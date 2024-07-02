@@ -1,107 +1,111 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652D115B10F;
-	Tue,  2 Jul 2024 11:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 331E91591ED;
+	Tue,  2 Jul 2024 11:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719918534; cv=none; b=Vdni/Z2vYPYjHoP3pF+2RQ/GZ6OJMkIIAXOYxDAl6sNMgGoxHz4afKwZyOyZgV+9/kuplgsMcjeH3ICpF+9SOVC0sGLJdmiV7wV3mmw0C8mhDB7P417FWv+oUmxlCqd3k3W/OhPylIOQob8q+SgJ6qxmcRa91WiQhln2f9C7Yic=
+	t=1719918628; cv=none; b=FSs83FVZCTpU630M1nZNiKjSScYmUVK9PuBp3/Jqkez1P/hX1mxwttDizPiyMeRX7APkeuAm++wQCsfgH1c+m6A3pOtmFbrdprhh/7EqyZAH4NNx40t3A28PsZ2oM9fYkrHXmnsThbqmzvXp2hyW/FYyXakPwLtuaSF34NK7cOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719918534; c=relaxed/simple;
-	bh=qqu1f8bbeU/SvJtG0ec6mPjZ4RG7l4GtvYUYiXGx2Z0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q25lgNbJ9LmHqh356wCMH+YfU6a99YqP+1subeRO9YtGbs2NPFLEWf99yoxNtm7GCou0m5Q7P00FIy/OZXc8sNfLWzpJZ3KaOqX8L9a6xF5Gda+pRkb6Es/P1InDjoh554ZLWX1l6TMnY15HDUCJK5JUenUP7CA9zcbvOV0940I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=absIHYmk; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="absIHYmk"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id E1C3C100005;
-	Tue,  2 Jul 2024 14:08:30 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1719918510; bh=fPpkEigsqYyjY+usdDH0XAppyEwih+KQZdXHBtDT3hE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=absIHYmkNib+lwQ3U/psX8NwxfEO4GxLGeMy7iCga6mucsKDyQNe/Ry191Pf9Ig5Y
-	 DHHf6wf7Jfu1+7pzMZ/zhZSIaSEXiegjgJbbafAG4KrTAwMXWrq5VXWxnl4R2EKZXx
-	 f/dLzeMT84f99djqiOZ8Br10OfTqdTj7EuoGoQHXeQDncXfPJouTWL+M72Do0PNXWO
-	 t3w60RfnpaW5AnboRZLsLmDaHcu80KlrGi5+cLdGphSStBxK6VaN4PuPNw6/7cNB3/
-	 1PYIkrv99wug0GsN/1hZ8KRrZ6bcn6QGCsfdSxocHfZyyN9zguX/hWwi/iZE9sc69V
-	 ZwxTMiQIM04uA==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Tue,  2 Jul 2024 14:07:24 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 2 Jul 2024
- 14:07:04 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Michael Walle <michael@walle.cc>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH net] net: phy: mscc-miim: Validate bus frequency obtained from Device Tree
-Date: Tue, 2 Jul 2024 14:06:50 +0300
-Message-ID: <20240702110650.17563-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1719918628; c=relaxed/simple;
+	bh=rTaJ0w6/itfmt4ygZvgEm2Q6+AQjMGYbtw9tNRjtlu8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfwn8xRzEHEqS7Vgvmndow3+2IWFhPg6TyU7whMID3fFN+ahE/8HgMRxrMcpjO7/LtNIjUbGeH7Mlg4IipKWkJSc34GwbOMOB7Az/cjGD2M9KjQvURn203c4hjWlNqYlOibADqx13eso+TSFIqtv5j5Y+DCFg6aurljvkpVGZkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72550339;
+	Tue,  2 Jul 2024 04:10:50 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E7013F762;
+	Tue,  2 Jul 2024 04:10:24 -0700 (PDT)
+Date: Tue, 2 Jul 2024 12:10:21 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Luke Parkin <luke.parkin@arm.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	Sudeep Holla <Sudeep.Holla@arm.com>
+Subject: Re: [PATCH 2/3] Track basic SCMI statistics
+Message-ID: <ZoPgHRl8FUo9-Xvz@pluto>
+References: <20240701142851.1448515-1-luke.parkin@arm.com>
+ <20240701142851.1448515-3-luke.parkin@arm.com>
+ <ZoLWH9-JPFQB4YSu@pluto>
+ <490bb053-f2dd-4c6a-a976-c8d21d66eb4c@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186273 [Jul 02 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/02 10:26:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/02 07:20:00 #25796017
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <490bb053-f2dd-4c6a-a976-c8d21d66eb4c@arm.com>
 
-In mscc_miim_clk_set() miim->bus_freq is taken from Device Tree and can
-contain any value in case of any error or broken DT. A value of 2147483648
-multiplied by 2 will result in an overflow and division by 0.
+On Tue, Jul 02, 2024 at 10:57:23AM +0100, Luke Parkin wrote:
+> > Ok, so IMO, this is the main core thing to rework in this series: the
+> > "counting" operation/block should be defined as a macro so that it can
+> > be fully compiled out when STATS=n, because these are counters
+> > incremented on the hot path for each message, not just once in a while,
+> > so the above if(IS_ENABELD()) now will be there and evaluated even when
+> > STATS=n.
+> >
+> > Something like:
+> >
+> > 	#ifdef CONFIG_ARM_SCMI_DEBUG_STATISTICS
+> > 	#define SCMI_LOG_STATS(counter)			\
+> > 		<your magic here> 			\
+> > 	#else
+> > 	#define SCMI_LOG_STATS(counter)
+> > 	#endif
+> >
+> > .... I have not thought it through eh...so it could be radically
+> > different...the point is ... the counting machinery should just
+> > disappear at compile time when STATS=n
+> 
+> Hey Cristian, Unless I've missed something, It looks like IS_ENABLED() does do
+> what you ask for.
+> In Documentation/process/coding-style.rst:1168 it reccomends using IS_ENABLED
+> for conditional compilation over #if and #ifdef, saying that the compiler will
+> constant-fold the conditional away.
 
-Add bus frequency value check to avoid overflow.
+Yes indeed, it will be compiled out anyway, forgot that despite having
+it used myself a few lines below :D .... but from the readability standpoint,
+given that we will sprinkle this all over the code, wont be much clearer to
+conditionally define once for all an inline function (like mentioned at the
+start of that coding-style.rst paragraph) or a macro in a header (like common.h)
+to wrap the atomic_inc
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+#ifdef CONFIG_ARM_SCMI_DEBUG_STATISTICS
+static inline void scmi_log_stats(atomic_t *cnt)
+{
+	atomic_inc(cnt);
+}
+#else
+static inline void scmi_log_stats(atomic_t *cnt) { }
+#endif
 
-Fixes: bb2a1934ca01 ("net: phy: mscc-miim: add support to set MDIO bus frequency")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/net/mdio/mdio-mscc-miim.c | 5 +++++
- 1 file changed, 5 insertions(+)
+and then just call it plainly wherever it needs, knowing that the compiler
+will equally compile it out all-over when STATS=n.
 
-diff --git a/drivers/net/mdio/mdio-mscc-miim.c b/drivers/net/mdio/mdio-mscc-miim.c
-index c29377c85307..6380c22567ea 100644
---- a/drivers/net/mdio/mdio-mscc-miim.c
-+++ b/drivers/net/mdio/mdio-mscc-miim.c
-@@ -254,6 +254,11 @@ static int mscc_miim_clk_set(struct mii_bus *bus)
- 	if (!miim->bus_freq)
- 		return 0;
- 
-+	if (miim->bus_freq == 2147483648) {
-+		dev_err(&bus->dev, "Incorrect bus frequency\n");
-+		return -EINVAL;
-+	}
-+
- 	rate = clk_get_rate(miim->clk);
- 
- 	div = DIV_ROUND_UP(rate, 2 * miim->bus_freq) - 1;
--- 
-2.30.2
+ifdeffery is discouraged in the code flow but it is acceptable to define
+alternative nop fucntions in a header.
 
+Also because in some of the callsite you handle 2 stats with some ifcond
+(conditional on the IS_ENABLED that is good) and that could be a problem,
+but those calls can be split and placed alone where that some condition is
+already check normally as in as an example in scmi_handle_response():
+
+	if (xfer->hdr.type == MSG_TYPE_DELAYED_RESP) {                           
+                scmi_clear_channel(info, cinfo);
+                complete(xfer->async_done);
++		scmi_log_stats(&info->stats.dlyd_response_ok);
+	} else {                                                                 
+                complete(&xfer->done);                                           
++		scmi_log_stats(&info->stats.response_ok);
+        }                                    
+
+...what do you think, am I missing something else ?
+
+Thanks,
+Cristian
