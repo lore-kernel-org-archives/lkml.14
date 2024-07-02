@@ -1,201 +1,216 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2045.outbound.protection.outlook.com [40.92.107.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5CA146D48
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 09:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719912669; cv=none; b=HNbQcHH0+L1ycKSGPykGt2nFCUhQpJ/p/4WqFFZJgbaIJB7v3H0l6JVj6EYoZdURUHSWi81JJIiWOwgw8+DLa05Cp1MhBNxkHMqmw2Q2AgY/CoZ+THjwj2R+JIbFTTX+/EkFDTnlC1jUtNDwn0Ca1/Oi4wq4e09kOD6BizTbMG8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719912669; c=relaxed/simple;
-	bh=My+y33TojPKjem8uoG/oIgg3upZ5k+T7Qg+MxFRnAQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SD3X/6GI+QKcuE1+4YgAKzCY01afD48Qcoy0qySQOSZacNfsUUSzHPdM3UGbtrTkqXJtEOK19KjnkvOBCwRqnPEsS9Q13+tJL6GZwggcNilY4jXSmnGLH6E0hJOXJpK1NDIrZ6ZvSVIzQI/GsWm58PyeIZ740kZ3n6aWtZtjuMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Or6wJIF+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IR5aqluV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eqmkFc27; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zAAWmqUw; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9991215250C;
+	Tue,  2 Jul 2024 09:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.107.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719912671; cv=fail; b=j/8UHSWxdj3s/RksC8/qn+ACV3oh+UgM1dy5OQQd14y/zZDoLCrtn9SUbxZwNoQewkiMiaQSSr2UBhVCyVW8i74zO6JOQIj3XILIa2BGdMrMWHK9Pl8NkOHM5gV2Xm53NCrNVuhnbitRZNpf9rZnZCpnT4EQq1h6Hxo6NeOE1j0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719912671; c=relaxed/simple;
+	bh=6OPz8fRAL/9aKdt1yqlxOIMb3ox6wMg0b98ZsP7keeE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GOjp7i4iplHnTSRtbeF+DuwJrGU7bJjlMl5uNeuxMUMIzAb0psDkRoZ03hx1Q87HLTEIqH+R8+HseDYIt0RJWQGddLBSIMQGtg/0rW67UfV68NKbABRXSnsProqb2nAcEDbTZJY1bawAQeHR1dbtfVogmhQNoFOe2CUPtkG1AYw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=t+IBEey6; arc=fail smtp.client-ip=40.92.107.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Or6wJIF+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IR5aqluV";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eqmkFc27";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zAAWmqUw"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E226D1FB90;
-	Tue,  2 Jul 2024 09:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719912665; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VN2koVPOWj3sGqHMQ5WBQyHX/C5oZKpDGLxXVxlIKlM=;
-	b=Or6wJIF+odV4MjKWnmt40ZA8dcZ1zhFSzyMFuUWHTEfLZHYeQcIaeICDqbT3Lq0zDs/Ao9
-	XyJDh74D7G6SL1P1tzVaRazxxRbZBOZH8BLbFGkROvxN74QHnV3nc6EMnznO9wlxd19JZk
-	kJbh38ikULvNn/BvoaCDAc4s8YB6OJ0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719912665;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VN2koVPOWj3sGqHMQ5WBQyHX/C5oZKpDGLxXVxlIKlM=;
-	b=IR5aqluV6soLhf11GD63gba5KwADgbmh3rf5sjvzbVUweEW/G4oGMBlr32/YhcgX9fTStx
-	Azr+7W2lNis7PeCA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=eqmkFc27;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=zAAWmqUw
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719912663; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VN2koVPOWj3sGqHMQ5WBQyHX/C5oZKpDGLxXVxlIKlM=;
-	b=eqmkFc27yUiFhBYzKJdGjJxtD75N3ApNZH3wb6LyUgSmrSokF1Tnw1K4fYBVSfPq0x0xmX
-	2m7T5ZVq/F40PnPSUgnqkYFshs/vNR3ZCZt/fvmN7zKmlaKIrPmvG2zJQ3qahLm5LCbOPq
-	fcGaWvlm+XU0g2Zo6jIFzV8EJLtHxe4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719912663;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VN2koVPOWj3sGqHMQ5WBQyHX/C5oZKpDGLxXVxlIKlM=;
-	b=zAAWmqUwuS0BN8TYJADfAsYGEWXbyvO5kHzrYnUfLjYTH52JL2i1sWkadLieGjokTUDwye
-	LIBSRmssnmR6ZgDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB7CA1395F;
-	Tue,  2 Jul 2024 09:31:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id B2hUMdfIg2bZLgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 02 Jul 2024 09:31:03 +0000
-Message-ID: <bb4214ca-fada-4aa9-af40-008182ea4006@suse.cz>
-Date: Tue, 2 Jul 2024 11:31:03 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="t+IBEey6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SSwluto4wJGh610DovNmUVoPUdiy8byZoWcGon2jGe/dsZpadOLRq25o1Xvvm4N2lP33kXVtSqaR104blLFy3m4lH2wx68QdCOvRAeGjDB2bsIIcnhI7mj8iLg53+KQD9WY+gSa+oc620wpKiqk4S7HzxwLjBeHPo6g1OX74XM+JvXHpd+LkA1WHT+Leb5Y7pM0zaGx3/UwrxBwb15DckEFGbsjMBX17O8f4HPWKU0NSPSdK717OTBO4a6KXydXi4on/DsFdUwwy0x8IodywJBUFIWc8LUL/HeKkreZUcc5rTPDZJXGReWvkxZT52swQTV3l58/iZJMVTizTGgVmKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2HdbQjWM+VEKKI2HTVCOdOkUXCd9mQc9QGFddL4pYnU=;
+ b=gjDqBRrU54AQkGrc8+ySd9ug6Gk6TiNBoCXB7aYAoAvJjblLG6HiwuZjvVT9VLyj33QcPWPJMyK9+u+KphK5miIA/oXtldhh+Z7oq5LFwjLSEtl61R2Z0nYK8z0d8TFXITKNrWstG/pIKfO9Vxvh+x4RDeOQ511au87sjsby6vltCQNpyKs7WQqv4I/9mK8yVqHD0bTFhDWTRYV3qSRnID4h9zW5yPzFGchoHacBmKVxkCGm6DfFY3x5bjrR3l3jyU/87dP2FBZ+/gKduGywb27ZZUkzfyKCdoCRiFB65/7ad3Sl1+vi8ogZp2ZD/z3sVCqlHMzoiCH8NXlIYsoD+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2HdbQjWM+VEKKI2HTVCOdOkUXCd9mQc9QGFddL4pYnU=;
+ b=t+IBEey6xbh6JUQdzp/jvqtK1+ba5ClmAXAdiwUg6lcW0WdfwxSJ628ClbTYdtO+6qqDlCtSgbVMUIDixvcqZ1Wi/cJOn25tkrBhIVph4AfyIMOm93t9/I+y84m3HUfkrlYYgxbxjgCIm0AK7pHMA3dmJarHUieO5Xu9t6PoHqZg1W5ten3SaOIIw3gJ4qEvX3bfVOhm42g/xiJl3iNYV3XtiRAhI6PrC6JD+6EQEptcVmzhXNYTWvZRMmhXFamQVb6SqeunS7GHK47imENQVVvY8G0dVkxDmPvNsJnp9NHL9Sg6wQip58GSq6XROQrlQJb1FsWns9iHV2X8zujxfg==
+Received: from SEYPR01MB4221.apcprd01.prod.exchangelabs.com
+ (2603:1096:101:56::12) by SEZPR01MB4613.apcprd01.prod.exchangelabs.com
+ (2603:1096:101:91::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.34; Tue, 2 Jul
+ 2024 09:31:02 +0000
+Received: from SEYPR01MB4221.apcprd01.prod.exchangelabs.com
+ ([fe80::b674:8f70:6e29:3756]) by SEYPR01MB4221.apcprd01.prod.exchangelabs.com
+ ([fe80::b674:8f70:6e29:3756%4]) with mapi id 15.20.7719.029; Tue, 2 Jul 2024
+ 09:31:02 +0000
+From: Haylen Chu <heylenay@outlook.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>
+Cc: linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Haylen Chu <heylenay@outlook.com>
+Subject: [PATCH v3 1/3] dt-bindings: thermal: sophgo,cv1800-thermal: Add Sophgo CV1800 thermal
+Date: Tue,  2 Jul 2024 09:30:24 +0000
+Message-ID:
+ <SEYPR01MB42217228213F5F2C739088DED7DC2@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <SEYPR01MB42213F3A032C60C6AF5EB677D7DC2@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
+References: <SEYPR01MB42213F3A032C60C6AF5EB677D7DC2@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [17i62xjFeVM3yHP1oYezK0i5S0kz8QCo]
+X-ClientProxiedBy: SI2P153CA0006.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::22) To SEYPR01MB4221.apcprd01.prod.exchangelabs.com
+ (2603:1096:101:56::12)
+X-Microsoft-Original-Message-ID: <20240702093025.449-2-heylenay@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mm/slab: fix 'variable obj_exts set but not used'
- warning
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev,
- pasha.tatashin@soleen.com, souravpanda@google.com, keescook@chromium.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kernel test robot <lkp@intel.com>
-References: <20240614225951.3845577-1-surenb@google.com>
- <18a30d5c-abf3-4ceb-a7fd-2edfd8bee2a8@suse.cz>
- <CAJuCfpFPDAjE5aNYxTngxzAusz_9QkOdnELSRNadi2Sxb4O=oA@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJkBREIBQkRadznAAoJECJPp+fMgqZkNxIQ
- ALZRqwdUGzqL2aeSavbum/VF/+td+nZfuH0xeWiO2w8mG0+nPd5j9ujYeHcUP1edE7uQrjOC
- Gs9sm8+W1xYnbClMJTsXiAV88D2btFUdU1mCXURAL9wWZ8Jsmz5ZH2V6AUszvNezsS/VIT87
- AmTtj31TLDGwdxaZTSYLwAOOOtyqafOEq+gJB30RxTRE3h3G1zpO7OM9K6ysLdAlwAGYWgJJ
- V4JqGsQ/lyEtxxFpUCjb5Pztp7cQxhlkil0oBYHkudiG8j1U3DG8iC6rnB4yJaLphKx57NuQ
- PIY0Bccg+r9gIQ4XeSK2PQhdXdy3UWBr913ZQ9AI2usid3s5vabo4iBvpJNFLgUmxFnr73SJ
- KsRh/2OBsg1XXF/wRQGBO9vRuJUAbnaIVcmGOUogdBVS9Sun/Sy4GNA++KtFZK95U7J417/J
- Hub2xV6Ehc7UGW6fIvIQmzJ3zaTEfuriU1P8ayfddrAgZb25JnOW7L1zdYL8rXiezOyYZ8Fm
- ZyXjzWdO0RpxcUEp6GsJr11Bc4F3aae9OZtwtLL/jxc7y6pUugB00PodgnQ6CMcfR/HjXlae
- h2VS3zl9+tQWHu6s1R58t5BuMS2FNA58wU/IazImc/ZQA+slDBfhRDGYlExjg19UXWe/gMcl
- De3P1kxYPgZdGE2eZpRLIbt+rYnqQKy8UxlszsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
- J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
- /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
- IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
- X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
- wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
- PVAiT6fnzIKmZAUCZAUSmwUJDK5EZgAKCRAiT6fnzIKmZOJGEACOKABgo9wJXsbWhGWYO7mD
- 8R8mUyJHqbvaz+yTLnvRwfe/VwafFfDMx5GYVYzMY9TWpA8psFTKTUIIQmx2scYsRBUwm5VI
- EurRWKqENcDRjyo+ol59j0FViYysjQQeobXBDDE31t5SBg++veI6tXfpco/UiKEsDswL1WAr
- tEAZaruo7254TyH+gydURl2wJuzo/aZ7Y7PpqaODbYv727Dvm5eX64HCyyAH0s6sOCyGF5/p
- eIhrOn24oBf67KtdAN3H9JoFNUVTYJc1VJU3R1JtVdgwEdr+NEciEfYl0O19VpLE/PZxP4wX
- PWnhf5WjdoNI1Xec+RcJ5p/pSel0jnvBX8L2cmniYnmI883NhtGZsEWj++wyKiS4NranDFlA
- HdDM3b4lUth1pTtABKQ1YuTvehj7EfoWD3bv9kuGZGPrAeFNiHPdOT7DaXKeHpW9homgtBxj
- 8aX/UkSvEGJKUEbFL9cVa5tzyialGkSiZJNkWgeHe+jEcfRT6pJZOJidSCdzvJpbdJmm+eED
- w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
- 1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
- EP+ylKVEKb0Q2A==
-In-Reply-To: <CAJuCfpFPDAjE5aNYxTngxzAusz_9QkOdnELSRNadi2Sxb4O=oA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,suse.cz:email,suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: E226D1FB90
-X-Spam-Flag: NO
-X-Spam-Score: -4.50
-X-Spam-Level: 
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEYPR01MB4221:EE_|SEZPR01MB4613:EE_
+X-MS-Office365-Filtering-Correlation-Id: 57056f5a-ae6a-4841-7d52-08dc9a79b0a6
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|8060799006|4302099013|3412199025|440099028|1602099012|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	rBHyE6Q+GmxLwaomWEYcX3NmnZk5Gg7HtR2pDGPc2rAmyCcZPyD1OErFUYyMLMkZHqRvkcXIjrNoEf684G/cZwSTUDZideskKiYR17s/LV2Q0pW/y5jIv9vDnrEk6bsa7ClU++cDP/rziKZyJ44tztQvKhNkwIHFUntJ/eNgi8b8PuPnPxSgVfIn8xz9Cu4SdKT3+wnnn9GGOQ2T/RhrtXIc49Oq+H5UUVmIgq5DP9oIlI2c/O2ydoJFnfEhSUm7cP4jn/9CqdFuFQckz4BpHKxd9Xgt9uhDiksAEnmvvgBS7vv75Ys4Ln9wzepY6xPLFBRcYNCcRcXVqx8SXL3ZRS+q8YgMBuFNeb4aH0kXDK8335E/Q7pTl1q5lqSLnQGpOv1251duL2nBhzElAcwsMp09NIPdO07CtUywAmGMebh9GDBU5g18P2JQkbzjukGxcozDbLuUSRU9zkvYSrUUDzmZLCRNwqB1L/Db34qjjehfqweAlup9zr8/8tuKYaM9DIlmEgdz2mAMjgQNNmMLB6lY3AgCvie4JQriOpe3A21uqUTAzjjaSCb3PWGohffKHUiyRpmbnmhnrtdivAKTuE+/hjSY4wfF/KvbZ+fWuTOnU/XFCtoeqgPw3B2zPDrDWQKjy4Ha/KVORLlCD0y1OBqQvAF029tRHT3UWt1rDJCW6r1auvUJLz4uSXstfwRgWHwnXL4JC5d2OluU6JOnzAQheKIsUyTftW3MTb4PKxRsjHHtpGDk7pqeVaXpXmhGs/Xv97nlw9dh9ePYPxZTFg==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?M0zMDZw7RkYbA48QmWYz1waLUtvaHwzbXFkczUhn+SMKf+C/JJUlhq+kXyPc?=
+ =?us-ascii?Q?QaQNEN5tJKpgnC4SbETt4O9xg6TteOOswN1WGr+CQN2URnT2PYuRN7y33T5C?=
+ =?us-ascii?Q?SosMBNMzUxActEicAgnMG0XknXc6rw4dUOtqYJf/4QMKIb3aNl4GT4BAZtoI?=
+ =?us-ascii?Q?rISxZKEr8aVF8CpOGgpAB8dL9vXdNlv2fMGHYPjdVvS1ZUI9Q2e7e4K4HppI?=
+ =?us-ascii?Q?LzFP38v2jVX9ouHe98bgh3PuoP2UO6kkyo5trTLnvys6KnSheCeqrxSUkUy7?=
+ =?us-ascii?Q?LkKqaTqJF/7iNH3TOHNqhVx+Ur4p80uEiXNyicQVXUtnn8ULKHxfZqlpNBB0?=
+ =?us-ascii?Q?UAsro5kgCYEsSauUNwm8Yz04k+KgiXdkeb2EM7dFwESJBSFIO6lvcwzieqCC?=
+ =?us-ascii?Q?zWTg6NdBaR38qOagbz17RG8YHqxqBXa26ZPkXD5IsM7pa1ztbHqXpcFe/oPQ?=
+ =?us-ascii?Q?w8G+obMMVjXpucJ/JVetVrZvCsoFe94NhRasSDluPh0rXZ0m78vzdOEP5yA/?=
+ =?us-ascii?Q?U7EOEPY51BAFrk2OfztJJc5p9eigEqQlVqcJ2oEmydBJVa6q9KF8H2toF5Ug?=
+ =?us-ascii?Q?GxeoIyjOeesZzwda0LRXIL7LxCWy7myVfdbi2nDAaZlry+y7XtCj/FwxNRmF?=
+ =?us-ascii?Q?6rEScg2Ln7kAOtmiaKn/0srpxkG3koatqbQvpVT8/FZ/FIlKnxwk4leUcwon?=
+ =?us-ascii?Q?f4M4M37bA2iwpTYmk+lSbyrL13YEBd63XioRzj9YW7HXIpZ09rcNlcuJ3l7V?=
+ =?us-ascii?Q?k6IPLo0rNrMy2MVZFckv/QZWq97Hz59oXdfjpUEDHKATNPhSghBqGlQonOF2?=
+ =?us-ascii?Q?hoCnYK8gohDuv9Vwbx4/lX5+mXju9mbAwNsof2Wqdt8kx/XWXZg2e1bk0lP0?=
+ =?us-ascii?Q?QEi2p2m9ntQbj+FQO+gzY3J+BER044M8tCyZQWWboteDiKhjj22k1QqcBt1c?=
+ =?us-ascii?Q?TsAuLrqsmKaleUdS+HMEZttQ/JZ8JobYxQVdgz3G1d35byF34VQB1uxWRYvV?=
+ =?us-ascii?Q?t6c5vOfeku28ZIft89ZlsI5ZtBaF5A+Pm1dUNrWvqnMQ/r0jTanVRHfqowuX?=
+ =?us-ascii?Q?zAjNsyE3PJ2Ct4xvqAWXBw6DGldEHKreJM+ndpN7VZuHrPCLcaiP39NkQ/9M?=
+ =?us-ascii?Q?Isb1WYqZ/a+a6sXkwKA32OJ+Xh761rDSoW/TgOK3TeuDASQxQ3hIkRCWaG+0?=
+ =?us-ascii?Q?ACG/EDRUYNtmXc4r+8TL4IGbDK5Jv6qP533rityql3fNi7QHxLOFqHPfbUQ?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57056f5a-ae6a-4841-7d52-08dc9a79b0a6
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR01MB4221.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 09:31:02.8017
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR01MB4613
 
-On 6/30/24 9:20 PM, Suren Baghdasaryan wrote:
-> On Mon, Jun 17, 2024 at 3:04 AM Vlastimil Babka <vbabka@suse.cz> wrote:
->>
->> On 6/15/24 12:59 AM, Suren Baghdasaryan wrote:
->> > slab_post_alloc_hook() uses prepare_slab_obj_exts_hook() to obtain
->> > slabobj_ext object. Currently the only user of slabobj_ext object in
->> > this path is memory allocation profiling, therefore when it's not enabled
->> > this object is not needed. This also generates a warning when compiling
->> > with CONFIG_MEM_ALLOC_PROFILING=n. Move the code under this configuration
->> > to fix the warning. If more slabobj_ext users appear in the future, the
->> > code will have to be changed back to call prepare_slab_obj_exts_hook().
->> >
->> > Fixes: 4b8736964640 ("mm/slab: add allocation accounting into slab allocation and free paths")
->> > Reported-by: kernel test robot <lkp@intel.com>
->> > Closes: https://lore.kernel.org/oe-kbuild-all/202406150444.F6neSaiy-lkp@intel.com/
->> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
->>
->> Acked-by: Vlastimil Babka <vbabka@suse.cz>
->>
->> But it seems to me we could remove the whole #ifdef if current->alloc_tag
->> (which doesn't exist with !MEM_ALLOC_PROFILING) had an access helper, or
->> there was a alloc_tag_add_current() variant?
-> 
-> Hmm. I'll check if current->alloc_tag is the only reason for this
-> ifdef. If so then you are correct and we can simplify this code.
+Add devicetree binding documentation for thermal sensors integrated in
+Sophgo CV180X SoCs.
 
-The fix is now in mm-hotfixes-stable but we can cleanup for the future as a
-non-hotfix.
+Signed-off-by: Haylen Chu <heylenay@outlook.com>
+---
+ .../thermal/sophgo,cv1800-thermal.yaml        | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sophgo,cv1800-thermal.yaml
+
+diff --git a/Documentation/devicetree/bindings/thermal/sophgo,cv1800-thermal.yaml b/Documentation/devicetree/bindings/thermal/sophgo,cv1800-thermal.yaml
+new file mode 100644
+index 000000000000..016299822c16
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/sophgo,cv1800-thermal.yaml
+@@ -0,0 +1,74 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/sophgo,cv1800-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sophgo CV1800 on-SoC Thermal Sensor
++
++maintainers:
++  - Haylen Chu <heylenay@outlook.com>
++
++description: Binding for Sophgo CV1800 on-SoC thermal sensor
++
++properties:
++  compatible:
++    enum:
++      - sophgo,cv1800-thermal
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description: The thermal sensor clock
++
++  interrupts:
++    maxItems: 1
++
++  accumulation-period:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Accumulation period for a sample
++    enum:
++      - 512
++      - 1024
++      - 2048
++      - 4096
++    default: 2048
++
++  chop-period:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: ADC chop period
++    enum:
++      - 128
++      - 256
++      - 512
++      - 1024
++    default: 1024
++
++  sample-cycle-us:
++    description: Period between samples. Should be greater than 524us.
++    default: 1000000
++
++  '#thermal-sensor-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++        #include <dt-bindings/clock/sophgo,cv1800.h>
++        #include <dt-bindings/interrupt-controller/irq.h>
++        thermal-sensor@30e0000 {
++            compatible = "sophgo,cv1800-thermal";
++            reg = <0x30e0000 0x100>;
++            clocks = <&clk CLK_TEMPSEN>;
++            interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
++            #thermal-sensor-cells = <0>;
++        };
++...
+-- 
+2.45.2
 
