@@ -1,77 +1,166 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87B428385
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 02:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DC264D
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 02:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719888518; cv=none; b=ISeBh8E3NtaSC5ZraQytDQDNFW4rJesgS8BsTYw0IHZBfrVlYj5t1hjVPSMpdUF1TZ8KyYxMUhaCxEUXv4uj6x6J70iisGB25uyH6M1BzYjIDBckFhMia0Eby1GEsTxWu604lrAk7gnu5elsuE2KOLTmr6kYDl5gPKVDrOuDqGg=
+	t=1719888662; cv=none; b=IwY0zuuZvyKVbgfpxmIPmuHIN69SdFSovGtA3n3rRwxXvTMfAtDjVRpt5ZR8Ghw4nh3A2CuM31JBda1a980X/iLtqT/NUR3NcNQ5znqK3InVkClxp2t0a22ksiGiVaX0DYIOVcOACW4ELIuDjNTVLnFbhF/kKP0LeRGupCI6PXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719888518; c=relaxed/simple;
-	bh=egxj00bAm237tAR5xsPTNlx3oMwWUnxzJKHmcy1c/eY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rdk3VHZg9zjTdzecyOAWCJ2g0Ix6cUkYpfV26DpmAochzzeUvht0E4vg/YxBw2D+SlK92eCVoWF5zyqEMVPl/RAUQej2dH8DnY6Zpm0LV48rGYBwriffAiVeoHeRdvwDh0IGeu74IeYJEMLvAq3c835USRF4hpVmi69xZOEFBQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowABXX3d2aoNmnBeXEw--.36213S2;
-	Tue, 02 Jul 2024 10:48:22 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: miquel.raynal@bootlin.com,
-	conor.culhane@silvaco.com,
-	alexandre.belloni@bootlin.com
-Cc: linux-i3c@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] i3c: master: svc: Convert comma to semicolon
-Date: Tue,  2 Jul 2024 10:47:58 +0800
-Message-Id: <20240702024758.1411569-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1719888662; c=relaxed/simple;
+	bh=dI4FUUfMjl69PrOL983cIvqHwtYC/LP2jgUv1UMPb4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=buxF+qEdQKna+76j79sPkkULkrlaDzHdJtqNwOa7UMGJYfysQp5bw4CYeL6X15kuXP+YNihFSzDgJMZr+gkqofPaSMnxQUcYGDhBh2Bgq19biNHPASW5IIAOPPgnXjAnJm/9joa0V+N0ucarLExjA5uRwY/v2bCz9+FReF27okc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KEOQkZXb; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KEOQkZXb"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-707f9c3bd02so2414873b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 19:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719888659; x=1720493459; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nBp88gZrUa2YS7lo6hEmRMUQenqjZqceKeedcGibfdc=;
+        b=KEOQkZXbdHMQKAMmA8s+fZDUnapasIIQlXOqJRuy7fE2l4u/1FnOLd5oy/0splC6oV
+         B1ScMcNB1auB2GuQWE148z6cXritZM3BxCsHuX0cOyDhN7lmW9jFwTI377Nc/g4QY+eU
+         HOAEHM7Qj++eK++Gaxhz6B97ReKVU+GkghOtlnOTdEQs2de9EdV6K0uRWQ3JLmQsQEnT
+         cpVm0eC+OviBuUVwaElc3CtdD7c5djEiJiKmS1NltdrQbPDKr558M0TBS8IcqnLUAxzN
+         jhNLQsybPmAObbOchbpRS/XzOK7OojEHOqvosB23PwzBETnRLfKcrqgaJi9oCQ2rmYrg
+         3/0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719888659; x=1720493459;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nBp88gZrUa2YS7lo6hEmRMUQenqjZqceKeedcGibfdc=;
+        b=F0T8axfaMrR9f6+5+E+1K5yzQGEjo3OdIT8S3SOAE2AmSYTVpiO8yttQvXq6c41A2Y
+         y71LZU+/xvpGy+L91B6ssmAadYK9n0NrnjpAlIr8mN8oQX95PDMU21JrGIvedTTt1YdT
+         fHv7CyDH/Wa1wEUrD3xItyq5gLRE9SUDQZnLEq+LN410KCym+pKuLa2NPpRQtANtjxBU
+         nW2b7qMaOX4/z+QzYuLHV42cDL9IZiCJ0BR/2spEo7ga/jCq8DkRFEjck4ps0yoZmBMc
+         lBWVeKGh8zY0EmxNGwaJKDtYxO86Uh/UX6UJH//jz6nfku+1dJ517pqLvgh9w3D8JOP5
+         TgtA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtrNJvXbVC/pbnyCPZONhoLR6BvB1j6gTh6bd6Q6913WPIebPQNz+lJHlC818eWoy2uOTChbpvP1QWibBHBwsGc8OubBkKd1peYweP
+X-Gm-Message-State: AOJu0YwH2pHcQZIXGKrQzDuiP+P/KVd8Q9B3FDoOmSjBPIKdcvqWmy5Z
+	qHtyQOwypkooIKPfjUCUc3l1+tKkHXfm7Q1gs6Igp9RVm/hyPO741sGpVRDi6g==
+X-Google-Smtp-Source: AGHT+IFf88EVVdjFfdu2f1Xd7SqqWlpsU+fSNzdJfNG3fiH6hUTe+nsB4Eh7rlvmYm98E6DkS52y3w==
+X-Received: by 2002:a05:6a00:4b4c:b0:706:705f:313a with SMTP id d2e1a72fcca58-70aaad3add2mr5320365b3a.12.1719888658875;
+        Mon, 01 Jul 2024 19:50:58 -0700 (PDT)
+Received: from google.com (148.98.83.34.bc.googleusercontent.com. [34.83.98.148])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70801e57aa0sm7300844b3a.28.2024.07.01.19.50.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 19:50:58 -0700 (PDT)
+Date: Tue, 2 Jul 2024 02:50:54 +0000
+From: Igor Pylypiv <ipylypiv@google.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Hannes Reinecke <hare@suse.de>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 8/8] ata: libata-scsi: Make ata_scsi_qc_complete()
+ more readable
+Message-ID: <ZoNrDo0HIISlBMdX@google.com>
+References: <20240701195758.1045917-1-ipylypiv@google.com>
+ <20240701195758.1045917-9-ipylypiv@google.com>
+ <ZoMciql1lQcj5MbM@ryzen.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABXX3d2aoNmnBeXEw--.36213S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZF15Zr47GrWUJrW5ZFb_yoWfWFg_KF
-	15AF4xtFs8Ar1jka4Fkr9I9r12y34rXF4kKF9YqF93uFWxJw1kJ3WUJr47AFyUGa17XrZr
-	KrWDKrn3Cr97GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
-	Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUnhFxUUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoMciql1lQcj5MbM@ryzen.lan>
 
-Replace a comma between expression statements by a semicolon.
+On Mon, Jul 01, 2024 at 11:15:54PM +0200, Niklas Cassel wrote:
+> On Mon, Jul 01, 2024 at 07:57:58PM +0000, Igor Pylypiv wrote:
+> > The ATA PASS-THROUGH handling logic in ata_scsi_qc_complete() is hard
+> > to read/understand. Improve the readability of the code by moving checks
+> > into self-explanatory boolean variables.
+> > 
+> > Additionally, always set SAM_STAT_CHECK_CONDITION when CK_COND=1 because
+> > SAT specification mandates that SATL shall return CHECK CONDITION if
+> > the CK_COND bit is set.
+> > 
+> > Co-developed-by: Niklas Cassel <cassel@kernel.org>
+> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> > Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
+> > ---
+> >  drivers/ata/libata-scsi.c | 21 +++++++++++----------
+> >  1 file changed, 11 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+> > index a66c177b6087..8f21b3b0bc75 100644
+> > --- a/drivers/ata/libata-scsi.c
+> > +++ b/drivers/ata/libata-scsi.c
+> > @@ -1659,26 +1659,27 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
+> >  {
+> >  	struct scsi_cmnd *cmd = qc->scsicmd;
+> >  	u8 *cdb = cmd->cmnd;
+> > -	int need_sense = (qc->err_mask != 0) &&
+> > -		!(qc->flags & ATA_QCFLAG_SENSE_VALID);
+> > -	int need_passthru_sense = (qc->err_mask != 0) ||
+> > -		(qc->flags & ATA_QCFLAG_SENSE_VALID);
+> > +	bool have_sense = qc->flags & ATA_QCFLAG_SENSE_VALID;
+> > +	bool is_ata_passthru = cdb[0] == ATA_16 || cdb[0] == ATA_12;
+> > +	bool is_ck_cond_request = cdb[2] & 0x20;
+> > +	bool is_error = qc->err_mask != 0;
+> >  
+> >  	/* For ATA pass thru (SAT) commands, generate a sense block if
+> >  	 * user mandated it or if there's an error.  Note that if we
+> > -	 * generate because the user forced us to [CK_COND =1], a check
+> > +	 * generate because the user forced us to [CK_COND=1], a check
+> >  	 * condition is generated and the ATA register values are returned
+> >  	 * whether the command completed successfully or not. If there
+> > -	 * was no error, we use the following sense data:
+> > +	 * was no error, and CK_COND=1, we use the following sense data:
+> >  	 * sk = RECOVERED ERROR
+> >  	 * asc,ascq = ATA PASS-THROUGH INFORMATION AVAILABLE
+> >  	 */
+> > -	if (((cdb[0] == ATA_16) || (cdb[0] == ATA_12)) &&
+> > -	    ((cdb[2] & 0x20) || need_passthru_sense)) {
+> > -		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID))
+> > +	if (is_ata_passthru && (is_ck_cond_request || is_error || have_sense)) {
+> > +		if (!have_sense)
+> >  			ata_gen_passthru_sense(qc);
+> >  		ata_scsi_set_passthru_sense_fields(qc);
+> > -	} else if (need_sense) {
+> > +		if (is_ck_cond_request)
+> > +			set_status_byte(qc->scsicmd, SAM_STAT_CHECK_CONDITION);
+> > +	} else if (is_error && !have_sense) {
+> >  		ata_gen_ata_sense(qc);
+> >  	} else {
+> >  		/* Keep the SCSI ML and status byte, clear host byte. */
+> > -- 
+> > 2.45.2.803.g4e1b14247a-goog
+> > 
+> 
+> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> 
+> However: I really think that this patch should be squashed with patch 2/8.
+> 
+> Sure, the changes in this patch will make it harder to backport...
+> but, even patch 2/8 will be a pain to backport...
+> 
+> And this patch will need to have CC: stable and be backported as well...
+> (such that we always set CHECK_CONDITION when CK_COND=1), so I strongly
+> suggest that we should squash these, since it will probably be way simpler
+> to backport the patch that is "patch 2/8 squashed with this patch",
+> compared to backporting patch 2/8, and then backporting this patch.
+> (That would just give two patches that will need manual backport, rather
+> than one patch that needs manual backport.)
+> 
+> Both of these are fixing incorrect sense data for ATA passthough commands
+> anyway.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/i3c/master/svc-i3c-master.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Agreed, it makes more sense to squash. Squashed the patches in v5.
 
-diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-index f0362509319e..eb42280f465a 100644
---- a/drivers/i3c/master/svc-i3c-master.c
-+++ b/drivers/i3c/master/svc-i3c-master.c
-@@ -1351,7 +1351,7 @@ static int svc_i3c_master_send_direct_ccc_cmd(struct svc_i3c_master *master,
- 	cmd->addr = ccc->dests[0].addr;
- 	cmd->rnw = ccc->rnw;
- 	cmd->in = ccc->rnw ? ccc->dests[0].payload.data : NULL;
--	cmd->out = ccc->rnw ? NULL : ccc->dests[0].payload.data,
-+	cmd->out = ccc->rnw ? NULL : ccc->dests[0].payload.data;
- 	cmd->len = xfer_len;
- 	cmd->actual_len = actual_len;
- 	cmd->continued = false;
--- 
-2.25.1
+I really appreciate your thorough reviews and feedback, Niklas! Thank you!
 
+Best,
+Igor
+> 
+> 
+> Kind regards,
+> Niklas
