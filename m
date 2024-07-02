@@ -1,155 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D971B581A;
-	Tue,  2 Jul 2024 14:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881641DDD6;
+	Tue,  2 Jul 2024 14:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719929292; cv=none; b=s52VEheeCmJIxnnRcN/2D/h0U2YSmZYRMMwfjhokn7EGodjcOkXSX06SNSP777OwdW5dlemEycjHEb6rHMwUutujGDMplUGdcFOyh+ZyCsKHP/OWI0bGDnRwzwv62lVYPWIMB2Gxj2xkgNGYerCKYz/LfH4ziEG0mM9xGtPJRRc=
+	t=1719929460; cv=none; b=WujGegQVCqUGD6wmCsnaE0Ixq3TjlXIOp6kkaeXZG+dF0ucSPVECFkRPkxn8zyx10yXdEh97abZTj9W4ShiVkBgDJ2kBGwbCuBae6rkvOifbnFdsKuX0DWjIMRc6RvX77g9No/ZuOXJhWp2uzTvD3QpYs6HM5dvtHEVsmo5yssg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719929292; c=relaxed/simple;
-	bh=FczaPhMPNC2StePC+oGnLGpU1tRFqdJWKJZyTLhC67U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zr3HgxjrX7fe8A2xHGj/kXXmLpdo2IoslogB9Rp8v2iwhbZEsJmo1+OUK3RMD0VR+bHmVuPviHIYhdnSvWBjVdJuD8omojswVOCdcex7hV8EWUUjkVkR2pcM5x0WChHKeZyNL8XSScCq/O//Zna4TgdoJ0q1HXJFIUw1necMyv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pd1kgJmj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719929460; c=relaxed/simple;
+	bh=jB7e0BWJUYy8pnYPEEOc3nSFaGq1u1krnDozmi3jQjM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J+Iopty+QZYF2qTmEqqQGhEcD/Cystd5cr0Nlz263uruqWfRp+mDZD84X7eUG3XVuZkJGMt60SX8a8XLYqwPEraiQq4kQylJ0WhcSlu9jDdLkKXZgYop2JVJi2ekTE5IpylY7CFeC4w0u9tyQLj5UxAo3n02SnsSTZkkLD4X/Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YxCVCEV3; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pd1kgJmj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4831C2BD10;
-	Tue,  2 Jul 2024 14:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719929291;
-	bh=FczaPhMPNC2StePC+oGnLGpU1tRFqdJWKJZyTLhC67U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pd1kgJmjphvQZpFYPGN5fWrwFeCN4vdbE37IPda6u/ZDAXOjwNht89sKsRynFIoO5
-	 ZN5AATxpTwAdDCt7Yi+IndVIPBtE4s+XjYj+x7ByM74y3HqRiXjZPvXS51qOLCC2lM
-	 j17ah0qHZX3Bq3UW5yCU8RuIsteqSG03qgqseXAnspD7LiR+3egEEC0PBoj2jDXKT+
-	 6ASk2Ke2SMX9WaI3K94tVueVY/ntVogA1vjm49Hty59Kja+OKIo94w5aNkf5kLTFDC
-	 DaPq6hsfupejni532Qx7Ndp4hOvLcVctRKu1jSBihfHGR10tktG3plBWTMCUB0ZO6/
-	 G28xOD4jn4paQ==
-Date: Tue, 2 Jul 2024 15:08:05 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jesse Taube <jesse@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Wende Tan <twd2.me@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 4/4] RISC-V: Use Zkr to seed KASLR base address
-Message-ID: <20240702-unissued-dreamlike-badd0fb75ab0@spud>
-References: <20240701185132.319995-1-jesse@rivosinc.com>
- <20240701185132.319995-5-jesse@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YxCVCEV3"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462DwE8l027175;
+	Tue, 2 Jul 2024 14:10:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=d
+	DTSHAKS0Syv4Qne1bjB6vcqNRJn3LQKmhsFFS/Xv2k=; b=YxCVCEV36K5XqJKql
+	BBR0a3hGZW6GKYPUpzCG+NsP1wRfGQWYXVNtpEFWxp828rN5xZPGqxQrLAwahztL
+	RLGRkquw4gp/dn8iaxFgokebNU0fV8QzEvUVd6VJfnJUzKCnpXj2VdmuQ3MT6p3S
+	tAQNl3bNcujBxRw22ImHCgSeTBtvGk+Q6rrSHKqFHtcJqg6vfVNOvBQ2tRvLJrX5
+	axxs7WpQx0BiEnjjXiylWFTwlHy/KTxCS8vwfLTZqro88+BmaO35No6riat/Lkgw
+	E6rXsYRdxAoXYMj+1ZYwPWjRPZPaCyBI+gJsI+B80+7Q15nRZ0/EeGdlQ+NioPvD
+	DFX3g==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 404jw9r1a9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jul 2024 14:10:10 +0000 (GMT)
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 462EAAj5013168;
+	Tue, 2 Jul 2024 14:10:10 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 404jw9r1a1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jul 2024 14:10:10 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 462CAdDe024071;
+	Tue, 2 Jul 2024 14:10:09 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 402ya3cttf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jul 2024 14:10:09 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 462EA5mm62128520
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Jul 2024 14:10:08 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AC03C58086;
+	Tue,  2 Jul 2024 14:10:01 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4EFE258051;
+	Tue,  2 Jul 2024 14:09:54 +0000 (GMT)
+Received: from [9.195.35.111] (unknown [9.195.35.111])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  2 Jul 2024 14:09:54 +0000 (GMT)
+Message-ID: <d9625965-6742-4d48-ab8a-60a5a8b6be30@linux.ibm.com>
+Date: Tue, 2 Jul 2024 19:39:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="x34tUiPHU+DtDFfq"
-Content-Disposition: inline
-In-Reply-To: <20240701185132.319995-5-jesse@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 21/21] sched/cputime: Cope with steal time going
+ backwards or negative
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Durrant
+ <paul@xen.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira
+ <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jalliste@amazon.co.uk, sveith@amazon.de,
+        zide.chen@intel.com, Dongli Zhang <dongli.zhang@oracle.com>,
+        Chenyi Qiang <chenyi.qiang@intel.com>, kvm@vger.kernel.org
+References: <20240522001817.619072-1-dwmw2@infradead.org>
+ <20240522001817.619072-22-dwmw2@infradead.org>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20240522001817.619072-22-dwmw2@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 8Kkr1ADykf2YsmO5WnLXu5WZuSB9XAYW
+X-Proofpoint-ORIG-GUID: T3nKIhJIKBS1A199aUafYu2FD1DdVyo8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-02_09,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ malwarescore=0 lowpriorityscore=0 mlxlogscore=999 clxscore=1011
+ impostorscore=0 suspectscore=0 spamscore=0 phishscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407020103
 
 
---x34tUiPHU+DtDFfq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Jul 01, 2024 at 02:51:32PM -0400, Jesse Taube wrote:
+On 5/22/24 5:47 AM, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> In steal_account_process_time(), a delta is calculated between the value
+> returned by paravirt_steal_clock(), and this_rq()->prev_steal_time which
+> is assumed to be the *previous* value returned by paravirt_steal_clock().
+> 
+> However, instead of just assigning the newly-read value directly into
+> ->prev_steal_time for use in the next iteration, ->prev_steal_time is
+> *incremented* by the calculated delta.
 
-> +/**
-> + *  isa_string_contains - check if isa string contains an extension
-> + *
-> + * @isa_str: isa string to search
-> + * @ext_name: the extension to search for
-> + *
-> + *  Returns true if the extension is in the given isa string,
-> + *  false otherwise
-> + */
-> +static bool isa_string_contains(const char *isa_str, const char *ext_name)
-> +{
-> +	size_t i, single_end, len = strlen(ext_name);
-> +	char ext_end;
+
+Does this happen because ULONG_MAX and u64 aren't of same size? If so, 
+would using the u64 variant of MAX would be a simpler fix?
+
+> 
+> This used to be roughly the same, modulo conversion to jiffies and back,
+> until commit 807e5b80687c0 ("sched/cputime: Add steal time support to
+> full dynticks CPU time accounting") started clamping that delta to a
+> maximum of the actual time elapsed. So now, if the value returned by
+> paravirt_steal_clock() jumps by a large amount, instead of a *single*
+> period of reporting 100% steal time, the system will report 100% steal
+> time for as long as it takes to "catch up" with the reported value.
+> Which is up to 584 years.
+> 
+> But there is a benefit to advancing ->prev_steal_time only by the time
+> which was *accounted* as having been stolen. It means that any extra
+> time truncated by the clamping will be accounted in the next sample
+> period rather than lost. Given the stochastic nature of the sampling,
+> that is more accurate overall.
+> 
+> So, continue to advance ->prev_steal_time by the accounted value as
+> long as the delta isn't egregiously large (for which, use maxtime * 2).
+> If the delta is more than that, just set ->prev_steal_time directly to
+> the value returned by paravirt_steal_clock().
+> 
+> Fixes: 807e5b80687c0 ("sched/cputime: Add steal time support to full dynticks CPU time accounting")
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>  kernel/sched/cputime.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+> index af7952f12e6c..3a8a8b38966d 100644
+> --- a/kernel/sched/cputime.c
+> +++ b/kernel/sched/cputime.c
+> @@ -254,13 +254,21 @@ static __always_inline u64 steal_account_process_time(u64 maxtime)
+>  {
+>  #ifdef CONFIG_PARAVIRT
+>  	if (static_key_false(&paravirt_steal_enabled)) {
+> -		u64 steal;
+> -
+> -		steal = paravirt_steal_clock(smp_processor_id());
+> -		steal -= this_rq()->prev_steal_time;
+> -		steal = min(steal, maxtime);
+> +		u64 steal, abs_steal;
 > +
-> +	/* Error must contain rv32/64 */
-> +	if (strlen(isa_str) < 4)
-> +		return false;
-> +
-> +	if (len == 1) {
-> +		single_end = strcspn(isa_str, "sSxXzZ");
-> +		/* Search for single chars between rv32/64 and multi-letter extensions */
-> +		for (i = 4; i < single_end; i++) {
-> +			if (tolower(isa_str[i]) == ext_name[0])
-> +				return true;
+> +		abs_steal = paravirt_steal_clock(smp_processor_id());
+> +		steal = abs_steal - this_rq()->prev_steal_time;
+> +		if (unlikely(steal > maxtime)) {
+> +			/*
+> +			 * If the delta isn't egregious, it can be counted
+> +			 * in the next time period. Only advance by maxtime.
+> +			 */
+> +			if (steal < maxtime * 2)
+> +				abs_steal = this_rq()->prev_steal_time + maxtime;
+> +			steal = maxtime;
 > +		}
-> +		return false;
-> +	}
-> +
-> +	/* Skip to start of multi-letter extensions */
-> +	isa_str = strpbrk(isa_str, "sSxXzZ");
-
-Technically this could break with the old QEMUs that had "su" in the
-single letter part, but at this point I think enough time has passed
-that it does not matter.
-
-> +	while (isa_str) {
-> +		if (strncasecmp(isa_str, ext_name, len) == 0) {
-> +			ext_end = isa_str[len];
-> +			/* Check if matches the whole extension excluding version. */
-> +			if (ext_end == '\0' || ext_end == '_' || isdigit(ext_end))
-
-I'm also not entirely sure about the final clause here. If you have an
-extension "foo" and "foo32b", you'd match on the latter, right? I don't
-think any extensions like that at the minute (foo32b type stuff does,
-but the "root" alphabetical part for a foo32b doesn't), but I also don't
-wanna have to chase down bugs in a parser this early in the future! The
-devicetree binding doesn't actually allow anyone to put version
-information in the isa string, so maybe the thing to do is just drop the
-isdigit() check, given we only support devicetree right now for this early
-probing?
-
-> +				return true;
-> +		}
-> +		/* Multi-letter extensions must be split from other multi-letter
-> +		 * extensions with an "_", the end of a multi-letter extension will
-> +		 * either be the null character or the "_" at the start of the next
-> +		 * multi-letter extension.
-> +		 */
-> +		isa_str = strchr(isa_str, '_');
-> +		if (isa_str)
-> +			isa_str++;
-> +	}
-> +
-> +	return false;
-> +}
-
-Otherwise, I think this is fine now. Thanks for the updates.
-
-Cheers,
-Conor.
-
---x34tUiPHU+DtDFfq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoQJxQAKCRB4tDGHoIJi
-0k6uAP4h26hzrqUn8SQOtea5MoE7pVfXu05eNbYHvp84e0SVewEAtZqV1yZzenjn
-RAoQXWnUc4/VGcwTElosMZrjivWItQY=
-=D3gK
------END PGP SIGNATURE-----
-
---x34tUiPHU+DtDFfq--
+>  		account_steal_time(steal);
+> -		this_rq()->prev_steal_time += steal;
+> +		this_rq()->prev_steal_time = abs_steal;
+>  
+>  		return steal;
+>  	}
