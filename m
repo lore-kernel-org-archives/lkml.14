@@ -1,137 +1,83 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC99914A0A0
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 11:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+Received: from cmccmta2.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 201CB82488;
+	Tue,  2 Jul 2024 11:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719919932; cv=none; b=d0mzrpV+ezLsoqc4B6X5CjvZIY9XxjVf97bbWHvNppf7/U2hf7jf2ff3osnK0z/XLFjiBF2FIJ7WeJ3vpdoRrSbjzZN9sDHOVLteh4Akm3YKwcSkfM2XyB+4fKHIecHEfxcXAktXnHdnYMLd4CeuYKCF4wwO0i2M/9c0sQlPT7g=
+	t=1719920012; cv=none; b=ZkrPJe0vgfgapi/OyuChMg3hoH9h33IMLx6rEfXLaZBQW4GjZYCq4t1jeUyo4DtBIqUy54JliTF3vkTjco2A1ZVceYN1xo7DiTRkjd4/EAxC4Y++ayxuSYTVsUB98nliG95MOXG5tmcqPU1shtTTrV+SPb7DR+sVw5eGGcT8ONY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719919932; c=relaxed/simple;
-	bh=LBVcgvFsJch237tejdKimLdtCtiJYaVTKGi5dUPVMjU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KyQWOICLq7icYEJ642n4t4z7gb3VjIfBGm3nZt22UUheYEIOR9CEqXTQugMuKGCLMGmKmdYxB18+y480a64S03IxQ5llN+LllLYOzRBfeLRmY5VDQ3YwfRaBLeGan+W+Ehpwy73Mzwpk0zNZFxFUGxrrcnKQyUOMsdTLXK2UMow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x0frbTE9; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x0frbTE9"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ee75ffce77so7864531fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 04:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719919929; x=1720524729; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MSXoHkGA1DU1EMI9T5lLVnQCkK0LuT27soBVnNuZYko=;
-        b=x0frbTE9M1Qw6uyZH/eVuqQ1uFaANpkWY1itES9Cgqd5vOmsS1nulJeDe4T6J6SrvK
-         D4xgtr32jQ6jCC9ts13x/DWApa3+Dc3t4YGlxhTBRmnKushwx8GIv8dkL7p/M+7M7Toi
-         m55y7UyKo0qUsC/w92jzn73T4nDkoLV1gramOm5bkMUIwru/l2EYUkRcPpamFw3HfmtT
-         n2Y+ZqYHX5+ZwRAk66dnxFxu2X/5QbxzY3ijattsM3p3CuyUkkHfVAEscAYG/PsEdCkH
-         OjB5SfFC9imnchpyq9WJ/o7UnDK5Dn5ytA4FVyscC3E2NQUQrauSSSR0fLDedEnPClHb
-         65uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719919929; x=1720524729;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MSXoHkGA1DU1EMI9T5lLVnQCkK0LuT27soBVnNuZYko=;
-        b=BdvyjLD7wd13/I2hpWamy+eUMnJPmDIRWifFwEeAX3AmrV+ZOVE0qRcIaJH9lySYQu
-         U5zH+53IY1YnkCtMp0vgZDqIGePtUbmm9f6iEpkT5UOdmjo2+ygwJbwBEMa5JV+sWCCi
-         Y/W3dc6RawPMiPPYXp4BZgL1i7FmW5So/bf0moefC+miCTWJ69zpltIqesBMN5cJbu3y
-         auU1mDgIKM1UH7ASfIVb78R5/LtMGR3ntZqXqvcGZTq29ccjRTbszRZxJQmnRcq698zT
-         3oJW1sUYAK2WHzrA1vnrs59+tBbzrMd/vSEtM1/whuhfgxJSvlnQ+nxf0FhrbxeN4n3R
-         g4JA==
-X-Forwarded-Encrypted: i=1; AJvYcCVR4fnAWVjc/t498+JZh0VblXnJX6Z/OnrY/FDoaFIb7ezNC3OW++V5prEQ33MVMG5DOguAwcjTsWvjk4KBi1y7QYllyslHDeBHgpQF
-X-Gm-Message-State: AOJu0Yz4xDVqB95jOtLdrnzU9vk+bGI5eq6PHdsYTvw0cbk3Xh9Yqrux
-	mMOPqc2D6CMikRMZfTAUaYRBR8ItEDusc4+HTqaYFJZHbpkfPoFDCuneWiiVeDY=
-X-Google-Smtp-Source: AGHT+IFAdzMwRbV78/433AlK5zgIZCy4qqRs0hIvh7bFbT2gSLGjHOaaKZTsy/GGmd70uGng579VEw==
-X-Received: by 2002:a2e:9997:0:b0:2ec:5430:7f7c with SMTP id 38308e7fff4ca-2ee5e707c8fmr59877361fa.53.1719919928001;
-        Tue, 02 Jul 2024 04:32:08 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee51695ec8sm16560371fa.130.2024.07.02.04.32.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 04:32:05 -0700 (PDT)
-Date: Tue, 2 Jul 2024 14:32:04 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
-	Amit Pundir <amit.pundir@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>, dt <devicetree@vger.kernel.org>, 
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sm8550-hdk: add the Wifi node
-Message-ID: <j2pvpoxrw7swutchmpgkzsacbwjcpdickmhprpxzedvcqxqx4o@6gyaqv4a35if>
-References: <20240702091655.278974-1-amit.pundir@linaro.org>
- <8ba07bbf-e8b1-4244-882b-ff2575368b20@kernel.org>
- <he7q4mzj7u7t3c4pndu565m727e6hqpf2srrqgbdltjdffugdl@x3xrwteqpki3>
- <CAMRc=Mepx86sQmPYLq2TkvhxtwUtsQGeYTVUc585oiuvOzLc-A@mail.gmail.com>
+	s=arc-20240116; t=1719920012; c=relaxed/simple;
+	bh=WQiuwDDoZehRrDSjUiALxlVpbCKwODdp3MxFrPhK1P0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=URt0snryBHOk3MTt9C2sDIpLjl+t6aNa15HbEM9r83x4ztxaVwXiAfgbNuOjjUzU9Ah1pqh/zsLqfdZhR77fhozXxaFv0rWb4L/77t6jULF75Y96JSHm/UUEOydlI0WQwEnGlnbo3RFQaSRlacdURHZFyKpfkZptTNq/0LiPRuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee86683e5699d3-259ff;
+	Tue, 02 Jul 2024 19:33:08 +0800 (CST)
+X-RM-TRANSID:2ee86683e5699d3-259ff
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from localhost.localdomain (unknown[223.108.79.99])
+	by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee66683e573678-94de5;
+	Tue, 02 Jul 2024 19:33:08 +0800 (CST)
+X-RM-TRANSID:2ee66683e573678-94de5
+From: Liu Jing <liujing@cmss.chinamobile.com>
+To: matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	shuah@kernel.org
+Cc: netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	liujing@cmss.chinamobile.com
+Subject: [PATCH v2] selftests: mptcp: always close input's FD if opened
+Date: Tue,  2 Jul 2024 12:05:18 +0800
+Message-Id: <20240702040518.11058-1-liujing@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mepx86sQmPYLq2TkvhxtwUtsQGeYTVUc585oiuvOzLc-A@mail.gmail.com>
 
-On Tue, Jul 02, 2024 at 01:13:09PM GMT, Bartosz Golaszewski wrote:
-> On Tue, Jul 2, 2024 at 1:10 PM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
-> >
-> > On Tue, Jul 02, 2024 at 12:42:02PM GMT, Krzysztof Kozlowski wrote:
-> > > On 02/07/2024 11:16, Amit Pundir wrote:
-> > > > Describe the ath12k WLAN on-board the WCN7850 module present on the
-> > > > board.
-> > > >
-> > > > Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
-> > > > ---
-> > > > Kanged verbatim from 490812872449 ("arm64: dts: qcom: sm8550-qrd: add the Wifi node").
-> > > >
-> > > >  arch/arm64/boot/dts/qcom/sm8550-hdk.dts | 97 +++++++++++++++++++++++++
-> > > >  1 file changed, 97 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> > > > index 12d60a0ee095..c453d081a2df 100644
-> > > > --- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> > > > +++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> > > > @@ -279,6 +279,68 @@ platform {
-> > > >                     };
-> > > >             };
-> > > >     };
-> > > > +
-> > > > +   wcn7850-pmu {
-> > > > +           compatible = "qcom,wcn7850-pmu";
-> > > > +
-> > > > +           pinctrl-names = "default";
-> > > > +           pinctrl-0 = <&wlan_en>, <&pmk8550_sleep_clk>;
-> > > > +
-> > > > +           wlan-enable-gpios = <&tlmm 80 GPIO_ACTIVE_HIGH>;
-> > > > +           /*
-> > > > +            * TODO Add bt-enable-gpios once the Bluetooth driver is
-> > > > +            * converted to using the power sequencer.
-> > >
-> > > I don't understand why hardware description should depend on the driver.
-> > > Either you have this GPIO or not. If you have it, what does it matter if
-> > > there is no driver who can play with it?
-> >
-> > Then there is a conflict between BT and PMU, which both will try to
-> > access the gpio (or at least the pinctrl).
-> 
-> Ah, so this slipped through the cracks. Amit merely copied it from existing dts.
-> 
-> Yes, there's a conflict but Krzysztof is right - we should handle this
-> in the driver, not in dts.
-> 
-> However for that we need a patch for the PMU pwrseq driver first. Let
-> me cook something up.
+in main_loop_s function, when the open(cfg_input, O_RDONLY) function is run,
+the last fd is not closed if the "--cfg_repeat > 0" branch is not taken.
 
-Or for the BT driver, which might be more futureproof.
+Fixes: 05be5e273c84("selftests: mptcp: add disconnect tests").
 
+Signed-off-by: Liu Jing <liujing@cmss.chinamobile.com>
+---
+Changes from v1
+- add close function in main_loop_s function
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index d2043ec3bf6d..48b7389ae75b 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -1119,7 +1119,8 @@ int main_loop_s(int listensock)
+ 		if (cfg_input)
+ 			close(fd);
+ 		goto again;
+-	}
++	} else
++		close(fd);
+ 
+ 	return 0;
+ }
 -- 
-With best wishes
-Dmitry
+2.33.0
+
+
+
