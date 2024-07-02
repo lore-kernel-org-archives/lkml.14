@@ -1,110 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFDD1534E1
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 09:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69E6156C6C
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 09:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719914024; cv=none; b=C90nW8w8ZPwjU0OUZZO+XJmg9JXdi9rwTMnfEDUFr24e2X7kWMmXaKjclZDxqRL5tcRQyp41v1dc8osbmOomv2gl7YLDiZRzSHH9vpslCpsdL020GWBFNwxJlQ0v+DRYO4Jbj3gh051UFUl5yM5WF+mfeP9QQ0AZcFNU69/+OPM=
+	t=1719914029; cv=none; b=Zn/Uy3ZLO9mluMIMv8UdMF4bRPlncck/sLLmAyWJwFBoi7fTUolH6G/sCa2eLbC/SeSLlWBbuuvUzVFizxXn4x3tgoHokacVczHXwbAxb4U/Quy7dO4EdO9eU5vMThwqTJFVIRdlFoWy2Bo6rFS5hG2S8sZucBA83qLr9slOsP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719914024; c=relaxed/simple;
-	bh=MGSzto/cq3LB0E4ecOkYu6NC/5l/m8jXuofARCe6LEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C6gDuxJNxLxyTWDXethM3JN9kHcq8bnoC2HTUqFnVvuIn3ctLfqdkqjW7bsuJ4aYIkdnsNpRXdrc7E423IOvST130Ix3zddH12WXhKd17L3ux1B9h4V3RR93YfLqfIyZAk1wvsOO7MmV/qY1jkonkgqRMY60UlMUxvar0dQi7z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dgT+ir4V; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1719914029; c=relaxed/simple;
+	bh=59rFT6bkUS+dB3SilvF7+EgBhQRDj12JRdiB7gC2UEc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p1gS4n85LZuuxoOdSIKR9TB5ovBKVBr/DSz43KHf1ScBVACmqHJzhWrFHCJ2AF/2fz53vrK0OpszdQOeS7vm0hQW9rnSKlrPv9grDSYOl/y2IsL8Mf5U941Zp9JpXGZ07fKJefmwkN4rFeRmlc3/JpBIk+te5Sl1DOAfguLohp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IYqWcMJF; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dgT+ir4V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IYqWcMJF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719914021;
+	s=mimecast20190719; t=1719914026;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7gbuCbmqaQOZCH0Y2TLfMh3O6y0nrrvSpYLO6jxz61g=;
-	b=dgT+ir4VmhCucplpg2cLaCAQR06RL59RzwDj44jquCDNw6PJCgXyOtiq+X2QRPrkEKpVU5
-	dHR5GGuOahy3KXTijEa0OkU2i1+RVC79dsh6xqLz5wtJi7+W84MaOrqtjfbhIspvlV3OBG
-	Z2+tFVREnO076fkEqhZUjjZmY4qhuEE=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-479-8DXOI_qlPeeTK6MaedB-vw-1; Tue, 02 Jul 2024 05:53:40 -0400
-X-MC-Unique: 8DXOI_qlPeeTK6MaedB-vw-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-44645ec39d4so51396031cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 02:53:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719914020; x=1720518820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7gbuCbmqaQOZCH0Y2TLfMh3O6y0nrrvSpYLO6jxz61g=;
-        b=jtdtqPKjz6Bxe1r+t805k+QtNySLdDQkqeur0/Yo6+OwlM71uTUveEaub5Ea3n2huN
-         ensdEqyNe6Bk/8JhwZlRdVnYrX4L9huebfZf3skmdRL3+oiR8J6vF2/b1vAAUjgS8MkM
-         N0zA2tyLZEL/9zrlOBM8zAwnOGqE78RZ2j4wSQeAu2MeVCaM02Wc/LynEOHqYPV1F4aj
-         V++mEfHo+pEYBgUZoBdS6I6/1e8ydNvewwkrNT1bAoBdY2G+I6S6RJwAE55krpMrx/gh
-         H/fbfY7JnhI3+kv9BxhlOSNZ+TXaB20Q2cpHg5GpcoeM3m8xYrsKb15nRtnIYKRcBGSp
-         wx9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWgjxQL+6P+YqD5QhPFSxF43zkArS7YiQMYhSLnx95HVjzr3kHxR9CJ7LJ84P3SDwkNdjxiUt4lgiIKcvXc/Cx4rWbCB+Fv3BhoEmIY
-X-Gm-Message-State: AOJu0YwKD0aaEAbKt7FXQ+Guxnn+ePPtole49+2nBlofZ83ssqzDUDBz
-	15cX0Ll7jT/6doUHeerD9ac/9CXBUiF08pXXF6h8PQiVHCymXd8Ctb4hAChn642OzDRJK8M3dfM
-	hMQdx059e+Gw2ZSWWOzkzeM44YHA8ITK0dTlpXEFRC1hfRi+hvEvQN5zyL8J7Rw==
-X-Received: by 2002:a05:622a:1a9b:b0:43a:ac99:4bb5 with SMTP id d75a77b69052e-44662e9743cmr109715651cf.51.1719914020142;
-        Tue, 02 Jul 2024 02:53:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCcQNmIPoKc5Qmxn92R19gzUW4REeysnZ+oNphjyAhLmalfFvXnVJlo/R+c80Iq9xcgNw8ug==
-X-Received: by 2002:a05:622a:1a9b:b0:43a:ac99:4bb5 with SMTP id d75a77b69052e-44662e9743cmr109715461cf.51.1719914019651;
-        Tue, 02 Jul 2024 02:53:39 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.133.110])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-446514b2484sm39462531cf.81.2024.07.02.02.53.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 02:53:39 -0700 (PDT)
-Date: Tue, 2 Jul 2024 11:53:30 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Luigi Leonardi <luigi.leonardi@outlook.com>
-Cc: devnull+luigi.leonardi.outlook.com@kernel.org, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, marco.pinn95@gmail.com, netdev@vger.kernel.org, 
-	pabeni@redhat.com, stefanha@redhat.com, virtualization@lists.linux.dev
-Subject: Re: [PATCH PATCH net-next v2 2/2] vsock/virtio: avoid enqueue
- packets when work queue is empty
-Message-ID: <e52cj2hjqmx5egtvnkqua3fvgiggfwcmkcsw3zswbey5s4bc4p@qp3togqfwgol>
-References: <20240701-pinna-v2-2-ac396d181f59@outlook.com>
- <AS2P194MB21701DDDFD9714671737D0E39AD32@AS2P194MB2170.EURP194.PROD.OUTLOOK.COM>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6wtzyAnYbN33jH1u/SHNAN7lsd54LbwMy7ec7PPXYwo=;
+	b=IYqWcMJFAU9yI7W9ol81/PlDIGW3Bm9t12dkPg1+ZteBkVpcuH166mS0+sI8Fr86y0xBp6
+	weFlnbMOKpMQK6ttoS/Qhs2LxqrgEMPe/U4jcz0yNUUlqG8cpKX1iQev303IoHE8dLkQ7m
+	KIQs0rHXJPa4XZZV6uImd9inZT+0+4U=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-Lg6_T5oqOcCvrCPwgoO2YQ-1; Tue,
+ 02 Jul 2024 05:53:43 -0400
+X-MC-Unique: Lg6_T5oqOcCvrCPwgoO2YQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1F8EC195608B;
+	Tue,  2 Jul 2024 09:53:42 +0000 (UTC)
+Received: from antares.redhat.com (unknown [10.39.194.50])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9291B19560A3;
+	Tue,  2 Jul 2024 09:53:38 +0000 (UTC)
+From: Adrian Moreno <amorenoz@redhat.com>
+To: netdev@vger.kernel.org
+Cc: aconole@redhat.com,
+	echaudro@redhat.com,
+	horms@kernel.org,
+	i.maximets@ovn.org,
+	dev@openvswitch.org,
+	Adrian Moreno <amorenoz@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH net-next v8 00/10] net: openvswitch: Add sample multicasting.
+Date: Tue,  2 Jul 2024 11:53:17 +0200
+Message-ID: <20240702095336.596506-1-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <AS2P194MB21701DDDFD9714671737D0E39AD32@AS2P194MB2170.EURP194.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Mon, Jul 01, 2024 at 04:49:41PM GMT, Luigi Leonardi wrote:
->Hi all,
->
->> +		/* Inside RCU, can't sleep! */
->> +		ret = mutex_trylock(&vsock->tx_lock);
->> +		if (unlikely(ret == 0))
->> +			goto out_worker;
->
->I just realized that here I don't release the tx_lock and
->that the email subject is "PATCH PATCH".
->I will fix this in the next version.
+** Background **
+Currently, OVS supports several packet sampling mechanisms (sFlow,
+per-bridge IPFIX, per-flow IPFIX). These end up being translated into a
+userspace action that needs to be handled by ovs-vswitchd's handler
+threads only to be forwarded to some third party application that
+will somehow process the sample and provide observability on the
+datapath.
 
-What about adding a function to handle all these steps?
-So we can handle better the error path in this block code.
+A particularly interesting use-case is controller-driven
+per-flow IPFIX sampling where the OpenFlow controller can add metadata
+to samples (via two 32bit integers) and this metadata is then available
+to the sample-collecting system for correlation.
 
-IMHO to simplify the code, you can just return true or false if you 
-queued it. Then if the driver is disappearing and we are still queuing 
-it, it will be the release that will clean up all the queues, so we 
-might not worry about this edge case.
+** Problem **
+The fact that sampled traffic share netlink sockets and handler thread
+time with upcalls, apart from being a performance bottleneck in the
+sample extraction itself, can severely compromise the datapath,
+yielding this solution unfit for highly loaded production systems.
 
-Thanks,
-Stefano
+Users are left with little options other than guessing what sampling
+rate will be OK for their traffic pattern and system load and dealing
+with the lost accuracy.
 
->Any feedback is welcome!
->
->Thanks,
->Luigi
->
+Looking at available infrastructure, an obvious candidated would be
+to use psample. However, it's current state does not help with the
+use-case at stake because sampled packets do not contain user-defined
+metadata.
+
+** Proposal **
+This series is an attempt to fix this situation by extending the
+existing psample infrastructure to carry a variable length
+user-defined cookie.
+
+The main existing user of psample is tc's act_sample. It is also
+extended to forward the action's cookie to psample.
+
+Finally, a new OVS action (OVS_SAMPLE_ATTR_PSAMPLE) is created.
+It accepts a group and an optional cookie and uses psample to
+multicast the packet and the metadata.
+
+--
+v7 -> v8:
+- Rebased
+- Redirect flow insertion to /dev/null to avoid spat in test.
+- Removed inline keyword in stub execute_psample_action function.
+
+v6 -> v7:
+- Rebased
+- Fixed typo in comment.
+
+v5 -> v6:
+- Renamed emit_sample -> psample
+- Addressed unused variable and conditionally compilation of function.
+
+v4 -> v5:
+- Rebased.
+- Removed lefover enum value and wrapped some long lines in selftests.
+
+v3 -> v4:
+- Rebased.
+- Addressed Jakub's comment on private and unused nla attributes.
+
+v2 -> v3:
+- Addressed comments from Simon, Aaron and Ilya.
+- Dropped probability propagation in nested sample actions.
+- Dropped patch v2's 7/9 in favor of a userspace implementation and
+consume skb if emit_sample is the last action, same as we do with
+userspace.
+- Split ovs-dpctl.py features in independent patches.
+
+v1 -> v2:
+- Create a new action ("emit_sample") rather than reuse existing
+  "sample" one.
+- Add probability semantics to psample's sampling rate.
+- Store sampling probability in skb's cb area and use it in emit_sample.
+- Test combining "emit_sample" with "trunc"
+- Drop group_id filtering and tracepoint in psample.
+
+rfc_v2 -> v1:
+- Accommodate Ilya's comments.
+- Split OVS's attribute in two attributes and simplify internal
+handling of psample arguments.
+- Extend psample and tc with a user-defined cookie.
+- Add a tracepoint to psample to facilitate troubleshooting.
+
+rfc_v1 -> rfc_v2:
+- Use psample instead of a new OVS-only multicast group.
+- Extend psample and tc with a user-defined cookie.
+
+Adrian Moreno (10):
+  net: psample: add user cookie
+  net: sched: act_sample: add action cookie to sample
+  net: psample: skip packet copy if no listeners
+  net: psample: allow using rate as probability
+  net: openvswitch: add psample action
+  net: openvswitch: store sampling probability in cb.
+  selftests: openvswitch: add psample action
+  selftests: openvswitch: add userspace parsing
+  selftests: openvswitch: parse trunc action
+  selftests: openvswitch: add psample test
+
+ Documentation/netlink/specs/ovs_flow.yaml     |  17 ++
+ include/net/psample.h                         |   5 +-
+ include/uapi/linux/openvswitch.h              |  31 +-
+ include/uapi/linux/psample.h                  |  11 +-
+ net/openvswitch/Kconfig                       |   1 +
+ net/openvswitch/actions.c                     |  66 ++++-
+ net/openvswitch/datapath.h                    |   3 +
+ net/openvswitch/flow_netlink.c                |  32 ++-
+ net/openvswitch/vport.c                       |   1 +
+ net/psample/psample.c                         |  16 +-
+ net/sched/act_sample.c                        |  12 +
+ .../selftests/net/openvswitch/openvswitch.sh  | 115 +++++++-
+ .../selftests/net/openvswitch/ovs-dpctl.py    | 272 +++++++++++++++++-
+ 13 files changed, 566 insertions(+), 16 deletions(-)
+
+-- 
+2.45.2
 
