@@ -1,127 +1,86 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AAA14E2E8
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 08:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E5C14E2E8;
+	Tue,  2 Jul 2024 08:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719909792; cv=none; b=aEasInKymWkihnmmUzAD4j1bpHMGJSeV/3QoqbGNBfsPwAZZcHo82ukBHfbf2oRbd4Afs7nEI4yF6P0A08PLUmH4ehEQAM0VLEj9dcn/IpTOtfJYL2zN9hOY216BD1yN2KVx0VnrTcGtM3d6TIP8lamXYm2HLK9WT0E/T55sYiI=
+	t=1719909811; cv=none; b=cksStywxcCmz3wtL+K7biHPzcJEYNzm8pRoIWt0wC5gDmPu3Rj/4rCtfzJ3+czGY5DxKU6N+92TqBDeMDsrO9sVGTF52mhk7y9XBR04of5wCQAFf9FvheY+9WNQnODE4jxKZho0G/MbfaYdk2U27get6qBgPfMlN8eD/tHfklNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719909792; c=relaxed/simple;
-	bh=SJHlZBOSA+3+lnPuviGQpdlU9rY3FwzL6Gu9MvuAZco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kuAe9Rq4SJAWBVbpkWnl+IqVIJzkNYizRjDVHL7Qp1IgOPxsnPzWZtSGVDzk378lVGy3sxeOCSjZB/B5RE+lAUnRvwZL6s20koHKHjKX0vKnUYOH3Wi1rbZnz3ex3D65fUC/TJ2HGlV3vl98yRWZBeBnc+GAj2xbYn+YuT3tfeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PXD0xa1r; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719909811; c=relaxed/simple;
+	bh=HXFeBtQ2nJcSAHi9tFupC1wLuKQP+oXjQcCxaB0UapQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WpDIJUW+1j+WYmv0cuSvnuPeBoobGRirGUgohZIKyKYX1VU9IVtd7NWdDyv9GzJ+AgUBhLfkk31+DiqeUufKLuFPWPDhIBykEuhtdpY0tdDZnFoitVumLc1vIuF7RdcDmox9TQcQkOai7RXLYWhl23BoEMdNihBDhd4e7vH8CRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JAYilRh1; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PXD0xa1r"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f9cd92b146so25438465ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 01:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719909790; x=1720514590; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vQ8zplKEvkyqs0AhE9LwFp0KDkZC+KF7mrGUufJk6Ng=;
-        b=PXD0xa1rPRriMku4erUF1QY2TBZ4Ug44pJOPVVj6Nhcl5bh/1LW1m9lDSaKCyKqKP1
-         Bnsub1BlfqJSddD1x1AZ6flScuiXvDwhpF2yElbbc63Qbs9iUAmjxK3z+fWxpGCyDFJa
-         mayt8fyCKIB/OMIy4cP3T227SvHHKm0JQkWV/4DEWjoQvq0r6URwXJDraD76Y5FRnXcM
-         laJvpvVdUOoxhJJ5ZvqWzgMKhZ+F9ZIXFKMssCnUuYnCa5m5W9ZxrkV8cAKkk0UDnmUC
-         z3WEE9d6FEwa3n+jHxHe7KSCl9o10zjGTk9aW+nCZ2ZMvr/H/rN1YPpEH+ACrxL0Dc9A
-         4D/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719909790; x=1720514590;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vQ8zplKEvkyqs0AhE9LwFp0KDkZC+KF7mrGUufJk6Ng=;
-        b=L4mWGWDTG3aYwaFMDdIZvgVZ58nIoyn8LeCOJmiKJQUHjHNqWd+fwpgHMqI2ZAVtSR
-         VCL1BYcj0jgk4cOe1Ez0fJpvSVd4xkhYEHNkxUh65dcIfIydCFFgrf1EvrZHr0fed8sE
-         GZOwRGkMlBUyNdy9Lc8uDqfmTA1BYx86CS6gVef3HHyWh0OaoS04BTBjYm9j1DGLbEXA
-         7r+D7fEQpCgTOO2GibV/A+Bt7kbZTYSUCk71YiyPeBy8qBfe37pYQr7waovwFw8BKMAi
-         bTy2ReMC8kdsFo1w2htAtCtnmDw+IjqxLrG9ng56EMdczcFkwDPFihe++bYiPZ1npb3U
-         o5SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBXYpIoC90YzOcTNymFdn2ONONK6scF7jrAIjNfFLM7XOL0WMewOMo2k7UGpxdmDPbGScqHKpUkmvAkc1saBgsc8niY+fTu4TJEdJG
-X-Gm-Message-State: AOJu0YyLb1CryM4QqJ3FwXYesw9G0NwEVjOE4CTn2X5hdAgztLAC9suv
-	tsRBxT2LyJFph3WOZqBzcfgbZuMp5pMMdme/IK77yYfYXCv0TMOqRBmz3rSHIG9ZBpUzfiiogM+
-	g
-X-Google-Smtp-Source: AGHT+IEmIv2vGdHXLm2ZvbXST6X7Il1ZBsG0xUxf3z1Ipxyow451EWanRYVGWaC0ZCem1Pikt0Jlng==
-X-Received: by 2002:a17:902:d488:b0:1fa:a68:47a8 with SMTP id d9443c01a7336-1fadbca042dmr72974405ad.28.1719909789985;
-        Tue, 02 Jul 2024 01:43:09 -0700 (PDT)
-Received: from localhost ([122.172.82.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac156957fsm78805885ad.228.2024.07.02.01.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 01:43:09 -0700 (PDT)
-Date: Tue, 2 Jul 2024 14:13:07 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, kernel@collabora.com,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] cpufreq: mediatek: Use dev_err_probe in every error path
- in probe
-Message-ID: <20240702084307.wwvl5dchxa4frif3@vireshk-i7>
-References: <20240628-mtk-cpufreq-dvfs-fail-init-err-v1-1-19c55db23011@collabora.com>
- <20240702055703.obendyy2ykbbutrz@vireshk-i7>
- <aa6e93bd-aba2-4e4d-bce9-04e818ac25ed@collabora.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JAYilRh1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DA00B240003;
+	Tue,  2 Jul 2024 08:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719909807;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ESiFCwdIijiYKdTgoUxnWvhTex6WtiiBxTyR4etpb9Q=;
+	b=JAYilRh1vX1i2kUkXnuWb3U40CeaCGpuwSK4xKmSiLuF2R7Zk1QhoGWQ/KJbsVBumSIMKH
+	FcutiaGlCysRV3/zD8UB6iPNnRHBaXoToEj2FvVNraRojwyMGPbC1BD09mqr4OOhQF6AXf
+	lSj5KEcNA1PxZNVK7d+fQ5XiXP0hTBjb0tnE06NyQfFkkYAADrR1AXiuy1pD6Oh3aWDcXp
+	aUwj3DSK8sG+9P/WZlP/dncXOqimhqd+KJT/SCzLL8w1OistzhHjAmVgt2hwawpgtsz674
+	fXQfJJ2LFhRTH7huSB+36Co3ebvF2oGIwnowBIQzjX7ma+5sTdfULKhSBPo+HA==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH net-next 1/6] net: phy: dp83869: Disable autonegotiation in
+ RGMII/1000Base-X mode
+Date: Tue, 02 Jul 2024 10:44:12 +0200
+Message-ID: <3818335.kQq0lBPeGt@fw-rgant>
+In-Reply-To: <a244ce05-28a1-47b7-9093-12899f2c447f@lunn.ch>
+References:
+ <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
+ <20240701-b4-dp83869-sfp-v1-1-a71d6d0ad5f8@bootlin.com>
+ <a244ce05-28a1-47b7-9093-12899f2c447f@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aa6e93bd-aba2-4e4d-bce9-04e818ac25ed@collabora.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On 02-07-24, 10:26, AngeloGioacchino Del Regno wrote:
-> Il 02/07/24 07:57, Viresh Kumar ha scritto:
-> > On 28-06-24, 15:48, Nícolas F. R. A. Prado wrote:
-> > > diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-> > > @@ -629,11 +630,9 @@ static int mtk_cpufreq_probe(struct platform_device *pdev)
-> > >   	int cpu, ret;
-> > >   	data = dev_get_platdata(&pdev->dev);
-> > > -	if (!data) {
-> > > -		dev_err(&pdev->dev,
-> > > -			"failed to get mtk cpufreq platform data\n");
-> > > -		return -ENODEV;
-> > > -	}
-> > > +	if (!data)
-> > > +		return dev_err_probe(&pdev->dev, -ENODEV,
+On lundi 1 juillet 2024 18:40:24 UTC+2 Andrew Lunn wrote:
+> On Mon, Jul 01, 2024 at 10:51:03AM +0200, Romain Gantois wrote:
+> > Currently, the DP83869 driver only disables autonegotiation in fiber
+> > configurations for 100Base-FX mode. However, the DP83869 PHY does not
+> > support autonegotiation in any of its fiber modes.
 > > 
-> > What's the point of calling dev_err_probe() when we know for sure that
-> > the error isn't EPROBE_DEFER ?
-> > 
+> > Disable autonegotiation for all fiber modes.
 > 
-> Logging consistency, that's all; the alternative would be to rewrite the dev_err()
-> messages to be consistent with what dev_err_probe() says, so that'd be
-> dev_err("error %pe: (message)");
+> I'm assuming to does work in copper mode?
 
-That would be better I guess. There is no point adding inefficient
-code.
+I'm unable to test any of the copper modes for the DP83869HM but
+according to the datasheet, autonegotiation should work in those.
 
-> > > +				     "failed to get mtk cpufreq platform data\n");
-> > >   	for_each_possible_cpu(cpu) {
-> > >   		info = mtk_cpu_dvfs_info_lookup(cpu);
-> > > @@ -643,24 +642,21 @@ static int mtk_cpufreq_probe(struct platform_device *pdev)
-> > >   		info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-> > >   		if (!info) {
-> > >   			ret = -ENOMEM;
-> > > +			dev_err_probe(&pdev->dev, ret, "Failed to allocate dvfs_info\n");
-> > 
-> 
-> By the way, forgot to point that out in my former review: to make it shorter,
-> instead of "ret = -ENOMEM; dev_err_probe()" you can write it as...
-> 
-> ret = dev_err_probe(&pdev->dev, -ENOMEM, ".... message");
+To be clear, "fiber mode" in the DP83869 linguo also includes
+1000Base-X which can be used with a direct-attach copper cable. From
+what I've seen, autonegotiation is not supported in this configuration.
 
-`ret` will be  be used I guess with the `goto` statement to return
-error and so the change was like this.
+Thanks,
 
 -- 
-viresh
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+
+
