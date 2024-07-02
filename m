@@ -1,251 +1,109 @@
-Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939D284D39;
-	Tue,  2 Jul 2024 08:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7916F14F111
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 08:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719910333; cv=none; b=qVJUYN8h2Bl+GFvyKAZTCkrC9ceioK/DrONnHzbGgqOsZiOFhk+ekeg30l9uijd8MYofyeEEWYWqo8C5fxkvHsoBnb2hx0uDOK25YhshW2Kd/MFYL+BYlX9JP7Bi+PBvy5v8iahIqiRJfNsBgCl79kNsxvrX77ofcvHddYZsn78=
+	t=1719910380; cv=none; b=A/Uc9mVAyga1+ysLEl15WPR0+I2GwljLO/9c12Ykalxbt6it3x2GZieLQJCm9ue7ZWStTCKYfFNzJFBvdDCveKxRv8lVXN9wtgIcgJol86lw/5C7C+CkMlZ9w4aYphvvBCuTMI8lq4ebUM35w9Zgkh7iW9PgQxvdHPzEyOszuqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719910333; c=relaxed/simple;
-	bh=BH2CWTwSOhfW5vCvhd8tT4OjEdGCVOIRmEO7y0iID3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GlCkRYlYgnCI5xkf49p69ua7OtT8K4aYECMvPqNpIdvpul6N8uih/lyeXSJ6k0wfk5F+T7ZBeMrxeRqKMrz9G689ffI6NK8kB3zM9xMyzc0cbzjKF6WaeRIFWZ5QNFsGBF3jzGjj1EG0Hk1xY46/C/jeeNnxmVCNFsJ5l3Y/Voc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=nobj0K6o; arc=none smtp.client-ip=217.92.40.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+	s=arc-20240116; t=1719910380; c=relaxed/simple;
+	bh=+JvUDoeNSyvi+ZJSJiTWzNfp9Z1R07b8HKUoZPogfYM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GKHTYk0LX4FZS8NVyPztkuu4cAW3pVWOLdHhN2QNw6CG6511F7DLm7/hN4AXI7RBI/xLzwaJ3Ld1dHGEGFyosOvJ2ZINZTnSXzQWex8wIHldxz9B5ZpyhS5ncXQKHMlwV2fNxL1JsHyg7cmNA3l5Vt7jIKqy3Ad/VNSrTx5gfF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=IeFIP8cB; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="nobj0K6o"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 66517148180A;
-	Tue,  2 Jul 2024 10:51:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1719910321; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=rnPvl+gvjVB+JnMYogxg+hXwl+8kf0wMBfY9XNxoeZw=;
-	b=nobj0K6o+gqjwCuo1I6LFAxMjoT7Yj9H6oOshtkkVqyxorSDr/JFof/fC4CknN0aB7gp9K
-	Ag1ozYNlnfOJBPyrdOyI8oMJ8yofGmK1IfR1zROOb5Yu9+/ye36Ebrd7aMuyvRJ3LJ+WHc
-	QRrcpv88RaLw5zYOwhvYyHd8sCnrvOQADomYhtwtidMtc4LwEmEZldGGnTDxiL0ZKP//9j
-	NWASOi6HFPwJDauPGR9hKfdQIpjCL0TYVVMvikkNrzRLVoxuseErIvc4HfpJBM6VFN2L9Y
-	nQJtGa9gE2gRQbhAsBdnbEZtssS6Tvx48i6jgFcMo3giUhFFxzYUqqgCH88l/g==
-Date: Tue, 2 Jul 2024 10:51:53 +0200
-From: Alexander Dahl <ada@thorsis.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: microchip: at91: align LED node name with
- bindings
-Message-ID: <20240702-expel-unflawed-b174e82e27c7@thorsis.com>
-Mail-Followup-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="IeFIP8cB"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-36703b0f914so2414097f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 01:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719910377; x=1720515177; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nBblSarVHgMFr1VSeSy1dk9YozNFS90bm9c7S+clMb8=;
+        b=IeFIP8cBsnOevcNJEwqi49zqXpZTdPq62triCBSkkPXc8pSSsL2x3fhEvIc5ObKx8/
+         G3jdw0HdBskdSDdkpppik0MnP9dZ4xqXFuT/yvi5VK7rziUrWkqUVdLzwvxBO0pTtbpP
+         fdIOTbyLRdDKNZyrbqY+obyYwKDGq1eQfGAAUdYGhCW7+OsHxCL0R2KpoQRwHSMebvH7
+         GS2n0+eFyUXzSEhSFpTmEuUEtKSuGi3o0WgoFeqWCs7EywLhaARMPDG1oDlo2YE1nVjl
+         +6LttyB6qM61Ms4T/EbwynHBqCHU9eRoYnnV7BNSuzYVC5nBZ/xG1zzEzZ3KFmd/kY8l
+         m4zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719910377; x=1720515177;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nBblSarVHgMFr1VSeSy1dk9YozNFS90bm9c7S+clMb8=;
+        b=MBujkac6bUJdPhQyQnb7vaOnmeA7H1ULkWzLe+oHefj+GJcempWC0aF0ubS3n3vK+p
+         41Qj4x9QdtbMFZRUrTT6oZ/gIFXmS1sW7HRk9DvU07F8fyVdT86VpzBOuZnzCmLfG/fA
+         7m4viSoQ/ZGg6bbcgsQ4ByaPawSZb1tKOiKGB9Nko99pjlfaiwEsh/bZqWoh4aKoI4WO
+         sTnZfcyEcz5Tytac/1fF7lLAt79fUdaFJRgLUWxeXxMAE62yKz1sbNkntTjVh/qmgzz5
+         w+MPwnhA19zuW6S/sR4ODS37wEwvmcGZqtZOJATCzFFb7Y/HjneS2kQQEMQzryIaxhdn
+         RXOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrDIvxPIdJ3YqlB9S3EhaXie+brYYhEhO22HXA0zhTGxdQDYa8Y+NU+ZcKw8hZvfFUL1TXq5H4KYSeSdD3GgaNg9zm2ecgYj/FZbob
+X-Gm-Message-State: AOJu0YwmuknokNxvYlEeLHVrlSZdiWwtP4pmVPTuuDPxemF20F9YBjNG
+	hxzHeRcBSqmAWdE9MXetX13ZSFKvX2gbpgpUTJJFf6PPaBgdj1iGbu8wQ8siIlg=
+X-Google-Smtp-Source: AGHT+IFhEaBGka3Ti+hlZOEC6CfbyAu8S9sImqvjdSOCqz/0wRb9B50fIT/vKC7eV3aR2yOVb8VmLg==
+X-Received: by 2002:a05:6000:2a7:b0:361:94d9:1e9f with SMTP id ffacd0b85a97d-36760a62e0dmr10948760f8f.7.1719910376818;
+        Tue, 02 Jul 2024 01:52:56 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b09a828sm190852585e9.37.2024.07.02.01.52.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 01:52:56 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-References: <20240701164952.577277-1-krzysztof.kozlowski@linaro.org>
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Ved Shanbhogue <ved@rivosinc.com>,
+	Matt Evans <mev@rivosinc.com>,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v3 2/4] dt-bindings: riscv: Add Svvptc ISA extension description
+Date: Tue,  2 Jul 2024 10:50:32 +0200
+Message-Id: <20240702085034.48395-3-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240702085034.48395-1-alexghiti@rivosinc.com>
+References: <20240702085034.48395-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701164952.577277-1-krzysztof.kozlowski@linaro.org>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
-Hello Krzysztof,
+Add description for the Svvptc ISA extension which was ratified recently.
 
-Am Mon, Jul 01, 2024 at 06:49:52PM +0200 schrieb Krzysztof Kozlowski:
-> Bindings expect the LED node names to follow certain pattern, see
-> dtbs_check warnings:
-> 
->   at91sam9g15ek.dtb: leds: 'pb18', 'pd21' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../boot/dts/microchip/at91sam9g20ek_2mmc.dts |  4 ++--
->  .../at91sam9g25-gardena-smart-gateway.dts     | 24 +++++++++----------
->  arch/arm/boot/dts/microchip/at91sam9n12ek.dts |  6 ++---
->  arch/arm/boot/dts/microchip/at91sam9x5cm.dtsi |  4 ++--
->  4 files changed, 19 insertions(+), 19 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/microchip/at91sam9g20ek_2mmc.dts b/arch/arm/boot/dts/microchip/at91sam9g20ek_2mmc.dts
-> index 172af6ff4b18..3e5eab57d1a5 100644
-> --- a/arch/arm/boot/dts/microchip/at91sam9g20ek_2mmc.dts
-> +++ b/arch/arm/boot/dts/microchip/at91sam9g20ek_2mmc.dts
-> @@ -40,13 +40,13 @@ pinctrl_board_mmc0_slot0: mmc0_slot0-board {
->  	leds {
->  		compatible = "gpio-leds";
->  
-> -		ds1 {
-> +		led-ds1 {
->  			label = "ds1";
->  			gpios = <&pioB 9 GPIO_ACTIVE_HIGH>;
->  			linux,default-trigger = "heartbeat";
->  		};
->  
-> -		ds5 {
-> +		led-ds5 {
->  			label = "ds5";
->  			gpios = <&pioB 8 GPIO_ACTIVE_LOW>;
->  		};
-> diff --git a/arch/arm/boot/dts/microchip/at91sam9g25-gardena-smart-gateway.dts b/arch/arm/boot/dts/microchip/at91sam9g25-gardena-smart-gateway.dts
-> index af70eb8a3a02..e0c1e8df81b1 100644
-> --- a/arch/arm/boot/dts/microchip/at91sam9g25-gardena-smart-gateway.dts
-> +++ b/arch/arm/boot/dts/microchip/at91sam9g25-gardena-smart-gateway.dts
-> @@ -37,71 +37,71 @@ button {
->  	leds {
->  		compatible = "gpio-leds";
->  
-> -		power_blue {
-> +		led-power-blue {
->  			label = "smartgw:power:blue";
->  			gpios = <&pioC 21 GPIO_ACTIVE_HIGH>;
->  			default-state = "off";
->  		};
->  
-> -		power_green {
-> +		led-power-green {
->  			label = "smartgw:power:green";
->  			gpios = <&pioC 20 GPIO_ACTIVE_HIGH>;
->  			default-state = "on";
->  		};
->  
-> -		power_red {
-> +		led-power-red {
->  			label = "smartgw:power:red";
->  			gpios = <&pioC 19 GPIO_ACTIVE_HIGH>;
->  			default-state = "off";
->  		};
->  
-> -		radio_blue {
-> +		led-radio-blue {
->  			label = "smartgw:radio:blue";
->  			gpios = <&pioC 18 GPIO_ACTIVE_HIGH>;
->  			default-state = "off";
->  		};
->  
-> -		radio_green {
-> +		led-radio-green {
->  			label = "smartgw:radio:green";
->  			gpios = <&pioC 17 GPIO_ACTIVE_HIGH>;
->  			default-state = "off";
->  		};
->  
-> -		radio_red {
-> +		led-radio-red {
->  			label = "smartgw:radio:red";
->  			gpios = <&pioC 16 GPIO_ACTIVE_HIGH>;
->  			default-state = "off";
->  		};
->  
-> -		internet_blue {
-> +		led-internet-blue {
->  			label = "smartgw:internet:blue";
->  			gpios = <&pioC 15 GPIO_ACTIVE_HIGH>;
->  			default-state = "off";
->  		};
->  
-> -		internet_green {
-> +		led-internet-green {
->  			label = "smartgw:internet:green";
->  			gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
->  			default-state = "off";
->  		};
->  
-> -		internet_red {
-> +		led-internet-red {
->  			label = "smartgw:internet:red";
->  			gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
->  			default-state = "off";
->  		};
->  
-> -		heartbeat {
-> +		led-heartbeat {
->  			label = "smartgw:heartbeat";
->  			gpios = <&pioB 8 GPIO_ACTIVE_HIGH>;
->  			linux,default-trigger = "heartbeat";
->  		};
->  
-> -		pb18 {
-> +		led-pb18 {
->  			status = "disabled";
->  		};
->  
-> -		pd21 {
-> +		led-pd21 {
->  			status = "disabled";
->  		};
->  	};
-> diff --git a/arch/arm/boot/dts/microchip/at91sam9n12ek.dts b/arch/arm/boot/dts/microchip/at91sam9n12ek.dts
-> index 4c644d4c6be7..643c3b2ab97e 100644
-> --- a/arch/arm/boot/dts/microchip/at91sam9n12ek.dts
-> +++ b/arch/arm/boot/dts/microchip/at91sam9n12ek.dts
-> @@ -207,19 +207,19 @@ bl_reg: backlight_regulator {
->  	leds {
->  		compatible = "gpio-leds";
->  
-> -		d8 {
-> +		led-d8 {
->  			label = "d8";
->  			gpios = <&pioB 4 GPIO_ACTIVE_LOW>;
->  			linux,default-trigger = "mmc0";
->  		};
->  
-> -		d9 {
-> +		led-d9 {
->  			label = "d9";
->  			gpios = <&pioB 5 GPIO_ACTIVE_LOW>;
->  			linux,default-trigger = "nand-disk";
->  		};
->  
-> -		d10 {
-> +		led-d10 {
->  			label = "d10";
->  			gpios = <&pioB 6 GPIO_ACTIVE_HIGH>;
->  			linux,default-trigger = "heartbeat";
-> diff --git a/arch/arm/boot/dts/microchip/at91sam9x5cm.dtsi b/arch/arm/boot/dts/microchip/at91sam9x5cm.dtsi
-> index cdd37f67280b..fb3c19bdfcb6 100644
-> --- a/arch/arm/boot/dts/microchip/at91sam9x5cm.dtsi
-> +++ b/arch/arm/boot/dts/microchip/at91sam9x5cm.dtsi
-> @@ -120,13 +120,13 @@ rootfs@800000 {
->  	leds {
->  		compatible = "gpio-leds";
->  
-> -		pb18 {
-> +		led-pb18 {
->  			label = "pb18";
->  			gpios = <&pioB 18 GPIO_ACTIVE_LOW>;
->  			linux,default-trigger = "heartbeat";
->  		};
->  
-> -		pd21 {
-> +		led-pd21 {
->  			label = "pd21";
->  			gpios = <&pioD 21 GPIO_ACTIVE_HIGH>;
->  		};
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ Documentation/devicetree/bindings/riscv/extensions.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-In this case these are all gpio-leds and the pattern is in the
-leds-gpio gpio binding.  I'm wondering however why you chose the very
-generic 'led' match over the more strict one requiring the names to
-look like 'led-0', 'led-1' an so forth?  The generic match would also
-match names like 'knowledge' or 'controlled'.  But besides that:
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index 468c646247aa..b52375bea512 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -171,6 +171,13 @@ properties:
+             memory types as ratified in the 20191213 version of the privileged
+             ISA specification.
+ 
++        - const: svvptc
++          description:
++            The standard Svvptc supervisor-level extension for
++            address-translation cache behaviour with respect to invalid entries
++            as ratified at commit 4a69197e5617 ("Update to ratified state") of
++            riscv-svvptc.
++
+         - const: zacas
+           description: |
+             The Zacas extension for Atomic Compare-and-Swap (CAS) instructions
+-- 
+2.39.2
 
-Reviewed-by: Alexander Dahl <ada@thorsis.com>
-
-Greets
-Alex
-
-
-> -- 
-> 2.43.0
-> 
-> 
