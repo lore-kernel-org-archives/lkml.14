@@ -1,73 +1,79 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDBD1B11ED
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2101B11F4
 	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719957544; cv=none; b=MNL+d6ZV9ARS4FB5+Iobpdab4518vSdYxg1HwqgbdUUKae2LqxLrWJE1pmJLHrUktCzdybmHVHm2MoATYYAAdYcvpktZW2fUZ+3Q75Z3yFWIRuDquVJIfpJX2sCf3GVMRwlUX8Z7bRtg5TCPgquWacjl36FmviGILH7wVtX5knM=
+	t=1719957544; cv=none; b=ocqgJN2fIZeAQxAoE38dnGvscbRBPUdAYxRUl+jtlvgbDxiUEG2ENIexFXs0BfKspvVNdMbmhpjudb7WH0y6V8PUCtDbnD5DTn4ezB9YRx66qCIQt/6ppRjA/ya+rUJJrAZG0cVipm0wdhQtsuZt6UyBjXuTvRtPPfriiTZEk/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719957544; c=relaxed/simple;
-	bh=hRx/V3N1tOC03q/ejC+f/u6Teuj3+AZz0SNmbH3aP+Q=;
+	bh=HsVJ+8bSyTwxbd5PVHZFf8uV50bzhcBL2G646/K/2NQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aaSpNSzIvlMwSMMh564wsxOTVw5hbNnciw83SOE/Vn+/oRbEf7DpAqntyMssRAOhdlwmuhFMkR5VfTMTFwmAHigmiUxvLWbwH6+/coJ03nFLNTPbnkOU1+qe7+MS9ZRhTz3C8Q85A2aREYDOqc//KHr8dM0J3Rt4U/rUpi8mmIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=P61IpjSp; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 MIME-Version; b=JgHAdcQnmzz6D/yaTyGglNMxZRK6YzdVxPi6wXJxsyL0i8PE5X/hEt/K/KqYYW56IScRRgOA8ZFtE+D2imS+EzKqV752pWPim9TxEItmInX+vSgCJG5yvWSUrhevRyNKaMJ6KMfUSWTD0jxOxGUz8rPncaf0/NQ2inlzihFlDgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJpCWqN0; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P61IpjSp"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fab03d2eecso36554565ad.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJpCWqN0"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7f3d3f1294dso169391539f.2
         for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:59:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1719957542; x=1720562342; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719957542; x=1720562342; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MS62etFpIYNGMrGCK000i0PIRfNlj81mNm/Gs9qD5BY=;
-        b=P61IpjSpNrFO4Mhe/vSPn+HYxWf9wzZff49NXuEIUmGW8tYmt6z7T1ohloU+Dpcz2J
-         P0trfgxN/r38uwvtDsJiLTdvgssqJahaJV3tCi9neHYRY3gyTPhve2SsCXivLBnJJRSu
-         HnVKMUrzsSdDkh5ORdc/9HLXWyaOOXjY2wa1k=
+        bh=Qc7kDWbr1ZOLQ8+EMlKcMIOk0gPIa550UiXaV/Fsdqw=;
+        b=IJpCWqN0O5YY+ciAbjwuYsqQlyT6Fc9eCUCSbtWegSSQYY++6nXFu0HotUrm+Gyb1R
+         gP73l4DcyUUb9A0lTJ86fCXyhEiwz5mq+iAUl17i+QWNRaVRtsYyeIkCrgF3LTd788yk
+         p3RNVawBu8tdy3VTHcMN2mcWfQERpqqmZ+8Be+er5p1j79N2hDov2YxBICAQb1HWkSy3
+         9jrivxWfJ3x5iFDXIfK1yux43edpI8FeojeGeAc5/LC23nTNcvoIt+SX9LLxATrwYrWd
+         X2EUISyQLn+Eoe6AfKoRtDEnBUru//Hlkl13yvYQuVZSIvJvfwmS7sQrH6m3iEhK11s7
+         DVIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1719957542; x=1720562342;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MS62etFpIYNGMrGCK000i0PIRfNlj81mNm/Gs9qD5BY=;
-        b=R8eu7qPCsAODwAdYIj+4qnO0TW4z86omNfVuU5ITUSBSuZPMAXfqryB+JAgn/a730N
-         MqYg20D76d2e2UpPq9hqfgcyJ3voImdkOfU7z0/izPR8xfR2G3e0rb+PiO6Ky3TNfSIB
-         jOAC07Nb+VULpE5RNdpWr0VyGbIWTfIsT8sMjUoHV150RggpluT003J3TSqbML/F01Nr
-         NHrWqXVebysQIR7ijiAnj0Q9fkxbnpsK08XmyUQ5X6nvaieXdZzXG7tepnFJWTDLFnRP
-         BkVmPNzwEtfNVRqgV57HyQh1iKRMT3XPfDhN8t+5fgd1L/aZI6/PyPWEw+059DWJuz5c
-         r00w==
-X-Forwarded-Encrypted: i=1; AJvYcCXV77YjgicJekpxFSMNibACLzApQhsh+bkWKAExItexexTfeHapYa7hkmsyD7OGRIvg2bznFOkuDlEAhl1RIhQgb6nXZKwUfVl4ggSh
-X-Gm-Message-State: AOJu0YxD/uhLFAdlKG1sPDfcDrQMOsEd6zc7W5B9AqrRTW59I+2Uf9pG
-	d+3FrgoYZMlMaU4LHDo4dU+eT8RrlQIsXIeniTZVfwLjGk43/bFbOmj+6ICcUIGlyVuGum5x1Md
-	yVQ==
-X-Google-Smtp-Source: AGHT+IGhBHTd3UcyBZmHUjgYyT7fXHIhXEIAs1XDCCOIAV7kEK6DLojlLX7aVDeHN+pn1Pb84Pk4hA==
-X-Received: by 2002:a17:903:11c4:b0:1fa:ff88:8914 with SMTP id d9443c01a7336-1faff8890ccmr18873025ad.35.1719957542207;
+        bh=Qc7kDWbr1ZOLQ8+EMlKcMIOk0gPIa550UiXaV/Fsdqw=;
+        b=OUT186lm1i+fVprC4v9eBNWSZ6fKuG6n+ZP9VQQkOnJM931/7k9Tw3Qf8m39hzIwXJ
+         rK1k1bsAO4sjL00l7U6Wv3vCkzNinyyAbwhj3f5rUPIYFySqD+WzvUp5yunrHTKdmTqb
+         R8NE7zladuP016qwK7bvaGeeN0A7sdpr8aWCpF++LBta45lmPaOvtRgsQ2h0Ptr5cslq
+         /pq/PS1RbeBPtx2GDOCUS52aZMhZ/zG8xJA000d/rk/1EWwDxgdrm1sGBFB4kWhzd7bm
+         rq//HstJZmJ3pgyt8nN4k/3sJT61OCa7nv40gwXxKpmAAEIShR9nksQclpyuCbMQDfEl
+         pBng==
+X-Gm-Message-State: AOJu0YyxzgISm4KSrW5i1VS5BCXq8aqluIRZBZFpe+eRhU4FwZhUvMMR
+	FZ6oCUcMh1vuQseSpHH3kRd4Qivqk3zkC2US0XFPxqcPrBzl6FkW
+X-Google-Smtp-Source: AGHT+IEDyc9E1PwwY+Pk3LT0DP2fwrHuyrUsNmUtygBhUpQrRyXS1AQocEBRzUzkRTfsja1fYVr45A==
+X-Received: by 2002:a05:6602:54:b0:7f3:d795:d9f9 with SMTP id ca18e2360f4ac-7f62ee82b18mr1067791539f.18.1719957542151;
         Tue, 02 Jul 2024 14:59:02 -0700 (PDT)
-Received: from localhost ([2620:15c:9d:2:5fa9:4b10:46fe:4740])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-1fac10d1498sm89565205ad.8.2024.07.02.14.59.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
+        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-7f61d207fcesm279944739f.51.2024.07.02.14.59.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 02 Jul 2024 14:59:01 -0700 (PDT)
-From: Brian Norris <briannorris@chromium.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v2 1/3] tools build: Correct libsubcmd fixdep dependencies
-Date: Tue,  2 Jul 2024 14:58:37 -0700
-Message-ID: <20240702215854.408532-2-briannorris@chromium.org>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-In-Reply-To: <20240702215854.408532-1-briannorris@chromium.org>
-References: <20240702215854.408532-1-briannorris@chromium.org>
+From: Jim Cromie <jim.cromie@gmail.com>
+To: daniel.vetter@ffwll.ch,
+	tvrtko.ursulin@linux.intel.com,
+	jani.nikula@intel.com,
+	ville.syrjala@linux.intel.com,
+	jbaron@akamai.com,
+	gregkh@linuxfoundation.org,
+	ukaszb@chromium.org
+Cc: linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org,
+	intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux@rasmusvillemoes.dk,
+	joe@perches.com,
+	mcgrof@kernel.org,
+	Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH v9 36/52] drm-dyndbg: DRM_CLASSMAP_USE in nouveau
+Date: Tue,  2 Jul 2024 15:57:31 -0600
+Message-ID: <20240702215804.2201271-42-jim.cromie@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240702215804.2201271-1-jim.cromie@gmail.com>
+References: <20240702215804.2201271-1-jim.cromie@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,52 +82,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-All built targets need fixdep to be built first, before handling object
-dependencies [1]. We're missing one such dependency before the libsubcmd
-target.
+Following the dyndbg-api-fix, replace DECLARE_DYNDBG_CLASSMAP with
+DRM_CLASSMAP_USE.  This refs the defined & exported classmap, rather
+than re-declaring it redundantly, and error-prone-ly.
 
-This resolves .cmd file generation issues such that the following
-sequence produces many fewer results:
+This resolves the appearance of "class:_UNKNOWN_" in the control file
+for the driver's drm_dbg()s.
 
-  $ git clean -xfd tools/
-  $ make tools/objtool
-  $ grep "cannot find fixdep" $(find tools/objtool -name '*.cmd')
+Fixes: f158936b60a7 ("drm: POC drm on dyndbg - use in core, 2 helpers, 3 drivers.")
 
-In particular, only a buggy tools/objtool/libsubcmd/.fixdep.o.cmd
-remains, due to circular dependencies of fixdep on itself.
-
-Such incomplete .cmd files don't usually cause a direct problem, since
-they're designed to fail "open", but they can cause some subtle problems
-that would otherwise be handled by proper fixdep'd dependency files.
-
-[1] This problem is better described in commit abb26210a395 ("perf
-tools: Force fixdep compilation at the start of the build"). I don't
-apply its solution here, because additional recursive make can be a bit
-of overkill.
-
-Link: https://lore.kernel.org/all/ZGVi9HbI43R5trN8@bhelgaas/
-Link: https://lore.kernel.org/all/Zk-C5Eg84yt6_nml@google.com/
-Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
+ drivers/gpu/drm/nouveau/nouveau_drm.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-(no changes since v1)
-
- tools/lib/subcmd/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index b87213263a5e..59b09f280e49 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -76,7 +76,7 @@ include $(srctree)/tools/build/Makefile.include
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index a947e1d5f309..27995c0c9b31 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -72,17 +72,7 @@
+ #include "nouveau_uvmm.h"
+ #include "nouveau_sched.h"
  
- all: fixdep $(LIBFILE)
+-DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
+-			"DRM_UT_CORE",
+-			"DRM_UT_DRIVER",
+-			"DRM_UT_KMS",
+-			"DRM_UT_PRIME",
+-			"DRM_UT_ATOMIC",
+-			"DRM_UT_VBL",
+-			"DRM_UT_STATE",
+-			"DRM_UT_LEASE",
+-			"DRM_UT_DP",
+-			"DRM_UT_DRMRES");
++DRM_CLASSMAP_USE(drm_debug_classes);
  
--$(SUBCMD_IN): FORCE
-+$(SUBCMD_IN): fixdep FORCE
- 	@$(MAKE) $(build)=libsubcmd
- 
- $(LIBFILE): $(SUBCMD_IN)
+ MODULE_PARM_DESC(config, "option string to pass to driver core");
+ static char *nouveau_config;
 -- 
-2.45.2.803.g4e1b14247a-goog
+2.45.2
 
