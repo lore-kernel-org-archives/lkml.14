@@ -1,102 +1,121 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3110F17A5B4
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 23:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F8817A5B4
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 23:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719963860; cv=none; b=Kzo0/t1YqfP68yr8Ag9ElzYF20xQgMIZOCekR5/QPUObMYlUM8LYHk7Up+oWr59QRoVYwkmonOvUle0A7APpscX7g7/tXY2h4pE5US2r1DZvH9srILiv8ig+Zn5gdbckw+9jUitm13hcyn1kIy+JLVYvOJiZDJLBq5dEkEagwYc=
+	t=1719963882; cv=none; b=uJylKMymyv0aLcDH+46DeuhqNg2Ubu+ClYWTeiOCJnWYsJoERdhNYMJ4YHXHItVzGcRce7zaak7oRN/eiMeJ5GQvI1Q6a10IHN7aryAR2Kb/G9ROHoXmjJxLl30JImb1AaWBJBiMULT+qLFv0KX5NyLlaU3aqnTTcsLAWDN8C4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719963860; c=relaxed/simple;
-	bh=nugYxFvqkZ3GdtJPIrAFiDsnYPiIlN3gx7rBB0rx1kg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qhuOgY5TfpsgrZcQq+zJXv2Vty59+N2rvl0uREy7MnrGj9bRaw5vQGUAjhBv0/lZ082wJ0SL5RA/F4iwHvbP/ICKfzMxl6/xcbxOpqqa64/LiOXXbM9fkPN8bCmBB/m8w0bz/WfCaf/8tOi5cn9Xf0JxWsn0pQVQVhPdGzyx0Po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EIHyJU9E; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1719963882; c=relaxed/simple;
+	bh=R1kdNIGoCaWsREHCUMwJVGjiiGc9/mWffR7Nmk/5mdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o4mvHzodfIhMQydgXDTmbB3LSkV0cViv9j3OTEicGo9VQrBGj/EPspIMvXzVoYJmk8ltRQ5AD6CSmS+IRb5KllC8Yq/MkW7GimaMzmjaf6sYmuKo65ghAmMjsoaZ13XsCRLGOgCVk9kOU52g48AmPL3Gh3icmiXM7WFa3cAyIwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=XBWcy1D0; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EIHyJU9E"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-24c5ec50da1so693248fac.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 16:44:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="XBWcy1D0"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2c7dbdc83bfso3315569a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 16:44:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1719963858; x=1720568658; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Pm45MIjIaeWm4BhjkbsfpReUNUivy1UEQs0ZvejH8fQ=;
-        b=EIHyJU9E3/Pdp81jNZe92O+49Aa5NDKbQnumuZX5YPtPgDV7fttXYCit+82ogGha9P
-         gHzUqfnki9u8kbujp6EMYwsX10XFjm7W4c7DYY2MKMfynf8hM5R3DQorqJuBEB4pJJXf
-         aborWGugO5u6mSh30kgvqeCq7HRyI/p7xsfGs=
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1719963880; x=1720568680; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E8C8pGBl6PwQv/QUgN+lCj1NZP+HloIAvEgarAJ98W0=;
+        b=XBWcy1D08mH3db+GL/2YHwmqFqLkTcLuzLhT4toXTi+Gbx4VOwTqTp+Lm+SfHA0lYF
+         qA6+6CmeHmy6SXR1Z96UEBZt5J8vSrI2BnQcdddOLJCjWUxz7vGRPYzFzZpJNbOXPsxq
+         /cKRFAJa+uAxzT0SjdJY+uYa385+oJUG930ITHy3Ex62z5EVWsmx3CEQSiKxhJ2dOoCQ
+         4jiJeddgwNnbiw9NYjaxbgkmPvsPv6NJzXymqiKuY9xRRRA1WXhMb6B9iXznlV4bA0pV
+         9AOVpQLQc428Y0OWK9VMnkORzoIiONVx3jvc/2xh81mlOZfmeGqr/KmmAe1QGtp8+MDv
+         eS4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719963858; x=1720568658;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pm45MIjIaeWm4BhjkbsfpReUNUivy1UEQs0ZvejH8fQ=;
-        b=JrsRod+SJtG3OxpyIthgVLzuQrDgmhDxQufzA+p7Jp9v57m3X9rgH+wc99UtpinMEt
-         1n1P92gjhUos/RbsMBC58GXpNu6qf3iuddKf28GL7FCzh81QZzLDJcuaDZjnP7tUmcUb
-         A6a8PZvRRHURcnCFpmaP+keofkASll/bB4SwnjShPc5+bPaSLj+KaV/wj32g0abbMwPD
-         PeK9xyBbmgXGtWi6Y8Gl3HnjTX30GzjQ9l1FrlMzy7D/4usCEAwnwU8Lh39BGBvFeOnh
-         3UUtuP6s0XkA2/YdWDI/VgPnkCscZURqQiw30hAzag7ragz1k4PEP52WZJoaKcmXID7W
-         IE3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWxCFXraJkTsckD+2crLrCuIV+drYWQQrnyEQBm+UXPfK1ensR7MfelQ3DEvCs7/ZCPRhiKku7QzvgoTpI5xhqZZ0vh7+kC67ZuBWur
-X-Gm-Message-State: AOJu0YwrzQX4296hkAliz90o/EXuYp5r6jrRqv/vm6SZIujWb6JPDu8p
-	6/lasfufCUBmDk6TaF40UG4bhCbj4510ENr0W5dqigtYa7h5ot2DQ1fVWh/0ie4=
-X-Google-Smtp-Source: AGHT+IGmqmuHlWuvkaXE07Rh5CKoFmBmZoQmtyD6UtHJqCbjW06Ub0MNM9EHQlJGbJkxvCbgPsH50g==
-X-Received: by 2002:a05:6871:24d2:b0:25e:180:9183 with SMTP id 586e51a60fabf-25e0180af8amr2263497fac.4.1719963858211;
-        Tue, 02 Jul 2024 16:44:18 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-25df77cef10sm434167fac.19.2024.07.02.16.44.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jul 2024 16:44:17 -0700 (PDT)
-Message-ID: <bb8f0689-0989-4c18-bc75-f73ce6743c22@linuxfoundation.org>
-Date: Tue, 2 Jul 2024 17:44:16 -0600
+        d=1e100.net; s=20230601; t=1719963880; x=1720568680;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E8C8pGBl6PwQv/QUgN+lCj1NZP+HloIAvEgarAJ98W0=;
+        b=VppPyRGFqK6yPxxZV3IXLzB4Wu5OJd/SVCVK8hDdZcZ/C0/Hg+JYzVKOm2PF5948P8
+         CZTNuYlbLrIlTiLvJmhpbryCBlVZbuzQBcvg9ZjaFRQrux2w/QJq6flq+kbn+RCQMiOt
+         C700iRY5yCyOUf4aS9HL8jzSG4HvhIJ2UQ6cYnPyNBzqRQd57r0dMW7jnMu8LZh6l/K8
+         TCL9878Q5KaS28AaYmEXoBfZIiHDGt5bQuwuCEGSbQViOsrWaBHI5hjEJtVznpy1G9Rw
+         DsrLmwayChJXbOhcBZJaQOr40WhK1aXOZusHM5KlJmRWpwSeM8gVasd5V4iCWCTHvTvV
+         OLqg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1/w2+fOOyx78IxAbEEN36AhI60CpCoGY8th0Z3iN0+1yrCsF7BR0GL7qdfZ56sulIgvSiTh45QcpMpbPAIyYx6FfyBsmMfjBcTIIC
+X-Gm-Message-State: AOJu0YwkxyZNljYnWAzqFVG9DyQzqMkdX0yhPXgEdhlktAuKIp9sJWc/
+	i3MMSefccqqzsEj/MaExH4rFapeGn0S7a8NW+DaT0vkkIZfGkLrXBC94on3IuME=
+X-Google-Smtp-Source: AGHT+IETsvkjzYuCKZ9p0+Ku62Va5mDUhoO32TyPvDTm6zW6hZFOLGO3Cd9d34Mox5TYkCVzYBNnjg==
+X-Received: by 2002:a17:90b:1884:b0:2c9:6ad7:659d with SMTP id 98e67ed59e1d1-2c96ad76752mr1638316a91.6.1719963879903;
+        Tue, 02 Jul 2024 16:44:39 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce4333esm9464957a91.18.2024.07.02.16.44.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 16:44:39 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sOnAq-0022iT-21;
+	Wed, 03 Jul 2024 09:44:36 +1000
+Date: Wed, 3 Jul 2024 09:44:36 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: alexjlzheng@gmail.com, chandan.babu@oracle.com, djwong@kernel.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	alexjlzheng@tencent.com
+Subject: Re: [PATCH v3 2/2] xfs: make xfs_log_iovec independent from
+ xfs_log_vec and free it early
+Message-ID: <ZoSQ5BAhpwoYN4Dz@dread.disaster.area>
+References: <20240626044909.15060-1-alexjlzheng@tencent.com>
+ <20240626044909.15060-3-alexjlzheng@tencent.com>
+ <ZoH9gVVlwMkQO1dm@dread.disaster.area>
+ <ZoI1P1KQzQVVUzny@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/128] 6.1.97-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240702170226.231899085@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240702170226.231899085@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoI1P1KQzQVVUzny@infradead.org>
 
-On 7/2/24 11:03, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.97 release.
-> There are 128 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Sun, Jun 30, 2024 at 09:49:03PM -0700, Christoph Hellwig wrote:
+> On Mon, Jul 01, 2024 at 10:51:13AM +1000, Dave Chinner wrote:
+> > Here's the logic - the iovec array is largely "free" with the larger
+> > data allocation.
 > 
-> Responses should be made by Thu, 04 Jul 2024 17:01:55 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.97-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> What the patch does it to free the data allocation, that is the shadow
+> buffer earlier.  Which would safe a quite a bit of memory indeed ... if
+> we didn't expect the shadow buffer to be needed again a little later
+> anyway, which AFAIK is the assumption under which the CIL code operates.
 
-Compiled and booted on my test system. No dmesg regressions.
+Ah, ok, my bad. I missed that because the xfs_log_iovec is not the
+data buffer - it is specifically just the iovec array that indexes
+the data buffer. Everything in the commit message references the
+xfs_log_iovec, and makes no mention of the actual logged metadata
+that is being stored, and I didn't catch that the submitter was
+using xfs_log_iovec to mean something different to what I understand
+it to be from looking at the code. That's why I take the time to
+explain my reasoning - so that people aren't in any doubt about how
+I interpretted the changes and can easily point out where I've gone
+wrong. :)
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+> So as asked previously and by you again here I'd love to see numbers
+> for workloads where this actually is a benefit.
 
-thanks,
--- Shuah
+Yup, it doesn't change the basic premise that no allocations in the
+fast path is faster than doing even one allocation in the fast
+path. I made the explicit design choice to consume that
+memory as a necessary cost of going fast, and the memory is already
+being consumed while the objects are sitting and being relogged in
+the CIL before the CIL is formatted and checkpointed.
+
+Hence I'm not sure that freeing it before the checkpoint IO is
+submitted actually reduces the memory footprint significantly at
+all. Numbers and workloads are definitely needed.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
