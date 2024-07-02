@@ -1,97 +1,158 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8849616F85E
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC61A15CD7A;
+	Tue,  2 Jul 2024 12:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719923281; cv=none; b=pOOF5NOxg15E1JGiylEVcPnoaRUEiWXJ9qEYXZEsdCnp+Ij5f8qmu+cFVtkaDJPmR8iQ3F1/3nfXtMHEctSWLCVEDKPauIjQtMR67F/BPQMGMX+26S5TOzjEhs6ffr+N16ssk2iV3ORolQi5ywLaBP45DCDqJsT23t498tLkKxI=
+	t=1719923330; cv=none; b=QeUORDxJKDcUAb/0pb1B2j3mkminOf4aFi+aR1EGoB93dxAIpYo7VijraoOJZvkj/P026HHBrB94ajRO0lUIRzm/+UjpmbQ6BiCb99MfYzDfUkp+T9qLR/uZz8XUqkZcToNHSCCd3ba4aXhtr3K7F652hMDDFBTy3Hz2ojfBlKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719923281; c=relaxed/simple;
-	bh=1v5lOVUChevQP+N2QZWisjCxH7AUTxAWh+Bnio2PItY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cD7bo20eeyhcXh2Zgmkym5lY/8K8Re5s22y1+HRHTfWDIeJuj5pf0XJYfilwFy7AN8K6VohwG/3cjesFLAtMjBShnygZEJs7eeoQSIpq9uc1CCi7nWDHG1APkbNlCIY25HTSaMAiGqp8ug8rg2P91GcjQZUS4ERGFv5fjFb37pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ekXuqG89; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ekXuqG89"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4256f102e89so27746035e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 05:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719923278; x=1720528078; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1v5lOVUChevQP+N2QZWisjCxH7AUTxAWh+Bnio2PItY=;
-        b=ekXuqG89b+fAiKRdV2IZfgBSYgw6jaFMBIrwG9dNcFcUGTDP6190ViYvCaVZboT5Zz
-         UbNYGPaqW1sGl7S3IvE05/gS163fH0wMRW6tYKalYy+EvosHdO2Y3mUVI37W2qrfPYMT
-         fikBocX3TFRqpD6Dx6TN2mLDJqgfBOez8JB4pkqFQCDGHIlAo92V3W/26on3v7rjgOnT
-         KWD4AeFthVeREjD2f1fLMTupJMyDzQvYm5WObZ+vVZnUMwNlFSmiO/DMovxstD1Uc2Jf
-         BJtd4tk17hU0LreLSVLl19SGNP67KIeYAoAtpx1udQ/EkZuonWHsBFGreFusev9h1bi2
-         aO3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719923278; x=1720528078;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1v5lOVUChevQP+N2QZWisjCxH7AUTxAWh+Bnio2PItY=;
-        b=kAXKzJu+yvY4FaIrNCkt/KQHPDIWwqHehLT6vU/h3gau6chfw9vzfczYoSCVEd8k6H
-         0jkpVAlXaAT+/r+xLhSvHSDe0N7gype97WxsUJczKnhiGkNNrQpP/es7ClV4XErOoq8P
-         3ZWdTjLwJUrRGmPVB/2MXaOvwHamFimNId021qrr3km6T4Zh08RrF/VUH+JwHxOaiEzj
-         KPEO6/W4tslFD0Vysz9esSSbXhJRCUuY4vDG0BLceUcPkVRgCBI3nApDD07XDZB4MsL6
-         4wLXjmKaVErWND8y0D+xFcQXbZ023SeRRz99h9mrZMXW9+/fPoJopa9WJaaqdPpY3B1I
-         WLUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpvQFf04TGANhJsfjDbJOgen7xpoI4xu5yIAwRswpSF8GT4SC0KOrdNvoAYzovoYOmeCUAdz1S3yYyDzVj+z1vp08aTFGqcn2YmLEI
-X-Gm-Message-State: AOJu0YwNE39H/up2MH0OXkQt0WkbLJzUdDPh7VpS266Bjd3KCkvzc2Vc
-	DNLCpErsMbYCfXniooT+ZBtJOTbep9eHa5Aan9mnNRuWOsMeRXKVBjsbDffjwMKxNYf477gIMoT
-	fY+Giehvf3EzI/xqF4Vewk9S4Hx9oKkC7wfTi
-X-Google-Smtp-Source: AGHT+IF4qZD52kZRJjBUJxyc2yqwkhHDch0UUTYE9b5JxPadLBBqquNx7emNw9zg4DSnlg0OkbPdmI7A1w5xcyHHBrU=
-X-Received: by 2002:a05:6000:1045:b0:367:13a:5276 with SMTP id
- ffacd0b85a97d-367756ad617mr5683027f8f.20.1719923277752; Tue, 02 Jul 2024
- 05:27:57 -0700 (PDT)
+	s=arc-20240116; t=1719923330; c=relaxed/simple;
+	bh=O/fFJvf7yfrAM2sSNiI5YSjh0/0/XRYmc8TSpfAKlhY=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=XBYrwKoRBbIMYvhTWDNst73n241LAIv+OjqNgxVyZUIDHdHnV0iFrAYDYwQGgoq6PadBaamuhS1x+/EgwluXSdGbY3YgH0G8XElmMH4D5gD1JVqmoWVkjeBYSctYvac+1OhSUkFWadpL8+oS8JIMYtJ64WFHGYYt3NWXjhvwmtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WD2D81rGszQk09;
+	Tue,  2 Jul 2024 20:24:56 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5FB66140134;
+	Tue,  2 Jul 2024 20:28:43 +0800 (CST)
+Received: from [10.69.30.204] (10.69.30.204) by dggpemf200006.china.huawei.com
+ (7.185.36.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 2 Jul
+ 2024 20:28:43 +0800
+Subject: Re: [PATCH net-next v9 03/13] mm: page_frag: use initial zero offset
+ for page_frag_alloc_align()
+To: Alexander H Duyck <alexander.duyck@gmail.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, <linux-mm@kvack.org>
+References: <20240625135216.47007-1-linyunsheng@huawei.com>
+ <20240625135216.47007-4-linyunsheng@huawei.com>
+ <8e80507c685be94256e0e457ee97622c4487716c.camel@gmail.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <01dc5b5a-bddf-bd2d-220c-478be6b62924@huawei.com>
+Date: Tue, 2 Jul 2024 20:28:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701183625.665574-1-ojeda@kernel.org> <20240701183625.665574-3-ojeda@kernel.org>
- <ap7u5hpgfdzYgTkobIleYc0uolBIsAVbq56CwMJG6k4x57wXeEtu4fpLpgSOvQtbJHvB6D0J1wlBaqDV-xt2owlVejhfABUv_ivILyJ2J9o=@protonmail.com>
- <CANiq72kMaPm2OsGb3o0VUtdoMhSUoo8QEsCFzVjYFtCThvNJ1w@mail.gmail.com>
-In-Reply-To: <CANiq72kMaPm2OsGb3o0VUtdoMhSUoo8QEsCFzVjYFtCThvNJ1w@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 2 Jul 2024 14:27:45 +0200
-Message-ID: <CAH5fLgiApXtur45Uz+o+xOTX4qqFAf6LnB+Csz2-0CGmJue40g@mail.gmail.com>
-Subject: Re: [PATCH 02/13] rust: init: simplify from `map_err` to `inspect_err`
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8e80507c685be94256e0e457ee97622c4487716c.camel@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-On Mon, Jul 1, 2024 at 11:58=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Mon, Jul 1, 2024 at 10:05=E2=80=AFPM Bj=C3=B6rn Roy Baron
-> <bjorn3_gh@protonmail.com> wrote:
-> >
-> > The formatting here is a bit weird. I would have expected the ) ending =
-the inspect_err call to be placed on a new line given that the unsafe block=
- isn't placed on the same line as the start of the inspect_err call either.=
- This seems to be a case where rustfmt mostly gives up on formatting. If I =
-deindent the comment and unsafe block rustfmt will keep it that way and if =
-I add a trailing space to the inspect_err line it will keep it and emit an =
-error that it left behind trailing whitespace. Maybe add a block around the=
- comment and unsafe block to make rustfmt work again?
->
-> Benno: any preference here? Or even open coding it.
+On 2024/7/2 7:27, Alexander H Duyck wrote:
+> On Tue, 2024-06-25 at 21:52 +0800, Yunsheng Lin wrote:
+>> We are above to use page_frag_alloc_*() API to not just
+> "about to use", not "above to use"
 
-I would open code it with an `if res.is_err() { drop }`. Using inspect
-for a side effect other than printing seems weird to me.
+Ack.
 
-Alice
+> 
+>> allocate memory for skb->data, but also use them to do
+>> the memory allocation for skb frag too. Currently the
+>> implementation of page_frag in mm subsystem is running
+>> the offset as a countdown rather than count-up value,
+>> there may have several advantages to that as mentioned
+>> in [1], but it may have some disadvantages, for example,
+>> it may disable skb frag coaleasing and more correct cache
+>> prefetching
+>>
+
+...
+
+>> diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
+>> index 88f567ef0e29..da244851b8a4 100644
+>> --- a/mm/page_frag_cache.c
+>> +++ b/mm/page_frag_cache.c
+>> @@ -72,10 +72,6 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+>>  		if (!page)
+>>  			return NULL;
+>>  
+>> -#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>> -		/* if size can vary use size else just use PAGE_SIZE */
+>> -		size = nc->size;
+>> -#endif
+>>  		/* Even if we own the page, we do not use atomic_set().
+>>  		 * This would break get_page_unless_zero() users.
+>>  		 */
+>> @@ -84,11 +80,16 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+>>  		/* reset page count bias and offset to start of new frag */
+>>  		nc->pfmemalloc = page_is_pfmemalloc(page);
+>>  		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+>> -		nc->offset = size;
+>> +		nc->offset = 0;
+>>  	}
+>>  
+>> -	offset = nc->offset - fragsz;
+>> -	if (unlikely(offset < 0)) {
+>> +#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>> +	/* if size can vary use size else just use PAGE_SIZE */
+>> +	size = nc->size;
+>> +#endif
+>> +
+>> +	offset = __ALIGN_KERNEL_MASK(nc->offset, ~align_mask);
+>> +	if (unlikely(offset + fragsz > size)) {
+> 
+> The fragsz check below could be moved to here.
+> 
+>>  		page = virt_to_page(nc->va);
+>>  
+>>  		if (!page_ref_sub_and_test(page, nc->pagecnt_bias))
+>> @@ -99,17 +100,13 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+>>  			goto refill;
+>>  		}
+>>  
+>> -#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>> -		/* if size can vary use size else just use PAGE_SIZE */
+>> -		size = nc->size;
+>> -#endif
+>>  		/* OK, page count is 0, we can safely set it */
+>>  		set_page_count(page, PAGE_FRAG_CACHE_MAX_SIZE + 1);
+>>  
+>>  		/* reset page count bias and offset to start of new frag */
+>>  		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+>> -		offset = size - fragsz;
+>> -		if (unlikely(offset < 0)) {
+>> +		offset = 0;
+>> +		if (unlikely(fragsz > PAGE_SIZE)) {
+> 
+> Since we aren't taking advantage of the flag that is left after the
+> subtraction we might just want to look at moving this piece up to just
+> after the offset + fragsz check. That should prevent us from trying to
+> refill if we have a request that is larger than a single page. In
+> addition we could probably just drop the 3 PAGE_SIZE checks above as
+> they would be redundant.
+
+I am not sure I understand the 'drop the 3 PAGE_SIZE checks' part and
+the 'redundant' part, where is the '3 PAGE_SIZE checks'? And why they
+are redundant?
+
+> 
+>>  			/*
+>>  			 * The caller is trying to allocate a fragment
+>>  			 * with fragsz > PAGE_SIZE but the cache isn't big
+>> @@ -124,8 +121,7 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+>>  	}
+>>  
+>>  	nc->pagecnt_bias--;
+>> -	offset &= align_mask;
+>> -	nc->offset = offset;
+>> +	nc->offset = offset + fragsz;
+>>  
+>>  	return nc->va + offset;
+>>  }
+> 
+> 
+> .
+> 
