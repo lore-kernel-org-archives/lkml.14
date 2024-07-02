@@ -1,101 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A8D1BBBF7;
-	Tue,  2 Jul 2024 15:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5716D1BBBFB
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 15:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719934624; cv=none; b=eUBPLUmIvqa//154zDuBlHHv3QyANVdjZAiI0MDkDY+OLRPcWuUCyCDsm2iIINnlqRumNEiDG1m3CnjXNQrUfujZzRkBxcKHr2fAtMbWipIAn4gTfvWjp0/9I/sBnRuAiljpHCvqwNXF4wLcY//mpb4sVtAuwtqMpo83O4qfxrw=
+	t=1719934632; cv=none; b=Ppxup2mhvLtqn/p6tOwJQ6cqoJ5WnduO5Q31MtYZH+E+0vRt3iq6N+BSVR5BOc1bZbp0ROQvhpe/nUqOnubm2VttSf7uRtBsZJHYDkZnwBTBuzQHsf7lyfh8rvb/T1NCeHhHjgU9gv4lZJUZlQwObY5X43dZQE6RB2/SaENCRJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719934624; c=relaxed/simple;
-	bh=WTGvOz3HRhLyyqq4Zh1ZbWhG2m2SzbOevLYrkdYK0Ac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AEGpQwFeFge0kf/r6gcobrxHVsc7991C2sonuDYo/Y2L0CmqpNyStzgAhmKX/ca7Qntp3qV7Le317wz3sa6qufvA66yrgl1PEkMiem5kZHE5RXhLtAMYFrc2irQ9OTaHmXb35SfggXFm1HUkDRrQUlPgC9n0Ufw6dqNB1REbH1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IsAWtP/5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719934632; c=relaxed/simple;
+	bh=dQc3tYew1AZurSoAlwOVz1tVJUNzfbYnzsDwt5Len+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LMNQzaIJrU5h+zudWTldaU18Ehs08Sb874pD+w7Yubka/eGYltugGXshfL+T5ENCMrfhGRnje6o40HTBDw6g8t5HffZadjCJoUkDSrueDtRs8A5qNZd2InUcxH4g+Ef/Z7AaONXARhuokIZsHrh231ZQNt2Dyve4QwQQvPISeXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VIZKNsZ1; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IsAWtP/5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30631C4AF07;
-	Tue,  2 Jul 2024 15:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719934624;
-	bh=WTGvOz3HRhLyyqq4Zh1ZbWhG2m2SzbOevLYrkdYK0Ac=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IsAWtP/5sywxnJ3K4GhdvT0CoKl6Wx7LlTBWBtriyGsqNoyMg7IhVmk61VqdXFky0
-	 T1tgw6GnFa/6AW67rk6Zv5of+0v/ZWvtFtybMOJo5nr9OjNIvvWiphf6h6o1wCpwW3
-	 fDnjF7GyUgnYd+W69xW1jKWfQ6lbEv/iYecBfpwh0q2GEG0xqRMlfmxaXx6EBVFOky
-	 KLswnROVOBB+nkybbNu8+0OjcDlue3n+kDKRk4zehl49xBfWElFENxsVl2reH2kWvQ
-	 ghJ7NPLIAls8pIe2zFxf/JYmZFhJ2pwBw5gp4rJ+xfb3RkpRumMpOS1c1QFHGYSaBW
-	 vlP8gw1m8b9MA==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a754746f3easo84863466b.0;
-        Tue, 02 Jul 2024 08:37:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWHrx04RCxaQCulqu03/KMyZg+ucrhs7rGOWL48R4HmxZDhBXqhYx35ATCBSJQvP87dC1OO0HXxfui/7sAp1p1IwGLuqsU6JjmFn3fyB7ZWN+2YVV9/K6XghzPXmQOIYNM3NeTL1Z0jv/fcpS+x9wa8a6TW6jSHJesmP9Adwb5kOmFx4N/H
-X-Gm-Message-State: AOJu0Yy+WUbNJoRVJbJvOMaqFwS9d/W8XINWd6jBOtDjUky4LuOptxww
-	qFYin6g2OoAq2+7hkFtPLKCOvZW69NoR4Tv2y3//QwH8NdhaEOHKJGW4LUCodTmY4gtBZGP6RyY
-	P7nQhP2D2OXk3+MPMNYyvNkJAvW4=
-X-Google-Smtp-Source: AGHT+IHbRwTQFTOsGOu8dsXrAJCptQY1MXaOy1rNd3Y3lFjz+6X1PC/qmnx2H22UI1+PZJ+qeXsVVq8MLpI02IBHqk0=
-X-Received: by 2002:a17:907:86a0:b0:a5c:eafb:5288 with SMTP id
- a640c23a62f3a-a751448a596mr822072466b.31.1719934622768; Tue, 02 Jul 2024
- 08:37:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VIZKNsZ1"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-701f397e8ffso2437300a34.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 08:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719934630; x=1720539430; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aVSAscJsJjawbJOjNIIGYe0PRN71Kp02pqdgWCt4bXw=;
+        b=VIZKNsZ1xsjPK4VukAe3sigPaTkLFT5C268zv6lIQJFXS4SDdv0V37FCrbrG7kA51p
+         jc0EH5gkwdSR5uE/6TVAHUHDohDFJxxXS0yV5EvfW9vZMdt2mwtPXql8ZVLcgg1FcHtX
+         x3eXpWOtGtiwcBsJcgENohfeSp8oDyXP4U34NRsu2XjUcLGnnm11FpK3fv5Qusb6tTTb
+         yB8ZHQ156gJfjyC99o3MiNOkeqaNzSoTzdjj7nL4YQ+w4GL5jW0l0FbXomU4LJY1UfSj
+         diZDpypyp/7LD5KJxewv9NphxT/xGLcNpRdmt2j0Fsn00KePBblAxvUDmZDnt0BxJopX
+         XGuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719934630; x=1720539430;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aVSAscJsJjawbJOjNIIGYe0PRN71Kp02pqdgWCt4bXw=;
+        b=dF3lGeLXCdeonjaTxfMrayXXfashGVr91Ijz+e9Foqo+HZ0H1j2ZbzDh+d6hjRLG8Z
+         RRvkJzss9MgvlFKXiF1IDjMKEB7+bc3tXx2cGPoMYZA6EuBK8WvxtJIsVDRmZfywzfMG
+         sL76HHWtW1kTwKVghfpWTAZD8R9HHe9EvNZTo91CUAajRZwLHe7JzWeLIl63S+g9lbGc
+         oWjDbvKN3apk1oBSY5QKF5cG9BLV3yQjs+VuMPv3GYgLu17pQfl6vWaB11i84qtjtgyE
+         werrSoiECJpV0/h+fyOeuXw1YkLzS43FFWKDfsX2/rNmAwOd6kZYU3/6g88ZTDjvBiC2
+         WKMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqKoD3rh9ZRCKcrUX7cp86aWr2FQM78XuR7wYZoB3rwR+FoD1H1xk+WzTsngeNAPvCdQJBFVIBhZxYNAwMCUo+hx1I9I3ZZzBDBevq
+X-Gm-Message-State: AOJu0YzwKgsQ6TJOjAlMyQ7nH8Ei3Dn5Ynsv5FVyc/GRQKmmzYlsb/n/
+	C/RA22ObUHipYhNk6rs4dBWk7IbnpFbi8NYMmyc/4f5gOMskhLSYJHVvaJfCFto=
+X-Google-Smtp-Source: AGHT+IFMIUm5t6dN9PzC0I8I0TadK3ts/fipkldg0xShDih4b+I3MtsFtps46SCU+i0L3AuqZ01sAA==
+X-Received: by 2002:a05:6870:4413:b0:254:ccac:133e with SMTP id 586e51a60fabf-25db36c36f9mr7911251fac.56.1719934630414;
+        Tue, 02 Jul 2024 08:37:10 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:a6f1:b7be:4c8c:bf62])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-25dff4c6b11sm152928fac.5.2024.07.02.08.37.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 08:37:09 -0700 (PDT)
+Date: Tue, 2 Jul 2024 17:37:07 +0200
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Arend Van Spriel <arend.vanspriel@broadcom.com>,
+	Su Hui <suhui@nfschina.com>, johannes.berg@intel.com,
+	kees@kernel.org, a@bayrepo.ru, marcan@marcan.st,
+	quic_alokad@quicinc.com, zyytlz.wz@163.com,
+	petr.tesarik.ext@huawei.com, duoming@zju.edu.cn,
+	colin.i.king@gmail.com, frankyl@broadcom.com, meuleman@broadcom.com,
+	phaber@broadcom.com, linville@tuxdriver.com,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH wireless 1/9]  wifi: cfg80211: avoid garbage value of
+ 'io_type' in  brcmf_cfg80211_attach()
+Message-ID: <3071fd19-5cc7-440a-8184-3aeeb81c96e0@suswa.mountain>
+References: <20240702122450.2213833-1-suhui@nfschina.com>
+ <20240702122450.2213833-2-suhui@nfschina.com>
+ <ba67020a-04bb-46b8-bc05-751684f71e8a@suswa.mountain>
+ <19073fcc9e8.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+ <878qyjg6cv.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625110029.606032-1-mjguzik@gmail.com> <20240625110029.606032-3-mjguzik@gmail.com>
- <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
- <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
- <CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
- <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site> <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com>
-In-Reply-To: <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 2 Jul 2024 23:36:50 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
-Message-ID: <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Xi Ruoyao <xry111@xry111.site>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878qyjg6cv.fsf@kernel.org>
 
-Hi, Arnd,
-
-On Mon, Jul 1, 2024 at 7:59=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Sun, Jun 30, 2024, at 04:39, Xi Ruoyao wrote:
-> > On Sun, 2024-06-30 at 09:40 +0800, Huacai Chen wrote:
-> >> >
-> >> > Yes, both Linus and Christian hates introducing a new AT_ flag for
-> >> > this.
-> >> >
-> >> > This patch just makes statx(fd, NULL, AT_EMPTY_PATH, ...) behave
-> >> > like
-> >> > statx(fd, "", AT_EMPTY_PATH, ...) instead.  NULL avoids the
-> >> > performance
-> >> > issue and it's also audit-able by seccomp BPF.
-> >> To be honest, I still want to restore __ARCH_WANT_NEW_STAT. Because
-> >> even if statx() becomes audit-able, it is still blacklisted now.
+On Tue, Jul 02, 2024 at 06:29:20PM +0300, Kalle Valo wrote:
+> Arend Van Spriel <arend.vanspriel@broadcom.com> writes:
+> 
+> > On July 2, 2024 3:57:27 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
 > >
-> > Then patch the sandbox to allow it.
+> >> On Tue, Jul 02, 2024 at 08:24:44PM +0800, Su Hui wrote:
+> >>> brcmf_fil_cmd_int_get() reads the value of 'io_type' and passes it to
+> >>> brcmf_fil_cmd_data_get(). Initialize 'io_type' to avoid garbage value.
+> >>
+> >> Since you're going to be resending anyway, please delete the space char
+> >> from the start of the line.
+> >>
+> >> It's weird that brcmf_fil_cmd_data_get() uses the uninitialized data.
+> >> It looks like it just goes to great lengths to preserve the original
+> >> data in io_type...  So it likely is harmless enough but still a strange
+> >> and complicated way write a no-op.
 > >
-> > The sandbox **must** be patched anyway or it'll be broken on all 32-bit
-> > systems after 2037.  [Unless they'll unsupport all 32-bit systems befor=
-e
-> > 2037.]
->
-> More importantly, the sandbox won't be able to support any 32-bit
-> targets that support running after 2037, regardless of how long
-> the sandbox supports them: if you turn off COMPAT_32BIT_TIME today
-> in order to be sure those don't get called by accident, the
-> fallback is immediately broken.
-Would you mind if I restore newstat for LoongArch64 even if this patch exis=
-t?
+> > Not sure if it helps, but I tried to explain the reason in response to
+> > patch 0 (cover letter).
+> 
+> Would it make more sense to have just one patch? It's the same issue
+> anyway.
 
-Huacai
+The Fixes tags are different though.  I'd probably leave them as
+separate patches just because of that.
 
->
->       Arnd
+regards,
+dan carpenter
+
