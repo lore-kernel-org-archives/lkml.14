@@ -1,84 +1,183 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B101CB313
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 18:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080B584A40;
+	Tue,  2 Jul 2024 18:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719946742; cv=none; b=bty3H718e7gJE6+7PmCo8mkSPzgnaCIOjHUkzB8f6KaLWS6CNVhPc70RKWbMJTpgYTcLGP5H9gGASaD8+h/9mufqem7kOVFGw3gZ7AxAdAIZs4eMgKspAbYQNcws+q6UEKcqBhpivwFChV3JA5s4y/vrEtBBGOVzuxn3BiJvCR8=
+	t=1719946766; cv=none; b=WCRjrNt8u4VYcCzVr5wyo492LKMuiXN02xtOQmVJoLCWBmp6wd72rNYo8WUIejZ7nf39AIMdtPtkHsLbvxR1NaDPAf4wNumEqAD1yE2mr1+GMXSMdPGIPX8lXvyxUffWJPlKjE1CcediYcxDCa3UUP4xC/X1EwSgnYn2P1ljxZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719946742; c=relaxed/simple;
-	bh=rSgaHqVZQImHTOfgOEqTu4ULIR2aezhDn/5iYMs/7bg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vw/TnikM36V0Bvo914amwn+w57D0rJ/hf8yfW1BgkJyxOCScnKtk0m4Dqz/RNJTf5hbmBaMekRG4Cmy5X4EhS4lb6UPpcoYSo1IObVUCCjYX3bPTg0Hq7gSe5mBi7r4I0VLD73EJqG6b7zK0u8hKlVa0P7cOjPhGhz9iHybAie8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BNRE8li+; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BNRE8li+"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 689C040E0185;
-	Tue,  2 Jul 2024 18:58:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id RsFJfm7RO5gT; Tue,  2 Jul 2024 18:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1719946734; bh=q093ooWosuu4xO1lQUGjKU525ujMW+zd9lX5wt+JL3s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BNRE8li+UWwsfDIt8FNop1QVprUu99EAMtTMjo0ogkDbJ4BTlrCFr7CmE/RT8SK5H
-	 foLjwwCfPOzwoWKHz/+l7yS0OV+MVEpOsKpTVjXKPqXH3G0Aumy+XxBMXKkMJXlNAc
-	 2S1wqy3yna6vok1gora14mk3KQX8vqrJbhPSVk7QDWdRY8iuwOiE2krBzMMGleflh9
-	 h+mCa++pvf0BTIM3EjGvb60hMiaIy74dxziHjSh6aMpIBHccw+/fS+Vx1xA8gnmxHN
-	 ZoH0NOSdT2FWMxydIZ9c+yJh18P/CkdsoNpIi7LKfpew+IQpp3EdKuXo0X5mrHQYLI
-	 Kwc/VGImvbQpCdDetYDwD3ZRP2kVB2pFWy4097K3y5uCqUFZ9yaEapaE8YKZevpfBR
-	 7yyEcu3S0/VeRFgoOPO1vDPjnRWhDfG7jqNqdwFvuuX7mspTzsgLTKjw3ojunMJTrX
-	 v+baoU7VIujDcchwaVXYuS/jNEok9Lfet7XkxSf/VL+HKshiVzd9OlR/sUcqEWdxzO
-	 AMMfb9zYnaxKxIKLeHQXZ6h6d+MTX4PJUfdPZPGlOIagXLYtDKIjfU4UjL15vgHhQ0
-	 Yk0msO1Bz0KiUQdC5r/FIH8e9xh6Xai8C7iOrEX8xS73TM4zLzVccUTv0Ez05M5x9U
-	 G2U4eM6miaL6RKwCJTVJRSyQ=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 578C340E021E;
-	Tue,  2 Jul 2024 18:58:41 +0000 (UTC)
-Date: Tue, 2 Jul 2024 20:58:35 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v3 1/3] x86/mm: Use IPIs to synchronize LAM
- enablement
-Message-ID: <20240702185835.GIZoRN297EJA0QgBDC@fat_crate.local>
-References: <20240702132139.3332013-1-yosryahmed@google.com>
- <20240702132139.3332013-2-yosryahmed@google.com>
+	s=arc-20240116; t=1719946766; c=relaxed/simple;
+	bh=r3rsrgYvDNPot/J0J9qW+ROTWJ+QO7HKBNmC7Ub0TXs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dyKtwBLDYB4PUYE32OTbmLPHCfd4Dg/YWxL5sLZgkEMjeAwDSnvJitDXk2fPVQgRcmpmLQ7qwGzWlYVe5Cs0bz6fz7LPZ2zq7jvTwNfL6cD7iM/1FYRvurIRdRpSDJGihnyuKVuuSOW+nzevZnEeed8lajj0FzL0iwDdaBozmjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c964f5a037so581493a91.0;
+        Tue, 02 Jul 2024 11:59:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719946764; x=1720551564;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SwzG6F4f5E6fksBgJirQ54c8SNWFrroy6GPzSmRvfqQ=;
+        b=anWh0mgCPYSDgl3XdJfp/KppuuBIbW5hIfAkORZ73cM08bWzQhrzEHcRZxMkggTSr3
+         NEWwGm0p2akKrGekUDOjr1fmwz2QGYoA4gJRaUyOlPjoVJTJsXQWKcS6XPg8+OK2LUvR
+         jQVETHZfmU3NjbeZ5JRZqHPl4HkOW1S4kSs6eTtJZV/4vhFvPa7gwUkw1n9TZGdIjBXh
+         vx6NIvADQtyQYp65Rkr8qqn5K4KNJAZ3wofTulDEgtMMtQX2gnydZVG7yohqr/PLtJUY
+         12niNKbQXOExjhOuTu0sXyecMFJFhSa7bGJIPHL0LOpxx4F/OuLlwjP5n4GhXc6PLDaT
+         gtBA==
+X-Forwarded-Encrypted: i=1; AJvYcCU63X9uZi+xfFF+lhyQupJrJi+c/w1RfG+LRs+/EVYU+TkTQWv43JaghHT37krkJwYtrxkHlacuo+FEANQZeBNzTMqBIp9ZMWoUgn68iIil326kDqq2XgYN/nV8d7+ii5Glh4bKkugfekvOu0yLHA==
+X-Gm-Message-State: AOJu0YxtxY3IatuucSHy3sWcP1v5vgd/LnTLC1vT+CNpKWekBNXm9N06
+	Bz7gb2XwimjNOARk/0MGcYEYHBNVVVbgQcp3zXYGLfzn69VThJ6BU2p1J51kmbRElw1RV5pvj2H
+	1bA2syNvaILbnbj98a1ewzVx8rbA=
+X-Google-Smtp-Source: AGHT+IGC6dX/dOAx2dakhe0u99rDFvwClutmuvkHsvn9RBM56LEvW+skwbUj15GzJlliKKHiByK2zvk/nj0sgFXKmrs=
+X-Received: by 2002:a17:90a:ac8:b0:2c5:12b5:b816 with SMTP id
+ 98e67ed59e1d1-2c93d77cf94mr5568002a91.48.1719946764039; Tue, 02 Jul 2024
+ 11:59:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240702132139.3332013-2-yosryahmed@google.com>
+References: <20240624222026.229401-1-weilin.wang@intel.com>
+ <ZnxW4u_TB5agiFJT@google.com> <CO6PR11MB563505F0D97C0E2D5949F583EED62@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <Zn3MV8lCSHLEEXDG@google.com> <CO6PR11MB5635353A7B7A010FB727C5A5EED22@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <DM8PR11MB56372A51C1D0D2EEDDA95E31EEDC2@DM8PR11MB5637.namprd11.prod.outlook.com>
+In-Reply-To: <DM8PR11MB56372A51C1D0D2EEDDA95E31EEDC2@DM8PR11MB5637.namprd11.prod.outlook.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 2 Jul 2024 11:59:11 -0700
+Message-ID: <CAM9d7chcdiHCBdwagj=zAeB3P1yT1Edc+q31Uq3LZfOFpP7vaQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v14 0/8] TPEBS counting mode support
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 02, 2024 at 01:21:37PM +0000, Yosry Ahmed wrote:
-> Change-Id: I7fd573a9db5fe5284d69bc46f9b3758f1f9fb467
+Hello Weilin,
 
-What do those tags mean?
+On Mon, Jul 1, 2024 at 9:27=E2=80=AFPM Wang, Weilin <weilin.wang@intel.com>=
+ wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Wang, Weilin
+> > Sent: Saturday, June 29, 2024 10:13 PM
+> > To: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > <mingo@redhat.com>; Alexander Shishkin
+> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
+ter,
+> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
+;
+> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
+ Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
+rs,
+> > Caleb <caleb.biggers@intel.com>
+> > Subject: RE: [RFC PATCH v14 0/8] TPEBS counting mode support
+> >
+> >
+> >
+> > > -----Original Message-----
+> > > From: Namhyung Kim <namhyung@kernel.org>
+> > > Sent: Thursday, June 27, 2024 1:32 PM
+> > > To: Wang, Weilin <weilin.wang@intel.com>
+> > > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > > <mingo@redhat.com>; Alexander Shishkin
+> > > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; H=
+unter,
+> > > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.co=
+m>;
+> > > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylo=
+r, Perry
+> > > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>;
+> > Biggers,
+> > > Caleb <caleb.biggers@intel.com>
+> > > Subject: Re: [RFC PATCH v14 0/8] TPEBS counting mode support
+> > >
+> > > On Wed, Jun 26, 2024 at 06:17:22PM +0000, Wang, Weilin wrote:
+> > > >
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Namhyung Kim <namhyung@kernel.org>
+> > > > > Sent: Wednesday, June 26, 2024 10:59 AM
+> > > > > To: Wang, Weilin <weilin.wang@intel.com>
+> > > > > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > > > > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Mo=
+lnar
+> > > > > <mingo@redhat.com>; Alexander Shishkin
+> > > > > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org=
+>;
+> > Hunter,
+> > > > > Adrian <adrian.hunter@intel.com>; Kan Liang
+> > <kan.liang@linux.intel.com>;
+> > > > > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; T=
+aylor,
+> > > Perry
+> > > > > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>;
+> > > Biggers,
+> > > > > Caleb <caleb.biggers@intel.com>
+> > > > > Subject: Re: [RFC PATCH v14 0/8] TPEBS counting mode support
+> > > > >
+> > > > > On Mon, Jun 24, 2024 at 06:20:16PM -0400, weilin.wang@intel.com
+> > > wrote:
+> > > > > > From: Weilin Wang <weilin.wang@intel.com>
+> > > > > >
+> > > > > > Changes in v14:
+> > > > > >  - Fix the python import test failure. We cannot support PYTHON=
+_PERF
+> > > > > because it
+> > > > > >  will trigger a chain of dependency issues if we add intel-tpeb=
+s.c to it.
+> > So,
+> > > > > >  only enable tpebs functions in evsel and evlist when PYTHON_PE=
+RF is
+> > not
+> > > > > >  defined.
+> > > > >
+> > > > > I think it's easier if we have Ian's python build cleanup first.
+> > > > >
+> > > > >   https://lore.kernel.org/linux-perf-users/20240625214117.953777-=
+1-
+> > > > > irogers@google.com
+> > > > >
+> > > > > Let me take a look at it..
+> > > >
+> > > > Ok, I will hold the cmd option name update until we conclude on thi=
+s one.
+> > > > Thanks a lot!
+> > >
+> > > Please take a look at the current perf-tools-next branch.
+> >
+> > Hi Namhyung,
+> >
+> > The python import test works correctly with the latest perf-tools-next =
+branch
+> > without the change I added in v14. I will send a new version that rever=
+ts this
+> > change and update the command line option. Is there any other changes
+> > you'd
+> > like me to add?
+>
+> Hi Namhyung,
+>
+> I'm planning to submit the new version before Wednesday. Please let me kn=
+ow if
+> you have any new comment on this.
 
--- 
-Regards/Gruss,
-    Boris.
+Yep, I think it's ok unless it introduces new test failures.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Namhyung
