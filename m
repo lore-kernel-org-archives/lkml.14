@@ -1,64 +1,34 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09358172BC8
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC97E1B372F
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719926935; cv=none; b=QYp5mvdZP9u666EZtr+Bt7BiH2pr8xjR7ttW6EXzUfqp7l7XHk5XWaA8uVBnASWQOY72bBXBexU39K3v4r4euWbdpc1TrwyyuDvz6waUs2OZUlEcHidIrJrWebweyU+x9MXJE6PwQxNXb2t2XcZnemZEYx/VVYxTdSj9yHkQcIo=
+	t=1719926937; cv=none; b=kSRSVSb6Jyxhnwwul1JbqLiAvM7a4Rhdd3gwya/zqfMoMFOrUQVAHEwKtkGw23Q1oLGOGcsYOWmarktU8V15gJLxqMEsQ0vnBrFTpAiHh2ghl4kFi8ccu3Y3PL2KMkw3T4Ywwb4At5Zi3bLsFBX+uvXJ19cfzgw2QO5JZ64Jd9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719926935; c=relaxed/simple;
-	bh=jyZG55KbeIoMjk6imOGduy5VGWOolxy4yZAD40rYJSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EcZzpuCCgK9dxEz7G+TeDpx/9zQNXuRNw/hb0k4iceT+k88oUZFzuE7wE6mTtVeH9MZJKa0uXJzzIMcqS+aI2xRYKkNV8BdRGjofveCM5+Z6l+6EXE5S+crwyAZbfS0N0jJlKNhyorCfO+M5iJ/qVs1sw4ke+mij54IFL2f8Y8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PHL6HdF6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHL6HdF6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719926933;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+jl2z9/pX2zCRMT6h5qbae+biJ++Up1G2LDt2lVB89I=;
-	b=PHL6HdF6DdlLamY7BEc+qPPBCDoovtj9KqEsng1hrJzpntb+2EHZaVfUMkXxuERqrWIaHy
-	t4ImSAxda9UF4ppm/5PrKUvIkS8mdW/UeQj+miPrNG3qXVUnqDqpG7UFO0XZ8AFhQJz6l6
-	3ZL1UgXBm0oyp2T/FxS8aaZ1FaAmmRs=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-4CUHkCvhOzucYTBx6Br-kQ-1; Tue,
- 02 Jul 2024 09:28:48 -0400
-X-MC-Unique: 4CUHkCvhOzucYTBx6Br-kQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0DC611933182;
-	Tue,  2 Jul 2024 13:28:47 +0000 (UTC)
-Received: from RHTRH0061144.bos.redhat.com (dhcp-17-72.bos.redhat.com [10.18.17.72])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4DCE319560AE;
-	Tue,  2 Jul 2024 13:28:34 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: netdev@vger.kernel.org
-Cc: dev@openvswitch.org,
-	linux-kselftest@vger.kernel.org,
+	s=arc-20240116; t=1719926937; c=relaxed/simple;
+	bh=lsztn1GGz6uHTkFVeHcQwlwcE4zuum5RGrh6MJvl9mQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XuCLktpvA/nAqVmqI2ZhbYHwbnk02TO7iquPqolyx2U2sr84ZYeWLSERtPyfGiv0ea3kgr3BgcViKv049si0EqJ8BZbxzRm1BdFKLGrj+BfbEmPlh3N64o7tK0Phqsv/X2upk3P0AYyv8cqRPFXA94YMH8jVnk/ZbvY9imbro2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CDBB339;
+	Tue,  2 Jul 2024 06:29:20 -0700 (PDT)
+Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 281FA3F766;
+	Tue,  2 Jul 2024 06:28:54 -0700 (PDT)
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: coresight@lists.linaro.org
+Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Pravin B Shelar <pshelar@ovn.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	=?UTF-8?q?Adri=C3=A1n=20Moreno?= <amorenoz@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next 1/3] selftests: openvswitch: Bump timeout to 15 minutes.
-Date: Tue,  2 Jul 2024 09:28:28 -0400
-Message-ID: <20240702132830.213384-2-aconole@redhat.com>
-In-Reply-To: <20240702132830.213384-1-aconole@redhat.com>
-References: <20240702132830.213384-1-aconole@redhat.com>
+	anshuman.khandual@arm.com,
+	mike.leach@linaro.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	James Clark <james.clark@arm.com>
+Subject: [PATCH] coresight: tmc: sg: Do not leak sg_table
+Date: Tue,  2 Jul 2024 14:28:46 +0100
+Message-Id: <20240702132846.1677261-1-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,25 +36,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-We found that since some tests rely on the TCP SYN timeouts to cause flow
-misses, the default test suite timeout of 45 seconds is quick to be
-exceeded.  Bump the timeout to 15 minutes.
+Running perf with cs_etm on Juno triggers the following kmemleak warning !
 
-Signed-off-by: Aaron Conole <aconole@redhat.com>
+:~# cat /sys/kernel/debug/kmemleak
+ unreferenced object 0xffffff8806b6d720 (size 96):
+ comm "perf", pid 562, jiffies 4297810960
+ hex dump (first 32 bytes):
+ 38 d8 13 07 88 ff ff ff 00 d0 9e 85 c0 ff ff ff  8...............
+ 00 10 00 88 c0 ff ff ff 00 f0 ff f7 ff 00 00 00  ................
+ backtrace (crc 1dbf6e00):
+ [<ffffffc08107381c>] kmemleak_alloc+0xbc/0xd8
+ [<ffffffc0802f9798>] kmalloc_trace_noprof+0x220/0x2e8
+ [<ffffffc07bb71948>] tmc_alloc_sg_table+0x48/0x208 [coresight_tmc]
+ [<ffffffc07bb71cbc>] tmc_etr_alloc_sg_buf+0xac/0x240 [coresight_tmc]
+ [<ffffffc07bb72538>] tmc_alloc_etr_buf.constprop.0+0x1f0/0x260 [coresight_tmc]
+ [<ffffffc07bb7280c>] alloc_etr_buf.constprop.0.isra.0+0x74/0xa8 [coresight_tmc]
+ [<ffffffc07bb72950>] tmc_alloc_etr_buffer+0x110/0x260 [coresight_tmc]
+ [<ffffffc07bb38afc>] etm_setup_aux+0x204/0x3b0 [coresight]
+ [<ffffffc08025837c>] rb_alloc_aux+0x20c/0x318
+ [<ffffffc08024dd84>] perf_mmap+0x2e4/0x7a0
+ [<ffffffc0802cceb0>] mmap_region+0x3b0/0xa08
+ [<ffffffc0802cd8a8>] do_mmap+0x3a0/0x500
+ [<ffffffc080295328>] vm_mmap_pgoff+0x100/0x1d0
+ [<ffffffc0802cadf8>] ksys_mmap_pgoff+0xb8/0x110
+ [<ffffffc080020688>] __arm64_sys_mmap+0x38/0x58
+ [<ffffffc080028fc0>] invoke_syscall.constprop.0+0x58/0x100
+
+This due to the fact that we do not free the "sg_table" itself while
+freeing up  the SG table and data pages. Fix this by freeing the sg_table
+in tmc_free_sg_table().
+
+Fixes: 99443ea19e8b ("coresight: Add generic TMC sg table framework")
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: James Clark <james.clark@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- tools/testing/selftests/net/openvswitch/settings | 1 +
- 1 file changed, 1 insertion(+)
- create mode 100644 tools/testing/selftests/net/openvswitch/settings
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/openvswitch/settings b/tools/testing/selftests/net/openvswitch/settings
-new file mode 100644
-index 000000000000..e2206265f67c
---- /dev/null
-+++ b/tools/testing/selftests/net/openvswitch/settings
-@@ -0,0 +1 @@
-+timeout=900
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index e75428fa1592..610ad51cda65 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -261,6 +261,7 @@ void tmc_free_sg_table(struct tmc_sg_table *sg_table)
+ {
+ 	tmc_free_table_pages(sg_table);
+ 	tmc_free_data_pages(sg_table);
++	kfree(sg_table);
+ }
+ EXPORT_SYMBOL_GPL(tmc_free_sg_table);
+ 
+@@ -342,7 +343,6 @@ struct tmc_sg_table *tmc_alloc_sg_table(struct device *dev,
+ 		rc = tmc_alloc_table_pages(sg_table);
+ 	if (rc) {
+ 		tmc_free_sg_table(sg_table);
+-		kfree(sg_table);
+ 		return ERR_PTR(rc);
+ 	}
+ 
 -- 
-2.45.1
+2.34.1
 
