@@ -1,119 +1,407 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B46372
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 04:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206C881F
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 04:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719894449; cv=none; b=AF3uKESgZxQsMeQ5kJ2CebP6MbBG9PXav30rSD+aKhOuLk8mFFFVCPH02x1vGlRoR450Cjlm2F11dba9xiMF16+AxbcxR21NIR6ZyZwX/IpTh05liIWppgN4NdnwSrU5GwPd+xQ2buTTGCm1tBfcgDn+GlRm7QH9jREw1cDtNM4=
+	t=1719894654; cv=none; b=mgfH5FRxv61ztZBPJgooYhiJvqyiAIUJJVJh5hEF85trmgms9J0xC1lMYO0VZ4PQ6rF4CIr0K+YauMcOMxf27iPVNmWpkydaL6s4XhniniG5IL7nyRD4hGEyJ0yFNzFpUidEwyrofjRVgU3mlX5ZAj+jQC2ooDLxSIjxk6QhHjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719894449; c=relaxed/simple;
-	bh=r66APsfbuZwhaGtdICg8m8ISseHQCJgnvESBj7Fq7W0=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IvaoTP9KARM1x5oJNFtjExnE5m12M5hrc18zTDVn7Qz4FZ23ltRstyFnNeX9eWSBxfqf5L4cFoeNk9K+coLIx86MtC9uO8XZlO7NUN9GF5rEXAb6WRngzXtUf++1CEOe0ghkQp1mUHRMJLALNCod0bOIVbkKhM+4N8hFrARriDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 4624QwPG039760;
-	Tue, 2 Jul 2024 12:26:58 +0800 (GMT-8)
-	(envelope-from zhang.chunA@h3c.com)
-Received: from DAG6EX11-BJD.srv.huawei-3com.com (unknown [10.153.34.13])
-	by mail.maildlp.com (Postfix) with ESMTP id 630F62004BA2;
-	Tue,  2 Jul 2024 12:31:02 +0800 (CST)
-Received: from DAG6EX09-BJD.srv.huawei-3com.com (10.153.34.11) by
- DAG6EX11-BJD.srv.huawei-3com.com (10.153.34.13) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.27; Tue, 2 Jul 2024 12:26:59 +0800
-Received: from DAG6EX09-BJD.srv.huawei-3com.com ([fe80::bdc5:ad7:2347:12a5])
- by DAG6EX09-BJD.srv.huawei-3com.com ([fe80::bdc5:ad7:2347:12a5%4]) with mapi
- id 15.02.1258.027; Tue, 2 Jul 2024 12:26:59 +0800
-From: Zhangchun <zhang.chunA@h3c.com>
-To: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaoxupo
-	<jiaoxupo@h3c.com>, Bailin <berlin@h3c.com>,
-        Zhangzhansheng
-	<zhang.zhansheng@h3c.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>, wangyu
-	<wang.yuI@h3c.com>,
-        "shaohaojize@126.com" <shaohaojize@126.com>,
-        Zhangzhengming <zhang.zhengming@h3c.com>
-Subject: [PATCH] mm: fix kmap_high deadlock V2
-Thread-Topic: [PATCH] mm: fix kmap_high deadlock V2
-Thread-Index: AdrMNwI2VvTxTh3MSgCT1mPrIo0cfgAAO7Gg
-Date: Tue, 2 Jul 2024 04:26:59 +0000
-Message-ID: <7caa255fa5fe4e8e9c6a05084a1faf72@h3c.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-sender-location: DAG2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1719894654; c=relaxed/simple;
+	bh=PlRkBUH3KsOKJc39XgWriA2SJd+esXfQur3CBBY+V6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UrbnHbYiMQQP46zCSAO80oLawyeuTagd8elKLuQsM0AVGW1XKn392Lk0DeyQj3cR0mjuGnSqF36NqSOaVuIE0q0KMWmIOJpp3HWqzEeyLTT407NiEWUMf1eBKjCA3Y3EXE4MuKkbH0zDQx1CDPwGziipK4StVpCfNHWn0AZ5bxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qFEMydrv; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qFEMydrv"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7178727da84so2007088a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 21:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719894651; x=1720499451; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=j7wHN8ZS4EW/ROGi5LHr2BBapsgd7jowT7gRws/UAh8=;
+        b=qFEMydrvASbbL6Nxa6Cb8B3BSG1LN+wBJK7sQU9l+lvLXpNLW0RlOktgWBPEfLmCT5
+         WwhfSwZBK74DJzmh3D0la4z6tW59IFp8DTSpYtzJclGec3bCov7slcELFnmAA37rd1uH
+         GsSHTk7Ps8KOyurDCZV1mZDiABRgOTeJiWrX54b5obFRtftEnP6fCDOzleXhE7+epnIy
+         drFrEaHytrh4bYsuLGp03XA19d977Pk276Tvt9YBQySrPjK0V9j0kTUPNbAdwtjUERoo
+         YALpytrl/H7ngjNL7IIyqZwgzhwwje9VIeeXmAQnfS+fXpF9xquPaEnLlNN+y+BZubeB
+         Z7RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719894651; x=1720499451;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j7wHN8ZS4EW/ROGi5LHr2BBapsgd7jowT7gRws/UAh8=;
+        b=CwqhmMnpeRJhzKBvFvgFRaF+GJVJFZ5uhC2OIpMVg7LYifWiCo4lJPy9jdRzBacAYj
+         3qNna/ZP1QMEd+wpGMMxhYdbL1xehsKO0zo5S+oEsI6kECl0nLfE/GlfZVfMI3Qu6mBA
+         QmRDcyTKMUT9vgWeqOA841UePxg6QFeLBQ8i7T8bLGBz8dIXJqii3sscNHoJhObAM5BG
+         qXvrugqzwVgQvRU5nY4lGhbFg5RxaJA6m2AHuNLUdp01dnw9EJ++8O+wtF8UBE3TV+qb
+         m665VY/nta8X9obk3cgqtbGS0i8mSPoiBlQGPKQ5PsciGK59z28McxYQJ4JlwqbKvC0I
+         hgAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrWzaYzsvnRNBys1BUMsrH1GP/fMBZZ1SlClvJDtAs9Ian2dn2cspXj9S5iTr77z0afuf8DvlhY17qo+FdlL7vL0V8KRtE9oFVuTmx
+X-Gm-Message-State: AOJu0YyYI/wTBJgTmlf7mP7FvYnOCj1wUEynw/oQhZaRvlfitsL+XicJ
+	gZfJH3M/EkkAERyTXq4NZLud6kcUVdKw/NbumtomKnhXS08n7s6hUKCtMJRrI8A=
+X-Google-Smtp-Source: AGHT+IEA+hwI1pWHzT1n/noPMk2yq8ZulVIVMBdYuGLl8QeXBXHg42EsIQfke1S7YJEV2djWmrb7ig==
+X-Received: by 2002:a05:6a20:3941:b0:1bd:28d1:fc5 with SMTP id adf61e73a8af0-1bef611b7e9mr7758299637.6.1719894651375;
+        Mon, 01 Jul 2024 21:30:51 -0700 (PDT)
+Received: from ghost ([2601:647:5700:6860:a569:328b:99ad:ce17])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1539255sm73322835ad.129.2024.07.01.21.30.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 21:30:50 -0700 (PDT)
+Date: Mon, 1 Jul 2024 21:30:48 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Jesse Taube <jesse@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Wende Tan <twd2.me@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v3 4/4] RISC-V: Use Zkr to seed KASLR base address
+Message-ID: <ZoOCeMUTIgnA72xj@ghost>
+References: <20240701185132.319995-1-jesse@rivosinc.com>
+ <20240701185132.319995-5-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 4624QwPG039760
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701185132.319995-5-jesse@rivosinc.com>
 
-DQpGcm9tOiAiemhhbmcuY2h1biIgPHpoYW5nLmNodW5hQGgzYy5jb20+DQoNCkkgd29yayB3aXRo
-IHpoYW5nemhhbnNoZW5nKGZyb20gaDNjKSBmaW5kIHRoYXQgc29tZSBzaXR1YXRpb24gbWF5IGNh
-c3VlIGRlYWRsb2NrIHdoZW4gd2UgdXNlIGttYXBfaGlnaCBhbmQga21hcF9YWFggb3Iga3VtYXBf
-eHh4IGJldHdlZW4gIGRpZmZlcnQgY29yZXMgYXQgdGhlIHNhbWUgdGltZSwgIGttYXBfaGlnaC0+
-bWFwX25ld192aXJ0dWFsLT4gZmx1c2hfYWxsX3plcm9fcGttYXBzLT5mbHVzaF90bGJfa2VybmVs
-X3JhbmdlLT5vbl9lYWNoX2NwdS4gT24gdGhpcyBjb25kaXRpb24sIGttYXBfaGlnaCBob2xkIHRo
-ZSBrbWFwX2xvY2vvvIx3YWl0IHRoZSBvdGhlciBjb3JlcyByZXNwb25kIHRvIGlwaS4gQnV0IHRo
-ZSBvdGhlcnMgbWF5IGRpc2FibGUgaXJxIGFuZCB3YWl0IGttYXBfbG9jaywgdGhpcyBpcyBzb21l
-IGRlYWRsb2NrIGNvbmRpdGlvbi4gSSB0aGluayBpdCdzIG5lY2Vzc2FyeSB0byBnaXZlIGttYXBf
-bG9jayBiZWZvcmUgY2FsbCBmbHVzaF90bGJfa2VybmVsX3JhbmdlLg0KTGlrZSB0aGlzOg0Kc3Bp
-bl91bmxvY2soJmttYXBfbG9jayk7DQpmbHVzaF90bGJfa2VybmVsX3JhbmdlKHh4eCk7DQpzcGlu
-X2xvY2soJmttYXBfbG9jayk7DQoNCkNQVSAwOiAgICAgICAgICAgICAgICBjcHUgMToNCiAgICAg
-ICAgICAgICAgICAgICAgICAgIGttYXBfeHh4KCkgew0KeHh4ICAgICAgICAgICAgICAgICAgICAg
-aXJxX2Rpc2FibGUoKTsNCmttYXBfaGlnaCgpOyAgICAgICAgICAgIHNwaW5fbG9jaygma21hcF9s
-b2NrKQ0KeHh4ICAgICAgICAgICAgICAgICAgICAgeXl5eXl5eQ0KICAgICAgICAgICAgICAgICAg
-ICAgICAgc3Bpbl91bmxvY2soJmttYXBfbG9jaykNCiAgICAgICAgICAgICAgICAgICAgICAgIGly
-cV9lbmFibGUoKTsNCiAgICAgICAgICAgICAgICAgICAgICAgIH0NCmttYXBfaGlnaCBkZXRhaWw6
-DQprbWFwX2hpZ2goKSB7DQogICAgICAgIHp6eg0KICAgICAgICBzcGluX2xvY2soJmttYXBfbG9j
-aykNCiAgICAgICAgbWFwX25ld192aXJ0dWFsLT4NCiAgICAgICAgICAgICAgICBmbHVzaF9hbGxf
-emVyb19wa21hcHMtPg0KICAgICAgICAgICAgICAgICAgICAgICAgZmx1c2hfdGxiX2tlcm5lbF9y
-YW5nZS0+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uX2VhY2hfY3B1DQogICAg
-ICAgIC8qDQogICAgICAgIGlmIGNwdSAxIGlycV9kaXNhYmxlZCwgdGhlIGNwdSAxDQogICAgICAg
-IGNhbm5vdCBhY2ssIHRoZW4gY3B1IDAgYW5kIGNwdSAxIG1heSBoYW5ndXAuDQogICAgICAgICov
-DQogICAgICAgIHNwaW5fdW5sb2NrKCZrbWFwX2xvY2spDQogICAgICAgIHp6eg0KfQ0KU2lnbmVk
-LW9mZi1ieTogemhhbmdjaHVuIDx6aGFuZy5jaHVuYUBoM2MuY29tPg0KDQpSZXZpZXdlZC1ieTog
-emhhbmd6aGVuZ21pbmcgPHpoYW5nLnpoZW5nbWluZ0BoM2MuY29tPg0KLS0tDQogbW0vaGlnaG1l
-bS5jIHwgNSArKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkNCg0KZGlmZiAtLWdpdCBhL21tL2hpZ2htZW0uYyBiL21tL2hpZ2htZW0uYyBpbmRleCBi
-ZDQ4YmE0Li44NDFiMzcwIDEwMDY0NA0KLS0tIGEvbW0vaGlnaG1lbS5jDQorKysgYi9tbS9oaWdo
-bWVtLmMNCkBAIC0yMjAsOCArMjIwLDExIEBAIHN0YXRpYyB2b2lkIGZsdXNoX2FsbF96ZXJvX3Br
-bWFwcyh2b2lkKQ0KICAgICAgICAgICAgICAgIHNldF9wYWdlX2FkZHJlc3MocGFnZSwgTlVMTCk7
-DQogICAgICAgICAgICAgICAgbmVlZF9mbHVzaCA9IDE7DQogICAgICAgIH0NCi0gICAgICAgaWYg
-KG5lZWRfZmx1c2gpDQorICAgICAgIGlmIChuZWVkX2ZsdXNoKSB7DQorICAgICAgICAgICAgICAg
-c3Bpbl91bmxvY2soJmttYXBfbG9jayk7DQogICAgICAgICAgICAgICAgZmx1c2hfdGxiX2tlcm5l
-bF9yYW5nZShQS01BUF9BRERSKDApLCBQS01BUF9BRERSKExBU1RfUEtNQVApKTsNCisgICAgICAg
-ICAgICAgICBzcGluX2xvY2soJmttYXBfbG9jayk7DQorICAgICAgIH0NCiB9DQoNCiB2b2lkIF9f
-a21hcF9mbHVzaF91bnVzZWQodm9pZCkNCi0tDQoyLjM0LjENCg0KLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LQ0K5pys6YKu5Lu25Y+K5YW26ZmE5Lu25ZCr5pyJ5paw5Y2O5LiJ6ZuG5Zui55qE5L+d5a+G5L+h
-5oGv77yM5LuF6ZmQ5LqO5Y+R6YCB57uZ5LiK6Z2i5Zyw5Z2A5Lit5YiX5Ye6DQrnmoTkuKrkurrm
-iJbnvqTnu4TjgILnpoHmraLku7vkvZXlhbbku5bkurrku6Xku7vkvZXlvaLlvI/kvb/nlKjvvIjl
-jIXmi6zkvYbkuI3pmZDkuo7lhajpg6jmiJbpg6jliIblnLDms4TpnLLjgIHlpI3liLbjgIENCuaI
-luaVo+WPke+8ieacrOmCruS7tuS4reeahOS/oeaBr+OAguWmguaenOaCqOmUmeaUtuS6huacrOmC
-ruS7tu+8jOivt+aCqOeri+WNs+eUteivneaIlumCruS7tumAmuefpeWPkeS7tuS6uuW5tuWIoOmZ
-pOacrA0K6YKu5Lu277yBDQpUaGlzIGUtbWFpbCBhbmQgaXRzIGF0dGFjaG1lbnRzIGNvbnRhaW4g
-Y29uZmlkZW50aWFsIGluZm9ybWF0aW9uIGZyb20gTmV3IEgzQywgd2hpY2ggaXMNCmludGVuZGVk
-IG9ubHkgZm9yIHRoZSBwZXJzb24gb3IgZW50aXR5IHdob3NlIGFkZHJlc3MgaXMgbGlzdGVkIGFi
-b3ZlLiBBbnkgdXNlIG9mIHRoZQ0KaW5mb3JtYXRpb24gY29udGFpbmVkIGhlcmVpbiBpbiBhbnkg
-d2F5IChpbmNsdWRpbmcsIGJ1dCBub3QgbGltaXRlZCB0bywgdG90YWwgb3IgcGFydGlhbA0KZGlz
-Y2xvc3VyZSwgcmVwcm9kdWN0aW9uLCBvciBkaXNzZW1pbmF0aW9uKSBieSBwZXJzb25zIG90aGVy
-IHRoYW4gdGhlIGludGVuZGVkDQpyZWNpcGllbnQocykgaXMgcHJvaGliaXRlZC4gSWYgeW91IHJl
-Y2VpdmUgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlcg0KYnkg
-cGhvbmUgb3IgZW1haWwgaW1tZWRpYXRlbHkgYW5kIGRlbGV0ZSBpdCENCg==
+On Mon, Jul 01, 2024 at 02:51:32PM -0400, Jesse Taube wrote:
+> Parse the device tree for Zkr in the isa string.
+> If Zkr is present, use it to seed the kernel base address.
+> 
+> On an ACPI system, as of this commit, there is no easy way to check if
+> Zkr is present. Blindly running the instruction isn't an option as;
+> we have to be able to trust the firmware.
+> 
+> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+> ---
+> V1 -> V2:
+>  - Almost entire rewrite
+> V2 -> V3:
+>  - Dont parse iscv,isa-base
+>  - Move fdt_early_match_extension_isa in pi.h under comment
+>  - Only check enabled cpus
+>  - Rename early_isa_str to fdt_early_match_extension_isa
+>  - Rename get_ext_named to early_cpu_isa_ext_available
+>  - Rewrite isa_string_contains
+>  - Update commit description
+>  - Use fdt_stringlist_contains for riscv,isa-extensions
+> ---
+>  arch/riscv/kernel/pi/Makefile           |   2 +-
+>  arch/riscv/kernel/pi/archrandom_early.c |  30 +++++
+>  arch/riscv/kernel/pi/fdt_early.c        | 160 ++++++++++++++++++++++++
+>  arch/riscv/kernel/pi/pi.h               |   3 +
+>  arch/riscv/mm/init.c                    |   5 +-
+>  5 files changed, 198 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/riscv/kernel/pi/archrandom_early.c
+> 
+> diff --git a/arch/riscv/kernel/pi/Makefile b/arch/riscv/kernel/pi/Makefile
+> index 1ef7584be0c3..dba902f2a538 100644
+> --- a/arch/riscv/kernel/pi/Makefile
+> +++ b/arch/riscv/kernel/pi/Makefile
+> @@ -33,5 +33,5 @@ $(obj)/string.o: $(srctree)/lib/string.c FORCE
+>  $(obj)/ctype.o: $(srctree)/lib/ctype.c FORCE
+>  	$(call if_changed_rule,cc_o_c)
+>  
+> -obj-y		:= cmdline_early.pi.o fdt_early.pi.o string.pi.o ctype.pi.o lib-fdt.pi.o lib-fdt_ro.pi.o
+> +obj-y		:= cmdline_early.pi.o fdt_early.pi.o string.pi.o ctype.pi.o lib-fdt.pi.o lib-fdt_ro.pi.o archrandom_early.pi.o
+
+When CONFIG_FORTIFY_SOURCE is enabled, the string functions try to
+reference `__fortify_panic` which gets aliased to `__pi___fortify_panic`
+and causes lld to fail:
+
+ld.lld: error: undefined hidden symbol: __pi___fortify_panic
+>>> referenced by fdt_early.c:24 (arch/riscv/kernel/pi/fdt_early.c:24)
+>>>               arch/riscv/kernel/pi/fdt_early.pi.o:(__pi_fdt_early_match_extension_isa) in archive vmlinux.a
+
+This early in boot __fortify_panic isn't supported. Can you add
+`CFLAGS_fdt_early.o += -D__NO_FORTIFY` next to the same addition for
+cmdline_early and fdt_early?
+
+The rest of this looks go to me (just send a new version with this simple fix).
+
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+
+>  extra-y		:= $(patsubst %.pi.o,%.o,$(obj-y))
+> diff --git a/arch/riscv/kernel/pi/archrandom_early.c b/arch/riscv/kernel/pi/archrandom_early.c
+> new file mode 100644
+> index 000000000000..3f05d3cf3b7b
+> --- /dev/null
+> +++ b/arch/riscv/kernel/pi/archrandom_early.c
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <asm/csr.h>
+> +#include <linux/processor.h>
+> +
+> +#include "pi.h"
+> +
+> +/*
+> + * To avoid rewriting code include asm/archrandom.h and create macros
+> + * for the functions that won't be included.
+> + */
+> +#undef riscv_has_extension_unlikely
+> +#define riscv_has_extension_likely(...) false
+> +#undef pr_err_once
+> +#define pr_err_once(...)
+> +
+> +#include <asm/archrandom.h>
+> +
+> +u64 get_kaslr_seed_zkr(const uintptr_t dtb_pa)
+> +{
+> +	unsigned long seed = 0;
+> +
+> +	if (!fdt_early_match_extension_isa((const void *)dtb_pa, "zkr"))
+> +		return 0;
+> +
+> +	if (!csr_seed_long(&seed))
+> +		return 0;
+> +
+> +	return seed;
+> +}
+> diff --git a/arch/riscv/kernel/pi/fdt_early.c b/arch/riscv/kernel/pi/fdt_early.c
+> index 40ee299702bf..49ff5360bf87 100644
+> --- a/arch/riscv/kernel/pi/fdt_early.c
+> +++ b/arch/riscv/kernel/pi/fdt_early.c
+> @@ -2,6 +2,7 @@
+>  #include <linux/types.h>
+>  #include <linux/init.h>
+>  #include <linux/libfdt.h>
+> +#include <linux/ctype.h>
+>  
+>  #include "pi.h"
+>  
+> @@ -23,3 +24,162 @@ u64 get_kaslr_seed(uintptr_t dtb_pa)
+>  	*prop = 0;
+>  	return ret;
+>  }
+> +
+> +/**
+> + *  fdt_device_is_available - check if a device is available for use
+> + *
+> + * @fdt: pointer to the device tree blob
+> + * @node: offset of the node whose property to find
+> + *
+> + *  Returns true if the status property is absent or set to "okay" or "ok",
+> + *  false otherwise
+> + */
+> +static bool fdt_device_is_available(const void *fdt, int node)
+> +{
+> +	const char *status;
+> +	int statlen;
+> +
+> +	status = fdt_getprop(fdt, node, "status", &statlen);
+> +	if (!status)
+> +		return true;
+> +
+> +	if (statlen > 0) {
+> +		if (!strcmp(status, "okay") || !strcmp(status, "ok"))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +/* Copy of fdt_nodename_eq_ */
+> +static int fdt_node_name_eq(const void *fdt, int offset,
+> +			    const char *s)
+> +{
+> +	int olen;
+> +	int len = strlen(s);
+> +	const char *p = fdt_get_name(fdt, offset, &olen);
+> +
+> +	if (!p || olen < len)
+> +		/* short match */
+> +		return 0;
+> +
+> +	if (memcmp(p, s, len) != 0)
+> +		return 0;
+> +
+> +	if (p[len] == '\0')
+> +		return 1;
+> +	else if (!memchr(s, '@', len) && (p[len] == '@'))
+> +		return 1;
+> +	else
+> +		return 0;
+> +}
+> +
+> +/**
+> + *  isa_string_contains - check if isa string contains an extension
+> + *
+> + * @isa_str: isa string to search
+> + * @ext_name: the extension to search for
+> + *
+> + *  Returns true if the extension is in the given isa string,
+> + *  false otherwise
+> + */
+> +static bool isa_string_contains(const char *isa_str, const char *ext_name)
+> +{
+> +	size_t i, single_end, len = strlen(ext_name);
+> +	char ext_end;
+> +
+> +	/* Error must contain rv32/64 */
+> +	if (strlen(isa_str) < 4)
+> +		return false;
+> +
+> +	if (len == 1) {
+> +		single_end = strcspn(isa_str, "sSxXzZ");
+> +		/* Search for single chars between rv32/64 and multi-letter extensions */
+> +		for (i = 4; i < single_end; i++) {
+> +			if (tolower(isa_str[i]) == ext_name[0])
+> +				return true;
+> +		}
+> +		return false;
+> +	}
+> +
+> +	/* Skip to start of multi-letter extensions */
+> +	isa_str = strpbrk(isa_str, "sSxXzZ");
+> +	while (isa_str) {
+> +		if (strncasecmp(isa_str, ext_name, len) == 0) {
+> +			ext_end = isa_str[len];
+> +			/* Check if matches the whole extension excluding version. */
+> +			if (ext_end == '\0' || ext_end == '_' || isdigit(ext_end))
+> +				return true;
+> +		}
+> +		/* Multi-letter extensions must be split from other multi-letter
+> +		 * extensions with an "_", the end of a multi-letter extension will
+> +		 * either be the null character or the "_" at the start of the next
+> +		 * multi-letter extension.
+> +		 */
+> +		isa_str = strchr(isa_str, '_');
+> +		if (isa_str)
+> +			isa_str++;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +/**
+> + *  early_cpu_isa_ext_available - check if cpu node has an extension
+> + *
+> + * @fdt: pointer to the device tree blob
+> + * @node: offset of the cpu node
+> + * @ext_name: the extension to search for
+> + *
+> + *  Returns true if the cpu node has the extension,
+> + *  false otherwise
+> + */
+> +static bool early_cpu_isa_ext_available(const void *fdt, int node, const char *ext_name)
+> +{
+> +	const void *prop;
+> +	int len;
+> +
+> +	prop = fdt_getprop(fdt, node, "riscv,isa-extensions", &len);
+> +	if (prop && fdt_stringlist_contains(prop, len, ext_name))
+> +		return true;
+> +
+> +	prop = fdt_getprop(fdt, node, "riscv,isa", &len);
+> +	if (prop && isa_string_contains(prop, ext_name))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +/**
+> + *  fdt_early_match_extension_isa - check if all cpu nodes have an extension
+> + *
+> + * @fdt: pointer to the device tree blob
+> + * @ext_name: the extension to search for
+> + *
+> + *  Returns true if the all available the cpu nodes have the extension,
+> + *  false otherwise
+> + */
+> +bool fdt_early_match_extension_isa(const void *fdt, const char *ext_name)
+> +{
+> +	int node, parent;
+> +	bool ret = false;
+> +
+> +	parent = fdt_path_offset(fdt, "/cpus");
+> +	if (parent < 0)
+> +		return false;
+> +
+> +	fdt_for_each_subnode(node, fdt, parent) {
+> +		if (!fdt_node_name_eq(fdt, node, "cpu"))
+> +			continue;
+> +
+> +		if (!fdt_device_is_available(fdt, node))
+> +			continue;
+> +
+> +		if (!early_cpu_isa_ext_available(fdt, node, ext_name))
+> +			return false;
+> +
+> +		ret = true;
+> +	}
+> +
+> +	return ret;
+> +}
+> diff --git a/arch/riscv/kernel/pi/pi.h b/arch/riscv/kernel/pi/pi.h
+> index 493c8cb7c0e6..21141d84fea6 100644
+> --- a/arch/riscv/kernel/pi/pi.h
+> +++ b/arch/riscv/kernel/pi/pi.h
+> @@ -11,7 +11,10 @@
+>   */
+>  
+>  u64 get_kaslr_seed(uintptr_t dtb_pa);
+> +u64 get_kaslr_seed_zkr(const uintptr_t dtb_pa);
+>  bool set_nokaslr_from_cmdline(uintptr_t dtb_pa);
+>  u64 set_satp_mode_from_cmdline(uintptr_t dtb_pa);
+>  
+> +bool fdt_early_match_extension_isa(const void *fdt, const char *ext_name);
+> +
+>  #endif /* _RISCV_PI_H_ */
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 9940171c79f0..bfb068dc4a64 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -1025,6 +1025,7 @@ static void __init pt_ops_set_late(void)
+>  #ifdef CONFIG_RANDOMIZE_BASE
+>  extern bool __init __pi_set_nokaslr_from_cmdline(uintptr_t dtb_pa);
+>  extern u64 __init __pi_get_kaslr_seed(uintptr_t dtb_pa);
+> +extern u64 __init __pi_get_kaslr_seed_zkr(const uintptr_t dtb_pa);
+>  
+>  static int __init print_nokaslr(char *p)
+>  {
+> @@ -1045,10 +1046,12 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>  
+>  #ifdef CONFIG_RANDOMIZE_BASE
+>  	if (!__pi_set_nokaslr_from_cmdline(dtb_pa)) {
+> -		u64 kaslr_seed = __pi_get_kaslr_seed(dtb_pa);
+> +		u64 kaslr_seed = __pi_get_kaslr_seed_zkr(dtb_pa);
+>  		u32 kernel_size = (uintptr_t)(&_end) - (uintptr_t)(&_start);
+>  		u32 nr_pos;
+>  
+> +		if (kaslr_seed == 0)
+> +			kaslr_seed = __pi_get_kaslr_seed(dtb_pa);
+>  		/*
+>  		 * Compute the number of positions available: we are limited
+>  		 * by the early page table that only has one PUD and we must
+> -- 
+> 2.45.2
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
