@@ -1,42 +1,63 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5BB55C1A
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD41E12E1CD
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719903337; cv=none; b=q+AwUAO07k+yei31dhSsR7hrn0W7/f3k3WTXtAT0DsniQiAhXsPDK/mDCO7s6st99uPgZAbMWy1WqCiVvPWpvmUGL6DytA/Uiss1Y//2PZk+esJErlOuBMgmj2b1Du7oa47xZr/SmWdP1jgR8KqfX6Z4pGbuZUeGAGjLwTr78CI=
+	t=1719903360; cv=none; b=UacGjP6iTbxAGe0a/DwybQmfztBGhcblEmsg8OeFU0VNuGlCnJIu3yRwDJMqmOzlQVwnPoQhY/ODqh2KucoPZUAmwhrK3rB7p9llB7n2SWrlkwthoc0z/P6PHb7EchAkFbtbxjJds2h48f3TXHm+QYqTnKNG6DVfqdD8AmqkW2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719903337; c=relaxed/simple;
-	bh=x+SEkEj656NkHk0dv7h0S3gvsmiPq7ZBZhp+ZqQhVrg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RtI/9ZeoRZaqUsd95kNG5znb3rD7oTeAe14wlFsjQ26TSKJy9Yujd8RjApv0W/VvIZRJXGtb791J3Iad3V23TP0wZJiWt+ggJZAhRvnJcVtnm+rEywvFFp7I4eDGZFFhpCJmkYa5Avj3NhJkNP70X3olb6GhdyvDwB3tLRFbH5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WCtvn4vFXznYS3;
-	Tue,  2 Jul 2024 14:55:17 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id BFF1914022D;
-	Tue,  2 Jul 2024 14:55:32 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 2 Jul
- 2024 14:55:32 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <linux@armlinux.org.uk>, <arnd@arndb.de>, <afd@ti.com>,
-	<akpm@linux-foundation.org>, <linus.walleij@linaro.org>,
-	<eric.devolder@oracle.com>, <ardb@kernel.org>, <gregkh@linuxfoundation.org>,
-	<deller@gmx.de>, <javierm@redhat.com>, <bhe@redhat.com>, <robh@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH 2/2] ARM: 9322/1: Convert to arch_cpu_is_hotpluggable()
-Date: Tue, 2 Jul 2024 14:59:06 +0800
-Message-ID: <20240702065906.929987-3-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1719903360; c=relaxed/simple;
+	bh=916JHf1x7pQxiP1w5zb4l22Bh5FMWLpzdyrqfqetWw8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GBtbeh2gJB+37jLcscfOEzIpV7r60CbDRqjruoks1/bu1IxCnpssWYKB/ztVBwqInargpsCpUd8rC7bgRpjet8hyOsrfYN/zMFaUV9rkUjZSdX/htnI53HPk/Dfp8ID6XcrotSYFh4tbROsTYZ8px74mBj491DdvFovHc9bpTyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mzq7sTl6; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mzq7sTl6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719903359; x=1751439359;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=916JHf1x7pQxiP1w5zb4l22Bh5FMWLpzdyrqfqetWw8=;
+  b=Mzq7sTl6Nw3tvoKKPsBz4+BheBwwPAPzbQkrWLN/6QO+NbkzrS5TU+2O
+   cIgUdx4sxCK2j0S3k2eJs90JFgyxEWnT2hJbKUdNhBDvLFEiapPbx4h85
+   ZAv5ZgWr2mO8nKLZojwssgoB2buVyhrprFRJHjtwq69/H/AJRZGI1hfYC
+   VI6Ilx1Ii32qyaqhRSDuc5VxFp6KuQbo/WrBpP5bCntLZXbaHKuQoZkGz
+   a6fww/HY8rrcPJpKU+IOIUiZw5Ksm9Ixwx114+XdlMtzXyYcTN38ZYgAq
+   fYQclyOigKFHp8/5bqBXmvjikWAantVp/lpqSjLzJDbycY+Yx41+GT9MV
+   g==;
+X-CSE-ConnectionGUID: pOjzZjUUQMW7s4o1Eywa0g==
+X-CSE-MsgGUID: mHY9khdeTIGbnmZaQ6VNbQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="12352634"
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="12352634"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 23:55:58 -0700
+X-CSE-ConnectionGUID: xom5wlJkQTqOoRKLtycdyg==
+X-CSE-MsgGUID: DT4JYkzrSzuPBVJIiyOBWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="50405617"
+Received: from unknown (HELO dell-3650.sh.intel.com) ([10.239.159.147])
+  by fmviesa004.fm.intel.com with ESMTP; 01 Jul 2024 23:55:55 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [RESEND Patch 1/2] perf/x86: Remove perf_events_lapic_init() calling from x86_pmu_enable()
+Date: Wed,  3 Jul 2024 06:57:02 +0800
+Message-Id: <20240702225703.346951-1-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240702065906.929987-1-ruanjinjie@huawei.com>
-References: <20240702065906.929987-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,37 +65,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi100008.china.huawei.com (7.221.188.57)
 
-Convert arm32 to use the arch_cpu_is_hotpluggable() helper rather than
-arch_register_cpu().
+perf_events_lapic_init() helper is called to configure PMI to NMI vector
+and clear MASK bit simultaneously by writing APIC_LVTPC MSR. It's called
+firstly to initialize APIC_LVTPC MSR by init_hw_perf_events(), and the
+PMI handler would always to clear the MASK bit in APIC_LVTPC MSR by
+writing APIC_LVTPC MSR directly.
 
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+So it becomes unnecessary to call perf_events_lapic_init() again in
+x86_pmu_enable(), and worse x86_pmu_enable() could be called very
+frequently in some scenarios with very high context-switches. This would
+cause performance overhead which can't be ignored especially in KVM guest
+environment since frequent APIC_LVTPC writing would cause huge number
+of VM-Exits.
+
+For example, in guest environment Geekbench score (running multiplxing
+perf-stat command in background) increases 1% and perf-sched benchmark
+increases 7% after removing perf_events_lapic_init() calling from
+x86_pmu_enable().
+
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/arm/kernel/setup.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/x86/events/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index f91e2b5b8b20..e6a857bf0ce6 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -1201,12 +1201,9 @@ void __init setup_arch(char **cmdline_p)
- 		mdesc->init_early();
- }
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 5b0dd07b1ef1..580923443813 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1347,7 +1347,6 @@ static void x86_pmu_enable(struct pmu *pmu)
+ 			x86_pmu_start(event, PERF_EF_RELOAD);
+ 		}
+ 		cpuc->n_added = 0;
+-		perf_events_lapic_init();
+ 	}
  
--int arch_register_cpu(int num)
-+bool arch_cpu_is_hotpluggable(int num)
- {
--	struct cpu *cpu = &per_cpu(cpu_devices, num);
--
--	cpu->hotpluggable = platform_can_hotplug_cpu(num);
--	return register_cpu(cpu, num);
-+	return platform_can_hotplug_cpu(num);
- }
- 
- #ifdef CONFIG_HAVE_PROC_CPU
+ 	cpuc->enabled = 1;
+
+base-commit: 73e931504f8e0d42978bfcda37b323dbbd1afc08
 -- 
-2.34.1
+2.40.1
 
