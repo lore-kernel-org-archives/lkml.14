@@ -1,35 +1,48 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from serv108.segi.ulg.ac.be (serv108.segi.ulg.ac.be [139.165.32.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9E01BE234;
-	Tue,  2 Jul 2024 17:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FB0155335;
+	Tue,  2 Jul 2024 17:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.165.32.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719942688; cv=none; b=rnex/RjxGscCtAimzpXeuaYr0S/mY1etvRD6pRbx84oV+8zH0xmfYVX5/Mw5EDZnGIPuSwsgA4IRrBkUpi2UVWzXIlBFao4S17a+m5m4ZB6xNJAtJmXbvuG8hzG1rPFpzxZNz8rjLa1okXM4SQVdY6X6hV4XtE+1bTSjvGJLZi0=
+	t=1719942826; cv=none; b=UAg4/zJd/Z4TY3pqckFvMwTGb6o+vZbPkY0kZHi0DEhA0OPjesmUdoR1jyNMeCJFXov/PyhlTBs0QN8M35FYpnZVfZUD4/XefLTKRlLyAFVLZyIl/oUSvvlSVSGlqx/q+GAXyvXO32nG2UvY4eYQ5WlG4LIo82qUu/s+Ths560g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719942688; c=relaxed/simple;
-	bh=H+U1EYcxPs8vYHE+bBElJ5nD7JX1Ny122D1CoXoM0nE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fDACJpzpRn23zsJy5KaOV0/BtRc3dkbSHFyVkzwrNcIo0XR1lgw3xTwXv/h5amWVsPhmzWOj9eMB2Lr3F4pI4r52tSiJPlZEWr2xC80C/EI/oC6Kv7BaEsw2BxLJajn/zCLutdqfWagdCNU3xFGLIlk0Ygj7udhmDQo85nTQzWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from ljl-virtual-machine.localdomain (unknown [106.58.225.219])
-	by APP-01 (Coremail) with SMTP id qwCowABnR0zvPYRmR0g9AQ--.968S2;
-	Wed, 03 Jul 2024 01:51:06 +0800 (CST)
-From: Junlin Li <make24@iscas.ac.cn>
-To: mchehab@kernel.org,
-	laurent.pinchart+renesas@ideasonboard.com,
-	tzimmermann@suse.de,
-	wsa+renesas@sang-engineering.com,
-	hkallweit1@gmail.com,
-	robh@kernel.org,
-	crope@iki.fi
-Cc: linux-media@vger.kernel.org,
+	s=arc-20240116; t=1719942826; c=relaxed/simple;
+	bh=hopb8jJXYjSgJxfRiT/jTw/DJbPUKO4GWu2WfEyTerI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZUBtdjkb8d3cq766UgCBVBXCFeqO6RYfOdGl1s5q+C7Wq2GwudsXgShjzisnvpYvfxxJyXLTubJZQtkM9+BoAGt0GnYKBl5CWXjuSOX4409dEQOW5c7/OGA7/7o/dOUQuet5sUHz/VaCQ93T6kaWfkNzwlyJIGehLSV70wS40yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be; spf=pass smtp.mailfrom=uliege.be; dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b=URey39i0; arc=none smtp.client-ip=139.165.32.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uliege.be
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b="URey39i0"
+Received: from localhost.localdomain (48.39-182-91.adsl-dyn.isp.belgacom.be [91.182.39.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by serv108.segi.ulg.ac.be (Postfix) with ESMTPSA id DDB89200BFE3;
+	Tue,  2 Jul 2024 19:45:23 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 serv108.segi.ulg.ac.be DDB89200BFE3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uliege.be;
+	s=ulg20190529; t=1719942324;
+	bh=8KC+FJWfjQ8vb3wsEa+o1zXrrfgLfUradvGMOOm1hpw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=URey39i0gsUKzJJUldP8A++Y9SY8+AR+fh72V3WV5LiWebU34TTB9dWMZHWThSJXj
+	 tdms3HYkl7+/gPsz50ZYPFZBspFj/yhIzNCvW2Xm63TwMGGBS/EXk/4wseAtsvWX5Y
+	 w8QGiJ7DaULQiTx8Zr6BQBU+vICuaGHAUU8FIBrfVG/3b/8PEP1SBS/qFeiDDLuhiH
+	 LSps5jDYXX3TvpwabDu3s915y/aiDHhUujDpvH38qeaq8ZYxk/sPO6SziqY7OUTW/N
+	 aw5Ch/ul1ePZyhdGmGT5E4MxCSLBSWAHDwu8QLjQboM2vpcKSnYqLKSVIp1P/Je4p7
+	 Q9Ksq7UGEb3xQ==
+From: Justin Iurman <justin.iurman@uliege.be>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
 	linux-kernel@vger.kernel.org,
-	Junlin Li <make24@iscas.ac.cn>
-Subject: [PATCH] drivers: media: dvb-frontends/rtl2830: fix an out-of-bounds write error
-Date: Wed,  3 Jul 2024 01:50:23 +0800
-Message-Id: <20240702175023.3921-1-make24@iscas.ac.cn>
+	justin.iurman@uliege.be
+Subject: [PATCH net 0/2] net: ioam6: fix bugs in ioam6_iptunnel
+Date: Tue,  2 Jul 2024 19:44:49 +0200
+Message-Id: <20240702174451.22735-1-justin.iurman@uliege.be>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,54 +51,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABnR0zvPYRmR0g9AQ--.968S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XrWkAryrWw4xur4rGrW3ZFb_yoWkJwc_G3
-	4SqrsxXFyjqF1Yya1Y9w45ZrWq9rW7XwsYgF15t3y3tFW5ZFy8KFyqg3ZFyFy8WFy7Wrn8
-	AFnxGF1Sk3W29jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-	Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
-	WxJr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
-	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUQZ23UUUUU=
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Ensure index in rtl2830_pid_filter
-does not exceed 31 to prevent out-of-bounds access.
-dev->filters is a 32-bit value,
-so set_bit and clear_bit functions should only
-operate on indices from 0 to 31.
-If index is 32, it will attempt to access a non-existent 33rd bit,
-leading to out-of-bounds access.
-Change the boundary check
-from index > 32 to index >= 32 to resolve this issue.
+When running some measurements on IOAM, we discovered a "bug" that
+triggers two reallocations instead of one in some specific cases. Those
+specific cases are:
+- "inline" mode with pre-allocated data size 236 or 240 bytes
+- "encap" mode with pre-allocated data size 196 or 200 bytes
 
-Fixes: df70ddad81b4 ("[media] rtl2830: implement PID filter")
-Signed-off-by: Junlin Li <make24@iscas.ac.cn>
----
- drivers/media/dvb-frontends/rtl2830.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The reason is that we (unluckily) fall on a boundary and, since we use
+skb->mac_len by default in skb_cow_head(), the second call to
+skb_cow_head() after the insertion may need more than available in the
+headroom (because, there, we call LL_RESERVED_SPACE()). Example on a
+machine that reallocates by steps of 64 bytes:
+- I need to add 256 bytes (+14 skb->mac_len), so 270 bytes
+- current headroom is 206 bytes
+- call to skb_cow_head, the headroom is now 270 bytes (+64 bytes)
+- after the insertion, we want to make sure that the dev has enough
+  headroom (LL_RESERVED_SPACE() gives 16 bytes in our case: 14+2)
+- current headroom is 14 bytes (yep, remember... see above)
+- call to skb_cow_head... oh wait, I need 16 bytes and I only have 14
+  available... let's reallocate! The headroom is now 78 bytes (+64)
 
-diff --git a/drivers/media/dvb-frontends/rtl2830.c b/drivers/media/dvb-frontends/rtl2830.c
-index 30d10fe4b33e..320aa2bf99d4 100644
---- a/drivers/media/dvb-frontends/rtl2830.c
-+++ b/drivers/media/dvb-frontends/rtl2830.c
-@@ -609,7 +609,7 @@ static int rtl2830_pid_filter(struct dvb_frontend *fe, u8 index, u16 pid, int on
- 		index, pid, onoff);
- 
- 	/* skip invalid PIDs (0x2000) */
--	if (pid > 0x1fff || index > 32)
-+	if (pid > 0x1fff || index >= 32)
- 		return 0;
- 
- 	if (onoff)
+And so every single time. Patch 2 solves this issue by providing a
+mitigation.
+
+Also, while fixing the above, we discovered another bug: after the
+insertion, the second call to skb_cow_head() makes sure that the dev has
+enough headroom for layer 2 and stuff. In that case, the "old" dst entry
+is used, which is not correct. Patch 1 solves this issue.
+
+Justin Iurman (2):
+  net: ioam6: use "new" dst entry with skb_cow_head
+  net: ioam6: mitigate the two reallocations problem
+
+ net/ipv6/ioam6_iptunnel.c | 85 ++++++++++++++++++++-------------------
+ 1 file changed, 44 insertions(+), 41 deletions(-)
+
 -- 
 2.34.1
 
