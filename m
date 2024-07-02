@@ -1,36 +1,45 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from out0-215.mail.aliyun.com (out0-215.mail.aliyun.com [140.205.0.215])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67750171BA;
-	Tue,  2 Jul 2024 02:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA0E101E4
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 02:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.215
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719887711; cv=none; b=Yb7Zs0KoDXUxNaFHkf7EmPRP/mkdBycVzi9gpRxOKgr+Buv3W4AnUFc19YX2PmLJsr/aGOp0bQRKQHx0eiunI+EGkB/Xm3elq8dDTJxqN/6HMu0YKxrQNhIxGATOJPOn4F/dBLtinEwhAe5f6pXz7RGq1wZcGXOG/rnV0VfQHKw=
+	t=1719887880; cv=none; b=tyAjCr3kVQPD/BWAb9zKA4RFR3eFj3aJ8856EO6QbFNQIUyyfYM47H/w6dnOgk6T01hDykX3RKdfG+2ySYmDTqp6mwpnLu8skVLcmBxiuTDg3/9Gwd9s9AwRrArz+aWMhDl3ZqWvRzTW4Py5/y8dC91Grc9fmbKydnmKzZTpOBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719887711; c=relaxed/simple;
-	bh=duOE5/WUTmEt2OMV+3Ya1x3dxJYEKTpX14cmRqn2wUA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nH/H6NqleSJFrIJT/aWbV7NX5KFWb+44B6GXNF5L1sXgjoBXRZaWE1p/aJwH+mihTisVDR7srzYqSoGDuGVzmiAxBLwENhC6fYBE3rwtkP957TdBD9f3GUSlkri0Me1RMIW6OlXNhfUzX8boc4mM5QuJ6d/Tz9Ln7u+WkbZIHr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WCn2L3q1Qz1T4gb;
-	Tue,  2 Jul 2024 10:30:34 +0800 (CST)
-Received: from kwepemd100013.china.huawei.com (unknown [7.221.188.163])
-	by mail.maildlp.com (Postfix) with ESMTPS id 17DA518007E;
-	Tue,  2 Jul 2024 10:35:06 +0800 (CST)
-Received: from huawei.com (10.67.174.121) by kwepemd100013.china.huawei.com
- (7.221.188.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Tue, 2 Jul
- 2024 10:35:05 +0800
-From: Chen Ridong <chenridong@huawei.com>
-To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
-	<longman@redhat.com>
-CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 -next] cgroup/rstat: add force idle show helper
-Date: Tue, 2 Jul 2024 02:28:22 +0000
-Message-ID: <20240702022822.1032693-1-chenridong@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1719887880; c=relaxed/simple;
+	bh=DQlNrY6GpPnwFvmd+8wGYRreV8/2u30pY/SEpRMlZbc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HWC4n6IF0DSV+e24h15U2UJ7pmEmk2Qa3D9tzV0jGjWMclBoddZroiiu547q5AZGL7xLH3ZfedQuZmQL3thnHdVOLiqq9ZPQru5i6NntLQFtjFGxKZXi9C7iGhZcSgeIQkTeX2PwvWU4d6r1IsQaMZfEPdAlhe6eC5mrSgLabwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=1GxGAz3S; arc=none smtp.client-ip=140.205.0.215
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="1GxGAz3S"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1719887875; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=24NgFMDS5S3jO5/FabpLcvF++s2Y5El1WGn9ifWoN/4=;
+	b=1GxGAz3SPPmrKqAg1B29gEAVKeniRaFegmcKlSk1x6dZcwqXD0BgIWhypR+rnBv7DkjR7Yk6U7g7WyWJw7IqIQ8CDxdAPd79UIlQ5oAzk85hNWElkj4narvtkDm0emNebFSy0YUDRFuP1wk5+8jTa3vSLCTQeIlisCZdKr5GJQQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033070021176;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---.YEjSGUT_1719887873;
+Received: from localhost(mailfrom:libang.li@antgroup.com fp:SMTPD_---.YEjSGUT_1719887873)
+          by smtp.aliyun-inc.com;
+          Tue, 02 Jul 2024 10:37:54 +0800
+From: "Bang Li" <libang.li@antgroup.com>
+To: ughd@google.com,
+	akpm@linux-foundation.org
+Cc:  <david@redhat.com>,
+   <ryan.roberts@arm.com>,
+   <wangkefeng.wang@huawei.com>,
+   <baolin.wang@linux.alibaba.com>,
+   <ioworker0@gmail.com>,
+   <ziy@nvidia.com>,
+   <linux-kernel@vger.kernel.org>,
+   <linux-mm@kvack.org>,
+  "Bang Li" <libang.li@antgroup.com>
+Subject: [PATCH v2] mm: thp: support "THPeligible" semantics for mTHP with anonymous shmem
+Date: Tue, 02 Jul 2024 10:34:01 +0800
+Message-Id: <20240702023401.41553-1-libang.li@antgroup.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,87 +47,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd100013.china.huawei.com (7.221.188.163)
 
-In the function cgroup_base_stat_cputime_show, there are five
-instances of #ifdef, which makes the code not concise.
-To address this, add the function cgroup_force_idle_show
-to make the code more succinct.
+After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
+anonymous shmem"), we can configure different policies through
+the multi-size THP sysfs interface for anonymous shmem. But
+currently "THPeligible" indicates only whether the mapping is
+eligible for allocating THP-pages as well as the THP is PMD
+mappable or not for anonymous shmem, we need to support semantics
+for mTHP with anonymous shmem similar to those for mTHP with
+anonymous memory.
 
-Signed-off-by: Chen Ridong <chenridong@huawei.com>
+Signed-off-by: Bang Li <libang.li@antgroup.com>
 ---
- kernel/cgroup/rstat.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+Changes since v1 [1]:
+ - Put anonymous shmem mthp related logic into
+   thp_vma_allowable_orders() (per David)
 
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index fb8b49437573..22bb4e9050f0 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -594,49 +594,47 @@ static void root_cgroup_cputime(struct cgroup_base_stat *bstat)
- 	}
+[1] https://lore.kernel.org/linux-mm/20240628104926.34209-1-libang.li@antgroup.com/
+---
+ include/linux/huge_mm.h | 11 +++++++++++
+ mm/huge_memory.c        | 13 +++++++++----
+ mm/shmem.c              |  9 +--------
+ 3 files changed, 21 insertions(+), 12 deletions(-)
+
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 212cca384d7e..f87136f38aa1 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -267,6 +267,10 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+ 	return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
  }
  
++unsigned long shmem_allowable_huge_orders(struct inode *inode,
++				struct vm_area_struct *vma, pgoff_t index,
++				bool global_huge);
 +
-+static void cgroup_force_idle_show(struct seq_file *seq, struct cgroup_base_stat *bstat)
+ struct thpsize {
+ 	struct kobject kobj;
+ 	struct list_head node;
+@@ -460,6 +464,13 @@ static inline unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+ 	return 0;
+ }
+ 
++static inline unsigned long shmem_allowable_huge_orders(struct inode *inode,
++				struct vm_area_struct *vma, pgoff_t index,
++				bool global_huge)
 +{
-+#ifdef CONFIG_SCHED_CORE
-+	u64 forceidle_time = bstat->forceidle_sum;
-+
-+	do_div(forceidle_time, NSEC_PER_USEC);
-+	seq_printf(seq, "core_sched.force_idle_usec %llu\n", forceidle_time);
-+#endif
++	return 0;
 +}
 +
- void cgroup_base_stat_cputime_show(struct seq_file *seq)
- {
- 	struct cgroup *cgrp = seq_css(seq)->cgroup;
- 	u64 usage, utime, stime;
- 	struct cgroup_base_stat bstat;
--#ifdef CONFIG_SCHED_CORE
--	u64 forceidle_time;
--#endif
+ #define transparent_hugepage_flags 0UL
  
- 	if (cgroup_parent(cgrp)) {
- 		cgroup_rstat_flush_hold(cgrp);
- 		usage = cgrp->bstat.cputime.sum_exec_runtime;
- 		cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime,
- 			       &utime, &stime);
--#ifdef CONFIG_SCHED_CORE
--		forceidle_time = cgrp->bstat.forceidle_sum;
--#endif
-+		bstat = cgrp->bstat;
- 		cgroup_rstat_flush_release(cgrp);
- 	} else {
- 		root_cgroup_cputime(&bstat);
- 		usage = bstat.cputime.sum_exec_runtime;
- 		utime = bstat.cputime.utime;
- 		stime = bstat.cputime.stime;
--#ifdef CONFIG_SCHED_CORE
--		forceidle_time = bstat.forceidle_sum;
--#endif
- 	}
+ #define thp_get_unmapped_area	NULL
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index c7ce28f6b7f3..ea377bb4af91 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -151,10 +151,15 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+ 	 * Must be done before hugepage flags check since shmem has its
+ 	 * own flags.
+ 	 */
+-	if (!in_pf && shmem_file(vma->vm_file))
+-		return shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
+-				     !enforce_sysfs, vma->vm_mm, vm_flags)
+-			? orders : 0;
++	if (!in_pf && shmem_file(vma->vm_file)) {
++		bool global_huge = shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
++							!enforce_sysfs, vma->vm_mm, vm_flags);
++
++		if (!vma_is_anon_shmem(vma))
++			return global_huge? orders : 0;
++		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
++							vma, vma->vm_pgoff, global_huge);
++	}
  
- 	do_div(usage, NSEC_PER_USEC);
- 	do_div(utime, NSEC_PER_USEC);
- 	do_div(stime, NSEC_PER_USEC);
--#ifdef CONFIG_SCHED_CORE
--	do_div(forceidle_time, NSEC_PER_USEC);
--#endif
- 
- 	seq_printf(seq, "usage_usec %llu\n"
- 		   "user_usec %llu\n"
- 		   "system_usec %llu\n",
- 		   usage, utime, stime);
- 
--#ifdef CONFIG_SCHED_CORE
--	seq_printf(seq, "core_sched.force_idle_usec %llu\n", forceidle_time);
--#endif
-+	cgroup_force_idle_show(seq, &bstat);
+ 	if (!vma_is_anonymous(vma)) {
+ 		/*
+diff --git a/mm/shmem.c b/mm/shmem.c
+index d495c0701a83..aa85df9c662a 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1622,7 +1622,7 @@ static gfp_t limit_gfp_mask(gfp_t huge_gfp, gfp_t limit_gfp)
  }
  
- /* Add bpf kfuncs for cgroup_rstat_updated() and cgroup_rstat_flush() */
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-static unsigned long shmem_allowable_huge_orders(struct inode *inode,
++unsigned long shmem_allowable_huge_orders(struct inode *inode,
+ 				struct vm_area_struct *vma, pgoff_t index,
+ 				bool global_huge)
+ {
+@@ -1707,13 +1707,6 @@ static unsigned long shmem_suitable_orders(struct inode *inode, struct vm_fault
+ 	return orders;
+ }
+ #else
+-static unsigned long shmem_allowable_huge_orders(struct inode *inode,
+-				struct vm_area_struct *vma, pgoff_t index,
+-				bool global_huge)
+-{
+-	return 0;
+-}
+-
+ static unsigned long shmem_suitable_orders(struct inode *inode, struct vm_fault *vmf,
+ 					   struct address_space *mapping, pgoff_t index,
+ 					   unsigned long orders)
 -- 
-2.34.1
+2.19.1.6.gb485710b
 
