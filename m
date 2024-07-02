@@ -1,82 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2745C1DFFC;
-	Tue,  2 Jul 2024 15:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75281DFFC
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 15:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719932555; cv=none; b=S5FmUZVf9xBQNiIGrJdGdTyhRBXeGmENkT6lwbZYaipW4dE8UwV7TQmSpl/WWmnNQFARasSsDfV7f9+WK6rOCm92MHBatXHtFDQE2+JUU81oHIfrtb+3o6HVJj03diQPYi15wEqoloIsxDi5OSVvxABqtvxCJo7V2Kwgnhj8XUU=
+	t=1719932568; cv=none; b=VaLNSDx15lNovV9bsrqnBN5D+FsZwLxVLt22WvVK7UrlBuTaR7m09IvngDt4iMpkjUNoG2d93Sxf/8CKM6CZKQjmfUC2vfEKC/G1/YaRyz+e15TY0YmJoLxrzcgDuR6b/h+2qgDFZP0iewE+TREFc0cYkXgG9HwAtID7HnVfvNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719932555; c=relaxed/simple;
-	bh=ztMq901XmUFB1BuzPipFR04mykoZrcUnpHnDqCoR3FI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eee2RnWZJOYHT275sYii7uib1TU2DdcJj995PmtB26nO4PIF034ZtvAsYSWTUnDHFqopqlZpbHoOp64+txJIqMT+u8X2dINTrSvfRGid545NPBo+OrdiTiXFLMWOOTWZONzbbFSovDjwHgcoDbkCHm0TkHXEQPzS6THi4Z/QGHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6+rSvzr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719932568; c=relaxed/simple;
+	bh=fr9y7zaKBJWd5Nq+J5D0Htxix9ZN96bhg/tbL+wNefI=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=VP9VBeyjjHoVfE8lSsTmwWBaO5e8KoUr2nDYJAGZCv5WxJLdJAOYLYXpdD8KCWd94VbGevAE8bn4Ft/9YbbtXVUUurJo5JOAjif+LOuY4owpABb2MnUJ6fzrxI+FTYCS+bCZvKwY7OlQRnFUQdaPCAumU54+/80YLcAsDPOiWmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=UeSaeYie; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6+rSvzr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D79EC116B1;
-	Tue,  2 Jul 2024 15:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719932554;
-	bh=ztMq901XmUFB1BuzPipFR04mykoZrcUnpHnDqCoR3FI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t6+rSvzrscxfKsOyntILw2yEyYa2bECDdGf8HrqfOaLd2CfPjD6pNgXxf1Sz06+/y
-	 bUfdSoCvAj+/vSE+h6WNZNTQcuiWjCMkaWECQiUEsgRUah77RLElTzuF2vE3fV9TnF
-	 hVaEE6xO1kF3aFfjX2OlS7SvitwVjgTRaxf+pMFtn2cChaSnEACOlovUfIhxu3JPyI
-	 tz6DtPoo1KRfqCKVo199acbNJlcac8p7PWeTYIYd1SkfpdYF6u2FFNNoYGhy44+QQR
-	 0b9PARwt0+91sxNI2XQnfHpW6aby7rUjQhAL0TdwdijM9bxzbgjUzEMbEraek696ev
-	 8Ns5Tt3zJE4Dg==
-Date: Tue, 2 Jul 2024 16:02:30 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Ved Shanbhogue <ved@rivosinc.com>, Matt Evans <mev@rivosinc.com>,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] riscv: Add ISA extension parsing for Svvptc
-Message-ID: <20240702-reset-skirmish-74c6a30b41ad@spud>
-References: <20240702085034.48395-1-alexghiti@rivosinc.com>
- <20240702085034.48395-2-alexghiti@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="UeSaeYie"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1719932555; bh=O4ypknQaGzJdIqqc9/A2hiRqkd8JeZFBfl4wuZsE6Iw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=UeSaeYie1uHsW1tzw0PdBLQ/QQU+pdgtSCh31BbgoB4mKfq3A9K4Hcy10b7t1JGiB
+	 KqcarFZroGl/VOuDtTYSZZasrFBGbgKa81v2RTy3d1pm1PkE7ZSBmgG0txds2LEv7S
+	 O6NVQFcGIwZS8jH/CexI1ILA/31LcbF88F9QsFt8=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id DC89D2F9; Tue, 02 Jul 2024 22:55:08 +0800
+X-QQ-mid: xmsmtpt1719932108t83bauouw
+Message-ID: <tencent_922C096E68955CEA7AED66CC3079766DA40A@qq.com>
+X-QQ-XMAILINFO: OP9Dqbc7TEr/t0FY5px6FxuBcMpGgxXlQF7VfRv7WXFFx5Akdi7cP85s7ZjtU9
+	 Pt2iospx3YBnLiSxhU5S2W8eDBJQKZF87hW4oPWEjUw4ccIFEVm8Bpg9N+EYmNdK4p43lPNJhOtF
+	 U4APEOrX/dy4H/D5FBzkOW/vHQ83y/mcyDK2emTN98VqXA1QcQb5KYinyioGdWPrJ91fqoMcFB8U
+	 JK58FM1045u2FoQ+/VyPzcXIRKl7w10xJ8wHerpCvZvja21cghnhuhRr7QX1/mD+hHrYuJa2oEWT
+	 MC85/JmpZkEPhpVasIn6+h0L+IL+Ffzak2cSiIai7QLiRZz0b1obdk63s5SgGA3xSndALJR6X1Cg
+	 UdnMXetTPmhGRviYjMCjwy0UomaHyYXpdXQFt7XMcYS5gNZPil0yHvpaIMHc0K5WKk1qSSnjn7RL
+	 BQBc33O8XvSdaC18aFwvn2QVPopgy116fPaJ4DCIWd1/3XhO/QSZWTeXN7YbQSoQkBLo+WFVkna8
+	 /kPTtwzVCK3KekjTvqZtXfe6WOokqwP1EqcVBANVZxwmoR57S3m4tyi+mLb9yqEInpvgeha4/IgZ
+	 f+2TdR6xsDNQ9JfpvHqp+H/AlWnM0KLMPpgkZnsfoOeLsLUa0xP8C16SkKyDl3ED7lt8pt1oFBzV
+	 +faQ+0TxzgNetgRjAS3Vc6bLaHZVd4ripQfgelPLtionOHGkKjO2vQrDKY7uQ+GmBwG7tsNUi8NP
+	 fpBvMrgcGCgtIjVvrQom5Ns4Wn+nhnffQG2MlPTmKb1j7dlUGoDJUKVJzquz2X6LuKXEPom4CPRg
+	 mF7HGvubGcza/C8raw5mH0GLvI84GT2icB+hutxdMFhTP8m6cC4U0o8oaKpTMc+NR0sMxfwTFn4Z
+	 R+8U4FyeHamomp8X39rokayttWNxFMtFWcD3jcKW6ORihB8f2bzVtli7UtaXRyOCf1epBy2P2jRk
+	 IcDOkDyMg=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in nf_tables_trans_destroy_work
+Date: Tue,  2 Jul 2024 22:55:09 +0800
+X-OQ-MSGID: <20240702145508.3938445-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000aa1dbb061c354fe6@google.com>
+References: <000000000000aa1dbb061c354fe6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xgGaz+REe5RWb2vu"
-Content-Disposition: inline
-In-Reply-To: <20240702085034.48395-2-alexghiti@rivosinc.com>
+Content-Transfer-Encoding: 8bit
 
+Unbalanced increase and decrease of use in the table
 
---xgGaz+REe5RWb2vu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+#syz test: net-next 1c5fc27bc48a
 
-On Tue, Jul 02, 2024 at 10:50:31AM +0200, Alexandre Ghiti wrote:
-> Add support to parse the Svvptc string in the riscv,isa string.
->=20
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 70d0bad029fd..33139e1b6d46 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -1498,6 +1498,7 @@ static int nf_tables_newtable(struct sk_buff *skb, const struct nfnl_info *info,
+ 	if (err < 0)
+ 		goto err_trans;
+ 
++	nft_use_inc_restore(&table->use);
+ 	list_add_tail_rcu(&table->list, &nft_net->tables);
+ 	return 0;
+ err_trans:
+@@ -9529,6 +9530,9 @@ static void nft_commit_release(struct nft_trans *trans)
+ 
+ 	nft_ctx_update(&ctx, trans);
+ 
++	if (trans->table)
++		nft_use_dec(&trans->table->use);
++
+ 	switch (trans->msg_type) {
+ 	case NFT_MSG_DELTABLE:
+ 	case NFT_MSG_DESTROYTABLE:
 
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
---xgGaz+REe5RWb2vu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoQWhgAKCRB4tDGHoIJi
-0ifAAP9plyA2m/vt7qY20XZcvjGlyy0qgUy50Xu5Kixsyo4MeAEAuTY4Ovy1WMj+
-EW0wPL8aWFktQf2DmAJj/JhJcA9QwwE=
-=F09G
------END PGP SIGNATURE-----
-
---xgGaz+REe5RWb2vu--
