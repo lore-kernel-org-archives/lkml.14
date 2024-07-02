@@ -1,229 +1,119 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C89B1BD512;
-	Tue,  2 Jul 2024 21:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283AE205E11
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719957471; cv=none; b=ca9PoNQkEQNbFzM0H8ntodKMgC8zV1WUH/SVpgaVmJvsPW5ziDBbCbzUnRgOmDox4vj3VVKE48GShcn6909/Wk/dBmpIwC+JKcL5v6Hlo95q2A+SDZJpJ3g9d+nUeV+hzrUIPxjJw2NVE5YeKYElLQf7Z06kue5anBA++2vs/Ag=
+	t=1719957497; cv=none; b=gIuOagWeytan8JFFLU7k6tz5IxKTUuY+Ch+SDcvsOdJUjBrQ1lGtXLucKTCIgd6yEYaDN6xtSLhKn8g+PHsoY92yd+c5x58TT4/hVzpQi2n7i13/aql9xvZfxWyTrvUncF3zpp+pvCWchHwc2NkMgkH/MAazJjfZeZuNnkDUrMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719957471; c=relaxed/simple;
-	bh=3IoNLmFrW04h5NZct8LpCc5lx5DRX/yIR+IZxZhLabU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=acgl5pbaaajAtvyLjBAaMYFmar0i7lUf1mrt2XFwO9ZZz59B80HP5n4DytlyLOjjyeSm4ciYChg8EWKp24MgTk3yvHWIoQy6lfLqKylopUtxyBohqbDsDvxeCSHTXLQcz00t54hKHUtOLELKRGjYIDJS2CpLtjtFUPa4Q639kdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=niPPaf0q; arc=none smtp.client-ip=209.85.218.47
+	s=arc-20240116; t=1719957497; c=relaxed/simple;
+	bh=wKsffOuXjQz6csIEgiqYbyUo9lvjHQdEP0b/s+bAJ7A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ib9Z68nXD7fRV1jGrnTI0JsUYSVirQKBwW70esfeUKZ/L/gs7kBILDpOnvSTf1zY6oan7XJRQ8Bdczx9r8IRkLrILR4Qq1n2N+8NiPKMu8RM6ZOu0N7GHWW8NEwXY+ODlsNsIEGO8E6KiuNoeVcez5072vHOd09eMTH0NHKC3T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yxt0rJiM; arc=none smtp.client-ip=209.85.166.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="niPPaf0q"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a724598cfe3so592316566b.1;
-        Tue, 02 Jul 2024 14:57:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yxt0rJiM"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7f64942fc54so88535239f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:58:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719957467; x=1720562267; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1719957495; x=1720562295; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0qVUlcxGg0CHOekHZ6+YIbM0eY0VoswlJ0lYpz49cnw=;
-        b=niPPaf0qL7/cCI55fzipByy82mm4fRwqTj435f38/0Ri9XpOVV4hNSLkmjM0iYJVTj
-         Qw2Sjdo3MyCJbYLskKj78NFchwc6z1OQZpiYRPpl3XTr+GaQUJP/zyWOCC2TPTJJIQ77
-         MmUgq1fRDmeNJXPg3Hh+1zS2K4NcL0bzE+An0T/umxpOymBFt2mQxwRW+OGsnXVY9vGN
-         3ZlZ2YTdjp3knEccISCqH95GsjeBVvF3alxJLS5f09KkMuExc+oe5r0VBIKSVqSQHZAT
-         XLDFXCdqOKvOvX19JTzJEKMwpHp08bojkOErkUTkYzi13Adsz/VswZoxqJnvYgc5FZeL
-         1wig==
+        bh=5R1ZNEsygnLGTQO2NIWkjU0SF7pc6VSZuM8NRzidmQA=;
+        b=Yxt0rJiMPCXQE+CTmDJi3n2OijXY++ygC1NrxQrSduTxJmoghZDevNZDL6zeTobiWM
+         a2QmNaWmsN4S4ok2uLgX5t1HoaviIhZ+MoUmCXdJ0p0hBenzv3B7L5gC7ATfeClS+apC
+         o5nliP/i5KaXRql8kO/04ozZ/Q4sRQWkaQ8c0YKgh7cyIvOHCxiplctcRnr3JoS4QH5Q
+         kV1Z7q54dGgrnRd0z1gjxtqFTgucnozFVpMHfYNak4062CeAvjPLDokJKPLDDJBHvmmM
+         EwNQC8jUg5bgeJDFTX/AiI+pdCDUhLjGgHYwQ4nK+X3bNiSbs5noCQDsscvhnRj5wq9z
+         Y68w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719957467; x=1720562267;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719957495; x=1720562295;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0qVUlcxGg0CHOekHZ6+YIbM0eY0VoswlJ0lYpz49cnw=;
-        b=UQxQMTIWiQl9V5ZdUIjjMQHEy7A7jXhXrQ6V7vCwxuxTaKazzjWqegS9PduJh9Pu2L
-         /bw0aQU9O6Kq0bpxQCVcrjojIeyndksRD5CwGDEmgnXnloaj4aiAunHDd5VLEymYROth
-         B1eY8QbvCdKKVLZWHuiHRmQFyyNyfrkk0UdKOu9DiKZQSw+wvLhGWrXeKWCqsTsB4ILp
-         AoV4fnbOiH8DD890JrmgcvVGUotwW5ItO+aUYcgIQKpYaTWoeE7+azNoOiwo2FDCyL1h
-         1B+VCNmxy9RYcvW1KWVbwssQL45oXgGn0aeTElTM4zge88HtSS7KZai4xXgnoX3Z7fEV
-         VTmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSkznQorx/vYU1TyNQa+tdHoP40V67IBh75yAjgh/N38mhd5OKk/HA69KaChaxoITJl/3hEmWsd40MHK+RbQt5ThXY4vuyr7nZxW0Lr3OqqjTpen+fpGKRdLbmYyCgQNeIYjRBDGPxAq08yvI5GkTBNoQvgai/2GiGLBhhbeQ7jh5UqX5z
-X-Gm-Message-State: AOJu0Yy0wII6a6w53qPXklFWd/naUucCcpvJE/9h8AoErhjR6aHa43zI
-	Vch97yDjCFyiwDbyKbH77q9gW6Z9tUxhJIgv7Qc50BF7mlkrHAtLMMqdSxoYdY8VsMRXDbzoV28
-	Ihv0jlFgny1BD+J1Mi1oljLEyd30=
-X-Google-Smtp-Source: AGHT+IEWKwRh13zALGUZeYb54SJjh/VFz3E8OF502MPQpiXuwMwTmJpwUAyI27pPStrbjgG0Mr0sC0aGcS91RQtdCZc=
-X-Received: by 2002:a17:906:b897:b0:a72:4402:9344 with SMTP id
- a640c23a62f3a-a7514488e8amr754070866b.20.1719957467509; Tue, 02 Jul 2024
- 14:57:47 -0700 (PDT)
+        bh=5R1ZNEsygnLGTQO2NIWkjU0SF7pc6VSZuM8NRzidmQA=;
+        b=VHNqHx3EyCOdMMSbct+l1ndfUEawRQ/7eUajHCp9abYFHBY43ukg9PmM0XVqMT7RjJ
+         eNHrJp/HujJhs+ha6kavz1xtctd9niNa8/OkMCl0yKhvELIRmXSrolmKFF4gnz9aUhlk
+         5rJJoGi0qbNIqq4FE6chTVzqns5+AF0WJya1FzIkPFSmYB5GJ3AQL1luUhotKvK7UnJq
+         H8V4DgtZUit5jJlhFVK6rBq3w5iNu8/yxyaGY+GTfF4ii87poAk1gkfz3jxNrylu4K0q
+         9BLu2FmNXrOzmHn/b1UZtvwKAVlmvl5AHPXKZXkSi5FqqnEbSoXX0EZmxk/k3OZlG8SO
+         Mr6Q==
+X-Gm-Message-State: AOJu0YwYoJGzHXZ+YBFRrlEkUoVmyaSF9XPEH89bglg5Be0Uyo6bNM5d
+	Iru7yKX1knzU8GwrkQeTISDBZT4Q9n9ALSEs1ummauXZlNFpGHa6
+X-Google-Smtp-Source: AGHT+IE+ttIbCy0SMKnbv8P5dir5+2/h1iAP1anhrhtyYoJ/ag2FDZflxmfE4svH4Uxez+4Zs/MseA==
+X-Received: by 2002:a5d:9541:0:b0:7f3:cb2a:a1b2 with SMTP id ca18e2360f4ac-7f62ee85397mr1239939539f.13.1719957495211;
+        Tue, 02 Jul 2024 14:58:15 -0700 (PDT)
+Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
+        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-7f61d207fcesm279944739f.51.2024.07.02.14.58.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 14:58:14 -0700 (PDT)
+From: Jim Cromie <jim.cromie@gmail.com>
+To: daniel.vetter@ffwll.ch,
+	tvrtko.ursulin@linux.intel.com,
+	jani.nikula@intel.com,
+	ville.syrjala@linux.intel.com,
+	jbaron@akamai.com,
+	gregkh@linuxfoundation.org,
+	ukaszb@chromium.org
+Cc: linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org,
+	intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux@rasmusvillemoes.dk,
+	joe@perches.com,
+	mcgrof@kernel.org,
+	Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH v9 01/52] docs/dyndbg: update examples \012 to \n
+Date: Tue,  2 Jul 2024 15:56:51 -0600
+Message-ID: <20240702215804.2201271-2-jim.cromie@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240702215804.2201271-1-jim.cromie@gmail.com>
+References: <20240702215804.2201271-1-jim.cromie@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701164115.723677-1-jolsa@kernel.org> <20240701164115.723677-7-jolsa@kernel.org>
-In-Reply-To: <20240701164115.723677-7-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 2 Jul 2024 14:57:33 -0700
-Message-ID: <CAEf4Bzby-7tt3fmLocL8_TXrP+ZuUOQYv9TnBg1vnb4GpXTzXg@mail.gmail.com>
-Subject: Re: [PATCHv2 bpf-next 6/9] selftests/bpf: Add uprobe session test
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 1, 2024 at 9:43=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding uprobe session test and testing that the entry program
-> return value controls execution of the return probe program.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  .../bpf/prog_tests/uprobe_multi_test.c        | 42 +++++++++++++++
->  .../bpf/progs/uprobe_multi_session.c          | 53 +++++++++++++++++++
->  2 files changed, 95 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_sessio=
-n.c
->
+commit 47ea6f99d06e ("dyndbg: use ESCAPE_SPACE for cat control")
 
-LGTM.
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+changed the control-file to display format strings with "\n" rather
+than "\012".  Update the docs to match the new reality.
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b=
-/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-> index bf6ca8e3eb13..cd9581f46c73 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-> @@ -6,6 +6,7 @@
->  #include "uprobe_multi.skel.h"
->  #include "uprobe_multi_bench.skel.h"
->  #include "uprobe_multi_usdt.skel.h"
-> +#include "uprobe_multi_session.skel.h"
->  #include "bpf/libbpf_internal.h"
->  #include "testing_helpers.h"
->  #include "../sdt.h"
-> @@ -615,6 +616,45 @@ static void test_link_api(void)
->         __test_link_api(child);
->  }
->
-> +static void test_session_skel_api(void)
-> +{
-> +       struct uprobe_multi_session *skel =3D NULL;
-> +       LIBBPF_OPTS(bpf_kprobe_multi_opts, opts);
-> +       struct bpf_link *link =3D NULL;
-> +       int err;
-> +
-> +       skel =3D uprobe_multi_session__open_and_load();
-> +       if (!ASSERT_OK_PTR(skel, "fentry_raw_skel_load"))
-> +               goto cleanup;
-> +
-> +       skel->bss->pid =3D getpid();
-> +
-> +       err =3D uprobe_multi_session__attach(skel);
-> +       if (!ASSERT_OK(err, " uprobe_multi_session__attach"))
-> +               goto cleanup;
-> +
-> +       /* trigger all probes */
-> +       skel->bss->uprobe_multi_func_1_addr =3D (__u64) uprobe_multi_func=
-_1;
-> +       skel->bss->uprobe_multi_func_2_addr =3D (__u64) uprobe_multi_func=
-_2;
-> +       skel->bss->uprobe_multi_func_3_addr =3D (__u64) uprobe_multi_func=
-_3;
-> +
-> +       uprobe_multi_func_1();
-> +       uprobe_multi_func_2();
-> +       uprobe_multi_func_3();
-> +
-> +       /*
-> +        * We expect 2 for uprobe_multi_func_2 because it runs both entry=
-/return probe,
-> +        * uprobe_multi_func_[13] run just the entry probe.
-> +        */
-> +       ASSERT_EQ(skel->bss->uprobe_session_result[0], 1, "uprobe_multi_f=
-unc_1_result");
-> +       ASSERT_EQ(skel->bss->uprobe_session_result[1], 2, "uprobe_multi_f=
-unc_2_result");
-> +       ASSERT_EQ(skel->bss->uprobe_session_result[2], 1, "uprobe_multi_f=
-unc_3_result");
-> +
-> +cleanup:
-> +       bpf_link__destroy(link);
-> +       uprobe_multi_session__destroy(skel);
-> +}
-> +
->  static void test_bench_attach_uprobe(void)
->  {
->         long attach_start_ns =3D 0, attach_end_ns =3D 0;
-> @@ -703,4 +743,6 @@ void test_uprobe_multi_test(void)
->                 test_bench_attach_usdt();
->         if (test__start_subtest("attach_api_fails"))
->                 test_attach_api_fails();
-> +       if (test__start_subtest("session"))
-> +               test_session_skel_api();
->  }
-> diff --git a/tools/testing/selftests/bpf/progs/uprobe_multi_session.c b/t=
-ools/testing/selftests/bpf/progs/uprobe_multi_session.c
-> new file mode 100644
-> index 000000000000..72c00ae68372
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/uprobe_multi_session.c
-> @@ -0,0 +1,53 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/bpf.h>
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> +#include <stdbool.h>
-> +#include "bpf_kfuncs.h"
-> +#include "bpf_misc.h"
-> +
-> +char _license[] SEC("license") =3D "GPL";
-> +
-> +__u64 uprobe_multi_func_1_addr =3D 0;
-> +__u64 uprobe_multi_func_2_addr =3D 0;
-> +__u64 uprobe_multi_func_3_addr =3D 0;
-> +
-> +__u64 uprobe_session_result[3];
-> +
-> +int pid =3D 0;
-> +
-> +static int uprobe_multi_check(void *ctx, bool is_return)
-> +{
-> +       const __u64 funcs[] =3D {
-> +               uprobe_multi_func_1_addr,
-> +               uprobe_multi_func_2_addr,
-> +               uprobe_multi_func_3_addr,
-> +       };
-> +       unsigned int i;
-> +       __u64 addr;
-> +
-> +       if (bpf_get_current_pid_tgid() >> 32 !=3D pid)
-> +               return 1;
-> +
-> +       addr =3D bpf_get_func_ip(ctx);
-> +
-> +       for (i =3D 0; i < ARRAY_SIZE(funcs); i++) {
-> +               if (funcs[i] =3D=3D addr) {
-> +                       uprobe_session_result[i]++;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       /* only uprobe_multi_func_2 executes return probe */
-> +       if ((addr =3D=3D uprobe_multi_func_1_addr) ||
-> +           (addr =3D=3D uprobe_multi_func_3_addr))
-> +               return 1;
-> +
-> +       return 0;
-> +}
-> +
-> +SEC("uprobe.session//proc/self/exe:uprobe_multi_func_*")
-> +int uprobe(struct pt_regs *ctx)
-> +{
-> +       return uprobe_multi_check(ctx, bpf_session_is_return());
-> +}
-> --
-> 2.45.2
->
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+---
+ Documentation/admin-guide/dynamic-debug-howto.rst | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index 0e9b48daf690..6a8ce5a34382 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -52,12 +52,12 @@ query/commands to the control file.  Example::
+   # grease the interface
+   :#> alias ddcmd='echo $* > /proc/dynamic_debug/control'
+ 
+-  :#> ddcmd '-p; module main func run* +p'
++  :#> ddcmd '-p; module main func run* +p'	# disable all, then enable main
+   :#> grep =p /proc/dynamic_debug/control
+-  init/main.c:1424 [main]run_init_process =p "  with arguments:\012"
+-  init/main.c:1426 [main]run_init_process =p "    %s\012"
+-  init/main.c:1427 [main]run_init_process =p "  with environment:\012"
+-  init/main.c:1429 [main]run_init_process =p "    %s\012"
++  init/main.c:1424 [main]run_init_process =p "  with arguments:\n"
++  init/main.c:1426 [main]run_init_process =p "    %s\n"
++  init/main.c:1427 [main]run_init_process =p "  with environment:\n"
++  init/main.c:1429 [main]run_init_process =p "    %s\n"
+ 
+ Error messages go to console/syslog::
+ 
+-- 
+2.45.2
+
