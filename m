@@ -1,73 +1,101 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D871BC09D;
-	Tue,  2 Jul 2024 15:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B007D266;
+	Tue,  2 Jul 2024 15:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719935121; cv=none; b=DmAxwYF3dAr4fOkZVxzqHHIixthIZpLr/lvamSXb1ltqMizJGjs0LSA3eitEpCLlQW2rGZOb1ua+hp/htIsJh1A2Ze7ZgWragVAxQ9c5zyInwu5imtmOd2HzMqzJLOaI/AhzuIIIIm1V8UqK7oD0jz+W+cb80Yn+0UzhCv2j8Ek=
+	t=1719935182; cv=none; b=jmUS/NB4H0JBJbdhdhF4l4oHLPasQ1RkWSzECYKqBDV5K7Xk9s69za6z0ItS5wlQvXgkmz5CtWIz3CMpUolxeRUFTq2eM2IXhknyhtIO0whGw7iuQ0vAXIWFtxZWk7vMpftopr8e+MeI5k2XwXRdxlo/avpPiZWhN41bQIM0T6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719935121; c=relaxed/simple;
-	bh=53x6wd9/axPR7qzEIOl3zaUmIi/DmvdNSJXwbnmOY0c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e/bojwPNzMfAPN/naLITF1GEKh9gdJCwVVb9FJVTwyRDdIXgUALT6fybtO+kah3dsauwqygIgPEQEO6z9svtKnut8IKdS+Ua8BvFXoW3N5IyuWWrtRnyJ4lT3lrWz10kGSgk+H01U33O+ts0GQvFee4wtqTlX2URYwY68WGtTpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtp84t1719935050tdogj5kd
-X-QQ-Originating-IP: NGe9nAZ0lDhi5NYOuKfSyIeI7Nf/ayaiffpMbMYb8TU=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 02 Jul 2024 23:44:08 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 17054690860164996744
-From: WangYuli <wangyuli@uniontech.com>
-To: gregkh@linuxfoundation.org,
-	hgajjar@de.adit-jv.com,
-	stern@rowland.harvard.edu,
-	lb@semihalf.com,
-	wangyuli@uniontech.com
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	guanwentao@uniontech.com
-Subject: [PATCH] USB: Add USB_QUIRK_NO_SET_INTF quirk for START BP-850k
-Date: Tue,  2 Jul 2024 23:44:08 +0800
-Message-ID: <202E4B2BD0F0FEA4+20240702154408.631201-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.43.4
+	s=arc-20240116; t=1719935182; c=relaxed/simple;
+	bh=0ibR360hPUqQ7hgWtx3NG9BBOAI0tL4aSNSl8jIXVrg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=kVc2c+vkIgs0z765dO72ni1C51shC4MP0XUwaVxjOK9IXpHBQC+pD7B5mrpfU82Hel5o7uVJIyiDSTi/BBgcW71SWZ6KBZu+AOOo5Tj9WtJQRJl7+c8x2FbqStfjfCHLiysIqDTTc0nf3TPIwAR8YL0NwuxMykNtEqSScIqtqU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nbWt8gbR; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nbWt8gbR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 16644FF805;
+	Tue,  2 Jul 2024 15:46:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719935172;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GXc+8fEuYxBnCX11OGCVRsvxNL2Mw6mHKpkE9BRDssM=;
+	b=nbWt8gbREQMCfAcf84382i0POulvVG2BhOSx/zeMZfMFN87iTQxOcuZYtMtDiGLGFZhOVk
+	Xxp8eT4x07nnhud4srCWWMZ/nd2xNVJ8YVAL+VkRkKYJQQmXj51T1ipbRMaOSau/stqZ8P
+	pEE6BFxwH601uiBtLS/vc/6/Glie8cYwHYKnwplFxvI9Qat8STAnKtj0LIjN4d+0TZbeK6
+	WJDIrxwin1CKcBt32szaooHJeIX+aKpmRwwT9HNFbgJFPnxKjfKC5PE9K2gOvWJHQYxuWA
+	MPVf2DnKhBJvBu18vfYJerLtZFq8azVk8n3oBETGRLpyVleNueaSzF8gta7nFA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 02 Jul 2024 17:46:11 +0200
+Message-Id: <D2F64U1H2P8J.16H1SVRMYFROM@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH 2/2] pinctrl: eyeq5: add platform driver
+Cc: <oe-kbuild-all@lists.linux.dev>, <linux-gpio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Vladimir
+ Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "kernel test robot" <lkp@intel.com>, "Linus Walleij"
+ <linus.walleij@linaro.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240628-mbly-pinctrl-v1-2-c878192d6b0a@bootlin.com>
+ <202407020641.JqMWvOOu-lkp@intel.com>
+In-Reply-To: <202407020641.JqMWvOOu-lkp@intel.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-START BP-850K is a dot matrix printer that crashes when
-it receives a Set-Interface request and needs USB_QUIRK_NO_SET_INTF
-to work properly.
+Hello,
 
-Signed-off-by: jinxiaobo <jinxiaobo@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- drivers/usb/core/quirks.c | 3 +++
- 1 file changed, 3 insertions(+)
+On Tue Jul 2, 2024 at 12:49 AM CEST, kernel test robot wrote:
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on f2661062f16b2de5d7b6a5c42a9a5c96326b8454]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Th-o-Lebrun/Revert=
+-dt-bindings-pinctrl-mobileye-eyeq5-pinctrl-add-bindings/20240630-070720
+> base:   f2661062f16b2de5d7b6a5c42a9a5c96326b8454
+> patch link:    https://lore.kernel.org/r/20240628-mbly-pinctrl-v1-2-c8781=
+92d6b0a%40bootlin.com
+> patch subject: [PATCH 2/2] pinctrl: eyeq5: add platform driver
+> config: m68k-randconfig-r131-20240701
+> compiler: m68k-linux-gcc (GCC) 13.2.0
+> reproduce:
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202407020641.JqMWvOOu-lkp=
+@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>    m68k-linux-ld: drivers/pinctrl/pinctrl-eyeq5.o: in function `pinconf_g=
+eneric_dt_node_to_map_pin':
+> >> pinctrl-eyeq5.c:(.text+0xe0): undefined reference to `pinconf_generic_=
+dt_node_to_map'
 
-diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-index b4783574b8e6..13171454f959 100644
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -506,6 +506,9 @@ static const struct usb_device_id usb_quirk_list[] = {
- 	{ USB_DEVICE(0x1b1c, 0x1b38), .driver_info = USB_QUIRK_DELAY_INIT |
- 	  USB_QUIRK_DELAY_CTRL_MSG },
- 
-+	/* START BP-850k Printer */
-+	{ USB_DEVICE(0x1bc3, 0x0003), .driver_info = USB_QUIRK_NO_SET_INTF },
-+
- 	/* MIDI keyboard WORLDE MINI */
- 	{ USB_DEVICE(0x1c75, 0x0204), .driver_info =
- 			USB_QUIRK_CONFIG_INTF_STRINGS },
--- 
-2.43.4
+Argh yes, pinconf_generic_dt_node_to_map() requires CONFIG_OF. I'll add
+that to the Kconfig entry in the next revision, as a "depends on OF"
+similar to other pinctrl driver config options.
+
+Regards,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
