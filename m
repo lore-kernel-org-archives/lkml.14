@@ -1,141 +1,79 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601916F06A;
-	Tue,  2 Jul 2024 06:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F52D60BBE
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719901516; cv=none; b=O8dON7o+QKm+Kz+0RtUVS0tj+swVH9jc3t6rZiizk7XrhYD8GtrqNPacJR6HmhEQuDUA4lNKAmDO93kksagRUYh48awlCgqmoc+9PUTUpQ6NQsslfw4FowjcmHBy2dPL9Suy/2ab9dl6y7TFp5yS6BkNNhrH8u2F63ItUwixNfU=
+	t=1719901596; cv=none; b=MBf80LG1O7M6pjtBuBgt4n7DSWmvp92L3/oNs8F5RoBDOCvCtnxJlHrhOtOYMR/BjjVWR8J76TaDABFm5dF8998Ap7F98yzOeMOsdInWDjPHJDHUNjJGYG0IEs9OW+D27ADjCvmv9AcMquB/al6jEgFPIjH2JIuYOgA22wp3rms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719901516; c=relaxed/simple;
-	bh=d7jmQn3cQKTbDmIwjhlKxQJjbtiLywWBTewUHIeU2cY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iUyHDYW23nJYfAt0QFIFDC7+VC/fabUChN77xor26RZpLqmvfMJyZsVbjegCKWoojaVCewYUkunxkrcFgZ/kDVDTzwKAtQLg0R4ANKBIS8Qct+bg1vqUA7m3XCvy7bWnTj+jUNvC0WQHD19E5oRAnhvfhlr998m4lnjv4LpAlxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=W96gFTsV; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1719901596; c=relaxed/simple;
+	bh=/NWgWzyITs0KIhEoudIf/i46NZ3AxtyQk9ZuZLbP7tM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=m9aw7IdAUnnFfY5aXdkqRV25NHex3oJViq641d2n3yrz3P3cQ8NxElJEnJROl4pZN3YjZcLxav/FNf7KAHMlYZC1XCdCcPfszDxKGYdNnto5RgNPgrpnjAg/Nw1sMS2azIvONdqRc3mdWcp6dLky+xO92VnKZWcBZIMB37chO4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=iFNwNx5B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="W96gFTsV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1719901504; x=1720160704;
-	bh=ViRBjlbD8T+ejB+NOEPHsNS/Xejpr+JGkmJCTZcRKRM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=W96gFTsVdPuMZBI2efwM/mLbKkDInLhNk7WNOUVDnaHYRba7PTr4IziNDstaJPpWw
-	 x2fwWTpsmuuDUgT6OKYByhgEbbhKnwSgDvAD8VIYuo5wS5aaW3sOjhcEC/JxQ2h0N7
-	 T2eMT6uS0q+VMXR6y4ACFDblkCp6fgQWux/jUpy8/DYseJmY3oOBMIB0j8Znn7pfvu
-	 4BIbuWfSgov8Ckk2MAut9aDgQs08tnoRH2FRZaks28KhQoVcZoG0JW4t2ptLel0LYe
-	 vzNGhAcVtP+quAX6DMXHyn5TEoZTRcO2Br3m9tb1De9D0kM+WKHE4loaMOxE44qGNZ
-	 9RuppLPlvCxmQ==
-Date: Tue, 02 Jul 2024 06:25:02 +0000
-To: Miguel Ojeda <ojeda@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Gaynor <alex.gaynor@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH 00/13] Support several Rust toolchain versions
-Message-ID: <4fa15761-7cab-4463-a2ff-717256c67d76@proton.me>
-In-Reply-To: <20240701183625.665574-1-ojeda@kernel.org>
-References: <20240701183625.665574-1-ojeda@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 2e9bc08aec290fbcb180ad6148608273607df319
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="iFNwNx5B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B55C116B1;
+	Tue,  2 Jul 2024 06:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1719901595;
+	bh=/NWgWzyITs0KIhEoudIf/i46NZ3AxtyQk9ZuZLbP7tM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iFNwNx5BdUiPSyNhTX2+HvsdyzHpS5vzd+UCV9fOvKf9NCRCaqhq783P+H1ee90E+
+	 oR5MpznKto0jbvssxKDVTa1RrtUy2f67F4Ad8Wy0JSI20oEPP8w+Wua24yRllScKXx
+	 cqla6yHYJDe79HKj/+EJoc2p9nAEv4kGl3XsRcx0=
+Date: Mon, 1 Jul 2024 23:26:34 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: jack@suse.cz, surenb@google.com, linux-kernel@vger.kernel.org, Christoph
+ Hellwig <hch@lst.de>
+Subject: Re: [PATCH] dma-buf: Remove unnecessary kmalloc() cast
+Message-Id: <20240701232634.0bddb542ddea123b48dcabdf@linux-foundation.org>
+In-Reply-To: <20240630011215.42525-1-thorsten.blum@toblux.com>
+References: <20240630011215.42525-1-thorsten.blum@toblux.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 01.07.24 20:36, Miguel Ojeda wrote:
-> Hi all,
->=20
-> It is time to start supporting several Rust toolchain versions and thus
-> establish a minimum Rust compiler and `bindgen` version.
->=20
-> For the Rust compiler, we will start with a window of two stable
-> releases, and widen it over time. This series keeps the minimum where
-> it is (1.78.0), but adds support for the recently released 1.79.0.
->=20
-> This should already be enough for kernel developers in distributions that
-> provide recent Rust compiler versions routinely, such as Arch Linux,
-> Debian Unstable (outside the freeze period), Fedora Linux, Gentoo
-> Linux (especially the testing channel), Nix (unstable) and openSUSE
-> Tumbleweed. A documentation adds the instructions for each of them.
->=20
-> In addition, Rust for Linux is now being built-tested in Rust's
-> pre-merge CI. That is, every change that is attempting to land into the
-> Rust compiler is tested against the kernel, and it is merged only if it
-> passes -- thanks to the Rust project for that!
->=20
-> Thus, with the pre-merge CI in place, both projects hope to avoid
-> unintentional changes to Rust that break the kernel. This means that,
-> in general, apart from intentional changes on their side (that we will
-> need to workaround conditionally on our side), the upcoming Rust compiler
-> versions should generally work.
->=20
-> For instance, currently, the beta (1.80.0) and nightly (1.81.0) branches
-> work as well.
->=20
-> Similarly, we kept the minimum as it is for `bindgen`. `bindgen` is also
-> adding the kernel to its CI -- thanks!
->=20
-> Cheers,
-> Miguel
->=20
->=20
-> Miguel Ojeda (13):
->   rust: macros: indent list item in `paste!`'s docs
->   rust: init: simplify from `map_err` to `inspect_err`
->   rust: allow `dead_code` for never constructed bindings
->   rust: relax most deny-level lints to warnings
->   rust: simplify Clippy warning flags set
->   rust: start supporting several compiler versions
->   rust: warn about `bindgen` versions 0.66.0 and 0.66.1
->   rust: work around `bindgen` 0.69.0 issue
->   rust: avoid assuming a particular `bindgen` build
->   rust: start supporting several `bindgen` versions
->   kbuild: rust: add `rustc-version` support
->   rust: support the new `-Zub-checks` flag
->   docs: rust: quick-start: add section on Linux distributions
->=20
->  Documentation/process/changes.rst  |   9 +--
->  Documentation/rust/quick-start.rst | 118 +++++++++++++++++++++++------
->  Makefile                           |  29 +++----
->  init/Kconfig                       |  11 ++-
->  lib/Kconfig.debug                  |  18 +++++
->  rust/Makefile                      |   4 +-
->  rust/bindings/lib.rs               |   1 +
->  rust/kernel/init.rs                |  12 +--
->  rust/macros/lib.rs                 |   2 +-
->  rust/uapi/lib.rs                   |   1 +
->  scripts/Kconfig.include            |   6 ++
->  scripts/Makefile.compiler          |   4 +
->  scripts/rust_is_available.sh       |  20 ++---
->  scripts/rust_is_available_test.py  |  40 +++++-----
->  scripts/rustc-version.sh           |  52 +++++++++++++
->  15 files changed, 238 insertions(+), 89 deletions(-)
->  create mode 100755 scripts/rustc-version.sh
->=20
->=20
-> base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
-> --
-> 2.45.2
+On Sun, 30 Jun 2024 03:12:16 +0200 Thorsten Blum <thorsten.blum@toblux.com> wrote:
 
-I applied the series and successfully ran the kunit tests on nixos.
-I tried the following rust versions via fenix:
-- rustc 1.78.0 (9b00956e5 2024-04-29)
-- rustc 1.79.0 (129f3b996 2024-06-10)
-- 1.80.0-beta.4 (64a1fe671 2024-06-21)
-- 1.81.0-nightly (6868c831a 2024-06-30)
+> Casting the return value of kmalloc() is unnecessary and can be
+> removed. Remove it and fix the following Coccinelle/coccicheck warning
+> reported by alloc_cast.cocci:
+> 
+>   WARNING: casting value returned by memory allocation function to (struct dma_fence_chain *) is useless.
+> 
+> Compile-tested only.
+> 
+> ...
+>
+> --- a/include/linux/dma-fence-chain.h
+> +++ b/include/linux/dma-fence-chain.h
+> @@ -87,7 +87,7 @@ dma_fence_chain_contained(struct dma_fence *fence)
+>   * Returns a new struct dma_fence_chain object or NULL on failure.
+>   */
+>  #define dma_fence_chain_alloc()	\
+> -		((struct dma_fence_chain *)kmalloc(sizeof(struct dma_fence_chain), GFP_KERNEL))
+> +		kmalloc(sizeof(struct dma_fence_chain), GFP_KERNEL)
+>  
+>  /**
+>   * dma_fence_chain_free
 
-My bindgen version is 0.69.4.
+No, I do think the cast is useful:
 
-Everything worked as expected :)
+	struct page *page = dma_fence_chain_alloc();
 
-Tested-by: Benno Lossin <benno.lossin@proton.me>
+will presently generate a warning.  We want this.  Your change will
+remove that useful warning.
 
----
-Cheers,
-Benno
 
+Unrelatedly: there is no earthly reason why this is implemented as a
+macro.  A static inline function would be so much better.  Why do we
+keep doing this.
