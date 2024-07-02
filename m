@@ -1,119 +1,189 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317CE1E50F;
-	Tue,  2 Jul 2024 14:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788E91E50F
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 14:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719930949; cv=none; b=IUIQR8wr+d8EhzCl4SCNmO2yO4rgVH4o1fl+qeix6xBRS0DwJrDPub22xB2E3sxxjooLFwuFAa1ke6kjVtY9Om3my8LMEd/S+896H6WMUEdBIFYpI0l1aRJuZjJZpD3p7wvD4mWwwGmlpgBekV9jM1SO205+0PolDf8+1ORuF8M=
+	t=1719931300; cv=none; b=VS0s2SIuwaljR/4ZLs0oXe505gMYg6IlSsjUKPndAIjRfBRiyukBnoJ/E8WEw4+egxndKIV0QJm4niFp5Ym/WRuW5aQM0v6ClkL1YLi+ptUPMPR5kBJzpneN1/48afxGBlsVMKqfHQ224gVA3U5PGVuEWLhwVPG+ZbQ3rcV+VtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719930949; c=relaxed/simple;
-	bh=WX5kDqC4tJpN29x0TQP8aggg4HMYizhSJ7+/HkfdHwk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZJeNTn7EwWJRvyfo8mqnx/lMVPXiEhpQYwbsOQ5i82A4k1q9lYoC6xQMP1LufjHHCKPQVcTMLseoF1Rz0k6ECafmD8RSiljr3p7tkJPsj453cpoh0Y7f3s6Nmx0nZ0ccuDVXD5YqgSS7QbnEVLGo8cXK/SQ8gAP1PbNehMCCe9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=FtlD4jZv; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1719931300; c=relaxed/simple;
+	bh=JNcI884R2Mazh2EB+asSTkbedNGY3kpHw4/Toprhyvg=;
+	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=X4fVX9IMfSPvWxRId8Pf4+F71/Vwx37or/P8lwuxFO5yBGag+IHucWIQQ1r6ZjaLt9S5OeslPzfixMZLKgBJ6KpUK0ihkD1u/Rjxw/8/gd2nRziAVt5Bg4sp+13DClwLvuWKh3LUmdZNEm7T7Pldux1wdLo2eLEAG5QtqHYDRGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=e0EWHSx6; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="FtlD4jZv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1719930944;
-	bh=WX5kDqC4tJpN29x0TQP8aggg4HMYizhSJ7+/HkfdHwk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FtlD4jZvXq217zYnd/L5G9ScVzmrDJTpOBnDM4WKRtXaeZ9tAAh42XBiudMdP+L6c
-	 v3PrjxkCa6qkpji5bCsYuot8IdJyhOtPSIsvhgK6HIJr3rx4uumJ1chLTH7RQWqofW
-	 YzeBtYcJ6wfsiLTXLjyfZ9LX8jo5z86HBCJwUEsxezJl0wNH/fYxX7aASSdDvhHPWM
-	 2byCcOOcQFPQShT4crZ7sMBqIABOjFHAG9HkKugXsJN3sUTHQs3+bE3VVD1/OXP2pA
-	 FvOWqhfi6EnnN2fkB8OA995ejiSM+J7tv8fVqUkOiQiIgpGBihmBRkODHR83QkNUJ8
-	 WzmdQKdJlItdA==
-Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4WD5745522z17vy;
-	Tue,  2 Jul 2024 10:35:44 -0400 (EDT)
-Message-ID: <9a9c8ea4-8e17-4e7e-95fe-7b51441a228c@efficios.com>
-Date: Tue, 2 Jul 2024 10:36:03 -0400
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="e0EWHSx6"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52cdf4bc083so6579923e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 07:41:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1719931297; x=1720536097; darn=vger.kernel.org;
+        h=mime-version:subject:user-agent:references:in-reply-to:message-id
+         :date:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JNcI884R2Mazh2EB+asSTkbedNGY3kpHw4/Toprhyvg=;
+        b=e0EWHSx6jCfrF1myhMmMeyJlMOyqvQL6CE1eD7fQsboXygxcVEvmObLTdpt3+z2Mqf
+         PaGSAYc7kxnroByTGrzIuE+YAY99Fk+YYy9zLLpxdjORfzP2XjprHQjNEzQCsH0VtNph
+         qVJZ6IKjC34FH53V/yJY48UCSX9+V6YdboH70=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719931297; x=1720536097;
+        h=mime-version:subject:user-agent:references:in-reply-to:message-id
+         :date:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JNcI884R2Mazh2EB+asSTkbedNGY3kpHw4/Toprhyvg=;
+        b=L169lKL9ub6O+BR6jQfAXVPjMz/yYVmse+uvzdXz4jLyjNp6W0qQiHibAj3FmEc0tN
+         kz4moz/XflfyGzDqNkBdHmdzrjezMhA42dz/vpPpMvAYE/+CVAf+zOO/skuSYXGs44Qa
+         cM92kqnK5ANDWWGzScVVl0HxKWJMUbG2nLdYLXeQH4RDyIUNLUeqqTbVQvOQArt7zYRC
+         cMh0ubLk6NOc0f46seHaUMJa5u16cJkO4ECxcvpndSfF0TXMYNrimIyQImcNxIhKqEzI
+         VHIpHD0HlK/gogmKihav76CaOJ0K92eM9+520wEwK0nJagV+w2e/q7J/K07oHXkxfaYN
+         FlsA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/u0VqaSi2aM0/DmDjkarReTp09LzGv7lG3fLGR/qbfOqUT25XERx/ImKMQgyTksfL4ATQVh94rZ596nhGDwrLSYSfhr7hO5jK8Bij
+X-Gm-Message-State: AOJu0YzGZpiWYlsSiUgf7GRdQK5O9N920Sn6lLX7QYzDZeBnpsksLqqR
+	ia2z9AlGtlR0OWYtbPJnlVpk9y3xvrOAy05/N0Iaf3b9K4rJR/8KzZ8BmIfwWA==
+X-Google-Smtp-Source: AGHT+IHVtX/aDIl+DTQjkyohV5orWbeyrkEnZIQBjZ2/ag5M0yWAft9UtgtEA9wk91x/iUtQEsWbGA==
+X-Received: by 2002:a05:6512:114f:b0:52c:ccb4:ec70 with SMTP id 2adb3069b0e04-52e82661de0mr6094510e87.22.1719931296498;
+        Tue, 02 Jul 2024 07:41:36 -0700 (PDT)
+Received: from [10.229.40.68] ([192.19.176.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4258036d034sm99115865e9.43.2024.07.02.07.41.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2024 07:41:35 -0700 (PDT)
+From: Arend Van Spriel <arend.vanspriel@broadcom.com>
+To: Johannes Berg <johannes@sipsolutions.net>, Su Hui <suhui@nfschina.com>, <kvalo@kernel.org>
+CC: <kees@kernel.org>, <a@bayrepo.ru>, <quic_alokad@quicinc.com>, <zyytlz.wz@163.com>, <marcan@marcan.st>, <petr.tesarik.ext@huawei.com>, <duoming@zju.edu.cn>, <colin.i.king@gmail.com>, <u.kleine-koenig@pengutronix.de>, <quic_jjohnson@quicinc.com>, <linville@tuxdriver.com>, <pieterpg@broadcom.com>, <meuleman@broadcom.com>, <frankyl@broadcom.com>, <stanley.hsu@cypress.com>, <wright.feng@cypress.com>, <ian.lin@infineon.com>, <chi-hsien.lin@cypress.com>, <zajec5@gmail.com>, <antonio@open-mesh.com>, <franky.lin@broadcom.com>, <linux-wireless@vger.kernel.org>, <brcm80211@lists.linux.dev>, <brcm80211-dev-list.pdl@broadcom.com>, <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Date: Tue, 02 Jul 2024 16:41:32 +0200
+Message-ID: <19073e4c960.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+In-Reply-To: <2db23d6f3bd62c955c76d30aa2dfc3f03c8c5748.camel@sipsolutions.net>
+References: <20240702122450.2213833-1-suhui@nfschina.com>
+ <2db23d6f3bd62c955c76d30aa2dfc3f03c8c5748.camel@sipsolutions.net>
+User-Agent: AquaMail/1.51.5 (build: 105105504)
+Subject: Re: [PATCH wireless 0/9] wifi: cfg80211: avoid some garbage values
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v23 3/5] tracing: Allow user-space mapping of the
- ring-buffer
-To: Steven Rostedt <rostedt@goodmis.org>, "Dmitry V. Levin" <ldv@strace.io>
-Cc: Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
- kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
- david@redhat.com, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20240510140435.3550353-1-vdonnefort@google.com>
- <20240510140435.3550353-4-vdonnefort@google.com>
- <20240630105322.GA17573@altlinux.org>
- <20240630084053.0b506916@rorschach.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20240630084053.0b506916@rorschach.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000fed8ec061c44b5ff"
 
-On 2024-06-30 08:40, Steven Rostedt wrote:
-> On Sun, 30 Jun 2024 13:53:23 +0300
-> "Dmitry V. Levin" <ldv@strace.io> wrote:
-> 
->> On Fri, May 10, 2024 at 03:04:32PM +0100, Vincent Donnefort wrote:
->> [...]
->>> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
->>> index b682e9925539..bd1066754220 100644
->>> --- a/include/uapi/linux/trace_mmap.h
->>> +++ b/include/uapi/linux/trace_mmap.h
->>> @@ -43,4 +43,6 @@ struct trace_buffer_meta {
->>>   	__u64	Reserved2;
->>>   };
->>>   
->>> +#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
->>> +
+--000000000000fed8ec061c44b5ff
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+
+On July 2, 2024 2:50:38 PM Johannes Berg <johannes@sipsolutions.net> wrote:
+
+> On Tue, 2024-07-02 at 20:24 +0800, Su Hui wrote:
 >>
->> I'm sorry but among all the numbers this one was probably the least
->> fortunate choice because it collides with TCGETS on most of architectures.
-> 
-> Hmm, that is unfortunate.
-> 
->>
->> For example, this is how strace output would look like when
->> TRACE_MMAP_IOCTL_GET_READER support is added:
->>
->> $ strace -e ioctl stty
->> ioctl(0, TCGETS or TRACE_MMAP_IOCTL_GET_READER, {c_iflag=ICRNL|IXON, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B38400|CS8|CREAD, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|IEXTEN|ECHOCTL|ECHOKE, ...}) = 0
->>
->> Even though ioctl numbers are inherently not unique, TCGETS is
->> a very traditional one, so it would be great if you could change
->> TRACE_MMAP_IOCTL_GET_READER to avoid this collision.
->>
->> Given that _IO('T', 0x1) is _IOC(_IOC_NONE, 'T', 0x1, 0),
->> something like _IOC(_IOC_NONE, 'T', 0x1, 0x1) should be OK.
-> 
-> Well, it may not be too late to update this as it hasn't been
-> officially released in 6.10 yet. It's still only in the -rc and the
-> library doesn't rely on this yet (I've been holding off until 6.10 was
-> officially released before releasing the library that uses it).
-> 
-> I can send a patch this week to update it. Or feel free to send a patch
-> yourself.
+>> Su Hui (9):
+>> wifi: cfg80211: avoid garbage value of 'io_type' in
+>> brcmf_cfg80211_attach()
+>> wifi: brcmfmac: avoid garbage value of 'status' in
+>> brcmf_c_download_blob()
+>> wifi: cfg80211: avoid garbage value of 'noise' in
+>> brcmf_cfg80211_dump_survey()
+>> wifi: cfg80211: avoid garbage value of 'chanspec' in
+>> brcmf_cfg80211_get_channel()
+>> wifi: cfg80211: avoid garbage value of 'freq' in
+>> brcmf_cfg80211_mgmt_tx()
+>> wifi: cfg80211: avoid garbage value of 'wsec' in
+>> brcmf_cfg80211_reconfigure_wep()
+>> wifi: cfg80211: avoid garbage value of 'wsec' in
+>> brcmf_cfg80211_add_key()
+>> wifi: cfg80211: avoid garbage value of 'val' in brcmf_set_key_mgmt()
+>> wifi: cfg80211: avoid garbage value of 'wsec' in
+>> brcmf_cfg80211_{get,config_default}_key()
+>
+> Uh where did all those line breaks come from?
+>
+> anyway all the titles are wrong - all of this is brcmfmac, not cfg80211
 
-You need to reserve an unused ioctl Code and Seq# range within:
+It made you look though ;-)
 
-Documentation/userspace-api/ioctl/ioctl-number.rst
-
-Otherwise this duplicate will confuse all system call instrumentation
-tooling.
-
-Thanks,
-
-Mathieu
+Gr. AvS
 
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
 
+
+--000000000000fed8ec061c44b5ff
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+2Gzj3QNJRLsZu1TLyOyBBIr/BE7UiY3RabgRzknBGAPmzhS+fmyM8OtM5BYBsFBrSUFtZZO2p/tf
+Nbc24J2zf2peoZ8MK+7WQqummYlOnz+FyDkA9EybeNMcS5C+xi/PAgMBAAGjggHdMIIB2TAOBgNV
+HQ8BAf8EBAMCBaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJl
+Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYI
+KwYBBQUHMAGGNWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24y
+Y2EyMDIwME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3
+dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqG
+OGh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3Js
+MCcGA1UdEQQgMB6BHGFyZW5kLnZhbnNwcmllbEBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYB
+BQUHAwQwHwYDVR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFIikAXd8CEtv
+ZbDflDRnf3tuStPuMA0GCSqGSIb3DQEBCwUAA4IBAQCdS5XCYx6k2GGZui9DlFsFm75khkqAU7rT
+zBX04sJU1+B1wtgmWTVIzW7ugdtDZ4gzaV0S9xRhpDErjJaltxPbCylb1DEsLj+AIvBR34caW6ZG
+sQk444t0HPb29HnWYj+OllIGMbdJWr0/P95ZrKk2bP24ub3ZP/8SyzrohfIba9WZKMq6g2nTLZE3
+BtkeSGJx/8dy0h8YmRn+adOrxKXHxhSL8BNn8wsmIZyYWe6fRcBtO3Ks2DOLyHCdkoFlN8x9VUQF
+N2ulEgqCbRKkx+qNirW86eF138lr1gRxzclu/38ko//MmkAYR/+hP3WnBll7zbpIt0jc9wyFkSqH
+p8a1MYICbTCCAmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1z
+YTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMTv1t
+bpIzNUky46LXMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAKlUM4ImgXCxlmJ0BH
+tb7nTJmgVvMg5/EK83EFkVXnKjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJ
+BTEPFw0yNDA3MDIxNDQxMzZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFl
+AwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzAL
+BglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAmOKcMzgfp9FlwF8v70eaCpKUNv/ZVZgjrUZ1
+CFprSqqxuCcYll5ZNeWO1Of8vkx5sCaPyU7frFTFu6hJelqCLDZPy+QLDx57jMLeqGjyWrcfaHG+
+cDhYObXl9GTua68lGnjVPZjl4UQ8hW/e2gSd/I76xZIDEq8zbjYPOu4p4Q4dbnzpK4D0ruG4dyo2
+Yp611U4iRn3oXc2YDoeYtJf0fRcMQLco2ahkP0htaRRSmXxwLgxEGCYU3PHRqojVf8dwcdzSr02o
+F2QXGmz4sBKuQ7vO6QSeNhzpdZ24+0RrDx/BmW4S+m/40H1IHth1pY/iUpgpUBeK/amDPCHmcDR3
+Rw==
+--000000000000fed8ec061c44b5ff--
