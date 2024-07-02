@@ -1,229 +1,99 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAD0B51004;
-	Tue,  2 Jul 2024 10:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3071158DC8;
+	Tue,  2 Jul 2024 10:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719917640; cv=none; b=V09pI3tfIdyZ+gdjklpF0/+JyndXrw40vvQ6ufIaizUJAND0lKB+iEIm+rBt/Ir3EYzpUiCggRmWmEh5pwk4LqlGMIyUlucVWgCFfQq/t409ULif1cv03tatsU3KqnxerUWF5YkE+LEi+8Kt6GSZduPhodqaM4YWzuy6BxcBPAM=
+	t=1719917658; cv=none; b=ZSKkmiBWDLsqwLLMJ6WgtuNkjJuZATEXR3oZkK3IujVKPiBklgUctokLjYXFF++S218LRi9H4Qiuth4nbjqSAm7wx/+iY4xMYE9ZC2Z8FQjtWvr1ISGjpLsyO+lQ/fxv++E/z/CBuXMCwocVuthTmhWWwFkmd8dyHXDGEnK1GGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719917640; c=relaxed/simple;
-	bh=CpTcOvl0QkABqKFQB6/gYUAOE1TtybWUTE1vLk4wGmo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RGOF2sr8Phjbv7JkuviPECf7iYJ/QsNKWePRu1hrrobdkx09Fo58CUCiwzP/ilDmHR3PRC/VK6rTbCbn8JpeflhfjsJRQqiCqcHSBX4TiaEZ7FxjaITr81JBHB2us0I8B83e51XQslwmiBAV0Tgd08ipeogW5Tr1murK9RHJeLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gwGaxGLq; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719917658; c=relaxed/simple;
+	bh=Nu8B5T3JPPoNTLLDtfwHrdmFJU39KKRK+9B2K65Fz/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o2JFB9SRGLdO0QkyC4YIZC3GPsWXRmY1d+KlHwrDrvOEjtHg/PS0E8k86vyclFbUhuCc3Ec2H8JeuIwPKU4Ht+Kp0NUfU42mLncRzmIzo9UM+GlD0TaJXzOBNvX0ljsww8QwJIT2vPTZUEFyFnKmWjm2v15t+W8McR89lsgnusU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EEwIsnTs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gwGaxGLq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=PQ9RM
-	3z3im+VjcU0v0S4k3STJQrv4lvRtxUnRKvb9y8=; b=gwGaxGLqTXIHZJ6NtaNn4
-	d1I0KA5rRuSylBta9YIHGn+N86gdMZ8J5z0lcmMXirnOtWolqBvKUH78kAViu1sO
-	YODAVuR6FRVKFJonz69iKnNj4sP0utoOESDPPwexyXJ/an6beq2iA/IoFLT1C4I9
-	wZfES0vrEMG3VllHqTvLjY=
-Received: from localhost (unknown [101.132.132.191])
-	by gzga-smtp-mta-g3-0 (Coremail) with SMTP id _____wD3P7Kp24NmfgFZAw--.52978S2;
-	Tue, 02 Jul 2024 18:51:22 +0800 (CST)
-From: Xavier <xavier_qy@163.com>
-To: tj@kernel.org
-Cc: longman@redhat.com,
-	mkoutny@suse.com,
-	lizefan.x@bytedance.com,
-	hannes@cmpxchg.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	Xavier <xavier_qy@163.com>
-Subject: [PATCH-cpuset v9 2/2] cpuset: use Union-Find to optimize the merging of cpumasks
-Date: Tue,  2 Jul 2024 18:50:10 +0800
-Message-Id: <20240702105010.253933-3-xavier_qy@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240702105010.253933-1-xavier_qy@163.com>
-References: <ZoMXN3G72xtCLjgp@slm.duckdns.org>
- <20240702105010.253933-1-xavier_qy@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EEwIsnTs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AF43C116B1;
+	Tue,  2 Jul 2024 10:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719917658;
+	bh=Nu8B5T3JPPoNTLLDtfwHrdmFJU39KKRK+9B2K65Fz/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EEwIsnTs270z1fMt+nZIvziWDZ3zar11CzHZq7+xfW+jN1p+6jbjSzgBSqEDYI3i8
+	 dJzVDuUmuatTpHfgjIdwJvxW243AbmSohCvJNvU265Mn8SdO5zAyYXSxv+CfiJGARQ
+	 yFGxeWQZ/XWUnwqkzsgOM2RSQox9FWPQTw9bbexW9sXkDikVWO+o7S0bGdQaEzg/CZ
+	 942RQgxRaufFkXtcKpihct9H9psd63kaatKJ9dN15hu8nfSO/ZrG4R6RNy7NDkLlzB
+	 dTY8Xxqm3Lj3bW9g0KdTnGrPO12yMH+6yBCmzJxf4oVaZby14PbIewL9ke25JZW+zc
+	 s/4cMFWisQkLw==
+Date: Tue, 2 Jul 2024 11:54:11 +0100
+From: Simon Horman <horms@kernel.org>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?utf-8?Q?Nicol=C3=B2?= Veronese <nicveronese@gmail.com>,
+	mwojtas@chromium.org, Nathan Chancellor <nathan@kernel.org>,
+	Antoine Tenart <atenart@kernel.org>,
+	Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH net-next v14 12/13] net: ethtool: strset: Allow querying
+ phy stats by index
+Message-ID: <20240702105411.GF598357@kernel.org>
+References: <20240701131801.1227740-1-maxime.chevallier@bootlin.com>
+ <20240701131801.1227740-13-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3P7Kp24NmfgFZAw--.52978S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAFWfur4kKFyUZFWUJrW3Awb_yoWruryUpF
-	4Sk3y2qrWrJryUGwsakay8Zw1Yk3ykJayUtw15Gw1rtrnrA3Z29a40qFs3KayUZrWq9F1U
-	uF9Igr47Wr1UKFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UbBMNUUUUU=
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiYwoQEGV4JGHcNAAAsZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701131801.1227740-13-maxime.chevallier@bootlin.com>
 
-The process of constructing scheduling domains
- involves multiple loops and repeated evaluations, leading to numerous
- redundant and ineffective assessments that impact code efficiency.
+On Mon, Jul 01, 2024 at 03:17:58PM +0200, Maxime Chevallier wrote:
+> The ETH_SS_PHY_STATS command gets PHY statistics. Use the phydev pointer
+> from the ethnl request to allow query phy stats from each PHY on the
+> link.
+> 
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> ---
+>  net/ethtool/strset.c | 24 +++++++++++++++++-------
+>  1 file changed, 17 insertions(+), 7 deletions(-)
+> 
+> diff --git a/net/ethtool/strset.c b/net/ethtool/strset.c
 
-Here, we use Union-Find to optimize the merging of cpumasks. By employing
-path compression and union by rank, we effectively reduce the number of
-lookups and merge comparisons.
+...
 
-Signed-off-by: Xavier <xavier_qy@163.com>
----
- kernel/cgroup/cpuset.c | 95 ++++++++++++++++--------------------------
- 1 file changed, 36 insertions(+), 59 deletions(-)
+> @@ -279,6 +280,8 @@ static int strset_prepare_data(const struct ethnl_req_info *req_base,
+>  	const struct strset_req_info *req_info = STRSET_REQINFO(req_base);
+>  	struct strset_reply_data *data = STRSET_REPDATA(reply_base);
+>  	struct net_device *dev = reply_base->dev;
+> +	struct nlattr **tb = info->attrs;
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index fe76045aa5..4d32cd1407 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -45,6 +45,7 @@
- #include <linux/cgroup.h>
- #include <linux/wait.h>
- #include <linux/workqueue.h>
-+#include <linux/union_find.h>
- 
- DEFINE_STATIC_KEY_FALSE(cpusets_pre_enable_key);
- DEFINE_STATIC_KEY_FALSE(cpusets_enabled_key);
-@@ -172,9 +173,6 @@ struct cpuset {
- 	 */
- 	int attach_in_progress;
- 
--	/* partition number for rebuild_sched_domains() */
--	int pn;
--
- 	/* for custom sched domain */
- 	int relax_domain_level;
- 
-@@ -208,6 +206,9 @@ struct cpuset {
- 
- 	/* Remote partition silbling list anchored at remote_children */
- 	struct list_head remote_sibling;
-+
-+	/* Used to merge intersecting subsets for generate_sched_domains*/
-+	struct uf_node node;
- };
- 
- /*
-@@ -1007,7 +1008,7 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	struct cpuset *cp;	/* top-down scan of cpusets */
- 	struct cpuset **csa;	/* array of all cpuset ptrs */
- 	int csn;		/* how many cpuset ptrs in csa so far */
--	int i, j, k;		/* indices for partition finding loops */
-+	int i, j;		/* indices for partition finding loops */
- 	cpumask_var_t *doms;	/* resulting partition; i.e. sched domains */
- 	struct sched_domain_attr *dattr;  /* attributes for custom domains */
- 	int ndoms = 0;		/* number of sched domains in result */
-@@ -1015,6 +1016,7 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	struct cgroup_subsys_state *pos_css;
- 	bool root_load_balance = is_sched_load_balance(&top_cpuset);
- 	bool cgrpv2 = cgroup_subsys_on_dfl(cpuset_cgrp_subsys);
-+	int nslot_update;
- 
- 	doms = NULL;
- 	dattr = NULL;
-@@ -1102,31 +1104,25 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	if (root_load_balance && (csn == 1))
- 		goto single_root_domain;
- 
--	for (i = 0; i < csn; i++)
--		csa[i]->pn = i;
--	ndoms = csn;
--
--restart:
--	/* Find the best partition (set of sched domains) */
--	for (i = 0; i < csn; i++) {
--		struct cpuset *a = csa[i];
--		int apn = a->pn;
-+	if (!cgrpv2) {
-+		for (i = 0; i < csn; i++)
-+			uf_node_init(&csa[i]->node);
- 
--		for (j = 0; j < csn; j++) {
--			struct cpuset *b = csa[j];
--			int bpn = b->pn;
--
--			if (apn != bpn && cpusets_overlap(a, b)) {
--				for (k = 0; k < csn; k++) {
--					struct cpuset *c = csa[k];
--
--					if (c->pn == bpn)
--						c->pn = apn;
--				}
--				ndoms--;	/* one less element */
--				goto restart;
-+		/* Merge overlapping cpusets */
-+		for (i = 0; i < csn; i++) {
-+			for (j = i + 1; j < csn; j++) {
-+				if (cpusets_overlap(csa[i], csa[j]))
-+					uf_union(&csa[i]->node, &csa[j]->node);
- 			}
- 		}
-+
-+		/* Count the total number of domains */
-+		for (i = 0; i < csn; i++) {
-+			if (csa[i]->node.parent == &csa[i]->node)
-+				ndoms++;
-+		}
-+	} else {
-+		ndoms = csn;
- 	}
- 
- 	/*
-@@ -1159,44 +1155,25 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	}
- 
- 	for (nslot = 0, i = 0; i < csn; i++) {
--		struct cpuset *a = csa[i];
--		struct cpumask *dp;
--		int apn = a->pn;
--
--		if (apn < 0) {
--			/* Skip completed partitions */
--			continue;
--		}
--
--		dp = doms[nslot];
--
--		if (nslot == ndoms) {
--			static int warnings = 10;
--			if (warnings) {
--				pr_warn("rebuild_sched_domains confused: nslot %d, ndoms %d, csn %d, i %d, apn %d\n",
--					nslot, ndoms, csn, i, apn);
--				warnings--;
--			}
--			continue;
--		}
--
--		cpumask_clear(dp);
--		if (dattr)
--			*(dattr + nslot) = SD_ATTR_INIT;
-+		nslot_update = 0;
- 		for (j = i; j < csn; j++) {
--			struct cpuset *b = csa[j];
--
--			if (apn == b->pn) {
--				cpumask_or(dp, dp, b->effective_cpus);
-+			if (uf_find(&csa[j]->node) == &csa[i]->node) {
-+				struct cpumask *dp = doms[nslot];
-+
-+				if (i == j) {
-+					nslot_update = 1;
-+					cpumask_clear(dp);
-+					if (dattr)
-+						*(dattr + nslot) = SD_ATTR_INIT;
-+				}
-+				cpumask_or(dp, dp, csa[j]->effective_cpus);
- 				cpumask_and(dp, dp, housekeeping_cpumask(HK_TYPE_DOMAIN));
- 				if (dattr)
--					update_domain_attr_tree(dattr + nslot, b);
--
--				/* Done with this partition */
--				b->pn = -1;
-+					update_domain_attr_tree(dattr + nslot, csa[j]);
- 			}
- 		}
--		nslot++;
-+		if (nslot_update)
-+			nslot++;
- 	}
- 	BUG_ON(nslot != ndoms);
- 
--- 
-2.45.0
+Hi Maxime,
 
+Elsewhere in this function it is assumed that info may be NULL.
+But here it is dereferenced unconditionally.
+
+Flagged by Smatch.
+
+> +	struct phy_device *phydev;
+>  	unsigned int i;
+>  	int ret;
+>  
+
+...
