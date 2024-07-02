@@ -1,192 +1,149 @@
-Received: from smtp.outgoing.loopia.se (smtp.outgoing.loopia.se [93.188.3.37])
+Received: from out203-205-221-190.mail.qq.com (out203-205-221-190.mail.qq.com [203.205.221.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB6F15B133
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.3.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8050115B133
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719924084; cv=none; b=GsYCxMgbWvInpRmb94dg26gMOXvz5JcUH68ZfBDYOHl9us46ONf2i2DpduiIhxmCU1+ZJgIpA43rKWuswQeyCX1EBUGxGR355gV4IEFzE7WiI6u3je4e5L6u2+pRQu+Srg+Ajcxl81aAVHDxwFpYYimFsTa3pY3KspcZBd9St14=
+	t=1719924218; cv=none; b=TzT0jZ7zlryTKuGLtn9KqomFIZTBYHrqbUaQ5pONurnIHo0BEhFwTaIMMt8VlVqKEWGisy29WL6iEik/euhPOR9hPx63oX0fcQOPZBR/vGEgDLBy5MNkR5kmBsSYiy/QHIqLB5U5h+L4CqlUCCuMMetNifsXk3Qkd86+XnnTfSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719924084; c=relaxed/simple;
-	bh=3zCcAstELY1r9IVMmZDh1lUwRBnQSkuTsIIph7TQZvc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WiyQ0PTpbzDks7pJBZivvo47Iszqoo5YPHZQAlNH2/yrUQnLQTPdicxJT1p6AW72ve2eB4iQC44CgRtBhK0BGa5ErSePJCtFPt6VJxlCpEbKM0QEib89KaJWIIqpDJLNzjtw2fYck19/YvdfSSeUpIvCkI4Dv/HP+e34Tt+7E8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=frelon.se; spf=pass smtp.mailfrom=frelon.se; dkim=pass (2048-bit key) header.d=frelon.se header.i=@frelon.se header.b=UUjwh08W; arc=none smtp.client-ip=93.188.3.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=frelon.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=frelon.se
+	s=arc-20240116; t=1719924218; c=relaxed/simple;
+	bh=ucNQTfjmvBjyz/KHBM6TptraxFu5C2dRm7z1yhf6WbE=;
+	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
+	 Date:Cc:References:To; b=EwyXLUn7f8AAXMrDxT/abukPPIQ1Ogu/UwIuPNCdQd5stcSsETlkVkDrnrucyvakBHWGP6pXBOwmJHBYpGcrjQ8BE9bHkneHI8KNPNR7APhgmYIU3kkGH/t3K93MK02Ix3hENW2zddKoyQ6SVtqL+Ftf+z7dAGNH7bQpOLtcBxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=hNc8MvVg; arc=none smtp.client-ip=203.205.221.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=frelon.se header.i=@frelon.se header.b="UUjwh08W"
-Received: from s807.loopia.se (localhost [127.0.0.1])
-	by s807.loopia.se (Postfix) with ESMTP id A28F33028DF2
-	for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:31:40 +0200 (CEST)
-Received: from s979.loopia.se (unknown [172.22.191.5])
-	by s807.loopia.se (Postfix) with ESMTP id 91CE22E2B06D;
-	Tue, 02 Jul 2024 14:31:40 +0200 (CEST)
-Received: from s470.loopia.se (unknown [172.22.191.6])
-	by s979.loopia.se (Postfix) with ESMTP id 8FB1C10BC553;
-	Tue, 02 Jul 2024 14:31:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at amavis.loopia.se
-X-Spam-Flag: NO
-X-Spam-Score: -1.2
-X-Spam-Level:
-Authentication-Results: s470.loopia.se (amavisd-new); dkim=pass (2048-bit key)
- header.d=frelon.se
-Received: from s899.loopia.se ([172.22.191.5])
- by s470.loopia.se (s470.loopia.se [172.22.190.34]) (amavisd-new, port 10024)
- with UTF8LMTP id qx_XX6333UFS; Tue,  2 Jul 2024 14:31:40 +0200 (CEST)
-X-Loopia-Auth: user
-X-Loopia-User: fredrik@frelon.se
-X-Loopia-Originating-IP: IPv6:2001:2042:34bd:7800:4e1d:96ff:fe79:894d
-Received: from frelon.se (unknown [IPv6:2001:2042:34bd:7800:4e1d:96ff:fe79:894d])
-	(Authenticated sender: fredrik@frelon.se)
-	by s899.loopia.se (Postfix) with ESMTPSA id 150FD2C8BA98;
-	Tue, 02 Jul 2024 14:31:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=frelon.se;
-	s=loopiadkim1707342414; t=1719923500;
-	bh=Ftj2lhmVvSVSrnHCWs3/uFd1rZPl9d1w3Yyy0lkezX8=;
-	h=From:To:Cc:Subject:Date;
-	b=UUjwh08WhmIiysEpdW+BtqzE5dZwjyj6tw+TBtgOQdQbo9P5qKTQC8ZCeMtIQynMB
-	 qCjqo6msI9SFVl1schHYFCFH/QQOQruG19GDrXl9WxzMCQ0PIH8jX0QA+aHe0opBHJ
-	 5ElIprnaFfWgaEnCRh10nKaRi52Wyo+p4uzocgQ9iExFpr9FY9iDpiv45/EYW4tNbn
-	 E65VNEr5Xu9f05hhyuVeqdpnzX9hmHAYrUf5tx8jXluyhld4rr2aBEy6E3DZFq94HF
-	 2nc+QVNMrfYiLYf6nZXKN0gHTRzkXi/fuX7eYPOyW/otR1cviZUOzKJ0bWZVHUgRyu
-	 qNXZab2OmvVdQ==
-From: =?UTF-8?q?Fredrik=20L=C3=B6nnegren?= <fredrik@frelon.se>
-To: Ping-Ke Shih <pkshih@realtek.com>,
-	Kalle Valo <kvalo@kernel.org>
-Cc: =?UTF-8?q?Fredrik=20L=C3=B6nnegren?= <fredrik@frelon.se>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rtlwifi: fix comment typo
-Date: Tue,  2 Jul 2024 14:30:44 +0200
-Message-ID: <20240702123048.14829-1-fredrik@frelon.se>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="hNc8MvVg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1719924210; bh=ZRPp8dKEItyDHCpqVd9zL+53a0tYUZt1IfOdGrtXWPw=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=hNc8MvVgGZVMCinqsg2zoXkBYYFy+op3bhM6W+q1EqDmTcSNBzA6+rb5GZ1cx4/Vw
+	 RUqJUGmWyhyidLQyyDCd0wLdN4NCQhALGRxyMALgpPOy0XyefrMKqxqxieOP9hXyqB
+	 BQjAJ4iN/6YCYDu/FhwCKjOAJ4lDhtvsafNMbAvc=
+Received: from smtpclient.apple ([2408:8207:18a1:c8b0:d94f:d56c:82f1:40db])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id ADA8E457; Tue, 02 Jul 2024 20:43:26 +0800
+X-QQ-mid: xmsmtpt1719924206t21455jn1
+Message-ID: <tencent_A6F18ECEB80131BA21638D187C6782F6DA08@qq.com>
+X-QQ-XMAILINFO: MR/iVh5QLeie4AIX3n0T6n2xfv3bNhMVzS0YvYjIW5sNeB3CoBvcf4zqKG2mDr
+	 JpcgJVFniYRVyY8okQnNsyFMqFE8c10WVDOS6ovC9Yv6s5uSNkLXA/tqkKIGMkGlh6mLKNWdRQ4r
+	 BdTv+w4zy5WqOx/j1hNeeSG90O2/CDlFDOXC2aUzyXwXu0/FAbck8vbZGRqmAK2E6wF/VkkQQBMZ
+	 YBveTJCUFwX9gvF3OpV887vODjDeHhSTM0mFYL7Y9X1y7MjHikWGLT1oRqysrSnhpQ+kEYsIVpkE
+	 a+0RLDsUZwrsipslpd1p7yiG6FH/Ji6jNFytihfwovoA9ZUuLxaozoZ+C1sEC0xwNt7o0GnzPNdj
+	 PzvS/SGBtQr7Xkt2PI1H/p10caBf9SlhHHP0fchhfqguHwrEW1oMarZOcV1/Ty1RRmeRG69XeGeM
+	 qTcCVUtHXEiFSMF7rlAxsTe16jetMlBfcTAW9R1cSuKysEBve6ht/BreycSjMOxooEzVf1VpqjVz
+	 rxvwqURlnkuBWHVnSRG88VzULEumM7+VCpp2pJ56QT4BPfvO1cWfrGsFRYPjqFbcYtco3gN3cFC5
+	 tAoZALae/7S2hpNBQgAwv/vEI6fM+smz8Hs2UmCbsY1rTd1oodyQ0iCuH7KXtoH4G7MmBZPRgfSj
+	 bqmMSaurtrSHhjKFinHGYzZn25/Jh533uny3gKP1mhR1/ElZwCoUved/cbxQMeCRTTlcDUqdQB49
+	 YH4P/0Eo2/M+k0ThmgWeJezSeOIIz2wAu7SfWRx1/auVvYzGaUqswfQCYOYplB5ApzUjpGSv3WBL
+	 +8Yw6q/OObE8k72jEfxpFHR6+DyVvp42jiz94ZKGIfV2icfBBbV1MZ/E0YGXrUETwOoXUkOnJvt2
+	 EFX0LrkjXbV8capv6pDgdblHM+cd8WlDJBrTttNroFWuELRpf+EJk50d4ysd6g7MWpeLavDXWrqB
+	 /PElS66q9bJxAA1HHnSprXRTWL9TRlzrexNJmTBoQ4Thbs5t7uL6BGJCgNMxn8blMm/bXuKLriNp
+	 FDB+Z39hL3WHiPNhe96pAZkJLQpDXfO5gv4YAhl0b5BlStwjLV
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH v1] drivers/perf: apple_m1: fix affinity table for event
+ 0x96 and 0x9b
+From: Yangyu Chen <cyy@cyyself.name>
+In-Reply-To: <20240702121340.GB3542@willie-the-truck>
+Date: Tue, 2 Jul 2024 20:43:16 +0800
+Cc: Marc Zyngier <maz@kernel.org>,
+ linux-arm-kernel@lists.infradead.org,
+ Mark Rutland <mark.rutland@arm.com>,
+ Janne Grunau <j@jannau.net>,
+ Hector Martin <marcan@marcan.st>,
+ Asahi Lina <lina@asahilina.net>,
+ asahi@lists.linux.dev,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+X-OQ-MSGID: <8D1767DE-D45B-40AD-A57F-5711A8AF9B3D@cyyself.name>
+References: <tencent_7B71486CE305DF8AE084B6BB6313EE550C06@qq.com>
+ <20240701140148.GE2250@willie-the-truck> <87cynxp52o.wl-maz@kernel.org>
+ <87bk3hp3z7.wl-maz@kernel.org>
+ <tencent_371517268623E4A61194EF4C70497BDC5105@qq.com>
+ <8634oshxhj.wl-maz@kernel.org> <20240702121340.GB3542@willie-the-truck>
+To: Will Deacon <will@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-Change 'defult' to 'default' in comments in several rtlwifi drivers.
 
-Signed-off-by: Fredrik Lönnegren <fredrik@frelon.se>
----
- drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c | 2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c | 2 +-
- 8 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c
-index 37bb59fa8bfa..35875cda30fc 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c
-@@ -27,7 +27,7 @@ static void rtl88e_init_aspm_vars(struct ieee80211_hw *hw)
- 	 * 2 - Enable ASPM with Clock Req,
- 	 * 3 - Alwyas Enable ASPM with Clock Req,
- 	 * 4 - Always Enable ASPM without Clock Req.
--	 * set defult to RTL8192CE:3 RTL8192E:2
-+	 * set default to RTL8192CE:3 RTL8192E:2
- 	 */
- 	rtlpci->const_pci_aspm = 3;
- 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c
-index e20f2bec45c4..ce7c28d9c874 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c
-@@ -31,7 +31,7 @@ static void rtl92c_init_aspm_vars(struct ieee80211_hw *hw)
- 	 * 2 - Enable ASPM with Clock Req,
- 	 * 3 - Alwyas Enable ASPM with Clock Req,
- 	 * 4 - Always Enable ASPM without Clock Req.
--	 * set defult to RTL8192CE:3 RTL8192E:2
-+	 * set default to RTL8192CE:3 RTL8192E:2
- 	 * */
- 	rtlpci->const_pci_aspm = 3;
- 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
-index 5f6311c2aac4..1b7a08315fc9 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
-@@ -32,7 +32,7 @@ static void rtl92d_init_aspm_vars(struct ieee80211_hw *hw)
- 	 * 2 - Enable ASPM with Clock Req,
- 	 * 3 - Alwyas Enable ASPM with Clock Req,
- 	 * 4 - Always Enable ASPM without Clock Req.
--	 * set defult to RTL8192CE:3 RTL8192E:2
-+	 * set default to RTL8192CE:3 RTL8192E:2
- 	 * */
- 	rtlpci->const_pci_aspm = 3;
- 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c
-index 7bde20fdbeab..162e734d5b08 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c
-@@ -31,7 +31,7 @@ static void rtl92ee_init_aspm_vars(struct ieee80211_hw *hw)
- 	 * 2 - Enable ASPM with Clock Req,
- 	 * 3 - Alwyas Enable ASPM with Clock Req,
- 	 * 4 - Always Enable ASPM without Clock Req.
--	 * set defult to RTL8192CE:3 RTL8192E:2
-+	 * set default to RTL8192CE:3 RTL8192E:2
- 	 */
- 	rtlpci->const_pci_aspm = 3;
- 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c
-index 675bdd32feb1..bbf8ff63dced 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c
-@@ -27,7 +27,7 @@ static void rtl92s_init_aspm_vars(struct ieee80211_hw *hw)
- 	 * 2 - Enable ASPM with Clock Req,
- 	 * 3 - Alwyas Enable ASPM with Clock Req,
- 	 * 4 - Always Enable ASPM without Clock Req.
--	 * set defult to RTL8192CE:3 RTL8192E:2
-+	 * set default to RTL8192CE:3 RTL8192E:2
- 	 * */
- 	rtlpci->const_pci_aspm = 2;
- 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c
-index dd7505e2f22c..1b144fbd4d26 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c
-@@ -33,7 +33,7 @@ static void rtl8723e_init_aspm_vars(struct ieee80211_hw *hw)
- 	 * 2 - Enable ASPM with Clock Req,
- 	 * 3 - Alwyas Enable ASPM with Clock Req,
- 	 * 4 - Always Enable ASPM without Clock Req.
--	 * set defult to RTL8192CE:3 RTL8192E:2
-+	 * set default to RTL8192CE:3 RTL8192E:2
- 	 */
- 	rtlpci->const_pci_aspm = 3;
- 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
-index 162c34f0e9b7..0a92d0325098 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
-@@ -32,7 +32,7 @@ static void rtl8723be_init_aspm_vars(struct ieee80211_hw *hw)
- 	 * 2 - Enable ASPM with Clock Req,
- 	 * 3 - Alwyas Enable ASPM with Clock Req,
- 	 * 4 - Always Enable ASPM without Clock Req.
--	 * set defult to RTL8192CE:3 RTL8192E:2
-+	 * set default to RTL8192CE:3 RTL8192E:2
- 	 */
- 	rtlpci->const_pci_aspm = 3;
- 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c
-index 7b911695db33..a65503c5ae5a 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c
-@@ -30,7 +30,7 @@ static void rtl8821ae_init_aspm_vars(struct ieee80211_hw *hw)
- 	 * 2 - Enable ASPM with Clock Req,
- 	 * 3 - Alwyas Enable ASPM with Clock Req,
- 	 * 4 - Always Enable ASPM without Clock Req.
--	 * set defult to RTL8192CE:3 RTL8192E:2
-+	 * set default to RTL8192CE:3 RTL8192E:2
- 	 */
- 	rtlpci->const_pci_aspm = 3;
- 
--- 
-2.45.2
+> On Jul 2, 2024, at 20:13, Will Deacon <will@kernel.org> wrote:
+> 
+> On Tue, Jul 02, 2024 at 11:58:00AM +0100, Marc Zyngier wrote:
+>> On Tue, 02 Jul 2024 11:22:21 +0100,
+>> Yangyu Chen <cyy@cyyself.name> wrote:
+>>> 
+>>>> Yangyu, can you please clarify how you came to the conclusion that
+>>>> these events didn't count anywhere other than counter 7?
+>>>> 
+>>> 
+>>> IIRC, I came across some web page that says events 0x96 and 0x9b
+>>> can only be installed on counter 7 to count Apple AMX, but I can't
+>>> find the page now. Since AMX is not usable in Linux, I don't know
+>>> if this will affect some other instructions that are usable in
+>>> Linux.
+>> 
+>> As you said, AMX cannot be used with Linux, and that's unlikely to
+>> ever change. But when it comes to the standard ARM ISA, we can only
+>> witness counters 5,6 and 7 being incremented with at the exact same
+>> rate.
+>> 
+>> So reading between the lines, what I understand is that AMX
+>> instructions would only have their effects counted in counter 7 for
+>> these events, while other instructions would be counted in all 3
+>> counters.
+>> 
+>> By extension, such behaviour could be applied to SME on HW that
+>> supports it (wild guess).
+>> 
+>>> There are some other reasons, but I can't say in public.
+>> 
+>> Fair enough, I'm not asking for the disclosure of anything that isn't
+>> public (the least I know, the better).
+>> 
+>>> Even though I can't find the actual usage, I think using count 7
+>>> only for these 2 events is safer. If this reason is insufficient,
+>>> we can ignore this patch until we find other evidence that this
+>>> affinity affects some instructions usable in Linux.
+>> 
+>> I honestly don't mind.
+>> 
+>> The whole thing is a black box, and is more useful as an interrupt
+>> generator than an actual PMU, due to the lack of freely available
+>> documentation. If the PMU maintainers want to merge this, I won't
+>> oppose it.
+> 
+> I'd rather leave the code as-is than tweak specific counters based on
+> a combination of guesswork and partial information.
+> 
+> Of course, if somebody who knows better wants to fix up all of the
+> mappings (because this surely isn't the only corner-case), then we can
+> take that. But at least what we have today has _some_ sort of consistent
+> rationale behind it.
+
+Actually, anyone who has macOS software can learn the whole affinity
+table of PMU. The detailed information can be extracted from a plist
+file stored in the macOS root filesystem. I also provide that script
+[1] to extract this information.
+
+However, I can't directly use this information for legal concerns.
+Would this be acceptable if the information I provide matches Apple's
+information? I can't say whether it matches or not in public. I can
+only say we can easily find someone who uploaded this file to the
+internet.
+
+[1] https://github.com/cyyself/m1-pmu-gen
+
+> 
+> Will
+
 
