@@ -1,110 +1,131 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F86155A52
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 09:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0E1156641;
+	Tue,  2 Jul 2024 09:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719911783; cv=none; b=e0YJVZPH9r8BgALPbMAunMDej9nIg/ra+dmVpo6RfBggRjgb+HMzfezOdUuPpo/XFV17EB/YTXHEXblo3/VgQgc0Cj0icDGXjSWWWzn4X6qXE5LF2DdzN2m7bnuIt3x5U1N3gCozhXeN8suyDH44RF2kFhdBLfE2pdSWWl39mVA=
+	t=1719911820; cv=none; b=ZyXS7l8Su/FAFncSUp5Juhp+oPgULC/1GY3umyJgCfbUqCMn3tVS7WkeJCUxCNrTNBInoC1/6AhreBFn2MektBlvVsEObXhTjspZyYbcx4qgr/aDhg6dT4S7MHeVJjLIzernNLSpqXIR9cdGEZoxTHVEe53HJHE2yIbtqE2tQCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719911783; c=relaxed/simple;
-	bh=4WZAZtnHKSDJYQ5TKJuVTZiOFTMVNAPKVK4zImRkS5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g5NOQ6BiMw6DELiaUoZMQb/gigZtlv34OqCCDsWtCZNnAfWs2reA+SAAO4xV9hzWwwi1KeuVv+qR/br/mrrBRor0v9QddWssMP/4bJ4r3Tm7Y400AuZ/P7u0MNoyKX+YRc+LSuqoKpC3Dveshkv/xhzGLxYNTCK+qzd2UcPemAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1sOZba-0004QR-Dq; Tue, 02 Jul 2024 11:15:18 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1sOZbW-006ZmA-Rx; Tue, 02 Jul 2024 11:15:14 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1sOZbW-00AOUX-2L;
-	Tue, 02 Jul 2024 11:15:14 +0200
-Date: Tue, 2 Jul 2024 11:15:14 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Russell King <linux@armlinux.org.uk>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Vladimir Zapolskiy <vz@mleia.com>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	imx@lists.linux.dev, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-	openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH 9/9] eeprom: at24: remove deprecated Kconfig symbol
-Message-ID: <20240702091514.jjdahaseml6fpnrz@pengutronix.de>
-References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
- <20240701-b4-v6-10-topic-usbc-tcpci-v1-9-3fd5f4a193cc@pengutronix.de>
- <CAMRc=McP=K0jSD56JdCR9DPJmJN39Z74mjAo0qX2mEnTBN1GAA@mail.gmail.com>
+	s=arc-20240116; t=1719911820; c=relaxed/simple;
+	bh=A95+J/M+hBp0B3YAI/nsGZZXz9ZcUwI13nO0P8PUUhg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VtFRPO4yLfZd81loLxKMJT3qT497eIDQrDxyI+xt+1LP8PvKJBDyhxYt0OvAEQcbMTKcg1RAVP6pIPStjMuCcX/wb4nH/edimyeN4MA0pDeVngTItAEylXxKZeBpyV+aj2KfIIyIQY/y7fADFfBnCYc5ZV1JnMsHe4J8g4/SRBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1dm3YN2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1dm3YN2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A81C6C32781;
+	Tue,  2 Jul 2024 09:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719911819;
+	bh=A95+J/M+hBp0B3YAI/nsGZZXz9ZcUwI13nO0P8PUUhg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=L1dm3YN25lvx78G5TzkZsGCMqktja8XEDagGP2IeUC4rmbQNtSVwGFe9i0vsRVIyR
+	 xcumraU8kbp3lDvtZWBJO5bZsW2paPECdkl2jushfX3AFBEoevkDf/SVkukw6chcX3
+	 +71HEb7xZTNO7fvRLDTt0j9oto5IurDLdoeNssggzeakXWIRurPHh308arLPrE0BCt
+	 DUlIA1bME+UrRWkCpAD4aIdSfqjZMhO9/LkyJGx7bXAFD5g98LM6L58R9OC5AGeRWK
+	 DWcilHBmvuiB8XK6Gvm5vZvNlXXE2Y/0eMk65Cm3qNqL8kfLga4In1C9GFSUxrg86W
+	 5VBnWEPjdyZVQ==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ec61eeed8eso48897991fa.0;
+        Tue, 02 Jul 2024 02:16:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSdh2Tqun4lIKjMF0rAvRJHRk9lMAL3exBVHW0lTmBwMjjYGVYPsX18l2XKF6Ec+KC81lJCVUurWMoyyFSx1jTX8JBR3zjy1DCCJJUm0A5tBp+24jokRzi4/jYOOawNO86lh/WE4NWf73z
+X-Gm-Message-State: AOJu0Yz8cBZqmTtqB9nsVZXlT6tY1Ro0XiSnkodEkQil1MEcCAEN8bYq
+	iY93ianPjtmWQdrOsJ4lTnN4vK0yV1nXM6h7p2wQnnUmDD2b8LwLYwlAJSgRl/Q+B6S08bs4eVt
+	hcWKmWvVVLd9lGuW2uUkObthvzSk=
+X-Google-Smtp-Source: AGHT+IFfhlmSaAaQmfgNgpWikVPetj7fCvtt1FQlhm049GGmJ6bkGBLCsrBYTswT1MVMx6x56qR9eL7fxZ9oN7jQ3X0=
+X-Received: by 2002:a05:651c:154c:b0:2ec:5dfc:a64e with SMTP id
+ 38308e7fff4ca-2ee5e2a8a4dmr71464391fa.0.1719911818304; Tue, 02 Jul 2024
+ 02:16:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McP=K0jSD56JdCR9DPJmJN39Z74mjAo0qX2mEnTBN1GAA@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20240613093433.131699-1-wenst@chromium.org>
+In-Reply-To: <20240613093433.131699-1-wenst@chromium.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 2 Jul 2024 18:16:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT2i_28f7jojpwQrTsW-h_pYZ1ifraM50RoMmUvdPUbuw@mail.gmail.com>
+Message-ID: <CAK7LNAT2i_28f7jojpwQrTsW-h_pYZ1ifraM50RoMmUvdPUbuw@mail.gmail.com>
+Subject: Re: [PATCH v2] scripts/make_fit: Support decomposing DTBs
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Simon Glass <sjg@chromium.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, Jun 13, 2024 at 6:34=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.org> w=
+rote:
+>
+> The kernel tree builds some "composite" DTBs, where the final DTB is the
+> result of applying one or more DTB overlays on top of a base DTB with
+> fdtoverlay.
+>
+> The FIT image specification already supports configurations having one
+> base DTB and overlays applied on top. It is then up to the bootloader to
+> apply said overlays and either use or pass on the final result. This
+> allows the FIT image builder to reuse the same FDT images for multiple
+> configurations, if such cases exist.
+>
+> The decomposition function depends on the kernel build system, reading
+> back the .cmd files for the to-be-packaged DTB files to check for the
+> fdtoverlay command being called. This will not work outside the kernel
+> tree. The function is off by default to keep compatibility with possible
+> existing users.
+>
+> To facilitate the decomposition and keep the code clean, the model and
+> compatitble string extraction have been moved out of the output_dtb
+> function. The FDT image description is replaced with the base file name
+> of the included image.
+>
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> ---
+> Changes since v1:
+> - Replace OrderedDict with standard {} dict
+> - Change short form command line argument to -D
+> - Drop [] around "'fdt-{x}\x00' for x in files"
+> - Add spaces around '+' in slice argument
+> - Split out DTB parsing into separate function
+>
+> Simon's reviewed-by was dropped.
+>
+> This is a feature I alluded to in my replies to Simon's original
+> submission of the make_fit.py script [1].
+>
+> This is again made a runtime argument as not all firmware out there
+> that boot FIT images support applying overlays. Like my previous
+> submission for disabling compression for included FDT images, the
+> bootloader found in RK3399 and MT8173 Chromebooks do not support
+> applying overlays. Another case of this is U-boot shipped by development
+> board vendors in binary form (without upstream) in an image or in
+> SPI flash on the board that were built with OF_LIBFDT_OVERLAY=3Dn.
+> These would fail to boot FIT images with DT overlays. One such
+> example is my Hummingboard Pulse. In these cases the firmware is
+> either not upgradable or very hard to upgrade.
+>
+> I believe there is value in supporting these cases. A common script
+> shipped with the kernel source that can be shared by distros means
+> the distro people don't have to reimplement this in their downstream
+> repos or meta-packages. For ChromeOS this means reducing the amount
+> of package code we have in shell script.
+>
+> [1] https://lore.kernel.org/linux-kbuild/20231207142723.GA3187877@google.=
+com/
+>
+>  scripts/Makefile.lib |  1 +
+>  scripts/make_fit.py  | 86 ++++++++++++++++++++++++++++++++------------
+>  2 files changed, 65 insertions(+), 22 deletions(-)
 
-On 24-07-02, Bartosz Golaszewski wrote:
-> On Mon, Jul 1, 2024 at 3:54 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> >
-> > All kernel users are shifted to the new MTD_EEPROM_AT24 Kconfig symbol
-> > so we can drop the old one.
-> >
-> 
-> Nope, with this series arm64 still selects the old symbol.
 
-sry. I must have forgotten to add the arm64 hunk :/ I also noticed one
-powerpc config which still select the old symbol. I will fix this in v2.
 
-Thank you,
-  Marco
 
-> 
-> Bart
-> 
+Applied to linux-kbuild.
+Thanks!
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
