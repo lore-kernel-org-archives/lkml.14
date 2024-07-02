@@ -1,218 +1,155 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2078.outbound.protection.outlook.com [40.107.96.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544394CE09;
-	Tue,  2 Jul 2024 08:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719908162; cv=fail; b=r5vbBw4K1KBessn0YAqhZ4ObIKNsK2QYHiiB5aXn8fEmEuI/ZY3x0UyTa+HEZEoSE0wwhfPnlL8yen9dGJaD0dyMPtGB+/a+XCrw+sOzB4ykLigUoa4H2iCl0RaXkJBbwTRI4kfJzAQ/h6l74sjkFvLvLQljFlO3pFCjZYCpY4Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719908162; c=relaxed/simple;
-	bh=H13dc82WW+Z7MKcMzb4ex0Rb0p7CFJq3+YkkDeneb8U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nTTL2Yz8iT/NJkc9f9dMWfHz8HjapoLWNoHAry4UKzUa+ks41+BVapC01gbZOd6c46CKcrY2yolHG0D/ttsS7hQs9SE6gMd3RG0HuhlIMpIPog+njsKb9OYcpWpaJdZeSus+KmpDS86MKq5ezVWb0+UsRWdPfW+bwrHXpmu3OxM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1wL3R+NT; arc=fail smtp.client-ip=40.107.96.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1wL3R+NT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gw8OkHAaOZJOaHU+zz0umkK2TJvw70ZXLz/FYxEs3ZLdH1/wuvpeTEknPRPBf/KtLRmJfYLmtS2TA1a1gd/GPlCOMiD1Ba4on598yRUns31Q6C2OhInbqNDFAVKQ0BygGwh4G5wDn4hfZ8ITQczU+GpOSzZrIdw44FCA9QTRV547T+qP8h0kqd6wsC6rBgC/9IcfDxL/dbrZ8bCAA+1LTV4Q+qmAXlXQmhTfzNmf1H0iOwXu7PrHy+4xP4P0VB8xy0FhhhUimQ7FT98oD0bZm8QcOoUFk0M4Nz7mpmXVouqwdCGsd6L+UW/GQULTKckMTIMMki6pwN9OVtdcFD/Mag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CluJrTS3Uz6QUctPwbDYrbMSb+eD0U6x0grFTSEL2l8=;
- b=S+2Wsu95VGv6n9S9ttFgV+/UTgOV0sIZjtDxqdjOErvmQyx5oMu8Pnr2YjZATQrVJIyXd1U+jIx4U2moqgzFkfG8iOqtVEs84+4mrvHEGY88Ab4mMkNWnWiKosa5HaAVwY7TwLscqTamQG2D+oDdEQNUNpxSc4UKmiBrCifRWFjru39/CY8h53N5su2MxJT/eRGtlTpciBVLVPi9t9TfoZk7pvv9O7AOk1+JffFpObBbJhcp8mf5RUWwebdByL+gEiFDO0O9uzGbr5aVXP0KBm475XT+736W0oSfV4+ul3C3Nn7+1/eM6UQuh7/pzuiPROq8tO2thMPY8PnLr36oPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CluJrTS3Uz6QUctPwbDYrbMSb+eD0U6x0grFTSEL2l8=;
- b=1wL3R+NT4xiHT4wfL4SiKcosnCbCRDmePqr2dF78fc13AS/qfQsfxewmnmlf/oNrYkwtQ2g/3U1XISQgHH6pwrLstyqmitVBp248yk/8QUMIKRRnn/NVzbsta4u4h6KRyc2hJw/Ak9O2Wc3OIacm6u9tn97QXA/PFejNovpknPc=
-Received: from CH2PR14CA0038.namprd14.prod.outlook.com (2603:10b6:610:56::18)
- by SN7PR12MB6959.namprd12.prod.outlook.com (2603:10b6:806:261::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.33; Tue, 2 Jul
- 2024 08:15:58 +0000
-Received: from DS3PEPF000099DA.namprd04.prod.outlook.com
- (2603:10b6:610:56:cafe::82) by CH2PR14CA0038.outlook.office365.com
- (2603:10b6:610:56::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.35 via Frontend
- Transport; Tue, 2 Jul 2024 08:15:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099DA.mail.protection.outlook.com (10.167.17.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7741.18 via Frontend Transport; Tue, 2 Jul 2024 08:15:57 +0000
-Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 2 Jul
- 2024 03:15:53 -0500
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-To: <rafael@kernel.org>, <viresh.kumar@linaro.org>, <gautham.shenoy@amd.com>,
-	<mario.limonciello@amd.com>, <perry.yuan@amd.com>,
-	<skhan@linuxfoundation.org>, <li.meng@amd.com>, <ray.huang@amd.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Dhananjay
- Ugwekar" <Dhananjay.Ugwekar@amd.com>, David Arcari <darcari@redhat.com>
-Subject: [PATCH v2 2/2] cpufreq/amd-pstate: Fix the scaling_max_freq setting on shared memory CPPC systems
-Date: Tue, 2 Jul 2024 08:14:14 +0000
-Message-ID: <20240702081413.5688-3-Dhananjay.Ugwekar@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240702081413.5688-1-Dhananjay.Ugwekar@amd.com>
-References: <20240702081413.5688-1-Dhananjay.Ugwekar@amd.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D9184CE09
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 08:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719908341; cv=none; b=T1b9iJHipv+XbCLBI86b6rwIcon1YGGqbOpmQNkHGhv1iEWAtAupwZDZCkj0vaqUxmOxOFAsdZ9eN53EGkKKC0A8+eqfRT6ns90gDN7IRyiKZkl1jxW9BRzSn6iSDx2sXq8pdJQiDD/6TflBWnsV6eMF/U3enmxBGUBLWPD6VGE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719908341; c=relaxed/simple;
+	bh=kkKIITcUg9oP9Wi1l5zsvVb76B8TQyoXp2TAZv6UER8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sRpk0rV9RNN2whGeScxbbpCnOmbvIPXST9MecP+tXEb7zUy1Np3nFRzm9WWU79x3L4clY17lmIRis1Y4oLYjLjFbXI64I5GPQ/EDx04KYlFiDMPaOPakZhEax0psyAxrAfkbbWxtSJaIMIrJRTTpVg2Z6RzwLKEZRhr+0sDEBwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D40B0339;
+	Tue,  2 Jul 2024 01:19:16 -0700 (PDT)
+Received: from [10.57.72.41] (unknown [10.57.72.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DCA03F766;
+	Tue,  2 Jul 2024 01:18:50 -0700 (PDT)
+Message-ID: <507da6d0-77c5-46ca-8351-53b405ecb131@arm.com>
+Date: Tue, 2 Jul 2024 09:18:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DA:EE_|SN7PR12MB6959:EE_
-X-MS-Office365-Filtering-Correlation-Id: 55fdfff2-8eff-4271-d401-08dc9a6f339c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/ywqJ0GGjaUNDfZj3aSAZ563SkVM+QsJXgmi/lZfL72MBGTYKMITvlxyzAkw?=
- =?us-ascii?Q?9A92uWyNFPHuribp7a6apdS+rLNrU1TyDX5685QJ2DKrq2gtXzyRGgVVK54u?=
- =?us-ascii?Q?FK9yVsYwcJ+EvtQ2NNsiBq2zYVsFnZ5qiAeUGEtEz1eAqD69C4AJP2WX5gmT?=
- =?us-ascii?Q?PC0p5XHIaYcQ7YbWSU9sD8uR1gfBHIsopw4IPW4Cuw4/06HZX+ARi7H1pHv1?=
- =?us-ascii?Q?Y8FPQdT+6bqH40QtAor2MoaaFq5r3gIuTqK9BpKDSJYhQAXvuCszT8XZldTF?=
- =?us-ascii?Q?XfkuOYINEysWnJBj+oxNGfoMM9DgIOB5jka8GpgEbZC5ES9bigrdp70JEgG8?=
- =?us-ascii?Q?Kj+fwfyBjsKrx21L398fhOCEpqM/DJDSU/5mfUNXO9hf27L9+Fz8U+Vkot4x?=
- =?us-ascii?Q?hnQkcpIesOsB1b/1heCXRvGEnlDPYJJ0d1cmMCdi1LGwurbTG1SOzPkkIXNi?=
- =?us-ascii?Q?Tpzm83QfP6UMPJ8BYynlc2zzuMHRaWxM09+SwezNyhVZAwvx3LBpS8Z9D6UF?=
- =?us-ascii?Q?zJRO2BNlAKsxFYtGxeq7kGymNMs+qxbMtMsp8EXdveeiEUdvvEHHhx2AGKe8?=
- =?us-ascii?Q?LThARibDNkN5j+CUrVHFZNeeJOVJkohKYdcLKJiAzP6SOc0VtF1bSE0ARz/T?=
- =?us-ascii?Q?GjaymEzUzV6F8DsTI0punr37cTnKj58uQhMxZtdFmu9bgwQuhw0pEm6kovoB?=
- =?us-ascii?Q?dp7njtv6CaaqjYkttISLdU9K1U3kxEHm21xmJpAH1G1imm184/RaArKcJeZJ?=
- =?us-ascii?Q?etKBgreoQ1C7UryLlxWj6zEV9r8tkZVHLvcuKb3YmTDET9XM9Phtjv/un5/K?=
- =?us-ascii?Q?e49ti0jZt0SGDwHJHlAyE8kkpPahanoVudGgxlm05w53qJVCU2DMLi7B3ZXU?=
- =?us-ascii?Q?J9IYsVayeCP+NyhDsie0tlpE9wx5IXyiHF/OA0480bUkbzYXqBhIvLU3tkw3?=
- =?us-ascii?Q?3Pjo0cRaSWMTEW1ESrsmcBy+MdLtm2MLkOtayrdlyUSMHohRe6aMqjdLajTn?=
- =?us-ascii?Q?NwdaQmWeTOsiDDVZbEF00wkp2Yj3UvUtGkBjAxnwtIubO6ETnva/6R6QpQxn?=
- =?us-ascii?Q?lXVp0Y7H6agnVJKMwK7KbqdX7fT5RqCeXuauUR3Pzpy1H/6IvKKEEUXzcbry?=
- =?us-ascii?Q?mtI809FIJSUmcNXK/UKbBPPr9gKNPP+XtCWg0oR7lwqxwmRSA8RKr+iOxgoi?=
- =?us-ascii?Q?xPg/sdDE/BpiPPvg+G2jOBnd5PUvvx/kcJ8XPzA/kvI6GrtYfR5kqo4HlFOv?=
- =?us-ascii?Q?HaJ6yisGnZeYeHYR9gchk6kIVnXUvtJk6SUrZ041n5zWcEn23w1gyfrVC81R?=
- =?us-ascii?Q?0j5unq2Q4vqAii7K1BSLVCQRRSSPrHZt/ruPxrwbvAfCMyk7iGS7qwGlx/YK?=
- =?us-ascii?Q?KmafBA/VQg2apy9OmxEVgTOvpiXCp1HVDu4pNlD3ce6R+FCVQu09bptxMxNH?=
- =?us-ascii?Q?owod19WNiBNQrd3fMxviZWmA5GuvoO5z?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 08:15:57.6637
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55fdfff2-8eff-4271-d401-08dc9a6f339c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099DA.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6959
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: thp: support "THPeligible" semantics for mTHP with
+ anonymous shmem
+Content-Language: en-GB
+To: Bang Li <libang.li@antgroup.com>, ughd@google.com,
+ akpm@linux-foundation.org
+Cc: david@redhat.com, wangkefeng.wang@huawei.com,
+ baolin.wang@linux.alibaba.com, ioworker0@gmail.com, ziy@nvidia.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20240702023401.41553-1-libang.li@antgroup.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240702023401.41553-1-libang.li@antgroup.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On shared memory CPPC systems, with amd_pstate=active mode, the change
-in scaling_max_freq doesn't get written to the shared memory
-region. Due to this, the writes to the scaling_max_freq sysfs file
-don't take effect. Fix this by propagating the scaling_max_freq
-changes to the shared memory region.
+On 02/07/2024 03:34, Bang Li wrote:
+> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
+> anonymous shmem"), we can configure different policies through
+> the multi-size THP sysfs interface for anonymous shmem. But
+> currently "THPeligible" indicates only whether the mapping is
+> eligible for allocating THP-pages as well as the THP is PMD
+> mappable or not for anonymous shmem, we need to support semantics
+> for mTHP with anonymous shmem similar to those for mTHP with
+> anonymous memory.
+> 
+> Signed-off-by: Bang Li <libang.li@antgroup.com>
+> ---
+> Changes since v1 [1]:
+>  - Put anonymous shmem mthp related logic into
+>    thp_vma_allowable_orders() (per David)
+> 
+> [1] https://lore.kernel.org/linux-mm/20240628104926.34209-1-libang.li@antgroup.com/
+> ---
+>  include/linux/huge_mm.h | 11 +++++++++++
+>  mm/huge_memory.c        | 13 +++++++++----
+>  mm/shmem.c              |  9 +--------
+>  3 files changed, 21 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 212cca384d7e..f87136f38aa1 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -267,6 +267,10 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+>  	return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
+>  }
+>  
+> +unsigned long shmem_allowable_huge_orders(struct inode *inode,
+> +				struct vm_area_struct *vma, pgoff_t index,
+> +				bool global_huge);
+> +
+>  struct thpsize {
+>  	struct kobject kobj;
+>  	struct list_head node;
+> @@ -460,6 +464,13 @@ static inline unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+>  	return 0;
+>  }
+>  
+> +static inline unsigned long shmem_allowable_huge_orders(struct inode *inode,
+> +				struct vm_area_struct *vma, pgoff_t index,
+> +				bool global_huge)
+> +{
+> +	return 0;
+> +}
+> +
+>  #define transparent_hugepage_flags 0UL
+>  
+>  #define thp_get_unmapped_area	NULL
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index c7ce28f6b7f3..ea377bb4af91 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -151,10 +151,15 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+>  	 * Must be done before hugepage flags check since shmem has its
+>  	 * own flags.
+>  	 */
+> -	if (!in_pf && shmem_file(vma->vm_file))
+> -		return shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
+> -				     !enforce_sysfs, vma->vm_mm, vm_flags)
+> -			? orders : 0;
+> +	if (!in_pf && shmem_file(vma->vm_file)) {
+> +		bool global_huge = shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
+> +							!enforce_sysfs, vma->vm_mm, vm_flags);
+> +
+> +		if (!vma_is_anon_shmem(vma))
+> +			return global_huge? orders : 0;
 
-Fixes: ffa5096a7c33 ("cpufreq: amd-pstate: implement Pstate EPP support for the AMD processors")
-Reported-by: David Arcari <darcari@redhat.com>
-Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
----
- drivers/cpufreq/amd-pstate.c | 43 +++++++++++++++++++-----------------
- 1 file changed, 23 insertions(+), 20 deletions(-)
+nit: missing space before '?'
 
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 9ad62dbe8bfb..a092b13ffbc2 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -247,6 +247,26 @@ static int amd_pstate_get_energy_pref_index(struct amd_cpudata *cpudata)
- 	return index;
- }
- 
-+static void pstate_update_perf(struct amd_cpudata *cpudata, u32 min_perf,
-+			       u32 des_perf, u32 max_perf, bool fast_switch)
-+{
-+	if (fast_switch)
-+		wrmsrl(MSR_AMD_CPPC_REQ, READ_ONCE(cpudata->cppc_req_cached));
-+	else
-+		wrmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ,
-+			      READ_ONCE(cpudata->cppc_req_cached));
-+}
-+
-+DEFINE_STATIC_CALL(amd_pstate_update_perf, pstate_update_perf);
-+
-+static inline void amd_pstate_update_perf(struct amd_cpudata *cpudata,
-+					  u32 min_perf, u32 des_perf,
-+					  u32 max_perf, bool fast_switch)
-+{
-+	static_call(amd_pstate_update_perf)(cpudata, min_perf, des_perf,
-+					    max_perf, fast_switch);
-+}
-+
- static int amd_pstate_set_epp(struct amd_cpudata *cpudata, u32 epp)
- {
- 	int ret;
-@@ -263,6 +283,9 @@ static int amd_pstate_set_epp(struct amd_cpudata *cpudata, u32 epp)
- 		if (!ret)
- 			cpudata->epp_cached = epp;
- 	} else {
-+		amd_pstate_update_perf(cpudata, cpudata->min_limit_perf, 0U,
-+					     cpudata->max_limit_perf, false);
-+
- 		perf_ctrls.energy_perf = epp;
- 		ret = cppc_set_epp_perf(cpudata->cpu, &perf_ctrls, 1);
- 		if (ret) {
-@@ -452,16 +475,6 @@ static inline int amd_pstate_init_perf(struct amd_cpudata *cpudata)
- 	return static_call(amd_pstate_init_perf)(cpudata);
- }
- 
--static void pstate_update_perf(struct amd_cpudata *cpudata, u32 min_perf,
--			       u32 des_perf, u32 max_perf, bool fast_switch)
--{
--	if (fast_switch)
--		wrmsrl(MSR_AMD_CPPC_REQ, READ_ONCE(cpudata->cppc_req_cached));
--	else
--		wrmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ,
--			      READ_ONCE(cpudata->cppc_req_cached));
--}
--
- static void cppc_update_perf(struct amd_cpudata *cpudata,
- 			     u32 min_perf, u32 des_perf,
- 			     u32 max_perf, bool fast_switch)
-@@ -475,16 +488,6 @@ static void cppc_update_perf(struct amd_cpudata *cpudata,
- 	cppc_set_perf(cpudata->cpu, &perf_ctrls);
- }
- 
--DEFINE_STATIC_CALL(amd_pstate_update_perf, pstate_update_perf);
--
--static inline void amd_pstate_update_perf(struct amd_cpudata *cpudata,
--					  u32 min_perf, u32 des_perf,
--					  u32 max_perf, bool fast_switch)
--{
--	static_call(amd_pstate_update_perf)(cpudata, min_perf, des_perf,
--					    max_perf, fast_switch);
--}
--
- static inline bool amd_pstate_sample(struct amd_cpudata *cpudata)
- {
- 	u64 aperf, mperf, tsc;
--- 
-2.34.1
+> +		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
+> +							vma, vma->vm_pgoff, global_huge);
+
+What's the rationale for splitting these functions into shmem_is_huge() and
+shmem_allowable_huge_orders()? Why not just have a single
+shmem_allowable_huge_orders() that tells you the answer?
+
+> +	}
+>  
+>  	if (!vma_is_anonymous(vma)) {
+>  		/*
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index d495c0701a83..aa85df9c662a 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -1622,7 +1622,7 @@ static gfp_t limit_gfp_mask(gfp_t huge_gfp, gfp_t limit_gfp)
+>  }
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -static unsigned long shmem_allowable_huge_orders(struct inode *inode,
+> +unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>  				struct vm_area_struct *vma, pgoff_t index,
+>  				bool global_huge)
+>  {
+> @@ -1707,13 +1707,6 @@ static unsigned long shmem_suitable_orders(struct inode *inode, struct vm_fault
+>  	return orders;
+>  }
+>  #else
+> -static unsigned long shmem_allowable_huge_orders(struct inode *inode,
+> -				struct vm_area_struct *vma, pgoff_t index,
+> -				bool global_huge)
+> -{
+> -	return 0;
+> -}
+> -
+>  static unsigned long shmem_suitable_orders(struct inode *inode, struct vm_fault *vmf,
+>  					   struct address_space *mapping, pgoff_t index,
+>  					   unsigned long orders)
 
