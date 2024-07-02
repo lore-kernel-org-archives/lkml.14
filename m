@@ -1,91 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366521BA081;
-	Tue,  2 Jul 2024 15:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950FA1AD9E7;
+	Tue,  2 Jul 2024 15:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719934234; cv=none; b=MmOZtOsMImWUgrr5gKs/9kGjSUU8AiuVVT9hsaGLUxDgEbn7k0mc6BpGpwkgFAIJG9Ucrh2brNj5XDTmva2ecwq+uxivVEwt6RrAO5aWSOsqHeujDBcuz53LPzhtXQ/S9HoNdWWRiRc5vMw3OOWmI4Mr/JkMoRIcykdTOp7OBUI=
+	t=1719934358; cv=none; b=MDxhIMAQEOeaSTy1PlvtKQJB+dWoT2ffgovXKqgw2IHZSqtN4d1pmpWBxhJws1+NRQ1KCUeBMdI8M2TcKENdQr+OokVA0aaJVDJe89HlMjwS28zEmkuf2d7c0+qCqOMmpIDxe0CH21f1TkTdXn/zCu8jlWyvB9fKnkVpO+FefUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719934234; c=relaxed/simple;
-	bh=1WfIcRGptFoZsf/Eke2g+70uUIv3MS8w+QRVo//psMU=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=Xkl/8BhtS/b3IyYrCOH5hf96j5QSMOOI8Asqz9cS62WJ6INaga+zqIsM4ygtOrRbHG/+C4sZ9ZzjGfu11PD42dI8ElGbnlvKDr7Kwt7r9tnCEZT25O3urT+dXPdU063RGmJ538MoMKvkmDj9ZmPtag7PzdMx++M/UNaJTElREhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q+6pQ5aw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719934358; c=relaxed/simple;
+	bh=QwdTvN2w8magt7NV4w0a71FnxDWn0zOLPn5PX026wl8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Na58O1Zq13M9YnVoWXJ2UrJu0Jtk6tGWXqzQz84BFL1jQKc48N4XQZkEnXshfvx38PY86WC8rSApRBMZ+fdNcqX0+i0WuTitgMFVRJvuV+TGMDppuZv7vNxrX70AYn+FsxFIxG71wd+ysO4Yu3sFMVDG2V6g3TNRWtrsjCDRKCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=h2n2xVeH; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q+6pQ5aw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B110AC116B1;
-	Tue,  2 Jul 2024 15:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719934233;
-	bh=1WfIcRGptFoZsf/Eke2g+70uUIv3MS8w+QRVo//psMU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Q+6pQ5awOFoL3CIdIVlyoeVUirEzWX7wHchaTxh7xHk2msCNMKvAp8NFGw+rRC5eN
-	 xqow+KJKRlhyzvk2bssDxGiYWD9/JvaMmUfs2tE5hzAVGsGbxdeNlwKtFrD3DSPiZ0
-	 LUGvZpOzkDpSlKSkyYVPFd9sr8VDSfrA7C7yP9mANgtWqm3HnTCh7qTxibz+7cMtwj
-	 twA4rNrx1XBVXZktajaDcVKTfaJKEmPrYp0zh9sBmHtanccxAsvXRs5EiU1JfmLuPR
-	 SxrPdnLGX1evilP21aEHLOrBiiZG1sCXAgqUwswH7re89HMxzMOCG7Fcd1a9f4jGY6
-	 JIQT2qBIhGuaA==
-Date: Tue, 02 Jul 2024 09:30:32 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="h2n2xVeH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1719934355;
+	bh=QwdTvN2w8magt7NV4w0a71FnxDWn0zOLPn5PX026wl8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h2n2xVeHYDmTWHWbKVMllVb6cRZHs5fiOSf7bi9PYgEEZVm8jkjVKod71hfQo6A8h
+	 XOtbqnDjrQM199DOGtUHU0k+x0qCU/Jk+9MmKQu4Yzyms6RZI33rgZpgM79N3JvsmF
+	 0JLefZAE/V21nGW2O1ueXJci2nWV0F6nGXj2gtVI0CwhvGn7RAf7sUrxlOi2w8lgGi
+	 dFCUWA6NSwRAjSanmGa5gOymcS3If55BMuGO0XHrC061gV/UkyzJB8F5ZFvyU7PAnn
+	 A6DFpOp+4p69y/H6tG8L9YXTRWZ6BLlN6asisrhYM3jRxKDQZELszKKzYq2VXEGBSo
+	 8Bzgy9TUScy5A==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4WD6Ng1CKcz187J;
+	Tue,  2 Jul 2024 11:32:35 -0400 (EDT)
+Message-ID: <cb02f5a0-d6a3-4228-9cbb-473fd392ee48@efficios.com>
+Date: Tue, 2 Jul 2024 11:32:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Yasin Lee <yasin.lee.x@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Jonathan Cameron <jic23@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-iio@vger.kernel.org, 
- Lars-Peter Clausen <lars@metafoo.de>, Conor Dooley <conor+dt@kernel.org>, 
- yasin.lee.x@outlook.com
-In-Reply-To: <20240702-add-tyhx-hx9023s-sensor-driver-v9-2-c030f1801d9b@gmail.com>
-References: <20240702-add-tyhx-hx9023s-sensor-driver-v9-0-c030f1801d9b@gmail.com>
- <20240702-add-tyhx-hx9023s-sensor-driver-v9-2-c030f1801d9b@gmail.com>
-Message-Id: <171993423274.3453558.2041154529413644852.robh@kernel.org>
-Subject: Re: [PATCH v9 2/3] dt-bindings: iio: proximity: Add TYHX HX9023S
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v23 3/5] tracing: Allow user-space mapping of the
+ ring-buffer
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>
+Cc: "Dmitry V. Levin" <ldv@strace.io>,
+ Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
+ kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
+ david@redhat.com, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <20240510140435.3550353-1-vdonnefort@google.com>
+ <20240510140435.3550353-4-vdonnefort@google.com>
+ <20240630105322.GA17573@altlinux.org>
+ <20240630084053.0b506916@rorschach.local.home>
+ <9a9c8ea4-8e17-4e7e-95fe-7b51441a228c@efficios.com>
+ <20240702111807.13d2dd2c@rorschach.local.home>
+Content-Language: en-US
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20240702111807.13d2dd2c@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Tue, 02 Jul 2024 22:12:33 +0800, Yasin Lee wrote:
-> A capacitive proximity sensor
+On 2024-07-02 11:18, Steven Rostedt wrote:
+> On Tue, 2 Jul 2024 10:36:03 -0400
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Yasin Lee <yasin.lee.x@gmail.com>
-> ---
->  .../bindings/iio/proximity/tyhx,hx9023s.yaml       | 93 ++++++++++++++++++++++
->  1 file changed, 93 insertions(+)
+>>> I can send a patch this week to update it. Or feel free to send a patch
+>>> yourself.
+>>
+>> You need to reserve an unused ioctl Code and Seq# range within:
+>>
+>> Documentation/userspace-api/ioctl/ioctl-number.rst
 > 
+> Ug, it's been so long, I completely forgot about that file.
+> 
+> Thanks for catching this.
+> 
+>>
+>> Otherwise this duplicate will confuse all system call instrumentation
+>> tooling.
+> 
+> Agreed, what if we did this then:
+> 
+> -- Steve
+> 
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index a141e8e65c5d..9a97030c6c8d 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -186,6 +186,7 @@ Code  Seq#    Include File                                           Comments
+>   'Q'   all    linux/soundcard.h
+>   'R'   00-1F  linux/random.h                                          conflict!
+>   'R'   01     linux/rfkill.h                                          conflict!
+> +'R'   20-2F  linux/trace_mmap.h
+>   'R'   C0-DF  net/bluetooth/rfcomm.h
+>   'R'   E0     uapi/linux/fsl_mc.h
+>   'S'   all    linux/cdrom.h                                           conflict!
+> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+> index bd1066754220..c102ef35d11e 100644
+> --- a/include/uapi/linux/trace_mmap.h
+> +++ b/include/uapi/linux/trace_mmap.h
+> @@ -43,6 +43,6 @@ struct trace_buffer_meta {
+>   	__u64	Reserved2;
+>   };
+>   
+> -#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
+> +#define TRACE_MMAP_IOCTL_GET_READER		_IO('R', 0x20)
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Note that user events also has this issue: the ioctl is not reserved in
+the ioctl-number.rst list. See include/uapi/linux/user_events.h:
 
-yamllint warnings/errors:
+#define DIAG_IOC_MAGIC '*'
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/proximity/tyhx,hx9023s.example.dtb: proximity@2a: channel@0: Unevaluated properties are not allowed ('single-channel' was unexpected)
-	from schema $id: http://devicetree.org/schemas/iio/proximity/tyhx,hx9023s.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/proximity/tyhx,hx9023s.example.dtb: proximity@2a: channel@1: Unevaluated properties are not allowed ('single-channel' was unexpected)
-	from schema $id: http://devicetree.org/schemas/iio/proximity/tyhx,hx9023s.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/proximity/tyhx,hx9023s.example.dtb: proximity@2a: channel@2: Unevaluated properties are not allowed ('single-channel' was unexpected)
-	from schema $id: http://devicetree.org/schemas/iio/proximity/tyhx,hx9023s.yaml#
+/* Request to register a user_event */
+#define DIAG_IOCSREG _IOWR(DIAG_IOC_MAGIC, 0, struct user_reg *)
 
-doc reference errors (make refcheckdocs):
+/* Request to delete a user_event */
+#define DIAG_IOCSDEL _IOW(DIAG_IOC_MAGIC, 1, char *)
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240702-add-tyhx-hx9023s-sensor-driver-v9-2-c030f1801d9b@gmail.com
+/* Requests to unregister a user_event */
+#define DIAG_IOCSUNREG _IOW(DIAG_IOC_MAGIC, 2, struct user_unreg*)
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+Where '*' maps to Code 0x2A. Looking at the list I don't see any
+conflicts there, but we should definitely add it.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+If we use '*' for user events already, perhaps we'd want to consider
+using the same range for the ring buffer ioctls ? Arguably one is
+about instrumentation and the other is about ring buffer interaction
+(data transport), but those are both related to tracing.
 
-pip3 install dtschema --upgrade
+Thanks,
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Mathieu
+
+>   
+>   #endif /* _TRACE_MMAP_H_ */
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
