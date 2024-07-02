@@ -1,140 +1,135 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D1E85298
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 03:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EAE12CD8B
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 03:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719889331; cv=none; b=JKPJYoLRzLxyDCS7hnRXKrfkrgkFA80xiGBIDlW1bVGb01WvtQAltGuQ/JhnCIZpLFpR6qdujtxVwmgisCVyCWtTOfu5DLHjTUaAUCLPmZQ25qKCU75XfadeyiDN0JUExftKFXzufdDCiF+e0JVwAN0BUbj52OTMRVlQ8m+RKMg=
+	t=1719889334; cv=none; b=olA6+eyznFnptbQZCztNYn5hPoYe1+sqEZ6jDVNu3UIOSCkXyBP/En0R9HkcAt8b2NrhnzAxCJ0ZM9me6n0huPTsb1sgio3kkxan/OQf0hXKW3pk0YPfTxd9lyT0IV0+NMd/oZNKy1uuVgTKB96NTEC03xuGdofd7a3okVM7QqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719889331; c=relaxed/simple;
-	bh=juDRxuue6BuNqcCiTQ1oRGV1+UkKo+RHyTXKiyOaT44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G7oiRxz32JZbf1nvy/XsAS1jY1QoEcqp1cfe/MiF8DQbf3htA/pXIHpQWKQgny2dsPfU2K/zeKiFSI55g9TfD48T4MO2cTjQI3bzHx/5xc3XoIbcWaZo89L4TkOc271OlkrinPaqbHM+SovG8TWOtx8/bvkMNm/po1PfVnZ2B6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=jM/WdWgV; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1719889334; c=relaxed/simple;
+	bh=yiJFaJgdWIpSzq4I1bh4NFNS0sS3mumsKHKQMWi9Duw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EBbm7n3IICYM/Pf9J6+ZEDxMNumO6ejeCg4/15MYUMDRlD3aMiO24Z0FfFXvxzUNdMjhCU8tKV032ZeILvDgOqclmFhnbBwLzEyV59P+x7sH5Rbsf85rq8xQsTI5Hcm0lE8UMm1PgEP8fjPHnLXSvgBOFgNcgyF1FlJzspt7dr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=pass smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=opkiiNOE; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smartx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="jM/WdWgV"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-72c03d2926eso2040630a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 20:02:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="opkiiNOE"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-375daa47685so14255875ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 20:02:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719889329; x=1720494129; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ojm2WDT+jRVGV+bXsvRAENxh4cvFhiHctBiMqtse7vA=;
-        b=jM/WdWgVkZB0UZc7R6fqYmyiJJjCE+b1o5Z6D9SYoKHF+vnGmgupnW2rkXVIOwlrry
-         MJtHnd2X0xj2+NM9fwdXUJr77G5TT+ZTnpYZ2BtZnZQD5OLi/bBpwOwVksfP8USpriaS
-         Ur+tt/0hWuYcpyVJkbvzW5FXAv8lLFbZN8bUHmK2SD4CiZUsiiO2cnEErX4C0Z8pqlcO
-         ISYTzf+xsPhEgKpUrwrD6Dc2lsNrrai7U80S0Z+MdHVhWNxSn6SvM5OHPI+EfzCA3XDW
-         j2HYSnvTucA5OF1H1U3rKRYAQnWtzWasmFdtNI9GUDxQF36o+d+vkRMDn00wX3tFJ2Ly
-         BP1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719889329; x=1720494129;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1719889332; x=1720494132; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ojm2WDT+jRVGV+bXsvRAENxh4cvFhiHctBiMqtse7vA=;
-        b=XE1MOflJfEo6c6i+56KHDTbEMiEad0uPdgXuW7Xu207HfIsH/FeAdSCz8iTXZIMtV9
-         1UA2rpDoiLuomzbPS9h3OvhPB6Slz6YvIYISTdDkbPtBrVj2KSHEXeIIzq8wbEtzFxFZ
-         UjxPdDCvbVsYuxtBE0n5hHxrzj/gBWZU3lqIrzhaVm6ExsN3iTphE+W03ukXYL3pqaF1
-         6hLNULH+Qeu+2OGMy2/F95MhXtFPNaGET2ZyVAh2vsBbT7jhSleAkFCQuOSMb8wEOGUa
-         y7rERER5rEG2djLCsNGtAsyujZh6IN9XMIf/ZytKK1+Q9OuqrauTzpRfCg86ribAvgIY
-         0QNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvPL1ydoE7gtr6CwKL4AVqJEz6vUBSqyIDjuVjr6xa3KtsIfRMHJDqjlh6DnjqaWjWXFkegI6INgwe6LgoFy3Ul5G+Ito7c6RVrfn3
-X-Gm-Message-State: AOJu0YxF9dp9eBqDOYkCxCM4reF3AKgo62yVEtCMmTzE/6UsuY0XJYIv
-	CxoH/ElgnhEF+xXNLHi7dRvANLY7ftNgyMCz0ckIwPYc/Jo9YUfaZunh4ptDi0c=
-X-Google-Smtp-Source: AGHT+IFtzRVBgPoIZ5spdIWYcesTZAiiJeslpnCGATGmgq3SV6QGiwVYg4WyG0rOC5lcz8Vf2zmQxA==
-X-Received: by 2002:a05:6a20:cf84:b0:1bd:2699:436c with SMTP id adf61e73a8af0-1bef62066c0mr6579915637.40.1719889329603;
-        Mon, 01 Jul 2024 20:02:09 -0700 (PDT)
-Received: from ghost ([2601:647:5700:6860:a569:328b:99ad:ce17])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1538ee0sm72521095ad.149.2024.07.01.20.02.07
+        bh=Z5wro2DPQQzDm4JEbFr9RFX4ZrKb+KLG6vY37L6bP9Y=;
+        b=opkiiNOE6G/+ZxDBex22KOc3oTB0pSYB7lJfPDnTQc16jMbCY81GKcS5sNUI4BgVwb
+         o7VkuUq+B/oXK/1YjvPZnPRSoEK7+Yrj/ij+4udZwSAAcveIYl9W4jtuCEiCbH9+WfkR
+         4f2SxYVJhFRF7gICy/UG09xXuDXJXuqaP3FwDaiX6rQMYM0WjIG6Mn+2BSqrMe3dRk0G
+         aE3omH3f9AsaAThh+5RaEEy3yf+rnOq5BrN9f064V58bZ2Gi5Z5cDImjEC02V13NKWmj
+         PV/LHColcl3zbJDA/E/XNfuYaxn/P178CCQtm24f92k/V0k9bukr3uoLS/2FNqH7Cqko
+         72Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719889332; x=1720494132;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z5wro2DPQQzDm4JEbFr9RFX4ZrKb+KLG6vY37L6bP9Y=;
+        b=i815k+8lSmO8eVYRMh+HkdgKMKfMhyb/nU4qKrEcTn6uk3eni+3HZXGo/JFM9NK4No
+         VVDu5I2rGm6v+MsBAmDL9ch4uYRViGs25vvmNk1fOLGaLPZjn6a89SzXL3Abu8hLv2pX
+         jZINpS+beD9T0zmGaRaxQECrEEoJ25sslYc8slSKuztAjtZz01w8lXfxoUrWzqAVgI2f
+         muUyojo4JSugWBix64aJVWJLQZOaXxG5dpphUfLeocu9FfEL16vTU2nsOhpfvdFUgVkJ
+         a7a2s7zayaZSc8zW4dZNuyS9pn3z9i3onXzh4/cdVZYHeS2fqZra+blXQFdbMNASWIjd
+         o8GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoG1054Qhn50Gtzy4Vl6s1EKJ3X7Vd/Ldain2dZHp3L43hqMpOX+JnlEiRDeSydc6s13/spkJr93m7eoyUOhWl/tJyfKoX60Pt/n47
+X-Gm-Message-State: AOJu0Yw0C5csLoScTkkY9N+tBTHVDvotNa9vn/zBNKpVBW8q8h7O/0Qc
+	I4J1kJKCf55D7tZgf8h1zgG++z9dDErnpmZJBROzxJJnG7+yUiPXcORk147WVTE=
+X-Google-Smtp-Source: AGHT+IEpTMk59V3NV8KVvtbOMVVsa4fULF1zm0uglqoSp4Io1UgeVjGAy7FP7CAi425G0Y2cNLDt1A==
+X-Received: by 2002:a92:c54b:0:b0:374:5a2d:178 with SMTP id e9e14a558f8ab-37cd07285b2mr89734205ab.2.1719889332060;
+        Mon, 01 Jul 2024 20:02:12 -0700 (PDT)
+Received: from fedora.smartx.com ([103.172.41.200])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6a8dbb2fsm4792904a12.31.2024.07.01.20.02.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 20:02:09 -0700 (PDT)
-Date: Mon, 1 Jul 2024 20:02:05 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Jesse Taube <jesse@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Wende Tan <twd2.me@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 2/4] RISC-V: lib: Add pi aliases for string functions
-Message-ID: <ZoNtrXawP8nvXUds@ghost>
-References: <20240701185132.319995-1-jesse@rivosinc.com>
- <20240701185132.319995-3-jesse@rivosinc.com>
+        Mon, 01 Jul 2024 20:02:11 -0700 (PDT)
+From: Haoqian He <haoqian.he@smartx.com>
+To: Christoph Hellwig <hch@infradead.org>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: fengli@smartx.com
+Subject: [PATCH 2/3] scsi: sd: remove scsi_disk field lbpvpd
+Date: Mon,  1 Jul 2024 23:01:15 -0400
+Message-ID: <20240702030118.2198570-3-haoqian.he@smartx.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240702030118.2198570-1-haoqian.he@smartx.com>
+References: <20240702030118.2198570-1-haoqian.he@smartx.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701185132.319995-3-jesse@rivosinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 01, 2024 at 02:51:30PM -0400, Jesse Taube wrote:
-> memset, strcmp, and strncmp are all used in the the __pi_ section.
-> add SYM_FUNC_ALIAS for them.
-> 
-> When KASAN is enabled in <asm/string.h> __pi___memset is also needed.
-> 
-> Suggested-by: Charlie Jenkins <charlie@rivosinc.com>
-> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
-> ---
-> V2 -> V3:
->  - New patch
-> ---
->  arch/riscv/lib/memset.S  | 2 ++
->  arch/riscv/lib/strcmp.S  | 1 +
->  arch/riscv/lib/strncmp.S | 1 +
->  3 files changed, 4 insertions(+)
-> 
-> diff --git a/arch/riscv/lib/memset.S b/arch/riscv/lib/memset.S
-> index 35f358e70bdb..da23b8347e2d 100644
-> --- a/arch/riscv/lib/memset.S
-> +++ b/arch/riscv/lib/memset.S
-> @@ -111,3 +111,5 @@ SYM_FUNC_START(__memset)
->  	ret
->  SYM_FUNC_END(__memset)
->  SYM_FUNC_ALIAS_WEAK(memset, __memset)
-> +SYM_FUNC_ALIAS(__pi_memset, __memset)
-> +SYM_FUNC_ALIAS(__pi___memset, __memset)
-> diff --git a/arch/riscv/lib/strcmp.S b/arch/riscv/lib/strcmp.S
-> index 687b2bea5c43..bc73325b2fd1 100644
-> --- a/arch/riscv/lib/strcmp.S
-> +++ b/arch/riscv/lib/strcmp.S
-> @@ -120,3 +120,4 @@ strcmp_zbb:
->  .option pop
->  #endif
->  SYM_FUNC_END(strcmp)
-> +SYM_FUNC_ALIAS(__pi_strcmp, strcmp)
-> diff --git a/arch/riscv/lib/strncmp.S b/arch/riscv/lib/strncmp.S
-> index aba5b3148621..b36325a57f6a 100644
-> --- a/arch/riscv/lib/strncmp.S
-> +++ b/arch/riscv/lib/strncmp.S
-> @@ -136,3 +136,4 @@ strncmp_zbb:
->  .option pop
->  #endif
->  SYM_FUNC_END(strncmp)
-> +SYM_FUNC_ALIAS(__pi_strncmp, strncmp)
-> -- 
-> 2.45.2
-> 
+The lbpme bit in scsi_disk can be used directly to indicate
+if the logical unit supports logical block provisioning
+management. The lbpvpd bit is no longer needed, so remove
+this field from scsi_disk.
 
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Signed-off-by: Haoqian He <haoqian.he@smartx.com>
+Signed-off-by: Li Feng <fengli@smartx.com>
+---
+ drivers/scsi/sd.c | 8 ++++----
+ drivers/scsi/sd.h | 1 -
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 44a19945b5b6..b49bab1d8610 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3306,8 +3306,10 @@ static void sd_read_app_tag_own(struct scsi_disk *sdkp, unsigned char *buffer)
+ 
+ static unsigned int sd_discard_mode(struct scsi_disk *sdkp)
+ {
+-	if (!sdkp->lbpvpd)
+-		/* Disable discard if LBP VPD page not provided */
++	if (!sdkp->lbpme)
++		/* LBPME was not set means the logical unit
++		 * is fully provisioned, so disable discard.
++		 */
+ 		return SD_LBP_DISABLE;
+ 
+ 	/* LBP VPD page tells us what to use */
+@@ -3430,7 +3432,6 @@ static void sd_read_block_provisioning(struct scsi_disk *sdkp)
+ 	struct scsi_vpd *vpd;
+ 
+ 	if (!sdkp->lbpme) {
+-		sdkp->lbpvpd    = 0;
+ 		sdkp->lbpu      = 0;
+ 		sdkp->lbpws     = 0;
+ 		sdkp->lbpws10   = 0;
+@@ -3445,7 +3446,6 @@ static void sd_read_block_provisioning(struct scsi_disk *sdkp)
+ 		return;
+ 	}
+ 
+-	sdkp->lbpvpd	= 1;
+ 	sdkp->lbpu	= (vpd->data[5] >> 7) & 1; /* UNMAP */
+ 	sdkp->lbpws	= (vpd->data[5] >> 6) & 1; /* WRITE SAME(16) w/ UNMAP */
+ 	sdkp->lbpws10	= (vpd->data[5] >> 5) & 1; /* WRITE SAME(10) w/ UNMAP */
+diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h
+index 36382eca941c..ff9ff2655c25 100644
+--- a/drivers/scsi/sd.h
++++ b/drivers/scsi/sd.h
+@@ -146,7 +146,6 @@ struct scsi_disk {
+ 	unsigned	lbpu : 1;
+ 	unsigned	lbpws : 1;
+ 	unsigned	lbpws10 : 1;
+-	unsigned	lbpvpd : 1;
+ 	unsigned	ws10 : 1;
+ 	unsigned	ws16 : 1;
+ 	unsigned	rc_basis: 2;
+-- 
+2.44.0
 
