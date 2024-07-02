@@ -1,202 +1,105 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52ED27F47B;
-	Tue,  2 Jul 2024 10:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE381534EC;
+	Tue,  2 Jul 2024 10:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719914724; cv=none; b=Mo8R6LjMAENtwC8wjlbaOPuLLhEgnHax8BsxLNWKAckP+2KK14edtQCeC5r8sfooVjteKGX+cw+GWdmPViOuCUtKe2Ve7d4AEypypGIdbun8A4T6StRrNfngIreAuOIQ5RETmJJq7G/WKV7aQZl2v3t2YrQUHEA71kaNtqtq35U=
+	t=1719914984; cv=none; b=knWy70rQmXHYZnesJFE8Rf4gDU2F1DjMX0nV/Q2D0HvzIQ3h20MweYVlA+ANuAsx+Wj/hMMsiSCUjqGL1cpVLOaCyrVZ/4jcwoU29qPY73LTHQd5XRBEpOy2ZI4Vfmyr+hPKVUd8+96e6F9aMCVdGR8dCDlDoJ24sb51U7mk1Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719914724; c=relaxed/simple;
-	bh=mhOJZW7Zk/WukhprJ5A7RkP8chUJyL8pjmf42EkjSZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mX49hyC66vgUO1ie031BugyRD95hRW8Q31Z2h93bzT+Btme7tYbDGXYUyZT5JCeqLMo6aLWDsXEhEPaWs+U7u4w6UoZH3kB26eFIYunDEJ10Ev0I8NwmRFKf4RxTcrKD8tZLwRBnrm33yiS4iSuNV8efNx6/hfLjgvrIJz4B01Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mjk0hAPn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kAuK0Vrs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mjk0hAPn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kAuK0Vrs; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1719914984; c=relaxed/simple;
+	bh=g2HcVrfzUkoc4bMPBDSpk1If8X1nscDfttTqg6/6ETE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jDQmEy2s4taRjmR6N2turztLZoajhDYwmcwA+y3cXSAVMoJbxUJ7ILBqaPZ7I0hRdMwwH5hcARB2fWRJnBYr6KnM/Na5+Or3XiJo6JDbavxMzXHN/f5tJTpfS94g5fSnXiskub2fs/rmGg2guUhgGLzuzeFRVhRK654nbuYsn7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m8bCm87d; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mjk0hAPn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kAuK0Vrs";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mjk0hAPn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kAuK0Vrs"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 46B752199A;
-	Tue,  2 Jul 2024 10:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719914721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VT/A0LJZ/LMX/rqyuXqUDapR9hC/2J9IlVs+gBCcdC8=;
-	b=mjk0hAPnNv1wryFP+AJU02jxDou69zJVzAWsLACvtVQyy7srL/U3dDS0u1gn28cIz54AGW
-	BTmoALSKK/08C8ZBJqnsgrSVPYtIQXdN7Tpd93ZYi7rWOdnX3oT5/Tv1bIAueoCCf5EuXG
-	D0RFCq1kIbvUlIy9q+2g1RiuucxMY9Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719914721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VT/A0LJZ/LMX/rqyuXqUDapR9hC/2J9IlVs+gBCcdC8=;
-	b=kAuK0VrsYMQy54aX0Hf+1pLSDte8Z4KNso4lHVagnSivX+RBTzCkz8q+b67iiNDO2Cbt3W
-	kSINNIZ2+QGBTWBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=mjk0hAPn;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=kAuK0Vrs
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719914721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VT/A0LJZ/LMX/rqyuXqUDapR9hC/2J9IlVs+gBCcdC8=;
-	b=mjk0hAPnNv1wryFP+AJU02jxDou69zJVzAWsLACvtVQyy7srL/U3dDS0u1gn28cIz54AGW
-	BTmoALSKK/08C8ZBJqnsgrSVPYtIQXdN7Tpd93ZYi7rWOdnX3oT5/Tv1bIAueoCCf5EuXG
-	D0RFCq1kIbvUlIy9q+2g1RiuucxMY9Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719914721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VT/A0LJZ/LMX/rqyuXqUDapR9hC/2J9IlVs+gBCcdC8=;
-	b=kAuK0VrsYMQy54aX0Hf+1pLSDte8Z4KNso4lHVagnSivX+RBTzCkz8q+b67iiNDO2Cbt3W
-	kSINNIZ2+QGBTWBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5625913A9A;
-	Tue,  2 Jul 2024 10:05:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Hmt0EuDQg2Z0OgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Tue, 02 Jul 2024 10:05:20 +0000
-Message-ID: <34701ce5-4f35-463d-a2d2-5144a20aaf0f@suse.de>
-Date: Tue, 2 Jul 2024 13:05:15 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8bCm87d"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ec52fbb50cso39131961fa.2;
+        Tue, 02 Jul 2024 03:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719914980; x=1720519780; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORlm+pvBVTYWDNlelC+yKxdC1S4NZedvbzc98e8A0Zo=;
+        b=m8bCm87dwZJmE1orXaKVircMBG5ryJGIXSZ2737wISeT6P4fUrneZIsMMc2BQNC+pe
+         ddh+NXKEeMeZmcMDVyHhy6fH2AfZDWORCiMFavjkuNQTDfxEtEQvdk79U/WWef9QEn2G
+         pKGQeiwH2bssxRaOmt2Q1dVw9ztBqHJGgup2gw/fsX7B9lxhyO5SrVfhJyKgPEJx326q
+         eHyXWpvGcBMu9MP80dhLrqOouwZb0l6AckoOfS4MQtFEjVKRXmy5BLELHQ8pzNry3iHw
+         WeBXlT2EJGT7RjbSt8L/a+Gj9x+p0Hdne1c6EwJ7MmakSqaL9AEKjPONnrfdE2MV05ci
+         cpcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719914980; x=1720519780;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ORlm+pvBVTYWDNlelC+yKxdC1S4NZedvbzc98e8A0Zo=;
+        b=PgWNhQtGFGLQldHamopGXoD2+D0L0AQOFjMxpj43QpUbHDOgXwcNN0qTyeASBx7EwO
+         kAtt1HOTIJNCAot4+S/z/JhHogRP29UW6UhaPoZmrN9u1HuIhRIfTML75vRfp0+LOphf
+         GSwhsPZilOpSzuXVlx6DBBtvsKruIvQ7wthKUSEargXpABOI9TFKm8khP0S7/ngAAuOQ
+         4a9JMNzjUt/KvjAMnRp4R6bcxQEdIhV0Pnyu9Loku+L8WwWh1yZc8+HjtGhjHuTwpVgW
+         h1LDuRLNzaftpRYuBXTK+jrrUBG01xHLMnVn3iE49K7YDQ6e6LiST2tHzKC431/Bk/X7
+         NoGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWo1PcjuZHVlFJIKqQyKaix2StjIRFMUke3KGWTnvdwwoeBGtOicVT11ILX2fxs0k/XpnZrH8FJ6mZ2XHaH5Surk3BZkfG90QmhHWSi
+X-Gm-Message-State: AOJu0Yzk26hZDk7ed8G87RgB7Nu2pmpEsm5D2EcDypWq94hI98/BRLUc
+	fTw7e9v0ZLPin2CF7Kq6kforQKvHbK8HBNf8jWCuufek4LaSfxTG43lblA==
+X-Google-Smtp-Source: AGHT+IEp/60WQQZbuNNOgwwaRD9CX5cVlzlsfNe/G+lFEh773fjrwvCtuPjD24jNmKf9uOkyGmFpCw==
+X-Received: by 2002:a05:651c:1a09:b0:2ec:596c:b629 with SMTP id 38308e7fff4ca-2ee5e392b84mr65614661fa.20.1719914980298;
+        Tue, 02 Jul 2024 03:09:40 -0700 (PDT)
+Received: from [127.0.1.1] (84-115-213-37.cable.dynamic.surfer.at. [84.115.213.37])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b06377dsm192630315e9.28.2024.07.02.03.09.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 03:09:39 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: [PATCH 0/3] hwmon: constify struct regmap_config
+Date: Tue, 02 Jul 2024 12:09:29 +0200
+Message-Id: <20240702-hwmon-const-regmap-v1-0-63f6d4765fe0@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] Add PCIe support for bcm2712
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
- Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
-References: <20240626104544.14233-1-svarbanov@suse.de>
- <5bbf813f-9a7b-467b-a2c7-6bc21ea85ef8@broadcom.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <5bbf813f-9a7b-467b-a2c7-6bc21ea85ef8@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 46B752199A
-X-Spam-Score: -3.00
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANnRg2YC/x3MQQqAIBBA0avErBswE8KuEi1CJ51FKhoVSHdPW
+ r7F/xUKZaYCc1ch08WFY2gY+g6M34IjZNsMUkglJiHR30cMaGIoJ2Zyx5ZQWUWjEXqymqCFKdP
+ Ozz9d1vf9AAxU/QVkAAAA
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Eric Tremblay <etremblay@distech-controls.com>, 
+ Robert Marko <robert.marko@sartura.hr>, 
+ Luka Perkov <luka.perkov@sartura.hr>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719914978; l=806;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=g2HcVrfzUkoc4bMPBDSpk1If8X1nscDfttTqg6/6ETE=;
+ b=MeVkxsnF4FlKU7QNrYGmXBIlx5oZCtmdnYhosOHWL9jlRXTanTGSBrF27BRLQaGfantkwKwqY
+ kSiZ1K1NPWDD/r7s+xqMAxvVGwN22U6F9IHVJ4GzPCVS48i7w6OU+Wp
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-Hi Florian,
+This series adds the const modifier to the remaining regmap_config
+structs within the hwmon subsystem that are effectively used as const
+(i.e., only read after their declaration), but kept ad writtable data.
 
-On 6/26/24 14:31, Florian Fainelli wrote:
-> Hi,
-> 
-> On 26/06/2024 11:45, Stanimir Varbanov wrote:
->> This patchset aims to add bare minimum support for bcm2712
->> in brcmstb PCIe driver needed to support the peripherals from
->> RP1 south-bridge found in RPi5. In order to support RP1
->> PCIe endpoint peripherals a new interrupt controller is added.
->> The interrupt controller supports 64 interrupt sources which
->> are enough to handle 61 RP1 peripherals.
->>
->> Patch 1 is adding DT binding schema for the MIP interrupt
->> controller, patch 2 is adding relevant changes for PCIe
->> bcm2712 in yaml. Patch 3 adds MIP intterrupt cotroller driver.
->> Patches 4 and 5 are preparations for adding bcm2712 support in 6.
->> The last patch updates bcm2712 .dsti by adding pcie DT nodes.
->>
->> Few concerns about the implementation:
->>   - the connection between MIP interrupt-controller and PCIe RC is
->>     done through BAR1. The PCIe driver is parsing the msi_parent
->>     DT property in order to obtain few private DT properties like
->>     "brcm,msi-pci-addr" and "reg". IMO this looks hackish but I failed
->>     to find something better. Ideas?
->>
->>   - in downstream RPi kernel "ranges" and "dma-ranges" DT properties
->>     are under an axi {} simple-bus node even that PCIe block is on CPU
->>     MMIO bus. I tried to merge axi {} in soc {} and the result could be
->>     seen on the last patch in this series, but I'm still not sure that
->>     it looks good enough.
->>
->> This series has been functionally tested on OpenSUSE Tumbleweed with
->> downstream RP1 south-bridge PCIe endpoint driver implementation as
->> MFD by using ethernet which is part of it.
->>
->> The series is based on Andrea's "Add minimal boot support for
->> Raspberry Pi 5"
->> series.
->>
->> Comments are welcome!
-> 
-> We are just about submitting support for 7712 which is the sister chip
-> of 2712 and requires similar, if not identical types of changes to
-> pcie-brcmstb.c, would you mind reviewing that patch series when it gets
-> posted by Jim in the next few days, and base yours upon that one? It
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+---
+Javier Carrasco (3):
+      hwmon: (ina238) Constify struct regmap_config
+      hwmon: (tmp513) Constify struct regmap_config
+      hwmon: (tps23861) Constify struct regmap_config
 
-Sure, I'll review bcm7712 series and rebase bcm2712 on top of it.
+ drivers/hwmon/ina238.c   | 2 +-
+ drivers/hwmon/tmp513.c   | 2 +-
+ drivers/hwmon/tps23861.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+---
+base-commit: 39b24cced70fdc336dbc0070f8b3bde61d8513a8
+change-id: 20240702-hwmon-const-regmap-4d4e3c097d9e
 
-> does separate changes in a more atomic and a more reviewer friendly
-> rather than having one big commit modifying pcie-brcmstb.c
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-Agreed.
-
-> 
-> Thanks.
-
-~Stan
