@@ -1,67 +1,48 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA8D158D98
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 11:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D40E016728E;
+	Tue,  2 Jul 2024 11:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719920472; cv=none; b=fDE+ZGedSxi1c0OwCRZ0H0Od30dzTDmo5/eqKhyYk41oSeOd0eK73m/fUar15kFhn2VA0/LNNVvBgS4ZinQ+TLKXlh3yKDX81C21cGANbdCnCmN7mFSNaPu4lMOrfsofongRjZ3FaY8SxNOqU/0RSHqI31xCOpmhB/n6jPcVy9w=
+	t=1719920474; cv=none; b=e6ezl1+BVs5mhaTFuN8ioYk6ep+q8Gk6ZZAkPFZLzfmR2QuKiJ4vgTco/7AAmYR2PZuCiF+lBbVQqUotLEFQuFin4Yx2pEKm9z0wpxT8NMrvaPW3RuGSshjAn5caxA+dukZY+jK3eqtQqQKVvCfUQ3cJwkpfEOsw+Zqc8Vq/Gi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719920472; c=relaxed/simple;
-	bh=EjhoZ8OblHPETlxZbG+8SNtqIJsd3VP1PTSzTC6gkK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MkHsDfl6rD5FjchYl6BVmU8C8Bjun6qI8GRKIy3RL6qpJAxrBM8wQyUzH1FJ8RU3YBsVQyKZenuFLQYFz8iRDaQc5o31jm0VQioKI6YPKmqHhZ9V5NwHFR2iOA4CVPwKLTDnvONG3K8YPCILUekGnB/0Fq8vhRJvWLgZgKjkqcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=e1jGGGU8; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="e1jGGGU8"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3626c29d3f0so2070915f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 04:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719920469; x=1720525269; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ibYk2INHrDewcc6rOpyR3n0ptWH8fAE6FA5MquhF0qk=;
-        b=e1jGGGU8RlUHnyAPyIBRgc5yHf3TIgwvt7LHI7nHCgyIt7Ia8OpI3FzKNk9vWP6Uxp
-         Lsrg+Py+z1TqC7hQ/gw+tbjCpLaapT4tTrUCjukm87AEogzslWOu+NWnDNpLCQ/3I9Jr
-         oCODDIp3A4LGjYB296VskdIbxiqjZL0W49R1uXXZbYbdSb5w2bWpn32cM0hQZ9YclsoS
-         zdfcB2y2F1Ae1RXzEmn+Z1nHnk6l7h9UEwII0npyqMF6taWg0IRmr7MQb/PS7x+nEj3v
-         M3Fo4gGYjbkbXNTaJlP9WtE7EM0SboN9dliHITapYSnFIFPfT9jIcsS4grAYcgVA7gtq
-         /I4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719920469; x=1720525269;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ibYk2INHrDewcc6rOpyR3n0ptWH8fAE6FA5MquhF0qk=;
-        b=K+f8Q4h2dEwrssWdd8aC2lkZjDtAC3JMbtWhzJt4hI+Jd89otAy3fw+1ANlkcrhXdQ
-         UlYlVUQx6ydcLe3lm7pGIndJtXyaUheNag9rM4hOkkacTIemmfV1mP9cLUIPVw26OvE4
-         MyAZ67dmCtQcyNXo4/Dd/k9xdfm/4ZtsNiAXKWtop3p68x7yFVrlaasX5rwdmq2NfYlj
-         FH/Wm/SdzJWNFWmuz6xv+t7r3wZgLfqtbeZqJp7mqK87F2+zgN0auPuCMcy0AEYIPb29
-         PtjY9Cx8PbKFQmhC9JkvQqNIH36Txq+yk/7FFPU5demfoICMJSEx3ueBfaD0CRFTZK6m
-         vIdg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDfVJR+oKNfEVt9e1YN/S/lTPtrpN+hjnA4kSzqCUX/+VhXUINmYCrsuJ5MZsk0kAw2y//ELuAH5rLoUDDqwHAwp6zjlsaFnJFG+bn
-X-Gm-Message-State: AOJu0YxUUHPE30YrARainH1PjktdmMEjKVfpiF+QrYakszd5fyTGyHD0
-	XuGKu4pKg6HJEzjoCzSUZNmWLwKisSUfjpXqCiFZ1zGxnli7LGBkRaPskRZZlU8r6DwxD30HaOj
-	S
-X-Google-Smtp-Source: AGHT+IEU5xcCH/1EAfhOaWb9JMDGA6qsWvtR9LL9IGXqlYSEFIFdTaE5gkIzrS/Q7ZbPZLxOAp3Crg==
-X-Received: by 2002:a05:6000:d43:b0:366:6ef0:e92 with SMTP id ffacd0b85a97d-367756b96a9mr6870973f8f.27.1719920468559;
-        Tue, 02 Jul 2024 04:41:08 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:628b:5bc8:edc:9c60])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a1030c8sm12966271f8f.98.2024.07.02.04.41.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 04:41:08 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Amit Pundir <amit.pundir@linaro.org>
-Cc: linux-pm@vger.kernel.org,
+	s=arc-20240116; t=1719920474; c=relaxed/simple;
+	bh=KLI7RwevKToSjonuk0SjrUo2aHU+EbF6Srl8Ej/aGIc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=h7X3MSzAIomDLGtVTGOJlkGLlWhczteq+AOqOnvWP+KFknEr5r+EGC4CSJP7yA7FstKQelG50zHhecmA6wl0yEoZW+5v94eScrQzdYyFDxQYwP43Hdt4CpTp22chjQR/cE1aBbcgXEHFE7P2cvtxQToPuHhuSFv1RH6zlQ3kZpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36B7B1515;
+	Tue,  2 Jul 2024 04:41:37 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7454F3F762;
+	Tue,  2 Jul 2024 04:41:09 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: Will Deacon <will@kernel.org>,
+	Joerg Roedel <joro@8bytes.org>
+Cc: linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] power: sequencing: qcom-wcn: don't request BT enable GPIOs for wcn7850
-Date: Tue,  2 Jul 2024 13:41:03 +0200
-Message-ID: <20240702114103.16068-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+	iommu@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v3 3/5] ACPI: Retire acpi_iommu_fwspec_ops()
+Date: Tue,  2 Jul 2024 12:40:49 +0100
+Message-Id: <011e39e275aba3ad451c5a1965ca8ddf20ed36c2.1719919669.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
+In-Reply-To: <cover.1719919669.git.robin.murphy@arm.com>
+References: <cover.1719919669.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,64 +51,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Now that iommu_fwspec_init() can signal for probe deferral directly,
+acpi_iommu_fwspec_ops() is unneeded and can be cleaned up.
 
-Due to having many existing users of wcn7850 in the kernel, conversion
-of the hci_qca driver to using pwrseq exclusively must be done
-carefully. Right now, the Bluetooth driver requests and controls the BT
-enable GPIO and so the PMU pwrseq driver must not do it or we will run
-into problems depending on the probe ordering.
-
-Add a flag that tells the driver not to request the BT-enable GPIO. We
-will remove it once the conversion of the Bluetooth driver is complete.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Tested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/power/sequencing/pwrseq-qcom-wcn.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/acpi/scan.c | 28 +++++-----------------------
+ 1 file changed, 5 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/power/sequencing/pwrseq-qcom-wcn.c b/drivers/power/sequencing/pwrseq-qcom-wcn.c
-index 42dacfda745e..68bcd6ec4269 100644
---- a/drivers/power/sequencing/pwrseq-qcom-wcn.c
-+++ b/drivers/power/sequencing/pwrseq-qcom-wcn.c
-@@ -22,6 +22,7 @@ struct pwrseq_qcom_wcn_pdata {
- 	size_t num_vregs;
- 	unsigned int pwup_delay_ms;
- 	unsigned int gpio_enable_delay_ms;
-+	bool no_bt_gpio;
- };
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 8d5a589db141..2cfbb365c4ab 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -1588,26 +1588,14 @@ int acpi_iommu_fwspec_init(struct device *dev, u32 id,
+ 	return iommu_fwspec_add_ids(dev, &id, 1);
+ }
  
- struct pwrseq_qcom_wcn_ctx {
-@@ -212,6 +213,11 @@ static const struct pwrseq_qcom_wcn_pdata pwrseq_wcn7850_of_data = {
- 	.vregs = pwrseq_wcn7850_vregs,
- 	.num_vregs = ARRAY_SIZE(pwrseq_wcn7850_vregs),
- 	.pwup_delay_ms = 50,
-+	/*
-+	 * FIXME: Remove it once the entire hci_qca driver is converted to
-+	 * using the power sequencer.
-+	 */
-+	.no_bt_gpio = true,
- };
+-static inline const struct iommu_ops *acpi_iommu_fwspec_ops(struct device *dev)
+-{
+-	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+-
+-	return fwspec ? fwspec->ops : NULL;
+-}
+-
+ static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
+ {
+ 	int err;
+-	const struct iommu_ops *ops;
  
- static int pwrseq_qcom_wcn_match(struct pwrseq_device *pwrseq,
-@@ -277,10 +283,13 @@ static int pwrseq_qcom_wcn_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to get all regulators\n");
+ 	/* Serialise to make dev->iommu stable under our potential fwspec */
+ 	mutex_lock(&iommu_probe_device_lock);
+-	/*
+-	 * If we already translated the fwspec there is nothing left to do,
+-	 * return the iommu_ops.
+-	 */
+-	ops = acpi_iommu_fwspec_ops(dev);
+-	if (ops) {
++	/* If we already translated the fwspec there is nothing left to do */
++	if (dev_iommu_fwspec_get(dev)) {
+ 		mutex_unlock(&iommu_probe_device_lock);
+ 		return 0;
+ 	}
+@@ -1624,15 +1612,7 @@ static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
+ 	if (!err && dev->bus)
+ 		err = iommu_probe_device(dev);
  
--	ctx->bt_gpio = devm_gpiod_get_optional(dev, "bt-enable", GPIOD_OUT_LOW);
--	if (IS_ERR(ctx->bt_gpio))
--		return dev_err_probe(dev, PTR_ERR(ctx->bt_gpio),
--				     "Failed to get the Bluetooth enable GPIO\n");
-+	if (!ctx->pdata->no_bt_gpio) {
-+		ctx->bt_gpio = devm_gpiod_get_optional(dev, "bt-enable",
-+						       GPIOD_OUT_LOW);
-+		if (IS_ERR(ctx->bt_gpio))
-+			return dev_err_probe(dev, PTR_ERR(ctx->bt_gpio),
-+					     "Failed to get the Bluetooth enable GPIO\n");
-+	}
+-	if (err == -EPROBE_DEFER)
+-		return err;
+-	if (err) {
+-		dev_dbg(dev, "Adding to IOMMU failed: %d\n", err);
+-		return err;
+-	}
+-	if (!acpi_iommu_fwspec_ops(dev))
+-		return -ENODEV;
+-	return 0;
++	return err;
+ }
  
- 	ctx->wlan_gpio = devm_gpiod_get_optional(dev, "wlan-enable",
- 						 GPIOD_OUT_LOW);
+ #else /* !CONFIG_IOMMU_API */
+@@ -1672,6 +1652,8 @@ int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+ 	ret = acpi_iommu_configure_id(dev, input_id);
+ 	if (ret == -EPROBE_DEFER)
+ 		return -EPROBE_DEFER;
++	if (ret)
++		dev_dbg(dev, "Adding to IOMMU failed: %d\n", ret);
+ 
+ 	arch_setup_dma_ops(dev, attr == DEV_DMA_COHERENT);
+ 
 -- 
-2.43.0
+2.39.2.101.g768bb238c484.dirty
 
