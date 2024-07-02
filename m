@@ -1,102 +1,103 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A2A1E48A
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 14:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB40D1E48A;
+	Tue,  2 Jul 2024 14:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719931734; cv=none; b=fYmJdbPOy4LKzejHCMYGTOz2aAFArzn0w35uWv1wZJSpdkYCxDwhU2yKeoiHU6T0MXwyZ5tFnKsPDd9GYksUu3a5wVkUpg3ExMJZfXTUleqQTdgDrZiTegsQSEmLsjmwL4CF6CVE1ovKG0t1v2XjEmLHfWJ+QxILSFPBDDWax4Q=
+	t=1719931817; cv=none; b=R4TFzthgbbZlxpKWd1v9lcUHjaxuv1lsp8+gOX1FPjYL50Uf8XDdtNwmJntHFQNX1IKENBgYjrnTp7jw5JWGK6WbpjD3FjDaGm4HyE6cGZj7N/53Zu8G+ArA2pHpSrenxPgHOov9q6mWlsSpzNWoi1Prpt3Jocb7aMXxp1o5VsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719931734; c=relaxed/simple;
-	bh=AQVlcyF9Tip+It54yHXr1yZmmTS5Q3x12TvMoh8HyDk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sbHuTvgQHNtCknQUhyhdhtgyruqrWqJFnwnE8aNgTOwYsCqyll8dwKDquQB9ZWFAMYFs20bUB23veMsF6C66BipC/MK71azgnP5aHB2J/7sRr3IxlMqCMnNV2DKoOzAy111QVcM7Ir/0CsiQ8kXycX2V+r+CxRw3EhEk+mvESvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D6NSwcB/; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719931817; c=relaxed/simple;
+	bh=HqJSSoNKjIMDM+CJGgP+I5L5NB+rRz1kCBLAO8WJm7A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K5xKJdZ9Ad+TiSiHciSW2+xaWF02U5LGs3NqLpniOX1w12ZHGqw615nYigidC0h3IdAlT8RMRJAAGW1In4pTesMRjjL2DOUi0Yf9AXTWFX4WN+95Extv2N7v5YCuPj8SwqILesmhx1sdgz07pMEZS6yrk/LSY9k70JWjnxzrp5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZZnYdfBq; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6NSwcB/"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5c410776a80so2219297eaf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 07:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719931732; x=1720536532; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lbzSX2jm/CLVUUZ3qU6O92SO48UCb5doHo+EGGpsX5s=;
-        b=D6NSwcB/eN3N+o0MJRF6V53Ey7Zi5Qj7P53fWKgOUo03+lUqbWcnkKb4EyW27tFd4M
-         pNl1KNfi0VVNUYTXGez/DJTntxLg5exiVFwF0ArnhQLPH63GIicnqULuv9RClqyJWFMK
-         JBkJAd9uAxQVsqky2sWFSqzSvlCDvWNjxL5ebyd/Wt4NAONT/sgDwFSrnLw+Fmcg5B6p
-         FGX08Z6gkUTMPTEcBH0YMIFbgVFb9HDzeUJeXl0d46QMLIB8MHdx/aex2kTknGBK47tl
-         ZMLJ6Qoz7v8xXiGXW4iaOmG/1MPbVX6KL6Ex0YCvpPStkbIBv+gXqCBdxKPFMOrUF8E3
-         5HqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719931732; x=1720536532;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lbzSX2jm/CLVUUZ3qU6O92SO48UCb5doHo+EGGpsX5s=;
-        b=SQMO180w9gPqtMTzwIZ5Hk+941IzlXSyK7OA9cjKT86LXOptI/hUL52q1awdb9CXFx
-         uqXZoo3R4pFNkD3UuLvqhvwUe1yFgmw4lqnmjahCKdoN9JGSwBI5PT9iBBPx56YYEGYp
-         znsnMLL6uAio+U1B8e3TBu15NZeYG5g3VCJVGCVDPHjulr1mYntMwaih6kgpPbCBEDD+
-         6P6PeE1iwyWT0H8kZxj0auj95S9nHWzhWtBjxGbavPlkVoM4vJr3QiY7d3Hbuv4nSIBw
-         HKnrAmiYOlUtb8+TSFpPofQd9mt7LycFqAcg/dsUvsHd6DYA46qi1C8TIc/eljmXvH+B
-         bXhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrpi1MOFkp0XBTIsbn+PIB7e8S4hY7R5cynIpouYlp/zl6WCMfZCzXuYmqL1id9sKjKs9FojvR9EJt4tT25SyJ1x0fUn4wRogMoxxu
-X-Gm-Message-State: AOJu0Yxux3Lb81xH3/LJBHHp+qAdB1libbP7X0h9mfTeNtiW8DpVbJ6Q
-	bmyTmVXrebf5nhPMtP9huXnV8XDdV+RR3Cxcf/I4ysM3u5SYqpH7bTXjLomg
-X-Google-Smtp-Source: AGHT+IEoKjeHNdhrVeltAR3pigvzckm+881yE7i+H5fpSRXSBafQKcZfdKbF9Ig4QexHTY4SMiyIBg==
-X-Received: by 2002:a05:6358:9486:b0:19f:346d:d1d1 with SMTP id e5c5f4694b2df-1a6acdc06e4mr879562355d.16.1719931731801;
-        Tue, 02 Jul 2024 07:48:51 -0700 (PDT)
-Received: from dev0.. ([49.43.162.163])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6b48e198sm5687831a12.51.2024.07.02.07.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 07:48:50 -0700 (PDT)
-From: Abhinav Jain <jain.abhinav177@gmail.com>
-To: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	jain.abhinav177@gmail.com
-Subject: [PATCH] gpu: ipu-v3: Removal of of_node_put with __free for auto cleanup
-Date: Tue,  2 Jul 2024 14:48:36 +0000
-Message-Id: <20240702144836.1001916-1-jain.abhinav177@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZZnYdfBq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719931815; x=1751467815;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HqJSSoNKjIMDM+CJGgP+I5L5NB+rRz1kCBLAO8WJm7A=;
+  b=ZZnYdfBqjnATfzG3CLFd1+0D861dlCKvpp1joaakoI42itan5bZ2WI/y
+   OUYw1zr+sSHtDnXhPGsla/XroPG68GmiT57tXCHFxNt8PHDHNLO77ufxn
+   yDdHly0Z21YnbGhN0YpilkzB7RBeC/IqW9ZOJO4wPZivWqSdqMQiAUyKE
+   p7OeuMUeEPQy+J6OXvw58jvCrtutgSU9GXYx8Z58TIpVLKT2nlVEJzsAo
+   /Si+DshtcExVY47HObhtsGvXDO9q0EEqaFdnBV8bxblEqyV2QPdh1elWB
+   7uao7CIFTDULG60Lk1Osv70te2INKVI0/QfpDkla08YPnXXcJSQG48yRv
+   Q==;
+X-CSE-ConnectionGUID: V/UneS+cRamYEXHzI021bA==
+X-CSE-MsgGUID: lAwSoQeMQx6akjydSKFlXg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="34558299"
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="34558299"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 07:50:00 -0700
+X-CSE-ConnectionGUID: 6Vw0grZvTcSZ8AqT595Amg==
+X-CSE-MsgGUID: JIBGLbcKT1SxXJQ4cNjqIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="51117023"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 07:49:59 -0700
+Date: Tue, 2 Jul 2024 07:49:57 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org,
+	brauner@kernel.org, viro@zeniv.linux.org.uk,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, gregkh@linuxfoundation.org, linux-mm@kvack.org,
+	liam.howlett@oracle.com, surenb@google.com, rppt@kernel.org,
+	adobriyan@gmail.com
+Subject: Re: [PATCH v6 3/6] fs/procfs: add build ID fetching to PROCMAP_QUERY
+ API
+Message-ID: <ZoQTlSLDwaX3u37r@tassilo>
+References: <20240627170900.1672542-1-andrii@kernel.org>
+ <20240627170900.1672542-4-andrii@kernel.org>
+ <878qyqyorq.fsf@linux.intel.com>
+ <CAEf4BzZHOhruFGinsRoPLtOsCzbEJyf2hSW=-F67hEHhvAsNZQ@mail.gmail.com>
+ <Zn86IUVaFh7rqS2I@tassilo>
+ <CAEf4Bzb3CnCKZi-kZ21F=qM0BHvJnexgajP0mHanRfEOzzES6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4Bzb3CnCKZi-kZ21F=qM0BHvJnexgajP0mHanRfEOzzES6A@mail.gmail.com>
 
-Remove of_node_put from device node of_node.
-Move declaration to initialization for ensuring scope sanity.
+> 1) non-executable file-backed VMA still has build ID associated with
+> it. Note, build ID is extracted from the backing file's content, not
+> from VMA itself. The part of ELF file that contains build ID isn't
+> necessarily mmap()'ed at all
 
-Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
----
- drivers/gpu/ipu-v3/ipu-common.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+That's true, but there should be at least one executable mapping
+for any useful ELF file.
 
-diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
-index 71ec1e7f657a..f8cc3f721d2a 100644
---- a/drivers/gpu/ipu-v3/ipu-common.c
-+++ b/drivers/gpu/ipu-v3/ipu-common.c
-@@ -1150,10 +1150,10 @@ static int ipu_add_client_devices(struct ipu_soc *ipu, unsigned long ipu_base)
- 	for (i = 0; i < ARRAY_SIZE(client_reg); i++) {
- 		struct ipu_platform_reg *reg = &client_reg[i];
- 		struct platform_device *pdev;
--		struct device_node *of_node;
--
- 		/* Associate subdevice with the corresponding port node */
--		of_node = of_graph_get_port_by_id(dev->of_node, i);
-+		struct device_node *of_node __free(device_node) =
-+			of_graph_get_port_by_id(dev->of_node, i);
-+
- 		if (!of_node) {
- 			dev_info(dev,
- 				 "no port@%d node in %pOF, not using %s%d\n",
--- 
-2.34.1
+Basically such a check guarantee that you cannot tell anything
+about a non x mapping not related to ELF.
 
+> 
+> 2) What sort of exploitation are we talking about here? it's not
+> enough for backing file to have correct 4 starting bytes (0x7f"ELF"),
+> we still have to find correct PT_NOTE segment, and .note.gnu.build-id
+> section within it, that has correct type (3) and key name "GNU".
+
+There's a timing side channel, you can tell where the checks
+stop. I don't think it's a big problem, but it's still better to avoid
+such leaks in the first place as much as possible.
+
+> 
+> I'm trying to understand what we are protecting against here.
+> Especially that opening /proc/<pid>/maps already requires
+> PTRACE_MODE_READ permissions anyways (or pid should be self).
+
+While that's true for the standard security permission model there might
+be non standard ones where the relationship is more complicated.
+
+-Andi
