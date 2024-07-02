@@ -1,114 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61C785C74;
-	Tue,  2 Jul 2024 13:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB11B19D085
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719925844; cv=none; b=B5/RiMnHMB2xsVQTsOmnWtxsoYDhI2w7YHalOz1m5353Gtk8P3/qbqDh470jnnIYv6/Ap6cxgXeu6qhy8vPSTepGPE2VWI0P+uPfNGvfJep5P6TcbFFF/f+9J0O1/RbJv78+msOPysStTmDYbGnvyM2sNhI1oUJVLE3xIKh6JTk=
+	t=1719925885; cv=none; b=nZHkpqx1X5nlsC3viRvzyG/AmzAkX35ZWn/niMKkpT4MisAcC1IZHEu5p+RAXJ+tiNeay4bX8OOFZo24yKaRCaxwchSysRfZot/eW5Otc8vDp6EtuDoQnlEbMGVAkAyfj4WuaAoVGKKJMrjZmMX5orjyLVaUmWcils4s7iTlRFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719925844; c=relaxed/simple;
-	bh=gTUvzjDM37z27yYoTrtM5Z4GIXEMOln7R9yBe19BcUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tIUE5N+aczMXBKC8eqZ38qHArT//Y8Fam+mb2Qy7yCENBq9/8dTt+DPTRJ/QV/VkIXcCsmw3acURaUGbc2RYHG8WS4McFPC8oTNaXTRfWlKOYIFtLRXlaUewcpjFqVe00oNde1jiPbc1aXhTaXS9WqY+jiTPeKs1RQdAqrt0hnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KX1DvoVI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719925885; c=relaxed/simple;
+	bh=YZn0x+z03ip1L3EiHj1D9rs3c6TN7O0rjwXqtOiBDSg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T2xdHxe5tjzGM7iPY/H19qRQW3l0b8bWdQ4c3eMgvVLJie2nKNZ9T2UF+iw/Qvu0lSRBaCuV+M13cOG0ad/4fiCKRKG3lMumSdpltQS4Z9xa30SStL1nKqcRfiiVWeTBW3P/1P44XRalIStDkHh7vv3GlBcVkSsQPz4d7bJ3Kt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lB+TECet; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KX1DvoVI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5B6C116B1;
-	Tue,  2 Jul 2024 13:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719925844;
-	bh=gTUvzjDM37z27yYoTrtM5Z4GIXEMOln7R9yBe19BcUc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KX1DvoVIFjA5s5UUU7JkyxMT0elBAp3eZlvV46bSXunOkxGbagzOZ6DHIdDIlCCWO
-	 Ul93piDGNWJPE3cpaX1Oo8zHI68xAmCu9kJB5oeexuuuQZn0hJJ+O2mITmZ9pUyLn6
-	 BQn9NhR4cTi4uefLIZZCDa5qw8SW8HCaBBQKQZfNkMVJK3VpXdMVNNRXGv6GcVNETK
-	 pXVxT5XEb8EKdB4OeuUDTpqAYJcqsj9SyGY6/DeUPkgrB8zJ7ar/ywDcARXQ2IodZh
-	 CQbdotgE5irUQdvvbrRj1c7lS8O55fWZBImAeVPnjmnRqvwv0wxSg1wuQmy0xppmKy
-	 3CHxwSW28PUSA==
-Message-ID: <fcd91462-f8bb-4713-afc1-ba9473405396@kernel.org>
-Date: Tue, 2 Jul 2024 15:10:38 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lB+TECet"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719925884; x=1751461884;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YZn0x+z03ip1L3EiHj1D9rs3c6TN7O0rjwXqtOiBDSg=;
+  b=lB+TECet4Ix3Mz3YMMYuD5qbyh7uBrNW5pgCNQcf/vXyjcMbiQFccMtz
+   yqSWHtmK/sFSKnuvB/UYyqBgsjHZjwDbkSWj8QPEeDk2tbZK+X9/Twle6
+   RPfQMZs+GEYNjXwjyWcfsXlZ1aVc3FsLVCSBptMXIBqDl+h8sS18p6IOW
+   vA39vwMCKhjh8sp/b04EpQpNyIRyaGxEriXkBLd3VLQ/skhQeRdMWlZQM
+   ofjSCP3XY5Od7VBUyEPXc5krI8R9qVzori9PQG530Ocn3zZgaeWP6XRev
+   uiWsUXaaUgD3JfRT+xMC8E53zPpkILQE5UPcXZFaadR889EvOP8biK583
+   Q==;
+X-CSE-ConnectionGUID: ZaP/gynDRUiZVeL0rObjjg==
+X-CSE-MsgGUID: i8Qad9YNQCOZJua1fGOMRg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="27699990"
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="27699990"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 06:11:24 -0700
+X-CSE-ConnectionGUID: Cp6LEnc3RneOefPsy3tz8w==
+X-CSE-MsgGUID: XrLZzZWXQqOY9qEQ/qDdPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="50250826"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by fmviesa003.fm.intel.com with ESMTP; 02 Jul 2024 06:11:22 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] [PULL REQUEST] Intel IOMMU updates for v6.11
+Date: Tue,  2 Jul 2024 21:08:32 +0800
+Message-Id: <20240702130839.108139-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: Add MPS mp5920
-To: Conor Dooley <conor@kernel.org>, Alex Vdovydchenko <keromvp@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Sean Anderson <sean.anderson@linux.dev>,
- Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
- Alex Vdovydchenko <xzeol@yahoo.com>
-References: <20240701145603.1507516-1-xzeol@yahoo.com>
- <20240701145603.1507516-2-xzeol@yahoo.com>
- <20240701-mug-scuttle-dfe4c84b4e0b@spud>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240701-mug-scuttle-dfe4c84b4e0b@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 01/07/2024 17:47, Conor Dooley wrote:
-> On Mon, Jul 01, 2024 at 05:56:00PM +0300, Alex Vdovydchenko wrote:
->> Add support for MPS mp5920 controller
->>
->> Signed-off-by: Alex Vdovydchenko <xzeol@yahoo.com>
-> 
-> Missing an ack from v2:
-> https://lore.kernel.org/all/20240627-swivel-grower-002af077b654@spud/
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Hi Will,
 
-That's third time you give the same ack. I suggest give up...
+The following changes have been queued for v6.11-rc1. They are all about
+small refactoring, including:
+
+ - Use READ_ONCE to read volatile descriptor status
+ - Remove support for handling Execute-Requested requests
+ - Downgrade warning for pre-enabled interrupt remapping
+ - Remove calling iommu_domain_alloc()
+ - Refactor the PRI enable/disable flows
+ - Cleanups
+
+These patches are based on v6.10-rc5. The complete patches are also
+available at:
+
+https://github.com/LuBaolu/intel-iommu/commits/vtd-update-for-v6.11
+
+Please consider them for iommu next.
 
 Best regards,
-Krzysztof
+baolu
+
+Jacob Pan (1):
+  iommu/vt-d: Handle volatile descriptor status read
+
+Lu Baolu (6):
+  iommu/vt-d: Remove comment for def_domain_type
+  iommu/vt-d: Remove control over Execute-Requested requests
+  iommu/vt-d: Downgrade warning for pre-enabled IR
+  iommu/vt-d: Add helper to allocate paging domain
+  iommu/vt-d: Add helper to flush caches for context change
+  iommu/vt-d: Refactor PCI PRI enabling/disabling callbacks
+
+ drivers/iommu/intel/iommu.h         |  19 ++-
+ drivers/iommu/intel/pasid.h         |  10 --
+ drivers/iommu/intel/dmar.c          |   2 +-
+ drivers/iommu/intel/iommu.c         | 194 +++++++++++++++++++---------
+ drivers/iommu/intel/irq_remapping.c |   4 +-
+ drivers/iommu/intel/pasid.c         | 109 ++++++++++++----
+ 6 files changed, 241 insertions(+), 97 deletions(-)
+
+-- 
+2.34.1
 
