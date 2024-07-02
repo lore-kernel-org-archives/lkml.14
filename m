@@ -1,120 +1,204 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFA139847
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 17:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707EB1C005C;
+	Tue,  2 Jul 2024 17:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719940655; cv=none; b=D4gLYwsWYS95g33tmqgz2fwoxKpyxZRHgNwdqbMZaADKGimF7FYFm9KohM/+9vdyc6tcTsE9ZtURi8iZcHiJMGrTdfaL8Q971cqTsN/nE8hPSUi95WPeCm8aQn+DKv2W2TKZgVO33WH0FxIsB4FWYrGhO+drIdI9N/UUeVwO9Es=
+	t=1719940659; cv=none; b=C25ZjwYj01gILL4F9chQYb9Wg5euG+LHa/3yFfs8ec5BrAzA45Oer2PLzO60scoHWlE6w4dLAyTQbzRSFEzaEiUofLo9deLEtl+rMVGcYQgABJTyV7OApdSLNUKdMuvRp5HaJzvvSovolbmgIsUxEkX4R7gN4yCt6dhzt6qs6TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719940655; c=relaxed/simple;
-	bh=Vnlmh4K+nd2zkdElqekxJ/vTbq8wmrwBN/mDF5q1FKw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ndSJd3PIA5AeWsH59/LVph+XSlElgN78Y1qtSPdLnEJ7Xtk2o2EmtJ8oYv5jgZw0TJGYDTBB5wv1HAsFCIQmF2TtKllNMgJm1F2OyF+mhqsmaObOXIOF1ikEFzoXVCgcQlaTCRSlzXU4f/TaRu1dhcKnIj43VBq/zhmbYIKM+nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=AllpbsAK; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1719940659; c=relaxed/simple;
+	bh=4868Ep+IoY10npVHcVKyoLSgEn/iBhldDS/CKlKIWeo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KfeVGKLQshxovuIJX+d1MHf81ybsyrwFeeplF/MKvM6QlL8ZrT07KeWvwtFcQBqyoCQcP7Tv8thVqNNSW2U5/ub0JH58PCOc7T90NB2feUQ8c8Eybd8YZ4pNZ+fXxPobvv/1tHrtzEUz7JRai8TporTEW6DgGKUFkN1M2RfgCeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOSqoEri; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AllpbsAK"
-Received: from [192.168.7.205] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 462HGUOv630318
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 2 Jul 2024 10:16:30 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 462HGUOv630318
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719940591;
-	bh=+awL2sjll9GZ5TMa2CofZj27FdVoCF8MijTG4QObr8c=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=AllpbsAK7Dr96sNrMYifmBPq2qdvv1d9UF4eYRcv2oa64WvfdzvQ0/XoGd50ns+ys
-	 4WOeXBc7q1nrK75pI09DLoNHjluaumL/s9NLsgRT7bCYxXdzLxcR3w44ln+QTZx8sE
-	 jHLEcl0XDqJs28R/m193dDdesLyTnCom9usCL62EpKp9ykpwjKPRT/oC9OQcc021Cy
-	 7mVpr00dVivpkr7D4I0tT832TEoJAlbpE/F/lOJf3Ti144gO6AskCDrH7uXFx/0sPr
-	 OB2QL4SBq7G6WGl+2WieIz31DKF7fIXxO+L6l2pt/xQeaDHbve56bv3RH156pKB1hI
-	 p3LINISlC/a4A==
-Message-ID: <c2548e16-7251-4d1c-87a2-f1c09be83e3e@zytor.com>
-Date: Tue, 2 Jul 2024 10:16:29 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOSqoEri"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c1a4192d55so2695685a91.2;
+        Tue, 02 Jul 2024 10:17:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719940658; x=1720545458; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ab7Ql4t/fDVRM0N/Hkib1qt1vDXIApr8krme2e4EA7M=;
+        b=XOSqoErisk6s7XXkTiD4NVZHF7EgqsC7/JnYc/tOY2qZ6YJIAnWZxn2vVqiu67U1uJ
+         ei7/dx3rgTlPzCyAE79COtff3YLBSNo1oatA6nOPnovSdIYCc+wK0dKBGMl7v2YFQ2lt
+         a6IBUAsaCQ6nRV+uzdEGhtBiIbtCgD1ChXOmFwCxsKO33krZ7tvUd0/yses+d4gTm/+k
+         uDA8YzoNc5j1xAz3B8VXRDqrkQazukpNHkKqPmkC4WkYEvzbhSvnzhE9QmHOUsH0SWOK
+         TogibV8Ai1+D+CTM1eSBHUvaVDeD8goQf2JLu3qh8Wz6l8JMtl66XDOKLmxPWwhF4kt7
+         +/DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719940658; x=1720545458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ab7Ql4t/fDVRM0N/Hkib1qt1vDXIApr8krme2e4EA7M=;
+        b=iawMCHuQiwYSEyhRCkqccjHxoFa0wkOw24AtHzIWABiP1HUFpXIOeRuxspdSWb6WWb
+         LT7MOHcgeEB5k0HF5fhEmPlTchffeWSB6lqMt3oFl0BM71LzC1KF6+TcK2q8fnQNVOxe
+         ZtO7X8MoUf5gixvFiML4mTkwPKnV8/Oq833O+GIBTnxqkgfIm1jBmF+7TtQwA7o94W5L
+         s1JuL6yQPxTOQG+pNhD+RYZyA+2weUm+tHskIdWyNDUxUDLzWyJR7zCwb9el0Xddqcni
+         W2Io6GF3t5T0v1qYhGHPZMLz5DONv6kVISnLcij4TzfvQxF/iPDEMIUDW+MVQglz9u3v
+         GJ9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUQq4INjdVK14Su4X/mw7W5kuEXf21Sdyhw7D4Z2kSt74LryiJn2VvSnhHQG2Cz/AfRQFb5QvHw3fpo0HjYIwKerIOxTO3t2vsRak1vJ2kQCY3ATK8+cBHFTNqFp8IFyMGIQhMzIplHheDb2b9xDUMCpZURtECQVfIdSkKd7OpwzZssN1L9yz+QCRFRzn3i89AiQyCC6FEsJfnBMipSPnocHGajCi6owg==
+X-Gm-Message-State: AOJu0YxOouXGtHv0A5D/1qEe+qNVr+zY1qHArikpwz3NDsxE0HfgchhE
+	4GS08BmdNRCfcjcp9VVKm1A83lDV0G0prAReFVPJgaRm3AoHFy3KR8Nb1hsarQXrYqCP37AQmfB
+	tv5uXdLyDLXsAZKUA18h2Nb1RdVh17f0/
+X-Google-Smtp-Source: AGHT+IFAHjRiuSEDaf8Hq1+3dk9LMpcf/uGUbkKYmarxsoMEFNojGFS2jiWIoJDgxN+hGNT47VCp7kxlwzAj9WVYrh0=
+X-Received: by 2002:a17:90b:fd1:b0:2c3:11fa:41f with SMTP id
+ 98e67ed59e1d1-2c93d76fbbemr5239692a91.45.1719940657536; Tue, 02 Jul 2024
+ 10:17:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] x86/fred: Always install system interrupt handler
- into IDT
-From: Xin Li <xin@zytor.com>
-To: Hou Wenlong <houwenlong.hwl@antgroup.com>
-Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Xin Li
- <xin3.li@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <cover.1718972598.git.houwenlong.hwl@antgroup.com>
- <2f632ef59c8c9cc27c3702bc2d286496ed298d65.1718972598.git.houwenlong.hwl@antgroup.com>
- <dca1635b-1e08-4dbb-9dbb-335cbdcf9b9d@zytor.com>
- <20240628093656.GA103025@k08j02272.eu95sqa>
- <c0ec7712-c538-4cd1-ada2-d0120c662ce8@zytor.com>
-Content-Language: en-US
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <c0ec7712-c538-4cd1-ada2-d0120c662ce8@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240701231027.61930-1-andrii@kernel.org> <20240702095036.GE11386@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240702095036.GE11386@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 2 Jul 2024 10:17:24 -0700
+Message-ID: <CAEf4BzZxXDsB+_Oyu=gDP9_7c5vc4Z6QFfW5TnY3GTA86X6hSQ@mail.gmail.com>
+Subject: Re: [PATCH] perf,x86: avoid missing caller address in stack traces
+ captured in uprobe
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com, 
+	tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/28/2024 8:18 AM, Xin Li wrote:
-> On 6/28/2024 2:36 AM, Hou Wenlong wrote:
->> Hi Xin,
->>
->> It seems preferable to parse the FRED command line and disable FRED
->> early instead of using this method. As mentioned in my cover letter, I
->> initially attempted to fix the problem this way (by parsing the command
->> line in cpu_parse_early_param()). Should I send a new patch for it, or
->> will you be covering it in your work to enable FRED early?
->>
-> 
-> I have done it in my patches that enables FRED early, but if you want,
-> you can post it, because you're a key contributor in this work.
-> 
+On Tue, Jul 2, 2024 at 2:50=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
+> wrote:
+>
+>
+> +Josj +LKML
+>
 
-Please let me know if you want to do it.
+ack, will add for next revision
 
-Thanks!
-     Xin
 
+> On Mon, Jul 01, 2024 at 04:10:27PM -0700, Andrii Nakryiko wrote:
+> > When tracing user functions with uprobe functionality, it's common to
+> > install the probe (e.g., a BPF program) at the first instruction of the
+> > function. This is often going to be `push %rbp` instruction in function
+> > preamble, which means that within that function frame pointer hasn't
+> > been established yet. This leads to consistently missing an actual
+> > caller of the traced function, because perf_callchain_user() only
+> > records current IP (capturing traced function) and then following frame
+> > pointer chain (which would be caller's frame, containing the address of
+> > caller's caller).
+> >
+> > So when we have target_1 -> target_2 -> target_3 call chain and we are
+> > tracing an entry to target_3, captured stack trace will report
+> > target_1 -> target_3 call chain, which is wrong and confusing.
+> >
+> > This patch proposes a x86-64-specific heuristic to detect `push %rbp`
+> > instruction being traced. Given entire kernel implementation of user
+> > space stack trace capturing works under assumption that user space code
+> > was compiled with frame pointer register (%rbp) preservation, it seems
+> > pretty reasonable to use this instruction as a strong indicator that
+> > this is the entry to the function. In that case, return address is stil=
+l
+> > pointed to by %rsp, so we fetch it and add to stack trace before
+> > proceeding to unwind the rest using frame pointer-based logic.
+> >
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> >  arch/x86/events/core.c  | 20 ++++++++++++++++++++
+> >  include/linux/uprobes.h |  2 ++
+> >  kernel/events/uprobes.c |  2 ++
+> >  3 files changed, 24 insertions(+)
+> >
+> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > index 5b0dd07b1ef1..82d5570b58ff 100644
+> > --- a/arch/x86/events/core.c
+> > +++ b/arch/x86/events/core.c
+> > @@ -2884,6 +2884,26 @@ perf_callchain_user(struct perf_callchain_entry_=
+ctx *entry, struct pt_regs *regs
+> >               return;
+> >
+> >       pagefault_disable();
+> > +
+> > +#ifdef CONFIG_UPROBES
+> > +     /*
+> > +      * If we are called from uprobe handler, and we are indeed at the=
+ very
+> > +      * entry to user function (which is normally a `push %rbp` instru=
+ction,
+> > +      * under assumption of application being compiled with frame poin=
+ters),
+> > +      * we should read return address from *regs->sp before proceeding
+> > +      * to follow frame pointers, otherwise we'll skip immediate calle=
+r
+> > +      * as %rbp is not yet setup.
+> > +      */
+> > +     if (current->utask) {
+> > +             struct arch_uprobe *auprobe =3D current->utask->auprobe;
+> > +             u64 ret_addr;
+> > +
+> > +             if (auprobe && auprobe->insn[0] =3D=3D 0x55 /* push %rbp =
+*/ &&
+> > +                 !__get_user(ret_addr, (const u64 __user *)regs->sp))
+>
+> This u64 is wrong, perf_callchain_user() is always native size.
+>
+> Additionally, I suppose you should also add a hunk to
+> perf_callchain_user32(), which is the compat case.
+>
+
+Ah, I misunderstood the purpose of perf_callchain_user32(), and so
+assumed u64 is correct here. I get it now, perf_callchain_user32() is
+compat 32-in-64 case, but the general case can be either 32 or 64 bit.
+Will fix it, thanks!
+
+> > +                     perf_callchain_store(entry, ret_addr);
+> > +     }
+> > +#endif
+> > +
+> >       while (entry->nr < entry->max_stack) {
+> >               if (!valid_user_frame(fp, sizeof(frame)))
+> >                       break;
+> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > index b503fafb7fb3..a270a5892ab4 100644
+> > --- a/include/linux/uprobes.h
+> > +++ b/include/linux/uprobes.h
+> > @@ -76,6 +76,8 @@ struct uprobe_task {
+> >       struct uprobe                   *active_uprobe;
+> >       unsigned long                   xol_vaddr;
+> >
+> > +     struct arch_uprobe              *auprobe;
+> > +
+> >       struct return_instance          *return_instances;
+> >       unsigned int                    depth;
+> >  };
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 99be2adedbc0..6e22e4d80f1e 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -2082,6 +2082,7 @@ static void handler_chain(struct uprobe *uprobe, =
+struct pt_regs *regs)
+> >       bool need_prep =3D false; /* prepare return uprobe, when needed *=
+/
+> >
+> >       down_read(&uprobe->register_rwsem);
+> > +     current->utask->auprobe =3D &uprobe->arch;
+> >       for (uc =3D uprobe->consumers; uc; uc =3D uc->next) {
+> >               int rc =3D 0;
+> >
+> > @@ -2096,6 +2097,7 @@ static void handler_chain(struct uprobe *uprobe, =
+struct pt_regs *regs)
+> >
+> >               remove &=3D rc;
+> >       }
+> > +     current->utask->auprobe =3D NULL;
+> >
+> >       if (need_prep && !remove)
+> >               prepare_uretprobe(uprobe, regs); /* put bp at return */
+> > --
+> > 2.43.0
+> >
