@@ -1,79 +1,72 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B6E1B1215
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78CB20FAB2
 	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719957545; cv=none; b=TMdYMBmNgIgDl+sJEBW6Z3AouIfEFlUxNwGsqMbeqeBczop4T+WTjcVtP3KCe2npwJZdBYmIaSIVLDikPuXkuCN9spoWB9Y45QmHisD1i1h27AkJ9PLL9R8oHoNLpHliz4gykNC+5v5rg4Hluk5n04seUV6KUx/l6UCyS025pAw=
+	t=1719957546; cv=none; b=tCWtPL0dmPX+dHVzQfOmfsYhr2iMMwOix3S4cQoLREHsXwQunxP8MXLHRJI37zn0/RVpOVDg3abKFAUH3bLOtHOHVSyKruxIK28Tq0tDyKC+iOxyec/m7CeNdZHOlVaHgrSm3iIDuiMUV1OCyPlGh50P2GY0dAdXfzmobyea0UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719957545; c=relaxed/simple;
-	bh=HsVJ+8bSyTwxbd5PVHZFf8uV50bzhcBL2G646/K/2NQ=;
+	s=arc-20240116; t=1719957546; c=relaxed/simple;
+	bh=Yzpg2+WaoEbAF5iByFWp49UVOXwrxjOWqhpGJSHXybE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t92RZaFPSGXyWW+YthLBS4AAaUjdL6qmRZ+hT9jVIuUKu/2KHgFsCFW4iXmr2eGj8zbJPEwXVpwvVczalgPRuUaNYYSzQFhcMTlmQB5DPXnv1ZiepnEmzbQ9F7rIzQeix7OhOjDGhLBhG8HBv0xMA2cNGom2csfb2PJ+XNtNOVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7Da93wx; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=W0pgGtl3FyF7aOVDVsS3ncmsrM++qpmATGYCmNZO7wflm/otpNgbuBtu9scCptHi891M9WC0Mr2RI4vHmEw5xlxCfJUR2xxHp8Wf9YF3400XjUGjE+p+o6YR6qJCXoH4KUsp2Nsz2vMokKjPTfIyKcHF5op7r6txlIGqeNv+6+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=O21kfWY4; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7Da93wx"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7f3ca6869e8so168994939f.3
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O21kfWY4"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f480624d0dso35664885ad.1
         for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:59:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719957543; x=1720562343; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1719957544; x=1720562344; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Qc7kDWbr1ZOLQ8+EMlKcMIOk0gPIa550UiXaV/Fsdqw=;
-        b=G7Da93wx6fn1iPHLsVMNJ7ZK3+mNFvgg0SWnz6P7agZjhSsUM0SRaRavyZL20xVlsZ
-         +nDuWfcoMK4HNFicOdpbHWVmBuHcY1mZrEnB3hr/0hqFwrTKwoSHR2IpyEUC+XB4jN1m
-         VayGGRtNkzZoGbiVr9OdAy9feoNXiuzWgq5MsW3whKUW5LNn50G7nNJuf9m1QoPEle67
-         kGjJbJuBy9vmg6kDUYummVZW1ZVraQJ1uN648u8EnlIFPNRb+Gw8RJKZRFsGVxuPjDJ7
-         wJ5DCFJ8zZVJH3p7jUgk8rKy+e8dYtYJfDNTK0mFNrQE7gydWR3kRjDd/X0QZPLE7FyD
-         bkHg==
+        bh=Gsj73O3sDeXJFSaK3K7S5NYYn9jtEt42KkD9vbFcQHE=;
+        b=O21kfWY4z6hOwUJq1WjZjgGCw2SBMJ8S3uXQf4t8bptDEYBOLqpcstscPA0o5g9C04
+         hl35t6CKwAwfiX2yOF2rVgdN48hDrQSn9cmOHKunlwQt07aQVeFbhGgrdBEDBkBIP/4m
+         mpvEKXuBJStmGaigIel0nPgjtLgyrHUE60JXk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719957543; x=1720562343;
+        d=1e100.net; s=20230601; t=1719957544; x=1720562344;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Qc7kDWbr1ZOLQ8+EMlKcMIOk0gPIa550UiXaV/Fsdqw=;
-        b=T9QGAos6apQ32KtFKHkLm4B4EkUFiTj2JbAPCrrh11ncGRYWPd7I5ISrNlKHDexhIN
-         st56wEXfDjg5hBCuImZfZy8+8kT9HO/FmrTKjVWCeR8r2DRlxEvydG68Ix2TYMxBCCY/
-         483VpAdIxo6ka8h/jA7dcezAKw+5QEvFNQ8OdXtIwe4lUFMU4iOwgzziirOR2/eCYrdr
-         fjaAOYBRApyUK0x1OboYTplaNxYJQpDkgGeTdtuBYi4W+qhWjRBmtc/yP63YGvA39ujW
-         RyuuN69EuUND64pM0atX9YrRJabLqLURGNf6eFJt7Oii4+Ya9RKX5Is5VJ29Wr0yHq3J
-         72JA==
-X-Gm-Message-State: AOJu0YxZYsAgFBTUFc+Cdru+KGp7VAWnV5MOi0W5a0b/nu4o6yUaap2h
-	FovtGZmlsE5fV+qyYY2BuCpIgUZ6yEhfrv9XWhCmQ48c+ZTIcL+n
-X-Google-Smtp-Source: AGHT+IFU7HE3OnORXf/jPfIvwK8ZL9okfkzaVw0Y9XlHErXhQ5Il5ia22RtTXqA/C72TmprohxCaoA==
-X-Received: by 2002:a5e:a819:0:b0:7eb:c68b:8250 with SMTP id ca18e2360f4ac-7f62ee8d422mr1089812139f.18.1719957543284;
+        bh=Gsj73O3sDeXJFSaK3K7S5NYYn9jtEt42KkD9vbFcQHE=;
+        b=LgKv45O5ScXSg0Wk0iQ4bUqDUFIwjswYGqs5Dzpll1MsVQogZdcg2tPou/C4jqcpIB
+         REZ8vIlB8nySPYTzANN0K9G23J59e6/Cnz4EZ6hZLv+gw69HRpC2tbMK2NTqwnm0tN2e
+         U7Os9bWc+Vd9lCDFBFQ6017CUFOcbzi5AkfkRLyKYs7n0P2759FNyjo9LrAA2KKiyF4h
+         yT10Lk41NGunb7bpwnjMDFlEOZvs9ESb0UJyV/D5GVuyINE9EINfI8m6qybVw4tu8eBU
+         OlA/qyajdY70KYUVVQn9yfJKXGdJWvIjpmoJhYyccjyy9yZL8h7+F6DxBa7zZO2mebQW
+         jBDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnkzHl4gXJ3WK8nk1R5vrNnqrQwUm4rJdFJjYpKe2ZJnbO1PtIodbuBblEVUgGK2tpUapmRi7K4G/5rsB0L0ivAVlG9zXUGuNoZgNv
+X-Gm-Message-State: AOJu0YznY4/JiSr+A4BjM6KF2HP7VgwwR2DdP+ZNN5Q7AyzAXFGZ81nT
+	n73kF6GW6OedkxpMk5guoVoVoGaoubGfDIPZSrqYFl6OQJsvKWJoFVcdzEVlOg==
+X-Google-Smtp-Source: AGHT+IFcvyCQMP70a54FiUECjL3zy54tvMT4fzePzLGfeDFAcPS+TNQEst+rANMcYK6YnMwgQVENjA==
+X-Received: by 2002:a17:902:c942:b0:1fa:d319:e0ae with SMTP id d9443c01a7336-1fadbce6a64mr115401435ad.51.1719957543897;
         Tue, 02 Jul 2024 14:59:03 -0700 (PDT)
-Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
-        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-7f61d207fcesm279944739f.51.2024.07.02.14.59.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 14:59:02 -0700 (PDT)
-From: Jim Cromie <jim.cromie@gmail.com>
-To: daniel.vetter@ffwll.ch,
-	tvrtko.ursulin@linux.intel.com,
-	jani.nikula@intel.com,
-	ville.syrjala@linux.intel.com,
-	jbaron@akamai.com,
-	gregkh@linuxfoundation.org,
-	ukaszb@chromium.org
-Cc: linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org,
-	intel-gvt-dev@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux@rasmusvillemoes.dk,
-	joe@perches.com,
-	mcgrof@kernel.org,
-	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v9 37/53] drm-dyndbg: DRM_CLASSMAP_USE in nouveau
-Date: Tue,  2 Jul 2024 15:57:32 -0600
-Message-ID: <20240702215804.2201271-43-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240702215804.2201271-1-jim.cromie@gmail.com>
-References: <20240702215804.2201271-1-jim.cromie@gmail.com>
+Received: from localhost ([2620:15c:9d:2:5fa9:4b10:46fe:4740])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-1fb14faa1ddsm946665ad.17.2024.07.02.14.59.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jul 2024 14:59:03 -0700 (PDT)
+From: Brian Norris <briannorris@chromium.org>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v2 2/3] tools build: Avoid circular .fixdep-in.o.cmd issues
+Date: Tue,  2 Jul 2024 14:58:38 -0700
+Message-ID: <20240702215854.408532-3-briannorris@chromium.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+In-Reply-To: <20240702215854.408532-1-briannorris@chromium.org>
+References: <20240702215854.408532-1-briannorris@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,43 +75,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Following the dyndbg-api-fix, replace DECLARE_DYNDBG_CLASSMAP with
-DRM_CLASSMAP_USE.  This refs the defined & exported classmap, rather
-than re-declaring it redundantly, and error-prone-ly.
+The 'fixdep' tool is used to post-process dependency files for various
+reasons, and it runs after every object file generation command. This
+even includes 'fixdep' itself.
 
-This resolves the appearance of "class:_UNKNOWN_" in the control file
-for the driver's drm_dbg()s.
+In Kbuild, this isn't actually a problem, because it uses a single
+command to generate fixdep (a compile-and-link command on fixdep.c), and
+afterward runs the fixdep command on the accompanying .fixdep.cmd file.
 
-Fixes: f158936b60a7 ("drm: POC drm on dyndbg - use in core, 2 helpers, 3 drivers.")
+In tools/ builds (which notably is maintained separately from Kbuild),
+fixdep is generated in several phases:
 
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+ 1. fixdep.c -> fixdep-in.o
+ 2. fixdep-in.o -> fixdep
+
+Thus, fixdep is not available in the post-processing for step 1, and
+instead, we generate .cmd files that look like:
+
+  ## from tools/objtool/libsubcmd/.fixdep.o.cmd
+  # cannot find fixdep (/path/to/linux/tools/objtool/libsubcmd//fixdep)
+  [...]
+
+These invalid .cmd files are benign in some respects, but cause problems
+in others (such as the linked reports).
+
+Because the tools/ build system is rather complicated in its own right
+(and pointedly different than Kbuild), I choose to simply open-code the
+rule for building fixdep, and avoid the recursive-make indirection that
+produces the problem in the first place.
+
+Link: https://lore.kernel.org/all/Zk-C5Eg84yt6_nml@google.com/
+Signed-off-by: Brian Norris <briannorris@chromium.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_drm.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index a947e1d5f309..27995c0c9b31 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -72,17 +72,7 @@
- #include "nouveau_uvmm.h"
- #include "nouveau_sched.h"
+(no changes since v1)
+
+ tools/build/Makefile | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
+
+diff --git a/tools/build/Makefile b/tools/build/Makefile
+index 17cdf01e29a0..fea3cf647f5b 100644
+--- a/tools/build/Makefile
++++ b/tools/build/Makefile
+@@ -43,12 +43,5 @@ ifneq ($(wildcard $(TMP_O)),)
+ 	$(Q)$(MAKE) -C feature OUTPUT=$(TMP_O) clean >/dev/null
+ endif
  
--DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
--			"DRM_UT_CORE",
--			"DRM_UT_DRIVER",
--			"DRM_UT_KMS",
--			"DRM_UT_PRIME",
--			"DRM_UT_ATOMIC",
--			"DRM_UT_VBL",
--			"DRM_UT_STATE",
--			"DRM_UT_LEASE",
--			"DRM_UT_DP",
--			"DRM_UT_DRMRES");
-+DRM_CLASSMAP_USE(drm_debug_classes);
- 
- MODULE_PARM_DESC(config, "option string to pass to driver core");
- static char *nouveau_config;
+-$(OUTPUT)fixdep-in.o: FORCE
+-	$(Q)$(MAKE) $(build)=fixdep
+-
+-$(OUTPUT)fixdep: $(OUTPUT)fixdep-in.o
+-	$(QUIET_LINK)$(HOSTCC) $(KBUILD_HOSTLDFLAGS) -o $@ $<
+-
+-FORCE:
+-
+-.PHONY: FORCE
++$(OUTPUT)fixdep: $(srctree)/tools/build/fixdep.c
++	$(QUIET_CC)$(HOSTCC) $(KBUILD_HOSTLDFLAGS) -o $@ $<
 -- 
-2.45.2
+2.45.2.803.g4e1b14247a-goog
 
