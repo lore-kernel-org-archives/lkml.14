@@ -1,221 +1,118 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440121EB25;
-	Tue,  2 Jul 2024 19:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0644A1EB25;
+	Tue,  2 Jul 2024 19:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719947003; cv=none; b=SKwK7h5mgqrUi3+3Uxee0n7kpu9Vgd4DPEQkM3EjYx9wIlYtc+tYYpTpGpwyuyQJsSiMG+U4VBh9Dr8NoSiVoGSduC3K6Ur+2vBMbcmrhfgLYuw0oXRxXJ6IlMWuD1yIAPylgTURLFTxXKd/5DH3iBOS0CJF4EzPU3XNXGySR84=
+	t=1719947047; cv=none; b=XBw1wJOJZKcZlEJ7engeFw0S7fBJ5WSjtvWMVxnChUyieYQkN4eD08e8RAxilfVgIpkG1Dx1QvqKN7NN7VUnid4T5Wt8XEsAcsB1tkrXBP8F3N5f33+Qn6iIaahd44HDbXBBiF016vnv0+Cve/WLeYeiOIk6D4B/JMFlX6xaoqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719947003; c=relaxed/simple;
-	bh=IYHGOWQYHzfej5qUuNd7psK1kiJHU76lRKzC9PeXtNU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RxAoxthVT+EiOjD2QJTblyihN1vTTvkCGR6IIBZKtuGuvgD+A2u82fUUV+XpkUHSJZsgIOkNjwvZwRHPBaRAzVvC8WR17I4JnnlxyJzmXpgEyrN5WED4g+8QPLUeHgCrhePgJNFxiz7PidwWeM3GICfhwjG2i7T433ePCsIlqAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=eYnnGdL0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vFXFlM/7; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1719947047; c=relaxed/simple;
+	bh=72jQsOwZhtv7NmowAKLnAHDBjN6SnciL4Pl7yt/yJs0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iNOnIuINgpNkdaEYHmlDHmfyBh3Kz1GmULkAXOwmZR99GozfEPkdZ299rmGbzb1zCEwBVwxzex3qk1NneiKDxEhseySiabNengBNwz1aWIDYwI/YUWDU5Ik+HTCvE1A7KUKlmE294T2wd7RSvao+iYivJzFxOqTrwFmgrAFeshg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ayTDMh5Y; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="eYnnGdL0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vFXFlM/7"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id EC8671140175;
-	Tue,  2 Jul 2024 15:03:16 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Tue, 02 Jul 2024 15:03:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1719946996; x=1720033396; bh=nQ
-	YbCpa+E8n2YlgnyPwC0P6/tQ4hyVyrd8XEfm45oWI=; b=eYnnGdL0pYPDVVGht1
-	dShxEo3pnCH8FYyAU+nVoKkAPoHtbB2niNzHh9Z8XcI7wxQxaa6ckVFvZSYP2LKx
-	0V5DkkfN5pyQc862lrfM0rQLWVJjHvCJDvH/P1DYv3QKJ1fRip5IGc9QLoAlVrRL
-	Q5MkC6Upuks4j2pfeKRhP2zoikbVm60phPdJqb4UUkZYVwLanR5K064Rs3+sy3Y9
-	9kr605XNSxBULysrrG2OiWP0wTBSTKi9RA3Em5Gj9VOa+7kPThMak7HyNVsZ2ROo
-	O4sV57vfLskDE+kFg4WAzObSys4ke8GbM4n/JL/P6iCY49B9Yk5bg+XwRFh+THxM
-	ga7w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1719946996; x=1720033396; bh=nQYbCpa+E8n2Y
-	lgnyPwC0P6/tQ4hyVyrd8XEfm45oWI=; b=vFXFlM/7fv3z3ZVnjNUxTC8HyfAnF
-	eBO/6g8EH5H1GWhaHm9S46hL+hqA5meG5ZCSQK63OCBhqt969WPp2HyDbsUfGSli
-	5gxOxIPzWMX8dBV2Nsscz3Sj5yBwd9Sacdvvj3r2NI8Tvw/H11l/y86CKZXHM2jM
-	Lk7Aw54lA/IKs2mHg2G/qyR5LroSTjqnw80vtSGqLFKp5OgLNivQ8MpKhO12mqfu
-	9giV8QlZl16RBJVQ6H2+HBFGI8+2XfDzRQBbkx55WFqL+l/19E6RaSFLaTQVPYXS
-	PU6E4114SrdK8I28nRDTyaiiqqY7E923tNHIU1YoCNhnj79Oyl8GCwC5w==
-X-ME-Sender: <xms:9E6EZor_hxt7wsAhuEwNZhURVLah5Yprrgf4kbzbLSLIBcy1fWxPZA>
-    <xme:9E6EZurlq2_5ekhT_dNNggswl2U8inNO1K60pIB_NZSjjIfx3exi9RIlItbAf8KRU
-    kq41nzi8i34qiG-NB0>
-X-ME-Received: <xmr:9E6EZtN42dNUc9RP_Mc9SHKlwds8VFb4i4kxMqZcSmEFUtPAj-0AcSmxiTppy6SEVEz0jm-pLUgSHYeS-EwdSwgiYw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudehgdduvdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofggtgfgsehtkeertdertdejnecuhfhrohhmpefpihhklhgr
-    shcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhouggvrhhluhhnugdorhgvnhgvsh
-    grshesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeehudelteetkefg
-    ffefudefuedvjeeivdekhfevieefgeffheeltddvvefhfeetgeenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhl
-    uhhnugesrhgrghhnrghtvggthhdrshgv
-X-ME-Proxy: <xmx:9E6EZv5vjTd2eRo3WtGfHcCMITuRpFt3UzuGZxj2Z1tIqREtAm5SjA>
-    <xmx:9E6EZn6nQnjYhb0yeEcmFH2WpMSfsHgQhWt6CIHZS2EgByaYOROr_A>
-    <xmx:9E6EZvgg60PtLMoM0nenzDQsTLbFPLYVs3mYpblDECFXGYVq9TYofA>
-    <xmx:9E6EZh5r-RExlLmVYEQ9KraDTeTNAXDxwFVf8E-HiipqOK80sJJgSA>
-    <xmx:9E6EZtRAOJbdVZQNKnVI2-SXf36b-s7XxCoeH9j2fuy5IC4sbfP5QABe>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 2 Jul 2024 15:03:15 -0400 (EDT)
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH] clocksource/drivers/sh_cmt: Address race condition for clock events
-Date: Tue,  2 Jul 2024 21:02:30 +0200
-Message-ID: <20240702190230.3825292-1-niklas.soderlund+renesas@ragnatech.se>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayTDMh5Y"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-424ad289912so32115845e9.2;
+        Tue, 02 Jul 2024 12:04:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719947044; x=1720551844; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4wKiM0LoVnSJlvFGJ4zMxAkn2aVFBxR/LJM4ELZBaDg=;
+        b=ayTDMh5YNNX5QbXG7Rxey4KKXyx7bw1z4Q8P+TlVmvmG+HVHb7dvZ0oDImLVBorXor
+         OUepvCQYb/tYzSoN4A8AL067bdp9zs/KHyWPXGT+D31sIFAbopsMzHoproBPpLXIgLsC
+         HSc9xbN3ZZ5fYSFUWbx6NW5NnHU3GXBPMK17UXOs3hCvTvzNXP9KMgn2UrBPKysHIO+O
+         1QGVNQS/vK36cYXRo7jCGSPdlUQ5kRHm6bYHFaPSX9Uxagj3z41OcIORJdGDInDZx0KZ
+         uXoadjFCi0mEj7N8uiF85teTS/b+U4drAHzQhG2Bl9NvsmwBMwxJhjVoQKuD+8MzU6BK
+         2FmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719947044; x=1720551844;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4wKiM0LoVnSJlvFGJ4zMxAkn2aVFBxR/LJM4ELZBaDg=;
+        b=Jy378if44e7Bcu+8xcxOB/rNTrESeASGIOVfFXV4cxilriqeUsVmd2Z1LW0MSwm3sm
+         FBSvDWj8C2wMV/tje7PTtfi4nG0JawsInJ6K5lytv9Vxy5Crfsd8oXb9syYptjncKySt
+         B/WDNRUKtKhx0dXLJVhLQXKEgPy5wy0q26l9tq+buE+NV2riaPQ4tVedoQAqCmLVqB78
+         vEm+HxhLMbk6NbUyfAdTk7ks2v6OGUVk8s7ZcHf4eksNsPqM5JfxzKyuBcwQeDRrpZeI
+         +VrdqkY40ey+JJ+8LBuX4iYyLlpCcn7lKYqU8j+1KFEoYFls40iZXetviHEkvGkQgzfu
+         29xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVB2aaZvBy0GEiaGGhVaKe+JfQH0SyDpspCSGcmWOFDViOWq5L00WTRC81ixx2FEkEf1iVDdfOK9Mw2GWOEY9D+m68nz9cw58GLBZaAyVtsEZoouFxHRBXQ2VxJdcPyAU20jz8WqQRiLQ==
+X-Gm-Message-State: AOJu0Yy2UJyt6KrO3AxdMlp0q/so7dEnm6Qr0czgffUGc4r3PBN0HP58
+	WeB43G+mw4FubQQBWjrJT10uX3kV1Bq+w0LB4RDrwIz7IePvN5m4
+X-Google-Smtp-Source: AGHT+IEg7Ylb0a0AliUiVMF+rVgKJlQM5K3IpV+SBP/fB47GeoimS1/x+hfjjTAv03cj8BzLban4yA==
+X-Received: by 2002:a5d:404f:0:b0:366:e1a6:3386 with SMTP id ffacd0b85a97d-3677571c5a7mr5535190f8f.44.1719947044099;
+        Tue, 02 Jul 2024 12:04:04 -0700 (PDT)
+Received: from qamajeed.Home ([39.45.181.116])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0e169dsm13909412f8f.65.2024.07.02.12.03.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 12:04:03 -0700 (PDT)
+From: Muhammad Qasim Abdul Majeed <qasim.majeed20@gmail.com>
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Muhammad Qasim Abdul Majeed <qasim.majeed20@gmail.com>
+Subject: [PATCH v2] Updating a vulnerable use of strcpy.
+Date: Tue,  2 Jul 2024 23:55:24 +0500
+Message-Id: <20240702185523.17716-1-qasim.majeed20@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-There is a race condition in the CMT interrupt handler. In the interrupt
-handler the driver sets a driver private flag, FLAG_IRQCONTEXT. This
-flag is used to indicate any call to set_next_event() should not be
-directly propagated to the device, but instead cached. This is done as
-the interrupt handler itself reprograms the device when needed before it
-completes and this avoids this operation to take place twice.
+Replacing strcpy with strscpy and memory bound the copy. strcpy is a deprecated function. It should be removed from the kernel source.
 
-It is unclear why this design was chosen, my suspicion is to allow the
-struct clock_event_device.event_handler callback, which is called while
-the FLAG_IRQCONTEXT is set, can update the next event without having to
-write to the device twice.
+Reference: https://github.com/KSPP/linux/issues/88
 
-Unfortunately there is a race between when the FLAG_IRQCONTEXT flag is
-set and later cleared where the interrupt handler have already started to
-write the next event to the device. If set_next_event() is called in
-this window the value is only cached in the driver but not written. This
-leads to the board to misbehave, or worse lockup and produce a splat.
+Signed-off-by: Muhammad Qasim Abdul Majeed <qasim.majeed20@gmail.com>
 
-   rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-   rcu:     0-...!: (0 ticks this GP) idle=f5e0/0/0x0 softirq=519/519 fqs=0 (false positive?)
-   rcu:     (detected by 1, t=6502 jiffies, g=-595, q=77 ncpus=2)
-   Sending NMI from CPU 1 to CPUs 0:
-   NMI backtrace for cpu 0
-   CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.10.0-rc5-arm64-renesas-00019-g74a6f86eaf1c-dirty #20
-   Hardware name: Renesas Salvator-X 2nd version board based on r8a77965 (DT)
-   pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-   pc : tick_check_broadcast_expired+0xc/0x40
-   lr : cpu_idle_poll.isra.0+0x8c/0x168
-   sp : ffff800081c63d70
-   x29: ffff800081c63d70 x28: 00000000580000c8 x27: 00000000bfee5610
-   x26: 0000000000000027 x25: 0000000000000000 x24: 0000000000000000
-   x23: ffff00007fbb9100 x22: ffff8000818f1008 x21: ffff8000800ef07c
-   x20: ffff800081c79ec0 x19: ffff800081c70c28 x18: 0000000000000000
-   x17: 0000000000000000 x16: 0000000000000000 x15: 0000ffffc2c717d8
-   x14: 0000000000000000 x13: ffff000009c18080 x12: ffff8000825f7fc0
-   x11: 0000000000000000 x10: ffff8000818f3cd4 x9 : 0000000000000028
-   x8 : ffff800081c79ec0 x7 : ffff800081c73000 x6 : 0000000000000000
-   x5 : 0000000000000000 x4 : ffff7ffffe286000 x3 : 0000000000000000
-   x2 : ffff7ffffe286000 x1 : ffff800082972900 x0 : ffff8000818f1008
-   Call trace:
-    tick_check_broadcast_expired+0xc/0x40
-    do_idle+0x9c/0x280
-    cpu_startup_entry+0x34/0x40
-    kernel_init+0x0/0x11c
-    do_one_initcall+0x0/0x260
-    __primary_switched+0x80/0x88
-   rcu: rcu_preempt kthread timer wakeup didn't happen for 6501 jiffies! g-595 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-   rcu:     Possible timer handling issue on cpu=0 timer-softirq=262
-   rcu: rcu_preempt kthread starved for 6502 jiffies! g-595 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
-   rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-   rcu: RCU grace-period kthread stack dump:
-   task:rcu_preempt     state:I stack:0     pid:15    tgid:15    ppid:2      flags:0x00000008
-   Call trace:
-    __switch_to+0xbc/0x100
-    __schedule+0x358/0xbe0
-    schedule+0x48/0x148
-    schedule_timeout+0xc4/0x138
-    rcu_gp_fqs_loop+0x12c/0x764
-    rcu_gp_kthread+0x208/0x298
-    kthread+0x10c/0x110
-    ret_from_fork+0x10/0x20
+> In what way exactly is it vulnerable?
+strcpy is a deprecated interface (reference: https://github.com/KSPP/linux/issues/88). It should be removed from kernel source.
+It is reported as vulnerable in Enabling Linux in Safety Critical Applications (ELISA) builder.
 
-The design have been part of the driver since it was first merged in
-early 2009. It becomes increasingly harder to trigger the issue the
-older kernel version one tries. It only takes a few boots on v6.10-rc5,
-while hundreds of boots are needed to trigger it on v5.10.
+> Why is a runtime check needed here if all of the sizes in question are known at compile time?
+Runtime check has been replaced with compile time check.
 
-Close the race condition by using the CMT channel lock for the two
-competing sections. The channel lock was added to the driver after its
-initial design.
-
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
-Hello,
+v1 -> v2: Commit message has been updated and runtime check is replace with compile time check.
 
-I only have access to R-Car based SoCs and that is what I have tested
-this change on. I have not been able to test on any SH platforms which
-also uses this driver.
----
- drivers/clocksource/sh_cmt.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/acpi/acpi_video.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
-index 26919556ef5f..b72b36e0abed 100644
---- a/drivers/clocksource/sh_cmt.c
-+++ b/drivers/clocksource/sh_cmt.c
-@@ -528,6 +528,7 @@ static void sh_cmt_set_next(struct sh_cmt_channel *ch, unsigned long delta)
- static irqreturn_t sh_cmt_interrupt(int irq, void *dev_id)
- {
- 	struct sh_cmt_channel *ch = dev_id;
-+	unsigned long flags;
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index 1fda30388297..be8346a66374 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -1128,8 +1128,8 @@ static int acpi_video_bus_get_one_device(struct acpi_device *device, void *arg)
+ 		return -ENOMEM;
+ 	}
  
- 	/* clear flags */
- 	sh_cmt_write_cmcsr(ch, sh_cmt_read_cmcsr(ch) &
-@@ -558,6 +559,8 @@ static irqreturn_t sh_cmt_interrupt(int irq, void *dev_id)
+-	strcpy(acpi_device_name(device), ACPI_VIDEO_DEVICE_NAME);
+-	strcpy(acpi_device_class(device), ACPI_VIDEO_CLASS);
++	strscpy(acpi_device_name(device), ACPI_VIDEO_DEVICE_NAME, sizeof(ACPI_VIDEO_DEVICE_NAME));
++	strscpy(acpi_device_class(device), ACPI_VIDEO_CLASS, sizeof(ACPI_VIDEO_CLASS));
  
- 	ch->flags &= ~FLAG_SKIPEVENT;
+ 	data->device_id = device_id;
+ 	data->video = video;
+@@ -2010,8 +2010,8 @@ static int acpi_video_bus_add(struct acpi_device *device)
+ 	}
  
-+	raw_spin_lock_irqsave(&ch->lock, flags);
-+
- 	if (ch->flags & FLAG_REPROGRAM) {
- 		ch->flags &= ~FLAG_REPROGRAM;
- 		sh_cmt_clock_event_program_verify(ch, 1);
-@@ -570,6 +573,8 @@ static irqreturn_t sh_cmt_interrupt(int irq, void *dev_id)
+ 	video->device = device;
+-	strcpy(acpi_device_name(device), ACPI_VIDEO_BUS_NAME);
+-	strcpy(acpi_device_class(device), ACPI_VIDEO_CLASS);
++	strscpy(acpi_device_name(device), ACPI_VIDEO_BUS_NAME, sizeof(ACPI_VIDEO_BUS_NAME));
++	strscpy(acpi_device_class(device), ACPI_VIDEO_CLASS, sizeof(ACPI_VIDEO_CLASS));
+ 	device->driver_data = video;
  
- 	ch->flags &= ~FLAG_IRQCONTEXT;
- 
-+	raw_spin_unlock_irqrestore(&ch->lock, flags);
-+
- 	return IRQ_HANDLED;
- }
- 
-@@ -780,12 +785,18 @@ static int sh_cmt_clock_event_next(unsigned long delta,
- 				   struct clock_event_device *ced)
- {
- 	struct sh_cmt_channel *ch = ced_to_sh_cmt(ced);
-+	unsigned long flags;
- 
- 	BUG_ON(!clockevent_state_oneshot(ced));
-+
-+	raw_spin_lock_irqsave(&ch->lock, flags);
-+
- 	if (likely(ch->flags & FLAG_IRQCONTEXT))
- 		ch->next_match_value = delta - 1;
- 	else
--		sh_cmt_set_next(ch, delta - 1);
-+		__sh_cmt_set_next(ch, delta - 1);
-+
-+	raw_spin_unlock_irqrestore(&ch->lock, flags);
- 
- 	return 0;
- }
+ 	acpi_video_bus_find_cap(video);
 -- 
-2.45.2
+2.34.1
 
