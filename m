@@ -1,126 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D229419EED5
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE5B26AEC;
+	Tue,  2 Jul 2024 13:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719926954; cv=none; b=rQjV4V0fnxCatDOtMbvtE9yreB7AekGLwjY0iijibO+65EzTkEagnSYWyQ81G6HVvZqVN+m+bvWtTr998hmB0hfjObPr+F4+TrhDnmeZhVoBvXAQa0iB1iex0U1qQuOSrQA9PrUG/r6Lxfnqkmjf++1Jc5emgLAnqSbyt3TsA0Y=
+	t=1719927017; cv=none; b=B3RKGI/JaMEopF/p7TSbteEb0mHLSCklRoo9hANYaIYfMo+CF07J4UM5DuVGjIO1NryJ0VnLibpMhSU+9dPmXbvX+CX2R8P2IbTlAqSA3+U8WrLJzgEetiG4iXuKBjlBODkIKynUOUvHilXDEsoNRFWYd7h/EW5W3Nn3gcYexyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719926954; c=relaxed/simple;
-	bh=Md4OIEI8Xk4k+u3H0ICjhfnaCqEai/wBrcFngDWAWZg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n0//RL2CvLsf4SXoaoM62+hbVmT6Pyf66W236Wx8hKdvOoHhJP+90zhoGuomyciTyOGFh2yvEVVofctog+CBqpjW92pjGjAjoywGkLQ35lREpY2VnCVIWSv8qI30RaOcYggtIU06kV17JOrvNVP2CXHJbNGGFgLWxIJdn/V65ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hqt3CBra; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719927017; c=relaxed/simple;
+	bh=8RJtG0gGC00rT2GsXuQEaindF1W2r+IuO/BdBiyjJLM=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=hKeiMOewYVbx9vckV9r4ar9H5tHjovThhuTuzIiwYQm0Pl3a3lhba8If22gl2/HfBAcaFTS6t2QCWQf3laU52RGB+M2rLye9XFVdy0/aicXdVZfpXUUZdc7mhBlL5EPfGjpn9sKCZ6J6Pdci2YCK52hiOu2Pvnn2kLhwr92jcLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBZ6E/Hb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hqt3CBra"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719926952;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=giGzfHbFvw5ELOoh3gsT5u4QyGdGlB0ujxo9yyHMwqU=;
-	b=hqt3CBraueW6fXv5G6WfvDsvcF/EkHCopaEs7c+5+EupvJKHbKbqqZwrWH+7iwkt9yRjAC
-	Gj+ZmuYfLyoC/S4QY7kGxJLkIQrpgJI8gCZiZwyU5bJX6UbzB7Wy4yLgRVdYFdd9i1J47M
-	F1K1OqHL/ZZCgxcSYgVI1zUL/+pHvHI=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-567-THrynPfCOsqyX_eyscvuzw-1; Tue,
- 02 Jul 2024 09:29:08 -0400
-X-MC-Unique: THrynPfCOsqyX_eyscvuzw-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 981261944DEC;
-	Tue,  2 Jul 2024 13:29:06 +0000 (UTC)
-Received: from RHTRH0061144.bos.redhat.com (dhcp-17-72.bos.redhat.com [10.18.17.72])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6737019815C1;
-	Tue,  2 Jul 2024 13:28:49 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: netdev@vger.kernel.org
-Cc: dev@openvswitch.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pravin B Shelar <pshelar@ovn.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	=?UTF-8?q?Adri=C3=A1n=20Moreno?= <amorenoz@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next 3/3] selftests: openvswitch: Be more verbose with selftest debugging.
-Date: Tue,  2 Jul 2024 09:28:30 -0400
-Message-ID: <20240702132830.213384-4-aconole@redhat.com>
-In-Reply-To: <20240702132830.213384-1-aconole@redhat.com>
-References: <20240702132830.213384-1-aconole@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBZ6E/Hb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23B8CC4AF07;
+	Tue,  2 Jul 2024 13:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719927017;
+	bh=8RJtG0gGC00rT2GsXuQEaindF1W2r+IuO/BdBiyjJLM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=BBZ6E/HbkuhYaAn15zmd4Nk0PEd9guaspQwFVcD0y6e80jVg/7PGdlUIVTD5PVn3k
+	 NsPx7S9Szi1KiWBb73d4X17sSicGlTJrbJcJsBN3X6cDIZPzmJzp62FJuvN8zLsJBe
+	 Hh+zOGX6O7abgbci9xYpqh3fBnCUdw4W0S1LVHdMZuQ5ckD/TLMcDm3qFus0R/DkLk
+	 yYiJDpxEGqXsUCXBDddiayVBjuIbuZlOsDUy53i7Uc+UWRp2YydUwvASFOadEtiwO/
+	 1us5/GPrfCaWreY3ar8CL+Wj25deHBGbYcweqdZJp8SeE89PG2PMgQbnygxZ/RZXEe
+	 K6Q1ba13n7p5w==
+Date: Tue, 02 Jul 2024 07:30:16 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+Cc: devicetree@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-iio@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@outlook.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Chen Wang <unicorn_wang@outlook.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ =?utf-8?q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Jonathan Cameron <jic23@kernel.org>
+In-Reply-To: <20240702-sg2002-adc-v1-1-ac66e076a756@bootlin.com>
+References: <20240702-sg2002-adc-v1-0-ac66e076a756@bootlin.com>
+ <20240702-sg2002-adc-v1-1-ac66e076a756@bootlin.com>
+Message-Id: <171992701607.3218867.8675024539411863214.robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: sophgo,cv18xx-saradc.yaml:
+ Add Sophgo SARADC binding documentation
 
-The openvswitch selftest is difficult to debug for anyone that isn't
-directly familiar with the openvswitch module and the specifics of the
-test cases.  Many times when something fails, the debug log will be
-sparsely populated and it takes some time to understand where a failure
-occured.
 
-Increase the amount of details logged to the debug log by trapping all
-'info' logs, and all 'ovs_sbx' commands.
+On Tue, 02 Jul 2024 13:52:21 +0200, Thomas Bonnefille wrote:
+> The Sophgo SARADC is a Successive Approximation ADC that can be found in
+> the Sophgo SoC.
+> 
+> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+> ---
+>  .../bindings/iio/adc/sophgo,cv18xx-saradc.yaml     | 51 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  5 +++
+>  2 files changed, 56 insertions(+)
+> 
 
-Signed-off-by: Aaron Conole <aconole@redhat.com>
----
-NOTE: There is a conflict here with a patch on list that adds psample
-      support, but it should be simple to resolve, since the conflict
-      would be due to a context change in tests="".  I can also respin
-      if the patches collide.
+My bot found errors running 'make dt_binding_check' on your patch:
 
- tools/testing/selftests/net/openvswitch/openvswitch.sh | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+yamllint warnings/errors:
 
-diff --git a/tools/testing/selftests/net/openvswitch/openvswitch.sh b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-index 0bd0425848d9..531951086d9c 100755
---- a/tools/testing/selftests/net/openvswitch/openvswitch.sh
-+++ b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-@@ -23,7 +23,9 @@ tests="
- 	drop_reason				drop: test drop reasons are emitted"
- 
- info() {
--    [ $VERBOSE = 0 ] || echo $*
-+	[ "${ovs_dir}" != "" ] &&
-+		echo "`date +"[%m-%d %H:%M:%S]"` $*" >> ${ovs_dir}/debug.log
-+	[ $VERBOSE = 0 ] || echo $*
- }
- 
- ovs_base=`pwd`
-@@ -65,7 +67,8 @@ ovs_setenv() {
- 
- ovs_sbx() {
- 	if test "X$2" != X; then
--		(ovs_setenv $1; shift; "$@" >> ${ovs_dir}/debug.log)
-+		(ovs_setenv $1; shift;
-+		 info "run cmd: $@"; "$@" >> ${ovs_dir}/debug.log)
- 	else
- 		ovs_setenv $1
- 	fi
-@@ -139,7 +142,7 @@ ovs_add_flow () {
- 	info "Adding flow to DP: sbx:$1 br:$2 flow:$3 act:$4"
- 	ovs_sbx "$1" python3 $ovs_base/ovs-dpctl.py add-flow "$2" "$3" "$4"
- 	if [ $? -ne 0 ]; then
--		echo "Flow [ $3 : $4 ] failed" >> ${ovs_dir}/debug.log
-+		info "Flow [ $3 : $4 ] failed"
- 		return 1
- 	fi
- 	return 0
--- 
-2.45.1
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml: 'oneOf' conditional failed, one must be fixed:
+	'unevaluatedProperties' is a required property
+	'additionalProperties' is a required property
+	hint: Either unevaluatedProperties or additionalProperties must be present
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml: $id: Cannot determine base path from $id, relative path/filename doesn't match actual path or filename
+ 	 $id: http://devicetree.org/schemas/iio/adc/sophgo,cv18xx-adc.yaml
+ 	file: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml
+Error: Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.example.dts:24.11-12 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.lib:427: Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1430: dt_binding_check] Error 2
+make: *** [Makefile:240: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240702-sg2002-adc-v1-1-ac66e076a756@bootlin.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
