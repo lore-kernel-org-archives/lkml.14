@@ -1,226 +1,160 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15E5815748C
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74FC12F392
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719914623; cv=none; b=dfVjjk28RvR0c4nWIZ++9/R8ehSYVNovi1GRJhbM+3ooxAwOLYE0akxGEg1qI1AmuqLz2DPcbeVYa/cTpynqxj7h8Qxu1+/k8P7NStYUqL/XNGYazG6x4+t2j2MZMZ4O5TKHk/otCQMglUsqYDIEcBbW1sMADwvjNZyhLncfG1E=
+	t=1719914642; cv=none; b=Hi2kbDkx+f1i/uHUvUPVbnWl7qjyQmTFPBKwdNZFAObob7hRGsYPGrAj+DoKwHc8m2S6cQB9ahi6bMbmqqdpCcTH8duoWOgOblkxF63TjhVJuYrB+p9a8/A2dwgktg5+9FHjDuPp7mSNT1Z70RVXaoCpzWLMtYOHhN+97opFyqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719914623; c=relaxed/simple;
-	bh=vz4aY8OF6owaFzq4OL1FRnnjBZrBEhnHlzs1u7Hj6EU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CV7jbh0kkg44+lcoi7cXm0+vN7Pu9GDj0kcs8vv6fpfr7HYkuE2ivk/OXh9rcMZgx9JuDFv8wJV0VcWCueMAE5tTr6RccQH59O5x4Qel9PSEmuYBgacqsig8hF32DN3W0G7w9JCy9yGqwCcSqM+QOdXi1GeXdsPLR4tPn5OzK1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EiLHhZOF; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719914642; c=relaxed/simple;
+	bh=w0BsET4XO2EbD/Q55BNLIPKw+27X4/d1LTf3mFB9I8E=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=TVguYnaupjIytBLcKDYzur5ZHNZHS5gZ22rI8XSuVkZMa0cqdRofQoiL1wlqx3iiGsQbk7tt08XEujLLRpl2yH72EGa9XIFhLyErzuBJa8GR5seO3D5xbwF1Idhc+5gXLjXSkzOZKBdTe4lZp8sxPDkRpSHvY1Y2owMJQ4/NPLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ex9r250k; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vhc5Rfl9; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EiLHhZOF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:Reply-To:MIME-Version;
-	bh=8FbDO25MgR0OBg4ghDSk/qfsedlmdOP5SL6u05bo5P8=; b=EiLHhZOFu7tJS
-	aZFRQ4lXR+37PglfQm4Z8c0jf2Rnsf91yj97XoQruB8TZMhmmqA7DucuvJ6KYYy9
-	D5xd7TlzeWXMMA3DtFgTP/7Wtt4wJ7U8Kvd7LKcyfj/pjeLGofZrqoKih7V6pBg5
-	ryDYrO9JlX83IUqU9mX7zx7Karllpc=
-Received: from localhost.localdomain (unknown [183.192.130.164])
-	by gzga-smtp-mta-g1-2 (Coremail) with SMTP id _____wD3_2Vb0INmpmSMBQ--.35615S2;
-	Tue, 02 Jul 2024 18:03:08 +0800 (CST)
-From: Ping Gan <jacky_gam_2001@163.com>
-To: sagi@grimberg.me,
-	hch@lst.de,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: ping.gan@dell.com
-Subject: Re: [PATCH 0/2] nvmet: support polling task for RDMA and TCP 
-Date: Tue,  2 Jul 2024 18:02:14 +0800
-Message-Id: <20240702100215.2265-1-jacky_gam_2001@163.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <f9828eb4-39be-498b-8b90-2cb7ce42d3c7@grimberg.me>
-References: <f9828eb4-39be-498b-8b90-2cb7ce42d3c7@grimberg.me>
-Reply-To: sagi@grimberg.me
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ex9r250k";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vhc5Rfl9"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.nyi.internal (Postfix) with ESMTP id A041A138019C;
+	Tue,  2 Jul 2024 06:03:59 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Tue, 02 Jul 2024 06:03:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1719914639;
+	 x=1720001039; bh=w0BsET4XO2EbD/Q55BNLIPKw+27X4/d1LTf3mFB9I8E=; b=
+	ex9r250kwDRCDdvJ3HMp6mKSzdvEg5JRtpeVZA2XzMlbG3yqWcG/6ODWxLzpCLqI
+	o0isffMgdjne1jrmpJ9oKZJV6OT0rwMbj84madVhsFLCTkejrobrxegicEtI9nwM
+	aUnB06KhUcwWYuPlH4cQbW6tRETdb4iOkjV+WItHekDeNWIMoIVkFBGrbftBCxyD
+	VFa7tdAN8YZpTRNLxzr1XODKHfnL5niZqXwpUeCstaWqJnAHlASmouaU0h+9d4/H
+	Wf4GroXcCmlsNRMKWBZfV1RBA1A8zW6kQ+OLFP2AQfcHOpUoLgWg/WacUix4m2GB
+	ygbeHtmIQtxXFv0IRkr/AA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1719914639; x=
+	1720001039; bh=w0BsET4XO2EbD/Q55BNLIPKw+27X4/d1LTf3mFB9I8E=; b=v
+	hc5Rfl9tST/T0gL6boDn7oupli4x0OqFxRJIAYjPw1feUyeSqNJvFGvL1LR06qOK
+	2eNm+o6kApn43P4QWuZefgL9Qq+e6EGT+nrfwFkUEc8rUY/rEJmsO2qdPh6EdTgB
+	jFs72uO7PaRx33XNdRLzEuMDtOMTcmnjjfcHUZ3b+biXV1cRRan1DrmVtcFX7axn
+	yvVsXVh2YSbq3U3k5rH7qi7+e0CC/RFTgS4DzDA82vkjJG4sGQgRPVEgnFU97Nm2
+	LnuLsBxGONXXv1aC9VexlfXDNYiOzsDjU6F38XkJZh2UfIPJpAiktGBypUNYdAhD
+	JSS6zzo7hCqLD99R47P2A==
+X-ME-Sender: <xms:jtCDZiY8s8YICgZZhhqRfoPfIgV8TwXUYuX-1gMqG5q-49kv_jCXCw>
+    <xme:jtCDZlbcWFHp4jyhOjcyRiwqdz8zG9ccl3xTTXvDlYkrA1Go-IdeHIvjJZoed9-4X
+    j63YKFLKnO5aPLc4Iw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudehgddvudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
+    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:jtCDZs9scyNdgoMJEeDSDiXIG3hZhYVLfNA-1rtViUjGfsxOXm4PlQ>
+    <xmx:jtCDZkq6nuFn4Qk8x_UPWtANu4mBTzCh7DDJPkSs_rcfqj0-hLNvXg>
+    <xmx:jtCDZtqRb9DaJ6zJ-zLfZl-KXmk42-IcIw9Ucf4SNtVs-ZF4V7f32g>
+    <xmx:jtCDZiSSaf6gDsDY1jgXLMkXM-0YK_tqtoWJNrvnP3B-KK7hxuntog>
+    <xmx:j9CDZo0BX82S6ioGFEzkgZG-EdLY40OahBqdbw_0G4uDY7ftjoWnnkM2>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id B2A5536A0074; Tue,  2 Jul 2024 06:03:58 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3_2Vb0INmpmSMBQ--.35615S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3AF17uFWfCFW5Zr4DXF4xWFg_yoWxGFy7pF
-	WftFW5KrsrKrWUCw1IvanruFy09wn3J3y5Jr1fJry7Cw1Y93sxAryxKr15WFyDCr1kKw1a
-	qFyDX3sxuF1qyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UI2N_UUUUU=
-X-CM-SenderInfo: 5mdfy55bjdzsisqqiqqrwthudrp/1tbiEB0QKWXAluk-igAAsb
+Message-Id: <fd1d0a97-7075-4936-b58b-e99bab9afc58@app.fastmail.com>
+In-Reply-To: <ae7085fd-3bca-4a4a-b465-5e4941011877@amd.com>
+References: <20240629052247.2653363-1-uwu@icenowy.me>
+ <20240629052247.2653363-3-uwu@icenowy.me>
+ <a143a2c3-c6f0-4537-acc6-94f229f14639@app.fastmail.com>
+ <2760BA02-8FF8-4B29-BFE2-1322B5BFB6EC@icenowy.me>
+ <7e30177b-ff13-4fed-aa51-47a9cbd5d572@amd.com>
+ <6303afecce2dff9e7d30f67e0a74205256e0a524.camel@icenowy.me>
+ <ff1bf596-83cb-4b3e-a33a-621ac2c8171c@amd.com>
+ <b9189c97f7efbaa895198113ee5b47012bd8b4dc.camel@icenowy.me>
+ <ae7085fd-3bca-4a4a-b465-5e4941011877@amd.com>
+Date: Tue, 02 Jul 2024 18:03:37 +0800
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Icenowy Zheng" <uwu@icenowy.me>, "Huang Rui" <ray.huang@amd.com>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+ "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "David Airlie" <airlied@gmail.com>, "Daniel Vetter" <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] drm/ttm: downgrade cached to write_combined when snooping
+ not available
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
->On 01/07/2024 10:42, Ping Gan wrote:
->>> Hey Ping Gan,
->>>
->>>
->>> On 26/06/2024 11:28, Ping Gan wrote:
->>>> When running nvmf on SMP platform, current nvme target's RDMA and
->>>> TCP use kworker to handle IO. But if there is other high workload
->>>> in the system(eg: on kubernetes), the competition between the
->>>> kworker and other workload is very radical. And since the kworker
->>>> is scheduled by OS randomly, it's difficult to control OS resource
->>>> and also tune the performance. If target support to use delicated
->>>> polling task to handle IO, it's useful to control OS resource and
->>>> gain good performance. So it makes sense to add polling task in
->>>> rdma-rdma and rdma-tcp modules.
->>> This is NOT the way to go here.
->>>
->>> Both rdma and tcp are driven from workqueue context, which are bound
->>> workqueues.
->>>
->>> So there are two ways to go here:
->>> 1. Add generic port cpuset and use that to direct traffic to the
->>> appropriate set of cores
->>> (i.e. select an appropriate comp_vector for rdma and add an
->>> appropriate
->>> steering rule
->>> for tcp).
->>> 2. Add options to rdma/tcp to use UNBOUND workqueues, and allow
->>> users
->>> to
->>> control
->>> these UNBOUND workqueues cpumask via sysfs.
->>>
->>> (2) will not control interrupts to steer to other workloads cpus,
->>> but
->>> the handlers may
->>> run on a set of dedicated cpus.
->>>
->>> (1) is a better solution, but harder to implement.
->>>
->>> You also should look into nvmet-fc as well (and nvmet-loop for that
->>> matter).
->> hi Sagi Grimberg,
->> Thanks for your reply, actually we had tried the first advice you
->> suggested, but we found the performance was poor when using spdk
->> as initiator.
+
+
+=E5=9C=A82024=E5=B9=B47=E6=9C=882=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
+=8D=885:27=EF=BC=8CChristian K=C3=B6nig=E5=86=99=E9=81=93=EF=BC=9A
+> Am 02.07.24 um 11:06 schrieb Icenowy Zheng:
+>> [SNIP] However I don't think the definition of the AGP spec could app=
+ly on all
+>> PCI(e) implementations. The AGP spec itself don't apply on
+>> implementations that do not implement AGP (which is the most PCI(e)
+>> implementations today), and it's not in the reference list of the PCIe
+>> spec, so it does no help on this context.=20
+> No, exactly that is not correct.
 >
->I suggest that you focus on that instead of what you proposed.
->What is the source of your poor performance?
-Before these patches, we had used linux's RPS to forward the packets
-to a fixed cpu set for nvmet-tcp. But when did that we can still not 
-cancel the competition between softirq and workqueue since nvme target's
-kworker cpu core bind on socket's cpu which is from skb. Besides that
-we found workqueue's wait latency was very high even we enabled polling
-on nvmet-tcp by module parameter idle_poll_period_usecs. So when
-initiator
-is polling mode, the target of workqueue is the bottleneck. Below is 
-work's wait latency trace log of our test on our cluster(per node uses 
-4 numas 96 cores, 192G memory, one dual ports mellanox CX4LX(25Gbps X 2)
-ethernet adapter and randrw 1M IO size) by RPS to 6 cpu cores. And
-system's CPU and memory were used about 80%.
-ogden-brown:~ #/usr/share/bcc/tools/wqlat -T -w nvmet_tcp_wq 1 2
-01:06:59
-     usecs               : count     distribution
-         0 -> 1          : 0        |                              |
-         2 -> 3          : 0        |                              |
-         4 -> 7          : 0        |                              |
-         8 -> 15         : 3        |                              |
-        16 -> 31         : 10       |                              |
-        32 -> 63         : 3        |                              |
-        64 -> 127        : 2        |                              |
-       128 -> 255        : 0        |                              |
-       256 -> 511        : 5        |                              |
-       512 -> 1023       : 12       |                              |
-      1024 -> 2047       : 26       |*                             |
-      2048 -> 4095       : 34       |*                             |
-      4096 -> 8191       : 350      |************                  |
-      8192 -> 16383      : 625      |******************************|
-     16384 -> 32767      : 244      |*********                     |
-     32768 -> 65535      : 39       |*                             |
-
-01:07:00
-     usecs               : count     distribution
-         0 -> 1          : 1        |                              |
-         2 -> 3          : 0        |                              |
-         4 -> 7          : 4        |                              |
-         8 -> 15         : 3        |                              |
-        16 -> 31         : 8        |                              |
-        32 -> 63         : 10       |                              |
-        64 -> 127        : 3        |                              |
-       128 -> 255        : 6        |                              |
-       256 -> 511        : 8        |                              |
-       512 -> 1023       : 20       |*                             |
-      1024 -> 2047       : 19       |*                             |
-      2048 -> 4095       : 57       |**                            |
-      4096 -> 8191       : 325      |****************              |
-      8192 -> 16383      : 647      |******************************|
-     16384 -> 32767      : 228      |***********                   |
-     32768 -> 65535      : 43       |**                            |
-     65536 -> 131071     : 1        |                              |
-
-And the bandwidth of a node is only 3100MB. While we used the patch
-and enable 6 polling task, the bandwidth can be 4000MB. It's a good 
-improvement.
-
->>   You know this patch is not only resolving OS resource
->> competition issue, but also the perf issue. We have analyzed if we
->> still use workqueue(kworker) as target when initiator is polling
->> driver(eg: spdk), then workqueue/kworker target is the bottleneck
->> since every nvmf request may have a wait latency from queuing on
->> workqueue to begin processing,
+> See as I explained the No-Snoop extension to PCIe was created to help=20
+> with AGP support and later merged into the base PCIe specification.
 >
->That is incorrect, the work context polls the cq until it either drains
->it
->completely, or exhaust a quota of IB_POLL_BUDGET_WORKQUEUE (or
->NVMET_TCP_IO_WORK_BUDGET). Not every command gets its own workqueue
->queuing delay.
+> So the AGP spec is now part of the PCIe spec.
+
+We don't really buy this theory.
+
+Keyword "AGP" doesn't appear in "PCI Express Base 4.0 Base Specification=
+" even
+once.
+
+If PCIe is a predecessor of AGP, where does AGP specific software interf=
+ace like
+ AGP aperture goes? PCIe GPUs are only borrowing software concepts from =
+AGP,
+but they didn't inherit any hardware properties.
+
+[...]
+> We seem to have a misunderstanding here, this is not a software issue.=20
+> The hardware platform is considered broken by the hardware vendor!
+
+It's up to the specification text to define compliance means. So far as =
+per analysis
+from Icenowy of PCIe specification text itself it's not prohibited.
+
 >
->And, what does the spdk initiator has to do with it? Didn't
->understand...
-Yes, target workqueue implementation will poll a quota; but when the
-work
-load was high we found many work will wait too long(some of them at
-several
-ms to hundred ms shown above histogram). We use the spdk initiator(by 
-polling mode) to send IO's read/write to nvme disks of a kubernetes 
-cluster's remote node.
-
->>   and the latency can be traced by wqlat
->> of bcc (https://github.com/iovisor/bcc/blob/master/tools/wqlat.py).
->> We think the latency is a disaster for the polling driver data plane,
->> right?
+> In other words people have stitched together hardware in a way which i=
+s=20
+> not supported by the creator of that hardware.
 >
->If you need a target that polls all the time, you should probably
->resort 
->to spdk.
->If there is room for optimization in nvmet we'll gladly take it, but 
->this is not the
->way to go IMO.
-Yes, in the begining we did use the spdk as polling target driver,
-but we suffered from spdk target could not support disk hot plug/unplug
-well, sometimes it will cause data loss when did disk hot plug/unplug.
-So we switch to kernel target driver because in production customer's
-data security is first priority. And for kernel's target it has no
-polling mode target driver, so we implemented these patches.
+> So as long as you can't convince anybody from ARM or the RISC-V team o=
+r=20
+> whoever created that hardware to confirm that the hardware actually=20
+> works you won't get any support for that.
 
->> So we think adding a polling task mode on nvmet side to handle
->> IO does really make sense; what's your opinion about this?
+Well we are trying to support them on our own in mainline, we are not as=
+king
+for any support.
+
+Thanks
+- Jiaxun
 >
->I personally think that adding a polling kthread is questionable.
->However there is a precedent, io_uring sqthreads. So please look
->into what is done there. I don't mind having something like 
->IB_POLL_IOTASK (or
->io_task threads in nvmet-tcp) if its done correctly (leverages common
->code).
-Yes, we have studied io_uring's code before implementing the patches.
-Actually we followed io_uring's design idea in these patches.
+> Regards,
+> Christian.
 
->>   And you
->> mentioned we should also look into nvmet-fc, I agree with you.
->> However currently we have no nvmf-fc's testbed; if we get the
->> testbed,
->> will do that.
->
->There is fcloop, you should use that to test, same for loop. We don't
->want
->the transports to diverge in functionality.
-Ok, I will try, would you please give me some configuration guide for
-fcloop since I never used fcloop before.
-
-Thanks,
-Ping
-
-
+--=20
+- Jiaxun
