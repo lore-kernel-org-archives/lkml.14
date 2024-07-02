@@ -1,133 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CA34CE09;
-	Tue,  2 Jul 2024 08:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE69514884C;
+	Tue,  2 Jul 2024 08:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719908345; cv=none; b=F+BFhV9jYysM7bQPhfG4e0+LHk4y/yLkhtGzmdBr4fi+6NngV8N5UXy8W7S5xekrT//JuC1jvtobbG1rgD1gcrpEE2m/Dlu2R+wEmHvY2m00+pqIf1dalz6NDz5dKusn8hWaq9RPltjm/hbNmATkr4JzNjU0nOLQyjDX8KtFu2c=
+	t=1719908371; cv=none; b=sxIcHw9u6yf0VtR8tYDHqsZ/PVYoo/KoF4qysQFwoAFBEY/KyqF+nynLcDMIWIPUgQ324ItMCJy1nYbSNrDOfuAnwoZaEapzK7/gjs5+PcbRlmiRtBMu/aF1WNUaNr9ag7mspaIhLQVF7sv8W5l/QxoAicFBbt8Pwp15eExf8n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719908345; c=relaxed/simple;
-	bh=RzpV9qaqwHuuRQM83MwVSglsal7/lXC+YUdHRHr7VCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t66Vxtd7PUawZ3NLgVO237CcHPVJhUm2HjZT+Lw0kfTA7Pd1fCpl3dtNkXpBG+C4Hf58uielh8bWxnUU7HMLwN5yvJhlQta9RmTtYdeUMFJm4ZG/Dr7vPK6Qrie4ijfWawBWX6wHjqIumd0vnjghx4OZPBufATIrn2PgI36JuO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dr+92Fuq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719908371; c=relaxed/simple;
+	bh=q5MZcYXTG4Pd0D+0SZGew/DTm9RJ1zf3Kssculi3i88=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I7zG+gilwc4tCdzaaNp8ERRR3uqPWjlJ3XCTtNKduPxfrfCP5+WkjMLxQHExdmH3qyjOvp2cf+tFa3yvxcamdJ1VLeFO4ovpWuYC6yNSMCJU5X9YjkdBKKyfyYEhXngi05MKo+G8qBo2n5s3ueCgiVqzd/plFZpafo9vNfA2i9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=MdN91Y4X; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dr+92Fuq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F36BDC116B1;
-	Tue,  2 Jul 2024 08:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719908345;
-	bh=RzpV9qaqwHuuRQM83MwVSglsal7/lXC+YUdHRHr7VCg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Dr+92FuqyBWgmLDCTMhNKDE4mVBP3sxUMgWdTHf5EAFHFEXg6h2fWzOPSiX7Av672
-	 oy4Ru7izPNmn0sf80fElznKEu8AANKnKqxUGCP3VRIUIbRGWqkVD8VKIp/lyqgrIU7
-	 inrjpcnRBk6lhXYYrWjl48evnPTT5eYV2hq6oKiorT5AN8x8aqV9ER/NLAsIG1gIR8
-	 IkFFtNdSs2/i2QS9dgY6QINBl7T5ERtga0VEUP8lExARHjC27lPfM1KWEr/Sl4Vev9
-	 GAA1f4YBAnpH1TKPYw/Mwnusmn+KOCKp9+H9dubH/cA5d2Ogd5t9AUjPEYtioZSona
-	 FgtjFNShd7hvQ==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ee4ab4076bso42314621fa.0;
-        Tue, 02 Jul 2024 01:19:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVYEf1mjHb7GAXb2CBzHxUcBmoDpuh62kpTWV2WyoYGFh2qbdcjSOpOVAdX5F3fQz79zPktEZ/k8COzNuMDAJ6gbQ+wl9lUHj91tmiO
-X-Gm-Message-State: AOJu0YxwJx6BYi5L6ptFmUhWfUbQIJ2pHLiGB5lPXnNnJNSTfJulJnYF
-	nrJ1D48rVOK+vltY7Xd4H6xxxxRAbFnS9nO3R/kuOina2huXwSDUTbBdu/qvbXZm0Nk6EcVAKEW
-	DreUoar4i/wb3mRuWy8zBfyGlI00=
-X-Google-Smtp-Source: AGHT+IGZCLZCDiHqujnjOIEhR/fmNiQYGVdcu639B4lScKs5vNFq96qBK+DiO/OkuH+QAaTO+BYj6d5ODyaB+Cf+PRI=
-X-Received: by 2002:a05:6512:3d0e:b0:52b:aae0:2d41 with SMTP id
- 2adb3069b0e04-52e825d7156mr2718388e87.28.1719908343630; Tue, 02 Jul 2024
- 01:19:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="MdN91Y4X"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4627I45A022022;
+	Tue, 2 Jul 2024 04:19:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=za7IYtfl6n1xtDLxO19ry0fEsMv
+	qhvDostuZGHAhhds=; b=MdN91Y4XU9DV4NCeL1piqtwgN0Vi1597WhV5WT9Cgvd
+	HdD/KoNFvRG7aT+/QE0Nae7aFEuJ6kI/itckdFzPbJhrcR7XWuTGQIRTlgWNShfG
+	MP1aAN5q0fC2B1a6diAQxN23uHZxxpH0WT6J+DbwQh7mJm2UfrrRt/OG6nEF+g1T
+	oeRKdtI3MO6ipT2a7Yr1REJASOig/6MQQrVXkQrwJXxYbCx/bjAgTBC0qCu/zEwG
+	uDXCeDcA4N++4KpoDspVVb0dtrJ1P95vlwx0qv+ZrbLylabFVZ0T9dGMhWtuRxt5
+	a4ARyzLd+SBEqTKcV/xqT9f40HOnCtnQaUPu0X7Tb9g==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 402f639upr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jul 2024 04:19:07 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 4628J6hS003280
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 2 Jul 2024 04:19:06 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 2 Jul 2024 04:19:05 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 2 Jul 2024 04:19:05 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 2 Jul 2024 04:19:05 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.159])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4628Isft025612;
+	Tue, 2 Jul 2024 04:18:57 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Antoniu Miclaus <antoniu.miclaus@analog.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ABI: testing: fix admv8818 attr description
+Date: Tue, 2 Jul 2024 11:18:50 +0300
+Message-ID: <20240702081851.4663-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2c8833e1-1995-4f49-804a-705ab9e702a5@gmail.com>
-In-Reply-To: <2c8833e1-1995-4f49-804a-705ab9e702a5@gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 2 Jul 2024 17:18:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASH6mS3X_YhkVV9z5ZVXdew_nGpJxaakaE1moZckETM7A@mail.gmail.com>
-Message-ID: <CAK7LNASH6mS3X_YhkVV9z5ZVXdew_nGpJxaakaE1moZckETM7A@mail.gmail.com>
-Subject: Re: [PROBLEM linux-next] Segfault while building headers with dpkg-deb
-To: Mirsad Todorovac <mtodorovac69@gmail.com>
-Cc: Linux Kernel Build System <linux-kbuild@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: kDzv8nf4JqwuyL_bH0-b3w1ubChJY5Gn
+X-Proofpoint-ORIG-GUID: kDzv8nf4JqwuyL_bH0-b3w1ubChJY5Gn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-02_04,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=956
+ adultscore=0 suspectscore=0 impostorscore=0 priorityscore=1501
+ malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407020062
 
-On Sat, Jun 29, 2024 at 3:59=E2=80=AFAM Mirsad Todorovac <mtodorovac69@gmai=
-l.com> wrote:
->
-> Hi all,
->
-> On the vanilla linux-next tree, branch next-20240627, there happens to be=
- a bug while building
-> with the randconfig seed KCONFIG_SEED=3D0x90E8E591:
->
->   .
->   .
->   .
->   XZ      debian/linux-image-6.10.0-rc5-next-20240627-dirty/lib/modules/6=
-.10.0-rc5-next-20240627-dirty/kernel/samples/trace_events/trace-events-samp=
-le.ko.xz
->   XZ      debian/linux-image-6.10.0-rc5-next-20240627-dirty/lib/modules/6=
-.10.0-rc5-next-20240627-dirty/kernel/samples/trace_events/trace_custom_sche=
-d.ko.xz
->   XZ      debian/linux-image-6.10.0-rc5-next-20240627-dirty/lib/modules/6=
-.10.0-rc5-next-20240627-dirty/kernel/samples/ftrace/sample-trace-array.ko.x=
-z
->   XZ      debian/linux-image-6.10.0-rc5-next-20240627-dirty/lib/modules/6=
-.10.0-rc5-next-20240627-dirty/kernel/samples/fprobe/fprobe_example.ko.xz
-> dpkg-deb: building package 'linux-libc-dev' in '../linux-libc-dev_6.10.0-=
-rc5-45_i386.deb'.
->   DEPMOD  debian/linux-image-6.10.0-rc5-next-20240627-dirty/lib/modules/6=
-.10.0-rc5-next-20240627-dirty
-> dpkg-deb: building package 'linux-headers-6.10.0-rc5-next-20240627-dirty'=
- in '../linux-headers-6.10.0-rc5-next-20240627-dirty_6.10.0-rc5-45_i386.deb=
-'.
-> Segmentation fault (core dumped)
-> make[6]: *** [scripts/Makefile.modinst:128: depmod] Error 139
-> make[5]: *** [Makefile:1842: modules_install] Error 2
-> make[4]: *** [Makefile:2058: run-command] Error 2
-> make[3]: *** [debian/rules:61: binary-image] Error 2
-> make[3]: *** Waiting for unfinished jobs....
-> dpkg-deb: building package 'linux-image-6.10.0-rc5-next-20240627-dirty-db=
-g' in '../linux-image-6.10.0-rc5-next-20240627-dirty-dbg_6.10.0-rc5-45_i386=
-.deb'.
-> dpkg-buildpackage: error: make -f debian/rules binary subprocess returned=
- exit status 2
-> make[2]: *** [scripts/Makefile.package:121: bindeb-pkg] Error 2
-> make[1]: *** [/home/marvin/linux/kernel/linux-next/Makefile:1555: bindeb-=
-pkg] Error 2
-> make: *** [Makefile:240: __sub-make] Error 2
->
-> Build log and .config are attached at your convenience.
+Fix description of the filter_mode_available attribute by pointing to
+the correct name of the attribute that can be written with valid values.
 
+Fixes: bf92d87 ("iio:filter:admv8818: Add sysfs ABI documentation")
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+ Documentation/ABI/testing/sysfs-bus-iio-filter-admv8818 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-filter-admv8818 b/Documentation/ABI/testing/sysfs-bus-iio-filter-admv8818
+index 31dbb390573f..c431f0a13cf5 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio-filter-admv8818
++++ b/Documentation/ABI/testing/sysfs-bus-iio-filter-admv8818
+@@ -3,7 +3,7 @@ KernelVersion:
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		Reading this returns the valid values that can be written to the
+-		on_altvoltage0_mode attribute:
++		filter_mode attribute:
+ 
+ 		- auto -> Adjust bandpass filter to track changes in input clock rate.
+ 		- manual -> disable/unregister the clock rate notifier / input clock tracking.
+-- 
+2.45.2
 
-
-
-If you used an old kmod version, this is a known issue.
-
-https://lore.kernel.org/linux-kbuild/E1rNVlL-000qDm-Pg@rmk-PC.armlinux.org.=
-uk/
-
-A quick solution is to upgrade your kmod version.
-
-
-
-
-
-
-
->
-> Hope this helps.
->
-> Best regards,
-> Mirsad Todorovac
-
-
-
---
-Best Regards
-Masahiro Yamada
