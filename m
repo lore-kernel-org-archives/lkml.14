@@ -1,28 +1,29 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6E16EB7C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A618BA37
 	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719903336; cv=none; b=I9lEdFOoFMt7zgbcPKEcDJY7HytQFHi4Q4zZc/DWZaZZQr7rdNcquM1uKXPq2PT9yatCKqNBDsEjnE6NZNHpfj/yLow6QB4UxRs6AhNxMsFFUqCC9C0WLohuIIcumu1cJRFQwUgLqq92teu5sWa3NMH25u7SBHS/6DlIxTKeTxs=
+	t=1719903337; cv=none; b=QCRFdRxj5ab2lrPL68KTGob5c2TOUKu8zVVKFe582YDa1Z0Hg2HbTb2SbsAhskQBxhS7qcoCnI+Z2WvMKTik8zUIxz0PSXRDPp+Eqnvfj31FYFxQUY0fSy/UqfRHj6SU/fD5maDOW9vrIMPLw0Sa4hw/R3r69tg19S353VG2t1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719903336; c=relaxed/simple;
-	bh=4uG+ux9EgZA8XzVPZigkfsy0eVgdX8NowUwLkucQ8lc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pX8GAq2+ynLwFbxCM1IB0FFNFdc5K+aPV/aE60Mmlw5HX9/o2jQunM+XjJNr2XwmYF8vrf3pRvWKipr+dBkSSraKKwnEeOOudHW9L0knP4OYMmb+zwjn2Q/O9rps4U/ld5k15pgWSzZ24wwJ9wmxygf+kMVW+eICLLTKrhnu6ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+	s=arc-20240116; t=1719903337; c=relaxed/simple;
+	bh=AB+3tO4P+aNCXHvKy/l0tc+XRKWAnULlohanbrKw11E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O5FEvwUKGAcOTzbz2mcUFqm2pcLQMXDa+pmKYqAHu3n4w2DqvlIi8NLdHRG54VCiGocXOp7aoETgn4Ri9vF6Df8Su5deX7i7lV/PVsUTqfxtNQbcLzJeA4lSYhdXKKWdjcZWX1ABWX7QBjfeMrlvVrWoFkzec4htyMXdDU6CVHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WCtqg338zzQjwd;
-	Tue,  2 Jul 2024 14:51:43 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WCtpx3NF6zxTM2;
+	Tue,  2 Jul 2024 14:51:05 +0800 (CST)
 Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 457AF140416;
-	Tue,  2 Jul 2024 14:55:30 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id AB6E214022D;
+	Tue,  2 Jul 2024 14:55:31 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
  (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 2 Jul
- 2024 14:55:29 +0800
+ 2024 14:55:30 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <linux@armlinux.org.uk>, <arnd@arndb.de>, <afd@ti.com>,
 	<akpm@linux-foundation.org>, <linus.walleij@linaro.org>,
@@ -30,10 +31,12 @@ To: <linux@armlinux.org.uk>, <arnd@arndb.de>, <afd@ti.com>,
 	<deller@gmx.de>, <javierm@redhat.com>, <bhe@redhat.com>, <robh@kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH 0/2] ARM: 9322/1: Switch over to GENERIC_CPU_DEVICES
-Date: Tue, 2 Jul 2024 14:59:04 +0800
-Message-ID: <20240702065906.929987-1-ruanjinjie@huawei.com>
+Subject: [PATCH 1/2] ARM: 9322/1: Switch over to GENERIC_CPU_DEVICES using arch_register_cpu()
+Date: Tue, 2 Jul 2024 14:59:05 +0800
+Message-ID: <20240702065906.929987-2-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240702065906.929987-1-ruanjinjie@huawei.com>
+References: <20240702065906.929987-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,19 +49,75 @@ X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemi100008.china.huawei.com (7.221.188.57)
 
 Currently, almost all architectures have switched to GENERIC_CPU_DEVICES,
-except for arm32. Also switch over to GENERIC_CPU_DEVICES, which can also
-make the code more concise.
+except for arm32. Also switch over to GENERIC_CPU_DEVICES, and provide an
+arch_register_cpu() that populates the hotpluggable flag for arm32.
 
-Jinjie Ruan (2):
-  ARM: 9322/1: Switch over to GENERIC_CPU_DEVICES using
-    arch_register_cpu()
-  ARM: 9322/1: Convert to arch_cpu_is_hotpluggable()
+The struct cpu in struct cpuinfo_arm is never used directly, remove
+it to use the one GENERIC_CPU_DEVICES provides.
 
+This also has the effect of moving the registration of CPUs from subsys to
+driver core initialisation, prior to any initcalls running.
+
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
  arch/arm/Kconfig           |  1 +
  arch/arm/include/asm/cpu.h |  1 -
- arch/arm/kernel/setup.c    | 14 ++------------
- 3 files changed, 3 insertions(+), 13 deletions(-)
+ arch/arm/kernel/setup.c    | 15 ++++-----------
+ 3 files changed, 5 insertions(+), 12 deletions(-)
 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index b211b7f5a138..68990e1645d5 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -63,6 +63,7 @@ config ARM
+ 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+ 	select GENERIC_IRQ_IPI if SMP
+ 	select GENERIC_CPU_AUTOPROBE
++	select GENERIC_CPU_DEVICES
+ 	select GENERIC_EARLY_IOREMAP
+ 	select GENERIC_IDLE_POLL_SETUP
+ 	select GENERIC_IRQ_MULTI_HANDLER
+diff --git a/arch/arm/include/asm/cpu.h b/arch/arm/include/asm/cpu.h
+index bd6fdb4b922d..9d8863537aa5 100644
+--- a/arch/arm/include/asm/cpu.h
++++ b/arch/arm/include/asm/cpu.h
+@@ -11,7 +11,6 @@
+ #include <linux/cpu.h>
+ 
+ struct cpuinfo_arm {
+-	struct cpu	cpu;
+ 	u32		cpuid;
+ #ifdef CONFIG_SMP
+ 	unsigned int	loops_per_jiffy;
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index 7b33b157fca0..f91e2b5b8b20 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -1201,20 +1201,13 @@ void __init setup_arch(char **cmdline_p)
+ 		mdesc->init_early();
+ }
+ 
+-
+-static int __init topology_init(void)
++int arch_register_cpu(int num)
+ {
+-	int cpu;
+-
+-	for_each_possible_cpu(cpu) {
+-		struct cpuinfo_arm *cpuinfo = &per_cpu(cpu_data, cpu);
+-		cpuinfo->cpu.hotpluggable = platform_can_hotplug_cpu(cpu);
+-		register_cpu(&cpuinfo->cpu, cpu);
+-	}
++	struct cpu *cpu = &per_cpu(cpu_devices, num);
+ 
+-	return 0;
++	cpu->hotpluggable = platform_can_hotplug_cpu(num);
++	return register_cpu(cpu, num);
+ }
+-subsys_initcall(topology_init);
+ 
+ #ifdef CONFIG_HAVE_PROC_CPU
+ static int __init proc_cpu_init(void)
 -- 
 2.34.1
 
