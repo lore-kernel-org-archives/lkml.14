@@ -1,75 +1,130 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1569515D5BE
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from cmccmta1.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD6D1C686;
+	Tue,  2 Jul 2024 12:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719921730; cv=none; b=lVMpDZITM4AvXdNjvOJyPLuZGZ4FI+QUxYbtVnQ54o7W5o0ctgDYdZyXLGbGotSv/LjObkDlWX8bk8pscwS22Qcq+ohenwJzYCMOHSmRfuy/U8ceGffzRliP8i0qzss8Yw8SyidoEasvfEi4EGdxrX1nwv9NrbVd425sOkqUP14=
+	t=1719921756; cv=none; b=EZL8vrohQGvXWU8CnL8iWt7ddsPblEhYzh/D2fBwfHI+kBlk5vtutMSnxYcesr9emijksDnVahRx/kNnRRt5C630lIoU1YEGXGpU2rgZFrsHDIRRj1/OBqNxXJ0CTbup++Juo/0O7LDm1CpGxKbzPAo82tkkonR+ypayvt3//G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719921730; c=relaxed/simple;
-	bh=UFSYmtBuaXKRPipjsLJRmYY5gjEWB/YBSAGHtG/6S/U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZBxedSQV85dgNn+6wTFxG/UzdX69KVEH8Ag3lWcTk6Ls4gTt77xgupVECOPyIiumIxDMnEnuXZzcM92s93SsczYi1DnTrZYTtSlMUSjSXRlKltELWPzaNXqgp3JKwh1LZ+8avSq7o7wxvGeB4QBV1HJhdzxDk9FeKndoc6QblDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=Kmu+FjaM; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Kmu+FjaM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1719921721;
-	bh=FXwb3NDkOXba4t5aP3C9g00gzWbtwMStp3ogpDj4GB0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Kmu+FjaMZERhRfktDqkks74plxvjyoFLsSJvWsb0Nge/HXsLlzHBYtPYdiNo2BxTJ
-	 8HRfkJzZXvErLi9BgRPoJ1tltiojXBQ2G4GTmHJGmTFjBSLAEgTddJV9pDOuhG049l
-	 2vTAwgis/bp9h4cQVwK7PraMeJT7QNWNqLC0ygfuPGvUVV9ZVwYuiPaAuNRnOfDs3X
-	 /rYRv4LlwLS5bFLTrPxWJNAlbJgEkTJoEB66+3nDsX5AeQw/4vP4NYmKjgheo4qrVF
-	 ioObEliwijeZ5NVR/Bw35UwDMnwD+dH9/fNXyD98M8ztr5gJAInnpZXNaQi4bwfIIv
-	 dnCWXznUN+uyg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WD1jf61Dfz4wc4;
-	Tue,  2 Jul 2024 22:01:58 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Esben Haabendal
- <esben@geanix.com>, Tudor Ambarus <tudor.ambarus@linaro.org>, Pratyush
- Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, Miquel
- Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>,
- Vignesh Raghavendra <vigneshr@ti.com>, Nicholas Piggin
- <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao"
- <naveen.n.rao@linux.ibm.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 2/3] powerpc/configs: Update defconfig with now
- user-visible CONFIG_FSL_IFC
-In-Reply-To: <d203dd45-fe69-48dc-aa36-d9870065f2e9@kernel.org>
-References: <20240530-fsl-ifc-config-v3-0-1fd2c3d233dd@geanix.com>
- <20240530-fsl-ifc-config-v3-2-1fd2c3d233dd@geanix.com>
- <d203dd45-fe69-48dc-aa36-d9870065f2e9@kernel.org>
-Date: Tue, 02 Jul 2024 22:01:57 +1000
-Message-ID: <87v81oj93e.fsf@mail.lhotse>
+	s=arc-20240116; t=1719921756; c=relaxed/simple;
+	bh=fOBTd6vK4Wl3rRRMzFrMhBEU+PiOZ3K1qzb18PIshVI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=spmhaDu9FDj8zAYKhbNI///ykNmIqkJHPgDTtYRA5IyiAPe7Qpqx9/o5SCE0SPp6tKVxwP9T+OIIL3Vgs+9/5a9qUtQZITxJsDDJCuqDCpHZ5hY0rUPDZlQlyHDMW62Xh0MLVcYo3Hrq0CEK/0VJQOIVpTOPEHZQXiSIj9EQNxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee46683ec48ad9-bb3c7;
+	Tue, 02 Jul 2024 20:02:20 +0800 (CST)
+X-RM-TRANSID:2ee46683ec48ad9-bb3c7
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from localhost.localdomain (unknown[223.108.79.99])
+	by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea6683ec4be50-965e6;
+	Tue, 02 Jul 2024 20:02:20 +0800 (CST)
+X-RM-TRANSID:2eea6683ec4be50-965e6
+From: Liu Jing <liujing@cmss.chinamobile.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	kuninori.morimoto.gx@renesas.com,
+	bartosz.golaszewski@linaro.org,
+	linus.walleij@linaro.org
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	liujing@cmss.chinamobile.com
+Subject: [PATCH] ASoC: mediatek: mt2701-cs42448: Optimize redundant code in mt2701_cs42448_machine_probe
+Date: Tue,  2 Jul 2024 12:36:56 +0800
+Message-Id: <20240702043656.11278-1-liujing@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Krzysztof Kozlowski <krzk@kernel.org> writes:
-> On 30/05/2024 16:46, Esben Haabendal wrote:
->> With CONFIG_FSL_IFC now being user-visible, and thus changed from a select
->> to depends in CONFIG_MTD_NAND_FSL_IFC, the dependencies needs to be
->> selected in defconfigs.
->> 
->> Signed-off-by: Esben Haabendal <esben@geanix.com>
->
-> Anyone is going to pick this up?
+Utilize the defined parameter 'dev' to make the code cleaner.
 
-Doesn't it need to be merged along with patch 1?
+Signed-off-by: Liu Jing <liujing@cmss.chinamobile.com>
+---
+ sound/soc/mediatek/mt2701/mt2701-cs42448.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-cheers
+diff --git a/sound/soc/mediatek/mt2701/mt2701-cs42448.c b/sound/soc/mediatek/mt2701/mt2701-cs42448.c
+index 1262e8a1bc9a..4974b0536b7b 100644
+--- a/sound/soc/mediatek/mt2701/mt2701-cs42448.c
++++ b/sound/soc/mediatek/mt2701/mt2701-cs42448.c
+@@ -329,10 +329,10 @@ static int mt2701_cs42448_machine_probe(struct platform_device *pdev)
+ 	int ret;
+ 	int i;
+ 	struct device_node *platform_node, *codec_node, *codec_node_bt_mrg;
++	struct device *dev = &pdev->dev;
+ 	struct mt2701_cs42448_private *priv =
+-		devm_kzalloc(&pdev->dev, sizeof(struct mt2701_cs42448_private),
++		devm_kzalloc(dev, sizeof(struct mt2701_cs42448_private),
+ 			     GFP_KERNEL);
+-	struct device *dev = &pdev->dev;
+ 	struct snd_soc_dai_link *dai_link;
+ 
+ 	if (!priv)
+@@ -341,7 +341,7 @@ static int mt2701_cs42448_machine_probe(struct platform_device *pdev)
+ 	platform_node = of_parse_phandle(pdev->dev.of_node,
+ 					 "mediatek,platform", 0);
+ 	if (!platform_node) {
+-		dev_err(&pdev->dev, "Property 'platform' missing or invalid\n");
++		dev_err(dev, "Property 'platform' missing or invalid\n");
+ 		return -EINVAL;
+ 	}
+ 	for_each_card_prelinks(card, i, dai_link) {
+@@ -355,7 +355,7 @@ static int mt2701_cs42448_machine_probe(struct platform_device *pdev)
+ 	codec_node = of_parse_phandle(pdev->dev.of_node,
+ 				      "mediatek,audio-codec", 0);
+ 	if (!codec_node) {
+-		dev_err(&pdev->dev,
++		dev_err(dev,
+ 			"Property 'audio-codec' missing or invalid\n");
+ 		return -EINVAL;
+ 	}
+@@ -368,7 +368,7 @@ static int mt2701_cs42448_machine_probe(struct platform_device *pdev)
+ 	codec_node_bt_mrg = of_parse_phandle(pdev->dev.of_node,
+ 					     "mediatek,audio-codec-bt-mrg", 0);
+ 	if (!codec_node_bt_mrg) {
+-		dev_err(&pdev->dev,
++		dev_err(dev,
+ 			"Property 'audio-codec-bt-mrg' missing or invalid\n");
+ 		return -EINVAL;
+ 	}
+@@ -377,7 +377,7 @@ static int mt2701_cs42448_machine_probe(struct platform_device *pdev)
+ 
+ 	ret = snd_soc_of_parse_audio_routing(card, "audio-routing");
+ 	if (ret) {
+-		dev_err(&pdev->dev, "failed to parse audio-routing: %d\n", ret);
++		dev_err(dev, "failed to parse audio-routing: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+@@ -395,10 +395,10 @@ static int mt2701_cs42448_machine_probe(struct platform_device *pdev)
+ 
+ 	snd_soc_card_set_drvdata(card, priv);
+ 
+-	ret = devm_snd_soc_register_card(&pdev->dev, card);
++	ret = devm_snd_soc_register_card(dev, card);
+ 
+ 	if (ret)
+-		dev_err(&pdev->dev, "%s snd_soc_register_card fail %d\n",
++		dev_err(dev, "%s snd_soc_register_card fail %d\n",
+ 			__func__, ret);
+ 	return ret;
+ }
+-- 
+2.33.0
+
+
+
