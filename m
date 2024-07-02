@@ -1,175 +1,130 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic308-44.consmr.mail.ir2.yahoo.com (sonic308-44.consmr.mail.ir2.yahoo.com [77.238.178.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE7B167D8C;
-	Tue,  2 Jul 2024 12:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEA816F0E4
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.238.178.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719923117; cv=none; b=SYyxc+EViFmQuKpmkkyOwwlHfoA/W/05aTCicXdmX3Ew7FEQtI6nRg8P5jc1cDlOokUyKAiI0Hf9E++g4h2oFqo+7eDBGDurUxcshGtIjtXt79zCgNFxkm9ppVIxG4D1rPPxsfQsU13/MzlTJ+gP5OLhz812XZnjfayrQLIezu4=
+	t=1719923124; cv=none; b=uXvXdRRQ6r/GAFtn/9IfLFNdcJMoZ12mh8eTtrC3eQ4VYGX6lZYYIczIEDm/yhWO5mSFoIRSC6XOHsyjQa4t+GV0PQRWrgb+RL6S50OP9e2SfB5oQ2120Z3UjMVlMHizfzgSGhks6mu3f5oD9mvGZa5/1mTxqe4TIHasMOjWV34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719923117; c=relaxed/simple;
-	bh=ktCITwpxHpI1W1hj/sUArc8rIdogsyyInYcXkBWuLH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W+kehe7JDYqZ7awSj9wIKc9kwNProwtT3pm0rAe8CxbfN+wZ3rMRDUqV0wm/oxmOgbBZB8Zb91TFjntkrYMWPRWTr8C+6YS9WEZGbhYv/EmUBUrtUXwfdfE2s2lfJxZBkZlHZBgqqmJj8RBnsKYCEA9ah4lTWyf1KqNegzPHdBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WD2DK2qWwz4f3jtx;
-	Tue,  2 Jul 2024 20:25:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id B2B4A1A016E;
-	Tue,  2 Jul 2024 20:25:12 +0800 (CST)
-Received: from [10.174.177.174] (unknown [10.174.177.174])
-	by APP1 (Coremail) with SMTP id cCh0CgBXgHyi8YNm6TG7Aw--.61077S3;
-	Tue, 02 Jul 2024 20:25:10 +0800 (CST)
-Message-ID: <5e3ffecd-4def-44b4-b141-e24429d13929@huaweicloud.com>
-Date: Tue, 2 Jul 2024 20:25:06 +0800
+	s=arc-20240116; t=1719923124; c=relaxed/simple;
+	bh=czYlFkR7gACaffEBBYkZYMloku7B869PLgAxG+uGO7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=tSuBf8ISSN/tqteuR/MHzY62sl//7UW8hjMd6YG10XdXrefEG1icQedua1yeKYoLq2Nbjj9Cv9Mbo/ceXa42H3dqkYtEILn5mqSR9XIqozmAKyKMOYyflSGZGPfYMxRhFsWaXppM7E4RLu6tnnq6L4nHC+QNFVYa1BgwFqJu2h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=L8PzqMIs; arc=none smtp.client-ip=77.238.178.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="L8PzqMIs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1719923121; bh=J8LVgZXsBn/SKy0ON6Xyfp/jRyWWH2Gsbog4fAcslz4=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=L8PzqMIsKDTAK56PMorZq7qZ61MdL2ugyUDQ+g2LY+T7W6D9cEpCC6yp+h85eJwC3n0lLqYaRFLRLb7z6esToj6ef1un5gbVQKXpqq4rMOG0eQPDK5RjYN4mKCfrirYpk++Ym2lcYf7PkgQLzvrBucCartUDCZkjbIMxpin82kJtZ3m1S5EAFrakPMPLksFo0LT3wr9eU361BSHt1qPgRd+UX+lFMfYuWE76PIZO/HPa/eCKk0B6yEoQPpodVMc36i6FnbN/5p7SEU19fVhsO3Ch0vViSo9K3fqVX6A9mZbL1hJjEBx9CXGzwJONNMKh5He8BrAR5HO/Kd+RJYaIxw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1719923121; bh=ojo8wkfSFDTTQ+tYwEoPp0kEyAweQJADnia1W5e98f4=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=e9e1EtIgvfoxLMx1LoRRC/LYpIeMTfSUiQNHMWo2/ltJEuqTDMIfAqWO9XlRrQRs9pDr7YNcNeBIk/EDh98233xthDEbkrEsrg2o1epd2kEXJFjxkw3GViykcpZ1K5Smk6gQfi81HihIbbCIdHm2qr8m8Y9FTZr2w5k8E6ft6/lpOH1Ja2j23IFiFAtKvBiFaDW3XcJha9FvFwD59GsnqD4i6mHuHjBH1uFDwFCuJ0RkRFtgem/Z22/qaKDcSFBb/KvKHcy8ZTZokkz/lV9qFTkO03HK4o8BQdXzNdivi8dT8itX7MoUQ89er8MBxi4TjxEbMi0fS858lJOaz1ET9w==
+X-YMail-OSG: INJqqsoVM1nUAl02a13QJLORw6oGZokgB9tm0D_u0t7.L.3_e8rDkhW0asv59PQ
+ wUB7ez8C6hw2C66ImTssx46a7xqfLZpGmx.b9PxJWj6kMkbk64d5wPuFePSRhmRcdNyCR1FYP5EV
+ HPwhTSavDu9zWK73CFsTIJ76uI_LLg1EaSbwpwyGLYzIgOM5O.o_MIXcgvPiIhrYSw6mBe3lNrIF
+ jgHTL6oGsYRrG2D7FPo2FJbsuP2dCxBIX8l3hRK4nry77Gx9Cpi8eApdfhHc5Jgot9uzDbvjykd8
+ ySZnsdbxn6lXbl4uOmZEQBpslc7CVG1GbH8NXZj_PRXBf.WbA0XKOugzTRGPRKLYuH4F8W7EIf76
+ vZuukz7ZQofO9EugcmV2HV2qCcV_GRAqahcjlPhP5aNzgE4c39JwdeBD5FLnLUS5lfhhCSFiF4kX
+ Qdfp4Rwx_V3ygH.1g.xRcwtMO4HP7c253DxO8Y3FwdrS37n9AYS.B3ogqPOy94PCXTfSsrRmNsBw
+ TDno83H0N_p37.mARmrXa5qZvxnLd8JobcTS9yViaetHuSpq0y6Rcrvv1xPOrPDSpAJnHrLXEJuM
+ xiB35FeIU4WwsZ2RpttSmIkZxbfS2OdBkC3zcOkEhPh6c_EsjilB5uF4EPo0QRjjgclx4BEoSG2G
+ RTomCdub9A2Kl5fXW3Iyb3JwTLzUuWcOAzIZiRCVb9wmbt.XPpwMNJVFm1WCH5tIg7mMY2ul5msE
+ Y0cv0S2XxxVJ.raBl1mPpPlsr2tANCk5SoSzsfo0Ydc31xE_Mz6yk0rahRsWYlKm6iAP1FLq1_XN
+ Gpbm_sXubjjeg4bvX1TUMCi6rUSBLa.DhK6TGHz9uAhOaEjFh8OMWTL4DwsRsg62nNPtgSCCOOZe
+ O7PJHKPLTGt37sH21x0csJy6Oa20jG.gQeoRg_g9EranMPJDfS59anwWW7UzrDQOqOCsd6BRTVqr
+ oejA9rlIXRU1awHyrz4ICGNPfb.6IpUeyAkz70QXHeV54M_asDv3Mr3vQR4xXWjokvgJnHZKPrAD
+ vcYV_9rtdjJPgQBpVw79wTw.tr5FzF1jhyuiUiGfGeNCVg4DbOnoatnxnDxw3gtVgnCfR6HP_LEZ
+ O_nOnTJ4z_58kWOuoNMRoanxUUk_a2mm2Ntyj4DIEVTnj9GKO6ndWlkxQO.kUEpUbWHvlFxKrjiT
+ q1o6Lv5ZxlifJ3hRwcx_D2DdTs_1bQnDw6qvuAT4uOdIS.jLKi9DoabPle203FeAx_KQmUdOR8L0
+ 5lWF8Lzwg23ZDW1Hpxoxx.TNG74ZUD_t4AspQXJHWizYo0poqnlJ5zeaQZDelLEcrLvgNHGRe6Nr
+ wpUHPQ9f2yQJDsQ3ADVppsNcRZME951iXAWtPRzry.Mtw.9T9zFWIHhA5pRnpIz174IvXawZnFRZ
+ 0QQDJ9F9nb_EUfzn6hVlslQ8hngLGtFw4VStOBn4e0l_BLdkRVNPLXAZdglMs.8lWSCOxyq5XNot
+ T7uzchyjW7FpQm9NrgYIyrb22lSGN91uX9ujSf7D.BM4kv5_gt1plXDcEaVy.A0r7NsDgXofBZB6
+ EnOk1gpi7SbbBRqv1.7sigXnuzeiJTsIN0oBSl62Y_lvcoXe9VAUni8IxulWDnYqdZjw.JoO80p_
+ rWBlfnY3qLL3b_V_Iav0oYgVVx74zkvTHWY0tG3ytP8x0CqwROaETxlE8l0Wwz.MyeWCZwO3zyKk
+ szoeKme69weeGHYsKK5klMTM98WrvkQNRxgGfL4WPfJob0q1ORg94cY0nEoRRfDydfq6YY7jlj17
+ 6pXXd9GpBoeTENmft6HgwEC4mlxBmTB7EwEU4xUYlJNa0oEr9Xu4IRCsTG_WP8_Z2DkWUDfb5Crs
+ rRhr2isIezCmRjRJPjuFar.eAvUupu1ljHnjmeY_oMHAifaXy.Op1KhAEHRS4riDxqZZleB4HqZO
+ S7w2nfRaXNrw.BTFuw_kRrFKfD9NGYerZ9rFIRRHox1cky96VzGe3aDFBUHJQ5sPtIXuvx08G5.j
+ LfaBCHbFQnjWtjvgSI45zi1kt58OLLxOoH0s9wjdHRCWx3Zd6GMrpBE3z5zwYV08YN.UgdNk6UPg
+ E3Ik49m7izLziYezWdonBe4OJf3z8yuPGwy3uED77zpFK4fr.PDwDg_xtZURZoRpfDkW.edw-
+X-Sonic-MF: <xzeol@yahoo.com>
+X-Sonic-ID: 22345d43-bb8b-4137-a272-4ea238d35601
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ir2.yahoo.com with HTTP; Tue, 2 Jul 2024 12:25:21 +0000
+Received: by hermes--production-ir2-85cf877599-mvt7h (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 0dd9cec1d13f3a8113ebc66190b2d374;
+          Tue, 02 Jul 2024 11:52:55 +0000 (UTC)
+From: Alex Vdovydchenko <xzeol@yahoo.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Alex Vdovydchenko <xzeol@yahoo.com>
+Subject: [PATCH v4 0/2] Add MPS MP5920 Host-Swap controller
+Date: Tue,  2 Jul 2024 14:52:49 +0300
+Message-ID: <20240702115252.981416-1-xzeol@yahoo.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] cachefiles: random bugfixes
-To: netfs@lists.linux.dev, dhowells@redhat.com, jlayton@kernel.org
-Cc: hsiangkao@linux.alibaba.com, jefflexu@linux.alibaba.com,
- zhujia.zj@bytedance.com, linux-erofs@lists.ozlabs.org, brauner@kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- yangerkun@huawei.com, houtao1@huawei.com, yukuai3@huawei.com,
- wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>,
- Baokun Li <libaokun@huaweicloud.com>
-References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
-Content-Language: en-US
-From: Baokun Li <libaokun@huaweicloud.com>
-In-Reply-To: <20240628062930.2467993-1-libaokun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBXgHyi8YNm6TG7Aw--.61077S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCF13tr18Wr1kZw45uFy8Zrb_yoWrCw17pF
-	WakanxArykWryxCws3Zw4xtFyFy3yxX3Z2gr1xXw15A3s8XF1FvrWIkr15ZFy5Crs7GrW2
-	vr1q9Fn3Gw1qv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQvt
-	AUUUUU=
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAgAMBV1jkHxNzQAAsZ
+References: <20240702115252.981416-1-xzeol.ref@yahoo.com>
 
-Friendly ping...
+This series of patches adds the MP5920 Host-swap controller, which is used
+as a protection and control IC for devices that are being inserted into a live
+backplane. MP5920 acts as a voltage regulator (MP5911 etc) supervisor. IC
+utilizes pmbus and provides monitoring, statistics and limits to electrical and
+thermal characteristics such as:
+- input and output voltage
+- output current
+- output power
+- IC temperature
 
-On 2024/6/28 14:29, libaokun@huaweicloud.com wrote:
-> From: Baokun Li <libaokun1@huawei.com>
->
-> Hi all!
->
-> This is the third version of this patch series, in which another patch set
-> is subsumed into this one to avoid confusing the two patch sets.
-> (https://patchwork.kernel.org/project/linux-fsdevel/list/?series=854914)
->
-> Thank you, Jia Zhu, Gao Xiang, Jeff Layton, for the feedback in the
-> previous version.
->
-> We've been testing ondemand mode for cachefiles since January, and we're
-> almost done. We hit a lot of issues during the testing period, and this
-> patch series fixes some of the issues. The patches have passed internal
-> testing without regression.
->
-> The following is a brief overview of the patches, see the patches for
-> more details.
->
-> Patch 1-2: Add fscache_try_get_volume() helper function to avoid
-> fscache_volume use-after-free on cache withdrawal.
->
-> Patch 3: Fix cachefiles_lookup_cookie() and cachefiles_withdraw_cache()
-> concurrency causing cachefiles_volume use-after-free.
->
-> Patch 4: Propagate error codes returned by vfs_getxattr() to avoid
-> endless loops.
->
-> Patch 5-7: A read request waiting for reopen could be closed maliciously
-> before the reopen worker is executing or waiting to be scheduled. So
-> ondemand_object_worker() may be called after the info and object and even
-> the cache have been freed and trigger use-after-free. So use
-> cancel_work_sync() in cachefiles_ondemand_clean_object() to cancel the
-> reopen worker or wait for it to finish. Since it makes no sense to wait
-> for the daemon to complete the reopen request, to avoid this pointless
-> operation blocking cancel_work_sync(), Patch 1 avoids request generation
-> by the DROPPING state when the request has not been sent, and Patch 2
-> flushes the requests of the current object before cancel_work_sync().
->
-> Patch 8: Cyclic allocation of msg_id to avoid msg_id reuse misleading
-> the daemon to cause hung.
->
-> Patch 9: Hold xas_lock during polling to avoid dereferencing reqs causing
-> use-after-free. This issue was triggered frequently in our tests, and we
-> found that anolis 5.10 had fixed it. So to avoid failing the test, this
-> patch is pushed upstream as well.
->
-> Comments and questions are, as always, welcome.
-> Please let me know what you think.
->
-> Thanks,
-> Baokun
->
-> Changes since v2:
->    * Collect Acked-by from Jeff Layton.(Thanks for your ack!)
->    * Collect RVB from Gao Xiang.(Thanks for your review!)
->    * Patch 1-4 from another patch set.
->    * Pathch 4,6,7: Optimise commit messages and subjects.
->
-> Changes since v1:
->    * Collect RVB from Jia Zhu and Gao Xiang.(Thanks for your review!)
->    * Pathch 1,2：Add more commit messages.
->    * Pathch 3：Add Fixes tag as suggested by Jia Zhu.
->    * Pathch 4：No longer changing "do...while" to "retry" to focus changes
->      and optimise commit messages.
->    * Pathch 5: Drop the internal RVB tag.
->
-> v1: https://lore.kernel.org/all/20240424033409.2735257-1-libaokun@huaweicloud.com
-> v2: https://lore.kernel.org/all/20240515125136.3714580-1-libaokun@huaweicloud.com
->
-> Baokun Li (7):
->    netfs, fscache: export fscache_put_volume() and add
->      fscache_try_get_volume()
->    cachefiles: fix slab-use-after-free in fscache_withdraw_volume()
->    cachefiles: fix slab-use-after-free in cachefiles_withdraw_cookie()
->    cachefiles: propagate errors from vfs_getxattr() to avoid infinite
->      loop
->    cachefiles: stop sending new request when dropping object
->    cachefiles: cancel all requests for the object that is being dropped
->    cachefiles: cyclic allocation of msg_id to avoid reuse
->
-> Hou Tao (1):
->    cachefiles: wait for ondemand_object_worker to finish when dropping
->      object
->
-> Jingbo Xu (1):
->    cachefiles: add missing lock protection when polling
->
->   fs/cachefiles/cache.c          | 45 ++++++++++++++++++++++++++++-
->   fs/cachefiles/daemon.c         |  4 +--
->   fs/cachefiles/internal.h       |  3 ++
->   fs/cachefiles/ondemand.c       | 52 ++++++++++++++++++++++++++++++----
->   fs/cachefiles/volume.c         |  1 -
->   fs/cachefiles/xattr.c          |  5 +++-
->   fs/netfs/fscache_volume.c      | 14 +++++++++
->   fs/netfs/internal.h            |  2 --
->   include/linux/fscache-cache.h  |  6 ++++
->   include/trace/events/fscache.h |  4 +++
->   10 files changed, 123 insertions(+), 13 deletions(-)
->
+One must take into account the nonlinear character of readings, so there will be
+a statistical error in the range 5–10 percents, depending on current passing
+through. In order to use the IC, make sure to specify a valid I2C address
+(consult to datasheet and dts-bindings)
+MP5920 datasheet: https://www.monolithicpower.com/en/mp5920.html
+
+Changes in v2:
+  -  fixed typos
+Changes in v3:
+  -  removed unnecessary license blob
+  -  removed unnecessary headers
+  -  edited device tables style
+  -  added chip name checking in probing
+  -  fixed typos in pmbus_driver_info struct initialization
+Changes in v4:
+  -  added i2c_check_functionality in probing
+  -  refactored usage of dev_err_probe insted of dev_err
+  -  edited chip name string handling while printing
+  -  restored .driver.of_match_table, keeping i2c_driver "old" style
+
+Alex Vdovydchenko (2):
+  dt-bindings: hwmon: Add MPS mp5920
+  hwmon: add MP5920 driver
+
+ .../devicetree/bindings/trivial-devices.yaml  |  2 +
+ Documentation/hwmon/index.rst                 |  1 +
+ Documentation/hwmon/mp5920.rst                | 91 ++++++++++++++++++
+ drivers/hwmon/pmbus/Kconfig                   |  9 ++
+ drivers/hwmon/pmbus/Makefile                  |  1 +
+ drivers/hwmon/pmbus/mp5920.c                  | 93 +++++++++++++++++++
+ 6 files changed, 197 insertions(+)
+ create mode 100644 Documentation/hwmon/mp5920.rst
+ create mode 100644 drivers/hwmon/pmbus/mp5920.c
 
 -- 
-With Best Regards,
-Baokun Li
+2.43.0
 
