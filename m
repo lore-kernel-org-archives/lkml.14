@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398851CF3E0;
-	Tue,  2 Jul 2024 19:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4321CF3CA;
+	Tue,  2 Jul 2024 19:24:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719948259; cv=none; b=AlvmuFnAfgipskQ8gpM8mkW9UFekIMEQpyUXEY2sY8l63UdGUIviccsDmVBy6ziXBc58DMgPEIUY+GxIAg1lXJh0WgYQkGhBRSoBUCG8/2jVkK3Fxbp1FlC50e93sLWb+POQvU720ye7NvG9kqKck5fWs8ZRLQYG0aMawMqoG3g=
+	t=1719948258; cv=none; b=gPkKNfFtdQaGQh3rx9RYY8KznwH5hnO0Ba2Ev0/gPv08xvPHku+UdaKkMzTOU0fyy5cwabfudde1pEuDSKx4ZCR8Usj/ODNYzUGK+9osKkvFXkpo1qm5zH95Dt34hHgc4VzOA//dHQpPVTRdETJNU2be2MbgFT/nfOfStjOzqvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719948259; c=relaxed/simple;
-	bh=oMQvUSRtH/oYx3lD/FQZr0lkUMACa2bl2UNOd8PvIfU=;
+	s=arc-20240116; t=1719948258; c=relaxed/simple;
+	bh=94805oqwme+51/lRA423YLXZ/gkIplMTVoKleAhYdeQ=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=RBtrj8vCpa5WGiQp4zCv2k57t9wcfqjDafcmeZAV9+XucK2X3/D7kRUEXg8Yp1nbsjbKGudL5N7xLRKS/RAY8exBF3DneR+cug8fOrYCQLJSnDqnjI0lE1XvIepYbQJOAOHXHupY2J5Gba5EOFpoXp+HxnLArf4A1/EFaW0+kko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HpjRtwRq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vkNzItSZ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=imVGNSnVqiA1hdeUcuClDgmRgvwtFh1mA6vEqpdYIGB3Xpe8hwg+b6YaScjEUsOIn2NrhpOmCD+yrE6pboCHdmlUxLKcv4kDzOnFqhhrzPInrFFPvrjOSA4oYCB5H7PaKrV4B6SA9EKTTGcTputw4o70RZ3Hrg42+QXXT30cjnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vveY4UiB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hhIuL01y; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HpjRtwRq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vkNzItSZ"
-Date: Tue, 02 Jul 2024 19:24:15 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vveY4UiB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hhIuL01y"
+Date: Tue, 02 Jul 2024 19:24:13 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719948255;
+	s=2020; t=1719948253;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dR+DgmlZEd1pDjqDZYIK4/a+7lD35kkeQzbntnX71Ts=;
-	b=HpjRtwRqR3XwT5tNvxQfCNv/sBJ6rqCsWC8WyIiGj1M5X77KrQOzhTabBZ57tGp6MLZnML
-	1oiW01ghPjuCstfsFERtLh3XkJhOy4LhvxOpX2gyCFgbBihgAe2Dd97NtRmyt8YOtEyIec
-	j2DHVMYQYxAnOjGZWvzjl0g1iYkrCej3QPLx57+wnbYYm1IVkDnzx5HNBw2M/Ouvc2IOST
-	Q1tprvMozZt1EWi8+3jouo1jlEtOjs3Ey1FDMuQOFGHhAiFJ7gcVpRmF5lMplJaomEfHiy
-	gEFLP/tOJZLwkB05/836P7uaslZbMo0aEz02PxPv4TaDoDVDhjIZPJVVCdjMiw==
+	bh=ghU0IIyxgFhAVBblZ8igN7OxEvQchvM+F3yokf6NgJI=;
+	b=vveY4UiBpbr3g+onKwTgMARZnwsFnY7GZ3m7JHgxNP10tkEwBT3YGwDWSXwkuI1Iq5c/pM
+	bHpshfpRjUAe7fJR5xZtBln/9KXKXgKy96000ZGf1sGF4I9iUTcuddozHYKWX+4VT3Espx
+	STKvDcDUNI2Xxm2fEBKWhvgSoTfSbiyFfLtf5oMVwONZrLvMDjD8bkDqciBSa8DG+EhncX
+	FUO0XCwdCFNhXGS2J0OL+0eI9J/MgDz/1AycCAery10R/5E+LpDw3nrVvVJEroMzmOXUYs
+	JaMEy3FFCTZGZQL+hCrgG5AD9Gx7LLW5fn2A+KklLpBZFTc0sJZsFJ2IIdjeIA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719948255;
+	s=2020e; t=1719948253;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dR+DgmlZEd1pDjqDZYIK4/a+7lD35kkeQzbntnX71Ts=;
-	b=vkNzItSZywZyZ8n/wq8sWKzjk5jq3C8N5rt2AbqKH7b4DXKadzuoOhTlOG64XFI7FQe8My
-	Mr3sxka1x/0EMjBg==
+	bh=ghU0IIyxgFhAVBblZ8igN7OxEvQchvM+F3yokf6NgJI=;
+	b=hhIuL01yb+NV+XAGK1VMEVLa1GYWl8xZn+zuKdMsqq3nJawQGxAhffqvG8xN0C8s+Ud1h5
+	3td9hXOzolU4BeCg==
 From: "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] x86/resctrl: Block use of mba_MBps mount option on
- Sub-NUMA Cluster (SNC) systems
+Subject:
+ [tip: x86/cache] x86/resctrl: Allocate a new field in union mon_data_bits
 Cc: Tony Luck <tony.luck@intel.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  Reinette Chatre <reinette.chatre@intel.com>, Babu Moger <babu.moger@amd.com>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240628215619.76401-8-tony.luck@intel.com>
-References: <20240628215619.76401-8-tony.luck@intel.com>
+In-Reply-To: <20240628215619.76401-13-tony.luck@intel.com>
+References: <20240628215619.76401-13-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171994825517.2215.364968821216240098.tip-bot2@tip-bot2>
+Message-ID: <171994825349.2215.1522418083591820504.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,74 +68,80 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     ac20aa423052553c005089b00f1e3caf79d3c1d3
-Gitweb:        https://git.kernel.org/tip/ac20aa423052553c005089b00f1e3caf79d3c1d3
+Commit-ID:     92b5d0b1189ea9e9f00ae493fc99102fe7f2442f
+Gitweb:        https://git.kernel.org/tip/92b5d0b1189ea9e9f00ae493fc99102fe7f2442f
 Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Fri, 28 Jun 2024 14:56:07 -07:00
+AuthorDate:    Fri, 28 Jun 2024 14:56:12 -07:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
 CommitterDate: Tue, 02 Jul 2024 19:49:54 +02:00
 
-x86/resctrl: Block use of mba_MBps mount option on Sub-NUMA Cluster (SNC) systems
+x86/resctrl: Allocate a new field in union mon_data_bits
 
-When SNC is enabled there is a mismatch between the MBA control function
-which operates at L3 cache scope and the MBM monitor functions which
-measure memory bandwidth on each SNC node.
+When Sub-NUMA Cluster (SNC) mode is enabled, the legacy monitor reporting files
+must report the sum of the data from all of the SNC nodes that share the L3
+cache that is referenced by the monitor file.
 
-Block use of the mba_MBps when scopes for MBA/MBM do not match.
+Resctrl squeezes all the attributes of these files into 32 bits so they can be
+stored in the "priv" field of struct kernfs_node.
 
-Improve user diagnostics by adding invalfc() message when mba_MBps
-is not supported.
+Currently, only three monitor events are defined by enum resctrl_event_id so
+reducing it from 8 bits to 7 bits still provides more than enough space to
+represent all the known event types.
+
+But note that this choice was arbitrary.  The "rid" field is also far wider
+than needed for the current number of resource id types.  This structure is
+purely internal to resctrl, no ABI issues with modifying it. Subsequent changes
+may rearrange the allocation of bits between each of the fields as needed.
+
+Give the bit to a new "sum" field that indicates that reading this file must
+sum across SNC nodes. This bit also indicates that the domid field is the id of
+an L3 cache (instead of a domain id) to find which domains must be summed.
+
+Fix up other issues in the kerneldoc description for mon_data_bits.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Tested-by: Babu Moger <babu.moger@amd.com>
-Link: https://lore.kernel.org/r/20240628215619.76401-8-tony.luck@intel.com
+Link: https://lore.kernel.org/r/20240628215619.76401-13-tony.luck@intel.com
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/resctrl/internal.h | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index eb3bbfa..d3b0fa9 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2335,14 +2335,18 @@ static void mba_sc_domain_destroy(struct rdt_resource *r,
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 681b5bd..13d8622 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -127,19 +127,25 @@ struct mon_evt {
+ };
  
- /*
-  * MBA software controller is supported only if
-- * MBM is supported and MBA is in linear scale.
-+ * MBM is supported and MBA is in linear scale,
-+ * and the MBM monitor scope is the same as MBA
-+ * control scope.
+ /**
+- * union mon_data_bits - Monitoring details for each event file
++ * union mon_data_bits - Monitoring details for each event file.
+  * @priv:              Used to store monitoring event data in @u
+- *                     as kernfs private data
+- * @rid:               Resource id associated with the event file
+- * @evtid:             Event id associated with the event file
+- * @domid:             The domain to which the event file belongs
+- * @u:                 Name of the bit fields struct
++ *                     as kernfs private data.
++ * @u.rid:             Resource id associated with the event file.
++ * @u.evtid:           Event id associated with the event file.
++ * @u.sum:             Set when event must be summed across multiple
++ *                     domains.
++ * @u.domid:           When @u.sum is zero this is the domain to which
++ *                     the event file belongs. When @sum is one this
++ *                     is the id of the L3 cache that all domains to be
++ *                     summed share.
++ * @u:                 Name of the bit fields struct.
   */
- static bool supports_mba_mbps(void)
- {
-+	struct rdt_resource *rmbm = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
- 	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl;
- 
- 	return (is_mbm_local_enabled() &&
--		r->alloc_capable && is_mba_linear());
-+		r->alloc_capable && is_mba_linear() &&
-+		r->ctrl_scope == rmbm->mon_scope);
- }
- 
- /*
-@@ -2750,6 +2754,7 @@ static int rdt_parse_param(struct fs_context *fc, struct fs_parameter *param)
- {
- 	struct rdt_fs_context *ctx = rdt_fc2context(fc);
- 	struct fs_parse_result result;
-+	const char *msg;
- 	int opt;
- 
- 	opt = fs_parse(fc, rdt_fs_parameters, param, &result);
-@@ -2764,8 +2769,9 @@ static int rdt_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 		ctx->enable_cdpl2 = true;
- 		return 0;
- 	case Opt_mba_mbps:
-+		msg = "mba_MBps requires local MBM and linear scale MBA at L3 scope";
- 		if (!supports_mba_mbps())
--			return -EINVAL;
-+			return invalfc(fc, msg);
- 		ctx->enable_mba_mbps = true;
- 		return 0;
- 	case Opt_debug:
+ union mon_data_bits {
+ 	void *priv;
+ 	struct {
+ 		unsigned int rid		: 10;
+-		enum resctrl_event_id evtid	: 8;
++		enum resctrl_event_id evtid	: 7;
++		unsigned int sum		: 1;
+ 		unsigned int domid		: 14;
+ 	} u;
+ };
