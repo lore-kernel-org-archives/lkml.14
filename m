@@ -1,98 +1,107 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic314-46.consmr.mail.ir2.yahoo.com (sonic314-46.consmr.mail.ir2.yahoo.com [77.238.177.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1F81581EA;
-	Tue,  2 Jul 2024 12:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4731F16CD2E
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.238.177.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719922513; cv=none; b=Ylg16Jb30ZY2v9tNC5R+zR+Wl2I7xU4XlGYRUsMY6AUsdxF6ZU7THLqXX35F0IpeDOYpT3U1SXALngbFOhibe3INIeztaHAWuc39LnOyS0r3p9nTTm7rJXkVblbjQnUTNETnN+HzTFV3ECAXTdgA91JcFpAAU5sVfvSBCJNyU54=
+	t=1719922517; cv=none; b=ogOfo89x9cCVMBoV93pwCdX6Z8BuAlHOEz7daZEi1XFSIpkawetirTUQ0rPBLXlAP25r0Wtth6G0d3LCS82H/65zPVs2yJVwhHyW08cyKyML9/gD0i7gS9KtoOrDRm6cyGKQgnVc1FnxDxxfRTSHVKbSy2QYueq0pxcqg/8jzWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719922513; c=relaxed/simple;
-	bh=daknPN5+UD0AOsgseyyPKy+GhsmNuv/Kgat0Tz4/+yA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WNc0sTY9+NAk9iZXssr6v1hGg29i7drYjQSKWCN58L8Q2m5DjGTMk7M66cT6lBteJY8CZz3Nwn54B7Lhiha7g4yiR9Rpkgso8j3ZrbUMCaM/5vhV01C5MWq+06qGVKecnX9PMrm7d7ljkJE/TW3WcR2WhH8AM8+0pa73aAF1D9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BkRP4wh6; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1719922517; c=relaxed/simple;
+	bh=5A/LPrJoCxitojeJt7eBlNk3snz2b7ebrhihpRcHwVk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YVZPHOuERO30VjZWWRAEHtCmkmUyFcdm43qGKCmlYl4hORvoOio2eND3EAUr0+SMeIB2gx1aCXjBQ8KsiQXhVGYtjIrOJ0GhN5Pve+GQqqdsNUoyKs+z3GfVJCY8KH4QQ1q53MHdwGryCQC1o+y0e+eVmwYPWh5WbFULNUJ9wCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=W0GmMW36; arc=none smtp.client-ip=77.238.177.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BkRP4wh6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4H0kn1lNWzVJfOABE8UVhmMrapLkOqkflBiu0II1OzI=; b=BkRP4wh6h5/M14B1AqqGglvNcX
-	iwivozmzpyoWh27g/3lRhEJLrmxdm1tf02XoZ26+xBicXfsIpJuturWphgXWW7rvN95zuXNqYgDQR
-	9UIkUGf3C2jrueKsbdD1Ky1jo5iRPz/W11ehsVYkllZ35LOsCd48VblmSG/IgOmtaXrnsy2WZz8hp
-	CESuZMR/SYEHEPla3jWILQ/PYhfoMfwKULLddVzXgcZkB8zT6nViFpsn1tESLNDxrXxODCZewyjYP
-	2eoTrrBtZ7DYLNQL98MRR7e5zUdKhSmb7tnywmPhxl8XS2meRungD78uUInbOm3Rezf5D+IEVZC4/
-	GDIK3Ihw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOcPX-00000006ddf-2NOb;
-	Tue, 02 Jul 2024 12:15:03 +0000
-Date: Tue, 2 Jul 2024 05:15:03 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
-Message-ID: <ZoPvR39vGeluD5T2@infradead.org>
-References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
- <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
- <20240701224941.GE612460@frogsfrogsfrogs>
- <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
- <ZoOuSxRlvEQ5rOqn@infradead.org>
- <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
- <20240702101902.qcx73xgae2sqoso7@quack3>
- <958080f6de517cf9d0a1994e3ca500f23599ca33.camel@kernel.org>
- <ZoPs0TfTEktPaCHo@infradead.org>
- <09ad82419eb78a2f81dda5dca9caae10663a2a19.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="W0GmMW36"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1719922514; bh=SI7tOorPKK3iwm2YfS1Q/1Qsuj151Q4jTdztaPUQtFQ=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=W0GmMW36rP0dyoHybBYHWPwrq7WKLdiIT71YN/hYayZ3kCTHJT57HIUx7aJhL+pnKaUFzxAxRQ+oy5/rQH5RVeDaaA0wYz4tt+yjY4skEKIpPpIxZCUk/VIoXn+KM0cZwUF4UcY7gUUrnhPcpkINLXW8fx91oHSIt4gvC2OTTQEpysCaT4OE8JqY0WTSsBGQ0XBo3FQyWyMU3YTgXG2ty0YGOq7dTY4pJB4+oJN6gDNNLGR8zkRS+GsuQcvuhdMzhbtBWE3W8+enX48L5VR5SvUgbOipzxFA45wMsZBO5Nboj7OajBdlq7CEmg9/ZRbpC8dSqFAcYjTS3w3Cl9wT7Q==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1719922514; bh=hcfzUVawVVnbnXKHIXQxFqBsiaYVIbdVjVVVA0ARjWF=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=ofA1Zqctco8x0d5CPMeL7HCZ/MekOySYjaWHgXBwhWYz/JoC2En7GTrc4Nl1iZSLY/KkakcN75Y7uDGddfDelAKmJq2aNkHDh5qRpZfBn9TU/rZC+JYqsYIpAWxQSlFMsWnpPEr6fHkMud2YOr56nUknXgcxKUSXpxTD0KU/At4EUFF0z7mF9M/fhHGsuHyat7fuwHnS52u9hV2uXQj6lVGU4Fv1+Oz+lOrLzEu5HEOso76gG//wJ44jhmrI9PR5+Bkxxh/mWSCrAVBCdpBC+stQ7OqCrFxTbs6l0F2kJRgRk3u3EgC6FDQXqivvVb1acXeeIemWPsCH5/pmWKPfdg==
+X-YMail-OSG: ElClSJoVM1kUkOe6xQFoHRNY54mPJP6B7tC6uj_3Brw__zqhVQ2DoPACgCDwrrF
+ R9lmIY.b1BomJ4A1apc6Emx1ZzQZYGvJDVLjjzqEZB3UTiq00K9.Eq3aRazKiLR2bzh5Qe2qAbNh
+ ML.cT4e9F1lx8Un25yjgtwnjTlt1aJEGoDoTgOTww0xG.eL3SE7JaV0V7oKs6EVm2FutJV4ZGoLK
+ H1OHbFoVcbH1J68X30f8ZVNVqZO6UxEnkUZwJSZ1WQ81n5q0sG56Nq045setkuAsQB5PqcKZ.nQ2
+ hNzygx_DMUXqU62DvFAwMm9d8B7qzUdHiINV1RaS_m6zrIJVRXkrMLcX1_hrIX2VtozztwpDcA7K
+ gI1B.ey6HqFlWvaBpqvsVYOzIvB9bim6toaORiAmcEH.0EgeHFfmam0MR7pP9EmWkQ2Kdvupi3vZ
+ 6Fefeq3sxWCHuFd6VIiUuyUAth4zziIzKWIBaYhTQFjKuNdJUNwH.y2ImvrCIHWivlKQBZQafq2G
+ bUzQiIJeQrGZbkgq__9cP4pCbVMe0ctO.5UCjdSMQszPbBCEW57HfhhTg..9q_L4ySQFAS_xSC7Q
+ UsIGeRXcyH1TvqLblSNC3Bafip.vtsLbJg.UBYHvPyh7cJ4fyvi6uLkYsUyU4WkZYXTkzKKb0EvY
+ 6I1ef.MSS6dp5NvdKu2ZrOaFLxlFVdSFgTl4d0fyHZxYKexouC4W_ldHKO6n14d2oKdjZ2xbH3CI
+ jsoVBPCL4cSfwiZVk1p.kp_TJ5OnbNOfaqybVjHpxGaH8A7Xp.WsSMubPE7JxhMJhpGvlI75wdlA
+ 0.PwF3bX6huSzp2Hg4pekj4z0cwEH2faIabZWV8EH72uzECwlptGhAVUg9r4JqC1DjoV9e_uOMr5
+ eOU02LjaaXqCZiBJapRiWKlAFYFuJbn9L.ORfZk2kqylr7yxSoG3pZE2KE03.7eeSWRk40MCofBE
+ 5S2wKvhcyMxKhXZq7fJhUUhoeWpeJ4ZLV5w2wPiuwNM9CjPqvla7oIk1uQ9P7Al7_0wW3_NWXVmK
+ NkhOTrY9dryUROMiUSMy7QAyYWR8Hk7y7JTPSJi5B3Vv67HbPTRuKOyCfObw0PIqjymaKIN8tEFd
+ 8oce3gH1FF4PhYjZ61J9Xu9lJOA3hH9kVVWy5Hl_6dGvw6rgxKFKGhIX.vcDAVNMn5e7Dx368Mgl
+ 5mSJ_zE44I84OkHpL2v9Wsr2pvlSZUX3KJyZ7IuNJNgn0RMmughcpBXHouv4kBVivzk1Q9zRR4W7
+ 96UHq8JRVSeSsjPyoZcK50krIuYt3RebgtNEw3TUoplkdCgXejz9_SqM4B26AiytJih1PR5O0wNF
+ CQhfYOkAx7y5Z07UTZMzcCIxXbkY.1FtKKAbo6E8ncgQUZmzsau67KklsB88SrNXdSxDfS00WTxb
+ BZYP9hjNEoCj7xEPpMnMEsz61kc.hI2GAb4faQtP7R3UIbRl6AMD8XGsH1ZbU1T9q8Spl.mPiLBf
+ guiyIx5g.e2I2y6sqf6lCaGcDIGyO7HC5zp5gSN08chtLloOH3Yc8C5uGnMyJKsIBkWcFxuZ.mO7
+ OiZOn33tHUrsoHIcvrJFSr.WTvzADM8ap1x5RaqH1W2FDaLuNouy9T4FO.MoUGXMgx7OLuDqtcgw
+ jFnRpKGe9je.Z.rdrzS8p6Thh2WtnRHRxt8kx3pYrdHgnnjv_akDZrhKy2BS7JncP.T85S257Rnl
+ mXuAgXX61OuhhUnnV1uX8H25QzeDA6pCWC2mjEtrp57TjgDMuBSOiDYYXduCZyRcvPQr778.bX.W
+ UP9cuWSt.sO6VU1DorbXJfC2dSOEVRKRTnFe6xcEApnqE15NZ5qIIWkVO..l7HdvAjhoAUDFiR5R
+ AU.TGmWIqud8womiJYuD.I9k48dzgTjSZImSvD0Cv_NI52s5Gz1H4u7g1OLWcCHl4mnbIPyHcpa3
+ DCL0TS3I8KlSI1CUcfF9O.Lxx8uHqG5MfMrKPO.1QT7_w.RZgtER72mGBO.4FC3WsmrG5Q8XL_jX
+ Ey4kHZ0sJbiWRtS4JFzVgEEd8.0Vfcudj3kANixtHpOO4bVWh16aAaC1goGPmxBP7cW9mZmUrFmD
+ .gQlY8Sq5UgUER2jkAzE0DAGUL.aQTlnl1eMYijON7ZMYP7FJuZym.w5dmkU3sAcTJdW3LUC8PZl
+ Ko2vzwYHrndjNvkhdi9y5GVs.1fCkPAEEEggy40pUfpY1rDzooZF_qjI1xw--
+X-Sonic-MF: <xzeol@yahoo.com>
+X-Sonic-ID: 5be21093-340e-4cd2-8dfd-5895edaad512
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ir2.yahoo.com with HTTP; Tue, 2 Jul 2024 12:15:14 +0000
+Received: by hermes--production-ir2-85cf877599-mvt7h (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 0dd9cec1d13f3a8113ebc66190b2d374;
+          Tue, 02 Jul 2024 11:52:58 +0000 (UTC)
+From: Alex Vdovydchenko <xzeol@yahoo.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Alex Vdovydchenko <xzeol@yahoo.com>
+Subject: [PATCH v4 1/2] dt-bindings: hwmon: Add MPS mp5920
+Date: Tue,  2 Jul 2024 14:52:50 +0300
+Message-ID: <20240702115252.981416-2-xzeol@yahoo.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240702115252.981416-1-xzeol@yahoo.com>
+References: <20240702115252.981416-1-xzeol@yahoo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09ad82419eb78a2f81dda5dca9caae10663a2a19.camel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 02, 2024 at 08:09:46AM -0400, Jeff Layton wrote:
-> > > corrupt timestamps like this?
-> > 
-> > inode_set_ctime_to_ts should return an error if things are out of range.
-> 
-> Currently it just returns the timespec64 we're setting it to (which
-> makes it easy to do several assignments), so we'd need to change its
-> prototype to handle this case, and fix up the callers to recognize the
-> error.
-> 
-> Alternately it may be easier to just add in a test for when
-> __i_ctime == KTIME_MAX in the appropriate callers and have them error
-> out. I'll have a look and see what makes sense.
+Add support for MPS mp5920 controller
 
-The seems like a more awkward interface vs one that explicitly checks.
+Signed-off-by: Alex Vdovydchenko <xzeol@yahoo.com>
+---
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> 
-> > How do we currently catch this when it comes from userland?
-> > 
-> 
-> Not sure I understand this question. ctime values should never come
-> from userland. They should only ever come from the system clock.
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index ff70f0926..cb2fc26d9 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -296,6 +296,8 @@ properties:
+           - mps,mp2975
+             # Monolithic Power Systems Inc. multi-phase controller mp2993
+           - mps,mp2993
++            # Monolithic Power Systems Inc. multi-phase hot-swap controller mp5920
++          - mps,mp5920
+             # Monolithic Power Systems Inc. multi-phase hot-swap controller mp5990
+           - mps,mp5990
+             # Monolithic Power Systems Inc. digital step-down converter mp9941
+-- 
+2.43.0
 
-Ah, yes, utimes only changes mtime.
