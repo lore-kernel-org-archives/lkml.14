@@ -1,166 +1,98 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DF915D5AB;
-	Tue,  2 Jul 2024 12:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1F81581EA;
+	Tue,  2 Jul 2024 12:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719922446; cv=none; b=EHcD2YqLWLFKl8Kt53kjdI/xy4iML3U2AH8wP38a/SIQtJtIERRvaWNxV7DhfXFYjHDSM7/21lupqUvbKOAX7K0XLqUHS3tBiZ7pYNwREJisURSgCtLhri7gGb2sZbPjS2qF7b6F4PZVRB5J+L+S/tHT9clUr4g/BrLkG6thRI0=
+	t=1719922513; cv=none; b=Ylg16Jb30ZY2v9tNC5R+zR+Wl2I7xU4XlGYRUsMY6AUsdxF6ZU7THLqXX35F0IpeDOYpT3U1SXALngbFOhibe3INIeztaHAWuc39LnOyS0r3p9nTTm7rJXkVblbjQnUTNETnN+HzTFV3ECAXTdgA91JcFpAAU5sVfvSBCJNyU54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719922446; c=relaxed/simple;
-	bh=+s6jgiAJELxreoow36uUgrgozKOOjkSRma04ypAOOY0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=i2CECPgR7vanVt3qnUaATEWkV9DTLW8+zpE1LL/6MkqYysRYh1ijh/zlUWtbEpKrWogqavOzKppLxbfa3n8X5RKkZDw+LZfomXpgOFU3ImoB1eNYzuffLhTmprNdQC5u886Z56REOau3i1IZOFBm9u2pAX2lokiSmW4Z0qyMuZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LxwkcBQV; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719922513; c=relaxed/simple;
+	bh=daknPN5+UD0AOsgseyyPKy+GhsmNuv/Kgat0Tz4/+yA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WNc0sTY9+NAk9iZXssr6v1hGg29i7drYjQSKWCN58L8Q2m5DjGTMk7M66cT6lBteJY8CZz3Nwn54B7Lhiha7g4yiR9Rpkgso8j3ZrbUMCaM/5vhV01C5MWq+06qGVKecnX9PMrm7d7ljkJE/TW3WcR2WhH8AM8+0pa73aAF1D9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BkRP4wh6; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LxwkcBQV"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4628FSIe006162;
-	Tue, 2 Jul 2024 12:13:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WAc+27O8bp3KbN84Q0eAMJawfTO1NX5ZOKDBTeZA1oQ=; b=LxwkcBQVgolmjPWK
-	Uas18qBtOu04XZDaSHgpyE5C9Cg21ukIWiiNLzxqUx+MsxbQpaSFuicy5TQ8k+xs
-	OIoS1VBRzxbtC8CbLst03UWR8BRTRSZKtBZ9MFCYeT9UCV4qr2zF0N3Hb4LEv0fd
-	Nsx/92Z0ezvnRQwbpN3A5u2rCbutpShj98y633QSI5U1O0BAItQQDuQMNy9sTgfa
-	S27VV8GjNZ4UMMB3HRTsUjZv6TnKA2dK0EJ4d4yAdFzU8rk39iTYJ0vYik6S2Z4W
-	bNOcTgtBm60jhLdOd3GIkPc1CyJ9L40GlniIkWcw7Xl5Aeipo9ta36i7dCncSD+j
-	6siugQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402bj87n5v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jul 2024 12:13:23 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 462CDM4C026821
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 2 Jul 2024 12:13:22 GMT
-Received: from [10.50.55.70] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 2 Jul 2024
- 05:13:12 -0700
-Message-ID: <5ccbfde6-f26a-4796-abac-e8d6a18c74e7@quicinc.com>
-Date: Tue, 2 Jul 2024 17:43:08 +0530
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BkRP4wh6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4H0kn1lNWzVJfOABE8UVhmMrapLkOqkflBiu0II1OzI=; b=BkRP4wh6h5/M14B1AqqGglvNcX
+	iwivozmzpyoWh27g/3lRhEJLrmxdm1tf02XoZ26+xBicXfsIpJuturWphgXWW7rvN95zuXNqYgDQR
+	9UIkUGf3C2jrueKsbdD1Ky1jo5iRPz/W11ehsVYkllZ35LOsCd48VblmSG/IgOmtaXrnsy2WZz8hp
+	CESuZMR/SYEHEPla3jWILQ/PYhfoMfwKULLddVzXgcZkB8zT6nViFpsn1tESLNDxrXxODCZewyjYP
+	2eoTrrBtZ7DYLNQL98MRR7e5zUdKhSmb7tnywmPhxl8XS2meRungD78uUInbOm3Rezf5D+IEVZC4/
+	GDIK3Ihw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOcPX-00000006ddf-2NOb;
+	Tue, 02 Jul 2024 12:15:03 +0000
+Date: Tue, 2 Jul 2024 05:15:03 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
+Message-ID: <ZoPvR39vGeluD5T2@infradead.org>
+References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
+ <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
+ <20240701224941.GE612460@frogsfrogsfrogs>
+ <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
+ <ZoOuSxRlvEQ5rOqn@infradead.org>
+ <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
+ <20240702101902.qcx73xgae2sqoso7@quack3>
+ <958080f6de517cf9d0a1994e3ca500f23599ca33.camel@kernel.org>
+ <ZoPs0TfTEktPaCHo@infradead.org>
+ <09ad82419eb78a2f81dda5dca9caae10663a2a19.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 4/7] dt-bindings: clock: Add ipq9574 NSSCC clock and
- reset definitions
-To: "Rob Herring (Arm)" <robh@kernel.org>
-CC: <catalin.marinas@arm.com>, <u-kumar1@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <krzk+dt@kernel.org>,
-        <geert+renesas@glider.be>, <neil.armstrong@linaro.org>,
-        <nfraprado@collabora.com>, <mturquette@baylibre.com>,
-        <linux-kernel@vger.kernel.org>, <dmitry.baryshkov@linaro.org>,
-        <netdev@vger.kernel.org>, <konrad.dybcio@linaro.org>,
-        <m.szyprowski@samsung.com>, <arnd@arndb.de>,
-        <richardcochran@gmail.com>, <will@kernel.org>, <sboyd@kernel.org>,
-        <andersson@kernel.org>, <p.zabel@pengutronix.de>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <20240626143302.810632-1-quic_devipriy@quicinc.com>
- <20240626143302.810632-5-quic_devipriy@quicinc.com>
- <171941612020.3280624.794530163562164163.robh@kernel.org>
-Content-Language: en-US
-From: Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <171941612020.3280624.794530163562164163.robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6shE0fNeo2vFEYGKXPuqETHTSuM8sMwR
-X-Proofpoint-GUID: 6shE0fNeo2vFEYGKXPuqETHTSuM8sMwR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-02_08,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- spamscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
- malwarescore=0 adultscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407020090
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <09ad82419eb78a2f81dda5dca9caae10663a2a19.camel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+On Tue, Jul 02, 2024 at 08:09:46AM -0400, Jeff Layton wrote:
+> > > corrupt timestamps like this?
+> > 
+> > inode_set_ctime_to_ts should return an error if things are out of range.
+> 
+> Currently it just returns the timespec64 we're setting it to (which
+> makes it easy to do several assignments), so we'd need to change its
+> prototype to handle this case, and fix up the callers to recognize the
+> error.
+> 
+> Alternately it may be easier to just add in a test for when
+> __i_ctime == KTIME_MAX in the appropriate callers and have them error
+> out. I'll have a look and see what makes sense.
 
+The seems like a more awkward interface vs one that explicitly checks.
 
-On 6/26/2024 9:05 PM, Rob Herring (Arm) wrote:
 > 
-> On Wed, 26 Jun 2024 20:02:59 +0530, Devi Priya wrote:
->> Add NSSCC clock and reset definitions for ipq9574.
->>
->> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
->>   Changes in V5:
->> 	- Dropped interconnects and added interconnect-cells to NSS
->> 	  clock provider so that it can be  used as icc provider.
->>
->>   .../bindings/clock/qcom,ipq9574-nsscc.yaml    |  74 +++++++++
->>   .../dt-bindings/clock/qcom,ipq9574-nsscc.h    | 152 ++++++++++++++++++
->>   .../dt-bindings/reset/qcom,ipq9574-nsscc.h    | 134 +++++++++++++++
->>   3 files changed, 360 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml
->>   create mode 100644 include/dt-bindings/clock/qcom,ipq9574-nsscc.h
->>   create mode 100644 include/dt-bindings/reset/qcom,ipq9574-nsscc.h
->>
+> > How do we currently catch this when it comes from userland?
+> > 
 > 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> Error: Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.example.dts:26.26-27 syntax error
-> FATAL ERROR: Unable to parse input tree
-> make[2]: *** [scripts/Makefile.lib:427: Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.example.dtb] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1430: dt_binding_check] Error 2
-> make: *** [Makefile:240: __sub-make] Error 2
-> 
-> doc reference errors (make refcheckdocs):
-> 
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240626143302.810632-5-quic_devipriy@quicinc.com
-> 
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
-> 
-> pip3 install dtschema --upgrade
-> 
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your schema.
-> Hi Rob,
+> Not sure I understand this question. ctime values should never come
+> from userland. They should only ever come from the system clock.
 
-We tried running dt_binding_check on linux-next and we do not face any
-sort of errors.
-
-However in case of v6.10-rc1, patch[1] failed to apply as the dependent
-patch[2] is not available on rc1.
-
-[1] 
-https://patchwork.kernel.org/project/linux-arm-msm/patch/20240626143302.810632-3-quic_devipriy@quicinc.com/
-
-[2] 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20240531&id=475beea0b9f631656b5cc39429a39696876af613
-
-Patch [2] does not hold any functional dependency on this series but has 
-a patch rebase dependency.
-
-The Bot has went ahead and tried running the dt_binding_check on patch 
-https://patchwork.kernel.org/project/linux-arm-msm/patch/20240626143302.810632-5-quic_devipriy@quicinc.com/
-which is dependent on patch [1] and hence the issue was reported.
-
-Is this the expected behaviour?
-
-Thanks & Regards,
-Devi Priya
-> 
+Ah, yes, utimes only changes mtime.
