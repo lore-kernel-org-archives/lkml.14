@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7501CE088;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD111CD5D3;
 	Tue,  2 Jul 2024 19:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719948255; cv=none; b=aBF6d2ajKbygPpDTUGelf6WNnTXJRfgoDUhvTALxRUuNt4yZQYo9FYlhGXhFzpxliO2pD7pv43lhZh1GyRPc2AHHWs0Vllu8NwFKWci9ijFXgkpnbphtjF/wk0+gibHZwA0Dhb5fxjkv4QG0rlhCqaj+JvvHAqq/TQvNoED8jeM=
+	t=1719948255; cv=none; b=SSGF/K6OqjHLJ2Tt+y8xUMjGXuDVfyZSd4we11HT3z4LFQWv+EjvCJy7IElXgXTHgYar14LE738i9KkEKe9oBz3CwAJGWsnQrHNvJls21Gu1/7N6BGCvERTcUh16M+8L/+D8CGYhWbqsEYXeiuUn5wfax7ikoLOrYbFgDbVF2Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719948255; c=relaxed/simple;
-	bh=VG6Hq4/h7KDP0q5H1EJ7GmtURSB1tyDoNlkPyrDZjHI=;
+	bh=TpkuKdbAm/4wvkB8G9ZWn4DVu9X2qnBz+7pyvS851A4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=N14KjBqLkXY9TNQVQWM9wtY3YIlBbvPULKxp7wrp1mqMFzQLQVJuQnUVhCWUpcximbG7H+15+32LCuEfSl7T+pK4Yc7lYdHC06KC2XCR+iuuMJ3uHlIlr2PMcpUNzmClnVsgDlZMP9UYrErzZlp9k+z0Rq8o3unc/WB+V8DYEFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KJ+xmLls; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wpkaqUdE; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=nE9KECDJq1KVPgiUC5cPyvbrqaRohVvxBuy73VXPfHZm5YuMxtON41eYqcvLJRa7+lZD//ferF5CEwyhFfSfQMLZB60hLQqm36WmttlSM5wobkGt+JAHkoLwGAYtHlM3AyBPKjFefDFd+g/y+zghiA/lVNhTfD7996Fuh/r+Uk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SKjewpaU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nFNueEYc; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KJ+xmLls";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wpkaqUdE"
-Date: Tue, 02 Jul 2024 19:24:12 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SKjewpaU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nFNueEYc"
+Date: Tue, 02 Jul 2024 19:24:11 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1719948252;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KRKP8icRR/2QpFvlaLpebPvPm25weRkY9nBWbi8gmMY=;
-	b=KJ+xmLlsU9iZXbkpua8av/bA/bMCNeZ40KAqSaei9pEl1q9UHt7WDX6vgC4FWDYZqk8zzi
-	zwI/XDn4zsOhRe8Tzrm0woyjqM/w+OkGML9G/C/rlFGBz+hK8Ahac/pUa/tQx10CDGsw0y
-	ZfFY7J8BjpsePaFJvQfi/qdUOqZxvJsoFyn6OoCt+zquSqeJ//ARsGXgo2lFo3mpLt+TA7
-	UoSNu4lnXEcY+cX8h6ySYcU397jOU+xVmgSxvRE1VGKrsHQfcIUHOAc/ZdpYBZacmYN4gr
-	VoEHVL+dT0ttwVQ9WjdWw8wrMh4VLPx6/cUhJggzAYHq0yjFuBkljeJq6rxHbQ==
+	bh=3KYlJvub7w0Ro8r6BoObmwfiG8RQO123IBOGEetAbOw=;
+	b=SKjewpaUXhQ6k/pP5AXI0B6xTiLB7MtL5BgjrfD6hhET2swRWB5VFQjhzyqYbUTv90qqn9
+	YDPRM67A76PjupHK8rJw9XGfEgiUBnXqWonRggS8JyIAKeo0cDFHupLTQ/RRKGlpU0C6KH
+	yxFGR5tVwQoSUDUN53ylBGFE25/BG3qS3eTJz6cuLdCY2if0AwJo8OE6OTGFPOHmhBso8p
+	G5oZ0YZyM5k6MXVm8KtyEJzTySo/yO+lK6w66Do++Gh5ojl4UmuxJnBgQgFGJuJfIQfimf
+	/r30hvoiIQ4tyR4kaoTKO6yRLEs/GdYXpF7+gFzqNK0Q3vlsYkblAR3Y1PVLmw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1719948252;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,27 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KRKP8icRR/2QpFvlaLpebPvPm25weRkY9nBWbi8gmMY=;
-	b=wpkaqUdEJxwHNKhGZ5CxYdhQlWiUy+mUk16eZZjnvbQcrUy12Y29Tm7GJhJtguWFH5/Lae
-	nEMGsgS4rLT92KCg==
+	bh=3KYlJvub7w0Ro8r6BoObmwfiG8RQO123IBOGEetAbOw=;
+	b=nFNueEYc3MUUW8S6NCPN79nRDVvKxWa6S82v+yLmjTM4jL3Ntn1x1GJSTviTnBq2z8HWB6
+	RR60Mm2nPBfGxdCg==
 From: "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cache] x86/resctrl: Make __mon_event_count() handle sum domains
+Subject: [tip: x86/cache] x86/resctrl: Enable shared RMID mode on Sub-NUMA
+ Cluster (SNC) systems
 Cc: Tony Luck <tony.luck@intel.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Reinette Chatre <reinette.chatre@intel.com>, Babu Moger <babu.moger@amd.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240628215619.76401-17-tony.luck@intel.com>
-References: <20240628215619.76401-17-tony.luck@intel.com>
+ Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240702173820.90368-3-tony.luck@intel.com>
+References: <20240702173820.90368-3-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171994825208.2215.17506703249107280689.tip-bot2@tip-bot2>
+Message-ID: <171994825170.2215.10473182240437238185.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,118 +68,113 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     9fbb303ec949a376f3cbdf6a2b66ad2212c24ebc
-Gitweb:        https://git.kernel.org/tip/9fbb303ec949a376f3cbdf6a2b66ad2212c24ebc
+Commit-ID:     21b362cc762aabb3e8496d33d7b4538154c95a0b
+Gitweb:        https://git.kernel.org/tip/21b362cc762aabb3e8496d33d7b4538154c95a0b
 Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Fri, 28 Jun 2024 14:56:16 -07:00
+AuthorDate:    Tue, 02 Jul 2024 10:38:20 -07:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 02 Jul 2024 19:57:22 +02:00
+CommitterDate: Tue, 02 Jul 2024 19:57:51 +02:00
 
-x86/resctrl: Make __mon_event_count() handle sum domains
+x86/resctrl: Enable shared RMID mode on Sub-NUMA Cluster (SNC) systems
 
-Legacy resctrl monitor files must provide the sum of event values across
-all Sub-NUMA Cluster (SNC) domains that share an L3 cache instance.
+Hardware has two RMID configuration options for SNC systems. The default
+mode divides RMID counters between SNC nodes. E.g. with 200 RMIDs and
+two SNC nodes per L3 cache RMIDs 0..99 are used on node 0, and 100..199
+on node 1. This isn't compatible with Linux resctrl usage. On this
+example system a process using RMID 5 would only update monitor counters
+while running on SNC node 0.
 
-There are now two cases:
-1) A specific domain is provided in struct rmid_read
-   This is either a non-SNC system, or the request is to read data
-   from just one SNC node.
-2) Domain pointer is NULL. In this case the cacheinfo field in struct
-   rmid_read indicates that all SNC nodes that share that L3 cache
-   instance should have the event read and return the sum of all
-   values.
+The other mode is "RMID Sharing Mode". This is enabled by clearing bit
+0 of the RMID_SNC_CONFIG (0xCA0) model specific register. In this mode
+the number of logical RMIDs is the number of physical RMIDs (from CPUID
+leaf 0xF) divided by the number of SNC nodes per L3 cache instance. A
+process can use the same RMID across different SNC nodes.
 
-Update the CPU sanity check. The existing check that an event is read
-from a CPU in the requested domain still applies when reading a single
-domain. But when summing across domains a more relaxed check that the
-current CPU is in the scope of the L3 cache instance is appropriate
-since the MSRs to read events are scoped at L3 cache level.
+See the "Intel Resource Director Technology Architecture Specification"
+for additional details.
+
+When SNC is enabled, update the MSR when a monitor domain is marked
+online. Technically this is overkill. It only needs to be done once
+per L3 cache instance rather than per SNC domain. But there is no harm
+in doing it more than once, and this is not in a critical path.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Tested-by: Babu Moger <babu.moger@amd.com>
-Link: https://lore.kernel.org/r/20240628215619.76401-17-tony.luck@intel.com
+Link: https://lore.kernel.org/r/20240702173820.90368-3-tony.luck@intel.com
 ---
- arch/x86/kernel/cpu/resctrl/monitor.c | 51 +++++++++++++++++++++-----
- 1 file changed, 42 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/msr-index.h       |  1 +
+ arch/x86/kernel/cpu/resctrl/core.c     |  2 ++
+ arch/x86/kernel/cpu/resctrl/internal.h |  2 ++
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 20 ++++++++++++++++++++
+ 4 files changed, 25 insertions(+)
 
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index e022e6e..3cb8dd6 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -1164,6 +1164,7 @@
+ #define MSR_IA32_QM_CTR			0xc8e
+ #define MSR_IA32_PQR_ASSOC		0xc8f
+ #define MSR_IA32_L3_CBM_BASE		0xc90
++#define MSR_RMID_SNC_CONFIG		0xca0
+ #define MSR_IA32_L2_CBM_BASE		0xd10
+ #define MSR_IA32_MBA_THRTL_BASE		0xd50
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 95ef8fe..1930fce 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -615,6 +615,8 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
+ 	}
+ 	cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
+ 
++	arch_mon_domain_online(r, d);
++
+ 	if (arch_domain_mbm_alloc(r->num_rmid, hw_dom)) {
+ 		mon_domain_free(hw_dom);
+ 		return;
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 16982d1..955999a 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -534,6 +534,8 @@ static inline bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l)
+ 
+ int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool enable);
+ 
++void arch_mon_domain_online(struct rdt_resource *r, struct rdt_mon_domain *d);
++
+ /*
+  * To return the common struct rdt_resource, which is contained in struct
+  * rdt_hw_resource, walk the resctrl member of struct rdt_hw_resource.
 diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index ca309c9..ca486d0 100644
+index ca486d0..16b7bf5 100644
 --- a/arch/x86/kernel/cpu/resctrl/monitor.c
 +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -324,9 +324,6 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
- 
- 	resctrl_arch_rmid_read_context_check();
- 
--	if (!cpumask_test_cpu(smp_processor_id(), &d->hdr.cpu_mask))
--		return -EINVAL;
--
- 	prmid = logical_rmid_to_physical_rmid(cpu, rmid);
- 	ret = __rmid_read_phys(prmid, eventid, &msr_val);
- 	if (ret)
-@@ -592,7 +589,10 @@ static struct mbm_state *get_mbm_state(struct rdt_mon_domain *d, u32 closid,
- 
- static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
- {
-+	int cpu = smp_processor_id();
-+	struct rdt_mon_domain *d;
- 	struct mbm_state *m;
-+	int err, ret;
- 	u64 tval = 0;
- 
- 	if (rr->first) {
-@@ -603,14 +603,47 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
- 		return 0;
- 	}
- 
--	rr->err = resctrl_arch_rmid_read(rr->r, rr->d, closid, rmid, rr->evtid,
--					 &tval, rr->arch_mon_ctx);
--	if (rr->err)
--		return rr->err;
-+	if (rr->d) {
-+		/* Reading a single domain, must be on a CPU in that domain. */
-+		if (!cpumask_test_cpu(cpu, &rr->d->hdr.cpu_mask))
-+			return -EINVAL;
-+		rr->err = resctrl_arch_rmid_read(rr->r, rr->d, closid, rmid,
-+						 rr->evtid, &tval, rr->arch_mon_ctx);
-+		if (rr->err)
-+			return rr->err;
- 
--	rr->val += tval;
-+		rr->val += tval;
- 
--	return 0;
-+		return 0;
-+	}
-+
-+	/* Summing domains that share a cache, must be on a CPU for that cache. */
-+	if (!cpumask_test_cpu(cpu, &rr->ci->shared_cpu_map))
-+		return -EINVAL;
-+
-+	/*
-+	 * Legacy files must report the sum of an event across all
-+	 * domains that share the same L3 cache instance.
-+	 * Report success if a read from any domain succeeds, -EINVAL
-+	 * (translated to "Unavailable" for user space) if reading from
-+	 * all domains fail for any reason.
-+	 */
-+	ret = -EINVAL;
-+	list_for_each_entry(d, &rr->r->mon_domains, hdr.list) {
-+		if (d->ci->id != rr->ci->id)
-+			continue;
-+		err = resctrl_arch_rmid_read(rr->r, d, closid, rmid,
-+					     rr->evtid, &tval, rr->arch_mon_ctx);
-+		if (!err) {
-+			rr->val += tval;
-+			ret = 0;
-+		}
-+	}
-+
-+	if (ret)
-+		rr->err = ret;
-+
-+	return ret;
+@@ -1090,6 +1090,26 @@ static void l3_mon_evt_init(struct rdt_resource *r)
+ 		list_add_tail(&mbm_local_event.list, &r->evt_list);
  }
  
- /*
++/*
++ * The power-on reset value of MSR_RMID_SNC_CONFIG is 0x1
++ * which indicates that RMIDs are configured in legacy mode.
++ * This mode is incompatible with Linux resctrl semantics
++ * as RMIDs are partitioned between SNC nodes, which requires
++ * a user to know which RMID is allocated to a task.
++ * Clearing bit 0 reconfigures the RMID counters for use
++ * in RMID sharing mode. This mode is better for Linux.
++ * The RMID space is divided between all SNC nodes with the
++ * RMIDs renumbered to start from zero in each node when
++ * counting operations from tasks. Code to read the counters
++ * must adjust RMID counter numbers based on SNC node. See
++ * logical_rmid_to_physical_rmid() for code that does this.
++ */
++void arch_mon_domain_online(struct rdt_resource *r, struct rdt_mon_domain *d)
++{
++	if (snc_nodes_per_l3_cache > 1)
++		msr_clear_bit(MSR_RMID_SNC_CONFIG, 0);
++}
++
+ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
+ {
+ 	unsigned int mbm_offset = boot_cpu_data.x86_cache_mbm_width_offset;
