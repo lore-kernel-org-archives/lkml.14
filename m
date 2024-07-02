@@ -1,80 +1,45 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137A77442F
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 18:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECF01BD00A;
+	Tue,  2 Jul 2024 18:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719946084; cv=none; b=isg30I01r+BNzcMHMkqGB+tEgHD/Ag5DwmFYaqXVq1ZMs24GUYnhwqpwCq+6VYYF7IVwFAEbM4ZJf/GyeBPCS1ypgaiDEdjGLNmS1rEe8k92mGcWoxSFCMX2ePI1kpm4E8ywfOzG56cbdrNw1rb0R8ud+KmoeV9QR1FRyABqfnk=
+	t=1719946188; cv=none; b=LR4wTUwMfilk+64nZAqwWCJ5KnAu0yW5YUaFFpvqkG7VnImUhQP/iPt6VIg3qECAW8LaI52LJP0sGoBSGlcG1OoYT1ImHMXu8olDfJWt+4G4Z6VaXtqIqzwbiQVJQ8h+3uujVVg7G4K/YNpj8+HA+lt3ZfTNlObGEHCBh8pmutE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719946084; c=relaxed/simple;
-	bh=6mPeGExdB8g59kIomkdxZxbeb+RUp33J6ZRmTyUtha0=;
+	s=arc-20240116; t=1719946188; c=relaxed/simple;
+	bh=muWQU8+tLHYzGQGeY25n5iq8cxrlarZsW8XJMLS/Raw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V4BNmpozIQo/4S4TrjMKVZeXkMKETvnjXKLvh23KiDJNj/IGF9uUKssy5Q8ExM5eMdkDuHaOGtf4Tr6+WNuRUfzRAiNA99U/VqLiJ15plGUBu5IVywFt9dty/PMM+Uy4zsF/ymjh3gTtf/4yw74wDhdE90tObTTGI4cm70FtiW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=Eg8QhUEe; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bw1Tc7a31IZDNXkPJt1J5rCz9S46jfrhG6ZlMr+TeiCil3d90wNqQUGz8NeqyKQqTMLaCdF5h/N2KweuBtTCqvjPRKphe1YFP/eGsp8njkIrOoCvyXykLSQC+3uJZr42uRhzkai4j6DZlr/4tVtTyjRc13Wnx3gDmZaUzEoRliQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ila/O7rp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Eg8QhUEe"
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462Fi2fM031853;
-	Tue, 2 Jul 2024 18:46:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pps0720; bh=cZHI3o5vijwEP2GKNej30tD
-	g/paC0ciSdKQjouzo7JA=; b=Eg8QhUEe2hpdluShBQog/yynoCrYRtUqwn/vNrU
-	EOIWqf7dJTIH7FEWDB6G//0Y7STrRN1te2zpzXax7xbkp37sLSHAMjjEVMPy8BPd
-	y5NTZkcSj14J5yFjquZ/0TnMs5ITvg3Uy5exfVCWBClGSZVwrGkjHn7fnGEtvBAM
-	R4FiCp0X43RiNqoPwjezbDQz51gVsjMUfpJoLRyLhZ+5skY9XQDfVts0D6HpRBPG
-	d2VNwPtfGctYuagKEkMI+57mQOD7+BzgTy0ll9Gj5YUnOcLcb7nHuhPNbEEUbQbK
-	wj28TcyZ0LxT0LtxFVDb1hdxAG9V7QkXUQnitYtfjXs/mjw==
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 404mer1gft-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jul 2024 18:46:53 +0000 (GMT)
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id C896A147A9;
-	Tue,  2 Jul 2024 18:46:52 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 8B592800465;
-	Tue,  2 Jul 2024 18:46:46 +0000 (UTC)
-Date: Tue, 2 Jul 2024 13:46:44 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Steve Wahl <steve.wahl@hpe.com>,
-        Ashish Kalra <ashish.kalra@amd.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, Pavin Joseph <me@pavinjoseph.com>,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
-        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
-Message-ID: <ZoRLFI60Z0n8lwEf@swahl-home.5wahls.com>
-References: <20240520183633.1457687-1-steve.wahl@hpe.com>
- <20240613152826.GKZmsQGnO3OthLH3Vu@fat_crate.local>
- <ZmsbZCF9rFzuB3rO@swahl-home.5wahls.com>
- <20240616202533.GDZm9KPZtpDKw5aXWX@fat_crate.local>
- <ZnBR6MgS-jzjgA8A@swahl-home.5wahls.com>
- <20240621131742.GEZnV9dn_0XVH0IZ58@fat_crate.local>
- <ZnmNKAE5qT48yhrI@swahl-home.5wahls.com>
- <20240701142704.GGZoK8uDt-2VVtclHl@fat_crate.local>
- <20240702174425.GHZoQ8edlTfB1falcO@fat_crate.local>
- <CAMj1kXGsjU5CpF655me1XNA8-5nbk3020vT2Bu5ZoFY25igovg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ila/O7rp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B686FC116B1;
+	Tue,  2 Jul 2024 18:49:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719946187;
+	bh=muWQU8+tLHYzGQGeY25n5iq8cxrlarZsW8XJMLS/Raw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ila/O7rpP+ijC26sY6h7xSzfMIDBYSmHDcmLvOG77xWue3CiP6pokghGtdMbXkQQL
+	 bYX5frJx0Y2HtuMOUCQENjXbEQwKdV2sF6fOG86NBjzvnZJZJINzOGmHDMMvHKs7rZ
+	 lzLwu1FCeeRwXSutN/DzO04gMt+B3QikdkFcA6wiRwUrZzPg9tc7LXguIhaufFqoH4
+	 0UVK2Q7v2pQlr9YLbzB11MDnh6xGVzqXIkqfCPfWW8aFSR/oazTBPbFKOHZfGCVPl5
+	 OlklpSxLSSs6571NDVLV2/4hkOp993lbAzgta4/BjvK6N6E1zJt4Iij9bPQfKBRZT3
+	 d2KQahfMenEwA==
+Date: Tue, 2 Jul 2024 19:49:42 +0100
+From: Will Deacon <will@kernel.org>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: robin.murphy@arm.com, joro@8bytes.org, jgg@nvidia.com,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v9 4/6] iommu/arm-smmu-v3: Add CS_NONE quirk for
+ CONFIG_TEGRA241_CMDQV
+Message-ID: <20240702184942.GD5167@willie-the-truck>
+References: <cover.1718228494.git.nicolinc@nvidia.com>
+ <d20dc9939523fac490bc02e57d7836f680916a36.1718228494.git.nicolinc@nvidia.com>
+ <20240702174307.GB4740@willie-the-truck>
+ <ZoREzIAqzyamQBWL@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,74 +48,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXGsjU5CpF655me1XNA8-5nbk3020vT2Bu5ZoFY25igovg@mail.gmail.com>
-X-Proofpoint-ORIG-GUID: 22z0Bj_lK-Qn4x7J03Y2jLoLD860Nvhh
-X-Proofpoint-GUID: 22z0Bj_lK-Qn4x7J03Y2jLoLD860Nvhh
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-02_14,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=740 adultscore=0 impostorscore=0 mlxscore=0
- spamscore=0 priorityscore=1501 malwarescore=0 phishscore=0 suspectscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407020136
+In-Reply-To: <ZoREzIAqzyamQBWL@Asurada-Nvidia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Jul 02, 2024 at 08:32:22PM +0200, Ard Biesheuvel wrote:
-> On Tue, 2 Jul 2024 at 19:45, Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Mon, Jul 01, 2024 at 04:27:04PM +0200, Borislav Petkov wrote:
-> > > On Mon, Jun 24, 2024 at 10:13:44AM -0500, Steve Wahl wrote:
-> > > > These accesses are a problem because they happen prior to establishing
-> > > > the page fault interrupt handler that would mend the identity map.  I
-> > > > know very little about the AMD SEV feature but reading the code I
-> > > > think it may be required to do this before setting up that handler.
+On Tue, Jul 02, 2024 at 11:19:56AM -0700, Nicolin Chen wrote:
+> Hi Will,
+> 
+> On Tue, Jul 02, 2024 at 06:43:07PM +0100, Will Deacon wrote:
+> > On Wed, Jun 12, 2024 at 02:45:31PM -0700, Nicolin Chen wrote:
+> > > The CMDQV extension in NVIDIA Tegra241 SoC only supports CS_NONE in the
+> > > CS field of CMD_SYNC. Add a quirk flag to accommodate that.
 > > >
-> > > Yeah, from looking at it, we should be able to establish a #PF handler that
-> > > early too but the devil's in the detail, especially in that early boot code.
+> > > Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> > > Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> > > ---
+> > >  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 8 +++++++-
+> > >  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h | 3 +++
+> > >  2 files changed, 10 insertions(+), 1 deletion(-)
 > > >
-> > > Lemme poke some things and people...
-> >
-> > Ard, from EFI perspective and boot services exiting, do you see any potential
-> > issues if we enable a pagefault handler in load_stage1_idt() in
-> > arch/x86/boot/compressed/head_64.S already or is the EFI pagetable not really
-> > "reliable" then?
-> >
+> > > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> > > index c864c634cd23..ba0e24d5ffbf 100644
+> > > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> > > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> > > @@ -345,6 +345,11 @@ static void arm_smmu_cmdq_build_sync_cmd(u64 *cmd, struct arm_smmu_device *smmu,
+> > >                FIELD_PREP(CMDQ_SYNC_0_MSH, ARM_SMMU_SH_ISH) |
+> > >                FIELD_PREP(CMDQ_SYNC_0_MSIATTR, ARM_SMMU_MEMATTR_OIWB);
+> > >
+> > > +     if (q->quirks & CMDQ_QUIRK_SYNC_CS_NONE_ONLY) {
+> > > +             cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_NONE);
+> > > +             return;
+> > > +     }
+> > > +
+> > >       if (!(smmu->options & ARM_SMMU_OPT_MSIPOLL)) {
+> > >               cmd[0] |= FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_SEV);
+> > >               return;
+> > > @@ -690,7 +695,8 @@ static int arm_smmu_cmdq_poll_until_sync(struct arm_smmu_device *smmu,
+> > >                                        struct arm_smmu_cmdq *cmdq,
+> > >                                        struct arm_smmu_ll_queue *llq)
+> > >  {
+> > > -     if (smmu->options & ARM_SMMU_OPT_MSIPOLL)
+> > > +     if (smmu->options & ARM_SMMU_OPT_MSIPOLL &&
+> > > +         !(cmdq->q.quirks & CMDQ_QUIRK_SYNC_CS_NONE_ONLY))
+> > >               return __arm_smmu_cmdq_poll_until_msi(smmu, cmdq, llq);
+> > >
+> > >       return __arm_smmu_cmdq_poll_until_consumed(smmu, cmdq, llq);
+> > > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > > index 180c0b1e0658..01227c0de290 100644
+> > > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > > @@ -543,6 +543,9 @@ struct arm_smmu_queue {
+> > >
+> > >       u32 __iomem                     *prod_reg;
+> > >       u32 __iomem                     *cons_reg;
+> > > +
+> > > +#define CMDQ_QUIRK_SYNC_CS_NONE_ONLY BIT(0)  /* CMD_SYNC CS field supports CS_NONE only */
+> > > +     u32                             quirks;
+> > 
+> > Please can you use the existing smmu->options field instead of adding
+> > another place to track quirks? Or do you need this only for some of the
+> > queues for a given SMMU device?
 > 
-> For the first boot, this shouldn't be needed - EFI maps all of RAM so
-> I wouldn't expect the PF handler to fire, except when writing to code
-> regions that were mapped ROX by the firmware. But even then, things
-> should just keep working, although from a security pov, it would be
-> better if the r/o regions remain r/o
-
-We are looking at entering from kexec, and the identity map is not
-completely filled in with all available RAM, especially if you use
-smaller 2M pages to create the identity map.
-
-Patches 1 and 2 are aiming to fill in the parts of the map we
-potentially use before the page fault handler is established.
-
-(And my overall problem is kexec creating the identity map with 1G
-pages includes areas that are marked "reserved" by the BIOS, causing a
-halt when speculatively accessed.  This is what patch 3 addresses.)
-
-> > Would solve the issue in this thread where the EFI config table ends up not
-> > mapped on some hw configurations, elegantly...
-> >
+> VCMDQs are extension of a regular SMMU (with its own CMDQ). So,
+> SMMU CMDQ still supports SIG_IRQ for the CS field, while VCMDQs
+> could only support SIG_NONE. In another word, this quirk is not
+> per SMMU but per Queue.
 > 
-> The #PF handler makes sense when entering via the 32-bit entrypoint,
-> where the asm can only map the lower 4G and is in no position to
-> reason about where RAM lives.
-> 
-> For kexec on a 64-bit system, I would expect the high-level support
-> code to be capable of simply mapping all of DRAM 1:1, rather than
-> playing these games with #PF handlers and on-demand mapping.
+> I can highlight this in the commit message, if that would make
+> it clear.
 
-Currently the identity map is selectively created, and at least
-from my point of view, patches 1 and 2 add in some parts that are
-missed and also not covered by #PF handlers.
+I think we could still use smmu->options and have something like
+ARM_SMMU_OPT_SECONDARY_CMDQ_CS_NONE_ONLY which could be applied
+when the queue is != arm_smmu_get_cmdq(smmu).
 
---> Steve
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
+Will
