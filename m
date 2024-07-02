@@ -1,222 +1,120 @@
-Received: from relay3-s.mailbaby.net (relay3-s.mailbaby.net [208.73.205.254])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E8A1BE251
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 17:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.73.205.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFA139847
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 17:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719940631; cv=none; b=FvAyPlFGR4iQAoJqkVjLjT2/D7DX33gxuyUmRKDFuYey3UJW25yUbr7ELsLkk+Ye6fuTos6k3Q2H8jHZrsFnE98drW/I6Dd5IEy92WyJDqLuuv133otMeyUc1L2EaoJs/JCEx1j5Jbo6wrdsKhq1Eto6LtoPz2nTorPi+Iq4nOw=
+	t=1719940655; cv=none; b=D4gLYwsWYS95g33tmqgz2fwoxKpyxZRHgNwdqbMZaADKGimF7FYFm9KohM/+9vdyc6tcTsE9ZtURi8iZcHiJMGrTdfaL8Q971cqTsN/nE8hPSUi95WPeCm8aQn+DKv2W2TKZgVO33WH0FxIsB4FWYrGhO+drIdI9N/UUeVwO9Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719940631; c=relaxed/simple;
-	bh=71ExIM+EYTOxyMVsz+VFIZv1Mlh82DJlzB41sdGa5ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uOCj/VRzMFCqb1dlXRY7jQCo76yzVdt1xMBMxJCL7hnQixvWqpEYb5FyQ07/EHBDd74n93/81XJuE4mxPypfDsy7WEmjQWRVo1Dq/gBCsglGUmg5UkIoiLjWDzRNLH6nGC6NEC1MxZTx7CiM0SEWtbMAJCRZ+MOQZrXSNo4ICwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=agatha.dev; spf=fail smtp.mailfrom=agatha.dev; dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b=V+GFjLbB; dkim=pass (2048-bit key) header.d=agatha.dev header.i=@agatha.dev header.b=A/vpN+Ja; arc=none smtp.client-ip=208.73.205.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=agatha.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=agatha.dev
+	s=arc-20240116; t=1719940655; c=relaxed/simple;
+	bh=Vnlmh4K+nd2zkdElqekxJ/vTbq8wmrwBN/mDF5q1FKw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ndSJd3PIA5AeWsH59/LVph+XSlElgN78Y1qtSPdLnEJ7Xtk2o2EmtJ8oYv5jgZw0TJGYDTBB5wv1HAsFCIQmF2TtKllNMgJm1F2OyF+mhqsmaObOXIOF1ikEFzoXVCgcQlaTCRSlzXU4f/TaRu1dhcKnIj43VBq/zhmbYIKM+nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=AllpbsAK; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b="V+GFjLbB";
-	dkim=pass (2048-bit key) header.d=agatha.dev header.i=@agatha.dev header.b="A/vpN+Ja"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbaby.net;
- q=dns/txt; s=bambino; bh=C2MVi7u0aBqSaHkN4epRNQ7LYKtJQ4HmDN87qdIiZk0=;
- h=from:subject:date:message-id:to:cc:mime-version:content-type:in-reply-to:references;
- b=V+GFjLbBGcguTyM6fxfSk8gXOum+/9TqqVeDWjGJwTYvvSVTxOMTddRGkKptVELdHDw226RKo
- Y/67Td2WVGP5TxiUSxNHAGaMLE7iuX5+2BgjXkINjQ3V1twDO8Z1dUO5FgjLL2vcGkuyAHcUmtd
- f6x79nAO5vt+wGkcMCbBxME=
-Received: from mia3000.dnsiaas.com ([192.155.110.18] mia3000.dnsiaas.com)
- (Authenticated sender: mb6724)
- by relay3-s.mailbaby.net (MailBabyMTA) with ESMTPSA id 190746e73ea000a4da.002
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Tue, 02 Jul 2024 17:11:54 +0000
-X-Zone-Loop: b9710705d0b9055bcf53c2416ca841c8df92ec0e699c
-X-Get-Message-Sender-Via: mb6724: authenticated_id: code@agatha.dev
-X-NS-SCAN: PASS
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=agatha.dev;
-	s=default; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=C2MVi7u0aBqSaHkN4epRNQ7LYKtJQ4HmDN87qdIiZk0=; b=A/vpN+JanpGybsiu0hvaNGEMOJ
-	xQO/9FxmEQ+o4L9xx6MHEZSeGVIw2mLBEHQ5L8bDJTbxeLFNeNpz0TuT84njG7HGqKjLgI+ToaW5t
-	nddnEr+ZnhbYaAfUddoz7DpEu2DX4w0hsc8sXVHoTyyVuSy6ih2g+cl63JXj7VL5nSoTPyuKbBzis
-	1ajSak9pnhFnGh+YsFCb8fuHiHzumfrUpLYae0wvWLltFlgMUt0VZKmXgwfYBtIVE8xQGdasllHsC
-	w+IGXA44ugz9y5TNFWUBnCU1VH9rlDDLVEHm3FxKmIZ69H1axGGBGszn2YeckdVVpok2BNDJIzPdf
-	pdU7bTQQ==;
-Received: from [186.250.91.79] (port=20192 helo=kurupi-arch.blackcat)
-	by mia3000.dnsiaas.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <code@agatha.dev>)
-	id 1sOh2l-0000000EthG-0Co7;
-	Tue, 02 Jul 2024 13:11:52 -0400
-Date: Tue, 2 Jul 2024 14:11:47 -0300
-From: =?utf-8?Q?=C3=81gatha?= Isabelle Chris Moreira Guedes <code@agatha.dev>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-modules@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, 
-	=?utf-8?Q?=C3=81gatha?= Isabelle Chris Moreira Guedes <patch-reply@agatha.dev>, Jookia <contact@jookia.org>
-Subject: Re: [PATCH] staging: Fix missing warning/taint on builtin code
-Message-ID: <diuey54pdwq4zcj2uxdhmw6fl5gahxpfs2gzg3qa6mz4qwf4ra@y65aap6nkge3>
-References: <yf3ewok3u7fu7f4yqlcovcvedkhyjtibvwzlgbcjwf7ijcsktt@vrk54srlnk2n>
- <lm4ju5czrrmbiq3jgrjwrgsbudnkcydixnribyuspqcvblt3q5@u5oiczdrzajq>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AllpbsAK"
+Received: from [192.168.7.205] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 462HGUOv630318
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 2 Jul 2024 10:16:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 462HGUOv630318
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024061501; t=1719940591;
+	bh=+awL2sjll9GZ5TMa2CofZj27FdVoCF8MijTG4QObr8c=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=AllpbsAK7Dr96sNrMYifmBPq2qdvv1d9UF4eYRcv2oa64WvfdzvQ0/XoGd50ns+ys
+	 4WOeXBc7q1nrK75pI09DLoNHjluaumL/s9NLsgRT7bCYxXdzLxcR3w44ln+QTZx8sE
+	 jHLEcl0XDqJs28R/m193dDdesLyTnCom9usCL62EpKp9ykpwjKPRT/oC9OQcc021Cy
+	 7mVpr00dVivpkr7D4I0tT832TEoJAlbpE/F/lOJf3Ti144gO6AskCDrH7uXFx/0sPr
+	 OB2QL4SBq7G6WGl+2WieIz31DKF7fIXxO+L6l2pt/xQeaDHbve56bv3RH156pKB1hI
+	 p3LINISlC/a4A==
+Message-ID: <c2548e16-7251-4d1c-87a2-f1c09be83e3e@zytor.com>
+Date: Tue, 2 Jul 2024 10:16:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="g5cfquunyjpghass"
-Content-Disposition: inline
-In-Reply-To: <lm4ju5czrrmbiq3jgrjwrgsbudnkcydixnribyuspqcvblt3q5@u5oiczdrzajq>
-X-AuthUser: me@agatha.dev
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] x86/fred: Always install system interrupt handler
+ into IDT
+From: Xin Li <xin@zytor.com>
+To: Hou Wenlong <houwenlong.hwl@antgroup.com>
+Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Xin Li
+ <xin3.li@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1718972598.git.houwenlong.hwl@antgroup.com>
+ <2f632ef59c8c9cc27c3702bc2d286496ed298d65.1718972598.git.houwenlong.hwl@antgroup.com>
+ <dca1635b-1e08-4dbb-9dbb-335cbdcf9b9d@zytor.com>
+ <20240628093656.GA103025@k08j02272.eu95sqa>
+ <c0ec7712-c538-4cd1-ada2-d0120c662ce8@zytor.com>
+Content-Language: en-US
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <c0ec7712-c538-4cd1-ada2-d0120c662ce8@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 6/28/2024 8:18 AM, Xin Li wrote:
+> On 6/28/2024 2:36 AM, Hou Wenlong wrote:
+>> Hi Xin,
+>>
+>> It seems preferable to parse the FRED command line and disable FRED
+>> early instead of using this method. As mentioned in my cover letter, I
+>> initially attempted to fix the problem this way (by parsing the command
+>> line in cpu_parse_early_param()). Should I send a new patch for it, or
+>> will you be covering it in your work to enable FRED early?
+>>
+> 
+> I have done it in my patches that enables FRED early, but if you want,
+> you can post it, because you're a key contributor in this work.
+> 
 
---g5cfquunyjpghass
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please let me know if you want to do it.
 
-On Tue, Jul 02, 2024 at 09:50:49AM GMT, Uwe Kleine-K=F6nig wrote:
-> Hello =C1gatha,
->=20
-> On Tue, Jul 02, 2024 at 02:44:31AM -0300, =C1gatha Isabelle Chris Moreira=
- Guedes wrote:
-> > ACKNOWLEDGEMENTS
-> > Thanks for Jookia, heat and ukleinek for the important comments &
-> > suggestions on this patch prior to submission.
->=20
-> FTR: That happend in the #kernelnewbies irc channel.
+Thanks!
+     Xin
 
-<3 <3 <3
-
-> > diff --git a/include/linux/init.h b/include/linux/init.h
-> > index 58cef4c2e59a..68c37600958f 100644
-> > --- a/include/linux/init.h
-> > +++ b/include/linux/init.h
-> > @@ -397,4 +397,10 @@ void __init parse_early_options(char *cmdline);
-> >  #define __exit_p(x) NULL
-> >  #endif
-> > =20
-> > +#ifdef CONFIG_STAGING
-> > +#ifndef __ASSEMBLY__
-> > +extern void staging_taint(const char *code_id, bool module);
-> > +#endif /* __ASSEMBLY__ */
-> > +#endif /* CONFIG_STAGING */
->=20
-> You could drop the #ifdef for CONFIG_STAGING here. The obvious downside
-> of this suggestion is that then you have a declaration of a function
-> that isn't available depending on configuration. However the compiler
-> doesn't care and the upside of not having CONFIG_STAGING in
-> <linux/init.h> is that compile units that have nothing to do with
-> CONFIG_STAGING but include <linux/init.h> won't get recompiled if you
-> switch the setting.
-
-Thanks a lot for the suggestion, it hasn't ocurred to me (despite the
-intense task of recompiling it all over several times during
-development LOL).
-
->=20
-> (OK, maybe a minor issue given that most drivers also include
-> <linux/module.h> where the #ifdef cannot be dropped.)
-
-For drivers it would be true, but with a very minimal config I am using,
-the core code that doesn't include it would get some relative build time
-improvement. Definetely worth, considering the machine I am using for
-kernel development here (a core2quad cpu LOL).
-
-
-> > diff --git a/include/linux/module.h b/include/linux/module.h
-> > index 330ffb59efe5..ffe58f5d143b 100644
-> > --- a/include/linux/module.h
-> > +++ b/include/linux/module.h
-> > @@ -76,6 +76,39 @@ extern struct module_attribute module_uevent;
-> >  extern int init_module(void);
-> >  extern void cleanup_module(void);
-> > =20
-> > +#ifdef CONFIG_STAGING
-> > +
-> > +#define __lower_define_initcall(fn, id) ___define_initcall(fn, id, .in=
-itcall##id)
-> > +
-> > +/**
-> > + * __staging_define_initcall(fn,id) - staging initialization entry poi=
-nt
-> > + * @fn: the function to run at kernel boot time
-> > + * @id: the initcall level
-> > + *
-> > + * __staging_define_initcall() will ensure the drive's init function i=
-s always
-> > + * called during initcalls for staging code by producing a wrapper fun=
-ction.
-> > + * It applies if a module from the drivers/staging subtree is builtin =
-to the
-> > + * kernel. It reproduces the behavior in load_module() by tainting the=
- kernel
-> > + * and logging a warning about the code quality.
-> > + */
-> > +
-> > +#define __staging_define_initcall(fn, id) \
-> > +	static int __init __staging_wrapped_##fn(void) \
-> > +	{ \
-> > +		staging_taint(__FILE__, false); \
-> > +		return fn(); \
-> > +	} \
-> > +__lower_define_initcall(__staging_wrapped_##fn, id)
-> > +
-> > +#ifdef STAGING_CODE
-> > +
-> > +#undef __define_initcall
-> > +#define __define_initcall(fn, id) __staging_define_initcall(fn, id)
->=20
-> undefining macros makes the implemented logic hard to understand. While
-> it allows to keep the touched code compact, in the long run it's more
-> important that it's understandable.
->=20
-> So I suggest to modify the original definition of __define_initcall().
-
-Yeah, I didn't like the idea of touching it at first, but it makes sense
-at this time. Thanks for suggesting!
-
->=20
-> > +#endif /* STAGING_CODE */
-> > +
-> > +#endif /* CONFIG_STAGING */
-> > +
-> >  #ifndef MODULE
-> >  /**
-> >   * module_init() - driver initialization entry point
->=20
-> I like the idea and think the missing taint for built-in code is an
-> oversight that went unnoticed for an astonishingly long time (since 2008
-> if my quick research is right).
->=20
-> Maybe add
->=20
-> Fixes: 061b1bd394ca ("Staging: add TAINT_CRAP for all drivers/staging cod=
-e")
->=20
-> to the commit log?!
-
-I'll do, thanks a lot so far Uwe!
-
----
-Sincerely,
-=C1gatha Isabelle
-she/her
-https://agatha.dev
-
---g5cfquunyjpghass
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQMdxNgKl/8Z+5yuVT3jE4VBgsOTAUCZoQ0zgAKCRD3jE4VBgsO
-TJV9AP0Z2eOFITT+czoXsumzc7ZUhDBzu+nZ4T1Jhbs+xiCIwQEAld7+/XugScSk
-a6T9506TPK41CqwDpq1DzSAQR6d6jQ8=
-=TP39
------END PGP SIGNATURE-----
-
---g5cfquunyjpghass--
