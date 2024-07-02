@@ -1,163 +1,111 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFA926AE4
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 15:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A129E1BB69C;
+	Tue,  2 Jul 2024 15:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719935812; cv=none; b=HXLrzSYWXifEFedyITORYshruLq1nZh+A37UjYiMsmRCU/+21QziCbr0Mmm4YmeYPA08NzCYVsl7MRyCSDqHq1uvrreMbRGQ2c8QshEHHKUSTi6XldA84dbmU1YNe2qbQKQdnhlSs66TUEg8AHl8nCY3vZIqlLggYFLDZNu25Ac=
+	t=1719935886; cv=none; b=oe9qfJuXDn8Sjpi8tLKZ+Cvcmd64Mo3KTTq0ghjL9TU+N794dwzVxW6gnZvHmuQaEB8AynL0h3+MYDplQBmcZ8rEaKYyHk9lPKTnqfa2HZy+3gdtvP1xQWViyIDLruh4bbu0hRc/TJzHZwp6Bd3LOuPtqTu+8xbjgmf7vURaya0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719935812; c=relaxed/simple;
-	bh=8ner41gRskw+GSfgxISqqxmCp4VWSYH/4KdQPpuLGM0=;
-	h=Date:Message-ID:MIME-Version:Content-Type:Content-Disposition:
-	 From:To:Cc:Subject:References:In-Reply-To; b=JJFQrjSwr/qac0Rj8aCfoA/eOhhY0OwnvBx+IsregrCyoUkvTg0Y7/13HzILdTDzSgG7RMQS8bP18qBkxRBvynra8qsm3zVKTaqZEaDOl5IQ4MNLt99lYvGtZrGxMIbwJmLZeoRdQRy6yuBVwhhcrBWOlXqCpNuRoZ1EB7fgf3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=cozWUnlm; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1719935886; c=relaxed/simple;
+	bh=yAxpNc/j1H0lyF8Ynd7Qrc3hhJ0EXoOLvIipfqRn/+4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GeKozZROevj4a+h5jPxMqqBlbH0P5kzckf7JeZkDagXYsvDP8tdLkiDy9mkwUv2kuQAjUjbknKbcOl+8LW5Cu4uo/5JeRNsJK8bGNBVgreSUp5Pmvj6oPSvXw1vyszoMTDEapCuu45A1R9h6yUl7tPZkmoRkHL71eVjqWYnXDbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VwVHIaKM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="cozWUnlm"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6b5db7936b3so2574526d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 08:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1719935809; x=1720540609; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :content-disposition:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FB8UHDOaIKLrgIWEE8g4mg51WR8c0nOJoFegB46Qoig=;
-        b=cozWUnlmfWxoQ4IxgusiFt3R70S1Q5Q1L5rX1VNTvO2ckMWFW+SrWmJILBcizGo7yi
-         UaD7sbtTaGxIkOPC+AMzcRuBZuRRqaPhrllVoKODDuQGmAZyuQxvlnNSI2A0tdMvFeVi
-         HErL97dxR3z34ThGYBTeEUhRExQUzGX8p1PlxA7AMrm1f9wXd4F17vOCVEdesHKrHg3K
-         E8CL5eOx241hTcxzLcxAz5HN5x1PoETA9ym/aWleTpVWrYcZEh7qwhQFYWcj4yC7odzm
-         SsC/fNhVoVo8gKT7QhwAhIOHGgIOtjwmXSNjrvUNGdlRVlbMwkvSQHu8VreI3yhjG76O
-         L3mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719935809; x=1720540609;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :content-disposition:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FB8UHDOaIKLrgIWEE8g4mg51WR8c0nOJoFegB46Qoig=;
-        b=QVO2h55Z01uNwbquGS2SL0J+AfxgPDT5IAuFr/V3Ksmjpjo4qsbwIXs0fY+JgvUgI2
-         jTVp8+R18OEYUeEuBTOKuDtAacU33fe9cWkjP4dFpnhR5kFbLRQ5p5IMduZ17F2I9gDm
-         2NUoYLuaBb+KP3BtsCEhH2MGVhXCACxyxyafvm7XukO33K0ImOr+ZF60Eb8Cd+wBSGA8
-         oaLEJsbpJaRdWhO39vcl5sotZijsEkV3kubp0Yf6Ez8xPr8KTXnmB+5EsPfhVbLFNLv3
-         nWhKSC14qr6Lnli4wjBh6YHF3oX2EeOZRA05vpEiv6XDcLdQH+TbXMkX597daX1Cfdp+
-         v86g==
-X-Forwarded-Encrypted: i=1; AJvYcCUT+PlWUZQ0zoAoY6jaTtRCcDs3JaR7Mg1HAjNoevYh9R3YIpq6zJ50hCPDB8FY+rxCyr4h1rKZhyvvLwxJlV+8PiCCq1Pt34rSrWOd
-X-Gm-Message-State: AOJu0YxT525+ec9YbBa+vSFAh/sN4lXjlWd3qD8LZsMV7VDkvXfGokh1
-	MPCPf0DvxgbAv6pVD9E3U6yEXcBnX7Cg7k96UWWODVnydCZncUmS10TjE6QPZg==
-X-Google-Smtp-Source: AGHT+IGjBlHimts/oaQ3Af8rs53H92WprPl+hFmtp0WMpy+HhR/2A4KlwlRph0QRmPf5uT43vkBHAw==
-X-Received: by 2002:a05:6214:2422:b0:6b0:763c:e069 with SMTP id 6a1803df08f44-6b5b7098a37mr126280576d6.18.1719935809612;
-        Tue, 02 Jul 2024 08:56:49 -0700 (PDT)
-Received: from localhost ([70.22.175.108])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b5a705bc83sm41082046d6.131.2024.07.02.08.56.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 08:56:49 -0700 (PDT)
-Date: Tue, 02 Jul 2024 11:56:48 -0400
-Message-ID: <0c6a49b11150cb088f3be6a8e49fdd02@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VwVHIaKM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24005C116B1;
+	Tue,  2 Jul 2024 15:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719935886;
+	bh=yAxpNc/j1H0lyF8Ynd7Qrc3hhJ0EXoOLvIipfqRn/+4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=VwVHIaKMM6joL2OslHAIAERB/dK2OuRh+N0Rf+7RMwG7aMwTxfVAG3DGHCTWgLyxD
+	 D9QtAFozBzc0dfXK/zUPJkn93gkFxJX6y4A9x4CCxeoKydX1JVfdG4H9JISZZgBxoP
+	 u+Tu5bHyJGR070eTHxhXAu/RzX0XoNtClq0VehfB6+i/tQOvIlW8TLOIad+lsIWlF9
+	 8Rsucv9SKOiMNOqpzS32EjPT8qjnE+2EZ/7cl3xwlnLCawNDUCcvHg62u28nndcycD
+	 VaCvTYyaBg5zquzAKQ3wkGbsjU3mTAY2vaEGX7W5z3cnlk3IU2OSbQ0MmJeXSYlNr2
+	 CupBjaiOz8EqA==
+Message-ID: <4ec1fbdc6568e16da40f41789081805e764fd83e.camel@kernel.org>
+Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
+From: Jeff Layton <jlayton@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Jan Kara <jack@suse.cz>, "Darrick J. Wong" <djwong@kernel.org>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Chandan Babu R <chandan.babu@oracle.com>,
+ Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>,
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
+ <dsterba@suse.com>,  Hugh Dickins <hughd@google.com>, Andrew Morton
+ <akpm@linux-foundation.org>, kernel-team@fb.com, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-mm@kvack.org,  linux-nfs@vger.kernel.org
+Date: Tue, 02 Jul 2024 11:58:02 -0400
+In-Reply-To: <ZoQY4jdTc5dHPGGG@infradead.org>
+References: <20240701224941.GE612460@frogsfrogsfrogs>
+	 <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
+	 <ZoOuSxRlvEQ5rOqn@infradead.org>
+	 <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
+	 <20240702101902.qcx73xgae2sqoso7@quack3>
+	 <958080f6de517cf9d0a1994e3ca500f23599ca33.camel@kernel.org>
+	 <ZoPs0TfTEktPaCHo@infradead.org>
+	 <09ad82419eb78a2f81dda5dca9caae10663a2a19.camel@kernel.org>
+	 <ZoPvR39vGeluD5T2@infradead.org>
+	 <a11d84a3085c6a6920d086bf8fae1625ceff5764.camel@kernel.org>
+	 <ZoQY4jdTc5dHPGGG@infradead.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=utf-8 
-Content-Disposition: inline 
-Content-Transfer-Encoding: 8bit
-From: Paul Moore <paul@paul-moore.com>
-To: Canfeng Guo <guocanfeng@uniontech.com>
-Cc: stephen.smalley.work@gmail.com, omosnace@redhat.com, selinux@vger.kernel.org, linux-kernel@vger.kernel.org, Canfeng Guo <guocanfeng@uniontech.com>
-Subject: Re: [PATCH] selinux: Streamline type determination in  security_compute_sid
-References: <20240629041124.156720-1-guocanfeng@uniontech.com>
-In-Reply-To: <20240629041124.156720-1-guocanfeng@uniontech.com>
+MIME-Version: 1.0
 
-On Jun 29, 2024 Canfeng Guo <guocanfeng@uniontech.com> wrote:
-> 
-> Simplifies the logic for determining the security context type in
-> security_compute_sid, enhancing readability and efficiency.
-> 
-> Consolidates default type assignment logic next to type transition
-> checks, removing redundancy and improving code flow.
-> 
-> Signed-off-by: Canfeng Guo <guocanfeng@uniontech.com>
-> ---
->  security/selinux/ss/services.c | 32 ++++++++++++++++----------------
->  1 file changed, 16 insertions(+), 16 deletions(-)
-> 
-> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
-> index e33e55384b75..0c07ebf0b1e7 100644
-> --- a/security/selinux/ss/services.c
-> +++ b/security/selinux/ss/services.c
-> @@ -1804,21 +1804,7 @@ static int security_compute_sid(u32 ssid,
->  			newcontext.role = OBJECT_R_VAL;
->  	}
->  
-> -	/* Set the type to default values. */
-> -	if (cladatum && cladatum->default_type == DEFAULT_SOURCE) {
-> -		newcontext.type = scontext->type;
-> -	} else if (cladatum && cladatum->default_type == DEFAULT_TARGET) {
-> -		newcontext.type = tcontext->type;
-> -	} else {
-> -		if ((tclass == policydb->process_class) || sock) {
-> -			/* Use the type of process. */
-> -			newcontext.type = scontext->type;
-> -		} else {
-> -			/* Use the type of the related object. */
-> -			newcontext.type = tcontext->type;
-> -		}
-> -	}
-> -
-> +	/* Set the type. */
->  	/* Look for a type transition/member/change rule. */
->  	avkey.source_type = scontext->type;
->  	avkey.target_type = tcontext->type;
-> @@ -1837,9 +1823,23 @@ static int security_compute_sid(u32 ssid,
->  		}
->  	}
->  
-> +	/* If a permanent rule is found, use the type from */
-> +	/* the type transition/member/change rule. Otherwise, */
-> +	/* set the type to its default values. */
+On Tue, 2024-07-02 at 08:12 -0700, Christoph Hellwig wrote:
+> On Tue, Jul 02, 2024 at 08:21:42AM -0400, Jeff Layton wrote:
+> > Many of the existing callers of inode_ctime_to_ts are in void
+> > return
+> > functions. They're just copying data from an internal
+> > representation to
+> > struct inode and assume it always succeeds. For those we'll
+> > probably
+> > have to catch bad ctime values earlier.
+> >=20
+> > So, I think I'll probably have to roll bespoke error handling in
+> > all of
+> > the relevant filesystems if we go this route. There are also
+> > differences between filesystems -- does it make sense to refuse to
+> > load
+> > an inode with a bogus ctime on NFS or AFS? Probably not.
+> >=20
+> > Hell, it may be simpler to just ditch this patch and reimplement
+> > mgtimes using the nanosecond fields like the earlier versions did.
+>=20
+> Thatdoes for sure sound simpler.=C2=A0 What is the big advantage of the
+> ktime_t?=C2=A0 Smaller size?
+>=20
 
-In general this patch looks fine with the exception of the comment
-block above, you can either follow the multi-line comment used elsewhere
-in this source file, example:
+Yeah, mostly. We shrink struct inode by 8 bytes with that patch, and we
+(probably) get a better cache footprint, since i_version ends up in the
+same cacheline as the ctime. That's really a separate issue though, so
+I'm not too worked up about dropping that patch.
 
- /* line one
-    line two
-    line three */
+As a bonus, leaving it split across separate fields means that we can
+use unused bits in the nsec field for the flag, so we don't need to
+sacrifice any timestamp granularity either.
 
-... or you can follow the generally accepted style for multi-line
-comments in the Linux kernel:
+I've got a draft rework that does this that I'm testing now. Assuming
+it works OK, I'll resend in a few days.
 
- /* line one
-  * line two
-  * line three
-  */
-
-See the link below for more information:
-
-* https://docs.kernel.org/process/coding-style.html#commenting
-
->  	if (avnode) {
-> -		/* Use the type from the type transition/member/change rule. */
->  		newcontext.type = avnode->datum.u.data;
-> +	} else if (cladatum && cladatum->default_type == DEFAULT_SOURCE) {
-> +		newcontext.type = scontext->type;
-> +	} else if (cladatum && cladatum->default_type == DEFAULT_TARGET) {
-> +		newcontext.type = tcontext->type;
-> +	} else {
-> +		if ((tclass == policydb->process_class) || sock) {
-> +			/* Use the type of process. */
-> +			newcontext.type = scontext->type;
-> +		} else {
-> +			/* Use the type of the related object. */
-> +			newcontext.type = tcontext->type;
-> +		}
->  	}
->  
->  	/* if we have a objname this is a file trans check so check those rules */
-> -- 
-> 2.20.1
-
---
-paul-moore.com
+Thanks for the feedback!
+--=20
+Jeff Layton <jlayton@kernel.org>
