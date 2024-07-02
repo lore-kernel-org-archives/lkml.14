@@ -1,79 +1,94 @@
-Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17431B47A5
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E3B19D085;
+	Tue,  2 Jul 2024 13:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719926469; cv=none; b=SbdirKrwPNq3aWAqblRm1G8FVBnG0jdSnSy9T9n7sy240tW1yxEOsbEk6kBEcSWSxYWj/K/VrMaP2Lx8w2sO+qfI+UqHiPBHgJ1SFHGiaHMVjfvzei5xzJjsCHMfN9eM67QwOL8kCPdlNxUtPtixAMBTnGcyF+YT+qoIQX9BHpQ=
+	t=1719926488; cv=none; b=J8dtcNHmCII19AkbBLmAxwO11BsX3HkwL3rMwxAc+3hd5nXo7IkvZKNIUjs5FPJBoIfADM6BnoWQONkgzIzskxfdXZ3XsHVTWGEkt4KEb+au3nSjwRvCIZ2k8OTcR5P2ZzG18/R/JINYZ23mGhlc/XmJnba2v5dBRWt+3mqNSvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719926469; c=relaxed/simple;
-	bh=EmQHO97FIP/vJTqSG5INUnUFiptrKtdUB536EBRtKEo=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=NIubzfXz47cZBUdNsV/hKg7Pp4TL7xlwu6OJmEV+6HHXhc0xlfMlcbKJn8W04oK319EezBQ5F6YifSNN5FdgiwSBjRYNb7cUMPqK//n2kXfb6x7P+TbAm9x88oGe36X2rsEGfRFTjMv08y6lhP65/pvn+a9PrTyUVhCgfKitOmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=K4l7T/Lo; arc=none smtp.client-ip=203.205.221.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1719926488; c=relaxed/simple;
+	bh=Z3TpF0Wkv2GL991OM6qpoiwzwswLje71quWBU6oLG3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O9Ii9+kHYlWmmX1oXF4glUD7Ky9Ip832Je65/pcgSwlXdW99vlIDxVTg9pk+wwIskL8QresWQsY/EgWrOjjZd3OtXwNlM3jCTmAH1ndUlupXCfLbj3QJltpue7cZI2anJo4YEaU+oMBCQ/AFhF4X9u97zdiFDikINbA9eoOgrEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mngtAgeM; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="K4l7T/Lo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1719926456; bh=0VrEWnjb6+LRo8SvQr5MhH/XfRQjhw5tJiE96jU1xoQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=K4l7T/LoZaAthKKPYoLjuALxsooxVofL/1T5iW+ObCui+kd98Pzdf9OVEgcrU436S
-	 jGuTllFsVeF/sPVAwsJJzmuhP4Msq7jvhjVtrvkzAFqU5+GTTmJI8ZtB5Pj1gZAJ64
-	 7xofYdjxGZ/2RRutAXKDTDmfN8n4Iz3oFcx4NfVw=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 3AD8B6A4; Tue, 02 Jul 2024 21:14:45 +0800
-X-QQ-mid: xmsmtpt1719926085t1o9pn6rw
-Message-ID: <tencent_1625C3BA12BB3633E59EF81B504BC11B6808@qq.com>
-X-QQ-XMAILINFO: MIaS6BHTUnR1SXYH9uQdeZjAzg7a0KDALnwNmFJEct4ItRTDVN3LYHFmK8UZtj
-	 m+YPTpEutUOa4GpW+gUKogqaEAmPma9OZAFTkxTq6eqaQnh/TxDWIQ6DY8c8CuTSQUw7DDBwDEZ7
-	 ct89ChJ6GpdBtmn0Dh+f+B+EligI0A09zz1Iv1XVnF/B6TtN9wzBSAfuoIWljgacnpL3RyNeDLYJ
-	 yKFoLXHpIcdZx/xWXpWisfGuIp9y/sdy94b5ZLkdszoWOA67wMP2qzlmsftPv+98juk4b9gPtZr+
-	 F2Cu5vsgkMwjbOAqIN+Y8I0Bddeqwdkw/X1WvYkrP+O7nCBaiRGFvL62P+6GD/rf2BSM6lKZwMjt
-	 /qzSdx2FtYcXKefI4zzqvKkM0uPXUsKmOOgZnYKXAALShtISzFA5MS1xysFntALtMK3Grj9drldp
-	 o0fBQbg3GN0ynmvqVMgipM/3ojs2Mv3QTMpCtZuaEIa+ryAjKX1K9sqt0hJlMFcIwbLqtO5DeNQT
-	 kmontiVQiP+UHOhI1/f3DZLwUneXon+zbld+uSOiJUKc7QmTKXhWWW+BapCyPrZq0Cyb3+hTDOpE
-	 grE4MXcFS5bLe82nVCKzln7hpLRWpXXwMgt5wLGqXmEpDJEjS5XfseIgx48dve3fuVhqUeMj+zJF
-	 F6Pf8TFzKwbcGB6X+e98l57oMqlpNjHcLioh7qsvQXbJ7qohpkjIkwqNsdjzCGsBccnCS138stw8
-	 LoIUI3Qliw+2TIA7vpbKkHE1et6XmlcSuMTn7HXLdvQ40kZO553GEq2v2Wbf18e+ZfCspC2YniRt
-	 3lxSGd9oIVqREvgf01AwoWulg9J62qOQqX/mW9wdSYnRqPcLwnA3ZrU0HdlVujymI/5BkTPJIkZd
-	 JXockgiZm56OVnzBmi6jw5BkjS1QQ5zG0K2DhzAHuelGiaRhilybrN34kQWLCYgUg71mCxFDgW5T
-	 dEVfqLz3x9vRxDwE/iJA==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in nf_tables_trans_destroy_work
-Date: Tue,  2 Jul 2024 21:14:46 +0800
-X-OQ-MSGID: <20240702131445.3838529-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000aa1dbb061c354fe6@google.com>
-References: <000000000000aa1dbb061c354fe6@google.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mngtAgeM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=1xDsfm4Y/LtLrp+GL7JQi0vWoAc+ybfwPXxT0wl27Xk=; b=mngtAgeMXcJNnpYXVeeTnCyuVB
+	pPqaFnVSAxLtDRGbMM3OtAxJqnbOkoD9/KaFucFQiFEe6KTOoj7H1qeuoRM+XeAOjCHK365Z8UJTN
+	TTFbYD3II9bsjPfNNEw76a5HRU0mZqIlTRX93FpIzJxhSFFwVCsej5echVpUZNpLSYLk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sOdRV-001dhr-Dq; Tue, 02 Jul 2024 15:21:09 +0200
+Date: Tue, 2 Jul 2024 15:21:09 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 5/6] net: phy: dp83869: Support SGMII SFP modules
+Message-ID: <b3ff54a1-5242-46d7-8d9d-d469c06a7f7b@lunn.ch>
+References: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
+ <20240701-b4-dp83869-sfp-v1-5-a71d6d0ad5f8@bootlin.com>
+ <f9ed0d60-4883-4ca7-b692-3eedf65ca4dd@lunn.ch>
+ <2273795.iZASKD2KPV@fw-rgant>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2273795.iZASKD2KPV@fw-rgant>
 
-Unbalanced increase and decrease of use in the table
+On Tue, Jul 02, 2024 at 10:11:07AM +0200, Romain Gantois wrote:
+> Hello Andrew, thanks for the review!
+> 
+> I think this particular patch warrants that I explain myself a bit more.
+> 
+> Some SGMII SFP modules will work fine once they're inserted and the appropriate 
+> probe() function has been called by the SFP PHY driver. However, this is not 
+> necessarily the case, as some SFP PHYs require further configuration before the 
+> link can be brought up (e.g. calling phy_init_hw() on them which will 
+> eventually call things like config_init()).
+> 
+> This configuration usually doesn't happen before the PHY device is attached to 
+> a network device. In this case, the DP83869 PHY is placed between the MAC and 
+> the SFP PHY. Thus, the DP83869 is attached to a network device while the SFP 
+> PHY is not. This means that the DP83869 driver basically takes on the role of 
+> the MAC driver in some aspects.
+> 
+> In this patch, I used the connect_phy() callback as a way to get a handle to 
+> the downstream SFP PHY. This callback is only implemented by phylink so far.
+> 
+> I used the module_start() callback to initialize the SFP PHY hardware and 
+> start it's state machine.
 
-#syz test: net-next 1c5fc27bc48a
+The SFP PHY is however a PHY which phylib is managing. And you have
+phylink on top of that, which knows about both PHYs. Architecturally,
+i really think phylink should be dealing with all this
+configuration.
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 70d0bad029fd..b77b764955a0 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1498,6 +1498,7 @@ static int nf_tables_newtable(struct sk_buff *skb, const struct nfnl_info *info,
- 	if (err < 0)
- 		goto err_trans;
- 
-+	nft_use_inc_restore(&table->use);
- 	list_add_tail_rcu(&table->list, &nft_net->tables);
- 	return 0;
- err_trans:
+The MAC driver has told phylink its pause capabilities.
+phylink_bringup_phy() will tell phylib these capabilities by calling
+phy_support_asym_pause(). Why does this not work for the SFP PHY?
 
+phylink knows when the SFP PHY is plugged in, and knows if the link is
+admin up. It should be starting the state machine, not the PHY.
+
+Do you have access to a macchiatobin? I suggest you play with one, see
+how the marvell PHY driver works when you plug in a copper SFP module.
+
+	Andrew
