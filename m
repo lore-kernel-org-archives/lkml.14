@@ -1,265 +1,333 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09D7171AF
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A268B152782
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719915170; cv=none; b=jTvMNGawH5oaLcrIdSBAG3c6Tb+fRiYoXBc1w3FgzmLks5DSwQopZQH6udX7FIRAZU4urxpLQyBN4d86AcPDKrlGsU04AruzUP8/bLUSrPZQlKRlorob6hKEnu8pq29UDpQA1495/SWzRsbrao/nyPzJJZAMe/YhuGaH9fuCgu4=
+	t=1719915191; cv=none; b=uiNKqGYF4sZdgNrEm4c0r7/m/8QRX+QRCMzNZ6hddgP1DiIZsGa3zkdYPTSegXazX3DGH8Sm3d6ytjLyhtSWhJrf834ahnEEANbN2nJ+b6lIu0ViP+/qyIcUqIErr53rD9KHLfcpQkm48pe67RgQxAB0o7HvbEeJOa5VdszFQZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719915170; c=relaxed/simple;
-	bh=amqA7d6SNzXfCuotIepj6pkO/m9NKawDxULsnh+YJ7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d04wGdOBT/y59idK+DcPf1s/mfVbyUNJkPSlMG5th0OdR1piPGQSnBdVtcaW/fJm16mBcVA2OL0qyIy09MMWCApRwQ1WEWdP4xjy74LDv3sXwEk7yiLInTi4wFsRmJxqFH8w3kVLRM/zjjCZgi8matdWOMYv6To6F9YyYmngS6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Vooq79VX; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Vooq79VX; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1719915191; c=relaxed/simple;
+	bh=SPbHJYsiPJjsmyvySqe/VP1Q7pmCunLfCkECUEwNfLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dPUyyzbBy2Ul+3e5Nf0QaPseGBCFd8idnJYKXr7H9oRT4YZXWXLNDn8Jv4N9F4y1xjzIP75rjs+l11nfeZ2LL+GjXgg3ZCrZCFFESl/9+/pq8/CdK2l/SR35EJyJM7+Mh2lbWNiKUDOsln3jPfDDtlfkKPjdv0RvE6nf0cI+sPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=AB091qlD; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Vooq79VX";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Vooq79VX"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B76901FB8F;
-	Tue,  2 Jul 2024 10:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1719915166; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=amqA7d6SNzXfCuotIepj6pkO/m9NKawDxULsnh+YJ7M=;
-	b=Vooq79VXQVMyzESvAlFJKYtjRV/5n5dHlALr951xA/ws7VdiiFpBTfJJst8ZZSPyCzp+eY
-	AxQK6DjesUhNZI/txY2Beu5IpaeL/AAcSJ0ANq1iwhTw32wbT9ozFmmsSvVBu1zjwaOB0x
-	33ArtY/MeYM804w8UbCuaH7aXWqyuJs=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1719915166; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=amqA7d6SNzXfCuotIepj6pkO/m9NKawDxULsnh+YJ7M=;
-	b=Vooq79VXQVMyzESvAlFJKYtjRV/5n5dHlALr951xA/ws7VdiiFpBTfJJst8ZZSPyCzp+eY
-	AxQK6DjesUhNZI/txY2Beu5IpaeL/AAcSJ0ANq1iwhTw32wbT9ozFmmsSvVBu1zjwaOB0x
-	33ArtY/MeYM804w8UbCuaH7aXWqyuJs=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 61C3913A9A;
-	Tue,  2 Jul 2024 10:12:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eotKFp7Sg2bZPAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 02 Jul 2024 10:12:46 +0000
-Message-ID: <17aa46c3-89e9-40aa-bb15-817230712f07@suse.com>
-Date: Tue, 2 Jul 2024 12:12:45 +0200
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="AB091qlD"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7f4e272b425so143133739f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 03:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1719915188; x=1720519988; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a/sfLp11hmW8XmCatXqx8ssHvyyK3qsyCd37VaEVAL8=;
+        b=AB091qlDVzepmqK5XJtE6C4P/8dBzKmKo7AmtrVPxOKA7K5xMvQT1nrpAfutL8Vhey
+         dURjEOnQKaCYykKgIH6KZ5Ere3bsv0HvxVn8T2fHXyJlTWxSO6FF/D0v4GClByVCRodc
+         nl8VqaMPbiLUi1CJowWQ2PIi8WdGkGxSt9oDmyM6d4K0IofsNTWuQhpl84e8vRP/8DO1
+         Voh3o0HhhzsfmlH/7ee7knftyx11SSTCAcUWDZhXIFuTPk+aFLFlYWRbqnuXBAqTdzc6
+         UnaPS2qC4foSNws/5i9a4hibLX0uGTkP8XZXZSauABRjcD6AKU6xzRdwoAfFHV6nY5gk
+         Li8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719915188; x=1720519988;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a/sfLp11hmW8XmCatXqx8ssHvyyK3qsyCd37VaEVAL8=;
+        b=J1GI6HhlOoecwwNumyiHr76/sb97fZyJ8s4fjUstfWHf6fCM4778Yjy3gJUthrvAnT
+         B6iYTqvqsUYqz94U10T/zGB0nAkUbWJ2lnZSL/sJiEd3DUtkyDtN7zWwoSaMlbr4q+5G
+         7tl08vu3BUA0JMTXP/qvuJfdbd0ZgyVO3uSoQozlzUHjFA4v/Zdub/MkyHqBCZ+5Ln2V
+         uZR83bZFdaSzy6lWwfe9JUwprId8ymapW6z9WSmPXFki5ijznCLXAMMnNnNiM6aDsqds
+         PdnBsSkshfr2lkukfTLhI2WBI/Kl9eoE2PhLDrean3G4A7x7su2t1MixdcVwCc7lDuGU
+         mJGA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5ExMD23lKBHWDoqRWnUCo4y/teAcZCX0EumW2JIHfiXQcL26gD/zaaY8VLoJLfp9BhOFNWBx075o0Aewact2Jvo7WFsoFES7z3KNg
+X-Gm-Message-State: AOJu0Yy4c+RCCmLxSic98KWlsdpMRomR+RPmrSl5iDds9kPpWB61rG2s
+	qXcixIil0gtF6wNVz5t9gRB46u31n4EFElN1MlVql/mCG2R3YHRjCaySCez2mo10vb3ppBUHAgb
+	2Voz/0Y+A44ay/bAmBp07Rmvmr7JnNqAby8TXPA==
+X-Google-Smtp-Source: AGHT+IGoEgVDZjPWAam4RvZu0N/hvH3TdQfOxT1+hDZWpA6VO+SGZ99U6V5aJh8q7Z9zzeuPqfSR+JhreaWsEEhEJpU=
+X-Received: by 2002:a05:6e02:164c:b0:381:17b4:763 with SMTP id
+ e9e14a558f8ab-38117b40a2fmr2935795ab.9.1719915187606; Tue, 02 Jul 2024
+ 03:13:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] xen: privcmd: Switch from mutex to spinlock for
- irqfds
-To: Viresh Kumar <viresh.kumar@linaro.org>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
- =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <a66d7a7a9001424d432f52a9fc3931a1f345464f.1718703669.git.viresh.kumar@linaro.org>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <a66d7a7a9001424d432f52a9fc3931a1f345464f.1718703669.git.viresh.kumar@linaro.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------bwSRyRlr9X9bbK5RyRnvDpgm"
-X-Spamd-Result: default: False [-5.18 / 50.00];
-	BAYES_HAM(-2.99)[99.94%];
-	SIGNED_PGP(-2.00)[];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-0.997];
-	MIME_BASE64_TEXT(0.10)[];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	XM_UA_NO_VERSION(0.01)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	TO_DN_SOME(0.00)[];
-	HAS_ATTACHMENT(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -5.18
-X-Spam-Level: 
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------bwSRyRlr9X9bbK5RyRnvDpgm
-Content-Type: multipart/mixed; boundary="------------XbicjrxknHrgY0Dmx8Pxez32";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
- =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Message-ID: <17aa46c3-89e9-40aa-bb15-817230712f07@suse.com>
-Subject: Re: [PATCH 1/2] xen: privcmd: Switch from mutex to spinlock for
- irqfds
-References: <a66d7a7a9001424d432f52a9fc3931a1f345464f.1718703669.git.viresh.kumar@linaro.org>
-In-Reply-To: <a66d7a7a9001424d432f52a9fc3931a1f345464f.1718703669.git.viresh.kumar@linaro.org>
-
---------------XbicjrxknHrgY0Dmx8Pxez32
-Content-Type: multipart/mixed; boundary="------------dirje0y05bPUMX0EZM5pQS6v"
-
---------------dirje0y05bPUMX0EZM5pQS6v
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-T24gMTguMDYuMjQgMTE6NDIsIFZpcmVzaCBLdW1hciB3cm90ZToNCj4gaXJxZmRfd2FrZXVw
-KCkgZ2V0cyBFUE9MTEhVUCwgd2hlbiBpdCBpcyBjYWxsZWQgYnkNCj4gZXZlbnRmZF9yZWxl
-YXNlKCkgYnkgd2F5IG9mIHdha2VfdXBfcG9sbCgmY3R4LT53cWgsIEVQT0xMSFVQKSwgd2hp
-Y2gNCj4gZ2V0cyBjYWxsZWQgdW5kZXIgc3Bpbl9sb2NrX2lycXNhdmUoKS4gV2UgY2FuJ3Qg
-dXNlIGEgbXV0ZXggaGVyZSBhcyBpdA0KPiB3aWxsIGxlYWQgdG8gYSBkZWFkbG9jay4NCj4g
-DQo+IEZpeCBpdCBieSBzd2l0Y2hpbmcgb3ZlciB0byBhIHNwaW4gbG9jay4NCj4gDQo+IFJl
-cG9ydGVkLWJ5OiBBbCBWaXJvIDx2aXJvQHplbml2LmxpbnV4Lm9yZy51az4NCj4gU2lnbmVk
-LW9mZi1ieTogVmlyZXNoIEt1bWFyIDx2aXJlc2gua3VtYXJAbGluYXJvLm9yZz4NCj4gLS0t
-DQo+ICAgZHJpdmVycy94ZW4vcHJpdmNtZC5jIHwgMjYgKysrKysrKysrKysrKysrLS0tLS0t
-LS0tLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRp
-b25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy94ZW4vcHJpdmNtZC5jIGIvZHJp
-dmVycy94ZW4vcHJpdmNtZC5jDQo+IGluZGV4IDY3ZGZhNDc3ODg2NC4uNWNlYjZjNTZjZjNl
-IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3hlbi9wcml2Y21kLmMNCj4gKysrIGIvZHJpdmVy
-cy94ZW4vcHJpdmNtZC5jDQo+IEBAIC0xMyw3ICsxMyw2IEBADQo+ICAgI2luY2x1ZGUgPGxp
-bnV4L2ZpbGUuaD4NCj4gICAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+ICAgI2luY2x1
-ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiAtI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+DQoNCkkg
-ZG9uJ3QgdGhpbmsgeW91IGNhbiBkcm9wIHRoYXQuIFRoZXJlIGlzIHN0aWxsIHRoZSBpb3Jl
-cV9sb2NrIG11dGV4Lg0KDQpJIGNhbiBmaXggdGhhdCB1cCB3aGlsZSBjb21taXR0aW5nLCB3
-aXRoIHRoYXQ6DQoNClJldmlld2VkLWJ5OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5j
-b20+DQoNCg0KSnVlcmdlbg0K
---------------dirje0y05bPUMX0EZM5pQS6v
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
+References: <20240702085034.48395-1-alexghiti@rivosinc.com> <20240702085034.48395-4-alexghiti@rivosinc.com>
+In-Reply-To: <20240702085034.48395-4-alexghiti@rivosinc.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Tue, 2 Jul 2024 15:42:55 +0530
+Message-ID: <CAAhSdy3_N7nubTwaR15WNeiysDDQ5BkB5qCq-6Fh2ZwDbV-6qw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] riscv: Stop emitting preventive sfence.vma for new
+ vmalloc mappings
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Ved Shanbhogue <ved@rivosinc.com>, Matt Evans <mev@rivosinc.com>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+On Tue, Jul 2, 2024 at 2:24=E2=80=AFPM Alexandre Ghiti <alexghiti@rivosinc.=
+com> wrote:
+>
+> In 6.5, we removed the vmalloc fault path because that can't work (see
+> [1] [2]). Then in order to make sure that new page table entries were
+> seen by the page table walker, we had to preventively emit a sfence.vma
+> on all harts [3] but this solution is very costly since it relies on IPI.
+>
+> And even there, we could end up in a loop of vmalloc faults if a vmalloc
+> allocation is done in the IPI path (for example if it is traced, see
+> [4]), which could result in a kernel stack overflow.
+>
+> Those preventive sfence.vma needed to be emitted because:
+>
+> - if the uarch caches invalid entries, the new mapping may not be
+>   observed by the page table walker and an invalidation may be needed.
+> - if the uarch does not cache invalid entries, a reordered access
+>   could "miss" the new mapping and traps: in that case, we would actually
+>   only need to retry the access, no sfence.vma is required.
+>
+> So this patch removes those preventive sfence.vma and actually handles
+> the possible (and unlikely) exceptions. And since the kernel stacks
+> mappings lie in the vmalloc area, this handling must be done very early
+> when the trap is taken, at the very beginning of handle_exception: this
+> also rules out the vmalloc allocations in the fault path.
+>
+> Link: https://lore.kernel.org/linux-riscv/20230531093817.665799-1-bjorn@k=
+ernel.org/ [1]
+> Link: https://lore.kernel.org/linux-riscv/20230801090927.2018653-1-dylan@=
+andestech.com [2]
+> Link: https://lore.kernel.org/linux-riscv/20230725132246.817726-1-alexghi=
+ti@rivosinc.com/ [3]
+> Link: https://lore.kernel.org/lkml/20200508144043.13893-1-joro@8bytes.org=
+/ [4]
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/cacheflush.h  | 18 +++++-
+>  arch/riscv/include/asm/thread_info.h |  5 ++
+>  arch/riscv/kernel/asm-offsets.c      |  5 ++
+>  arch/riscv/kernel/entry.S            | 84 ++++++++++++++++++++++++++++
+>  arch/riscv/mm/init.c                 |  2 +
+>  5 files changed, 113 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm=
+/cacheflush.h
+> index ce79c558a4c8..8de73f91bfa3 100644
+> --- a/arch/riscv/include/asm/cacheflush.h
+> +++ b/arch/riscv/include/asm/cacheflush.h
+> @@ -46,7 +46,23 @@ do {                                                 \
+>  } while (0)
+>
+>  #ifdef CONFIG_64BIT
+> -#define flush_cache_vmap(start, end)           flush_tlb_kernel_range(st=
+art, end)
+> +extern u64 new_vmalloc[NR_CPUS / sizeof(u64) + 1];
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+Why is this u64 and not "unsigned long" ?
 
---------------dirje0y05bPUMX0EZM5pQS6v--
+Was this tested on rv32 ?
 
---------------XbicjrxknHrgY0Dmx8Pxez32--
+> +extern char _end[];
+> +#define flush_cache_vmap flush_cache_vmap
+> +static inline void flush_cache_vmap(unsigned long start, unsigned long e=
+nd)
+> +{
+> +       if (is_vmalloc_or_module_addr((void *)start)) {
+> +               int i;
+> +
+> +               /*
+> +                * We don't care if concurrently a cpu resets this value =
+since
+> +                * the only place this can happen is in handle_exception(=
+) where
+> +                * an sfence.vma is emitted.
+> +                */
+> +               for (i =3D 0; i < ARRAY_SIZE(new_vmalloc); ++i)
+> +                       new_vmalloc[i] =3D -1ULL;
+> +       }
+> +}
+>  #define flush_cache_vmap_early(start, end)     local_flush_tlb_kernel_ra=
+nge(start, end)
+>  #endif
+>
+> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/as=
+m/thread_info.h
+> index 5d473343634b..32631acdcdd4 100644
+> --- a/arch/riscv/include/asm/thread_info.h
+> +++ b/arch/riscv/include/asm/thread_info.h
+> @@ -60,6 +60,11 @@ struct thread_info {
+>         void                    *scs_base;
+>         void                    *scs_sp;
+>  #endif
+> +       /*
+> +        * Used in handle_exception() to save a0, a1 and a2 before knowin=
+g if we
+> +        * can access the kernel stack.
+> +        */
+> +       unsigned long           a0, a1, a2;
+>  };
+>
+>  #ifdef CONFIG_SHADOW_CALL_STACK
+> diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offs=
+ets.c
+> index b09ca5f944f7..29c0734f2972 100644
+> --- a/arch/riscv/kernel/asm-offsets.c
+> +++ b/arch/riscv/kernel/asm-offsets.c
+> @@ -36,6 +36,8 @@ void asm_offsets(void)
+>         OFFSET(TASK_THREAD_S9, task_struct, thread.s[9]);
+>         OFFSET(TASK_THREAD_S10, task_struct, thread.s[10]);
+>         OFFSET(TASK_THREAD_S11, task_struct, thread.s[11]);
+> +
+> +       OFFSET(TASK_TI_CPU, task_struct, thread_info.cpu);
+>         OFFSET(TASK_TI_FLAGS, task_struct, thread_info.flags);
+>         OFFSET(TASK_TI_PREEMPT_COUNT, task_struct, thread_info.preempt_co=
+unt);
+>         OFFSET(TASK_TI_KERNEL_SP, task_struct, thread_info.kernel_sp);
+> @@ -43,6 +45,9 @@ void asm_offsets(void)
+>  #ifdef CONFIG_SHADOW_CALL_STACK
+>         OFFSET(TASK_TI_SCS_SP, task_struct, thread_info.scs_sp);
+>  #endif
+> +       OFFSET(TASK_TI_A0, task_struct, thread_info.a0);
+> +       OFFSET(TASK_TI_A1, task_struct, thread_info.a1);
+> +       OFFSET(TASK_TI_A2, task_struct, thread_info.a2);
+>
+>         OFFSET(TASK_TI_CPU_NUM, task_struct, thread_info.cpu);
+>         OFFSET(TASK_THREAD_F0,  task_struct, thread.fstate.f[0]);
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 68a24cf9481a..822311266a12 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -19,6 +19,78 @@
+>
+>         .section .irqentry.text, "ax"
+>
+> +.macro new_vmalloc_check
+> +       REG_S   a0, TASK_TI_A0(tp)
+> +       REG_S   a1, TASK_TI_A1(tp)
+> +       REG_S   a2, TASK_TI_A2(tp)
+> +
+> +       csrr    a0, CSR_CAUSE
+> +       /* Exclude IRQs */
+> +       blt     a0, zero, _new_vmalloc_restore_context
+> +       /* Only check new_vmalloc if we are in page/protection fault */
+> +       li      a1, EXC_LOAD_PAGE_FAULT
+> +       beq     a0, a1, _new_vmalloc_kernel_address
+> +       li      a1, EXC_STORE_PAGE_FAULT
+> +       beq     a0, a1, _new_vmalloc_kernel_address
+> +       li      a1, EXC_INST_PAGE_FAULT
+> +       bne     a0, a1, _new_vmalloc_restore_context
+> +
+> +_new_vmalloc_kernel_address:
+> +       /* Is it a kernel address? */
+> +       csrr    a0, CSR_TVAL
+> +       bge     a0, zero, _new_vmalloc_restore_context
+> +
+> +       /* Check if a new vmalloc mapping appeared that could explain the=
+ trap */
+> +
+> +       /*
+> +        * Computes:
+> +        * a0 =3D &new_vmalloc[BIT_WORD(cpu)]
+> +        * a1 =3D BIT_MASK(cpu)
+> +        */
+> +       REG_L   a2, TASK_TI_CPU(tp)
+> +       /*
+> +        * Compute the new_vmalloc element position:
+> +        * (cpu / 64) * 8 =3D (cpu >> 6) << 3
+> +        */
+> +       srli    a1, a2, 6
+> +       slli    a1, a1, 3
+> +       la      a0, new_vmalloc
+> +       add     a0, a0, a1
+> +       /*
+> +        * Compute the bit position in the new_vmalloc element:
+> +        * bit_pos =3D cpu % 64 =3D cpu - (cpu / 64) * 64 =3D cpu - (cpu =
+>> 6) << 6
+> +        *         =3D cpu - ((cpu >> 6) << 3) << 3
+> +        */
+> +       slli    a1, a1, 3
+> +       sub     a1, a2, a1
+> +       /* Compute the "get mask": 1 << bit_pos */
+> +       li      a2, 1
+> +       sll     a1, a2, a1
+> +
+> +       /* Check the value of new_vmalloc for this cpu */
+> +       REG_L   a2, 0(a0)
+> +       and     a2, a2, a1
+> +       beq     a2, zero, _new_vmalloc_restore_context
+> +
+> +       /* Atomically reset the current cpu bit in new_vmalloc */
+> +       amoxor.w        a0, a1, (a0)
 
---------------bwSRyRlr9X9bbK5RyRnvDpgm
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Doing only 32bit atomic here, is this intentional ?
 
------BEGIN PGP SIGNATURE-----
+> +
+> +       /* Only emit a sfence.vma if the uarch caches invalid entries */
+> +       ALTERNATIVE("sfence.vma", "nop", 0, RISCV_ISA_EXT_SVVPTC, 1)
+> +
+> +       REG_L   a0, TASK_TI_A0(tp)
+> +       REG_L   a1, TASK_TI_A1(tp)
+> +       REG_L   a2, TASK_TI_A2(tp)
+> +       csrw    CSR_SCRATCH, x0
+> +       sret
+> +
+> +_new_vmalloc_restore_context:
+> +       REG_L   a0, TASK_TI_A0(tp)
+> +       REG_L   a1, TASK_TI_A1(tp)
+> +       REG_L   a2, TASK_TI_A2(tp)
+> +.endm
+> +
+> +
+>  SYM_CODE_START(handle_exception)
+>         /*
+>          * If coming from userspace, preserve the user thread pointer and=
+ load
+> @@ -30,6 +102,18 @@ SYM_CODE_START(handle_exception)
+>
+>  .Lrestore_kernel_tpsp:
+>         csrr tp, CSR_SCRATCH
+> +
+> +       /*
+> +        * The RISC-V kernel does not eagerly emit a sfence.vma after eac=
+h
+> +        * new vmalloc mapping, which may result in exceptions:
+> +        * - if the uarch caches invalid entries, the new mapping would n=
+ot be
+> +        *   observed by the page table walker and an invalidation is nee=
+ded.
+> +        * - if the uarch does not cache invalid entries, a reordered acc=
+ess
+> +        *   could "miss" the new mapping and traps: in that case, we onl=
+y need
+> +        *   to retry the access, no sfence.vma is required.
+> +        */
+> +       new_vmalloc_check
+> +
+>         REG_S sp, TASK_TI_KERNEL_SP(tp)
+>
+>  #ifdef CONFIG_VMAP_STACK
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index e3405e4b99af..2367a156c33b 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -36,6 +36,8 @@
+>
+>  #include "../kernel/head.h"
+>
+> +u64 new_vmalloc[NR_CPUS / sizeof(u64) + 1];
+> +
+>  struct kernel_mapping kernel_map __ro_after_init;
+>  EXPORT_SYMBOL(kernel_map);
+>  #ifdef CONFIG_XIP_KERNEL
+> --
+> 2.39.2
+>
+>
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmaD0p0FAwAAAAAACgkQsN6d1ii/Ey/G
-TAgAgxymc8CQF5CYediZ4vITMBb9Fg4dKQJ8RmYYdSmCdwfXd66VClavxj2Fm1mzMnzctBhmMaUK
-iGjHE3vD5n45nhB0nMLt/8KmMkgTNmakptsRc4TQrMHdwHtlJyfvS7U6kb+oIrf+ZQK7zxAC7V73
-dkMcemthSzuGMveWxGd8LYko/amY4S8DRe5xqQvSxj2c1xZYiq/+fO94FnA5AL+Mv+8iEAzTPinn
-we3sag+P8mWnJ7cp7ooICrDeadExts9AlDk2EpaWsVMhQT2/5THIdLOO4o8vRb+46d8V3P+uqgG6
-qBWhjlzh5D8PqSPGG3nmgwKC9b2m0/hb+9WfFjvU4Q==
-=/xXf
------END PGP SIGNATURE-----
-
---------------bwSRyRlr9X9bbK5RyRnvDpgm--
+Regards,
+Anup
