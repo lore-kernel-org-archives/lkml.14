@@ -1,186 +1,333 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058DF14B97A;
-	Tue,  2 Jul 2024 08:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC9814D6FE;
+	Tue,  2 Jul 2024 08:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719909657; cv=none; b=hcUYa6ORONdtW9F+A0mhnocuVMsaAoTi0ln64OO5S0Yhv1yotkiNAg7jkyRjcL8nj7Jp9bqWUFhfJlPsEiCxvazzSQkH1HVsRYVMSGpF/4Igd7kJ509+IJbJjZvw6/7U6D+v1vj76Mzv7042FUP94tdfgl3soOWqsnioU/7CfLw=
+	t=1719909736; cv=none; b=WxHpAxT2TTyHdDT+7PtkitmoLGeCI8wFIe6IdFb2sRSpcD0mlizbQAJz+s87myL38h+ss2jt6Q3ykGQL8CIj1ce8RcLJ0f38Sr3D58tEhSstyAmizSKGexh2xHB8JWjp+KaC3r/fBPqovo01P941KXG6uvYgpeszmBnrStJxoHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719909657; c=relaxed/simple;
-	bh=u+aOJF3gZZR5fDXd86dDnlILnB/6Ycly+pFrUKbGE+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nVP2dI8U98Nl7KnezY/TDlNiOqavxN01GWJFSasTjhucnIqhnadzk4l6n1an9RLNeghtX8KA5bWg1v/m3rJI0N2jcG+J5oOSBs5qdtlOrCDH/PY9taGzhC1bciwQskcsQjGScExg/FyjLH8jvJFGRCeZwYpX8MMQjjAykhnEnvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iAzpE2rL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iAzpE2rL"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4628eZII011448;
-	Tue, 2 Jul 2024 08:40:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ai4mMkxG7K2zhtMaV60b0R6R2hGk3c6gNObnKdp7cck=; b=iAzpE2rLBMfbirZA
-	xYkjaP2BrBkTm10pKM3/Bn5ngsOOTSzCidKIpDrwlikX6HjC/nYDzrkwsKIr/xqT
-	Ibg8Z7wE2nB0GFwsT1CjhbzbodYGryGZSDlMSYJiJ5t5M2TH+kLxH+jjIcY1oWWS
-	knBVvnaPgr+K59Kwa8CAfjM7q16XYm0Rzejjn5erAOMl3H4tW9+mBgELDDeeFz+T
-	XwS2vnzbjjNYsv9qv9BBcl66fBT2dIth/aMCB66kPYEd6F8pTtCHXHhzL9Xcz/cW
-	6dZfluIuAL4tx6i4hS4WX9UvXSHYFVNzzZWaThiXNGkW0rGqb6OyB2tn9R6virn8
-	IgcXAw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402an769bk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jul 2024 08:40:34 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4628eX7f008915
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 2 Jul 2024 08:40:33 GMT
-Received: from [10.204.65.49] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 2 Jul 2024
- 01:40:29 -0700
-Message-ID: <46aa3914-7ac9-4605-911f-5120e8a33720@quicinc.com>
-Date: Tue, 2 Jul 2024 14:10:26 +0530
+	s=arc-20240116; t=1719909736; c=relaxed/simple;
+	bh=dVSkwp5J1neV+MovPUozEx5EZoxCHIniO79CArc0PPY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=e6KKEpjIbSOgqsR0YyC8rDLuEiAOcAu01+2swTp55vOA5HmA3OR+KG51YQTLCu84iq/zAM1i9usPZoWNW7nVb+IxLZmnuq/YDuT68sNgk/+srjEoCo5YIcDOFJu+aqIVUtFye0Cronenb+ZS6A4Patc9YVyN0m9/nakxzIc3Gyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxjutivYNm+hQAAA--.129S3;
+	Tue, 02 Jul 2024 16:42:10 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPMdfvYNmTmE4AA--.1373S3;
+	Tue, 02 Jul 2024 16:42:09 +0800 (CST)
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240626063239.3722175-1-maobibo@loongson.cn>
+ <20240626063239.3722175-3-maobibo@loongson.cn>
+ <CAAhV-H4O8QNb61xkErd9y_1tK_70=Y=LNqzy=9Ny5EQK1XZJaQ@mail.gmail.com>
+ <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
+ <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
+ <9c7d242e-660b-8d39-b69e-201fd0a4bfbf@loongson.cn>
+ <CAAhV-H4wwrYyMYpL1u5Z3sFp6EeW4eWhGbBv0Jn9XYJGXgwLfg@mail.gmail.com>
+ <059d66e4-dd5d-0091-01d9-11aaba9297bd@loongson.cn>
+ <CAAhV-H41B3_dLgTQGwT-DRDbb=qt44A_M08-RcKfJuxOTfm3nw@mail.gmail.com>
+ <7e6a1dbc-779a-4669-4541-c5952c9bdf24@loongson.cn>
+ <CAAhV-H7jY8p8eY4rVLcMvVky9ZQTyZkA+0UsW2JkbKYtWvjmZg@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <81dded06-ad03-9aed-3f07-cf19c5538723@loongson.cn>
+Date: Tue, 2 Jul 2024 16:42:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] misc: fastrpc: Increase max user PD initmem size
+In-Reply-To: <CAAhV-H7jY8p8eY4rVLcMvVky9ZQTyZkA+0UsW2JkbKYtWvjmZg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-CC: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
-        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>,
-        <dri-devel@lists.freedesktop.org>, <arnd@arndb.de>,
-        stable
-	<stable@kernel.org>
-References: <20240701115237.371020-1-quic_ekangupt@quicinc.com>
- <ZoMcM+F8r58tmE7g@hu-bjorande-lv.qualcomm.com>
-From: Ekansh Gupta <quic_ekangupt@quicinc.com>
-In-Reply-To: <ZoMcM+F8r58tmE7g@hu-bjorande-lv.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: OUYXYds6jrjvyUvX1jaQQfxaPyVkCN5k
-X-Proofpoint-ORIG-GUID: OUYXYds6jrjvyUvX1jaQQfxaPyVkCN5k
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-02_04,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- clxscore=1015 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
- phishscore=0 bulkscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407020065
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxPMdfvYNmTmE4AA--.1373S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3KF4UKryxCr1fZF1UKFy3GFX_yoWDCw1fpr
+	WUJF4UKr4UJr17Ar1qqw1DJr13tr1xJr1UXr1UJryUJr1Dtr17Jr18tr1UCFyUXw18Xr1j
+	vr1UJr17ZF15A3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jn
+	UUUUUUUU=
 
 
 
-On 7/2/2024 2:44 AM, Bjorn Andersson wrote:
-> On Mon, Jul 01, 2024 at 05:22:37PM +0530, Ekansh Gupta wrote:
->> For user PD initialization, initmem is allocated and sent to DSP for
->> initial memory requirements like shell loading. This size is passed
->> by user space and is checked against a max size.
-> Why does fastrpc_init_create_process() allocate 4x the passed value and
-> why is the value rounded up to INIT_FILELEN_MAX?
-The passed value is actually the size of fastrpc shell. This size is not sufficient for the user
-PD initialization and the PD also needs some additional memory for it's other requirements
-like heap. The value is aligned to 1 MB and there is a possibility that the user passed value
-is zero(user can only pass the size if it can open the shell). For this, there is at least some
-memory allocated and sent to DSP for PD initialization(2MB as of today).
->> For unsigned PD
->> offloading requirement, more than 2MB size could be passed by user
->> which would result in PD initialization failure. Increase the maximum
->> size that can be passed py user for user PD initmem allocation.
-> Sounds good, but why not 2.1MB or a rounder arbitrary value of 8 or 16?
->
-> What is actually expected to fit in this initial memory? Is it the shell
-> that has grown beyond 2MB?
-I checked this again with the size of shell and I see that the shell size is not going beyond
-2 MB, it's the unsigned PD requirement which is asking for more memory. This is because
-there are some static heap initialization specifically for unsigned PD. Do you suggest having
-a different definition for minimum initmem? Or have it as a local variable which changes
-based on PD type(2MB for signed PD and 5MB for unsigned PD)?
->
-> Also, s/py/by
->
->> Any
->> additional memory sent to DSP during PD init is used as the PD heap.
+On 2024/7/2 下午3:28, Huacai Chen wrote:
+> On Tue, Jul 2, 2024 at 12:13 PM maobibo <maobibo@loongson.cn> wrote:
 >>
-> Does this mean that the initmem is used for shell loading and initial
-> heap, and if more heap is needed after that the DSP can request more
-> memory? Related to the question in v2, how is this memory accounted for?
-Yes this is for the initial heap requirement of PD(described above also). In case any more
-memory is required by DSP PD, it will make a reverse call to borrow more memory from
-HLOS using ADD_PAGES request which is supported by fastrpc_req_mmap. However,
-for unsigned PD the heaps are statically initialized which brings the requirement of some
-additional memory.
->
-> What would it mean that init.filefd != 0 in
-> fastrpc_init_create_process(), will that pre-allocated memory (which was
-> allocated without any size checks afaict) then be used for the same
-> purpose? Why is a buffer of 4x the size of initfd then also allocated
-> and mapped to the DSP?
-The init.filefd is the FD of fastrpc shell that is opened and read by the process user space.
-I believe the pre-allocated memory you mentioned is the memory pointed by init.file. If
-the shell file is opened by user process DSP will load the shell and add the initmem to the
-DSP PD pool. If the user space has not opened and read the shell, DSP root PD daemon
-will open and read the shell for loading for PD spawning. Please let me know if there are
-any more questions here. Basically the usage of initmem is for shell loading and remaining
-memory is added to PD pool of heap and other usage.
->
->
-> Could you please send a patch adding some comments documenting these
-> things, the steps taken to create a new process, and what the 6
-> arguments built in fastrpc_init_create_process() actually means?
-Sure, I'll add this information in the next spin.
->
-> Perhaps I'm just failing to read the answers already in the
-> implementation, if so I'm sorry.
-Thanks for reviewing the patch. I'll add most of the information in commit text and as
-comments in the next patch.
+>>
+>>
+>> On 2024/7/2 上午10:34, Huacai Chen wrote:
+>>> On Tue, Jul 2, 2024 at 10:25 AM maobibo <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2024/7/2 上午9:59, Huacai Chen wrote:
+>>>>> On Tue, Jul 2, 2024 at 9:51 AM maobibo <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> Huacai,
+>>>>>>
+>>>>>> On 2024/7/1 下午6:26, Huacai Chen wrote:
+>>>>>>> On Mon, Jul 1, 2024 at 9:27 AM maobibo <maobibo@loongson.cn> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Huacai,
+>>>>>>>>
+>>>>>>>> On 2024/6/30 上午10:07, Huacai Chen wrote:
+>>>>>>>>> Hi, Bibo,
+>>>>>>>>>
+>>>>>>>>> On Wed, Jun 26, 2024 at 2:32 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>>
+>>>>>>>>>> Two kinds of LBT feature detection are added here, one is VCPU
+>>>>>>>>>> feature, the other is VM feature. VCPU feature dection can only
+>>>>>>>>>> work with VCPU thread itself, and requires VCPU thread is created
+>>>>>>>>>> already. So LBT feature detection for VM is added also, it can
+>>>>>>>>>> be done even if VM is not created, and also can be done by any
+>>>>>>>>>> thread besides VCPU threads.
+>>>>>>>>>>
+>>>>>>>>>> Loongson Binary Translation (LBT) feature is defined in register
+>>>>>>>>>> cpucfg2. Here LBT capability detection for VCPU is added.
+>>>>>>>>>>
+>>>>>>>>>> Here ioctl command KVM_HAS_DEVICE_ATTR is added for VM, and macro
+>>>>>>>>>> KVM_LOONGARCH_VM_FEAT_CTRL is added to check supported feature. And
+>>>>>>>>>> three sub-features relative with LBT are added as following:
+>>>>>>>>>>       KVM_LOONGARCH_VM_FEAT_X86BT
+>>>>>>>>>>       KVM_LOONGARCH_VM_FEAT_ARMBT
+>>>>>>>>>>       KVM_LOONGARCH_VM_FEAT_MIPSBT
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>>>>>> ---
+>>>>>>>>>>       arch/loongarch/include/uapi/asm/kvm.h |  6 ++++
+>>>>>>>>>>       arch/loongarch/kvm/vcpu.c             |  6 ++++
+>>>>>>>>>>       arch/loongarch/kvm/vm.c               | 44 ++++++++++++++++++++++++++-
+>>>>>>>>>>       3 files changed, 55 insertions(+), 1 deletion(-)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+>>>>>>>>>> index ddc5cab0ffd0..c40f7d9ffe13 100644
+>>>>>>>>>> --- a/arch/loongarch/include/uapi/asm/kvm.h
+>>>>>>>>>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+>>>>>>>>>> @@ -82,6 +82,12 @@ struct kvm_fpu {
+>>>>>>>>>>       #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_64(KVM_REG_LOONGARCH_CSR, REG)
+>>>>>>>>>>       #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_64(KVM_REG_LOONGARCH_CPUCFG, REG)
+>>>>>>>>>>
+>>>>>>>>>> +/* Device Control API on vm fd */
+>>>>>>>>>> +#define KVM_LOONGARCH_VM_FEAT_CTRL     0
+>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_X86BT   0
+>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_ARMBT   1
+>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_MIPSBT  2
+>>>>>>>>>> +
+>>>>>>>>>>       /* Device Control API on vcpu fd */
+>>>>>>>>>>       #define KVM_LOONGARCH_VCPU_CPUCFG      0
+>>>>>>>>>>       #define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
+>>>>>>>>> If you insist that LBT should be a vm feature, then I suggest the
+>>>>>>>>> above two also be vm features. Though this is an UAPI change, but
+>>>>>>>>> CPUCFG is upstream in 6.10-rc1 and 6.10-final hasn't been released. We
+>>>>>>>>> have a chance to change it now.
+>>>>>>>>
+>>>>>>>> KVM_LOONGARCH_VCPU_PVTIME_CTRL need be attr percpu since every vcpu
+>>>>>>>> has is own different gpa address.
+>>>>>>> Then leave this as a vm feature.
+>>>>>>>
+>>>>>>>>
+>>>>>>>> For KVM_LOONGARCH_VCPU_CPUCFG attr, it will not changed. We cannot break
+>>>>>>>> the API even if it is 6.10-rc1, VMM has already used this. Else there is
+>>>>>>>> uapi breaking now, still will be in future if we cannot control this.
+>>>>>>> UAPI changing before the first release is allowed, which means, we can
+>>>>>>> change this before the 6.10-final, but cannot change it after
+>>>>>>> 6.10-final.
+>>>>>> Now QEMU has already synced uapi to its own directory, also I never hear
+>>>>>> about this, with my experience with uapi change, there is only newly
+>>>>>> added or removed deprecated years ago.
+>>>>>>
+>>>>>> Is there any documentation about UAPI change rules?
+>>>>> No document, but learn from my more than 10 years upstream experience.
+>>>> Can you show me an example about with your rich upstream experience?
+>>> A simple example,
+>>> e877d705704d7c8fe17b6b5ebdfdb14b84c revert
+>>> 1dccdba084897443d116508a8ed71e0ac8a0 and it changes UAPI.
+>>> 1dccdba084897443d116508a8ed71e0ac8a0 is upstream in 6.9-rc1, and
+>>> e877d705704d7c8fe17b6b5ebdfdb14b84c can revert the behavior before
+>>> 6.9-final, but not after that.
+>>>
+>>> Before the first release, the code status is treated as "unstable", so
+>>> revert, modify is allowed. But after the first release, even if an
+>>> "error" should also be treated as a "bad feature".
+>> Huacai,
+>>
+>> Thanks for showing the example.
+>>
+>> For this issue, Can we adding new uapi and mark the old as deprecated?
+>> so that it can be removed after years.
+> Unnecessary, just remove the old one. Deprecation is for the usage
+> after the first release.
+> 
+>>
+>> For me, it is too frequent to revert the old uapi, it is not bug and
+>> only that we have better method now. Also QEMU has synchronized the uapi
+>> to its directory already.
+> QEMU also hasn't been released after synchronizing the uapi, so it is
+> OK to remove the old api now.
+No, I will not do such thing. It is just a joke to revert the uapi.
 
---Ekansh
->
-> Regards,
-> Bjorn
->
->> Fixes: 7f1f481263c3 ("misc: fastrpc: check before loading process to the DSP")
->> Cc: stable <stable@kernel.org>
->> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
->> ---
->> Changes in v2:
->>   - Modified commit text.
->>   - Removed size check instead of updating max file size.
->> Changes in v3:
->>   - Added bound check again with a higher max size definition.
->>   - Modified commit text accordingly.
+So just create new world and old world on Loongarch system again?
+
+Regards
+Bibo, Mao
+
+> 
+> Huacai
+> 
 >>
->>  drivers/misc/fastrpc.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
->> index 5204fda51da3..11a230af0b10 100644
->> --- a/drivers/misc/fastrpc.c
->> +++ b/drivers/misc/fastrpc.c
->> @@ -38,7 +38,7 @@
->>  #define FASTRPC_INIT_HANDLE	1
->>  #define FASTRPC_DSP_UTILITIES_HANDLE	2
->>  #define FASTRPC_CTXID_MASK (0xFF0)
->> -#define INIT_FILELEN_MAX (2 * 1024 * 1024)
->> +#define INIT_FILELEN_MAX (5 * 1024 * 1024)
->>  #define INIT_FILE_NAMELEN_MAX (128)
->>  #define FASTRPC_DEVICE_NAME	"fastrpc"
->>  
->> -- 
->> 2.34.1
->>
->>
+>> Regards
+>> Bibo, Mao
+>>>
+>>> Huacai
+>>>
+>>>
+>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> How about adding new extra features capability for VM such as?
+>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_LSX   3
+>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_LASX  4
+>>>>>>> They should be similar as LBT, if LBT is vcpu feature, they should
+>>>>>>> also be vcpu features; if LBT is vm feature, they should also be vm
+>>>>>>> features.
+>>>>>> On other architectures, with function kvm_vm_ioctl_check_extension()
+>>>>>>        KVM_CAP_XSAVE2/KVM_CAP_PMU_CAPABILITY on x86
+>>>>>>        KVM_CAP_ARM_PMU_V3/KVM_CAP_ARM_SVE on arm64
+>>>>>> These features are all cpu features, at the same time they are VM features.
+>>>>>>
+>>>>>> If they are cpu features, how does VMM detect validity of these features
+>>>>>> passing from command line? After all VCPUs are created and send bootup
+>>>>>> command to these VCPUs? That is too late, VMM main thread is easy to
+>>>>>> detect feature validity if they are VM features also.
+>>>>>>
+>>>>>> To be honest, I am not familiar with KVM still, only get further
+>>>>>> understanding after actual problems solving. Welcome to give comments,
+>>>>>> however please read more backgroud if you insist on, else there will be
+>>>>>> endless argument again.
+>>>>> I just say CPUCFG/LSX/LASX and LBT should be in the same class, I
+>>>>> haven't insisted on whether they should be vcpu features or vm
+>>>>> features.
+>>>> It is reasonable if LSX/LASX/LBT should be in the same class, since
+>>>> there is feature options such as lsx=on/off,lasx=on/off,lbt=on/off.
+>>>>
+>>>> What is the usage about CPUCFG capability used for VM feature? It is not
+>>>> a detailed feature, it is only feature-set indicator like cpuid.
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>> Regards
+>>>>>> Bibo, Mao
+>>>>>>>
+>>>>>>> Huacai
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Regards
+>>>>>>>> Bibo Mao
+>>>>>>>>>
+>>>>>>>>> Huacai
+>>>>>>>>>
+>>>>>>>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>>>>>>>> index 233d28d0e928..9734b4d8db05 100644
+>>>>>>>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>>>>>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>>>>>>>> @@ -565,6 +565,12 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>>>>>>>>>>                              *v |= CPUCFG2_LSX;
+>>>>>>>>>>                      if (cpu_has_lasx)
+>>>>>>>>>>                              *v |= CPUCFG2_LASX;
+>>>>>>>>>> +               if (cpu_has_lbt_x86)
+>>>>>>>>>> +                       *v |= CPUCFG2_X86BT;
+>>>>>>>>>> +               if (cpu_has_lbt_arm)
+>>>>>>>>>> +                       *v |= CPUCFG2_ARMBT;
+>>>>>>>>>> +               if (cpu_has_lbt_mips)
+>>>>>>>>>> +                       *v |= CPUCFG2_MIPSBT;
+>>>>>>>>>>
+>>>>>>>>>>                      return 0;
+>>>>>>>>>>              case LOONGARCH_CPUCFG3:
+>>>>>>>>>> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+>>>>>>>>>> index 6b2e4f66ad26..09e05108c68b 100644
+>>>>>>>>>> --- a/arch/loongarch/kvm/vm.c
+>>>>>>>>>> +++ b/arch/loongarch/kvm/vm.c
+>>>>>>>>>> @@ -99,7 +99,49 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>>>>>>>>>>              return r;
+>>>>>>>>>>       }
+>>>>>>>>>>
+>>>>>>>>>> +static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr)
+>>>>>>>>>> +{
+>>>>>>>>>> +       switch (attr->attr) {
+>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_X86BT:
+>>>>>>>>>> +               if (cpu_has_lbt_x86)
+>>>>>>>>>> +                       return 0;
+>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_ARMBT:
+>>>>>>>>>> +               if (cpu_has_lbt_arm)
+>>>>>>>>>> +                       return 0;
+>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_MIPSBT:
+>>>>>>>>>> +               if (cpu_has_lbt_mips)
+>>>>>>>>>> +                       return 0;
+>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>> +       default:
+>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>> +       }
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static int kvm_vm_has_attr(struct kvm *kvm, struct kvm_device_attr *attr)
+>>>>>>>>>> +{
+>>>>>>>>>> +       switch (attr->group) {
+>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_CTRL:
+>>>>>>>>>> +               return kvm_vm_feature_has_attr(kvm, attr);
+>>>>>>>>>> +       default:
+>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>> +       }
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>>       int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+>>>>>>>>>>       {
+>>>>>>>>>> -       return -ENOIOCTLCMD;
+>>>>>>>>>> +       struct kvm *kvm = filp->private_data;
+>>>>>>>>>> +       void __user *argp = (void __user *)arg;
+>>>>>>>>>> +       struct kvm_device_attr attr;
+>>>>>>>>>> +
+>>>>>>>>>> +       switch (ioctl) {
+>>>>>>>>>> +       case KVM_HAS_DEVICE_ATTR:
+>>>>>>>>>> +               if (copy_from_user(&attr, argp, sizeof(attr)))
+>>>>>>>>>> +                       return -EFAULT;
+>>>>>>>>>> +
+>>>>>>>>>> +               return kvm_vm_has_attr(kvm, &attr);
+>>>>>>>>>> +       default:
+>>>>>>>>>> +               return -EINVAL;
+>>>>>>>>>> +       }
+>>>>>>>>>>       }
+>>>>>>>>>> --
+>>>>>>>>>> 2.39.3
+>>>>>>>>>>
+>>>>>>>>
+>>>>>>
+>>>>
 >>
 
