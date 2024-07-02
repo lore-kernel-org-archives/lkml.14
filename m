@@ -1,103 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE011B47AC;
-	Tue,  2 Jul 2024 13:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C471A38DB
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719927743; cv=none; b=Qu4UZgEIr1l8zoMgpAz7Yn+JbQQOb6XGOBzsTi/LaZA1zb18A6xByGmwaDNcjal/ShLVLG9TwdxaX0rUQc+ziigttEYFmkFgSPl9XsBykO+9mvALxsU67F/Gn2Mw44AUnVlifC8gHkHxUkR9gvd4Dj2bffR3fMvqcZC84gpUhjk=
+	t=1719927963; cv=none; b=iBDeaQloHNPsUbBCJ7C6GptUIxIjycqUuLidemsxWFFCSxPfwb2xnCEgJxfXidTjH03JcpYk2d6dMSai6FMllLzNAvADpMFhGnL76+38I2LJEK1H8kzHXNRATFfpiGuI2u2G+ZxEOkS3dcu1TkJmFo/0OKroDfHOSE22aRUAg74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719927743; c=relaxed/simple;
-	bh=viWMyuSLPQcT8QQfWmFKUsU7APOiO0XeiC0Q+5KtxT4=;
+	s=arc-20240116; t=1719927963; c=relaxed/simple;
+	bh=VGdyH+yFJZICp/mwbvFetq0ibB2CUajUHzE5kfWvTEo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYh6UTVHxdexVdQh5O7qAkz2/0XrfgEE4ZxHufOhlhqYGa58OkzkaqjZOFMudaMQ7GV3/NzDoFKhA23Y+i+7FtdwIh3NCa7u3MwlzqCaCwpM5xsQ8RKq/ms+L2JSQ6Nve88bZFByFkkEaGHWG43bI3nI+8CJu+42FJl3vv07wJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/IjLzG6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rgCbLJPEi4qOsDcm7iFDPi7cJt2aRpxd7F04P/vMfdKUBxDx9yNjxszyswsaa75zOii5Tu+vFvkUgjzR7rP7OPO2Rdq3vSA3zs0vY2uYdtSOsqA3cu3XqZFXwqjygAHJnxMcVT+5x0fGsG6raqX1hr5CqviFCrdj8aQyZ2idoxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WPzHcDfW; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/IjLzG6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 162A0C116B1;
-	Tue,  2 Jul 2024 13:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719927742;
-	bh=viWMyuSLPQcT8QQfWmFKUsU7APOiO0XeiC0Q+5KtxT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W/IjLzG68TM7rttv/YSFDQ9jMMSBPjODnfFodJoeJ5QyC4HQ6T3fjQnPpmdMwgFVJ
-	 eZT8d2HZY4+j7w7knSNvIgOCH3a5IySSXvxW0AXQx1cXkD1imNArNtL23XjsXVgi/+
-	 sSPShsEL/2h1Q8NRhqNFYrg1AvDQJVCWUhDNfJMX+EixW+zr97l+NGIoXXZnjK0pMq
-	 +qxgC4UE3uNSY3XTkR24D+PUHigiyKt98Jxja9aeD8njc7B0IsEkhsZMXg2usEhLze
-	 vuHzs/177SP+CKODtMQQaYtXdR+yJSGJTTcR6TtUWq93kCUNLZQEXLNB6wHqzLg+hg
-	 rx1eF23fe7tHA==
-Date: Tue, 2 Jul 2024 15:42:18 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Matteo Martelli <matteomartelli3@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Marcus Cooper <codekipper@gmail.com>, =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, 
-	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] ASoC: sunxi: sun4i-i2s: fix LRCLK polarity in i2s
- mode
-Message-ID: <20240702-copperhead-of-unusual-intensity-7f43a8@houat>
-References: <20240529140658.180966-2-matteomartelli3@gmail.com>
- <20240529140658.180966-3-matteomartelli3@gmail.com>
- <20240606-savvy-wallaby-of-champagne-d4a50e@houat>
- <6662bf1b61bbc_2f51737023@njaxe.notmuch>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WPzHcDfW"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-25e04a7d9f1so37154fac.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 06:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719927960; x=1720532760; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NiyhmXpZS1r7WZeDrgRFtefnzEGTGZ2jJsCR0mdYOhA=;
+        b=WPzHcDfWcap/uSpa3W+MXnbwL2A7RkXNp2gKyn2KGjkbjv/CTyaa4kec4b9RCEVsiA
+         UwGhLQnzVTwd3uKoTU5inbWDY1cf7AMz8j8A8qia02i8SqYYOPdoo1EtAuf1Q0dA1AUy
+         l6titFLHPsgEbyoiNOiQC11oeJbf+uNmcRSjkTbv45rkQmCzL+MSyVEo+UIjuKuRnWtx
+         GyvQk/O6OqeqHp6xT0f/LbA7D5HCWBR9otOWtTkLVlBFkLsjg2dWV5WC07mOmovoiJyR
+         lIYb2rTAhepu3EelekSAkdG5h39dUagzpy+XWJNSgixhZXOK1FU7VXWtXlQ1OR6Qnisa
+         7z1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719927960; x=1720532760;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NiyhmXpZS1r7WZeDrgRFtefnzEGTGZ2jJsCR0mdYOhA=;
+        b=HRfZ04G/GWViMKasIDWYsa5ximcLyHyMLwMd8v4Jwd2chWjScFX6ktawxv+P8eST5c
+         CNtSVsaC6YxV3LMVf23QlqRtFqZxIH0Rz+C0GevVQYpjuiTyzprxPmQhh8wG4NXk3RtR
+         Yb4ra2xJDRUjQQxzOfcgRq5EDgEhwZKdN/VcPh+Z3ab2aLuVWNLmdbYgJm1gJX+5jh6U
+         pxxp9Qu/+oKFX5KJGXp2rnoAjj542TIHfQvPWqtJAPhyaVTFZBo1lw767nMETHgU7yAI
+         9FG7RiCI7Cr13J6FEQaqLvMb2F3ExMn5iUIEd6xNvPyCd1qp1/0608u4UNN68yFQoxqx
+         CI1g==
+X-Forwarded-Encrypted: i=1; AJvYcCU6OUnecglk9Qzlvfma0SyG4IAud2VrGNx3NLVemBD5mM6m9v10ZvHR4E7R9PzGzpFLdVv4H7Sci/QWh1IdztA2sxBi9hjTIEAZiiYD
+X-Gm-Message-State: AOJu0Yx5lJ+fRgybIbB7t1ptTIh8vSmT0KJJHSLvGw1G9DZb2Rh9zlZ1
+	jdHzXxpOzADOC7mG+KNYn0kU2KqUNvx0Ht+9LYRQcAnGj4DJTjTzcd+OZwMbsDg=
+X-Google-Smtp-Source: AGHT+IFpG/+NxuDQTZzifvzctc9H1OWBvWlhgyHr9DRMBTOjzX5KQcOawMFkjTy2lBWhf7Nw/PdOiQ==
+X-Received: by 2002:a05:6870:6494:b0:24f:ebcd:6aa9 with SMTP id 586e51a60fabf-25db338f930mr7423045fac.1.1719927960594;
+        Tue, 02 Jul 2024 06:46:00 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:a6f1:b7be:4c8c:bf62])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-25d8e1f0490sm2227612fac.20.2024.07.02.06.45.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 06:45:59 -0700 (PDT)
+Date: Tue, 2 Jul 2024 15:45:55 +0200
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: =?iso-8859-1?Q?=C1gatha?= Isabelle Chris Moreira Guedes <code@agatha.dev>
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	=?iso-8859-1?Q?=C1gatha?= Isabelle Chris Moreira Guedes <patch-reply@agatha.dev>,
+	Jookia <contact@jookia.org>
+Subject: Re: [PATCH] staging: Fix missing warning/taint on builtin code
+Message-ID: <ad745b51-0aef-4a16-95a4-3514846e6504@suswa.mountain>
+References: <yf3ewok3u7fu7f4yqlcovcvedkhyjtibvwzlgbcjwf7ijcsktt@vrk54srlnk2n>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6xqnwajdqjhkbqhg"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <6662bf1b61bbc_2f51737023@njaxe.notmuch>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <yf3ewok3u7fu7f4yqlcovcvedkhyjtibvwzlgbcjwf7ijcsktt@vrk54srlnk2n>
 
+On Tue, Jul 02, 2024 at 02:44:31AM -0300, Ágatha Isabelle Chris Moreira Guedes wrote:
+> diff --git a/init/main.c b/init/main.c
+> index 206acdde51f5..fca889f3bcc0 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1602,3 +1602,23 @@ static noinline void __init kernel_init_freeable(void)
+>  
+>  	integrity_load_keys();
+>  }
+> +
+> +#ifdef CONFIG_STAGING
+> +/**
+> + * staging_init_taint() - We need to taint the kernel whenever staging code
+> + * is initialized (from built-in drivers) or loaded (as modules) and issue
+> + * a warning the first time it happens.
+> + */
+> +void staging_taint(const char *code_id, bool module)
+> +{
+> +	char *code_type = module ? "module" : "builtin driver at";
+> +
+> +	pr_warn("%s %s: The kernel contains code from staging directory"
 
---6xqnwajdqjhkbqhg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Needs a space after directory before the quote.
 
-Hi,
+> +		"the quality is unknown, you have been warned.\n",
+> +		code_type, code_id);
+> +
+> +	add_taint(TAINT_CRAP, LOCKDEP_STILL_OK);
+> +}
+> +EXPORT_SYMBOL(staging_taint);
 
-On Fri, Jun 07, 2024 at 10:04:43AM GMT, Matteo Martelli wrote:
-> Maxime Ripard wrote:
-> > > -	/*
-> > > -	 * DAI clock polarity
-> > > -	 *
-> > > -	 * The setup for LRCK contradicts the datasheet, but under a
-> > > -	 * scope it's clear that the LRCK polarity is reversed
-> > > -	 * compared to the expected polarity on the bus.
-> > > -	 */
-> >=20
-> > I think we should keep that comment somewhere.
->=20
-> I think that keeping that comment would be very misleading since the LRCLK
-> setup would not contradict the datasheet anymore [1][2].
->
-> Also, do you recall any details about the mentioned scope test setup? Was=
- i2s
-> mode tested in that occasion? It would help clarify the situation.
-
-I can't remember if I tested i2s, I think I did though. But most of the
-work was done on either TDM or DSP modes, and I remember very clearly
-that the LRCK polarity was inverted compared to what Allwinner documents.
-
-So the doc was, at best, misleading for these formats and we should keep
-the comments.
-
-Maxime
-
---6xqnwajdqjhkbqhg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZoQDugAKCRDj7w1vZxhR
-xVvRAPwJR6VO4KkT6NwzPIFmZLjnVJpctsukmqnb9lXstjDJGAEA1SlfjzCl4zUa
-deqV6VITIqV5aIAAfkYTA5gnQ9iasAI=
-=K/Rr
------END PGP SIGNATURE-----
-
---6xqnwajdqjhkbqhg--
+regards,
+dan carpenter
