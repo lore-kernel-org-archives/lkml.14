@@ -1,81 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6580FBE7F;
-	Tue,  2 Jul 2024 14:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B6FBE7F;
+	Tue,  2 Jul 2024 14:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719931414; cv=none; b=NC2CGjXWUD9tsfASRit8Fy1Ov5csB7zsnq+60Uy4T+/UGDFSzFVPc7JbUyMgGnLBW/AYJ7IlZb7+bUd/do+JsEpNyFxFVV63m5aJCb9sj+9YmUPtkPhkVgssF7fvsch4ZN48AOwZkiRl3TRgWixm/xM7uwD1DvRd4UUbFfEfscE=
+	t=1719931495; cv=none; b=aH4qMpORMYev9NhFGEUX4CeQ7TYgQ/dO3KAM66aUAXc95LD4Sm/zenhay/DcWWB/ROimEVhgg4HEDtI0trKLgYFNjqfinnxXxviWZM/CpLtRvLIFKz9189zvjQW41EJI+4r6Cz8Exs9K40F4WIVAarVtdawWkVwzjvVWr9uP3K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719931414; c=relaxed/simple;
-	bh=Ewc+Nh03yjPZR+ueWNbFezjcHbaY+TESO4Fc3R9gE1E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b/YbrBI9H9kH7fe1hNr2rP/ZwLbDoo5Mh9kqGi/bwiTZVciH46crU3fAUKaM1/6m1N9XNuuR328c+EWzDCbpcHrfLhbuE9RUT1frw8Gtv3FPNSI5kN765cFBOqF16ebSa7DQGMk5N1uAzpxiXNfQTUCTFrr0lg0tyL3jnGmEk0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=ZqFDZos4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719931495; c=relaxed/simple;
+	bh=hylGUm911e4WMhiZzXuDXft7cF0yyM6IgOOX8pQZKto=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GQNrkLTyqoTar9DlZKbHHjnhXgyyhNI+X4pE6INZTzIPywR4N5+cHCFAbuWs/VZTCN0qYmDSJfJEU7M/u8QWh+sHMvBbbtFEyLROgTluCrBjAbYFS36YsZAi/7mBqMF/nM3e3KBNTBAiwFn4RBbpnImwFz2RspRt81buVLiJfAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=YHEOPZXf reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ZqFDZos4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05289C4AF0E;
-	Tue,  2 Jul 2024 14:43:33 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ZqFDZos4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1719931411;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zXXeFMq/nRaS9iayRn6IsvflwzLp/kF0XFNwUtC+MBQ=;
-	b=ZqFDZos441mvpYJQ2HrCAPLSQFw0DaHlAIaA649IELznV2d0xJOJFkr80MloEpKUEyTnKJ
-	g0zH2K5CnEhXVMssS1ftcOkVBtb+vv3rvx70zmqGkyQoQrVS0HrCtgYgLKov4kp/vMtBfZ
-	qzSOX33cS57ZQ9QiQVhQYlkOz5+gsPY=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 54d48fee (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 2 Jul 2024 14:43:29 +0000 (UTC)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-25c9786835eso2519713fac.3;
-        Tue, 02 Jul 2024 07:43:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXNSWJacyEjIrHe/HuAlnmDeildfHYDRR5nLp1peC7bsiT7RpyDU303t6Iy74pFoRU5AHWrdOUfjRmbyfWOCIENYUgMmpRyq0M4E/JQJVnsqtXE0OZC/pGsfjfOYP9yRGIhVuEDKXMT/Q==
-X-Gm-Message-State: AOJu0Yx+nO4HE58vbgd1c6xcFRENeK/dbnxGJCVlKPzbMiMzIOuKmr54
-	YZCPvoydcJppXWrPTDnOORDYguZY30k9DCq+DnATEMVWrE6LwuSxzeB3WtknfvnOjWf63Arqb7S
-	cw0+Pw4wbVcJuPq5oE+qX1aXm0SQ=
-X-Google-Smtp-Source: AGHT+IGclrLKwuVggXhaPkcX0BzCbOmf+xj1+cgZxD0rVwMU8M8iRW42aSuLffCowufW6GLjoyYsWbtg7xBfCjVAD+I=
-X-Received: by 2002:a05:6870:3751:b0:254:a810:cdf with SMTP id
- 586e51a60fabf-25db340a2bamr8358777fac.13.1719931408681; Tue, 02 Jul 2024
- 07:43:28 -0700 (PDT)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="YHEOPZXf"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.0)
+ id aed396a62b52ac75; Tue, 2 Jul 2024 16:44:43 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 43444A562AE;
+	Tue,  2 Jul 2024 16:44:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1719931483;
+	bh=hylGUm911e4WMhiZzXuDXft7cF0yyM6IgOOX8pQZKto=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=YHEOPZXf+76dohpZb1tqnMCHzzVnxT+Eithjngiq2luwFTK7aUUkjmymASzTAodqH
+	 gHQaFoRKyp3ixiPuj96QCVVz44w9ZM84M7pGewktFATsgAU0jnkVb8zGmjvj/4coJn
+	 keswOV8bywQr5KtTO4PgYZyMZn86loZGqBe598EG/rN6Qk0jQII2ew1xbH0lwvGzrm
+	 K2vNtHcaXRCuz3x2Ah0/LHaxKjG+/z33MZcFxcPQWK2iBuINh4TiXk1Lxj/kz6iWgo
+	 MOG3NppUhThUPI5qppVr1ZgiPAk9SOBRltXONZI4iyP8w5plnAJujoAvKRozOBuGwF
+	 jE/Xtd5Gm7kDg==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>, Shawn Guo <shawnguo@kernel.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Thara Gopinath <thara.gopinath@gmail.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, linux-wireless@vger.kernel.org,
+ linux-tegra@vger.kernel.org
+Subject:
+ [RESEND][PATCH v1 5/5] thermal: trip: Fold __thermal_zone_get_trip() into its
+ caller
+Date: Tue, 02 Jul 2024 16:44:27 +0200
+Message-ID: <22339769.EfDdHjke4D@rjwysocki.net>
+In-Reply-To: <1890956.tdWV9SEqCh@rjwysocki.net>
+References: <1890956.tdWV9SEqCh@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702165601.08bb4545@canb.auug.org.au>
-In-Reply-To: <20240702165601.08bb4545@canb.auug.org.au>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Tue, 2 Jul 2024 16:43:17 +0200
-X-Gmail-Original-Message-ID: <CAHmME9rYfTtO9CPGi1nB=ohZ_SBMFocxpB=Ga3cqA54EF8F7Og@mail.gmail.com>
-Message-ID: <CAHmME9rYfTtO9CPGi1nB=ohZ_SBMFocxpB=Ga3cqA54EF8F7Og@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the random tree with the vfs-brauner,
- ftrace trees
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, Christian Brauner <brauner@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	=?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddrudehgdejjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=14 Fuz1=14 Fuz2=14
 
-Hi Stephen,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On Tue, Jul 2, 2024 at 8:56=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org.=
-au> wrote:
->  +466   n32     removexattrat                   sys_removexattrat
-> ++468   n32     vgetrandom_alloc                sys_vgetrandom_alloc
+Because __thermal_zone_get_trip() is only called by thermal_zone_get_trip()
+now, fold the former into the latter.
 
-Wondering why 467 was skipped.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/thermal/thermal_trip.c |   18 ++++--------------
+ include/linux/thermal.h        |    2 --
+ 2 files changed, 4 insertions(+), 16 deletions(-)
 
-Also, any chance you can let me keep 463 and shift the others (unless
-Christian objects)? Or does it not really matter anyway because Linus
-is gonna merge this how he wants, separately from what you do in
--next?
+Index: linux-pm/drivers/thermal/thermal_trip.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/thermal_trip.c
++++ linux-pm/drivers/thermal/thermal_trip.c
+@@ -114,27 +114,17 @@ void thermal_zone_set_trips(struct therm
+ 		dev_err(&tz->device, "Failed to set trips: %d\n", ret);
+ }
+ 
+-int __thermal_zone_get_trip(struct thermal_zone_device *tz, int trip_id,
+-			    struct thermal_trip *trip)
+-{
+-	if (!tz || trip_id < 0 || trip_id >= tz->num_trips || !trip)
+-		return -EINVAL;
+-
+-	*trip = tz->trips[trip_id].trip;
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(__thermal_zone_get_trip);
+-
+ int thermal_zone_get_trip(struct thermal_zone_device *tz, int trip_id,
+ 			  struct thermal_trip *trip)
+ {
+-	int ret;
++	if (!tz || !trip || trip_id < 0 || trip_id >= tz->num_trips)
++		return -EINVAL;
+ 
+ 	mutex_lock(&tz->lock);
+-	ret = __thermal_zone_get_trip(tz, trip_id, trip);
++	*trip = tz->trips[trip_id].trip;
+ 	mutex_unlock(&tz->lock);
+ 
+-	return ret;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(thermal_zone_get_trip);
+ 
+Index: linux-pm/include/linux/thermal.h
+===================================================================
+--- linux-pm.orig/include/linux/thermal.h
++++ linux-pm/include/linux/thermal.h
+@@ -202,8 +202,6 @@ static inline void devm_thermal_of_zone_
+ }
+ #endif
+ 
+-int __thermal_zone_get_trip(struct thermal_zone_device *tz, int trip_id,
+-			    struct thermal_trip *trip);
+ int thermal_zone_get_trip(struct thermal_zone_device *tz, int trip_id,
+ 			  struct thermal_trip *trip);
+ int for_each_thermal_trip(struct thermal_zone_device *tz,
 
-Jason
+
+
