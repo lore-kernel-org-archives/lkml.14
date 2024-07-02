@@ -1,165 +1,86 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4CB1BE248;
-	Tue,  2 Jul 2024 17:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719940551; cv=fail; b=TiOzzm6RgZKmmnX1/Tiv1M5appvrAIo6AC8TVYZ/Oa3XjZnpPOnskge26mtIs1t8SmSjzkZ62g/QkxJ5DyECD2uQ56iJwMG7G258GPoXrXXlkjLADrYUJaXm7Xm9AO6VRBYnr0mD9A2uM445if1ZHyUJ6PyVv50zpj9SGNyfybs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719940551; c=relaxed/simple;
-	bh=yDSdeIXaHEWI0p+SVSp2OwVPdQbLc/kOng8lp3YQhiU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cvdo+2qaAH9XEjrHDghf4+KOQbwFHpOCUQAgfLVeCAjZAmoESQlSxM1CDqJNOAEylRTGWC5GGIKyHU2sNsmUmJzHb96Xcocpe5bmqp2TLsSDw3kTbz4RMMQXPSmupBcKVd/NpBzxRvSxpdWRC/xns3Tkl/f4P2ZzkQIn0QhaWQw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LP/7BBDn; arc=fail smtp.client-ip=40.107.243.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CC51BE22A;
+	Tue,  2 Jul 2024 17:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719940602; cv=none; b=V30ZmZk0BlRWaP8sA1W8N3/UQvMFz791nI7g6yYh90C6oV0Fqwbi6QGykEMwqsrME4STqdC/KjdMxb/21bhCmanmeE1eGt6CQluHPvmHtlUVBpNBAAjMKcBrhuSKc7lgnhlyo4lSYcUYOmZg5NChKISoDyk5M71HAa+jQyi3Nu8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719940602; c=relaxed/simple;
+	bh=f/M+sNyCwuSUx8B+9svKR0RPND8pbkXc8FBBEmXL93U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RpJ/UFW+kZeVc7so9o2SoK7ctFeam9crhtNHsT3CH9LI2Gs6nDln+5MkojnSRDsfGUpVytn4aoLN7S3BPlDWBZjohaAcDxQ73fuHWrhpV5pO3HElgEhArvjvlMq3O20s7o/euNX6rr4xzBOTNa+Yg+Q+X7VV1R8+ANwPcmWozUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+u7OU6Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LP/7BBDn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nxQ75zzA/Yi0scF2eYwJG7ERYGvegTvpjMxXbvbXBB9hJmX4ISjskycx1zYLQXkTVblj9PdjWlZ/YXxJRqSUgkbDqTPWJxU66ClG+gmmi1kvH+lzRLOYOkSZR+H6ZIMT2k4Tgrp19jzKL2Qx81CaFZ4+Ep/3TMXF4Hl5sn+jdT+IS/4Tod9xexMK/6duslut6vc4kOwlbahSslWIf5gu6GLU0+XL7k/PZUpyLvV9N4yzomqbjZroTykttCNDJCqF3cMzENuPlEqKKIZVrKHgAU1yLetay29o3ahgsTCQJkQkMha8AHT2TssUA1QoyVYrxbMYx3T+2kmHVlewdvm9lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=efGjyeGz+CX9Gb5D6Ag6M6ahh59pFv68S0tThCAlAJo=;
- b=BHE+v/vLxVTkHRCBcoO15VS5lsZhvK2yIIRFyEps0O0GMEGEmaqysD1xg/ra2hXzaxkps3XqfNoObd8bYF/R0DzrqGmcb9VcFrfBWtDI0vVIdvzAyHRA24zmvsdd50YSG5F0QckSCpLdiPkmgV7WaVBhsJN+8Br4FXTwZdnyLTU3cdL0SBPddb203PIBm401ovGrbDtGbFJ+Og851cvlA1mL3r2YjtE+0yQKhY+NRs1jVlMtgLYA0+f5DBhQGaQDnQVWYnvXDavLU9VYwk6nKBjKlGF4hj/YWDcvRKUcuLCYF55XQBosO+TTZboQad3rh5lXjLxtlesz6lGCUS2J1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=efGjyeGz+CX9Gb5D6Ag6M6ahh59pFv68S0tThCAlAJo=;
- b=LP/7BBDnht2jpy7S8kewEV+coHdlvQs4CLtW+gOlom5SqV3sJHGCNug+5WWPJ8kqSsHKROxUd15SLBpHQe9GMvFhAQd/MM4aX+1dsYg+p4eWDSX6AIm6ONGbqSrXhJRm45YYiEsg7vBQ2X7jgHuM33Jp39saHO3YpfQPvZh9s9w=
-Received: from BN9PR03CA0275.namprd03.prod.outlook.com (2603:10b6:408:f5::10)
- by IA1PR12MB7709.namprd12.prod.outlook.com (2603:10b6:208:423::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Tue, 2 Jul
- 2024 17:15:41 +0000
-Received: from BN1PEPF00004689.namprd05.prod.outlook.com
- (2603:10b6:408:f5:cafe::c9) by BN9PR03CA0275.outlook.office365.com
- (2603:10b6:408:f5::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.23 via Frontend
- Transport; Tue, 2 Jul 2024 17:15:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF00004689.mail.protection.outlook.com (10.167.243.134) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7741.18 via Frontend Transport; Tue, 2 Jul 2024 17:15:41 +0000
-Received: from AUS-HP-PV-STX4.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 2 Jul
- 2024 12:15:40 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: "Gautham R . Shenoy" <gautham.shenoy@amd.com>
-CC: Meng Li <li.meng@amd.com>, Perry Yuan <perry.yuan@amd.com>, "open list:AMD
- PSTATE DRIVER" <linux-pm@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>, Dhananjay Ugwekar
-	<Dhananjay.Ugwekar@amd.com>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH 1/2] cpufreq/amd-pstate-ut: Don't check for highest perf matching on prefcore
-Date: Tue, 2 Jul 2024 12:15:14 -0500
-Message-ID: <20240702171515.6780-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+u7OU6Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D27C3C116B1;
+	Tue,  2 Jul 2024 17:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719940602;
+	bh=f/M+sNyCwuSUx8B+9svKR0RPND8pbkXc8FBBEmXL93U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W+u7OU6YHMF9dg/txZ1c9k9EILUgrFVbUCo0ncrE0x+MX0+2u0WIw929KbOAHXQ0M
+	 5+T55dcSEtoLXBvOAiSSOl0vUMhEGTZMOhmYqY0i2HRaRKSc0QcWyPA5oTykC/cO4b
+	 hPpCKGryQ3UlnJttv/Y9JAepr8mHIgRsfAgwkghqq9yXurqMKWMXuEmLO+UFBZZioS
+	 dDQroXDCwyDpcQsphR2sEHUpbcVMXZgP99+rSiMu4jemPPHuA9G36KnvKn5cEcDfWs
+	 9HH5JajKNBLjl5PUi3EQ+p9AFzUEpnRKtncJP6A1D88lrOBf60A/ObbF9o/MGzsBTh
+	 4/a+yoXZGrRZg==
+Date: Tue, 2 Jul 2024 17:16:40 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: dm-devel@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>, linux-kernel@vger.kernel.org,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 7/7] dm-verity: hash blocks with shash import+finup when
+ possible
+Message-ID: <20240702171640.GA1049704@google.com>
+References: <20240702064835.120541-1-ebiggers@kernel.org>
+ <20240702064835.120541-8-ebiggers@kernel.org>
+ <CAMj1kXFE45J9fDJ9XtMyJiUP1F-odZUmH0zLKkuZeWL_bLdDZQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004689:EE_|IA1PR12MB7709:EE_
-X-MS-Office365-Filtering-Correlation-Id: ed11b728-fce5-44e5-4f95-08dc9aba99d7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NdnVK+6ip4lKT3CXE2oqVO/5EWaRfW2eYtTenbFdlAw7lNE0YwX0p8h8Rt9U?=
- =?us-ascii?Q?y1ZO/qkWZuUEdt1AUBKTiITOmnM9XhffhKvq5LIUbutJ0HIagQeFbJcRXkp3?=
- =?us-ascii?Q?UFlUP5VmQbZE+Z8uProrag8M41UFH+fl/v+lbaOoKTiWXlHBhp5cYEsO9yCl?=
- =?us-ascii?Q?DPXkOGQQYtkvNgHzNicPRLG6CNxM2LS16bfEb+o8brHE4Ci3NXYCJT8DNNkH?=
- =?us-ascii?Q?vxDmawPJFMM8MjYkishGR/vHxU3+b3n7epZA8olqbFxhyInb2c/rSu/UN6D/?=
- =?us-ascii?Q?RHMZu3sh0glFrbIQ3VDGvTh7PCEr8L39pT3W81IC5193gi0clUCpUDamO/QG?=
- =?us-ascii?Q?naRpJeDYX/4SNRoyWrXj0EQSCW0+vWebg4XWX6MnE9/MNbkS+MOYDzOrcNlY?=
- =?us-ascii?Q?GvmRMVVC5HOiTTLU8q6r7LlX/T9Z8+x8h15CWMX6+hG66qKbnVeUQ8UhQCCg?=
- =?us-ascii?Q?4rfI+W4vvrhy4wslhxFQQ32b/vWmF91NeCGvdnLLugx5497GRcMjBOQf2pzq?=
- =?us-ascii?Q?FaBp3EgYQuOrVVayZbFE5D2qVGfp2kHLv59+Su+FgbgQrNfZ16UEU+mK7uHC?=
- =?us-ascii?Q?TsbPcZY3ECYm5d28DGFzF5sbCoiAcd6hfZG9xXPLLSnf4ygZplIMxAFFGcN6?=
- =?us-ascii?Q?Cl5JmXNLKo8dH+0QFw6PyajEbY1MvdjEYEnrb+xuZTukkxqYNpk58B2zwXTs?=
- =?us-ascii?Q?CYI5TR3zL4i9LpVtS+Q7MHf5bzgNFS/g3TCSW6KvoIWfX1fm13r4Mja+OFV0?=
- =?us-ascii?Q?8ea1Uv4Jo8KfGGNiMNj+hIxKTrUTDHmHi+Euq/FreEeN72nK2luaz+Z9Zq1j?=
- =?us-ascii?Q?ZeTUpFYcR669hEauFg9JXjkAfiiC0WI1OtHHpuMo4JJBhoindqRav5h9XnWS?=
- =?us-ascii?Q?a+gnk3+fP5basIGcGC8koKJLKa4NtGSShTwwmpu/S7oc9Elkm2CVxzdnqWrc?=
- =?us-ascii?Q?qfUiNixfMgoUJJdQigVTnyBvroaSaWJDJLGcEg1kB3EKX6q6QDHRDOlpJn+O?=
- =?us-ascii?Q?A4aDpMEzjpKB467TApyZYVUNegIopONS31+Hvbze1Cww0XlkQPlUFB9Q6iXH?=
- =?us-ascii?Q?Ws5owBwaUlu3WGFdRg2Z078dC2IRgxycoFwW7FlIFbtbc20TnBAeFG4zVNwz?=
- =?us-ascii?Q?5GN1JFWEMaSgVxC+67Z6kLZxIvwRKf6kdjeC9IJlIC40E5BKlU7DKSyp2e7p?=
- =?us-ascii?Q?Am8/r/BB40VJ9p9Sj3WaGFSIeV/XQC62OPLU19d6QCssGtxbq5wH4FPe2L+w?=
- =?us-ascii?Q?L8/TeDBJS+fNROc4j2Z1NOdZCJCcNXqs9Q7VwazVaINDq+jfJDPGE2+JwM7l?=
- =?us-ascii?Q?KC0InY6psUN/pZ7e9xFQMGzWCxsU7t6EWfNAuRpDY7CbBaxQFj3k2D6GlQf5?=
- =?us-ascii?Q?GpJRFNRN3Jr5RDJEBTcKeVklNem3/wXH0xCNByW+aopOp1prt2hA63XiFl9f?=
- =?us-ascii?Q?tFnacDDme4rPapzeAP6pRQ+F2dcfgxm8?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 17:15:41.4762
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed11b728-fce5-44e5-4f95-08dc9aba99d7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004689.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7709
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFE45J9fDJ9XtMyJiUP1F-odZUmH0zLKkuZeWL_bLdDZQ@mail.gmail.com>
 
-If a system is using preferred cores the highest perf will be inconsistent
-as it can change from system events.
+Hi Ard,
 
-Skip the checks for it.
+On Tue, Jul 02, 2024 at 09:41:19AM +0200, Ard Biesheuvel wrote:
+> >  int verity_hash(struct dm_verity *v, struct dm_verity_io *io,
+> >                 const u8 *data, size_t len, u8 *digest, bool may_sleep)
+> >  {
+> > -       struct ahash_request *req = verity_io_hash_req(v, io);
+> >         int r;
+> > -       struct crypto_wait wait;
+> > -
+> > -       r = verity_hash_init(v, req, &wait, may_sleep);
+> > -       if (unlikely(r < 0))
+> > -               goto out;
+> >
+> > -       r = verity_hash_update(v, req, data, len, &wait);
+> > -       if (unlikely(r < 0))
+> > -               goto out;
+> > +       if (static_branch_unlikely(&ahash_enabled) && !v->shash_tfm) {
+> 
+> Is the static key really worth the hassle? Couldn't this just be
+> 
+> if (unlikely(!v->shash_tfm)) {
+> 
+> so that the ahash logic is moved to the cold path? We need to
+> dereference v->shash_tfm right away in any case, and if it is never
+> NULL, the branch predictor should be able to remember that.
 
-Fixes: e571a5e2068e ("cpufreq: amd-pstate: Update amd-pstate preferred core ranking dynamically")
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/cpufreq/amd-pstate-ut.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+The value of the static key is indeed marginal.  I included it because of the
+precedent of dm-verity's existing use_bh_wq_enabled static key, which exists for
+a similar purpose.  As long as we're going through the trouble of doing that, I
+think it makes sense to use the same pattern for ahash too.  It's another rarely
+needed option that can be patched in in the very rare case that it's needed.
 
-diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
-index 66b73c308ce6..b7318669485e 100644
---- a/drivers/cpufreq/amd-pstate-ut.c
-+++ b/drivers/cpufreq/amd-pstate-ut.c
-@@ -160,14 +160,17 @@ static void amd_pstate_ut_check_perf(u32 index)
- 			lowest_perf = AMD_CPPC_LOWEST_PERF(cap1);
- 		}
- 
--		if ((highest_perf != READ_ONCE(cpudata->highest_perf)) ||
--			(nominal_perf != READ_ONCE(cpudata->nominal_perf)) ||
-+		if (highest_perf != READ_ONCE(cpudata->highest_perf) && !cpudata->hw_prefcore) {
-+			pr_err("%s cpu%d highest=%d %d highest perf doesn't match\n",
-+				__func__, cpu, highest_perf, cpudata->highest_perf);
-+			goto skip_test;
-+		}
-+		if ((nominal_perf != READ_ONCE(cpudata->nominal_perf)) ||
- 			(lowest_nonlinear_perf != READ_ONCE(cpudata->lowest_nonlinear_perf)) ||
- 			(lowest_perf != READ_ONCE(cpudata->lowest_perf))) {
- 			amd_pstate_ut_cases[index].result = AMD_PSTATE_UT_RESULT_FAIL;
--			pr_err("%s cpu%d highest=%d %d nominal=%d %d lowest_nonlinear=%d %d lowest=%d %d, they should be equal!\n",
--				__func__, cpu, highest_perf, cpudata->highest_perf,
--				nominal_perf, cpudata->nominal_perf,
-+			pr_err("%s cpu%d nominal=%d %d lowest_nonlinear=%d %d lowest=%d %d, they should be equal!\n",
-+				__func__, cpu, nominal_perf, cpudata->nominal_perf,
- 				lowest_nonlinear_perf, cpudata->lowest_nonlinear_perf,
- 				lowest_perf, cpudata->lowest_perf);
- 			goto skip_test;
--- 
-2.43.0
-
+- Eric
