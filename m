@@ -1,298 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E193A152179
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4351A15217E
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719902290; cv=none; b=Mm0u24gRykpeRDmE0unMpu/WVPPsfvKaypLvHCLouxnJXugpMlw3AlNxv42MpiYdw0pcR4Z77J97VaroBwyRRpO+vcnqiYfe/BECnvvckLI5PBYQ1THS/nbLbn+maNLeSHiFBVyjxIRkbZE0l0EPDzatjCYcBgmobbLqD3WgQbc=
+	t=1719902293; cv=none; b=iiw/YCzwMCTHAWqmDturPfjUhwSThvI99DcekNqXE1HpRaS55z0v/ibQ8Ca39XPOYXu5muNRCUmHVXRfxNeAQNoaDlWPcrpKhkuQLV8CmkHdOsAgP4GAwuPWIeKG0eS29irivppENPueIhUHdp7Lbp3uVrkYWiCasEyAqSoDXtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719902290; c=relaxed/simple;
-	bh=6jqkIqEZwn4e7Et/J5+bKc0HECtgwLwGNALYtjkl4xI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Glb6/rGXR6SaU+u6l16NrKbebCYZR2uyDlaZbMEZZrdTFLoqwYVzATkak7cp+xkvYgpYOZoQd+LBcJ6ki3PScA5fOJmULlq3kl18RrkgJHLI/WqZz1fAIerkYvjndldiFMhX1KjKe7LY6tPan6JwC/h/6vFM6rAdJugVMUofaL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XdwtA7Oi; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719902293; c=relaxed/simple;
+	bh=uVGTXrCZ95rXnFyM1jW4IBOOvZ8iiNQ34mCxGz8eJdo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YpMxtRcxhgI2SEy18t4F7EGmzXOG+20XpmNhxZeUfC81bCAs/q276Y+w9cUu93+gv31Rog4XXiteX2zH3/RCbQ6VIaBWid24mmYCrQYSswfluqSbmMbST/e18ZlmsHoYRRgMzqMNmDbrQsuYrSS96dibM9QnQSbwMMpz/NWh6iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S2tAOdrD; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XdwtA7Oi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719902289; x=1751438289;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6jqkIqEZwn4e7Et/J5+bKc0HECtgwLwGNALYtjkl4xI=;
-  b=XdwtA7OiW623eqTKMwFx5g63S1GH0oWMuakI2gX4d4WbI6XUG0NOuA9c
-   fZtvauaWyoIVxkTf0EB+Txd4qeeAF+KmwN3KRqv4lKsbNmtUE6Jf2BzBW
-   Jok6RcJT9nygqNTGWrOaCfVvaCN5vtcJn5KlVdvbVwdu/RvaRTVHdDbNY
-   2sgV3idu40Hj1uD5F5JR21Odoz7PS75hdBYAwhKZfH/9SaoHHnmGXrm7N
-   tZ7TVOqIgaaUOegeJkIN23SqTf8Li0dzokLr4g3vn3lbiYRNI7cfVwVx3
-   V6GuKH+kywEhG4dILVKZ4iaG+Y+aclLp3rOUUSIf8CDKo3Vkzow62zGPS
-   Q==;
-X-CSE-ConnectionGUID: 284WubZOTMiXyYikE6KXmQ==
-X-CSE-MsgGUID: kBi9UQu3R1+KvfBgacFKHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="28455698"
-X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="28455698"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 23:38:09 -0700
-X-CSE-ConnectionGUID: qwtQg15+TOGgMMGk4sD4ZA==
-X-CSE-MsgGUID: gyEaqq1WT4OwGQ6izHg96w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="50137337"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by fmviesa003.fm.intel.com with ESMTP; 01 Jul 2024 23:38:05 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	Joel Granados <j.granados@samsung.com>
-Cc: iommu@lists.linux.dev,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v8 10/10] iommufd/selftest: Add coverage for IOPF test
-Date: Tue,  2 Jul 2024 14:34:44 +0800
-Message-Id: <20240702063444.105814-11-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240702063444.105814-1-baolu.lu@linux.intel.com>
-References: <20240702063444.105814-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S2tAOdrD"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-366e70d0330so2381817f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 23:38:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719902289; x=1720507089; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PNCv1zHEy8SjFr6U2erVD2AzxRdRE5SVwR5I879o2aE=;
+        b=S2tAOdrDYRoYwhxS3oL/kT+3zSkESMc5YsrOQ13/yjFpeUDvryrP1bjgQ485v6MGoR
+         kagPCqwCp7thLejQ6CTrFd2i8Xg/g04VYgQjl1FnoQQjJbg9bvzn3fRvjtC6b2G8/gPP
+         CfgWK+2YAarHc16IFHG5LZ1WMeiCh/VfjmewSTLKfpIgiwyGJOaEU9Toho3uwCvb0xfY
+         BUsLlCHooCUXAg4X2Gv0yY4ngGg4CPKl3kpkkhzSzlQkKptrJvbgxu0joZdp9oRt2tnk
+         jFjrMbBx33XLVvGB2sLEULYXiHzDEsYIHl5tSkJF8WmLhR9LB/ETvfrgVtkZEvhidtCd
+         QQaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719902289; x=1720507089;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PNCv1zHEy8SjFr6U2erVD2AzxRdRE5SVwR5I879o2aE=;
+        b=bO2ZoKiLS+ewiCPihn5L1h6CHpq7TfZV2ZkYuLyXglU5ZoC1ye0ZLaq5AlwmnQCmnx
+         NZOq1I4n36jRIN1xChqHClEiPBwBauykn1fQyOgewzBb5uG4TtXUTevkYbBGcXDtn3PU
+         5Kpr3B3owoW7inhHAd1qYkoDJGKIJpPd1Bx2XxvtMEWpqS8lWusL/tFggvH8g+owf2yG
+         PdAzIb4Fl1zGQfH8kyUPNH/VQ+vkEQ5FYlLWVxdqiTIX2TrBwWSnWjnRLyhDsIIqYtCn
+         yx89Lhzs6CcN1HaeRYtpnYlSVGgWhweSL8iBpOU1Kp8I6QRASGlLAI/xxVobZXtL60Le
+         u+jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJfMIkfmBKsKEiD3aQP9W+VGVnHF5okP+9czKCtpInwQekk69nK8dKA6ijqI6gXhnPfeN5j3E7/uK5bblfzMWop5Ebb60mOuiBAbSS
+X-Gm-Message-State: AOJu0YwYHNsmFC8BsHbvuKUj2hdseIal+ofKGN/CNK3gi2Jkwxl/4GIr
+	8S5fXmV4Gk7lMDwaOTTytMCf06JJdS+lLJA7Z3Mi9hEh7KiennTk6Q8zcLQksFS45n69PVo9w1G
+	jCbgDal55e9Cl8/HnenAY8jOjmWn9c9pkKCjh
+X-Google-Smtp-Source: AGHT+IHFFIpP0I+ybtmWQvASLb2wmgzFLFQ4KKDZRXguJSPBoitxkQ1JFanEaFATLkfV3ZeHp5H9vkHujV1yOOdWuF8=
+X-Received: by 2002:a5d:58c3:0:b0:367:8147:92af with SMTP id
+ ffacd0b85a97d-367814793femr695746f8f.69.1719902289308; Mon, 01 Jul 2024
+ 23:38:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240701184912.01f1f9ce@canb.auug.org.au> <20240701201448.7878e9b35e1569bfc1f2ddbc@linux-foundation.org>
+ <CACw3F52=GxTCDw-PqFh3-GDM-fo3GbhGdu0hedxYXOTT4TQSTg@mail.gmail.com>
+ <CACw3F52wm=5Rg+QP-E7JDOjBvA2mYv0uDBL+8=KPCfQ8tkHQaA@mail.gmail.com> <20240701231826.fb3044bb52dc97bedc9853ab@linux-foundation.org>
+In-Reply-To: <20240701231826.fb3044bb52dc97bedc9853ab@linux-foundation.org>
+From: Jiaqi Yan <jiaqiyan@google.com>
+Date: Mon, 1 Jul 2024 23:37:55 -0700
+Message-ID: <CACw3F52_obAB742XeDRNun4BHBYtrxtbvp5NkUincXdaob0j1g@mail.gmail.com>
+Subject: Re: linux-next: build warnings after merge of the mm tree
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Extend the selftest tool to add coverage of testing IOPF handling. This
-would include the following tests:
+On Mon, Jul 1, 2024 at 11:18=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Mon, 1 Jul 2024 21:33:20 -0700 Jiaqi Yan <jiaqiyan@google.com> wrote:
+>
+> > > > This seems a reasonable thing to do so there's probably some way in
+> > > > which to do it, but a bit of grepping failed to turn up examples in
+> > > > existing .rst files.  Can someone please suggest?
+> > >
+> > > It seems I need to add some blank lines according to [1], especially
+> > > to add a blank line above the first list item:
+> > >
+> > > diff --git a/Documentation/admin-guide/sysctl/vm.rst
+> > > b/Documentation/admin-guide/sysctl/vm.rst
+> > > index 75e22137d849..74b4c0f65213 100644
+> > > --- a/Documentation/admin-guide/sysctl/vm.rst
+> > > +++ b/Documentation/admin-guide/sysctl/vm.rst
+> > > @@ -274,12 +274,15 @@ Correctable memory errors are very common on
+> > > servers. Soft-offline is kernel's
+> > >  solution for memory pages having (excessive) corrected memory errors=
+.
+> > >
+> > >  For different types of page, soft-offline has different behaviors / =
+costs.
+> > > +
+> > >  - For a raw error page, soft-offline migrates the in-use page's cont=
+ent to
+> > >    a new raw page.
+> > > +
+> > >  - For a page that is part of a transparent hugepage, soft-offline sp=
+lits the
+> > >    transparent hugepage into raw pages, then migrates only the raw er=
+ror page.
+> > >    As a result, user is transparently backed by 1 less hugepage, impa=
+cting
+> > >    memory access performance.
+> > > +
+> > >  - For a page that is part of a HugeTLB hugepage, soft-offline first =
+migrates
+> > >    the entire HugeTLB hugepage, during which a free hugepage will be =
+consumed
+> > >    as migration target.  Then the original hugepage is dissolved into=
+ raw
+> > >
+> > > But I am having trouble testing the build, so wasn't able to validate
+> > > the change above:
+> > >
+> > > Documentation$ make
+> > > /tools/net/ynl/ynl-gen-rst.py -o
+> > > /Documentation/networking/netlink_spec/index.rst -x
+> > > make: /tools/net/ynl/ynl-gen-rst.py: No such file or directory
+> > > make: *** [Makefile:113:
+> > > /Documentation/networking/netlink_spec/index.rst] Error 127
+>
+> You need to install all sorts of whacky system and python packages.
+> The (failed) build process should guide you through this.
+>
+> > I tried another way: make htmldocs at repo's root directory. Although
+> > I wasn't able to finish the make process,
+> >
+> > - without the blank lines:
+> >
+> >   Documentation/admin-guide/sysctl/vm.rst:278: ERROR: Unexpected indent=
+ation.
+> >   Documentation/admin-guide/sysctl/vm.rst:279: WARNING: Block quote
+> > ends without a blank line; unexpected unindent.
+> >
+> > - with the blank lines added, the ERROR and WARNING in vm/rst are gone.
+> >
+> > Andrew and Stephen, what is the best way to post the fix for this?
+> > Should I send out a v8 of the patch with the blank lines added? or a
+> > standalone commit for this fix?
+>
+> I added your fix, thanks.
 
-- Allocating and destroying an iommufd fault object.
-- Allocating and destroying an IOPF-capable HWPT.
-- Attaching/detaching/replacing an IOPF-capable HWPT on a device.
-- Triggering an IOPF on the mock device.
-- Retrieving and responding to the IOPF through the file interface.
+Ah, sorry Andrew, I should sent out this diff, as there are more blank
+lines needed:
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
----
- tools/testing/selftests/iommu/iommufd_utils.h | 86 +++++++++++++++++--
- tools/testing/selftests/iommu/iommufd.c       | 22 +++++
- .../selftests/iommu/iommufd_fail_nth.c        |  2 +-
- 3 files changed, 104 insertions(+), 6 deletions(-)
+diff --git a/Documentation/admin-guide/sysctl/vm.rst
+b/Documentation/admin-guide/sysctl/vm.rst
+index 75e22137d849..f48eaa98d22d 100644
+--- a/Documentation/admin-guide/sysctl/vm.rst
++++ b/Documentation/admin-guide/sysctl/vm.rst
+@@ -274,12 +274,15 @@ Correctable memory errors are very common on
+servers. Soft-offline is kernel's
+ solution for memory pages having (excessive) corrected memory errors.
 
-diff --git a/tools/testing/selftests/iommu/iommufd_utils.h b/tools/testing/selftests/iommu/iommufd_utils.h
-index 8d2b46b2114d..a70e35a78584 100644
---- a/tools/testing/selftests/iommu/iommufd_utils.h
-+++ b/tools/testing/selftests/iommu/iommufd_utils.h
-@@ -153,7 +153,7 @@ static int _test_cmd_mock_domain_replace(int fd, __u32 stdev_id, __u32 pt_id,
- 	EXPECT_ERRNO(_errno, _test_cmd_mock_domain_replace(self->fd, stdev_id, \
- 							   pt_id, NULL))
- 
--static int _test_cmd_hwpt_alloc(int fd, __u32 device_id, __u32 pt_id,
-+static int _test_cmd_hwpt_alloc(int fd, __u32 device_id, __u32 pt_id, __u32 ft_id,
- 				__u32 flags, __u32 *hwpt_id, __u32 data_type,
- 				void *data, size_t data_len)
- {
-@@ -165,6 +165,7 @@ static int _test_cmd_hwpt_alloc(int fd, __u32 device_id, __u32 pt_id,
- 		.data_type = data_type,
- 		.data_len = data_len,
- 		.data_uptr = (uint64_t)data,
-+		.fault_id = ft_id,
- 	};
- 	int ret;
- 
-@@ -177,24 +178,36 @@ static int _test_cmd_hwpt_alloc(int fd, __u32 device_id, __u32 pt_id,
- }
- 
- #define test_cmd_hwpt_alloc(device_id, pt_id, flags, hwpt_id)                  \
--	ASSERT_EQ(0, _test_cmd_hwpt_alloc(self->fd, device_id, pt_id, flags,   \
-+	ASSERT_EQ(0, _test_cmd_hwpt_alloc(self->fd, device_id, pt_id, 0, flags,   \
- 					  hwpt_id, IOMMU_HWPT_DATA_NONE, NULL, \
- 					  0))
- #define test_err_hwpt_alloc(_errno, device_id, pt_id, flags, hwpt_id)   \
- 	EXPECT_ERRNO(_errno, _test_cmd_hwpt_alloc(                      \
--				     self->fd, device_id, pt_id, flags, \
-+				     self->fd, device_id, pt_id, 0, flags, \
- 				     hwpt_id, IOMMU_HWPT_DATA_NONE, NULL, 0))
- 
- #define test_cmd_hwpt_alloc_nested(device_id, pt_id, flags, hwpt_id,         \
- 				   data_type, data, data_len)                \
--	ASSERT_EQ(0, _test_cmd_hwpt_alloc(self->fd, device_id, pt_id, flags, \
-+	ASSERT_EQ(0, _test_cmd_hwpt_alloc(self->fd, device_id, pt_id, 0, flags, \
- 					  hwpt_id, data_type, data, data_len))
- #define test_err_hwpt_alloc_nested(_errno, device_id, pt_id, flags, hwpt_id, \
- 				   data_type, data, data_len)                \
- 	EXPECT_ERRNO(_errno,                                                 \
--		     _test_cmd_hwpt_alloc(self->fd, device_id, pt_id, flags, \
-+		     _test_cmd_hwpt_alloc(self->fd, device_id, pt_id, 0, flags, \
- 					  hwpt_id, data_type, data, data_len))
- 
-+#define test_cmd_hwpt_alloc_iopf(device_id, pt_id, fault_id, flags, hwpt_id,    \
-+				   data_type, data, data_len)                   \
-+	ASSERT_EQ(0, _test_cmd_hwpt_alloc(self->fd, device_id, pt_id, fault_id, \
-+					  flags, hwpt_id, data_type, data,      \
-+					  data_len))
-+#define test_err_hwpt_alloc_iopf(_errno, device_id, pt_id, fault_id, flags,     \
-+				 hwpt_id, data_type, data, data_len)            \
-+	EXPECT_ERRNO(_errno,                                                    \
-+		     _test_cmd_hwpt_alloc(self->fd, device_id, pt_id, fault_id, \
-+					  flags, hwpt_id, data_type, data,      \
-+					  data_len))
+ For different types of page, soft-offline has different behaviors / costs.
 +
- #define test_cmd_hwpt_check_iotlb(hwpt_id, iotlb_id, expected)                 \
- 	({                                                                     \
- 		struct iommu_test_cmd test_cmd = {                             \
-@@ -684,3 +697,66 @@ static int _test_cmd_get_hw_info(int fd, __u32 device_id, void *data,
- 
- #define test_cmd_get_hw_capabilities(device_id, caps, mask) \
- 	ASSERT_EQ(0, _test_cmd_get_hw_info(self->fd, device_id, NULL, 0, &caps))
+ - For a raw error page, soft-offline migrates the in-use page's content to
+   a new raw page.
 +
-+static int _test_ioctl_fault_alloc(int fd, __u32 *fault_id, __u32 *fault_fd)
-+{
-+	struct iommu_fault_alloc cmd = {
-+		.size = sizeof(cmd),
-+	};
-+	int ret;
+ - For a page that is part of a transparent hugepage, soft-offline splits t=
+he
+   transparent hugepage into raw pages, then migrates only the raw error pa=
+ge.
+   As a result, user is transparently backed by 1 less hugepage, impacting
+   memory access performance.
 +
-+	ret = ioctl(fd, IOMMU_FAULT_QUEUE_ALLOC, &cmd);
-+	if (ret)
-+		return ret;
-+	*fault_id = cmd.out_fault_id;
-+	*fault_fd = cmd.out_fault_fd;
-+	return 0;
-+}
-+
-+#define test_ioctl_fault_alloc(fault_id, fault_fd)                       \
-+	({                                                               \
-+		ASSERT_EQ(0, _test_ioctl_fault_alloc(self->fd, fault_id, \
-+						     fault_fd));         \
-+		ASSERT_NE(0, *(fault_id));                               \
-+		ASSERT_NE(0, *(fault_fd));                               \
-+	})
-+
-+static int _test_cmd_trigger_iopf(int fd, __u32 device_id, __u32 fault_fd)
-+{
-+	struct iommu_test_cmd trigger_iopf_cmd = {
-+		.size = sizeof(trigger_iopf_cmd),
-+		.op = IOMMU_TEST_OP_TRIGGER_IOPF,
-+		.trigger_iopf = {
-+			.dev_id = device_id,
-+			.pasid = 0x1,
-+			.grpid = 0x2,
-+			.perm = IOMMU_PGFAULT_PERM_READ | IOMMU_PGFAULT_PERM_WRITE,
-+			.addr = 0xdeadbeaf,
-+		},
-+	};
-+	struct iommu_hwpt_page_response response = {
-+		.code = IOMMUFD_PAGE_RESP_SUCCESS,
-+	};
-+	struct iommu_hwpt_pgfault fault = {};
-+	ssize_t bytes;
-+	int ret;
-+
-+	ret = ioctl(fd, _IOMMU_TEST_CMD(IOMMU_TEST_OP_TRIGGER_IOPF), &trigger_iopf_cmd);
-+	if (ret)
-+		return ret;
-+
-+	bytes = read(fault_fd, &fault, sizeof(fault));
-+	if (bytes <= 0)
-+		return -EIO;
-+
-+	response.cookie = fault.cookie;
-+
-+	bytes = write(fault_fd, &response, sizeof(response));
-+	if (bytes <= 0)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+#define test_cmd_trigger_iopf(device_id, fault_fd) \
-+	ASSERT_EQ(0, _test_cmd_trigger_iopf(self->fd, device_id, fault_fd))
-diff --git a/tools/testing/selftests/iommu/iommufd.c b/tools/testing/selftests/iommu/iommufd.c
-index edf1c99c9936..93634e53e95e 100644
---- a/tools/testing/selftests/iommu/iommufd.c
-+++ b/tools/testing/selftests/iommu/iommufd.c
-@@ -279,6 +279,9 @@ TEST_F(iommufd_ioas, alloc_hwpt_nested)
- 	uint32_t parent_hwpt_id = 0;
- 	uint32_t parent_hwpt_id_not_work = 0;
- 	uint32_t test_hwpt_id = 0;
-+	uint32_t iopf_hwpt_id;
-+	uint32_t fault_id;
-+	uint32_t fault_fd;
- 
- 	if (self->device_id) {
- 		/* Negative tests */
-@@ -326,6 +329,7 @@ TEST_F(iommufd_ioas, alloc_hwpt_nested)
- 					   sizeof(data));
- 
- 		/* Allocate two nested hwpts sharing one common parent hwpt */
-+		test_ioctl_fault_alloc(&fault_id, &fault_fd);
- 		test_cmd_hwpt_alloc_nested(self->device_id, parent_hwpt_id, 0,
- 					   &nested_hwpt_id[0],
- 					   IOMMU_HWPT_DATA_SELFTEST, &data,
-@@ -334,6 +338,14 @@ TEST_F(iommufd_ioas, alloc_hwpt_nested)
- 					   &nested_hwpt_id[1],
- 					   IOMMU_HWPT_DATA_SELFTEST, &data,
- 					   sizeof(data));
-+		test_err_hwpt_alloc_iopf(ENOENT, self->device_id, parent_hwpt_id,
-+					 UINT32_MAX, IOMMU_HWPT_FAULT_ID_VALID,
-+					 &iopf_hwpt_id, IOMMU_HWPT_DATA_SELFTEST,
-+					 &data, sizeof(data));
-+		test_cmd_hwpt_alloc_iopf(self->device_id, parent_hwpt_id, fault_id,
-+					 IOMMU_HWPT_FAULT_ID_VALID, &iopf_hwpt_id,
-+					 IOMMU_HWPT_DATA_SELFTEST, &data,
-+					 sizeof(data));
- 		test_cmd_hwpt_check_iotlb_all(nested_hwpt_id[0],
- 					      IOMMU_TEST_IOTLB_DEFAULT);
- 		test_cmd_hwpt_check_iotlb_all(nested_hwpt_id[1],
-@@ -504,14 +516,24 @@ TEST_F(iommufd_ioas, alloc_hwpt_nested)
- 			     _test_ioctl_destroy(self->fd, nested_hwpt_id[1]));
- 		test_ioctl_destroy(nested_hwpt_id[0]);
- 
-+		/* Switch from nested_hwpt_id[1] to iopf_hwpt_id */
-+		test_cmd_mock_domain_replace(self->stdev_id, iopf_hwpt_id);
-+		EXPECT_ERRNO(EBUSY,
-+			     _test_ioctl_destroy(self->fd, iopf_hwpt_id));
-+		/* Trigger an IOPF on the device */
-+		test_cmd_trigger_iopf(self->device_id, fault_fd);
-+
- 		/* Detach from nested_hwpt_id[1] and destroy it */
- 		test_cmd_mock_domain_replace(self->stdev_id, parent_hwpt_id);
- 		test_ioctl_destroy(nested_hwpt_id[1]);
-+		test_ioctl_destroy(iopf_hwpt_id);
- 
- 		/* Detach from the parent hw_pagetable and destroy it */
- 		test_cmd_mock_domain_replace(self->stdev_id, self->ioas_id);
- 		test_ioctl_destroy(parent_hwpt_id);
- 		test_ioctl_destroy(parent_hwpt_id_not_work);
-+		close(fault_fd);
-+		test_ioctl_destroy(fault_id);
- 	} else {
- 		test_err_hwpt_alloc(ENOENT, self->device_id, self->ioas_id, 0,
- 				    &parent_hwpt_id);
-diff --git a/tools/testing/selftests/iommu/iommufd_fail_nth.c b/tools/testing/selftests/iommu/iommufd_fail_nth.c
-index f590417cd67a..c5d5e69452b0 100644
---- a/tools/testing/selftests/iommu/iommufd_fail_nth.c
-+++ b/tools/testing/selftests/iommu/iommufd_fail_nth.c
-@@ -615,7 +615,7 @@ TEST_FAIL_NTH(basic_fail_nth, device)
- 	if (_test_cmd_get_hw_info(self->fd, idev_id, &info, sizeof(info), NULL))
- 		return -1;
- 
--	if (_test_cmd_hwpt_alloc(self->fd, idev_id, ioas_id, 0, &hwpt_id,
-+	if (_test_cmd_hwpt_alloc(self->fd, idev_id, ioas_id, 0, 0, &hwpt_id,
- 				 IOMMU_HWPT_DATA_NONE, 0, 0))
- 		return -1;
- 
--- 
-2.34.1
+ - For a page that is part of a HugeTLB hugepage, soft-offline first migrat=
+es
+   the entire HugeTLB hugepage, during which a free hugepage will be consum=
+ed
+   as migration target.  Then the original hugepage is dissolved into raw
+@@ -296,8 +299,11 @@ the request to soft offline the pages.  Its
+default value is 1.
 
+ It is worth mentioning that after setting enable_soft_offline to 0, the
+ following requests to soft offline pages will not be performed:
++
+ - Request to soft offline pages from RAS Correctable Errors Collector.
++
+ - On ARM, the request to soft offline pages from GHES driver.
++
+ - On PARISC, the request to soft offline pages from Page Deallocation Tabl=
+e.
+
+ extfrag_threshold
