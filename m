@@ -1,387 +1,288 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E067156C6B
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 09:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A25B15697B
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 09:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719913741; cv=none; b=dHJ5rWkANaSIDp/zz7fGx5o0cQIKCmAaW5U3KdEJ/UDNXfpu0KbhbJNV4dub37eo3hbJ4YyM0cs4/2JFHotI8qBgO0P9z/aKCdV2YI8yZK+L/AD1GiXseB0JWoV0J0a1/53xdDabXsc2L5jzaMBTiETBcHqEI7OThCJ9/5TTtgI=
+	t=1719913764; cv=none; b=Yx2Ge/LrAr4abBFrkMc29DydwL+c6zP4M3UUKJmsAOBs00oQW+GVC/wV8PLRF6zOL4muc2sBLubSJG6bOxi2IrxVMbMOD1KfEiZYGLRwX2oPju1YRgQXGQeTYpY+UbyTWmQEqxpxy9CcNuyO+01+NrGK74N+2LQGLnqstQfiJvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719913741; c=relaxed/simple;
-	bh=XEu8F3MssoKDb+QQZWwR5R5Ax2lz2UkYvPYt1wioZ5M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ULVcNIo258WaSSOou9JCLPd1mBTDmymPu8HH1aDJNufYSuM5gO3y/m8Ed1HIP/YPi0h5CDVBfqpeF5hOLMzU5zJpodSJuYBM8ugyjQFnlHhZuabP/ux3hI2h8MdkUivFk9R6X3SH5ZruKtNGd0HEmBADGtl2PZY5/oGkU6sCPG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KoSvspFn; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719913764; c=relaxed/simple;
+	bh=ChOuMiwGOzBpP3sNCHMWI4qVZ4l5LHUl3YiuYdFClBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d0CpbeSLOjKMh5LGR+c9p9CrpkEK+J+hAxpAYLPucb6UCnb1gSrsq6dLy/iQRCudfacYfxpWlEhxoZWxACamCQDqOaYzRPpQ8UWZ9hW2pS8uh9MM+9dCnjM+SDtgA91L8exKmQ2co9amGWAfbmfzA3pwjiEt911SQsRVZb+6lW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NFXeIihp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KoSvspFn"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so39110711fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 02:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719913737; x=1720518537; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zMfKgTFDHkwJCeUJvNPaxF1oMIhQ0c5OI5BCMTfEDCs=;
-        b=KoSvspFnVw8DaJsEaLKC/7VThaq1lfPD343poYFDfa643AkCn3j1hS9FLdmT1SQKZr
-         8VttagdewuS/s6Bckt1/91m64X/9cw+GE2QJ6tJBd+LyjMyI4pJsxkAmrQL9t/rYyV7P
-         KDv3EQ7v1mIB131bY85VZnmJHCXGGKXYCmmZUB9m3QkFxacjCnsbvQzTS1a0R7O6LNoa
-         1/FyBRw08P6wsn2A9WMu//F6cdMq5jwcmXmO9gYadCXcNgiTnqcVAzPnBCuZ90NsmUyt
-         IV62ihEZhGy0MZYODgakmRlPLch8+1eMYmmd0TNW/NFVDVUVhxRUB2egU2hNYksfHx+r
-         6bAw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NFXeIihp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719913761;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I5C9hn1xC00HSAhZfwY+mFDAG9W+9IK6IOhPCt4SQMQ=;
+	b=NFXeIihp63Rr/OD4jRKaPb0cGW6shn8FFQQDy7dsG2tEGp8CZ3ZZ35y8EpjqkzrB3746wE
+	bDj5EiQ9CzJ2LnBTbhyVm51qLkuL60XHPsmLcG3RUICIVV7n1KVB9Itm1aQ46Nki3Kw8fu
+	GbfmKCHCMujSjbUBMLtLiZlIreksrXU=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-79-rULmeAUZP-ekIzsIo5U28g-1; Tue, 02 Jul 2024 05:49:20 -0400
+X-MC-Unique: rULmeAUZP-ekIzsIo5U28g-1
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6b50f5610cdso55176786d6.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 02:49:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719913737; x=1720518537;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zMfKgTFDHkwJCeUJvNPaxF1oMIhQ0c5OI5BCMTfEDCs=;
-        b=C/6DFb9N+a7bW0tNzqWUC6zX8CwvlBbHJFJdyYv9BJb80OKD9HPyX7Q/j37QMPxn7p
-         M5yhflFqMvpm2T9E+WH/SyZnNOHEJyHg64FXZDW818Z9Gqa//iOujAzgqEa0/JMws++o
-         sRFG4lSt/6gDCbFw8MoQfKR7QU7fbFJLh06zuIvYbpxRz4M57WVhjk1Q6fBHMr/d6oqd
-         cjw7A6ASJJQrZV4bR2OqThtRWb/2rS0nGL5JcEMO9mAFE7yMsVVorgTuw7VL0H37peqg
-         HXfXmy04jGKdBPI/Tq/Yjn57UH7sOXmgqCpvQrdMEmYQHBoHjAUXIgZwosePvTjO51sq
-         9v7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUNzivSBjJB62qQsPYYev1iZd5lpXxQL05TxPTQ7JP5OS+L+ALtN7XVaRDnGa/Uf39lu4gdLxiRwuicpaMKUDuhEjY434kmaIwrwDzZ
-X-Gm-Message-State: AOJu0Yyty8iucpjC0Qao3XsKPzkhv0piW1QrfgUaZwuROcIRBsLmd72j
-	+EcRz5joEuI311xTCza73cz7qgakhorVnv1jqk6mYokjDa5BzZpnMbGuWXGxmv4=
-X-Google-Smtp-Source: AGHT+IFdaqNk/YBQI79JMZgPPVDzQ8r2QaVueo1kugYWDyxFiIuMlN4vOElT1qOB4NowPdRrYtbqSQ==
-X-Received: by 2002:a2e:a702:0:b0:2ed:a091:f54c with SMTP id 38308e7fff4ca-2ee5e3ae50emr42630861fa.23.1719913736322;
-        Tue, 02 Jul 2024 02:48:56 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee5160e333sm16231161fa.5.2024.07.02.02.48.55
+        d=1e100.net; s=20230601; t=1719913759; x=1720518559;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I5C9hn1xC00HSAhZfwY+mFDAG9W+9IK6IOhPCt4SQMQ=;
+        b=Kxtvlj3S+NmwPOOlhzzdd2ZDqvl3e2yoCdIdnD0wAO4XsrZOGyxagI/mCDis37bwdO
+         mPMdre3t+sSROxinXIIOz5EZp7pWsr2MfQBBtFxUEWEFWYTpPL8NhuFhbtod+gKwY+e1
+         rLHJueJk0Q05soQ0V28hQxjix8bdyq4LVD+95j243+Edzp/iNDLdQKIF/vrFR0s0ckkK
+         mJJaTGjTQkn/zjVyVWU7eu5luMZ/CxKVEaKKQpGxV1tVFDJDlamBs/uIC+9NNDm3RNJs
+         Zw+G8dY/eXzD6hQL4Z9xb62XY4oKitbSeWj/tSMpvo8BzF4F/Ikw56ARPv4hlMizSBoA
+         L3oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXn/GQhB3H/HtQd9H/RL5CP5tvPIMQThvRMSZJaeLE622A+gbGORXN02g8bu5ZYxfjSPLQopQyhHgdsanoCUK9ioaVyc2av0I9h3rWH
+X-Gm-Message-State: AOJu0YwCzL9uEy0Y9yV3z0y4vSomDur3T2I/Q87X87ms1nlrOcl+rSbC
+	Z293I8NmdsAJpQ6BqDh8oK3o4Xps+xLzsY3aIOmC0/nuszYDn6hNZGWVVhhIzTInVmo8WPH8YuS
+	MNibp2+zITYW2Vu/XpmJsPiboVqCRGLI2WEJyh9E9qKDdYCAXTug8BJBrvy9VCpflZ5lcAQ==
+X-Received: by 2002:a05:6214:3005:b0:6b5:42b7:122 with SMTP id 6a1803df08f44-6b5b717b58bmr97377636d6.60.1719913759510;
+        Tue, 02 Jul 2024 02:49:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEgjbJl5pAjHk9X3v0oZqCcimvYtk9tuAmSK1l2XBB63KoGDxZm9QoDjYoqcF0qXR1twRoDnw==
+X-Received: by 2002:a05:6214:3005:b0:6b5:42b7:122 with SMTP id 6a1803df08f44-6b5b717b58bmr97377396d6.60.1719913759015;
+        Tue, 02 Jul 2024 02:49:19 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.133.110])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e5f39c1sm41979666d6.97.2024.07.02.02.49.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 02:48:55 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 02 Jul 2024 12:48:54 +0300
-Subject: [PATCH v3 3/4] drm/bridge-connector: move to DRM_DISPLAY_HELPER
- module
+        Tue, 02 Jul 2024 02:49:18 -0700 (PDT)
+Date: Tue, 2 Jul 2024 11:49:09 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: luigi.leonardi@outlook.com, Stefan Hajnoczi <stefanha@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Marco Pinna <marco.pinn95@gmail.com>
+Subject: Re: [PATCH PATCH net-next v2 1/2] vsock/virtio: refactor
+ virtio_transport_send_pkt_work
+Message-ID: <5togzaghzoau7jxkbqpn6ydp45oc3rbwrmavtrimhpfxo5wxdi@hav2bj3l4ozo>
+References: <20240701-pinna-v2-0-ac396d181f59@outlook.com>
+ <20240701-pinna-v2-1-ac396d181f59@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240702-drm-bridge-connector-fix-hdmi-reset-v3-3-12b0e3124ca4@linaro.org>
-References: <20240702-drm-bridge-connector-fix-hdmi-reset-v3-0-12b0e3124ca4@linaro.org>
-In-Reply-To: <20240702-drm-bridge-connector-fix-hdmi-reset-v3-0-12b0e3124ca4@linaro.org>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- dri-devel@lists.freedesktop.org, igt-dev@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11112;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=XEu8F3MssoKDb+QQZWwR5R5Ax2lz2UkYvPYt1wioZ5M=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmg80F8ZWyWkyyc3QAemCdZTBWhJfq0V0Gs+fkf
- iMxBwUvTwWJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZoPNBQAKCRCLPIo+Aiko
- 1fR6B/0ZTaw/CY4NGnO6mbaRwCOlUXuVLCAKQSb4NnIy0rVV3JiDoP30xWsYPx9GneZianjjudG
- J988rMbqJ8qNRGZ2hLkpRUujNu2HTlp9PgTK5Ol2HzuXZTESZ79JpkvmsSXCHPeIYgwXK/psHTN
- s5G4KsSilB9lvqDhiRW8t3VpiPJPJSEb/BDt7LyMvPNh4RKgJ9MML1EkQc5Zn8VIC6PzkQgh0Sj
- XfjiGyO9ziGtJjG9EjbztUlGk3XxjrYxrF1mcINGFuKr6rSe7IbkEPUrpFz+exggCs0RoDRPqL+
- 4y371LVTPvFETDH5aWWTPEltPanW70x4mG7fKrNNfKD0GPXg
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240701-pinna-v2-1-ac396d181f59@outlook.com>
 
-drm_bridge_connector is a "leaf" driver, belonging to the display
-helper, rather than the "CRTC" drm_kms_helper module. Move the driver
-to the drm/display and add necessary Kconfig selection clauses.
+On Mon, Jul 01, 2024 at 04:28:02PM GMT, Luigi Leonardi via B4 Relay wrote:
+>From: Marco Pinna <marco.pinn95@gmail.com>
+>
+>Preliminary patch to introduce an optimization to the
+>enqueue system.
+>
+>All the code used to enqueue a packet into the virtqueue
+>is removed from virtio_transport_send_pkt_work()
+>and moved to the new virtio_transport_send_skb() function.
+>
+>Co-developed-by: Luigi Leonardi <luigi.leonardi@outlook.com>
+>Signed-off-by: Luigi Leonardi <luigi.leonardi@outlook.com>
+>Signed-off-by: Marco Pinna <marco.pinn95@gmail.com>
+>---
+> net/vmw_vsock/virtio_transport.c | 133 +++++++++++++++++++++------------------
+> 1 file changed, 73 insertions(+), 60 deletions(-)
+>
+>diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+>index 43d405298857..a74083d28120 100644
+>--- a/net/vmw_vsock/virtio_transport.c
+>+++ b/net/vmw_vsock/virtio_transport.c
+>@@ -94,6 +94,77 @@ static u32 virtio_transport_get_local_cid(void)
+> 	return ret;
+> }
+>
+>+/* Caller need to hold vsock->tx_lock on vq */
+>+static int virtio_transport_send_skb(struct sk_buff *skb, struct virtqueue *vq,
+>+				     struct virtio_vsock *vsock, bool *restart_rx)
+>+{
+>+	int ret, in_sg = 0, out_sg = 0;
+>+	struct scatterlist **sgs;
+>+	bool reply;
+>+
+>+	reply = virtio_vsock_skb_reply(skb);
+>+	sgs = vsock->out_sgs;
+>+	sg_init_one(sgs[out_sg], virtio_vsock_hdr(skb),
+>+		    sizeof(*virtio_vsock_hdr(skb)));
+>+	out_sg++;
+>+
+>+	if (!skb_is_nonlinear(skb)) {
+>+		if (skb->len > 0) {
+>+			sg_init_one(sgs[out_sg], skb->data, skb->len);
+>+			out_sg++;
+>+		}
+>+	} else {
+>+		struct skb_shared_info *si;
+>+		int i;
+>+
+>+		/* If skb is nonlinear, then its buffer must contain
+>+		 * only header and nothing more. Data is stored in
+>+		 * the fragged part.
+>+		 */
+>+		WARN_ON_ONCE(skb_headroom(skb) != sizeof(*virtio_vsock_hdr(skb)));
+>+
+>+		si = skb_shinfo(skb);
+>+
+>+		for (i = 0; i < si->nr_frags; i++) {
+>+			skb_frag_t *skb_frag = &si->frags[i];
+>+			void *va;
+>+
+>+			/* We will use 'page_to_virt()' for the userspace page
+>+			 * here, because virtio or dma-mapping layers will call
+>+			 * 'virt_to_phys()' later to fill the buffer descriptor.
+>+			 * We don't touch memory at "virtual" address of this page.
+>+			 */
+>+			va = page_to_virt(skb_frag_page(skb_frag));
+>+			sg_init_one(sgs[out_sg],
+>+				    va + skb_frag_off(skb_frag),
+>+				    skb_frag_size(skb_frag));
+>+			out_sg++;
+>+		}
+>+	}
+>+
+>+	ret = virtqueue_add_sgs(vq, sgs, out_sg, in_sg, skb, GFP_KERNEL);
+>+	/* Usually this means that there is no more space available in
+>+	 * the vq
+>+	 */
+>+	if (ret < 0)
+>+		return ret;
+>+
+>+	virtio_transport_deliver_tap_pkt(skb);
+>+
+>+	if (reply) {
+>+		struct virtqueue *rx_vq = vsock->vqs[VSOCK_VQ_RX];
+>+		int val;
+>+
+>+		val = atomic_dec_return(&vsock->queued_replies);
+>+
+>+		/* Do we now have resources to resume rx processing? */
+>+		if (val + 1 == virtqueue_get_vring_size(rx_vq))
+>+			*restart_rx = true;
+>+	}
 
-Suggested-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/gpu/drm/Makefile                             | 1 -
- drivers/gpu/drm/bridge/Kconfig                       | 1 +
- drivers/gpu/drm/display/Kconfig                      | 6 ++++++
- drivers/gpu/drm/display/Makefile                     | 2 ++
- drivers/gpu/drm/{ => display}/drm_bridge_connector.c | 0
- drivers/gpu/drm/imx/dcss/Kconfig                     | 2 ++
- drivers/gpu/drm/imx/lcdc/Kconfig                     | 2 ++
- drivers/gpu/drm/ingenic/Kconfig                      | 2 ++
- drivers/gpu/drm/kmb/Kconfig                          | 2 ++
- drivers/gpu/drm/mediatek/Kconfig                     | 2 ++
- drivers/gpu/drm/meson/Kconfig                        | 2 ++
- drivers/gpu/drm/msm/Kconfig                          | 1 +
- drivers/gpu/drm/omapdrm/Kconfig                      | 2 ++
- drivers/gpu/drm/renesas/rcar-du/Kconfig              | 2 ++
- drivers/gpu/drm/renesas/rz-du/Kconfig                | 2 ++
- drivers/gpu/drm/renesas/shmobile/Kconfig             | 2 ++
- drivers/gpu/drm/rockchip/Kconfig                     | 4 ++++
- drivers/gpu/drm/tegra/Kconfig                        | 1 +
- drivers/gpu/drm/tidss/Kconfig                        | 2 ++
- drivers/gpu/drm/xlnx/Kconfig                         | 1 +
- 20 files changed, 38 insertions(+), 1 deletion(-)
+Looking more closely at this patch, perhaps we can leave reply handling 
+out of this refactoring, as it is only needed in the worker.
 
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 68cc9258ffc4..fa432a1ac9e2 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -128,7 +128,6 @@ obj-$(CONFIG_DRM_TTM_HELPER) += drm_ttm_helper.o
- drm_kms_helper-y := \
- 	drm_atomic_helper.o \
- 	drm_atomic_state_helper.o \
--	drm_bridge_connector.o \
- 	drm_crtc_helper.o \
- 	drm_damage_helper.o \
- 	drm_encoder_slave.o \
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index c621be1a99a8..3eb955333c80 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -390,6 +390,7 @@ config DRM_TI_SN65DSI86
- 	depends on OF
- 	select DRM_DISPLAY_DP_HELPER
- 	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_KMS_HELPER
- 	select REGMAP_I2C
- 	select DRM_PANEL
-diff --git a/drivers/gpu/drm/display/Kconfig b/drivers/gpu/drm/display/Kconfig
-index 479e62690d75..1a192a45961b 100644
---- a/drivers/gpu/drm/display/Kconfig
-+++ b/drivers/gpu/drm/display/Kconfig
-@@ -6,6 +6,12 @@ config DRM_DISPLAY_HELPER
- 	help
- 	  DRM helpers for display adapters.
- 
-+config DRM_BRIDGE_CONNECTOR
-+	bool
-+	depends on DRM && DRM_BRIDGE && DRM_DISPLAY_HELPER
-+	help
-+	  DRM connector implementation terminating DRM bridge chains.
-+
- config DRM_DISPLAY_DP_AUX_BUS
- 	tristate
- 	depends on DRM
-diff --git a/drivers/gpu/drm/display/Makefile b/drivers/gpu/drm/display/Makefile
-index 629df2f4d322..fbb9d2b8acd4 100644
---- a/drivers/gpu/drm/display/Makefile
-+++ b/drivers/gpu/drm/display/Makefile
-@@ -3,6 +3,8 @@
- obj-$(CONFIG_DRM_DISPLAY_DP_AUX_BUS) += drm_dp_aux_bus.o
- 
- drm_display_helper-y := drm_display_helper_mod.o
-+drm_display_helper-$(CONFIG_DRM_BRIDGE_CONNECTOR) += \
-+	drm_bridge_connector.o
- drm_display_helper-$(CONFIG_DRM_DISPLAY_DP_HELPER) += \
- 	drm_dp_dual_mode_helper.o \
- 	drm_dp_helper.o \
-diff --git a/drivers/gpu/drm/drm_bridge_connector.c b/drivers/gpu/drm/display/drm_bridge_connector.c
-similarity index 100%
-rename from drivers/gpu/drm/drm_bridge_connector.c
-rename to drivers/gpu/drm/display/drm_bridge_connector.c
-diff --git a/drivers/gpu/drm/imx/dcss/Kconfig b/drivers/gpu/drm/imx/dcss/Kconfig
-index 3ffc061d392b..59e3b6a1dff0 100644
---- a/drivers/gpu/drm/imx/dcss/Kconfig
-+++ b/drivers/gpu/drm/imx/dcss/Kconfig
-@@ -2,6 +2,8 @@ config DRM_IMX_DCSS
- 	tristate "i.MX8MQ DCSS"
- 	select IMX_IRQSTEER
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_GEM_DMA_HELPER
- 	select VIDEOMODE_HELPERS
- 	depends on DRM && ARCH_MXC && ARM64
-diff --git a/drivers/gpu/drm/imx/lcdc/Kconfig b/drivers/gpu/drm/imx/lcdc/Kconfig
-index 7e57922bbd9d..9c28bb0f4662 100644
---- a/drivers/gpu/drm/imx/lcdc/Kconfig
-+++ b/drivers/gpu/drm/imx/lcdc/Kconfig
-@@ -3,5 +3,7 @@ config DRM_IMX_LCDC
-       depends on DRM && (ARCH_MXC || COMPILE_TEST)
-       select DRM_GEM_DMA_HELPER
-       select DRM_KMS_HELPER
-+      select DRM_DISPLAY_HELPER
-+      select DRM_BRIDGE_CONNECTOR
-       help
-         Found on i.MX1, i.MX21, i.MX25 and i.MX27.
-diff --git a/drivers/gpu/drm/ingenic/Kconfig b/drivers/gpu/drm/ingenic/Kconfig
-index 3db117c5edd9..8cd7b750dffe 100644
---- a/drivers/gpu/drm/ingenic/Kconfig
-+++ b/drivers/gpu/drm/ingenic/Kconfig
-@@ -8,6 +8,8 @@ config DRM_INGENIC
- 	select DRM_BRIDGE
- 	select DRM_PANEL_BRIDGE
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_GEM_DMA_HELPER
- 	select REGMAP
- 	select REGMAP_MMIO
-diff --git a/drivers/gpu/drm/kmb/Kconfig b/drivers/gpu/drm/kmb/Kconfig
-index fd011367db1d..e5ae3ec52392 100644
---- a/drivers/gpu/drm/kmb/Kconfig
-+++ b/drivers/gpu/drm/kmb/Kconfig
-@@ -3,6 +3,8 @@ config DRM_KMB_DISPLAY
- 	depends on DRM
- 	depends on ARCH_KEEMBAY || COMPILE_TEST
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_MIPI_DSI
- 	help
-diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-index d6449ebae838..417ac8c9af41 100644
---- a/drivers/gpu/drm/mediatek/Kconfig
-+++ b/drivers/gpu/drm/mediatek/Kconfig
-@@ -9,6 +9,8 @@ config DRM_MEDIATEK
- 	depends on MTK_MMSYS
- 	select DRM_GEM_DMA_HELPER if DRM_FBDEV_EMULATION
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_MIPI_DSI
- 	select DRM_PANEL
- 	select MEMORY
-diff --git a/drivers/gpu/drm/meson/Kconfig b/drivers/gpu/drm/meson/Kconfig
-index 615fdd0ce41b..2544756538cc 100644
---- a/drivers/gpu/drm/meson/Kconfig
-+++ b/drivers/gpu/drm/meson/Kconfig
-@@ -4,6 +4,8 @@ config DRM_MESON
- 	depends on DRM && OF && (ARM || ARM64)
- 	depends on ARCH_MESON || COMPILE_TEST
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_DISPLAY_CONNECTOR
- 	select VIDEOMODE_HELPERS
-diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
-index 26a4c71da63a..90c68106b63b 100644
---- a/drivers/gpu/drm/msm/Kconfig
-+++ b/drivers/gpu/drm/msm/Kconfig
-@@ -17,6 +17,7 @@ config DRM_MSM
- 	select DRM_DISPLAY_DP_AUX_BUS
- 	select DRM_DISPLAY_DP_HELPER
- 	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_EXEC
- 	select DRM_KMS_HELPER
- 	select DRM_PANEL
-diff --git a/drivers/gpu/drm/omapdrm/Kconfig b/drivers/gpu/drm/omapdrm/Kconfig
-index 6c49270cb290..0c6d5afc1ef4 100644
---- a/drivers/gpu/drm/omapdrm/Kconfig
-+++ b/drivers/gpu/drm/omapdrm/Kconfig
-@@ -4,6 +4,8 @@ config DRM_OMAP
- 	depends on DRM && OF
- 	depends on ARCH_OMAP2PLUS
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select FB_DMAMEM_HELPERS_DEFERRED if DRM_FBDEV_EMULATION
- 	select VIDEOMODE_HELPERS
- 	select HDMI
-diff --git a/drivers/gpu/drm/renesas/rcar-du/Kconfig b/drivers/gpu/drm/renesas/rcar-du/Kconfig
-index c17e7c50492c..025677fe88d3 100644
---- a/drivers/gpu/drm/renesas/rcar-du/Kconfig
-+++ b/drivers/gpu/drm/renesas/rcar-du/Kconfig
-@@ -5,6 +5,8 @@ config DRM_RCAR_DU
- 	depends on ARM || ARM64 || COMPILE_TEST
- 	depends on ARCH_RENESAS || COMPILE_TEST
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_GEM_DMA_HELPER
- 	select VIDEOMODE_HELPERS
- 	help
-diff --git a/drivers/gpu/drm/renesas/rz-du/Kconfig b/drivers/gpu/drm/renesas/rz-du/Kconfig
-index 5f0db2c5fee6..e1a6dd322caf 100644
---- a/drivers/gpu/drm/renesas/rz-du/Kconfig
-+++ b/drivers/gpu/drm/renesas/rz-du/Kconfig
-@@ -6,6 +6,8 @@ config DRM_RZG2L_DU
- 	depends on VIDEO_RENESAS_VSP1
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select VIDEOMODE_HELPERS
- 	help
- 	  Choose this option if you have an RZ/G2L alike chipset.
-diff --git a/drivers/gpu/drm/renesas/shmobile/Kconfig b/drivers/gpu/drm/renesas/shmobile/Kconfig
-index 027220b8fe1c..c329ab8a7a8b 100644
---- a/drivers/gpu/drm/renesas/shmobile/Kconfig
-+++ b/drivers/gpu/drm/renesas/shmobile/Kconfig
-@@ -5,6 +5,8 @@ config DRM_SHMOBILE
- 	depends on ARCH_RENESAS || ARCH_SHMOBILE || COMPILE_TEST
- 	select BACKLIGHT_CLASS_DEVICE
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_GEM_DMA_HELPER
- 	select VIDEOMODE_HELPERS
- 	help
-diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index 7df875e38517..23c49e91f1cc 100644
---- a/drivers/gpu/drm/rockchip/Kconfig
-+++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -86,6 +86,8 @@ config ROCKCHIP_LVDS
- 	bool "Rockchip LVDS support"
- 	depends on DRM_ROCKCHIP
- 	depends on PINCTRL && OF
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	help
- 	  Choose this option to enable support for Rockchip LVDS controllers.
- 	  Rockchip rk3288 SoC has LVDS TX Controller can be used, and it
-@@ -96,6 +98,8 @@ config ROCKCHIP_RGB
- 	bool "Rockchip RGB support"
- 	depends on DRM_ROCKCHIP
- 	depends on PINCTRL
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	help
- 	  Choose this option to enable support for Rockchip RGB output.
- 	  Some Rockchip CRTCs, like rv1108, can directly output parallel
-diff --git a/drivers/gpu/drm/tegra/Kconfig b/drivers/gpu/drm/tegra/Kconfig
-index 782f51d3044a..e688d8104652 100644
---- a/drivers/gpu/drm/tegra/Kconfig
-+++ b/drivers/gpu/drm/tegra/Kconfig
-@@ -8,6 +8,7 @@ config DRM_TEGRA
- 	select DRM_DISPLAY_DP_HELPER
- 	select DRM_DISPLAY_HDMI_HELPER
- 	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_DISPLAY_DP_AUX_BUS
- 	select DRM_KMS_HELPER
- 	select DRM_MIPI_DSI
-diff --git a/drivers/gpu/drm/tidss/Kconfig b/drivers/gpu/drm/tidss/Kconfig
-index 378600806167..2385c56493b9 100644
---- a/drivers/gpu/drm/tidss/Kconfig
-+++ b/drivers/gpu/drm/tidss/Kconfig
-@@ -3,6 +3,8 @@ config DRM_TIDSS
- 	depends on DRM && OF
- 	depends on ARM || ARM64 || COMPILE_TEST
- 	select DRM_KMS_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_GEM_DMA_HELPER
- 	help
- 	  The TI Keystone family SoCs introduced a new generation of
-diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
-index 68ee897de9d7..626e5ac4c33d 100644
---- a/drivers/gpu/drm/xlnx/Kconfig
-+++ b/drivers/gpu/drm/xlnx/Kconfig
-@@ -8,6 +8,7 @@ config DRM_ZYNQMP_DPSUB
- 	select DMA_ENGINE
- 	select DRM_DISPLAY_DP_HELPER
- 	select DRM_DISPLAY_HELPER
-+	select DRM_BRIDGE_CONNECTOR
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_KMS_HELPER
- 	select GENERIC_PHY
+IIUC, this is to prevent the RX worker from leaving room for the TX 
+worker by handling too many replies. So when we have a large enough 
+number of replies (equal to the size of the RX queue) in the queue of 
+the TX worker ready to be queued in the virtqueue, we stop the RX worker 
+and restart it only when the TX worker has had a chance to send replies.
 
--- 
-2.39.2
+@Stefan can you confirm this since you were involved in the original 
+implementation?
+
+If we skip the worker, we don't need this.
+Moreover, we know well that the worker has no queued elements, so we 
+will only go to increment `queued_replies` and then decrement it 
+immediately afterwards.
+
+Thanks,
+Stefano
+
+>+
+>+	return 0;
+>+}
+>+
+> static void
+> virtio_transport_send_pkt_work(struct work_struct *work)
+> {
+>@@ -111,77 +182,19 @@ virtio_transport_send_pkt_work(struct work_struct *work)
+> 	vq = vsock->vqs[VSOCK_VQ_TX];
+>
+> 	for (;;) {
+>-		int ret, in_sg = 0, out_sg = 0;
+>-		struct scatterlist **sgs;
+> 		struct sk_buff *skb;
+>-		bool reply;
+>+		int ret;
+>
+> 		skb = virtio_vsock_skb_dequeue(&vsock->send_pkt_queue);
+> 		if (!skb)
+> 			break;
+>
+>-		reply = virtio_vsock_skb_reply(skb);
+>-		sgs = vsock->out_sgs;
+>-		sg_init_one(sgs[out_sg], virtio_vsock_hdr(skb),
+>-			    sizeof(*virtio_vsock_hdr(skb)));
+>-		out_sg++;
+>-
+>-		if (!skb_is_nonlinear(skb)) {
+>-			if (skb->len > 0) {
+>-				sg_init_one(sgs[out_sg], skb->data, skb->len);
+>-				out_sg++;
+>-			}
+>-		} else {
+>-			struct skb_shared_info *si;
+>-			int i;
+>-
+>-			/* If skb is nonlinear, then its buffer must contain
+>-			 * only header and nothing more. Data is stored in
+>-			 * the fragged part.
+>-			 */
+>-			WARN_ON_ONCE(skb_headroom(skb) != sizeof(*virtio_vsock_hdr(skb)));
+>-
+>-			si = skb_shinfo(skb);
+>-
+>-			for (i = 0; i < si->nr_frags; i++) {
+>-				skb_frag_t *skb_frag = &si->frags[i];
+>-				void *va;
+>-
+>-				/* We will use 'page_to_virt()' for the userspace page
+>-				 * here, because virtio or dma-mapping layers will call
+>-				 * 'virt_to_phys()' later to fill the buffer descriptor.
+>-				 * We don't touch memory at "virtual" address of this page.
+>-				 */
+>-				va = page_to_virt(skb_frag_page(skb_frag));
+>-				sg_init_one(sgs[out_sg],
+>-					    va + skb_frag_off(skb_frag),
+>-					    skb_frag_size(skb_frag));
+>-				out_sg++;
+>-			}
+>-		}
+>-
+>-		ret = virtqueue_add_sgs(vq, sgs, out_sg, in_sg, skb, GFP_KERNEL);
+>-		/* Usually this means that there is no more space available in
+>-		 * the vq
+>-		 */
+>+		ret = virtio_transport_send_skb(skb, vq, vsock, &restart_rx);
+> 		if (ret < 0) {
+> 			virtio_vsock_skb_queue_head(&vsock->send_pkt_queue, skb);
+> 			break;
+> 		}
+>
+>-		virtio_transport_deliver_tap_pkt(skb);
+>-
+>-		if (reply) {
+>-			struct virtqueue *rx_vq = vsock->vqs[VSOCK_VQ_RX];
+>-			int val;
+>-
+>-			val = atomic_dec_return(&vsock->queued_replies);
+>-
+>-			/* Do we now have resources to resume rx processing? */
+>-			if (val + 1 == virtqueue_get_vring_size(rx_vq))
+>-				restart_rx = true;
+>-		}
+>-
+> 		added = true;
+> 	}
+>
+>
+>-- 
+>2.45.2
+>
+>
 
