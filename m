@@ -1,187 +1,139 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08791514EF
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 09:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1955717741
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 09:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719912587; cv=none; b=EgIOzOtENEEiXFWmVZzOLVTYwVFyYCvnc/DzK/q37WlMa4QDi6CMDJjqUmdK5B4rphyOtQoodGq+sXu66MS9OU1afKVXNhE7c5jpz6WCpIA6U7n7fewRtmX0FkgLW15qg1HWmGJ7ztji+u883bHrkfr3Q79qOGJtNv0GPMeBJ50=
+	t=1719912649; cv=none; b=hqUl2L1fBtawYHsMok6bxCIGHDHiZtuoRZpahG2X00BIaMb4/pQQjnhXBIChG4b89Vnk25BB3AYqOHivm7CPZx/8bFlWYLi0sbAYVQ8YP9jDIJYH4Ayqw73Qd3zTuU8kf9Ltho/5Un5TbaNjqse2dSInc+jJTFgfbg6OejIpfpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719912587; c=relaxed/simple;
-	bh=TerRgP+v40fCEJSwAyzuLhhySHf5Xi59Fhbfu6zqEXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fqhytKozynnc+AUTiL8qbz0WCkIIfnbx1DB0wKDxm1NmZ3QFx8SjxNYRjbOTJYsI6ZKf6QRFDaX3OcCtScESvPmSPTfVnry0lQKyBScrskAfDFj1gMUGpJIGhrqfXYYupK/EpcBcgc9Vvspa4Qnb25TlMZ8dLHLX1Nm+297WOXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q3M7S8qi; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719912649; c=relaxed/simple;
+	bh=9wZMt4XIKtzsHJGnA6q+tBhSLGvVzwp7kne8YAJ4ON4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IjTq2doxYs/T3yoQCnuDJ6lpVuA3exBHZglNTzkxfA2JjQ1ear/29w8tfzn+sSD3TP2X6dY4gV+lg48biWDqKl13/t6jug8r2qYq6wiuFYVsP/iS2iP3Kqfd5OQ3M6AJh2KNe8wYS09tHKOZwmK4Aek93N/NGFjZRFyK0zfQ4MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ek5oh6EC; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q3M7S8qi"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42573d3f7e4so25578985e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 02:29:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ek5oh6EC"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ee794ec046so1749651fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 02:30:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719912584; x=1720517384; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gFNGLntKhW/Guwso71i4rkzJq++IdrdgxniMyjmtpdk=;
-        b=q3M7S8qiINZ8QiqZFJsYYDWmjZIzHPeL+Ii+Ea89O7yX9IZH6ufX/Wj2huYB1UaLhR
-         kuLgT4ro33yssRFoPGNOUUz04TIIAJhuf4PuPC+Q3QsghdViLQOF+8rv6A23fG72gBWO
-         YtEtiN7cY7GpXmbc1uBlZ634AykFVlYL57wxDpS3P5wYn1qYzML6RWWZ9UN93TwdyZY+
-         MVxJVBiBftqJS4Rm+kGQ7ZzAFdD8Gmw/7Pd4wWA9aOYFMQCvdZpdc9weDC4HBKFy9Rg9
-         l+rjxDk3EPzr4GG2qaizQnGnRSmA2NCRmuIhmEltxUCSDCY/VcIixzue9Fb68GDczadS
-         g6lQ==
+        d=suse.com; s=google; t=1719912645; x=1720517445; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fuIsxk1T213WYy8gsWuEjbMwN3Poo3nOOrSb0iGSbOY=;
+        b=ek5oh6ECv3ojeOT9KAD6eQVsl6bZFv2RPUs8Fj8+qWrzZd3vKX8Gv27gPRLA6YLLLn
+         nk/4yRC83X432Tu0LRtpNzWRGcaUpDENGXQsTU8V3/SD3gOa7dQZEZygwsHKsvOlR4bw
+         rOxMskN5le3kQ6w6nK1pWxOR2ZdjkvVDkuDLyOTaaljmZ2pmULlHCoyXZgeGQBE+s67N
+         EfCtu/jI8IL5ed9YoMCSrTomOIikO90U9Lul+PoU9P9WAUjvVdxy+Ab5WSrHHn5zFa4P
+         tJ6EaBYsjZ7NXnhwmqHCiwwfUGWo/X7C3AFMeaUmj5/Udn94TJrMn0RT4cjiNgvHqnVZ
+         SalA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719912584; x=1720517384;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gFNGLntKhW/Guwso71i4rkzJq++IdrdgxniMyjmtpdk=;
-        b=mLuo63+uyQ92z5w8OBN68DGULC4sc2Qr6eKRRjtTaOTPCm+l3+00TvH7mSg3tMX6al
-         7UsaYuj6HvVSIUn6uNTQitHMBQErutPzGVttY4HRsnxy5iy2LFvUX7k5ZyNJExHo9TUW
-         x5rJmgr0x17eD+lJdFZoLzF+OlVpglUEJXaRTIMnUiv+Z9Q1elZwiireQhWvUy7o8kwK
-         bAhodZplut9k73/leNI/vYoMsBsdgmIG7j2rJoSZI8Xjc2p8jnqFKXdCmA9+NA+i+SVy
-         1FIRdKo3iAs7lkbYM066tbJ4DQVSIcQ2H3YNgxvfEtcNn6qEF0F5P28gyQmAEFKF5TAa
-         2x/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXJTSlnMjY9MV44QfWJ90EbVZ7LNgeHpgCx1lQSp0hbzexS2LP8SFe2k8A6jeFdl+Pn7BAwn8caaIS6BDpS/hAHFATywey9+rcxszgM
-X-Gm-Message-State: AOJu0YyCdGx1KuNFPqO52GbXYMvbpD7t3f3tunfCCfAgVHxY+ry0hwgv
-	mFNENEIyT75VkK8G9Y8msKZL8vsGX4He7fgRgKf5+bPD/2dqHgGJEI8wslzU4+A=
-X-Google-Smtp-Source: AGHT+IGcvq6Md4bK4F0AZvBieiuaKUIzYS5wkTsJTtgZyqDebBXPayfayMlcGBx0YgPhznQfC9z7ug==
-X-Received: by 2002:a05:600c:4589:b0:425:6911:eb00 with SMTP id 5b1f17b1804b1-4257a02c894mr52320595e9.5.1719912583999;
-        Tue, 02 Jul 2024 02:29:43 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:de58:360d:d635:3977? ([2a05:6e02:1041:c10:de58:360d:d635:3977])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4257fb4fabdsm96567125e9.46.2024.07.02.02.29.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jul 2024 02:29:43 -0700 (PDT)
-Message-ID: <98fe3146-07ae-4095-b372-6aed6e080d94@linaro.org>
-Date: Tue, 2 Jul 2024 11:29:42 +0200
+        d=1e100.net; s=20230601; t=1719912645; x=1720517445;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fuIsxk1T213WYy8gsWuEjbMwN3Poo3nOOrSb0iGSbOY=;
+        b=oPN6EfMJX8eGqpB1GCcLejpI/oXslulTPkpKfsMiey63l7G5bUyeUfvuFudKB0A4OU
+         yLIj0hl1KOm5nqvJE7a0+vynSAW+Gy6pfYJNfr1SBX661O7ivuX1KUatjGGh+DNk3q55
+         WolpWXikM+xgbYbrMMsTBVk7HjZvu9xuskjsZXPjIgbd/lU0lxdGebkZKmTQoaw3tFVW
+         lVR1jBdP6GhpUXGyDxDivMsirQr/1NQ/piaxdI1LE38zofFf3M6ovjCIExD3KVDN2R3/
+         Az2PXM2AoKWpfdcMj7Nq9SpBjUgqQsnq5Sn8VtHhYviTzSAxJbOCO4eu8yLzAvhUyUdQ
+         zm+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWaPQnYxWvn35uR535NbjGBeT+quEz/CQTWDbdmylQaK55Uyfh5E71U57ZjT/zFnfRSTlUdjfjtAYFcl/NfTmXQQJoaaybKHlNR8Nq5
+X-Gm-Message-State: AOJu0YzGSBntLMhN408UQyStFJBICTK8kjPU2c3hFc4W0yYrXM9VR3pE
+	PWjCd/P4ofzueOMt6FeUcW50pqEh4L0ysAJyD7r2udZyzvSgxQ+NTpGfopa+x48v6mHCnknplOG
+	Q
+X-Google-Smtp-Source: AGHT+IFyoXc0eDp9A4bdmO+DVOA0xE9bWlJ17XsgQKXgjzpgCx/c/dZZ0193bS9tXJ9JaLMJmsJxVA==
+X-Received: by 2002:a2e:bc84:0:b0:2ee:4c72:204e with SMTP id 38308e7fff4ca-2ee5e2c7592mr68018441fa.0.1719912645184;
+        Tue, 02 Jul 2024 02:30:45 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fafb9c3fbfsm8788475ad.12.2024.07.02.02.30.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 02:30:44 -0700 (PDT)
+Date: Tue, 2 Jul 2024 11:30:36 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH printk v2 12/18] printk: Add kthread for all legacy
+ consoles
+Message-ID: <ZoPIvPtN1rmrds4a@pathway.suse.cz>
+References: <20240603232453.33992-1-john.ogness@linutronix.de>
+ <20240603232453.33992-13-john.ogness@linutronix.de>
+ <Zn6iq3n2ggL138Gs@pathway.suse.cz>
+ <87cyo1xnmw.fsf@jogness.linutronix.de>
+ <Zn67hDCEHdgtYPv3@pathway.suse.cz>
+ <877ce9xim6.fsf@jogness.linutronix.de>
+ <ZoLCLfcIjQ6FbgR0@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] thermal/core: Introduce user trip points
-To: Rob Herring <robh@kernel.org>
-Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20240627085451.3813989-1-daniel.lezcano@linaro.org>
- <20240701162600.GA4119789-robh@kernel.org>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20240701162600.GA4119789-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoLCLfcIjQ6FbgR0@pathway.suse.cz>
 
-On 01/07/2024 18:26, Rob Herring wrote:
-> On Thu, Jun 27, 2024 at 10:54:50AM +0200, Daniel Lezcano wrote:
->> Currently the thermal framework has 4 trip point types:
->>
->> - active : basically for fans (or anything requiring energy to cool
->>    down)
->>
->> - passive : a performance limiter
->>
->> - hot : for a last action before reaching critical
->>
->> - critical : a without return threshold leading to a system shutdown
->>
->> A thermal zone monitors the temperature regarding these trip
->> points. The old way to do that is actively polling the temperature
->> which is very bad for embedded systems, especially mobile and it is
->> even worse today as we can have more than fifty thermal zones. The
->> modern way is to rely on the driver to send an interrupt when the trip
->> points are crossed, so the system can sleep while the temperature
->> monitoring is offloaded to a dedicated hardware.
->>
->> However, the thermal aspect is also managed from userspace to protect
->> the user, especially tracking down the skin temperature sensor. The
->> logic is more complex than what we found in the kernel because it
->> needs multiple sources indicating the thermal situation of the entire
->> system.
->>
->> For this reason it needs to setup trip points at different levels in
->> order to get informed about what is going on with some thermal zones
->> when running some specific application.
->>
->> For instance, the skin temperature must be limited to 43°C on a long
->> run but can go to 48°C for 10 minutes, or 60°C for 1 minute.
->>
->> The thermal engine must then rely on trip points to monitor those
->> temperatures. Unfortunately, today there is only 'active' and
->> 'passive' trip points which has a specific meaning for the kernel, not
->> the userspace. That leads to hacks in different platforms for mobile
->> and embedded systems where 'active' trip points are used to send
->> notification to the userspace. This is obviously not right because
->> these trip are handled by the kernel.
->>
->> This patch introduces the 'user' trip point type where its semantic is
->> simple: do nothing at the kernel level, just send a notification to
->> the user space.
+On Mon 2024-07-01 16:50:31, Petr Mladek wrote:
+> On Fri 2024-06-28 16:17:13, John Ogness wrote:
+> > On 2024-06-28, Petr Mladek <pmladek@suse.com> wrote:
+> > > On Fri 2024-06-28 14:28:47, John Ogness wrote:
+> > >> On 2024-06-28, Petr Mladek <pmladek@suse.com> wrote:
+> > >> >> @@ -1494,7 +1508,9 @@ void nbcon_cpu_emergency_exit(void)
+> > >> >>  		 * to handle it.
+> > >> >>  		 */
+> > >> >>  		do_trigger_flush = true;
+> > >> >> -		if (printing_via_unlock && !is_printk_deferred()) {
+> > >> >> +		if (!force_printkthreads() &&
+> > >> >
+> > >> > Is this correct? We still need to flush the messages directly
+> > >> > when the legacy kthread is not ready yet.
+> > >> 
+> > >> No! If force_printkthreads() is set, messages will never flush directly
+> > >> except for console_flush_on_panic().
+> > >
+> > > But this is an _emergency_ context! This would be inconsistent with
+> > > the nbcon consoles where the messages are flushed directly.
+> > >
+> > > Is RT sheduling quaranteed when the system reached emergency state?
+> > 
+> > No.
+> > 
+> > > In fact, we probably should not check force_printkthreads() here at
+> > > all. It would be only for NBCON_PRIO_NORMAL context.
+> > 
+> > On PREEMPT_RT, legacy consoles are not allowed to print from
+> > non-preemptible contexts because they use spinlocks (rtmutexes).
 > 
-> Sounds like OS behavior/policy though I guess the existing ones kind are
-> too. Maybe we should have defined *what* action to take and then the OS
-> could decide whether what actions to handle vs. pass it up a level.
-
-Right
-
-> Why can't userspace just ask to be notified at a trip point it
-> defines?
-
-Yes I think it is possible to create a netlink message to create a trip 
-point which will return a trip id.
-
-Rafael what do you think ?
-
-> If we keep this in DT, perhaps 'notice' would be a better name that
-> doesn't encode the OS architecture details.
-
-[ ... ]
-
-> BTW, can we decide what to do about 'trips' node being required or not?
-> That's nearly the only DT warning left for some platforms.
-
-A thermal zone is a combination of a sensor, a mitigation logic (user or 
-kernel), hardware limits with trip points to activate the logic. Without 
-trip points, this logic can not operate, consequently the thermal zone 
-description is incomplete.
-
-I guess those thermal zones are set to have the sensor exported in 
-/sys/class/thermal, so the userspace can access the temperature.
-
-However, existing thermal zone description should have at least a 'hot' 
-trip point and a 'critical' trip point.
-
-On the other hand, now that we are introducing the 'user' trip point, 
-those thermal zone can exist without trip points because we can create 
-them at any time from userspace.
-
-So at the first glance, I would say we can drop the "required" 
-constraint for the trip points in the thermal zone description.
-
-
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->> ---
->>   .../devicetree/bindings/thermal/thermal-zones.yaml        | 1 +
+> Ah, I see.
 > 
-> Please make bindings a separate patch.
+> > This is a disadvantage for legacy consoles on PREEMPT_RT. If people want
+> > a legacy console to gain the reliability attribute on PREEMPT_RT, then
+> > that console _must_ be converted to nbcon.
 > 
->>   drivers/thermal/thermal_core.c                            | 8 ++++++++
->>   drivers/thermal/thermal_of.c                              | 1 +
->>   drivers/thermal/thermal_trace.h                           | 4 +++-
->>   drivers/thermal/thermal_trip.c                            | 1 +
->>   include/uapi/linux/thermal.h                              | 1 +
->>   6 files changed, 15 insertions(+), 1 deletion(-)
+> Makes sense.
 > 
+> Thanks a lot for explanation.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+It is clear that the legacy consoles could not be flushed directly in
+nbcon_cpu_emergency_exit() with PREEMPT_RT. I thought whether we
+could/should allow this for other preemption modes.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+My opinion. Let's keep it simple and behave the same in all preemption
+modes. force_printkthreads() is enabled only in PREEMPT_RT by default.
+Users would get the "expected" legacy behavior in other preemption
+modes by default.
 
+By other words, let's keep "force_printkthreads()" to really simulate
+RT behavior also in other preemption modes.
+
+That said, I still suggest to rename the variable/function to
+"force_legacy_thread". It does not affect the behavior of
+the kthreads for nbcon consoles.
+
+Best Regards,
+Petr
