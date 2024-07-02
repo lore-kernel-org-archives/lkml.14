@@ -1,110 +1,110 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28BB19AD74
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B40919CCFF
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719925701; cv=none; b=oGtGDnJrsv0QwudwGiSbDpCfKZDR6hEobZ2E+VXf6NWE0QRzc9HXPowENJeXKRnefxeuez75np6dGetsyc8yVovqgMpZ4YQm+Yq6qhOTB0lQNLQ0MEL7b7lAlbcVIKWgJES8mkMHYmHvxodjZjst/SNIYtv5S5+ygJgCg0+8E6k=
+	t=1719925756; cv=none; b=nLm3KxQznOKJXiY5kK7tvT19RoImT3z2XIZKj9Z7U+rmaoaDeB7BNfsNueHk0zPxwh/tQN6O2k3b0nXp5zcfs6dfhO1wGfjyf2LACHW6T/n1q1Gsi9P3sKsKxxe4yRJTf52nj6uWOuZeukZf6lP8lqATDMyrYIgZnf4k3oh0f9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719925701; c=relaxed/simple;
-	bh=S9WAdF5zIp6DOMlbWzRmjzJu0uGlfzXZ7p8RCFnmTG8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cGLfuyD3D1aeusVyw9nOhSY082boM09PY6/jqyAnv9i/J0LiCheT+0RG6A7HqBX8I/09Ri1HujEfdjsmntUCB/JW+xUhCa+M+lvUvCJs53X/HAUXa8B85cCfpuPsPw0mwQs86X8oMJ2o7vySCRwM4hKRMA6lG5JYeJpi2qBQ/Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KXYmwcmM; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719925756; c=relaxed/simple;
+	bh=I7aNRo+sve/BZvbTVmJbcCR9t4DkOqGj0zOcNQmFlrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QCdMgi5jWppjSP35Vag1p4AJzX1t6C2EU3g+Imcvzr40GFdRSu4BUC4zcQzq9nKtwUgU2d2oRNQCFkJzVW6ylLxRE3zxsl+EIbKbrgi5KxgpWnA/S84wY2foYASOmsJBFPOuFtFPSSVdz1IZGLE9q+j9sPkFxxmFDyZWeGfbYzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TUM0P8V3; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KXYmwcmM"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e02b79c6f21so4405155276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 06:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719925699; x=1720530499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S9WAdF5zIp6DOMlbWzRmjzJu0uGlfzXZ7p8RCFnmTG8=;
-        b=KXYmwcmMKKYBi5yexqO4pin1cb5HGL430GBaG4HMJDkbBPx86anhXl3g8NSbAHii6h
-         /ha4gOQfIPioxjSNw6v7pgeB+0uGeqZ9jJP2jpLlhP54Bh3OoLtrSN+GXml0/V2Xl+eo
-         dI7WQACmUfVpkB+pkX6SoPw696xDHwtX0N+lSByeRPAjhl7ula38smq00J9PW+ghCjRe
-         cv80+xhPZQpo7t8rG9ZHHbt2epdNNUJ8UaxiEo1OH7ZpcYla+DLFsL/XaXTFILWh0gaV
-         aHWN7ewZtO6FUXGuIIDdx+2CwHnuiaXbUowXB3TyRLRHRK42t5qCJqCt8zs/VRm8LjKT
-         j8mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719925699; x=1720530499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S9WAdF5zIp6DOMlbWzRmjzJu0uGlfzXZ7p8RCFnmTG8=;
-        b=Y0D2+pRaPKVGWFF+Ht8fTmq6IiVJoChu3XaOgZaYsPppKty3EB/YbchIHWDpeDvBpL
-         LucG78eDW+FpKqxCvhcx8GfI4471pIejd8gBY/bq58XDwSx8dWbjLzLtc3hH595B5u+I
-         B0a/Se01WBk877xCRRK8vLOrX63fEi4XAZBZl2gk4i0uIxu3lQi+JhqurhMKeFXkWTpv
-         XquW9JQ9iK+ddFUM2kc4cz0W15OjNqY4IeDZSYHzb1A6r5y4YI6+0UcgMtP3BnT23XHW
-         GZF5EzNmiZZXvm7vTmUrNl3S5wqSCglU3hvry/rdc+Bm/ncdJEbM3N9+9KRpB3uMGWAU
-         xC2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVeBnUeL9sTxtqS1vYQty6KSwWzlY8nvzswsX4ocr2eGMR70F+OIfXCDBLBZyLkRn6WB1hEWHCq+Rzhg5Ga8Nnr/7vAaUm8sNUAbcwP
-X-Gm-Message-State: AOJu0Yyc/f2MmvQtmvyZ06MyAofs73eWIUzADMIBvDz9ldlz+mKRHYOw
-	yonDPp1z2NA4vbX38+T9Je3VcruL959xYcdX8ymWwCPNziSUX7mhjVsPDd1h//Dpu7+/X0TPO2m
-	HhwiB4V7BzWjPLYiNvN7ecn10nCC+8ZZ+1FysLA==
-X-Google-Smtp-Source: AGHT+IFd5P5nvAOCFhI34eu3EgzzjA69f2Au+mefSwkWxzhefLYYUPNhJFm+L/KZewGETUij+yyWjdPRQk02bxj11bk=
-X-Received: by 2002:a0d:e604:0:b0:646:7b75:5c2c with SMTP id
- 00721157ae682-64c718039c9mr86962577b3.16.1719925698688; Tue, 02 Jul 2024
- 06:08:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TUM0P8V3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=qwc169O9ryOr+Zwl4OTGypcihMe4v8eMeZPJXKyjQKQ=; b=TUM0P8V3efqF00LMj3W3CB56L4
+	ZjEIV1R2SUW2iT0pl39R44/r+DhUcUSAsLQDeiu1CVMSB4/KZwN4sCLaoC12pArsutzJ6n/TPYMSl
+	5v94MxmGKZYI2s03BVRicer4N99kjVbETMXYuGXG1OOuUefO/ozKRwxKmMZK6UEkKgUmZiwc42Bc8
+	p45Ed92mT82BLB6kxrh2z0/VRc+/4ucnWTfVoI/ur7OBr6mk6AsCpuiu64C++aYe9neg1uMtRw2ET
+	u5KRhoFWs5z25+NoohwAvIp+E6pcMUMLQb0pCdTFuwgTPBoWMF3mH463mesH7j38ZY7VEZdYXVlK9
+	fb/Tl/Tw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOdFe-00000000nTO-2GZW;
+	Tue, 02 Jul 2024 13:08:54 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1A367300694; Tue,  2 Jul 2024 15:08:53 +0200 (CEST)
+Date: Tue, 2 Jul 2024 15:08:52 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Libo Chen <libo.chen@oracle.com>
+Cc: "mingo@redhat.com" <mingo@redhat.com>,
+	"juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+	"dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"bsegall@google.com" <bsegall@google.com>,
+	"mgorman@suse.de" <mgorman@suse.de>,
+	"bristot@redhat.com" <bristot@redhat.com>,
+	"vschneid@redhat.com" <vschneid@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
+	"wuyun.abel@bytedance.com" <wuyun.abel@bytedance.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"efault@gmx.de" <efault@gmx.de>
+Subject: Re: [RFC][PATCH 08/10] sched/fair: Implement delayed dequeue
+Message-ID: <20240702130852.GI11386@noisy.programming.kicks-ass.net>
+References: <20240405102754.435410987@infradead.org>
+ <20240405110010.631664251@infradead.org>
+ <CA44DAC1-B01A-4208-B9A0-D824E8178974@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702114103.16068-1-brgl@bgdev.pl> <CAA8EJppo4X1KmeeTRz9n7+9S0fGWE4AD1O1cCc_aPHTWPUGVvw@mail.gmail.com>
- <CAMRc=McVo364EruPtBCkLdR86=PfvSQFztTC_HUO0RPRCayAxQ@mail.gmail.com>
-In-Reply-To: <CAMRc=McVo364EruPtBCkLdR86=PfvSQFztTC_HUO0RPRCayAxQ@mail.gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 2 Jul 2024 16:08:07 +0300
-Message-ID: <CAA8EJpqk+yko_jqyRFo4sFJgtz+YZyEPh2sOEcDa-cYD3pGtnA@mail.gmail.com>
-Subject: Re: [PATCH] power: sequencing: qcom-wcn: don't request BT enable
- GPIOs for wcn7850
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Amit Pundir <amit.pundir@linaro.org>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA44DAC1-B01A-4208-B9A0-D824E8178974@oracle.com>
 
-On Tue, 2 Jul 2024 at 14:48, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Tue, Jul 2, 2024 at 1:42=E2=80=AFPM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
-> >
-> > On Tue, 2 Jul 2024 at 14:41, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > >
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Due to having many existing users of wcn7850 in the kernel, conversio=
-n
-> > > of the hci_qca driver to using pwrseq exclusively must be done
-> > > carefully. Right now, the Bluetooth driver requests and controls the =
-BT
-> > > enable GPIO and so the PMU pwrseq driver must not do it or we will ru=
-n
-> > > into problems depending on the probe ordering.
-> > >
-> > > Add a flag that tells the driver not to request the BT-enable GPIO. W=
-e
-> > > will remove it once the conversion of the Bluetooth driver is complet=
-e.
-> >
-> > This will not prevent the pinctrl conflict if both PMU and BT devices
-> > declare pinctrl for the BT_EN pin.
-> >
->
-> Hmm... So maybe we'll need to modify the BT driver after all. Should
-> we see if we have the enable-gpios property in hci_qca and - if not -
-> try to use the power sequencer? Or prioritize the sequencer first and
-> if it doesn't match, then fall-back to the current mode of operation?
+On Tue, Jul 02, 2024 at 02:56:51AM +0000, Libo Chen wrote:
 
-I'd say, try powerseq first, then fallback to enable-gpio.
+> Hi Peter,
+> 
+> We are observing massive hackbench regressions with this patchset as
+> well as the newer version from your queue.  I don’t know if you are
+> still working on complete EEVDF, just want to bring this
+> issue to your attention if it’s still in play.
 
---=20
-With best wishes
-Dmitry
+Yeha, I'm still (slowly) poking at this. I was planning to post a new
+set in a week or so.
+
+> The test system is a two-socket Zen4 EYPC with total of 192C/384T,
+> intel does suffer too but to a lesser degree.  Kernel is v6.10 based
+> off the latest schedule/core. From 48 groups to 296 groups,
+> process/threads via socket degrades <= 60%, process/threads via pipe
+> can have regression at whopping 110% or more.
+> 
+> It turns out in deactivate_task(), this patchset changes the order of
+> dequeue_task() and setting p->on_rq such that p->on_rq is set after
+> dequeue_task() gets called. 
+
+Bah, I knew I had to double check that,.. but then I never did :/
+
+> My understanding is TASK_ON_RQ_MIGRATING
+> allows src rq lock to be released to other tasks since
+> soon-to-be-dequeued task is migrating anyway, so holding two rq locks
+> while dequeuing seems to be a quite horrible thing to do. The RFC
+> patch is a bit tricky to get the order back, but a fix can be easily
+> done to your newer version specifically to “sched: Split DEQUEUE_SLEEP
+> from deactivate_task()” like below:
+> 
+>  void deactivate_task(struct rq *rq, struct task_struct *p, int flags)
+>  {
+> -       dequeue_task(rq, p, flags);
+> -
+>         WRITE_ONCE(p->on_rq, TASK_ON_RQ_MIGRATING);
+>         ASSERT_EXCLUSIVE_WRITER(p->on_rq);
+> +
+> +       dequeue_task(rq, p, flags);
+>  }
+
+Thanks, I'll fold that in and try and put your name somewhere.
