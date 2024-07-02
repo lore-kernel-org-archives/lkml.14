@@ -1,340 +1,195 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66DD16D4F5;
-	Tue,  2 Jul 2024 12:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB38E167D8C
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719923683; cv=none; b=a5RO5C4WyZgh7X6Lurihb29q3bTTEi/Z5kHE1JDq4O80JeaGfLPsbguAHicRzkHpZAuV6Y10esfeNr7NcEvL/WT+ab/00D7MiixR1I1fMVoIhNUhZItaBgnb6aBvrcFscHgS7vHD8v/iYS+CQ4NVsRmt7njLSsZr3lKB8Alo6rI=
+	t=1719923706; cv=none; b=WgIIAMy7BT9K32R7juQThWHnTgLGSsfl9mYfJxmM/3eH4KqyBuWCnbAUTQZg5HqxsqveSm0uvETIOWox3rLRSlashQgLhOFV0XfkwjcSkw8s95ReYOhVX4oUjVyjNLOYSrDSD3Kvn37XGzpx1NfbYOsZ4P4PYC96qhN5HgxBasA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719923683; c=relaxed/simple;
-	bh=SUIaTV81srnXVIJNxC+R4Sh2XmDPYaahO1P68G9vz40=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UiSenjrjjOh4UeC9bt70+9MV13NoQic3H+wIcRnr0t+i2cdegEr/y5NOWdppvKhbjy4SVtW4mlN3pTtF1BcNTCdIgkUVnkW13cvwhBREtdbRQsIqgt7rEmleX/dvoNbJDuzeest0Smq7BjO3oN5LUg+Rd0xB1fI2105i3LxHNdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=CIlyuU3a; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1719923706; c=relaxed/simple;
+	bh=CYAdJeB+CqncFSyqJi1YrjNIbpA52qv/O23+hWZWLAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d6W/GAx2OZIXHC/9kJ7WKiVoU8dgAuvzmKFn2V75tO86VjU7PoKmlamjt5ikWMTxEeS/4y3Q4ckSlCrv08+hlpN/stRDWf2Ky2TONwbIOuQhuMu6qzoG2xQXPP5u0AE9AbNQjNgLBVSrZUxRqM3DQb1AJ4OPDwNLyV5M57+hHNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Be35Opg+; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="CIlyuU3a"
-Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id E3346100016;
-	Tue,  2 Jul 2024 15:34:38 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru E3346100016
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1719923678;
-	bh=WDvsjnCOMqIp/cCpUuumCAjvp9d7iYIJ13Aq9BVxTOE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=CIlyuU3avIrPaBtgfqsoVY4zElzeV12uVj2ODC9fRvsHl0UVgBNESr1gZXy/joLGf
-	 Lo9yS8AwoHh4kg3qwlN3j8lFTfv1ZephBV/dHfBWXPE4S0XlQTq+p6yOJLNQ/cvWD9
-	 9vsL4DPHGsRJaoU6LrtafGr9qSwM5O8xtfKLwYbMi6BevojrtmeBevlA6KZTMoNq1A
-	 DcoMU9uQ7e+V3zFClPAWU1sltIrAfWKvgSflz3OO8k0jsv56hlcB4ZpsxGWyRhCgFW
-	 WTQbsw1A0cSV6Q/nJk0Ems3P60s9F0sq68P+77RZhZsVYhyDSbreOsPNEIcQk2i4Ue
-	 YuYvQq4b0AQJw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue,  2 Jul 2024 15:34:38 +0300 (MSK)
-Received: from work.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 2 Jul 2024 15:34:38 +0300
-From: George Stark <gnstark@salutedevices.com>
-To: <ukleinek@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
-	<jbrunet@baylibre.com>, <martin.blumenstingl@googlemail.com>,
-	<hkallweit1@gmail.com>
-CC: <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, George Stark
-	<GNStark@sberdevices.ru>, Dmitry Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH v3 2/2] arm64: dts: meson: a1: add definitions for meson PWM
-Date: Tue, 2 Jul 2024 15:34:25 +0300
-Message-ID: <20240702123425.584610-3-gnstark@salutedevices.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240702123425.584610-1-gnstark@salutedevices.com>
-References: <20240702123425.584610-1-gnstark@salutedevices.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Be35Opg+"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f9ffd24262so23555695ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 05:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1719923704; x=1720528504; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t2VzYQ+j8+6iQewLkeQCbIq09NlR4ehs8d7s9IHNlCc=;
+        b=Be35Opg+cNzuc5fytG3Frz39IU9QYbH9304zWoqyz2ZA6JjD1ynxs4RjvBWTNMGySi
+         1d6dHhn7RhdGrqOz9YQ4TP88QwbBMggeZB2jbQbyNuXf3VUaSQgRuY03E03SPl9ZG/8Q
+         g4sbKNaA8HmHxlvhaw+4t/Zjcup+ReWNBNMQE74mD4rneQ7GFNWh5NNtev00RoXUGtt9
+         Mc9tk8VQPVqKD8Bw7zsBiNmpcnaByT1qF3pXqqbd5j2FI/mXUyL25998Y2YCGLfsEOUi
+         R9JaT5k4ZOWzsf/lG5S26brN10CEL/l3Z8ezao/3x6NSP9KVhMQvNIb1wc1M0GYGruV+
+         uMDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719923704; x=1720528504;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=t2VzYQ+j8+6iQewLkeQCbIq09NlR4ehs8d7s9IHNlCc=;
+        b=upHNrNoG4o01lH2+6hckQiqpO8K7bOkMZsprojs1MmdYZzNFTKzGOSd8wy4IVoCUen
+         Tj36mxn5vC7PC45z0Cr1JWF0rH4lM1dwlBcsB+TBsnnae9pbish3iI6EYsSmiFe0EkWn
+         CL8sPUReIkDyfwzttWGvD3PyxF148Vs7A3lnRo+zOwJqvP+UO888TCy3l9ldiivTbFlh
+         YySvLF/8r/fAzHB/543M048+94C5uBvGx9EJuYyVjtQOOqw4JS/bHi6an41Q49jfXi+L
+         umRRE4Fd956erqhULXSMOn/6LakiHBMvrKwWlRgiTvxE7pLi80iWKnp2sZSsWidYWmbX
+         8ibQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6y2UG6pAn73C+1HBbfBL/rsIIcU2BJhgaZzlc86n8ZvzKYkE3WrAQ9VC53Qpg6belyQyV2hy2awwTxbiatyCxrVFo2QM15oBIm/9f
+X-Gm-Message-State: AOJu0Ywg0QiFbqe7wN8mGXg+xhIBtqmGVpEg7DgJThyTJ6pg/flwAmx7
+	COnj3nP4jKB9CgYqvM7m3drXPFgqhKGa94yY22Z1AGYgt/jz5/Gmmo2I1oEtkBcPun35XJ0d4OC
+	i
+X-Google-Smtp-Source: AGHT+IHQnoogWURs/kZMnk2ajJRFjETen6Zlw109v1iQySDinr13mF+vbirF+SJ/r8hNYxe5uKUJlA==
+X-Received: by 2002:a17:902:e80f:b0:1f9:ddb9:3ee5 with SMTP id d9443c01a7336-1fadbc85f8dmr67450555ad.26.1719923703933;
+        Tue, 02 Jul 2024 05:35:03 -0700 (PDT)
+Received: from [10.3.154.188] ([61.213.176.6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac11d9685sm83027985ad.111.2024.07.02.05.34.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jul 2024 05:35:02 -0700 (PDT)
+Message-ID: <616a1162-233e-46a9-98e8-cfac36426a2b@bytedance.com>
+Date: Tue, 2 Jul 2024 20:34:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [External] [PATCH v3 8/9] cachefiles: cyclic allocation of msg_id
+ to avoid reuse
+To: libaokun@huaweicloud.com, netfs@lists.linux.dev, dhowells@redhat.com,
+ jlayton@kernel.org
+Cc: hsiangkao@linux.alibaba.com, jefflexu@linux.alibaba.com,
+ linux-erofs@lists.ozlabs.org, brauner@kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yangerkun@huawei.com, houtao1@huawei.com, yukuai3@huawei.com,
+ wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>, zhujia.zj@bytedance.com
+References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
+ <20240628062930.2467993-9-libaokun@huaweicloud.com>
+From: Jia Zhu <zhujia.zj@bytedance.com>
+In-Reply-To: <20240628062930.2467993-9-libaokun@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186278 [Jul 02 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/02 07:59:00 #25796134
-X-KSMG-AntiVirus-Status: Clean, skipped
 
-From: George Stark <GNStark@sberdevices.ru>
 
-The chip has 3 dual-channel PWM modules PWM_AB, PWM_CD, PWM_EF those
-can be connected to various digital I/O pins.
 
-Each of 6 PWM is driven by individually selected clock parent and
-8-bit divider. The PWM signal is generated using two 16-bit counters.
+在 2024/6/28 14:29, libaokun@huaweicloud.com 写道:
+> From: Baokun Li <libaokun1@huawei.com>
+> 
+> Reusing the msg_id after a maliciously completed reopen request may cause
+> a read request to remain unprocessed and result in a hung, as shown below:
+> 
+>         t1       |      t2       |      t3
+> -------------------------------------------------
+> cachefiles_ondemand_select_req
+>   cachefiles_ondemand_object_is_close(A)
+>   cachefiles_ondemand_set_object_reopening(A)
+>   queue_work(fscache_object_wq, &info->work)
+>                  ondemand_object_worker
+>                   cachefiles_ondemand_init_object(A)
+>                    cachefiles_ondemand_send_req(OPEN)
+>                      // get msg_id 6
+>                      wait_for_completion(&req_A->done)
+> cachefiles_ondemand_daemon_read
+>   // read msg_id 6 req_A
+>   cachefiles_ondemand_get_fd
+>   copy_to_user
+>                                  // Malicious completion msg_id 6
+>                                  copen 6,-1
+>                                  cachefiles_ondemand_copen
+>                                   complete(&req_A->done)
+>                                   // will not set the object to close
+>                                   // because ondemand_id && fd is valid.
+> 
+>                  // ondemand_object_worker() is done
+>                  // but the object is still reopening.
+> 
+>                                  // new open req_B
+>                                  cachefiles_ondemand_init_object(B)
+>                                   cachefiles_ondemand_send_req(OPEN)
+>                                   // reuse msg_id 6
+> process_open_req
+>   copen 6,A.size
+>   // The expected failed copen was executed successfully
+> 
+> Expect copen to fail, and when it does, it closes fd, which sets the
+> object to close, and then close triggers reopen again. However, due to
+> msg_id reuse resulting in a successful copen, the anonymous fd is not
+> closed until the daemon exits. Therefore read requests waiting for reopen
+> to complete may trigger hung task.
+> 
+> To avoid this issue, allocate the msg_id cyclically to avoid reusing the
+> msg_id for a very short duration of time.
+> 
+> Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> Acked-by: Jeff Layton <jlayton@kernel.org>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Signed-off-by: George Stark <GNStark@sberdevices.ru>
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 215 ++++++++++++++++++++++
- 1 file changed, 215 insertions(+)
+Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 2a69e1e41bdc..d93b10bd156b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -307,6 +307,188 @@ mux {
- 					};
- 				};
- 
-+				pwm_a_pins1: pwm-a-pins1 {
-+					mux {
-+						groups = "pwm_a_x6";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins2: pwm-a-pins2 {
-+					mux {
-+						groups = "pwm_a_x7";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins3: pwm-a-pins3 {
-+					mux {
-+						groups = "pwm_a_f10";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins4: pwm-a-pins4 {
-+					mux {
-+						groups = "pwm_a_f6";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins5: pwm-a-pins5 {
-+					mux {
-+						groups = "pwm_a_a";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_b_pins1: pwm-b-pins1 {
-+					mux {
-+						groups = "pwm_b_x";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_b_pins2: pwm-b-pins2 {
-+					mux {
-+						groups = "pwm_b_f";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_b_pins3: pwm-b-pins3 {
-+					mux {
-+						groups = "pwm_b_a";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_c_pins1: pwm-c-pins1 {
-+					mux {
-+						groups = "pwm_c_x";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_c_pins2: pwm-c-pins2 {
-+					mux {
-+						groups = "pwm_c_f3";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_c_pins3: pwm-c-pins3 {
-+					mux {
-+						groups = "pwm_c_f8";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_c_pins4: pwm-c-pins4 {
-+					mux {
-+						groups = "pwm_c_a";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_d_pins1: pwm-d-pins1 {
-+					mux {
-+						groups = "pwm_d_x15";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_d_pins2: pwm-d-pins2 {
-+					mux {
-+						groups = "pwm_d_x13";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_d_pins3: pwm-d-pins3 {
-+					mux {
-+						groups = "pwm_d_x10";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_d_pins4: pwm-d-pins4 {
-+					mux {
-+						groups = "pwm_d_f";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_e_pins1: pwm-e-pins1 {
-+					mux {
-+						groups = "pwm_e_p";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins2: pwm-e-pins2 {
-+					mux {
-+						groups = "pwm_e_x16";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins3: pwm-e-pins3 {
-+					mux {
-+						groups = "pwm_e_x14";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins4: pwm-e-pins4 {
-+					mux {
-+						groups = "pwm_e_x2";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins5: pwm-e-pins5 {
-+					mux {
-+						groups = "pwm_e_f";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins6: pwm-e-pins6 {
-+					mux {
-+						groups = "pwm_e_a";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_f_pins1: pwm-f-pins1 {
-+					mux {
-+						groups = "pwm_f_b";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_f_pins2: pwm-f-pins2 {
-+					mux {
-+						groups = "pwm_f_x";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_f_pins3: pwm-f-pins3 {
-+					mux {
-+						groups = "pwm_f_f4";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_f_pins4: pwm-f-pins4 {
-+					mux {
-+						groups = "pwm_f_f12";
-+						function = "pwm_f";
-+					};
-+				};
-+
- 				sdio_pins: sdio {
- 					mux0 {
- 						groups = "sdcard_d0_x",
-@@ -648,6 +830,28 @@ uart_AO_B: serial@2000 {
- 				status = "disabled";
- 			};
- 
-+			pwm_ab: pwm@2400 {
-+				compatible = "amlogic,meson-a1-pwm",
-+					     "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x2400 0x0 0x24>;
-+				#pwm-cells = <3>;
-+				clocks = <&clkc_periphs CLKID_PWM_A>,
-+					 <&clkc_periphs CLKID_PWM_B>;
-+				power-domains = <&pwrc PWRC_I2C_ID>;
-+				status = "disabled";
-+			};
-+
-+			pwm_cd: pwm@2800 {
-+				compatible = "amlogic,meson-a1-pwm",
-+					     "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x2800 0x0 0x24>;
-+				#pwm-cells = <3>;
-+				clocks = <&clkc_periphs CLKID_PWM_C>,
-+					 <&clkc_periphs CLKID_PWM_D>;
-+				power-domains = <&pwrc PWRC_I2C_ID>;
-+				status = "disabled";
-+			};
-+
- 			saradc: adc@2c00 {
- 				compatible = "amlogic,meson-g12a-saradc",
- 					"amlogic,meson-saradc";
-@@ -731,6 +935,17 @@ sec_AO: ao-secure@5a20 {
- 				amlogic,has-chip-id;
- 			};
- 
-+			pwm_ef: pwm@5400 {
-+				compatible = "amlogic,meson-a1-pwm",
-+					     "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x5400 0x0 0x24>;
-+				#pwm-cells = <3>;
-+				clocks = <&clkc_periphs CLKID_PWM_E>,
-+					 <&clkc_periphs CLKID_PWM_F>;
-+				power-domains = <&pwrc PWRC_I2C_ID>;
-+				status = "disabled";
-+			};
-+
- 			clkc_pll: pll-clock-controller@7c80 {
- 				compatible = "amlogic,a1-pll-clkc";
- 				reg = <0 0x7c80 0 0x18c>;
--- 
-2.25.1
-
+> ---
+>   fs/cachefiles/internal.h |  1 +
+>   fs/cachefiles/ondemand.c | 20 ++++++++++++++++----
+>   2 files changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
+> index a1a1d25e9514..7b99bd98de75 100644
+> --- a/fs/cachefiles/internal.h
+> +++ b/fs/cachefiles/internal.h
+> @@ -129,6 +129,7 @@ struct cachefiles_cache {
+>   	unsigned long			req_id_next;
+>   	struct xarray			ondemand_ids;	/* xarray for ondemand_id allocation */
+>   	u32				ondemand_id_next;
+> +	u32				msg_id_next;
+>   };
+>   
+>   static inline bool cachefiles_in_ondemand_mode(struct cachefiles_cache *cache)
+> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+> index 1d5b970206d0..470c96658385 100644
+> --- a/fs/cachefiles/ondemand.c
+> +++ b/fs/cachefiles/ondemand.c
+> @@ -528,20 +528,32 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
+>   		smp_mb();
+>   
+>   		if (opcode == CACHEFILES_OP_CLOSE &&
+> -			!cachefiles_ondemand_object_is_open(object)) {
+> +		    !cachefiles_ondemand_object_is_open(object)) {
+>   			WARN_ON_ONCE(object->ondemand->ondemand_id == 0);
+>   			xas_unlock(&xas);
+>   			ret = -EIO;
+>   			goto out;
+>   		}
+>   
+> -		xas.xa_index = 0;
+> +		/*
+> +		 * Cyclically find a free xas to avoid msg_id reuse that would
+> +		 * cause the daemon to successfully copen a stale msg_id.
+> +		 */
+> +		xas.xa_index = cache->msg_id_next;
+>   		xas_find_marked(&xas, UINT_MAX, XA_FREE_MARK);
+> +		if (xas.xa_node == XAS_RESTART) {
+> +			xas.xa_index = 0;
+> +			xas_find_marked(&xas, cache->msg_id_next - 1, XA_FREE_MARK);
+> +		}
+>   		if (xas.xa_node == XAS_RESTART)
+>   			xas_set_err(&xas, -EBUSY);
+> +
+>   		xas_store(&xas, req);
+> -		xas_clear_mark(&xas, XA_FREE_MARK);
+> -		xas_set_mark(&xas, CACHEFILES_REQ_NEW);
+> +		if (xas_valid(&xas)) {
+> +			cache->msg_id_next = xas.xa_index + 1;
+> +			xas_clear_mark(&xas, XA_FREE_MARK);
+> +			xas_set_mark(&xas, CACHEFILES_REQ_NEW);
+> +		}
+>   		xas_unlock(&xas);
+>   	} while (xas_nomem(&xas, GFP_KERNEL));
+>   
