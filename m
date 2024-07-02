@@ -1,81 +1,118 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A0C11C0DCA;
-	Tue,  2 Jul 2024 16:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71461C0DD4
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 16:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719938696; cv=none; b=m9C0Sp7sxgHP9vhZREFhcly1R6X82P5wsLq6hHwp8iHmxE0XVKQIjmR0zfS1pHFcOTt70fqXx4cxU9K2BN7ulJxebz44yEM+8et7khmHGMBqJCDWA16nkPgBerRTxRLGpcg0zWNrWkQ8IEIeOUUUW4eRXwhiSTUZpnMrjoWhQQw=
+	t=1719938697; cv=none; b=ugBoYCcTfDTuPYtRleYI/+5JNM4tIEmnQ1IXrS1aKID3iTaOWvh82A0A3dpPzTxw4XrVAoJjnRkOfqeA0P28Z2mbGfvfNBnbiT5EJU6ywdx4NvshB82OAMjtlx3VEYO42Hhl1OwSJ56zMIoMSIH9ODJb02/lF7Xr03uRSJZjuic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719938696; c=relaxed/simple;
-	bh=Yhje840QSjNSdNQxsc4dG5jeAsfocmN5qaeueFJZNZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B3O5m+ulHk3p/C1WdsdHO8VEH25cNXTXpY400ilu4MontiF5Kiow2c4OeDOZkRGNB6QbDeRvEhEttOcRieO2d//ZfaZm21LpRkGG1wwfZ7qJTpxGuZI/g0rXz1h/iAiXSBEWUpwTkQvA+ID1xMZq0qvG/RJY2edRWYehgbG41Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id A673472C8CC;
-	Tue,  2 Jul 2024 19:44:46 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id 92B507CCB3A; Tue,  2 Jul 2024 19:44:46 +0300 (IDT)
-Date: Tue, 2 Jul 2024 19:44:46 +0300
-From: "Dmitry V. Levin" <ldv@strace.io>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
-	kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
-	david@redhat.com, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v23 3/5] tracing: Allow user-space mapping of the
- ring-buffer
-Message-ID: <20240702164445.GA16225@altlinux.org>
-References: <20240510140435.3550353-1-vdonnefort@google.com>
- <20240510140435.3550353-4-vdonnefort@google.com>
- <20240630105322.GA17573@altlinux.org>
- <20240630084053.0b506916@rorschach.local.home>
- <9a9c8ea4-8e17-4e7e-95fe-7b51441a228c@efficios.com>
- <20240702111807.13d2dd2c@rorschach.local.home>
- <cb02f5a0-d6a3-4228-9cbb-473fd392ee48@efficios.com>
+	s=arc-20240116; t=1719938697; c=relaxed/simple;
+	bh=sAtodnEEl8mReT3BIkXwqo9FkryU2zquaGIJub47SpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MzAS1e3v19p2LapWq1I/O8Gqwl5LmawYZxQSpNx9DBM/PovnGzuGp2hRYmzEh1dk9oRIolAmuPsYSOB9iJr1/Qcxf7+1f3xmKT+w9Gri4poiU9yhOlziVV3dMa2ykmMiwlqOwyOTsWXzcBLDyJzARwayd+ynGHbzv97tIOLUvZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=bcQC1gNg; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="bcQC1gNg"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 77CBF240003;
+	Tue,  2 Jul 2024 16:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
+	t=1719938693;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=unb3QJ1ZSaRryP9Bs3P1fLuG39JlH4isF5oYd+2RhRQ=;
+	b=bcQC1gNgP3gDQfpW0v23OOjOxdP0I2luTbTTLxfUXVTUL7/jRRjMhpCL5kQzqcUNwyvVs6
+	ly8+SPm0Uxlb5CXCg9Tj26hBJYHZhQWry2GCUecSInf3AhHWtNdUwZ+28quErq/hMvxqm4
+	1aLtj3rOF2it97inFG6FKmcpFCAE0i+4Ywh+SkeIZjXPKpNVYbXa1FUtU1Q0XyqA77qbjp
+	QwYSKTtOq/6epwUFyBd2lSGHUxxP679j3RRiKNx5E5EV5zr152wukzLyqVhyTM4HzJ7KCB
+	WwEKEaq/EW9ToVvQxMcUTMdYGLs2LvHc755NQHutKnM01u8AJgp7gPZOWN0F4A==
+Message-ID: <b974df45-daf5-4156-8532-cf9e2be8bdfa@yoseli.org>
+Date: Tue, 2 Jul 2024 18:44:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb02f5a0-d6a3-4228-9cbb-473fd392ee48@efficios.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] arch: m68k: Add definitions for flash NFC support
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Stefan Agner <stefan@agner.ch>, linux-m68k@lists.linux-m68k.org,
+ linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+References: <20240627-upstream-nfc-mcf5441x-v2-0-312929d09ee5@yoseli.org>
+ <20240627-upstream-nfc-mcf5441x-v2-1-312929d09ee5@yoseli.org>
+ <20240628094511.75cc9c78@xps-13>
+Content-Language: en-US
+From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+In-Reply-To: <20240628094511.75cc9c78@xps-13>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-On Tue, Jul 02, 2024 at 11:32:53AM -0400, Mathieu Desnoyers wrote:
-[...]
-> Note that user events also has this issue: the ioctl is not reserved in
-> the ioctl-number.rst list. See include/uapi/linux/user_events.h:
-> 
-> #define DIAG_IOC_MAGIC '*'
-> 
-> /* Request to register a user_event */
-> #define DIAG_IOCSREG _IOWR(DIAG_IOC_MAGIC, 0, struct user_reg *)
-> 
-> /* Request to delete a user_event */
-> #define DIAG_IOCSDEL _IOW(DIAG_IOC_MAGIC, 1, char *)
-> 
-> /* Requests to unregister a user_event */
-> #define DIAG_IOCSUNREG _IOW(DIAG_IOC_MAGIC, 2, struct user_unreg*)
-> 
-> Where '*' maps to Code 0x2A. Looking at the list I don't see any
-> conflicts there, but we should definitely add it.
-> 
-> If we use '*' for user events already, perhaps we'd want to consider
-> using the same range for the ring buffer ioctls ? Arguably one is
-> about instrumentation and the other is about ring buffer interaction
-> (data transport), but those are both related to tracing.
+Hi Miquel,
 
-FWIW, I've checked the list of ioctls known to strace and can confirm that
-currently there are no more users of 0x2a ioctl code besides these three
-DIAG_* ioctls.
+On 28/06/2024 09:45, Miquel Raynal wrote:
+> Hi Jean-Michel & Geert,
+> 
+> jeanmichel.hautbois@yoseli.org wrote on Thu, 27 Jun 2024 18:05:28 +0200:
+> 
+>> Add a few definitions, as the base address for the NFC for the M5441x.
+>>
+>> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+>> ---
+>>   arch/m68k/include/asm/m5441xsim.h | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/m68k/include/asm/m5441xsim.h b/arch/m68k/include/asm/m5441xsim.h
+>> index f48cf63bd782..d4ee1eab7c4a 100644
+>> --- a/arch/m68k/include/asm/m5441xsim.h
+>> +++ b/arch/m68k/include/asm/m5441xsim.h
+>> @@ -99,6 +99,7 @@
+>>   #define MCFINT2_PIT1		14
+>>   #define MCFINT2_PIT2		15
+>>   #define MCFINT2_PIT3		16
+>> +#define MCFINT2_NFC		25
+>>   #define MCFINT2_RTC		26
+>>   
+>>   /*
+>> @@ -333,4 +334,10 @@
+>>   #define MCF_IRQ_BOFF1		(MCFINT1_VECBASE + MCFINT1_FLEXCAN1_BOFF)
+>>   #define MCF_IRQ_ERR1		(MCFINT1_VECBASE + MCFINT1_FLEXCAN1_ERR)
+>>   
+>> +/*
+>> + * Flash module
+>> + */
+>> +#define MCF_NFC_BASE		0xfc0fc000
+>> +#define MCF_NFC_SIZE		(0xfc0fff3b - 0xfc0fc000)
+>> +#define MCF_NFC_ISR		(MCFINT2_VECBASE + MCFINT2_NFC)
+> 
+> I'm sorry but this feels really backwards. Platform data as C
+> structures are already legacy, but defining these information in
+> some arch headers and using them directly from drivers really seems
+> even "wronger" to me. What's the mid/long term plan for this? If the
+> platforms are still in use today and need to be maintained, why not
+> finally enabling device tree support? I know it's harder to do than to
+> say, but I'd like some really good explanation on why we should accept
+> to do this in 2024 because it feels rather inadequate.
 
+Thanks for your review !
 
--- 
-ldv
+I agree with you it is legacy. I use a lot of ARM platforms and 
+device-tree is indeed great. Though, switching the m68k architecture to 
+use this sounds really tough.
+
+I will obviously let Geert and maybe others answer, but my feeling is it 
+is not really worth it to implement the dts on those platforms are they 
+are not that used (compared, again, to ARM for instance).
+
+AFAIK the platform data is not officialy considered deprecated ? As it 
+concerns a few platforms out there...
+
+Thanks,
+JM
