@@ -1,230 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCEF84DFF
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719914416; cv=none; b=Cx3ktAzCVxPcRAqAkLKX3niTx0MReQ6CG4j/HP/ADjty/zVaSlahDTW82DOZNx/LLVCYBH92k4QO9a97PBW8JfOZkql4epp2obD7Ek9wGlXuV2WSEUCfr17tfCbm/ZYCbZjBlzZspLNG9CuF4WrI0n88KpQ1jmIirhtrif3exRc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719914416; c=relaxed/simple;
-	bh=FL9d6OezN0DaGSeDwX3ch8BUZ6rZMm7r6XTHPIhIbRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z6I8QUi8hY8EDMbHblGaWj+AdGE1dyvNVQcVVBQXBP3FuFjdu5TB5PEGVP6+1DNUc3Iu+XqQ0WAmtaUbXIgJ11N/HcRY7uxpLNXf9GrUCp53wcCKDX/TymdNQmIFCG2xNWGkQspuN8hxIFHa+DjcQVRtSuHwSYoBhId0sIc/x7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J/xzxhyg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5F284DFF
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719914485; cv=pass; b=M2ERl/7aX8xOYlm2V3Ul2nwQGM9SJeHPCialdOnJsR1O+itOEJ5jfFNf7Ns0hTqLoNmU9TV50ICVOUHYKqjIP9OkmLrFtEUh3P7vfr0wycwHjLgMQlVl0LYrbiTvRUK55M3lXdpM45cvzS9jP2T+jKIYWTiwB2VB+AkDeEupQJ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719914485; c=relaxed/simple;
+	bh=lq+cPpQFpajmigEpdnK1tqlgUHHq9wmvoZ7G1CxyHeg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WmcchCyEqOjdXMXCCK9VgSNhxAPwl4uzrdHa5GAOy1mutRyq1rfIY2vB5G0U3KcKwRj695uenJbDG3bYWVzfLhrCLCiA/L8Gb0ZE0/SavruFZXOhrz6gB1lxHJBqDm6ZohoqVVhG5APnYdnqJbOxIYPgMoLuEbQDzBy9QvlsOrU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=FHCmYi5D; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J/xzxhyg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719914413;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yv6opSv0vaul5KLer+4NSP+gJbph4rk+UabR1uMZGi8=;
-	b=J/xzxhygmRM0a9LjZJx3Pqmhs3GbTrAanyehBJ9YikjMFB2nNVW2eMBMqfgO9jv9bh8cu4
-	jImfFjSy9li9iIQ7TNQWI4OoAyAJhZFjpeLadUdlS8FBROnaQ0S1y0FdN6JpuhHWv2KGNI
-	88LetmkAToEm756X/RlxoT8/uovogFw=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-503-Q5FssW9gOlWL5T-SJHtfVg-1; Tue, 02 Jul 2024 06:00:10 -0400
-X-MC-Unique: Q5FssW9gOlWL5T-SJHtfVg-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6b07ef34bfcso75276236d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 03:00:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719914409; x=1720519209;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yv6opSv0vaul5KLer+4NSP+gJbph4rk+UabR1uMZGi8=;
-        b=XhjldPjQt5aPnRGaUdEUyYXa3dycA/L3Eo1pMv4FAK5098AIvzYtFOQMiC7x6Zc3sl
-         hKkvWHsYzjUSSkAYfDEz208Cq0FB9Vj50K8PWroeaMMU7RDdS6PDmTifaqiyJ8asc/K4
-         cevkqJLyZGCSHQC9cpDZzKS/8pZHBbyywupQ4+nrNIQL4k+OA/2eI/f+1UWbjges315v
-         Pw9r5T/MkuXh78C1TytylQRY3la6yXHdbObjaeBkD5vYF4RtgjgMNBS7OiV4v1QMvPqG
-         eFouzvtW+0rlhY9PuvoG6GgaTGvIBXS7/A1U/QrDVYby/5SSGcXBMW1PN2L0FNKQY7vR
-         MKJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsbOUhfb4nCrRU11i5ne83yjv2JLV2whRej+Qm9DCbVn4QsRf2x7pwlCxsqRyiVrpCTgCits5kNHrG5CMAqW4kQtvzFUKbvTaErHvk
-X-Gm-Message-State: AOJu0YyRcnF6MCpRwNSW58Geb/X74WONGlxBVbTpAmuJUuJXW8vjT86J
-	d36Q2v3ytC+qvHTUOZyPMCjl8XB+xF7XWvitsA87iDdvogRI2DDF9vSp/1Q6gQDMrVycslGMTO/
-	B1USSSfknSnARC2e4uMHb4a7ptCEsrZSKf8aACLFrD/rVkgW2s6l+Ul5PsHInjw==
-X-Received: by 2002:ad4:5dc9:0:b0:6af:7b2e:1868 with SMTP id 6a1803df08f44-6b5b6eb34demr150374086d6.18.1719914409593;
-        Tue, 02 Jul 2024 03:00:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6OFvuiXkTbjAlYyeTGZ8incXsosT5LSwB4zEJQ1+txCs4HqKJX0owYZypPLWDDL7ByIDetg==
-X-Received: by 2002:ad4:5dc9:0:b0:6af:7b2e:1868 with SMTP id 6a1803df08f44-6b5b6eb34demr150373726d6.18.1719914409206;
-        Tue, 02 Jul 2024 03:00:09 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.133.110])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e5631bcsm42009626d6.32.2024.07.02.03.00.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 03:00:08 -0700 (PDT)
-Date: Tue, 2 Jul 2024 12:00:00 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: luigi.leonardi@outlook.com
-Cc: Stefan Hajnoczi <stefanha@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Marco Pinna <marco.pinn95@gmail.com>
-Subject: Re: [PATCH PATCH net-next v2 2/2] vsock/virtio: avoid enqueue
- packets when work queue is empty
-Message-ID: <omiwday3x75sfre6qp7zp7rzmdwyv27eq2wmzkz6hwt7p6jqvv@n2dx55e2xojf>
-References: <20240701-pinna-v2-0-ac396d181f59@outlook.com>
- <20240701-pinna-v2-2-ac396d181f59@outlook.com>
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="FHCmYi5D"
+ARC-Seal: i=1; a=rsa-sha256; t=1719914470; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=hwG+VedwzcfPvdhlTgBnuVt5K/rI6Tuuw/rZGp2QvXeLcEGB4Mhke37BFPBLPZo0hQmF+vWMTl/FlAKiqyKHK+u8U8wtVuan1Vsn9n0Js8jsefB8NAC9fiHcRp4lrYZLrIdTI7zq/unQT/nl+iIrssP89QiyQYxb6g9dJkJYW84=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1719914470; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=lq+cPpQFpajmigEpdnK1tqlgUHHq9wmvoZ7G1CxyHeg=; 
+	b=HjxFKPZBuCm6DgD5D/R6VDV6sDGz6vdkmsauZCxmkfocaiYZdq5sVSjh0HYUg6ADq31VELxlBDN88pAebxFowKo9vdtQXjPAh0MqKseS/Gb9jlrjqgkUnkMmX/QcTCCy0og4UNaalXGwLkwAgKK0+bSE3VQGP0PXj0RLbyBvack=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1719914470;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=lq+cPpQFpajmigEpdnK1tqlgUHHq9wmvoZ7G1CxyHeg=;
+	b=FHCmYi5D4THx6B5y6F5eedkbs9KsIlBTh3IHigtUTr1gCuVrzvgp4BdhtagVo4ZE
+	HkPtm5ERa/+Tg5zEzlpmAkXGNjOs/CgSgAVgxTN+hrYt2RF3XCHFVkXCJOCM7mPdxMR
+	bjEa/N8iF/vFJIS275ltRxdfV8bZynRP82ps2lRQlteUoQHnZvsGTTdhJ6Yve6sUNlr
+	3VJ/P4WqZJDMnAhUgqOgtcWXoZ/5dzqVEqIDPmTPKSclysY+roCR0yzq2wz0KyVM3hQ
+	c2oeqjrOijWsJBEcluKpUuxYBREG7Ggein/56HvXF7Q2dYqroYXr1Ahn0Od2wmy2Lv5
+	jhXTmxCQQA==
+Received: by mx.zohomail.com with SMTPS id 1719914469225554.1334590249544;
+	Tue, 2 Jul 2024 03:01:09 -0700 (PDT)
+Message-ID: <0db974d40cd8c5dcc723d43c328bac923e0fe33a.camel@icenowy.me>
+Subject: Re: [RFC PATCH 2/2] drm/ttm: downgrade cached to write_combined
+ when snooping not available
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Jiaxun
+ Yang <jiaxun.yang@flygoat.com>, Huang Rui <ray.huang@amd.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date: Tue, 02 Jul 2024 18:01:05 +0800
+In-Reply-To: <ae7085fd-3bca-4a4a-b465-5e4941011877@amd.com>
+References: <20240629052247.2653363-1-uwu@icenowy.me>
+	 <20240629052247.2653363-3-uwu@icenowy.me>
+	 <a143a2c3-c6f0-4537-acc6-94f229f14639@app.fastmail.com>
+	 <2760BA02-8FF8-4B29-BFE2-1322B5BFB6EC@icenowy.me>
+	 <7e30177b-ff13-4fed-aa51-47a9cbd5d572@amd.com>
+	 <6303afecce2dff9e7d30f67e0a74205256e0a524.camel@icenowy.me>
+	 <ff1bf596-83cb-4b3e-a33a-621ac2c8171c@amd.com>
+	 <b9189c97f7efbaa895198113ee5b47012bd8b4dc.camel@icenowy.me>
+	 <ae7085fd-3bca-4a4a-b465-5e4941011877@amd.com>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20240701-pinna-v2-2-ac396d181f59@outlook.com>
+X-ZohoMailClient: External
 
-On Mon, Jul 01, 2024 at 04:28:03PM GMT, Luigi Leonardi via B4 Relay wrote:
->From: Marco Pinna <marco.pinn95@gmail.com>
->
->Introduce an optimization in virtio_transport_send_pkt:
->when the work queue (send_pkt_queue) is empty the packet is
->put directly in the virtqueue reducing latency.
->
->In the following benchmark (pingpong mode) the host sends
->a payload to the guest and waits for the same payload back.
->
->All vCPUs pinned individually to pCPUs.
->vhost process pinned to a pCPU
->fio process pinned both inside the host and the guest system.
->
->Host CPU: Intel i7-10700KF CPU @ 3.80GHz
->Tool: Fio version 3.37-56
->Env: Phys host + L1 Guest
->Payload: 512
->Runtime-per-test: 50s
->Mode: pingpong (h-g-h)
->Test runs: 50
->Type: SOCK_STREAM
->
->Before (Linux 6.8.11)
->------
->mean(1st percentile):    380.56 ns
->mean(overall):           780.83 ns
->mean(99th percentile):  8300.24 ns
->
->After
->------
->mean(1st percentile):   370.59 ns
->mean(overall):          720.66 ns
->mean(99th percentile): 7600.27 ns
->
->Same setup, using 4K payload:
->
->Before (Linux 6.8.11)
->------
->mean(1st percentile):    458.84 ns
->mean(overall):          1650.17 ns
->mean(99th percentile): 42240.68 ns
->
->After
->------
->mean(1st percentile):    450.12 ns
->mean(overall):          1460.84 ns
->mean(99th percentile): 37632.45 ns
->
->virtqueue.
->
->Throughput: iperf-vsock
->
->Before (Linux 6.8.11)
->G2H 28.7 Gb/s
->
->After
->G2H 40.8 Gb/s
+=E5=9C=A8 2024-07-02=E6=98=9F=E6=9C=9F=E4=BA=8C=E7=9A=84 11:27 +0200=EF=BC=
+=8CChristian K=C3=B6nig=E5=86=99=E9=81=93=EF=BC=9A
+> Am 02.07.24 um 11:06 schrieb Icenowy Zheng:
+> > [SNIP]
+> > However I don't think the definition of the AGP spec could apply on
+> > all
+> > PCI(e) implementations. The AGP spec itself don't apply on
+> > implementations that do not implement AGP (which is the most PCI(e)
+> > implementations today), and it's not in the reference list of the
+> > PCIe
+> > spec, so it does no help on this context.
+>=20
+> No, exactly that is not correct.
+>=20
+> See as I explained the No-Snoop extension to PCIe was created to help
+> with AGP support and later merged into the base PCIe specification.
+>=20
+> So the AGP spec is now part of the PCIe spec.
+> [SNIP]
 
-Cool!
+I don't think AGP spec is part of the PCIe spec, at least not part of
+the PCIe spec I was reading. It does not contain the word "AGP" at all,
+and despite it has a "Reference Documents" chapter, this chapter didn't
+include the AGP spec, unlike PCI spec / PCI-X addendum which are listed
+there.
 
-I'd suggest to add the length of buffer (-l param) used, and also
-check more lenghts, like at least 4k, 64k, 128k.
+In addition, your logic that No-Snoop is related to AGP only apply when
+discussing about the history of PCIe, not when inspecting it from a
+synchronic view, which is what new implementers of a spec should do.
 
->
->The performance improvement is related to this optimization,
->I checked that each packet was put directly on the vq
->avoiding the work queue.
+> > > We have quite a bunch of V4L, sound and I also think network
+> > > devices
+> > > which work like that. But those are non-PCI devices.
+> > I think in the Linux kernel most drivers (of course including PCI
+> > ones)
+> > use DMA buffer in this way, which makes them natually compatible
+> > with
+> > non-coherent PCIe implementations. TTM is one of the few exceptions
+> > here.
+>=20
+> Yes and that is absolutely intentional.
+>=20
+> See we don't want to support any non-coherent PCIe implementation.
+>=20
 
-How?
+However, considering users exist for this setup, I here seriously hope
+the support to be gained since today.
 
->
->Co-developed-by: Luigi Leonardi <luigi.leonardi@outlook.com>
->Signed-off-by: Luigi Leonardi <luigi.leonardi@outlook.com>
->Signed-off-by: Marco Pinna <marco.pinn95@gmail.com>
+> [SNIP]
+> > > And if I'm not completely mistaken the RISC-V specification was
+> > > also
+> > > updated to disallow stuff like this.
+> > >=20
+> > > So yes you can have boards which implement non-snooped PCIe, but
+> > > you
+> > > get
+> > > exactly zero support from hardware vendors to run software on it.
+> > >=20
+> > It's a quite usual case for free softwares to get no support from
+> > hardware vendors, and some of them are even developed by reverse
+> > engineering. I don't think it as a blocker for the Linux kernel to
+> > merge as many hardwares' support as possible.
+>=20
+> We seem to have a misunderstanding here, this is not a software
+> issue.=20
+> The hardware platform is considered broken by the hardware vendor!
 
-I think you might want to change the author of this patch, since it's 
-changed a lot from Marco's original one. Obviously if you both agree on 
-this.
+I don't think in this case Arm Ltd / RISC-V International is considered
+the vendor -- the SoC vendor is. You can rarely get support directly
+from the CPU ISA vendor (or CPU IP vendor, which differs mostly in the
+RISC-V situation) in the case a SoC or a final product with some SoC is
+purchased, and the SoC/product's vendor would rarely declare their
+hardware platform as broken.
 
-Thanks,
-Stefano
+>=20
+> In other words people have stitched together hardware in a way which
+> is=20
+> not supported by the creator of that hardware.
+>=20
+> So as long as you can't convince anybody from ARM or the RISC-V team
+> or=20
+> whoever created that hardware to confirm that the hardware actually=20
+> works you won't get any support for that.
 
->---
-> net/vmw_vsock/virtio_transport.c | 38 ++++++++++++++++++++++++++++++++++++--
-> 1 file changed, 36 insertions(+), 2 deletions(-)
->
->diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
->index a74083d28120..3815aa8d956b 100644
->--- a/net/vmw_vsock/virtio_transport.c
->+++ b/net/vmw_vsock/virtio_transport.c
->@@ -213,6 +213,7 @@ virtio_transport_send_pkt(struct sk_buff *skb)
-> {
-> 	struct virtio_vsock_hdr *hdr;
-> 	struct virtio_vsock *vsock;
->+	bool use_worker = true;
-> 	int len = skb->len;
->
-> 	hdr = virtio_vsock_hdr(skb);
->@@ -234,8 +235,41 @@ virtio_transport_send_pkt(struct sk_buff *skb)
-> 	if (virtio_vsock_skb_reply(skb))
-> 		atomic_inc(&vsock->queued_replies);
->
->-	virtio_vsock_skb_queue_tail(&vsock->send_pkt_queue, skb);
->-	queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
->+	/* If the workqueue (send_pkt_queue) is empty there is no need to enqueue the packet.
->+	 * Just put it on the virtqueue using virtio_transport_send_skb.
->+	 */
->+	if (skb_queue_empty_lockless(&vsock->send_pkt_queue)) {
->+		bool restart_rx = false;
->+		struct virtqueue *vq;
->+		int ret;
->+
->+		/* Inside RCU, can't sleep! */
->+		ret = mutex_trylock(&vsock->tx_lock);
->+		if (unlikely(ret == 0))
->+			goto out_worker;
->+
->+		/* Driver is being removed, no need to enqueue the packet */
->+		if (!vsock->tx_run)
->+			goto out_rcu;
->+
->+		vq = vsock->vqs[VSOCK_VQ_TX];
->+
->+		if (!virtio_transport_send_skb(skb, vq, vsock, &restart_rx)) {
->+			use_worker = false;
->+			virtqueue_kick(vq);
->+		}
->+
->+		mutex_unlock(&vsock->tx_lock);
->+
->+		if (restart_rx)
->+			queue_work(virtio_vsock_workqueue, &vsock->rx_work);
->+	}
->+
->+out_worker:
->+	if (use_worker) {
->+		virtio_vsock_skb_queue_tail(&vsock->send_pkt_queue, skb);
->+		queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
->+	}
->
-> out_rcu:
-> 	rcu_read_unlock();
->
->-- 2.45.2
->
->
+The world isn't black-or-white, and the thing contradictory to
+"confirmed working" is "not confirmed working" instead of "confirmed
+not working". To get the thing really working (or prove it doesn't work
+at all by practice) is part of the traditional fun of a hacker.
+
+>=20
+> Regards,
+> Christian.
 
