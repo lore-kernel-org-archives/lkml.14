@@ -1,203 +1,117 @@
-Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486761AD9E7;
-	Tue,  2 Jul 2024 15:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D441BA89E
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 15:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719933937; cv=none; b=qFhGJxrsimjSVcupi/i2uUl3KOtmBokWE7CaubfYxG9Yj7qdrYTvRWBRAQLGn3/7MA+6jw9F6VASJPXQUvneIuYwW6AGHNWvcYzL7qAs2DDwh7Hy/8akiGkL8x/tm2ZMQuiR4b0An7Z7A9K/ZuwjtN89jv91yT76r7LmsSWUIJM=
+	t=1719934085; cv=none; b=n95g5UVvH/kOX63RqbMvjt3+dpPSAtotuXUDFfOfRW5mnjSTMLbOS7JjYHS3SOP3hmC9wpGWR83N4E3SNohDUzyFMYX9H3YJ/AmnOqYs/XwNaz+hETRdgHVuAuTWqR1TQRknvWWCBVpzA667J6E9m5GTRzplfqWSH6lvoCYQhaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719933937; c=relaxed/simple;
-	bh=yRg+8F091FuUES+JYKaVyH2G6lgo5Hr0AeAjnDuBU74=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=NrygjBQt21fiUZGQlq0tNCGsHpwtpaKc3OvR6wr7fkJtQk7qcV2Aa+axJX1dx6U39HVVK8JFlbLt1IEFDIzQTY8E44qjrEMtFhHfHHWxWcrp/jqXTGi3MT3gUkY2FcmjXOdODvCVObUKbBfhH9+8xw+cHXp1/XjNhafvnpss2U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=kEkbHH/X; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ITaMGUSc; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kEkbHH/X";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ITaMGUSc"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 48F9413804AD;
-	Tue,  2 Jul 2024 11:25:33 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 02 Jul 2024 11:25:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1719933933; x=1720020333; bh=//A1hzQZrR
-	Fs+Jf7FIQ+nCDerLffGWLM2hRD5dKs7d4=; b=kEkbHH/XWCSn06of/wqt97JCcJ
-	d63/Ez6gIB61Do7L3zzyqlwIy1tVZClPACYGlmn2ihv8WrN2RKGIuE/YWSDyC5X3
-	NyOBG9hCHKcF6B3d0U6ABCoD0ABGEWQ4onpwFrpFKgwhkPriO5tL2mLgWIzO/S5V
-	BK65nyq5m/J6OOYIDUMu7j60fcabWeGzEZ/nBnJlg794+Dt+QugkelVT9hEEp7Sw
-	Fb6pognCnQ28sK53xdF4VE9qsQQ0GWTJbnxxBqYdwtuQTnzrL2C+BkxLIGKS77ML
-	e992b6+4qaUoXXMBF0AqrVDeY8pVe53x+UuXMFbiYP/7AuoX43hHfXvDlb/g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1719933933; x=1720020333; bh=//A1hzQZrRFs+Jf7FIQ+nCDerLff
-	GWLM2hRD5dKs7d4=; b=ITaMGUScvo3efaios+nmJ+l2HFnt+Ouk1xOR9SCejBQX
-	X+nMNacgNPtPKVi4irj4dEYmGrr8FNITbhQUvWqAYQQPILNRrWJVHQULFVvNoLM7
-	rTdtpiL1WJQ2qMf+/vYV45qnUD9+xhUBPDPwmPbuPForpfbAg5MR7IWuf4lWJOgu
-	ZjcC9O6LcbgYKxFqEkJjij/TmMxzFEnaFEMin+DhBtFLzdFURKTy10k+bo8qqvn6
-	Y6zNLEL+rF6C87PnO3yUyXaOLtKKo2b6FHT7E7qU6piIjRurUT67VkufhxxxVfli
-	WkgrL30i15fkwtNeO2lCJCtYhLxBOKJhGEzhWh11AQ==
-X-ME-Sender: <xms:7BuEZttoIOu3FgcnRTCwlUY9enW-fWdSGJA21XR6uYg7nZNfEvYT4A>
-    <xme:7BuEZmeD2xZcTgq_x095S6hIFE_CXNZyvUj2JjppPZHG2X6yvowIK7ZB0ttBhCkdS
-    mKq1RK7-XDTo4l4GAg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudehgdekiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:7BuEZgzV2V9m7yHeP1-CY_1ToL-7saFDkeYbauhzrcIdP0hWxpdECQ>
-    <xmx:7BuEZkPqG5nj4biEtgHDOMbrIFpZ-CZs4LyXyDGqrlwrKeiI3XmUng>
-    <xmx:7BuEZt-0YpFxDaNOoYfGLVTo6xVdfiYwpii7nZD9L9GApKzNrmdlDg>
-    <xmx:7BuEZkX5ATZdeALUPYBN_7NUDUsZodxq3UocvaVEljBw0ouzzUeugQ>
-    <xmx:7RuEZhWiOkzLt1hDorcP0Kt54ntgBJmUM8iMCFrY5Nkd-AbR7KPNeG0_>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id A1149B60092; Tue,  2 Jul 2024 11:25:32 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
+	s=arc-20240116; t=1719934085; c=relaxed/simple;
+	bh=9BcbW3R58Xt26qorPVQMjxexUsj4CEO4CJkf0dkDK+E=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=jRd6zUuFha+eqWUCwQrnC0xWujGuRWpvRyEj6j1u0gpHn056j27SitIrqMmCRZjXa4Olt0iltZFLaQFPbEWigicxbzf2JRfCqBDWkZhwOTN6T97Sk8kCzljoJvWY46tHEWTLnNIr2X+n/kB+AeZj/LLNmsFJmXNSUnGcjQeen20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-37714b7f378so48444505ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 08:28:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719934082; x=1720538882;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sm/SFW10p9CDhz9e0IrzOEC4hQ8O7cLnB9cnxNvIrpQ=;
+        b=ZDsKLidPBCsEx5/QFvEMmgnuieaQMkSZv5WfbGg8si8hsHs4L2FyRC5wgw+lMcil4l
+         NJ/aj+gOvAj8tTX2LVTZAJ5ejlnwLLOvTplVkethoVubf7MNUkvJaOQepRSJDxfuJ5kf
+         ddpeAqoVxspEAHQBFaJS9lesouOPd0Bs37wj2lpcS/f9rC5MC5CMLVvnujuUUwAe7m29
+         HpeWDFmteoRZiip2ly+t3XPmk+lrQw0bz5C7w4AGTVuURJzqgPNc5G6j8YANpgKCNzc7
+         bkayL1tLNbTxAXshzDm9bYY5vXn/TKIOqJgCtF/qb2JJu3KxKO6nM9B6BQhmqJV56eZt
+         Esgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUY9LOr/wHsq7QzM4QL+upNcaV7wlv9CVJNkIiazz1BJvGZ6j9urD6BGI7BWBP/NTtJELKuCapdc55z9gADtHdcv01QNU+mIBauY67i
+X-Gm-Message-State: AOJu0YzAxLdsuY5SOmrUfJNfdM/JXzi3/OGT7fqMBZtbKMOiedKilfAW
+	0wuEG5UljXIy9C4gIat0vM3ja8E9s0hick8MMe0FP8L62Yy/aCPhBZ/NQF7tRNWrqk661jOnHXI
+	IIc7Ff5CYNhY0p5HgHKIQ+TnM37OtkkLPDyh/4IVg7jtX4K2BVX1ykJQ=
+X-Google-Smtp-Source: AGHT+IFkn4D/b1TKuOyqfcYM7t2On3XNHJyTqE6eAqfp55yJTMdTulbmCjlmT+DwwiHUupZnD5jtVhcBOdddYzvbAJt7aRk5z8RY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <35691b55-436c-4c52-b241-f0c5326227cb@app.fastmail.com>
-In-Reply-To: <20240628003253.1694510-11-almasrymina@google.com>
-References: <20240628003253.1694510-1-almasrymina@google.com>
- <20240628003253.1694510-11-almasrymina@google.com>
-Date: Tue, 02 Jul 2024 17:25:11 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Mina Almasry" <almasrymina@google.com>, Netdev <netdev@vger.kernel.org>,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>,
- "Donald Hunter" <donald.hunter@gmail.com>,
- "Jonathan Corbet" <corbet@lwn.net>,
- "Richard Henderson" <richard.henderson@linaro.org>,
- "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
- "Matt Turner" <mattst88@gmail.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Helge Deller" <deller@gmx.de>, "Andreas Larsson" <andreas@gaisler.com>,
- "Jesper Dangaard Brouer" <hawk@kernel.org>,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>,
- "Andrii Nakryiko" <andrii@kernel.org>,
- "Martin KaFai Lau" <martin.lau@linux.dev>,
- "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>,
- "Yonghong Song" <yonghong.song@linux.dev>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "KP Singh" <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>,
- "Hao Luo" <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>,
- "Steffen Klassert" <steffen.klassert@secunet.com>,
- "Herbert Xu" <herbert@gondor.apana.org.au>,
- "David Ahern" <dsahern@kernel.org>,
- "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>,
- shuah <shuah@kernel.org>, "Sumit Semwal" <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Bagas Sanjaya" <bagasdotme@gmail.com>,
- "Christoph Hellwig" <hch@infradead.org>,
- "Nikolay Aleksandrov" <razor@blackwall.org>,
- "Pavel Begunkov" <asml.silence@gmail.com>, "David Wei" <dw@davidwei.uk>,
- "Jason Gunthorpe" <jgg@ziepe.ca>,
- "Yunsheng Lin" <linyunsheng@huawei.com>,
- "Shailend Chand" <shailend@google.com>,
- "Harshitha Ramamurthy" <hramamurthy@google.com>,
- "Shakeel Butt" <shakeel.butt@linux.dev>,
- "Jeroen de Borst" <jeroendb@google.com>,
- "Praveen Kaligineedi" <pkaligineedi@google.com>,
- "Willem de Bruijn" <willemb@google.com>,
- "Kaiyuan Zhang" <kaiyuanz@google.com>
-Subject: Re: [PATCH net-next v15 10/14] tcp: RX path for devmem TCP
-Content-Type: text/plain
+X-Received: by 2002:a05:6638:271e:b0:4b9:80a8:3cf3 with SMTP id
+ 8926c6da1cb9f-4bbb6f21bb4mr446557173.6.1719934082580; Tue, 02 Jul 2024
+ 08:28:02 -0700 (PDT)
+Date: Tue, 02 Jul 2024 08:28:02 -0700
+In-Reply-To: <tencent_922C096E68955CEA7AED66CC3079766DA40A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000007935c061c455c9d@google.com>
+Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in nf_tables_trans_destroy_work
+From: syzbot <syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 28, 2024, at 02:32, Mina Almasry wrote:
-> --- a/arch/alpha/include/uapi/asm/socket.h
-> +++ b/arch/alpha/include/uapi/asm/socket.h
-> @@ -140,6 +140,11 @@
->  #define SO_PASSPIDFD		76
->  #define SO_PEERPIDFD		77
-> 
-> +#define SO_DEVMEM_LINEAR	78
-> +#define SCM_DEVMEM_LINEAR	SO_DEVMEM_LINEAR
-> +#define SO_DEVMEM_DMABUF	79
-> +#define SCM_DEVMEM_DMABUF	SO_DEVMEM_DMABUF
+Hello,
 
-Something is still wrong with the number assignment:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING in __nft_release_table
 
-> --- a/arch/mips/include/uapi/asm/socket.h
-> +++ b/arch/mips/include/uapi/asm/socket.h
-> @@ -151,6 +151,11 @@
->  #define SO_PASSPIDFD		76
->  #define SO_PEERPIDFD		77
-> 
-> +#define SO_DEVMEM_LINEAR	78
-> +#define SCM_DEVMEM_LINEAR	SO_DEVMEM_LINEAR
-> +#define SO_DEVMEM_DMABUF	79
-> +#define SCM_DEVMEM_DMABUF	SO_DEVMEM_DMABUF
-> +
->  #if !defined(__KERNEL__)
-> 
->  #if __BITS_PER_LONG == 64
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 5991 at net/netfilter/nf_tables_api.c:1667 nf_tables_table_destroy net/netfilter/nf_tables_api.c:1667 [inline]
+WARNING: CPU: 1 PID: 5991 at net/netfilter/nf_tables_api.c:1667 __nft_release_table+0xed3/0xf40 net/netfilter/nf_tables_api.c:11521
+Modules linked in:
+CPU: 1 PID: 5991 Comm: syz.1.21 Not tainted 6.10.0-rc5-syzkaller-01137-g1c5fc27bc48a-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+RIP: 0010:nf_tables_table_destroy net/netfilter/nf_tables_api.c:1667 [inline]
+RIP: 0010:__nft_release_table+0xed3/0xf40 net/netfilter/nf_tables_api.c:11521
+Code: 8b 04 25 28 00 00 00 48 3b 84 24 e0 00 00 00 75 72 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 9e f2 e0 f7 90 <0f> 0b 90 eb a8 89 d9 80 e1 07 fe c1 38 c1 0f 8c fd f1 ff ff 48 89
+RSP: 0018:ffffc9000465f8a0 EFLAGS: 00010293
+RAX: ffffffff89b53462 RBX: 0000000000000001 RCX: ffff8880258d8000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: ffffc9000465f9d0 R08: ffffffff89b53393 R09: 1ffffffff25f78ca
+R10: dffffc0000000000 R11: fffffbfff25f78cb R12: dffffc0000000000
+R13: ffff88802be8fb00 R14: ffff8880644edd70 R15: ffff8880644eddc0
+FS:  000055556d3a6500(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6829251378 CR3: 000000002a83e000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ nft_rcv_nl_event+0x55f/0x6d0 net/netfilter/nf_tables_api.c:11580
+ notifier_call_chain+0x19f/0x3e0 kernel/notifier.c:93
+ blocking_notifier_call_chain+0x69/0x90 kernel/notifier.c:388
+ netlink_release+0x11a6/0x1b10 net/netlink/af_netlink.c:787
+ __sock_release net/socket.c:659 [inline]
+ sock_close+0xbc/0x240 net/socket.c:1421
+ __fput+0x406/0x8b0 fs/file_table.c:422
+ task_work_run+0x24f/0x310 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x168/0x370 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f052bf75b99
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd273700b8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 0000000000018813 RCX: 00007f052bf75b99
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: ffffffffffffffff R08: 0000000000000001 R09: 00000004273703cf
+R10: 00007f052be00000 R11: 0000000000000246 R12: 00007f052c103fac
+R13: 0000000000000032 R14: 00007f052c105aa0 R15: 00007f052c103fa0
+ </TASK>
 
-so alpha and mips use the same numbering system as
-the generic version for existing numbers
 
-> diff --git a/arch/parisc/include/uapi/asm/socket.h 
-> b/arch/parisc/include/uapi/asm/socket.h
-> index be264c2b1a117..2b817efd45444 100644
-> --- a/arch/parisc/include/uapi/asm/socket.h
-> +++ b/arch/parisc/include/uapi/asm/socket.h
-> @@ -132,6 +132,11 @@
->  #define SO_PASSPIDFD		0x404A
->  #define SO_PEERPIDFD		0x404B
-> 
-> +#define SO_DEVMEM_LINEAR	78
-> +#define SCM_DEVMEM_LINEAR	SO_DEVMEM_LINEAR
-> +#define SO_DEVMEM_DMABUF	79
-> +#define SCM_DEVMEM_DMABUF	SO_DEVMEM_DMABUF
+Tested on:
 
-parisc uses a different number, but you start using the
-generic version here. This is probably fine but needs 
-a comment.
+commit:         1c5fc27b Merge tag 'nf-next-24-06-28' of git://git.ker..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=120dd466980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5264b58fdff6e881
+dashboard link: https://syzkaller.appspot.com/bug?extid=4fd66a69358fc15ae2ad
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11b97f05980000
 
-> index 8ce8a39a1e5f0..25a2f5255f523 100644
-> --- a/include/uapi/asm-generic/socket.h
-> +++ b/include/uapi/asm-generic/socket.h
-> @@ -135,6 +135,11 @@
->  #define SO_PASSPIDFD		76
->  #define SO_PEERPIDFD		77
-> 
-> +#define SO_DEVMEM_LINEAR	98
-> +#define SCM_DEVMEM_LINEAR	SO_DEVMEM_LINEAR
-> +#define SO_DEVMEM_DMABUF	99
-> +#define SCM_DEVMEM_DMABUF	SO_DEVMEM_DMABUF
-
-These on the other hand look like a typo: did you
-mean number 78 and 79 instead of 98 and 99?
-
-Alternatively, you could continue with number 87,
-which is the next unused number on sparc, and have
-the same numbers on all architectures?
-
-     Arnd
