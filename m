@@ -1,113 +1,182 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D3784DFF
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56639152500;
+	Tue,  2 Jul 2024 10:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719914539; cv=none; b=RSoibdYunoImSKOtTwUbkcLilwYL+0uek4mNhBvcqXZeczpnTLaN5zG202eAV+1TeHsaZQVLjIy3YEJMTEAyz1CatOtv7S7IbD0rhUXHbqk6t0midR0s8LP8lzmfMDODaM6mtbnkfa216Y5Wuu1mSlQwStsyveizhdtZAWe37pI=
+	t=1719914603; cv=none; b=IQf1m4n1QQER5SqJ26we+rE5aZ67pZR5iBHaY7V8fGo7dLCH1wluYtswh9XCk0friBUu2F0DN4ALyxyWm3IK2Doc2/35wLX6Ne7e5YMh3XU/7ZoRVCjD28ZZ/eCVtrPKmiIe+BSd/WKqwb89QsBS88EYkJ3dBNbjS5gV2vE/WC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719914539; c=relaxed/simple;
-	bh=kfQXYHa0/iq3VMeEyiTVIoiCqBLBnSRbpgiMa9uKD2E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=R9J0fNyzMXOO2ITejhL6wdutQFI1/lf93H07PTBsakztNC5OFTYtGe++xoUSESKhwgmbPlgtGmvn7jYMccp5fVIuP9UeuYrqTE69w2YfE6eliReUuaNdkEPpzW89zkR+g8h8aDUGTN/GIXQnyMuSA+sTVfj5Q32y1/7NPCTWQAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=meLx/pde; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1719914603; c=relaxed/simple;
+	bh=ZZC6RUME3C3T+j6uBSf5KK5uj8Trge04Cv6a6nZ23VQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eV8iN9PXrkRUkf8h1mek8+LVWoGzaK7L314kSEfy7iFSnvsaWdEW1R1n4y6Iq2x0jLmDXvqCjoL7qUVzdMzTjvHROab5HQdVAQlEB1xpvJxhINxc/HObmxOQdleCpSez7YXNj7x2b8xzfzCdE37qNbjWXKuSKYNmREScKBKh8Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=nO1TVLg3; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ZOrQNQtM reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="meLx/pde"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46284MAV002305;
-	Tue, 2 Jul 2024 12:01:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	MIg3DBI11sSmG6wbpd1DN3SW8f/bMTTym/JO7g3ovAY=; b=meLx/pdejVh1bTGy
-	uiOCkKrNavNX2j6fEcHeoDBVA9rQI/vqeh/OSOWTTRsttxc8sHmjPcZIS0i6dlcF
-	r+2Ekv1DYq9MKu9Bruma9yWFHdmR9uvctzaJnTFSVuZDm8JO/c57GsEqoC4ifMI9
-	kXj+u56SubQnamAqrK9K6qSex+Ehy3cegUGyr0LfhS39ypwUB4pmajtm8SCuwWd3
-	XWmUfNPcJ8z+WzEWJrmrwF8JgfzQKOezzYepK7oL7lWlxRAXGiCiUDAlB0QU3gpB
-	Wn5O+H0ZWUHuZa/LOv5itGw0pYjiPz3vFkGgN7oH6f23+83dPscbIS4xiiklspxG
-	YxxZdw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4027pgjyqa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jul 2024 12:01:35 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 725024004B;
-	Tue,  2 Jul 2024 12:01:28 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2BE492207C0;
-	Tue,  2 Jul 2024 12:00:37 +0200 (CEST)
-Received: from [10.252.8.242] (10.252.8.242) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 2 Jul
- 2024 12:00:36 +0200
-Message-ID: <b33d9470-b845-478f-97d3-636e158693d2@foss.st.com>
-Date: Tue, 2 Jul 2024 12:00:35 +0200
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="nO1TVLg3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ZOrQNQtM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1719914600; x=1751450600;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=ZZC6RUME3C3T+j6uBSf5KK5uj8Trge04Cv6a6nZ23VQ=;
+  b=nO1TVLg3rMM+RdaZYYDVe7ZBZDKdwLH1mAjHz0dk7CuC2C4+C8YiPZ6d
+   IEBqM5GMsG9sLCTf8K5+rJjejbl0fdlp+MDIrBxn4H7c1kJYZT9574iv9
+   xcsyWv96bGA7tshC8dwheCwTAJYRVKjwn/+/pQ5KOl5wrELVXJYSCvwTx
+   3QGEb22mgyg5dEYPsnxShiLb4hj21bwYM8Zx1cqLtxzChcwzamQ5PV5+m
+   cjU/h4c6+zxX0LFn/wRPlbim7kSVwNQ9/4CnFN8/6gycJhPd2l504XAC7
+   qZ7lMOJKGG+TZn9AOmwxe7JbRAMHDOQu2ayOFWwv6hvjXp1hkZ9kQvpMf
+   w==;
+X-CSE-ConnectionGUID: LYzK7jUlQ2y1hld4f6tLmA==
+X-CSE-MsgGUID: uNEUPFhTQ+KBuwDotQUbhQ==
+X-IronPort-AV: E=Sophos;i="6.09,178,1716242400"; 
+   d="scan'208";a="37697386"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 02 Jul 2024 12:03:10 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 968581658FC;
+	Tue,  2 Jul 2024 12:03:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1719914586;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=ZZC6RUME3C3T+j6uBSf5KK5uj8Trge04Cv6a6nZ23VQ=;
+	b=ZOrQNQtMSkAIaicd+ssSgMSS1f+2sT2dsUkHW279QXJMAqSbTxnzoRPxc0FgXXNwdiHVCB
+	nSZ4yfF2iFgFsFuQ3fb1K6Rj3NM1OjCGGWLFgEm0vbn1+LHZA272r4EoZuV5aaNlgFFG8q
+	jhZ/D3aa/i1yQBV8oymhfJtmjSBlzSPf5nen2Sub0M8Lx0rJSannB9FREn/TynYfxLDJHc
+	T5+iNFM07fZ2aoMQSjH2m4GJnuG/2aqubOWMB/+RNEYotShXZdMvDtl8amC6157oDG0otU
+	WedOEuLJFj5dqT79l51MHNvODXL9cMToZmUR6Hnjh6XJUshbZHd6S+U3GbBVOw==
+Message-ID: <734a29a87613b9052fc795d56a30690833e4aba9.camel@ew.tq-group.com>
+Subject: Re: Kernel hang caused by commit "can: m_can: Start/Cancel polling
+ timer together with interrupts"
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Markus
+	Schneider-Pargmann
+	 <msp@baylibre.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Chandrasekar Ramakrishnan
+ <rcsekar@samsung.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Tony Lindgren
+ <tony@atomide.com>, Judith Mendez <jm@ti.com>,  linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,  linux@ew.tq-group.com
+Date: Tue, 02 Jul 2024 12:03:01 +0200
+In-Reply-To: <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
+References: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
+	 <c93ab2cc-d8e9-41ba-9f56-51acb331ae38@leemhuis.info>
+	 <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
+	 <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/stm: Remove unnecessary .owner for
- lvds_platform_driver
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        <yannick.fertre@foss.st.com>
-CC: <philippe.cornu@foss.st.com>, <maarten.lankhorst@linux.intel.com>,
-        <mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-        <daniel@ffwll.ch>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@foss.st.com>, <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Abaci
- Robot <abaci@linux.alibaba.com>
-References: <20240701062304.42844-1-jiapeng.chong@linux.alibaba.com>
-Content-Language: en-US
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-In-Reply-To: <20240701062304.42844-1-jiapeng.chong@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-02_06,2024-07-02_02,2024-05-17_01
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Jiapeng,
+On Tue, 2024-07-02 at 07:37 +0200, Linux regression tracking (Thorsten Leem=
+huis) wrote:
+>=20
+>=20
+> On 01.07.24 16:34, Markus Schneider-Pargmann wrote:
+> > On Mon, Jul 01, 2024 at 02:12:55PM GMT, Linux regression tracking (Thor=
+sten Leemhuis) wrote:
+> > > [CCing the regression list, as it should be in the loop for regressio=
+ns:
+> > > https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> > >=20
+> > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> > > for once, to make this easily accessible to everyone.
+> > >=20
+> > > Hmm, looks like there was not even a single reply to below regression
+> > > report. But also seens Markus hasn't posted anything archived on Lore
+> > > since about three weeks now, so he might be on vacation.
+> > >=20
+> > > Marc, do you might have an idea what's wrong with the culprit? Or do =
+we
+> > > expected Markus to be back in action soon?
+> >=20
+> > Great, ping here.
+>=20
+> Thx for replying!
+>=20
+> > @Matthias: Thanks for debugging and sorry for breaking it. If you have =
+a
+> > fix for this, let me know. I have a lot of work right now, so I am not
+> > sure when I will have a proper fix ready. But it is on my todo list.
+>=20
+> Thx. This made me wonder: is "revert the culprit to resolve this quickly
+> and reapply it later together with a fix" something that we should
+> consider if a proper fix takes some time? Or is this not worth it in
+> this case or extremely hard? Or would it cause a regression on it's own
+> for users of 6.9?
+>=20
+> Ciao, Thorsten
 
-On 7/1/24 08:23, Jiapeng Chong wrote:
-> Remove .owner field if calls are used which set it automatically.
->
-> ./drivers/gpu/drm/stm/lvds.c:1213:3-8: No need to set .owner here. The core will do it.
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9457
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-> ---
->  drivers/gpu/drm/stm/lvds.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/stm/lvds.c b/drivers/gpu/drm/stm/lvds.c
-> index 2fa2c81784e9..06f2d7a56cc9 100644
-> --- a/drivers/gpu/drm/stm/lvds.c
-> +++ b/drivers/gpu/drm/stm/lvds.c
-> @@ -1210,7 +1210,6 @@ static struct platform_driver lvds_platform_driver = {
->  	.remove = lvds_remove,
->  	.driver = {
->  		.name = "stm32-display-lvds",
-> -		.owner = THIS_MODULE,
->  		.of_match_table = lvds_dt_ids,
->  	},
->  };
+Hi,
+
+I think on 6.9 a revert is not easily possible (without reverting several o=
+ther commits adding new
+features), but it should be considered for 6.6.
+
+I don't think further regressions are possible by reverting, as on 6.6 the =
+timer is only used for
+platforms without an m_can IRQ, and on these platforms the current behavior=
+ is "the kernel
+reproducibly deadlocks in atomic context", so there is not much room for ma=
+king it worse.
+
+Like Markus, I have writing a proper fix for this on my TODO list, but I'm =
+not sure when I can get
+to it - hopefully next week.
+
+Best regards,
+Matthias
 
 
-Indeed, platform_driver_register() overrides the value of the owner.
 
-Acked-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+>=20
+> > > On 18.06.24 18:12, Matthias Schiffer wrote:
+> > > > Hi Markus,
+> > > >=20
+> > > > we've found that recent kernels hang on the TI AM62x SoC (where no =
+m_can interrupt is available and
+> > > > thus the polling timer is used), always a few seconds after the CAN=
+ interfaces are set up.
+> > > >=20
+> > > > I have bisected the issue to commit a163c5761019b ("can: m_can: Sta=
+rt/Cancel polling timer together
+> > > > with interrupts"). Both master and 6.6 stable (which received a bac=
+kport of the commit) are
+> > > > affected. On 6.6 the commit is easy to revert, but on master a lot =
+has happened on top of that
+> > > > change.
+> > > >=20
+> > > > As far as I can tell, the reason is that hrtimer_cancel() tries to =
+cancel the timer synchronously,
+> > > > which will deadlock when called from the hrtimer callback itself (h=
+rtimer_callback -> m_can_isr ->
+> > > > m_can_disable_all_interrupts -> hrtimer_cancel).
+> > > >=20
+> > > > I can try to come up with a fix, but I think you are much more fami=
+liar with the driver code. Please
+> > > > let me know if you need any more information.
+> > > >=20
+> > > > Best regards,
+> > > > Matthias
+> > > >=20
+> > > >=20
+> >=20
+> >=20
 
-Thanks,
-Raphaël
-
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
