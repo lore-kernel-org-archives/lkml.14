@@ -1,57 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C580A16FF2A
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:25:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B930173338
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719923128; cv=none; b=ZfL/a2/pr220k0KYPFbVBeMF+inKo2qrz/aFb2tLKKb6bUmD5P6jrUHVeT9dz7O0hZmjYFtHK8Ezcyal0E6aKdPgtULZGuehuosdUauxg6lEaGO2o656eTbBBWxhIrKPBs7Fj1Q2/0pgI0TIEmGS8zrES+JCeqEpOjdkmpGNxek=
+	t=1719923130; cv=none; b=CfKxNosQJ+ohxzRzEaxImIAgUy7EnZ9NZPpS+/37mKw2YadcTO2559pVJNKgf3gRkXZkhGuasaXnSyw8e9qrT+inOfHc+pGGN1z3oLb2ruyAq8sqzRdq8CgUOYquciza1uvzKGbvf0WKY4cMOFR7f8ixFCi8Jqieyd3N4p4WyEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719923128; c=relaxed/simple;
-	bh=evl2bS6d9F1sSu4fuJWgautkM5r1gEFsGAw1GotDw2g=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=SUbwiQ/Vz7QSK+iMqVsIpnthLYQW3Mi1Xui1/jgGnyRt/12clIzoylkocR1VgGTkmsAZ/bOnbnBk5ZdwDxnSTbQh6yv9zOcUjUO/g2sM8dWWh7H5eqBFNPSnVAnlP13iMLF/CX8E8toWVfc0VnyuHbrqIr8SzAzc4bn1k8Nq2IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EFVLc/Lx; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1719923130; c=relaxed/simple;
+	bh=puLbfTWYRfg3k5VB5i514x46WNTm9nmUV/u9cgJaWG4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=a5SVMLSTV8XCRr6f4jOH9LaNsIbLKKAF1Ul1WVpONPJPmnJ4Wpv9uZzM2NANVGr2LE/A32MIGmuHk229uhGI3ZLY7jh+S+akjCt0Pzb5RCSDjVaSGH7hUhMNGP74xRgIpbTqbyaWMdHsHNHIQeS78iYNTlTDKp7gicChYYi9/ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tw0bsWmF; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EFVLc/Lx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tw0bsWmF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719923126; x=1751459126;
+  t=1719923128; x=1751459128;
   h=date:from:to:cc:subject:message-id;
-  bh=evl2bS6d9F1sSu4fuJWgautkM5r1gEFsGAw1GotDw2g=;
-  b=EFVLc/LxnF3ivB3J+5utW2HTKNm+Go46RuZfSnrbJUuaavaMXFbUz7A/
-   XDXPUPr3FSPLMBg+7itaKJwbQ72+zutb3qnkySbYK3ZrY0bDz3tqpwXnm
-   t+xmO8hT/hphw7rHDN+bgBtY5QZJV39qD7Rb7J00CE8o7hspqOKC6uT5u
-   ETPvn3XVrPGoGgoJeTsIvALtvddOhVqSlcCE/jiBkB9lCTZ3oFT4JSi0y
-   6ZgHCp30fgSZFilBmyOkQeDzBvoAPOHnloZe1lGH6c+jVpm184bJM37Up
-   Rp0JSiBxMlGD2sdJZNzVCKO7JhASpK/ApVSbNWOw6emgj1dCXX1Jh4qmT
-   w==;
-X-CSE-ConnectionGUID: hwFdQCoBR/qtzRigW5ZxKA==
-X-CSE-MsgGUID: 7lSiIWABToa2itfDh88Q3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="20963215"
+  bh=puLbfTWYRfg3k5VB5i514x46WNTm9nmUV/u9cgJaWG4=;
+  b=Tw0bsWmFjhTa0PL7vNe+OkajZrdXZ+ORD8+j4uH/7ET+qTpODNQ6W2x1
+   PWO8bahV126UA+aF2jgg3pkm3ANv6mDBS2Dn8m0/EldwvXcgfFDNaTroz
+   CQ65l2pDETtDMj/0K2H6TVy9JZeEet90qDxxI6Iak3w6veLrSDdW+k+kn
+   Qc+x+G3r5FBeM+zvH3INodLjWUAsWJkAHj0SAsl9Cmu2frKr7pQ1diUR+
+   LRREn9nE+h6gKiST/ZljeqmqOwFyB15BfI8JxTAEfmHuYTAURD4DRpoPl
+   dZQ/wRQDvKYsdkPQnlvcCyZj+xHMEauxqnuEf8O4hWrzJM78VpnoQz+fU
+   Q==;
+X-CSE-ConnectionGUID: OsvhKjUTSHe+yZG/aryIrg==
+X-CSE-MsgGUID: A9EKrx9ZQFWV1JU8N7qNsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="20963216"
 X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="20963215"
+   d="scan'208";a="20963216"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
   by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 05:25:25 -0700
-X-CSE-ConnectionGUID: rIt6luoARgejGyoIME3pCA==
-X-CSE-MsgGUID: HqAcdEwTRUOFxrm9lwKPQg==
+X-CSE-ConnectionGUID: seWW2XFRRGOJY1AcEPI+2Q==
+X-CSE-MsgGUID: 9xht/TsvS6WKD3ufjmNSjw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="46622541"
+   d="scan'208";a="46622540"
 Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
   by orviesa008.jf.intel.com with ESMTP; 02 Jul 2024 05:25:25 -0700
 Received: from kbuild by 68891e0c336b with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sOcZV-000O9y-1V;
+	id 1sOcZV-000O9w-1Q;
 	Tue, 02 Jul 2024 12:25:21 +0000
-Date: Tue, 02 Jul 2024 20:25:19 +0800
+Date: Tue, 02 Jul 2024 20:24:33 +0800
 From: kernel test robot <lkp@intel.com>
 To: "x86-ml" <x86@kernel.org>
 Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/alternatives] BUILD SUCCESS
- 0d3db1f14abb4eb28613fbeb1e2ad92bac76debf
-Message-ID: <202407022017.aHHSr75d-lkp@intel.com>
+Subject: [tip:sched/urgent] BUILD SUCCESS
+ ddae0ca2a8fe12d0e24ab10ba759c3fbd755ada8
+Message-ID: <202407022031.ehGJKWTJ-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/alternatives
-branch HEAD: 0d3db1f14abb4eb28613fbeb1e2ad92bac76debf  x86/alternatives, kvm: Fix a couple of CALLs without a frame pointer
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/urgent
+branch HEAD: ddae0ca2a8fe12d0e24ab10ba759c3fbd755ada8  sched: Move psi_account_irqtime() out of update_rq_clock_task() hotpath
 
 elapsed time: 1467m
 
