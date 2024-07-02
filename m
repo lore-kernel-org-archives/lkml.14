@@ -1,79 +1,72 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243471C094B
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EF81C093D
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719957548; cv=none; b=E//Cs4D1SPYevaTifXlZ1Bc5uMLSvmaYzcQJid5Ao2Ip5KmHDsJHycZqqbqgDOTqp2aedkzrhdBIEEkbmPyG9SvLsZusnweo0K6JTOVHNSZ3kxU0GuQPFVyCUQfqjlEcnUtOE/WHO4/yJpWfOx7OR4yv+EQ30h3uZW10ODeAUfM=
+	t=1719957548; cv=none; b=cIAHYNy+hhL1xWnAWGuJTlRsVJ78J/4WBh6mW606dBxUgQWpwWyjaEwJfLIf7HrDeYUCyjNF8+vSmHa/mhRT8qpV4iEBiBPyYFurgKTez8PfvYzLqDPS7DNQen2N3jm+R6NbqJVZd8K2sb+qffs+NBsXhT+A2duV95CUZqDxmCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719957548; c=relaxed/simple;
-	bh=LByawjcddd6Y7jpwbDz/sjAV8w3O5QnZzc7RlvHGwag=;
+	bh=KS6v5h2TMxV5p5idCDDKxL5D9ipXivXxl0yGY6wRk5k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RNKJurdJibVYTgLoKLt7dSfBVQkIL+UaX+w9PaFUHQVBKkk40kmAklDKS4M01K9We5TSCTWtApdCtOCl0KWdblBu097MDUt4AqjCIhyF/FVvMTHgwnkkt4Myas6bLBRH0wJTKjhPM8QF4ZIPgx/qlRaRDPYkz6YWeU6LIE3mfZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XWSCatHb; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=agLAbvxPU9FXaYRPIbJxyOJO0E7U3nSVbFzvmDKNbU6EB99rnMYBZnxrNBew2wlEOPFEOWbnNETyswe+xuFGFl+TjLjMqGPIVm6k8Mth4sKhRKDfC0vyRGP3cXMWkAXOyq3+SDTHlQmg3LJNpDE6ubFclWPfecPlmCGvCyosTXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=llkhDD92; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWSCatHb"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7f65a32a58fso21873739f.1
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="llkhDD92"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c84df0e2f4so11289a91.1
         for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719957546; x=1720562346; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1719957546; x=1720562346; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0tTLQ7kYNablnENIf/KeDz5dGwor+/R9FnQHvwE/Et4=;
-        b=XWSCatHbWhwxnDw84MkGqFcLmSjhA3ehklioVrAE7IPYc1GHw2HQUL30dwcbx56gL2
-         NxjICkHlkNznR/J4Yraiq2sknNSljEL2vjE0CkuuMWgRFq6M/XmGxGQ/6N4d5E7SjkOZ
-         z1AWG7vXS7gcxD7UCi66LLbcWDtbeoFMc1ftd5C15vNXDjoZ+X1BjSvPJmWfiZlXtJRB
-         9lAVMgAk5l6HZmWM5DPSZI2azZIyN6t4MT/qjHNxSiQjlaBw1lJa/0VT/Ci0ciN4zJ0L
-         lZWO7qKK/8TOLNJPHLC/m7FpJwwQe0UmTI8E8cknDgL5X4arXqNhOWj4Emtz2leyVkkP
-         MTvw==
+        bh=XaROXC68GNyaX4Dj5ZGqXjQP0U0kBkL9jho+BZ7xcjY=;
+        b=llkhDD9289OvZvEm6UOR8hFnxssZxsWHbMXwCUkB50MMIAmep75hkV/Hd6bpKKG9sj
+         s/MaPzqE4E7upg5DEG3Pq7BgHfQSf+AC++DtO1+wu4+RBHfjyYoblOJNWlpzw8xqmxRc
+         NV8I6xtY4oKkYfsX7+tl6BKxagL1b+ozroIDA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1719957546; x=1720562346;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0tTLQ7kYNablnENIf/KeDz5dGwor+/R9FnQHvwE/Et4=;
-        b=F4Usyhn3QuFEBwWAq5NDGV4Znvx0O56aIM/73EV0g4ys1wLftp7Dh75wlh0v5+xOtC
-         cpR3Ya1+jl//i72PvxfqbHzanBzrdGv0uNtzrf8kEi3k2TEmUxZpb3ClRpQZUZaRxWNk
-         v0OT7vyql7PTXbOF+pOWlmeUMi2PeL8wXPwo80Msl/EWjMKUww63Nu5Q40Ct+RW6gplx
-         +4e2byGhvcp/yP0V8nza0CwkxAfTHPp60OPTrFx5yBHyZi5tMETB0L0h4qLIeRvoKOeb
-         71lDq870l+CB5mwWyPzdCw5i1fKRV9lhSWgrE8ZLw7E+ES3iZwdPf7hXMiPRVK1Pi0dZ
-         QZRQ==
-X-Gm-Message-State: AOJu0YxpazR+ykpYm6y7HOm777XrSX4LGBoA7RtzuNGzZgSgR/eb38xz
-	VHrTtSo8PtXjxf/MKICMVd2qW3oxEVTopVyYxURvWbjKwuniPNn2
-X-Google-Smtp-Source: AGHT+IHVzUq+7oBbjRhtfUg8hR7fA0Vm3TWdJRFj0erHJhGLHrI/NeeXyYjOwGHjAwtUEfGXKXA+rQ==
-X-Received: by 2002:a5e:8f49:0:b0:7f6:1d7e:a9c9 with SMTP id ca18e2360f4ac-7f62ee085a0mr1058272839f.6.1719957546282;
-        Tue, 02 Jul 2024 14:59:06 -0700 (PDT)
-Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
-        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-7f61d207fcesm279944739f.51.2024.07.02.14.59.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=XaROXC68GNyaX4Dj5ZGqXjQP0U0kBkL9jho+BZ7xcjY=;
+        b=jeH1UVaZoMV18bgA5YZlbyKJyYrOLJMYr5E7QIDcWGAUFU6je3Q508EcDbY+mJ9pgR
+         WfY3DQWe26QaVYSViLTRePDKaF9Jnwuy6zVvr10ArWZMdfLm+u/6NLar2RNAES+b7s/R
+         lUXLBEf+qENsV5oT9AiXBQztTLZCM32wpo0QOS04KjHWpM7gIfQ50SE3wAirA48O+CLe
+         mAtA1JJBb8oMC7NtNVUaAUoznszVahQAOUT3+rF1x75dHIW4MTJljDRms/8L+f2ofwid
+         34g9uQWteruWe7qDOUVnAaf2ZtgK+KPjteJ2oEZZngk5jG5AzTaj1/nAvCUbTDhhvRMK
+         RD1A==
+X-Forwarded-Encrypted: i=1; AJvYcCV4L1cUlmkr+E5W16trkRGQF9TCBdFXzF0ORSB+sOmJbSEkOtVl5tPKMl49uCXkzk41jizhys+H3hPCfpyYPocKal0//eGyhylxnMFp
+X-Gm-Message-State: AOJu0YxBULHw0WRMerHRNBVKaSCjSp5XV7aCWgSd6FxC2zxtam5rtr9h
+	Bt3mzpQpi3DpH9dChYBlPIIW4LsT2WspDicy1jxd44ZwkMgF0LhIg5GWn1ng1Q==
+X-Google-Smtp-Source: AGHT+IH2/m6EIFOLSLhgMDsvvUV/sVJEQ8WwfSylFVNaQ8sawGIDNdYdzlJnCUgCZbHRviLXsCiLow==
+X-Received: by 2002:a17:90a:c912:b0:2c9:36bf:ba6f with SMTP id 98e67ed59e1d1-2c93d186753mr15586471a91.3.1719957545989;
         Tue, 02 Jul 2024 14:59:05 -0700 (PDT)
-From: Jim Cromie <jim.cromie@gmail.com>
-To: daniel.vetter@ffwll.ch,
-	tvrtko.ursulin@linux.intel.com,
-	jani.nikula@intel.com,
-	ville.syrjala@linux.intel.com,
-	jbaron@akamai.com,
-	gregkh@linuxfoundation.org,
-	ukaszb@chromium.org
-Cc: linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org,
-	intel-gvt-dev@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux@rasmusvillemoes.dk,
-	joe@perches.com,
-	mcgrof@kernel.org,
-	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v9 38/52] drm-dyndbg: add DRM_CLASSMAP_USE to Xe driver
-Date: Tue,  2 Jul 2024 15:57:34 -0600
-Message-ID: <20240702215804.2201271-45-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240702215804.2201271-1-jim.cromie@gmail.com>
-References: <20240702215804.2201271-1-jim.cromie@gmail.com>
+Received: from localhost ([2620:15c:9d:2:5fa9:4b10:46fe:4740])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2c91c7df8b0sm9517429a91.0.2024.07.02.14.59.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jul 2024 14:59:05 -0700 (PDT)
+From: Brian Norris <briannorris@chromium.org>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v2 3/3] tools build: Correct bpf fixdep dependencies
+Date: Tue,  2 Jul 2024 14:58:39 -0700
+Message-ID: <20240702215854.408532-4-briannorris@chromium.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+In-Reply-To: <20240702215854.408532-1-briannorris@chromium.org>
+References: <20240702215854.408532-1-briannorris@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,28 +75,119 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Invoke DRM_CLASSMAP_USE from xe_drm_client.c.  When built with
-CONFIG_DRM_USE_DYNAMIC_DEBUG=y, this tells dydnbg that Xe uses
-has drm.debug calls.
+The dependencies in tools/lib/bpf/Makefile are incorrect. Before we
+recurse to build $(BPF_IN_STATIC), we need to build its 'fixdep'
+executable.
 
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+I can't use the usual shortcut from Makefile.include:
+
+  <target>: <sources> fixdep
+
+because its 'fixdep' target relies on $(OUTPUT), and $(OUTPUT) differs
+in the parent 'make' versus the child 'make' -- so I imitate it via
+open-coding.
+
+I tweak a few $(MAKE) invocations while I'm at it, because
+1. I'm adding a new recursive make; and
+2. these recursive 'make's print spurious lines about files that are "up
+   to date" (which isn't normally a feature in Kbuild subtargets) or
+   "jobserver not available" (see [1])
+
+I also need to tweak the assignment of the OUTPUT variable, so that
+relative path builds work. For example, for 'make tools/lib/bpf', OUTPUT
+is unset, and is usually treated as "cwd" -- but recursive make will
+change cwd and so OUTPUT has a new meaning. For consistency, I ensure
+OUTPUT is always an absolute path.
+
+And $(Q) gets a backup definition in tools/build/Makefile.include,
+because Makefile.include is sometimes included without
+tools/build/Makefile, so the "quiet command" stuff doesn't actually work
+consistently without it.
+
+After this change, top-level builds result in an empty grep result from:
+
+  $ grep 'cannot find fixdep' $(find tools/ -name '*.cmd')
+
+[1] https://www.gnu.org/software/make/manual/html_node/MAKE-Variable.html
+If we're not using $(MAKE) directly, then we need to use more '+'.
+
+Signed-off-by: Brian Norris <briannorris@chromium.org>
 ---
- drivers/gpu/drm/xe/xe_drm_client.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/xe/xe_drm_client.c b/drivers/gpu/drm/xe/xe_drm_client.c
-index 87c10bd7958b..c61163d0d945 100644
---- a/drivers/gpu/drm/xe/xe_drm_client.c
-+++ b/drivers/gpu/drm/xe/xe_drm_client.c
-@@ -15,6 +15,8 @@
- #include "xe_drm_client.h"
- #include "xe_trace.h"
+Changes in v2:
+ - also fix libbpf shared library rules
+ - ensure OUTPUT is always set, and always an absolute path
+ - add backup $(Q) definition in tools/build/Makefile.include
+
+ tools/build/Makefile.include | 12 +++++++++++-
+ tools/lib/bpf/Makefile       | 14 ++++++++++++--
+ 2 files changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/tools/build/Makefile.include b/tools/build/Makefile.include
+index 8dadaa0fbb43..0e4de83400ac 100644
+--- a/tools/build/Makefile.include
++++ b/tools/build/Makefile.include
+@@ -1,8 +1,18 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ build := -f $(srctree)/tools/build/Makefile.build dir=. obj
  
-+DRM_CLASSMAP_USE(drm_debug_classes);
++# More than just $(Q), we sometimes want to suppress all command output from a
++# recursive make -- even the 'up to date' printout.
++ifeq ($(V),1)
++  Q ?=
++  SILENT_MAKE = +$(Q)$(MAKE)
++else
++  Q ?= @
++  SILENT_MAKE = +$(Q)$(MAKE) --silent
++endif
 +
- /**
-  * xe_drm_client_alloc() - Allocate drm client
-  * @void: No arg
+ fixdep:
+-	$(Q)$(MAKE) -C $(srctree)/tools/build CFLAGS= LDFLAGS= $(OUTPUT)fixdep
++	$(SILENT_MAKE) -C $(srctree)/tools/build CFLAGS= LDFLAGS= $(OUTPUT)fixdep
+ 
+ fixdep-clean:
+ 	$(Q)$(MAKE) -C $(srctree)/tools/build clean
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index 2cf892774346..630369c0091e 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -108,6 +108,8 @@ MAKEOVERRIDES=
+ 
+ all:
+ 
++OUTPUT ?= ./
++OUTPUT := $(abspath $(OUTPUT))/
+ export srctree OUTPUT CC LD CFLAGS V
+ include $(srctree)/tools/build/Makefile.include
+ 
+@@ -141,7 +143,13 @@ all: fixdep
+ 
+ all_cmd: $(CMD_TARGETS) check
+ 
+-$(BPF_IN_SHARED): force $(BPF_GENERATED)
++$(SHARED_OBJDIR):
++	$(Q)mkdir -p $@
++
++$(STATIC_OBJDIR):
++	$(Q)mkdir -p $@
++
++$(BPF_IN_SHARED): force $(BPF_GENERATED) | $(SHARED_OBJDIR)
+ 	@(test -f ../../include/uapi/linux/bpf.h -a -f ../../../include/uapi/linux/bpf.h && ( \
+ 	(diff -B ../../include/uapi/linux/bpf.h ../../../include/uapi/linux/bpf.h >/dev/null) || \
+ 	echo "Warning: Kernel ABI header at 'tools/include/uapi/linux/bpf.h' differs from latest version at 'include/uapi/linux/bpf.h'" >&2 )) || true
+@@ -151,9 +159,11 @@ $(BPF_IN_SHARED): force $(BPF_GENERATED)
+ 	@(test -f ../../include/uapi/linux/if_xdp.h -a -f ../../../include/uapi/linux/if_xdp.h && ( \
+ 	(diff -B ../../include/uapi/linux/if_xdp.h ../../../include/uapi/linux/if_xdp.h >/dev/null) || \
+ 	echo "Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h' differs from latest version at 'include/uapi/linux/if_xdp.h'" >&2 )) || true
++	$(SILENT_MAKE) -C $(srctree)/tools/build CFLAGS= LDFLAGS= OUTPUT=$(SHARED_OBJDIR) $(SHARED_OBJDIR)fixdep
+ 	$(Q)$(MAKE) $(build)=libbpf OUTPUT=$(SHARED_OBJDIR) CFLAGS="$(CFLAGS) $(SHLIB_FLAGS)"
+ 
+-$(BPF_IN_STATIC): force $(BPF_GENERATED)
++$(BPF_IN_STATIC): force $(BPF_GENERATED) | $(STATIC_OBJDIR)
++	$(SILENT_MAKE) -C $(srctree)/tools/build CFLAGS= LDFLAGS= OUTPUT=$(STATIC_OBJDIR) $(STATIC_OBJDIR)fixdep
+ 	$(Q)$(MAKE) $(build)=libbpf OUTPUT=$(STATIC_OBJDIR)
+ 
+ $(BPF_HELPER_DEFS): $(srctree)/tools/include/uapi/linux/bpf.h
 -- 
-2.45.2
+2.45.2.803.g4e1b14247a-goog
 
