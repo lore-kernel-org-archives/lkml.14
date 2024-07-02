@@ -1,56 +1,56 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10FA18DB0E
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB9B18DB31
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719957528; cv=none; b=eoldUIS48hQuyVrThgSl6xg2IK1TMybW7sUDHN+W+nsOVqn5PpheyknAIsJIF1iiRlEdCqgBivABBiA563J7aAP28TRtmSzIz/2A0FvUcofNpOu0OJJhv4Lw8rfAbHrOS/v0RCzVodiGeucHGNB9noQ887GBYmQXS+Nq28VIAA4=
+	t=1719957529; cv=none; b=BGAyJEZmRyCWRyUaeOiq8vB+w20DgKjRAcJS8oGWI+CVFHOQGqCPMG5uKC0GGun4PneCiFVbAkLoIEoBTmrYKRBFYTN7OgmusQe+ydAR4vtFhPSuuRq4TZXBrRc2cUnPs98diFzdunqk0OcBDFdEXNjPBg0E4Q7xC9DP5+Inarg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719957528; c=relaxed/simple;
-	bh=qGonLoeAF1nKI66oYiyq/9w8tauQ74p3yAoY7oXxkr8=;
+	s=arc-20240116; t=1719957529; c=relaxed/simple;
+	bh=ruM/z33ybyG4BT7EGafatX+PVpfZYy41EY6pGKapSCM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eO+pm0fyV3O8/ByfaIBbLXqQWtanO1t4YEXPA0uZKm29ZRgd4KEGYvFsgOM8Ae8oqU3kf5H7ijw06NzaE2Gp9uVsfYKEn54Ha2Sr5K8bk4rXUbi9XIIPa4v/LL3sTAX5XsYDxVSM3nEsY72M/SeFvoN6t0+d/3xPJn9mJwjiFCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L2bPSByt; arc=none smtp.client-ip=209.85.166.43
+	 MIME-Version; b=u3SczcwpGErv5CX7rxKjzbEYCkTL+5CGfIcXI3lqkYXfSbdoT3zgaTKBAL8mUwDon6FsqHK+WTvSiwBuEve+L5bzlKkHrO8vdPHTWzcPSpPrblDZ90c3sZ2X4WS+yPw7zNCZD6DMygMOsp6yIT4gIkPcR+OoptKNr7+2zQ64F8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=duWbtE5O; arc=none smtp.client-ip=209.85.166.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2bPSByt"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7f3d3919a4aso177937839f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:58:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="duWbtE5O"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7f63db7a69cso142342639f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719957526; x=1720562326; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719957527; x=1720562327; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AlDKvAdBKoPRv/bIs38+uKi/tkvNJDzr4jduq2zKdbM=;
-        b=L2bPSBytG3u5hNKLMAYLiHPt3C5115tbK1AHbvoiU8XoUcwWqUGX3mYy9ejwLhH8NC
-         Nd7k3eaTowtr7HNldX4mqZ38E/0FGNa900HPPKF1PVnFdUs48xogmZlvHPhalf14Kb/0
-         CcNeAB4rdbJxaI8YWL9kNXJGVQZUv6SsRyRxX7bnmuZTIOKCWUwvGefWGlqjkWHgogg5
-         cTArhqjd5e1ZPvCrZ41AK3+RgDdMUR+CzLlsPCujm1WHqFez5YmHB+nEXUzlPoJQtPrR
-         u2oAXJAK5sc5rg5AB8tNHPZMV9fQW80+zIadLyAi9xVOG9mIj2OveIS4PcIKTErEVR6Q
-         cnuQ==
+        bh=Gt92vv+l+QrwNWjlUzQRBip24zXOkaNnGwWlphVTLFQ=;
+        b=duWbtE5OIn/38AMUZrLNRaW1P8wd/508o+V0Vo1VymiHl2sg1czQ2p0VPfUQ1qUQ7H
+         Xj/RgPwv6WQXIobXYe17TeFOC81HeqJeIlBvoZEegqJS2CsoqA/Himp4g1zY7HMmpzaW
+         aNN3/G7O07lvjGYWRQM7r7mll627PpCykmxQIcxWbH4DhrLQFcVrcSSyV5dElStsblw/
+         EIB1S0tqPdt2zW0xp07Wh4gNRDaz1qUUPhI4xYM3WbrgMUYhYryXgK00nKhjr0yy5Az7
+         hAQlAxlyv/VBQjbAdYCOFRpMhIhz6oF/rUepc8rECB9yQql0BpL5njNI54taMjqrsjgR
+         ihdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719957526; x=1720562326;
+        d=1e100.net; s=20230601; t=1719957527; x=1720562327;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AlDKvAdBKoPRv/bIs38+uKi/tkvNJDzr4jduq2zKdbM=;
-        b=hXfplBui/Vw7/ZMBgc20xal9/7vMUtaZPjoXDQbbnfeMbbmSHuZ2RSQDeaCdibhI1s
-         7z+WQH3jCYk4P6+NmP0aL36CK+LJ5O1ExHq3PgdaLJxtdx2G4LZkghMHrBHoMVoQ/3xI
-         9GpIfcgL6SN0q7Yuh66lZ/3+teelGIcqlGulsXnzEO203HA1lESLrcLVomRGxhoVBprj
-         E17kwNF8RMhHy/8ODJ4YUsrg8YjGAk4cQ3+cuRg6soeTSUXar9mBoJ1JXtvStz5W73e4
-         tjVob5lWdsXPzsxK1Jfjhcky8CqgJJxTvvpKMpT1LBbpQqJQoYY96VbSg1keWfIZ/o4t
-         a5cg==
-X-Gm-Message-State: AOJu0YwQmO3GszyjTSOuX6G0+mZ1E278GbOITrJBwwbNvLkXOkga9Hb2
-	jZlSC6YCT4+CoWCVzx0FxBpVmai4B8HVxYhhKnUsln0J856oxlCI
-X-Google-Smtp-Source: AGHT+IEykACPg8Yuh6xy1PBNO3lKJQHFEEJ8ReiFUL2QHWIsQS/wu8Ny162mn5gSs3mLVbeCJLAYLw==
-X-Received: by 2002:a6b:ce01:0:b0:7eb:7887:a496 with SMTP id ca18e2360f4ac-7f62ee118a2mr1185180239f.4.1719957526148;
-        Tue, 02 Jul 2024 14:58:46 -0700 (PDT)
+        bh=Gt92vv+l+QrwNWjlUzQRBip24zXOkaNnGwWlphVTLFQ=;
+        b=e9MI0Cx0pRBdkt+oa60/NnzhqfFLzHmiscyTYmIjGSAxR8z+9MlYWj996P4gev8LEv
+         tSgBvTgH1MrTh6x+mmOAptsmWz2UZ2P006lNyExurf1UueIsIeZG3om/Uuy5emC7ET9c
+         /R4uXHpG/MwC2SL1UFFkuDuPpIFGl7o2rImcBRmD3v1ogK+2XM0iiPsPt+AnO3Gw+enR
+         MlZJfUWqAkEAz2fXQwQQBhpKGng5W/5qobp8WtVWA0uvgd2FZmggyJdQCt8w5vYOUZKo
+         EaeyyJywr+eWRtAOT1skEisQx2gg5PaV96pdSSNYYS3N+AZL8DDQGK0sV8gTjiFf/bGJ
+         M3ZA==
+X-Gm-Message-State: AOJu0YyJrnFwyc/3G79p2WG0I6XJXqZBExnZkuy1/YohvGSiM5i0BN39
+	T1a+phC0Fp8Q54NGb7nFih7bPwTiAojfwhVV/HGWAGfiB0qgyEPg
+X-Google-Smtp-Source: AGHT+IF3h87zduF7F4ddnH2q9ze+NFD9i3fNyFNxg/0ttCijjGWkOENGZRuQmey084nqd6Ft/oa1CQ==
+X-Received: by 2002:a5e:de4c:0:b0:7f6:20dd:7117 with SMTP id ca18e2360f4ac-7f62ed4675fmr1103892639f.0.1719957527247;
+        Tue, 02 Jul 2024 14:58:47 -0700 (PDT)
 Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
-        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-7f61d207fcesm279944739f.51.2024.07.02.14.58.45
+        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-7f61d207fcesm279944739f.51.2024.07.02.14.58.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 14:58:45 -0700 (PDT)
+        Tue, 02 Jul 2024 14:58:46 -0700 (PDT)
 From: Jim Cromie <jim.cromie@gmail.com>
 To: daniel.vetter@ffwll.ch,
 	tvrtko.ursulin@linux.intel.com,
@@ -68,9 +68,9 @@ Cc: linux-kernel@vger.kernel.org,
 	joe@perches.com,
 	mcgrof@kernel.org,
 	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v9 26/52] dyndbg: change __dynamic_func_call_cls* macros into expressions
-Date: Tue,  2 Jul 2024 15:57:16 -0600
-Message-ID: <20240702215804.2201271-27-jim.cromie@gmail.com>
+Subject: [PATCH v9 27/52] selftests-dyndbg: check KCONFIG_CONFIG to avoid silly fails
+Date: Tue,  2 Jul 2024 15:57:17 -0600
+Message-ID: <20240702215804.2201271-28-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240702215804.2201271-1-jim.cromie@gmail.com>
 References: <20240702215804.2201271-1-jim.cromie@gmail.com>
@@ -82,56 +82,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Xe driver's XE_IOCTL_DBG macro calls drm_dbg() from inside an if
-(expression).  This breaks when CONFIG_DRM_USE_DYNAMIC_DEBUG=y because
-the invoked macro has a do-while-0 wrapper.
+Several tests are dependent upon config choices. Lets avoid failing
+where that is noise.
 
-   if (cond && (drm_dbg("expr-form"),1)) {
-      ... do some more stuff
-   }
+The KCONFIG_CONFIG var exists to convey the config-file around.  If
+the var names a file, read it and extract the relevant CONFIG items,
+and use them to skip the dependent tests, thus avoiding the fails that
+would follow, and the disruption to whatever CI is running these
+selftests.
 
-Fix it by changing __dynamic_func_call_cls{,_no_desc} macros into
-expressions, by replacing the do-while-0s with a ({ }) wrapper.
+If the envar doesn't name a config-file, ".config" is assumed.
 
-In C, all legal expressions are also legal statements, as converted by
-the trailing semi-colon in a statement-style macro invocation:
+CONFIG_DYNAMIC_DEBUG=y:
 
-   drm_dbg("statement form");
+basic-tests() and comma-terminator-tests() test for the presence of
+the builtin pr_debugs in module/main.c, which I deemed stable and
+therefore safe to count.  That said, the test fails if only
+CONFIG_DYNAMIC_DEBUG_CORE=y is set.  It could be rewritten to test
+against test-dynamic-debug.ko, but that just trades one config
+dependence for another.
+
+CONFIG_TEST_DYNAMIC_DEBUG=m
+
+As written, test_percent_splitting() modprobes test_dynamic_debug,
+enables several classes, and count them.  It could be re-written to
+work for the builtin module also, but builtin test modules are not a
+common or desirable build/config.
+
+CONFIG_TEST_DYNAMIC_DEBUG=m && CONFIG_TEST_DYNAMIC_DEBUG_SUBMOD=m
+
+test_mod_submod() recaps the bug found in DRM-CI where drivers werent
+enabled by drm.debug=<bits>.  It modprobes both test_dynamic_debug &
+test_dynamic_debug_submod, so it depends on a loadable modules config.
+
+It could be rewritten to work in a builtin parent config; DRM=y is
+common enough to be pertinent, but testing that config also wouldn't
+really test anything more fully than all-loadable modules, since they
+default together.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
----
- include/linux/dynamic_debug.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index 19f959f9a6b4..121a66b0ca25 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -287,20 +287,20 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
-  * (|_cls):	adds in _DPRINT_CLASS_DFLT as needed
-  * (|_no_desc):	former gets callsite descriptor as 1st arg (for prdbgs)
-  */
--#define __dynamic_func_call_cls(id, cls, fmt, func, ...) do {	\
-+#define __dynamic_func_call_cls(id, cls, fmt, func, ...) ({	\
- 	DEFINE_DYNAMIC_DEBUG_METADATA_CLS(id, cls, fmt);	\
- 	if (DYNAMIC_DEBUG_BRANCH(id))				\
- 		func(&id, ##__VA_ARGS__);			\
--} while (0)
-+})
- #define __dynamic_func_call(id, fmt, func, ...)				\
- 	__dynamic_func_call_cls(id, _DPRINTK_CLASS_DFLT, fmt,		\
- 				func, ##__VA_ARGS__)
+fixup-kconfig
+---
+ .../dynamic_debug/dyndbg_selftest.sh          | 45 ++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh b/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
+index fccd2012b548..d09ef26b2308 100755
+--- a/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
++++ b/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
+@@ -11,6 +11,30 @@ CYAN="\033[0;36m"
+ NC="\033[0;0m"
+ error_msg=""
  
--#define __dynamic_func_call_cls_no_desc(id, cls, fmt, func, ...) do {	\
-+#define __dynamic_func_call_cls_no_desc(id, cls, fmt, func, ...) ({	\
- 	DEFINE_DYNAMIC_DEBUG_METADATA_CLS(id, cls, fmt);		\
- 	if (DYNAMIC_DEBUG_BRANCH(id))					\
- 		func(__VA_ARGS__);					\
--} while (0)
-+})
- #define __dynamic_func_call_no_desc(id, fmt, func, ...)			\
- 	__dynamic_func_call_cls_no_desc(id, _DPRINTK_CLASS_DFLT,	\
- 					fmt, func, ##__VA_ARGS__)
++[ -e /proc/dynamic_debug/control ] || {
++    echo -e "${RED}: this test requires CONFIG_DYNAMIC_DEBUG=y ${NC}"
++    exit 0 # nothing to test here, no good reason to fail.
++}
++
++# need info to avoid failures due to untestable configs
++
++[ -f "$KCONFIG_CONFIG" ] || KCONFIG_CONFIG=".config"
++if [ -f "$KCONFIG_CONFIG" ]; then
++    echo "# consulting KCONFIG_CONFIG: $KCONFIG_CONFIG"
++    grep -q "CONFIG_DYNAMIC_DEBUG=y" $KCONFIG_CONFIG ; LACK_DD_BUILTIN=$?
++    grep -q "CONFIG_TEST_DYNAMIC_DEBUG=m" $KCONFIG_CONFIG ; LACK_TMOD=$?
++    grep -q "CONFIG_TEST_DYNAMIC_DEBUG_SUBMOD=m" $KCONFIG_CONFIG ; LACK_TMOD_SUBMOD=$?
++    if [ $V -eq 1 ]; then
++	echo LACK_DD_BUILTIN: $LACK_DD_BUILTIN
++	echo LACK_TMOD: $LACK_TMOD
++	echo LACK_TMOD_SUBMOD: $LACK_TMOD_SUBMOD
++    fi
++else
++    LACK_DD_BUILTIN=0
++    LACK_TMOD=0
++    LACK_TMOD_SUBMOD=0
++fi
++
+ function vx () {
+     echo $1 > /sys/module/dynamic_debug/parameters/verbose
+ }
+@@ -192,6 +216,10 @@ function check_err_msg() {
+ 
+ function basic_tests {
+     echo -e "${GREEN}# BASIC_TESTS ${NC}"
++    if [ $LACK_DD_BUILTIN -eq 1 ]; then
++	echo "SKIP"
++	return
++    fi
+     ddcmd =_ # zero everything (except class'd sites)
+     check_match_ct =p 0
+     # there are several main's :-/
+@@ -214,6 +242,10 @@ EOF
+ 
+ function comma_terminator_tests {
+     echo -e "${GREEN}# COMMA_TERMINATOR_TESTS ${NC}"
++    if [ $LACK_DD_BUILTIN -eq 1 ]; then
++	echo "SKIP"
++	return
++    fi
+     # try combos of spaces & commas
+     check_match_ct '\[params\]' 4 -r
+     ddcmd module,params,=_		# commas as spaces
+@@ -226,9 +258,12 @@ function comma_terminator_tests {
+     ddcmd =_
+ }
+ 
+-    
+ function test_percent_splitting {
+     echo -e "${GREEN}# TEST_PERCENT_SPLITTING - multi-command splitting on % ${NC}"
++    if [ $LACK_TMOD -eq 1 ]; then
++	echo "SKIP"
++	return
++    fi
+     ifrmmod test_dynamic_debug_submod
+     ifrmmod test_dynamic_debug
+     ddcmd =_
+@@ -248,6 +283,14 @@ function test_percent_splitting {
+ 
+ function test_mod_submod {
+     echo -e "${GREEN}# TEST_MOD_SUBMOD ${NC}"
++    if [ $LACK_TMOD -eq 1 ]; then
++	echo "SKIP"
++	return
++    fi
++    if [ $LACK_TMOD_SUBMOD -eq 1 ]; then
++	echo "SKIP"
++	return
++    fi
+     ifrmmod test_dynamic_debug_submod
+     ifrmmod test_dynamic_debug
+     ddcmd =_
 -- 
 2.45.2
 
