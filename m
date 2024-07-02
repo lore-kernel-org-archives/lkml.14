@@ -1,129 +1,169 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3583E1BBBC3
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 15:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D4216C69A;
+	Tue,  2 Jul 2024 15:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719934365; cv=none; b=gQ1b0CKfwzeFixEoJQv0rR5qIGyIarCdFPsjo1r5us23VTbCUuEELotGIldMUYvo8SJt5rTE/q5QnffinH5fdLPBXc7wGVdOyA1RZZ650/5rUjCkSPK/ZiiHsc0JjBmiqeWItbm2/3SZwggwu1vpjdRYm6Xky6R/g7WAyuZiedw=
+	t=1719934488; cv=none; b=VVcRLJWO+KnCIlx3Oczto1mGT9INS4KbmRowqFoEWwwybfZkjMh4iYxeUQhfVEB6ZrUA7NFTpOTqLQdTjVCMQi4r91Q66/RTLaNJj105bkYnT6v40LC4P3Z1WwRcN9YNRoUi7Az1Nl6eKMDWu6hjvFL5W5Cg0gQ3bqjUp6W1WoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719934365; c=relaxed/simple;
-	bh=C/m6fd75vr0+1BIFC2PeIwG+mleUy9yNFQhDe3qHmc0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=POQt5InXmVnY1tKvLaHJ6/AO1Ehd/a5SzZ57wWcgfzhgJy4pTinbAdBvKyJqc6KIuDN0WC+QBEBqN4/89YcmuyLJ5YWOK8jrpeGrf3TB7bEA4am0lT9p5EgQwQpdZCmsSSfJIsweYRJiFfVHrYnYnbWag4PJFVOMaKHzcWR3+U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dFITaTMZ; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719934488; c=relaxed/simple;
+	bh=+dYiFmhmoQq6ipJE6mlBFSYVxPXJIa9oBX8SvQ1Od/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLyFjAEV3MNgj9UJPmTr1vdCqITzNJ63m/qOhxjtrU88jn5mY6r6pLnRn5M0j5kr6/3bBKA4fPndoIvoEZ1CtzT8+Lxc1corcOgeQWu5encfn4cCP2mxjTtk4D3DeV1cLSCpVbYsQfSETMxWjafKWsrKq3OzxGjdPYskj0FyVYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHlopjPf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFITaTMZ"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ee7885aa5fso7977451fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 08:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719934362; x=1720539162; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=C/m6fd75vr0+1BIFC2PeIwG+mleUy9yNFQhDe3qHmc0=;
-        b=dFITaTMZMBwOi1alls6EAjY9yG/iDphamHhu1lA/zoWqXX75nQ1ErysF6FeyennyvX
-         nvfnnLESSR4SZeIKHsOjA7Oy+9i3q0P4dvuqKX7PXrUxvHQ/3H3W1yLzHIjgz2Mlhq7D
-         b0mqR6C5ywr7Ap3v+sjrcesgZ2k1yaLPz0vZ0Mrl8tRS+OXOPtbqROPZ6bqiUmaQgmd+
-         CY8o7u04jZQWrHzg3ZBhmf8B944CHsC98Fg7Z7qpccOgmdq3fD6vuTE1+gvyP/yDOCTv
-         btwf8U8U0msFr2htpSxGl1iiU7UnWUwkt1rL8PkTURyj/ekurjoTd3O+qyMFreuia8yk
-         DTMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719934362; x=1720539162;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C/m6fd75vr0+1BIFC2PeIwG+mleUy9yNFQhDe3qHmc0=;
-        b=l3x+sXe73UEhB8cri0y1aqabi4JgcipJUiu2OZZ+Ba5IWcdRrJ7cxAp5zALij+ih0w
-         8Ik7WeB9kclYrsIxlRIUrb4EWXTT/h1v4S8OJO9cjEcTi5hSwskdjwJHTT4lx9hRYhj2
-         AEjPO97xdl3u8b5btPbWNI3S0rv9U7np7ivHSY923oCIxnbyTgvFFmgSmWhfWI2HRLla
-         YJZdXV2tRBRa89N0SJhepdop/scjPmk9J4GWHoWRVm0Jk5DIQB2OZVPs7HUofdyuuBnc
-         cdO76JLKrY1Mgrnde9xsvxdCwinKS22g0xVQ5+UJS35R70CtzyT49XqWlEpvh8njt9wA
-         Im5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXMcntTFiEOPmItndsaudJ02TIj7X7DKpWYAkJE/XIQ2Bv3L2pEvZxnDGHLGc0+n+mBr5Ri77OdyArgupSsW3iQIlekxUuohrYBI+Ga
-X-Gm-Message-State: AOJu0YwUoRT13h2wT7dmkfWL2O7UssM34uuow8ArYhFHDd6ubFBbFAkK
-	GV+8Wq5Oo7Mk6aJw3bFnm4jtTz2X3tncKyVV4cJFvZUzCAXn/YYv28u0EKs2ViU6si7B0XvywIe
-	v6U7FaLcQ8XvTKpuDetrIw88fWPM=
-X-Google-Smtp-Source: AGHT+IGpss4noUQgT3U0y8rHVx0PXPERHp6cM4+5fhPb2ffHe8Jw2nNKmIcPJRz59rdV4Tn6bFNR4p7ayqOSLwFJSvM=
-X-Received: by 2002:a2e:9a13:0:b0:2ee:6254:f9ee with SMTP id
- 38308e7fff4ca-2ee6254fb2cmr65786961fa.42.1719934361988; Tue, 02 Jul 2024
- 08:32:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHlopjPf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F94C116B1;
+	Tue,  2 Jul 2024 15:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719934487;
+	bh=+dYiFmhmoQq6ipJE6mlBFSYVxPXJIa9oBX8SvQ1Od/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aHlopjPfwKNLP8sg48SSnpmQ5D4dZ5ylFVdez1Wv3FlKTOo5st+VquVoSvYCuDngm
+	 CQQ91dB4rDedUSUmeu3oHUw84DE9Y5lZk+8YqwrLFvALUgnkXDXMF/pUDylGL7YwVt
+	 rDbDfwbJbaLW/YBG5xoHocFBZaoelikmsCqlrKGc872N+PgViLLKu23JsEYt6nY49g
+	 vmFtWis0SaLdjhp1krsTKDI7tjmLWl9TryPOlT/HidCCOlbC0+tymUcTtvBlCPAPcn
+	 u1odPFJgqegm0pP5tw4OU1oX15iI53gi8l83+6eIyNtAlf08aFFSO/1ZpnkrA8RTdJ
+	 jRsr0+ya4LRhA==
+Date: Tue, 2 Jul 2024 16:34:42 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Hironori KIKUCHI <kikuchan98@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: st7701: Add Anbernic RG28XX
+ panel
+Message-ID: <20240702-magnetism-amends-d535f626e433@spud>
+References: <20240628051019.975172-1-kikuchan98@gmail.com>
+ <20240628051019.975172-2-kikuchan98@gmail.com>
+ <20240628-splashy-slug-1d74e3fd9fe6@spud>
+ <CAG40kxERY2r2cj58kjVMMg1JVOChRKraKYFo_K5C5fnx0g80Qw@mail.gmail.com>
+ <20240630-babied-grill-13c840abb70a@spud>
+ <CAG40kxHxnSNp1_4fX0fOWypLunPm-NnH1UEKZNQgM0g-Z1u1DQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zn8GVkpwXwhaUFno@titan> <CALP2yXcUrCdzyqQx7RQUup3QjfbH4VnMVCPFVXNmmd08GJkKMQ@mail.gmail.com>
- <CAMBcuYNG6n1_yc0-5MSFoh2xCfh3-tHG7VcQq5vY65RKSq39RA@mail.gmail.com> <ZoB1ac1bEI8aH-Yp@titan>
-In-Reply-To: <ZoB1ac1bEI8aH-Yp@titan>
-From: Jakob L <jakobl.gm.g@gmail.com>
-Date: Tue, 2 Jul 2024 17:32:29 +0200
-Message-ID: <CALP2yXexcwNR69Og48Wd8oyqP+YRUnujtUkgbu4ZLkQUQsAEVw@mail.gmail.com>
-Subject: Re: T113 TCON Top tinting troubleshooting
-To: John Watts <contact@jookia.org>
-Cc: Kirby Nankivell <kirby.nankivell@gmail.com>, linux-sunxi@lists.linux.dev, 
-	andre.przywara@arm.com, Paul Kocialkowski <contact@paulk.fr>, 
-	Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Samuel Holland <samuel@sholland.org>, dri-devel@lists.freedesktop.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="8Wkwgm2LZxTD6wYX"
+Content-Disposition: inline
+In-Reply-To: <CAG40kxHxnSNp1_4fX0fOWypLunPm-NnH1UEKZNQgM0g-Z1u1DQ@mail.gmail.com>
 
-Hi John,
 
-i am pretty sure other devices don't have this. At least i have never
-seen it on V3s, A20, A33, H3, A64 with RGB, HDMI, LVDS, or Mipi. This
-was the first - and on MIPI its pretty bad, to a point where its not
-usable.
-With the allwinner u-boot from BSP i had not experience that tint -
-but i assumed it to be somewhere in the wrong Mipi packager or DMA
-setup.
+--8Wkwgm2LZxTD6wYX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Since i am not very experience with mainline contributions i am not
-sure what is the best approach. While i agree that ideally its done
-right on all sunxi devices, the risk of breaking something without
-need should be avoided?
+On Tue, Jul 02, 2024 at 02:28:27AM +0900, Hironori KIKUCHI wrote:
+> On Sun, Jun 30, 2024 at 11:17=E2=80=AFPM Conor Dooley <conor@kernel.org> =
+wrote:
+> > On Sat, Jun 29, 2024 at 05:26:56PM +0900, Hironori KIKUCHI wrote:
+> > > On Sat, Jun 29, 2024 at 1:27=E2=80=AFAM Conor Dooley <conor@kernel.or=
+g> wrote:
+> > > > On Fri, Jun 28, 2024 at 02:10:15PM +0900, Hironori KIKUCHI wrote:
 
-All the best
-Jakob
-
-Am Sa., 29. Juni 2024 um 23:01 Uhr schrieb John Watts <contact@jookia.org>:
->
-> Hi,
->
-> On Sat, Jun 29, 2024 at 12:14:39PM +1000, Kirby Nankivell wrote:
-> > Tested this on a MangoPI-MQ-R with a RGB lcd and can confirm that this fix
-> > removes the green tint I experienced.
+> > > > >            - densitron,dmt028vghmcmi-1a
+> > > > >            - elida,kd50t048a
+> > > > >            - techstar,ts8550b
+> > > > >        - const: sitronix,st7701
+> > > > >
+> > > > >    reg:
+> > > > > -    description: DSI virtual channel used by that screen
+> > > > > +    description: DSI / SPI channel used by that screen
+> > > > >      maxItems: 1
+> > > > >
+> > > > >    VCC-supply:
+> > > > > @@ -43,6 +41,13 @@ properties:
+> > > > >    IOVCC-supply:
+> > > > >      description: I/O system regulator
+> > > > >
+> > > > > +  dc-gpios:
+> > > > > +    maxItems: 1
+> > > > > +    description:
+> > > > > +      Controller data/command selection (D/CX) in 4-line SPI mod=
+e.
+> > > > > +      If not set, the controller is in 3-line SPI mode.
+> > > > > +      Disallowed for DSI.
+> > > > > +
+> > > > >    port: true
+> > > > >    reset-gpios: true
+> > > > >    rotation: true
+> > > > > @@ -57,7 +62,38 @@ required:
+> > > > >    - port
+> > > > >    - reset-gpios
+> > > > >
+> > > > > -additionalProperties: false
+> > > > > +allOf:
+> > > > > +  - $ref: panel-common.yaml#
+> > > > > +  - if:
+> > > > > +      properties:
+> > > > > +        compatible:
+> > > > > +          contains:
+> > > > > +            # SPI connected panels
+> > > > > +            enum:
+> > > > > +              - anbernic,rg28xx-panel
+> > > > > +    then:
+> > > > > +      $ref: /schemas/spi/spi-peripheral-props.yaml
+> > > >
+> > > > I'm not really keen on this. I'd rather see a different binding for=
+ the
+> > > > SPI version compared to the MIPI ones. Is doing things like this co=
+mmon
+> > > > for panels? If it is, I'll turn a blind eye..
+> > >
+> > > This might be the first case that a driver supports both DSI and SPI
+> > > for a panel.
+> > > The panel can be either a DSI device or an SPI device.
 > >
-> > Disabling the mixer1 in DTS entirely also works.
-> >
-> > I suspect on the basis that the Mixer/TCON-TOP topology is identical to the
-> > R40 but does not seem to experience this issue, that is a
-> > silicon errata specific to the T113/D1s as far as we currently know.
-> >
-> > However, there is no functional reason from a drm perspective to require
-> > more than one mixer tied to one output via tcon-top - unless someone has a
-> > good argument here?
-> >
-> > in my opinion:
-> > 1) implement this as a quirk on the t113 and fix mixer0 > rgb/dsi and
-> > mixer1 > tv0
-> > 2) make this a global default for the sun8i tcon top driver where only one
-> > mixer is initialised against an output (which would also impact the R40)
->
-> The only reason I caught this issue was because I implemented LCD output in
-> U-Boot and saw it looked a little better- I thought the tint was the backlight.
-> Had you not contacted me and had it not affected the person I'm doing
-> work for I would not have bothered looking in to this.
-> It's entirely possible that the other supported devices have this issue,
-> or that future ones will and nobody will notice.
->
-> Going with a preventative approach here by fixing it for all potential devices
-> and relying on the behaviour the sunxi code assumes rather than the datasheet
-> says seems like the best approach to me.
->
-> John.
+> > The commit message sounded like the panel was capable of doing SPI
+> > instead of DSI, is that not the case and the panel is actually capable
+> > of doing both, just happens to be connected as SPI in this particular
+> > device?
+>=20
+> Sorry for the confusion.
+> I think it depends on what the "panel" refers to...
+> Although the "panel driver IC" (ST7701 variant) is capable of doing
+> both, the "panel assy" (including its cable) of the RG28XX only has an
+> SPI interface in its pinout.
+> If the compatible string "rg28xx-panel" represents the assy, then I
+> could say the "panel" only supports SPI, and the other panels only
+> support DSI.
+> But if it only represents a specific LCD panel and its driver IC with
+> control parameters, then it theoretically supports both, and it might
+> be sufficient to just include spi-peripheral-props, as in v1.
+> v1: https://lore.kernel.org/linux-kernel/20240618081515.1215552-2-kikucha=
+n98@gmail.com/
+
+I thought about it some more, and I think what you've got for this in
+the binding at present is fine. Splitting the binding I think would
+require a select and wouldn't really be any "cleaner" of an
+implementation.
+
+Thanks,
+Conor.
+
+--8Wkwgm2LZxTD6wYX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoQeEgAKCRB4tDGHoIJi
+0vvsAP9+fpoFYD3SA3hRRGAIfCwJ3EiGoPOw3FcWVA1dtXs6FwEA7OBNrPnGxdQo
+DSBupiUCLvbAS0u7Q+v/iLTAaozWdAY=
+=4eFZ
+-----END PGP SIGNATURE-----
+
+--8Wkwgm2LZxTD6wYX--
