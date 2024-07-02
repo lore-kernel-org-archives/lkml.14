@@ -1,184 +1,114 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A1C14E2C2
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 08:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9726148303;
+	Tue,  2 Jul 2024 08:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719910502; cv=none; b=OY5ww0mZmX286VEy2CnUdGhciIAoh33B3vrODAbY9CgFsO6YM1ivDPgyDpzfUKaGNjf0oN5T5523XSJZOV8egAFf+/p1Z+zsutY/cJiYLX6Rs6a8V/mCgFGrnwWIB8ydcQ6SJA62KgMepCmAebSZwTu15x6SoKJbmCdY7TLQ9qE=
+	t=1719910635; cv=none; b=eY7f4kni68lnbFf2FEYngQVP28j9ArahEgAHhViPlHwvPW4PBwhftcWJnHMOihGFbTgs8ZUheW31hTT3B8TC89eKaXRn2Zmbeuku3HPmRwgnYOlfrPA4nYOKW8HSDsIAlRaGQ5ctjG3taTRav39azkVLrrhLBf8B+eS2ZyhH6ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719910502; c=relaxed/simple;
-	bh=NtT6gw2gmAZGxUgPXoRr7YQ72rpYmMN4iv8VIrPB2ds=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GCu1O+PJE9b+Bn3Cy4Tv+ZdgFtYhEQIcqsGo6V9CblnEc5VQ006kPxTNVfATUj/Er4ZRE9zqjsT6Y8HqqW++fvLvJ7BhosdJHHRUllhwoRDdSlEVOZwOk3ay4SI9hO6cxQQ46nm74iv92oWCwegNG9eSgutrPcZddHlbzTeLNTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=bxOoCfWm; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1719910635; c=relaxed/simple;
+	bh=k8ltUBy7tIu3sTitWeJizzHjGemAAUqdiwnUig0vyMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E5tYiSEiTmY5hm7u1JuLrVF+rCw6FJj636pSSUyhspaDClmR9S5U43opi+jegqoG2/Bybst0X2YmLTCNyq12tQKAtAX9IwqeRQj7fOISZqOZyoFMuSpxPALiJkCUTkxg5jys0Xvw1+QGvF6w6XxjDlBLJVwvIBFsJdk50BJ0m7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=wM+GaF8k; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="bxOoCfWm"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42138eadf64so27971625e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 01:55:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719910499; x=1720515299; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YIThDSMu0YHhK3Il5EBAYEpaIGUwsTH7rJyBDsaK5V0=;
-        b=bxOoCfWmURyNxZKknkb/djDDT4TqbS+D9+htykOa3H8ywGWqYOAQN/nlBvaQqUIKWR
-         1DgbCw6g+i5a4V//V1+NBP7oK6HzNSYX2ZX32FL0Mn5IHp3EcW7fKI2qNdZrTLLTJaVr
-         JjatIopwCFx8zz2dUIanoMUmYx3tnrBBFmuITrmWxFE+AIpe5hwkdcPjhGKpHkuekKPh
-         fF+PsWNAdkkh4EVddU3vm2g3zZGXt2+NQX3bkr9zP+RDMH9rkxyt/95sRfnieIvKCXyc
-         WvhkY96jXCBmRPiL+6hlpZiEA0iXdqtwjl0JcaJ0g10mcfzzsvz5NsOj/BSLKljI/Aim
-         HAvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719910499; x=1720515299;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YIThDSMu0YHhK3Il5EBAYEpaIGUwsTH7rJyBDsaK5V0=;
-        b=WgI62b2jGI1HZv/0DruzXcVUBTWWmZZpQ2e+nZAuH9qUr5wGxhHAQ2OcummGR8/Y8M
-         DUR5hygbuxFnZOosl/qXseBuICy3t4XkoYBjHllDYohFfWRizSZeb8VcUDSeo2lMJ6D7
-         6/yn1lCIXyiPzlYu7uA23Njv7R5FPN3vQbIxBdn1p/AgNM0XTqk0SRFOT4pnCt6KZRHA
-         pkmTo9bBw1FliG/9kCXjqxGPyrBkOalSFJsvgcdDp59yD8jLFbvy4awrafR2Mt+MYf9v
-         rd7IbKThrevuJd5XinY/607aJbrUpHBJm53hN/PWpDVxEv5pnbHMgZ77yThkPQTU28wa
-         D9fA==
-X-Forwarded-Encrypted: i=1; AJvYcCUg8vlKBtKrffdZ53mqe+4xKr9nYAC/Mkcm+fHKHEXjnxrU0bSQVTKScz21UugGeLn69KPWOJDGvjSReDy+S+XlWkw0RBDGv/dt4iVy
-X-Gm-Message-State: AOJu0YxgRQx1ECV0BBRM8GrsAvBLJZKsA5J2bUQUMUkHcMGp7i2TrLIb
-	CaWGE5m6CvwMpy+4LjxYGkSI2oEU+k+7/8DFcjXh3SuWAlVT8VOfV3s+o/2qBHM=
-X-Google-Smtp-Source: AGHT+IEDGO5lSYXzrNCtUPjdOzG/kBq6PyIV7c530qUlaMBb/cLWp/uOV4WEq8k/ROEiTkODEzbQXA==
-X-Received: by 2002:a05:600c:2147:b0:425:6b8a:7013 with SMTP id 5b1f17b1804b1-4257a074a93mr50887735e9.35.1719910499045;
-        Tue, 02 Jul 2024 01:54:59 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af552bbsm189623875e9.13.2024.07.02.01.54.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 01:54:58 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Conor Dooley <conor@kernel.org>,
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="wM+GaF8k"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D39931480778;
+	Tue,  2 Jul 2024 10:57:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1719910630; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=ihwSEeAUbYbmh/Ao3Mg4/4pnp9Tll7MaTdNMncYB7Rw=;
+	b=wM+GaF8k20vVhtAkte5r7+0EFpiBdf4tY27YqjYn8ttwc2ZCYuSgJqGiLt0L94MrJG8YZi
+	9+7tjzzbXwRSv7fb8MQGQHjMo+pO4pmeea2ftvfx9pAXUDY83QjxKQ5GcdOMnlPsPxAwIK
+	E72uZzDVoAR+AlVGZJ0hv9YpO4ZTrAlkgSWrRw00o1I1c9hvdmO7Yh/p/JNEakxQKWb5h1
+	6VZY/UJ4oLafiVR29GjKVx9peeKQMiq7J3n9wcyYNycU7RCF4acpdKSwGFBkFPSj69bEk2
+	odZZjhEHmGsJh4T+MtVI/r0RhVXGSyMIS03B7e2Grcxh7E0R+Vkvav8VusRorQ==
+Date: Tue, 2 Jul 2024 10:57:05 +0200
+From: Alexander Dahl <ada@thorsis.com>
+To: iansdannapel@gmail.com
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Ved Shanbhogue <ved@rivosinc.com>,
-	Matt Evans <mev@rivosinc.com>,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 4/4] riscv: Stop emitting preventive sfence.vma for new userspace mappings with Svvptc
-Date: Tue,  2 Jul 2024 10:50:34 +0200
-Message-Id: <20240702085034.48395-5-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240702085034.48395-1-alexghiti@rivosinc.com>
-References: <20240702085034.48395-1-alexghiti@rivosinc.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Michael Riesch <michael.riesch@wolfvision.net>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] dt-bindings: vendor-prefix: Add prefix for
+ Efinix, Inc.
+Message-ID: <20240702-abreast-tree-672e096750b7@thorsis.com>
+Mail-Followup-To: iansdannapel@gmail.com, Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Michael Riesch <michael.riesch@wolfvision.net>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20240620144217.124733-1-iansdannapel@gmail.com>
+ <20240628152348.61133-1-iansdannapel@gmail.com>
+ <20240628152348.61133-4-iansdannapel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628152348.61133-4-iansdannapel@gmail.com>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-Last-TLS-Session-Version: TLSv1.3
 
-The preventive sfence.vma were emitted because new mappings must be made
-visible to the page table walker but Svvptc guarantees that it will
-happen within a bounded timeframe, so no need to sfence.vma for the uarchs
-that implement this extension, we will then take gratuitous (but very
-unlikely) page faults, similarly to x86 and arm64.
+Hei hei,
 
-This allows to drastically reduce the number of sfence.vma emitted:
+Am Fri, Jun 28, 2024 at 05:23:48PM +0200 schrieb iansdannapel@gmail.com:
+> From: Ian Dannapel <iansdannapel@gmail.com>
+> 
+> Add entry for Efinix, Inc. (https://www.efinixinc.com/)
+> 
+> Signed-off-by: Ian Dannapel <iansdannapel@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index fbf47f0bacf1..6175719c1fb6 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -422,6 +422,8 @@ patternProperties:
+>      description: Emtop Embedded Solutions
+>    "^eeti,.*":
+>      description: eGalax_eMPIA Technology Inc
+> +  "^efinix,.*":
+> +    description: Efinix, Inc.
+>    "^einfochips,.*":
+>      description: Einfochips
+>    "^eink,.*":
 
-* Ubuntu boot to login:
-Before: ~630k sfence.vma
-After:  ~200k sfence.vma
+Acked-by: Alexander Dahl <ada@thorsis.com>
 
-* ltp - mmapstress01
-Before: ~45k
-After:  ~6.3k
+Greets
+Alex
 
-* lmbench - lat_pagefault
-Before: ~665k
-After:   832 (!)
-
-* lmbench - lat_mmap
-Before: ~546k
-After:   718 (!)
-
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/pgtable.h | 16 +++++++++++++++-
- arch/riscv/mm/pgtable.c          | 13 +++++++++++++
- 2 files changed, 28 insertions(+), 1 deletion(-)
-
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index aad8b8ca51f1..816147e25ca9 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -476,6 +476,9 @@ static inline void update_mmu_cache_range(struct vm_fault *vmf,
- 		struct vm_area_struct *vma, unsigned long address,
- 		pte_t *ptep, unsigned int nr)
- {
-+	asm goto(ALTERNATIVE("nop", "j %l[svvptc]", 0, RISCV_ISA_EXT_SVVPTC, 1)
-+		 : : : : svvptc);
-+
- 	/*
- 	 * The kernel assumes that TLBs don't cache invalid entries, but
- 	 * in RISC-V, SFENCE.VMA specifies an ordering constraint, not a
-@@ -485,12 +488,23 @@ static inline void update_mmu_cache_range(struct vm_fault *vmf,
- 	 */
- 	while (nr--)
- 		local_flush_tlb_page(address + nr * PAGE_SIZE);
-+
-+svvptc:
-+	/*
-+	 * Svvptc guarantees that the new valid pte will be visible within
-+	 * a bounded timeframe, so when the uarch does not cache invalid
-+	 * entries, we don't have to do anything.
-+	 */
- }
- #define update_mmu_cache(vma, addr, ptep) \
- 	update_mmu_cache_range(NULL, vma, addr, ptep, 1)
- 
- #define __HAVE_ARCH_UPDATE_MMU_TLB
--#define update_mmu_tlb update_mmu_cache
-+static inline void update_mmu_tlb(struct vm_area_struct *vma,
-+				  unsigned long address, pte_t *ptep)
-+{
-+	flush_tlb_range(vma, address, address + PAGE_SIZE);
-+}
- 
- static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
- 		unsigned long address, pmd_t *pmdp)
-diff --git a/arch/riscv/mm/pgtable.c b/arch/riscv/mm/pgtable.c
-index 533ec9055fa0..4ae67324f992 100644
---- a/arch/riscv/mm/pgtable.c
-+++ b/arch/riscv/mm/pgtable.c
-@@ -9,6 +9,9 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
- 			  unsigned long address, pte_t *ptep,
- 			  pte_t entry, int dirty)
- {
-+	asm goto(ALTERNATIVE("nop", "j %l[svvptc]", 0, RISCV_ISA_EXT_SVVPTC, 1)
-+		 : : : : svvptc);
-+
- 	if (!pte_same(ptep_get(ptep), entry))
- 		__set_pte_at(vma->vm_mm, ptep, entry);
- 	/*
-@@ -16,6 +19,16 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
- 	 * the case that the PTE changed and the spurious fault case.
- 	 */
- 	return true;
-+
-+svvptc:
-+	if (!pte_same(ptep_get(ptep), entry)) {
-+		__set_pte_at(vma->vm_mm, ptep, entry);
-+		/* Here only not svadu is impacted */
-+		flush_tlb_page(vma, address);
-+		return true;
-+	}
-+
-+	return false;
- }
- 
- int ptep_test_and_clear_young(struct vm_area_struct *vma,
--- 
-2.39.2
-
+> -- 
+> 2.34.1
+> 
+> 
