@@ -1,320 +1,114 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DBF1BD50C;
-	Tue,  2 Jul 2024 16:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B9F1C0DCA;
+	Tue,  2 Jul 2024 16:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719938669; cv=none; b=PqSKR7L81CAOi4NlCCO6Mm+qM/beW0+y0OqEJM+zZzJnNfoh49bmcE1aA3Hzdlqt4SIKrmUsHJL5o3WKpk/BmOLL75WcPOFlZcxflJDf3VPm6RhjNIfNUI1NdJwAeBNOQb4xzmO5Lh1hMIZLA8pYEvu7e8U+CAm7NOEmS/G5aHc=
+	t=1719938685; cv=none; b=uKawxVTn1ONyRmNO13PE1pe5o5ZUzkoFS059KkOwD23BSLpi/+zzz6u2clpp3TDfyOee/xOky3FDzPCYTQjS09F+SYXQ+w+s+5NPYZoCnLmMG6RDGQ9iGKpbCYyrUzpJ06woRKDZfvNBMuQ/82FlDAphxGevic1tuQx1865IkxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719938669; c=relaxed/simple;
-	bh=FLUSq1hIV63SE6OJNfvqA13Mb1SGXfL91XMsBLfw0ko=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mqDeaabUyN808fXmzDDQ2UYJffvQ6TZ+69LpjChNDu76Fs3w2j72AbOCACyD1mq9JZupb9MNhAXYQJUcf9KcCgBvHrIo8TFQU8FaOFTuc85EPCh8oQ0xcinUArFkHsvcyiIxiRkAtbis11kS9u92XU83N9aDCd3dp0o0Rhl0QNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=O7ACIInw; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1719938685; c=relaxed/simple;
+	bh=Tyz3TqYU3UX8c5xyn01VKHdXHg/5NiIVo+c3mmPCbMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LPqfsyx1BN33hv6HnMMxV8+Gt+MKQYKYBGWC+C4OL7yE7E9t4Y1WkVOJ0ME66oP1vryMFLmS+QOcmqUFdeE361vKR+sBhev2mi/7kn1hxMUzOralSoHN6+xte8SmTv+Ne6rDacaSyayTzEpXjJ/iEuXELdHMsQha2iqZfaJTKCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cTlHJP8o; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O7ACIInw"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 462Gi6jK041356;
-	Tue, 2 Jul 2024 11:44:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719938646;
-	bh=qQzeOA+K6eBl08tIYJflOHwd2vwIBpLVg0O3CYTulF0=;
-	h=From:To:CC:Subject:Date;
-	b=O7ACIInw38w9ntH28QJqqa3S6PCux4UM33YibRDA1Naoc+nm8oT0HWEiNHLAdATO4
-	 1UFDeywJWYZr9TxMZ6m8NZWcnSn1GP+SvlZ8Foxvc5xkzb8N8eijTdG0q0dd1E4II5
-	 LKYs3UFl0HpsTyWSdGWDlIKRqb5LQJEbKFdRU/x4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 462Gi5Dg030980
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 2 Jul 2024 11:44:06 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 2
- Jul 2024 11:44:05 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 2 Jul 2024 11:44:05 -0500
-Received: from fllvsmtp7.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 462Gi4YA112748;
-	Tue, 2 Jul 2024 11:44:04 -0500
-From: Andrew Davis <afd@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vaishnav M A
-	<vaishnav@beagleboard.org>,
-        Derek Kiernan <derek.kiernan@amd.com>,
-        Dragan
- Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Michael Walle
-	<mwalle@kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson
-	<robertcnelson@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Ayush Singh <ayush@beagleboard.org>,
-        Ayush Singh <ayushdevel1325@gmail.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH RFC 0/3] Add generic Overlay for Grove Sunlight Sensor
-Date: Tue, 2 Jul 2024 11:44:00 -0500
-Message-ID: <20240702164403.29067-1-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTlHJP8o"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f9aeb96b93so30031605ad.3;
+        Tue, 02 Jul 2024 09:44:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719938683; x=1720543483; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yYQFfspilKOpcYu5H8+151P184PuyX7LYe2ftiXcF2g=;
+        b=cTlHJP8o51bskjpIItl/1BVoDE5vBv04aGSWR75cGdzL4h4+jAo0OCx8SG/JovGrqy
+         u11iOj3fb5bL9Z53IpwJjXxddmcY1kwDrB47ZLPqVSEkk8HXF1k9Orz7ZWimi6fj2t3K
+         6a2Kk0SW2uqBSLqXcoUpqV4ZTFzCubIiVMlNn4kU8uoyxyoqs5BKPIFBUfpJ1zsfcdmE
+         s+AdR4ni/Zmv9ZJG9N3JoSEunpoXzyjKJuvW3VFaCVEyyeOtA08VkrmemAcUB9EezMgU
+         UmMWj+jhG8tdJHj8GX6RNa2WDrOPfwL8NYDEWuJ9pmwLDd774rmbprQrvg3giXuYJydt
+         7BJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719938683; x=1720543483;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yYQFfspilKOpcYu5H8+151P184PuyX7LYe2ftiXcF2g=;
+        b=Lp8rhHbM6xz/nThpXap++7idiBUY60ZgOykm1dIRbB7VWUpYoDxDhIOLdpDSeZu5bZ
+         iUmC6igocC422lAAxSL5fwmNAdxZJ4wHEZiWF3SMXih5XkhgTFVd8YFyqf2dVTd/5JQD
+         U8l3zHxUSp2tCejl7MB1R6/D89QWYr8yjHfc3FJRNs7KRSLgPeF3YDiimFw16NyfU8wq
+         lrSKuKcd8dMLFjvC1jK0FiFUEYlUzgWz2O0cxfkfrtR4uxe9cVNuDaXVhOvxIv247Wgj
+         Clu/S7A8ao5Pgq2QWLzP7rxFmJG/4SUI66XPYXkH0oPtSALifLx+Qbb0gm8zuK9Z2v+o
+         6bYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWXKRTLadQLx3f7yiVtZCtxvL04him0HFZ6ny6XCya+46FosOhBlsFRnQebVFAodaCPV3CxpOcbIPhSUvyxGYYSTp+HqEyYurGabzYs77/MyTPj+nXBfSsdXRhhgwsm6Nv48evd9sgD+mUUB0kJuUtyrikaOiMR/K21pRJRelh4UA==
+X-Gm-Message-State: AOJu0YyfynjBNQZUedWKM0KFMYFfNZLPfSEktLvUJWC2FKWwZASO75iN
+	1hYo43r9HD/JGR/uOGyMovi/ChXenRfQ8ofETf/Ppk8vHNWCzBOQz3IJQA==
+X-Google-Smtp-Source: AGHT+IFtRAVfGfX7WOnLBEzo8/hdJ4YwGMYKD5zNpsgpRGteKfUv7M/KfKScvhDpxNUvVD2263RTgg==
+X-Received: by 2002:a17:90b:1294:b0:2c7:c6c4:1693 with SMTP id 98e67ed59e1d1-2c93d71f47emr8104054a91.21.1719938683575;
+        Tue, 02 Jul 2024 09:44:43 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce53bdasm9067348a91.23.2024.07.02.09.44.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 09:44:43 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 2 Jul 2024 06:44:41 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Xiu Jianfeng <xiujianfeng@huawei.com>
+Cc: lizefan.x@bytedance.com, hannes@cmpxchg.org, corbet@lwn.net,
+	kamalesh.babulal@oracle.com, haitao.huang@linux.intel.com,
+	cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 -next] cgroup/misc: Introduce misc.peak
+Message-ID: <ZoQueSY_8NYcApfi@slm.duckdns.org>
+References: <20240702075718.2657635-1-xiujianfeng@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240702075718.2657635-1-xiujianfeng@huawei.com>
 
-Hello all,
+Hello,
 
-A new attempt at solving the long standing "add-on board" problem was
-recently posted[0]. The current out-of-tree solutions usually involve
-Device Tree Overlays. Recently, Overlays have started being accepted into
-the kernel repo, this makes now the perfect time to solve this issue.
-Here is my attempt at a generic solution.
+On Tue, Jul 02, 2024 at 07:57:18AM +0000, Xiu Jianfeng wrote:
+>  struct misc_res {
+>  	u64 max;
+> +	u64 watermark;
 
-Problem statement
------------------
+atomic64_t is probably better here.
 
-The Device tree(DT) system provides hardware descriptions to the Linux
-kernel (or other DT compatible SW). When the hardware is modular this
-description becomes dynamic. For this we use DT Overlays which take a base
-hardware description and append the description of the add-on hardware.
-Due to the design of DT, these DT overlays are specific to a given base
-hardware board. The add-on itself is usually not specific to a single
-board. Some examples of add-on ecosystems to consider:
-
-Beaglebone Cape
-Raspberry Pi HAT
-MikroBUS Click Boards
-Seeed Grove
-SparkFun Qwiic
-etc..
-
-Some of these ecosystems already have more than a thousand(!) add-on boards.
-If a DT description needed to be written specific to each of the multitude
-of base boards that support each add-on, the combinatorial explosion would
-be unmanageable. We need to define a scheme that allow for creating and
-applying generic add-on overlays.
-
-Goals
------
-
-* Each add-on board should be described by only one DT overlay. That DT
-overlay should be generic enough to apply to the DT of any base board
-that supports that add-on.
-
-* Some base boards have multiple instances of a given add-ons connector
-port. An add-on's overlay must apply to any available connection port
-without modification to the overlay.
-
-* Some connectors are stackable, stacked application of overlays shall
-function as expected. Chained connectors from one ecosystem to another
-shall be supported also (i.g. This thing[1] which connects to a BeagleBone
-Cape connector and then exposes a number of Grove connectors).
-
-* We should reuse as much existing infrastructure as possible (ideally no
-changes should be needed). The basic application of DT overlays is well
-supported and documented.
-
-* An overlay for an add-on board that is not compatible with the base board
-shall fail to apply at application time, not silently later. Incompatibility
-includes add-ons which require a function from a pin for which the matching
-pin on the base board cannot provide. We see this with some HATs and Capes
-where they use non-standard muxing of pins that only work for some subset
-of base boards. For instance, the BeaglePlay's Grove connector supports
-Digital/UART/I2C functions but not "Analog". So any Grove module that uses
-Analog pins should fail to apply.
-
-* Nothing in this solution should preclude runtime application of these DT
-overlays. Hardware auto-detection and runtime DT modification are orthogonal
-problems. 
-
-Solution
---------
-
-This is a classic many-to-many problem, we propose to solve this the
-same as the database folks, with an associative(join) table like adapter
-overlay. We add an adapter overlay in-between the base board and the add-on. This
-adapter overlay prepares the base DTB for the application of an add-on
-targeting a specific connector. Adapting the base board's specifics to accept
-the generic connector names contained in the add-on overlay. There will
-be one adapter overlay per base board connector.
-
-We already have the infrastructure to implement these adapter overlays
-today. The DT overlay system makes use of a symbol table in the
-base DT and a fixup table in the overlay. The magic is in using the
-__fixups__ table to modify the __symbols__ table itself.
-
-Let's use the Grove connector[2] as an example. Grove is a good example
-target as it has
-
- * Low pin count (2 signal pins keeps the example gasket DTBOs simple, everything here can be extended to any number of signal pins)
- * Multiple connectors per base board
- * Has an add-on board that exposes more add-on board connectors
- * Each pin can have multiple functions depending on the base board
- * Moderately sized collection of add-on boards which contain parts already supported in Linux/DT
-
-To make an overlay generic we need a standard name scheme which we
-use across base boards. For the connector pins the pinmux phandle
-shall be:
-
-<connector-name>_<pin-name>_mux_<pin-function>
-
-All capitalized to make it easy to identify that this name is
-not the final phandle name, but will instead be fixed during
-overlay application.
-
-Each pin will have a definition for each function it can take,
-so pin1 in the Grove ecosystem has 4 possible functions, and
-pin2 has the same, therefor 8 definitions are needed in the
-connector's adapter overlay:
-
- /* Grove connector 0 Pin1 options */
-GROVE_PIN1_MUX_I2C_SCL = &grove_pins_i2c;
-GROVE_PIN1_MUX_DIGITAL = &grove_pins_digital;
-/* GROVE_PIN1_MUX_ANALOG not available on this pin on this connector on this board */
+>  	atomic64_t usage;
+>  	atomic64_t events;
+>  };
 ...
-GROVE_PIN2_MUX_UART_TX = &grove_pins_uart;
-etc..
+> +static void misc_cg_update_watermark(struct misc_res *res, u64 new_usage)
+> +{
+> +	u64 old;
+> +
 
-(see patch [2/3] for a complete example)
+How about just while (true)?
 
-By listing each pin/function combination separately we allow for add-on
-boards that only use a subset of pins, or mix pin functions
-(pin1->digital and pin2->uart_tx).
+> +	do {
+> +		old = READ_ONCE(res->watermark);
 
-This also means is if a given base board does not support some function
-on a connector pin, then it is not defined and application of an overlay
-which uses that pin/function will correctly fail as expected.
+here, you can use atomic64_read().
 
-For the parent provider phandle, we use a similar naming scheme:
+> +		if (new_usage <= old)
+> +			break;
+> +		if (cmpxchg(&res->watermark, old, new_usage) == old)
 
-<connector-name>_<pin-name>_<pin-function>
+and atomic64_cmpxchg().
 
-Note we list this per-pin. Even though one IP/bus may service multiple
-pins, we cannot know this in a generic way. For instance some boards
-may have all GPIO functions served by one controller, others may have
-some pins on different controllers.
+> +			break;
+> +	} while (1);
+> +}
 
-Patch [3/3] is a complete example overlay for an add-on board[3].
-
-So what does this all look like? Let's take an example of a BeaglePlay
-with two Grove connectors for which we have physically attached a
-Sunlight module to the first connector, and an Air Quality sensor to
-the second. Doing ahead of time command-line DT overlay application:
-
-./fdtoverlay \
-	-o output.dtb \
-	-i k3-am625-beagleplay.dtb
-		k3-am625-beagleplay-grove-connector0.dtbo grove-sunlight-sensor.dtbo \
-		k3-am625-beagleplay-grove-connector1.dtbo grove-air-quality.dtbo
-
-We start with the base board, then apply the adapter overlay for the
-specific connector we are going to attach the add-on. The next add-on
-overlay applied will attach to the connector most recently applied.
-This can be continued as needed, simply apply the next connector's
-adapter overlay, then the next add-on, rinse, repeat. 
-
-Note that the connector adapter overlay is board specific, but the add-on
-overlay is completely generic. It can be applied to any base board.
-
-./fdtoverlay \
-	-o output.dtb \
-	-i bcm2837-rpi-3-b.dtb \
-		grove-base-hat.dtbo \
-			grove-base-hat-connector0.dtbo grove-sunlight-sensor.dtbo \
-			grove-base-hat-connector1.dtbo grove-air-quality.dtbo
-
-Should work just the same for any board supporting that extender HAT,
-for instance the BeagleY-AI would be:
-
-./fdtoverlay \
-	-o output.dtb \
-	-i k3-am67a-beagley-ai.dtb \
-		grove-base-hat.dtbo \
-			grove-base-hat-connector0.dtbo grove-sunlight-sensor.dtbo \
-			grove-base-hat-connector1.dtbo grove-air-quality.dtbo \
-			grove-base-hat-connector4.dtbo etc..
-
-All of the above works just the same at boot time (U-Boot overlay support)
-or runtime using the in-kernel runtime overlay support (when that is enabled).
-For connectors with board detection I'd expect the detector to be described
-in the base board connector node. On board identification, the adapter overlay
-for that connector would be loaded by the detector driver followed by th
-overlay for the identified board.
-
-Although this is an RFC, the patches in this series are functional and
-meet all the above goals. They require no additional DT schema nor
-kernel/tooling modifications. Nested adapters (add-ons on top of add-on
-connectors) require a small fix in DTC which will be sent separately.
-
-Open items
-----------
-
-Variable cell count providers. The provider specifies the cell count
-and meaning. For GPIO this is handled very well, there is a standard
-2 cell format (GPIO number and flags). Any device can request a
-controllers' 4th GPIO with active high output the exact same way for
-all controllers. Interrupts on the other hand have providers with one,
-two, and even three cells variations. There is no universal way to say
-"I want this controller's 4th IRQ line with rising edge triggering".
-These cells may need some level of indirection in the connector node
-itself to handle variable cell counts/meanings.
-
-Where to store the add-on overlay source files. These are not specific
-to any one board, nor even to one architecture. For now I put the
-grove-sunlight-sensor.dtb in arch/arm64/boot/dts/ti but it needs a
-better home acceptable by all boards.
-
-More testing, I currently have very few add-on boards to test with right
-now (but I did just put some on order). Hopefully I can get some more
-complex ones to really exercise this idea. Maybe a stack like the one
-in the 4th image here[4], a RPi HAT that exposes a couple MikroBUS
-connectors, that then have 4 Grove ports on that.
-
-This isn't perfect, but the Goals section should be applicable to any
-solution, and the adapter overlay concept hopefully can be reused as
-needed for whatever solution the community chooses.
-
-Thanks,
-Andrew
-
-[0] https://lore.kernel.org/linux-arm-kernel/20240627-mikrobus-scratch-spi-v5-0-9e6c148bf5f0@beagleboard.org/
-[1] https://wiki.seeedstudio.com/Grove_Base_Cape_for_BeagleBone_v2/
-[2] https://wiki.seeedstudio.com/Grove_System/
-[3] https://wiki.seeedstudio.com/Grove-Sunlight_Sensor/
-[4] https://www.tindie.com/products/pmunts/mikrobus-grove-adapter-3/
-
-Andrew Davis (3):
-  arm64: dts: ti: k3-am625-beagleplay: Add Grove connector pinmux
-    options
-  arm64: dts: ti: k3-am625-beagleplay: Add Grove connector adapter
-    overlays
-  arm64: dts: ti: grove: Add Grove Sunlight Sensor overlay
-
- arch/arm64/boot/dts/ti/Makefile               |  5 +++
- .../boot/dts/ti/grove-sunlight-sensor.dtso    | 31 ++++++++++++++
- .../k3-am625-beagleplay-grove-connector0.dtso | 41 +++++++++++++++++++
- .../k3-am625-beagleplay-grove-connector1.dtso | 22 ++++++++++
- .../arm64/boot/dts/ti/k3-am625-beagleplay.dts | 32 +++++++++++----
- 5 files changed, 124 insertions(+), 7 deletions(-)
- create mode 100644 arch/arm64/boot/dts/ti/grove-sunlight-sensor.dtso
- create mode 100644 arch/arm64/boot/dts/ti/k3-am625-beagleplay-grove-connector0.dtso
- create mode 100644 arch/arm64/boot/dts/ti/k3-am625-beagleplay-grove-connector1.dtso
+Thanks.
 
 -- 
-2.39.2
-
+tejun
