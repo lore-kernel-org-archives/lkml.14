@@ -1,54 +1,37 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985AC85C74;
-	Tue,  2 Jul 2024 13:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C579470;
+	Tue,  2 Jul 2024 13:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719925503; cv=none; b=bk6BauzsvM/ZzeSA6I+IW2c9zy/YITpshciqZTECg6Q1S0ycbFvTaL2UYvkSwyUX4w/EEMo8p+59bRgB2lodz41YXgWdH7DgKALkNiDC92B8dw0bVm7CCR4W8Jd5YPNsOXvUE8XMTkITcDfI16SQcVT1L4BQynd921QxF4LNq9M=
+	t=1719925556; cv=none; b=bEj79amGgIeDn7KQ/VUjWrrkcmplkMI3KWO2NonbKEsYcniDkuor9DNuqtE4mwyLMYY1lI2yrhQtgELqHNPpqlbFcYby2v6R5nJGVypsnYEjzEul/mnwOoPYYVPpzSkk2p7nW7fiu9dVacZk3Xt2JgOtvosMaQbtCmQlL6db4Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719925503; c=relaxed/simple;
-	bh=3KcH1mvo3c8vxp6bWIMM8taPOyXym4k8+bE8hSgVFVw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SR35b2Bu104ENGmliFRrhgjtfsPg5W6Zikl0VpUjWcSIy2dLazXPnpOA8bf3KMMQF5MB0NMLUUZ1ytYCEDdNv/9VNJdLjrB94jrTVX8SEbRBnvXMbhJlpBPj+MDUU6lG8xRkUqKczn6mFa15MCy+J9iAk6k+flNbnTREYRdUpM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=Jd+yYe5S; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="Jd+yYe5S"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 4FC10100002;
-	Tue,  2 Jul 2024 16:04:35 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1719925475; bh=zowmtXX0f+3Uklt3sUVqGKSt/ix1I6aiLaxyigUy3zA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=Jd+yYe5SOTcaorMCkrsPJibc1u+/4fi39vjeBCi8XsE3ujPzE8+kzCSCYyCTRjdW3
-	 R4OcCaMIClDHK2kKAQ9cW4AQJ8bTwJDFJEFFKGnr7n9fWqWt8dzzPlALearBXP39gP
-	 HkkuyeVFRLiovFUT9dUT+Wf8R7kMltbZG0LZ9NwD6eLoNiZIndG0AIz60abISshGIL
-	 0UUP0tp+KfEfHQ5YDbd0tpgcy2XkZ95Dxb8e6Iq+EaHoVqvGGEEMlXFNCYcBjq1yQt
-	 T6AeVxytvJI6NbkH7gmDhz208kB7w0BVGNbue4E4d9vxyuPFZ+Hdl6guT+TcwI3Vzh
-	 i9RCFHOxflkig==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Tue,  2 Jul 2024 16:03:30 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 2 Jul 2024
- 16:03:10 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Michael Walle <michael@walle.cc>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH net v2] net: phy: mscc-miim: Validate bus frequency obtained from Device Tree
-Date: Tue, 2 Jul 2024 16:02:47 +0300
-Message-ID: <20240702130247.18515-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240702110650.17563-1-amishin@t-argos.ru>
-References: 
+	s=arc-20240116; t=1719925556; c=relaxed/simple;
+	bh=P6WvHNwJFtOe2fivIfPHj5BHweMvmgj1DWklaEwm+Vc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D70Rm4flXq24j1EkHRwx61CtODgzsR174HEAH4tTi4ntBSUzHwwZU0oOP5XSDVIJXlki+c2Q0DFzwFwig6LqSGjEihYbmC5NkO16fwoaobaUtJD7G+2/F8wHltiJfdNuEl1zWUnCkv4ul4tXIm5zhKl5lUJiZojK7+/Neqyjk5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WD3245mcJzZh3K;
+	Tue,  2 Jul 2024 21:01:16 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2449E18007E;
+	Tue,  2 Jul 2024 21:05:49 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 2 Jul 2024 21:05:48 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
+	<corbet@lwn.net>, <akpm@linux-foundation.org>
+CC: <cgroups@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+Subject: [PATCH -next] mm/hugetlb_cgroup: introduce peak and rsvd.peak to v2
+Date: Tue, 2 Jul 2024 12:57:28 +0000
+Message-ID: <20240702125728.2743143-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,57 +40,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186279 [Jul 02 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/02 10:26:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/02 07:20:00 #25796017
-X-KSMG-AntiVirus-Status: Clean, skipped
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-In mscc_miim_clk_set() miim->bus_freq is taken from Device Tree and can
-contain any value in case of any error or broken DT. A value of 2147483648
-multiplied by 2 will result in an overflow and division by 0.
+Introduce peak and rsvd.peak to v2 to show the historical maximum
+usage of resources, as in some scenarios it is necessary to configure
+the value of max/rsvd.max based on the peak usage of resources.
 
-Add bus frequency value check to avoid overflow.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: bb2a1934ca01 ("net: phy: mscc-miim: add support to set MDIO bus frequency")
-Suggested-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 ---
-v1->v2: Detect overflow event instead of using magic numbers as suggested by Michael
+ Documentation/admin-guide/cgroup-v2.rst |  8 ++++++++
+ mm/hugetlb_cgroup.c                     | 19 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
- drivers/net/mdio/mdio-mscc-miim.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/net/mdio/mdio-mscc-miim.c b/drivers/net/mdio/mdio-mscc-miim.c
-index c29377c85307..b344d0b03d8e 100644
---- a/drivers/net/mdio/mdio-mscc-miim.c
-+++ b/drivers/net/mdio/mdio-mscc-miim.c
-@@ -254,6 +254,11 @@ static int mscc_miim_clk_set(struct mii_bus *bus)
- 	if (!miim->bus_freq)
- 		return 0;
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index ae0fdb6fc618..97d19968230a 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -2607,6 +2607,14 @@ HugeTLB Interface Files
+         hugetlb pages of <hugepagesize> in this cgroup.  Only active in
+         use hugetlb pages are included.  The per-node values are in bytes.
  
-+	if (2 * miim->bus_freq == 0) {
-+		dev_err(&bus->dev, "Incorrect bus frequency\n");
-+		return -EINVAL;
-+	}
++  hugetlb.<hugepagesize>.peak
++	Show historical maximum usage for "hugepagesize" hugetlb.  It exists
++        for all the cgroup except root.
 +
- 	rate = clk_get_rate(miim->clk);
++  hugetlb.<hugepagesize>.rsvd.peak
++	Show historical maximum usage for "hugepagesize" hugetlb reservations.
++        It exists for all the cgroup except root.
++
+ Misc
+ ----
  
- 	div = DIV_ROUND_UP(rate, 2 * miim->bus_freq) - 1;
+diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+index 4ff238ba1250..f443a56409a9 100644
+--- a/mm/hugetlb_cgroup.c
++++ b/mm/hugetlb_cgroup.c
+@@ -583,6 +583,13 @@ static int hugetlb_cgroup_read_u64_max(struct seq_file *seq, void *v)
+ 		else
+ 			seq_printf(seq, "%llu\n", val * PAGE_SIZE);
+ 		break;
++	case RES_RSVD_MAX_USAGE:
++		counter = &h_cg->rsvd_hugepage[idx];
++		fallthrough;
++	case RES_MAX_USAGE:
++		val = (u64)counter->watermark;
++		seq_printf(seq, "%llu\n", val * PAGE_SIZE);
++		break;
+ 	default:
+ 		BUG();
+ 	}
+@@ -739,6 +746,18 @@ static struct cftype hugetlb_dfl_tmpl[] = {
+ 		.seq_show = hugetlb_cgroup_read_u64_max,
+ 		.flags = CFTYPE_NOT_ON_ROOT,
+ 	},
++	{
++		.name = "peak",
++		.private = RES_MAX_USAGE,
++		.seq_show = hugetlb_cgroup_read_u64_max,
++		.flags = CFTYPE_NOT_ON_ROOT,
++	},
++	{
++		.name = "rsvd.peak",
++		.private = RES_RSVD_MAX_USAGE,
++		.seq_show = hugetlb_cgroup_read_u64_max,
++		.flags = CFTYPE_NOT_ON_ROOT,
++	},
+ 	{
+ 		.name = "events",
+ 		.seq_show = hugetlb_events_show,
 -- 
-2.30.2
+2.34.1
 
