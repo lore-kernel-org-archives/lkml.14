@@ -1,153 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B718A8BFC
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 00:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDB33D66;
+	Tue,  2 Jul 2024 00:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719879489; cv=none; b=Tm8wSpJrVY1+UK3pYv3I5sH1O1I1DF+RFcecv5P8YY+OxZPkarezMZ7BsIoa3pok6qBgO8swdhl1vj4JU/hp2JWCc+XJwpkJX+ZdQ697ygK0TcdJe0u7aJSZxQRrg1QYI2ikU6lHQ5gwIiv1ObjTtEiGQh1Nv1+1PD0EG3UMMdg=
+	t=1719879553; cv=none; b=GnAiuQunKw58d6/ENBnOxXKDIyAHR5JmIXSQFnWS3ncsxtS+wOihtdbf2bRM7hvoFyIdx2+cCwNf5s/U4tibpatxiteJWcwnD6yNPsAwjg2lvrcb9a3MqBARNcPK6xd+xzI7thHVBuZPv4xT/DCHE9as5qpLxjaz0YpT5oDib6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719879489; c=relaxed/simple;
-	bh=zXHRxJfQ76pZA5jJuEeDkgW74LynXLABZeuPfCmaDGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ArgG0DTDkf65Q3YsU1bYgty9aOX0cxSwoe+9ZttycYQuKIxJFju1jycleXgdQyBWaCVYq/PLiaL9ukLZT6D0aA5KeJZxktyqVl+tvRxN9pZ5J2ujtS6C0V/3+A7yALrgNl209kaQGubd5+AVNkZRiTbtJfvDR+IFCZBI8TNOOjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d+xss2fp; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719879553; c=relaxed/simple;
+	bh=K9oeLGJQU+rgsK96dB9QMC+iN8/+4+J/PBYB7gUN7Zs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Fy1PREH8+cQC6uVMSyCIXvyLIQN9ENo6rU91lOCoKL6UpQExW1FBuITNYtTToS2kWATItJ7GqK+/cpKMChZTxYeRgmGdI+iOngztDXxo5621fAtEyo4a/Bg6SKi953Jeait24J1XGyp2qnf3QexuIavzNC6TlOo3tvnaZd71fEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=hgsDS1QC; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d+xss2fp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719879488; x=1751415488;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zXHRxJfQ76pZA5jJuEeDkgW74LynXLABZeuPfCmaDGI=;
-  b=d+xss2fpeFMjdoP1gR0eiUPYfOJkaQcFGTg6hBbq2jLdf2TQGJpjXss7
-   qY0fNxJv0CIrxFebKlJEgsJRH91g8jvFactcEKfy/OZ71kTqxxtgZggBq
-   f0APiOsqfMSPEbY+mMM8t8W0j8iHn2VFYD5kERBELqryM9Ul96hi4qShj
-   5D3abBFaf5EMqvqKtJAfBNZvO13PohcVC1h3wfHYcUAITVu+rgccMWyYb
-   tYJT3P5YiHA1XzvT6K6Xu2ep9qm3BA2cdJ+KlgS4C8ZasKV7VO4qd9s0B
-   wruy0DW+Ad0eFxTbMUdUZgWxEwbcBdoXRxtxAV9EtoQdGiE26WuLdMGu9
-   g==;
-X-CSE-ConnectionGUID: CmBPiwhuTYe6y0Dz3p6qLA==
-X-CSE-MsgGUID: cGGIdxKVS6WRIwwssdXyzQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="16987086"
-X-IronPort-AV: E=Sophos;i="6.09,177,1716274800"; 
-   d="scan'208";a="16987086"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 17:18:08 -0700
-X-CSE-ConnectionGUID: YY4/KY8YSIqWsHANr3ImDA==
-X-CSE-MsgGUID: TN8Xm8u8Tp6Bt/zNut4/ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,177,1716274800"; 
-   d="scan'208";a="68912610"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 17:18:07 -0700
-Date: Mon, 1 Jul 2024 17:23:19 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin
- Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian
- <kevin.tian@intel.com>, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 1/2] iommu/vt-d: Add helper to flush caches for
- context change
-Message-ID: <20240701172319.264e718c@jacob-builder>
-In-Reply-To: <20240627023121.50166-2-baolu.lu@linux.intel.com>
-References: <20240627023121.50166-1-baolu.lu@linux.intel.com>
-	<20240627023121.50166-2-baolu.lu@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="hgsDS1QC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1719879545;
+	bh=K9oeLGJQU+rgsK96dB9QMC+iN8/+4+J/PBYB7gUN7Zs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=hgsDS1QCjQdVgp1dT+k+xCgYKDv9+/NO7OuKPD5gSHHb2n8GHvpxBWICIUFcSQ/P/
+	 zq5c3c4v6Qz0rYIbBLCIHsOOrOfmrz/rWjzlKveoQz2j0f/gb5DN/4DOOqGQmPtqs5
+	 MRYrGg/V2soCvU5db/DmnXP/3dGLtMrrPQo0ZXYvGiLpnbWiW5WGoo5yut6MxTw+7S
+	 LxrRj3oJZJy7PvTxv7E5koOZUTmk6IEYQZRksmLTRf2HRBEykDbUKgW08ebGdrpr38
+	 eP2AiFpQlI9Vemdz1ACoQG6wJ6IeHZhuNuaTIhnWobz/8mQjdvdGE6EyUhcQV9Vkfe
+	 YyN2U+C+GZWew==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WCk6d19g7z4wcS;
+	Tue,  2 Jul 2024 10:19:04 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ regressions@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, naveen.n.rao@linux.ibm.com, Stefan Berger
+ <stefanb@linux.ibm.com>, linux-integrity@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, jarkko@kernel.org
+Subject: Re: [PATCH] tpm: ibmvtpm: Call tpm2_sessions_init() to initialize
+ session support
+In-Reply-To: <4108938158d888cc6ec371bb151e7ac35d3b4cb0.camel@HansenPartnership.com>
+References: <20240617193408.1234365-1-stefanb@linux.ibm.com>
+ <87pls1lwe0.fsf@mail.lhotse>
+ <4108938158d888cc6ec371bb151e7ac35d3b4cb0.camel@HansenPartnership.com>
+Date: Tue, 02 Jul 2024 10:19:04 +1000
+Message-ID: <87y16kk5mv.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+James Bottomley <James.Bottomley@HansenPartnership.com> writes:
+> On Fri, 2024-06-28 at 10:54 +1000, Michael Ellerman wrote:
+>> Stefan Berger <stefanb@linux.ibm.com> writes:
+>> > Fix the following type of error message caused by a missing call to
+>> > tpm2_sessions_init() in the IBM vTPM driver:
+>> >=20
+>> > [=C2=A0=C2=A0=C2=A0 2.987131] tpm tpm0: tpm2_load_context: failed with=
+ a TPM error
+>> > 0x01C4
+>> > [=C2=A0=C2=A0=C2=A0 2.987140] ima: Error Communicating to TPM chip, re=
+sult: -14
+>> >=20
+>> > Fixes: d2add27cf2b8 ("tpm: Add NULL primary creation")
+>> > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+>> > ---
+>> > =C2=A0drivers/char/tpm/tpm_ibmvtpm.c | 4 ++++
+>> > =C2=A01 file changed, 4 insertions(+)
+>> >=20
+>> > diff --git a/drivers/char/tpm/tpm_ibmvtpm.c
+>> > b/drivers/char/tpm/tpm_ibmvtpm.c
+>> > index d3989b257f42..1e5b107d1f3b 100644
+>> > --- a/drivers/char/tpm/tpm_ibmvtpm.c
+>> > +++ b/drivers/char/tpm/tpm_ibmvtpm.c
+>> > @@ -698,6 +698,10 @@ static int tpm_ibmvtpm_probe(struct vio_dev
+>> > *vio_dev,
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0rc =3D tpm2_get_cc_attrs_tbl(chip);
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0if (rc)
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+goto init_irq_cleanup;
+>> > +
+>> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0rc =3D tpm2_sessions_init(chip);
+>> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0if (rc)
+>> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0goto i=
+nit_irq_cleanup;
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+>> > =C2=A0
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return tpm_chip_regist=
+er(chip);
+>>=20
+>> #regzbot ^introduced: d2add27cf2b8=20
+>
+> Could you please test out the patch I proposed for this:
+>
+> https://lore.kernel.org/linux-integrity/1302b413a2d7bf3b275133e7fdb04b44b=
+fe2d5e3.camel@HansenPartnership.com/
 
-On Thu, 27 Jun 2024 10:31:20 +0800, Lu Baolu <baolu.lu@linux.intel.com>
-wrote:
+Your patch does fix the issue on my PowerVM system, as does Stefan's.
 
-> +/*
-> + * Cache invalidations after change in a context table entry that was
-> present
-> + * according to the Spec 6.5.3.3 (Guidance to Software for
-> Invalidations). If
-> + * IOMMU is in scalable mode and all PASID table entries of the device
-> were
-> + * non-present, set affect_domains to true. Otherwise, false.
-> + */
-The spec says:
-"Domain-selective PASID-cache invalidation to affected domains (can be
-skipped if all PASID entries were not-present and CM=0)"
-
-So we should skip PASID cache invalidation if affect_domain is true
-according to this comment.
-
-> +void intel_context_flush_present(struct device_domain_info *info,
-> +				 struct context_entry *context,
-> +				 bool affect_domains)
-> +{
-> +	struct intel_iommu *iommu = info->iommu;
-> +	u16 did = context_domain_id(context);
-> +	struct pasid_entry *pte;
-> +	int i;
-> +
-> +	assert_spin_locked(&iommu->lock);
-> +
-> +	/*
-> +	 * Device-selective context-cache invalidation. The Domain-ID
-> field
-> +	 * of the Context-cache Invalidate Descriptor is ignored by
-> hardware
-> +	 * when operating in scalable mode. Therefore the @did value
-> doesn't
-> +	 * matter in scalable mode.
-> +	 */
-> +	iommu->flush.flush_context(iommu, did, PCI_DEVID(info->bus,
-> info->devfn),
-> +				   DMA_CCMD_MASK_NOBIT,
-> DMA_CCMD_DEVICE_INVL); +
-> +	/*
-> +	 * For legacy mode:
-> +	 * - Domain-selective IOTLB invalidation
-> +	 * - Global Device-TLB invalidation to all affected functions
-> +	 */
-> +	if (!sm_supported(iommu)) {
-> +		iommu->flush.flush_iotlb(iommu, did, 0, 0,
-> DMA_TLB_DSI_FLUSH);
-> +		__context_flush_dev_iotlb(info);
-> +
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * For scalable mode:
-> +	 * - Domain-selective PASID-cache invalidation to affected
-> domains
-> +	 * - Domain-selective IOTLB invalidation to affected domains
-> +	 * - Global Device-TLB invalidation to affected functions
-> +	 */
-> +	if (affect_domains) {
-> +		for (i = 0; i < info->pasid_table->max_pasid; i++) {
-> +			pte = intel_pasid_get_entry(info->dev, i);
-> +			if (!pte || !pasid_pte_is_present(pte))
-> +				continue;
-> +
-> +			did = pasid_get_domain_id(pte);
-> +			qi_flush_pasid_cache(iommu, did,
-> QI_PC_ALL_PASIDS, 0);
-This is conflicting with the comments above where PASID cache flush can be
-skipped if affect_domain==true, no?
-
-> +			iommu->flush.flush_iotlb(iommu, did, 0, 0,
-> DMA_TLB_DSI_FLUSH);
-> +		}
-> +	}
-
-Thanks,
-
-Jacob
+cheers
