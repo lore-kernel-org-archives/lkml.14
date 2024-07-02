@@ -1,117 +1,90 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9806215B0FE
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 14:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CE31DFE1;
+	Tue,  2 Jul 2024 14:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719930570; cv=none; b=u3czWsPvhwnK2Huj/i8bAD/TwxUvZqd0a17H8nK44ox+w9oTSNv0tpaxhjdebY5YBYmCIP0nEl+vNfMxL7HeIVh6DprotXY81arTz944n/3EIbVtQ9R7fs+wyGXJbUccf9EUL1YGXREwPjxNKOzFXXZUJ9sHy+rDP+wbVQlV4Yk=
+	t=1719930619; cv=none; b=LZyTtfcpnXy/9Ejyn0JH4oVIFRJuMFK535fDCz1TB7A5zqCM21PXPW6J91AwcY1EOVepydQPmCY96OqakiwRblFkIvhESM3lplkvKVbi/ck1AQXPu96QEaRd4UJxjHTo4fMeES2URSMoODc6Fv5j1F3xBqEgHdAYrDKHuxV1Yh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719930570; c=relaxed/simple;
-	bh=bQfHvnKbnsgaFe4SUybNa0fZ2yCvTSinDBnucZHdrI0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u+H57AHSNePAu7Qv1YmmbEZcC7PdczSqexx8BJ5Uu3W/HpOPYLw1R4YOyGw73qIE8Ouba4xITfSUHq89uPJ6Eye0RjpRsWjsFnCaY0U1GYuB9ddsoZM4vbdkqCtXD0oJRyHlkzyDziYkgbh1tdA2XKlu9liNUwLPMsj2VC2fzMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcYtzKMP; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcYtzKMP"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-424ad991cbbso33194975e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 07:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719930567; x=1720535367; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1IAex0C8drdlkZxMli/n3mCvgYAdPAKLrdakmDvXPaI=;
-        b=NcYtzKMPMeYQh7LRy/5x1k6w+hXDBxMhNYoQ1X9PHrIp8Khy+8ULFIqOJI6r62KQ61
-         mkDiRB/59mFwzgxD/vwzC45sfqcg0ocILzABKuXgb1/lRizwy5hAOt9G0nR/KvNuvpBe
-         9JueOdkURmaAEwWPLzmW1FbCVdbQ3hXiSv2n+6r3Vj6EgSoegHPMdtmDwHDnzj/D4iva
-         fwmmVEGfqlOKuraYCnHADoFoPrOJwLi+3r+QIc42wyJq2FlY4nEPpj28Z5UUBtTIl5Le
-         xu+/TVbv16ZuPU23DViqbax7ITqOpoTOLSDMiandQQOWrZq5KHnahqne1uobgmwkLS58
-         utTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719930567; x=1720535367;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1IAex0C8drdlkZxMli/n3mCvgYAdPAKLrdakmDvXPaI=;
-        b=HiyRPpHegVj5+x2lbL9/fiSS5zVUXHpHZTDAt6PvJA0EH6b3TrQWwErBv2Ds7DVyJ0
-         kD2P1RMRR1YK/7DgTvsw24X00U8kIY4Qik4apvILwtXJofR+TjJD5w3fdwUemqaiCFjk
-         WyUSqJDnWEvidfgrJ5XN7HSP3JK2QvbnG6ptvm9kkoAvFwc4Qvqv4erLTqKzQHeX3xXz
-         JtSSge92j8E90XW6AfOpdP+yq+UJd8TFtylSO8nOFChdCA3ETQ3oRM4OxXgWHR1iC7KF
-         vpAzOC/hael4Xwfzbk+DbBRp2Ll3wl7oE+VAcC1QePCJgUMSE5GJ/6avkI+kZlgrgAaV
-         fJ3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVoPclMm1Y4FcaIE94CNzt/zHmQf2bA+N7wAbkq2bB1H4Pw1MPvgWlPlFF9r6Y6ongwnbaASP8hvre9QSB3KSWCLuOCto7kKwBy44Ir
-X-Gm-Message-State: AOJu0YxTrb8UAwajvGAn8vaZMkFJYHKr7FJcp+pOEH4qa5i9IeLFX+7C
-	KMoGMLO0c+NkkFnBeYf4vanQeZLB+l8fU4wEnRDMYavyxFLdCPAnGvdcEze38Xrubze8977oCij
-	abBaTdvU7kmD8vvx3gZvPNyPM2lM=
-X-Google-Smtp-Source: AGHT+IEf1j7xt3BYwx0h8b2w5dzVdvIqB5enG7GLe0qUmGWP7xbI5/ZfxjzaLp7HJMATYVWtVNCe6C859pT+NXSs/6E=
-X-Received: by 2002:adf:e2cf:0:b0:362:dbc2:9486 with SMTP id
- ffacd0b85a97d-36775728c18mr5152575f8f.68.1719930566909; Tue, 02 Jul 2024
- 07:29:26 -0700 (PDT)
+	s=arc-20240116; t=1719930619; c=relaxed/simple;
+	bh=T3DWqD+Ol1/VNz18zDmIpBFqHT4hlrXFgHlH4ruVB2Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TJd9eJaJ/F81l5Lr16+EHPWDNejPin5Adg0oElg/lSuxkoeDnOTdyrhhc9xB8/DQJv0fD/MFljj504dCBCdb7dtKH0BaOrrGT2jthl38q379/qb7lIV4tsnqSwAbnSyxGO/O56aYUYr08vgqHKagGNMO1i3RKpnVv7RZxOaQqwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=breakpoint.cc; arc=none smtp.client-ip=91.216.245.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=breakpoint.cc
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1sOeWN-0008BV-L4; Tue, 02 Jul 2024 16:30:15 +0200
+From: Florian Westphal <fw@strlen.de>
+To: <netfilter-devel@vger.kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	<netdev@vger.kernel.org>,
+	syzkaller-bugs@googlegroups.com,
+	Florian Westphal <fw@strlen.de>,
+	syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com
+Subject: [PATCH nf] netfilter: nf_tables: unconditionally flush pending work before notifier
+Date: Tue,  2 Jul 2024 16:08:14 +0200
+Message-ID: <20240702140841.3337-1-fw@strlen.de>
+X-Mailer: git-send-email 2.44.2
+In-Reply-To: <000000000000aa1dbb061c354fe6@google.com>
+References: <000000000000aa1dbb061c354fe6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000a8c856061ae85e20@google.com> <82cf2f25-fd3b-40a2-8d2b-a6385a585601@I-love.SAKURA.ne.jp>
- <daad75ac-9fd5-439a-b04b-235152bea222@I-love.SAKURA.ne.jp>
- <CA+fCnZdg=o3bA-kBM4UKEftiGfBffWXbqSapje8w25aKUk_4Nw@mail.gmail.com> <ec7411af-01ac-4ebd-99ad-98019ff355bf@I-love.SAKURA.ne.jp>
-In-Reply-To: <ec7411af-01ac-4ebd-99ad-98019ff355bf@I-love.SAKURA.ne.jp>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Tue, 2 Jul 2024 16:29:15 +0200
-Message-ID: <CA+fCnZfxCWZYX-7vJzMcwN4vKguuskk5rGYA2Ntotw=owOZ6Sg@mail.gmail.com>
-Subject: Re: [syzbot] [kernel?] KASAN: stack-out-of-bounds Read in __show_regs (2)
-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: syzbot <syzbot+e9be5674af5e3a0b9ecc@syzkaller.appspotmail.com>, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	kasan-dev <kasan-dev@googlegroups.com>, linux-mm <linux-mm@kvack.org>, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com, 
-	tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 2, 2024 at 8:11=E2=80=AFAM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> Well, KASAN says "out-of-bounds". But the reported address
->
->   BUG: KASAN: stack-out-of-bounds in __show_regs+0x172/0x610
->   Read of size 8 at addr ffffc90003c4f798 by task kworker/u8:5/234
->
-> is within the kernel stack memory mapping
->
->   The buggy address belongs to the virtual mapping at
->    [ffffc90003c48000, ffffc90003c51000) created by:
->    copy_process+0x5d1/0x3d7
->
-> . Why is this "out-of-bounds" ? What boundary did KASAN compare with?
-> Is this just a race of KASAN detecting a problem and KASAN reporting
-> that problem? (But as I explained above, it is unlikely that the thread
-> to be reported can die while processing report_rtnl_holders()...)
+syzbot reports:
 
-KASAN creates the bug title based on the memory state byte, it doesn't
-compare any boundaries. So if the memory state got
-corrupted/out-of-sync, the title can end up arbitrary. In this case,
-the bad access likely touched a redzone between stack variables, so
-KASAN reported out-of-bounds.
+KASAN: slab-uaf in nft_ctx_update include/net/netfilter/nf_tables.h:1831
+KASAN: slab-uaf in nft_commit_release net/netfilter/nf_tables_api.c:9530
+KASAN: slab-uaf int nf_tables_trans_destroy_work+0x152b/0x1750 net/netfilter/nf_tables_api.c:9597
+Read of size 2 at addr ffff88802b0051c4 by task kworker/1:1/45
+[..]
+Workqueue: events nf_tables_trans_destroy_work
+Call Trace:
+ nft_ctx_update include/net/netfilter/nf_tables.h:1831 [inline]
+ nft_commit_release net/netfilter/nf_tables_api.c:9530 [inline]
+ nf_tables_trans_destroy_work+0x152b/0x1750 net/netfilter/nf_tables_api.c:9597
 
-Since syzbot managed to find a reproducer for this bug, you can ask it
-to run the reproducer with additional testing patches to check various
-hypotheses [1]. Perhaps, you can write a magic value into task_struct
-(or into pt_regs of the task?) in get_rtnl_holder() before saving the
-task_struct reference, and then check that marker value in
-report_rtnl_holders() before doing sched_show_task(). Depending of
-whether the check succeeds, this will give additional information.
+Problem is that the notifier does a conditional flush, but its possible
+that the table-to-be-removed is still referenced by transactions being
+processed by the worker, so we need to flush unconditionally.
 
-One other thing that comes to mind with regards to your patch: if the
-task is still executing, the location of things on its stack might
-change due to CONFIG_RANDOMIZE_KSTACK_OFFSET while you're printing the
-task info. However, if the task is sleeping on a lock, this shouldn't
-happen... But maybe a task can wake up during sched_show_task() and
-start handling a new syscall? Just some guesses.
+We could make the flush_work depend on whether we found a table to delete
+in nf-next to avoid the flush for most cases.
 
-[1] https://github.com/google/syzkaller/blob/master/docs/syzbot.md#testing-=
-patches
+AFAICS this problem is only exposed in nf-next, with
+commit e169285f8c56 ("netfilter: nf_tables: do not store nft_ctx in transaction objects"),
+with this commit applied there is an unconditional fetch of
+table->family which is whats triggering the above splat.
+
+Fixes: 2c9f0293280e ("netfilter: nf_tables: flush pending destroy work before netlink notifier")
+Reported-and-tested-by: syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=4fd66a69358fc15ae2ad
+Signed-off-by: Florian Westphal <fw@strlen.de>
+---
+ net/netfilter/nf_tables_api.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 02d75aefaa8e..683f6a4518ee 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -11552,8 +11552,7 @@ static int nft_rcv_nl_event(struct notifier_block *this, unsigned long event,
+ 
+ 	gc_seq = nft_gc_seq_begin(nft_net);
+ 
+-	if (!list_empty(&nf_tables_destroy_list))
+-		nf_tables_trans_destroy_flush_work();
++	nf_tables_trans_destroy_flush_work();
+ again:
+ 	list_for_each_entry(table, &nft_net->tables, list) {
+ 		if (nft_table_has_owner(table) &&
+-- 
+2.44.2
+
