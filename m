@@ -1,49 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7521CE08C;
-	Tue,  2 Jul 2024 18:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A031CB320;
+	Tue,  2 Jul 2024 18:44:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719945862; cv=none; b=M5Jv4abCDWDe29me2rW5g2laIXBdGUqMQI6fRBvCRyWwtR2mISRFMDnnAcmwzWCiV4a1h0xT1QOMvBAYPFsQXywU+jFD4thRIcG+8FC/NHjGAUxphRSJ/MRzMk/hLAzoLi0QXlTReaoAMj9bD3ZbzO6K1aqM8RJgq4ATDPM/r3U=
+	t=1719945864; cv=none; b=Kzsb5HkHj7Ki9ufWldb1FZd5Qld8/MRYUeH7LqXQXJjnWWCYdVuvGjBl/AJ6s9zAmuedzftOQaAIlgmsa1yBwauqOWkR0TSF8j8E2cPbfbq42xG/b493m+c3oKoEwybY5RGtIR/N1hFPCSB1HinYNEL4Hnx/2bAmZ8kKvdd2sVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719945862; c=relaxed/simple;
-	bh=+VYPaSHoBsGAn+u4fC7TOldFkvHGa8TzIynwBLs1h0Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oipt5h8hhNymy8MolowSPBRMzKSd0hAyMkVRonUcsOWAxkQMPrU6a0qX6C8nTOF6b1kd+17L5g2d5fYZoPQkJt7EgjyXN2jlbWwFBnRZpIaLMSjgeJ4l9VrX9vqUP4b57cvs2qK/DZ7HFA2qFmkNlK6b1+dVfEtve96T3pKRH04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWnBpUZy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719945864; c=relaxed/simple;
+	bh=Js2g1rc6r2mTXHRGQ6JfgAQN7WPziZPvIQHY4wG9sEY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IONEMvd6NGzm3YMt6nWLo1QYPsVQeAsw819Y+TZP+tnWl6oFXtYu0g+k5ug9FIr6rUm8hSX/L/WGxdIQFZBk9j4m3xcNHRkXhtnUQTc4CMBQUMAenf0YwbEFisfEYA05IFxbhn7qH3VNuj5xEb6BxJpyEgi9lOIXtxVGYdzm3yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MVexMKDA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWnBpUZy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C659C4AF0C;
-	Tue,  2 Jul 2024 18:44:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MVexMKDA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD5CEC4AF0C;
+	Tue,  2 Jul 2024 18:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719945862;
-	bh=+VYPaSHoBsGAn+u4fC7TOldFkvHGa8TzIynwBLs1h0Y=;
+	s=k20201202; t=1719945864;
+	bh=Js2g1rc6r2mTXHRGQ6JfgAQN7WPziZPvIQHY4wG9sEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KWnBpUZyXeLaw5+Chn6PRVtR4pGK3O+5TWwX49X+hP2IMlOvm08x3K65/cP0M39W5
-	 LeOwp33LjzXWy3jAHPE80f6NCFf4N1sNto4MWLTClGDqeYrqOtsKPOqPZJ1giBwOP+
-	 8MxKOAV63iCNU/9a5uG/IGVoR8+Y3GToRymrw1ZYiTbC3EG4lOb2HgTy/lEd1V51vn
-	 go1/2qM1t7k2CLHWLkT2OdIsMeUs2Q3j8SrouhkXmoG0eWmhsg6dR2VhQ8XJU71zy8
-	 28fevgoqpF6GTsM+LVSAGtR7f1RpoRbdG4rjPdpVz2BvfVRLxf3B2hLHTwL8U3MNU+
-	 aFq4vrnC7Cx+A==
-From: Will Deacon <will@kernel.org>
-To: robdclark@gmail.com,
-	robin.murphy@arm.com,
-	joro@8bytes.org,
-	iommu@lists.linux.dev,
-	Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/arm-smmu-qcom: record reason for deferring probe
-Date: Tue,  2 Jul 2024 19:44:01 +0100
-Message-Id: <171993979643.1971775.11685745937828043612.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1719910870-25079-1-git-send-email-quic_zhenhuah@quicinc.com>
-References: <1719910870-25079-1-git-send-email-quic_zhenhuah@quicinc.com>
+	b=MVexMKDAS7oJZL7UxI7g9sC2355dlngjBG5SCllMEWMlnfdas6+OAomIafSlmCiby
+	 8+KRSMyjSeoGXsYgJv1jJcx3CmjsEOybFjVAXooEBYBtpnedTodV7oI/ic7l4GwYz9
+	 jmIEo5nJrZ1HDqswDzHpubSA+wjszYkGoAkyD0K4fVjD0AvV6MCMXabyrJKjhzkAQp
+	 OrME2yqlTtTDCQPiKQNG64ewiUNlL3bpqvfKhRnQ6CrUvxMQeLyEmz0FCQLpoUx08p
+	 2OlsPD6xGB5EQCmT+3aJxowvIfOiESqzvOZHFuBXxLmm/nlQIY22AtF6pFfiIu/Ftf
+	 nt43gw2QjNXFQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Yicong Yang <yangyicong@hisilicon.com>
+Subject: Re: [PATCH v2 1/2] perf stat: Fix a segfault with --per-cluster --metric-only
+Date: Tue,  2 Jul 2024 11:44:20 -0700
+Message-ID: <171994580797.2905908.17252651084023923233.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+In-Reply-To: <20240628000604.1296808-1-namhyung@kernel.org>
+References: <20240628000604.1296808-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,23 +53,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 02 Jul 2024 17:01:10 +0800, Zhenhua Huang wrote:
-> To avoid deferring probe smmu driver silently, record reason for it.
-> It can be checked through ../debugfs/devices_deferred as well:
-> /sys/kernel/debug# cat devices_deferred
-> 15000000.iommu  arm-smmu: qcom_scm not ready
+On Thu, 27 Jun 2024 17:06:03 -0700, Namhyung Kim wrote:
+
+> The new --per-cluster option was added recently but it forgot to update
+> the aggr_header fields which are used for --metric-only option.  And it
+> resulted in a segfault due to NULL string in fputs().
 > 
 > 
 
-Applied to will (for-joerg/arm-smmu/updates), thanks!
+Applied both to perf-tools-next, thanks!
 
-[1/1] iommu/arm-smmu-qcom: record reason for deferring probe
-      https://git.kernel.org/will/c/9796cf9b3eb9
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Best regards,
+Namhyung
