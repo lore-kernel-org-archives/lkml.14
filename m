@@ -1,103 +1,85 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A99150991
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 08:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C315914F9CA
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 08:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719910637; cv=none; b=dhs3ieON6kqxtl1bDGbLS0Zt6rA5djvyfPXhKXCpm5AM/ULCmV1kYFqNbSF6Mgph9ALWtehxLg9yZN++WjzCpPFHvGQCZfE5x+E+9pwdWzefxEkVi0gsCFqPzhJDirf4xgiuW53yLk/MmDlKNpO521UDd/3Pz3YAj9veaMxeQp4=
+	t=1719910781; cv=none; b=tPaeyHf90ULaLWf5fLjChjHQfgRkWNS6g5MiYWYgJSEZLi6cOgtyB3es0MjN8eQ6PajKlHZ61pNAMKU9n59qendXTinbzeFTZznMXYhsY9gx230OKrpgGzfzmg/mVNa6YsuF9HotoBME6PU+Bn0EnktKzF3ZvTvZ1h8YgWHedTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719910637; c=relaxed/simple;
-	bh=lQNWMHSAHhi1B2REf6bXB44AOtjzCQUTtwwc1XnHiu4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fx4n/SxE4dNR43gNEqgZ490EBdHwwT7qoUXy2bDyHTwDcFg7N/14ftSVleo1c7gsuj7R3v8S1/yxpUchfZlVrjRtMKUkIho0O65jJiZ8udE3nfGx3jYzqSWQ1MkQGJwjo7Ao6OVmnAJ7fLcvRSivI+NE4STG4KhFTfY1hVcgQB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=glwt1H6g; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1719910781; c=relaxed/simple;
+	bh=XqFM1KWiBlZkSaXakx0pXUCwN1NvGH+2XFV2KajMJvw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GDAiUDz4yYoOfm5GOBKf1DAvX+gvuaGEK90fKPsd3JnKw5Wpik4IOncqIxG1dI+P52babGKr1UCq2xdBp0K7BXPAQ14yBEH65TW6Cw/Nb2h2ps11Vc1QWGsfnG9xjYPyWind8uRE4abrZwM2Grf7GVZimpThMRWQR4LNUw2IVUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VS2fjaIA; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="glwt1H6g"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ec4eefbaf1so40917931fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 01:57:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719910634; x=1720515434; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lQNWMHSAHhi1B2REf6bXB44AOtjzCQUTtwwc1XnHiu4=;
-        b=glwt1H6gEHz5G7Wnt7RTnhGCqk5JZIC88aU+612xeTQ6wk6987komrereM13fpQuFw
-         DnM3gWpGvivvrkmaVkZqjw8iQJMRiyL5bY2JlsfTg/sM/01DZXoZR6xmrnh1+cSB5zqI
-         wsfe8xel4I0LhUKd6/AFreXDxAZnRqLVMcToFi+bCN9n07eOD/0x1TPiL2u+yYnWMxlf
-         7kG098AIf2R+T9LJOtND3GOT2eZBBQUs0mjMgxScReV6q9Er2dv8wbfkAAu3VE9TdV3Y
-         xJd+TqCnpltgchQuCl9btbMOFI36sdKBHC9/UBtE7oG5sFTS6Jge7euCZ005F0NnqXAX
-         f41A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719910634; x=1720515434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lQNWMHSAHhi1B2REf6bXB44AOtjzCQUTtwwc1XnHiu4=;
-        b=YIpTT9rK06uvGZpikXUXJC/JUG2tS8fWg1tSv98yQZ0JUdx4RJtKqtiPyy9jEh3t4t
-         OYNAryJ6ASKkxjmgfEj/gk2zcfvLjhc6loW6FSwFEB16jiIKAl5gdJfMQhZwb2X2Dsts
-         XAUKX1w0t8jg68vCxJ4qY+3JuNPrSFcM7vP4IcDdJu/c0Z8ggtByR3J0Ry3dRe3HMgOs
-         AASU2lJogYznVGIkONx2Sn/V5/Mu++zdoXARquWJxDcroCXo+sjyQuzIvLLLwWN+4kCU
-         FykLO2ZTFzXEV81SoZiz9vPB8TAepIbiH/hbvzj/r0+FKdj0JsIumRRQc6/FdYgkJlwX
-         n86Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU0eoaabz4bOwNUGKS1j17NsYstAIheBXsD2ngJ29aBmZAxiOpG1qRSLpfxcmKvF6BYpk6B9YpdUB2Z7blbYnY9GUGA7bFTuw7oEK1H
-X-Gm-Message-State: AOJu0YwK/EchZMPDDICarYv0/UOLcfeqghhyc87k4XID/oHaIoxAFm6M
-	46wAKxnkdjRGu7rZFGnjJzQHMrDbh1NhUJzI7IpwFg5F3zFVOmmuw42CBFeU/Qpm3EQklgK82Rf
-	rSNtFKTgMJClokvGFIrCs72+QcYCDO2apfRBI+A==
-X-Google-Smtp-Source: AGHT+IHo5eEIsVu44pGpnRevjVwA1ZpOtmw6Mmmn4Q+VHOJCxnzpE8v3YnPOHaBgvtoU17z7s4obBrZVrOf9sLuZILM=
-X-Received: by 2002:a2e:bc06:0:b0:2ec:1dfc:45bf with SMTP id
- 38308e7fff4ca-2ee5e6ba584mr55892571fa.42.1719910633934; Tue, 02 Jul 2024
- 01:57:13 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VS2fjaIA"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8C4F240E0187;
+	Tue,  2 Jul 2024 08:59:37 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id wd1lQBb4DG1n; Tue,  2 Jul 2024 08:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719910774; bh=knK52wuCs+Ob82T1MKWyxTneJjQEnIgx33EFZthlZBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VS2fjaIASr8GrH4vf4BOBqTYuz685l0fb2VccymAVCC7nPiaGkcH2LINBrPt9t2sH
+	 WT+2e99CMwkQJ1QHcco3YXxx4qp7UJtQRAO3870MTIE1nHDlmF75C9FrIqJyW/hnHf
+	 U8/5jBLK6k9kGHFj1poZiI62crN/TBCplZYz/I92sUkyuBBzMhxxenRmy3VBJAM+8r
+	 C1hUO47dkDP3IycyIVzEmFoeFEJHilffX5NMmdVhe/vDHj9ZlqYc0AhXg6UbCNTQJE
+	 R8loQJnZp4yBF4NPsAUZBgYFSL4EHcVZyhpMm/5hiZg3E3K80gc/ZIAcy4LT9PEFzu
+	 Jq3yhs2hgftUAt+AVzNJOSGE74wqJzAcHjHx5Acw3vt2moTI5KwE44w4jJ1mcVcyNx
+	 YU4j9iqEcE1bUbGCLASe1d8vtQv+lXz5zDWw820ypogqEHOEJaZZTJ/MXJrr9nlxQ1
+	 gpqyZRRzeywKMhibmY2CyAsG7Yk+4gYpKmV9/+5fKvEf9WZri9DdGmgeu5kIKPfRRt
+	 pSF6Qu0CTS/wsgcLj5SmccIn30hnyZ2P11vLGhxFHPBKPzYwhksPO4+JVDGZDgULeR
+	 UZ+UNTe4JqI94SSMRvN2CNDaaUiO1aY3aUjddprhc7PCY25CKbieKASrKreOnKNDQR
+	 ZmezV+tApA/qbhA7IRSm4Ws8=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E6F9540E0192;
+	Tue,  2 Jul 2024 08:59:21 +0000 (UTC)
+Date: Tue, 2 Jul 2024 10:59:21 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v23 17/19] x86/resctrl: Enable shared RMID mode on
+ Sub-NUMA Cluster (SNC) systems
+Message-ID: <20240702085921.GBZoPBadgHD8wD4wXf@fat_crate.local>
+References: <20240628215619.76401-1-tony.luck@intel.com>
+ <20240628215619.76401-18-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
- <20240701-b4-v6-10-topic-usbc-tcpci-v1-9-3fd5f4a193cc@pengutronix.de>
-In-Reply-To: <20240701-b4-v6-10-topic-usbc-tcpci-v1-9-3fd5f4a193cc@pengutronix.de>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Jul 2024 10:57:02 +0200
-Message-ID: <CAMRc=McP=K0jSD56JdCR9DPJmJN39Z74mjAo0qX2mEnTBN1GAA@mail.gmail.com>
-Subject: Re: [PATCH 9/9] eeprom: at24: remove deprecated Kconfig symbol
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, 
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Vladimir Zapolskiy <vz@mleia.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Tony Lindgren <tony@atomide.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	imx@lists.linux.dev, linux-omap@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240628215619.76401-18-tony.luck@intel.com>
 
-On Mon, Jul 1, 2024 at 3:54=E2=80=AFPM Marco Felsch <m.felsch@pengutronix.d=
-e> wrote:
->
-> All kernel users are shifted to the new MTD_EEPROM_AT24 Kconfig symbol
-> so we can drop the old one.
->
+On Fri, Jun 28, 2024 at 02:56:17PM -0700, Tony Luck wrote:
+> +	rdmsrl(MSR_RMID_SNC_CONFIG, val);
+> +	val &= ~BIT_ULL(0);
+> +	wrmsrl(MSR_RMID_SNC_CONFIG, val);
 
-Nope, with this series arm64 still selects the old symbol.
+msr_clear_bit
 
-Bart
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
