@@ -1,150 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D91158871;
-	Tue,  2 Jul 2024 13:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E216D158871;
+	Tue,  2 Jul 2024 13:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719925230; cv=none; b=duJejHNvKA9b8y0YlTPWk2aAgnPGvJDB4dbLFwoKF9bi1NgpA59eufp8C+cOlhk0sxECCqAygQ1DHvmAQaA+RNkiiTz9sB6U+JRJ2t7IGheF4rKUwegJlVjvpWbqG13WHD8t0O/XXLP34ADbl3xcV5QkxBdRrfR5jeyYcgYcK9s=
+	t=1719925251; cv=none; b=HgcvR+GZCwxwGg+/eT07ry6N9FVFu/sm7Q9o7PGQA/zhi4VmGUy8OkojZGZ0tVq57yaSrR/UBmaCCASoGNOiGiNSlKb1S72cqM5waQUErlW3hZABYNzx7Skrm5Q2y3wcLz0HJjVoKyZpNxd4v8JXV1VU3bOr4j6EVLdho0ElNW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719925230; c=relaxed/simple;
-	bh=3IcKndPgJRKyDI4uLAvL9dcl2uguX3FJbSHktips0FI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D7rFW3Bysoo44OQOJnbQywJEkIRW0iewL3eaMBbhA2q3iMhXqmWsglA8ppwIeN2XBkhV6fuNJR48T2VeG7ueeR5afRmdM063unpsFbt7ce/GPq31UOtakCdIrAbGhW9oDBIme7aqdUEKHXXs20gjMfZ4RZbugJC3QBkP7L2RcJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ozESms7C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719925251; c=relaxed/simple;
+	bh=RvmxtaLFdGmoMeX5gcNao/MxA1wPjlmJYp+uXmtLNyg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ar+EAgj3SOCM+vDQB+Q6Ves95M5jFTKkeJD+ToyHWN/pPbv4ITDgmMoBIOUPJjTNsXcafxWpSS7HmvLduwqZvyHOa4F2xa6NOH6p2ZPYKUjgdjZRUuq/HqJtj3cgEUTUnnyP1LVqWzkUkFRFxUeuNZN0zv3FOiec08GlLckc5Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Wj8FFfI1; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ozESms7C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 957EAC2BD10;
-	Tue,  2 Jul 2024 13:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719925230;
-	bh=3IcKndPgJRKyDI4uLAvL9dcl2uguX3FJbSHktips0FI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ozESms7CPjBSF7HnyGgtc5BOIx/GdqR1fdGFtQDO8e2pWqvWA3H92MeHHz0lsqsm+
-	 KWf7GUFwobINaivWa2jXhe/rVmBOT8AoUfVKjp7KAsBbwEZcZv56xGsYPbSHNMRmyt
-	 kxKgoKLsPKVU0JxTB54QYBeYbmo/xV0GmDcgfKaH03i+BnoGQFONeBS1wdTsUopZph
-	 J1+kBPg8oq1Zbv7Hr3xKr7+9Jq5Z3M7bZmuZJRyFL9yBE6wW/k7KJVDxpQspfJeUMl
-	 sNBOWdVlTKweq+g/p17iXmK98PgtTP+C4eqLrFg+R7K4663SzUIFoidm4LPPFwd6Em
-	 BzBGnQ9P8pvOw==
-Date: Tue, 2 Jul 2024 14:00:24 +0100
-From: Simon Horman <horms@kernel.org>
-To: Peter Yin <peteryin.openbmc@gmail.com>
-Cc: patrick@stwcx.xyz, amithash@meta.com,
-	Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Cosmo Chou <cosmo.chou@quantatw.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org
-Subject: Re: [PATCH v1 1/1] net/ncsi: specify maximum package to probe
-Message-ID: <20240702130024.GJ598357@kernel.org>
-References: <20240701154336.3536924-1-peteryin.openbmc@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Wj8FFfI1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 81880E000F;
+	Tue,  2 Jul 2024 13:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719925246;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oy9E7qoNPRI7001TLEist7NPC81uUt9cNPWX2cJ1Ft0=;
+	b=Wj8FFfI1Om7ejfiiaOpF3dw3OLu3/ddogiz6e+B6gnvMviz0+00XxkxKEsofgVzY+1TVPg
+	oDACI7Kq/5+6UcJ+wuO8u94ib1E1zfqnHAvB13xOVNTcSbBypTKHLrK6owyRMhvjDzltoi
+	dnZpuDArsl5FTamSs55tStUGkArgh6zG1FkmahhMB5JtgR8AzElcD1CZGyymac2XozwlSU
+	MlTU1IP+/OIhNEALRQlMj5gtJgUrwMA5LqVN+oD9AsKC/YLVC5cWb/s8BP6C8d0tsJGDzx
+	2i19nLikAt38+6jjefyaOJIoFOXO2ufCwvawXfcf/3+Uu4pahVzFefOWCRnoFQ==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH net-next 1/6] net: phy: dp83869: Disable autonegotiation in
+ RGMII/1000Base-X mode
+Date: Tue, 02 Jul 2024 15:01:31 +0200
+Message-ID: <3633322.R56niFO833@fw-rgant>
+In-Reply-To: <ZoPTPH3YQYMMe4YZ@shell.armlinux.org.uk>
+References:
+ <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
+ <2614671.Lt9SDvczpP@fw-rgant> <ZoPTPH3YQYMMe4YZ@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701154336.3536924-1-peteryin.openbmc@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-GND-Sasl: romain.gantois@bootlin.com
 
-[ As this seems to relate to: DT, ASPEED and ARM, CC:
-  Rob Herring, Krzysztof Kozlowski, Conor Dooley, Joel Stanley, Andrew Jeffery,
-  devicetree, linux-arm-kernel, linux-aspeed. ]
+On mardi 2 juillet 2024 12:15:24 UTC+2 Russell King (Oracle) wrote:
+> On Tue, Jul 02, 2024 at 11:42:04AM +0200, Romain Gantois wrote:
+...
+> So, just because the PHY documentation states that speed is not
+> negotiated, that doesn't mean that negotiation is not supported.
+> IEEE 802.3 *requires* AN be implemented.
 
-On Mon, Jul 01, 2024 at 11:43:36PM +0800, Peter Yin wrote:
-> Most NICs have a single package. For OCP3.0 NICs, the package ID is
-> determined by the slot ID. Probing all 8 package IDs is usually
-> unnecessary. To reduce probe time, add properties to specify the
-> maximum number of packages.
-> 
-> Signed-off-by: Cosmo Chou <cosmo.chou@quantatw.com>
-> Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
-> ---
->  net/ncsi/internal.h    |  1 +
->  net/ncsi/ncsi-manage.c | 16 ++++++++++++----
->  2 files changed, 13 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/ncsi/internal.h b/net/ncsi/internal.h
-> index ef0f8f73826f..bd7ad0bf803f 100644
-> --- a/net/ncsi/internal.h
-> +++ b/net/ncsi/internal.h
-> @@ -341,6 +341,7 @@ struct ncsi_dev_priv {
->  #define NCSI_MAX_VLAN_VIDS	15
->  	struct list_head    vlan_vids;       /* List of active VLAN IDs */
->  
-> +	unsigned int        max_package;     /* Num of packages to probe   */
->  	bool                multi_package;   /* Enable multiple packages   */
->  	bool                mlx_multi_host;  /* Enable multi host Mellanox */
->  	u32                 package_whitelist; /* Packages to configure    */
-> diff --git a/net/ncsi/ncsi-manage.c b/net/ncsi/ncsi-manage.c
-> index 5ecf611c8820..159943ee1317 100644
-> --- a/net/ncsi/ncsi-manage.c
-> +++ b/net/ncsi/ncsi-manage.c
-> @@ -1358,12 +1358,12 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
->  		nd->state = ncsi_dev_state_probe_deselect;
->  		fallthrough;
->  	case ncsi_dev_state_probe_deselect:
-> -		ndp->pending_req_num = 8;
-> +		ndp->pending_req_num = ndp->max_package;
->  
->  		/* Deselect all possible packages */
->  		nca.type = NCSI_PKT_CMD_DP;
->  		nca.channel = NCSI_RESERVED_CHANNEL;
-> -		for (index = 0; index < 8; index++) {
-> +		for (index = 0; index < ndp->max_package; index++) {
->  			nca.package = index;
->  			ret = ncsi_xmit_cmd(&nca);
->  			if (ret)
-> @@ -1491,7 +1491,7 @@ static void ncsi_probe_channel(struct ncsi_dev_priv *ndp)
->  
->  		/* Probe next package */
->  		ndp->package_probe_id++;
-> -		if (ndp->package_probe_id >= 8) {
-> +		if (ndp->package_probe_id >= ndp->max_package) {
->  			/* Probe finished */
->  			ndp->flags |= NCSI_DEV_PROBED;
->  			break;
-> @@ -1746,7 +1746,7 @@ struct ncsi_dev *ncsi_register_dev(struct net_device *dev,
->  	struct platform_device *pdev;
->  	struct device_node *np;
->  	unsigned long flags;
-> -	int i;
-> +	int i, ret;
->  
->  	/* Check if the device has been registered or not */
->  	nd = ncsi_find_dev(dev);
-> @@ -1795,6 +1795,14 @@ struct ncsi_dev *ncsi_register_dev(struct net_device *dev,
->  		if (np && (of_property_read_bool(np, "mellanox,multi-host") ||
->  			   of_property_read_bool(np, "mlx,multi-host")))
->  			ndp->mlx_multi_host = true;
-> +
+Got it. Thanks for clarifying, I'll remove this patch from v2 and see
+if I can get this autoneg to work.
 
-Should the "ncsi-package" (and above multi-host properties) be
-documented in DT bindings somewhere? I was unable to locate such
-documentation.
+Best Regards,
 
-> +		if (np) {
-> +			ret = of_property_read_u32(np, "ncsi-package",
-> +						   &ndp->max_package);
-> +			if (ret || !ndp->max_package ||
-> +			    ndp->max_package > NCSI_MAX_PACKAGE)
-> +				ndp->max_package = NCSI_MAX_PACKAGE;
-> +		}
->  	}
+-- 
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-It seems that ndp->max_package will be 0 unless pdev != NULL and np != NULL.
-Would it be better set to NCSI_MAX_PACKAGE in such cases?
 
->  
->  	return nd;
-> -- 
-> 2.25.1
-> 
-> 
+
