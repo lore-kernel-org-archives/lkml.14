@@ -1,83 +1,115 @@
-Received: from cmccmta2.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 201CB82488;
-	Tue,  2 Jul 2024 11:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.137
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5929B82D7F
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 11:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719920012; cv=none; b=ZkrPJe0vgfgapi/OyuChMg3hoH9h33IMLx6rEfXLaZBQW4GjZYCq4t1jeUyo4DtBIqUy54JliTF3vkTjco2A1ZVceYN1xo7DiTRkjd4/EAxC4Y++ayxuSYTVsUB98nliG95MOXG5tmcqPU1shtTTrV+SPb7DR+sVw5eGGcT8ONY=
+	t=1719920055; cv=none; b=BvNUZl2hL9t+GA10MpD+SloNYxHOMEMKqNwobVImElMS4m74RBcAXJwzkVAscGDSGxiwO6Z6FhqPxwFR8v1UgVAQgHNqlnKNXUGOOmIYd2SiZ0soPm9jx1s/RjwvX4CZx3i95GtdzbwcHxkeCl3XnXRBDWelGU8E5dkkgB+q2CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719920012; c=relaxed/simple;
-	bh=WQiuwDDoZehRrDSjUiALxlVpbCKwODdp3MxFrPhK1P0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=URt0snryBHOk3MTt9C2sDIpLjl+t6aNa15HbEM9r83x4ztxaVwXiAfgbNuOjjUzU9Ah1pqh/zsLqfdZhR77fhozXxaFv0rWb4L/77t6jULF75Y96JSHm/UUEOydlI0WQwEnGlnbo3RFQaSRlacdURHZFyKpfkZptTNq/0LiPRuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee86683e5699d3-259ff;
-	Tue, 02 Jul 2024 19:33:08 +0800 (CST)
-X-RM-TRANSID:2ee86683e5699d3-259ff
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from localhost.localdomain (unknown[223.108.79.99])
-	by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee66683e573678-94de5;
-	Tue, 02 Jul 2024 19:33:08 +0800 (CST)
-X-RM-TRANSID:2ee66683e573678-94de5
-From: Liu Jing <liujing@cmss.chinamobile.com>
-To: matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	shuah@kernel.org
-Cc: netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	liujing@cmss.chinamobile.com
-Subject: [PATCH v2] selftests: mptcp: always close input's FD if opened
-Date: Tue,  2 Jul 2024 12:05:18 +0800
-Message-Id: <20240702040518.11058-1-liujing@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1719920055; c=relaxed/simple;
+	bh=nfWjYsWXGgOjbGPo1gNRcIPQ7kDBdPTDLah8hIC0EUU=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=ZbV1iJ0d7WRPJz+la0B8lYYq5rlO3PxcFzGl6vrWGHFvCb3N9PGYP1EkmZrbiOCGwffvLyP8ihKcznpynzFVjg4OZRCX4le+l283bgIvDPvQZFXsFqRVDWaqH40WDNNsY7fWTo3pS9CrJd7C9kDL89HKSoFWhV7ZSuDquUOX2xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4WD15S5n5sz5B1J4;
+	Tue,  2 Jul 2024 19:34:04 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.99.176])
+	by mse-fl2.zte.com.cn with SMTP id 462BXvu2002423;
+	Tue, 2 Jul 2024 19:33:57 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Tue, 2 Jul 2024 19:33:59 +0800 (CST)
+Date: Tue, 2 Jul 2024 19:33:59 +0800 (CST)
+X-Zmail-TransId: 2afa6683e5a7ffffffff92d-854bb
+X-Mailer: Zmail v1.0
+Message-ID: <20240702193359997GhKH_KNYXYGLV7TlNVtkq@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
+        <vincent.guittot@linaro.org>, <ietmar.eggemann@arm.com>,
+        <ostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+        <bristot@redhat.com>
+Cc: <he.peilin@zte.com.cn>, <yang.yang29@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <jiang.kun2@zte.com.cn>, <xu.xin16@zte.com.cn>,
+        <zhang.yunkai@zte.com.cn>, <liu.chun2@zte.com.cn>,
+        <fan.yu9@zte.com.cn>, <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?B?wqBbUEFUQ0ggbGludXgtbmV4dCBSRVNFTkRdIHNjaGVkL2NvcmU6IEFkZCBXQVJOKCkgdG8gY2hlY2tzIGluIG1pZ3JhdGVfZGlzYWJsZSgp?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 462BXvu2002423
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6683E5AC.001/4WD15S5n5sz5B1J4
 
-in main_loop_s function, when the open(cfg_input, O_RDONLY) function is run,
-the last fd is not closed if the "--cfg_repeat > 0" branch is not taken.
+From: Peilin He <he.peilin@zte.com.cn>
 
-Fixes: 05be5e273c84("selftests: mptcp: add disconnect tests").
+Background
+==========
+When repeated migrate_disable() calls are made with missing the
+corresponding migrate_enable() calls, there is a risk of
+'migration_disabled' going upper overflow because
+'migration_disabled' is a type of unsigned short whose max value is
+65535.
 
-Signed-off-by: Liu Jing <liujing@cmss.chinamobile.com>
+In PREEMPT_RT kernel, if 'migration_disabled' goes upper overflow, it may
+make the migrate_disable() ineffective within local_lock_irqsave(). This
+is because, during the scheduling procedure, the value of
+'migration_disabled' will be checked, which can trigger CPU migration.
+Consequently, the count of 'rcu_read_lock_nesting' may leak due to 
+local_lock_irqsave() and local_unlock_irqrestore() occurring on different
+CPUs.
+
+Usecase
+========
+For example, When I developed a driver, I encountered a warning like
+"WARNING: CPU: 4 PID: 260 at kernel/rcu/tree_plugin.h:315
+rcu_note_context_switch+0xa8/0x4e8" warning. It took me half a month
+to locate this issue. Ultimately, I discovered that the lack of upper
+overflow detection mechanism in migrate_disable() was the root cause,
+leading to a significant amount of time spent on problem localization.
+
+If the upper overflow detection mechanism was added to migrate_disable(),
+the root cause could be very quickly and easily identified.
+
+Effect
+======
+Using WARN() to check if 'migration_disabled' is upper overflow can help
+developers identify the issue quickly.
+
+Signed-off-by: Peilin He<he.peilin@zte.com.cn>
+Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
+Reviewed-by: Qiang Tu <tu.qiang35@zte.com.cn>
+Reviewed-by: Kun Jiang <jiang.kun2@zte.com.cn>
+Reviewed-by: Fan Yu <fan.yu9@zte.com.cn>
+Cc: Yang Yang <yang.yang29@zte.com.cn>
+Cc: Liu Chun <liu.chun2@zte.com.cn>
 ---
-Changes from v1
-- add close function in main_loop_s function
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/sched/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index d2043ec3bf6d..48b7389ae75b 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1119,7 +1119,8 @@ int main_loop_s(int listensock)
- 		if (cfg_input)
- 			close(fd);
- 		goto again;
--	}
-+	} else
-+		close(fd);
- 
- 	return 0;
- }
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8cc4975d6b2b..14671291564c 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2259,6 +2259,8 @@ void migrate_disable(void)
+ 	struct task_struct *p = current;
+
+ 	if (p->migration_disabled) {
++		if (p->migration_disabled == USHRT_MAX)
++			WARN(1, "migration_disabled has encountered an overflow.\n");
+ 		p->migration_disabled++;
+ 		return;
+ 	}
 -- 
-2.33.0
-
-
-
+2.17.1
