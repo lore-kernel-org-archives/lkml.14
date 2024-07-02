@@ -1,124 +1,231 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DCB15CD54
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7343D15CD54
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719922340; cv=none; b=kCE84WBGNlsLFPc6EaFARt4rg9ldCYjxNJmaDKQA9G1FJ5e308md49U2Uaub2xaWo2kwCq9S0D5vfiG1/jPR7pEoU1c+tj7sdg4/os/iZhiZj3Sx6unFIpHAn0XZhrZpXMLbuAc0nZFWD/gf580Gu1Bs9h/MusbIeCiHf7Vuzso=
+	t=1719922395; cv=none; b=cWnjJi72xqomaHzpeNVZJVLTw6wpfKPe9yfxCTYrH8DIBDM/gD6qRT6YV9t8AHCayZRgXFOGxrsr7ZyOypyzccBuTuup/D74EJFH2qR5f9nTbbcM8m2HXGWmicfisON9o4FTumX07JqFednKFxEWlYn1Un/AAPOhcsDD1+aWqrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719922340; c=relaxed/simple;
-	bh=pQF1gmroJLyYPwVp6Y99BEq59Xm9uFxtaNDkFEsBrCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H5LbnHLfKcKTLNFvKsJHGFvdIawin/YiUylL5W7hij6IyDK8WUoHwVyWn30JAirXJr4i4yYyJfeuJ9gXWYkxgm5Cp/c8uWMyDjsUayXCsIHZrWfUWZumyMXMO2/6ctI/5rM+jbnaGO2clE8qv7VzAKFZHI5xZKOQKpqChbp+zwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XKXQozUz; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1719922395; c=relaxed/simple;
+	bh=pTe1aDPvuuFEJZ/GobIEJEDeVnTdQCn5R9VkL0RK+Qc=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=K8SlBL1mGgEoDA5KRDNl1HoTeZ1sVXCqNdIpw4cX5LH91F6ahIpR5jeCUVDrb38A7CP96YDjD4TqZJ+nu730R0omoD8PCsYKtbB5td30wWfM5UQVKqRtP057T4N4kYpmlNRxD0gxirqZRX2jgG2Z8082TE1oSuKn8fyW5yBYnIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=J2uZgE6/; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XKXQozUz"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so42650251fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 05:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719922337; x=1720527137; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0xngQr25p1sZV26OzUH+Wi8Y6ZPE5TWk/yG5cCxzrxs=;
-        b=XKXQozUzPq4pL0A+FXFqOsuRVFBYQA9FdTkzFWzWagHTvU/g7cvksv85USBzJoXZTP
-         LY94RmODBTbw3NJRDJSFw11aeEdU2Y66L2fCaguWPjG0vfN7QmIA6Vm6sicZBfG6n4qW
-         Gfc6IUhaQ5JURYm00CsEfyKhx5PJDB22YX1Kc47Np4LtkR3O+I4UuTYbjEaZlPIks9Ud
-         eHNDXSM1Et3Hp4IJMuIS8qz0cYM3wUPAvZ+717JC+6kXchq0oVcgox9eDZ55v0Gco/TB
-         wHXdeuQZ0sKEwfH0Xy4X4vjb6h6G38zmdm85ZtA2hktD2oNK8kebQXBPIsenZ8cO8wom
-         L/sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719922337; x=1720527137;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0xngQr25p1sZV26OzUH+Wi8Y6ZPE5TWk/yG5cCxzrxs=;
-        b=vqoZxlDuwNhyGGMLNSd5zUEhXJw5SSwPeVWkLkVvG0aS+gCesuBe0oGvHXAsb892CD
-         pK6jhher8i+s/lS/vL7VyVJC/fkSxDYcwTG4YrbZxm/5tJ3nUq8VAwk94XTIa6Leh5XN
-         nJ8FwFuqvb0s2qj55e78lw5eWjHRdKuEcDRGBfAHI7Vr7GSRSAWN+Ft9R7E4F3Ql5yam
-         lCanoKweFgRZfh7KDgMogqPD5mCBxZzvaVogukbjw/y1jslX122CWAMAudPKqhy+PFQC
-         lvMTSjWI9h0iliVPIGQWYqH2vx02HA8u6eCFhIwlPrBJKJ6bz8mH4yjOBXVs6evQfBX1
-         RT0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUWwRzEKTQtHRVKiCS074V6VdoF9AaX7lxyHrVYr83r/dhLXRiUL0yg0fcQwVqa4vQvoZn6cSvCt1c6mkMQ/Di0oz7h03yYDdTDOQJG
-X-Gm-Message-State: AOJu0Yz0MXAgJaa7Wyw7BjzFacMM1J4e4L62YqIbd20R3Ik8E0+7Edn/
-	TxZEIroJJW402TBgp4rY0xlOFzv/ti0UDo8KCGC+1keG6+1wyz+lIo5CvACFNkg=
-X-Google-Smtp-Source: AGHT+IHDHRTrkO4CFMTeB0SmP/Wd2havgBGFo8IzqIkV5ET0LCgN/3ncN6rqzs7Vj0SBv8WfjQ70CA==
-X-Received: by 2002:a05:651c:54a:b0:2ee:4ccf:ca4f with SMTP id 38308e7fff4ca-2ee5e3c3a6bmr66459021fa.31.1719922336700;
-        Tue, 02 Jul 2024 05:12:16 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac15788casm82487285ad.219.2024.07.02.05.12.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 05:12:16 -0700 (PDT)
-Date: Tue, 2 Jul 2024 14:12:06 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH printk v2 16/18] printk: Provide threadprintk boot
- argument
-Message-ID: <ZoPullwnOGvUoCPv@pathway.suse.cz>
-References: <20240603232453.33992-1-john.ogness@linutronix.de>
- <20240603232453.33992-17-john.ogness@linutronix.de>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="J2uZgE6/"
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240702121310epoutp02bf3976a76f78c7c7c3e0ec4a8e05d03f~eZE01ZdZj2405724057epoutp02J
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 12:13:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240702121310epoutp02bf3976a76f78c7c7c3e0ec4a8e05d03f~eZE01ZdZj2405724057epoutp02J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1719922390;
+	bh=fQw+IYHbL0xTtgej7CXwhTQ7qvGP/baI3QsyrH+7RPE=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=J2uZgE6/+ibHiAAMHLHsO1YHi8aUi6QwaZiPB+ZAC5MnaeZbRmOPk8M5JipCeAWTt
+	 4SDGQid2uV/SuAhSH5BUl9SJE/PKmMewX5+pMatKXaXvN07qavXmVN7fmrw6hy0pXY
+	 UfUeUC4I/AZHxNMh1wEZWy6akn/h1Hk5a8dUTcb0=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240702121310epcas1p1339fc12ca924c194b7ddf2c4bd6c6b2d~eZE0h5cTW3046030460epcas1p1-;
+	Tue,  2 Jul 2024 12:13:10 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.38.247]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4WD1yY5Qpsz4x9Pt; Tue,  2 Jul
+	2024 12:13:09 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+	epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+	16.68.09910.5DEE3866; Tue,  2 Jul 2024 21:13:09 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240702121309epcas1p1aa6092515863dec08bd7fe82e67db7f9~eZEzx9fMj1468214682epcas1p1u;
+	Tue,  2 Jul 2024 12:13:09 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240702121309epsmtrp2dec70dfcfc1ab1453dde493aecca43e8~eZEzxXruB1337413374epsmtrp2Z;
+	Tue,  2 Jul 2024 12:13:09 +0000 (GMT)
+X-AuditID: b6c32a38-a3fff700000226b6-b7-6683eed58a89
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	5D.6D.18846.5DEE3866; Tue,  2 Jul 2024 21:13:09 +0900 (KST)
+Received: from sminjeong05 (unknown [10.253.99.183]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240702121309epsmtip245756f2f05328ac93ac9bac5ad2eef45~eZEzocFCu3163931639epsmtip2z;
+	Tue,  2 Jul 2024 12:13:09 +0000 (GMT)
+From: "Sunmin Jeong" <s_min.jeong@samsung.com>
+To: "'Chao Yu'" <chao@kernel.org>, <jaegeuk@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <linux-f2fs-devel@lists.sourceforge.net>
+In-Reply-To: <20240625031351.3586955-4-chao@kernel.org>
+Subject: RE: [f2fs-dev] [PATCH 4/4] f2fs: atomic: fix to forbid dio in
+ atomic_file
+Date: Tue, 2 Jul 2024 21:13:09 +0900
+Message-ID: <5f6701dacc79$33afa870$9b0ef950$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603232453.33992-17-john.ogness@linutronix.de>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJIkRSe0PNvFivjVhHqD787u2nN5QGFMc2+AfNnngSw7ArncA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLKsWRmVeSWpSXmKPExsWy7bCmge7Vd81pBsfualicnnqWyeLJ+lnM
+	FpcWuVtc3jWHzYHFY9OqTjaP3Qs+M3l83iQXwByVbZORmpiSWqSQmpecn5KZl26r5B0c7xxv
+	amZgqGtoaWGupJCXmJtqq+TiE6DrlpkDtExJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquU
+	WpCSU2BWoFecmFtcmpeul5daYmVoYGBkClSYkJ2xZOkR9oIe+YpXN/4wNjA+lehi5OSQEDCR
+	WLplG0sXIxeHkMAORoml9+cxQTifGCUO3F7PAlIF5hzd4wfT8aG9mRkivpNR4tVXA4iGl4wS
+	h15cBWtgE9CTmL76H1iRiIC5xJ7Fr9hAbGYBH4nft+6BxTmB4o8PfmEHsYUFQiTOvz8M1ssi
+	oCKx89xVRhCbV8BS4uuT51C2oMTJmU9YIObIS2x/O4cZ4iAFiZ9Pl7FC7HKS+HPpNSNEjYjE
+	7M42ZpDjJAReskus+vGTFaLBReJX6152CFtY4tXxLVC2lMTnd3vZIOxiiaPzN7BDNDcwStz4
+	ehOqyF6iubUZqIgDaIOmxPpd+hDL+CTefe1hBQlLCPBKdLQJQVSrSnQ/WgJ1p7TEsmMHoaZ4
+	SGz985R1AqPiLCSvzULy2iwkL8xCWLaAkWUVo1hqQXFuemqxYYEJPLKT83M3MYLToZbFDsa5
+	bz/oHWJk4mA8xCjBwawkwhv4qz5NiDclsbIqtSg/vqg0J7X4EKMpMLAnMkuJJucDE3JeSbyh
+	iaWBiZmRiYWxpbGZkjjvmStlqUIC6YklqdmpqQWpRTB9TBycUg1MnDZLa4WlLu7fG3m0Tv9s
+	uuK8zfVr3kQfVecKkq+SXzTr38Nc2TfbnQ/Lt4R/53T6cFBUWdrT4O5U3e9d1i3PLU20Ys/w
+	C86fG/jz1J87E913TSza4L2PN1e9TXAZT2PX7m6RQ87e9SkCBm2L7t9b1NDg9KLqZlnHj4ti
+	S72UIqJLJPRvb7S7e3H+h5veT28dzdn17LnW9FffHqYL1awydeT5XPNfIyH1zuM0H8VXcnXe
+	WT5mmhfXlp4LVzmsePvS4Zl51o7uhV6/X19zXsxdIfpuomLQ1m1VUyOCXmZ/Kfvncnkhp1Z8
+	7BtPkYz8fft4ws3bOpuqfbaIJiVeFH7AtPP4feWYJ6wxTV2inluUWIozEg21mIuKEwHUGRUD
+	EAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsWy7bCSvO7Vd81pBmeXCFicnnqWyeLJ+lnM
+	FpcWuVtc3jWHzYHFY9OqTjaP3Qs+M3l83iQXwBzFZZOSmpNZllqkb5fAlbFk6RH2gh75ilc3
+	/jA2MD6V6GLk5JAQMJH40N7MDGILCWxnlLjX6NPFyAEUl5Y49qcIwhSWOHy4GKLiOaPE3FZr
+	EJtNQE9i+up/YJ0iApYSC2adYwGxmQX8JHY9XAEU5wKq38wo8f1AGztIglPAXOLxwS9gtrBA
+	kETP/MOsIDaLgIrEznNXGUFsXqBBX588h7IFJU7OfMICcgMz0LK2jYwQ8+Ultr+dwwxxvYLE
+	z6fLWCFucJL4c+k1VI2IxOzONuYJjMKzkEyahTBpFpJJs5B0LGBkWcUomlpQnJuem1xgqFec
+	mFtcmpeul5yfu4kRHAlaQTsYl63/q3eIkYmD8RCjBAezkghv4K/6NCHelMTKqtSi/Pii0pzU
+	4kOM0hwsSuK8yjmdKUIC6YklqdmpqQWpRTBZJg5OqQamPfx5yo1sF0y3HnFWrV62c+mDlR+n
+	brzpqOqw5vKdf58YBaWTiw413Uo7cJpjRtJux513DjxdLRIje0bj4KfFl4vWhZx89PbO9+y7
+	XLYzd5zK3BZkxdh/U6TmHZ9T6Pz0O65HBR//Euwxr73xRP7Q5hOHTtqbFm3dYb07LP5RbIb/
+	zP0bm+62eX0IkerfwKeZyiuwy3jDvfPc4d/ztbU2n8s798k/gZ07NVlQ1oudz/+49P3vUw46
+	R358N8O6Y6Gw3oRJXzqf6z+qfbE+j9lLV3Tyc6tt66caFWqbbXg1d+v7RTU/e5a//SoddCPk
+	9hbJm5IFzowK5r//TZ35RmWNnYbn1Ih3VVuOPbkwfe/6qDNKLMUZiYZazEXFiQBDpme38wIA
+	AA==
+X-CMS-MailID: 20240702121309epcas1p1aa6092515863dec08bd7fe82e67db7f9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240625031523epcas1p12bf3d3dbe617eb6b8c00e742cf43ae50
+References: <20240625031351.3586955-1-chao@kernel.org>
+	<CGME20240625031523epcas1p12bf3d3dbe617eb6b8c00e742cf43ae50@epcas1p1.samsung.com>
+	<20240625031351.3586955-4-chao@kernel.org>
 
-On Tue 2024-06-04 01:30:51, John Ogness wrote:
-> For PREEMPT_RT, legacy console printing is performed in a dedicated
-> kthread. However, this behavior can also be interesting for other
-> preemption models as it minimizes the duration of printk() calls by
-> deferring all printing.
+Hello
+
+I also have been thinking about the GC of the atomic file these days. I
+read your patches for atomic write, but I think there are some corner
+cases that can't be resolved with them.
+
+First is when the GC of the atomic file occurs right after the writeback
+of newly updated page. Since the atomic page flag is cleared at the end
+of f2fs_do_write_data_page, the GC thread will set the page dirty and
+let it be written to the atomic file, which will cause the data
+corruption of the original inode.
+
+Second is the foreground GC of atomic file. Although your patch can
+distinguish whether pages should be written to the original inode or cow
+inode, it can't handle the case when the atomic page needs to be
+migrated but updated page already exists in the page cache as below.
+
+// atomic file's 1st old block is a and new block is b.
+// b is in the page cache
+GC thread(FG_GC)
+  - select A as a victim segment
+  do_garbage_collect
+    - iget atomic file's inode for block a
+    move_data_page
+      f2fs_do_write_data_page
+        - use dn of cow inode since b has atomic flag
+    - seg_freed is 0 since block a is still valid
+    - goto gc_more and A is selected as victim again
+
+Third is a race condition between GC of cow file and writeback thread of
+atomic file. Since there are two page caches for one dnode, I think we
+need to consider the race condition between them such as the case
+between the file inode and the meta inode.
+
+I submitted a patch set for atomic write, so could you review it?
+The patch links are as below.
+https://sourceforge.net/p/linux-f2fs/mailman/message/58790988/
+https://sourceforge.net/p/linux-f2fs/mailman/message/58790989/
+
+Thanks
+
+
+
+> atomic write can only be used via buffered IO, let's fail direct IO on
+> atomic_file and return -EOPNOTSUPP.
 > 
-> Provide a new boot argument "threadprintk" that will create the
-> dedicated kthread for legacy console printing for !PREEMPT_RT
-> systems.
+> Signed-off-by: Chao Yu <chao@kernel.org>
+> ---
+>  fs/f2fs/file.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> The implementation is the same as the "threadirqs" boot argument.
->
-> Users should be aware that if this option is enabled, the shutdown,
-> reboot, and panic messages probably will not be visible on the
-> legacy consoles.
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c index
+> 0355cb054521..a527de1e7a2f 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -2150,6 +2150,7 @@ static int f2fs_ioc_start_atomic_write(struct file
+> *filp, bool truncate)
+>  		goto out;
+> 
+>  	f2fs_down_write(&fi->i_gc_rwsem[WRITE]);
+> +	f2fs_down_write(&fi->i_gc_rwsem[READ]);
+> 
+>  	/*
+>  	 * Should wait end_io to count F2FS_WB_CP_DATA correctly by @@ -
+> 2209,6 +2210,7 @@ static int f2fs_ioc_start_atomic_write(struct file
+*filp,
+> bool truncate)
+>  	}
+>  	f2fs_i_size_write(fi->cow_inode, isize);
+> 
+> +	f2fs_up_write(&fi->i_gc_rwsem[READ]);
+>  	f2fs_up_write(&fi->i_gc_rwsem[WRITE]);
+> 
+>  	f2fs_update_time(sbi, REQ_TIME);
+> @@ -4537,6 +4539,13 @@ static ssize_t f2fs_dio_read_iter(struct kiocb
+> *iocb, struct iov_iter *to)
+>  		f2fs_down_read(&fi->i_gc_rwsem[READ]);
+>  	}
+> 
+> +	/* dio is not compatible w/ atomic file */
+> +	if (f2fs_is_atomic_file(inode)) {
+> +		f2fs_up_read(&fi->i_gc_rwsem[READ]);
+> +		ret = -EOPNOTSUPP;
+> +		goto out;
+> +	}
+> +
+>  	/*
+>  	 * We have to use __iomap_dio_rw() and iomap_dio_complete() instead
+> of
+>  	 * the higher-level function iomap_dio_rw() in order to ensure that
+> the @@ -4948,6 +4957,12 @@ static ssize_t f2fs_file_write_iter(struct
+> kiocb *iocb, struct iov_iter *from)
+>  	/* Determine whether we will do a direct write or a buffered write.
+> */
+>  	dio = f2fs_should_use_dio(inode, iocb, from);
+> 
+> +	/* dio is not compatible w/ atomic write */
+> +	if (dio && f2fs_is_atomic_file(inode)) {
+> +		ret = -EOPNOTSUPP;
+> +		goto out_unlock;
+> +	}
+> +
+>  	/* Possibly preallocate the blocks for the write. */
+>  	target_size = iocb->ki_pos + iov_iter_count(from);
+>  	preallocated = f2fs_preallocate_blocks(iocb, from, dio);
+> --
+> 2.40.1
+> 
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
 
-printk() is _heavily_ limited in this mode. Users would see the
-messages only when the system is running well.
-
-I think that this is a _big_ difference against "threadirqs".
-It still allows to handle some critical IRQ handlers directly
-by using IRQF_NO_THREAD.
-
-> Non-legacy consoles (NBCON) already have their own dedicated kernel
-> threads for printing and reliable shutdown, reboot, and panic
-> printing. This option really only applies to legacy consoles.
-
-OK, the NBCON consoles might make it a bit more useful. But there
-will be only one at the beginning. And it won't work with boot
-consoles.
-
-All I want to say is that this mode has big limitations
-and kind of weird semantic. This semantic is basically
-needed only with PREEMPT_RT.
-
-I would prefer to remove this patch for now. It would give us
-more time to think about the threaded and sync modes.
-
-Or I would at least use "force" in the name to make it more clear
-that it forces some non-default (non-optimal) behavior.
-I would call it "printk_thread_force" or "printk_legacy_thread_force".
-
-Best Regards,
-Petr
