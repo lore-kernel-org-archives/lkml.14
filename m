@@ -1,156 +1,154 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1791148FF0;
-	Tue,  2 Jul 2024 21:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051C820127C
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719955536; cv=none; b=OW/8v4bhqxBlWd8OOBa6RVVPP2zd/sjHbRGs8/+I+5vhriTT+bEfl0nrHTzNZnT8Nk1hxBxbkkgpC2ALigWSfrXWmGJ7jTnUfh+Bj2OX/ESuvhkARe/iBbFJhzkLToHRr3DFQBfTPO5+FzzsbuUqY+3uadIbpOc0VeQgC2ncVJ0=
+	t=1719955638; cv=none; b=UcSe7T3WrHQ/NH1gHlr/5Sf3OCo+b6iDw/cjfFfxS/3ZOJ4/a4oEgo2Dj8PG6Nzavp58QU0VxT31DeQeQjuh2NU0njtau1atctEQr3wK564WfepPJSpP+kGji8S4qbfLbiBaFzdKI2Km2iFR0UTBYabmoBjYycZbb+WwsJkbTN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719955536; c=relaxed/simple;
-	bh=kxOa+jj5icSx1TV8u2CbRScO5ZwrgRSKLg5LVgqTcd4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NzD6cliAj8qvdXCOgV2m1WViVu0P4Odp4+jJ3/QW6Gpk/5HPuEw3xXlHVbpzofvZr/5xocq5BZGlrwxBKD/FCAPDmre9P46oC9waItDHnNQoyouoRe4mvGZoTZ0UR4PReG+o1UuECA6lAvF02irZm78scPxdmEGxA+KRhMBBe5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NIrbnihi; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1719955638; c=relaxed/simple;
+	bh=O+o3Ib11ciLZU7Bvqliq2+mbTCErwHIwUfXdIcVPsOM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Ok7F42JRqHkKR8zezlt9OY+Q9U3LdLihulTdm1w3ITN2hTf6XHMsqkgHRZce2zeL+RrJWitnXgid3UIdzNsvs6NVCpUDFsbPBtb4+Su63W9ma+IdXYf2AHAbqwjVYCqqwKfv0yfN4W2+4SA3EdfsMb4+jXxQsOVS8sJnv5LW7/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A90aQDSm; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NIrbnihi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1719955533;
-	bh=kxOa+jj5icSx1TV8u2CbRScO5ZwrgRSKLg5LVgqTcd4=;
-	h=From:Date:Subject:To:Cc:From;
-	b=NIrbnihinxT1gB6gnvSxy9dSyWS1U4oNykI4qNhHHbhc6wrMt+E4QBlLB2tRSGaRV
-	 QKJxRJdPqZq1Cl9C8lIupmKiOrkOAMAgJAu6iHzSlQNOKnkc4DKeIXbiKwj4QWOyOK
-	 0IokuOqs384mSikorJS4Fe5DE65g8MUgruHm72sNFBJiw2cv8mbz0SYAGx60cf3Hzo
-	 D3qUYWQp8UOvdaTkuFFGf2X9txI6MgrByQVG0AkcDrgUUkHkmbEuo2obbBfCWTtmwY
-	 AV/eef5DHJec8GYKHS9fSszxvSt3WNaGX2SKz1N2uGdQ0LK8e+4cB8JWdXWedPBu6x
-	 iTaTOeRcNiGqg==
-Received: from [192.168.1.203] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0ED6037811EB;
-	Tue,  2 Jul 2024 21:25:30 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Tue, 02 Jul 2024 17:24:56 -0400
-Subject: [PATCH] thermal: gov_power_allocator: Return early in manage if
- trip_max is null
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A90aQDSm"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5c21ef72be3so2573722eaf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:27:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719955635; x=1720560435; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nTzF53NuroztRgrbHB394lFrc7XZKur8WQZSwEHeFpA=;
+        b=A90aQDSmTJicxO9zOPubi5b/wVe/V5iGXzga7b9RCrWjWwEIphBUvM8nWbtJvAnqP3
+         kI9HedBa9Tsb1iCXovKQWNXgdl55FwkVlO4fDuxzpXFBaW4UVZ+FRyGJxKjp+yRTBeLN
+         nFUjoCGc8pjU112JTADeQbj3YbtnskfJDQVmzkaKQnYE2BMv5wo+5Ei0ncVuHYmuA+5C
+         jDA6x3nOmOZy33qLfvKLPGVaUOOYkC62WDq2TA+9G4pk/+RzZcJ4DVDUJ9HDflGFlR5Y
+         vBdqqV9GYN8RZ+KGW28JlssECsmBKZsYJja8UKmYh6fXqGKN5W9tf5EaFwLXSwS4hfem
+         1h4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719955635; x=1720560435;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nTzF53NuroztRgrbHB394lFrc7XZKur8WQZSwEHeFpA=;
+        b=nQBQloG1EnZbBIbdoCMs15p5rDwdHt47TAJMwzBkLID9cKo9ODfb6lKx+KViHaONHP
+         EfDY5CZhI+3BbdoIZFTicJ3spqEeTs6PFoBDYcoTXKTOmJwap+zwU39giWX3XNZtVgDV
+         MwgkAdL+PISZB3j9VWFKphKz3C5qNP2rjLAsNf0A3xlhpVbyojVJLIMCM1SILPyE/ZLj
+         APlaBmBCwfcRxTYfHN0YnZoahkJd7ExXO8PsXDbAAgwg52Xlz3ajzPn56zyC8ZGEnvQs
+         LOSA4XqeQD+SHroRVeVOFYS+qzynsjomlJqFJPlS0R4YFcj3PfSEwLw3TI9rtwd/n5A4
+         k4aw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/iNXpvWfw3wSecvb4C7b9cnApydgF1vPFtjsXIeXexxj8BAmLOKKEvoo4zlmYcZMbfz8BWkAS3Z0bmFJCY5N6RWR5vUwWnlDiLmF2
+X-Gm-Message-State: AOJu0YybyFeYq76SCho436Pz25210vOFVAMsFmRlN/kK4F7vxidkjFgJ
+	6WNeBoStKZrmDvK0kf+2qOoYjwXQdELRQGfLTFLKrQzo1agK1JnJxWzf9oIQqkw=
+X-Google-Smtp-Source: AGHT+IEXkSehpzi4dO+e44Mjuzyc/L9KJG1nFcAOno11tON/+OnVJMgXU857jRLULOgie6mk2dtQcQ==
+X-Received: by 2002:a05:6871:b09:b0:254:c41a:2b34 with SMTP id 586e51a60fabf-25db33f824emr8393430fac.22.1719955635025;
+        Tue, 02 Jul 2024 14:27:15 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:a6f1:b7be:4c8c:bf62])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-25d8e37ee64sm2386570fac.47.2024.07.02.14.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 14:27:14 -0700 (PDT)
+Date: Tue, 2 Jul 2024 23:27:12 +0200
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, iansdannapel@gmail.com,
+	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Michael Riesch <michael.riesch@wolfvision.net>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	Ian Dannapel <iansdannapel@gmail.com>
+Subject: Re: [PATCH v2 1/3] fpga: Add Efinix Trion & Titanium serial SPI
+ programming driver
+Message-ID: <6286e61c-6822-40d4-a43e-617a4ce257ca@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240702-power-allocator-null-trip-max-v1-1-47a60dc55414@collabora.com>
-X-B4-Tracking: v=1; b=H4sIACdwhGYC/x3MwQqDMAwA0F+RnBfoiqD4K2OHLEYN1LakbhPEf
- 7d4fJd3QBFTKTA0B5j8tGiKFc9HA7xQnAV1rAbvfOs65zGnvxhSCIlpS4bxGwJuphlX2vHDved
- +7ISEoR7ZZNL9/l/v87wAJiIUDG8AAAA=
-To: Lukasz Luba <lukasz.luba@arm.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Nikita Travkin <nikita@trvn.ru>
-Cc: kernel@collabora.com, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628152348.61133-2-iansdannapel@gmail.com>
 
-Commit da781936e7c3 ("thermal: gov_power_allocator: Allow binding
-without trip points") allowed the governor to bind even when trip_max
-is null. This allows a null pointer dereference to happen in the manage
-callback. Add an early return to prevent it, since the governor is
-expected to not do anything in this case.
+Hi,
 
-Fixes: da781936e7c3 ("thermal: gov_power_allocator: Allow binding without trip points")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
-This issue was noticed by KernelCI during a boot test on the
-mt8195-cherry-tomato-r2 platform with the config in [1]. The stack trace
-is attached below.
+kernel test robot noticed the following build warnings:
 
-[1] http://0x0.st/XaON.txt
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-[    4.015786] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[    4.015791] Mem abort info:
-[    4.015793]   ESR = 0x0000000096000004
-[    4.015796]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    4.015799]   SET = 0, FnV = 0
-[    4.015802]   EA = 0, S1PTW = 0
-[    4.015804]   FSC = 0x04: level 0 translation fault
-[    4.015807] Data abort info:
-[    4.015809]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[    4.015811]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[    4.015814]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[    4.015818] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000109809000
-[    4.015821] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
-[    4.015835] Modules linked in: mt8195_mt6359(+) mt6577_auxadc snd_soc_mt8195_afe mtk_scp_ipi snd_sof_utils mtk_wdt(+)
-[    4.015852] CPU: 2 PID: 13 Comm: kworker/u32:1 Not tainted 6.10.0-rc6 #1 c5d519ae8e7fec6bbe67cb8c50bfebcb89dfa54e
-[    4.015859] Hardware name: Acer Tomato (rev2) board (DT)
-[    4.015862] Workqueue: events_unbound deferred_probe_work_func
-[    4.015875] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    4.015880] pc : power_allocator_manage+0x110/0x6a0
-[    4.015888] lr : __thermal_zone_device_update+0x1dc/0x400
-[    4.015893] sp : ffff8000800eb800
-[    4.015895] x29: ffff8000800eb810 x28: 0000000000000001 x27: 0000000000000001
-[    4.015903] x26: aaaaaaaaaaaaaaab x25: ffff07a0461c15a0 x24: ffffb58530ca67c0
-[    4.015911] x23: 0000000000000000 x22: ffff07a04098fcc0 x21: ffffb58532eec848
-[    4.015918] x20: ffff8000800eb920 x19: ffff07a0461c1000 x18: 0000000000000b4b
-[    4.015926] x17: 5359534255530031 x16: ffffb585310352e4 x15: 0000000000000020
-[    4.015933] x14: 0000000000000000 x13: ffffffff00000000 x12: 0000000000000040
-[    4.015940] x11: 0101010101010101 x10: ffffffffffffffff x9 : ffffb58530ca8d78
-[    4.015948] x8 : 0101010101010101 x7 : 7f7f7f7f7f7f7f7f x6 : 0000000000001388
-[    4.015955] x5 : 0000000000000000 x4 : 0000000000000384 x3 : 0000000000000000
-[    4.015962] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
-[    4.015970] Call trace:
-[    4.015972]  power_allocator_manage+0x110/0x6a0
-[    4.015978]  __thermal_zone_device_update+0x1dc/0x400
-[    4.015983]  thermal_zone_device_set_mode+0x7c/0xa0
-[    4.015987]  thermal_zone_device_enable+0x1c/0x28
-[    4.015991]  thermal_of_zone_register+0x43c/0x498
-[    4.015996]  devm_thermal_of_zone_register+0x6c/0xb8
-[    4.016001]  gadc_thermal_probe+0x140/0x214
-[    4.016007]  platform_probe+0x70/0xc4
-[    4.016012]  really_probe+0x140/0x270
-[    4.016018]  __driver_probe_device+0xfc/0x114
-[    4.016024]  driver_probe_device+0x44/0x100
-[    4.016029]  __device_attach_driver+0x64/0xdc
-[    4.016035]  bus_for_each_drv+0xb4/0xdc
-[    4.016041]  __device_attach+0xdc/0x16c
-[    4.016046]  device_initial_probe+0x1c/0x28
-[    4.016052]  bus_probe_device+0x44/0xac
-[    4.016057]  deferred_probe_work_func+0xb0/0xc4
-[    4.016063]  process_scheduled_works+0x114/0x330
-[    4.016070]  worker_thread+0x1c0/0x20c
-[    4.016076]  kthread+0xf8/0x108
-[    4.016081]  ret_from_fork+0x10/0x20
-[    4.016090] Code: d1030294 17ffffdd f94012c0 f9401ed7 (b9400000)
-[    4.016095] ---[ end trace 0000000000000000 ]---
----
- drivers/thermal/gov_power_allocator.c | 3 +++
- 1 file changed, 3 insertions(+)
+url:    https://github.com/intel-lab-lkp/linux/commits/iansdannapel-gmail-com/fpga-Add-Efinix-Trion-Titanium-serial-SPI-programming-driver/20240630-044745
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20240628152348.61133-2-iansdannapel%40gmail.com
+patch subject: [PATCH v2 1/3] fpga: Add Efinix Trion & Titanium serial SPI programming driver
+config: powerpc-randconfig-r081-20240701 (https://download.01.org/0day-ci/archive/20240703/202407030525.VHF3He6K-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
 
-diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
-index 45f04a25255a..1b2345a697c5 100644
---- a/drivers/thermal/gov_power_allocator.c
-+++ b/drivers/thermal/gov_power_allocator.c
-@@ -759,6 +759,9 @@ static void power_allocator_manage(struct thermal_zone_device *tz)
- 		return;
- 	}
- 
-+	if (!params->trip_max)
-+		return;
-+
- 	allocate_power(tz, params->trip_max->temperature);
- 	params->update_cdevs = true;
- }
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202407030525.VHF3He6K-lkp@intel.com/
 
----
-base-commit: 82e4255305c554b0bb18b7ccf2db86041b4c8b6e
-change-id: 20240702-power-allocator-null-trip-max-bc82c8d7eaec
+smatch warnings:
+drivers/fpga/efinix-trion-spi-passive.c:174 efinix_spi_probe() warn: passing zero to 'PTR_ERR'
 
-Best regards,
+vim +/PTR_ERR +174 drivers/fpga/efinix-trion-spi-passive.c
+
+4c272ecc14b70f Ian Dannapel 2024-06-28  152  static int efinix_spi_probe(struct spi_device *spi)
+4c272ecc14b70f Ian Dannapel 2024-06-28  153  {
+4c272ecc14b70f Ian Dannapel 2024-06-28  154  	struct efinix_spi_conf *conf;
+4c272ecc14b70f Ian Dannapel 2024-06-28  155  	struct fpga_manager *mgr;
+4c272ecc14b70f Ian Dannapel 2024-06-28  156  
+4c272ecc14b70f Ian Dannapel 2024-06-28  157  	conf = devm_kzalloc(&spi->dev, sizeof(*conf), GFP_KERNEL);
+4c272ecc14b70f Ian Dannapel 2024-06-28  158  	if (!conf)
+4c272ecc14b70f Ian Dannapel 2024-06-28  159  		return -ENOMEM;
+4c272ecc14b70f Ian Dannapel 2024-06-28  160  
+4c272ecc14b70f Ian Dannapel 2024-06-28  161  	conf->spi = spi;
+4c272ecc14b70f Ian Dannapel 2024-06-28  162  
+4c272ecc14b70f Ian Dannapel 2024-06-28  163  	conf->creset = devm_gpiod_get(&spi->dev, "creset", GPIOD_OUT_HIGH);
+4c272ecc14b70f Ian Dannapel 2024-06-28  164  	if (IS_ERR(conf->creset))
+4c272ecc14b70f Ian Dannapel 2024-06-28  165  		return dev_err_probe(&spi->dev, PTR_ERR(conf->creset),
+4c272ecc14b70f Ian Dannapel 2024-06-28  166  				"Failed to get RESET gpio\n");
+4c272ecc14b70f Ian Dannapel 2024-06-28  167  
+4c272ecc14b70f Ian Dannapel 2024-06-28  168  	conf->cs = devm_gpiod_get(&spi->dev, "cs", GPIOD_OUT_HIGH);
+4c272ecc14b70f Ian Dannapel 2024-06-28  169  	if (IS_ERR(conf->cs))
+4c272ecc14b70f Ian Dannapel 2024-06-28  170  		return dev_err_probe(&spi->dev, PTR_ERR(conf->cs),
+4c272ecc14b70f Ian Dannapel 2024-06-28  171  				"Failed to get CHIP_SELECT gpio\n");
+4c272ecc14b70f Ian Dannapel 2024-06-28  172  
+4c272ecc14b70f Ian Dannapel 2024-06-28  173  	if (!(spi->mode & SPI_CPHA) || !(spi->mode & SPI_CPOL))
+4c272ecc14b70f Ian Dannapel 2024-06-28 @174  		return dev_err_probe(&spi->dev, PTR_ERR(conf->cs),
+
+s/conf->cs/-EINVAL/
+
+4c272ecc14b70f Ian Dannapel 2024-06-28  175  				"Unsupported SPI mode, set CPHA and CPOL\n");
+4c272ecc14b70f Ian Dannapel 2024-06-28  176  
+4c272ecc14b70f Ian Dannapel 2024-06-28  177  	conf->cdone = devm_gpiod_get_optional(&spi->dev, "cdone", GPIOD_IN);
+4c272ecc14b70f Ian Dannapel 2024-06-28  178  	if (IS_ERR(conf->cdone))
+4c272ecc14b70f Ian Dannapel 2024-06-28  179  		return dev_err_probe(&spi->dev, PTR_ERR(conf->cdone),
+4c272ecc14b70f Ian Dannapel 2024-06-28  180  				"Failed to get CDONE gpio\n");
+4c272ecc14b70f Ian Dannapel 2024-06-28  181  
+4c272ecc14b70f Ian Dannapel 2024-06-28  182  	mgr = devm_fpga_mgr_register(&spi->dev,
+4c272ecc14b70f Ian Dannapel 2024-06-28  183  				"Efinix SPI Passive Programming FPGA Manager",
+4c272ecc14b70f Ian Dannapel 2024-06-28  184  					&efinix_spi_ops, conf);
+4c272ecc14b70f Ian Dannapel 2024-06-28  185  
+4c272ecc14b70f Ian Dannapel 2024-06-28  186  	return PTR_ERR_OR_ZERO(mgr);
+4c272ecc14b70f Ian Dannapel 2024-06-28  187  }
+
 -- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
