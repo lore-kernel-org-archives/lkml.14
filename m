@@ -1,85 +1,86 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB722BCFF
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 19:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581827E574
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 19:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719946837; cv=none; b=uYtWwA/JyJ/M1kI7WgpCXE6QfMu/A5+6GR1wBAbUD/peaOS78THEBCeWq8IyxkyHMaV40V/1yC3J6W02OYjF4w5mTxz8Xyc7XqhxabXTXrmGCUFhK/fIu1tnKDXt9DTg/c79ZA7uUs0gkhqqaudmeGcPINgCVjhu5W+KDv7MirI=
+	t=1719946853; cv=none; b=d/6HTOZE7wjm610ar3SWxKPj4cxnxCXDzjKXIrFeOPdBjT1fljO8Z0dKyl1Y2DgSijbiWWy089+vbt457Bd4ikMnr5/SaD8qLQfCv5CprpEfFR3xtn7lOEMn3g0RDjnpuaJV2ZQmSntdx74RJH5s06mdPwGmDbzYmkMlMI+FP/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719946837; c=relaxed/simple;
-	bh=TRh3kCtvO58B3TS/ro9pEJNNo6FOlD9/z7qzRrzSlqs=;
-	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gSTiHTSzW7uqMI8moB9goe5Phb6V7LTIvaNfC6eC+qKwzN2rpN+HHCmZDAIGszUCfUZ4pQgTJFxo9K1AgqRdcq06FBfY9Jxf2UKlbXeOWtVij5ZcRJ0IFR9B+j5v//vTMBS0Z6dsQw+P0Mw3SiptVqLDPF8lhKKzulvlFZiQ32Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Aex1PcL4; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1719946853; c=relaxed/simple;
+	bh=Og7DW5Yu4GR5oFkUrZTTWI8AIavBfgW62M8Yq5VQPiA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L2fVNcvDhJajiegLbbaw0tXD/HtUd8Rr3qms8xpm/6zDxDK87Cti731mtH4B6tpxJILMHxZe4Ux9z2NTDDsZ28aJPLniXQdiMFBzsnCIM9eYWxTUDHgWwI3M69dIFdo5QXXBC3kizoGHF0w+MZy8t4ofG0HHTGWm6J4bxtTE5YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qA596l9s; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Aex1PcL4"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7021702f3f1so1552121a34.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 12:00:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qA596l9s"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6fe81a5838so441497866b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 12:00:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1719946835; x=1720551635; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TRh3kCtvO58B3TS/ro9pEJNNo6FOlD9/z7qzRrzSlqs=;
-        b=Aex1PcL4TQzx8xBTycaadMgX5n4tITaDJ7ONqUNBdF1vjeiOMgSC7gfpdYgMNs2lpz
-         sN8BIfgFJPooNk7fLnAPOogWzWhcLP/V/GdwoECSQQ1PBIpuB69W9QQKCLX8UVGKuOV/
-         hoy2aSRq+4RZcb1OEn93WMKX2ZPMXrFFYB+x8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719946835; x=1720551635;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1719946851; x=1720551651; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TRh3kCtvO58B3TS/ro9pEJNNo6FOlD9/z7qzRrzSlqs=;
-        b=wvHcMRXlD+vYT2BYEif5Cdy86DC7mZKGYKFx3F8ojqFNJPusJmqOw4ZDeJqDYLqsGM
-         w2T28kNSGObz2qRJitfmlfHHc1p4V9WheNe65dJdVC1j4fBXQmZVb409J6AEo3hv+M8o
-         L3Bz2VkEYzryGi4zyXXxK7c9R3A4Mwn+w9hH2qcdfAF0Hp+YuamcY9xz51ZQubLfizV7
-         k/K5cJ0fOvrH9uoWFNG3xSYhNQbdBkqa65XGERZumETOS/9xQInI4YT+2Lw80JmTi5iJ
-         VSBDdNQXnW+8BjFHqSBkc4Sm7TSufjX6rwmZ5rk8A1OcYJf6QrmBKvigcwYXczThkmBW
-         la1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUpkc8G4rNzliHDpFKkZ+vhPCa3OIm0V2dy+eBlfjbgJUw8uw6vc4B+YQhEbVYyoKFZwj5MyjgmpogmNYBkB4obp/iKItO6TDiF8xdH
-X-Gm-Message-State: AOJu0YxkHMUFfq7K+lKLUBb+fflZp4pnKG343Jmyw0Id5+6yHj9CDosw
-	fol05fyubv129DaTWx7yje9TMd/wfM8uH85+I99/zkNY9qFdaXjn8BP6tP+sakw3eYAPhgmeK3M
-	u8G4ySD+e3mTgcXuWsdhgm9rTzMkVXSAHq2bD
-X-Google-Smtp-Source: AGHT+IEuctwteLzkcWtPEA88NJi6Q3ar2tx3qa3jOR7L3cOw0C0DH0EuKI1yUKU29vx9JV4sFz9I67UQX3NV/JxAMfc=
-X-Received: by 2002:a9d:6c56:0:b0:702:526:284e with SMTP id
- 46e09a7af769-702076f2ed8mr10449874a34.33.1719946835587; Tue, 02 Jul 2024
- 12:00:35 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 2 Jul 2024 12:00:34 -0700
+        bh=Og7DW5Yu4GR5oFkUrZTTWI8AIavBfgW62M8Yq5VQPiA=;
+        b=qA596l9sQhdhNB4+3YdvUXfWKDIkdoabdE7qi8Il5VJtm5LzuiAwbLQkuLlt7oL8lO
+         qd9TLbYV7lJgKWNOuVTgtThsjsrY890H2lKjRFlBWWQP37WnU6qBBjEQ3szGQS/xUDGQ
+         +bNRmFEEYZ/EajSPYGF4b+jZ0PFT29U3mUyzV2wPaeNnR4Ekl47bq23yNeQFclGhdfy/
+         AsZ6+iihdyxZNPFMJ8qO4ZTbRKAeXXkaTK7t8KhNY3TkJA+Wl2IkcC/NFFmz1thJbDFC
+         4CW40Iqde+grFthx5tsVRXogRSsfCPY8MjlX9aAZbJ0ZCGjJXpoXCCo+OPGhmI02RGNe
+         LVOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719946851; x=1720551651;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Og7DW5Yu4GR5oFkUrZTTWI8AIavBfgW62M8Yq5VQPiA=;
+        b=S6vp8rJSMs9H0VEQ2ABghrnUM7B11f7H/dbQmZUOeM6lXs1JKeFK15jJIVXcoWLDeL
+         JxwfdrCX30mhk6+hHMcRNrFjAHQIPeskk0ikOJBIjO5RDVO34EXM+4iyqxHnFws6WmsF
+         tG5SMS5hVb9wxl7AO+zn9dgGWf/W/lHGqLGhGOLoFERtIWp62tN4GdCVGXqlnWMAnE6a
+         aQH+81szsX6UTGWUB5SXPvkiqr9ClQdO63zI5MgHgIIs+V4GnmFUmzUxEfGArL7I5ow7
+         7rMcDzsvrDgIRBBrrFx0s4QJgMCuMeWNWO99NlYgbGp7wUK/t4OxrzpMzugKS4Y2TX8R
+         kB4g==
+X-Forwarded-Encrypted: i=1; AJvYcCXwb9TDmmulEh4ZfaS9SNkFVfkKJMLX//M8zGfSF2PPUnqJJ/cqINDjQXHhkES4Lk8T740FBHgLhxyAGwPjRovfWuZCfknVk7ml+Ziu
+X-Gm-Message-State: AOJu0YwlV8wKnVOxEHoIzBG42/vY5u/eRsqKK/Ii9uqy8bUAi1eGXDIa
+	ZHCylwu/S/1PZmTTRWjrGViR0JajK9n7/tN4ZdiAWrQp8dRkS4tL0vma0qh+KHo7i+D5JLQ2I5g
+	EhETBZK79AhdPqDpiFaVib3k6CW02imo6O7a9
+X-Google-Smtp-Source: AGHT+IEtU90GXT6EOoRx2J1TTgr3l1xux+l3ChvX/U/M2rL9K7531nZLNavqx6y3ZQVJfxLYpJCq+2GdoOshT8YxfBI=
+X-Received: by 2002:a17:907:3d8f:b0:a72:4bf2:e16 with SMTP id
+ a640c23a62f3a-a7514463114mr781223866b.16.1719946850169; Tue, 02 Jul 2024
+ 12:00:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240624-usb_core_of_memleak-v1-1-af6821c1a584@gmail.com>
-References: <20240624-usb_core_of_memleak-v1-1-af6821c1a584@gmail.com>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date: Tue, 2 Jul 2024 12:00:34 -0700
-Message-ID: <CAE-0n51SfZiQ_XnPXYrG4Fyu=H8xDc0zpJ_Hxa+MrFq8V8PXTQ@mail.gmail.com>
-Subject: Re: [PATCH] usb: core: add missing of_node_put() in usb_of_has_devices_or_graph
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
+References: <20240702132139.3332013-1-yosryahmed@google.com>
+ <20240702132139.3332013-2-yosryahmed@google.com> <20240702185835.GIZoRN297EJA0QgBDC@fat_crate.local>
+In-Reply-To: <20240702185835.GIZoRN297EJA0QgBDC@fat_crate.local>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Tue, 2 Jul 2024 12:00:14 -0700
+Message-ID: <CAJD7tkak-FdHB0X+xbNxRd6uXS6v-6KYWugJEpwvu2upC88dgQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 1/3] x86/mm: Use IPIs to synchronize LAM enablement
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Quoting Javier Carrasco (2024-06-24 14:10:06)
-> The for_each_child_of_node() macro requires an explicit call to
-> of_node_put() on early exits to decrement the child refcount and avoid a
-> memory leak.
-> The child node is not required outsie the loop, and the resource must be
-> released before the function returns.
+On Tue, Jul 2, 2024 at 11:58=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrot=
+e:
 >
-> Add the missing of_node_put().
+> On Tue, Jul 02, 2024 at 01:21:37PM +0000, Yosry Ahmed wrote:
+> > Change-Id: I7fd573a9db5fe5284d69bc46f9b3758f1f9fb467
 >
-> Cc: stable@vger.kernel.org
-> Fixes: 82e82130a78b ("usb: core: Set connect_type of ports based on DT node")
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-> ---
+> What do those tags mean?
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Those are gerrit tags (from internal tooling) that I mistakenly
+included, please ignore them. I can resend the patches without them if
+needed. Sorry about that.
