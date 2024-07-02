@@ -1,82 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C796201279;
-	Tue,  2 Jul 2024 21:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C718620125A;
+	Tue,  2 Jul 2024 21:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719956356; cv=none; b=ZEZj4nskBS9gjYgcM1vqxaDgr+0Mkshw3ocbXChR7QrXN8FAwYsVR8eqRaezrjtqMjFbw6EM0zdXYdSQQij7jTIiyAbiV76kdWsTwaL787n6Tw0uumOK9tsnZ8YGNAafWM9aEYN2yE+kndsMsYSt8W6mTds1x/RRqgwnTlVF8fo=
+	t=1719956395; cv=none; b=TVt6sp8boKRjIoKJaA6R8+yZIE8Lj9HrjiY0uV5Mcz27T4i7w0J4M6bKf7Sc8pmdBXWgrf/4fmMEljB89ndKVQrfJ7TOQOA1sDUOHh0nMFwoiQ/rAJ4v7vpuYViDY5h0zjpOG28e+R0etXGBC10J+xERKa+8F2PhSgQApO7pSxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719956356; c=relaxed/simple;
-	bh=yhmXJTbkrrMWvZUHv6TNPn7XDDifEJi4Vj/IN2OOqjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=peLl+zG6j6Bub6F/wr0EVN64snOXEUJNhk6V75I6zbI3zQV9rUg1N1F4bPatDDA5iPDeYk0gTw45BULma4bpCGPpxqH6fKa+ox5uUD7KUCPuR7207M+p8qXuV2EBb2K4XgxGxBSjMPqhyFb9CpwNl8jwl1v5GANt8/eNRx844cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hAOIucNT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719956395; c=relaxed/simple;
+	bh=boNYnQaxAbncbVDKC6riwSLR2cfzkMgrICaD3z4Xm7U=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=oFsGWu5x6F8j5BVeQdgNfeLqV/e/x4GHGeMRJMIBuMr9fUsA1ae9cjkSlJ6AvBjV539sN03DBYm00RESCV5dhjPaYFYVwLwStBEgfErooTZbRT6Nlvt1ZHwHdQeDUoNXBZwzBb/osntp9vvCT1Vo55z+UdKY0vAVaAzz9lEePe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FvZAR+J1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UED8poPi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hAOIucNT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB52BC32781;
-	Tue,  2 Jul 2024 21:39:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719956356;
-	bh=yhmXJTbkrrMWvZUHv6TNPn7XDDifEJi4Vj/IN2OOqjo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hAOIucNTlt+El3HE7zv12g/VbAu31FonTbyh8tact72p0+cJzqI+e4mlxr6nkVxly
-	 NoYU+ElO7mDq0E+6XwNEtWrYp9LALe8kTyZujLkCtn+2enR3dK/uzS/+HivRREoSHR
-	 Bcn1ggH47qr0MhblvwCDMm7s6fclNzDFzluzYlbAvpMcBKuGXf4gPAqTQ4W73q883J
-	 0OQvqZ9D+RfazYnZhCqgigpSZLR3umgDUNtUEze2BBIMByn05YnZlgDE4JMVfW4d20
-	 IgczyumGV7a62fupcm+Mb8DizTiP0dWUf822wEAPHbXwQIUKRovdGuxO0AhskYOB0L
-	 Hy3N/PvygdOhg==
-Date: Tue, 2 Jul 2024 22:39:09 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com
-Subject: Re: [PATCH 6.6 000/163] 6.6.37-rc1 review
-Message-ID: <6986fdc7-2958-4c2d-8fc4-40b4b62061f3@sirena.org.uk>
-References: <20240702170233.048122282@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FvZAR+J1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UED8poPi"
+Date: Tue, 02 Jul 2024 21:39:51 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719956391;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=HhKvrwzqCmcb83qItVGlKVvu9jHjlPt6Zbqq+IyY0zc=;
+	b=FvZAR+J1HbZnYQ9Io2UM1L+olVq6ltvbwerbfsoaUI/fAkJ9U7hzNmGvYfdYCgJCsG3vau
+	lvCZsva8CI5zA/e+UWqiu1Ga5puHxO17KUYxItvsel/oiK8SMr+AIpej5cfoC8szM7Sq5g
+	btTZCiAuWslqpvlKT/M08Oq7xDBtm0nIBTRlLlwaPNKOpVeH3OYzolStWtW2FKPkZbOctl
+	bYOxZjKAt/yItZ3/v9Eru2WEJ9EF6o3wHPFEYvq27IujYFS1iGsXs05q2BgjtNZES0ZjTF
+	0FO1lCGQ8VsdfyovkreWgTILbfdTCh/RrHaFV2cLltFYHG6xoL+8KTJj7xl7SA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719956391;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=HhKvrwzqCmcb83qItVGlKVvu9jHjlPt6Zbqq+IyY0zc=;
+	b=UED8poPi037o9cTN/3lzDhxP/4fHMvH+LdMpszFoPwYqYx435kEPDghDvvZwu8hEE2bBRa
+	hG51zH257m53cfCw==
+From: "tip-bot2 for Yosry Ahmed" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] x86/mm: Cleanup prctl_enable_tagged_addr() nr_bits
+ error checking
+Cc: Yosry Ahmed <yosryahmed@google.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6Lgj+0vCkZSvkiUH"
-Content-Disposition: inline
-In-Reply-To: <20240702170233.048122282@linuxfoundation.org>
-X-Cookie: Phasers locked on target, Captain.
+Message-ID: <171995639138.2215.10418408006509074215.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the x86/mm branch of tip:
 
---6Lgj+0vCkZSvkiUH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Commit-ID:     b7c35279e0da414e7d90eba76f58a16223a734cb
+Gitweb:        https://git.kernel.org/tip/b7c35279e0da414e7d90eba76f58a16223a734cb
+Author:        Yosry Ahmed <yosryahmed@google.com>
+AuthorDate:    Tue, 02 Jul 2024 13:21:39 
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Tue, 02 Jul 2024 11:33:44 -07:00
 
-On Tue, Jul 02, 2024 at 07:01:54PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.37 release.
-> There are 163 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+x86/mm: Cleanup prctl_enable_tagged_addr() nr_bits error checking
 
-Tested-by: Mark Brown <broonie@kernel.org>
+There are two separate checks in prctl_enable_tagged_addr() that nr_bits
+is in the correct range. The checks are arranged such the correct case
+is sandwiched between both error cases, which do exactly the same thing.
 
---6Lgj+0vCkZSvkiUH
-Content-Type: application/pgp-signature; name="signature.asc"
+Simplify the if condition and pull the correct case outside with the
+rest of the success code path.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Link: https://lore.kernel.org/all/20240702132139.3332013-4-yosryahmed%40google.com
+---
+ arch/x86/kernel/process_64.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmaEc3wACgkQJNaLcl1U
-h9AIQAf9HiR/ZnyvU83fM4tUp3bI9d6Ottt5Jt+TQDKbeBhXb5o0oySda7kfvr5j
-0QdTT39uOwNWSPpQcz4gXIZt1ISNAYBH1yzOEc9zMR/og9oe2P563bJJT+JCcrpI
-hWtjP6N/8f7Tjt1/zuI3OQnHNL1UCTnVB3O81HGYG1HMpmqUoperb6Bt88+tZjxE
-Udr6r81TdZL96WldNBNunIuCql7/1YnM3cEQc2sdCHv+E6qWAvi2Vx/8RwoQoBZk
-a48IrjQvkpIYWrjDVXsSgsPcRQz/BnpFGuNjKIbb7h1x6ta/wLhdKQCUVNtRgjf2
-CMB29KqBqdla8QIQF1/3hQRxTFuMHw==
-=nzr7
------END PGP SIGNATURE-----
-
---6Lgj+0vCkZSvkiUH--
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index e9f7cfd..2264723 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -812,6 +812,9 @@ static void enable_lam_func(void *__mm)
+ 
+ static void mm_enable_lam(struct mm_struct *mm)
+ {
++	mm->context.lam_cr3_mask = X86_CR3_LAM_U57;
++	mm->context.untag_mask =  ~GENMASK(62, 57);
++
+ 	/*
+ 	 * Even though the process must still be single-threaded at this
+ 	 * point, kernel threads may be using the mm.  IPI those kernel
+@@ -846,13 +849,7 @@ static int prctl_enable_tagged_addr(struct mm_struct *mm, unsigned long nr_bits)
+ 		return -EBUSY;
+ 	}
+ 
+-	if (!nr_bits) {
+-		mmap_write_unlock(mm);
+-		return -EINVAL;
+-	} else if (nr_bits <= LAM_U57_BITS) {
+-		mm->context.lam_cr3_mask = X86_CR3_LAM_U57;
+-		mm->context.untag_mask =  ~GENMASK(62, 57);
+-	} else {
++	if (!nr_bits || nr_bits > LAM_U57_BITS) {
+ 		mmap_write_unlock(mm);
+ 		return -EINVAL;
+ 	}
