@@ -1,94 +1,77 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E373678C80
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6692AD17
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719901618; cv=none; b=Dqaa2otX7o9GYz46H63OiKwsI5pMunppTOzmTYt7tz5q/02tdUWDva1wOpFRftDlFzCKb4fEeMNeSUIEnWd3EfkeelCYFOAUGJ8lhRctSsEk2yOZzxk6YL7EsFmsSeM/t+ijf4IYR5P+uJH2dmvrJSXJboI6+5+0LFj626a05f4=
+	t=1719901692; cv=none; b=G5XFanZDR0zJn75/HNNJrKH9cDWxpL4rl9600CdCnYQsMSQ+qgR9XbVcVfpuilr25yGL4E9IhD2LNglb7i/Mj1sAQeHpPYQxUgi6Gcqse0jKEksxftNVCUkoniMU5vG8Ko1HT9l5HWO8sgIa9YgQITYSA/Kxg35r/JUrai3LL88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719901618; c=relaxed/simple;
-	bh=z8dhfmBSjmoLou/vJnZ1Eq316Ett29RsRhpUg0m+j6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nNcmHxRoavLrcc3HfSTDyre8Jlr16ZFfBJhxDkDNHfOfRl7XZ9AL1Csekm9HPgqa/n9JR7up6BB5BzmWsL1oJxD8yPrW2pqXDiw6t4nbpECINCo1k9x/l99IGkooLMYZOBJismu3NRfAvcvpkpmMTlrb5F0KF7Vk0ACAAXMPx0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mWpldvQD; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719901692; c=relaxed/simple;
+	bh=pJLbr97ZcJmIstk3829Yol82mUBfeqKgdCDrOnJSUWI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F0BN6WM7HY7NFCXAZlkJQXkmW8gi0stEfqdirshhbeRoQiYA1+DpyxuMJgTioJ4XnXrZq8EZyigSMMdfwGEQke4+KSZirJ0/tkS4w7OMsS7LghjTpxQHcsNJHNPmSaJgvNTXafU7aePxC7KMat1imbSZfr0belzlYmB9IcJBiDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=D6c7imaR; arc=none smtp.client-ip=185.70.40.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mWpldvQD"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52e7ad786dfso3205767e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 23:26:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719901615; x=1720506415; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Ff4Ris1lJRxR6e0xGu/YQpNzFw2f0z8KnYBgggSnQY=;
-        b=mWpldvQDW4fgnqhkFIf3goKIpDCIYA/m8xAY0ldIYov1+dYQjjiF1Kk1aCq7VFJQBj
-         MxpLRNsGCGk5q70zfr+Iz5+RxIx0/yuUq0dU6x9KM5zwKoybmGNKchEhMmVrVcwlP7H2
-         BepNYXa91HsA+FbHSShK+GTi2ne7PddWtUmHhiBPyvxVDZxa8tmpaTMUniXZmLYFkriJ
-         nPH8hR/4Agv49nKrlD7Tgr8efRaGTXUi3jVRw7qQkCS7beN7sGrCrIAXnCQaezH4QPNV
-         Q3tb2kJN8Kq/aMz7bdgylW9bf2im+C9YP1rBMO7kNyVIfYQByBIc8I+H0FWVgIZngyhh
-         m9fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719901615; x=1720506415;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Ff4Ris1lJRxR6e0xGu/YQpNzFw2f0z8KnYBgggSnQY=;
-        b=xNMeAgv+pj1xDoF8+AqaaHaxD/z3p6fOOgFAntGmWNQGPfFX7ExXq7B3mf4machYl7
-         GDvyGy3P61hLEtV7Kg3GMqepprIbxPZPwJXrxEPfEt34j2j17RJb8IkVAim5c6GymSQN
-         +WhcQ9hrRH/Bl7tMLm1OvBCtDMpp/P5zABmZAd7bJW0dNhGTGt9BIEcGJR1KyF1gxLW3
-         UG7vfXFoOqZjYTE/P7lvl8GZb9hc34zQkzchZGeIYAixu8s1TGWdjccz/yaSJkr9gbBI
-         1az7ImWKgLFaFtPSral5uXq35tkxE8cPLYDTf9NX8HofH2xR0Rka2Jb86+sh9nZZ0J8y
-         5cTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXWI5Ud9l/7Sb26FLCWv8ZNQvWC3t7LwBWUGQjurRsA4QFJr1XYgPjjYQWYiYyBzmTDI5vziALtFsWjmWKA/Oqs7KHmz+XBwruRQXUR
-X-Gm-Message-State: AOJu0YzsiyDBxonPrDwvpROJ9IdoZtwSLlXAu+9rNDuijPpkHC6v2QPA
-	8CGZacTOC3HoyLUlCRplSR5UiUCQopjRokwn4WfRvKtLabqCWkd/8jt5gBY1YXQ=
-X-Google-Smtp-Source: AGHT+IGTfSdpdThJDoiFSVsTbt1wJIsaM88cMQegT3fVR+tIB61p9i1DpXSZ416qGf5KdbnNaDBD+w==
-X-Received: by 2002:ac2:5f6e:0:b0:52c:7fc8:8658 with SMTP id 2adb3069b0e04-52e7b92f94dmr2534884e87.34.1719901615025;
-        Mon, 01 Jul 2024 23:26:55 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab0bc5fsm1642862e87.49.2024.07.01.23.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 23:26:54 -0700 (PDT)
-Date: Tue, 2 Jul 2024 09:26:53 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>, 
-	kernel test robot <lkp@intel.com>, Sean Paul <sean@poorly.run>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/msm/a6xx: Add missing __always_unused
-Message-ID: <i46daa63dnz5an5y4463airqi57homwitfetepg6voxard3wgd@xds6h6grlpou>
-References: <20240701212330.426399-1-robdclark@gmail.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="D6c7imaR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=abfdaa263rdfdi2xhukkc4emkq.protonmail; t=1719901689; x=1720160889;
+	bh=1y0bYAfpS02/2yoYIaQkGAqT8Yh0A7VVxasMlNBr9yY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=D6c7imaRSYIfSQAujmH+l8zWYbhZBLs6rHp13COfMOxmJ9mRjx1cExIZ5ipUzfeKo
+	 6wFMLqicLcBDjBw4L+8/mv0wtbq9wGYoWjK/S6hhGT5DKxF2il2JzHfCeZRxbyahSC
+	 hscoe72Seybjano37IiuA8mxpWrZHrlBjdNCtXqFUY5W75uEcTSKoqfm62eONkFgrS
+	 Jrq7PZikHNlaieufq96cVPOveE6wuqv677CCklETzDbVyKuUUYEni6a4yRochCq7qa
+	 xjmA8oLKHl2VcQ3A8iTm8epJiSvD+CHq1R/fL6ay7A4JSeCiSJNLzicL9FMIQkfVYa
+	 e8dQ66qVhD0RA==
+Date: Tue, 02 Jul 2024 06:28:03 +0000
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH 02/13] rust: init: simplify from `map_err` to `inspect_err`
+Message-ID: <b379184a-c1ca-47b5-856f-62144edf3baf@proton.me>
+In-Reply-To: <CANiq72kMaPm2OsGb3o0VUtdoMhSUoo8QEsCFzVjYFtCThvNJ1w@mail.gmail.com>
+References: <20240701183625.665574-1-ojeda@kernel.org> <20240701183625.665574-3-ojeda@kernel.org> <ap7u5hpgfdzYgTkobIleYc0uolBIsAVbq56CwMJG6k4x57wXeEtu4fpLpgSOvQtbJHvB6D0J1wlBaqDV-xt2owlVejhfABUv_ivILyJ2J9o=@protonmail.com> <CANiq72kMaPm2OsGb3o0VUtdoMhSUoo8QEsCFzVjYFtCThvNJ1w@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: e08b99f84c62c4cfa206ef6818fc00e68acef6a6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701212330.426399-1-robdclark@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 01, 2024 at 02:23:29PM GMT, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> The __build_asserts() function only exists to have a place to put
-> build-time asserts.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202407010401.rfunrBSx-lkp@intel.com/
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+On 01.07.24 23:58, Miguel Ojeda wrote:
+> On Mon, Jul 1, 2024 at 10:05=E2=80=AFPM Bj=C3=B6rn Roy Baron
+> <bjorn3_gh@protonmail.com> wrote:
+>>
+>> The formatting here is a bit weird. I would have expected the ) ending t=
+he inspect_err call to be placed on a new line given that the unsafe block =
+isn't placed on the same line as the start of the inspect_err call either. =
+This seems to be a case where rustfmt mostly gives up on formatting. If I d=
+eindent the comment and unsafe block rustfmt will keep it that way and if I=
+ add a trailing space to the inspect_err line it will keep it and emit an e=
+rror that it left behind trailing whitespace. Maybe add a block around the =
+comment and unsafe block to make rustfmt work again?
+>=20
+> Benno: any preference here? Or even open coding it.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+I would put the comment outside of the closure:
 
--- 
-With best wishes
-Dmitry
+    let val =3D unsafe { &mut *slot };
+    // SAFETY: `slot` is considered pinned.
+    let val =3D unsafe { Pin::new_unchecked(val) };
+    // SAFETY: `slot` was initialized above.
+    (self.1)(val).inspect_err(|_| unsafe { core::ptr::drop_in_place(slot) }=
+)
+
+---
+Cheers,
+Benno
+
