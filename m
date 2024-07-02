@@ -1,95 +1,128 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7F015B0FE;
-	Tue,  2 Jul 2024 17:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A67178381;
+	Tue,  2 Jul 2024 17:15:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719940373; cv=none; b=OCB6b/kNPztqyiJbht3u7pLZf9FxmZMejJ2kCvT6snAvH1NvYvJzXnidPthCUC7ntnWsXmfHOTFhp6d1gpv5W1CFsmOzhMcCAozMggVOoE2onNHaJelRQP2X7vDxJUvGjfcX3ER7ocBuCQbC9kDjGn5TXM67V/I0+OkxQcGhQO8=
+	t=1719940540; cv=none; b=fqJDYPHFCZ0qMSGpZ+TicMwk7pBs5t1LJWPVMnZudc88vVmGZHI0UU6BJDSMP1CpsMfmeLhTGuvoKDyOXurYTicQ2H50KVPVEKvkOnga57BrUjjVrjFWuPK+6GYuLEcQ9zErsoid8ltOwG09kycjyyabjBxpAkdswrGf8B9zHqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719940373; c=relaxed/simple;
-	bh=DgA7cfU5r9OZRCmLMvOPAI4mDa2XadFyFMbIQBBRS50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OWT3i798pMn+cbWg7OkQFV9NH+Nrxz0j8ExPTXPR4Cilkcl8HAYjR5HCbaQOW5xOQCJHn90H2xWzV5F+I/f2w7+8QVroQeGDyQFoj0y7KJ8eCFgOIZXYC6q8ezvw6HeEBClgiF0+v7OrPSDOgg2z1E5YxKYI8UOEAOSIl4pLduc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7jBBI0c; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719940540; c=relaxed/simple;
+	bh=Voao/9ZbAQgCxYYXt+AnJWKa7CyUGptJVX/ODDe6bKo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VelE5uPwS4G+rq+/fn7Eux8QfmHn8OLmm1tro5F27ARxHEZhSgRiDfC9d+6hxSBqLMzQfsb60HNhawCp3kBPpLWi0waHnj6sUaTHwD5jPI1BRrosB28pxn1IBOFksRucra5kDS7i8M7gt8PI+8hiSh56+HgHnmU6ueasmgESrGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNEBAC/W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7jBBI0c"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fa0f143b85so31719735ad.3;
-        Tue, 02 Jul 2024 10:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719940371; x=1720545171; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ijlINSkzKP0UYjx8QkFk3CJQA3Xa/exZyxHOlqZ+kd0=;
-        b=K7jBBI0cKxoRlC0Z9A0sObvFQLtU8xFznK18IzxwldfJc+1z0cVdcNLi/UZRV/ZYEc
-         clFBIPHhSbQv4kbOUeocUOxS8W0vYZ7t8Cqr2LLclsnJfkg5XZFyWFHNjh0Rp6r++IBg
-         6KS/Vz7HipU4HYXyTnyGWEO/XV2Z13sNUsP46GELU23ccUvaRDiKYSUmhcDDGAp5QEiH
-         +fM0G7fF7qsTCYRVQwaxqwGAKWPf+msLiwh9k2RoE2v10PfwPEb9aBtvR86G190j0p46
-         8tCTpFYy9mQk/ep/dWi5gJwfRJqYmcsBxwhuwI70hgSbZf/tAGqQXmM45eD69+RU1pHU
-         Koug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719940371; x=1720545171;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ijlINSkzKP0UYjx8QkFk3CJQA3Xa/exZyxHOlqZ+kd0=;
-        b=wiL8CoJpv0lXOvFb50zmv8orPrNx4D9qRZ18VONE1DLS7G2XqXwN9WQsuF03E9LH4F
-         emN/birFBLAaWbRuGjP4ugYbX8xhN074aenB11ugVKrvipSD6+Kxn3GrrCB/IwEL5rcE
-         2ObYpc+g2dnSYVC3gvwm5p2fBDrY2qMQg0kC5Oc9NxRkBW8qP8VwjEMGEXQZc0BtKJSs
-         i/FK14TJm0D2o6KsKoACdbzMrsH9m2+Ms5CcnAwu/9g13zmv01G4c/tQTZPKffHrBX0K
-         yJfFkHpWv/UjHrVcUdUemFLRzHotJTCpzTtksrFEV1QWszvlKw2FXKPtkjMRF87Cabed
-         vWsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVP0jBSt1EDoc9LmFn2ilr2SY3BiiWZgBH4YfVWSUWeXM1FYtJzDMWQGL2/PIWUrddeFX/9N1HYO0pTEgKd6p7u0ITZfUy66A==
-X-Gm-Message-State: AOJu0YxluwsY6K4UTEESirlVtXJuoTV4iNfG8gdZjg5ZdqQ+3zqJ+4Kb
-	On1Ot/eMpx0lGy1P1twSnAYPnc76PUulDatBJbGIFCKdhQxbVT7zGvdIkg==
-X-Google-Smtp-Source: AGHT+IFtvOAOPvBw51G6xGDnGYQR4jj0xhEcOUX9FgXruavu5hhPth9FgxN59oXFPCdDtUuxbpcupA==
-X-Received: by 2002:a17:902:d492:b0:1fa:4b9:cffc with SMTP id d9443c01a7336-1fadbb5ecdemr57563255ad.0.1719940371388;
-        Tue, 02 Jul 2024 10:12:51 -0700 (PDT)
-Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10d2060sm89296925ad.15.2024.07.02.10.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 10:12:51 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 2 Jul 2024 07:12:49 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	Vipin Sharma <vipinsh@google.com>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH] cgroup_misc: add kernel-doc comments for enum
- misc_res_type
-Message-ID: <ZoQ1ETVlajXTSbr9@slm.duckdns.org>
-References: <20240701234937.8234-1-rdunlap@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNEBAC/W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B68C4AF0A;
+	Tue,  2 Jul 2024 17:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719940539;
+	bh=Voao/9ZbAQgCxYYXt+AnJWKa7CyUGptJVX/ODDe6bKo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DNEBAC/WytPnR9V+BRdY+5hONNBz7BWJhkn8ERlNYMP58bJq27YNnlfmMTUUeFeDh
+	 rB1ugxZay58NfWftptCG/88JWwndPj55OyWUB65/YupL/sF7o7SmbdZMB3nWUsdjtv
+	 x1ldPQ551VAu8uL98XSWKxz2Hxzt0pCnpu7Bbj2OqZZK47/eyd2E+9x3bjxXrp34I9
+	 nkcdwjNqSZEqnDPYdqAelreLJRSUg/zlhwRtIEscdOo/+gfmSNfaDt61Far8cQXh5b
+	 thFPpKlGof1Kh3eMAsO9X34EyARk/BMwLtkNky/hmd6UW5VL3WWkMykEgxhnr1BNb+
+	 /EmmtERXHDouQ==
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-25cd2b51fd3so617874fac.3;
+        Tue, 02 Jul 2024 10:15:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXvn8+p1ex0q6rkfLqwY0cCf9a1LK54PqDv5/f2eiQLV/mSG+KFh6+GhC4oC3AsbH3JQM0/usecD5VWHt9g/bRVv4CZrMrp6q4j/GMQZFWs/TbGo1dtiyRWqEZ1kN/5bAuEAbG87BLKsZpDnfRveeOGRCOjYMUzkmd94fNtDanWeGfi
+X-Gm-Message-State: AOJu0YzM14hdvGPfa9Erag4W+q9+h4Ieb80kCa7/h7zb2TYalMt66BLk
+	gMdLtl8T5/oVi67AWNqtfe6pC9s2c8gTkZ0/H8raEVt82SO/Eu1eHuC7ZbIPkvPOKizIqakIYsh
+	f5ngPk3L8sTHmWiQiehg7OHFG724=
+X-Google-Smtp-Source: AGHT+IE1DRCB6qtLcW4MoX0ogT+ywTiqe+dg1pKMXFbqphnd5h9FK8o+rlXfPkXivwsNxTp84BAwQBXh1QBXZpyn1Wc=
+X-Received: by 2002:a05:6870:a511:b0:259:f03c:4e90 with SMTP id
+ 586e51a60fabf-25db36a52edmr9891331fac.4.1719940539219; Tue, 02 Jul 2024
+ 10:15:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701234937.8234-1-rdunlap@infradead.org>
+References: <20240627085451.3813989-1-daniel.lezcano@linaro.org>
+ <20240701162600.GA4119789-robh@kernel.org> <98fe3146-07ae-4095-b372-6aed6e080d94@linaro.org>
+ <CAJZ5v0ix+RDtrR+r3jd=A_W7D5U7JodMiirJ519-wwLrHeBbSw@mail.gmail.com>
+ <1eb7eb88-4230-4803-83fe-415ce0745951@linaro.org> <CAJZ5v0jV+0bWqpCR1Q2rYLJvx0J6hgExzRks6YDPL9gX_HK0rA@mail.gmail.com>
+ <2a8f5b5f-b67a-4bd0-afe9-f09473aea2d5@linaro.org>
+In-Reply-To: <2a8f5b5f-b67a-4bd0-afe9-f09473aea2d5@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 2 Jul 2024 19:15:28 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g4A1FYZ+7Cb5ocw78y=1Kdg=HSuza2FpYSAiT2c_ZzaQ@mail.gmail.com>
+Message-ID: <CAJZ5v0g4A1FYZ+7Cb5ocw78y=1Kdg=HSuza2FpYSAiT2c_ZzaQ@mail.gmail.com>
+Subject: Re: [PATCH] thermal/core: Introduce user trip points
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 01, 2024 at 04:49:37PM -0700, Randy Dunlap wrote:
-> Fully document enum misc_res_type with kernel-doc comments to prevent
-> kernel-doc warnings:
-> 
-> misc_cgroup.h:12: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
->  * Types of misc cgroup entries supported by the host.
-> misc_cgroup.h:12: warning: missing initial short description on line:
->  * Types of misc cgroup entries supported by the host.
-> 
-> Fixes: a72232eabdfc ("cgroup: Add misc cgroup controller")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: cgroups@vger.kernel.org
+On Tue, Jul 2, 2024 at 6:31=E2=80=AFPM Daniel Lezcano <daniel.lezcano@linar=
+o.org> wrote:
+>
+> On 02/07/2024 13:03, Rafael J. Wysocki wrote:
+>
+> [ ... ]
+>
+> >>> Trips cannot be created on the fly ATM.
+> >>>
+> >>> What can be done is to create trips that are invalid to start with an=
+d
+> >>> then set their temperature via sysfs.  This has been done already for
+> >>> quite a while AFAICS.
+> >>
+> >> Yes, I remember that.
+> >>
+> >> I would like to avoid introducing more weirdness in the thermal
+> >> framework which deserve a clear ABI.
+> >>
+> >> What is missing to create new trip points on the fly ?
+> >
+> > A different data structure to store them (essentially, a list instead
+> > of an array).
+> >
+> > I doubt it's worth the hassle.
+> >
+> > What's wrong with the current approach mentioned above?  It will need
+> > to be supported going forward anyway.
+>
+> So when the "user trip point" option will be set, a thermal zone will
+> have ~ten(?) user trip points initialized to an invalid temperature ?
 
-Applied to cgroup/for-6.11.
+If a thermal zone is registered with 10 invalid trip points, htat can
+happen already today.
 
-Thanks.
+Let's talk about the usage model, though.
 
--- 
-tejun
+IIUC, this would be something like "triggers" I mentioned before: If a
+certain temperature level is reached, a notification is sent to user
+space, and there are multiple (possibly many) levels like this.  They
+can be added and deleted at any time.
+
+There can be an interface for this, as simple as a pair of sysfs
+attributes under a thermal zone: add_trigger and remove_trigger.  If
+root (or equivalent) writes a (valid) temperature value to
+add_trigger, a new trigger is added (up to a limit and provided that
+enough memory can be allocated).  Conversely, if a temperature value
+is written to remove_trigger and there is a trigger with that
+temperature, it will be deleted.
+
+Internally, the triggers can be stored in a sorted list (with some
+optimizations, so it need not be walked every time the zone
+temperature changes) or a tree, independent of the trips table (if
+any).  Every time the zone temperature changes, the triggers list is
+consulted (in addition to the trips table) and if any of them have
+been crossed, notifications are sent to user space.
+
+If polling is used, this would just work, but without polling the
+driver needs to support setting a pair (at least) of temperature
+levels causing an interrupt to occur.  If a specific callback, say
+.set_triggers(), is provided by the driver, it can be used for setting
+those temperature levels to the triggers right above and right below
+the current zone temperature, in analogy with .set_trips().
+
+Does this reflect what you are after?
