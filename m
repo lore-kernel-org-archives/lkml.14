@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411E3D518
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 07:00:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB1E4CB23
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 07:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719903633; cv=none; b=c10iHYX7P/yKmtkpUHdiJ77MP1c08UuM7NmpOqhhJCkqJfJAxPBn5Z9ub2IvJpFeOxcSXMbvMyI5eFa3d4re7CAGpVsDCQz7xn1K+/75pb+AVxYEaYh87Znu2/nbuewp1Bzfj4V3+P7Xi0gSZ52Ka6b7NcCbENzcIOAL7RPs+lY=
+	t=1719903650; cv=none; b=Oh8hwpIaz9gXsY1JBLSIM2Fbz1/qQrnD2T5yROgJODxJ2rAYUwLxMwLiAHdl4WlGhiDikpmiL1aukO89qSv4EzfpLn3xwzjv5eNHixT+cuR5ioRyd7YewZKfxtEghBY9JRGnZR1g3BNBjZDynARCvtgVcaWHLRfkGHkmLEv+WdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719903633; c=relaxed/simple;
-	bh=G08x9Hsb4KLp3BcCWhMY8WT2trDfN0A90XlVgRrIvp8=;
+	s=arc-20240116; t=1719903650; c=relaxed/simple;
+	bh=FS41p/aHV/AdeAid3qNfKkLGKSCulGrxDVJp7+CTRfg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LzmA4coHphZXqN8bCR1Gg5cOyoyS7MLoaRCrcJ9TCxff/9/osSjqYbsVS1BBrve7qYaKxHygz/plpMP9vIFKtJoKvUBW/RVsFGXx0//g+gD69B2dosMySTN1pc6lIdHDy2ISQqnWYCmrOZIU2/SgTYBGmRTTEBThSRa5lrr1kEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irSIw51u; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=f3npyjbzvswNGpoWgQgXWfilXPaqPOFswai+yQuVHdctYVp99yIE7zICn0SbQxBZkfLQceUCtk84et5WHf0Rh3x0djzv/PeW358/Ama06By3QVz3UBwM35EKwqNd9WDJoeP+uE6w1PChZFKcpNORnU8XfdcX0Ahg1xnM8A4Pdv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hq8PoOKz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irSIw51u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0576C116B1;
-	Tue,  2 Jul 2024 07:00:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hq8PoOKz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0473FC116B1;
+	Tue,  2 Jul 2024 07:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719903632;
-	bh=G08x9Hsb4KLp3BcCWhMY8WT2trDfN0A90XlVgRrIvp8=;
+	s=k20201202; t=1719903649;
+	bh=FS41p/aHV/AdeAid3qNfKkLGKSCulGrxDVJp7+CTRfg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=irSIw51ubwpKsbC2BrtrQTcOfGSkHw+pUSM51Z/9l6eTUZ/S5wv2gATsWL7pBQwKz
-	 m89OubxuZ5nqlb4TxAbkUGIfTL1fOWqQRzYAtTTpLi457vFf6I1PtaMZH0+FZl4nwb
-	 qAyLK6IGY6gDL9ynQykqx7eBWkWl5MnNfMMn8Yg2rMazU+GNtiEQhG9QCaGuZZMhN4
-	 XtC7mGX3gVlxoFGE67N2yyqweuSw/NN1jVaWZ4LNwtBLpy5kZ6QupFKT2q2h7Yx6ih
-	 fvh1T6yN8ZffnPniM1MhKlssLpOY42DgXiDqVMFHb/SYgJppCTaELZy9D375X8h2ko
-	 sD7h4MnO5kHOw==
-Message-ID: <d203dd45-fe69-48dc-aa36-d9870065f2e9@kernel.org>
-Date: Tue, 2 Jul 2024 09:00:24 +0200
+	b=hq8PoOKz319snuW5x/MvSEZd5jRkj6iwZKJsU5uNMY9VStk2BTjFvT+jlKjkincBZ
+	 qFsEH16mLERORU1nxU7CQSSUfNo0Dz6yVClX4rPrWNVYXKJoExxMJ0r3fQzp5UifnC
+	 lCrYbi0BRfahKm6ZpvoZykRFZomQ/0N2uryOglJAwoKiKe8MeKZ6eFxrXP9I7HW7hA
+	 6+0NboW42LKV5V+JZxu1HOnQ0eZ4ECnZwTnVvzRgT2Rode58QOkghUx9JZBAC9wl+Z
+	 TGu72UDOzZlkqwBQZQyOgQhp3YJgT3Y4CzGmSKKI4DyXkHmfuppovNFoCh/rQlVGSz
+	 XJc0eZY9eFioQ==
+Message-ID: <515e039b-2a1a-414b-96ce-9690fe0dd7b1@kernel.org>
+Date: Tue, 2 Jul 2024 09:00:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] powerpc/configs: Update defconfig with now
+Subject: Re: [PATCH v3 3/3] arm64/configs: Update defconfig with now
  user-visible CONFIG_FSL_IFC
 To: Esben Haabendal <esben@geanix.com>,
  Tudor Ambarus <tudor.ambarus@linaro.org>,
@@ -50,7 +50,7 @@ To: Esben Haabendal <esben@geanix.com>,
 Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
  linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 References: <20240530-fsl-ifc-config-v3-0-1fd2c3d233dd@geanix.com>
- <20240530-fsl-ifc-config-v3-2-1fd2c3d233dd@geanix.com>
+ <20240530-fsl-ifc-config-v3-3-1fd2c3d233dd@geanix.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -96,18 +96,16 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240530-fsl-ifc-config-v3-2-1fd2c3d233dd@geanix.com>
+In-Reply-To: <20240530-fsl-ifc-config-v3-3-1fd2c3d233dd@geanix.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 30/05/2024 16:46, Esben Haabendal wrote:
 > With CONFIG_FSL_IFC now being user-visible, and thus changed from a select
 > to depends in CONFIG_MTD_NAND_FSL_IFC, the dependencies needs to be
-> selected in defconfigs.
+> selected in defconfig.
 > 
 > Signed-off-by: Esben Haabendal <esben@geanix.com>
-
-Anyone is going to pick this up?
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
