@@ -1,39 +1,38 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8903412FB02;
-	Tue,  2 Jul 2024 11:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB5A145B09;
+	Tue,  2 Jul 2024 11:53:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719921199; cv=none; b=K3TghGLl3yuxaLsEci/O6lOo0tQNOuEr/ZIrJaIDwsWOLzWJ3xTQkH0jfUDuIWwwu3oIr09jOr6jk8LQNSyEj2c+QJNLlabnXzg9ViIwHWzZr6mim8zYakmj9erF6nTHditoeKlJ5hLwG/iQqhfTKCGxiAyfza4lINjsWrrFuXM=
+	t=1719921200; cv=none; b=ssjVzMeOiu/SPcrLj5JzEhZ5LaP0r2xnUs9p0IZ+xcGxKme9mKI5ZVMC+y5h/lFW2rHYFDkhV0YOFcULGh8jxAiB2bCBWKUjIXyCWsGo6Ypic7vf/todYAL3pIhqB5s30wtTp3dHuBLJkOd1gIgKE7wGdhkfmYOGFIuYQoT1GTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719921199; c=relaxed/simple;
-	bh=xFU1ZTWWDXMnh1IPgPeerJ9PIRESjK9ivSjm0yRjZ6g=;
+	s=arc-20240116; t=1719921200; c=relaxed/simple;
+	bh=4ktnlb7yvW4ussBIReyJtLp9KZJ51hpL56o2nKPHpuY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IMNCsSphTs33x8jyp+RKn7DvguueZUit4mad0obUOQyHiU4uiJeY2I1pduBupISdpEcMdznyZZ45NcgPp7wZVhJTn2k0T77pH9BRrg4T861x2vvJvwowRzR1+6aWD57vcJ0FDu+3g2UBVTU8su+pP2tf3ca3C+3HtX6ostIe34c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=h7w8X7Ym; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=OILcGnEuwEV71zfg0fKHgCRMYtWphBRLVKJCHsdUZfdGi3WMeQSdxjM953+F1UrsXWed8+/dteOsl1+lqJww8GDrMMXhPLUK93CpnC7dbCUt3Zg8IRKSHhIsvvl6bb/Ri/f9TmYy4peMluuwvsT0/djXiFuJ0jeEvKGKkgd9IQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g0vqKHeG; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="h7w8X7Ym"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 084991BF213;
-	Tue,  2 Jul 2024 11:53:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g0vqKHeG"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B7D1E1BF20C;
+	Tue,  2 Jul 2024 11:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719921194;
+	t=1719921196;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gqC7auAvQgW9A/VK3641+r1UdxlnIIFJMqdNw3IN0E8=;
-	b=h7w8X7Ymc/zvg+nQGNtcHw99Z+LNVB4kkkykGYu1pNVAwfUAOJGqYPwIX4EO1l/UW7qfV6
-	MsR/SRV06v6diweqPiAPi5hIw80hC40El59u52AB5lOR/YEg1mEaxK4ffe/JmICNilGJnG
-	/C9D9LyAlJxmkw876Ltaz01I3TTz6bwwXwD17cHpDemzFCQzyHyFwWFMNo8D5e/1jV/tn8
-	eO2cFGHP8fvaLTXOkzcI+RyJ/VezVBx0NCdmuKNZAY6BSy7vCsbHW2lf0t/hiFdMDTvq8o
-	/WEaSmPHk7X0y1WCly5PwlRLR/MGfutj2Yn80KmC5Sr+a1ONVdmFV3vY3GR/RQ==
+	bh=2HvfbFLoLElmyEB196KhuxtSYeLMdyA9ytyFqCVntKA=;
+	b=g0vqKHeGUFZHTGvhJ5s1w9/pEwrBqpADrH/Kz2VFtD3suvNGRgGQNUQgXcteSVxFJL3Dtp
+	nPJVcmeGHyikdyPGe74xSw29JGyCYK05/QjZc+Hw6J9CgW9c0FzgGOrlMSgNqKz/HfmnEx
+	jMR16g+Q6vXvZnd0PJGoiUaSoLWzKiAvOB+ylzIUxJ2nJCHncINM3TLaAmrmCr8lwllF6O
+	mIoxAimPNIA5qvwzJXe74tEUeTt+CrxyPYHy/HpaW/QCf1hl0v4iCVK5r4w4autQsUKJvB
+	vR+i3/382LkbhYT4cRqWZtOk1lFzmqPGP4C/FVKE81M3mu0V9MJQ8/onJvFcuw==
 From: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Date: Tue, 02 Jul 2024 13:52:21 +0200
-Subject: [PATCH 1/3] dt-bindings: iio: adc: sophgo,cv18xx-saradc.yaml: Add
- Sophgo SARADC binding documentation
+Date: Tue, 02 Jul 2024 13:52:23 +0200
+Subject: [PATCH 3/3] riscv: dts: sophgo: Add SARADC configuration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240702-sg2002-adc-v1-1-ac66e076a756@bootlin.com>
+Message-Id: <20240702-sg2002-adc-v1-3-ac66e076a756@bootlin.com>
 References: <20240702-sg2002-adc-v1-0-ac66e076a756@bootlin.com>
 In-Reply-To: <20240702-sg2002-adc-v1-0-ac66e076a756@bootlin.com>
 To: Jonathan Cameron <jic23@kernel.org>, 
@@ -60,88 +59,40 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.14.0
 X-GND-Sasl: thomas.bonnefille@bootlin.com
 
-The Sophgo SARADC is a Successive Approximation ADC that can be found in
-the Sophgo SoC.
+Adds SARADC nodes for the common Successive Approximation Analog to
+Digital Converter used in Sophgo SoC.
+This patch adds nodes for the two SARADCs presents on the board, one in
+the Active domain and the other in the No-Die domain.
 
 Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
 ---
- .../bindings/iio/adc/sophgo,cv18xx-saradc.yaml     | 51 ++++++++++++++++++++++
- MAINTAINERS                                        |  5 +++
- 2 files changed, 56 insertions(+)
+ arch/riscv/boot/dts/sophgo/cv18xx.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml
-new file mode 100644
-index 000000000000..21fd5dc8e24e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/sophgo,cv18xx-adc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+index 7247c7c3013c..0b996aa7fa31 100644
+--- a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
++++ b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+@@ -309,5 +309,19 @@ clint: timer@74000000 {
+ 			reg = <0x74000000 0x10000>;
+ 			interrupts-extended = <&cpu0_intc 3>, <&cpu0_intc 7>;
+ 		};
 +
-+title: Sophgo 3 channels Successive Approximation Analog to Digital Converters
++		saradc_active: adc@30f0000 {
++			compatible = "sophgo,cv18xx-saradc";
++			clocks = <&clk CLK_SARADC>;
++			interrupts = <100 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x030F0000 0x1000>;
++			status = "disabled";
++		};
 +
-+maintainers:
-+  - Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-+
-+description:
-+  Datasheet at https://github.com/sophgo/sophgo-doc/releases
-+
-+properties:
-+  compatible:
-+    const: sophgo,cv18xx-saradc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      SARADC will use the presence of this clock to determine if the controller
-+      needs to be explicitly clocked by it (Active domain) or if it is part of
-+      the No-Die Domain, along with the RTC, which does not require explicit
-+      clocking.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    # ADC in the Active domain
-+    adc@30f0000 {
-+      compatible = "sophgo,cv18xx-saradc";
-+      clocks = <&clk CLK_SARADC>;
-+      interrupts = <100 IRQ_TYPE_LEVEL_HIGH>;
-+      reg = <0x030F0000 0x1000>;
-+    };
-+  - |
-+    # ADC in the No-Die domain
-+    adc@502c000 {
-+      compatible = "sophgo,cv18xx-saradc";
-+      reg = <0x0502C000 0x1000>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aacccb376c28..dc87898c518c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20901,6 +20901,11 @@ S:	Maintained
- N:	sophgo
- K:	sophgo
- 
-+SOPHGO SARADC DEVICE DRIVER
-+M:	Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml
-+
- SOUND
- M:	Jaroslav Kysela <perex@perex.cz>
- M:	Takashi Iwai <tiwai@suse.com>
++		saradc_nodie: adc@502c000 {
++			compatible = "sophgo,cv18xx-saradc";
++			reg = <0x0502C000 0x1000>;
++			status = "disabled";
++		};
+ 	};
+ };
 
 -- 
 2.45.2
