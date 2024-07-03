@@ -1,147 +1,112 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FA117DA39
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 19:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82C1130A7C;
+	Wed,  3 Jul 2024 19:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720036370; cv=none; b=BZdzj7hw+hIJzmlFy9scKmCQDSnmh4ulSsA/WOtzyUH/fS1lwNxS4uAik4yy9gltoVWx6CmQw9v/VMemeCvaXsjIt0wVgXn1mVViXcNkKHc0zY9ywaGxIyO47YwwooEgEggrGyzReTkF9Jvg+ks6ASpH3xSmkMIlRAXw83GMmQ4=
+	t=1720036423; cv=none; b=IebcOYYv1fUl33n2XtXIFQLjWBePMGHVJCKXeedT5HoQv+8wkzOadi/yOI7VfpyzBvof9/wsv1DSUqZbtFjVsbT05ARVvSCb5Kv6EQipPv+iaMoNNWuuAMJuu5wo1Vye4m382TGcPHmGIGij4qenJp8Q3YLb/Op3YxhiYX24Rks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720036370; c=relaxed/simple;
-	bh=LLTX7iSgEsmjeaKJZDhgJQFLarTCP8xjpF1SCz02LfA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sLdGZ0v5HkPIIEDq+BLfiopPVminmrdUlORUMJN3s7Is3NnPMt27mY7CqLB3t9qcdTrHzPQwTUerNzMpwJx5s5YwDfRfBiP3C/b+EC/jD7UfwiV/Y0Ij1Sdh9gWGyTUq/bqOjfz55f4sfX0nyzo5lWEOY8OwD5+DbTjw/v/+k3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SZ0BHx4I; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720036423; c=relaxed/simple;
+	bh=gpPnxAmH7YVYAIk7U213xERaCKNz7L4XQJjxdiVAonk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y3dyGp1LGYzHvwLiNMuzdIrYHUcGG2BSSzqa0TsLoSf/hZ1DyFZjFipZJBUikKSLmzfXKMD8wIr40oKxbxZ4wenw9ipays2QfP1+gL1kEKPL19L35c5v1yg+MlwtG9KepK0d5Jg97YpuEDCFOxUHtIpksZMsf1YcNXWHjpus+kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TiGX+rgZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SZ0BHx4I"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58c947a6692so2068391a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 12:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720036367; x=1720641167; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FRtKeRwASst4Njswx8SNkBJ3T6bOEI9xkykNSRHU6CM=;
-        b=SZ0BHx4IDCTI7I5cQFWaX85To6EIEpBd8G5y52797lTBgPauACrfUvIrDhW8Z99v0z
-         IIQP1URqnpSwbgy7Ofjhi69c0c+qQSs3R66yrX3+q7DZERdSGdrjoP7PlMRfgNOHR1J5
-         hr/SyGGJ4OQn/jPGmK2tLcbSfGpWehF4RFgWQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720036367; x=1720641167;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FRtKeRwASst4Njswx8SNkBJ3T6bOEI9xkykNSRHU6CM=;
-        b=BHEZc/mZ3ONLZTkojAXUSxCKfBpmF+4/EXJHh123Q6XZtqJWOn5FfWfMdAWVYolFmM
-         aGyHGfzff/K/7yIBi73OhSSyO4616hjd6t8y5sHc/o+2hIL3I/RNHXkbOCY84ZzmSuHf
-         AqocewNjIg0ggp7A85Z56TyYJ7xpvkorqchbxbI4A8rOsZZP6nMSrXVlRmdV8ckLT6bW
-         55G1SyZv2p7HhPCIp4FiO/5+3ZudeAOcr1w+8ULQ+oaqbtbx1uwbyXTR/geCD5hEtR62
-         Thcjpyuso3F66kTt2PSyyisdRUfa9Q+doOhtC0mcIHyMYR9fNaHaojHZ5wrq80ndyHP7
-         ldAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWztQ/Phl3de30xyF5gGCNxMcGRUeHpEHFk4DcJiLDZL4QyJcZH51zOLh3x+DN7nQad3f+j3BxzIejjV1u/cuW1x+jjNKR1YyGBNpU
-X-Gm-Message-State: AOJu0YyxHq/7Nw90WlX0U91v+6bAueeZx5VzECJlY01O5Jd6l+RcjH4m
-	DOajfTI8OBNIz7y7LUlAeLemAA/jUQu6Khet5/3hsYfrxmMpoM3ULkDOArCiSvNJ1WOxKU2E9+V
-	6EvA7tQ==
-X-Google-Smtp-Source: AGHT+IENT1J887VC6yMAEwI8fSdp/25aGI6ptie//bIj2OdLZ74eKFUXtZlKY/iBliDQGqDd+jJD/A==
-X-Received: by 2002:a05:6402:278b:b0:57c:5b7a:87e7 with SMTP id 4fb4d7f45d1cf-5879f2b8072mr7523957a12.14.1720036367086;
-        Wed, 03 Jul 2024 12:52:47 -0700 (PDT)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58614d503b1sm7410445a12.67.2024.07.03.12.52.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 12:52:46 -0700 (PDT)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a72585032f1so633195266b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 12:52:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXj5uOPj3g8P87ve6RuRhtysZSMiNnjXjkZOwWLCR8CY0/40PR5vSeu7A8ZIYbgmxkv4ktVWwbHhZ6a4qVOnosPzkhQLwx+xHdsd+6j
-X-Received: by 2002:a17:907:7ea3:b0:a6f:6aa3:e378 with SMTP id
- a640c23a62f3a-a751443872emr1062386666b.38.1720036366168; Wed, 03 Jul 2024
- 12:52:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TiGX+rgZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BA5FC2BD10;
+	Wed,  3 Jul 2024 19:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720036423;
+	bh=gpPnxAmH7YVYAIk7U213xERaCKNz7L4XQJjxdiVAonk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TiGX+rgZd6oGXSuPDvKT9AAvqCDq4dPYsWAaoI+jNnrRCLVUFFZX2juyxY+OcT8Yp
+	 uLFx7o7jX6lBOygGof4KiKtlIvzzV8c9ujI+8SHQowycUA7hyqo6FaZ4bDOTIQT7pG
+	 wG4kjuYpIF/0NC/LE7euV9CB7xlpYOZjh+w70oqcawcX0eBOskJJ+ueUlhD1IHUx+x
+	 jW3kB8CyYA9pkNGBRpaVPl4/6i5ettVDvtVPRUZJTva4fqEZtqlJYiv846hf7LcAcE
+	 J3q3B8XeoOW5BZ0zHSsS1sTXH0wN1gvydLmNrahzDXw/XnIwzwCjNhpgK7mUZ03fiv
+	 Bz9Oj1aqp4RMQ==
+Date: Wed, 3 Jul 2024 20:53:38 +0100
+From: Simon Horman <horms@kernel.org>
+To: admiyo@os.amperecomputing.com
+Cc: Jeremy Kerr <jk@codeconstruct.com.au>,
+	Matt Johnston <matt@codeconstruct.com.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Huisong Li <lihuisong@huawei.com>
+Subject: Re: [PATCH v4 3/3] mctp pcc: Implement MCTP over PCC Transport
+Message-ID: <20240703195338.GR598357@kernel.org>
+References: <20240702225845.322234-1-admiyo@os.amperecomputing.com>
+ <20240702225845.322234-4-admiyo@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com>
- <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner> <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
- <8b6d59ffc9baa57fee0f9fa97e72121fd88cf0e4.camel@xry111.site>
- <CAHk-=wif5KJEdvZZfTVX=WjOOK7OqoPwYng6n-uu=VeYUpZysQ@mail.gmail.com>
- <b60a61b8c9171a6106d50346ecd7fba1cfc4dcb0.camel@xry111.site>
- <CAHk-=wjH3F1jTVfADgo0tAnYStuaUZLvz+1NkmtM-TqiuubWcw@mail.gmail.com>
- <CAHk-=wii3qyMW+Ni=S6=cV=ddoWTX+qEkO6Ooxe0Ef2_rvo+kg@mail.gmail.com>
- <e40b8edeea1d3747fe79a4f9f932ea4a8d891db0.camel@xry111.site>
- <CAHk-=wiJh1egNXJN7AsqpE76D4LCkUQTj+RboO7O=3AFeLGesw@mail.gmail.com> <20240703-hobel-benachbarten-c475d3eb589b@brauner>
-In-Reply-To: <20240703-hobel-benachbarten-c475d3eb589b@brauner>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 3 Jul 2024 12:52:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whZwUuYP08JF-kyBmr7w45S2z17dJKaWCFE_cfFw_T9Vg@mail.gmail.com>
-Message-ID: <CAHk-=whZwUuYP08JF-kyBmr7w45S2z17dJKaWCFE_cfFw_T9Vg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
-To: Christian Brauner <brauner@kernel.org>
-Cc: Xi Ruoyao <xry111@xry111.site>, libc-alpha@sourceware.org, 
-	"Andreas K. Huettel" <dilfridge@gentoo.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240702225845.322234-4-admiyo@os.amperecomputing.com>
 
-On Wed, 3 Jul 2024 at 12:33, Christian Brauner <brauner@kernel.org> wrote:
->
-> Fwiw, that's why I prefer structs versioned by size which we added clean
-> handling for via copy_struct_from_user()
+On Tue, Jul 02, 2024 at 06:58:45PM -0400, admiyo@os.amperecomputing.com wrote:
+> From: Adam Young <admiyo@os.amperecomputing.com>
+> 
+> Implementation of network driver for
+> Management Control Transport Protocol(MCTP) over
+> Platform Communication Channel(PCC)
+> 
+> DMTF DSP:0292
+> 
+> MCTP devices are specified by entries in DSDT/SDST and
+> reference channels specified in the PCCT.
+> 
+> Communication with other devices use the PCC based
+> doorbell mechanism.
+> 
+> Signed-off-by: Adam Young <admiyo@os.amperecomputing.com>
+> ---
+>  drivers/net/mctp/Kconfig    |  13 ++
+>  drivers/net/mctp/Makefile   |   1 +
+>  drivers/net/mctp/mctp-pcc.c | 322 ++++++++++++++++++++++++++++++++++++
 
-That works very well for the kernel interface for new things, but it
-actually doesn't solve the issue for user space library versioning.
+...
 
-If you are something like 'glibc', you don't have the option of saying
-"pass in struct and size". You are kind of stuck with the API rules,
-and the rules are that you expose a 'struct stat' that has a fixed
-size.
+> diff --git a/drivers/net/mctp/mctp-pcc.c b/drivers/net/mctp/mctp-pcc.c
 
-So I don't disagree that copy_struct_from_user() is a good model, but
-what would happen is just that then glibc says "I will need to make a
-decision", and would pick a size that is bigger than the current size
-it uses, so that glibc later could do those extensions without
-breaking the ABI.
+...
 
-And yes, it would pass that larger size to the kernel,. because it
-would want the kernel to zero out the unused tail of the struct.
+> +static struct acpi_driver mctp_pcc_driver = {
+> +	.name = "mctp_pcc",
+> +	.class = "Unknown",
+> +	.ids = mctp_pcc_device_ids,
+> +	.ops = {
+> +		.add = mctp_pcc_driver_add,
+> +		.remove = mctp_pcc_driver_remove,
+> +	},
+> +	.owner = THIS_MODULE,
 
-So the 'struct and extensible size' thing really only works when
-everybody agrees on using it, and users pass the size end-to-end.
+Hi Adam,
 
-Side note: this is our original i386 'stat64':
+Perhaps net-next isn't the appropriate tree to apply this patch.
+But, due to [1] the owner field is not present in net-next and
+thus this fails to build when applied there.
 
-        unsigned long   st_blocks;      /* Number 512-byte blocks allocated. */
-        unsigned long   __pad4;         /* future possible st_blocks
-high bits */
+[1] cc85f9c05bba ("ACPI: drop redundant owner from acpi_driver")
 
-        unsigned long   st_atime;
-        unsigned long   __pad5;
-
-        unsigned long   st_mtime;
-        unsigned long   __pad6;
-
-        unsigned long   st_ctime;
-        unsigned long   __pad7;         /* will be high 32 bits of
-ctime someday */
-
-which is kind of sad. The code was literally designed to extend the
-time range, had a comment to that effect and all, and then we screwed
-it up.
-
-On little-endian, we could literally have done it as
-
-        unsigned long long  st_ctime:44, st_ctime_usec:20;
-
-without losin gbinary compatibility. But it's sadly not what we did.
-Instead we gave the full 32-bit padding to the nsec field.
-
-And yes, I had to go back a long time to find this screw-up. It
-happened back in 2002.
-
-Oh well. Not the first time we've royally screwed up, and it most
-definitely won't be the last time either.
-
-           Linus
+> +};
+> +
+> +module_acpi_driver(mctp_pcc_driver);
+> +
+> +MODULE_DEVICE_TABLE(acpi, mctp_pcc_device_ids);
+> +
+> +MODULE_DESCRIPTION("MCTP PCC device");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Adam Young <admiyo@os.amperecomputing.com>");
+> -- 
+> 2.34.1
+> 
+> 
