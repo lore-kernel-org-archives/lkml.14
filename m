@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BED1849EB
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 20:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E5218FC7F
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 20:03:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720037007; cv=none; b=fTg9w3bHRhDSdJBs+qZHC5qgYZK4Jj0LVMgYj0WS53Gn8kkgIHop431HqK8YpRPQQ4eBYXFy4T9d9UDbfEWZoGt9AGzQEAMZDuAwzysukOchpuHZe+/iLTwvJQpP5m7aLlFrCU8nakcslETBRloPKx2rI9//f2NvQTs709oOL3A=
+	t=1720037008; cv=none; b=WAVH+BLL163tZwZwR4vm2JeMdzRPEcRSRJ16A/aNsXlzCS49M+9ii+HSzchxkRfOnMzgM5ElhyK9mgEhcb1aZRvQ6GhPB//+avkmP573wSCv4XYL1KUNc9PlS2GwrWeiNMPNAOsBW8YIVqVcMFYtovqy31JDq2bNsWazCoaHMLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720037007; c=relaxed/simple;
-	bh=PnDdlfcERxVSvWUX3ql7Jr5lCD7PahiVaogQ8rp5bfU=;
+	s=arc-20240116; t=1720037008; c=relaxed/simple;
+	bh=1GaNK1PymifhZFxq0NBZ6fvfnfWs7uS6/JsGWQPLcdM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HgUOIUtJVFxAtnJJ5ahOB2ppexzFM2Rha5hV8QVFYoWrY9W7QDpyGAiMPtbIZognkqj5gxTdjuEkP/+Tp0B9TQXGipN7zGiVN5xiozKHwYcjz+rScRnYtVzKx44CQPVDZUyE2t6CcXr8dCCxI7TI/4xoed4SW0a1gpZo1gTMXgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nUynTbGr; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=DXKaWMIFS3twDw20Gzf2ZtkT1JE6Hh7psUj4IoI3ipy9+VmXlHOz0vyFiQYNSrgyQaqEqPjqa/ipI9bF/P16Qj+v1otogv11pTzDGTMRiwg13CWDxX5mbf7QHQpeApFbejNSAXFK6yi7bp4biNqRWzo/T17ehjuw5GbYf9ZQhhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xc7DtAZF; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nUynTbGr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xc7DtAZF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720037006; x=1751573006;
+  t=1720037007; x=1751573007;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=PnDdlfcERxVSvWUX3ql7Jr5lCD7PahiVaogQ8rp5bfU=;
-  b=nUynTbGrmRF4sX/K10d1cySejLVB3CFi9uk/WZbc046/ws+XCljPlt+C
-   bbHLDneOyw/+mPbwTTomRXym5rxaXsaaGAgB5T+g/i/Yq0RhXR2bLwdsQ
-   7mcaz+YmzarFiGJgzUqQBfeJO2CWS0QtiZo1X+1GIEI5b7NeFQUS7mhWP
-   Ge5XjCW/WDhrsp0agfGu3lDF1p2aPe89OARUJPJUaF/D1EGcQLdgkdEIo
-   HBqDhOfRXsH2C86u8SkDRQZP6pWnTrh/io9QGSB8XLXjn9wyT2IaMuR7J
-   TiYrewsdRwbl4uGXU3vfJqTH9zzT/wgHiqCMCNq07Kc7wkLAaM/oUfd/G
+  bh=1GaNK1PymifhZFxq0NBZ6fvfnfWs7uS6/JsGWQPLcdM=;
+  b=Xc7DtAZFHhnR58vzL2XfznSMYYQPA+Izw10r4tMVs9v/wP/GI2/IXuq9
+   5j4JqOr9hAowWMeGBWLgsJMFW7FiRgspalOUtaf5he+zE9uSJFxw3GJk2
+   x5l5bD4ztnrV0uHMFIr6xD3dnz5l5WyuqiVb/X3mqAWDsdVQ+xX0YK44m
+   Jf6htWVIBunTzbPCB20JRFtKK/ISwlpds5ICAWd4VqnspVtkehUzbBUVf
+   DroDq5TS7pJkNYeCXL+P17kp0kc+2T6NadydTYfXeyc9lU5tVbJ8hkk6Q
+   Z4ONfw1u5H83MFlmU2XaVIG5nOsxXUWdLqq8ALrYzyBPvAh+K8BRK0F5M
    A==;
-X-CSE-ConnectionGUID: zmqscmi2To2kdXCutvmZsw==
-X-CSE-MsgGUID: 7RWldaUWTQedE9puPRHF7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="39807576"
+X-CSE-ConnectionGUID: 2li2xUGOR2G51zZtQypj5g==
+X-CSE-MsgGUID: BZC5kg9HTNuKy0OcCqsegg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="39807595"
 X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="39807576"
+   d="scan'208";a="39807595"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 13:03:25 -0700
-X-CSE-ConnectionGUID: Iq3UV6fWQQmLF1DfDZ1oIw==
-X-CSE-MsgGUID: 1scwYKs/S0+K7HkEZGYl+g==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 13:03:26 -0700
+X-CSE-ConnectionGUID: W4B8xxzOSku+WmCq2xwBQA==
+X-CSE-MsgGUID: /1AW7v56Q2aaSvYVN10Y/w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="46442561"
+   d="scan'208";a="46442580"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa010.fm.intel.com with ESMTP; 03 Jul 2024 13:03:24 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 03 Jul 2024 13:03:25 -0700
 From: kan.liang@linux.intel.com
 To: acme@kernel.org,
 	namhyung@kernel.org,
@@ -54,9 +54,9 @@ Cc: adrian.hunter@intel.com,
 	ak@linux.intel.com,
 	eranian@google.com,
 	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 3/9] perf evlist: Save branch counters information
-Date: Wed,  3 Jul 2024 13:03:50 -0700
-Message-Id: <20240703200356.852727-4-kan.liang@linux.intel.com>
+Subject: [PATCH 5/9] perf evsel: Assign abbr name for the branch counter events
+Date: Wed,  3 Jul 2024 13:03:52 -0700
+Message-Id: <20240703200356.852727-6-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20240703200356.852727-1-kan.liang@linux.intel.com>
 References: <20240703200356.852727-1-kan.liang@linux.intel.com>
@@ -70,127 +70,116 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The branch counters logging (A.K.A LBR event logging) introduces a
-per-counter indication of precise event occurrences in LBRs. The kernel
-only dumps the number of occurrences into a record. The perf tool has
-to map the number to the corresponding event.
+There could be several branch counter events. If perf tool output the
+result via the format "event name + a number", the line could be very
+long and hard to read.
 
-Add evlist__update_br_cntr() to go through the evlist to pick the
-events that are configured to be logged. Assign a logical idx to track
-them, and add the total number of the events in the leader event.
-The total number will be used to allocate the space to save the branch
-counters for a block. The logical idx will be used to locate the
-corresponding event quickly in the following patches.
-
-It only needs to iterate the evlist once. The
-evsel__has_branch_counters() is also optimized.
+An abbreviation is introduced to replace the full event name in the
+display. The abbreviation starts from 'A' to 'Z9', which can support
+up to 286 events. The same abbreviation will be assigned if the same
+events are found in the evlist. The next patch will utilize the
+abbreviation name to show the branch counter events in the output.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/util/evlist.c | 15 +++++++++++++++
- tools/perf/util/evlist.h |  2 ++
- tools/perf/util/evsel.c  | 13 +++++++------
- tools/perf/util/evsel.h  |  8 ++++++++
- 4 files changed, 32 insertions(+), 6 deletions(-)
+ tools/perf/util/evlist.c | 53 +++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/evsel.h  |  4 +++
+ 2 files changed, 56 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 3a719edafc7a..6f5311d01a14 100644
+index 6f5311d01a14..028169dcb53d 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -78,6 +78,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 	evlist->ctl_fd.fd = -1;
- 	evlist->ctl_fd.ack = -1;
- 	evlist->ctl_fd.pos = -1;
-+	evlist->nr_br_cntr = -1;
- }
- 
- struct evlist *evlist__new(void)
-@@ -1261,6 +1262,20 @@ u64 evlist__combined_branch_type(struct evlist *evlist)
+@@ -33,6 +33,7 @@
+ #include "util/bpf-filter.h"
+ #include "util/stat.h"
+ #include "util/util.h"
++#include "util/env.h"
+ #include <signal.h>
+ #include <unistd.h>
+ #include <sched.h>
+@@ -1262,15 +1263,65 @@ u64 evlist__combined_branch_type(struct evlist *evlist)
  	return branch_type;
  }
  
-+void evlist__update_br_cntr(struct evlist *evlist)
++static struct evsel *
++evlist__find_dup_event_from_prev(struct evlist *evlist, struct evsel *event)
 +{
-+	struct evsel *evsel;
-+	int i = 0;
++	struct evsel *pos;
 +
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) {
-+			evsel->br_cntr_idx = i++;
-+			evsel__leader(evsel)->br_cntr_nr++;
-+		}
++	evlist__for_each_entry(evlist, pos) {
++		if (event == pos)
++			break;
++		if ((pos->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) &&
++		    !strcmp(pos->name, event->name))
++			return pos;
 +	}
-+	evlist->nr_br_cntr = i;
++	return NULL;
 +}
 +
- bool evlist__valid_read_format(struct evlist *evlist)
- {
- 	struct evsel *first = evlist__first(evlist), *pos = first;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index cb91dc9117a2..88206dd554c7 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -56,6 +56,7 @@ struct evlist {
- 	bool		 enabled;
- 	int		 id_pos;
- 	int		 is_pos;
-+	int		 nr_br_cntr;
- 	u64		 combined_sample_type;
- 	enum bkw_mmap_state bkw_mmap_state;
- 	struct {
-@@ -217,6 +218,7 @@ int evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel);
- u64 __evlist__combined_sample_type(struct evlist *evlist);
- u64 evlist__combined_sample_type(struct evlist *evlist);
- u64 evlist__combined_branch_type(struct evlist *evlist);
-+void evlist__update_br_cntr(struct evlist *evlist);
- bool evlist__sample_id_all(struct evlist *evlist);
- u16 evlist__id_hdr_size(struct evlist *evlist);
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a5dd031c9080..89c3baae926e 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2562,17 +2562,18 @@ u64 evsel__bitfield_swap_branch_flags(u64 value)
- 
- static inline bool evsel__has_branch_counters(const struct evsel *evsel)
- {
--	struct evsel *cur, *leader = evsel__leader(evsel);
-+	struct evsel *leader = evsel__leader(evsel);
- 
- 	/* The branch counters feature only supports group */
- 	if (!leader || !evsel->evlist)
- 		return false;
- 
--	evlist__for_each_entry(evsel->evlist, cur) {
--		if ((leader == evsel__leader(cur)) &&
--		    (cur->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS))
--			return true;
--	}
-+	if (evsel->evlist->nr_br_cntr < 0)
-+		evlist__update_br_cntr(evsel->evlist);
++#define MAX_NR_ABBR_NAME	(26 * 11)
 +
-+	if (leader->br_cntr_nr > 0)
-+		return true;
++/*
++ * The abbr name is from A to Z9. If the number of event
++ * which requires the branch counter > MAX_NR_ABBR_NAME,
++ * return NA.
++ */
++static char *evlist__new_abbr_name(void)
++{
++	static int idx;
++	char str[3];
++	int i = idx / 26;
 +
- 	return false;
- }
++	if (idx >= MAX_NR_ABBR_NAME)
++		return strdup("NA");
++
++	str[0] = 'A' + (idx % 26);
++
++	if (!i)
++		str[1] = '\0';
++	else {
++		str[1] = '0' + i - 1;
++		str[2] = '\0';
++	}
++
++	idx++;
++	return strdup(str);
++}
++
+ void evlist__update_br_cntr(struct evlist *evlist)
+ {
+-	struct evsel *evsel;
++	struct evsel *evsel, *dup;
+ 	int i = 0;
  
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) {
+ 			evsel->br_cntr_idx = i++;
+ 			evsel__leader(evsel)->br_cntr_nr++;
++
++			dup = evlist__find_dup_event_from_prev(evlist, evsel);
++			if (dup)
++				evsel->abbr_name = strdup(dup->abbr_name);
++			else
++				evsel->abbr_name = evlist__new_abbr_name();
+ 		}
+ 	}
+ 	evlist->nr_br_cntr = i;
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 80b5f6dd868e..a733d3407b35 100644
+index a733d3407b35..bf37442002aa 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -147,6 +147,14 @@ struct evsel {
+@@ -152,9 +152,13 @@ struct evsel {
+ 	 * br_cntr_idx: The idx of the branch counter event in the evlist
+ 	 * br_cntr_nr:  The number of the branch counter event in the group
+ 	 *	        (Only available for the leader event)
++	 * abbr_name:   The abbreviation name assigned to an event which is
++	 *		logged by the branch counter.
  	 */
- 	__u64			synth_sample_type;
- 
-+	/*
-+	 * Store the branch counter related information.
-+	 * br_cntr_idx: The idx of the branch counter event in the evlist
-+	 * br_cntr_nr:  The number of the branch counter event in the group
-+	 *	        (Only available for the leader event)
-+	 */
-+	int			br_cntr_idx;
-+	int			br_cntr_nr;
+ 	int			br_cntr_idx;
+ 	int			br_cntr_nr;
++	char			*abbr_name;
++
  	/*
  	 * bpf_counter_ops serves two use cases:
  	 *   1. perf-stat -b          counting events used byBPF programs
