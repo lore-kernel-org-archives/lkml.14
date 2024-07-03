@@ -1,149 +1,192 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EBC2BD19
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C521822EC;
+	Wed,  3 Jul 2024 16:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720023817; cv=none; b=YyIjU8bwvzDH72V//xElrMY55/fZsXG4KEFU+Tk4ZwCo5iEn6rnSww0GfgCP0zc6QdtcKPj4+NHDSfKp7tYhALdJHO9WRTqhZ0cKdwgsGy5FqiTJirwz+OIamW2ZDh3a0nP5nYPp448wpDLyef79Or7Cd6/XHrcbkbW6huoc63s=
+	t=1720023860; cv=none; b=odvsvwykGpGraeZv6WjagMgBBeaoRyfstlBa29PSWpCF0g2fwe8TbD2ENiy3+uZaS0fiIWPC3Shn14Vwh63fGKLB6Ip3o/QMvwmhJ9pTAT81MbbeL8FsOl1z1KAL4hGb+lx+TCMb0Z870xlRhvrCMupdgpnWvOw9Lw3MJF19Od0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720023817; c=relaxed/simple;
-	bh=yAl9WkIF75Z5792jsKO6kzvCg4MDRUb7mflCnX2qKpE=;
+	s=arc-20240116; t=1720023860; c=relaxed/simple;
+	bh=2Hacc46nHYFvYqe1ib5XbS062I+YR3yn+g22MnTZjt0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sqW35UxGZs3hSiFJCo8oPTaJGzf5qhzYwytI0GVR+NZzl0loHTzC4B2FxuXO+04otG/w8tryLrQco1z0R7T3xW2z3Zu51MSiftTdPsUKTGc7Hxsrt+G6p1Ft3TJtd6l0TQPs1xWywUSaJTaiVl1+BK7ms1E2kpRk7d/KuluaMFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TsBqYSE/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=Rd3OZtXU5hKqQxkld/Z3SuK8HV6D8E19mmA+v0T7p9CDCidoBHdqM59Nrkz9vaQ852DWRlZnCJFM1mHflMUFT1M9jUk/fQ5SarRDw6Y3HCk0kclFy3M5iRQAHfqr52CM2DzuTnbSLRS2XtjxahVTKagB2j57E+kxKjWqMds51oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RXmJMfix; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TsBqYSE/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720023815;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n91rt4myNGjgsOAzA53ROWPaLTAmQTcNbTctluHszT0=;
-	b=TsBqYSE/Ogb+CXsORFRoJ0wRWymSSoZAe46veu2fT/f5QTsMjnEUgiOiAMm+iEAr4+wPfx
-	tjoRkoDpJvfVpHItPyaLqgntvC9uKY1RnQrzp8ua1xfNzTCLbjj7kX2odctk11zUgbs+eP
-	8oWxICIONoCpyxcUo6LLlsV/vL4/nV4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-230-X7zafkaAMxOdUYBS3a-1gg-1; Wed, 03 Jul 2024 12:23:29 -0400
-X-MC-Unique: X7zafkaAMxOdUYBS3a-1gg-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-58bd8406816so1407539a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 09:23:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RXmJMfix"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-79c0b1eb94dso380243385a.1;
+        Wed, 03 Jul 2024 09:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720023858; x=1720628658; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LssWgT0rAbf2Zvr3wzcyKBmvblvua7M79zlMa0Rclsw=;
+        b=RXmJMfixNMUk5lM2QdP0+qV6m+CqR688cnRzOflSlpj4HgvdZCJt3yNAFZphLNVKAg
+         baJ78dPgtWafB52wXJwSR0gZRZD65XOlBmlhEQA7tPxW0iJrUEuzX3Lm+HHfLLuM8Cp6
+         dLZAl/PW0PmhEenSXQnv87xF0KpfDTxuQurnYhg2nlOhA8oG0CE85a6PIeWKLTgqqvbn
+         FNyGkzyaXINozpxi7zzIe+hbSnlIFrffrqVBcBXaVz8ru9UkDZN4Zix4emoH7mLFOO6N
+         2F8tY/k0A1hPvlPZ9wD34P5zYf8R5VMDfJtuh1BB3ZBrKf6Mt3YNNWWIQRTYh5DB5NXH
+         zCgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720023806; x=1720628606;
+        d=1e100.net; s=20230601; t=1720023858; x=1720628658;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n91rt4myNGjgsOAzA53ROWPaLTAmQTcNbTctluHszT0=;
-        b=cuCBq8TqyaMFcDjodEjYa27VUWlI9/kge0ui/LZ2ET5EJlJhgKh0/E/9FxtvTEBC5W
-         6M5rzpotmo2ljEFPCipyHElPcgXScI2jEY5frSV7bqMxfQv6aZky/kITE5yf8JpChAPr
-         b/Xf3pJgrpsnievQNbgX8kX6UjA1F7pLV67ObosIFvUaPeDrWMUz9jy/j2Y+uwQnCLby
-         L4TstrZc7gkyNMdYgjVAlXFOEp1YllCAEgmbxsptrcY9RhcgI03wliGRaAwVDtZavNX1
-         bDcMERvRa6xj2tT5LCEvWCeuIqRMZAVEUIhFrHyD+NeuEhpoI+2aksZGM//1uKnb4Bps
-         If/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWoyMDugVXEFu93KOzUNqpZo/dhHMwXcSQmKMz2k/YiqHcbGW6ZE5maGPFe2kGUqsZwVOwIYvrjHScEv+aajrM6a7/fpO8PnwXTuFFs
-X-Gm-Message-State: AOJu0YwxC+DMJf2QEoDAWS95chuN+lNb+fgbO491r+rDM7v4rCH73/uN
-	5XRYCahJ0SCuwV83lpDuEcodCm7i0CaDgY4VP4Ht0/Utb1bxOFnu8ek+JILv6WuRsIxVUE0uU6m
-	qDoj/7XXZ5S3cNLup75sr0G3cprlVm+95FJnZ5K0dFCaAuRP4kwFTX8/ml737xpZSxzSxf0mJll
-	8f8n7hDV43wssRgQ8pr+h06d0kUA6oPbqCK7v2zWkPU4/5qqA=
-X-Received: by 2002:a05:6402:1cc1:b0:57c:6188:875a with SMTP id 4fb4d7f45d1cf-587a0637437mr7847857a12.26.1720023806610;
-        Wed, 03 Jul 2024 09:23:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGDKcKhOUx+NmAMpJL8tgtpN3L8p4uaUWiZMnuqg99iVFuWIDVp5qSLrtsQb/GpER4ZLfVxi176Yy0Dko+cScU=
-X-Received: by 2002:a05:6402:1cc1:b0:57c:6188:875a with SMTP id
- 4fb4d7f45d1cf-587a0637437mr7847840a12.26.1720023806248; Wed, 03 Jul 2024
- 09:23:26 -0700 (PDT)
+        bh=LssWgT0rAbf2Zvr3wzcyKBmvblvua7M79zlMa0Rclsw=;
+        b=I/+wOzBhOoRLMhn6lAXpWlHJGGwuW//OV5PElt714DGxYHaUYw0rrUqMro0ZjTv09/
+         1zusd0BPenY5e/7ARPumVaakZxBd24nrHnTgF8bTjq32SyyYLsQRkvwRgFQpXuGUIjtb
+         ifs/NV4lYX9O6ItPTkRpBNv6nQPcTVrDCxUrxHCrMJOuDOQGq9iP+0Q49ZgAlIVK68Cn
+         4sGE/3BtraE5jcLkaJMVY8twKQTnmCwqSP9OjiE0VyeBNqZSAUpYLaoQCqmGBT08dWnc
+         wlCJJm248mDjMnygTOwAT6E8KPfgfRMkvc6LMfbMoDPO0VrAdCpyi4qg2X3LPBgJPDzi
+         Ftyw==
+X-Forwarded-Encrypted: i=1; AJvYcCXxP6BicZexsIKZgHPwFfbqGWlB2OSoAtmL4FL1MhGYyddvSegSKFLNyJaUmI7hY1/fnXaf5Sie9YaPn9dLFRCY/P8qZbyKZp4hH5k8YgMfOGWNN+dW+V0ojiE0zNjXGtLYrT3uWMSKBAUJbg==
+X-Gm-Message-State: AOJu0Yxz8OI9YOUYfLpbVsmnxMvu84HGrXn1zK4lP/JjeQ3YekAY4r3x
+	YzTrHqVt9exA8eeH0F/J5JEl5PpZs2+/wxIbCUPXYJuudLZfnXTRVVBDnMQby31KQyNw8Xf4hEk
+	yMqq/v7qkawIDyrBl4Kac/LJu6QM=
+X-Google-Smtp-Source: AGHT+IFSvisVJYJa9uTwBqRJ9OsIwK0wr6BGtSTTpy/fAImCTth3S8Np7WJQfC/6zxRKPuXNVd23VUaQ7+Psd8sHNPM=
+X-Received: by 2002:a05:620a:a95:b0:79d:986a:9e8e with SMTP id
+ af79cd13be357-79d986aa061mr567225585a.67.1720023857744; Wed, 03 Jul 2024
+ 09:24:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626-stage-vdpa-vq-precreate-v2-0-560c491078df@nvidia.com> <20240626-stage-vdpa-vq-precreate-v2-19-560c491078df@nvidia.com>
-In-Reply-To: <20240626-stage-vdpa-vq-precreate-v2-19-560c491078df@nvidia.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 3 Jul 2024 18:22:47 +0200
-Message-ID: <CAJaqyWccNsTo16CzUmSwNLFw2CTinrQ47YQ2JjRndyHLeRVFNg@mail.gmail.com>
-Subject: Re: [PATCH vhost v2 19/24] vdpa/mlx5: Forward error in suspend/resume device
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	Cosmin Ratiu <cratiu@nvidia.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
+References: <20240703010215.2013266-1-drosen@google.com> <315aef06-794d-478f-93a3-8a2da14ec18c@fastmail.fm>
+ <CAOQ4uxhYcNvQc-Y+ZZSGyX1Un8WCJuE-aeiRrgLm91HwJ48gWA@mail.gmail.com> <d98fefc9-fbb4-44b8-9050-61378176dcf1@fastmail.fm>
+In-Reply-To: <d98fefc9-fbb4-44b8-9050-61378176dcf1@fastmail.fm>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 3 Jul 2024 19:24:06 +0300
+Message-ID: <CAOQ4uxjHe6m1LUxTzrmOSFnbF=yZRuL0180V0gFH8qJTfcsNeQ@mail.gmail.com>
+Subject: Re: [PATCH 0/1] Fuse Passthrough cache issues
+To: Bernd Schubert <bernd.schubert@fastmail.fm>
+Cc: Daniel Rosenberg <drosen@google.com>, Miklos Szeredi <miklos@szeredi.hu>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 26, 2024 at 12:28=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.co=
-m> wrote:
+On Wed, Jul 3, 2024 at 7:09=E2=80=AFPM Bernd Schubert
+<bernd.schubert@fastmail.fm> wrote:
 >
-> Start using the suspend/resume_vq() error return codes previously added.
 >
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-> Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+>
+> On 7/3/24 16:41, Amir Goldstein wrote:
+> > On Wed, Jul 3, 2024 at 4:27=E2=80=AFPM Bernd Schubert
+> > <bernd.schubert@fastmail.fm> wrote:
+> >>
+> >>
+> >>
+> >> On 7/3/24 03:02, Daniel Rosenberg wrote:
+> >>> I've been attempting to recreate Android's usage of Fuse Passthrough =
+with the
+> >>> version now merged in the kernel, and I've run into a couple issues. =
+The first
+> >>> one was pretty straightforward, and I've included a patch, although I=
+'m not
+> >>> convinced that it should be conditional, and it may need to do more t=
+o ensure
+> >>> that the cache is up to date.
+> >>>
+> >>> If your fuse daemon is running with writeback cache enabled, writes w=
+ith
+> >>> passthrough files will cause problems. Fuse will invalidate attribute=
+s on
+> >>> write, but because it's in writeback cache mode, it will ignore the r=
+equested
+> >>> attributes when the daemon provides them. The kernel is the source of=
+ truth in
+> >>> this case, and should update the cached values during the passthrough=
+ write.
+> >>
+> >> Could you explain why you want to have the combination passthrough and
+> >> writeback cache?
+> >>
+> >> I think Amirs intention was to have passthrough and cache writes
+> >> conflicting, see fuse_file_passthrough_open() and
+> >> fuse_file_cached_io_open().
+> >
+> > Yes, this was an explicit design requirement from Miklos [1].
+> > I also have use cases to handle some read/writes from server
+> > and the compromise was that for the first version these cases should
+> > use FOPEN_DIRECT_IO, which does not conflict with FOPEN_PASSTHROUGH.
+> >
+> > I guess this is not good enough for Android applications opening photos
+> > that need the FUSE readahead cache for performance?
+> >
+> > In that case, a future BPF filter can decide whether to send the IO dir=
+ect
+> > to server or to backing inode.
+> >
+> > Or a future backing inode mapping API could map part of the file to
+> > backing inode
+> > and the metadata portion will not be mapped to backing inode will fall =
+back to
+> > direct IO to server.
+> >
+> > [1] https://lore.kernel.org/linux-fsdevel/CAJfpegtWdGVm9iHgVyXfY2mnR98X=
+J=3D6HtpaA+W83vvQea5PycQ@mail.gmail.com/
+> >
+> >>
+> >> Also in <libfuse>/example/passthrough_hp.cc in sfs_init():
+> >>
+> >>     /* Passthrough and writeback cache are conflicting modes */
+> >>
+> >>
+> >>
+> >> With that I wonder if either fc->writeback_cache should be ignored whe=
+n
+> >> a file is opened in passthrough mode, or if fuse_file_io_open() should
+> >> ignore FOPEN_PASSTHROUGH when fc->writeback_cache is set. Either of bo=
+th
+> >> would result in the opposite of what you are trying to achieve - which
+> >> is why I think it is important to understand what is your actual goal.
+> >>
+> >
+> > Is there no standard way for FUSE client to tell the server that the
+> > INIT response is invalid?
+>
+> Problem is that at FUSE_INIT time it is already mounted. process_init_rep=
+ly()
+> can set an error state, but fuse_get_req*() will just result in ECONNREFU=
+SED.*
+>
+> >
+> > Anyway, we already ignore  FUSE_PASSTHROUGH in INIT response
+> > for several cases, so this could be another case.
+> > Then FOPEN_PASSTHROUGH will fail with EIO (not be ignored).
+>
+> So basically this?
+>
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index 573550e7bbe1..36c6dcd47a53 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -1327,7 +1327,8 @@ static void process_init_reply(struct fuse_mount *f=
+m, struct fuse_args *args,
+>                         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH) &&
+>                             (flags & FUSE_PASSTHROUGH) &&
+>                             arg->max_stack_depth > 0 &&
+> -                           arg->max_stack_depth <=3D FILESYSTEM_MAX_STAC=
+K_DEPTH) {
+> +                           arg->max_stack_depth <=3D FILESYSTEM_MAX_STAC=
+K_DEPTH &&
+> +                           !(flags & FUSE_WRITEBACK_CACHE)) {
+>                                 fc->passthrough =3D 1;
+>                                 fc->max_stack_depth =3D arg->max_stack_de=
+pth;
+>                                 fm->sb->s_stack_depth =3D arg->max_stack_=
+depth;
+>
+>
 
-Reviewed-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+Yap.
+Maybe add something to the comment, because the comment is
+about max_stack_depth and someone may assume that it also refers
+to FUSE_WRITEBACK_CACHE somehow.
 
-> ---
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/ml=
-x5_vnet.c
-> index e65d488f7a08..ce1f6a1f36cd 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -3436,22 +3436,25 @@ static int mlx5_vdpa_suspend(struct vdpa_device *=
-vdev)
->  {
->         struct mlx5_vdpa_dev *mvdev =3D to_mvdev(vdev);
->         struct mlx5_vdpa_net *ndev =3D to_mlx5_vdpa_ndev(mvdev);
-> +       int err;
->
->         mlx5_vdpa_info(mvdev, "suspending device\n");
->
->         down_write(&ndev->reslock);
->         unregister_link_notifier(ndev);
-> -       suspend_vqs(ndev);
-> +       err =3D suspend_vqs(ndev);
->         mlx5_vdpa_cvq_suspend(mvdev);
->         mvdev->suspended =3D true;
->         up_write(&ndev->reslock);
-> -       return 0;
-> +
-> +       return err;
->  }
->
->  static int mlx5_vdpa_resume(struct vdpa_device *vdev)
->  {
->         struct mlx5_vdpa_dev *mvdev =3D to_mvdev(vdev);
->         struct mlx5_vdpa_net *ndev;
-> +       int err;
->
->         ndev =3D to_mlx5_vdpa_ndev(mvdev);
->
-> @@ -3459,10 +3462,11 @@ static int mlx5_vdpa_resume(struct vdpa_device *v=
-dev)
->
->         down_write(&ndev->reslock);
->         mvdev->suspended =3D false;
-> -       resume_vqs(ndev);
-> +       err =3D resume_vqs(ndev);
->         register_link_notifier(ndev);
->         up_write(&ndev->reslock);
-> -       return 0;
-> +
-> +       return err;
->  }
->
->  static int mlx5_set_group_asid(struct vdpa_device *vdev, u32 group,
->
-> --
-> 2.45.1
->
-
+Thanks,
+Amir.
