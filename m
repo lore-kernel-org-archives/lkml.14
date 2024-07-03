@@ -1,114 +1,99 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B448B4964E;
-	Wed,  3 Jul 2024 20:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373D51428F8;
+	Wed,  3 Jul 2024 20:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720038895; cv=none; b=s9/zRfuGCy/8x6m0+w0VpOCqgm2abjPlX7YMnV2zSYcgubISpH+HTpKQfTLJ6gR4qd7PFrBoZXPnLAKcZBL/yZECHjOVLhKGbIlipnSdk7Y2oXCb2ilGmO7MVfQ+LzINUHALOkTYWXkRYfF7LstJOBPuN9jT/OE48R5nbssM0ec=
+	t=1720038980; cv=none; b=aePGjmLkJcrVmC9nFJUkG+27zRqnnmxQO3RhaJAiWpcf+i/6AqlEeedvZXO0tF+Y2+0dpUx33wFJNrEHq26qMFBHo/GKmGWjs94R5ChfKokXbFTIsQJypYc4p3Pj6vv2D+dHdzDC2b11B58BOBJqYblrE5f70YMyNhOhTaireZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720038895; c=relaxed/simple;
-	bh=Zz/epqt5ZRh8ui97t65GrBhekOF+Qb7LbgbykpbYtdk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Iyvl9dSv3fL08VUyuKJQHyiDFX4D3dUFyEXVT5RLn8f09pQL6QHQHf6XmiIo2aZK7RHnYIXo+TZOUK6I1HwuwnOX4PIfuKIeLluUDm+qohz5GpLGVURSw30o6ACk/8kq5NHOBQaN4IB2VPkumhDfVv3KxgMIZt1qNTtCtJJTuxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=oLxJbbiw; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1720038980; c=relaxed/simple;
+	bh=Oqyd5Kxbfv5QZ3nFmSgn8SiH41r1XTO0pZscPfXtn+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mBU7V4lrOegrjPr2zxkY2Qqm58ZH4zfjiGboicaJv9CiYH0OxlXF5yWbcV20iznzjuay7AcWaQdVKbuIx41XdySg/7Hv4voqa85pUWWH2FSkgzTF/mL191tPSJJu4K+erZHxjARRrLTX5+HKQik3OAgtkWfJfhxh6MxgicsX/Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XctAR0tp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="oLxJbbiw"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id D097F100004;
-	Wed,  3 Jul 2024 23:34:30 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1720038870; bh=+w5nLEKphcLgW6rn0LDohsYxcRdzToxepNB2cUqDYdY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=oLxJbbiwUyUJp9W+ibOTqjN5D3p1y4+h5MFGapmdzoEtwEE7svaRLTf2SpLf478Rg
-	 19bhKEVo9ZMZkJnxBd2TAqtV7WGzbQLdYHYiP4FYMm2U8oO3CeoAPAwgMvXkz44QpE
-	 lpPqxpVrRkPtXXOCprls/BpNGOukTafD+cpHTrf6a5L4Js3Ln3naP8dop9BGA47Cpu
-	 0xCnOaGfb/VjdcfvTgeTWWJgQbPL4ngbkjNOKSF1P2n2v3WVbk3GUhlABRNVCcpynE
-	 2YVN2bOaDSo/fdmxdOJh3WnkXGIFcWv2G+QvQV6Zk6DxerWsCLBCcMpqui9MHhXnJU
-	 GuXHJKopS92Tg==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Wed,  3 Jul 2024 23:33:23 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 3 Jul 2024
- 23:33:02 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Jiri Pirko <jiri@resnulli.us>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Ido Schimmel <idosch@nvidia.com>,
-	Petr Machata <petrm@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Przemek
- Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net v2] mlxsw: core_linecards: Fix double memory deallocation in case of invalid INI file
-Date: Wed, 3 Jul 2024 23:32:51 +0300
-Message-ID: <20240703203251.8871-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XctAR0tp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03342C2BD10;
+	Wed,  3 Jul 2024 20:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720038980;
+	bh=Oqyd5Kxbfv5QZ3nFmSgn8SiH41r1XTO0pZscPfXtn+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XctAR0tpA5fSdH3KeTgwqMs6oXubiLg+dYNI4FhoGZLMEUI+XQrKw0gc5Zu3gPy2O
+	 fQC+FwT6a1N5CEaMUUGyjC0cURMt1uW6r0zhFIJsD1lRb3s8M+RuqLtEXstglJBpxJ
+	 Wpo7LfsGKUx4AuPHciKLKWArR+R+x/TBggAbdIImsYz4pOI1r8l06FpyDjeggUGjv2
+	 A6stN2mitkepEKs36Bs/9eTHCs9Aj23wDrZnV9rMHwragqlQgOY0tvUjyjdvx6u3et
+	 gEJ8LzNvYfxn3O/cg7pMwmQHB2JRhfNbsP09KmcJkr+gfBQiKVOtZpsD3HjarLgv90
+	 lUnrDJQ7HWTuA==
+Date: Wed, 3 Jul 2024 13:36:19 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
+Message-ID: <202407031330.F9016C60B@keescook>
+References: <20240701164115.723677-1-jolsa@kernel.org>
+ <20240701164115.723677-2-jolsa@kernel.org>
+ <CAEf4BzZaTNTDauJYaES-q40UpvcjNyDSfSnuU+DkSuAPSuZ8Qw@mail.gmail.com>
+ <20240703081042.GM11386@noisy.programming.kicks-ass.net>
+ <CAEf4BzY9zi7pKmSmrCAqJ2GowZmCZ0EnZfA5f8YvxHRk2Pj8Zw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186316 [Jul 03 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, t-argos.ru:7.1.1;lore.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/03 19:52:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/03 17:02:00 #25823003
-X-KSMG-AntiVirus-Status: Clean, skipped
+In-Reply-To: <CAEf4BzY9zi7pKmSmrCAqJ2GowZmCZ0EnZfA5f8YvxHRk2Pj8Zw@mail.gmail.com>
 
-In case of invalid INI file mlxsw_linecard_types_init() deallocates memory
-but doesn't reset pointer to NULL and returns 0. In case of any error
-occurred after mlxsw_linecard_types_init() call, mlxsw_linecards_init()
-calls mlxsw_linecard_types_fini() which performs memory deallocation again.
+On Wed, Jul 03, 2024 at 11:31:11AM -0700, Andrii Nakryiko wrote:
+> On Wed, Jul 3, 2024 at 1:10 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Tue, Jul 02, 2024 at 01:51:28PM -0700, Andrii Nakryiko wrote:
+> > > > +static size_t ri_size(int sessions_cnt)
+> > > > +{
+> > > > +       struct return_instance *ri __maybe_unused;
+> > > > +
+> > > > +       return sizeof(*ri) + sessions_cnt * sizeof(ri->sessions[0]);
+> > >
+> > > just use struct_size()?
+> >
+> > Yeah, lets not. This is readable, struct_size() is not.
+> 
+> This hack with __maybe_unused is more readable than the standard
+> struct_size() helper that was added specifically for cases like this,
+> really?
+> 
+> I wonder if Kees agrees and whether there are any downsides to using
+> struct_size()
+> 
+> struct_size(struct return_instance, sessions, sessions_cnt) seems
+> readable enough to me, in any case.
 
-Add pointer reset to NULL.
+Yes, please use struct_size_t(). This is exactly what it was designed for.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Though with only 2 instances of ri_size(), maybe just use struct_size()
+directly?
 
-Fixes: b217127e5e4e ("mlxsw: core_linecards: Add line card objects and implement provisioning")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
-Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
----
-v2:
-  - fix few typos in comment as suggested by Przemek and Ido
-  - add Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-    (https://lore.kernel.org/all/c631fc5e-1cc6-467a-963a-69ef03c20f40@intel.com/)
-  - add Reviewed-by: Ido Schimmel <idosch@nvidia.com>
-    (https://lore.kernel.org/all/ZoWJzqaRJKjtTlNO@shredder.mtl.com/)
-v1: https://lore.kernel.org/all/20240702103352.15315-1-amishin@t-argos.ru/
+Also, please annotate struct return_instance with __counted_by:
 
- drivers/net/ethernet/mellanox/mlxsw/core_linecards.c | 1 +
- 1 file changed, 1 insertion(+)
++	int			sessions_cnt;
++	struct session_consumer	sessions[] __counted_by(sessions_cnt);
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_linecards.c b/drivers/net/ethernet/mellanox/mlxsw/core_linecards.c
-index 025e0db983fe..b032d5a4b3b8 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core_linecards.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core_linecards.c
-@@ -1484,6 +1484,7 @@ static int mlxsw_linecard_types_init(struct mlxsw_core *mlxsw_core,
- 	vfree(types_info->data);
- err_data_alloc:
- 	kfree(types_info);
-+	linecards->types_info = NULL;
- 	return err;
- }
- 
+
 -- 
-2.30.2
-
+Kees Cook
