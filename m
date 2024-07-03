@@ -1,193 +1,133 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051C2194C7E
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 23:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E5E1C68D
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 23:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720049324; cv=none; b=snlQtZSoOIw2CVEn6pzUQOjVA7I1Sdx/Z/v8qYoDpGrLXVF6B2yfnltffSIGuNbsLLvqf4efgM/adDqARKeWXI7/F5017tUOmAEu4vqZJYSCAbgjhmPEwnFSa38Y9G1DZ0MLg4wGV7wuwjCH4T9C7V0dfVjgEp+xTUrNSItCooo=
+	t=1720049455; cv=none; b=fIXjz+4N29NegLPvJue8yuGGDhIq9wNJrGHnAWrOYfd3gDlEguBYOVzJTh8Us+2F4iJl9JplRPi+Id/SDkhzMLCqqRHNWcPRL46e6MQadDKxBEBFcSqr59bMLHK6KEFliq8eBjna0EwLXDrDN/fxjpxQWyjIQ9hRZ7RhuCRmoEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720049324; c=relaxed/simple;
-	bh=2rX1eM7IcyL+aaZE748iVd0kPixuWYIPt9NTa74r4qY=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RI7B33CTkrty+Md+4yzQtGbecrGiJoUdnM8XJHyt6KG+sC3DODp/CyLx5qEHxfBAHTTMZN0MItOT9zDNt5Tf0mwxxE0TeZ2VKYi+xAwxPQepn/z3YAu9fT/1nFTqOKe7I77VloC4cCS+pREvxb4Hglc8CFw0uNBNMUAJLmFeNGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=S5WDqZ+2; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1720049455; c=relaxed/simple;
+	bh=jv9izjVCFx08jaRmdoUJ03mx+SPiEKMPfOvx7XvV0/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c1JeeHBvSZyO37uEPiyIW7E9fx8InIxB9GUcF6G4kpSmQp9wpwjxWQLNjvndbttGaxzTVU5r4vux6Pfixo1Aurou5Y61oCMf0E/jJDpxd7GVV5jypKCX4vEsvEbjyPd0009VGdIeBveh6FyueGJ8wZ3qsnTZdnASlwXJyOadHM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=k2e73T4W; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tpP7ooKB; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S5WDqZ+2"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c961b5f215so77237a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 16:28:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1720049322; x=1720654122; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DMqe2BG7Tl+EbczXsabTlZUrjUbcGGCiv8T53M9QugY=;
-        b=S5WDqZ+2uAck8Hl9jdtHzSRXw5ejCh1kBGWKXJ56FN1G5nIUvwVXdoSJba4bPrZhZR
-         rOzI3cnh2E+tgHgRsmKAex+vM8RhC82eeQkd5e8099yOq8MMCcK5dXZZzvFuE2IdOHZm
-         xB455Ni0feB6QooXPe6x6nyRa7khUHG70Al7M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720049322; x=1720654122;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DMqe2BG7Tl+EbczXsabTlZUrjUbcGGCiv8T53M9QugY=;
-        b=m6AElUkNpMe0Mkz4gqyyPVykDS4l/WsYJzI48bOMp/HZSBxS/Z2KAzpuQw9jZejpT2
-         6t0nb67Usa9Gets+AmAmMjlDXdHOftMs2nSoOPUbPNgD9KJFr8MhhGq5I/yjHO6MIve+
-         o+5eZK7bdmgoORuBNOAEeTGSiDcNFys4tXqtiaxJSUi0Syr31VeCxgjkeEnRUuHJz49S
-         oQ3Nq+GFIs2QFBofWhHxKK+tXFUwWx+zCQEack1GGsIuXcfQ8dSZZDSXGForm5FJbom/
-         doxwG1g98jARJPEZf1AZGxRgOIYuDLnj1r63UwqOGoev+dlPQDOS5jftcIJQGAlAvs0I
-         ZC+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUV8Dfi/oKZ9dsPB7gBKSFu6rAVHuGwUQcK9l74Gn1IfDI6SzefS3wIy/+prEfNqOy2YvFW6j1BXz2/1KFIka+WxI7Pgc+5ndcxZZ8D
-X-Gm-Message-State: AOJu0YydehWbFoFfgM4Lm1UGkOcWFaTnnvVXjYJZO5Da3g/6VMmYk4Os
-	fVy8ceeEYHk8mXFsfwVftuWV7scMT9Z41OWym+HMin8zR7ejmhQxXniJPMcbZg==
-X-Google-Smtp-Source: AGHT+IGnGTNEJSPVIcneCMmD4X4a7gsV7nmqZFmM5q3Tdw7a+eMuok/DQQzMgjsieAlv0BO+nLBTFw==
-X-Received: by 2002:a17:90a:ff18:b0:2c9:77d8:bb60 with SMTP id 98e67ed59e1d1-2c977d90022mr2511946a91.35.1720049322220;
-        Wed, 03 Jul 2024 16:28:42 -0700 (PDT)
-Received: from ubuntu.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a946fb2sm83793a91.3.2024.07.03.16.28.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 16:28:41 -0700 (PDT)
-From: Tim Merrifield <tim.merrifield@broadcom.com>
-To: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Xin Li <xin3.li@intel.com>,
-	Tim Merrifield <tim.merrifield@broadcom.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Kai Huang <kai.huang@intel.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Kees Cook <kees@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	virtualization@lists.linux.dev,
-	alex.james@broadcom.com,
-	doug.covelli@broadcom.com,
-	jeffrey.sheldon@broadcom.com
-Subject: [PATCH 2/2] x86/vmware: VMware support for TDX userspace hypercalls
-Date: Wed,  3 Jul 2024 23:36:01 +0000
-Message-Id: <7f57b0fe002291e3f4b27dfe9f502ed3af296bc2.1720046911.git.tim.merrifield@broadcom.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1720046911.git.tim.merrifield@broadcom.com>
-References: <cover.1720046911.git.tim.merrifield@broadcom.com>
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="k2e73T4W";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tpP7ooKB"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 846831140274;
+	Wed,  3 Jul 2024 19:30:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 03 Jul 2024 19:30:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1720049451; x=
+	1720135851; bh=Wk19BgkiX8lgErfCjZ7uFzpS8AsJuw3QkRtAF46r3yo=; b=k
+	2e73T4WKwZjrZLCOCkSs5m4GWJ9t+EViJswf3KIGkqrXjSKH+cDyHC+C1FCnmrLf
+	Ya+Me8DVeJR3B51pWoAlJAj/xhWsabhSCLa4uYiIc4kExhIj8iXrAME5IhXLGy3p
+	8TlO0JI96hUwP5V1um/5xE6fcxtixRPZ/kX+ct2yzpwXfewwBEUayLvuGfWgX1QY
+	lHZu+fhGnVpK2NENBe8AYTzYW9XB4pc3vB5Q7NVmjYXlCNqfs2BFb7di3QM7/EEr
+	cJr36kdIhbfCHx1vQ0zevYUPvi0ZWnXxx8FvlRccXCd0Qg3i3BoCbWxslnjUUE02
+	RHzq0OO9GlTMn3VAJ+LPQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720049451; x=1720135851; bh=Wk19BgkiX8lgErfCjZ7uFzpS8AsJ
+	uw3QkRtAF46r3yo=; b=tpP7ooKBfmqDz+1Ob6MOPzzNvG7et4cDh46dNNCnnYUS
+	s0mMHTme82NsYhLPUo+L2WhtMn+Swm8n4nuc4Vt86lsitL7AXXDogKfb4lfgVgz1
+	x8GZc/IEVeVrQIvdveQG1n3V1q+jYIHQQvoVkKAiJZR3ZUsp+r7LY+j45fQfEVYd
+	veV8vo8zjhL0EnnxXzifIyE0xUN1oDLdg9MnkWLDYgAEJgkFA7zisA2MIbIw7LFh
+	GXxSffHbxJ78Omiu2t+n0GzedxMpPlQF3WbKo8NJ52YFIctXmFe0z7gFj46xxYu8
+	/n7uA7Cmp9cKvc8iUiTvZaxTOqP472E++iRyxVOMnA==
+X-ME-Sender: <xms:K9-FZvX9SxQqN8CC1oaGXJmyLe5rBhOllCAnD_gg45UDjXPgvGgenQ>
+    <xme:K9-FZnlbV8ZGoISAaDDkrOG7kDdeau-ABw-47gXcK7u-AOoyX-VTvcRPnA9FI2MaO
+    gQjsOighVjMYBokF0s>
+X-ME-Received: <xmr:K9-FZrYATSixmIm8yojwRJRcRScJ7ezqoVvLl0nGkHlOEYaCUiS7mWN8vLXYB6nXNr8jnmldhnswB9lq4HZdjPYraiZZ9CXTwA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudekgddvudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvfevuffkfhggtggujgesthdtre
+    dttddtvdenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqthgrkhgr
+    shhhihesshgrkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnhephefhhfette
+    fgkedvieeuffevveeufedtlefhjeeiieetvdelfedtgfefuedukeeunecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihessh
+    grkhgrmhhotggthhhirdhjph
+X-ME-Proxy: <xmx:K9-FZqU9GBgTMmP2wZz22u1Ghj_0M9iTFsqGVYqbqgYXQW3gssCJaA>
+    <xmx:K9-FZplBFDCvGdKNHGlT-JDcHTsGHsLSmZ-L0fJbSYCnpLmghs9zJw>
+    <xmx:K9-FZncAglNWV63K9GkiiccQedD8hlss23ZD2AGHzZttGkR6PHPktQ>
+    <xmx:K9-FZjGuFm3omMh75C4zsyBU3mTRQ1t5yffMRUiVtAamEDhCZJ0AlA>
+    <xmx:K9-FZuyIQgZmju-Qg2QKlSYv06XaaumdS3wRWK0GUD8eBu0PPgp4cLX5>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 3 Jul 2024 19:30:50 -0400 (EDT)
+Date: Thu, 4 Jul 2024 08:30:47 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: linux1394-devel@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] firewire: ohci: add tracepoints event for data of
+ Self-ID DMA
+Message-ID: <20240703233047.GA1441700@workstation.local>
+Mail-Followup-To: linux1394-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+References: <20240702222034.1378764-1-o-takashi@sakamocchi.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240702222034.1378764-1-o-takashi@sakamocchi.jp>
 
-This change adds a handler for tdx_hcall in the x86_hyper_runtime type for
-VMware hypervisors which will ultimately invoke __tdx_hypercall. The
-handler (vmware_tdx_user_hcall) does not reuse the existing
-vmware_tdx_hypercall for a couple of reasons.
+On Wed, Jul 03, 2024 at 07:20:29AM +0900, Takashi Sakamoto wrote:
+> Hi,
+> 
+> In IEEE 1394, Self identification process is the last step at
+> bus configuration process initiated by reset. In this step, all nodes at
+> the bus broadcast self-ID packet according to the new topology. In 1394
+> OHCI, the contents of the self-ID packet stream are transmitted to host
+> system by DMA. This is Self-ID DMA, and configured by two registers,
+> signaled by an interrupt, has a format of buffer.
+> 
+> Software handles the interrupt, then parse the contents of self-ID packet
+> stream to detect all nodes in the bus. Finally it starts any type of
+> operation in the bus. Both the timing to handle the interrupt and the
+> data of DMA buffer are important as a first step to use the bus.
+> 
+> This series of patches is to add a tracepoints event to trace the
+> interrupt and the data of DMA buffer. It would be useful to diagnose
+> some kind of issue related to the self-ID process; e.g. hardware quirks.
+> I also expect it useful to investigate the timing issue between hardIRQ
+> and softIRQ contexts to process the contents of self-ID packets.
+> 
+> Takashi Sakamoto (5):
+>   firewire: ohci: use common macro to interpret be32 data in le32 buffer
+>   firewire: ohci: use static function to handle endian issue on PowerPC
+>     platform
+>   firewire: ohci: add static inline functions to deserialize for Self-ID
+>     DMA operation
+>   firewire: ohci: use inline functions to operate data of self-ID DMA
+>   firewire: ohci: add tracepoints event for data of Self-ID DMA
+> 
+>  drivers/firewire/.kunitconfig        |  1 +
+>  drivers/firewire/Kconfig             | 16 ++++++++
+>  drivers/firewire/Makefile            |  1 +
+>  drivers/firewire/ohci-serdes-test.c  | 56 ++++++++++++++++++++++++++
+>  drivers/firewire/ohci.c              | 60 ++++++++++++++++++++--------
+>  drivers/firewire/ohci.h              | 43 +++++++++++++++++++-
+>  include/trace/events/firewire_ohci.h | 54 +++++++++++++++++++++++++
+>  7 files changed, 213 insertions(+), 18 deletions(-)
+>  create mode 100644 drivers/firewire/ohci-serdes-test.c
 
-First, while the few hypercalls that are invoked from the kernel expect
-uint32 outputs, this may not be the case for every backdoor userspace may
-call. So the existing interface is not sufficient. Additionally, we don't
-require the branches based on output arguments. Finally, the
-VMWARE_CMD_MASK employed in vmware_tdx_hypercall is applicable to only
-hypercalls expected from the kernel.
+Applied to for-next branch.
 
-Signed-off-by: Tim Merrifield <tim.merrifield@broadcom.com>
----
- arch/x86/kernel/cpu/vmware.c | 51 ++++++++++++++++++++++++++++--------
- 1 file changed, 40 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 00189cdeb775..54759c5a9808 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -494,6 +494,24 @@ static bool __init vmware_legacy_x2apic_available(void)
-  * TDCALL[TDG.VP.VMCALL] uses %rax (arg0) and %rcx (arg2). Therefore,
-  * we remap those registers to %r12 and %r13, respectively.
-  */
-+static inline void vmware_init_tdx_args(struct tdx_module_args *args, bool is_user,
-+					unsigned long cmd, unsigned long in1,
-+					unsigned long in3, unsigned long in4,
-+					unsigned long in5, unsigned long in6)
-+{
-+	args->rbx = in1;
-+	args->rdx = in3;
-+	args->rsi = in4;
-+	args->rdi = in5;
-+	args->r10 = VMWARE_TDX_VENDOR_LEAF;
-+	args->r11 = VMWARE_TDX_HCALL_FUNC;
-+	args->r12 = VMWARE_HYPERVISOR_MAGIC;
-+	args->r13 = cmd;
-+	args->r14 = in6;
-+	/* CPL */
-+	args->r15 = is_user ? 3 : 0;
-+}
-+
- unsigned long vmware_tdx_hypercall(unsigned long cmd,
- 				   unsigned long in1, unsigned long in3,
- 				   unsigned long in4, unsigned long in5,
-@@ -512,17 +530,7 @@ unsigned long vmware_tdx_hypercall(unsigned long cmd,
- 		return ULONG_MAX;
- 	}
- 
--	args.rbx = in1;
--	args.rdx = in3;
--	args.rsi = in4;
--	args.rdi = in5;
--	args.r10 = VMWARE_TDX_VENDOR_LEAF;
--	args.r11 = VMWARE_TDX_HCALL_FUNC;
--	args.r12 = VMWARE_HYPERVISOR_MAGIC;
--	args.r13 = cmd;
--	/* CPL */
--	args.r15 = 0;
--
-+	vmware_init_tdx_args(&args, false, cmd, in1, in3, in4, in5, 0);
- 	__tdx_hypercall(&args);
- 
- 	if (out1)
-@@ -539,6 +547,24 @@ unsigned long vmware_tdx_hypercall(unsigned long cmd,
- 	return args.r12;
- }
- EXPORT_SYMBOL_GPL(vmware_tdx_hypercall);
-+
-+static bool vmware_tdx_user_hcall(struct pt_regs *regs)
-+{
-+	struct tdx_module_args args;
-+
-+	vmware_init_tdx_args(&args, true, regs->cx, regs->bx,
-+			     regs->dx, regs->si, regs->di, regs->bp);
-+	__tdx_hypercall(&args);
-+	regs->ax = args.r12;
-+	regs->bx = args.rbx;
-+	regs->cx = args.r13;
-+	regs->dx = args.rdx;
-+	regs->si = args.rsi;
-+	regs->di = args.rdi;
-+	regs->bp = args.r14;
-+
-+	return true;
-+}
- #endif
- 
- #ifdef CONFIG_AMD_MEM_ENCRYPT
-@@ -586,4 +612,7 @@ const __initconst struct hypervisor_x86 x86_hyper_vmware = {
- 	.runtime.sev_es_hcall_prepare	= vmware_sev_es_hcall_prepare,
- 	.runtime.sev_es_hcall_finish	= vmware_sev_es_hcall_finish,
- #endif
-+#ifdef CONFIG_INTEL_TDX_GUEST
-+	.runtime.tdx_hcall              = vmware_tdx_user_hcall,
-+#endif
- };
--- 
-2.40.1
+Regards
 
+Takashi Sakamoto
