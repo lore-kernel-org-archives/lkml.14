@@ -1,60 +1,61 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809521386D7
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 05:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C53613C3D3
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 05:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719986233; cv=none; b=KjrlnMMqyuspVYVdVhufh8FzSi49xDKHDOwIg8US8kAjXAa/SdY6sD1HTNyuvy/FyDMUSfMkQNWG+HDdQte0j9dBSe6gW0ONqBFYQCcDVaBH5jumFSCiRuHr8XuJXZFjX/pg3OhOchu2wehMVnbrcSSf+lJGHasoc27yQJYPcfE=
+	t=1719986238; cv=none; b=T/Y3cSzciTH41XZLEy3gtp71uwDsoXcnP2twJCMF5arfyRWr5ONOT3NdOeQcupFpAZv1Qv63ynbi/FZ8Dpkyd51DpZFy8EpEtjvSpeEIu8+3UA9glo0q54lSyCOuWSQ396NhmaHU4OYbMGtj5hZEWTmstsZQSRCGwMGakiCTvnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719986233; c=relaxed/simple;
-	bh=L3aaRS2j1B7ly0GhgM86XDS3MRCOslmFg/ArzwGxzO0=;
+	s=arc-20240116; t=1719986238; c=relaxed/simple;
+	bh=dCWSBUpx4qCGfIbb6AkRk0WJKMpQrJUrmy5t5c2FWg0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZO4b0S7gsi0ZErnJv41S2S9VZu6P1jJZT9XmIAOSjeU7S/Ijm3ic2awvKom3mj7J53J2A2YTtwoEdnuyTTXkMGUlOrnwpZW9TD+5WTGCe/9NezGw79x2tUUCmnoTH7SM5CJO3Ww30S7nlfiKdr6S6Z8uKdjNtNA75U5s29D0cAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=l/PVBJ0a; arc=none smtp.client-ip=209.85.210.180
+	 In-Reply-To:To:Cc; b=k7lpS1dwytjpVTbRSAs4H6QhhsjhP0yKPfDnHBOXexINEDfXqVejqgOetbgEthSdC3TBCJgDiGcYTBx/4kjiWTIDrrvDwI463/fMHznB0w0KgfBPHJUTb9aFW8WRkEbQN/BIZQGVPEdEpUzVCQ7eSyEsbLs65lzT1rBEaMmxeTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=2lNdHY0f; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="l/PVBJ0a"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70aec66c936so145602b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 22:57:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="2lNdHY0f"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7066a4a611dso3219918b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 22:57:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719986232; x=1720591032; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719986236; x=1720591036; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UhITSSlteAMwmsPUv9TpJ8KEJQbK1ok0BXYvmwnIXKY=;
-        b=l/PVBJ0aF5RsOTwvHr7UTlxGj4ukd61G9xro+qpQPZUgFnnxMApKHLJvnGy6vobnLF
-         ArIo1Gbesn7iywjG+rJLNfy6QdIxMn9rWHISy9UF4tODN53HdhWmBgiZ6yJDAWnSBpXX
-         HuQYOplH4C7OpRIcXFpM566aDgqnoa2eIPt2qJwStsBG+y6UToVFKH95STMetTRZxTl/
-         4lcyj+Hzllygn0Z5Fn5wPz6mkBadujo109S9uMwA9lPpdjATpLOIM8K09sy/EINoWObJ
-         B5BFYGArG4448iLRUyw3LEku1nBMFlAt8GnJSMek1gIXVdb2xRScVhJNxhP8gzJNJTxq
-         vM6g==
+        bh=9IAv3IalW2WHj5QlmTaqPFFxyGG4xHL3AONx2E92VLQ=;
+        b=2lNdHY0fG2coXjHk0xwz1NZjuYVaf2xWf+nsSzyJmJ1WAxdrDrT9gzXAB/6cgaSAoc
+         MUnWu1YEMTlTWNgMwq2BuQGmeKAeNuybpdzbWZ/u6AhX5KvVyXmkgqZ8VXuMBxYO2bxR
+         MmwwTSr8j3Dacqi6Jl0sr/PSQ6/lPKNwx6NRkN/kE+p01qAwwD0YO/JmvVuWg6v9ZALZ
+         1S7zY+Fv20d0faL3sE83uQ7egPMGonD7tWnXjzDSHL6HZ96swm0Mh/J8utZDEZxYx+UB
+         x8/CXU2hiIh5ZPYz6n6IZ6YCIuagw1EB0nOBbl5WrSvVFgJ1E7yOUfPu4fe05EXlq2k+
+         Wehg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719986232; x=1720591032;
+        d=1e100.net; s=20230601; t=1719986236; x=1720591036;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UhITSSlteAMwmsPUv9TpJ8KEJQbK1ok0BXYvmwnIXKY=;
-        b=FT8hNigf+rhk6kFW8PkGb/Q+AqYYUYTGOPbeYqhufTA6Yyf3dAG7vCCD5/p+0oT0j3
-         98TYmld6oWLZEwtddQY/3CyO3rRcEB3ZRkopz7xN40hUTwLF/Nz7lnNUN2YKOZ/W3Svi
-         i8FKZIiyX1Be97a0k6Gz3ljvLKeaEyqlTY8xgdLHXZEep8Hi9fr31SFcmgya1zw6x8JM
-         4VepbLbK3gzTLff2XfsUZ0bNK7CEmhGEWDY9ym84en2w+/pzMHlMQGyCzEwUtUQtZCjC
-         KE07HRT773l1HYCi/XTNKOf7Ez5c++ZFhmCXRsjsbFHjvRpmnOffabxVwYGS2Vz0g8Jh
-         zHFg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4FAURq6+UyGKf1SNs3ukUpFXtVEC1fMucTGOpBvlAXZdNb0SdU7quRJNKQSa8tUKvAivUf6dxwWtcOn0QDBHq9rnP80u1QERp0xge
-X-Gm-Message-State: AOJu0YxyDc4veBsjZ8iWQkVaFvyOIwWJ+XZDyu7lNMNqEoZUH2Z21pY2
-	nMp8NMhtxt38X4dk+uD82oRUtbLXdoTOvIfduFEhWpu4XFTMvCic0CDisu3CP98=
-X-Google-Smtp-Source: AGHT+IHpwFVutQV5bD0qc8ckbUJ1hgf68O54SV5uCNZDiu6Lj8fD2bIReshuqA93ROnVtsuvcW+iJA==
-X-Received: by 2002:a05:6a00:3cc6:b0:706:aa2e:fc4d with SMTP id d2e1a72fcca58-70aaad6f9a9mr10699215b3a.16.1719986231828;
-        Tue, 02 Jul 2024 22:57:11 -0700 (PDT)
+        bh=9IAv3IalW2WHj5QlmTaqPFFxyGG4xHL3AONx2E92VLQ=;
+        b=g63xWJkvt2UpTprlcu0JsOrAJa2TegEfh4xb25EzQAJ8sSycVzP/56G9JvEiW8g2an
+         LgIt4f5J4aIC0uq0+MO5YP1k7htmEV4x42IkkHqlEpGl2ilLYJeUgpxXnMzg6o51DD+J
+         pLElKhtlKvwCfBwYcjO8qn3ZOTbUbUgVFAzUvbppXAAveyzPEx8zbzV4uKnuMhJN4TYU
+         zK/CpbsLrQGVi0hYXqFWQexvCd8s6+1Y9rHE5slw2RQIZhBep4xc8VxR8E3a3nHBoA5B
+         Shj1kTuEz/hVoVd+BUKLA6pzBKFVDf6ku9ClQBPsENUm6nLUHUpE3QAVNwXcYWuls14t
+         k4ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWosFmziz2C0GmRP1I8HSFPSLWfSzf+fO0+J1QYX5Z6NCMIRSx1a1ADf1B+zC+9pr2zeYFlQ7Nd7RN00q8fgfL/ZKyrHuCSv+UjMnA3
+X-Gm-Message-State: AOJu0YxVyN5KU/QZNw93EoS7tD9lMurKip1ErNFo5oh9ON8/dykw/MRD
+	/oleeSKVt0j7ubdEPu5XwwSJLVXNsOe86C9qwQ1twwlej1C1r+tpETqBJgO8uBQ=
+X-Google-Smtp-Source: AGHT+IHERkVopPMl5XXXst4TwFI/KrCxeby83ZH9Oi6DDHDeuZM30ocaaDeFNS388r9FYXm65qaHcA==
+X-Received: by 2002:a05:6a00:1482:b0:706:6bdc:4de5 with SMTP id d2e1a72fcca58-70aaad3086dmr11019106b3a.7.1719986235770;
+        Tue, 02 Jul 2024 22:57:15 -0700 (PDT)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70804a89fc9sm9514103b3a.212.2024.07.02.22.57.10
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70804a89fc9sm9514103b3a.212.2024.07.02.22.57.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 22:57:11 -0700 (PDT)
+        Tue, 02 Jul 2024 22:57:15 -0700 (PDT)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Tue, 02 Jul 2024 22:56:28 -0700
-Subject: [PATCH v4 08/13] riscv: Add xtheadvector instruction definitions
+Date: Tue, 02 Jul 2024 22:56:30 -0700
+Subject: [PATCH v4 10/13] riscv: hwprobe: Add thead vendor extension
+ probing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240702-xtheadvector-v4-8-2bad6820db11@rivosinc.com>
+Message-Id: <20240702-xtheadvector-v4-10-2bad6820db11@rivosinc.com>
 References: <20240702-xtheadvector-v4-0-2bad6820db11@rivosinc.com>
 In-Reply-To: <20240702-xtheadvector-v4-0-2bad6820db11@rivosinc.com>
 To: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -80,62 +81,222 @@ To: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
 Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev, 
  linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Charlie Jenkins <charlie@rivosinc.com>, Heiko Stuebner <heiko@sntech.de>
+ Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719986213; l=1957;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719986213; l=7564;
  i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=L3aaRS2j1B7ly0GhgM86XDS3MRCOslmFg/ArzwGxzO0=;
- b=8lywCVM8UEoyiTaUOO1WlkKStMLhnLjNmIQBfPGf3FufVm1Mqo69xHqmn0UTcpEmOyN0wJWKZ
- yoqNjk/xI5xCo2xZyqo6QIDXF3j3gh/7+S827QcaciEZ6fYpZRyr58A
+ bh=dCWSBUpx4qCGfIbb6AkRk0WJKMpQrJUrmy5t5c2FWg0=;
+ b=jDQHrEzncAEJSTmUjNrhaGKQ+L1zwrNr5+aJ4w1i9TP+CEfeVtE9x9y0SoR5K30aysJpNQpL/
+ XEXDn2fKX3zDlMl0/8KGuavt6/kDy1XDJoNiWbkszvMmsSDvUqkmAm2
 X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
  pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-xtheadvector uses different encodings than standard vector for
-vsetvli and vector loads/stores. Write the instruction formats to be
-used in assembly code.
+Add a new hwprobe key "RISCV_HWPROBE_KEY_VENDOR_EXT_THEAD_0" which
+allows userspace to probe for the new RISCV_ISA_VENDOR_EXT_XTHEADVECTOR
+vendor extension.
 
-Co-developed-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+This new key will allow userspace code to probe for which thead vendor
+extensions are supported. This API is modeled to be consistent with
+RISCV_HWPROBE_KEY_IMA_EXT_0. The bitmask returned will have each bit
+corresponding to a supported thead vendor extension of the cpumask set.
+Just like RISCV_HWPROBE_KEY_IMA_EXT_0, this allows a userspace program
+to determine all of the supported thead vendor extensions in one call.
+
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Evan Green <evan@rivosinc.com>
 ---
- arch/riscv/include/asm/vendor_extensions/thead.h | 26 ++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/riscv/include/asm/hwprobe.h                   |  5 +--
+ .../include/asm/vendor_extensions/thead_hwprobe.h  | 18 +++++++++++
+ .../include/asm/vendor_extensions/vendor_hwprobe.h | 37 ++++++++++++++++++++++
+ arch/riscv/include/uapi/asm/hwprobe.h              |  3 +-
+ arch/riscv/include/uapi/asm/vendor/thead.h         |  3 ++
+ arch/riscv/kernel/sys_hwprobe.c                    |  5 +++
+ arch/riscv/kernel/vendor_extensions/Makefile       |  1 +
+ .../riscv/kernel/vendor_extensions/thead_hwprobe.c | 19 +++++++++++
+ 8 files changed, 88 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/include/asm/vendor_extensions/thead.h b/arch/riscv/include/asm/vendor_extensions/thead.h
-index 48421d1553ad..27a253a20ab8 100644
---- a/arch/riscv/include/asm/vendor_extensions/thead.h
-+++ b/arch/riscv/include/asm/vendor_extensions/thead.h
-@@ -13,4 +13,30 @@
+diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
+index 630507dff5ea..de9fe279f02e 100644
+--- a/arch/riscv/include/asm/hwprobe.h
++++ b/arch/riscv/include/asm/hwprobe.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ /*
+- * Copyright 2023 Rivos, Inc
++ * Copyright 2023-2024 Rivos, Inc
+  */
  
- extern struct riscv_isa_vendor_ext_data_list riscv_isa_vendor_ext_list_thead;
+ #ifndef _ASM_HWPROBE_H
+@@ -8,7 +8,7 @@
  
-+/* Extension specific helpers */
+ #include <uapi/asm/hwprobe.h>
+ 
+-#define RISCV_HWPROBE_MAX_KEY 6
++#define RISCV_HWPROBE_MAX_KEY 7
+ 
+ static inline bool riscv_hwprobe_key_is_valid(__s64 key)
+ {
+@@ -21,6 +21,7 @@ static inline bool hwprobe_key_is_bitmask(__s64 key)
+ 	case RISCV_HWPROBE_KEY_BASE_BEHAVIOR:
+ 	case RISCV_HWPROBE_KEY_IMA_EXT_0:
+ 	case RISCV_HWPROBE_KEY_CPUPERF_0:
++	case RISCV_HWPROBE_KEY_VENDOR_EXT_THEAD_0:
+ 		return true;
+ 	}
+ 
+diff --git a/arch/riscv/include/asm/vendor_extensions/thead_hwprobe.h b/arch/riscv/include/asm/vendor_extensions/thead_hwprobe.h
+new file mode 100644
+index 000000000000..925fef39a2c0
+--- /dev/null
++++ b/arch/riscv/include/asm/vendor_extensions/thead_hwprobe.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_RISCV_VENDOR_EXTENSIONS_THEAD_HWPROBE_H
++#define _ASM_RISCV_VENDOR_EXTENSIONS_THEAD_HWPROBE_H
++
++#include <linux/cpumask.h>
++
++#include <uapi/asm/hwprobe.h>
++
++#ifdef CONFIG_RISCV_ISA_VENDOR_EXT_THEAD
++void hwprobe_isa_vendor_ext_thead_0(struct riscv_hwprobe *pair, const struct cpumask *cpus);
++#else
++static inline void hwprobe_isa_vendor_ext_thead_0(struct riscv_hwprobe *pair, const struct cpumask *cpus)
++{
++	pair->value = 0;
++}
++#endif
++
++#endif
+diff --git a/arch/riscv/include/asm/vendor_extensions/vendor_hwprobe.h b/arch/riscv/include/asm/vendor_extensions/vendor_hwprobe.h
+new file mode 100644
+index 000000000000..f28f31e19cda
+--- /dev/null
++++ b/arch/riscv/include/asm/vendor_extensions/vendor_hwprobe.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2024 Rivos, Inc
++ */
++
++#ifndef _ASM_RISCV_SYS_HWPROBE_H
++#define _ASM_RISCV_SYS_HWPROBE_H
++
++#include <asm/cpufeature.h>
++
++#define VENDOR_EXT_KEY(ext)									\
++	do {										\
++		if (__riscv_isa_extension_available(isainfo->isa, RISCV_ISA_VENDOR_EXT_##ext)) \
++			pair->value |= RISCV_HWPROBE_VENDOR_EXT_##ext;			\
++		else									\
++			missing |= RISCV_HWPROBE_VENDOR_EXT_##ext;			\
++	} while (false)
 +
 +/*
-+ * Vector 0.7.1 as used for example on T-Head Xuantie cores, uses an older
-+ * encoding for vsetvli (ta, ma vs. d1), so provide an instruction for
-+ * vsetvli	t4, x0, e8, m8, d1
++ * Loop through and record extensions that 1) anyone has, and 2) anyone
++ * doesn't have.
++ *
++ * _extension_checks is an arbitrary C block to set the values of pair->value
++ * and missing. It should be filled with VENDOR_EXT_KEY expressions.
 + */
-+#define THEAD_VSETVLI_T4X0E8M8D1	".long	0x00307ed7\n\t"
-+#define THEAD_VSETVLI_X0X0E8M8D1	".long	0x00307057\n\t"
++#define VENDOR_EXTENSION_SUPPORTED(pair, cpus, per_hart_vendor_bitmap, _extension_checks)	\
++	do {											\
++		int cpu;									\
++		u64 missing;									\
++		for_each_cpu(cpu, (cpus)) {							\
++			struct riscv_isavendorinfo *isainfo = &(per_hart_vendor_bitmap)[cpu];	\
++			_extension_checks							\
++		}										\
++		(pair)->value &= ~missing;							\
++	} while (false)										\
 +
-+/*
-+ * While in theory, the vector-0.7.1 vsb.v and vlb.v result in the same
-+ * encoding as the standard vse8.v and vle8.v, compilers seem to optimize
-+ * the call resulting in a different encoding and then using a value for
-+ * the "mop" field that is not part of vector-0.7.1
-+ * So encode specific variants for vstate_save and _restore.
-+ */
-+#define THEAD_VSB_V_V0T0		".long	0x02028027\n\t"
-+#define THEAD_VSB_V_V8T0		".long	0x02028427\n\t"
-+#define THEAD_VSB_V_V16T0		".long	0x02028827\n\t"
-+#define THEAD_VSB_V_V24T0		".long	0x02028c27\n\t"
-+#define THEAD_VLB_V_V0T0		".long	0x012028007\n\t"
-+#define THEAD_VLB_V_V8T0		".long	0x012028407\n\t"
-+#define THEAD_VLB_V_V16T0		".long	0x012028807\n\t"
-+#define THEAD_VLB_V_V24T0		".long	0x012028c07\n\t"
++#endif /* _ASM_RISCV_SYS_HWPROBE_H */
+diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
+index dda76a05420b..155a83dd1cdf 100644
+--- a/arch/riscv/include/uapi/asm/hwprobe.h
++++ b/arch/riscv/include/uapi/asm/hwprobe.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ /*
+- * Copyright 2023 Rivos, Inc
++ * Copyright 2023-2024 Rivos, Inc
+  */
+ 
+ #ifndef _UAPI_ASM_HWPROBE_H
+@@ -68,6 +68,7 @@ struct riscv_hwprobe {
+ #define		RISCV_HWPROBE_MISALIGNED_UNSUPPORTED	(4 << 0)
+ #define		RISCV_HWPROBE_MISALIGNED_MASK		(7 << 0)
+ #define RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE	6
++#define RISCV_HWPROBE_KEY_VENDOR_EXT_THEAD_0	7
+ /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
+ 
+ /* Flags */
+diff --git a/arch/riscv/include/uapi/asm/vendor/thead.h b/arch/riscv/include/uapi/asm/vendor/thead.h
+new file mode 100644
+index 000000000000..43790ebe5faf
+--- /dev/null
++++ b/arch/riscv/include/uapi/asm/vendor/thead.h
+@@ -0,0 +1,3 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 +
- #endif
++#define		RISCV_HWPROBE_VENDOR_EXT_XTHEADVECTOR	(1 << 0)
+diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+index 969ef3d59dbe..e39fa70083d3 100644
+--- a/arch/riscv/kernel/sys_hwprobe.c
++++ b/arch/riscv/kernel/sys_hwprobe.c
+@@ -13,6 +13,7 @@
+ #include <asm/uaccess.h>
+ #include <asm/unistd.h>
+ #include <asm/vector.h>
++#include <asm/vendor_extensions/thead_hwprobe.h>
+ #include <vdso/vsyscall.h>
+ 
+ 
+@@ -217,6 +218,10 @@ static void hwprobe_one_pair(struct riscv_hwprobe *pair,
+ 			pair->value = riscv_cboz_block_size;
+ 		break;
+ 
++	case RISCV_HWPROBE_KEY_VENDOR_EXT_THEAD_0:
++		hwprobe_isa_vendor_ext_thead_0(pair, cpus);
++		break;
++
+ 	/*
+ 	 * For forward compatibility, unknown keys don't fail the whole
+ 	 * call, but get their element key set to -1 and value set to 0
+diff --git a/arch/riscv/kernel/vendor_extensions/Makefile b/arch/riscv/kernel/vendor_extensions/Makefile
+index 353522cb3bf0..866414c81a9f 100644
+--- a/arch/riscv/kernel/vendor_extensions/Makefile
++++ b/arch/riscv/kernel/vendor_extensions/Makefile
+@@ -2,3 +2,4 @@
+ 
+ obj-$(CONFIG_RISCV_ISA_VENDOR_EXT_ANDES)	+= andes.o
+ obj-$(CONFIG_RISCV_ISA_VENDOR_EXT_THEAD)	+= thead.o
++obj-$(CONFIG_RISCV_ISA_VENDOR_EXT_THEAD)	+= thead_hwprobe.o
+diff --git a/arch/riscv/kernel/vendor_extensions/thead_hwprobe.c b/arch/riscv/kernel/vendor_extensions/thead_hwprobe.c
+new file mode 100644
+index 000000000000..2eba34011786
+--- /dev/null
++++ b/arch/riscv/kernel/vendor_extensions/thead_hwprobe.c
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <asm/vendor_extensions/thead.h>
++#include <asm/vendor_extensions/thead_hwprobe.h>
++#include <asm/vendor_extensions/vendor_hwprobe.h>
++
++#include <linux/cpumask.h>
++#include <linux/types.h>
++
++#include <uapi/asm/hwprobe.h>
++#include <uapi/asm/vendor/thead.h>
++
++void hwprobe_isa_vendor_ext_thead_0(struct riscv_hwprobe *pair, const struct cpumask *cpus)
++{
++	VENDOR_EXTENSION_SUPPORTED(pair, cpus,
++				   riscv_isa_vendor_ext_list_thead.per_hart_isa_bitmap, {
++		VENDOR_EXT_KEY(XTHEADVECTOR);
++	});
++}
 
 -- 
 2.44.0
