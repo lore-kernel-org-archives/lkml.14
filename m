@@ -1,108 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A66178367;
-	Wed,  3 Jul 2024 19:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA67183075
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 19:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720033354; cv=none; b=Lla3riHaN+KpdK9064tHtQRBshO6xOmFDA22E6FLmiJU6S3IdwbKKfq2yg23T1R5eTa34GCwsbfLDIHDgU5zIttkh9XfGPJwiJaPuPu2K0tgquIMoDOX740xjYp0avlTxQwaKGrihccNHn6Ls4Y5GRWEgKV3GpHQ6MLx1yogvok=
+	t=1720033373; cv=none; b=uc8ZblTj0+GZ1iyQEb8CRxJOfeahNJU/6N0nzV0HmKSEUUmU68X3EOeDe1h7xOEOmQ5/VPx1dTlmgT1/di1cvdPUVwhMLy5yToR6VlGLDfgPp0qJPmVB8rWvgM4urOBemmHnHcbNIsxpj6Tz2MnJdqibIizEi9RaRlKcqco8Q/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720033354; c=relaxed/simple;
-	bh=71g2nqc6FxOk/YKMFvTXoevyN3+HuT2J8B/us81Ujck=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iv7vL2XBC3L0bIOk7uQChv2nkBOxppgz2XUjzbxOxNEVjC9ShIVKJaUeYUZzcH0t9wZ+Z0tekXoQsNNupPH2AVnpKT6dXZYJh37hmQf93RB5NFFe0ljKawGPFPqqc0f7XcYNy3P6c9FPftWlkg/9mviZsUr5BTf7M4uLfsZyGXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQoLYDjc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720033373; c=relaxed/simple;
+	bh=NCK07WgmJilnpjTCGxUktyi8UNtcBim7wUs73C1Aoss=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=I3YQCtadCrfBZMNqxlSXg8LcY+b6xFIdCpDfHkbSHBNaQEU3+mJWlofBBkKr56yxZMXbFSZ9oYMaJ8vOkxxLa4RFTXSsfakTwkIdBjHWXOBd8ce9dG+E2VblHh6NddFvOZ4XnXSdqkG6THmKPfYqmm+2BxZTKYiSrvuiBUbPEyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=AvkZ881r; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQoLYDjc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C256FC2BD10;
-	Wed,  3 Jul 2024 19:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720033354;
-	bh=71g2nqc6FxOk/YKMFvTXoevyN3+HuT2J8B/us81Ujck=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XQoLYDjcQ2TtN25XS4Ipa0DRq52rIW9iJ75Ux5oqdj1gS8/BK2EffIqsXs1P8tDrM
-	 riuygMI4RCB6LBq2FaCd8Q0dD5SXkqrYev/sVbxrJWzHAwu+wpGiAPDEdAd5yi25+y
-	 FWXNT0wz9JnF0euwY+0yP3oZUW3Xeut6HqyJB4pG/SbuZlPyqAWYNV0bbKqTdfLjnJ
-	 XJy21QbGt7EVyIytH3aYvk3u6Vu7S2QWJzoFN9hqXNtxoa8uERRlk+CJb2FJ+R64pB
-	 KDHMO2phYJ/JTGktOZ7FmjqR0RuubrPdUWJ9Y/8iJSjCX81IzebutlVMnfYOy0blO3
-	 EXlKvMiY7TuVA==
-From: Eric Biggers <ebiggers@kernel.org>
-To: dm-devel@lists.linux.dev,
-	Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2] dm-verity: provide dma_alignment limit in io_hints
-Date: Wed,  3 Jul 2024 12:01:41 -0700
-Message-ID: <20240703190141.5943-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="AvkZ881r"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fa244db0b2so46692705ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 12:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1720033371; x=1720638171; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nR2WZFpu9F/eyrknYOVvW0A0ylVQU6Yd0yqZ9Xzk2UM=;
+        b=AvkZ881razoEo5WBNwOTfGuhVNA9rpWsUdrMy1iMWYhLpzMnS8U6KONU80l0TGcOev
+         WLPA8kZIeAqR87lFNwm0DeIyV2qWu6kImY44hhIIqIfvka6/5Ggc/9QrQ0Q6t0aMesHZ
+         FiUmnB22VWTPePXmncYjHUZFKZfEjf2lOImCxyg8JO8aQybUxZf/6Aoy+a1k/msY8bDH
+         TnIPOIjqs89btE2xywFxyFiFObRo7zUKQ7oA0wPgu6tXmQXWT32wSAXqyVVJzibXDmTq
+         FeerNm3+4k9wMaZYgtbLO1hPURX46T0stl48oXg235EdS3kb3aLOHYE7xmJQ++5Uj0V1
+         g7gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720033371; x=1720638171;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nR2WZFpu9F/eyrknYOVvW0A0ylVQU6Yd0yqZ9Xzk2UM=;
+        b=leOiqkJn+AfFT4GTQtiSHAf8uLm/42V/G/Tu80YaDzea5u4OLVDQahhP5Ax7glZ3w+
+         S+sPx7kk0UUfew8rm7QU0bnBGnO/qRUZaT7sPwixNs9EN1HYlO0V9gbIMj/bchE9j1LA
+         yHAJzGv7jn8t82y0TszyfClLaBRGAXeODbR/8QdsCLX81w3J10OjLRuw5NPVMM3Y8XWf
+         jFZ2Alp15cMhNg93Pkp02P1Z2BoDDF6tyctk4Q1EU+ccQmaD+ZKUwPZCz1nE5A81qb6o
+         7TLogdG6TteJkfOXd08aD90y4IXB0CWaqA5f80hhVSfdVarDJBF73J6mXvvn4tsihKQk
+         cLJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdHBOeIdmlPOT9jDvTFw2XAO9XmU82BpvhnEGsg6ro7TdNOcsR8sZ4BC8xDGU+mmrQ8sX9vQZIQw0zIw2/qC8M0EhyczQV4xPYA9e3
+X-Gm-Message-State: AOJu0Yyd8FtWQ3mFPjJhTQQP0KkLO2x0yIp0UuDv1oHpBuAAxTtT3rS8
+	I5O7ZDAOeGsCFmxzeqrNSFrAiGV0z2B9FAaSzfqqUGS62pUqhQeYopRbBZIBYbE=
+X-Google-Smtp-Source: AGHT+IHOXF6EBNQCbpT1v/yymwkerRoZt4wfhxb5Ia/193m68mpPf++GQAxANRbGvPnXQGS+XO5Phw==
+X-Received: by 2002:a17:903:1c2:b0:1f7:2d45:2f1 with SMTP id d9443c01a7336-1fadbc7f2d8mr91782835ad.15.1720033370590;
+        Wed, 03 Jul 2024 12:02:50 -0700 (PDT)
+Received: from smtpclient.apple ([2604:3d08:8e80:cf0:34b3:a7ec:924a:312f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1596d55sm107100645ad.277.2024.07.03.12.02.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2024 12:02:50 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH] m68k: cmpxchg: Fix return value for default case in
+ __arch_xchg()
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <CAMuHMdVTqsqrDTKGTGoLd_3FPk9S6wX-qXYzipJ+6yW0q0L11w@mail.gmail.com>
+Date: Wed, 3 Jul 2024 12:02:39 -0700
+Cc: gerg@uclinux.org,
+ dhowells@redhat.com,
+ linux-m68k@lists.linux-m68k.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <21C8794F-EA8A-4C4C-A51D-DA7D6900CC74@toblux.com>
+References: <20240702034116.140234-2-thorsten.blum@toblux.com>
+ <CAMuHMdVTqsqrDTKGTGoLd_3FPk9S6wX-qXYzipJ+6yW0q0L11w@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-From: Eric Biggers <ebiggers@google.com>
+On 2. Jul 2024, at 00:21, Geert Uytterhoeven <geert@linux-m68k.org> =
+wrote:
+>=20
+> Hi Thorsten,
+>=20
+> On Tue, Jul 2, 2024 at 5:42=E2=80=AFAM Thorsten Blum =
+<thorsten.blum@toblux.com> wrote:
+>> The return value of __invalid_xchg_size() is assigned to tmp instead =
+of
+>> the return variable x. Assign it to x instead.
+>=20
+> Thanks for your patch!
+>=20
+>> Fixes: 803f69144f0d ("Disintegrate asm/system.h for M68K")
+>=20
+> That is not the right commit.  The issue was introduced before:
+> Fixes: 2501cf768e4009a0 ("m68k: Fix xchg/cmpxchg to fail to link if
+> given an inappropriate pointer")
+>=20
+>> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+>=20
+>> --- a/arch/m68k/include/asm/cmpxchg.h
+>> +++ b/arch/m68k/include/asm/cmpxchg.h
+>> @@ -32,7 +32,7 @@ static inline unsigned long __arch_xchg(unsigned =
+long x, volatile void * ptr, in
+>>                x =3D tmp;
+>>                break;
+>>        default:
+>> -               tmp =3D __invalid_xchg_size(x, ptr, size);
+>> +               x =3D __invalid_xchg_size(x, ptr, size);
+>>                break;
+>>        }
+>=20
+> Although this was not a real bug (__invalid_xchg_size() does not =
+exist,
+> but is referenced to cause a deliberate link error), it is good to
+> clean this up.
 
-Since Linux v6.1, some filesystems support submitting direct I/O that is
-aligned to only dma_alignment instead of the logical_block_size
-alignment that was required before.  I/O that is not aligned to the
-logical_block_size is difficult to handle in device-mapper targets that
-do cryptographic processing of data, as it makes the units of data that
-are hashed or encrypted possibly be split across pages, creating rarely
-used and rarely tested edge cases.
+Thank you for explaining this. I was already wondering why I couldn't=20
+find the function definition.
 
-As such, dm-crypt and dm-integrity have already opted out of this by
-setting dma_alignment to 'logical_block_size - 1'.
-
-Although dm-verity does have code that handles these cases (or at least
-is intended to do so), supporting direct I/O with such a low amount of
-alignment is not really useful on dm-verity devices.  So, opt dm-verity
-out of it too so that it's not necessary to handle these edge cases.
-
-Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
-
-v2: Added a comment, as requested by Christoph.
-
-    Resending as a standalone patch since the series was already applied
-    to linux-dm/for-next.
-    
- drivers/md/dm-verity-target.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
-index bb5da66da4c1..90a13548028a 100644
---- a/drivers/md/dm-verity-target.c
-+++ b/drivers/md/dm-verity-target.c
-@@ -1013,10 +1013,18 @@ static void verity_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 
- 	if (limits->physical_block_size < 1 << v->data_dev_block_bits)
- 		limits->physical_block_size = 1 << v->data_dev_block_bits;
- 
- 	blk_limits_io_min(limits, limits->logical_block_size);
-+
-+	/*
-+	 * Similar to what dm-crypt does, opt dm-verity out of support for
-+	 * direct I/O that is aligned to less than the traditional direct I/O
-+	 * alignment requirement of logical_block_size.  This prevents dm-verity
-+	 * data blocks from crossing pages, eliminating various edge cases.
-+	 */
-+	limits->dma_alignment = limits->logical_block_size - 1;
- }
- 
- static void verity_dtr(struct dm_target *ti)
- {
- 	struct dm_verity *v = ti->private;
-
-base-commit: 22a40d14b572deb80c0648557f4bd502d7e83826
--- 
-2.45.2
-
+Thorsten=
