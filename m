@@ -1,185 +1,169 @@
-Received: from mail-sh.amlogic.com (unknown [58.32.228.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0325B13775B;
-	Wed,  3 Jul 2024 06:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.32.228.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A22733D5
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 06:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719988294; cv=none; b=n2VUEOQroedXws5owOn+gtUw4Ruoj99PC/biwFXOcvGOoupncusXIvHPJCdnUdTzFM9HL51n4gEdxDzS+opy8ZE+rX9IkzDm8rg821WN3lKKcWnknDc1qMdXkuq9IbqLy79k1AApoY9wB0ANC+QSDCDtXBegrrvO1CTYnwbc1xI=
+	t=1719988395; cv=none; b=Y4xKoApsPr/Q89UWLLy+X2ZWsOA52pAO91OZgLm5LqArk9yAq0PG/UFI/KyQxbYlwl+Waxd/wTQfKbvSxif6Lf8fY+YKpzlaCNSUL1WuCii1XIio+U7Q3dG2/xthgDN9qpzKm2LKUQ2WhVI+NOWa2oXrtxV/ULanBLiWhMxRzdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719988294; c=relaxed/simple;
-	bh=kA6LIOc3Alw0ut6784da65cwBnGH6NQ7007My63rbS8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TJSeJdM3ovJ30QOmkPJWW/6yLut3oy6an/zIgevGplnm9n80bW+/151k4V4QZWoouVk6s+QUYoHAtbDULU2AhDnNnLOnP7+YUso7s3xQasVfBGmDULoDiKFiUgQSjDXAgJVzGqc2BPp+rzz23sjelt6z4M0lg3HNi+/W2DCafDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; arc=none smtp.client-ip=58.32.228.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
-Received: from droid10-sz.amlogic.com (10.28.11.69) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.6; Wed, 3 Jul 2024
- 14:16:19 +0800
-From: zelong dong <zelong.dong@amlogic.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Rob Herring
-	<robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Jerome Brunet <jbrunet@baylibre.com>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kelvin.zhang@amlogic.com>, Zelong Dong <zelong.dong@amlogic.com>
-Subject: [PATCH 3/3] arm64: dts: amlogic: Add Amlogic A5 reset controller
-Date: Wed, 3 Jul 2024 14:16:10 +0800
-Message-ID: <20240703061610.37217-4-zelong.dong@amlogic.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240703061610.37217-1-zelong.dong@amlogic.com>
-References: <20240703061610.37217-1-zelong.dong@amlogic.com>
+	s=arc-20240116; t=1719988395; c=relaxed/simple;
+	bh=H5eZhdMck6PKyVrAjb2JK2IorIN9/Ev82wjv1COU90s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nJffuokOtkFILVWLDdrJYPTpk2ZEuHlk4jwvW/c7E7S1dsYwqU+etcV6TwI3NZpC+utanaIzQl2MuBq23Lc7x0GzpWAYkMGzxqM3OG55hO5n2HEU970ceQ5CYChYPupbXo3VAMKRNKTDgA1HZ9P5GmeshipwB6Y/ISa1ZsfqxR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XeI6wlws; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XeI6wlws"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719988393; x=1751524393;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=H5eZhdMck6PKyVrAjb2JK2IorIN9/Ev82wjv1COU90s=;
+  b=XeI6wlwsgIZmljrA7uHBnBOxvZ2xMEwDgXX+NFreht7ajXdz3iTWqzWa
+   6/HV93sRyG/iyBDAk1LejAcp3Uh9nGHBW3eADTNG8xhjHMwJ++l4wU7iP
+   Ln5O1A6AXXGexg5JYFuorfOi7OPizWevUPVKoAeLkPfL2fmAL7JdkWuH0
+   OJlUSxBfR+VQFqfdjK9cSCq1BML3OzSXeLAVMhO96wQ+Lv+omiLWyCOLl
+   +FzOjxv5ZFuKtelnEGJPgqKvb3u3hwEGyG7WrA5B5+VHUu2PYQwHaZ2qj
+   5ULGRTrKgatkztY/4WnJyA5xkOepBbisOBxQiIJWyn8n88QH53RC/Fnh7
+   g==;
+X-CSE-ConnectionGUID: yaxcd7J3QVqguQr0eGXjpg==
+X-CSE-MsgGUID: D8sdVbBiSyOqV606ORNVCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="16856511"
+X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
+   d="scan'208";a="16856511"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 23:33:12 -0700
+X-CSE-ConnectionGUID: UEkP0j2dQxCdKOAaqTTBvQ==
+X-CSE-MsgGUID: BDVkjxB/Si6N+TTmzpIFhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
+   d="scan'208";a="69322686"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 23:33:07 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org,  linux-mm@kvack.org,  chrisl@kernel.org,
+  david@redhat.com,  hannes@cmpxchg.org,  kasong@tencent.com,
+  linux-kernel@vger.kernel.org,  mhocko@suse.com,  nphamcs@gmail.com,
+  ryan.roberts@arm.com,  shy828301@gmail.com,  surenb@google.com,
+  kaleshsingh@google.com,  hughd@google.com,  v-songbaohua@oppo.com,
+  willy@infradead.org,  xiang@kernel.org,  yosryahmed@google.com,
+  baolin.wang@linux.alibaba.com,  shakeel.butt@linux.dev,
+  senozhatsky@chromium.org,  minchan@kernel.org
+Subject: Re: [PATCH RFC v4 0/2] mm: support mTHP swap-in for zRAM-like swapfile
+In-Reply-To: <20240629111010.230484-1-21cnbao@gmail.com> (Barry Song's message
+	of "Sat, 29 Jun 2024 23:10:08 +1200")
+References: <20240629111010.230484-1-21cnbao@gmail.com>
+Date: Wed, 03 Jul 2024 14:31:16 +0800
+Message-ID: <87ikxnj8az.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=ascii
 
-From: Zelong Dong <zelong.dong@amlogic.com>
+Barry Song <21cnbao@gmail.com> writes:
 
-Add the device node and related header file for Amlogic
-A5 reset controller. The count and offset for A5 Soc
-RESET registers are same as S4 Soc.
+> From: Barry Song <v-songbaohua@oppo.com>
+>
+> In an embedded system like Android, more than half of anonymous memory is
+> actually stored in swap devices such as zRAM. For instance, when an app 
+> is switched to the background, most of its memory might be swapped out.
+>
+> Currently, we have mTHP features, but unfortunately, without support
+> for large folio swap-ins, once those large folios are swapped out,
+> we lose them immediately because mTHP is a one-way ticket.
 
-Signed-off-by: Zelong Dong <zelong.dong@amlogic.com>
----
- .../boot/dts/amlogic/amlogic-a4-common.dtsi   |  1 +
- .../arm64/boot/dts/amlogic/amlogic-a5-reset.h | 95 +++++++++++++++++++
- arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi   |  1 +
- 3 files changed, 97 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h
+No exactly one-way ticket, we have (or will have) khugepaged.  But I
+admit that it may be not good enough for you.
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi
-index c527dfce65ab..f11fe3ee83b2 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi
-@@ -54,6 +54,7 @@ apb: bus@fe000000 {
- 
- 			reset: reset-controller@2000 {
- 				compatible = "amlogic,a4-reset",
-+					     "amlogic,a5-reset",
- 					     "amlogic,meson-s4-reset";
- 				reg = <0x0 0x2000 0x0 0x98>;
- 				#reset-cells = <1>;
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h b/arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h
-new file mode 100644
-index 000000000000..cdf0f5159620
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h
-@@ -0,0 +1,95 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-+/*
-+ * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#ifndef __DTS_AMLOGIC_A5_RESET_H
-+#define __DTS_AMLOGIC_A5_RESET_H
-+
-+/* RESET0 */
-+/*						0-3 */
-+#define RESET_USB				4
-+/*						5-7 */
-+#define RESET_USBPHY20				8
-+/*						9 */
-+#define RESET_USB2DRD				10
-+/*						11-31 */
-+
-+/* RESET1 */
-+#define RESET_AUDIO				32
-+#define RESET_AUDIO_VAD				33
-+/*                                              34 */
-+#define RESET_DDR_APB				35
-+#define RESET_DDR				36
-+/*						37-40 */
-+#define RESET_DSPA_DEBUG			41
-+/*                                              42 */
-+#define RESET_DSPA				43
-+/*						44-46 */
-+#define RESET_NNA				47
-+#define RESET_ETHERNET				48
-+/*						49-63 */
-+
-+/* RESET2 */
-+#define RESET_ABUS_ARB				64
-+#define RESET_IRCTRL				65
-+/*						66 */
-+#define RESET_TS_PLL				67
-+/*						68-72 */
-+#define RESET_SPICC_0				73
-+#define RESET_SPICC_1				74
-+#define RESET_RSA				75
-+
-+/*						76-79 */
-+#define RESET_MSR_CLK				80
-+#define RESET_SPIFC				81
-+#define RESET_SAR_ADC				82
-+/*						83-90 */
-+#define RESET_WATCHDOG				91
-+/*						92-95 */
-+
-+/* RESET3 */
-+/*						96-127 */
-+
-+/* RESET4 */
-+#define RESET_RTC				128
-+/*						129-131 */
-+#define RESET_PWM_AB				132
-+#define RESET_PWM_CD				133
-+#define RESET_PWM_EF				134
-+#define RESET_PWM_GH				135
-+/*						104-105 */
-+#define RESET_UART_A				138
-+#define RESET_UART_B				139
-+#define RESET_UART_C				140
-+#define RESET_UART_D				141
-+#define RESET_UART_E				142
-+/*						143*/
-+#define RESET_I2C_S_A				144
-+#define RESET_I2C_M_A				145
-+#define RESET_I2C_M_B				146
-+#define RESET_I2C_M_C				147
-+#define RESET_I2C_M_D				148
-+/*						149-151 */
-+#define RESET_SDEMMC_A				152
-+/*						153 */
-+#define RESET_SDEMMC_C				154
-+/*						155-159*/
-+
-+/* RESET5 */
-+/*						160-175 */
-+#define RESET_BRG_AO_NIC_SYS			176
-+#define RESET_BRG_AO_NIC_DSPA			177
-+#define RESET_BRG_AO_NIC_MAIN			178
-+#define RESET_BRG_AO_NIC_AUDIO			179
-+/*						180-183 */
-+#define RESET_BRG_AO_NIC_ALL			184
-+#define RESET_BRG_NIC_NNA			185
-+#define RESET_BRG_NIC_SDIO			186
-+#define RESET_BRG_NIC_EMMC			187
-+#define RESET_BRG_NIC_DSU			188
-+#define RESET_BRG_NIC_SYSCLK			189
-+#define RESET_BRG_NIC_MAIN			190
-+#define RESET_BRG_NIC_ALL			191
-+
-+#endif
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-index 43f68a7da2f7..ea9d4f2ce42b 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include "amlogic-a4-common.dtsi"
-+#include "amlogic-a5-reset.h"
- / {
- 	cpus {
- 		#address-cells = <2>;
--- 
-2.35.1
+> This is unacceptable and reduces mTHP to merely a toy on systems
+> with significant swap utilization.
 
+May be true in your systems.  May be not in some other systems.
+
+> This patch introduces mTHP swap-in support. For now, we limit mTHP
+> swap-ins to contiguous swaps that were likely swapped out from mTHP as
+> a whole.
+>
+> Additionally, the current implementation only covers the SWAP_SYNCHRONOUS
+> case. This is the simplest and most common use case, benefiting millions
+
+I admit that Android is an important target platform of Linux kernel.
+But I will not advocate that it's MOST common ...
+
+> of Android phones and similar devices with minimal implementation
+> cost. In this straightforward scenario, large folios are always exclusive,
+> eliminating the need to handle complex rmap and swapcache issues.
+>
+> It offers several benefits:
+> 1. Enables bidirectional mTHP swapping, allowing retrieval of mTHP after
+>    swap-out and swap-in.
+> 2. Eliminates fragmentation in swap slots and supports successful THP_SWPOUT
+>    without fragmentation. Based on the observed data [1] on Chris's and Ryan's
+>    THP swap allocation optimization, aligned swap-in plays a crucial role
+>    in the success of THP_SWPOUT.
+> 3. Enables zRAM/zsmalloc to compress and decompress mTHP, reducing CPU usage
+>    and enhancing compression ratios significantly. We have another patchset
+>    to enable mTHP compression and decompression in zsmalloc/zRAM[2].
+>
+> Using the readahead mechanism to decide whether to swap in mTHP doesn't seem
+> to be an optimal approach. There's a critical distinction between pagecache
+> and anonymous pages: pagecache can be evicted and later retrieved from disk,
+> potentially becoming a mTHP upon retrieval, whereas anonymous pages must
+> always reside in memory or swapfile. If we swap in small folios and identify
+> adjacent memory suitable for swapping in as mTHP, those pages that have been
+> converted to small folios may never transition to mTHP. The process of
+> converting mTHP into small folios remains irreversible. This introduces
+> the risk of losing all mTHP through several swap-out and swap-in cycles,
+> let alone losing the benefits of defragmentation, improved compression
+> ratios, and reduced CPU usage based on mTHP compression/decompression.
+
+I understand that the most optimal policy in your use cases may be
+always swapping-in mTHP in highest order.  But, it may be not in some
+other use cases.  For example, relative slow swap devices, non-fault
+sub-pages swapped out again before usage, etc.
+
+So, IMO, the default policy should be the one that can adapt to the
+requirements automatically.  For example, if most non-fault sub-pages
+will be read/written before being swapped out again, we should swap-in
+in larger order, otherwise in smaller order.  Swap readahead is one
+possible way to do that.  But, I admit that this may not work perfectly
+in your use cases.
+
+Previously I hope that we can start with this automatic policy that
+helps everyone, then check whether it can satisfy your requirements
+before implementing the optimal policy for you.  But it appears that you
+don't agree with this.
+
+Based on the above, IMO, we should not use your policy as default at
+least for now.  A user space interface can be implemented to select
+different swap-in order policy similar as that of mTHP allocation order
+policy.  We need a different policy because the performance characters
+of the memory allocation is quite different from that of swap-in.  For
+example, the SSD reading could be much slower than the memory
+allocation.  With the policy selection, I think that we can implement
+mTHP swap-in for non-SWAP_SYNCHRONOUS too.  Users need to know what they
+are doing.
+
+> Conversely, in deploying mTHP on millions of real-world products with this
+> feature in OPPO's out-of-tree code[3], we haven't observed any significant
+> increase in memory footprint for 64KiB mTHP based on CONT-PTE on ARM64.
+>
+> [1] https://lore.kernel.org/linux-mm/20240622071231.576056-1-21cnbao@gmail.com/
+> [2] https://lore.kernel.org/linux-mm/20240327214816.31191-1-21cnbao@gmail.com/
+> [3] OnePlusOSS / android_kernel_oneplus_sm8550 
+> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8550/tree/oneplus/sm8550_u_14.0.0_oneplus11
+>
+
+[snip]
+
+--
+Best Regards,
+Huang, Ying
