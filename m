@@ -1,128 +1,240 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2097.outbound.protection.outlook.com [40.107.223.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1AB1FB4;
-	Wed,  3 Jul 2024 00:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F221F623;
+	Wed,  3 Jul 2024 00:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.97
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719966865; cv=pass; b=A2sGz7aPH2iuvow8MAZRI/qKiZN0T7DzZOym0tMZuKDQTt1sfpj1n5rSy/r2VZ97wjL6CvDNX9GWN5pYwLRyeo50mOrcIkahxiQR8VBDPHXGETjR2Veq1SCrEKmVzc9iGCNOHfaJfQD2bkBfDFsixFE024wEr6IcQdTOFkuQJ/U=
+	t=1719967268; cv=fail; b=VMkP/205hRMtE6EApD8mumFbD+Qn0ERX+Z+L5kio/b/+74b1pV0hqSZsZwtJmFKLszBpkurggMhBH0DS2fHVkj1X2XYMdkwtLy3H/M114S9S7iFSrIHhDuTNV6o3to0X1wrimmhLJrOHApKjZMuzfGV+No4Ii3fOcPzkj4siXlc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719966865; c=relaxed/simple;
-	bh=ywzEqGjjGM7mIn1VawbrZuz00V7sB9FTsYmYjFiztFQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=QqOjblOdkwK45AqFsxGu86Bz/lPnHFECfgH5AKXXsXelLS4pms6nm3kYK4/01p71eQojwlgABCdM+mH/SWjwY0ePuIVhDlsHMZmem5Yu2pHVihhJ5en50/2KEvm15cwHkEvHoeazDl2J8lMhf34+yu8V87BQoSnx60WAGbQJzHM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=Hwzk1ORC; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	s=arc-20240116; t=1719967268; c=relaxed/simple;
+	bh=KHA+y3S0NX59sjXXoeZoXQGMpvG/gGYSOf04WoaPiJI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=T+jjYY21uZzx41aIr4n/cbIw4xwNh0nDzocdCEUb5vjNPaui1DnFM3TaD1huBsC/XrSyxTrmvSw2JclovEWXFTPJppM0SWgcnzlODScO4gWmzZlZmcuuS8u25DwSOF8D2vP19nexZgcgtF5I2hL9dLaotvjSQrhuGPhoWGZOnAs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=YVhSQbJ6; arc=fail smtp.client-ip=40.107.223.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="Hwzk1ORC"
-Received: from localhost (83-245-197-232.elisa-laajakaista.fi [83.245.197.232])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sakkinen)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4WDLPn43c7z49PwY;
-	Wed,  3 Jul 2024 03:34:21 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1719966861;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GaV4tuk1WbugWdGR34mCTzuCrF1HR/X8Zy5U2pP20mY=;
-	b=Hwzk1ORCDLDo+ZiLXJZ9VZDcBs7xVnOnpn2RghTPQxZfI25659jdF6jLTsfX00r63/BfUK
-	4LJpl2qkg+FsZzTi6qEj7aJZ+qm+T3Q8QG08lI9lpRhGYIid5OcV9mk9dhF5fKgG5cAb+r
-	fOJEmy8yHRDQ23Vo27z6NynYLgwq3IUaJkTe7bAw4ek5Qe/33BCx2b2pveBwT/BVLlChT+
-	SRxjiCB9EixM2pioAv2iotHdA1II0Mt9DbC4uGjOW/vyoPOM2mUUykK7UJIhSr7WzrAqF4
-	vIvoYYMuxgqWZ/0OmKOUJElMv3Hc1HTYrq3uBKU1m+Qj0+zfJSR+r5JjUG1Fww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1719966861;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GaV4tuk1WbugWdGR34mCTzuCrF1HR/X8Zy5U2pP20mY=;
-	b=r0a24xe0CGr61iBcz2UuPxJCeXSNlnpKlc2FHYz2NFz2gAk1FYG+s7W0I+0Vyyo4Y9gDBX
-	sE/pwlTG1yW3ijfHKJI6XsbchMT68iiEDm1djjK4WI2XX2EWsztLDnsqKgCnxd0oed7BOU
-	FMH2F9TXYvdseY0vdsxthj5JIXYUhOUr3PkgACLFE80nMRaXnGzwmu8fNeGUZPdd+1fm41
-	six+W33Kc1zTdF76mrSrF4ErWJHJ1pd0C4nqzmwmNeEgBXnQYeOTUOskUFN3LeTuZQxQMI
-	PKTkAcTtfQuHdyAMiDbtuiAha0SUQQs0lMrgUWfHFAW5/hn3Q+D1/xx7/2bQlQ==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sakkinen smtp.mailfrom=jarkko.sakkinen@iki.fi
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1719966861; a=rsa-sha256;
-	cv=none;
-	b=Vu1Tcl6h9Orp81BbUjw627PbKr6gMUDh/2r3b4xEIAn2hDle019jRr3F6WBTIPEv3lah3I
-	6/0AdEeDW2sxRnvNFbE6UP90xd21TXSR4dPWn0HN3fU8ejGP826iWNmDmsei6oxby5Y058
-	kLk/cSbUN2JukeWIZHt5qZiZFRHd8WqMG04T2WD7KvlMaEKBRixgP2RZYav3GztbSwg8L8
-	2vOY25jM8l5yC90/mvjOYiojzXDbi4Qy5gnko3qORWiEc/HuBk7T591AvyE00GoUGANF4D
-	yfD+D3zH1zV3mHH2JEOW19bV3R1I8s7BXPooVyDvdzuBWY++Kl8DY9EuSLWKUw==
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="YVhSQbJ6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hw0APgafIJrll0yjK51TykDVGtgSvkh7IBb+bhWcKocvn2Fj3kK8320L6DKAwz5HPBuyk7LEzvSUXeHfFKdRF2mYMkNvf57pDIxNjbSew8WQ0ysU74PTKiKyOioG8GgdNqz5EhdNudtDZNC0W9Gy144MtH5jc4NZV7BPd7Wv63837MY6cNJeA4PSAL/AhgrSvSQt8Oz2DtPuiGbGYii2HKjUoWLipU08IK7l3D/epIhcwcGIvGigWHfrtfLB6xWgn+RxllKZ4U3LPk1pysgp0ELV8ZqKZ8ioFa3mAeci2H9N2ACGOgrs1hUG//tNex6K+mApA9W4LoH91U0Ue3Mmhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4MF29OXg8iYXUaKRe3E9LfYCdxu7ABNIuLaiwiOkG8A=;
+ b=iMh0S4m8ec97t6LxyFBXm4Q5YoZKJVmf/UmKLzIYDc2uID9xI/ZOFtyluW5lejE1I+kCNgbafHK8vjHvINxuvKSOV/TIYlzFA+yOH9Q6R+fyNvFOgTmPA9lFwRy+TebKwJZ/DiJ5iFQ7aYGSd9VX/9XyxsCfoPiDcyF9ZSGnhwW7kIDX3oMLfS+B9VRsQ7u5N/oIOnP3RbFqpp37HrjuWussb1TSZslhR239F4rx07hy46TMXXo+UmiBxXVH30Tmgcf6zpwKLUEJJn1bFwhfxdIFxUjC9iSlychO/For2HW/f0N0BifmlgQlhr7gv+WawsJHCi3C+17d/qIJOlnAoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4MF29OXg8iYXUaKRe3E9LfYCdxu7ABNIuLaiwiOkG8A=;
+ b=YVhSQbJ6MNX+iH4kQaYGUUunLQ+PRiWpI5AUzWG/1IGRqIQyB4j5EbqBDa1xeAjpJF0EvbNVkurtPEqVPGJ2zGC8B4oYj/iSNUUVA5x1lWBVObS/ElT+PmHp/uETKkNHFwruIQBI4PZDP5Izz0r3t7g/ba02Mlwdv+8OxaORgTg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from BYAPR01MB5463.prod.exchangelabs.com (2603:10b6:a03:11b::20) by
+ DM8PR01MB6824.prod.exchangelabs.com (2603:10b6:8:23::24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7719.33; Wed, 3 Jul 2024 00:41:01 +0000
+Received: from BYAPR01MB5463.prod.exchangelabs.com
+ ([fe80::4984:7039:100:6955]) by BYAPR01MB5463.prod.exchangelabs.com
+ ([fe80::4984:7039:100:6955%4]) with mapi id 15.20.7719.029; Wed, 3 Jul 2024
+ 00:41:01 +0000
+Message-ID: <2f8d6381-d693-4d16-b510-b74aff4fc55d@os.amperecomputing.com>
+Date: Tue, 2 Jul 2024 17:40:55 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build failure after merge of the mm-hotfixes tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20240701101641.4fea0ac2@canb.auug.org.au>
+ <20240701110159.216a8d1f@canb.auug.org.au>
+ <37b70d3f-c46c-4df4-b52a-3c6ba5feb692@os.amperecomputing.com>
+ <20240703084440.3af9f526@canb.auug.org.au>
+ <20240703092233.44f51416@canb.auug.org.au>
+Content-Language: en-US
+From: Yang Shi <yang@os.amperecomputing.com>
+In-Reply-To: <20240703092233.44f51416@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0P221CA0017.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:11c::26) To BYAPR01MB5463.prod.exchangelabs.com
+ (2603:10b6:a03:11b::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 03 Jul 2024 03:34:21 +0300
-Message-Id: <D2FHD82R8YAC.YBL9FAIVMBWL@iki.fi>
-Subject: Re: [PATCH] tpm: ibmvtpm: Call tpm2_sessions_init() to initialize
- session support
-From: "Jarkko Sakkinen" <jarkko.sakkinen@iki.fi>
-To: "Jarkko Sakkinen" <jarkko.sakkinen@iki.fi>, "Stefan Berger"
- <stefanb@linux.ibm.com>, "Linux regressions mailing list"
- <regressions@lists.linux.dev>
-Cc: <naveen.n.rao@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
- <linux-integrity@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-X-Mailer: aerc 0.17.0
-References: <20240617193408.1234365-1-stefanb@linux.ibm.com>
- <9e167f3e-cd81-45ab-bd34-939f516b05a4@linux.ibm.com>
- <55e8331d-4682-40df-9a1b-8a08dc5f6409@leemhuis.info>
- <9f86a167074d9b522311715c567f1c19b88e3ad4.camel@kernel.org>
- <53d96a8b-26ef-46a3-9b68-3d791613e47c@linux.ibm.com>
- <D2EFNJTR80JS.1RW91OVY1UH1N@iki.fi>
- <e7db74a0-cd5c-4394-b87e-c31ea0861ea1@linux.ibm.com>
- <b7559dbb323d16fb334f8f8f35b8fda3fb6e481c.camel@iki.fi>
- <85f882ff079554c41a73d8ad4275072c5229f716.camel@iki.fi>
-In-Reply-To: <85f882ff079554c41a73d8ad4275072c5229f716.camel@iki.fi>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR01MB5463:EE_|DM8PR01MB6824:EE_
+X-MS-Office365-Filtering-Correlation-Id: 37af68ae-78ce-4c80-adc7-08dc9af8cfd7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dGFDZEFKMjZuV1I3UVI0aUs1UVpXTzYzb3VWa0Y4UmxGbURmSFhBWHMzQ1pO?=
+ =?utf-8?B?aVV3RkQ3M20zRXY4eS8zaUEycGdGQ1JKekJKUXZBUkg2Zy92Ukp6M1lBdzNl?=
+ =?utf-8?B?bGZ3NE1zTXFSU2lXNGJXcWpQWkwzOVVoMzcrQkVwZ0lNVDdKdURrUzh6TUVO?=
+ =?utf-8?B?WXNLSkR3M0VkSWZmUG1qVmViVlZTdldJYi94MXliSVlHTEVxUElYcUNaMzk5?=
+ =?utf-8?B?K1JlZVZNdTViUkhra2F6dTIyVkZ3U3BBTGRWc09rNFBNVDFkYlA3TEszN1ZF?=
+ =?utf-8?B?TUorS3ZHTHhLZkt0VFFPSlZMRCtZV1BENmVGSmRYRlRFd3RnSFZVN2cvUjFS?=
+ =?utf-8?B?d1lnVUlJU3NQWUhxRXBJdm0rY1pIRVBYdjRraXJ4V1NZZ1I0c3kvM0Vnbm5P?=
+ =?utf-8?B?Y1dDckJ3SWNBMmtNOHJGKzJTM21UTitqZEdqRDZ2b3IvckE1RlFvWjBZWTk1?=
+ =?utf-8?B?QkdhMlhmbWp2U2dTUFdJaHZib29EOC9GWjNHM2ZsQlJ2T3BxUDllNU9wSVhz?=
+ =?utf-8?B?Qk1qNUVDamtLd3ZUMEhjdE5pNTB3aWVsLzZpZW9VOUxUVmIvaUlaWC9yYUVt?=
+ =?utf-8?B?Ti9NSE5wTnBLOUJEWHVGMXZuMHNQQWxESzRMeDZUYW9RdXI3TXY5WHVuZHQ1?=
+ =?utf-8?B?dE1VVnlkcG15OVRLcWlvQ1o5TWcvVGZrWlhtQ2xqOTNyNjFXazhVNC80SWlO?=
+ =?utf-8?B?WTJWdVlMQlRRcW92V0k4eTgwZDdCZTR0bGR5eWJuNXl6b2w2NW90ZnA3OFln?=
+ =?utf-8?B?T1dSQ3NJcnpxNHpOZHIwNDZuVUVOdHp6Sk80bjQrN2FxUEN1QXlRNEY0aDBM?=
+ =?utf-8?B?Y1A0ZGdDRHpKQ2RvbmRwWDFKcEEzZjhaUzZCcU8yQjdrVzBpVXQ5d0Y3Q2hG?=
+ =?utf-8?B?VFpGWFNIYjUxZDh3ZjNSbWJFbHkyS2U0RnhUWnVUaytXR0ZWcWVNdE1xdE5P?=
+ =?utf-8?B?TTkvR3I3MzRhMXRtVTBPL2RUZTRLRzZYaVU2MTBuall3elQ3c0FBL1h6cHll?=
+ =?utf-8?B?SnpBdG84NlVtZFlVbjJ6VDF3anl2RzhLeXptSHIrcHdvNGpUc29TWTRhakJ6?=
+ =?utf-8?B?aGtuTkhvVjhuR2dzejlyNU5Mc2ZEbWcwOTNhdURMSVg1NnNhMjNYaDArdXBY?=
+ =?utf-8?B?TTBmVGI2aFU4dkR6R2s3N2NsOHljelVEU3FCa0RuSmhtME9OdUJqWENDVzZ5?=
+ =?utf-8?B?blVoUzQ1N3BGQ0c5UE1tbGNsZUhobmdvallENEdabWg3YTltdzZ3b1ZlM1M5?=
+ =?utf-8?B?aXlRUXhBVWdaUEZjWjNvNGM5LzQ4QlkyUE4yNWxmTm9oRHFqVW5OWHdHVFJX?=
+ =?utf-8?B?ZUU0ckJxSVUvbTdjYXAvRjJQdHRmM1VKL1V0OVFYNW1PK2VBUDhqQkhURWZL?=
+ =?utf-8?B?SUR4RkVJZlg5NEJIcENtMG0zVmJEcUJRRks2R3BIZFhMODFmNUdUUHBJNHBQ?=
+ =?utf-8?B?NkgwRDhjNHNmUC80dS9CakNZSXpxNkNnVkxBSTl4bEc1Y3hrU1VQMWZvNFJN?=
+ =?utf-8?B?UjZwTzUreThKdFFHZzVwQTBPT2RnK2ZCOWZoRFVvZS9BUFhVK01xRndBSmZY?=
+ =?utf-8?B?MGFHWS85M25JZ1lCcjJxdjZOblk3T0YzNGtweWJ5VzhIbllVdDltMWtWdTJW?=
+ =?utf-8?B?cVZYWmcrS1Znazh3OUJxaHdjd3hHdFdOOVMwSG9JRTNUZnl6TG9qekJNK0J4?=
+ =?utf-8?B?SCtMbjVPZCtzbC9UOURjQjRmMVd4MzBlbTl1MkVTNUpZcExTbXdQUW5kUlUx?=
+ =?utf-8?Q?c4YgkGNE+JlSFJxOuw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB5463.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RGRJUEVqYW1KamtDNU5lM3M0cENOTzBqUGZlUTM5YWJBbTNTbDljRlRWNWhh?=
+ =?utf-8?B?Ty95TGRrbkg2MXFwMTJTc2p2cVVpa2ZaRFlTQmxlWmZsNGRRUDZZK2xDbkp3?=
+ =?utf-8?B?QVBTdGZGanV4WU1TcE5rUGRtYkZ5cmpQQ0crNUgxQm02ZmRaVloxNmZIT0lt?=
+ =?utf-8?B?enp2SHIvcnNKbVdkYzY4cnBSZUtFdGJYeVpVVVRpUVN1NGsrSDlYK1g4cHVZ?=
+ =?utf-8?B?dCtQenhGWlVRa2JBc044b0luc2ZrY2xwbSt4dHJSOUdyNE5pRXZDTHpNZllC?=
+ =?utf-8?B?Sy93ekk1ems2dlhxZE5GbDFBdEVUL3pEY3BEMHFFUWtmNmdsd05hUTljYWNT?=
+ =?utf-8?B?RTYvWklQMk5NcXBZMFhhQjZWeFBMWVV4ajUxVld2RjRXQTVrNFcvbHI4RlJJ?=
+ =?utf-8?B?Q3k0ZXViQVR0ektCb0VKUlBJaVJXR040T2RFT29BSldMVGpVemhuUGQ4UzRn?=
+ =?utf-8?B?S1lyRmI5SXZlSjg3QXplWWZwS09ZNlZrR0lKb2lGRTErRnpGRk45Zm9aU0RV?=
+ =?utf-8?B?blNPbFJIdVlSazVXY0dQU1hqV1pSOVowV2hNeVNaRmROZmVoc3NSWUEzQ0xU?=
+ =?utf-8?B?TkJhMFRqdDIvTHgxNXJIM3pLZnJmVVhHb3hBTnVTNEhkclFFV0Q2cE5tMW1F?=
+ =?utf-8?B?Nk1jd2txd1JkeG5GOVlKaEhpRlc2SHBieWFIKzdQcU1LbzZjcHBWN1djM0Mz?=
+ =?utf-8?B?WU1OaWpKREFQMFl1a3EwRGZJaTdzbHV4bHQ4KzJDdUxWZlQ5aTl5cmRJeFor?=
+ =?utf-8?B?ZWNvV2M2OEtGK3NDOHVERElIVXBjUG5XdHY2bjdxd1VmYTViQXRJZjlDMnBE?=
+ =?utf-8?B?bnBGZVFoR2o3d2tkb2UzU2RYTFZpTFlhUjFZR04rdnVodjBvL2dlSUEvdWZ5?=
+ =?utf-8?B?MGFqY01lNTA0SmhKZEh4ODR3WmU1a0VNekN2VnI1TUVXTEpsTFJ5MWpiR3lL?=
+ =?utf-8?B?RlRMMnJxZTZqRHViSGlmVEtnczBiT1NySnkrU0tGVTRmUytCNHU0NVZYTUdU?=
+ =?utf-8?B?ODhjbUlGM0xYc3BMZm1JZVMyNFIzbU5reFh4SWc5WUJJbW9GdXZXc3pjYzJW?=
+ =?utf-8?B?MkxtTWI0Y2xtNlJZdUJoTWNacVZkRmZYRmw3Wk15dEtJdnZ0NVdadVkvdGwz?=
+ =?utf-8?B?WTlrTzFSa3F4WFVWUDFJTldUSjdiZHh3Tmh5YVlVVUc0K2ZLbXZGckJuRGsr?=
+ =?utf-8?B?MXhHN0FXRVRJbS9SS3ErSkgrOVFRQnJoZkpqRnMvdHZoS2JVOVd6SzZaMm9X?=
+ =?utf-8?B?RTNvc0d2WW5xTVExMjI5UUxGVHBzaVErL053UWdqcUVCd0JvRDdYbnZyY1Vs?=
+ =?utf-8?B?ZFZvM1BCSEU2QWV0c0hFa1lUQ0tNSllmaExEWk1yTVJVVGpYL2dxLzVCODlh?=
+ =?utf-8?B?OTRpa2pOeWp0RXZaZmY5bWo2MXVYYUR4eW5FK2swbnRjMVNObkR5MFRQM3Mx?=
+ =?utf-8?B?d1J1VERtS2d2WENXRldKQW1NREgvZEJ5L0ovaHhHUFJNaEhrVTltUVRwU0dT?=
+ =?utf-8?B?eTNodFY1SGNzTERKS3RRWG5nR2FWOWRLMVllQkFtWUx6UFlPVHBac2xod0hH?=
+ =?utf-8?B?WGNTSCtRdVY2ZWJ2dklRemtseFhHb294RnZYdE1CMmpLMmJVNE9XWC9PTWRK?=
+ =?utf-8?B?M0t6T29rcnZBdlU3UzlPZzFjaTB4YWtBbytwL0x1RlFIdWRoendxclk3Rlor?=
+ =?utf-8?B?L0JKb0xvNUpzSS9sb1R2bGtBckw2SVNLL29HQlJOeitjK3UxbkV2ZVd4NDBH?=
+ =?utf-8?B?SWs4TWlWVHlZZVA3Y1BReTkyUi93OEswMXhHOU1EeWFhOVA4UFlBZUNDMW0r?=
+ =?utf-8?B?VnVYeGhGbFV1Z2JEcFZQQ2hoVlNFcFFTalh0NG85SytCQ0dzaCtPNFBuVkhL?=
+ =?utf-8?B?a1M3cDdpalF1T2drSWN3WlFybDJJMm5UTzVUdTBTRklTRk0xQ1NOOXQ2YlJr?=
+ =?utf-8?B?K3BaU3A3NktuSDExRlRZdHN0STBPL1ZsSWlDRGhHT3ZRUkRHenY2NmZPd0Jl?=
+ =?utf-8?B?WG9qRm9sdkxoR1RQZ1lFdU1CMHh0ZWlEa0s2YmRQdzExcC84OFZJUXpxa0dy?=
+ =?utf-8?B?Q2VUbGg5L096Q0dMNkk0MUhXTTVrNHFQancvQTdDZ0tXclNZdDEwN2dBbkRF?=
+ =?utf-8?B?SW05R3JBT2tVY2NPVGV2UEVsMUIwS0xvNGJMMGpvYmR0b2NqODZoMEZncHJv?=
+ =?utf-8?Q?77/3RJDsgdLQIAd824f4uo0=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37af68ae-78ce-4c80-adc7-08dc9af8cfd7
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR01MB5463.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 00:41:01.0780
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TbOTNPmjRc8YNOao3Moi/n/LNPgqLp/7hCj5aTB0Zq1Pi+UUVj3R6Ws8soCIj/7/SD350Ax/DeEisTM8/irz6u4JiR/dvi/QWcp6XoyCAhE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR01MB6824
 
-On Wed Jul 3, 2024 at 2:57 AM EEST, Jarkko Sakkinen wrote:
-> On Wed, 2024-07-03 at 02:48 +0300, Jarkko Sakkinen wrote:
-> > On Mon, 2024-07-01 at 15:14 -0400, Stefan Berger wrote:
-> > > Applying it is probably the better path forward than restricting HMAC=
- to=20
-> > > x86_64 now and enabling it on a per-architecture basis afterwards ...
-> >=20
-> > Why is this here and not in the associated patch?
-> >=20
-> > Any, what argue against is already done for v6.10.
-> >=20
-> > The actual bug needs to be fixed before anything
-> > else.
-> >=20
-> > I can look at the patch when in August (back from
-> > holiday) but please response to the correct patch
-> > next time, thanks.
+
+
+On 7/2/24 4:22 PM, Stephen Rothwell wrote:
+> Hi Andrew,
 >
-> Next steps forward:
+> On Wed, 3 Jul 2024 08:44:40 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>> On Mon, 1 Jul 2024 11:15:17 -0700 Yang Shi <yang@os.amperecomputing.com> wrote:
+>>> On 6/30/24 6:01 PM, Stephen Rothwell wrote:
+>>>> On Mon, 1 Jul 2024 10:16:41 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>>>> After merging the mm-hotfixes tree, today's linux-next build (powerpc
+>>>>> ppc64_defconfig) failed like this:
+>>>>>
+>>>>> mm/gup.c: In function 'gup_hugepte':
+>>>>> mm/gup.c:474:25: error: implicit declaration of function 'try_grab_folio_fast'; did you mean 'try_grab_folio'? [-Werror=implicit-function-declaration]
+>>>>>     474 |                 folio = try_grab_folio_fast(page, refs, flags);
+>>>>>         |                         ^~~~~~~~~~~~~~~~~~~
+>>>>>         |                         try_grab_folio
+>>>>> mm/gup.c:474:23: warning: assignment to 'struct folio *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>>>>>     474 |                 folio = try_grab_folio_fast(page, refs, flags);
+>>>>>         |                       ^
+>>>>> mm/gup.c: At top level:
+>>>>> mm/gup.c:2747:22: error: conflicting types for 'try_grab_folio_fast'; have 'struct folio *(struct page *, int,  unsigned int)'
+>>>>>    2747 | static struct folio *try_grab_folio_fast(struct page *page, int refs,
+>>>>>         |                      ^~~~~~~~~~~~~~~~~~~
+>>>>> mm/gup.c:474:25: note: previous implicit declaration of 'try_grab_folio_fast' with type 'int()'
+>>>>>     474 |                 folio = try_grab_folio_fast(page, refs, flags);
+>>>>>         |                         ^~~~~~~~~~~~~~~~~~~
+>>>>> cc1: some warnings being treated as errors
+>>>>>
+>>>>> Caused by commit
+>>>>>
+>>>>>     5f408bfe0d13 ("mm: gup: stop abusing try_grab_folio")
+>>>>>
+>>>>> I have reverted that commit for today.
+>>>> And I also had to revert commit
+>>>>
+>>>>     52cca85b0ebf ("mm-gup-introduce-memfd_pin_folios-for-pinning-memfd-folios-fix")
+>>>>
+>>>> from the mm-unstable branch of the mm tree.
+>>> The patch attached in this mail should fix the compile error.
+>>>
+>>> https://lore.kernel.org/linux-mm/CAHbLzkowMSso-4Nufc9hcMehQsK9PNz3OSu-+eniU-2Mm-xjhA@mail.gmail.com/
+>> It looks like that patch has been applied to the mm tree instead of the
+>> mm-hotfixes tree - as a fix for commit
+>>
+>>    50ceb37037f3 ("mm: gup: stop abusing try_grab_folio")
+> So for today, I have applied the following patch to the mm-hotfixes
+> tree merge and stopped reverting
+> mm-gup-introduce-memfd_pin_folios-for-pinning-memfd-folios-fix.
+
+Thanks, Stephen. I think Andrew may misread what my patch fixed. I 
+emailed him offline. Once he fixed it you should not need this 
+workaround anymore.
+
 >
-> 1  Comment out sessions_init().
-> 2. See what happens on x86 in QEMU.
-> 3. All errors were some sort size errors, so look into failing
->    sites and fixup the use of hmac shenanigans.
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 3 Jul 2024 08:52:20 +1000
+> Subject: [PATCH] fixup for "mm: gup: stop abusing try_grab_folio"
+>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>   mm/gup.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 12c7b41712f7..5f58c95b3ab9 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -437,6 +437,9 @@ static unsigned long hugepte_addr_end(unsigned long addr, unsigned long end,
+>   	return (__boundary - 1 < end - 1) ? __boundary : end;
+>   }
+>   
+> +static struct folio *try_grab_folio_fast(struct page *page, int refs,
+> +					 unsigned int flags);
+> +
+>   /*
+>    * Returns 1 if succeeded, 0 if failed, -EMLINK if unshare needed.
+>    *
 
-For anything "fast" or "quick" I think this really the only
-possible sane thing to do right now:
-
-https://lore.kernel.org/linux-integrity/20240703003033.19057-1-jarkko@kerne=
-l.org/T/#u
-
-There's also bunch of other drivers than tpm_ibmvtpm so better
-to limit it to known good drivers.
-
-I can take at the actual issue in August and will review any
-possible patches then. This one I'll send after my current PR
-for TPM has been merged.
-
-BR, Jarkko
