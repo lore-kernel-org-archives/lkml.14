@@ -1,222 +1,242 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB763143C42;
-	Wed,  3 Jul 2024 10:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720002093; cv=none; b=TUUianinrAEdn3mBjSCOvpEto/mlBsH6zA8McKs1jFt36J3/5Q9TS4JGUTuOyBx9ArhNrA8/yShqsARDnUge19m8/vcKgH4CR64BHISaN4LsA1xoFK+BKhvTT6bLfVYWNHfFBAuzVhLS6F/UHcI5GsGeiGXlhdQ/GICig+87a6A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720002093; c=relaxed/simple;
-	bh=CsaWx8PdD675H5FCw6difqLNYbisrdqd1zWhvZqFxiM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BivQSGgr5sJgVfB2K0GE3wcW1vewcuag7YB1dh95pabfh+98XFCW29zedoWw/BcgXO5tb0cLlqHnRXTXGsFxxOgBbflAQa3hdeuow2S7rA1YOyYEoU1gvNbaCap1hO++u5RotFhG+BBLQiIG/pio1b9RxI23TQLDWmDMGOalvYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=OHg1NkAx; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DF913C9AE;
+	Wed,  3 Jul 2024 10:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720002166; cv=fail; b=Ic1iUklPLH0wMvhQ//UYBKV8s0zb5CsaXVd5BF7m+eRmGJXavfhbHUIlAumsZzn2AD+MbuczUbWCaw0Lt1O15vrabrYo6nLbi0VA/TOYi6s0C+eivr5KdnTtHcHg0+cIn4lSe8nv2fznVm5yhlIn1HV1ZRFkp+ZV56Qv0REUO3I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720002166; c=relaxed/simple;
+	bh=/DFBAmCmi2ItOl5undpeKK9uluJjAj9kma7YlE00rfA=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qxFAtj/+mXJ6rFxXUQH9FegIcqseaHewpieRxv106Wgc99XAJJkhHRHzJytbQ0q3sLLr/e987xWCQj+2Y4yv+KZ371HBRbG2jjaqRG3Vm8nIudE1JqQzUgIIfTh6kPQ3HYm5yUzbCAZOmPr516nL8Z4FIhfLgtrtDzOA/wcOvL4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HpiQrkJ7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=0DnazZAI; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OHg1NkAx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720002091; x=1751538091;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CsaWx8PdD675H5FCw6difqLNYbisrdqd1zWhvZqFxiM=;
-  b=OHg1NkAxPZ+BD5GXc/s2u9inou0K2PmfqkadwWVtZ/MMYWyNd1QtbBDa
-   tPiDZJr7aS8bKTXoghEgrW96sHk2Ujl78TH6/W8ZdI5Pu5EtjeYy3Fhul
-   tu3X0s32buPRexm2X8tcf5026t6l5WoU0qpZHDbeut428s4ggRPSsitcr
-   sbCEcx1OFCT/t53PR6AUQlM9J7IfLfUMxJd7Jlen9ESgyqlgNV6TLQPXN
-   Fxai22pEGVSiYcZRCCuYVmSzqgyF8qfsM+D8+NjrFiProi5MGiF8ObnE+
-   aKQQyQj41Te+XcmjcU00z1U6XuJWz8gGmZePtXkZtZsjMnzR0GOFt0dOo
-   A==;
-X-CSE-ConnectionGUID: Znz9azp1QR6J93vlkandzw==
-X-CSE-MsgGUID: qVWTiJyHQOypLOlBu5gCMQ==
-X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="scan'208";a="28772185"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jul 2024 03:21:29 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jul 2024 03:20:49 -0700
-Received: from che-lt-i67070.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Jul 2024 03:20:38 -0700
-From: Varshini Rajendran <varshini.rajendran@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-	<tglx@linutronix.de>, <sre@kernel.org>, <p.zabel@pengutronix.de>,
-	<richard.genoud@bootlin.com>, <radu_nicolae.pirea@upb.ro>,
-	<gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-	<linux@armlinux.org.uk>, <mihai.sain@microchip.com>,
-	<andrei.simion@microchip.com>, <varshini.rajendran@microchip.com>,
-	<durai.manickamkr@microchip.com>, <arnd@arndb.de>,
-	<akpm@linux-foundation.org>, <mpe@ellerman.id.au>, <geert+renesas@glider.be>,
-	<rdunlap@infradead.org>, <dharma.b@microchip.com>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>
-Subject: [PATCH v5 00/27] Add support for sam9x7 SoC family
-Date: Wed, 3 Jul 2024 15:50:11 +0530
-Message-ID: <20240703102011.193343-1-varshini.rajendran@microchip.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HpiQrkJ7";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="0DnazZAI"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4638OWip030316;
+	Wed, 3 Jul 2024 10:22:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:to:subject:message-id:references:content-type
+	:in-reply-to:mime-version; s=corp-2023-11-20; bh=MTTYmYVZHuKm+X0
+	i1FRbHLBPYAU6CrUsS6DJZ81saYo=; b=HpiQrkJ7CIRtYvIKlKskXInkJ8f+viJ
+	uh8xX7bN3gNTv727KXvcYTxmtPuQxlRJ5LHyvbRO6nKdHXNJuxZQlzJrVd3xtcnJ
+	5Gwe1EWIy7M0wyRpxPiD99zPpZSXH8pBSNuuSmUzg5gQ5BCcSLMyfBfVoyBMMpmo
+	vFoHU+TAD4mEWp/pw0NSzEYEvru1VpJ+qiTpBbfxdzlkjO1MmkEplCPSZZxqurT4
+	9ePtiEGGkRbFxsBzLKlRVvtJeFk8QI3d8yxZ8etiCaZNkmxbpD4GLAIUo/e1x4hv
+	fFHt4bNdR6qCcqus4tHk50UgwS4hNBAoOJyN08/Fm2vOK/BHFIS/bzw==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40296ayvn1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 03 Jul 2024 10:22:29 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4638eB4Q023488;
+	Wed, 3 Jul 2024 10:22:28 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 404n0yxrxh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 03 Jul 2024 10:22:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hljG0bJ6hsPrJ3bwjLOSo3f0onC465Wt/XCHFJzS5unkpSSkL4DAF9kk/a8YwXGXPegRduW82OuX8hwpIyEbV4P8DFzJ0tO/sqAScfDm8PqwOwheOWuvEX7D4M4LfbxML3VQ6xBEPFB1EJaN9LYcs0+BworOjdbtilb8tbru+RoFSAeRIZM+iADLZP7SSrTrJS5nhxCgwf9lFsJTPlHyKHhyKWkapmj0J5dGsVBkKD6D607dTcspjkIlTOxMd2IMTr3QaC5/S6MhF7oImJDU4gLREb8pUPuj8+uxprobaIgKA8pb7H+cE0nKawD4vBAEfO8vVxFA8vMk6mRCnyidSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MTTYmYVZHuKm+X0i1FRbHLBPYAU6CrUsS6DJZ81saYo=;
+ b=UcqHz+l0Xda5SI5DIHYJIMNdLUUjr2VAsLqg/1lK01p4Xi9Rm8BVrmC1+unT7YrR1sKDiNUjIcN472RDSBOzunjKiqQaKVDPgA0YDPyE0bo6ozv3FWDtAso0PLysrq9Mk2cjN5uT89tpRlBZa+GiyoJjYtw/H9D2jX5UYg33lJEr3EDUoFbnji4COLSzaucIkfz3g559hp9OWEFFh4huZq8d8GAoPSpbiKaQak+BYXxFcuM0hX7LDyU6a5OCm/rhqV4oruW6oyETHSMeGLZYGTrXCF6FzwzIZpzZIp9yZg/g+kb9CRcQqgO5Im5GanXBRD1xC+POlQpTxsBaeA619g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MTTYmYVZHuKm+X0i1FRbHLBPYAU6CrUsS6DJZ81saYo=;
+ b=0DnazZAIMETsU/KpAMABd+eYIqVNUJSmWeXubI43hCfeWw0AXYKKIVtayYUaMihcfDlYACrzqiFgD7iDreFq0PCwYae0Bz70+WR8g8dPhw+6W3NvuwU9JF7wMJPGILsgdWF+xaB+t0z0NayG4uBhqffPHJjYNJrH769EEKJ15E4=
+Received: from SJ0PR10MB5613.namprd10.prod.outlook.com (2603:10b6:a03:3d0::5)
+ by CH0PR10MB5180.namprd10.prod.outlook.com (2603:10b6:610:db::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.36; Wed, 3 Jul
+ 2024 10:22:26 +0000
+Received: from SJ0PR10MB5613.namprd10.prod.outlook.com
+ ([fe80::4239:cf6f:9caa:940e]) by SJ0PR10MB5613.namprd10.prod.outlook.com
+ ([fe80::4239:cf6f:9caa:940e%6]) with mapi id 15.20.7741.025; Wed, 3 Jul 2024
+ 10:22:25 +0000
+Date: Wed, 3 Jul 2024 11:22:09 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [RFC PATCH v2 4/7] mm: move internal core VMA manipulation
+ functions to own file
+Message-ID: <86fa5aa6-151c-45e3-ab8d-a268f7c090f8@lucifer.local>
+References: <cover.1719584707.git.lstoakes@gmail.com>
+ <4fd37092b65caf30187c29399c2cc320a8126a66.1719584707.git.lstoakes@gmail.com>
+ <o3c66lbg2c43wtut6hyoruggdp65jdb22gtyn6scnycluevqs3@f2rzgmqlri2w>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <o3c66lbg2c43wtut6hyoruggdp65jdb22gtyn6scnycluevqs3@f2rzgmqlri2w>
+X-ClientProxiedBy: LO4P123CA0399.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:189::8) To SJ0PR10MB5613.namprd10.prod.outlook.com
+ (2603:10b6:a03:3d0::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB5613:EE_|CH0PR10MB5180:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2771b4ae-e769-4ef1-d290-08dc9b4a0894
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|7416014|366016|376014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?+K9dn8y9vF4LZTHIN4R1GIGhWH4vjA38epvMGjXpur2cBymtV6VcM+c6TqBP?=
+ =?us-ascii?Q?fvYg17/PO1CdGTPENWI5Jz5p6hLcY4CJYHRsP7Tm5eJtyw/YOJZjLJayXoAi?=
+ =?us-ascii?Q?p6yxYW1MnrJL3Kmeu50chEbNZcUoE95ZZIAm9+4clwU+FTeXzROEK32Jc8CO?=
+ =?us-ascii?Q?dhKFXTGYGepyLpuikHY7Ksu4nhCprC+3pLOTnjnsfR32S38pNBn0pcVToDdD?=
+ =?us-ascii?Q?Tu0SWZ2lZ50bviqo4zd/0yhq1bEEJK8ljxFyJL62k5uiQyLENTh1em4l+r+Q?=
+ =?us-ascii?Q?NYapJeH/pf+Mf4Az72k3ZYgFKwTkRZRo+ShzGeEQGPpYyM8kjCU4tu+r7B9B?=
+ =?us-ascii?Q?R8/TzSdzgTKAfQq2AiX8BuJOxwJX4tB5TejBUQSW/TKC3VGMuoXAlgYHl5oe?=
+ =?us-ascii?Q?Z3Mu2dk3kUdNRh5iqWcsdchMvOR+cltY6c3eyvJ6AjkA4CI9KjaOrxSr1HUn?=
+ =?us-ascii?Q?0LVwwBUlqY1rgpUxrpq+fSty1b6TnwwGhC6g+0c9zkuDAe3FTkiXqdGcSbDN?=
+ =?us-ascii?Q?G8YdJ87TnQi5RDeorzxpuB8EDDT0JvglYDS6U2Bm/xphN1WriieyTi3hactS?=
+ =?us-ascii?Q?z39LO3X6K9zmu7y/FYiAboUpSNYY1BCye+4jMFA8WZRgfPBw+UhWdU7dRvrU?=
+ =?us-ascii?Q?bySajPWQBQC811ONYRfZHcSuSE67vGEy/Bzv6afvXeK++Sy/lnxlXwl3KXRD?=
+ =?us-ascii?Q?8C/6Qy7BxVWmT43K9nLyOkHKDMt5QpD2XWFqpxfzvD7QnE8RmokIyleRhcWq?=
+ =?us-ascii?Q?Kavrhn5OTzjmxQn1edlLe3VUbcnlJPOgiJ9R/eizGJzTISzBaP5ltxxigHzo?=
+ =?us-ascii?Q?PmveUHwEAfav7AJt408MXNBTS+z5ga2k/wMnI+uELQmuhiuvdeS5ktcdW3UB?=
+ =?us-ascii?Q?/enWjyDA7fl/Hf3fNLx0a4eMZlrfFIGwdHYsbyJAG1ewOBskfOFRrwiE+9Qj?=
+ =?us-ascii?Q?zx0kEHw+Ty6QINJ9LgTzIseAzEmpXf54uPgUcYb1YrRFV34a6zPkgmZPmxvk?=
+ =?us-ascii?Q?Hm8vC30itIKKtvehx33MwByhqSRymh+mwFhkMOOb6DTFo+ew8fBXHzB908Yt?=
+ =?us-ascii?Q?qvfY2UKY35q82GhehBfn04FdhZt+Claib42PKQRK9VBQleJCMPo8jF09Trd2?=
+ =?us-ascii?Q?zr8XD1VKzl8a4h+AFkfkulOcs83+jhv1wGRFWeAa0i4i4Z/M5DjjBazC6dOH?=
+ =?us-ascii?Q?F01NoYuaznS7/TyB076fdMeyjea3ANhO5XoNvFGW0AxqUkuZcq1PpUjhD9h3?=
+ =?us-ascii?Q?SEZhPmG6oZQClvMdip7pcFM+Z2xSp2DXOsYmsE5t3A/gH07cmzWGtImfhWyn?=
+ =?us-ascii?Q?o52v44la718sZv703EO/8vQFvhWv1SBYAPY0esk8meWJjV0SfUvYDhEoVFfB?=
+ =?us-ascii?Q?TauL91wAR3f2HCij3lATCO84JkR3?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB5613.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?DtfdPVv8O4wc9l3QrAWpoA5GXB9IfcNtYXB74Y+B0yDEM5UcCUckHTdOSO82?=
+ =?us-ascii?Q?QxOkad5XdOndVUMqHtgawhHHq/Z5GuLmWeAS7jv2U9UbWNn8S1lIvvh3KeIA?=
+ =?us-ascii?Q?tTKAj2n1eOu2jer7/y/YEFR4hV9dnEYCQmfgB9GTKC+HXcQ3SlQ8XAM99QXX?=
+ =?us-ascii?Q?11uiFAKIXDIpdleDM05UuMeDJFCJBNyFoazeEcxUDZ7S16xq0QKArN0scvIH?=
+ =?us-ascii?Q?RaotMi9kwJE2x12KgLSJxm5TR8q3vLxzUgpTgyAJV3Aino6bq3x6qvgNupJ9?=
+ =?us-ascii?Q?vtZqKvPn6eVHguRSP/+oSmzogva1bLv8OqklbqybEaS9Frj7uT0lK106O7Wv?=
+ =?us-ascii?Q?/qHEYsrD17rnaFRi2oghe1Byfy2CcMeYJVlKfqhDuab+OymUYytvrO9YwURg?=
+ =?us-ascii?Q?m7EyTXbxOgU/1JBf4lNvUzy/uhgeehlXbpQMWva1JlfZ98PFSoXpQZlohDzO?=
+ =?us-ascii?Q?TJhZNBTXze2sDs2MDxUMPx1FAtm6pWFgEaDRh4P1ISdcqgTs4rBtekSMdx4S?=
+ =?us-ascii?Q?hbpxl0e72kcqdNG44MqLY1kiYUgF2BRkmGLSaMnebZFMviyNubVCGWPMApH8?=
+ =?us-ascii?Q?z9wGo5eMLFR/t0YfsWw5SefwbGyPM6SEQHtPr4ZUmT3WtsMKkqo1KJvMgY87?=
+ =?us-ascii?Q?MyFWKNsF5znTWeX0HQ8fXwuU/gZ48av7Ps0aQ272JB7kiQ/3qneXKKJWZHFI?=
+ =?us-ascii?Q?NP+zU9tZ6qRAS5wZaN7Ap3Hv1+O6G4tWZDF7+fVRzChmJfMyv1adInSWzcoK?=
+ =?us-ascii?Q?7zkINQubr051Pm1TELUnF7Uq2iY6PV00/R+GKwE6Ee2VniKg7+0hBjkefUia?=
+ =?us-ascii?Q?YnQ5eA2rodX9dQBGXkUpvFo5VhFPc+merUO4QIGpwzuXxSu2iT5KaRBnD2xZ?=
+ =?us-ascii?Q?orhw0MCID8odhn3fnB7gOdpAwDMmYAZAqUm+S5tdVDCW6uaBC3tJugKGifox?=
+ =?us-ascii?Q?h5tkdjLcAB7GkqfsEEFQ+skqfJwy554OYoUeqS6H5AWMU3JB9/188+jy4kdt?=
+ =?us-ascii?Q?Snel7g3OQtvzx6UIIY8adktW1gYqomn/yvIQl3oGe9KPDQM2KT2K+19tivEW?=
+ =?us-ascii?Q?B6J0q4QFUTnd+8HMz3vJtGiCGL9NwFgG/fHo5xRwhjvmeTggGWtrP5WjAjfL?=
+ =?us-ascii?Q?evjSmW3FyEUpbqeXSKTElW6Kv1LrrbjLT+TPvInKep/8ax32g2Mli72JlrHF?=
+ =?us-ascii?Q?Wwdh1Z4zT0gsSp0C9diWeKY2nBatXkNTDXW9klP7/45Rb3qpxW8mhhyoCvz2?=
+ =?us-ascii?Q?e6RJ007s8a8+gB4vcILFduXV5pPg2V56pBL/vzcKAsLnTaQVqUH9VwbgW1Mq?=
+ =?us-ascii?Q?C948O9/9Q5Tpgt1jzguMAQ2niiPVQpcaB1VfI01bCF/PFZXTGzSJKcyKl1+I?=
+ =?us-ascii?Q?IWpML72i1O0wORVQ4gPz2knmg+FIGg4x5LkseAyexig0S93wPVP56Rd1qGkS?=
+ =?us-ascii?Q?mAlRpFSt87jBDejJfIoF+dndDO/PQX7HlboLTvk8qGiuvWUtLd5zVL93QU+8?=
+ =?us-ascii?Q?jTeKT4hAM3ZQdJ762gaSjf2Nd+cNsWOg1eTLDarr/5y0srSCs3Wner1EG9U1?=
+ =?us-ascii?Q?FLASgtv4R32uFcRgcrUWQUye9KSnruE48GbcatAumRfC6Hh2CSatzZZuyv76?=
+ =?us-ascii?Q?Ew=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	yoLVPp8X811Xy/+or4hcUwiCWbBEmZjYgCEOjieXiroAaKVtr27sHW0ALosslCb24v6lE0nRaSkByZI7XY4ja0y5IibpJJ+2DYnzoirGE08ptB10vScP8W08nKbmZqiimeGOZ3SArnzVY5DyUTTNqaxgjqR5KYLS14qTYRwRCLydIUMIW2C1H3wcYsoDbjYwUWQTEFPK9zPA3KOx2JjJqCC+F7YBwhA0nZWhqQzTIkQnoQ6wIHIRtCeD9v2zxk1ETmoEyyRP1lZkBgSf1/Ly460kSjOlG2InPXkLmD4g9gMwv4qzfN5KRTX4QY2I2Mp+ahxfimzcbRitQdVeA86Q4cuo70TRAk1QpWMRUAstVlVAqg6PKoWXaZnFhvjkYpoUXnDkPZEBQO1P0R4VP+WNoQ5u+KnjpgyIJTfKIO9x7EZqOhCE6MJpdvyvfu59F1UwJs3Jj/Jl6OCI1soigOnmORHGBOq4Syjz9aw7mDeQd0oQnqZPH/TgFmc8VlPyfAmPbcIHJth1c1bOZDRX/eiBQ4XG3hYP08YofpxB+QMJmX18TBZEcY34GF+dHhmT+DIaYwapf0XLpFkiumd5rQ22JRKRRWtmgBjMbMw7XgtySwo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2771b4ae-e769-4ef1-d290-08dc9b4a0894
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB5613.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 10:22:25.4696
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HYgr9HKjJbK8zPFwQIYnBu0Lwuhsq5hTZl16oXX5x43mTl6hfd/kNflLCN9gdnFsLbn49u3VNA/iFWc0ma+qZ+nLArtnbXja4OLfjvzGeRU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5180
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_06,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2406180000 definitions=main-2407030076
+X-Proofpoint-GUID: wMcf3o4YSVdScTaRffBAFpMkGA2dx9FB
+X-Proofpoint-ORIG-GUID: wMcf3o4YSVdScTaRffBAFpMkGA2dx9FB
 
-This patch series adds support for the new SoC family - sam9x7.
- - The device tree, configs and drivers are added
- - Clock driver for sam9x7 is added
- - Support for basic peripherals is added
- - Target board SAM9X75 Curiosity is added
+On Tue, Jul 02, 2024 at 01:38:58PM GMT, Liam R. Howlett wrote:
+> * Lorenzo Stoakes <lstoakes@gmail.com> [240628 10:35]:
+> > This patch introduces vma.c and moves internal core VMA manipulation
+> > functions to this file from mmap.c.
+> >
+> > This allows us to isolate VMA functionality in a single place such that we
+> > can create userspace testing code that invokes this functionality in an
+> > environment where we can implement simple unit tests of core functionality.
+> >
+> > This patch ensures that core VMA functionality is explicitly marked as such
+> > by its presence in mm/vma.h.
+> >
+> > It also places the header includes required by vma.c in vma_internal.h,
+> > which is simply imported by vma.c. This makes the VMA functionality
+> > testable, as userland testing code can simply stub out functionality
+> > as required.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+> > ---
+> >  include/linux/mm.h |   35 -
+> >  mm/Makefile        |    2 +-
+> >  mm/internal.h      |  236 +-----
+> >  mm/mmap.c          | 1981 +++-----------------------------------------
+> >  mm/mmu_notifier.c  |    2 +
+> >  mm/vma.c           | 1766 +++++++++++++++++++++++++++++++++++++++
+> >  mm/vma.h           |  362 ++++++++
+> >  mm/vma_internal.h  |   52 ++
+> >  8 files changed, 2293 insertions(+), 2143 deletions(-)
+> >  create mode 100644 mm/vma.c
+> >  create mode 100644 mm/vma.h
+> >  create mode 100644 mm/vma_internal.h
+> >
+>
+> ...
+>
+> > diff --git a/mm/mmap.c b/mm/mmap.c
+> > index d2eebbed87b9..721870f380bf 100644
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -57,6 +57,7 @@
+> >  #include <trace/events/mmap.h>
+> >
+> >  #include "internal.h"
+> > +#include "vma.h"
+>
+> This isn't needed as internal.h includes vma.h in this revision.
 
- Changes in v5:
- --------------
+Ugh yeah thought I caught all of them but clearly not. Will fix!
 
- - Addressed all the review comments in the patches
- - Picked up all Acked-by and Reviewed-by tags
- - Dropped applied patches from the series
- - Addressed the ABI breakage reported in the IRQ patch
- - All the specific changes are captured in the corresponding patches
-
- Changes in v4:
- --------------
-
- - Addressed all the review comments in the patches
- - Picked up all Acked-by and Reviewed-by tags
- - Dropped applied patches from the series
- - Added pwm node and related dt binding documentation
- - Added support for exporting some clocks to DT
- - Dropped USB related patches and changes. See NOTE.
- - All the specific changes are captured in the corresponding patches
-
- NOTE: Owing to the discussion here
- https://lore.kernel.org/linux-devicetree/CAL_JsqJ9PrX6fj-EbffeJce09MXs=B7t+KS_kOinxaRx38=WxA@mail.gmail.com/
- the USB related changes are dropped from this series in order to enable
- us to work on the mentioned issues before adding new compatibles as
- said. The issues/warnings will be addressed in subsequent patches.
- After which the USB related support for sam9x7 SoCs will be added. Hope
- this works out fine.
-
- Changes in v3:
- --------------
-
- - Fixed the DT documentation errors pointed out in v2.
- - Dropped Acked-by tag in tcb DT doc patch as it had to be adapted
-   according to sam9x7 correctly.
- - Picked by the previously missed tags.
- - Dropped this patch "dt-bindings: usb: generic-ehci: Document clock-names
-   property" as the warning was not found while validating DT-schema for
-   at91-sam9x75_curiosity.dtb.
- - Dropped redundant words in the commit message.
- - Fixed the CHECK_DTBS warnings validated against
-   at91-sam9x75_curiosity.dtb.
- - Renamed dt nodes according to naming convention.
- - Dropped unwanted status property in dts.
- - Removed nodes that are not in use from the board dts.
- - Removed spi DT doc patch from the series as it was already applied
-   and a fix patch was applied subsequently. Added a patch to remove the
-   compatible to adapt sam9x7.
- - Added sam9x7 compatibles in usb dt documentation.
-
-
- Changes in v2:
- --------------
-
- - Added sam9x7 specific compatibles in DT with fallbacks
- - Documented all the newly added DT compatible strings
- - Added device tree for the target board sam9x75 curiosity and
-   documented the same in the DT bindings documentation
- - Removed the dt nodes that are not supported at the moment
- - Removed the configs added by previous version that are not supported
-   at the moment
- - Fixed all the corrections in the commit message
- - Changed all the instances of copyright year to 2023
- - Added sam9x7 flag in PIT64B configuration
- - Moved macro definitions to header file
- - Added another divider in mck characteristics in the pmc driver
- - Fixed the memory leak in the pmc driver
- - Dropped patches that are no longer needed
- - Picked up Acked-by and Reviewed-by tags
-
-
-Varshini Rajendran (27):
-  dt-bindings: atmel-sysreg: add sam9x7
-  dt-bindings: atmel-ssc: add microchip,sam9x7-ssc
-  dt-bindings: serial: atmel,at91-usart: add compatible for sam9x7.
-  ARM: at91: pm: add support for sam9x7 SoC family
-  ARM: at91: pm: add sam9x7 SoC init config
-  ARM: at91: add support in SoC driver for new sam9x7
-  dt-bindings: clocks: atmel,at91sam9x5-sckc
-  dt-bindings: clocks: atmel,at91rm9200-pmc
-  clk: at91: clk-sam9x60-pll: re-factor to support individual core freq
-    outputs
-  clk: at91: sam9x7: add support for HW PLL freq dividers
-  clk: at91: sama7g5: move mux table macros to header file
-  dt-bindings: clock: at91: Allow PLLs to be exported and referenced in
-    DT
-  clk: at91: sam9x7: add sam9x7 pmc driver
-  dt-bindings: interrupt-controller: Add support for sam9x7 aic
-  dt-bindings: interrupt-controller: Document the property
-    microchip,nr-irqs
-  irqchip/atmel-aic5: Add support to get nr_irqs from DT for sam9x60 &
-    sam9x7
-  ARM: dts: at91: sam9x60: Add nirqs property in the dt node
-  power: reset: at91-poweroff: lookup for proper pmc dt node for sam9x7
-  power: reset: at91-reset: add reset support for sam9x7 SoC
-  power: reset: at91-reset: add sdhwc support for sam9x7 SoC
-  dt-bindings: reset: atmel,at91sam9260-reset: add sam9x7
-  dt-bindings: power: reset: atmel,sama5d2-shdwc: add sam9x7
-  ARM: at91: Kconfig: add config flag for SAM9X7 SoC
-  ARM: configs: at91: enable config flags for sam9x7 SoC family
-  ARM: dts: at91: sam9x7: add device tree for SoC
-  dt-bindings: arm: add sam9x75 curiosity board
-  ARM: dts: microchip: sam9x75_curiosity: add sam9x75 curiosity board
-
- .../devicetree/bindings/arm/atmel-at91.yaml   |    6 +
- .../devicetree/bindings/arm/atmel-sysregs.txt |    7 +-
- .../bindings/clock/atmel,at91rm9200-pmc.yaml  |    2 +
- .../bindings/clock/atmel,at91sam9x5-sckc.yaml |    4 +-
- .../interrupt-controller/atmel,aic.yaml       |   28 +-
- .../devicetree/bindings/misc/atmel-ssc.txt    |    1 +
- .../power/reset/atmel,sama5d2-shdwc.yaml      |    3 +
- .../reset/atmel,at91sam9260-reset.yaml        |    4 +
- .../bindings/serial/atmel,at91-usart.yaml     |    9 +-
- arch/arm/boot/dts/microchip/Makefile          |    3 +
- .../dts/microchip/at91-sam9x75_curiosity.dts  |  312 +++++
- arch/arm/boot/dts/microchip/sam9x60.dtsi      |    1 +
- arch/arm/boot/dts/microchip/sam9x7.dtsi       | 1226 +++++++++++++++++
- arch/arm/configs/at91_dt_defconfig            |    1 +
- arch/arm/mach-at91/Kconfig                    |   22 +-
- arch/arm/mach-at91/Makefile                   |    1 +
- arch/arm/mach-at91/generic.h                  |    2 +
- arch/arm/mach-at91/pm.c                       |   29 +
- arch/arm/mach-at91/sam9x7.c                   |   33 +
- drivers/clk/at91/Makefile                     |    1 +
- drivers/clk/at91/clk-sam9x60-pll.c            |   42 +-
- drivers/clk/at91/pmc.h                        |   18 +
- drivers/clk/at91/sam9x60.c                    |    7 +
- drivers/clk/at91/sam9x7.c                     |  946 +++++++++++++
- drivers/clk/at91/sama7g5.c                    |   42 +-
- drivers/irqchip/irq-atmel-aic5.c              |    8 +-
- drivers/power/reset/Kconfig                   |    4 +-
- drivers/power/reset/at91-sama5d2_shdwc.c      |    1 +
- drivers/soc/atmel/soc.c                       |   23 +
- drivers/soc/atmel/soc.h                       |    9 +
- include/dt-bindings/clock/at91.h              |    4 +
- 31 files changed, 2750 insertions(+), 49 deletions(-)
- create mode 100644 arch/arm/boot/dts/microchip/at91-sam9x75_curiosity.dts
- create mode 100644 arch/arm/boot/dts/microchip/sam9x7.dtsi
- create mode 100644 arch/arm/mach-at91/sam9x7.c
- create mode 100644 drivers/clk/at91/sam9x7.c
-
--- 
-2.25.1
-
+>
+> >
+> >  #ifndef arch_mmap_check
+> >  #define arch_mmap_check(addr, len, flags)	(0)
+>
+> ...
+>
+> Thanks,
+> Liam
