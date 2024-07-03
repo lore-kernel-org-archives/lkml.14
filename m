@@ -1,89 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C18442C;
-	Wed,  3 Jul 2024 16:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47EEB442C
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720023229; cv=none; b=Wu+cnN7HlbQSf+JHF/xElWB2IsNcOXT3Csx/Nshu5N45oQkwVE8/rN2GYmAV7mT+yYIXlJkzBCS8lSpUgvfjM/k/z7I6fOsiNLdHwcrXvaOsQ2YKNEDpzt1ZkgGaYck9H8X5u3/E3e0wrsGBzy7mm5MI+mHBnpITjJZelkf7VT0=
+	t=1720023292; cv=none; b=AAHEZG3NYo5ApNuhfqN6SIuPvY0tUOYgTL6X4KZcFyERXX+sJub7EE76s1rwgxyVUQCruF2uxMP+/i/gWXuURoFceTh5cpiZpqZ0yNp5yh/O/efbGe6wFR6797/CPIHP2x/KG2YIywMT1//LulWJh/Urj56MzIPBg5KCYc1JWQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720023229; c=relaxed/simple;
-	bh=CP0YPCf3KiiDCDFmDjQwYPh5LIGF7oMy05isbiaBdvI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p4hecpgvVmWyTGw9e9hAlXbzq5cwZM45KlSc+aaWlsWxh3UvQSi2VtzgLWg2doLH+xMYsnfjey51mbpKZ6JHmnsBJHfTSuhwB2Y9v/zsmqg4YyQ0CI/cLSVPkbepIhenUNj7qvf+jvEHhDqo43ARzuTIEnJ61m4AV57pQC+ncv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hsIpIff1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsIpIff1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85110C2BD10;
-	Wed,  3 Jul 2024 16:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720023229;
-	bh=CP0YPCf3KiiDCDFmDjQwYPh5LIGF7oMy05isbiaBdvI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hsIpIff1ACJ8p1LzszqupWfvZaJyDhY34HeSOhNtDdu9T2qizwTRdMmm3kl34gKq6
-	 8NcDd/+CbLaR7/hAysCTBBD2TXXuOgY/+5gPlkYM4xcY8Uc3IGZdQbSfwHHSCoEnGV
-	 GCS/Nbjicnh1s5INkPX8Iz/zc5auxcx8qjVfeCJKXNjSfO7xc4oyp5HYBlePnx4IXk
-	 f0i05er1aF6x2a6N0jHfU19thskg4IqmfmE9GK+aXp0xp1bGLKR52DEdS/MNNTCSfV
-	 h01r4SA7Zee5b5qH11RpIetEHQwSJOh3T4LmF0/qe0EmJWwI0AO44D8tq2EYnUb3HK
-	 AuCQH1HtTA+DQ==
-From: Will Deacon <will@kernel.org>
-To: Joerg Roedel <joro@8bytes.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] [PULL REQUEST] Intel IOMMU updates for v6.11
-Date: Wed,  3 Jul 2024 17:13:36 +0100
-Message-Id: <172002116723.1869749.5235762901047952982.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240702130839.108139-1-baolu.lu@linux.intel.com>
-References: <20240702130839.108139-1-baolu.lu@linux.intel.com>
+	s=arc-20240116; t=1720023292; c=relaxed/simple;
+	bh=FvLLVaWSE/3Waw29kXFeMeKmkQns+0BkGpJhRraPJw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=knslzCb6AckaLIKlRAEcisQHtSpUg0J3zXkat3UOPWZX7YKpXMWmvTS8dDxm2CBd7JghBUUcDOFI5Zy2A9sj6AtP4wcTZssgY8EF4asNim1KV7HAylOamtau5fXLxpHmwdGPCoB7fybnqihGb5fSWRLDupbGZbT8kL+P9eeLobY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E378367
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 09:15:14 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 368653F766
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 09:14:49 -0700 (PDT)
+Date: Wed, 3 Jul 2024 17:14:41 +0100
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Steven Price <steven.price@arm.com>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	=?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
+Subject: Re: [PATCH] drm/panthor: Record devfreq busy as soon as a job is
+ started
+Message-ID: <ZoV48WcKj1hz80sd@e110455-lin.cambridge.arm.com>
+References: <20240703155646.80928-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240703155646.80928-1-steven.price@arm.com>
 
-On Tue, 02 Jul 2024 21:08:32 +0800, Lu Baolu wrote:
-> The following changes have been queued for v6.11-rc1. They are all about
-> small refactoring, including:
+On Wed, Jul 03, 2024 at 04:56:46PM +0100, Steven Price wrote:
+> If a queue is already assigned to the hardware, then a newly submitted
+> job can start straight away without waiting for the tick. However in
+> this case the devfreq infrastructure isn't notified that the GPU is
+> busy. By the time the tick happens the job might well have finished and
+> no time will be accounted for the GPU being busy.
 > 
->  - Use READ_ONCE to read volatile descriptor status
->  - Remove support for handling Execute-Requested requests
->  - Downgrade warning for pre-enabled interrupt remapping
->  - Remove calling iommu_domain_alloc()
->  - Refactor the PRI enable/disable flows
->  - Cleanups
+> Fix this by recording the GPU as busy directly in queue_run_job() in the
+> case where there is a CSG assigned and therefore we just ring the
+> doorbell.
 > 
-> [...]
+> Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-Applied to iommu (intel/vt-d), thanks!
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
 
-[1/7] iommu/vt-d: Handle volatile descriptor status read
-      https://git.kernel.org/iommu/c/b5e86a95541c
-[2/7] iommu/vt-d: Remove comment for def_domain_type
-      https://git.kernel.org/iommu/c/5fbf97371dc0
-[3/7] iommu/vt-d: Remove control over Execute-Requested requests
-      https://git.kernel.org/iommu/c/e995fcde6070
-[4/7] iommu/vt-d: Downgrade warning for pre-enabled IR
-      https://git.kernel.org/iommu/c/804f98e224e4
-[5/7] iommu/vt-d: Add helper to allocate paging domain
-      https://git.kernel.org/iommu/c/2b989ab9bc89
-[6/7] iommu/vt-d: Add helper to flush caches for context change
-      https://git.kernel.org/iommu/c/f90584f4beb8
-[7/7] iommu/vt-d: Refactor PCI PRI enabling/disabling callbacks
-      https://git.kernel.org/iommu/c/3753311c9190
+> ---
+>  drivers/gpu/drm/panthor/panthor_sched.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+> index 951ff7e63ea8..e7afaa1ad8dc 100644
+> --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> @@ -2942,6 +2942,7 @@ queue_run_job(struct drm_sched_job *sched_job)
+>  			pm_runtime_get(ptdev->base.dev);
+>  			sched->pm.has_ref = true;
+>  		}
+> +		panthor_devfreq_record_busy(sched->ptdev);
+>  	}
+>  
+>  	/* Update the last fence. */
+> -- 
+> 2.39.2
+> 
 
-Cheers,
 -- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
