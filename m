@@ -1,46 +1,49 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32A813B5A5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FD213B5A1
 	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 08:55:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719996912; cv=none; b=je9JkZD9rW+sFUxmo0HdY2+zEUteimf2yuQN9K9xQQ+otc4rE7Mpt5Go+Keqf+KY8cLqP2wdr0/B+u5IL8RdBemsGYI/ZTQ9v2nLJBLEdl4y1p0yK7WHctFU6L1qY1tN5DT0hiHKg+5T32CTLXQVFll4yC6qzjIqRzgea4OPRws=
+	t=1719996913; cv=none; b=uhR7a6HrfpQdajI+Fn2C7ZZvLToJNMiSYx9wwWiJsUudfgBTEAgL1HVVAYzYEEKFKO4cK1OmDuAwtsSwY7HdvJ+LugMJ7fOIUiD6818Fnd17pfTL98XSkDpBe5DxW0D2aNqIkyhpguggzwe4tKHMm9w+kn2+oMQ9bgA+vJyFzjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719996912; c=relaxed/simple;
-	bh=Ukxmgg0srBdOTa7AcFstIUg77+VdPhRhRqpAGgrQQpM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tt4K9mszX4uLlLt+Tyg5v2DrSAltHEEQuaNrVKYyslfnBIb5JCtikRKZFpvPhV9Uj+zfEhCBr1mMz/C+1Q/6spNtR7AXwldxjtOfWuSrCk+sJmnTwdo6yumONf2b0Lz91vwE0kI/wivgGwRTq0lxUQbNOmttJTiFPO5LlDhwzu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=n4zN+OEU; arc=none smtp.client-ip=198.137.202.136
+	s=arc-20240116; t=1719996913; c=relaxed/simple;
+	bh=kdikNib9x+eTgS5GaTuz0ap4G90ilWCwk8wef1VJOOQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=I/fjJ0QgKexqk1p1HqiYALIHMMcaH/crzC9wD6wugOY3a++Wlzg7ynAS7q8Hn+QVPHLY2bGrEigPl9nTP8M500gM71nAprFN/T7k6is22gtqGfE1140yMBlYb13KznlOU7pjIwkmfq23FUHOfSHep0guD3VlRZ07si/jqykjlnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=RtTNXEpB; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="n4zN+OEU"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RtTNXEpB"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4638sQ16274819
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4638sQ1A274819
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 3 Jul 2024 01:54:30 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4638sQ16274819
+	Wed, 3 Jul 2024 01:54:34 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4638sQ1A274819
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719996871;
-	bh=pZTV+OGhNN4DFQrZeVdekS2nXzNI1T5U3Yqgnk+2i8s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=n4zN+OEUJEP2TkDaGq1zM43VhooqY/6HBM3sehH5BZGt6cVrYJbb9+hzaokV7vVdF
-	 /+T8WB1j7mKbzsER3/xawk9x/8qac+pjZb8Km9KBx8pp4WzJzit96R6cJQMZwnPt6O
-	 xSLLHF/xgvmz+dk6NYAfrR8CA1vbi8DEeyh51Hb3pBVr5cY/dnJivIMN/YyOJnnUVH
-	 qKYn2Nj92jBD2Ulpr21oA9ByoT9B6kmjOLdw5VYPtQkm33cbGoZs2dsT+EBlRQ1j5u
-	 V2jC6n5VhRg5KhMvWq4aOgsBURjkUSYyok3RBt21Rcuw9asaT2i+H/VKathlrFZ3wL
-	 /T7rhXzmu/avg==
+	s=2024061501; t=1719996874;
+	bh=Ko+FE7nG9WBnR7O9m6WOO/3Vh122gx7NsoMXFF+ciuI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RtTNXEpBkHFfKjaLaqu7V8zjxdM8U+AwvSJ12KTjjGK2DSCiYsKg/IiiGGfz2/hNf
+	 b4IUHgoRAMu65YQBkKdRjn7oOtgeO35pb9NuZ/XQCVbzJ+61YNi9rRl4G4Vi8b2mcc
+	 f3e6x2k0b/paIvlnlqbYbqhNVwdvWYnHXF2EGMq3yIxSk5/Deb/bKi1n3UCjjLNzQe
+	 Nnv/rzo9vGe8tVIArLjN+ns5B03Y/O00vMYzGHuaWrX7rEVyd9cQR7ljcnk0u6kGJO
+	 +NgTpmQuGW1sr9fyhrcN2ME8Q88HRs2nZroddv9GN6nsDifKnRDsXFYKVZ/n/eed3J
+	 gaOGn0svYavYA==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org
 Cc: hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org, peterz@infradead.org,
         andrew.cooper3@citrix.com, nik.borisov@suse.com,
         houwenlong.hwl@antgroup.com
-Subject: [PATCH v1 0/4] Enable FRED earlier
-Date: Wed,  3 Jul 2024 01:54:22 -0700
-Message-ID: <20240703085426.274801-1-xin@zytor.com>
+Subject: [PATCH v1 4/4] x86/fred: Enable FRED right after init_mem_mapping()
+Date: Wed,  3 Jul 2024 01:54:26 -0700
+Message-ID: <20240703085426.274801-5-xin@zytor.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240703085426.274801-1-xin@zytor.com>
+References: <20240703085426.274801-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,48 +52,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Wenlong Hou from Ant group reported two problems during the FRED
-initialization:
-https://lore.kernel.org/lkml/cover.1718972598.git.houwenlong.hwl@antgroup.com/
+Enable FRED right after init_mem_mapping() to avoid #PF handler,
+exc_page_fault(), fetching its faulting address from the stack
+before FRED is enabled.
 
-The first problem is that spurious_interrupt() gets called on the
-HYPERVISOR_CALLBACK_VECTOR vector.  Because kvm_guest_init(), being
-executed way before trap_init() in which it is decided that whether
-FRED will be enabled or not, calls sysvec_install() to install
-HYPERVISOR_CALLBACK_VECTOR's interrupt handler into FRED system
-vector dispatch table or IDT depending on whether FRED is enabled.
+Fixes: 14619d912b65 ("x86/fred: FRED entry/exit and dispatch code")
+Reported-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+---
+ arch/x86/kernel/cpu/common.c | 6 +-----
+ arch/x86/kernel/setup.c      | 7 ++++++-
+ arch/x86/kernel/smpboot.c    | 6 ++++++
+ arch/x86/kernel/traps.c      | 4 ++++
+ 4 files changed, 17 insertions(+), 6 deletions(-)
 
-The other problem is that the #PF handler gets a wrong faulting
-address from the stack instead of CR2 before FRED is enabled.
-Because the #PF handler fetches its faulting addresss from the
-stack or CR2 based on whether FRED is available rather than active.
-
-This patchset fixes the 2 problems with suggestions from tglx:
-
-  1) Parse cmdline param "fred=" in cpu_parse_early_param() to
-     minimize the gap mentioned above, before kvm_guest_init().
-
-  2) Enable FRED right after init_mem_mapping() to switch to FRED
-     from early IDT ASAP, avoid intermediately using the IDT #PF
-     handler.
-
-
-Xin Li (Intel) (4):
-  x86/fred: Parse cmdline param "fred=" in cpu_parse_early_param()
-  x86/fred: Write to FRED MSRs with wrmsrns()
-  x86/fred: Split FRED RSP initialization into a separate function
-  x86/fred: Enable FRED right after init_mem_mapping()
-
- arch/x86/include/asm/fred.h  |  2 ++
- arch/x86/kernel/cpu/common.c |  9 ++++---
- arch/x86/kernel/fred.c       | 50 +++++++++++++++++++++---------------
- arch/x86/kernel/setup.c      |  7 ++++-
- arch/x86/kernel/smpboot.c    |  6 +++++
- arch/x86/kernel/traps.c      | 30 +++-------------------
- 6 files changed, 54 insertions(+), 50 deletions(-)
-
-
-base-commit: e70c87e103e2e3842bf4c55a66c83560a1387925
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 022ae4ba7997..8d454b6f7def 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -2195,12 +2195,8 @@ void cpu_init_exception_handling(void)
+ 	/* GHCB needs to be setup to handle #VC. */
+ 	setup_ghcb();
+ 
+-	if (cpu_feature_enabled(X86_FEATURE_FRED)) {
+-		cpu_init_fred_exceptions();
+-		cpu_init_fred_rsps();
+-	} else {
++	if (!cpu_feature_enabled(X86_FEATURE_FRED))
+ 		load_current_idt();
+-	}
+ }
+ 
+ /*
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 728927e4ba51..d866136a89ff 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -39,6 +39,7 @@
+ #include <asm/coco.h>
+ #include <asm/cpu.h>
+ #include <asm/efi.h>
++#include <asm/fred.h>
+ #include <asm/gart.h>
+ #include <asm/hypervisor.h>
+ #include <asm/io_apic.h>
+@@ -1040,7 +1041,11 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	init_mem_mapping();
+ 
+-	idt_setup_early_pf();
++	/* Switch to FRED from early IDT ASAP */
++	if (cpu_feature_enabled(X86_FEATURE_FRED))
++		cpu_init_fred_exceptions();
++	else
++		idt_setup_early_pf();
+ 
+ 	/*
+ 	 * Update mmu_cr4_features (and, indirectly, trampoline_cr4_features)
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 0c35207320cb..0d83377f9dcd 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -64,6 +64,7 @@
+ #include <asm/acpi.h>
+ #include <asm/cacheinfo.h>
+ #include <asm/desc.h>
++#include <asm/fred.h>
+ #include <asm/nmi.h>
+ #include <asm/irq.h>
+ #include <asm/realmode.h>
+@@ -248,6 +249,11 @@ static void notrace start_secondary(void *unused)
+ 
+ 	cpu_init_exception_handling();
+ 
++	if (cpu_feature_enabled(X86_FEATURE_FRED)) {
++		cpu_init_fred_exceptions();
++		cpu_init_fred_rsps();
++	}
++
+ 	/*
+ 	 * Load the microcode before reaching the AP alive synchronization
+ 	 * point below so it is not part of the full per CPU serialized
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 6afb41e6cbbb..81648bd07576 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1407,6 +1407,10 @@ void __init trap_init(void)
+ 	/* Init cpu_entry_area before IST entries are set up */
+ 	setup_cpu_entry_areas();
+ 
++	/* FRED RSPs pointing to memory from CPU entry areas */
++	if (cpu_feature_enabled(X86_FEATURE_FRED))
++		cpu_init_fred_rsps();
++
+ 	/* Init GHCB memory pages when running as an SEV-ES guest */
+ 	sev_es_init_vc_handling();
+ 
 -- 
 2.45.2
 
