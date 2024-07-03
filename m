@@ -1,112 +1,135 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84861DFD1;
-	Wed,  3 Jul 2024 15:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9667180A92
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 15:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019783; cv=none; b=QCrQnAtL7taaLT51SuIEakJLz3dgBg/p6XSk9YwdOIirtG2FlL4Lz8jc4hQj/t/YQAt1zNnsys5K0zIuunA6qGH4W5GwFGTozeufwRDTKD9Jn3SU/05i9AtkvhfFbkPF0E89C2E5T/BUYCgJGMrmGpDaQBj/DrgPBplI/+xTppw=
+	t=1720019786; cv=none; b=HVj7a0p5Bv3l0xxg+aQ46OKAg2gr2vBX5PMPEHMXoTDETGFaRlTuYMSDgomxCwm3bBDRL3xKigtWgJRm2EJDD266oJD7x3hk0X9FCyTGzu1XzZ/lyp1iA7xROiMeb++8pYAw2XmJNrpKIpqGFAxvhScNKNTKjkwHLfHfdZyK8Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019783; c=relaxed/simple;
-	bh=7FMn/uRg0zYfw3DQH1Sz/pojM+8pV3loh/mbtGw+Fm4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QVqWVMyoiDEcA9dukxUg9euNOnbedMXdXIyUxt50r/VAuGQM8Un6UiFSDWGNNQnTXLlcxSlJnlLwh8CfEJYwrooY6rHZU7LueR7Gsol1479wxL/YUVlq28d1FFVaKLx750QsMearbtFPEF/yDL/LnOc416J7j6TewIr9xmtU4vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=F/TChOj+; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="F/TChOj+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=6Pvtr4CL3nBCwnXoyeyqTuDH9oRlsRjo2dtNGYFj5Ks=; t=1720019779; x=1720624579; 
-	b=F/TChOj+kldVL4qjJxBxCohEnwgii6ad0clG+V8T0KJKorBpRTV5RRik+zLk/d4F9/r06SwwejT
-	xUdBzw57lCxjrIGtqTor+cXOzVgKMxKPeP5QNqeqxZH9Lhccit9gGlPEB8HW/KZdp5y8zlhfBKrh7
-	XAceUqDm9rvmSXmIaj7d0cOFAfuJeu6y7D3g3aVkHxAJo5iFs+j4J42N1JF3bgzEfw/stgyEki6l8
-	DphxZNmBP6Ws4Dmv0kJ/UejncXX8nk42U1kfIxi2atuCUtXPiFb2JG5rIBMtCKQsq62PoyhM+JWWx
-	noXj8xwkCXpLb4HuJsrfS8T3WPQ8Ic7ytXMg==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.97)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1sP1eU-00000002G2P-0ZsP; Wed, 03 Jul 2024 17:12:10 +0200
-Received: from tmo-084-6.customers.d1-online.com ([80.187.84.6] helo=[172.20.10.3])
-          by inpost2.zedat.fu-berlin.de (Exim 4.97)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1sP1eT-00000003lh1-3VTh; Wed, 03 Jul 2024 17:12:10 +0200
-Message-ID: <5473f57a21639724e6277c3e271fc46ea5f62ed3.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] sh: push-switch: add missing MODULE_DESCRIPTION() macro
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>, Yoshinori Sato
-	 <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>
-Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Date: Wed, 03 Jul 2024 17:12:07 +0200
-In-Reply-To: <20240702-md-sh-arch-sh-drivers-v1-1-2c5d439a5479@quicinc.com>
-References: <20240702-md-sh-arch-sh-drivers-v1-1-2c5d439a5479@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1720019786; c=relaxed/simple;
+	bh=823t3ZG9vkcftcwqMBGfKjM5kAW55T7HJ5obY8rbJts=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=PgRyRWefdUR2FVqRqzbBZXFvhvEAgBrF43675OWSo0UPxsaF8NFU/ZsqYe7GzsPsA3SurDE9BQWeoB3vkVDyeY4We6kKyOk4Y4AVAIvIeBNlNniGmtbGIw/KolrFV+rgbWJnPGqLODVU6iFP9frqNzZsVbXWpBgq0QKc/vTNzBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7f61fca8c40so572842939f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 08:16:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720019784; x=1720624584;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+1I6KYKQLxxIUvJsrKHo+sk76c12VVzV5Ztu8InShbo=;
+        b=oJREwl4NEk/hqvNPXIYPZpFW+Nbzs15Sds6FTX/jR12gD0NopksIKzsZT3oMxhr07c
+         0Xkuu9628/Esfo23M4Wa/KDiTTthW4xoTx+fGCprADpp15s5UBw1g/GNucMJ2jrtHErq
+         Dm6DI5BfYAeG90Qu2j//WytLjC7LcgEw2Liaq8goHIm0Ur+VwLbuWjSpuKGLFlk6sVNW
+         EvWIDoWG+YqeC7XTXIgVrFTyZPy/u8MkLgVjeoZ3GaftUUAiCgPIg8tveA9IXfNkPhPz
+         VuEq2ah1ayxd5ND6uiyLg3wImfS9PEkryuMlXR4JEvJ72W8tYka/hP+bpsNpouJMGTNf
+         Ns3A==
+X-Gm-Message-State: AOJu0YzntXyaimWsQzBGSrXVZf/eGXrtzJ3MBPUhOXYZ6JbAjErmLt9y
+	KhIlF/i0eFtjrXHGfDfp1uXeNY/7U3k9s4vJ7mFUXB0AjIz84gNU7q0AYfNHgfBnH8ZI0RHs7uq
+	UbXuV0PnLl43qWiZhvGPIQR0+4hZ7F/2v2ZNtNNd+oXQwzs6acOlAk6k=
+X-Google-Smtp-Source: AGHT+IE0gCGp9tmC8Q5+tEtrQAXBwMnfJYBie2SKXEkREjuacYegch52h+5Q3iHDc+IyekP0WQ1/X7uySUwoGYMZAJvkMQLC4sLJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+X-Received: by 2002:a05:6602:3f8a:b0:7eb:75e9:8f2b with SMTP id
+ ca18e2360f4ac-7f62ee6461bmr93474539f.2.1720019783958; Wed, 03 Jul 2024
+ 08:16:23 -0700 (PDT)
+Date: Wed, 03 Jul 2024 08:16:23 -0700
+In-Reply-To: <00000000000024894706196d697f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003ad3d1061c5950f0@google.com>
+Subject: Re: [syzbot] [syzbot] [wireless?] WARNING in __cfg80211_connect_result
+ (2)
+From: syzbot <syzbot+d6eb9cee2885ec06f5e3@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jeff,
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-On Tue, 2024-07-02 at 12:29 -0700, Jeff Johnson wrote:
-> With ARCH=3Dsh, make allmodconfig && make W=3D1 C=3D1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/sh/drivers/push-sw=
-itch.o
->=20
-> Add the missing invocation of the MODULE_DESCRIPTION() macro.
->=20
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
-> MODULE_DESCRIPTION copied from file prologue:
-> /*
->  * Generic push-switch framework
->  *
->  * Copyright (C) 2006  Paul Mundt
->  */
-> ---
->  arch/sh/drivers/push-switch.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/arch/sh/drivers/push-switch.c b/arch/sh/drivers/push-switch.=
-c
-> index 362e4860bf52..1dea43381b5a 100644
-> --- a/arch/sh/drivers/push-switch.c
-> +++ b/arch/sh/drivers/push-switch.c
-> @@ -131,4 +131,5 @@ module_exit(switch_exit);
-> =20
->  MODULE_VERSION(DRV_VERSION);
->  MODULE_AUTHOR("Paul Mundt");
-> +MODULE_DESCRIPTION("Generic push-switch framework");
->  MODULE_LICENSE("GPL v2");
->=20
-> ---
-> base-commit: 1dfe225e9af5bd3399a1dbc6a4df6a6041ff9c23
-> change-id: 20240702-md-sh-arch-sh-drivers-40af731eb66c
+***
 
-Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: [syzbot] [wireless?] WARNING in __cfg80211_connect_result (2)
+Author: en-wei.wu@canonical.com
 
-Thanks for fixing this. Will pick this up later this week.
+#syz test
 
-Adrian
+--- a/drivers/net/wireless/virtual/virt_wifi.c
++++ b/drivers/net/wireless/virtual/virt_wifi.c
+@@ -136,6 +136,9 @@ static struct ieee80211_supported_band band_5ghz = {
+ /* Assigned at module init. Guaranteed locally-administered and unicast. */
+ static u8 fake_router_bssid[ETH_ALEN] __ro_after_init = {};
+ 
++#define VIRT_WIFI_SSID_LEN 8
++#define VIRT_WIFI_SSID "VirtWifi"
++
+ static void virt_wifi_inform_bss(struct wiphy *wiphy)
+ {
+ 	u64 tsf = div_u64(ktime_get_boottime_ns(), 1000);
+@@ -146,8 +149,8 @@ static void virt_wifi_inform_bss(struct wiphy *wiphy)
+ 		u8 ssid[8];
+ 	} __packed ssid = {
+ 		.tag = WLAN_EID_SSID,
+-		.len = 8,
+-		.ssid = "VirtWifi",
++		.len = VIRT_WIFI_SSID_LEN,
++		.ssid = VIRT_WIFI_SSID,
+ 	};
+ 
+ 	informed_bss = cfg80211_inform_bss(wiphy, &channel_5ghz,
+@@ -213,6 +216,8 @@ struct virt_wifi_netdev_priv {
+ 	struct net_device *upperdev;
+ 	u32 tx_packets;
+ 	u32 tx_failed;
++	u32 connect_requested_ssid_len;
++	u8 connect_requested_ssid[IEEE80211_MAX_SSID_LEN];
+ 	u8 connect_requested_bss[ETH_ALEN];
+ 	bool is_up;
+ 	bool is_connected;
+@@ -224,11 +229,21 @@ static int virt_wifi_connect(struct wiphy *wiphy, struct net_device *netdev,
+ 			     struct cfg80211_connect_params *sme)
+ {
+ 	struct virt_wifi_netdev_priv *priv = netdev_priv(netdev);
++	u32 ssid_len;
+ 	bool could_schedule;
+ 
+ 	if (priv->being_deleted || !priv->is_up)
+ 		return -EBUSY;
+ 
++	if (!sme->ssid) {
++		wiphy_err(wiphy, "invalid SSID\n");
++		return -EINVAL;
++	}
++
++	ssid_len = min_t(u32, sme->ssid_len, IEEE80211_MAX_SSID_LEN);
++	priv->connect_requested_ssid_len = ssid_len;
++	memcpy(priv->connect_requested_ssid, sme->ssid, ssid_len);
++
+ 	could_schedule = schedule_delayed_work(&priv->connect, HZ * 2);
+ 	if (!could_schedule)
+ 		return -EBUSY;
+@@ -252,12 +267,15 @@ static void virt_wifi_connect_complete(struct work_struct *work)
+ 		container_of(work, struct virt_wifi_netdev_priv, connect.work);
+ 	u8 *requested_bss = priv->connect_requested_bss;
+ 	bool right_addr = ether_addr_equal(requested_bss, fake_router_bssid);
++	bool right_ssid = (priv->connect_requested_ssid_len == VIRT_WIFI_SSID_LEN ?
++			  !memcmp(priv->connect_requested_ssid, VIRT_WIFI_SSID,
++				  priv->connect_requested_ssid_len) : false);
+ 	u16 status = WLAN_STATUS_SUCCESS;
+ 
+ 	if (is_zero_ether_addr(requested_bss))
+ 		requested_bss = NULL;
+ 
+-	if (!priv->is_up || (requested_bss && !right_addr))
++	if (!priv->is_up || (requested_bss && !right_addr) || !right_ssid)
+ 		status = WLAN_STATUS_UNSPECIFIED_FAILURE;
+ 	else
+ 		priv->is_connected = true;
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
