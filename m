@@ -1,87 +1,108 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5ED621;
-	Wed,  3 Jul 2024 01:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACB9523A
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 01:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719968616; cv=none; b=eGjBhlcw4cs4v9RDg7IkTyUJuyL5HzCHV0S44J3ZgvkcM5i8mDmXQh00Kgq0Ul/5lsMga2F2YoWCdiJdmdhyeFOWXWPN/lS2GJMko4eD/HMpnf6zHBvRsE8fP8uUpnTAlfXj2stn5vQ2R3+McbsXgbIlLdfip8U4BLvRb9AKl9A=
+	t=1719968640; cv=none; b=e8Jq8qwgnWGnPVgGtV3L69hcIRma8AQRQHp7ySHPIZRPRiD5exgYSbQGq0UcO4QEVxf/j6DZz39Y8d01HsHOIVaM68gBE5Pr7rvOBF93fKn7lFUlUwhGU6I9/abuYOt+3Hpf8dCmdG763MTLwHfsnQ7vA9dD9hLJlrz6rANzVHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719968616; c=relaxed/simple;
-	bh=7e9SsKzfSM366TjWrAlHka5sUepJObo6LLumeDqksk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AePXTjQzMTHc8gLVbyrE/aMTQjoiXLgzhCuRpVFpQ9g11gPYGs4xzW7H0ts6U71LysAA64/LevdPHUyBg7YlENBiKs9plNtFNlfn0ikL8cysZT9PEXCdjMx5rjyOWi9Uzrvy7KHGJYsamJ6VyMoTRS9ygJQ2OXDB8Xbrz0IUlWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-656d8b346d2so2887112a12.2;
-        Tue, 02 Jul 2024 18:03:34 -0700 (PDT)
+	s=arc-20240116; t=1719968640; c=relaxed/simple;
+	bh=N5Ae9rGoE3GKngiy/Tj9+RKRVssoTFMAU66isGG61rg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IDttRSON4JMyH1SRLhRhH4OCUnFEl6zczdsju3OF5kyywep1QLBirMPbJIIz7rXC9uni6esSaFe+bbMYxiZw+zHLDVL6BMihte/Vv5v0oXWNPeUovckA2UcIApxZwkYeRW3aMV/vXrFWp7MUSHcob0xuZowRIM1cghnMVIOYPn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--drosen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WwD6txZR; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--drosen.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WwD6txZR"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-64b2a73ad0bso73564807b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 18:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719968638; x=1720573438; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FyIaT//Jdg7f/8MKV1vKBRmhvJGqM0s2j18nW8bQEiY=;
+        b=WwD6txZR1umu7OaMpP2iHFxLErv67xDOwVw4wkv7/N3RF+aXhGfYwCxgKpLxsu+vdf
+         yDjWVsgJsEGaAphCy0FEzILvF23P2FN0yT5+tfCoAYLEtHx24XOnj6j80XpgToXYdmVo
+         xLfmQXhYJK3SM/YhAoCs4slP8nMXyqWs8DKvKePUUJ8wjEtNHFXF1HzKWwZCivhxQW37
+         mU28kw1QQRzF8LyOS841o645rdVNv7rcMvg24fatFoFMRQhi1Al/s4gpLtHl31Giz6m5
+         8xsko30VSys6dYS3s7ncE5YX5/lH2rvZHbW61b5cQ93aF4ELhDtIEyF1LAi8Pn/E3YAV
+         9G/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719968614; x=1720573414;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r4xI5Q+oGJGz5nsSovrUlg8gGo+ekUKOgKzvPPkYcDw=;
-        b=rVx/ti0aAEi9ab2DLvwr44FLn0HmtJ9k1NxVM5D6bB5gXF9xJtOEIjRyvZJAx+DLqv
-         FaK7HWqfMrW4Ble04fq7F8LNR/DjBeprbFpgewFLOg9bodOYGPCmR2JAL+LC1xaPEh+p
-         890zwViCQ1VG+wE1mQwADuH05FsR1+Qg0oSN40qxeLFKiv8r4xEzI+mpjSmaHGT1NULo
-         /v0tXkOpfI5dHdJnn2Xp51VOHG1eltbcAjrZ+WK6DzNObd4e6o+5zOQq2qKaRmdfvDnB
-         w2fhfD8KTu/P2FZh+ovpg8R1sRulF7Dza5kXtPEkGdJ9/UCNp9N8pKbXS/g1bCNyyYpC
-         cTTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVs8cdQ8yDdMH1bSNivL9IsV6nFLx8Qej08tV80RTzeTsUM53I5O89VdN7e2S5FdElBE8mh0JUoQoBsJc2lCj4TeKU6TYAUp0VQ9ftKL1ShPAE785TOJP95IlGVdhOqiSQi/VEFv4ZuHg==
-X-Gm-Message-State: AOJu0YzV9dNHVf5EPJhMG06E+7GfqXfqUwJqRaIdeRRdF1vT+ngE9r8f
-	CIsBswQtOq2RZThSYJbZrpnXBwfy6z5rURyjv3hplSUUIHzqmSyG
-X-Google-Smtp-Source: AGHT+IFk54s5SdkQZ1FAG8+B5HUSZUrstTfy4g5PxxS5qF23LI5sCJ7gz8dXuEnlhzxIKBb/bIVnyw==
-X-Received: by 2002:a05:6a20:4303:b0:1be:2e11:ab28 with SMTP id adf61e73a8af0-1bef60e3affmr10156692637.5.1719968614188;
-        Tue, 02 Jul 2024 18:03:34 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1568dd9sm90546935ad.182.2024.07.02.18.03.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 18:03:33 -0700 (PDT)
-Date: Wed, 3 Jul 2024 10:03:32 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the pci tree
-Message-ID: <20240703010332.GB3160262@rocinante>
-References: <20240701130108.63628d9f@canb.auug.org.au>
- <20240701201942.GC272504@rocinante>
+        d=1e100.net; s=20230601; t=1719968638; x=1720573438;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FyIaT//Jdg7f/8MKV1vKBRmhvJGqM0s2j18nW8bQEiY=;
+        b=WDaamXFbGwBUel8+JCWXROBdrBH6J1SKY9bzmpBs/S5p0gA7vLYjY4dyiZg/mxbhLK
+         OzwHlGuF1WDOkVYZzMfl5XIB60vM6qfJtzykax+A2TTFPRumE0W/RrZgywNVDe1ZpDbI
+         sweB3bCph8iknYiE4KW/GO2ZZ83LYVO6Vhqk3wQsXeRyuEswENUTVmZ0R5XGTARyheM3
+         xw04cbjPRlqBCxakyT/EeB6PDw4EGLAwrRt2pQ5NDsyJ31kAaUBylR2irw5Qgue6v36Y
+         MVhUxT+mUAFt41H4GkZ9MOfMTEbbVhWWVcwnhxy75WqHoEB9FL7bIO2y8tZdtmdNrKUO
+         Jniw==
+X-Gm-Message-State: AOJu0YzDH1SL8bFBsJuc9BWfyXFWIi7+3XgXTVyVW5GmQPXh77f+mhjb
+	D2K0VK64mUARr9UwaMaXbzyty8kozVhyz4KJ1M9U9iVM7+DObtDsxpIEC7twKyn8g5oY0wpqR+P
+	23Q==
+X-Google-Smtp-Source: AGHT+IGV/NvoJUuArfID21GmDZBYGZ36B6phTaS0vo7MrU7Ut8oKdvUBr5uZ4z0FMUGS8o2DHX2qxiyBQyo=
+X-Received: from drosen.mtv.corp.google.com ([2620:15c:211:201:2ca5:53d1:2309:2615])
+ (user=drosen job=sendgmr) by 2002:a05:690c:480c:b0:62c:fb55:aeab with SMTP id
+ 00721157ae682-6512ff21046mr20307b3.8.1719968637718; Tue, 02 Jul 2024 18:03:57
+ -0700 (PDT)
+Date: Tue,  2 Jul 2024 18:02:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701201942.GC272504@rocinante>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240703010215.2013266-1-drosen@google.com>
+Subject: [PATCH 0/1] Fuse Passthrough cache issues
+From: Daniel Rosenberg <drosen@google.com>
+To: Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+I've been attempting to recreate Android's usage of Fuse Passthrough with the
+version now merged in the kernel, and I've run into a couple issues. The first
+one was pretty straightforward, and I've included a patch, although I'm not
+convinced that it should be conditional, and it may need to do more to ensure
+that the cache is up to date.
 
-> > After merging the pci tree, today's linux-next build (arm
-> > multi_v7_defconfig) failed like this:
-> > 
-> > drivers/pci/controller/dwc/pcie-designware-ep.c:818:6: error: redefinition of 'dw_pcie_ep_linkup'
-> >   818 | void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> >       |      ^~~~~~~~~~~~~~~~~
-> > drivers/pci/controller/dwc/pcie-designware-ep.c:22:6: note: previous definition of 'dw_pcie_ep_linkup' with type 'void(struct dw_pcie_ep *)'
-> >    22 | void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> >       |      ^~~~~~~~~~~~~~~~~
-> > 
-> > Caused by commit
-> > 
-> >   9eba2f70362f ("PCI: dwc: ep: Remove dw_pcie_ep_init_notify() wrapper")
-> > 
-> > possibly because of an interaction with commit
-> > 
-> >   3d2e425263e2 ("PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown() API to handle Link Down event")
-> 
-> I will look into this shortly...
+If your fuse daemon is running with writeback cache enabled, writes with
+passthrough files will cause problems. Fuse will invalidate attributes on
+write, but because it's in writeback cache mode, it will ignore the requested
+attributes when the daemon provides them. The kernel is the source of truth in
+this case, and should update the cached values during the passthrough write.
 
-Hopefully, should be fixed now.  Thank you!
+The other issue I ran into is the restriction on opening a file in passthrough
+and non passthrough modes. In Android, one of our main usecases for passthrough
+is location metadata redaction. Apps without the location permission get back
+nulled out data when they read image metadata location. If an app has that
+permission, it can open the file in passthrough mode, but otherwise the daemon
+opens the file in normal fuse mode where it can do the redaction.
 
-	Krzysztof
+Currently in passthrough, this behavior is explicitly blocked. What's needed to
+allow this? The page caches can contain different data, but in this case that's
+a feature, not a bug. They could theoretically be backed by entirely different
+things, although that would be fairly confusing. I would think the main thing
+we'd need would be to invalidate areas of the cache when writing in passthrough
+mode to give the daemon the opportunity to react to what's there now, and also
+something in the other direction. Might make more sense as something the daemon
+can opt into.
+
+Any thoughts on these issues? And does the proposed fix make sense to you?
+
+
+
+Daniel Rosenberg (1):
+  fuse: Keep attributes consistent with Passthrough
+
+ fs/fuse/passthrough.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+
+base-commit: 73e931504f8e0d42978bfcda37b323dbbd1afc08
+-- 
+2.45.2.803.g4e1b14247a-goog
+
