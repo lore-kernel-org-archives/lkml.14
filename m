@@ -1,209 +1,86 @@
-Received: from mailfilter03-out30.webhostingserver.nl (mailfilter03-out30.webhostingserver.nl [195.211.72.164])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256EF191F75
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 21:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.211.72.164
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720042104; cv=pass; b=foJiMP0gq1RddN2uh2RUkGNj0FOolUCW658AaL7sPIV9YuKP2oAXzpqjP1CRqAhdiJj3heyTey9Zd5NhRBlleJro0d9hOd2Re6dKXEQEbaQb0Mn7eyAoG1GglrA7UqqolZkftcXOcyp8cnyXpfxu9MSc5QEUJZHYAltfhvW17AA=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720042104; c=relaxed/simple;
-	bh=Lzr/U/qKnONsBIfrOpzHoAvCwRD3pTy9JeYEDVNUKpI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fTUJJFlMl4/QPdYkcampWZNCgrk4PUs51UrpiwcKVRyjSiQzkcAZzzpj/RSEiU01Grnrhu4hETfSWg96NOhVT1rU+ev+jjsW5mzr+1VlUMYnoDvOvkur2GRz5mAyvoxBC6GvpR5iDPTk+1Ol2m0qBH0GDW+QqwhncBEsVXICOUQ=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl; spf=pass smtp.mailfrom=exalondelft.nl; dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b=cegEaOyM; arc=pass smtp.client-ip=195.211.72.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exalondelft.nl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47405181CEC
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 21:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720042122; cv=none; b=DkHEDV/YsTchjt0izCUcHgfP5zPGOShkQZAigLs09P24VwNrtQeHV68s7gAYYrNRkvN141gYR1hBb2Isxowrmgwqo4PL0JS4IvDrrJUOJrj9pZMlSfHJ2L1LtM03y4p7fLgZ4cQH5wKFMo/Z9FwNLcFSLXC5/+PLmxvfHj8MUQo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720042122; c=relaxed/simple;
+	bh=pRizBzT6P+pExbFelF1chI1Qk2EFTL1cdCGgkVMzIXo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fhxKjjZKDiKNx7y1Tz6PPLILCRRrGS+qdr6NN25a99HI1ipZ2Le+WubpJvcG5l/0byhbc6qSEo588GB0+G6qvtDnINRgCkWKB1E6o+zgscoiEBrhvKUJeQL6uf2yEnn4WFAbJsQpOu9wHfJTBhe6p6lZo67p9lmp7YPxfNC4Hzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=XyWEGsCm; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b="cegEaOyM"
-ARC-Seal: i=2; a=rsa-sha256; t=1720042033; cv=pass;
-	d=webhostingserver.nl; s=whs1;
-	b=tmUNeLmp+mvw2XoHIqFvjKueqOF2Y9EmvWhGiYt0Z0ESP3wwRZZVUmGKHVWVtlA+E3Ir/IQvgwzZm
-	 W+uCqVH2icFheuth3M5eYU1JsnIlfp5X1VscFxi7kPjNQ4zbzZRr0aS/SbRNTsfYI957q6OQMZEjg7
-	 DSekKxml7vzttqkVLgu2PLICVnfLRS7BotXXXfyDCtGHdNrLIYTLnddtimByb2X5I4p+1mI5F50pmJ
-	 OeRVcKCK3A0PCvMmTEURgJmVrXlVwN/PGGscvxnj3Vu0cbgpkuRVtKof94rx0PqBagoNOS03Blyn5y
-	 3PREs0NX5Nn0Opn6j/1Fs1NTjQaEf9Q==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed;
-	d=webhostingserver.nl; s=whs1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 dkim-signature:from;
-	bh=PaY4INhElQh8/bXzT7uDWTqQXybclID2iv+hsZtCnWw=;
-	b=sk0mZ3cmyQofEMrUrdi1y744Qyxxy+Trl685Nsz/Qv13ikGP6ZrbWk6iLWjdPfIC0q6W2zatAvg86
-	 XRFWytylrRTkWkykwP0Yj6Pjk1dtmSubJNOFTfZQcQ28mFybdhYBpm4hkXBaMLt8CG57lUMTBYTZ28
-	 bEJHHHxF19ycTCQtv/WwSrqrdy+Y6/CuROEIAgkHhxrmOtBC/2s1qqxouXqF5MNS1tuMwtte1g2MdW
-	 a6iDOx0+5pJF6phs1eX7SdWIdTCXnpenmQeM+G49oGWk0HPIMZmT2sMRPRnByLHNeJO0nCWk5QqwuM
-	 6uRI2f+QTVdV7KR5aG7LlmJAbKS1Png==
-ARC-Authentication-Results: i=2; mailfilter03.webhostingserver.nl;
-	spf=pass smtp.mailfrom=exalondelft.nl smtp.remote-ip=141.138.168.154;
-	dmarc=pass header.from=exalondelft.nl;
-	arc=pass header.oldest-pass=0;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=exalondelft.nl; s=whs1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=PaY4INhElQh8/bXzT7uDWTqQXybclID2iv+hsZtCnWw=;
-	b=cegEaOyMQrcQzAFpISnntR0AP6FXwM7nUfJPILRNXLUtMhwKym0QowEcfUkd9qivS64ngtJ6lmj2Q
-	 tPh+fmd1TP31u7wH/ByloBMtooPo6TJuq8ytIX3MhpKsGmZFJ1fXtjqq1MmF/s9ExUJeb6CGKpITTq
-	 +UdBf9UmWkzXS1sQ5wlh155Jl2AZqfX3cHCI2DMQb9FLED0lmPod10X4SB1EWekHKPH2g9UCGQWg25
-	 qJB5WFHqVH+t5iZVUVCmuc1TnL+IfsA/6z3UCRjMDijyEMw2S0PLOAWgRRXZzH/9zOj1lvI+XL+Qm+
-	 mjJ2dM17WyHE3E1CefLb18Q68I+8Zbw==
-X-Halon-ID: 00a1e1b1-3983-11ef-b271-001a4a4cb9a5
-Received: from s198.webhostingserver.nl (s198.webhostingserver.nl [141.138.168.154])
-	by mailfilter03.webhostingserver.nl (Halon) with ESMTPSA
-	id 00a1e1b1-3983-11ef-b271-001a4a4cb9a5;
-	Wed, 03 Jul 2024 23:27:08 +0200 (CEST)
-ARC-Seal: i=1; cv=none; a=rsa-sha256; d=webhostingserver.nl; s=whs1; t=1720042028;
-	 b=w6uZ5pl58x6/D4JL6lkxYe1ddu7EpXNtcji6KZWzgXtHDjcdmoNp3ib0yuXKP7V00Kki8QtnzJ
-	  JszmtbRpoFqR09Mouzj8a8QSqmMCojwmwXNxpRTi2Ze3NNzF/w013KY8czyzh5mZkFM5uKRQCa
-	  dY8+Dl87dWYxRIYA6lbfUR+M65ZoVIFwb5Wqh6rPCppHJxRKXLR3K4h3JRPWQVSysv2DEWost2
-	  Wr9RgMUXhJRR8Pm9jafMgEUiBt4Rr03ieE5Qk7xZ13K5WXtojNQDsUOzYGEvo1SUYw7P6VIQIa
-	  erzHtyJkaTaHgN5V3slR6ZO5GwNMkHPOh3LB0y/AFWLdRA==;
-ARC-Authentication-Results: i=1; webhostingserver.nl; smtp.remote-ip=2a02:a466:68ed:1:46c9:4818:36c:3aae;
-	iprev=pass (2a02-a466-68ed-1-46c9-4818-36c-3aae.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:46c9:4818:36c:3aae;
-	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
-	spf=softfail smtp.mailfrom=exalondelft.nl;
-	dmarc=skipped header.from=exalondelft.nl;
-	arc=none
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed; d=webhostingserver.nl; s=whs1; t=1720042028;
-	bh=Lzr/U/qKnONsBIfrOpzHoAvCwRD3pTy9JeYEDVNUKpI=;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From;
-	b=O3TKpDHQ+bl+w2US9vaXuM2LgwTQT01FydvX4BETgWU7wEmUkRmZ5FTt8pmYbFtDZ2/C0rzyAL
-	  pWrcP4nrhJ59EMHboZGxOnd1GJUKUNwH+O86lfZ2CtxqKMVYH2LJy4FnqtYENp8hyEsF5j+YS+
-	  03+OyUKd/I/ViC6gpDrjLfOdhAaAzrYCF5isNzS4p0Do6Kl5D6ShISBp4JygM6f7740gBlflmq
-	  dtLuqYJu7vKMKHrvtTpOcvLXY+tQ/NIy6gACwHqDGgsuvAP+zy+AUv5xPDPmYX8z1h5mYU13tx
-	  y2v0+6Ck+DkHqodMOSw5y9XpvHCXhVsNiMff5ZxbcOSxjg==;
-Authentication-Results: webhostingserver.nl;
-	iprev=pass (2a02-a466-68ed-1-46c9-4818-36c-3aae.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:46c9:4818:36c:3aae;
-	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
-	spf=softfail smtp.mailfrom=exalondelft.nl;
-	dmarc=skipped header.from=exalondelft.nl;
-	arc=none
-Received: from 2a02-a466-68ed-1-46c9-4818-36c-3aae.fixed6.kpn.net ([2a02:a466:68ed:1:46c9:4818:36c:3aae] helo=submission)
-	by s198.webhostingserver.nl with esmtpa (Exim 4.97.1)
-	(envelope-from <ftoth@exalondelft.nl>)
-	id 1sP7VL-0000000CSYn-23jx;
-	Wed, 03 Jul 2024 23:27:07 +0200
-From: Ferry Toth <ftoth@exalondelft.nl>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ferry Toth <ftoth@exalondelft.nl>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: neil.armstrong@linaro.org,
-	AlCooper <alcooperx@gmail.com>,
-	AlexanderShiyan <shc_work@mail.ru>,
-	AlexandreBelloni <alexandre.belloni@bootlin.com>,
-	AlexandreTorgue <alexandre.torgue@foss.st.com>,
-	AlimAkhtar <alim.akhtar@samsung.com>,
-	AndrewMorton <akpm@linux-foundation.org>,
-	"AneeshKumarK . V" <aneesh.kumar@kernel.org>,
-	AngeloGioacchinoDelRegno <angelogioacchino.delregno@collabora.com>,
-	BaolinWang <baolin.wang@linux.alibaba.com>,
-	BaruchSiach <baruch@tkos.co.il>,
-	BjornAndersson <andersson@kernel.org>,
-	ClaudiuBeznea <claudiu.beznea@tuxon.dev>,
-	"DavidS . Miller" <davem@davemloft.net>,
-	FabioEstevam <festevam@gmail.com>,
-	HammerHsieh <hammerh0314@gmail.com>,
-	=?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-	ChristopheLeroy <christophe.leroy@csgroup.eu>,
-	ChunyanZhang <zhang.lyra@gmail.com>,
-	JeromeBrunet <jbrunet@baylibre.com>,
-	JonathanHunter <jonathanh@nvidia.com>,
-	KevinHilman <khilman@baylibre.com>,
-	KonradDybcio <konrad.dybcio@linaro.org>,
-	KrzysztofKozlowski <krzysztof.kozlowski@linaro.org>,
-	KumaravelThiagarajan <kumaravel.thiagarajan@microchip.com>,
-	LaxmanDewangan <ldewangan@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	"MaciejW . Rozycki" <macro@orcam.me.uk>,
-	ManivannanSadhasivam <manivannan.sadhasivam@linaro.org>,
-	MartinBlumenstingl <martin.blumenstingl@googlemail.com>,
-	MatthiasBrugger <matthias.bgg@gmail.com>,
-	MaximeCoquelin <mcoquelin.stm32@gmail.com>,
-	MichaelEllerman <mpe@ellerman.id.au>,
-	MichalSimek <michal.simek@amd.com>,
-	"NaveenN . Rao" <naveen.n.rao@linux.ibm.com>,
-	NicolasFerre <nicolas.ferre@microchip.com>,
-	NicholasPiggin <npiggin@gmail.com>,
-	OrsonZhai <orsonzhai@gmail.com>,
-	=?ISO-8859-15?Q?Pali_Roh=E1r?= <pali@kernel.org>,
-	PatriceChotard <patrice.chotard@foss.st.com>,
-	PeterKorsgaard <jacmet@sunsite.dk>,
-	RichardGenoud <richard.genoud@gmail.com>,
-	RussellKing <linux@armlinux.org.uk>,
-	SaschaHauer <s.hauer@pengutronix.de>,
-	ShawnGuo <shawnguo@kernel.org>,
-	StefaniSeibold <stefani@seibold.net>,
-	SumitSemwal <sumit.semwal@linaro.org>,
-	TaichiSugaya <sugaya.taichi@socionext.com>,
-	TakaoOrito <orito.takao@socionext.com>,
-	TharunKumarP <tharunkumar.pasumarthi@microchip.com>,
-	ThierryReding <thierry.reding@gmail.com>,
-	TimurTabi <timur@kernel.org>,
-	VineetGupta <vgupta@kernel.org>,
-	MarekSzyprowski <m.szyprowski@samsung.com>,
-	PhilEdworthy <phil.edworthy@renesas.com>
-Subject: [PATCH/RFC v1 0/1] 
-Date: Wed,  3 Jul 2024 22:56:36 +0200
-Message-ID: <20240703212613.56024-1-ftoth@exalondelft.nl>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="XyWEGsCm"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4WDtF458fxz6CmQyM;
+	Wed,  3 Jul 2024 21:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1720042118; x=1722634119; bh=pRizBzT6P+pExbFelF1chI1Q
+	k2EFTL1cdCGgkVMzIXo=; b=XyWEGsCmo5dBCGrnhGmXEkMqabMP/Jsfn/Y6Vwzk
+	H6p0U1qaLY5YGMCbP4v1O4aD6VFvsNdSIQ1wwiJDNoB9mZKfNE+Zlh0+cIHdIu2L
+	b4eMOn6Gvq1Ab24M7cnmEv/EPtXFBnT11y9Ettrp+hzTYtG4gxkR0QGogICTXJDy
+	uuW8WveVVLxhVeBKPx39T+nj7RCO1Jv+82kaA5h0Tl4Y3IGXrFjmq3xYcBdBaUvh
+	ohgldcAz88Oty0ZZmeCAOzVM6xKZz8aijGF+nrnfa0mVCAPj+Rn+cO4sMv4lcmye
+	EdwKOGKuzxkmkkPc8DUlCmUvxwlR+Ln44kHPG0mo62ibPQ==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id G0Nku-Q8zvu9; Wed,  3 Jul 2024 21:28:38 +0000 (UTC)
+Received: from [192.168.50.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4WDtF10gQnz6Cnv3Q;
+	Wed,  3 Jul 2024 21:28:36 +0000 (UTC)
+Message-ID: <f0333b86-212e-40e6-b41d-b393c312153f@acm.org>
+Date: Wed, 3 Jul 2024 14:28:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ACL-Warn: Sender domain ( exalondelft.nl ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info ).
-X-ACL-Warn: From-header domain ( exalondelft.nl} ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info )
-X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/53] workqueue: Introduce the create*_workqueue2()
+ macros
+To: Kees Cook <kees@kernel.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>, Tejun Heo <tj@kernel.org>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ linux-kernel@vger.kernel.org
+References: <20240630222904.627462-1-bvanassche@acm.org>
+ <20240630222904.627462-2-bvanassche@acm.org>
+ <CAJhGHyCsypVP7VgsNKdQ=rn0hqiJOzSS9p_OGio6k-S2idaLtA@mail.gmail.com>
+ <3302014f-6ee0-452a-a6a5-dea6fcc37542@acm.org>
+ <202407031249.F9EB68A@keescook>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <202407031249.F9EB68A@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Since 1788cf6a91d9 "tty: serial: switch from circ_buf to kfifo" serial 
-transmit when using DMA uses kfifo with a SG list with a single entry. 
-This obviously lead to 2 separate DMA transfers when the buffer wraps 
-around.  
+On 7/3/24 1:24 PM, Kees Cook wrote:
+> This can be done with the preprocessor to detect how many arguments
+> are being used, so then there is no need to do the renaming passes and
+> conversions can land via subsystems:
 
-On the receiving end depending on the UART the receive DMA might 
-terminate when there is a moment of silence (an interchar gap) of a few 
-(typcially 5) characters length. The receivers FIFO will help to extend 
-that time (depending on FIFO length and threshold).  Currently high 
-speed UARTs (HSU) can have baud rates of 3.5MBd which means terminating 
-a DMA transfer and handling a receive interrupt to set up a new DMA 
-transfer has to complete in 180us which is hard to guarantee. Especially 
-under heavy interrupt load.
+Thanks Kees, this is very useful feedback.
 
-As most serial protocols will transfer maximally a buffer length at a 
-time it makes sense to eliminate the interchar gap on buffer wraps by 
-using a SG list with 2 entries.
+As one can see here, Tejun requested not to add support for a format
+string in the create*_workqueue() macros:
+https://lore.kernel.org/linux-kernel/ZoMF1ZydZUusxRcf@slm.duckdns.org/
 
-The following patch has been tested on Merrifield (Intel Edison) which 
-is slow (500MHz) but has a HSU that can transmit up to 3.5MBd.
+Hence a different approach for the SCSI create*_workqueue() macros:
+https://lore.kernel.org/linux-scsi/20240702215228.2743420-1-bvanassche@acm.org/
 
-This patch should be viewed as a preparation for a follow-up patch that 
-remove the interrupt on the receiving end entirely.
+Best regards,
 
-But first I would like to make sure that: 1) either all users can 
-actually handle 2 SG entries 2) if not, get your advice on how to best 
-make the number of entries configurable per platform
-
-Possibly on RZN1 due to aa63d786cea2 ("serial: 8250: dw: Add support for 
-DMA flow controlling devices") we might anticipate problems.
-
-Please test on your platform and let me know  your suggestions.
-
-Thanks!
-
-Ferry Toth (1):
-  tty: serial: 8250_dma: use sgl with 2 nents to take care of buffer
-    wrap
-
- drivers/tty/serial/8250/8250_dma.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
-
--- 
-2.43.0
-
+Bart.
