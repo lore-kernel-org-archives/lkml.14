@@ -1,151 +1,184 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B3D17C7C;
-	Wed,  3 Jul 2024 16:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1618181CF0;
+	Wed,  3 Jul 2024 16:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720023647; cv=none; b=bhfOkyHX6HW0vrxqLasJWeZaK6R5ToTx8FTK+Pac0fxzA2287u5/yc36DgSmmtfvqVPz7oH3VKVvzIG1W6/vParOJ9CG/zv3TvVh53bx3++4qK6UEGFvwePvl6eZwR2TrFLXTA/HHhhHK6Qd/myx9y7z2AxLLpwQX76PZpcUE24=
+	t=1720023664; cv=none; b=Ki6VE5FLUVSQsLVWLLCdGFfOw/16+Bcn2xHfVv7Q7r4yGyxB1go6VfHXQMxnFKNa55NmtYMX43hMrVpWOZChom64nHTIdaY8E40fSTSW5wraSfonDcBkZk7BGqeAMPVX+mQh+6xI9kxPWqaOk5pWYe7KOXBTJkYRtZub2Tqj5/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720023647; c=relaxed/simple;
-	bh=wwFT+vz81q5073dVZ1ppSrdYkyQllN4uMfPUMuY8sGM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qOQNhZqMpGvdXIVMjmrQuLnfW+14vnVpXIe2ugZXTZLhOolrf10UR1UXphquuDUnGIm/osjAdfBptr8hcS8MrHYsqZysjeqOXi7kdzqJkTrGvs+8N6XKNxMdzFx1of5Q5t5Ti9qgp9H42MSnPQxED/uPPRNYk3ww9A9sIuowh/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CchXGZN7; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720023664; c=relaxed/simple;
+	bh=zkiWcHGjz2TNHSSYj3gAD/6JOpE4e7eGlFo4E4j9CV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AgaYlt0WRHCDlNFAl10Hz72U7XsII59l2o0GbM8Ko7X5aRpLA3nELpt3pEdZPAGW64igf/vWIPnlcDFKnPv3X9H1hgxlu0rW1k7fKcfnc0+LdbqC01ZpfiIVzD+E9T6YrMU22edVN9sxUF/swDc7ZhfYcXedoodyJOw9PTDbgKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnC0Xcyb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CchXGZN7"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ee7885aa5fso22132231fa.1;
-        Wed, 03 Jul 2024 09:20:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720023644; x=1720628444; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=v6l054JVIhkosfS6xjtkQ8TNQqgCYBV3oASoIl/CMIQ=;
-        b=CchXGZN7MISAzlRkgz12MQNdSA+bZKmvZwLlJIoaZcHzMsGv3EULtVKnC2uogj22tI
-         ZcjE3ey6TNHtziX+GKwSOcZsyo0YXG2QM7IgC/SI6TuIav5hbzJNQ/PMzlvSJrtkfYzY
-         uB/I7Pb26d5KzOIxxN5qENvfhJrfkEBPnxQzHbzowmGx2t6ZUAzP01CgSyTdWwk9M1Pz
-         4y+VHXwjJGWPZTkZ6uZg0UgEkHk6r2jaZ0MdiQMAfKSXfoyVtL5PE0XUf2XuB95KvJkv
-         TBMR2ohTuphXUsbvRuR0kzmdDKsL11DYAbrX+Q9++FIQ0VAW+GMLa7ap0fen0NSvJ65d
-         W4rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720023644; x=1720628444;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v6l054JVIhkosfS6xjtkQ8TNQqgCYBV3oASoIl/CMIQ=;
-        b=FTz+nnjMhd3WRJl7LdydpN0chm8E2smutsypzkHvW17jXGG9/IlRaOoTrc8Wrqneea
-         fOeNcFoq4i7iXyr5cG9qIJsvGxNU4b7OMgyxtjoY2RxVJYZ6UH2itf6UrZlInOd0oGjx
-         crcqyVKN4lzU80AKbCg3zk8cKT6Ox4Z3p1QIHleEOerfbWanWvDc/n/PB+x8qsm/OBFK
-         IXGsZdcnIxtMgAaG3Kae58VnRavdpgfXicF/ooKjUFQWgDvHs9tvK385l01oweiXRQW9
-         Do7RcjUlG1FFmw1BtqihnbZF1vhnx4DdITkuRz07npgo/t9qIIhu4L2HwvFPQkA2SGSG
-         GMdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNXwtxLPap6RjB1dKW51VNrAoSAvLWtIgliVhb/e3YeLm7Q9071emnbd/cXuEgmWQDlrZxVf7jX3akSHpMEdy8S5sBUnEnMfXJXVWCyLBIjjBLPoUW0pQ/pxIfSLqjhuk/WCOCAsL8A3RivcKZcwnEhFrCzKREcsgLwWYs4+VY8GgHAUvv
-X-Gm-Message-State: AOJu0YzoURcB43Ewepa7QtxXthWrojMi022nFJ+YXXGR7IlhtPOYaEuM
-	lKsGACVDv7AUdtTieyiiFJMONcB/TBom9VOoOTLvfR2j6X9dJquX
-X-Google-Smtp-Source: AGHT+IHF602ROVoMJ5i/7KWiAX0EbFAF1zyRWMZ68q+6idsjw7RsAzLr+FNYROMIa1HOy3OmGVqm1Q==
-X-Received: by 2002:a2e:bc19:0:b0:2eb:d924:43fb with SMTP id 38308e7fff4ca-2ee5e6bc6f7mr90705151fa.41.1720023643632;
-        Wed, 03 Jul 2024 09:20:43 -0700 (PDT)
-Received: from krava ([176.105.156.1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b09a073sm244278305e9.32.2024.07.03.09.20.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 09:20:43 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 3 Jul 2024 18:20:36 +0200
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
-Message-ID: <ZoV6VK9PiryYZw2O@krava>
-References: <20240701164115.723677-1-jolsa@kernel.org>
- <20240701164115.723677-2-jolsa@kernel.org>
- <20240702130408.GH11386@noisy.programming.kicks-ass.net>
- <ZoQmkiKwsy41JNt4@krava>
- <CAEf4BzYz-4eeNb1621LugDtm7NFshGJUgPzrVL7p4Wg+mq4Aqg@mail.gmail.com>
- <ZoVu1MKUZKtPJ7Am@krava>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnC0Xcyb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C6AC2BD10;
+	Wed,  3 Jul 2024 16:21:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720023664;
+	bh=zkiWcHGjz2TNHSSYj3gAD/6JOpE4e7eGlFo4E4j9CV0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pnC0XcybrNw8kq5EQFs2KpYnKSi040lgXtZeLJiDjT7GxhejsiXllO0FTUP/XL+33
+	 sDZph1BuSJ++L4Hr68CtXODMyflU5qMl1jT2CLtmnW4ymaBKU6XE0s0W53mKMZAoPe
+	 EN9vkKcAJVtrWgFLUDdLTZ0A7rUFjlVIhILBZ5IiCliBXiXQ/7VsqRqti6/KdNAFYJ
+	 ndvUrqf7SFsnx5/3DMsNGfKPVenUC+6xdvdFrxdtCfkMAD20CZJQ2/XFFppZx2Wz1d
+	 5GR+53bE3Axfp+UoVZsMuOnm61fEPNraydb0ohMVqd40oMEHeNAdJ3wIoaMpF6H2xL
+	 PN2cGVWDUTaAg==
+Date: Wed, 3 Jul 2024 18:21:01 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org, Leonardo Bras <leobras@redhat.com>,
+	Sean Christopherson <seanjc@google.com>
+Subject: Re: [PATCH rcu 6/9] rcu: Add rcutree.nocb_patience_delay to reduce
+ nohz_full OS jitter
+Message-ID: <ZoV6bTj0xvGopEao@localhost.localdomain>
+References: <657595c8-e86c-4594-a5b1-3c64a8275607@paulmck-laptop>
+ <20240604222355.2370768-6-paulmck@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZoVu1MKUZKtPJ7Am@krava>
+In-Reply-To: <20240604222355.2370768-6-paulmck@kernel.org>
 
-On Wed, Jul 03, 2024 at 05:31:32PM +0200, Jiri Olsa wrote:
-> On Tue, Jul 02, 2024 at 01:52:38PM -0700, Andrii Nakryiko wrote:
-> > On Tue, Jul 2, 2024 at 9:11â€¯AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > >
-> > > On Tue, Jul 02, 2024 at 03:04:08PM +0200, Peter Zijlstra wrote:
-> > > > On Mon, Jul 01, 2024 at 06:41:07PM +0200, Jiri Olsa wrote:
-> > > >
-> > > > > +static void
-> > > > > +uprobe_consumer_account(struct uprobe *uprobe, struct uprobe_consumer *uc)
-> > > > > +{
-> > > > > +   static unsigned int session_id;
-> > > > > +
-> > > > > +   if (uc->session) {
-> > > > > +           uprobe->sessions_cnt++;
-> > > > > +           uc->session_id = ++session_id ?: ++session_id;
-> > > > > +   }
-> > > > > +}
-> > > >
-> > > > The way I understand this code, you create a consumer every time you do
-> > > > uprobe_register() and unregister makes it go away.
-> > > >
-> > > > Now, register one, then 4g-1 times register+unregister, then register
-> > > > again.
-> > > >
-> > > > The above seems to then result in two consumers with the same
-> > > > session_id, which leads to trouble.
-> > > >
-> > > > Hmm?
-> > >
-> > > ugh true.. will make it u64 :)
-> > >
-> > > I think we could store uprobe_consumer pointer+ref in session_consumer,
-> > > and that would make the unregister path more interesting.. will check
-> > 
-> > More interesting how? It's actually a great idea, uprobe_consumer
+Le Tue, Jun 04, 2024 at 03:23:52PM -0700, Paul E. McKenney a écrit :
+> If a CPU is running either a userspace application or a guest OS in
+> nohz_full mode, it is possible for a system call to occur just as an
+> RCU grace period is starting.  If that CPU also has the scheduling-clock
+> tick enabled for any reason (such as a second runnable task), and if the
+> system was booted with rcutree.use_softirq=0, then RCU can add insult to
+> injury by awakening that CPU's rcuc kthread, resulting in yet another
+> task and yet more OS jitter due to switching to that task, running it,
+> and switching back.
 > 
-> nah, got confused ;-)
-
-actually.. the idea was to store uprobe_consumer pointers in 'return_instance'
-and iterate them on return probe (not uprobe->consumers).. but that would
-require the unregister code to somehow remove them (replace with null)
-
-but we wouldn't need to do the search for matching consumer with session_id
-
-also it probably regress current code, because we would execute only uprobe
-return consumers that were registered at the time the function entry was hit,
-whereas in current code the return uprobe executes all registered return
-consumers
-
-jirka
-
+> In addition, in the common case where that system call is not of
+> excessively long duration, awakening the rcuc task is pointless.
+> This pointlessness is due to the fact that the CPU will enter an extended
+> quiescent state upon returning to the userspace application or guest OS.
+> In this case, the rcuc kthread cannot do anything that the main RCU
+> grace-period kthread cannot do on its behalf, at least if it is given
+> a few additional milliseconds (for example, given the time duration
+> specified by rcutree.jiffies_till_first_fqs, give or take scheduling
+> delays).
 > 
-> > pointer itself is a unique ID and 64-bit. We can still use lowest bit
-> > for RC (see my other reply).
+> This commit therefore adds a rcutree.nocb_patience_delay kernel boot
+> parameter that specifies the grace period age (in milliseconds)
+> before which RCU will refrain from awakening the rcuc kthread.
+> Preliminary experiementation suggests a value of 1000, that is,
+> one second.  Increasing rcutree.nocb_patience_delay will increase
+> grace-period latency and in turn increase memory footprint, so systems
+> with constrained memory might choose a smaller value.  Systems with
+> less-aggressive OS-jitter requirements might choose the default value
+> of zero, which keeps the traditional immediate-wakeup behavior, thus
+> avoiding increases in grace-period latency.
 > 
-> I used pointers in the previous version, but then I thought what if the
-> consumer gets free-ed and new one created (with same address.. maybe not
-> likely but possible, right?) before the return probe is hit
+> [ paulmck: Apply Leonardo Bras feedback.  ]
 > 
-> jirka
+> Link: https://lore.kernel.org/all/20240328171949.743211-1-leobras@redhat.com/
+> 
+> Reported-by: Leonardo Bras <leobras@redhat.com>
+> Suggested-by: Leonardo Bras <leobras@redhat.com>
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Reviewed-by: Leonardo Bras <leobras@redhat.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  8 ++++++++
+>  kernel/rcu/tree.c                               | 10 ++++++++--
+>  kernel/rcu/tree_plugin.h                        | 10 ++++++++++
+>  3 files changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 500cfa7762257..2d4a512cf1fc6 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5018,6 +5018,14 @@
+>  			the ->nocb_bypass queue.  The definition of "too
+>  			many" is supplied by this kernel boot parameter.
+>  
+> +	rcutree.nocb_patience_delay= [KNL]
+> +			On callback-offloaded (rcu_nocbs) CPUs, avoid
+> +			disturbing RCU unless the grace period has
+> +			reached the specified age in milliseconds.
+> +			Defaults to zero.  Large values will be capped
+> +			at five seconds.  All values will be rounded down
+> +			to the nearest value representable by jiffies.
+> +
+>  	rcutree.qhimark= [KNL]
+>  			Set threshold of queued RCU callbacks beyond which
+>  			batch limiting is disabled.
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 35bf4a3736765..408b020c9501f 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -176,6 +176,9 @@ static int gp_init_delay;
+>  module_param(gp_init_delay, int, 0444);
+>  static int gp_cleanup_delay;
+>  module_param(gp_cleanup_delay, int, 0444);
+> +static int nocb_patience_delay;
+> +module_param(nocb_patience_delay, int, 0444);
+> +static int nocb_patience_delay_jiffies;
+>  
+>  // Add delay to rcu_read_unlock() for strict grace periods.
+>  static int rcu_unlock_delay;
+> @@ -4344,11 +4347,14 @@ static int rcu_pending(int user)
+>  		return 1;
+>  
+>  	/* Is this a nohz_full CPU in userspace or idle?  (Ignore RCU if so.) */
+> -	if ((user || rcu_is_cpu_rrupt_from_idle()) && rcu_nohz_full_cpu())
+> +	gp_in_progress = rcu_gp_in_progress();
+> +	if ((user || rcu_is_cpu_rrupt_from_idle() ||
+> +	     (gp_in_progress &&
+> +	      time_before(jiffies, READ_ONCE(rcu_state.gp_start) + nocb_patience_delay_jiffies))) &&
+> +	    rcu_nohz_full_cpu())
+
+The rcu_nohz_full_cpu() test should go before anything in order to benefit from
+the static key in tick_nohz_full_cpu().
+
+And since it only applies to nohz_full, should it be called
+nohz_full_patience_delay ?
+
+Or do we want to generalize it to all nocb uses
+(which means only rely on rcu_is_cpu_rrupt_from_idle() if not nohz_full). Not
+sure if that would make sense...
+
+Thanks.
+
+>  		return 0;
+>  
+>  	/* Is the RCU core waiting for a quiescent state from this CPU? */
+> -	gp_in_progress = rcu_gp_in_progress();
+>  	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm && gp_in_progress)
+>  		return 1;
+>  
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 340bbefe5f652..31c539f09c150 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -93,6 +93,16 @@ static void __init rcu_bootup_announce_oddness(void)
+>  		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
+>  	if (gp_cleanup_delay)
+>  		pr_info("\tRCU debug GP cleanup slowdown %d jiffies.\n", gp_cleanup_delay);
+> +	if (nocb_patience_delay < 0) {
+> +		pr_info("\tRCU NOCB CPU patience negative (%d), resetting to zero.\n", nocb_patience_delay);
+> +		nocb_patience_delay = 0;
+> +	} else if (nocb_patience_delay > 5 * MSEC_PER_SEC) {
+> +		pr_info("\tRCU NOCB CPU patience too large (%d), resetting to %ld.\n", nocb_patience_delay, 5 * MSEC_PER_SEC);
+> +		nocb_patience_delay = 5 * MSEC_PER_SEC;
+> +	} else if (nocb_patience_delay) {
+> +		pr_info("\tRCU NOCB CPU patience set to %d milliseconds.\n", nocb_patience_delay);
+> +	}
+> +	nocb_patience_delay_jiffies = msecs_to_jiffies(nocb_patience_delay);
+>  	if (!use_softirq)
+>  		pr_info("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
+>  	if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG))
+> -- 
+> 2.40.1
+> 
+> 
