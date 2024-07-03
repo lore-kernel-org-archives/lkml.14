@@ -1,83 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841128F5B;
-	Wed,  3 Jul 2024 02:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD8B1C2E
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 02:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719972156; cv=none; b=ARn1Qkidza5oc8OE+X/i5+2JMEWS5k3//5K1WUMtGiplHzZoVrXwMkwNyf5dDRYsU+glo2g8EYxdWjEe4XJxTaEAkjmtPCqahMw7OmwqEmoETrVJA8jre5epwOwAU4av5ABq7fmWL2/q4d4B04wgBwim5ffpOdS7NJnmovi2Ym0=
+	t=1719972588; cv=none; b=n52jlEFgMkRqghESJP4WsfFp+KZobh/ujYDUUZNbf+wSTaWVW+1R7HQS+PHhQsksxqlO0ezNePbJAcX9ORMQQMAC+pbds7cUCozH7UNvL+YH3haPRgWQ0x5kHZgFvkKJBfvdDUtB58fZ+i4FJszI0hg5SlZ6/2dtI5KjmKoEqGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719972156; c=relaxed/simple;
-	bh=R6kgAs73TS+N4+4Y27yXxUyZx91QX/oME+K5F6DbZ1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bZlu7eDKKnjHX7f+Czk1p805q1VLOV148XZ4RDTrt4xQzlXB0HwSyJ87CftOesDO3tIDiqh037YBEe4K6T13tDw/31+dlV59w6be0tWdJNezZinNJ8dp5mjTvFPUanFMjWYIGiKXeBgXs4zTrJebVZPCZdrUt5jWIxPLLvZ/kLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZkiJu8V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719972588; c=relaxed/simple;
+	bh=agajvCivFdkzHTcK2qV0G18SpVRD8KhPbNoX4ZI/vJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PoUXh0ksFq3NRsFMeVnLkZNsE1ydg7Zc+IVTPYbh0YyQ/Q+PGnZuvK+Gr47Ak8y3Wc4pdQZmCBOqlRLg8Z5ANwr4OEqOtbilKtsMH1y4u9Xv6J4UjMaLnSTCG7JElnAETmo+3DBwvobT6XY0LVpn377jnPKHtJe7emdU193tQiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YE+Cu7T5; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZkiJu8V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E22CC32781;
-	Wed,  3 Jul 2024 02:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719972156;
-	bh=R6kgAs73TS+N4+4Y27yXxUyZx91QX/oME+K5F6DbZ1c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nZkiJu8VGkExL+V5eE4TDNRvf6KjZSSsn/r8tuggjTUlWsOLkZpiVUHTnjLRiNwNU
-	 VeTQthUWctRpmaY5e/iSnDXXpAF2t86pYqMWLsTKj25XULlKC2vLrCx7hGY3xvcFuv
-	 Uj09eyf8otNb8v9e39qs7Lxed4UQvrG50QOns/dziVCxTqzN6QKAtP/7MTwkC52Yvn
-	 X2Rr75v95DZXNFuMqrUO5D9PIsCgHfg72jH5LhBVJaJKHbLGnZCIT5snd5fDgANFyC
-	 VUbx8fAuRtC/pj/Eea0xyvGwlc5iucM3sDRIte3Z2CJ74+DIpSCuhaPkTTzjly8lpE
-	 2pasIfmYiJF3Q==
-Date: Tue, 2 Jul 2024 19:02:32 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Donald
- Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Richard
- Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
- <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan
- <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, "Christian
- =?UTF-8?B?S8O2bmln?=" <christian.koenig@amd.com>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, Nikolay
- Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>
-Subject: Re: [PATCH net-next v15 00/14] Device Memory TCP
-Message-ID: <20240702190232.7cbe4c41@kernel.org>
-In-Reply-To: <20240628003253.1694510-1-almasrymina@google.com>
-References: <20240628003253.1694510-1-almasrymina@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YE+Cu7T5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719972587; x=1751508587;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=agajvCivFdkzHTcK2qV0G18SpVRD8KhPbNoX4ZI/vJ4=;
+  b=YE+Cu7T5mzew7eJxyDfbPbS0chRxxTF4nQDMY/j425cpOgiTF+JHNBjm
+   EGn/rDUrKB+p4KQO1/w+ATcF1cXn8OARXBFWVUxtLQeeM/5Je2prMnEd3
+   VyZMINj2s4aO9iTKe9QkSYYYVSgyzR58v7sBfmNDBPOqAJexhxcEEZLaJ
+   GXt/X9RUHLGp5OIMMKukj8rw/eLevGZd8bLbmPGqkjWAl8qTJ94s+csOm
+   /hxzAOYh3ZRWKI2i1MRlcsJDIPVdHE8+wrz+vCr9zmLwT7qFrgLdNcj7x
+   X7sZedDikkKiiAwodlNtl/MW3v3dqsfRQjgVP7PC69HRqzNfiqXGYQcL/
+   Q==;
+X-CSE-ConnectionGUID: iNTmXdTCRsaxA1Rzi1+W7w==
+X-CSE-MsgGUID: zdHqDOntRsm/5HBodfhNog==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="42606833"
+X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
+   d="scan'208";a="42606833"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:09:46 -0700
+X-CSE-ConnectionGUID: JbhFs33uQbyIk3a9dhQSnA==
+X-CSE-MsgGUID: A4ylhif6SKu74ahUsalp7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
+   d="scan'208";a="50702291"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 02 Jul 2024 19:09:41 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sOpRC-000P8j-2Y;
+	Wed, 03 Jul 2024 02:09:38 +0000
+Date: Wed, 3 Jul 2024 10:09:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jesse Taube <jesse@rivosinc.com>, linux-riscv@lists.infradead.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jesse Taube <jesse@rivosinc.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Wende Tan <twd2.me@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Baoquan He <bhe@redhat.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] RISC-V: Use Zkr to seed KASLR base address
+Message-ID: <202407030941.LFCgSw4G-lkp@intel.com>
+References: <20240701185132.319995-5-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701185132.319995-5-jesse@rivosinc.com>
 
-On Fri, 28 Jun 2024 00:32:37 +0000 Mina Almasry wrote:
-> v15: https://patchwork.kernel.org/project/netdevbpf/list/?series=865481&state=*
+Hi Jesse,
 
-I'll pick up a couple of patches unlikely to change.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on linus/master v6.10-rc6 next-20240702]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jesse-Taube/RISC-V-pi-Force-hidden-visibility-for-all-symbol-references/20240702-025515
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240701185132.319995-5-jesse%40rivosinc.com
+patch subject: [PATCH v3 4/4] RISC-V: Use Zkr to seed KASLR base address
+config: riscv-randconfig-001-20240703 (https://download.01.org/0day-ci/archive/20240703/202407030941.LFCgSw4G-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 326ba38a991250a8587a399a260b0f7af2c9166a)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240703/202407030941.LFCgSw4G-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407030941.LFCgSw4G-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: undefined hidden symbol: __pi___fortify_panic
+   >>> referenced by fdt_early.c:24 (arch/riscv/kernel/pi/fdt_early.c:24)
+   >>>               arch/riscv/kernel/pi/fdt_early.pi.o:(__pi_fdt_early_match_extension_isa) in archive vmlinux.a
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
