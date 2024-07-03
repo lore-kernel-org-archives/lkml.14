@@ -1,103 +1,106 @@
-Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709A713BAFA
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 08:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6724D584;
+	Wed,  3 Jul 2024 08:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719995718; cv=none; b=ZbRtlqBLGfNFiTAExr4pgj5UIYAgsVO/xCmQN1pQv1Zs1pi4DBBhagnZlLDfBALljNxMFR1i6Tg24Tv7GHJDYK9mwze41rByEMkF8VhK3B3jyJYUQDVUi8eSy5BPeMv0IfnsDKJfog/dGn2HlGeM/ZwE2B9sQeNYxVnn7m1NVrY=
+	t=1719995857; cv=none; b=L+/2MKsKDw3Tt1+rbpbdr0pyjXGKEtu+ngKx3l2l14KgrYeWaGral+sNg9MSdjdwgn4F1GxhFZ2nzkmoSiGC9xu8W6Hh3pHNix4b0nk12NM1XRarQkCbQbJ0xCmuwOhjM2Q6szec1ZDWx7VIuPPitFWhBx+X0c05HLQi/yBskao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719995718; c=relaxed/simple;
-	bh=NE4mcokORx8nzprECoDhl/NIF8E+UJxpNKhON4U3ad0=;
-	h=From:Cc:Subject:Date:Message-Id:MIME-Version; b=o0ENqFfOdSJm6+AZgeKFHLGGKurKUUqwdJp4Pa/gQlgSxA20ymTDP3MKd1UU8do9WUY5wlcprpDQhUEhfGZRFpD00b+iY34DC1b15AxoGh5Jfo7fVcDPm47M7eReF2vw+dVpiK3fP5gsJ1a1+DAD4B+rfpGBBAme3DleYrz0eXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=ziegler.andreas@siemens.com header.b=L7L57DzH; arc=none smtp.client-ip=185.136.64.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1719995857; c=relaxed/simple;
+	bh=sJN+MwV5sUnjoxSQ5dfAVt8zKfWkamWIkI8xHG1+5/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FFOm6OJWh2rpRe/UH48/xqZnfH20K58Md7lY0wNxoN68gTMJ87WtiRNR9QFRgRlCaot4KxxtdCTJIUDSQN41Lqk/46oy3Hpndr1Df4Y2RKEJlwigdnoXMSOAEcOnblkeCiXJAxUId2iVUjYfJfUZZ88V4F/z7uKZo/Q1hSBLzuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYIXoNSn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=siemens.com header.i=ziegler.andreas@siemens.com header.b="L7L57DzH"
-Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 20240703083506c2ff85faf35c490d4e
-        for <linux-kernel@vger.kernel.org>;
-        Wed, 03 Jul 2024 10:35:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=ziegler.andreas@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=UHaxMOTp3hJaKOa/viZsy6vWL1hwPuU7YOxyKbA6WLo=;
- b=L7L57DzHFeX15AzeEnjrqgT42DUvRC/p9S2Wt105lRC9zUWApVFMGKLwDDl2BMZoIYXO3T
- YLaSvtCOQEQ/j/sC4TahuaigGYGmhAaAUzxMw6TRZzNwK7UTBq31+8mjoKXB/ivJ7t4Sn3uY
- dMq1/Ht87EY3QztB47sPLJmpNsZa4=;
-From: Andreas Ziegler <ziegler.andreas@siemens.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	bpf@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYIXoNSn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FEAC2BD10;
+	Wed,  3 Jul 2024 08:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719995856;
+	bh=sJN+MwV5sUnjoxSQ5dfAVt8zKfWkamWIkI8xHG1+5/E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oYIXoNSnDnTODvPBZ2lWNiOAhSRpc/Ft1dVV3BiFipzKHxsDmrIByL4EAO+3IQ0+m
+	 U0dVB539ht4XH4U9PYqwTkeAPNdPW3m2vl0OfRnSrtf8QJwapI5epMUx1kGzzocRNe
+	 +r0bKbP84mX1sXSFxMJ8y90kIQx/iolbmU29SIjmKFX1yUCkHGhhVaCeB1ZlyDQDVl
+	 oqFjDHqBjkcro6AyOgpUDFjb1WOUGt4kTGI3pjFK0V7k4B7HNnXmYH60gb9cL20l3k
+	 9nEusexxMFMacoQCtSHIBl/x6rPyPoNBc43Mrpr/ASYn8CoWuEGyEc7J0TkELnNwaS
+	 xQRvrXMCXj+zw==
+From: Christian Brauner <brauner@kernel.org>
+To: netfs@lists.linux.dev,
+	dhowells@redhat.com,
+	jlayton@kernel.org,
+	libaokun@huaweicloud.com
+Cc: Christian Brauner <brauner@kernel.org>,
+	jefflexu@linux.alibaba.com,
+	zhujia.zj@bytedance.com,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Andreas Ziegler <ziegler.andreas@siemens.com>
-Subject: [PATCH] libbpf: add NULL checks to bpf_object__{prev_map,next_map}
-Date: Wed,  3 Jul 2024 10:34:36 +0200
-Message-Id: <20240703083436.505124-1-ziegler.andreas@siemens.com>
+	yangerkun@huawei.com,
+	houtao1@huawei.com,
+	yukuai3@huawei.com,
+	wozizhi@huawei.com,
+	Baokun Li <libaokun1@huawei.com>,
+	Gao Xiang <xiang@kernel.org>
+Subject: Re: [PATCH v3 0/9] cachefiles: random bugfixes
+Date: Wed,  3 Jul 2024 10:37:24 +0200
+Message-ID: <20240703-beweis-glimpflich-439d10d8ea13@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240628062930.2467993-1-libaokun@huaweicloud.com>
+References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2151; i=brauner@kernel.org; h=from:subject:message-id; bh=sJN+MwV5sUnjoxSQ5dfAVt8zKfWkamWIkI8xHG1+5/E=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS18h5fzfvjj8+mIIHXTK3+lpoZn/JX77N5alJzQZJXM cEgvEigo5SFQYyLQVZMkcWh3SRcbjlPxWajTA2YOaxMIEMYuDgFYCL+EQz/U/PmMhQcv9nvURe/ brVqbY2D5b2lTOrvorf8U9dP3qzWyPBX+pN+nderS4Kne03ZZ65S5HAV31vu/PaN2hn9RJuQ/yt ZAQ==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1326705:519-21489:flowmailer
 
-In the current state, an erroneous call to
-bpf_object__find_map_by_name(NULL, ...) leads to a segmentation fault
-through the following call chain:
+On Fri, 28 Jun 2024 14:29:21 +0800, libaokun@huaweicloud.com wrote:
+> From: Baokun Li <libaokun1@huawei.com>
+> 
+> Hi all!
+> 
+> This is the third version of this patch series, in which another patch set
+> is subsumed into this one to avoid confusing the two patch sets.
+> (https://patchwork.kernel.org/project/linux-fsdevel/list/?series=854914)
+> 
+> [...]
 
-bpf_object__find_map_by_name(obj = NULL, ...)
--> bpf_object__for_each_map(pos, obj = NULL)
--> bpf_object__next_map((obj = NULL), NULL)
--> return (obj = NULL)->maps
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-While calling bpf_object__find_map_by_name with obj = NULL is
-obviously incorrect, this should not lead to a segmentation
-fault but rather be handled gracefully.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-As __bpf_map__iter already handles this situation correctly,
-we can delegate the check for the regular case there and only
-add a check in case the prev or next parameter is NULL.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Signed-off-by: Andreas Ziegler <ziegler.andreas@siemens.com>
----
- tools/lib/bpf/libbpf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 4a28fac4908a..30f121754d83 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -10375,7 +10375,7 @@ __bpf_map__iter(const struct bpf_map *m, const struct bpf_object *obj, int i)
- struct bpf_map *
- bpf_object__next_map(const struct bpf_object *obj, const struct bpf_map *prev)
- {
--	if (prev == NULL)
-+	if (prev == NULL && obj != NULL)
- 		return obj->maps;
- 
- 	return __bpf_map__iter(prev, obj, 1);
-@@ -10384,7 +10384,7 @@ bpf_object__next_map(const struct bpf_object *obj, const struct bpf_map *prev)
- struct bpf_map *
- bpf_object__prev_map(const struct bpf_object *obj, const struct bpf_map *next)
- {
--	if (next == NULL) {
-+	if (next == NULL && obj != NULL) {
- 		if (!obj->nr_maps)
- 			return NULL;
- 		return obj->maps + obj->nr_maps - 1;
--- 
-2.39.2
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
+[1/9] netfs, fscache: export fscache_put_volume() and add fscache_try_get_volume()
+      https://git.kernel.org/vfs/vfs/c/857edaec7e8b
+[2/9] cachefiles: fix slab-use-after-free in fscache_withdraw_volume()
+      https://git.kernel.org/vfs/vfs/c/6438822b8978
+[3/9] cachefiles: fix slab-use-after-free in cachefiles_withdraw_cookie()
+      https://git.kernel.org/vfs/vfs/c/ba71b9fbe167
+[4/9] cachefiles: propagate errors from vfs_getxattr() to avoid infinite loop
+      https://git.kernel.org/vfs/vfs/c/389332dcf4ea
+[5/9] cachefiles: stop sending new request when dropping object
+      https://git.kernel.org/vfs/vfs/c/6091d755c681
+[6/9] cachefiles: cancel all requests for the object that is being dropped
+      https://git.kernel.org/vfs/vfs/c/f4648f418a04
+[7/9] cachefiles: wait for ondemand_object_worker to finish when dropping object
+      https://git.kernel.org/vfs/vfs/c/9659aaa5c58b
+[8/9] cachefiles: cyclic allocation of msg_id to avoid reuse
+      https://git.kernel.org/vfs/vfs/c/1a95962625e1
+[9/9] cachefiles: add missing lock protection when polling
+      https://git.kernel.org/vfs/vfs/c/6cc42ff0f5c9
