@@ -1,22 +1,22 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1FCD180A86;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0D5F17FAD3;
 	Wed,  3 Jul 2024 15:13:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019587; cv=none; b=HQWlftd8Nmo+NBNjA/ChMrJ5Ic7CKkn5mwOL21Rr9PS3wdDyAcxzLCh8HHJiaz6+KBxWljEeQ4/EEh0iMG5Q52q8TlVZPRZq+/IpBTOwcvn54Olr1OSjnhiHjUyUVDVV6dwsyMv51dE5tC6Jt6wg5qx8StyfiCTFnubFrcWJzs0=
+	t=1720019588; cv=none; b=o8P8gl6sXRJI2WmV+V7GSUpccirm3/bws/W3QBbz1j2+oM3LhYx4zw46VlVU1r2o5rAUMzsuoDj+cAVm9fgKg6bx4rLHaGYA7PH33YMnxir7cDcYC7VG8pmFRC3CNvCKWFCtnNwN93OyPptRw91BaLgri4vXYvrVMzjGuRqIzw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019587; c=relaxed/simple;
-	bh=jKTmlKxi/yn3cFG5v91xEFOOukpAGESCC2WZcF+oqLg=;
+	s=arc-20240116; t=1720019588; c=relaxed/simple;
+	bh=IgiR48qZckGes9RhJYBc+AaWGNnyeZUEyB3IhSIIVJQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xvv11adozgLWpq7aiZsH+APDcfIx4gn79S0w/NFdWVRg27TQJX/LPju/9CkgkKaLmVTssjND3CARwWBiF3LqRctdcwk8d2C051E13GzIO42pE4oT9J/94ObJ0sCRYN1kLCMeYqZCU+LzdAoMi59gj7nemuPuKTgNuxQNHL1g7vk=
+	 Content-Type:Content-Disposition:In-Reply-To; b=THDu8654+CkeXaxbafkf8VkRjzlhA5vRpXBbvCLLl085cDj2c9FodNIPdZ0j5KVO1ScHImnarhh2Gqt+FDAshz07vgqL+Xu+qk1zFst9t0UtWzDyZ5Jeza3Uarl1ZnmpNIVc6M06IVk/ML2ySyviLFIdWRHMjD7qsFYWl7VLgio=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1sP1eq-0000BL-00; Wed, 03 Jul 2024 17:12:32 +0200
+	id 1sP1eq-0000BF-00; Wed, 03 Jul 2024 17:12:32 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id D500DC031A; Wed,  3 Jul 2024 17:11:38 +0200 (CEST)
-Date: Wed, 3 Jul 2024 17:11:38 +0200
+	id 0BB0CC0120; Wed,  3 Jul 2024 17:03:45 +0200 (CEST)
+Date: Wed, 3 Jul 2024 17:03:45 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -26,10 +26,11 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	Serge Semin <fancer.lancer@gmail.com>,
 	Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/10] MIPS: smp: Implement IPI stats
-Message-ID: <ZoVqKlpQ5K+w3VDn@alpha.franken.de>
+Subject: Re: [PATCH 02/10] MIPS: smp: Manage IPI interrupts as percpu_devid
+ interrupts
+Message-ID: <ZoVoUabfZiiAXWKR@alpha.franken.de>
 References: <20240616-b4-mips-ipi-improvements-v1-0-e332687f1692@flygoat.com>
- <20240616-b4-mips-ipi-improvements-v1-5-e332687f1692@flygoat.com>
+ <20240616-b4-mips-ipi-improvements-v1-2-e332687f1692@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,14 +39,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240616-b4-mips-ipi-improvements-v1-5-e332687f1692@flygoat.com>
+In-Reply-To: <20240616-b4-mips-ipi-improvements-v1-2-e332687f1692@flygoat.com>
 
-On Sun, Jun 16, 2024 at 10:03:09PM +0100, Jiaxun Yang wrote:
-> Show IPI statistics in arch_show_interrupts as what RISC-V
-> did.
+On Sun, Jun 16, 2024 at 10:03:06PM +0100, Jiaxun Yang wrote:
+> IPI interrupts need to be enabled when a new CPU coming up.
+> 
+> Manage them as percpu_devid interrupts and invoke enable/disable
+> functions at appropriate time to perform enabling as required,
+> similar to what RISC-V and Arm doing.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/include/asm/ipi.h | 11 +++++++++++
+>  arch/mips/kernel/smp.c      | 26 ++++++++++++++++++++++++--
+>  2 files changed, 35 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/include/asm/ipi.h b/arch/mips/include/asm/ipi.h
+> index df7a0ac4227a..88b507339f51 100644
+> --- a/arch/mips/include/asm/ipi.h
+> +++ b/arch/mips/include/asm/ipi.h
+> @@ -29,6 +29,17 @@ int mips_smp_ipi_allocate(const struct cpumask *mask);
+>   * Return 0 on success.
+>   */
+>  int mips_smp_ipi_free(const struct cpumask *mask);
+> +
+> +void mips_smp_ipi_enable(void);
+> +void mips_smp_ipi_disable(void);
+> +#else
+> +static inline void mips_smp_ipi_enable(void)
+> +{
+> +}
+> +
+> +static inline void mips_smp_ipi_disable(void)
+> +{
+> +}
+>  #endif /* CONFIG_GENERIC_IRQ_IPI */
+>  #endif /* CONFIG_SMP */
+>  #endif
+> diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
+> index a6cf6444533e..710644d47106 100644
+> --- a/arch/mips/kernel/smp.c
+> +++ b/arch/mips/kernel/smp.c
+> @@ -186,6 +186,7 @@ irq_handler_t ipi_handlers[IPI_MAX] __read_mostly = {
+>  };
+>  
+>  #ifdef CONFIG_GENERIC_IRQ_IPI
+> +static DEFINE_PER_CPU_READ_MOSTLY(int, ipi_dummy_dev);
+>  static int ipi_virqs[IPI_MAX] __ro_after_init;
+>  static struct irq_desc *ipi_desc[IPI_MAX] __read_mostly;
+>  
+> @@ -225,13 +226,29 @@ void mips_smp_send_ipi_mask(const struct cpumask *mask,
+>  	local_irq_restore(flags);
+>  }
+>  
+> +void mips_smp_ipi_enable(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < IPI_MAX; i++)
+> +		enable_percpu_irq(ipi_virqs[i], IRQ_TYPE_NONE);
+> +}
+> +
+> +void mips_smp_ipi_disable(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < IPI_MAX; i++)
+> +		disable_percpu_irq(ipi_virqs[i]);
+> +}
+> +
 
-it probably still does, but either this is usefull on it's own or
-we don't need it. IMHO it's useful, so drop the reference to RISC-V.
+there is no user of mips_smp_ipi_disable() (at least I didn't see one),
+so do we need this patch at all ? Just looking like ARM or RiscV isn't
+a justification for code churn.
 
 Thomas.
 
