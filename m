@@ -1,124 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF50181BB3;
-	Wed,  3 Jul 2024 15:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F76217DE01
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 15:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720021457; cv=none; b=MX3wIWOgLkTwJ6z+B1whOXtyA2AbrIMNSLsAQZjiM4SHtZeSAWBPlEszBsysNhLMuGPH2SqVD494oR2ke0eRuWp9mh141iMntfgnCiXH4/2D5hgri8dYp7qXe+NeRJU6pS6kHJsnT6ZXqj066W6ievJAiVI9rCEv13TSAuPCCx0=
+	t=1720021471; cv=none; b=mPLwCY7KE6x9jfLOJjywOGdAobhFnX7ozOT9WdnkhlXKVVi88X6XqsAYGp/yV+CranPYYNKyU6MDS7zyfDNptvoWrjLOe3lzegKl+UIin3l9RThAYoARmRi1PbPFkio+8RMi+M1Y7EOQHZHt1yCvhlprmeMrmSZ9f8QP5PbGTt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720021457; c=relaxed/simple;
-	bh=jYmjQiqQpad3hkViZYZAMJQKoWXm0SiaRxoFOzHBIkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aCS/QPVmZyL6um7saYv4rA9g8Sit8LQ0ngjrBP5rclwhDihJQ4QawTxhWY6ued99maT6k3krZvESwmRNOZQE6g8cT/m7rNs6r5lK4Zza/BdcwW3B3UIMxIW8/EsJF7j6XR5jn5DkgbUMKqK7Y/wd1zTUHXKq6ORDAsP4C30xjaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XN/8Du6H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720021471; c=relaxed/simple;
+	bh=M9eUlAni9FkUNboMsSyX0Mz7X9vOCnEmjMuBMJuBZDs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BuTM4m91od9KiVsfkW9q8J8E2W3LTtOiG/H/9zJ+jvhbpLTupF4MLN5qC1dcnpPTpbyQ3NOOucWU15fHnVxveIAcnx006q1C9Q2saQJ3rHUCdONIcNTrH5UXpedSjs5RyTWD1cDNbUROrKmWl3R2dIYyZhbeTdgXrXunFcFxcPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HClMsL6s; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XN/8Du6H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50A0FC2BD10;
-	Wed,  3 Jul 2024 15:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720021456;
-	bh=jYmjQiqQpad3hkViZYZAMJQKoWXm0SiaRxoFOzHBIkI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XN/8Du6HCu0Gdq60W5VRZIsiUC75cPPDb1SqJ71UnLu5D/FuILg5+f1ffm/OPABTX
-	 UXpH7GXqZBV1Ud3d6BxKH8xViZ1NltX8TFiwETF8F3DqQou2Xf6IITWZpnw1Bs4oST
-	 eYLL2ZmBdYkUcdUSS3hSNlaNnStaDj3BDtBwQAP59T4yaIRx4N5RxKhdY9CdzWLQyo
-	 MyNMGBn9r+gkEFKA7NberWi8XPb5M1aFQLOh/WP9xZ6VjkdInS0U3ZNygmv2t6DAq5
-	 xbSdSmT1I4e3VqzDwXWRTxYSRx6sy8ruDWf9XXreCz18zkZCNaAjgHj4DQsjzO5Vjx
-	 dcrcBY19oBXuw==
-Date: Wed, 3 Jul 2024 16:44:09 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Varshini Rajendran <varshini.rajendran@microchip.com>
-Cc: radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 03/27] dt-bindings: serial: atmel,at91-usart: add
- compatible for sam9x7.
-Message-ID: <20240703-turbulent-geologic-fdcb698a4b55@spud>
-References: <20240703102011.193343-1-varshini.rajendran@microchip.com>
- <20240703102640.195431-1-varshini.rajendran@microchip.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HClMsL6s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720021469;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=s2erXypPFS96oGxgCOnNdx6e4GIHP7kCcJ5ryjq/x4k=;
+	b=HClMsL6sSttiQZGf0IVEdsk0jWFQp7fONU7SE5mRK4gwSwycabMSzwPUgCnGG2EVLYIHsE
+	k/XICJ5AxndLjtcUqttmzYqM5F7BHMD0V0VgBW4SqhWDao00ywMWKMEVA+M6uBVikOTn8p
+	h1Sy5r7GjBt5Io2Adcp2hWILaqL4uxM=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-577-wbBm45VNMgidjIZZQ62NHw-1; Wed,
+ 03 Jul 2024 11:44:26 -0400
+X-MC-Unique: wbBm45VNMgidjIZZQ62NHw-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D06DE1954206;
+	Wed,  3 Jul 2024 15:44:22 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.39.193.208])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 599BD1955BC0;
+	Wed,  3 Jul 2024 15:44:17 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	"Bjorn Roy Baron" <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	rust-for-linux@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [PATCH 0/4] drm/panic: Add a qr_code panic screen
+Date: Wed,  3 Jul 2024 17:33:57 +0200
+Message-ID: <20240703154309.426867-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HPDmH2zYVKMCfEhh"
-Content-Disposition: inline
-In-Reply-To: <20240703102640.195431-1-varshini.rajendran@microchip.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+
+This series adds a new panic screen, with the kmsg data embedded in a QR-code.
+
+The main advantage of QR-code, is that you can copy/paste the debug data to a bug report.
+
+The QR-code encoder is written in rust, and is very specific to drm_panic.
+The reason is that it is called in a panic handler, and thus can't allocate memory, or use locking.
+The rust code uses a few rust core API, and provides only two C entry points.
+There is no particular reason to do it in rust, I just wanted to learn rust, and see if it can work in the kernel.
+
+If you want to see what it looks like, I've put a few screenshots here:
+https://github.com/kdj0c/panic_report/issues/1
+
+-- 
+
+Jocelyn
 
 
---HPDmH2zYVKMCfEhh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Jocelyn Falempe (4):
+  drm/panic: Add integer scaling to blit()
+  drm/rect: add drm_rect_overlap()
+  drm/panic: simplify logo handling
+  drm/panic: Add a qr_code panic screen
 
-On Wed, Jul 03, 2024 at 03:56:40PM +0530, Varshini Rajendran wrote:
-> Add sam9x7 compatible to DT bindings documentation.
->=20
-> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-> ---
-> Changes in v5:
-> - Corrected the order of bindings.
-> - sam9x60 bindings in the dts and dt documentation in future series.
-> ---
->  .../devicetree/bindings/serial/atmel,at91-usart.yaml     | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/serial/atmel,at91-usart.ya=
-ml b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-> index eb2992a447d7..f466c38518c4 100644
-> --- a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-> @@ -23,13 +23,20 @@ properties:
->            - const: atmel,at91sam9260-dbgu
->            - const: atmel,at91sam9260-usart
->        - items:
-> -          - const: microchip,sam9x60-usart
-> +          - enum:
-> +              - microchip,sam9x60-usart
-> +              - microchip,sam9x7-usart
->            - const: atmel,at91sam9260-usart
->        - items:
->            - const: microchip,sam9x60-dbgu
->            - const: microchip,sam9x60-usart
->            - const: atmel,at91sam9260-dbgu
->            - const: atmel,at91sam9260-usart
-> +      - items:
-> +          - const: microchip,sam9x7-dbgu
-> +          - const: atmel,at91sam9260-dbgu
+ drivers/gpu/drm/Kconfig         |  29 +
+ drivers/gpu/drm/Makefile        |   1 +
+ drivers/gpu/drm/drm_drv.c       |   3 +
+ drivers/gpu/drm/drm_panic.c     | 338 +++++++++--
+ drivers/gpu/drm/drm_panic_qr.rs | 989 ++++++++++++++++++++++++++++++++
+ include/drm/drm_panic.h         |   4 +
+ include/drm/drm_rect.h          |  15 +
+ 7 files changed, 1340 insertions(+), 39 deletions(-)
+ create mode 100644 drivers/gpu/drm/drm_panic_qr.rs
 
-> +          - const: microchip,sam9x7-usart
 
-I still think that this particular compatible shouldn't be here, but I
-did say I would accept this version.
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+base-commit: 3f5ea7ed705e8effe9cfabf912e769ccb6b7d389
+-- 
+2.45.2
 
-Thanks,
-Conor.
-
-> +          - const: atmel,at91sam9260-usart
-> =20
->    reg:
->      maxItems: 1
-> --=20
-> 2.25.1
->=20
-
---HPDmH2zYVKMCfEhh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoVxyQAKCRB4tDGHoIJi
-0lMdAQC9IlgMexaIHRE/kzioxuHqnOOQ4p5nqh5Iwz7U7KIhAwD/VwBipX8VhBQg
-Sb9kTKARv8FnQcLhLcFDHHwB1UA99g0=
-=0ChQ
------END PGP SIGNATURE-----
-
---HPDmH2zYVKMCfEhh--
