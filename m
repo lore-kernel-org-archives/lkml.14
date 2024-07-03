@@ -1,229 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5413E4C6C;
-	Wed,  3 Jul 2024 20:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720036836; cv=fail; b=t0ECEbou4MzEjdLyQzgtpbOB+0XCGGP4RSwpdsyNelvCbH3Y2jLDIXR/JiEjHpkZMw3sTn9JdzLRQJGpllUCHidifTBD6aht+5w1kQlIDpFxjX8QmhOqUFMDIjZh0rvCmZZKD2ycj2lKHTFe6YEJsWFMT/zwXeA0X3Gjk4qmJgQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720036836; c=relaxed/simple;
-	bh=yHZPs0Wdk6IUbYSc6rRTimnTcdLAofd1xU1P4Cu3ayc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=AVL9z8b5wrpc/im8vtXs/SPfxFZHLJXm69w78EtYkjnn4ouLzt8ZdMb1Lfjs8cMvoXIXg24R5eBG2TrJiI0LV1icpQiZ6Bv9QaZ5OfnTHWoVbST8ebgzi4IGHejAWJ34f+yBxntXPdKwAAkciF/s9n/yWTPnmuJl3L49kCGSZWo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DtSVUzpS; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12064C6C
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 20:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720037005; cv=none; b=aWmedZyQtBmkLrlmK373FxEU1Q5uFSwBwJEYN2XcgDqjb7V3q0E+tTj4wbkS6zw2Q2WqFi+NhzpekyMI+cRGSqel5xUOXqS7lkW7VwJUftRDuxUAS9B5KF4ST/fdsyYN0Ht+Tm1ou1K+vbswNfp/j6MAzYZJCwuF/pPjpb5dRJc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720037005; c=relaxed/simple;
+	bh=KWKxSgkUTigGIrlXO8IkzNopByjBOgpoYRnFd3RiAwk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=CD2qVCNo7K2tp/4B8ctkeM4lm/V/IFRaE5CxFIyafN7vhjPukl27tO0DLB4Kd/Hbg0he7ho/dkHsAxT+QzcAz7URT5qT7QEhNQIjJgpA+hjsndPIkQ+266a5v/IISUpr0KAhs4mN6XrBX3FmHOpuQFTs5iMlQkhQsZ8c7cuQwYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CEWIkgRM; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DtSVUzpS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CEWIkgRM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720036834; x=1751572834;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=yHZPs0Wdk6IUbYSc6rRTimnTcdLAofd1xU1P4Cu3ayc=;
-  b=DtSVUzpSOls6K1Nm88/0AVloxtSYdVzwZzC4vQsa2KR+tCZRuKfZ/piO
-   J/ZDPROUOBF1m/pexsHoqesbLkw1qJh1HLgbxZxhMCVAkZFJm+CgaEZTr
-   HvPINoG9SnwVA1UHFb2CSGLUa2t4RKWqTZJT5XPsnkDgretaIfiEgTMZf
-   PFD/qYBnNa0Kq3ydbBcm0IQDpsf61yxEYOxN0e7Cr9CdWMkrJMRr3W1PV
-   xc9kCbEI9nzSwDwy/Ym7wNTmUl0rRiyhZ9cwThyvPWvv4GXkDNmR655N+
-   eHdc42zpGmAJusEd4Abhrv0Tjs5MyG+hBw0gtETMIEcz88IUpd/f0mWtn
-   w==;
-X-CSE-ConnectionGUID: PmnBT3AMROOhigozRGQD4g==
-X-CSE-MsgGUID: 7HL3HNGFQKGO9qSuEQPxbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="28431871"
+  t=1720037004; x=1751573004;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KWKxSgkUTigGIrlXO8IkzNopByjBOgpoYRnFd3RiAwk=;
+  b=CEWIkgRMt/ksvN1zrZJByuBsasPv8xmPH/LxqVtm1diYVo3XQryCGvTF
+   K+uRvhDdSP2ZlFZGsmLcWE7YJ7xxtK+3IRJEqU3aeg6/2j7XLhV6iDJH0
+   mOTc510/sN3N41BRhAUr6ZOADCZnLSjDJ5RmbO26djIdTw3noKinJqeN2
+   iC5AIUrN6ivOBKuy9njhIidTblKOYe5TNMbvZBLuocWhHWH/0OiW28tZ5
+   nOMR0Xl1wEilLlzJDlU/wa7j4LaS2QkJ0J/2YCX/prbwQ7SZ/+NhqlkfW
+   AXc3kDHx7hcarkBFtvyoXOMZrZgNb4mxEQYB0sBi9dDx/8S7MxctIOnol
+   A==;
+X-CSE-ConnectionGUID: TnnbwbZbRaSts6I0fn1v0w==
+X-CSE-MsgGUID: PsM5wN4cTqiLsQ9fh96TOA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="39807558"
 X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="28431871"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 13:00:32 -0700
-X-CSE-ConnectionGUID: 57rG+ygvSqq68R+P2tqDVA==
-X-CSE-MsgGUID: KsF3TUVfQz+hZW6WIow34g==
+   d="scan'208";a="39807558"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 13:03:23 -0700
+X-CSE-ConnectionGUID: zjHdWsvsTSCnT9/SdJncyQ==
+X-CSE-MsgGUID: NPzgd5CSSj2uSedGm0c8HQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="47115027"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jul 2024 13:00:30 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 3 Jul 2024 13:00:28 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 3 Jul 2024 13:00:27 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 3 Jul 2024 13:00:27 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.171)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 3 Jul 2024 13:00:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n9/e4Y71iL7ylYrR8b8orRoz048Ap/fpnWZTYbhdYrpz/Vjg8RTo4NJr3IAl2hV2JB0xaxONfkxRt8gx32ioVycOZNw8exeGT9sh1SBMCvS2jFcvikyq2CZRdAygRhjPmiKgVcIJKBvoSI3IYiI+JgSpUQKVLFe5sf1VM3tB1XqiVYGJ4RPHcTwVSGCFQWz/9sp3hQfxqoyEVpcym3y8Mzsco/oP982gaUGckIGXuJtxwr3k7cRsr7wZOwyIFkIdiTXu72B3l2R4t6MsJihs0/xRekncQtkmpn76hNaNoysLllRYs6MBBAHZQngIn30HdFkidcErFTAFaAVuGfUbhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yHZPs0Wdk6IUbYSc6rRTimnTcdLAofd1xU1P4Cu3ayc=;
- b=NJS1BZWQ4O/IQTTYi2aWAAKaD43wBxdLVPFf0ywrzzhUNgZdQBGGQ/N5YHD5sTK2Ek7rFb73S+lbfSqCyqAa7vpGcos49Jdf/9k0gx9YIfbE6U0nPTYqOCw3cV2FTw0jIisV+R8aD482hAaZI5qUGzg6lOaX2yvZBRgZpQSnkL7dEZv3JoKF2deRUHypVTKTgWE9B6v1/DUw/UzlBVwCaiH/uUuJGJD7qGYoh/E8c23mIs7Q3NhYHY6hyTmU6nFDU7ha9Ww6glU82mFDoJTlE11w539QbynYbWBv5Ji1uxaO/6CtNxKP0wU/WSaonkD+x+rLB4sSFaS2/swqyOI/9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by PH7PR11MB6032.namprd11.prod.outlook.com (2603:10b6:510:1d3::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Wed, 3 Jul
- 2024 20:00:18 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9%4]) with mapi id 15.20.7719.029; Wed, 3 Jul 2024
- 20:00:18 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "Zhao, Yan Y" <yan.y.zhao@intel.com>
-CC: "Gao, Chao" <chao.gao@intel.com>, "seanjc@google.com" <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>, "sagis@google.com" <sagis@google.com>,
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Aktas, Erdem"
-	<erdemaktas@google.com>, "dmatlack@google.com" <dmatlack@google.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Yamahata, Isaku"
-	<isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>
-Subject: Re: [PATCH v3 17/17] KVM: x86/tdp_mmu: Take root types for
- kvm_tdp_mmu_invalidate_all_roots()
-Thread-Topic: [PATCH v3 17/17] KVM: x86/tdp_mmu: Take root types for
- kvm_tdp_mmu_invalidate_all_roots()
-Thread-Index: AQHawpkmqvK9+rV8gk+Fb4hYJXFjCLHRzw4AgADIg4CABASjgIAA908AgAB1KwCAAPZwAIAAW/6AgAwm8gA=
-Date: Wed, 3 Jul 2024 20:00:18 +0000
-Message-ID: <c2380408eff9fb8501f2feee571e96eab5ca882b.camel@intel.com>
-References: <20240619223614.290657-1-rick.p.edgecombe@intel.com>
-	 <20240619223614.290657-18-rick.p.edgecombe@intel.com>
-	 <ZnUncmMSJ3Vbn1Fx@yzhao56-desk.sh.intel.com>
-	 <0e026a5d31e7e3a3f0eb07a2b75cb4f659d014d5.camel@intel.com>
-	 <Znkuh/+oeDeIY68f@yzhao56-desk.sh.intel.com>
-	 <d12ce92535710e633ed095286bb8218f624d53bb.camel@intel.com>
-	 <ZnpgRsyh8wyswbHm@yzhao56-desk.sh.intel.com>
-	 <2f867acb7972d312c046ae3170670931a57377a8.camel@intel.com>
-	 <Znt8K7o0gCwjuES+@yzhao56-desk.sh.intel.com>
-In-Reply-To: <Znt8K7o0gCwjuES+@yzhao56-desk.sh.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|PH7PR11MB6032:EE_
-x-ms-office365-filtering-correlation-id: f32dee00-5afd-4a29-86bb-08dc9b9ac395
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?Ym1EWG45Z1dIQTZpcmhuclBtYy9uMmRKd2t6eVVoMndWNTlPWmc1RFVibTgz?=
- =?utf-8?B?YTFWV0piWnowQWdjR1d2a3BRVFV2NkR5MmRPb1FqYVd6cWJ2eGpBdVVLM1dq?=
- =?utf-8?B?d2VoWm1zVWJOUEtYVm5ZdWsveW5BeVV2TFk5cVNpUVZ5WXhMOEpiVU91T0Fu?=
- =?utf-8?B?TlNtV0l3OGF6d0lKZ0FaS3hsYytJMUdKYnhmbmpHNnhCelh5bnk4NjJ0VUJJ?=
- =?utf-8?B?cmg1ZDN4RWhsL0VCM2ZGWW1RVCs5ekc5S0duUk1ncnFrRGd6bmx2YVI0VExP?=
- =?utf-8?B?aTZlR0tuMTdIZVhPeitjODUrejBNaHYyZ3N2TFhBMkZEMG9xQllnYWtnWlRI?=
- =?utf-8?B?djBuZEgzSmg4dnhvQkR1c3ljN3pFODJOYi9RMEl6VzZjckVTRDhpSWlCUk0y?=
- =?utf-8?B?NHBWQm82LzdTcTNrcEVEcWJDaTRmczVHLzZRbjFGSVV5Tmd5Vm5CWTNEcUk3?=
- =?utf-8?B?eE1CZm40L3IrNE05VThJYm4ySXVDQmlKSFZoc0NBRlhqODNRbzA0VExTK2p4?=
- =?utf-8?B?Y1JoYm9KRDBOMitlWEtlZ2JKaU9SVnIwOHFGN1pWWHNGcm0zNXlQQzErWG9E?=
- =?utf-8?B?bnp6VURlVXZ0N3JRK1BRSUFKbjlQRmMwSDRIcnp6a01hM0c5OWxLRExPQ0d4?=
- =?utf-8?B?MnhkSEx6RDZ3RGJES0FNa29LQ3hOR1BrS09uZVVlUmlTYUxQWmpWQjBsRFpW?=
- =?utf-8?B?U3FCNEZ0L2tvWnU4UFZLU3VLSElXWHVwaVdSTTZhQWQ2OUJqYkVCMTRtamlC?=
- =?utf-8?B?b2dGeFc0dWswdC84VXBDM1gvNzJWYTNkL053SzMyZFUzM0RjOGtBSVRtdGxC?=
- =?utf-8?B?OFAvZmxGNjF2Wld0emlycUcyZVd1bXhaY0ZoVndVWFBqN1NFU2V2dzJiUzhZ?=
- =?utf-8?B?ck1CR3RMVWpYUXJDWnhoZXBEMTV6eUNrVmlieDFWd2VPVjBDNGkwb3pHZ21l?=
- =?utf-8?B?NytHNTUxT096Q1pqU3BoQWIrNFVjbUdMV2VNeVFXd1NxbTlxSDhsQmkwWG5P?=
- =?utf-8?B?M281Y2FTcmVBYWdpMjByZytJYXg2c2UwMFZHZTY4QTNaQ1Y2VDk1cENVN3or?=
- =?utf-8?B?SXlDZkRIbEh5VEhHRGFmWGNuc0kvYXBFdkdCOWNJNHUrM1E5bmtBanM0bDM4?=
- =?utf-8?B?ZE0zclFnYVR0NFV0ZXF5bEhBazlBYmdjM0hxMTlaaXJRWnZiNlNQZkxkWVUv?=
- =?utf-8?B?RU5WbGJXd2hGNk4rS3ZhMlBlTUdIYWJCeDF3YUNDT1gzSGR1bFdwdHg3TzRU?=
- =?utf-8?B?ZTJic1hTTGREUGFjTzNOZTZuUjBEcHAwaWxaWXZnNzBhUG5jMDJDL2tBU3FS?=
- =?utf-8?B?V09ZT0ZHcmk5Z21Nb3liL3RIWHlTcndJOXRlOXVPSVlmc0x4dHJESUVZbnly?=
- =?utf-8?B?V2lIZS9DNFFGMmNLdDFGbkJLSXJPdkNkSUNKbG1WTXBpaVQ4QnBtN3AzcE5N?=
- =?utf-8?B?MGVjdUxvaHMyUnVsTXgyRlNGNjlqeUkwV2MxV21NZmtOMzBWSWdGOVllcjJG?=
- =?utf-8?B?Y1JLRHBJSk5UYVdUeWk3MlhPSjVCRUJ6RE92M1IvbHIxUXN2YStyM2VqeGJK?=
- =?utf-8?B?V0Fva25pUHhYVC9NOGtPS0FDaHl3MExBZVFvTHlFR2VJckxzMkJwTlNjWFVK?=
- =?utf-8?B?UmNMTUVpTXliVzdtZWgwT25zNnlzNVh2aGtDRDBqYVlYQm5welR6SlVXeGMz?=
- =?utf-8?B?d3BPa2xjS3VaRm5XLzZpRWJZWFpnYURJV05sbjVpTzJVWkFrVy96L04vUlYw?=
- =?utf-8?B?U2hKdFNVYXJmK3hESWhRdkdSakF6cmxhTTRpTG1ZYVZRWUJ3eFhoUlR2Sksx?=
- =?utf-8?B?NStDSUVGZVQrZDZqNzJ4RXFKNVBqWUUyRHdBM0VyMjFsUE5qVmJ3Rnk5cXRO?=
- =?utf-8?B?dmJNa3lXNWFJYTBVNGJjcUErcjdtRUYwM05ocklMNHRQcGc9PQ==?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?d0FTbXpBbTVNQ0ZLdUExMGZwSkZFN1RkaThOb1NEMWRnMjVybUhWNXBzby9W?=
- =?utf-8?B?WCtCMWVMbEcwaEJTcXFwU0cwVU5XeEhGNWRPcFVPYVhTcUV0cjZIT2NlcmtF?=
- =?utf-8?B?Nkg1Q2wrQ0FIeENOVUo1TnFTWGdReG5RWWZWUW93bmQ3Y1JySjJqQS9BSi9V?=
- =?utf-8?B?MlcyYnlTYmFwTmVkMGtFMjVmTTlpL1FlYkFNVFNZaU1GKzJJam5uU1lhVWRZ?=
- =?utf-8?B?ZEpETTBVOVNJOTNPZTNxL2FPUDczU3dlaTg4RmZhQzFWaFd5NGhvVGdYZXdH?=
- =?utf-8?B?a3NLdUJ4ZmpySmVZOXA2YkYyRTQwM0sycWFjREZSanMyRlZSWjhzc0tsQXg2?=
- =?utf-8?B?MzhTN3RpeDdtbnVTMXBmL3BGMFRPbmxmWFdTTFk2ZE42cmtLVi9LMzdPYXpW?=
- =?utf-8?B?clhWNmpLQWV1UHNqbEhMMDJEbkFDU1ZyUEU4b09sSGVucGlqaG1GMll5R3pk?=
- =?utf-8?B?amVkUnV5VUFjeWpEZU84bnB1QTNHR3BpTmh2Nk9odnFGbWNyZlEreEppTlJS?=
- =?utf-8?B?cG12WENrbTR2UnBDV0MwVzVtak81V29ydWJMb3NXVDZLQnBlR2RMZ2hCdHNK?=
- =?utf-8?B?U3M1aVV4M0l6YjF6RklGV0tJeGozMytkL1lyK2drL3ZFSWhCS0RwS2VQOXVx?=
- =?utf-8?B?UnpiRVFGbnJOZVU2bmFhenphdXhHNUZXRVl5cTZ3QTR6MmpMOGpHbS8yTUpn?=
- =?utf-8?B?dTAzWHFpTk1xQlhJRjJJemVtNU5ndDd4U2hzQy9LTHo0NzBPdEhjSU9tb1E3?=
- =?utf-8?B?ZklHSlVwUVloVGExSHJMeVBkclB3WnNXOGtwVUZTWEJaTGFkanQwTWJxcU5W?=
- =?utf-8?B?VDFFeVpDRUYrZkdwOE5uaGJCdWxHNVhMK1VQeHZ4czNGeTAxMlRzcDFMQlVD?=
- =?utf-8?B?WTlvRVFHRUFDb2dGRXhJZ0tWT0xXWXAxbXNCaENwV09VandzWSsxMDBnY21Q?=
- =?utf-8?B?VUQyZXVMQWlPRUxUVys1c3NFTWVMYVZ0NjFlVUFWYzUvY0pONEgyUG95bTFp?=
- =?utf-8?B?WjdaMDZrYXBuK1VGWjNEL29iNEd2cDBMUHpPZ0NjaSs4aFlXdTJRWmhkMXVN?=
- =?utf-8?B?TkNHODBOWFcxYlFLV2pmZTZtYU55LzNiRlRQQ1ExMktkVTlFWng4ZzZEY2Ni?=
- =?utf-8?B?YnY4bldlcUJuVU4ra1haRzFBeDFaeHhEZFl5ZGVlK3Y0YjdXZ090MUNtZUJ6?=
- =?utf-8?B?RVpZOHhhWXlaZUQxSmRyRmhGVGlWdEhXZXdjbHN4YWpMUStYOEVJV0Q3V0Vx?=
- =?utf-8?B?eU5HaldwK2JmeENYVFR1a1lsWGx5aDhZZUo1T09CVXFiR2hmeEUzY05OeENK?=
- =?utf-8?B?ODNkOHpsd3p4ZzdlY2tTai9janVidi9Od29xeTBnL0dkY1JaaS9TYXY0SzBP?=
- =?utf-8?B?N1JaS2FhZmFnTk1zbHM2a3ZzZFJRMXBRNFErV0VzK0RVTW1iNmVVZmVXUUUw?=
- =?utf-8?B?cnQ4MFpXYmJyckZjTWZLbVp6VEttNUpJNGFFKzBOa0hoaFpTbDlsWXVxWXlE?=
- =?utf-8?B?ZmZGWFhvUnFrS3dTQWVlT0tZVVlKSWdjREphUzZrV0FCVDVlTm0wOUJyUy94?=
- =?utf-8?B?Mm85czdnMWZnYTFLVGdxb051eGMxNG1WWVBDRWdVTnNpV2gzQWV0a3BRMHNx?=
- =?utf-8?B?M1AyTE4xUGx5LzRvYTFVc3lXZVZEelkwSVQ5WVErZkR2aEhpTVpad3lkd2JC?=
- =?utf-8?B?ZEo3ZWRDUnIwNlArT3ErRytwRUJvR3Z2U3EwYThKc0tQNDgvU1pnVHphZDlk?=
- =?utf-8?B?SnR5WW5VNnBUYmhFdDFDdzR0c2t0Tk5yTVhBMVkvQ2lDRTAxN2pGYjNTZWFC?=
- =?utf-8?B?SmRhd2lLWVlUWWlKckxycThienR1aVIrd0ZWQ2NCVVJqTkhWeWQ0N3RTRk5v?=
- =?utf-8?B?bXNQWGtrSXk1dFcwM1RjcFduWEwzZVYyVXR6QnFBajgyZHJhQ3RsU3BSK2p2?=
- =?utf-8?B?NkVkVzFINEVqY2tMN1R4aDRzQTBVbmIvak1jQjVrcnZqTlJuamd6MlVMMVhX?=
- =?utf-8?B?MXVCVmU4b0tvdFpza3RjVlhLOC96V2ZCU09MWFRDNUs1SUJtUkVJQm4wTnQ3?=
- =?utf-8?B?dHJmTGYvNGlEeGgwTU1vV2l1L3N0Z0d2cGxkek9HQWoyc2Q3ckVucXhRR2dC?=
- =?utf-8?B?UUdyVkpOWCtMOXZHYlc0SDFwd2NHbllHaTJML25WK3Z0VUFDM20wcE1LNVhG?=
- =?utf-8?B?RXc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1C5E37846ABC47489DC44ADA9D94E0CB@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="46442539"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa010.fm.intel.com with ESMTP; 03 Jul 2024 13:03:22 -0700
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	peterz@infradead.org,
+	mingo@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: adrian.hunter@intel.com,
+	ak@linux.intel.com,
+	eranian@google.com,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 0/9] Support branch counters in block annotation 
+Date: Wed,  3 Jul 2024 13:03:47 -0700
+Message-Id: <20240703200356.852727-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f32dee00-5afd-4a29-86bb-08dc9b9ac395
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2024 20:00:18.8208
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Y3388hCyjYMZZ9FW1yr4Qj9cpJziYE6R0qkb7u6e8F/SeNdtyGQmrLY71AzLbHPOgnd7RGTVKiu+WlI550dnRRvz59q9I7iWs7Q5AYe2BfQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6032
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-T24gV2VkLCAyMDI0LTA2LTI2IGF0IDEwOjI1ICswODAwLCBZYW4gWmhhbyB3cm90ZToNCj4gPiBN
-YXliZSBiZXR0ZXIgdGhhbiBhIGNvbW1lbnQuLi4/IE5lZWQgdG8gcHV0IHRoZSB3aG9sZSB0aGlu
-ZyB0b2dldGhlciBhbmQNCj4gPiB0ZXN0IGl0DQo+ID4gc3RpbGwuDQo+IEhtbSwgSSB0aGluayBw
-YXNzaW5nIEtWTV9ESVJFQ1RfUk9PVFMgb25seSBpbiBrdm1fdGRwX21tdV96YXBfYWxsKCkgaXMg
-b2ssDQo+IGJlY2F1c2Uga3ZtX21tdV91bmluaXRfdGRwX21tdSgpIHdpbGwgemFwIGFsbCBpbnZh
-bGlkYXRlZCByb290cyBldmVudHVhbGx5LA0KPiB0aG91Z2ggS1ZNX0RJUkVDVF9ST09UUyB8IEtW
-TV9JTlZBTElEX1JPT1RTIG1hdGNoZXMgbW9yZSB0byB0aGUgZnVuY3Rpb24gbmFtZQ0KPiB6YXBf
-YWxsLg0KPiANCj4gSSdtIG5vdCBjb252aW5jZWQgdGhhdCB0aGUgY2hhbmdlIGluIHRkcF9tbXVf
-cm9vdF9tYXRjaCgpIGFib3ZlIGlzIG5lZWRlZC4NCj4gT25jZSBhIHJvb3QgaXMgbWFya2VkIGlu
-dmFsaWQsIGl0IHdvbid0IGJlIHJlc3RvcmVkIGxhdGVyLiBEaXN0aW5ndWlzaGluZw0KPiBiZXR3
-ZWVuIGludmFsaWQgZGlyZWN0IHJvb3RzIGFuZCBpbnZhbGlkIG1pcnJvciByb290cyB3aWxsIG9u
-bHkgcmVzdWx0IGluIG1vcmUNCj4gdW51c2VkIHJvb3RzIGxpbmdlcmluZyB1bm5lY2Vzc2FyaWx5
-Lg0KDQpUaGUgbG9naWMgZm9yIGRpcmVjdCByb290cyBpcyBmb3Igbm9ybWFsIFZNcyBhcyB3ZWxs
-LiBJbiBhbnkgY2FzZSwgd2Ugc2hvdWxkIG5vdA0KbWl4IGdlbmVyaWMgS1ZNIE1NVSBjaGFuZ2Vz
-IGluIHdpdGggbWlycm9yZWQgbWVtb3J5IGFkZGl0aW9ucy4gU28gbGV0J3Mga2VlcCB0aGUNCmV4
-aXN0aW5nIGRpcmVjdCByb290IGJlaGF2aW9yIHRoZSBzYW1lLg0KDQoNCg==
+From: Kan Liang <kan.liang@linux.intel.com>
+
+The branch counters logging (A.K.A LBR event logging) introduces a
+per-counter indication of precise event occurrences in LBRs. It can
+provide a means to attribute exposed retirement latency to combinations
+of events across a block of instructions. It also provides a means of
+attributing Timed LBR latencies to events.
+
+The kernel support and basic perf tool support have been merged.
+https://lore.kernel.org/lkml/20231025201626.3000228-1-kan.liang@linux.intel.com/
+
+This series is to provide advanced perf tool support via adding the
+branch counters information in block annotation. It can further
+facilitate the analysis of branch blocks.
+
+The patch 1 and 2 are to fix two existing issues of --total-cycles and
+the branch counters feature.
+
+The patch 3-9 are the advanced perf tool support.
+
+Here are some examples.
+
+perf annotation:
+
+$perf record -e "{branch-instructions:ppp,branch-misses}:S" -j any,counter
+$perf report  --total-cycles --stdio
+
+ # To display the perf.data header info, please use --header/--header-only options.
+ #
+ #
+ # Total Lost Samples: 0
+ #
+ # Samples: 1M of events 'anon group { branch-instructions:ppp, branch-misses }'
+ # Event count (approx.): 1610046
+ #
+ # Branch counter abbr list:
+ # branch-instructions:ppp = A
+ # branch-misses = B
+ # '-' No event occurs
+ # '+' Event occurrences may be lost due to branch counter saturated
+ #
+ # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles          Branch Counter [Program Block Range]
+ # ...............  ..............  ...........  ..........  ......................  ..
+ #
+           57.55%            2.5M        0.00%           3             |A   |-   |                 ...
+           25.27%            1.1M        0.00%           2             |AA  |-   |                 ...
+           15.61%          667.2K        0.00%           1             |A   |-   |                 ...
+            0.16%            6.9K        0.81%         575             |A   |-   |                 ...
+            0.16%            6.8K        1.38%         977             |AA  |-   |                 ...
+            0.16%            6.8K        0.04%          28             |AA  |B   |                 ...
+            0.15%            6.6K        1.33%         946             |A   |-   |                 ...
+            0.11%            4.5K        0.06%          46             |AAA+|-   |                 ...
+
+(The below output is in the TUI mode. Users can press 'B' to display
+the Branch counter abbr list.)
+
+Samples: 1M of events 'anon group { branch-instructions:ppp, branch-misses }',
+4000 Hz, Event count (approx.):
+f3  /home/sdp/test/tchain_edit [Percent: local period]
+Percent       │ IPC Cycle       Branch Counter (Average IPC: 1.39, IPC Coverage: 29.4%)
+              │                                     0000000000401755 <f3>:
+  0.00   0.00 │                                       endbr64
+              │                                       push    %rbp
+              │                                       mov     %rsp,%rbp
+              │                                       movl    $0x0,-0x4(%rbp)
+  0.00   0.00 │1.33     3          |A   |-   |      ↓ jmp     25
+ 11.03  11.03 │                                 11:   mov     -0x4(%rbp),%eax
+              │                                       and     $0x1,%eax
+              │                                       test    %eax,%eax
+ 17.13  17.13 │2.41     1          |A   |-   |      ↓ je      21
+              │                                       addl    $0x1,-0x4(%rbp)
+ 21.84  21.84 │2.22     2          |AA  |-   |      ↓ jmp     25
+ 17.13  17.13 │                                 21:   addl    $0x1,-0x4(%rbp)
+ 21.84  21.84 │                                 25:   cmpl    $0x270f,-0x4(%rbp)
+ 11.03  11.03 │0.61     3          |A   |-   |      ↑ jle     11
+              │                                       nop
+              │                                       pop     %rbp
+  0.00   0.00 │0.24    20          |AA  |B   |      ← ret
+
+perf script:
+
+$perf script -F +brstackinsn,+brcntr
+
+ # Branch counter abbr list:
+ # branch-instructions:ppp = A
+ # branch-misses = B
+ # '-' No event occurs
+ # '+' Event occurrences may be lost due to branch counter saturated
+     tchain_edit  332203 3366329.405674:      53030 branch-instructions:ppp:            401781 f3+0x2c (home/sdp/test/tchain_edit)
+        f3+31:
+        0000000000401774        insn: eb 04                     br_cntr: AA     # PRED 5 cycles [5]
+        000000000040177a        insn: 81 7d fc 0f 27 00 00
+        0000000000401781        insn: 7e e3                     br_cntr: A      # PRED 1 cycles [6] 2.00 IPC
+        0000000000401766        insn: 8b 45 fc
+        0000000000401769        insn: 83 e0 01
+        000000000040176c        insn: 85 c0
+
+$perf script -F +brstackinsn,+brcntr -v
+
+     tchain_edit  332203 3366329.405674:      53030 branch-instructions:ppp:            401781 f3+0x2c (/home/sdp/test/tchain_edit)
+        f3+31:
+        0000000000401774        insn: eb 04                     br_cntr: branch-instructions:ppp 2 branch-misses 0      # PRED 5 cycles [5]
+        000000000040177a        insn: 81 7d fc 0f 27 00 00
+        0000000000401781        insn: 7e e3                     br_cntr: branch-instructions:ppp 1 branch-misses 0      # PRED 1 cycles [6] 2.00 IPC
+        0000000000401766        insn: 8b 45 fc
+        0000000000401769        insn: 83 e0 01
+        000000000040176c        insn: 85 c0
+
+Kan Liang (9):
+  perf report: Fix --total-cycles --stdio output error
+  perf report: Remove the first overflow check for branch counters
+  perf evlist: Save branch counters information
+  perf annotate: Save branch counters for each block
+  perf evsel: Assign abbr name for the branch counter events
+  perf report: Display the branch counter histogram
+  perf annotate: Display the branch counter histogram
+  perf script: Add branch counters
+  perf test: Add new test cases for the branch counter feature
+
+ tools/perf/Documentation/perf-report.txt |   1 +
+ tools/perf/Documentation/perf-script.txt |   2 +-
+ tools/perf/builtin-annotate.c            |  13 +-
+ tools/perf/builtin-diff.c                |   8 +-
+ tools/perf/builtin-report.c              |  25 ++-
+ tools/perf/builtin-script.c              |  69 +++++++-
+ tools/perf/builtin-top.c                 |   4 +-
+ tools/perf/tests/shell/record.sh         |  17 +-
+ tools/perf/ui/browsers/annotate.c        |  18 +-
+ tools/perf/ui/browsers/hists.c           |  18 +-
+ tools/perf/util/annotate.c               | 209 +++++++++++++++++++++--
+ tools/perf/util/annotate.h               |  24 ++-
+ tools/perf/util/block-info.c             |  66 ++++++-
+ tools/perf/util/block-info.h             |   8 +-
+ tools/perf/util/branch.h                 |   1 +
+ tools/perf/util/disasm.c                 |   1 +
+ tools/perf/util/evlist.c                 |  66 +++++++
+ tools/perf/util/evlist.h                 |   2 +
+ tools/perf/util/evsel.c                  |  15 +-
+ tools/perf/util/evsel.h                  |  12 ++
+ tools/perf/util/hist.c                   |   5 +-
+ tools/perf/util/hist.h                   |   2 +-
+ tools/perf/util/machine.c                |   3 +
+ 23 files changed, 519 insertions(+), 70 deletions(-)
+
+-- 
+2.38.1
+
