@@ -1,192 +1,173 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6A915B107
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03458143758;
+	Wed,  3 Jul 2024 10:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720001470; cv=none; b=oc3zkeZaa7tKTwYsnaI5hXuXO1FPZvm2n4jTbrW4R4Ubc0QifUdQq+F88QONsgfEqrmCSvhvYGKd7NQyCH8Ilf7ggGDTQ0PHJ1/YRl0urW6flcX1WBknHW7Z0EZEbayhODZ2SyK1RezHyeP9dW+cYQr5qIFOhlpcw9YebzuVj5w=
+	t=1720001473; cv=none; b=KTVqYdoCKAAeQteHO0qzCneqYKdc9KkVg/o+PM0S59iWEZKQyGpDP5smLYCCZgVEVIsdnCT1aotCTcCuxBm+17St5pn6UEwHOpO8WfLIsY0jntW2LGYPWTgOjCjCvYyhFKZAjUmp6R4LxXAXoiONQ48OiBh18oTwUziTMaKA2TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720001470; c=relaxed/simple;
-	bh=XPy1FzF1Ebx4bueMG5ZLQTSTYfgwB7PuWQdXDp+T4YU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C5qC8dZ8YMPODWG/8uqfrVxfXDDzbnOTvAcgLW6xzELNXW/qbFVKfoppdU3UdpIBYhVIR2MLI7AX0Qej+u9lLBumZfEoRsh+XsZNcxQMiufETJiwBYp2FhK6Jhsik1JSpvaFnJWEEkwWyYoytjmK0l7BjxAQULWozQEOLLMo44o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CiWKKQ6b; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720001473; c=relaxed/simple;
+	bh=OtlEX+N2t22ZO0stHC9uK5V+uqtQ/aaFzUaCS8qHyPs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QcPo7Ox3UUB8f44u94aMEROifIOqfG1ICZbE8e2boWjMVK/gax0hbvnQwDmcUHB2Rk/hQ+yCE8sTqTxNU7gDuAKjA/YG4o5/5MrXGGi1373PokQanw2YLtX1+gcHTEzV1MBtmk8LhA8dBvVub8yvbpn+D9p0/j1KAEWg8gGrsyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxIYkZcG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CiWKKQ6b"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-380dacc983eso185215ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 03:11:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720001468; x=1720606268; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WpAR7Ny8q3WkzXllnPim4ghKxdVm2AsfgGOk/xi9Hrc=;
-        b=CiWKKQ6bnAaA5eN+ukEzuXjSIIeTtkF0k7qOgKhFVYBgaPyvGglzvdXgi1RbmQIlqX
-         WySC+TWtVgKnIH3eFTmRtfNkTiYmriRL8cRfl6pmuNIzkrEap0md26iYbNgrrcOk1Ltx
-         AukByvIVtfwRUSZie1ZCvR2RBGeRlGMv5hjnYmVhMkZcclJfoouryqLzrQETT3qt+szH
-         CAt7S4hwFkLUegLAS2wlPN8Wy5Y5q9DQx1jPY8p6cEF2v6h5nWBICesxzNSF7YV85Tkk
-         8CDkcgecPgcIwpFNJ8Tqv9xIACcuk75iO6e8ICJJuc2vW/3OMiERsdcx+l8zDMZ1xDcE
-         RY9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720001468; x=1720606268;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WpAR7Ny8q3WkzXllnPim4ghKxdVm2AsfgGOk/xi9Hrc=;
-        b=qyfwW8IqwvuAc4FCELqPG49+Dhq0VL+el+yb7fdgbk+2pHNeoHr36rrrsl7PcvH38z
-         kqOz3QDsOGw/AAWg8/eQCdK04eBx0pvV+SuwxVKHxtKFnI+pc4F5Gp+qCQJpFnCetxqG
-         OFEjnimJu4hbNPKlwjRkX437oLds8XomqEMaOwG+W7m16OCBHyIIju+vwJhZZ+E/jFRI
-         KfPSR8UWyyWKGy0So6Sn0iPxclGwbED7gno6E2o+yABol0peqX6nCi9NbsKxFlNfF9IG
-         nFHeyROd1YTQjgovSnhWnM1JJNBipgBCzdywHBJJC6CYRjptkrpSWBUsjyeiPjS0of6M
-         NC4g==
-X-Forwarded-Encrypted: i=1; AJvYcCWJuKbBH8ycaKab/e8jfJ7iNpjpGjctbRFPtg/ZUX/EMmeco8Y0oux/bke6+pf4orYp6AFemJJa3zt/oIdTABkUs5XH5uequfifoT56
-X-Gm-Message-State: AOJu0YzTqUsF+hosn3GKpmE/dZ5DkmR9vTGfMKVcwb44cuXUHTUH250U
-	9XkoEJY2+hJ227XnpX5KNXDkhlqsjvEL33qvj7cps9hxtm/MlcWuNaaSMrJwC1hkaO9lutOdt/8
-	rVexGMbMY4bWdLvU/3xut8nNKqBo2uuSZpe5A
-X-Google-Smtp-Source: AGHT+IH898YEcCwJpLbHzqqfGYM8WQrRWE/MGIIxJuHopTKOArBwznaH1U1QlxYiVG3aQU53jla4P0WZiSL0/plIfJg=
-X-Received: by 2002:a05:6e02:339a:b0:375:f1f7:c53 with SMTP id
- e9e14a558f8ab-3820cde0e19mr2167885ab.7.1720001467894; Wed, 03 Jul 2024
- 03:11:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxIYkZcG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1432AC32781;
+	Wed,  3 Jul 2024 10:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720001472;
+	bh=OtlEX+N2t22ZO0stHC9uK5V+uqtQ/aaFzUaCS8qHyPs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rxIYkZcGUcc9gfnGdG5yW4Jmigr8H/S6zs9NwCzHe8JfCciF5l0zxi4aJnysN8pjV
+	 a1maAmcFMJfTPznNccowSoqXMj2c1K4RTfSiGZtEUIVwZkujCDJ0pfQifJ0GxtrHYC
+	 Aq/BezJWWthV/f5iWNH3gG7g9m6nnGXoYIcFdXt0UAyeU3MICY4PtcCfTwDi4Jrx+D
+	 SQTW/jJ2G8htqoJmcLUVReCAXX0m9jXm5cnVt5++w39xs3KpGqrqpdXZZ7koj97umo
+	 L9ZrBi5lf7rkayW/qDnR7EqGm81egFKwfOpy4zmZV+Wrqtw2JwlPIg6yMBywlH/9L+
+	 AclTEGVZ5McDg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v12 11/19] bpf: Enable kprobe_multi feature if CONFIG_FPROBE is enabled
+Date: Wed,  3 Jul 2024 19:11:07 +0900
+Message-Id: <172000146719.63468.13245486388278577139.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <172000134410.63468.13742222887213469474.stgit@devnote2>
+References: <172000134410.63468.13742222887213469474.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000227d2c061c54ff82@google.com>
-In-Reply-To: <000000000000227d2c061c54ff82@google.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 3 Jul 2024 12:10:52 +0200
-Message-ID: <CANn89iJFATii0PdPxfhjurHXiBo6j5Dgqunok1dLJw_NNYtb7g@mail.gmail.com>
-Subject: Re: [syzbot] [net?] WARNING: suspicious RCU usage in dev_activate
-To: syzbot <syzbot+2120b9a8f96b3fa90bad@syzkaller.appspotmail.com>, 
-	Johannes Berg <johannes.berg@intel.com>
-Cc: davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 3, 2024 at 12:07=E2=80=AFPM syzbot
-<syzbot+2120b9a8f96b3fa90bad@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    1dfe225e9af5 Merge tag 'scsi-fixes' of git://git.kernel.o=
-r..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D14a4f2d198000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D1ace69f521989=
-b1f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D2120b9a8f96b3fa=
-90bad
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
-ian) 2.40
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/3894cf8b5271/dis=
-k-1dfe225e.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/573c202ade8f/vmlinu=
-x-1dfe225e.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/a356d869b8f3/b=
-zImage-1dfe225e.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+2120b9a8f96b3fa90bad@syzkaller.appspotmail.com
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> WARNING: suspicious RCU usage
-> 6.10.0-rc6-syzkaller-00051-g1dfe225e9af5 #0 Not tainted
-> -----------------------------
-> net/sched/sch_generic.c:1249 suspicious rcu_dereference_protected() usage=
-!
->
-> other info that might help us debug this:
->
->
-> rcu_scheduler_active =3D 2, debug_locks =3D 1
-> 3 locks held by kworker/u8:0/11:
->  #0: ffff88801efaa148 ((wq_completion)bond0#9){+.+.}-{0:0}, at: process_o=
-ne_work kernel/workqueue.c:3223 [inline]
->  #0: ffff88801efaa148 ((wq_completion)bond0#9){+.+.}-{0:0}, at: process_s=
-cheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
->  #1: ffffc90000107d00 ((work_completion)(&(&bond->mii_work)->work)){+.+.}=
--{0:0}, at: process_one_work kernel/workqueue.c:3224 [inline]
->  #1: ffffc90000107d00 ((work_completion)(&(&bond->mii_work)->work)){+.+.}=
--{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
->  #2: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire i=
-nclude/linux/rcupdate.h:329 [inline]
->  #2: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock incl=
-ude/linux/rcupdate.h:781 [inline]
->  #2: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: bond_mii_monitor+0=
-x174/0x3170 drivers/net/bonding/bond_main.c:2824
->
-> stack backtrace:
-> CPU: 0 PID: 11 Comm: kworker/u8:0 Not tainted 6.10.0-rc6-syzkaller-00051-=
-g1dfe225e9af5 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 06/07/2024
-> Workqueue: bond0 bond_mii_monitor
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->  lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
->  dev_activate+0xf8/0x1240 net/sched/sch_generic.c:1249
->  linkwatch_do_dev+0xfb/0x170 net/core/link_watch.c:173
->  ethtool_op_get_link+0x15/0x60 net/ethtool/ioctl.c:62
->  bond_check_dev_link+0x1f1/0x3f0 drivers/net/bonding/bond_main.c:757
->  bond_miimon_inspect drivers/net/bonding/bond_main.c:2604 [inline]
->  bond_mii_monitor+0x49a/0x3170 drivers/net/bonding/bond_main.c:2826
->  process_one_work kernel/workqueue.c:3248 [inline]
->  process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3329
->  worker_thread+0x86d/0xd50 kernel/workqueue.c:3409
->  kthread+0x
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-I think this came with this patch :
+Enable kprobe_multi feature if CONFIG_FPROBE is enabled. The pt_regs is
+converted from ftrace_regs by ftrace_partial_regs(), thus some registers
+may always returns 0. But it should be enough for function entry (access
+arguments) and exit (access return value).
 
-commit facd15dfd69122042502d99ab8c9f888b48ee994
-Author: Johannes Berg <johannes.berg@intel.com>
-Date:   Mon Dec 4 21:47:07 2023 +0100
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Florent Revest <revest@chromium.org>
+---
+ Changes in v9:
+  - Avoid wasting memory for bpf_kprobe_multi_pt_regs when
+    CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST=y
+---
+ kernel/trace/bpf_trace.c |   27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
-    net: core: synchronize link-watch when carrier is queried
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index f72b421abe9b..77fd63027286 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2602,7 +2602,7 @@ struct bpf_session_run_ctx {
+ 	void *data;
+ };
+ 
+-#if defined(CONFIG_FPROBE) && defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
++#ifdef CONFIG_FPROBE
+ struct bpf_kprobe_multi_link {
+ 	struct bpf_link link;
+ 	struct fprobe fp;
+@@ -2625,6 +2625,13 @@ struct user_syms {
+ 	char *buf;
+ };
+ 
++#ifndef CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST
++static DEFINE_PER_CPU(struct pt_regs, bpf_kprobe_multi_pt_regs);
++#define bpf_kprobe_multi_pt_regs_ptr()	this_cpu_ptr(&bpf_kprobe_multi_pt_regs)
++#else
++#define bpf_kprobe_multi_pt_regs_ptr()	(NULL)
++#endif
++
+ static int copy_user_syms(struct user_syms *us, unsigned long __user *usyms, u32 cnt)
+ {
+ 	unsigned long __user usymbol;
+@@ -2819,7 +2826,7 @@ static u64 bpf_kprobe_multi_entry_ip(struct bpf_run_ctx *ctx)
+ 
+ static int
+ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+-			   unsigned long entry_ip, struct pt_regs *regs,
++			   unsigned long entry_ip, struct ftrace_regs *fregs,
+ 			   bool is_return, void *data)
+ {
+ 	struct bpf_kprobe_multi_run_ctx run_ctx = {
+@@ -2831,6 +2838,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 		.entry_ip = entry_ip,
+ 	};
+ 	struct bpf_run_ctx *old_run_ctx;
++	struct pt_regs *regs;
+ 	int err;
+ 
+ 	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
+@@ -2841,6 +2849,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 
+ 	migrate_disable();
+ 	rcu_read_lock();
++	regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
+ 	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+ 	err = bpf_prog_run(link->link.prog, regs);
+ 	bpf_reset_run_ctx(old_run_ctx);
+@@ -2857,15 +2866,11 @@ kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
+ 			  unsigned long ret_ip, struct ftrace_regs *fregs,
+ 			  void *data)
+ {
+-	struct pt_regs *regs = ftrace_get_regs(fregs);
+ 	struct bpf_kprobe_multi_link *link;
+ 	int err;
+ 
+-	if (!regs)
+-		return 0;
+-
+ 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
+-	err = kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs, false, data);
++	err = kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs, false, data);
+ 	return is_kprobe_session(link->link.prog) ? err : 0;
+ }
+ 
+@@ -2875,13 +2880,9 @@ kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
+ 			       void *data)
+ {
+ 	struct bpf_kprobe_multi_link *link;
+-	struct pt_regs *regs = ftrace_get_regs(fregs);
+-
+-	if (!regs)
+-		return;
+ 
+ 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
+-	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs, true, data);
++	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs, true, data);
+ }
+ 
+ static int symbols_cmp_r(const void *a, const void *b, const void *priv)
+@@ -3142,7 +3143,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 	kvfree(cookies);
+ 	return err;
+ }
+-#else /* !CONFIG_FPROBE || !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
++#else /* !CONFIG_FPROBE */
+ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+ {
+ 	return -EOPNOTSUPP;
 
-
-Issue here is that ethtool_op_get_link() could be called from RCU contexts.
-
-Adding linkwatch_sync_dev() in it broke this case.
-
-BTW, this commit also made it difficult to convert "ip link" dumps to
-not use RTNL, but rely on RCU instead.
