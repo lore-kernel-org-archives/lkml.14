@@ -1,917 +1,354 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11022129.outbound.protection.outlook.com [52.101.66.129])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D57282E1;
-	Wed,  3 Jul 2024 16:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.129
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720023564; cv=fail; b=ELz5IzGwZYUyLMLtaICjDwFcNbgknZZLYbtkzgEavSkW1XU1UPQ+1cibbkKOfN3vPo6U6kclRMK3AruLOrAws+AO6BwqJVWKlhdr+spf/fez2KRjHZuTzEQ97WRnmiZVqGzaWyBF+s4H6uoSoZg9vdbdCi8jQJEqiumKer4CDFo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720023564; c=relaxed/simple;
-	bh=K0FuuqO7HEswnf5P7g9rZv9FumEIFEDGAjHq2yr6hAI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sjyjKUnyVhKkmxNQWtmZzoGwJUS7QGE6eoU4232t6+cwTIzaHmvOuV7g9gp27VG7YtT3NaVGmPkqItFQ2Vwx06QO2+K8yq2bFlhDA/RwpOOj1EkcMK0ids6JDslVBtKylvqskRzlLRHfJ/KNwpd4brAPzAMjYV/YvyuK94Tvj2Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=c9ZdgZJI; arc=fail smtp.client-ip=52.101.66.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931FB1836D8
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720023569; cv=none; b=gbl+vLPL4R6aqZ2cfXnDG+kBk/nrzaiJt6XAr+yWH3j370kw6UAx+W12PRQS7L6MhiTNjBkTnWWW6lgxyEYXunq0Lun4JQSBL5cW0I6bduz+FOtQN30Ex3V15Ie3zKCS5SvuQRTYcjNWs97QFY5l1AcvSZL0shUMenPQLj+hy5A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720023569; c=relaxed/simple;
+	bh=XZQ2khpGw92ayYyOOjfsbAZCVbk4sLWNq5yArPaelbQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HhtdNU5bgGSkX8Q3lPVpX8NTds6iq79uuE/57uQtIAj9WK671ySKQbeLYkVKSrBlTweWmQGZdzncXYFsEbjvm8MZfvKL3jGyqnFKOySgypw1PMkdgCcqKBCRAbpWT1WzlJmY8W3wAez6xj5FxN9w3IiN48t/jJBtAdEnRJfGFrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=REpniWAn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="c9ZdgZJI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rfqz0JJbdMqMXrSm1wxdP2t3o+SOOLYLW+VMOnhvRfcmwjFU0W2HHgrNPRLhGsjhp7DVMGoprpBE9bVrW73xGJGBk2RPI7owyPW6VO8Yn93w41hJOGLiPppFA02HjVkrB5n6Czkr3HszUvTwaYwOHiGyMJCUQmadPd1lqlvr1rIY8ff+yFYssj4n/LlT4C47CnVpU4eFpbYgdxSQO4gWVNFua5k49GfVG9WHkjaNrAna/o8qxFm/0ujNjRsKYqh/EN6bFUh9mJ+5s0kPi9VNJ1vpOdyWHk6tA0G06bX4X9OTpn9cIN48OgO68gHCDpesOG+Tfwe/Nii8dCf/BSO5iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YHGxVbc+bT8OWe7ovM0g5M5Rz8RSWBmovLY6aOp9F4w=;
- b=OZQzIhued+tTUP2AGSJHbjO7ROO3bUhhWrcGn7lAoYXxVGCAfYqVulORAdSWPj2eouFmWD34nbngbJcRetrHrPIiKtztb7N+5omKlRfgnGuz9/eXHPqqqcJPZHlTqmuqBor6+eV2vALOmYDu3Ql5XPbNhPjWOm01i5g9XbynH7xkpn1qu1PLNwqXXP6jhJHMty5CS9wA0HCtcfA8Q56zvzHtcrepR7mHvtRmkaX0591je79bUKQjhtC2bSyYv9wk9n9sMVyWChWigPwP+Zxyx7B8u/q8fONmx/cQSgNAy/daXAyl4Xfhs3zx98Ukt3OJVHDq/dve8IXzH7lE03cHbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YHGxVbc+bT8OWe7ovM0g5M5Rz8RSWBmovLY6aOp9F4w=;
- b=c9ZdgZJIPQvGLveZ14Wrj2GWD3Pp6/1LxBi0cR1Xaf4NfPR4ARnIdPfXi/xj4pqtaGc18ju2bb0+tQyCQLc4Ib8BuZ0tg/nXaYggTbJo6Ce3CGNfm73/HSGyL6kI8iSvm4cEJlxINxeJDMCoXa1JVQlI0XZ+fLUoCQ96i5Mcmu4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from PA4PR04MB7982.eurprd04.prod.outlook.com (2603:10a6:102:c4::9)
- by AM0PR04MB6770.eurprd04.prod.outlook.com (2603:10a6:208:187::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.25; Wed, 3 Jul
- 2024 16:19:17 +0000
-Received: from PA4PR04MB7982.eurprd04.prod.outlook.com
- ([fe80::3c4:afd5:49ac:77af]) by PA4PR04MB7982.eurprd04.prod.outlook.com
- ([fe80::3c4:afd5:49ac:77af%4]) with mapi id 15.20.7741.017; Wed, 3 Jul 2024
- 16:19:17 +0000
-Message-ID: <015776ca-a9e0-470f-bbf5-39cec4147c6b@cherry.de>
-Date: Wed, 3 Jul 2024 18:19:15 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/11] hwmon: (amc6821) Convert to use regmap
-To: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Farouk Bouabid <farouk.bouabid@cherry.de>
-References: <20240701212348.1670617-1-linux@roeck-us.net>
- <20240701212348.1670617-10-linux@roeck-us.net>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20240701212348.1670617-10-linux@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: WA1P291CA0013.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:19::16) To PA4PR04MB7982.eurprd04.prod.outlook.com
- (2603:10a6:102:c4::9)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="REpniWAn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720023565;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c65T9aGcCrnJaJaWK+o0SC+aJQfT0XzRMaqMZ/EJDM4=;
+	b=REpniWAnG293xyof8cG3Xb72Tct2qn6jdZUPtH6+8lgkyXR2xRndj2EL4McZOW8dOv2anm
+	fxBDAc/f43GCHffgeUnY5pHikBZ/CGhjfX82ch0czigSrfUJYyus6LmDp7ZJEmxdXIRgft
+	Owj77v7fgwRCBm6hJhP2sZBDecupdoY=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-250-wM-AH0WJOUelKoRZj4ptjg-1; Wed, 03 Jul 2024 12:19:24 -0400
+X-MC-Unique: wM-AH0WJOUelKoRZj4ptjg-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-57d3eca4bb7so1299360a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 09:19:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720023562; x=1720628362;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c65T9aGcCrnJaJaWK+o0SC+aJQfT0XzRMaqMZ/EJDM4=;
+        b=b/ZbRkBEXgfNbeKKYF2mh7gzmW2RSDMknMNrwrYkBMJSMy6sSJiYvTFgf2viiXkw1S
+         yblpEMKxs+CHg6enq2pNmo59Jc9dJdS5EKjTugcGJX/Y7yN6Eog8xvf/jicTgzIGw9LY
+         GpJmUl/cVzYlbbD5Aqnl1X7HxLw1JWtO/2i9Pct6UFeFF4D84Xk6WTriwQ4eoDqIY/aS
+         z2m2H+QQDWyxP/anT5i9efrJptRpXM4ETaFd8PqPR4oI43DoDoq+F7paOOeemrMzWzIW
+         AQG5XZGrE7sBabxf9K+hyXC6F4o+8ITDkRuJC6OILqBTm4/+RYENR5ZjOjTlXDbpnMgO
+         vDgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKTT9t6qrAC+jsvjwfLEwVnsYf8IHhuxZvgWECX5ymTszu8WWEhqE65nPHjvzZS4lOc4xvIBKEZx8fcLBCBZo+nV9BzJY1hiC9rJMq
+X-Gm-Message-State: AOJu0YwR5qq7P8le1yFzjKEK3/kFx8+lPE506wk6G0ux4YlUpqkaQEWL
+	kKaK7wlSq48pc/yTtazJCMXdQpPaRNUyWuiRVvuTzjUuS9YZRmXPzUxPpDmnxaFAjo8uFfnNyvr
+	8OkCevVqyUtVOQ9EWKPDAOyYyLadTH1Fki2/arsU2RgJf8Da8Gv0JtGx+An1SdYguZFcGn7U6Fv
+	5Ea5BYU0T8imGZGOFH5iE6MzsswHdEVA408dKkCskKrYUfrio=
+X-Received: by 2002:a05:6402:3591:b0:58c:b2b8:31b2 with SMTP id 4fb4d7f45d1cf-58ce5ef6ad8mr1719691a12.17.1720023562396;
+        Wed, 03 Jul 2024 09:19:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGOPm2RKAFqhIP4SkrsoOYtpsOdJlOeWv6pMlJEn55IU/y69hvTL9KLEEXmYY5vce/n+pf4qv0hzVawdzxulgw=
+X-Received: by 2002:a05:6402:3591:b0:58c:b2b8:31b2 with SMTP id
+ 4fb4d7f45d1cf-58ce5ef6ad8mr1719679a12.17.1720023562050; Wed, 03 Jul 2024
+ 09:19:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB7982:EE_|AM0PR04MB6770:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a5ae198-435c-4dff-2482-08dc9b7be305
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?U2l4NlpNaGFkcDJtVzE1ZWd5dkg1N21qalRHa2Z2blYxa1AyYXcrQzBzMzFD?=
- =?utf-8?B?Y2dCeEdoUUJsSzVnRWNCTFBPdDZLdERmdmpmVHhmS3loN253bDFMOWdRRUpM?=
- =?utf-8?B?RHNYOHFDODVvb3NCWlEwWUlTOEE1SEp1ZmVkRzhwUk45bXVVY04veWNZZFU4?=
- =?utf-8?B?WDFCWkxWSzRlbjNrS3lkd0pERDEzZEU0aFloYUkvVlhUNGZ3TkRjNVFnbWQ2?=
- =?utf-8?B?ejdrLzlGM09vY3FhU3R5TUgveTZFNGw5MjY2Rk5uYlFlVlM2OTdHS2NpRGls?=
- =?utf-8?B?UmVvVE42UGFEYytCM2xBcXVOb2dldFc2UWNqTzdGZ1V0SGp4VUJyY0drSm1p?=
- =?utf-8?B?citNQmZCeHNyT2lLdFJyN29Gd1JMQVRwR0xpc005aVpJVmdPM2JhZDhYMExC?=
- =?utf-8?B?N2tpUjRnVVVSWlo3MTZXY3UyQks4MXhLZ212QkZJMU5zd0lkcmVaT092VVRR?=
- =?utf-8?B?eDRya3RhanJpTHNYVGxDME1rTnVzckJrekhlTHhqMkdRVnpPUE4xNUEzSVJS?=
- =?utf-8?B?b29kaGhKamFBaytERzdhSTR4MnlTYUd0ekx1Tzk4U1ZYNCtNZnE2M050elp6?=
- =?utf-8?B?eUxuS3dCRHp5WG5zWWNkU28xcGxEY1Z5dWVtalJNWHlYK3crVTNpeE5yeUdj?=
- =?utf-8?B?Q0tKeGliRlRmMXFWdGRBcGZ3K3NuV3pieVBXOGN4OHFGb21DMGI1Q2tya0x5?=
- =?utf-8?B?Z2RtdUVQV0JCTDA0N2FTdGNTUW4yeGM4c2EwQVFyNUtyeXN0dVFIbVo3cWxx?=
- =?utf-8?B?YnZBUEk2dUUyV1hib2VZN0wzMzVTUDQ1WE0wOTVLV0RpRTZpY3RMUWUvKzBE?=
- =?utf-8?B?bTgwa0ZVZUFxVjhwSitDN0pBN3RzaER5OENIc3QzaVJKQyt5VHdmdVp6Y2g5?=
- =?utf-8?B?U0gzRlNlbGFld0xJRWJ4ejVlQXBEUnJMR2NmUFI0bEE5cVd1OTJtVVlJNEV3?=
- =?utf-8?B?Ni8weEVBOFVSbHdKTHU0UWhYQXBYSFV5QUlPbGcyTmVIMFQydTRjYTlNa1B2?=
- =?utf-8?B?cjhoZTgvd1VoV29XV2lFeUhwcGVtU0hNd2llQnFGRGdJS1Ivb1JDTTdISDQr?=
- =?utf-8?B?enhoSXVkL3ZyMzZseXd1ZzNxM0tDRmFSR3V3eWhzSFduV2JhS3QrSUhhcTdU?=
- =?utf-8?B?TmZRa2YzVCsxL2liZndzcjNieEhnVkladEt6WHp1NHFxaFJTZ3lzZVV0TnZi?=
- =?utf-8?B?OXAyWklzQVppMTU1a2V5N1pqMDBnVUdYZ1ZVc0pWNFBJUm84WkJDbXZ5TXBR?=
- =?utf-8?B?VENVZHlpdEQweldTblRzejA1dElQT1dhQkV0Z25TQVRjanIycitVWFd1REM0?=
- =?utf-8?B?SmpoTzRtR2lnbk42Sm1UWWc1T212bm50MGZSbXo0enFWUEhseG15ejcvbDVn?=
- =?utf-8?B?MnhIelM5UEdIUzU4RnVQMTlYMTU4NmRvTVZRT2Z1eHRTUXRERXV6b1NEdFJi?=
- =?utf-8?B?VDJ1dlhFanAycEhWSkJnMG91SjZoeU12WmdXSEhHcHc0NEpsRHh6QklFL0wy?=
- =?utf-8?B?Z3c1WW1xTHRYNXhzYk5TcXJLMG0vMi9JdGdQMkh3UXlvbXR3azZtTHpNU3lj?=
- =?utf-8?B?emIxOU02cnN6NHg0a2dkT3VIczBYOTFNMzRONVV1SUNoVVdsdTNkK3Fha2pF?=
- =?utf-8?B?NHVIbWJ2SUNGNHJqcWxsWWVtMXJHU1pTWlFwSk9jVTRBVTZKMkxwTkx2UHMx?=
- =?utf-8?B?Nmw1eUFMajFmdnlOb0JyYlN6YTNiNENROERGRi8yTGl4UERiZEdqWjZDblo1?=
- =?utf-8?B?VFJ5VzFHeFh6a0tRVkh1c240REE3eE0vcUpNQ2tZWHhPUDZMZzFYNFBBbmxy?=
- =?utf-8?B?VU1HNmQ0UmZ0ZmxPSnVHZz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB7982.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YWFReFRicVdpU1MwR0hpYXhvRjl2RVVxYnFocGI4K3dnS3JBTWFNZGh5Wmp0?=
- =?utf-8?B?YXJRL3p4OWpJRUV1dER2ZGdFSTg2UHZhQTN3K042V1FaazhIQXJsVWd1YW42?=
- =?utf-8?B?L0RkOS9qdEdnY2JuZlFleGtjejZFZ1UzV0FTS1VTcU9lbXJ2czM5dFdkR1Fr?=
- =?utf-8?B?cVdiRE9BNlBPOUJaQjJpMUV3MEZtMEc1bGdzVkxqVEVFNTBTSkNhUnVwZW5L?=
- =?utf-8?B?WUl6cWdNWkpJaFB3cnFOM1puakd1azBONFNzNlQvSmZZWFpUWEJ2eGs2bmxB?=
- =?utf-8?B?d05sM1Z4ZVhibEpUSjgxeGFvQUVtVlJ5b0RpQTZlaTc4T2w0QWtRcTdLWEZN?=
- =?utf-8?B?MDlBNnNzbFlHUjhEaWVQSWU4TVB3RHpGT1Y3N1hvZ01oRzY0SGp1elEwQzR6?=
- =?utf-8?B?bGV0WlUyWmk3bmJhSXIxRDRNQkJORGYyMlVGNkRQbEhQZ1Z1SlhnU2Z5NHlC?=
- =?utf-8?B?dHYzNFhlWVZhTVpZSGlESGZIbHk0eEgrM0tBanl3VWxKKzdOY0VhWFJUalZQ?=
- =?utf-8?B?M3BtUDA3RHBYcnFvZENSVlNEeGpUQzZKQzNvZUpxaSs3SHczNk52d09JVitY?=
- =?utf-8?B?MVRQdXVrUklUT21zbThNaVV4QTVsajJqVlhpTlJORTQ2SStSSm4za0F0Nkk1?=
- =?utf-8?B?YWNnbS9HU2l0a0NaZWlscmVQVC96aW9mVndpaEo4enpWQkh4NUtaSFVhZGdP?=
- =?utf-8?B?YTJpaE9CQ2NlSG5XTnhqdW1jd3RzZnlTOWVzeWwvVC8xbXQ1VlA3YVNTdksr?=
- =?utf-8?B?bk9XbVYyOGxBeTlmNm91M2ZmY1hDeEpxc21iN1ZjN0F1Wm1yQ0dwZ0MyajBm?=
- =?utf-8?B?QWZpcHRuRXYzSE02NDM5TGo5cStySnlUNTZYT01VeThpdkRsQjZjeEMxTGVs?=
- =?utf-8?B?RTliMStXRU5xZktDVmxUR0Vxc0xaTVRPNkJ3TUE2TVY2OFFlaGxydlZCTC9F?=
- =?utf-8?B?eVV2cmVML014cUsyOGZ6cEpqbEdZU3hrS01xYVpUZkJ2SnF0Y1UwUkRPdS9D?=
- =?utf-8?B?ODc5R3RBNmp4N3dEQWNsdzkvZ1pqWTMvcFhJNHhGYk9GUTcyUnUxTkcxVnU1?=
- =?utf-8?B?N1V3MnNtUndrU1pFSENHUHZzUUVIbklpWEQwZklpZGpOUTVvWldrU0EyNnlT?=
- =?utf-8?B?TTI3bzd4cUhXUzRLTUduQmIyV3d0SDMyZ1lKcE4rSDEyeWY4bjBWL1U5TjRZ?=
- =?utf-8?B?NnkyNTZidisxNkN4aU5yaFhyRmRtRy9QTlZLZ1J3WERSeU5VQTlVdzJEVVg5?=
- =?utf-8?B?N1lXL25hVmlXNzAzeWZjcGwzMFN4R0ZYK1VDTWJwSGRxUkg5WE1uYjJqTUNw?=
- =?utf-8?B?c3JUN1RndDdOc2JjajgrUE1ETS9qTytuaEowWUFQK25aQmxGd2N2d2ZlNFJX?=
- =?utf-8?B?VDNjdm5LT092SEVlZkxZNFNPUEJqaVcrZWh5MTNJbktlRTl5cDV6VzMxWmxw?=
- =?utf-8?B?cHR6RlFPK29nYkx3b3Y4RHVVRFdVQU5zWS9tcWhVYVM3WGNSL252NVovZGdP?=
- =?utf-8?B?aXltRlFaZDUrMGpBSlp2RitwbEt6ZCtqNENCUEVJWkIxRmlXckE2QmJXTGxE?=
- =?utf-8?B?MnlsN3Q3ME9laGNEeklqRDNLUXc2REFXL2x1ZFg3eE9Tem1HQ09ybzlYMTYy?=
- =?utf-8?B?Wk1nYUNRZm1DUDk3dytiMzBMN0VZM3VURmppT3VUamhySVJxUUZMaDNKM3Mr?=
- =?utf-8?B?bitPa2F4b1lmYW9qZ2RISTI1TG1zV3Vka2RqTnZwZXJ1WGQydUJpT1FvVEF2?=
- =?utf-8?B?b1YwY1BaMHhNTzlGNjFSZ0k4L0RSZWxzTTZ3RG1XRHdVUHBlK0RiRE5JSG1a?=
- =?utf-8?B?KzZ5czJ3cWpFVVZXTXRTaTZ0a2ZQaFJHN3lRWFIxdXFDeDNQL3pERU5iL0dC?=
- =?utf-8?B?Tmcxa056UEhxUURrMGl2dkhlUFFvZjgwTUFXWVNBcVMwWG5LcFVteXZzeVUr?=
- =?utf-8?B?TUVaUEx1UitEbjZFN2o0MGVqSnpaV0FOVndpT0hVazN6cUhhajFMNFYyUG0z?=
- =?utf-8?B?QU1ISFZNRFVFK0ZjTENiNlN4ODEzOVRMUmZEVTViRktPeHRSYkJDZTZ6ZFhZ?=
- =?utf-8?B?YVc3QW4rMjcvU0xlbE52TE9yRTJ3MlVmT1E1VUEvSzFwY2ZpTG5VWWVyRHBq?=
- =?utf-8?B?RnlFcnB0VllkY3MyeFYzYzE4TzArcW9CRC9XeVRKNk5NYlVYVlZNYjJRWWIv?=
- =?utf-8?B?NHc9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a5ae198-435c-4dff-2482-08dc9b7be305
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB7982.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 16:19:17.3033
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2wZmfjZ7Qoul8MT8csYliRegniML2iwjoe4Bcg5+/4QkKxRAkyZ6/9ES267NfEJe4AOlF9nIrJsL3UERlTivLrxiECNmFatHlOn2JfikuY8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6770
+References: <20240626-stage-vdpa-vq-precreate-v2-0-560c491078df@nvidia.com> <20240626-stage-vdpa-vq-precreate-v2-15-560c491078df@nvidia.com>
+In-Reply-To: <20240626-stage-vdpa-vq-precreate-v2-15-560c491078df@nvidia.com>
+From: Eugenio Perez Martin <eperezma@redhat.com>
+Date: Wed, 3 Jul 2024 18:18:44 +0200
+Message-ID: <CAJaqyWfEv9KLKDSZidiO=ZoJvKVLaHzHW3+ModPxfGEiu1xMUw@mail.gmail.com>
+Subject: Re: [PATCH vhost v2 15/24] vdpa/mlx5: Allow creation of blank VQs
+To: Dragos Tatulea <dtatulea@nvidia.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
+	Cosmin Ratiu <cratiu@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Guenter,
+On Wed, Jun 26, 2024 at 12:28=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.co=
+m> wrote:
+>
+> Based on the filled flag, create VQs that are filled or blank.
+> Blank VQs will be filled in later through VQ modify.
+>
+> Downstream patches will make use of this to pre-create blank VQs at
+> vdpa device creation.
+>
 
-On 7/1/24 11:23 PM, Guenter Roeck wrote:
-> Use regmap for register accesses and for most caching.
-> 
-> While at it, use sysfs_emit() instead of sprintf() to write sysfs
-> attribute data, and remove spurious debug messages which would
-> only be seen as result of a bug in the code.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+s/Downstream/Later/ ?
+
+> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+
+Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+
 > ---
-> v2: Drop another spurious debug message in this patch instead of patch 10
->      Add missing "select REGMAP_I2C" to Kconfig
->      Change misleading variable name from 'mask' to 'mode'.
->      Use sysfs_emit instead of sprintf everywhere
-> 
->   drivers/hwmon/Kconfig   |   1 +
->   drivers/hwmon/amc6821.c | 713 ++++++++++++++++++----------------------
->   2 files changed, 329 insertions(+), 385 deletions(-)
-> 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index e14ae18a973b..a8fa87a96e8f 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -2127,6 +2127,7 @@ config SENSORS_ADS7871
->   config SENSORS_AMC6821
->   	tristate "Texas Instruments AMC6821"
->   	depends on I2C
-> +	select REGMAP_I2C
->   	help
->   	  If you say yes here you get support for the Texas Instruments
->   	  AMC6821 hardware monitoring chips.
-> diff --git a/drivers/hwmon/amc6821.c b/drivers/hwmon/amc6821.c
-> index 028998d3bedf..3fe0bfeac843 100644
-> --- a/drivers/hwmon/amc6821.c
-> +++ b/drivers/hwmon/amc6821.c
-> @@ -8,15 +8,16 @@
->    * Copyright (C) 2007 Hans J. Koch <hjk@hansjkoch.de>
->    */
->   
-> +#include <linux/bitops.h>
->   #include <linux/bits.h>
->   #include <linux/err.h>
->   #include <linux/hwmon.h>
->   #include <linux/hwmon-sysfs.h>
->   #include <linux/i2c.h>
->   #include <linux/init.h>
-> -#include <linux/jiffies.h>
->   #include <linux/module.h>
->   #include <linux/mutex.h>
-> +#include <linux/regmap.h>
->   #include <linux/slab.h>
->   
->   /*
-> @@ -44,6 +45,7 @@ module_param(init, int, 0444);
->   #define AMC6821_REG_CONF4		0x04
->   #define AMC6821_REG_STAT1		0x02
->   #define AMC6821_REG_STAT2		0x03
-> +#define AMC6821_REG_TEMP_LO		0x06
->   #define AMC6821_REG_TDATA_LOW		0x08
->   #define AMC6821_REG_TDATA_HI		0x09
->   #define AMC6821_REG_LTEMP_HI		0x0A
-> @@ -61,11 +63,8 @@ module_param(init, int, 0444);
->   #define AMC6821_REG_DCY_LOW_TEMP	0x21
->   
->   #define AMC6821_REG_TACH_LLIMITL	0x10
-> -#define AMC6821_REG_TACH_LLIMITH	0x11
->   #define AMC6821_REG_TACH_HLIMITL	0x12
-> -#define AMC6821_REG_TACH_HLIMITH	0x13
->   #define AMC6821_REG_TACH_SETTINGL	0x1e
-> -#define AMC6821_REG_TACH_SETTINGH	0x1f
->   
->   #define AMC6821_CONF1_START		BIT(0)
->   #define AMC6821_CONF1_FAN_INT_EN	BIT(1)
-> @@ -130,224 +129,169 @@ static const u8 fan_reg_low[] = {AMC6821_REG_TDATA_LOW,
->   			AMC6821_REG_TACH_HLIMITL,
->   			AMC6821_REG_TACH_SETTINGL, };
->   
-> -static const u8 fan_reg_hi[] = {AMC6821_REG_TDATA_HI,
-> -			AMC6821_REG_TACH_LLIMITH,
-> -			AMC6821_REG_TACH_HLIMITH,
-> -			AMC6821_REG_TACH_SETTINGH, };
+>  drivers/vdpa/mlx5/net/mlx5_vnet.c | 85 +++++++++++++++++++++++++--------=
+------
+>  1 file changed, 55 insertions(+), 30 deletions(-)
+>
+> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/ml=
+x5_vnet.c
+> index a8ac542f30f7..0a62ce0b4af8 100644
+> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> @@ -158,7 +158,7 @@ static bool is_index_valid(struct mlx5_vdpa_dev *mvde=
+v, u16 idx)
+>
+>  static void free_fixed_resources(struct mlx5_vdpa_net *ndev);
+>  static void mvqs_set_defaults(struct mlx5_vdpa_net *ndev);
+> -static int setup_vq_resources(struct mlx5_vdpa_net *ndev);
+> +static int setup_vq_resources(struct mlx5_vdpa_net *ndev, bool filled);
+>  static void teardown_vq_resources(struct mlx5_vdpa_net *ndev);
+>
+>  static bool mlx5_vdpa_debug;
+> @@ -874,13 +874,16 @@ static bool msix_mode_supported(struct mlx5_vdpa_de=
+v *mvdev)
+>                 pci_msix_can_alloc_dyn(mvdev->mdev->pdev);
+>  }
+>
+> -static int create_virtqueue(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa=
+_virtqueue *mvq)
+> +static int create_virtqueue(struct mlx5_vdpa_net *ndev,
+> +                           struct mlx5_vdpa_virtqueue *mvq,
+> +                           bool filled)
+>  {
+>         int inlen =3D MLX5_ST_SZ_BYTES(create_virtio_net_q_in);
+>         u32 out[MLX5_ST_SZ_DW(create_virtio_net_q_out)] =3D {};
+>         struct mlx5_vdpa_dev *mvdev =3D &ndev->mvdev;
+>         struct mlx5_vdpa_mr *vq_mr;
+>         struct mlx5_vdpa_mr *vq_desc_mr;
+> +       u64 features =3D filled ? mvdev->actual_features : mvdev->mlx_fea=
+tures;
+>         void *obj_context;
+>         u16 mlx_features;
+>         void *cmd_hdr;
+> @@ -898,7 +901,7 @@ static int create_virtqueue(struct mlx5_vdpa_net *nde=
+v, struct mlx5_vdpa_virtque
+>                 goto err_alloc;
+>         }
+>
+> -       mlx_features =3D get_features(ndev->mvdev.actual_features);
+> +       mlx_features =3D get_features(features);
+>         cmd_hdr =3D MLX5_ADDR_OF(create_virtio_net_q_in, in, general_obj_=
+in_cmd_hdr);
+>
+>         MLX5_SET(general_obj_in_cmd_hdr, cmd_hdr, opcode, MLX5_CMD_OP_CRE=
+ATE_GENERAL_OBJECT);
+> @@ -906,8 +909,6 @@ static int create_virtqueue(struct mlx5_vdpa_net *nde=
+v, struct mlx5_vdpa_virtque
+>         MLX5_SET(general_obj_in_cmd_hdr, cmd_hdr, uid, ndev->mvdev.res.ui=
+d);
+>
+>         obj_context =3D MLX5_ADDR_OF(create_virtio_net_q_in, in, obj_cont=
+ext);
+> -       MLX5_SET(virtio_net_q_object, obj_context, hw_available_index, mv=
+q->avail_idx);
+> -       MLX5_SET(virtio_net_q_object, obj_context, hw_used_index, mvq->us=
+ed_idx);
+>         MLX5_SET(virtio_net_q_object, obj_context, queue_feature_bit_mask=
+_12_3,
+>                  mlx_features >> 3);
+>         MLX5_SET(virtio_net_q_object, obj_context, queue_feature_bit_mask=
+_2_0,
+> @@ -929,17 +930,36 @@ static int create_virtqueue(struct mlx5_vdpa_net *n=
+dev, struct mlx5_vdpa_virtque
+>         MLX5_SET(virtio_q, vq_ctx, queue_index, mvq->index);
+>         MLX5_SET(virtio_q, vq_ctx, queue_size, mvq->num_ent);
+>         MLX5_SET(virtio_q, vq_ctx, virtio_version_1_0,
+> -                !!(ndev->mvdev.actual_features & BIT_ULL(VIRTIO_F_VERSIO=
+N_1)));
+> -       MLX5_SET64(virtio_q, vq_ctx, desc_addr, mvq->desc_addr);
+> -       MLX5_SET64(virtio_q, vq_ctx, used_addr, mvq->device_addr);
+> -       MLX5_SET64(virtio_q, vq_ctx, available_addr, mvq->driver_addr);
+> -       vq_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATAVQ_GROUP]];
+> -       if (vq_mr)
+> -               MLX5_SET(virtio_q, vq_ctx, virtio_q_mkey, vq_mr->mkey);
 > -
->   /*
->    * Client data (each client gets its own)
->    */
->   
->   struct amc6821_data {
-> -	struct i2c_client *client;
-> +	struct regmap *regmap;
->   	struct mutex update_lock;
-> -	bool valid; /* false until following fields are valid */
-> -	unsigned long last_updated; /* in jiffies */
->   
-> -	/* register values */
-> -	int temp[TEMP_IDX_LEN];
-> -
-> -	u16 fan[FAN1_IDX_LEN];
-> -	u8 fan1_pulses;
-> -
-> -	u8 pwm1;
->   	u8 temp1_auto_point_temp[3];
->   	u8 temp2_auto_point_temp[3];
-> -	u8 pwm1_auto_point_pwm[3];
-> -	u8 pwm1_enable;
-> -	u8 pwm1_auto_channels_temp;
-> -
-> -	u8 stat1;
-> -	u8 stat2;
->   };
->   
-> -static struct amc6821_data *amc6821_update_device(struct device *dev)
-> +static int amc6821_init_auto_point_data(struct amc6821_data *data)
->   {
-> -	struct amc6821_data *data = dev_get_drvdata(dev);
-> -	struct i2c_client *client = data->client;
-> -	int timeout = HZ;
-> -	u8 reg;
-> -	int i;
-> +	struct regmap *regmap = data->regmap;
-> +	u32 pwm, regval;
-> +	int err;
->   
-> -	mutex_lock(&data->update_lock);
-> +	err = regmap_read(regmap, AMC6821_REG_DCY_LOW_TEMP, &pwm);
-
-I think this is incorrect logic.
-
-amc6821_init_auto_point_data is only called once in init_client, in 
-probe. While we currently do not write to AMC6821_REG_DCY_LOW_TEMP, we 
-could in the future. But writing to it would desynchronise the 
-auto_point_temp values for the new value of the register.
-
-I suggest we put the logic into a function and return the value for a 
-given temp_auto_point (1/2 currently) so that we are calling this 
-function instead of a member in the struct so that we are never caching 
-it unknowingly (regmap would do it for us in any case). It's a bit odd 
-anyway to have only **those** values be cached in the struct as members 
-and migrating everything else.
-
-> +	if (err)
-> +		return err;
->   
-> -	if (time_after(jiffies, data->last_updated + timeout) ||
-> -			!data->valid) {
-> +	err = regmap_read(regmap, AMC6821_REG_PSV_TEMP, &regval);
-> +	if (err)
-> +		return err;
-> +	data->temp1_auto_point_temp[0] = regval;
-> +	data->temp2_auto_point_temp[0] = data->temp1_auto_point_temp[0];
->   
-> -		for (i = 0; i < TEMP_IDX_LEN; i++)
-> -			data->temp[i] = (int8_t)i2c_smbus_read_byte_data(
-> -				client, temp_reg[i]);
-> +	err = regmap_read(regmap, AMC6821_REG_LTEMP_FAN_CTRL, &regval);
-> +	if (err)
-> +		return err;
-> +	data->temp1_auto_point_temp[1] = (regval & 0xF8) >> 1;
->   
-> -		data->stat1 = i2c_smbus_read_byte_data(client,
-> -			AMC6821_REG_STAT1);
-> -		data->stat2 = i2c_smbus_read_byte_data(client,
-> -			AMC6821_REG_STAT2);
-> +	regval &= 0x07;
-> +	regval = 0x20 >> regval;
-> +	if (regval)
-> +		data->temp1_auto_point_temp[2] =
-> +			data->temp1_auto_point_temp[1] +
-> +			(255 - pwm) / regval;
-> +	else
-> +		data->temp1_auto_point_temp[2] = 255;
->   
-> -		data->pwm1 = i2c_smbus_read_byte_data(client,
-> -			AMC6821_REG_DCY);
-> -		for (i = 0; i < FAN1_IDX_LEN; i++) {
-> -			data->fan[i] = i2c_smbus_read_byte_data(
-> -					client,
-> -					fan_reg_low[i]);
-> -			data->fan[i] += i2c_smbus_read_byte_data(
-> -					client,
-> -					fan_reg_hi[i]) << 8;
-> -		}
-> -		data->fan1_pulses = i2c_smbus_read_byte_data(client,
-> -			AMC6821_REG_CONF4);
-> -		data->fan1_pulses = data->fan1_pulses & AMC6821_CONF4_PSPR ? 4 : 2;
-> +	err = regmap_read(regmap, AMC6821_REG_RTEMP_FAN_CTRL, &regval);
-> +	if (err)
-> +		return err;
->   
-> -		data->pwm1_auto_point_pwm[0] = 0;
-> -		data->pwm1_auto_point_pwm[2] = 255;
-> -		data->pwm1_auto_point_pwm[1] = i2c_smbus_read_byte_data(client,
-> -			AMC6821_REG_DCY_LOW_TEMP);
-> +	data->temp2_auto_point_temp[1] = (regval & 0xF8) >> 1;
-> +	regval &= 0x07;
-> +	regval = 0x20 >> regval;
->   
-> -		data->temp1_auto_point_temp[0] =
-> -			i2c_smbus_read_byte_data(client,
-> -					AMC6821_REG_PSV_TEMP);
-> -		data->temp2_auto_point_temp[0] =
-> -				data->temp1_auto_point_temp[0];
-> -		reg = i2c_smbus_read_byte_data(client,
-> -			AMC6821_REG_LTEMP_FAN_CTRL);
-> -		data->temp1_auto_point_temp[1] = (reg & 0xF8) >> 1;
-> -		reg &= 0x07;
-> -		reg = 0x20 >> reg;
-> -		if (reg > 0)
-> -			data->temp1_auto_point_temp[2] =
-> -				data->temp1_auto_point_temp[1] +
-> -				(data->pwm1_auto_point_pwm[2] -
-> -				data->pwm1_auto_point_pwm[1]) / reg;
-> -		else
-> -			data->temp1_auto_point_temp[2] = 255;
-> +	if (regval)
-> +		data->temp2_auto_point_temp[2] =
-> +			data->temp2_auto_point_temp[1] +
-> +			(255 - pwm) / regval;
-> +	else
-> +		data->temp2_auto_point_temp[2] = 255;
->   
-> -		reg = i2c_smbus_read_byte_data(client,
-> -			AMC6821_REG_RTEMP_FAN_CTRL);
-> -		data->temp2_auto_point_temp[1] = (reg & 0xF8) >> 1;
-> -		reg &= 0x07;
-> -		reg = 0x20 >> reg;
-> -		if (reg > 0)
-> -			data->temp2_auto_point_temp[2] =
-> -				data->temp2_auto_point_temp[1] +
-> -				(data->pwm1_auto_point_pwm[2] -
-> -				data->pwm1_auto_point_pwm[1]) / reg;
-> -		else
-> -			data->temp2_auto_point_temp[2] = 255;
-> -
-> -		reg = i2c_smbus_read_byte_data(client, AMC6821_REG_CONF1);
-> -		reg = (reg >> 5) & 0x3;
-> -		switch (reg) {
-> -		case 0: /*open loop: software sets pwm1*/
-> -			data->pwm1_auto_channels_temp = 0;
-> -			data->pwm1_enable = 1;
-> -			break;
-> -		case 2: /*closed loop: remote T (temp2)*/
-> -			data->pwm1_auto_channels_temp = 2;
-> -			data->pwm1_enable = 2;
-> -			break;
-> -		case 3: /*closed loop: local and remote T (temp2)*/
-> -			data->pwm1_auto_channels_temp = 3;
-> -			data->pwm1_enable = 3;
-> -			break;
-> -		case 1: /*
-> -			 * semi-open loop: software sets rpm, chip controls
-> -			 * pwm1
-> -			 */
-> -			data->pwm1_auto_channels_temp = 0;
-> -			data->pwm1_enable = 4;
-> -			break;
-> -		}
-> -
-> -		data->last_updated = jiffies;
-> -		data->valid = true;
-> -	}
-> -	mutex_unlock(&data->update_lock);
-> -	return data;
-> +	return 0;
->   }
->   
->   static ssize_t temp_show(struct device *dev, struct device_attribute *devattr,
->   			 char *buf)
->   {
-> -	struct amc6821_data *data = amc6821_update_device(dev);
-> +	struct amc6821_data *data = dev_get_drvdata(dev);
->   	int ix = to_sensor_dev_attr(devattr)->index;
-> +	u32 regval;
-> +	int err;
->   
-> -	return sprintf(buf, "%d\n", data->temp[ix] * 1000);
-> +	err = regmap_read(data->regmap, temp_reg[ix], &regval);
-> +	if (err)
-> +		return err;
+> -       vq_desc_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATAVQ_DESC_=
+GROUP]];
+> -       if (vq_desc_mr && MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, desc_g=
+roup_mkey_supported))
+> -               MLX5_SET(virtio_q, vq_ctx, desc_group_mkey, vq_desc_mr->m=
+key);
+> +                !!(features & BIT_ULL(VIRTIO_F_VERSION_1)));
 > +
-> +	return sysfs_emit(buf, "%d\n", sign_extend32(regval, 7) * 1000);
->   }
->   
->   static ssize_t temp_store(struct device *dev, struct device_attribute *attr,
->   			  const char *buf, size_t count)
->   {
->   	struct amc6821_data *data = dev_get_drvdata(dev);
-> -	struct i2c_client *client = data->client;
->   	int ix = to_sensor_dev_attr(attr)->index;
->   	long val;
-> +	int err;
->   
->   	int ret = kstrtol(buf, 10, &val);
->   	if (ret)
->   		return ret;
->   	val = clamp_val(val / 1000, -128, 127);
->   
-> -	mutex_lock(&data->update_lock);
-> -	data->temp[ix] = val;
-> -	if (i2c_smbus_write_byte_data(client, temp_reg[ix], data->temp[ix])) {
-> -		dev_err(&client->dev, "Register write error, aborting.\n");
-> -		count = -EIO;
-> -	}
-> -	mutex_unlock(&data->update_lock);
-> +	err = regmap_write(data->regmap, temp_reg[ix], val);
-> +	if (err)
-> +		return err;
+> +       if (filled) {
+> +               MLX5_SET(virtio_net_q_object, obj_context, hw_available_i=
+ndex, mvq->avail_idx);
+> +               MLX5_SET(virtio_net_q_object, obj_context, hw_used_index,=
+ mvq->used_idx);
 > +
->   	return count;
->   }
->   
->   static ssize_t temp_alarm_show(struct device *dev,
->   			       struct device_attribute *devattr, char *buf)
->   {
-> -	struct amc6821_data *data = amc6821_update_device(dev);
-> +	struct amc6821_data *data = dev_get_drvdata(dev);
->   	int ix = to_sensor_dev_attr(devattr)->index;
-> -	u8 flag;
-> +	u32 regval, mask, reg;
-> +	int err;
->   
->   	switch (ix) {
->   	case IDX_TEMP1_MIN:
-> -		flag = data->stat1 & AMC6821_STAT1_LTL;
-> +		reg = AMC6821_REG_STAT1;
-> +		mask = AMC6821_STAT1_LTL;
->   		break;
->   	case IDX_TEMP1_MAX:
-> -		flag = data->stat1 & AMC6821_STAT1_LTH;
-> +		reg = AMC6821_REG_STAT1;
-> +		mask = AMC6821_STAT1_LTH;
->   		break;
->   	case IDX_TEMP1_CRIT:
-> -		flag = data->stat2 & AMC6821_STAT2_LTC;
-> +		reg = AMC6821_REG_STAT2;
-> +		mask = AMC6821_STAT2_LTC;
->   		break;
->   	case IDX_TEMP2_MIN:
-> -		flag = data->stat1 & AMC6821_STAT1_RTL;
-> +		reg = AMC6821_REG_STAT1;
-> +		mask = AMC6821_STAT1_RTL;
->   		break;
->   	case IDX_TEMP2_MAX:
-> -		flag = data->stat1 & AMC6821_STAT1_RTH;
-> +		reg = AMC6821_REG_STAT1;
-> +		mask = AMC6821_STAT1_RTH;
->   		break;
->   	case IDX_TEMP2_CRIT:
-> -		flag = data->stat2 & AMC6821_STAT2_RTC;
-> +		reg = AMC6821_REG_STAT2;
-> +		mask = AMC6821_STAT2_RTC;
->   		break;
->   	default:
-> -		dev_dbg(dev, "Unknown attr->index (%d).\n", ix);
+> +               MLX5_SET64(virtio_q, vq_ctx, desc_addr, mvq->desc_addr);
+> +               MLX5_SET64(virtio_q, vq_ctx, used_addr, mvq->device_addr)=
+;
+> +               MLX5_SET64(virtio_q, vq_ctx, available_addr, mvq->driver_=
+addr);
+> +
+> +               vq_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATAVQ_GR=
+OUP]];
+> +               if (vq_mr)
+> +                       MLX5_SET(virtio_q, vq_ctx, virtio_q_mkey, vq_mr->=
+mkey);
+> +
+> +               vq_desc_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATA=
+VQ_DESC_GROUP]];
+> +               if (vq_desc_mr &&
+> +                   MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, desc_group_m=
+key_supported))
+> +                       MLX5_SET(virtio_q, vq_ctx, desc_group_mkey, vq_de=
+sc_mr->mkey);
+> +       } else {
+> +               /* If there is no mr update, make sure that the existing =
+ones are set
+> +                * modify to ready.
+> +                */
+> +               vq_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATAVQ_GR=
+OUP]];
+> +               if (vq_mr)
+> +                       mvq->modified_fields |=3D MLX5_VIRTQ_MODIFY_MASK_=
+VIRTIO_Q_MKEY;
+> +
+> +               vq_desc_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATA=
+VQ_DESC_GROUP]];
+> +               if (vq_desc_mr)
+> +                       mvq->modified_fields |=3D MLX5_VIRTQ_MODIFY_MASK_=
+DESC_GROUP_MKEY;
+> +       }
+>
+>         MLX5_SET(virtio_q, vq_ctx, umem_1_id, mvq->umem1.id);
+>         MLX5_SET(virtio_q, vq_ctx, umem_1_size, mvq->umem1.size);
+> @@ -959,12 +979,15 @@ static int create_virtqueue(struct mlx5_vdpa_net *n=
+dev, struct mlx5_vdpa_virtque
+>         kfree(in);
+>         mvq->virtq_id =3D MLX5_GET(general_obj_out_cmd_hdr, out, obj_id);
+>
+> -       mlx5_vdpa_get_mr(mvdev, vq_mr);
+> -       mvq->vq_mr =3D vq_mr;
+> +       if (filled) {
+> +               mlx5_vdpa_get_mr(mvdev, vq_mr);
+> +               mvq->vq_mr =3D vq_mr;
+>
+> -       if (vq_desc_mr && MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, desc_g=
+roup_mkey_supported)) {
+> -               mlx5_vdpa_get_mr(mvdev, vq_desc_mr);
+> -               mvq->desc_mr =3D vq_desc_mr;
+> +               if (vq_desc_mr &&
+> +                   MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, desc_group_m=
+key_supported)) {
+> +                       mlx5_vdpa_get_mr(mvdev, vq_desc_mr);
+> +                       mvq->desc_mr =3D vq_desc_mr;
+> +               }
+>         }
+>
+>         return 0;
+> @@ -1442,7 +1465,9 @@ static void dealloc_vector(struct mlx5_vdpa_net *nd=
+ev,
+>                 }
+>  }
+>
+> -static int setup_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virtque=
+ue *mvq)
+> +static int setup_vq(struct mlx5_vdpa_net *ndev,
+> +                   struct mlx5_vdpa_virtqueue *mvq,
+> +                   bool filled)
+>  {
+>         u16 idx =3D mvq->index;
+>         int err;
+> @@ -1471,7 +1496,7 @@ static int setup_vq(struct mlx5_vdpa_net *ndev, str=
+uct mlx5_vdpa_virtqueue *mvq)
+>                 goto err_connect;
+>
+>         alloc_vector(ndev, mvq);
+> -       err =3D create_virtqueue(ndev, mvq);
+> +       err =3D create_virtqueue(ndev, mvq, filled);
+>         if (err)
+>                 goto err_vq;
+>
+> @@ -2062,7 +2087,7 @@ static int change_num_qps(struct mlx5_vdpa_dev *mvd=
+ev, int newqps)
+>         } else {
+>                 ndev->cur_num_vqs =3D 2 * newqps;
+>                 for (i =3D cur_qps * 2; i < 2 * newqps; i++) {
+> -                       err =3D setup_vq(ndev, &ndev->vqs[i]);
+> +                       err =3D setup_vq(ndev, &ndev->vqs[i], true);
+>                         if (err)
+>                                 goto clean_added;
+>                 }
+> @@ -2558,14 +2583,14 @@ static int verify_driver_features(struct mlx5_vdp=
+a_dev *mvdev, u64 features)
+>         return 0;
+>  }
+>
+> -static int setup_virtqueues(struct mlx5_vdpa_dev *mvdev)
+> +static int setup_virtqueues(struct mlx5_vdpa_dev *mvdev, bool filled)
+>  {
+>         struct mlx5_vdpa_net *ndev =3D to_mlx5_vdpa_ndev(mvdev);
+>         int err;
+>         int i;
+>
+>         for (i =3D 0; i < mvdev->max_vqs; i++) {
+> -               err =3D setup_vq(ndev, &ndev->vqs[i]);
+> +               err =3D setup_vq(ndev, &ndev->vqs[i], filled);
+>                 if (err)
+>                         goto err_vq;
+>         }
+> @@ -2877,7 +2902,7 @@ static int mlx5_vdpa_change_map(struct mlx5_vdpa_de=
+v *mvdev,
+>
+>         if (teardown) {
+>                 restore_channels_info(ndev);
+> -               err =3D setup_vq_resources(ndev);
+> +               err =3D setup_vq_resources(ndev, true);
+>                 if (err)
+>                         return err;
+>         }
+> @@ -2888,7 +2913,7 @@ static int mlx5_vdpa_change_map(struct mlx5_vdpa_de=
+v *mvdev,
+>  }
+>
+>  /* reslock must be held for this function */
+> -static int setup_vq_resources(struct mlx5_vdpa_net *ndev)
+> +static int setup_vq_resources(struct mlx5_vdpa_net *ndev, bool filled)
+>  {
+>         struct mlx5_vdpa_dev *mvdev =3D &ndev->mvdev;
+>         int err;
+> @@ -2906,7 +2931,7 @@ static int setup_vq_resources(struct mlx5_vdpa_net =
+*ndev)
+>         if (err)
+>                 goto err_setup;
+>
+> -       err =3D setup_virtqueues(mvdev);
+> +       err =3D setup_virtqueues(mvdev, filled);
+>         if (err) {
+>                 mlx5_vdpa_warn(mvdev, "setup_virtqueues\n");
+>                 goto err_setup;
+> @@ -3000,7 +3025,7 @@ static void mlx5_vdpa_set_status(struct vdpa_device=
+ *vdev, u8 status)
+>                                 goto err_setup;
+>                         }
+>                         register_link_notifier(ndev);
+> -                       err =3D setup_vq_resources(ndev);
+> +                       err =3D setup_vq_resources(ndev, true);
+>                         if (err) {
+>                                 mlx5_vdpa_warn(mvdev, "failed to setup dr=
+iver\n");
+>                                 goto err_driver;
+>
+> --
+> 2.45.1
+>
 
-Was this an intended removal? I think we can afford keeping it in?
-
->   		return -EINVAL;
->   	}
-> -	if (flag)
-> -		return sprintf(buf, "1");
-> -	else
-> -		return sprintf(buf, "0");
-> +	err = regmap_read(data->regmap, reg, &regval);
-> +	if (err)
-> +		return err;
-> +	return sysfs_emit(buf, "%d\n", !!(regval & mask));
->   }
->   
->   static ssize_t temp2_fault_show(struct device *dev,
->   				struct device_attribute *devattr, char *buf)
->   {
-> -	struct amc6821_data *data = amc6821_update_device(dev);
-> -	if (data->stat1 & AMC6821_STAT1_RTF)
-> -		return sprintf(buf, "1");
-> -	else
-> -		return sprintf(buf, "0");
-> +	struct amc6821_data *data = dev_get_drvdata(dev);
-> +	u32 regval;
-> +	int err;
-> +
-> +	err = regmap_read(data->regmap, AMC6821_REG_STAT1, &regval);
-> +	if (err)
-> +		return err;
-> +
-> +	return sysfs_emit(buf, "%d\n", !!(regval & AMC6821_STAT1_RTF));
->   }
->   
->   static ssize_t pwm1_show(struct device *dev, struct device_attribute *devattr,
->   			 char *buf)
->   {
-> -	struct amc6821_data *data = amc6821_update_device(dev);
-> -	return sprintf(buf, "%d\n", data->pwm1);
-> +	struct amc6821_data *data = dev_get_drvdata(dev);
-> +	u32 regval;
-> +	int err;
-> +
-> +	err = regmap_read(data->regmap, AMC6821_REG_DCY, &regval);
-> +	if (err)
-> +		return err;
-> +
-> +	return sysfs_emit(buf, "%d\n", regval);
->   }
->   
->   static ssize_t pwm1_store(struct device *dev,
-> @@ -355,24 +299,43 @@ static ssize_t pwm1_store(struct device *dev,
->   			  size_t count)
->   {
->   	struct amc6821_data *data = dev_get_drvdata(dev);
-> -	struct i2c_client *client = data->client;
->   	u8 val;
->   	int ret = kstrtou8(buf, 10, &val);
->   	if (ret)
->   		return ret;
->   
-> -	mutex_lock(&data->update_lock);
-> -	data->pwm1 = val;
-> -	i2c_smbus_write_byte_data(client, AMC6821_REG_DCY, data->pwm1);
-> -	mutex_unlock(&data->update_lock);
-> +	ret = regmap_write(data->regmap, AMC6821_REG_DCY, val);
-> +	if (ret)
-> +		return ret;
-> +
->   	return count;
->   }
->   
->   static ssize_t pwm1_enable_show(struct device *dev,
->   				struct device_attribute *devattr, char *buf)
->   {
-> -	struct amc6821_data *data = amc6821_update_device(dev);
-> -	return sprintf(buf, "%d\n", data->pwm1_enable);
-> +	struct amc6821_data *data = dev_get_drvdata(dev);
-> +	int err;
-> +	u32 val;
-> +
-> +	err = regmap_read(data->regmap, AMC6821_REG_CONF1, &val);
-> +	if (err)
-> +		return err;
-> +	switch (val & (AMC6821_CONF1_FDRC0 | AMC6821_CONF1_FDRC1)) {
-> +	case 0:
-> +		val = 1;	/* manual */
-> +		break;
-> +	case AMC6821_CONF1_FDRC0:
-> +		val = 4;	/* target rpm (fan1_target) controlled */
-> +		break;
-> +	case AMC6821_CONF1_FDRC1:
-> +		val = 2;	/* remote temp controlled */
-> +		break;
-> +	default:
-> +		val = 3;	/* max(local, remote) temp controlled */
-> +		break;
-> +	}
-> +	return sysfs_emit(buf, "%d\n", val);
->   }
->   
->   static ssize_t pwm1_enable_store(struct device *dev,
-> @@ -380,49 +343,37 @@ static ssize_t pwm1_enable_store(struct device *dev,
->   				 const char *buf, size_t count)
->   {
->   	struct amc6821_data *data = dev_get_drvdata(dev);
-> -	struct i2c_client *client = data->client;
->   	long val;
-> -	int config = kstrtol(buf, 10, &val);
-> -	if (config)
-> -		return config;
-> +	u32 mode;
-> +	int err;
->   
-> -	mutex_lock(&data->update_lock);
-> -	config = i2c_smbus_read_byte_data(client, AMC6821_REG_CONF1);
-> -	if (config < 0) {
-> -			dev_err(&client->dev,
-> -			"Error reading configuration register, aborting.\n");
-> -			count = config;
-> -			goto unlock;
-> -	}
-> +	err = kstrtol(buf, 10, &val);
-> +	if (err)
-> +		return err;
->   
->   	switch (val) {
->   	case 1:
-> -		config &= ~AMC6821_CONF1_FDRC0;
-> -		config &= ~AMC6821_CONF1_FDRC1;
-> +		mode = 0;
->   		break;
->   	case 2:
-> -		config &= ~AMC6821_CONF1_FDRC0;
-> -		config |= AMC6821_CONF1_FDRC1;
-> +		mode = AMC6821_CONF1_FDRC1;
->   		break;
->   	case 3:
-> -		config |= AMC6821_CONF1_FDRC0;
-> -		config |= AMC6821_CONF1_FDRC1;
-> +		mode = AMC6821_CONF1_FDRC0 | AMC6821_CONF1_FDRC1;
->   		break;
->   	case 4:
-> -		config |= AMC6821_CONF1_FDRC0;
-> -		config &= ~AMC6821_CONF1_FDRC1;
-> +		mode = AMC6821_CONF1_FDRC0;
->   		break;
->   	default:
-> -		count = -EINVAL;
-> -		goto unlock;
-> +		return -EINVAL;
->   	}
-> -	if (i2c_smbus_write_byte_data(client, AMC6821_REG_CONF1, config)) {
-> -			dev_err(&client->dev,
-> -			"Configuration register write error, aborting.\n");
-> -			count = -EIO;
-> -	}
-> -unlock:
-> -	mutex_unlock(&data->update_lock);
-> +
-> +	err = regmap_update_bits(data->regmap, AMC6821_REG_CONF1,
-> +				 AMC6821_CONF1_FDRC0 | AMC6821_CONF1_FDRC1,
-> +				 mode);
-> +	if (err)
-> +		return err;
-> +
->   	return count;
->   }
->   
-> @@ -430,26 +381,45 @@ static ssize_t pwm1_auto_channels_temp_show(struct device *dev,
->   					    struct device_attribute *devattr,
->   					    char *buf)
->   {
-> -	struct amc6821_data *data = amc6821_update_device(dev);
-> -	return sprintf(buf, "%d\n", data->pwm1_auto_channels_temp);
-> +	struct amc6821_data *data = dev_get_drvdata(dev);
-> +	u32 val;
-> +	int err;
-> +
-> +	err = regmap_read(data->regmap, AMC6821_REG_CONF1, &val);
-> +	if (err)
-> +		return err;
-> +	switch (val & (AMC6821_CONF1_FDRC0 | AMC6821_CONF1_FDRC1)) {
-> +	case 0:
-> +	case AMC6821_CONF1_FDRC0:
-> +		val = 0;	/* manual or target rpm controlled */
-> +		break;
-> +	case AMC6821_CONF1_FDRC1:
-> +		val = 2;	/* remote temp controlled */
-> +		break;
-> +	default:
-> +		val = 3;	/* max(local, remote) temp controlled */
-> +		break;
-> +	}
-> +
-> +	return sysfs_emit(buf, "%d\n", val);
->   }
->   
->   static ssize_t temp_auto_point_temp_show(struct device *dev,
->   					 struct device_attribute *devattr,
->   					 char *buf)
->   {
-> +	struct amc6821_data *data = dev_get_drvdata(dev);
->   	int ix = to_sensor_dev_attr_2(devattr)->index;
->   	int nr = to_sensor_dev_attr_2(devattr)->nr;
-> -	struct amc6821_data *data = amc6821_update_device(dev);
-> +
->   	switch (nr) {
->   	case 1:
-> -		return sprintf(buf, "%d\n",
-> -			data->temp1_auto_point_temp[ix] * 1000);
-> +		return sysfs_emit(buf, "%d\n",
-> +				  data->temp1_auto_point_temp[ix] * 1000);
->   	case 2:
-> -		return sprintf(buf, "%d\n",
-> -			data->temp2_auto_point_temp[ix] * 1000);
-> +		return sysfs_emit(buf, "%d\n",
-> +				  data->temp2_auto_point_temp[ix] * 1000);
->   	default:
-> -		dev_dbg(dev, "Unknown attr->nr (%d).\n", nr);
-
-Ditto.
-
->   		return -EINVAL;
->   	}
->   }
-> @@ -458,44 +428,59 @@ static ssize_t pwm1_auto_point_pwm_show(struct device *dev,
->   					struct device_attribute *devattr,
->   					char *buf)
->   {
-> +	struct amc6821_data *data = dev_get_drvdata(dev);
->   	int ix = to_sensor_dev_attr(devattr)->index;
-> -	struct amc6821_data *data = amc6821_update_device(dev);
-> -	return sprintf(buf, "%d\n", data->pwm1_auto_point_pwm[ix]);
-> +	u32 val;
-> +	int err;
-> +
-> +	switch (ix) {
-> +	case 0:
-> +		val = 0;
-> +		break;
-> +	case 1:
-> +		err = regmap_read(data->regmap, AMC6821_REG_DCY_LOW_TEMP, &val);
-> +		if (err)
-> +			return err;
-> +		break;
-> +	default:
-> +		val = 255;
-> +		break;
-> +	}
-> +	return sysfs_emit(buf, "%d\n", val);
->   }
->   
-> -static inline ssize_t set_slope_register(struct i2c_client *client,
-> -		u8 reg,
-> -		u8 dpwm,
-> -		u8 *ptemp)
-> +static inline int set_slope_register(struct regmap *regmap,
-> +				     u8 reg, u8 *ptemp)
->   {
-> -	int dt;
-> -	u8 tmp;
-> +	u8 tmp, dpwm;
-> +	int err, dt;
-> +	u32 pwm;
->   
-> -	dt = ptemp[2]-ptemp[1];
-> +	err = regmap_read(regmap, AMC6821_REG_DCY_LOW_TEMP, &pwm);
-> +	if (err)
-> +		return err;
-> +
-> +	dpwm = 255 - pwm;
-> +
-> +	dt = ptemp[2] - ptemp[1];
->   	for (tmp = 4; tmp > 0; tmp--) {
->   		if (dt * (0x20 >> tmp) >= dpwm)
->   			break;
->   	}
->   	tmp |= (ptemp[1] & 0x7C) << 1;
-> -	if (i2c_smbus_write_byte_data(client,
-> -			reg, tmp)) {
-> -		dev_err(&client->dev, "Register write error, aborting.\n");
-> -		return -EIO;
-> -	}
-> -	return 0;
-> +	return regmap_write(regmap, reg, tmp);
->   }
->   
->   static ssize_t temp_auto_point_temp_store(struct device *dev,
->   					  struct device_attribute *attr,
->   					  const char *buf, size_t count)
->   {
-> -	struct amc6821_data *data = amc6821_update_device(dev);
-> -	struct i2c_client *client = data->client;
-> +	struct amc6821_data *data = dev_get_drvdata(dev);
->   	int ix = to_sensor_dev_attr_2(attr)->index;
->   	int nr = to_sensor_dev_attr_2(attr)->nr;
-> +	struct regmap *regmap = data->regmap;
->   	u8 *ptemp;
->   	u8 reg;
-> -	int dpwm;
->   	long val;
->   	int ret = kstrtol(buf, 10, &val);
->   	if (ret)
-> @@ -511,12 +496,10 @@ static ssize_t temp_auto_point_temp_store(struct device *dev,
->   		reg = AMC6821_REG_RTEMP_FAN_CTRL;
->   		break;
->   	default:
-> -		dev_dbg(dev, "Unknown attr->nr (%d).\n", nr);
-
-Ditto.
-
->   		return -EINVAL;
->   	}
->   
->   	mutex_lock(&data->update_lock);
-> -	data->valid = false;
->   
->   	switch (ix) {
->   	case 0:
-> @@ -525,13 +508,9 @@ static ssize_t temp_auto_point_temp_store(struct device *dev,
->   		ptemp[0] = clamp_val(ptemp[0], 0,
->   				     data->temp2_auto_point_temp[1]);
->   		ptemp[0] = clamp_val(ptemp[0], 0, 63);
-> -		if (i2c_smbus_write_byte_data(
-> -					client,
-> -					AMC6821_REG_PSV_TEMP,
-> -					ptemp[0])) {
-> -				dev_err(&client->dev,
-> -					"Register write error, aborting.\n");
-> -				count = -EIO;
-> +		if (regmap_write(regmap, AMC6821_REG_PSV_TEMP, ptemp[0])) {
-> +			dev_err(dev, "Register write error, aborting.\n");
-> +			count = -EIO;
->   		}
->   		goto EXIT;
->   	case 1:
-> @@ -543,12 +522,10 @@ static ssize_t temp_auto_point_temp_store(struct device *dev,
->   		ptemp[2] = clamp_val(val / 1000, ptemp[1]+1, 255);
->   		break;
->   	default:
-> -		dev_dbg(dev, "Unknown attr->index (%d).\n", ix);
-
-Ditto.
-
->   		count = -EINVAL;
->   		goto EXIT;
->   	}
-> -	dpwm = data->pwm1_auto_point_pwm[2] - data->pwm1_auto_point_pwm[1];
-> -	if (set_slope_register(client, reg, dpwm, ptemp))
-> +	if (set_slope_register(regmap, reg, ptemp))
->   		count = -EIO;
->   
->   EXIT:
-> @@ -561,10 +538,11 @@ static ssize_t pwm1_auto_point_pwm_store(struct device *dev,
->   					 const char *buf, size_t count)
->   {
->   	struct amc6821_data *data = dev_get_drvdata(dev);
-> -	struct i2c_client *client = data->client;
-> -	int dpwm;
-> +	struct regmap *regmap = data->regmap;
->   	u8 val;
-> -	int ret = kstrtou8(buf, 10, &val);
-> +	int ret;
-> +
-> +	ret = kstrtou8(buf, 10, &val);
-
-Not sure this cosmetic change is worth it? Or maybe squash with an 
-earlier commit?
-
->   	if (ret)
->   		return ret;
->   
-> @@ -572,27 +550,24 @@ static ssize_t pwm1_auto_point_pwm_store(struct device *dev,
->   		return -EINVAL;
->   
->   	mutex_lock(&data->update_lock);
-> -	data->pwm1_auto_point_pwm[1] = val;
-> -	if (i2c_smbus_write_byte_data(client, AMC6821_REG_DCY_LOW_TEMP,
-> -			data->pwm1_auto_point_pwm[1])) {
-> -		dev_err(&client->dev, "Register write error, aborting.\n");
-> -		count = -EIO;
-> -		goto EXIT;
-> +	ret = regmap_write(regmap, AMC6821_REG_DCY_LOW_TEMP, val);
-> +	if (ret)
-
-I think we're missing a count = something here?
-
-> +		goto unlock;
-> +
-> +	ret = set_slope_register(regmap, AMC6821_REG_LTEMP_FAN_CTRL,
-> +				 data->temp1_auto_point_temp);
-> +	if (ret) {
-> +		count = ret;
-
-In some places, we replace set_slope_register return code with -EIO 
-(like it was) and sometimes we propagate it, like here. Is there some 
-reason for this or can we have some kind of consistency across the code 
-base here?
-
-Looks good to me otherwise.
-
-Cheers,
-Quentin
