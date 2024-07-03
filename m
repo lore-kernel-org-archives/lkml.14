@@ -1,479 +1,255 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBF017624E;
-	Wed,  3 Jul 2024 11:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720007900; cv=fail; b=chZZ5AErgnfAnBiaopfSyaLRXZlrHC752jfhKjrcpeXRyye0Mnw+n6whA/HzlWKjZaNlfpmpUbq8rVvMmf5nwyhBsZ9YJtHkaUgolkYL4axIR4wJiZmth4fDnwILKu6G9h4eOmmqguvH8EF4TcpjbZWdUl8YhR1t2wRMikuz2UM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720007900; c=relaxed/simple;
-	bh=Ra6M4rtT/0LKv+r18UjaZ7XOFLWFl1xu42O4XnR48DY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LjzeI8adAA6/pRKFSVdifgNwBifXgr53bNNy+TuTF4A0yjATcJTGoYwkL8XojkpNFVjEeqZ8TmT4W2N17xGgukbwvpaFYyEIbzMZhngUpOgl+Uu2Q0xxaDt/XdnSb1qLr7Q/2OQRxuT1nkcUnHMZ8c4ax2/o808jMdnKz4FgS4g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=G+Kz0LdU; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=TbEaPJlV; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E56171E70
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720007919; cv=none; b=ZfF1QcYMLLs43ESqWOnjWv2tWZxQzvXpYNteUIZm8eK9Vv66rOPE64VSXaalHI8Gf8UTrgIGmC67vLajxlb0euTsJa0I0Eop5vdtPjG5OqsqLWe27nDSEH3/Bac7ZGrNDFbcnUpwV3PFcTQGOps1ksKN7BiDEZzy/bLOTgtbuvA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720007919; c=relaxed/simple;
+	bh=wWDHwFMrAnkV5WaEW0RgDnLWEqsKmujFhA7jcRY3QCs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gGO/Y3oorWsBFbGebKpUN7W5Bbq4V4ksSfYz5r9vcg1xa/f4chVdUgl3oSB+9rdei+YTDstdpAfya2lI+3fCuY04UR0KODz7gVNEEzdjPwXZFkh1KPFC66tNVHuS2GErHtsrLZd3QQN1KgVR6MRUYye9+1qhg1Z0grAMeyqAAPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=OPy4XGQm; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G+Kz0LdU";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="TbEaPJlV"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4638OHOg030257;
-	Wed, 3 Jul 2024 11:58:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:content-transfer-encoding:content-type:mime-version; s=
-	corp-2023-11-20; bh=MzhyD6cb3BiXjeh/IjbwiE2Jy8JsxlBCHvbf47q1oBw=; b=
-	G+Kz0LdU1fnhVQbd3FPTKWkG33x4t5x9IJaDfKxodiBhS9qYS824qATcxFVlrF+1
-	hZv+Y2RDgd3DTFEL9w80cJbhSO6CYKK8jv1Rypg8s7KTR9F9d614nLo3Jl/ijTyw
-	J+zGy5HRe92SAOp7r8WFc0n2MdxvY0LW0RqnS3IzfvgtNDtwr8PdUrQlgV5leWM+
-	zWAzujmzDxF1qSfhihWbHvl7UWGDKq+PdmSqKoEUodYwkIXE81KfNm5FzfpCz0De
-	ZOoUXBw1T0YXBFAFk9hzvRn+G776taFu2CAEEHThGUqV8PK6FuQeodin1gaZrPWc
-	yKDliyyOBNYIZhtGLbZIZw==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40296b01fe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 03 Jul 2024 11:58:05 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4639ks41021582;
-	Wed, 3 Jul 2024 11:58:04 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4028qf5bm2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 03 Jul 2024 11:58:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R5Iy4pTGki4rSJlRoUw8ecU9xvU4/8ngjoT55zyF3b+6Esdd3n0qCMGExMb4hw4mj+tVA4OGhmFMQi1CusWz8k3dQOxl3ghwzZXn2MvBFtk+rmWOXeeXHHqiNDosZfS1fFPXAF1uoEvgrGzdhyqy6q6TylkoycRta/wL6i5Xu/Qe9I0a5P4C9Vg3+4SjKBUvf8RSrrnWrmxYhTOStJb6IVa+yGiQ2l9PidaXApeZ1jD0t5PkH5NR2sdDgvJ0XO2b/CiqKPPkcljTuHVrodrf9K6kX3jZiT8opHMgOYgh/q3BjpC4cL9Xvav3KZRgphITyLWaO/PCUt+dtKG6mV97yA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MzhyD6cb3BiXjeh/IjbwiE2Jy8JsxlBCHvbf47q1oBw=;
- b=HHtg7IIIViTdpzS4UP20SZVZWlZvj2mbG7TxOHFofMN1Z2SVoAVxjJn4YvJYwBsfp/Td7BTvJzD1RIngCCKrTEFYdvuitsi275DtY0uZ5WXQqzmYNQvWbFMOPCtQ8Ptr4ibQqdL4v17LPvxhDvglJ2SjuIQwCMJxjd59Ui/piHSrIEZwgbOq7LsgDVDBGpatT4nntnYQWR7h1ZuzXJf6r+Wei78S+WdaRYPm6Jbyxs7scyQawxCwtNExHO2RYfVrIsuzs61iyzoFAkMI9GFb1jLEngqtcE22RxDtKkIKwELUIJFCrG/DzTkSW7QyxqiIiNsB7IkxOFbFlpW+OK7G5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="OPy4XGQm"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7f61549406eso200423739f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 04:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MzhyD6cb3BiXjeh/IjbwiE2Jy8JsxlBCHvbf47q1oBw=;
- b=TbEaPJlVpfTkz5EfbVq2i8+Q1ec0UhLc7WamBAB3NylGK2tpDJeOoesy/EwmeRiR60dSIS55qxFdzHnNlI1FFxURpyJxqYU0jktNHdo+6tNJ4DQMBy+HN1nk3cgz6XZjbglc7GPENtTwOZLCOox1o7fXGavbOJnnQtrdLFhAsH0=
-Received: from SJ0PR10MB5613.namprd10.prod.outlook.com (2603:10b6:a03:3d0::5)
- by SA1PR10MB7832.namprd10.prod.outlook.com (2603:10b6:806:3a9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Wed, 3 Jul
- 2024 11:58:01 +0000
-Received: from SJ0PR10MB5613.namprd10.prod.outlook.com
- ([fe80::4239:cf6f:9caa:940e]) by SJ0PR10MB5613.namprd10.prod.outlook.com
- ([fe80::4239:cf6f:9caa:940e%6]) with mapi id 15.20.7741.025; Wed, 3 Jul 2024
- 11:58:01 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: [PATCH 3/7] mm: move vma_shrink(), vma_expand() to internal header
-Date: Wed,  3 Jul 2024 12:57:34 +0100
-Message-ID: <c1be2cf261bd0d72fe17084c41452f5ebe030d8c.1720006125.git.lorenzo.stoakes@oracle.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1720006125.git.lorenzo.stoakes@oracle.com>
-References: <cover.1720006125.git.lorenzo.stoakes@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P265CA0118.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c6::8) To SJ0PR10MB5613.namprd10.prod.outlook.com
- (2603:10b6:a03:3d0::5)
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1720007916; x=1720612716; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UBIo+uStCQ1paPqSfZA5+vCejmY+rJugxSJUMJ0dpJs=;
+        b=OPy4XGQmp5ZJVwertz4xDgZFocEzQzDZvtbK9+kQhOxacQ7lIhYcqxQrUUYzfB0MSK
+         7NoUvahATBT7UJ+153WWxWmqgrAo+tnvJn1rUV2MUpr607nqMqvju7TMIa8UKO0EtDGh
+         lCezYp/q2vaqIQuo1L2fq3DtxUorBoxn6YslhnCJf7w6RfrNcTNJa3OW7ilIY1TdmW1U
+         3+ixWVJCuXhPGg/GEmiYC1PAcapbL2BRxlVXiWjCDar68mlFdKUpsz36v2O7VDddCiVn
+         4G4LedAJtdln0Ml5OX8tdmdNCF/SePTm3y7edS93EYujjuLoRDt90Mz29HvAkaicDI1+
+         DW/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720007916; x=1720612716;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UBIo+uStCQ1paPqSfZA5+vCejmY+rJugxSJUMJ0dpJs=;
+        b=Y/STWdr2R/WmIdxiiAXgUGCfsZZCsIbym6Kms2TVX0K+JhCzJtfU/ZOczJg3DleR47
+         jKuN6rHQu6FHqMdeH6bGPkyfWjbtmYYzjJtj36v2E8iqgqQI3hYDf8/L8EjSzdFfT5k+
+         DycCj+r3dCFr0t/d03COHWjBDhiiLP5JqfLC7S7btI4UEiy1m20C36RNb0TBqrOsq85l
+         W8vXKjrjhmm1zqYDEgArVjq98IbvHbkwpnZbzhmnqkFcb4qzIJi233avGKuS7T1iIH3Y
+         eoDi4vm0eIStHw9uzx5u5XZtcxjRCPgD5dYUWCTaUWH73/EKQsQRXroLskETQkaRzqZF
+         0d8A==
+X-Forwarded-Encrypted: i=1; AJvYcCU2azTOumbK9Gcbnnz0b6CQpluffHPup4yqDsvPnuOUXRsLk6qNEylE4jS9Lqbyj2TE1m0FNx6CzTbBh0eYeZ6t0obwBUhgwR2vX5Za
+X-Gm-Message-State: AOJu0Yx4+CrlyvbpdSBSuH0XjsFKSfWjWyVLf7xuJ29mdDV5b4MV6j6B
+	ChK5YnE0xABr5/lpT+lOJKDJFnCb0tqPPvkKwNcRtBxtTFEzOlgHeOshxcTyXJP5RFfrkGbMaer
+	sOQfqdrIueCnRcgydRI/XSlV7NlFyat/AmuuENQ==
+X-Google-Smtp-Source: AGHT+IGtEVfnde1bieGkI5SLPARCf/348XEIKCJO3SDHaPoIXAvv+n69uX9+bVbyCoNz+uoRDDv5kQ3q8qWIwWtXjR4=
+X-Received: by 2002:a05:6e02:17c9:b0:37a:a9f0:f263 with SMTP id
+ e9e14a558f8ab-37cd31b75aemr142038025ab.20.1720007916271; Wed, 03 Jul 2024
+ 04:58:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR10MB5613:EE_|SA1PR10MB7832:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d775c25-b6e1-4ae7-131f-08dc9b5763ab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?1v2TF6QHNbUT3P/2GWSDYV2u8ZvqD+xyZbOJFqJZpgmIc4dXUaEu2qvmK47i?=
- =?us-ascii?Q?e6gyGCw69ytS1up0TlEOjER1IUK8h92zxo5kOPOiRWjsct96T9+s76ALG6sd?=
- =?us-ascii?Q?XtUaNqAh3HwpA3uEAOAWB/alNfxLBwfQtJxtBWaPQLY6lA9pei05545a0Uq9?=
- =?us-ascii?Q?5ziekNVheXScDyFjMcKaljbioMFYGnB6NFnojH4ATxMN1IespGOARcyAlDz6?=
- =?us-ascii?Q?MJBYE7ffAm3jaVSSOrRdSTCbM/l/fmUJKgXav3uDZfZhMi4ADI5kYvFOGzLk?=
- =?us-ascii?Q?c5V2F0p9GPp8cGkneFS+LnOtFhQBx5Nx8jAbpaKX0Vav3NDI8IZBWJFDeFhA?=
- =?us-ascii?Q?AgqcJ8WkhrtbapaDnN/29BwbTyaHk8byWkKAPRV4Ymnjwvv5n8t5zaeCyvvL?=
- =?us-ascii?Q?UY+mWwfghJgVnfwQeAU203Phm88voOJXqlmE7w2Ug1Bw1j5MAYG+Q3ZoJZMZ?=
- =?us-ascii?Q?/fJ6MvBR0vzREHFbXKUvHCWJRcCcmoy5XAbu90KSjN/JehWYkITMH8z8QEmW?=
- =?us-ascii?Q?aiWX15bh657NqwhHdMEE2+FQzrFWIv+TuTUSFoLgXgkfJypD8YQo/aUKPVHt?=
- =?us-ascii?Q?OxlZtkb6roVLR8L3T2Fgp/OzcURcN2NSc9DeVSQlyWGy9yF4UBTVvUm47hwI?=
- =?us-ascii?Q?ZyI758uPOvTYqNlho3PCPxDC1/oEkzUg7oxzBZBX4wYFeIwELivj8R7/ttdY?=
- =?us-ascii?Q?Xm8m1nbLGy+2WO2I8496OwpRLKvPcNRPAXQsxQbWlUQPFssSwrwt6JDrkR+/?=
- =?us-ascii?Q?6HqLjvG4Jljgh2A4QYcvsKb9QWcqaT6E2dVidCmRwCGsJq/ALqn+R8SKg6S5?=
- =?us-ascii?Q?PU26+mYjMaQEWSYDZ1cv2UbO1DPDm3ZZOQ2GB6rlkN6MiwV1t+WhmKABvPrX?=
- =?us-ascii?Q?BEkZbeTstdcvD13iDMHFMWN2p+zZQ4rxXGY+ll4a+rYn4w/3wMbN3+bso/tP?=
- =?us-ascii?Q?JpAdStsEiJCEHII0rh2VSTqC3aJgiwfkuzQV/CqEkDUt17LbgB8wUeWqaWBG?=
- =?us-ascii?Q?j3yaIQr6eQhg6lW0dcaTcuYLyBDwxDgDS8/RwXEdyG4DiH8qcy1uRWQwXNdX?=
- =?us-ascii?Q?KxFH4sZjQwlhKsAPlmLjsldbHBQSWgnCeyDDq+DNBWEidh6T4+CSad0q626k?=
- =?us-ascii?Q?JP7UZokecXIo53wFigGdNQvlgGdQKQJhAoUcyM/JCb2SxxcxCq+/v4uKLDnF?=
- =?us-ascii?Q?lSLYvL2w/hLu9B7qr+wAKnA6Q2caqJM7mVmdHNDPN3WhQMizavF9Uc/Sohv4?=
- =?us-ascii?Q?BhCq/bDZJsZRBcPC2GDV8hvgJNhZzrkQ0gp8X2emjcxoQrmK1zHo75uhUncx?=
- =?us-ascii?Q?bbkHsGiNsOhWfKT0eb5c0X0eG3w9ONXj8ScCtOIHX8wbOQ=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB5613.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?bgYdqoTcX3EUYTYGDULG6ceK+o8LPLs/m8QtIYpHDJdrCuYf7PoVp2qG9+eG?=
- =?us-ascii?Q?7LJJJzdj9dDLj4w6AZr1BDm3Je5oCE3tqKGmGiiD17QeSz4KQy64yu1m98iB?=
- =?us-ascii?Q?Qn+jZ8JbroHq/+UbKbujQZNWET5fh0Bj+1QcUVWbLh3AFacU2CHEE9NXEebN?=
- =?us-ascii?Q?wv+1lQI3JbON3Q1BetDpzLbBWqFYj4YHDVW/Mt1I9o4h9WnoIwmaYAkxqMpP?=
- =?us-ascii?Q?zWa5thGNmukz2f/Sj3BkyUuZ5oDtwTYIAaKLlJb6wzZ/CwhGNLO1GhDhHq8y?=
- =?us-ascii?Q?yMGTRv5o2wRHWrSOLssQtWe4leQbXlpp7KLYhPhXmJjxoe+Umgc5g5VAgJsb?=
- =?us-ascii?Q?gJhyRFFiD75Kdl2FzwA5aJFu/Uj3/gLIj8E9tx7lkNr+amWkvY4UUQt4KlEF?=
- =?us-ascii?Q?ptvJNL2IqnhJH7An1+R7DbMxsCMaYYix9ZKYQD/wMSa90GKShQfDZDnBtanu?=
- =?us-ascii?Q?gn6vQjXUMV0SyHOkbUF+kkYNQIKwIfj+WspBhY/e/flxfYPUGMnonc9rlB3F?=
- =?us-ascii?Q?ZAk5ckz4PNCNSVJVca+4ZP6FvEqGh2UfpqMyGlfxAwFl27t8yjevcvBtMcB/?=
- =?us-ascii?Q?XF6ka9xeC4KJS8ZVFNAnZbvZGVGLqzL+w0rqTQ5dHNZ6ly53AbZLurZuQnop?=
- =?us-ascii?Q?b7r7IseI7bSeMJtNczUKmWPvo5PVmgyQyMUV6/4PdEC8ET1r5izkH0TUXwMj?=
- =?us-ascii?Q?1MrNsFSqT8GDU/7ixNqL2gK2TWHx9x8XjPiPzCSAnNimENOBjW71WPkf9YQC?=
- =?us-ascii?Q?qHmHY3Y/9LB6cifzvBMiV3b1U2LimwZPJ/JOd/pa+7oTDtrcSVBv5/V30t6v?=
- =?us-ascii?Q?tlAGrxVwQF8oj48kPPmVTZPFYayZODLifTFJ5flvkIf9sV82giLiFr4rqZsp?=
- =?us-ascii?Q?nEpaMCJumziQo/cVuSf7Qi0ECjUxGz4lK9Cd11oO0/Hxnn2IkTbJ7NTuDfS7?=
- =?us-ascii?Q?PJNbXbq88Efqb9hNDhZvHNhIVtITgwlrkiukjBnK2Ld7iglYEMa44Di+a3Ei?=
- =?us-ascii?Q?7ClwaWMFauhxE7Ow/oXf1qhdOoMmhhityosVk5XbRw2stYzstXgNUS6L3Xwm?=
- =?us-ascii?Q?6kjtIL3gZ0toJ9Fz0GvuBCzJPv85CPYY0UVo01n9qXQxLrqvRzi6i3bLeva3?=
- =?us-ascii?Q?xXnvkZ2D7QujR4aEgFrCEf69dtSgQvDWwLCsdFL+u5IJ0PJKhUhwcSNLo2/N?=
- =?us-ascii?Q?P51pTfB3lMWL+pL79kU9z/yLB5qXWckiotODE9yXDnrDN6Si4FIQ1KCysf9K?=
- =?us-ascii?Q?N/L1ItpBM7+/NzhWpjR53kXg7RvEvS0n+GlDGay0IISY8aTb2A0qXYkhUwOw?=
- =?us-ascii?Q?9BYkGOpM42BKmh+TD1xlXWHiMNgLLoTP+BaZ6ugU1tyfX7jcUI15/uUw0VOh?=
- =?us-ascii?Q?qVdWhmHn7SELebXNWZjT6pff22GhMK75Sei1kUKvWJIACWsN5SzvKvwpwud9?=
- =?us-ascii?Q?Eu1GBwveGtej+QDoWw6PwR/zsU0LzOMIunT/DZLE/nZmcPmm8YFlWU0g3lEI?=
- =?us-ascii?Q?WlDZ6Irc/pSmS7424luP53WWKL70d6wMwEt6CL3jsJSYT+vwB80zyeCJ11ez?=
- =?us-ascii?Q?cUODfDTE3pkX+vcJ9INLnSkHPpS05pryWlg/9YuAGItzPujurbeq03UchJ+X?=
- =?us-ascii?Q?QA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	QDojYLuDGhfFWBa1f8TB5R8yPxw7vYgi+UvPnSYRqLluUK9nsYKq3uBiKriH2WcAK5qhQeimLc0p4pfCqLHs9gyiaO7fgiyLvmuGHNXaWOrjQAF+RcYIo9hcpmQHG0pryXoHPLAeYA2F7F1exYqja3OVVrHc4Q9MwPtH4ResnyWxVwDQH99LpXLAD1XldPqJn4Ji0+0/0EC7Z3oLF9WFBK05G9xSiPwFiSRRljFKk8rbRvNBztp++OSFCjH8X6+hackXcPka5I5nHMLWncYk8zF0cBxcrBdPgKA7S/6k1cnHUXhicNOAZntdOsc5I26YLDTnwJQ4oKkSyQKUosaeF3F2sZ6UYzxpzgX3ay5jp4Ils9iWNMTnMGWDLkjzVU4mZ4pSuFHt4JHDGYF0WvGyq0lBKWlc1jOAXDmm4mIX2Cl3Qj+CnMW9j60MZ7LXSZAmfjfJe24m5gUcaFvpDf1jJi7jpAyAPNIWascMkJRKzloHhf99Oq+OBMEvmmOk/g1b4dYufZsxvyqusO2YNzrZFWQe+vLUy8IGVmwxdF+1TMV+ie5YFExrgay3CUR0yMPoL01PlhBNAdBz76OU+p3E8AL+eVrcDRETSCoR7i6BO5M=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d775c25-b6e1-4ae7-131f-08dc9b5763ab
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB5613.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 11:58:01.8489
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T7Jyl3/AXIRskJ6gor/ctinQ9Bt2aJymeNLLobzq3t3JjqHeCDRPlvv0eEjyO04aiPtl51Giw5gnXOfgeRG0sbzS/+j06WHuwyMl8JWgUt8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7832
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_07,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
- definitions=main-2407030087
-X-Proofpoint-GUID: 8RlY13dTiF4awPZUYWnwXz7HZfPWZG4l
-X-Proofpoint-ORIG-GUID: 8RlY13dTiF4awPZUYWnwXz7HZfPWZG4l
+References: <20240703072659.1427616-1-namcao@linutronix.de>
+In-Reply-To: <20240703072659.1427616-1-namcao@linutronix.de>
+From: Anup Patel <anup@brainfault.org>
+Date: Wed, 3 Jul 2024 17:28:23 +0530
+Message-ID: <CAAhSdy0ZGD-p0iBVPqHF0RKTwvAAMWwYZ0ufioRrO75JzSh1qQ@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/sifive-plic: Fix plic_set_affinity() only enables
+ 1 cpu
+To: Nam Cao <namcao@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, b.spranger@linutronix.de, 
+	Christoph Hellwig <hch@lst.de>, Marc Zyngier <marc.zyngier@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The vma_shrink() and vma_expand() functions are internal VMA manipulation
-functions which we ought to abstract for use outside of memory management
-code.
+On Wed, Jul 3, 2024 at 12:57=E2=80=AFPM Nam Cao <namcao@linutronix.de> wrot=
+e:
+>
+> plic_set_affinity() only enables interrupt for the first possible CPU in
+> the mask. The point is to prevent all CPUs trying to claim an interrupt,
+> but only one CPU succeeds and the other CPUs wasted some clock cycles for
+> nothing.
+>
+> However, there are two problems with that:
+> 1. Users cannot enable interrupt on multiple CPUs (for example, to minimi=
+ze
+> interrupt latency).
 
-To achieve this, we replace shift_arg_pages() in fs/exec.c with an
-invocation of a new relocate_vma_down() function implemented in mm/mmap.c,
-which enables us to also move move_page_tables() and vma_iter_prev_range()
-to internal.h.
+Well, you are assuming that multiple CPUs are always idle or available
+to process interrupts. In other words, if the system is loaded running
+some workload on each CPU then performance on multiple CPUs
+will degrade since multiple CPUs will wastefully try to claim interrupt.
 
-The purpose of doing this is to isolate key VMA manipulation functions in
-order that we can both abstract them and later render them easily testable.
+In reality, we can't make such assumptions and it is better to target a
+particular CPU for processing interrupts (just like various other interrupt
+controllers). For balancing interrupt processing load, we have software
+irq balancers running in user-space (or kernel space) which do a
+reasonably fine job of picking appropriate CPU for interrupt processing.
 
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
----
- fs/exec.c          | 81 ++++------------------------------------------
- include/linux/mm.h | 17 +---------
- mm/internal.h      | 18 +++++++++++
- mm/mmap.c          | 81 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 106 insertions(+), 91 deletions(-)
+> 2. Even if users do not touch SMP interrupt affinity, plic_set_affinity()
+> is still invoked once (in plic_irqdomain_map()). Thus, by default, only
+> CPU0 handles interrupts from PLIC. That may overload CPU0.
+>
+> Considering this optimization is not strictly the best (it is tradeoff
+> between CPU cycles and interrupt latency), it should not be forced on
+> users.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 40073142288f..8596d325250c 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -680,80 +680,6 @@ static int copy_strings_kernel(int argc, const char *const *argv,
+Randomly attempting to take an interrupt on multiple CPUs affects the
+workload running all such CPUs (see above comment).
 
- #ifdef CONFIG_MMU
+It's better to have a more predictable and targeted interrupt affinity
+so that software irq balancers work effectively.
 
--/*
-- * During bprm_mm_init(), we create a temporary stack at STACK_TOP_MAX.  Once
-- * the binfmt code determines where the new stack should reside, we shift it to
-- * its final location.  The process proceeds as follows:
-- *
-- * 1) Use shift to calculate the new vma endpoints.
-- * 2) Extend vma to cover both the old and new ranges.  This ensures the
-- *    arguments passed to subsequent functions are consistent.
-- * 3) Move vma's page tables to the new range.
-- * 4) Free up any cleared pgd range.
-- * 5) Shrink the vma to cover only the new range.
-- */
--static int shift_arg_pages(struct vm_area_struct *vma, unsigned long shift)
--{
--	struct mm_struct *mm = vma->vm_mm;
--	unsigned long old_start = vma->vm_start;
--	unsigned long old_end = vma->vm_end;
--	unsigned long length = old_end - old_start;
--	unsigned long new_start = old_start - shift;
--	unsigned long new_end = old_end - shift;
--	VMA_ITERATOR(vmi, mm, new_start);
--	struct vm_area_struct *next;
--	struct mmu_gather tlb;
--
--	BUG_ON(new_start > new_end);
--
--	/*
--	 * ensure there are no vmas between where we want to go
--	 * and where we are
--	 */
--	if (vma != vma_next(&vmi))
--		return -EFAULT;
--
--	vma_iter_prev_range(&vmi);
--	/*
--	 * cover the whole range: [new_start, old_end)
--	 */
--	if (vma_expand(&vmi, vma, new_start, old_end, vma->vm_pgoff, NULL))
--		return -ENOMEM;
--
--	/*
--	 * move the page tables downwards, on failure we rely on
--	 * process cleanup to remove whatever mess we made.
--	 */
--	if (length != move_page_tables(vma, old_start,
--				       vma, new_start, length, false, true))
--		return -ENOMEM;
--
--	lru_add_drain();
--	tlb_gather_mmu(&tlb, mm);
--	next = vma_next(&vmi);
--	if (new_end > old_start) {
--		/*
--		 * when the old and new regions overlap clear from new_end.
--		 */
--		free_pgd_range(&tlb, new_end, old_end, new_end,
--			next ? next->vm_start : USER_PGTABLES_CEILING);
--	} else {
--		/*
--		 * otherwise, clean from old_start; this is done to not touch
--		 * the address space in [new_end, old_start) some architectures
--		 * have constraints on va-space that make this illegal (IA64) -
--		 * for the others its just a little faster.
--		 */
--		free_pgd_range(&tlb, old_start, old_end, new_end,
--			next ? next->vm_start : USER_PGTABLES_CEILING);
--	}
--	tlb_finish_mmu(&tlb);
--
--	vma_prev(&vmi);
--	/* Shrink the vma to just the new range */
--	return vma_shrink(&vmi, vma, new_start, new_end, vma->vm_pgoff);
--}
--
- /*
-  * Finalizes the stack vm_area_struct. The flags and permissions are updated,
-  * the stack is optionally relocated, and some extra space is added.
-@@ -846,7 +772,12 @@ int setup_arg_pages(struct linux_binprm *bprm,
+>
+> Rewrite plic_set_affinity() to enable interrupt for all possible CPUs in
+> the mask.
 
- 	/* Move stack pages down in memory. */
- 	if (stack_shift) {
--		ret = shift_arg_pages(vma, stack_shift);
-+		/*
-+		 * During bprm_mm_init(), we create a temporary stack at STACK_TOP_MAX.  Once
-+		 * the binfmt code determines where the new stack should reside, we shift it to
-+		 * its final location.
-+		 */
-+		ret = relocate_vma_down(vma, stack_shift);
- 		if (ret)
- 			goto out_unlock;
- 	}
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 4d2b5538925b..418aca7e37a6 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -998,12 +998,6 @@ static inline struct vm_area_struct *vma_prev(struct vma_iterator *vmi)
- 	return mas_prev(&vmi->mas, 0);
- }
+At least from my side, it is a NO to this approach.
 
--static inline
--struct vm_area_struct *vma_iter_prev_range(struct vma_iterator *vmi)
--{
--	return mas_prev_range(&vmi->mas, 0);
--}
--
- static inline unsigned long vma_iter_addr(struct vma_iterator *vmi)
- {
- 	return vmi->mas.index;
-@@ -2523,11 +2517,6 @@ int set_page_dirty_lock(struct page *page);
+Regards,
+Anup
 
- int get_cmdline(struct task_struct *task, char *buffer, int buflen);
-
--extern unsigned long move_page_tables(struct vm_area_struct *vma,
--		unsigned long old_addr, struct vm_area_struct *new_vma,
--		unsigned long new_addr, unsigned long len,
--		bool need_rmap_locks, bool for_stack);
--
- /*
-  * Flags used by change_protection().  For now we make it a bitmap so
-  * that we can pass in multiple flags just like parameters.  However
-@@ -3273,11 +3262,6 @@ void anon_vma_interval_tree_verify(struct anon_vma_chain *node);
-
- /* mmap.c */
- extern int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin);
--extern int vma_expand(struct vma_iterator *vmi, struct vm_area_struct *vma,
--		      unsigned long start, unsigned long end, pgoff_t pgoff,
--		      struct vm_area_struct *next);
--extern int vma_shrink(struct vma_iterator *vmi, struct vm_area_struct *vma,
--		       unsigned long start, unsigned long end, pgoff_t pgoff);
- extern struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *);
- extern int insert_vm_struct(struct mm_struct *, struct vm_area_struct *);
- extern void unlink_file_vma(struct vm_area_struct *);
-@@ -3285,6 +3269,7 @@ extern struct vm_area_struct *copy_vma(struct vm_area_struct **,
- 	unsigned long addr, unsigned long len, pgoff_t pgoff,
- 	bool *need_rmap_locks);
- extern void exit_mmap(struct mm_struct *);
-+extern int relocate_vma_down(struct vm_area_struct *vma, unsigned long shift);
-
- static inline int check_data_rlimit(unsigned long rlim,
- 				    unsigned long new,
-diff --git a/mm/internal.h b/mm/internal.h
-index 81564ce0f9e2..a4d0e98ccb97 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1305,6 +1305,12 @@ static inline struct vm_area_struct
- 			  vma_policy(vma), new_ctx, anon_vma_name(vma));
- }
-
-+int vma_expand(struct vma_iterator *vmi, struct vm_area_struct *vma,
-+	      unsigned long start, unsigned long end, pgoff_t pgoff,
-+	      struct vm_area_struct *next);
-+int vma_shrink(struct vma_iterator *vmi, struct vm_area_struct *vma,
-+	       unsigned long start, unsigned long end, pgoff_t pgoff);
-+
- enum {
- 	/* mark page accessed */
- 	FOLL_TOUCH = 1 << 16,
-@@ -1528,6 +1534,12 @@ static inline int vma_iter_store_gfp(struct vma_iterator *vmi,
- 	return 0;
- }
-
-+static inline
-+struct vm_area_struct *vma_iter_prev_range(struct vma_iterator *vmi)
-+{
-+	return mas_prev_range(&vmi->mas, 0);
-+}
-+
- /*
-  * VMA lock generalization
-  */
-@@ -1639,4 +1651,10 @@ void unlink_file_vma_batch_init(struct unlink_vma_file_batch *);
- void unlink_file_vma_batch_add(struct unlink_vma_file_batch *, struct vm_area_struct *);
- void unlink_file_vma_batch_final(struct unlink_vma_file_batch *);
-
-+/* mremap.c */
-+unsigned long move_page_tables(struct vm_area_struct *vma,
-+	unsigned long old_addr, struct vm_area_struct *new_vma,
-+	unsigned long new_addr, unsigned long len,
-+	bool need_rmap_locks, bool for_stack);
-+
- #endif	/* __MM_INTERNAL_H */
-diff --git a/mm/mmap.c b/mm/mmap.c
-index e42d89f98071..c1567b8b2a0a 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -4058,3 +4058,84 @@ static int __meminit init_reserve_notifier(void)
- 	return 0;
- }
- subsys_initcall(init_reserve_notifier);
-+
-+/*
-+ * Relocate a VMA downwards by shift bytes. There cannot be any VMAs between
-+ * this VMA and its relocated range, which will now reside at [vma->vm_start -
-+ * shift, vma->vm_end - shift).
-+ *
-+ * This function is almost certainly NOT what you want for anything other than
-+ * early executable temporary stack relocation.
-+ */
-+int relocate_vma_down(struct vm_area_struct *vma, unsigned long shift)
-+{
-+	/*
-+	 * The process proceeds as follows:
-+	 *
-+	 * 1) Use shift to calculate the new vma endpoints.
-+	 * 2) Extend vma to cover both the old and new ranges.  This ensures the
-+	 *    arguments passed to subsequent functions are consistent.
-+	 * 3) Move vma's page tables to the new range.
-+	 * 4) Free up any cleared pgd range.
-+	 * 5) Shrink the vma to cover only the new range.
-+	 */
-+
-+	struct mm_struct *mm = vma->vm_mm;
-+	unsigned long old_start = vma->vm_start;
-+	unsigned long old_end = vma->vm_end;
-+	unsigned long length = old_end - old_start;
-+	unsigned long new_start = old_start - shift;
-+	unsigned long new_end = old_end - shift;
-+	VMA_ITERATOR(vmi, mm, new_start);
-+	struct vm_area_struct *next;
-+	struct mmu_gather tlb;
-+
-+	BUG_ON(new_start > new_end);
-+
-+	/*
-+	 * ensure there are no vmas between where we want to go
-+	 * and where we are
-+	 */
-+	if (vma != vma_next(&vmi))
-+		return -EFAULT;
-+
-+	vma_iter_prev_range(&vmi);
-+	/*
-+	 * cover the whole range: [new_start, old_end)
-+	 */
-+	if (vma_expand(&vmi, vma, new_start, old_end, vma->vm_pgoff, NULL))
-+		return -ENOMEM;
-+
-+	/*
-+	 * move the page tables downwards, on failure we rely on
-+	 * process cleanup to remove whatever mess we made.
-+	 */
-+	if (length != move_page_tables(vma, old_start,
-+				       vma, new_start, length, false, true))
-+		return -ENOMEM;
-+
-+	lru_add_drain();
-+	tlb_gather_mmu(&tlb, mm);
-+	next = vma_next(&vmi);
-+	if (new_end > old_start) {
-+		/*
-+		 * when the old and new regions overlap clear from new_end.
-+		 */
-+		free_pgd_range(&tlb, new_end, old_end, new_end,
-+			next ? next->vm_start : USER_PGTABLES_CEILING);
-+	} else {
-+		/*
-+		 * otherwise, clean from old_start; this is done to not touch
-+		 * the address space in [new_end, old_start) some architectures
-+		 * have constraints on va-space that make this illegal (IA64) -
-+		 * for the others its just a little faster.
-+		 */
-+		free_pgd_range(&tlb, old_start, old_end, new_end,
-+			next ? next->vm_start : USER_PGTABLES_CEILING);
-+	}
-+	tlb_finish_mmu(&tlb);
-+
-+	vma_prev(&vmi);
-+	/* Shrink the vma to just the new range */
-+	return vma_shrink(&vmi, vma, new_start, new_end, vma->vm_pgoff);
-+}
---
-2.45.2
+>
+> Before:
+> $ cat /proc/interrupts
+>            CPU0       CPU1       CPU2       CPU3
+>  10:       2538       2695       3080       2309  RISC-V INTC   5 Edge   =
+   riscv-timer
+>  12:          3          0          0          0  SiFive PLIC 111 Edge   =
+   17030000.power-controller
+>  13:       1163          0          0          0  SiFive PLIC  25 Edge   =
+   13010000.spi
+>  14:         60          0          0          0  SiFive PLIC   7 Edge   =
+   end0
+>  15:          0          0          0          0  SiFive PLIC   6 Edge   =
+   end0
+>  16:          0          0          0          0  SiFive PLIC   5 Edge   =
+   end0
+>  17:          0          0          0          0  SiFive PLIC  78 Edge   =
+   end1
+>  18:          0          0          0          0  SiFive PLIC  77 Edge   =
+   end1
+>  19:          0          0          0          0  SiFive PLIC  76 Edge   =
+   end1
+>  22:        796          0          0          0  SiFive PLIC  32 Edge   =
+   ttyS0
+>  23:          0          0          0          0  SiFive PLIC  38 Edge   =
+   pl022
+>  24:       9062          0          0          0  SiFive PLIC  75 Edge   =
+   dw-mci
+>  25:          0          0          0          0  SiFive PLIC  35 Edge   =
+   10030000.i2c
+>  26:          0          0          0          0  SiFive PLIC  37 Edge   =
+   10050000.i2c
+>  27:          1          0          0          0  SiFive PLIC  50 Edge   =
+   12050000.i2c
+>  28:          0          0          0          0  SiFive PLIC  51 Edge   =
+   12060000.i2c
+> IPI0:       118         98         88        138  Rescheduling interrupts
+> IPI1:      2272       1910       3758       3200  Function call interrupt=
+s
+> IPI2:         0          0          0          0  CPU stop interrupts
+> IPI3:         0          0          0          0  CPU stop (for crash dum=
+p) interrupts
+> IPI4:         0          0          0          0  IRQ work interrupts
+> IPI5:         0          0          0          0  Timer broadcast interru=
+pts
+>
+> After:
+> $ cat /proc/interrupts
+>            CPU0       CPU1       CPU2       CPU3
+>  10:       2539       2734       2295       2552  RISC-V INTC   5 Edge   =
+   riscv-timer
+>  12:          2          1          0          0  SiFive PLIC 111 Edge   =
+   17030000.power-controller
+>  13:        643        194        368         75  SiFive PLIC  25 Edge   =
+   13010000.spi
+>  14:          6         22         19         27  SiFive PLIC   7 Edge   =
+   end0
+>  15:          0          0          0          0  SiFive PLIC   6 Edge   =
+   end0
+>  16:          0          0          0          0  SiFive PLIC   5 Edge   =
+   end0
+>  17:          0          0          0          0  SiFive PLIC  78 Edge   =
+   end1
+>  18:          0          0          0          0  SiFive PLIC  77 Edge   =
+   end1
+>  19:          0          0          0          0  SiFive PLIC  76 Edge   =
+   end1
+>  22:        158        254        226        207  SiFive PLIC  32 Edge   =
+   ttyS0
+>  23:          0          0          0          0  SiFive PLIC  38 Edge   =
+   pl022
+>  24:       2265       2250       1452       2024  SiFive PLIC  75 Edge   =
+   dw-mci
+>  25:          0          0          0          0  SiFive PLIC  35 Edge   =
+   10030000.i2c
+>  26:          0          0          0          0  SiFive PLIC  37 Edge   =
+   10050000.i2c
+>  27:          0          0          0          1  SiFive PLIC  50 Edge   =
+   12050000.i2c
+>  28:          0          0          0          0  SiFive PLIC  51 Edge   =
+   12060000.i2c
+> IPI0:        92        118        116        120  Rescheduling interrupts
+> IPI1:      4135       2653       2170       3160  Function call interrupt=
+s
+> IPI2:         0          0          0          0  CPU stop interrupts
+> IPI3:         0          0          0          0  CPU stop (for crash dum=
+p) interrupts
+> IPI4:         0          0          0          0  IRQ work interrupts
+> IPI5:         0          0          0          0  Timer broadcast interru=
+pts
+>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Cc: Anup Patel <anup@brainfault.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  drivers/irqchip/irq-sifive-plic.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifi=
+ve-plic.c
+> index 9e22f7e378f5..f30bdb94ceeb 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -163,20 +163,19 @@ static void plic_irq_eoi(struct irq_data *d)
+>  static int plic_set_affinity(struct irq_data *d,
+>                              const struct cpumask *mask_val, bool force)
+>  {
+> -       unsigned int cpu;
+>         struct plic_priv *priv =3D irq_data_get_irq_chip_data(d);
+> +       struct cpumask new_mask;
+>
+> -       if (force)
+> -               cpu =3D cpumask_first_and(&priv->lmask, mask_val);
+> -       else
+> -               cpu =3D cpumask_first_and_and(&priv->lmask, mask_val, cpu=
+_online_mask);
+> +       cpumask_and(&new_mask, mask_val, &priv->lmask);
+> +       if (!force)
+> +               cpumask_and(&new_mask, &new_mask, cpu_online_mask);
+>
+> -       if (cpu >=3D nr_cpu_ids)
+> +       if (cpumask_empty(&new_mask))
+>                 return -EINVAL;
+>
+>         plic_irq_disable(d);
+>
+> -       irq_data_update_effective_affinity(d, cpumask_of(cpu));
+> +       irq_data_update_effective_affinity(d, &new_mask);
+>
+>         if (!irqd_irq_disabled(d))
+>                 plic_irq_enable(d);
+> --
+> 2.39.2
+>
