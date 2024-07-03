@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721121DFEA;
-	Wed,  3 Jul 2024 15:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F75C17F51E;
+	Wed,  3 Jul 2024 15:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019095; cv=none; b=Y47tDJGx7QyWzN05DjgQ0Oy6tcqLVB096G0dviBRT6DBzrFMs2poHsS5D5HL5r1JHXdcS3X/YeNwCoe8SnSSGp9oXIZOLgGHynBKYtYvj9jxfJlBQ4wTUuV3VzSnxP2HtcDM0GleX5Jm4f+B7/z/75NUC3VyN3Yo2iuOdThS5zE=
+	t=1720019099; cv=none; b=dmL8O3hfRpzxDGuiu5T+a2yjy6zkK2kuqvvh8fXErTOQz4i8CktCDmENQGuP9whzL0hU8T5ubMpIzefTv9tkTBiy3NTVRKfroPSjMcysWmPITAp/0kMJIRIgLq03+RvggVmeIIFfwqAE2XJ2FSvv8IrfQ7mnSZi/NIWNqDpr4hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019095; c=relaxed/simple;
-	bh=JducdG6Q9NlS+BnXrH82XW+CuRQmhRH8LnqhBENZXUY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SDv/Yni4BOQc8n7bh/GrveMk9vJ+36dFTucq0qHgBcPERXfoIRyntW7ctfO6B6COR73dyMI0RuUlIMNtltpQIWWUPvNYAHhJsMtzB4LLnT2nm8bkS5RD+DWz17wYqoSQg4PRBlp7Tr7MuytBj67io/HvWdPdry9GwdZVQE3AzJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d4VHI1nV; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1720019099; c=relaxed/simple;
+	bh=Tt/Y2d/cs9qfsWV6LthbqZwca4UWolXmQoKccfKAGjw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Mf9xfhfLnmU/xq9GE/CxzC64aHGTLqcmqIgDUwZfhn9ac43JKmryaw1xRyFOxwUpPnh7SNKLoLiDst42OJXAc853iqC7iSIQGBopnJ8poW5X5KcNhZFln8TTqAAx7DFceVZTm8H0OVg4PGMSThhjqjf4ymynOE3XqQpWaS+nLWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bHskP0IU; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d4VHI1nV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bHskP0IU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720019094; x=1751555094;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JducdG6Q9NlS+BnXrH82XW+CuRQmhRH8LnqhBENZXUY=;
-  b=d4VHI1nVTGPPkAGNKvYTCPbHb42URqUIyTzcAACM/BBXLYvMEVTkarG2
-   oqDXqBXWbMJPCaFL7veCDrJlqDXJLbE28FSPjiykgKtqX37AIQh6YBb2/
-   5K+Hsvu/q6wYBRLRWDLIrERWehVVcuVkZR2+FGg0K5c9sFRrCdq50EvA9
-   QpJrUBj6lDZIZI9rb2w3xvjjTr9OG/y1hi84xmrKGcqFCWX7RqBNbgEF/
-   yyboOj5LVIOUBZph9C7/NZRpPdd8MMaWRSi26J/I4U8tau69PTIZQM0pI
-   7TmtkX6hgOh5F+HlWthI4NM70pKXw4rF3z28EHw3gQ6KqPYXIEvsDuDl0
-   w==;
-X-CSE-ConnectionGUID: 1X9T31q6T4SSSwTIMGAABg==
-X-CSE-MsgGUID: L/EP9EtZRQGsK3E8F+oTiA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17079116"
+  t=1720019097; x=1751555097;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Tt/Y2d/cs9qfsWV6LthbqZwca4UWolXmQoKccfKAGjw=;
+  b=bHskP0IUBNx3eL78EanQiwD0ISLrUG/CQICqvN/weDPcDcQt4TK+HpTQ
+   y6ktg4/9g3oxljoT5bK+v9j2rQ36Tr4m+lB39ui5+uKEqwPj1g5QB+s13
+   /3pPryv0lDSCQYvM/Ls7oApndFBSIYApO/feoW3DHfSkZiiJpLIcq6NOV
+   mwEljm+nRw7VX+FYECwYggzEMfhWSGNhAVcvToKhZKb1OGEBaPNdYtcJv
+   MhlXwGpzwxMhEVO+OD08VqN3Ewkdm7x+ZvqTNI/pXvxoWd4KVUpvXc0TU
+   yhZ6FOuqVSZICePLJtZFAKlOBTJky6stsk9KbmvOmFfvti4AdzxHYXGvB
+   Q==;
+X-CSE-ConnectionGUID: wVZIPriTS06BJE1fFk3RvQ==
+X-CSE-MsgGUID: Xmf98d0LRaCsy40mUWmv7w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17079146"
 X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="17079116"
+   d="scan'208";a="17079146"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 08:04:49 -0700
-X-CSE-ConnectionGUID: 6f+Q581HSdW9n+fLlAfGxQ==
-X-CSE-MsgGUID: rM9aJyXkQBe59TMT41sNWg==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 08:04:55 -0700
+X-CSE-ConnectionGUID: qU1qlJrDQxaHoVTiI8gIYw==
+X-CSE-MsgGUID: MqK227XERdW6ozSSh7a8Rw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="77016615"
+   d="scan'208";a="77016648"
 Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by orviesa002.jf.intel.com with ESMTP; 03 Jul 2024 08:04:45 -0700
+  by orviesa002.jf.intel.com with ESMTP; 03 Jul 2024 08:04:52 -0700
 From: Alexander Lobakin <aleksander.lobakin@intel.com>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -54,10 +55,12 @@ Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
 	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 0/5] netdev_features: start cleaning netdev_features_t up
-Date: Wed,  3 Jul 2024 17:03:37 +0200
-Message-ID: <20240703150342.1435976-1-aleksander.lobakin@intel.com>
+Subject: [PATCH net-next v2 2/5] netdev_features: remove unused __UNUSED_NETIF_F_1
+Date: Wed,  3 Jul 2024 17:03:39 +0200
+Message-ID: <20240703150342.1435976-3-aleksander.lobakin@intel.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240703150342.1435976-1-aleksander.lobakin@intel.com>
+References: <20240703150342.1435976-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,143 +69,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-NETDEV_FEATURE_COUNT is currently 64, which means we can't add any new
-features as netdev_features_t is u64.
-As per several discussions, instead of converting netdev_features_t to
-a bitmap, which would mean A LOT of changes, we can try cleaning up
-netdev feature bits.
-There's a bunch of bits which don't really mean features, rather device
-attributes/properties that can't be changed via Ethtool in any of the
-drivers. Such attributes can be moved to netdev private flags without
-losing any functionality.
+NETIF_F_NO_CSUM was removed in 3.2-rc2 by commit 34324dc2bf27
+("net: remove NETIF_F_NO_CSUM feature bit") and became
+__UNUSED_NETIF_F_1. It's not used anywhere in the code.
+Remove this bit waste.
 
-Start converting some read-only netdev features to private flags from
-the ones that are most obvious, like lockless Tx, inability to change
-network namespace etc. I was able to reduce NETDEV_FEATURE_COUNT from
-64 to 60, which mean 4 free slots for new features. There are obviously
-more read-only features to convert, such as highDMA, "challenged VLAN",
-HSR (4 bits) - this will be done in subsequent series.
-Please note that netdev features are not uAPI/ABI by any means. Ethtool
-passes their names and bits to the userspace separately and there are no
-hardcoded names/bits in the userspace, so that new Ethtool could work
-on older kernels and vice versa. Even shell scripts won't most likely
-break since the removed bits were always read-only, meaning nobody would
-try touching them from a script.
+It wasn't needed to rename the flag instead of removing it as
+netdev features are not uAPI/ABI. Ethtool passes their names
+and values separately with no fixed positions and the userspace
+Ethtool code doesn't have any hardcoded feature names/bits, so
+that new Ethtool will work on older kernels and vice versa.
 
-Alexander Lobakin (5):
-  netdevice: convert private flags > BIT(31) to bitfields
-  netdev_features: remove unused __UNUSED_NETIF_F_1
-  netdev_features: convert NETIF_F_LLTX to dev->lltx
-  netdev_features: convert NETIF_F_NETNS_LOCAL to dev->netns_local
-  netdev_features: convert NETIF_F_FCOE_MTU to dev->fcoe_mtu
-
- .../networking/net_cachelines/net_device.rst  |  7 ++-
- Documentation/networking/netdev-features.rst  | 15 -------
- Documentation/networking/netdevices.rst       |  4 +-
- Documentation/networking/switchdev.rst        |  4 +-
- drivers/net/ethernet/tehuti/tehuti.h          |  2 +-
- include/linux/netdev_features.h               | 14 +-----
- include/linux/netdevice.h                     | 43 +++++++++++++------
- drivers/net/amt.c                             |  4 +-
- drivers/net/bareudp.c                         |  2 +-
- drivers/net/bonding/bond_main.c               |  8 ++--
- drivers/net/dummy.c                           |  3 +-
- drivers/net/ethernet/adi/adin1110.c           |  2 +-
- drivers/net/ethernet/chelsio/cxgb/cxgb2.c     |  3 +-
- .../net/ethernet/chelsio/cxgb4/cxgb4_fcoe.c   |  6 +--
- .../net/ethernet/freescale/dpaa/dpaa_eth.c    |  3 +-
- .../net/ethernet/freescale/dpaa2/dpaa2-eth.c  |  3 +-
- .../net/ethernet/intel/ixgbe/ixgbe_dcb_nl.c   |  2 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c |  4 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c  |  2 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 11 ++---
- .../net/ethernet/intel/ixgbe/ixgbe_sriov.c    |  4 +-
- .../ethernet/marvell/prestera/prestera_main.c |  3 +-
- .../net/ethernet/mellanox/mlx5/core/en_main.c |  4 +-
- .../net/ethernet/mellanox/mlx5/core/en_rep.c  |  3 +-
- .../net/ethernet/mellanox/mlxsw/spectrum.c    |  6 ++-
- .../ethernet/microchip/lan966x/lan966x_main.c |  2 +-
- .../net/ethernet/netronome/nfp/nfp_net_repr.c |  3 +-
- drivers/net/ethernet/pasemi/pasemi_mac.c      |  5 ++-
- .../net/ethernet/qualcomm/rmnet/rmnet_vnd.c   |  2 +-
- drivers/net/ethernet/rocker/rocker_main.c     |  3 +-
- drivers/net/ethernet/sfc/ef100_rep.c          |  4 +-
- drivers/net/ethernet/tehuti/tehuti.c          |  4 +-
- drivers/net/ethernet/ti/cpsw_new.c            |  3 +-
- drivers/net/ethernet/toshiba/spider_net.c     |  3 +-
- drivers/net/geneve.c                          |  2 +-
- drivers/net/gtp.c                             |  2 +-
- drivers/net/hamradio/bpqether.c               |  2 +-
- drivers/net/ipvlan/ipvlan_main.c              |  3 +-
- drivers/net/loopback.c                        |  4 +-
- drivers/net/macsec.c                          |  4 +-
- drivers/net/macvlan.c                         |  6 ++-
- drivers/net/net_failover.c                    |  4 +-
- drivers/net/netkit.c                          |  3 +-
- drivers/net/nlmon.c                           |  4 +-
- drivers/net/ppp/ppp_generic.c                 |  2 +-
- drivers/net/rionet.c                          |  2 +-
- drivers/net/team/team_core.c                  |  8 ++--
- drivers/net/tun.c                             |  5 ++-
- drivers/net/veth.c                            |  2 +-
- drivers/net/vrf.c                             |  4 +-
- drivers/net/vsockmon.c                        |  4 +-
- drivers/net/vxlan/vxlan_core.c                |  5 ++-
- drivers/net/wireguard/device.c                |  2 +-
- drivers/scsi/fcoe/fcoe.c                      |  4 +-
- drivers/staging/octeon/ethernet.c             |  2 +-
- lib/test_bpf.c                                |  3 +-
- net/8021q/vlan_dev.c                          |  5 ++-
- net/8021q/vlanproc.c                          |  4 +-
- net/batman-adv/soft-interface.c               |  5 ++-
- net/bridge/br_device.c                        |  6 ++-
- net/core/dev.c                                |  8 ++--
- net/core/dev_ioctl.c                          |  9 ++--
- net/core/net-sysfs.c                          |  3 +-
- net/core/rtnetlink.c                          |  2 +-
- net/dsa/user.c                                |  3 +-
- net/ethtool/common.c                          |  3 --
- net/hsr/hsr_device.c                          | 12 +++---
- net/ieee802154/6lowpan/core.c                 |  2 +-
- net/ieee802154/core.c                         | 10 ++---
- net/ipv4/ip_gre.c                             |  4 +-
- net/ipv4/ip_tunnel.c                          |  2 +-
- net/ipv4/ip_vti.c                             |  2 +-
- net/ipv4/ipip.c                               |  2 +-
- net/ipv4/ipmr.c                               |  2 +-
- net/ipv6/ip6_gre.c                            |  7 +--
- net/ipv6/ip6_tunnel.c                         |  4 +-
- net/ipv6/ip6mr.c                              |  2 +-
- net/ipv6/sit.c                                |  4 +-
- net/l2tp/l2tp_eth.c                           |  2 +-
- net/openvswitch/vport-internal_dev.c          | 11 ++---
- net/wireless/core.c                           | 10 ++---
- net/xfrm/xfrm_interface_core.c                |  2 +-
- tools/testing/selftests/net/forwarding/README |  2 +-
- 83 files changed, 204 insertions(+), 192 deletions(-)
-
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 ---
-From v1[0]:
-* split bitfield priv flags into "hot" and "cold", leave the first
-  placed where the old ::priv_flags is and move the rest down next
-  to ::threaded (Jakub);
-* document all the changes in Documentation/networking/net_cachelines/
-  net_device.rst;
-* #3: remove the "-1 cacheline on Tx" paragraph, not really true (Eric).
+ include/linux/netdev_features.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-From RFC[1]:
-* drop:
-  * IFF_LOGICAL (as (LLTX | IFF_NO_QUEUE)) - will be discussed later;
-  * NETIF_F_HIGHDMA conversion - requires priv flags inheriting etc.,
-    maybe later;
-  * NETIF_F_VLAN_CHALLENGED conversion - same as above;
-* convert existing priv_flags > BIT(31) to bitfield booleans and define
-  new flags the same way (Jakub);
-* mention a couple times that netdev features are not uAPI/ABI by any
-  means (Andrew).
-
-[0] https://lore.kernel.org/netdev/20240625114432.1398320-1-aleksander.lobakin@intel.com
-[1] https://lore.kernel.org/netdev/20240405133731.1010128-1-aleksander.lobakin@intel.com
+diff --git a/include/linux/netdev_features.h b/include/linux/netdev_features.h
+index 7c2d77d75a88..44c428d62db4 100644
+--- a/include/linux/netdev_features.h
++++ b/include/linux/netdev_features.h
+@@ -14,7 +14,6 @@ typedef u64 netdev_features_t;
+ enum {
+ 	NETIF_F_SG_BIT,			/* Scatter/gather IO. */
+ 	NETIF_F_IP_CSUM_BIT,		/* Can checksum TCP/UDP over IPv4. */
+-	__UNUSED_NETIF_F_1,
+ 	NETIF_F_HW_CSUM_BIT,		/* Can checksum all the packets. */
+ 	NETIF_F_IPV6_CSUM_BIT,		/* Can checksum TCP/UDP over IPV6 */
+ 	NETIF_F_HIGHDMA_BIT,		/* Can DMA to high memory. */
 -- 
 2.45.2
 
