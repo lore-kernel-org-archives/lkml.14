@@ -1,134 +1,125 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B410D15CD55
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1859274413
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720001660; cv=none; b=QQ9D0nWSHLVZ6s24wzpguFGYLawMhhYT5PZFm7wlIok91dtp5qS+WcHJzhh16mxY9UVEIZAXMmiB4owiYHqNbL435dGNUY0VkGGVlUF/B07bhL0Y6PtSA0h/04echwk5e0skfn2BkZ+U+nW0B2Zyd88eo96aF2PyhbdGM2wRZJY=
+	t=1720001774; cv=none; b=d+JToXWenPnpFG5KVSnMwKJD09GQMxXqFQwfVt2+klJOCBZoVvyxguvfIScPvEOFdaZ0u5Pl8I7YsSqdXTzHVM5DbQc8QJ4eUKDmY3NL4OSawTe0XDyQQYESl4jQv8//HHy3vteobxR6aOLFI1efaNnq2GznihIK0IO/G3D5SSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720001660; c=relaxed/simple;
-	bh=ADx1HAS6y74RN3UyCopkFwtjf4z/7PUQw7RSzAaLWSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MtxwmI67hVkfHk9nU4vuj4VBClEZFvB1L8sMYGmIe+tWYiBvJa4FxlBE6y9cAfujsc4eXvgblh+lVNGXC7dZVgX9a/NYl84PkJ/YVh7m5y46/3BMBMdHBiZV6KXbUIk6UX19FtY4Uigi6w5SoYFsax+94BglU++rs3F9qqpIMc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Em1HEjWf; arc=none smtp.client-ip=209.85.167.52
+	s=arc-20240116; t=1720001774; c=relaxed/simple;
+	bh=rVRf9n1bFnXgcGWnl9warbbpA8WJWg1GWzSYHcOBEF0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=D22BH7n9U/GVO3nnboIRW4FF7laK//Dzrg3QgfALO2GgKmgdtwybDv0KjCWJpEDteBnfCgkvbTa0U4gXcQcc4zHFB/9waSFGmyiaHZHiDxXR+wEtRDIpx3lgYLfNE8xkmz0xAegmM485DkvL05S6FzX2DSe6bCbBECl1q6Y3s5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MWUTEvxH; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Em1HEjWf"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52cdc4d221eso5779223e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 03:14:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MWUTEvxH"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57cb9a370ddso3477595a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 03:16:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720001657; x=1720606457; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=35ft6uX0wzoy3SKCI7eehotUWy3KQA7aKuUBsAEd3w0=;
-        b=Em1HEjWfh149WDBk3CZqcv2ntr9XlgV6dlSGHDtHMrPXE4QElYlz3tJOoZ9GKqH1vo
-         Scx4EOI2JIhUp4+hBUxc95GV0NtLf+3BIzVbdiGfr6TJhlCGPMB3J5d5f8En5GUtktgH
-         aDWc5V8Q/Gk1O5+JCkt2jGk/LsFpiHPQU1CZNvxQr4oI4OVTFKC/Ka5WXrOM+V4R1nWH
-         iC4etrreWDUfAHnpOjkmsqnh0PUvX838TV6BJKkmoOre/ylgNEGfZQ21CmaGOTAJe846
-         hlpL+a20UeFIYvPsxBcjZan6tyaXSCnNk25f3WGjBhnFRJImex/jNYIAGTWQ6efuGwfb
-         1hNA==
+        d=linaro.org; s=google; t=1720001771; x=1720606571; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8n4l537zzmVevTwRxYF/dAXb8Lz3WH76s41W0uF6dT4=;
+        b=MWUTEvxHtZmYLcE311bSzrjtEJxnKQ+4YJ+dEeoaOMoZgn8S/6cDglaYjpScKIVd1W
+         dni3pm440IgYqa3m98rPQcutyCM2z7HIG9ctxgHI89Qvxsa1wJD99uA5poTJ8U8hW/Iw
+         YGo9WUdQ8mmycRy5RFBzRdgfAy3E550U0AEn2R9g6wXHJEKO+f1Fwnsxy0mLZ/cdPN/x
+         0QwjqNyq5XiRQqbR3+5TX3lnRKGdXVXjSFd7umRH774Q80OmXtA/yLs6+jzH0i43oLZ+
+         mPwYhhKuyAfKwjx73A8ane9uCczuwZ6UjLaKrikZ46l687EEDdT2vopmXtCxLFkfIY+k
+         Ys5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720001657; x=1720606457;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=35ft6uX0wzoy3SKCI7eehotUWy3KQA7aKuUBsAEd3w0=;
-        b=KGKxgPVXrPV8YRQAmNhqLCK86dnOw6OSwODXfu395+a4BFhlvORszhDqLQMc3xoYTi
-         JHg3wHMfZq1IkDjT/ZDVv5qI6DD51D2lfWg7+fYUYNF2cZ1C5YpyvX5/lBbCMHQJ9T+2
-         TzrT2L6g5lbqMsA12wEm6OUJoQTdByXCTmGNEjGYa5zkqwwK5cwG2peqXE5KJ6T8oG8I
-         fndT99+nuqSzOY92VK7xXPFAsQSY3tLkAAGrj16DN2gCbNldArKz2sQP81bltDLBCCDJ
-         krnhr6yAJjtN98mo5yRV/V7k9XwgOLEimdVPME6k9z+snvB7ss3KQl3nQBpIHj1W2hqT
-         qxIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUH1mg3uP9BhkV7Arobp46TtRjUhJp3JbzZKBUsQ5Q0Ha/9paYMt9s8LlKtk4hRe7jesQ5dpaJSo7PPxNFPacwi1U5OJN0gxAawOEbT
-X-Gm-Message-State: AOJu0YxxPsbBxATPZI56hwH1bYsE7nOpLl/BJAzmaouGN4v75rnlHBEw
-	hD218l3R2Mj0kmHXsnCbaT7zGyJjp3I3YBICoJL1J3ybPGgAgmL2/0jzUDYVw+4=
-X-Google-Smtp-Source: AGHT+IHM6seix3s7EN57/yRY5Hq6wvZsORJlQs2WavMTMhJlDE9cOI+tfgp2pF9fgXlOFZudF9NgcQ==
-X-Received: by 2002:a05:6512:114b:b0:52c:e556:b7e4 with SMTP id 2adb3069b0e04-52e82664eddmr8875018e87.15.1720001656901;
-        Wed, 03 Jul 2024 03:14:16 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab2ebacsm2117098e87.210.2024.07.03.03.14.16
+        d=1e100.net; s=20230601; t=1720001771; x=1720606571;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8n4l537zzmVevTwRxYF/dAXb8Lz3WH76s41W0uF6dT4=;
+        b=eiUlwRyWWHfFV86aCar4cqY/xnyFVs4y+ieUtPlLciMoaIALXUo2Qw1h6BP6lL8fAk
+         j9FPRAnvEFei1pgDV8RU8Xvni5C1Ki8u4LrxqOml/sNTp6SpPict9DHj/o7yQXRvTRe6
+         ypAoV2SI1bP1zN6W+9IebD8bHI6PckNnGg22rIoRP9DHpHebNA0SBzVilfophBaK5jqk
+         5VXmHMsbSm1b0vKZ35DLC8bJeCiM18YkEXVd8GnMwsVZkrcgtEqD99IkhZaoN4OfApw2
+         QP9h8621n69ShzK0LUcCWg0IiUhmtlq/AWrOpiJY5wY5Qmy8iTCyz7dbrNTLWqDJZmN1
+         T8Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCWY06YRmEGmW2ygcdPkPF5EGJFUZYEuByfSYMZiWsC+GaaS1lWpZYG91WnRGsYHRCVpqaPJ0embCd3vO1/YwfzKGMMcDieHpLTkfgZG
+X-Gm-Message-State: AOJu0YxOjFXdy8XSdb3pTd2bUovvN+/OZMsnPv61D4Md0hZVf/4voqBS
+	H+gJA/QGZx5KVtvP4glrwsvJNLFg30Jsi03llWfbSe+U1VLak8qsSmR4cbe2KgQ=
+X-Google-Smtp-Source: AGHT+IHjh2iPIsDOndUbytlmALDqW/1/ZBtRvtQbnsaiAJOFDAAUYImBknXBOAZcTuBdDGgTPdlzUA==
+X-Received: by 2002:a17:906:584f:b0:a72:7e5f:a0af with SMTP id a640c23a62f3a-a75144a8f07mr645953066b.55.1720001771282;
+        Wed, 03 Jul 2024 03:16:11 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab06565csm494291466b.103.2024.07.03.03.16.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 03:14:16 -0700 (PDT)
-Date: Wed, 3 Jul 2024 13:14:15 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Abhishek Sahu <absahu@codeaurora.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Ajit Pandey <quic_ajipan@quicinc.com>, 
-	Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, 
-	Jagadeesh Kona <quic_jkona@quicinc.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 4/6] dt-bindings: clock: qcom: Add SM8150 camera clock
- controller
-Message-ID: <b6nci7iepcoxtdqnrkp3ti3xnm3fxr37q22kqy5wvwapssm3vo@twsyw3cjsruw>
-References: <20240702-camcc-support-sm8150-v2-0-4baf54ec7333@quicinc.com>
- <20240702-camcc-support-sm8150-v2-4-4baf54ec7333@quicinc.com>
+        Wed, 03 Jul 2024 03:16:10 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/9] soundwire: simplify code with cleanup.h
+Date: Wed, 03 Jul 2024 12:15:52 +0200
+Message-Id: <20240703-soundwire-cleanup-h-v1-0-24fa0dbb948f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240702-camcc-support-sm8150-v2-4-4baf54ec7333@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANgkhWYC/x3MTQqAIBBA4avErBswE6KuEi1MpxoIFaUfEO+et
+ PwW72VIFJkSTE2GSDcn9q6iaxswh3Y7IdtqkEIqMYgek7+cfTgSmpO0uwIeqOU4qm5be2sV1DJ
+ E2vj9r/NSygddFtd4ZQAAAA==
+To: Vinod Koul <vkoul@kernel.org>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+ Sanyog Kale <sanyog.r.kale@intel.com>
+Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1253;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=rVRf9n1bFnXgcGWnl9warbbpA8WJWg1GWzSYHcOBEF0=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmhSTh4vNh28srE5LybUlslx4pM9JAnEQM5PQHj
+ jj/t4OlYayJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZoUk4QAKCRDBN2bmhouD
+ 19DWEACDV3MRzK5iIKIoPiqXrVovBLjGHnXr+WtQcAuAHt+JTG+TlogroB4bLtm9lZCwjz3nkkM
+ ZcSupxjD4d11w2qwV4vaUney+SzbwnwwTsfC5cfkEcy0IvWnAb5mg9jC73mBR/v0IkttK9Imwys
+ rOMFwwOravADKKcfGX59/gUg3XZbTt4fHtr8TVXIqTGXdyauW5JQuIn3Son97SXrSa6vWt3q+Yf
+ V0fclztDuT0+vcQQwuezNry+5mrZZZ2lMEOF7X4jtWeXVioAXVxlOUjyhvEiufxfa9kVLxyT36U
+ aRi4kqYzpnIvGTCyDIehUJoUhTnEP53yBP8ouybuNyyrWrX14wbTEL9zYIkWjyz52EK/ancJIWi
+ fz2ltZK8CFciAhskExjJfLBYXZhaU+12qNM6XRdVQylHHqLk3JFHMwWyv2RxXgJcFlr1pmeOz7k
+ yIuNxIxsNhXTLKiJ7iroz9nlYkQiUpd6AREmxFshBYeqQc0tMfc80M1fuIMu00ukTKg+/4uJqAR
+ IXzD4L/UaafnGKHzKE9RfouxSLqwPar02lITaC3kpLYQV8op22EFylp6qra8+h+aIHXsQmbiqTa
+ dkAUAttjkf3hC8377GulhB/NPX71dfqYRQbg7dhVy7uIo2gQpn52CwOOJjntw1lBBM+2YyMqW+z
+ tKhM1vgxwI+xjIw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Tue, Jul 02, 2024 at 09:20:42PM GMT, Satya Priya Kakitapalli wrote:
-> Add device tree bindings for the camera clock controller on
-> Qualcomm SM8150 platform.
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-> ---
->  .../bindings/clock/qcom,sm8150-camcc.yaml          |  77 ++++++++++++
->  include/dt-bindings/clock/qcom,sm8150-camcc.h      | 135 +++++++++++++++++++++
->  2 files changed, 212 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8150-camcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8150-camcc.yaml
-> new file mode 100644
-> index 000000000000..8fc27ba4be4b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,sm8150-camcc.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/qcom,sm8150-camcc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Camera Clock & Reset Controller on SM8150
-> +
-> +maintainers:
-> +  - Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-> +
-> +description: |
-> +  Qualcomm camera clock control module provides the clocks, resets and
-> +  power domains on SM8150.
-> +
-> +  See also:: include/dt-bindings/clock/qcom,sm8150-camcc.h
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sm8150-camcc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Board XO source
-> +      - description: Camera AHB clock from GCC
+Allocate the memory with scoped/cleanup.h to reduce error handling
+(simpler error paths) and make the code a bit smaller.
 
-No sleep clock?
+Best regards,
+Krzysztof
 
-> +
+---
+Krzysztof Kozlowski (9):
+      soundwire: amd: simplify return path in hw_params
+      soundwire: amd: simplify with cleanup.h
+      soundwire: amd_init: simplify with cleanup.h
+      soundwire: intel: simplify return path in hw_params
+      soundwire: intel: simplify with cleanup.h
+      soundwire: intel_ace2x: simplify return path in hw_params
+      soundwire: intel_ace2x: simplify with cleanup.h
+      soundwire: cadence: simplify with cleanup.h
+      soundwire: debugfs: simplify with cleanup.h
 
+ drivers/soundwire/amd_init.c       |  7 +++----
+ drivers/soundwire/amd_manager.c    | 13 +++++--------
+ drivers/soundwire/cadence_master.c |  5 ++---
+ drivers/soundwire/debugfs.c        |  7 ++-----
+ drivers/soundwire/intel.c          | 25 +++++++++----------------
+ drivers/soundwire/intel_ace2x.c    | 22 ++++++++--------------
+ 6 files changed, 29 insertions(+), 50 deletions(-)
+---
+base-commit: 246cf92bafedeea46cb16964d16478d6b68f8e5a
+change-id: 20240703-soundwire-cleanup-h-a29941fb3dd4
 
+Best regards,
 -- 
-With best wishes
-Dmitry
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
