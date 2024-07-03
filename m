@@ -1,165 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F00137911;
-	Wed,  3 Jul 2024 10:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF410171E57
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720002726; cv=none; b=bTlOAtm5ngq+gF9xer3qjg+sUUiA0H1zNZWj5uE/Jpo7EBt8kUa4dm0ofENGPHfQfZAPcli91U9vlgOoT/IMTBJbe2SmQcy+OQ8CQmaihXXYyjXxIkrloQEl3BfAZ55T4mn8QtjOwokATLev+ozB1faIN1rN8KlrcDI1u3HqDBM=
+	t=1720002797; cv=none; b=lVsaHsR8prOTjU3QwdugBN7RdYHWE8izgAOJ1DhRcf1zW1NEXrt1ek4w/R7dDREsHaBLhyjvN2MS6n3dZEVVyv25SmR1QbO14+wUI8xRGCsOA6K7yzoLAMk57vL28/09x1GC1hPFCj8yI76Zr0pBASYi/m5DgMUtd5QO5QGGII8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720002726; c=relaxed/simple;
-	bh=BUNSlRMhsXsEjdrAtE/PYMno10A849bFR3slyOWBk3U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rqDS7qcdsTCvuCWXytIPlwJh1GZv2pRv6qZIKm6xRC859fWpjpwV2XLEwk3jVWabodCoddzfQSjIJZHh7VRs7JbgCK1mLgMgpg/ycIUX83EjD2pMPUGsUN3pa6jvjYTzSI2IVmvwO8BYmMRdxzb2RWuEMF9LRDd1mSfCjg8X/VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJ0INMgy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720002797; c=relaxed/simple;
+	bh=4H5haDE7k64EWfuCw7wYQ8GiPFESg0dfVMdT8ZwOa9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kXR10wZrA1enZGjDxmvy3u3jHKGCtTYL6L8TBwmkhyKXx/B74Efe4g1iv8qTeQ02mub6LwrpUAqR32BXoa1BiOgrtgLhMU9lsM+nn5shb/RKnDfVHxnsEKwSkOI3Yg6Ey+nYNPntRYZuT20G/e3QHqHPIrOt1p+vastyPIQ5WXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tTSCYIFC; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJ0INMgy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F8BC4AF0C;
-	Wed,  3 Jul 2024 10:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720002725;
-	bh=BUNSlRMhsXsEjdrAtE/PYMno10A849bFR3slyOWBk3U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TJ0INMgyD2BoRmYOHUOrTecvxiFkfVB66qsNgUKwo002D2jJU6GT/9qxyptfyzJ79
-	 VXr+mVCjVe54B7ugnpL7FCLJuFfNydWuLuylWtBav/JNdtmGOmJ3mO1BhTi3e9ztgn
-	 tZ0ClbLI9jdHjrWp1RU/wuvcTkca07AelHthOBNoJiTEnDDZKmLNBBu5ZCKfSoxQ85
-	 GI9TJVgUPMdPW8Cu+3M9lVAaEIeSWYdZ7NucC5czGksniKkWJ8UtwbbYVERa4EV8Yi
-	 0artv+v9ZApYBkgwe6wJRXA2mE7cUtf2k+sX3VsEh1/wavV357lmGjG99PYTLAZrNu
-	 UjJLpHLLKUzfw==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52e9380add2so2127027e87.3;
-        Wed, 03 Jul 2024 03:32:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVX/Fi3wc71w7v5+IFQP29InKnvEGkpHMcto4uLdpAbmfKzW5oZ9PvDygY0g4wLW1itdaL/TN/cHg/FsS4rE8Mgyqeft1fTRIHKVhk=
-X-Gm-Message-State: AOJu0YxjaabzvLnciOkvaNixM8kR/KPxTzZBLtKtIu1B/z5OhXNBK+xf
-	8yTlJlZbNwtFzd8BLHDeW/SUbQmWVDEsnar6exJWUAvGandAWpJeuB9kuxu1w5s40JjJ3mfs6rs
-	ZSgjySGyEzdI2Q/OqjeYShN6UlNs=
-X-Google-Smtp-Source: AGHT+IGPM4Is6nxQwc56lNT3I/hYoefrXRTPEi/138EUSwH0uHYyo0NY+hUL96/N+jlwBdYXSK+Eau7G9dEFmyfawRY=
-X-Received: by 2002:a05:6512:b96:b0:52e:8071:e89d with SMTP id
- 2adb3069b0e04-52e82688db8mr11844670e87.40.1720002724112; Wed, 03 Jul 2024
- 03:32:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tTSCYIFC"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ec3f875e68so58192591fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 03:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720002793; x=1720607593; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TrB2TnPNBgt+WbBBIM4+5QWbIuhtFAqbg6qcHUZxaco=;
+        b=tTSCYIFCM9x8KJGViFEBb8Yb5gQu4qmjLgpYZIcAL+qddS7kr1YwE08ziXob92ubaN
+         jxwD7gNYXoEj3AeZROLmWOwijpOpfqfBXc2P+7Dht3CxYPwt5vhIgE43AFlyaK07WbxK
+         TRFYQ9/ANP7dDnvh5t9BZ8XTSbhu29pRLUA1RiRPZ/iCaFwjuCpzi4/1zo+lFAlUc2K3
+         plULoOR7vKDyLMKkjdHppqmbIhlsuapIo/NEcwnCqu+RY+Bo5OoBm/6++/W4tCQbVgfv
+         Q6iUhl4RNXmOAskcjO2HChzJOSHudruVGwoOSq7Fu0Ib6liCFbyS3zkuviBR0ja5g3iz
+         n4XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720002793; x=1720607593;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TrB2TnPNBgt+WbBBIM4+5QWbIuhtFAqbg6qcHUZxaco=;
+        b=ftdoqH+1lUI4m3p8J/RzZCXr+NoBZpuBG74Vw3CrOl2UrTr4Uu3NltAr0E0UAMNC0s
+         uyl641bYaLVJHJzCev1BCjXxNw4AUpNe6C8QavO/hyW4IEnPnEq4VTB9Yg1BlYcYU7mN
+         TEb/hwwdpDcZYBt+GxfYTQ19kyus0EIXypgrNUbPq5mCbmy2QBcbQ7Dn4n8LQ7qoLTd0
+         exTnpaSUS0Xkez6A1F7RWBvq+lLrpu6qaQseNAtgabW+4G7HyodFIcPZtsYeRBJj/61D
+         Az0w7NQccsjoENFfAT3OTHq7SNU25f/ig2SP0ECC+aEQkwmPOuPfeUaTnvPbku1jKaW1
+         i8Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCXS9vZGdZY4V9D+ZoVnkPU8m/dIHOIvQ9Kh8ocM3gOkTz1gYuPWg6NRE5LM38zRd+efsYIwYv77BXcDVz7uNHNWA1/KGaAKs4t7FtC2
+X-Gm-Message-State: AOJu0Yxd8r3Kq2NvqYTN6yWpFnTFiIWDRk64lSIx467PRDh8ZF+PPjoX
+	bCtI2NaHaNBq6xnbNV3CwLab0WAVQkO6/D1jl7Lvnv9std3B78ZHaz4bA4WrgiM=
+X-Google-Smtp-Source: AGHT+IEgLYgf/SDysaV48RHAuwJ+VgK2M5e2XinMD5byEgw07GiQwTlTQD6QPmY0VgdHWS5AezImMg==
+X-Received: by 2002:a05:651c:49b:b0:2eb:d9a3:2071 with SMTP id 38308e7fff4ca-2ee5e6c9cd8mr61398201fa.50.1720002792033;
+        Wed, 03 Jul 2024 03:33:12 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee51696991sm18684511fa.136.2024.07.03.03.33.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 03:33:11 -0700 (PDT)
+Date: Wed, 3 Jul 2024 13:33:09 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com, 
+	sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au, 
+	davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org, 
+	joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org, 
+	thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org, 
+	linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org, vkoul@kernel.org, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com, 
+	robimarko@gmail.com, quic_gurus@quicinc.com, bartosz.golaszewski@linaro.org, 
+	kishon@kernel.org, quic_wcheng@quicinc.com, alim.akhtar@samsung.com, 
+	avri.altman@wdc.com, bvanassche@acm.org, agross@kernel.org, 
+	gregkh@linuxfoundation.org, quic_tdas@quicinc.com, robin.murphy@arm.com, 
+	daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com, 
+	quic_rjendra@quicinc.com, ulf.hansson@linaro.org, quic_sibis@quicinc.com, 
+	otto.pflueger@abscue.de, quic_rohiagar@quicinc.com, luca@z3ntu.xyz, 
+	neil.armstrong@linaro.org, abel.vesa@linaro.org, bhupesh.sharma@linaro.org, 
+	alexandre.torgue@foss.st.com, peppe.cavallaro@st.com, joabreu@synopsys.com, 
+	netdev@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
+	ahalaney@redhat.com, krzysztof.kozlowski@linaro.org, u.kleine-koenig@pengutronix.de, 
+	quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com, 
+	mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com, 
+	quic_bjorande@quicinc.com, quic_msarkar@quicinc.com, quic_devipriy@quicinc.com, 
+	quic_tsoni@quicinc.com, quic_rgottimu@quicinc.com, quic_shashim@quicinc.com, 
+	quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com, quic_aiquny@quicinc.com, 
+	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, kernel@quicinc.com
+Subject: Re: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
+Message-ID: <43nktnqp6mthafojiph7ouzfchmudtht634gtxwg7gmutb5l7y@a5j27mpl7d23>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703035735.2182165-1-quic_tengfan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com> <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
-In-Reply-To: <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Wed, 3 Jul 2024 11:31:27 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
-Message-ID: <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240703035735.2182165-1-quic_tengfan@quicinc.com>
 
-On Tue, Jul 2, 2024 at 6:22=E2=80=AFPM Filipe Manana <fdmanana@kernel.org> =
-wrote:
->
-> On Tue, Jul 2, 2024 at 3:13=E2=80=AFPM Mikhail Gavrilov
-> <mikhail.v.gavrilov@gmail.com> wrote:
-> >
-> > On Mon, Jul 1, 2024 at 2:31=E2=80=AFPM Filipe Manana <fdmanana@kernel.o=
-rg> wrote:
-> > >
-> > > Try this:
-> > >
-> > > https://lore.kernel.org/linux-btrfs/cb12212b9c599817507f3978c91027672=
-67625b2.1719825714.git.fdmanana@suse.com/
-> > >
-> > > That applies only to the "for-next", it will need conflict resolution
-> > > for 6.10-rc, as noted in the commnets.
-> > > For a version that cleanly applies to 6.10-rc:
-> > >
-> > > https://gist.githubusercontent.com/fdmanana/5262e608b3eecb9a3b2631f8d=
-ad49863/raw/1a82fe8eafbd5f6958dddf34d3c9648d7335018e/btrfs-don-t-loop-again=
--over-pinned-extent-maps-when-.patch
-> >
-> > I tested this patch on top of v6.10-rc6
-> >
-> > > Btw, besides the longer kswapd execution times, what else do you obse=
-rve?
-> > > Is it impacting performance of any applications?
-> >
-> > I observe that the system freezes under load.
-> > Demonstration: https://youtu.be/1-gUrnEi2aU
-> > The GNOME shell stops responding, and even the clock in the GNOME
-> > status bar stops updating seconds.
-> > And this didn't happen when the v6.9 kernel was running. Second, I
-> > spotted high CPU usage by process kswapd0 when freezes occurred.
-> > Therefore, I decided to find the commit that led to high CPU
-> > consumption by the kswapd0 process.
-> > As we found out, this commit turned out to be 956a17d9d050.
-> >
-> > > I think no matter what we do, it's likely that kswapd will take more
-> > > time than before, because now there's extra work of going through
-> > > extent maps and dropping them.
-> > > We had to do it to prevent OOM situations because extent map creation
-> > > was unbounded.
-> >
-> > Unfortunately, the patch didn't improve anything.
-> > kswapd0 still consumes 100% CPU under load.
-> > And my system continues to freeze.
->
-> Ok, the concerning part is the freezing and high cpu usage.
->
-> So besides that patch, try 2 other patches on top of it:
->
-> 1) https://gist.githubusercontent.com/fdmanana/5262e608b3eecb9a3b2631f8da=
-d49863/raw/aaf4c00fd40aaee0ee2788cd9fdfe2f083328c39/btrfs-don-t-loop-again-=
-over-pinned-extent-maps-when-.patch
->     (this is the patch you tried before)
->
-> 2) https://gist.githubusercontent.com/fdmanana/f2275050f04d1830adb811745b=
-fd99d4/raw/1001d8154133d862e305959ee9eedebf55941669/gistfile1.txt
->
-> 3) https://gist.githubusercontent.com/fdmanana/0a71b9e0fe71f38f67a50b7b53=
-d520e6/raw/680cab70d2ef32337583bee6a4fb6519241b2faa/0003-btrfs-prevent-exte=
-nt-map-shrinker-from-monopolizing-.patch
->
-> Apply those patches on top of 6.10-rc in that order and let me know how i=
-t goes.
+On Wed, Jul 03, 2024 at 11:56:48AM GMT, Tengfei Fan wrote:
+> Introduce support for the QCS9100 SoC device tree (DTSI) and the
+> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
+> While the QCS9100 platform is still in the early design stage, the
+> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
+> mounts the QCS9100 SoC instead of the SA8775p SoC.
 
-Also, a 4th one:
+Your patch series includes a second copy of your patches, wich have
+different Message-IDs:
 
-https://gist.githubusercontent.com/fdmanana/638d90142e4db7cd462121d812075de=
-7/raw/acb90d92c1cab512414e0bd5461640c9015da4ec/0004-btrfs-use-delayed-iput-=
-during-extent-map-shrinking.patch
+20240703035735.2182165-1-quic_tengfan@quicinc.com vs
+20240703025850.2172008-1-quic_tengfan@quicinc.com
 
-This one should apply in any order. Try all those 4 together please.
-Thanks!
+Please consider switching to the b4 tool or just
+checking what is being sent.
 
-> Thanks.
->
-> >
-> > 6.10.0-0.rc6.51.fc41.x86_64+debug with patch
-> > up  1:00
-> > root         269 13.1  0.0      0     0 ?        S    12:24   7:53 [ksw=
-apd0]
-> > up  2:00
-> > root         269 29.9  0.0      0     0 ?        R    12:24  36:02 [ksw=
-apd0]
-> > up  3:00
-> > root         269 37.8  0.0      0     0 ?        S    12:24  68:19 [ksw=
-apd0]
-> > up  4:05
-> > root         269 39.3  0.0      0     0 ?        R    12:24  96:40 [ksw=
-apd0]
-> > up  5:01
-> > root         269 38.8  0.0      0     0 ?        R    12:24 117:00 [ksw=
-apd0]
-> > up  6:00
-> > root         269 40.3  0.0      0     0 ?        S    12:24 145:24 [ksw=
-apd0]
-> >
-> > --
-> > Best Regards,
-> > Mike Gavrilov.
+-- 
+With best wishes
+Dmitry
