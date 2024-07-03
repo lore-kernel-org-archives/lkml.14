@@ -1,281 +1,391 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406D61822C8;
-	Wed,  3 Jul 2024 16:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D31A187557;
+	Wed,  3 Jul 2024 16:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720022967; cv=none; b=ENfNk2nw+oUc7qBeAUVD2X4Ebcng9FE0Q9+P2gx/DL4ZnCnRbL5IYVSKkWGHA9lwP1pC/3ZyQwzkKuKoKWwGtzRON8wFjnVDt1cQJDf9rarclja366k0ykQ/q6/7RU9PCejs6mHaAa1tjAw/RxURKvnWfsfM4Cs51a6BeL4QqO0=
+	t=1720022972; cv=none; b=CIUhOvzWTU2MtUfMp5HT5Hc0l161fkE3b9u027upjTPZXbjERcG49NS7NqKVzcwxkKhcaMdal1RkwYsomSuJaczGL5g0JY5ZFCI/V5AwlW85ANJ+FJ54S8e9WnJXEef3FHnhJrSTQPXu7urUszbIj2e81I4YaVzEhpVxoM+JUbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720022967; c=relaxed/simple;
-	bh=t4iW7lBcz3MGBh+u2TsCN4v259jNbuNs7J3WIlww2zM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gRFWh7RkUQtoofL4DSpYad8NskzavuAlsEdY3CEMW7y/nGugv5IZHchlQQZW3y+FO9MMV85ny/B0EycasGHcrhhIsxJkYktO52JSWHlVIa1FuyS/CCHPjGEd+qdAGMYTfP+UByKI2Bh8yR9L0ipumBkaOt5M9JjRWdlB/4uE3cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HE4SoZ7l; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720022972; c=relaxed/simple;
+	bh=miTdIW03+gCfk4U+Cz/DHPo6T+x3t3RZv88YBKSPhGE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AGLaaWci0iwElooapA9qXqBUQw0UoBLxkNvtLIR4LU0VV4lvFAev8XPWcSKaAhR1v22SYvdIF3V6KEXJkfny7Pyic4c6jhGE37RXbgAEDCZZfOjWA/2MDjavoZ8HGM8YS9nWH82xP5f+lu/XvQXQvk4FPeGY2knhh8qFvDNHvJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=dvB3sA7h; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HE4SoZ7l"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4257d5fc9b7so33592355e9.2;
-        Wed, 03 Jul 2024 09:09:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720022964; x=1720627764; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=y+CHxrZ7qtoT8BKTUaekwlP3cat/UcO3wyY4oAUzx8s=;
-        b=HE4SoZ7ltoFhvePSZftpAoSeVgiRR+LuxEme8JJk7+ysQ06TbDp74uL/9HcCSrNLEm
-         5l00QWTDFdfXP7NPB2w9e3duDfZtNdknU4d6lkfOap/oWCj8IOikqPlwvNZtUBhagxVJ
-         c6JfSjPIVRxOHs1bukFHw57jHpMH6YvemZrXvFf7gh19KfQDn8wh4kAirad4rQYniTQA
-         8QAMYo3TH4uc4kNHo4pK8lbgjLL3xpO9O4dXC2QHMyFX2EIYeJF5RevfoT8BNX2znEk4
-         ZLca3zuJeQpW6MfTn7PTqV5NbUZvD+ohCt5ETmcsMaIw4pcPcred9nN09MrUWISO70Qs
-         CDJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720022964; x=1720627764;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y+CHxrZ7qtoT8BKTUaekwlP3cat/UcO3wyY4oAUzx8s=;
-        b=OhKCaNhd8NZwkMuD/IdWdrlC0cci7D+hQGkvBylIHjxs0uBZIrAbBTd7z1doSXs2Do
-         IDrI9l186yYsvmt0Nri5BvscC4+kT0pPIGSY/9n1rNGVlu1DG6Ga8o8stK74OWKg8NL+
-         xlk6AEbfU+eaBqT5RyhwAcMTlIcbdb9m8lKkipHkhEB6L4c+R5Sc1dZKqwVVDH+w7XXV
-         JY5uOzSGE9yfYcbwguewuJgW8GzoQReMd/5t2GptCvFKnf3zGOmF6QiYx16N5BVw3v81
-         s5hBl8RkB0jHP2qf058mNx33oDJkXO/BLMeJFemMHtRrQuV6vRYCMnQpcnhnDKm5ckyA
-         bKVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtd8FHQckh2j8EvboZdx3cQNXSKHOd8fKWob9fINg+fukS+kQazH4vzvs/GUs2bDWy81xzbJDCObLmlCPNELb9MqyE1rRGhXVS+KhBe4odWXhMarKeLfeR8meu5NktO9UWAkeKdkHP8j2gqOKjGpogef1fb1gdyzX+6Z2Vx3HlcT3hdIn1
-X-Gm-Message-State: AOJu0Yw2y5PcMjvkDwu1bh/sZ7/ZjT14qibf5rRKRBdpyyQbGnu95GyD
-	QU3lERZbUc/YPE6/KZgF8QdSTQgOeAtH/FxgP5n7lvgUCG0FyB6M
-X-Google-Smtp-Source: AGHT+IFOaHsI2OUQyY5F67H8NM44xcYZe4pbNrjUXpk995cJtsWH9MtvzobpmdfYGMDAq7foffVEuw==
-X-Received: by 2002:a05:600c:4f50:b0:425:73ba:e012 with SMTP id 5b1f17b1804b1-42579ffcce8mr97229955e9.7.1720022963234;
-        Wed, 03 Jul 2024 09:09:23 -0700 (PDT)
-Received: from krava ([176.105.156.1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b061eedsm233590495e9.26.2024.07.03.09.09.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 09:09:22 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 3 Jul 2024 18:09:17 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
-Message-ID: <ZoV3rRUHEdvTmJjG@krava>
-References: <20240701164115.723677-1-jolsa@kernel.org>
- <20240701164115.723677-2-jolsa@kernel.org>
- <20240703085533.820f90544c3fc42edf79468d@kernel.org>
- <CAEf4Bzbn+jky3hb+tUwmDCUgUmgCBxL5Ru_9G5SO3=uTWpi=kA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="dvB3sA7h"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463CLLxo018156;
+	Wed, 3 Jul 2024 18:09:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	53gohECmv3blfnBLse0suF14Wnzkm2nWQA5ErnOdSYU=; b=dvB3sA7hhflnMpST
+	AjKehBF65mGJy8hmOIecB8gGYkrAmxxf57Myiwl/aRANTDgABGEKkpKqEYSxVnhw
+	jjV91xz5dJBh0aVSC8MV8H/zj7hJLT7F/BE7M2sdbawqCerwvKYOntcvPTVLwN41
+	CNy0pzgK2mcct8tlxQgbLrRyEGzBSHDdb7OCJTRlO03njlmt6zMGVfbjiL60Xgvv
+	h9XinyeysFN8Dt0cvkUCGrvO2yGsbApHNoej13m87v2/hNOMZzQbd5XCdLFPNUHi
+	Po72O0Cv5J+WoNzglsZlXmjaonQFasuvl0MnsRVxfLCBNY7RaxrSbsSHIBH+vLDb
+	liBV8Q==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 40295dhfnf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 18:09:04 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0E67E40048;
+	Wed,  3 Jul 2024 18:09:00 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D18662291A9;
+	Wed,  3 Jul 2024 18:08:32 +0200 (CEST)
+Received: from localhost (10.252.27.110) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 3 Jul
+ 2024 18:08:32 +0200
+From: Olivier Moysan <olivier.moysan@foss.st.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: Olivier Moysan <olivier.moysan@foss.st.com>, <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 6/8] iio: adc: stm32-dfsdm: adopt generic channels bindings
+Date: Wed, 3 Jul 2024 18:05:31 +0200
+Message-ID: <20240703160535.2277871-7-olivier.moysan@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240703160535.2277871-1-olivier.moysan@foss.st.com>
+References: <20240703160535.2277871-1-olivier.moysan@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bzbn+jky3hb+tUwmDCUgUmgCBxL5Ru_9G5SO3=uTWpi=kA@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_11,2024-07-03_01,2024-05-17_01
 
-On Tue, Jul 02, 2024 at 05:13:38PM -0700, Andrii Nakryiko wrote:
-> On Tue, Jul 2, 2024 at 4:55 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > Hi Jiri,
-> >
-> > On Mon,  1 Jul 2024 18:41:07 +0200
-> > Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > > Adding support for uprobe consumer to be defined as session and have
-> > > new behaviour for consumer's 'handler' and 'ret_handler' callbacks.
-> > >
-> > > The session means that 'handler' and 'ret_handler' callbacks are
-> > > connected in a way that allows to:
-> > >
-> > >   - control execution of 'ret_handler' from 'handler' callback
-> > >   - share data between 'handler' and 'ret_handler' callbacks
-> > >
-> > > The session is enabled by setting new 'session' bool field to true
-> > > in uprobe_consumer object.
-> > >
-> > > We keep count of session consumers for uprobe and allocate session_consumer
-> > > object for each in return_instance object. This allows us to store
-> > > return values of 'handler' callbacks and data pointers of shared
-> > > data between both handlers.
-> > >
-> > > The session concept fits to our common use case where we do filtering
-> > > on entry uprobe and based on the result we decide to run the return
-> > > uprobe (or not).
-> > >
-> > > It's also convenient to share the data between session callbacks.
-> > >
-> > > The control of 'ret_handler' callback execution is done via return
-> > > value of the 'handler' callback. If it's 0 we install and execute
-> > > return uprobe, if it's 1 we do not.
-> > >
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > ---
-> > >  include/linux/uprobes.h     |  16 ++++-
-> > >  kernel/events/uprobes.c     | 129 +++++++++++++++++++++++++++++++++---
-> > >  kernel/trace/bpf_trace.c    |   6 +-
-> > >  kernel/trace/trace_uprobe.c |  12 ++--
-> > >  4 files changed, 144 insertions(+), 19 deletions(-)
-> > >
-> > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> > > index f46e0ca0169c..903a860a8d01 100644
-> > > --- a/include/linux/uprobes.h
-> > > +++ b/include/linux/uprobes.h
-> > > @@ -34,15 +34,18 @@ enum uprobe_filter_ctx {
-> > >  };
-> > >
-> > >  struct uprobe_consumer {
-> > > -     int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs);
-> > > +     int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs, __u64 *data);
-> > >       int (*ret_handler)(struct uprobe_consumer *self,
-> > >                               unsigned long func,
-> > > -                             struct pt_regs *regs);
-> > > +                             struct pt_regs *regs, __u64 *data);
-> > >       bool (*filter)(struct uprobe_consumer *self,
-> > >                               enum uprobe_filter_ctx ctx,
-> > >                               struct mm_struct *mm);
-> > >
-> > >       struct uprobe_consumer *next;
-> > > +
-> > > +     bool                    session;        /* marks uprobe session consumer */
-> > > +     unsigned int            session_id;     /* set when uprobe_consumer is registered */
-> >
-> > Hmm, why this has both session and session_id?
-> 
-> session is caller's request to establish session semantics. Jiri, I
+Move to generic channels binding to ease new backend framework adoption
+and prepare the convergence with MDF IP support on STM32MP2 SoC family.
 
-and session_id is set when uprobe is registered and used when
-return uprobe is executed to find matching uprobe_consumer,
-plz check handle_uretprobe_chain/session_consumer_find
+Legacy binding:
+DFSDM is an IIO channel consumer.
+SD modulator is an IIO channels provider.
+The channel phandles are provided in DT through io-channels property
+and channel indexes through st,adc-channels property.
 
-> think it's better to move it higher next to
-> handler/ret_handler/filter, that's the part of uprobe_consumer struct
-> which has read-only caller-provided data (I'm adding offset and
-> ref_ctr_offset there as well).
+New binding:
+DFSDM is an IIO channel provider.
+The channel indexes are given by reg property in channel child node.
 
-ok, makes sense
+This new binding is intended to be used with SD modulator IIO backends.
+It does not support SD modulator legacy IIO devices.
+The st,adc-channels property presence is used to discriminate
+between legacy and backend bindings.
 
-> 
-> > I also think we can use the address of uprobe_consumer itself as a unique id.
-> 
-> +1
-> 
-> >
-> > Also, if we can set session enabled by default, and skip ret_handler by handler's
-> > return value, it is more simpler. (If handler returns a specific value, skip ret_handler)
-> 
-> you mean derive if it's a session or not by both handler and
-> ret_handler being set? I guess this works fine for BPF side, because
-> there we never had them both set. If this doesn't regress others, I
-> think it's OK. We just need to make sure we don't unnecessarily
-> allocate session state for consumers that don't set both handler and
-> ret_handler. That would be a waste.
+The support of the DFSDM legacy channels and SD modulator IIO devices
+is kept for backward compatibility.
 
-hum.. so the current code installs return uprobe if there's ret_handler
-defined in consumer and also the entry 'handler' needs to return 0
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+---
+ drivers/iio/adc/stm32-dfsdm-adc.c | 200 ++++++++++++++++++++++++------
+ 1 file changed, 164 insertions(+), 36 deletions(-)
 
-if entry 'handler' returns 1 the uprobe is unregistered
+diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+index fabd654245f5..ae5d95e38cd7 100644
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -666,6 +666,64 @@ static int stm32_dfsdm_channel_parse_of(struct stm32_dfsdm *dfsdm,
+ 	return 0;
+ }
+ 
++static int stm32_dfsdm_generic_channel_parse_of(struct stm32_dfsdm *dfsdm,
++						struct iio_dev *indio_dev,
++						struct iio_chan_spec *ch,
++						struct fwnode_handle *node)
++{
++	struct stm32_dfsdm_channel *df_ch;
++	const char *of_str;
++	int ret, val;
++
++	ret = fwnode_property_read_u32(node, "reg", &ch->channel);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Missing channel index %d\n", ret);
++		return ret;
++	}
++
++	if (ch->channel >= dfsdm->num_chs) {
++		dev_err(&indio_dev->dev, " Error bad channel number %d (max = %d)\n",
++			ch->channel, dfsdm->num_chs);
++		return -EINVAL;
++	}
++
++	ret = fwnode_property_read_string(node, "label", &ch->datasheet_name);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev,
++			" Error parsing 'label' for idx %d\n", ch->channel);
++		return ret;
++	}
++
++	df_ch =  &dfsdm->ch_list[ch->channel];
++	df_ch->id = ch->channel;
++
++	ret = fwnode_property_read_string(node, "st,adc-channel-type", &of_str);
++	if (!ret) {
++		val = stm32_dfsdm_str2val(of_str, stm32_dfsdm_chan_type);
++		if (val < 0)
++			return val;
++	} else {
++		val = 0;
++	}
++	df_ch->type = val;
++
++	ret = fwnode_property_read_string(node, "st,adc-channel-clk-src", &of_str);
++	if (!ret) {
++		val = stm32_dfsdm_str2val(of_str, stm32_dfsdm_chan_src);
++		if (val < 0)
++			return val;
++	} else {
++		val = 0;
++	}
++	df_ch->src = val;
++
++	ret = fwnode_property_read_u32(node, "st,adc-alt-channel", &df_ch->alt_si);
++	if (ret != -EINVAL)
++		df_ch->alt_si = 0;
++
++	return 0;
++}
++
+ static ssize_t dfsdm_adc_audio_get_spiclk(struct iio_dev *indio_dev,
+ 					  uintptr_t priv,
+ 					  const struct iio_chan_spec *chan,
+@@ -1227,7 +1285,8 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
+ 		ret = iio_device_claim_direct_mode(indio_dev);
+ 		if (ret)
+ 			return ret;
+-		ret = iio_hw_consumer_enable(adc->hwc);
++		if (adc->hwc)
++			ret = iio_hw_consumer_enable(adc->hwc);
+ 		if (ret < 0) {
+ 			dev_err(&indio_dev->dev,
+ 				"%s: IIO enable failed (channel %d)\n",
+@@ -1236,7 +1295,8 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
+ 			return ret;
+ 		}
+ 		ret = stm32_dfsdm_single_conv(indio_dev, chan, val);
+-		iio_hw_consumer_disable(adc->hwc);
++		if (adc->hwc)
++			iio_hw_consumer_disable(adc->hwc);
+ 		if (ret < 0) {
+ 			dev_err(&indio_dev->dev,
+ 				"%s: Conversion failed (channel %d)\n",
+@@ -1362,15 +1422,20 @@ static int stm32_dfsdm_dma_request(struct device *dev,
+ 	return 0;
+ }
+ 
+-static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
+-					 struct iio_chan_spec *ch)
++static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev, struct iio_chan_spec *ch,
++					 struct fwnode_handle *child)
+ {
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+ 	int ret;
+ 
+-	ret = stm32_dfsdm_channel_parse_of(adc->dfsdm, indio_dev, ch);
+-	if (ret < 0)
+-		return ret;
++	if (child)
++		ret = stm32_dfsdm_generic_channel_parse_of(adc->dfsdm, indio_dev, ch, child);
++	else /* Legacy binding */
++		ret = stm32_dfsdm_channel_parse_of(adc->dfsdm, indio_dev, ch);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Failed to parse channel\n");
++		return dev_err_probe(&indio_dev->dev, ret, "Failed to parse channel\n");
++	}
+ 
+ 	ch->type = IIO_VOLTAGE;
+ 	ch->indexed = 1;
+@@ -1385,6 +1450,7 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
+ 
+ 	if (adc->dev_data->type == DFSDM_AUDIO) {
+ 		ch->ext_info = dfsdm_adc_audio_ext_info;
++		ch->scan_index = 0;
+ 	} else {
+ 		ch->scan_type.shift = 8;
+ 	}
+@@ -1396,20 +1462,67 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
+ 					  &adc->dfsdm->ch_list[ch->channel]);
+ }
+ 
++static int stm32_dfsdm_chan_init(struct iio_dev *indio_dev, struct iio_chan_spec *channels)
++{
++	int num_ch = indio_dev->num_channels;
++	int chan_idx = 0;
++	int ret;
++
++	for (chan_idx = 0; chan_idx < num_ch; chan_idx++) {
++		channels[chan_idx].scan_index = chan_idx;
++		ret = stm32_dfsdm_adc_chan_init_one(indio_dev, &channels[chan_idx], NULL);
++		if (ret < 0)
++			return dev_err_probe(&indio_dev->dev, ret, "Channels init failed\n");
++	}
++
++	return 0;
++}
++
++static int stm32_dfsdm_generic_chan_init(struct iio_dev *indio_dev, struct iio_chan_spec *channels)
++{
++	int chan_idx = 0, ret;
++
++	device_for_each_child_node_scoped(&indio_dev->dev, child) {
++		/* Skip DAI node in DFSDM audio nodes */
++		if (fwnode_property_present(child, "compatible"))
++			continue;
++
++		channels[chan_idx].scan_index = chan_idx;
++		ret = stm32_dfsdm_adc_chan_init_one(indio_dev, &channels[chan_idx], child);
++		if (ret < 0)
++			return dev_err_probe(&indio_dev->dev, ret, "Channels init failed\n");
++
++		chan_idx++;
++	}
++
++	return chan_idx;
++}
++
+ static int stm32_dfsdm_audio_init(struct device *dev, struct iio_dev *indio_dev)
+ {
+ 	struct iio_chan_spec *ch;
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+ 	struct stm32_dfsdm_channel *d_ch;
+-	int ret;
++	bool legacy = false;
++	int num_ch, ret;
++
++	/* If st,adc-channels is defined legacy binding is used. Else assume generic binding. */
++	num_ch = of_property_count_u32_elems(indio_dev->dev.of_node, "st,adc-channels");
++	if (num_ch == 1)
++		legacy = true;
+ 
+ 	ch = devm_kzalloc(&indio_dev->dev, sizeof(*ch), GFP_KERNEL);
+ 	if (!ch)
+ 		return -ENOMEM;
+ 
+-	ch->scan_index = 0;
++	indio_dev->num_channels = 1;
++	indio_dev->channels = ch;
++
++	if (legacy)
++		ret = stm32_dfsdm_chan_init(indio_dev, ch);
++	else
++		ret = stm32_dfsdm_generic_chan_init(indio_dev, ch);
+ 
+-	ret = stm32_dfsdm_adc_chan_init_one(indio_dev, ch);
+ 	if (ret < 0) {
+ 		dev_err(&indio_dev->dev, "Channels init failed\n");
+ 		return ret;
+@@ -1420,9 +1533,6 @@ static int stm32_dfsdm_audio_init(struct device *dev, struct iio_dev *indio_dev)
+ 	if (d_ch->src != DFSDM_CHANNEL_SPI_CLOCK_EXTERNAL)
+ 		adc->spi_freq = adc->dfsdm->spi_master_freq;
+ 
+-	indio_dev->num_channels = 1;
+-	indio_dev->channels = ch;
+-
+ 	return stm32_dfsdm_dma_request(dev, indio_dev);
+ }
+ 
+@@ -1430,43 +1540,61 @@ static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
+ {
+ 	struct iio_chan_spec *ch;
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+-	int num_ch;
+-	int ret, chan_idx;
++	int num_ch, ret;
++	bool legacy = false;
+ 
+ 	adc->oversamp = DFSDM_DEFAULT_OVERSAMPLING;
+ 	ret = stm32_dfsdm_compute_all_osrs(indio_dev, adc->oversamp);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	num_ch = of_property_count_u32_elems(indio_dev->dev.of_node,
+-					     "st,adc-channels");
+-	if (num_ch < 0 || num_ch > adc->dfsdm->num_chs) {
+-		dev_err(&indio_dev->dev, "Bad st,adc-channels\n");
+-		return num_ch < 0 ? num_ch : -EINVAL;
++	num_ch = device_get_child_node_count(&indio_dev->dev);
++	if (!num_ch) {
++		/* No channels nodes found. Assume legacy binding */
++		num_ch = of_property_count_u32_elems(indio_dev->dev.of_node, "st,adc-channels");
++		if (num_ch < 0) {
++			dev_err(&indio_dev->dev, "Bad st,adc-channels\n");
++			return num_ch;
++		}
++
++		legacy = true;
+ 	}
+ 
+-	/* Bind to SD modulator IIO device */
+-	adc->hwc = devm_iio_hw_consumer_alloc(&indio_dev->dev);
+-	if (IS_ERR(adc->hwc))
+-		return -EPROBE_DEFER;
++	if (num_ch > adc->dfsdm->num_chs) {
++		dev_err(&indio_dev->dev, "Number of channel [%d] exceeds [%d]\n",
++			num_ch, adc->dfsdm->num_chs);
++		return -EINVAL;
++	}
++	indio_dev->num_channels = num_ch;
+ 
+-	ch = devm_kcalloc(&indio_dev->dev, num_ch, sizeof(*ch),
+-			  GFP_KERNEL);
+-	if (!ch)
+-		return -ENOMEM;
++	if (legacy) {
++		/* Bind to SD modulator IIO device. */
++		adc->hwc = devm_iio_hw_consumer_alloc(&indio_dev->dev);
++		if (IS_ERR(adc->hwc))
++			return dev_err_probe(&indio_dev->dev, -EPROBE_DEFER,
++					     "waiting for SD modulator\n");
++	} else {
++		/* Generic binding. SD modulator IIO device not used. Use SD modulator backend. */
++		adc->hwc = NULL;
+ 
+-	for (chan_idx = 0; chan_idx < num_ch; chan_idx++) {
+-		ch[chan_idx].scan_index = chan_idx;
+-		ret = stm32_dfsdm_adc_chan_init_one(indio_dev, &ch[chan_idx]);
+-		if (ret < 0) {
+-			dev_err(&indio_dev->dev, "Channels init failed\n");
+-			return ret;
+-		}
++		adc->backend = devm_kzalloc(&indio_dev->dev, sizeof(*adc->backend) * num_ch,
++					    GFP_KERNEL);
++		if (!adc->backend)
++			return -ENOMEM;
+ 	}
+ 
+-	indio_dev->num_channels = num_ch;
++	ch = devm_kcalloc(&indio_dev->dev, num_ch, sizeof(*ch), GFP_KERNEL);
++	if (!ch)
++		return -ENOMEM;
+ 	indio_dev->channels = ch;
+ 
++	if (legacy)
++		ret = stm32_dfsdm_chan_init(indio_dev, ch);
++	else
++		ret = stm32_dfsdm_generic_chan_init(indio_dev, ch);
++	if (ret < 0)
++		return ret;
++
+ 	init_completion(&adc->completion);
+ 
+ 	/* Optionally request DMA */
+-- 
+2.25.1
 
-we could define new return value from 'handler' to 'not execute the
-'ret_handler' and have 'handler' return values:
-
-  0 - execute 'ret_handler' if defined
-  1 - remove the uprobe
-  2 - do NOT execute 'ret_handler'  // this current triggers WARN
-
-we could delay the allocation of 'return_instance' until the first
-consumer returns 0, so there's no perf regression
-
-that way we could treat all consumers the same and we wouldn't need
-the session flag..
-
-ok looks like good idea ;-) will try that
-
-thanks,
-jirka
-
-> 
-> >
-> > >  };
-> > >
-> > >  #ifdef CONFIG_UPROBES
-> > > @@ -80,6 +83,12 @@ struct uprobe_task {
-> > >       unsigned int                    depth;
-> > >  };
-> > >
-> > > +struct session_consumer {
-> > > +     __u64           cookie;
-> >
-> > And this cookie looks not scalable. If we can pass a data to handler, I would like to
-> > reuse it to pass the target function parameters to ret_handler as kretprobe/fprobe does.
-> >
-> >         int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs, void *data);
-> >
-> > uprobes can collect its uc's required sizes and allocate the memory (shadow stack frame)
-> > at handler_chain().
-> 
-> The goal here is to keep this simple and fast. I'd prefer to keep it
-> small and fixed size, if possible. I'm thinking about caching and
-> reusing return_instance as one of the future optimizations, so if we
-> can keep this more or less fixed (assuming there is typically not more
-> than 1 or 2 consumers per uprobe, which seems realistic), this will
-> provide a way to avoid excessive memory allocations.
-> 
-> >
-> > > +     unsigned int    id;
-> > > +     int             rc;
-> > > +};
-> > > +
-> > >  struct return_instance {
-> > >       struct uprobe           *uprobe;
-> > >       unsigned long           func;
-> > > @@ -88,6 +97,9 @@ struct return_instance {
-> > >       bool                    chained;        /* true, if instance is nested */
-> > >
-> > >       struct return_instance  *next;          /* keep as stack */
-> > > +
-> > > +     int                     sessions_cnt;
-> > > +     struct session_consumer sessions[];
-> >
-> > In that case, we don't have this array, but
-> >
-> >         char data[];
-> >
-> > And decode data array, which is a slice of variable length structure;
-> >
-> > struct session_consumer {
-> >         struct uprobe_consumer *uc;
-> >         char data[];
-> > };
-> >
-> > The size of session_consumer is uc->session_data_size + sizeof(uc).
-> >
-> > What would you think?
-> >
-> > Thank you,
-> >
-> > >  };
-> > >
-> > >  enum rp_check {
-> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > index 2c83ba776fc7..4da410460f2a 100644
-> > > --- a/kernel/events/uprobes.c
-> > > +++ b/kernel/events/uprobes.c
-> > > @@ -63,6 +63,8 @@ struct uprobe {
-> > >       loff_t                  ref_ctr_offset;
-> > >       unsigned long           flags;
-> > >
-> > > +     unsigned int            sessions_cnt;
-> 
-> [...]
