@@ -1,289 +1,192 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9C3174EF3
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 12:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF3F142904;
+	Wed,  3 Jul 2024 12:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720008071; cv=none; b=OK3zFVYh1R5WNS/OV2fuliukA4iOvBCJuITOxhTSC44eVzLXOSkj2NYqOsWkQwpQVgxyFcZTrnggh1xijLWoQmsiJtdw0ZTacME/888/Fs1cvTsyMCrTATtq0RY9O6aQTn4WZiPbyDv7gg5rZkJfGL+j34c++gURDkY1sSmg7/8=
+	t=1720008172; cv=none; b=h3epuh/X+6Ke/amD89mp8+GyV6HNSjfAsVWE0PDrZeEHl4bU021pD9fVmqWiPMkNL+fcTxXIvFd7DH6Oby+kKBpPdtK7ob2/uE8Va7KY1YmH8VjvosMXZaePQJRKRikchbBKjdUP3pZE6VcwI+/oZ695UAhXlmw5MHGOO6S9Qqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720008071; c=relaxed/simple;
-	bh=tXCExCtQTYhS5WoDbfhG1iAw0C6aFxicwOVUudxFZAg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ImZN4hCVoFMXvedSKB8g/AeJtXDmXRwuu/BMacQVpo0cd76gnHlgE6L4dnLP47oFk6l/kuK4iQVP6RHuWa3AVbgSslHiaIsnVHaqebDPw2tqc6+N04NcwZjO8rMyApTIOvq9P7qn12nht00vgKCt3hXWUPe31CkujB1cOwYsTgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CJ//tgM/; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1720008172; c=relaxed/simple;
+	bh=wbp3WxxKIZhpmswTUsyAwmPrBB5XKkn66nqq+Oj6lRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JeVMBIKdP3ACibZcZOEkzYcGBbTus7e0y5UwlsztkgfsJttOdrmgwrgiEytLfuNecEP4JJyaYw4/uGkgr2jwHMuiK/hhH4KdsekZFglkd8A58SBw/4Bn20w/Cjo1AWybdTnF/E9SpuFO+0be0m71A9jdGcK3UT54+wu8esh7MF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eTBDNWGq; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CJ//tgM/"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1720008061; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=f3NfSFOztXDR1P17ftTq4m6tI075p02Cmv9kVZVzihc=;
-	b=CJ//tgM/dfVB52T/mR9OkamKoal9J10XUhBI6aJvJttnS/Fdze8Ln6t2u2ZsADnTN6oUsu5sK9cX+GlfaiUYVnS4GVY8uPwkVXLjuApmb2jxjYDllZi/Yqe2qjHdx1vpUwwe4FSHvKo9pzLpRXlGERftVcICY/2FUgfAOMokDBM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W9mSOMt_1720008059;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W9mSOMt_1720008059)
-          by smtp.aliyun-inc.com;
-          Wed, 03 Jul 2024 20:01:00 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 4/4] erofs: tidy up `struct z_erofs_bvec`
-Date: Wed,  3 Jul 2024 20:00:51 +0800
-Message-ID: <20240703120051.3653452-4-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20240703120051.3653452-1-hsiangkao@linux.alibaba.com>
-References: <20240703120051.3653452-1-hsiangkao@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTBDNWGq"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42579b60af1so30929615e9.2;
+        Wed, 03 Jul 2024 05:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720008169; x=1720612969; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lHjbPIsTssPtEI+wx/kexPsqSteEWIwv7X4Mb6vwKlE=;
+        b=eTBDNWGqL3wOElG2GypU8drMhrccoejs2Wc13BB76tx0VltJZcGhidlbgSPM4vbl8i
+         +q5B29FgqbxOrklLHzF4A63WoZl8UdmHG5sIRvy8SRfrpl2b6TSfExl0etUEoNjUKs0t
+         ZZI1KtOIIsbLKKdG2OnNE7HN6mCBNg/CCp2ddbLdoVgul0ASSvUkAG/xI6SziNOEVlNN
+         Uv1fs/3oogWduvtOfbtm4D/bMQD4TXVAYdhgNjP3UBHeD5qlMgDAVj7yXkyqvkMVnxn4
+         RFRka9xVFiayeJXFUVCptUBUomN/uCJ9VmreiSmg7HettOgIsZoYgqj/LUzgPNv3W3Kd
+         Cj7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720008169; x=1720612969;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lHjbPIsTssPtEI+wx/kexPsqSteEWIwv7X4Mb6vwKlE=;
+        b=tmsNb1rqDBmU1jnh08KjD0uMvRkOAJOsyUB6QJ8E0WUWeNwJ3CwbvIHcMyWkr648pm
+         8tx7o1iO0XB0wYLSCGx3J3F1VJ+zUyl0ryTUc/HvyyeuGSj2KwTTvyTyfSsITHRS2Es8
+         bzqFhTgwnZ+RRiqwwRhjlnV2MQJaJqrQ48OcSgh9aLwDizQCBvRTDzLU848VYFOBzz0w
+         FN+7wo4g7pjh75zHjk5AXJnL6RRiW0ONr6dnK3+JVwEYJGYpk4rSUyEMthROzHXAjngc
+         X/FuW2Z/1ZwTQwH7qocZy0PERPzHzVwxHmw31cRj0Q8JNSdo3pR1HgVIOYtQauVQzHNW
+         Ao9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWEVBXecbUl1TZwLzQgmJusPINuL+T8EYscKYIhf2UFQFmCWbq8wn+sTSkqBnYa52d5mJE7oAN6yitJpHd+beY2f2k8bAa/doIuuw==
+X-Gm-Message-State: AOJu0YwjLvA1+TMikvoFvHzJG+dR4L+KmgVoYliJ3bLvIElNSgefSRFl
+	Kf060Cs9hR3jRsUqoECLfi2qCSkFtNgZhPi/aVa+oyyrr9rMh/hq
+X-Google-Smtp-Source: AGHT+IGsosvirTGJ/8ctAZiH25yTViMcfCBtbiveJvRTABfbUmQO0QA6b4COqpDoAchCbDMJxsxSKQ==
+X-Received: by 2002:a05:600c:1c88:b0:424:aa64:e9af with SMTP id 5b1f17b1804b1-4257a05c0c4mr77165875e9.32.1720008168844;
+        Wed, 03 Jul 2024 05:02:48 -0700 (PDT)
+Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4257880104csm74819155e9.1.2024.07.03.05.02.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 05:02:48 -0700 (PDT)
+Date: Wed, 3 Jul 2024 14:02:46 +0200
+From: Stanislav Jakubek <stano.jakubek@gmail.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Baolin Wang <baolin.wang7@gmail.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] dt-bindings: timer: sprd-timer: convert to YAML
+Message-ID: <ZoU95lBgoyF/8Md3@standask-GA-A55M-S2HP>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-After revisiting the design, I believe `struct z_erofs_bvec` should
-be page-based instead of folio-based due to the reasons below:
+Convert the Spreadtrum SC9860 timer bindings to DT schema.
 
- - The minimized memory mapping block is a page;
+Changes during conversion:
+  - rename file to match compatible
+  - add sprd,sc9860-suspend-timer which was previously undocumented
+  - minor grammar fix in description
 
- - Under the certain circumstances, only temporary pages needs to be
-   used instead of folios since refcount, mapcount for such pages are
-   unnecessary;
-
- - Decompressors handle all types of pages including temporary pages,
-   not only folios.
-
-When handling `struct z_erofs_bvec`, all folio-related information
-is now accessed using the page_folio() helper.
-
-The final goal of this round adaptation is to eliminate direct
-accesses to `struct page` in the EROFS codebase, except for some
-exceptions like `z_erofs_is_shortlived_page()` and
-`z_erofs_page_is_invalidated()`, which require a new helper to
-determine the memdesc type of an arbitrary page.
-
-Actually large folios of compressed files seems to work now, yet I tend
-to conduct more tests before officially enabling this for all scenarios.
-
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
 ---
- fs/erofs/zdata.c | 101 +++++++++++++++++++++++------------------------
- 1 file changed, 49 insertions(+), 52 deletions(-)
+ .../bindings/timer/sprd,sc9860-timer.yaml     | 68 +++++++++++++++++++
+ .../bindings/timer/spreadtrum,sprd-timer.txt  | 20 ------
+ 2 files changed, 68 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/sprd,sc9860-timer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/timer/spreadtrum,sprd-timer.txt
 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index cb017ca2c7e3..988f67cc0145 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -19,10 +19,7 @@
- typedef void *z_erofs_next_pcluster_t;
- 
- struct z_erofs_bvec {
--	union {
--		struct page *page;
--		struct folio *folio;
--	};
-+	struct page *page;
- 	int offset;
- 	unsigned int end;
- };
-@@ -617,32 +614,31 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe)
- 		fe->mode = Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE;
- }
- 
--/* called by erofs_shrinker to get rid of all cached compressed bvecs */
-+/* (erofs_shrinker) disconnect cached encoded data with pclusters */
- int erofs_try_to_free_all_cached_folios(struct erofs_sb_info *sbi,
- 					struct erofs_workgroup *grp)
- {
- 	struct z_erofs_pcluster *const pcl =
- 		container_of(grp, struct z_erofs_pcluster, obj);
- 	unsigned int pclusterpages = z_erofs_pclusterpages(pcl);
-+	struct folio *folio;
- 	int i;
- 
- 	DBG_BUGON(z_erofs_is_inline_pcluster(pcl));
--	/* There is no actice user since the pcluster is now freezed */
-+	/* Each cached folio contains one page unless bs > ps is supported */
- 	for (i = 0; i < pclusterpages; ++i) {
--		struct folio *folio = pcl->compressed_bvecs[i].folio;
-+		if (pcl->compressed_bvecs[i].page) {
-+			folio = page_folio(pcl->compressed_bvecs[i].page);
-+			/* Avoid reclaiming or migrating this folio */
-+			if (!folio_trylock(folio))
-+				return -EBUSY;
- 
--		if (!folio)
--			continue;
--
--		/* Avoid reclaiming or migrating this folio */
--		if (!folio_trylock(folio))
--			return -EBUSY;
--
--		if (!erofs_folio_is_managed(sbi, folio))
--			continue;
--		pcl->compressed_bvecs[i].folio = NULL;
--		folio_detach_private(folio);
--		folio_unlock(folio);
-+			if (!erofs_folio_is_managed(sbi, folio))
-+				continue;
-+			pcl->compressed_bvecs[i].page = NULL;
-+			folio_detach_private(folio);
-+			folio_unlock(folio);
-+		}
- 	}
- 	return 0;
- }
-@@ -650,9 +646,9 @@ int erofs_try_to_free_all_cached_folios(struct erofs_sb_info *sbi,
- static bool z_erofs_cache_release_folio(struct folio *folio, gfp_t gfp)
- {
- 	struct z_erofs_pcluster *pcl = folio_get_private(folio);
--	unsigned int pclusterpages = z_erofs_pclusterpages(pcl);
-+	struct z_erofs_bvec *bvec = pcl->compressed_bvecs;
-+	struct z_erofs_bvec *end = bvec + z_erofs_pclusterpages(pcl);
- 	bool ret;
--	int i;
- 
- 	if (!folio_test_private(folio))
- 		return true;
-@@ -661,9 +657,9 @@ static bool z_erofs_cache_release_folio(struct folio *folio, gfp_t gfp)
- 	spin_lock(&pcl->obj.lockref.lock);
- 	if (pcl->obj.lockref.count <= 0) {
- 		DBG_BUGON(z_erofs_is_inline_pcluster(pcl));
--		for (i = 0; i < pclusterpages; ++i) {
--			if (pcl->compressed_bvecs[i].folio == folio) {
--				pcl->compressed_bvecs[i].folio = NULL;
-+		for (; bvec < end; ++bvec) {
-+			if (bvec->page && page_folio(bvec->page) == folio) {
-+				bvec->page = NULL;
- 				folio_detach_private(folio);
- 				ret = true;
- 				break;
-@@ -1062,7 +1058,7 @@ static bool z_erofs_is_sync_decompress(struct erofs_sb_info *sbi,
- 
- static bool z_erofs_page_is_invalidated(struct page *page)
- {
--	return !page->mapping && !z_erofs_is_shortlived_page(page);
-+	return !page_folio(page)->mapping && !z_erofs_is_shortlived_page(page);
- }
- 
- struct z_erofs_decompress_backend {
-@@ -1415,7 +1411,7 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
- 	bool tocache = false;
- 	struct z_erofs_bvec zbv;
- 	struct address_space *mapping;
--	struct page *page;
-+	struct folio *folio;
- 	int bs = i_blocksize(f->inode);
- 
- 	/* Except for inplace folios, the entire folio can be used for I/Os */
-@@ -1425,23 +1421,25 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
- 	spin_lock(&pcl->obj.lockref.lock);
- 	zbv = pcl->compressed_bvecs[nr];
- 	spin_unlock(&pcl->obj.lockref.lock);
--	if (!zbv.folio)
-+	if (!zbv.page)
- 		goto out_allocfolio;
- 
--	bvec->bv_page = &zbv.folio->page;
-+	bvec->bv_page = zbv.page;
- 	DBG_BUGON(z_erofs_is_shortlived_page(bvec->bv_page));
+diff --git a/Documentation/devicetree/bindings/timer/sprd,sc9860-timer.yaml b/Documentation/devicetree/bindings/timer/sprd,sc9860-timer.yaml
+new file mode 100644
+index 000000000000..62c6da8bab5a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/sprd,sc9860-timer.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/sprd,sc9860-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	folio = page_folio(zbv.page);
- 	/*
- 	 * Handle preallocated cached folios.  We tried to allocate such folios
- 	 * without triggering direct reclaim.  If allocation failed, inplace
- 	 * file-backed folios will be used instead.
- 	 */
--	if (zbv.folio->private == (void *)Z_EROFS_PREALLOCATED_PAGE) {
--		zbv.folio->private = 0;
-+	if (folio->private == (void *)Z_EROFS_PREALLOCATED_PAGE) {
-+		folio->private = 0;
- 		tocache = true;
- 		goto out_tocache;
- 	}
- 
--	mapping = READ_ONCE(zbv.folio->mapping);
-+	mapping = READ_ONCE(folio->mapping);
- 	/*
- 	 * File-backed folios for inplace I/Os are all locked steady,
- 	 * therefore it is impossible for `mapping` to be NULL.
-@@ -1453,21 +1451,21 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
- 		return;
- 	}
- 
--	folio_lock(zbv.folio);
--	if (zbv.folio->mapping == mc) {
-+	folio_lock(folio);
-+	if (folio->mapping == mc) {
- 		/*
- 		 * The cached folio is still in managed cache but without
- 		 * a valid `->private` pcluster hint.  Let's reconnect them.
- 		 */
--		if (!folio_test_private(zbv.folio)) {
--			folio_attach_private(zbv.folio, pcl);
-+		if (!folio_test_private(folio)) {
-+			folio_attach_private(folio, pcl);
- 			/* compressed_bvecs[] already takes a ref before */
--			folio_put(zbv.folio);
-+			folio_put(folio);
- 		}
- 
- 		/* no need to submit if it is already up-to-date */
--		if (folio_test_uptodate(zbv.folio)) {
--			folio_unlock(zbv.folio);
-+		if (folio_test_uptodate(folio)) {
-+			folio_unlock(folio);
- 			bvec->bv_page = NULL;
- 		}
- 		return;
-@@ -1477,32 +1475,31 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
- 	 * It has been truncated, so it's unsafe to reuse this one. Let's
- 	 * allocate a new page for compressed data.
- 	 */
--	DBG_BUGON(zbv.folio->mapping);
-+	DBG_BUGON(folio->mapping);
- 	tocache = true;
--	folio_unlock(zbv.folio);
--	folio_put(zbv.folio);
-+	folio_unlock(folio);
-+	folio_put(folio);
- out_allocfolio:
--	page = erofs_allocpage(&f->pagepool, gfp | __GFP_NOFAIL);
-+	zbv.page = erofs_allocpage(&f->pagepool, gfp | __GFP_NOFAIL);
- 	spin_lock(&pcl->obj.lockref.lock);
--	if (pcl->compressed_bvecs[nr].folio) {
--		erofs_pagepool_add(&f->pagepool, page);
-+	if (pcl->compressed_bvecs[nr].page) {
-+		erofs_pagepool_add(&f->pagepool, zbv.page);
- 		spin_unlock(&pcl->obj.lockref.lock);
- 		cond_resched();
- 		goto repeat;
- 	}
--	pcl->compressed_bvecs[nr].folio = zbv.folio = page_folio(page);
-+	bvec->bv_page = pcl->compressed_bvecs[nr].page = zbv.page;
-+	folio = page_folio(zbv.page);
-+	/* first mark it as a temporary shortlived folio (now 1 ref) */
-+	folio->private = (void *)Z_EROFS_SHORTLIVED_PAGE;
- 	spin_unlock(&pcl->obj.lockref.lock);
--	bvec->bv_page = page;
- out_tocache:
- 	if (!tocache || bs != PAGE_SIZE ||
--	    filemap_add_folio(mc, zbv.folio, pcl->obj.index + nr, gfp)) {
--		/* turn into a temporary shortlived folio (1 ref) */
--		zbv.folio->private = (void *)Z_EROFS_SHORTLIVED_PAGE;
-+	    filemap_add_folio(mc, folio, pcl->obj.index + nr, gfp))
- 		return;
--	}
--	folio_attach_private(zbv.folio, pcl);
-+	folio_attach_private(folio, pcl);
- 	/* drop a refcount added by allocpage (then 2 refs in total here) */
--	folio_put(zbv.folio);
-+	folio_put(folio);
- }
- 
- static struct z_erofs_decompressqueue *jobqueue_init(struct super_block *sb,
++title: Spreadtrum SC9860 timer
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++description:
++  The Spreadtrum SC9860 platform provides 3 general-purpose timers.
++  These timers can support 32bit or 64bit counter, as well as supporting
++  period mode or one-shot mode, and they can be a wakeup source
++  during deep sleep.
++
++properties:
++  compatible:
++    enum:
++      - sprd,sc9860-timer
++      - sprd,sc9860-suspend-timer
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: sprd,sc9860-timer
++    then:
++      required:
++        - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      timer@40050000 {
++        compatible = "sprd,sc9860-timer";
++        reg = <0 0x40050000 0 0x20>;
++        interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&ext_32k>;
++      };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/timer/spreadtrum,sprd-timer.txt b/Documentation/devicetree/bindings/timer/spreadtrum,sprd-timer.txt
+deleted file mode 100644
+index 6d97e7d0f6e8..000000000000
+--- a/Documentation/devicetree/bindings/timer/spreadtrum,sprd-timer.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-Spreadtrum timers
+-
+-The Spreadtrum SC9860 platform provides 3 general-purpose timers.
+-These timers can support 32bit or 64bit counter, as well as supporting
+-period mode or one-shot mode, and they are can be wakeup source
+-during deep sleep.
+-
+-Required properties:
+-- compatible: should be "sprd,sc9860-timer" for SC9860 platform.
+-- reg: The register address of the timer device.
+-- interrupts: Should contain the interrupt for the timer device.
+-- clocks: The phandle to the source clock (usually a 32.768 KHz fixed clock).
+-
+-Example:
+-	timer@40050000 {
+-		compatible = "sprd,sc9860-timer";
+-		reg = <0 0x40050000 0 0x20>;
+-		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&ext_32k>;
+-	};
 -- 
-2.43.5
+2.34.1
 
