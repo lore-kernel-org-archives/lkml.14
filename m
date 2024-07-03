@@ -1,193 +1,108 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FF813B298
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 08:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6C328684
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 08:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719996297; cv=none; b=UsPPv1CRLs2tYy+8O9oqnLTl5vhwCXiGqWdv99jxbuSFtQT9JuUrdoE9t3URZwtz1NP8/A4gE/WK5KEg5LgsNUWohevg0/yVLZKpqFFRbxHvFRDSFgeIWMjMIBZxA5eiP5AAbbSDXCAzTxCqmFPDa/HYnV34GGJ6s/KXAMn9v+c=
+	t=1719996329; cv=none; b=F0q2ipjVXBMikOAkyvZ/qDnSquU5lStjDAdLTuVDRsVfm/UcdPt5wt9NOPFQW4uOk1UfnZl0sE53sInBHrdgBg8HYdVFI1vo+g/se9xwryTEuvWXyF/0lXKJ8/noLeCBHOSHsHn5GkWSz35QBesIQaln3B6iRDAmUJtxBDLC7ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719996297; c=relaxed/simple;
-	bh=v0T29FHkkrE0Y5ZEjvENIRw53QoQxwp8kkNpHD6tZjs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s48l4psl08pit3idMfRk/jn6AXtzgtB6ENXBDkjCK3k4cI+zpsmMhviKql1xhlQqGkUKAFW4sFiI8n3yaYWLNep5SGjsHBf5D2uhzEXsZZoN4Y75K2fVMQLvsO+f+97Nq5RqrnwQrvA3RGNKkbYfGXr5Afrm7K31bBBeSYTTyXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TrAVTe6z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uq0Cr5Pf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=x06l7bAg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FSymnsz0; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1719996329; c=relaxed/simple;
+	bh=1/78X+s0pwLYqNvet2Tcy5BBn4d0W8hkbGlv0yYIueY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pUMz+ysDE0VAshyIWkHD7WUdPBkP1TdjNwXLV8xKZ+Th7eoICChgset64RUeyRbEi51SwEjB2iU8G0wsDuzBtzLXOMw6Md2aLjn5+PubbzcaKTXSafjrl5gZkq+6KWMV1jE0oS2fhp/RtO5GmxBCArgdkOXTHyWWEWGWchjcL3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0Wx03H80; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TrAVTe6z";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uq0Cr5Pf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="x06l7bAg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FSymnsz0"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E87AF210E9;
-	Wed,  3 Jul 2024 08:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719996294; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=D/SvK/rvco1dwSTJGKtgmM2+qXfK0vRrRBbTQVCwqrg=;
-	b=TrAVTe6zF3tEy3cMjRufIvgeB58j+ojNZtBFT0LvV60EaBVyZAgpuGFziDpe2gCULPMZSG
-	9oGHt6dLDTOsjpyLk3nZVYpLVl5BBr5qUAEMEJSOUzHdITcv5vh7FG8OYgV+k4Izz3HpTQ
-	gUdNKEl6tt1IR+L/FYn3HTFet8Lg48U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719996294;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=D/SvK/rvco1dwSTJGKtgmM2+qXfK0vRrRBbTQVCwqrg=;
-	b=uq0Cr5PfHIyjQAWJx1xhaq+nPqIXxbLKpYmLKX0vraAbuJDm6lYMrfWBwIbZsQOFG1pO+3
-	3MPC4odl9b6VleCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719996293; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=D/SvK/rvco1dwSTJGKtgmM2+qXfK0vRrRBbTQVCwqrg=;
-	b=x06l7bAguRK2vYSqi2zSR8pqiDPmZNkvOuoHtE+UKAtlcGR4itsEm1BMPtV+A+AO2vsIJ2
-	EnuyaTAWIpc8zxoVjpRAo+m8KnhQCJqDJFFPp9Gu6B0iVbjHzQI8or/bzQGz06vOS4554n
-	ecX7hLNAVoQ2iACtX3YXtvRb40bwgoE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719996293;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=D/SvK/rvco1dwSTJGKtgmM2+qXfK0vRrRBbTQVCwqrg=;
-	b=FSymnsz0AqPg6vYpB55YoU5tgEFwy777oW3K95rKH4ltYdB1WHli1NppvgxFRopqmj+/F+
-	QbFYY0Bt0FW0e3Ag==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 93E3613889;
-	Wed,  3 Jul 2024 08:44:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ow/5IYUPhWZkSAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 03 Jul 2024 08:44:53 +0000
-Message-ID: <46bc2ed3-669b-420c-a5f5-e024a9b8a5df@suse.de>
-Date: Wed, 3 Jul 2024 10:44:53 +0200
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0Wx03H80"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ebeefb9a7fso57140361fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 01:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719996325; x=1720601125; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tnVZx57sQWGSbnJ3zKpnLdMuefpCU4Ga5SRMPYlDzsY=;
+        b=0Wx03H80EQc74/PdjBeqLLJWkyt2wzJBTncu1h3lBfdmdC1cJeEGjY9BD/qDIvg2l0
+         uilVxTPYaNEByY9uKABiFi3sTDD0ymcf6yMySxgmIUH1oBHm2osgh0mR6TS0bf0sbamJ
+         aVxPvpuZscq9t3UdFiulRCGro2KO66xOe1DHQgD1byqYAeFu11vxCNHqtgF2MxAIW3Ha
+         rqMh0XdN3+48/Exj9zmqJIMC7tRr/nqZO9amK52tc+pjVGb72JV/mN/qQ1POmLJIBZcP
+         acShnn3JcKiEm+6D9rp9b/I1FDDhqCe4YuiekmNXY8+TLhib9gzG56011m+24+dFnmzp
+         QWNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719996325; x=1720601125;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tnVZx57sQWGSbnJ3zKpnLdMuefpCU4Ga5SRMPYlDzsY=;
+        b=byVODJISZ4HMoFqDrGMSkmvzF9/oETsV1j3iWafW/pD5wfDKraH5+DtJHDFGV18nQh
+         X5csll/0gkg+ePL5mqz7uFuYuMa7rDw2gzXcPguZk9qT1w0c+TMmTWtAI+U5DB1HY6Dj
+         5ZNlvkA7f6wvoo1FCzy3DxiOeVhx+yoWT3rVafSxlXc0B884R023H/QQsU2XCxHpriNM
+         OcY1Y0vg2XrcarkKy8OtuK4GOgP5Cm5A3ZzS4VubdZrwwJIdHfoL2kbq64lhoVj/TAzQ
+         IEwdYQPqb/zQ36W2rmAvw7b4fK7KIAjt8ot9hKLCf9esnKgdGb2qZdIFRmi8Cq3s8w15
+         J0Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyL10MBmq72Bl3yoryJzjxfhhBWIEzaDF/7eCuC3aXU8tKr0bCWX/mNJhZs7T+Rp+VoOloh46WG8FRVynVXJRTFVuMlZh2nz1Ik2JD
+X-Gm-Message-State: AOJu0YwW+T4vp0GgIWzqx49zqH/OiHXoO7hkxPpjrfD4wnyiGO0kBs2r
+	Oj2S5zhnukMeV/MU/OqBfR23y6tM/dQNheZuaEIEEMa5pbjPxldx2LhOks+rt2iLJcApbw2wLBM
+	KdnaXxcqS3jGOdZpOScd/1Kjlts20QYcJGN1OOw==
+X-Google-Smtp-Source: AGHT+IFDOft8KfHB385vJiuHxLREIXeKetDDnVDU4joFIwEfhZmdo3TLOETTixZXyQ8sBTgvse4OPp+ty0rpbAhQjKU=
+X-Received: by 2002:a2e:be13:0:b0:2ee:4ec2:8232 with SMTP id
+ 38308e7fff4ca-2ee5e3c35e6mr75111591fa.25.1719996325489; Wed, 03 Jul 2024
+ 01:45:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/6] drm/radeon: add helper rdev_to_drm(rdev)
-To: Wu Hoi Pok <wuhoipok@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240630165949.117634-1-wuhoipok@gmail.com>
- <20240630165949.117634-5-wuhoipok@gmail.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20240630165949.117634-5-wuhoipok@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-0.999];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[amd.com,gmail.com,ffwll.ch,lists.freedesktop.org,vger.kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Score: -4.29
-X-Spam-Level: 
+References: <20240703083046.95811-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240703083046.95811-1-krzysztof.kozlowski@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 3 Jul 2024 10:45:14 +0200
+Message-ID: <CAMRc=MeW2ztyYkftJBy_ac30H+w0LinR9BFAmHMdsfQXa1EgFA@mail.gmail.com>
+Subject: Re: [PATCH] firmware: qcom: tzmem: simplify returning pointer without cleanup
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-Am 30.06.24 um 18:59 schrieb Wu Hoi Pok:
-> Add helper rdev_to_drm(rdev), similar to amdgpu, most function should
-> access the "drm_device" with "rdev_to_drm(rdev)" instead, where amdgpu has
-> "adev_to_drm(adev)". It also makes changing from "*drm_device" to "drm_device"
-> in "radeon_devicce" later on easier.
+On Wed, Jul 3, 2024 at 10:31=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> Signed-off-by: Wu Hoi Pok <wuhoipok@gmail.com>
-
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-Tested-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-
+> Use 'return_ptr' helper for returning a pointer without cleanup for
+> shorter code.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->   drivers/gpu/drm/radeon/radeon.h | 5 +++++
->   1 file changed, 5 insertions(+)
+>  drivers/firmware/qcom/qcom_tzmem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/radeon.h
-> index 0999c8eaae94..ae35c102a487 100644
-> --- a/drivers/gpu/drm/radeon/radeon.h
-> +++ b/drivers/gpu/drm/radeon/radeon.h
-> @@ -2476,6 +2476,11 @@ void r100_io_wreg(struct radeon_device *rdev, u32 reg, u32 v);
->   u32 cik_mm_rdoorbell(struct radeon_device *rdev, u32 index);
->   void cik_mm_wdoorbell(struct radeon_device *rdev, u32 index, u32 v);
->   
-> +static inline struct drm_device *rdev_to_drm(struct radeon_device *rdev)
-> +{
-> +	return rdev->ddev;
-> +}
-> +
->   /*
->    * Cast helper
->    */
+> diff --git a/drivers/firmware/qcom/qcom_tzmem.c b/drivers/firmware/qcom/q=
+com_tzmem.c
+> index 5d526753183d..ab156ab3a6b4 100644
+> --- a/drivers/firmware/qcom/qcom_tzmem.c
+> +++ b/drivers/firmware/qcom/qcom_tzmem.c
+> @@ -242,7 +242,7 @@ qcom_tzmem_pool_new(const struct qcom_tzmem_pool_conf=
+ig *config)
+>                 }
+>         }
+>
+> -       return no_free_ptr(pool);
+> +       return_ptr(pool);
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_tzmem_pool_new);
+>
+> --
+> 2.43.0
+>
+>
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+I'm not a big fan of this one. Same with any macro affecting flow
+control statements.
 
+But since it's there and the patch is not wrong:
+
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
