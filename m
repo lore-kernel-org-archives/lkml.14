@@ -1,89 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B651747F;
-	Wed,  3 Jul 2024 22:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC5B13C8EE;
+	Wed,  3 Jul 2024 22:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720046464; cv=none; b=anQjKRQ06VG8+XqyacAoqz/vm1uoEAo9NNRpHbGQ7WI3luwOQBzA4RCuBxLgG5H7zKS4aOADy5HefBqhv7t+CqLuV55gt9M+HzTJ9VBogaAdpd8kKzhyKsODZWg8rfMOJBydDSTUmkdLrboK9RiJPjkVXGc88h0uLLGVWzu0QYM=
+	t=1720046735; cv=none; b=RX42gvkdmeYKH0hM9wzl9HHO6GQ4/mCp8NXMH7MRsV4brwLWtc1653iLohUvCqmXGfbLn1x4Z6iQmpYvTAntgu0RlJL5EvA2XW9uuep4muWHOX6muT5ZkhGJPDEWoea0B2E4dOYqQVcBDJmMBArigUnZsmOu9eOtHi1s+lTByRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720046464; c=relaxed/simple;
-	bh=c4HcoAL5OGlqvu44M2cW9EqVDsE9T7akesnEeOLwWmM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KJUTi9Csw0HnNe0yBM/CSB944TwmJId/oJUCN5tA0yLy+euTjJCMgQQLxA7loJOkUMOsdlbQmP2QNFpmfj6d2/ypbp+LQR8hLBryjVHNJqA2C6/9vUJqMquDMZ6EZJ6x3pnVDfx4CtDzYlXBJdwew7b8HNTvWYf6oyORHC6dBgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pwmglolh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720046735; c=relaxed/simple;
+	bh=fNMayVtc/Uc85z5+2aY88Dp4v3+e6dcT6NuOkFfetOQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gln6XAUyV7T83yah44oGau8v6M9pdKrnEGbu1yEwlbIOYq35qefbH6zPjb62/bCwitKxrtR/8OnMJFMeyygDaqgVMkZNMHpF3sVrWAiEGoPqP4gRRSUj3hw09NJy4AWvYVdt1NdRWsOfPF0sQ8Oswxg5g7fHoZ26weRgmZyu01Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Hh8ILOF2; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pwmglolh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84136C2BD10;
-	Wed,  3 Jul 2024 22:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720046464;
-	bh=c4HcoAL5OGlqvu44M2cW9EqVDsE9T7akesnEeOLwWmM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pwmglolhVpLNfs0ZBftSKiiOYy+9lkPvyaGMwiLqTLTXfHyXWdU0MJWDS4L4Pr4mE
-	 jua7AgBjYqSnPW1hKfrqRXyQF7gp44u6zWZ/sTV13ECTJiqbe5aBJpuUtuLe43t+tI
-	 j0ZKy4bCpocob3tFDKlA9mN0fevvSNjSuX+hkBfwqG2Q+Xud1D6qQvTTbi1/CafxiD
-	 Ubb0C6PpOBucKKMIQ+bjrmKZuLeyHgxu5j4C+tluDyH7AIue5mxQrtU4z/NCBdnq8j
-	 +4W1KZd7IMfGSawxT1LiA7S9+ZEdNdwfTL0tU/P2qsdT11q6f9ltyW1lrheeFVsKQo
-	 VBbqssdmOlqEQ==
-Date: Wed, 3 Jul 2024 15:41:01 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack
- traces captured in uprobe
-Message-ID: <20240703224101.36r32g7j2atskidg@treble>
-References: <20240702171858.187562-1-andrii@kernel.org>
- <20240702233554.slj6kh7dn2mc2w4n@treble>
- <20240702233902.p42gfhhnxo2veemf@treble>
- <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
- <20240703011153.jfg6jakxaiedyrom@treble>
- <CAEf4BzbzsKLtzPUOhby0ZOM3FskE0q4bYx-o5bB4P=dVBVPSNw@mail.gmail.com>
- <20240703061119.iamshulwf3qzsdu3@treble>
- <CAEf4Bza6YdQ5HCcuPozOwVx75UrcyZL_1DGnYrJ=2pz=DxJpPQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Hh8ILOF2"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 1BD584189E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1720046731; bh=uFWhK3aDyzozkwTo58fIzcrGNoSCUI7ocMsW/Sf0duk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Hh8ILOF29WdbXTVT0gqn5ghjTXibp8yUHv7SRPUaN5wIOaXiNGINNu0sbvXgvuiOy
+	 dCVvO89UJm26X81OKE/Z2h45g0lp44Y8wSzEKvHNBiFgx0vU9CjCL5afa/fTpCvmlh
+	 Ac73SgKXCJHXJpPVYiS4tBHv06WrZHVzmwAXiolg1FTWHSdmHpf6+4TK/jMnOml6Gz
+	 IlcNFhZ/6DMWJqjflelFqctNoPWNH6bFtKP6auakuoXjSl/b0tE58WdIlqHvdSDyor
+	 3aZDNVApgaH5lx9Jym/lRYIkAQS6/ohCU2AYFSKx5XR1HyW+CShhGSCp5AmbXyLnoH
+	 846u086m/eZNw==
+Received: from localhost (c-24-9-249-71.hsd1.co.comcast.net [24.9.249.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 1BD584189E;
+	Wed,  3 Jul 2024 22:45:31 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Dongliang Mu <dzm91@hust.edu.cn>, Alex Shi <alexs@kernel.org>, Yanteng
+ Si <siyanteng@loongson.cn>, Dongliang Mu <dzm91@hust.edu.cn>, Konstantin
+ Ryabitsev <konstantin@linuxfoundation.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] docs/zh_CN: add process/researcher-guidelines
+ Chinese translation
+In-Reply-To: <20240614032211.241899-1-dzm91@hust.edu.cn>
+References: <20240614032211.241899-1-dzm91@hust.edu.cn>
+Date: Wed, 03 Jul 2024 16:45:30 -0600
+Message-ID: <875xtmt7qt.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAEf4Bza6YdQ5HCcuPozOwVx75UrcyZL_1DGnYrJ=2pz=DxJpPQ@mail.gmail.com>
+Content-Type: text/plain
 
-On Wed, Jul 03, 2024 at 01:23:39PM -0700, Andrii Nakryiko wrote:
-> > >  [0] https://docs.google.com/presentation/d/1k10-HtK7pP5CMMa86dDCdLW55fHOut4co3Zs5akk0t4
-> >
-> > I don't seem to have permission to open it.
-> >
-> 
-> Argh, sorry, it's under my corporate account which doesn't allow
-> others to view it. Try this, I "published" it, let me know if that
-> still doesn't work:
-> 
->   [0] https://docs.google.com/presentation/d/e/2PACX-1vRgL3UPbkrznwtNPKn-sSjvan7tFeMqOrIyZAFSSEPYiWG20JGSP80jBmZqGwqMuBGVmv9vyLU4KRTx/pub
+Dongliang Mu <dzm91@hust.edu.cn> writes:
 
-The new link doesn't work either :-)
+> Finish the translation of researcher-guidelines and add it to the
+> index file.
+>
+> Update to commit 27103dddc2da ("Documentation: update mailing list
+> addresses")
+>
+> Reviewed-by: Alex Shi <alexs@kernel.org>
+> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+> ---
+> v2->v3: modify _cn_submittingpatches to _cn_researcherguidelines
+>         according to jon
+> v1->v2: Revise description suggested by Alex Shi
+>         Add a commit id to keep track of the translation status
+>         Add a new line at the end of researcher-guidelines.rst
+>  .../translations/zh_CN/process/index.rst      |   2 +-
+>  .../zh_CN/process/researcher-guidelines.rst   | 129 ++++++++++++++++++
+>  2 files changed, 130 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/translations/zh_CN/process/researcher-guidelines.rst
 
-> > > Few questions, while we are at it. Does it mean that
-> > > perf_callchain_user() will support working from sleepable context and
-> > > will wait for data to be paged in? Is anyone already working on this?
-> > > Any pointers?
-> >
-> > I had a prototype here:
-> >
-> >   https://lkml.kernel.org/lkml/cover.1699487758.git.jpoimboe@kernel.org
-> >
-> > Hopefully I can get started on v2 soon.
-> 
-> Ok, so you are going to work on this. Please cc me on future revisions
-> then. Thanks!
+Applied, thanks.
 
-Will do!
-
--- 
-Josh
+jon
