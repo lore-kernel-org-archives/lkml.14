@@ -1,245 +1,129 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9DB413D2BE
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF2B1428F5
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720001275; cv=none; b=HRqltLsRkdqRCji8mLggjydpnjIoLD/a847N0hrybPRU2JgvW8gW+QXcOjLRMDb0HVlghdDiwIaw6sGlAgK0NBUPiD8wUwA/QRPoBuYUQaert+uw6h0bbJlGWziAjN3HhCyGB3T0A4zK4do6R/Yo6EwhNzh/UdbTs6uKruZdO8k=
+	t=1720001298; cv=none; b=scaP+YEPhpZicTH83UfRhQSQnTM6MtX4WE6PPm1/YOPFczU6wMbC1YrW4OYqzT8WQ4pn/C6N1pd9bHh9BZZK36V+HekgHXdK6ci0YFGg7FjOkAiKUnsM0NBx+n0vtGDZwcuT6lSLCIuExQA4Y5p0KYlKKD7Ul8P2QpmabJ//I+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720001275; c=relaxed/simple;
-	bh=rx5RnTU+kGBmxxatiIrk+TX3fJ4/GceRbwqeJB9OxDM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qWAiyb+Ttk8dXXvLRhHay/C33xOk5oysih18hS6MA0yEinneEYWTJzHzeJ8IqBA163ydjAE7mmqGYM6M7ZHj3Z4WX9MwBnpXM8PpBTCu3mPjCM58E+uxf8RDOBv5xVFZnNzKXBu8ZP2v6YMQ2x5xmcnFJ6ZaWD206Sum9s3O4sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B23A1007;
-	Wed,  3 Jul 2024 03:08:18 -0700 (PDT)
-Received: from e130256.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D507F3F766;
-	Wed,  3 Jul 2024 03:07:52 -0700 (PDT)
-From: Hongyan Xia <hongyan.xia2@arm.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] sched/uclamp: Delegate uclamp to each sched_class
-Date: Wed,  3 Jul 2024 11:07:47 +0100
-Message-Id: <45e58e2fe1f72d6c095c8824c7da696edfd80bd7.1719999165.git.hongyan.xia2@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1719999165.git.hongyan.xia2@arm.com>
-References: <cover.1719999165.git.hongyan.xia2@arm.com>
+	s=arc-20240116; t=1720001298; c=relaxed/simple;
+	bh=ypzrZcIwZiiS+8SrhLAXiVNNIok0NmG+vdJlnoa5bEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TfXb5nfvI+xBG2QhhER1+PJimtKH03S+W3I7CeL0uZKe/7w5oQUA8uc2l/Vgk8dudcnr5CfTy08LtYXaV7e5Pg4uAHv/jFdT8tMoEJWvqdRXZj27Pz1Vk3VZ2iJLmSAytLYQ+wtrBKyPzHvAdW5qzi16e9DCnQTxv3YeKfRh4Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jJoCd2Ty; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jJoCd2Ty"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ec3f875e68so57922211fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 03:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720001295; x=1720606095; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4k83HUkLUmDIGlVbWOWQ6orsM1XoadeMJUgBNXrUMAg=;
+        b=jJoCd2TyYmA+46A2tieUao2dTPBDhYoOJREsCpr7kaidkDboUVRfE7ZyCorFyHuFnk
+         cvncfKMCA57mM/6HBHMI16aUHlKWRod7Nuf9HIPzLBbqkWsgJxbRQIA+c/TcmC/KzyIp
+         DGg5AJ3MKOb+aVstjiNHLfvnzj6ZHD+Ynl354q7W4rYs2S/gDNi6c0przU3BKthcFxSC
+         vvooZR0T9VEp/NxeofAcQw7s2GENN7zIZa5SoVpreCTlsNhJczN9FXfTLwp5f0F0q7Oi
+         kQAsxvarjMHFmoyOtkEIJwHK7HtUr3IVfYYuSAU81iZW+EY/xyY+X4LsOkNT5Mq5c5dt
+         aiKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720001295; x=1720606095;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4k83HUkLUmDIGlVbWOWQ6orsM1XoadeMJUgBNXrUMAg=;
+        b=C158yg+zwQKXGy6UfgyoTXWV+69GbdR3F7prxY0+Wqrgt7CDM5S4vSz8v76vXzZxB+
+         rOfgpeLCk1OekotosCbVqrk7T5JaNHmr4a8WA+oJY0s5liWEVOFHhele4yjelegYPXq5
+         4ee+f/6bqwzFj4+yPySV8WX+XprnGJe3FAFlr8tJ/DvFg9jTdO73Zf2e5WWl12ZCH5u0
+         FLxeWQ/jZGXIsgu07+BEwaw5yqk7xplRZp22ZygLBKDxv7ZPP4DvyPjw3ZFVZpb4jkIY
+         P9dfw/SV0XyfOESNCet/p7K/rP9zHhE9my/r97zNWQ/m8A4CAiHWgI0L1brMzl6NPYzt
+         /Euw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTRKkfJuyuw4RvIStSfk0MR/w92XxhkuD37MVwY2Hda6U00qfKPmupOMpJl1EFfgm535/3IooOZQ85J1lV9bbCyzBtbGS8T4TIX4jI
+X-Gm-Message-State: AOJu0YxVHWVb/9wNkBt0asfGW6MXm9mCZX8wgulQjCFnbHoEM3eNc3LZ
+	TmI62m8HQcqFiKVIDVDSpkGbGQB9LllbgyeNrugJPqvNaTY570x5KW86DcofdR8=
+X-Google-Smtp-Source: AGHT+IFeGjoeFVuYs4mjQ5B1qszzT/eYdaDEn12VXFnuiHjLpsvLv38GLADABzzvIgEg3uJdpUVMZw==
+X-Received: by 2002:a2e:a813:0:b0:2ee:6b86:b0ab with SMTP id 38308e7fff4ca-2ee6b86b2b9mr66901001fa.20.1720001293291;
+        Wed, 03 Jul 2024 03:08:13 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee8758e4c2sm748241fa.110.2024.07.03.03.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 03:08:12 -0700 (PDT)
+Date: Wed, 3 Jul 2024 13:08:11 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Abhishek Sahu <absahu@codeaurora.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Ajit Pandey <quic_ajipan@quicinc.com>, 
+	Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, 
+	Jagadeesh Kona <quic_jkona@quicinc.com>, stable@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v2 0/6] clk: qcom: sm8150: Add camera clock controller
+ support for SM8150
+Message-ID: <qf6vv2eyvhl74qylx3da5c6wa5vzz726mnwi4dflehlpfubqwd@e522wwslmgyn>
+References: <20240702-camcc-support-sm8150-v2-0-4baf54ec7333@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240702-camcc-support-sm8150-v2-0-4baf54ec7333@quicinc.com>
 
-uclamp-related operations are written in core.c in a way that may
-suggest it is a global thing regardless of sched_class, but we end up
-checking sched_class->uclamp_enabled, so in reality it is sched_class
-specific anyway.
+On Tue, Jul 02, 2024 at 09:20:38PM GMT, Satya Priya Kakitapalli wrote:
+> Add camcc support and Regera PLL ops. Also, fix the pll post div mask.
+> 
+> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> ---
+> Changes in v2:
+> - As per Konrad's comments, re-use the zonda pll code for regera, as
+>   both are mostly same.
+> - Fix the zonda_set_rate API and also the pll_post_div shift used in
+>   trion pll post div set rate API
+> - Link to v1: https://lore.kernel.org/r/20240229-camcc-support-sm8150-v1-0-8c28c6c87990@quicinc.com
+> 
+> ---
+> Satya Priya Kakitapalli (5):
+>       clk: qcom: alpha-pll: Fix the pll post div mask and shift
+>       clk: qcom: clk-alpha-pll: Update set_rate for Zonda PLL
+>       dt-bindings: clock: qcom: Add SM8150 camera clock controller
+>       clk: qcom: Add camera clock controller driver for SM8150
+>       arm64: dts: qcom: Add camera clock controller for sm8150
+> 
+> Taniya Das (1):
+>       clk: qcom: clk-alpha-pll: Add support for Regera PLL ops
+> 
+>  .../bindings/clock/qcom,sm8150-camcc.yaml          |   77 +
+>  arch/arm64/boot/dts/qcom/sa8155p.dtsi              |    4 +
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi               |   13 +
+>  drivers/clk/qcom/Kconfig                           |    9 +
+>  drivers/clk/qcom/Makefile                          |    1 +
+>  drivers/clk/qcom/camcc-sm8150.c                    | 2159 ++++++++++++++++++++
+>  drivers/clk/qcom/clk-alpha-pll.c                   |   56 +-
+>  drivers/clk/qcom/clk-alpha-pll.h                   |    5 +
+>  include/dt-bindings/clock/qcom,sm8150-camcc.h      |  135 ++
+>  9 files changed, 2455 insertions(+), 4 deletions(-)
+> ---
+> base-commit: 20af1ca418d2c0b11bc2a1fe8c0c88f67bcc2a7e
 
-Remove sched_class->uclamp_enabled and simply delegate uclamp to
-sched_class->{enqueue,dequeue}_task(). This also removes extra
-uclamp_enabled checks in uclamp_rq_{inc,dec}().
+20240228 is very very old. Please don't base your changes on historical
+linux-next trees. Currently your patchset doesn't even apply cleanly.
 
-No functional changes for fair and RT.
+> change-id: 20240229-camcc-support-sm8150-d3f72a4a1a2b
+> 
+> Best regards,
+> -- 
+> Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> 
 
-Signed-off-by: Hongyan Xia <hongyan.xia2@arm.com>
----
- kernel/sched/core.c  | 14 ++------------
- kernel/sched/ext.c   |  4 ----
- kernel/sched/fair.c  |  6 ++----
- kernel/sched/rt.c    |  7 +++----
- kernel/sched/sched.h | 15 +++++++++++----
- 5 files changed, 18 insertions(+), 28 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 1092955a7d6e..5c5e5aefca81 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1671,7 +1671,7 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
- 	}
- }
- 
--static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-+void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- {
- 	enum uclamp_id clamp_id;
- 
-@@ -1684,9 +1684,6 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- 	if (!static_branch_unlikely(&sched_uclamp_used))
- 		return;
- 
--	if (unlikely(!p->sched_class->uclamp_enabled))
--		return;
--
- 	for_each_clamp_id(clamp_id)
- 		uclamp_rq_inc_id(rq, p, clamp_id);
- 
-@@ -1695,7 +1692,7 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- 		rq->uclamp_flags &= ~UCLAMP_FLAG_IDLE;
- }
- 
--static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
-+void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
- {
- 	enum uclamp_id clamp_id;
- 
-@@ -1708,9 +1705,6 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
- 	if (!static_branch_unlikely(&sched_uclamp_used))
- 		return;
- 
--	if (unlikely(!p->sched_class->uclamp_enabled))
--		return;
--
- 	for_each_clamp_id(clamp_id)
- 		uclamp_rq_dec_id(rq, p, clamp_id);
- }
-@@ -1949,8 +1943,6 @@ static void __init init_uclamp(void)
- }
- 
- #else /* !CONFIG_UCLAMP_TASK */
--static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
--static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
- static inline void uclamp_fork(struct task_struct *p) { }
- static inline void uclamp_post_fork(struct task_struct *p) { }
- static inline void init_uclamp(void) { }
-@@ -1990,7 +1982,6 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- 		psi_enqueue(p, (flags & ENQUEUE_WAKEUP) && !(flags & ENQUEUE_MIGRATED));
- 	}
- 
--	uclamp_rq_inc(rq, p);
- 	p->sched_class->enqueue_task(rq, p, flags);
- 
- 	if (sched_core_enabled(rq))
-@@ -2010,7 +2001,6 @@ void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
- 		psi_dequeue(p, flags & DEQUEUE_SLEEP);
- 	}
- 
--	uclamp_rq_dec(rq, p);
- 	p->sched_class->dequeue_task(rq, p, flags);
- }
- 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index ae9ec8f542f2..0b120104a7ce 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -3520,10 +3520,6 @@ DEFINE_SCHED_CLASS(ext) = {
- 	.prio_changed		= prio_changed_scx,
- 
- 	.update_curr		= update_curr_scx,
--
--#ifdef CONFIG_UCLAMP_TASK
--	.uclamp_enabled		= 1,
--#endif
- };
- 
- static void init_dsq(struct scx_dispatch_q *dsq, u64 dsq_id)
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d59537416865..a861fafd53f9 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6752,6 +6752,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	int idle_h_nr_running = task_has_idle_policy(p);
- 	int task_new = !(flags & ENQUEUE_WAKEUP);
- 
-+	uclamp_rq_inc(rq, p);
- 	/*
- 	 * The code below (indirectly) updates schedutil which looks at
- 	 * the cfs_rq utilization to select a frequency.
-@@ -6846,6 +6847,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	int idle_h_nr_running = task_has_idle_policy(p);
- 	bool was_sched_idle = sched_idle_rq(rq);
- 
-+	uclamp_rq_dec(rq, p);
- 	util_est_dequeue(&rq->cfs, p);
- 
- 	for_each_sched_entity(se) {
-@@ -13227,10 +13229,6 @@ DEFINE_SCHED_CLASS(fair) = {
- #ifdef CONFIG_SCHED_CORE
- 	.task_is_throttled	= task_is_throttled_fair,
- #endif
--
--#ifdef CONFIG_UCLAMP_TASK
--	.uclamp_enabled		= 1,
--#endif
- };
- 
- #ifdef CONFIG_SCHED_DEBUG
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 63e49c8ffc4d..f0b3ba5e8867 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -1480,6 +1480,8 @@ enqueue_task_rt(struct rq *rq, struct task_struct *p, int flags)
- {
- 	struct sched_rt_entity *rt_se = &p->rt;
- 
-+	uclamp_rq_inc(rq, p);
-+
- 	if (flags & ENQUEUE_WAKEUP)
- 		rt_se->timeout = 0;
- 
-@@ -1496,6 +1498,7 @@ static void dequeue_task_rt(struct rq *rq, struct task_struct *p, int flags)
- {
- 	struct sched_rt_entity *rt_se = &p->rt;
- 
-+	uclamp_rq_dec(rq, p);
- 	update_curr_rt(rq);
- 	dequeue_rt_entity(rt_se, flags);
- 
-@@ -2680,10 +2683,6 @@ DEFINE_SCHED_CLASS(rt) = {
- #ifdef CONFIG_SCHED_CORE
- 	.task_is_throttled	= task_is_throttled_rt,
- #endif
--
--#ifdef CONFIG_UCLAMP_TASK
--	.uclamp_enabled		= 1,
--#endif
- };
- 
- #ifdef CONFIG_RT_GROUP_SCHED
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 963a2fa180ad..619b1cc972bd 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2340,10 +2340,6 @@ extern s64 update_curr_common(struct rq *rq);
- 
- struct sched_class {
- 
--#ifdef CONFIG_UCLAMP_TASK
--	int uclamp_enabled;
--#endif
--
- 	void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
- 	void (*dequeue_task) (struct rq *rq, struct task_struct *p, int flags);
- 	void (*yield_task)   (struct rq *rq);
-@@ -3246,6 +3242,9 @@ uclamp_se_set(struct uclamp_se *uc_se, unsigned int value, bool user_defined)
- 	uc_se->user_defined = user_defined;
- }
- 
-+void uclamp_rq_inc(struct rq *rq, struct task_struct *p);
-+void uclamp_rq_dec(struct rq *rq, struct task_struct *p);
-+
- #else /* !CONFIG_UCLAMP_TASK: */
- 
- static inline unsigned long
-@@ -3283,6 +3282,14 @@ static inline bool uclamp_rq_is_idle(struct rq *rq)
- 	return false;
- }
- 
-+static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-+{
-+}
-+
-+static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
-+{
-+}
-+
- #endif /* !CONFIG_UCLAMP_TASK */
- 
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
 -- 
-2.34.1
-
+With best wishes
+Dmitry
