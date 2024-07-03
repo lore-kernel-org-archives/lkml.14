@@ -1,162 +1,253 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3197A13B29F;
-	Wed,  3 Jul 2024 08:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B81413B584;
+	Wed,  3 Jul 2024 08:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719996819; cv=none; b=ufIyrta4i+LHkw1BGIGQ/ygH8/tMMUr8POSnOn5A43eY02JW5vSqR1VGW0QgyfVDcmWMdUqDKQNrK+0MqyXNi5difZUMI6e5mhUqYAVsb07N80rJYWxhUmTygpGLYT8i/PeXl7Hbhs26dEt+Wo/JBNYTir/noBeRxYKqenmw/q4=
+	t=1719996865; cv=none; b=PufuwjkgxfGT97r6R6U6WqFBastNbBfrDZRzL/w9Wq0Mg6J8eXDq9si7Sb7HIhpRkqUNInsQ9Ztc0Rw4igZ9wzlSiyYrZYBJB7smeqd2i95w5iuKoOf5jVf2VUx/kA0gcDe42KxgYnxKBFoUIYGek6Ii7va0ozcKTI7xlubzsmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719996819; c=relaxed/simple;
-	bh=uJy6npIbvFhICTmqeRyyXfHKUe2Xu5teyWK4mPdnf60=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=E3U5Y7+tlNYELH6EjJm4pdcPc3D8neyml+JOUUKOwGj0HHiZ2Z6XiUMtz44dh62kbpw6GOpEc1tQ7C/m0yEkAjT/tqYHiBWVfvwYgEL14xnyRoHTC6eqtyKqhalrGWNEW8GrEBNPLP03Xx00N5C6cd/YRNyZ5ZGPL4mUsyFBHBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eHa7f4Zn; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eHa7f4Zn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719996817; x=1751532817;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=uJy6npIbvFhICTmqeRyyXfHKUe2Xu5teyWK4mPdnf60=;
-  b=eHa7f4ZnhLALGa9tUV6UJHkwmnWMf0aDsTb+Xr4JAv1c9CW8DWGTKgny
-   k4All4eSziET0832k7b1Xq7luAHwcqigqhvg57Fci0h9hetf7+dGAjCvw
-   pBHuX/kqGhhbwJO+NEF1+qrAOgc0GyvV+zg/efBO9DBDXk+H++3aJ/xUN
-   lRorR9e7Zk7Q1uXrQ08TJjUkRcuJXoutq0K6FjPAvikO4mJzh2koaPpp8
-   P3Dbe+7Q4Go2RQ4TYQ9UPRTg/o+lvQo4dnNtzeJaPKh4+RGeCQAgux3GS
-   Gdv5bnyA+Nxsk9B4qTTZevQOC4YYgjI0W1EYdELlkEOOKtzVFpNdTrQp/
-   w==;
-X-CSE-ConnectionGUID: 7CGM4lhAS2a7NizhwIac+A==
-X-CSE-MsgGUID: dOitDEatTra5Z2Sra93a+Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="27818576"
-X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="scan'208";a="27818576"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 01:53:36 -0700
-X-CSE-ConnectionGUID: TNLyrCPHR5SOEUdQfrNb3w==
-X-CSE-MsgGUID: b4l4Pq1yTnWXfVH4a1AjFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="scan'208";a="50633629"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 01:53:31 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>,  Gregory Price
- <gourry.memverge@gmail.com>,  <aneesh.kumar@linux.ibm.com>,
-  <mhocko@suse.com>,  <tj@kernel.org>,  <john@jagalactic.com>,  Eishan
- Mirakhur <emirakhur@micron.com>,  Vinicius Tavares Petrucci
- <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
-  Alistair Popple <apopple@nvidia.com>,  Srinivasulu Thanneeru
- <sthanneeru@micron.com>,  SeongJae Park <sj@kernel.org>,  "Rafael J.
- Wysocki" <rafael@kernel.org>,  "Len Brown" <lenb@kernel.org>,  Andrew
- Morton <akpm@linux-foundation.org>,  "Dave Jiang" <dave.jiang@intel.com>,
-  Dan Williams <dan.j.williams@intel.com>,  <linux-acpi@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-mm@kvack.org>,  "Ho-Ren (Jack)
- Chuang" <horenc@vt.edu>,  "Ho-Ren (Jack) Chuang"
- <horenchuang@bytedance.com>,  "Ho-Ren (Jack) Chuang"
- <horenchuang@gmail.com>,  <linux-cxl@vger.kernel.org>,
-  <qemu-devel@nongnu.org>
-Subject: Re: [PATCH v2 1/1] memory tier: consolidate the initialization of
- memory tiers
-In-Reply-To: <20240702142535.00003dc0@Huawei.com> (Jonathan Cameron's message
-	of "Tue, 2 Jul 2024 14:25:35 +0100")
-References: <20240628060925.303309-1-horen.chuang@linux.dev>
-	<20240628060925.303309-2-horen.chuang@linux.dev>
-	<20240702142535.00003dc0@Huawei.com>
-Date: Wed, 03 Jul 2024 16:51:40 +0800
-Message-ID: <87a5iykgdf.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1719996865; c=relaxed/simple;
+	bh=woE19g9vPhpqXW1hrwIwclZfrMDdDIgvIF9jxblDFw8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=G+us8vYemZdNHZO44ntLSfCrXvRn8qzCHTDdIP8Hf1UYVrNJTv/rg7UHMrLnavmZNtkQ+JbXZpd80C4vRgz+PcIz2F7NyG1VHLGqdStbqO5zCpbuw22YpjZNGDEkVx9deKZY8ZbB1MjedvyPUws0yuHIaiV9ftjwbAkFAu0w108=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WDYPJ0CYkz1T4w3;
+	Wed,  3 Jul 2024 16:49:40 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 370901402CE;
+	Wed,  3 Jul 2024 16:54:13 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 3 Jul 2024 16:54:12 +0800
+Message-ID: <f04da18d-bded-fb21-301d-1a6dd6b3b6c7@huawei.com>
+Date: Wed, 3 Jul 2024 16:54:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
+ uretprobe trampoline
+From: "Liao, Chang" <liaochang1@huawei.com>
+To: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>
+CC: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <ast@kernel.org>,
+	<daniel@iogearbox.net>, <andrii@kernel.org>, <nathan@kernel.org>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>
+References: <20240619013411.756995-1-liaochang1@huawei.com>
+ <20240619143852.GA24240@redhat.com>
+ <7cfa9f1f-d9ce-b6bb-3fe0-687fae9c77c4@huawei.com>
+ <20240620083602.GB30070@redhat.com> <ZnPxFbUJVUQd80hs@krava>
+ <11ae956a-9d0c-ca80-c3a7-a16b2c53e737@huawei.com>
+In-Reply-To: <11ae956a-9d0c-ca80-c3a7-a16b2c53e737@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
+Hi Jiri and Oleg,
 
-> On Fri, 28 Jun 2024 06:09:23 +0000
-> "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev> wrote:
+在 2024/6/20 19:27, Liao, Chang 写道:
+> 
+> 
+> 在 2024/6/20 17:06, Jiri Olsa 写道:
+>> On Thu, Jun 20, 2024 at 10:36:02AM +0200, Oleg Nesterov wrote:
+>>> On 06/20, Liao, Chang wrote:
+>>>>
+>>>> However, when i asm porting uretprobe trampoline to arm64
+>>>> to explore its benefits on that architecture, i discovered the problem that
+>>>> single slot is not large enought for trampoline code.
+>>
+>> ah ok, makes sense now.. x86_64 has the slot big enough for the trampoline,
+>> but arm64 does not
+>>
+>>>
+>>> Ah, but then I'd suggest to make the changelog more clear. It looks as
+>>> if the problem was introduced by the patch from Jiri. Note that we was
+>>> confused as well ;)
+>>>
+>>> And,
+>>>
+>>> 	+	/* Reserve enough slots for the uretprobe trampoline */
+>>> 	+	for (slot_nr = 0;
+>>> 	+	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
+>>> 	+	     slot_nr++)
+>>>
+>>> this doesn't look right. Just suppose that insns_size = UPROBE_XOL_SLOT_BYTES + 1.
+>>> I'd suggest DIV_ROUND_UP(insns_size, UPROBE_XOL_SLOT_BYTES).
+>>>
+>>> And perhaps it would be better to send this change along with
+>>> uretprobe_trampoline_for_arm64 ?
+>>
+>> +1, also I'm curious what's the gain on arm64?
+> 
+> I am currently finalizing the uretprobe trampoline and syscall implementation on arm64.
+> While i have addressed most of issues, there are stiil a few bugs that reguire more effort.
+> Once these are fixed, i will use Redis to evaluate the performance gains on arm64. In the
+> next revision, i will submit a patchset that includes all relevant code changs, testcases
+> and benchmark data, which will allows a comprehensive review and dicussion.
 
-[snip]
+This is an update on the development of uretprobe syscall for ARM64 architecture.
 
->> @@ -875,8 +886,7 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
->>  
->>  static int __init memory_tier_init(void)
->>  {
->> -	int ret, node;
->> -	struct memory_tier *memtier;
->> +	int ret;
->>  
->>  	ret = subsys_virtual_register(&memory_tier_subsys, NULL);
->>  	if (ret)
->> @@ -887,7 +897,8 @@ static int __init memory_tier_init(void)
->>  				GFP_KERNEL);
->>  	WARN_ON(!node_demotion);
->>  #endif
->> -	mutex_lock(&memory_tier_lock);
->> +
->> +	guard(mutex)(&memory_tier_lock);
->
-> If this was safe to do without the rest of the change (I think so)
-> then better to pull that out as a trivial precursor so less noise
-> in here.
->
->>  	/*
->>  	 * For now we can have 4 faster memory tiers with smaller adistance
->>  	 * than default DRAM tier.
->> @@ -897,29 +908,9 @@ static int __init memory_tier_init(void)
->>  	if (IS_ERR(default_dram_type))
->>  		panic("%s() failed to allocate default DRAM tier\n", __func__);
->>  
->> -	/*
->> -	 * Look at all the existing N_MEMORY nodes and add them to
->> -	 * default memory tier or to a tier if we already have memory
->> -	 * types assigned.
->> -	 */
->> -	for_each_node_state(node, N_MEMORY) {
->> -		if (!node_state(node, N_CPU))
->> -			/*
->> -			 * Defer memory tier initialization on
->> -			 * CPUless numa nodes. These will be initialized
->> -			 * after firmware and devices are initialized.
->> -			 */
->> -			continue;
->> -
->> -		memtier = set_node_memory_tier(node);
->> -		if (IS_ERR(memtier))
->> -			/*
->> -			 * Continue with memtiers we are able to setup
->> -			 */
->> -			break;
->> -	}
->> -	establish_demotion_targets();
->> -	mutex_unlock(&memory_tier_lock);
->> +	/* Record nodes with memory and CPU to set default DRAM performance. */
->> +	nodes_and(default_dram_nodes, node_states[N_MEMORY],
->> +		  node_states[N_CPU]);
->
-> There are systems where (for various esoteric reasons, such as describing an
-> association with some other memory that isn't DRAM where the granularity
-> doesn't match) the CPU nodes contain no DRAM but rather it's one node away.
-> Handling that can be a job for another day though.
->
-> Why does this need to be computed here?  Why not do it in
-> hmat_set_default_dram_perf? Doesn't seem to be used anywhere else.
+I've recently completed a basic implementation of the uretprobe syscall and trampoline
+code for ARM64, with the uprobe syscall selftest passed. This allow me to revisit the
+performance benchmark using uretprobe. With running Redis benchmark a Kunpeng server,
+I observed a slight performance gain with the uretprobe syscall on ARM64. The performance
+test spawned a Redis-server and Redis-benchmark on seperate cores within the same NUMA
+node. The Redis-server handled each SET and GET request from Redis-benchmark which triggered
+three uretprobe events with attached bpftrace program that increments the counter.
+Here is the benchmark result:
 
-IMO, which node is default dram node is a general concept instead of
-HMAT specific.  So, I think that it's better to decide that in the
-general code (memory-tiers.c).
+On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Cores @ 2.4GHz :
 
->>  
->>  	hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRI);
->>  	return 0;
+-------------------------------------------------------------------------------
+Test case       |  No uretprobe |  uretprobe(breakpoint) |  uretprobe (syscall)
+===============================================================================
+Redis SET (RPS) |  47025        |  40619   -13.6%        |  40670   -13.5%
+-------------------------------------------------------------------------------
+Redis GET (RPS) |  46715        |  41426   -11.3%        |  41274   -11.6%
+-------------------------------------------------------------------------------
 
---
-Best Regards,
-Huang, Ying
+The detailed test scripts and bpf program are available upon any request.
+
+Additionally, I've attempted to optimize the implementation of the uretprobe syscall and
+trampoline, but the cause of the lower than expected performance gain compared to x86
+remains unclear. Further investigation is necessary to identify potentail bottlenecks or
+inefficiencies specific to ARM64. It is grateful for any insights or suggestions the
+community might have on the potential reasons for the performance difference between
+ARM64 and X86. The patch for the uretprobe syscall is attached below for reference.
+
+---------------------------%<----------------------------
+diff --git a/arch/arm64/kernel/probes/Makefile b/arch/arm64/kernel/probes/Makefile
+index 8e4be92e25b1..059f38c0857f 100644
+--- a/arch/arm64/kernel/probes/Makefile
++++ b/arch/arm64/kernel/probes/Makefile
+@@ -3,4 +3,5 @@ obj-$(CONFIG_KPROBES)		+= kprobes.o decode-insn.o	\
+ 				   kprobes_trampoline.o		\
+ 				   simulate-insn.o
+ obj-$(CONFIG_UPROBES)		+= uprobes.o decode-insn.o	\
++				   uprobes_trampoline.o		\
+ 				   simulate-insn.o
+diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
+index d49aef2657cd..632f97afd50f 100644
+--- a/arch/arm64/kernel/probes/uprobes.c
++++ b/arch/arm64/kernel/probes/uprobes.c
+@@ -5,12 +5,69 @@
+ #include <linux/highmem.h>
+ #include <linux/ptrace.h>
+ #include <linux/uprobes.h>
++#include <linux/syscalls.h>
+ #include <asm/cacheflush.h>
+
+ #include "decode-insn.h"
+
+ #define UPROBE_INV_FAULT_CODE	UINT_MAX
+
++extern char uretprobe_trampoline[] __read_mostly;
++extern char uretprobe_trampoline_end[] __read_mostly;
++extern char uretprobe_trampoline_svc[] __read_mostly;
++
++void *arch_uprobe_trampoline(unsigned long *psize)
++{
++	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
++	struct pt_regs *regs = task_pt_regs(current);
++
++	if (!compat_user_mode(regs)) {
++		*psize = uretprobe_trampoline_end - uretprobe_trampoline;
++		return uretprobe_trampoline;
++	}
++
++	*psize = UPROBE_SWBP_INSN_SIZE;
++	return &insn;
++}
++
++static unsigned long syscall_at_uprobe_trampoline(void)
++{
++	unsigned long tramp = uprobe_get_trampoline_vaddr();
++
++	return tramp + (uretprobe_trampoline_svc - uretprobe_trampoline);
++}
++
++SYSCALL_DEFINE0(uretprobe)
++{
++	int err;
++	struct pt_regs *regs = task_pt_regs(current);
++
++	if (compat_user_mode(regs))
++		goto sigill;
++
++	/* ensure uretprobe syscall invoked from uretprobe trampoline */
++	if ((regs->pc - AARCH64_INSN_SIZE) != syscall_at_uprobe_trampoline())
++		goto sigill;
++
++	/* restore the clobbered context used to invoke uretprobe syscall */
++	err = copy_from_user(&regs->regs[8], (void __user *)(regs->sp - 8),
++			     sizeof(regs->regs[8]));
++	if (err)
++		goto sigill;
++
++	uprobe_handle_trampoline(regs);
++
++	/* restore the real LR before return to the caller. */
++	regs->regs[30] = regs->pc;
++
++	/* use the real return value */
++	return regs->regs[0];
++
++sigill:
++	force_sig(SIGILL);
++	return -1;
++}
++
+ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+ 		void *src, unsigned long len)
+ {
+diff --git a/arch/arm64/kernel/probes/uprobes_trampoline.S b/arch/arm64/kernel/probes/uprobes_trampoline.S
+new file mode 100644
+index 000000000000..670d4d9e97ec
+--- /dev/null
++++ b/arch/arm64/kernel/probes/uprobes_trampoline.S
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * trampoline entry and return code for uretprobes.
++ */
++
++#include <linux/linkage.h>
++#include <asm/asm-bug.h>
++#include <asm/assembler.h>
++#include <asm/unistd.h>
++
++	.text
++
++SYM_CODE_START(uretprobe_trampoline)
++	str x8, [sp, #-8]
++	mov x8, #__NR_uretprobe
++
++SYM_CODE_START(uretprobe_trampoline_svc)
++	svc #0x000
++
++SYM_CODE_START(uretprobe_trampoline_end)
++	nop
+--------------------------->%----------------------------
+
+Thanks.
+
+> 
+>>
+>> thanks,
+>> jirka
+> 
+
+-- 
+BR
+Liao, Chang
