@@ -1,152 +1,170 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82CD17D8A6
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 15:09:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51A317FAB8
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 15:09:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019346; cv=none; b=ikkyZ5JVOhjw9Qy6Vr0oX6OhDiw7PQ2gVsHa2tu+OXB+OZ1L0+WGGRMWYLeVdOCWB+BMJe3ityjfQvwPVGVV77ErVIRbFeDjCx2yACEjOlP0HxTLD4s86+cbZvE3z6ynvk01DIW7945ixjMyfJRcGiDiJuf51qkr+G00J7a2X6g=
+	t=1720019391; cv=none; b=K1VbjQHwv9/kPACwGiwm2Ou9aICwrkYkAaxzcvO5B6otiJIOXW2nXhhPu7qvxNNPHkiIVuft0eEQr7XWXx6Zx+Mrnp+BdLQzc5HyEESnCtajAvsXkDFbdsxlMbI69+FCpGEMgxBTsbc/YwaG/+Xy603VjgFVKWUUVYF+KZPPlfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019346; c=relaxed/simple;
-	bh=jr1zoQlesMQk4r7o3HlIip0zDDWr+3fEo4jdfJsQNtU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GNVW7I+WIFtXJiBoZJguSJX9XZRagD0cJBR6gLkjySE1mJBInd6gfwyyKRYwfZ5tjl9ru5+drCFz9v1B51SwBrsPViMR46STRl2/Ar7yzrtQA6DaHjw23LG7EyQWablYS39cBkgj3v3cJltIEwZOg9iwRap17OJMwBtuePonWnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bEdJhdGI; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1720019391; c=relaxed/simple;
+	bh=fhpejWcF/vfLe6nwrakqQTsElpgre49BCBgEinb2+BE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n6aIZu8NJPrPa/bkt8GmhqpetUV6QdUYdj3o1PTP4jZRGVyEfliDEzLqCoSlNVJcSs1hgmkUJK/czRMQuB/UsS1USCx+cVnp2OSk8lfvxRHNG9Ni5H9JTWK/ykaQivYzyI3oM2y1JrjM/9Z8QBXimtAj8McKHrgi+KhjtEVC44c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e52F586N; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bEdJhdGI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e52F586N"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720019343;
+	s=mimecast20190719; t=1720019388;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hJxP5plkEqtGT2+Fyxc7Jfw1c1Ky2bpGqcVIJ84Skao=;
-	b=bEdJhdGIBtvLFgSi0C3HiAg3lD8r6PxNFzrQgUcFD7jv+qqy8tT8nQmYM0EiF6y3AGEZZz
-	FT3yYOGCQcQ9//imaVBzS/0b7guLnvfnRUVNP136zRNc55dMXnTMiOBp9d+r8TuBUcdbbO
-	YOqexfY7vXvcOazTyBdAa1qxsp2d5ig=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=OwJT/oF0rqnt+S31sg05vpTbadEupYIHlD2ocZCHgDI=;
+	b=e52F586NIB84ITfcy2V8nSvLTtElmJHPUfmPuuDiZd9zwPiNVk1909O1xNXgGTzV8Le+fH
+	NfFAbc7XZZDP6ym/1mQt81SWERqw/d1OeHPN3skISyh8yjK4EOlfgPJwLOywaShql0/OFx
+	kkwLXl5vT8l40vYZifvcvwpdCCsqzEM=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-63-zdMd7ErxNTa_ZaZDaN3BiA-1; Wed, 03 Jul 2024 11:09:01 -0400
-X-MC-Unique: zdMd7ErxNTa_ZaZDaN3BiA-1
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-701ef03180dso5021080a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 08:09:01 -0700 (PDT)
+ us-mta-353--Fczy5j2P8e4I-phLooPFQ-1; Wed, 03 Jul 2024 11:09:47 -0400
+X-MC-Unique: -Fczy5j2P8e4I-phLooPFQ-1
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4450544eaadso69205991cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 08:09:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720019341; x=1720624141;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hJxP5plkEqtGT2+Fyxc7Jfw1c1Ky2bpGqcVIJ84Skao=;
-        b=MxFR3YZSVrLueuUSojeKGW/SYunar27tsVgQd5fxQAxxI4Ls1bC0eddBQ+nh2Q69QG
-         kTAMBUp6qtcCNKYGStJKummp7q+fAfdNWZdGxlboMrvcNQ8g17E/t0Vc2t5fITnWUB64
-         GNTL9tvQbSd8YsmhBPPoxFhzYqus+qPsBrPNAx+G4zHmZ4FrvCN2AKbzvaaovlfBNnK6
-         j9wqbmGFbRtSvaBgw8Z1SUXkRXW7zHrldxIYpfdirL2NkCq2CjVJNBHEKGz9WrMFVzbS
-         3OF6rOKkykLqgZI142zfZMPw5KWHgd/so6Wj9JewrsS6ckVhoNXZL9PkY0GQCwEFDm82
-         /Y3g==
-X-Forwarded-Encrypted: i=1; AJvYcCX785MP4pic+/xoWONNqE0RUO+SZu9TPIiZXBRBdHkVKfTgMCxFN5Wk0IPOSgMMrnl6e+b0v3Fxx24TJHZrrJDG/dWFUmGHj5cL9/BH
-X-Gm-Message-State: AOJu0YyNjD516qLzRyDeP9UHJ6nO08YCfyqsIT3u+ZWk3E15ilY221ef
-	5QD6hmgvZBOIj07i3FZ/7xsn4s4/YwogBITRoj12EYsjObv3m4IRGCnHVU5Vc8Qv2qhcl7dMRxb
-	n0vRcOTWbgU9dOVrKAVvd5+PESnZOWHe1iFDsZMwpHkJ9ntMfXD1JKpdZWWUkmm79LhPOmSE1AK
-	HeTzw7puHSExhpjDxQzpDMzEmiOJfsbQss0orC
-X-Received: by 2002:a9d:68d8:0:b0:702:2550:4e2c with SMTP id 46e09a7af769-702255051e8mr4714181a34.14.1720019340957;
-        Wed, 03 Jul 2024 08:09:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHZVFTIESQ8I8751zJPQrUjeFOeuFR0etgZWdHlMXhxuGEMPW7TYqK1PmAoORoUI/N+D8s9cfchZbSZ1h971QY=
-X-Received: by 2002:a9d:68d8:0:b0:702:2550:4e2c with SMTP id
- 46e09a7af769-702255051e8mr4714149a34.14.1720019340676; Wed, 03 Jul 2024
- 08:09:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720019382; x=1720624182;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OwJT/oF0rqnt+S31sg05vpTbadEupYIHlD2ocZCHgDI=;
+        b=O4VWy7sI1Pl7YleE0xacC85ssCc7H7UbUUn2fpSjTNyDCbwd7HqjULXe6IHWfwCpCD
+         WgEsgEzJjeB2bXrZNggEIkpvUXwzfggTBtLr8PckpgdYCyiA2fDCUMpTbJUtTevjScuB
+         23EWakC/F+E3FvQ0ELLEYoPe7V1wxI2C48EvP6am7HAobLd5XdxCX10IP9UASGcYGE/2
+         F3LqehZkguxSCQw/tHHEwUjDJyGiQ5+XmbczV9f1OwX/8g0FGwScs1qzavcuJM/gf3nn
+         r7IEnTYAmohce2jWeLSrVcjKZcVqUSkZY/nynxjIigD4IwCJjBRuBZsb+T0XiuN0mlrr
+         sAqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQIBBBnGwmm+faNVcOGhFTbn3Zk2WlwppV5auYDBEsZDBTasyez270sO3xbYkxrAdEYWhBWKk+CAWt4IZ5duEtZbHUuxA+eAFiaPc2
+X-Gm-Message-State: AOJu0YyOWjGG5ChkVXsLW9q329+aMQgQ7biY+1qlDzbg+SZcqaQjfBj1
+	nMF7How8MpdqepHdQr6y2g0bN+CKIkjkwrj5ntfr24JQHCcpjRQbjG9JMjDCXC7Y2eYxfTbgk6Z
+	wqHTbhYdHD1NuXnr/y2wYzgP5rIT+KDg3mpIaJywkwFJEjnUikvhRs3ihufkfNQ==
+X-Received: by 2002:ac8:7d84:0:b0:444:b495:e94d with SMTP id d75a77b69052e-44662c99f4bmr119752941cf.3.1720019381980;
+        Wed, 03 Jul 2024 08:09:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8jWmpy5/3+Y1qV1pkAlEofbtK+RF6spB2E3wXQKII8gdILaaxSAxoLFic14g5Q4iTwcc7CA==
+X-Received: by 2002:ac8:7d84:0:b0:444:b495:e94d with SMTP id d75a77b69052e-44662c99f4bmr119751991cf.3.1720019381501;
+        Wed, 03 Jul 2024 08:09:41 -0700 (PDT)
+Received: from x1gen2nano ([2600:1700:1ff0:d0e0::40])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4465c4bf7ecsm43222571cf.80.2024.07.03.08.09.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 08:09:41 -0700 (PDT)
+Date: Wed, 3 Jul 2024 10:09:36 -0500
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com, 
+	sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au, 
+	davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org, 
+	joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org, 
+	thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org, 
+	linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org, vkoul@kernel.org, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com, 
+	robimarko@gmail.com, quic_gurus@quicinc.com, bartosz.golaszewski@linaro.org, 
+	kishon@kernel.org, quic_wcheng@quicinc.com, alim.akhtar@samsung.com, 
+	avri.altman@wdc.com, bvanassche@acm.org, agross@kernel.org, 
+	gregkh@linuxfoundation.org, quic_tdas@quicinc.com, robin.murphy@arm.com, 
+	daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com, 
+	quic_rjendra@quicinc.com, ulf.hansson@linaro.org, quic_sibis@quicinc.com, 
+	otto.pflueger@abscue.de, quic_rohiagar@quicinc.com, luca@z3ntu.xyz, 
+	neil.armstrong@linaro.org, abel.vesa@linaro.org, bhupesh.sharma@linaro.org, 
+	alexandre.torgue@foss.st.com, peppe.cavallaro@st.com, joabreu@synopsys.com, 
+	netdev@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
+	krzysztof.kozlowski@linaro.org, u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org, 
+	quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com, 
+	mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com, 
+	quic_bjorande@quicinc.com, quic_msarkar@quicinc.com, quic_devipriy@quicinc.com, 
+	quic_tsoni@quicinc.com, quic_rgottimu@quicinc.com, quic_shashim@quicinc.com, 
+	quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com, quic_aiquny@quicinc.com, 
+	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, kernel@quicinc.com
+Subject: Re: [PATCH 29/47] dt-bindings: net: qcom,ethqos: add description for
+ qcs9100
+Message-ID: <u5ekupjqvgoehkl76pv7ljyqqzbnnyh6ci2dilfxfkcdvdy3dp@ehdujhkul7ow>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703025850.2172008-30-quic_tengfan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626-stage-vdpa-vq-precreate-v2-0-560c491078df@nvidia.com> <20240626-stage-vdpa-vq-precreate-v2-9-560c491078df@nvidia.com>
-In-Reply-To: <20240626-stage-vdpa-vq-precreate-v2-9-560c491078df@nvidia.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 3 Jul 2024 17:08:24 +0200
-Message-ID: <CAJaqyWf-MRS9ahonzAvuHVQ4dfgm6FQPmqk_vKMiRag7XDB8Sw@mail.gmail.com>
-Subject: Re: [PATCH vhost v2 09/24] vdpa/mlx5: Rename init_mvqs
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240703025850.2172008-30-quic_tengfan@quicinc.com>
 
-On Wed, Jun 26, 2024 at 12:27=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.co=
-m> wrote:
->
-> Function is used to set default values, so name it accordingly.
->
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+On Wed, Jul 03, 2024 at 10:58:32AM GMT, Tengfei Fan wrote:
+> Add the compatible for the MAC controller on qcs9100 platforms. This MAC
+> works with a single interrupt so add minItems to the interrupts property.
+> The fourth clock's name is different here so change it. Enable relevant
+> PHY properties. Add the relevant compatibles to the binding document for
+> snps,dwmac as well.
 
-Reviewed-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+This description doesn't match what was done in this patch, its what
+Bart did when he made changes to add the sa8775 changes. Please consider
+using a blurb indicating that this is the same SoC as sa8775p, just with
+different firmware strategies or something along those lines?
 
+> 
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 > ---
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/ml=
-x5_vnet.c
-> index de013b5a2815..739c2886fc33 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -155,7 +155,7 @@ static bool is_index_valid(struct mlx5_vdpa_dev *mvde=
-v, u16 idx)
->  }
->
->  static void free_fixed_resources(struct mlx5_vdpa_net *ndev);
-> -static void init_mvqs(struct mlx5_vdpa_net *ndev);
-> +static void mvqs_set_defaults(struct mlx5_vdpa_net *ndev);
->  static int setup_vq_resources(struct mlx5_vdpa_net *ndev);
->  static void teardown_vq_resources(struct mlx5_vdpa_net *ndev);
->
-> @@ -2810,7 +2810,7 @@ static void restore_channels_info(struct mlx5_vdpa_=
-net *ndev)
->         int i;
->
->         mlx5_clear_vqs(ndev);
-> -       init_mvqs(ndev);
-> +       mvqs_set_defaults(ndev);
->         for (i =3D 0; i < ndev->mvdev.max_vqs; i++) {
->                 mvq =3D &ndev->vqs[i];
->                 ri =3D &mvq->ri;
-> @@ -3023,7 +3023,7 @@ static int mlx5_vdpa_compat_reset(struct vdpa_devic=
-e *vdev, u32 flags)
->         down_write(&ndev->reslock);
->         unregister_link_notifier(ndev);
->         teardown_vq_resources(ndev);
-> -       init_mvqs(ndev);
-> +       mvqs_set_defaults(ndev);
->
->         if (flags & VDPA_RESET_F_CLEAN_MAP)
->                 mlx5_vdpa_destroy_mr_resources(&ndev->mvdev);
-> @@ -3485,7 +3485,7 @@ static void free_fixed_resources(struct mlx5_vdpa_n=
-et *ndev)
->         res->valid =3D false;
->  }
->
-> -static void init_mvqs(struct mlx5_vdpa_net *ndev)
-> +static void mvqs_set_defaults(struct mlx5_vdpa_net *ndev)
->  {
->         struct mlx5_vdpa_virtqueue *mvq;
->         int i;
-> @@ -3635,7 +3635,7 @@ static int mlx5_vdpa_dev_add(struct vdpa_mgmt_dev *=
-v_mdev, const char *name,
->         }
->         ndev->cur_num_vqs =3D MLX5V_DEFAULT_VQ_COUNT;
->
-> -       init_mvqs(ndev);
-> +       mvqs_set_defaults(ndev);
->         allocate_irqs(ndev);
->         init_rwsem(&ndev->reslock);
->         config =3D &ndev->config;
->
-> --
-> 2.45.1
->
+>  Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 1 +
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml  | 3 +++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> index 6672327358bc..8ab11e00668c 100644
+> --- a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> +++ b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> @@ -20,6 +20,7 @@ properties:
+>    compatible:
+>      enum:
+>        - qcom,qcs404-ethqos
+> +      - qcom,qcs9100-ethqos
+>        - qcom,sa8775p-ethqos
+>        - qcom,sc8280xp-ethqos
+>        - qcom,sm8150-ethqos
+> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> index 3bab4e1f3fbf..269c21779396 100644
+> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> @@ -67,6 +67,7 @@ properties:
+>          - loongson,ls2k-dwmac
+>          - loongson,ls7a-dwmac
+>          - qcom,qcs404-ethqos
+> +        - qcom,qcs9100-ethqos
+>          - qcom,sa8775p-ethqos
+>          - qcom,sc8280xp-ethqos
+>          - qcom,sm8150-ethqos
+> @@ -582,6 +583,7 @@ allOf:
+>                - ingenic,x1600-mac
+>                - ingenic,x1830-mac
+>                - ingenic,x2000-mac
+> +              - qcom,qcs9100-ethqos
+>                - qcom,sa8775p-ethqos
+>                - qcom,sc8280xp-ethqos
+>                - snps,dwmac-3.50a
+> @@ -639,6 +641,7 @@ allOf:
+>                - ingenic,x1830-mac
+>                - ingenic,x2000-mac
+>                - qcom,qcs404-ethqos
+> +              - qcom,qcs9100-ethqos
+>                - qcom,sa8775p-ethqos
+>                - qcom,sc8280xp-ethqos
+>                - qcom,sm8150-ethqos
+> -- 
+> 2.25.1
+> 
 
