@@ -1,122 +1,131 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91AA176ADE
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 12:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF4213A25B;
+	Wed,  3 Jul 2024 12:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720010112; cv=none; b=TTM/eiJT8QmLw1oVc3d65eNqRxDeFsari5KE9h3OilC30MwNkTfeTAa6SrItdiGgrJOG0l056X3S+24L8Es7vqHACLJX2rAmG/Zgbvep41/L0DAppJx29345ERLBb1XHvtNjOjFT71Vj3hdTKHK0e+5H7r2qGPF6LDp+9yMcDMU=
+	t=1720010161; cv=none; b=SRFyfO5b/0C8fEYWgC4PFmVjLafN+bGAqRgH9ofWLUJAzbQpVlb72EcuaDAXjF7wVGDFLirvDiUVjoKqNkUcsbh+ffqFWTsBhOkXAC8mfVw+asp4MXr+5STCJVQpgt3MqaERxYBK86iiYuK7iF8ZsH96FeOjTIqyroNY07QMurY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720010112; c=relaxed/simple;
-	bh=cfGy4hd/MJDQaAlZyWKj8dMD+MgtojL710RreopYNk4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uaT+TNPYHP+1j3hQkwsRrV/bdwkEp02/5JZiWmrBgd/GGrPtoUlBbDCAq6nMchIAQ9Eg6FLYsCVDYePH+XTRFLRf4Hk2xo+ybHhnGmDirzi+iwfYY6ouPgUn63n2itzRSYdDVBO6G0/EeKFv9swz7SMOylVVailp5nVJDtnGWT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=erEep//Q; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="erEep//Q"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4ef56bdc3fcso2296042e0c.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 05:35:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720010110; x=1720614910; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pj8SrAjLpSLjliuG99WdKny0d1AT/67yDFEWTU/8uKo=;
-        b=erEep//QN5IXm7I1epEj8I1BLWCjLhgaUkdFy0OsgNUbm/sTbX25lI0309bLOna9zI
-         3B0meQB7XuQJ2z+I+Bw5vLZoFTtIjkJJEcTD9e6DoPyLws4jwQUKO2Td7xa79GsxmiAi
-         LJGMgNYE7e0SdOywpuKcompPZypvWwXmMPjZ9Mcp2qoh9b5uou+/DqRnHC9QtUQTOsEV
-         MqGCq8G2yKf29qakj0oFMZhapUilwaDMzVl1/312RRdZvzBuZQjXKA+QSnc0XYFD/UxT
-         9md6fxCuIu9ehR2wbW/IKCeHm1VF/aTjACo7frld7jpJEgT90K3pHOkvnA3r2URpp+Jt
-         nPuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720010110; x=1720614910;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Pj8SrAjLpSLjliuG99WdKny0d1AT/67yDFEWTU/8uKo=;
-        b=TZYDYcZnJXPoODSRkwhj5cnMUnNfqKu1mT+6+bGZ8xijYtDFEv9PwIEXfGvjd/9+Hu
-         ZijVJNBaP3hmqb7gCrchRbLEp1wTJhd9IrtX4yQs/elVHucas3LOAYT1jbvskTtgQP14
-         AVOWGJQyQDSJsiUteP08Z+81WNzNZoWjrD5k1XOyImGGrOzhZaIgUYagnySpB4YHffUF
-         140YB+IVWkWeUu7dPV9hASs0BJ+TR+nsS4gDVsHsSP2jLB0eUzvHiAC7WkedvbmC7HYg
-         snbd5CYy/6ff3sqhYXvaRomEKoOql3zAsGzCrUYIOTagQCDQSCJWlJG+WHzcp2ZrK6cp
-         5saQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeVBPcXExRCXqdCbpvJVq0S+PX6RlJ8a96bw84TVVQLfLdR8j1qVqUBgy7HU6mNpy8GNrk3EuKozO10ATqRn2hdQOfrFPynT0kcL0i
-X-Gm-Message-State: AOJu0YzGEsBhWVEI/ToVv8QnlUG/VeC9UAMwvfZCgWvYwRKj2LnAFepd
-	NQNVkXRynVJpSmDJwavepFzPdLpySpG09qDFqOfKs8wF4x9oFnlImG6f739bmqW7KtnQmTmUC59
-	nikXW4bj+VtepE6qWTn6FzT83yIbZAxKCmZYOBA==
-X-Google-Smtp-Source: AGHT+IFC2Ceua1RohvvkAIKkyjcpb3zdlon3mgykMv7og6AVgIzZvwsefW9dPMvY1y6HF6Y22NRmSxg3gPVSzvwQPTc=
-X-Received: by 2002:a05:6122:4287:b0:4ef:58d4:70f8 with SMTP id
- 71dfb90a1353d-4f2a572cb78mr13958132e0c.13.1720010109406; Wed, 03 Jul 2024
- 05:35:09 -0700 (PDT)
+	s=arc-20240116; t=1720010161; c=relaxed/simple;
+	bh=onepRnVIoj8wYu4Zze0ForhgqtXoWegKGDXPt8UNkJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XmmSAmu35j9/3CsTkuf6OswGL6c3NRJpmpZq/3huzN3apBZFToA0AGyUCi9qMoaPwB+/dKWQgiCDfY/2Cd8Pf0xSOUvHYM6u3eDJ3JmY3YpEx0SzgikjqQGp6vVI9d+My4wLvs/R9yFWVeU/RpWUwan9T0BeY108bYWc8SXvGJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Date: Wed, 3 Jul 2024 14:35:54 +0200
+From: Guilherme Amadio <amadio@gentoo.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Thorsten Leemhuis <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>,
+	linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/6] perf build: Conditionally add feature check flags
+ for libtrace{event,fs}
+Message-ID: <ZoVFqiZdTXy1glLc@gentoo.org>
+References: <20240628202608.3273329-1-amadio@gentoo.org>
+ <20240628203432.3273625-1-amadio@gentoo.org>
+ <ZoSOR0ULxXLxLZvA@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702170233.048122282@linuxfoundation.org> <CA+G9fYs=KkeYFMS01s3VZmeSYd1zJphinPFCk1G2AJ7LZ=+8=A@mail.gmail.com>
-In-Reply-To: <CA+G9fYs=KkeYFMS01s3VZmeSYd1zJphinPFCk1G2AJ7LZ=+8=A@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 3 Jul 2024 18:04:57 +0530
-Message-ID: <CA+G9fYvcbdKN8B9t-ukO2aZCOwkjNme8+XhLcL-=wcd+XXRP6g@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/163] 6.6.37-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Kees Cook <keescook@chromium.org>, Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZoSOR0ULxXLxLZvA@google.com>
 
-On Wed, 3 Jul 2024 at 14:27, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Tue, 2 Jul 2024 at 22:48, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 6.6.37 release.
-> > There are 163 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 04 Jul 2024 17:01:55 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.37-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
->
-> The following powerpc builds failed on stable-rc 6.6.
->
-> powerpc:
->  - gcc-13-defconfig
->  - clang-18-defconfig
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Build log:
-> ---------
-> arch/powerpc/net/bpf_jit_comp.c: In function 'bpf_int_jit_compile':
-> arch/powerpc/net/bpf_jit_comp.c:208:17: error: ignoring return value
-> of 'bpf_jit_binary_lock_ro' declared with attribute
-> 'warn_unused_result' [-Werror=unused-result]
->   208 |                 bpf_jit_binary_lock_ro(bpf_hdr);
->       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> cc1: all warnings being treated as errors
->
+Hello,
 
-Anders bisected this down to,
-first bad commit: [28ae2e78321b5ac25958b3fcae0dcc80116e0c50]
-  bpf: Take return from set_memory_rox() into account with
-bpf_jit_binary_lock_ro()
+On Tue, Jul 02, 2024 at 04:33:27PM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> On Fri, Jun 28, 2024 at 10:34:27PM +0200, Guilherme Amadio wrote:
+> > This avoids reported warnings when the packages are not installed.
+> > 
+> > Fixes: 0f0e1f44569061e3dc590cd0b8cb74d8fd53706b
+> > Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
+> 
+> Thanks for working on this.
+> 
+> > ---
+> >  tools/perf/Makefile.config | 28 +++++++++++++++-------------
+> >  1 file changed, 15 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 5271a4c1d2b3..5387babb8f04 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -182,13 +182,21 @@ endif
+> >  FEATURE_CHECK_CFLAGS-libzstd := $(LIBZSTD_CFLAGS)
+> >  FEATURE_CHECK_LDFLAGS-libzstd := $(LIBZSTD_LDFLAGS)
+> >  
+> > -# for linking with debug library, run like:
+> > -# make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
+> > -FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
+> > -FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
+> > -
+> > -FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
+> > -FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
+> > +ifneq ($(NO_LIBTRACEEVENT),1)
+> > +  ifeq ($(call get-executable,$(PKG_CONFIG)),)
+> > +  dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
+> 
+> I know you just copied the code, but IIRC we wanted to remove this dummy
+> assignment before.
 
-- Naresh
+Sure, I will change this. I think we can also remove the "dummy :=" part and
+just do $(error Error: ...), like it's done in other places.
+
+> > +  endif
+> > +endif
+> > +ifeq ($(shell $(PKG_CONFIG) --exists libtraceevent 2>&1 1>/dev/null; echo $$?),0)
+> > +  # for linking with debug library, run like:
+> > +  # make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
+> > +  FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
+> > +  FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
+> > +endif
+> > +ifeq ($(shell $(PKG_CONFIG) --exists libtracefs 2>&1 1>/dev/null; echo $$?),0)
+> > +  FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
+> > +  FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
+> 
+> I'm curious if we can redirect stderr to /dev/null to surpress the
+> output when pkg-config is not installed.  Then we don't need to check
+> the `ifeq`.
+
+I was wondering that myself when I added the check, if you prefer to redirect
+stderr to /dev/null, I will do it that way then when I submit v3.
+
+Thanks for the review.
+
+Best regards,
+-Guilherme
+
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> > +endif
+> >  
+> >  FEATURE_CHECK_CFLAGS-bpf = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
+> >  # include ARCH specific config
+> > @@ -208,12 +216,6 @@ ifeq ($(call get-executable,$(BISON)),)
+> >    $(error Error: $(BISON) is missing on this system, please install it)
+> >  endif
+> >  
+> > -ifneq ($(NO_LIBTRACEEVENT),1)
+> > -  ifeq ($(call get-executable,$(PKG_CONFIG)),)
+> > -  dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
+> > -  endif
+> > -endif
+> > -
+> >  ifneq ($(OUTPUT),)
+> >    ifeq ($(shell expr $(shell $(BISON) --version | grep bison | sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\= 371), 1)
+> >      BISON_FILE_PREFIX_MAP := --file-prefix-map=$(OUTPUT)=
+> > -- 
+> > 2.45.2
+> > 
