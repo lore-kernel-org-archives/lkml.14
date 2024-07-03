@@ -1,149 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF30192B70;
-	Wed,  3 Jul 2024 21:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB0213DBB1
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 21:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720042192; cv=none; b=TGbGDqg/3+6oFh/9XWciFsyAjH1ox3SPJk11Zfmd4cSZ0GLhsWxLPoUpVXhL9hvvzMHxcjSU8OXyzM46tAVSdaq7ErJp2n5/3/0vYrOASDL+3U9uFEO9bN38dOEtVb/RVwxafhhLhK7PIDqs+1fhPnzfmXTDzXAG/lAc1FMWr/w=
+	t=1720042228; cv=none; b=tHKulscmcchULDFC3tdVzyo/mTqZ1Cr5IV7dHY24HFsFwEq7iUfQ5s7y6xvK8H+ic8Xosw7Xf/DrAWhnQK5mX/2xGl+qmpsVYVNSo1Bn941Tw8mlWUdrHYKeJ2u/dOxclxLc2peVs+9TIkUA5RDZIZiMcVBe8OhNsMOlU1nWPAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720042192; c=relaxed/simple;
-	bh=FNqtIxiz/iLSE0auqATLt3TNJBkF0qDalYBF2yAIu+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QLCB+Sw/1RT+eZ8eF1rJxL+BJmuCfGYWvQrboY7/aRl0Sl3N3PnKdbZEdIioyZw/X5Y7lFjKb18Q5qyhvVdJeoTcltTLAnV5DXi8HMZINas2VShU+jIAHunYXym8ZjWOCn7fvP4OdM4OM5uL/yKsyKadBGSy+XzucwrRGgXeErM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pv01mkK1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720042228; c=relaxed/simple;
+	bh=ItEwuW5FSpRgCqnKb7RkC8tFGprMzA77PgMMdX9re00=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=usdZQRp3q9HvQyySBiBES4CAJJdCNcPJpE1tYyuL5e8WP/RvII03LLgV4jgTTH+RQL1QNgles2KgdXFiKtpfQHZC+dryE7dlL6QVxs/XZxRN157zkXSN4SoaaDbB0o7Q+LmEUDsl6MYrFUoCCoNV+3ofcIoLHSOBPQX8P2XOcA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MGzNe3u+; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pv01mkK1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DE8C2BD10;
-	Wed,  3 Jul 2024 21:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720042191;
-	bh=FNqtIxiz/iLSE0auqATLt3TNJBkF0qDalYBF2yAIu+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pv01mkK1YBpFTAXKz488wlegYxCoyJ4soI5WNa957/Xie4y5GMbcs8mVvthbT9BAI
-	 SA5VL+ZSQLB3F800JE6hrfXLNAu5sxl2m9fkfywTgJWUw0XH9EBXCJ3x6GUxJ0DlK2
-	 MfauCsZNyW+QtbE9rH6IMsKP9o8ru8OSHh6JB2ExKZD1HojBsqOWV07RgO6erqAYuj
-	 cNgjQpw1a+TAALghtCWK/dSyJo8Adb9z/pyvn9tIDSc23FZkFEnyqU/KS7yG4VFdol
-	 MHRZz8fHu4ala5dLONlnQJi+zSwKtCferT2H2PkrHK67uw9zS1ytK62XpFyKWhwXiC
-	 Zwj2d3RrrpIuA==
-Date: Wed, 3 Jul 2024 14:29:49 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Guilherme Amadio <amadio@gentoo.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Thorsten Leemhuis <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>,
-	linux-perf-users@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/6] perf build: Conditionally add feature check flags
- for libtrace{event,fs}
-Message-ID: <ZoXCzbU_oHSZQzO7@google.com>
-References: <20240628202608.3273329-1-amadio@gentoo.org>
- <20240628203432.3273625-1-amadio@gentoo.org>
- <ZoSOR0ULxXLxLZvA@google.com>
- <ZoVFqiZdTXy1glLc@gentoo.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MGzNe3u+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720042227; x=1751578227;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ItEwuW5FSpRgCqnKb7RkC8tFGprMzA77PgMMdX9re00=;
+  b=MGzNe3u+MPb1cf+nArcrfgCLaE+I4861YqXjXpwA3MqEXdsaa56HVrBg
+   TqGzrP5DORVmmQjXlWmgewfuJVyizDWk6Top172NqpoQDyHlAfXYBylnZ
+   mzNn7VJWHs3m2uVnoTq8I51qsehgG+a2ZOe7YZ2QrvdKP4nmldeUnnQ75
+   L590IOqELaUz+kTKWEmFxR1kS0X0U75OU9Xu2gdAuMY2RpQAUHwrxVBiL
+   mWh/+F8arNmrBEtbLiaYlm35ZTdSplJZ6UtoI9WZNrkfl13Bp63RxrB1L
+   qV2iRbyY1WGYcv6KmG3YDipEVS4b0lbmzZs48ZR1G0Nlwknd+uD9tVerv
+   A==;
+X-CSE-ConnectionGUID: Ai48KkXASXuMh2KCE9/5CQ==
+X-CSE-MsgGUID: OxTwi5NJRn+9D/IocYL1xA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17432711"
+X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
+   d="scan'208";a="17432711"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 14:30:26 -0700
+X-CSE-ConnectionGUID: 6Q02YzsqSby+QTuhpHgV+w==
+X-CSE-MsgGUID: MWG1LX3gRTWV0L9D/kg+MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
+   d="scan'208";a="46173348"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 14:30:26 -0700
+Date: Wed, 3 Jul 2024 14:35:39 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin
+ Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian
+ <kevin.tian@intel.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 1/2] iommu/vt-d: Add helper to flush caches for
+ context change
+Message-ID: <20240703143539.7ea1fac5@jacob-builder>
+In-Reply-To: <1a2f66a2-a867-4203-8a76-dbced80bfeff@linux.intel.com>
+References: <20240701112317.94022-1-baolu.lu@linux.intel.com>
+	<20240701112317.94022-2-baolu.lu@linux.intel.com>
+	<20240701214128.5523a1ea@jacob-builder>
+	<28ade99a-13ad-4b01-aff2-711c006856fd@linux.intel.com>
+	<20240702085749.2e2bbea5@jacob-builder>
+	<1a2f66a2-a867-4203-8a76-dbced80bfeff@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZoVFqiZdTXy1glLc@gentoo.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 03, 2024 at 02:35:54PM +0200, Guilherme Amadio wrote:
-> Hello,
-> 
-> On Tue, Jul 02, 2024 at 04:33:27PM -0700, Namhyung Kim wrote:
-> > Hello,
+
+On Wed, 3 Jul 2024 10:49:19 +0800, Baolu Lu <baolu.lu@linux.intel.com>
+wrote:
+
+> On 7/2/24 11:57 PM, Jacob Pan wrote:
+> > On Tue, 2 Jul 2024 12:43:41 +0800, Baolu Lu<baolu.lu@linux.intel.com>
+> > wrote:
+> >   
+> >> On 2024/7/2 12:41, Jacob Pan wrote:  
+> >>> On Mon,  1 Jul 2024 19:23:16 +0800, Lu Baolu<baolu.lu@linux.intel.com>
+> >>> wrote:
+> >>>      
+> >>>> +	if (flush_domains) {
+> >>>> +		/*
+> >>>> +		 * If the IOMMU is running in scalable mode and
+> >>>> there might
+> >>>> +		 * be potential PASID translations, the caller
+> >>>> should hold
+> >>>> +		 * the lock to ensure that context changes and cache
+> >>>> flushes
+> >>>> +		 * are atomic.
+> >>>> +		 */
+> >>>> +		assert_spin_locked(&iommu->lock);
+> >>>> +		for (i = 0; i < info->pasid_table->max_pasid; i++) {
+> >>>> +			pte = intel_pasid_get_entry(info->dev, i);
+> >>>> +			if (!pte || !pasid_pte_is_present(pte))
+> >>>> +				continue;  
+> >>> Is it worth going through 1M PASIDs just to skip the PASID cache
+> >>> invalidation? Or just do the flush on all used DIDs unconditionally.  
+> >> Currently we don't track all domains attached to a device. If such
+> >> optimization is necessary, perhaps we can add it later.  
+> > I think it is necessary, because without tracking domain IDs, the code
+> > above would have duplicated invalidations.
+> > For example: a device PASID table has the following entries
+> > 	PASID	DomainID
+> > -------------------------
+> > 	100	1
+> > 	200	1
+> > 	300	2
+> > -------------------------
+> > When a present context entry changes, we need to do:
+> > qi_flush_pasid_cache(iommu, 1, QI_PC_ALL_PASIDS, 0);
+> > qi_flush_pasid_cache(iommu, 2, QI_PC_ALL_PASIDS, 0);
 > > 
-> > On Fri, Jun 28, 2024 at 10:34:27PM +0200, Guilherme Amadio wrote:
-> > > This avoids reported warnings when the packages are not installed.
-> > > 
-> > > Fixes: 0f0e1f44569061e3dc590cd0b8cb74d8fd53706b
-> > > Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
-> > 
-> > Thanks for working on this.
-> > 
-> > > ---
-> > >  tools/perf/Makefile.config | 28 +++++++++++++++-------------
-> > >  1 file changed, 15 insertions(+), 13 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > > index 5271a4c1d2b3..5387babb8f04 100644
-> > > --- a/tools/perf/Makefile.config
-> > > +++ b/tools/perf/Makefile.config
-> > > @@ -182,13 +182,21 @@ endif
-> > >  FEATURE_CHECK_CFLAGS-libzstd := $(LIBZSTD_CFLAGS)
-> > >  FEATURE_CHECK_LDFLAGS-libzstd := $(LIBZSTD_LDFLAGS)
-> > >  
-> > > -# for linking with debug library, run like:
-> > > -# make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
-> > > -FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
-> > > -FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
-> > > -
-> > > -FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
-> > > -FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
-> > > +ifneq ($(NO_LIBTRACEEVENT),1)
-> > > +  ifeq ($(call get-executable,$(PKG_CONFIG)),)
-> > > +  dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
-> > 
-> > I know you just copied the code, but IIRC we wanted to remove this dummy
-> > assignment before.
+> > With this code, we do
+> > qi_flush_pasid_cache(iommu, 1, QI_PC_ALL_PASIDS, 0);
+> > qi_flush_pasid_cache(iommu, 1, QI_PC_ALL_PASIDS, 0);//duplicated!
+> > qi_flush_pasid_cache(iommu, 2, QI_PC_ALL_PASIDS, 0);  
 > 
-> Sure, I will change this. I think we can also remove the "dummy :=" part and
-> just do $(error Error: ...), like it's done in other places.
-
-Exactly.
-
+> Yes, this is likely. But currently enabling and disabling PRI happens in
+> driver's probe and release paths. Therefore such duplicate is not so
+> critical.
 > 
-> > > +  endif
-> > > +endif
-> > > +ifeq ($(shell $(PKG_CONFIG) --exists libtraceevent 2>&1 1>/dev/null; echo $$?),0)
-> > > +  # for linking with debug library, run like:
-> > > +  # make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
-> > > +  FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
-> > > +  FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
-> > > +endif
-> > > +ifeq ($(shell $(PKG_CONFIG) --exists libtracefs 2>&1 1>/dev/null; echo $$?),0)
-> > > +  FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
-> > > +  FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
-> > 
-> > I'm curious if we can redirect stderr to /dev/null to surpress the
-> > output when pkg-config is not installed.  Then we don't need to check
-> > the `ifeq`.
-> 
-> I was wondering that myself when I added the check, if you prefer to redirect
-> stderr to /dev/null, I will do it that way then when I submit v3.
+> For long term, I have a plan to abstract the domain id into an object so
+> that domains attached to different PASIDs of a device could share a
+> domain id. With that done, we could improve this code by iterating the
+> domain id objects for a device and performing cache invalidation
+> directly.
 
-Yep, let's have a fewer lines of changes.
+Sounds good. It might be helpful to add a comment to clarify for others who
+might wonder about the duplicates.
 
-> 
-> Thanks for the review.
-
-No problem and thanks for your contribution!
+Reviewed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
 Thanks,
-Namhyung
 
-> > 
-> > > +endif
-> > >  
-> > >  FEATURE_CHECK_CFLAGS-bpf = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
-> > >  # include ARCH specific config
-> > > @@ -208,12 +216,6 @@ ifeq ($(call get-executable,$(BISON)),)
-> > >    $(error Error: $(BISON) is missing on this system, please install it)
-> > >  endif
-> > >  
-> > > -ifneq ($(NO_LIBTRACEEVENT),1)
-> > > -  ifeq ($(call get-executable,$(PKG_CONFIG)),)
-> > > -  dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
-> > > -  endif
-> > > -endif
-> > > -
-> > >  ifneq ($(OUTPUT),)
-> > >    ifeq ($(shell expr $(shell $(BISON) --version | grep bison | sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\= 371), 1)
-> > >      BISON_FILE_PREFIX_MAP := --file-prefix-map=$(OUTPUT)=
-> > > -- 
-> > > 2.45.2
-> > > 
+Jacob
