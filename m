@@ -1,111 +1,179 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C97E17A920
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 17:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FFF1849C3;
+	Wed,  3 Jul 2024 17:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720027410; cv=none; b=OxWBBjvxRMItljyplvViU4N082ruUIOg0FEkXV+MsQZKTj4pHhASO9BVlHwJbwcVzZVM6cuSh2GxbRJTuzjiFfpN+U5kY8kbpGUeSCqSkpGKONb2mTD0U9UvqTFI2sKdGnuJLMFH+yalk8ZBS9lnbQcjBVpCGGDl0znvjTQXc80=
+	t=1720027434; cv=none; b=H0YKhEd/KW4IdQLs0YAxsRwcmoU2zUF7gFe2X0w8+DIjQ4PzTAtbug74RjiyQ0FKrL/h+evk5yCVtS3CQIGmJaaxg9AqUAekONNaoyVWkzem0QMm1r53/MziT4Ks7RUad6BMn8AbVx6grdSJu9EySz3XTOOtUlUxfS4PSB5XiHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720027410; c=relaxed/simple;
-	bh=9Qs5ol2ze5oiR2DbW9m/2gue58457PaRyAxDKiR93+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H2B93R2cPwgCkypQv8e/QbfVAPw3Q3syaVplatZT3x/kNetueue4lYdQen4ArZ+eZFP38yYNhy2JvhDbAK334uCmPCR3JH6ZC7JevD9aRKC4yQXEXo1Og8aQwvTmZ9IA8KsO2eUwc5otDn02mPt5u+Atc+tpLdYVwWv5X5mIKYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GbVyliTS; arc=none smtp.client-ip=209.85.128.173
+	s=arc-20240116; t=1720027434; c=relaxed/simple;
+	bh=z67pOF54298L0LiTmDmYaTs/VX1vfsc0xJhQPZ9JdJg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kbodpq7azPviL6u972bYgaVHSBgio4gUI53ytdI8P1ouZpdRZ1jfs2ukz/Cd9h5vxz0SesYHgZGp7H9Rp9xeLOeVgwee50N8l2481bEnxe1HWrHW6BblwtwpnAkPitIDGs+EDAsJIO+CzqhGIY1cMa2kCmEVufEjR7thJlot1Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HIyLaSsc; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GbVyliTS"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-651815069f8so7776967b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 10:23:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIyLaSsc"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a724598cfe3so698018266b.1;
+        Wed, 03 Jul 2024 10:23:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720027408; x=1720632208; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ti6v24oTe1MEKhNZLLn/dVPsQr2JQWNo5ls87iglapk=;
-        b=GbVyliTSjri3Z8wDJnvtQpOKytk5jbQ0VqJHqZFPAHLIPjl9znCibr2/63VkyCp2AJ
-         UJmORX/TNLyVRnYRX/SUJt4pS23iIHL5jia8sBnwHaREU2MdIAxx03jU/17zKBMqZ3Aj
-         kJoI91/P1CnD7Wh4LVQg5OR3HdmQWTip55NlpEJxiwV1Xdz5S5fcCrJwlnYF3fsHeU7E
-         4ncT/WghMvKAusuLNIiSsmL0tLcmhn0+wWPy+XbzrTbz/kdPFOvZ4ojjsrrNE4R2upUK
-         GN546AFcnjgLWVOIKiIm1wbzgX3zaLLurOq4wNbV8+sO3vY+jWuJ+MgrtOaACi7ij846
-         LnNQ==
+        d=gmail.com; s=20230601; t=1720027431; x=1720632231; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0yydqW0pEiTRrPXeTkUJn0GQeIWHeWEWO75cCPWOmNY=;
+        b=HIyLaSsc/8S0A4uQ9TcnmSxsCpPlm7UsnEayt3Vr67+SpDf0FqLlMgeOJOe/WWTC/2
+         aJSvt3l+cMKUmo0JKovT6brEbI7+oPc3JrXsoQCU7tBNWjbHCMd51TGQCsNzntpvPaoC
+         7HuA1uj8Txm2pva5pH9W6c8k5ixnkcXVrDL4rDk4TkYIpdeUWYdA9QZmkb/kQmJY9SED
+         SxiJjtGvo3iOYMJXy3sCgSAXr1d0TXqKlX7wqH3mRJWWx6Ymxce/djqqM4P84CV2r3us
+         mSdP/8LUl3b7JSWSL416NWTVNA45tLfmqgfRYiecNymjVgOxGwMsSP0tGeSDado7JfkT
+         CMXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720027408; x=1720632208;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ti6v24oTe1MEKhNZLLn/dVPsQr2JQWNo5ls87iglapk=;
-        b=diwpbN5sSVAX9AaYPIT79WlbjOjh+f8/wrLHGXALuws0wb6hn4a1G2x+vq4YfQMEz+
-         FGHAXh2Hb2mWjeVB266N3MdDtRrF6rzkrt744nFJKIGsL4vEDIYLZClbUIRNQbIMVs6W
-         Ow+Y04fyLBDBjDilu1vDj9C7OC5VMjI5kckLjUKASSFMiGkUY35JW+q/ZjLCZTtFVAwV
-         UYTZzcrqajHFe0HBRNuJK7DM8bfyFxUjwaPQk6y+wiITKbhQ95xpTpTh9KWJARGr/MOK
-         7Vafkh4HftIdPSjveSZmiUZ2l5ISSpRORwB16J8NouPLFieDRcxVXxnbFfu+KX+fmTW1
-         mUpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRr3zJQFs7Fi09RinA1JhKYoWr7xcnZl7C7f55cK9Qyh6qpJUouEY84/kSBcZ7YgOJ76Mn4sTWcVbEWsWOSLllLnzP0sXrljdKnDgG
-X-Gm-Message-State: AOJu0YxZr+KfuDAAcJRWWNXERnW3dywpmu1wyk8ulB40y2Ohaj+HYsDu
-	adlX56fZIdxhlrHDg1K/Zpyzb336PzweqHimBwVDMCHOKvyczWe2TQYy5XVCWeeGmrxCWncw1Xg
-	5gVruEo536weeSTPFDaePxO/9w1m5Z2QREwM=
-X-Google-Smtp-Source: AGHT+IFWOydMbN6BlWi7lFEJsFqVYPn/wQrhz+LemE/ooLfbb7YSNlm3inzv1ZHEE/FXcdtbKBxpbSiueYfE+CJjO98=
-X-Received: by 2002:a0d:ebcb:0:b0:61a:e557:6ce1 with SMTP id
- 00721157ae682-651800ecdddmr15155807b3.1.1720027408329; Wed, 03 Jul 2024
- 10:23:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720027431; x=1720632231;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0yydqW0pEiTRrPXeTkUJn0GQeIWHeWEWO75cCPWOmNY=;
+        b=s3/Ff37m+qwF0s4iqIN8NjuzfkGZIp8On+AL3t50BgcSUMiTH4tqMqwVRUGhonBRqM
+         nU7LWxrBFMPXIMyEff0iXq3uCFhmFjF3VGcxIlBGLIxvGAPaj+FZFUeuTiZPk0A3JmI1
+         6dCrQQKMWemmcf2ihW7DC7V+Ka7hbFkRkIDfMVB2OLAyWN6+6qkOH2ItMtJOC3EkUF4w
+         biO9o4wOcCOdASLgdL38UQAKLeDQmW67V0F+N0A6N0akgFVkmUdtmrP6hUIzUmIC6bMF
+         +j1q37XHRVMENjxzVE+YKeDrecgYSWGx5i4j2wXCmwviIUriytWOXqqRWGPy2K7YsAcl
+         1K0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV7FR4zK3C6dDmc4yO6+DCUi2i4/EOdW/RDsNPH+sns3pk2gECYnZCRUKUTX5zHupYES74w8P1ZkIyoC4Zny0iXPIMdwyf6GaavMReyg+6OLvADilSymDGJD2tDNXMP4uucyavXU1AlyVH/5Opmvhr9ng7u3R8G3OYyPZL+RihRirQDW3pG
+X-Gm-Message-State: AOJu0YymUPot0MjUWYFKg5xvFfQOXgs2Hge1EWx/hFEQ8cM8Y0kLnC3h
+	upIwl28x3gCqJs642upkF2oNXSZLRvyy3Vwl5Kzld1A0NBukoi4u
+X-Google-Smtp-Source: AGHT+IGUvGNq+Sz+kFZMMyBKyjPhcOdVU6Um6y2Uyc9CbZDox0PUbeXGHKqoO4cqonps8AAl8uEA/g==
+X-Received: by 2002:a17:906:360c:b0:a72:a206:ddc2 with SMTP id a640c23a62f3a-a751449ef55mr722801666b.36.1720027431258;
+        Wed, 03 Jul 2024 10:23:51 -0700 (PDT)
+Received: from krava (37-188-178-233.red.o2.cz. [37.188.178.233])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7400456582sm427829466b.153.2024.07.03.10.22.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 10:23:51 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 3 Jul 2024 19:22:21 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 bpf-next 9/9] selftests/bpf: Add uprobe session
+ consumers test
+Message-ID: <ZoWIzZzZaqNR6dLm@krava>
+References: <20240701164115.723677-1-jolsa@kernel.org>
+ <20240701164115.723677-10-jolsa@kernel.org>
+ <CAEf4BzYzpyZL+hQogXp-BaWEu6CFvWyicCOnGUxJawMpErLWRQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240616203231.43724-1-av2082000@gmail.com> <d6cd7441-53f2-4c88-a361-729e3abe81c1@marliere.net>
- <CAPMW_r+sPGF5=+=edLY81X+Cd4bMWKFJw3sDd0mzaZEM9b75BQ@mail.gmail.com> <f64523f0-db39-4e3a-85a6-1a3cb07e2d08@marliere.net>
-In-Reply-To: <f64523f0-db39-4e3a-85a6-1a3cb07e2d08@marliere.net>
-From: Amit Vadhavana <av2082000@gmail.com>
-Date: Wed, 3 Jul 2024 22:53:17 +0530
-Message-ID: <CAPMW_rKV1BkBbrhcKNkMvhSatoHRNk58O8m8m8GHCN1Jb2V-8Q@mail.gmail.com>
-Subject: Re: [PATCH v2] slimbus: Fix struct and documentation alignment in stream.c
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: srinivas.kandagatla@linaro.org, alsa-devel@alsa-project.org, 
-	linux-kernel@vger.kernel.org, rbmarliere@gmail.com, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYzpyZL+hQogXp-BaWEu6CFvWyicCOnGUxJawMpErLWRQ@mail.gmail.com>
 
-On Thu, 20 Jun 2024 at 18:00, Ricardo B. Marliere <ricardo@marliere.net> wrote:
->
-> Hi Amit,
->
-> On 19 Jun 24 23:28, Amit Vadhavana wrote:
-> > Hi Ricardo,
+On Tue, Jul 02, 2024 at 03:10:55PM -0700, Andrii Nakryiko wrote:
+> On Mon, Jul 1, 2024 at 9:44 AM Jiri Olsa <jolsa@kernel.org> wrote:
 > >
-> > I have rebuilt it again, and there are no any warnings or errors.
->
-> Thanks for checking, FWIW:
->
-> Reviewed-by: Ricardo B. Marliere <ricardo@marliere.net>
->
-> BTW, I received this message plus another two empty ones. Please check
-> your settings. Also, make sure not to top-post [1].
->
-> Best regards,
-> -       Ricardo.
->
->
-> [1] https://en.wikipedia.org/wiki/Posting_style#Top-posting
->
->
->
+> > Adding test that attached/detaches multiple consumers on
+> > single uprobe and verifies all were hit as expected.
 > >
-> > Thanks
-> > Amit v
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  .../bpf/prog_tests/uprobe_multi_test.c        | 203 ++++++++++++++++++
+> >  .../progs/uprobe_multi_session_consumers.c    |  53 +++++
+> >  2 files changed, 256 insertions(+)
+> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_consumers.c
+> >
+> 
+> This is clever, though bit notation obscures the meaning of the code a
+> bit. But thanks for the long comment explaining the overall idea.
+> 
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
+> > index b521590fdbb9..83eac954cf00 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
+> > @@ -9,6 +9,7 @@
+> >  #include "uprobe_multi_session.skel.h"
+> >  #include "uprobe_multi_session_cookie.skel.h"
+> >  #include "uprobe_multi_session_recursive.skel.h"
+> > +#include "uprobe_multi_session_consumers.skel.h"
+> >  #include "bpf/libbpf_internal.h"
+> >  #include "testing_helpers.h"
+> >  #include "../sdt.h"
+> > @@ -739,6 +740,206 @@ static void test_session_recursive_skel_api(void)
+> >         uprobe_multi_session_recursive__destroy(skel);
+> >  }
+> >
+> > +static int uprobe_attach(struct uprobe_multi_session_consumers *skel, int bit)
+> > +{
+> > +       struct bpf_program **prog = &skel->progs.uprobe_0 + bit;
+> > +       struct bpf_link **link = &skel->links.uprobe_0 + bit;
+> > +       LIBBPF_OPTS(bpf_uprobe_multi_opts, opts);
+> > +
+> > +       /*
+> > +        * bit: 0,1 uprobe session
+> > +        * bit: 2,3 uprobe entry
+> > +        * bit: 4,5 uprobe return
+> > +        */
+> > +       opts.session = bit < 2;
+> > +       opts.retprobe = bit == 4 || bit == 5;
+> > +
+> > +       *link = bpf_program__attach_uprobe_multi(*prog, 0, "/proc/self/exe",
+> > +                                                "uprobe_session_consumer_test",
+> > +                                                &opts);
+> > +       if (!ASSERT_OK_PTR(*link, "bpf_program__attach_uprobe_multi"))
+> > +               return -1;
+> > +       return 0;
+> > +}
+> > +
+> > +static void uprobe_detach(struct uprobe_multi_session_consumers *skel, int bit)
+> > +{
+> > +       struct bpf_link **link = &skel->links.uprobe_0 + bit;
+> 
+> ok, this is nasty, no one guarantees this should keep working,
+> explicit switch would be preferable
 
-Hi Srinivas,
+I see, ok, will replace that with a switch
 
-I hope you are well. I am following up on a patch I submitted on 19
-Jun regarding a kernel document and Ricardo reviewed the patch.
-I understand you have a busy schedule, but if you could find some time
-to review the patch, I would greatly appreciate it.
-Your feedback would be invaluable in helping to improve the quality of
-this contribution.
-If there are any changes needed or additional steps I should take,
-please let me know.
+> 
+> > +
+> > +       bpf_link__destroy(*link);
+> > +       *link = NULL;
+> > +}
+> > +
+> > +static bool test_bit(int bit, unsigned long val)
+> > +{
+> > +       return val & (1 << bit);
+> > +}
+> > +
+> > +noinline int
+> > +uprobe_session_consumer_test(struct uprobe_multi_session_consumers *skel,
+> > +                            unsigned long before, unsigned long after)
+> > +{
+> > +       int bit;
+> > +
+> > +       /* detach uprobe for each unset bit in 'before' state ... */
+> > +       for (bit = 0; bit < 6; bit++) {
+> 
+> Does "bit" correspond to the uprobe_X program? Maybe call it an uprobe
+> index or something, if that's the case? bits are just representations,
+> but semantically meaningful is identifier of an uprobe program, right?
 
-Thanks
-Amit V
+right.. so it corresponds to program 'uprobe_<bit>' so maybe 'idx' is better
+
+thanks,
+jirka
