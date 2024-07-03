@@ -1,160 +1,102 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CD6131BDD;
-	Wed,  3 Jul 2024 07:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F49C131BDD
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 07:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719991766; cv=none; b=mcuKVhRF/Hfhr0f/AGTD3Vxq7PIrTd97BQCtBXG3RSrtceeZ7UyukX7KN4pRGqt8xxgIq/hV2i8D18i24atbGAdkvKKpJLSaxMC0AoKpsorrfIoZoR/jLHED/HF0QlSwV5GZSO3md+WOH7y+M/mN+wvnO5yENIg03jB4doidavk=
+	t=1719991794; cv=none; b=fmw0Ue0n2ezRlup2UvmNotakAqskQRuJGOnWIPvA3A3DR5Vsc4tSSxFK6bcLK//9GcPpqcoa4B/gigIlWSoePzhL/YEoKtgSpqAdkjyU1ofKlsZyZyhG5eyuD/vmRKkGwSvHXoCzjJMYLjh/Xy9QHyMFmjwwcHGqQqZkv1pw3CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719991766; c=relaxed/simple;
-	bh=XH8pzdAoHuWv8DznMXqsk1aeuJ++vg5q3W+27mPM9vo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rhYLq2IJZ+rw7F0CscT801yiUHMBG8kaVLBCHH2znS7bhu4vkutT5YCUh0yz0vrgPiGNfV/KFsL4HmYNsWSHpzG3ZY0WYbLg2rGgX+Ne9G7ng4hARMxioteilNk69k5PEgm9LFYjGT2v+U/qArjMBTKixm+Xk/fQpS+YjOaFvUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=e3rcjBZ6; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1719991794; c=relaxed/simple;
+	bh=ZgpTGg7ZhLUOVu5lLH9uwx5tIQp5zc/pXJ0uUfZM2Rc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fPcEYT5njcXsRt+IWnFc+uXk6fJLGW/4E8OXuNf3ySEdgcpl2WxOwBzJHducErkSPzLoCGq5NbF45iMsg0MDC5QDzrOjppldSRGPvCNy+rGJKKUo42TAGimjyoK/O6S+cSo1DxogENLP4T8QRhdwdUEWnFmcKqDl/P7DkoratDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=PKCFTvpw; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="e3rcjBZ6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719991764; x=1751527764;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XH8pzdAoHuWv8DznMXqsk1aeuJ++vg5q3W+27mPM9vo=;
-  b=e3rcjBZ6w1YCQadfPHuEgtKs9dThgtIuBbIMQEcRE7c57rwkAhQXJ0fT
-   ZqI5igh+PVw0FzZGL9MvCRXuplnbdwbp9jf1PMh3ntc2f5dauAB/gg0wi
-   jEP1SITvoBIxu6TJXYe9BOtHfQDC2TPXtu5rJIhLEltBMLlqbGwMXyzBD
-   A+MUZEdW3WDsNJ1jEk+MgdLBQTd8myE4ZIUQNDHJajXLq5EtIo6lVkNV/
-   ig0llmZw2jOM6Bqjv8FCUb7pKOQeWHlCTCywHQwYAbXjRDaVT5P0A14OR
-   p1GuQyR4/dfksh1oyWx32c4sQa90SKOmrxst0Gvuy8MTcUAlf+6Oji3x0
-   A==;
-X-CSE-ConnectionGUID: feGJv0yDT+igZZ1QI9ykeA==
-X-CSE-MsgGUID: ChZ+M0e1TT+Kc9XQeYII1A==
-X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="asc'?scan'208";a="28765840"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jul 2024 00:29:16 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jul 2024 00:29:00 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Wed, 3 Jul 2024 00:28:57 -0700
-Date: Wed, 3 Jul 2024 08:28:36 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-CC: Samuel Holland <samuel.holland@sifive.com>, Kanak Shilledar
-	<kanakshilledar@gmail.com>, Conor Dooley <conor+dt@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Mark Brown
-	<broonie@kernel.org>, Rob Herring <robh@kernel.org>, Jisheng Zhang
-	<jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	<linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v2 2/3] spi: dw-mmio: update dw_spi_mmio_of_match struct
- with thead
-Message-ID: <20240703-garbage-explicit-bd95f8deb716@wendy>
-References: <20240701121355.262259-2-kanakshilledar@gmail.com>
- <20240701121355.262259-4-kanakshilledar@gmail.com>
- <f8604c68-8866-447b-a874-562bdad1df79@sifive.com>
- <23gvjkszxvf6zehiqetjfmtf67nlpnnfmhgx234jnxwrtmbdpr@4yv64sz2kpcs>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="PKCFTvpw"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7066c9741fbso4316198b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 00:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719991792; x=1720596592; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eyHOv+1TQs3NJgyrsK3G70btEgM4PBOJQcOuP6+/cTo=;
+        b=PKCFTvpw5bXb4OQexhnk1hkKHZIMmU2RAbXxjNTzeM6Ni4DtgG7gwv1JntMkmQmm0B
+         rYLKZs3SYy+meTYY+sShbVkhj0Ewtm48EF8hvfPmJeL5lOtidw830HCjnLGQO9dCGu9q
+         wLWkr81aYV9OxbZWUNIGF2UKr9eQmFwZTzUy+sAA7pN6qGiYJPhwNr+gDcxGSCteuvWD
+         maRilwBFMp244KZpv+9vvX7vwrCq/dRXwZdGKECpX4GphxnGB8r3/To4mnj7L84zNsHN
+         3axF/jx6f83zLGwkTTgHJmFWmmUDQ+yC0ERm1xsYZGrmZKuvR4e8WCk79uEwS1VCsj0B
+         eyEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719991792; x=1720596592;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eyHOv+1TQs3NJgyrsK3G70btEgM4PBOJQcOuP6+/cTo=;
+        b=Vad3fguEVkW/RooIG6TfKsEqtnNZp93TjBBSxPDYp0il5ST9TLzAq0aq0VCU955cAi
+         wIh5E08tZzOjo3t9FQjIUr37r2FzirMMGYBLGOAkqrIzod0b2uolDl3GJmnparunt/Qs
+         2Xreo4wfxdYU8paQxbxgpnZIkCN45rYFNRnZMeAuzhfdz/YXezZy07T/gQ9Z2eIhShWm
+         0CLkmMTpRvjBm5kkZ3GixBC2vBvEaGHOCkOxaFjcHns8jIhWarlhbv7VCp5R927WsCxj
+         UpLq+q2JpV1P3mbTi7YhMhlDJtfmIuQVWQLHG6zBSJQ7Wclrwor8EHweGbVU0HfrM5OK
+         DgTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzN7drBMWzoh5OUoVd1ZHrIFrNctd7NCncJe/v9KUmMxgRRiUzzFa2+NFICNEi6F3EYVTmyQcbiwRT9z9EkgFyzCnRnsHSyVrXdeu+
+X-Gm-Message-State: AOJu0YySS50wwIvl4jneVEDIwr/boD51+g6r9xFhWwHAdDeWVJm0Ymkp
+	atehpvT8DJLFZTsaEhrnNqWTNCeZ6og5mziKrGnjjetCzA+PID1OgvQiW2OYF20=
+X-Google-Smtp-Source: AGHT+IF/2q2bYv+AW1oYPuOUB0yCXXmEAlApl3JeOfwhHA84IKB4Vo8dFV5LyPLNM+Hvub3oz8ssbw==
+X-Received: by 2002:a05:6a00:194a:b0:706:759a:70bc with SMTP id d2e1a72fcca58-70aaaf32f24mr14483206b3a.29.1719991792618;
+        Wed, 03 Jul 2024 00:29:52 -0700 (PDT)
+Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70802959d41sm9993502b3a.96.2024.07.03.00.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 00:29:52 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: ogabbay@kernel.org
+Cc: ttayar@habana.ai,
+	obitton@habana.ai,
+	fkassabri@habana.ai,
+	dliberman@habana.ai,
+	quic_carlv@quicinc.com,
+	dhirschfeld@habana.ai,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [RESEND PATCH] accel/habanalabs/gaudi2: Use kvfree() for memory allocated with kvcalloc()
+Date: Wed,  3 Jul 2024 09:24:39 +0200
+Message-ID: <20240703072438.725114-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wONVh+6L225rrd86"
-Content-Disposition: inline
-In-Reply-To: <23gvjkszxvf6zehiqetjfmtf67nlpnnfmhgx234jnxwrtmbdpr@4yv64sz2kpcs>
+Content-Transfer-Encoding: 8bit
 
---wONVh+6L225rrd86
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Use kvfree() to fix the following Coccinelle/coccicheck warning reported
+by kfree_mismatch.cocci:
 
-On Mon, Jul 01, 2024 at 09:57:20PM +0300, Serge Semin wrote:
-> Hi folks
->=20
-> On Mon, Jul 01, 2024 at 08:17:29AM -0500, Samuel Holland wrote:
-> > Hi Kanak,
-> >=20
-> > On 2024-07-01 7:13 AM, Kanak Shilledar wrote:
-> > > updated the struct of_device_id dw_spi_mmio_of_match to include
-> > > the updated compatible value for TH1520 SoC ("thead,th1520-spi")
-> > > to initialize with dw_spi_pssi_init().
-> > >=20
-> > > Signed-off-by: Kanak Shilledar <kanakshilledar@gmail.com>
-> > > ---
-> > > Changes in v2:
-> > > - Separated from a single patch file.
-> > > ---
-> > >  drivers/spi/spi-dw-mmio.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >=20
-> > > diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-> > > index 819907e332c4..39e3d46ebf5d 100644
-> > > --- a/drivers/spi/spi-dw-mmio.c
-> > > +++ b/drivers/spi/spi-dw-mmio.c
-> > > @@ -419,6 +419,7 @@ static const struct of_device_id dw_spi_mmio_of_m=
-atch[] =3D {
-> > >  	{ .compatible =3D "microchip,sparx5-spi", dw_spi_mscc_sparx5_init},
-> > >  	{ .compatible =3D "canaan,k210-spi", dw_spi_canaan_k210_init},
-> > >  	{ .compatible =3D "amd,pensando-elba-spi", .data =3D dw_spi_elba_in=
-it},
-> > > +	{ .compatible =3D "thead,th1520-spi", .data =3D dw_spi_pssi_init},
-> >=20
-> > Your binding requires snps,dw-apb-ssi as a fallback compatible string, =
-which is
-> > already supported by this driver and uses the same match data. So you d=
-on't need
-> > this patch; its only effect is to make the kernel larger.
->=20
-> Agree with Samuel comment. Indeed there is no point in adding the
-> vendor-specific device-name supported in the driver if the fallback
-> compatible works as-is.
+	WARNING kvmalloc is used to allocate this memory at line 10398
 
-FWIW, Mark picked up the binding alone so I think there's nothing for
-Kanak to do here & the driver patch should just be forgotten about :)
+Reviewed-by: Tomer Tayar <ttayar@habana.ai>
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ drivers/accel/habanalabs/gaudi2/gaudi2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >From that perspective we shouldn't have merged in the patch adding the
-> Renesas RZN1 SPI device name support, since the generic fallback
-> compatible works for it. On the contrary the Microsemi Ocelot/Jaguar2
-> SoC SPI DT-bindings shouldn't have been defined with the generic
-> fallback compatible since should the device be bound via the generic
-> name it won't work as expected.
->=20
-> Although, it's better to hear out what Rob, Conor or Krzysztof think
-> about this.
+diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2.c b/drivers/accel/habanalabs/gaudi2/gaudi2.c
+index fa1c4feb9f89..8024047962ec 100644
+--- a/drivers/accel/habanalabs/gaudi2/gaudi2.c
++++ b/drivers/accel/habanalabs/gaudi2/gaudi2.c
+@@ -10489,7 +10489,7 @@ static int gaudi2_memset_device_memory(struct hl_device *hdev, u64 addr, u64 siz
+ 				(u64 *)(lin_dma_pkts_arr), DEBUGFS_WRITE64);
+ 	WREG32(sob_addr, 0);
+ 
+-	kfree(lin_dma_pkts_arr);
++	kvfree(lin_dma_pkts_arr);
+ 
+ 	return rc;
+ }
+-- 
+2.45.2
 
-I agree with what you've written. If the fallback works identically, then
-the specific compatible shouldn't be added here. And if the fallback
-will cause the device to misbehave (or not behave at all), then it
-should not have been added.
-I'm not sure if the Microsemi stuff is in the "won't work {,properly}"
-camp or in the "will work in a limited fashion" camp. The latter would
-be suitable for a fallback, the former not.
-
-Cheers,
-Conor.
-
-
---wONVh+6L225rrd86
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoT9owAKCRB4tDGHoIJi
-0jYGAP9sjC9GgGM9qE1ZoqzHHiaERajD3hAFoKB9OYEHsOFtxQEAl1g8BT7QyaMo
-nMrjiPXoOmUwVmAt6fFAiWSAim+W7ws=
-=Z2Ad
------END PGP SIGNATURE-----
-
---wONVh+6L225rrd86--
