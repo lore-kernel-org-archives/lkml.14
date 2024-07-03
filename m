@@ -1,61 +1,60 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7784C172798
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 12:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FCB174EFF
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 12:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720008675; cv=none; b=S+zwrsfY9M3etnT243es/zmUxEpVff5Fh2wfEk+RMRjbYi//Slg6+lmaHfDahxw9/y2moGYGCGe6RX+a7FbktvM8aKUzl/Mnxjja+DhfDyFLtxArOoDHDDsW2hquSI5L5Ne4Ccm7c0CA6MLQA7hcU6IDBvMvw7eUi6OUxuZW28c=
+	t=1720008676; cv=none; b=GDb+mWMMUnKExfUfBqsVcFn3r13k9l6+d0Us+P9PCSlcSgLn/t1rC6rIODi2PqNEwqEmW1uh8PINXhXp3PsW9Q9UDGZa/QWO0YsW+ggTOvxDDWpnUfEBm4UCduS1LeT/q25NFrP1dKLRloIgK4j/5Tl1pl+1KZRJm/CPzLiUn/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720008675; c=relaxed/simple;
-	bh=zkBYXA5XhH4F6q1m9UDysUTPImTnL2Gru3YtQza5a+s=;
+	s=arc-20240116; t=1720008676; c=relaxed/simple;
+	bh=hcQM/u4gdKEirg5JUeG8TyWsInxszV0wEWN+duol+CY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X1uJizG1o4U8eHQofFtIeBjiF1P6qm+xL0N5ARE1wWGD5X8Dmx6tn33Ivv4zexbZQN1+7kK9xdKQEdBip4yjZvuzrj+RU9HpLncJYd1ZWHBpG47na0MnD5Y9K19vQrIzembpDzY9RYEhQ//SYM1N4wIzOFnFs2wKoxhz53vPTMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yinf8q62; arc=none smtp.client-ip=209.85.221.54
+	 In-Reply-To:To:Cc; b=dq0UKw9CnguBdatIgb6NKmROj/aK4NMtE7QVvf2pDGfI52uOsEpEiuGnFr5aWCUA7NwMI1UZ3OqzYtQD+4wI/mYxH1xMHaOHiKeLY/tQ75xJP7pdGkcr1i4f939v5G090kK8uf+yaz1AjmNodFxNcZ1T+FceHAbBKh151CLHQn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mi4q4QbP; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yinf8q62"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-36703b0f914so404687f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 05:11:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mi4q4QbP"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4256aee6d4fso32522385e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 05:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720008671; x=1720613471; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1720008673; x=1720613473; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7cLxowQxGXKyItHO9t5LQNge45csaHkg4VU8jx6Qm+I=;
-        b=yinf8q62WNkfCKrJA8xgleqMQO7qSsl23P729JNkKfm3ERJdcoAKP8/eDe3qt/j98s
-         Z7kqV9rqyGgAbEUxIG9338sx/rRtkS4THO1ffdHRN0wAyD/KAfLpGW9Y9y6Noui2BrLN
-         U1vV/WDI+GnAkVdg9pJrFJQgARnMH3a4uvN97045rGM8WYaz3jbJX1S15l91bIauI817
-         mnelTHbYU8AcO/mEwBZSq6iI7xYHnoTZ00sQEdalq5W/dJPOVa7H0H5QpTv/hcPLDPnU
-         ATWv6BG1I0AEG4NPX91V+zQbzdqsHUiJZuaxQNu2xJ3BGoXUF2s/3HLZSMJRuS3XltVB
-         7wuQ==
+        bh=TvfHWDLawXK7UTQtN1jPqjdOr/fZ9HhxS6j/T8wlgb0=;
+        b=mi4q4QbPZgLrl8yfIBksIq5MO+QZwUrk+2v5qqn5LVO8nBQ0Pa6g670jnh5cTJH8w6
+         XUUJAUwL7vlkD9ZlPZUL6bJGemaViI40UuUVO88EBUcE4Fmu8ZVPR7BSbZGEWCI0Hm4N
+         hzcTYntyCzveoUY7PXRESxmcZQQ3PlYe0KcIqAeaRLUJfLTJEsS3SXV+R1V2vjw3vYNr
+         I9vcZ5FMxUgvftYRDSe1yX2/m05+0RdOr+ttBimaxb8U7xdD2xfgw2rC+Ck8TCUAbQeV
+         2Mxv6kcJFlMXrz9mmSTYXhMmQr/f7ffASivOVpeNwIpV+YEUBgmbNweeoyuqM8pyWaOr
+         3Xlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720008671; x=1720613471;
+        d=1e100.net; s=20230601; t=1720008673; x=1720613473;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7cLxowQxGXKyItHO9t5LQNge45csaHkg4VU8jx6Qm+I=;
-        b=alblbETn1p9YDBpCp95Zs5TVb4qh1gzITVK89N1KHbbFmClj3FBc9sc5++zNaWIsTk
-         6/28BFgLvbhUgWL01rOn73DX4vtzDdcpJjfc0IAIdOiC+MvuQgZfbNSwOMs/j6Ap/+Qk
-         2fmUhSqmUv8xGKaOd8Ld2TNutQ0kBkj/0Ta7Psy7SxpLLyZwBoV27iuYs6ywDJ8qDMYm
-         GA2s9pw4TsBe1eV6Bc3qTmokSCUik8PmKWJoZP4YgYI4/KOFN802YanPBoMsOOPfPN9U
-         V1Dqlf3VodLBImVYZhV6N+XLMLX0+hPpO+39xuF8kS/OPfNc9nVyFkRBgnqVjP1sp62/
-         3EcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcfpZgMa/4MYEofLmpHrfiRmaQpTseOq4WzlNcIbH15Sq3i+v3vtvaKd55Yd71MQ/r+1Sd//cmTl5KEAs8sK4n4bG3pDkHX9kExL+3
-X-Gm-Message-State: AOJu0YyOlkULE9rl9mylHSMdkwwCUjDz5/h4hkx9tPBxznynJ53j5b2D
-	xa7rdA90DoOHUTSL2606j6JZKjgeN+5/Bi2kcm1yc2strW9PJFo5FeirHKWuVFY=
-X-Google-Smtp-Source: AGHT+IFy7XIwYIBv75NcGjjGCl0VS2oKdh8CqLT1sJCeuF/ePWgLta3XoHjrEoA8051q0A7kko4l1Q==
-X-Received: by 2002:adf:f652:0:b0:363:337a:3e0 with SMTP id ffacd0b85a97d-36794780b27mr1367398f8f.1.1720008670720;
-        Wed, 03 Jul 2024 05:11:10 -0700 (PDT)
+        bh=TvfHWDLawXK7UTQtN1jPqjdOr/fZ9HhxS6j/T8wlgb0=;
+        b=wB936kInil7I+rkRizUHpuitgoG3iH9mX4inV8Gc+LJpOvPYQEM/YeRBDhWKnSwBsF
+         qHHGoJ7YeOxFUYOOGRWcKKqNJ+0tDpBurYsGvD0Jn0jhH3NLvn5t+DLEBYzWIsjestZS
+         SYr4eb6SAkMP1iEuOMT6KHPrOhF7U47pXrE4TMEAOB0Zt74+MAkmY9lR9QKjxh+GQUMg
+         5an+0enyWQ+5+U6GdbWl7GIGtsjw1LLP0lWUfojguzrn6PP+OviZBeGa/C5GC+7AfnMv
+         YseNTlP14xoKpMGyxOBcfo+UKy8+D/LZBSySLfCpWU95EOBGwIFREfeE4wq079J+840V
+         ymQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVowzylG/xhcCNC9kg9C4aa4jeBIq92iqAjiWnb7bdSayA+VUj8NgjCIhfrpHJ59+wECJgfdN/+0dtcUAJpYZ00tH+jAL4eJT5MOIDO
+X-Gm-Message-State: AOJu0YzLM4olxRBa++dUixWLcuUOtL42l16LHuoJdQP/nw73r8KG89F2
+	mMsrR4o41Zl7ASSU5gg/hqo1kdr973+3jul3NLqwjV7pddEnjUiS0Yt+HRAY3lc=
+X-Google-Smtp-Source: AGHT+IH/sDmBGQHkKlo6P8bbLVjWf52TOStaaHtlhq8jk1kOVYcLwRGZwRzl7cnPOdgKGkCKo6+RoQ==
+X-Received: by 2002:adf:e24e:0:b0:366:ecc4:aa6e with SMTP id ffacd0b85a97d-3677569e9e7mr7912505f8f.4.1720008673463;
+        Wed, 03 Jul 2024 05:11:13 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a10307bsm15716222f8f.94.2024.07.03.05.11.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a10307bsm15716222f8f.94.2024.07.03.05.11.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 05:11:10 -0700 (PDT)
+        Wed, 03 Jul 2024 05:11:13 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 03 Jul 2024 14:10:55 +0200
-Subject: [PATCH 01/11] ASoC: codecs: audio-iio-aux: Simplify
- audio_iio_aux_add_dapms() with cleanup.h
+Date: Wed, 03 Jul 2024 14:10:57 +0200
+Subject: [PATCH 03/11] ASoC: codecs: wcd9335: Simplify with cleanup.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240703-asoc-cleanup-h-v1-1-71219dfd0aef@linaro.org>
+Message-Id: <20240703-asoc-cleanup-h-v1-3-71219dfd0aef@linaro.org>
 References: <20240703-asoc-cleanup-h-v1-0-71219dfd0aef@linaro.org>
 In-Reply-To: <20240703-asoc-cleanup-h-v1-0-71219dfd0aef@linaro.org>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -75,107 +74,104 @@ Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
  alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2812;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2386;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=zkBYXA5XhH4F6q1m9UDysUTPImTnL2Gru3YtQza5a+s=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmhT/SBRZL/pAdnmTHzMWcEt1sae0bOVf+MOlLi
- 9Iouwdrzt+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZoU/0gAKCRDBN2bmhouD
- 1++xD/4smEI7/Q/xqQ8kHg3Br1em0PyUgtV32GF4yvl2OjiJmfHfqwc4MC8tYzguMEV3m9v143t
- 3is1DhFHdotHjyQMMJiMG+/b3egvgKx8MxxKLDTGJ3MbXRecLSlQAaMuSCGeuLk4bCEXAZtN2nZ
- 59l6mosBbXKPDZGIBe3M+soiCM03Ydl01cJl8dSK5suDjwRpkMhb0+JXQjOl4yk2ZO0u8RmvM0j
- uTtxKpGljxGv78qEXDf1jblZH1uShAGNoK1Ox0ZKWxrhVpaG14Ytg1DC66Mpd7oomSWnyWBt1wU
- EshhBKabPnUlVVJObbJ1XFzGZURbnFu/lUXJgmBgaxhNczlYsv9/5T60tarIxLoFEClMrdN5NF4
- 7an704jrG2hU0kQtKZznWsT3bxDivQfnUj/7hEgnVcadq4eChOBHgZKl886/hgKB4b7l25UUdxr
- 7Zw7a1u0wlt1n9SPZTdlqdQwGj/1eL8hAkZkxLW54Dn6o59EUy415ArhoHSaawTLZFbER5UtXSs
- JrKvhfVNnjlmMmOGlnXUwCWRTfLqf9HBuynCCUJsjfA4B6sMDo0lV+P5grGPlQlghYxPgiaUAzU
- H96CRf99qS+tBY6o3K4/0HEsWzv1FLK3oz/6DmIkUKweb/sR9xpbL8JxcMRwZsi762H3cuL7vTE
- RVySwVK/E7N7Ziw==
+ bh=hcQM/u4gdKEirg5JUeG8TyWsInxszV0wEWN+duol+CY=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmhT/TOLcCIz6vRLHZuKKP8eFZ3aNZ0lSBNsBPR
+ gPoj0LQArmJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZoU/0wAKCRDBN2bmhouD
+ 15lDD/90zgr9CUgmwUMkXnQnamYu6m4EoSre0Pt416O1Wakpe2GuaQQXnXtSAFvkzmCN10TFJZS
+ 5mtDly3oBv29VLaL69b+0QdddwCyIaiHwr8ZHtoQyRQQbJ96V5mnVIzjvtdwcLji6ImP6o5nqw1
+ 7wXJnm8S6bE9dTMtmAIVqk7VZsp3HYcC57MFq8tHaNaCIszhbI3ac3d06FT+mEUjh/DK1zHBXrp
+ YlAvQWzutJrs63xmHSN5017bL6GJ8WTFqfjN/1zVIZu5LjANy1Q6Pjy14KFkr3BMiAlVOCsI7/v
+ UixaWOhI2XyG3sVrfnsI9OC2Tn5/90qd+qsG6yW9ajxs1BQLdfmH/sbF3dt+yH8nzH1uMDrIEuK
+ 9JaG3EaZj6+sMovJfP7FOkKSZQp2Nh4BGcw1OEuI1hzfOQAUdq4JQ/7aAGuWb5NZ5LK7Mel7Ixd
+ FHdoYh5nEFncyG6eylOXFPv18YVRccUV0jLdRQR8qiTs/pdNlpdkMnER5LtZhphvqXfFOZJfiNW
+ DxCSuGc/e7LCeRnXNj9bIxhaLPxD6IbRm+gny4Yvj6y3/yOVe21+yLfYFxGNvJlJ+4lQYThBc6g
+ 0ul+8ij1wZ4eAoA6XHNKr3O3LN6k7/KbGdnaduYaVQyTS5PESikZXMDj/ZbKqwSmli2SPa9+JwI
+ QXVLp6ds12r0Jfg==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Allocate the memory with scoped/cleanup.h in audio_iio_aux_add_dapms()
-to reduce error handling (less error paths) and make the code a bit
-simpler.
+Allocate the memory with scoped/cleanup.h to reduce error handling (less
+error paths) and make the code a bit simpler.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- sound/soc/codecs/audio-iio-aux.c | 36 +++++++++++-------------------------
- 1 file changed, 11 insertions(+), 25 deletions(-)
+ sound/soc/codecs/wcd9335.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/sound/soc/codecs/audio-iio-aux.c b/sound/soc/codecs/audio-iio-aux.c
-index 1e8e1effc2af..3969ee45f41e 100644
---- a/sound/soc/codecs/audio-iio-aux.c
-+++ b/sound/soc/codecs/audio-iio-aux.c
-@@ -6,6 +6,7 @@
- //
- // Author: Herve Codina <herve.codina@bootlin.com>
- 
+diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
+index 1a20131e2a60..373a31ddccb2 100644
+--- a/sound/soc/codecs/wcd9335.c
++++ b/sound/soc/codecs/wcd9335.c
+@@ -5,6 +5,7 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
 +#include <linux/cleanup.h>
- #include <linux/iio/consumer.h>
- #include <linux/minmax.h>
- #include <linux/mod_devicetable.h>
-@@ -131,33 +132,27 @@ static int audio_iio_aux_add_dapms(struct snd_soc_component *component,
- 				   struct audio_iio_aux_chan *chan)
- {
- 	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
--	char *output_name;
--	char *input_name;
--	char *pga_name;
- 	int ret;
+ #include <linux/device.h>
+ #include <linux/wait.h>
+ #include <linux/bitops.h>
+@@ -2714,25 +2715,23 @@ static int wcd9335_codec_enable_dec(struct snd_soc_dapm_widget *w,
+ 	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+ 	unsigned int decimator;
+ 	char *dec_adc_mux_name = NULL;
+-	char *widget_name = NULL;
+-	char *wname;
++	char *widget_name;
+ 	int ret = 0, amic_n;
+ 	u16 tx_vol_ctl_reg, pwr_level_reg = 0, dec_cfg_reg, hpf_gate_reg;
+ 	u16 tx_gain_ctl_reg;
+ 	char *dec;
+ 	u8 hpf_coff_freq;
  
--	input_name = kasprintf(GFP_KERNEL, "%s IN", chan->name);
-+	/* Allocated names are not needed afterwards (duplicated in ASoC internals) */
-+	char *input_name __free(kfree) = kasprintf(GFP_KERNEL, "%s IN", chan->name);
- 	if (!input_name)
+-	widget_name = kmemdup_nul(w->name, 15, GFP_KERNEL);
+-	if (!widget_name)
++	char *wname __free(kfree) = kmemdup_nul(w->name, 15, GFP_KERNEL);
++	if (!wname)
  		return -ENOMEM;
  
--	output_name = kasprintf(GFP_KERNEL, "%s OUT", chan->name);
--	if (!output_name) {
--		ret = -ENOMEM;
--		goto out_free_input_name;
--	}
-+	char *output_name __free(kfree) = kasprintf(GFP_KERNEL, "%s OUT", chan->name);
-+	if (!output_name)
-+		return -ENOMEM;
+-	wname = widget_name;
++	widget_name = wname;
+ 	dec_adc_mux_name = strsep(&widget_name, " ");
+ 	if (!dec_adc_mux_name) {
+ 		dev_err(comp->dev, "%s: Invalid decimator = %s\n",
+ 			__func__, w->name);
+-		ret =  -EINVAL;
+-		goto out;
++		return -EINVAL;
+ 	}
+ 	dec_adc_mux_name = widget_name;
  
--	pga_name = kasprintf(GFP_KERNEL, "%s PGA", chan->name);
--	if (!pga_name) {
--		ret = -ENOMEM;
--		goto out_free_output_name;
--	}
-+	char *pga_name __free(kfree) = kasprintf(GFP_KERNEL, "%s PGA", chan->name);
-+	if (!pga_name)
-+		return -ENOMEM;
+@@ -2740,16 +2739,14 @@ static int wcd9335_codec_enable_dec(struct snd_soc_dapm_widget *w,
+ 	if (!dec) {
+ 		dev_err(comp->dev, "%s: decimator index not found\n",
+ 			__func__);
+-		ret =  -EINVAL;
+-		goto out;
++		return  -EINVAL;
+ 	}
  
- 	widgets[0] = SND_SOC_DAPM_INPUT(input_name);
- 	widgets[1] = SND_SOC_DAPM_OUTPUT(output_name);
- 	widgets[2] = SND_SOC_DAPM_PGA(pga_name, SND_SOC_NOPM, 0, 0, NULL, 0);
- 	ret = snd_soc_dapm_new_controls(dapm, widgets, 3);
- 	if (ret)
--		goto out_free_pga_name;
-+		return ret;
+ 	ret = kstrtouint(dec, 10, &decimator);
+ 	if (ret < 0) {
+ 		dev_err(comp->dev, "%s: Invalid decimator = %s\n",
+ 			__func__, wname);
+-		ret =  -EINVAL;
+-		goto out;
++		return -EINVAL;
+ 	}
  
- 	routes[0].sink = pga_name;
- 	routes[0].control = NULL;
-@@ -165,17 +160,8 @@ static int audio_iio_aux_add_dapms(struct snd_soc_component *component,
- 	routes[1].sink = output_name;
- 	routes[1].control = NULL;
- 	routes[1].source = pga_name;
--	ret = snd_soc_dapm_add_routes(dapm, routes, 2);
- 
--	/* Allocated names are no more needed (duplicated in ASoC internals) */
--
--out_free_pga_name:
--	kfree(pga_name);
--out_free_output_name:
--	kfree(output_name);
--out_free_input_name:
--	kfree(input_name);
--	return ret;
-+	return snd_soc_dapm_add_routes(dapm, routes, 2);
+ 	tx_vol_ctl_reg = WCD9335_CDC_TX0_TX_PATH_CTL + 16 * decimator;
+@@ -2836,8 +2833,7 @@ static int wcd9335_codec_enable_dec(struct snd_soc_dapm_widget *w,
+ 		snd_soc_component_update_bits(comp, tx_vol_ctl_reg, 0x10, 0x00);
+ 		break;
+ 	}
+-out:
+-	kfree(wname);
++
+ 	return ret;
  }
  
- static int audio_iio_aux_component_probe(struct snd_soc_component *component)
 
 -- 
 2.43.0
