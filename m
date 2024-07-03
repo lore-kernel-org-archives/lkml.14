@@ -1,354 +1,93 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931FB1836D8
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:19:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B422BD19
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:19:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720023569; cv=none; b=gbl+vLPL4R6aqZ2cfXnDG+kBk/nrzaiJt6XAr+yWH3j370kw6UAx+W12PRQS7L6MhiTNjBkTnWWW6lgxyEYXunq0Lun4JQSBL5cW0I6bduz+FOtQN30Ex3V15Ie3zKCS5SvuQRTYcjNWs97QFY5l1AcvSZL0shUMenPQLj+hy5A=
+	t=1720023600; cv=none; b=UzuaPLNXP/KOpkzVIiab53bSekrI89SKnSTQc36jKrCugutHsMZbOc9FRURR4BiZws5N2hkz2K1eqnCbDm60ZtkT1mX6kkcdQ8tAYshGLmJcyS0UsoZoEGBvvLKjvxMW+kBXoFUj7AQmYQ/9mpR0EKPKdBt81yRuQcIj85xorig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720023569; c=relaxed/simple;
-	bh=XZQ2khpGw92ayYyOOjfsbAZCVbk4sLWNq5yArPaelbQ=;
+	s=arc-20240116; t=1720023600; c=relaxed/simple;
+	bh=Yb55tWCidbB7U28h6KIibcX9GbhOAIHz0lHdj7dTw74=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HhtdNU5bgGSkX8Q3lPVpX8NTds6iq79uuE/57uQtIAj9WK671ySKQbeLYkVKSrBlTweWmQGZdzncXYFsEbjvm8MZfvKL3jGyqnFKOySgypw1PMkdgCcqKBCRAbpWT1WzlJmY8W3wAez6xj5FxN9w3IiN48t/jJBtAdEnRJfGFrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=REpniWAn; arc=none smtp.client-ip=170.10.133.124
+	 To:Cc:Content-Type; b=BYkDwLDyGFEQl8WXMr1FW2tGikyMZ5DkqjjNfIHjyBkZCNY4bzQoichLeSNo4omVpnI8JGWQdiD/HqQ1V5lG8DOetDmsIYRQ+3yzgqxjyYemHTf5AzAw4S4j/pUa2jUlmOfp8wL16TRZmKnwmksdVzuFJyWezuVBF37lLR+c120=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PGE/en6v; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="REpniWAn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PGE/en6v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720023565;
+	s=mimecast20190719; t=1720023598;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c65T9aGcCrnJaJaWK+o0SC+aJQfT0XzRMaqMZ/EJDM4=;
-	b=REpniWAnG293xyof8cG3Xb72Tct2qn6jdZUPtH6+8lgkyXR2xRndj2EL4McZOW8dOv2anm
-	fxBDAc/f43GCHffgeUnY5pHikBZ/CGhjfX82ch0czigSrfUJYyus6LmDp7ZJEmxdXIRgft
-	Owj77v7fgwRCBm6hJhP2sZBDecupdoY=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Yb55tWCidbB7U28h6KIibcX9GbhOAIHz0lHdj7dTw74=;
+	b=PGE/en6vqcM0peyIVKhiWi9PyFsOzSl/snxX/wOOink/gcYfSjnwL9ALgFGsdLwqjy5jnP
+	obOb/VALCMWJ/FEtJ1kPVlP2RVMDy0kVJab6aon7+k81j8NPlxkYtoBdflCat4QbN35IXJ
+	LI3TYFCrN9pobeFXBrtWC0JC22ZgjQY=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-250-wM-AH0WJOUelKoRZj4ptjg-1; Wed, 03 Jul 2024 12:19:24 -0400
-X-MC-Unique: wM-AH0WJOUelKoRZj4ptjg-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-57d3eca4bb7so1299360a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 09:19:24 -0700 (PDT)
+ us-mta-402-jswbS6tpOtCMVF-XSwoSGg-1; Wed, 03 Jul 2024 12:19:56 -0400
+X-MC-Unique: jswbS6tpOtCMVF-XSwoSGg-1
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2c98dc3f5b6so135564a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 09:19:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720023562; x=1720628362;
+        d=1e100.net; s=20230601; t=1720023596; x=1720628396;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c65T9aGcCrnJaJaWK+o0SC+aJQfT0XzRMaqMZ/EJDM4=;
-        b=b/ZbRkBEXgfNbeKKYF2mh7gzmW2RSDMknMNrwrYkBMJSMy6sSJiYvTFgf2viiXkw1S
-         yblpEMKxs+CHg6enq2pNmo59Jc9dJdS5EKjTugcGJX/Y7yN6Eog8xvf/jicTgzIGw9LY
-         GpJmUl/cVzYlbbD5Aqnl1X7HxLw1JWtO/2i9Pct6UFeFF4D84Xk6WTriwQ4eoDqIY/aS
-         z2m2H+QQDWyxP/anT5i9efrJptRpXM4ETaFd8PqPR4oI43DoDoq+F7paOOeemrMzWzIW
-         AQG5XZGrE7sBabxf9K+hyXC6F4o+8ITDkRuJC6OILqBTm4/+RYENR5ZjOjTlXDbpnMgO
-         vDgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKTT9t6qrAC+jsvjwfLEwVnsYf8IHhuxZvgWECX5ymTszu8WWEhqE65nPHjvzZS4lOc4xvIBKEZx8fcLBCBZo+nV9BzJY1hiC9rJMq
-X-Gm-Message-State: AOJu0YwR5qq7P8le1yFzjKEK3/kFx8+lPE506wk6G0ux4YlUpqkaQEWL
-	kKaK7wlSq48pc/yTtazJCMXdQpPaRNUyWuiRVvuTzjUuS9YZRmXPzUxPpDmnxaFAjo8uFfnNyvr
-	8OkCevVqyUtVOQ9EWKPDAOyYyLadTH1Fki2/arsU2RgJf8Da8Gv0JtGx+An1SdYguZFcGn7U6Fv
-	5Ea5BYU0T8imGZGOFH5iE6MzsswHdEVA408dKkCskKrYUfrio=
-X-Received: by 2002:a05:6402:3591:b0:58c:b2b8:31b2 with SMTP id 4fb4d7f45d1cf-58ce5ef6ad8mr1719691a12.17.1720023562396;
-        Wed, 03 Jul 2024 09:19:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGOPm2RKAFqhIP4SkrsoOYtpsOdJlOeWv6pMlJEn55IU/y69hvTL9KLEEXmYY5vce/n+pf4qv0hzVawdzxulgw=
-X-Received: by 2002:a05:6402:3591:b0:58c:b2b8:31b2 with SMTP id
- 4fb4d7f45d1cf-58ce5ef6ad8mr1719679a12.17.1720023562050; Wed, 03 Jul 2024
- 09:19:22 -0700 (PDT)
+        bh=Yb55tWCidbB7U28h6KIibcX9GbhOAIHz0lHdj7dTw74=;
+        b=w7kA3STldQ1C1/4WonfYfwpqBS1pq/WO/8VRehx+ZgZuanBnoV96v+IVhH8dZ3nM2k
+         sXW+woiuVOUQIInfs1+bORzSU+oF8QAmQvEmQxx+zppMP18mgC+TaWUqL2uRNWwDm/5Z
+         js2JYPUU+JsRfexMP4p5hjpPlV7hn8VNSA3FGJyKlMyIgBAk+3CHUISQft0bPC7oM5vd
+         /mSvGQMllIbB5AMWw4Egs2tVm7JjoDmjtxC9S/d2rw/MEOYCuzH0WR0PC38ktPZkjPAP
+         dnVdSHGzixrV1svEsbR2gZg/fGLTE1fhvTVeSqkmWkeujUpu/AhvUnBOp6v2C4tS5hyK
+         i7Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFSqc3EmwmdKWD14O3sDkUTNLv61UsbYvYmzMzc3eYkrgc0Fn1zJVt/gJve0FHg5gL3uouKXZdE0gA46LAZ2ai9mubztxxGcwVzkpp
+X-Gm-Message-State: AOJu0YwT61H560KT/LNkvGBqdq7xVoM/1/MMGfWvVn4qj7gmdtYC3S+f
+	x/7Ybsi5c9EzVwsdr21L961fkBAYjm8gN8UY0LpkOcGGA3nfW7rhTHvSvRn7DM8wn5iWTLzYzVa
+	Pdw7fh5WaP7Pm7VPv7S3huVJ/kj5uzDLyF3x0HAHstjctR87Kp1NoV84gnWq2dB27QJIflgQtw5
+	67rdEkGGB0Zj4Dvy3kFZUdPRRU1DZEnVqL/uc+
+X-Received: by 2002:a17:90b:30c:b0:2c9:66d3:4663 with SMTP id 98e67ed59e1d1-2c966d34812mr3295004a91.43.1720023595691;
+        Wed, 03 Jul 2024 09:19:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBYnJibkfu8VR+gdQSw9I+Q70m33hrU3O4k6VmctxXx22qFoixYHHOvKc2dtgGcMdXrvw/AVbdfSSbiO6qe9M=
+X-Received: by 2002:a17:90b:30c:b0:2c9:66d3:4663 with SMTP id
+ 98e67ed59e1d1-2c966d34812mr3294975a91.43.1720023595205; Wed, 03 Jul 2024
+ 09:19:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626-stage-vdpa-vq-precreate-v2-0-560c491078df@nvidia.com> <20240626-stage-vdpa-vq-precreate-v2-15-560c491078df@nvidia.com>
-In-Reply-To: <20240626-stage-vdpa-vq-precreate-v2-15-560c491078df@nvidia.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 3 Jul 2024 18:18:44 +0200
-Message-ID: <CAJaqyWfEv9KLKDSZidiO=ZoJvKVLaHzHW3+ModPxfGEiu1xMUw@mail.gmail.com>
-Subject: Re: [PATCH vhost v2 15/24] vdpa/mlx5: Allow creation of blank VQs
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	Cosmin Ratiu <cratiu@nvidia.com>
+References: <20240703104600.455125-1-ast@fiberby.net>
+In-Reply-To: <20240703104600.455125-1-ast@fiberby.net>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Wed, 3 Jul 2024 18:19:44 +0200
+Message-ID: <CAKa-r6tRzP0xK8hSY3xraTyUET1xgLRE4RXRj5hoWFQSxcfF7Q@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/9] flower: rework TCA_FLOWER_KEY_ENC_FLAGS usage
+To: =?UTF-8?B?QXNiasO4cm4gU2xvdGggVMO4bm5lc2Vu?= <ast@fiberby.net>
+Cc: netdev@vger.kernel.org, Ilya Maximets <i.maximets@ovn.org>, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	David Ahern <dsahern@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Ratheesh Kannoth <rkannoth@marvell.com>, Florian Westphal <fw@strlen.de>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 26, 2024 at 12:28=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.co=
-m> wrote:
->
-> Based on the filled flag, create VQs that are filled or blank.
-> Blank VQs will be filled in later through VQ modify.
->
-> Downstream patches will make use of this to pre-create blank VQs at
-> vdpa device creation.
->
+hello,
 
-s/Downstream/Later/ ?
+On Wed, Jul 3, 2024 at 12:47=E2=80=AFPM Asbj=C3=B8rn Sloth T=C3=B8nnesen <a=
+st@fiberby.net> wrote:
+>
+> This series reworks the recently added TCA_FLOWER_KEY_ENC_FLAGS
+> attribute, to be more like TCA_FLOWER_KEY_FLAGS, and use the unused
+> u32 flags field in FLOW_DISSECTOR_KEY_ENC_CONTROL, instead of adding
+> a new flags field as FLOW_DISSECTOR_KEY_ENC_FLAGS.
 
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-
-Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
-
-> ---
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 85 +++++++++++++++++++++++++--------=
-------
->  1 file changed, 55 insertions(+), 30 deletions(-)
->
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/ml=
-x5_vnet.c
-> index a8ac542f30f7..0a62ce0b4af8 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -158,7 +158,7 @@ static bool is_index_valid(struct mlx5_vdpa_dev *mvde=
-v, u16 idx)
->
->  static void free_fixed_resources(struct mlx5_vdpa_net *ndev);
->  static void mvqs_set_defaults(struct mlx5_vdpa_net *ndev);
-> -static int setup_vq_resources(struct mlx5_vdpa_net *ndev);
-> +static int setup_vq_resources(struct mlx5_vdpa_net *ndev, bool filled);
->  static void teardown_vq_resources(struct mlx5_vdpa_net *ndev);
->
->  static bool mlx5_vdpa_debug;
-> @@ -874,13 +874,16 @@ static bool msix_mode_supported(struct mlx5_vdpa_de=
-v *mvdev)
->                 pci_msix_can_alloc_dyn(mvdev->mdev->pdev);
->  }
->
-> -static int create_virtqueue(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa=
-_virtqueue *mvq)
-> +static int create_virtqueue(struct mlx5_vdpa_net *ndev,
-> +                           struct mlx5_vdpa_virtqueue *mvq,
-> +                           bool filled)
->  {
->         int inlen =3D MLX5_ST_SZ_BYTES(create_virtio_net_q_in);
->         u32 out[MLX5_ST_SZ_DW(create_virtio_net_q_out)] =3D {};
->         struct mlx5_vdpa_dev *mvdev =3D &ndev->mvdev;
->         struct mlx5_vdpa_mr *vq_mr;
->         struct mlx5_vdpa_mr *vq_desc_mr;
-> +       u64 features =3D filled ? mvdev->actual_features : mvdev->mlx_fea=
-tures;
->         void *obj_context;
->         u16 mlx_features;
->         void *cmd_hdr;
-> @@ -898,7 +901,7 @@ static int create_virtqueue(struct mlx5_vdpa_net *nde=
-v, struct mlx5_vdpa_virtque
->                 goto err_alloc;
->         }
->
-> -       mlx_features =3D get_features(ndev->mvdev.actual_features);
-> +       mlx_features =3D get_features(features);
->         cmd_hdr =3D MLX5_ADDR_OF(create_virtio_net_q_in, in, general_obj_=
-in_cmd_hdr);
->
->         MLX5_SET(general_obj_in_cmd_hdr, cmd_hdr, opcode, MLX5_CMD_OP_CRE=
-ATE_GENERAL_OBJECT);
-> @@ -906,8 +909,6 @@ static int create_virtqueue(struct mlx5_vdpa_net *nde=
-v, struct mlx5_vdpa_virtque
->         MLX5_SET(general_obj_in_cmd_hdr, cmd_hdr, uid, ndev->mvdev.res.ui=
-d);
->
->         obj_context =3D MLX5_ADDR_OF(create_virtio_net_q_in, in, obj_cont=
-ext);
-> -       MLX5_SET(virtio_net_q_object, obj_context, hw_available_index, mv=
-q->avail_idx);
-> -       MLX5_SET(virtio_net_q_object, obj_context, hw_used_index, mvq->us=
-ed_idx);
->         MLX5_SET(virtio_net_q_object, obj_context, queue_feature_bit_mask=
-_12_3,
->                  mlx_features >> 3);
->         MLX5_SET(virtio_net_q_object, obj_context, queue_feature_bit_mask=
-_2_0,
-> @@ -929,17 +930,36 @@ static int create_virtqueue(struct mlx5_vdpa_net *n=
-dev, struct mlx5_vdpa_virtque
->         MLX5_SET(virtio_q, vq_ctx, queue_index, mvq->index);
->         MLX5_SET(virtio_q, vq_ctx, queue_size, mvq->num_ent);
->         MLX5_SET(virtio_q, vq_ctx, virtio_version_1_0,
-> -                !!(ndev->mvdev.actual_features & BIT_ULL(VIRTIO_F_VERSIO=
-N_1)));
-> -       MLX5_SET64(virtio_q, vq_ctx, desc_addr, mvq->desc_addr);
-> -       MLX5_SET64(virtio_q, vq_ctx, used_addr, mvq->device_addr);
-> -       MLX5_SET64(virtio_q, vq_ctx, available_addr, mvq->driver_addr);
-> -       vq_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATAVQ_GROUP]];
-> -       if (vq_mr)
-> -               MLX5_SET(virtio_q, vq_ctx, virtio_q_mkey, vq_mr->mkey);
-> -
-> -       vq_desc_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATAVQ_DESC_=
-GROUP]];
-> -       if (vq_desc_mr && MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, desc_g=
-roup_mkey_supported))
-> -               MLX5_SET(virtio_q, vq_ctx, desc_group_mkey, vq_desc_mr->m=
-key);
-> +                !!(features & BIT_ULL(VIRTIO_F_VERSION_1)));
-> +
-> +       if (filled) {
-> +               MLX5_SET(virtio_net_q_object, obj_context, hw_available_i=
-ndex, mvq->avail_idx);
-> +               MLX5_SET(virtio_net_q_object, obj_context, hw_used_index,=
- mvq->used_idx);
-> +
-> +               MLX5_SET64(virtio_q, vq_ctx, desc_addr, mvq->desc_addr);
-> +               MLX5_SET64(virtio_q, vq_ctx, used_addr, mvq->device_addr)=
-;
-> +               MLX5_SET64(virtio_q, vq_ctx, available_addr, mvq->driver_=
-addr);
-> +
-> +               vq_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATAVQ_GR=
-OUP]];
-> +               if (vq_mr)
-> +                       MLX5_SET(virtio_q, vq_ctx, virtio_q_mkey, vq_mr->=
-mkey);
-> +
-> +               vq_desc_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATA=
-VQ_DESC_GROUP]];
-> +               if (vq_desc_mr &&
-> +                   MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, desc_group_m=
-key_supported))
-> +                       MLX5_SET(virtio_q, vq_ctx, desc_group_mkey, vq_de=
-sc_mr->mkey);
-> +       } else {
-> +               /* If there is no mr update, make sure that the existing =
-ones are set
-> +                * modify to ready.
-> +                */
-> +               vq_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATAVQ_GR=
-OUP]];
-> +               if (vq_mr)
-> +                       mvq->modified_fields |=3D MLX5_VIRTQ_MODIFY_MASK_=
-VIRTIO_Q_MKEY;
-> +
-> +               vq_desc_mr =3D mvdev->mr[mvdev->group2asid[MLX5_VDPA_DATA=
-VQ_DESC_GROUP]];
-> +               if (vq_desc_mr)
-> +                       mvq->modified_fields |=3D MLX5_VIRTQ_MODIFY_MASK_=
-DESC_GROUP_MKEY;
-> +       }
->
->         MLX5_SET(virtio_q, vq_ctx, umem_1_id, mvq->umem1.id);
->         MLX5_SET(virtio_q, vq_ctx, umem_1_size, mvq->umem1.size);
-> @@ -959,12 +979,15 @@ static int create_virtqueue(struct mlx5_vdpa_net *n=
-dev, struct mlx5_vdpa_virtque
->         kfree(in);
->         mvq->virtq_id =3D MLX5_GET(general_obj_out_cmd_hdr, out, obj_id);
->
-> -       mlx5_vdpa_get_mr(mvdev, vq_mr);
-> -       mvq->vq_mr =3D vq_mr;
-> +       if (filled) {
-> +               mlx5_vdpa_get_mr(mvdev, vq_mr);
-> +               mvq->vq_mr =3D vq_mr;
->
-> -       if (vq_desc_mr && MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, desc_g=
-roup_mkey_supported)) {
-> -               mlx5_vdpa_get_mr(mvdev, vq_desc_mr);
-> -               mvq->desc_mr =3D vq_desc_mr;
-> +               if (vq_desc_mr &&
-> +                   MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, desc_group_m=
-key_supported)) {
-> +                       mlx5_vdpa_get_mr(mvdev, vq_desc_mr);
-> +                       mvq->desc_mr =3D vq_desc_mr;
-> +               }
->         }
->
->         return 0;
-> @@ -1442,7 +1465,9 @@ static void dealloc_vector(struct mlx5_vdpa_net *nd=
-ev,
->                 }
->  }
->
-> -static int setup_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virtque=
-ue *mvq)
-> +static int setup_vq(struct mlx5_vdpa_net *ndev,
-> +                   struct mlx5_vdpa_virtqueue *mvq,
-> +                   bool filled)
->  {
->         u16 idx =3D mvq->index;
->         int err;
-> @@ -1471,7 +1496,7 @@ static int setup_vq(struct mlx5_vdpa_net *ndev, str=
-uct mlx5_vdpa_virtqueue *mvq)
->                 goto err_connect;
->
->         alloc_vector(ndev, mvq);
-> -       err =3D create_virtqueue(ndev, mvq);
-> +       err =3D create_virtqueue(ndev, mvq, filled);
->         if (err)
->                 goto err_vq;
->
-> @@ -2062,7 +2087,7 @@ static int change_num_qps(struct mlx5_vdpa_dev *mvd=
-ev, int newqps)
->         } else {
->                 ndev->cur_num_vqs =3D 2 * newqps;
->                 for (i =3D cur_qps * 2; i < 2 * newqps; i++) {
-> -                       err =3D setup_vq(ndev, &ndev->vqs[i]);
-> +                       err =3D setup_vq(ndev, &ndev->vqs[i], true);
->                         if (err)
->                                 goto clean_added;
->                 }
-> @@ -2558,14 +2583,14 @@ static int verify_driver_features(struct mlx5_vdp=
-a_dev *mvdev, u64 features)
->         return 0;
->  }
->
-> -static int setup_virtqueues(struct mlx5_vdpa_dev *mvdev)
-> +static int setup_virtqueues(struct mlx5_vdpa_dev *mvdev, bool filled)
->  {
->         struct mlx5_vdpa_net *ndev =3D to_mlx5_vdpa_ndev(mvdev);
->         int err;
->         int i;
->
->         for (i =3D 0; i < mvdev->max_vqs; i++) {
-> -               err =3D setup_vq(ndev, &ndev->vqs[i]);
-> +               err =3D setup_vq(ndev, &ndev->vqs[i], filled);
->                 if (err)
->                         goto err_vq;
->         }
-> @@ -2877,7 +2902,7 @@ static int mlx5_vdpa_change_map(struct mlx5_vdpa_de=
-v *mvdev,
->
->         if (teardown) {
->                 restore_channels_info(ndev);
-> -               err =3D setup_vq_resources(ndev);
-> +               err =3D setup_vq_resources(ndev, true);
->                 if (err)
->                         return err;
->         }
-> @@ -2888,7 +2913,7 @@ static int mlx5_vdpa_change_map(struct mlx5_vdpa_de=
-v *mvdev,
->  }
->
->  /* reslock must be held for this function */
-> -static int setup_vq_resources(struct mlx5_vdpa_net *ndev)
-> +static int setup_vq_resources(struct mlx5_vdpa_net *ndev, bool filled)
->  {
->         struct mlx5_vdpa_dev *mvdev =3D &ndev->mvdev;
->         int err;
-> @@ -2906,7 +2931,7 @@ static int setup_vq_resources(struct mlx5_vdpa_net =
-*ndev)
->         if (err)
->                 goto err_setup;
->
-> -       err =3D setup_virtqueues(mvdev);
-> +       err =3D setup_virtqueues(mvdev, filled);
->         if (err) {
->                 mlx5_vdpa_warn(mvdev, "setup_virtqueues\n");
->                 goto err_setup;
-> @@ -3000,7 +3025,7 @@ static void mlx5_vdpa_set_status(struct vdpa_device=
- *vdev, u8 status)
->                                 goto err_setup;
->                         }
->                         register_link_notifier(ndev);
-> -                       err =3D setup_vq_resources(ndev);
-> +                       err =3D setup_vq_resources(ndev, true);
->                         if (err) {
->                                 mlx5_vdpa_warn(mvdev, "failed to setup dr=
-iver\n");
->                                 goto err_driver;
->
-> --
-> 2.45.1
->
+Tested-by: Davide Caratti <dcaratti@redhat.com>
 
