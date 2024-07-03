@@ -1,29 +1,29 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B2DA143C51
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9DB413D2BE
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:07:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720001276; cv=none; b=bF/TsT0x2qaWmP2iPwj/u5kLBDl+X+mCEVSU3F2kFJEAKbnENj1VyFv+/OH/JtLh1T3Q2I3qCSLGuTY3HD+bsaq2tx7Q31J5fD24bCwRj8yromLoV/4kRAx116HIq7s6FTQC8W8iMmpE+dom6R1IsNFkHrKwzzqnF8LCptIDb3g=
+	t=1720001275; cv=none; b=HRqltLsRkdqRCji8mLggjydpnjIoLD/a847N0hrybPRU2JgvW8gW+QXcOjLRMDb0HVlghdDiwIaw6sGlAgK0NBUPiD8wUwA/QRPoBuYUQaert+uw6h0bbJlGWziAjN3HhCyGB3T0A4zK4do6R/Yo6EwhNzh/UdbTs6uKruZdO8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720001276; c=relaxed/simple;
-	bh=SgHDnlKUpFZa1mecD7sSwc8oq/o6fVz9O73YRXtmBVQ=;
+	s=arc-20240116; t=1720001275; c=relaxed/simple;
+	bh=rx5RnTU+kGBmxxatiIrk+TX3fJ4/GceRbwqeJB9OxDM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K4vM+lhT5vt9LELEAAkJHO9I001P6/TUEziwhb0gWC/mQOXmybgfzDzQJ8afchT0xTDXdBF9mPlUX5I5FoVLkCyHRLSu4UKrZZrSoDXtk/o+ZuNzRa5VRS/vbdjVZhrIZCUTi916B1daH5dE2vcwUv9fIxT2QPLq3VyxEga/Mkc=
+	 MIME-Version; b=qWAiyb+Ttk8dXXvLRhHay/C33xOk5oysih18hS6MA0yEinneEYWTJzHzeJ8IqBA163ydjAE7mmqGYM6M7ZHj3Z4WX9MwBnpXM8PpBTCu3mPjCM58E+uxf8RDOBv5xVFZnNzKXBu8ZP2v6YMQ2x5xmcnFJ6ZaWD206Sum9s3O4sg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8D311688;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B23A1007;
 	Wed,  3 Jul 2024 03:08:18 -0700 (PDT)
 Received: from e130256.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E9BB3F766;
-	Wed,  3 Jul 2024 03:07:53 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D507F3F766;
+	Wed,  3 Jul 2024 03:07:52 -0700 (PDT)
 From: Hongyan Xia <hongyan.xia2@arm.com>
 To: Tejun Heo <tj@kernel.org>
 Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] sched/ext: Add BPF functions for uclamp inc and dec
-Date: Wed,  3 Jul 2024 11:07:48 +0100
-Message-Id: <34f3e33aa236445d677ea2b48d2d556178c1ac34.1719999165.git.hongyan.xia2@arm.com>
+Subject: [PATCH 1/2] sched/uclamp: Delegate uclamp to each sched_class
+Date: Wed,  3 Jul 2024 11:07:47 +0100
+Message-Id: <45e58e2fe1f72d6c095c8824c7da696edfd80bd7.1719999165.git.hongyan.xia2@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1719999165.git.hongyan.xia2@arm.com>
 References: <cover.1719999165.git.hongyan.xia2@arm.com>
@@ -35,64 +35,211 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A sched_ext scheduler may have different choices for uclamp:
+uclamp-related operations are written in core.c in a way that may
+suggest it is a global thing regardless of sched_class, but we end up
+checking sched_class->uclamp_enabled, so in reality it is sched_class
+specific anyway.
 
-1. Re-use the current uclamp implementation
-2. Ignore uclamp completely
-3. Have its own custom uclamp implemenation
+Remove sched_class->uclamp_enabled and simply delegate uclamp to
+sched_class->{enqueue,dequeue}_task(). This also removes extra
+uclamp_enabled checks in uclamp_rq_{inc,dec}().
 
-We expose uclamp BPF functions and let the scheduler itself decide what
-to do.
+No functional changes for fair and RT.
 
 Signed-off-by: Hongyan Xia <hongyan.xia2@arm.com>
 ---
- kernel/sched/ext.c                       | 12 ++++++++++++
- tools/sched_ext/include/scx/common.bpf.h |  2 ++
- 2 files changed, 14 insertions(+)
+ kernel/sched/core.c  | 14 ++------------
+ kernel/sched/ext.c   |  4 ----
+ kernel/sched/fair.c  |  6 ++----
+ kernel/sched/rt.c    |  7 +++----
+ kernel/sched/sched.h | 15 +++++++++++----
+ 5 files changed, 18 insertions(+), 28 deletions(-)
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 0b120104a7ce..48c553b6f0c3 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -6108,6 +6108,16 @@ __bpf_kfunc s32 scx_bpf_task_cpu(const struct task_struct *p)
- 	return task_cpu(p);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1092955a7d6e..5c5e5aefca81 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1671,7 +1671,7 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+ 	}
  }
  
-+__bpf_kfunc void scx_bpf_uclamp_rq_inc(s32 cpu, struct task_struct *p)
+-static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
++void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ {
+ 	enum uclamp_id clamp_id;
+ 
+@@ -1684,9 +1684,6 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ 	if (!static_branch_unlikely(&sched_uclamp_used))
+ 		return;
+ 
+-	if (unlikely(!p->sched_class->uclamp_enabled))
+-		return;
+-
+ 	for_each_clamp_id(clamp_id)
+ 		uclamp_rq_inc_id(rq, p, clamp_id);
+ 
+@@ -1695,7 +1692,7 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ 		rq->uclamp_flags &= ~UCLAMP_FLAG_IDLE;
+ }
+ 
+-static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
++void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ {
+ 	enum uclamp_id clamp_id;
+ 
+@@ -1708,9 +1705,6 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ 	if (!static_branch_unlikely(&sched_uclamp_used))
+ 		return;
+ 
+-	if (unlikely(!p->sched_class->uclamp_enabled))
+-		return;
+-
+ 	for_each_clamp_id(clamp_id)
+ 		uclamp_rq_dec_id(rq, p, clamp_id);
+ }
+@@ -1949,8 +1943,6 @@ static void __init init_uclamp(void)
+ }
+ 
+ #else /* !CONFIG_UCLAMP_TASK */
+-static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
+-static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
+ static inline void uclamp_fork(struct task_struct *p) { }
+ static inline void uclamp_post_fork(struct task_struct *p) { }
+ static inline void init_uclamp(void) { }
+@@ -1990,7 +1982,6 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+ 		psi_enqueue(p, (flags & ENQUEUE_WAKEUP) && !(flags & ENQUEUE_MIGRATED));
+ 	}
+ 
+-	uclamp_rq_inc(rq, p);
+ 	p->sched_class->enqueue_task(rq, p, flags);
+ 
+ 	if (sched_core_enabled(rq))
+@@ -2010,7 +2001,6 @@ void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+ 		psi_dequeue(p, flags & DEQUEUE_SLEEP);
+ 	}
+ 
+-	uclamp_rq_dec(rq, p);
+ 	p->sched_class->dequeue_task(rq, p, flags);
+ }
+ 
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index ae9ec8f542f2..0b120104a7ce 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -3520,10 +3520,6 @@ DEFINE_SCHED_CLASS(ext) = {
+ 	.prio_changed		= prio_changed_scx,
+ 
+ 	.update_curr		= update_curr_scx,
+-
+-#ifdef CONFIG_UCLAMP_TASK
+-	.uclamp_enabled		= 1,
+-#endif
+ };
+ 
+ static void init_dsq(struct scx_dispatch_q *dsq, u64 dsq_id)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d59537416865..a861fafd53f9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6752,6 +6752,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 	int idle_h_nr_running = task_has_idle_policy(p);
+ 	int task_new = !(flags & ENQUEUE_WAKEUP);
+ 
++	uclamp_rq_inc(rq, p);
+ 	/*
+ 	 * The code below (indirectly) updates schedutil which looks at
+ 	 * the cfs_rq utilization to select a frequency.
+@@ -6846,6 +6847,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 	int idle_h_nr_running = task_has_idle_policy(p);
+ 	bool was_sched_idle = sched_idle_rq(rq);
+ 
++	uclamp_rq_dec(rq, p);
+ 	util_est_dequeue(&rq->cfs, p);
+ 
+ 	for_each_sched_entity(se) {
+@@ -13227,10 +13229,6 @@ DEFINE_SCHED_CLASS(fair) = {
+ #ifdef CONFIG_SCHED_CORE
+ 	.task_is_throttled	= task_is_throttled_fair,
+ #endif
+-
+-#ifdef CONFIG_UCLAMP_TASK
+-	.uclamp_enabled		= 1,
+-#endif
+ };
+ 
+ #ifdef CONFIG_SCHED_DEBUG
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 63e49c8ffc4d..f0b3ba5e8867 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1480,6 +1480,8 @@ enqueue_task_rt(struct rq *rq, struct task_struct *p, int flags)
+ {
+ 	struct sched_rt_entity *rt_se = &p->rt;
+ 
++	uclamp_rq_inc(rq, p);
++
+ 	if (flags & ENQUEUE_WAKEUP)
+ 		rt_se->timeout = 0;
+ 
+@@ -1496,6 +1498,7 @@ static void dequeue_task_rt(struct rq *rq, struct task_struct *p, int flags)
+ {
+ 	struct sched_rt_entity *rt_se = &p->rt;
+ 
++	uclamp_rq_dec(rq, p);
+ 	update_curr_rt(rq);
+ 	dequeue_rt_entity(rt_se, flags);
+ 
+@@ -2680,10 +2683,6 @@ DEFINE_SCHED_CLASS(rt) = {
+ #ifdef CONFIG_SCHED_CORE
+ 	.task_is_throttled	= task_is_throttled_rt,
+ #endif
+-
+-#ifdef CONFIG_UCLAMP_TASK
+-	.uclamp_enabled		= 1,
+-#endif
+ };
+ 
+ #ifdef CONFIG_RT_GROUP_SCHED
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 963a2fa180ad..619b1cc972bd 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2340,10 +2340,6 @@ extern s64 update_curr_common(struct rq *rq);
+ 
+ struct sched_class {
+ 
+-#ifdef CONFIG_UCLAMP_TASK
+-	int uclamp_enabled;
+-#endif
+-
+ 	void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
+ 	void (*dequeue_task) (struct rq *rq, struct task_struct *p, int flags);
+ 	void (*yield_task)   (struct rq *rq);
+@@ -3246,6 +3242,9 @@ uclamp_se_set(struct uclamp_se *uc_se, unsigned int value, bool user_defined)
+ 	uc_se->user_defined = user_defined;
+ }
+ 
++void uclamp_rq_inc(struct rq *rq, struct task_struct *p);
++void uclamp_rq_dec(struct rq *rq, struct task_struct *p);
++
+ #else /* !CONFIG_UCLAMP_TASK: */
+ 
+ static inline unsigned long
+@@ -3283,6 +3282,14 @@ static inline bool uclamp_rq_is_idle(struct rq *rq)
+ 	return false;
+ }
+ 
++static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
 +{
-+	uclamp_rq_inc(cpu_rq(cpu), p);
 +}
 +
-+__bpf_kfunc void scx_bpf_uclamp_rq_dec(s32 cpu, struct task_struct *p)
++static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
 +{
-+	uclamp_rq_dec(cpu_rq(cpu), p);
 +}
 +
- __bpf_kfunc_end_defs();
+ #endif /* !CONFIG_UCLAMP_TASK */
  
- BTF_KFUNCS_START(scx_kfunc_ids_any)
-@@ -6132,6 +6142,8 @@ BTF_ID_FLAGS(func, scx_bpf_pick_idle_cpu, KF_RCU)
- BTF_ID_FLAGS(func, scx_bpf_pick_any_cpu, KF_RCU)
- BTF_ID_FLAGS(func, scx_bpf_task_running, KF_RCU)
- BTF_ID_FLAGS(func, scx_bpf_task_cpu, KF_RCU)
-+BTF_ID_FLAGS(func, scx_bpf_uclamp_rq_inc)
-+BTF_ID_FLAGS(func, scx_bpf_uclamp_rq_dec)
- BTF_KFUNCS_END(scx_kfunc_ids_any)
- 
- static const struct btf_kfunc_id_set scx_kfunc_set_any = {
-diff --git a/tools/sched_ext/include/scx/common.bpf.h b/tools/sched_ext/include/scx/common.bpf.h
-index dbbda0e35c5d..85ddc94fb4c1 100644
---- a/tools/sched_ext/include/scx/common.bpf.h
-+++ b/tools/sched_ext/include/scx/common.bpf.h
-@@ -57,6 +57,8 @@ s32 scx_bpf_pick_idle_cpu(const cpumask_t *cpus_allowed, u64 flags) __ksym;
- s32 scx_bpf_pick_any_cpu(const cpumask_t *cpus_allowed, u64 flags) __ksym;
- bool scx_bpf_task_running(const struct task_struct *p) __ksym;
- s32 scx_bpf_task_cpu(const struct task_struct *p) __ksym;
-+void scx_bpf_uclamp_rq_inc(s32 cpu, struct task_struct *p) __ksym;
-+void scx_bpf_uclamp_rq_dec(s32 cpu, struct task_struct *p) __ksym;
- 
- static inline __attribute__((format(printf, 1, 2)))
- void ___scx_bpf_bstr_format_checker(const char *fmt, ...) {}
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
 -- 
 2.34.1
 
