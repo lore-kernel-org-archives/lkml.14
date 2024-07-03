@@ -1,65 +1,87 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535311DA318
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 15:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B29031DA318;
+	Wed,  3 Jul 2024 15:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019571; cv=none; b=DYvZ2cOT1PoHQdrP0+MYJBCCzhzlaZIvkFywOorwnafsl3r+lD1GeiQ9ViyH2ZWEHwgpN2bWZXNSDEEyOm4RsL8KGoqC8EQGBO99HCvM7uBWX5A2IqBN43xtBWppe46P8LX5YP91X7WfAPza5S2oK48yoU60IHLNoDw+NHYcI5A=
+	t=1720019587; cv=none; b=T2G4lAMJad0AAM4E4M+Izdy3W4F1QdDU8O6Bm6K5B3FRTvFfQdSXqpKMk4uIFVA4Li0bUbzKUL2pAijAmyChP5cESDCbqNJrVsMd7ykn2Bj8afaJ19/nhJJfZuSbUB5c6xHzt+Y6IO3l20xZ0Eciw0bzW8tCmBhwsGkvHZChNEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019571; c=relaxed/simple;
-	bh=Hud6xR0o2mx9G/4jrdBZkRNINU79S0GB0NsgtlbSfLA=;
+	s=arc-20240116; t=1720019587; c=relaxed/simple;
+	bh=SLXF04FFNu6vy2oPin14t4V34tuaX2FpSx1g2C5Z1Jg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZsP5i33NB7HbJf0Ixr222glArKPQfNvA5kQpuevlEHMj37u4JXMgKjyL9UdjbIOchBcW9cPPwHBmOrzcxwsIqfGmtmU1IGZoqgnGwR/e+3u8uq05/FVOqJA9EI2E2Ev+7i9+A7b7MWAR3P3Dz93fhywz/r2gpfYwXo5Kf5Oc0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=deK9cLHK; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="deK9cLHK"
-X-Envelope-To: roman.gushchin@linux.dev
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1720019567;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1RVcsbBbyOrFN84Bpuysv00oCmVzMFIETbf4n93TAfs=;
-	b=deK9cLHK5L6tmKb5SncV0a9CHbMK806EQUxbovkzNl5IUrHpaePuemPOay8Pr4R2RurJ9j
-	MglUAWkHVg+V3fTFgQ0TNSOym8Pq1EnySQ1VL5Ek2EIc9+E92iP2LO6qmeVrAYdszsviRL
-	sByd6rqAVsBSqL0EHjLSeiHewaOQ+Dk=
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: mhocko@kernel.org
-X-Envelope-To: muchun.song@linux.dev
-Date: Wed, 3 Jul 2024 08:12:42 -0700
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>
-Subject: Re: [PATCH v1 6/9] mm: memcg: put memcg1-specific struct
- mem_cgroup's members under CONFIG_MEMCG_V1
-Message-ID: <inhyh4blxjzdzgzp5elgummcufsqis22ni2xpbcgtmlzpirsnv@cs6efw43wpfn>
-References: <20240628210317.272856-1-roman.gushchin@linux.dev>
- <20240628210317.272856-7-roman.gushchin@linux.dev>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XITOLc9ILwbo9QDeiZ1TrWh239axxBvxrkBiDtdWcOszUOBESEsbUoqZVQFhl7GadBNNXQqXzaop14Kxmf6gPZ9N5jQjM+R8U8Kb5Pvz80vT6NF2tTeiSpME71jtEgPjpAwz2aoYCfL+h1lgGi4E7KWHknyw1KdJp/eNMQst38g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sP1eq-0000BJ-00; Wed, 03 Jul 2024 17:12:32 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 08C89C031A; Wed,  3 Jul 2024 17:09:54 +0200 (CEST)
+Date: Wed, 3 Jul 2024 17:09:54 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	"paulburton@kernel.org" <paulburton@kernel.org>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/10] MIPS: Move mips_smp_ipi_init call after
+ prepare_cpus
+Message-ID: <ZoVpwrdeRaVrzJff@alpha.franken.de>
+References: <20240616-b4-mips-ipi-improvements-v1-0-e332687f1692@flygoat.com>
+ <20240616-b4-mips-ipi-improvements-v1-4-e332687f1692@flygoat.com>
+ <CAAhV-H4LsuLYBefKZb5aHx_+fYyWjvO+Bm8h5=NFtSvk6E0Szw@mail.gmail.com>
+ <7cbf218e-d311-4c33-aabb-7208eac231ed@app.fastmail.com>
+ <CAAhV-H7RQu6wdBBjOBptZX6R63Ypw1qFCoJnZ335bFKd1f=XdA@mail.gmail.com>
+ <a3d57a7e-6134-4da5-bd4a-b150d2c97912@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240628210317.272856-7-roman.gushchin@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a3d57a7e-6134-4da5-bd4a-b150d2c97912@app.fastmail.com>
 
-On Fri, Jun 28, 2024 at 09:03:14PM GMT, Roman Gushchin wrote:
-> Put memcg1-specific members of struct mem_cgroup under the
-> CONFIG_MEMCG_V1 config option. Also group them close to the end
-> of struct mem_cgroup just before the dynamic per-node part.
+On Tue, Jun 18, 2024 at 03:50:33PM +0100, Jiaxun Yang wrote:
 > 
-> Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+> 
+> 在2024年6月18日六月 上午4:51，Huacai Chen写道：
+> > On Tue, Jun 18, 2024 at 6:10 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+> >>
+> >>
+> >>
+> >> 在2024年6月17日六月 下午2:53，Huacai Chen写道：
+> >> > Hi, Jiaxun
+> >> >
+> >> > On Mon, Jun 17, 2024 at 5:03 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+> >> >>
+> >> >> This will give platform code a genuine chance to setup
+> >> >> IPI IRQ in prepare_cpus.
+> >> >>
+> >> >> This is the best place for platforms to setup IPI as smp_setup
+> >> >> is too early for IRQ subsystem.
+> >> > mips_smp_ipi_init() is an early_initcall() function, why do you say it
+> >> > is in smp_setup()?
+> >>
+> >> Sorry, I was trying to say that smp_setup is not a good point so we should
+> >> go prepare_cpus.
+> > It is not in smp_setup() now, then how do you move it from smp_setup()?
+> [...]
+> 
+> Well I was trying to justify where should I move it to, not where
+> does it from.
+> 
+> I should improve the commit message to justify the reason first.
 
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+please do
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
