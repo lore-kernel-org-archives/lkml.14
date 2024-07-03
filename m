@@ -1,378 +1,334 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C01113959B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720000986; cv=none; b=doRLGCmZL3Z4YLOB6OvQjoUtfl1D3BLj1P0y74pE02160trUzEZ7wO/SJH5chmD3x2qge41tFz1XpnrzlgJ41kHircKkYL9gA9DvV8Fx5Fes/it7lhxPQM2CKLp5fAdMkjZbu9bopbdv6YB9F1giNIL1cZcxc5dsj8m9kcuxS+g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720000986; c=relaxed/simple;
-	bh=/jKmE6GYjljQSPJiZrvHheiR3HN9eNP7p/LqqLBlM5g=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yo9AVFglsmM9mMHEQlszSTfxeNW+G9vLQr0fXsCpNuCry3R6by1r3ATN1EXE2v4Vzyjt0zWxOyUgmcP85B9ZAFcUrZ29+2V0g4Bi175Zi/udmSGTbmi9L6ixzhb+DW2VSC9O9of+yLZrylXd3pTkgVGPIoXpO7N3559NJCLqIc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=D8dhmbWW; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA70A17741;
+	Wed,  3 Jul 2024 10:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720001011; cv=fail; b=juZN2LEwQr4wrE2lpyOqXAWW9ZiBObMBL+qmykHtZ32e18htGmtbgQWt9c+bwGlWBb6s1sKfCvfR79yjoZe2PmIQ9unSbskgPKraSfr4UkCdjN+ZuuaaARo25SW3EGj0jPp1FTXmnk7jqVtebYBRA84xNZW/1ZKS4S8cR7+xE1w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720001011; c=relaxed/simple;
+	bh=sz79sk/6iJ0DInJasC0b5S/yXpsghuD2B8lUi0/8fvM=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Q2Qf8FoRn+P/aqrVVYDrZjN4lwUJGhyKKrKhqSFfqZs5eDaVJen4H31RJzIjqtgLGpVp2MthKB+DVNqQK/a+SWzCgQZAKJr8VhbbIEUjNC8S0aj+hCvOIarCdmNCoKrwb1f0z/V3rcmVZqjeEgP3vojUomFGb57zYo95mX8sW/8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cji+/Ui5; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JQhtaEMI; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="D8dhmbWW"
-X-UUID: 6c3e1ed0392311ef99dc3f8fac2c3230-20240703
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=ptEvBR1HF9mFj2T67w87EZNoyGTeD+Ap0evu63Vfkpk=;
-	b=D8dhmbWW/7Igg92dJ6xxyEmAkzbgmv2T1MOx3J6SxoOuAWZu3CYjiZjZ3umW4JST09lssFSs6Nz6/uC97o88UoVrXcXOsGvARe1oIDhJfHFUPyYpXQ+bxekdQFXgv/A/F49FfatS97KXXeQGo37E4YG92l8u+nHT7DzbHWkF8eE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.40,REQID:526c4e15-f9b8-43d9-ab9b-8b35351e8cd0,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:ba885a6,CLOUDID:34abe7d4-0d68-4615-a20f-01d7bd41f0bb,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 6c3e1ed0392311ef99dc3f8fac2c3230-20240703
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
-	(envelope-from <shuijing.li@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2002993280; Wed, 03 Jul 2024 18:02:57 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 3 Jul 2024 18:02:54 +0800
-Received: from mszsdhlt06.gcn.mediatek.inc (10.16.6.206) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 3 Jul 2024 18:02:53 +0800
-From: Shuijing Li <shuijing.li@mediatek.com>
-To: <chunkuang.hu@kernel.org>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
-	<daniel@ffwll.ch>, <matthias.bgg@gmail.com>,
-	<angelogioacchino.delregno@collabora.com>, <jitao.shi@mediatek.com>
-CC: <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Shuijing Li
-	<shuijing.li@mediatek.com>
-Subject: [PATCH v3] drm/mediatek: dsi: Add dsi per-frame lp code for mt8188
-Date: Wed, 3 Jul 2024 18:01:05 +0800
-Message-ID: <20240703100245.23188-1-shuijing.li@mediatek.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cji+/Ui5";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JQhtaEMI"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4638O7Jg028553;
+	Wed, 3 Jul 2024 10:03:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:to:subject:message-id:references:content-type
+	:in-reply-to:mime-version; s=corp-2023-11-20; bh=iyhRIvZmbaslxi4
+	lvphO8BKHPtBB5KBKc+QPISlSk3Q=; b=cji+/Ui5XN/xu+CUs4QPd49OhS0GM7b
+	31wMFV5Eqf3Ihhowz9gtTDkEoyfaHpuNApOErLnP3lrDi3pszMF9i7oYmMhA9D0M
+	AegpBgNXwamXNeFFvQCdoTtGjJxGs0WgFsCJjoInqtr52OuQtNvIyzi/Yz+Lxia7
+	50N7dzCMZ9dgMiCBstptV2zmYK1376PiG/PtRFz3XVsH2YGMeq2BNnH857SHx+j9
+	yB8sDYXLzHd5YI58kLK3AlCgJLowDJbQS3aTdQpYTstuqI89hYBzVD7Th3I8uqcf
+	NlkpN+CulrmZtq3KctZYd6Skl8Fz7ed2XYMWk/lRzzrPle7/qb9uONQ==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 402aacfutv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 03 Jul 2024 10:03:08 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4638lbRr023603;
+	Wed, 3 Jul 2024 10:03:07 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 404n0yx3sk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 03 Jul 2024 10:03:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hu6fcoE9AW1cVEHR/v4iRtr6xXLigTf9kSnK+7e6OyhM8cX1HGshl6+WDljcTXCtn3VKDiXc2svm1kP+lah11FVKTu65T4vp6KEb4dVtxnm0NTAUMOglwuP5VqYKHGVJzb86d3bspzqJea46yreAjRYni+6xOfkJ7rvEwZqrndArO3WTv7YnxpO4WT4kyqxJYaik9P/JmGD17zu0ftsu1DMnUdghc3m5fTNsC/YltDpSt1fPIsxWi2IAA6fOlwwlxvaZbCCb1oLkrsunsp2LwFALmsFV6rn+mJ35l3FgWOr3FbOKfpb3tdYX7MZdC6Sa8P9VE1oUtBHX3HweisrzpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iyhRIvZmbaslxi4lvphO8BKHPtBB5KBKc+QPISlSk3Q=;
+ b=kSZo0JpyoETfE022WzSlV2+y+kX4W2Qy+W9CnrI0h4SDcR55qcRxh1cFah8JatrXWAVYiB1i+pHDkO/l5HoluygQ03R48FPtztP6qJ0Ksd+xp1ll3Xtfqn+LFjSrfiKh3CgpTrFtMNuqzZLtbcwnxMYHzPmPei4tMqYO5B9OtaRZhl1YBH40sYl8Rgo1twheJFOCZW+0Cp3AfqSwX0Rpdtraj/zUTgnVLi+UY45dLPOKTA2gSV3IRVTpDVi+BOhMMSYXg6HQtzpo3ZG5I7MCJqK8LwQDUH+Jr0jZ2aqpYGALqJiWTczFoszRxE+CBp5tmabKia9g21kGa5EG6P7PeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iyhRIvZmbaslxi4lvphO8BKHPtBB5KBKc+QPISlSk3Q=;
+ b=JQhtaEMI2i1SRdF2S/QrLz+4ASraZzxKLagjDGDRc9IxyhSXbAf8zh8yAxvUj5b+MKsjgPB/G9F0dRYxWK1kcuw9H2msWApFGOT2R0WOpU0BaLSUfF2sfdbmSkcZ0tICdxnmByUSJkwLOYDRoU3eKeT1jtNmxZLQRwCAHlpAOWo=
+Received: from PH0PR10MB5611.namprd10.prod.outlook.com (2603:10b6:510:f9::16)
+ by CY8PR10MB6466.namprd10.prod.outlook.com (2603:10b6:930:62::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Wed, 3 Jul
+ 2024 10:03:04 +0000
+Received: from PH0PR10MB5611.namprd10.prod.outlook.com
+ ([fe80::d513:a871:bbf9:fce2]) by PH0PR10MB5611.namprd10.prod.outlook.com
+ ([fe80::d513:a871:bbf9:fce2%5]) with mapi id 15.20.7741.017; Wed, 3 Jul 2024
+ 10:03:04 +0000
+Date: Wed, 3 Jul 2024 11:02:44 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [RFC PATCH v2 3/7] mm: move vma_shrink(), vma_expand() to
+ internal header
+Message-ID: <f8b544e5-a61f-4b90-8210-979439f56db7@lucifer.local>
+References: <cover.1719584707.git.lstoakes@gmail.com>
+ <b092522043d0f676151350e65be57b5bb5c8d72c.1719584707.git.lstoakes@gmail.com>
+ <lm2brkhp7jfqgfazr5dlz2pxvz7k4fhpfie2gddkcijwmqf3j5@rqoy7efjnpvb>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <lm2brkhp7jfqgfazr5dlz2pxvz7k4fhpfie2gddkcijwmqf3j5@rqoy7efjnpvb>
+X-ClientProxiedBy: LO4P123CA0677.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:351::20) To PH0PR10MB5611.namprd10.prod.outlook.com
+ (2603:10b6:510:f9::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--5.974200-8.000000
-X-TMASE-MatchedRID: ctAk+wls9eAwKP61E4rxu1VN8laWo90M5TpDO1WKs2mYQOVjVNfbbjSg
-	hb/pcAwyjqr5io4jdQ5IT4SOZxkibrGaAH5r9EhkhK8o4aoss8oxmbT6wQT2a2ecrqZc3vabX69
-	OoovGE5CjmrD+IUq29hYchAzpNtsT62xBm/uUP3ltzb3s8Aa1Zu3+iQEtoSj4bYQ/auan8FGgrk
-	Hr6pdTsLLjQWZr8tDZNIi7EG8+unPaVScbiljcbKUebN0FQAbYZ/rAPfrtWC0Uta+LQgEZMLuLU
-	wvApCDyUOzgM0W+iui92gLrEY12PVFttnSPGAU6FYJUGv4DL3x9LQinZ4QefJOK2Na/r7MIF70J
-	Bot7Y8/3FLeZXNZS4EZLVcXaUbdiUAwFt6X7kDkJMI/FW9lXe6ynwL7YTauuN/sy1SK5OZaeqD9
-	WtJkSIw==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--5.974200-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: A800866F8F70ED76B50E553C9C65C6091D98EB762A5241ABB50E9CA98ADEE24C2000:8
-X-MTK: N
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5611:EE_|CY8PR10MB6466:EE_
+X-MS-Office365-Filtering-Correlation-Id: 695bd753-9332-4110-7bc7-08dc9b475493
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?j7jWQPFLVrVFI0of3rPxo0bBGb13BItdsbF7qwnMkFizkHApTNYIdi9prYvX?=
+ =?us-ascii?Q?9dKJWUMd6g5J/uv3XWvwwHwcqibZCxHh/Gdogpes45jBc+FtBjSSqKmD0Ejk?=
+ =?us-ascii?Q?lt/X6ECiC3QemcQ4ebZHNtjkHqb+xQwqBNEtRD2UeA2aTGtUf9klQLs5Rzy7?=
+ =?us-ascii?Q?+veDLoc8qFW6LJb3Gyk/PJtSsnw3IVvsJ6fi6QoCTr55QWmGi+WrbhFgUzpS?=
+ =?us-ascii?Q?I34hrABclfer/aWjiUvC2f/37AzYlPBySDTMiSa380ER+TB1zdobszoLjg0O?=
+ =?us-ascii?Q?sbwfZTcg37NGRqW56HSruyBQDSwqD8QFr7UGYcz19amUrzHblJY8B7Jq5J63?=
+ =?us-ascii?Q?rzTDf4hCY8OJtMxPhjwtxymE1L8rZoF8Q7C2ijdyLG7z5Mn69I6g9DatySxE?=
+ =?us-ascii?Q?JaX/eWak977hQa6VzRwJcMkXJcyMK7M0u9gKZUsqbcM/hegtRXHIgYkdLjqI?=
+ =?us-ascii?Q?+Yq6jUhd6ZftJv3J7yFjSpMjGJkv5BwFWm7LW1gbUXjalXDssNQ7vQ7V+0gJ?=
+ =?us-ascii?Q?x/KIUTXEmbG103nxySziD1jcAV1khywwzlwnQZMHi3dTQ8JwNAx77TQJiLwD?=
+ =?us-ascii?Q?QttGqip99z9FYVA/KD8YcRt8l9+Rrvl6gNJpDS5FRa+pJBNmR6N2UmjaTO2m?=
+ =?us-ascii?Q?G7NsjfE4hZpo8aZFUyOBJR3iE3uSVbrYpk+Mcr52Q+wKhuY/F9htuffGKmfu?=
+ =?us-ascii?Q?mjSg/SoL2Eq3Ippp0xOLSIgZfwWDC2ojYf6jceNqM5efnJJH79Gdn9UhK9Q0?=
+ =?us-ascii?Q?T76oomMeXejLCa+yj0pyIgU9LL2wqWdXNYZsDnmzTJ9pCTFGUJxlq0+sG4YX?=
+ =?us-ascii?Q?PLVb3hYaqpHh47HCt8451s7MF7rqNdWHlxlcV0yqwoSLUjixQRPtvQJNjxD5?=
+ =?us-ascii?Q?5f4pMRyHnQcdE4cb+yIR18zmfA1/kDHr0ar67Qf5HBrP/K3mgeMvYzGZC0jB?=
+ =?us-ascii?Q?yfQZPy9qV+uSJcsp57jQRgyJtJHGnV6C6VwNPMGHVGmTS6EwpQ1NQk3eQOFO?=
+ =?us-ascii?Q?g8guROQmoAN1jwPCtSrH0zw0+cMX4M7K8kEVI8craYHd4m5Sa3WX/e9wz9gO?=
+ =?us-ascii?Q?Hq+rPBhseA1dR3utJtORzMBijYtx35u+rduitD9cg7JGEwNvzEfS7Z0PZR2J?=
+ =?us-ascii?Q?40ayPTEklXA8oCMrbTamhjObZ+zSqZ/GtljJ78BOa+4+f8Ad4AjpUX+Nk+5q?=
+ =?us-ascii?Q?ejQVW2Bm0Nd1rJhy4B/m3Bf80Lt0o+4y8DROYMGjdmBP5qxbXQgdj7OTIASj?=
+ =?us-ascii?Q?CUNO8aXg5LU5fa+YM64GFm2t9wbp7WmZ8uJr/v+uuJiTBQ1IZzoShpvgGUu+?=
+ =?us-ascii?Q?MCLGhRcugDuqlr96ReLmFsrCVoCCattVeroavUySrw3wsPAj22zxformfgfk?=
+ =?us-ascii?Q?1fq0UnBaxnqJqtiEZskrZz/9PA1p?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5611.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?2OVjjrAQCaxT6mqdTzzw5EEAyD1jC5zWF1CdgJVvYdiWORZXFVD/fTa1+wTx?=
+ =?us-ascii?Q?SXADJ1l4t8Zk7XIJbASMwFAAc1RH1hi9K+DEMjx0Nx/5ZEixDJJh6hkr30+L?=
+ =?us-ascii?Q?wJ8k7NnYLKlsEpU688Dzu2+jIh6ZVhAoeydTHt8UnwU1gQVkyGrylqmOdPuu?=
+ =?us-ascii?Q?5+Hcaw4WiTHrb1Ezd0nCcx5d2/7EG9PvVVbjXX/DFdmaVJxOT7c3pnuUvvJN?=
+ =?us-ascii?Q?1GeQRzSGKc3uvF5/S0QWWHgte4vytw2zNmqZN/plY0jm5E/fYuq620LpWLJy?=
+ =?us-ascii?Q?tsacHjG3ovClZSEOdrLfUi6riLg4bRjw9RBHnYiCPzGCWrZknQ33Ua0u2L+u?=
+ =?us-ascii?Q?Zy+iYuXR3A+EiCNqSZ/VfB6vXj8/xnjRCcoT56lS3MVTLAbzuV1s0h3vUFl8?=
+ =?us-ascii?Q?xzm4NmkstEltwMI8ALV2knsOqst7Ci2mO9e6IDJgLfW0+2V8ox9JpLtYKqjN?=
+ =?us-ascii?Q?Kokhu0M9BipdRMQP71MYYzB62vNpbQSsdjOIHZLvUjcuLWWPeRNnooQMEMvm?=
+ =?us-ascii?Q?Di3dxUFGcFcMp/nQJpvbEVL7XRRJ7/cUdPZha+vAhsYU9O/5S4wcMrztf/Hd?=
+ =?us-ascii?Q?JZy1JpobhqvRDxq1OgzLynWL1PiQl43/mbhp70Gp/YsIftKwNV9MBPZl0IOT?=
+ =?us-ascii?Q?67y8oG2ysNnBKWDkMPwJr0xcJe3Ns+Xk8CjvA/4H4wmb0CQd5bqKydWWDP7V?=
+ =?us-ascii?Q?NN8I7cNGdFPhlLhZmqczL7TzXqMOkwAeeP+PMVxBdKp3Elbr7SPLz891Svxh?=
+ =?us-ascii?Q?v+I5SitGM1pDNBJnTT4nKh4iEkSLfuEHb7YRXU5QJez0B4H5Afwqr0spoepn?=
+ =?us-ascii?Q?feoA7hcY/mpYau/tf2uXnYCoVBFyh9nraLlQ9g+51DhJkmpUPPea18Y2vGu7?=
+ =?us-ascii?Q?RIFu9MGZCwv+hF797qwpNCVJDYI1YQr5DuStxs05RUCSaWbJrQdIzABXafB2?=
+ =?us-ascii?Q?zEclJg/ha8sSDDB33zwx4wPvtOkcUmNDLOqQp55HXkx8R+ZIQ3eLKfDP/zyQ?=
+ =?us-ascii?Q?8V8SdKhHLMsgxfd7yGkJcjD5oT9f/SwiT61ZOfKRTAD6Vx7FqeHwBMyKK3VN?=
+ =?us-ascii?Q?EGKjpi5+55TCbtkPNBag6v1SwRpU+gHRh2R5rRdFZ/Ogcfe8PYc9ITK2JKZt?=
+ =?us-ascii?Q?mYR1gyHBSIXqhL6zJWnxI/FasSQlSMQ/TZYoirGDUX4kR6ilz8uaIw4rCOry?=
+ =?us-ascii?Q?sm/Dk3UUc0sSRgRjmIZ8WmiBJniQ+4O2TThaVIkh2mxKkOD0zw7foEa5ds0W?=
+ =?us-ascii?Q?I7HvVuirY6xy+rCu/KeftmTUb3iN4nkmRROHIGsZGChwBsktkVABeRdmEvsR?=
+ =?us-ascii?Q?Cn0qJFuEZIo2I8rzVi8pROTWAoU9Sgwsl+jCWq4fzt5ka7naXK9RObh3DpMl?=
+ =?us-ascii?Q?pEKdxzpAntQnLfQTsGLlAxMryFNYZb5b70NRUcmWC1c8xIzAKkoQWzMSNRMW?=
+ =?us-ascii?Q?+0cs4ieQNHtDlMnlXvbRPSGIlGmZW5/Aj9xiyLFmv2Mi3c39hwtatHDN+NmC?=
+ =?us-ascii?Q?rq+L0dQn8u8LjpgSTx2mFIyiqTAClxbOLObB39wu7N+HxTMTwzyV2Gequuwh?=
+ =?us-ascii?Q?mg0DaORbG1MJ9OWYqIA/fyU4m9cPWbwMfkAKY2WxQe4GgOi1onZmFeH53p8E?=
+ =?us-ascii?Q?zQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	+D0xgRnS9x3xy6DLDj7A+KAcePDsY6JRcSYvhRgpb3jFmRczXolI8bdgQjaJhEFx3D3X8HAHkpMHeLnn08cTWv9WVmJVAi+csnhJhB3bTFJLgOdcvhqIcny5v0NjfGUFpR5cmEZThYBrz2cCtPH1chKmT8Zl3UZc3yR09euOcTIrFF9zYqIS7JlgV9DggqVaD3wlZwEeyS5Lz2mpk1zv2mU2QF/rUy4W+/iuvjfqElJpI7+jvyd3xNr59wM8Qk7QG4yqegUOvZaSAmsmN1CVZl0z9FALhUZd80qQKDlVWIaFSLicN6NesBRqu+BF4wituSU4hf3DJ8a2A3YQOrPiObtqo6vom/J+b7tD8eNX7jZhvDuS86dfNAz22CJ4IoXcXs1gwaQPA2or6TgmHnn/jhbc71QEkL9BOFex9cdOca5EoSdIVdlveGUpQTuUwtFKZvqXG6/1IO9H78+lnJkEm7PxS58raoobJXNL2+cGjc4stbx8VwufTDR1HzTsJeztnyROA0z1G7/b9U7Fjw6cderAWcblk+NIAIQo5oOxW7v9X4jfbYAnOwubbTJ51eEwVXG7wTCDpekdpBy6Z1zVEAjtj8Jx8VsO3VpuefnW5jo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 695bd753-9332-4110-7bc7-08dc9b475493
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5611.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 10:03:04.6297
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UYvMNnuWDSnD2SIqsVMQzPG/CFXnu3ot9RDUBwTi5ltCOGjahAhRxdtC3uOgXNZD6p6FpCT2X+5spABqvmwY3RU/oSUpaswqHj22asmLO6c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6466
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_06,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2406180000 definitions=main-2407030073
+X-Proofpoint-GUID: v_j6Z-0ScgAQDn0mhfWlwoieqt5D5-_z
+X-Proofpoint-ORIG-GUID: v_j6Z-0ScgAQDn0mhfWlwoieqt5D5-_z
 
-Adding the per-frame lp function of mt8188, which can keep HFP in HS and
-reduce the time required for each line to enter and exit low power.
-Per Frame LP:
-  |<----------One Active Frame-------->|
---______________________________________----___________________
-  ^HSA+HBP^^RGB^^HFP^^HSA+HBP^^RGB^^HFP^    ^HSA+HBP^^RGB^^HFP^
+On Tue, Jul 02, 2024 at 01:24:36PM GMT, Liam R. Howlett wrote:
+> * Lorenzo Stoakes <lstoakes@gmail.com> [240628 10:35]:
+> > The vma_shrink() and vma_expand() functions are internal VMA manipulation
+> > functions which we ought to abstract for use outside of memory management
+> > code.
+> >
+> > To achieve this, we abstract the operation performed in fs/exec.c by
+> > shift_arg_pages() into a new relocate_vma() function implemented in
+> > mm/mmap.c, which enables us to also move move_page_tables() and
+> > vma_iter_prev_range() to internal.h.
+> >
+> > The purpose of doing this is to isolate key VMA manipulation functions in
+> > order that we can both abstract them and later render them easily testable.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+> > ---
+> >  fs/exec.c          | 68 ++------------------------------------
+> >  include/linux/mm.h | 17 +---------
+> >  mm/internal.h      | 18 +++++++++++
+> >  mm/mmap.c          | 81 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 102 insertions(+), 82 deletions(-)
+> >
+> > diff --git a/fs/exec.c b/fs/exec.c
+> > index 40073142288f..5cf53e20d8df 100644
+> > --- a/fs/exec.c
+> > +++ b/fs/exec.c
+> > @@ -683,75 +683,11 @@ static int copy_strings_kernel(int argc, const char *const *argv,
+> >  /*
+> >   * During bprm_mm_init(), we create a temporary stack at STACK_TOP_MAX.  Once
+> >   * the binfmt code determines where the new stack should reside, we shift it to
+> > - * its final location.  The process proceeds as follows:
+> > - *
+> > - * 1) Use shift to calculate the new vma endpoints.
+> > - * 2) Extend vma to cover both the old and new ranges.  This ensures the
+> > - *    arguments passed to subsequent functions are consistent.
+> > - * 3) Move vma's page tables to the new range.
+> > - * 4) Free up any cleared pgd range.
+> > - * 5) Shrink the vma to cover only the new range.
+> > + * its final location.
+> >   */
+> >  static int shift_arg_pages(struct vm_area_struct *vma, unsigned long shift)
+> >  {
+> > -	struct mm_struct *mm = vma->vm_mm;
+> > -	unsigned long old_start = vma->vm_start;
+> > -	unsigned long old_end = vma->vm_end;
+> > -	unsigned long length = old_end - old_start;
+> > -	unsigned long new_start = old_start - shift;
+> > -	unsigned long new_end = old_end - shift;
+> > -	VMA_ITERATOR(vmi, mm, new_start);
+> > -	struct vm_area_struct *next;
+> > -	struct mmu_gather tlb;
+> > -
+> > -	BUG_ON(new_start > new_end);
+> > -
+> > -	/*
+> > -	 * ensure there are no vmas between where we want to go
+> > -	 * and where we are
+> > -	 */
+> > -	if (vma != vma_next(&vmi))
+> > -		return -EFAULT;
+> > -
+> > -	vma_iter_prev_range(&vmi);
+> > -	/*
+> > -	 * cover the whole range: [new_start, old_end)
+> > -	 */
+> > -	if (vma_expand(&vmi, vma, new_start, old_end, vma->vm_pgoff, NULL))
+> > -		return -ENOMEM;
+> > -
+> > -	/*
+> > -	 * move the page tables downwards, on failure we rely on
+> > -	 * process cleanup to remove whatever mess we made.
+> > -	 */
+> > -	if (length != move_page_tables(vma, old_start,
+> > -				       vma, new_start, length, false, true))
+> > -		return -ENOMEM;
+> > -
+> > -	lru_add_drain();
+> > -	tlb_gather_mmu(&tlb, mm);
+> > -	next = vma_next(&vmi);
+> > -	if (new_end > old_start) {
+> > -		/*
+> > -		 * when the old and new regions overlap clear from new_end.
+> > -		 */
+> > -		free_pgd_range(&tlb, new_end, old_end, new_end,
+> > -			next ? next->vm_start : USER_PGTABLES_CEILING);
+> > -	} else {
+> > -		/*
+> > -		 * otherwise, clean from old_start; this is done to not touch
+> > -		 * the address space in [new_end, old_start) some architectures
+> > -		 * have constraints on va-space that make this illegal (IA64) -
+> > -		 * for the others its just a little faster.
+> > -		 */
+> > -		free_pgd_range(&tlb, old_start, old_end, new_end,
+> > -			next ? next->vm_start : USER_PGTABLES_CEILING);
+> > -	}
+> > -	tlb_finish_mmu(&tlb);
+> > -
+> > -	vma_prev(&vmi);
+> > -	/* Shrink the vma to just the new range */
+> > -	return vma_shrink(&vmi, vma, new_start, new_end, vma->vm_pgoff);
+> > +	return relocate_vma(vma, shift);
+> >  }
+>
+> The end result is a function that simply returns the results of your new
+> function.  shift_arg_pages() is used once and mentioned in a single
+> comment in mm/mremap.c.  I wonder if it's worth just dropping the
+> function entirely and just replacing the call to shift_arg_pages() to
+> relocate_vma()?
 
-Per Line LP:
-  |<---------------One Active Frame----------->|
---______________--______________--______________----______________
-  ^HSA+HBP^^RGB^  ^HSA+HBP^^RGB^  ^HSA+HBP^^RGB^    ^HSA+HBP^^RGB^
+Yeah that's a good idea, will do. Can move the comment over to the
+invocation also.
 
-Signed-off-by: Shuijing Li <shuijing.li@mediatek.com>
----
-Changes in v3:
-Use function in bitfield.h and get value from phy timing, per suggestion
-from previous thread:
-https://patchwork.kernel.org/project/linux-mediatek/patch/20240424091639.22759-1-shuijing.li@mediatek.com/
-Changes in v2:
-Use bitfield macros and add new function for per prame lp and improve
-the format, per suggestion from previous thread:
-https://patchwork.kernel.org/project/linux-mediatek/patch/20240314094238.3315-1-shuijing.li@mediatek.com/
----
- drivers/gpu/drm/mediatek/mtk_dsi.c | 220 +++++++++++++++++++++++------
- 1 file changed, 173 insertions(+), 47 deletions(-)
+>
+> I'm happy either way, the compiler should do the Right Thing(tm) the way
+> it is written.
+>
+> ...
+>
+> > +
+> > +/*
+> > + * Relocate a VMA downwards by shift bytes. There cannot be any VMAs between
+> > + * this VMA and its relocated range, which will now reside at [vma->vm_start -
+> > + * shift, vma->vm_end - shift).
+> > + *
+> > + * This function is almost certainly NOT what you want for anything other than
+> > + * early executable temporary stack relocation.
+> > + */
+> > +int relocate_vma(struct vm_area_struct *vma, unsigned long shift)
+>
+> The name relocate_vma() implies it could be used in any direction, but
+> it can only shift downwards.  This is also true for the
+> shift_arg_pages() as well and at least the comments state which way
+> things are going, and that the vma is also moving.
+>
+> It might be worth stating the pages are also being relocated in the
+> comment.
+>
+> Again, I'm happy enough to keep it this way but I wanted to point it
+> out.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index c255559cc56e..129ae17347a4 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -88,12 +88,19 @@
- #define DSI_HSA_WC		0x50
- #define DSI_HBP_WC		0x54
- #define DSI_HFP_WC		0x58
-+#define HFP_HS_EN		31
-+#define HFP_HS_VB_PS_WC_SHIFT 16
-+
-+#define DSI_BLLP_WC		0x5C
-+#define BLLP_WC				GENMASK(11, 0)
- 
- #define DSI_CMDQ_SIZE		0x60
- #define CMDQ_SIZE			0x3f
- #define CMDQ_SIZE_SEL		BIT(15)
- 
- #define DSI_HSTX_CKL_WC		0x64
-+#define HSTX_CKL_WC				GENMASK(15, 2)
-+#define HSTX_CKL_WC_SHIFT	2
- 
- #define DSI_RX_DATA0		0x74
- #define DSI_RX_DATA1		0x78
-@@ -187,6 +194,7 @@ struct mtk_dsi_driver_data {
- 	bool has_shadow_ctl;
- 	bool has_size_ctl;
- 	bool cmdq_long_packet_ctl;
-+	bool support_per_frame_lp;
- };
- 
- struct mtk_dsi {
-@@ -426,6 +434,119 @@ static void mtk_dsi_ps_control(struct mtk_dsi *dsi, bool config_vact)
- 	writel(ps_val, dsi->regs + DSI_PSCTRL);
- }
- 
-+static void mtk_dsi_config_vdo_timing_per_frame_lp(struct mtk_dsi *dsi)
-+{
-+	u32 horizontal_sync_active_byte;
-+	u32 horizontal_backporch_byte;
-+	u32 horizontal_frontporch_byte;
-+	u32 dsi_tmp_buf_bpp;
-+	unsigned int lpx, da_hs_exit, da_hs_prep, da_hs_trail;
-+	unsigned int da_hs_zero, ps_wc, hs_vb_ps_wc;
-+	u32 bllp_wc, bllp_en, v_active_roundup, hstx_cklp_wc;
-+	u32 hstx_cklp_wc_max, hstx_cklp_wc_min;
-+	struct videomode *vm = &dsi->vm;
-+
-+	if (dsi->format == MIPI_DSI_FMT_RGB565)
-+		dsi_tmp_buf_bpp = 2;
-+	else
-+		dsi_tmp_buf_bpp = 3;
-+
-+	da_hs_trail = dsi->phy_timing.da_hs_trail;
-+	bllp_en = FIELD_GET(NULL_EN, readl(dsi->regs + DSI_TXRX_CTRL));
-+	ps_wc = FIELD_GET(DSI_PS_WC, readl(dsi->regs + DSI_PSCTRL));
-+
-+	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
-+		horizontal_sync_active_byte =
-+			vm->hsync_len * dsi_tmp_buf_bpp - 10;
-+		horizontal_backporch_byte =
-+			vm->hback_porch * dsi_tmp_buf_bpp - 10;
-+		horizontal_frontporch_byte =
-+			vm->hfront_porch * dsi_tmp_buf_bpp - 12;
-+
-+		v_active_roundup = (32 + horizontal_sync_active_byte +
-+			horizontal_backporch_byte + ps_wc +
-+			horizontal_frontporch_byte) % dsi->lanes;
-+		if (v_active_roundup)
-+			horizontal_backporch_byte = horizontal_backporch_byte +
-+				dsi->lanes - v_active_roundup;
-+		hstx_cklp_wc_min = (DIV_ROUND_UP((12 + 2 + 4 +
-+			horizontal_sync_active_byte), dsi->lanes) + da_hs_trail + 1)
-+			* dsi->lanes / 6 - 1;
-+		hstx_cklp_wc_max = (DIV_ROUND_UP((20 + 6 + 4 +
-+			horizontal_sync_active_byte + horizontal_backporch_byte +
-+			ps_wc), dsi->lanes) + da_hs_trail + 1) * dsi->lanes / 6 - 1;
-+	} else {
-+		horizontal_sync_active_byte = vm->hsync_len * dsi_tmp_buf_bpp - 4;
-+
-+		horizontal_backporch_byte = (vm->hback_porch + vm->hsync_len) *
-+			dsi_tmp_buf_bpp - 10;
-+		hstx_cklp_wc_min = (DIV_ROUND_UP(4, dsi->lanes) + da_hs_trail + 1)
-+			* dsi->lanes / 6 - 1;
-+
-+		if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-+			bllp_wc = FIELD_GET(BLLP_WC, readl(dsi->regs + DSI_BLLP_WC));
-+			horizontal_frontporch_byte = (vm->hfront_porch *
-+				dsi_tmp_buf_bpp - 18);
-+
-+			v_active_roundup = (28 + horizontal_backporch_byte + ps_wc +
-+				horizontal_frontporch_byte + bllp_wc) % dsi->lanes;
-+			if (v_active_roundup)
-+				horizontal_backporch_byte = horizontal_backporch_byte +
-+				dsi->lanes - v_active_roundup;
-+			if (bllp_en) {
-+				hstx_cklp_wc_max = (DIV_ROUND_UP((16 + 6 + 4 +
-+					horizontal_backporch_byte + bllp_wc + ps_wc),
-+					dsi->lanes) + da_hs_trail + 1) * dsi->lanes / 6 - 1;
-+			} else {
-+				hstx_cklp_wc_max = (DIV_ROUND_UP((12 + 4 + 4 +
-+					horizontal_backporch_byte + bllp_wc + ps_wc),
-+					dsi->lanes) + da_hs_trail + 1) * dsi->lanes / 6 - 1;
-+			}
-+		} else {
-+			horizontal_frontporch_byte = (vm->hfront_porch *
-+				dsi_tmp_buf_bpp - 12);
-+
-+			v_active_roundup = (22 + horizontal_backporch_byte + ps_wc +
-+				horizontal_frontporch_byte) % dsi->lanes;
-+			if (v_active_roundup)
-+				horizontal_backporch_byte = horizontal_backporch_byte +
-+				dsi->lanes - v_active_roundup;
-+
-+			hstx_cklp_wc_max = (DIV_ROUND_UP((12 + 4 + 4 +
-+				horizontal_backporch_byte + ps_wc),
-+				dsi->lanes) + da_hs_trail + 1) * dsi->lanes / 6 - 1;
-+		}
-+	}
-+	hstx_cklp_wc = FIELD_GET(HSTX_CKL_WC, readl(dsi->regs + DSI_HSTX_CKL_WC));
-+
-+	if (hstx_cklp_wc <= hstx_cklp_wc_min ||
-+		hstx_cklp_wc >= hstx_cklp_wc_max) {
-+		hstx_cklp_wc = ((hstx_cklp_wc_min + hstx_cklp_wc_max) / 2) << HSTX_CKL_WC_SHIFT;
-+		writel(hstx_cklp_wc, dsi->regs + DSI_HSTX_CKL_WC);
-+	}
-+	hstx_cklp_wc = hstx_cklp_wc >> HSTX_CKL_WC_SHIFT;
-+	if (hstx_cklp_wc <= hstx_cklp_wc_min ||
-+		hstx_cklp_wc >= hstx_cklp_wc_max) {
-+		DRM_WARN("Wrong setting of hstx_ckl_wc\n");
-+	}
-+
-+	lpx = dsi->phy_timing.lpx;
-+	da_hs_exit = dsi->phy_timing.da_hs_exit;
-+	da_hs_prep = dsi->phy_timing.da_hs_prepare;
-+	da_hs_zero = dsi->phy_timing.da_hs_zero;
-+
-+	hs_vb_ps_wc = ps_wc -
-+		(lpx + da_hs_exit + da_hs_prep + da_hs_zero + 2)
-+		* dsi->lanes;
-+	horizontal_frontporch_byte = (1 << HFP_HS_EN)
-+		| (hs_vb_ps_wc << HFP_HS_VB_PS_WC_SHIFT)
-+		| (horizontal_frontporch_byte);
-+
-+	writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
-+	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
-+	writel(horizontal_frontporch_byte, dsi->regs + DSI_HFP_WC);
-+}
-+
- static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
- {
- 	u32 horizontal_sync_active_byte;
-@@ -449,57 +570,61 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
- 	writel(vm->vfront_porch, dsi->regs + DSI_VFP_NL);
- 	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
- 
--	if (dsi->driver_data->has_size_ctl)
--		writel(FIELD_PREP(DSI_HEIGHT, vm->vactive) |
--		       FIELD_PREP(DSI_WIDTH, vm->hactive),
--		       dsi->regs + DSI_SIZE_CON);
--
--	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
--
--	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
--		horizontal_backporch_byte = vm->hback_porch * dsi_tmp_buf_bpp - 10;
--	else
--		horizontal_backporch_byte = (vm->hback_porch + vm->hsync_len) *
--					    dsi_tmp_buf_bpp - 10;
--
--	data_phy_cycles = timing->lpx + timing->da_hs_prepare +
--			  timing->da_hs_zero + timing->da_hs_exit + 3;
--
--	delta = dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST ? 18 : 12;
--	delta += dsi->mode_flags & MIPI_DSI_MODE_NO_EOT_PACKET ? 0 : 2;
-+	if (dsi->driver_data->support_per_frame_lp)
-+		mtk_dsi_config_vdo_timing_per_frame_lp(dsi);
-+	else {
-+		if (dsi->driver_data->has_size_ctl)
-+			writel(FIELD_PREP(DSI_HEIGHT, vm->vactive) |
-+				FIELD_PREP(DSI_WIDTH, vm->hactive),
-+				dsi->regs + DSI_SIZE_CON);
- 
--	horizontal_frontporch_byte = vm->hfront_porch * dsi_tmp_buf_bpp;
--	horizontal_front_back_byte = horizontal_frontporch_byte + horizontal_backporch_byte;
--	data_phy_cycles_byte = data_phy_cycles * dsi->lanes + delta;
-+		horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
- 
--	if (horizontal_front_back_byte > data_phy_cycles_byte) {
--		horizontal_frontporch_byte -= data_phy_cycles_byte *
--					      horizontal_frontporch_byte /
--					      horizontal_front_back_byte;
--
--		horizontal_backporch_byte -= data_phy_cycles_byte *
--					     horizontal_backporch_byte /
--					     horizontal_front_back_byte;
--	} else {
--		DRM_WARN("HFP + HBP less than d-phy, FPS will under 60Hz\n");
--	}
--
--	if ((dsi->mode_flags & MIPI_DSI_HS_PKT_END_ALIGNED) &&
--	    (dsi->lanes == 4)) {
--		horizontal_sync_active_byte =
--			roundup(horizontal_sync_active_byte, dsi->lanes) - 2;
--		horizontal_frontporch_byte =
--			roundup(horizontal_frontporch_byte, dsi->lanes) - 2;
--		horizontal_backporch_byte =
--			roundup(horizontal_backporch_byte, dsi->lanes) - 2;
--		horizontal_backporch_byte -=
--			(vm->hactive * dsi_tmp_buf_bpp + 2) % dsi->lanes;
-+		if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-+			horizontal_backporch_byte = vm->hback_porch * dsi_tmp_buf_bpp - 10;
-+		else
-+			horizontal_backporch_byte = (vm->hback_porch + vm->hsync_len) *
-+							dsi_tmp_buf_bpp - 10;
-+
-+		data_phy_cycles = timing->lpx + timing->da_hs_prepare +
-+				timing->da_hs_zero + timing->da_hs_exit + 3;
-+
-+		delta = dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST ? 18 : 12;
-+		delta += dsi->mode_flags & MIPI_DSI_MODE_NO_EOT_PACKET ? 0 : 2;
-+
-+		horizontal_frontporch_byte = vm->hfront_porch * dsi_tmp_buf_bpp;
-+		horizontal_front_back_byte = horizontal_frontporch_byte + horizontal_backporch_byte;
-+		data_phy_cycles_byte = data_phy_cycles * dsi->lanes + delta;
-+
-+		if (horizontal_front_back_byte > data_phy_cycles_byte) {
-+			horizontal_frontporch_byte -= data_phy_cycles_byte *
-+							horizontal_frontporch_byte /
-+							horizontal_front_back_byte;
-+
-+			horizontal_backporch_byte -= data_phy_cycles_byte *
-+							horizontal_backporch_byte /
-+							horizontal_front_back_byte;
-+		} else {
-+			DRM_WARN("HFP + HBP less than d-phy, FPS will under 60Hz\n");
-+		}
-+
-+		if ((dsi->mode_flags & MIPI_DSI_HS_PKT_END_ALIGNED) &&
-+			(dsi->lanes == 4)) {
-+			horizontal_sync_active_byte =
-+				roundup(horizontal_sync_active_byte, dsi->lanes) - 2;
-+			horizontal_frontporch_byte =
-+				roundup(horizontal_frontporch_byte, dsi->lanes) - 2;
-+			horizontal_backporch_byte =
-+				roundup(horizontal_backporch_byte, dsi->lanes) - 2;
-+			horizontal_backporch_byte -=
-+				(vm->hactive * dsi_tmp_buf_bpp + 2) % dsi->lanes;
-+		}
-+
-+		writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
-+		writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
-+		writel(horizontal_frontporch_byte, dsi->regs + DSI_HFP_WC);
- 	}
- 
--	writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
--	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
--	writel(horizontal_frontporch_byte, dsi->regs + DSI_HFP_WC);
--
- 	mtk_dsi_ps_control(dsi, false);
- }
- 
-@@ -1194,6 +1319,7 @@ static const struct mtk_dsi_driver_data mt8188_dsi_driver_data = {
- 	.has_shadow_ctl = true,
- 	.has_size_ctl = true,
- 	.cmdq_long_packet_ctl = true,
-+	.support_per_frame_lp = true,
- };
- 
- static const struct of_device_id mtk_dsi_of_match[] = {
--- 
-2.43.0
+Yeah, amusingly I was thinking about this when I wrote this, but worried
+that relocate_vma_down() would be overwrought. However on second thoughts I
+think you're right, this isn't ideal. Will change.
 
+Also ack re: comment.
+
+>
+> ...
+>
+> Thanks,
+> Liam
