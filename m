@@ -1,146 +1,110 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB1D1422B4
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 09:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4341411E1
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 09:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720000586; cv=none; b=kScJ/XIxKlyxJ7ob6RZ8+UstaQ/i0u0MCgAflRn8Zk0yvvlGuvRqtYObh5b9HSZOP1BnFP+zfU8Ri3oo+V7eljJiX8O+4uBn4ET9Se+qEn0x0TZcKK4z4QKDY2Pyzlu8Re0IQd8pX0yTm7RQO251JbE4FSyqs8RRONrz2Eo4JFY=
+	t=1720000615; cv=none; b=dEVuUgevAk8/ZNIVQFVEZ1+yKKl8VYRS8N8YEnsjJLL0mA0uDkJe2VShswpBVpy025Fx1B1zCeGod+aPmS+nsovZwua1ZYl5ePDTAHyQ76A8zug1BeP7oDFraFbrBvJAqflIwNI6wCerbP63FKo5wXnzMgrb+ngY8LVvbZ4UTVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720000586; c=relaxed/simple;
-	bh=/kiTWOs4ltQzwUEBThYjor7icgAsHIheHT3MRkr+wmY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hJgfFKkNDz00yGVeJZcR4eSf3B2IoXA24nanMsW0v6YSZLULx2S8aJ+1uuGDYPgzmXDZuVGGO75Q0u5x5YEf8/BMm0GCgR4uAIwJ+l00fTTRpngO5a2oOSKLGBB78SokgCUv5Bl7/UhhtMAANqNNI99exJGB8WMK0uyo8uq9WoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7f652a0d89dso195584639f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 02:56:24 -0700 (PDT)
+	s=arc-20240116; t=1720000615; c=relaxed/simple;
+	bh=VRqNg8ZwdNFYMwEZZ15y9oaDxErqj4bO5XutmPE7nnY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lujmNmP5HJyskC4Wm9eUpk2GFX46tut35X8h56vVfgjpxkiPh3k3bQLcwZXjN6QLDKW7+g/DRZUtxqiL33PtyTmQOjGJecb8yAGu2DuxirsARYARNN2hGN3sfOkyD4c1xfUqFhXbcjq3miOs24BuRntQkYe9WFAeegpoEz2PdBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2wn6T3Ja; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2wn6T3Ja"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ec3f875e68so57793801fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 02:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720000611; x=1720605411; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=644p2OqNe2TyfiDk6OFRaYAmlAu9C2CNKeyr0ia2jQo=;
+        b=2wn6T3JaeNHqvOS7BSJ17fgtERPLe2qH3ikYGO/YZscDHq9BF0FgfJsKowczXQ4TaT
+         yAdLmllo2q2IpLFoW5BrHw2+OA6YHfRlBXny2ZjBkS60VfXNwMxOg2Fh8m5VEPM3iubW
+         KdcNkbn27ATiwXTSwOPCE5K8gAPgCtYQ7YamQzxNF4sjE1BCwIFZJfL3iaiT8bpxVhhZ
+         kZRbm3BT8iS/RHGZAnYqrjLy7giMHi0cbwCq+ZFoSlWVZjPFD0pnvM8Hk8tbE4XzRdXo
+         nXkDazg3t8RckakT4JXtWAjFIb9Z9i2Ndmo6lk7sjK+LAxRhcI21xoli9DFKZYLzScs0
+         HLvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720000584; x=1720605384;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FY5C03KxkZrYdyjjPHGtHnHuVOgNSkiictHfwHQSyLI=;
-        b=gWHn5lddi04K/OeEg1jqiwftvKLFlVGvuiBWO5B1kWfXDgTLvbZXgD54noy51ysP16
-         jN9tm0+tKFBhwdi7KolVhCS9MtBnnZD3iw6uHgCQN1Dlm57azDpxkBY8ZRnE3iRI8TJJ
-         CzJvihQOd2aOWjrf3MBPJiIzMGZUteSefVoUYbRZ/HSqISpGnmivkhIqJ5rB0K/b6xwJ
-         3dW/WjhTEB+IjMqSw1xcdnp9/09150BhGdvBp9Jvd+vCBrCHMpNqmwtWPyAe7SSuRbKD
-         QEtJTAKdyYcBMhSfGvZP2k/DTgVyz3wTIfn0/54uKyh70sl96LNydQWx9KwMM6mvr458
-         erLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVi3+4L/MPTvFRHY3ERbCNlhJksU5Cs9OW/LvEsa+JenexsHO1x9iuAz56SDA2eZUXUDFNi0+07LatGiF4+oEiB1We5q3TJUnmbqf8s
-X-Gm-Message-State: AOJu0YyvnkKjTe3aeDEp/NX6ZFkcjGtw4qCte73KOi0dzaOuo2Y+5VX1
-	dTgoxEtPwRzw3AeR5Zkv68hGEnTefIKxyBMDzojfoPRXkOWap7O2Us+kWlKMgZItOWcyDssiP3W
-	qz1i6xj1jcL6SqWznT4asT8wPuhvO1HS8qTWAU31c/7W3xEm/hhAY3hw=
-X-Google-Smtp-Source: AGHT+IGa3IckrEyHM8si8aqAN/oiN06/0GFt5X7rAvzSMUGPPPEb5J4ZmA62eQGvL+rX2i+Afd19hUdk85VJc7AT8qdtbVN3hWrS
+        d=1e100.net; s=20230601; t=1720000611; x=1720605411;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=644p2OqNe2TyfiDk6OFRaYAmlAu9C2CNKeyr0ia2jQo=;
+        b=p0t+0DarK6Zv1lovjiNq4n2qkPO1MGMGSW36qvBDR0T4hmKh5B52xCIs0qjzbmmyqZ
+         TVhsOkod0VYb2lleGZuCrukfmSQfGVcqKoypD+bh/Q8/uMg6hHN0bCQHjuXgc2+H29yP
+         Qi1UVIB+oRnsP1eKCkrqXliM28Sx/ClS33Yqj7JP5iOPRYMEWYYIWrv/ImiUoF1oVztP
+         TMY+yt7U0aYfa2mxtybO8HMkDa7KD6SGKCvpa82uFDmKJYYGVDJtgFzohp5Kj1MQFUNZ
+         SCRjyrfAAreGPFPpue2bcIWdhXnNsqjgGhuturpKgbL0pQo5ny6j34xhZbcWHaZVDDZz
+         JQDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZaHOrEPMs4hmpIf5gtnahl/g4q8cdUbzL4K15QaiofJ8F04M7eK50s1feEV2RwqYGjFKp34qnujqx2NL8798c1qRgymAA0/Bf1j1p
+X-Gm-Message-State: AOJu0YxT6IaXrZ8NFnnENfRr8Np/fvnVaRAx0ii/PqaWNctbcnytW4hP
+	OaeM/aWoYUAyRCRLnzxBthvhf7J7jJWCva/XQmQ0fU4mptNqWyCAN4pHilxGYdzLKwCJqC47HCG
+	Z
+X-Google-Smtp-Source: AGHT+IG0w3E0EYqPeaL1EPJl8rWjAk6xvFAdS0J0CS6iElVHC8biwZiYbyTZBy9yDP3+x2rBjsmnzQ==
+X-Received: by 2002:a05:651c:150d:b0:2ee:8698:10ed with SMTP id 38308e7fff4ca-2ee86981404mr8101741fa.49.1720000609610;
+        Wed, 03 Jul 2024 02:56:49 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c37f:195e:538f:bf06])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b0c1018sm231190095e9.40.2024.07.03.02.56.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 02:56:49 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: brgl@bgdev.pl,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	Andrei Simion <andrei.simion@microchip.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 0/3] Read MAC address through NVMEM for sama7g5ek
+Date: Wed,  3 Jul 2024 11:56:47 +0200
+Message-ID: <172000059532.11489.8300421582989880074.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240703084704.197697-1-andrei.simion@microchip.com>
+References: <20240703084704.197697-1-andrei.simion@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:15cb:b0:7f6:2e72:e818 with SMTP id
- ca18e2360f4ac-7f62ee1602amr54881339f.1.1720000583702; Wed, 03 Jul 2024
- 02:56:23 -0700 (PDT)
-Date: Wed, 03 Jul 2024 02:56:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ce42b9061c54d76a@google.com>
-Subject: [syzbot] [wireless?] WARNING in rate_control_rate_init (3)
-From: syzbot <syzbot+9bdc0c5998ab45b05030@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, johannes@sipsolutions.net, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    ac26327635d6 Merge branch 'fixes-for-stm32-dwmac-driver-fa..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17b17ab9980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5264b58fdff6e881
-dashboard link: https://syzkaller.appspot.com/bug?extid=9bdc0c5998ab45b05030
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/192a90a6425b/disk-ac263276.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/233fc7270a4e/vmlinux-ac263276.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/585e26cc8536/bzImage-ac263276.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9bdc0c5998ab45b05030@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 8730 at net/mac80211/rate.c:48 rate_control_rate_init+0x588/0x5f0 net/mac80211/rate.c:48
-Modules linked in:
-CPU: 1 PID: 8730 Comm: syz.0.1096 Not tainted 6.10.0-rc5-syzkaller-01193-gac26327635d6 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-RIP: 0010:rate_control_rate_init+0x588/0x5f0 net/mac80211/rate.c:48
-Code: 00 00 00 e8 4a 75 01 f7 f0 41 80 8d 82 01 00 00 20 48 83 c4 20 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 69 ad 9b f6 90 <0f> 0b 90 48 83 c4 20 5b 41 5c 41 5d 41 5e 41 5f 5d eb 65 89 e9 80
-RSP: 0018:ffffc90004717058 EFLAGS: 00010283
-RAX: ffffffff8afa79b7 RBX: ffff88802deceb98 RCX: 0000000000040000
-RDX: ffffc90009d89000 RSI: 0000000000001518 RDI: 0000000000001519
-RBP: 0000000000000001 R08: ffffffff8afa7622 R09: 1ffffffff25f78b0
-R10: dffffc0000000000 R11: fffffbfff25f78b1 R12: ffff88802e488e20
-R13: ffff88802a9c8000 R14: 1ffff1100553900a R15: 0000000000000000
-FS:  00007f7083c2e6c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7082d5b420 CR3: 000000002df6e000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- sta_apply_auth_flags+0x1b6/0x410 net/mac80211/cfg.c:1711
- sta_apply_parameters+0xe23/0x1550 net/mac80211/cfg.c:2061
- ieee80211_add_station+0x3da/0x630 net/mac80211/cfg.c:2127
- rdev_add_station+0x11b/0x2b0 net/wireless/rdev-ops.h:201
- nl80211_new_station+0x1d53/0x2550 net/wireless/nl80211.c:7683
- genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2550
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
- netlink_unicast+0x7f0/0x990 net/netlink/af_netlink.c:1357
- netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1901
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:745
- ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
- ___sys_sendmsg net/socket.c:2639 [inline]
- __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f7082d75b99
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f7083c2e048 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f7082f03f60 RCX: 00007f7082d75b99
-RDX: 0000000000000000 RSI: 0000000020001080 RDI: 0000000000000003
-RBP: 00007f7082de4a7a R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f7082f03f60 R15: 00007fff740d84f8
- </TASK>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On Wed, 03 Jul 2024 11:47:01 +0300, Andrei Simion wrote:
+> Our main boot sequence :
+> (1) ROM BOOT -> AT91Bootstrap -> U-Boot -> Linux Kernel.
+> U-Boot is the stage where we set up the MAC address.
+> Also we can skip U-Boot and use the following boot sequence :
+> (2) ROM BOOT -> AT91Boostrap -> Linux Kernel.
+> Add EEPROMs and nvmem-layout to describe eui48 MAC address region
+> to be used for case (2).
+> 
+> [...]
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Applied, thanks!
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+[1/3] eeprom: at24: Add support for Microchip 24AA025E48/24AA025E64 EEPROMs
+      commit: b61ea8705095e5d242762268cfebf48c848315f6
+[3/3] dt-bindings: eeprom: at24: Add Microchip 24AA025E48/24AA025E64
+      commit: c1ec80e54afd0460d02b29a5731fd2a7b31f400b
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
