@@ -1,38 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AE94C7D
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 14:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79CA170854;
+	Wed,  3 Jul 2024 14:34:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720017210; cv=none; b=L8HQiODTlPyXPoxdxoYt3pGmwxzPzifdJCD1oOZgbHitK/kHnPIlh/0HGplgR6qaLleJm2QTkRSv6SQS/oWF+yM98DqkY+1bnYbU3RvNpkBDDSd3/pEzFNE2a01mUlwpf6kWqvwyi2jdFG058sSdUrEjDyJaBd8aYs/P/tj5jnQ=
+	t=1720017252; cv=none; b=T20Z98tJebTVYTYSqjQmplgAv0Iil8veDK5qzYqbkm0++s02pABmnnrTwRBCQkPsRkEX4H+nGfjWNjhQjhnZn4fMJKJK+OppxKEfIUdMjdXRepPXlfVL2HM/BaB7t6qx8M9PctYm78nA39x9ldpCLMxsMoSv96auN6/mFTC3RsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720017210; c=relaxed/simple;
-	bh=K4tGBXDyHG3s64xGn8nQEFFL2XRCDQHevLpd4H+cf6Y=;
+	s=arc-20240116; t=1720017252; c=relaxed/simple;
+	bh=LLMX3jjXZxqGijzK4Yb8leC6X2Okra+Heoqx62+HtPI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LQ1cf35y/GhTRwsZd6Y/i5Hbv/igOaXUUCVvnMFFTTHipBrVzao8YNMC+C8Z5uWo+cNB5rRBxBxa1DOTrRaV4ADI89B4cW/KWkoqvdwmwsnEuyVvv/sE+3Ynm5ohxamQpPjiEH8jCxezTAn+O5AtMKRCrKKKmpI8R4q0GXmxFhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cs+z83tV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=SlV1TcsJny9QehpOQsF6aMUxl0cYeHMhepkypLC0uhBX7KrnlbQLt9r1ff6cbKciBVGtc8sfxuUZpTQJXwP7aQo76bGQyqK+8juYj5tm+IUR3hoW8scwAufaYr5fQ1Zb0Jio36FjOLzxUEnBUYpEo0qauomI0dKEB/FTjntz3vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OOlfFPNn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cs+z83tV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 962A2C2BD10;
-	Wed,  3 Jul 2024 14:33:29 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OOlfFPNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA2D8C2BD10;
+	Wed,  3 Jul 2024 14:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720017210;
-	bh=K4tGBXDyHG3s64xGn8nQEFFL2XRCDQHevLpd4H+cf6Y=;
+	s=korg; t=1720017251;
+	bh=LLMX3jjXZxqGijzK4Yb8leC6X2Okra+Heoqx62+HtPI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cs+z83tVby1gFRgdgV3hxmn+1e2+/K6H5+LK6Ev/xD9puUuoS1WnRXMdRSIwNQgD6
-	 oHRTmsVR4+4ljE7LIYLDepLyf558JUhQtCD1S6F24U/h64lqlZidH0O8hZyzVN05li
-	 Z379oGymd0gfzZpeeCPwIt3CwX0RU7i/HchXtj1U=
-Date: Wed, 3 Jul 2024 16:33:27 +0200
+	b=OOlfFPNnLzV7nWg3ygWFBK5cCsOyGCdWEAXodxWJJQLsXTTOY5m3IVT8Cd7TKJMlh
+	 IbX08KnYyJVnwu2KuoQXLREiSOfvvgYAmPmqvk1CDJOQwvZcV47t+sSQYvLz5W8inC
+	 OlYtc60ni6tQ7OavBtI6ATzVwohfTIdpLMbR7a0Y=
+Date: Wed, 3 Jul 2024 16:34:08 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
-To: Vamsi Attunuru <vattunuru@marvell.com>
-Cc: arnd@arndb.de, jerinj@marvell.com, schalla@marvell.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 1/1] misc: mrvl-cn10k-dpi: add Octeon CN10K DPI
- administrative driver
-Message-ID: <2024070333-matchless-batch-57ec@gregkh>
-References: <c43e2c24-cd5b-44c2-a997-5f324f58746c@app.fastmail.com>
- <20240619132109.3168940-1-vattunuru@marvell.com>
+To: Sebastian Ene <sebastianene@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, arnd@arndb.de, will@kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Dragan Cvetic <dragan.cvetic@xilinx.com>,
+	Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2 0/2] misc: vcpu_stall_detector: Add a PPI interrupt
+Message-ID: <2024070357-henna-dubiously-bc1f@gregkh>
+References: <20240613141335.1134341-1-sebastianene@google.com>
+ <86tthwki93.wl-maz@kernel.org>
+ <Zmsh53PnONKG23MC@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,21 +44,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240619132109.3168940-1-vattunuru@marvell.com>
+In-Reply-To: <Zmsh53PnONKG23MC@google.com>
 
-On Wed, Jun 19, 2024 at 06:21:09AM -0700, Vamsi Attunuru wrote:
-> +struct dpi_mps_mrrs_cfg {
-> +	__u16 max_read_req_sz; /* Max read request size */
-> +	__u16 max_payload_sz;  /* Max payload size */
-> +	__u16 port; /* Ebus port */
-> +	__u16 rsvd; /* Reserved */
+On Thu, Jun 13, 2024 at 04:44:23PM +0000, Sebastian Ene wrote:
+> On Thu, Jun 13, 2024 at 03:52:08PM +0100, Marc Zyngier wrote:
+> > On Thu, 13 Jun 2024 15:13:33 +0100,
+> > Sebastian Ene <sebastianene@google.com> wrote:
+> > > 
+> > > Hello,
+> > > 
+> > > I respined the v2 version to address an issue previously found here:
+> > > https://lore.kernel.org/all/202406132132.FBKSWFav-lkp@intel.com/
+> > 
+> > So is this v2 or v3? Having two v2s on the list is... confusing.
+> > 
+> > 	M.
+> > 
+> 
+> There is a small change in the patch 2/2 so you are right it should be v3,
+> sorry for the confusion.
 
-Please spell out "reserved" you have plenty of characters to use.
-
-Anyway, you NEVER check this, so you just made it so it can never be
-used.  Please read the documentation in the kernel for how to add new
-ioctls, it goes through the reasoning why you must check this for 0 now.
-
-thanks,
-
-greg k-h
+Please send a new version, nothing we can do with duplicate series on
+the lists...
