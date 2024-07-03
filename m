@@ -1,155 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1101DFD1
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 14:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2632C1DFD1;
+	Wed,  3 Jul 2024 14:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720016699; cv=none; b=e84z9QYqidgG1Fy4pVwGDegwGpfMrGtAdJgz10RcNM+LGq86D/AYKsy65VBjoUq6Equyw7Byb6l3UVlWMrBURjYzSw8cz5qUnrvrI5k//K3S3WfMqiGhWPa02fGvah95lH/3fa/kA/Ljv0PIUlI9yJ6muAOTXWkQ5j6IdRyxY+g=
+	t=1720016727; cv=none; b=fKj5IqjKJJOt5i3yMZoSBw9bJ4wAkyPOrLuFiKJlcMvWFwuDs1o9E0b8drGG7f/GvXdOHE1yxzOWwKTbcyXLDsal3MB6AMS6qVHd6zM8j0TAEpH6WmJv8rYXAdy5qa/rQvYTR7h+5cinWEYF4hjWhD9NMH2OgSidT3AA6MACFW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720016699; c=relaxed/simple;
-	bh=xKrfYygHL66zKF5LftEfg0yfig95SkJROtYBUbot13Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=p4blg7r0yKt5fJuO/GCyDMa3S0PEiGGUDp2R6P2jCKe+olaz8bpCWXkEjCMUlsO6g2gObnAY1DCcNnxGbjirCiji0cucrQ9lFe0sZd7s7DECz8drzvGnoV3xyn/v+apyJ+1TRJ9Dqb1ysC1+NpsUUYyW6Rw91bPJUO1wO74F2No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FMAgBfBp; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720016727; c=relaxed/simple;
+	bh=8Vjl3YttzwHH2IsyM7t6WRqmidD0zMc9LqpB46m1uxQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t9Dkc3fhW7zoo9/j9P5HtuLZYPOUr9KOCr4SjyAzMeoYpVuzb8AmiYcy56DPB+21NmSNVIsP8LCvD2bYdgOpkrvX+ykBCohYVY548mzjKI3Mlti+DigwsZml+b/ZeIPPgOsIDK9Q4vkHeX7VnA9VM+yVH9aazlKjfskIJkZFddA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=efw1zff6; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FMAgBfBp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720016697; x=1751552697;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=xKrfYygHL66zKF5LftEfg0yfig95SkJROtYBUbot13Q=;
-  b=FMAgBfBpXcymwt1BOvHUrUDChWk1UF0ll7LrQit9Z1xIxHLuehlf6zJg
-   ThQW1tE/t1v5qu780ythx/V2pYd064hvEiLtceQxmI5GMvdOl4ccX1/Tr
-   /CLL9o8f4GEPA0Uiowh4eGiGiuspqQBc9qxStsw9SfaVQI5Mbbu9BcOW0
-   kpwDKpnD2cwblPiuQLRkDRH7JdNPgC8mHG51qh113xZHeSmbEcGPv3WEf
-   gae0Tq4aQWUMx3UkB5Ol9lx9epC3VwVxNkOCauO8Ws/seecIqxk/T4IAG
-   6umP0nbMbFpjMTfUq+s4jJJlXktN8xbyn8fsFjWO15mg8Os0DHGFHs5TG
-   Q==;
-X-CSE-ConnectionGUID: yB22mwd4ScCnSb/auDiFvA==
-X-CSE-MsgGUID: sts4US9VQj+D9tRhgCp12A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17367849"
-X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="17367849"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 07:24:56 -0700
-X-CSE-ConnectionGUID: NEGC8JXJTridh2yRepppNg==
-X-CSE-MsgGUID: oPY5YWC5R6Gx8x3n1n5j0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="46195186"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 07:24:54 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="efw1zff6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3818C40005;
+	Wed,  3 Jul 2024 14:25:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720016723;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QDrB6n0exh4TdxMHPeUljoSu3UlZuOXj1a37x1NMQyo=;
+	b=efw1zff6/mM4ToIHGLXq4pik4y9K5PRagdQwScUtXevMt4iBZccvfoQ43IsnA/R5gnOO15
+	6uAfu0n2IILJDh60tHAHPdffOay49z+Gh5SRWVm7vQJcAqFs69xt8SAKZXd4JwukBZdbWC
+	294jQyZ3K6HdYrcEIklapQmOXQ/nAsoxtvAMcNfuJM0zPKnJ1Vej299O7y0riOzml9YtUg
+	iNhOrJ5RdDi2JmNts94QTwCVp5AFjqm97nQ0UMEkxwn5Xn1XKx33ESjVCtg3Tj00zMkhpH
+	y9c0ci8ReWQeBWUNT1wY0KM27N37Uaj2xcy+6qioCsawhY/ZYUtFTnJVtPI39Q==
+From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Henrik Rydberg <rydberg@bitmath.org>,
+	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	tony.luck@intel.com,
-	qiuxu.zhuo@intel.com,
-	yudong.wang@intel.com
-Subject: [PATCH v2 1/1] drm/fb-helper: Don't schedule_work() to flush frame buffer during panic()
-Date: Wed,  3 Jul 2024 22:17:37 +0800
-Message-Id: <20240703141737.75378-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cbe57a4a-de59-42d1-882f-f66cbd09ecf2@suse.de>
-References: <cbe57a4a-de59-42d1-882f-f66cbd09ecf2@suse.de>
+	devicetree@vger.kernel.org,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Jeff LaBundy <jeff@labundy.com>
+Cc: catalin.popescu@leica-geosystems.com,
+	mark.satterthwaite@touchnetix.com,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	bsp-development.geo@leica-geosystems.com,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH v16 0/3] Input: Add TouchNetix axiom touchscreen driver
+Date: Wed,  3 Jul 2024 16:25:15 +0200
+Message-ID: <20240703142520.207066-1-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: kamel.bouhara@bootlin.com
 
-Sometimes the system [1] hangs on x86 I/O machine checks. However, the
-expected behavior is to reboot the system, as the machine check handler
-ultimately triggers a panic(), initiating a reboot in the last step.
+Add a new driver for the TouchNetix's axiom family of touchscreen
+controller. This driver only support i2c and can be later adapted for
+SPI and USB support.
+--
+Changes in v16:
+ - Fix bug report: https://lore.kernel.org/oe-kbuild-all/202406290709.X77lx18x-lkp@intel.com/
+ - Remove leica from list of Maintainers
+ - Rebase on v6.10-rc6
 
-The root cause is that sometimes the panic() is blocked when
-drm_fb_helper_damage() invoking schedule_work() to flush the frame buffer.
-This occurs during the process of flushing all messages to the frame
-buffer driver as shown in the following call trace:
+Changes in v15:
+ - Fix report ABS_MT_TRACKING_ID after input_mt_slot
 
-  Machine check occurs [2]:
-    panic()
-      console_flush_on_panic()
-        console_flush_all()
-          console_emit_next_record()
-            con->write()
-              vt_console_print()
-                hide_cursor()
-                  vc->vc_sw->con_cursor()
-                    fbcon_cursor()
-                      ops->cursor()
-                        bit_cursor()
-                          soft_cursor()
-                            info->fbops->fb_imageblit()
-                              drm_fbdev_generic_defio_imageblit()
-                                drm_fb_helper_damage_area()
-                                  drm_fb_helper_damage()
-                                    schedule_work() // <--- blocked here
-    ...
-    emergency_restart()  // wasn't invoked, so no reboot.
+Changes in v14:
+ - Fix is_report/present as booleans
+ - Add a comment to describe the boolean variable insert
+ - Remove not needed packed attributed from struct axiom_cmd_header
+ - Remove duplicate target event checking
+ - Only emit ABS_MT_DISTANCE/ABS_MT_PRESSURE
+ - Remove input_report_key() as a mean to indicate firs reported contact
+ - Remove EV_REL only need for u46 aka debug data
+ - Report only MT_TOOL_FINGER instead of MT_TOOL_MAX
+ - Remove unused EV_REL
+ - Remove emit BTN_TOUCH as a way to indicate first target report
+ - Remove unjustified delay after read access
+ - Remove falling back to polling mode when no irq acquired in ACPI/DT
+ - Remove handle of u46 report as it's not used
+ - Remove touchscreen_report_pos() call as it generates extra dummy events
+ - Rebase on v6.10-rc5
 
-During panic(), except the panic CPU, all the other CPUs are stopped.
-In schedule_work(), the panic CPU requires the lock of worker_pool to
-queue the work on that pool, while the lock may have been token by some
-other stopped CPU. So schedule_work() is blocked.
+Changes in v13:
+ - Fix CRC16 not selected reported in:https://lore.kernel.org/oe-kbuild-all/202405311035.5QZSREJv-lkp@intel.com/
+ - Rebase on v6.10-rc2
 
-Additionally, during a panic(), since there is no opportunity to execute
-any scheduled work, it's safe to fix this issue by skipping schedule_work()
-on 'oops_in_progress' in drm_fb_helper_damage().
+Changes in v12:
+ - Fix REGMAP_I2C not selected
+ - Rebase on v6.10-rc1
 
-[1] Enable the kernel option CONFIG_FRAMEBUFFER_CONSOLE,
-    CONFIG_DRM_FBDEV_EMULATION, and boot with the 'console=tty0'
-    kernel command line parameter.
+Changes in v11:
+ - Fix regulators name to match dt-binding
+ - Enable regulators before reset is asserted
 
-[2] Set 'panic_timeout' to a non-zero value before calling panic().
+Changes in v10:
+ - Set regulators as required
+ - Enable power supply before reset
+ - Fix ref count due to regulator requested twice
+ - Rebase on v6.9-rc4
 
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reported-by: Yudong Wang <yudong.wang@intel.com>
-Tested-by: Yudong Wang <yudong.wang@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
-v1 -> v2:
-  - No function changes.
+Changes in v9:
+ - Fix issue reported in https://lore.kernel.org/oe-kbuild-all/202402201157.BKo97uWl-lkp@intel.com/
+ - Rebase on v6.8-rc2
 
-  - Add 'Acked-by' from Thomas Zimmermann.
-    [ Thanks Thomas Zimmermann for reviewing this patch. ]
+Changes in v8:
+ - Fix missing call to input_report_slot_state()
+ - Fix issue reported in https://lore.kernel.org/oe-kbuild-all/202402020623.8T1Ah513-lkp@intel.com/
 
-  - Add 'Tested-by' from Yudong Wang.
+Changes in v7:
+ - Remove startup time from dt-binding
+ - Fix usage table not correctly populated
 
-  - Add comments to drm_fb_helper_damage() about the early return on oops_in_progress.
+Changes in v6:
+ - Fix missing unevaluatedProperties.in dt-binding
+ - Use __le16 to correctly deal with device endianness
+ - Use standart kernel types s/char/u8/
+ - Use regmap api as driver might support spi later
+ - Use get_unaligned_le16() for the sake of clarity
+ - Use devm_regulator_enable_optional()
 
- drivers/gpu/drm/drm_fb_helper.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Changes in v5:
+ - Fix wrong message constructed in axiom_i2c_read
+ - Delay required between i2c reads is >= 250us
+ - Do not split report reading in two phases as we'll
+   have to wait 500us
+ - Use lower-case in properties names
+ - Make regulators properties are required in dt-binding
+ - Fix bug report: https://lore.kernel.org/lkml/202312051457.y3N1q3sZ-lkp@intel.com/
+ - Fix bug report: https://lore.kernel.org/lkml/6f8e3b64-5b21-4a50-8680-063ef7a93bdb@suswa.mountain/
 
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index d612133e2cf7..6ad75034c966 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -628,6 +628,17 @@ static void drm_fb_helper_add_damage_clip(struct drm_fb_helper *helper, u32 x, u
- static void drm_fb_helper_damage(struct drm_fb_helper *helper, u32 x, u32 y,
- 				 u32 width, u32 height)
- {
-+	/*
-+	 * This function may be invoked by panic() to flush the frame
-+	 * buffer, where all CPUs except the panic CPU are stopped.
-+	 * During the following schedule_work(), the panic CPU needs
-+	 * the worker_pool lock, which might be held by a stopped CPU,
-+	 * causing schedule_work() and panic() to block. Return early on
-+	 * oops_in_progress to prevent this blocking.
-+	 */
-+	if (oops_in_progress)
-+		return;
-+
- 	drm_fb_helper_add_damage_clip(helper, x, y, width, height);
- 
- 	schedule_work(&helper->damage_work);
--- 
-2.17.1
+Changes in v4:
+ - Cleanup unused headers and macros
+ - Use standard kernel type
+ - Namespace structures and functions
+ - Use packed struct when possible to avoid bitfield operators
+ - Fix missing break when address is found in axiom_populate_target_address()
+ - Split reads in two steps for the reports, first length then report
+   itself so we only read required bytes
+ - Get poll-interval from devicetree
+ - Add VDDI/VDDA regulators
+ - Add a startup delay of 110 ms required after VDDA/VDDI is applied
+ - Remove axiom_i2c_write() as it is no more used
+
+Changes in v3:
+ - Remove irq-gpios property in dt-binding
+ - Use a generic node name
+ - Fix issues reported in https://lore.kernel.org/oe-kbuild-all/202310100300.oAC2M62R-lkp@intel.com/
+
+Changes in v2:
+ - Add device tree binding documentation
+ - Move core functions in axiom_i2c as we only care about i2c support now
+ - Use static function when required
+ - Use syntax dev_err_probe()
+ - Add an hardware based reset
+
+Kamel Bouhara (3):
+  dt-bindings: vendor-prefixes: Add TouchNetix AS
+  dt-bindings: input: Add TouchNetix axiom touchscreen
+  Input: Add TouchNetix axiom i2c touchscreen driver
+
+ .../input/touchscreen/touchnetix,ax54a.yaml   |  62 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   7 +
+ drivers/input/touchscreen/Kconfig             |  14 +
+ drivers/input/touchscreen/Makefile            |   1 +
+ drivers/input/touchscreen/touchnetix_axiom.c  | 616 ++++++++++++++++++
+ 6 files changed, 702 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
+ create mode 100644 drivers/input/touchscreen/touchnetix_axiom.c
+
+--
+2.25.1
 
