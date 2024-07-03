@@ -1,79 +1,64 @@
-Received: from mail.nfschina.com (unknown [42.101.60.195])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 58CA51FB4;
-	Wed,  3 Jul 2024 01:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC6246B5;
+	Wed,  3 Jul 2024 01:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719970926; cv=none; b=GfqIjeh0II1/TcimWm8KLHdAZ00WhmiKB1KYC2FmzY1aLxu9bZnJrCWe1KZXX7y0Lkcf5tcfYHY8borugcHKT5AymNKF9jWJZDFQq/gdwzFGssK55BYm59mxKG5UAluWWNCL4yD86Xnv4PKQtnaYQWW0z2xabfor10xecbI2Gpc=
+	t=1719970942; cv=none; b=dROPK6UR4bPTWGVnouTgZixHlR4JnOE2q8J1tdg+0/xqU7qIHxDmaqf/E3L+JM9vGA1FYU4xoKwdFNf145+TrNjFUANtrrwdOjWiCHVidokmq2rpEBC7vbv7/U/VLWs3IphCbaXF/rX6gMjn21bbr16kkH1eGd0wyxZegsosXUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719970926; c=relaxed/simple;
-	bh=/0w+i+Lr65ap+CUE0bx3iXZmGu8G7R70ai0Z4Ilzjm0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=ZxLQj4DWGiSANux5JNSndL3KsL3Jp9TKBNyyl9Kwl8AUkv6ZDq5ETAn6lvJakXjnCdXOMGlqV2sU+nbVy37uEVeNnaBeU8Q1oHRgwxdthBtf4JNYdjWsMQMXqnu9aD+DaPBOc2FZkyzlv83L0aNs/o44VZnCGmkMkuvitJg45yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 515B16047B688;
-	Wed,  3 Jul 2024 09:41:46 +0800 (CST)
-Message-ID: <36cef2a8-10a3-928a-d962-3599333d9ac8@nfschina.com>
-Date: Wed, 3 Jul 2024 09:41:45 +0800
+	s=arc-20240116; t=1719970942; c=relaxed/simple;
+	bh=UcxzuPrchx18jeTGp7Ek1IscH56sS0Ld5+/uuF2cChc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dpp7oe1TjDi9iV9BTcpHd/D0IabTvtmEytbwrZt+hmXHa8hPeAScOKKVBTJOGzVlY0/Gy8Dw1nSFD0yyVXtzL+TEBdbU9DSrCmMMSWafOmVfVJM6oFnTvQrpEHEfVM1uFXMUvRcP3NSWraetm8bzVeYdpr67hJTquRp0VkPnjDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhhrWUFD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhhrWUFD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D78CC116B1;
+	Wed,  3 Jul 2024 01:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719970941;
+	bh=UcxzuPrchx18jeTGp7Ek1IscH56sS0Ld5+/uuF2cChc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JhhrWUFDJAiIWRuEaTA+4eLHvJ9hIR7xIA+Hn7VxvLUy+4JqrI1B9EtoC/HUz6Kuy
+	 aCN6tE7o+rlRVHjLUxmxRcdSny6b72N4CrgwQ968PjDidqk4XRz6XtXdAobzXf7UXJ
+	 GL9eqi13dizn3hER88Sm4Z2ZJ4oQASs01Ctp2JggXuzhYZu14wfDx0wF5kWk4UiN9o
+	 MFff5KMzavS7KVqbZUJif/Fscr4OV9t0KwZArPo0bCYCDl1O8XeQ3FLNQi7pZeeOP4
+	 cYf0ZSoTaiAdlDZU9t8Sqq36hTJn/PBlGQTj8QQPst5yN3axPDOnqitHiMdkItWGWy
+	 lHwR4gkQAr2rg==
+Date: Tue, 2 Jul 2024 18:42:20 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH-next v1] r8152: Convert tasklet API to new bottom half
+ workqueue mechanism
+Message-ID: <20240702184220.306d8085@kernel.org>
+In-Reply-To: <20240701100329.93531-1-linux.amoon@gmail.com>
+References: <20240701100329.93531-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.1
-Subject: Re: [PATCH wireless 1/9] wifi: cfg80211: avoid garbage value of
- 'io_type' in brcmf_cfg80211_attach()
-Content-Language: en-US
-To: Arend Van Spriel <arend.vanspriel@broadcom.com>,
- Kalle Valo <kvalo@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, johannes.berg@intel.com,
- kees@kernel.org, a@bayrepo.ru, marcan@marcan.st, quic_alokad@quicinc.com,
- zyytlz.wz@163.com, petr.tesarik.ext@huawei.com, duoming@zju.edu.cn,
- colin.i.king@gmail.com, frankyl@broadcom.com, meuleman@broadcom.com,
- phaber@broadcom.com, linville@tuxdriver.com, linux-wireless@vger.kernel.org,
- brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <1907419a888.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2024/7/2 23:39, Arend Van Spriel wrote:
-> On July 2, 2024 5:29:27 PM Kalle Valo <kvalo@kernel.org> wrote:
->
->> Arend Van Spriel <arend.vanspriel@broadcom.com> writes:
->>
->>> On July 2, 2024 3:57:27 PM Dan Carpenter <dan.carpenter@linaro.org> 
->>> wrote:
->>>
->>>> On Tue, Jul 02, 2024 at 08:24:44PM +0800, Su Hui wrote:
->>>>> brcmf_fil_cmd_int_get() reads the value of 'io_type' and passes it to
->>>>> brcmf_fil_cmd_data_get(). Initialize 'io_type' to avoid garbage 
->>>>> value.
->>>>
->>>> Since you're going to be resending anyway, please delete the space 
->>>> char
->>>> from the start of the line.
->>>>
->>>> It's weird that brcmf_fil_cmd_data_get() uses the uninitialized data.
->>>> It looks like it just goes to great lengths to preserve the original
->>>> data in io_type...  So it likely is harmless enough but still a 
->>>> strange
->>>> and complicated way write a no-op.
->>>
->>> Not sure if it helps, but I tried to explain the reason in response to
->>> patch 0 (cover letter).
->>
->> Would it make more sense to have just one patch? It's the same issue
->> anyway.
->
-> Yes, but I would solve it in brcmf_fil_* functions (fwil.[ch]).
-It seems you will send a new patch to solve this issue.
-And I guess there is no need for me to resend a v2 patchset or just one 
-patch.
+On Mon,  1 Jul 2024 15:33:27 +0530 Anand Moon wrote:
+> Migrate tasklet APIs to the new bottom half workqueue mechanism. It
+> replaces all occurrences of tasklet usage with the appropriate workqueue
+> APIs throughout the alteon driver. This transition ensures compatibility
+> with the latest design and enhances performance
+
+alteon ?
+
+> -		tasklet_enable(&tp->tx_tl);
+> +		enable_and_queue_work(system_bh_wq, &tp->tx_work);
+
+This is not obviously correct. Please explain why in the commit message
+if you're sure this is right.
+-- 
+pw-bot: cr
