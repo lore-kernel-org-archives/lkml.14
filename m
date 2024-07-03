@@ -1,105 +1,107 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6020F170836
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 17:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392AA170836;
+	Wed,  3 Jul 2024 17:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720026507; cv=none; b=oGDcZHg4PF3FuPJrXgiZln1A3HpV+PssLYAD//VBADSeUAOBVfyr5qlyf7ZRtAV2fFMz5uObMk1uS3HKk6Q5efarbOdnTcf34fAuuCln4xjNOSAOnXgRkNCSneSjBY65ojWKNLcsXmrkuwSahGVO3+wD/V3hMIIUpy3njLlkKWg=
+	t=1720026511; cv=none; b=Q7M3BHYRMpEYwmFiTDHK5f5nwyahadcCeHCTa8qXa2tUyq7HDvexnrhiIgCwrUOYmhsT5QyTclCmlPCmvJRyZMS+aEvhWBpJDA9azCx0OBhh9lcEJPXohM0k7fzTXGT4HBRWtSjxWOH7cA5afjdERHZd4y+8vgoSTc46ClM6Ob4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720026507; c=relaxed/simple;
-	bh=CoZI3yUWx1BNO5TPImZmrW26/7Ny1EyDudyCG7fX2mc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CsuS0EOfSa3rjV4qz4mvNKoeui68jGfIR/DM8QZZ6iqRjNO0MmynSkakq7/Xkq0TO19fXGGzv7jtRhYZYhEqGO1N7lHvu6gKfMpSzHnZlAfo/kC4Q1j7WTOr0OcycEGL9En0ppZFtwHzHhgpdtGUxACYvh1LyQn9gnUaonqk3vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dlB0zq/W; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com
+	s=arc-20240116; t=1720026511; c=relaxed/simple;
+	bh=Bh1WZOoD8rKJfSE9pl8waPuK6bvUrIYjnIk14Lhl74Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MJSe9NQ5iyvtgeEc83hzdmLLqsodeX5Ywv71umE8W7dd5E+GpCIUU21rCh26vxVj25kS+B+BzfhQZ1fBuzxQUQQddX5Gr5abkI4dcR90WLAkDtu4Nsb/e4MiT5Vfd5nNVqGDTxL5YaYHLj3xeTNN0wlcpZ1SrMQRXwGJw0+nyNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iFpRZ89b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dlB0zq/W"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-70ac9630e3aso3552940a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 10:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720026506; x=1720631306; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NZnnrx3QXyY7CztU9U1okaz2oEAprba0zaynWPbW44Y=;
-        b=dlB0zq/WYGDllgHGASuPCuo048mk3+TO1GyLKj5dveMLhmfDbpbUss41Tfhz2wQiAH
-         VckJOYzA3mfY3Zj+LDNSuTkdf8AtPLREi1BXj22eAjd2qTwR6xIvKcqHBwxeGkNRy0s4
-         AS3Hf+cvZs/BXUz2SpEKPxf4LG4QgI49gTJyjMuVahOhKpnElc1A/H92D7Zco4YdQWXm
-         0/MUcBTKI2+oBXZ/XpKyaGBKW3H7IGzr6EESOWp9cPoj0zHLpb6ZqqJG63Omyp9GbIYa
-         O244CbEVi6/IJArs4sTq5sCRN2V+EAb2eHidwJJUteuxmr8QWrik5J3EppJbEDmyiHwo
-         0Yew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720026506; x=1720631306;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NZnnrx3QXyY7CztU9U1okaz2oEAprba0zaynWPbW44Y=;
-        b=HNf2CO9RCo2YEdaVijIRgSja2JiOdJNz/5/yoeCV0rheSmwl7n5oCKgC9XNbSx38jf
-         dcM55mADe6m4+4aNBkCyV/H/0x1fPCG/XixlcLQsFg8fKWrD775e5sbT1NFXzBpxDFHQ
-         WAUrcIAPDRJdCddxyLkLm4wSrsSACjwclR83eRThv9ukARvcTrqhQGPu67cIHqw1cBYS
-         abjRuLw+HrUhbTh7mN2scG3Csix6mcPP1u8b5TUwt7ZIFxseZrX6dJQJk7ab5dXN+V4o
-         1unqpCLXSQ9VdmK9lFKcFR+2/vzKdqWrlQdLH1PzDJHKYmpvaQRNhQR0hJPEbwOMSZ8D
-         W4bA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+XsygEXrYY9Ni+MeXsAgmwF1BBAy8q84e8wCXkbMHXy7mbqmgkCkxqe+fJ81CqKolU8vnrfWHTM9eklBhMRBD05Z+TJ801nhBWO/Q
-X-Gm-Message-State: AOJu0Yyv3kyUcESdbyHJWmTt7Gqb4tA6ahMZcmINckai+aIVJdUx2sds
-	Bnlh/Bs3eHYGexMwfCMmhXoApcRiMU8yRsbeD4KN6BxE/gOlywjRvgI4UEaDqSx5NT6qyU8/RNl
-	wwNhTeDRRVL4UohcM6EQJBQ==
-X-Google-Smtp-Source: AGHT+IGfM2PgszcdmtwW0N9jN7401C7zNoHfrP2bp3s5srd7fA9RFdcM6VtjPJLHKlcdogsFElXkteLgy7dO6VKJ9Q==
-X-Received: from yuting.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:317f])
- (user=yutingtseng job=sendgmr) by 2002:a05:6a02:522:b0:719:3562:2da3 with
- SMTP id 41be03b00d2f7-73cfca7548dmr27477a12.7.1720026505519; Wed, 03 Jul 2024
- 10:08:25 -0700 (PDT)
-Date: Wed,  3 Jul 2024 10:08:04 -0700
-In-Reply-To: <CAN5Drs06fbditeSaVLc6i6wEY+A47HHzQmhCS1rzJgacNs1Tjw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFpRZ89b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 685BFC2BD10;
+	Wed,  3 Jul 2024 17:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720026510;
+	bh=Bh1WZOoD8rKJfSE9pl8waPuK6bvUrIYjnIk14Lhl74Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iFpRZ89b0KtwSS9waMgMXui/2fnOZZ9z3NItxY0ddnZwXlmeMZgST1I9v3aVuofs0
+	 xvazMkI6nYVX9UpTDlhJARenBQ2LA63SzrLu8q8cSOA7ttA1tuLq7YDjwn6j+yiLjV
+	 TBxaLIKyTxqA4s2C9LCvrThwUwzHyFxoXEgysCz/gD8K7eaziOB+E8XsgIWWQol+lt
+	 II9ity4St4acMIpr54/iVktEPX8xXmACfsjiuIz/iXNiNyjxo0cT8eL8J+0rqZMIQ7
+	 ncp0DlIF0qQfxBPmMOt/8dz5rAImuq1IvvrcKfY01gpPGEEhS0JSqkSh+as9OWZm1o
+	 qI/Dp2XzIJANQ==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: linux-integrity@vger.kernel.org
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+	stable@vger.kernel.org,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH 1/3] tpm: Address !chip->auth in tpm2_*_auth_session()
+Date: Wed,  3 Jul 2024 20:08:11 +0300
+Message-ID: <20240703170815.1494625-2-jarkko@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240703170815.1494625-1-jarkko@kernel.org>
+References: <20240703170815.1494625-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAN5Drs06fbditeSaVLc6i6wEY+A47HHzQmhCS1rzJgacNs1Tjw@mail.gmail.com>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Message-ID: <20240703170804.3621083-2-yutingtseng@google.com>
-Subject: [PATCH v5] binder: frozen notification
-From: Yu-Ting Tseng <yutingtseng@google.com>
-To: cmllamas@google.com, tkjos@google.com, gregkh@linuxfoundation.org
-Cc: arve@android.com, maco@android.com, joel@joelfernandes.org, 
-	brauner@kernel.org, surenb@google.com, aliceryhl@google.com, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	Yu-Ting Tseng <yutingtseng@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> can you merge the branches into a single printk?
-Done
+Unless tpm_chip_bootstrap() was called by the driver, !chip->auth can cause
+a null derefence in tpm2_*_auth_session(). Thus, address !chip->auth in
+tpm2_*_auth_session().
 
-> I believe you meant to use the 'is_frozen' here
-Fixed
+Cc: stable@vger.kernel.org # v6.9+
+Reported-by: Stefan Berger <stefanb@linux.ibm.com>
+Closes: https://lore.kernel.org/linux-integrity/20240617193408.1234365-1-stefanb@linux.ibm.com/
+Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+---
+ drivers/char/tpm/tpm2-sessions.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-> I think you want to add a kfree(ref->freeze) to binder_free_ref().
-Done
-
-> Typo s/An/A/
-Done
-
-> The memset should have a blank line after the declarations. This should trigger a checkpatch issue I think.
-Fixed. Reran checkpatch and there is no other issues flagged now.
-(except for line-too-long which doesn't really have a fix)
-
-Also merged the binder_features change into this patch as requested.
-
-
-Yu-Ting Tseng (1):
-  binder: frozen notification
-
- drivers/android/binder.c                      | 284 +++++++++++++++++-
- drivers/android/binder_internal.h             |  21 +-
- drivers/android/binderfs.c                    |   8 +
- include/uapi/linux/android/binder.h           |  36 +++
- .../filesystems/binderfs/binderfs_test.c      |   1 +
- 5 files changed, 346 insertions(+), 4 deletions(-)
-
-
-base-commit: 14d7c92f8df9c0964ae6f8b813c1b3ac38120825
+diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
+index 907ac9956a78..d94b14757452 100644
+--- a/drivers/char/tpm/tpm2-sessions.c
++++ b/drivers/char/tpm/tpm2-sessions.c
+@@ -824,8 +824,13 @@ EXPORT_SYMBOL(tpm_buf_check_hmac_response);
+  */
+ void tpm2_end_auth_session(struct tpm_chip *chip)
+ {
+-	tpm2_flush_context(chip, chip->auth->handle);
+-	memzero_explicit(chip->auth, sizeof(*chip->auth));
++	struct tpm2_auth *auth = chip->auth;
++
++	if (!auth)
++		return;
++
++	tpm2_flush_context(chip, auth->handle);
++	memzero_explicit(auth, sizeof(*auth));
+ }
+ EXPORT_SYMBOL(tpm2_end_auth_session);
+ 
+@@ -907,6 +912,11 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+ 	int rc;
+ 	u32 null_key;
+ 
++	if (!auth) {
++		pr_warn_once("%s: encryption is not active\n", __func__);
++		return 0;
++	}
++
+ 	rc = tpm2_load_null(chip, &null_key);
+ 	if (rc)
+ 		goto out;
 -- 
-2.45.2.803.g4e1b14247a-goog
+2.45.2
 
