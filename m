@@ -1,63 +1,65 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EE513C8F4;
-	Wed,  3 Jul 2024 08:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48E2136986;
+	Wed,  3 Jul 2024 08:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719996520; cv=none; b=rWHYbAQF3Ra25jl020BBgZJ9FHPma+BkfKykqTk0y5tXTJbCYQKiGcECFFGyWhaAor1fYZLwFBJgbZfpK3psk4+dN1FFx6fXxVfhLOaqK1cf40PxaAFBqiGiRbKYY/CAIVTGPE32jxVG+tFR6vaGYwBuRnY1z4yos8debWclM1E=
+	t=1719996544; cv=none; b=LTvAv8hVfyfwLSKprITi0jC9c+pUW054i8Gyrvix8dzF1onvmilz+tyBKAQy1sK0yvtJBzRU3xzoMuF4RKX0QkCXbVdrPFeKbuP/43Iwo060BdMCf4mFDwkupOOfgEUuWf31CKZU2LlEhEmg4xEE6htFeR13S6DmDTlwVXtT5Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719996520; c=relaxed/simple;
-	bh=hkCQd1grkSXjq749gl/KZxjV8DnGi4H2CmXCRKQAUWU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oDypP+lGmSnqiNwcn7UaU5GZM4AuGuuf/1xEhfa7VfoPNtv5i+gafn6gVXHpbruwKOxh50OahEfLkQYRPX394WjHOu2YEz14kd+vsdZw9JGsZRzW5YYVXQYNCcX2HsZvnAcV2JiaNPfe2C9Ma0pyBL69kfbQJJoXKCe94+bL/io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=MVLxkoiF; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1719996544; c=relaxed/simple;
+	bh=g37GRHeA4FUQFNxW+0fC++R9p/fzKvH6Aw3qjaPXR2s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sBBuWrKOH/CtrXCyOOSurXUbUVJj3gBJa/aP645u9OtTxxT6n6q+CCDXVJc3QOZ9Nui5tm/gMgjNPm0ADEpVRpUFXd9PNk+mAQj1S34KbbjcO4pbQrTzINcl0BxKsy3F1IuvujKpdf9n47l8a7OeMH7trdBWBDepgt61sGRRm2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UWECwGZK; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="MVLxkoiF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719996518; x=1751532518;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hkCQd1grkSXjq749gl/KZxjV8DnGi4H2CmXCRKQAUWU=;
-  b=MVLxkoiFc3AL4nxftdNqHGlq5Msuz9fSwrd/S5UQGF3qHvAcNo3/sZhe
-   hg+c1OH4LbY9R3jouKIKIUa8k5oJIGPJSp7tb9H3JpVPLLH3k6RhL5PUy
-   F+Gg/KhD7/q+NOpbqxgbselxBHYr2LB0P7JZoa23M4sS0Xnh0IFM4bj2x
-   aQalzIoCm2L6WyZE+JAsV2gniIEem21MniXTXqGwRxUHqBZp/ohDemunJ
-   pFu0+ivt9+KL/ABxd1EGuWNPqqsXo1PVhCGOzhhslWmpta3ljWm+n06J8
-   7tqXQ3vVJd2OPsoal5vZJAtil07RHxtTjFNMaLFp/IFcF4lM/srRNnNpJ
-   g==;
-X-CSE-ConnectionGUID: s71X572eQVinIeDMsyDqRg==
-X-CSE-MsgGUID: 5FRwwSPJSdyu4F+Y3OQNSQ==
-X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="scan'208";a="196193660"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jul 2024 01:48:31 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jul 2024 01:48:08 -0700
-Received: from ROB-ULT-M76677.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Jul 2024 01:48:05 -0700
-From: Andrei Simion <andrei.simion@microchip.com>
-To: <brgl@bgdev.pl>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>, <arnd@arndb.de>,
-	<gregkh@linuxfoundation.org>
-CC: <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	Andrei Simion <andrei.simion@microchip.com>, Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: [PATCH v4 3/3] dt-bindings: eeprom: at24: Add Microchip 24AA025E48/24AA025E64
-Date: Wed, 3 Jul 2024 11:47:04 +0300
-Message-ID: <20240703084704.197697-4-andrei.simion@microchip.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWECwGZK"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e72224c395so58593671fa.3;
+        Wed, 03 Jul 2024 01:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719996541; x=1720601341; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1AjhbvJGW65lucbNOKyGKt16wc5zILo5usSblQaXEvc=;
+        b=UWECwGZKPjJT1+8eI0oYyy75gqW7RUUl84kmfZI+DyTjFXVF1sPEUQmt0ESp2qNtps
+         ZZ+CCXNiP3E6RZmRma07EmP4rCbxxaKEsNC1CsHomm9UX2t/2tGN3Oypb6GmcxgJTfqk
+         JZWSVhCqKQwpb1+nNzVdG7gWn6/9VtHH8oMBjPxKzGL6QCmJixGNhmsumaIsM5J3ScMh
+         RQbR0cNyrCp+w1xcKEgcRI8x+VQi0jaSkNAkrCyfEsBzrHkFPCvSK1PLjXkW8hS053Sr
+         JiicFvPwxnWFHPp87Y3jgaq/KojPsHUpoQbAPZfj+BrhzyQ/V74CIcL5Sk35pkBfm3nG
+         f5qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719996541; x=1720601341;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1AjhbvJGW65lucbNOKyGKt16wc5zILo5usSblQaXEvc=;
+        b=qOR/fZMFRf6cZKNNzCI6qm/Uju0z3SFWYJyRC8e9CSE0nNzZc7pYFB4OZFg4zMAEwp
+         avcAjqXUf24dn59ylAP+uzkKkRsfT4G+mPPmxB6qimWp1a59rLWWN1vM66yIZPhMVgG7
+         yJzMiS2JcZvUeUGvL6cAdWIu/ZXylq/mh39I6ipDdCpuyFkjnOr4ebvF6vAgbU85xdWC
+         kTWXKPzzw9LFGmrF2CC9xsmvi18o0vUcziWd+mV5giMP7wb130oNyVSgqIdqTbjxPLLo
+         JnNQaoA6G0F06l/Bhu5Va6AKUdYqzONcOKrAiW/IULI7q2WtwL6+DwVioV1VIyG4N65A
+         oQEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr8I2kqL/jceI1FuCqRFmv4dv9avfanstW5l2eeOhepHdwpIMVnr1WwtMbvgJb5z5J776b4X3bWQmfu5OkYJtIQ9g+54+gxe7o8lLNlAgfWqftuYu+jR8CBfw0TOOd4wYZLv4F1mfyGQ==
+X-Gm-Message-State: AOJu0YxEIH3xEqvEDgPpo070HpAVohxHRe0hYav5TjZ4jh+N9tw4YECg
+	LrIFqjY+WuqmsDlYWAiVjGFpd1SD5BCssXW38tfOZTAx9zO/WPpXgAzbgq8S
+X-Google-Smtp-Source: AGHT+IGWtoPrU8lRR2/crvMe7zAwVRwVnjmZHiO2S/eMWKnrVKssX59sxbWyLLLr048lbdCvIMR7zg==
+X-Received: by 2002:a2e:309:0:b0:2ec:59d8:a7e6 with SMTP id 38308e7fff4ca-2ee5e381f18mr69568041fa.30.1719996540582;
+        Wed, 03 Jul 2024 01:49:00 -0700 (PDT)
+Received: from qamajeed.Home ([39.45.165.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b065316sm226126115e9.26.2024.07.03.01.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 01:48:59 -0700 (PDT)
+From: Muhammad Qasim Abdul Majeed <qasim.majeed20@gmail.com>
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Muhammad Qasim Abdul Majeed <qasim.majeed20@gmail.com>
+Subject: [PATCH v3] Updating a deprecated use of strcpy.
+Date: Wed,  3 Jul 2024 13:41:25 +0500
+Message-Id: <20240703084124.11530-1-qasim.majeed20@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240703084704.197697-1-andrei.simion@microchip.com>
-References: <20240703084704.197697-1-andrei.simion@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,54 +67,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-Add support for compatible Microchip 24AA025E48/24AA025E64 EEPROMs.
+Replacing strcpy with strscpy.
+strcpy is a deprecated function.
+It should be removed from the kernel source.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Andrei Simion <andrei.simion@microchip.com>
+Link: https://github.com/KSPP/linux/issues/88
+
+Signed-off-by: Muhammad Qasim Abdul Majeed <qasim.majeed20@gmail.com>
+
+> Replacing strcpy with strscpy and memory bound the copy.
+
+> Why?  In this particular case, it is not fundamentally necessary.
+
+> strcpy is a deprecated function. It should be removed from the kernel source.
+
+> If the goal is to get rid of all strcpy() calls from the kernel
+> because using it is generally unsafe, just say so in the changelog and
+> it will be fine.
+changelog has been updated.
+
+> So is it necessary to use the size argument here and below?
+Size argument is not necessary as destination is an array of 40 bytes. Patch has been updated.
+
+> for that to work, shouldn't the size of the *destination* buffer be
+> passed, instead of the length of the string we want to copy?
+Yes, size of the destination should be passed.
+
+> Not tested, but the 3rd argument of strscpy () is optional.
+> (https://elixir.bootlin.com/linux/v6.10-rc6/source/include/linux/string.h#L87),
+> so maybe just:
+
+>        strscpy(acpi_device_name(device), ACPI_VIDEO_DEVICE_NAME);
+Thank you for sharing the reference, this suggestion will do the work and accomodated in the patch.
+
 ---
-v3 -> v4:
-- change the rule to select compatible
+	v2 -> v3: Changelog has been updated. size argument has been removed.
 
-v2 -> v3:
-- commit subject changed to reference Microchip 24AA025E48/24AA025E64
-- drop pattern: mac02e4$ and mac02e6$ and a-z from regex
-- add these two devices down at the bottom
-- added Reviewed-by
+ drivers/acpi/acpi_video.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-v1 -> v2:
-- change pattern into "^atmel,(24(c|cs|mac)[a-z0-9]+|spd)$" to keep simpler
----
- Documentation/devicetree/bindings/eeprom/at24.yaml | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-index 3c36cd0510de..4d46b8c5439d 100644
---- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-+++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-@@ -18,7 +18,9 @@ select:
-   properties:
-     compatible:
-       contains:
--        pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
-+        anyOf:
-+          - pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
-+          - enum: ["microchip,24aa025e48", "microchip,24aa025e64"]
-   required:
-     - compatible
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index 1fda30388297..8274a17872ed 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -1128,8 +1128,8 @@ static int acpi_video_bus_get_one_device(struct acpi_device *device, void *arg)
+ 		return -ENOMEM;
+ 	}
  
-@@ -132,6 +134,10 @@ properties:
-               - renesas,r1ex24128
-               - samsung,s524ad0xd1
-           - const: atmel,24c128
-+      - items:
-+          - const: microchip,24aa025e48
-+      - items:
-+          - const: microchip,24aa025e64
-       - pattern: '^atmel,24c(32|64)d-wl$' # Actual vendor is st
+-	strcpy(acpi_device_name(device), ACPI_VIDEO_DEVICE_NAME);
+-	strcpy(acpi_device_class(device), ACPI_VIDEO_CLASS);
++	strscpy(acpi_device_name(device), ACPI_VIDEO_DEVICE_NAME);
++	strscpy(acpi_device_class(device), ACPI_VIDEO_CLASS);
  
-   label:
+ 	data->device_id = device_id;
+ 	data->video = video;
+@@ -2010,8 +2010,8 @@ static int acpi_video_bus_add(struct acpi_device *device)
+ 	}
+ 
+ 	video->device = device;
+-	strcpy(acpi_device_name(device), ACPI_VIDEO_BUS_NAME);
+-	strcpy(acpi_device_class(device), ACPI_VIDEO_CLASS);
++	strscpy(acpi_device_name(device), ACPI_VIDEO_BUS_NAME);
++	strscpy(acpi_device_class(device), ACPI_VIDEO_CLASS);
+ 	device->driver_data = video;
+ 
+ 	acpi_video_bus_find_cap(video);
 -- 
 2.34.1
 
