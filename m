@@ -1,107 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7231F17DA25
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 15:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84861DFD1;
+	Wed,  3 Jul 2024 15:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019691; cv=none; b=sXirdzHB9jERhqNEsvhMH5xJqmltqiM5uH1SytkPy9PC3wkCc1v22WPv8JDDDY3NW2Pdsvg4OyUwvovPBLozQla5pSGtDtmDLSXGqdn2L+H7ODSBXf/TDdOKdPOUD1a678Lvb5VFnxaTDy2ygoJ+VFwvor8+s+Q7kfK0Dc42d8U=
+	t=1720019783; cv=none; b=QCrQnAtL7taaLT51SuIEakJLz3dgBg/p6XSk9YwdOIirtG2FlL4Lz8jc4hQj/t/YQAt1zNnsys5K0zIuunA6qGH4W5GwFGTozeufwRDTKD9Jn3SU/05i9AtkvhfFbkPF0E89C2E5T/BUYCgJGMrmGpDaQBj/DrgPBplI/+xTppw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019691; c=relaxed/simple;
-	bh=DVZoCgGNL/3QvR3GgyZlBB7wKE/Cuoc7qP2icJB8648=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=otC9iYRniAvjb5fHZNGGN1dBhasJ9/NO+hTqwv5p2tJhz2BHw99yl4J8yBfyCDY4VVCDKDXb6RJvUcmMizBVC863BbSDAsI4glQhgkZ7H1tTeALIVhwo5XMq1Cp+kixkdzX0Kx6QvthfRXIcPZXp5XDad0ld9jDQYq2LT/WKXfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fjIsL6+4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720019783; c=relaxed/simple;
+	bh=7FMn/uRg0zYfw3DQH1Sz/pojM+8pV3loh/mbtGw+Fm4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QVqWVMyoiDEcA9dukxUg9euNOnbedMXdXIyUxt50r/VAuGQM8Un6UiFSDWGNNQnTXLlcxSlJnlLwh8CfEJYwrooY6rHZU7LueR7Gsol1479wxL/YUVlq28d1FFVaKLx750QsMearbtFPEF/yDL/LnOc416J7j6TewIr9xmtU4vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=F/TChOj+; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fjIsL6+4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720019689;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tWUo3H7qkDAztkmmaCmdE2MO9pLRxkJhZ2WC3lZ6+9M=;
-	b=fjIsL6+4+M5EzoZD0CnYuDac20lgl6w+iuqvg7e7W7QHL24gv3c/raL1/yJcK6MQSGeJ9h
-	avk8O/d+VxhgoFzJ4WUDjpnYtfpyip7MdaHOVodmLne52F5nVR04aqLNpxlNFU+WRg6lon
-	O9hrz6uKQzaP53FZruoT2Rqc35NjfiA=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-688-OJYKiDLNPneTrgKnO966pw-1; Wed,
- 03 Jul 2024 11:14:47 -0400
-X-MC-Unique: OJYKiDLNPneTrgKnO966pw-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B832619560A2;
-	Wed,  3 Jul 2024 15:14:46 +0000 (UTC)
-Received: from [10.22.33.252] (unknown [10.22.33.252])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8743C1955F21;
-	Wed,  3 Jul 2024 15:14:45 +0000 (UTC)
-Message-ID: <7b105f07-5c13-4f69-9834-05e7054ddb36@redhat.com>
-Date: Wed, 3 Jul 2024 11:14:44 -0400
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="F/TChOj+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6Pvtr4CL3nBCwnXoyeyqTuDH9oRlsRjo2dtNGYFj5Ks=; t=1720019779; x=1720624579; 
+	b=F/TChOj+kldVL4qjJxBxCohEnwgii6ad0clG+V8T0KJKorBpRTV5RRik+zLk/d4F9/r06SwwejT
+	xUdBzw57lCxjrIGtqTor+cXOzVgKMxKPeP5QNqeqxZH9Lhccit9gGlPEB8HW/KZdp5y8zlhfBKrh7
+	XAceUqDm9rvmSXmIaj7d0cOFAfuJeu6y7D3g3aVkHxAJo5iFs+j4J42N1JF3bgzEfw/stgyEki6l8
+	DphxZNmBP6Ws4Dmv0kJ/UejncXX8nk42U1kfIxi2atuCUtXPiFb2JG5rIBMtCKQsq62PoyhM+JWWx
+	noXj8xwkCXpLb4HuJsrfS8T3WPQ8Ic7ytXMg==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1sP1eU-00000002G2P-0ZsP; Wed, 03 Jul 2024 17:12:10 +0200
+Received: from tmo-084-6.customers.d1-online.com ([80.187.84.6] helo=[172.20.10.3])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1sP1eT-00000003lh1-3VTh; Wed, 03 Jul 2024 17:12:10 +0200
+Message-ID: <5473f57a21639724e6277c3e271fc46ea5f62ed3.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] sh: push-switch: add missing MODULE_DESCRIPTION() macro
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, Yoshinori Sato
+	 <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>
+Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Date: Wed, 03 Jul 2024 17:12:07 +0200
+In-Reply-To: <20240702-md-sh-arch-sh-drivers-v1-1-2c5d439a5479@quicinc.com>
+References: <20240702-md-sh-arch-sh-drivers-v1-1-2c5d439a5479@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] workqueue: Protect wq_unbound_cpumask with
- wq_pool_attach_mutex in init_rescuer()
-To: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>, Tejun Heo <tj@kernel.org>
-References: <20240703033855.3373-1-jiangshanlai@gmail.com>
- <20240703033855.3373-3-jiangshanlai@gmail.com>
-Content-Language: en-US
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <20240703033855.3373-3-jiangshanlai@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
+Hi Jeff,
 
-On 7/2/24 23:38, Lai Jiangshan wrote:
-> From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
->
-> wq_unbound_cpumask can be possibly changed without wq_pool_attach_mutex
-> or wq_pool_mutex held in init_rescuer().
->
-> Use wq_pool_attach_mutex to protect it.
->
-> Fixes: 49584bb8ddbe("workqueue: Bind unbound workqueue rescuer to wq_unbound_cpumask")
-> Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+On Tue, 2024-07-02 at 12:29 -0700, Jeff Johnson wrote:
+> With ARCH=3Dsh, make allmodconfig && make W=3D1 C=3D1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/sh/drivers/push-sw=
+itch.o
+>=20
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+>=20
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 > ---
->   kernel/workqueue.c | 5 +++++
->   1 file changed, 5 insertions(+)
->
-> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> index c738b3024cc2..cf1a129eb547 100644
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -5533,6 +5533,9 @@ static int init_rescuer(struct workqueue_struct *wq)
->   		return ret;
->   	}
->   
-> +	/* lock wq_pool_attach_mutex for wq_unbound_cpumask */
-> +	mutex_lock(&wq_pool_attach_mutex);
-> +
->   	wq->rescuer = rescuer;
->   	if (wq->flags & WQ_UNBOUND)
->   		kthread_bind_mask(rescuer->task, wq_unbound_cpumask);
-> @@ -5540,6 +5543,8 @@ static int init_rescuer(struct workqueue_struct *wq)
->   		kthread_bind_mask(rescuer->task, cpu_possible_mask);
->   	wake_up_process(rescuer->task);
->   
-> +	mutex_unlock(&wq_pool_attach_mutex);
-> +
->   	return 0;
->   }
->   
-Reviewed-by: Waiman Long <longman@redhat.com>
+> MODULE_DESCRIPTION copied from file prologue:
+> /*
+>  * Generic push-switch framework
+>  *
+>  * Copyright (C) 2006  Paul Mundt
+>  */
+> ---
+>  arch/sh/drivers/push-switch.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/sh/drivers/push-switch.c b/arch/sh/drivers/push-switch.=
+c
+> index 362e4860bf52..1dea43381b5a 100644
+> --- a/arch/sh/drivers/push-switch.c
+> +++ b/arch/sh/drivers/push-switch.c
+> @@ -131,4 +131,5 @@ module_exit(switch_exit);
+> =20
+>  MODULE_VERSION(DRV_VERSION);
+>  MODULE_AUTHOR("Paul Mundt");
+> +MODULE_DESCRIPTION("Generic push-switch framework");
+>  MODULE_LICENSE("GPL v2");
+>=20
+> ---
+> base-commit: 1dfe225e9af5bd3399a1dbc6a4df6a6041ff9c23
+> change-id: 20240702-md-sh-arch-sh-drivers-40af731eb66c
 
-Thanks!
+Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
+Thanks for fixing this. Will pick this up later this week.
+
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
