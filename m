@@ -1,102 +1,152 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC271822D2;
-	Wed,  3 Jul 2024 14:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813A7184101;
+	Wed,  3 Jul 2024 14:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720015701; cv=none; b=Em2i+DqpPn1UudnOgdwl6NC6ha5wj2qON7pilrVtQvRP4hdSaXDRgiePkbSH2bleVcc77coGs/S+PiwglWCdavU6koLukq2sQmQlly+SHPsdT/0WkXy1UBShx9Gi60dR0wW8QJzqbCWkbSGIIvHgS7ygJZZdI7taB+Df80lwhdE=
+	t=1720015702; cv=none; b=AXipp6iH+zMY2frcu8TDf+sOvjt0FYHxjW/KlHIIXGuzioC7SNbvBIKIJyuUSI7hcxYUcpNPqqI8prLEA7bkNwdKX6I1acRmyoEl/Q7LZ4UiNMgIMx+3l7tEtW5jsD+L6LhFKedhhDdtfM0Ld2R0Uc+6/bqyABdoDB+1nMvMhvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720015701; c=relaxed/simple;
-	bh=7FIYxRfvmusJYW3NXDOpm3dJjXJR4Z4Kf/2oD5O5l2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GK5EIittVOsn4Gkw/C4WlFrrXSyrCxrs5oWd63zmtSYgXxesTogCX/Mc9Iisn4yTNmVoRnmwcZQAmYl6pKGPFcxj/lmkAE4Oe0gI2tR4CPhKjaTD3tF41pyVVo3bEPz7VpxRCNHiY/xdrotKgIvrv/SpduixWYaOd74RQD+40OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RWcaPmh7; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1720015702; c=relaxed/simple;
+	bh=ML2AEriOnHqO1QXh0j87+85SYqypaQr6iAt1xf7pymA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KCSjpPAKfjMYH6b2NmfoGpnQRdSrQE/fZPMV5hN7b1aGp5hGRH7x9fFaB88gXninCZwXa0iAt4NHFKh4YpS5FDjUMvfmMEbh+SMKCFDkElPAXfC/ulmXDF5mqW9hCzg8A+XEy6Nozxm8E4vFVhO05e1ubyGePrfo2zOR4cwXSkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/ZaJTbm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RWcaPmh7"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 828D0E000E;
-	Wed,  3 Jul 2024 14:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720015698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uy76o+N0EM0sJl+NqRd3EHqRDxABCoWbyTToYzh4nN4=;
-	b=RWcaPmh77ujuIim8tXovGLDvE21cGb4oY8Z4Ee4gDtmKlZntrtmR2XRKI94CscJ175Tnix
-	/0TKnCoog2nYcoML95jGBWnn3AdYdonnplAUBnFydh1V5XBYy8DzlNsJTefZ7v+6y9r8hA
-	dLjluNSfLlQ9huj4hFB7sy4/ZRh+6nNqKWm2e9ppjp7Ads7D/OKXiZt5i2CpXOQbOYmfYL
-	4mThWzq7J6xz8y71Uk4uOsT7W9/Yyh7KrimbMskGkE/0L7lPEEgVboqk10QJuzxeVSBKUk
-	vGh+wLcMuxf5/jnj/9LHpVLsAYmHzwMa+HmtF/v+kki5LS7ljeHM+TpMvPBRcg==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	mwojtas@chromium.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Antoine Tenart <atenart@kernel.org>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH net-next v15 06/14] netlink: specs: add phy-index as a header parameter
-Date: Wed,  3 Jul 2024 16:07:56 +0200
-Message-ID: <20240703140806.271938-7-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240703140806.271938-1-maxime.chevallier@bootlin.com>
-References: <20240703140806.271938-1-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/ZaJTbm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0017CC4AF19;
+	Wed,  3 Jul 2024 14:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720015702;
+	bh=ML2AEriOnHqO1QXh0j87+85SYqypaQr6iAt1xf7pymA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=j/ZaJTbm+XyN1fiRowPjnCzjA8P+hve726cRrUseYOEkgBjpelsI5ibpyPttVZ3OW
+	 HpwMEWhCGSiwXbCvEt0HLD9C4BbKd7NEv7ZRBxI6tgTE9U0MYM5sdEjLbY60WoBFiK
+	 2jAE4eGWYIiACmVjNg+ChMF5uHKQgNnSHuZ9uj4MdGyFtKwsy8bblIan0RD0c6FW4f
+	 LvuptEzgd4pQG2+jq4VTCG3shuKFMoSvoHf+yLVMBJNzxyiysNzLHSKJflJWvEBHuN
+	 SEDU8uRP8JxJuWHwS84dpBxkHQP/Guwe2IOXjTdl2JYSt8MbghBSsxIxm/k2teMl8x
+	 SB5MUAOFRTdWQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 93CF5CE0BC3; Wed,  3 Jul 2024 07:08:21 -0700 (PDT)
+Date: Wed, 3 Jul 2024 07:08:21 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com,
+	bpf@vger.kernel.org, jolsa@kernel.org, clm@meta.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
+ and per-CPU RW semaphore
+Message-ID: <6b728325-b628-488f-aabf-dbd9afa388fb@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240701223935.3783951-1-andrii@kernel.org>
+ <20240702102353.GG11386@noisy.programming.kicks-ass.net>
+ <20240702115447.GA28838@noisy.programming.kicks-ass.net>
+ <CAEf4BzaQUzQdba2=F2NoV7=Th98fxz2EN62QX2Ej92bazt1GAg@mail.gmail.com>
+ <20240702191857.GJ11386@noisy.programming.kicks-ass.net>
+ <fd1d8b71-2a42-4649-b7ba-1b2e88028a20@paulmck-laptop>
+ <20240703075057.GK11386@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240703075057.GK11386@noisy.programming.kicks-ass.net>
 
-Update the spec to take the newly introduced phy-index as a generic
-request parameter.
+On Wed, Jul 03, 2024 at 09:50:57AM +0200, Peter Zijlstra wrote:
+> On Tue, Jul 02, 2024 at 04:56:53PM -0700, Paul E. McKenney wrote:
+> 
+> > > Paul, isn't this the RCU flavour you created to deal with
+> > > !rcu_is_watching()? The flavour that never should have been created in
+> > > favour of just cleaning up the mess instead of making more.
+> > 
+> > My guess is that you are instead thinking of RCU Tasks Rude, which can
+> > be eliminated once all architectures get their entry/exit/deep-idle
+> > functions either inlined or marked noinstr.
+> 
+> Would it make sense to disable it for those architectures that have
+> already done this work?
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- Documentation/netlink/specs/ethtool.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+It might well.  Any architectures other than x86 at this point?
 
-diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 949e2722505d..4ca7c5b8c504 100644
---- a/Documentation/netlink/specs/ethtool.yaml
-+++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -39,6 +39,9 @@ attribute-sets:
-         name: flags
-         type: u32
-         enum: header-flags
-+      -
-+        name: phy-index
-+        type: u32
- 
-   -
-     name: bitset-bit
--- 
-2.45.1
+But this is still used in common code, so let's see...  In that case,
+synchronize_rcu_tasks_rude() becomes a no-op, call_rcu_tasks_rude() can be
+a wrapper around something like queue_work(), and rcu_barrier_tasks_rude()
+can be a wrapper around something like flush_work().
 
+Except that call_rcu_tasks_rude() and rcu_barrier_tasks_rude() are not
+actually used outside of testing, so maybe they can be dropped globally.
+
+Let me see what happens when I do this:
+
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 7d18b90356fd..5c8492a054f5 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -936,8 +936,8 @@ static struct rcu_torture_ops tasks_rude_ops = {
+ 	.deferred_free	= rcu_tasks_rude_torture_deferred_free,
+ 	.sync		= synchronize_rcu_tasks_rude,
+ 	.exp_sync	= synchronize_rcu_tasks_rude,
+-	.call		= call_rcu_tasks_rude,
+-	.cb_barrier	= rcu_barrier_tasks_rude,
++	// .call		= call_rcu_tasks_rude,
++	// .cb_barrier	= rcu_barrier_tasks_rude,
+ 	.gp_kthread_dbg	= show_rcu_tasks_rude_gp_kthread,
+ 	.get_gp_data	= rcu_tasks_rude_get_gp_data,
+ 	.cbflood_max	= 50000,
+
+It should be at least mildly amusing...
+
+> > > > I will
+> > > > ultimately use it anyway to avoid uprobe taking unnecessary refcount
+> > > > and to protect uprobe->consumers iteration and uc->handler() calls,
+> > > > which could be sleepable, so would need rcu_read_lock_trace().
+> > > 
+> > > I don't think you need trace-rcu for that. SRCU would do nicely I think.
+> > 
+> > From a functional viewpoint, agreed.
+> > 
+> > However, in the past, the memory-barrier and array-indexing overhead
+> > of SRCU has made it a no-go for lightweight probes into fastpath code.
+> > And these cases were what motivated RCU Tasks Trace (as opposed to RCU
+> > Tasks Rude).
+> 
+> I'm thinking we're growing too many RCU flavours again :/ I suppose I'll
+> have to go read up on rcu/tasks.* and see what's what.
+
+Well, you are in luck.  I am well along with the task of putting together
+the 2024 LWN RCU API article, which will include RCU Tasks Trace.  ;-)
+
+And I do sympathize with discomfort with lots of RCU flavors.  After all,
+hhad you told me 30 years ago that there would be more than one flavor,
+I would have been quite surprised.  Of course, I would also have been
+surprised by a great many other things (just how many flavors of locking
+and reference counting???), so maybe having three flavors (four if we
+cannot drop RCU Tasks RUDE) is not so bad.
+
+Oh, and no one is yet using srcu_down_read() and srcu_up_read(), so
+if they stay unused for another year or so...
+
+> > The other rule for RCU Tasks Trace is that although readers are permitted
+> > to block, this blocking can be for no longer than a major page fault.
+> > If you need longer-term blocking, then you should instead use SRCU.
+> 
+> I think this would render it unsuitable for uprobes. The whole point of
+> having a sleepable handler is to be able to take faults.
+
+???
+
+I said "longer than a major page fault", so it is OK to take a fault,
+just not one that potentially blocks forever.  (And those faulting onto
+things like NFS filesystems have enough other problems that this would
+be in the noise for them, right?)
+
+And yes, RCU Tasks Trace is specialized.  I would expect that unexpected
+new uses would get serious scrutiny by those currently using it.
+
+							Thanx, Paul
