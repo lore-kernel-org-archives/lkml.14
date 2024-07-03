@@ -1,121 +1,123 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62B8BA2D;
-	Wed,  3 Jul 2024 04:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332DE61FDF;
+	Wed,  3 Jul 2024 04:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719980379; cv=none; b=Ld5Hco0MPZHNgdGEhfBA/YTRp710Kumu8d8W8rlsRZ0ME8pbyh9GCYtA0kAgwAapiLPS7MFROxffzUjP2pRzL8aNL2/q58eDNa9cqCh3aO/NYhQ8OjKPVE0JSgcrnu9C3DzKgq1uxV4JKAN4F6CU5dIzMfSkdgU8xwHxwL0Qkf4=
+	t=1719980430; cv=none; b=pT3/PPYOvbk1ScE4GCaM84ERtaVltiqLIRcbVSwoUoDtFmDOGLamR3iT4H23+FcL7/gT8msbDYCPpv/hROEI6ZpBzPF02z1/ilGIva0NJLa/xVgXUoxiNIuC5OE+rmkpQ0FLPqvzqYEQziRI5djJbxeo+svig9QFoCRG84KIQtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719980379; c=relaxed/simple;
-	bh=20ZuX0judSc+BaDq5v2IZLQAn7nMVNSsXBjp6fVHD5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=p4PbtlOLPFUkUTQIeCPU+EZn8aiGzuyRADg0eVoBcXkaUFWaZr7gqdSb6a3PJJI3BNHYoLygN4efAy4RPZykvEok17mco51zxNbTzADv+u77jb/gFOd4gxkoUnHGWSYCZ5xIjAFNTggVWrWiX2bSKIneThzWkxmrxnW9d8/8kug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=b8jKCQ4Q; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1719980430; c=relaxed/simple;
+	bh=7tQ5DdUsAmsK80QqEziD7LvBBaCh71k7AGhTaH0Y/38=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=XunHJAjUCyUkOlD4DrmEugdZyOkMfQI9L0UKfw2qlDMYueLWuwoUVXUsXXof1dGVPpaNnnAi367ufSMqNRs1QlDgfNzeklKuY+PCFTmicEaDS1TC+7RWcMBMdJJU0jGABefsSaVocfDXxtrmfpNxTWCvGQELVmJAItQqsXYaQR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUBrMKDu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="b8jKCQ4Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1719980373;
-	bh=gYH1q2C2t5oF7TpkdAWWauH5U+b0niw7/owZDAAH2h4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=b8jKCQ4Qj4NelEnPjfNiQJIrlP1qeiwCN/bhwr0CMtY7txp5MVGlJ1wMLY+vNPbMV
-	 VXKmlF7H5dX73Wu6cgsJ9piaD0qLG/VHcHtauwzny03KraWa6OWVs17UCjzydwAtoK
-	 9tpjr/AykWeIuLDg0svrTqxWhR4s7DmQyB+ZX6G1lJZ/KR+unV4v8vOCfNoU46LYNb
-	 sOqBbVNUSU1eJ+KoB1yBJqyttXP23YNrDhdlI6aYGE1NRClSIWbt38E+j+rU6Jxcls
-	 y8MALhqqklHeqkwy+3g7BBBvQhBnBSS5fXqnbdcwjkD7PoSbafJTLXcq3vmyvK0tg7
-	 iLMnDJOYtI3fw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WDRPc60Slz4wc1;
-	Wed,  3 Jul 2024 14:19:32 +1000 (AEST)
-Date: Wed, 3 Jul 2024 14:19:32 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul
- <vkoul@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: =?UTF-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski@linaro.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Peter Griffin <peter.griffin@linaro.org>
-Subject: linux-next: manual merge of the phy-next tree with the samsung-krzk
- tree
-Message-ID: <20240703141932.47e51748@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUBrMKDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B81C3C4AF0A;
+	Wed,  3 Jul 2024 04:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719980429;
+	bh=7tQ5DdUsAmsK80QqEziD7LvBBaCh71k7AGhTaH0Y/38=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=cUBrMKDudMtKU7fLylCIzX419wYJo1pg5HK6TOjByeXAaK+Iu9MB36YZ/JOwT9btt
+	 TW7uzotImCielBB9ZnjBfupBNdVNyd7Or8vKHUkKdIFgGxYzZPQ7dk0qjdjSxwb4Rp
+	 F/rMa7aLBslRu+qPTQ8XJDbadjFZxXq4OgWd9JMrq8WJzwiZVFYD/vVvbFwe+xy565
+	 Vz+M5IbfIIdgKv/Xn4OTGbQzcrwDFQfWNBk+vfQsUkHdumQ29dKV4EmtbBcNf/dbqG
+	 c42fYAdxunJw+w6thOmBVcroXRlFUa5+niTYgcDUeg0q0PWoqoNHEXFH28n9hMe0k2
+	 8XqAG78rRlr5w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 945A6C54BB7;
+	Wed,  3 Jul 2024 04:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CoM4KYEr_Pu0_WKx0t6EDH6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v15 00/14] Device Memory TCP
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171998042959.21654.14959154340779220111.git-patchwork-notify@kernel.org>
+Date: Wed, 03 Jul 2024 04:20:29 +0000
+References: <20240628003253.1694510-1-almasrymina@google.com>
+In-Reply-To: <20240628003253.1694510-1-almasrymina@google.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, donald.hunter@gmail.com, corbet@lwn.net,
+ richard.henderson@linaro.org, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+ tsbogend@alpha.franken.de, James.Bottomley@HansenPartnership.com,
+ deller@gmx.de, andreas@gaisler.com, hawk@kernel.org,
+ ilias.apalodimas@linaro.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, arnd@arndb.de, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+ eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+ john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, jolsa@kernel.org, steffen.klassert@secunet.com,
+ herbert@gondor.apana.org.au, dsahern@kernel.org,
+ willemdebruijn.kernel@gmail.com, shuah@kernel.org, sumit.semwal@linaro.org,
+ christian.koenig@amd.com, bagasdotme@gmail.com, hch@infradead.org,
+ razor@blackwall.org, asml.silence@gmail.com, dw@davidwei.uk, jgg@ziepe.ca,
+ linyunsheng@huawei.com, shailend@google.com, hramamurthy@google.com,
+ shakeel.butt@linux.dev, jeroendb@google.com, pkaligineedi@google.com
 
---Sig_/CoM4KYEr_Pu0_WKx0t6EDH6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello:
 
-Hi all,
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Today's linux-next merge of the phy-next tree got a conflict in:
+On Fri, 28 Jun 2024 00:32:37 +0000 you wrote:
+> v15: https://patchwork.kernel.org/project/netdevbpf/list/?series=865481&state=*
+> ====
+> 
+> No material changes in this version, only a fix to linking against
+> libynl.a from the last version. Per Jakub's instructions I've pulled one
+> of his patches into this series, and now use the new libynl.a correctly,
+> I hope.
+> 
+> [...]
 
-  include/linux/soc/samsung/exynos-regs-pmu.h
+Here is the summary with links:
+  - [net-next,v15,01/14] netdev: add netdev_rx_queue_restart()
+    (no matching commit)
+  - [net-next,v15,02/14] net: netdev netlink api to bind dma-buf to a net device
+    (no matching commit)
+  - [net-next,v15,03/14] netdev: support binding dma-buf to netdevice
+    (no matching commit)
+  - [net-next,v15,04/14] netdev: netdevice devmem allocator
+    (no matching commit)
+  - [net-next,v15,05/14] page_pool: convert to use netmem
+    https://git.kernel.org/netdev/net-next/c/4dec64c52e24
+  - [net-next,v15,06/14] page_pool: devmem support
+    (no matching commit)
+  - [net-next,v15,07/14] memory-provider: dmabuf devmem memory provider
+    (no matching commit)
+  - [net-next,v15,08/14] net: support non paged skb frags
+    (no matching commit)
+  - [net-next,v15,09/14] net: add support for skbs with unreadable frags
+    (no matching commit)
+  - [net-next,v15,10/14] tcp: RX path for devmem TCP
+    (no matching commit)
+  - [net-next,v15,11/14] net: add SO_DEVMEM_DONTNEED setsockopt to release RX frags
+    (no matching commit)
+  - [net-next,v15,12/14] net: add devmem TCP documentation
+    (no matching commit)
+  - [net-next,v15,13/14] tools: net: package libynl for use in selftests
+    https://git.kernel.org/netdev/net-next/c/07c3cc51a085
+  - [net-next,v15,14/14] selftests: add ncdevmem, netcat for devmem TCP
+    (no matching commit)
 
-between commit:
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-  85863cee8ce0 ("soc: samsung: exynos-pmu: add support for PMU_ALIVE non at=
-omic registers")
 
-from the samsung-krzk tree and commit:
-
-  32267c29bc7d ("phy: exynos5-usbdrd: support Exynos USBDRD 3.1 combo phy (=
-HS & SS)")
-
-from the phy-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/soc/samsung/exynos-regs-pmu.h
-index f411c176536d,6765160eaab2..000000000000
---- a/include/linux/soc/samsung/exynos-regs-pmu.h
-+++ b/include/linux/soc/samsung/exynos-regs-pmu.h
-@@@ -657,8 -657,8 +657,12 @@@
-  #define EXYNOS5433_PAD_RETENTION_UFS_OPTION			(0x3268)
-  #define EXYNOS5433_PAD_RETENTION_FSYSGENIO_OPTION		(0x32A8)
- =20
- +/* For Tensor GS101 */
- +#define GS101_SYSIP_DAT0					(0x810)
- +#define GS101_SYSTEM_CONFIGURATION				(0x3A00)
- +
-+ /* For GS101 */
-+ #define GS101_PHY_CTRL_USB20					0x3eb0
-+ #define GS101_PHY_CTRL_USBDP					0x3eb4
-+=20
-  #endif /* __LINUX_SOC_EXYNOS_REGS_PMU_H */
-
---Sig_/CoM4KYEr_Pu0_WKx0t6EDH6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaE0VQACgkQAVBC80lX
-0GzMYwf/VD6ZV3ECZh7o9YP6+Hu61hp0IaCXPlCkT8Vw8mgDrgzEbOYMMocfgZJM
-CgoIR/40XwUGNog3QBtHkNXxirbEK7a4GTtKtrFQAad7ZmWKE8A/g599vv2Eb0ae
-bdHVpeBurN0OkpkmJWI7AZDYEAN/5CHqElV+oljdiN6Lytn7tcmjAGYxxjNUiR6h
-sf75V+FyLx74OA8Z9VSUIS7O7mEcw2cdHZIOfTDiuWiJNjv5yxK+sGF1dWrVbJ/w
-wd/FNTM9TZVNe3qGDADC4yFI2Rre6UtlPcYPW7tjSJse+oPGYYg7SixGiZjxvu6m
-dGUR3LxsRJh/kmNydbyInl1pz4KIoQ==
-=VjBH
------END PGP SIGNATURE-----
-
---Sig_/CoM4KYEr_Pu0_WKx0t6EDH6--
