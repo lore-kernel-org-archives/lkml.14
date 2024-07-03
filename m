@@ -1,113 +1,140 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C6917B4F7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E86139D16;
 	Wed,  3 Jul 2024 14:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720015697; cv=none; b=KvCKJh+STkiSvxvBDMRA+Qnefbkns+zLlE+zo8Anz4H6TSr18lq9iX0/kqz5IALvlL1Ch+hjnMnb5FvKLWgNgqXNnGsM082i8It6jG/baRk6IO4ravlQbQ6yJSX4ZMJpxJJ+Xz6L4Sq1wfqtM46gVH+OPUs+xw1p77+5gXLX33g=
+	t=1720015697; cv=none; b=T/NAM4B0Rxq1ZEbr709yOMwZ1ZrLNXD1gAsO+924wBsm3LgWl84vHrYoG280JbZUoSFzYXaU4rJdfh5vgNZEGbLfe0W0g49bu5+E0ieBf63eW3Le/gEN8Q8ymv0Kb2peD4uwCACeundGC4JDlYnhKGLOG4Ze5RvJhluTjEob1VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720015697; c=relaxed/simple;
-	bh=WtGnHZZ+RLi3ObKl8onh0tBYRgZkXH7SUIfhPKJ46EI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cMUOGTguQSTIj0EKClNZ66glgTU0z7AQrdIZPa30/jBTk7YwPWLBPZYSzCB7sWoPk5VJPi1sx8wcxIEgJtpmqF9XdgpwIhaOz7js7wJO0vWb/mOIuoO1aZwYRFKOmwxmK0j+4P5Fxpo+4xyfrbZITXb+2i8SUax6FflJ2fy1idI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BzGJM5Z6; arc=none smtp.client-ip=217.70.178.240
+	bh=5BdBXIXEzFrbHYhpcVl6eMdnlDRUioudERWqgerSkr0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=olY+2KuO43i+6DGNVQaLi+J1dJWOWEkGdcOWZZ0JmaxK/Nn+QVC1bipsN+cLZ1cqg3h5UBNAsOLjFA6NHcjLyiUAnsAXxATn41rn5TFkryT+fas4Tu9o9sGH0Y2JozuxCFX1U8ObmC/pyBZA/r+9b0wghn0HH8rXRcQ0y9EwJNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=geTFG3V6; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BzGJM5Z6"
-Received: from relay1-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::221])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 1DFCAC6D23;
-	Wed,  3 Jul 2024 13:46:15 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7ADEE240010;
-	Wed,  3 Jul 2024 13:46:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="geTFG3V6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AA85BE000A;
+	Wed,  3 Jul 2024 14:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720014373;
+	t=1720015693;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LRcR8zDM+0q/eOEPboWIYCWFm9lgVjfqj9jKDcJMYSY=;
-	b=BzGJM5Z6KLBDrGEfvfdRjXUtnsKf5GqM8obPJ8l8fr4PCOPPi7bwUFKoH5Ie3oHq9MhoUT
-	EsspARrAu6sOCA/cf+u7t4bMYkjd/LZYLsTFAL0xFSmsmJMjT4QrTHB0IvJYJG7iXMA68u
-	QovaIrwB5IN25iskNZAjTX+jfXIYtGM0uxCjEesi4Elr6dMlizq5pQ5qkVfWmfgm4g6o9U
-	CuUY23XWAvuAMDeOovPpJwLpXmKaNrpA2xJ0+b/M+1DwAg/iVFuNLtVEdY3TPww0weBmic
-	zLjsHPyi3JOa7xAbUlbz1+/1lKlCe1FIlfCDEiy0ErSl/TmypnWA8wra5hfz0g==
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 03 Jul 2024 15:46:06 +0200
-Subject: [PATCH v2 2/4] dt-bindings: clock: add Mobileye EyeQ6L/EyeQ6H
- clock indexes
+	bh=ExlAtdZOJ3MJY+x/PWgU0kHD6RtR8Zc2j85IcnrS0W4=;
+	b=geTFG3V6iLzY9vNq4pLZSPW05g3yDjv9odm1ooD+OftRcdON8XHbtsZmJzoz/6eBhZOVIy
+	Ad7CQxp79HPjcmMnJ50Neo4so8eVwdhQmjGbdej7sI4uYlhTd9xr6+HXj8RiWf9/eNmXPp
+	4FDeelU0ChOWkNEpNFclQaB9vwXDYVP3WHXKvvvsTWxi5mOVoPV/VEcyPZ8aUDiAjQDlRE
+	JNXb9rJThwp/zTuOl+EFMaVXgRGEFdFbohpn+loTaqHEyYR848IrZ46kc2WNcjZjAZoY+e
+	BsjvBjzURKuTXLJ5QxwWcCbAh2WY+cpQ/3yXlcOPrM7daPeP21mG76XDspYxtQ==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	mwojtas@chromium.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Antoine Tenart <atenart@kernel.org>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH net-next v15 02/14] net: sfp: pass the phy_device when disconnecting an sfp module's PHY
+Date: Wed,  3 Jul 2024 16:07:52 +0200
+Message-ID: <20240703140806.271938-3-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240703140806.271938-1-maxime.chevallier@bootlin.com>
+References: <20240703140806.271938-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240703-mbly-clk-v2-2-fe8c6199a579@bootlin.com>
-References: <20240703-mbly-clk-v2-0-fe8c6199a579@bootlin.com>
-In-Reply-To: <20240703-mbly-clk-v2-0-fe8c6199a579@bootlin.com>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.15-dev-13183
-X-GND-Sasl: theo.lebrun@bootlin.com
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Add #defines for Mobileye EyeQ6L and EyeQ6H SoC clocks.
+Pass the phy_device as a parameter to the sfp upstream .disconnect_phy
+operation. This is preparatory work to help track phy devices across
+a net_device's link.
 
-Constant prefixes are:
- - EQ6LC_PLL_: EyeQ6L clock PLLs
- - EQ6HC_SOUTH_PLL_: EyeQ6H south OLB PLLs
- - EQ6HC_SOUTH_DIV_: EyeQ6H south OLB divider clocks
- - EQ6HC_ACC_PLL_: EyeQ6H accelerator OLB PLLs
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- include/dt-bindings/clock/mobileye,eyeq5-clk.h | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/net/phy/phylink.c | 3 ++-
+ drivers/net/phy/sfp-bus.c | 4 ++--
+ include/linux/sfp.h       | 2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/include/dt-bindings/clock/mobileye,eyeq5-clk.h b/include/dt-bindings/clock/mobileye,eyeq5-clk.h
-index 26d8930335e4..b433c1772c28 100644
---- a/include/dt-bindings/clock/mobileye,eyeq5-clk.h
-+++ b/include/dt-bindings/clock/mobileye,eyeq5-clk.h
-@@ -19,4 +19,25 @@
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 51c526d227fa..ab4e9fc03017 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -3423,7 +3423,8 @@ static int phylink_sfp_connect_phy(void *upstream, struct phy_device *phy)
+ 	return ret;
+ }
  
- #define EQ5C_DIV_OSPI	10
+-static void phylink_sfp_disconnect_phy(void *upstream)
++static void phylink_sfp_disconnect_phy(void *upstream,
++				       struct phy_device *phydev)
+ {
+ 	phylink_disconnect_phy(upstream);
+ }
+diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
+index 2f44fc51848f..56953e66bb7b 100644
+--- a/drivers/net/phy/sfp-bus.c
++++ b/drivers/net/phy/sfp-bus.c
+@@ -487,7 +487,7 @@ static void sfp_unregister_bus(struct sfp_bus *bus)
+ 			bus->socket_ops->stop(bus->sfp);
+ 		bus->socket_ops->detach(bus->sfp);
+ 		if (bus->phydev && ops && ops->disconnect_phy)
+-			ops->disconnect_phy(bus->upstream);
++			ops->disconnect_phy(bus->upstream, bus->phydev);
+ 	}
+ 	bus->registered = false;
+ }
+@@ -743,7 +743,7 @@ void sfp_remove_phy(struct sfp_bus *bus)
+ 	const struct sfp_upstream_ops *ops = sfp_get_upstream_ops(bus);
  
-+#define EQ6LC_PLL_DDR		0
-+#define EQ6LC_PLL_CPU		1
-+#define EQ6LC_PLL_PER		2
-+#define EQ6LC_PLL_VDI		3
-+
-+#define EQ6HC_SOUTH_PLL_VDI		0
-+#define EQ6HC_SOUTH_PLL_PCIE		1
-+#define EQ6HC_SOUTH_PLL_PER		2
-+#define EQ6HC_SOUTH_PLL_ISP		3
-+
-+#define EQ6HC_SOUTH_DIV_EMMC		4
-+#define EQ6HC_SOUTH_DIV_OSPI_REF	5
-+#define EQ6HC_SOUTH_DIV_OSPI_SYS	6
-+#define EQ6HC_SOUTH_DIV_TSU		7
-+
-+#define EQ6HC_ACC_PLL_XNN		0
-+#define EQ6HC_ACC_PLL_VMP		1
-+#define EQ6HC_ACC_PLL_PMA		2
-+#define EQ6HC_ACC_PLL_MPC		3
-+#define EQ6HC_ACC_PLL_NOC		4
-+
- #endif
-
+ 	if (ops && ops->disconnect_phy)
+-		ops->disconnect_phy(bus->upstream);
++		ops->disconnect_phy(bus->upstream, bus->phydev);
+ 	bus->phydev = NULL;
+ }
+ EXPORT_SYMBOL_GPL(sfp_remove_phy);
+diff --git a/include/linux/sfp.h b/include/linux/sfp.h
+index b14be59550e3..54abb4d22b2e 100644
+--- a/include/linux/sfp.h
++++ b/include/linux/sfp.h
+@@ -550,7 +550,7 @@ struct sfp_upstream_ops {
+ 	void (*link_down)(void *priv);
+ 	void (*link_up)(void *priv);
+ 	int (*connect_phy)(void *priv, struct phy_device *);
+-	void (*disconnect_phy)(void *priv);
++	void (*disconnect_phy)(void *priv, struct phy_device *);
+ };
+ 
+ #if IS_ENABLED(CONFIG_SFP)
 -- 
-2.45.2
+2.45.1
 
