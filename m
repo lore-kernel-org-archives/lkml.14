@@ -1,116 +1,228 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1975B175549;
-	Wed,  3 Jul 2024 11:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2E0175549;
+	Wed,  3 Jul 2024 11:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720005807; cv=none; b=mWHr+i2yC3GFLP6amhcVm8eeC8hULu1gumU/VWz7OoLBUaxbsLvCim0wITnPIbx8FLhLzCxIitVJYPDTsyN+P9wWnF3DIdldiklVkKbwuc4VjbLvBrhQVwdd+zv2jvDYSUiPNnp4iLq6TT8G84Lm0iLxtE3TZSH1BSg3GCQ4iK4=
+	t=1720005835; cv=none; b=UbCtx7PPpvjivX9x1y4mI5ROOwfG4pq17tqkM+94Cw1HjCFDEo//tQipEJmT1d7o7PImdeTBGySkQzCXq+aTNmv4Cdv9hP095oPWhtGVlZBRkMDh3RlIptJE2TCbNKyXhKJl+74gVMnxmAkeGKYsOrZiR+iwAPIA4UlBnd8JSIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720005807; c=relaxed/simple;
-	bh=nQiTDZ7nqA0Uw9Lrn3vTdguwK9Iz6Yt7yURRRhUQRzc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=N/BBIUc1c6yoZ5HwtfNK0caJgcFrgIGJz7eHq0m2SHriWKF9SXWC85Gmq07xpEg76jbuEe38eepGqWE8Gak/i7e7AdSeriKyuvrT4lDWGdFApcxOP69QRDGRiVzchIxHwuzV/jq4w3Ki+AfzZdrrvNFpZ+49Oam735AjIR119Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=jLwO2iOA reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1720005835; c=relaxed/simple;
+	bh=UpA7Iba8tO6maXc3ayC0JI+euHmvgrbNveLcPh7m5YY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UTE2uZd9DZrtaI27pNRuwvUtlN+1iCf7LUG/fy8mXs2WJmJ7kqki/g7fQFM/qc/gbyUjgWFKHvdFq2rHE3dyQ3Oh1mgJFkyzshlq/6HL8DVBEgYIc0Ojy/MQW6IZKq7M9UjrhmcsTyABafnG/r8UyuRkCPhEox5n8O9E0PzwsPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GeUDNBd/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="jLwO2iOA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=V7t00RqL96BHgAhWVmpE7JBjLbm+xuBNNxvx6wIpm9k=; b=j
-	LwO2iOAgrdnX6bQrFNFxmF8Mmc6ZMk3bd1njrkmMgRv4/ad2XeOGgZHAkxCtsNHC
-	4ju23q+O63Ja1p/vHiZIyJn88ta60dtpTw/khw0mMbdzlHuaUnLqRuUOGB6DUGv1
-	tYufJPFg6v87kjnQOwk2BLR1kL4cCx7N/chhhVN/ZY=
-Received: from xavier_qy$163.com ( [59.82.45.106] ) by
- ajax-webmail-wmsvr-40-122 (Coremail) ; Wed, 3 Jul 2024 19:20:09 +0800 (CST)
-Date: Wed, 3 Jul 2024 19:20:09 +0800 (CST)
-From: Xavier  <xavier_qy@163.com>
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: tj@kernel.org, longman@redhat.com, akpm@linux-foundation.org, 
-	lizefan.x@bytedance.com, hannes@cmpxchg.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
-Subject: Re:Re: [PATCH-cpuset v10 1/2] Union-Find: add a new module in
- kernel library
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <haimyc4y2trcyvbnkpw2gkfoiaunykb2q2d5ybr6qgt6upf3lm@afhcevtyjcjl>
-References: <ZoRThI4lcZLxBlwc@slm.duckdns.org>
- <20240703063727.258722-1-xavier_qy@163.com>
- <20240703063727.258722-2-xavier_qy@163.com>
- <haimyc4y2trcyvbnkpw2gkfoiaunykb2q2d5ybr6qgt6upf3lm@afhcevtyjcjl>
-X-NTES-SC: AL_Qu2ZAvybuk4r7ySZY+kfmk4aj+k+XsG0vfUj34FWOp9wjDHp+ik+VG1eLH3Hwe+QGwuFiwWKaTVJ2/RZYo1ndawFieXNfysjlVPU3yb2fJop3A==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GeUDNBd/"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4632UD3K028827;
+	Wed, 3 Jul 2024 11:23:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eU63yGsA6bYUJtOsa6VUuuK/iRbrnEPILy0wIZf7Bt8=; b=GeUDNBd/B6r/ZGdN
+	2rnfWSpLAx1Qj52Csb+NjohRclhpBnB/GdxysSMj4Iid3bbtonXyEvWTSocedLuh
+	qi7PRcVGv5IYJ3fvUQfbgzh7RZYpsPAHOCjhIzRa1S2DbJJWUHcMGJW4bITMizM3
+	TUcDkJUaaiwQAjAhZxLJXFnC2kPEwdWYSg5jMEaF63Jvo7oGkirIPZRlUwccQAsW
+	KdfXeaVOc/TtUCKP85kPoKVXGdE+6wFVED+X+hmagCRtmFXLWnD+c5MPwRv9asGL
+	3seQD2BskH+oXAQljloncJiGza/yicRweXffSoQwvbC4pld4XYt+MYQ51qejiicC
+	oS9OqQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 404kctjvw1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 11:23:45 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 463BNjuh028325
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Jul 2024 11:23:45 GMT
+Received: from [10.131.33.37] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 3 Jul 2024
+ 04:23:39 -0700
+Message-ID: <65ce72e1-7106-0872-88f7-bfdfcef7a24b@quicinc.com>
+Date: Wed, 3 Jul 2024 16:53:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <13bf9422.aeb4.1907852c7ce.Coremail.xavier_qy@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3f4vpM4VmdvsfAA--.2509W
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiZRMREGXAmy+0tAAJsv
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V6 5/5] arm64: dts: qcom: x1e80100: Enable cpufreq
+Content-Language: en-US
+To: Nikunj Kela <quic_nkela@quicinc.com>, Johan Hovold <johan@kernel.org>
+CC: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <jassisinghbrar@gmail.com>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <dmitry.baryshkov@linaro.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
+        <conor+dt@kernel.org>, <quic_psodagud@quicinc.com>,
+        <abel.vesa@linaro.org>
+References: <20240612124056.39230-1-quic_sibis@quicinc.com>
+ <20240612124056.39230-6-quic_sibis@quicinc.com>
+ <ZoQjAWse2YxwyRJv@hovoldconsulting.com>
+ <f53bc00f-8217-1dc8-5203-1a83c24d353d@quicinc.com>
+ <1fcea728-6ee6-4361-b3c5-63d8a2facd74@quicinc.com>
+From: Sibi Sankar <quic_sibis@quicinc.com>
+In-Reply-To: <1fcea728-6ee6-4361-b3c5-63d8a2facd74@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 7cTYTMIZOKw4j2DaxdBKCPCaAAiyc642
+X-Proofpoint-ORIG-GUID: 7cTYTMIZOKw4j2DaxdBKCPCaAAiyc642
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_06,2024-07-03_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ suspectscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407030084
 
-SGkgTWljaGFsLAoKQXQgMjAyNC0wNy0wMyAxNzo0MDoyNSwgIk1pY2hhbCBLb3V0bsO9IiA8bWtv
-dXRueUBzdXNlLmNvbT4gd3JvdGU6Cj5PbiBXZWQsIEp1bCAwMywgMjAyNCBhdCAwMjozNzoyNlBN
-IEdNVCwgWGF2aWVyIDx4YXZpZXJfcXlAMTYzLmNvbT4gd3JvdGU6Cj4+IFRoaXMgcGF0Y2ggaW1w
-bGVtZW50cyBhIHVuaW9uLWZpbmQgZGF0YSBzdHJ1Y3R1cmUgaW4gdGhlIGtlcm5lbCBsaWJyYXJ5
-LAo+PiB3aGljaCBpbmNsdWRlcyBvcGVyYXRpb25zIGZvciBhbGxvY2F0aW5nIG5vZGVzLCBmcmVl
-aW5nIG5vZGVzLAo+PiBmaW5kaW5nIHRoZSByb290IG9mIGEgbm9kZSwgYW5kIG1lcmdpbmcgdHdv
-IG5vZGVzLgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogWGF2aWVyIDx4YXZpZXJfcXlAMTYzLmNvbT4K
-Pj4gLS0tCj4+ICBEb2N1bWVudGF0aW9uL2NvcmUtYXBpL3VuaW9uX2ZpbmQucnN0ICAgICAgICAg
-fCAxMDIgKysrKysrKysrKysrKysrKysrCj4+ICAuLi4vemhfQ04vY29yZS1hcGkvdW5pb25fZmlu
-ZC5yc3QgICAgICAgICAgICAgfCAgODcgKysrKysrKysrKysrKysrCj4+ICBNQUlOVEFJTkVSUyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKysKPj4gIGluY2x1ZGUvbGlu
-dXgvdW5pb25fZmluZC5oICAgICAgICAgICAgICAgICAgICB8ICA0MSArKysrKysrCj4+ICBsaWIv
-TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKy0KPj4gIGxp
-Yi91bmlvbl9maW5kLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA0OCArKysrKysr
-KysKPj4gIDYgZmlsZXMgY2hhbmdlZCwgMjg4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
-Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2NvcmUtYXBpL3VuaW9uX2ZpbmQu
-cnN0Cj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhf
-Q04vY29yZS1hcGkvdW5pb25fZmluZC5yc3QKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
-L2xpbnV4L3VuaW9uX2ZpbmQuaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGxpYi91bmlvbl9maW5k
-LmMKPj4gCj4KPk5pY2UuCj5JJ2Qgc28gcy9Vbmlvbi1GaW5kL3VuaW9uLWZpbmQvIGJvdGggaW4g
-dGhlIGRvY3MgYW5kIHRoZSBjb2RlCj4oY29tbWVudHMpLCBJIGRpZG4ndCBmaW5kIGFueSBydWxl
-IHdoeSB0d28gY2FwaXRhbGl6YXRpb25zIGFyZSB1c2VkLgoKVW5pb24tRmluZCBvbmx5IGFwcGVh
-cnMgaW4gdGhlIHBhdGNoIGRlc2NyaXB0aW9uIG9yIHRpdGxlOyBpbiB0aGUgbWFpbiB0ZXh0LCB3
-ZSBjb25zaXN0ZW50bHkKdXNlIHVuaW9uLWZpbmQuIFRoaXMgd2lsbCBiZSBjb3JyZWN0ZWQgaW4g
-dGhlIG5leHQgdmVyc2lvbi4KCj4+ICtzdHJ1Y3QgdWZfbm9kZSB7Cj4+ICsJc3RydWN0IHVmX25v
-ZGUgKnBhcmVudDsKPj4gKwl1bnNpZ25lZCBpbnQgcmFuazsKPj4gK307Cj4+ICsKPj4gKy8qIFRo
-aXMgbWFjcm8gaXMgdXNlZCBmb3Igc3RhdGljIGluaXRpYWxpemF0aW9uIG9mIGEgdW5pb24tZmlu
-ZCBub2RlLiAqLwo+PiArI2RlZmluZSBVRl9JTklUX05PREUobm9kZSkJey5wYXJlbnQgPSAmbm9k
-ZSwgLnJhbmsgPSAwfQo+PiArCj4+ICsvKioKPj4gKyAqIHVmX25vZGVfaW5pdCAtIEluaXRpYWxp
-emUgYSB1bmlvbi1maW5kIG5vZGUKPj4gKyAqIEBub2RlOiBwb2ludGVyIHRvIHRoZSB1bmlvbi1m
-aW5kIG5vZGUgdG8gYmUgaW5pdGlhbGl6ZWQKPj4gKyAqCj4+ICsgKiBUaGlzIGZ1bmN0aW9uIHNl
-dHMgdGhlIHBhcmVudCBvZiB0aGUgbm9kZSB0byBpdHNlbGYgYW5kCj4+ICsgKiBpbml0aWFsaXpl
-cyBpdHMgcmFuayB0byAwLgo+PiArICovCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgdWZfbm9kZV9p
-bml0KHN0cnVjdCB1Zl9ub2RlICpub2RlKQo+PiArewo+PiArCW5vZGUtPnBhcmVudCA9IG5vZGU7
-Cj4+ICsJbm9kZS0+cmFuayA9IDA7Cj4+ICt9Cj4KPlhhdmllciwgbm90IHN1cmUgaWYgeW91IHJl
-c3BvbmRlZCB0byBteSBzdWdnZXN0aW9uIG9mIGNvbnNpZGVyZWQgemVyb2VkCj5vYmplY3QgYSB2
-YWxpZCBpbml0aWFsaXplZCBvbmUuIFRoYXQgY291bGQgc2F2ZSBzb21lIGluaXQgd29yayAoYW5k
-Cj5tb3ZlIGl0IHRvIGFsdGVybmF0aXZlIHVmX2ZpbmQsIHNlZSBiZWxvdykuCj4KPldpdGggdWZf
-ZmluZCBib2R5IGNoZWNraW5nIGZvciBOVUxMOgo+Cj4Jd2hpbGUgKG5vZGUtPnBhcmVudCAhPSBu
-b2RlKSB7Cj4JCXBhcmVudCA9IG5vZGUtPnBhcmVudDsKPgkJbm9kZS0+cGFyZW50ID0gcGFyZW50
-ID8gcGFyZW50LT5wYXJlbnQgOiBub2RlOwo+CQlub2RlID0gbm9kZS0+cGFyZW50Owo+CX0KClll
-cywgSSBub3RpY2VkIHlvdXIgc3VnZ2VzdGlvbi4gSW4gcGF0Y2ggdjQsIEkgaW1wbGVtZW50ZWQg
-aXQgYnkgaW5pdGlhbGl6aW5nIHRvIDAKYW5kIGFkZGluZyBhIGNoZWNrIGZvciB3aGV0aGVyIHRo
-ZSBwYXJlbnQgaXMgMCBpbiB1Zl9maW5kLiBIb3dldmVyLCBsYXRlciwKd2hlbiBJIHdhcyByZXZp
-ZXdpbmcgdGhlIGFsZ29yaXRobSdzIGRvY3VtZW50YXRpb24sIEkgbm90aWNlZCBpdCByZXF1aXJl
-cwppbml0aWFsaXphdGlvbiB0byBpdHNlbGYuIE1vcmVvdmVyLCB1Zl9maW5kIGlzIGEgaGlnaC1m
-cmVxdWVuY3kgb3BlcmF0aW9uLCBpZiB3ZQphZGQgYSBwYXJlbnQgY2hlY2sgd2l0aGluIGl0LCB0
-aGUgZWZmaWNpZW5jeSBpbXBhY3QgZWFjaCB0aW1lIHdvdWxkIGJlIG1vcmUKc2lnbmlmaWNhbnQg
-dGhhbiBpbml0aWFsaXppbmcgb25jZS4gVGhlcmVmb3JlLCBJIGFkaGVyZWQgdG8gdGhlIGluaXRp
-YWxpemF0aW9uCnRvIGl0c2VsZiBhcHByb2FjaC4KCj4+ICsvKioKPj4gKyAqIHVmX3VuaW9uIC0g
-TWVyZ2UgdHdvIHNldHMsIHVzaW5nIHVuaW9uIGJ5IHJhbmsKPj4gKyAqIEBub2RlMTogdGhlIGZp
-cnN0IG5vZGUKPj4gKyAqIEBub2RlMjogdGhlIHNlY29uZCBub2RlCj4+ICsgKgo+PiArICogVGhp
-cyBmdW5jdGlvbiBtZXJnZXMgdGhlIHNldHMgY29udGFpbmluZyBub2RlMSBhbmQgbm9kZTIsIGJ5
-IGNvbXBhcmluZwo+PiArICogdGhlIHJhbmtzIHRvIGtlZXAgdGhlIHRyZWUgYmFsYW5jZWQuCj4+
-ICsgKi8KPj4gK3ZvaWQgdWZfdW5pb24oc3RydWN0IHVmX25vZGUgKm5vZGUxLCBzdHJ1Y3QgdWZf
-bm9kZSAqbm9kZTIpCj4+ICt7Cj4+ICsJc3RydWN0IHVmX25vZGUgKnJvb3QxID0gdWZfZmluZChu
-b2RlMSk7Cj4+ICsJc3RydWN0IHVmX25vZGUgKnJvb3QyID0gdWZfZmluZChub2RlMik7Cj4+ICsK
-Pj4gKwlpZiAocm9vdDEgIT0gcm9vdDIpIHsKPgo+aWYgKHJvb3QxID09IHJvb3QyKQo+CXJldHVy
-bjsKPnRoZW4gdGhlIHJlc3QgY2FuIGJlIG9uZSBsZXZlbCBsZXNzIG5lc3RlZCA7LSkKPgpPZiBj
-b3Vyc2UsIHRoaXMgY2hhbmdlIG1ha2VzIGl0IGxvb2sgY2xlYXJlci4KCi0tCkJlc3QgUmVnYXJk
-cywKWGF2aWVyCg==
+
+
+On 7/3/24 01:43, Nikunj Kela wrote:
+> 
+> On 7/2/2024 12:59 PM, Sibi Sankar wrote:
+>>
+>>
+>> On 7/2/24 21:25, Johan Hovold wrote:
+>>> On Wed, Jun 12, 2024 at 06:10:56PM +0530, Sibi Sankar wrote:
+>>>> Enable cpufreq on X1E80100 SoCs through the SCMI perf protocol node.
+>>>>
+>>>> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+>>>> ---
+>>>>    arch/arm64/boot/dts/qcom/x1e80100.dtsi | 63
+>>>> ++++++++++++++++----------
+>>>>    1 file changed, 39 insertions(+), 24 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+>>>> b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+>>>> index 7b619db07694..d134dc4c7425 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+>>>> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+>>>> @@ -69,8 +69,8 @@ CPU0: cpu@0 {
+>>>>                reg = <0x0 0x0>;
+>>>>                enable-method = "psci";
+>>>>                next-level-cache = <&L2_0>;
+>>>> -            power-domains = <&CPU_PD0>;
+>>>> -            power-domain-names = "psci";
+>>>> +            power-domains = <&CPU_PD0>, <&scmi_dvfs 0>;
+>>>> +            power-domain-names = "psci", "perf";
+>>>>                cpu-idle-states = <&CLUSTER_C4>;
+>>>
+>>>> +        scmi {
+>>>> +            compatible = "arm,scmi";
+>>>> +            mboxes = <&cpucp_mbox 0>, <&cpucp_mbox 2>;
+>>>> +            mbox-names = "tx", "rx";
+>>>> +            shmem = <&cpu_scp_lpri0>, <&cpu_scp_lpri1>;
+>>>> +
+>>>> +            #address-cells = <1>;
+>>>> +            #size-cells = <0>;
+>>>> +
+>>>> +            scmi_dvfs: protocol@13 {
+>>>> +                reg = <0x13>;
+>>>> +                #power-domain-cells = <1>;
+>>>> +            };
+>>>> +        };
+>>>>        };
+>>>
+>>
+>> Hey Johan,
+>>
+>> Thanks for trying out the series.
+>>
+>>> This series gives a nice performance boost on the x1e80100 CRD, but I'm
+>>> seeing a bunch of warnings and errors that need to be addressed:
+>>>
+>>> [    9.533053] arm-scmi firmware:scmi: Failed to get FC for protocol
+>>> 13 [MSG_ID:6 / RES_ID:0] - ret:-95. Using regular messaging.
+>>> [    9.549458] arm-scmi firmware:scmi: Failed to add opps_by_lvl at
+>>> 3417600 for NCC - ret:-16
+>>> [    9.563925] arm-scmi firmware:scmi: Failed to add opps_by_lvl at
+>>> 3417600 for NCC - ret:-16
+>>> [    9.572835] arm-scmi firmware:scmi: Failed to get FC for protocol
+>>> 13 [MSG_ID:6 / RES_ID:1] - ret:-95. Using regular messaging.
+>>> [    9.609471] arm-scmi firmware:scmi: Failed to add opps_by_lvl at
+>>> 3417600 for NCC - ret:-16
+>>> [    9.633341] arm-scmi firmware:scmi: Failed to add opps_by_lvl at
+>>> 3417600 for NCC - ret:-16
+>>> [    9.650000] arm-scmi firmware:scmi: Failed to get FC for protocol
+>>> 13 [MSG_ID:6 / RES_ID:2] - ret:-95. Using regular messaging.
+>>
+>> X1E uses fast channels only for message-id: 7 (level set) and regular
+>> channels for all the other messages. The spec doesn't mandate fast
+>> channels for any of the supported message ids for the perf protocol.
+>> So nothing to fix here.
+>>
+>>> [    9.727098] cpu cpu4: _opp_is_duplicate: duplicate OPPs detected.
+>>> Existing: freq: 3417600000, volt: 0, enabled: 1. New: freq:
+>>> 3417600000, volt: 0, enabled: 1
+>>> [    9.737157] cpu cpu4: _opp_is_duplicate: duplicate OPPs detected.
+>>> Existing: freq: 3417600000, volt: 0, enabled: 1. New: freq:
+>>> 3417600000, volt: 0, enabled: 1
+>>> [    9.875039] cpu cpu8: _opp_is_duplicate: duplicate OPPs detected.
+>>> Existing: freq: 3417600000, volt: 0, enabled: 1. New: freq:
+>>> 3417600000, volt: 0, enabled: 1
+>>> [    9.888428] cpu cpu8: _opp_is_duplicate: duplicate OPPs detected.
+>>> Existing: freq: 3417600000, volt: 0, enabled: 1. New: freq:
+>>> 3417600000, volt: 0, enabled: 1
+>>
+>> The duplicate entries reported by the perf protocol come directly from
+>> the speed bins. I was told the duplicate entry with volt 0 is meant to
+>> indicate a lower power way of achieving the said frequency at a lower
+>> core count. We have no way of using it in the kernel and it gets safely
+>> discarded. So again nothing to fix in the kernel.
+> 
+> Hi Sibi,
+> 
+> Can you try increasing the max_msg_size to 256 bytes in mailbox
+> transport? We saw the same issue but got resolved by increasing the
+> max_msg_size for the transport(obviously, I reduced the max_msg to 10 to
+> keep the total shmem size same). Even the opps_by_lvl warning went away
+> with this for us.
+
+Nikunj,
+Thanks for taking time to review the series :)
+
+Not sure if we are talking about the same things here, are you
+suggesting that tweaking with the max_msg size will stop the SCMI
+controller from reporting duplicate OPPs? Even if it does go away
+magically wouldn't it mean you are dropping messages? Also opps_by_lvl
+failing with -16 and duplicate opps detected in the opp core have the
+same root cause i.e. duplicate entries reported by the controller.
+
+> 
+> Thanks,
+> 
+> -Nikunj
+> 
+>>
+>>> [    9.913506] debugfs: Directory 'NCC' with parent 'pm_genpd'
+>>> already present!
+>>> [    9.922198] debugfs: Directory 'NCC' with parent 'pm_genpd'
+>>> already present!
+>>
+>> Yeah I did notice ^^ during dev, the series isn't the one introducing it
+>> so it shouldn't block the series acceptance. Meanwhile I'll spend some
+>> cycles to get this warn fixed.
+
+Johan,
+
+https://lore.kernel.org/lkml/20240703110741.2668800-1-quic_sibis@quicinc.com/
+
+Posted a fix for the warn ^^
+
+>>
+>> -Sibi
+>>
+>>>
+>>> Johan
+>>>
