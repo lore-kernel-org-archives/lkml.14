@@ -1,121 +1,144 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF5613D52C;
-	Wed,  3 Jul 2024 09:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C9C113C8EE;
+	Wed,  3 Jul 2024 09:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719998469; cv=none; b=ooENJ7JEfQdNZ82QouzjFz+Eja7/6cjt6zz5YMaOylsLCOmQvoy5cOuavh/2xlCEKsHajt/3aeqKadwP4q2YK2i5p1yzKR9IW/3FeMVlW9rj+L8DQzA4/G/S/NKbckoaFC6jcScXC1bglAa7h4/5lY9QYnettnQCneddEheKbbI=
+	t=1719998490; cv=none; b=qAWlS6NbMak+iKcJ1lXlQu8vMCfez10vexgz9gzE3FvmKN2/41w8JByWMH65GrCS7n66vjx2snA0X2oDdrHYePXp5uWnuhkv0uTqHKGginD1AYTpbaTxr/L79Ijce116Rhcf0FXNtomATZqG7d13zZ3bAo8JFWczZV4X0sAjZp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719998469; c=relaxed/simple;
-	bh=Wyl2SFGLVCY9I76VGiszxJyjpFrEkWUOFvTsPtE6pTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gBRranUaUD9QBBWdZqNpkUX2/Jrf+hrawnoGWHMaAK1UYHbQ5ow+/AuGGURD9r2zeSyZaSeS9iyek+DBMbaDDuH1whr29UupLVFXroYNiUO8naPZUOMft0mZF0RuX8n7K5+66BPjLCCJeLDWkrt8g/HxgmnRlDOO8u77WAsM96U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=tcu9U6xc; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1719998490; c=relaxed/simple;
+	bh=LuBxYBzCQ3t5eskA78KO4HNCqbdC06CI70/S0+JsLj4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fcxiYRFDkbql+kB1QWnJvjATyxD+ddqA5uLQ3lOic46YMBNeFZ7vuizRLt0auvQAIuzZ3e+V8lLVIF2Qmsduuetsu/9s3ee0sqTH7s7motweSdgHFBiFDWewjzNS1uSqmlvK9ogcjKYOfCeIpklmvqnsWvKp3BaUGOjM4A6UiL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hiJmdn5/; arc=none smtp.client-ip=45.254.50.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="tcu9U6xc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719998458; x=1720603258; i=spasswolf@web.de;
-	bh=oBQFmETLL7D3z7jRwHkLZHsWnUmcK0p0AK8DnuJD78w=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=tcu9U6xckseNUP1+vBU5sqBou5tHz81TQZzdvDP2x/jWhFQZbLnRBsAtKPgzrAuS
-	 cs7NtYC9LTykXu/PKvI4JfiPScC2vF6wn7m8hPKTOc0hMUMcsnFWzF5rXGIfbXRBR
-	 gQqGsAlmpUO3un9spZUP7UKBvp68Wdh7iPf4tGTPbY0hnloKLH+D5OKh/OMyrFzeu
-	 ca6wumnhXPCHZA63DVCN9Ysv8KQxE9bTm1JZL0GZAPrU45/exT1VnuG5YIV9p8WLl
-	 CUqHzf4BzSAg6T3UA1bPMz5XplVW2BVdBcfrZmzsPu2RdaIccvyTP9QXilR3hvweH
-	 cV6VzsnP2qteDGIdnw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from localhost.localdomain ([84.119.92.193]) by smtp.web.de
- (mrweb106 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 1M7Nmo-1sUQGE218u-00Elao; Wed, 03 Jul 2024 11:15:38 +0200
-From: Bert Karwatzki <spasswolf@web.de>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	caleb.connolly@linaro.org,
-	bhelgaas@google.com,
-	brgl@bgdev.pl,
-	amit.pundir@linaro.org,
-	neil.armstrong@linaro.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hiJmdn5/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=BTnss
+	Ax2cxCnOWayOPuWiQqj81ayGW11i7bWdYf4BJo=; b=hiJmdn5/r1tETI0cFNGMu
+	KP4M134fRLE3XF8DtHruRuzVy/vGGHGU9+fl/hNk9lCGVZc+0cb7s2kmVfYxOD5C
+	e93prtr44x+v7DiHu7iO1yBtl8dMg6t6007MYg9ffXBDU8QHfCH4yHMSczAL7kXf
+	9gf2Zm1KBJdOCAUvdDiBqo=
+Received: from localhost.localdomain (unknown [193.203.214.57])
+	by gzga-smtp-mta-g0-0 (Coremail) with SMTP id _____wD3P3TXF4Vmr+vYBQ--.20081S4;
+	Wed, 03 Jul 2024 17:20:25 +0800 (CST)
+From: ran xiaokai <ranxiaokai627@163.com>
+To: david@redhat.com
+Cc: akpm@linux-foundation.org,
+	baohua@kernel.org,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] pci: bus: only call of_platform_populate() if CONFIG_OF is defined
-Date: Wed,  3 Jul 2024 11:15:30 +0200
-Message-ID: <20240703091535.3531-1-spasswolf@web.de>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: 20240612082019.19161-4-brgl@bgdev.pl
-References: 
+	linux-mm@kvack.org,
+	peterx@redhat.com,
+	ran.xiaokai@zte.com.cn,
+	ranxiaokai627@163.com,
+	ryan.roberts@arm.com,
+	svetly.todorov@memverge.com,
+	vbabka@suse.cz,
+	willy@infradead.org,
+	ziy@nvidia.com
+Subject: Re: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
+Date: Wed,  3 Jul 2024 09:20:23 +0000
+Message-Id: <20240703092023.76749-1-ranxiaokai627@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <1fddf73d-577f-4b4c-996a-818dd99eb489@redhat.com>
+References: <1fddf73d-577f-4b4c-996a-818dd99eb489@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nyJcyHhsNSpkSUGZqbvy5cz1+qJWvtRYdbilKOrnaRbpkEucYDI
- OO6X9pZ8KS+LAvp0TY5pUBt13c5CZ5zj58Jvj7gRo7OtAEgAi64mW3/H5Q4f5PEAxJRvddj
- 19rlO8z708zo5053JsZrJq5n5fJsE/CHsT0KUTpAnn9hFrDqamw8Ed6svdI5bvXDv+wctVC
- B/p0EFClr8h/KIYSsBJZw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:20gnE9vcYAw=;5Vn92s0UDnCrY+dgvQFnS2uHqlE
- zJhJX+e4RvaJ0YxUVfTBGS9DpEFmWV17NOxuLmJjHvlA9l0n9M9/bXy8nsSsRtimB32ZA7bAp
- 2dZmY9SSnYrQVaOyMoRfP0VDudwq/YJs++W5FIIAM3nDqZ1C5hRhBh03cFR80R8CYj764VBso
- tO4eH7o56SGLLhtgYEGRFUMy7rl5zRQd6B5O497CRvkYecE6ZFh3SVOH5gTFKTwJYm7AYvNy7
- tqDZ/8xBFxkky9HST5qVSfKrVFy7k8oq/zAuT1CxTyyFyCt1hUSPQR4LL9t8rYSORUMntxQXC
- C4TEyB7o6aF4mCKZr6CbKVI/UkUqs98jwJxNYv+vUkAvLf6NAkGDUEtZnMHilS9dIDfTAf0EN
- GWsj/mgStCv7Trsd71WrZIJ55tjpoJfKCNnUczEUYHpF2dXFscNdFAgHkQGDCXVUMwz8hMRkA
- /+pBgsPxay08zCB+qc+Or1hes7b4uCi1khmkHD21t5WeBh4ghmnKYOQ+o1dPuKMV6t2F0c+iI
- GX2XhI0vW4Se6IElsiL32ATSDehuly8Jjw1DPJBVb6HvOpbZLgseHjqMYDx0YkpPg6kAciw92
- 3aLMlx9fQNQDrtIk5bTPNRkJdSodIndz8jucpl1FvrkGQSzDu3TcAWT4JzrBt23a4E9owVMg+
- OsEGNORflRBAJv8dK/uggUys80Q/HQrJgCmdQSXYbDBp+NFLkUz+hoHRP0mc48Fc+dOqeFcc8
- Vl9ovVrQxPzdg9nf/UVPnFAGpipd6tv5tLW+EibbfJCqM+6P333ufkZmKv10A1q/yX+5wrJpT
- 4tAAA5elsJMFlWsXYwXZWKmIdkdTieKOWI2jWiq1jIL2A=
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3P3TXF4Vmr+vYBQ--.20081S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAFyfAw17Xr15ZrWrXF48tFb_yoW5Cw15pF
+	WYkFyqyr4DG3sYyr1Ivw1qyry8Gr98ZayUta43Cr17uF9xJF92qrW0y3s8A3W3Ar4rZ3ZF
+	vFWUWF4qv3W5ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUN189UUUUU=
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/1tbiqRIMTGVOBJWk7QABsJ
 
-If of_platform_populate() is called when CONFIG_OF is not defined this
-leads to spurious error messages of the following type:
- pci 0000:00:01.1: failed to populate child OF nodes (-19)
- pci 0000:00:02.1: failed to populate child OF nodes (-19)
+>On 26.06.24 04:49, ran xiaokai wrote:
+>> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+>> 
+>> KPF_COMPOUND_HEAD and KPF_COMPOUND_TAIL are set on "common" compound
+>> pages, which means of any order, but KPF_THP should only be set
+>> when the folio is a 2M pmd mappable THP. Since commit 19eaf44954df
+>
+>"should only be set" -- who says that? :)
+>
+>The documentation only talks about "Contiguous pages which construct 
+>transparent hugepages". Sure, when it was added there were only PMD ones.
+>
+>
+>> ("mm: thp: support allocation of anonymous multi-size THP"),
+>> multiple orders of folios can be allocated and mapped to userspace,
+>> so the folio_test_large() check is not sufficient here,
+>> replace it with folio_test_pmd_mappable() to fix this.
+>> 
+>
+>A couple of points:
+>
+>1) If I am not daydreaming, ever since we supported non-PMD THP in the
+>    pagecache (much longer than anon mTHP), we already indicate KPF_THP
+>    for them here. So this is not anon specific? Or am I getting the
+>    PG_lru check all wrong?
+>
+>2) Anon THP are disabled as default. If some custom tool cannot deal
+>    with that "extension" we did with smaller THP, it shall be updated if
+>    it really has to special-case PMD-mapped THP, before enabled by the
+>    admin.
+>
+>
+>I think this interface does exactly what we want, as it is right now. 
+>Unless there is *good* reason, we should keep it like that.
+>
+>So I suggest
+>
+>a) Extend the documentation to just state "THP of any size and any 
+>mapping granularity" or sth like that.
+>
+>b) Maybe using folio_test_large_rmappable() instead of "(k & (1 <<
+>    PG_lru)) || is_anon", so even isolated-from-LRU THPs are indicated
+>    properly.
 
-Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nod=
-es of the port node")
-Signed-off-by: Bert Karwatzki <spasswolf@web.de>
-=2D--
- drivers/pci/bus.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi, David,
 
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index e4735428814d..b363010664cd 100644
-=2D-- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -350,6 +350,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+The "is_anon" check was introduced to also include page vector cache
+pages, but now large folios are added to lru list directly, bypassed
+the pagevec cache. So the is_anon check seems unnecessary here.
+As now pagecache also supports large folios, the is_anon check seems
+unsufficient here.
 
- 	pci_dev_assign_added(dev, true);
+Can i say that for userspace memory,
+folio_test_large_rmappable() == folio_test_large()?
+if that is true, except the "if ((k & (1 << PG_lru)) || is_anon)"
+check, we can also remove the folio_test_large() check,
+like this:
 
-+#ifdef CONFIG_OF
- 	if (pci_is_bridge(dev)) {
- 		retval =3D of_platform_populate(dev->dev.of_node, NULL, NULL,
- 					      &dev->dev);
-@@ -357,6 +358,7 @@ void pci_bus_add_device(struct pci_dev *dev)
- 			pci_err(dev, "failed to populate child OF nodes (%d)\n",
- 				retval);
- 	}
-+#endif
- }
- EXPORT_SYMBOL_GPL(pci_bus_add_device);
+else if (folio_test_large_rmappable(folio)) {
+        u |= 1 << KPF_THP;
+    else if (is_huge_zero_folio(folio)) {
+        u |= 1 << KPF_ZERO_PAGE;
+        u |= 1 << KPF_THP;
+    }
+} else if (is_zero_pfn(page_to_pfn(page)))
 
-=2D-
-2.45.2
+This will also include the isolated folios.
 
-The mentioned error message occur on systems without CONFIG_OF, i.e.
-x86_64. The call to of_platform_depopulate() in drivers/pci/remove.c
-does not need #ifdef CONFIG_OF as the return value is not checked (it
-will most likely be optimized away on platforms witout OF where the
-of_platform_{de,}populate() functions just return -ENODEV)
+>c) Whoever is interested in getting the folio size, use this flag along
+>    with a scan for the KPF_COMPOUND_HEAD.
+>
+>
+>I'll note that, scanning documentation, PAGE_IS_HUGE currently only 
+>applies to PMD *mapped* THP. It doesn't consider PTE-mapped THP at all 
+>(including PMD-ones). Likely, documentation should be updated to state 
+>"PMD-mapped THP or any hugetlb page".
+>
+>> Also kpageflags is not only for userspace memory but for all valid pfn
+>> pages,including slab pages or drivers used pages, so the PG_lru and
+>> is_anon check are unnecessary here.
+>
+>I'm completely confused about that statements. We do have KPF_OFFLINE, 
+>KPF_PGTABLE, KPF_SLAB, ... I'm missing something important.
 
-Please CC me when replying, I'm not subscribed to the lists.
-
-Bert Karwatzki
