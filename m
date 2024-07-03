@@ -1,75 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA69913BC0E
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 09:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1516E136649;
+	Wed,  3 Jul 2024 09:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719998239; cv=none; b=GrfsqglbqIDV6Ya8TnnRKKdVzyZQEOZkA97CM2XAcNiGFUh/XMtGoO6TpJ/wajQ6P5/EfQoBW2hs64YTP2uHaZf3kk/WTZuZGt2Q0MS6uVJeHolcPe621ZRnXgcFZ4WqRZwLgjPMLk3mEABz1AnszjJBFmz8qygIiO5hfoQFIyc=
+	t=1719998266; cv=none; b=BTh4evJRWdohubpkFd6I9ZRuGyr4TNf0mUFk0huptLR7So+qA5kDG48e4JqeJT+iAAgT4PWo9MonffJw02ne/M9JASgCy+H5bBnMQ+goxOpmIw50/npU1Etf6JosF2wTQn8zqA7V6QySlgLM+Zi5YZ+9OyG8fqs/hmx7z1ruVgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719998239; c=relaxed/simple;
-	bh=wS7lzFAGRGSUQzBCLpUo66s379++n6EjhtsAvlkoypo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TJySCv+eFbbojpqVcZ+scAnacAxNcYQLLSRowYXZ0apa5ZfLGnPTOTmnwzXALHsj69jqhJHWmbR2cjqnR1nurhMTyG1z5vNHwrUw5SW+bhndzWBUjzevIO+Y0ML7DwLQ+Eyl4kUfPS+Kon+mUqpNbFE5Am/16/xDKLmtrDHQMRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JQjCJc/q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719998266; c=relaxed/simple;
+	bh=oE6/q3bTRtR3dW9baI0zUJRzXNi1NNKxb3kn55LGhe8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dnJJlEmSxcfB1LRZJJFVkSYr0C9/Fa/PwJY5ULdtchVv7/quiRO5LsdTFvRizPMKNg1IgZ8IslM5dKn1KiYMyBpn8Ugl6o3BYk3FLcn3vbGaEonXlhgyQTzLoqucIkoTWsMB1s1Re4ffHUYp73oLdwtQC6OevzHLaQU1hb4oWyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CHaFFAMF; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JQjCJc/q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719998236;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nDRjbFmP01KxOsB0eGxpZsCd+/+50ehZGov31ZZvomA=;
-	b=JQjCJc/qEfpIZurxWrcolY2DMkNqSVcop560FuFkUskIJLikL9MTqmYhK6XKestU7SICSO
-	iOHvi2CQXUNjah3iC9DSmMFtTg1P8t4Wfsnnj05r3EldH1ZvWBHj08wEmHFVqEeoB4dpXJ
-	Oe3qZA0WvWV9hxzgYMOMJ2w12ToB7e0=
-Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com
- [209.85.160.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680-RQi_8HrFNe6Zruhg5fphAg-1; Wed, 03 Jul 2024 05:17:15 -0400
-X-MC-Unique: RQi_8HrFNe6Zruhg5fphAg-1
-Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-255112df14aso3892559fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 02:17:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719998234; x=1720603034;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nDRjbFmP01KxOsB0eGxpZsCd+/+50ehZGov31ZZvomA=;
-        b=GGfGRAOy4fD44tqHn857pSWJVKSTCtvhY+FO4RNsWYGiM53+uqiVbmJB2d2m85Ya6M
-         cRiKm2vkoTb0eBKxtTqQJnmMdAJPIFHZrlR+PmgWWU3n4DN5uUhLpxzNZAKvVxI6pvAA
-         A5LHqvstZZDziU8e3AyOJ4NCZ5qHuasXYpf+/QfDRAr5/vlA+7aqKMhiXTN7PcZMd3KN
-         7lvdCRAF2F7KxCVZke+6vNRPkqmwvNr4zck2+AkvgrGt0fM0USyrO9iCNcthg+N9s3mm
-         kdESsUKSJAw0TFnZRoHhDjsspSir5AQZHbrDKcDBDp9i5UEvYR7SI9std235jhPenq8W
-         lQRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSqAjth5TP6a+1MZ9dcMIvLbAjOkrUlaJBqLMyrPrWuSMBYrlQ6foAugOGTXvgdvCy7/SmUSS9Xv8j9x3ZrWj4x9CLo8JzIg3rrhwU
-X-Gm-Message-State: AOJu0YzC2ObpxcZCZAwJlUhqKo9jBFciL9UNgJg/qzdkTldmAqJG1CBp
-	hQUuIUMMnKezcVLY7hPeYa5q05+RY+WKuFmEVOj0bDv99hb8jjkzHGNndOhtERFc2p78YKsZN0X
-	wL5qQ+Ld806I2x2Ac2eAgLhWVLvG9cSlGgbp6c8hvnOX/SupIGj/hWcb8hZ/0NQ==
-X-Received: by 2002:a05:6870:1493:b0:25d:5024:4fae with SMTP id 586e51a60fabf-25db35c0336mr10443993fac.45.1719998234665;
-        Wed, 03 Jul 2024 02:17:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEplzfCQnzMujnj6tcN/ISofTFNlDfMRPdQLw63q83nhzqBWn2jkHc0Ih43zLVejope70KeaQ==
-X-Received: by 2002:a05:6870:1493:b0:25d:5024:4fae with SMTP id 586e51a60fabf-25db35c0336mr10443982fac.45.1719998234343;
-        Wed, 03 Jul 2024 02:17:14 -0700 (PDT)
-Received: from ryzen.. ([240d:1a:c0d:9f00:ca7f:54ff:fe01:979d])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7080205a180sm10257626b3a.18.2024.07.03.02.17.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 02:17:14 -0700 (PDT)
-From: Shigeru Yoshida <syoshida@redhat.com>
-To: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Shigeru Yoshida <syoshida@redhat.com>,
-	syzkaller <syzkaller@googlegroups.com>
-Subject: [PATCH net] inet_diag: Initialize pad field in struct inet_diag_req_v2
-Date: Wed,  3 Jul 2024 18:16:49 +0900
-Message-ID: <20240703091649.111773-1-syoshida@redhat.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CHaFFAMF"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463002d3025449;
+	Wed, 3 Jul 2024 09:17:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=OeG8x0o9x2boiA+S+aRCwa
+	pAdprouPAYd76jDKf7wuM=; b=CHaFFAMFl8sbdV2KfVe9XaqKm+2eRmEyjV5YXt
+	AWJXB33/eIGCYXpGd+MXz+AibOY2sqGJPy5LsRnQw9FzVk3v9c7B1tX9HjyV38Ds
+	8yywvefhTUMKFp2/ffhpQr41+ECD7i2b9pE5VwB3LT4pdFXlsBK+aNhtj04pnT3f
+	j+U2Edy6ZzXUsZ2XmO0bNOGpEoWn2QodjY6faOnizTwkAWnWt5kz6zrWkKLEMl/e
+	2JO4a0BbzlbaecdmRYqJWVxQcnMQ8axRxLgbA2AKcfUuJl6Gxaczq1OnAXdQlbD1
+	3yvH4TtnTbp2KmIsVa9/6Ra1YNC7XCNsh3OGK/axBi1EoP6Q==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402an78ax8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 09:17:26 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4639HPeT027670
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Jul 2024 09:17:25 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 3 Jul 2024 02:17:17 -0700
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <vireshk@kernel.org>, <nm@ti.com>, <sboyd@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <angelogioacchino.delregno@collabora.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
+        <ilia.lin@kernel.org>, <rafael@kernel.org>, <ulf.hansson@linaro.org>,
+        <quic_sibis@quicinc.com>, <quic_rjendra@quicinc.com>,
+        <quic_rohiagar@quicinc.com>, <abel.vesa@linaro.org>,
+        <otto.pflueger@abscue.de>, <danila@jiaxyga.com>,
+        <quic_varada@quicinc.com>, <quic_ipkumar@quicinc.com>,
+        <luca@z3ntu.xyz>, <stephan.gerhold@kernkonzept.com>, <nks@flawful.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+Subject: [PATCH v4 00/10] Enable CPR for IPQ9574
+Date: Wed, 3 Jul 2024 14:46:41 +0530
+Message-ID: <20240703091651.2820236-1-quic_varada@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,108 +64,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: k6Gqw8JX5179wjP76TTAYDCv3AAjd4GY
+X-Proofpoint-ORIG-GUID: k6Gqw8JX5179wjP76TTAYDCv3AAjd4GY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_05,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ clxscore=1011 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ phishscore=0 bulkscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407030068
 
-KMSAN reported uninit-value access in raw_lookup() [1]. Diag for raw
-sockets uses the pad field in struct inet_diag_req_v2 for the
-underlying protocol. This field corresponds to the sdiag_raw_protocol
-field in struct inet_diag_req_raw.
+This series tries to enable CPR on IPQ9574, that implements
+CPRv4. Since [1] is older, faced few minor issues. Those are
+addressed in [2].
 
-inet_diag_get_exact_compat() converts inet_diag_req to
-inet_diag_req_v2, but leaves the pad field uninitialized. So the issue
-occurs when raw_lookup() accesses the sdiag_raw_protocol field.
+dt_binding_check and dtbs_check passed.
 
-Fix this by initializing the pad field in
-inet_diag_get_exact_compat(). Also, do the same fix in
-inet_diag_dump_compat() to avoid the similar issue in the future.
+Depends:
+	[1] https://lore.kernel.org/lkml/20230217-topic-cpr3h-v14-0-9fd23241493d@linaro.org/T/
+	[2] https://github.com/quic-varada/cpr/tree/4de50be55a89eb29ab0d40d3fcfe9aa7a9ccf910
 
-[1]
-BUG: KMSAN: uninit-value in raw_lookup net/ipv4/raw_diag.c:49 [inline]
-BUG: KMSAN: uninit-value in raw_sock_get+0x657/0x800 net/ipv4/raw_diag.c:71
- raw_lookup net/ipv4/raw_diag.c:49 [inline]
- raw_sock_get+0x657/0x800 net/ipv4/raw_diag.c:71
- raw_diag_dump_one+0xa1/0x660 net/ipv4/raw_diag.c:99
- inet_diag_cmd_exact+0x7d9/0x980
- inet_diag_get_exact_compat net/ipv4/inet_diag.c:1404 [inline]
- inet_diag_rcv_msg_compat+0x469/0x530 net/ipv4/inet_diag.c:1426
- sock_diag_rcv_msg+0x23d/0x740 net/core/sock_diag.c:282
- netlink_rcv_skb+0x537/0x670 net/netlink/af_netlink.c:2564
- sock_diag_rcv+0x35/0x40 net/core/sock_diag.c:297
- netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
- netlink_unicast+0xe74/0x1240 net/netlink/af_netlink.c:1361
- netlink_sendmsg+0x10c6/0x1260 net/netlink/af_netlink.c:1905
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg+0x332/0x3d0 net/socket.c:745
- ____sys_sendmsg+0x7f0/0xb70 net/socket.c:2585
- ___sys_sendmsg+0x271/0x3b0 net/socket.c:2639
- __sys_sendmsg net/socket.c:2668 [inline]
- __do_sys_sendmsg net/socket.c:2677 [inline]
- __se_sys_sendmsg net/socket.c:2675 [inline]
- __x64_sys_sendmsg+0x27e/0x4a0 net/socket.c:2675
- x64_sys_call+0x135e/0x3ce0 arch/x86/include/generated/asm/syscalls_64.h:47
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xd9/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+v4: s/cprh/cpr4/
+    Create new match data for ipq9574 that includes genpd_names
+    Update cloop-vadj & oloop-vadj with minItems
 
-Uninit was stored to memory at:
- raw_sock_get+0x650/0x800 net/ipv4/raw_diag.c:71
- raw_diag_dump_one+0xa1/0x660 net/ipv4/raw_diag.c:99
- inet_diag_cmd_exact+0x7d9/0x980
- inet_diag_get_exact_compat net/ipv4/inet_diag.c:1404 [inline]
- inet_diag_rcv_msg_compat+0x469/0x530 net/ipv4/inet_diag.c:1426
- sock_diag_rcv_msg+0x23d/0x740 net/core/sock_diag.c:282
- netlink_rcv_skb+0x537/0x670 net/netlink/af_netlink.c:2564
- sock_diag_rcv+0x35/0x40 net/core/sock_diag.c:297
- netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
- netlink_unicast+0xe74/0x1240 net/netlink/af_netlink.c:1361
- netlink_sendmsg+0x10c6/0x1260 net/netlink/af_netlink.c:1905
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg+0x332/0x3d0 net/socket.c:745
- ____sys_sendmsg+0x7f0/0xb70 net/socket.c:2585
- ___sys_sendmsg+0x271/0x3b0 net/socket.c:2639
- __sys_sendmsg net/socket.c:2668 [inline]
- __do_sys_sendmsg net/socket.c:2677 [inline]
- __se_sys_sendmsg net/socket.c:2675 [inline]
- __x64_sys_sendmsg+0x27e/0x4a0 net/socket.c:2675
- x64_sys_call+0x135e/0x3ce0 arch/x86/include/generated/asm/syscalls_64.h:47
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xd9/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+v3: Fix patch authorship for 2 patches
+    Include CPR3 file changes done to Konrad's patches in https://github.com/quic-varada/cpr/commits/konrad/
+    Change url for [2] to skip the cpr3 file changes
 
-Local variable req.i created at:
- inet_diag_get_exact_compat net/ipv4/inet_diag.c:1396 [inline]
- inet_diag_rcv_msg_compat+0x2a6/0x530 net/ipv4/inet_diag.c:1426
- sock_diag_rcv_msg+0x23d/0x740 net/core/sock_diag.c:282
+v2: Fix Signed-off-by order in 2 patches
+    Update constraints in qcom,cpr3.yaml
+    Add rbcpr_clk_src registration
+    Add Reviewed-by to one of the patches
+    Not adding Acked-by as the file has changed
 
-CPU: 1 PID: 8888 Comm: syz-executor.6 Not tainted 6.10.0-rc4-00217-g35bb670d65fc #32
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40 04/01/2014
+Praveenkumar I (2):
+  pmdomain: qcom: rpmpd: Add IPQ9574 power domains
+  soc: qcom: cpr3: Add IPQ9574 definitions
 
-Fixes: 432490f9d455 ("net: ip, diag -- Add diag interface for raw sockets")
-Reported-by: syzkaller <syzkaller@googlegroups.com>
-Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
----
- net/ipv4/inet_diag.c | 2 ++
- 1 file changed, 2 insertions(+)
+Varadarajan Narayanan (8):
+  soc: qcom: cpr3: Fix 'acc_desc' usage
+  cpufreq: qcom-nvmem: Add support for IPQ9574
+  dt-bindings: power: rpmpd: Add IPQ9574 power domains
+  dt-bindings: soc: qcom: cpr3: Add bindings for IPQ9574
+  dt-bindings: clock: Add CPR clock defines for IPQ9574
+  clk: qcom: gcc-ipq9574: Add CPR clock definition
+  dt-bindings: opp: v2-qcom-level: Update minItems for oloop-vadj &
+    cloop-vadj
+  dts: arm64: qcom: ipq9574: Enable CPR
 
-diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
-index 7adace541fe2..9712cdb8087c 100644
---- a/net/ipv4/inet_diag.c
-+++ b/net/ipv4/inet_diag.c
-@@ -1383,6 +1383,7 @@ static int inet_diag_dump_compat(struct sk_buff *skb,
- 	req.sdiag_family = AF_UNSPEC; /* compatibility */
- 	req.sdiag_protocol = inet_diag_type2proto(cb->nlh->nlmsg_type);
- 	req.idiag_ext = rc->idiag_ext;
-+	req.pad = 0;
- 	req.idiag_states = rc->idiag_states;
- 	req.id = rc->id;
- 
-@@ -1398,6 +1399,7 @@ static int inet_diag_get_exact_compat(struct sk_buff *in_skb,
- 	req.sdiag_family = rc->idiag_family;
- 	req.sdiag_protocol = inet_diag_type2proto(nlh->nlmsg_type);
- 	req.idiag_ext = rc->idiag_ext;
-+	req.pad = 0;
- 	req.idiag_states = rc->idiag_states;
- 	req.id = rc->id;
- 
+ .../bindings/opp/opp-v2-qcom-level.yaml       |   2 +
+ .../devicetree/bindings/power/qcom,rpmpd.yaml |   1 +
+ .../bindings/soc/qcom/qcom,cpr3.yaml          |  35 +++
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi         | 269 ++++++++++++++++--
+ drivers/clk/qcom/gcc-ipq9574.c                |  39 +++
+ drivers/cpufreq/qcom-cpufreq-nvmem.c          |   7 +-
+ drivers/pmdomain/qcom/cpr3.c                  | 147 +++++++++-
+ drivers/pmdomain/qcom/rpmpd.c                 |  19 ++
+ include/dt-bindings/clock/qcom,ipq9574-gcc.h  |   2 +
+ include/dt-bindings/power/qcom-rpmpd.h        |   3 +
+ 10 files changed, 502 insertions(+), 22 deletions(-)
+
 -- 
-2.45.2
+2.34.1
 
