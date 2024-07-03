@@ -1,137 +1,171 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110621DA313;
-	Wed,  3 Jul 2024 23:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5A31DA313
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 23:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720048077; cv=none; b=PPKoQNoANOW9Vx80T8iqME7opMXiFZWLFFFrYW92X7inz03daBaF3hXFfyH88aO3j2g9cUXXQGPzBPgYQzN5zQYlvyx8l3VJFd2EpeL/4w6GMsQMy2DNuGCGjr4VCKRkQoEhoIw48R1DXzE5qe6VjWV2Qct1VAWNMkda4mAJVMs=
+	t=1720048263; cv=none; b=bCC7NprIthTXAdgDQ3VloeI9FUrB+souMmLNBgu0vY8zlZmSsSYyWhzy0XHFr4262W2eahv5Bwsq6OFe5MM4q3Nucs55fXpoi7HAj3TSZX0+HHBStK1M8aT7iInu0IIseUsrC2UrjGsCwPVEeFP3s5GCr/P7RSInO54lHRjp4R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720048077; c=relaxed/simple;
-	bh=vn+sW8ZyjpsUb2fRe3K0pOkAZ+FDvIED2cRcDMheMq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IiWXVjP//FzoZG44DjWEPv32K9703UDLOX4xoQBmglLGeXSv7QgfJkou/uSouhEBmx+3Ciu7iit4axFibTgD2/8Zm607rd0qQbJbIz7jgSDUJrSYUExrtldp0BXEZuUri+EaqYGjskGt2Nh9FB+jz9ILurUM8Q541DCU1rV3EZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SuOlLfAO; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1720048263; c=relaxed/simple;
+	bh=r0uAG+k85KUhnmC0RU/sPMM+jlY/KvzKUPnko0MwoA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=afal8G8U+LmcDrCA0+XfOusHCd4KcsdbZkzcCrK4G+VDCq8wGsgMqNvu6wLSAsH/inIotUSSZMHcxVgVek7ahm5No3HzBv2GbB+4zy4ghaXa3cTMgEu4StLldIjX3jXJnXDZEmdlWngPGkGEcVPRRb1+a4McL9GYJDPWEGEeJPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hqHMl/tq; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SuOlLfAO"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8DA2D40E021B;
-	Wed,  3 Jul 2024 23:07:52 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id dccP64wQ6FMy; Wed,  3 Jul 2024 23:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1720048069; bh=vARn0lwb52XcUW8aFdtOgDF06W70NUIa2J+3vdggSvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SuOlLfAOzld19ExePQmgbMX3M01B5Mr4oCwu5IS+rFQ/V7dHagmWjYI4GTej63GYF
-	 5tQuwCg+qBMgxjqZEJjjgtZ2YGk9cp6MFLaylP/CaoR9QPlAvni4k1SCPsKfPXkKfh
-	 RP0Qe99/Ze4/0cQ/VdfhYhgj3kozxoI8BNuZYFPX05oPw+Ag3I/JRdLKJraWStglGw
-	 k2R8nB/08AeBOTEubMm/GMZ3kkpvs2qtRZQqDox7FJglxeybYCyPebOavbbFRUo0z4
-	 2gVczO2vfiT26tV5w0F2DgyZEt3f0Ta8V5hqDwUrnu6fJ8BvTB1xUzNTDYRnA2yagu
-	 vv1CSenbNmg9D3Df3L/MqsrfWT0BxI99GgEDXejRfMrvPHCbh5CguOXP19dFEfVIhS
-	 Zx7AwL4rlFB0Zx9/ZiYj1v2j8X5SzYLp+FPA7q/tnj/7wofU0/VDZjAecwHTEjzTeg
-	 aQQGmvL63taD7AivA5PYqVWvcZ5mjfPN23OLTI+IDrGEGbmfQjp3xujFuVKtw8WvZB
-	 GZ7HJAfi23Fcwa9qofH5QiIRcUIOQnwQNCfA0wI0FohXxjbo0Vo1RUYxcJGVaYkidG
-	 prURk4982zgdBi8TY7qZDMDke1KnZ0F2luZDW2oJFO1FYawkInGaz/279T/JmtElNz
-	 9mFxTqQhvy7Q0wmoL1PefuXQ=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 224E140E0185;
-	Wed,  3 Jul 2024 23:07:29 +0000 (UTC)
-Date: Thu, 4 Jul 2024 01:07:24 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v2 1/9] x86/cpu/topology: Add CPU type to struct
- cpuinfo_topology
-Message-ID: <20240703230724.GEZoXZrIavchI2Kj-P@fat_crate.local>
-References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
- <20240627-add-cpu-type-v2-1-f927bde83ad0@linux.intel.com>
- <20240628080305.GEZn5uOSnW40fVgaNA@fat_crate.local>
- <20240628173209.wzpc6pwnw4p6u57h@desk>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hqHMl/tq"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7f3ce5b48f2so260939f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 16:11:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1720048260; x=1720653060; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OMhBfo2AqOtt3z+XF5sqTNNiKJEZsUksgQMqNwJunyk=;
+        b=hqHMl/tqGCSeepVnEPVjW4Topdg6qeJkbrXcLs5KHPtJJmf+RWvBH+b89Qw8Skorpf
+         RoDlmU/QSzf6guikqhveHqwjjH8U3yDVsBZAprIYsdOP/wsWStwAKpkMm4CwBsXnSBty
+         nZziRgAG5Wb6V4mPhU0O4g/O8J7+JgmUeqy3s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720048260; x=1720653060;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OMhBfo2AqOtt3z+XF5sqTNNiKJEZsUksgQMqNwJunyk=;
+        b=AgpABUmolJPA2/WC3CzYCJyztjF5enwzPvH7B2SRMfmkbJfX19ymHCZRCg8XIgVk1Z
+         2qrTULmkz+2QRLBNf9qNG6hVHeRVkj0Li2GImRID0+ngkDb7Wb/TkPjfgRD+mabNardn
+         4zIDKggqgD6pHt0NYfGYy3DRRdqCOuj9rVer4NXLA3oFHxyYg8Puar9TFKpsKACl99xo
+         nBq3u066IFCsESvGTG7/7DG/sNKNqVzn+pCrEkzCdFgRKMRXamKjZ2wo7YmzPiDBHR/V
+         HrRH6IAnRhcF2011oN7TdB3TAdfGFGInjmCIqYj3MWi1i/9mNd7hkz8JJE+vbRBSGEtP
+         Z5gw==
+X-Forwarded-Encrypted: i=1; AJvYcCWH1f3KfuLhD9Q+weJoJJNJ8Sg+Iuodekrx/OI/6ey7kh5Lg5jynMS6xxXA/184Rws7etsNbuaxFzjZMqMUl4SsiFL9MpVB4MCUtHJQ
+X-Gm-Message-State: AOJu0Ywm83eKYcSUL0Q5reRanhwuiF6rpO810sqxc651Sr/N9IYv0nHs
+	/b4CbHIPnoVByqKkJPAl0GgUGwxjx24LwBrmig29lyANBRz2344MfN+2wdE6w30=
+X-Google-Smtp-Source: AGHT+IHcxNy4vvenn7jpiCsub8VWCATTgFQTQRQ7tQQa38oCzlQJbrAUv/99P7AbqgB/f4Iku057YA==
+X-Received: by 2002:a6b:fe05:0:b0:7f3:ccee:7436 with SMTP id ca18e2360f4ac-7f66dee0b66mr12164939f.2.1720048260238;
+        Wed, 03 Jul 2024 16:11:00 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4beeea701e4sm142588173.2.2024.07.03.16.10.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jul 2024 16:10:59 -0700 (PDT)
+Message-ID: <6b2bca6d-61e8-40f6-b3b1-3a81dfb2b397@linuxfoundation.org>
+Date: Wed, 3 Jul 2024 17:10:59 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240628173209.wzpc6pwnw4p6u57h@desk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] selftests/watchdog: limit ping loop and allow
+ configuring the number of pings
+To: Laura Nao <laura.nao@collabora.com>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, shuah@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <818d06c2-c5d6-4559-a8c9-9bf9e21c30f6@linuxfoundation.org>
+ <20240703144855.89747-1-laura.nao@collabora.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240703144855.89747-1-laura.nao@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 28, 2024 at 10:32:09AM -0700, Pawan Gupta wrote:
-> On Fri, Jun 28, 2024 at 10:03:05AM +0200, Borislav Petkov wrote:
-> > On Thu, Jun 27, 2024 at 01:44:06PM -0700, Pawan Gupta wrote:
-> > > The hw_cpu_type is populated in the below debugfs file:
-> > > 
-> > >   # cat /sys/kernel/debug/x86/topo/cpus/#
-> > 
-> > What "below debugfs file"? A '#'?
+On 7/3/24 08:48, Laura Nao wrote:
+> On 6/27/24 20:48, Shuah Khan wrote:
+>> On 5/6/24 05:13, Laura Nao wrote:
+>>> In order to run the watchdog selftest with the kselftest runner, the
+>>> loop responsible for pinging the watchdog should be finite. This
+>>> change limits the loop to 5 iterations by default and introduces a new
+>>> '-c' option to adjust the number of pings as needed.
+>>
+>> This patch makes the test run finite in all cases changing the bevavior
+>> to run it forever?
 > 
-> That is the number of the CPU. If it is causing confusion, I can will
-> change it to N, or say # means the number of the CPU.
-
-Or drop that sentence completely.
-
-For some reason lately it seems to me folks feel the need to explain what the
-patch does. Even if that is visible from the diff.
-
-> I thought about that, but the other fields are also printed without a
-> preceding "0x":
+> Correct.
 > 
->           seq_printf(m, "initial_apicid:      %x\n", c->topo.initial_apicid);
->           seq_printf(m, "apicid:              %x\n", c->topo.apicid);
-> 	  ...
+>>>
+>>> Signed-off-by: Laura Nao <laura.nao@collabora.com>
+>>> ---
+>>>    tools/testing/selftests/watchdog/watchdog-test.c | 16 ++++++++++++++--
+>>>    1 file changed, 14 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/watchdog/watchdog-test.c
+>>> b/tools/testing/selftests/watchdog/watchdog-test.c
+>>> index bc71cbca0dde..786cc5a26206 100644
+>>> --- a/tools/testing/selftests/watchdog/watchdog-test.c
+>>> +++ b/tools/testing/selftests/watchdog/watchdog-test.c
+>>> @@ -24,16 +24,18 @@
+>>>    #include <linux/watchdog.h>
+>>>    #define DEFAULT_PING_RATE    1
+>>> +#define DEFAULT_PING_COUNT    5
+>>>    int fd;
+>>>    const char v = 'V';
+>>> -static const char sopts[] = "bdehp:st:Tn:NLf:i";
+>>> +static const char sopts[] = "bdehp:c:st:Tn:NLf:i";
+>>>    static const struct option lopts[] = {
+>>>        {"bootstatus",          no_argument, NULL, 'b'},
+>>>        {"disable",             no_argument, NULL, 'd'},
+>>>        {"enable",              no_argument, NULL, 'e'},
+>>>        {"help",                no_argument, NULL, 'h'},
+>>>        {"pingrate",      required_argument, NULL, 'p'},
+>>> +    {"pingcount",     required_argument, NULL, 'c'},
+>>>        {"status",              no_argument, NULL, 's'},
+>>>        {"timeout",       required_argument, NULL, 't'},
+>>>        {"gettimeout",          no_argument, NULL, 'T'},
+>>> @@ -90,6 +92,8 @@ static void usage(char *progname)
+>>>        printf(" -h, --help\t\tPrint the help message\n");
+>>>        printf(" -p, --pingrate=P\tSet ping rate to P seconds (default
+>>> %d)\n",
+>>>               DEFAULT_PING_RATE);
+>>> +    printf(" -c, --pingcount=C\tSet number of pings to C (default
+>>> %d)\n",
+>>> +           DEFAULT_PING_COUNT);
+>>>        printf(" -t, --timeout=T\tSet timeout to T seconds\n");
+>>>        printf(" -T, --gettimeout\tGet the timeout\n");
+>>>        printf(" -n, --pretimeout=T\tSet the pretimeout to T seconds\n");
+>>> @@ -172,6 +176,7 @@ int main(int argc, char *argv[])
+>>>    {
+>>>        int flags;
+>>>        unsigned int ping_rate = DEFAULT_PING_RATE;
+>>> +    unsigned int ping_count = DEFAULT_PING_COUNT;
+>>>        int ret;
+>>>        int c;
+>>>        int oneshot = 0;
+>>> @@ -248,6 +253,12 @@ int main(int argc, char *argv[])
+>>>                    ping_rate = DEFAULT_PING_RATE;
+>>>                printf("Watchdog ping rate set to %u seconds.\n",
+>>> ping_rate);
+>>>                break;
+>>> +        case 'c':
+>>> +            ping_count = strtoul(optarg, NULL, 0);
+>>> +            if (!ping_count)
+>>> +                ping_count = DEFAULT_PING_COUNT;
+>>> +            printf("Number of pings set to %u.\n", ping_count);
+>>> +            break;
+>>>            case 's':
+>>>                flags = 0;
+>>>                oneshot = 1;
+>>> @@ -336,9 +347,10 @@ int main(int argc, char *argv[])
+>>>        signal(SIGINT, term);
+>>> -    while (1) {
+>>> +    while (ping_count > 0) {
+>>>            keep_alive();
+>>>            sleep(ping_rate);
+>>> +        ping_count--;
+>>
+>> So this test no longer runs forever?
+>>
 > 
-> I will change those too, probably in a separate patch.
-
-Yes please.
-
-> > > +static void topo_set_hw_cpu_type(struct cpuinfo_x86 *c)
-> > > +{
-> > > +	c->topo.hw_cpu_type = X86_HW_CPU_TYPE_UNKNOWN;
-> > > +
-> > > +	if (c->x86_vendor == X86_VENDOR_INTEL && c->cpuid_level >= 0x1a)
-> > > +		c->topo.hw_cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
-> > > +}
-> > 
-> > Why isn't this happening in cpu/intel.c? And then you don't need yet
-> > another silly function.
+> That's correct, with this patch applied the test no longer runs forever.
+> I understand you prefer the current behavior - how about keeping the
+> keep_alive() loop infinite by default and only making it finite when the
+> -c argument is passed? Would that be reasonable?
 > 
-> I was preferring to keep the topology related code in one place. Would it
-> make sense to keep it in Intel specific leg in parse_topology() as below:
 
-I guess.
+Yes. I am open to taking the patch if the default behavior doesn't change.
 
-Although looking around this code, I wonder why is this hw_cpu_type part of
-the topology and not part of cpuinfo_x86 directly?
+thanks,
+-- Shuah
 
-struct cpuinfo_topology has all the IDs but the type? Feels out of place
-there.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
