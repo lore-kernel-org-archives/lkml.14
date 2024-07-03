@@ -1,125 +1,320 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE99016EC0C;
-	Wed,  3 Jul 2024 11:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFC2137910;
+	Wed,  3 Jul 2024 11:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720007752; cv=none; b=ky+EM5FRDSGux/iPFHam3nhNQg0V2xFe9rmE8Rn9QWuWMCT3g8HS8lVBpm1Zd/UelIR0M5yH51b3CBNf7B/x2J2zLMt4g8q/X70ZXm9kD9iu8t4l1J6sslHnKei/l85vV/hSRlSvlciv8nXzeqmBVTvcumUrygVWpilgFnM7QRo=
+	t=1720007786; cv=none; b=F86ZfjOTMYxpi03xI/I9aEHDAzythHgz1alUI6qJK60HrlultUB/5l88/huxAAa5xaF8jweG6MFHQuTOLFp83oJU5pRh5z877KsLQwrys31FQB6/6bOsoEguBJvlNa17OEYS6JJyxlpqeAzTSIPuWN6/3hG5tLE+hrh/s4+sy4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720007752; c=relaxed/simple;
-	bh=0oJeoGG81bzehMG51mi88GXA8pDGoGhbepv1IZLVz7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=E802mGdzKgNEyXcy3/G+fu6ev05kO1kKbgPMDFM8h2Yt6MhogAgv4MGOKlHsvPUMJGvDgAyMS2WnoOkh+zUMJSqyrHowrGtNw9xy16VQ9q800wULWw3Iip/4oxnXi85Z9aVnyEWAaX4MSPef+TioZ3pFkSMvWL2drJSOJZStHuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AK1xEVv+; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720007786; c=relaxed/simple;
+	bh=F0WVTVTfWLcxzvi2Uj1O1lUjL6ujJxPJi8QDJYpvoIY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fVDqbPeZVi+ZWXP1+bEf/rFDV0g9pnpqEpvRhOJ99UH8eFmvF5vOlx5/vbyw273mzuzGvFUgAyYjxC2ATwogADKoxlCfJx3lIQuMoo0ehOic9IIXOiowSHtcY7EH5vUgp9BNU8K5/hCnuoNNAWkGqGDA3z2oRU5Q12vDdLqHAx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=pTQzAAcD; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Kr3j+wlE; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AK1xEVv+"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-58b0beaf703so2977371a12.2;
-        Wed, 03 Jul 2024 04:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720007749; x=1720612549; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MTSQnqgsaxj4ShNaVAyout8ROilJlVNHANanPFm1Bp8=;
-        b=AK1xEVv+J8q6sJVSSp1xomuU6rNLWe9gaVCbvrmret/HSYxor7M3pvppC7X8Od71eK
-         tJBPJlK8iNiXeG5KGkdRfCKBN/Yp4aC9+f6Lxb7h85CBMQ0WuNf/dZAGt7ST0AlQlqtC
-         MGJ4K/GFgCvX46lJNX2KNG201IUg3Yus0ekcd1em2q8nb0/hC4K/lXe7Y1gh2v13dOZM
-         0+aErfGL+TKs4j9BS40Obs/ufQU/n3o7IElv31SQ3N5r1Kf+o+UVD8EATY1oKL1jGh2t
-         XAGfpfsJQeqpDTDMU7HPPvSv7StcvxcY4UACou9mRcs2J5W9U8nz4aR67upOYX3AlaOj
-         uJqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720007749; x=1720612549;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MTSQnqgsaxj4ShNaVAyout8ROilJlVNHANanPFm1Bp8=;
-        b=SjkcBXd2d8kgxI9RW4plzqTfV7e+bqAlejTr2tIrDs3RIm4jRVpw1O0rYqtVzdDppZ
-         MfpHiOgZuxOt4pm5AcfumYTvfDf2l04tI2GZGQAxk9aYgRmns5I3GHEUwL4LqfGK6fjT
-         s0SbdVoZfs80Vui1irw91Z6YBCgXHj5Q1SmlbjVOkhzOsPxsHWO1hKhKF0qko6LZTzWD
-         Ls5kNzVOB1dvyVb9U9FgHw/Q0fAMecVrfzd1qhQUB5BoRz9FIbCsYX+7m3+N2RA2ZCUP
-         Rw0X53YIh6KjujtdRNdsvBCr0n1SPb/hC8q/Mqkz8w3HlUBcxfqmqAhSa5fGzE7YPM6C
-         L0pw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3+DPkrCW8FvItqgLtAzo/5/s2xqelaulmDgB2rGqZ0SMTFirrSCYgYkOH+yqt/WC2iGbw2IFPOcsRacKPBIXTo2rYrkHHGdUcSl2ISFNz7tvrTMB2NxXZpmzmBVBRwBf9ucbsd2clOAU=
-X-Gm-Message-State: AOJu0Yyy2ts3YmnidQXr2zF43838M5eIf2fXobVaW8wMMe+nWElN7DJq
-	E0rD8c6QHl639S5PBOMwZnuRiD0M4XQ9HVf8db8rD6VjWx+RTWwO
-X-Google-Smtp-Source: AGHT+IHaPlJYig52nHAvcAkSxel6Q87BW6mueSa8QLn+Gow9q8XpeYxS+0PKkttq3s7IBzQ/asjqpw==
-X-Received: by 2002:a17:906:6c9:b0:a74:5b82:7f28 with SMTP id a640c23a62f3a-a75144301efmr720652566b.23.1720007748897;
-        Wed, 03 Jul 2024 04:55:48 -0700 (PDT)
-Received: from [192.168.42.235] ([163.114.131.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf1ba77sm500748966b.33.2024.07.03.04.55.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 04:55:48 -0700 (PDT)
-Message-ID: <fbd3bebc-db09-4224-bdf9-b44304bf55b8@gmail.com>
-Date: Wed, 3 Jul 2024 12:55:57 +0100
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="pTQzAAcD";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Kr3j+wlE"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CF0AD21BBA;
+	Wed,  3 Jul 2024 11:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1720007783; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=XzAsO4d1d00dRfQB1nR62M6eaIXlE3bQZcqYbGriBsU=;
+	b=pTQzAAcDqJmole7r5v4jQwXVeryo/tA+4yahr8+LZeJKq92VIczvqcR4lYyept6nG6F0lI
+	Yw1uVagsZEAwIs5o81m7zCPE3xXMvNIwNPMoHzV53/vGS9pwD1l5UUspEGdWHoNfH/yFjE
+	djQY6ETiNJmhdqrLUniSW6PwTDCrmkk=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=Kr3j+wlE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1720007782; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=XzAsO4d1d00dRfQB1nR62M6eaIXlE3bQZcqYbGriBsU=;
+	b=Kr3j+wlE/+h4wDKMXy1ATwP3RAF2pXLjM6KGxWF76GHX2hAEZL6sRt3OX1hXS56Sjpcu29
+	dCg7CL686RjZX9Ru6p9TCp5oaBz+YLuuNGCfv5WRCyOVGa4SyAfJI7ne6SrSyK2S5xdqkL
+	8nHe7UhQdvW9Ii/buZXo1O5djP8Mge8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6DB5013974;
+	Wed,  3 Jul 2024 11:56:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id F36yGGY8hWYhDwAAD6G6ig
+	(envelope-from <jgross@suse.com>); Wed, 03 Jul 2024 11:56:22 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	xen-devel@lists.xenproject.org
+Subject: [PATCH] xen: make multicall debug boot time selectable
+Date: Wed,  3 Jul 2024 13:56:20 +0200
+Message-Id: <20240703115620.25772-1-jgross@suse.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] sbitmap: fix io hung due to race on
- sbitmap_word::cleared
-To: Yang Yang <yang.yang@vivo.com>, Ming Lei <ming.lei@redhat.com>,
- Jens Axboe <axboe@kernel.dk>, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-References: <20240703022807.642115-1-yang.yang@vivo.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20240703022807.642115-1-yang.yang@vivo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,suse.com:dkim];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: CF0AD21BBA
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Spam-Level: 
 
-On 7/3/24 03:28, Yang Yang wrote:
-> Configuration for sbq:
->    depth=64, wake_batch=6, shift=6, map_nr=1
-> 
-> 1. There are 64 requests in progress:
->    map->word = 0xFFFFFFFFFFFFFFFF
-> 2. After all the 64 requests complete, and no more requests come:
->    map->word = 0xFFFFFFFFFFFFFFFF, map->cleared = 0xFFFFFFFFFFFFFFFF
-> 3. Now two tasks try to allocate requests:
->    T1:                                       T2:
->    __blk_mq_get_tag                          .
->    __sbitmap_queue_get                       .
->    sbitmap_get                               .
->    sbitmap_find_bit                          .
->    sbitmap_find_bit_in_word                  .
->    __sbitmap_get_word  -> nr=-1              __blk_mq_get_tag
->    sbitmap_deferred_clear                    __sbitmap_queue_get
->    /* map->cleared=0xFFFFFFFFFFFFFFFF */     sbitmap_find_bit
->      if (!READ_ONCE(map->cleared))           sbitmap_find_bit_in_word
->        return false;                         __sbitmap_get_word -> nr=-1
->      mask = xchg(&map->cleared, 0)           sbitmap_deferred_clear
->      atomic_long_andnot()                    /* map->cleared=0 */
->                                                if (!(map->cleared))
->                                                  return false;
->                                       /*
->                                        * map->cleared is cleared by T1
->                                        * T2 fail to acquire the tag
->                                        */
-> 
-> 4. T2 is the sole tag waiter. When T1 puts the tag, T2 cannot be woken
-> up due to the wake_batch being set at 6. If no more requests come, T1
-> will wait here indefinitely.
-> 
-> This patch achieves two purposes:
-> 1. Check on ->cleared and update on both ->cleared and ->word need to
-> be done atomically, and using spinlock could be the simplest solution.
-> So revert commit 661d4f55a794 ("sbitmap: remove swap_lock"), which
-> may cause potential race.
-> 
-> 2. Add extra check in sbitmap_deferred_clear(), to identify whether
-> ->word has free bits.
-> 
-> Fixes: 661d4f55a794 ("sbitmap: remove swap_lock")
+Today Xen multicall debugging needs to be enabled via modifying a
+define in a source file for getting debug data of multicall errors
+encountered by users.
 
-Is it blamed right? Considering that the revert alone doesn't fix
-the problem, it sounds like the 2nd step might need to be ported
-to kernels even without the blamed commit.
+Switch multicall debugging to depend on a boot parameter "xen_mc_debug"
+instead, enabling affected users to boot with the new parameter set in
+order to get better diagnostics.
 
+Add printing all arguments of a single call for better diagnostics.
+
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+ .../admin-guide/kernel-parameters.txt         |   6 +
+ arch/x86/xen/multicalls.c                     | 120 ++++++++++++++----
+ 2 files changed, 99 insertions(+), 27 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 27ec49af1bf2..b33d048e01d8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -7427,6 +7427,12 @@
+ 			Crash from Xen panic notifier, without executing late
+ 			panic() code such as dumping handler.
+ 
++	xen_mc_debug	[X86,XEN,EARLY]
++			Enable multicall debugging when running as a Xen PV guest.
++			Enabling this feature will reduce performance a little
++			bit, so it should only be enabled for obtaining extended
++			debug data in case of multicall errors.
++
+ 	xen_msr_safe=	[X86,XEN,EARLY]
+ 			Format: <bool>
+ 			Select whether to always use non-faulting (safe) MSR
+diff --git a/arch/x86/xen/multicalls.c b/arch/x86/xen/multicalls.c
+index 07054572297f..abea216f07f4 100644
+--- a/arch/x86/xen/multicalls.c
++++ b/arch/x86/xen/multicalls.c
+@@ -23,6 +23,8 @@
+ #include <linux/percpu.h>
+ #include <linux/hardirq.h>
+ #include <linux/debugfs.h>
++#include <linux/jump_label.h>
++#include <linux/printk.h>
+ 
+ #include <asm/xen/hypercall.h>
+ 
+@@ -31,18 +33,12 @@
+ 
+ #define MC_BATCH	32
+ 
+-#define MC_DEBUG	0
+-
+ #define MC_ARGS		(MC_BATCH * 16)
+ 
+ 
+ struct mc_buffer {
+ 	unsigned mcidx, argidx, cbidx;
+ 	struct multicall_entry entries[MC_BATCH];
+-#if MC_DEBUG
+-	struct multicall_entry debug[MC_BATCH];
+-	void *caller[MC_BATCH];
+-#endif
+ 	unsigned char args[MC_ARGS];
+ 	struct callback {
+ 		void (*fn)(void *);
+@@ -50,13 +46,84 @@ struct mc_buffer {
+ 	} callbacks[MC_BATCH];
+ };
+ 
++struct mc_debug_data {
++	struct multicall_entry debug[MC_BATCH];
++	void *caller[MC_BATCH];
++	size_t argsz[MC_BATCH];
++};
++
+ static DEFINE_PER_CPU(struct mc_buffer, mc_buffer);
++static struct mc_debug_data __percpu *mc_debug_data;
++static struct mc_debug_data mc_debug_data_early __initdata;
+ DEFINE_PER_CPU(unsigned long, xen_mc_irq_flags);
+ 
++static struct static_key mc_debug __ro_after_init;
++static bool mc_debug_enabled __initdata;
++
++static int __init xen_parse_mc_debug(char *arg)
++{
++	mc_debug_enabled = true;
++	static_key_slow_inc(&mc_debug);
++
++	return 0;
++}
++early_param("xen_mc_debug", xen_parse_mc_debug);
++
++static int __init mc_debug_enable(void)
++{
++	struct mc_debug_data __percpu *mcdb;
++	unsigned long flags;
++
++	if (!mc_debug_enabled)
++		return 0;
++
++	mcdb = alloc_percpu(struct mc_debug_data);
++	if (!mcdb) {
++		pr_err("xen_mc_debug inactive\n");
++		static_key_slow_dec(&mc_debug);
++		return -ENOMEM;
++	}
++
++	/* Be careful when switching to percpu debug data. */
++	local_irq_save(flags);
++	xen_mc_flush();
++	mc_debug_data = mcdb;
++	local_irq_restore(flags);
++
++	pr_info("xen_mc_debug active\n");
++
++	return 0;
++}
++early_initcall(mc_debug_enable);
++
++static void print_debug_data(struct mc_buffer *b, struct mc_debug_data *mcdb,
++			     int idx)
++{
++	unsigned int arg;
++
++	pr_err("  call %2d: op=%lu result=%ld caller=%pS", idx + 1,
++	       mcdb->debug[idx].op, b->entries[idx].result, mcdb->caller[idx]);
++	if (mcdb->argsz[idx]) {
++		pr_cont(" args=");
++		for (arg = 0; arg < mcdb->argsz[idx] / 8; arg++)
++			pr_cont("%lx ", mcdb->debug[idx].args[arg]);
++	}
++	pr_cont("\n");
++}
++
++static struct mc_debug_data * __ref get_mc_debug_ptr(void)
++{
++	if (likely(mc_debug_data))
++		return this_cpu_ptr(mc_debug_data);
++
++	return &mc_debug_data_early;
++}
++
+ void xen_mc_flush(void)
+ {
+ 	struct mc_buffer *b = this_cpu_ptr(&mc_buffer);
+ 	struct multicall_entry *mc;
++	struct mc_debug_data *mcdb = NULL;
+ 	int ret = 0;
+ 	unsigned long flags;
+ 	int i;
+@@ -69,10 +136,11 @@ void xen_mc_flush(void)
+ 
+ 	trace_xen_mc_flush(b->mcidx, b->argidx, b->cbidx);
+ 
+-#if MC_DEBUG
+-	memcpy(b->debug, b->entries,
+-	       b->mcidx * sizeof(struct multicall_entry));
+-#endif
++	if (static_key_false(&mc_debug)) {
++		mcdb = get_mc_debug_ptr();
++		memcpy(mcdb->debug, b->entries,
++		       b->mcidx * sizeof(struct multicall_entry));
++	}
+ 
+ 	switch (b->mcidx) {
+ 	case 0:
+@@ -104,20 +172,15 @@ void xen_mc_flush(void)
+ 		       ret, b->mcidx, smp_processor_id());
+ 		for (i = 0; i < b->mcidx; i++) {
+ 			if (b->entries[i].result < 0) {
+-#if MC_DEBUG
+-				pr_err("  call %2d: op=%lu arg=[%lx] result=%ld\t%pS\n",
+-				       i + 1,
+-				       b->debug[i].op,
+-				       b->debug[i].args[0],
+-				       b->entries[i].result,
+-				       b->caller[i]);
+-#else
+-				pr_err("  call %2d: op=%lu arg=[%lx] result=%ld\n",
+-				       i + 1,
+-				       b->entries[i].op,
+-				       b->entries[i].args[0],
+-				       b->entries[i].result);
+-#endif
++				if (static_key_false(&mc_debug)) {
++					print_debug_data(b, mcdb, i);
++				} else {
++					pr_err("  call %2d: op=%lu arg=[%lx] result=%ld\n",
++					       i + 1,
++					       b->entries[i].op,
++					       b->entries[i].args[0],
++					       b->entries[i].result);
++				}
+ 			}
+ 		}
+ 	}
+@@ -155,9 +218,12 @@ struct multicall_space __xen_mc_entry(size_t args)
+ 	}
+ 
+ 	ret.mc = &b->entries[b->mcidx];
+-#if MC_DEBUG
+-	b->caller[b->mcidx] = __builtin_return_address(0);
+-#endif
++	if (static_key_false(&mc_debug)) {
++		struct mc_debug_data *mcdb = get_mc_debug_ptr();
++
++		mcdb->caller[b->mcidx] = __builtin_return_address(0);
++		mcdb->argsz[b->mcidx] = args;
++	}
+ 	b->mcidx++;
+ 	ret.args = &b->args[argidx];
+ 	b->argidx = argidx + args;
 -- 
-Pavel Begunkov
+2.35.3
+
