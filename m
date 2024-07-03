@@ -1,106 +1,136 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA6417C9E8
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 14:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA0D17DA2E;
+	Wed,  3 Jul 2024 14:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720015903; cv=none; b=VGAurtVxrSbBFH4eK24lgP4wVdCq3MTdgc3iXpbPxeCHIev12GqQpMrvQGuJMvwrr2f8CvLmyWq2cTpvorDk+UaHnLDJ6VGSsEPyeBz4XII1oSQKMbJ+TS1KbwkDO5RTjysszfX3WV2uCMz+D7jzTPX9ssnDGNX2+6K5knzZkCo=
+	t=1720016007; cv=none; b=KmEuXAA+hn2qsWDcoQqXL/1gFfWAI3E3qmvirAiGAs5N91wANxEodR8QNc4SHovzcHOgiKzm6SKC+GcTyeUiqm2XcLmtd5SEslJiy1Y30S6emaTYu1d8kQ1AIIPGarWyWLSY0h+yPflAnbS8PIgsWQfcF3vOrtOabU5w1Ggmc/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720015903; c=relaxed/simple;
-	bh=m8hCT7EOm/KzocY2lDql9ksozHqcMD8DmIHpk2qdW1A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gMSqHquqjzbSjaHI9AdfmaOehLSg6r31vAXKht2ABRm0JW8hkRoU/tMrF2j8Prk/GlJbL8l3wczMMDiNUrhXzSFj4zyYXjE188a25Dn+Rc71oMBzLgw/Z+8mWfoVmFhBv4c5PZ8CHmDem3MoVuilQusnb2kGp7+G3JXMmMK3GpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iT29VdPR; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720016007; c=relaxed/simple;
+	bh=U6DEP19ygCkPXuQKLLxorLJXfz+rnBG5Pwv8YMdO/Bw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KT3XYjJcEwu2gwCJNewsixCxaW1CrOKy/628S5vEHbupXoYJSJKrHGoDu4leJ3ds24FTGXAsE2G4VTdgMmljjszNHVzeBODPTnD1L6Aofb+ZL6p0lscCKlVOtVJoqe5S22Q+P/i6auu9B4z4XzyaVQ0+weDJkBvUXyaWYZEyzzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VwLRCtq5; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iT29VdPR"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a72510ebc3fso814459666b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 07:11:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720015900; x=1720620700; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o+jfOfJ3/jY+788L7avbBrQiHekIeiMO253ikR1T3ag=;
-        b=iT29VdPRPYv8KheP5rSzCVZHVONpUGc+X9RiiEhSfMLOtcPXAPg1XYpWG48xGWqu7c
-         YuuHN8S6B6xxj0KC/tUURw/S8Cyj8Ru8qjHi8FZl7iSTkW0HH5UCe98zxDiGAX5hvlUs
-         OaaFgl89qsbKdBHo7YEyqiJ9Upvu8fE/cbO2u0F3ATsFo66Y0Q9WjLwT9NNk3WVzXkLO
-         bEKjEYL0dYxZyRXHgOg91dzupr0RLq+KzLQ115Ri8HLpYBjbACUL4ItPkI+LsKdMBH0p
-         3E3jgzfGpQrgypgu99AG+9km3n8n+zPU5PxrSCVlwaxnk7Z2sSj8sN1pGWi25nDhnpuD
-         6COA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720015900; x=1720620700;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o+jfOfJ3/jY+788L7avbBrQiHekIeiMO253ikR1T3ag=;
-        b=LrhqmnpoW3kaBX2+U0KOVu7PZMcIcDKMPu9prD1q8AVdmNDDWBu5G2x6fXqmgFU9MQ
-         O2BmmvFcxbI+5mRaftvW6Ui5InboLSTrNGmSvtK378kfY66tVeiupGZ/La890uiODMeB
-         EmJqIwqKXOaZ3yF4KeBlRe6+Q5vEBFmGuCB2CKyro9J4+C2OnEXuZVSHRBZUjvVnkj6e
-         5ITuTwQCVFUPx0aM2HLkGpOiqoLQQtvySCEIawrV74rYLHKX62/+w3/QxlSo4h46hxz+
-         gAvJIEN9XkmgNIgwON56HPibjHuWWpJygRt9YKMUf2HJpoemM7R4o/puwNb+ExJoWTBQ
-         BkEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWdh3PhTlnms2hx51lRxZIOVloYbirSc0mbQHZlH30lPxgxtu/WOxymoZYEhU68yHt3qpVQUjY451lOjDM2KEIJoSHDOKcMGchxY4wf
-X-Gm-Message-State: AOJu0Yyiexxa3OrjzWDoZ3rtKh3F4PRIkoSi+yqR6Cuqsqxop76FttNw
-	mGxMxALwxM4h/0lZvJUY909+xT101ebN93sEstW927nZJestOaw90ihln7lRAHxLPjP6sue/cag
-	hNpmreaPSSkLsMqldVmWfQtiltso=
-X-Google-Smtp-Source: AGHT+IE3jD545xz4CdEoFN2qZKeLPkj9TIBo3lb9j/pQ0Q6mPtJJR+TY7Q/5JydaEL8odgHFIZ7STtFK6v5V18RVLNg=
-X-Received: by 2002:a17:906:594:b0:a72:40b4:c845 with SMTP id
- a640c23a62f3a-a75144badc1mr687998366b.51.1720015899409; Wed, 03 Jul 2024
- 07:11:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VwLRCtq5"
+Received: from relay1-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::221])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id E2503C6D04;
+	Wed,  3 Jul 2024 13:46:13 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3BFDC240002;
+	Wed,  3 Jul 2024 13:46:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720014371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=SAmBKY6TaaS5jkk7Ij5yPeOvb0Ktt8dFf3y/RyTt1Mk=;
+	b=VwLRCtq57OxU0fIL81TJ2PS+HkQ3vz3Pu7v0mgKdcxXoI+DE6kjBn47ygcKfAwVFZ4xuI3
+	nNC5KFsuvTGXWqSlj6AEvADdDRprmppH6Wp+bd1V8AV/hLdcJyHT41pJMt0ykaAdyDD+vT
+	8n7Wk7a77SKzhMxRjebnhDFGfB26V9fKSdeEsw2ovgOXizY6RFv2xvZpRv4fxxKdKnD8cG
+	RQjTQY1GEdNd6DN9wIMLybhhFfv06OsTF5YvFDmb8B+bA8RGuw8GHjR8fmB2FrpEg3xdym
+	R2mIQ728UiuCltmAdEGnXs/GEiXKZrW0drmDnrFWzkm6F109ASXNfgGjoJxFNw==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: [PATCH v2 0/4] Add Mobileye EyeQ clock support
+Date: Wed, 03 Jul 2024 15:46:04 +0200
+Message-Id: <20240703-mbly-clk-v2-0-fe8c6199a579@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGudoHGuTP-nv=zwXdQs38OEqb=BD=i-vA-9xjZ0UOyvWuXP_w@mail.gmail.com>
- <CAHk-=wgVzKtRnvDXAzueJTbgfo1o12Lw6DH97PzRe1cGA_b1oA@mail.gmail.com>
- <CAGudoHH_z1a6MX8Z8Cqbz-jDTUoAjoxdV9KrQ6yvUkNszXO5aw@mail.gmail.com>
- <CAGudoHHg-T+ZOTm0fSpW0Hztfxn=fpfnksz5Q3=3YeCeEPo7LQ@mail.gmail.com>
- <CAHk-=wiBGSLNW6GGbnec-dCbn0kWvD+OXAa5VNXPBKLXYy5KOQ@mail.gmail.com>
- <3g3arsrwnyvv562v2rsfv2ms4ht4mk45vwdkvssxkrjhfjtpdz@umyx5tl2du7o>
- <CAHk-=wg6e8QMaBOyFaGon7pik_C1COrkmEz37mtUqpBoq=R44w@mail.gmail.com>
- <6knlkefvujkry65gx6636u6e7rivqrn5kqjovs4ctjg7xtzrmo@2zd4wjx6zcym>
- <CAHk-=whagTfq=EgwpuywUUu0ti7PPQuE_ftVjZOVrjnLwtS0Ng@mail.gmail.com>
- <du5vnvwygzbtal6qogmxckawwwxgbppuq5qi5aeqcs5unrlpz3@3k5degdvflzq> <20240703-haftstrafe-anbringen-88ed445e77a4@brauner>
-In-Reply-To: <20240703-haftstrafe-anbringen-88ed445e77a4@brauner>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Wed, 3 Jul 2024 16:11:25 +0200
-Message-ID: <CAGudoHHkxyCkLZ4xwQ9ho5uy0TQ4K1ENJMmSYDZkaZw6YF4VEA@mail.gmail.com>
-Subject: Re: [linux-next:master] [lockref] d042dae6ad: unixbench.throughput
- -33.7% regression
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	Linux Memory Management List <linux-mm@kvack.org>, linux-kernel@vger.kernel.org, ying.huang@intel.com, 
-	feng.tang@intel.com, fengwei.yin@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIABxWhWYC/23MQQ7CIBCF4as0s3YMIKHqynuYLgod7URaDDTEp
+ uHuYtcu/5eXb4NEkSnBtdkgUubEYa6hDg24sZ+fhDzUBiWUFkadcbJ+RedfqJ0h61ppTrqFen9
+ HevBnp+5d7ZHTEuK6y1n+1j9IliiQBitJXajXTt5sCIvn+ejCBF0p5Qt39+ZvogAAAA==
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.15-dev-13183
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Wed, Jul 3, 2024 at 4:09=E2=80=AFPM Christian Brauner <brauner@kernel.or=
-g> wrote:
->
-> > As a side note this is where I should also note the *current* LSM hooks
-> > are racy as is.  Suppose you can stat a particular file now, but a chow=
-n
-> > to 1234 means you can't. Then your stat call can race against chown +
-> > other ops. You can end up in a state where LSMs gave a green light and
-> > only then the state changed to one you are not allowed to look at. This
->
-> Fwiw, we've discussed this before. And my opinion is that we should
-> absolute not care about this. I have no interest in complicating path
-> lookup or any codepath to make these hooks less racy. This raciness they
-> have to deal with. This is not a comment on your patch but just that the
-> raciness of security hooks is not a problem we should care to solve
-> imho. If we go down that road we'll all slowly go insane trying to give
-> state change guarantees to layers that hook into the VFS in really odd
-> locations.
+This is a new iteration on the Mobileye system-controller series. It
+used to be sent as a single series [0], but has been split in the
+previous revision (see [1], [2], [3], [4]) to faciliate merging.
 
-Well I noted I have no interest in working on it anyway, so... I think
-we are good here on this front :)
+This series adds a platform driver dealing with read-only PLLs derived
+from the main crystal, and some divider clocks based on those PLLs. It
+also acts at the one instantiating reset and pinctrl auxiliary devices.
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+One special feature is that some clocks are required before platform
+bus infrastructure is available; we therefore register some clocks at
+the of_clk_init() stage.
+
+We support EyeQ5, EyeQ6L and EyeQ6H SoCs. The last one is special in
+that there are seven instances of this system-controller. All of those
+handle clocks.
+
+Related series are targeted at reset [5], pinctrl [6] and MIPS [4]. The
+first two are receiving a second version. The last one has no change
+and stays at its V1.
+
+Have a nice day,
+Théo
+
+[0]: https://lore.kernel.org/lkml/20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com/
+
+[1]: https://lore.kernel.org/lkml/20240628-mbly-clk-v1-0-edb1e29ea4c1@bootlin.com/
+[2]: https://lore.kernel.org/lkml/20240628-mbly-reset-v1-0-2a8294fd4392@bootlin.com/
+[3]: https://lore.kernel.org/lkml/20240628-mbly-pinctrl-v1-0-c878192d6b0a@bootlin.com/
+[4]: https://lore.kernel.org/lkml/20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com/
+
+[5]: https://lore.kernel.org/lkml/20240703-mbly-reset-v2-0-3fe853d78139@bootlin.com/
+[6]: https://lore.kernel.org/lkml/20240703-mbly-pinctrl-v2-0-eab5f69f1b01@bootlin.com/
+
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+Changes in v2:
+- bindings: take Acked-by: Krzysztof Kozlowski.
+- driver: eqc_auxdev_create(): cast the `void __iomem *base` variable to
+  (void __force *) before putting it in platform_data, to avoid sparse
+  warning.
+- Link to v1: see [1]
+
+Changes since OLB v3 [0]:
+ - MAINTAINERS: Move changes into a separate commit to avoid merge
+   conflicts. This commit is in the MIPS series [3].
+ - dt-bindings: split include/dt-bindings/ changes into its own commit.
+   It is part of this clk series.
+ - dt-bindings: Take Reviewed-by: Rob Herring. The include/dt-bindings/
+   new commit has NOT inherited from it, just to make sure.
+
+---
+Théo Lebrun (4):
+      Revert "dt-bindings: clock: mobileye,eyeq5-clk: add bindings"
+      dt-bindings: clock: add Mobileye EyeQ6L/EyeQ6H clock indexes
+      clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS flag
+      clk: eyeq: add driver
+
+ .../bindings/clock/mobileye,eyeq5-clk.yaml         |  51 --
+ drivers/clk/Kconfig                                |  12 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-divider.c                          |  12 +-
+ drivers/clk/clk-eyeq.c                             | 789 +++++++++++++++++++++
+ include/dt-bindings/clock/mobileye,eyeq5-clk.h     |  21 +
+ include/linux/clk-provider.h                       |  11 +-
+ 7 files changed, 839 insertions(+), 58 deletions(-)
+---
+base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
+change-id: 20240628-mbly-clk-4c6ebc716347
+
+Best regards,
+-- 
+Théo Lebrun <theo.lebrun@bootlin.com>
+
