@@ -1,61 +1,40 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mail115-79.sinamail.sina.com.cn (mail115-79.sinamail.sina.com.cn [218.30.115.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED411143744;
-	Wed,  3 Jul 2024 10:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D23156F28
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720002406; cv=none; b=Tolw7GdsZhA5doVyPVenI7g0vVU34X+Kk8z0xdbuYfKY+XC1qn0UI3Qh+ZDcejooK4QA4CJ/zkbtSSHNLJj2Pz9ghWG8j/Alc7u8z16xsGXq71MA5zBsAZsX1qZ5AtEG+Y8y5ModjVrfIPhNzYnAZ5kX/VTubZunMiOlqb21Huk=
+	t=1720002419; cv=none; b=kH7z02UJDcQl+C4Dhkmr7QRrt22NR0y6DxKaCJ0JX0slLpCgsgUJ8V7GVsaPxUwQiE9dape5mF4hGa+ONNqZAV6QEDAW3CZkfdriILWAt78+DiIsrj20pi8cEWcplOAWtOo1itlrZ46FDnmJg1NJq9oN+YQmVNrs6RKtoew41v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720002406; c=relaxed/simple;
-	bh=OZONZC0L9/k87HW5rUnW1mTWkoq/e2Ggm9W9MinqYHw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K6J1iMFgvtucXFebDbZzDxfsE3bv44QavH5iEVAwAosbFLC770fKXtH6fl6TLFzocpa3uuxR/eCdmNI3RTXLbxtUNwABNVCKt7BfOcnJr8641ZQZZn93+f5wf2eA66LKkh3b75DOArHnnGFUFUkQbiniOFV0QlpIhGhnQD/F7IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=z7WlH21t; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="z7WlH21t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720002404; x=1751538404;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OZONZC0L9/k87HW5rUnW1mTWkoq/e2Ggm9W9MinqYHw=;
-  b=z7WlH21tUt2SfUpQcvO7Q7/l3PoLJuno4QXrn2MGP/lA3yRIvZPGs0yQ
-   UcZpoDwM8bkYhW2K8K+eQfXWbVFbbh5ZwrarXCVuPwL7fOYqOu/o5O79B
-   THcrhX8Q+MD6tKNHPTxtlxUxmE12Wahs3Ocd9nBoJOoMJFeN/mocXxFsC
-   2+iZytJj7fMu0oEFtoE+YYGOksUJkIZ2ZMMauGWH1ZGtzoN+NNzFRkgQj
-   B8DJuEbN7K7IZK+tMF2muicXwmGKA4+Os4CIPaqytd1rE+TFkuKG7o58p
-   uwIFZS2IaUIbpWR+dx154aEplCBYUfmfrot51c3owdCylS58fvdfN0tgl
-   Q==;
-X-CSE-ConnectionGUID: Pkzf6S+tQ2Ka0F87qiXpUQ==
-X-CSE-MsgGUID: tETn17lJQ2yW9FQYd1PnBQ==
-X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="scan'208";a="31414851"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jul 2024 03:26:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jul 2024 03:26:30 -0700
-Received: from che-lt-i67070.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Jul 2024 03:26:26 -0700
-From: Varshini Rajendran <varshini.rajendran@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <varshini.rajendran@microchip.com>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v5 01/27] dt-bindings: atmel-sysreg: add sam9x7
-Date: Wed, 3 Jul 2024 15:56:21 +0530
-Message-ID: <20240703102621.195333-1-varshini.rajendran@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240703102011.193343-1-varshini.rajendran@microchip.com>
-References: <20240703102011.193343-1-varshini.rajendran@microchip.com>
+	s=arc-20240116; t=1720002419; c=relaxed/simple;
+	bh=Lyl7brd58UZD41Tu4tAVEWaLVNMkmy7WTmd0GqIb8j0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SkGyiJaKLB2ar2K0A5w64D26bZlSngbTtptu1NdwU6Ws1RSQLZi/8/5G6lq8HZ7E8SlnTP/7AtYtDPOqYRqQ9hkywyWxV/pNZLWLat3nUUjzY5sZeRg8rAj0TcbZ2GHoeQXvBsiwQEMfMCPbRnEgUwS0rauBX8U7LfvRlRcN3ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.64.67])
+	by sina.com (10.185.250.22) with ESMTP
+	id 6685276200007C60; Wed, 3 Jul 2024 18:26:45 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 962727602745
+X-SMAIL-UIID: 305151AD62A1492E90EF020340F63037-20240703-182645-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+91dbdfecdd3287734d8e@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] possible deadlock in touch_wq_lockdep_map
+Date: Wed,  3 Jul 2024 18:26:33 +0800
+Message-Id: <20240703102633.2821-1-hdanton@sina.com>
+In-Reply-To: <000000000000fb901b061c4e0282@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,48 +42,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-Add RAM controller & SFR DT bindings.
+On Tue, 02 Jul 2024 18:47:23 -0700
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    734610514cb0 Merge tag 'erofs-for-6.10-rc7-fixes' of git:/..
+> git tree:       upstream
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1424d281980000
 
-Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  734610514cb0
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-index 67a66bf74895..1339298203c6 100644
---- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-@@ -11,7 +11,8 @@ PIT Timer required properties:
-   shared across all System Controller members.
+--- x/net/bluetooth/hci_core.c
++++ y/net/bluetooth/hci_core.c
+@@ -1075,6 +1075,7 @@ static void hci_power_off(struct work_st
+ static void hci_error_reset(struct work_struct *work)
+ {
+ 	struct hci_dev *hdev = container_of(work, struct hci_dev, error_reset);
++	bool put;
  
- PIT64B Timer required properties:
--- compatible: Should be "microchip,sam9x60-pit64b"
-+- compatible: Should be "microchip,sam9x60-pit64b" or
-+			"microchip,sam9x7-pit64b", "microchip,sam9x60-pit64b"
- - reg: Should contain registers location and length
- - interrupts: Should contain interrupt for PIT64B timer
- - clocks: Should contain the available clock sources for PIT64B timer.
-@@ -31,7 +32,8 @@ RAMC SDRAM/DDR Controller required properties:
- 			"atmel,at91sam9g45-ddramc",
- 			"atmel,sama5d3-ddramc",
- 			"microchip,sam9x60-ddramc",
--			"microchip,sama7g5-uddrc"
-+			"microchip,sama7g5-uddrc",
-+			"microchip,sam9x7-ddramc", "atmel,sama5d3-ddramc".
- - reg: Should contain registers location and length
+ 	hci_dev_hold(hdev);
+ 	BT_DBG("%s", hdev->name);
+@@ -1084,10 +1085,13 @@ static void hci_error_reset(struct work_
+ 	else
+ 		bt_dev_err(hdev, "hardware error 0x%2.2x", hdev->hw_error_code);
  
- Examples:
-@@ -63,6 +65,7 @@ required properties:
- 	"atmel,<chip>-sfrbu", "syscon"
-   <chip> can be "sama5d3", "sama5d4" or "sama5d2".
-   It also can be "microchip,sam9x60-sfr", "syscon".
-+  It also can be "microchip,sam9x7-sfr", "microchip,sam9x60-sfr", "syscon".
- - reg: Should contain registers location and length
++	put = !test_bit(HCI_UP, &hdev->flags);
++
+ 	if (!hci_dev_do_close(hdev))
+ 		hci_dev_do_open(hdev);
  
- 	sfr@f0038000 {
--- 
-2.25.1
-
+-	hci_dev_put(hdev);
++	if (put)
++		hci_dev_put(hdev);
+ }
+ 
+ void hci_uuids_clear(struct hci_dev *hdev)
+--
