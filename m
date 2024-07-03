@@ -1,182 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606BD1741D8;
-	Wed,  3 Jul 2024 11:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04E31822C1
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720006165; cv=none; b=ue2IVlA3I6aZ6sqMYcL/sSMflRG1uzNF8OwbWjkfCeFZ8WlcTZZjciN3mCKBrQ7jX9+ziSklaKiP0r2h9nlWrWKW9TfJALQVzDWkBTkRvX910YxJTZa+h/IFdqzStal1Y5gOAwxnv1omIQmI7P+XQt3NGVnt9A1qn2cYYEybFg0=
+	t=1720006205; cv=none; b=eoL9KNU5yCjhvHvq+gOBGrnDbja1TkqfVxSJRi9qjztech5E3d5G0+NDs0WnjdzggCvSqzAN34RNVaA4kx31fCZVAjzyh3Kqyvc6t+RnThZPi6velHdrGR/Ms2FoK1ZJWjuvWY/48PGrlRqx/mYHkioG5X0tqqaRSqH5aXNwbas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720006165; c=relaxed/simple;
-	bh=J1TqBfgMvz3MisIs2hh8O8mTQPg8xA/goCyFhkuKx7c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e3gERoxK3IUZOKY4/kx9zIXGvAfOkI5ZwJNChbxvVL4ybHHrD7b2vYThi2Z9FieK12j/z1cya+vJNdCv0xcd29UilV0Q1xDVP4ncuWJcKEUak65RH2T2PlOMn/CNb1IiVopwVscL0ThPg1ojtGSsFOR+7yzS2kM3l98VbmLGmAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZOlQ9Pc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZOlQ9Pc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51EA3C4AF0E;
-	Wed,  3 Jul 2024 11:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720006164;
-	bh=J1TqBfgMvz3MisIs2hh8O8mTQPg8xA/goCyFhkuKx7c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IZOlQ9PcKnngdX1qW1D2uVGf7FRuZz7tgzdlqicMpZeSv5TfyZAoiIbmKfQMqjFCI
-	 Fq8LQj6ZCdnd9yTuJsMF4CgqocLuo4RPLD6UOE5MMrJKcYd5zbb8VxReOGZFATJSXk
-	 3LiJXOUfgHd0Ulku5jyIKpPQ9OQAY99Kkqyu1sRxT7cT4YYr2nhmW5HbQ9NIA94hl/
-	 oQmnV3PEvv5zW3O7FDMDtIhSo0tOBOOgGd8rg+gVKgl0PdCv1jy6h401arUbwN+Y9H
-	 T1IOkOlMRQJb/9ClGOa7hWRvoI+UgjeJfxcGRvrg3ELamblrKky6blMlRscDnUZsuD
-	 t30TpIewTfehA==
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-25cb5ee9d2dso808069fac.1;
-        Wed, 03 Jul 2024 04:29:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUS4ClJ/0gJ67YnjiHQO1dL/SwKUAOdOpfmnNSgxgC/qPZURmV19OYIFONJ3IrwYjOotS+Ay6gl0Gc0jeV2r+V9AuxIAECst1CiDLjoVqWJP7XcTzUHdsHLX6xz/HWoTZPpcEJPI+FhF/ThGu/jQh9XHxRu17fUhdykP7p8bXsv9XY2jv/T
-X-Gm-Message-State: AOJu0YxLqgslFj/+Gpq/Gcl6kk6sHSugq+0xEfJ+TRE6pnBGPvxxKjEd
-	oQVlNu/2I1hE+TexK9ivvFj7eWvQG00K6KtUX0Rrcl5p6z9+mQwRGjsThnRDdgxZFu3Yr7Gbenc
-	DEI5Dh1MCO0xEpaUA7eSXbzw8Yn0=
-X-Google-Smtp-Source: AGHT+IEfBcCjatNC6wC5BGGI315cgOmTa423h04GO+a7g0cgFZZJ/cgCoSiY1QtLJ4b3xk8CiR2OfueDiVajgIduryo=
-X-Received: by 2002:a05:6871:24d2:b0:25e:180:9183 with SMTP id
- 586e51a60fabf-25e0180af8amr3552026fac.4.1720006163639; Wed, 03 Jul 2024
- 04:29:23 -0700 (PDT)
+	s=arc-20240116; t=1720006205; c=relaxed/simple;
+	bh=BfBH17VJtXddypEgWxOTCDyxog3F+1OJeoRSo4XyS88=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=XRmlA8hOsbhmi0oH6nDLBMxNoI2mpkPCWuQ2leF+33mAQx9SMF2N62iKTTUQlA6gmJhp0A3QdO7CHDFXWsMnn1FWiUYJxeUqlF1YyAfGjwALwtkwCFTZHbOLcpiP8PE2iH9oHD8RIZBOTbx4FWSxgusHfhYH4CLjLqpuWAeL/Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f3d2fd6ad6so597339539f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 04:30:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720006203; x=1720611003;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GtDOwAyHfaH7yyD0GH2aSXDr9A+JGdnxgQykaBHcXN0=;
+        b=HP8nLT/8HOoQMWm2O+P4JZBirejGVCCfl2VHIGIVmvVPri9lI0od1MuFbEPJFLDVHA
+         I0w/1idhKeuN6c2cGLRqatvJSdFry/FzWjXtdlwaqhqWR1Fjz4zNol+EvbX9cltog2Gn
+         hUVmskrRPxGtL8J7f2NrA6HC+T02cEpgIu46ebpbZkxmjd92oBBJtG2iUED4m/eO4rnJ
+         mrK0pISTTkW4MLO6s5ESyOzT0eLV/npq1/hmpU3gEx4V0zhasnskOthN9LL9obxlSbdZ
+         w5UMqP4jxFbOCaSUBI1UOTY/leUTJkXxFRjnKHjtqM91OBrMpUXBZ5U+VOtNQFbLffEp
+         UGYg==
+X-Gm-Message-State: AOJu0YxEGxoux2KNh+qM2rbY2wh4WR2/YI9QZPWv59m/w9nrhX8Ox+85
+	TefglU1n9nQtJlDzHI6KSYOF+7fL9iViGCusMD5qXNKPGd5rBXu2vaVNfxVVWBqhx/9EZnuxfg6
+	DUisXXz2NOZaM8XGYsa4qyPmvtjbCQ8ERJFWzBo5R4r+4+OCK0eoKaN0=
+X-Google-Smtp-Source: AGHT+IEIax5/D/dGA9BMfrVKPEvu7Yt1XPECp25e7JFAWps+K01mgYPk8aNZatnMgXBVhW/z5tyDzrI3AxSBWUzCt8yxku8lQpR7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2764814.mvXUDI8C0e@rjwysocki.net> <2ed4c630-204a-4f80-a37f-f2ca838eb455@linaro.org>
-In-Reply-To: <2ed4c630-204a-4f80-a37f-f2ca838eb455@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 3 Jul 2024 13:29:12 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ghYd28H5eX8b68PSABMm8vTbeSpMxUsQ5mpVOXRPZ3RA@mail.gmail.com>
-Message-ID: <CAJZ5v0ghYd28H5eX8b68PSABMm8vTbeSpMxUsQ5mpVOXRPZ3RA@mail.gmail.com>
-Subject: Re: [PATCH v2] thermal: core: Call monitor_thermal_zone() if zone
- temperature is invalid
-To: neil.armstrong@linaro.org
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Lukasz Luba <lukasz.luba@arm.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>, 
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>
+X-Received: by 2002:a05:6638:12c4:b0:488:9082:8dd0 with SMTP id
+ 8926c6da1cb9f-4bbb6892d94mr1132629173.0.1720006202854; Wed, 03 Jul 2024
+ 04:30:02 -0700 (PDT)
+Date: Wed, 03 Jul 2024 04:30:02 -0700
+In-Reply-To: <ZoU1Aa/JJ+60FZla@katalix.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bba661061c5626c5@google.com>
+Subject: Re: [syzbot] [net?] KASAN: slab-use-after-free Write in l2tp_session_delete
+From: syzbot <syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tparkin@katalix.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-On Wed, Jul 3, 2024 at 1:04=E2=80=AFPM Neil Armstrong <neil.armstrong@linar=
-o.org> wrote:
->
-> Hi,
->
-> On 28/06/2024 14:10, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Commit 202aa0d4bb53 ("thermal: core: Do not call handle_thermal_trip()
-> > if zone temperature is invalid") caused __thermal_zone_device_update()
-> > to return early if the current thermal zone temperature was invalid.
-> >
-> > This was done to avoid running handle_thermal_trip() and governor
-> > callbacks in that case which led to confusion.  However, it went too
-> > far because monitor_thermal_zone() still needs to be called even when
-> > the zone temperature is invalid to ensure that it will be updated
-> > eventually in case thermal polling is enabled and the driver has no
-> > other means to notify the core of zone temperature changes (for example=
-,
-> > it does not register an interrupt handler or ACPI notifier).
-> >
-> > Also if the .set_trips() zone callback is expected to set up monitoring
-> > interrupts for a thermal zone, it has to be provided with valid
-> > boundaries and that can only happen if the zone temperature is known.
-> >
-> > Accordingly, to ensure that __thermal_zone_device_update() will
-> > run again after a failing zone temperature check, make it call
-> > monitor_thermal_zone() regardless of whether or not the zone
-> > temperature is valid and make the latter schedule a thermal zone
-> > temperature update if the zone temperature is invalid even if
-> > polling is not enabled for the thermal zone.
-> >
-> > Fixes: 202aa0d4bb53 ("thermal: core: Do not call handle_thermal_trip() =
-if zone temperature is invalid")
-> > Reported-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >   drivers/thermal/thermal_core.c |    5 ++++-
-> >   drivers/thermal/thermal_core.h |    6 ++++++
-> >   2 files changed, 10 insertions(+), 1 deletion(-)
-> >
-> > Index: linux-pm/drivers/thermal/thermal_core.c
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/drivers/thermal/thermal_core.c
-> > +++ linux-pm/drivers/thermal/thermal_core.c
-> > @@ -300,6 +300,8 @@ static void monitor_thermal_zone(struct
-> >               thermal_zone_device_set_polling(tz, tz->passive_delay_jif=
-fies);
-> >       else if (tz->polling_delay_jiffies)
-> >               thermal_zone_device_set_polling(tz, tz->polling_delay_jif=
-fies);
-> > +     else if (tz->temperature =3D=3D THERMAL_TEMP_INVALID)
-> > +             thermal_zone_device_set_polling(tz, msecs_to_jiffies(THER=
-MAL_RECHECK_DELAY_MS));
-> >   }
-> >
-> >   static struct thermal_governor *thermal_get_tz_governor(struct therma=
-l_zone_device *tz)
-> > @@ -514,7 +516,7 @@ void __thermal_zone_device_update(struct
-> >       update_temperature(tz);
-> >
-> >       if (tz->temperature =3D=3D THERMAL_TEMP_INVALID)
-> > -             return;
-> > +             goto monitor;
-> >
-> >       tz->notify_event =3D event;
-> >
-> > @@ -536,6 +538,7 @@ void __thermal_zone_device_update(struct
-> >
-> >       thermal_debug_update_trip_stats(tz);
-> >
-> > +monitor:
-> >       monitor_thermal_zone(tz);
-> >   }
-> >
-> > Index: linux-pm/drivers/thermal/thermal_core.h
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/drivers/thermal/thermal_core.h
-> > +++ linux-pm/drivers/thermal/thermal_core.h
-> > @@ -133,6 +133,12 @@ struct thermal_zone_device {
-> >       struct thermal_trip_desc trips[] __counted_by(num_trips);
-> >   };
-> >
-> > +/*
-> > + * Default delay after a failing thermal zone temperature check before
-> > + * attempting to check it again.
-> > + */
-> > +#define THERMAL_RECHECK_DELAY_MS     100
-> > +
-> >   /* Default Thermal Governor */
-> >   #if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
-> >   #define DEFAULT_THERMAL_GOVERNOR       "step_wise"
-> >
-> >
-> >
-> >
->
-> This patch on next-20240702 makes Qualcomm HDK8350, HDK8450, QRD8550, HDK=
-8560, QRD8650 & HDK8650 output in loop:
->
-> thermal thermal_zoneXX: failed to read out thermal zone (-19)
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Is the loop endless?  If not, how many times does the message get printed?
+failed to apply patch:
+checking file net/l2tp/l2tp_core.c
+Hunk #1 FAILED at 1290.
+1 out of 1 hunk FAILED
 
-If I'm not mistaken, it would be printed at least once without the
-commit in question.  Can you please check that?
 
-Also, can you check the previous version of the patch in question:
 
-https://lore.kernel.org/linux-pm/2745114.mvXUDI8C0e@rjwysocki.net/
+Tested on:
 
-and see if it has the same problem (just apply it instead of the $subject o=
-ne).
+commit:         185d7211 net: xilinx: axienet: Enable multicast by def..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e78fc116033e0ab7
+dashboard link: https://syzkaller.appspot.com/bug?extid=c041b4ce3a6dfd1e63e2
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=177064e1980000
 
-Thanks!
