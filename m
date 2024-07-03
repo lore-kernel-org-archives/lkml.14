@@ -1,128 +1,161 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F83213B5B2
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E7D172798;
+	Wed,  3 Jul 2024 11:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720007189; cv=none; b=bDxPsGVcZ4KJTZjaTVQ4hH7fMItFE8JXSapexYry6jJla5XtjopLTnLiKDi+6Mv4Ot/Oz7+IewE7kR0T63U5UcoxuMjRSsEdkm2oJunjigD/IGyR8wy6Rd8SOHDcAFiS5KD7ewNqii2HjXkpt0e1cnaNplttE5bFi2HdRXfwfiI=
+	t=1720007193; cv=none; b=EU6QqED3E/vIDtsKqS9E4MAHEIudcC4OyW43UqbGfI1WUTKsiS/hZu/o/E6SQk0grNSgR8EV2AIyrdYrTZM7Vn/9H/thgJprxhz+/79bevO7IQzxE+ZeiRq1YR2pQG0KdKzrB6AognkNG+2HzJtSHR7h5lLR6URivrXnLrbl8Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720007189; c=relaxed/simple;
-	bh=NVka7LdFhNak7mWiqRSHdImmzu3VSO08Qioh0A1K68M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dqh8cs24pwd9x9NY4J4oTpq/4zcW1lxxULKszjSWn0uRX7bNZUAIS+fWZnibmeDS5cBpabpjtlPciDbdI+ZzvgLUVT/UiXlF8NLsjCI7l2+q6jlNwobpooGbb1Rxiug83oIA5SmiyT/Ki4dXEsTA0dMXxKrWLpco2BZjcw1s6vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=HX+U0qEG; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1720007193; c=relaxed/simple;
+	bh=ccSSB5ntIgvLAQBJKwo1I+LWZkPdt11bRXA2in5N+ak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BQwPpo1zeMrzaEiiFzW3T19Cmoe/gUR4jo79NafI3YOuS8KYBsxRcJLhUu4uYV0yOLogYUqjc7K6b2RK34NidtdOexmtpBrGTmvOhpj74L5NdOBj3JSPT/uX2cVjYzP2ZVcZIA8zuSkpUaGKnnPpU84JVmUHaYxPE5dBr9vZitI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m+DFD4NI; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="HX+U0qEG"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52e9944764fso509167e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 04:46:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1720007185; x=1720611985; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RD61GeZNS1NUH4+36WhC2nBOz/+c8ob3A4yfUrlEwiA=;
-        b=HX+U0qEG48JoIFXazX9CrAPHb8b2CfUinMR6kIZlwTAw+VreX4tkJDACIRu+6mkb2/
-         vT+R3fjz0Z5RoMA2Ein3o8IRrYpIpTi9bUtLpjFDyCWLUVd/WwOgH/LEcXEgODxOnBvl
-         /iRdlRYJqSsa+V0EjRbsflugf6qNwbZYXKZtHRtqMouVP56ohMVWzdj1C6RAqTgX5k2C
-         Unhbz2bcmn+4h/CgxE84ikLW4eJd9PT+ZkVjN2Vs0P3qJt1QAnVppRSKWyfGQXlxVZL9
-         1h8W9AlkZnAn8GyNygjyBwny6e7alC8SGP81lTiBnQKUt0CSXei7ox38S6GiRiTHqNZO
-         IHbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720007185; x=1720611985;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RD61GeZNS1NUH4+36WhC2nBOz/+c8ob3A4yfUrlEwiA=;
-        b=oM4o2ICJ1kNMIjgw6KFZ5buyIzO6iJL8eVNcm8LmK+OGVgy5niZKOl9/srq/gnbFvm
-         q9G5iiFKTiqAIYZl59eldnjCDTMhLYiPOhvtenMnMnXe/foOuAkGE72JhZDg8OpAbuJO
-         jZ8qk4OiGoLjet/twlzpkNT/1f+/EwHLj0Kl2c8G7q2hSxNgraU1RToiM70TL72SdAKa
-         E//5JSh2h0vq68cm8aDS4WFHQlkqRmkw6tVV0iW+TPmqmuw05yAE7n91qh6bnUNvjjaP
-         fJ69P1OxLrd5MQDu0li1UL4txBlCM/L7kY1KMfhey5r26qan53qrEMNBztV47Sbvh1QV
-         Hh/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXeUiZQJ6aO8uDiP31eOhsIgGI+vuqBZ/xIeihDwZrqmqVMNpzYUY4c1GGcikXdvlk0nGo9Kraj8hI4RT4+nAPuWRORB5JgNws8gHQ3
-X-Gm-Message-State: AOJu0YyMmWEq6kMVEAaw2QpLUs+YR83lLL2t9Hc6UXgJhVl5KX0GLuND
-	AmEZJzDH8OKSCzgUdzeH06X9ITD1Rlg57UXsIZ3bN65+98eQTrJzZytKBUTzq3U=
-X-Google-Smtp-Source: AGHT+IEgElY0USQhWi09GiNFlgNu9bIuDIBzJHExs+cE+oIBcdpUxWBHzzbv9tDKsriVdm3zAvQwag==
-X-Received: by 2002:a05:6512:10d4:b0:52c:890e:e8e7 with SMTP id 2adb3069b0e04-52e8270e724mr7211144e87.50.1720007184879;
-        Wed, 03 Jul 2024 04:46:24 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36790a40391sm2100391f8f.54.2024.07.03.04.46.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 04:46:24 -0700 (PDT)
-Date: Wed, 3 Jul 2024 12:46:23 +0100
-From: Qais Yousef <qyousef@layalina.io>
-To: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	christian.loehle@arm.com, vincent.donnefort@arm.com,
-	ke.wang@unisoc.com, di.shen@unisoc.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 2/2] sched/fair: Use actual_cpu_capacity everywhere in
- util_fits_cpu()
-Message-ID: <20240703114623.g7damgahld47kiah@airbuntu>
-References: <20240624082011.4990-1-xuewen.yan@unisoc.com>
- <20240624082011.4990-3-xuewen.yan@unisoc.com>
- <20240628012832.37swdtxr4ds2kkp7@airbuntu>
- <CAB8ipk-p_vT3mq4+BD0AxzgsLiRxpAnHJ1QaTWr1t619JeaL+w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m+DFD4NI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720007191; x=1751543191;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ccSSB5ntIgvLAQBJKwo1I+LWZkPdt11bRXA2in5N+ak=;
+  b=m+DFD4NIfTIgHK4nnF6s9z2b2GVPz+6mKi1CNMQMgaD6Z4D6hAaKTl60
+   24IqFDpLSVQioAdFg2wTtvNajS8g8f2MrftAr4yy9LGDyzuU3AjuCLWz8
+   /ahsb8g1Tnddng5tioSQshI9xqUIhXzh2xNs9qxaVyHw4PF+gJN3g5d7k
+   H7kFJwTNV8ASSdglrWonxOygvzPl+rrv/lYftXVBspY4XPyjRirwtltUy
+   gwEwtZbR00XBwmMxTI0Lb0yJaNbOPt5QGKpqCNXv8ZH3KDE+Jx3sv9ThW
+   ZnpVOI4m3NsW57+o+OW7j0yxO4Vy2v+NJAoY7IptC3aUAh+pLbDi1CS91
+   g==;
+X-CSE-ConnectionGUID: bSIGfMeZSpaj80t7/M1w7A==
+X-CSE-MsgGUID: UVtjcWXWRu2aqiR+P8l5/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="34679636"
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="34679636"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 04:46:31 -0700
+X-CSE-ConnectionGUID: 1DbAtIMHT7i9igPX/tAdng==
+X-CSE-MsgGUID: EIT9haWkTTKqfKMieYH4tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="76963793"
+Received: from irvmail002.ir.intel.com ([10.43.11.120])
+  by orviesa002.jf.intel.com with ESMTP; 03 Jul 2024 04:46:28 -0700
+Received: from [10.246.34.68] (mwajdecz-MOBL.ger.corp.intel.com [10.246.34.68])
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id F409A284FE;
+	Wed,  3 Jul 2024 12:46:24 +0100 (IST)
+Message-ID: <10c3d9b8-bf5b-42c1-9c87-36828f5c995c@intel.com>
+Date: Wed, 3 Jul 2024 13:46:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAB8ipk-p_vT3mq4+BD0AxzgsLiRxpAnHJ1QaTWr1t619JeaL+w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build failure after merge of the drm
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Dave Airlie
+ <airlied@redhat.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Mark Brown <broonie@kernel.org>, DRI <dri-devel@lists.freedesktop.org>,
+ =?UTF-8?Q?Piotr_Pi=C3=B3rkowski?= <piotr.piorkowski@intel.com>,
+ buildfailureaftermergeofthedrmtree@sirena.org.uk,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <Zn7s611xnutUFxR0@sirena.org.uk>
+ <20240703123643.5b4dc83f@canb.auug.org.au>
+Content-Language: en-US
+From: Michal Wajdeczko <michal.wajdeczko@intel.com>
+In-Reply-To: <20240703123643.5b4dc83f@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 07/01/24 20:13, Xuewen Yan wrote:
++ Rodrigo for help
 
-> > >        *
-> > >        * Only exception is for HW or cpufreq pressure since it has a direct impact
-> > >        * on available OPP of the system.
-> > > @@ -5011,7 +5011,7 @@ static inline int util_fits_cpu(unsigned long util,
-> > >        * For uclamp_max, we can tolerate a drop in performance level as the
-> > >        * goal is to cap the task. So it's okay if it's getting less.
-> > >        */
-> > > -     capacity_orig = arch_scale_cpu_capacity(cpu);
-> > > +     capacity_actual = get_actual_cpu_capacity(cpu);
-> > >
-> > >       /*
-> > >        * We want to force a task to fit a cpu as implied by uclamp_max.
-> > > @@ -5039,7 +5039,7 @@ static inline int util_fits_cpu(unsigned long util,
-> > >        *     uclamp_max request.
-> > >        *
-> > >        *   which is what we're enforcing here. A task always fits if
-> > > -      *   uclamp_max <= capacity_orig. But when uclamp_max > capacity_orig,
-> > > +      *   uclamp_max <= capacity_actual. But when uclamp_max > capacity_actual,
-> > >        *   the normal upmigration rules should withhold still.
-> > >        *
-> > >        *   Only exception is when we are on max capacity, then we need to be
-> > > @@ -5050,8 +5050,8 @@ static inline int util_fits_cpu(unsigned long util,
-> > >        *     2. The system is being saturated when we're operating near
-> > >        *        max capacity, it doesn't make sense to block overutilized.
-> > >        */
-> > > -     uclamp_max_fits = (capacity_orig == SCHED_CAPACITY_SCALE) && (uclamp_max == SCHED_CAPACITY_SCALE);
-> > > -     uclamp_max_fits = !uclamp_max_fits && (uclamp_max <= capacity_orig);
-> > > +     uclamp_max_fits = (capacity_actual == SCHED_CAPACITY_SCALE) && (uclamp_max == SCHED_CAPACITY_SCALE);
-> >
-> > We should use capacity_orig here. We are checking if the CPU is the max
-> > capacity CPU.
+On 03.07.2024 04:36, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Maybe we could remove the uclamp_max_fits = (capacity_orig ==
-> SCHED_CAPACITY_SCALE) && (uclamp_max == SCHED_CAPACITY_SCALE);
-> and just judge the uclamp_max <= capacity_actual?
+> On Fri, 28 Jun 2024 18:03:39 +0100 Mark Brown <broonie@kernel.org> wrote:
+>>
+>> After merging the drm tree, today's linux-next build (x86_64
+>> allmodconfig) failed like this:
+>>
+>> /tmp/next/build/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c: In function 'pf_get_threshold':
+>> /tmp/next/build/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c:1788:27: error: unused variable 'xe' [-Werror=unused-variable]
+>>  1788 |         struct xe_device *xe = gt_to_xe(gt);
+>>       |                           ^~
+>> cc1: all warnings being treated as errors
+>>
+>> Caused by commit
+>>
+>>   629df234bfe73d ("drm/xe/pf: Introduce functions to configure VF thresholds")
+>>
+>> I have used the tree from 20240627 instead.
 > 
-> -     uclamp_max_fits = (capacity_orig == SCHED_CAPACITY_SCALE) &&
-> (uclamp_max == SCHED_CAPACITY_SCALE);
-> -     uclamp_max_fits = !uclamp_max_fits && (uclamp_max <= capacity_orig);
-> +     uclamp_max_fits =  (uclamp_max <= capacity_actual);
+> I am still seeing that build failure.
+> 
 
-If capacity_orig = 1024, capacity_actual = 1024, uclamp_max = 1024 (which is
-the common case), then overutilized will never trigger for big CPU, no?
+as explained before, this additional var is not present in
+drm-xe/drm-xe-next
 
-We can't 'force' fit a task on the biggest core, and fits_capacity() should be
-our sole judge here if we fit or not.
+AFAICS this additional var comes from the drm/drm-next and is applied to
+drm-tip as something like:
+
+
+commit fa60cd98341b3a176de428a182e13ebd7a5ea4b7 (from
+fb625bf6187d97c3cd28d680b14bf80f84207e5a)
+Merge: f733fce76fff fb625bf6187d
+Author: Thomas Zimmermann <tzimmermann@suse.de>
+Date:   Wed Jul 3 10:12:05 2024 +0200
+
+    Merge remote-tracking branch 'drm/drm-next' into drm-tip
+
+    # Conflicts:
+    #       drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.c
+    #       drivers/gpu/drm/amd/display/dc/hwss/dcn35/dcn35_init.c
+    #       drivers/gpu/drm/amd/pm/swsmu/inc/smu_types.h
+    #       drivers/gpu/drm/xe/xe_gt_idle.c
+    #       drivers/gpu/drm/xe/xe_guc_pc.c
+
+diff --git a/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
+b/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
+index 694671497f6e..a5c9dfa1077c 100644
+--- a/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
++++ b/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
+@@ -1785,6 +1785,7 @@ static int pf_get_threshold(struct xe_gt *gt,
+unsigned int vfid,
+                            enum xe_guc_klv_threshold_index index)
+ {
+        struct xe_gt_sriov_config *config = pf_pick_vf_config(gt, vfid);
++       struct xe_device *xe = gt_to_xe(gt);
+
+        return config->thresholds[index];
+ }
+
+
+and later drm-tip removes that by merging fixup from the topic branch:
+
+commit 1179bb6a96b57c1584497920768ac9c40c7874e4 (from
+29a62552d265091cd444bf819f4e4fd3fa7f471c)
+Merge: 29a62552d265 428c3ef38ef5
+Author: Thomas Zimmermann <tzimmermann@suse.de>
+Date:   Wed Jul 3 10:12:10 2024 +0200
+
+    Merge remote-tracking branch 'drm-xe/topic/xe-for-CI' into drm-tip
+
+diff --git a/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
+b/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
+index c8936aae7f43..db6c213da847 100644
+--- a/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
++++ b/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
+@@ -1785,7 +1785,6 @@ static int pf_get_threshold(struct xe_gt *gt,
+unsigned int vfid,
+                            enum xe_guc_klv_threshold_index index)
+ {
+        struct xe_gt_sriov_config *config = pf_pick_vf_config(gt, vfid);
+-       struct xe_device *xe = gt_to_xe(gt);
+
+        return config->thresholds[index];
+ }
+
