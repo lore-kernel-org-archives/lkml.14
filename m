@@ -1,166 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466D517625D
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 15:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDA11DFEA;
+	Wed,  3 Jul 2024 15:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019262; cv=none; b=K8wwM5gzrwOwiC26r7qZ0Fe5WiOGrcsPyWjYTfSMDzfZ1XBJUREmdweyWfM5Q3AhznUROKmt6r8NnAi3i150crPz2nWXELwtBmwsrRquNRgMdh5PZe+dBDLv5cR8bPaUPlOamkec8wL/rI4+AdgtQUzszwfyOmJpatqWm1ERq0k=
+	t=1720019315; cv=none; b=r3QeDwlescoM0KmoZPoimYIqddm3x2x+JI5XzoqEHW1BrwddeRs++yxUutsRINnssJXPEjbN4EO8kKpP55gKtasitRmkwWvaoQNPn/pML5DFXqtuPFq0y5fzbVPqBYsYbepgARk8C5lGqOHtC8QesRUQN+HQm/VeaPs5aOGIPd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019262; c=relaxed/simple;
-	bh=htiNVKCUYbXGPavreykediMApatRGcFz26KpoJTonIc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vd+fhK/0mwJr77S4FHp1QJvso52HauSgJi8e/kghlibJRm/NxthwLK2wXwjJUCCSJny/X+HQ7rLLhi//mJXORYpF80zi6K5yULBWuA/DFIornAuTejPqtFyBEJFh6sT8uQakhDN0bAx8xktvdghAy1HTFKijtVzvUTVlCklwxrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KTyrea0s; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720019315; c=relaxed/simple;
+	bh=lAX7AD5BLSxqIQUwHe6xLlpQ2JbfV2Twnsd17wFHnnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KIKj7sIpWVyW4ptOVRgducB+A9zBAFArfEybu1qDoPgT/SgLAOriOtTSmUoSEAoT0ZQ8tfvZO9f+aDvyljHXiB9+d/kJG5SrEjRfKOAOyHUwUVtcel9YqcbHCw46mlHJo2xrxRBpnq00FF3Y3Yj2N2tn00IBdATu2/dgKb5mM9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDEq7msq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KTyrea0s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720019260;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NBe9D4bWmY0rHimyhkz7e567bCh9VnKwjShWa1gkoYc=;
-	b=KTyrea0s8ynQ+n78DO3/DhzzD8AIx3+js6xEavqt4aJ2BeoMMf/9bYkzGbkWIyJ5j/gX8V
-	uQOqYMQ6rk5eVe2w7J4UwUDXZaEQZG9TjWH3b+6JNbJc0HWYgNvlqmBMY79ai1NlgS65P9
-	4WomFIvi7M2baApBIfvvzk5ShWyolNA=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622--_QP4CLtM_KREQH8CiP2Bg-1; Wed, 03 Jul 2024 11:07:39 -0400
-X-MC-Unique: -_QP4CLtM_KREQH8CiP2Bg-1
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-651e54bb41bso7192027b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 08:07:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720019257; x=1720624057;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NBe9D4bWmY0rHimyhkz7e567bCh9VnKwjShWa1gkoYc=;
-        b=ES2Alv2MRME2yof+zLLkslcVTOrnq17nKCoUC5LdSsPwS99AkQ48C7vCQktIysAXXw
-         fC/5rD9ZH8uCbmN8rc2zcXZT/lpt75xFgWeuLXtSi3wXAj750IwkSqtVAVOhr6pfTEHc
-         Ab9RBEC8zCVqH9JwXa3WkfAbXN9chviXnUplXxjndxgk3TKk/rhHMeemziUhera1fwRL
-         kDMstI7e7UVqTR+Ag9wNfaITC0D+XITua1u8AkEmAp7lK0TubPL+uGTdeLRaXeLsKnKo
-         nX4MLIetxU05LRa0Y496d3UxT+c7IpH1imZWj9dK+X77clQXWSHW2ZuQ48h8MK6+SjSx
-         dm6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXGzUU989Yd/1vk+/wj6UCvmaNSbjOyOjkVrz6C1ISTC8W/jF0+R+oEAPO+LiuTwOoovUQaHedjqfGp1N3HqDTEIubdPL9CL8QMw9Pl
-X-Gm-Message-State: AOJu0YzSCuJPStRaEyjNJxFfk+PJuQhOiZhr9UjUxXvddUarlAy1tQx0
-	hc9BdBLKkeOdj78kBkZBQoi9VzjoReiNGfxA5T5IrnOX8gNESgBMpu9kr9KM33idxtFahdwMUzZ
-	YFzh7kVHaLG+lKqXXdJ1FR6lMz4sM8lUtCw34qvp9Z3kHgGQGudgnSDMjJc7P/YRB3M78fJ2qTt
-	vVNepNEfDNIUr3sUApmLNxXz4v2QCa3uKVru/R
-X-Received: by 2002:a05:690c:f11:b0:64b:8086:5805 with SMTP id 00721157ae682-64c718039a1mr148168827b3.15.1720019257364;
-        Wed, 03 Jul 2024 08:07:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHxpUeuUPTttPcddF+w9Z2HF+ZkSI3kZ1UScOasay/ojm8JxPbrzG2VpLXNh580qpjYBy40hIVvMVQf+q2TP1A=
-X-Received: by 2002:a05:690c:f11:b0:64b:8086:5805 with SMTP id
- 00721157ae682-64c718039a1mr148168507b3.15.1720019257119; Wed, 03 Jul 2024
- 08:07:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDEq7msq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C11F9C2BD10;
+	Wed,  3 Jul 2024 15:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720019315;
+	bh=lAX7AD5BLSxqIQUwHe6xLlpQ2JbfV2Twnsd17wFHnnA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WDEq7msq+dt6Fu6rj8PED1k/VmxDrbkjC5MhrEbatrm7NUkDuD16Gc6u1EC+CeABl
+	 i8dbrvDwdvJcUp7qqcmUlgb1va59/INITxOSX8/oe2EH6lG0Pwq6YMvwYIJ8mEyaiP
+	 TG8xKk0eTNZyJHK+bB7PFdiRUXOdrDTOVqc3u0Q0GySc21XZD9s/wNMQg8GfcIU2aA
+	 Ba2MvPpYxnsbZQwSFfJC4jqeCiWWmsyFWVhGyIJGaS18ImwK2XTq7qngSqj7bfEqxK
+	 2sREfTTwSKo6ELP+W5UybPGfSMJz77FKLfk9GaU6tWt4W5Iy1kM8u3e89ya2F3Fqai
+	 UB+d2JxBWhbqA==
+Date: Wed, 3 Jul 2024 16:08:30 +0100
+From: Simon Horman <horms@kernel.org>
+To: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH iwl-net v1 1/4] igc: Fix qbv_config_change_errors logics
+Message-ID: <20240703150830.GO598357@kernel.org>
+References: <20240702040926.3327530-1-faizal.abdul.rahim@linux.intel.com>
+ <20240702040926.3327530-2-faizal.abdul.rahim@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626-stage-vdpa-vq-precreate-v2-0-560c491078df@nvidia.com> <20240626-stage-vdpa-vq-precreate-v2-7-560c491078df@nvidia.com>
-In-Reply-To: <20240626-stage-vdpa-vq-precreate-v2-7-560c491078df@nvidia.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 3 Jul 2024 17:07:01 +0200
-Message-ID: <CAJaqyWeDwkTbi1ti0z+FsrxViubuxVe+mNtJ2zxbHmTteyR0XQ@mail.gmail.com>
-Subject: Re: [PATCH vhost v2 07/24] vdpa/mlx5: Initialize and reset device
- with one queue pair
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	Cosmin Ratiu <cratiu@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240702040926.3327530-2-faizal.abdul.rahim@linux.intel.com>
 
-On Wed, Jun 26, 2024 at 12:27=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.co=
-m> wrote:
->
-> The virtio spec says that a vdpa device should start off with one queue
-> pair. The driver is already compliant.
->
-> This patch moves the initialization to device add and reset times. This
-> is done in preparation for the pre-creation of hardware virtqueues at
-> device add time.
->
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+On Tue, Jul 02, 2024 at 12:09:23AM -0400, Faizal Rahim wrote:
+> When user issues these cmds:
+> 1. Either a) or b)
+>    a) mqprio with hardware offload disabled
+>    b) taprio with txtime-assist feature enabled
+> 2. etf
+> 3. tc qdisc delete
+> 4. taprio with base time in the past
+> 
+> At step 4, qbv_config_change_errors wrongly increased by 1.
+> 
+> Excerpt from IEEE 802.1Q-2018 8.6.9.3.1:
+> "If AdminBaseTime specifies a time in the past, and the current schedule
+> is running, then: Increment ConfigChangeError counter"
+> 
+> qbv_config_change_errors should only increase if base time is in the past
+> and no taprio is active. In user perspective, taprio was not active when
+> first triggered at step 4. However, i225/6 reuses qbv for etf, so qbv is
+> enabled with a dummy schedule at step 2 where it enters
+> igc_tsn_enable_offload() and qbv_count got incremented to 1. At step 4, it
+> enters igc_tsn_enable_offload() again, qbv_count is incremented to 2.
+> Because taprio is running, tc_setup_type is TC_SETUP_QDISC_ETF and
+> qbv_count > 1, qbv_config_change_errors value got incremented.
+> 
+> This issue happens due to reliance on qbv_count field where a non-zero
+> value indicates that taprio is running. But qbv_count increases
+> regardless if taprio is triggered by user or by other tsn feature. It does
+> not align with qbv_config_change_errors expectation where it is only
+> concerned with taprio triggered by user.
+> 
+> Fixing this by relocating the qbv_config_change_errors logic to
+> igc_save_qbv_schedule(), eliminating reliance on qbv_count and its
+> inaccuracies from i225/6's multiple uses of qbv feature for other TSN
+> features.
+> 
+> The new function created: igc_tsn_is_taprio_activated_by_user() uses
+> taprio_offload_enable field to indicate that the current running taprio
+> was triggered by user, instead of triggered by non-qbv feature like etf.
+> 
+> Fixes: ae4fe4698300 ("igc: Add qbv_config_change_errors counter")
+> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
 
-Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+Thanks Faizal,
 
-> ---
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 23 ++++++++++++-----------
->  1 file changed, 12 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/ml=
-x5_vnet.c
-> index eca6f68c2eda..c8b5c87f001d 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -48,6 +48,16 @@ MODULE_LICENSE("Dual BSD/GPL");
->
->  #define MLX5V_UNTAGGED 0x1000
->
-> +/* Device must start with 1 queue pair, as per VIRTIO v1.2 spec, section
-> + * 5.1.6.5.5 "Device operation in multiqueue mode":
-> + *
-> + * Multiqueue is disabled by default.
-> + * The driver enables multiqueue by sending a command using class
-> + * VIRTIO_NET_CTRL_MQ. The command selects the mode of multiqueue
-> + * operation, as follows: ...
-> + */
-> +#define MLX5V_DEFAULT_VQ_COUNT 2
-> +
->  struct mlx5_vdpa_cq_buf {
->         struct mlx5_frag_buf_ctrl fbc;
->         struct mlx5_frag_buf frag_buf;
-> @@ -2713,16 +2723,6 @@ static int mlx5_vdpa_set_driver_features(struct vd=
-pa_device *vdev, u64 features)
->         else
->                 ndev->rqt_size =3D 1;
->
-> -       /* Device must start with 1 queue pair, as per VIRTIO v1.2 spec, =
-section
-> -        * 5.1.6.5.5 "Device operation in multiqueue mode":
-> -        *
-> -        * Multiqueue is disabled by default.
-> -        * The driver enables multiqueue by sending a command using class
-> -        * VIRTIO_NET_CTRL_MQ. The command selects the mode of multiqueue
-> -        * operation, as follows: ...
-> -        */
-> -       ndev->cur_num_vqs =3D 2;
-> -
->         update_cvq_info(mvdev);
->         return err;
+My nit below notwithstanding, this looks good to me.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+
+...
+
+> diff --git a/drivers/net/ethernet/intel/igc/igc_tsn.c b/drivers/net/ethernet/intel/igc/igc_tsn.c
+> index 22cefb1eeedf..02dd41aff634 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_tsn.c
+> +++ b/drivers/net/ethernet/intel/igc/igc_tsn.c
+> @@ -78,6 +78,17 @@ void igc_tsn_adjust_txtime_offset(struct igc_adapter *adapter)
+>  	wr32(IGC_GTXOFFSET, txoffset);
 >  }
-> @@ -3040,7 +3040,7 @@ static int mlx5_vdpa_compat_reset(struct vdpa_devic=
-e *vdev, u32 flags)
->                 mlx5_vdpa_destroy_mr_resources(&ndev->mvdev);
->         ndev->mvdev.status =3D 0;
->         ndev->mvdev.suspended =3D false;
-> -       ndev->cur_num_vqs =3D 0;
-> +       ndev->cur_num_vqs =3D MLX5V_DEFAULT_VQ_COUNT;
->         ndev->mvdev.cvq.received_desc =3D 0;
->         ndev->mvdev.cvq.completed_desc =3D 0;
->         memset(ndev->event_cbs, 0, sizeof(*ndev->event_cbs) * (mvdev->max=
-_vqs + 1));
-> @@ -3643,6 +3643,7 @@ static int mlx5_vdpa_dev_add(struct vdpa_mgmt_dev *=
-v_mdev, const char *name,
->                 err =3D -ENOMEM;
->                 goto err_alloc;
->         }
-> +       ndev->cur_num_vqs =3D MLX5V_DEFAULT_VQ_COUNT;
->
->         init_mvqs(ndev);
->         allocate_irqs(ndev);
->
-> --
-> 2.45.1
->
+>  
+> +bool igc_tsn_is_taprio_activated_by_user(struct igc_adapter *adapter)
+> +{
+> +	struct igc_hw *hw = &adapter->hw;
+> +
+> +	if ((rd32(IGC_BASET_H) || rd32(IGC_BASET_L)) &&
+> +	    adapter->taprio_offload_enable)
+> +		return true;
+> +	else
+> +		return false;
 
+As per my response to patch 2/4, I think something like this is a bit
+nicer:
+
+(Completely untested!)
+
+	return (rd32(IGC_BASET_H) || rd32(IGC_BASET_L)) &&
+		adapter->taprio_offload_enable;
+
+
+> +}
+> +
+>  /* Returns the TSN specific registers to their default values after
+>   * the adapter is reset.
+>   */
+
+...
