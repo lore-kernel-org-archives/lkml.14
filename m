@@ -1,134 +1,105 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E774176AB0
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91AE17967A;
+	Wed,  3 Jul 2024 10:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003761; cv=none; b=SL6UuVhNro38Zmcc44rvf+udZKYJARgtbHA6+9sygfEA01O6m3wuW8qItdf2ROCv2LXdmHg0fvO95Z5lUMEDvJeYOgVIzscXnGAeGkT/Ndho4W5Ipg5xnTYP0KoEZqnQ5Lv4jAS/TYzUWiTg8HCd3bRT+wR0j4R58QP+6h5emZ4=
+	t=1720003788; cv=none; b=HqXCed4pQrZMcLxJGFJygGzOssk8PsbTf1bcOCihxw+xnLYvZfHuqJ2cLQDbaYsyZAWbJt/LVxouZ2EGJNLVtrU0o5K3QxgMxFyDpKVgX3gpmF9gO4rP45DkAJVOYvbhK5qZOCNAtj7udE+ZSa4XXHnLlqK5/zn24884X/0QsFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003761; c=relaxed/simple;
-	bh=Um6OFwuQl3zsxZvzVYkhOfVGwWQHGW4jkk7FyvSE948=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D0mt4G2gUqryva37CYIq0+c346YOIERIJsy8+7u8KJcPju+FCDxwIktdOcdF+ZPzjQBMBAPxqsaU2FV8/rvT+xQnKm6c2FvcVa6xUag1bSeeE3uAwYedeXJs0INYtPfTh4x7jU5i8J7uSbcdLzFCboRcQ0PBDbu0KW+kixn7Wc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ijZiOZfC; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720003788; c=relaxed/simple;
+	bh=3qXmo/5pNDaZWNpYAjzoXZ2kcJMP7hkArNksNzOixz8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=p/smUUL13JPk5wJ4XGhGIhETzi2Zgw0KSyhtQWliFN88onIeqW1WvkR0k/FvF5/QstxxBzphZI2QermCHm76+bH4OWhp0qTwJFhBJ+Z/pLJXoXJB+xHujLl5k9t8nABh6GvE8Wdz9SINbkm55QNSwd5tTx13mLLPnZ0qmrUB1UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=VLDgNOSK; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ijZiOZfC"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ebec2f11b7so59333751fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 03:49:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720003757; x=1720608557; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+oCQluoC8qtSjLERarQGyWRmhWoDfPg38XOkq2Vkd4g=;
-        b=ijZiOZfCGPVdZ2CLtf1HcXi37SBf7oI4NeFK8CGCxS6Ih943RHV+LjJ2Qol7WJw1WZ
-         vVzeAgd0G1yV25k1ndYnWaAacs79K6hp6Z3WO4KuJwT2c0dtJaQoddj/2H+x8u7XlspC
-         aGQi5i38FaeoXWxpeaZ5cDCGOzqapLbmxDl3eqdZQ86YfO2mqLQCSks7xsLTQeAjJofJ
-         GBqNNjc5y7r3V+mQMaNS7f3+Ok2b/XFNM4uLv6A95UDfAq4P3tNwezAwYHX252R5AiVp
-         IHCfARjkrY0ipMwgaUKEiSPYaN6D8Q1IIId+xrPv5na1phK1UGget9JzUbEXTFqvPsxH
-         bTjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720003757; x=1720608557;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+oCQluoC8qtSjLERarQGyWRmhWoDfPg38XOkq2Vkd4g=;
-        b=LEdkbMGSn++n87RT9vD6OeZz8LNz/wrumVBdxDJQzZfMJwqJiJ3avf1BXsDW8yoJY7
-         PeDrCy2BJIy8EqZuuS/Xsisk0TiVAGDPA1dabL/T+mdCmL2UyPl+BsuvUNwzS0bKKppO
-         yDyMg0S1wWas5LYe025Ezqp8fu+Tib6JaK09nitZxlzLeCobe9y1GorZTdZxaUNi99lq
-         S4q0kLiz066O14uPWbj2lZGMGNHl3F9RGOXEUPfj0QnE+8kTmWVwWqZsEpjw7KyrHqHq
-         fVQGE328+lV02BGHaJt+UkpMKBw5MkMRciDd4wElA1VLsCLnh5+5umUx5T7O5UgsziKe
-         tfIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtXL1Do86XTjz5+8b29Yp3mmodBDCXTFfLJUvyR4iNN+JuVJ7No35JeRogRnWZfywbyxmSVwwzTgGaODyxxbYM0CyShGrmlul5h6sT
-X-Gm-Message-State: AOJu0YyEu34E/YXG8ZOyy1azkYhSyh4Elt08veCJ8GKCo3SO/Wq/J6Yz
-	pDfXYM/F/5fQBt3u9GqpZprIaIJsZq8C/5EdYBwsAZxATyaCv/nny0WuT7+WZ9c=
-X-Google-Smtp-Source: AGHT+IE8qUOiSOeMa1No93ZElWBx36fUbt9QiwfSUKevXmpoGLYCbyM0z6/scs7glRtZMd/DqTqN6A==
-X-Received: by 2002:a05:651c:b23:b0:2ec:5fa1:2434 with SMTP id 38308e7fff4ca-2ee5e33a9e5mr76322521fa.9.1720003757433;
-        Wed, 03 Jul 2024 03:49:17 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee53c1718asm18435541fa.42.2024.07.03.03.49.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 03:49:17 -0700 (PDT)
-Date: Wed, 3 Jul 2024 13:49:15 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, angelogioacchino.delregno@collabora.com, 
-	andersson@kernel.org, konrad.dybcio@linaro.org, mturquette@baylibre.com, 
-	ilia.lin@kernel.org, rafael@kernel.org, ulf.hansson@linaro.org, 
-	quic_sibis@quicinc.com, quic_rjendra@quicinc.com, quic_rohiagar@quicinc.com, 
-	abel.vesa@linaro.org, otto.pflueger@abscue.de, danila@jiaxyga.com, 
-	quic_ipkumar@quicinc.com, luca@z3ntu.xyz, stephan.gerhold@kernkonzept.com, nks@flawful.org, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v4 08/10] soc: qcom: cpr3: Add IPQ9574 definitions
-Message-ID: <sk66oje4p4yzh5hfk7pqihr72rap3vpidgdxzhje57uu47sjpf@z72v46onyiwf>
-References: <20240703091651.2820236-1-quic_varada@quicinc.com>
- <20240703091651.2820236-9-quic_varada@quicinc.com>
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="VLDgNOSK"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id B4F3D100004;
+	Wed,  3 Jul 2024 13:49:21 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1720003761; bh=qBTrMRweeYn17EcgCxBKWTPEOQW17rObU/UXX5H3hws=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=VLDgNOSKdpC3Zroyoh26tyyRk7D5usQSaCSbQ0vIocD11Ugj/zXbhoJIqgoKxoDyT
+	 XON1rzewXW90zK43ttAXAHOueRErWIOhqtD8yVfz6jWROgolAiJPiB+oXpl81JIPps
+	 RBwxgtzWH51j0i5+Ep7YX2d+F6/+N4KWOOrsKcyU2Krxcmm3w13+cnBVkTQ/ot5joy
+	 F2D6G8OA7DIDV0dlMnbYZcPv/cVEH7MZosaa2lwEdqdYYwsDYBRyV2O/eDGdCJRE8o
+	 BC/BcRAvzjdg4MNUTP8ODpRW/0RTc0/v2pjL16UM3s6KkqgyPeckjnTtaY/H+FjVOz
+	 2lNLCKWm0CMNg==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Wed,  3 Jul 2024 13:48:06 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 3 Jul 2024
+ 13:47:45 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Michael Hennerich <Michael.Hennerich@analog.com>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Lars-Peter Clausen
+	<lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Datta Shubhrajyoti <shubhrajyoti@ti.com>,
+	<linux-iio@vger.kernel.org>, <linux-staging@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH] staging: iio: frequency: ad9834: Validate frequency parameter value
+Date: Wed, 3 Jul 2024 13:47:34 +0300
+Message-ID: <20240703104734.12034-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703091651.2820236-9-quic_varada@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186302 [Jul 03 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/07/03 07:47:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/03 06:16:00 #25818842
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Wed, Jul 03, 2024 at 02:46:49PM GMT, Varadarajan Narayanan wrote:
-> From: Praveenkumar I <quic_ipkumar@quicinc.com>
-> 
-> * Add thread, scaling factor, CPR descriptor defines to enable
->   CPR on IPQ9574.
-> 
-> * Skip 'acc' usage since IPQ9574 does not have acc
-> 
-> Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> ---
-> v4: s/silver//, s/cprh/cpr4/
->     Skip 'acc' related code as IPQ9574 does not have acc
-> 
-> v3: Fix patch author
->     Included below information in cover letter
-> v2: Fix Signed-off-by order
-> Depends:
-> 	[1] https://lore.kernel.org/lkml/20230217-topic-cpr3h-v14-0-9fd23241493d@linaro.org/T/
-> 	[2] https://github.com/quic-varada/cpr/commits/konrad/
-> ---
->  drivers/pmdomain/qcom/cpr3.c | 143 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 141 insertions(+), 2 deletions(-)
-> 
+In ad9834_write_frequency() clk_get_rate() can return 0. In such case
+ad9834_calc_freqreg() call will lead to division by zero. Checking
+'if (fout > (clk_freq / 2))' doesn't protect in case of 'fout' is 0.
+ad9834_write_frequency() is called from ad9834_write(), where fout is
+taken from text buffer, which can contain any value.
 
+Modify parameters checking.
 
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> @@ -2703,7 +2840,8 @@ static int cpr_probe(struct platform_device *pdev)
->  
->  	mutex_init(&drv->lock);
->  
-> -	if (desc->cpr_type < CTRL_TYPE_CPRH) {
-> +	if (desc->cpr_type < CTRL_TYPE_CPRH &&
-> +	    !of_device_is_compatible(dev->of_node, "qcom,ipq9574-cpr4")) {
+Fixes: 12b9d5bf76bf ("Staging: IIO: DDS: AD9833 / AD9834 driver")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+ drivers/staging/iio/frequency/ad9834.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-No. Check for ->acc_desc instead.
-
->  		np = of_parse_phandle(dev->of_node, "qcom,acc", 0);
->  		if (!np)
->  			return -ENODEV;
-> @@ -2828,6 +2966,7 @@ static void cpr_remove(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id cpr3_match_table[] = {
-> +	{ .compatible = "qcom,ipq9574-cpr4", .data = &ipq9574_cpr_acc_desc },
->  	{ .compatible = "qcom,msm8998-cprh", .data = &msm8998_cpr_acc_desc },
->  	{ .compatible = "qcom,sdm630-cprh", .data = &sdm630_cpr_acc_desc },
->  	{ }
-> -- 
-> 2.34.1
-> 
-
+diff --git a/drivers/staging/iio/frequency/ad9834.c b/drivers/staging/iio/frequency/ad9834.c
+index a7a5cdcc6590..9e42129f44f7 100644
+--- a/drivers/staging/iio/frequency/ad9834.c
++++ b/drivers/staging/iio/frequency/ad9834.c
+@@ -114,7 +114,7 @@ static int ad9834_write_frequency(struct ad9834_state *st,
+ 
+ 	clk_freq = clk_get_rate(st->mclk);
+ 
+-	if (fout > (clk_freq / 2))
++	if (!fout || fout > (clk_freq / 2))
+ 		return -EINVAL;
+ 
+ 	regval = ad9834_calc_freqreg(clk_freq, fout);
 -- 
-With best wishes
-Dmitry
+2.30.2
+
