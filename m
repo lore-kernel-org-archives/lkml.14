@@ -1,93 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6244F17DA3E;
-	Wed,  3 Jul 2024 14:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC3017BB0D;
+	Wed,  3 Jul 2024 14:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720017518; cv=none; b=EY7BfnRpHDNxBbCiYm5ov973pqF9NlKKg8jKIpwMgJoODW0TSdkSqAEY2E6ZLB2oiBTg+RWzS//DlEXnfKaPfN+x5Rz6QPLbYjExGBY16An9yYrGjJwmml5v4b6yo/Nq6gA1kgoq7J1e0brlSMQ2LiDmVIiWwDM+laP8F83/Ho8=
+	t=1720017533; cv=none; b=fGxvocfrJvAk16pOY6njXvWfT1eY7XwkIKduxgt3+wM1XvONjnQw6qyIVxWv0JlQkNn7/MATTI1f7i+HPnWe675TPa6+LZKCYUnDKcsYzCcMDsCx9YHozbgxp9r+fo8celfdKVOdGrw+L037DSvkTwQOmeVU5KY2eYs/kY/OSyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720017518; c=relaxed/simple;
-	bh=1pyvTHvgPYCtPb4G+O/6/6OTk21US0vpzPZTUyPuZZo=;
+	s=arc-20240116; t=1720017533; c=relaxed/simple;
+	bh=MLzXW0zmt8TQcHGK5nYiqQdxT5V+dSydfz7v2Sdsn+Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PQ64HsEnbgfxC7pV96DLsGG47yD08OK2OeOIC619vj7eBJiDm/AAPcBMtOpaJlRO+fSu67yWKcDk3yzg+WKqtHifUQG0reW2TyxwF8I+4mK8Wfb9O9DUD9P6OsIcPzsVwX2j2HdHnJh5FpKeOh1mDsk3hRniSREmmrYTq32xZjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 040BF1688;
-	Wed,  3 Jul 2024 07:39:01 -0700 (PDT)
-Received: from thinkcentre-m93p.cambridge.arm.com (thinkcentre-m93p.cambridge.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 245DB3F766;
-	Wed,  3 Jul 2024 07:38:35 -0700 (PDT)
-From: Luke Parkin <luke.parkin@arm.com>
-To: linux-kernel@vger.kernel.org,
+	 MIME-Version:Content-Type; b=IZoIUSUXLB0WtXRL6Ehmrbq2zZzki8HIyYM+42UWUUAJsm9Y88l+s/gpZGs0CC7rzrgF6HGp35cRlNV9OiC9H8YM/y3uc6M6cUz1pZK8+HWY72pqZvv5bE0dWzTcTYFK9v8r2TXw8yXafBlc2HOkqdOd2Bs+J1FC3K+O3+Wx/14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvzXEd+O; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvzXEd+O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E6AC2BD10;
+	Wed,  3 Jul 2024 14:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720017532;
+	bh=MLzXW0zmt8TQcHGK5nYiqQdxT5V+dSydfz7v2Sdsn+Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UvzXEd+OvZE0GLMzyCnlChXUeaWhWzEJj3t77gcq+UEcXMBtRoDIphusBsCr6EWNK
+	 cb6ncbDUbZ8yHOyZ1ge01dmAPU4OSt0ItHtzAlU18+IIYgDmn21DivLA65n8M8hSXZ
+	 4mAd0279LkOIYcnzbu7cxmzpNPZb5n+Ug0yVV++BH5+DxmgS+NUkXPCKL5Fs+cxutr
+	 +LvJsAIDn9ruMwtdpXAN1u2eO/8Mt6HJAQ6Yj0a4YrQQmnD+8ZHh7kkEBnGGIDFuB0
+	 dfxJEqm3lzV0s9vcNfBtfAD+IaUCmE5S42Puaf2B0VK3HhupOxtVWkunkRKjlZvLtW
+	 GqGKYB49MONug==
+From: Will Deacon <will@kernel.org>
+To: Russell King <linux@armlinux.org.uk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@arm.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>
+Cc: kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org
-Cc: sudeep.holla@arm.com,
-	cristian.marussi@arm.com,
-	Luke Parkin <luke.parkin@arm.com>
-Subject: [PATCH v2 4/4] firmware: arm_scmi: Create debugfs files for statistics
-Date: Wed,  3 Jul 2024 15:37:38 +0100
-Message-Id: <20240703143738.2007457-5-luke.parkin@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240703143738.2007457-1-luke.parkin@arm.com>
-References: <20240703143738.2007457-1-luke.parkin@arm.com>
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 00/12] arm64: Add support for Armv9.4 PMU fixed instruction counter
+Date: Wed,  3 Jul 2024 15:38:44 +0100
+Message-Id: <172001203729.3396033.17013529444643308853.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
+References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Create debugfs files for the statistics in the scmi_debug_stats struct
+On Wed, 26 Jun 2024 16:32:24 -0600, Rob Herring (Arm) wrote:
+> This series adds support for the optional fixed instruction counter
+> added in Armv9.4 PMU. Most of the series is a refactoring to remove the
+> index to counter number conversion which dates back to the Armv7 PMU
+> driver. Removing it is necessary in order to support more than 32
+> counters without a bunch of conditional code further complicating the
+> conversion.
+> 
+> [...]
 
-Signed-off-by: Luke Parkin <luke.parkin@arm.com>
-v1->v2
-Only create stats pointer if stats are enabled
-Move stats debugfs creation into a seperate helper function
----
- drivers/firmware/arm_scmi/driver.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Applied to will (for-next/perf), thanks!
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 937546397cf2..10cd9a319ffb 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -2858,6 +2858,24 @@ static int scmi_device_request_notifier(struct notifier_block *nb,
- 	return NOTIFY_OK;
- }
- 
-+static void scmi_debugfs_stats_setup(struct scmi_info *info,
-+				     struct dentry *trans)
-+{
-+	struct dentry *stats;
-+
-+	stats = debugfs_create_dir("stats", trans);
-+	debugfs_create_atomic_t("response_ok", 0400, stats,
-+				&info->stats.response_ok);
-+	debugfs_create_atomic_t("dlyd_response_ok", 0400, stats,
-+				&info->stats.dlyd_response_ok);
-+	debugfs_create_atomic_t("sent_ok", 0400, stats,
-+				&info->stats.sent_ok);
-+	debugfs_create_atomic_t("sent_fail", 0400, stats,
-+				&info->stats.sent_fail);
-+	debugfs_create_atomic_t("xfers_response_timeout", 0400, stats,
-+				&info->stats.xfers_response_timeout);
-+}
-+
- static void scmi_debugfs_common_cleanup(void *d)
- {
- 	struct scmi_debug_info *dbg = d;
-@@ -2924,6 +2942,9 @@ static struct scmi_debug_info *scmi_debugfs_common_setup(struct scmi_info *info)
- 	debugfs_create_u32("rx_max_msg", 0400, trans,
- 			   (u32 *)&info->rx_minfo.max_msg);
- 
-+	if (IS_ENABLED(CONFIG_ARM_SCMI_DEBUG_STATISTICS))
-+		scmi_debugfs_stats_setup(info, trans);
-+
- 	dbg->top_dentry = top_dentry;
- 
- 	if (devm_add_action_or_reset(info->dev,
+[01/12] perf: arm_pmuv3: Avoid assigning fixed cycle counter with threshold
+        https://git.kernel.org/will/c/81e15ca3e523
+[02/12] perf: arm_pmuv3: Drop unnecessary IS_ENABLED(CONFIG_ARM64) check
+        https://git.kernel.org/will/c/598c1a2d9f4b
+[03/12] perf/arm: Move 32-bit PMU drivers to drivers/perf/
+        https://git.kernel.org/will/c/8d75537bebfa
+[04/12] perf: arm_v6/7_pmu: Drop non-DT probe support
+        https://git.kernel.org/will/c/12f051c987dc
+[05/12] perf: arm_pmuv3: Include asm/arm_pmuv3.h from linux/perf/arm_pmuv3.h
+        https://git.kernel.org/will/c/d688ffa26942
+[06/12] perf: arm_pmu: Remove event index to counter remapping
+        https://git.kernel.org/will/c/b7e89b0f5bd7
+[07/12] perf: arm_pmuv3: Prepare for more than 32 counters
+        https://git.kernel.org/will/c/12fef9fb7179
+[08/12] KVM: arm64: pmu: Use arm_pmuv3.h register accessors
+        https://git.kernel.org/will/c/6ef2846c17a3
+[09/12] KVM: arm64: pmu: Use generated define for PMSELR_EL0.SEL access
+        https://git.kernel.org/will/c/558fdd12c069
+[10/12] arm64: perf/kvm: Use a common PMU cycle counter define
+        https://git.kernel.org/will/c/323bc9e17c01
+[11/12] KVM: arm64: Refine PMU defines for number of counters
+        https://git.kernel.org/will/c/be884dd62461
+[12/12] perf: arm_pmuv3: Add support for Armv9.4 PMU instruction counter
+        https://git.kernel.org/will/c/dc4c33f753ca
+
+Cheers,
 -- 
-2.34.1
+Will
 
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
