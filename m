@@ -1,139 +1,167 @@
-Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631E713D61B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE2213D61B
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720007533; cv=none; b=SW5nao5Wd4j8fSsbHyRZWurB640tUfhrAomQBJ7lL82rJ6eJybiiT1GnEKFDXiDqazSkoScijTEKXb8RfYh/1bKmV6Dkzwp1kkEjwlMuJd1sFqUISGQgFf3/7OryMxoufrVV0fsiyjoeN7WI7sIO0GI9iMNnOEsmmaYj05DKoes=
+	t=1720007577; cv=none; b=mKmhI6C5x0PW761QnpAybEE5DFzbwf+kx+qzsO5NWKKfK0v+kUgnttv+ER2AQ01q6xMpUwr9JxVPzXPbt23XSwi3MH7B0DU6+cYR9HAgPZID4I50PCyg0QOYegDK9baFIPX727KekRJN/xelNBStvsCjSvbp0QH5DkkIykmLZIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720007533; c=relaxed/simple;
-	bh=WYjyN31nvOPQorDg4MwuaO39knfNAiEVUYUmWPo3/s0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kV2SxLgXNRu0hzIBEuUXSkK8kY0Z4Qy+cqKlHtAj5R9t7MIjvJj4c4ocJCoqwOeN6IcMOuVFBXqCaiWDKZeI409lxvdd7qKzZRDR2gAmu52xiVfM1x8gPXPm8bGtN5E2rXfSX98IOCpF09r+fg5Fad4OYVvrLR/oYI2S90XGSwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.64.67])
-	by sina.com (10.185.250.23) with ESMTP
-	id 66853B3B000058DB; Wed, 3 Jul 2024 19:51:25 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 6931968913445
-X-SMAIL-UIID: 4B0436BF9FEB440284964CB5AE262EC2-20240703-195125-1
-From: Hillf Danton <hdanton@sina.com>
-To: Tom Parkin <tparkin@katalix.com>
-Cc: syzbot <syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	James Chapman <jchapman@katalix.com>,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] KASAN: slab-use-after-free Write in l2tp_session_delete
-Date: Wed,  3 Jul 2024 19:51:13 +0800
-Message-Id: <20240703115113.2928-1-hdanton@sina.com>
-In-Reply-To: <ZoU1Aa/JJ+60FZla@katalix.com>
-References: 
+	s=arc-20240116; t=1720007577; c=relaxed/simple;
+	bh=EpdJkfBmRQKg1jeirUfiq32WPAAoiCKsPGk8hCr+s6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cJpxwLypkSQwMhEe3qVGl6x77hleCbvFl8YdMvki9jYIGU9heepZpObK9MWpZ0P7/v/tuiT+lpDF8AXFWHOV1yirP9RYI+8PZ7MpapJlvRxiFNt1h1Zx9O/ukqhsTTaEFgatl2Qrnz2fed8fPw+eXKLngg+fFLrqQin4ZG7l3AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k++e98Sv; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k++e98Sv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720007576; x=1751543576;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=EpdJkfBmRQKg1jeirUfiq32WPAAoiCKsPGk8hCr+s6c=;
+  b=k++e98Svz1pe27wKdkkCtLiGNH3zqKd/onHOJSs1ssdQ9VPvTdJPswHi
+   YWlQAx5mmz0LrCZ5MkGx9Rk8hBSXlGGzPtfbDYAbHp+lyoMrfAuuoPTCr
+   3MA+lHT1R++tb7tE6HYI3qcPnDirN+ft31QT5mb052lYw2K2qHuah0r/N
+   VAmUVPpoSSxtYkGUVISv2vig5jibfgJJVs1BFLFNNrVKDkN9ux6XsPdTQ
+   EsT5GcnxpUWHbJIvGop78fJPBcOG2bqO7gti57Pb5K4y3zLIp31xCY26K
+   6QMjTONPDq7+HO9Y+0t46ooGaKSk1XOvw/i7ff50PqxKoDl9bUszyjGNa
+   g==;
+X-CSE-ConnectionGUID: ustaz7xlQs6XUkMjqSxftw==
+X-CSE-MsgGUID: 2QwnNcR+SDOJyjyRC8+1Gw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17440569"
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="17440569"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 04:52:55 -0700
+X-CSE-ConnectionGUID: RPKwiF2YT5uq5i+JYJQ79g==
+X-CSE-MsgGUID: 3q321IkRR06QRpPPf4qnAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="46205175"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by fmviesa008.fm.intel.com with SMTP; 03 Jul 2024 04:52:50 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 03 Jul 2024 14:52:49 +0300
+Date: Wed, 3 Jul 2024 14:52:49 +0300
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: jim.cromie@gmail.com
+Cc: daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com,
+	jani.nikula@intel.com, jbaron@akamai.com,
+	gregkh@linuxfoundation.org, ukaszb@chromium.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, linux@rasmusvillemoes.dk,
+	joe@perches.com, mcgrof@kernel.org
+Subject: Re: [PATCH v9 30/52] drm-dyndbg: adapt drm core to use dyndbg
+ classmaps-v2
+Message-ID: <ZoU7kR2aYwVDvd_G@intel.com>
+References: <20240702215804.2201271-1-jim.cromie@gmail.com>
+ <20240702215804.2201271-31-jim.cromie@gmail.com>
+ <ZoSOMClB0MeWeokU@intel.com>
+ <CAJfuBxzsZUpO-Q_uAfMhzXs0WHYMTnj1F8ju7af-kQZKQjLvNQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJfuBxzsZUpO-Q_uAfMhzXs0WHYMTnj1F8ju7af-kQZKQjLvNQ@mail.gmail.com>
+X-Patchwork-Hint: comment
 
-On Wed, 3 Jul 2024 12:24:49 +0100 Tom Parkin <tparkin@katalix.com>
+On Tue, Jul 02, 2024 at 08:34:39PM -0600, jim.cromie@gmail.com wrote:
+> On Tue, Jul 2, 2024 at 5:33 PM Ville Syrjälä
+> <ville.syrjala@linux.intel.com> wrote:
+> >
+> > On Tue, Jul 02, 2024 at 03:57:20PM -0600, Jim Cromie wrote:
+> > > dyndbg's CLASSMAP-v1 api was broken; DECLARE_DYNDBG_CLASSMAP tried to
+> > > do too much.  Its replaced by DRM_CLASSMAP_DEFINE, which creates &
+> > > EXPORTs the classmap when CONFIG_DRM_USE_DYNAMIC_DEBUG=y, for direct
+> > > reference by drivers.
+> > >
+> > > The drivers still use DECLARE_DYNDBG_CLASSMAP for now, so they still
+> > > redundantly re-declare the classmap, but we can convert the drivers
+> > > later to DYNDBG_CLASSMAP_USE
+> > >
+> > > Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/drm_print.c | 25 +++++++++++++------------
+> > >  include/drm/drm_print.h     |  8 ++++++++
+> > >  2 files changed, 21 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
+> > > index 699b7dbffd7b..4a5f2317229b 100644
+> > > --- a/drivers/gpu/drm/drm_print.c
+> > > +++ b/drivers/gpu/drm/drm_print.c
+> > > @@ -55,18 +55,19 @@ MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug cat
+> > >  #if !defined(CONFIG_DRM_USE_DYNAMIC_DEBUG)
+> > >  module_param_named(debug, __drm_debug, ulong, 0600);
+> > >  #else
+> > > -/* classnames must match vals of enum drm_debug_category */
+> > > -DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
+> > > -                     "DRM_UT_CORE",
+> > > -                     "DRM_UT_DRIVER",
+> > > -                     "DRM_UT_KMS",
+> > > -                     "DRM_UT_PRIME",
+> > > -                     "DRM_UT_ATOMIC",
+> > > -                     "DRM_UT_VBL",
+> > > -                     "DRM_UT_STATE",
+> > > -                     "DRM_UT_LEASE",
+> > > -                     "DRM_UT_DP",
+> > > -                     "DRM_UT_DRMRES");
+> > > +/* classnames must match value-symbols of enum drm_debug_category */
+> > > +DRM_CLASSMAP_DEFINE(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS,
+> > > +                 DRM_UT_CORE,
+> > > +                 "DRM_UT_CORE",
+> > > +                 "DRM_UT_DRIVER",
+> > > +                 "DRM_UT_KMS",
+> > > +                 "DRM_UT_PRIME",
+> > > +                 "DRM_UT_ATOMIC",
+> > > +                 "DRM_UT_VBL",
+> > > +                 "DRM_UT_STATE",
+> > > +                 "DRM_UT_LEASE",
+> > > +                 "DRM_UT_DP",
+> > > +                 "DRM_UT_DRMRES");
+> >
+> > Looks like this stuff just ends up in an array, so presumably
+> > it should be possible to use designated initializers to make this
+> > less fragile?
 > 
-> [-- Attachment #1.1: Type: text/plain, Size: 379 bytes --]
-> 
-> On  Tue, Jun 25, 2024 at 06:25:23 -0700, syzbot wrote:
-> > syzbot found the following issue on:
-> > 
-> > HEAD commit:    185d72112b95 net: xilinx: axienet: Enable multicast by def..
-> > git tree:       net-next
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1062bd46980000
-> 
-> #syz test https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git  185d72112b95
-> 
-> [-- Attachment #1.2: 0001-l2tp-fix-possible-UAF-when-cleaning-up-tunnels.patch --]
-> [-- Type: text/x-diff, Size: 3275 bytes --]
-> 
-> From 31321b7742266c4e58355076c19d8d490fa005d2 Mon Sep 17 00:00:00 2001
-> From: James Chapman <jchapman@katalix.com>
-> Date: Tue, 2 Jul 2024 12:49:07 +0100
-> Subject: [PATCH] l2tp: fix possible UAF when cleaning up tunnels
-> 
-> syzbot reported a UAF caused by a race when the L2TP work queue closes a
-> tunnel at the same time as a userspace thread closes a session in that
-> tunnel.
-> 
-> Tunnel cleanup is handled by a work queue which iterates through the
-> sessions contained within a tunnel, and closes them in turn.
-> 
-> Meanwhile, a userspace thread may arbitrarily close a session via
-> either netlink command or by closing the pppox socket in the case of
-> l2tp_ppp.
-> 
-> The race condition may occur when l2tp_tunnel_closeall walks the list
-> of sessions in the tunnel and deletes each one.  Currently this is
-> implemented using list_for_each_safe, but because the list spinlock is
-> dropped in the loop body it's possible for other threads to manipulate
-> the list during list_for_each_safe's list walk.  This can lead to the
-> list iterator being corrupted, leading to list_for_each_safe spinning.
-> One sequence of events which may lead to this is as follows:
-> 
->  * A tunnel is created, containing two sessions A and B.
->  * A thread closes the tunnel, triggering tunnel cleanup via the work
->    queue.
->  * l2tp_tunnel_closeall runs in the context of the work queue.  It
->    removes session A from the tunnel session list, then drops the list
->    lock.  At this point the list_for_each_safe temporary variable is
->    pointing to the other session on the list, which is session B, and
->    the list can be manipulated by other threads since the list lock has
->    been released.
->  * Userspace closes session B, which removes the session from its parent
->    tunnel via l2tp_session_delete.  Since l2tp_tunnel_closeall has
->    released the tunnel list lock, l2tp_session_delete is able to call
->    list_del_init on the session B list node.
->  * Back on the work queue, l2tp_tunnel_closeall resumes execution and
->    will now spin forever on the same list entry until the underlying
->    session structure is freed, at which point UAF occurs.
-> 
-> The solution is to iterate over the tunnel's session list using
-> list_first_entry_not_null to avoid the possibility of the list
-> iterator pointing at a list item which may be removed during the walk.
-> 
-> ---
->  net/l2tp/l2tp_core.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
-> index 64f446f0930b..afa180b7b428 100644
-> --- a/net/l2tp/l2tp_core.c
-> +++ b/net/l2tp/l2tp_core.c
-> @@ -1290,13 +1290,14 @@ static void l2tp_session_unhash(struct l2tp_session *session)
->  static void l2tp_tunnel_closeall(struct l2tp_tunnel *tunnel)
->  {
->  	struct l2tp_session *session;
-> -	struct list_head *pos;
-> -	struct list_head *tmp;
->  
->  	spin_lock_bh(&tunnel->list_lock);
->  	tunnel->acpt_newsess = false;
-> -	list_for_each_safe(pos, tmp, &tunnel->session_list) {
-> -		session = list_entry(pos, struct l2tp_session, list);
-> +	for (;;) {
-> +		session = list_first_entry_or_null(&tunnel->session_list,
-> +						   struct l2tp_session, list);
-> +		if (!session)
-> +			break;
+> Im not sure I got your whole point, but:
 
-WTF difference could this patch make wrt closing the race above?
+I mean using
+ [DRM_UT_CORE] = "DRM_UT_CORE"
+instead of
+ "DRM_UT_CORE"
+so there is no chance of screwing up the order.
+Or maybe the order doesn't even matter here?
 
->  		list_del_init(&session->list);
->  		spin_unlock_bh(&tunnel->list_lock);
->  		l2tp_session_delete(session);
+Could also stringify to avoid accidental of typos.
+
+> 
+> the fragility is the repetitive re-statement of the map,
+> in those un-modified DECLARE_s,
+> once replaced, the USEs just ref the struct built by the _DEFINE
+> (once, and exported)
+> 
+> I dont really like the _DEFINEs restatement of the enum-values: DRM_UT_*
+> especially as "strings".
+> I can automate the stringification with an APPLY_FN_(__stringify, ...)
+> but the enum-list DRM_UT_* (w.o quotes) is still needed as args.
+> 
+> unless there is something C can do thats like Enum.values() ?
+> 
+> 
+> 
+> >
+> > --
+> > Ville Syrjälä
+> > Intel
+
+-- 
+Ville Syrjälä
+Intel
