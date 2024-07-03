@@ -1,136 +1,131 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A404173348
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 12:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561CC85298;
+	Wed,  3 Jul 2024 12:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720009276; cv=none; b=iFdmVn8l8hHNP2VlwWldquzciVC71UeyZiQS2ifwX6AxLT0vV8EMoAY8C5FbBF6d/zuVdWhX7tlznNVacYNNeD5j7egLur6eQ2vFspffca6zdfhqgDN5L6Hx4zbU0tlkMdMhWOzt0yuvr8A+VFeGOMvId6Ncvu40WGkkshoR3RM=
+	t=1720009324; cv=none; b=ZmVKXxRGNaqgXTnW8FeX4wq/fLW7ce9ASS0r5ecsQb74PL3GZYbs1P7gj69vI++f+/FmbNHjE0Onq7qKSUIT7p0AKDcGVJQKwFuC4dg378rijYkQUfiA+cf9daGBJwvI6iaYMM+vxYs+N/3focGqSwZKfn9lTrXWvtJ6kNBwkYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720009276; c=relaxed/simple;
-	bh=cubV7PSPhJbJ+Qx4nqp+Dd4OkcCI8xjyljP7mHG1qOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LlY6HogA75Oh8EmImy67TE+X6kz6hHJDMOBGeAW7LO4pq1gIC8sDWwHvgSAd3+lgrYo9DSuwODy0eHZ2Z0yLLLk0frvi+fXF04G/DQzuwUMS4s+PUXwRjGsrt4LvHeE9xIOnCk1yLn2pzBWe5sGbNcdgNiBweoJZqxatvEFSfmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hEy79cb8; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720009324; c=relaxed/simple;
+	bh=m4n82d0J3T8685flgzkuvY6d+GsiP8d6MyWa3RazyGM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ot4GJiiZQz2A2XFhqX1gUyqtzU/EAl9e205fOCVxdIn/TCZ+FxEXC99uaLiTAS0j76lA1mmI7ubZocQuMknUKHnkRTsiwJchIAocnSMUc0y6N6G+0qdp08UU+sJC6EpLPDd5U3aKOoXXTmpUyYzqBNa+tJt74+Ouev5nEjotShw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j4w1z5JB; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hEy79cb8"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52cdcd26d61so5949360e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 05:21:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j4w1z5JB"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-1fa2ea1c443so40291015ad.0;
+        Wed, 03 Jul 2024 05:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720009273; x=1720614073; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+m8M3n1qsYckd6mSAf4YNSgVy1Uh2copyKJHcyhOiQ4=;
-        b=hEy79cb8yCJ8LpfHgReutG402o3o3xLWz7STVx0R/B3rn65FjszZrjBQxYYH3MrhTE
-         DQhYL/cXr7YJ6HOicYRPOEu1X7fR3qYTDxEMWg/Er2X2Ob59fqs24HQiHNBLyP/rnjPt
-         l0kCQk9Rl2UtTp4wn4/AAoJNth0A1gayb2k8W7JhFus7uoivwhOMaaeF2J3m2b4R58NY
-         rnWDwkUxkWij2fN4xabWLO8ff5qLOMZEvDFlir+T4A4DtlVFvkEslEvumD9Vljre0s3i
-         yJeDMj9yfHLdbcXSB0KzPGUKBGOpc8hCHTz0hqwZB6yKnS5q64Ib4Y6DXZnwemvHgNgZ
-         rX4Q==
+        d=gmail.com; s=20230601; t=1720009322; x=1720614122; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KUmNJmYy7NJ6Dze7UhH2LVbEnF29e+6mD1oyuBQ6Egk=;
+        b=j4w1z5JB8ICqmeD0b4W3tMu5KHTVtlts4AS48fpMdz84uceQsGSLfZjDDOHj68uoOY
+         8xF5aDRsZO/wQWNE/jnf+U7slrHK7R0IMdLIVcEkDpWGT7tjmJm3jR04diLRxXkjgfR6
+         T7mMJPPDAK2z7YhWbXXpQyP6p/ItJ3mPeCyrDgl+IabzDTLuhlSKJP35IeaCBDufQ5Ss
+         FxKcfovhWJQLCm5wkl72TDvIUzn/1shInoO7/33dz36vdRGTVXxeI33vQ5qIkecoamhL
+         A38M9M6tBZhmk5AiBCLph4UqR0pUb0gaqEohTELUvHGZUMuU8fLoVtN1Y+GVlQriM6ml
+         bp4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720009273; x=1720614073;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+m8M3n1qsYckd6mSAf4YNSgVy1Uh2copyKJHcyhOiQ4=;
-        b=H3BrxBmcHTBCGrSdBZqMrEeQkkbKx9phufr2gjxC60T24wZhjqiCga5KAXBEePFdWF
-         bPJmGDyuMv4FwJkQv4poB/4rja7Q/9tKytt8lKhVW3hocVtdTd20fjzVzQkj4KPvI3EE
-         bALSNx6S+21zN47yHeIpLs+tamyBurlKlLNwndrip3ZXoXXjWD2ox+HD9gLCwAo2peQL
-         GA50k9728dEkaZ8eooyXqQDIk4NjLbuL6yQ/pdo4fatkUGyCKcfpP5XRAzbGMjDYFKLN
-         YuhuL97KeMDZ6ffLLxsp8bWAnk6dV5m0+MbySpz4ngYyYmF0sXxusW39ETmAvNJiw2xS
-         CtHQ==
-X-Gm-Message-State: AOJu0YxR+Z2OOIAROLIl/LYScWtAa5VVqgLlkRLEe6hNP5qZoazmEjbN
-	LK8CeRhQHqeLtvZ4ia2G0/OL6+zoiYzoD8Qx1fe8jzykly58i3wzl9bR4C9FrB7w/cyfOPNbIBp
-	6
-X-Google-Smtp-Source: AGHT+IGoCrWnpI4H3vkYZIW4U5GwbaIxS3AV0bKKM6IK+U0+ym4oAlShp5iDrd+SuM0Al6aqGSLjKA==
-X-Received: by 2002:a05:6512:3988:b0:52c:f2e0:db23 with SMTP id 2adb3069b0e04-52e826886a0mr8508503e87.40.1720009272232;
-        Wed, 03 Jul 2024 05:21:12 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0? ([2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4256b0c19eesm243158405e9.45.2024.07.03.05.21.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 05:21:11 -0700 (PDT)
-Message-ID: <47440afc-1b76-4dff-8c72-427103d7184a@linaro.org>
-Date: Wed, 3 Jul 2024 14:21:10 +0200
+        d=1e100.net; s=20230601; t=1720009322; x=1720614122;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KUmNJmYy7NJ6Dze7UhH2LVbEnF29e+6mD1oyuBQ6Egk=;
+        b=lmJjWjzU/Ox+S/1p3GF8buD+ZbkULg18J+FYWro4PbKYxzeKitjTPU30PSq9KhPpNH
+         WHy6ZY7/vBUpIDF39EIXRlviqu3TzXW6jF/DNON+FCm6KQav1MUpw19EKMzAxUNMp1LS
+         JTs1l0oBGL5zt3djaG0bRt/iuIrCFIe5coo2ek7mWwaNaBwdS7P2tl6nqV+SMElHmSEM
+         nss21FuOJq2KoGPJIV73/afyMAYmszghzwvLL/RybGtb/ZwqFNIIp46wD0Zwv8Wb53wi
+         RwKEAK4Xin4e0CEfV+vmdTQvJl8qK6D5yfevYXhYq2qU74aKKPQNUUzotFsJLBzlHVD4
+         3rSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWsGz9fX1ueOw4Qkzk2jYUkvt7g45T+7XmVJ9KcPI5jfboUriEQf8qkJper26/y8zU8iRBdwOBrYi5Jw5OllQmIPRk3YyeMDCRC3u4/kaqMrGODm/d1zSwRHFQyM2Jgfsr1bTqchWb3AYd4GfzQeIjiTj0+z6+uRUS
+X-Gm-Message-State: AOJu0YwmWSEA6ZKpa4AwViZB/zZzNDZjTNgjuRbi1EIq3hVMIC4fl4sJ
+	NuWnUbu0NhgwMNAKilDem5rufldJhMAR15QHUZrR9Nik/Z3fy/EQ
+X-Google-Smtp-Source: AGHT+IHFhpUsM+UjoIZsvc9abfXBBwVr4Pvy2R6DexEfQuaMWZGPVsyFvMSpNFqyTQepijGjgMqDtw==
+X-Received: by 2002:a17:903:18d:b0:1fa:f9e1:5d33 with SMTP id d9443c01a7336-1faf9e15e0amr32122215ad.50.1720009322425;
+        Wed, 03 Jul 2024 05:22:02 -0700 (PDT)
+Received: from localhost.localdomain ([240e:604:203:6020:9d53:3114:91d1:7a47])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb24fbd598sm3616985ad.199.2024.07.03.05.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 05:22:01 -0700 (PDT)
+From: Fred Li <dracodingfly@gmail.com>
+To: pabeni@redhat.com
+Cc: aleksander.lobakin@intel.com,
+	andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	davem@davemloft.net,
+	dracodingfly@gmail.com,
+	edumazet@google.com,
+	haoluo@google.com,
+	hawk@kernel.org,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@weissschuh.net,
+	martin.lau@linux.dev,
+	mkhalfella@purestorage.com,
+	nbd@nbd.name,
+	netdev@vger.kernel.org,
+	sashal@kernel.org,
+	sdf@google.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	herbert@gondor.apana.org.au
+Subject: Re: [PATCH v2 1/2] net: Fix skb_segment when splitting gso_size mangled skb having linear-headed frag_list whose head_frag=true
+Date: Wed,  3 Jul 2024 20:21:53 +0800
+Message-Id: <20240703122153.25381-1-dracodingfly@gmail.com>
+X-Mailer: git-send-email 2.32.1 (Apple Git-133)
+In-Reply-To: <fd44c91884d0ebf3625ac85a1049679a987f8f79.camel@redhat.com>
+References: <fd44c91884d0ebf3625ac85a1049679a987f8f79.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND][PATCH v1 4/5] thermal: imx: Drop critical trip check
- from imx_set_trip_temp()
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>, Shawn Guo <shawnguo@kernel.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Thara Gopinath <thara.gopinath@gmail.com>,
- Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, linux-wireless@vger.kernel.org,
- linux-tegra@vger.kernel.org
-References: <1890956.tdWV9SEqCh@rjwysocki.net>
- <2272035.iZASKD2KPV@rjwysocki.net>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <2272035.iZASKD2KPV@rjwysocki.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 02/07/2024 16:43, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Because the IMX thermal driver does not flag its critical trip as
-> writable, imx_set_trip_temp() will never be invoked for it and so the
-> critical trip check can be dropped from there.
+> I must admit I more than a bit lost in the many turns of skb_segment(),
+> but the above does not look like the correct solution, as it will make
+> the later BUG_ON() unreachable/meaningless.
 
-And as a rule of thumb, we should not allow writing the critical trip 
-point temperature in the thermal core code.
+Sorry, the subsequent BUG_ON maybe should be removed in this patch, because
+for skb_headlen(list_skb) > len, it will continue splitting as commit 13acc94eff122 
+(net: permit skb_segment on head_frag frag_list skb) does.
 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->   drivers/thermal/imx_thermal.c |    9 ---------
->   1 file changed, 9 deletions(-)
 > 
-> Index: linux-pm/drivers/thermal/imx_thermal.c
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/imx_thermal.c
-> +++ linux-pm/drivers/thermal/imx_thermal.c
-> @@ -335,21 +335,12 @@ static int imx_set_trip_temp(struct ther
->   			     int temp)
->   {
->   	struct imx_thermal_data *data = thermal_zone_device_priv(tz);
-> -	struct thermal_trip trip;
->   	int ret;
->   
->   	ret = pm_runtime_resume_and_get(data->dev);
->   	if (ret < 0)
->   		return ret;
->   
-> -	ret = __thermal_zone_get_trip(tz, trip_id, &trip);
-> -	if (ret)
-> -		return ret;
-> -
-> -	/* do not allow changing critical threshold */
-> -	if (trip.type == THERMAL_TRIP_CRITICAL)
-> -		return -EPERM;
-> -
->   	/* do not allow passive to be set higher than critical */
->   	if (temp < 0 || temp > trips[IMX_TRIP_CRITICAL].temperature)
->   		return -EINVAL;
+> Do I read correctly that when the BUG_ON() triggers:
 > 
-> 
-> 
+> list_skb->len is 125
+> len is 75
+> list_skb->frag_head is true
+>
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+yes, it's correct.
+list_skb->len is 125
+gso_size is 75, also the len in the BUG_ON conditon
+list_skb->head_frag is true
+ 
+> It looks like skb_segment() is becoming even and ever more complex to
+> cope with unexpected skb layouts, only possibly when skb_segment() is
+> called by some BPF helpers.
+> 
+> Thanks,
+> 
+> Paolo
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+I'll wait for more suggestions from others.
+
+Thanks
+
+Fred Li
+
 
