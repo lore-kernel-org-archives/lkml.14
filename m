@@ -1,119 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB85E17E8EE;
-	Wed,  3 Jul 2024 15:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DE61DA319;
+	Wed,  3 Jul 2024 15:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019440; cv=none; b=nRiHXrdjYK1fC8XT4FTJKoLL6InUpHqYqF5LDbQBer6dj7arBpf5Ln0W9DYkXvcW+UYBYTi5lKOmECfSabGJdHb18XfXWMWX0yyxFkOnR89M01+zpYjnNb3pSQ/HuQYmd4YDgrsSn/qj9YyrXNP+QWqw9rpiXObvf+E/6Jzizxw=
+	t=1720019467; cv=none; b=Gh0Km+NDm3G6DG16BjoPfGj7NCIgXDq2D0JA+6UDvrONPhk4XHCm/sUm6LlDwtz8YZVy1BkFT/w9B/3UqF6lSLf5Hz1PaEICgBoPjZvLLFcrEiXipduQ26+t5AtdGD3ta88Y5cI4YgFTpHV1ziTJZbPqrBhau0uQ4mwHeu/0YG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019440; c=relaxed/simple;
-	bh=z5NT7nklWyh3rDy0r1YW8buRwoHbBrZ6LTh94YKUM84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rRRjgCWpfvRGqUjWMfhqw0ReFAYgAwwXosr9DSagVxk1IcWJnQMl7GTgcCarVpMVNI18bJtJWFmJEUCeLUVg0YHGR++a6gg5NYUg7xF7h5sZTyKNt09DK/AY/xMEdkjwZoJI88r8euwioiZ12JXVQyR2xdhxnovVeTIiPZ1LIa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ip5Iq2He; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720019467; c=relaxed/simple;
+	bh=3wjTP1DBKceOOiIIRZ+CtbjKJjvmYWz9hXD+GkONhlo=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=G6G+R5c7NE25FndVIBgOc4IPngj3zYC1/N7yQ66Ok0Xu4hMvnLhF46g+w2n/dN9K3lpuhxo9HLB7USjZM8m+NBbUlc5oDHSFUuh5QmnsNA61hxC/TdcwRFp1peKFSyvhojOw2UvlHCj0lueJ5+jMuiDSEFocRVRxwzPAfoxPriM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QctYtcqB; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ip5Iq2He"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C715DC2BD10;
-	Wed,  3 Jul 2024 15:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720019440;
-	bh=z5NT7nklWyh3rDy0r1YW8buRwoHbBrZ6LTh94YKUM84=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ip5Iq2HezpBHXYt/93hPbeMG7Zo/ec1gIvdcgAC9d8gL6AZN3LQUDCb874Tj88Cho
-	 4tKk+8DPYZFlQia57yoq0HWevC8Kw+XR+C7ZmDpCmXW+slcUp/I9w4zd/7EtxgG7K3
-	 /WrPDnpnK1Ki+fsWWSOAKR7hB6o4C05njYsnmFYyHb3sSeSCbaE30Mu2aXzk4YmoXx
-	 sEh9a5qkKq6KPKr+OGXfp4WnQLO2lYWnsouQXl3XbmCCMChZMbobi1MIsNNms/3yin
-	 cStctn9CCEXxDKaMmF1z0el9UOQDqR5yZADzGBYxR0vxXbC2LKEgiTpgXc5biTgHxC
-	 0drEK1adVdLxw==
-Date: Wed, 3 Jul 2024 16:10:35 +0100
-From: Simon Horman <horms@kernel.org>
-To: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH iwl-net v1 4/4] igc: Fix qbv tx latency by setting
- gtxoffset
-Message-ID: <20240703151035.GQ598357@kernel.org>
-References: <20240702040926.3327530-1-faizal.abdul.rahim@linux.intel.com>
- <20240702040926.3327530-5-faizal.abdul.rahim@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QctYtcqB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720019462; x=1720624262; i=markus.elfring@web.de;
+	bh=uzXyAXmbJBxGH6PQ3hVx3H9XYijhY9dW2zRghJjaRTI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=QctYtcqBAc9Z7SyNbdJh4kGMRJx+WhM3exw+AS54JsJAzzZq4gkRLIQRZBh/ZNdb
+	 uI6gZykd6BzQo4orusmIJM/tWoGmoNRyGzcDykFjb5lQkDAGkaqEFb+uHGM8dNrAn
+	 2BpIRCqL7Z3ZboCPKX+cMjk6Rrj/FmDtQFTZa38sM+nDycmzezFBDj3M4rzqdUoHG
+	 Nh4Aw7GxsMH7bQA4ZL3147x892CPOhKKfxjqf/XRsH4oy16Ht/dX7qjNmTsYqNy8/
+	 SORh5RcMOBzieCuU5x1d+X6LLZ+eEb02Pm6ZhTwTmDKZX0IygU7i8wz7JytqlfmHu
+	 gD1IPlNrNCu6L2bEIQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Ml46w-1rzp832BZM-00ekp4; Wed, 03
+ Jul 2024 17:05:15 +0200
+Message-ID: <b0fe50c3-9279-4225-aad5-2869b335fe53@web.de>
+Date: Wed, 3 Jul 2024 17:05:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240702040926.3327530-5-faizal.abdul.rahim@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+To: Haoxiang Li <make24@iscas.ac.cn>, linux-hyperv@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Andrea Parri <parri.andrea@gmail.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Michael Kelley
+ <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240703084221.12057-1-make24@iscas.ac.cn>
+Subject: Re: [PATCH v2] drivers: hv: vmbus: Add missing check for dma_set_mask
+ in vmbus_device_register()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240703084221.12057-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:YV8ws4IVXhh8faxR3kOPPdm6RfB/oTFu1GWuLpn3YbmM6sIdPrS
+ kdcANEgP8Z3mzIkApf8ZC6F+eE8H9zgChVOZllxO5YZyDBJz7IvNo2qG7WZgbV1FEo/YUZx
+ En6C+uRQWZKf47+Fgyqh7vgGCu8V+2e07I/2hNOm/g7UJknTRyTAscOnJG+1QSKMHoQuMxQ
+ DH1aX6qwRzRq7oCWtKbTQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:njd83SA+1ts=;J++nmAq9qfV+/27rRiJIp7+2skC
+ ie7foP98eRndAw9gUKDk3/WRDjb7nlNxefeJLjVZakxQyUUScjeabFmhN8y4YEBlfvqIgbiEp
+ KPWTpuOYnD1/EArT0dYcenbLcWv8sjapAypkUOzyrxC0QVk8ZbCdWezbK+K3EG8tr3FwuenQY
+ 14CLBPN7IlmhOa041iu7KW047zdTuG7NZalH5csWhpX91GuZkFKQhoNPVoW9waBQjaTzb4nyu
+ jq0XJWtMdN/q2F+1s9EEspSgpqSK4oZHxx/aPGq9M0W8698cglHJV/fDkbyOlM1z5p3iA1Onv
+ EBXX9y1GZmE5yXOeKicPzEFGDr3eDiBdMHQ6rcMmHxB8xpxGHcNAXdWdFokSE++jZpiojWzxB
+ GxJGttL9jCv4COvG0PK1y9hnTdUH+mi5gGnAAgVaNwoJJv1mvSNjegmgMWksRHTaTfgdroxs4
+ 5b4rXt8zBwhOjCvuOHu6EM8wx+OrhviaufEY1AvOryfnqreFIGN8soeaGvfTBZJ49QILoD7/c
+ T6L8/W3jHqlL5B5dmouUk+y2n23JwdfzzHX85AstyF7nmQu42rrPNpAhHhg0Tvd95MVk/Ahop
+ 2lpP24KXemslIloJjLqPwNKLog79crjZKVDIzkv4XvJKTT+AugA6t8DHZ6umkOV1AxCPArWpD
+ qTpuH5iw5d7GEm28JtTW92Nf45Uo9nQM7gUWvuLg0JWe9rRe1edMIih5ViQ1cn/ppS9kB1hXK
+ m6M+gTkoCrKx4wGSHv1lMaGB0POF22yFUY3SV5G+tTigD7oq7InFz3Bfm5v54I6/9cDoeh5Y/
+ tbSYpyOkwHymqUMLqwj/jpnEGADY4DBwejG2RmYLuqliQ=
 
-On Tue, Jul 02, 2024 at 12:09:26AM -0400, Faizal Rahim wrote:
-> A large tx latency issue was discovered during testing when only QBV was
-> enabled. The issue occurs because gtxoffset was not set when QBV is
-> active, it was only set when launch time is active.
-> 
-> The patch "igc: Correct the launchtime offset" only sets gtxoffset when
-> the launchtime_enable field is set by the user. Enabling launchtime_enable
-> ultimately sets the register IGC_TXQCTL_QUEUE_MODE_LAUNCHT (referred to as
-> LaunchT in the SW user manual).
-> 
-> Section 7.5.2.6 of the IGC i225/6 SW User Manual Rev 1.2.4 states:
-> "The latency between transmission scheduling (launch time) and the
-> time the packet is transmitted to the network is listed in Table 7-61."
-> 
-> However, the patch misinterprets the phrase "launch time" in that section
-> by assuming it specifically refers to the LaunchT register, whereas it
-> actually denotes the generic term for when a packet is released from the
-> internal buffer to the MAC transmit logic.
-> 
-> This launch time, as per that section, also implicitly refers to the QBV
-> gate open time, where a packet waits in the buffer for the QBV gate to
-> open. Therefore, latency applies whenever QBV is in use. TSN features such
-> as QBU and QAV reuse QBV, making the latency universal to TSN features.
-> 
-> Discussed with i226 HW owner (Shalev, Avi) and we were in agreement that
-> the term "launch time" used in Section 7.5.2.6 is not clear and can be
-> easily misinterpreted. Avi will update this section to:
-> "When TQAVCTRL.TRANSMIT_MODE = TSN, the latency between transmission
-> scheduling and the time the packet is transmitted to the network is listed
-> in Table 7-61."
-> 
-> Fix this issue by using igc_tsn_is_tx_mode_in_tsn() as a condition to
-> write to gtxoffset, aligning with the newly updated SW User Manual.
-> 
-> Tested:
-> 1. Enrol taprio on talker board
->    base-time 0
->    cycle-time 1000000
->    flags 0x2
->    index 0 cmd S gatemask 0x1 interval1
->    index 0 cmd S gatemask 0x1 interval2
-> 
->    Note:
->    interval1 = interval for a 64 bytes packet to go through
->    interval2 = cycle-time - interval1
-> 
-> 2. Take tcpdump on listener board
-> 
-> 3. Use udp tai app on talker to send packets to listener
-> 
-> 4. Check the timestamp on listener via wireshark
-> 
-> Test Result:
-> 100 Mbps: 113 ~193 ns
-> 1000 Mbps: 52 ~ 84 ns
-> 2500 Mbps: 95 ~ 223 ns
-> 
-> Note that the test result is similar to the patch "igc: Correct the
-> launchtime offset".
-> 
-> Fixes: 790835fcc0cb ("igc: Correct the launchtime offset")
-> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+> child_device_obj->device cannot perform DMA properly if dma_set_mask()
+> returns non-zero. =E2=80=A6
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Can the repetition of another wording suggestion influence the software ev=
+olution?
+  Direct memory access can not be properly performed any more
+  after a dma_set_mask() call failed.
 
+
+See also:
+https://elixir.bootlin.com/linux/v6.10-rc6/source/kernel/dma/mapping.c#L80=
+4
+
+
+=E2=80=A6
+> Signed-off-by: Haoxiang Li <make24@iscas.ac.cn>
+
+Under which circumstances will applications of the Developer's Certificate=
+ of Origin
+be reconsidered any more (after three different names were presented so fa=
+r)?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n398
+
+
+Would you like to append parentheses to another function name in the summa=
+ry phrase?
+
+Regards,
+Markus
