@@ -1,50 +1,49 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3CD49641;
-	Wed,  3 Jul 2024 05:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB5813541F;
+	Wed,  3 Jul 2024 05:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719986331; cv=none; b=QF8jF4kislGxqCn6gFjDHNQVsZnKStoouML3Yx0BfOgGTIhLod82n+jPdyFSp1+BM8AQbxW4KwmV47fEhHuYQvcpIAT/KLjeI76J9Cu29kYWdlJdNH8VDKIMqBkDuqcgL5rrv7c2prOQV4Xqa/hRGH5VbvFwXENUvV39enLntKs=
+	t=1719986326; cv=none; b=ty2KQXBvxv6zyII1oJFfvPtG7wZ/FAvQhclq7SEwOsZFPPZYnwtJrmrjulE0lsJEruhrsUHWOpr587VoRnn65f+U8+jvKgj6M82rvUnZw7gfvkF4mvQGv6h91EakImynuCqGfoh4YdO8UVAOYzC+s4S2wp+YdjGOM81Ety3aR8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719986331; c=relaxed/simple;
-	bh=XzNFUQ2EwQf/TZ0IGIm4LrUJD0Hy6DUecxnrIoxyjvE=;
+	s=arc-20240116; t=1719986326; c=relaxed/simple;
+	bh=l7zbK7rFs9De/N+VRxmnvNYF9IssHTkcgHSKBWIUrKA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=QPtWKqPE5LyafWqW2F+dAy3nIeUUa6fSCBajd8AKzqnAIBHiRNvrACSG9VWWUpU0eHAzZWSBq0oYqhRV0JOCB3lfgFV/Fgv2jC47ezfgg5fjngFCiZTdLVQ0s3UgQLoNvWhByACRywoExhfguYFS6ZEY1XzniOswhpr3oeN9vro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LxlSHf29; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=dUs3+J4WrOSCXOY+YpiSTEP5fO5878ZKyzzR16woaLOEWqa8XA0hBGQcbSX1E4aJXPk5NpPwpGUlKWo1oHhMUKMWYNzu4twkG0LhBPVsh8xldvfNGsVlwdxESF2Wv5Gsl0V1G7jofFQ1QUQL5U+uAJnLISsc1qNFUQhJYom/zAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D7ewIrZ5; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LxlSHf29"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4634Miwt026797;
-	Wed, 3 Jul 2024 05:58:33 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D7ewIrZ5"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462HEXFI026437;
+	Wed, 3 Jul 2024 05:58:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+Qufv8nSsO26prsDMp1M0X/extr/ONR88p7a4XR34fg=; b=LxlSHf29+iXUztDt
-	xzRUG6U/Z/c+xyy1Ek59PFE1Uqz8lzzQ93JlOWT9PUG4T6ByAEwesExHaik0AHfU
-	gBzQQZIcTOuGtxJBmi5voOGBgjQuuEcTUIg+pq9yUWJnnfs2ugxcwjywcbjwp1NL
-	pUC4acDT8WOXW3OFoYMQPzuW20+bZT0KkMTc5Z8OhV1+feN0kJwY0BCJRxIBJhS4
-	pYj9xYhtT8ZDJJjD785/J7RKkJJiKPf9sjc0b6N2YUJ4fUtEvS16gZjPQ7lGAiOC
-	0/jbCS24PkjHWS6AItJpLa+AfjoFm9CoGhdmQ5wx0KmlEwsjBYwChRaljnaxolhe
-	L1TuWg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 404yjhr5a2-1
+	V8TXcx8jw6QWvKs5CYwsTmHLAtBSwRHSzyv0bVaGZQ4=; b=D7ewIrZ5qK0iDwyT
+	lhg63QZcIQQ+p7Gm+00wlQrQg2o5fXkbtLFkNNInf+FtgFIYnK5UQ+Rh322Tl5tw
+	yn72qpix9EI6g0EDJndn9shPYxLgqJpbD92InV6tzOYR3UACJ7Q8hgHZ80q0Bkxm
+	YwqWc58HAiGe8k5s70DCsGZtgLFZfufxhGOdxyKUcRllOPzufmRoudTLIWj6ILWN
+	iY2rMHg83Xgf/PJEF+0HTPYyGMSGbH3rIv3kSyR/1Qey4+aSck+ZY8ap+rAmNl0V
+	MRZyj65bHAOSkUfJ4micQcOTHq2w3OCmjA0UKPBwoJQ+DqLV+tdE6M/RBcsc+B5w
+	WJz6NQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4027mnr571-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 03 Jul 2024 05:58:33 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4635wWlv003308
+	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4635wVlv031851
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Jul 2024 05:58:32 GMT
+	Wed, 3 Jul 2024 05:58:31 GMT
 Received: from hu-azarrabi-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 2 Jul 2024 22:58:32 -0700
+ 15.2.1544.9; Tue, 2 Jul 2024 22:58:31 -0700
 From: Amirreza Zarrabi <quic_azarrabi@quicinc.com>
-Date: Tue, 2 Jul 2024 22:57:38 -0700
-Subject: [PATCH RFC 3/3] firmware: qcom: implement ioctl for TEE object
- invocation
+Date: Tue, 2 Jul 2024 22:57:36 -0700
+Subject: [PATCH RFC 1/3] firmware: qcom: implement object invoke support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240702-qcom-tee-object-and-ioctls-v1-3-633c3ddf57ee@quicinc.com>
+Message-ID: <20240702-qcom-tee-object-and-ioctls-v1-1-633c3ddf57ee@quicinc.com>
 References: <20240702-qcom-tee-object-and-ioctls-v1-0-633c3ddf57ee@quicinc.com>
 In-Reply-To: <20240702-qcom-tee-object-and-ioctls-v1-0-633c3ddf57ee@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -70,1420 +69,1942 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: tv38L9CMtE-9U0HzqzGp_E2MQ2jCqEMF
-X-Proofpoint-ORIG-GUID: tv38L9CMtE-9U0HzqzGp_E2MQ2jCqEMF
+X-Proofpoint-ORIG-GUID: bgfF0m4pFUqjGKfycWXzM9nANdFOjKka
+X-Proofpoint-GUID: bgfF0m4pFUqjGKfycWXzM9nANdFOjKka
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-03_02,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- mlxlogscore=999 clxscore=1015 lowpriorityscore=0 suspectscore=0
- malwarescore=0 mlxscore=0 priorityscore=1501 adultscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 mlxscore=0 suspectscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2406140001 definitions=main-2407030042
 
-Provide ioctl to expose support to invoke a TEE object to userspace and
-implementing a callback server to handle TEE object invokes.
+Qualcomm TEE hosts Trusted Applications and Services that run in the
+secure world. Access to these resources is provided using object
+capabilities. A TEE client with access to the capability can invoke
+the object and request a service. Similarly, TEE can request a service
+from nonsecure world with object capabilities that are exported to secure
+world.
+
+We provide qcom_tee_object which represents an object in both secure
+and nonsecure world. TEE clients can invoke an instance of qcom_tee_object
+to access TEE. TEE can issue a callback request to nonsecure world
+by invoking an instance of qcom_tee_object in nonsecure world.
+
+Any driver in nonsecure world that is interested to export a struct (or a
+service object) to TEE, requires to embed an instance of qcom_tee_object in
+the relevant struct and implements the dispatcher function which is called
+when TEE invoked the service object.
+
+We also provids simplified API which implements the Qualcomm TEE transport
+protocol. The implementation is independent from any services that may
+reside in nonsecure world.
 
 Signed-off-by: Amirreza Zarrabi <quic_azarrabi@quicinc.com>
 ---
- drivers/firmware/qcom/Kconfig                      |   12 +
- drivers/firmware/qcom/qcom_object_invoke/Makefile  |    3 +
- .../qcom_object_invoke/xts/object_invoke_uapi.c    | 1231 ++++++++++++++++++++
- include/uapi/misc/qcom_tee.h                       |  117 ++
- 4 files changed, 1363 insertions(+)
+ drivers/firmware/qcom/Kconfig                      |   14 +
+ drivers/firmware/qcom/Makefile                     |    2 +
+ drivers/firmware/qcom/qcom_object_invoke/Makefile  |    4 +
+ drivers/firmware/qcom/qcom_object_invoke/async.c   |  142 +++
+ drivers/firmware/qcom/qcom_object_invoke/core.c    | 1139 ++++++++++++++++++++
+ drivers/firmware/qcom/qcom_object_invoke/core.h    |  186 ++++
+ .../qcom/qcom_object_invoke/qcom_scm_invoke.c      |   22 +
+ .../firmware/qcom/qcom_object_invoke/release_wq.c  |   90 ++
+ include/linux/firmware/qcom/qcom_object_invoke.h   |  233 ++++
+ 9 files changed, 1832 insertions(+)
 
 diff --git a/drivers/firmware/qcom/Kconfig b/drivers/firmware/qcom/Kconfig
-index f16fb7997595..6592f79d3b70 100644
+index 7f6eb4174734..103ab82bae9f 100644
 --- a/drivers/firmware/qcom/Kconfig
 +++ b/drivers/firmware/qcom/Kconfig
-@@ -108,4 +108,16 @@ config QCOM_OBJECT_INVOKE_MEM_OBJECT
+@@ -84,4 +84,18 @@ config QCOM_QSEECOM_UEFISECAPP
+ 	  Select Y here to provide access to EFI variables on the aforementioned
+ 	  platforms.
  
- 	  Select Y here Enable support for memory object.
- 
-+config QCOM_OBJECT_INVOKE
-+	bool "Add support for userspace to access TEE"
-+	select QCOM_OBJECT_INVOKE_CORE
-+	select QCOM_OBJECT_INVOKE_MEM_OBJECT
++config QCOM_OBJECT_INVOKE_CORE
++	bool "Secure TEE Communication Support"
 +	help
-+	  This provides an interface to access TEE from userspace. It creates two
-+	  char devices /dev/tee and /dev/tee-ree. The /dev/tee is used to obtain
-+	  access to the root client env object. The /dev/tee-ree is used to start a
-+	  callback server.
++	  Various Qualcomm SoCs have a Trusted Execution Environment (TEE) running
++	  in the Trust Zone. This module provides an interface to that via the
++	  capability based object invocation, using SMC calls.
++
++	  OBJECT_INVOKE_CORE allows capability based secure communication between
++	  TEE and VMs. Using OBJECT_INVOKE_CORE, kernel can issue calls to TEE or
++	  TAs to request a service or exposes services to TEE and TAs. It implements
++	  the necessary marshaling of messages with TEE.
 +
 +	  Select Y here to provide access to TEE.
 +
  endmenu
-diff --git a/drivers/firmware/qcom/qcom_object_invoke/Makefile b/drivers/firmware/qcom/qcom_object_invoke/Makefile
-index 1f7d43fa38db..9c2350fff6b7 100644
---- a/drivers/firmware/qcom/qcom_object_invoke/Makefile
-+++ b/drivers/firmware/qcom/qcom_object_invoke/Makefile
-@@ -7,3 +7,6 @@ object-invoke-core-objs := qcom_scm_invoke.o release_wq.o async.o core.o
- 
- obj-$(CONFIG_QCOM_OBJECT_INVOKE_MEM_OBJECT) += mem-object.o
- mem-object-objs := xts/mem_object.o
+diff --git a/drivers/firmware/qcom/Makefile b/drivers/firmware/qcom/Makefile
+index 0be40a1abc13..dd5e00215b2e 100644
+--- a/drivers/firmware/qcom/Makefile
++++ b/drivers/firmware/qcom/Makefile
+@@ -8,3 +8,5 @@ qcom-scm-objs += qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
+ obj-$(CONFIG_QCOM_TZMEM)	+= qcom_tzmem.o
+ obj-$(CONFIG_QCOM_QSEECOM)	+= qcom_qseecom.o
+ obj-$(CONFIG_QCOM_QSEECOM_UEFISECAPP) += qcom_qseecom_uefisecapp.o
 +
-+obj-$(CONFIG_QCOM_OBJECT_INVOKE) += object-invoke-uapi.o
-+object-invoke-uapi-objs := xts/object_invoke_uapi.o
-diff --git a/drivers/firmware/qcom/qcom_object_invoke/xts/object_invoke_uapi.c b/drivers/firmware/qcom/qcom_object_invoke/xts/object_invoke_uapi.c
++obj-y += qcom_object_invoke/
+diff --git a/drivers/firmware/qcom/qcom_object_invoke/Makefile b/drivers/firmware/qcom/qcom_object_invoke/Makefile
 new file mode 100644
-index 000000000000..b6d2473e183c
+index 000000000000..6ef4d54891a5
 --- /dev/null
-+++ b/drivers/firmware/qcom/qcom_object_invoke/xts/object_invoke_uapi.c
-@@ -0,0 +1,1231 @@
++++ b/drivers/firmware/qcom/qcom_object_invoke/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_QCOM_OBJECT_INVOKE_CORE) += object-invoke-core.o
++object-invoke-core-objs := qcom_scm_invoke.o release_wq.o async.o core.o
+diff --git a/drivers/firmware/qcom/qcom_object_invoke/async.c b/drivers/firmware/qcom/qcom_object_invoke/async.c
+new file mode 100644
+index 000000000000..dd022ec68d8b
+--- /dev/null
++++ b/drivers/firmware/qcom/qcom_object_invoke/async.c
+@@ -0,0 +1,142 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#include <linux/kobject.h>
++#include <linux/slab.h>
++#include <linux/mutex.h>
++
++#include "core.h"
++
++/* Async handlers and providers. */
++struct async_msg {
++	struct {
++		u32 version;	/* Protocol version: top 16b major, lower 16b minor. */
++		u32 op;			/* Async operation. */
++	} header;
++
++	/* Format of the Async data field is defined by the specified operation. */
++
++	struct {
++		u32 count;	/* Number of objects that should be released. */
++		u32 obj[];
++	} op_release;
++};
++
++/* Async Operations and header information. */
++
++#define ASYNC_HEADER_SIZE sizeof(((struct async_msg *)(0))->header)
++
++/* ASYNC_OP_x: operation.
++ * ASYNC_OP_x_HDR_SIZE: header size for the operation.
++ * ASYNC_OP_x_SIZE: size of each entry in a message for the operation.
++ * ASYNC_OP_x_MSG_SIZE: size of a message with n entries.
++ */
++
++#define ASYNC_OP_RELEASE QCOM_TEE_OBJECT_OP_RELEASE	/* Added in minor version 0x0000. **/
++#define ASYNC_OP_RELEASE_HDR_SIZE offsetof(struct async_msg, op_release.obj)
++#define ASYNC_OP_RELEASE_SIZE sizeof(((struct async_msg *)(0))->op_release.obj[0])
++#define ASYNC_OP_RELEASE_MSG_SIZE(n) \
++	(ASYNC_OP_RELEASE_HDR_SIZE + ((n) * ASYNC_OP_RELEASE_SIZE))
++
++/* async_qcom_tee_buffer return the available async buffer in the output buffer. */
++
++static struct qcom_tee_buffer async_qcom_tee_buffer(struct qcom_tee_object_invoke_ctx *oic)
++{
++	int i;
++	size_t offset;
++
++	struct qcom_tee_callback *msg = (struct qcom_tee_callback *)oic->out.msg.addr;
++
++	if (!(oic->flags & OIC_FLAG_BUSY))
++		return oic->out.msg;
++
++	/* Async requests are appended to the output buffer after the CB message. */
++
++	offset = OFFSET_TO_BUFFER_ARGS(msg, counts_total(msg->counts));
++
++	for_each_input_buffer(i, msg->counts)
++		offset += align_offset(msg->args[i].b.size);
++
++	for_each_output_buffer(i, msg->counts)
++		offset += align_offset(msg->args[i].b.size);
++
++	if (oic->out.msg.size > offset) {
++		return (struct qcom_tee_buffer)
++			{ { oic->out.msg.addr + offset }, oic->out.msg.size - offset };
++	}
++
++	pr_err("no space left for async messages! or malformed message.\n");
++
++	return (struct qcom_tee_buffer) { { 0 }, 0 };
++}
++
++static size_t async_release_handler(struct qcom_tee_object_invoke_ctx *oic,
++	struct async_msg *async_msg, size_t size)
++{
++	int i;
++
++	/* We need space for at least a single entry. */
++	if (size < ASYNC_OP_RELEASE_MSG_SIZE(1))
++		return 0;
++
++	for (i = 0; i < async_msg->op_release.count; i++) {
++		struct qcom_tee_object *object;
++
++		/* Remove the object from xa_qcom_tee_objects so that the object_id
++		 * becomes invalid for further use. However, call put_qcom_tee_object
++		 * to schedule the actual release if there is no user.
++		 */
++
++		object = erase_qcom_tee_object(async_msg->op_release.obj[i]);
++
++		put_qcom_tee_object(object);
++	}
++
++	return ASYNC_OP_RELEASE_MSG_SIZE(i);
++}
++
++/* '__fetch__async_reqs' is a handler dispatcher (from TEE). */
++
++void __fetch__async_reqs(struct qcom_tee_object_invoke_ctx *oic)
++{
++	size_t consumed, used = 0;
++
++	struct qcom_tee_buffer async_buffer = async_qcom_tee_buffer(oic);
++
++	while (async_buffer.size - used > ASYNC_HEADER_SIZE) {
++		struct async_msg *async_msg = (struct async_msg *)(async_buffer.addr + used);
++
++		/* TEE assumes unused buffer is set to zero. */
++		if (!async_msg->header.version)
++			goto out;
++
++		switch (async_msg->header.op) {
++		case ASYNC_OP_RELEASE:
++			consumed = async_release_handler(oic,
++				async_msg, async_buffer.size - used);
++
++			break;
++		default: /* Unsupported operations. */
++			consumed = 0;
++		}
++
++		used += align_offset(consumed);
++
++		if (!consumed) {
++			pr_err("Drop async buffer (context_id %d): buffer %p, (%p, %zx), processed %zx\n",
++				oic->context_id,
++				oic->out.msg.addr,	/* Address of Output buffer. */
++				async_buffer.addr,	/* Address of beginning of async buffer. */
++				async_buffer.size,	/* Available size of async buffer. */
++				used);				/* Processed async buffer. */
++
++			goto out;
++		}
++	}
++
++ out:
++
++	memset(async_buffer.addr, 0, async_buffer.size);
++}
+diff --git a/drivers/firmware/qcom/qcom_object_invoke/core.c b/drivers/firmware/qcom/qcom_object_invoke/core.c
+new file mode 100644
+index 000000000000..37dde8946b08
+--- /dev/null
++++ b/drivers/firmware/qcom/qcom_object_invoke/core.c
+@@ -0,0 +1,1139 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 + */
 +
-+#define pr_fmt(fmt) "qcom-object-invoke-uapi: %s: " fmt, __func__
-+
++#include <linux/kobject.h>
++#include <linux/sysfs.h>
 +#include <linux/module.h>
-+#include <linux/file.h>
-+#include <linux/dma-buf.h>
-+#include <linux/cdev.h>
-+#include <linux/version.h>
-+#include <linux/anon_inodes.h>
-+#include <linux/miscdevice.h>
-+#include <linux/platform_device.h>
-+#include <linux/mod_devicetable.h>
++#include <linux/init.h>
++#include <linux/slab.h>
++#include <linux/delay.h>
++#include <linux/mm.h>
++#include <linux/xarray.h>
 +
-+#include <linux/firmware/qcom/qcom_object_invoke.h>
++#include "core.h"
 +
-+/* Mutex to protect userspace processes. */
-+static DEFINE_MUTEX(si_mutex);
++/* Static 'Primordial Object' operations. */
 +
-+static const struct file_operations qtee_fops;
-+static const struct file_operations server_fops;
++#define OBJECT_OP_YIELD	1
++#define OBJECT_OP_SLEEP	2
 +
-+struct server_info {
-+	struct kref refcount;
++/* static_qcom_tee_object_primordial always exists. */
++/* primordial_object_register and primordial_object_release extends it. */
 +
-+	/* List of transactions pending for service. */
-+	struct list_head cb_tx_list;
++static struct qcom_tee_object static_qcom_tee_object_primordial;
 +
-+	int id, dead;
++static int primordial_object_register(struct qcom_tee_object *object);
++static void primordial_object_release(struct qcom_tee_object *object);
 +
-+	/* Queue of threads waiting for a new transaction. */
-+	wait_queue_head_t server_threads;
-+};
-+
-+/* Dispatcher is called with context ID [10 .. n] from qcom_object_invoke_core.c.
-+ * Any ID below 10 is available to call dispatcher internally.
-+ * Here, CONTEXT_ID_ANY is used to state that it is an async call, e.g. release.
++/* Marshaling API. */
++/*
++ * prepare_msg - Prepares input buffer for sending to TEE.
++ * update_args - Parses TEE response in input buffer.
++ * prepare_args - Parses TEE request from output buffer.
++ * update_msg - Updates output buffer with response for TEE request.
++ *
++ * prepare_msg and update_args are used in direct TEE object invocation.
++ * prepare_args and update_msg are used for TEE requests (callback or async).
 + */
-+#define CONTEXT_ID_ANY 0
 +
-+/* A transaction made to usespace server host an object. */
-+struct cb_txn {
-+	struct kref refcount;
-+	struct list_head node;
-+	struct completion completion;
++static int prepare_msg(struct qcom_tee_object_invoke_ctx *oic,
++	struct qcom_tee_object *object, unsigned long op, struct qcom_tee_arg u[]);
++static int update_args(struct qcom_tee_arg u[], struct qcom_tee_object_invoke_ctx *oic);
++static int prepare_args(struct qcom_tee_object_invoke_ctx *oic);
++static int update_msg(struct qcom_tee_object_invoke_ctx *oic);
 +
-+	/* ''Object Invocation'' */
-+
-+	struct qcom_tee_arg *args;	/* Arguments for the requested operation. */
-+	int errno;					/* Result of the operation. */
-+
-+	enum state {
-+		XST_NEW = 0,		/* New transaction. */
-+		XST_PENDING = 1,	/* Waiting for server. */
-+		XST_PROCESSING = 2,	/* Being processed by server. */
-+		XST_PROCESSED = 3,	/* Done. */
-+		XST_TIMEDOUT = 4,
-+	} processing;
-+
-+	/* ''Object Invocation'' as seen by userspace. */
-+
-+	struct qcom_tee_cb_arg *uargs;
-+	size_t uargs_size;
-+};
-+
-+/* 'struct cb_object' is a userspace object. */
-+struct cb_object {
-+	struct qcom_tee_object object;
-+
-+	/* If set, we send release request to userspace. */
-+	int notify_on_release;
-+
-+	/* 'id' + 'server_info' combo that represents user object.*/
-+	u64 id;
-+	struct server_info *si;
-+};
-+
-+static struct qcom_tee_object_operations cbo_ops;
-+
-+#define to_cb_object(o) container_of((o), struct cb_object, object)
-+
-+static int is_cb_object(struct qcom_tee_object *object)
++static int next_arg_type(struct qcom_tee_arg u[], int i, enum qcom_tee_arg_type type)
 +{
-+	return (typeof_qcom_tee_object(object) == QCOM_TEE_OBJECT_TYPE_CB_OBJECT) &&
-+		(object->ops == &cbo_ops);
++	while (u[i].type != QCOM_TEE_ARG_TYPE_END && u[i].type != type)
++		i++;
++
++	return i;
 +}
 +
-+static int fd_alloc(const char *name, const struct file_operations *fops, void *private)
-+{
-+	int fd;
-+	struct file *file;
-+
-+	fd = get_unused_fd_flags(O_RDWR);
-+	if (fd < 0)
-+		return fd;
-+
-+	file = anon_inode_getfile(name, fops, private, O_RDWR);
-+	if (!IS_ERR(file)) {
-+		fd_install(fd, file);
-+
-+		return fd;
-+	}
-+
-+	put_unused_fd(fd);
-+
-+	return PTR_ERR(file);
-+}
-+
-+static struct file *get_file_of_type(int fd, const struct file_operations *fop)
-+{
-+	struct file *filp;
-+
-+	filp = fget(fd);
-+	if (!filp)
-+		return NULL;
-+
-+	if (filp->f_op == fop)
-+		return filp;
-+
-+	fput(filp);
-+
-+	return NULL;
-+}
-+
-+static struct cb_object *cb_object_alloc_for_param(struct qcom_tee_param *param)
-+{
-+	struct file *filp;
-+	struct cb_object *cb_object;
-+
-+	filp = get_file_of_type(param->object.host_id, &server_fops);
-+	if (!filp)
-+		return ERR_PTR(-EBADF);
-+
-+	cb_object = kzalloc(sizeof(*cb_object), GFP_KERNEL);
-+	if (cb_object) {
-+		kref_get(&cb_object->si->refcount);
-+		cb_object->notify_on_release = 1; /* Default: notify. */
-+		cb_object->id = param->object.id;
-+		cb_object->si = filp->private_data;
-+
-+	} else {
-+		cb_object = ERR_PTR(-ENOMEM);
-+	}
-+
-+	fput(filp);
-+
-+	return cb_object;
-+}
-+
-+/* QCOM_TEE_OBJECT to/from PARAM. */
-+
-+/* This declaration should be removed, see comments in get_qcom_tee_object_from_param. */
-+struct qcom_tee_object *qcom_tee_mem_object_init(struct dma_buf *dma_buf,
-+	void (*release)(void *), void *private);
-+
-+/* get_qcom_tee_object_from_param - converts a param to instance of qcom_tee_object.
-+ * It calls get_qcom_tee_object before returning (i.e. ref == 2) for all objects
-+ * except QCOM_TEE_OBJECT_TYPE_USER: One reference for TEE and one for driver itself.
++/**
++ * args_for_each_type - Iterate over argument of given type.
++ * @i: index in @args.
++ * @args: array of arguments.
++ * @at: type of argument.
 + */
-+static int get_qcom_tee_object_from_param(struct qcom_tee_param *param, struct qcom_tee_arg *arg)
++#define args_for_each_type(i, args, at) \
++	for (i = 0, i = next_arg_type(args, i, at); \
++		args[i].type != QCOM_TEE_ARG_TYPE_END; i = next_arg_type(args, ++i, at))
++
++#define arg_for_each_input_buffer(i, args)  args_for_each_type(i, args, QCOM_TEE_ARG_TYPE_IB)
++#define arg_for_each_output_buffer(i, args) args_for_each_type(i, args, QCOM_TEE_ARG_TYPE_OB)
++#define arg_for_each_input_object(i, args)  args_for_each_type(i, args, QCOM_TEE_ARG_TYPE_IO)
++#define arg_for_each_output_object(i, args) args_for_each_type(i, args, QCOM_TEE_ARG_TYPE_OO)
++
++/* Outside this file we use struct qcom_tee_object to identify an object. */
++
++/* We only allocate IDs with QCOM_TEE_OBJ_NS_BIT set in range
++ * [QCOM_TEE_OBJECT_ID_START .. QCOM_TEE_OBJECT_ID_END]. qcom_tee_object
++ * represents non-secure object. The first ID with QCOM_TEE_OBJ_NS_BIT set is reserved
++ * for primordial object.
++ */
++
++#define QCOM_TEE_OBJECT_PRIMORDIAL	(QCOM_TEE_OBJ_NS_BIT)
++#define QCOM_TEE_OBJECT_ID_START	(QCOM_TEE_OBJECT_PRIMORDIAL + 1)
++#define QCOM_TEE_OBJECT_ID_END		(UINT_MAX)
++
++#define SET_QCOM_TEE_OBJECT(p, type, ...) __SET_QCOM_TEE_OBJECT(p, type, ##__VA_ARGS__, 0UL)
++#define __SET_QCOM_TEE_OBJECT(p, type, optr, ...) do { \
++		(p)->object_type = (type); \
++		(p)->info.object_ptr = (unsigned long)(optr); \
++		(p)->release = NULL; \
++	} while (0)
++
++/* ''TEE Object Table''. */
++static DEFINE_XARRAY_ALLOC(xa_qcom_tee_objects);
++
++struct qcom_tee_object *allocate_qcom_tee_object(void)
 +{
-+	int ret = 0;
 +	struct qcom_tee_object *object;
 +
-+	if (param->attr == QCOM_TEE_OBJECT) {
-+		if (QCOM_TEE_PARAM_OBJECT_USER(param)) {
-+			struct cb_object *cb_object;
++	object = kzalloc(sizeof(*object), GFP_KERNEL);
++	if (object)
++		SET_QCOM_TEE_OBJECT(object, QCOM_TEE_OBJECT_TYPE_NULL);
 +
-+			cb_object = cb_object_alloc_for_param(param);
-+			if (!IS_ERR(cb_object)) {
-+				object = &cb_object->object;
++	return object;
++}
++EXPORT_SYMBOL_GPL(allocate_qcom_tee_object);
 +
-+				init_qcom_tee_object_user(object, QCOM_TEE_OBJECT_TYPE_CB_OBJECT,
-+					&cbo_ops, "cbo");
++void free_qcom_tee_object(struct qcom_tee_object *object)
++{
++	kfree(object);
++}
++EXPORT_SYMBOL_GPL(free_qcom_tee_object);
 +
-+				get_qcom_tee_object(object);
-+			} else {
-+				ret = PTR_ERR(cb_object);
-+			}
++/* 'get_qcom_tee_object' and 'put_qcom_tee_object'. */
 +
-+		} else if (QCOM_TEE_PARAM_OBJECT_KERNEL(param)) {
-+			struct dma_buf *dma_buf;
++static int __free_qcom_tee_object(struct qcom_tee_object *object);
++static void ____destroy_qcom_tee_object(struct kref *refcount)
++{
++	struct qcom_tee_object *object = container_of(refcount, struct qcom_tee_object, refcount);
 +
-+			/* param->object.host_id == QCOM_TEE_MEMORY_OBJECT. */
++	__free_qcom_tee_object(object);
++}
 +
-+			/* TODO. For now, we only have memory object that is hosted in kernel
-+			 * so keep it simple. We should move this conversation to the code
-+			 * implements the object using @param_to_object callback.
-+			 */
++int get_qcom_tee_object(struct qcom_tee_object *object)
++{
++	if (object != NULL_QCOM_TEE_OBJECT &&
++		object != ROOT_QCOM_TEE_OBJECT)
++		return kref_get_unless_zero(&object->refcount);
 +
-+			dma_buf = dma_buf_get(param->object.id);
-+			if (!IS_ERR(dma_buf)) {
-+				object = qcom_tee_mem_object_init(dma_buf, NULL, NULL);
-+				if (!object)
-+					ret = -EINVAL;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(get_qcom_tee_object);
 +
-+				get_qcom_tee_object(object);
++static struct qcom_tee_object *qcom_tee__get_qcom_tee_object(unsigned int object_id)
++{
++	XA_STATE(xas, &xa_qcom_tee_objects, object_id);
++	struct qcom_tee_object *object;
 +
-+				/* qcom_tee_mem_object_init calls dma_buf_get internally. */
-+				dma_buf_put(dma_buf);
-+			} else {
-+				ret = -EINVAL;
-+			}
++	rcu_read_lock();
++	do {
++		object = xas_load(&xas);
++		if (xa_is_zero(object))
++			object = NULL_QCOM_TEE_OBJECT;
 +
-+		} else { /* QCOM_TEE_PARAM_OBJECT_SECURE(param). */
-+			struct file *filp;
++	} while (xas_retry(&xas, object));
 +
-+			filp = get_file_of_type(param->object.id, &qtee_fops);
-+			if (filp) {
-+				object = filp->private_data;
-+
-+				/* We put 'filp' while keeping the instance of object. */
-+				get_qcom_tee_object(object);
-+
-+				fput(filp);
-+			} else {
-+				ret = -EINVAL;
-+			}
-+		}
-+
-+	} else if (param->attr == QCOM_TEE_OBJECT_NULL) {
++	/* Sure object still exists. */
++	if (!get_qcom_tee_object(object))
 +		object = NULL_QCOM_TEE_OBJECT;
 +
-+	} else { /* param->attr == QCOM_TEE_BUFFER. */
++	rcu_read_unlock();
++
++	return object;
++}
++
++struct qcom_tee_object *qcom_tee_get_qcom_tee_object(unsigned int object_id)
++{
++	switch (object_id) {
++	case QCOM_TEE_OBJECT_PRIMORDIAL:
++		return &static_qcom_tee_object_primordial;
++
++	default:
++		return qcom_tee__get_qcom_tee_object(object_id);
++	}
++}
++
++void put_qcom_tee_object(struct qcom_tee_object *object)
++{
++	if (object != &static_qcom_tee_object_primordial &&
++		object != NULL_QCOM_TEE_OBJECT &&
++		object != ROOT_QCOM_TEE_OBJECT)
++		kref_put(&object->refcount, ____destroy_qcom_tee_object);
++}
++EXPORT_SYMBOL_GPL(put_qcom_tee_object);
++
++/* 'alloc_qcom_tee_object_id' and 'erase_qcom_tee_object'. */
++
++static int alloc_qcom_tee_object_id(struct qcom_tee_object *object, u32 *idx)
++{
++	static u32 xa_last_id = QCOM_TEE_OBJECT_ID_START;
++
++	/* Every ID allocated here, will have 'QCOM_TEE_OBJ_NS_BIT' set. */
++	return xa_alloc_cyclic(&xa_qcom_tee_objects, idx, object,
++		XA_LIMIT(QCOM_TEE_OBJECT_ID_START, QCOM_TEE_OBJECT_ID_END),
++			&xa_last_id, GFP_KERNEL);
++}
++
++struct qcom_tee_object *erase_qcom_tee_object(u32 idx)
++{
++	return xa_erase(&xa_qcom_tee_objects, idx);
++}
++
++static int __free_qcom_tee_object(struct qcom_tee_object *object)
++{
++	if (object->release)
++		object->release(object);
++
++	synchronize_rcu();
++
++	switch (typeof_qcom_tee_object(object)) {
++	case QCOM_TEE_OBJECT_TYPE_USER:
++		release_user_object(object);
++
++		break;
++	case QCOM_TEE_OBJECT_TYPE_CB_OBJECT: {
++		/* Keep the name in case 'release' needs it! */
++		const char *name = object->name;
++
++		if (object->ops->release)
++			object->ops->release(object);
++
++		kfree_const(name);
++		break;
++	}
++	case QCOM_TEE_OBJECT_TYPE_ROOT:
++	case QCOM_TEE_OBJECT_TYPE_NULL:
++	default:
++
++		break;
++	}
++
++	return 0;
++}
++
++/**
++ * qcom_tee_object_type - Returns type of object represented by a TEE handle.
++ * @object_id: a TEE handle for the object.
++ *
++ * This is similar to typeof_qcom_tee_object but instead of receiving object
++ * as argument it receives TEE object handle. It is used internally on return path
++ * from TEE.
++ */
++static enum qcom_tee_object_type qcom_tee_object_type(unsigned int object_id)
++{
++	if (object_id == QCOM_TEE_OBJ_NULL)
++		return QCOM_TEE_OBJECT_TYPE_NULL;
++
++	if (object_id & QCOM_TEE_OBJ_NS_BIT)
++		return QCOM_TEE_OBJECT_TYPE_CB_OBJECT;
++
++	return QCOM_TEE_OBJECT_TYPE_USER;
++}
++
++/**
++ * init_qcom_tee_object_user - Initialize an instance of qcom_tee_object.
++ * @object: object to initialize.
++ * @ot: type of object.
++ * @ops: instance of callbacks.
++ * @fmt: name assigned to the object.
++ *
++ * Return: On error, -EINVAL if the arguments are invalid.
++ * On success, return zero.
++ */
++int init_qcom_tee_object_user(struct qcom_tee_object *object, enum qcom_tee_object_type ot,
++	struct qcom_tee_object_operations *ops, const char *fmt, ...)
++{
++	int ret;
++	va_list ap;
++
++	kref_init(&object->refcount);
++	SET_QCOM_TEE_OBJECT(object, QCOM_TEE_OBJECT_TYPE_NULL);
++
++	/* **/
++	/* init_qcom_tee_object_user only initializes'qcom_tee_object. The object_id
++	 * allocation is postponed to get_object_id. We want to use different
++	 * IDs so user can decide to share a qcom_tee_object.
++	 *
++	 **/
++
++	va_start(ap, fmt);
++	switch (ot) {
++	case QCOM_TEE_OBJECT_TYPE_NULL:
++
++		ret = 0;
++		break;
++	case QCOM_TEE_OBJECT_TYPE_CB_OBJECT:
++	case QCOM_TEE_OBJECT_TYPE_ROOT:
++		object->ops = ops;
++		if (!object->ops->dispatch)
++			return -EINVAL;
++
++		object->name = kvasprintf_const(GFP_KERNEL, fmt, ap);
++		if (!object->name)
++			return -ENOMEM;
++
++		SET_QCOM_TEE_OBJECT(object, QCOM_TEE_OBJECT_TYPE_CB_OBJECT);
++
++		if (ot == QCOM_TEE_OBJECT_TYPE_ROOT) {
++			object->release = primordial_object_release;
++
++			/* Finally, REGISTER it. */
++			primordial_object_register(object);
++		}
++
++		ret = 0;
++		break;
++	case QCOM_TEE_OBJECT_TYPE_USER:
++	default:
 +		ret = -EINVAL;
++	}
++	va_end(ap);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(init_qcom_tee_object_user);
++
++/* init_qcom_tee_object is to be consumed internally on return path from TEE. */
++static int init_qcom_tee_object(struct qcom_tee_object **object, unsigned int object_id)
++{
++	int ret;
++
++	switch (qcom_tee_object_type(object_id)) {
++	case QCOM_TEE_OBJECT_TYPE_NULL:
++
++		/* Should we receive ''QCOM_TEE_OBJECT_TYPE_NULL'' from TEE!? Why not. **/
++		*object = NULL_QCOM_TEE_OBJECT;
++
++		ret = 0;
++		break;
++	case QCOM_TEE_OBJECT_TYPE_CB_OBJECT: {
++		struct qcom_tee_object *t_object = qcom_tee_get_qcom_tee_object(object_id);
++
++		if (t_object != NULL_QCOM_TEE_OBJECT) {
++			*object = t_object;
++
++			ret = 0;
++		} else {
++			ret = -EINVAL;
++		}
++
++		break;
++	}
++	case QCOM_TEE_OBJECT_TYPE_USER: {
++		struct qcom_tee_object *t_object = allocate_qcom_tee_object();
++
++		if (t_object) {
++			kref_init(&t_object->refcount);
++
++			/* "noname"; it is not really a reason to fail here!. */
++			t_object->name = kasprintf(GFP_KERNEL, "qcom_tee-%u", object_id);
++
++			SET_QCOM_TEE_OBJECT(t_object, QCOM_TEE_OBJECT_TYPE_USER, object_id);
++
++			*object = t_object;
++
++			ret = 0;
++		} else {
++			ret = -ENOMEM;
++		}
++
++		break;
++	}
++	default: /* Err. SHOULD NEVER GET HERE! **/
++		ret = 0;
++
++		break;
 +	}
 +
 +	if (ret)
-+		object = NULL_QCOM_TEE_OBJECT;
-+
-+	arg->o = object;
++		*object = NULL_QCOM_TEE_OBJECT;
 +
 +	return ret;
 +}
 +
-+/* This declaration should be removed, see comments in get_param_from_qcom_tee_object. */
-+struct dma_buf *qcom_tee_mem_object_to_dma_buf(struct qcom_tee_object *object);
-+
-+/* get_param_from_qcom_tee_object - converts object to param.
-+ * On SUCCESS, it calls put_qcom_tee_object before returning for all objects except
-+ * QCOM_TEE_OBJECT_TYPE_USER. get_param_from_qcom_tee_object only initializes the
-+ * object and attr fields.
++/**
++ * get_object_id - Allocates a TEE handler 'object_id' for an object.
++ * @object: object to allocate a TEE handle.
++ * @object_id: TEE handle allocated.
++ *
++ * It is to be consumed internally on direct path to TEE. Unlike init_qcom_tee_object,
++ * get_object_id does not increase the object's reference counter, i.e. the client
++ * should do that.
 + */
-+static int get_param_from_qcom_tee_object(struct qcom_tee_object *object,
-+	struct qcom_tee_param *param, struct server_info **si)
++int get_object_id(struct qcom_tee_object *object, unsigned int *object_id)
 +{
-+	int ret = 0;
-+
-+	if (si)
-+		*si = NULL;
++	int ret;
 +
 +	switch (typeof_qcom_tee_object(object)) {
-+	case QCOM_TEE_OBJECT_TYPE_NULL:
-+		param->attr = QCOM_TEE_OBJECT_NULL;
++	case QCOM_TEE_OBJECT_TYPE_CB_OBJECT: {
++		u32 idx;
 +
-+		break;
-+	case QCOM_TEE_OBJECT_TYPE_CB_OBJECT:
-+		param->attr = QCOM_TEE_OBJECT;
++		ret = alloc_qcom_tee_object_id(object, &idx);
++		if (ret < 0)
++			goto out;
 +
-+		if (is_cb_object(object)) {
-+			struct cb_object *cb_object = to_cb_object(object);
++		*object_id = idx;
 +
-+			param->object.id = cb_object->id;
-+			param->object.host_id = cb_object->si->id;
-+
-+			if (si)
-+				*si = cb_object->si;
-+
-+			put_qcom_tee_object(object);
-+
-+		} else {
-+			struct dma_buf *dma_buf = qcom_tee_mem_object_to_dma_buf(object);
-+
-+			/* TODO. For now, we only have memory object that is hosted in kernel
-+			 * so keep it simple. We should move this conversation to the code
-+			 * implements the object using @object_to_param callback.
-+			 */
-+
-+			get_dma_buf(dma_buf);
-+			param->object.id = dma_buf_fd(dma_buf, O_CLOEXEC);
-+			if (param->object.id < 0) {
-+				dma_buf_put(dma_buf);
-+
-+				ret = -EBADF;
-+			} else {
-+				param->object.host_id = QCOM_TEE_MEMORY_OBJECT;
-+
-+				put_qcom_tee_object(object);
-+			}
-+		}
++		ret = 0;
++	}
 +
 +		break;
 +	case QCOM_TEE_OBJECT_TYPE_USER:
-+		param->attr = QCOM_TEE_OBJECT;
-+		param->object.host_id = QCOM_TEE_OBJECT_SECURE;
-+		param->object.id = fd_alloc(qcom_tee_object_name(object), &qtee_fops, object);
-+		if (param->object.id < 0)
-+			ret = -EBADF;
++		*object_id = object->info.object_ptr;
 +
-+		/* On SUCCESS, do not call put_qcom_tee_object.
-+		 * refcount is used by file's private_data.
-+		 */
++		ret = 0;
++		break;
++	case QCOM_TEE_OBJECT_TYPE_NULL:
++		*object_id = QCOM_TEE_OBJ_NULL;
 +
++		ret = 0;
 +		break;
 +	case QCOM_TEE_OBJECT_TYPE_ROOT:
-+	default:
-+		ret = -EBADF;
++		*object_id = QCOM_TEE_OBJ_ROOT;
 +
++		ret = 0;
 +		break;
++	default:
++		return -EBADF;
 +	}
 +
-+	if (ret)
-+		param->attr = QCOM_TEE_OBJECT_NULL;
++out:
 +
 +	return ret;
 +}
 +
-+/* Marshaling API. */
-+/* marshal_in_req Prepare input buffer for sending to TEE.
-+ * marshal_out_req Parse TEE response in input buffer.
-+ * marshal_in_cb_req Parse TEE request from output buffer.
-+ * marshal_out_cb_req Update output buffer with response for TEE request.
-+ *
-+ * marshal_in_req and marshal_out_req are used in direct invocation path.
-+ * marshal_in_cb_req and marshal_out_cb_req are used for TEE request.
++/* Release TEE handle allocated in get_object_id. */
++void __put_object_id(unsigned int object_id)
++{
++	erase_qcom_tee_object(object_id);
++}
++
++/* Context management API */
++
++/* 'shmem_alloc',
++ * 'qcom_tee_object_invoke_ctx_init', and
++ * 'qcom_tee_object_invoke_ctx_uninit'.
 + */
 +
-+static void marshal_in_req_cleanup(struct qcom_tee_arg u[], int notify)
-+{
-+	int i;
-+	struct qcom_tee_object *object;
++#define OUT_BUFFER_SIZE SZ_32K
 +
-+	for (i = 0; u[i].type; i++) {
-+		switch (u[i].type) {
-+		case QCOM_TEE_ARG_TYPE_IO:
-+			object = u[i].o;
++/* ''Context ID Allocator''. */
++static DEFINE_IDA(qcom_tee_object_invoke_ctxs_ida);
 +
-+			if (is_cb_object(object))
-+				to_cb_object(object)->notify_on_release = notify;
-+
-+			/* For object of type QCOM_TEE_OBJECT_TYPE_USER,
-+			 * get_qcom_tee_object_from_param does not call get_qcom_tee_object
-+			 * before returning (i.e. ref == 1). Replace it with
-+			 * NULL_QCOM_TEE_OBJECT as after put_qcom_tee_object,
-+			 * u[i].o is invalid.
-+			 */
-+
-+			else if (typeof_qcom_tee_object(object) == QCOM_TEE_OBJECT_TYPE_USER)
-+				u[i].o = NULL_QCOM_TEE_OBJECT;
-+
-+			put_qcom_tee_object(object);
-+
-+			break;
-+		case QCOM_TEE_ARG_TYPE_IB:
-+		case QCOM_TEE_ARG_TYPE_OB:
-+		case QCOM_TEE_ARG_TYPE_OO:
-+		default:
-+
-+			break;
-+		}
-+	}
-+}
-+
-+static int marshal_in_req(struct qcom_tee_arg u[], struct qcom_tee_param *params, int num_params)
++static int shmem_alloc(struct qcom_tee_object_invoke_ctx *oic, struct qcom_tee_arg u[])
 +{
 +	int i;
 +
-+	/* Assume 'u' already cleared. */
++	/* See 'prepare_msg'. Calculate size of inbound message. */
 +
-+	for (i = 0; i < num_params; i++) {
-+		if (params[i].attr == QCOM_TEE_BUFFER) {
-+			if (params[i].direction)
-+				u[i].type = QCOM_TEE_ARG_TYPE_IB;
-+			else
-+				u[i].type = QCOM_TEE_ARG_TYPE_OB;
++	size_t size = OFFSET_TO_BUFFER_ARGS((struct qcom_tee_object_invoke *)(0), size_of_arg(u));
 +
-+			u[i].flags = QCOM_TEE_ARG_FLAGS_UADDR;
-+			u[i].b.uaddr = u64_to_user_ptr(params[i].buffer.addr);
-+			u[i].b.size = params[i].buffer.len;
++	arg_for_each_input_buffer(i, u)
++		size = align_offset(u[i].b.size + size);
 +
-+		} else { /* QCOM_TEE_OBJECT || QCOM_TEE_OBJECT_NULL */
-+			if (params[i].direction) {
-+				if (get_qcom_tee_object_from_param(&params[i], &u[i]))
-+					goto out_failed;
++	arg_for_each_output_buffer(i, u)
++		size = align_offset(u[i].b.size + size);
 +
-+				u[i].type = QCOM_TEE_ARG_TYPE_IO;
-+			} else {
-+				u[i].type = QCOM_TEE_ARG_TYPE_OO;
-+			}
-+		}
-+	}
++	/* TEE requires both input and output buffer
++	 *   (1) to be PAGE_SIZE aligned and
++	 *   (2) to be multiple of PAGE_SIZE.
++	 */
++
++	size = PAGE_ALIGN(size);
++
++	/* TODO. Allocate memory using tzmem allocator. */
++
++	/* TEE assume unused buffers are zeroed; Do it now! */
++	memset(oic->in.msg.addr, 0, oic->in.msg.size);
++	memset(oic->out.msg.addr, 0, oic->out.msg.size);
 +
 +	return 0;
-+
-+out_failed:
-+
-+	/* Release whatever resources we got in 'u'. */
-+	marshal_in_req_cleanup(u, 0);
-+
-+	/* Drop TEE istances; on Success TEE does that. */
-+	for (i = 0; u[i].type; i++) {
-+		if (u[i].type == QCOM_TEE_ARG_TYPE_IO)
-+			put_qcom_tee_object(u[i].o);
-+	}
-+
-+	return -1;
 +}
 +
-+static int marshal_out_req(struct qcom_tee_param params[], struct qcom_tee_arg u[])
++static int qcom_tee_object_invoke_ctx_init(struct qcom_tee_object_invoke_ctx *oic,
++	struct qcom_tee_arg u[])
 +{
-+	int i = 0, err = 0;
++	memset(oic, 0, sizeof(*oic));
 +
-+	/* Consumes 'u' as initialized by marshal_in_req. */
++	/* First check if we can allocate an ID, then initialize it. */
++	/* Context IDs [0 .. 10) are never used. */
 +
-+	for (i = 0; u[i].type; i++) {
-+		switch (u[i].type) {
-+		case QCOM_TEE_ARG_TYPE_OB:
-+			params[i].buffer.len = u[i].b.size;
++	oic->context_id = ida_alloc_min(&qcom_tee_object_invoke_ctxs_ida, 10, GFP_KERNEL);
++	if (oic->context_id < 0) {
++		pr_err("unable to allocate context ID (%d)\n", oic->context_id);
 +
-+			break;
-+		case QCOM_TEE_ARG_TYPE_IO:
-+			put_qcom_tee_object(u[i].o);
-+
-+			break;
-+		case QCOM_TEE_ARG_TYPE_OO:
-+			if (err) {
-+				/* On FAILURE, continue to put objects. */
-+				params[i].attr = QCOM_TEE_OBJECT_NULL;
-+				put_qcom_tee_object(u[i].o);
-+			} else if (get_param_from_qcom_tee_object(u[i].o, &params[i], NULL)) {
-+				put_qcom_tee_object(u[i].o);
-+
-+				err = -1;
-+			}
-+
-+			break;
-+		case QCOM_TEE_ARG_TYPE_IB:
-+		default:
-+			break;
-+		}
++		return oic->context_id;
 +	}
 +
-+	if (!err)
-+		return 0;
++	if (shmem_alloc(oic, u)) {
++		ida_free(&qcom_tee_object_invoke_ctxs_ida, oic->context_id);
 +
-+	/* Release whatever resources we got in 'params'. */
-+	for (i = 0; u[i].type; i++) {
-+		if (params[i].attr == QCOM_TEE_OBJECT)
-+			; /* TODO. Cleanup exported object. */
-+	}
-+
-+	return -1;
-+}
-+
-+static int marshal_in_cb_req(struct qcom_tee_param params[], u64 ubuf,
-+	struct server_info *target_si, struct qcom_tee_arg u[])
-+{
-+	int i, err = 0;
-+
-+	size_t offset = 0;
-+
-+	for (i = 0; u[i].type; i++) {
-+		switch (u[i].type) {
-+		case QCOM_TEE_ARG_TYPE_IB:
-+		case QCOM_TEE_ARG_TYPE_OB:
-+			params[i].attr = QCOM_TEE_BUFFER;
-+			params[i].direction = u[i].type & QCOM_TEE_ARG_TYPE_INPUT_MASK;
-+			params[i].buffer.addr = ubuf + offset;
-+			params[i].buffer.len = u[i].b.size;
-+
-+			offset = ALIGN(offset + u[i].b.size, 8);
-+
-+			if (u[i].type == QCOM_TEE_ARG_TYPE_IB) {
-+				void __user *uaddr = u64_to_user_ptr(params[i].buffer.addr);
-+
-+				if (copy_to_user(uaddr, u[i].b.addr, u[i].b.size))
-+					return -1;
-+			}
-+
-+			break;
-+		case QCOM_TEE_ARG_TYPE_IO: {
-+			struct server_info *si;
-+
-+			if (!err) {
-+				params[i].direction = 1;
-+				if (get_param_from_qcom_tee_object(u[i].o, &params[i], &si)) {
-+					put_qcom_tee_object(u[i].o);
-+
-+					err = -1;
-+				} else if (target_si && si && si != target_si) {
-+					err = -1;
-+				}
-+			} else {
-+				params[i].attr = QCOM_TEE_OBJECT_NULL;
-+
-+				put_qcom_tee_object(u[i].o);
-+			}
-+		}
-+
-+			break;
-+		case QCOM_TEE_ARG_TYPE_OO:
-+			params[i].attr = QCOM_TEE_OBJECT_NULL;
-+			params[i].direction = 0;
-+
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	if (!err)
-+		return 0;
-+
-+	/* Release whatever resources we got in 'params'. */
-+	for (i = 0; u[i].type; i++) {
-+		if (params[i].attr == QCOM_TEE_OBJECT)
-+			; /* TODO. Cleanup exported object. */
-+	}
-+
-+	return -1;
-+}
-+
-+static int marshal_out_cb_req(struct qcom_tee_arg u[], struct qcom_tee_param params[])
-+{
-+	int i;
-+
-+	for (i = 0; u[i].type; i++) {
-+		switch (u[i].type) {
-+		case QCOM_TEE_ARG_TYPE_OB: {
-+				void __user *uaddr = u64_to_user_ptr(params[i].buffer.addr);
-+
-+				u[i].b.size = params[i].buffer.len;
-+				if (copy_from_user(u[i].b.addr, uaddr, params[i].buffer.len))
-+					return -1;
-+			}
-+
-+			break;
-+		case QCOM_TEE_ARG_TYPE_OO:
-+			if (get_qcom_tee_object_from_param(&params[i], &u[i])) {
-+				/* TODO. Release whatever resources we got in 'u'.*/
-+				return -1;
-+			}
-+
-+			break;
-+		case QCOM_TEE_ARG_TYPE_IO:
-+		case QCOM_TEE_ARG_TYPE_IB:
-+		default:
-+			break;
-+		}
++		return -ENOMEM;
 +	}
 +
 +	return 0;
 +}
 +
-+/* Transaction management. */
-+/* TODO. Do better! */
-+
-+static struct cb_txn *txn_alloc(void)
++static void qcom_tee_object_invoke_ctx_uninit(struct qcom_tee_object_invoke_ctx *oic)
 +{
-+	struct cb_txn *txn;
++	ida_free(&qcom_tee_object_invoke_ctxs_ida, oic->context_id);
 +
-+	txn = kzalloc(sizeof(*txn), GFP_KERNEL);
-+	if (txn) {
-+		kref_init(&txn->refcount);
-+
-+		INIT_LIST_HEAD(&txn->node);
-+		init_completion(&txn->completion);
-+	}
-+
-+	return txn;
++	/* TODO. Release memory using tzmem allocator. */
 +}
 +
-+static void txn_free(struct cb_txn *txn)
-+{
-+	kfree(txn->uargs);
-+	kfree(txn);
-+}
-+
-+/* queue_txn - queue a transaction only if server 'si' is alive. */
-+static int queue_txn(struct server_info *si, struct cb_txn *txn)
-+{
-+	int dead;
-+
-+	mutex_lock(&si_mutex);
-+	dead = si->dead;
-+	if (!dead) {
-+		list_add(&txn->node, &si->cb_tx_list);
-+
-+		txn->processing = XST_PENDING;
-+	}
-+	mutex_unlock(&si_mutex);
-+
-+	return dead;
-+}
-+
-+static struct cb_txn *dequeue_txn_by_id(struct server_info *si, unsigned int id)
-+{
-+	struct cb_txn *txn;
-+
-+	mutex_lock(&si_mutex);
-+	list_for_each_entry(txn, &si->cb_tx_list, node)
-+		if (txn->uargs->request_id == id) {
-+			list_del_init(&txn->node);
-+
-+			goto found;
-+		}
-+
-+	/* Invalid id. */
-+	txn = NULL;
-+
-+found:
-+	mutex_unlock(&si_mutex);
-+
-+	return txn;
-+}
-+
-+/**
-+ * possible__txn_state_transition - Return possible state transition.
-+ * @txn: Transactione to update.
-+ * @state: Target state for @txn.
-+ *
-+ * Checks if the requested state transition for @txn is possible.
-+ * Returns @state if the transition is possible or if @txn is already in @state state.
-+ * Returns current @txn state if the transition is not possible.
++/* For X_msg functions, on failure we do the cleanup. Because, we could not
++ * construct a message to send so the caller remains the owner of the objects.
++ * For X_args functions, on failure wo do ''not'' do a cleanup. Because,
++ * we received the message and receiver should be the new owner to cleanup.
 + */
-+static enum state possible__txn_state_transition(struct cb_txn *txn, enum state state)
++
++static int prepare_msg(struct qcom_tee_object_invoke_ctx *oic,
++	struct qcom_tee_object *object, unsigned long op, struct qcom_tee_arg u[])
 +{
-+	/* Possible state transitions:
-+	 * PENDING	-> PROCESSING, TIMEDOUT.
-+	 * PROCESSING -> PROCESSED, TIMEDOUT.
-+	 */
++	int i, ib = 0, ob = 0, io = 0, oo = 0;
 +
-+	/* Moving to PROCESSING state; we should be in PENDING state. */
-+	if (state == XST_PROCESSING) {
-+		if (txn->processing != XST_PENDING)
-+			return txn->processing;
++	unsigned int object_id;
 +
-+	/* Moving to PROCESSED state; we should be in PROCESSING state. */
-+	} else if (state == XST_PROCESSED) {
-+		if (txn->processing != XST_PROCESSING)
-+			return txn->processing;
++	/* Use input message buffer in 'oic'. */
 +
-+	/* Moving to TIMEDOUT state; we should be in PENDING or PROCESSING state. */
-+	} else if (state == XST_TIMEDOUT) {
-+		if (txn->processing != XST_PENDING && txn->processing != XST_PROCESSING)
-+			return txn->processing;
++	struct qcom_tee_object_invoke *msg = (struct qcom_tee_object_invoke *)oic->in.msg.addr;
++	size_t msg_size = oic->in.msg.size;
 +
-+	} else {
-+		return txn->processing;
++	/* Start offset in a message for buffer argument. */
++	unsigned int offset = OFFSET_TO_BUFFER_ARGS(msg, size_of_arg(u));
++
++	if (get_object_id(object, &object_id))
++		return -ENOSPC;
++
++	arg_for_each_input_buffer(i, u) {
++		msg->args[ib].b.offset = offset;
++		msg->args[ib].b.size = u[i].b.size;
++		if (!arg_in_bounds(&msg->args[ib], msg_size))
++			return -ENOMEM;
++
++		memcpy(OFFSET_TO_PTR(msg, offset), u[i].b.addr, u[i].b.size);
++
++		offset = align_offset(u[i].b.size + offset);
++		ib++;
 +	}
 +
-+	return state;
-+}
++	ob = ib;
++	arg_for_each_output_buffer(i, u) {
++		msg->args[ob].b.offset = offset;
++		msg->args[ob].b.size = u[i].b.size;
++		if (!arg_in_bounds(&msg->args[ob], msg_size))
++			return -ENOMEM;
 +
-+static int set_txn_state_locked(struct cb_txn *txn, enum state state)
-+{
-+	enum state pstate;
-+
-+	pstate = possible__txn_state_transition(txn, state);
-+	if (pstate == state) {
-+		txn->processing = state;
-+
-+		return 0;
++		offset = align_offset(u[i].b.size + offset);
++		ob++;
 +	}
 +
-+	return -EINVAL;
-+}
++	io = ob;
++	arg_for_each_input_object(i, u) {
++		if (get_object_id(u[i].o, &msg->args[io].o)) {
 +
-+static struct cb_txn *get_txn_for_state_transition_locked(struct server_info *si,
-+	unsigned int id, enum state state)
-+{
-+	struct cb_txn *txn;
++			/* Unable to get_object_id; put whatever we got. */
++			__put_object_id(object_id);
++			for (--io; io >= ob; io--)
++				__put_object_id(msg->args[io].o);
 +
-+	/* Supported state transitions:
-+	 * PENDING	-> PROCESSING.
-+	 * PROCESSING -> PROCESSED.
-+	 */
-+
-+	if (state != XST_PROCESSING && state != XST_PROCESSED)
-+		return NULL;
-+
-+	list_for_each_entry(txn, &si->cb_tx_list, node) {
-+		/* Search for a specific transaction with a particular state?! */
-+		if (id != CONTEXT_ID_ANY && txn->uargs->request_id != id)
-+			continue;
-+
-+		if (txn->processing != state &&
-+			possible__txn_state_transition(txn, state) == state) {
-+			kref_get(&txn->refcount);
-+
-+			return txn;
++			return -ENOSPC;
 +		}
++
++		io++;
 +	}
 +
-+	return NULL;
++	oo = io;
++	arg_for_each_output_object(i, u)
++		oo++;
++
++	/* Set object, operation, and argument counts. */
++	init_oi_msg(msg, object_id, op, ib, ob, io, oo);
++
++	return 0;
 +}
 +
-+static struct cb_txn *get_txn_for_state_transition(struct server_info *si,
-+	unsigned int context_id, enum state state)
-+{
-+	struct cb_txn *txn;
-+
-+	mutex_lock(&si_mutex);
-+	txn = get_txn_for_state_transition_locked(si, context_id, state);
-+	mutex_unlock(&si_mutex);
-+
-+	return txn;
-+}
-+
-+static int set_txn_state(struct cb_txn *txn, enum state state)
-+{
-+	int ret;
-+
-+	mutex_lock(&si_mutex);
-+	ret = set_txn_state_locked(txn, state);
-+	mutex_unlock(&si_mutex);
-+
-+	return ret;
-+}
-+
-+static void __release_txn(struct kref *refcount)
-+{
-+	struct cb_txn *txn = container_of(refcount, struct cb_txn, refcount);
-+
-+	txn_free(txn);
-+}
-+
-+static void put_txn(struct cb_txn *txn)
-+{
-+	kref_put(&txn->refcount, __release_txn);
-+}
-+
-+static void dequeue_and_put_txn(struct cb_txn *txn)
-+{
-+	mutex_lock(&si_mutex);
-+	/* Only if it is queued. */
-+	if (txn->processing != XST_NEW)
-+		list_del_init(&txn->node);
-+	mutex_unlock(&si_mutex);
-+
-+	put_txn(txn);
-+}
-+
-+/* wait_for_pending_txn picks the next available pending transaction or sleep. */
-+static int wait_for_pending_txn(struct server_info *si, struct cb_txn **picked_txn)
++static int update_args(struct qcom_tee_arg u[], struct qcom_tee_object_invoke_ctx *oic)
 +{
 +	int ret = 0;
-+	struct cb_txn *txn;
 +
-+	DEFINE_WAIT_FUNC(wait, woken_wake_function);
++	int i, ib = 0, ob = 0, io = 0, oo = 0;
 +
-+	add_wait_queue(&si->server_threads, &wait);
-+	while (1) {
-+		if (signal_pending(current)) {
-+			ret = -ERESTARTSYS;
++	/* Use input message buffer in 'oic'. */
 +
-+			break;
-+		}
++	struct qcom_tee_object_invoke *msg = (struct qcom_tee_object_invoke *)oic->in.msg.addr;
 +
-+		mutex_lock(&si_mutex);
-+		txn = get_txn_for_state_transition_locked(si, CONTEXT_ID_ANY, XST_PROCESSING);
-+		if (txn) {
-+			/* ''PENDING -> PROCESSING''. */
-+			set_txn_state_locked(txn, XST_PROCESSING);
-+			mutex_unlock(&si_mutex);
++	arg_for_each_input_buffer(i, u)
++		ib++;
 +
-+			break;
-+		}
-+		mutex_unlock(&si_mutex);
++	ob = ib;
++	arg_for_each_output_buffer(i, u) {
 +
-+		wait_woken(&wait, TASK_INTERRUPTIBLE, MAX_SCHEDULE_TIMEOUT);
++		memcpy(u[i].b.addr, OFFSET_TO_PTR(msg, msg->args[ob].b.offset),
++			msg->args[ob].b.size);
++
++		u[i].b.size = msg->args[ob].b.size;
++		ob++;
 +	}
 +
-+	remove_wait_queue(&si->server_threads, &wait);
-+	*picked_txn = txn;
++	io = ob;
++	arg_for_each_input_object(i, u)
++		io++;
++
++	oo = io;
++	arg_for_each_output_object(i, u) {
++		int err;
++
++		/* **/
++		/* If init_qcom_tee_object returns error (e.g. requested handle is invalid or
++		 * init_qcom_tee_object is unable to allocate qcom_tee_object), we continue to
++		 * process arguments. It is necessary so that latter we can issue the RELEASE.
++		 *
++		 * If init_qcom_tee_object failed to allocated the qcom_tee_object, we could not
++		 * release that object.
++		 *
++		 **/
++
++		err = init_qcom_tee_object(&u[i].o, msg->args[oo].o);
++		if (err)
++			ret = err;
++
++		oo++;
++	}
 +
 +	return ret;
 +}
 +
-+/* Callback object's operations. */
-+
-+static int cbo_dispatch(unsigned int context_id,
-+	struct qcom_tee_object *object, unsigned long op, struct qcom_tee_arg *args)
++static int prepare_args(struct qcom_tee_object_invoke_ctx *oic)
 +{
-+	struct cb_txn *txn;
-+	struct cb_object *cb_object = to_cb_object(object);
++	int i, ret = 0;
 +
-+	int errno, num_params = size_of_arg(args);
++	/* Use output message buffer in 'oic'. */
 +
-+	txn = txn_alloc();
-+	if (!txn)
-+		return -ENOMEM;
++	struct qcom_tee_callback *msg = (struct qcom_tee_callback *)oic->out.msg.addr;
 +
-+	/* INIT and QUEUE the request. */
++	/* We assume TEE already checked the buffer boundaries! */
 +
-+	txn->args = args;
-+	txn->uargs_size = offsetof(struct qcom_tee_cb_arg, params) +
-+		(num_params * sizeof(txn->uargs->params[0]));
-+
-+	txn->uargs = kzalloc(txn->uargs_size, GFP_KERNEL);
-+	if (!txn->args) {
-+		put_txn(txn);
-+
-+		return -EINVAL;
++	for_each_input_buffer(i, msg->counts) {
++		oic->u[i].b.addr = OFFSET_TO_PTR(msg, msg->args[i].b.offset);
++		oic->u[i].b.size = msg->args[i].b.size;
++		oic->u[i].type = QCOM_TEE_ARG_TYPE_IB;
 +	}
 +
-+	txn->uargs->id = cb_object->id;
-+	txn->uargs->op = op;
-+	txn->uargs->request_id = context_id;
-+	txn->uargs->num_params = num_params;
-+
-+	if (queue_txn(cb_object->si, txn)) {
-+		put_txn(txn);
-+
-+		return -EINVAL;
++	for_each_output_buffer(i, msg->counts) {
++		oic->u[i].b.addr = OFFSET_TO_PTR(msg, msg->args[i].b.offset);
++		oic->u[i].b.size = msg->args[i].b.size;
++		oic->u[i].type = QCOM_TEE_ARG_TYPE_OB;
 +	}
 +
-+	wake_up_interruptible_all(&cb_object->si->server_threads);
++	for_each_input_object(i, msg->counts) {
++		int err;
 +
-+	if (context_id == CONTEXT_ID_ANY)
-+		return 0;
++		/* See comments for for_each_output_object in update_args. **/
 +
-+	wait_for_completion_state(&txn->completion, TASK_FREEZABLE);
++		err = init_qcom_tee_object(&oic->u[i].o, msg->args[i].o);
++		if (err)
++			ret = err;
 +
-+	/* TODO. Allow TASK_KILLABLE. */
-+	/* We do not care why wait_for_completion_state returend.
-+	 * The fastest way to exit the dispatcher is to TIMEOUT the transaction.
-+	 * However, if set_txn_state failed, then transaction has already been PROCESSED.
-+	 */
++		oic->u[i].type = QCOM_TEE_ARG_TYPE_IO;
++	}
 +
-+	errno = set_txn_state(txn, XST_TIMEDOUT) ? txn->errno : -EINVAL;
-+	if (errno)
-+		dequeue_and_put_txn(txn);
++	for_each_output_object(i, msg->counts)
++		oic->u[i].type = QCOM_TEE_ARG_TYPE_OO;
 +
-+	return errno;
++	/* End of Arguments. */
++	oic->u[i].type = QCOM_TEE_ARG_TYPE_END;
++
++	return ret;
 +}
 +
-+static void cbo_notify(unsigned int context_id, struct qcom_tee_object *object, int status)
++static int update_msg(struct qcom_tee_object_invoke_ctx *oic)
 +{
-+	struct cb_txn *txn;
++	int i, ib = 0, ob = 0, io = 0, oo = 0;
 +
-+	txn = dequeue_txn_by_id(to_cb_object(object)->si, context_id);
-+	if (txn) {
-+		int i;
-+		struct qcom_tee_arg *u = txn->args;
++	/* Use output message buffer in 'oic'. */
 +
-+		for (i = 0; u[i].type; i++) {
-+			if (u[i].type == QCOM_TEE_ARG_TYPE_OO) {
-+				/* Transport failed. TEE did not recived the objects. */
-+				if (status && (typeof_qcom_tee_object(u[i].o) !=
-+						QCOM_TEE_OBJECT_TYPE_USER))
-+					put_qcom_tee_object(u[i].o);
++	struct qcom_tee_callback *msg = (struct qcom_tee_callback *)oic->out.msg.addr;
 +
-+				put_qcom_tee_object(u[i].o);
++	arg_for_each_input_buffer(i, oic->u)
++		ib++;
++
++	ob = ib;
++	arg_for_each_output_buffer(i, oic->u) {
++		/* Only reduce size of client requested that; never increase it. */
++		if (msg->args[ob].b.size < oic->u[i].b.size)
++			return -EINVAL;
++
++		msg->args[ob].b.size = oic->u[i].b.size;
++
++		ob++;
++	}
++
++	io = ob;
++	arg_for_each_input_object(i, oic->u)
++		io++;
++
++	oo = io;
++	arg_for_each_output_object(i, oic->u) {
++		if (get_object_id(oic->u[i].o, &msg->args[oo].o)) {
++			/* Unable to get_object_id; put whatever we got. */
++			for (--oo; oo >= io; --oo)
++				__put_object_id(msg->args[oo].o);
++
++			return -ENOSPC;
++		}
++
++		oo++;
++	}
++
++	return 0;
++}
++
++/* Invoke an 'qcom_tee_object' instance. */
++
++static void qcom_tee_object_invoke(struct qcom_tee_object_invoke_ctx *oic,
++	struct qcom_tee_callback *msg)
++{
++	int i, errno;
++
++	/* Get object being invoked!!! */
++	unsigned int object_id = msg->cxt;
++	struct qcom_tee_object *object;
++
++	/* TEE can not invoke NULL object or objects it hosts. */
++	if (qcom_tee_object_type(object_id) == QCOM_TEE_OBJECT_TYPE_NULL ||
++		qcom_tee_object_type(object_id) == QCOM_TEE_OBJECT_TYPE_USER) {
++		errno = -EINVAL;
++
++		goto out;
++	}
++
++	object = qcom_tee_get_qcom_tee_object(object_id);
++	if (object == NULL_QCOM_TEE_OBJECT) {
++		errno = -EINVAL;
++
++		goto out;
++	}
++
++	oic->object = object;
++
++	switch (QCOM_TEE_OBJECT_OP_METHOD_ID(msg->op)) {
++	case QCOM_TEE_OBJECT_OP_RELEASE:
++
++		/* Remove the object from xa_qcom_tee_objects so that the object_id
++		 * becomes invalid for further use. However, call put_qcom_tee_object
++		 * to schedule the actual release if there is no user.
++		 */
++
++		erase_qcom_tee_object(object_id);
++		put_qcom_tee_object(object);
++		errno = 0;
++
++		break;
++	case QCOM_TEE_OBJECT_OP_RETAIN:
++		get_qcom_tee_object(object);
++		errno = 0;
++
++		break;
++	default:
++
++		/* Check if the operation is supported before going forward. */
++		if (object->ops->op_supported) {
++			if (object->ops->op_supported(msg->op)) {
++				errno = -EINVAL;
++
++				break;
 +			}
 +		}
 +
-+		put_txn(txn);
-+	}
-+}
++		errno = prepare_args(oic);
++		if (errno) {
++			/* Unable to parse the message. Release any object arrived as input. */
++			arg_for_each_input_buffer(i, oic->u)
++				put_qcom_tee_object(oic->u[i].o);
 +
-+static void ____destroy_server_info(struct kref *kref);
-+static void cbo_release(struct qcom_tee_object *object)
-+{
-+	struct cb_object *cb_object = to_cb_object(object);
-+
-+	if (cb_object->notify_on_release) {
-+		static struct qcom_tee_arg args[] = { { .type = QCOM_TEE_ARG_TYPE_END } };
-+
-+		/* Use 'CONTEXT_ID_ANY' as context ID; as we do not care about the results. */
-+		cbo_dispatch(CONTEXT_ID_ANY, object, QCOM_TEE_OBJECT_OP_RELEASE, args);
-+	}
-+
-+	/* The matching 'kref_get' is in 'cb_object_alloc'. */
-+	kref_put(&cb_object->si->refcount, ____destroy_server_info);
-+	kfree(cb_object);
-+}
-+
-+static struct qcom_tee_object_operations cbo_ops = {
-+	.release = cbo_release,
-+	.notify = cbo_notify,
-+	.dispatch = cbo_dispatch,
-+};
-+
-+/* User Callback server */
-+
-+static int server_open(struct inode *nodp, struct file *filp)
-+{
-+	struct server_info *si;
-+
-+	si = kzalloc(sizeof(*si), GFP_KERNEL);
-+	if (!si)
-+		return -ENOMEM;
-+
-+	kref_init(&si->refcount);
-+	INIT_LIST_HEAD(&si->cb_tx_list);
-+	init_waitqueue_head(&si->server_threads);
-+
-+	filp->private_data = ROOT_QCOM_TEE_OBJECT;
-+
-+	return 0;
-+}
-+
-+static long qtee_ioctl_receive(struct server_info *si, u64 uargs, size_t len)
-+{
-+	struct cb_txn *txn;
-+	u64 ubuf;
-+
-+	do {
-+		/* WAIT FOR A REQUEST ... */
-+		if (wait_for_pending_txn(si, &txn))
-+			return -ERESTARTSYS;
-+
-+		/* Extra user buffer used for buffer arguments. */
-+		ubuf = ALIGN(uargs + txn->uargs_size, 8);
-+
-+		/* Initialize param. */
-+		/* The remaining fields are already initialized in cbo_dispatch. */
-+		if (marshal_in_cb_req(txn->uargs->params, ubuf, si, txn->args))
-+			goto out_failed;
-+
-+		if (copy_to_user((void __user *)uargs, txn->uargs, txn->uargs_size)) {
-+			/* TODO. We need to do some cleanup for marshal_in_cb_req. */
-+			goto out_failed;
++			break;
 +		}
++
++		errno = object->ops->dispatch(oic->context_id,
++			/* .dispatch(Object, Operation, Arguments). */
++			object, msg->op, oic->u);
++
++		if (!errno) {
++			/* On SUCCESS, notify object at appropriate time. */
++			oic->flags |= OIC_FLAG_NOTIFY;
++		}
++	}
++
++	switch (errno) {
++	case 0:
 +
 +		break;
 +
-+out_failed:
-+		/* FAILED parsing a request. Notify TEE and try another one. */
++	case -ERESTARTSYS:
++	case -ERESTARTNOINTR:
++	case -ERESTARTNOHAND:
++	case -ERESTART_RESTARTBLOCK:
 +
-+		if (txn->uargs->request_id == CONTEXT_ID_ANY)
-+			dequeue_and_put_txn(txn);
-+		else
-+			complete(&txn->completion);
++		/* There's no easy way to restart the syscall that end up in callback
++		 * object invocation. Just fail the call with EINTR.
++		 */
 +
-+		put_txn(txn);
-+	} while (1);
++		/* We do not do any cleanup for input objects. */
 +
-+	return 0;
-+}
++		errno = -EINTR;
 +
-+static long qtee_ioctl_reply(struct server_info *si, u64 uargs, size_t len)
-+{
-+	struct qcom_tee_cb_arg args;
-+	struct cb_txn *txn;
-+
-+	int errno;
-+
-+	if (copy_from_user(&args, (void __user *)uargs, sizeof(args)))
-+		return -EFAULT;
-+
-+	/* 'CONTEXT_ID_ANY' context ID?! Ignore. */
-+	if (args.request_id == CONTEXT_ID_ANY)
-+		return 0;
-+
-+	txn = get_txn_for_state_transition(si, args.request_id, XST_PROCESSED);
-+	if (!txn)
-+		return -EINVAL;
-+
-+	errno = args.result;
-+	if (!errno) {
-+		/* Only parse arguments on SUCCESS. */
-+
-+		/* TODO. Do not copy the header again, but let's keep it simple for now. */
-+		if (copy_from_user(txn->uargs, (void __user *)uargs, txn->uargs_size)) {
-+			errno = -EFAULT;
-+		} else {
-+			if (marshal_out_cb_req(txn->args, txn->uargs->params))
-+				errno = -EINVAL;
-+		}
-+	}
-+
-+	txn->errno = errno;
-+
-+	if (set_txn_state(txn, XST_PROCESSED))
-+		; /* TODO. We need to do some cleanup for marshal_out_cb_req on !errno. */
-+	else
-+		complete(&txn->completion);
-+
-+	put_txn(txn);
-+
-+	return errno;
-+}
-+
-+static long server_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
-+{
-+	struct qcom_tee_ioctl_data data;
-+
-+	if (_IOC_SIZE(cmd) != sizeof(data))
-+		return -EINVAL;
-+
-+	if (copy_from_user(&data, (void __user *)arg, sizeof(data)))
-+		return -EFAULT;
-+
-+	switch (cmd) {
-+	case QCOM_TEE_IOCTL_RECEIVE:
-+		return qtee_ioctl_receive(filp->private_data, data.buf_ptr, data.buf_len);
-+
-+	case QCOM_TEE_IOCTL_REPLY:
-+		return qtee_ioctl_reply(filp->private_data, data.buf_ptr, data.buf_len);
-+
++		fallthrough;
 +	default:
-+		return -ENOIOCTLCMD;
++
++		/* On error, dispatcher should do the cleanup. */
++
++		break;
 +	}
++
++out:
++
++	oic->errno = errno;
 +}
 +
-+static void ____destroy_server_info(struct kref *kref)
++/**
++ * qcom_tee_object_do_invoke - Submit an invocation for qcom_tee_object_invoke_ctx.
++ * @oic: context to use for current invocation.
++ * @object: object being invoked.
++ * @op: requested operation on @object.
++ * @u: array of argument for the current invocation.
++ * @result: result returned from TEE.
++ *
++ * The caller is responsible to keep track of the refcount for each object,
++ * including @object. On return (success or failure), the caller loses the
++ * ownership of all input object of type QCOM_TEE_OBJECT_TYPE_CB_OBJECT.
++ *
++ * Return: On success return 0. On failure returns -EINVAL if unable to parse the
++ * request or response. It returns -ENODEV if it can not communicate with TEE, or
++ * -EAGAIN if it can not communicate with TEE but it is safe for the caller to
++ * retry the call (after getting IO again as they are put on return). It returns
++ * -ENOMEM if memory could not be allocated, or -ENOSPC if there is not free
++ * context ID or TEE handler.
++ */
++int qcom_tee_object_do_invoke(struct qcom_tee_object_invoke_ctx *oic,
++	struct qcom_tee_object *object, unsigned long op, struct qcom_tee_arg u[], int *result)
 +{
-+	struct server_info *si = container_of(kref, struct server_info, refcount);
++	int i, ret, errno;
++	unsigned int data;
++	u64 response_type;
 +
-+	kfree(si);
++	struct qcom_tee_callback *cb_msg;
++
++	if (typeof_qcom_tee_object(object) != QCOM_TEE_OBJECT_TYPE_USER &&
++		typeof_qcom_tee_object(object) != QCOM_TEE_OBJECT_TYPE_ROOT)
++		return -EINVAL;
++
++	ret = qcom_tee_object_invoke_ctx_init(oic, u);
++	if (ret)
++		return ret;
++
++	ret = prepare_msg(oic, object, op, u);
++	if (ret)
++		goto out;
++
++	/* INVOKE remote object!! */
++
++	cb_msg = (struct qcom_tee_callback *)oic->out.msg.addr;
++
++	while (1) {
++		if (oic->flags & OIC_FLAG_BUSY) {
++			errno = oic->errno;
++
++			/* Update output buffer only if result is SUCCESS. */
++			if (!errno)
++				errno = update_msg(oic);
++
++			err_to_qcom_tee_err(cb_msg, errno);
++		}
++
++		ret = qcom_tee_object_invoke_ctx_invoke(oic, result, &response_type, &data);
++
++		if (oic->flags & OIC_FLAG_BUSY) {
++			struct qcom_tee_object *oic_object = oic->object;
++
++			/* A busy 'oic' can have a NULL_QCOM_TEE_OBJECT object if
++			 * qcom_tee_object_invoke fails, internally.
++			 */
++
++			if (oic_object) {
++				if (oic->flags & OIC_FLAG_NOTIFY) {
++					if (oic_object->ops->notify)
++						oic_object->ops->notify(oic->context_id,
++							oic_object, (errno | ret));
++				}
++
++				put_qcom_tee_object(oic_object);
++			}
++
++			/* 'oic' is done. Cleanup. */
++			oic->object = NULL_QCOM_TEE_OBJECT;
++			oic->flags &= ~(OIC_FLAG_BUSY | OIC_FLAG_NOTIFY);
++		}
++
++		if (ret) {
++			/* We can not recover from this. */
++
++			if (!(oic->flags & OIC_FLAG_QCOM_TEE)) {
++				/* So TEE is unaawre of this. */
++				/* QCOM_TEE_OBJECT_TYPE_CB_OBJECT input objects are orphan. */
++				arg_for_each_input_object(i, u)
++					if (typeof_qcom_tee_object(u[i].o) ==
++						QCOM_TEE_OBJECT_TYPE_CB_OBJECT)
++						put_qcom_tee_object(u[i].o);
++
++				ret = -EAGAIN;
++
++			} else {
++				/* So TEE is aware of this. */
++				/* On error, there is no clean way to clean up. */
++				ret = -ENODEV;
++			}
++
++			goto out;
++
++		} else {
++			/* TEE obtained the ownership of QCOM_TEE_OBJECT_TYPE_CB_OBJECT
++			 * input objects in 'u'. On further failure, TEE is responsible
++			 * to release them.
++			 */
++
++			oic->flags |= OIC_FLAG_QCOM_TEE;
++		}
++
++		/* Is it a callback request?! */
++		if (response_type != QCOM_TEE_RESULT_INBOUND_REQ_NEEDED) {
++			if (!*result) {
++				ret = update_args(u, oic);
++				if (ret) {
++					arg_for_each_output_object(i, u)
++						put_qcom_tee_object(u[i].o);
++				}
++			}
++
++			break;
++
++		} else {
++			oic->flags |= OIC_FLAG_BUSY;
++
++			/* Before dispatching the request, handle any pending async requests. */
++			__fetch__async_reqs(oic);
++
++			qcom_tee_object_invoke(oic, cb_msg);
++		}
++	}
++
++	__fetch__async_reqs(oic);
++
++out:
++	qcom_tee_object_invoke_ctx_uninit(oic);
++
++	return ret;
 +}
++EXPORT_SYMBOL_GPL(qcom_tee_object_do_invoke);
 +
-+static int server_release(struct inode *nodp, struct file *filp)
++/* Primordial Object. */
++/* It is invoked by TEE for kernel services. */
++
++static struct qcom_tee_object *primordial_object = NULL_QCOM_TEE_OBJECT;
++static DEFINE_MUTEX(primordial_object_lock);
++
++static int primordial_object_register(struct qcom_tee_object *object)
 +{
-+	struct server_info *si = filp->private_data;
++	/* A primordial_object is a valid callback object. */
++	if (typeof_qcom_tee_object(object) != QCOM_TEE_OBJECT_TYPE_CB_OBJECT)
++		return -EINVAL;
 +
-+	mutex_lock(&si_mutex);
-+	si->dead = 1;
++	/* Finally, REGISTER it. */
 +
-+	/* TODO. Teminate any PENDING or PROCESSING transactions. */
-+
-+	mutex_unlock(&si_mutex);
-+	kref_put(&si->refcount, ____destroy_server_info);
++	mutex_lock(&primordial_object_lock);
++	rcu_assign_pointer(primordial_object, object);
++	mutex_unlock(&primordial_object_lock);
 +
 +	return 0;
 +}
 +
-+static const struct file_operations server_fops = {
-+	.owner = THIS_MODULE,
-+	.unlocked_ioctl = server_ioctl,
-+	.compat_ioctl = server_ioctl,
-+	.release = server_release,
-+	.open = server_open,
-+};
-+
-+/* TEE object invocation. */
-+
-+static long qtee_ioctl_invoke(struct qcom_tee_object *object,
-+	struct qcom_tee_object_invoke_arg __user *uargs, size_t len)
++static void primordial_object_release(struct qcom_tee_object *object)
 +{
-+	int ret;
++	mutex_lock(&primordial_object_lock);
 +
-+	struct qcom_tee_object_invoke_arg args;
-+	struct qcom_tee_object_invoke_ctx *oic;
-+	struct qcom_tee_param *params;
-+	struct qcom_tee_arg *u;
++	/* Only reset 'primordial_object' if it points to this object. */
++	if (primordial_object == object)
++		rcu_assign_pointer(primordial_object, NULL_QCOM_TEE_OBJECT);
 +
-+	if (copy_from_user(&args, (void __user *)uargs, sizeof(args)))
-+		return -EFAULT;
++	mutex_unlock(&primordial_object_lock);
++}
 +
-+	oic = kzalloc(sizeof(*oic), GFP_KERNEL);
-+	if (!oic)
-+		return -ENOMEM;
++static struct qcom_tee_object *get_primordial_object(void)
++{
++	struct qcom_tee_object *object;
 +
-+	params = kcalloc(args.num_params, sizeof(*params), GFP_KERNEL);
-+	if (!params) {
-+		ret = -ENOMEM;
-+		goto out_failed;
-+	}
++	rcu_read_lock();
++	object = rcu_dereference(primordial_object);
 +
-+	/* Plus one for 'QCOM_TEE_ARG_TYPE_END'. */
-+	u = kcalloc(args.num_params + 1, sizeof(*u), GFP_KERNEL);
-+	if (!u) {
-+		ret = -ENOMEM;
-+		goto out_failed;
-+	}
++	if (!get_qcom_tee_object(object))
++		object = NULL_QCOM_TEE_OBJECT;
 +
-+	/* Copy argument array from userspace. */
-+	if (copy_from_user(params, (void __user *)uargs->params,
-+		sizeof(*params) * args.num_params)) {
-+		ret = -EFAULT;
-+		goto out_failed;
-+	}
++	rcu_read_unlock();
 +
-+	/* INITIATE an invocation. */
++	return object;
++}
 +
-+	if (marshal_in_req(u, params, args.num_params)) {
-+		pr_err("marshal_in_req failed.\n");
-+		ret = -EINVAL;
-+		goto out_failed;
-+	}
++/* Static 'Primordial Object' operations. */
 +
-+	ret = qcom_tee_object_do_invoke(oic, object, args.op, u, &args.result);
-+	if (ret) {
-+		/* TODO. We need to do some cleanup for marshal_in_req. */
-+		goto out_failed;
-+	}
++static int op_sleep(struct qcom_tee_arg args[])
++{
++	if (size_of_arg(args) != 1 || args[0].type != QCOM_TEE_ARG_TYPE_IB)
++		return -EINVAL;
 +
-+	if (!args.result) {
-+		if (marshal_out_req(params, u)) {
-+			pr_err("marshal_out_req failed.\n");
-+			ret = -EINVAL;
-+			goto out_failed;
++	msleep(*(u32 *)(args[0].b.addr));
++
++	return 0;
++}
++
++static int do_primordial_object_dispatch(unsigned int context_id,
++	struct qcom_tee_object *primordial_object, unsigned long op, struct qcom_tee_arg args[])
++{
++	int i, ret = -EINVAL;
++
++	struct qcom_tee_object *object;
++
++	/* Static 'primordial_object': Unused here! */
++
++	switch (op) {
++	case OBJECT_OP_YIELD:
++		ret = 0;
++
++		break;
++	case OBJECT_OP_SLEEP:
++		ret = op_sleep(args);
++
++		break;
++	default:
++		object = get_primordial_object();
++
++		if (object) {
++			ret = object->ops->dispatch(context_id,
++				/* .dispatch(Object, Operation, Arguments). */
++				object, op, args);
++
++			put_qcom_tee_object(object);
++		} else {
++			pr_err("No primordial object registered.\n");
++
++			/* Release any object arrived as input. */
++			arg_for_each_input_object(i, args)
++				put_qcom_tee_object(args[i].o);
 +		}
-+
-+		if (copy_to_user((void __user *)uargs->params, params,
-+			sizeof(*params) * args.num_params)) {
-+			ret = -EFAULT;
-+
-+			/* TODO. We need to do some cleanup for marshal_out_req. */
-+
-+			goto out_failed;
-+		}
 +	}
-+
-+	/* Copy u_req.result back! */
-+	if (copy_to_user(uargs, &args, sizeof(args))) {
-+		ret = -EFAULT;
-+
-+		goto out_failed;
-+	}
-+
-+	ret = 0;
-+
-+out_failed:
-+	kfree(u);
-+	kfree(params);
-+	kfree(oic);
 +
 +	return ret;
 +}
 +
-+static long qtee_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
++static struct qcom_tee_object_operations primordial_ops = {
++	.dispatch = do_primordial_object_dispatch
++};
++
++static struct qcom_tee_object static_qcom_tee_object_primordial = {
++	.object_type = QCOM_TEE_OBJECT_TYPE_CB_OBJECT,
++	.ops = &primordial_ops
++};
++
++/* Dump TEE object table. */
++static ssize_t ot_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 +{
-+	struct qcom_tee_ioctl_data data;
++	struct qcom_tee_object *object;
++	unsigned long idx;
++	size_t len = 0;
 +
-+	if (_IOC_SIZE(cmd) != sizeof(data))
-+		return -EINVAL;
-+
-+	if (copy_from_user(&data, (void __user *)arg, sizeof(data)))
-+		return -EFAULT;
-+
-+	switch (cmd) {
-+	case QCOM_TEE_IOCTL_INVOKE:
-+		return qtee_ioctl_invoke(filp->private_data,
-+			(struct qcom_tee_object_invoke_arg __user *)data.buf_ptr, data.buf_len);
-+
-+	default:
-+		return -ENOIOCTLCMD;
++	rcu_read_lock();
++	xa_for_each_start(&xa_qcom_tee_objects, idx, object, QCOM_TEE_OBJECT_ID_START) {
++		len += scnprintf(buf + len, PAGE_SIZE - len, "%lx %4d %s\n",
++			idx, kref_read(&object->refcount), qcom_tee_object_name(object));
 +	}
++	rcu_read_unlock();
++
++	return len;
 +}
 +
-+static int qtee_release(struct inode *nodp, struct file *filp)
++/* Info for registered primordial object. */
++static ssize_t po_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 +{
-+	struct qcom_tee_object *object = filp->private_data;
++	struct qcom_tee_object *object = get_primordial_object();
++	size_t len = 0;
 +
-+	/* The matching get_qcom_tee_object is in get_param_from_qcom_tee_object. */
-+	put_qcom_tee_object(object);
++	if (object) {
++		len = scnprintf(buf, PAGE_SIZE, "%s %d\n",
++			/* minus one for the above 'get_primordial_object'. */
++			qcom_tee_object_name(object), kref_read(&object->refcount) - 1);
++		put_qcom_tee_object(object);
++	}
 +
-+	return 0;
++	return len;
 +}
 +
-+static const struct file_operations qtee_fops = {
-+	.owner = THIS_MODULE,
-+	.unlocked_ioctl = qtee_ioctl,
-+	.compat_ioctl = qtee_ioctl,
-+	.release = qtee_release,
++static struct kobj_attribute ot = __ATTR_RO(ot);
++static struct kobj_attribute po = __ATTR_RO(po);
++static struct kobj_attribute release = __ATTR_RO(release);
++static struct attribute *attrs[] = {
++	&ot.attr,
++	&po.attr,
++	&release.attr,
++	NULL
 +};
 +
-+/* ''ROOT Object'' */
-+
-+static int root_open(struct inode *nodp, struct file *filp)
-+{
-+	/* Always return the same instance of root qcom_tee_object. */
-+	filp->private_data = ROOT_QCOM_TEE_OBJECT;
-+
-+	return 0;
-+}
-+
-+static const struct file_operations root_fops = {
-+	.owner = THIS_MODULE,
-+	.unlocked_ioctl = qtee_ioctl,
-+	.compat_ioctl = qtee_ioctl,
-+	.open = root_open,
++static struct attribute_group attr_group = {
++	.attrs = attrs,
 +};
 +
-+/* Device for direct object invocation. */
-+static struct miscdevice smcinvoke_misc_qtee_device = {
-+	.minor = MISC_DYNAMIC_MINOR,
-+	.name = "qtee",
-+	.fops = &root_fops,
-+};
-+
-+/* Device to start a userspace object host, i.e. a callback server. */
-+static struct miscdevice smcinvoke_misc_qtee_ree_device = {
-+	.minor = MISC_DYNAMIC_MINOR,
-+	.name = "qtee-ree",
-+	.fops = &server_fops,
-+};
-+
-+static int smcinvoke_probe(struct platform_device *pdev)
++static struct kobject *qcom_object_invoke_kobj;
++static int __init qcom_object_invoke_init(void)
 +{
 +	int ret;
 +
-+	ret = misc_register(&smcinvoke_misc_qtee_device);
++	ret = init_release_wq();
 +	if (ret)
 +		return ret;
 +
-+	ret = misc_register(&smcinvoke_misc_qtee_ree_device);
-+	if (ret) {
-+		misc_deregister(&smcinvoke_misc_qtee_device);
++	/* Create '/sys/kernel/qcom_object_invoke'. */
++	qcom_object_invoke_kobj = kobject_create_and_add("qcom_object_invoke", kernel_kobj);
++	if (!qcom_object_invoke_kobj) {
++		destroy_release_wq();
 +
-+		return ret;
++		return -ENOMEM;
++	}
++
++	ret = sysfs_create_group(qcom_object_invoke_kobj, &attr_group);
++	if (ret) {
++		kobject_put(qcom_object_invoke_kobj);
++		destroy_release_wq();
++	}
++
++	return ret;
++}
++
++static void __exit qcom_object_invoke_exit(void)
++{
++	/* TODO. Cleanup?!. */
++
++	sysfs_remove_group(qcom_object_invoke_kobj, &attr_group);
++
++	kobject_put(qcom_object_invoke_kobj);
++}
++
++module_init(qcom_object_invoke_init);
++module_exit(qcom_object_invoke_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("SI CORE driver");
+diff --git a/drivers/firmware/qcom/qcom_object_invoke/core.h b/drivers/firmware/qcom/qcom_object_invoke/core.h
+new file mode 100644
+index 000000000000..885cb2964680
+--- /dev/null
++++ b/drivers/firmware/qcom/qcom_object_invoke/core.h
+@@ -0,0 +1,186 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#ifndef __QCOM_OBJECT_INVOKE_CORE_H
++#define __QCOM_OBJECT_INVOKE_CORE_H
++
++#include <linux/kobject.h>
++#include <linux/firmware/qcom/qcom_object_invoke.h>
++
++#undef pr_fmt
++#define pr_fmt(fmt) "qcom-object-invoke: %s: " fmt, __func__
++
++/* get_object_id allocates a TEE handler 'object_id' for an object. */
++/* __put_object_id erases the TEE handler. */
++
++int get_object_id(struct qcom_tee_object *object, unsigned int *object_id);
++void __put_object_id(unsigned int object_id);
++
++/* qcom_tee_get_qcom_tee_object returns object for a TEE handler and increase the refcount. */
++struct qcom_tee_object *qcom_tee_get_qcom_tee_object(unsigned int object_id);
++
++/* erase_qcom_tee_object invalidates a TEE handler and returns respective object. */
++struct qcom_tee_object *erase_qcom_tee_object(u32 idx);
++
++/* qcom_tee_object_invoke_ctx_invoke is the interface to SCM. */
++int qcom_tee_object_invoke_ctx_invoke(struct qcom_tee_object_invoke_ctx *oic,
++	int *result, u64 *response_type, unsigned int *data);
++
++/* Object Release APIs. */
++
++int init_release_wq(void);
++void destroy_release_wq(void);
++void release_user_object(struct qcom_tee_object *object);
++ssize_t release_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf);
++
++/* ASYNC message management APIs. */
++
++void __fetch__async_reqs(struct qcom_tee_object_invoke_ctx *oic);
++
++/* ''Qualcomm TEE'' related definitions. */
++
++#define QCOM_TEE_RESULT_INBOUND_REQ_NEEDED 3
++
++#define QCOM_TEE_OBJ_NULL (0U)
++#define QCOM_TEE_OBJ_ROOT (1U)
++
++/* If this bit is set in a TEE handler, it represents an object in non-secure world. */
++#define QCOM_TEE_OBJ_NS_BIT BIT(31)
++
++#define align_offset(o) PTR_ALIGN((o), 8U)
++
++/* Definitions from TEE as part of the transport protocol. */
++
++/* qcom_tee_msg_arg - arguments as recognized by TEE. */
++union qcom_tee_msg_arg {
++	struct {
++		u32 offset;
++		u32 size;
++	} b;
++	u32 o;
++};
++
++/* struct qcom_tee_object_invoke - header for direct object invocation message. */
++struct qcom_tee_object_invoke {
++	u32 cxt;
++	u32 op;
++	u32 counts;
++	union qcom_tee_msg_arg args[];
++};
++
++/* struct qcom_tee_callback - header for callback request from TEE. */
++struct qcom_tee_callback {
++	u32 result;
++	u32 cxt;
++	u32 op;
++	u32 counts;
++	union qcom_tee_msg_arg args[];
++};
++
++/* Check if a buffer argument 'arg' can fit in a message of size 'sz'. */
++#define arg_in_bounds(arg, sz) \
++	(((arg)->b.offset < (sz)) && ((arg)->b.size < ((sz) - (arg)->b.offset)))
++
++#define OFFSET_TO_PTR(m, off) ((void *)&((char *)(m))[(off)])
++
++/* Offset in the message for the beginning of buffer argument's contents. */
++#define OFFSET_TO_BUFFER_ARGS(m, n) \
++	align_offset(offsetof(typeof(*m), args) + ((n) * sizeof((m)->args[0])))
++
++#define counts_num__bi_(x) (((x) >> 0) & 0xFU)
++#define counts_num__bo_(x) (((x) >> 4) & 0xFU)
++#define counts_num__oi_(x) (((x) >> 8) & 0xFU)
++#define counts_num__oo_(x) (((x) >> 12) & 0xFU)
++
++#define counts_idx__bi_(x) 0U
++#define counts_idx__bo_(x) (counts_idx__bi_(x) + counts_num__bi_(x))
++#define counts_idx__oi_(x) (counts_idx__bo_(x) + counts_num__bo_(x))
++#define counts_idx__oo_(x) (counts_idx__oi_(x) + counts_num__oi_(x))
++#define counts_total(x) (counts_idx__oo_(x) + counts_num__oo_(x))
++
++#define FOR_ARGS(i, c, type) \
++	for (i = counts_idx##type(c); i < (counts_idx##type(c) + counts_num##type(c)); i++)
++
++#define for_each_input_buffer(i, c)  FOR_ARGS(i, c, __bi_)
++#define for_each_output_buffer(i, c) FOR_ARGS(i, c, __bo_)
++#define for_each_input_object(i, c)  FOR_ARGS(i, c, __oi_)
++#define for_each_output_object(i, c) FOR_ARGS(i, c, __oo_)
++
++static inline void init_oi_msg(struct qcom_tee_object_invoke *msg,
++	u32 cxt, u32 op, int ib, int ob, int io, int oo)
++{
++#define MSG_ARG_BI_SHIFT 0
++#define MSG_ARG_OB_SHIFT 4
++#define MSG_ARG_IO_SHIFT 8
++#define MSG_ARG_OO_SHIFT 12
++
++	u32 counts = 0;
++
++	counts |= ((oo - io) & 0xFU) << MSG_ARG_OO_SHIFT;	/* No. Output Objects. */
++	counts |= ((io - ob) & 0xFU) << MSG_ARG_IO_SHIFT;	/* No. Input Objects. */
++	counts |= ((ob - ib) & 0xFU) << MSG_ARG_OB_SHIFT;	/* No. Output Buffer. */
++	counts |= (ib & 0xFU) << MSG_ARG_BI_SHIFT;			/* No. Input Buffer. */
++
++	msg->cxt = cxt;
++	msg->op = op;
++	msg->counts = counts;
++}
++
++static inline void err_to_qcom_tee_err(struct qcom_tee_callback *cb_msg, int err)
++{
++/* Generic error codes */
++#define QCOM_OBJECT_INVIKE_OK				0	/* non-specific success code */
++#define QCOM_OBJECT_INVIKE_ERROR			1	/* non-specific error */
++#define QCOM_OBJECT_INVIKE_ERROR_INVALID	2	/* unsupported/unrecognized request */
++#define QCOM_OBJECT_INVIKE_ERROR_SIZE_IN	3	/* supplied buffer/string too large */
++#define QCOM_OBJECT_INVIKE_ERROR_SIZE_OUT	4	/* supplied output buffer too small */
++
++#define QCOM_OBJECT_INVIKE_ERROR_USERBASE	10	/* start of user-defined error range */
++
++/* Transport layer error codes */
++#define QCOM_OBJECT_INVIKE_ERROR_DEFUNCT	-90	/* object no longer exists */
++#define QCOM_OBJECT_INVIKE_ERROR_ABORT		-91	/* calling thread must exit */
++#define QCOM_OBJECT_INVIKE_ERROR_BADOBJ		-92	/* invalid object context */
++#define QCOM_OBJECT_INVIKE_ERROR_NOSLOTS	-93	/* caller's object table full */
++#define QCOM_OBJECT_INVIKE_ERROR_MAXARGS	-94	/* too many args */
++#define QCOM_OBJECT_INVIKE_ERROR_MAXDATA	-95	/* buffers too large */
++#define QCOM_OBJECT_INVIKE_ERROR_UNAVAIL	-96	/* the request could not be processed */
++#define QCOM_OBJECT_INVIKE_ERROR_KMEM		-97	/* kernel out of memory */
++#define QCOM_OBJECT_INVIKE_ERROR_REMOTE		-98	/* local method sent to remote object */
++#define QCOM_OBJECT_INVIKE_ERROR_BUSY		-99	/* Object is busy */
++#define QCOM_OBJECT_INVIKE_ERROR_TIMEOUT	-103	/* Call Back Object invocation timed out. */
++
++	switch (err) {
++	case 0:
++		cb_msg->result = QCOM_OBJECT_INVIKE_OK;
++
++		break;
++	case -ENOMEM:
++		cb_msg->result = QCOM_OBJECT_INVIKE_ERROR_KMEM;
++
++		break;
++	case -ENODEV:
++		cb_msg->result = QCOM_OBJECT_INVIKE_ERROR_DEFUNCT;
++
++		break;
++	case -ENOSPC:
++	case -EBUSY:
++		cb_msg->result = QCOM_OBJECT_INVIKE_ERROR_BUSY;
++
++		break;
++	case -EBADF:
++		cb_msg->result = QCOM_OBJECT_INVIKE_ERROR_UNAVAIL;
++
++		break;
++	case -EINVAL:
++		cb_msg->result = QCOM_OBJECT_INVIKE_ERROR_INVALID;
++
++		break;
++	default:
++		cb_msg->result = QCOM_OBJECT_INVIKE_ERROR;
++	}
++}
++
++#endif /* __QCOM_OBJECT_INVOKE_CORE_H */
+diff --git a/drivers/firmware/qcom/qcom_object_invoke/qcom_scm_invoke.c b/drivers/firmware/qcom/qcom_object_invoke/qcom_scm_invoke.c
+new file mode 100644
+index 000000000000..2a9795da291b
+--- /dev/null
++++ b/drivers/firmware/qcom/qcom_object_invoke/qcom_scm_invoke.c
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#include <linux/firmware/qcom/qcom_scm.h>
++
++#include "core.h"
++
++int qcom_tee_object_invoke_ctx_invoke(struct qcom_tee_object_invoke_ctx *oic,
++	int *result, u64 *response_type, unsigned int *data)
++{
++	/* TODO. Buffers always coherent!? */
++
++	/* Direct invocation of callback!? */
++	if (!(oic->flags & OIC_FLAG_BUSY))
++		; /* TODO. Make smcinvoke. */
++	else
++		; /* TODO. Submit callback response. */
++
++	return 0;
++}
+diff --git a/drivers/firmware/qcom/qcom_object_invoke/release_wq.c b/drivers/firmware/qcom/qcom_object_invoke/release_wq.c
+new file mode 100644
+index 000000000000..a01d3d03cfa4
+--- /dev/null
++++ b/drivers/firmware/qcom/qcom_object_invoke/release_wq.c
+@@ -0,0 +1,90 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#include <linux/slab.h>
++
++#include "core.h"
++
++static struct workqueue_struct *release_wq;
++
++/* Number of all release requests submitted. */
++static atomic_t pending_releases = ATOMIC_INIT(0);
++
++/* 'release_user_object' put object in release work queue.
++ * 'qcom_tee_object_do_release' make direct invocation to release an object.
++ * 'destroy_user_object' finished the release after TEE acknowledged it.
++ */
++
++static void destroy_user_object(struct work_struct *work);
++void release_user_object(struct qcom_tee_object *object)
++{
++	INIT_WORK(&object->work, destroy_user_object);
++
++	atomic_inc(&pending_releases);
++
++	/* QUEUE a release work. */
++	queue_work(release_wq, &object->work);
++}
++
++static void qcom_tee_object_do_release(struct qcom_tee_object *object)
++{
++	int ret, result;
++
++	static struct qcom_tee_object_invoke_ctx oic;
++	static struct qcom_tee_arg args[1] = { 0 };
++
++	ret = qcom_tee_object_do_invoke(&oic, object, QCOM_TEE_OBJECT_OP_RELEASE, args, &result);
++	if (ret == -EAGAIN) {
++		/* On failure, if no callback response is in progress. */
++
++		queue_work(release_wq, &object->work);
++	} else {
++		/* On failure, there are two scenarios:
++		 *  - ret != 0 while retuning a callback response.
++		 *  - ret == 0 and result != 0.
++		 * In any of these case, there is nothing we can do to cleanup.
++		 */
++
++		if (ret || result)
++			pr_err("release failed for %s (%d result = %x).\n",
++				qcom_tee_object_name(object), ret, result);
++
++		atomic_dec(&pending_releases);
++
++		kfree(object->name);
++		free_qcom_tee_object(object);
++	}
++}
++
++static void destroy_user_object(struct work_struct *work)
++{
++	struct qcom_tee_object *object = container_of(work, struct qcom_tee_object, work);
++
++	qcom_tee_object_do_release(object);
++}
++
++ssize_t release_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++{
++	return scnprintf(buf, PAGE_SIZE, "%d\n", atomic_read(&pending_releases));
++}
++
++/* 'init_release_wq' and 'destroy_release_wq'. */
++
++int init_release_wq(void)
++{
++	release_wq = alloc_ordered_workqueue("qcom_object_invoke_release_wq", 0);
++	if (!release_wq) {
++		pr_err("failed to create qcom_object_invoke_release_wq.\n");
++
++		return -ENOMEM;
 +	}
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id smcinvoke_match[] = {
-+	{ .compatible = "qcom,smcinvoke", }, {},
-+};
-+
-+static struct platform_driver smcinvoke_plat_driver = {
-+	.probe = smcinvoke_probe,
-+	.driver = {
-+		.name = "smcinvoke",
-+		.of_match_table = smcinvoke_match,
-+	},
-+};
-+
-+module_platform_driver(smcinvoke_plat_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("smcinvoke driver");
-+MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
-+MODULE_IMPORT_NS(DMA_BUF);
-diff --git a/include/uapi/misc/qcom_tee.h b/include/uapi/misc/qcom_tee.h
++void destroy_release_wq(void)
++{
++	destroy_workqueue(release_wq);
++}
+diff --git a/include/linux/firmware/qcom/qcom_object_invoke.h b/include/linux/firmware/qcom/qcom_object_invoke.h
 new file mode 100644
-index 000000000000..7c127efc9612
+index 000000000000..9e6acd0f4db0
 --- /dev/null
-+++ b/include/uapi/misc/qcom_tee.h
-@@ -0,0 +1,117 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+
-+#ifndef __QCOM_TEE_H__
-+#define __QCOM_TEE_H__
-+
-+#include <linux/types.h>
-+
-+/**
-+ * struct qcom_tee_ioctl_data - Buffer to pass arguments to IOCTL call.
-+ * @buf_ptr: a __user pointer to a buffer.
-+ * @buf_len: length of the buffer.
-+ *
-+ * Used for QCOM_TEE_IOCTL_INVOKE, QCOM_TEE_IOCTL_RECEIVE, and QCOM_TEE_IOCTL_REPLY.
++++ b/include/linux/firmware/qcom/qcom_object_invoke.h
+@@ -0,0 +1,233 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 + */
-+struct qcom_tee_ioctl_data {
-+	__u64 buf_ptr;
-+	__u64 buf_len;
++
++#ifndef __QCOM_OBJECT_INVOKE_H
++#define __QCOM_OBJECT_INVOKE_H
++
++#include <linux/kref.h>
++#include <linux/completion.h>
++#include <linux/workqueue.h>
++#include <uapi/misc/qcom_tee.h>
++
++struct qcom_tee_object;
++
++/* Primordial Object */
++
++/* It is used for bootstrapping the IPC connection between a VM and TEE.
++ *
++ * Each side (both the VM and the TEE) starts up with no object received from the
++ * other side. They both ''assume'' the other side implements a permanent initial
++ * object in the object table.
++ *
++ * TEE's initial object is typically called the ''root client env'', and it's
++ * invoked by VMs when they want to get a new clientEnv. The initial object created
++ * by the VMs is invoked by TEE, it's typically called the ''primordial object''.
++ *
++ * VM can register a primordial object using 'init_qcom_tee_object_user' with
++ * 'QCOM_TEE_OBJECT_TYPE_ROOT' type.
++ */
++
++enum qcom_tee_object_type {
++	QCOM_TEE_OBJECT_TYPE_USER = 0x1,	/* TEE object. */
++	QCOM_TEE_OBJECT_TYPE_CB_OBJECT = 0x2,	/* Callback Object. */
++	QCOM_TEE_OBJECT_TYPE_ROOT = 0x8,	/* ''Root client env.'' or 'primordial' Object. */
++	QCOM_TEE_OBJECT_TYPE_NULL = 0x10,	/* NULL object. */
 +};
 +
-+#define QCOM_TEE_IOCTL_INVOKE _IOWR('Q', 0, struct qcom_tee_ioctl_data)
-+#define QCOM_TEE_IOCTL_RECEIVE _IOWR('Q', 1, struct qcom_tee_ioctl_data)
-+#define QCOM_TEE_IOCTL_REPLY _IOWR('Q', 2, struct qcom_tee_ioctl_data)
-+
-+enum qcom_tee_param_attr {
-+	/* Buffer. */
-+	QCOM_TEE_BUFFER = 0,
-+	/* A NULL object. */
-+	QCOM_TEE_OBJECT_NULL = 0x80,
-+	/* An object. */
-+	QCOM_TEE_OBJECT = QCOM_TEE_OBJECT_NULL + 1,
++enum qcom_tee_arg_type {
++	QCOM_TEE_ARG_TYPE_END = 0,
++	QCOM_TEE_ARG_TYPE_IB  = 0x80,	/* Input Buffer (IB).  */
++	QCOM_TEE_ARG_TYPE_OB  =	0x1,	/* Output Buffer (OB). */
++	QCOM_TEE_ARG_TYPE_IO  = 0x81,	/* Input Object (IO).  */
++	QCOM_TEE_ARG_TYPE_OO  = 0x2		/* Output Object (OO). */
 +};
 +
-+/**
-+ * Objects can be hosted on secure side, or privileged nonsecure side.
-+ * host_id in struct qcom_tee_param specifies the object host.
-+ *
-+ * For remote objects, use QCOM_TEE_OBJECT_SECURE. For objects, hosted in
-+ * userspace, host_id is the file descriptor of the userspace server that host
-+ * the object. Any negative number, is an object hosted in kernel.
-+ */
++#define QCOM_TEE_ARG_TYPE_INPUT_MASK 0x80
 +
-+#define QCOM_TEE_OBJECT_SECURE -1
-+#define QCOM_TEE_MEMORY_OBJECT -2
++/* Maximum specific type of arguments (i.e. IB, OB, IO, and OO) that can fit in a TEE message. */
++#define QCOM_TEE_ARGS_PER_TYPE 16
 +
-+/* Some helpers to check object host. */
-+
-+#define QCOM_TEE_PARAM_OBJECT_SECURE(p) ((p)->object.host_id == QCOM_TEE_OBJECT_SECURE)
-+#define QCOM_TEE_PARAM_OBJECT_KERNEL(p) ((p)->object.host_id < QCOM_TEE_OBJECT_SECURE)
-+#define QCOM_TEE_PARAM_OBJECT_USER(p) ((p)->object.host_id > QCOM_TEE_OBJECT_SECURE)
++/* Maximum arguments that can fit in a TEE message. */
++#define QCOM_TEE_ARGS_MAX (QCOM_TEE_ARGS_PER_TYPE * 4)
 +
 +/**
-+ * struct qcom_tee_param - Parameter to IOCTL calls.
-+ * @attr: attributes from enum qcom_tee_param_attr.
-+ * @direction: either input or output parameter.
-+ * @object: an ID that represent the object.
-+ * @buffer: a buffer.
++ * struct qcom_tee_arg - Argument for TEE object invocation.
++ * @type: type of argument
++ * @flags: extra flags.
++ * @b: address and size if type of argument is buffer.
++ * @o: qcom_tee_object instance if type of argument is object.
 + *
-+ * @id is the file descriptor that represents the object if @host_id is
-+ * QCOM_TEE_OBJECT_KERNEL or QCOM_TEE_OBJECT_SECURE. Otherwise, it is a number
-+ * that represents the object in the userspace process.
++ * @flags only accept QCOM_TEE_ARG_FLAGS_UADDR for now which states that @b
++ * contains userspace address in uaddr.
 + *
-+ * @addr and @len represents a buffer which is copied to a shared buffer with
-+ * secure side, i.e. it is not zero-copy.
-+ *
-+ * QCOM_TEE_OBJECT_NULL is valid everywhere, so @id and @host_id are ignored.
 + */
-+struct qcom_tee_param {
-+	__u32 attr;
-+	__u32 direction;
++struct qcom_tee_arg {
++	enum qcom_tee_arg_type type;
 +
++/* 'uaddr' holds a __user address. */
++#define QCOM_TEE_ARG_FLAGS_UADDR 1
++	char flags;
 +	union {
-+		struct {
-+			__u64 id;
-+			__s32 host_id;
-+		} object;
-+
-+		struct {
-+			__u64 addr;
-+			__u64 len;
-+		} buffer;
++		struct qcom_tee_buffer {
++			union {
++				void *addr;
++				void __user *uaddr;
++			};
++			size_t size;
++		} b;
++		struct qcom_tee_object *o;
 +	};
 +};
 +
-+/**
-+ * struct qcom_tee_object_invoke_arg - Invokes an object in QTEE.
-+ * @op: operation specific to object.
-+ * @result: return value.
-+ * @num_params: number of parameters following this struct.
++static inline int size_of_arg(struct qcom_tee_arg u[])
++{
++	int i = 0;
++
++	while (u[i].type != QCOM_TEE_ARG_TYPE_END)
++		i++;
++
++	return i;
++}
++
++/* Context ID - It is a unique ID assigned to a invocation which is in progress.
++ * Objects's dispatcher can use the ID to differentiate between concurrent calls.
++ * ID [0 .. 10) are reserved, i.e. never passed to object's dispatcher.
 + */
-+struct qcom_tee_object_invoke_arg {
-+	__u32 op;
-+	__s32 result;
-+	__u32 num_params;
-+	struct qcom_tee_param params[];
++
++struct qcom_tee_object_invoke_ctx {
++	unsigned int context_id;
++
++#define OIC_FLAG_BUSY		1	/* Context is busy, i.e. callback is in progress. */
++#define OIC_FLAG_NOTIFY		2	/* Context needs to notify the current object. */
++#define OIC_FLAG_QCOM_TEE	4	/* Context has objects shared with TEE. */
++	unsigned int flags;
++
++	/* Current object invoked in this callback context. */
++	struct qcom_tee_object *object;
++
++	/* Arguments passed to dispatch callback. */
++	struct qcom_tee_arg u[QCOM_TEE_ARGS_MAX + 1];
++
++	int errno;
++
++	/* Inbound and Outbound buffers shared with TEE. */
++	struct {
++		struct qcom_tee_buffer msg;
++	} in, out;
 +};
 +
-+/**
-+ * struct qcom_tee_cb_arg - Receive/Send object invocation from/to QTEE.
-+ * @id: object ID being invoked.
-+ * @request_id: ID of current request.
-+ * @op: operation specific to object.
-+ * @result: return value.
-+ * @num_params: number of parameters following this struct.
-+ *
-+ * @params is initialized to represents number of input and output parameters
-+ * and where the kernel expects to read the results.
-+ */
-+struct qcom_tee_cb_arg {
-+	__u64 id;
-+	__u32 request_id;
-+	__u32 op;
-+	__s32 result;
-+	__u32 num_params;
-+	struct qcom_tee_param params[];
++int qcom_tee_object_do_invoke(struct qcom_tee_object_invoke_ctx *oic,
++	struct qcom_tee_object *object, unsigned long op, struct qcom_tee_arg u[], int *result);
++
++#define QCOM_TEE_OBJECT_OP_METHOD_MASK 0x0000FFFFU
++#define QCOM_TEE_OBJECT_OP_METHOD_ID(op) ((op) & QCOM_TEE_OBJECT_OP_METHOD_MASK)
++
++/* Reserved Operations. */
++
++#define QCOM_TEE_OBJECT_OP_RELEASE	(QCOM_TEE_OBJECT_OP_METHOD_MASK - 0)
++#define QCOM_TEE_OBJECT_OP_RETAIN	(QCOM_TEE_OBJECT_OP_METHOD_MASK - 1)
++#define QCOM_TEE_OBJECT_OP_NO_OP	(QCOM_TEE_OBJECT_OP_METHOD_MASK - 2)
++
++struct qcom_tee_object_operations {
++	void (*release)(struct qcom_tee_object *object);
++
++	/**
++	 * @op_supported:
++	 *
++	 * Query made to make sure the requested operation is supported. If defined,
++	 * it is called before marshaling of the arguments (as optimisation).
++	 */
++	int (*op_supported)(unsigned long op);
++
++	/**
++	 * @notify:
++	 *
++	 * After @dispatch returned, it is called to notify the status of the transport;
++	 * i.e. transport errors or success. This allows the client to cleanup, if
++	 * the transport fails after @dispatch submits a SUCCESS response.
++	 */
++	void (*notify)(unsigned int context_id,	struct qcom_tee_object *object, int status);
++
++	int (*dispatch)(unsigned int context_id, struct qcom_tee_object *object,
++		unsigned long op, struct qcom_tee_arg args[]);
++
++	/**
++	 * @param_to_object:
++	 *
++	 * Called by core to do the object dependent marshaling from @param to an
++	 * instance of @object (NOT IMPLEMENTED YET).
++	 */
++	int (*param_to_object)(struct qcom_tee_param *param, struct qcom_tee_object *object);
++
++	int (*object_to_param)(struct qcom_tee_object *object, struct qcom_tee_param *param);
 +};
 +
-+#endif /* __QCOM_TEE_H__ */
++struct qcom_tee_object {
++	const char *name;
++	struct kref refcount;
++
++	enum qcom_tee_object_type object_type;
++	union object_info {
++		unsigned long object_ptr;
++	} info;
++
++	struct qcom_tee_object_operations *ops;
++
++	/* see release_wq.c. */
++	struct work_struct work;
++
++	/* Callback for any internal cleanup before the object's release. */
++	void (*release)(struct qcom_tee_object *object);
++};
++
++/* Static instances of qcom_tee_object objects. */
++
++#define NULL_QCOM_TEE_OBJECT ((struct qcom_tee_object *)(0))
++
++/* ROOT_QCOM_TEE_OBJECT aka ''root client env''. */
++#define ROOT_QCOM_TEE_OBJECT ((struct qcom_tee_object *)(1))
++
++static inline enum qcom_tee_object_type typeof_qcom_tee_object(struct qcom_tee_object *object)
++{
++	if (object == NULL_QCOM_TEE_OBJECT)
++		return QCOM_TEE_OBJECT_TYPE_NULL;
++
++	if (object == ROOT_QCOM_TEE_OBJECT)
++		return QCOM_TEE_OBJECT_TYPE_ROOT;
++
++	return object->object_type;
++}
++
++static inline const char *qcom_tee_object_name(struct qcom_tee_object *object)
++{
++	if (object == NULL_QCOM_TEE_OBJECT)
++		return "null";
++
++	if (object == ROOT_QCOM_TEE_OBJECT)
++		return "root";
++
++	if (!object->name)
++		return "noname";
++
++	return object->name;
++}
++
++struct qcom_tee_object *allocate_qcom_tee_object(void);
++void free_qcom_tee_object(struct qcom_tee_object *object);
++
++/**
++ * init_qcom_tee_object_user - Initialize an instance of qcom_tee_object.
++ * @object: object being initialized.
++ * @ot: type of object.
++ * @ops: sets of callback opeartions.
++ * @fmt: object name.
++ */
++int init_qcom_tee_object_user(struct qcom_tee_object *object, enum qcom_tee_object_type ot,
++	struct qcom_tee_object_operations *ops, const char *fmt, ...);
++
++int get_qcom_tee_object(struct qcom_tee_object *object);
++void put_qcom_tee_object(struct qcom_tee_object *object);
++
++#endif /* __QCOM_OBJECT_INVOKE_H */
 
 -- 
 2.34.1
