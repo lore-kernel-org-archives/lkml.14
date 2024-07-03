@@ -1,326 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ED317B50C;
-	Wed,  3 Jul 2024 13:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4383177981;
+	Wed,  3 Jul 2024 13:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720012367; cv=none; b=XCMLeV52Pbg0EBqinJT9YhZgzsR21yjiqm415gVNW5WeHpxBuPZOjL79CiilE7d91+NLotTMM+1ZEetzTWGQALxpk8BUxthVbBAkGd6N0xe31X2THrfhOcSbCglZ+3bDM1X9KCAfquXu1aCgXWEifLUuCzHlIibygWiEkqABzfU=
+	t=1720012382; cv=none; b=Ju+ANW0Rx0PrU5+4J9FoyRl24I0eiDYUreO9j5eCouJVj3nDt0NVxi10YtukHff+CO4Vzpc9Lh363GnIMr3HY3EUTCGF5E/ZJRIAAmCVs9N3jKKOpM98fvPXmYP1633kkJm/N0SeLyqKYAiBdu6atWSBMuodue5DhCp6emGrr44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720012367; c=relaxed/simple;
-	bh=/yY/KPY9pwvs5fiLiUhcooAZLs01/SJhTNgkcYQnYhQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UFHwbfDpwQ9amy0mpqURkVxwwwkbesAonP/LxVtHLOZFBNtn1IQL2RTx7JaMLC1rWcngjb5/ckV026DKADVdL6+cEe6x04sxNz9rK91Bt50+cqLzsqaCDG8gr2ZzTJXWxhCpbpy+g31+qDm+k5eKnOF8/rVYYdjjBPglAivhqwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CUrccvyT; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720012382; c=relaxed/simple;
+	bh=XQh38zj8YkxwoSpU2bVUlQPlOmTJ8dlkgb/XN2Vm+8U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d7/ynRjEH3iYh7cJ1ao4x7+o8LF+pfdD2GS81QvU+yildr6dLlyHesFVmgkZOi9jmq0RFMxBN1r0xSzU0tPovugiJ2bVV3561iUfjqORLentLk8MHdr7JTm/EUOPs7vY9tz7IVNcSd0CawpWwkZvbJQit8XkGbMnSaGRwvyc/cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZleCWzZ; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CUrccvyT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720012366; x=1751548366;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/yY/KPY9pwvs5fiLiUhcooAZLs01/SJhTNgkcYQnYhQ=;
-  b=CUrccvyTyE0lcXEIdyt5ngv2ynAFBOa9xCeD4kW035zq+BvzrLSC9D87
-   ofE6elLOCN351nL9Tloj7qZ9oE04OIJ5aDSuV89HndZ091Me1Z0e2aaGX
-   VUo4khLGp8x6+HYet1b9/FwgxSBh+1Sg4gfJ/aAo/WATQIu65if7hNXG8
-   I0CubwOS5o5ROFLXaO63sg5K/GcowMdL6tC+XFSiGBBkKq6DoSiAX+H0f
-   j8Ca2ZCwMhRCMCr2bCGy2pCzR1mRcB2qZH0nsjbjviRaT21/zMplsu6M8
-   KjaMvpzoufxkdICzErBlQ9AS9DgoMxM60/oJRtIwq0D6euCAUyerbw0nL
-   g==;
-X-CSE-ConnectionGUID: rieOpfNET06v60fb9RO3Ig==
-X-CSE-MsgGUID: 1XLIDL3DS/yQ9xppHi3pbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="27857162"
-X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="27857162"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 06:12:41 -0700
-X-CSE-ConnectionGUID: M/+KkrepT2SeVKfnBIxBpQ==
-X-CSE-MsgGUID: sf3hzFVORl64c/UyIh9Ynw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="46321603"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by fmviesa010.fm.intel.com with ESMTP; 03 Jul 2024 06:12:37 -0700
-Received: from fedora.igk.intel.com (Metan_eth.igk.intel.com [10.123.220.124])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 12BF928778;
-	Wed,  3 Jul 2024 14:12:36 +0100 (IST)
-From: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-To: intel-wired-lan@lists.osuosl.org
-Cc: apw@canonical.com,
-	joe@perches.com,
-	dwaipayanray1@gmail.com,
-	lukas.bulwahn@gmail.com,
-	akpm@linux-foundation.org,
-	willemb@google.com,
-	edumazet@google.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Wojciech Drewek <wojciech.drewek@intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-Subject: [Intel-wired-lan] [PATCH iwl-next v1 6/6] ice: devlink health: dump also skb on Tx hang
-Date: Wed,  3 Jul 2024 08:59:22 -0400
-Message-Id: <20240703125922.5625-7-mateusz.polchlopek@intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20240703125922.5625-1-mateusz.polchlopek@intel.com>
-References: <20240703125922.5625-1-mateusz.polchlopek@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZleCWzZ"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52cdea1387eso5905450e87.0;
+        Wed, 03 Jul 2024 06:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720012379; x=1720617179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0NKJh1yZ1elVP56CeXKI4BwpSL1VRHDS3kGX7TjqJRc=;
+        b=VZleCWzZoG/PAxSg9zswvytDN2eirOyt9v8nI4xBNP5TPberfif92C8nocRDulTti7
+         uYWgvDDHdjN9TmiQAxJXMxxFP0cQuTWJro8MKhYCSqikdUQMyQazIydibGNsolZgsiR2
+         dgF0lDfP5ZQ0r8wutj/0Tjg30am5P1K7vGO5ASFkyV3nUsU77LwQqIuaY5H1qJgvE8xD
+         KQuDjRB6CilRHuhNqxVIpWp3XIEdsUWomKgXWUQiAsTU/1S5zZsybYYwS+RW9eCyf7vG
+         Kj7gWe++j/gZ+5CKZujsUsMmXC0uCbKxkGCb803x1j4cjemGT129RmMYwebDGqYeWKOy
+         ni0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720012379; x=1720617179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0NKJh1yZ1elVP56CeXKI4BwpSL1VRHDS3kGX7TjqJRc=;
+        b=D4+Xu/s8uiHraa/ZVVF4lnSab14CGuE1KYV5UyKdbTu30BzBo3+/kRH8+npIBAzfVA
+         mOUhKCMG56rWw3yetz01OawmgwkSMX+rZPQy5YlsVmSNVD+He4sfJoZUKohOMlww4zt/
+         JywB4asciyr2ir9tx9Rqh+SpTsNlYlX0J3cuUY8Mg8MU364pS7U6FxIcMawZNGDM+H0j
+         IU/Awl6XH7JYV9TiRYWw1ghDaNFY4tVZnH+K73bghE0L+X9kaeVnhL2CIsqZyMBTuhUv
+         m4qANu8jfo9wUs61545KZPTYtMN3BvV6HLoOODjxci92xhodm7upswye1bzpED3AOsOs
+         nqPg==
+X-Forwarded-Encrypted: i=1; AJvYcCULRCb5RwA66aToxYI415m/jEIgk3iTqBF6dAcBxxDyNjuw1gTeWCWsU9RsLRQ/aDT0wsZrweboghwW0HhU3wP2VM6juTv4BawXGORZ+ZtYQsX+y0JOHo4kFNKuvGNS3oem5hHPdvNfacyykA6t2NaAVz3XwWP8Eu2wKc5Rpexuie8nfA==
+X-Gm-Message-State: AOJu0Ywv/Z0TotpGx/EC8/0Af5jwp5sqK44VYfd88/DOIYp+e7TELvoq
+	mq9ABv8QN/dJCpvMO4ANBGghpQ5ALrAwG/+iM8AWKinkit1gjG6Xi7C0pIkacQbV5g8hz2YieEn
+	3E7pBMyms9UzJNs37Ot86E28X3wuz9TOZ
+X-Google-Smtp-Source: AGHT+IEKCloal0IFPzdNkFkI2Hak2EZ742ax7plHna9yjqGCtPy3jRYVNeZ8SGON8Mm/M4XafoTTnS7CcgCDH0A9M9M=
+X-Received: by 2002:a05:6512:60c:b0:52e:9b92:4999 with SMTP id
+ 2adb3069b0e04-52e9b924c0cmr234740e87.2.1720012378657; Wed, 03 Jul 2024
+ 06:12:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240701121355.262259-2-kanakshilledar@gmail.com>
+ <20240701121355.262259-4-kanakshilledar@gmail.com> <f8604c68-8866-447b-a874-562bdad1df79@sifive.com>
+ <23gvjkszxvf6zehiqetjfmtf67nlpnnfmhgx234jnxwrtmbdpr@4yv64sz2kpcs> <20240703-garbage-explicit-bd95f8deb716@wendy>
+In-Reply-To: <20240703-garbage-explicit-bd95f8deb716@wendy>
+From: Kanak Shilledar <kanakshilledar@gmail.com>
+Date: Wed, 3 Jul 2024 18:42:46 +0530
+Message-ID: <CAGLn_=tieSCGWix-0mGC7n8MnD46WPxuWh9xhtB6r+YZry463g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] spi: dw-mmio: update dw_spi_mmio_of_match struct
+ with thead
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Serge Semin <fancer.lancer@gmail.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, linux-spi@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Hi,
+So, I will drop this patch.
+In the next version (i.e. v2) of this patchset, do I need to include
+the dt-binding patch as it is already in for-next.
+I am waiting for comments on the devicetree files before sending the
+v2 (if required).
 
-Extend Tx hang devlink health reporter dump by skb content.
+Thanks and Regards,
+Kanak Shilledar
 
-This commit includes much code copy-pasted from:
-- net/core/skbuff.c (function skb_dump() - modified to dump into buffer)
-- lib/hexdump.c (function print_hex_dump())
-
-Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
-Signed-off-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
----
- .../intel/ice/devlink/devlink_health.c        | 197 ++++++++++++++++++
- 1 file changed, 197 insertions(+)
-
-diff --git a/drivers/net/ethernet/intel/ice/devlink/devlink_health.c b/drivers/net/ethernet/intel/ice/devlink/devlink_health.c
-index d19fd3ebe76f..ea3af0091e70 100644
---- a/drivers/net/ethernet/intel/ice/devlink/devlink_health.c
-+++ b/drivers/net/ethernet/intel/ice/devlink/devlink_health.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright (c) 2024, Intel Corporation. */
- 
-+#include <net/genetlink.h>
- #include "devlink_health.h"
- #include "ice.h"
- #include "ice_ethtool_common.h"
-@@ -136,6 +137,188 @@ static void ice_dump_ethtool_stats_to_fmsg(struct devlink_fmsg *fmsg,
- 	kfree(stats);
- }
- 
-+/**
-+ * ice_emit_to_buf - print to @size sized buffer
-+ *
-+ * @buf: buffer to print into
-+ * @at: current pos to write in @buf
-+ * @size: total space in @buf (incl. prior to @at)
-+ * @fmt: format of the message to print
-+ *
-+ * Return: position in the @buf for next write, @size at most, to ease out
-+ * error handling.
-+ */
-+static __printf(4, 5)
-+int ice_emit_to_buf(char *buf, int size, int at, const char *fmt, ...)
-+{
-+	va_list args;
-+	int len;
-+
-+	va_start(args, fmt);
-+	len = vscnprintf(buf + at, size - at, fmt, args);
-+	va_end(args);
-+
-+	return min(at + len, size);
-+}
-+
-+/**
-+ * ice_emit_hex_to_buf - copy of print_hex_dump() from lib/hexdump.c modified to
-+ * dump into buffer
-+ *
-+ * @out: buffer to print to
-+ * @out_size: total size of @out
-+ * @out_pos: position in @out to write at
-+ * @prefix: string to prefix each line with;
-+ *  caller supplies trailing spaces for alignment if desired
-+ * @buf: data blob to dump
-+ * @buf_len: number of bytes in the @buf
-+ *
-+ * Return: position in the buf for next write, buf_len at most, to ease out
-+ * error handling.
-+ */
-+static int ice_emit_hex_to_buf(char *out, int out_size, int out_pos,
-+			       const char *prefix, const void *buf,
-+			       size_t buf_len)
-+{
-+	unsigned char linebuf[32 * 3 + 2 + 32 + 1];
-+	const int rowsize = 16, groupsize = 1;
-+	int i, linelen, remaining = buf_len;
-+	const u8 *ptr = buf;
-+
-+	for (i = 0; i < buf_len; i += rowsize) {
-+		linelen = min(remaining, rowsize);
-+		remaining -= rowsize;
-+
-+		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
-+				   linebuf, sizeof(linebuf), false);
-+		out_pos = ice_emit_to_buf(out, out_size, out_pos,
-+					  "%s%.8x: %s\n", prefix, i, linebuf);
-+
-+		if (out_pos == out_size)
-+			break;
-+	}
-+
-+	return out_pos;
-+}
-+
-+/**
-+ * ice_skb_dump_buf - Dump skb information and contents.
-+ *
-+ * copy of skb_dump() from net/core/skbuff.c, modified to dump into buffer
-+ *
-+ * @skb: skb to dump
-+ * @buf: buffer to dump into
-+ * @buf_size: size of @buf
-+ * @buf_pos: current position to write in @buf
-+ *
-+ * Return: position in the buf for next write.
-+ */
-+static int ice_skb_dump_buf(char *buf, int buf_size, int buf_pos,
-+			    const struct sk_buff *skb)
-+{
-+	struct skb_shared_info *sh = skb_shinfo(skb);
-+	struct net_device *dev = skb->dev;
-+	const bool toplvl = !buf_pos;
-+	struct sock *sk = skb->sk;
-+	struct sk_buff *list_skb;
-+	bool has_mac, has_trans;
-+	int headroom, tailroom;
-+	int i, len, seg_len;
-+
-+	len = skb->len;
-+
-+	headroom = skb_headroom(skb);
-+	tailroom = skb_tailroom(skb);
-+
-+	has_mac = skb_mac_header_was_set(skb);
-+	has_trans = skb_transport_header_was_set(skb);
-+
-+	buf_pos = ice_emit_to_buf(buf, buf_size, buf_pos,
-+		"skb len=%u headroom=%u headlen=%u tailroom=%u\n"
-+		"mac=(%d,%d) net=(%d,%d) trans=%d\n"
-+		"shinfo(txflags=%u nr_frags=%u gso(size=%hu type=%u segs=%hu))\n"
-+		"csum(0x%x ip_summed=%u complete_sw=%u valid=%u level=%u)\n"
-+		"hash(0x%x sw=%u l4=%u) proto=0x%04x pkttype=%u iif=%d\n",
-+		skb->len, headroom, skb_headlen(skb), tailroom,
-+		has_mac ? skb->mac_header : -1,
-+		has_mac ? skb_mac_header_len(skb) : -1,
-+		skb->network_header,
-+		has_trans ? skb_network_header_len(skb) : -1,
-+		has_trans ? skb->transport_header : -1,
-+		sh->tx_flags, sh->nr_frags,
-+		sh->gso_size, sh->gso_type, sh->gso_segs,
-+		skb->csum, skb->ip_summed, skb->csum_complete_sw,
-+		skb->csum_valid, skb->csum_level,
-+		skb->hash, skb->sw_hash, skb->l4_hash,
-+		ntohs(skb->protocol), skb->pkt_type, skb->skb_iif);
-+
-+	if (dev)
-+		buf_pos = ice_emit_to_buf(buf, buf_size, buf_pos,
-+					  "dev name=%s feat=%pNF\n", dev->name,
-+					  &dev->features);
-+	if (sk)
-+		buf_pos = ice_emit_to_buf(buf, buf_size, buf_pos,
-+					  "sk family=%hu type=%u proto=%u\n",
-+					  sk->sk_family, sk->sk_type,
-+					  sk->sk_protocol);
-+
-+	if (headroom)
-+		buf_pos = ice_emit_hex_to_buf(buf, buf_size, buf_pos,
-+					      "skb headroom: ", skb->head,
-+					      headroom);
-+
-+	seg_len = min_t(int, skb_headlen(skb), len);
-+	if (seg_len)
-+		buf_pos = ice_emit_hex_to_buf(buf, buf_size, buf_pos,
-+					      "skb linear:   ", skb->data,
-+					      seg_len);
-+	len -= seg_len;
-+
-+	if (tailroom)
-+		buf_pos = ice_emit_hex_to_buf(buf, buf_size, buf_pos,
-+					      "skb tailroom: ",
-+					      skb_tail_pointer(skb), tailroom);
-+
-+	for (i = 0; len && i < skb_shinfo(skb)->nr_frags; i++) {
-+		skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
-+		u32 p_off, p_len, copied;
-+		struct page *p;
-+		u8 *vaddr;
-+
-+		skb_frag_foreach_page(frag, skb_frag_off(frag),
-+				      skb_frag_size(frag), p, p_off, p_len,
-+				      copied) {
-+			seg_len = min_t(int, p_len, len);
-+			vaddr = kmap_local_page(p);
-+			buf_pos = ice_emit_hex_to_buf(buf, buf_size, buf_pos,
-+						      "skb frag:     ",
-+						      vaddr + p_off, seg_len);
-+			kunmap_local(vaddr);
-+			len -= seg_len;
-+
-+			if (!len || buf_pos == buf_size)
-+				break;
-+		}
-+	}
-+
-+	if (skb_has_frag_list(skb)) {
-+		buf_pos = ice_emit_to_buf(buf, buf_size, buf_pos,
-+					  "skb fraglist:\n");
-+		skb_walk_frags(skb, list_skb) {
-+			buf_pos = ice_skb_dump_buf(buf, buf_size, buf_pos,
-+						   list_skb);
-+
-+			if (buf_pos == buf_size)
-+				break;
-+		}
-+	}
-+
-+	if (toplvl)
-+		buf_pos = ice_emit_to_buf(buf, buf_size, buf_pos, ".");
-+
-+	return buf_pos;
-+}
-+
- /**
-  * ice_fmsg_put_ptr - put hex value of pointer into fmsg
-  *
-@@ -167,6 +350,10 @@ static int ice_tx_hang_reporter_dump(struct devlink_health_reporter *reporter,
- 				     struct netlink_ext_ack *extack)
- {
- 	struct ice_tx_hang_event *event = priv_ctx;
-+	char *skb_txt = NULL;
-+	struct sk_buff *skb;
-+
-+	skb = event->tx_ring->tx_buf->skb;
- 
- 	devlink_fmsg_obj_nest_start(fmsg);
- 	ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, head);
-@@ -178,9 +365,19 @@ static int ice_tx_hang_reporter_dump(struct devlink_health_reporter *reporter,
- 	devlink_fmsg_put(fmsg, "irq-mapping", event->tx_ring->q_vector->name);
- 	ice_fmsg_put_ptr(fmsg, "desc-ptr", event->tx_ring->desc);
- 	ice_fmsg_put_ptr(fmsg, "dma-ptr", (void *)event->tx_ring->dma);
-+	ice_fmsg_put_ptr(fmsg, "skb-ptr", skb);
- 	devlink_fmsg_binary_pair_put(fmsg, "desc", event->tx_ring->desc,
- 				     size_mul(event->tx_ring->count,
- 					      sizeof(struct ice_tx_desc)));
-+	if (skb)
-+		skb_txt = kvmalloc(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+
-+	if (skb_txt) {
-+		ice_skb_dump_buf(skb_txt, GENLMSG_DEFAULT_SIZE, 0, skb);
-+		devlink_fmsg_put(fmsg, "skb", skb_txt);
-+		kvfree(skb_txt);
-+	}
-+
- 	ice_dump_ethtool_stats_to_fmsg(fmsg, event->tx_ring->vsi->netdev);
- 	devlink_fmsg_obj_nest_end(fmsg);
- 
--- 
-2.38.1
-
+On Wed, Jul 3, 2024 at 12:59=E2=80=AFPM Conor Dooley <conor.dooley@microchi=
+p.com> wrote:
+>
+> On Mon, Jul 01, 2024 at 09:57:20PM +0300, Serge Semin wrote:
+> > Hi folks
+> >
+> > On Mon, Jul 01, 2024 at 08:17:29AM -0500, Samuel Holland wrote:
+> > > Hi Kanak,
+> > >
+> > > On 2024-07-01 7:13 AM, Kanak Shilledar wrote:
+> > > > updated the struct of_device_id dw_spi_mmio_of_match to include
+> > > > the updated compatible value for TH1520 SoC ("thead,th1520-spi")
+> > > > to initialize with dw_spi_pssi_init().
+> > > >
+> > > > Signed-off-by: Kanak Shilledar <kanakshilledar@gmail.com>
+> > > > ---
+> > > > Changes in v2:
+> > > > - Separated from a single patch file.
+> > > > ---
+> > > >  drivers/spi/spi-dw-mmio.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+> > > > index 819907e332c4..39e3d46ebf5d 100644
+> > > > --- a/drivers/spi/spi-dw-mmio.c
+> > > > +++ b/drivers/spi/spi-dw-mmio.c
+> > > > @@ -419,6 +419,7 @@ static const struct of_device_id dw_spi_mmio_of=
+_match[] =3D {
+> > > >   { .compatible =3D "microchip,sparx5-spi", dw_spi_mscc_sparx5_init=
+},
+> > > >   { .compatible =3D "canaan,k210-spi", dw_spi_canaan_k210_init},
+> > > >   { .compatible =3D "amd,pensando-elba-spi", .data =3D dw_spi_elba_=
+init},
+> > > > + { .compatible =3D "thead,th1520-spi", .data =3D dw_spi_pssi_init}=
+,
+> > >
+> > > Your binding requires snps,dw-apb-ssi as a fallback compatible string=
+, which is
+> > > already supported by this driver and uses the same match data. So you=
+ don't need
+> > > this patch; its only effect is to make the kernel larger.
+> >
+> > Agree with Samuel comment. Indeed there is no point in adding the
+> > vendor-specific device-name supported in the driver if the fallback
+> > compatible works as-is.
+>
+> FWIW, Mark picked up the binding alone so I think there's nothing for
+> Kanak to do here & the driver patch should just be forgotten about :)
+>
+> > >From that perspective we shouldn't have merged in the patch adding the
+> > Renesas RZN1 SPI device name support, since the generic fallback
+> > compatible works for it. On the contrary the Microsemi Ocelot/Jaguar2
+> > SoC SPI DT-bindings shouldn't have been defined with the generic
+> > fallback compatible since should the device be bound via the generic
+> > name it won't work as expected.
+> >
+> > Although, it's better to hear out what Rob, Conor or Krzysztof think
+> > about this.
+>
+> I agree with what you've written. If the fallback works identically, then
+> the specific compatible shouldn't be added here. And if the fallback
+> will cause the device to misbehave (or not behave at all), then it
+> should not have been added.
+> I'm not sure if the Microsemi stuff is in the "won't work {,properly}"
+> camp or in the "will work in a limited fashion" camp. The latter would
+> be suitable for a fallback, the former not.
+>
+> Cheers,
+> Conor.
+>
