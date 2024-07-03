@@ -1,194 +1,181 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43FEC171E5A;
-	Wed,  3 Jul 2024 12:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
+Received: from mail.katalix.com (mail.katalix.com [3.9.82.81])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27D7645945;
+	Wed,  3 Jul 2024 12:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.9.82.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720008206; cv=none; b=SRPpy4SBoHGvhc/VbDVhK6rdmbrTY69wOsO0B43P2E505Co4xtx/mZV7hGOStImJsCnK3wPi4QD9GDNQrxC9avAsxl1CZzfj6J+ItnKk3/c4eZsKgHjD7aVfIdp7ZBnkXZiC5aYtkj9wyc5nhrdFfrUaQz0t8WiyeH662mAL9kg=
+	t=1720008433; cv=none; b=T0fB9O3P0cO9obazLdKHgxKk9E/Lh0qUCsof719E+fjQtwDVg9ovkRKaWD+A11/FHtTADGK+htmHVOecUUxMLxgDskCZhOcD60GaEFUakup2jNyAemhrGKbV4SufHbcsMlbbpTpMTQ069Brwlno+ebq7Glldlio00sxxQBxaa8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720008206; c=relaxed/simple;
-	bh=CeCJEwqiwFWfrfCrR6E1k4PfHawusEPfZktD198KcUw=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=lE4ORoCF1O+6BuijXL9xkdlP1zaWHc8gwo9Dgl1loiHDWsklgNd/7f7iFN/ycQ9X4nbK5Kp0i1ZqTqZ3gAbwyh1KozG3lcVYAxpHaSXx9l8pMsBkym5gUA3ifhXh/iU/ctsPGXDA7jcpXW+VxeyW7N61UcpWvL4iLip7AP96hyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=T931knSL; arc=none smtp.client-ip=117.135.210.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1720008433; c=relaxed/simple;
+	bh=xAUwGWmp2Hl2S78EcEtu1s0V5BlSHNn5+p43jBpD7F4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iRraqax1husbk+8rYAXqZo1Tv5q5m/lC37aukhc5BXzsmkODEW1DQDIfZ2HOo++VP1zYkmdyEs8wxXz1e9vZBsUG/zUlRAPmWCCWwfcYAeAW0H+c8yjVe98MrvknH/9QdTXl2R1Whx6xB9/BCOBJ6N2oVP5qMfVEmPzzwj2ckuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=katalix.com; spf=pass smtp.mailfrom=katalix.com; dkim=pass (2048-bit key) header.d=katalix.com header.i=@katalix.com header.b=w0BLMBJb; arc=none smtp.client-ip=3.9.82.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=katalix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=katalix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="T931knSL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=+xxXvPv4ZRctgc4I5X
-	pHM6oasgCZi8jLWTxJTFBM7AM=; b=T931knSL8OsG26rLe+vEHmCV7+Dck4a1B1
-	xhZr2ieZ1YITIBsRbJzMmT623I1xpehq3eEXPVz9B2HUqmjfkBTBKWh4zuO9nU2L
-	C4styEijuj3GRALEs3Y3/Hn9IZm/MjnWBa4ukT6yFbP2m68a9kAuwWHYM1737fBR
-	qk7rPQwv0=
-Received: from hg-OptiPlex-7040.hygon.cn (unknown [118.242.3.34])
-	by gzga-smtp-mta-g1-1 (Coremail) with SMTP id _____wD3_9_mPYVmi7EgAQ--.48290S2;
-	Wed, 03 Jul 2024 20:02:48 +0800 (CST)
-From: yangge1116@126.com
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	21cnbao@gmail.com,
-	david@redhat.com,
-	baolin.wang@linux.alibaba.com,
-	aneesh.kumar@linux.ibm.com,
-	liuzixing@hygon.cn,
-	yangge <yangge1116@126.com>
-Subject: [PATCH V3] mm/gup: Clear the LRU flag of a page before adding to LRU batch
-Date: Wed,  3 Jul 2024 20:02:33 +0800
-Message-Id: <1720008153-16035-1-git-send-email-yangge1116@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID:_____wD3_9_mPYVmi7EgAQ--.48290S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3WF4rXF4fJr17CF4kCw4xCrg_yoW7AryxpF
-	W7Gr9IqF4DGFnrur47Xw15Jr1Yk393Xa1UJFWxGry7AF15Xw1qkF1xKw1UJa9xJryruFn3
-	Za4UJF1vgF1UAF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR5UUUUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiGAkRG2VLcLTHxQAAsz
+	dkim=pass (2048-bit key) header.d=katalix.com header.i=@katalix.com header.b="w0BLMBJb"
+Received: from localhost (unknown [IPv6:2a02:8012:909b:0:1e90:7398:2278:75e2])
+	(Authenticated sender: tom)
+	by mail.katalix.com (Postfix) with ESMTPSA id 0E2147D76D;
+	Wed,  3 Jul 2024 13:07:11 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=katalix.com; s=mail;
+	t=1720008431; bh=xAUwGWmp2Hl2S78EcEtu1s0V5BlSHNn5+p43jBpD7F4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Disposition:In-Reply-To:From;
+	z=Date:=20Wed,=203=20Jul=202024=2013:07:10=20+0100|From:=20Tom=20Pa
+	 rkin=20<tparkin@katalix.com>|To:=20syzbot=20<syzbot+c041b4ce3a6dfd
+	 1e63e2@syzkaller.appspotmail.com>|Cc:=20linux-kernel@vger.kernel.o
+	 rg,=20netdev@vger.kernel.org,=0D=0A=09syzkaller-bugs@googlegroups.
+	 com|Subject:=20Re:=20[syzbot]=20[net?]=20KASAN:=20slab-use-after-f
+	 ree=20Write=20in=0D=0A=20l2tp_session_delete|Message-ID:=20<ZoU+7g
+	 bOSzWMOOPC@katalix.com>|References:=20<0000000000008405e0061bb6d4d
+	 5@google.com>|MIME-Version:=201.0|Content-Disposition:=20inline|In
+	 -Reply-To:=20<0000000000008405e0061bb6d4d5@google.com>;
+	b=w0BLMBJbDBFIXB290mdCgyzw4g78apzkAqDnE8dFFQlM/ILK+q354zuNwBLhWwyoq
+	 5QrnZ2m5J681Fy755vGc+fF265RLmDSjtNMD0WWuSO/lYOOH16D6dYO0fCe6ka0NF2
+	 xdEAmaZ9AOzrk/rZAruKkygyoF79/Qmh8u3iZRcGSa9wABLFd58ZJC9yd8NAIkQuBO
+	 1yhPzWRIYz+6xsfBp/Q8jlIPSaXyiV76eBzpwf4VpfoKnC+OduC3Ean5uA/Hq9WIIy
+	 B8/1MoYjwo0mQlhkZ65zC9JVm1ulI8SC6EKGZB9OimuAyS20UjS+4ivqq3HuGPDM3O
+	 LOmA94O4fE9IA==
+Date: Wed, 3 Jul 2024 13:07:10 +0100
+From: Tom Parkin <tparkin@katalix.com>
+To: syzbot <syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] KASAN: slab-use-after-free Write in
+ l2tp_session_delete
+Message-ID: <ZoU+7gbOSzWMOOPC@katalix.com>
+References: <0000000000008405e0061bb6d4d5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SmA1Ol97I3F9djjj"
+Content-Disposition: inline
+In-Reply-To: <0000000000008405e0061bb6d4d5@google.com>
 
-From: yangge <yangge1116@126.com>
 
-If a large number of CMA memory are configured in system (for example, the
-CMA memory accounts for 50% of the system memory), starting a virtual
-virtual machine with device passthrough, it will
-call pin_user_pages_remote(..., FOLL_LONGTERM, ...) to pin memory.
-Normally if a page is present and in CMA area, pin_user_pages_remote()
-will migrate the page from CMA area to non-CMA area because of
-FOLL_LONGTERM flag. But the current code will cause the migration failure
-due to unexpected page refcounts, and eventually cause the virtual machine
-fail to start.
+--SmA1Ol97I3F9djjj
+Content-Type: multipart/mixed; boundary="6dG6xs0iNw9vxUoM"
+Content-Disposition: inline
 
-If a page is added in LRU batch, its refcount increases one, remove the
-page from LRU batch decreases one. Page migration requires the page is not
-referenced by others except page mapping. Before migrating a page, we
-should try to drain the page from LRU batch in case the page is in it,
-however, folio_test_lru() is not sufficient to tell whether the page is
-in LRU batch or not, if the page is in LRU batch, the migration will fail.
 
-To solve the problem above, we modify the logic of adding to LRU batch.
-Before adding a page to LRU batch, we clear the LRU flag of the page so
-that we can check whether the page is in LRU batch by folio_test_lru(page).
-Seems making the LRU flag of the page invisible a long time is no problem,
-because a new page is allocated from buddy and added to the lru batch,
-its LRU flag is also not visible for a long time.
+--6dG6xs0iNw9vxUoM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 9a4e9f3b2d73 ("mm: update get_user_pages_longterm to migrate pages allocated from CMA region")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: yangge <yangge1116@126.com>
+On  Tue, Jun 25, 2024 at 06:25:23 -0700, syzbot wrote:
+> syzbot found the following issue on:
+>=20
+> HEAD commit:    185d72112b95 net: xilinx: axienet: Enable multicast by de=
+f..
+> git tree:       net-next
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1062bd46980000
+
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.g=
+it  185d72112b95
+=20
+
+--6dG6xs0iNw9vxUoM
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-l2tp-fix-possible-UAF-when-cleaning-up-tunnels.patch"
+Content-Transfer-Encoding: quoted-printable
+
+=46rom 15d6d4c290810d5b8f357b9e494c5ad420c8a2fb Mon Sep 17 00:00:00 2001
+=46rom: Tom Parkin <tparkin@katalix.com>
+Date: Wed, 3 Jul 2024 13:02:51 +0100
+Subject: [PATCH] l2tp: fix possible UAF when cleaning up tunnels
+
+syzbot reported a UAF caused by a race when the L2TP work queue closes a
+tunnel at the same time as a userspace thread closes a session in that
+tunnel.
+
+Tunnel cleanup is handled by a work queue which iterates through the
+sessions contained within a tunnel, and closes them in turn.
+
+Meanwhile, a userspace thread may arbitrarily close a session via
+either netlink command or by closing the pppox socket in the case of
+l2tp_ppp.
+
+The race condition may occur when l2tp_tunnel_closeall walks the list
+of sessions in the tunnel and deletes each one.  Currently this is
+implemented using list_for_each_safe, but because the list spinlock is
+dropped in the loop body it's possible for other threads to manipulate
+the list during list_for_each_safe's list walk.  This can lead to the
+list iterator being corrupted, leading to list_for_each_safe spinning.
+One sequence of events which may lead to this is as follows:
+
+ * A tunnel is created, containing two sessions A and B.
+ * A thread closes the tunnel, triggering tunnel cleanup via the work
+   queue.
+ * l2tp_tunnel_closeall runs in the context of the work queue.  It
+   removes session A from the tunnel session list, then drops the list
+   lock.  At this point the list_for_each_safe temporary variable is
+   pointing to the other session on the list, which is session B, and
+   the list can be manipulated by other threads since the list lock has
+   been released.
+ * Userspace closes session B, which removes the session from its parent
+   tunnel via l2tp_session_delete.  Since l2tp_tunnel_closeall has
+   released the tunnel list lock, l2tp_session_delete is able to call
+   list_del_init on the session B list node.
+ * Back on the work queue, l2tp_tunnel_closeall resumes execution and
+   will now spin forever on the same list entry until the underlying
+   session structure is freed, at which point UAF occurs.
+
+The solution is to iterate over the tunnel's session list using
+list_first_entry_not_null to avoid the possibility of the list
+iterator pointing at a list item which may be removed during the walk.
 ---
- mm/swap.c | 43 +++++++++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 12 deletions(-)
+ net/l2tp/l2tp_core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-V3:
-   Add fixes tag
-V2:
-   Adjust code and commit message according to David's comments
+diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
+index be4bcbf291a1..fa75a8eb8782 100644
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1290,12 +1290,14 @@ static void l2tp_session_unhash(struct l2tp_session=
+ *session)
+ static void l2tp_tunnel_closeall(struct l2tp_tunnel *tunnel)
+ {
+ 	struct l2tp_session *session;
+-	struct list_head __rcu *pos;
+-	struct list_head *tmp;
+=20
+ 	spin_lock_bh(&tunnel->list_lock);
+ 	tunnel->acpt_newsess =3D false;
+-	list_for_each_safe(pos, tmp, &tunnel->session_list) {
++	for (;;) {
++		session =3D list_first_entry_or_null(&tunnel->session_list,
++						   struct l2tp_session, list);
++		if (!session)
++			break;
+ 		session =3D list_entry(pos, struct l2tp_session, list);
+ 		list_del_init(&session->list);
+ 		spin_unlock_bh(&tunnel->list_lock);
+--=20
+2.34.1
 
-diff --git a/mm/swap.c b/mm/swap.c
-index dc205bd..9caf6b0 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -211,10 +211,6 @@ static void folio_batch_move_lru(struct folio_batch *fbatch, move_fn_t move_fn)
- 	for (i = 0; i < folio_batch_count(fbatch); i++) {
- 		struct folio *folio = fbatch->folios[i];
- 
--		/* block memcg migration while the folio moves between lru */
--		if (move_fn != lru_add_fn && !folio_test_clear_lru(folio))
--			continue;
--
- 		folio_lruvec_relock_irqsave(folio, &lruvec, &flags);
- 		move_fn(lruvec, folio);
- 
-@@ -255,11 +251,16 @@ static void lru_move_tail_fn(struct lruvec *lruvec, struct folio *folio)
- void folio_rotate_reclaimable(struct folio *folio)
- {
- 	if (!folio_test_locked(folio) && !folio_test_dirty(folio) &&
--	    !folio_test_unevictable(folio) && folio_test_lru(folio)) {
-+	    !folio_test_unevictable(folio)) {
- 		struct folio_batch *fbatch;
- 		unsigned long flags;
- 
- 		folio_get(folio);
-+		if (!folio_test_clear_lru(folio)) {
-+			folio_put(folio);
-+			return;
-+		}
-+
- 		local_lock_irqsave(&lru_rotate.lock, flags);
- 		fbatch = this_cpu_ptr(&lru_rotate.fbatch);
- 		folio_batch_add_and_move(fbatch, folio, lru_move_tail_fn);
-@@ -352,11 +353,15 @@ static void folio_activate_drain(int cpu)
- 
- void folio_activate(struct folio *folio)
- {
--	if (folio_test_lru(folio) && !folio_test_active(folio) &&
--	    !folio_test_unevictable(folio)) {
-+	if (!folio_test_active(folio) && !folio_test_unevictable(folio)) {
- 		struct folio_batch *fbatch;
- 
- 		folio_get(folio);
-+		if (!folio_test_clear_lru(folio)) {
-+			folio_put(folio);
-+			return;
-+		}
-+
- 		local_lock(&cpu_fbatches.lock);
- 		fbatch = this_cpu_ptr(&cpu_fbatches.activate);
- 		folio_batch_add_and_move(fbatch, folio, folio_activate_fn);
-@@ -700,6 +705,11 @@ void deactivate_file_folio(struct folio *folio)
- 		return;
- 
- 	folio_get(folio);
-+	if (!folio_test_clear_lru(folio)) {
-+		folio_put(folio);
-+		return;
-+	}
-+
- 	local_lock(&cpu_fbatches.lock);
- 	fbatch = this_cpu_ptr(&cpu_fbatches.lru_deactivate_file);
- 	folio_batch_add_and_move(fbatch, folio, lru_deactivate_file_fn);
-@@ -716,11 +726,16 @@ void deactivate_file_folio(struct folio *folio)
-  */
- void folio_deactivate(struct folio *folio)
- {
--	if (folio_test_lru(folio) && !folio_test_unevictable(folio) &&
--	    (folio_test_active(folio) || lru_gen_enabled())) {
-+	if (!folio_test_unevictable(folio) && (folio_test_active(folio) ||
-+	    lru_gen_enabled())) {
- 		struct folio_batch *fbatch;
- 
- 		folio_get(folio);
-+		if (!folio_test_clear_lru(folio)) {
-+			folio_put(folio);
-+			return;
-+		}
-+
- 		local_lock(&cpu_fbatches.lock);
- 		fbatch = this_cpu_ptr(&cpu_fbatches.lru_deactivate);
- 		folio_batch_add_and_move(fbatch, folio, lru_deactivate_fn);
-@@ -737,12 +752,16 @@ void folio_deactivate(struct folio *folio)
-  */
- void folio_mark_lazyfree(struct folio *folio)
- {
--	if (folio_test_lru(folio) && folio_test_anon(folio) &&
--	    folio_test_swapbacked(folio) && !folio_test_swapcache(folio) &&
--	    !folio_test_unevictable(folio)) {
-+	if (folio_test_anon(folio) && folio_test_swapbacked(folio) &&
-+	    !folio_test_swapcache(folio) && !folio_test_unevictable(folio)) {
- 		struct folio_batch *fbatch;
- 
- 		folio_get(folio);
-+		if (!folio_test_clear_lru(folio)) {
-+			folio_put(folio);
-+			return;
-+		}
-+
- 		local_lock(&cpu_fbatches.lock);
- 		fbatch = this_cpu_ptr(&cpu_fbatches.lru_lazyfree);
- 		folio_batch_add_and_move(fbatch, folio, lru_lazyfree_fn);
--- 
-2.7.4
 
+--6dG6xs0iNw9vxUoM--
+
+--SmA1Ol97I3F9djjj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEsUkgyDzMwrj81nq0lIwGZQq6i9AFAmaFPuoACgkQlIwGZQq6
+i9CrwQf7BBc5N63d0HQY0kvvRRlqKPEWIMS5AJ2lfoKEkpll/MaNURPv9PjKypdQ
+w31Prbzd96i1ZBw7is0BeTfdPch9mULTr7Hj4IfITSxRadUR/DuKnNaWWGeTDbM+
+NC7hM6lsCsuVn9zXz2Mm7KFyjUoy1TVUQ1fjP4wfM+5EhCJQfN+RbCmpXXS5pyNV
+VtYIflrjxu562d0wE7/MoAu6qCnEtIFmCRNVWtpkNvVjXDaMXMs+j0pKTr0jd8q5
+/+oRpJQai/NOza4acd0lsd0Tuw0msQuweDmHOswOlGpaBAdAqryCXr6NQnAef+g+
+HfcldotjcV6+ZKgDiBo+uuNcRLxzjw==
+=Y74Y
+-----END PGP SIGNATURE-----
+
+--SmA1Ol97I3F9djjj--
