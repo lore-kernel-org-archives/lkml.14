@@ -1,95 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540BA49641;
-	Wed,  3 Jul 2024 05:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E835512DDB3
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 05:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719986204; cv=none; b=bcI//oSnENVoL7XCfYXwz8w+nOfqZmam6XiHiEoNM2nNJCfv3mS/G/vyusvxU3kEnJHCsPxhylv0Wj01uJc4JdU10J2eTUT6baYeXZv4py/aKYR4hLmAPlckUQ5iKfKTmoL5Tz7xPh8gKsOkqgglUzIXYXUTmrt2l83ZLBqq5NI=
+	t=1719986220; cv=none; b=dI5LIze0SgpL31LEecVO+uyPxQpzF81yEqKCbJjN95mQR5WdxNU+fgjMANvlPCUzMwwpxXrkCqRYHpknD/M1MNCbVYSCbAiAJpWjOvGatAIA95wVVweiFa1ocsKwp3TJbvZO1HvhYlGZ+KzhmplYJ/Fppi+IUvVEnL+0YQ1Y6c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719986204; c=relaxed/simple;
-	bh=3kxVvdoDm8FEBPBfT5t+Qc1jF4e1JkZLEA4oaiDz42E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fctqd2TNJEaLvXkUvEsEZwi7bCREk4CabQMjUO4cBr0NNZ/m4P0+lqVqycK3ZXXraNcE9WtJQVlaCNXeDqcM2Vgf5nAK8KySm8I2sUfMTRt5KWMjXetjJAbcJ4xAVNF1btcjaf3DuJcb+t4kux5e2hOlGT0NsqrC04ZQc5XAIi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcAqzK/0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719986220; c=relaxed/simple;
+	bh=BFeF/rMqjmAL/T3qO395y21tghoeF4vuGyaBxCV02tk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gyyOEKnpAR0i53ujEPyP+taF9/zBQQXJLTDgrbNaUnVQKYbaBn+XxeZpGj2X3Xe6uMWp9wZbnqfyp4uGIhEyZyEl5xZI9Uj7Ef+3ZFo/iqAE4c4QfPCL+d3Jjr1rz8MbYOJWHkHf/dsz8jxlEbG/YOvKN2w6Iyoy8digGVQMd0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=3CI3rzVN; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcAqzK/0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46493C32781;
-	Wed,  3 Jul 2024 05:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719986203;
-	bh=3kxVvdoDm8FEBPBfT5t+Qc1jF4e1JkZLEA4oaiDz42E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fcAqzK/0q1KaY36jNOvmQfa9G+D71+NTHDEA16UFG6/iIJBVLWPS1NMRrktsmFm9M
-	 pCnOuvPAYeFsrLnecnmlyP4Ep+uCdym1MdMQHXAIjwk+6w+10CYrPXUVrTrXG5qqkQ
-	 Blfw3Bia+D9+VkSJERppK/crJQ1qX+ANC/3BAXxRYZu6zOkntO+158MUz8fZaUeMYN
-	 XK5eFlnzEv9fLXnisoRtTIUufzYOQcgxrVvbrhkLtsz2sQg6SL6hW+pvLYfBdwzMhW
-	 aRH3RkFR98RSE1ZuTZs59pg3YLu8DuExi89tFa0z6eP9EeZYD56ozV1uql6lYDDKte
-	 o+sX+VUFV1I6g==
-Date: Tue, 2 Jul 2024 22:56:41 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-	Sami Tolvanen <samitolvanen@google.com>, Song Liu <song@kernel.org>,
-	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jikos@kernel.org, joe.lawrence@redhat.com, nathan@kernel.org,
-	morbo@google.com, justinstitt@google.com,
-	thunder.leizhen@huawei.com, kees@kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH] kallsyms, livepatch: Fix livepatch with CONFIG_LTO_CLANG
-Message-ID: <20240703055641.7iugqt6it6pi2xy7@treble>
-References: <20240605032120.3179157-1-song@kernel.org>
- <alpine.LSU.2.21.2406071458531.29080@pobox.suse.cz>
- <CAPhsuW5th55V3PfskJvpG=4bwacKP8c8DpVYUyVUzt70KC7=gw@mail.gmail.com>
- <alpine.LSU.2.21.2406281420590.15826@pobox.suse.cz>
- <Zn70rQE1HkJ_2h6r@bombadil.infradead.org>
- <ZoKrWU7Gif-7M4vL@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="3CI3rzVN"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70679845d69so3402628b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 22:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719986218; x=1720591018; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0gP3BTCO/eMabIcPEHZlkkrT/LBtjjbwR/exXvwDsR0=;
+        b=3CI3rzVNo0o/iCn4fESl327dia/gJObf/ZLE7I+4MyzFO7zKP80ZvCWVABVZ81vtDW
+         EQRhES/5uXpyvBrUt6d7wYood2kdpZpk+FpV7xZxyhEJzg0Db1M8fNDkixRLRWPjxOqL
+         i6KJr2+DGaNkKQBc7nAsC6tzi7BXI3Syw1pCW3FakRwrVBFPM7nb9AdkW+FISrNr0tMe
+         D2StOrcKjtluSvxtcZ3gX6UUruqB2J+uF42SW37R+LgNB1P5WAI0UDlEVcozYtvkmonY
+         yzkoyhrFv9fA6GfsrWh3pZKe7z5ser/5/Q3hE95c28SuRLdMhmyyg2Q/BxNEF63yqk+U
+         fGYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719986218; x=1720591018;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0gP3BTCO/eMabIcPEHZlkkrT/LBtjjbwR/exXvwDsR0=;
+        b=kwojeaYxIG/tlvr+4mNPnFDb3KIYZaHUgLqGLcHGkJs45HsweRdv/kNVjzgKyuKjHd
+         FssUU6tHj7bYiYpnUVx3eMlMugmbYvWh5hAc0NG2mTF8fqy2ARA3S69PgiYRR1yKqJJP
+         9lCXbzC05ytE/D/fiyPh2Xtvyz6SkrH0ZtnOPgYSeOx+Xy3RwTlLl/E7gdzXD30TvflY
+         HOfDon2egvj5OxcpdoDtkkqhvKfzP0hs+dPVUR+1X8HotiN5TU8tXF/pkkq8AZNvnSWj
+         e7dKq5MFTCNN+6WX3kjeN5DJI/PgGEkQ6nfAOY6cVlpXAXOT34vHHLOv9oaWTaViJD6o
+         oIDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3W09+r/L/61RIX8j7rmr6HLUh56bVKajcTDWJCVm4zpPa7gzNTY3FBigVnJ1tUx8xK5m80MO2K85qGWrPbDiIOGaSxF8kYFVi7EUc
+X-Gm-Message-State: AOJu0Yyzytw8/cX7uc/n8WnlVwdRWZKttsmUKl7Ol0ID6Aj/oXVmZr64
+	E2AOw+PYv7H0Pej5cU0WPujyk3vm2zk0uqh7Z0TJ7KGIdioSjoPKtZyt41AXga8=
+X-Google-Smtp-Source: AGHT+IFPk8bGhxxDiE9oF64qKKmdU13pr+uT6OiupoAHAaV7v4GIvDN9xb5Nma3yWPTn3YYLr0hhkQ==
+X-Received: by 2002:a05:6a00:1d02:b0:705:cade:1f50 with SMTP id d2e1a72fcca58-70aaaf3b8c7mr9285409b3a.34.1719986218135;
+        Tue, 02 Jul 2024 22:56:58 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70804a89fc9sm9514103b3a.212.2024.07.02.22.56.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 22:56:57 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Tue, 02 Jul 2024 22:56:21 -0700
+Subject: [PATCH v4 01/13] dt-bindings: riscv: Add xtheadvector ISA
+ extension description
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZoKrWU7Gif-7M4vL@pathway.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240702-xtheadvector-v4-1-2bad6820db11@rivosinc.com>
+References: <20240702-xtheadvector-v4-0-2bad6820db11@rivosinc.com>
+In-Reply-To: <20240702-xtheadvector-v4-0-2bad6820db11@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Jisheng Zhang <jszhang@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ Samuel Holland <samuel.holland@sifive.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
+ Guo Ren <guoren@kernel.org>, Evan Green <evan@rivosinc.com>, 
+ Andy Chiu <andy.chiu@sifive.com>, Jessica Clarke <jrtc27@jrtc27.com>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719986213; l=1767;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=BFeF/rMqjmAL/T3qO395y21tghoeF4vuGyaBxCV02tk=;
+ b=fjkJVEjEBLAONoqiHUcNpBFefDHSX2nBp5VtKJ5OXWsis/l0j13kilKZo1JDNR6OZx3nchXrc
+ DUHnx4vUzbPANcO+FajO56TrbkiU7rKqHSQIij8AF4+2aTbvHjpuDP0
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On Mon, Jul 01, 2024 at 03:13:23PM +0200, Petr Mladek wrote:
-> So, you suggest to search the symbols by a hash. Do I get it correctly?
-> 
-> Well, it might bring back the original problem. I mean
-> the commit 8b8e6b5d3b013b0 ("kallsyms: strip ThinLTO hashes from
-> static functions") added cleanup_symbol_name() so that user-space
-> tool do not need to take care of the "unstable" suffix.
+The xtheadvector ISA extension is described on the T-Head extension spec
+Github page [1] at commit 95358cb2cca9.
 
-Are symbol names really considered user ABI??  That's already broken by
-design.  Even without LTO, the toolchain can mangle them for a variety
-of reasons.
+Link: https://github.com/T-head-Semi/thead-extension-spec/blob/95358cb2cca9489361c61d335e03d3134b14133f/xtheadvector.adoc [1]
 
-If a user space tool doesn't want the suffixes, surely it can figure out
-a way to deal with that on their own?
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ Documentation/devicetree/bindings/riscv/extensions.yaml | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> So, it seems that we have two use cases:
-> 
->    1. Some user-space tools want to ignore the extra suffix. I guess
->       that it is in the case when the suffix is added only because
->       the function was optimized.
-> 
->       It can't work if there are two different functions of the same
->       name. Otherwise, the user-space tool would not know which one
->       they are tracing.
-> 
-> 
->    2. There are other use-cases, including livepatching, where we
->       want to be 100% sure that we match the right symbol.
-> 
->       They want to match the full names. They even need to distinguish
->       symbols with the same name.
-> 
-> 
-> IMHO, we need a separate API for each use-case.
-
-We should just always link with -zunique-symbols so the duplicate
-symbols no longer exist.  That would solve a lot of problems.
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index 468c646247aa..99d2a9e8c52d 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -477,6 +477,10 @@ properties:
+             latency, as ratified in commit 56ed795 ("Update
+             riscv-crypto-spec-vector.adoc") of riscv-crypto.
+ 
++        # vendor extensions, each extension sorted alphanumerically under the
++        # vendor they belong to. Vendors are sorted alphanumerically as well.
++
++        # Andes
+         - const: xandespmu
+           description:
+             The Andes Technology performance monitor extension for counter overflow
+@@ -484,5 +488,11 @@ properties:
+             Registers in the AX45MP datasheet.
+             https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Datasheet.pdf
+ 
++        # T-HEAD
++        - const: xtheadvector
++          description:
++            The T-HEAD specific 0.7.1 vector implementation as written in
++            https://github.com/T-head-Semi/thead-extension-spec/blob/95358cb2cca9489361c61d335e03d3134b14133f/xtheadvector.adoc.
++
+ additionalProperties: true
+ ...
 
 -- 
-Josh
+2.44.0
+
