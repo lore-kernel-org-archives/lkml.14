@@ -1,213 +1,91 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C0F142624
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1A3142624;
+	Wed,  3 Jul 2024 16:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720024224; cv=none; b=t2gf4UeYjGdkRWk1uQzDOSQhlb/0kkhUgmbQzLKl4mvnlmWQPQ4O5oDd519EfkT+sxuc3moRHI+fQs1eE4ouGnNYRV0LnNkckhXLsqVGehI3g6FEGT1M41JO82a20DfjdDcg9fddUwc08VUrDU7AjHfMnHxrr34ibNngYaMO6HQ=
+	t=1720024239; cv=none; b=QIgFlssrm/VGR6LnEjWDCGhvzIuwvox8hg8UuIv+mr1DL5FzJOpuTpPCrfhSwgH7yHo8v3EaDg364Zre11msmE1nScp8BADirE0Oujv3EkUww2eOw2vZTfLFvufMKN+I8GLyOKkyrNgUeC3RRUPP7XRi8anVvBaE84BHhCC2MjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720024224; c=relaxed/simple;
-	bh=d0NAZPug++84yb4AClA5Oi57MC5MzzyJOItoVtUB+f4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tNZmtYEiNLwk3PU1OLDHYYWJzDV2hlb00Yrlds9Wdl8rWZDLJqeSQUL4tfEzQ0onWQpSeSEw/u8lF9vwJJbusqqYOKIzmm88zvwSUXpm8cYfC0HtZeXwJjsb5iW+FkVYhIaVEjaszlfWrXr+7Vs5Np7pWKg6OSLmBcy8Hb2ST8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w02YCLA2; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720024239; c=relaxed/simple;
+	bh=tbw4IjqXUR04CkMFwlqotJR1pTI1NbAbfwA6PTNVkYE=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=K/XZz+SarjD1IMlTfXdkCwQ/5ruMWvcHw2R6HikgRaLfDBwp5itcD+JyQZm8i2bsNKC3+ILJsJCG9PcEynBYGY1OPdPGUwTGGwFD6YMNoCICr3tEeyadtSPIXtp2wHe1wjlBim50SerUrKHg5tbZcy8iDphgcwySe4lBit3PWuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhGbs0cz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w02YCLA2"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-38206c2f5e3so176225ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 09:30:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720024222; x=1720629022; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T2QmZejWA+lzJtqe0C34oQ5/ww4Ua8unvP+2Hn+v+eA=;
-        b=w02YCLA2fIWbQqRFLC/GgONfKrAwApTpQWM6uz15kVgKz6v9QzsM6TDKE7C/4Rhgfd
-         J7nzyv2eEsGAb5JoljsKjd7fFflaaEj/3P/GtChE8bGORvYr1U4ZBqKfLiQa55K55Eqj
-         oDoZey7pmzllBJXRo37fCkEsKNz90oMGLV2I9Apz2jCws7JRCFtJzsxF/haCO0bjygYR
-         okYSb7H1wo1KMcUmWPBybPCadt+KSeXFJVqLPoC8X9XCz1Eji83shBbFQVyxyJtN7V4Q
-         HlS1Wd00eoX45jLnSjSs8W1nfM8TpDzQjgckNjiwbnI4VHtAgQ71PXo9Z1Imw1IS/vWG
-         OuuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720024222; x=1720629022;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T2QmZejWA+lzJtqe0C34oQ5/ww4Ua8unvP+2Hn+v+eA=;
-        b=EVFRxHWKxkAIaOEmdfYCQZLXLz9Yk+XqwrW3uDMwtafyPGLZhwyxyqncA1nwddJFDi
-         pGQrkFJ6B7bgCIoydi5cg8M8WTELgrRQONer0bIoT1WGAWAoY4fGhxDsWnOMIG8f3tM/
-         J+ehgEDdIofNJkomvz2bMoGBOwa03aZE04evKGikPiFRJL6AIxEjJWajETkUte1nQn75
-         QhMkX+bSBT5e3555jJWxDuXhAPYdcLV4eCsB26TaaUxnhFlDcNAASDtg2ml7H4MeMmMl
-         XQNwqxt0la4dU/5kyjmiJXHyTwdii3eWLu9VEdP8WgJYAYmnFKvANW3vV8r0ZgMJpiON
-         nbUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMGW9P/Gzbn1u5guL1FdhpnbbZTBHkkezWd4gCZ9Q8WhKgpIlTUTu9rGqd9B2dal3tvI/qApQv5lMbrOvlCRHYtOGFt7Bn1tUyI0VD
-X-Gm-Message-State: AOJu0Yz8+5W1CasXWo1d7YL8qqG0gaQSaN+XmmQfgjqETxCrVi4Rfh0M
-	Ya5s0xy9RoP9azNE0OD5xvSO8vcIVN+zhaCSVXhnirb7x1x0iXvoK6FwzepyU2WSYoUOEJWEPrh
-	S/Q8Zr8zjvEZFwbrd3PJCczrH4tjD5zFiZNZG
-X-Google-Smtp-Source: AGHT+IG6hY5y4NoTYor41L2x0GP2NyHLBmVuFfxMPssEry84/PqOf7ZeBqMct8kfno+pOkP7LjodSM/1XSZqM1fcVf0=
-X-Received: by 2002:a05:6e02:152c:b0:376:48d1:1764 with SMTP id
- e9e14a558f8ab-3820cbf3e21mr3107115ab.17.1720024221710; Wed, 03 Jul 2024
- 09:30:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhGbs0cz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF21C2BD10;
+	Wed,  3 Jul 2024 16:30:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720024239;
+	bh=tbw4IjqXUR04CkMFwlqotJR1pTI1NbAbfwA6PTNVkYE=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=uhGbs0cz+lh5Jr0TI6K7d7JJFV3jwor1ByoZyfHg+ROERKhTX2KwjYle0gI70vSRu
+	 a9ZFvzQDl+Xq9VYbMo8c4lLE2ap46PcOrE4ZUVt+eNxQZHu7xgVzJ/jI2axq56jx9T
+	 ZHYQtQRbq/O8WqlZfiSE5mRUlBEwn63DKMxGXFOAFQWvCVhfkeadv7EZVX7FTK3uRq
+	 FiTh/wrl/Mt2KheRaaqlwYupBX+7XVmU6mA14+cRZScuSJoHbHuG6iiw/nOPe6TTNe
+	 7SYj8qxx0I0sMsZc3Vn9ooFLIpJqf+ao7gcS65cPtSuOa9+D3XapmMgsB9XAHB4LHu
+	 ZVoewSoyUGuXw==
+From: Mark Brown <broonie@kernel.org>
+To: shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, 
+ nicoleotsuka@gmail.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Chancel Liu <chancel.liu@nxp.com>
+In-Reply-To: <20240628094354.780720-1-chancel.liu@nxp.com>
+References: <20240628094354.780720-1-chancel.liu@nxp.com>
+Subject: Re: [PATCH] ASoC: fsl_xcvr: Improve suspend/resume flow in
+ fsl_xcvr_trigger()
+Message-Id: <172002423642.71782.11871848740483876915.b4-ty@kernel.org>
+Date: Wed, 03 Jul 2024 17:30:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZoVrzGBouwEQU3Bu@localhost.localdomain> <20240703160210.83667-1-aha310510@gmail.com>
-In-Reply-To: <20240703160210.83667-1-aha310510@gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 3 Jul 2024 18:30:05 +0200
-Message-ID: <CANn89iKbP4r+uAkHiz8_pdMB9XWoyRWR0NJ7ZuNCOr+LiFr9zg@mail.gmail.com>
-Subject: Re: [PATCH net] team: Fix ABBA deadlock caused by race in team_del_slave
-To: Jeongjun Park <aha310510@gmail.com>
-Cc: michal.kubiak@intel.com, davem@davemloft.net, jiri@resnulli.us, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzbot+705c61d60b091ef42c04@syzkaller.appspotmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev-d4707
 
-On Wed, Jul 3, 2024 at 6:02=E2=80=AFPM Jeongjun Park <aha310510@gmail.com> =
-wrote:
->
-> >
-> > On Wed, Jul 03, 2024 at 11:51:59PM +0900, Jeongjun Park wrote:
-> > >        CPU0                    CPU1
-> > >        ----                    ----
-> > >   lock(&rdev->wiphy.mtx);
-> > >                                lock(team->team_lock_key#4);
-> > >                                lock(&rdev->wiphy.mtx);
-> > >   lock(team->team_lock_key#4);
-> > >
-> > > Deadlock occurs due to the above scenario. Therefore,
-> > > modify the code as shown in the patch below to prevent deadlock.
-> > >
-> > > Regards,
-> > > Jeongjun Park.
-> >
-> > The commit message should contain the patch description only (without
-> > salutations, etc.).
-> >
-> > >
-> > > Reported-and-tested-by: syzbot+705c61d60b091ef42c04@syzkaller.appspot=
-mail.com
-> > > Fixes: 61dc3461b954 ("team: convert overall spinlock to mutex")
-> > > Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-> > > ---
-> > >  drivers/net/team/team_core.c | 14 ++++++++------
-> > >  1 file changed, 8 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/net/team/team_core.c b/drivers/net/team/team_cor=
-e.c
-> > > index ab1935a4aa2c..3ac82df876b0 100644
-> > > --- a/drivers/net/team/team_core.c
-> > > +++ b/drivers/net/team/team_core.c
-> > > @@ -1970,11 +1970,12 @@ static int team_add_slave(struct net_device *=
-dev, struct net_device *port_dev,
-> > >                           struct netlink_ext_ack *extack)
-> > >  {
-> > >         struct team *team =3D netdev_priv(dev);
-> > > -       int err;
-> > > +       int err, locked;
-> > >
-> > > -       mutex_lock(&team->lock);
-> > > +       locked =3D mutex_trylock(&team->lock);
-> > >         err =3D team_port_add(team, port_dev, extack);
-> > > -       mutex_unlock(&team->lock);
-> > > +       if (locked)
-> > > +               mutex_unlock(&team->lock);
-> >
-> > This is not correct usage of 'mutex_trylock()' API. In such a case you
-> > could as well remove the lock completely from that part of code.
-> > If "mutex_trylock()" returns false it means the mutex cannot be taken
-> > (because it was already taken by other thread), so you should not modif=
-y
-> > the resources that were expected to be protected by the mutex.
-> > In other words, there is a risk of modifying resources using
-> > "team_port_add()" by several threads at a time.
-> >
-> > >
-> > >         if (!err)
-> > >                 netdev_change_features(dev);
-> > > @@ -1985,11 +1986,12 @@ static int team_add_slave(struct net_device *=
-dev, struct net_device *port_dev,
-> > >  static int team_del_slave(struct net_device *dev, struct net_device =
-*port_dev)
-> > >  {
-> > >         struct team *team =3D netdev_priv(dev);
-> > > -       int err;
-> > > +       int err, locked;
-> > >
-> > > -       mutex_lock(&team->lock);
-> > > +       locked =3D mutex_trylock(&team->lock);
-> > >         err =3D team_port_del(team, port_dev);
-> > > -       mutex_unlock(&team->lock);
-> > > +       if (locked)
-> > > +               mutex_unlock(&team->lock);
-> >
-> > The same story as in case of "team_add_slave()".
-> >
-> > >
-> > >         if (err)
-> > >                 return err;
-> > > --
-> > >
-> >
-> > The patch does not seem to be a correct solution to remove a deadlock.
-> > Most probably a synchronization design needs an inspection.
-> > If you really want to use "mutex_trylock()" API, please consider severa=
-l
-> > attempts of taking the mutex, but never modify the protected resources =
-when
-> > the mutex is not taken successfully.
-> >
->
-> Thanks for your comment. I rewrote the patch based on those comments.
-> This time, we modified it to return an error so that resources are not
-> modified when a race situation occurs. We would appreciate your
-> feedback on what this patch would be like.
->
-> > Thanks,
-> > Michal
-> >
-> >
->
-> Regards,
-> Jeongjun Park
->
-> ---
->  drivers/net/team/team_core.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/team/team_core.c b/drivers/net/team/team_core.c
-> index ab1935a4aa2c..43d7c73b25aa 100644
-> --- a/drivers/net/team/team_core.c
-> +++ b/drivers/net/team/team_core.c
-> @@ -1972,7 +1972,8 @@ static int team_add_slave(struct net_device *dev, s=
-truct net_device *port_dev,
->         struct team *team =3D netdev_priv(dev);
->         int err;
->
-> -       mutex_lock(&team->lock);
-> +       if (!mutex_trylock(&team->lock))
-> +               return -EBUSY;
->         err =3D team_port_add(team, port_dev, extack);
->         mutex_unlock(&team->lock);
->
-> @@ -1987,7 +1988,8 @@ static int team_del_slave(struct net_device *dev, s=
-truct net_device *port_dev)
->         struct team *team =3D netdev_priv(dev);
->         int err;
->
-> -       mutex_lock(&team->lock);
-> +       if (!mutex_trylock(&team->lock))
-> +               return -EBUSY;
->         err =3D team_port_del(team, port_dev);
->         mutex_unlock(&team->lock);
->
-> --
+On Fri, 28 Jun 2024 18:43:54 +0900, Chancel Liu wrote:
+> In the current flow all interrupts are disabled in runtime suspend
+> phase. However interrupts enablement only exists in fsl_xcvr_prepare().
+> After resume fsl_xcvr_prepare() may not be called so it will cause all
+> interrupts still disabled even if resume from suspend. Interrupts
+> should be explictily enabled after resume.
+> 
+> Also, DPATH reset setting only exists in fsl_xcvr_prepare(). After
+> resume from suspend DPATH should be reset otherwise there'll be channel
+> swap issue.
+> 
+> [...]
 
-Failing team_del_slave() is not an option. It will add various issues.
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: fsl_xcvr: Improve suspend/resume flow in fsl_xcvr_trigger()
+      commit: c288f0a1c08efa65f9e3bb7954eb3cefb966c97d
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
