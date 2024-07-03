@@ -1,70 +1,83 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F49C131BDD
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 07:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807944C6C
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 07:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719991794; cv=none; b=fmw0Ue0n2ezRlup2UvmNotakAqskQRuJGOnWIPvA3A3DR5Vsc4tSSxFK6bcLK//9GcPpqcoa4B/gigIlWSoePzhL/YEoKtgSpqAdkjyU1ofKlsZyZyhG5eyuD/vmRKkGwSvHXoCzjJMYLjh/Xy9QHyMFmjwwcHGqQqZkv1pw3CY=
+	t=1719991847; cv=none; b=Gtks2XP7d1GPAefCsVV8vh5QE0XoldnZ6Kc2UvnQUFWo/BfJbKJbbTB6KaLApcksaznAe4egvN8JbYXhK9BUWYGbA+E8FAFfpNKDb51DZQ7JB4FnTMpLuD/EH7LHwk13n+8yuomUurxknw+OrXAdszxJ2gTIRRg+cBaxbwCrmns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719991794; c=relaxed/simple;
-	bh=ZgpTGg7ZhLUOVu5lLH9uwx5tIQp5zc/pXJ0uUfZM2Rc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fPcEYT5njcXsRt+IWnFc+uXk6fJLGW/4E8OXuNf3ySEdgcpl2WxOwBzJHducErkSPzLoCGq5NbF45iMsg0MDC5QDzrOjppldSRGPvCNy+rGJKKUo42TAGimjyoK/O6S+cSo1DxogENLP4T8QRhdwdUEWnFmcKqDl/P7DkoratDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=PKCFTvpw; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1719991847; c=relaxed/simple;
+	bh=oZYcvFZ7As80ohieZdjCQTQp3MfgLDla5R2j6Hq+kf4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n+Xp3VEFm3ExHfGw9L7c7DHf9edaNMrMLNGJv0tyLULYh5v9f9V/mXwz57j4zLrh6E4agG92yHcoWX4UbttnbW/CM1lBXfJX59gddxpMwBkdiybwvKqMz4Da9JpxAqn6yhNk5nhwBhANlbKkKMDbRPhdYeqHhi7T6DR8MrwRmOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MBUtLZ/x; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="PKCFTvpw"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7066c9741fbso4316198b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 00:29:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBUtLZ/x"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3d84546a05bso1341519b6e.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 00:30:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719991792; x=1720596592; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719991843; x=1720596643; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eyHOv+1TQs3NJgyrsK3G70btEgM4PBOJQcOuP6+/cTo=;
-        b=PKCFTvpw5bXb4OQexhnk1hkKHZIMmU2RAbXxjNTzeM6Ni4DtgG7gwv1JntMkmQmm0B
-         rYLKZs3SYy+meTYY+sShbVkhj0Ewtm48EF8hvfPmJeL5lOtidw830HCjnLGQO9dCGu9q
-         wLWkr81aYV9OxbZWUNIGF2UKr9eQmFwZTzUy+sAA7pN6qGiYJPhwNr+gDcxGSCteuvWD
-         maRilwBFMp244KZpv+9vvX7vwrCq/dRXwZdGKECpX4GphxnGB8r3/To4mnj7L84zNsHN
-         3axF/jx6f83zLGwkTTgHJmFWmmUDQ+yC0ERm1xsYZGrmZKuvR4e8WCk79uEwS1VCsj0B
-         eyEw==
+        bh=MZIEVlk+UkNAqnX2wpUNniG3hQvOJEhSruLUcJglBqY=;
+        b=MBUtLZ/xn9HYmMKgFT4tes9cJbuhMugaG5r2uH+0DrxbiG9jgIo9B4cjn2yvwtSyVO
+         2XnVH+flNX1LVYzIknmUsHos6ejdq5zE3M1IpBzit1NxgSxkLF173tkkWXJD7EVwpGhC
+         Bg0z9sXbZf/yQew8nQwEpN4+8dPMFZ+3A94E6RPp8EpAEl42y5Xt97BysGj+aw5DiMHE
+         P3sT5Q3WunV/y1/tr/UAwR0/OUk9Mc0QNSCh/oIf9iHzPGErZEFWhyXyB4fxai436wbE
+         fS5ufh3xRsJnT6CTMkZZ4YnaHbmojtyMMBZphZvV7sK5XiwRO32xjJYlR7f6aKknYkyB
+         ss1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719991792; x=1720596592;
+        d=1e100.net; s=20230601; t=1719991843; x=1720596643;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eyHOv+1TQs3NJgyrsK3G70btEgM4PBOJQcOuP6+/cTo=;
-        b=Vad3fguEVkW/RooIG6TfKsEqtnNZp93TjBBSxPDYp0il5ST9TLzAq0aq0VCU955cAi
-         wIh5E08tZzOjo3t9FQjIUr37r2FzirMMGYBLGOAkqrIzod0b2uolDl3GJmnparunt/Qs
-         2Xreo4wfxdYU8paQxbxgpnZIkCN45rYFNRnZMeAuzhfdz/YXezZy07T/gQ9Z2eIhShWm
-         0CLkmMTpRvjBm5kkZ3GixBC2vBvEaGHOCkOxaFjcHns8jIhWarlhbv7VCp5R927WsCxj
-         UpLq+q2JpV1P3mbTi7YhMhlDJtfmIuQVWQLHG6zBSJQ7Wclrwor8EHweGbVU0HfrM5OK
-         DgTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzN7drBMWzoh5OUoVd1ZHrIFrNctd7NCncJe/v9KUmMxgRRiUzzFa2+NFICNEi6F3EYVTmyQcbiwRT9z9EkgFyzCnRnsHSyVrXdeu+
-X-Gm-Message-State: AOJu0YySS50wwIvl4jneVEDIwr/boD51+g6r9xFhWwHAdDeWVJm0Ymkp
-	atehpvT8DJLFZTsaEhrnNqWTNCeZ6og5mziKrGnjjetCzA+PID1OgvQiW2OYF20=
-X-Google-Smtp-Source: AGHT+IF/2q2bYv+AW1oYPuOUB0yCXXmEAlApl3JeOfwhHA84IKB4Vo8dFV5LyPLNM+Hvub3oz8ssbw==
-X-Received: by 2002:a05:6a00:194a:b0:706:759a:70bc with SMTP id d2e1a72fcca58-70aaaf32f24mr14483206b3a.29.1719991792618;
-        Wed, 03 Jul 2024 00:29:52 -0700 (PDT)
-Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70802959d41sm9993502b3a.96.2024.07.03.00.29.51
+        bh=MZIEVlk+UkNAqnX2wpUNniG3hQvOJEhSruLUcJglBqY=;
+        b=HwlRui+jw8w0nc+ZTMZioiePiw9WRslYJUx5fQ73wDINYc6rsH7Uzuw0QPtzhGfK54
+         KC7REgZ7u+zLo5SV0lwowqtvNneRK0ddSc9ognVdH3YpgXZjOKfQ+FmPAPSuLOpMLRc0
+         lydwnw4DGgtHuwJt1NBYJi6vxmTRL2Bv04CZN2JINcO628+1pdP+UFVTX2wKu/dRtmYJ
+         rCKVZgptKkw2LLpb1vqPT4QubjHh9tJ85fQMzHChAhkDr8bZt8cdJomx1cOZJ0f38vda
+         vWp9Rkj01l9ojk+FBXcOg2qgOGJoXrtPp/YwWbznY2jSdQNA8K7gDF1Rw2UhiBcbKxg1
+         RHLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXs5MDITzcr9rVVQ/aFte1nPbPDvmgWAWMSlj9iQn80H5P2ne+lOjPUbzRuAsJ3Ag40XmLm04BB2RhK9psBQaXOgitIksxVxowPk8pQ
+X-Gm-Message-State: AOJu0Ywk+cA2Cqjek5XrguoEzoSXIvdH9V0e2Ndv9qqlifaTxcFimeVS
+	9Eda7f0oHWTWzbMnEOAywJayJ3qn5WF4dYpI/Guq8CWbiSZ/NGoLMcwRaEeMCwU=
+X-Google-Smtp-Source: AGHT+IEJLAIWsUinHPjVKyb8d+XMIc7IndPbH5xlUDWwh8Z4IkshorjmgwkDUcVsSqsOAzPzpTQ9sg==
+X-Received: by 2002:a05:6808:1823:b0:3d6:2f50:5517 with SMTP id 5614622812f47-3d6b2b24e68mr14703941b6e.1.1719991842923;
+        Wed, 03 Jul 2024 00:30:42 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708044b0b61sm10057686b3a.176.2024.07.03.00.30.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 00:29:52 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: ogabbay@kernel.org
-Cc: ttayar@habana.ai,
-	obitton@habana.ai,
-	fkassabri@habana.ai,
-	dliberman@habana.ai,
-	quic_carlv@quicinc.com,
-	dhirschfeld@habana.ai,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [RESEND PATCH] accel/habanalabs/gaudi2: Use kvfree() for memory allocated with kvcalloc()
-Date: Wed,  3 Jul 2024 09:24:39 +0200
-Message-ID: <20240703072438.725114-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+        Wed, 03 Jul 2024 00:30:42 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>
+Cc: linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Erik Schilling <erik.schilling@linaro.org>,
+	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH V3 0/8] Rust bindings for cpufreq and OPP core + sample driver
+Date: Wed,  3 Jul 2024 12:44:25 +0530
+Message-Id: <cover.1719990273.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,30 +86,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use kvfree() to fix the following Coccinelle/coccicheck warning reported
-by kfree_mismatch.cocci:
+Hello,
 
-	WARNING kvmalloc is used to allocate this memory at line 10398
+This RFC adds initial rust bindings for two subsystems, cpufreq and operating
+performance points (OPP). The bindings are provided for most of the interface
+these subsystems expose.
 
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- drivers/accel/habanalabs/gaudi2/gaudi2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This series also provides a sample cpufreq driver rcpufreq-dt, which is a
+duplicate of the merged cpufreq-dt driver (A generic platform agnostic device
+tree based cpufreq driver) used on most of the ARM platforms.
 
-diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2.c b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-index fa1c4feb9f89..8024047962ec 100644
---- a/drivers/accel/habanalabs/gaudi2/gaudi2.c
-+++ b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-@@ -10489,7 +10489,7 @@ static int gaudi2_memset_device_memory(struct hl_device *hdev, u64 addr, u64 siz
- 				(u64 *)(lin_dma_pkts_arr), DEBUGFS_WRITE64);
- 	WREG32(sob_addr, 0);
- 
--	kfree(lin_dma_pkts_arr);
-+	kvfree(lin_dma_pkts_arr);
- 
- 	return rc;
- }
+This is tested with the help of QEMU for now and frequency transitions, various
+configurations, driver binding/unbinding work as expected. No performance
+measurement is done with this.
+
+These patches (along with few other dependencies) are pushed here for anyone to
+give them a try:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/linux.git rust/cpufreq-dt
+
+
+This depends on basic bindings for few other modules: device/driver, platform
+driver, OF, clk, and cpumask. I am not looking to upstream a full fledged
+support for them yet.
+
+Based on staging/rust-device from the Rust tree (which is based over v6.10-rc1).
+
+V2->V3:
+- Rebased on latest rust-device changes, which removed `Data` and so few changes
+  were required to make it work.
+- use srctree links (Alice Ryhl).
+- Various changes the OPP creation APIs, new APIs: from_raw_opp() and
+  from_raw_opp_owned() (Alice Ryhl).
+- Inline as_raw() helpers (Alice Ryhl).
+- Add new interface (`OPP::Token`) for dynamically created OPPs.
+- Add Reviewed-by tag from Manos.
+- Modified/simplified cpufreq registration structure / method a bit.
+
+V1->V2:
+- Create and use separate bindings for OF, clk, cpumask, etc (not included in
+  this patchset but pushed to the above branch). This helped removing direct
+  calls from the driver.
+- Fix wrong usage of Pinning + Vec.
+- Use Token for OPP Config.
+- Use Opaque, transparent and Aref for few structures.
+- Broken down into smaller patches to make it easy for reviewers.
+- Based over staging/rust-device.
+
+Thanks.
+
+
+*** BLURB HERE ***
+
+Viresh Kumar (8):
+  rust: Add initial bindings for OPP framework
+  rust: Extend OPP bindings for the OPP table
+  rust: Extend OPP bindings for the configuration options
+  rust: Add initial bindings for cpufreq framework
+  rust: Extend cpufreq bindings for policy and driver ops
+  rust: Extend cpufreq bindings for driver registration
+  rust: Extend OPP bindings with CPU frequency table
+  cpufreq: Add Rust based cpufreq-dt driver
+
+ drivers/cpufreq/Kconfig         |   12 +
+ drivers/cpufreq/Makefile        |    1 +
+ drivers/cpufreq/rcpufreq_dt.rs  |  225 +++++++
+ rust/bindings/bindings_helper.h |    2 +
+ rust/helpers.c                  |   15 +
+ rust/kernel/cpufreq.rs          | 1041 +++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs              |    4 +
+ rust/kernel/opp.rs              |  918 +++++++++++++++++++++++++++
+ 8 files changed, 2218 insertions(+)
+ create mode 100644 drivers/cpufreq/rcpufreq_dt.rs
+ create mode 100644 rust/kernel/cpufreq.rs
+ create mode 100644 rust/kernel/opp.rs
+
 -- 
-2.45.2
+2.31.1.272.g89b43f80a514
 
