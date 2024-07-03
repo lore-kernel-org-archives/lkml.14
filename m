@@ -1,167 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE2213D61B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58E3171E72;
+	Wed,  3 Jul 2024 11:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720007577; cv=none; b=mKmhI6C5x0PW761QnpAybEE5DFzbwf+kx+qzsO5NWKKfK0v+kUgnttv+ER2AQ01q6xMpUwr9JxVPzXPbt23XSwi3MH7B0DU6+cYR9HAgPZID4I50PCyg0QOYegDK9baFIPX727KekRJN/xelNBStvsCjSvbp0QH5DkkIykmLZIc=
+	t=1720007580; cv=none; b=eAac+Qgg/cAVfFQKzAlQO89hlgIPMh7naBOG5HdUM9OpDeupKWvTd6z3uXUN/9djEjC50mtTPlpgyL5KR6YXtoUQZNUUO3Qa1wrgggiLCZxyhb0O7a2LNzLUp3omDDgsLeltu/PBHuPx4CvtEEgf2OZNekw0J0/neipGHLex/oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720007577; c=relaxed/simple;
-	bh=EpdJkfBmRQKg1jeirUfiq32WPAAoiCKsPGk8hCr+s6c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cJpxwLypkSQwMhEe3qVGl6x77hleCbvFl8YdMvki9jYIGU9heepZpObK9MWpZ0P7/v/tuiT+lpDF8AXFWHOV1yirP9RYI+8PZ7MpapJlvRxiFNt1h1Zx9O/ukqhsTTaEFgatl2Qrnz2fed8fPw+eXKLngg+fFLrqQin4ZG7l3AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k++e98Sv; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720007580; c=relaxed/simple;
+	bh=4vyCU6ANbjrw1Mvh+Q7mHa7DTpcwVfqc+heLSYWaXoo=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=A3AdzQiH2IfgvZFtyKoL+OOpTRAYx03g5ycIz+WTxM3aOVwW72ul0nZrFdDybQtF0nz3L1KVEXN6lmtPxLIyTkSozJuGZgasNTMxdOgLITdG2txUh8qptRIFqiiXUla+c0gsXKKek1Pn9KUtkSN+MaiHgsAlixq8WlRZufI/yec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IRLkTuVO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YedSxPgE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k++e98Sv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720007576; x=1751543576;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=EpdJkfBmRQKg1jeirUfiq32WPAAoiCKsPGk8hCr+s6c=;
-  b=k++e98Svz1pe27wKdkkCtLiGNH3zqKd/onHOJSs1ssdQ9VPvTdJPswHi
-   YWlQAx5mmz0LrCZ5MkGx9Rk8hBSXlGGzPtfbDYAbHp+lyoMrfAuuoPTCr
-   3MA+lHT1R++tb7tE6HYI3qcPnDirN+ft31QT5mb052lYw2K2qHuah0r/N
-   VAmUVPpoSSxtYkGUVISv2vig5jibfgJJVs1BFLFNNrVKDkN9ux6XsPdTQ
-   EsT5GcnxpUWHbJIvGop78fJPBcOG2bqO7gti57Pb5K4y3zLIp31xCY26K
-   6QMjTONPDq7+HO9Y+0t46ooGaKSk1XOvw/i7ff50PqxKoDl9bUszyjGNa
-   g==;
-X-CSE-ConnectionGUID: ustaz7xlQs6XUkMjqSxftw==
-X-CSE-MsgGUID: 2QwnNcR+SDOJyjyRC8+1Gw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17440569"
-X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="17440569"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 04:52:55 -0700
-X-CSE-ConnectionGUID: RPKwiF2YT5uq5i+JYJQ79g==
-X-CSE-MsgGUID: 3q321IkRR06QRpPPf4qnAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="46205175"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by fmviesa008.fm.intel.com with SMTP; 03 Jul 2024 04:52:50 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 03 Jul 2024 14:52:49 +0300
-Date: Wed, 3 Jul 2024 14:52:49 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: jim.cromie@gmail.com
-Cc: daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com,
-	jani.nikula@intel.com, jbaron@akamai.com,
-	gregkh@linuxfoundation.org, ukaszb@chromium.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, linux@rasmusvillemoes.dk,
-	joe@perches.com, mcgrof@kernel.org
-Subject: Re: [PATCH v9 30/52] drm-dyndbg: adapt drm core to use dyndbg
- classmaps-v2
-Message-ID: <ZoU7kR2aYwVDvd_G@intel.com>
-References: <20240702215804.2201271-1-jim.cromie@gmail.com>
- <20240702215804.2201271-31-jim.cromie@gmail.com>
- <ZoSOMClB0MeWeokU@intel.com>
- <CAJfuBxzsZUpO-Q_uAfMhzXs0WHYMTnj1F8ju7af-kQZKQjLvNQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IRLkTuVO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YedSxPgE"
+Date: Wed, 03 Jul 2024 11:52:49 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720007570;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F1P2TWzsZWnnZZh4FZTxVWZUPrceOOvWG4Mci481hOw=;
+	b=IRLkTuVOiDSjujWowBfwlngBQsPyJ1ptrbAiztE1k0B2ey4c0pYLMBIhyPAYdxxDYf2/NZ
+	879RwIbTkzD7FAAp9c+Bk9pDPxv6LU31Dn6LtYGjoprMhoDub9pGRlC9bBlJt+5c7sIApn
+	KnEY5ksFn1MxtnIpPiJrdK+C6P3Kr+u9SEVphgEze8y1W77FyObNNGnrliCg3h2RxYtIej
+	++Ef5hBuROv88odwQ6liJ6WS4LMhad9CK63TxpHIfMiCpibsjjWdXpyHEaKVbOqCLP/2J9
+	tnmA8njiVdGJVTYMQYJB3oYz5WCkHUVB+3y0P6PLO+Vt9ktz7HqB86Vz/RueYA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720007570;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F1P2TWzsZWnnZZh4FZTxVWZUPrceOOvWG4Mci481hOw=;
+	b=YedSxPgEBZld3dIf80kywfarhFiy5VIkslR/2GcDmpClvhgNaDvFfuvcYZrC32N55O0O9v
+	N/DLS/nOpPhQwnDA==
+From: "tip-bot2 for Alexandre Chartre" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/urgent] x86/bhi: Avoid warning in #DB handler due to BHI mitigation
+Cc: Suman Maity <suman.m.maity@oracle.com>,
+ Alexandre Chartre <alexandre.chartre@oracle.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240524070459.3674025-1-alexandre.chartre@oracle.com>
+References: <20240524070459.3674025-1-alexandre.chartre@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJfuBxzsZUpO-Q_uAfMhzXs0WHYMTnj1F8ju7af-kQZKQjLvNQ@mail.gmail.com>
-X-Patchwork-Hint: comment
+Message-ID: <172000756979.2215.11589165897193201369.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 02, 2024 at 08:34:39PM -0600, jim.cromie@gmail.com wrote:
-> On Tue, Jul 2, 2024 at 5:33 PM Ville Syrjälä
-> <ville.syrjala@linux.intel.com> wrote:
-> >
-> > On Tue, Jul 02, 2024 at 03:57:20PM -0600, Jim Cromie wrote:
-> > > dyndbg's CLASSMAP-v1 api was broken; DECLARE_DYNDBG_CLASSMAP tried to
-> > > do too much.  Its replaced by DRM_CLASSMAP_DEFINE, which creates &
-> > > EXPORTs the classmap when CONFIG_DRM_USE_DYNAMIC_DEBUG=y, for direct
-> > > reference by drivers.
-> > >
-> > > The drivers still use DECLARE_DYNDBG_CLASSMAP for now, so they still
-> > > redundantly re-declare the classmap, but we can convert the drivers
-> > > later to DYNDBG_CLASSMAP_USE
-> > >
-> > > Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_print.c | 25 +++++++++++++------------
-> > >  include/drm/drm_print.h     |  8 ++++++++
-> > >  2 files changed, 21 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
-> > > index 699b7dbffd7b..4a5f2317229b 100644
-> > > --- a/drivers/gpu/drm/drm_print.c
-> > > +++ b/drivers/gpu/drm/drm_print.c
-> > > @@ -55,18 +55,19 @@ MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug cat
-> > >  #if !defined(CONFIG_DRM_USE_DYNAMIC_DEBUG)
-> > >  module_param_named(debug, __drm_debug, ulong, 0600);
-> > >  #else
-> > > -/* classnames must match vals of enum drm_debug_category */
-> > > -DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
-> > > -                     "DRM_UT_CORE",
-> > > -                     "DRM_UT_DRIVER",
-> > > -                     "DRM_UT_KMS",
-> > > -                     "DRM_UT_PRIME",
-> > > -                     "DRM_UT_ATOMIC",
-> > > -                     "DRM_UT_VBL",
-> > > -                     "DRM_UT_STATE",
-> > > -                     "DRM_UT_LEASE",
-> > > -                     "DRM_UT_DP",
-> > > -                     "DRM_UT_DRMRES");
-> > > +/* classnames must match value-symbols of enum drm_debug_category */
-> > > +DRM_CLASSMAP_DEFINE(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS,
-> > > +                 DRM_UT_CORE,
-> > > +                 "DRM_UT_CORE",
-> > > +                 "DRM_UT_DRIVER",
-> > > +                 "DRM_UT_KMS",
-> > > +                 "DRM_UT_PRIME",
-> > > +                 "DRM_UT_ATOMIC",
-> > > +                 "DRM_UT_VBL",
-> > > +                 "DRM_UT_STATE",
-> > > +                 "DRM_UT_LEASE",
-> > > +                 "DRM_UT_DP",
-> > > +                 "DRM_UT_DRMRES");
-> >
-> > Looks like this stuff just ends up in an array, so presumably
-> > it should be possible to use designated initializers to make this
-> > less fragile?
-> 
-> Im not sure I got your whole point, but:
+The following commit has been merged into the x86/urgent branch of tip:
 
-I mean using
- [DRM_UT_CORE] = "DRM_UT_CORE"
-instead of
- "DRM_UT_CORE"
-so there is no chance of screwing up the order.
-Or maybe the order doesn't even matter here?
+Commit-ID:     ac8b270b61d48fcc61f052097777e3b5e11591e0
+Gitweb:        https://git.kernel.org/tip/ac8b270b61d48fcc61f052097777e3b5e11591e0
+Author:        Alexandre Chartre <alexandre.chartre@oracle.com>
+AuthorDate:    Fri, 24 May 2024 09:04:59 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 03 Jul 2024 13:26:30 +02:00
 
-Could also stringify to avoid accidental of typos.
+x86/bhi: Avoid warning in #DB handler due to BHI mitigation
 
-> 
-> the fragility is the repetitive re-statement of the map,
-> in those un-modified DECLARE_s,
-> once replaced, the USEs just ref the struct built by the _DEFINE
-> (once, and exported)
-> 
-> I dont really like the _DEFINEs restatement of the enum-values: DRM_UT_*
-> especially as "strings".
-> I can automate the stringification with an APPLY_FN_(__stringify, ...)
-> but the enum-list DRM_UT_* (w.o quotes) is still needed as args.
-> 
-> unless there is something C can do thats like Enum.values() ?
-> 
-> 
-> 
-> >
-> > --
-> > Ville Syrjälä
-> > Intel
+When BHI mitigation is enabled, if SYSENTER is invoked with the TF flag set
+then entry_SYSENTER_compat() uses CLEAR_BRANCH_HISTORY and calls the
+clear_bhb_loop() before the TF flag is cleared. This causes the #DB handler
+(exc_debug_kernel()) to issue a warning because single-step is used outside the
+entry_SYSENTER_compat() function.
 
--- 
-Ville Syrjälä
-Intel
+To address this issue, entry_SYSENTER_compat() should use CLEAR_BRANCH_HISTORY
+after making sure the TF flag is cleared.
+
+The problem can be reproduced with the following sequence:
+
+  $ cat sysenter_step.c
+  int main()
+  { asm("pushf; pop %ax; bts $8,%ax; push %ax; popf; sysenter"); }
+
+  $ gcc -o sysenter_step sysenter_step.c
+
+  $ ./sysenter_step
+  Segmentation fault (core dumped)
+
+The program is expected to crash, and the #DB handler will issue a warning.
+
+Kernel log:
+
+  WARNING: CPU: 27 PID: 7000 at arch/x86/kernel/traps.c:1009 exc_debug_kernel+0xd2/0x160
+  ...
+  RIP: 0010:exc_debug_kernel+0xd2/0x160
+  ...
+  Call Trace:
+  <#DB>
+   ? show_regs+0x68/0x80
+   ? __warn+0x8c/0x140
+   ? exc_debug_kernel+0xd2/0x160
+   ? report_bug+0x175/0x1a0
+   ? handle_bug+0x44/0x90
+   ? exc_invalid_op+0x1c/0x70
+   ? asm_exc_invalid_op+0x1f/0x30
+   ? exc_debug_kernel+0xd2/0x160
+   exc_debug+0x43/0x50
+   asm_exc_debug+0x1e/0x40
+  RIP: 0010:clear_bhb_loop+0x0/0xb0
+  ...
+  </#DB>
+  <TASK>
+   ? entry_SYSENTER_compat_after_hwframe+0x6e/0x8d
+  </TASK>
+
+  [ bp: Massage commit message. ]
+
+Fixes: 7390db8aea0d ("x86/bhi: Add support for clearing branch history at syscall entry")
+Reported-by: Suman Maity <suman.m.maity@oracle.com>
+Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Link: https://lore.kernel.org/r/20240524070459.3674025-1-alexandre.chartre@oracle.com
+---
+ arch/x86/entry/entry_64_compat.S | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/entry/entry_64_compat.S b/arch/x86/entry/entry_64_compat.S
+index 11c9b8e..ed0a5f2 100644
+--- a/arch/x86/entry/entry_64_compat.S
++++ b/arch/x86/entry/entry_64_compat.S
+@@ -89,10 +89,6 @@ SYM_INNER_LABEL(entry_SYSENTER_compat_after_hwframe, SYM_L_GLOBAL)
+ 
+ 	cld
+ 
+-	IBRS_ENTER
+-	UNTRAIN_RET
+-	CLEAR_BRANCH_HISTORY
+-
+ 	/*
+ 	 * SYSENTER doesn't filter flags, so we need to clear NT and AC
+ 	 * ourselves.  To save a few cycles, we can check whether
+@@ -116,6 +112,16 @@ SYM_INNER_LABEL(entry_SYSENTER_compat_after_hwframe, SYM_L_GLOBAL)
+ 	jnz	.Lsysenter_fix_flags
+ .Lsysenter_flags_fixed:
+ 
++	/*
++	 * CPU bugs mitigations mechanisms can call other functions. They
++	 * should be invoked after making sure TF is cleared because
++	 * single-step is ignored only for instructions inside the
++	 * entry_SYSENTER_compat function.
++	 */
++	IBRS_ENTER
++	UNTRAIN_RET
++	CLEAR_BRANCH_HISTORY
++
+ 	movq	%rsp, %rdi
+ 	call	do_SYSENTER_32
+ 	jmp	sysret32_from_system_call
