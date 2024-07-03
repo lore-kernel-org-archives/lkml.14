@@ -1,51 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7AF1DA316;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3546184116;
 	Wed,  3 Jul 2024 19:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720035380; cv=none; b=tYIvFJUlX8RboN1JX1kcADdR+CpZWO/2Q2PZRGErT5TrXYFbt/93ttkocbv5KRqk6IYI+7aEf6opJdxn9dXoYi6ZreRuCXu3BlKeva2QS4NmW+W/zNvk+tGvbPMRa+1uYaXXzYLd1rIan02gJjPJC4gcwFmHVyB1xLhpmdl71a8=
+	t=1720035382; cv=none; b=Xn1++Xl+iWy1HeV1+NCkPTADQHvhTjwGQu5Gz1Ob7enEvlxtQ1HyHjpFo7Y0Hieg++ZaLU1D9VzizIDshsjWqTYHnBaupoGZXKi5y7u/bHDzUu8USaulmgdr2BJpiGCLSeL8e7SGOf4Gt3fCLLQZraOLl8aDe6+uLUUHP1usbBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720035380; c=relaxed/simple;
-	bh=wvJnBj/S0cpi1UBzVKpHlZ82ps8JxftzfYszzQdgOHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MGbYUNDvg0ygVRBfiHQZlFQ9xC61FgUU69/aCntwBnQ02HKxQfm1drN1Zf3+les84vtfO480y7I789IDLmiyJfYXmHL1pQrDYVC3Cr1FOIfYl0lp7JdpZOUQO1SDqRZpLJT6HdY/CaTAfL2DPlbWbJ1E1f0qh64Q0hHEKSFDo+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAE28C2BD10;
-	Wed,  3 Jul 2024 19:36:18 +0000 (UTC)
-Date: Wed, 3 Jul 2024 15:36:17 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Guilherme Amadio <amadio@gentoo.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Ian Rogers <irogers@google.com>, Thorsten Leemhuis
- <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>,
- linux-perf-users@vger.kernel.org, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] tools: Make pkg-config dependency checks usable
- by other tools
-Message-ID: <20240703153617.650fcc1c@rorschach.local.home>
-In-Reply-To: <ZoSP_vFMVl83pxES@google.com>
-References: <20240628202608.3273329-1-amadio@gentoo.org>
-	<20240628203432.3273625-1-amadio@gentoo.org>
-	<20240628203432.3273625-3-amadio@gentoo.org>
-	<ZoSP_vFMVl83pxES@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1720035382; c=relaxed/simple;
+	bh=uqHav4gpcovj2Pf0YyKkm346bxgofRI+CxWEXUJ/Mvg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=JuRpc84qMU0b8JgA3XKsAguVpJ0hafspWyK+AOQQM7kXgD2U60Sh7rlpVlveleQKtqAF8g5g0Uvl/Msiv+NZccGG/aMdCNnDmsMlaPOCj0SHUBBueRE2YJAWv3W9unVR9eMX7QkdIDU9UM6wwB2AdcezDLRIfG5LglWJ9orpFVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u44vlPbp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/KnHEBEE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u44vlPbp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/KnHEBEE"
+Date: Wed, 03 Jul 2024 19:36:18 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720035379;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vMQQgoyveyjH5yX/pnahnsjZ7vuvr0+eH6mDO4+CBkM=;
+	b=u44vlPbpMcjRU+vk9hgU7nwNdpZXxdVfHFIuFU9cboO0ESzXcbxAj50QZSm150ztrpBskt
+	peX7Mfurm7t8DYr+vccNW9+AN0aATd4DYO2kptSgnCe1W7zxOAC8lnHz5sGeMkjbuSx5DH
+	6skuUncRIEt/L8zfJRuIxCfhW7VqHEp1fdr3D/z4O2Jnmi8qqAmORMrbeQLgvnW8CVKbj8
+	O07T1AbcrloGGLbWyihgqNWim3STjok9zawbSF8ApZLK1aKHCrQAoGVzoOEJnwddL+UTcd
+	fpnc7vInMhTZglHDyNGe4FmMBhVWm9ow4dBif/Rix9mxtK0HbNccVInTi9Prgw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720035379;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vMQQgoyveyjH5yX/pnahnsjZ7vuvr0+eH6mDO4+CBkM=;
+	b=/KnHEBEEaPBVCrUmCC+AdbJ8Y2+5PHuxAY0M3U/G4sV2sK2Q1UmJ1G4Wj5GDqTJ1/EvfLZ
+	IX47JVE2YLzwNFCw==
+From: "tip-bot2 for Anna-Maria Behnsen" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] x86/vdso: Remove unused include
+Cc: "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240701-vdso-cleanup-v1-5-36eb64e7ece2@linutronix.de>
+References: <20240701-vdso-cleanup-v1-5-36eb64e7ece2@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <172003537877.2215.17933618588743081260.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2 Jul 2024 16:40:46 -0700
-Namhyung Kim <namhyung@kernel.org> wrote:
+The following commit has been merged into the timers/core branch of tip:
 
-> +CC Steve and linux-trace-kernel list.
+Commit-ID:     2b83be20ae60308f5da31c696137a9561c44c24c
+Gitweb:        https://git.kernel.org/tip/2b83be20ae60308f5da31c696137a9561c44c24c
+Author:        Anna-Maria Behnsen <anna-maria@linutronix.de>
+AuthorDate:    Mon, 01 Jul 2024 16:47:58 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 03 Jul 2024 21:27:04 +02:00
 
-There doesn't seem to be a cover page, and it doesn't apply on
-v6.10-rc6 nor on tip.
+x86/vdso: Remove unused include
 
--- Steve
+Including hrtimer.h is not required and is probably a historical
+leftover. Remove it.
+
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Link: https://lore.kernel.org/r/20240701-vdso-cleanup-v1-5-36eb64e7ece2@linutronix.de
+
+---
+ arch/x86/include/asm/vdso/vsyscall.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/vdso/vsyscall.h b/arch/x86/include/asm/vdso/vsyscall.h
+index be199a9..9322628 100644
+--- a/arch/x86/include/asm/vdso/vsyscall.h
++++ b/arch/x86/include/asm/vdso/vsyscall.h
+@@ -4,7 +4,6 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
+-#include <linux/hrtimer.h>
+ #include <linux/timekeeper_internal.h>
+ #include <vdso/datapage.h>
+ #include <asm/vgtod.h>
