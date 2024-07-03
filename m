@@ -1,115 +1,95 @@
-Received: from mail.katalix.com (mail.katalix.com [3.9.82.81])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9C3913541F;
-	Wed,  3 Jul 2024 09:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.9.82.81
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54C0139590
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 09:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720000019; cv=none; b=Z5gmd2fxtNF6d+k3lLsYtrmkX9bhC8ZXAgsAfLWZDx1bSaab2Ob1yG26fvFbViOsGGDgSfFBIYQv/VlMA5C/ymvlzA1BAzUIzZ835xzUunv/Nx0+rNT1WvlPZo5zuMYeYw3FegViMjzO6pTAgW0QkNkzs2yOWS5ITxa0lmuASRM=
+	t=1720000134; cv=none; b=QQrv33xHPizrzGFJCRce7Eu2DPSXfUBUNF/f0I4iKhcXevY+vORcda/OR8Umc8Dh/pvTqaxSwARd0bE+44nGeQPwMa+vdVoJruFFfO25iXTI63V+0NFgO8utKmJ14EtWq3OfBtzngbsT/RHgodVVNlUXwlIvgn5r3GTwn8M4daA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720000019; c=relaxed/simple;
-	bh=bouHdOsxPVaf7RPMK1kJM80X30VaeGQat5pdp7fw4K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crYSQ0supDonFMu8G7crOW/x/eKJkbzufh7Iq3NAgjjKT7wbfA9L0wIn8e2qityNQnToiyl2rIUJDltimbUmZFXkiOlWBlKByql2Xu01eGENEAYLSqe1+gib/KQbqIhCe5z5aUL+g+LEwXPPcI78aTqgiAkhDn/oRJR00wq+7Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=katalix.com; spf=pass smtp.mailfrom=katalix.com; dkim=pass (2048-bit key) header.d=katalix.com header.i=@katalix.com header.b=FxImH4Cc; arc=none smtp.client-ip=3.9.82.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=katalix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=katalix.com
+	s=arc-20240116; t=1720000134; c=relaxed/simple;
+	bh=9Bb/NG3smGGfl51LXhMHloElDKOdrvDMHT4oKg8wS64=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X2+Uhwn4Mt5lhWmaUJnYarbDih+f2iTw3wzXMGvREE6uks86JeEO5eLYzURLMMy+jN0dsqnTF6BJ/kHZoJtD4gl1te0xUH5uecOopE7jkB4K2xlXHQvdd0rrSlWsROmD6wQxI6nmJEwm0lp3M7KYP5vEls0WGHVGsp31JZ6Y9bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LdnI0sIw; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=katalix.com header.i=@katalix.com header.b="FxImH4Cc"
-Received: from localhost (unknown [IPv6:2a02:8012:909b:0:1e90:7398:2278:75e2])
-	(Authenticated sender: tom)
-	by mail.katalix.com (Postfix) with ESMTPSA id B81097D76D;
-	Wed,  3 Jul 2024 10:46:50 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=katalix.com; s=mail;
-	t=1720000010; bh=bouHdOsxPVaf7RPMK1kJM80X30VaeGQat5pdp7fw4K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Disposition:In-Reply-To:From;
-	z=Date:=20Wed,=203=20Jul=202024=2010:46:50=20+0100|From:=20Tom=20Pa
-	 rkin=20<tparkin@katalix.com>|To:=20syzbot=20<syzbot+c041b4ce3a6dfd
-	 1e63e2@syzkaller.appspotmail.com>|Cc:=20linux-kernel@vger.kernel.o
-	 rg,=20netdev@vger.kernel.org,=0D=0A=09syzkaller-bugs@googlegroups.
-	 com|Subject:=20Re:=20[syzbot]=20[net?]=20KASAN:=20slab-use-after-f
-	 ree=20Write=20in=0D=0A=20l2tp_session_delete|Message-ID:=20<ZoUeCo
-	 DMkRA/9DSi@katalix.com>|References:=20<0000000000008405e0061bb6d4d
-	 5@google.com>|MIME-Version:=201.0|Content-Disposition:=20inline|In
-	 -Reply-To:=20<0000000000008405e0061bb6d4d5@google.com>;
-	b=FxImH4Cc+MmKNP/W1dIfK745SW7hYM6WudOVJcab9XMPeNyGvnm/z4pmVzbwzA9gm
-	 iirs2VMH7FkBMP4HKvof46cisiOu1XogdfgzHUIYEdYXSftxp9VVs04DsLWAAPcxc3
-	 TT4Am5Bff4xGj/9Tta+pXYZNA69Mj8KJRzW6/pYFoG4hR4wKvUVgbpeoseBF1+0u8Y
-	 qajBRLu2yCjNKhtuio+gs1/qiTRXgaafUtiCM05hn/nNPgsonlZhPM9tkojoM2pTcQ
-	 jkUgARp+f0QmmiD15gIokLIMZc96n6gsNhNWE/bPcKBTWV+FqyOWp5z1AnzxBjEMpx
-	 u7R0Cex694xgA==
-Date: Wed, 3 Jul 2024 10:46:50 +0100
-From: Tom Parkin <tparkin@katalix.com>
-To: syzbot <syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] KASAN: slab-use-after-free Write in
- l2tp_session_delete
-Message-ID: <ZoUeCoDMkRA/9DSi@katalix.com>
-References: <0000000000008405e0061bb6d4d5@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LdnI0sIw"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-424a30255d3so32525e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 02:48:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720000131; x=1720604931; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9Bb/NG3smGGfl51LXhMHloElDKOdrvDMHT4oKg8wS64=;
+        b=LdnI0sIwKagPlegEJUH4AgOUM00tFRIhQHP7qK4BY69BXHfz9vUv1a9QlfVjKyWBpH
+         WgZAmUppD1RjYsUrcjglUxlCCy2EBOYIJuU9wfgIEETECKnE2qaQayfyrGSLk8nmDris
+         zpOIwqYaroa7oJfeYVQ/nnGSzFZLSJY9XUaiLGaPzCrCzx2nPBbd38QDYYHI2KI64T6Y
+         93tHuGISvjAioQKQHtfuq8PlaBXWi2K3LbJ7Hdck+RwMpMOTsVYKT/NVoo8uxXkK+5Mo
+         tlojQ9tLOH20+IuFky+67D6kL38Hda4LrXUWEDJ5SFR+rvqSVKXtD2OrHB9p7+6FzCly
+         HRAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720000131; x=1720604931;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9Bb/NG3smGGfl51LXhMHloElDKOdrvDMHT4oKg8wS64=;
+        b=RmAH141tBn5eUbOZdqsW21qz7Un6jEgHYtdhTCHzZHDPnxEh/CrLv1SjV6p5EYxUYQ
+         E2fyyaVNxwP5PsbzXvyKExRXL/6lvNCZGNEGaUviLbaOFWfan2izTAQiHxlI160KCg9K
+         j2zDDNg0ZVvDWOrOkwoDks5fl7RCSw1U51GQ6tV9dENWWEXs0PmgPyBmrCa65XB54nPq
+         gGNNq5VkzCCQeEzHwvrbebhGARHxdiF1g4+qEx/SDQav6dGiSzkoYv+BFH7UhN7OySOo
+         JblNKgPX2I8Ao7AIE5pW5KWPJ/zv/J2IBeQ3cWCHWhWe344Gg+oIZZpPB8cbQUjmJEdA
+         /5og==
+X-Forwarded-Encrypted: i=1; AJvYcCW+Cd389IG5xn7Pk/XQm8tmBtcVw+gRpJNHTjrR/4L5nXazZxKHs7ugFl99mjsom3+F5vhCn0Ji2/UXX9jqfunQjFSwpmttvxZprHTU
+X-Gm-Message-State: AOJu0YwpzU2kUchM1ie2qs1GL+8gCjpk0c4tgynI655cd1QYar7L4cOH
+	Rje4kxEQpITVSsNkW8vUem4JFBABu8aGT42kMVMClVNN5pmBwM3JYAep3WJqrymK/wOdm0AcYJb
+	XNJ5H1+YzAPi00UxDyfC2EoyAdFVL2jeVKW2GOYQKYLMjplUfLw==
+X-Google-Smtp-Source: AGHT+IGC917Ef7NHa4Xa4S9uRSjyc3XSEB0vBW2CBOjBoWNGHAYl4t3gXiObSqoyxW/dl36MJF/FOdJM6zwKGkccvGU=
+X-Received: by 2002:a05:600c:5127:b0:422:ffac:f8c0 with SMTP id
+ 5b1f17b1804b1-4263f7efa11mr931815e9.7.1720000130929; Wed, 03 Jul 2024
+ 02:48:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8snERkfl58I8EGWb"
-Content-Disposition: inline
-In-Reply-To: <0000000000008405e0061bb6d4d5@google.com>
-
-
---8snERkfl58I8EGWb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240703091649.111773-1-syoshida@redhat.com>
+In-Reply-To: <20240703091649.111773-1-syoshida@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 3 Jul 2024 11:48:36 +0200
+Message-ID: <CANn89iJaCc71gqmphNKqyFDrEFC3gALESsLpuNheMTzhzA2LpQ@mail.gmail.com>
+Subject: Re: [PATCH net] inet_diag: Initialize pad field in struct inet_diag_req_v2
+To: Shigeru Yoshida <syoshida@redhat.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, 
+	pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On  Tue, Jun 25, 2024 at 06:25:23 -0700, syzbot wrote:
-> syzbot found the following issue on:
->=20
-> HEAD commit:    185d72112b95 net: xilinx: axienet: Enable multicast by de=
-f..
-> git tree:       net-next
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1062bd46980000
+On Wed, Jul 3, 2024 at 11:17=E2=80=AFAM Shigeru Yoshida <syoshida@redhat.co=
+m> wrote:
+>
+> KMSAN reported uninit-value access in raw_lookup() [1]. Diag for raw
+> sockets uses the pad field in struct inet_diag_req_v2 for the
+> underlying protocol. This field corresponds to the sdiag_raw_protocol
+> field in struct inet_diag_req_raw.
+>
+> inet_diag_get_exact_compat() converts inet_diag_req to
+> inet_diag_req_v2, but leaves the pad field uninitialized. So the issue
+> occurs when raw_lookup() accesses the sdiag_raw_protocol field.
+>
+> Fix this by initializing the pad field in
+> inet_diag_get_exact_compat(). Also, do the same fix in
+> inet_diag_dump_compat() to avoid the similar issue in the future.
+>
+> Fixes: 432490f9d455 ("net: ip, diag -- Add diag interface for raw sockets=
+")
+> Reported-by: syzkaller <syzkaller@googlegroups.com>
+> Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.g=
-it  185d72112b95
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1290,13 +1290,14 @@ static void l2tp_session_unhash(struct l2tp_session=
- *session)
- static void l2tp_tunnel_closeall(struct l2tp_tunnel *tunnel)
- {
-    struct l2tp_session *session;
--   struct list_head *pos;
--   struct list_head *tmp;
-
-    spin_lock_bh(&tunnel->list_lock);
-    tunnel->acpt_newsess =3D false;
--   list_for_each_safe(pos, tmp, &tunnel->session_list) {
--       session =3D list_entry(pos, struct l2tp_session, list);
-+   for (;;) {
-+       session =3D list_first_entry_or_null(&tunnel->session_list,
-+                          struct l2tp_session, list);
-+       if (!session)
-+           break;
-        list_del_init(&session->list);
-        spin_unlock_bh(&tunnel->list_lock);
-        l2tp_session_delete(session);
-
---8snERkfl58I8EGWb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEsUkgyDzMwrj81nq0lIwGZQq6i9AFAmaFHgQACgkQlIwGZQq6
-i9CeRAf/W3LdHltDdn3pvAj9TMVybZHHF9EwniUz3G3NRWazvpq5T4svhx/H7uf/
-OJ+m5auCgiDOHuz7DtMP4LKd3VPnRZ2RYFtYztDNKZDSIsWQNBVVkfkV97+FmARu
-mBgW684e8gRLVybRG+sQEgJaXHieG+hz7mO7YGfQBK0sncrMcKVn40SLGhB3LA9F
-0W/Jnm3QhFRGqtmka23k3od7kASz+87LxGrZhclemnu+knTpyTA/Uf7YsD176TH+
-fdtrjUBPJy4BX3qcThTks2NgQdS6WQ2dtTRk792lNNOUtfo0m/Tx4B0dALbVP3Wr
-1VoijlJ88UWjNjb1Hr36qpzddS48rQ==
-=j0cV
------END PGP SIGNATURE-----
-
---8snERkfl58I8EGWb--
+Thanks !
