@@ -1,201 +1,116 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC461891CA
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1975B175549;
+	Wed,  3 Jul 2024 11:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720005734; cv=none; b=sXTEOun6GtoOPWCCc+VuP3jaBygHzoQiRKztydystbafmk+XTz0RmOUV/XpT3rdXeeA3M+rzNqx79tirZsygVjNfQMR9gn/QJzHP2/vO5BxodwAVV/PhkglSTkj2tww9ArBFAKHiVKGC3E/cVELETxWIouYR6QgQNmFzXHPqbxA=
+	t=1720005807; cv=none; b=mWHr+i2yC3GFLP6amhcVm8eeC8hULu1gumU/VWz7OoLBUaxbsLvCim0wITnPIbx8FLhLzCxIitVJYPDTsyN+P9wWnF3DIdldiklVkKbwuc4VjbLvBrhQVwdd+zv2jvDYSUiPNnp4iLq6TT8G84Lm0iLxtE3TZSH1BSg3GCQ4iK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720005734; c=relaxed/simple;
-	bh=XGvJWi2ACdeOImN/SwBAgmGV5CjAcEGdLvKIxHnA/Ig=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TK0eAw5p64xMya3uwcJqdOQwY6QmrCzj3k+IELDD5hTsdpdDlAtB29MQC7j/7Nc6zhBl7W+vQXsgZmXuDOoTf1k5Y6jzwLE4FxPEhaETAfiufNIKXNv2Aydosc+ch8S76TG04DcT6HoosZTuJlGu3fD46tuDpgGKI0uG/K11cZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=fGKMLFkr; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1720005807; c=relaxed/simple;
+	bh=nQiTDZ7nqA0Uw9Lrn3vTdguwK9Iz6Yt7yURRRhUQRzc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=N/BBIUc1c6yoZ5HwtfNK0caJgcFrgIGJz7eHq0m2SHriWKF9SXWC85Gmq07xpEg76jbuEe38eepGqWE8Gak/i7e7AdSeriKyuvrT4lDWGdFApcxOP69QRDGRiVzchIxHwuzV/jq4w3Ki+AfzZdrrvNFpZ+49Oam735AjIR119Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=jLwO2iOA reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="fGKMLFkr"
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id BE8203FD42
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1720005726;
-	bh=1qFVnINiw1OmtrqIdL6Ri9JaQ6L530vAhDFXUjoyBpE=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=fGKMLFkrmuhQQrYe/BWFJEP6GOzk3C4feeDUCE3lwk/PDdaUo4LDp4IXmeNnUzwWq
-	 +IEr2b+YMJpF2KRsJgCV9iY+ILZV5SkBrGJV6PQe7Mh9Lil9oTPJlSXEaT/RByVxfh
-	 0nbMlBJFqrzBIZohNaLc1F4Z6GkxpzCPA58MfE3QNMj+BDfyNMUm/ZKpiYZJAwKLFn
-	 F75MeHMsEGum7O341Kd/lWULXwcGP84DitPveHplpRYWsO4sbT9AgbYh0gXMPJ1nOv
-	 0fA6PjmWAkmhYGgEAGgI9nONn1FzRyIreeYF6bb+FErHK1vke0awybw8euvfRwjr2e
-	 keql42ajTZITg==
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-44634cda251so77117501cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 04:22:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720005725; x=1720610525;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1qFVnINiw1OmtrqIdL6Ri9JaQ6L530vAhDFXUjoyBpE=;
-        b=ppLym/XEbYd5izSo/iRlkBBPFdq/ZagbYuSQ8aWcZlxyAIgvY/OxHqqtlKWEFnf3Jh
-         KBHz5Oxy9o/C9PGH7tK6RgipxXF4Qym/8q1aSq5zPaKyh+7sRhBRnZhXXQJ+Po0/BIuF
-         AMHFc0SxxRQrSWv1MbQZ+o0Uu91yEX3HTcj23Da6MJTpZARj/PgfKfROg3UdTs1jBb5S
-         V7JLVzK4WHI/IjXxq3CrjniNqPNgD1I0wVzGIOiUcgxCh36kpdTodVEU2v/WJNM15ZG6
-         RydZp68ZAuwFcQKJaTdXBPlACllgfGscKfvIUYZcxCs8vEUO9ak3+alvlSrm8O5bg7Ah
-         erOA==
-X-Forwarded-Encrypted: i=1; AJvYcCW//0/ExGeWLUMvxcMVmbb8q9fakJ2j+tTjV+UfPW25h03mbhvlS2nAKaT68OmlH4rBVh/1gKuBH0x2ONyC6QU6dIg09H8yAmm6iJzz
-X-Gm-Message-State: AOJu0Yz41dv8+o2UCY+xFBsiTqITQO2Jp+e0QNHHyuY9OvNfTk/wDDr5
-	dD6QW6uZeZy1jAWLudPoLJOngHDAqNTOR/FDlBb/AdNTnoZ+Kybhv+uQHQ77Dw5NMvbTiqkMBFH
-	9TjmMlzWVm9m/5DKX85KUIsI0bdAGcUBpSmcXwKlldH6nL/2tK/TBhacU+4s6I8y4TWQr6oYlOP
-	BXA95Igp22IGNbqLX74KSak6+8XfVWGQXw6sSCfthy9piQDiNbSAdY
-X-Received: by 2002:ac8:58c8:0:b0:446:5d98:bbb1 with SMTP id d75a77b69052e-44662e5b600mr160719501cf.32.1720005725496;
-        Wed, 03 Jul 2024 04:22:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKJRX5E4PZN5AIkzZDqalz4GIxVyhLTZcy2t5CI2qf3j37GtaHnJJ1/0FVMsH63722yIHL+BLfMdPGdU70kDQ=
-X-Received: by 2002:ac8:58c8:0:b0:446:5d98:bbb1 with SMTP id
- d75a77b69052e-44662e5b600mr160719281cf.32.1720005725057; Wed, 03 Jul 2024
- 04:22:05 -0700 (PDT)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 3 Jul 2024 04:22:04 -0700
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20240703094049.GB2676251@ofsar>
-References: <20240627-k1-01-basic-dt-v2-0-cc06c7555f07@gentoo.org>
- <20240627-k1-01-basic-dt-v2-8-cc06c7555f07@gentoo.org> <CAJM55Z9jeAQTsVjRiLeofDm1RyMWCuHXC0a-pdKtpUiTkSjJCA@mail.gmail.com>
- <20240702012847.GA2447193@ofsar> <IA1PR20MB4953C031CB453AA0E51657B3BBDC2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <20240702-appease-attire-6afbe758bf0f@spud> <20240703094049.GB2676251@ofsar>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="jLwO2iOA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=V7t00RqL96BHgAhWVmpE7JBjLbm+xuBNNxvx6wIpm9k=; b=j
+	LwO2iOAgrdnX6bQrFNFxmF8Mmc6ZMk3bd1njrkmMgRv4/ad2XeOGgZHAkxCtsNHC
+	4ju23q+O63Ja1p/vHiZIyJn88ta60dtpTw/khw0mMbdzlHuaUnLqRuUOGB6DUGv1
+	tYufJPFg6v87kjnQOwk2BLR1kL4cCx7N/chhhVN/ZY=
+Received: from xavier_qy$163.com ( [59.82.45.106] ) by
+ ajax-webmail-wmsvr-40-122 (Coremail) ; Wed, 3 Jul 2024 19:20:09 +0800 (CST)
+Date: Wed, 3 Jul 2024 19:20:09 +0800 (CST)
+From: Xavier  <xavier_qy@163.com>
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: tj@kernel.org, longman@redhat.com, akpm@linux-foundation.org, 
+	lizefan.x@bytedance.com, hannes@cmpxchg.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
+Subject: Re:Re: [PATCH-cpuset v10 1/2] Union-Find: add a new module in
+ kernel library
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2024 www.mailtech.cn 163com
+In-Reply-To: <haimyc4y2trcyvbnkpw2gkfoiaunykb2q2d5ybr6qgt6upf3lm@afhcevtyjcjl>
+References: <ZoRThI4lcZLxBlwc@slm.duckdns.org>
+ <20240703063727.258722-1-xavier_qy@163.com>
+ <20240703063727.258722-2-xavier_qy@163.com>
+ <haimyc4y2trcyvbnkpw2gkfoiaunykb2q2d5ybr6qgt6upf3lm@afhcevtyjcjl>
+X-NTES-SC: AL_Qu2ZAvybuk4r7ySZY+kfmk4aj+k+XsG0vfUj34FWOp9wjDHp+ik+VG1eLH3Hwe+QGwuFiwWKaTVJ2/RZYo1ndawFieXNfysjlVPU3yb2fJop3A==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Wed, 3 Jul 2024 04:22:04 -0700
-Message-ID: <CAJM55Z9AdOq_yd7sK_VhkutokK+-QKscdq9i759H3N1UKVwJkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] riscv: dts: add initial SpacemiT K1 SoC device tree
-To: Yixun Lan <dlan@gentoo.org>, Conor Dooley <conor@kernel.org>
-Cc: Inochi Amaoto <inochiama@outlook.com>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Samuel Holland <samuel.holland@sifive.com>, 
-	Anup Patel <anup@brainfault.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-serial@vger.kernel.org, Meng Zhang <zhangmeng.kevin@spacemit.com>, 
-	Yangyu Chen <cyy@cyyself.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Message-ID: <13bf9422.aeb4.1907852c7ce.Coremail.xavier_qy@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:_____wD3f4vpM4VmdvsfAA--.2509W
+X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiZRMREGXAmy+0tAAJsv
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Yixun Lan wrote:
-> Hi Conor:
->
-> On 16:25 Tue 02 Jul     , Conor Dooley wrote:
-> > On Tue, Jul 02, 2024 at 09:35:45AM +0800, Inochi Amaoto wrote:
-> > > On Tue, Jul 02, 2024 at 01:28:47AM GMT, Yixun Lan wrote:
-> > > > On 12:49 Mon 01 Jul     , Emil Renner Berthing wrote:
-> > > > > Yixun Lan wrote:
-> > > > > > From: Yangyu Chen <cyy@cyyself.name>
-> > > > > >
-> > > > > > Banana Pi BPI-F3 motherboard is powered by SpacemiT K1[1].
-> > > > > >
-> > > > > > Key features:
-> > > > > > - 4 cores per cluster, 2 clusters on chip
-> > > > > > - UART IP is Intel XScale UART
-> > > > > >
-> > > > > > Some key considerations:
-> > > > > > - ISA string is inferred from vendor documentation[2]
-> > > > > > - Cluster topology is inferred from datasheet[1] and L2 in vend=
-or dts[3]
-> > > > > > - No coherent DMA on this board
-> > > > > >     Inferred by taking vendor ethernet and MMC drivers to the m=
-ainline
-> > > > > >     kernel. Without dma-noncoherent in soc node, the driver fai=
-ls.
-> > > > > > - No cache nodes now
-> > > > > >     The parameters from vendor dts are likely to be wrong. It h=
-as 512
-> > > > > >     sets for a 32KiB L1 Cache. In this case, each set is 64B in=
- size.
-> > > > > >     When the size of the cache line is 64B, it is a directly ma=
-pped
-> > > > > >     cache rather than a set-associative cache, the latter is co=
-mmonly
-> > > > > >     used. Thus, I didn't use the parameters from vendor dts.
-> > > > > >
-> > > > > > Currently only support booting into console with only uart, oth=
-er
-> > > > > > features will be added soon later.
-> > > > > >
-> > > > ...
-> > > >
-> > > > > > +		clint: timer@e4000000 {
-> > > > > > +			compatible =3D "spacemit,k1-clint", "sifive,clint0";
-> > > > > > +			reg =3D <0x0 0xe4000000 0x0 0x10000>;
-> > > > > > +			interrupts-extended =3D <&cpu0_intc 3>, <&cpu0_intc 7>,
-> > > > > > +					      <&cpu1_intc 3>, <&cpu1_intc 7>,
-> > > > > > +					      <&cpu2_intc 3>, <&cpu2_intc 7>,
-> > > > > > +					      <&cpu3_intc 3>, <&cpu3_intc 7>,
-> > > > > > +					      <&cpu4_intc 3>, <&cpu4_intc 7>,
-> > > > > > +					      <&cpu5_intc 3>, <&cpu5_intc 7>,
-> > > > > > +					      <&cpu6_intc 3>, <&cpu6_intc 7>,
-> > > > > > +					      <&cpu7_intc 3>, <&cpu7_intc 7>;
-> > > > > > +		};
-> > > > > > +
-> > > > > > +		uart0: serial@d4017000 {
-> > > > > > +			compatible =3D "spacemit,k1-uart", "intel,xscale-uart";
-> > > > > > +			reg =3D <0x0 0xd4017000 0x0 0x100>;
-> > > > > > +			interrupts =3D <42>;
-> > > > > > +			clock-frequency =3D <14857000>;
-> > > > > > +			reg-shift =3D <2>;
-> > > > > > +			reg-io-width =3D <4>;
-> > > > > > +			status =3D "disabled";
-> > > > > > +		};
-> > > > > > +
-> > > > > > +		/* note: uart1 skipped */
-> > > > >
-> > > > > The datasheet page you link to above says "-UART (=C3=9710)", but=
- here you're
-> > > > > skipping one of them. Why? I can see the vendor tree does the sam=
-e, but it
-> > > > > would be nice with an explanation of what's going on.
-> > > > >
-> > > > /* note: uart1 in 0xf0612000, reserved for TEE usage */
-> > > > I would put something like this, does this sound ok to you?
-> > > >
-> > > > more detail, iomem range from 0xf000,0000 - 0xf080,0000 are dedicat=
-ed for TEE purpose,
-> > > > It won't be exposed to Linux once TEE feature is enabled..
-> > > >
-> > > > skipping uart1 may make people confused but we are trying to follow=
- datasheet..
-> > >
-> > > Instead of skipping it, I suggest adding this to reserved-memory area=
-,
-> > > which make all node visible and avoid uart1 being touched by mistake.
-> >
-> > No, don't make it reserved-memory - instead add it as
-> > status =3D "reserved"; /* explanation for why */
-> Ok, got
->
-> > Also, I'd appreciate if the nodes were sorted by unit address in the
-> > dtsi.
-> so I would move "plic, clint" after node of uart9 as this suggestion
->
-> for uart1, its unit-address is 0xf0610000, it should be moved to after cl=
-int
-> (once unit-address sorted), if we follow this rule strictly.
-> but it occur to me this is not very intuitive, if no objection, I would p=
-ut
-> it between uart0 and uart2 (thus slightly break the rule..)
-
-No, please order nodes by their address as Conor said. It actually says so =
-in
-the DTS coding style:
-
-https://docs.kernel.org/devicetree/bindings/dts-coding-style.html
-
-/Emil
+SGkgTWljaGFsLAoKQXQgMjAyNC0wNy0wMyAxNzo0MDoyNSwgIk1pY2hhbCBLb3V0bsO9IiA8bWtv
+dXRueUBzdXNlLmNvbT4gd3JvdGU6Cj5PbiBXZWQsIEp1bCAwMywgMjAyNCBhdCAwMjozNzoyNlBN
+IEdNVCwgWGF2aWVyIDx4YXZpZXJfcXlAMTYzLmNvbT4gd3JvdGU6Cj4+IFRoaXMgcGF0Y2ggaW1w
+bGVtZW50cyBhIHVuaW9uLWZpbmQgZGF0YSBzdHJ1Y3R1cmUgaW4gdGhlIGtlcm5lbCBsaWJyYXJ5
+LAo+PiB3aGljaCBpbmNsdWRlcyBvcGVyYXRpb25zIGZvciBhbGxvY2F0aW5nIG5vZGVzLCBmcmVl
+aW5nIG5vZGVzLAo+PiBmaW5kaW5nIHRoZSByb290IG9mIGEgbm9kZSwgYW5kIG1lcmdpbmcgdHdv
+IG5vZGVzLgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogWGF2aWVyIDx4YXZpZXJfcXlAMTYzLmNvbT4K
+Pj4gLS0tCj4+ICBEb2N1bWVudGF0aW9uL2NvcmUtYXBpL3VuaW9uX2ZpbmQucnN0ICAgICAgICAg
+fCAxMDIgKysrKysrKysrKysrKysrKysrCj4+ICAuLi4vemhfQ04vY29yZS1hcGkvdW5pb25fZmlu
+ZC5yc3QgICAgICAgICAgICAgfCAgODcgKysrKysrKysrKysrKysrCj4+ICBNQUlOVEFJTkVSUyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKysKPj4gIGluY2x1ZGUvbGlu
+dXgvdW5pb25fZmluZC5oICAgICAgICAgICAgICAgICAgICB8ICA0MSArKysrKysrCj4+ICBsaWIv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKy0KPj4gIGxp
+Yi91bmlvbl9maW5kLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA0OCArKysrKysr
+KysKPj4gIDYgZmlsZXMgY2hhbmdlZCwgMjg4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2NvcmUtYXBpL3VuaW9uX2ZpbmQu
+cnN0Cj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhf
+Q04vY29yZS1hcGkvdW5pb25fZmluZC5yc3QKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
+L2xpbnV4L3VuaW9uX2ZpbmQuaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGxpYi91bmlvbl9maW5k
+LmMKPj4gCj4KPk5pY2UuCj5JJ2Qgc28gcy9Vbmlvbi1GaW5kL3VuaW9uLWZpbmQvIGJvdGggaW4g
+dGhlIGRvY3MgYW5kIHRoZSBjb2RlCj4oY29tbWVudHMpLCBJIGRpZG4ndCBmaW5kIGFueSBydWxl
+IHdoeSB0d28gY2FwaXRhbGl6YXRpb25zIGFyZSB1c2VkLgoKVW5pb24tRmluZCBvbmx5IGFwcGVh
+cnMgaW4gdGhlIHBhdGNoIGRlc2NyaXB0aW9uIG9yIHRpdGxlOyBpbiB0aGUgbWFpbiB0ZXh0LCB3
+ZSBjb25zaXN0ZW50bHkKdXNlIHVuaW9uLWZpbmQuIFRoaXMgd2lsbCBiZSBjb3JyZWN0ZWQgaW4g
+dGhlIG5leHQgdmVyc2lvbi4KCj4+ICtzdHJ1Y3QgdWZfbm9kZSB7Cj4+ICsJc3RydWN0IHVmX25v
+ZGUgKnBhcmVudDsKPj4gKwl1bnNpZ25lZCBpbnQgcmFuazsKPj4gK307Cj4+ICsKPj4gKy8qIFRo
+aXMgbWFjcm8gaXMgdXNlZCBmb3Igc3RhdGljIGluaXRpYWxpemF0aW9uIG9mIGEgdW5pb24tZmlu
+ZCBub2RlLiAqLwo+PiArI2RlZmluZSBVRl9JTklUX05PREUobm9kZSkJey5wYXJlbnQgPSAmbm9k
+ZSwgLnJhbmsgPSAwfQo+PiArCj4+ICsvKioKPj4gKyAqIHVmX25vZGVfaW5pdCAtIEluaXRpYWxp
+emUgYSB1bmlvbi1maW5kIG5vZGUKPj4gKyAqIEBub2RlOiBwb2ludGVyIHRvIHRoZSB1bmlvbi1m
+aW5kIG5vZGUgdG8gYmUgaW5pdGlhbGl6ZWQKPj4gKyAqCj4+ICsgKiBUaGlzIGZ1bmN0aW9uIHNl
+dHMgdGhlIHBhcmVudCBvZiB0aGUgbm9kZSB0byBpdHNlbGYgYW5kCj4+ICsgKiBpbml0aWFsaXpl
+cyBpdHMgcmFuayB0byAwLgo+PiArICovCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgdWZfbm9kZV9p
+bml0KHN0cnVjdCB1Zl9ub2RlICpub2RlKQo+PiArewo+PiArCW5vZGUtPnBhcmVudCA9IG5vZGU7
+Cj4+ICsJbm9kZS0+cmFuayA9IDA7Cj4+ICt9Cj4KPlhhdmllciwgbm90IHN1cmUgaWYgeW91IHJl
+c3BvbmRlZCB0byBteSBzdWdnZXN0aW9uIG9mIGNvbnNpZGVyZWQgemVyb2VkCj5vYmplY3QgYSB2
+YWxpZCBpbml0aWFsaXplZCBvbmUuIFRoYXQgY291bGQgc2F2ZSBzb21lIGluaXQgd29yayAoYW5k
+Cj5tb3ZlIGl0IHRvIGFsdGVybmF0aXZlIHVmX2ZpbmQsIHNlZSBiZWxvdykuCj4KPldpdGggdWZf
+ZmluZCBib2R5IGNoZWNraW5nIGZvciBOVUxMOgo+Cj4Jd2hpbGUgKG5vZGUtPnBhcmVudCAhPSBu
+b2RlKSB7Cj4JCXBhcmVudCA9IG5vZGUtPnBhcmVudDsKPgkJbm9kZS0+cGFyZW50ID0gcGFyZW50
+ID8gcGFyZW50LT5wYXJlbnQgOiBub2RlOwo+CQlub2RlID0gbm9kZS0+cGFyZW50Owo+CX0KClll
+cywgSSBub3RpY2VkIHlvdXIgc3VnZ2VzdGlvbi4gSW4gcGF0Y2ggdjQsIEkgaW1wbGVtZW50ZWQg
+aXQgYnkgaW5pdGlhbGl6aW5nIHRvIDAKYW5kIGFkZGluZyBhIGNoZWNrIGZvciB3aGV0aGVyIHRo
+ZSBwYXJlbnQgaXMgMCBpbiB1Zl9maW5kLiBIb3dldmVyLCBsYXRlciwKd2hlbiBJIHdhcyByZXZp
+ZXdpbmcgdGhlIGFsZ29yaXRobSdzIGRvY3VtZW50YXRpb24sIEkgbm90aWNlZCBpdCByZXF1aXJl
+cwppbml0aWFsaXphdGlvbiB0byBpdHNlbGYuIE1vcmVvdmVyLCB1Zl9maW5kIGlzIGEgaGlnaC1m
+cmVxdWVuY3kgb3BlcmF0aW9uLCBpZiB3ZQphZGQgYSBwYXJlbnQgY2hlY2sgd2l0aGluIGl0LCB0
+aGUgZWZmaWNpZW5jeSBpbXBhY3QgZWFjaCB0aW1lIHdvdWxkIGJlIG1vcmUKc2lnbmlmaWNhbnQg
+dGhhbiBpbml0aWFsaXppbmcgb25jZS4gVGhlcmVmb3JlLCBJIGFkaGVyZWQgdG8gdGhlIGluaXRp
+YWxpemF0aW9uCnRvIGl0c2VsZiBhcHByb2FjaC4KCj4+ICsvKioKPj4gKyAqIHVmX3VuaW9uIC0g
+TWVyZ2UgdHdvIHNldHMsIHVzaW5nIHVuaW9uIGJ5IHJhbmsKPj4gKyAqIEBub2RlMTogdGhlIGZp
+cnN0IG5vZGUKPj4gKyAqIEBub2RlMjogdGhlIHNlY29uZCBub2RlCj4+ICsgKgo+PiArICogVGhp
+cyBmdW5jdGlvbiBtZXJnZXMgdGhlIHNldHMgY29udGFpbmluZyBub2RlMSBhbmQgbm9kZTIsIGJ5
+IGNvbXBhcmluZwo+PiArICogdGhlIHJhbmtzIHRvIGtlZXAgdGhlIHRyZWUgYmFsYW5jZWQuCj4+
+ICsgKi8KPj4gK3ZvaWQgdWZfdW5pb24oc3RydWN0IHVmX25vZGUgKm5vZGUxLCBzdHJ1Y3QgdWZf
+bm9kZSAqbm9kZTIpCj4+ICt7Cj4+ICsJc3RydWN0IHVmX25vZGUgKnJvb3QxID0gdWZfZmluZChu
+b2RlMSk7Cj4+ICsJc3RydWN0IHVmX25vZGUgKnJvb3QyID0gdWZfZmluZChub2RlMik7Cj4+ICsK
+Pj4gKwlpZiAocm9vdDEgIT0gcm9vdDIpIHsKPgo+aWYgKHJvb3QxID09IHJvb3QyKQo+CXJldHVy
+bjsKPnRoZW4gdGhlIHJlc3QgY2FuIGJlIG9uZSBsZXZlbCBsZXNzIG5lc3RlZCA7LSkKPgpPZiBj
+b3Vyc2UsIHRoaXMgY2hhbmdlIG1ha2VzIGl0IGxvb2sgY2xlYXJlci4KCi0tCkJlc3QgUmVnYXJk
+cywKWGF2aWVyCg==
