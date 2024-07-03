@@ -1,105 +1,139 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839093BBEA
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 13:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197D817A5A8
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 13:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720014342; cv=none; b=V5lg8nFq0Jr7i4l6+ExVBQ73JJ5fft6km8aM5qu9zPx4OQtSAA98P8wFldDRrFMUDSzqTsCe6bhswbi/eq5RJ0KKg78HeWh72qiV1SBZrhHHDxEXJZKIq4PEZp1YRozI7X6sNIAIIyen1bM3l1zjjHLNvECN7Ac//0A1hKdlnkA=
+	t=1720014384; cv=none; b=D4DQxF5GEG7NvAj7su9aHSnmfSYP8TpEwfmhXv6nm7R9+iUXN3OYp4+dH7ZQibqi8RFXfyxJVjtAwrfdqpwbwpNYGSQZ168nrsK3iAnpszzkOoPdhV8fOf4m5p58/zT77FaT1nLiV2al08YiLoc4OFXoGqPWWArBswGrZoZ1Nm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720014342; c=relaxed/simple;
-	bh=8tA7B8QLastRGbA7MeBQsihKnyFlqwm/jcWdR5LFPYI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bIJu03AcqpWCKk6ii3VfcrzpgtkgijX9mNxKXMie87lr48/hYUG1tyxHQeLiKiQXpjyswYS+pW6V2U4cm6+1sD12ogROhomhuhKNvO02nEmW3BfWj5yuj4TliHI35GGfj13WfpzODHA94IRHQQoIxoH07BF4GuBJX1ASuMlLC2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b=Y0wOjUJy; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1720014384; c=relaxed/simple;
+	bh=/m6A+sXoU4Olg6HTeHCABBg9ut0WZrDY9nPjeBeXu2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kkW1IayOXPlwpGaD9UkuDNCWcfzIFeUVcX2T7REuATgG+Pf1ET0PLA8U8rh/RywRzGdoEfTXxU6LMMplJUwhxwNP9UyuLOA7PT/kA//1bIWJVyCoqMCQgHJ4xOFPlM4uY57CejoNZanzA7Bfq12+STKCXNr2lRRmvIDambP85d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HxnttMfA; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b="Y0wOjUJy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1720014316; x=1720619116; i=efault@gmx.de;
-	bh=xu/SnLB/Fljhm4ChiQGySOZFvBpo/HmJl/ceRfBF5lk=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Y0wOjUJyezvuvNnBR0hM1drkrs0snD/2cclcc3n05TT4naD4WwZKo8BQfzv17xbO
-	 5V4KsGhK9PGWgJJrpcn8or3bgd+od/xWoIg930Zhio3vWcQhf7Jp2rSo6kWlfqgcn
-	 jmWoEV1gxj6jn/7s8kU53BQU//j22dpDl30NbVJxxP3N8QMSYI9f1U/SZ7VX5tqhg
-	 8p+EFl4kA85OQNCLZd3YXRWJg86GSxDorCxLCQ2SrYkSUt+U2nrlQ9Hs46IZ+wosC
-	 RH8CZMRKTaGiWZrO1pnxCHAR7RupCb67IYeYPl+79xH/Ki3Ik4csSxyPDxMzReiY/
-	 RrKGsk6sNFy9HNweQA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from homer.fritz.box ([185.146.49.228]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MGhyS-1sclw60mA6-002DUJ; Wed, 03
- Jul 2024 15:45:16 +0200
-Message-ID: <e90c75a2e4e3f529c8d42edabcb103885449de3e.camel@gmx.de>
-Subject: Re: [PATCH 1/2] sched/fair: Record the average duration of a task
-From: Mike Galbraith <efault@gmx.de>
-To: Chen Yu <yu.c.chen@intel.com>
-Cc: Raghavendra K T <raghavendra.kt@amd.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Juri Lelli
- <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Tim
- Chen <tim.c.chen@intel.com>, Yujie Liu <yujie.liu@intel.com>, K Prateek
- Nayak <kprateek.nayak@amd.com>, "Gautham R . Shenoy"
- <gautham.shenoy@amd.com>,  Chen Yu <yu.chen.surf@gmail.com>,
- linux-kernel@vger.kernel.org
-Date: Wed, 03 Jul 2024 15:45:13 +0200
-In-Reply-To: <ZoVQvDEme3CBonHI@chenyu5-mobl2>
-References: <cover.1719295669.git.yu.c.chen@intel.com>
-	 <338ec61022d4b5242e4af6d156beac53f20eacf2.1719295669.git.yu.c.chen@intel.com>
-	 <d922f7bf3965f4eaef5028177b886e2e1861742d.camel@gmx.de>
-	 <ZoFY/n2S7rMp6ypn@chenyu5-mobl2>
-	 <db81ba7fba622e2a1b7186e66471cfb9ad8490fd.camel@gmx.de>
-	 <ZoLDxQlTR7fxoXWs@chenyu5-mobl2>
-	 <683663e3-cef0-bb45-e1c7-5bf1cf44209c@amd.com>
-	 <4e28fd17d7a2f7146aae10a76982f0e58b22befb.camel@gmx.de>
-	 <ZoVQvDEme3CBonHI@chenyu5-mobl2>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HxnttMfA"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-6eab07ae82bso3270341a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 06:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720014381; x=1720619181; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Bf+gEq9Qv4j2DaejyoY0EnJO0snP/b2OWlh18sSmCtA=;
+        b=HxnttMfAn3tuNMuEG6PxLR3uCCkn1CEHyb1QYrRd6ISEV3ezk6dr+FXFedyY4XcWn4
+         gOqJRhG67Xj1TtUoxaRPpGHgAkzBFBzBa5cBv8pgPyzPvJxOKNGhHTkBV3RM9cxWWiSf
+         rH08kpUyb1gdEbw1eKWkb4nmhLiK1VGbYHoDsS0JnqN1P3sTfK2aHuXkdq+5BKWm386d
+         2Kx5OrWk7x8nIJLGowHsnEX6DVRFZkOAER/nfdXLsffCkuIOEmczPwHASREU8sX26Z8v
+         K0+iKliW+ZMwe7GQTkL0DZHbC9KIo1jDxuMb/W3rrfyNi5MkauNoFd+77dnrNmiFX5xt
+         xC2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720014381; x=1720619181;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bf+gEq9Qv4j2DaejyoY0EnJO0snP/b2OWlh18sSmCtA=;
+        b=I5r2v319rrxtC8BKwwU2+09RABS8lH2Z0J6D5HEX8TUSrTs4MicfTLqZge8PWjw14f
+         7tZNrqKFx6oTgR8cdgFGPwFsJB+XLLaFklZ5tfITzImkQOxMCOb94NUUdQiXqyBuhFkb
+         tGP5HNiBEBpWoOrpikVVEDEdpvLmECGmP6bQMrhe0L06hNLedOiJoknbHL2+2tbZ+HB+
+         uhxhYUsMHZy0Xb4FQ8u4bOJ69jxiBKT18uTwUx5yU4s9aZ0oh6KzSFWVVa80qY500f8/
+         TfQiAcrzbde9ADRZmG1+fYEZ3dpt8cDFyNmocaFIl5q5P96iKQMcTKgF17aYgm0XnxFZ
+         ToHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWB8llkyuAEXIYeba2/rETXs/yjZ2i95Lj1/Tlu9YGQRKRmBMtReXK7V85EImDkhvEHfbWnyEVXKSMW8cMw8AaR/H65cywKrE9+SFaz
+X-Gm-Message-State: AOJu0YzcaOzIyoyArDpk7hFRHsuf2rdC7UYuW8Y/n21pAKbHSqDNqq0L
+	LAu/7vt1+SKdwHhJD7pSDruuZR3bV7x566CMgqd5EsfeOmgSfV7ChmUJzmwsBg==
+X-Google-Smtp-Source: AGHT+IFbgy8xFgSDq57ntgaSsYgc8vIgCPq4hdC8aq3qDRUkMazMF18pniYYlOiILpepBoDGTQuepQ==
+X-Received: by 2002:a05:6a20:3c94:b0:1be:c4b9:c216 with SMTP id adf61e73a8af0-1bef60f3c38mr12064525637.7.1720014381428;
+        Wed, 03 Jul 2024 06:46:21 -0700 (PDT)
+Received: from thinkpad ([220.158.156.98])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91d3e7d7bsm10761774a91.47.2024.07.03.06.46.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 06:46:20 -0700 (PDT)
+Date: Wed, 3 Jul 2024 19:16:16 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Slark Xiao <slark_xiao@163.com>
+Cc: loic.poulain@linaro.org, ryazanov.s.a@gmail.com,
+	johannes@sipsolutions.net, quic_jhugo@quicinc.com,
+	netdev@vger.kernel.org, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] bus: mhi: host: Add name for mhi_controller
+Message-ID: <20240703134616.GC4342@thinkpad>
+References: <20240701021216.17734-1-slark_xiao@163.com>
+ <20240701021216.17734-2-slark_xiao@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:p0uamndQAjL4e7FwOMZ7TOF2MxJK5kuYW1n/tXa8UjF/5cQDwl2
- qzNnzVhqd9PVCrut7fyYO6wWYKXGH71WlQ78nqfVG7wKiJIfD0C728id3rUMiSH0ohCzvGL
- iasFd84AUFp/N6wsYhp5HfKhB1CTmnyJ5BIOK8N0Jg5l9bERhuUEMcGNxd6pv+mHkA+hkzM
- kpgHfVCLTNa1kEVSTnF3Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2ddTCT/aiA0=;sq2II4r3/R26cAeM+jAJ97f8R2P
- ht1lviK94sWWv5dqh7POUNaWnS+Mc68qysCsn66x+06W2Te5RaoNDuE5XPsYZwXuLoWUGe6HZ
- BIdkge1N6iJlHuWUyK90j3cyxWl+FE5UsLkBaUkbfYcu/EuTN/7+/rrPZ9hSEp4IbjTaEU6ZK
- pO4PM887XKN4TghsZNYLVbMwiq3oUbkI/OVK3L2avB4W1CrTHyGui4h8U2rP7zJGmVvqdSj6U
- GVG1DBENHCb+QanxH/203YqdtL1ldwWduTjD/39KGEpZJtBfIK0AOiGNA9LkZ2q3RMpgxJw25
- K8tGT6GWGDqJESCpVaaPYBMgAsYymBW/yWGLdoU+/xRrwa8Y0OOXB1OJ2EJ9L3FNbbWFOZZkX
- TmY6N3bDR2hqxq9yPNM50nGfTUp0URPd5jBoJlt1YrEbo2GJZsWRX4aTM6cdiJ7b0vRpEF6jK
- WrVfJDw4wRVy80Qjwh61L4oR6aWnoSAM3BllumiJh03eu22OPCPfiKLsYm3eNE29M81U0Ie25
- 5aFd/iN5xHdU0jdSDiDBQQWpyi9mxMewju8tA9TshFpv1ohtb5zNqLQUYbgmO1q1/TPzGs/05
- 2HQosVumamzztNsJfiHZNJED7ga12TW0slwOh94jKgDm82ucmjLweg+YjGzd+U7J4CJoynx/i
- tYvcaujkwNTD968fhI+U0ujNUVgk5EblD7TOWnEXNvvl+Q4uM5JeSkSlrkP4RktoxvE6r/JWn
- Kc1BQbJMDDcTHyaaXbuel5n8N18VD3nZZ9a0VDpycEsHxbiq/bZXoGuaLDUsKtFEjp0A6K0J6
- YGr1ZuohATV2ggaq+4LwXSfgCdJg/KHbZJ4DUOehH0+EY=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240701021216.17734-2-slark_xiao@163.com>
 
-On Wed, 2024-07-03 at 21:23 +0800, Chen Yu wrote:
-> On 2024-07-03 at 13:57:19 +0200, Mike Galbraith wrote:
-> >
-> > Oooh dear.. as soon as you mention threads, the question of who's
-> > wheelhouse is this in springs to mind, ie should the kernel be
-> > overriding userspace by targeting bits of threaded programs for forced
-> > serialization?
->
-> Do you mean the threads within the same process should run in parallel
-> as much as possible, regardless of sharing the same data, because the th=
-read
-> is designed to do so? If so then we should probably skip the 1:1 task st=
-acking
-> if the waker and the wakee are in the same process.
+On Mon, Jul 01, 2024 at 10:12:15AM +0800, Slark Xiao wrote:
+> For SDX72 MBIM mode, it starts data mux id from 112 instead of 0.
+> This would lead to device can't ping outside successfully.
+> Also MBIM side would report "bad packet session (112)".In order to
+> fix this issue, we decide to use the device name of MHI controller
+> to do a match in client driver side. Then client driver could set
+> a corresponding mux_id value for this MHI product.
+> 
+> Signed-off-by: Slark Xiao <slark_xiao@163.com>
 
-That's seems like the obviously correct answer.. except for that
-leaving virtually the entire issue you're squabbling with lying on the
-floor.  Grr, how annoying.
+Applied to mhi-next with fixup to commit subject and description and also fixed
+the issue spotted by Jeff!
 
-	-Mike
+- Mani
+
+> ---
+> v2: Remove Fix flag
+> v3: Use name match solution instead of use mux_id
+> v4: Update the description of new member 'name' and move it to
+> right position
+> ---
+>  drivers/bus/mhi/host/pci_generic.c | 1 +
+>  include/linux/mhi.h                | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+> index 1fb1c2f2fe12..14a11880bcea 100644
+> --- a/drivers/bus/mhi/host/pci_generic.c
+> +++ b/drivers/bus/mhi/host/pci_generic.c
+> @@ -1086,6 +1086,7 @@ static int mhi_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	mhi_cntrl->runtime_get = mhi_pci_runtime_get;
+>  	mhi_cntrl->runtime_put = mhi_pci_runtime_put;
+>  	mhi_cntrl->mru = info->mru_default;
+> +	mhi_cntrl->name = info->name;
+>  
+>  	if (info->edl_trigger)
+>  		mhi_cntrl->edl_trigger = mhi_pci_generic_edl_trigger;
+> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+> index b573f15762f8..d45058d3dbed 100644
+> --- a/include/linux/mhi.h
+> +++ b/include/linux/mhi.h
+> @@ -289,6 +289,7 @@ struct mhi_controller_config {
+>  };
+>  
+>  /**
+> + * @name: device name of the MHI controller
+>   * struct mhi_controller - Master MHI controller structure
+>   * @cntrl_dev: Pointer to the struct device of physical bus acting as the MHI
+>   *            controller (required)
+> @@ -367,6 +368,7 @@ struct mhi_controller_config {
+>   * they can be populated depending on the usecase.
+>   */
+>  struct mhi_controller {
+> +	const char *name;
+>  	struct device *cntrl_dev;
+>  	struct mhi_device *mhi_dev;
+>  	struct dentry *debugfs_dentry;
+> -- 
+> 2.25.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
