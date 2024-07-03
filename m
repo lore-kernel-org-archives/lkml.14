@@ -1,135 +1,92 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E71510A1F;
-	Wed,  3 Jul 2024 03:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFC111187
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 03:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719977722; cv=none; b=jYdIvEYC8Km6560KYUbhenag7bxvnyMUQN+dH8bHCf71/wYUCWhTsVkEB3u51hDuHIFpDdb75l1VDGtSCgAoEbEa7ak1u1nSGLFMHpEFpYu18WYdvkuVbF4XvdLjBHtx1QSJoTJ0JZB2wbd4tByPhOEtrIL14EaBIg1c+vjThzQ=
+	t=1719977771; cv=none; b=arFgITA9cz2zjN3Hvz1P6wgZ5+3oWd5fYIo3gSki1je+DrKVx9NrHu9fugQydvUOD04qE5iCerbOB7nkDkQvdOCrFRLHmu6bMTkRvYP3K04/9XeUMg/qt0NPyyQ1HuZK/V5MQzERlewRbpWxrmzCdJOkprw5SFVcedlFVOIk+1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719977722; c=relaxed/simple;
-	bh=alDW/5WRTsnQvPoIKEAj39FCtHeT0wPGDtOjyOtERHw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z53H0ZLLSD6ktaZGx92nSSCfvMSY7rpRD7XgUND46QXHDZTB2ixejHi3Np/VozcSSaX1saSoSHfI+zHz0Gua4R+9VUTSYHjHrwYcrJmt2Pd0kkmr+KuQXK2X1djjKaWkQLB4ydBixIiPHE5GWJve5g1yCsGsd9i/bsnTOAHO398=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OASLjKx1; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1719977771; c=relaxed/simple;
+	bh=G8nq3KYdh9QirMoONwHDujRMlhBFSRw8PHtUh+RYGks=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L3rJCS7j7cMrJ5+RY97NtvQaSAmjbUktL1HP9i4TcJ/6PUhGtIctKFDXVWUy0O7Uvd/cg+rO5sIJCikPyM51Ikr9aB92TgKNUcPEaxAAXK0ECxZxYFvxl1nhIie+AjBtAQoCwggotc3AMgqv39YIF+Ha4LQ3ANl1RG1mq7nl1ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gWC6whJM; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OASLjKx1"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7066a3229f4so3253711b3a.2;
-        Tue, 02 Jul 2024 20:35:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWC6whJM"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f6a837e9a3so21279975ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 20:36:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719977721; x=1720582521; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l0OSZ5JJ3cRcJxK0FWpvSgsBkGlhmq63+yMgRkflksk=;
-        b=OASLjKx1MK5i9ELYo8t8PnW5Q7k00bXmd/+huQlbOiURQCAIy3lldGLrx+X2gLDFqq
-         v8BVBi9ec7T4MpVNsT45aN6zLhItMLtW++UIvNoH57NDPdpBMiYdkbEKgjeiBH4ueitT
-         IfeYjBI8nMCLAs33s7kNFUUR3yhMQGn8ces6C30gBF/DTPEdrH7tJBUwQmVQ/VpDEDdm
-         buC0EK8T/8kfLRgiTHV75scAuX4eGVtdsEEIcBczeD3k1QfE3Suw3X+t+TgofUvNovLx
-         6mdrGmjkh8uU+HZSF4I3BoA3DeeBXGMXDULWx3SSrfOkmk8YQRpY6ShmsFR6FwvAQUMz
-         YMSQ==
+        d=gmail.com; s=20230601; t=1719977769; x=1720582569; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bIW8fFKo/WA1Akzmq2h4ZjGts16MbSA8rHna9aaImEA=;
+        b=gWC6whJMSv93qa0iV+TbT+Aqo4zP49h4Jj//SNsN6gzOL9PMpb5zoCXSQxWPmPNYJ6
+         ZEg44koVkVK9q2IiRTMpMB0MvowNuEw6k6BZns4V+ZS8ZHNGPsnaskh5kC01vp6dD8pF
+         nWnUs1O6c1xY3TYXUfD3rXgLjHIU8D2codgXAdYaJdPY7lanVOpJPFcutYSnfV1iBhPa
+         MS+jiLpYH7jsInc/MQxwueiefUXYK8RKlFLtsRhz2Q066CzlW5FplCWd1JSZSW0pY5X/
+         OjNscOdVj4RdovF1cTMeKfP62cIG2OyMkyuhud3nGgsvSoTp39d2NVwFMmtksD1T2MFu
+         Qzbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719977721; x=1720582521;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l0OSZ5JJ3cRcJxK0FWpvSgsBkGlhmq63+yMgRkflksk=;
-        b=caHJN4wkx8MF5mWoj9tPoil2cH65xKGYrmlschgjwo/Oe3ETLfoW0VrHPWGKFcbYhi
-         SuAwuHVL23OnIs6iVMka8+PfS1idwFMTYDpro3V6VEEpC64r37y9to032sXwq39l+KDt
-         pjfMstc1df4wWNnkB81/iDWEXuIyRT7+Ph+rpW5hL2l/jLRUHZd76idEqQOnAw3+9hG7
-         cMzOH+aL+DNQPAKhdRDQyebMSDleZwxOOM+Id6KNTfYwgRoz0+PinJdfTSx7uasU43gO
-         0dxsmyBKKEjOuqbZkL6MQQmYdqW5c4EHrIesdP+Ltkhv36SSDyL5qxHqZQTATEMADNB+
-         udgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvlXKcEF7eFBrPrP7P7LVfpLMViiod0HJwiu/x5yTtG/UHMJcI07NCUjb3QbMTvK5kVKn0j10L4856j1u/P6KSULhEce/zFGi0NNeY93qKBndZgTK4vpcBvYBOKpW0hWFHGhZUiDGzMxCXAkngNVSdZrhmFPqP5A1anksjFM+QGy9F+iVXARujzLO5nrxGZY559q6Sdtxnj4E93HhRNM1Tz1zYEJcCdg==
-X-Gm-Message-State: AOJu0YwvB5oppPriMbWcDQA8Z1dJryPBB7LSU+4WV5bkOixNrA9CSgZY
-	m2LdiZuxe1luhyAaI/J1xrdolOlSEHQLDfbLjbS8KDn3Nwi1peYZYSlPZRjnVr5GNso6JbZs6rK
-	DJXelt9ttGEIYd22qUZeEZ5i+0Z5vUKdx
-X-Google-Smtp-Source: AGHT+IEvXhl7/THETxftoNv1+QEaIpTlrmxZjQ5Jl1zLbDAXsZxlBu4DIpOCs3GNgARkdzzKCjvFzBRweyzktSXtPgQ=
-X-Received: by 2002:a05:6a00:4fcf:b0:706:6af8:e088 with SMTP id
- d2e1a72fcca58-70aaad2975bmr9987422b3a.3.1719977720721; Tue, 02 Jul 2024
- 20:35:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719977769; x=1720582569;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bIW8fFKo/WA1Akzmq2h4ZjGts16MbSA8rHna9aaImEA=;
+        b=Z0TcrX8arOKHlmFUOloDw6b0whQu+EmmtSWFFhkndJAYKMdugMskdI38/pwmcc6Avq
+         hE6xrXZc1uclCd388GZSZIBN/OU9V8Za+oUpo6rHzwVz0Z6VYhkPnCqkb6D952uWo/TK
+         RCNG2CUB9nHrOq6qFSEYgomNH5HYk7Z2Vbjde5srhzImfO2uukCpRX1t2SacVy0/HH8F
+         ccUDDBxrgkm517sA2DPABq1MmuaL+95RLbkBoOdpt/uqx2HAO7CbpP1l7J3JnDx+HM8C
+         NFuTBvigtxX87Q9VR3VH+0lSXE4LBcWFvjR3+Cz4AM/zq6XSFFWomOVeiJsgR8gdFR/s
+         x8AQ==
+X-Gm-Message-State: AOJu0YwXLPwXksLpSidyjz7F38pZUQmX0t9Gru+uX7U8QbvwYta+f64v
+	4HnsI1BozPzAmCY8aV1GF3cvwlp2luNdF3NaT/I2W8jEyDgMpp3NkVLVQA==
+X-Google-Smtp-Source: AGHT+IFUaQRh9Twvhn5vIaZkCwv2byP3iBgWI4hMzsshOr0cs6sS704KuhSLYUkH+411U/fLfgNWUg==
+X-Received: by 2002:a17:903:18e:b0:1f6:7f05:8c0e with SMTP id d9443c01a7336-1fadbc5b502mr64752865ad.2.1719977769053;
+        Tue, 02 Jul 2024 20:36:09 -0700 (PDT)
+Received: from localhost ([47.89.225.180])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac15b890asm92092705ad.301.2024.07.02.20.36.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2024 20:36:08 -0700 (PDT)
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	Tejun Heo <tj@kernel.org>
+Subject: [PATCH 0/6] workqueue: Make the PWQ allocation and WQ enlistment atomic
+Date: Wed,  3 Jul 2024 11:38:49 +0800
+Message-Id: <20240703033855.3373-1-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702171858.187562-1-andrii@kernel.org> <20240702233554.slj6kh7dn2mc2w4n@treble>
- <20240702233902.p42gfhhnxo2veemf@treble> <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
- <20240703011153.jfg6jakxaiedyrom@treble>
-In-Reply-To: <20240703011153.jfg6jakxaiedyrom@treble>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 2 Jul 2024 20:35:08 -0700
-Message-ID: <CAEf4BzbzsKLtzPUOhby0ZOM3FskE0q4bYx-o5bB4P=dVBVPSNw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 2, 2024 at 6:11=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org>=
- wrote:
->
-> On Tue, Jul 02, 2024 at 05:06:14PM -0700, Andrii Nakryiko wrote:
-> > > > Should it also check for ENDBR64?
-> > > >
-> >
-> > Sure, I can add a check for endbr64 as well. endbr64 probably can be
-> > used not just at function entry, is that right? So it might be another
-> > case of false positive (which I think is ok, see below).
->
-> Yeah, at least theoretically they could happen in the middle of a
-> function for implementing C switch jump tables.
->
-> > > > When compiled with -fcf-protection=3Dbranch, the first instruction =
-of the
-> > > > function will almost always be ENDBR64.  I'm not sure about other
-> > > > distros, but at least Fedora compiles its binaries like that.
-> > >
-> > > BTW, there are some cases (including leaf functions and some stack
-> > > alignment sequences) where a "push %rbp" can happen inside a function=
-.
-> > > Then it would presumably add a bogus trace entry.  Are such false
-> > > positives ok?
-> >
-> > I think such cases should be rare. People mostly seem to trace user
-> > function entry/exit, rarely if ever they trace something within the
-> > function, except for USDT cases, where it will be a nop instruction
-> > that they trace.
-> >
-> > In general, even with false positives, I think it's overwhelmingly
-> > better to get correct entry stack trace 99.9% of the time, and in the
-> > rest 0.01% cases it's fine having one extra bogus entry (but the rest
-> > should still be correct), which should be easy for humans to recognize
-> > and filter out, if necessary.
->
-> Agreed, this is a definite improvement overall.
+From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
-Cool, I'll incorporate that into v3 and send it soon.
+The PWQ allocation and WQ enlistment are not within the same lock-held
+critical section; therefore, their states can become out of sync when
+the user modifies the unbound mask or if CPU hotplug events occur in
+the interim since those operations only update the WQs that are already
+in the list.
 
->
-> BTW, soon there will be support for sframes instead of frame pointers,
-> at which point these checks should only be done for the frame pointer
-> case.
+Lai Jiangshan (6):
+  workqueue: Register sysfs after the whole creation of the new wq
+  workqueue: Protect wq_unbound_cpumask with wq_pool_attach_mutex in
+    init_rescuer()
+  workqueue: Separate out destroy_rescuer()
+  workqueue: Init rescuer before alloc and link pwqs
+  workqueue: Move kthread_flush_worker() out of alloc_and_link_pwqs()
+  workqueue: Put PWQ allocation and WQ enlistment in the same lock C.S.
 
-Nice, this is one of the reasons I've been thinking about asynchronous
-stack trace capture in BPF (see [0] from recent LSF/MM).
+Cc: Tejun Heo <tj@kernel.org>
 
-Few questions, while we are at it. Does it mean that
-perf_callchain_user() will support working from sleepable context and
-will wait for data to be paged in? Is anyone already working on this?
-Any pointers?
+ kernel/workqueue.c | 110 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 63 insertions(+), 47 deletions(-)
 
- [0] https://docs.google.com/presentation/d/1k10-HtK7pP5CMMa86dDCdLW55fHOut=
-4co3Zs5akk0t4
+-- 
+2.19.1.6.gb485710b
 
->
-> --
-> Josh
