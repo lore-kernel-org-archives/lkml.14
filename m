@@ -1,163 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F6B2E646;
-	Wed,  3 Jul 2024 04:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE732232A;
+	Wed,  3 Jul 2024 04:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719981537; cv=none; b=pZ+OKe6S0et5ekahCPMpCHNQM6Xj54oGbktKLOZFIbJ70tWBM2s96HpKE4j+W3Ffk4lGCociGzgZIKvtXE/EsZxnfCt51MAqt8Z3ZI6YqeV9pZjBlDNI5vmXneaFVc+cUlNxPqhSja9VcFH8ePiZKEmLNmRFaTAEoBCU2zIIpok=
+	t=1719981574; cv=none; b=Bqj46czmnLfBWawsJpXdy0JLJY+4w+YxANoKLyNGhMyV558pQcaeGZM7w1RAJWK8UWPXwDy29D3eu7tZNUn75rcNTtoLBxur+KOAm+XlQvFr4hXPFkxBP3wB+pL+yevY9gbLNqwJf/4TJtg/3HGd+DqJGcBMPZZu2K0gZbzwYS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719981537; c=relaxed/simple;
-	bh=W1kROEg3Fjkby7km6ea2XB5zUQBCta+iGVmjqDJNcd4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bZqPUtFLZLcDvSPhlBsWsB7B8aq8z+yUddbX0sc9IqlFyHIPn9eRohJDaWH+wyqvn2Y7pnOa+GP7g6OGwpdbTWkSrLgbI5cDbqW8ql9okxlTCFPHJ0iuQo2u8002k2UtKd29I+NApJAkYBegpUe1QWmyUP8Fc6LWsmxOMdovMr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+hv0vca; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719981574; c=relaxed/simple;
+	bh=rXfLHCvQqVGbbaxrGRVm8ysFjS2nucIX/6ks96HT4hw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R3fJgFhrv+bmwEP79gYOd33upbN9wkwslgTEckgB70OZ00Eyl1YsVq9UVCzt7Ru6nTYA05ErOH2yQ9rqtEHeVXdRelcOHpAC+mffWmm76BW2c+S7YIVgII0fEs9xj6YJ800V17NBs4L3FJ7z1HtK1Y+zLQRdkrNJMYj6541sH6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PK32F36f; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+hv0vca"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD393C32781;
-	Wed,  3 Jul 2024 04:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719981536;
-	bh=W1kROEg3Fjkby7km6ea2XB5zUQBCta+iGVmjqDJNcd4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H+hv0vcaiq0XC7+jQ4SkBP6tLioSIe3HKWUbXaOlUbiaFuBk9DLPO6VtNaanYUvzQ
-	 Ev/nx7GDK0z1YI39SPHe5GZWGxN+hkg9cwmbiWCwdESQw03d1YG767i52fPG/rVnuK
-	 UOb1ndi1WGV82b3WM/a5qdpRt3Fb63aRJ2Htb59BTCAqbDCrjlgPQnzyc26BfvChNf
-	 TwFz7y9MCugmzjF5lnkT4ZELHLonzS58O1pg7wcml6uL942bgU0iRWtcikgy03fsKi
-	 KLp8csgIQfcYyKnwjYthjPSFP1QW16hZutMWuBsN+BZQPLf9kUUNuratI9rp68f9O6
-	 ZFOZuNIoRcFng==
-Message-ID: <665f6c8c-4f43-4d20-90e9-9e037a942066@kernel.org>
-Date: Wed, 3 Jul 2024 06:38:24 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PK32F36f"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4634dQ8u064632;
+	Tue, 2 Jul 2024 23:39:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719981566;
+	bh=/1Eg8vQ4Vxi7v3m/O/uum223vtD5GjiOMiwNP9a/ys8=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=PK32F36fCMVtoTIjqCU3kDX0fi2UQoCz4bg38j5k3/Nu4Go3bWe/SsFrNDTxbtX3z
+	 zB1f4fllSNiyQAoFy54nlcGOsuys5/o+e4n9O+6sJ1niteS9Km3uLczkSFbPzXEmI4
+	 39q11rMfaXnBb959aN6VifCYjrBnw+xonZVXcroI=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4634dQ1U028493
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 2 Jul 2024 23:39:26 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 2
+ Jul 2024 23:39:26 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 2 Jul 2024 23:39:26 -0500
+Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4634dNHP013653;
+	Tue, 2 Jul 2024 23:39:24 -0500
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@kernel.org>,
+        Andrew
+ Davis <afd@ti.com>, Tero Kristo <kristo@kernel.org>
+Subject: Re: [RFT][PATCH 0/2] dts: ti: Fix build warns in usb@31000000
+Date: Wed, 3 Jul 2024 10:09:21 +0530
+Message-ID: <171984950185.3152309.13270720287525957044.b4-ty@ti.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240626101520.1782320-1-d-gole@ti.com>
+References: <20240626101520.1782320-1-d-gole@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/47] dt-bindings: arm: qcom: Document QCS9100 SoC and
- RIDE board
-To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com,
- sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au,
- davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org,
- joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org,
- thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org,
- linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org,
- vkoul@kernel.org, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- mcoquelin.stm32@gmail.com
-Cc: robimarko@gmail.com, quic_gurus@quicinc.com,
- bartosz.golaszewski@linaro.org, kishon@kernel.org, quic_wcheng@quicinc.com,
- alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
- agross@kernel.org, gregkh@linuxfoundation.org, quic_tdas@quicinc.com,
- robin.murphy@arm.com, daniel.lezcano@linaro.org, rui.zhang@intel.com,
- lukasz.luba@arm.com, quic_rjendra@quicinc.com, ulf.hansson@linaro.org,
- quic_sibis@quicinc.com, otto.pflueger@abscue.de, quic_rohiagar@quicinc.com,
- luca@z3ntu.xyz, neil.armstrong@linaro.org, abel.vesa@linaro.org,
- bhupesh.sharma@linaro.org, alexandre.torgue@foss.st.com,
- peppe.cavallaro@st.com, joabreu@synopsys.com, netdev@vger.kernel.org,
- lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- ahalaney@redhat.com, krzysztof.kozlowski@linaro.org,
- u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org,
- quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com,
- mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com,
- quic_bjorande@quicinc.com, quic_msarkar@quicinc.com,
- quic_devipriy@quicinc.com, quic_tsoni@quicinc.com,
- quic_rgottimu@quicinc.com, quic_shashim@quicinc.com,
- quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com,
- quic_aiquny@quicinc.com, srinivas.kandagatla@linaro.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- kernel@quicinc.com
-References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
- <20240703025850.2172008-2-quic_tengfan@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240703025850.2172008-2-quic_tengfan@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 03/07/2024 04:58, Tengfei Fan wrote:
-> Document the QCS9100 SoC and RIDE board.
+Hi Dhruva Gole,
+
+On Wed, 26 Jun 2024 15:45:18 +0530, Dhruva Gole wrote:
+> The series has been marked as RFT because although I was able to boot
+> test, it needs to be made sure that usb features aren't affected by this
+> change. Ideally, looking at the driver, I don't think it really is
+> looking at port@X but incase I missed anything please feel free to point
+> out.
 > 
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+> I'm working on top of tag: next-20240625
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-> index ec1c10a12470..f06543f96026 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> @@ -45,6 +45,7 @@ description: |
->          qcs8550
->          qcm2290
->          qcm6490
-> +        qcs9100
->          qdu1000
->          qrb2210
->          qrb4210
-> @@ -894,7 +895,9 @@ properties:
->  
->        - items:
->            - enum:
-> +              - qcom,qcs9100-ride
->                - qcom,sa8775p-ride
-> +          - const: qcom,qcs9100
+> [...]
 
-This changes existing compatible for sa8775p without any explanation in
-commit msg.
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-Best regards,
-Krzysztof
+[1/2] arm64: dts: ti: k3-am62p5-sk: fix graph_child_address warnings
+      commit: 28a950c404679aba602e3311c733a19b7c945ab4
+[2/2] arm64: dts: ti: k3-am62x-sk-common: Fix graph_child_address warns
+      commit: cf645197f045147cd0232c7a205cdfed49590756
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
 
