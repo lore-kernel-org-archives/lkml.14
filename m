@@ -1,56 +1,60 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F293B16B3A1;
-	Wed,  3 Jul 2024 10:29:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7831741CF;
+	Wed,  3 Jul 2024 10:29:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720002552; cv=none; b=Ksd68LUGShiV/gVe7CkKI1PbmeX4F/c6khMYhxA4jfKHCIKqG/a3Vk6twj9gcnTTXGc77apLl5CMJwHR907a0C5Sgx+Ow0g9SZ0AP3HL5V0PMBtY3vJ+qOk4Et2IZPErsxP7ME8Idb0jkXXTD1VHf30qfUgSIfQGftSpxaBlUaE=
+	t=1720002562; cv=none; b=plng3GkSr3yBU9G0kBHQd56Z3YQb4MJEO1jODnc9lTfiHw8fIW+DZUBoRdRmgYu4dQ7OKiu9V6OE3wCVaz+CteiuFpTefpLPyoRLoTP34kFQkdczDzTsiRYN2vy8fliYFNMsBLiseuV8KuNO53rnl2T0TlGZcwdwMUb5mWcxAKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720002552; c=relaxed/simple;
-	bh=OQ3DquxxckfkYxfIhdDEQe/+9PiGWGIXHlCGBn7IixI=;
+	s=arc-20240116; t=1720002562; c=relaxed/simple;
+	bh=flQEluk5hLljQfPymWhZA5C4pdYlqlYSYYtSaCbnjQ8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oBJ9HyjbDlWFWwUOtzqQ9JiOwEmwV90EIP14k/5z01SP8iLc+y4awqF2MFd3rRCl+lBsz/zLV6Ik+MJ//tRz3rFgrgkQblwKSBs06I5vZyHHUbTs6ZkzRQxTgdQaLoC4f6wzLEND30kj9fTKju4Gt2Jq9ZklRc8CrNT9XOc7WPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=J6bOeN93; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=GLzJ4RfoVfw/DzkMkLjTO+YRK0vULr8UKAU1crXo1wwNxblpHYfRQkQWHvibFBsgtHB1NslFhj1MDAJO3ZKJKmfG+p2wQIfhRn1vLXaeisLgdxCcUNBZmcO45xX8Ggy3hLWpe4Zb3azi0RcGdMHsxmgIXFD2U7ncf3i0WtQtkKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=hxvC0SL5; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="J6bOeN93"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hxvC0SL5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720002550; x=1751538550;
+  t=1720002562; x=1751538562;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=OQ3DquxxckfkYxfIhdDEQe/+9PiGWGIXHlCGBn7IixI=;
-  b=J6bOeN93MgSTuX67wLO+e+PqSFMobynPxVfxGHTyv316Cmv6a+EWnlnf
-   bMfalvzc0izmm9jPxzG7dlaYwQg3v3QCCcupI+55mIt5N/+0y9hZ76KXI
-   5gEIHDPfpmkxtcvN89/DEEi8hR/fQwB+v4H26U8pc9/88a+OdomvYOIeE
-   hLeakidnNXTXVK11MrjhQ4eZAe+1UXFoETMJwMuaX7+Uwf0QOaCkYRdA6
-   S7yqbO6bx72Wl1D4/bhnjAcdgV7bAVeEA5/2LJidZFNXb/xuEfI1LLtq5
-   n42zWmQptvhrYmg+ef9DGpCu7fUHD68oWf4v04tI1MyMPhxDvnu+D4qTc
-   g==;
-X-CSE-ConnectionGUID: n3BwhiapRjCNKuOiIdXemA==
-X-CSE-MsgGUID: NmNsCLHURH2IguhwouDY+w==
+  bh=flQEluk5hLljQfPymWhZA5C4pdYlqlYSYYtSaCbnjQ8=;
+  b=hxvC0SL5ERbvpzes7OtZdVWSR+R488fSPeb/fjD/nIQM7UTxwQ1QNsdr
+   ZXUDSfQHfH5I2K0N9k1kb2PUgxH1IbwD5X1d4xZvauqhebd50cVihpM7A
+   lofzAzn5FMFpds6+RJaxUjQbHyHraohuapRxgZdCmvlQtrhMib10h01D0
+   7GozbrjVRRl8921Lsb14WzaPsi2C0ysmC3FWyI8Lr6/vOecIv69dLRZnK
+   LTVdFNaTcSks6ReW1u0MlmDLyE06wBINPB/9JC9TsH0brhtJ93z5h1Gc7
+   hAXJiER1I3ppQ6aa0NEHE9K3fwIS5cAMAgwXjCPmEG1trvHrd5TJgPd1y
+   A==;
+X-CSE-ConnectionGUID: oB4ZDQLAQnSdyIMLfIgWpQ==
+X-CSE-MsgGUID: GC0AUHZYTDqJd9oYsIyo5Q==
 X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="scan'208";a="31414906"
+   d="scan'208";a="259682246"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jul 2024 03:29:10 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jul 2024 03:29:21 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jul 2024 03:28:49 -0700
+ 15.1.2507.35; Wed, 3 Jul 2024 03:29:09 -0700
 Received: from che-lt-i67070.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Jul 2024 03:28:46 -0700
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 3 Jul 2024 03:29:04 -0700
 From: Varshini Rajendran <varshini.rajendran@microchip.com>
-To: <sre@kernel.org>, <linux-pm@vger.kernel.org>,
+To: <claudiu.beznea@tuxon.dev>, <sre@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <linux-pm@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>
-CC: <varshini.rajendran@microchip.com>, Sebastian Reichel
+CC: <varshini.rajendran@microchip.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>, Sebastian Reichel
 	<sebastian.reichel@collabora.com>
-Subject: [PATCH v5 19/27] power: reset: at91-reset: add reset support for sam9x7 SoC
-Date: Wed, 3 Jul 2024 15:58:43 +0530
-Message-ID: <20240703102843.196257-1-varshini.rajendran@microchip.com>
+Subject: [PATCH v5 22/27] dt-bindings: power: reset: atmel,sama5d2-shdwc: add sam9x7
+Date: Wed, 3 Jul 2024 15:59:02 +0530
+Message-ID: <20240703102902.196403-1-varshini.rajendran@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240703102011.193343-1-varshini.rajendran@microchip.com>
 References: <20240703102011.193343-1-varshini.rajendran@microchip.com>
@@ -63,27 +67,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Add power reset support for SAM9X7 SoC.
+Add shutdown controller DT bindings.
 
 Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/power/reset/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/power/reset/atmel,sama5d2-shdwc.yaml   | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index fece990af4a7..e3ebebc1f80d 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -26,7 +26,7 @@ config POWER_RESET_AT91_POWEROFF
- config POWER_RESET_AT91_RESET
- 	tristate "Atmel AT91 reset driver"
- 	depends on ARCH_AT91
--	default SOC_AT91SAM9 || SOC_SAM9X60 || SOC_SAMA5
-+	default SOC_AT91SAM9 || SOC_SAM9X60 || SOC_SAM9X7 || SOC_SAMA5
- 	help
- 	  This driver supports restart for Atmel AT91SAM9 and SAMA5
- 	  SoCs
+diff --git a/Documentation/devicetree/bindings/power/reset/atmel,sama5d2-shdwc.yaml b/Documentation/devicetree/bindings/power/reset/atmel,sama5d2-shdwc.yaml
+index 8c58e12cdb60..0735ceb7c103 100644
+--- a/Documentation/devicetree/bindings/power/reset/atmel,sama5d2-shdwc.yaml
++++ b/Documentation/devicetree/bindings/power/reset/atmel,sama5d2-shdwc.yaml
+@@ -22,6 +22,9 @@ properties:
+       - enum:
+           - atmel,sama5d2-shdwc
+           - microchip,sam9x60-shdwc
++      - items:
++          - const: microchip,sam9x7-shdwc
++          - const: microchip,sam9x60-shdwc
+ 
+   reg:
+     maxItems: 1
 -- 
 2.25.1
 
