@@ -1,91 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B821417B41F;
-	Wed,  3 Jul 2024 14:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17384409;
+	Wed,  3 Jul 2024 14:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720018218; cv=none; b=eIa5nIRbp7Csc5cUgudD30T/tLHpGt8zOuPfdB8gGfqVphwvNCBIxsEWmzybDqZxI0TWQazJy+A5k9VipURizHF0+06r+Xc1F16QQyjgb0dzxlKrCLV57TT7ktPo1tgtKqBFVh/NIhr31dn43/ZxCmPNhrbXus4mfePeYSvCX2Y=
+	t=1720018330; cv=none; b=CYJqV3SaVUMWidFjJCdWXBYlZ6mp7xICcOyAInW0xumB1GsUKwI88li5kkj4xjIb1t75SR2M1vqTY1/0UPbyJXQcQb4E5LjOUpq24+R2mnraZfVCB14nu1a509o6xUtCPgkVZpbzKui9Ui+lpaLnvIWLnHpZg8awx27V4CjTjYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720018218; c=relaxed/simple;
-	bh=DiZJ0dILrXy2O013iz+bCGWZocmbBOMiap6sH6MRS2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HTIZh9dk76LAtLvl8/S69NO+57+40ywGbG523BDEdPLwdyVdDqxFYG+xUdENgUBaFyMkK2JFFF6neBz5flLTdFtTkf/N/s3cfL2Qt2vXXGMJXiC+OpcLGMsQcCY5hA4fGnDZOuetLLNisfcTQQYNje8xKdNLjPN8pOZZNCuduYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcFbI+Z6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720018330; c=relaxed/simple;
+	bh=opuYPOBO3CpJ/UR87r0PwPENZCJ5lJ2kN2zlHDHZooc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=mrHGoO1AhQ623ubAnCvm83DAYbZxOUhNW+zhKC2l481wD++98ysOSWoKFZMWLDgqgebHMCmBgcrCj6wdonMA9FQqerMC+P6TUxFATbvvJRS3/8K9pscweJlK6sovdZGin+WG1D4DPTd6R938I0kOZJHhh1/7eTCZRtMMBZfTcvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=J6mfbvdE; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcFbI+Z6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DEAFC4AF07;
-	Wed,  3 Jul 2024 14:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720018218;
-	bh=DiZJ0dILrXy2O013iz+bCGWZocmbBOMiap6sH6MRS2s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jcFbI+Z6lRD3WEZSda4ofZtQCQaCdDIk96edMJ+s6TxX/U4DfAJtrLLzHna3j79OG
-	 tPpjAXpi3Nd+aO3IJKBFW7Q4u+QH2J8UjKAP/kTgwS7rFTEilIjoqsdTzuKkr42LZN
-	 2JpI0ojfYh1w52bIW1na6U5VAEZ46Uv1yFcGNqLw+Qmv0WUE1/teG4Cn9C/IX2qYID
-	 /FWRd+Njfy+VNi+TsKvmkcf/evGUmFJ/rFFPWNEWYXQsFiX+qdWIxO/s7h/wse3o+6
-	 RNlbfv7klYn46Lz6nWgKk8zozcKxXIWNzTTYuI7MZ88aSXTpA/AhOs18U3bnB3zade
-	 tYPpEAcm+S+jw==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ec52fbb50cso53622321fa.2;
-        Wed, 03 Jul 2024 07:50:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUu0D/1X6NwdgiXAcNy4sH5ebURn/yhnatzJiRrEWWVhAVr+nr8nKyeUtR/r+ceLHDnDo6r3rx/cTt+BEJyviJavzRTDQz1Id3HsdbxYjbJrUF7fKrJvR82+3JgvzaIIrqu+khpFMKptB20
-X-Gm-Message-State: AOJu0Ywnuldx695UttZHFwzv15I0F9O12m6ZDKlANhEULMwSRKDEx91a
-	7OIZDpPI4GTYzYSmlcpCA3MmX5GDjee2rpa/7KW0xNRh5OtdNDeXI93yBoXALvGlL26VS3ofr2h
-	LVkZHnEIjo4O1STpJ7gz5tLcj8kU=
-X-Google-Smtp-Source: AGHT+IEIWx0ohubc/gEMbIlq7uaD+5IUVCdvsx24gzXDTf+BCAo6XWw/fWojD8I4j0YT/KHy8zlrPKTeoiWu61pmhgs=
-X-Received: by 2002:a2e:bcc5:0:b0:2ee:7b7d:66ed with SMTP id
- 38308e7fff4ca-2ee7b7d68cdmr29931121fa.10.1720018216931; Wed, 03 Jul 2024
- 07:50:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="J6mfbvdE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 72851240008;
+	Wed,  3 Jul 2024 14:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720018326;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=opuYPOBO3CpJ/UR87r0PwPENZCJ5lJ2kN2zlHDHZooc=;
+	b=J6mfbvdEQcsGLS3MQ/y3pHy6zksWvA521a7dcQT+652pasbVLH3I7a8WdzbA5AwaYd7hIK
+	gu//wwGdPcqBgYvQpLSP5Mw4tDjWK9OF6wxGptBb+QhhGm1nCDvODbj1gjHOpmWb4kgBap
+	yN/gW2Ddu8sWw0uqQLrIK4HgKpH5Jjklwzk2/V9texg7lXB9TRy/nqDYlPKjSXNo9fz0SV
+	NPmUFQzKo1+1EzTTOAgqWBwVSSXMr0zFdXoLoy6ELWg57skFitEUDF2TiMOJ9LYKKv1ypV
+	MEZzSRFCwj23ChOLs4fVVw9CW1osH7vceBjXpU2+I1lGOi2RIW2HPt5eD7bv7g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240702234008.19101-1-richard.weiyang@gmail.com>
- <20240702234008.19101-2-richard.weiyang@gmail.com> <20240702185230.9ff500bf6a89db888207f8f1@linux-foundation.org>
-In-Reply-To: <20240702185230.9ff500bf6a89db888207f8f1@linux-foundation.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 3 Jul 2024 23:49:40 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS+TgSo6CCrvKQ=n8=pFPDTJ3wq2chq1-p9KgSSv=N9Ww@mail.gmail.com>
-Message-ID: <CAK7LNAS+TgSo6CCrvKQ=n8=pFPDTJ3wq2chq1-p9KgSSv=N9Ww@mail.gmail.com>
-Subject: Re: [PATCH 2/3] modpost: .meminit.* is not in init section when
- CONFIG_MEMORY_HOTPLUG set
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>, nathan@kernel.org, nicolas@fjasle.eu, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 03 Jul 2024 16:52:04 +0200
+Message-Id: <D2FZLXUX4HHW.1R8U2P6JBH758@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH 0/3] MIPS: Add Mobileye EyeQ OLB system-controller
+Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+X-Mailer: aerc 0.17.0-0-g6ea74eb30457
+References: <20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com>
+ <ZoVhry8VFRx8x3w/@alpha.franken.de>
+In-Reply-To: <ZoVhry8VFRx8x3w/@alpha.franken.de>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Wed, Jul 3, 2024 at 10:52=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
+Hello Thomas,
+
+On Wed Jul 3, 2024 at 4:35 PM CEST, Thomas Bogendoerfer wrote:
+> On Fri, Jun 28, 2024 at 06:11:49PM +0200, Th=C3=A9o Lebrun wrote:
+> > This is a new iteration on the Mobileye system-controller series [0].
+> > It has been split into separate series to facilitate merging.
+> >=20
+> > This series contains a dt-bindings defining the system-controller
+> > (called OLB) used on EyeQ5, EyeQ6L and EyeQ6H. It then modifies the
+> > EyeQ5 devicetree to exploit that system-controller.
 >
-> On Tue,  2 Jul 2024 23:40:07 +0000 Wei Yang <richard.weiyang@gmail.com> w=
-rote:
->
-> > .meminit.* is not put into init section when CONFIG_MEMORY_HOTPLUG is
-> > set, since we define MEM_KEEP()/MEM_DISCARD() according to
-> > CONFIG_MEMORY_HOTPLUG.
->
-> Please describe how this changes modpost behaviour.
->
-> Something like: "we're currently not checking for references into
-> meminit and meminitdata when CONFIG_HOTPLUG=3Dy, which may cause us to
-> fail to notice incorrect references.".  But I don't think that's
-> correct.  So what *is* wrong with the current code?
->
+> just to be sure, this replaces the v3 series ? And it's the only
+> series, which should go through the MIPS tree ?
 
+Sorry it was not clear enough. I confirm this replaces the V3.
+It is the only series that should go through the MIPS tree.
 
-Sigh.
+The remaining three series have had their V2 sent a few minutes ago.
+Each series contains the removal of the old dt-bindings and the three
+clk/reset/pinctrl drivers.
 
-If you do not understand, you should not apply it.
+https://lore.kernel.org/lkml/20240703-mbly-clk-v2-0-fe8c6199a579@bootlin.co=
+m/
+https://lore.kernel.org/lkml/20240703-mbly-reset-v2-0-3fe853d78139@bootlin.=
+com/
+https://lore.kernel.org/lkml/20240703-mbly-pinctrl-v2-0-eab5f69f1b01@bootli=
+n.com/
 
-I am surprised that there exists a person who
-attempted to apply this.
+Thanks,
 
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-
---=20
-Best Regards
-Masahiro Yamada
