@@ -1,236 +1,112 @@
-Received: from pb-smtp1.pobox.com (pb-smtp1.pobox.com [64.147.108.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B1D1B95B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 03:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.108.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9C82233B
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 03:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719977776; cv=none; b=Z6Wwr7blxWXpbVTqd4G6hEb+Cdmll+Sn/cuicckG9f7tjjOJpgpfXKV6BSL9CpO0dAcjoVBHsGn2bton4KDy1szdvPA0ZOAHyaN4ANvRenNBszZxlDzxbn/oiVyhtaNjh3VN0M7fRYNIlujCnYHJvX5B0vm9D7vs2MUK7TyO49w=
+	t=1719977777; cv=none; b=sLTQ/6mwMkz36NUgeYnFtP5AFSht6P2Or/jOijQxPDssjHPFjyyfDCNjHtIkFOAg328MgCsk43n7SQ8j9kH7Y2ECoSn5toIedOgFi9loPQP9O9kBPu+GeORWrdCSWVEdaXkhoNkm+8I6CKEijXoRFXA1GQOmpjuxZuIjICEH2Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719977776; c=relaxed/simple;
-	bh=lT6RLash4CuN3+zZ6rbgyUfZ76/w+P195UNSoGYglbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bHI2Zpv9ODgKRPEKN0KS23mIKbIfXnJWmVm0MSR9ATD1aywV5hp5ZZPD024R/HtVVaLAY2+wao0C6MHaiJ2gbS5JMl7UXKfcJcZR+CORvSgDm6PbdlMxjY8QAnQas7jsI5oh1d3E5B0NWhOjNHipePRtpJ44C5g5d8m8f+j9EjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=uGV7433j; dkim=fail (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=dh0x2uHc reason="signature verification failed"; arc=none smtp.client-ip=64.147.108.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1719977777; c=relaxed/simple;
+	bh=hDB7ErbKyrBBqUbkW2fkYqhmVxL7yx6cpxPwDaA56RE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cNwwhKgNJLv+BRu2cMVBTtJCnhDj6cybahy7eltPHFm7lWwZao7fcdHTqSzb7DFs/K0zXBm4/FblGO913/Ur+BjFauwH2Hpt37U97YvDuiPn4OsSkV0t5gZNSUBHC//d/jInG3/thXBe9CiofiX+NCWTFBQltASCgrXhPwZXe24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ePkE+j+i; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="uGV7433j";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="dh0x2uHc"
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-	by pb-smtp1.pobox.com (Postfix) with ESMTP id C64A3267C5;
-	Tue,  2 Jul 2024 23:36:07 -0400 (EDT)
-	(envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=from:to:cc
-	:subject:date:message-id:in-reply-to:references:mime-version
-	:content-transfer-encoding; s=sasl; bh=lT6RLash4CuN3+zZ6rbgyUfZ7
-	6/w+P195UNSoGYglbo=; b=uGV7433jTOoOJB3xeIdLOCMF8Spz+4r6+Vf7FNi5/
-	jlIF0GM6GPp6fiTeyayih8J+L8e4jgFu0C1qS9nr6FkdMZsqujkBn0H0v+mgMOxq
-	xHHAVf0mkT2j1Q4Ds7cX/ZjZBAce56fOZvJyECVY8Ywtnj/k5LCReEALXMtI2/rK
-	oQ=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-	by pb-smtp1.pobox.com (Postfix) with ESMTP id AAD03267C3;
-	Tue,  2 Jul 2024 23:36:07 -0400 (EDT)
-	(envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=from:to:cc:subject:date:message-id:in-reply-to:references:mime-version:content-transfer-encoding; s=2016-12.pbsmtp; bh=Ki3nGTnd4PRSQbxSrHxnHZO3kQnZkmIeaAixDyp7MUM=; b=dh0x2uHcJqj73tlGF/O3ozza5LYBse1jN7tlNadeBYSHtrEAp4nsZEX4DBZ5XAUik7/F/+Q087w/WSVOtSyn+EHK1knByU9Qs1Q+i4gsrGA8DO3UjQz7aGhWlhsMMTsctCg8X3ahwlPVu5MvdeCd34wZgJRW+oOJK1Xhnw7jfFk=
-Received: from yoda.fluxnic.net (unknown [184.162.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 074DA267C2;
-	Tue,  2 Jul 2024 23:36:07 -0400 (EDT)
-	(envelope-from nico@fluxnic.net)
-Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 8C644D31181;
-	Tue,  2 Jul 2024 23:36:05 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Nicolas Pitre <npitre@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] mul_u64_u64_div_u64: make it precise always
-Date: Tue,  2 Jul 2024 23:34:08 -0400
-Message-ID: <20240703033552.906852-2-nico@fluxnic.net>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240703033552.906852-1-nico@fluxnic.net>
-References: <20240703033552.906852-1-nico@fluxnic.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePkE+j+i"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fb0d88fd25so1500735ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 20:36:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719977775; x=1720582575; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EmfbtIC8gkMyEyGpTQo1qvjL1gkxM76DMe3jF1C+RTI=;
+        b=ePkE+j+iXYoBYvsx5gYk1aHr9iqk0c4t9S4Zs8EYd0Cw7MzZC7iueY5lDSEWI3TXhc
+         g+qS0eevmZI12liLxMdl8jVYmbHt1KKHQFYizQRImEBtBTK4oFuZxmlhuZe5Fiph8/pu
+         C9uwCraDBIMgxMwb+BMgw2a/wW1Y0QE8+H4ApGzXw7KA7V6iO+JsNZRLcmmYW4MEnOyC
+         kxLpNw3KquvUO19h4/6UinjDrm8KYgBmkfiDhxIGmAtBUQy3dAq/OTgPsw1gw/BmWrm9
+         d/mJexV3MhOt+Ya2UfOhmOYda8+zYu4QGNiDjiC0HYH1IDJSzyiL1SDJjFF0KoJwZk/W
+         ACWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719977775; x=1720582575;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EmfbtIC8gkMyEyGpTQo1qvjL1gkxM76DMe3jF1C+RTI=;
+        b=CLbmBThHEfrvnPKuhyYod9bJgsnwALYOUqHLlt3GTj1NaiJDwqJiNYjNjV51KoERnr
+         eRra1rg2wDvOHZEDEZDQaQPmsWCyhmZcip7wbd7FQXWzyny7qGOAmIt025S0fqHj706j
+         U5v5c/XxrBoOnd0ZsUF2RSUXN7m1ql9EjeNUEDxNrTI5FZ+4WHrNkNtcvEa4BFdDLRBL
+         FAyiYYmuySFS7KE6EjT5f4LNODqhqA64iLCSBtgS/ITZQ1EXuFYJRc8O6ZSggKK+YR7l
+         o76ZCeFuC6XbXP/d7EZNaU5H8hr8t4T48MIlx2eNzhMeF8rhoihViCgn590nepCSzcga
+         wcwQ==
+X-Gm-Message-State: AOJu0Yxcg/776xe9TFwGVm0oOlFsJRGLLlqFRrNlcQDcDASnuGOqDZGC
+	Sc+9wrB5Zf6U+YPYKmrhRN6SXwug8po+2DTM3hs0AbD5CejPfJIWkbZbVQ==
+X-Google-Smtp-Source: AGHT+IEG4fucmaycNaPyVyLnYq9fuwy0hOO0gizsJVsEVzuilbHFrUVX4pMFgO5ui6l7OfmFwG9yjQ==
+X-Received: by 2002:a17:902:dad1:b0:1f9:c52f:d9a6 with SMTP id d9443c01a7336-1fb1a02400fmr7829775ad.2.1719977775405;
+        Tue, 02 Jul 2024 20:36:15 -0700 (PDT)
+Received: from localhost ([47.89.225.180])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac15388d3sm92046925ad.181.2024.07.02.20.36.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2024 20:36:15 -0700 (PDT)
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH 2/6] workqueue: Protect wq_unbound_cpumask with wq_pool_attach_mutex in init_rescuer()
+Date: Wed,  3 Jul 2024 11:38:51 +0800
+Message-Id: <20240703033855.3373-3-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+In-Reply-To: <20240703033855.3373-1-jiangshanlai@gmail.com>
+References: <20240703033855.3373-1-jiangshanlai@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Pobox-Relay-ID:
- 61C4FC20-38ED-11EF-BF38-5B6DE52EC81B-78420484!pb-smtp1.pobox.com
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-From: Nicolas Pitre <npitre@baylibre.com>
+From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
-Library facilities must always return exact results. If the caller may
-be contented with approximations then it should do the approximation on
-its own.
+wq_unbound_cpumask can be possibly changed without wq_pool_attach_mutex
+or wq_pool_mutex held in init_rescuer().
 
-In this particular case the comment in the code says "the algorithm
-... below might lose some precision". Well, if you try it with e.g.:
+Use wq_pool_attach_mutex to protect it.
 
-	a =3D 18446462598732840960
-	b =3D 18446462598732840960
-	c =3D 18446462598732840961
-
-then the produced answer is 0 whereas the exact answer should be
-18446462598732840959. This is _some_ precision lost indeed!
-
-Let's reimplement this function so it always produces the exact result
-regardless of its inputs while preserving existing fast paths
-when possible.
-
-Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+Fixes: 49584bb8ddbe("workqueue: Bind unbound workqueue rescuer to wq_unbound_cpumask")
+Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 ---
- lib/math/div64.c | 123 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 80 insertions(+), 43 deletions(-)
+ kernel/workqueue.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/lib/math/div64.c b/lib/math/div64.c
-index 191761b1b6..dd461b3973 100644
---- a/lib/math/div64.c
-+++ b/lib/math/div64.c
-@@ -186,55 +186,92 @@ EXPORT_SYMBOL(iter_div_u64_rem);
- #ifndef mul_u64_u64_div_u64
- u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
- {
--	u64 res =3D 0, div, rem;
--	int shift;
-+	if (ilog2(a) + ilog2(b) <=3D 62)
-+		return div64_u64(a * b, c);
-=20
--	/* can a * b overflow ? */
--	if (ilog2(a) + ilog2(b) > 62) {
--		/*
--		 * Note that the algorithm after the if block below might lose
--		 * some precision and the result is more exact for b > a. So
--		 * exchange a and b if a is bigger than b.
--		 *
--		 * For example with a =3D 43980465100800, b =3D 100000000, c =3D 10000=
-00000
--		 * the below calculation doesn't modify b at all because div =3D=3D 0
--		 * and then shift becomes 45 + 26 - 62 =3D 9 and so the result
--		 * becomes 4398035251080. However with a and b swapped the exact
--		 * result is calculated (i.e. 4398046510080).
--		 */
--		if (a > b)
--			swap(a, b);
-+#if defined(__SIZEOF_INT128__)
-+
-+	/* native 64x64=3D128 bits multiplication */
-+	u128 prod =3D (u128)a * b;
-+	u64 n_lo =3D prod, n_hi =3D prod >> 64;
-+
-+#else
-+
-+	/* perform a 64x64=3D128 bits multiplication manually */
-+	union {
-+		u64 v;
-+		struct {
-+#if defined(CONFIG_CPU_LITTLE_ENDIAN)
-+			u32 l;
-+			u32 h;
-+#elif defined(CONFIG_CPU_BIG_ENDIAN)
-+			u32 h;
-+			u32 l;
-+#else
-+#error "unknown endianness"
-+#endif
-+		};
-+	} A, B, X, Y, Z;
-+
-+	A.v =3D a;
-+	B.v =3D b;
-+
-+	X.v =3D (u64)A.l * B.l;
-+	Y.v =3D (u64)A.l * B.h + X.h;
-+	Z.v =3D (u64)A.h * B.h + Y.h;
-+	Y.v =3D (u64)A.h * B.l + Y.l;
-+	X.h =3D Y.l;
-+	Z.v +=3D Y.h;
-+
-+	u64 n_lo =3D X.v, n_hi =3D Z.v;
-+
-+#endif
-=20
-+	int shift =3D __builtin_ctzll(c);
-+
-+	/* try reducing the fraction in case the dividend becomes <=3D 64 bits =
-*/
-+	if ((n_hi >> shift) =3D=3D 0) {
-+		u64 n =3D (n_lo >> shift) | (n_hi << (64 - shift));
-+
-+		return div64_u64(n, c >> shift);
- 		/*
--		 * (b * a) / c is equal to
--		 *
--		 *      (b / c) * a +
--		 *      (b % c) * a / c
--		 *
--		 * if nothing overflows. Can the 1st multiplication
--		 * overflow? Yes, but we do not care: this can only
--		 * happen if the end result can't fit in u64 anyway.
--		 *
--		 * So the code below does
--		 *
--		 *      res =3D (b / c) * a;
--		 *      b =3D b % c;
-+		 * The remainder value if needed would be:
-+		 *   res =3D div64_u64_rem(n, c >> shift, &rem);
-+		 *   rem =3D (rem << shift) + (n_lo - (n << shift));
- 		 */
--		div =3D div64_u64_rem(b, c, &rem);
--		res =3D div * a;
--		b =3D rem;
--
--		shift =3D ilog2(a) + ilog2(b) - 62;
--		if (shift > 0) {
--			/* drop precision */
--			b >>=3D shift;
--			c >>=3D shift;
--			if (!c)
--				return res;
--		}
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index c738b3024cc2..cf1a129eb547 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -5533,6 +5533,9 @@ static int init_rescuer(struct workqueue_struct *wq)
+ 		return ret;
  	}
-=20
--	return res + div64_u64(a * b, c);
-+	if (n_hi >=3D c) {
-+		/* overflow: result is unrepresentable in a u64 */
-+		return -1;
-+	}
+ 
++	/* lock wq_pool_attach_mutex for wq_unbound_cpumask */
++	mutex_lock(&wq_pool_attach_mutex);
 +
-+	/* Do the full 128 by 64 bits division */
+ 	wq->rescuer = rescuer;
+ 	if (wq->flags & WQ_UNBOUND)
+ 		kthread_bind_mask(rescuer->task, wq_unbound_cpumask);
+@@ -5540,6 +5543,8 @@ static int init_rescuer(struct workqueue_struct *wq)
+ 		kthread_bind_mask(rescuer->task, cpu_possible_mask);
+ 	wake_up_process(rescuer->task);
+ 
++	mutex_unlock(&wq_pool_attach_mutex);
 +
-+	shift =3D __builtin_clzll(c);
-+	c <<=3D shift;
-+
-+	int p =3D 64 + shift;
-+	u64 res =3D 0;
-+	bool carry;
-+
-+	do {
-+		carry =3D n_hi >> 63;
-+		shift =3D carry ? 1 : __builtin_clzll(n_hi);
-+		if (p < shift)
-+			break;
-+		p -=3D shift;
-+		n_hi <<=3D shift;
-+		n_hi |=3D n_lo >> (64 - shift);
-+		n_lo <<=3D shift;
-+		if (carry || (n_hi >=3D c)) {
-+			n_hi -=3D c;
-+			res |=3D 1ULL << p;
-+		}
-+	} while (n_hi);
-+	/* The remainder value if needed would be n_hi << p */
-+
-+	return res;
+ 	return 0;
  }
- EXPORT_SYMBOL(mul_u64_u64_div_u64);
- #endif
---=20
-2.45.2
+ 
+-- 
+2.19.1.6.gb485710b
 
