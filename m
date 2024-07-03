@@ -1,84 +1,91 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0810130A4D;
-	Wed,  3 Jul 2024 06:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1336313213B
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 06:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719988754; cv=none; b=L9nN7dernSMLig6y1gfn7qN3eQdVxF0GsG+uaGU0hrUfahUtlIkk4DWLBBZLbuEzI68nOmGLh0TxYC7TRIpohWwl3uf3P83ofsnpeAwqok9JMpSPnsEW8l+Au3HVJJHmlRsaJCl58ZSAiYtYRntNOJGThOe9DsKrgYoh4Iqlhv8=
+	t=1719988780; cv=none; b=k/TPLQrUF8JTVt32ySm2Lo/CO1G3YQsQ0qb+cOdOdVS/F+O71g4ZvDG6PUXptTffk2MDhztHTcWi98w8jMrSM5UYmiDQ933g1FNgjqrHOhK97g16ULTaOJWvCQmsBzbyaHmTKm6Jbj1LcgzQ77Avo/lAHiAH0pmPEgxvMO3qyig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719988754; c=relaxed/simple;
-	bh=YtF5km8cVaM3xxkWxd9nXrDDcYt04/mc+bKwK9djk10=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BMrFic4nu6btCtkx/0soOYbfkJJZhNSO5qvex3AWcPbOqYt/ZZJzAP14Pjbmbus5bBjYMkoODmGH7jeIC6BtWGQ06AhNsCrm9JVbTUJOUSyWOPWgjM9uA+JvfC2781RH4LHPsLpZzaGFk66sfbond2fp4poY8Aza0Gj8bUNsavM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kWCkUr3o; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719988780; c=relaxed/simple;
+	bh=2gfJcP+dPdB8Ll2+BGwToOilKKAE5E2Ikpq/CZOFF+Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mOPm1zbsCREQZTmoP+BxF1W8LlDhOgPwfvAJlL4ondbhD3DdtVTifNpjMMr8Ao1EvQIOcB0sIAFvWrhj3jYrb4Ccq5Zg0cB2oXrIv0lXfWcy2S0uJPTK9gs7+/Ehdu6p4AqKVYlL6fic0iROAG8FBgBPhs/U4iiqM6bb3CXyHZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xI/6RlKa; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kWCkUr3o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=MPH8c
-	X+M9F6ljdADbJ95yi7S10RAty+yWLX1qeeJzKg=; b=kWCkUr3otpV+UJYWdDnTF
-	8fPmojipHFfTHsi5ITzWye+s24/5eYl8q7L8FioWn/0bAcdtpBG7rafMLLgb1PYr
-	D73SPWyi6W1uNJipBnkDPgcgb8a8j+d55NdhVHMhAo+9ugViC6jVQgAXlkqVvu52
-	g7cBDsSpYFOv2FMl/IGvpI=
-Received: from localhost (unknown [101.132.132.191])
-	by gzga-smtp-mta-g3-0 (Coremail) with SMTP id _____wD3P62q8YRm357BAw--.8878S2;
-	Wed, 03 Jul 2024 14:37:30 +0800 (CST)
-From: Xavier <xavier_qy@163.com>
-To: tj@kernel.org,
-	longman@redhat.com,
-	akpm@linux-foundation.org
-Cc: mkoutny@suse.com,
-	lizefan.x@bytedance.com,
-	hannes@cmpxchg.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	Xavier <xavier_qy@163.com>
-Subject: [PATCH-cpuset v10 0/2] Add Union-Find and use it to optimize cpuset
-Date: Wed,  3 Jul 2024 14:37:25 +0800
-Message-Id: <20240703063727.258722-1-xavier_qy@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZoRThI4lcZLxBlwc@slm.duckdns.org>
-References: <ZoRThI4lcZLxBlwc@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xI/6RlKa"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52ce6c8db7bso7741651e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 23:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719988777; x=1720593577; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2gfJcP+dPdB8Ll2+BGwToOilKKAE5E2Ikpq/CZOFF+Q=;
+        b=xI/6RlKaYz5tVsdTz/fuXKnHhRs0f/SUvnte34B7w1WIbzfVRho2oLHcsaYu1M4vRW
+         Tn3siMniupBYIgHjTLeN81hyWMoAOjpNxHRvmCjNxx1ipnGC5Ia7o6sRwcyFgd60Xn5M
+         cFXxK5QpuYI4ufGw5EsS7f9gu4z9R778xVWOZh/QnBDDT+B6s0qK+8F3bVizqd0K9gPZ
+         ySixqHO+wNgTKQBWEvTYKO7YGiKOlOtt4Pz4gnSPDC8f+VRrvxRi1qOcN5eXbX2EaHoP
+         fJgRmmkOd6Ak9e8VOZu16b371nlSuIag8YzB8/EdIuDI0aXTFwcmMwqZ8oI9hjL5+5ab
+         He1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719988777; x=1720593577;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2gfJcP+dPdB8Ll2+BGwToOilKKAE5E2Ikpq/CZOFF+Q=;
+        b=poay5g8DkOkO4xi7BPn5DmJkHSoNHeOof2EKlu5ofmen/XfkgRkSEiz5TKCHXPncLq
+         KQHRKHt9eX5FDu2UhkziPEeUuCV5+3wI7hIxG0KzMKF8I82oCp8buWY4MWAawuAa8l06
+         PG3NOZw/SplSp+fX9K7tXtVVJ92pMrr7HDPkbjglm6UvxX3dEm0qfsB5ySqc8Yl+5wHN
+         m6lJJ57V/C7USdjF/Y9McxJLAycNGrXKJoLiFdpdIRBZedrEAAcv39/rqLpKKlpP0t7f
+         dijdTMPu2CMGrP3ZBspoHI6IUXd0o8vQHqNAzbnPH+s4Aj7eutzkIyQc5JjoQfxXjXRt
+         lbug==
+X-Forwarded-Encrypted: i=1; AJvYcCXFNngSMiYHGcvMSBymvUkJ5W+tz8NlaldVf1L8G36Dxzhk69nLmRcAuyeaJ9mpYUx4VPS+GbrknjmJDgeB1br2lkYtS7zgJLgQ4vJg
+X-Gm-Message-State: AOJu0Yyr2Gv0Hh97mcgL/ywHY7IKYqjBYwpBjwjUsCyagihPd/qKDwyk
+	GyB/X3UJPyQ3fZP/nC5rsp4HAC7PLSd3Yh84IZZ48+Ib5S91m/VFWF+cioQrJSnC5NO16JzZyn1
+	PQdJe7VCYsGukELQgaX/qURLRAFh5WKCxTuW7qg==
+X-Google-Smtp-Source: AGHT+IHU9DUx6SzBnuSCLTwk5I/hgKcSP3g1gias5lVbToL50BaDFFU6mIr8rhEcT8TXJ5tdUX9Gl+FsVBvHtHEo4a8=
+X-Received: by 2002:a05:6512:3b88:b0:52c:7f42:32c9 with SMTP id
+ 2adb3069b0e04-52e82752b89mr6919968e87.67.1719988777074; Tue, 02 Jul 2024
+ 23:39:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3P62q8YRm357BAw--.8878S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Xry3ZrWfAw17ArWDtF4UCFg_yoWfCFX_Wr
-	WkXayjkw1UWFn2gay8CFyrtFZF9FWYgryvk3WDKFZrXF4UJrZrGr1DJa4DXay5XF4kAr43
-	Gas8Jr4xtrnrXjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUcyCJUUUUU==
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiZQwREGXAmyucugAAsb
+References: <ZoNAWoJ12DyApZ1s@google.com>
+In-Reply-To: <ZoNAWoJ12DyApZ1s@google.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 3 Jul 2024 08:39:25 +0200
+Message-ID: <CACRpkdbS8MDTZLwzM+OFso0-dYg6SwN1NV-tqPdD32HGs3o6qQ@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: Alchemy: switch to use software nodes for GPIOs
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Arnd Bergmann <arnd@arndb.de>, 
+	Martin Schiller <ms@dev.tdt.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Tue, Jul 2, 2024 at 1:48=E2=80=AFAM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-All the pointed out comment issues have been addressed. Moving forward, I will
-continue to look for applications of the union-find algorithm in other parts
-of the kernel.
+> Switch to use software nodes/properties to describe GPIOs for the
+> ADS7846 touchscreen and the SPI controller (away from using GPIO lookup
+> tables). This allows removing use of ADS7846 platform data, which will
+> be going away.
+>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>
+> Compiled only, as I do not have access to the hardware. However I would
+> very much like to get rid of ads7846_platform_data from the
+> kernel/ads7846 driver, and this is one of the last 3 users of it.
 
-Kindly review.
+I agree. The years of working on device properties is finally
+starting to pay off!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Xavier (2):
-  Union-Find: add a new module in kernel library
-  cpuset: use Union-Find to optimize the merging of cpumasks
-
- Documentation/core-api/union_find.rst         | 102 ++++++++++++++++
- .../zh_CN/core-api/union_find.rst             |  87 +++++++++++++
- MAINTAINERS                                   |   9 ++
- include/linux/union_find.h                    |  41 +++++++
- kernel/cgroup/cpuset.c                        | 114 +++++++-----------
- lib/Makefile                                  |   2 +-
- lib/union_find.c                              |  48 ++++++++
- 7 files changed, 332 insertions(+), 71 deletions(-)
- create mode 100644 Documentation/core-api/union_find.rst
- create mode 100644 Documentation/translations/zh_CN/core-api/union_find.rst
- create mode 100644 include/linux/union_find.h
- create mode 100644 lib/union_find.c
-
--- 
-2.45.0
-
+Yours,
+Linus Walleij
