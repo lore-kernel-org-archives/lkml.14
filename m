@@ -1,138 +1,109 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B62181CF6;
-	Wed,  3 Jul 2024 16:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CFB181CE2;
+	Wed,  3 Jul 2024 16:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720022906; cv=none; b=KEGPhuq1In/TUkXdVVVdIGl0RnJzsi4F99z1A+Y4VGYGxYlaQDBMizZXXiY+FryFjLObAcd+Q1UuUnp6D7/Si/94iuNn2xjW5UJlyhHxNKrcHd8psJsIY7s9yytBu/Pl/qnC79W7/EDN2OElrpiStVS3ZtoCIZztrDsSDfxVZvA=
+	t=1720022922; cv=none; b=cBAtLIz+OL1ki+Kl58dEOc34qX6YiLGxYEfyieLECbhFSPZV6sgcL4xgXTSskd+nQFuKG8Ho49JpZx/HfcCAo4wt3kgnumRC1q8j+XIRK07b/6L2V5e7W8iEkpqFlVGJFG3sq9ansg5kPLzLS1stTWEj1lvJZUri8b+KHUq9d74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720022906; c=relaxed/simple;
-	bh=7BaNISH55n/A/MVA9c++n/zTtTouz5E5BL82HUun+bU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mb/Z6a123ES30A6oTsstbCRVPRZtvp/JEya6HKuX6l+9c/KCGaRKQpcYX5m363vvRkpvbD2o6FvvVKpjMsMckEbKzqFdq1dUBdfPzkO5dFQ9KOpIi5MfSBLD4PkX7KuXQITOb0mGcpEBQLzgTRwjmxLJ+0dQi1TvJBvLzFFof9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=WuZEpSdb; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1720022922; c=relaxed/simple;
+	bh=07orgEznonTXaOIHNFt/N1sf+pDGLONgsVdR7FpN9vU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=uKhXC8FfukMWuW8b7dxSmcxFAf4MA5loltOBGBdjcbl+0XTtM8chgs9AMTC7Fbhm6DIrRndOm4vP04CxigB/2CxDeWOpS6uYFVNQ9dy7knZZNqx/F7p91WN16qkyaRBKtNQPOufXDXKGPtYkw1mS2io/fci9M8EbbF+7fGNOq9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=oZkpvrM8; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="WuZEpSdb"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463FtSDj024015;
-	Wed, 3 Jul 2024 18:08:10 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	P+kNXBwzIwoxxa4OyxqdIx5+Zo644vt/ZB+ntrLN0Ns=; b=WuZEpSdbcUXBU1Ff
-	HPXQfgAl3nQSUnwv55nc8rHvADFKNtYeApr+aOCwXlu01xEROOu+a5V6l/pX01Ej
-	/Y2hyTe/dUxKv3haIzTHfoCwHAG2jQxLQ+ODads6n+/qK14dxBJtossQ2n+wLjH3
-	q2KTi8cLHW9mDNt3ERzIohzpNUSxpXHuu1gtCVd4H+MJUIhDWSZ0AFy2NVx2aoee
-	adIePkC0yny6Xjik+ne2359vk4plTvnCwqgN+DfOImUyBKvV+dWhTmJ5U/vQB5Ne
-	Z7yG5rU2z1wiVAnNBDYmCNmSfQki3b2WX/P5rC4DHLfIqpwwp403FPAFVrmCt02I
-	/b+Gtw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4029kx1ggf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 18:08:10 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0095D40046;
-	Wed,  3 Jul 2024 18:08:04 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A28E02291B2;
-	Wed,  3 Jul 2024 18:07:31 +0200 (CEST)
-Received: from localhost (10.252.27.110) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 3 Jul
- 2024 18:07:31 +0200
-From: Olivier Moysan <olivier.moysan@foss.st.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Arnaud Pouliquen
-	<arnaud.pouliquen@foss.st.com>
-CC: Olivier Moysan <olivier.moysan@foss.st.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 5/8] dt-bindings: iio: add backend support to sd modulator
-Date: Wed, 3 Jul 2024 18:05:30 +0200
-Message-ID: <20240703160535.2277871-6-olivier.moysan@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240703160535.2277871-1-olivier.moysan@foss.st.com>
-References: <20240703160535.2277871-1-olivier.moysan@foss.st.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="oZkpvrM8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720022896; x=1720627696; i=markus.elfring@web.de;
+	bh=07orgEznonTXaOIHNFt/N1sf+pDGLONgsVdR7FpN9vU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=oZkpvrM8xwVQ7XI5woMiqdzY/u2dKaIegJszLY91DeWPg66nsqdG/FtgjPyR9odg
+	 reD1lLMgQ331UVEr6+NREDbVnvWHpMWBjstONtypiCrGbXPAB90QcO6jpXRHSl1Gn
+	 kUG5shMRwd5QcK+t7J6mDZex62t+VV1oKdqrhERhu3Z9VeKLqyGJQ6fttVsM/nxCB
+	 caoxJhveaVOKu+PLSpI99yyQVXL9GrTDryBi14nf90O844EMV/FFyFVDYmw2AoHKm
+	 5NabEYQ8lhDskGZkVTc02qmRptzL4ibT21nMIlp8hrC98jBA8M35Ix0kqn0IW/k8U
+	 1i98Q6N63rvvyXUFnw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MLAVc-1sh7LO2ee2-00TfqF; Wed, 03
+ Jul 2024 18:08:16 +0200
+Message-ID: <170879dc-88de-4c08-93d7-57756daca4c6@web.de>
+Date: Wed, 3 Jul 2024 18:08:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_11,2024-07-03_01,2024-05-17_01
+User-Agent: Mozilla Thunderbird
+To: Junlin Li <make24@iscas.ac.cn>, linux-media@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240702132413.4318-1-make24@iscas.ac.cn>
+Subject: Re: [PATCH] drivers: media: dvb-frontends/rtl2832: fix an
+ out-of-bounds write error
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240702132413.4318-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VhPOAXdGj5dgCOol1vZtrpOQqZEObNHjQFtD5lJZmM8jnW4FXzA
+ enGASuwiIRqSoGaG9yCDX8XozDPVzVZCMpMaLzn9kuRbnuyjeEqPnOYmH5RVuQr/Y7XEbru
+ z2WzAEwrC/pLIA+oivPIQyKHKHsayImzFsvwHuIOirQyX7pnmL5oOnJFg/5o31AWkCyI1A+
+ YBh5hb4ga8GZoPX9QjM/Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:DBJ8xYYnUw8=;PJRQ3jGGArGOK9kR+6p9MKH3hcB
+ MEYm3WMIve8yDCOsueqwU3FelYdtBYf3vZ/DUNmMuLbk8Ba5Hgtn01TAEIoeYxs6lnoTgKJrQ
+ taUFYdlD22dYWuj6zw2rhGPWYWisIx5bS2jR5UQBvF7EhNlaANVtNlmkeqb2pJqWYPnV6R+I3
+ vN3TM45Z+NSSuqDZ+9AxFocH5yN8lwVh3T6D6IRMNBwcuDuURd+6NDKOchJguD7FOMN72QeSC
+ gdv+wFRcVK5NO0eDpu9Eiq35thwTsiwuojWfBoSFVlbHO+NtlaSODLwxCST9B8dFdkGC2I8Vk
+ lxEQUoLtX+mQiZygzaQ0gBixLB24jC2MX2uEDwWG0Y9tQ0Fq1n+wJxVzIUVU6UFKVCo+icLaI
+ FWYQ2TSOWuWP3eoJ+t5OMMbSQ3kZ88TYitK1yuYT8wnYCONf5c5q2kKM/yR+nIYNfO9Rbv9WQ
+ nFYWI+K23BG+c+Pca7TcuXBY7HIM7+Tkpt7bknCivd8NKzyZS4tKAYT5Q4Bso5X2dC5nUDq6D
+ CSHndcKpyi1agchmx053CtE1V+hAFgoMXApJdr1iqWEsqzrqWWIT7CAEct3RvZNLcvWobHKfi
+ HpCwGtjK+j9KwFhdSvnuZH5BLFkPG3DyDQ+FoaavMJFDQSwkwY+rSZmAd5AlYOQPvKll1umPR
+ p8UoTxAfb1cVNbq2nCF6spyMXFLUtRaDXDrN74vT2+WNk56JYCn4a5GMrCFVXsIU1AzNQcZSe
+ E2lDPy9SGp6uGEhoZ98/GsOrwCC1F66jmNYe6tbhnaj/Y00/pOwQV+PESPGlZhGNgrgXuIPUf
+ 1LOX3X6pCwDbHVfJT1Bu7GBbAQ/Y5GeJ8Wi0lrpWxTnqQ=
 
-The legacy sd modulator driver registers the sigma delta modulator as
-an IIO channel provider. This implementation is not convenient when the
-SD modulator has to be cascaded with another IIO device. The scaling
-information is distributed across devices, which makes it difficult to
-report consistent scaling data on IIO devices.
+> Ensure index in rtl2830_pid_filter
 
-The solution is to expose these cascaded IIO devices as an aggregate
-device, which report global scaling information.
-Add IIO backend support to SD modulator to allow scaling information
-management.
+Please correct such information according to the shown function name =E2=
+=80=9Crtl2832_pid_filter=E2=80=9D
+in the proposed diff fragment.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
----
- .../iio/adc/sigma-delta-modulator.yaml        | 24 +++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-index cab0d425eaa4..e34aa560da63 100644
---- a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-@@ -18,18 +18,38 @@ properties:
-       - sd-modulator
-       - ads1201
- 
-+  '#io-backend-cells':
-+    const: 0
-+
-   '#io-channel-cells':
-     const: 0
- 
-+  reg:
-+    maxItems: 1
-+
-+  vref-supply:
-+    description: Phandle to the vref input analog reference voltage.
-+
- required:
-   - compatible
--  - '#io-channel-cells'
-+
-+allOf:
-+  - anyOf:
-+    - required: ['#io-backend-cells']
-+    - required: ['#io-channel-cells']
- 
- additionalProperties: false
- 
- examples:
-   - |
--    ads1202: adc {
-+    // Exemple1: SD modulator is an IIO backend device
-+    ads1201_0 {
-+      compatible = "ti,ads1201";
-+      #io-backend-cells = <0>;
-+    };
-+
-+    //Example2: SD modulator is an IIO channel provider
-+    ads1201_1 {
-       compatible = "sd-modulator";
-       #io-channel-cells = <0>;
-     };
--- 
-2.25.1
+> does not exceed 31 to prevent out-of-bounds access.
+=E2=80=A6
 
+Please adjust the word wrapping.
+You may occasionally put more than 51 characters into text lines
+of such a change description.
+
+
+=E2=80=A6
+> Signed-off-by: Junlin Li <make24@iscas.ac.cn>
+
+Under which circumstances will applications of the Developer's Certificate=
+ of Origin
+be reconsidered any more (after three different names were presented so fa=
+r)?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n398
+
+
+Would you like to omit the text =E2=80=9Cdrivers: =E2=80=9D from the subsy=
+stem specification?
+
+Regards,
+Markus
