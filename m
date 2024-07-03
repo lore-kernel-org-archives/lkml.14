@@ -1,108 +1,130 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48D525760
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 22:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6336313D638;
+	Wed,  3 Jul 2024 22:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720044926; cv=none; b=GuyyblQrOJE2ysmiAWQBFdtHwDUi5d7ASj7ax2K5thPiXxKmr7RQuFMXC9carw4P3GQueRyjatKp/UVSe5chgCvqklUFHjYwINZhlfjVgQJmhYtWtGxFlXBPai/WQPdTL3sOM0wjnkZ0JWvwggkrOuGpWM2tbNYrVtHSODuTwro=
+	t=1720044971; cv=none; b=LW5Uqug29/oS0V0JL4ZmbJCiLOfJRe07Aep0O9SYuD+oDK9EoLJkDZcMXRmFcqAaRP9ylSdOKzmd5dTFpRRQT6dau0zoc5MM3IRiGoef45IE5BZlnFdMwFNLPuWdKK45DkoCNxpWefXf9IUZnjulg0cGOMFs2huokp88ON87hFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720044926; c=relaxed/simple;
-	bh=5U+97VIdUMemMTBgeVDVpiqBOk72ICdW8Uhny9VtHkQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WXINmPGlN6R8iRgyfWuf4XI0h0ctMdASUile7TQ9EDEVGk/LpJVc4oWdaS+NtOHHBXhej4wqIMkJLqUJW3KhJGJjdudENRGKoTzuMfun8qlI0idV8O4D/fWM1Ohw4NsJwkmCEnPXUglHY4h6/12EQMvMLKfYunyy9hLFjMQxU/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RYDDIRu0; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+	s=arc-20240116; t=1720044971; c=relaxed/simple;
+	bh=8qnEkM1tCQqlFds8Vo++c+Ec0foFAGlgMtXpuV4BuYM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=MZImQ1BM5nMPIHAKmfHTbF7cucQRXUTTROQaPekm07GlbDeg9ZUodAzFHmY1DwYxp4kOO0TtrMlLBE5EQ9DYfoPKR/XlRb3yB+3EjGyK2HBgjefZ/L/VyHt27YaAyhCid2oVuav5sIIu1mtI0uaB4mQbIq1z4tou+4R8K0D7b1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Da5lJRSA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RYDDIRu0"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa73db88dcso30075276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 15:15:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720044923; x=1720649723; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VbdaRivJDkEZ8uZPg1xaCceJnWoje7EsJAVnR1Tx1rc=;
-        b=RYDDIRu0JpJ/ydPcP7D08pJFpNhaixFtw+uMuPoJvsRl2NO2I747tL0jPtcRY1zjH0
-         hsieGfGbYC/dDSo4c83qhzFgngSlVxKQmbQSmZSelGcRMpugSgJU4goC4ZZkawaWXi3d
-         Sql7Wt5GMkyKdldgUk8asFcGWpZE7jhFwJbumvel7Q1/tgdkcmmP3gF268GFCYdwUdZ7
-         Fv/FmvzRYuSdYjIz5PwJ/Yv6gtVY1yWXwLXRH50lEFG25pfat394KsiifGJS8SE7YM6e
-         +l0djU5E/LtT62C4f8xyY5sNNADOklUpqs7EfwCY768yAiei0fJvB3E06IUp8oarTDVe
-         G24A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720044923; x=1720649723;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VbdaRivJDkEZ8uZPg1xaCceJnWoje7EsJAVnR1Tx1rc=;
-        b=PXFc4BC76pVOPuP2SNPU1cJWh8voCbWlgQ5JrOnoS7gZHa3q4Unvg0Xx1zSctQC39P
-         DEBgVQUEfV/rx9se5gMD/a8ofnfUJ/hYE2v8PfL65ysx8t0aU5nYWKBpWun4yvH/2JE9
-         Rtg0o4ker+xXDyRRKbsVnQM8WF1ljvJXfK694uOmZjK+NcykOasnD8q3YQ5i06cFjWfg
-         97MuPamAgIJoN0QrTAPBbEQsvZHmPtFSuAgssojhmCHZdmNnmz9YvNSQJE3dNlK6VQNa
-         fJef93yf7QPL9E8TU3xKMqlsHaslmJ/+Er7FSPA60AvWtoxQnAF8xeMufdxPbJDbz6s9
-         HOXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSbD6RnKtLrFRYn1T6Ch69yrN3reJ6RkC5PUm0ZmX3z5W3PkHNZst+XLd3idLGqM6tRVU8SBdkkCcXVNrOAe2xjAuhwWr7gGagsHss
-X-Gm-Message-State: AOJu0YyPJypx8fQ+kwTYXiTXY0adYEBd8jSKVdXIOUeguePpjfxr1aKa
-	2++qx83zt4K0OFvTzWR3oNwP3GW+HYNqhHoDQ9o5rOVx8Lv3Q5JlHlYg1tqjRrjL4SR+rj5gZZu
-	VUw==
-X-Google-Smtp-Source: AGHT+IEmFnRUqMiMpV2rFepFx+AiCteobqdvOcvm13aNrOY2ADxAQRCBuPvTOUGzOwXbPQD/DL2+RWfWE0s=
-X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:7049:5206:eaa8:8edd])
- (user=surenb job=sendgmr) by 2002:a25:e20e:0:b0:e03:5312:c053 with SMTP id
- 3f1490d57ef6-e036eb2ffb3mr41300276.7.1720044923618; Wed, 03 Jul 2024 15:15:23
- -0700 (PDT)
-Date: Wed,  3 Jul 2024 15:15:20 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Da5lJRSA"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463AATXK013681;
+	Wed, 3 Jul 2024 22:15:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5gx2z++go3lmdlJ7suDIvslktQNjYu4UWvXHRKPW/EM=; b=Da5lJRSAWNEl77gW
+	z5ByX80GtyWtJC9X0cj0EEoBpCsdjlMy7BW5GhuR2WnQz9Oqc5x3iRC+j+Mck5hS
+	Z/JsveEJFVGXzGxVww1zuvRIlBpOGhPb9FWZt8ACFVpMC3gl3vsGMcVmz1W0PdBg
+	O4mI8PhUyv7EGSfUuVxoJn19eB6JgnyeAhw4NEGW+5TwOmLyGrv3C+MP+ZuEGkaZ
+	8qT8LzaSyX59UqLmwvpNCTq4J0GfHq00hc/At+Vkm1YJC3vv78R5SSF3/tJxZnmW
+	tj3E7SmbytuSzDJ/PD6j7GHyA0jvrpdqkHT3mxqlsB9WoqWf2BIGqrSvS+uo2EWK
+	kH2nOA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4054ndse7r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 22:15:40 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 463MFdjp006141
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Jul 2024 22:15:39 GMT
+Received: from hu-scheluve-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 3 Jul 2024 15:15:36 -0700
+From: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+Date: Wed, 3 Jul 2024 15:15:21 -0700
+Subject: [PATCH v3 1/2] dt-bindings: net: qcom: ethernet: Add interconnect
+ properties
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Message-ID: <20240703221520.4108464-1-surenb@google.com>
-Subject: [PATCH 1/1] sched.h: always_inline alloc_tag_{save|restore} to fix
- modpost warnings
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, kent.overstreet@linux.dev, 
-	linux-kernel@vger.kernel.org, surenb@google.com, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240703-icc_bw_voting_from_ethqos-v3-1-8f9148ac60a3@quicinc.com>
+References: <20240703-icc_bw_voting_from_ethqos-v3-0-8f9148ac60a3@quicinc.com>
+In-Reply-To: <20240703-icc_bw_voting_from_ethqos-v3-0-8f9148ac60a3@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S.
+ Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Russell King <linux@armlinux.org.uk>, "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Bhupesh Sharma <bhupesh.sharma@linaro.org>
+CC: <kernel@quicinc.com>, Andrew Halaney <ahalaney@redhat.com>,
+        Andrew Lunn
+	<andrew@lunn.ch>, <linux-arm-msm@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: gBmN92ICWt_uSGDvqlxDwp8_EW8QRyEy
+X-Proofpoint-ORIG-GUID: gBmN92ICWt_uSGDvqlxDwp8_EW8QRyEy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_16,2024-07-03_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ phishscore=0 impostorscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407030166
 
-Mark alloc_tag_{save|restore} as always_inline to fix the following
-modpost warnings:
+Add documentation for the interconnect and interconnect-names
+properties required when voting for AHB and AXI buses.
 
-WARNING: modpost: vmlinux: section mismatch in reference: alloc_tag_save+0x1c (section: .text.unlikely) -> initcall_level_names (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: alloc_tag_restore+0x3c (section: .text.unlikely) -> initcall_level_names (section: .init.data)
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202407032306.gi9nZsBi-lkp@intel.com/
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
+Suggested-by: Andrew Halaney <ahalaney@redhat.com>
+Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
 ---
- include/linux/sched.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 61591ac6eab6..a5f4b48fca18 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -2192,13 +2192,13 @@ static inline int sched_core_idle_cpu(int cpu) { return idle_cpu(cpu); }
- extern void sched_set_stop_task(int cpu, struct task_struct *stop);
+diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+index 6672327358bc..f0e8eaf51137 100644
+--- a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
++++ b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+@@ -63,6 +63,14 @@ properties:
  
- #ifdef CONFIG_MEM_ALLOC_PROFILING
--static inline struct alloc_tag *alloc_tag_save(struct alloc_tag *tag)
-+static __always_inline struct alloc_tag *alloc_tag_save(struct alloc_tag *tag)
- {
- 	swap(current->alloc_tag, tag);
- 	return tag;
- }
+   dma-coherent: true
  
--static inline void alloc_tag_restore(struct alloc_tag *tag, struct alloc_tag *old)
-+static __always_inline void alloc_tag_restore(struct alloc_tag *tag, struct alloc_tag *old)
- {
- #ifdef CONFIG_MEM_ALLOC_PROFILING_DEBUG
- 	WARN(current->alloc_tag != tag, "current->alloc_tag was changed:\n");
++  interconnects:
++    maxItems: 2
++
++  interconnect-names:
++    items:
++      - const: cpu-mac
++      - const: mac-mem
++
+   phys: true
+ 
+   phy-names:
 
-base-commit: 795c58e4c7fc6163d8fb9f2baa86cfe898fa4b19
 -- 
-2.45.2.803.g4e1b14247a-goog
+2.34.1
 
