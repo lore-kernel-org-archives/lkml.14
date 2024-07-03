@@ -1,179 +1,75 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FFF1849C3;
-	Wed,  3 Jul 2024 17:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2062C17A920;
+	Wed,  3 Jul 2024 17:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720027434; cv=none; b=H0YKhEd/KW4IdQLs0YAxsRwcmoU2zUF7gFe2X0w8+DIjQ4PzTAtbug74RjiyQ0FKrL/h+evk5yCVtS3CQIGmJaaxg9AqUAekONNaoyVWkzem0QMm1r53/MziT4Ks7RUad6BMn8AbVx6grdSJu9EySz3XTOOtUlUxfS4PSB5XiHA=
+	t=1720027470; cv=none; b=k1TjQoFAL9hIpdrrcP9O8uvDfPZtp3LcstsHx14fDGBKJRylZZ2dvTGGw70aIpA7FlEYCKGOKcGur5wPL3iGvaLnens+011MnIqww8qQcMi3bSiKso0Cz+gwKF36+Gt9h16oi2etswiSUJhA4rWFMFEZh7AgrB4pNMa2pQggoIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720027434; c=relaxed/simple;
-	bh=z67pOF54298L0LiTmDmYaTs/VX1vfsc0xJhQPZ9JdJg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kbodpq7azPviL6u972bYgaVHSBgio4gUI53ytdI8P1ouZpdRZ1jfs2ukz/Cd9h5vxz0SesYHgZGp7H9Rp9xeLOeVgwee50N8l2481bEnxe1HWrHW6BblwtwpnAkPitIDGs+EDAsJIO+CzqhGIY1cMa2kCmEVufEjR7thJlot1Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HIyLaSsc; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720027470; c=relaxed/simple;
+	bh=iuBZisjNdWYlQ9wx+QgfvIlstiZiWQefpRZWHhmW+I0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=G/KLIQocIMNlJvBVIzu70fDYztFkGwU+xsDdWE35yfuMZzdatqM4BLNV4nKaJU3z6waO7HFZsf+abFFJc8FYGXz7s+sbUCTCaVY/AepoTd/4uQKkykKZwt4R4+40w/fhRskYIu1eDOfKZiC9X16snUmpB5QYva/LxxqjaTFjt/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmdtdkn8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIyLaSsc"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a724598cfe3so698018266b.1;
-        Wed, 03 Jul 2024 10:23:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720027431; x=1720632231; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0yydqW0pEiTRrPXeTkUJn0GQeIWHeWEWO75cCPWOmNY=;
-        b=HIyLaSsc/8S0A4uQ9TcnmSxsCpPlm7UsnEayt3Vr67+SpDf0FqLlMgeOJOe/WWTC/2
-         aJSvt3l+cMKUmo0JKovT6brEbI7+oPc3JrXsoQCU7tBNWjbHCMd51TGQCsNzntpvPaoC
-         7HuA1uj8Txm2pva5pH9W6c8k5ixnkcXVrDL4rDk4TkYIpdeUWYdA9QZmkb/kQmJY9SED
-         SxiJjtGvo3iOYMJXy3sCgSAXr1d0TXqKlX7wqH3mRJWWx6Ymxce/djqqM4P84CV2r3us
-         mSdP/8LUl3b7JSWSL416NWTVNA45tLfmqgfRYiecNymjVgOxGwMsSP0tGeSDado7JfkT
-         CMXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720027431; x=1720632231;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0yydqW0pEiTRrPXeTkUJn0GQeIWHeWEWO75cCPWOmNY=;
-        b=s3/Ff37m+qwF0s4iqIN8NjuzfkGZIp8On+AL3t50BgcSUMiTH4tqMqwVRUGhonBRqM
-         nU7LWxrBFMPXIMyEff0iXq3uCFhmFjF3VGcxIlBGLIxvGAPaj+FZFUeuTiZPk0A3JmI1
-         6dCrQQKMWemmcf2ihW7DC7V+Ka7hbFkRkIDfMVB2OLAyWN6+6qkOH2ItMtJOC3EkUF4w
-         biO9o4wOcCOdASLgdL38UQAKLeDQmW67V0F+N0A6N0akgFVkmUdtmrP6hUIzUmIC6bMF
-         +j1q37XHRVMENjxzVE+YKeDrecgYSWGx5i4j2wXCmwviIUriytWOXqqRWGPy2K7YsAcl
-         1K0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV7FR4zK3C6dDmc4yO6+DCUi2i4/EOdW/RDsNPH+sns3pk2gECYnZCRUKUTX5zHupYES74w8P1ZkIyoC4Zny0iXPIMdwyf6GaavMReyg+6OLvADilSymDGJD2tDNXMP4uucyavXU1AlyVH/5Opmvhr9ng7u3R8G3OYyPZL+RihRirQDW3pG
-X-Gm-Message-State: AOJu0YymUPot0MjUWYFKg5xvFfQOXgs2Hge1EWx/hFEQ8cM8Y0kLnC3h
-	upIwl28x3gCqJs642upkF2oNXSZLRvyy3Vwl5Kzld1A0NBukoi4u
-X-Google-Smtp-Source: AGHT+IGUvGNq+Sz+kFZMMyBKyjPhcOdVU6Um6y2Uyc9CbZDox0PUbeXGHKqoO4cqonps8AAl8uEA/g==
-X-Received: by 2002:a17:906:360c:b0:a72:a206:ddc2 with SMTP id a640c23a62f3a-a751449ef55mr722801666b.36.1720027431258;
-        Wed, 03 Jul 2024 10:23:51 -0700 (PDT)
-Received: from krava (37-188-178-233.red.o2.cz. [37.188.178.233])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7400456582sm427829466b.153.2024.07.03.10.22.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 10:23:51 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 3 Jul 2024 19:22:21 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 bpf-next 9/9] selftests/bpf: Add uprobe session
- consumers test
-Message-ID: <ZoWIzZzZaqNR6dLm@krava>
-References: <20240701164115.723677-1-jolsa@kernel.org>
- <20240701164115.723677-10-jolsa@kernel.org>
- <CAEf4BzYzpyZL+hQogXp-BaWEu6CFvWyicCOnGUxJawMpErLWRQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmdtdkn8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1850FC2BD10;
+	Wed,  3 Jul 2024 17:24:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720027470;
+	bh=iuBZisjNdWYlQ9wx+QgfvIlstiZiWQefpRZWHhmW+I0=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=nmdtdkn8mOlr1tXHqHfwLxD4nyX69ommK2D2v59ifgA7Pm/dJRbeLpruVEYUDoJY+
+	 SwLkqmjNcSkRvY+b/Mytpp22d3V+glQwtk2joScw5ErXgG5PmWqBWOKvJ9Yu1tUg8G
+	 z2WkY0UG2hvgJXlC4Aw0vZh1N0TzTDsXygoTV382+/kkLMNV533GnbyC4gw2UMfME/
+	 wKWT/QSslqX+qEdFIGtWzdQRYD6N3MjuBvVjWxGlxP7ikh0fXFjypD3I8nPt5pCy92
+	 iqaHOrVMjYI+rxOij/QFRS6yfCTGbYc8CbW+ijD/YoRqlq+02aq2C303wP6NZD5Icx
+	 nqmkI0JjvSeRg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzYzpyZL+hQogXp-BaWEu6CFvWyicCOnGUxJawMpErLWRQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 03 Jul 2024 20:24:25 +0300
+Message-Id: <D2G2UL8ED69K.2CY96NBKMJPWD@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, <linux-integrity@vger.kernel.org>
+Cc: <stable@vger.kernel.org>, "Stefan Berger" <stefanb@linux.ibm.com>,
+ "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>, "James
+ Bottomley" <James.Bottomley@HansenPartnership.com>, "Mimi Zohar"
+ <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
+ <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "Serge E.
+ Hallyn" <serge@hallyn.com>, <linux-kernel@vger.kernel.org>,
+ <keyrings@vger.kernel.org>, <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Limit TCG_TPM2_HMAC to known good drivers
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240703003033.19057-1-jarkko@kernel.org>
+ <D2FHYVV7GNCV.3G1XOEUI3LZFB@kernel.org>
+In-Reply-To: <D2FHYVV7GNCV.3G1XOEUI3LZFB@kernel.org>
 
-On Tue, Jul 02, 2024 at 03:10:55PM -0700, Andrii Nakryiko wrote:
-> On Mon, Jul 1, 2024 at 9:44 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Adding test that attached/detaches multiple consumers on
-> > single uprobe and verifies all were hit as expected.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  .../bpf/prog_tests/uprobe_multi_test.c        | 203 ++++++++++++++++++
-> >  .../progs/uprobe_multi_session_consumers.c    |  53 +++++
-> >  2 files changed, 256 insertions(+)
-> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_consumers.c
-> >
-> 
-> This is clever, though bit notation obscures the meaning of the code a
-> bit. But thanks for the long comment explaining the overall idea.
-> 
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-> > index b521590fdbb9..83eac954cf00 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-> > @@ -9,6 +9,7 @@
-> >  #include "uprobe_multi_session.skel.h"
-> >  #include "uprobe_multi_session_cookie.skel.h"
-> >  #include "uprobe_multi_session_recursive.skel.h"
-> > +#include "uprobe_multi_session_consumers.skel.h"
-> >  #include "bpf/libbpf_internal.h"
-> >  #include "testing_helpers.h"
-> >  #include "../sdt.h"
-> > @@ -739,6 +740,206 @@ static void test_session_recursive_skel_api(void)
-> >         uprobe_multi_session_recursive__destroy(skel);
-> >  }
-> >
-> > +static int uprobe_attach(struct uprobe_multi_session_consumers *skel, int bit)
-> > +{
-> > +       struct bpf_program **prog = &skel->progs.uprobe_0 + bit;
-> > +       struct bpf_link **link = &skel->links.uprobe_0 + bit;
-> > +       LIBBPF_OPTS(bpf_uprobe_multi_opts, opts);
-> > +
-> > +       /*
-> > +        * bit: 0,1 uprobe session
-> > +        * bit: 2,3 uprobe entry
-> > +        * bit: 4,5 uprobe return
-> > +        */
-> > +       opts.session = bit < 2;
-> > +       opts.retprobe = bit == 4 || bit == 5;
-> > +
-> > +       *link = bpf_program__attach_uprobe_multi(*prog, 0, "/proc/self/exe",
-> > +                                                "uprobe_session_consumer_test",
-> > +                                                &opts);
-> > +       if (!ASSERT_OK_PTR(*link, "bpf_program__attach_uprobe_multi"))
-> > +               return -1;
-> > +       return 0;
-> > +}
-> > +
-> > +static void uprobe_detach(struct uprobe_multi_session_consumers *skel, int bit)
-> > +{
-> > +       struct bpf_link **link = &skel->links.uprobe_0 + bit;
-> 
-> ok, this is nasty, no one guarantees this should keep working,
-> explicit switch would be preferable
+On Wed Jul 3, 2024 at 4:02 AM EEST, Jarkko Sakkinen wrote:
+> On Wed Jul 3, 2024 at 3:30 AM EEST, Jarkko Sakkinen wrote:
+> > +	depends on TCG_CRB || TCG_TIS_CORE
+>
+> Needs to be "depends on !TCG_IBMVTPM":
+>
+> https://lore.kernel.org/linux-integrity/D2FHWYEXITS4.1GNXEB8V6KJM7@kernel=
+.org/
 
-I see, ok, will replace that with a switch
+This ended up such a mess to fix with any fast path so I made a
+proper fix for the core issue in the hmac authentication patch
+set:
 
-> 
-> > +
-> > +       bpf_link__destroy(*link);
-> > +       *link = NULL;
-> > +}
-> > +
-> > +static bool test_bit(int bit, unsigned long val)
-> > +{
-> > +       return val & (1 << bit);
-> > +}
-> > +
-> > +noinline int
-> > +uprobe_session_consumer_test(struct uprobe_multi_session_consumers *skel,
-> > +                            unsigned long before, unsigned long after)
-> > +{
-> > +       int bit;
-> > +
-> > +       /* detach uprobe for each unset bit in 'before' state ... */
-> > +       for (bit = 0; bit < 6; bit++) {
-> 
-> Does "bit" correspond to the uprobe_X program? Maybe call it an uprobe
-> index or something, if that's the case? bits are just representations,
-> but semantically meaningful is identifier of an uprobe program, right?
+https://lore.kernel.org/linux-integrity/20240703170815.1494625-1-jarkko@ker=
+nel.org/
 
-right.. so it corresponds to program 'uprobe_<bit>' so maybe 'idx' is better
+The problem is that tpm_crb and tpm_tis_core are the *only*
+drivers, which call tpm_chip_bootstrap() so it is better not to
+take any possible risks with this. I'm still aiming to get these
+fixes into 6.10.
 
-thanks,
-jirka
+BR, Jarkko
