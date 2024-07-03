@@ -1,129 +1,72 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D9A41A81
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 19:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B222E41A81;
+	Wed,  3 Jul 2024 19:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720033257; cv=none; b=a0gpxy+WEf6P1APCNS/klRhykTbMqbLiIaE2PSkkiVD1TSG85FRCQ6485Qw7StFYv75sNWKu+7BSonPRRJ9qeuGyMLQyfU52C260nVBINNvd2/PmSa26CK+/OAYYJPvJT7jnXYQJ+TIh6qoDSStoite8PgaYIcfNQu/042o6I0Y=
+	t=1720033305; cv=none; b=CUv08gIXaX3+XO6iKriN+o/+6i4UtXJcof0fwYKfHFAsUb9+v2KdIOfFjQ6gRltjZBJek3gmesvHma7jVppBP+qXVVWSDlRPCW/Q6J1P9D3TdAVlz+pVpJ7Ox4TUIpv+YjhPd99MgACwaQLx7gKgHEoxFw/Df2UXQNraO3YA0bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720033257; c=relaxed/simple;
-	bh=UYxPNFpMcGneQ/ECP3GOas6d4yYi/uC/3SPT66tF62M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DHnOleFtAaok7fnfmV2LZfL1eZ2czulxzqLiDeJE5qkLTVvXNOdkObcU7fAFQh8O7Mxojk+zmuEZ2Ci/MYAMUtl2BPrnOg9SCJJjpXhm0mDwTOx3dLr+9sriqqGoSjuE8UDGt6XYGFwi+bDlAhB+8h8/oUhvezU+EePhReRoQpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KnNdd/2H; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720033305; c=relaxed/simple;
+	bh=CiBfnjOODz9WdgKnFn9W67Hb3I6KjlLRqA0gcZAc/Ac=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V9BCNXEsU1eDaev/2RrckHNvvA7R1ZgtmHsAYM6z/hxjMQQdz7Nv5nt2miBWT5m2uau/J16yJ240p3bPHlD71BVvEfF0qaGlThbe0wknud2v9r4F3zA20unr5+IYOti83t2VpXFnOXEj2UjDh5NrGkuxtdSN9n2uThl67i9C/vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+rzUkWq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KnNdd/2H"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52e9380add2so3051184e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 12:00:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720033253; x=1720638053; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AwbTD1jwFh01l2fYaG95Vp8QD2DPYGRJu95WiulxKsI=;
-        b=KnNdd/2HC1g8PPW8ysWVmTO3XHICeitMIeENaaNdC1dvDWlj7Sv7dPRX1vx9PtZqP3
-         2unL0/Q0p53VLHX+jthB91yRBRPHrPChbR8Tcft1vXtCvxGPTDb3FQwEJmS+mt2fjCSJ
-         DKpxzFIIh0AXpdiSQ8Bi93vH3mLHUdMXUr93g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720033253; x=1720638053;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AwbTD1jwFh01l2fYaG95Vp8QD2DPYGRJu95WiulxKsI=;
-        b=Wj0gZVVJ+ChR9k2n2WraKEUdZkyyhKaY34MbLuTcMkVmjeecYGzjFEEoxPajyjSA+V
-         IVwOsNUkYSO4CA2+ndEW1eVVS970AI8v8MC5mnirJc6rszpwHizXRGaY6cC64GTkBFvY
-         hoG/rHnJ9cg5IyZ4MdQq749vt3krvv/QALwUxFLuSENrzIRRlEFEFoO2muhhlO6MboH5
-         u7wpu1xqiKUD90uNEbw+fTlan859Y0J873pJFAk4nuQTNb9E5vRiuImNbhmw5wT3X6ZL
-         kHqtFpNReF22mnJii3h38Ye2kcZvJn0XillF48vpANayYFCwHBSDA3SSpcavSg95j86V
-         xk1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ0Q0czMb7sLjqdXDMoPl3Ov5AT5JgUYytRi/7FLFQvGgwei4HLgA6kxKVpLaDX3+MH1YKb0q419y7x37VxKw7Vv80eQ4LrzMp3NPr
-X-Gm-Message-State: AOJu0YzVupLjeiBl1oHxY75BzFHKwQm9erFZhetlx0LRtbvQC3W7J/c+
-	xatjkdr2bzdGRqoEIUcjPpWecZmlY3K0J+DBMoAwgOZD5nKISFqBPzxFEWWa5/BTNN+wXr+VNQ6
-	xOAWztg==
-X-Google-Smtp-Source: AGHT+IGg0a5xNiO/KxWqvn7A/J1FITVV34tA9Q91b/3JUi2dI/g+LpQV9Vlk1N+qC3lFb4eFLOmVGw==
-X-Received: by 2002:a05:6512:3d1e:b0:52c:9ae0:beed with SMTP id 2adb3069b0e04-52e82705d17mr12117514e87.52.1720033251534;
-        Wed, 03 Jul 2024 12:00:51 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab0bab5sm2207080e87.13.2024.07.03.12.00.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 12:00:50 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ee77db6f97so30843861fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 12:00:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURMHs/zA8Wi3PMUA2vAUSvo08gf2WnfHbZ9cReOwVnid/7laGZHO3Oaf37wVAHVL6tuoLwgHdNXFGgxo/jVmYEB79Bio1pDRvTbOs/
-X-Received: by 2002:a2e:a7c9:0:b0:2ec:56b9:258b with SMTP id
- 38308e7fff4ca-2ee5e6f60femr110934241fa.33.1720033250138; Wed, 03 Jul 2024
- 12:00:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+rzUkWq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB6FC2BD10;
+	Wed,  3 Jul 2024 19:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720033305;
+	bh=CiBfnjOODz9WdgKnFn9W67Hb3I6KjlLRqA0gcZAc/Ac=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M+rzUkWqjXIOxfZWdAasTZQJbYKu6cBo89U+pWBDMRVnO/axqW39izLx2uUamebAS
+	 mkl05mZ4kbyR515qzZHihFBJ5zj81F7U5KyrqECGn1QQ1VlQ4CP3+Xr02RscafMIPn
+	 NT2PRNXurhL27/V08eAP/hdc7BFdf9tode2UPry4wYQdIQ9KsItmzxAzLIgLxhSGpK
+	 zQkVfi/ky/0R+Vc7/P8eg/czXRvv7OyR3eDk2TMWAZ2s8kxzLwyp9SxIxZ3qTDSAi2
+	 46NwoRyclNvz8g+AuQ/UJoJJQhTYyu7V6bY2kKIcfir2lysdOd2/WjA8OWG8c30ao2
+	 vEi/jR87EDuLA==
+Date: Wed, 3 Jul 2024 12:01:43 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: syzbot <syzbot+08811615f0e17bc6708b@syzkaller.appspotmail.com>,
+ andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+ daniel@iogearbox.net, davem@davemloft.net, eddyz87@gmail.com,
+ haoluo@google.com, hawk@kernel.org, john.fastabend@gmail.com,
+ jolsa@kernel.org, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+ martin.lau@linux.dev, netdev@vger.kernel.org, sdf@fomichev.me,
+ song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Subject: Re: [PATCH net-net] tun: Assign missing bpf_net_context.
+Message-ID: <20240703120143.43cc1770@kernel.org>
+In-Reply-To: <20240703122758.i6lt_jii@linutronix.de>
+References: <000000000000adb970061c354f06@google.com>
+	<20240702114026.1e1f72b7@kernel.org>
+	<20240703122758.i6lt_jii@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com>
- <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
- <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com> <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
- <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
- <8b6d59ffc9baa57fee0f9fa97e72121fd88cf0e4.camel@xry111.site>
- <CAHk-=wif5KJEdvZZfTVX=WjOOK7OqoPwYng6n-uu=VeYUpZysQ@mail.gmail.com>
- <b60a61b8c9171a6106d50346ecd7fba1cfc4dcb0.camel@xry111.site>
- <CAHk-=wjH3F1jTVfADgo0tAnYStuaUZLvz+1NkmtM-TqiuubWcw@mail.gmail.com>
- <CAHk-=wii3qyMW+Ni=S6=cV=ddoWTX+qEkO6Ooxe0Ef2_rvo+kg@mail.gmail.com> <20240703-begossen-extrem-6ed55a165113@brauner>
-In-Reply-To: <20240703-begossen-extrem-6ed55a165113@brauner>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 3 Jul 2024 12:00:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgCttiyp+3BBzhqKv+uXuUr-fzw2QbmH8kXwO+sB+FAaQ@mail.gmail.com>
-Message-ID: <CAHk-=wgCttiyp+3BBzhqKv+uXuUr-fzw2QbmH8kXwO+sB+FAaQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
-To: Christian Brauner <brauner@kernel.org>
-Cc: Xi Ruoyao <xry111@xry111.site>, libc-alpha@sourceware.org, 
-	"Andreas K. Huettel" <dilfridge@gentoo.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 3 Jul 2024 at 11:14, Christian Brauner <brauner@kernel.org> wrote:
->
-> In any case, which one of these does a new architecture have to add for
-> reasonable backward compatibility:
->
-> fstat()
-> fstat64()
-> fstatat64()
->
-> lstat()
-> lstat64()
->
-> stat()
-> stat64()
-> statx()
->
-> newstat()
-> newlstat()
-> newfstat()
-> newfstatat()
+On Wed, 3 Jul 2024 14:27:58 +0200 Sebastian Andrzej Siewior wrote:
+> During the introduction of struct bpf_net_context handling for
+> XDP-redirect, the tun driver has been missed.
+> 
+> Set the bpf_net_context before invoking BPF XDP program within the TUN
+> driver.
 
-Well, I do think that a *new* architecture should indeed add all of
-those, but make the 'struct stat' for all of them be the same.
+Sorry if I'm missing the point but I think this is insufficient.
+You've covered the NAPI-like entry point to the Rx stack in your
+initial work, but there's also netif_receive_skb() which drivers 
+may call outside of NAPI, simply disabling BH before the call.
 
-So then if people do the system call rewriting thing - or just do the
-manual system call thing with
-
-    syscall(__NR_xyz, ...)
-
-it is all available, but it ends up being all the same code.
-
-Wouldn't that be lovely?
-
-Of course, I also happen to think that "new architecture" and "32-bit"
-is just crazy to begin with, so honestly, I don't even care. 32-bit
-architectures aren't really relevant for any new development, and I
-think we should just codify that.
-
-And on 64-bit architectures, the standard 'stat' works fine.
-
-            Linus
+The only concern in that case is that we end up in do_xdp_generic(),
+and there's no bpf_net_set_ctx() anywhere on the way. So my intuition
+would be to add the bpf_net_set_ctx() inside the if(xdp_prog) in
+do_xdp_generic(). "XDP generic" has less stringent (more TC-like) 
+perf requirements, so setting context once per packet should be fine.
+And it will also cover drivers like TUN which use both
+netif_receive_skb() and call do_xdp_generic(), in a single place.
