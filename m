@@ -1,175 +1,94 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8587914265C;
-	Wed,  3 Jul 2024 22:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9969913C8EE;
+	Wed,  3 Jul 2024 22:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720046788; cv=none; b=m2uKW/aXyJH7DHXrmC4P0pY8IAswNNBK3GBEsJ7mpeA3J4nrTSQ7BlThUf98J7ZdO0ek37y0QOB86b/e4KjynK9hJgzUtcI+3f69aZGGvkLiUEzWfgNlIF5ZTwmb0SnoKlmNYDcp0xb217CYzA7+LXXfDLozjQi2IN9IKf9UKEc=
+	t=1720046798; cv=none; b=UYDRjOSPD5hKu4Ya1N/0ezInJecrubS7kJqpTpWTF0w3Wx4vYP7eycz5ttt1xfZdISjCZFs2WHm5m/UdLezsE8NFMzrSzDD5ZMwc1zYLG8EYcukVYg4IoUA68lSvOei4X+RI/Ae7jw0wgHLxdVXgaPPGwgBUzVIAik2gSKyhxAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720046788; c=relaxed/simple;
-	bh=gA7+VliSMoQlSbs6CV2YV/4Xrx/0Iq+N6gm0gQ63NHs=;
+	s=arc-20240116; t=1720046798; c=relaxed/simple;
+	bh=JJJ12lNXuIbwooXoYwbH6PTqCB9tKCRzkL1V8+ooC4Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fkGla/nFyxl6ey/qj9RnBo9N9Qdc9W2x9O30sBMQHlDLqO+fBC7KTC9saN5n0Ee/iHKjmj93nqrM9uCZqCeUpX2B20FUAIGCO2IMgy1oSb0v1jwKckNs6v5SvVqDsGfqTjZJu1d49IVcaGJp8jqbgn4MLFMpjQWMh/V1NSLvfnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AQsZnf5n; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UcdlGNbP6GGKsytEcj1kgnfkaudg7bqf3/fEAM8wZwoo4iEZJ67wUSI3UQjd+H6sGuIswwPKApHbcUxvvlOodrYWc+0dCqNdmSYLn/sOqeCe29sroaNF86p9KqUmFbEISvui17ypdOm5035xbm9Ku/zDBrVcfQZKFEMfqpguj+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=lQ9JcN7u; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQsZnf5n"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e0360f8901aso17751276.2;
-        Wed, 03 Jul 2024 15:46:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720046785; x=1720651585; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1NR1sr/ZbZPbIrygTH2/gqn6qhtATWX6EGzQmK9ZnLY=;
-        b=AQsZnf5nn6QOrMol5ZSHJ4Kw6BdQ5UicPwEajIqgq/eWkMKHBKPcscs1DHmxv+1I5r
-         bRQ66I/GaoPrGOJ+uVKs8AhsAOUJW4c888X9zSyCq3hsN/8rWo2qTKtUhlFHUBf+VbYn
-         SAopT4cVTs1OwTBjn0zn6l329KSIF8IgcPuSPErdsrthMNpyejH2zTjZdMAnbNDvec4Q
-         +OkQTVfI+N7jXQoHrN1A4E36q0+EQYkcvzW+vXHulsioY5YGXgCbWOud/6I2YX8yWVEb
-         waelb6xsxrmPR+FLmUdjyu6h1H4RkxEPNtf9iRkCLgFXke0JZ4/vy48mlfK1NvfW1Cnt
-         mvIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720046785; x=1720651585;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1NR1sr/ZbZPbIrygTH2/gqn6qhtATWX6EGzQmK9ZnLY=;
-        b=YK1uDPf8dHRgvb/IoiirrNHXGzu2GNi6EPi2JSggW9ReCQ0eF/bMGK7l+oUfVym6Bl
-         r+HyfOipMrAl9EB9AaHdcpUyutb4Q88Obhlhu61PHUPtrT4iFJ7fXRRn4/06LdUj+L1g
-         bsQn+KdFD6hLNFN6uxsXiXSOjEEwAm28I2F9X7h/tFJIa8XftpAXb3ScCjhfzenVT0ma
-         oAxqvqeoHOYlH2W7XlZCH8Lpc2weA5CR8l8eN4789xggenRQOXgCfnWKB+Z1g2stBuBO
-         Mi+tRVrP0+5Bx8J/QEZ7l54InsfDteGuvRPPR+4qDOKWn0KJlDqyx0Uk2wTFHNO8Zp5m
-         gJhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXHorNZoXITf39x5ZzsZR5VfWV9TN6eY9FRvTQGhaiFW+rNYyjlIjnzZd1RcubfdjQuHRyr9nqzL+TRuVUnGNOHfoAQu98TdjZJw==
-X-Gm-Message-State: AOJu0Yx3jGkmJcy9JcgEJ/QXVxakPZ62nAGTNF98s6CoeWPpI9t1ywTt
-	Y+qBZSAfKQ28TDKvILMM1lQpzax5Th2QCrN7Btvdyw7lSeBdQ9F0
-X-Google-Smtp-Source: AGHT+IExAkct7vzhEMm0LI1KfE/PTZcCuuE2jma8x+8BFnYcDnOqpOFLAlcFxtmKBISUNpLtKW1JMg==
-X-Received: by 2002:a25:a8a:0:b0:e03:a168:f132 with SMTP id 3f1490d57ef6-e03a168f33fmr5910295276.31.1720046785489;
-        Wed, 03 Jul 2024 15:46:25 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b5dfc92d45sm11585156d6.142.2024.07.03.15.46.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 15:46:24 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id B79191200043;
-	Wed,  3 Jul 2024 18:46:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Wed, 03 Jul 2024 18:46:23 -0400
-X-ME-Sender: <xms:v9SFZrx_XtbK-YmDyDOjoYWTmPxohWsAuEywVmy5C-q_289ELl4w6Q>
-    <xme:v9SFZjRnRT4ueTFnC9qKpR5Fb8BM3TqB46E8Gga1ITXXr14zkm5D88g46Rn-NfQGQ
-    n1-TaXpQJoicXn6rg>
-X-ME-Received: <xmr:v9SFZlUBlhEfZhkrGHuLpSP3qpqH706ahknh5UQGSz2NMC3NJlO4xqvKlmhzQg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudekgddufecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepleeuvdehjeehledvtdegveefleejleegtdelkefgkedttdekhedvheegvdei
-    tdetnecuffhomhgrihhnpehshiiikhgrlhhlvghrrdgrphhpshhpohhtrdgtohhmpdhkvg
-    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeile
-    dvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgt
-    ohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:v9SFZlhbUHcdPHmwNFdklla1dY5XdKiopnYKyq0vQl86-zVmW1c4Tw>
-    <xmx:v9SFZtC4q8BNcRAanbiCDL67mnwaPba5DcF7L6EHNSiH2kAYd2fPuw>
-    <xmx:v9SFZuIsz5HmwPC3G9SO38xRuLPynuOJUpAqjymzrMvEwEJ9FtBldQ>
-    <xmx:v9SFZsC5fgbK0kDTUbMdZYkhic74F-huTbKFQsZRb9P1prA8cGpt2w>
-    <xmx:v9SFZpxjiGRpDeCj2_rfeNL_DXy_C7cthYJKNFF-K6NDGkj4bqri8eEs>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 3 Jul 2024 18:46:23 -0400 (EDT)
-Date: Wed, 3 Jul 2024 15:45:21 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: botta633 <bottaawesome633@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, linux-ext4@vger.kernel.org,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	syzkaller@googlegroups.com, "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] Forcing subclasses to have same name pointer as their
- parent class
-Message-ID: <ZoXUgdUkD-GtKfKJ@boqun-archlinux>
-References: <20240704003224.22832-1-bottaawesome633@gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="lQ9JcN7u"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F155240E0194;
+	Wed,  3 Jul 2024 22:46:27 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id vfJyq0TgD1hn; Wed,  3 Jul 2024 22:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1720046785; bh=b5Bb4jBo4uSvVka56BV/u/Ge9WVyID8cnF4LTN5W710=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lQ9JcN7u2vylGzTWqKa5/jGLcyTVUmr/g0M3HUiev+spF53J8ktazapeWkvaJnKhi
+	 uQioTCCI5nDBMOvRniUZV9VuSmRm2HBu3dzO4aZCKgUQgVNKMFI10b2vkgAQn5fURA
+	 OlVOJhTkyOHTDvgjGkD5ftOGoCUB/lDIGx1N6SqbxuWmrkxAULo2Wry0/pgBJdFuE9
+	 GWy73NAF4HvuWU9wBL9zzPr6abMf++tUeEXKIfneHTvL2mTHgMYPpCOwsOeplpG6Y3
+	 TPMSUZgCktwwqkDxmaUgsjY6V/2Cdzx5zyoCcmaInvUAIYcGv14X4fESy3s11qdS3K
+	 lSRSsex/r/AsDvVLFssXfEtKvgeowqr4aHS7kjok7SEm4wdK7e4EcIViPNnXoggCGZ
+	 Ksxhx42EnrmXhsMObkDfnr5gIkPxnc4jW7DDm5DWRmuYKJ2CXkZBxJBQKHrjaEzyRC
+	 z2uHMDTqZgY6aOyRQr19ejMG6I22GFPL5AgKrBxpj9HdQU/wq3CY/DqiVxmtsjcXVH
+	 UUZeVeYQfBQ8+eRCSurrWckhTg5rSYJyNrcfzKePf0YyPO7pvCIC92vTW+MrluNWjW
+	 yg+/MxPl8S0R9KLhNtaxtqo45aj0h+21ZuZDBzqWn05LAlQ6UP0G0DnYfoj0Ifs0dB
+	 Vb5Dh/Fo+cMrEOLjb3gY3OfA=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D6E7540E0185;
+	Wed,  3 Jul 2024 22:46:17 +0000 (UTC)
+Date: Thu, 4 Jul 2024 00:46:11 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: John Allen <john.allen@amd.com>
+Cc: rafael@kernel.org, lenb@kernel.org, yazen.ghannam@amd.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] RAS/AMD/ATL: Translate normalized to system
+ physical addresses using PRM
+Message-ID: <20240703224611.GDZoXUs7INLbRM4v1a@fat_crate.local>
+References: <20240506174721.72018-1-john.allen@amd.com>
+ <20240506174721.72018-3-john.allen@amd.com>
+ <20240628074522.GDZn5qEkTXG0EvQ4Lv@fat_crate.local>
+ <ZoWxPR+A3xjV1Y/j@AUS-L1-JOHALLEN.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240704003224.22832-1-bottaawesome633@gmail.com>
+In-Reply-To: <ZoWxPR+A3xjV1Y/j@AUS-L1-JOHALLEN.amd.com>
 
-Hi,
+On Wed, Jul 03, 2024 at 03:14:53PM -0500, John Allen wrote:
+> I'm not sure this works the way we need it to. If ACPI_PRMT is not
+> enabled, then the norm to sys translation function will be referenced by
+> the base AMD ATL, but will the symbol will not be found since the the
+> PRM file doesn't get compiled.
 
-On Thu, Jul 04, 2024 at 03:32:24AM +0300, botta633 wrote:
-> Preventing Lockdep_set_subclass from creating a new instance of the 
-> string literal. Hence, we will always have the class->name. This
-> prevents kernel panics when locking up a lock class while comparing
-> class locks and class names.
+So you don't delete the stub but you put it in the internal.h header:
 
-Good catch! Thanks.
+#ifndef CONFIG_AMD_ATL_PRM
++unsigned long prm_umc_norm_to_sys_addr(u8 socket_id, u64 umc_bank_inst_id, unsigned long addr)
++{
++       return -ENODEV;
++}
++
++#endif
 
-> 
-> 
+Don't be afraid to grep the tree - there are gazillion examples how stuff like
+that is usually done.
 
-Please remove the extra blank line here.
+-- 
+Regards/Gruss,
+    Boris.
 
-> Signed-off-by: botta633 <bottaawesome633@gmail.com>
-
-Do you mind putting your real name here? Besides, IIUC, this is fixing:
-
-	https://syzkaller.appspot.com/bug?extid=7f4a6f7f7051474e40ad		
-
-, right? If so, there are some more things:
-
-*	Copy ext4 and syzkaller people, so that you could get more
-	tests.
-
-*	Since this is a bug fix, could you please figure out which
-	commit introduces the issue, so that you can put a correct
-	"Fixes:" tag along with your signed-off-by?
-
-*	Since the issue was reported by syzkaller, you should put their
-	"Reported-by" tag, they have an example in the website I paste
-	above.
-
-*	Please also Cc stable mail list so that the fix can be
-	backported, you can find the information on "Cc: stable" tag at:
-
-		https://docs.kernel.org/process/stable-kernel-rules.html
-
-*	Last but not the least, could you try to add a test case in
-	lib/locking-selftest.c to ensure the issue you fixed won't
-	happen again? This could be tricky, since you will need to fight
-	against the compiler to generate two string literals with the
-	same content.
-
-[Cc ext4 and syzkaller]
-
-Regards,
-Boqun
-
-> ---
->  include/linux/lockdep.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-> index 08b0d1d9d78b..df8fa5929de7 100644
-> --- a/include/linux/lockdep.h
-> +++ b/include/linux/lockdep.h
-> @@ -173,7 +173,7 @@ static inline void lockdep_init_map(struct lockdep_map *lock, const char *name,
->  			      (lock)->dep_map.lock_type)
->  
->  #define lockdep_set_subclass(lock, sub)					\
-> -	lockdep_init_map_type(&(lock)->dep_map, #lock, (lock)->dep_map.key, sub,\
-> +	lockdep_init_map_type(&(lock)->dep_map, (lock)->dep_map.name, (lock)->dep_map.key, sub,\
->  			      (lock)->dep_map.wait_type_inner,		\
->  			      (lock)->dep_map.wait_type_outer,		\
->  			      (lock)->dep_map.lock_type)
-> -- 
-> 2.45.2
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
