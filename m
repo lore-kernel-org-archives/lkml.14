@@ -1,383 +1,124 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9C4944D;
-	Wed,  3 Jul 2024 11:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AB3944D
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720007850; cv=none; b=dQItZDVA9YKlbN7/oy9YAG5cbC1szbqvZYqaJgxlKRz92nDO1NL6YKpe5unWecRzuoQGfl5YZtAPYFRskRY62gk+HsaXXA4ZYwop1o3KVuN4oIUzl0t2zJWk21ruw53c09rblunEntGUJiFcnYD0CJaV9rEDCe1wxsx4fZT8QSU=
+	t=1720007865; cv=none; b=imrHK6k7pdye91aHBCy2rl8VGXHb2MTk0q08wz1SQEldh6nf9jTH57V9h5ieD34O9F1Utpv35NFfC9r8g2wki8wtI9e33BvhakY4SMTxVY0MgD5g+JhDWMiWR2kfGu2NyRkBfFd+5Ky/7stPQjNH1e7R2UNKENzQQd8GwjKacSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720007850; c=relaxed/simple;
-	bh=1Odn1tXTGUHtqlrSfnBMT4/7wzHI8WBv3cF8bRORf0k=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=mwOlJ7xTVdKbcRKtiM8xchMBpSef5jBP5OTlTw8aYqTnQXpKiN+Nj+aKkpya5gByzCr62lCojypxWpUm3ZU3HsvEuftBFQKAOG+lFLebAzsseBSyyM4cbr02uwRm2sju6ZCPgv9w1c74lDYTzeh4B8GSOxwl+7CXt6tn3tfvYBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P0vDGbdG; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1720007865; c=relaxed/simple;
+	bh=rKV38DTKe44owKlSJKgilDF63JZgHdfEW79Spi8tgRE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X8UYk21Hmg1BTIP2atti38B6LH+5HZ5JpSJ82r98BF7ijSGumC+6ZBgSoJXjD/DLPOmmfv/kiPkUSiE0PX3FowuChKWWzQ4czwP+Pr57m/rpnN7G/nMpD4S8IHsmwCTNNYDIECuGqkrKGBgyPokc0WGoxXT4Q3dTFljfsGvbdB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b=mQLb73QS; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P0vDGbdG"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463AvnS8030397;
-	Wed, 3 Jul 2024 11:57:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:mime-version:subject:from:in-reply-to:date:cc
-	:content-transfer-encoding:message-id:references:to; s=pp1; bh=W
-	ZqByMisVszq09kN65sBEzVYFscYU29piGSfZF81Do4=; b=P0vDGbdGwp+OLM1KV
-	h4T9cjHa2S+JRHQjDnHHizURW0rGNLh+5IqOBbcUx0wNVj9nV6Qx7SJe92AbCYWE
-	ufdMG6euHtewN9z4IvpOGMxJCwdnVaqrE/39SF4lau//g+P5pwGA88ObdEkLB/Q0
-	g4rJPRJhqv5DbDa9uOcMcVP2KdAbTJn93rjBZu1RuDiynmy/hOUnHd35W6AO88c3
-	Q4dwYaK4M+ix+axj9LPy/Ea7vSvPxoisWFOSY+SIMzLYl3cYtgXsa+Cc3mHjDWRa
-	5zbQTBk1BZi375+i8au9H2v/mDMs+MytQR9+m0ZfK2KBP9j1n5++hUw29qwjwLBa
-	7QcZg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4054ww88hc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 11:57:10 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 463Bv9Zx027724;
-	Wed, 3 Jul 2024 11:57:09 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4054ww88e5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 11:57:09 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4639A67R030022;
-	Wed, 3 Jul 2024 11:53:13 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 402x3n2a34-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 11:53:12 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 463Br7Dw31982324
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Jul 2024 11:53:09 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1C47320040;
-	Wed,  3 Jul 2024 11:53:07 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 829D42005A;
-	Wed,  3 Jul 2024 11:53:04 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.44.47])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed,  3 Jul 2024 11:53:04 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b="mQLb73QS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1720007841; x=1720612641; i=efault@gmx.de;
+	bh=SQRSK4a08DTy1RMTibP027PFWUlxi+GRikrcCxsT88w=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=mQLb73QS928NmijNLr/rwtHD5r+z4Mqdv/cVS8qfsUOYgRAYzM+S8TgXxfInKAlu
+	 3wHVn2uJcMDYqmVI4b0MyUIkyDX23JZmTqQpIgA3b7warVohsSk0OaJIs9QgavT6G
+	 UoDRN2/KNePCGAHlu49HE6HFLSZfwyUxIqH0tkX+zMO43KMwmW2Yz9ufzGKr0SyEv
+	 0buidByWo4t8OkMR47QIXWGhDsLk9fm5Fkg0ccM8iK+Ue/0bY+4xVh2PtMlf8zPDl
+	 bBjEvnqeLpXyLYRFMOy9fTyAe27a4LF3bJFJyCEqsM8QW5VI0Zs+PP2sdYPuzFpRd
+	 FIddCxhOd6pTveh5Lg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from homer.fritz.box ([185.146.49.228]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mirng-1rtC6P2zmG-00klSH; Wed, 03
+ Jul 2024 13:57:21 +0200
+Message-ID: <4e28fd17d7a2f7146aae10a76982f0e58b22befb.camel@gmx.de>
+Subject: Re: [PATCH 1/2] sched/fair: Record the average duration of a task
+From: Mike Galbraith <efault@gmx.de>
+To: Raghavendra K T <raghavendra.kt@amd.com>, Chen Yu <yu.c.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Tim Chen <tim.c.chen@intel.com>, Yujie Liu
+ <yujie.liu@intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, "Gautham R
+ . Shenoy" <gautham.shenoy@amd.com>,  Chen Yu <yu.chen.surf@gmail.com>,
+ linux-kernel@vger.kernel.org
+Date: Wed, 03 Jul 2024 13:57:19 +0200
+In-Reply-To: <683663e3-cef0-bb45-e1c7-5bf1cf44209c@amd.com>
+References: <cover.1719295669.git.yu.c.chen@intel.com>
+	 <338ec61022d4b5242e4af6d156beac53f20eacf2.1719295669.git.yu.c.chen@intel.com>
+	 <d922f7bf3965f4eaef5028177b886e2e1861742d.camel@gmx.de>
+	 <ZoFY/n2S7rMp6ypn@chenyu5-mobl2>
+	 <db81ba7fba622e2a1b7186e66471cfb9ad8490fd.camel@gmx.de>
+	 <ZoLDxQlTR7fxoXWs@chenyu5-mobl2>
+	 <683663e3-cef0-bb45-e1c7-5bf1cf44209c@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH V5 05/17] tools/perf: Add support to capture and parse raw
- instruction in powerpc using dso__data_read_offset utility
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZoSoO7IHKreTpkbt@google.com>
-Date: Wed, 3 Jul 2024 17:22:52 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <649287F9-2301-42B8-ABD9-E6B3DC6DA50F@linux.vnet.ibm.com>
-References: <20240701043430.66666-1-atrajeev@linux.vnet.ibm.com>
- <20240701043430.66666-6-atrajeev@linux.vnet.ibm.com>
- <ZoSoO7IHKreTpkbt@google.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: VTU_GJi3Ds1tmgOTbK-z8GKoMVIdwKRW
-X-Proofpoint-GUID: J-NB3IyAn6c5FQ1E87iGQyCivaw_vhIY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_07,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 adultscore=0 mlxscore=0 malwarescore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 spamscore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407030087
+X-Provags-ID: V03:K1:CtQ/l1TksDKUoYM5X2hpLTu42SJe7Sq/7yDsfwUmYIHnqAX1KUb
+ 8TKr10nZriZbVaRYan5sgzkLzqqErNfQ3jdKM3V0oJf3SeFt4KGAJO3RcKYpxjMVj//mb0i
+ mWaVQ0hg99tzbmJwUiyUqAwuCQtefjxl0deaM7IliipxQEYeHRg0PBCKd+eK2okzxzcXcuy
+ glRB2jAea6NzAGqsdcC2Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:v/67zEkirsc=;HpScUQuYcf5o+tBNG1kYwgUICng
+ DOm1rpKZcAG8UTlnIpXJkRcfyz5p+fE2Z9OUUDjVfIPs1aNydAI9t3qX4KvP5G9AOnpThSv87
+ iLsb12tKy9Y1fx1sP7bceUfNWwIboDIZbqGxKZKUNQutZ61UMU1oq+cV/M7V8NhZKZ03RLNHG
+ 8mE4+gruBLHg2iDq13VhYHXPieXAsEozCLg2onSiJizEg32uVmoBcA8aOdo/baMnUaKTtAF7R
+ LOROvcJ7uoUR7aCRScMpgVaS9GO+ImjzD2tOhumdwcachncxBPDXppRFAwrEZKjR4ZwBLy798
+ wsLQziDmai5fcoNcAA11/9+NrEOrEK40pvT4yR0XgiohmiLUh2SK5YLZAMK2/P1TFS6khVaTy
+ k6OTu9AYxUqjcWUcx+JNOUX2ItxBDLa5YlFUecYajuMZgZvL6L2mZr/dui2GyoQ1z5AD07iRk
+ E0SYS1lV0oQJr2K2LZZkLyB4dNtw+U9w/4YqxFNclgoVd2AqG4Dh2f3y1SdRpn3PMG5/voEGN
+ Y65Km7yhXRim3TEIzqWMK0aH+UHaFBVPi0KRphxWzjhtAr8OYg8JeNL/Vd/wRp7rtGjyxr/aX
+ /cWOc/hwFQ9CE09Su4NWr2X3Ju+qKTmtDCt7i9r/QAXU34qrqnvFIgONkcbtaWCHFy8Ky3bYQ
+ hzgYeTIGrDTwZEwLS+I6YB9w6FvEogSsb+3WED8grS4naMg3b42fWISzSwCdOCYwSXzpw1Y7l
+ klU8UbgVrIizfR5kEvuj+0plTuLnNjLONIDjPnwtZkhMK+a4fyxQgj4Ve+34FpgJWs0Bt2mSS
+ FptoRFwk+JCzluFoEZpUm/oxRPu38n3mfQF/lrHSoVCkg=
 
+On Wed, 2024-07-03 at 14:04 +0530, Raghavendra K T wrote:
+>
+>
+> On 7/1/2024 8:27 PM, Chen Yu wrote:
+> >
+> > A thought occurred to me that one possible method to determine if the =
+waker
+> > and wakee share data could be to leverage the NUMA balance's numa_grou=
+p data structure.
+> > As numa balance periodically scans the task's VMA space and groups tas=
+ks accessing
+> > the same physical page into one numa_group, we can infer that if the w=
+aker and wakee
+> > are within the same numa_group, they are likely to share data, and it =
+might be
+> > appropriate to place the wakee on top of the waker.
+> >
+> > CC Raghavendra here in case he has any insights.
+> >
+>
+> Agree with your thought here,
+>
+> So I imagine two possible things to explore here.
+>
+> 1) Use task1, task2 numa_group and check if they belong to same
+> numa_group, also check if there is a possibility of M:N relationship
+> by checking if t1/t2->numa_group->nr_tasks > 1 etc
+>
+> 2) Given a VMA we can use vma_numab_state pids_active[] if task1, task2
+> (threads) possibly interested in same VMA.
+> Latter one looks to be practically difficult because we don't want to
+> sweep across VMAs perhaps..
 
+Oooh dear.. as soon as you mention threads, the question of who's
+wheelhouse is this in springs to mind, ie should the kernel be
+overriding userspace by targeting bits of threaded programs for forced
+serialization?
 
-> On 3 Jul 2024, at 6:54=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
-wrote:
->=20
-> On Mon, Jul 01, 2024 at 10:04:18AM +0530, Athira Rajeev wrote:
->> Add support to capture and parse raw instruction in powerpc.
->> Currently, the perf tool infrastructure uses two ways to disassemble
->> and understand the instruction. One is objdump and other option is
->> via libcapstone.
->>=20
->> Currently, the perf tool infrastructure uses "--no-show-raw-insn" =
-option
->> with "objdump" while disassemble. Example from powerpc with this =
-option
->> for an instruction address is:
->>=20
->> Snippet from:
->> objdump  --start-address=3D<address> --stop-address=3D<address>  -d =
---no-show-raw-insn -C <vmlinux>
->>=20
->> c0000000010224b4: lwz     r10,0(r9)
->>=20
->> This line "lwz r10,0(r9)" is parsed to extract instruction name,
->> registers names and offset. Also to find whether there is a memory
->> reference in the operands, "memory_ref_char" field of objdump is =
-used.
->> For x86, "(" is used as memory_ref_char to tackle instructions of the
->> form "mov  (%rax), %rcx".
->>=20
->> In case of powerpc, not all instructions using "(" are the only =
-memory
->> instructions. Example, above instruction can also be of extended form =
-(X
->> form) "lwzx r10,0,r19". Inorder to easy identify the instruction =
-category
->> and extract the source/target registers, patch adds support to use =
-raw
->> instruction for powerpc. Approach used is to read the raw instruction
->> directly from the DSO file using "dso__data_read_offset" utility =
-which
->> is already implemented in perf infrastructure in "util/dso.c".
->>=20
->> Example:
->>=20
->> 38 01 81 e8     ld      r4,312(r1)
->>=20
->> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
->> this translates to instruction form: "ld RT,DS(RA)" and binary code
->> as:
->>=20
->>   | 58 |  RT  |  RA |      DS       | |
->>   -------------------------------------
->>   0    6     11    16              30 31
->>=20
->> Function "symbol__disassemble_dso" is updated to read raw instruction
->> directly from DSO using dso__data_read_offset utility. In case of
->> above example, this captures:
->> line:    38 01 81 e8
->>=20
->> The above works well when perf report is invoked with only sort keys =
-for
->> data type ie type and typeoff. Because there is no instruction level
->> annotation needed if only data type information is requested for. For
->> annotating sample, along with type and typeoff sort key, "sym" sort =
-key
->> is also needed. And by default invoking just "perf report" uses sort =
-key
->> "sym" that displays the symbol information.
->>=20
->> With approach changes in powerpc which first reads DSO for raw
->> instruction, "perf annotate" and "perf report" + a key breaks since
->> it doesn't do the instruction level disassembly.
->>=20
->> Snippet of result from perf report:
->>=20
->> Samples: 1K of event 'mem-loads', 4000 Hz, Event count (approx.): =
-937238
->> do_work  /usr/bin/pmlogger [Percent: local period]
->> Percent=E2=94=82        ea230010
->>       =E2=94=82        3a550010
->>       =E2=94=82        3a600000
->>=20
->>       =E2=94=82        38f60001
->>       =E2=94=82        39490008
->>       =E2=94=82        42400438
->> 51.44 =E2=94=82        81290008
->>       =E2=94=82        7d485378
->>=20
->> Here, raw instruction is displayed in the output instead of human
->> readable annotated form.
->>=20
->> One way to get the appropriate data is to specify "--objdump path", =
-by
->> which code annotation will be done. But the default behaviour will be
->> changed. To fix this breakage, check if "sym" sort key is set. If so
->> fallback and use the libcapstone/objdump way of disassmbling the =
-sample.
->>=20
->> With the changes and "perf report"
->>=20
->> Samples: 1K of event 'mem-loads', 4000 Hz, Event count (approx.): =
-937238
->> do_work  /usr/bin/pmlogger [Percent: local period]
->> Percent=E2=94=82        ld        r17,16(r3)
->>       =E2=94=82        addi      r18,r21,16
->>       =E2=94=82        li        r19,0
->>=20
->>       =E2=94=82 8b0:   rldicl    r10,r10,63,33
->>       =E2=94=82        addi      r10,r10,1
->>       =E2=94=82        mtctr     r10
->>       =E2=94=82      =E2=86=93 b         8e4
->>       =E2=94=82 8c0:   addi      r7,r22,1
->>       =E2=94=82        addi      r10,r9,8
->>       =E2=94=82      =E2=86=93 bdz       d00
->> 51.44 =E2=94=82        lwz       r9,8(r9)
->>       =E2=94=82        mr        r8,r10
->>       =E2=94=82        cmpw      r20,r9
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/util/disasm.c | 101 =
-+++++++++++++++++++++++++++++++++++++++
->> 1 file changed, 101 insertions(+)
->>=20
->> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
->> index ddb861a0b043..e400dcab4029 100644
->> --- a/tools/perf/util/disasm.c
->> +++ b/tools/perf/util/disasm.c
->> @@ -25,6 +25,7 @@
->> #include "srcline.h"
->> #include "symbol.h"
->> #include "util.h"
->> +#include "sort.h"
->>=20
->> static regex_t  file_lineno;
->>=20
->> @@ -1645,6 +1646,91 @@ static int symbol__disassemble_capstone(char =
-*filename, struct symbol *sym,
->> }
->> #endif
->>=20
->> +static int symbol__disassemble_dso(char *filename, struct symbol =
-*sym,
->=20
-> Again, I still think this should be named to symbol__disassemble_raw()
-> because it only uses the raw binary codes.  Using =
-dso__data_read_offset
-> is not important here and it's just a way of implementing it.
->=20
-> Thanks,
-> Namhyung
->=20
-Hi Namhyung
+Bah, think I'll just bugger off and let you guys have a go at making
+this stacking business do less harm than good.
 
-Thanks for review comments
-
-Sure, will change to symbol__disassemble_raw
-
-Athira
->=20
->> + struct annotate_args *args)
->> +{
->> + struct annotation *notes =3D symbol__annotation(sym);
->> + struct map *map =3D args->ms.map;
->> + struct dso *dso =3D map__dso(map);
->> + u64 start =3D map__rip_2objdump(map, sym->start);
->> + u64 end =3D map__rip_2objdump(map, sym->end);
->> + u64 len =3D end - start;
->> + u64 offset;
->> + int i, count;
->> + u8 *buf =3D NULL;
->> + char disasm_buf[512];
->> + struct disasm_line *dl;
->> + u32 *line;
->> +
->> + /* Return if objdump is specified explicitly */
->> + if (args->options->objdump_path)
->> + return -1;
->> +
->> + pr_debug("Reading raw instruction from : %s using =
-dso__data_read_offset\n", filename);
->> +
->> + buf =3D malloc(len);
->> + if (buf =3D=3D NULL)
->> + goto err;
->> +
->> + count =3D dso__data_read_offset(dso, NULL, sym->start, buf, len);
->> +
->> + line =3D (u32 *)buf;
->> +
->> + if ((u64)count !=3D len)
->> + goto err;
->> +
->> + /* add the function address and name */
->> + scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
->> +   start, sym->name);
->> +
->> + args->offset =3D -1;
->> + args->line =3D disasm_buf;
->> + args->line_nr =3D 0;
->> + args->fileloc =3D NULL;
->> + args->ms.sym =3D sym;
->> +
->> + dl =3D disasm_line__new(args);
->> + if (dl =3D=3D NULL)
->> + goto err;
->> +
->> + annotation_line__add(&dl->al, &notes->src->source);
->> +
->> + /* Each raw instruction is 4 byte */
->> + count =3D len/4;
->> +
->> + for (i =3D 0, offset =3D 0; i < count; i++) {
->> + args->offset =3D offset;
->> + sprintf(args->line, "%x", line[i]);
->> + dl =3D disasm_line__new(args);
->> + if (dl =3D=3D NULL)
->> + goto err;
->> +
->> + annotation_line__add(&dl->al, &notes->src->source);
->> + offset +=3D 4;
->> + }
->> +
->> + /* It failed in the middle */
->> + if (offset !=3D len) {
->> + struct list_head *list =3D &notes->src->source;
->> +
->> + /* Discard all lines and fallback to objdump */
->> + while (!list_empty(list)) {
->> + dl =3D list_first_entry(list, struct disasm_line, al.node);
->> +
->> + list_del_init(&dl->al.node);
->> + disasm_line__free(dl);
->> + }
->> + count =3D -1;
->> + }
->> +
->> +out:
->> + free(buf);
->> + return count < 0 ? count : 0;
->> +
->> +err:
->> + count =3D -1;
->> + goto out;
->> +}
->> /*
->>  * Possibly create a new version of line with tabs expanded. Returns =
-the
->>  * existing or new line, storage is updated if a new line is =
-allocated. If
->> @@ -1769,6 +1855,21 @@ int symbol__disassemble(struct symbol *sym, =
-struct annotate_args *args)
->> strcpy(symfs_filename, tmp);
->> }
->>=20
->> + /*
->> +  * For powerpc data type profiling, use the dso__data_read_offset
->> +  * to read raw instruction directly and interpret the binary code
->> +  * to understand instructions and register fields. For sort keys as
->> +  * type and typeoff, disassemble to mnemonic notation is
->> +  * not required in case of powerpc.
->> +  */
->> + if (arch__is(args->arch, "powerpc")) {
->> + if (sort_order && !strstr(sort_order, "sym")) {
->> + err =3D symbol__disassemble_dso(symfs_filename, sym, args);
->> + if (err =3D=3D 0)
->> + goto out_remove_tmp;
->> + }
->> + }
->> +
->> #ifdef HAVE_LIBCAPSTONE_SUPPORT
->> err =3D symbol__disassemble_capstone(symfs_filename, sym, args);
->> if (err =3D=3D 0)
->> --=20
->> 2.43.0
-
-
+	-Mike
