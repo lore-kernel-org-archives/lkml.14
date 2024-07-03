@@ -1,192 +1,126 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF54168C4
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 03:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686D910A1F
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 03:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719977285; cv=none; b=pzm5GX8dNZmNznb5o9juTEyg+Sn0ZF+4RbThS9UtA4q3UCr0ascUf7hWNLUTuSxBnzZ9cASTBu3IAJeWLq/lC9AN9OgMoAtx1rZH6wNrVzBxN8nPfX+VueX2GUT6cKaEpkmG7S14h81dumFgb88apnuS2+UMyJqHBNDU0Ke48FY=
+	t=1719977475; cv=none; b=FMnzLCMNEfGxmkX2QGCqkYoS7LlO7rNc7Ok53R0GE+mp1TQ7BGiSn+gY4hRU+xmkH7J893u4FKQEK6a4oxZXgDbu71+/BNuqt9Wz18D/8u02y2+HCCozIZ+VkVefgbxc5G5BLOEcmihiKzSl27Pm9RT623D0E3hD2JLAfxDl6TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719977285; c=relaxed/simple;
-	bh=ARIekpQhnYUhnUdT7waA6yqvrIk0lhX19I1MkT48bIE=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=dwYVK2bfuLnfZUzlCpD08lIjFEL02rek3QF5BeGD/1p3gCnx8zxvuBNGVdYRc50dyDdtEkT8Muc9vM8ICL0GM5UStI6TEngcfBcAK8w54jWSIzoncT955E7OF4dyEyrgMU5tFCds/T+PzUbXGY53wdxATX2LDfOAXRTx4xcBY/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mIrf6RdE; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1719977475; c=relaxed/simple;
+	bh=Ntgv1RmGQvZEExr5kYNNuFVZ13m+/Y6h9Yh+Z/69C94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ab2fvyh8HY1W8TRi5/5NE4eWjeSh8M9NueTNkuPhQarWQS+AQskudxSp3n+/6x6GwspAS0ITJTJz+iJgfkyajvvDMinPKid8gDymyKoVZas3HQIxf9AYEZZ0BhGREyLAdO2uV5M9kV0GdrH0jqBAF5WacakclQXC8OyopzEzowc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BHKu7kZr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mIrf6RdE"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240703032755epoutp0324d2901e3c972f69554a861792543b23~eljgj7zbP0254702547epoutp039
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 03:27:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240703032755epoutp0324d2901e3c972f69554a861792543b23~eljgj7zbP0254702547epoutp039
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1719977275;
-	bh=HiRFalHcuRme+HURIVkjBw2o+/SorePbdcpWdvn9xfE=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=mIrf6RdEnURk1ZBNTYtFozbrjpP+1xwGbJ5cWZrCOqEJPmJ/GhhJP4Mu4wu4QWqyT
-	 Pu7D8E3NTBnPtNaezSxICQtJXOvAQ1vfZ3GoXd+PEHgu3vP+NQQ7HsQKVe9c7lLQn8
-	 6P4PM12sAhO54QbMW78wU31Mqi94/fzj6nQwylKU=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240703032754epcas5p179aa6584fe4821edfadcc4cdb043ffab~eljf9x6K_0829008290epcas5p1I;
-	Wed,  3 Jul 2024 03:27:54 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4WDQFz1mgnz4x9Px; Wed,  3 Jul
-	2024 03:27:51 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	78.C1.11095.735C4866; Wed,  3 Jul 2024 12:27:51 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240703031925epcas5p3b3b59bf3c981597a49e3be1776005b19~elcFvsxUg1894018940epcas5p3f;
-	Wed,  3 Jul 2024 03:19:25 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240703031925epsmtrp16da8fa8b4fc7452099065d1f26784fa6~elcFuk9-U0703407034epsmtrp1q;
-	Wed,  3 Jul 2024 03:19:25 +0000 (GMT)
-X-AuditID: b6c32a49-423b770000012b57-55-6684c537847b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	32.01.07412.D33C4866; Wed,  3 Jul 2024 12:19:25 +0900 (KST)
-Received: from FDSFTE582 (unknown [107.122.82.121]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240703031923epsmtip14d94ef010ea2fa15582f42e7bdc5533d~elcEB80fm2713527135epsmtip1H;
-	Wed,  3 Jul 2024 03:19:23 +0000 (GMT)
-From: "Vishnu Reddy" <vishnu.reddy@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Krzysztof Kozlowski'"
-	<krzysztof.kozlowski@linaro.org>, <s.nawrocki@samsung.com>,
-	<alim.akhtar@samsung.com>, <linus.walleij@linaro.org>
-Cc: <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <pankaj.dubey@samsung.com>,
-	<ravi.patel@samsung.com>, <gost.dev@samsung.com>
-In-Reply-To: <b1b6ccc8-ab83-4d4e-8902-769e12975580@kernel.org>
-Subject: RE: [PATCH v2] pinctrl: samsung: Add support for pull-up and
- pull-down
-Date: Wed, 3 Jul 2024 08:49:22 +0530
-Message-ID: <00e601daccf7$ce1d5c30$6a581490$@samsung.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHKu7kZr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719977472;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SdbEpW+ka8BV0EfHU5IhEH8Kwx89A+Qt9tjxCITxu5w=;
+	b=BHKu7kZrwKXBjDRH+Mgn17SXVSaUXUYqFTzl65+MUhNvLEMl93+BVtD8K24yWMsWp5oM7J
+	bS131oDZQ65p5x02z9xDqBLYQSbom+966fLktsk37CSr2/nwYP5Ourkz3g4/wFHL1aGjLk
+	3lRtQolvlt5RSwuP1iZBVv6ToCQ1m9A=
+Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com
+ [209.85.217.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-349-vhZrDt5fMjiZV-9x3-MEJw-1; Tue, 02 Jul 2024 23:31:09 -0400
+X-MC-Unique: vhZrDt5fMjiZV-9x3-MEJw-1
+Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-48f589e9643so238649137.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 20:31:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719977468; x=1720582268;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SdbEpW+ka8BV0EfHU5IhEH8Kwx89A+Qt9tjxCITxu5w=;
+        b=o14+2pvq2iHxoISm3vmCrJaecVb0nNlT/RM52LwT+0SnkkvTgMkFlqb8+Fn4G33GKn
+         uOifGFQEqE4GmLoU0sfSgmYu/Dmzr3LeeH08XNDjuwcBOAFqFyJNArKfwgqCl2VK3emA
+         I0xcwlKEvZ7sMdqyzWbFWgtVPGesZ0Wr+mBXSMMfNYtPRKqbZ1cidV3Xt4YH8/RQnDwU
+         QdUG2HBggwFEFCvYT5lEJinMQEAlMnCkSqaV0qTST+FzpYxgjn3bBu9I6GJPpVa6UOim
+         e2qafEIYckFJK8N5VbAF0DtBgBIqayayuTCSbgAPifM7lsG8lUmnEWc58xHEkpCppIOn
+         X4hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZNiyHNxtdQxMey1mJjn8N90/k/+VqOgaBIO4+FQLx/Eri7e4OWEp6uw9gMZHEK0uvZ0w5HF3jhsGAwvt1TK2WKXh0BusnzOZcraH0
+X-Gm-Message-State: AOJu0YxelFKGtKtswyHo2ljznd9ff8bf64xqjO0q6G6sVGvEycYXO1ok
+	+iaYnHr/RWsgJAnF/8uHruCfT2MfhWuvMn7Tc5TlOjMJLH4ltL8KRR/N6TptrDWRN9aU+jmRsAZ
+	3cEBOmWDDAqkaGREFt0DK6jr2YYJW5YLrFG4Mq++MdUWo3ox7Z9WQgBFo38IwATAIZqLWZbmRLC
+	nmphZ9u/Mp+WF/jtHvwvt9PE6MsoLwaY6LjPm3JOXss96+9M8=
+X-Received: by 2002:a05:6102:418e:b0:48f:df2c:6d58 with SMTP id ada2fe7eead31-48fdf2c7213mr459635137.3.1719977468403;
+        Tue, 02 Jul 2024 20:31:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFq36iZHffY05mQHqGwXuTfgtcDXU9owjtWovlD+KLAjq9PvpntYYFlSgObgHSBSnsI4qjVbXMlcxCuzralhu4=
+X-Received: by 2002:a05:6102:418e:b0:48f:df2c:6d58 with SMTP id
+ ada2fe7eead31-48fdf2c7213mr459624137.3.1719977468074; Tue, 02 Jul 2024
+ 20:31:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240703022807.642115-1-yang.yang@vivo.com>
+In-Reply-To: <20240703022807.642115-1-yang.yang@vivo.com>
+From: Ming Lei <ming.lei@redhat.com>
+Date: Wed, 3 Jul 2024 11:30:57 +0800
+Message-ID: <CAFj5m9KfY+0r8eR-ThS7FF+xTnLaWGVrC4vT01LUChVQMqqzUA@mail.gmail.com>
+Subject: Re: [PATCH v5] sbitmap: fix io hung due to race on sbitmap_word::cleared
+To: Yang Yang <yang.yang@vivo.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Pavel Begunkov <asml.silence@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJsl4iGk1jvO+hY9fFKxJSBqey3YQJX8oCQAbw/7GgCIZ1lJgH0CiQ3AUxadNACwAZFAwIN5Vo7sE6fCKA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIJsWRmVeSWpSXmKPExsWy7bCmlq750ZY0g0fN3BYP5m1js7h5YCeT
-	xfnzG9gt9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWM87vY7JYtPULu8XDD3vYLQ6/aWd1
-	4PHYtKqTzePOtT1sHpuX1Hv0bVnF6PF5k1wAa1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7yp
-	mYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QeUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XU
-	gpScApMCveLE3OLSvHS9vNQSK0MDAyNToMKE7Iwtx04xFxwRrth9vbSBsVWgi5GTQ0LAROJ9
-	12vmLkYuDiGB3YwSf/9OZ4NwPjFKXNnyjQXC+cYosfThCjaYlrWfZkNV7WWUODbpNFT/C0aJ
-	1RfXAmU4ONgE9CWab0iAxEUE9jBK3Lz6FqyIWeAho8TE+59YQYo4Bewkrn73AJkqLBAo0fzq
-	PguIzSKgIvH98Q5WEJtXwFJi6r3tTBC2oMTJmU/AapgFtCWWLQQ5HOQiBYmfT5eB1YsIJEnM
-	2vSKFaJGXOLozx6omj0cEjcWsUDYLhK3/++EigtLvDq+hR3ClpJ42d8GZSdLrP99ih3kTAmB
-	HImeaQoQYXuJA1fmsICEmQU0Jdbv0ocIy0pMPbWOCWIrn0Tv7ydMEHFeiR3zYGw1YFBNZ4Ww
-	ZSQ6V9xgnMCoNAvJY7OQPDYLyQOzELYtYGRZxSiZWlCcm55abFpgmJdaDo/u5PzcTYzgtKvl
-	uYPx7oMPeocYmTgYDzFKcDArifBKvW9OE+JNSaysSi3Kjy8qzUktPsRoCgzticxSosn5wMSf
-	VxJvaGJpYGJmZmZiaWxmqCTO+7p1boqQQHpiSWp2ampBahFMHxMHp1QDk6za3cezOWIPeE/4
-	7FsZHsZ3l1Xs2rqG2Y/myW+fWhaxcmp3y9VAj0Nmtw2rxb7t1xCszBXm2d3e3Lny/Mva9Zee
-	76i+neofPr+arU/ELsVm86PzSgYxsdyFZ+/rbDa6vm/KvP3B/CVrfbrvJZZqiCl43fG2OiG7
-	h0eCR91775Mbi5o4pH69EbgpmuR1n08iXPnWIellC9tnlnrITtv8IyxI483SKVx3O6+K7op+
-	Xa/4Mrif5/TxioB/vze2uUguOVDtKCzw88w6n53xbRdzV0hPUvwhVSy6x8H3TvlTwylnXKql
-	fhVpVismvQxZpjZ96dWO+8pxlfsmLOi/tYZT9d7zMy/u71/c+bZKOC5CRYmlOCPRUIu5qDgR
-	AFZL7mlEBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnK7t4ZY0g6u71SwezNvGZnHzwE4m
-	i/PnN7Bb7H29ld1iyp/lTBabHl9jtdg8/w+jxeVdc9gsZpzfx2SxaOsXdouHH/awWxx+087q
-	wOOxaVUnm8eda3vYPDYvqffo27KK0ePzJrkA1igum5TUnMyy1CJ9uwSujEfrtrEUbBeuOH38
-	I2MD4yv+LkZODgkBE4m1n2azdTFycQgJ7GaUuLP8PCNEQkbiw50tzBC2sMTKf8/ZQWwhgWeM
-	Ep83O3cxcnCwCehLNN+QAAmLCBxglDg2XQRkDrPAc0aJTS/mMUEM3cws8atjFhNIA6eAncTV
-	7x4gprCAv8SEwzogvSwCKhLfH+9gBbF5BSwlpt7bzgRhC0qcnPmEBcRmFtCW6H3YyghjL1v4
-	Guo0BYmfT5exQtyQJDFr0ytWiBpxiaM/e5gnMArPQjJqFpJRs5CMmoWkZQEjyypGydSC4tz0
-	3GTDAsO81HK94sTc4tK8dL3k/NxNjODY09LYwXhv/j+9Q4xMHIyHGCU4mJVEeKXeN6cJ8aYk
-	VlalFuXHF5XmpBYfYpTmYFES5zWcMTtFSCA9sSQ1OzW1ILUIJsvEwSnVwNTfo7H/X/m13qxZ
-	0y+vZ8nPD/hw+P9aOcHSL/cjpeOqOZ89XHGnLHlC3h2b6rPrJ6h97RNhiOTfrWLlcs1oSUSc
-	9tz7XF1BK9k5Djl4TNaWrXGWbRQ94b9Wba7YmS+m8+J7J8wPnxO3wXSV89a0XWF/Fyg4GvwL
-	eTqlwrtlZqjwvfWHZJnmuEYLxzXUCrFHTI1Sa1l11vxIKpPmphd2P1Sdih0ktfTtWvbt81i8
-	+sLd9hqJbwm8c44vO7m7R4v53Cb5fSEmSYbeLLFr1lxvYjRkMPGoevXu3/or2zumq4SVnUj2
-	uWK1MPDqSt8+/Y/z32yImGuwROz/jR11R602Be/ZpXz1bL+90dOLMbornZVYijMSDbWYi4oT
-	AWpttJksAwAA
-X-CMS-MailID: 20240703031925epcas5p3b3b59bf3c981597a49e3be1776005b19
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240620103950epcas5p10514d4a19bdfd505d7d92ceb1fe10cc7
-References: <CGME20240620103950epcas5p10514d4a19bdfd505d7d92ceb1fe10cc7@epcas5p1.samsung.com>
-	<20240620103410.35786-1-vishnu.reddy@samsung.com>
-	<38fae674-f672-46e0-a44e-1278deaaf36a@kernel.org>
-	<07f201dac7be$e81317d0$b8394770$@samsung.com>
-	<4efb51f3-4600-4d88-a5df-e7be43294d53@linaro.org>
-	<086b01dac896$e988fed0$bc9afc70$@samsung.com>
-	<dbe55275-a13e-46a3-8b45-b08c301088d4@kernel.org>
-	<b1b6ccc8-ab83-4d4e-8902-769e12975580@kernel.org>
 
+On Wed, Jul 3, 2024 at 10:28=E2=80=AFAM Yang Yang <yang.yang@vivo.com> wrot=
+e:
+>
+> Configuration for sbq:
+>   depth=3D64, wake_batch=3D6, shift=3D6, map_nr=3D1
+>
+> 1. There are 64 requests in progress:
+>   map->word =3D 0xFFFFFFFFFFFFFFFF
+> 2. After all the 64 requests complete, and no more requests come:
+>   map->word =3D 0xFFFFFFFFFFFFFFFF, map->cleared =3D 0xFFFFFFFFFFFFFFFF
+> 3. Now two tasks try to allocate requests:
+>   T1:                                       T2:
+>   __blk_mq_get_tag                          .
+>   __sbitmap_queue_get                       .
+>   sbitmap_get                               .
+>   sbitmap_find_bit                          .
+>   sbitmap_find_bit_in_word                  .
+>   __sbitmap_get_word  -> nr=3D-1              __blk_mq_get_tag
+>   sbitmap_deferred_clear                    __sbitmap_queue_get
+>   /* map->cleared=3D0xFFFFFFFFFFFFFFFF */     sbitmap_find_bit
+>     if (!READ_ONCE(map->cleared))           sbitmap_find_bit_in_word
+>       return false;                         __sbitmap_get_word -> nr=3D-1
+>     mask =3D xchg(&map->cleared, 0)           sbitmap_deferred_clear
+>     atomic_long_andnot()                    /* map->cleared=3D0 */
+>                                               if (!(map->cleared))
+>                                                 return false;
+>                                      /*
+>                                       * map->cleared is cleared by T1
+>                                       * T2 fail to acquire the tag
+>                                       */
+>
+> 4. T2 is the sole tag waiter. When T1 puts the tag, T2 cannot be woken
+> up due to the wake_batch being set at 6. If no more requests come, T1
+> will wait here indefinitely.
+>
+> This patch achieves two purposes:
+> 1. Check on ->cleared and update on both ->cleared and ->word need to
+> be done atomically, and using spinlock could be the simplest solution.
+> So revert commit 661d4f55a794 ("sbitmap: remove swap_lock"), which
+> may cause potential race.
+>
+> 2. Add extra check in sbitmap_deferred_clear(), to identify whether
+> ->word has free bits.
+>
+> Fixes: 661d4f55a794 ("sbitmap: remove swap_lock")
+> Signed-off-by: Yang Yang <yang.yang@vivo.com>
 
-
-> -----Original Message-----
-> From: Krzysztof Kozlowski =5Bmailto:krzk=40kernel.org=5D
-> Sent: 27 June 2024 20:58
-> To: Vishnu Reddy <vishnu.reddy=40samsung.com>; 'Krzysztof Kozlowski'
-> <krzysztof.kozlowski=40linaro.org>; s.nawrocki=40samsung.com;
-> alim.akhtar=40samsung.com; linus.walleij=40linaro.org
-> Cc: linux-arm-kernel=40lists.infradead.org; linux-samsung-
-> soc=40vger.kernel.org; linux-gpio=40vger.kernel.org; linux-
-> kernel=40vger.kernel.org; pankaj.dubey=40samsung.com;
-> ravi.patel=40samsung.com; gost.dev=40samsung.com
-> Subject: Re: =5BPATCH v2=5D pinctrl: samsung: Add support for pull-up and=
- pull-
-> down
->=20
-> On 27/06/2024 17:22, Krzysztof Kozlowski wrote:
-> > On 27/06/2024 15:35, Vishnu Reddy wrote:
-> >>>
-> >>> I don't remember the code used here, but usually such choices are
-> >>> determined by driver match data (and flags or value customized per
-> variant).
-> >> Hi, Thanks for suggestion.
-> >> I have gone through this and found that driver match data in this driv=
-er is
-> stored in the __initconst section, which is freed up after kernel initial=
-ization.
-> So we have two options:
-> >> 1: Keep this platform specific data in driver match data and then popu=
-late
-> driver_data field in probe function.
-> >> 2: Use compatible matching and set different values during set_config.
-> >>
-> >> First approach will result in many changes, such as populating  driver
-> match data for all platforms and then storing the same in driver_data in
-> probe.
-> >>
-> >> In the second approach, we can handle this using simple if/else based =
-on
-> a compatible match.
-> >>
-> >> IMO, second approach would be simpler and introduce less changes. Any
-> suggestions from your end?
-> >
-> > Please wrap your email according to mailing list style.
-> >
-> > Both options are not the way because you introduce a new, different
-> > style of handling per-variant customization. The driver already parses
-> > match data and stores such per-variant-details in different places, lik=
-e
-> > samsung_pin_bank or samsung_pinctrl_drv_data. This seems like a value
-> > fixed per entire device, so could go to samsung_pinctrl_drv_data.
->=20
-> ... although maybe this matches your first option? Not sure.
-My understanding is same that the value is fixed per entire device. We can
-add the pud data into samsung_pinctrl_drv_data and then fetch the pud
-values during probe.
-I will test this and submit v3 soon.
->=20
-> Best regards,
-> Krzysztof
-
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
