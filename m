@@ -1,146 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C3A17C9EE
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C4917C9EE
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720024341; cv=none; b=Gdg3crGHYwx6/KtCPB3Enn4WWQtCIVbz8mcmYLWIHxdturo+/sc54Nkqlnca5dNhkf/KQ+m0Qr+pErgZUk/tB+gJ49E/mT/Tas8Obplg9NPfCxL8EyvAxWrlznBMAlwxew+KQxGut/OgUfUaGQVj4oAuFX2HtxRzgAoPvNyQWkI=
+	t=1720024347; cv=none; b=iXAGKTP9VieljaB8lSZl7EpYS6rn3QRkOMlL1FdZ1TPmlaOUPCJwwYE5fT8aiOhcoINhzhGAU+oWjV258ficlqFj+TWWOZBNDy9TeKx+3eB0GDjDSS50CMSuVw4gQ+TrSWq8/MiJ5KjhUfn5FINBV/edZyNUfzW95itebDjLLQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720024341; c=relaxed/simple;
-	bh=ZPRti1CI8p1V40wO4CGTtrqPhRk4GtpbeKPBK/2WljE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cmxzVGNcCQajvPMxwuHpKYnEp57/7dHr7M/9jhHi+GTLffuDls7/iEnqe9KdSIRcifPogSzUKofl8wnYNzMOJAIOL9t5iR2SEZlwBnAnKPMb5zmz3h+5A/V5PKmVbjNg+J27ZZR1otEsFKwrWDE2oZDquBjxIk/RNsC3ayfFgUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PpffOb8v; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720024347; c=relaxed/simple;
+	bh=6fg4dcswb0DQev8Wi78l8xEElSEY+gN/LTKix/A82Lc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bL3AgkZRZlDGSO5Ill37zdVs74V9EXJViXwVsgx1dHsTNi8238gdFqG9XhrBpwQ2QSmBtkb1BAwUCY//soaQmw8572iqr8+TOB9L9fXE6f45cTsdGGc4AfBVPYFvggZhmOKYZgXAZQPko/ZT6LPqFlK5aSuFRxI2UB5MqoKaCbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=ZToUQMJI; arc=none smtp.client-ip=98.142.107.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PpffOb8v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720024338;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T29v3MqMDNzKMLmvfKJHErvtZBlG75imLBcIldPfbq8=;
-	b=PpffOb8viEhI6gZd+WTEXRT4ulosUJ0foJGj70+JkbiuiVFY1Jo++kluw/Z4r/vC1TS54/
-	ZlSWUyLRF2L8/3gOmJF4yYQoqpcOf4xGq8DXBupTWZ2R1S9r83NGGfzA/MD9XC1vrTJAQr
-	BTkEEfZE8KSTHwGJKAPZDqhnZ92eP/g=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-370-c2sReQAFNTqWiNXkzOEHZg-1; Wed, 03 Jul 2024 12:32:16 -0400
-X-MC-Unique: c2sReQAFNTqWiNXkzOEHZg-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ee4d3091b6so60886671fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 09:32:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720024335; x=1720629135;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T29v3MqMDNzKMLmvfKJHErvtZBlG75imLBcIldPfbq8=;
-        b=hjVOU1aaQYzuzlnOeqShDgSab1xzipO/s3cKG7pEDXIVdhlkQqquFhv1rODk1YG24+
-         S5vbe0t5r220aHpJFUYCKeZls7EwO6sh2PtTf6wFqZi+iL9AzBiUR7BvFLJEq/rJ7zdG
-         IIYEXRwdc35K8LpXNed18HkZ7BkTTAtrQVduuXkXUDmVk2V3R3WsluhET3lJ3TXXiyTD
-         IAVk8uCTSbECWGFdgfXRdYSb9nKgmmj5hi7nxZafIaBuzhTLr8y37WyvDh9TKG9kmxxM
-         0oAMxaszcamD5jPSiUVHPivRb53drPYyY0jTK+Ff04LPTGr39gRTZVfEnVWo7Yj03r/u
-         /DMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrCClUkmaQBLJ/w2B1nMwoiW22tjoyGIiwwlhXqqL7YEMwgtetUUURUOVuPENHdqBooMcxHu8Jv8I4v7KDLrvPl6NN6svMwfd8f3Vn
-X-Gm-Message-State: AOJu0YyZmLpbW1N8oDffXGMm8m/FWioUd5DdlOiRcRL33/B30NK9M+fK
-	xZlBir886/ScNSEyWXsYq0ITrn1fELjA0JH5OxLHLuprc//CN36zMvxKAb8YCmjPGFIjvFmtCF+
-	8ptOLxEqFq89YfORa3sVbQylftRMefrpw5Q3ENBvSMkNdJHhgjC8y3mUzDzwr6A==
-X-Received: by 2002:a2e:bc19:0:b0:2eb:d924:43fb with SMTP id 38308e7fff4ca-2ee5e6bc6f7mr90933101fa.41.1720024335102;
-        Wed, 03 Jul 2024 09:32:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3V7vYkVhH8OJphhsnsxAVWOG21asngpKcdckbhi0zQYrX/jZvvDTcTN6is+OmAjmZQvtD0g==
-X-Received: by 2002:a2e:bc19:0:b0:2eb:d924:43fb with SMTP id 38308e7fff4ca-2ee5e6bc6f7mr90932111fa.41.1720024332354;
-        Wed, 03 Jul 2024 09:32:12 -0700 (PDT)
-Received: from redhat.com ([31.187.78.171])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af3cff9sm242324535e9.3.2024.07.03.09.32.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 09:32:11 -0700 (PDT)
-Date: Wed, 3 Jul 2024 12:32:06 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Kalle Valo <kvalo@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	ath10k@lists.infradead.org, ath11k@lists.infradead.org,
-	iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/21] vhost-vdpa: Use iommu_paging_domain_alloc()
-Message-ID: <20240703123146-mutt-send-email-mst@kernel.org>
-References: <20240610085555.88197-1-baolu.lu@linux.intel.com>
- <20240610085555.88197-5-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="ZToUQMJI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=1iV7tm49eSCwyOVyED7fSFNlOEYvfAvEQ0ypI3kf1ww=; b=ZToUQMJIkNIBcrEMx7cD61NJ1C
+	CRLtbX8YtyICn2iPpXnFdBluNcb3O7trvfhI8lbbQompEgpt5nVz6U0yV0s/6US+rKOn/CQiIfwIK
+	1vgPG/H95XfvzWUcALaAsd5f+wtwQeFsQMRq7SM5HRMCIoCNIF7Uv2BVddA87xCG2AgYyAqPIt92M
+	6Zpo1kZEzmG05YFIdANCyZMe7/cfmbzhU4TRLcE4Ri3HV6+icVNVWWVpuZyQgitbgUHqOX9UMkkNq
+	md4YhLdIHoxfnvQy8c0TcyKfMAECjnGb37ZFjDW9AfDvV3fZg5X4J/wHShcFTPtGjTH/+IJauX3a/
+	lpOB8aUQ==;
+Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:40114 helo=[192.168.0.142])
+	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <david@lechnology.com>)
+	id 1sP2YG-0007NE-1u;
+	Wed, 03 Jul 2024 12:07:38 -0400
+Message-ID: <3f4e9dfa-6373-4b34-8097-48c870e69daa@lechnology.com>
+Date: Wed, 3 Jul 2024 11:07:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240610085555.88197-5-baolu.lu@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] drm/tiny: Add support for Sitronix ST7539
+To: Christian Eggers <ceggers@arri.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20240703140504.8518-1-ceggers@arri.de>
+Content-Language: en-US
+From: David Lechner <david@lechnology.com>
+Autocrypt: addr=david@lechnology.com; keydata=
+ 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
+In-Reply-To: <20240703140504.8518-1-ceggers@arri.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Mon, Jun 10, 2024 at 04:55:38PM +0800, Lu Baolu wrote:
-> Replace iommu_domain_alloc() with iommu_paging_domain_alloc().
+On 7/3/24 9:05 AM, Christian Eggers wrote:
+> Based on the existing ST7586 driver. But the ST7539 ...
+> - is monochrome only
+> - has 8 VERTICAL pixels per byte
+> - doesn't support any MIPI DCS commands
+> - has (a few) 16 bit commands
+> - doesn't support setting a clipping rect when writing to the RAM
+> - doesn't support rotation (only mirroring of X and/or Y axis)
 > 
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Questions/TODO:
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+To start with, I would suggest reading [1]. This patch is really hard to
+read because it isn't properly formatted. If you don't change the patch,
+you can resend it as [RFC PATCH RESEND] using `git send-email`, or if you
+do change the patch before re-sending, e.g. because you fixed checkpatch
+style issues, just call it v2.
 
+[1]: https://www.kernel.org/doc/html/latest/process/submitting-patches.html
 
-I assume it's merged with the rest of the stuff, right?
+> - should drivers for such old displays be mainlined?
 
+If it is actually going to be used and you are willing to maintain it,
+then yes.
+
+> - shall I use mipi_dbi_ although the display doesn't implement MIPI DCS
+> (and has some 16 bit commands)?
+> - can the conversion to 8 vertical pixels/byte (taken from
+> solomon/ssd130x.c) be avoided / simplified / made more efficient?
+> - how to implement setting of the display contrast (required by my
+> application)?
+
+I see that ssd130x_update_bl() is using brightness to control
+contrast. Don't know if it that is the best way though.
+
+> - add device tree binding
+> 
+> Signed-off-by: Christian Eggers <ceggers@arri.de>
 > ---
->  drivers/vhost/vdpa.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-> index 63a53680a85c..e31ec9ebc4ce 100644
-> --- a/drivers/vhost/vdpa.c
-> +++ b/drivers/vhost/vdpa.c
-> @@ -1312,26 +1312,24 @@ static int vhost_vdpa_alloc_domain(struct vhost_vdpa *v)
->  	struct vdpa_device *vdpa = v->vdpa;
->  	const struct vdpa_config_ops *ops = vdpa->config;
->  	struct device *dma_dev = vdpa_get_dma_dev(vdpa);
-> -	const struct bus_type *bus;
->  	int ret;
->  
->  	/* Device want to do DMA by itself */
->  	if (ops->set_map || ops->dma_map)
->  		return 0;
->  
-> -	bus = dma_dev->bus;
-> -	if (!bus)
-> -		return -EFAULT;
-> -
->  	if (!device_iommu_capable(dma_dev, IOMMU_CAP_CACHE_COHERENCY)) {
->  		dev_warn_once(&v->dev,
->  			      "Failed to allocate domain, device is not IOMMU cache coherent capable\n");
->  		return -ENOTSUPP;
->  	}
->  
-> -	v->domain = iommu_domain_alloc(bus);
-> -	if (!v->domain)
-> -		return -EIO;
-> +	v->domain = iommu_paging_domain_alloc(dma_dev);
-> +	if (IS_ERR(v->domain)) {
-> +		ret = PTR_ERR(v->domain);
-> +		v->domain = NULL;
-> +		return ret;
-> +	}
->  
->  	ret = iommu_attach_device(v->domain, dma_dev);
->  	if (ret)
-> -- 
-> 2.34.1
-
