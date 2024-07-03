@@ -1,127 +1,70 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA4C187540
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 17:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F01B17B50C
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 17:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720027294; cv=none; b=U9V1dtFtRbWsgKGiEN0cPjI1dyh+WmzPmk57IF6+ppXaAKuy0zrIlfpOaSg94FJVPQjd/dyDTk74aVJmh5z1aiHHnmzk0NFvkaVfo4GxNq9O2KGckPu7DyGTdul+5J3W4Hd3P0EqUrG/IKP79g3mPbW5d+MZlXFWNG77Co+2xWM=
+	t=1720027385; cv=none; b=uN2V8NIQlFGjBTuk4bBJLeHwfQzUrBxdaxIKlbVI3MddbIc6+4XLtRJsizGITma90clGioHM8QvfAuHrusecRVsdhvMAGTbYKXCK7susR9t3ukBdOZjvG6V9B4OxDlu8n4AQ//u93iFNkJgDXNVUrxRDJbiRzz/9gdfnVc1SfdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720027294; c=relaxed/simple;
-	bh=PyUC4JnOx8t49+z9OfoW03gptn9Bhl8DXa2Hy8+Ghhk=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=O4ixu0rjWeSt5FyLtnJnjkThxyIkd3XtA0LRG9QU3O6ztnYjYKXgKMXsvW9iLKuvtenZLsD2fw0TOVnB45cTyrgLApIcHGS1T514crugsP2iTWwPJfAb+yAPjANCxThB7rFOWGlcp0r58BrqiGUKSXK77mNLHa8aIhUJnsPahjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tumwyInO; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tumwyInO"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e0342b6f7fbso9364935276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 10:21:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720027289; x=1720632089; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K0FWSWvUbekODbWV63YGf3s/rZsG/y2vGmr0tGGkdh4=;
-        b=tumwyInOQMVTUdUQfOcAnw6ccxJ5a1K0GQPopHDL7D3Hyac94/jprk2Z3A9TIZc8eD
-         +60Z5kt+pfvxLd/EFKxnLS2IIpuuwc2po/RWFf8SD7DGe0IuAQKCJCWgszxvblTl9vnI
-         VX3HiOWoDj+LWQE05SFUH//AVogKTANegkaVOuOZrTuhVDWCxNiUTFECDd8kAJwLO/kY
-         DF3pchQR+urmu+DCf+eS7VkQYkmQpga5KZhFSCALAmdj0Suo0+vci9VGBQ13ixvQOidw
-         AvhpU0mpBO+YjQ3WG87GZylDdxsnrmu/Vr0qnqL6wOpSaXk9Fj5c0DYSP0L3PLNElNOY
-         OkHg==
+	s=arc-20240116; t=1720027385; c=relaxed/simple;
+	bh=iDWqXvabKOgAqW3p3Iu5skUj2Zz2es1nqz12xkhpFQk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=BFFOIWHog6Z1R7D816JJSPlXTlNUdKwTymbIc1MUEeJfl0ttrB/M0JUiNs+jNZKScR9dzKwkQUolsltDRE0Au9mAyipiipl1N6RJLV0hrA+CcRXeg3uBiGJhOyHE9482JhDJG4K6jHLQtae7XN1nOkHOf9LG99OhlEf8xvHA8xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-37613924eefso64235955ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 10:23:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720027289; x=1720632089;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+        d=1e100.net; s=20230601; t=1720027383; x=1720632183;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K0FWSWvUbekODbWV63YGf3s/rZsG/y2vGmr0tGGkdh4=;
-        b=T52uE5h9jcEnp3bHBG8sYAuWVaQqE7i2SvUVIvjUZ2K37vvuyf9QCVjEyqtBckj8QZ
-         d3xfA4drUIm8nS0+Q3PTYTE3fZZscBzz+CdZkvXhgQT9craqpgNc07vPoTvpSvF6KrzJ
-         z0syj7BEzj8r4b59huA9c1qnabAoVIwud4D6ekp2IeUq0G7SCsHA3VgqYcAsnEuyvocZ
-         KvSXuUv5bMaf+P8UXZx6gswNjH22bcxrFS6KvvnwxUE4jPaQBr8Fs0+1/+3CQEyAVmjC
-         kpsvBHDD6dGZVmYUZl/9/YeZ8M1nJMaKCopLiQx2qvOTYRMk623QjY7vAeRKw9Sp5af9
-         GA3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU6Ork6njHe8wE9n0sIzOQgQlJoqXqArEs3RPymLvYFAd1gdtuAgUzIWRp4WhqPeU3JzSEnYErpJTHSSqdHHhCF7L+MBhMYKQXkRZYI
-X-Gm-Message-State: AOJu0YzO/cFklo3FDcDk6wkw7KTPoY8qKrVFBRJyuPugKW9lgMM/ZuXI
-	oka2PXqxT/t29PTXM6zPaN1l+0U75mwX90knp1ErqrAtcyWpCwHfzqm+r2iVoeCz3HwAFjECBbY
-	mW1aKWQ==
-X-Google-Smtp-Source: AGHT+IGgzf2ypPsf+gg7WY15qEpj68EM85AeI9lS4mElKvh7OEaQdift7C8lBXTuoGY+dMzeU9TsXsOPncCe
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bdc2:f28d:3877:f0f2])
- (user=irogers job=sendgmr) by 2002:a05:6902:c03:b0:dfe:3a4a:bef2 with SMTP id
- 3f1490d57ef6-e036ec62e39mr866543276.11.1720027289687; Wed, 03 Jul 2024
- 10:21:29 -0700 (PDT)
-Date: Wed,  3 Jul 2024 10:21:17 -0700
-In-Reply-To: <20240703172117.810918-1-irogers@google.com>
-Message-Id: <20240703172117.810918-3-irogers@google.com>
+        bh=l11yEPDvI5YCrjj0DcoJuCs1C0g24MwZOXs8ZbcH3Vw=;
+        b=ktopo4IUtRQnFwD6oHHutefjFqFUXXHW7MTiQnpy8zaf+9W06xy6ekPTqqRgxpALHX
+         XKteNK2Htwez31eN6laFuUD1+O9LdptaHrvqcSRoXyPJqP5SOCwJXj5zEy8LAbBAQD7o
+         O/M6LE6YVBb7HfA8rCRXdR7dllXQd9kPmpAc42sjJQFjs4QNfQU1mxZe2MpDdPNV+JjJ
+         Ur/ZcPSmFVXzX2TwyQfj1UumGbx8ByBnDi8HDWwQqdpTzUTseHmgoZb9TSdaPczFejj2
+         G+NL2RzRlzsmwaalxd7GkwLd0/kKjkhy2xq3Y0EGNe+1rGQZHRiXAic+Fj/PXT5kbxfU
+         M7IQ==
+X-Gm-Message-State: AOJu0Yy3+NYmoNiIUP2nQ0b/B8v8m6h+I4C0Ur++V9FVrr6xWiv7DHxy
+	6olsVlaq/Q8kzEEYURNpc1Ue7xfJ6qxc8JmUwluziMFOTDzXnTi/qj9LdKFIX/BM7MGlWoWc/pI
+	zC1U/w21aNgyxZ8lCJuqPsfq4PbxN4d60VH33TFjrgsO839MrG3QNyAU=
+X-Google-Smtp-Source: AGHT+IGutl/H9tCG8cVtkfDGWkkjm4xSkPq4+cOkWdmH355BT6OaM3Wi7YwSczwmC9gXLNyJlbz7EAnROzEEPgaGhTZcvnpOpGvj
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240703172117.810918-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Subject: [PATCH v1 2/2] perf dsos: When adding a dso into sorted dsos maintain
- the sort order
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Steinar Gunderson <sesse@google.com>, Matt Fleming <matt@readmodwrite.com>
+MIME-Version: 1.0
+X-Received: by 2002:a92:cb88:0:b0:375:ae47:ba62 with SMTP id
+ e9e14a558f8ab-37cd0448fa7mr2316875ab.1.1720027383240; Wed, 03 Jul 2024
+ 10:23:03 -0700 (PDT)
+Date: Wed, 03 Jul 2024 10:23:03 -0700
+In-Reply-To: <ZoV+N1lcTs1ztvay@katalix.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002eadd0061c5b15c6@google.com>
+Subject: Re: [syzbot] [net?] KASAN: slab-use-after-free Write in l2tp_session_delete
+From: syzbot <syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tparkin@katalix.com
 Content-Type: text/plain; charset="UTF-8"
 
-dsos__add would add at the end of the dso array possibly requiring a
-later find to re-sort the array. Patterns of find then add were
-becoming O(n*log n) due to the sorts. Change the add routine to be
-O(n) rather than O(1) but to maintain the sorted-ness of the dsos
-array so that later finds don't need the O(n*log n) sort.
+Hello,
 
-Reported-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/dsos.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 5e5e05f86dd3..d4acdb37f046 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -206,11 +206,27 @@ int __dsos__add(struct dsos *dsos, struct dso *dso)
- 		dsos->dsos = temp;
- 		dsos->allocated = to_allocate;
- 	}
--	dsos->dsos[dsos->cnt++] = dso__get(dso);
--	if (dsos->cnt >= 2 && dsos->sorted) {
--		dsos->sorted = dsos__cmp_long_name_id_short_name(&dsos->dsos[dsos->cnt - 2],
--								 &dsos->dsos[dsos->cnt - 1])
--			<= 0;
-+	if (!dsos->sorted) {
-+		dsos->dsos[dsos->cnt++] = dso__get(dso);
-+	} else {
-+		int low = 0, high = dsos->cnt - 1;
-+		int insert = dsos->cnt; /* Default to inserting at the end. */
-+
-+		while (low <= high) {
-+			int mid = low + (high - low) / 2;
-+			int cmp = dsos__cmp_long_name_id_short_name(&dsos->dsos[mid], &dso);
-+
-+			if (cmp < 0) {
-+				low = mid + 1;
-+			} else {
-+				high = mid - 1;
-+				insert = mid;
-+			}
-+		}
-+		memmove(&dsos->dsos[insert + 1], &dsos->dsos[insert],
-+			(dsos->cnt - insert) * sizeof(struct dso *));
-+		dsos->cnt++;
-+		dsos->dsos[insert] = dso__get(dso);
- 	}
- 	dso__set_dsos(dso, dsos);
- 	return 0;
--- 
-2.45.2.803.g4e1b14247a-goog
+Reported-and-tested-by: syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         185d7211 net: xilinx: axienet: Enable multicast by def..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=10eb109e980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e78fc116033e0ab7
+dashboard link: https://syzkaller.appspot.com/bug?extid=c041b4ce3a6dfd1e63e2
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=101379c1980000
+
+Note: testing is done by a robot and is best-effort only.
