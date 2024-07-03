@@ -1,61 +1,48 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D9C13D630
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 05:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302D861FF9;
+	Wed,  3 Jul 2024 05:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719986244; cv=none; b=XhAweuIo0QE6YUeBLd/NO4SzVu9z44mA8dgvph9DNFUdACWCvYsGPPX9XhUncWeZm1IVLrCWAgkSDsUCQhVZ1XL+jlfkXqvAALhuBo5oBtbTFgYwSjTqATvM42+3ODRpG01x0icSYSqYMTs6TNLRAPbJtjzt7mUlcDl/dML9zWQ=
+	t=1719986319; cv=none; b=FCdMBpRQrhv8hjq54mk0ZyO8tMAjPx447VK873JuNt2y+FwFue+1sodzh+gOail1ma8WHIm9C/ldIcd54+PjFBLHO3yHWikNPsblAUprayozHIZxSL2ANWVLlUR71++BjFPLt1juSR2TFfetVlvKTxz67mu4/uimkmqF2ddaODE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719986244; c=relaxed/simple;
-	bh=5x3Kx2GIIrTZhv6naZLYhu3QB2wQGzuvxZ0uTCGjNl0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QhBpBQFG8G/dMLi5F6jLrNP08ZnvdrY4bghsDesgFpuB9SQQBGBr+p8TiBS+lI7mUAkLspXu7RLbralfiEv4BMp/AFTwju7OXwImtsgs5ZH/TJ3jjkpj7iwQJ+95Wu7S1H8CKk296qAOM2X1DrKown/RbAuH1JXPebVl8NfAvyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=f/JgZrdw; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1719986319; c=relaxed/simple;
+	bh=UbLaVPYf/8fF6WtHy1fuyY5eDsi0S5XH2heNT10lzQc=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=uI+pE+DfH9ptJsCydv8pfAnc3Mht4spDrKD69KISVusOD5ybdsa0aEyBBs1089qclJ8cUhJAGp++CVeqozVLpEsKUDJ3p8tizR9EP/zbgThWD6l71XfDoK+5j5nCCGlV8nx6RiG/3GOVYfBeSLSKoPtRf+7HJsTlo1ZAV0S3Uec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dig3kYqm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="f/JgZrdw"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7041053c0fdso2701098b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 22:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719986242; x=1720591042; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y36XPWrfz1CADhtBwZf6nneoyWvS4JioNGUoxpoOl3U=;
-        b=f/JgZrdwmeyKylKU59WUCWfU0dsPVqvOTFvQlgRuBojF5tdd8wYA+wH+NOkOYN/75R
-         1taDaN+T+U2tSHrFoy2TJXmGs7+8JAgrbPLesa0uAgSc3SyjJjrYv4ncWgB7pZi32iWe
-         833HBitByICurIDgerRHROZ/a/rp5arPX49ns8wpVk+pHg/bDXgNhJgvHvz941GyHS42
-         I0ZYosPbACw7tK1i9ZgjdOzW1QroIgPl++2EzW0zvAKpiXOa12efp4BUmhPhSKKNyNaS
-         QjpmtMAxjLU6nCsm9Mcq0p3nTFdAG8Nq7F3vibLhqnZiC9AmkGIfOmuWF/PCxdI9auaO
-         xucA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719986242; x=1720591042;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y36XPWrfz1CADhtBwZf6nneoyWvS4JioNGUoxpoOl3U=;
-        b=rQTXJd7wcZxy5JTuVwuLI4aLU3qDhZLlfF89pngpikKF6X4Hj4WhvGtfA8Vo2n3AIA
-         GgZfrYlL1Mf+SqH4orZmhDKgz+09Zgf4jrMj1ThlfACASEBfqmCJ+QPE7TcT8Qp2orGj
-         UgOm6YVD5glqTOo+U5rtJxMDkdYiS29E5GrsECHNGz+ZmuxD/X1Sp7+nPyzsa4DnsO2A
-         44TWz2+rfebk+HB+x0orgCm1hCKJETSXYKJiwdk/GQoUxwE4Fcr4fkJ/ENq9wIbEM/hm
-         A6YUPYK3Q6JD00i9Z2ju/cSzAUweeZrp0vQ7NmdRU++wXN6/Yj1gin5SP6/e38AoUyN4
-         aNYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaWR6QMOf14zXm0a6kVWrI6UXiYwflLHyzCumWmPRgw3O2fEeD0eRLkUM7X0O4kvFEVGtjucGf9NqhAvsRCUncuYCZmMOHjCdqL7TW
-X-Gm-Message-State: AOJu0YytBag/QvKkoJCm1JO4g/2cDejbZPnmPQdRiq48KDbVz9tK+EzD
-	34eSlivpaYl2PYoqjI75GW+TEnSV4X3dGkaOH4N/wamV0y1qOgupKN3vpfWWF74=
-X-Google-Smtp-Source: AGHT+IGtTL6zeex4Vp3nLyf5jioRlTFVR9IWpHVL9ccOzYaNDCDVvXsIbuo5Lu/zNx1942ZXU8AkhA==
-X-Received: by 2002:a05:6a00:99b:b0:705:ca05:9a with SMTP id d2e1a72fcca58-70aaaf2f588mr9678471b3a.29.1719986241689;
-        Tue, 02 Jul 2024 22:57:21 -0700 (PDT)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70804a89fc9sm9514103b3a.212.2024.07.02.22.57.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 22:57:20 -0700 (PDT)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Tue, 02 Jul 2024 22:56:33 -0700
-Subject: [PATCH v4 13/13] selftests: riscv: Support xtheadvector in vector
- tests
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dig3kYqm"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4634Yn2b010616;
+	Wed, 3 Jul 2024 05:58:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=2bCbwj31Jqvp01Ij45V+38
+	DSdGH4QBJ4EfdMmc5rl+g=; b=Dig3kYqmOsPT2BTpKGIMJvFn9cFT/+m5SQNM4D
+	zKJHCTVmYuTgTrs8os/g6OLdMGXTm13cvJhcyMbLJL6DqC93tVLdfIevh9Sk4a4b
+	lj7ByhjnQanjqt9WxdMVvMUcaI/CHNwe/xLt5wGmWEPm9dtwq2aC7kp5p8L1jGlE
+	3o1oUE7Hwg2013NZ33c3SJNEElF0Gm8kh30RTuRgfSF6MITf1699rceqcc9IIcv1
+	99xV9RNkgN2aU8xY4dhvmXz94ZHFaGZSUK736D6KfT/3765k7C6fMp08FKmfwlZ+
+	IDLmqkVH04Lifpp8mHx1RJ9MNuXPt+QJdPmO3LjLZjx4iK6A==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 404yr984d0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 05:58:32 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4635wV1X008878
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Jul 2024 05:58:31 GMT
+Received: from hu-azarrabi-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 2 Jul 2024 22:58:30 -0700
+From: Amirreza Zarrabi <quic_azarrabi@quicinc.com>
+Subject: [PATCH RFC 0/3] Implement Qualcomm TEE IPC and ioctl calls
+Date: Tue, 2 Jul 2024 22:57:35 -0700
+Message-ID: <20240702-qcom-tee-object-and-ioctls-v1-0-633c3ddf57ee@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,442 +51,159 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240702-xtheadvector-v4-13-2bad6820db11@rivosinc.com>
-References: <20240702-xtheadvector-v4-0-2bad6820db11@rivosinc.com>
-In-Reply-To: <20240702-xtheadvector-v4-0-2bad6820db11@rivosinc.com>
-To: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Jisheng Zhang <jszhang@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
- Guo Ren <guoren@kernel.org>, Evan Green <evan@rivosinc.com>, 
- Andy Chiu <andy.chiu@sifive.com>, Jessica Clarke <jrtc27@jrtc27.com>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Charlie Jenkins <charlie@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAE/ohGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDcwMj3cLk/FzdktRU3fykrNTkEt3EvBTdzPzkkpxiXbM0U6O0lFQDYxM
+ LUyWgAQVFqWmZFWDDo5WC3JyVYmtrAeTmQadxAAAA
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
+        "Amirreza Zarrabi" <quic_azarrabi@quicinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719986213; l=13223;
- i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=5x3Kx2GIIrTZhv6naZLYhu3QB2wQGzuvxZ0uTCGjNl0=;
- b=uTE5lUX7OUcJXEXONvFnZEnhakheq763ouHiDIE2KuM510nBeHka22cGL7HakksI8IhwTpxXw
- 390eXS+p5qED42aQnrYS/h71E5qoJSapLkYB2JEpzPCT82KA33lkV5w
-X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
- pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 7O4WY9ZCbdTvL_HRAaIGxYzG58P6xYQ2
+X-Proofpoint-ORIG-GUID: 7O4WY9ZCbdTvL_HRAaIGxYzG58P6xYQ2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_02,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ bulkscore=0 impostorscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407030042
 
-Extend existing vector tests to be compatible with the xtheadvector
-instructions.
+Qualcomm TEE hosts Trusted Applications (TAs) and services that run in
+the secure world. Access to these resources is provided using MinkIPC.
+MinkIPC is a capability-based synchronous message passing facility. It
+allows code executing in one domain to invoke objects running in other
+domains. When a process holds a reference to an object that lives in
+another domain, that object reference is a capability. Capabilities
+allow us to separate implementation of policies from implementation of
+the transport.
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+As part of the upstreaming of the object invoke driver (called SMC-Invoke
+driver), we need to provide a reasonable kernel API and UAPI. The clear
+option is to use TEE subsystem and write a back-end driver, however the
+TEE subsystem doesn't fit with the design of Qualcomm TEE.
+
+Does TEE subsystem fit requirements of a capability based system?
+-----------------------------------------------------------------
+In TEE subsystem, to invoke a function:
+   - client should open a device file "/dev/teeX",
+   - create a session with a TA, and
+   - invoke the functions in that session.
+
+1. The privilege to invoke a function is determined by a session. If a
+   client has a session, it cannot share it with other clients. Even if
+it does, it is not fine-grained enough, i.e. either all accessible
+functions/resources in a session or none. Assume a scenario when a client
+wants to grant a permission to invoke just a function that it has the rights,
+to another client.
+
+The "all or nothing" for sharing sessions is not in line with our
+capability system: "if you own a capability, you should be able to grant
+or share it".
+
+2. In TEE subsystem, resources are managed in a context. Every time a
+   client opens "/dev/teeX", a new context is created to keep track of
+the allocated resources, including opened sessions and remote objects. Any
+effort for sharing resources between two independent clients requires
+involvement of context manager, i.e. the back-end driver. This requires
+implementing some form of policy in the back-end driver.
+
+3. The TEE subsystem supports two type of memory sharing:
+   - per-device memory pools, and
+   - user defined memory references.
+User defined memory references are private to the application and cannot
+be shared. Memory allocated from per-device "shared" pools are accessible
+using a file descriptor. It can be mapped by any process if it has
+access to it. This means, we cannot provide the resource isolation
+between two clients. Assume a scenario when a client wants to allocate a
+memory (which is shared with TEE) from an "isolated" pool and share it
+with another client, without the right to access the contents of memory.
+
+4. The kernel API provided by TEE subsystem does not support a kernel
+   supplicant. Adding support requires an execution context (e.g. a
+kernel thread) due to the TEE subsystem design. tee_driver_ops supports
+only "send" and "receive" callbacks and to deliver a request, someone
+should wait on "receive".
+
+We need a callback to "dispatch" or "handle" a request in the context of
+the client thread. It should redirect a request to a kernel service or
+a user supplicant. In TEE subsystem such requirement should be implemented
+in TEE back-end driver, independent from the TEE subsystem.
+
+5. The UAPI provided by TEE subsystem is similar to the GPTEE Client
+   interface. This interface is not suitable for a capability system.
+For instance, there is no session in a capability system which means
+either its should not be used, or we should overload its definition.
+
+Can we use TEE subsystem?
+-------------------------
+There are workarounds for some of the issues above. The question is if we
+should define our own UAPI or try to use a hack-y way of fitting into
+the TEE subsystem. I am using word hack-y, as most of the workaround
+involves:
+
+- "diverging from the definition". For instance, ignoring the session
+  open and close ioctl calls or use file descriptors for all remote
+resources (as, fd is the closet to capability) which undermines the
+isolation provided by the contexts,
+
+- "overloading the variables". For instance, passing object ID as file
+  descriptors in a place of session ID, or
+
+- "bypass TEE subsystem". For instance, extensively rely on meta
+  parameters or push everything (e.g. kernel services) to the back-end
+driver, which means leaving almost all TEE subsystem unused.
+
+We cannot take the full benefits of TEE subsystem and may need to
+implement most of the requirements in the back-end driver. Also, as
+discussed above, the UAPI is not suitable for capability-based use cases.
+We proposed a new set of ioctl calls for SMC-Invoke driver.
+
+In this series we posted three patches. We implemented a transport
+driver that provides qcom_tee_object. Any object on secure side is
+represented with an instance of qcom_tee_object and any struct exposed
+to TEE should embed an instance of qcom_tee_object. Any, support for new
+services, e.g. memory object, RPMB, userspace clients or supplicants are
+implemented independently from the driver.
+
+We have a simple memory object and a user driver that uses
+qcom_tee_object.
+
+Signed-off-by: Amirreza Zarrabi <quic_azarrabi@quicinc.com>
 ---
- .../selftests/riscv/vector/v_exec_initval_nolibc.c | 23 ++++--
- tools/testing/selftests/riscv/vector/v_helpers.c   | 17 +++-
- tools/testing/selftests/riscv/vector/v_helpers.h   |  4 +-
- tools/testing/selftests/riscv/vector/v_initval.c   | 12 ++-
- .../selftests/riscv/vector/vstate_exec_nolibc.c    | 20 +++--
- .../testing/selftests/riscv/vector/vstate_prctl.c  | 91 ++++++++++++++--------
- 6 files changed, 115 insertions(+), 52 deletions(-)
+Amirreza Zarrabi (3):
+      firmware: qcom: implement object invoke support
+      firmware: qcom: implement memory object support for TEE
+      firmware: qcom: implement ioctl for TEE object invocation
 
-diff --git a/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c b/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
-index 74b13806baf0..6f40c2acc0c2 100644
---- a/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
-+++ b/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
-@@ -18,13 +18,22 @@ int main(int argc, char **argv)
- 	unsigned long vl;
- 	int first = 1;
- 
--	asm volatile (
--		".option push\n\t"
--		".option arch, +v\n\t"
--		"vsetvli	%[vl], x0, e8, m1, ta, ma\n\t"
--		".option pop\n\t"
--		: [vl] "=r" (vl)
--	);
-+	if (argc > 2 && strcmp(argv[2], "x"))
-+		asm volatile (
-+			// 0 | zimm[10:0] | rs1 | 1 1 1 | rd |1010111| vsetvli
-+			// vsetvli	t4, x0, e8, m1, d1
-+			".4byte		0b00000000000000000111111011010111\n\t"
-+			"mv		%[vl], t4\n\t"
-+			: [vl] "=r" (vl) : : "t4"
-+		);
-+	else
-+		asm volatile (
-+			".option push\n\t"
-+			".option arch, +v\n\t"
-+			"vsetvli	%[vl], x0, e8, m1, ta, ma\n\t"
-+			".option pop\n\t"
-+			: [vl] "=r" (vl)
-+		);
- 
- #define CHECK_VECTOR_REGISTER(register) ({					\
- 	for (int i = 0; i < vl; i++) {						\
-diff --git a/tools/testing/selftests/riscv/vector/v_helpers.c b/tools/testing/selftests/riscv/vector/v_helpers.c
-index 15c22318db72..2c4df76eefe9 100644
---- a/tools/testing/selftests/riscv/vector/v_helpers.c
-+++ b/tools/testing/selftests/riscv/vector/v_helpers.c
-@@ -1,11 +1,21 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
- #include "../hwprobe/hwprobe.h"
-+#include <asm/vendor/thead.h>
- #include <stdlib.h>
- #include <stdio.h>
- #include <unistd.h>
- #include <sys/wait.h>
- 
-+int is_xtheadvector_supported(void)
-+{
-+	struct riscv_hwprobe pair;
-+
-+	pair.key = RISCV_HWPROBE_KEY_VENDOR_EXT_THEAD_0;
-+	riscv_hwprobe(&pair, 1, 0, NULL, 0);
-+	return pair.value & RISCV_HWPROBE_VENDOR_EXT_XTHEADVECTOR;
-+}
-+
- int is_vector_supported(void)
- {
- 	struct riscv_hwprobe pair;
-@@ -15,9 +25,9 @@ int is_vector_supported(void)
- 	return pair.value & RISCV_HWPROBE_IMA_V;
- }
- 
--int launch_test(char *next_program, int test_inherit)
-+int launch_test(char *next_program, int test_inherit, int xtheadvector)
- {
--	char *exec_argv[3], *exec_envp[1];
-+	char *exec_argv[4], *exec_envp[1];
- 	int rc, pid, status;
- 
- 	pid = fork();
-@@ -29,7 +39,8 @@ int launch_test(char *next_program, int test_inherit)
- 	if (!pid) {
- 		exec_argv[0] = next_program;
- 		exec_argv[1] = test_inherit != 0 ? "x" : NULL;
--		exec_argv[2] = NULL;
-+		exec_argv[2] = xtheadvector != 0 ? "x" : NULL;
-+		exec_argv[3] = NULL;
- 		exec_envp[0] = NULL;
- 		/* launch the program again to check inherit */
- 		rc = execve(next_program, exec_argv, exec_envp);
-diff --git a/tools/testing/selftests/riscv/vector/v_helpers.h b/tools/testing/selftests/riscv/vector/v_helpers.h
-index 88719c4be496..67d41cb6f871 100644
---- a/tools/testing/selftests/riscv/vector/v_helpers.h
-+++ b/tools/testing/selftests/riscv/vector/v_helpers.h
-@@ -1,5 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- 
-+int is_xtheadvector_supported(void);
-+
- int is_vector_supported(void);
- 
--int launch_test(char *next_program, int test_inherit);
-+int launch_test(char *next_program, int test_inherit, int xtheadvector);
-diff --git a/tools/testing/selftests/riscv/vector/v_initval.c b/tools/testing/selftests/riscv/vector/v_initval.c
-index f38b5797fa31..be9e1d18ad29 100644
---- a/tools/testing/selftests/riscv/vector/v_initval.c
-+++ b/tools/testing/selftests/riscv/vector/v_initval.c
-@@ -7,10 +7,16 @@
- 
- TEST(v_initval)
- {
--	if (!is_vector_supported())
--		SKIP(return, "Vector not supported");
-+	int xtheadvector = 0;
- 
--	ASSERT_EQ(0, launch_test(NEXT_PROGRAM, 0));
-+	if (!is_vector_supported()) {
-+		if (is_xtheadvector_supported())
-+			xtheadvector = 1;
-+		else
-+			SKIP(return, "Vector not supported");
-+	}
-+
-+	ASSERT_EQ(0, launch_test(NEXT_PROGRAM, 0, xtheadvector));
- }
- 
- TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/riscv/vector/vstate_exec_nolibc.c b/tools/testing/selftests/riscv/vector/vstate_exec_nolibc.c
-index 1f9969bed235..7b7d6f21acb4 100644
---- a/tools/testing/selftests/riscv/vector/vstate_exec_nolibc.c
-+++ b/tools/testing/selftests/riscv/vector/vstate_exec_nolibc.c
-@@ -6,13 +6,16 @@
- 
- int main(int argc, char **argv)
- {
--	int rc, pid, status, test_inherit = 0;
-+	int rc, pid, status, test_inherit = 0, xtheadvector = 0;
- 	long ctrl, ctrl_c;
- 	char *exec_argv[2], *exec_envp[2];
- 
--	if (argc > 1)
-+	if (argc > 1 && strcmp(argv[1], "x"))
- 		test_inherit = 1;
- 
-+	if (argc > 2 && strcmp(argv[2], "x"))
-+		xtheadvector = 1;
-+
- 	ctrl = my_syscall1(__NR_prctl, PR_RISCV_V_GET_CONTROL);
- 	if (ctrl < 0) {
- 		puts("PR_RISCV_V_GET_CONTROL is not supported\n");
-@@ -53,11 +56,14 @@ int main(int argc, char **argv)
- 				puts("child's vstate_ctrl not equal to parent's\n");
- 				exit(-1);
- 			}
--			asm volatile (".option push\n\t"
--				      ".option arch, +v\n\t"
--				      "vsetvli x0, x0, e32, m8, ta, ma\n\t"
--				      ".option pop\n\t"
--				      );
-+			if (xtheadvector)
-+				asm volatile (".4byte	0x00007ed7");
-+			else
-+				asm volatile (".option push\n\t"
-+					".option arch, +v\n\t"
-+					"vsetvli x0, x0, e32, m8, ta, ma\n\t"
-+					".option pop\n\t"
-+					);
- 			exit(ctrl);
- 		}
- 	}
-diff --git a/tools/testing/selftests/riscv/vector/vstate_prctl.c b/tools/testing/selftests/riscv/vector/vstate_prctl.c
-index 528e8c544db0..375af40e88e6 100644
---- a/tools/testing/selftests/riscv/vector/vstate_prctl.c
-+++ b/tools/testing/selftests/riscv/vector/vstate_prctl.c
-@@ -11,7 +11,7 @@
- 
- #define NEXT_PROGRAM "./vstate_exec_nolibc"
- 
--int test_and_compare_child(long provided, long expected, int inherit)
-+int test_and_compare_child(long provided, long expected, int inherit, int xtheadvector)
- {
- 	int rc;
- 
-@@ -21,7 +21,7 @@ int test_and_compare_child(long provided, long expected, int inherit)
- 		       provided, rc);
- 		return -1;
- 	}
--	rc = launch_test(NEXT_PROGRAM, inherit);
-+	rc = launch_test(NEXT_PROGRAM, inherit, xtheadvector);
- 	if (rc != expected) {
- 		printf("Test failed, check %d != %ld\n", rc,  expected);
- 		return -2;
-@@ -36,7 +36,7 @@ TEST(get_control_no_v)
- {
- 	long rc;
- 
--	if (is_vector_supported())
-+	if (is_vector_supported() || is_xtheadvector_supported())
- 		SKIP(return, "Test expects vector to be not supported");
- 
- 	rc = prctl(PR_RISCV_V_GET_CONTROL);
-@@ -48,7 +48,7 @@ TEST(set_control_no_v)
- {
- 	long rc;
- 
--	if (is_vector_supported())
-+	if (is_vector_supported() || is_xtheadvector_supported())
- 		SKIP(return, "Test expects vector to be not supported");
- 
- 	rc = prctl(PR_RISCV_V_SET_CONTROL, PR_RISCV_V_VSTATE_CTRL_ON);
-@@ -61,12 +61,12 @@ TEST(vstate_on_current)
- 	long flag;
- 	long rc;
- 
--	if (!is_vector_supported())
-+	if (!is_vector_supported() && !is_xtheadvector_supported())
- 		SKIP(return, "Vector not supported");
- 
- 	flag = PR_RISCV_V_VSTATE_CTRL_ON;
- 	rc = prctl(PR_RISCV_V_SET_CONTROL, flag);
--	EXPECT_EQ(0, rc) TH_LOG("Enabling V for current should always success");
-+	EXPECT_EQ(0, rc) TH_LOG("Enabling V for current should always succeed");
- }
- 
- TEST(vstate_off_eperm)
-@@ -74,99 +74,128 @@ TEST(vstate_off_eperm)
- 	long flag;
- 	long rc;
- 
--	if (!is_vector_supported())
-+	if (!is_vector_supported() && !is_xtheadvector_supported())
- 		SKIP(return, "Vector not supported");
- 
- 	flag = PR_RISCV_V_VSTATE_CTRL_OFF;
- 	rc = prctl(PR_RISCV_V_SET_CONTROL, flag);
--	EXPECT_EQ(EPERM, errno) TH_LOG("Disabling current's V alive must fail with EPERM(%d)", errno);
--	EXPECT_EQ(-1, rc) TH_LOG("Disabling current's V alive must fail with EPERM(%d)", errno);
-+	EXPECT_EQ(EPERM, errno) TH_LOG("Disabling V in current thread with V enabled must fail with EPERM(%d)", errno);
-+	EXPECT_EQ(-1, rc) TH_LOG("Disabling V in current thread with V enabled must fail with EPERM(%d)", errno);
- }
- 
- TEST(vstate_on_no_nesting)
- {
- 	long flag;
-+	int xtheadvector = 0;
- 
--	if (!is_vector_supported())
--		SKIP(return, "Vector not supported");
-+	if (!is_vector_supported()) {
-+		if (is_xtheadvector_supported())
-+			xtheadvector = 1;
-+		else
-+			SKIP(return, "Vector not supported");
-+	}
- 
- 	/* Turn on next's vector explicitly and test */
- 	flag = PR_RISCV_V_VSTATE_CTRL_ON << PR_RISCV_V_VSTATE_CTRL_NEXT_SHIFT;
- 
--	EXPECT_EQ(0, test_and_compare_child(flag, PR_RISCV_V_VSTATE_CTRL_ON, 0));
-+	EXPECT_EQ(0, test_and_compare_child(flag, PR_RISCV_V_VSTATE_CTRL_ON, 0, xtheadvector));
- }
- 
- TEST(vstate_off_nesting)
- {
- 	long flag;
-+	int xtheadvector = 0;
- 
--	if (!is_vector_supported())
--		SKIP(return, "Vector not supported");
-+	if (!is_vector_supported()) {
-+		if (is_xtheadvector_supported())
-+			xtheadvector = 1;
-+		else
-+			SKIP(return, "Vector not supported");
-+	}
- 
- 	/* Turn off next's vector explicitly and test */
- 	flag = PR_RISCV_V_VSTATE_CTRL_OFF << PR_RISCV_V_VSTATE_CTRL_NEXT_SHIFT;
- 
--	EXPECT_EQ(0, test_and_compare_child(flag, PR_RISCV_V_VSTATE_CTRL_OFF, 1));
-+	EXPECT_EQ(0, test_and_compare_child(flag, PR_RISCV_V_VSTATE_CTRL_OFF, 1, xtheadvector));
- }
- 
- TEST(vstate_on_inherit_no_nesting)
- {
- 	long flag, expected;
-+	int xtheadvector = 0;
- 
--	if (!is_vector_supported())
--		SKIP(return, "Vector not supported");
-+	if (!is_vector_supported()) {
-+		if (is_xtheadvector_supported())
-+			xtheadvector = 1;
-+		else
-+			SKIP(return, "Vector not supported");
-+	}
- 
- 	/* Turn on next's vector explicitly and test no inherit */
- 	flag = PR_RISCV_V_VSTATE_CTRL_ON << PR_RISCV_V_VSTATE_CTRL_NEXT_SHIFT;
- 	flag |= PR_RISCV_V_VSTATE_CTRL_INHERIT;
- 	expected = flag | PR_RISCV_V_VSTATE_CTRL_ON;
- 
--	EXPECT_EQ(0, test_and_compare_child(flag, expected, 0));
-+	EXPECT_EQ(0, test_and_compare_child(flag, expected, 0, xtheadvector));
- }
- 
- TEST(vstate_on_inherit)
- {
- 	long flag, expected;
-+	int xtheadvector = 0;
- 
--	if (!is_vector_supported())
--		SKIP(return, "Vector not supported");
-+	if (!is_vector_supported()) {
-+		if (is_xtheadvector_supported())
-+			xtheadvector = 1;
-+		else
-+			SKIP(return, "Vector not supported");
-+	}
- 
- 	/* Turn on next's vector explicitly and test inherit */
- 	flag = PR_RISCV_V_VSTATE_CTRL_ON << PR_RISCV_V_VSTATE_CTRL_NEXT_SHIFT;
- 	flag |= PR_RISCV_V_VSTATE_CTRL_INHERIT;
- 	expected = flag | PR_RISCV_V_VSTATE_CTRL_ON;
- 
--	EXPECT_EQ(0, test_and_compare_child(flag, expected, 1));
-+	EXPECT_EQ(0, test_and_compare_child(flag, expected, 1, xtheadvector));
- }
- 
- TEST(vstate_off_inherit_no_nesting)
- {
- 	long flag, expected;
-+	int xtheadvector = 0;
- 
--	if (!is_vector_supported())
--		SKIP(return, "Vector not supported");
--
-+	if (!is_vector_supported()) {
-+		if (is_xtheadvector_supported())
-+			xtheadvector = 1;
-+		else
-+			SKIP(return, "Vector not supported");
-+	}
- 	/* Turn off next's vector explicitly and test no inherit */
- 	flag = PR_RISCV_V_VSTATE_CTRL_OFF << PR_RISCV_V_VSTATE_CTRL_NEXT_SHIFT;
- 	flag |= PR_RISCV_V_VSTATE_CTRL_INHERIT;
- 	expected = flag | PR_RISCV_V_VSTATE_CTRL_OFF;
- 
--	EXPECT_EQ(0, test_and_compare_child(flag, expected, 0));
-+	EXPECT_EQ(0, test_and_compare_child(flag, expected, 0, xtheadvector));
- }
- 
- TEST(vstate_off_inherit)
- {
- 	long flag, expected;
-+	int xtheadvector = 0;
- 
--	if (!is_vector_supported())
--		SKIP(return, "Vector not supported");
-+	if (!is_vector_supported()) {
-+		if (is_xtheadvector_supported())
-+			xtheadvector = 1;
-+		else
-+			SKIP(return, "Vector not supported");
-+	}
- 
- 	/* Turn off next's vector explicitly and test inherit */
- 	flag = PR_RISCV_V_VSTATE_CTRL_OFF << PR_RISCV_V_VSTATE_CTRL_NEXT_SHIFT;
- 	flag |= PR_RISCV_V_VSTATE_CTRL_INHERIT;
- 	expected = flag | PR_RISCV_V_VSTATE_CTRL_OFF;
- 
--	EXPECT_EQ(0, test_and_compare_child(flag, expected, 1));
-+	EXPECT_EQ(0, test_and_compare_child(flag, expected, 1, xtheadvector));
- }
- 
- /* arguments should fail with EINVAL */
-@@ -174,7 +203,7 @@ TEST(inval_set_control_1)
- {
- 	int rc;
- 
--	if (!is_vector_supported())
-+	if (!is_vector_supported() && !is_xtheadvector_supported())
- 		SKIP(return, "Vector not supported");
- 
- 	rc = prctl(PR_RISCV_V_SET_CONTROL, 0xff0);
-@@ -187,7 +216,7 @@ TEST(inval_set_control_2)
- {
- 	int rc;
- 
--	if (!is_vector_supported())
-+	if (!is_vector_supported() && !is_xtheadvector_supported())
- 		SKIP(return, "Vector not supported");
- 
- 	rc = prctl(PR_RISCV_V_SET_CONTROL, 0x3);
-@@ -200,7 +229,7 @@ TEST(inval_set_control_3)
- {
- 	int rc;
- 
--	if (!is_vector_supported())
-+	if (!is_vector_supported() && !is_xtheadvector_supported())
- 		SKIP(return, "Vector not supported");
- 
- 	rc = prctl(PR_RISCV_V_SET_CONTROL, 0xc);
+ drivers/firmware/qcom/Kconfig                      |   36 +
+ drivers/firmware/qcom/Makefile                     |    2 +
+ drivers/firmware/qcom/qcom_object_invoke/Makefile  |   12 +
+ drivers/firmware/qcom/qcom_object_invoke/async.c   |  142 +++
+ drivers/firmware/qcom/qcom_object_invoke/core.c    | 1139 ++++++++++++++++++
+ drivers/firmware/qcom/qcom_object_invoke/core.h    |  186 +++
+ .../qcom/qcom_object_invoke/qcom_scm_invoke.c      |   22 +
+ .../firmware/qcom/qcom_object_invoke/release_wq.c  |   90 ++
+ .../qcom/qcom_object_invoke/xts/mem_object.c       |  406 +++++++
+ .../qcom_object_invoke/xts/object_invoke_uapi.c    | 1231 ++++++++++++++++++++
+ include/linux/firmware/qcom/qcom_object_invoke.h   |  233 ++++
+ include/uapi/misc/qcom_tee.h                       |  117 ++
+ 12 files changed, 3616 insertions(+)
+---
+base-commit: 74564adfd3521d9e322cfc345fdc132df80f3c79
+change-id: 20240702-qcom-tee-object-and-ioctls-6f52fde03485
 
+Best regards,
 -- 
-2.44.0
+Amirreza Zarrabi <quic_azarrabi@quicinc.com>
 
