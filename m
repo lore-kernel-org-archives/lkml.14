@@ -1,93 +1,88 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D00017DE04;
-	Wed,  3 Jul 2024 11:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7F217F51A;
+	Wed,  3 Jul 2024 11:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720004752; cv=none; b=G7MsgBd1hTEff0ba+2w6J5PNKF1OZ1T/3vKPurvT3MDfA5MHp/TFF7u7Bo+xc8l15pH9rScLbIAOTpPcn4GHW779QMDhk4V1SyBiebmNl2OEJfCFT8DEqOoTDmuKf2aqOBlnntp5EmRZK9k6hW2X3498X2Mv+VjGjy/jwavnVUQ=
+	t=1720004755; cv=none; b=Sq+m+xopqvB0zfKhtsOyX2wlI6dlDB65ha0SQ01YtWeIQt6OGldrnDmGJlatZBXNQtwZ+nhjyO7mCv6IRzgez5ncmBYZNYu+wLDNf0r5C8NBNjYIXFKSMa9/daY+K8EZro6LqKgP6KZI0sl7CS54qqchkOCjzl+D9wMstbxnhUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720004752; c=relaxed/simple;
-	bh=AtufuHakgiGeUK6iDXQt3b7GibQgjYgBp7xXGZAc0ZE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BbwXp/uDThe2GiWS3Ky9cDrlCHSVqKpXq/zD5NhIYlsXlWw3rw0U4ybA5i9wyyFfBM488ghhbDCYs8KHE71pLHmwdLeYfnps3vSCio24WibZbhLYDfvjHkNW0Uh35rZOftITYT5s/DtpdiioHEL0+fc6GaFEXuQyE8o+3wwRPrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B2mrjgvq; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2mrjgvq"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a751ed17b1eso85456266b.1;
-        Wed, 03 Jul 2024 04:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720004749; x=1720609549; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AtufuHakgiGeUK6iDXQt3b7GibQgjYgBp7xXGZAc0ZE=;
-        b=B2mrjgvqEnlbJIaisnNo32cM7E2GDMOv8q3nbbcdncW+QGATbDNzYobCG3QS5xQyJn
-         mf+HJxwrMkhzCV+DE8RdgNS5pvgC8AgmKKjL5XkOUjpedkiy1JPjQtTTE2KgYtyKVT4M
-         lU0TZY6M8o6ReaKmqbj7L9eP8Lr52ODhJugTgmpdsRv1w+t3XkRlAgNZYwmc7uQwF8ib
-         ZAyp1Qiz2nTSpvoHsGKciuEeRLi7bT2QQQrI2nVxy0+pk1zQ+Ds2DGLoYLtb2CkPfGz8
-         Uj8+yOh2/6niukHIv2PoxjccofAxP6rEmORNkBC6sHn9lS1vZTnrN4BD4xGc/8Gq7KKS
-         l1xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720004749; x=1720609549;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AtufuHakgiGeUK6iDXQt3b7GibQgjYgBp7xXGZAc0ZE=;
-        b=Dlb41/MPIblnvcrHpnA1Zdu/n9MR5RMDdewcFfrI8Tlyi6QkrVMJDKHT8gtZxO/JPN
-         bs/L3VpfUOvKSR+08heeO1F2Evgd+GSXIbuEKxItehmE5Rye9bbCKU+P/Ll/wPfO9oVy
-         E9B0aQCs1XuH8tufZ/QEhR+90VVnLWdhJVrR8fkMm54xccbFVdLX80gWaMoCvxMAEUrN
-         MIjTTNpcul27qg25Y1+SpfWGJlzUTzw0e6UvQ8jAj8PGOTpAfRnnvS2fC3IqgFng3HuD
-         JN5hAuiCU8s1O7/hDjbVLTfpLJF3rl7OykS7n1LzaDjbFLCRX+Y7AORtyLkFX1JMIPPt
-         pRBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWy5E/Dt8c6VDRj0t4UJUHHdMpTyZVv9HUPdvHeTgQmHHBcpP68/h+In1J56xQYhIhjLw6F/y+koxWnPdpDHL9fLAJlbI/ap1Oi3CJ09xv22h9/XK/lRhvI+/4CRco9ygwgRyNBYiiSsB6O8Do/c/enVnDMZnEXWR7hPvjrdm3gvjBLq3g
-X-Gm-Message-State: AOJu0Yx8g0vNb4NkYa2qQJcrQgIuKXIJWCBiusNnkh2Iwnb+ejNL1iBl
-	PyU5MH18BWRT6wYSlJtXTt6QTyllLJamml6IPBqhV7WGYVBQJCam
-X-Google-Smtp-Source: AGHT+IHf7MFzp4LLom+o6D/8hyMvzEblmww27i1LILaQzgfwgc7RfSfx0fNDiElrClKQrROXBmLSyw==
-X-Received: by 2002:a17:906:a281:b0:a6f:dbd1:b493 with SMTP id a640c23a62f3a-a77a240439bmr105122266b.7.1720004748569;
-        Wed, 03 Jul 2024 04:05:48 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab065735sm501843366b.135.2024.07.03.04.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 04:05:48 -0700 (PDT)
-Message-ID: <429af3d1afe4297dde5c8795ca745d84d52e5033.camel@gmail.com>
-Subject: Re: [PATCH v3 7/8] iio: adc: ad7606: fix standby gpio state to
- match the documentation
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Guillaume Stols <gstols@baylibre.com>, Lars-Peter Clausen
- <lars@metafoo.de>,  Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, jstephan@baylibre.com, dlechner@baylibre.com
-Date: Wed, 03 Jul 2024 13:09:41 +0200
-In-Reply-To: <20240702-cleanup-ad7606-v3-7-57fd02a4e2aa@baylibre.com>
-References: <20240702-cleanup-ad7606-v3-0-57fd02a4e2aa@baylibre.com>
-	 <20240702-cleanup-ad7606-v3-7-57fd02a4e2aa@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1720004755; c=relaxed/simple;
+	bh=Nt6ZuaCko+BArRXXU7JkXLT2e8uK2t+eKVQDm+MzM0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r7TD7wTA9dXspNTUx95qjCvgYqV7rxLLXbDD6bvWcpjhc6SSO6P8tBcvzkS23zkY+R5Fo0RdXzd6D/DQ2gSWrGG0qrqwlDvABsm8jY0RWSAlieyzTXE2JLx15oq+rH4MomzGNtBQUjGg/M0WoDv8aUwHUgtZz4rv2//fhjGQkO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.22.233.190])
+	by gateway (Coremail) with SMTP id _____8Cx_vCPMIVmaX8AAA--.1818S3;
+	Wed, 03 Jul 2024 19:05:51 +0800 (CST)
+Received: from lvm.. (unknown [112.22.233.190])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxfceMMIVmHIU5AA--.3488S2;
+	Wed, 03 Jul 2024 19:05:50 +0800 (CST)
+From: WANG Rui <wangrui@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	loongarch@lists.linux.dev,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	WANG Rui <wangrui@loongson.cn>
+Subject: [PATCH] LoongArch: rust: Use rustc option -Zdirect-access-external-data
+Date: Wed,  3 Jul 2024 19:06:24 +0800
+Message-ID: <20240703110624.1301830-1-wangrui@loongson.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxfceMMIVmHIU5AA--.3488S2
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWruF48WF1rJFyrJr48Ww15trc_yoWkCrX_Wa
+	13Jw48Ka1rWrs0va15Zr1rGrn7C348JF4fZF1vqr9xJryYgry5trZrGw1fZrnaq3y2grs5
+	GF4xZasrZr1UtosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-On Tue, 2024-07-02 at 17:34 +0000, Guillaume Stols wrote:
-> The binding's documentation specifies that "As the line is active low, it
-> should be marked GPIO_ACTIVE_LOW". However, in the driver, it was handled
-> the opposite way. This commit sets the driver's behaviour in sync with th=
-e
-> documentation
->=20
-> Fixes: 722407a4e8c0 ("staging:iio:ad7606: Use GPIO descriptor API")
-> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
-> ---
+-Zdirect-access-external-data is a new Rust compiler option added
+in Rust 1.78, which we use to optimize the access of external data
+in the Linux kernel's Rust code. This patch modifies the Rust code
+in vmlinux to directly access externa data, using PC-REL instead of
+GOT. However, Rust code whithin modules is constrained by the PC-REL
+addressing range and is explicitly set to use an indirect method.
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+Signed-off-by: WANG Rui <wangrui@loongson.cn>
+---
+ arch/loongarch/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 8674e7e24c4a..ae3f80622f4c 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -105,7 +105,8 @@ KBUILD_CFLAGS			+= -fno-jump-tables
+ endif
+ 
+ KBUILD_RUSTFLAGS		+= --target=loongarch64-unknown-none-softfloat
+-KBUILD_RUSTFLAGS_MODULE		+= -Crelocation-model=pic
++KBUILD_RUSTFLAGS_KERNEL		+= -Zdirect-access-external-data=yes
++KBUILD_RUSTFLAGS_MODULE		+= -Zdirect-access-external-data=no
+ 
+ ifeq ($(CONFIG_RELOCATABLE),y)
+ KBUILD_CFLAGS_KERNEL		+= -fPIE
+-- 
+2.45.2
 
