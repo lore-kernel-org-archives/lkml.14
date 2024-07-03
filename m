@@ -1,107 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B89116DEC3;
-	Wed,  3 Jul 2024 10:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3626416DECF
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003159; cv=none; b=CebIpoVWT31aq66Z21A9LDrQVNaqAlueRAjGZZj0Ak7zlQchjedy9a5IvTPBciCH0X0+Tr7uwqtTJbnvXR129MX6RS6i6M7m7x/6Mn1m2SnLLMD5Ro/bEmdd9Ra9CfuiH6piH1e1tCfqpiH5Xt4XPDgLDz0GoWuc0bTrDytu/cg=
+	t=1720003162; cv=none; b=Vvo5VFvxFPXqxoAbwAaD4Nhkdqkzg6VlSD9u7J8FMNt1gR96Ki+uLYUw7xRcQUQkVCP1DWYy1zmYpLC1xpfhV5K25HF+NqmN+REPGfWAFDLYdc1df/UO+4YHTDAQo+GEtF1RUyzD9Hgx7dPVPS89yXqUnUgNrfsqxO+8eD8hv/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003159; c=relaxed/simple;
-	bh=c5YMYnQsGVVDkEokkgr1bMvHGW7VnZ6W/LDJWK8aJIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XWjPmYDMshXDFw1ZJj0O+/7rUsVHwcLcvEkgGgGCkzJqwDE7TAoZYQmqwVcB3u6QQkSO8VXWKxdUyBdcu0yUNKt/yH68cxByEvhPcAYgZhOSezRqLKpSZbv2m1YUOKVbtEx6hc7xohXK9o2QPdGIVb1uA7Rw+1RO9tPGLZLhVMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sWVq37Zk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sWVq37Zk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 845FBC2BD10;
-	Wed,  3 Jul 2024 10:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720003158;
-	bh=c5YMYnQsGVVDkEokkgr1bMvHGW7VnZ6W/LDJWK8aJIk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sWVq37Zk4uoAqYi2poiW5YdDurYhN+xWgKw/mZZdGmqHKAnywekW7t51AwB9tRKg/
-	 IrTljMGi+ftFVVmOyNkG5mzivjK4scc7eUX9uR8qpkXAmb4JdgAT/qSvK9Xns1lX5p
-	 qN+drU0zAfHc4Kx0tGc23QpSxKT9xmzcEikqy830=
-Date: Wed, 3 Jul 2024 12:39:16 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>
-Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
-	quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org,
-	quic_chennak@quicinc.com, dri-devel@lists.freedesktop.org,
-	arnd@arndb.de
-Subject: Re: [PATCH v1] misc: fastrpc: Add support for multiple PD from one
- process
-Message-ID: <2024070353-giggly-stardom-7b6d@gregkh>
-References: <20240703065200.1438145-1-quic_ekangupt@quicinc.com>
+	s=arc-20240116; t=1720003162; c=relaxed/simple;
+	bh=DfCOs+Uh49YR9cOQOpraFaVAi5ot/dscCajlnNC7m5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W/sFJ6fgjhgwrBg4tPjJ4uCUQCFvGgEdT3MfrmwoMdhAXUyogyBtvnaMjCjw2S2cyHgso0lQOM/kJsX1EQba4cVFcA6Wl98RK87cTqx7wF9S6WryOZI5jtsLc3hiRB9jlUbRHMI1TlecU/4lMCH0c5zebsganTz38Ww+7IvR94w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-mid: bizesmtpsz9t1720003071tpz2sub
+X-QQ-Originating-IP: tPq2Z00b0loLhBPfxiZCnsYVWGynSo7q+PcRQPMmOtw=
+Received: from [10.20.53.89] ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 03 Jul 2024 18:37:49 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 17256580716429354049
+Message-ID: <2B5581C46AC6E335+9c7a81f1-05fb-4fd0-9fbb-108757c21628@uniontech.com>
+Date: Wed, 3 Jul 2024 18:37:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703065200.1438145-1-quic_ekangupt@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] nvme/pci: Add DEEPEST_PS quirk for Lenovo N60z laptop
+To: kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+ guanwentao@uniontech.com, huanglin@uniontech.com
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <C0A44727E997523C+20240703101513.72590-1-wangyuli@uniontech.com>
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <C0A44727E997523C+20240703101513.72590-1-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-On Wed, Jul 03, 2024 at 12:22:00PM +0530, Ekansh Gupta wrote:
-> @@ -268,6 +272,7 @@ struct fastrpc_channel_ctx {
->  	struct fastrpc_session_ctx session[FASTRPC_MAX_SESSIONS];
->  	spinlock_t lock;
->  	struct idr ctx_idr;
-> +	struct ida dsp_pgid_ida;
+Sorry, please just don't merge this patch!!!
 
-You have an idr and an ida?  Why two different types for the same
-driver?
 
->  	struct list_head users;
->  	struct kref refcount;
->  	/* Flag if dsp attributes are cached */
-> @@ -299,6 +304,7 @@ struct fastrpc_user {
->  	struct fastrpc_buf *init_mem;
->  
->  	int tgid;
-> +	int dsp_pgid;
+Just a few minutes after I sent this patch, right now (after I quiesced 
+this lenovo n60z laptop for 10 hours),
 
-Are you sure this fits in an int?
+its nvme disk crashed again! Just like before, nothing can wake it up 
+except a reboot.
 
-> +static int fastrpc_pgid_alloc(struct fastrpc_channel_ctx *cctx)
-> +{
-> +	int ret = -1;
 
-No need to initialize this.
+This is very surprising and it seems that only 'NVME_QUIRK_NO_APST' is 
+the correct choice.
 
-> +
-> +	/* allocate unique id between MIN_FRPC_PGID and MAX_FRPC_PGID */
-> +	ret = ida_alloc_range(&cctx->dsp_pgid_ida, MIN_FRPC_PGID,
-> +					MAX_FRPC_PGID, GFP_ATOMIC);
-> +	if (ret < 0)
-> +		return -1;
+I'm sure that 'NVME_QUIRK_NO_APST' will not have the same problem, I 
+have tested dozens of devices of the same model before.
 
-Why is -1 a specific value here?  Return a real error please.
-Or return 0 if that's not allowed.
 
-v
-> +
-> +	return ret;
-> +}
-> +
->  static int fastrpc_device_open(struct inode *inode, struct file *filp)
->  {
->  	struct fastrpc_channel_ctx *cctx;
-> @@ -1582,6 +1605,12 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
->  	fl->cctx = cctx;
->  	fl->is_secure_dev = fdevice->secure;
->  
-> +	fl->dsp_pgid = fastrpc_pgid_alloc(cctx);
-> +	if (fl->dsp_pgid == -1) {
-> +		dev_dbg(&cctx->rpdev->dev, "too many fastrpc clients, max %u allowed\n", MAX_DSP_PD);
-> +		return -EUSERS;
+I will send patch v3 to revert the code to its original state.
 
-Why -EUSERS?
 
-And you obviously did not test this as you just leaked memory :(
-
-thanks,
-
-greg k-h
+-- 
+WangYuli <wangyuli@uniontech.com>
