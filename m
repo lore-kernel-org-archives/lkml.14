@@ -1,484 +1,186 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2106.outbound.protection.outlook.com [40.107.103.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53F313B5AD;
-	Wed,  3 Jul 2024 09:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719998350; cv=none; b=pK+YitrXDL0OC7Rqb9G9AoHHmbJqaRPtkh1kr39SSNu4hacvcrH7R0inugQTsrbw3ixvLmeU7H6YtPIYBCEEl0jNYxMLVLbB1ng1TO5APKDu7QYpm1wWxL5pjaLLBiTgTAJeSSZs2QL2Bh/Xl3aZBWQtMwfTK+D4cTO5TS50LjY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719998350; c=relaxed/simple;
-	bh=qoTHyueTQ/dT4+44hHIQbKgJFJ3Y7RgrwoEpxOGhv0A=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cCttL1x5JA2dE4GitrVPk1710Yw+/AgmPL9PWIkgHfXBvgP63GAdmz3L51CSstPQvzHJdnHl6KG2AXqqq55i8aIkcPArDeKPfhjVmKPR2/jPb7ki/V5FJVxOLktIECXCPcbXNwddEw2/+OBTG0Xkq1f3iSNi5jut6mh8bXIiKOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=irxfij9i; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C87E13C677;
+	Wed,  3 Jul 2024 09:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.106
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719998423; cv=fail; b=Ob9ySUTCO0nvlbEFleOK2gd2k3QP4/+vN8TveC5ri4YfBWfRW1Whw8mKJ5s3IbbK+eZTq1t0VxzgTb7wdrllhDYRSPc1fTlVWlUgavEW21mlTa/pqtCNHNTd+w/NZArplf/eOGxN6hgIM35/xG7LDnAwoyvTStdvRnFWy4cXNwI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719998423; c=relaxed/simple;
+	bh=dBb+tvNs/o6J4u+PqsKU9tpYZ7pFr16cToHz5DcK+wE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OugEYAyx8u1cz+O6aY7K6Ypk59Qe/IwgX7JiMmkZnwDSYDHxGsU60Q/y8ib0YJ0EXNx/xWsFM6wDBTwe0xrOW8n2S+VvlhfiZhwr/xFX59dL4CcSnsCeV7c3RxVYtO0IHmncRthKJJAvZNLOBc0QlP6pfxpoVliR4bvAkR0G/5M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=WzxNatvD; arc=fail smtp.client-ip=40.107.103.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="irxfij9i"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4638FXkN016108;
-	Wed, 3 Jul 2024 09:18:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8AbjZX+XaDXMjC7NooiO5noD6SB5icWzrytd0VpePi4=; b=irxfij9i4eQcshB3
-	uvtV54ge59VZCbTD5VS01Zsi91KLGDoGgOEJt3cSsJhSuFgHfje9s6fp7MsZwCVP
-	8c3nK63Yy0fFU26Qwpz6c1ofHqTTS4tW0LKW8ZomHkSJrOMPvDsmXcmPpnLgM/1V
-	foi8VJRFjt8VLql51+oximIeTA1Akz3J9tt9pyraLph0fKGTm+1h+JaP+eZ7PWfV
-	jUpKCovPS4MNW2fseqA2YRb89Imupe88/oBolO3AmqMI6syIGNkIvOqkuPM/oUJK
-	/8K1dVTqV+D3SExC2cA+odT+0F1a5o2KlFStKbt0dHKu6L9mB0G6E7QTk2j30yRP
-	HJ7e7A==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4052yhg54q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 09:18:49 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4639ImN5029484
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Jul 2024 09:18:48 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 3 Jul 2024 02:18:40 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <vireshk@kernel.org>, <nm@ti.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <angelogioacchino.delregno@collabora.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
-        <ilia.lin@kernel.org>, <rafael@kernel.org>, <ulf.hansson@linaro.org>,
-        <quic_sibis@quicinc.com>, <quic_rjendra@quicinc.com>,
-        <quic_rohiagar@quicinc.com>, <abel.vesa@linaro.org>,
-        <otto.pflueger@abscue.de>, <danila@jiaxyga.com>,
-        <quic_varada@quicinc.com>, <quic_ipkumar@quicinc.com>,
-        <luca@z3ntu.xyz>, <stephan.gerhold@kernkonzept.com>, <nks@flawful.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-Subject: [PATCH v4 10/10] dts: arm64: qcom: ipq9574: Enable CPR
-Date: Wed, 3 Jul 2024 14:46:51 +0530
-Message-ID: <20240703091651.2820236-11-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240703091651.2820236-1-quic_varada@quicinc.com>
-References: <20240703091651.2820236-1-quic_varada@quicinc.com>
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WzxNatvD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XrRdo+YmKJIOACP5TlZ64fTKq2q3aWw/ACyznxbr2P6qneaCQDdobL3ckrnOkDliwnGrRpD7xB6z1nFxRvNGdFCbnR/P2uqAn0csrCItdT26Jz8IHIdyeT8U9hvRdynepa0sm7AuO7deZwjMuoW5vfdkqqFKs1ViZxpigR9wgLIH9uHopD2IupcGfQwe/ZcRCnMPgB1zNR1d2oxoookYJpaNiKkZHHzAanmr3VpqYSB9WKbmxDHKK1kFx3VwRznpZb80QtuJirKq+4w+lcTJihuqbjef3AH5WLYbzljURA/V3ila7J6Z4P3U538Ikcw/VI7DFTkolweWlwj8TGxLZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dBb+tvNs/o6J4u+PqsKU9tpYZ7pFr16cToHz5DcK+wE=;
+ b=WA3g4K6kEKIB4IKBJSEYxtDOKhoX9JS0+xvAHc42ilKueGf/0QuvtuSCdPS3/nZqiNBjUl4Ayr4KgKprpZjXznOvzilMX8UNKDU4VMvWEW9zj+hezPfZQepHZ2pwAbYAFmpXp2YPA3BiDhFOPbMZp6D/1RF3ZImjKULeCthY0U4grtNcn8P0esE3eyML/i9gRt6swrPDXZ0xBvtFVaLG2GpgNZq1qrzwk+spWJMabHy9Qa0aMLe/OvZUsuNKbj/L7HmVit44wBUsVOMJBe8342A+013h8hExwE9a6KonFcCwB6+wND2PJH6sF7Lbl1/7OL5/y8OjferugXChkfWY6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dBb+tvNs/o6J4u+PqsKU9tpYZ7pFr16cToHz5DcK+wE=;
+ b=WzxNatvD5+rUXCO1fa+ZqtZ6+b6CMh+YvK/o12ix7VA79qvUwqjv/IedttnlFNT9jVwWzQ6fLCLxoXRwvZ6Yk2+cuORRp6trVaL5jNEtEuHK5eNh8FtsGEyU4LLwMRszqNKAjEi7t0UAWJI+pVi67UV5ksC3294qaYqIKIsgkjk=
+Received: from PAXPR83MB0559.EURPRD83.prod.outlook.com (2603:10a6:102:246::15)
+ by DB9PR83MB0520.EURPRD83.prod.outlook.com (2603:10a6:10:303::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.6; Wed, 3 Jul
+ 2024 09:20:16 +0000
+Received: from PAXPR83MB0559.EURPRD83.prod.outlook.com
+ ([fe80::3706:393d:dc70:11b1]) by PAXPR83MB0559.EURPRD83.prod.outlook.com
+ ([fe80::3706:393d:dc70:11b1%4]) with mapi id 15.20.7762.005; Wed, 3 Jul 2024
+ 09:20:16 +0000
+From: Konstantin Taranov <kotaranov@microsoft.com>
+To: Zhu Yanjun <yanjun.zhu@linux.dev>, Konstantin Taranov
+	<kotaranov@linux.microsoft.com>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, Dexuan Cui
+	<decui@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>, Long Li
+	<longli@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org"
+	<leon@kernel.org>
+CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next v2 1/2] net: mana: introduce helper to get a
+ master netdev
+Thread-Topic: [PATCH net-next v2 1/2] net: mana: introduce helper to get a
+ master netdev
+Thread-Index: AQHazSo3MF7q6sO+qECNANn4g/L4RA==
+Date: Wed, 3 Jul 2024 09:20:16 +0000
+Message-ID:
+ <PAXPR83MB055992B967622803555AA64EB4DD2@PAXPR83MB0559.EURPRD83.prod.outlook.com>
+References: <1719838736-20338-1-git-send-email-kotaranov@linux.microsoft.com>
+ <1719838736-20338-2-git-send-email-kotaranov@linux.microsoft.com>
+ <5b418472-4370-4626-9373-064e7aaf9ae5@linux.dev>
+In-Reply-To: <5b418472-4370-4626-9373-064e7aaf9ae5@linux.dev>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=14b7518e-3808-4c9e-a626-cfb48f73aefa;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-07-03T09:19:11Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR83MB0559:EE_|DB9PR83MB0520:EE_
+x-ms-office365-filtering-correlation-id: d06cc856-de13-460a-60ed-08dc9b415a24
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?aVRvcFBLWTIwWEFjWDc2TWUwK0NLS0ZWMmV4UEpGam1va3JzYlFVelh3ei90?=
+ =?utf-8?B?bGs2TWNKYzhCTENNR1k1OEVBUWJxZ0FTZ0tlMDdlbVA3bS9weE10L1d3dUNX?=
+ =?utf-8?B?ak5FTFlQanZOaElPYytqYlFhWnFjQ3ZJY1BJL2cyRmN5bU9mRmYyZFZ5bHJw?=
+ =?utf-8?B?ZXE2RzV3MDBiOElHQlVxZzZKZ1ZCd2E4WE5KclFFRmQxTm0vYW1GR0wza1Ew?=
+ =?utf-8?B?aHE4dGRTZGNCaG1oSmFTRHByUk1hY2JkRDRRVjdkNU9QZzZRSU9GUEtLOFBW?=
+ =?utf-8?B?YTVUZk1HUVdFQTkxL0grNjJyNjRwYWQrWDIzQ3B0UDc3YTlDVDl4eG02Rnl6?=
+ =?utf-8?B?SzVTaEx4OVhQeFkwQlQ0dW9WN05EUkJkdFdZNFVqM3VsYSsrSzdiUnUxRk5P?=
+ =?utf-8?B?WXNtdHI5YXRtcnE2QUNlWGFPY24rbzBWelZpQ1ZRQ0JNWHNIbmJoZjVkR3Iz?=
+ =?utf-8?B?ZDFzeXpMdjJWRklxdTE5T3FWRng3TzZtcTBpRUxiTzlGcXY4enQrRGJhYndI?=
+ =?utf-8?B?OVZXL0YxS3JVcWphWXBuYkxTaTZpSEFvOVpVTXlJWnQ4UHZGdm00dTQwOG1Q?=
+ =?utf-8?B?QnFPOHp0dEw2dXh2VzRyaTRiT1ZDRy9yd2FZSXRxV3JLM1BEQ3kvNjY1c3JQ?=
+ =?utf-8?B?dTNZaE9YTllid204Y2VVNVZyMS9SalBEZ3FLcWF0K0FOQVdCK3JFNlRtWEJX?=
+ =?utf-8?B?bTJRdiswc25xV3lkQUtYZVZYeUc3YUVUeGl0MG1OaFl5VXlvMjEyOWhmMUlq?=
+ =?utf-8?B?V1FSMWFDYWVRZkMyQ3RyK3VKdEJPNmRHZTlKNlZEN0Y1UTNSN1VySkZUZ2JC?=
+ =?utf-8?B?UWtZZ0NsOCtGOTl1ZEhlUmlyMGtIcTFzOWozWXV3WjB6K2RWU1NsT29RU0VU?=
+ =?utf-8?B?V2l5THRUL1JNdmQ0U1BrQkRUVU0zanJYQldBLzAraWVURlRqN1hSaXNSZnQ3?=
+ =?utf-8?B?UXZqMFljRDM3VDFlOTE3WkcreWVzdTBpcVJMd0JKeEFxTFltT1VhR29UU29v?=
+ =?utf-8?B?M0dnVk54K2NaNUg0STYydWhFeWV3RW1tUGFKcVhoekwwUTg5a2lObUZMU1lF?=
+ =?utf-8?B?UktnSlM0eVFPOEV1Nm9sL2svL2FrMnhZT09aUG50NXFFb2NZMFpham5nS3g3?=
+ =?utf-8?B?Q1FiWG8yb244NnZTa012bkhhSkttc015V3lNenVtTjl4Z25zbHlmZWhZTTB0?=
+ =?utf-8?B?d2t5VStRL2d5dzRKcnowb1pQMG51RzJzbG1wTHpOVmU4aHc5Ty96bVRDVlZH?=
+ =?utf-8?B?L3llZkUxUDRHamhBZEwvNFNsZ24xWW93M09YbWY5OUdmbHhsdXJhbCtVTlND?=
+ =?utf-8?B?djRxVmlxVnc0ODJram00Z2VwV0IyYkd2M1hibUFjSVBOellMdm9wR2MzK2lP?=
+ =?utf-8?B?TVQ4bXE4andVZFI5cVk3RjhvOGx2OHRnZDV1Z3g3WEpYaW9GYzBDaElOVGlU?=
+ =?utf-8?B?Y1RuOVJLZ0VrV3hPUWlLM29FNHRGRElTVlVQWG1XcWNDcjNFYzNPKy95amxE?=
+ =?utf-8?B?UmgvVmlseFJERXVjZzRyWSsxUW0ycE1yVGk1a3JHT0tBSFhYaERwOVVqRVcv?=
+ =?utf-8?B?WXF3aGFkSVM2THlrTWcydllzT2I1S1dqVW03Slg1UDZGa1BqSXQ1RU9UVEFt?=
+ =?utf-8?B?SDU4OVZXMGtMNTJGUUJ0cm5mZ0RkS2JPc2JnSExxemoyOCtCTjJDU3J6cjN0?=
+ =?utf-8?B?ak5lWXJmTmNKQXRWUi85YWJQUGdQWXZmV1JTZjVhZmdiRGs5K3ZVeU5xdGpz?=
+ =?utf-8?B?TEYvTFNSblN1Sm4zbTl6UW5MRDFmaUhrNVFBWU4rVTdVb2Y2Wm9Rd2lZZldZ?=
+ =?utf-8?B?NlgrYlVnWmZXVnJUQTBkRGJKRkFUaGxRVGFFQm11YS83LzkzNlA5SzczSGE1?=
+ =?utf-8?B?cDJGMFRiRy9RdUV3bnVueDJiSzNKSVExN0ppVTd0YWZHOW9uMjVxRFpwQzlp?=
+ =?utf-8?Q?oWvuCbHk4Zc=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR83MB0559.EURPRD83.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?UGJvcGgwdk8rc2hlaXBTMlZVb2dlclJidlpoWmpra3VaR00yRmpoeFhXWlBz?=
+ =?utf-8?B?WUUyRUlrWGdLZUVINjBPZ091VW9kczFHOGs5b3VvZ082aHBGenI1SVNyTVhU?=
+ =?utf-8?B?elBTQkJhRlllNXNqeFF4Yk1ROWpaVzdKRnNpTkw2cXJ1Yi8rRGQyV3VpVVVs?=
+ =?utf-8?B?Z1RESXZoZnc1M3NWSDBNbHVCaGZDNGdkeEhVTEVhRVVQSVRhVEdrUlJzSHlE?=
+ =?utf-8?B?RGJYS3oyN3dKVEJhcXdCdm9UL2ZHc2hoRUVwNWxveC9UNiswanhmMENqODBX?=
+ =?utf-8?B?dTlESnNBQjZXOUR5dGI1bEN3aUZpcFVUemt0dDEwMlR3d3FKMi9iWWpyUzVD?=
+ =?utf-8?B?Zld6aEw4KzUwSUZWaTNGL05NT1Q5bDUwczBKZEdqT2R6Vi9jOFJsakNpY0hl?=
+ =?utf-8?B?V0lxcE5XOElpaVhSdEhrMG54QUpnNldWNW1zYVQ1Q0VhVysvOG5VSmttV2Y0?=
+ =?utf-8?B?eGppYmtDOG4vV2tKWldXRnRUTWluZlg3b09pL3FyWlBiUnY1VmZHbzNTbndP?=
+ =?utf-8?B?R1hBMGx2QTJsWUVtNWlYM2xJbVBMbWVsTWNUc2Q4VVFqOGVrRnFkWS9wNEI5?=
+ =?utf-8?B?d0RsUmlGVjY2RDg2Y3hDZFJKemhxcXZCZ01mSXFDUTZNcGNYQnJIS3d1Rmwr?=
+ =?utf-8?B?cjEyQXQrWWo5VWsxSFVtOEEyOExuR0MycjB0Ty94VzFER2NHempHZ0NIOGx5?=
+ =?utf-8?B?SFlaZVZ1Qk9rcW9DZGVCbnFSWWUreGtzeitPUG82UnpYL1gwOTdmVG5jMWZy?=
+ =?utf-8?B?VXhpa3BuQWFxdzhKZ0lVNjJEWTZHbmxMczl1OWVqUk9RQ25mNnZmUHFrMWlE?=
+ =?utf-8?B?UERxcXg1VGovUDdJVWlFLzRFN3lrT01OUnpNdVRBTkJEdCtPTzBOdk5iOTFM?=
+ =?utf-8?B?THNBTnhURm5HN2gxSzdxTXBzN3FSTFVHSlJnMklOTVZPQ0F5MHpRaE54cGtC?=
+ =?utf-8?B?eTkwdjZPQkNUcnJIWTQ0VEx2L3hqK3N5bGVoS1ZKSVV5ZXZZRTNqRVFJYXRt?=
+ =?utf-8?B?MzhzNW1rWWkzTzRCZVJnN0FaWERPZHo3dDJ6R2lJQjh2cFB0c1NSaTBEanQ2?=
+ =?utf-8?B?Zm1NWTA4ZURjTXVWYUJCOXJpalkrOVRSZU5xeVFyM0E3dmJESXMyN2RxMnph?=
+ =?utf-8?B?RUdoSjFPekwxb3Z3dmViVEdPUEQ3NmFDQkFZbVkxeGJPL0V1SmhUYzBnYzdp?=
+ =?utf-8?B?RHFzdERQcHU4dTd1WjJwKzA2VHplNFJuSkR4OFlmdWFQbFA3OGpkWThtUlQ4?=
+ =?utf-8?B?WkE2Uk43NzNpQWNEWmo2aFFvY1F0bWwzdjVGQ0JEaXFVUDN0d2Zva1kwdEJq?=
+ =?utf-8?B?RzA1eml0V3NKMnRWNFA2bTNUUlp2ZGdRUFZVeG92cS9jNExGTzZ0Y2NUN3NP?=
+ =?utf-8?B?aHc0a2ErUUh4Zi9DV3Nzeko4SWJQeDBnNzVFYTVHWEdKV3kxWFdPb0h4OHZW?=
+ =?utf-8?B?U2xBMUk5RHpTTTVITC9jQ0RxVnFQalY1Z3B3a24vajE2WGY5bGF6ZTk2bjk4?=
+ =?utf-8?B?VlJ0T2xFU2h1Y1lwNEd5MzlKSXB4SXE4M3U4UjJYZmRhNE1ZWTFDVnlKdTlx?=
+ =?utf-8?B?b0t2YlZabXVPVDRHd3FBVngzMythcnVlaCtwMlZtMFkvSUowbStiSnRIZnF3?=
+ =?utf-8?B?ZXB5WUhrUVhMS2ZCOVhPdTRUTCtQejJRK3M4S1gwR2RsSWkyRUFwU0JieWtr?=
+ =?utf-8?B?WEJ0MFNiY0JMamJCUHo4RjBoTk5scVpWSkM3VVg2NE53YUx4aytJREdnbEtG?=
+ =?utf-8?B?V2FFVHFxeTQxb1llUTJRQTRkSlFPcjRqRVF1bk9ZdThUVGc5MStiZytHK0hj?=
+ =?utf-8?B?R001SkZCbGtVN1d1dUxncHV6WXlmOFlQTHZtY3g3cjVpZitFalBIaWhTRWlI?=
+ =?utf-8?B?bGs2TXZlVCtVUmJIeU90NGs0eE4xbG9RdkJHV2VQWmNnb2JOamFNc01xbm5S?=
+ =?utf-8?B?cm1hU3ZyU3BpS25CUkFBME1mQTU3aEo5M3hxRkJiUU54WFBBNVRxVi9EOG1M?=
+ =?utf-8?B?ckdjS3BLbGFKTnQza1lDOHgrcXlBMTdvYnp0My83YUhJai84Sm9nd201SHRX?=
+ =?utf-8?Q?LCLmWz?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: BJU7oCwbLOjvpJYDQKF05FE6kutTMEAf
-X-Proofpoint-GUID: BJU7oCwbLOjvpJYDQKF05FE6kutTMEAf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_05,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 impostorscore=0 clxscore=1015
- bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407030068
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR83MB0559.EURPRD83.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d06cc856-de13-460a-60ed-08dc9b415a24
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2024 09:20:16.7088
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mKa0WgG7mRSV18YV088hO+ZeQ7Rsp7KwHeVQt/+sw9Yw1oL8WgoKmxg/CIjloULf8czVF0vw3KcvbL4fWPj6Hw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR83MB0520
 
-* Add CPR, RPMPD, OPP table nodes as applicable to IPQ9574 to
-  enable CPR functionality on IPQ9574.
-
-* Bootloader set frequency 792MHz is added to the OPP table to
-  the avoid 'need at least 2 OPPs to use CPR' error
-
-* Remove 1.2GHz as it is not supported in any of the IPQ9574 SKUs.
-
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
-v4: s/cprh/cpr4/
-v2: Update commit log. No code change.
----
- arch/arm64/boot/dts/qcom/ipq9574.dtsi | 269 ++++++++++++++++++++++++--
- 1 file changed, 252 insertions(+), 17 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-index 04ba09a9156c..cda30a877877 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/qcom,ipq9574-gcc.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -42,8 +43,9 @@ CPU0: cpu@0 {
- 			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
- 			clock-names = "cpu";
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&ipq9574_s1>;
- 			#cooling-cells = <2>;
-+			power-domains = <&apc_cpr4 0>;
-+			power-domain-names = "perf";
- 		};
- 
- 		CPU1: cpu@1 {
-@@ -55,8 +57,9 @@ CPU1: cpu@1 {
- 			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
- 			clock-names = "cpu";
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&ipq9574_s1>;
- 			#cooling-cells = <2>;
-+			power-domains = <&apc_cpr4 0>;
-+			power-domain-names = "perf";
- 		};
- 
- 		CPU2: cpu@2 {
-@@ -68,8 +71,9 @@ CPU2: cpu@2 {
- 			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
- 			clock-names = "cpu";
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&ipq9574_s1>;
- 			#cooling-cells = <2>;
-+			power-domains = <&apc_cpr4 0>;
-+			power-domain-names = "perf";
- 		};
- 
- 		CPU3: cpu@3 {
-@@ -81,8 +85,9 @@ CPU3: cpu@3 {
- 			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
- 			clock-names = "cpu";
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&ipq9574_s1>;
- 			#cooling-cells = <2>;
-+			power-domains = <&apc_cpr4 0>;
-+			power-domain-names = "perf";
- 		};
- 
- 		L2_0: l2-cache {
-@@ -105,58 +110,111 @@ memory@40000000 {
- 		reg = <0x0 0x40000000 0x0 0x0>;
- 	};
- 
-+	cpr4_opp_table: opp-table-cpr4 {
-+		compatible = "operating-points-v2-qcom-level";
-+
-+		cpr4_opp0: opp-0 {
-+			opp-level = <1>;
-+			qcom,opp-fuse-level = <1>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp1: opp-1 {
-+			opp-level = <2>;
-+			qcom,opp-fuse-level = <1>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp2: opp-2 {
-+			opp-level = <3>;
-+			qcom,opp-fuse-level = <1>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp3: opp-3 {
-+			opp-level = <4>;
-+			qcom,opp-fuse-level = <2>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp4: opp-4 {
-+			opp-level = <5>;
-+			qcom,opp-fuse-level = <2>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp5: opp-5 {
-+			opp-level = <6>;
-+			qcom,opp-fuse-level = <3>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp6: opp-6 {
-+			opp-level = <7>;
-+			qcom,opp-fuse-level = <4>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+	};
-+
- 	cpu_opp_table: opp-table-cpu {
- 		compatible = "operating-points-v2-kryo-cpu";
- 		opp-shared;
- 		nvmem-cells = <&cpu_speed_bin>;
- 
-+		opp-792000000 {
-+			opp-hz = /bits/ 64 <792000000>;
-+			opp-supported-hw = <0x0>;
-+			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp0>;
-+		};
-+
- 		opp-936000000 {
- 			opp-hz = /bits/ 64 <936000000>;
--			opp-microvolt = <725000>;
- 			opp-supported-hw = <0xf>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp1>;
- 		};
- 
- 		opp-1104000000 {
- 			opp-hz = /bits/ 64 <1104000000>;
--			opp-microvolt = <787500>;
--			opp-supported-hw = <0xf>;
--			clock-latency-ns = <200000>;
--		};
--
--		opp-1200000000 {
--			opp-hz = /bits/ 64 <1200000000>;
--			opp-microvolt = <862500>;
- 			opp-supported-hw = <0xf>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp2>;
- 		};
- 
- 		opp-1416000000 {
- 			opp-hz = /bits/ 64 <1416000000>;
--			opp-microvolt = <862500>;
- 			opp-supported-hw = <0x7>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp3>;
- 		};
- 
- 		opp-1488000000 {
- 			opp-hz = /bits/ 64 <1488000000>;
--			opp-microvolt = <925000>;
- 			opp-supported-hw = <0x7>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp4>;
- 		};
- 
- 		opp-1800000000 {
- 			opp-hz = /bits/ 64 <1800000000>;
--			opp-microvolt = <987500>;
- 			opp-supported-hw = <0x5>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp5>;
- 		};
- 
- 		opp-2208000000 {
- 			opp-hz = /bits/ 64 <2208000000>;
--			opp-microvolt = <1062500>;
- 			opp-supported-hw = <0x1>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp6>;
- 		};
- 	};
- 
-@@ -182,6 +240,40 @@ glink-edge {
- 			rpm_requests: rpm-requests {
- 				compatible = "qcom,rpm-ipq9574";
- 				qcom,glink-channels = "rpm_requests";
-+
-+				rpmpd: power-controller {
-+					compatible = "qcom,ipq9574-rpmpd";
-+					#power-domain-cells = <1>;
-+					operating-points-v2 = <&rpmpd_opp_table>;
-+
-+					rpmpd_opp_table: opp-table {
-+						compatible = "operating-points-v2";
-+
-+						rpmpd_opp_svs: opp1 {
-+							opp-level = <RPM_SMD_LEVEL_SVS>;
-+						};
-+
-+						rpmpd_opp_svs_plus: opp2 {
-+							opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
-+						};
-+
-+						rpmpd_opp_nom: opp3 {
-+							opp-level = <RPM_SMD_LEVEL_NOM>;
-+						};
-+
-+						rpmpd_opp_nom_plus: opp4 {
-+							opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
-+						};
-+
-+						rpmpd_opp_turbo: opp5 {
-+							opp-level = <RPM_SMD_LEVEL_TURBO>;
-+						};
-+
-+						rpmpd_opp_turbo_high: opp6 {
-+							opp-level = <RPM_SMD_LEVEL_TURBO_HIGH>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-@@ -252,6 +344,95 @@ cpu_speed_bin: cpu-speed-bin@15 {
- 				reg = <0x15 0x2>;
- 				bits = <7 2>;
- 			};
-+
-+			cpr_efuse_speedbin: speedbin@5 {
-+				reg = <0x5 0x8>;
-+				bits = <0 3>;
-+			};
-+
-+			cpr_fuse_revision: cpr-fusing-rev@7 {
-+				reg = <0x7 0x8>;
-+				bits = <1 5>;
-+			};
-+
-+			/* CPR Ring Oscillator: Power Cluster */
-+			cpr_ro_sel0_pwrcl: rosel0-pwrcl@358 {	/* ROSEL_SVS */
-+				reg = <0x358 0x1>;
-+				bits = <4 4>;
-+			};
-+
-+			cpr_ro_sel1_pwrcl: rosel1-pwrcl@358 {	/* ROSEL_NOM */
-+				reg = <0x358 0x1>;
-+				bits = <0 4>;
-+			};
-+
-+			cpr_ro_sel2_pwrcl: rosel2-pwrcl@350 {	/* ROSEL_TUR */
-+				reg = <0x350 0x1>;
-+				bits = <4 4>;
-+			};
-+
-+			cpr_ro_sel3_pwrcl: rosel3-pwrcl@350 {	/* ROSEL_STUR */
-+				reg = <0x350 0x1>;
-+				bits = <0 4>;
-+			};
-+
-+			/* CPR Init Voltage: Power Cluster */
-+			cpr_init_voltage0_pwrcl: ivolt0-pwrcl@343 {	/* VOLT_SVS */
-+				reg = <0x343 0x1>;
-+				bits = <0 6>;
-+			};
-+
-+			cpr_init_voltage1_pwrcl: ivolt1-pwrcl@342 {	/* VOLT_NOM */
-+				reg = <0x342 0x1>;
-+				bits = <2 6>;
-+			};
-+
-+			cpr_init_voltage2_pwrcl: ivolt2-pwrcl@341 {	/* VOLT_TUR */
-+				reg = <0x341 0x2>;
-+				bits = <4 6>;
-+			};
-+
-+			cpr_init_voltage3_pwrcl: ivolt3-pwrcl@340 {	/* VOLT_STUR */
-+				reg = <0x340 0x2>;
-+				bits = <6 6>;
-+			};
-+
-+			/* CPR Target Quotients: Power Cluster */
-+			cpr_quot0_pwrcl: quot0-pwrcl@354 {	/* QUOT_VMIN_SVS */
-+				reg = <0x354 0x2>;
-+				bits = <0 12>;
-+			};
-+
-+			cpr_quot1_pwrcl: quot1-pwrcl@352 {	/* QUOT_VMIN_NOM */
-+				reg = <0x352 0x2>;
-+				bits = <4 12>;
-+			};
-+
-+			cpr_quot2_pwrcl: quot2-pwrcl@351 {	/* QUOT_VMIN_TUR */
-+				reg = <0x351 0x2>;
-+				bits = <0 12>;
-+			};
-+
-+			cpr_quot3_pwrcl: quot3-pwrcl@355 {	/* QUOT_VMIN_STUR */
-+				reg = <0x355 0x2>;
-+				bits = <4 12>;
-+			};
-+
-+			/* CPR Quotient Offsets: Power Cluster */
-+			cpr_quot_offset1_pwrcl: qoff1-pwrcl@34e {	/* QUOT_OFFSET_NOM_SVS */
-+				reg = <0x34e 0x1>;
-+				bits = <0 8>;
-+			};
-+
-+			cpr_quot_offset2_pwrcl: qoff2-pwrcl@34d {	/* QUOT_OFFSET_TUR_NOM */
-+				reg = <0x34d 0x1>;
-+				bits = <0 8>;
-+			};
-+
-+			cpr_quot_offset3_pwrcl: qoff0-pwrcl@34c {	/* QUOT_OFFSET_STUR_TUR */
-+				reg = <0x34c 0x1>;
-+				bits = <0 8>;
-+			};
- 		};
- 
- 		cryptobam: dma-controller@704000 {
-@@ -639,6 +820,60 @@ usb_0_dwc3: usb@8a00000 {
- 			};
- 		};
- 
-+		apc_cpr4: power-controller@b018000 {
-+			compatible = "qcom,ipq9574-cpr4", "qcom,cprh";
-+			reg = <0x0b018000 0x4000>,
-+			      <0x00048000 0x4000>;
-+
-+			clocks = <&gcc GCC_RBCPR_CLK>;
-+
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_EDGE_RISING>;
-+			vdd-supply = <&ipq9574_s1>;
-+
-+			/* Set the CPR clock here, it needs to match XO */
-+			assigned-clocks = <&gcc GCC_RBCPR_CLK>;
-+			assigned-clock-rates = <24000000>;
-+
-+			operating-points-v2 = <&cpr4_opp_table>;
-+			power-domains = <&rpmpd IPQ9574_VDDAPC>;
-+			#power-domain-cells = <1>;
-+
-+			nvmem-cells = <&cpr_efuse_speedbin>,
-+				      <&cpr_fuse_revision>,
-+				      <&cpr_quot0_pwrcl>,
-+				      <&cpr_quot1_pwrcl>,
-+				      <&cpr_quot2_pwrcl>,
-+				      <&cpr_quot3_pwrcl>,
-+				      <&cpr_quot_offset1_pwrcl>,
-+				      <&cpr_quot_offset2_pwrcl>,
-+				      <&cpr_quot_offset3_pwrcl>,
-+				      <&cpr_init_voltage0_pwrcl>,
-+				      <&cpr_init_voltage1_pwrcl>,
-+				      <&cpr_init_voltage2_pwrcl>,
-+				      <&cpr_init_voltage3_pwrcl>,
-+				      <&cpr_ro_sel0_pwrcl>,
-+				      <&cpr_ro_sel1_pwrcl>,
-+				      <&cpr_ro_sel2_pwrcl>,
-+				      <&cpr_ro_sel3_pwrcl>;
-+			nvmem-cell-names = "cpr_speed_bin",
-+					   "cpr_fuse_revision",
-+					   "cpr0_quotient1",
-+					   "cpr0_quotient2",
-+					   "cpr0_quotient3",
-+					   "cpr0_quotient4",
-+					   "cpr0_quotient_offset2",
-+					   "cpr0_quotient_offset3",
-+					   "cpr0_quotient_offset4",
-+					   "cpr0_init_voltage1",
-+					   "cpr0_init_voltage2",
-+					   "cpr0_init_voltage3",
-+					   "cpr0_init_voltage4",
-+					   "cpr0_ring_osc1",
-+					   "cpr0_ring_osc2",
-+					   "cpr0_ring_osc3",
-+					   "cpr0_ring_osc4";
-+		};
-+
- 		intc: interrupt-controller@b000000 {
- 			compatible = "qcom,msm-qgic2";
- 			reg = <0x0b000000 0x1000>,  /* GICD */
--- 
-2.34.1
-
+PiA+ICsvKiB0aGUgY2FsbGVyIHNob3VsZCBob2xkIHJjdV9yZWFkX2xvY2sgKi8gc3RydWN0IG5l
+dF9kZXZpY2UNCj4gPiArKm1hbmFfZ2V0X21hc3Rlcl9uZXRkZXZfcmN1KHN0cnVjdCBtYW5hX2Nv
+bnRleHQgKmFjLCB1MzIgcG9ydF9pbmRleCkNCj4gPiArew0KPiA+ICsJc3RydWN0IG5ldF9kZXZp
+Y2UgKm5kZXY7DQo+IA0KPiAgRnJvbSB0aGUgY29tbWVudHMsIHRoaXMgZnVuY3Rpb24gcmVxdWly
+ZXMgcmN1X3JlYWRfbG9jay4gQ2FuIHRoZSBmb2xsb3dpbmcNCj4gYmUgYWRkZWQgaW4gdGhpcyBm
+dW5jdGlvbj8NCj4gDQo+IFJDVV9MT0NLREVQX1dBUk4oIXJjdV9yZWFkX2xvY2tfaGVsZCgpLCAi
+bm8gcmN1IHJlYWQgbG9jayBoZWxkIik7DQo+IA0KPiBJZiByY3VfcmVhZF9sb2NrIGlzIG5vdCBo
+ZWxkLCB0aGlzIGZ1bmN0aW9uIHdpbGwgbm90aWZ5IHRoZSBjYWxsZXIuDQo+IFRoaXMgY2FuIGV4
+cGxpY2l0bHkgZW5zdXJlIHRoYXQgcmN1X3JlYWRfbG9jayBzaG91bGQgYmUgaGVsZCBiZWZvcmUg
+dGhpcw0KPiBmdWN0aW9uIGlzIGNhbGxlZC4NCg0KVGhhbmtzISBHcmVhdCBpZGVhIQ0KDQo+IA0K
+PiBCZXN0IFJlZ2FyZHMsDQo+IA0KPiBaaHUgWWFuanVuDQo+IA0KDQo=
