@@ -1,136 +1,94 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA0D17DA2E;
-	Wed,  3 Jul 2024 14:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BD61836F0;
+	Wed,  3 Jul 2024 14:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720016007; cv=none; b=KmEuXAA+hn2qsWDcoQqXL/1gFfWAI3E3qmvirAiGAs5N91wANxEodR8QNc4SHovzcHOgiKzm6SKC+GcTyeUiqm2XcLmtd5SEslJiy1Y30S6emaTYu1d8kQ1AIIPGarWyWLSY0h+yPflAnbS8PIgsWQfcF3vOrtOabU5w1Ggmc/I=
+	t=1720016015; cv=none; b=ggge3CXFVSpYzPS4TR/dVVf8CJCVQ59/r3yQuA24T0SY2rgmqeBiQHN65BSQ4rJpAGOO/7eiHgZmVWXvTKtfBDw975xaDUoV3rxaytY3reSrH7GDSg3q2NYTbj/gWuh/JF/QHxFfSGFuYZbE7vMJ4AMtCUX2luCBsxylCYecl00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720016007; c=relaxed/simple;
-	bh=U6DEP19ygCkPXuQKLLxorLJXfz+rnBG5Pwv8YMdO/Bw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KT3XYjJcEwu2gwCJNewsixCxaW1CrOKy/628S5vEHbupXoYJSJKrHGoDu4leJ3ds24FTGXAsE2G4VTdgMmljjszNHVzeBODPTnD1L6Aofb+ZL6p0lscCKlVOtVJoqe5S22Q+P/i6auu9B4z4XzyaVQ0+weDJkBvUXyaWYZEyzzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VwLRCtq5; arc=none smtp.client-ip=217.70.178.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1720016015; c=relaxed/simple;
+	bh=m5kRBzNvuVQihwlIdSe2O1KJm1VxODSBS7k4s/7Re+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YuH+xPUBwWHKX7l4iAIDFkw5EyETqnFLwLLwE0lstYcbW+OKZHbtb1jU0XybYmLOAheROPZaBORp4rOY4a58eRxGZHs23eWyyxyc7jHRsTCKH8ViEZCqIi4YCkg3gq89DvkjUJoZW2+3wBKhn+0YqdfwGrEU8OGJZ9fivKjRik0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lav3DobJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VwLRCtq5"
-Received: from relay1-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::221])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id E2503C6D04;
-	Wed,  3 Jul 2024 13:46:13 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3BFDC240002;
-	Wed,  3 Jul 2024 13:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720014371;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=SAmBKY6TaaS5jkk7Ij5yPeOvb0Ktt8dFf3y/RyTt1Mk=;
-	b=VwLRCtq57OxU0fIL81TJ2PS+HkQ3vz3Pu7v0mgKdcxXoI+DE6kjBn47ygcKfAwVFZ4xuI3
-	nNC5KFsuvTGXWqSlj6AEvADdDRprmppH6Wp+bd1V8AV/hLdcJyHT41pJMt0ykaAdyDD+vT
-	8n7Wk7a77SKzhMxRjebnhDFGfB26V9fKSdeEsw2ovgOXizY6RFv2xvZpRv4fxxKdKnD8cG
-	RQjTQY1GEdNd6DN9wIMLybhhFfv06OsTF5YvFDmb8B+bA8RGuw8GHjR8fmB2FrpEg3xdym
-	R2mIQ728UiuCltmAdEGnXs/GEiXKZrW0drmDnrFWzkm6F109ASXNfgGjoJxFNw==
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: [PATCH v2 0/4] Add Mobileye EyeQ clock support
-Date: Wed, 03 Jul 2024 15:46:04 +0200
-Message-Id: <20240703-mbly-clk-v2-0-fe8c6199a579@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lav3DobJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48132C2BD10;
+	Wed,  3 Jul 2024 14:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720016015;
+	bh=m5kRBzNvuVQihwlIdSe2O1KJm1VxODSBS7k4s/7Re+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lav3DobJskVXAYLQquBqUn2oQCSKfgSGL97d3UEWNOcpRuVRYiT+uLRYp6jmuE8gN
+	 16hSacg1Cr9/RzQ7TZtzaORClSB6aPg6okLcl6jn540eNJxdBowyEPcNU3tPZrhZL7
+	 gZ/nSFcmu7F2j1DXJrap4vPcgKxxONponmTioObP2WsOKpEfIMBzdQN2lNttLxEA0Y
+	 iovrtHBLITYdQrHayp0ivA4PDx5OneWh7r+O3Bia3GmRFZX83RCRfLMJYKC/PeeHn/
+	 m/jOJifzciapDlI7BczP+yCfTxWkbJSU2awJwsDZH6SQhwnhx2rBMOoiVlSKvaxQGo
+	 EpCqppXDuVLBg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sP0jk-0000000050s-0qlf;
+	Wed, 03 Jul 2024 16:13:32 +0200
+Date: Wed, 3 Jul 2024 16:13:32 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] serial: qcom-geni: fix lockups
+Message-ID: <ZoVcjP3BLcqU05D4@hovoldconsulting.com>
+References: <20240624133135.7445-1-johan+linaro@kernel.org>
+ <2024070326-stability-glamorous-fcc1@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIABxWhWYC/23MQQ7CIBCF4as0s3YMIKHqynuYLgod7URaDDTEp
- uHuYtcu/5eXb4NEkSnBtdkgUubEYa6hDg24sZ+fhDzUBiWUFkadcbJ+RedfqJ0h61ppTrqFen9
- HevBnp+5d7ZHTEuK6y1n+1j9IliiQBitJXajXTt5sCIvn+ejCBF0p5Qt39+ZvogAAAA==
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.15-dev-13183
-X-GND-Sasl: theo.lebrun@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024070326-stability-glamorous-fcc1@gregkh>
 
-This is a new iteration on the Mobileye system-controller series. It
-used to be sent as a single series [0], but has been split in the
-previous revision (see [1], [2], [3], [4]) to faciliate merging.
+On Wed, Jul 03, 2024 at 04:09:22PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Jun 24, 2024 at 03:31:32PM +0200, Johan Hovold wrote:
+> > Since 6.10-rc1, Qualcomm machines with a serial port can easily lock up
+> > hard, for example, when stopping a getty on reboot.
+> > 
+> > The first patch in this series fixes this severe regression by restoring
+> > the pre-6.10-rc1 behaviour of printing additional characters when
+> > flushing the tx buffer.
+> > 
+> > The second patch fixes a long-standing issue in the GENI driver which
+> > can lead to a soft lock up when using software flow control and on
+> > suspend.
+> > 
+> > The third patch, addresses the old issue with additional characters
+> > being printing when flushing the buffer.
+> > 
+> > Note that timeouts used when clearing the tx fifo are a bit excessive
+> > since I'm reusing the current qcom_geni_serial_poll_bit() helper for
+> > now.
+> > 
+> > I think at least the first patch should be merged for rc6 while we
+> > consider the best way forward to address the remaining issues.
+> > 
+> > Doug has posted an alternative series of fixes here that depends on
+> > reworking the driver a fair bit here:
+> > 
+> > 	https://lore.kernel.org/lkml/20240610222515.3023730-1-dianders@chromium.org/
+> 
+> I'm confused.  Should I take this series, or Doug's, or Doug's single
+> patch that they say resolve the immediate issue?  I can't tell what was
+> agreed on here at all, so I'm going to drop all of these patches and
+> wait for a resubmission that everyone agrees should be what is taken...
 
-This series adds a platform driver dealing with read-only PLLs derived
-from the main crystal, and some divider clocks based on those PLLs. It
-also acts at the one instantiating reset and pinctrl auxiliary devices.
+Yes, sorry about the confusion. I'm preparing a v2 of this series which
+fixes the regression without downsides of Doug's first series or minimal
+fix. I should be able to post it tomorrow.
 
-One special feature is that some clocks are required before platform
-bus infrastructure is available; we therefore register some clocks at
-the of_clk_init() stage.
-
-We support EyeQ5, EyeQ6L and EyeQ6H SoCs. The last one is special in
-that there are seven instances of this system-controller. All of those
-handle clocks.
-
-Related series are targeted at reset [5], pinctrl [6] and MIPS [4]. The
-first two are receiving a second version. The last one has no change
-and stays at its V1.
-
-Have a nice day,
-Théo
-
-[0]: https://lore.kernel.org/lkml/20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com/
-
-[1]: https://lore.kernel.org/lkml/20240628-mbly-clk-v1-0-edb1e29ea4c1@bootlin.com/
-[2]: https://lore.kernel.org/lkml/20240628-mbly-reset-v1-0-2a8294fd4392@bootlin.com/
-[3]: https://lore.kernel.org/lkml/20240628-mbly-pinctrl-v1-0-c878192d6b0a@bootlin.com/
-[4]: https://lore.kernel.org/lkml/20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com/
-
-[5]: https://lore.kernel.org/lkml/20240703-mbly-reset-v2-0-3fe853d78139@bootlin.com/
-[6]: https://lore.kernel.org/lkml/20240703-mbly-pinctrl-v2-0-eab5f69f1b01@bootlin.com/
-
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
----
-Changes in v2:
-- bindings: take Acked-by: Krzysztof Kozlowski.
-- driver: eqc_auxdev_create(): cast the `void __iomem *base` variable to
-  (void __force *) before putting it in platform_data, to avoid sparse
-  warning.
-- Link to v1: see [1]
-
-Changes since OLB v3 [0]:
- - MAINTAINERS: Move changes into a separate commit to avoid merge
-   conflicts. This commit is in the MIPS series [3].
- - dt-bindings: split include/dt-bindings/ changes into its own commit.
-   It is part of this clk series.
- - dt-bindings: Take Reviewed-by: Rob Herring. The include/dt-bindings/
-   new commit has NOT inherited from it, just to make sure.
-
----
-Théo Lebrun (4):
-      Revert "dt-bindings: clock: mobileye,eyeq5-clk: add bindings"
-      dt-bindings: clock: add Mobileye EyeQ6L/EyeQ6H clock indexes
-      clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS flag
-      clk: eyeq: add driver
-
- .../bindings/clock/mobileye,eyeq5-clk.yaml         |  51 --
- drivers/clk/Kconfig                                |  12 +
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-divider.c                          |  12 +-
- drivers/clk/clk-eyeq.c                             | 789 +++++++++++++++++++++
- include/dt-bindings/clock/mobileye,eyeq5-clk.h     |  21 +
- include/linux/clk-provider.h                       |  11 +-
- 7 files changed, 839 insertions(+), 58 deletions(-)
----
-base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
-change-id: 20240628-mbly-clk-4c6ebc716347
-
-Best regards,
--- 
-Théo Lebrun <theo.lebrun@bootlin.com>
-
+Johan
