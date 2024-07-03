@@ -1,134 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30660195FEA;
-	Wed,  3 Jul 2024 22:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5A6191F69
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 22:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720045841; cv=none; b=sSzSwNr+juW9jPn3GnVmOv7et15LEyk3R5Y0YOGMSwyS6nR6S3J/poyRcPRGXk+NxSA5m2tKz5UlKz+LdE7ofTtMJr05jZu0djnHT1Rn017uVGI8jx+lBzSNoHn0BGwuIK1N5DHEV3lvud38WCN+rd2UdJGDB54IL9K9e3kmcqw=
+	t=1720046000; cv=none; b=H6ZOFiyvwAOXGZ3obzksOq1b9c1NoorJc7F/wp3X+KfiYUyfekJU5dZ9bxrF191o8pjYFrYuzNEURp+Fm3pfbMvet0tzxQ6WkyrOQBoDxN4wFuhYAFvmaLCa/AFhs339R7YEnDjo8R7D0IchWc4wdbErJOe+7EUQOkShf+3HLZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720045841; c=relaxed/simple;
-	bh=Oe38Zy3sD1EBtAZsJmD68r+VYxDVmXNUn21vOw1Hj8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RnrJ8BZ0MGYPwKid7cfpEHaQmF0Oi6OQYH8xZVEIfjNlw+kM5cN+e+bHC/GiqtfQDyhH8i+Kfk5LTD5K8+ZORCO8q4SwckJLEPsVIIuPGDoZMAQPhMi67K5+MX6o0Ni/Mr2YTGVxpmBhD7W5V/U8243rhCUFrMMv7QKNzxholGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sP6/nJpx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720046000; c=relaxed/simple;
+	bh=KFg/rbkQmn4+Z9qgLd5RFdTVJuWPN6J8DyNWRoUAxts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FbFxXZhu2HOaWee7QFUoj0F5UOxkceghrcvByD8kHsY61s8DbnC3z37ypAl03J7bRR6FV1kqZSGh5yva7CVhkVeKh+Vf7eLYMALjYLSP2bwonM7XBAZ5nkonNsx8+r7RkBRghg7eDjrhLWfygF2fl89zoBg/fqNxibgMyr6Mb1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aazw5Q82; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sP6/nJpx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 536E0C4AF0A;
-	Wed,  3 Jul 2024 22:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720045840;
-	bh=Oe38Zy3sD1EBtAZsJmD68r+VYxDVmXNUn21vOw1Hj8w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sP6/nJpxO0u8DHPOvnaaBixGb6AsMH1UHhLJe2Ae1xSQDzlE/lAfe1dSyM4LHFbnW
-	 vpN2m2vI/2TtVzhVeUczv/tP45Jp45kjQmdemBpjJ86pKAF8386AOPDHS9cP5xEo8u
-	 +DY9XOg6YkirHEus4JYb/cwf8eHhqyCD4yMXFFMv42L85wDOLoMdcp50BU3upvpl0Z
-	 UvjM1n7CF5VIVScoXQSsnSic70HDOnN7hcXOW+OxQUWQVcVi4ultQuuJD+0gc9ommi
-	 3ZwfPoWxg/tSNH4+22dq6UhO2D2iWw9Ke1kxIajAOzDXDDQOnEVTpzey5SDDeRnxVO
-	 Lzr5exwC0qZyw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	KP Singh <kpsingh@kernel.org>,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: [PATCH v3 7/8] perf record: Add --setup-filter option
-Date: Wed,  3 Jul 2024 15:30:34 -0700
-Message-ID: <20240703223035.2024586-8-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-In-Reply-To: <20240703223035.2024586-1-namhyung@kernel.org>
-References: <20240703223035.2024586-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aazw5Q82"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70af0684c2bso51492b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 15:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720045998; x=1720650798; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7oIWu5LvDFQTuSLumXWbuf9a7+vs9Ao9dfYk4KDVvB4=;
+        b=Aazw5Q82vakUl/FAbJUpooY9v9wqWQHAH2VyPXMQPSn3EDFS+YFx3z2OLYVQTvh70/
+         ON/yeiOHC6g3AjJQhkHQ5Iu8d3olVYGLi1Mdd7C87yuwZTBjP5Jqxcr7X9adIJtAKT8O
+         XMiZNblqGRsYzKWkyLReMJLviWRXWzNZ1v8AF+DLHLVAHd5QVsCm7bBT6VAY1i2p6OHM
+         hPY69iYWMQL0jaFyopuYncJHWrC4fT4T/MbP1Q2Oph4YvAg+5/09CNUJ9pKcV7mk1MNu
+         pvIY12WktqSE849/r+T3cRNiO4g1hM9D19q8N0WL1F71pjcoYnvFoCFDpQAZBK3xecAY
+         NLwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720045998; x=1720650798;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7oIWu5LvDFQTuSLumXWbuf9a7+vs9Ao9dfYk4KDVvB4=;
+        b=q48GrNc2UJrDTH4FV21sdS91SIE4pDN3wpNUZUNCDg300V6L8Qt14tKsafG8BczdGD
+         97IYbHVwbK1IKK4kqKGMvHiNAoWdAwwD0QPC5U61OZtTwMsLgVQTvKCNPOr8almJG7BT
+         vuPvGLkneZF3c8Bg42Vdj9l6HiWj/hflLxeryndPYS/1gDzGW7bC6VLjSxhdJ3q7sM2P
+         NuIdwy1g77FVL1dxFjMop8KQx/Y2bj4an4L1+S1tRqLTSRtewW2XHob5oqeYT8L/gBRd
+         OXNMe/rYogUVFiIEV9ZOj+FhgHWKtT70ZSoK7uULlIblixgcVU5Fqh/ufb6VsnvT7bpC
+         xTZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNYT01ucC/Ktd/O+xMgxwUlVeRkAFg99uBMUYMi5Ue8FqcoGDV/TFAcdUXzywW9rIC2gV4YM1d2TBwB3oiLIQKc7P5M4uiVPw/mzcJ
+X-Gm-Message-State: AOJu0YxxJAxa2z4JNHDKqU5DWS7lgQIvOgAqLBeAS7f/hrnBG6w9bV50
+	LW67W3CXkeqWPi4bGZEMjvUQTeRti5CFuwz1dc26MbWtyNR9FI6M
+X-Google-Smtp-Source: AGHT+IF8rsBR8SE1387cEngzKISqLVoRWHwAWn7/bnTtKa+yNdh9syvNaPUCSzklWyizIkZ8bFzMaA==
+X-Received: by 2002:a05:6a00:22d5:b0:705:d805:215b with SMTP id d2e1a72fcca58-70aaaefd5efmr11756680b3a.27.1720045998259;
+        Wed, 03 Jul 2024 15:33:18 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70803ecf74bsm10950636b3a.117.2024.07.03.15.33.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 15:33:17 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 3 Jul 2024 12:33:16 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Bart Van Assche <bvanassche@acm.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/53] workqueue: Introduce the create*_workqueue2()
+ macros
+Message-ID: <ZoXRrD48cLEGmUT2@slm.duckdns.org>
+References: <20240630222904.627462-1-bvanassche@acm.org>
+ <20240630222904.627462-2-bvanassche@acm.org>
+ <CAJhGHyCsypVP7VgsNKdQ=rn0hqiJOzSS9p_OGio6k-S2idaLtA@mail.gmail.com>
+ <3302014f-6ee0-452a-a6a5-dea6fcc37542@acm.org>
+ <202407031249.F9EB68A@keescook>
+ <f0333b86-212e-40e6-b41d-b393c312153f@acm.org>
+ <202407031518.7320BBC9E3@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202407031518.7320BBC9E3@keescook>
 
-To allow BPF filters for unprivileged users it needs to pin the BPF
-objects to BPF-fs first.  Let's add a new option to pin and unpin the
-objects easily.  I'm not sure 'perf record' is a right place to do this
-but I don't have a better idea right now.
+Hello,
 
-  $ sudo perf record --setup-filter pin
+On Wed, Jul 03, 2024 at 03:20:17PM -0700, Kees Cook wrote:
+> > Hence a different approach for the SCSI create*_workqueue() macros:
+> > https://lore.kernel.org/linux-scsi/20240702215228.2743420-1-bvanassche@acm.org/
+> 
+> Gotcha. Okay, well, that's a lot of flags to open-code, but I guess
+> that's fine? :P
 
-The above command would pin BPF program and maps for the filter when the
-system has BPF-fs (usually at /sys/fs/bpf/).  To unpin the objects,
-users can run the following command (as root).
+The flag in question is WQ_MEM_RECLAIM and that flag has a direct cost of
+creating a dedicated kthread which mostly sits idle, so we want it to be
+explicit. In SCSI, the naive expansion is likely to be correct for most
+cases.
 
-  $ sudo perf record --setup-filter unpin
+It's a bit tricky in that the failure mode of incorrectly missing the flag
+is critical (system deadlock under memory pressure) but can be difficult to
+trigger and the depencency chain may not be immediately evident when looking
+at the code. The upsides are that when it happens, it's usually not too
+difficult to tell from the backtraces and lockdep annotation sometimes helps
+with finding missing cases (which is suppressed when using the old interface
+because it's unclear whether MEM_RECLAIM is there intentionally or not).
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-record.txt |  5 +++++
- tools/perf/builtin-record.c              | 15 +++++++++++++++
- 2 files changed, 20 insertions(+)
+Anyways, yeah, we want it to be explicit.
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index d6532ed97c02..41e36b4dc765 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -828,6 +828,11 @@ filtered through the mask provided by -C option.
- 	only, as of now.  So the applications built without the frame
- 	pointer might see bogus addresses.
- 
-+--setup-filter=<action>::
-+	Prepare BPF filter to be used by regular users.  The action should be
-+	either "pin" or "unpin".  The filter can be used after it's pinned.
-+
-+
- include::intel-hybrid.txt[]
- 
- SEE ALSO
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index a473000f3599..e88dedc0391b 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -171,6 +171,7 @@ struct record {
- 	bool			timestamp_filename;
- 	bool			timestamp_boundary;
- 	bool			off_cpu;
-+	const char		*filter_action;
- 	struct switch_output	switch_output;
- 	unsigned long long	samples;
- 	unsigned long		output_max_size;	/* = 0: unlimited */
-@@ -3557,6 +3558,8 @@ static struct option __record_options[] = {
- 			    "write collected trace data into several data files using parallel threads",
- 			    record__parse_threads),
- 	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
-+	OPT_STRING(0, "setup-filter", &record.filter_action, "pin|unpin",
-+		   "BPF filter action"),
- 	OPT_END()
- };
- 
-@@ -4086,6 +4089,18 @@ int cmd_record(int argc, const char **argv)
- 		pr_warning("WARNING: --timestamp-filename option is not available in parallel streaming mode.\n");
- 	}
- 
-+	if (rec->filter_action) {
-+		if (!strcmp(rec->filter_action, "pin"))
-+			err = perf_bpf_filter__pin();
-+		else if (!strcmp(rec->filter_action, "unpin"))
-+			err = perf_bpf_filter__unpin();
-+		else {
-+			pr_warning("Unknown BPF filter action: %s\n", rec->filter_action);
-+			err = -EINVAL;
-+		}
-+		goto out_opts;
-+	}
-+
- 	/*
- 	 * Allow aliases to facilitate the lookup of symbols for address
- 	 * filters. Refer to auxtrace_parse_filters().
+Thanks.
+
 -- 
-2.45.2.803.g4e1b14247a-goog
-
+tejun
