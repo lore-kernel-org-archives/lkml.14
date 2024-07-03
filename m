@@ -1,57 +1,58 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FDD171085;
-	Wed,  3 Jul 2024 10:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0E0143C6B;
+	Wed,  3 Jul 2024 10:28:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720002489; cv=none; b=u7jPDLvy5ELxZtDCot9VmqAVK1nPkxbBK6RmrGrzRpFxMtP2e+5QnF4I2iPTWgljkHvqC4MqYoDu5GpCmVXGyodymDAMOWsSO3RULi77yQF1eBY0JCiKQiS8RW/xMMjmZ7TxHoYnuQkfsJbUgPvSbLJD9GHyVxUZurc1D5YyoyU=
+	t=1720002490; cv=none; b=BS4+RVtUxYM6UlfTq9b1BDKIoyuJezF5K+pNf/a4JgZYXgMrhIJPHmw1emMrJqBO55aei2wry7VWSZjG0SqRUf4aJB+7rwmofBrRWRuqb3cP7h6yMMH/ekqYItbxoNxH+QvgSDJsqVq+FWxdnglm7SY4Co1qlAUqQJ2+Gip2cxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720002489; c=relaxed/simple;
-	bh=NycM/6GqLRtFrGB/KY1v7hoKxrqUj+TND0uXU/YfnHk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l8CM2kX7p60k/BVxX52MBJuMY3v6Kf8UVw+qp/Fk763dgKWHF+OxdyQj3HF2HBsCHMCqXwBeN5KO8d/jkkjamRDBtyLbbrNin6qBtBPuU5YbBillUrsBGAHNSauzWvokVs02QMEw8/Qxv0PpFh+jAVXHusCUlnIND+r42hfDIC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=lMn+lhYg; arc=none smtp.client-ip=68.232.154.123
+	s=arc-20240116; t=1720002490; c=relaxed/simple;
+	bh=d+NaFbiFI1ORWu1Rz4SBsOdh7lHDtqOtupPY4l7As28=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QrZNBjt8QEFXcpuI8GPnAhkXo1t5mCs9X7hibVGmZd0rJwHT3Vo2NEC/zcB0EttKFLiUQ+GAx7fwJFQgYPLTqMHOsChWzog+/jCntYZPX0NB2DEWYqL/DYGW0AA0u1ut2v20OqfLQYNAzDqaR4PaYfK2Cp+TeHh+bo/w9lEDjzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Z+jLPCfU; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lMn+lhYg"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Z+jLPCfU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720002488; x=1751538488;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=NycM/6GqLRtFrGB/KY1v7hoKxrqUj+TND0uXU/YfnHk=;
-  b=lMn+lhYgsMtRyqGxUevQSScM1siVVACqznmjgX4IML/Iebm951qQzpWs
-   nQJ2TvwhLvoA7GO/Pi9Dyok7KGZiTWXz+kEJ8vf1GpG07gXfxyKcwGiD9
-   bKuWB07i/QnhH0gbn+/DVv8V/C3bUXjkQ89/d7X7oNtyI1PL0GLJJFQ85
-   PMeHK6zkMxCZDeG2TyaRHEsEOROzXyXB3iQauovtHDNzPR4J3Ecrc1Ykg
-   if+dWFNtO4gOQ54KqHl0foRPlJ04F0XdARlaa4rz65lkqSAmPs3g5+4om
-   4OWVqdcBUJc/3vMeWuOgMYXpUv+MAcUqFUaL4NDE6yqo8h177h69o92to
+  t=1720002489; x=1751538489;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=d+NaFbiFI1ORWu1Rz4SBsOdh7lHDtqOtupPY4l7As28=;
+  b=Z+jLPCfUvSL0/kAR+CKGB+no0hlBjsP3P9ZxIdcUHSw1wTZw/EkRC3xe
+   sRtAZkyZbeB8NOTLH9ihaMXMvqpI/gGdaAuTT0JqSWd2FCPNZl9VFAyJZ
+   9yx3eQL58lXfuOQRNY3lyoxk2by/xZLRB1HuHrcZX/D3d1OkqhOk+aaHc
+   Hd+qnidB7c+YPa8ML/F5r7tr2yBrmH6qTYQk96rO4iyoKDZBXiO/Vk2sM
+   qnVpF/GRGj+TRhxblKeU6rdF61tbWaisk3WVGVLCMWpE/7c9Xr907adLp
+   3QmO0PeMlydBLxU92WWcytdFQn/WZU5nclHBJHAr7rFWcLh1MnIyFYTae
    w==;
 X-CSE-ConnectionGUID: C1sswkSrQy+pa1d+oVi69g==
-X-CSE-MsgGUID: 542unQ1TRLOWZ3Tvaz8tKQ==
+X-CSE-MsgGUID: 7GR4o5dbRZOp2O0MfqxJVw==
 X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="scan'208";a="29441489"
+   d="scan'208";a="29441491"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
   by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jul 2024 03:28:05 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jul 2024 03:27:43 -0700
+ 15.1.2507.35; Wed, 3 Jul 2024 03:28:00 -0700
 Received: from che-lt-i67070.microchip.com (10.10.85.11) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Jul 2024 03:27:39 -0700
+ 15.1.2507.35 via Frontend Transport; Wed, 3 Jul 2024 03:27:55 -0700
 From: Varshini Rajendran <varshini.rajendran@microchip.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <varshini.rajendran@microchip.com>,
-	<linux-clk@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 10/27] clk: at91: sam9x7: add support for HW PLL freq dividers
-Date: Wed, 3 Jul 2024 15:57:36 +0530
-Message-ID: <20240703102736.195810-1-varshini.rajendran@microchip.com>
+To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+	<linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <varshini.rajendran@microchip.com>
+Subject: [PATCH v5 12/27] dt-bindings: clock: at91: Allow PLLs to be exported and referenced in DT
+Date: Wed, 3 Jul 2024 15:57:49 +0530
+Message-ID: <20240703102749.195907-1-varshini.rajendran@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240703102011.193343-1-varshini.rajendran@microchip.com>
 References: <20240703102011.193343-1-varshini.rajendran@microchip.com>
@@ -64,109 +65,33 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Add support for hardware dividers for PLL IDs in sam9x7 SoC. The system
-PLL - PLLA and the system PLL divided by 2 - PLLADIV2 with PLL ID 0 and
-4 respectively, both have a hardware divider /2. This has to be taken into
-account in the software to obtain the right frequencies. Support for the
-same is added in the PLL driver.
-
-fcorepllack -----> HW Div = 2 -+--> fpllack
-                               |
-                               +--> HW Div = 2 ---> fplladiv2ck
-
-In this case the corepll freq is 1600 MHz. So, the plla freq is 800 MHz
-after the hardware divider and the plladiv2 freq is 400 MHz after the
-hardware divider (given that the DIVPMC is 0).
+Allow PLLADIV2 and LVDSPLL to be referenced as a PMC_TYPE_CORE
+clock from phandle in DT for sam9x7 SoC family.
 
 Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
 Changes in v5:
-- Corrected typos in commit message.
-- Rewrote the conditional statement.
+- Updated Acked-by tag.
 ---
- drivers/clk/at91/clk-sam9x60-pll.c | 30 ++++++++++++++++++++++++++++--
- drivers/clk/at91/pmc.h             |  1 +
- 2 files changed, 29 insertions(+), 2 deletions(-)
+ include/dt-bindings/clock/at91.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/clk/at91/clk-sam9x60-pll.c b/drivers/clk/at91/clk-sam9x60-pll.c
-index b0314dfd7393..fda041102224 100644
---- a/drivers/clk/at91/clk-sam9x60-pll.c
-+++ b/drivers/clk/at91/clk-sam9x60-pll.c
-@@ -73,9 +73,15 @@ static unsigned long sam9x60_frac_pll_recalc_rate(struct clk_hw *hw,
- {
- 	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
- 	struct sam9x60_frac *frac = to_sam9x60_frac(core);
-+	unsigned long freq;
+diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
+index 3e3972a814c1..6ede88c3992d 100644
+--- a/include/dt-bindings/clock/at91.h
++++ b/include/dt-bindings/clock/at91.h
+@@ -38,6 +38,10 @@
+ #define PMC_CPU			(PMC_MAIN + 9)
+ #define PMC_MCK1		(PMC_MAIN + 10)
  
--	return parent_rate * (frac->mul + 1) +
-+	freq = parent_rate * (frac->mul + 1) +
- 		DIV_ROUND_CLOSEST_ULL((u64)parent_rate * frac->frac, (1 << 22));
++/* SAM9X7 */
++#define PMC_PLLADIV2		(PMC_MAIN + 11)
++#define PMC_LVDSPLL		(PMC_MAIN + 12)
 +
-+	if (core->layout->div2)
-+		freq >>= 1;
-+
-+	return freq;
- }
- 
- static int sam9x60_frac_pll_set(struct sam9x60_pll_core *core)
-@@ -432,6 +438,12 @@ static unsigned long sam9x60_div_pll_recalc_rate(struct clk_hw *hw,
- 	return DIV_ROUND_CLOSEST_ULL(parent_rate, (div->div + 1));
- }
- 
-+static unsigned long sam9x60_fixed_div_pll_recalc_rate(struct clk_hw *hw,
-+						       unsigned long parent_rate)
-+{
-+	return parent_rate >> 1;
-+}
-+
- static long sam9x60_div_pll_compute_div(struct sam9x60_pll_core *core,
- 					unsigned long *parent_rate,
- 					unsigned long rate)
-@@ -606,6 +618,16 @@ static const struct clk_ops sam9x60_div_pll_ops_chg = {
- 	.restore_context = sam9x60_div_pll_restore_context,
- };
- 
-+static const struct clk_ops sam9x60_fixed_div_pll_ops = {
-+	.prepare = sam9x60_div_pll_prepare,
-+	.unprepare = sam9x60_div_pll_unprepare,
-+	.is_prepared = sam9x60_div_pll_is_prepared,
-+	.recalc_rate = sam9x60_fixed_div_pll_recalc_rate,
-+	.round_rate = sam9x60_div_pll_round_rate,
-+	.save_context = sam9x60_div_pll_save_context,
-+	.restore_context = sam9x60_div_pll_restore_context,
-+};
-+
- struct clk_hw * __init
- sam9x60_clk_register_frac_pll(struct regmap *regmap, spinlock_t *lock,
- 			      const char *name, const char *parent_name,
-@@ -725,10 +747,14 @@ sam9x60_clk_register_div_pll(struct regmap *regmap, spinlock_t *lock,
- 	else
- 		init.parent_names = &parent_name;
- 	init.num_parents = 1;
--	if (flags & CLK_SET_RATE_GATE)
-+
-+	if (layout->div2)
-+		init.ops = &sam9x60_fixed_div_pll_ops;
-+	else if (flags & CLK_SET_RATE_GATE)
- 		init.ops = &sam9x60_div_pll_ops;
- 	else
- 		init.ops = &sam9x60_div_pll_ops_chg;
-+
- 	init.flags = flags;
- 
- 	div->core.id = id;
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index bb9da35198d9..91d1c6305d95 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -64,6 +64,7 @@ struct clk_pll_layout {
- 	u8 frac_shift;
- 	u8 div_shift;
- 	u8 endiv_shift;
-+	u8 div2;
- };
- 
- extern const struct clk_pll_layout at91rm9200_pll_layout;
+ #ifndef AT91_PMC_MOSCS
+ #define AT91_PMC_MOSCS		0		/* MOSCS Flag */
+ #define AT91_PMC_LOCKA		1		/* PLLA Lock */
 -- 
 2.25.1
 
