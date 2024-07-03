@@ -1,184 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1618181CF0;
-	Wed,  3 Jul 2024 16:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DA0282E1;
+	Wed,  3 Jul 2024 16:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720023664; cv=none; b=Ki6VE5FLUVSQsLVWLLCdGFfOw/16+Bcn2xHfVv7Q7r4yGyxB1go6VfHXQMxnFKNa55NmtYMX43hMrVpWOZChom64nHTIdaY8E40fSTSW5wraSfonDcBkZk7BGqeAMPVX+mQh+6xI9kxPWqaOk5pWYe7KOXBTJkYRtZub2Tqj5/w=
+	t=1720023676; cv=none; b=FBPIAsSe1JRVM6hGMeKSL+f19raZj55FEoFfCLD1+kDsWQVWnZPFTYHhSmalUH+AsCHgWR+pJoT2KH6oldBtHrHC1oZGqzL/yAOhdGLQhw/a06B4+rsD4fQllhmLOdCX43Jn8pCjHOE2xTswHSt0Q008BuR41YiCb/wA0u0KVVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720023664; c=relaxed/simple;
-	bh=zkiWcHGjz2TNHSSYj3gAD/6JOpE4e7eGlFo4E4j9CV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AgaYlt0WRHCDlNFAl10Hz72U7XsII59l2o0GbM8Ko7X5aRpLA3nELpt3pEdZPAGW64igf/vWIPnlcDFKnPv3X9H1hgxlu0rW1k7fKcfnc0+LdbqC01ZpfiIVzD+E9T6YrMU22edVN9sxUF/swDc7ZhfYcXedoodyJOw9PTDbgKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnC0Xcyb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720023676; c=relaxed/simple;
+	bh=2yfo3OvP/tnsTIp4VFs4rNirB845fNkFXJ45jxb/Y+c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IAGhzCZZL2dhIBZVuCMMv27Y/eJzBmkDAWxyiS+fmtep93OJjEPefpVcJS5wYUP+0EqH7L8B8iSNDlG/aUXGc7/me4ezPhWDdgwRTWz0SHjCNNh9uOviRYDXbq3CMENsQqi4GKABsytMzDW6vkmm8LoS4bVsEwAcHhGOx89Z3aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X9UpOCTq; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnC0Xcyb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C6AC2BD10;
-	Wed,  3 Jul 2024 16:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720023664;
-	bh=zkiWcHGjz2TNHSSYj3gAD/6JOpE4e7eGlFo4E4j9CV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pnC0XcybrNw8kq5EQFs2KpYnKSi040lgXtZeLJiDjT7GxhejsiXllO0FTUP/XL+33
-	 sDZph1BuSJ++L4Hr68CtXODMyflU5qMl1jT2CLtmnW4ymaBKU6XE0s0W53mKMZAoPe
-	 EN9vkKcAJVtrWgFLUDdLTZ0A7rUFjlVIhILBZ5IiCliBXiXQ/7VsqRqti6/KdNAFYJ
-	 ndvUrqf7SFsnx5/3DMsNGfKPVenUC+6xdvdFrxdtCfkMAD20CZJQ2/XFFppZx2Wz1d
-	 5GR+53bE3Axfp+UoVZsMuOnm61fEPNraydb0ohMVqd40oMEHeNAdJ3wIoaMpF6H2xL
-	 PN2cGVWDUTaAg==
-Date: Wed, 3 Jul 2024 18:21:01 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org, Leonardo Bras <leobras@redhat.com>,
-	Sean Christopherson <seanjc@google.com>
-Subject: Re: [PATCH rcu 6/9] rcu: Add rcutree.nocb_patience_delay to reduce
- nohz_full OS jitter
-Message-ID: <ZoV6bTj0xvGopEao@localhost.localdomain>
-References: <657595c8-e86c-4594-a5b1-3c64a8275607@paulmck-laptop>
- <20240604222355.2370768-6-paulmck@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9UpOCTq"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52e97e5a84bso1344614e87.2;
+        Wed, 03 Jul 2024 09:21:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720023672; x=1720628472; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jsALFFHLFuxY5RQqYr6ygaK5HtrgJplgfhE1MyVzeTA=;
+        b=X9UpOCTqvwzSMicpDoZjII/jBw1qP7Fz7/PFgrzV43Lmlye2jku4YsSN5Ui+C9SHXl
+         RXVdz3Nnfalzgg5ER4GVS2AidGyFfCzuHAMRP+MdHpIDGWNuMbreucsyhduhr2u1+Lqz
+         ItsElKH+MwL0LEddrFjZRxJUyuV+fLplHFRSDUjVlyqaWWS52BJOGMKzNWNq9vatZ3NU
+         0dP+V7CneQrGnkb9BsOHjpgUl9oeox4MHf3gQtaEEO8+ywYCSsOV86fohpJp6TKzk7l1
+         vHQVEEUPU3s4YxrsZ3yNd1Ysn2BYVGkjokvpaRLRl/0CoQy1ww/LpKbd/VAINwANwW3p
+         luxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720023672; x=1720628472;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jsALFFHLFuxY5RQqYr6ygaK5HtrgJplgfhE1MyVzeTA=;
+        b=MWE7722Cgi58ZrzIcMbybpfMXMymRiy5qYLk3y5zq5zAjpTOYM8+cv+b4hxx3JWtdz
+         hq85IIwNkKSdIRHL4CyxSLfPIjLDTepQxJYYi0SceLKPazNuvfK7eiBrgkyUMdG7tVtD
+         iiQLN3HYruoOiHCZY+Gqo3vO6fIGxQjQskICVxvGvRIIPEtrF4fdPkOpKHpoasMS5J9G
+         XWDAQk0mO761OHxjuWHHuUChUzH3U02QeWAg27Otx6s32682/IR4/4EX7+Sx60RVR6LK
+         H6stX6k0PpGn2hnjDWKOCMFamfSYqk1o04KYpwBwJ5fGRPBXNPj5KL8YT5+RHE42Q3PQ
+         WPow==
+X-Forwarded-Encrypted: i=1; AJvYcCXyKUo6oe1EoXpkVjLHBGgxGaSHtxcnryH5Aiwz2yxFrGcKiqlAZVjXceTaYn9z+Bch8XrIaZZxFVppu0ralias3PuEequH2sNAEcBgJ/PxNqziKmdMjZhl7A6+XTT3/UQUsYEbOio8sF6FoN69AEOt8KgXhbDODs5fdW/0AgC1q+hTZv2Ypi5nXe52r5ZPbngpj9cNodYTLsxxzPRB8zEKZZzmRA==
+X-Gm-Message-State: AOJu0Yx8amQ6cwDN7xRXLBWmrAjgqwCDa/d8HQGADyC2dKjRjk9+jt7J
+	W0Xe7t/odEhiyudUUcv96RXP4YFS0+HC/QU1BBnzY2wOdUYtUhyiNdmPPaWV
+X-Google-Smtp-Source: AGHT+IEFbJZPNdKnbaS0tCECdKRbpFEUC6/kEynhmQGEQOtH15bPicM3fIy/tKjmK0CSUZrTfa6cCA==
+X-Received: by 2002:a05:6512:124a:b0:529:b718:8d00 with SMTP id 2adb3069b0e04-52e8264b5dfmr11354631e87.8.1720023670436;
+        Wed, 03 Jul 2024 09:21:10 -0700 (PDT)
+Received: from [127.0.1.1] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72b5abddaesm473075166b.140.2024.07.03.09.21.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 09:21:10 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: [PATCH 0/9] ASoC: Constify struct regmap_config
+Date: Wed, 03 Jul 2024 18:20:56 +0200
+Message-Id: <20240703-sound-const-regmap_config-v1-0-2e379b0446a7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240604222355.2370768-6-paulmck@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGh6hWYC/x3MSwqEMBBF0a1IjS2Ivxbcikij5hlrYCIpbQRx7
+ 4YensG9NymiQKnLbor4iUrwCUWe0byO3oHFJlNpytq0pmINp7c8B68HR7ht3L8JizgubG2bz9S
+ iASj1e8Qi1//dD8/zAtML9wtrAAAA
+To: David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Paul Cercueil <paul@crapouillou.net>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Banajit Goswami <bgoswami@quicinc.com>
+Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mips@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720023669; l=1329;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=2yfo3OvP/tnsTIp4VFs4rNirB845fNkFXJ45jxb/Y+c=;
+ b=2XXm7af+smGwzm0vmJjdGPs0OO7QoTlsUJ3ujwzB3P8Nu0wlrV/eudsRaas7fpkTWpXW772bV
+ IB2/agz33aMBtUVwjbgPWXgOTcE34sW54Hcm2J2XEj5ds6/20gz0XNB
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-Le Tue, Jun 04, 2024 at 03:23:52PM -0700, Paul E. McKenney a écrit :
-> If a CPU is running either a userspace application or a guest OS in
-> nohz_full mode, it is possible for a system call to occur just as an
-> RCU grace period is starting.  If that CPU also has the scheduling-clock
-> tick enabled for any reason (such as a second runnable task), and if the
-> system was booted with rcutree.use_softirq=0, then RCU can add insult to
-> injury by awakening that CPU's rcuc kthread, resulting in yet another
-> task and yet more OS jitter due to switching to that task, running it,
-> and switching back.
-> 
-> In addition, in the common case where that system call is not of
-> excessively long duration, awakening the rcuc task is pointless.
-> This pointlessness is due to the fact that the CPU will enter an extended
-> quiescent state upon returning to the userspace application or guest OS.
-> In this case, the rcuc kthread cannot do anything that the main RCU
-> grace-period kthread cannot do on its behalf, at least if it is given
-> a few additional milliseconds (for example, given the time duration
-> specified by rcutree.jiffies_till_first_fqs, give or take scheduling
-> delays).
-> 
-> This commit therefore adds a rcutree.nocb_patience_delay kernel boot
-> parameter that specifies the grace period age (in milliseconds)
-> before which RCU will refrain from awakening the rcuc kthread.
-> Preliminary experiementation suggests a value of 1000, that is,
-> one second.  Increasing rcutree.nocb_patience_delay will increase
-> grace-period latency and in turn increase memory footprint, so systems
-> with constrained memory might choose a smaller value.  Systems with
-> less-aggressive OS-jitter requirements might choose the default value
-> of zero, which keeps the traditional immediate-wakeup behavior, thus
-> avoiding increases in grace-period latency.
-> 
-> [ paulmck: Apply Leonardo Bras feedback.  ]
-> 
-> Link: https://lore.kernel.org/all/20240328171949.743211-1-leobras@redhat.com/
-> 
-> Reported-by: Leonardo Bras <leobras@redhat.com>
-> Suggested-by: Leonardo Bras <leobras@redhat.com>
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Reviewed-by: Leonardo Bras <leobras@redhat.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |  8 ++++++++
->  kernel/rcu/tree.c                               | 10 ++++++++--
->  kernel/rcu/tree_plugin.h                        | 10 ++++++++++
->  3 files changed, 26 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 500cfa7762257..2d4a512cf1fc6 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5018,6 +5018,14 @@
->  			the ->nocb_bypass queue.  The definition of "too
->  			many" is supplied by this kernel boot parameter.
->  
-> +	rcutree.nocb_patience_delay= [KNL]
-> +			On callback-offloaded (rcu_nocbs) CPUs, avoid
-> +			disturbing RCU unless the grace period has
-> +			reached the specified age in milliseconds.
-> +			Defaults to zero.  Large values will be capped
-> +			at five seconds.  All values will be rounded down
-> +			to the nearest value representable by jiffies.
-> +
->  	rcutree.qhimark= [KNL]
->  			Set threshold of queued RCU callbacks beyond which
->  			batch limiting is disabled.
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 35bf4a3736765..408b020c9501f 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -176,6 +176,9 @@ static int gp_init_delay;
->  module_param(gp_init_delay, int, 0444);
->  static int gp_cleanup_delay;
->  module_param(gp_cleanup_delay, int, 0444);
-> +static int nocb_patience_delay;
-> +module_param(nocb_patience_delay, int, 0444);
-> +static int nocb_patience_delay_jiffies;
->  
->  // Add delay to rcu_read_unlock() for strict grace periods.
->  static int rcu_unlock_delay;
-> @@ -4344,11 +4347,14 @@ static int rcu_pending(int user)
->  		return 1;
->  
->  	/* Is this a nohz_full CPU in userspace or idle?  (Ignore RCU if so.) */
-> -	if ((user || rcu_is_cpu_rrupt_from_idle()) && rcu_nohz_full_cpu())
-> +	gp_in_progress = rcu_gp_in_progress();
-> +	if ((user || rcu_is_cpu_rrupt_from_idle() ||
-> +	     (gp_in_progress &&
-> +	      time_before(jiffies, READ_ONCE(rcu_state.gp_start) + nocb_patience_delay_jiffies))) &&
-> +	    rcu_nohz_full_cpu())
+This series adds the const modifier to the remaining regmap_config
+structs under sound/soc that are effectively used as const (i.e., only
+read after their declaration), but kept as writtable data.
 
-The rcu_nohz_full_cpu() test should go before anything in order to benefit from
-the static key in tick_nohz_full_cpu().
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+---
+Javier Carrasco (9):
+      ASoC: cs35l34: Constify struct regmap_config
+      ASoC: cs35l35: Constify struct regmap_config
+      ASoC: cs35l36: Constify struct regmap_config
+      ASoC: cs53l30: Constify struct regmap_config
+      ASoC: jz4760: Constify struct regmap_config
+      ASoC: jz4770: Constify struct regmap_config
+      ASoC: wsa881x: Constify struct regmap_config
+      ASoC: wsa883x: Constify struct regmap_config
+      ASoC: wsa884x: Constify struct regmap_config
 
-And since it only applies to nohz_full, should it be called
-nohz_full_patience_delay ?
+ sound/soc/codecs/cs35l34.c | 2 +-
+ sound/soc/codecs/cs35l35.c | 2 +-
+ sound/soc/codecs/cs35l36.c | 2 +-
+ sound/soc/codecs/cs53l30.c | 2 +-
+ sound/soc/codecs/jz4760.c  | 2 +-
+ sound/soc/codecs/jz4770.c  | 2 +-
+ sound/soc/codecs/wsa881x.c | 2 +-
+ sound/soc/codecs/wsa883x.c | 2 +-
+ sound/soc/codecs/wsa884x.c | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
+---
+base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+change-id: 20240703-sound-const-regmap_config-1d4d56b7e5ee
 
-Or do we want to generalize it to all nocb uses
-(which means only rely on rcu_is_cpu_rrupt_from_idle() if not nohz_full). Not
-sure if that would make sense...
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-Thanks.
-
->  		return 0;
->  
->  	/* Is the RCU core waiting for a quiescent state from this CPU? */
-> -	gp_in_progress = rcu_gp_in_progress();
->  	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm && gp_in_progress)
->  		return 1;
->  
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 340bbefe5f652..31c539f09c150 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -93,6 +93,16 @@ static void __init rcu_bootup_announce_oddness(void)
->  		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
->  	if (gp_cleanup_delay)
->  		pr_info("\tRCU debug GP cleanup slowdown %d jiffies.\n", gp_cleanup_delay);
-> +	if (nocb_patience_delay < 0) {
-> +		pr_info("\tRCU NOCB CPU patience negative (%d), resetting to zero.\n", nocb_patience_delay);
-> +		nocb_patience_delay = 0;
-> +	} else if (nocb_patience_delay > 5 * MSEC_PER_SEC) {
-> +		pr_info("\tRCU NOCB CPU patience too large (%d), resetting to %ld.\n", nocb_patience_delay, 5 * MSEC_PER_SEC);
-> +		nocb_patience_delay = 5 * MSEC_PER_SEC;
-> +	} else if (nocb_patience_delay) {
-> +		pr_info("\tRCU NOCB CPU patience set to %d milliseconds.\n", nocb_patience_delay);
-> +	}
-> +	nocb_patience_delay_jiffies = msecs_to_jiffies(nocb_patience_delay);
->  	if (!use_softirq)
->  		pr_info("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
->  	if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG))
-> -- 
-> 2.40.1
-> 
-> 
