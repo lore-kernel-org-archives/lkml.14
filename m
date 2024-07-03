@@ -1,57 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3616F136E2A;
-	Wed,  3 Jul 2024 10:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FB0174ED0
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003553; cv=none; b=gkaC98rD9NnWjpzQHGocsnDlVGGFKSkuIlvYUh9jketWyGPDyNU8w13kdt81tgu0XNkVmEpLTRmMvRh8x4sWWR40DF1KiAVZ43i0WZt5RgTFc8QnFHWYswvRx3tQpjYPRumMFqqsNAuMY91JZw5pSapaR4jOXuzcfKIAR2HxbfU=
+	t=1720003621; cv=none; b=Pe2NCNy61ztxz7+jCt3uQUfjCztRjGkbbVm6qtBqWNnBFwzGASRHTzGZz1Zrr2zwEByZodsR4qoQzOA3zzeLJ7HBKTiaD0ccc083VEHdegx17/LE5D+JSK38LPWKBWAiEDSuuVxk003VdFsAT2z4B6TaIexBveiGigVmTb3AUQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003553; c=relaxed/simple;
-	bh=ybZI4gJNmFnoEu3H9cWbSOw6kCgX8A39RFgpl/yKhZE=;
+	s=arc-20240116; t=1720003621; c=relaxed/simple;
+	bh=foPMIvvTPseXesFoCi3Y6Msx3NpMb+EdXsD3e3zHHT8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JniM/DMu9njpwlGpwkjt2RD3KWHAuU9zo1AQWh+V4iu+mNYOozqOV7hIbOMMNAYCSMuhQN2noTAk1XXU8ERShka5yypo3M7Kvyjckh3RKjBeOUFQ2jXzR87x+yk0p0AeSxTMf2xNC7WsJ7iRraBOrWPYBRodQj7nblLVKEj/GFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LJOnaLoQ; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SxGwsAERaepDofX8WD93bGpo1RxF8wsosnMRCxIUqEVscwJibtXiFZVWX8yczfOgDL9Vnn3/Z+XoosCCV9fqVu3nIbBDHM1nVzPhBNxEjvfCVBfFXJjwptP8VEcIGLZGABRY6vwm23Owa0JNcPoFPMMUOK4pKl40qctQENYCMTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bv+mtDSc; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LJOnaLoQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720003551; x=1751539551;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ybZI4gJNmFnoEu3H9cWbSOw6kCgX8A39RFgpl/yKhZE=;
-  b=LJOnaLoQAYC1sPRYS76IwwMcMjcbCgIka1AbHykWmJnEYYAdUIa/Xw9d
-   yRQNjnqIsVRdiJjT6R4PfnOzHnMjKyrZO8meeSY4jVYvjgzpYkAv+CFLy
-   8RX8eR/tqNazKlW19Pagl5MwNzOVHTEjY7j8xq3NufrsUowWfXcKhrpLe
-   n0rO84YeKyVXqHz+2pQMbnbm9eixztbjrbHxrpQiOfzecNdD/oKFia4wZ
-   HZhJM/tRFc29BoCr5Hvu2LqPhMhQUTyxl5j2Z7ExmDmj4pSyCv8KpB4pW
-   djZljblugejhFmiHMxurWa0DA4b1K2DaaDP5zX2pb1FGar61KK8VMXNcH
-   A==;
-X-CSE-ConnectionGUID: WUia96+hT8mjiJmiChBHcg==
-X-CSE-MsgGUID: NqrdvJGpS8SF6Jv8bAenYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="28617588"
-X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="scan'208";a="28617588"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 03:45:50 -0700
-X-CSE-ConnectionGUID: mGFZsjhpSDavh5I/wmDnYw==
-X-CSE-MsgGUID: koyajHxJR5q0JcInXI98ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="scan'208";a="76947966"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 03:45:48 -0700
-Date: Wed, 3 Jul 2024 12:44:27 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Geetha sowjanya <gakula@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kuba@kernel.org,
-	davem@davemloft.net, pabeni@redhat.com, edumazet@google.com,
-	sgoutham@marvell.com, sbhatta@marvell.com, hkelam@marvell.com
-Subject: Re: [net-next PATCH v7 00/10] Introduce RVU representors
-Message-ID: <ZoUri0XggubbjQvg@mev-dev.igk.intel.com>
-References: <20240628133517.8591-1-gakula@marvell.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bv+mtDSc"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52db11b1d31so7300664e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 03:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720003618; x=1720608418; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z6RqGX8VTMC710d07ZkPLdr6JCBvXddZZa+hWl6qD7c=;
+        b=Bv+mtDSc4VpJyl9o7hOA8LPvSe6ExZzmRTBwgM+K5p17KkSLGR7Xu2EnogWzZmxnjJ
+         SeSuN8ib18XT508IFxgEDgLdqHRTbCgt+h14MR0u8bvGVfrhVsHup1QTytsViZ4a4g9A
+         B7Vd7WcDZtfIxEWZ+8uOnXej6MxTJkXpcvEwKIEEfDXMl/DHekHAV76bIjoZ7PjwNqyh
+         PtV1M/Brnq7cUHOPflAfrUkppolTA2lwxslsR1PJqB2hlSnHpZhyjeet2CVAkKt2r4QW
+         tCOR9nddCLRIqQF5RUnhmvCPk0tz5Geor3AGQls+Sz1BUembO8Gu8RVbp9Vx7kdBhCld
+         MLBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720003618; x=1720608418;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z6RqGX8VTMC710d07ZkPLdr6JCBvXddZZa+hWl6qD7c=;
+        b=ILLcL2cneEOkAYFV9sf+vx9Rlq2GScPa/CtnnZ/WnlGnLYegoYctrMaz8pghWbpoID
+         L/RZnEoJ47jeOEBDe6bCxN4lSmTyYuxaEdn14EzwsEgoIJr8sOL/7cCZOnV7rwPQCCwW
+         gEpNAyyiXgRYmUK5UaSfA/mztNCdVfOwSQbEJcfGLzaucsBJsON9ZffhYRpIpHfs/wd7
+         Is3JTrZJ0IVt4ACNS815PtyJZwyEZCqmJDzrTY21F0cTCk0dgDFFMQJo+9YYxtoisU+x
+         5mwnU47bEnlpJ3zDzvvXsnjlTkM6xIFygUfJudgBKsZH89mFjH9QsJhoW1Zn6SVix5S1
+         6NjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTHxd2pS8xHhKP0C8H7uYF6hIoPJNyI/njZUuc2Dq8YNbm7xHAqpejkHE38bhwurM5MhTXxzDQXqWx6pmWd0bqKC2eDZwPmwchyTKV
+X-Gm-Message-State: AOJu0Yw4XLcwbzS5b8c3vpxAStOucS3vC8rKeiGg8zpL9QxbonJBV0yR
+	gAhNdtYlM3Fd1o3JFwNjU6/Pq0rAr0Hqb0xb3gTRfcl+QGyll+iQqiIdIxahn00=
+X-Google-Smtp-Source: AGHT+IEP56pHbP4DCZFL0TzwnwRKdgriFsrjpsNp9TvUXF81k3NcrKi5DJQNSBnNphOP/g4IRsep+w==
+X-Received: by 2002:a05:6512:6d2:b0:52c:84d1:180e with SMTP id 2adb3069b0e04-52e827344e4mr7597722e87.67.1720003616744;
+        Wed, 03 Jul 2024 03:46:56 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab3b263sm2093468e87.268.2024.07.03.03.46.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 03:46:56 -0700 (PDT)
+Date: Wed, 3 Jul 2024 13:46:54 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, angelogioacchino.delregno@collabora.com, 
+	andersson@kernel.org, konrad.dybcio@linaro.org, mturquette@baylibre.com, 
+	ilia.lin@kernel.org, rafael@kernel.org, ulf.hansson@linaro.org, 
+	quic_sibis@quicinc.com, quic_rjendra@quicinc.com, quic_rohiagar@quicinc.com, 
+	abel.vesa@linaro.org, otto.pflueger@abscue.de, danila@jiaxyga.com, 
+	quic_ipkumar@quicinc.com, luca@z3ntu.xyz, stephan.gerhold@kernkonzept.com, nks@flawful.org, 
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v4 01/10] soc: qcom: cpr3: Fix 'acc_desc' usage
+Message-ID: <u4hzxnecdyow6h4vhddcp53tuxrqhbqu6cv4cznytihsyshzy4@lqxhsn3qvjbz>
+References: <20240703091651.2820236-1-quic_varada@quicinc.com>
+ <20240703091651.2820236-2-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,140 +75,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240628133517.8591-1-gakula@marvell.com>
+In-Reply-To: <20240703091651.2820236-2-quic_varada@quicinc.com>
 
-On Fri, Jun 28, 2024 at 07:05:07PM +0530, Geetha sowjanya wrote:
-> This series adds representor support for each rvu devices.
-> When switchdev mode is enabled, representor netdev is registered
-> for each rvu device. In implementation of representor model, 
-> one NIX HW LF with multiple SQ and RQ is reserved, where each
-> RQ and SQ of the LF are mapped to a representor. A loopback channel
-> is reserved to support packet path between representors and VFs.
-> CN10K silicon supports 2 types of MACs, RPM and SDP. This
-> patch set adds representor support for both RPM and SDP MAC
-> interfaces.
+On Wed, Jul 03, 2024 at 02:46:42PM GMT, Varadarajan Narayanan wrote:
+> cpr3 code assumes that 'acc_desc' is available for SoCs
+> implementing CPR version 4 or less. However, IPQ9574 SoC
+> implements CPRv4 without ACC. This causes NULL pointer accesses
+> resulting in crashes. Hence, check if 'acc_desc' is populated
+> before using it.
 > 
-> - Patch 1: Refactors and exports the shared service functions.
-> - Patch 2: Implements basic representor driver.
-> - Patch 3: Add devlink support to create representor netdevs that
->   can be used to manage VFs.
-> - Patch 4: Implements basec netdev_ndo_ops.
-> - Patch 5: Installs tcam rules to route packets between representor and
-> 	   VFs.
-> - Patch 6: Enables fetching VF stats via representor interface
-> - Patch 7: Adds support to sync link state between representors and VFs .
-> - Patch 8: Enables configuring VF MTU via representor netdevs.
-> - Patch 9: Add representors for sdp MAC.
-> - Patch 10: Add devlink port support.
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> ---
+> v4: Undo the acc_desc validation in probe function as that could
+>     affect other SoC.
+> ---
+>  drivers/pmdomain/qcom/cpr3.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Command to create VF representor
-> #devlink dev eswitch set pci/0002:1c:00.0 mode switchdev
-> VF representors are created for each VF when switch mode is set switchdev on representor PCI device
+> diff --git a/drivers/pmdomain/qcom/cpr3.c b/drivers/pmdomain/qcom/cpr3.c
+> index c7790a71e74f..6ceb7605f84d 100644
+> --- a/drivers/pmdomain/qcom/cpr3.c
+> +++ b/drivers/pmdomain/qcom/cpr3.c
+> @@ -2399,12 +2399,12 @@ static int cpr_pd_attach_dev(struct generic_pm_domain *domain,
+>  		if (ret)
+>  			goto exit;
+>  
+> -		if (acc_desc->config)
+> +		if (acc_desc && acc_desc->config)
+>  			regmap_multi_reg_write(drv->tcsr, acc_desc->config,
+>  					       acc_desc->num_regs_per_fuse);
+>  
+>  		/* Enable ACC if required */
+> -		if (acc_desc->enable_mask)
+> +		if (acc_desc && acc_desc->enable_mask)
+>  			regmap_update_bits(drv->tcsr, acc_desc->enable_reg,
+>  					   acc_desc->enable_mask,
+>  					   acc_desc->enable_mask);
 
-Does it mean that VFs needs to be created before going to switchdev
-mode? (in legacy mode). Keep in mind that in both mellanox and ice
-driver assume that VFs are created after chaning mode to switchdev (mode
-can't be changed if VFs).
+Should the same fix be applied to other places which access acc_desc?
+For example cpr_pre_voltage() and cpr_post_voltage() which call
+cpr_set_acc()?
 
-Different order can be problematic. For example (AFAIK) kubernetes
-scripts for switchdev assume that first is switching to switchdev and
-VFs creation is done after that.
-
-Thanks,
-Michal
-
-> # devlink dev eswitch set pci/0002:1c:00.0  mode switchdev 
-> # ip link show
-> 25: r0p1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
->     link/ether 32:0f:0f:f0:60:f1 brd ff:ff:ff:ff:ff:ff
-> 26: r1p1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
->     link/ether 3e:5d:9a:4d:e7:7b brd ff:ff:ff:ff:ff:ff
-> 
-> #devlink dev
-> pci/0002:01:00.0
-> pci/0002:02:00.0
-> pci/0002:03:00.0
-> pci/0002:04:00.0
-> pci/0002:05:00.0
-> pci/0002:06:00.0
-> pci/0002:07:00.0
-> 
-> ~# devlink port
-> pci/0002:1c:00.0/0: type eth netdev r0p1v0 flavour pcipf controller 0 pfnum 1 vfnum 0 external false splittable false
-> pci/0002:1c:00.0/1: type eth netdev r1p1v1 flavour pcivf controller 0 pfnum 1 vfnum 1 external false splittable false
-> pci/0002:1c:00.0/2: type eth netdev r2p1v2 flavour pcivf controller 0 pfnum 1 vfnum 2 external false splittable false
-> pci/0002:1c:00.0/3: type eth netdev r3p1v3 flavour pcivf controller 0 pfnum 1 vfnum 3 external false splittable false
-> 
-> -----------
-> v1-v2:
->  -Fixed build warnings.
->  -Address review comments provided by "Kalesh Anakkur Purayil".
-> 
-> v2-v3:
->  - Used extack for error messages.
->  - As suggested reworked commit messages.
->  - Fixed sparse warning.
-> 
-> v3-v4: 
->  - Patch 2 & 3: Fixed coccinelle reported warnings.
->  - Patch 10: Added devlink port support.
-> 
-> v4-v5:
->   - Patch 3: Removed devm_* usage in rvu_rep_create()
->   - Patch 3: Fixed build warnings.
-> 
-> v5-v6:
->   - Addressed review comments provided by "Simon Horman".
->   - Added review tag. 
-> 
-> v6-v7:
->   - Rebased on top net-next branch.
-> 
-> Geetha sowjanya (10):
->   octeontx2-pf: Refactoring RVU driver
->   octeontx2-pf: RVU representor driver
->   octeontx2-pf: Create representor netdev
->   octeontx2-pf: Add basic net_device_ops
->   octeontx2-af: Add packet path between representor and VF
->   octeontx2-pf: Get VF stats via representor
->   octeontx2-pf: Add support to sync link state between representor and
->     VFs
->   octeontx2-pf: Configure VF mtu via representor
->   octeontx2-pf: Add representors for sdp MAC
->   octeontx2-pf: Add devlink port support
-> 
->  .../net/ethernet/marvell/octeontx2/Kconfig    |   8 +
->  .../ethernet/marvell/octeontx2/af/Makefile    |   3 +-
->  .../ethernet/marvell/octeontx2/af/common.h    |   2 +
->  .../net/ethernet/marvell/octeontx2/af/mbox.h  |  74 ++
->  .../net/ethernet/marvell/octeontx2/af/npc.h   |   1 +
->  .../net/ethernet/marvell/octeontx2/af/rvu.c   |  11 +
->  .../net/ethernet/marvell/octeontx2/af/rvu.h   |  30 +-
->  .../marvell/octeontx2/af/rvu_debugfs.c        |  27 -
->  .../marvell/octeontx2/af/rvu_devlink.c        |   6 +
->  .../ethernet/marvell/octeontx2/af/rvu_nix.c   |  81 ++-
->  .../marvell/octeontx2/af/rvu_npc_fs.c         |   5 +
->  .../ethernet/marvell/octeontx2/af/rvu_reg.h   |   4 +
->  .../ethernet/marvell/octeontx2/af/rvu_rep.c   | 464 ++++++++++++
->  .../marvell/octeontx2/af/rvu_struct.h         |  26 +
->  .../marvell/octeontx2/af/rvu_switch.c         |  20 +-
->  .../ethernet/marvell/octeontx2/nic/Makefile   |   2 +
->  .../ethernet/marvell/octeontx2/nic/cn10k.c    |   4 +-
->  .../ethernet/marvell/octeontx2/nic/cn10k.h    |   2 +-
->  .../marvell/octeontx2/nic/otx2_common.c       |  56 +-
->  .../marvell/octeontx2/nic/otx2_common.h       |  84 ++-
->  .../marvell/octeontx2/nic/otx2_devlink.c      |  49 ++
->  .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 305 +++++---
->  .../marvell/octeontx2/nic/otx2_txrx.c         |  38 +-
->  .../marvell/octeontx2/nic/otx2_txrx.h         |   3 +-
->  .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  19 +-
->  .../net/ethernet/marvell/octeontx2/nic/rep.c  | 684 ++++++++++++++++++
->  .../net/ethernet/marvell/octeontx2/nic/rep.h  |  53 ++
->  27 files changed, 1834 insertions(+), 227 deletions(-)
->  create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
->  create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.c
->  create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-> 
-> -- 
-> 2.25.1
-> 
+-- 
+With best wishes
+Dmitry
