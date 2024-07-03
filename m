@@ -1,146 +1,92 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EDC181BAE
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 15:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E0917A589;
+	Wed,  3 Jul 2024 16:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720022393; cv=none; b=A+gaz0QpClax83luqVhkftN+uchzXH4TDsbf0z/BaD3piOKtlHWfY172Wjv4JcXvPRHH7PDpKFSvTnynUrvGsIRjkGOVNRzXrBvjqTP5Sxj0nB7U/Rfql22jmCRVDodGQ/WuOQnJ8d/FpeqqKJlw8K9RU8y6/t6mq6pKLkAnCeY=
+	t=1720022436; cv=none; b=UNRBzMTD4aGA5JtRIxroq54kWw5KqJ5yIJ5QWhDZ4M9iiCFdgP+8z/S9lXB+4YZVg9wv3Ufr1gY9u0vhscMTtpLfjNQ5K3e4PsUdLnloYNi/4ERbd2IneOhpkATt8B8YmOCfgQCcHg657O0prylExRL182Ff4gv4TnQnXU7vKrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720022393; c=relaxed/simple;
-	bh=FNRprOWq8ldQpxWHTTdhVGM9NaiNYj8i5iZmJH/dIhY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ULKMPtiUrGil4dz4cj1YaMmKkNETnvp5WNk/GldS0PTm3nPWy95wYMb3bkrs7h8+abqCs9OOlV8QuxdV3b61dZzdyeWZVktdYjYHz21zLyCK7CKuxwLM1/qpbdilVVqtV04WWfvevMZ20jYspA6oLhxCkGjgfe9q3IqAocjOzT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Q+JBxIpK; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1720022436; c=relaxed/simple;
+	bh=yTHPhsfhAJ4WGzKRVVKRBjIFVfZM0LD+fCx3Igm2aDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sibntm5erYHOgdK1PuG91R7P+G2e9kP46dIKk6WKFRtpMZGttpmVNoIC1V7Yd0k8vAcvyU9yVYi7OSrFElOHtVBCW2coHUfmvJ+suBky1P6ReSX8dgiOAsfDFL2UTrdTu9rcuWbXIupFPtpu3iM8SVZfhPFDcmRNIXFqoOCn+T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uY81kNSb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Q+JBxIpK"
-X-Virus-Scanned: SPAM Filter at disroot.org
-From: Yao Zi <ziyao@disroot.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1720022382; bh=FNRprOWq8ldQpxWHTTdhVGM9NaiNYj8i5iZmJH/dIhY=;
-	h=From:To:Cc:Subject:Date;
-	b=Q+JBxIpKF4lEYSy9NZ201G1vVCb6o4Nb3wbVRUw10LWkcCnJXVM8GxqHQyW989FME
-	 PI10wJm/FAIJUTlLDpbFvFddyt4TsqHPvrebgRFADHBVTDv6pLiO494v3wSbug9Xpd
-	 /xSFLlzswHlt4jaV3N6jpyQs5VZMoVrYPPEE9Disgs2jtk7e/lSuWs11/qZlkZGs3V
-	 MrOdvcL3NPUIG2t6HrkUaaZWUaFfUVBuckFJhT4jxRg9sBdKvrXDXYjOcK2XXsUzpb
-	 Q2ibE8NtHn7I94XO9JZdYmExIuixmdKD5ieHLsQD/A4GR3qUYF6hxYGkEH8dpRxbVC
-	 geNOweXQvDlkQ==
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Maxime Jourdan <mjourdan@baylibre.com>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH] drm/meson: fix canvas release in bind function
-Date: Wed,  3 Jul 2024 15:58:27 +0000
-Message-ID: <20240703155826.10385-2-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uY81kNSb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE426C2BD10;
+	Wed,  3 Jul 2024 16:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720022436;
+	bh=yTHPhsfhAJ4WGzKRVVKRBjIFVfZM0LD+fCx3Igm2aDg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uY81kNSbilY4ZonPDrgVSVcb9Z2MfLNKP4iLLJKyUj603l7fOKWEmqCr4wmc9O8AV
+	 2bHJlWpmyV9Jgfk+ONc46Jiwz2DEubRsPRE5xMBllLoSk6+tz6UBwP2QrmnUum0RrN
+	 3+QaqRtiXYJLpXEiQEXnw1Y5KzBgpp3BUm/ZPBzobpU/5+U4AyZfGikR33KaHCYVu4
+	 zmQ2JftAJatnT3Lfx8viPu5FFLE9FW/+X/fGnpdmrdJuq8z+HP6ziaRROzpkaFPJEO
+	 qGqqyVLUIevBOcnyU3/9hfptkoyl3bRTu0tTG6Q1FxLq+MTQZ84K2SlDaFBA1zn/c3
+	 2KJyo0s7PqrIg==
+Date: Wed, 3 Jul 2024 17:00:29 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@spacemit.com>,
+	Yangyu Chen <cyy@cyyself.name>
+Subject: Re: [PATCH v3 05/11] dt-bindings: interrupt-controller: Add SpacemiT
+ K1 PLIC
+Message-ID: <20240703-oncoming-chamomile-4f7132d3374a@spud>
+References: <20240703-k1-01-basic-dt-v3-0-12f73b47461e@gentoo.org>
+ <20240703-k1-01-basic-dt-v3-5-12f73b47461e@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="t4wAf3UbGKQdKw+B"
+Content-Disposition: inline
+In-Reply-To: <20240703-k1-01-basic-dt-v3-5-12f73b47461e@gentoo.org>
 
-Allocated canvases may not be released on the error exit path of
-meson_drv_bind_master(), leading to resource leaking. Rewrite exit path
-to release canvases on error.
 
-Fixes: 2bf6b5b0e374 ("drm/meson: exclusively use the canvas provider module")
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- drivers/gpu/drm/meson/meson_drv.c | 37 +++++++++++++++----------------
- 1 file changed, 18 insertions(+), 19 deletions(-)
+--t4wAf3UbGKQdKw+B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
-index 17a5cca007e2..4bd0baa2a4f5 100644
---- a/drivers/gpu/drm/meson/meson_drv.c
-+++ b/drivers/gpu/drm/meson/meson_drv.c
-@@ -250,29 +250,20 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
- 	if (ret)
- 		goto free_drm;
- 	ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_vd1_0);
--	if (ret) {
--		meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
--		goto free_drm;
--	}
-+	if (ret)
-+		goto free_canvas_osd1;
- 	ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_vd1_1);
--	if (ret) {
--		meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
--		meson_canvas_free(priv->canvas, priv->canvas_id_vd1_0);
--		goto free_drm;
--	}
-+	if (ret)
-+		goto free_canvas_vd1_0;
- 	ret = meson_canvas_alloc(priv->canvas, &priv->canvas_id_vd1_2);
--	if (ret) {
--		meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
--		meson_canvas_free(priv->canvas, priv->canvas_id_vd1_0);
--		meson_canvas_free(priv->canvas, priv->canvas_id_vd1_1);
--		goto free_drm;
--	}
-+	if (ret)
-+		goto free_canvas_vd1_1;
- 
- 	priv->vsync_irq = platform_get_irq(pdev, 0);
- 
- 	ret = drm_vblank_init(drm, 1);
- 	if (ret)
--		goto free_drm;
-+		goto free_canvas_vd1_2;
- 
- 	/* Assign limits per soc revision/package */
- 	for (i = 0 ; i < ARRAY_SIZE(meson_drm_soc_attrs) ; ++i) {
-@@ -288,11 +279,11 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
- 	 */
- 	ret = drm_aperture_remove_framebuffers(&meson_driver);
- 	if (ret)
--		goto free_drm;
-+		goto free_canvas_vd1_2;
- 
- 	ret = drmm_mode_config_init(drm);
- 	if (ret)
--		goto free_drm;
-+		goto free_canvas_vd1_2;
- 	drm->mode_config.max_width = 3840;
- 	drm->mode_config.max_height = 2160;
- 	drm->mode_config.funcs = &meson_mode_config_funcs;
-@@ -307,7 +298,7 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
- 	if (priv->afbcd.ops) {
- 		ret = priv->afbcd.ops->init(priv);
- 		if (ret)
--			goto free_drm;
-+			goto free_canvas_vd1_2;
- 	}
- 
- 	/* Encoder Initialization */
-@@ -371,6 +362,14 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
- exit_afbcd:
- 	if (priv->afbcd.ops)
- 		priv->afbcd.ops->exit(priv);
-+free_canvas_vd1_2:
-+	meson_canvas_free(priv->canvas, priv->canvas_id_vd1_2);
-+free_canvas_vd1_1:
-+	meson_canvas_free(priv->canvas, priv->canvas_id_vd1_1);
-+free_canvas_vd1_0:
-+	meson_canvas_free(priv->canvas, priv->canvas_id_vd1_0);
-+free_canvas_osd1:
-+	meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
- free_drm:
- 	drm_dev_put(drm);
- 
--- 
-2.45.2
+On Wed, Jul 03, 2024 at 02:55:08PM +0000, Yixun Lan wrote:
+> From: Yangyu Chen <cyy@cyyself.name>
+>=20
+> Add compatible string for SpacemiT K1 PLIC.
+>=20
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+--t4wAf3UbGKQdKw+B
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoV1nQAKCRB4tDGHoIJi
+0uXPAP91uQ09kipQ21Z4FRKIaHGfIeBoJeYNSe9AEAAi/N98RAEA7wB6F4xpZyKi
+X/gn7dAw72lrmSbMyUTANxeKtwTuMgw=
+=4qhD
+-----END PGP SIGNATURE-----
+
+--t4wAf3UbGKQdKw+B--
