@@ -1,159 +1,162 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9E51836EC;
-	Wed,  3 Jul 2024 17:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720027627; cv=fail; b=ixaE74puiZNxZfxpMcBRx6k6eOLMqEpbf7nNylLdzzX4FPF2szsrtWJZjS8XN5Hl6upleC4IY9xpw/6nUA+N3j43tcpf4ZwVsz9Sy5Qn1AfeuOrMPE7ohhn3d+bovdKfG1tX0q+aWecFKGAMMOOPaaUt4XrXZyAPhgUtKVnm3RI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720027627; c=relaxed/simple;
-	bh=5qzci5Nxa/CHojHloK6nfIZijOnHU5V6PQeafK409r4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=c2wF4wLfYAJTgbE+ogAX7R81yeVi7DLbxoLSSN3bAI/rK+lP5kd+g/G/7DnmJ0J5IFTGh3/k++2DJjhijOoFgR6EYQ/gymss6es3GCPntnbZ5dQ+dtOMy2XGmsBDmVkMLlJyaJMVvi5UKghdrFAvIitC5R9mSGj3jpfl1UhOZds=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PnYwcDhG; arc=fail smtp.client-ip=40.107.220.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41381822FB
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 17:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720027655; cv=none; b=t7TtIncTEvEBOLkEyLu+BRKGdDqrNBvH3EvIqSuZT/YOL7CrL9lagkPRxP9JHS0rGxVr9SMrfpQ2KSzl9p1Ja74scrdtGH5B+qsx73fc1osHaDmIcH6XiXHDSu6n80yY2C+z/+p9BEg7nbJpku8hXoAbr+u/D8Ec/1W1fqUOgDA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720027655; c=relaxed/simple;
+	bh=FqSyU+a73jyu6OuLG6kVV6BIzAH4QLJf32ezyh/nspQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X5oPSd8UiBORgOYFrQcu7lLWO5Vkrtlw74bZg19WV3b6SSpCrYVlo2AtnHrbxBs7EfxMEPWiUvASSya/ceI6NiWrlBvtasJa/fS4M3HAOuTxysRxefFlDeEffZ2c7YrUT192o04PGuHe36/hA2Or9uaSNQXn5KirpqIzB7tnzEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y9WoHKyN; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PnYwcDhG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YJudWtgvmKH6WhJjl8zKczzU0ve7gbhIXlfAB0esnKSjX4NiMJMieGxMd5HSXQ1PGn0qirlYVT6SHzcLOR/oift6hvDBXwDiYF+iVtlV3cdzcAp0wvIQDDjz9eEcYasps5esoUTmVFo9eIbIDSV8g4N7d/ZCAeRoho9jxlv2MgRK8Ufny+exeGt+hVF6fegvYJmHDACMyfVadSV8tEI3evaTQRc7hao1RBiHX/pBOVVBF5BnUoFeiVV9zxUQHIPOLZ6BHUAKPRqZVcUb+nZeRt7RnHPRmS+yvV2efTrt8EE5YsaukHcwULrKj78JougzSTyAljbmaL7PPPOjKLWiQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=u6wu7MAeRYonsktWKRUZ9yv3gi6rlTZN3mGfpSTbd1g=;
- b=Ko942xqBDT/iIUw+ev0KtdrCH0WRl2LIruyQZmfUCCA1mFcxCbzKi8YFlBs5mdvuBH7Vn7zew77SPBegQSkLdKNZkJsQDNv8dZMOo9woORZr+/PpzEwQfeR/XoEfjWJg3e+eBdcVykzEC74xWeMPpGtnnfH/HK+qf/Ce3fexM2eeOEQXQebnP/ZXfV2jSe+Jwk3vuoJUGGjFNc/criXpOVRqVOiiU97THY1tw0DRDD3W4ubHP5YVrEwX3cRBioHP8MM3pRhhTnUJ1YIFRHlBQi0Y9ogaFJrKR7ZzDad3Lwe2iaSe5eO1UosGFnH4xNDZfI8MweVSAj1HEBJuwzy1Fw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u6wu7MAeRYonsktWKRUZ9yv3gi6rlTZN3mGfpSTbd1g=;
- b=PnYwcDhGtQjYlbPpcFDX0iUuZ52I0/8ZwbootQ63fjURQfUdfaZbasreC7q8UZJbqWxQ9NDGUQNbHIhS5HviffapPIh0SWuhIHkUozLOvCt4AkzC2/sGvOLa+7vY9nl4DyZHyngJO71XQUaFy2iP3lE+E9KmXUxQejddFQjvXorVQ+0dZ1qZdLEbRoqF3bq98DjBMFKfWmmBFgkPT6vozY20lHjMnrq3i0xn/LPuUGFY8jmpjSaU6K1ySBbJaW0PxHvzIyy7TIik4T6hab4JZGR65UbqA0pagFapLjnVZCt2vrM5Y1U2BHKeW78OW7FeDjU6cQZtFu02JfM1QXifoA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com (2603:10b6:930:24::22)
- by DS7PR12MB6334.namprd12.prod.outlook.com (2603:10b6:8:95::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.27; Wed, 3 Jul
- 2024 17:26:57 +0000
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::9ec8:2099:689a:b41f]) by CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::9ec8:2099:689a:b41f%5]) with mapi id 15.20.7719.036; Wed, 3 Jul 2024
- 17:26:57 +0000
-Date: Wed, 3 Jul 2024 20:26:38 +0300
-From: Ido Schimmel <idosch@nvidia.com>
-To: Aleksandr Mishin <amishin@t-argos.ru>
-Cc: Jiri Pirko <jiri@resnulli.us>, Petr Machata <petrm@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH net] mlxsw: core_linecards: Fix double memory
- deallocation in case of invalid INI file
-Message-ID: <ZoWJzqaRJKjtTlNO@shredder.mtl.com>
-References: <20240702103352.15315-1-amishin@t-argos.ru>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240702103352.15315-1-amishin@t-argos.ru>
-X-ClientProxiedBy: FR0P281CA0172.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b4::14) To CY5PR12MB6179.namprd12.prod.outlook.com
- (2603:10b6:930:24::22)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y9WoHKyN"
+X-Envelope-To: link@vivo.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1720027650;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IyZPON5O6++ZHw+uOQ1ftlsCqOJ1FTyz/rf8eKpBQ2w=;
+	b=Y9WoHKyNvOR3yrZpzen3hMsN5tO7VfI+HQSl8+BSeYtnVxAC1Ec3bH2P1EVOXnntkaY3kz
+	7V0dqSdBtGdFbdeT4lPGWF0Unbk8eK9dDYlzkLWSbxjdpacMLUTU3qbea6JYFPh5SfAF/e
+	5t5pOrj19c1JrDfKXPVG43kpZdftikg=
+X-Envelope-To: roman.gushchin@linux.dev
+X-Envelope-To: hannes@cmpxchg.org
+X-Envelope-To: mhocko@kernel.org
+X-Envelope-To: muchun.song@linux.dev
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: willy@infradead.org
+X-Envelope-To: david@redhat.com
+X-Envelope-To: ryan.roberts@arm.com
+X-Envelope-To: chrisl@kernel.org
+X-Envelope-To: schatzberg.dan@gmail.com
+X-Envelope-To: kasong@tencent.com
+X-Envelope-To: cgroups@vger.kernel.org
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: brauner@kernel.org
+X-Envelope-To: opensource.kernel@vivo.com
+Date: Wed, 3 Jul 2024 10:27:25 -0700
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Huan Yang <link@vivo.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, David Hildenbrand <david@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Chris Li <chrisl@kernel.org>, 
+	Dan Schatzberg <schatzberg.dan@gmail.com>, Kairui Song <kasong@tencent.com>, cgroups@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>, opensource.kernel@vivo.com
+Subject: Re: [RFC PATCH 0/4] Introduce PMC(PER-MEMCG-CACHE)
+Message-ID: <tlnxo4rawxryyzlpiqhjaum667q2arecgp2u4rz2s3gcsxyaqo@qeffvy5ezufc>
+References: <20240702084423.1717904-1-link@vivo.com>
+ <ZoRUukQUNqGHn_x1@google.com>
+ <27a62e44-9d85-4ef2-b833-e977af039758@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6179:EE_|DS7PR12MB6334:EE_
-X-MS-Office365-Filtering-Correlation-Id: bdbd2186-a4aa-4776-ee8e-08dc9b8556d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yJkhRhjG89EHa5ZrA8r9reQFvE2NKlGpr+mkVinkuxlqx2cAS7gPnztgYJ8c?=
- =?us-ascii?Q?N5kEMDlOmw4ltDUAest8wulp3iygEZHvk4q1eo2oVm7b8U5wZw9PyIXCX2Qj?=
- =?us-ascii?Q?tw40oZbizVWWm01LeZQIT3UKajbA+WUpsY9m926IV/W7jARzrYSpb3XC/6MN?=
- =?us-ascii?Q?EujLRepZQkEt3uHt+VjjoQrXRXvfmXiAeBltOFBSo5SDe5J76EKRTnKUucvO?=
- =?us-ascii?Q?7160i7L8RfrXL4sB7jn9GZmZhkigCUSc+lDokuFk+caWgKaIhOI3pzVagLli?=
- =?us-ascii?Q?GbMM56KRj8QVWI3ddJJqyA2NDmSVxzJZVoK3xUvDsWMf054R/Hfq6GlXpwg4?=
- =?us-ascii?Q?Av8sAOYWbuzwiloRyj1+FDB9srpLBu2wrpEimNq/6QLjGB0HokU9fsVc/F8g?=
- =?us-ascii?Q?DYxns5Em335/KRZazBGhujJot+4Hnfwr0ZRp4PHvqiLH6IqCI0L3uQFyWRpW?=
- =?us-ascii?Q?UjwFV9ew8mGjFrLdkF/ZKJdONnqZVlo+w2U41PFMAq8/h7uSk/u9OwJw6v+A?=
- =?us-ascii?Q?T11lNHRB4NerNsyres75rIh6C1BOmA5B3+bu1I7tqP1DbPSnChlqXBkc0u1/?=
- =?us-ascii?Q?HrvK/lS943iEPdnilc/I1aPK80IfuAMQxylYp/sZ7G7vt1zKXnEQdvFXQQLk?=
- =?us-ascii?Q?FH0e2ny5qHgl4OITgayI1YM9hpS0VSvl8yvsu4eN29tyAZbqDnbIZCkI66tu?=
- =?us-ascii?Q?SNNAPlWhNQJtAPTHsdFMt/h3ReDHEtGbxIqkTeCUPC9vUQ1K/pm+Qlfkivme?=
- =?us-ascii?Q?0UjFhmzUss97knhp1murufwtX+7ZNlH4ZS4hfdmHewznvrBuerGsRjolc8Av?=
- =?us-ascii?Q?D9Btoglj74ClAnyEgFIQ5wKsqN49p1aUziPnB+CIViTHUMB6DaoGGXHT1F8F?=
- =?us-ascii?Q?LkVh8vBWppmda//gxeKShgJf/BmBiFRgycpPmA7TdytXmu6LDxP5plK/XYg7?=
- =?us-ascii?Q?U16UfGDBEsyztGBPItFOX4Ttij9neV3KwmZn/j6hv1j9aiml4ganE6gg1TCe?=
- =?us-ascii?Q?dQeIRVCkpFyPagG4BqPgOLhWUJrAiJKoZcW7oZOvFG+h1outYYbry0w6Cymd?=
- =?us-ascii?Q?VHCKoK4TUM28VOsw6R1dUG/zdRpccq3rMAVozSoLYeR8hkpa7xUP8XJR+Ui4?=
- =?us-ascii?Q?jnK3uH+9+BZ4ZcUW6OWKKAFf/1CmeOB0ev9dsKWin8rYbCMxzPGwNWTjmHgH?=
- =?us-ascii?Q?3rMZE2ELXE20oandnqtvnRYVTkXwkG3rnicyylm5VO+ejKkpFfUmtUG1CXkg?=
- =?us-ascii?Q?ZcYBI1M4Ggu3NYtqr5VBMzCyd2e7ZSfN7aKY90m7KTuCtninEGifepPtp83D?=
- =?us-ascii?Q?Rw0C74DXqJsBkN2L0RUT3GGep+rBIwN8cHIYY87wygxbUA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6179.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YZO30ZMUawiqxOcnSExubSQN9JXoAYsbIfEih4AjE44qdOB5XmKnIJydhFQp?=
- =?us-ascii?Q?TEkmcaLgw2luhXuFcRxBg+/ZY3EvBpAQHwO1gVqmUqkBzNLYYTK7U2k9Lygw?=
- =?us-ascii?Q?Orp0YvgHhif1K/cdPoozaDz3ukt1Ngr1L8R71HJJX7uIlzSOjvuZhCwLTFFi?=
- =?us-ascii?Q?bS8KSRsrhvheypnbIjYeTjAhXpgxxPrIxVTzd/J8G+77P0Un8xXV8TY0miKU?=
- =?us-ascii?Q?SyvFMcH9GkShrHyHiYTuRBsgjcRDKHIk+Bfxt3p/bBRmQ1uDAdu8MO14KWi+?=
- =?us-ascii?Q?yrb+WcOC8rVtGVsgKKc4PbS0QP4Xz8Upr6+l/8BgZpcngWqpVKzXQwo1/N71?=
- =?us-ascii?Q?vH7NUgWkkHMc+I+PtIUQ50plQ/yVFeejn4iIckcCkf2SXtT4WJ6ibufjI+n3?=
- =?us-ascii?Q?W/W8/qqKjqMqBERe1yQRHj/GrrAGvSlDS2XRVhn0CvifqJH9i4Rerhnd42jA?=
- =?us-ascii?Q?Urnl0TypB+DQqsLTHksYFrHsdYj0+bFh0xi8xa6Aw7z7ubeBliGr+2gk5EwX?=
- =?us-ascii?Q?5GP54A89S60m46y8kmfMAWMBb7TXhf5O/sOCib4apqVnmsD7QiIAAC2Cq9z4?=
- =?us-ascii?Q?+JNgqqxLpnYLgDeL38b+XYyQSvt0v2xGbaHyCczjTOT6evORQPFIl7I9E3Tx?=
- =?us-ascii?Q?7vNp4Q/7gEj9LZ6ihyiZfziuzFNOHNyN29G+0aeaMSZ3mI6FZW3KjP8BDxtg?=
- =?us-ascii?Q?ghDlvQ8jrh6AU5R0ahGnhiu6SxX6TnMiisU/zqFj9/IZ7AstyVN3O6qGsaLc?=
- =?us-ascii?Q?xg5Z44K/32X8yWVArJ197XUf/JIB3kiQGa3LdwDUaIvqqERo40cu95WcrEep?=
- =?us-ascii?Q?a2zPat+Ht5sxcKk7sprO6fuw4LNQ6B6WOByWvi/67O4Vn1T0ve1UuiCW2kSq?=
- =?us-ascii?Q?hGNnt0fjt+zXiOZftfSHlGMlQcozczyWcYWmDhcPZ3s9NniXeR/FY7UXbLgO?=
- =?us-ascii?Q?MnODF3bStxwJj6btd9Cu5bveD6rjffmxkVExRQ3NvV5NFjXE7t5sMhC//hnv?=
- =?us-ascii?Q?xLoN1m5N4Qnf3oMUMBcaIF+W+VkwF1igkmnUMzIJecDokEJpCb2r4pugtNIZ?=
- =?us-ascii?Q?Ocj5o3V2b0kSAqPU4gaG8jxOVMzVWsQ791pWBxMYzSvRBPPkhZfbZ1fys3pe?=
- =?us-ascii?Q?BkYL44VB4J4kX6jIaeYXcPMNXRJ5ghiQdNzk+YCwoR/6SvtiXBOJ86NIZHL0?=
- =?us-ascii?Q?RWAJjoYhqtjaFmRBW8yykQTR0BPw/MK6r1N5CkkGx/3xMkAls5lwF4alJQY3?=
- =?us-ascii?Q?5cSqZd/uqllKeK9wybsxQSL6wWjh9ffAwDJix3BHNcaLOhwH+foG4veoyzJG?=
- =?us-ascii?Q?KF4rWryW28mpJHlEcW4uqTEGaFXDt1tMSTulNLptanqCdm8OoO7h2Ae3+mLi?=
- =?us-ascii?Q?jPkorA0P/juOpYANF7n1WCQJyHuKxFtEu29Ud5PivXPOWnpVdYwXsUys18Zj?=
- =?us-ascii?Q?e0iLLOH8fHlwirOOL4jGBcIp1vSwJFDlGnySersyvheZ1nNX6teQiI/O76AL?=
- =?us-ascii?Q?Ub8WdOsdSiyGQ470D5TAyOZvSoyVzoH/Pi4ZCWKC8KQlwuo1oMLMaWUhqC2A?=
- =?us-ascii?Q?Z3jNi8fZWgboJUkUe+WkqXmGOJO1W+cEqPMlFvnO?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdbd2186-a4aa-4776-ee8e-08dc9b8556d1
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6179.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 17:26:57.1210
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lbbBXfcfsaAz/YLlj6JSPVr7rkqBJBLIPBRSBkzz68xLV3Ix1ZVSGYq4SiSGYwgBx15vAxPvXqhanEObP7Am+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6334
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <27a62e44-9d85-4ef2-b833-e977af039758@vivo.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jul 02, 2024 at 01:33:52PM +0300, Aleksandr Mishin wrote:
-> In case of invalid INI file mlxsw_linecard_types_init() deallocates memory
-> but doesn't reset pointer to NULL and returns 0. In case of any error
-> occured after mlxsw_linecard_types_init() call, mlxsw_linecards_init()
-> calls mlxsw_linecard_types_fini() which perform memory deallocation again.
-
-s/perform/performs/
-
+On Wed, Jul 03, 2024 at 10:23:35AM GMT, Huan Yang wrote:
 > 
-> Add pointer reset to NULL.
+> 在 2024/7/3 3:27, Roman Gushchin 写道:
+[...]
+> > Hello Huan,
+> > 
+> > thank you for sharing your work.
+> thanks
+> > 
+> > Some high-level thoughts:
+> > 1) Naming is hard, but it took me quite a while to realize that you're talking
+> Haha, sorry for my pool english
+> > about free memory. Cache is obviously an overloaded term, but per-memcg-cache
+> > can mean absolutely anything (pagecache? cpu cache? ...), so maybe it's not
 > 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> Currently, my idea is that all memory released by processes under memcg will
+> go into the `cache`,
 > 
-> Fixes: b217127e5e4e ("mlxsw: core_linecards: Add line card objects and implement provisioning")
-> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+> and the original attributes will be ignored, and can be freely requested by
+> processes under memcg.
+> 
+> (so, dma-buf\page cache\heap\driver, so on). Maybe named PMP more friendly?
+> :)
+> 
+> > the best choice.
+> > 2) Overall an idea to have a per-memcg free memory pool makes sense to me,
+> > especially if we talk 2MB or 1GB pages (or order > 0 in general).
+> I like it too :)
+> > 3) You absolutely have to integrate the reclaim mechanism with a generic
+> > memory reclaim mechanism, which is driven by the memory pressure.
+> Yes, I all think about it.
+> > 4) You claim a ~50% performance win in your workload, which is a lot. It's not
+> > clear to me where it's coming from. It's hard to believe the page allocation/release
+> > paths are taking 50% of the cpu time. Please, clarify.
+> 
+> Let me describe it more specifically. In our test scenario, we have 8GB of
+> RAM, and our camera application
+> 
+> has a complex set of algorithms, with a peak memory requirement of up to
+> 3GB.
+> 
+> Therefore, in a multi-application background scenario, starting the camera
+> and taking photos will create a
+> 
+> very high memory pressure. In this scenario, any released memory will be
+> quickly used by other processes (such as file pages).
+> 
+> So, during the process of switching from camera capture to preview, DMA-BUF
+> memory will be released,
+> 
+> while the memory used for the preview algorithm will be simultaneously
+> requested.
+> 
+> We need to take a lot of slow path routes to obtain enough memory for the
+> preview algorithm, and it seems that the
+> 
+> just released DMA-BUF memory does not provide much help.
+> 
+> But using PMC (let's call it that for now), we are able to quickly meet the
+> memory needs of the subsequent preview process
+> 
+> with the just released DMA-BUF memory, without having to go through the slow
+> path, resulting in a significant performance improvement.
+> 
+> (of course, break migrate type may not good.)
+> 
 
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+Please correct me if I am wrong, IIUC you have applcations with
+different latency or performance requirements, running on the same
+system but the system is memory constraint. You want applications with
+stringent performance requirement to go less in the allocation slowpath
+and want the lower priority (or no perf requirement) applications to do
+more slowpath work (reclaim/compaction) for themselves as well as for
+the high priority applications.
+
+What about the allocations from the softirqs or non-memcg-aware kernel
+allocations? 
+
+An alternative approach would be something similar to the watermark
+based approach. Low priority applications (or kswapds) doing
+reclaim/compaction at a higher newly defined watermark and the higher
+priority applications are protected through the usual memcg protection.
+
+I can see another use-case for whatever the solution we comeup with and
+that is userspace reliable oom-killer.
+
+Shakeel
+
