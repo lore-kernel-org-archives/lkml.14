@@ -1,141 +1,113 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4024142651;
-	Wed,  3 Jul 2024 22:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9488313B59A
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 22:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720044973; cv=none; b=Z05lbYUGQGWjVb9kDY31Zm3v8/lO3U5hTatR7cgg/sF0yn/8tWHuQLoHcEll3FYvDbQ13CTCjD1ziIEP7n5JuAvCXSwb0O+3eQrITf3L0ozooNWUy40wy3Dfbb74XQ9UxCjNSzlvrUzu5yvjHsCwQXoqXC14lODtkCbZ4iB68pc=
+	t=1720045063; cv=none; b=fd6FzUbeyHueBeqd+Vor4N0/abZOR23AWlTgUIY5nxfA6nJ1NuwfoKbKD0cRoJ6SLFt1JvM1gQF2vP4xr7dIgct3KWenQpEmqijWMhT8D/AS1ja0MhUKlV4Gx+QsmMw1+BQlox0qisUo3iNBWzMilGnud4QhF5XV01HJe5vtp28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720044973; c=relaxed/simple;
-	bh=Og1fhZgFt0xWyCRUHbUCRh82rO0/bd2Fj6H2fhoeCpY=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=DM+Nazg83fOoHBAwA1hu1DihiC3kxfTQSI4MFzz3jkz6+PzWuCkZksVDcAowtMgmQ50HAvhzQtxl7otyVa+dYpiZd7RavRt1i5sBP9zZr8vGm4I/iZz2sIwVOkeaoHZyoeClqPGFMZlcr3K7gZkUbEeihkgBXaaNVYeKhf6Osaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FTlEPOpo; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720045063; c=relaxed/simple;
+	bh=DaQtQUezy9Cd6dPj/vQJgAG0+5hzPIdQv4yBLL7Tw+I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kz6H8N+rbzZibpFhbin7jgSIV+VCHLAEctMtx2Y13E5NnpXk50yP3D0hwQdyCFnfjBmKd1KzmIXBRL8WVOdv8nWZWtmk2j6aSGhyalYtECB4IqD4tC8WpBKkytw67IhmlU0BCEF+JDcwaM1Qr+zknLUDzy9ePu7m3mBvRuXbKLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4mIakU6/; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FTlEPOpo"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463H94ZV032097;
-	Wed, 3 Jul 2024 22:15:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=bH5mLRWToa45CvSBqBIx2T
-	QFf1I020B8oPm5J9wOF68=; b=FTlEPOpoUA/Dp8TT4/tTtcIxb33/OT+Xvi/kEg
-	j6IpgYTyO76gcRTc0S8LBGTIk8VaQYLpPQqWMJm065Gbuu66as77YJKiB/N+xMvO
-	uSehqpF9LAOifqyqClqv2lmmxjGz02/qe8fFf76Gg7eJs67DhcUNdaFZ59DiSrSl
-	yh66RDsWqmoyIlCLXbOnpPdJNPXZXI1YJc3bDbXFQZz/N6X3pKVBeJZL/04ksek1
-	zoD49D2gowJL8RFLTSR2VWQBxAOBP3to07GStjIX3ZvfwSFtOLWUIs1rxkkHgd+S
-	SA5CdrFAHkK3ps/kEH6fz5bhZCBn62toe7Ml9nMYlR/tV4dQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402abtsxpx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 22:15:40 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 463MFd1J014098
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Jul 2024 22:15:39 GMT
-Received: from hu-scheluve-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 3 Jul 2024 15:15:36 -0700
-From: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
-Subject: [PATCH v3 0/2] Add interconnect support for stmmac driver.
-Date: Wed, 3 Jul 2024 15:15:20 -0700
-Message-ID: <20240703-icc_bw_voting_from_ethqos-v3-0-8f9148ac60a3@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4mIakU6/"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e03a9f7c6a6so2046276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 15:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720045060; x=1720649860; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kBFY0AezQv8pUC4Zn75QewV+jmxCpy323lgmyp3n110=;
+        b=4mIakU6/CkWDxyKFCzoHKk4fCgn90vZ/srgah71MWq8PxeaBr/9/uSALLM04qKDz7R
+         kXkIYsb6n1ZQ/SGyBus4sPCmG8KhnQTSEuuD7bvZzdVY15JbRaAZlLoOaxP7BtKJ8YFv
+         M8Au1nhgdJQtZJJV7G5usAFdyQA6xbvIBW3Txsmd9NGuI1sKWYAqBznHsMWLCALSqMqy
+         2b47n20kJfmE3D0Qgn9+DvKtPbxDfcw2UTg2gGBPGfXDHtgtrMVNR0rDDfe2iUCbdjjK
+         C8Tb++KOPjKka1RZtvRRPopTkf8LYo5vH74FsPmhsRNOZhOtw+gkAKgG4bGkAbxmxPB8
+         OGyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720045060; x=1720649860;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kBFY0AezQv8pUC4Zn75QewV+jmxCpy323lgmyp3n110=;
+        b=kJR90NFQXE5Esc+DPwNlw5Rsslm6txn+mkx2eeXh1i1THw1G2FrK6NVLdA+25+oR1D
+         fXEFmfUQlFhBXvAS8UEW0+jsFCFR4Lq2Jbgy8uFCLGeRSwEMsED8wjvIev35p/wMnAH1
+         ornW/Exvy6VMZ7rmS/K+rCzY2UCopDIugfwS3d47aQiNiSW6XZY1tumtklPW53isz8rS
+         ZCfs81P+BH4uDxd1gJvuPoxEbkGlv9+ZgxQa+ia7RjVoT4QIg3udnJHLK8QpvJpiCqv3
+         de/glfVEx7voqUL3Nb4rOjbA8pW0QnE8C7NX9BDpd8VAbZNHR32n4h5sYsGXdX6XORK1
+         LX5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUEd3ZRK2vyZo7FnJ/KCjIJzrj7EEMLTFln9+dXM/fkWk5KwSqwrYlbXzaZNruKIhTN+BGIoOHP73MiD1Rq3Mg8U5PdtVQS6B47P+TA
+X-Gm-Message-State: AOJu0Ywbbc1aHlLa2TVBZbgI/m+lmTRKOwFfCWncH+9+kci5RMuLlSqx
+	xWPfOonOvLkUEvu40BKgVYHUbv2gzxN2nVoOMbJJAIP1jkeeE+2ByvwKwyWt8Ee7SqF5VjqwYhU
+	lp0i4/ODzJtafIba8Gc35aLsNanExk4NTtu4o
+X-Google-Smtp-Source: AGHT+IF+YHjIjtyJP3TQiVa5IYtgSjacB1lIHVSnp746reC92x+NB1avh2v9/xG67hBD7Y6DlOQnEo7BO3UvXnbsAwM=
+X-Received: by 2002:a05:690c:650f:b0:64a:3d6c:476d with SMTP id
+ 00721157ae682-64c71803990mr143734497b3.25.1720045060293; Wed, 03 Jul 2024
+ 15:17:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHnNhWYC/33NQQ6CMBCF4auYrq1pR6jgynsYQ2CYwiyk2mLVE
- O5uMTHRjcv/JfPNJAJ5piD2q0l4ihzYDSm265XAvh46ktymFqAgU0YryYhVc6+iG3noKuvduaK
- xv7ogNdgcDbWZQRDp/uLJ8uNtH0+pew6j88/3q6iX9aOWf9SopZJGayizoikgp8P1xsgDbtCdx
- eJG+LIg/2dBsqiud2hLZZRVv9Y8zy/CDtcaEAEAAA==
-To: Vinod Koul <vkoul@kernel.org>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S.
- Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Russell King <linux@armlinux.org.uk>, "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Bhupesh Sharma <bhupesh.sharma@linaro.org>
-CC: <kernel@quicinc.com>, Andrew Halaney <ahalaney@redhat.com>,
-        Andrew Lunn
-	<andrew@lunn.ch>, <linux-arm-msm@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Sagar Cheluvegowda <quic_scheluve@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: LWej0WdK370tmzv6wv8-c6a4GfXp993W
-X-Proofpoint-ORIG-GUID: LWej0WdK370tmzv6wv8-c6a4GfXp993W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_16,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 mlxscore=0 clxscore=1015 suspectscore=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0 impostorscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407030165
+References: <202407032306.gi9nZsBi-lkp@intel.com>
+In-Reply-To: <202407032306.gi9nZsBi-lkp@intel.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 3 Jul 2024 15:17:27 -0700
+Message-ID: <CAJuCfpEtRLSiAmv_5+bo-oW_Lnx+=v=rasgVerdVJyoaFQ-R5w@mail.gmail.com>
+Subject: Re: WARNING: modpost: vmlinux: section mismatch in reference:
+ alloc_tag_restore+0x3c (section: .text.unlikely) -> initcall_level_names
+ (section: .init.data)
+To: kernel test robot <lkp@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	Linux Memory Management List <linux-mm@kvack.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Interconnect is a software framework to access NOC bus topology
-of the system, this framework is designed to provide a standard
-kernel interface to control the settings of the interconnects on
-an SoC.
-The interconnect support is now being added to the stmmac driver
-so that any vendors who wants to use this feature can just
-define corresponging dtsi properties according to their
-NOC bus topologies. 
+On Wed, Jul 3, 2024 at 8:42=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
+ote:
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t master
+> head:   e9d22f7a6655941fc8b2b942ed354ec780936b3e
+> commit: b951aaff503502a7fe066eeed2744ba8a6413c89 mm: enable page allocati=
+on tagging
+> date:   10 weeks ago
+> config: xtensa-randconfig-r051-20240703 (https://download.01.org/0day-ci/=
+archive/20240703/202407032306.gi9nZsBi-lkp@intel.com/config)
+> compiler: xtensa-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20240703/202407032306.gi9nZsBi-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202407032306.gi9nZsBi-lkp=
+@intel.com/
+>
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+>
+> WARNING: modpost: missing MODULE_DESCRIPTION() in vmlinux.o
+> >> WARNING: modpost: vmlinux: section mismatch in reference: alloc_tag_re=
+store+0x3c (section: .text.unlikely) -> initcall_level_names (section: .ini=
+t.data)
 
-Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
----
-Changes in v3:
-- Drop the patch:
-	[PATCH v2 3/3] net: stmmac: Bring down the clocks to lower frequencies when mac link goes down.
-- Modify the dt-bindings property names from "axi" and "ahb" to "mac-mem" and
-  "cpu-mac" respectively.
-- Link to v2: https://lore.kernel.org/r/20240625-icc_bw_voting_from_ethqos-v2-0-eaa7cf9060f0@quicinc.com
+Fix posted at: https://lore.kernel.org/all/20240703221520.4108464-1-surenb@=
+google.com/
 
-Changes in v2:
-- Edit the cover letter to give a big picture of this change.
-- Move the interconnect changes from ethqos driver to stmmac driver.
-- Reorder the the patches to place bindings patch on the top.
-- Remove "_icc_path" redundant string from the "interconnect-names" property.
-- Link to v1: https://lore.kernel.org/r/20240619-icc_bw_voting_from_ethqos-v1-0-6112948b825e@quicinc.com
-
----
-Sagar Cheluvegowda (2):
-      dt-bindings: net: qcom: ethernet: Add interconnect properties
-      net: stmmac: Add interconnect support
-
- Documentation/devicetree/bindings/net/qcom,ethqos.yaml |  8 ++++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h           |  1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c      |  8 ++++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c  | 12 ++++++++++++
- include/linux/stmmac.h                                 |  2 ++
- 5 files changed, 31 insertions(+)
----
-base-commit: 8a92980606e3585d72d510a03b59906e96755b8a
-change-id: 20240610-icc_bw_voting_from_ethqos-12f5c6ed46c2
-
-Best regards,
--- 
-Sagar Cheluvegowda <quic_scheluve@quicinc.com>
-
+> WARNING: modpost: vmlinux: section mismatch in reference: bitmap_copy_cle=
+ar_tail+0x44 (section: .text.unlikely) -> __setup_str_initcall_blacklist (s=
+ection: .init.rodata)
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
