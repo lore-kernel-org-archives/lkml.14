@@ -1,91 +1,137 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F431862A8;
-	Wed,  3 Jul 2024 18:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DA81862A8;
+	Wed,  3 Jul 2024 18:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720033081; cv=none; b=h6RyYXxdy1ijyHpv72Dgcw/PPMb2qtj3VXldZxLxsNf78c2WTqmgp1oAk2YlnXILrIQjF3oOHhXqyWaM12bKNkE+bxrGiM7pVn4W5xn8nJmG9mt29oMLR7c2X9Qw9EJsTsSvE2VOFo3Mdf+XrGnlTOPAHCTNOGVQ3F9OQVvEK/A=
+	t=1720033091; cv=none; b=IWUe9uJs85ATphXpwutGc8Kk/SrOkMA3GB9J7p/BIYjHEY/Q9tKi1WhooPO8bL5sR2caDf1R6Y3ZgDA1kuKuYsuXNptVr+I4bX9pDh79cHA9WJ3hA2jdWJIMokqtt7r9c3SxWJf7Z3cP3UQ3awaMxu5BYFUIMCwj1eQDCn3FNPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720033081; c=relaxed/simple;
-	bh=r6UVfIS51/hrDRT2rQvASqgTmeji6NSK3h7seP9vttw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cJUCf74Q0M7q2IVADgjjwk2n4cuBn5/6uyJo/F6Vsl5+b7PAclrqOr7gyy9oGEIefEGwoRr0lvjXRSMPeMxcUeO43eQEgGCY/asjzuv5MenPHdSqhfoB0/EngAQU9g/1dwX0JNPa50eSdn1N/JG8pBoW0suueKNGRnT0jnEp7Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=W+OMOCYx; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1720033091; c=relaxed/simple;
+	bh=bZ+FF7jFYurRxn42IBLLrS+aiNewIzNM9FuhK9vjhvE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OZaZqVbT7X3lp91FZB1GpfvycP5EJvAxaL4CMP4OcuVfMOTG7m+VrHQ5Y57l3efamRaa1TPO00Vj/OGc8/lJFcyOPFzJqUbDSzp5AfKf9MaWMiEjum0TLjyiwGJS0lJ4X3nCy9R6j7WAv1Yg6XSv49rC0Es2cDUkuvWESTwkT6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJ5EHx3y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="W+OMOCYx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=LQ9QFlXPCkPCJO/uXmZOKpGl6HSaTjoZz8vKdX6Htr8=; b=W+OMOCYxqfobDNoR6Ibh4jnUB5
-	o0cIV7ZkAkuVqvkkeQ+UNWlecU4NI3yWbRrBEt3dhntlgmTr0zlHgp4BWA6xdRdoUOMhq7PR/jcNN
-	TCFo+nGxNJVC7kYww+PONLmvkenefLZrxPN/Ar4uJa8GOm2EZpSgeIZpdfy7VGyLHq7Q=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sP5At-001lCA-6I; Wed, 03 Jul 2024 20:57:51 +0200
-Date: Wed, 3 Jul 2024 20:57:51 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Yuiko Oshino <yuiko.oshino@microchip.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH net v1 2/2] net: phy: microchip: lan87xx: do not report
- SQI if no link
-Message-ID: <47b227f0-d445-47ba-9386-e8b77b733c26@lunn.ch>
-References: <20240703132801.623218-1-o.rempel@pengutronix.de>
- <20240703132801.623218-2-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJ5EHx3y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94211C2BD10;
+	Wed,  3 Jul 2024 18:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720033090;
+	bh=bZ+FF7jFYurRxn42IBLLrS+aiNewIzNM9FuhK9vjhvE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=rJ5EHx3yT/x84MN+Y79yBSLQQNELfBNLtHaEYHbiSUUzTSZQMrBOcT+uTmQrwbsFf
+	 0x3Df2hpEDmwlR4w4+G664gH+Cu+cylyiWSQI5eyqEWz7avQ+1xPSUYcpOs+0mKv3v
+	 o/n2hvo/MMLhx8VwGxJmGPyeCQNn8sLhW7NdSQCKzrjfXSSl+5klcxvBk+wl5Im5+O
+	 ebm+IPIfvMc+1nnTS/786z02sMSYZcAWgutHH3MkERWQC/tRvk0FdDf0lyRXRLQITy
+	 DZXT+lagNZlVdmLeaUbK0jxDWZMqyLAsf+jOYB1XC/j1wRt1RS0AczYXDEVNKfY8CJ
+	 Ug2O35cngApWQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH bpf-next v3 0/3] selftests/bpf: new MPTCP subflow subtest
+Date: Wed, 03 Jul 2024 20:57:31 +0200
+Message-Id: <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-0-ebdc2d494049@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703132801.623218-2-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABufhWYC/5XPTQ6CMBAF4KuYrh1TSvlz5T2MCwpTaITStAUxh
+ LvbEDW6ZPnyku/NLMShVejI+bAQi5NyatAhxMcDqdpSNwiqDpkwyjhNaAqjcd5i2YMwEjTOHr5
+ Vb3xlwI1CdsMDPDoPskSZpgkXsoxJMI1FqeZt70o+ArmFplXOD/a5HTJFW/+Gs52bUwQUkIlK1
+ JIXeZJd7mg1dqfBNtvUxH75Yi/PAs8pzytW8Dw898ev6/oCEyic2lQBAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Nicolas Rybowski <nicolas.rybowski@tessares.net>, 
+ Geliang Tang <tanggeliang@kylinos.cn>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2723; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=bZ+FF7jFYurRxn42IBLLrS+aiNewIzNM9FuhK9vjhvE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmhZ89Fh6xY3cTrKVHLOr6Aa6xHeZRYzLbsRrCo
+ Db2pTuDwhqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZoWfPQAKCRD2t4JPQmmg
+ c/FZEADRysYPl3rHZhHEBuq0fSIfrla7Q3hKwMXmNu8PrDmG2DfvVTqXVhZoau6S41G7uSKGk0l
+ wCDS9wL7ntMJwI/YwpbgvQUeMyBk0SL6hpZMLjHUlGlQ0uEUKaBP4mT9+Fe8Sovc1p8caIzueoD
+ 3WMvRJjske9O2S5yX69zEJmtfLBzNu7aCV+lqxMhDqeLeIcfJS15NCX5IzQ0Xv1/T7wfsRFk1+I
+ 6fm6pjlDmpXRYCL2f2htAYL2SPc++CTPRFyc/hssfWm4mDI2EpraSpTOWIbEGtE4ZLA3rW069l3
+ VNi9+F7jwsFaWIQYB1NemhRGzJz5mZTcQ2s4CZkOM0OJZWOs2R4H2zqRfuZF24e1/onVB5I3xbW
+ EOF0bkzTO2XBTs3EsJbVjJveqZGkz2DT7pw0wOekXrlVPxtY8g0ipfj+Z+GjCmMUSEaalfAaQII
+ 74W4smE416JXN63ywnisokX5dBKrtBHkiaf5O+Otov/3eXylD7wtplyKGtTqhb00QZafrfnP/F6
+ FFrb/cNdcV0yJdV9s95TQqFgYy2KE08j3CncyoRIGDOjzbxWjU/fxUpkpvLzAeBgS+b2v39nJw8
+ RmLozNWj7Ql0N8gc+MJ+iMNRfCt/twQwTyp3+/rnUzXVRD+39sN+SMBqesDk+oSeQ4+Atl3kTzv
+ vJ+W6whg0mG6mLw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Wed, Jul 03, 2024 at 03:28:01PM +0200, Oleksij Rempel wrote:
-> Do not report SQI if no link is detected. Otherwise ethtool will show
-> non zero value even if no cable is attached.
-> 
-> Fixes: b649695248b15 ("net: phy: LAN87xx: add ethtool SQI support")
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/net/phy/microchip_t1.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/phy/microchip_t1.c b/drivers/net/phy/microchip_t1.c
-> index a35528497a576..22530a5b76365 100644
-> --- a/drivers/net/phy/microchip_t1.c
-> +++ b/drivers/net/phy/microchip_t1.c
-> @@ -840,6 +840,9 @@ static int lan87xx_get_sqi(struct phy_device *phydev)
->  	u8 sqi_value = 0;
->  	int rc;
->  
-> +	if (!phydev->link)
-> +		return 0;
-> +
+In this series from Geliang, modifying MPTCP BPF selftests, we have:
 
-Is this the correct place to fix this? Can any PHY report an SQI value
-if there is no link? Maybe an automotive PHY using T1 and good old
-fashioned CSMA/CD could report about background noise? But do they?
+- A new MPTCP subflow BPF program setting socket options per subflow: it
+  looks better to have this old test program in the BPF selftests to
+  track regressions and to serve as example.
 
-Maybe this should be fixed in linkstate_get_sqi()?
+  Note: Nicolas is no longer working for Tessares, but he did this work
+  while working for them, and his email address is no longer available.
 
-Also, maybe it should return -ENETDOWN, not 0. Do we want to say
-"worse than class A SQI (unstable link)" when in fact the link is
-"class G SQI (very good link)" once it is up?
+- A new symlink to MPTCP's pm_nl_ctl tool is added in BPF selftests, to
+  be able to use it instead of 'ip mptcp' which is not supported by the
+  BPF CI running IPRoute 5.5.0.
 
-	Andrew
+- A new MPTCP BPF subtest validating the new BPF program added in the
+  first patch.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v3:
+- Sorry for the delay between v2 and v3, this series was conflicting
+  with the "add netns helpers", but it looks like it is on hold:
+  https://lore.kernel.org/cover.1715821541.git.tanggeliang@kylinos.cn
+- Patch 1/3 includes "bpf_tracing_net.h", introduced in between.
+- New patch 2/3: "selftests/bpf: Add mptcp pm_nl_ctl link".
+- Patch 3/3: use the tool introduced in patch 2/3 + SYS_NOFAIL() helper.
+- Link to v2: https://lore.kernel.org/r/20240509-upstream-bpf-next-20240506-mptcp-subflow-test-v2-0-4048c2948665@kernel.org
+
+Changes in v2:
+- Previous patches 1/4 and 2/4 have been dropped from this series:
+  - 1/4: "selftests/bpf: Handle SIGINT when creating netns":
+    - A new version, more generic and no longer specific to MPTCP BPF
+      selftest will be sent later, as part of a new series. (Alexei)
+  - 2/4: "selftests/bpf: Add RUN_MPTCP_TEST macro":
+    - Removed, not to hide helper functions in macros. (Alexei)
+- The commit message of patch 1/2 has been clarified to avoid some
+  possible confusions spot by Alexei.
+- Link to v1: https://lore.kernel.org/r/20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-0-e2bcbdf49857@kernel.org
+
+---
+Geliang Tang (2):
+      selftests/bpf: Add mptcp pm_nl_ctl link
+      selftests/bpf: Add mptcp subflow subtest
+
+Nicolas Rybowski (1):
+      selftests/bpf: Add mptcp subflow example
+
+ MAINTAINERS                                       |   1 +
+ tools/testing/selftests/bpf/Makefile              |   3 +-
+ tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c     |   1 +
+ tools/testing/selftests/bpf/prog_tests/mptcp.c    | 104 ++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/mptcp_subflow.c |  59 ++++++++++++
+ 5 files changed, 167 insertions(+), 1 deletion(-)
+---
+base-commit: fd8db07705c55a995c42b1e71afc42faad675b0b
+change-id: 20240506-upstream-bpf-next-20240506-mptcp-subflow-test-faef6654bfa3
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
