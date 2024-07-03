@@ -1,141 +1,124 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFAF16F8F5;
-	Wed,  3 Jul 2024 11:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DB913D61B
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720007606; cv=none; b=oicZClG6WggIbl4P83q92czPnkOD5whkqCnCnDvR4lXz+2vaolMUFpY8dujNeSUqJcOmOMxqpyRLJWWJ/BeiCjJV4pCw2V1qpYY8JtMdIqC+JTLVZ+QgS8ALypZb+wECGmGUcE61XLt9KjQ1HJdsSePQdeA4qbPvkYS6BIFrtyE=
+	t=1720007652; cv=none; b=BXR3LLT0+kOpY/Z+jcFBOTynuUENwz+Pmr0CGNUGD8YRFNUgJv/yl//PC7MU7XUtOZfJpA6q2f3ODnhFQjafJ6qPWtFmh+mxr/MokvUMsRy8AMWAQ3yE3/FcRcxBvZQt6gi5ZMbHAov9Gn+6CdtWOMIeN09pVtIjxIMss7FFVgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720007606; c=relaxed/simple;
-	bh=/m1aybwXVDqT4wfLqQkBnjr1+YSMqNOJ/CoRq2aM3go=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lvWzlvmFrE2D86CpsUVQxt+Tey/FKe8xl0IpPbO4lBBHCxTFa+Xs3mht1JCKclDxKWoKfivBYPC+aBe7nrjnOOh1o7PmQ1x7KLsRn9d5dcfMMsMf0nbdI14bbENzUOMzXXBfSPUZAchiZEBatSc23lwPAWXjODEZQ1xChVFfOn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=NKaGM0vz; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1720007652; c=relaxed/simple;
+	bh=h1S2QC4xqEr68NWDQmaXFNegpal0bU94w8d1XyaS8sQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eqdF6cZwxvrkHtC54M1V+E9D8URnyZDT5nsZ51+i0I18SrEO2jkdipgpb6xIedda34jz41wUv/wBIwsSnyj4s+rfDVAAGl6EPVzeYJYj5sZ3QamXLcxgo9XRzYag9oQc4C3EVtK8b2DGJyzFXE/d6AEnPVp0s4SPD9Ga4ocXUr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=V6C9//Pa; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NKaGM0vz"
-X-UUID: d551591e393211ef99dc3f8fac2c3230-20240703
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=75FkGdUKgt+Z9hXJnJSQngHwHaha+5GUkIFIvukvpH4=;
-	b=NKaGM0vzZOZyrtlEqFXiDOsmDOeKz0DSeoyHprO9wvNf7oiKmYwsWEwgUh4rFiIdjGwBY2nLltQfXuQqFMrAPTm1DcjbgBfT8XpGHI0Xi4IdSSi78jrV2CHCJJvWXBux11Hkb6xJ4g0B3L4bamYW0NaVONsXTbIx9xqpZlSDPwQ=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.40,REQID:cede9587-a949-4299-b78e-5d9afc42bf30,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:ba885a6,CLOUDID:e48ae8d4-0d68-4615-a20f-01d7bd41f0bb,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: d551591e393211ef99dc3f8fac2c3230-20240703
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
-	(envelope-from <shun-yi.wang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1428062565; Wed, 03 Jul 2024 19:53:16 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 3 Jul 2024 19:53:13 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 3 Jul 2024 19:53:13 +0800
-From: Shun-yi Wang <shun-yi.wang@mediatek.com>
-To: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
-	<mathieu.poirier@linaro.org>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>,
-	<linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<jason-ch.chen@mediatek.com>, <yaya.chang@mediatek.com>,
-	<teddy.chen@mediatek.com>, <olivia.wen@mediatek.com>, shun-yi.wang
-	<shun-yi.wang@mediatek.com>
-Subject: [PATCH 1/1] remoteproc: mediatek: Support multiple reserved memory regions
-Date: Wed, 3 Jul 2024 19:53:08 +0800
-Message-ID: <20240703115308.17436-2-shun-yi.wang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240703115308.17436-1-shun-yi.wang@mediatek.com>
-References: <20240703115308.17436-1-shun-yi.wang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="V6C9//Pa"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42574064b16so33929945e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 04:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1720007649; x=1720612449; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=j/dKdrQWpBi8sNN8osFIvhbjM6ILY5kr5k1v9ROGIPU=;
+        b=V6C9//PaL4d34ClaqkkOBFnVJA6p0OOyIw3qZLIMSxyFsi8jMywMwqv4ZS+RhMDzAn
+         3nRZ2NC7VwsoIHx+wuCS2AueJ9Im24fD0BRcUxhQClZxQSbwM81ISXxejZfRUVY0Mv+y
+         qvRQUnl+OQs+EUUam63SJR/+nJUjliVIC7CT1QMkO3CQRcCckv259p2YpOvhFgIddbBJ
+         CESb+4o5/soC4/jel6H2B5AU7JtWMK55epj/ffXY2g62Vscrfa2Kc/xAIKZTTu66XqkM
+         Eg5kXCaSpLNimE65c7wEecz5gXqR9gWnixB3Hepkw3nhTn2Ejvk02Lv6jddTjk6J0teP
+         DT5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720007649; x=1720612449;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j/dKdrQWpBi8sNN8osFIvhbjM6ILY5kr5k1v9ROGIPU=;
+        b=SE4lz7cnZ76podPknGQwq9C1R62BxVkD82LS7SvVENCnwzqOEGH2FekHbj69oN4tca
+         nDQYBQlZcXZiNlAbYyhmsv1NCJR80Unz2dnXTnxtbloPkx9FXudnJtIa1oaMM6YuYmbM
+         GZCFKuVutLVF7p6NsahOa74WtP/HfzeWfR2dGkJ0ONtoYfgKeGzrqeYi4SneuMz1osnh
+         Lj5OhpSREF8RKluc74bDWXrHZpRNjzPCnBMStlfaB4L296NBOTPHHUWPjpOro7iynW4I
+         Y4tcSHwAxg5U1Cyf9drGfWNmiKT0uJGeOs7IQMoaP/RxnTl++Er9CWvaNS01zKk0Zqlj
+         3J8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUevBsnGzoMP7v4FiJ0Sb9zrUtYv+y7Ek/GW7WxL8MexcTE6+WyLoSFedUZnP7RZHlEXtJ4KKUTeJdOuYKeAdYLR6bqkj6dbq5HfAjR
+X-Gm-Message-State: AOJu0Yx7nfXJyXK/qdzHtsjvHXZ13CJWZa0HcS0NpPkzS+y8u7rCU+jt
+	0V4wuL5tpi9pad5kjIqxyPOHT+wGEOk7mVGVB2P/7ln6llKxf4KfGGobnWscOjw=
+X-Google-Smtp-Source: AGHT+IFt1tHV9WjwDQ4r4yGBCAWHvI3yCcMRx5Lk/4wU8pkkhtSCAhHCYrUR3fEp3K/O1euw3ZoLyw==
+X-Received: by 2002:a05:600c:3541:b0:425:62f7:92ea with SMTP id 5b1f17b1804b1-4257a02f7c9mr74975865e9.14.1720007649185;
+        Wed, 03 Jul 2024 04:54:09 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42577a06536sm75008455e9.0.2024.07.03.04.54.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 04:54:08 -0700 (PDT)
+Date: Wed, 3 Jul 2024 12:54:07 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>, dietmar.eggemann@arm.com,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, christian.loehle@arm.com,
+	vincent.donnefort@arm.com, ke.wang@unisoc.com, di.shen@unisoc.com,
+	xuewen.yan94@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 2/2] sched/fair: Use actual_cpu_capacity everywhere in
+ util_fits_cpu()
+Message-ID: <20240703115407.y6tjelkpq5njkzjy@airbuntu>
+References: <20240624082011.4990-1-xuewen.yan@unisoc.com>
+ <20240624082011.4990-3-xuewen.yan@unisoc.com>
+ <20240628012832.37swdtxr4ds2kkp7@airbuntu>
+ <CAKfTPtALDtnbPmq4401oLKzcEDurLKuCyqyNKOb1oYLAVJ2P4A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--4.883000-8.000000
-X-TMASE-MatchedRID: Ei0WBMmFdJjleW6zTRN7wAPZZctd3P4B6tEkNTIMeQjEosIs7IJbkCpJ
-	3T68EJKPg/N7mdNXD1c8RLY2vU8PD4/opKiQWjqUdXu122+iJtp6zDxGcFEbChL6MU7t349bxsr
-	6m7RljBHftLFtxOSbQ4Ay6p60ZV62fJ5/bZ6npdjKayT/BQTiGlIc3O7Mj/yCMO7Fp3VK5MEhmu
-	FTYDf84D50unEEcwa99dfwm9WweGYZ3afb2GJc48A9F3ly54VehHNYhwwtQTza6j4tja6OgKCjN
-	WMcfCKKdATQdtPksR+3/JiWOe6GXXSWgQ2GpXdZhztLVWA1eE9DDKa3G4nrLQ==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--4.883000-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	E45F84B53C2F9FE0E27731A6831DB9EC31E41B727B72E08D8A7DF8CAA7380CC92000:8
-X-MTK: N
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtALDtnbPmq4401oLKzcEDurLKuCyqyNKOb1oYLAVJ2P4A@mail.gmail.com>
 
-From: "shun-yi.wang" <shun-yi.wang@mediatek.com>
+On 07/02/24 15:25, Vincent Guittot wrote:
 
-SCP supports multiple reserved memory regions, intended for
-specific hardwards.
+> > >        *
+> > >        * Only exception is for HW or cpufreq pressure since it has a direct impact
+> > >        * on available OPP of the system.
+> > > @@ -5011,7 +5011,7 @@ static inline int util_fits_cpu(unsigned long util,
+> > >        * For uclamp_max, we can tolerate a drop in performance level as the
+> > >        * goal is to cap the task. So it's okay if it's getting less.
+> > >        */
+> > > -     capacity_orig = arch_scale_cpu_capacity(cpu);
+> > > +     capacity_actual = get_actual_cpu_capacity(cpu);
+> > >
+> > >       /*
+> > >        * We want to force a task to fit a cpu as implied by uclamp_max.
+> > > @@ -5039,7 +5039,7 @@ static inline int util_fits_cpu(unsigned long util,
+> > >        *     uclamp_max request.
+> > >        *
+> > >        *   which is what we're enforcing here. A task always fits if
+> > > -      *   uclamp_max <= capacity_orig. But when uclamp_max > capacity_orig,
+> > > +      *   uclamp_max <= capacity_actual. But when uclamp_max > capacity_actual,
+> > >        *   the normal upmigration rules should withhold still.
+> > >        *
+> > >        *   Only exception is when we are on max capacity, then we need to be
+> > > @@ -5050,8 +5050,8 @@ static inline int util_fits_cpu(unsigned long util,
+> > >        *     2. The system is being saturated when we're operating near
+> > >        *        max capacity, it doesn't make sense to block overutilized.
+> > >        */
+> > > -     uclamp_max_fits = (capacity_orig == SCHED_CAPACITY_SCALE) && (uclamp_max == SCHED_CAPACITY_SCALE);
+> > > -     uclamp_max_fits = !uclamp_max_fits && (uclamp_max <= capacity_orig);
+> > > +     uclamp_max_fits = (capacity_actual == SCHED_CAPACITY_SCALE) && (uclamp_max == SCHED_CAPACITY_SCALE);
+> >
+> > We should use capacity_orig here. We are checking if the CPU is the max
+> > capacity CPU.
+> 
+> I was also wondering what would be the best choice there. If we
+> consider that we have only one performance domain with all max
+> capacity cpus then I agree that we should keep capacity_orig as we
+> can't find a better cpu that would fit. But is it always true that all
+> max cpu are tied to the same perf domain ?
 
-Signed-off-by: shun-yi.wang <shun-yi.wang@mediatek.com>
----
- drivers/remoteproc/mtk_scp.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
-index 9ecd5ea04b5f3..1902826cea0af 100644
---- a/drivers/remoteproc/mtk_scp.c
-+++ b/drivers/remoteproc/mtk_scp.c
-@@ -1006,22 +1006,31 @@ EXPORT_SYMBOL_GPL(scp_mapping_dm_addr);
- 
- static int scp_map_memory_region(struct mtk_scp *scp)
- {
--	int ret;
-+	int ret, i, err;
- 	const struct mtk_scp_sizes_data *scp_sizes;
-+	struct device_node *node = scp->dev->of_node;
-+	struct of_phandle_iterator it;
-+
-+	i = 0;
-+	of_for_each_phandle(&it, err, node, "memory-region", NULL, 0) {
-+		ret = of_reserved_mem_device_init_by_idx(scp->dev, node, i);
-+
-+		if (ret) {
-+			dev_err(scp->dev, "failed to assign memory-region: %s\n",
-+				it.node->name);
-+			of_node_put(it.node);
-+			return -ENOMEM;
-+		}
- 
--	ret = of_reserved_mem_device_init(scp->dev);
-+		i++;
-+	}
- 
- 	/* reserved memory is optional. */
--	if (ret == -ENODEV) {
-+	if (!i) {
- 		dev_info(scp->dev, "skipping reserved memory initialization.");
- 		return 0;
- 	}
- 
--	if (ret) {
--		dev_err(scp->dev, "failed to assign memory-region: %d\n", ret);
--		return -ENOMEM;
--	}
--
- 	/* Reserved SCP code size */
- 	scp_sizes = scp->data->scp_sizes;
- 	scp->cpu_addr = dma_alloc_coherent(scp->dev, scp_sizes->max_dram_size,
--- 
-2.18.0
-
+Hmm I could be not thinking straight today. But the purpose of this check is to
+ensure overutilized can trigger for the common case where a task will always
+fit the max capacity cpu (whether it's on a single pd or multiple ones). For
+that corner case fits_capacity() should be the only fitness check otherwise
+overutilized will never trigger by default.
