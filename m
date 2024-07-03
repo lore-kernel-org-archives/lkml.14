@@ -1,150 +1,65 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-sh.amlogic.com (unknown [58.32.228.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1089130A58;
-	Wed,  3 Jul 2024 06:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5799049641;
+	Wed,  3 Jul 2024 06:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.32.228.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719988198; cv=none; b=omRZKaquo2Kz9bBV2DqflrGLN3tgBbogx///6V4BcRcdTILSPMcAbBauVQVLLJvsgZ4UPJ3jR+RESEfMcVm9fvnKQ5iLSIUyqc+nUokubyCDlHun5Begpqxw0mnMLY3TkRhyJeilftAKYqY84w+uYPB9vy07R0vbUAl5YQOm40U=
+	t=1719988289; cv=none; b=SdW31fK5jCN9LIDhS11t/ThQYDTiTgPOTZ1CW5/vHzK6EdrGJB4eCv0cL/xTKcyhnxwhhY3Vthy5xUxQ+guj2lWpK2k8FzqWwibCBm4xQn8TqjkcCupRBZibmvG6QozQhaWhLy/hATe08wT0aIusnVo57yidB0F7+CRVEGknY/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719988198; c=relaxed/simple;
-	bh=uNhuDjLWZorDbXDOWnVhHDPlY99NnQewwMxhnvVsgtQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vD6t/EB7OPjc/Trou7EnbIBEWXKpVaQ6h9UuGIXbKHeaxa5y7iaQPb9fYzKFzNu2PDYjFuigoRx9HByJg8XkQgbBVKPOLfTJ/wmcf0D/Xv3UdGbdAONbbPn1R5xFVlvSpjqcwMGS1a8pUWZBskeCnRNt/ouoXZOINL7zWRXX0Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Gxsoe0HD; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Gxsoe0HD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719988196; x=1751524196;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uNhuDjLWZorDbXDOWnVhHDPlY99NnQewwMxhnvVsgtQ=;
-  b=Gxsoe0HDr1vqSeikiipVO5TI/gFLTolVGrIn0jHuD0KYVjfCBy1UEBSZ
-   BpRYiUfnCkff/9qnCQ/66s7om2eDgQhzRramGfsq0ofYBKt6ovGOuxD4p
-   L3rqkMjoVJq1x3N9qU7Ad23WyCHMDsySnLd7M+kdKfVHRgXYZ55Lrbkvt
-   bWW+7NYk6yDaSSaPabbtDt/H1D3dqxqPp2abyJm0KRvzmRlmtXOSMW9v1
-   Gj6syKdrKT8gsFo5Q3dlaBpwOUYypWKzlaa+f3iV4/Im69c5JdnNLkZ4d
-   04MEJkypyA8ZfmuQN9+0piLgjC2U7qdhCBpqQm0e+oXr9xYQ9mm5UaUTh
-   A==;
-X-CSE-ConnectionGUID: uIiTarkbQoeuHwrRiGsmdg==
-X-CSE-MsgGUID: 7MEjGxCjQO6357/Nmml1zg==
-X-IronPort-AV: E=Sophos;i="6.09,181,1716274800"; 
-   d="asc'?scan'208";a="31406626"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 Jul 2024 23:29:52 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 2 Jul 2024 23:29:26 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Tue, 2 Jul 2024 23:29:12 -0700
-Date: Wed, 3 Jul 2024 07:28:53 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Tengfei Fan <quic_tengfan@quicinc.com>, <andersson@kernel.org>,
-	<konrad.dybcio@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <djakov@kernel.org>, <mturquette@baylibre.com>,
-	<sboyd@kernel.org>, <jassisinghbrar@gmail.com>,
-	<herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<manivannan.sadhasivam@linaro.org>, <will@kernel.org>, <joro@8bytes.org>,
-	<conor@kernel.org>, <tglx@linutronix.de>, <amitk@kernel.org>,
-	<thara.gopinath@gmail.com>, <linus.walleij@linaro.org>,
-	<wim@linux-watchdog.org>, <linux@roeck-us.net>, <rafael@kernel.org>,
-	<viresh.kumar@linaro.org>, <vkoul@kernel.org>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>,
-	<robimarko@gmail.com>, <quic_gurus@quicinc.com>,
-	<bartosz.golaszewski@linaro.org>, <kishon@kernel.org>,
-	<quic_wcheng@quicinc.com>, <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-	<bvanassche@acm.org>, <agross@kernel.org>, <gregkh@linuxfoundation.org>,
-	<quic_tdas@quicinc.com>, <robin.murphy@arm.com>, <daniel.lezcano@linaro.org>,
-	<rui.zhang@intel.com>, <lukasz.luba@arm.com>, <quic_rjendra@quicinc.com>,
-	<ulf.hansson@linaro.org>, <quic_sibis@quicinc.com>,
-	<otto.pflueger@abscue.de>, <quic_rohiagar@quicinc.com>, <luca@z3ntu.xyz>,
-	<neil.armstrong@linaro.org>, <abel.vesa@linaro.org>,
-	<bhupesh.sharma@linaro.org>, <alexandre.torgue@foss.st.com>,
-	<peppe.cavallaro@st.com>, <joabreu@synopsys.com>, <netdev@vger.kernel.org>,
-	<lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
-	<ahalaney@redhat.com>, <krzysztof.kozlowski@linaro.org>,
-	<u.kleine-koenig@pengutronix.de>, <dmitry.baryshkov@linaro.org>,
-	<quic_cang@quicinc.com>, <danila@jiaxyga.com>, <quic_nitirawa@quicinc.com>,
-	<mantas@8devices.com>, <athierry@redhat.com>, <quic_kbajaj@quicinc.com>,
-	<quic_bjorande@quicinc.com>, <quic_msarkar@quicinc.com>,
-	<quic_devipriy@quicinc.com>, <quic_tsoni@quicinc.com>,
-	<quic_rgottimu@quicinc.com>, <quic_shashim@quicinc.com>,
-	<quic_kaushalk@quicinc.com>, <quic_tingweiz@quicinc.com>,
-	<quic_aiquny@quicinc.com>, <srinivas.kandagatla@linaro.org>,
-	<linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linux-clk@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-	<linux-crypto@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-	<linux-usb@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<iommu@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
-	<linux-gpio@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-	<kernel@quicinc.com>
-Subject: Re: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
-Message-ID: <20240703-manager-armless-b13b18c79192@wendy>
-References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
- <20240703035735.2182165-1-quic_tengfan@quicinc.com>
- <7417fd8c-e852-45ee-bac9-d92921036e2f@kernel.org>
+	s=arc-20240116; t=1719988289; c=relaxed/simple;
+	bh=wPHD84jZMZht71iaK0Af8cD7f+Ly3by38T6UF64r0R8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rlrhcCnXAbyp7QO9rWgUZ+VX7Ai5C3RLYKO1zdqUknOXGMXB9PNYuKIICduZryIP+LJ9Wbs47BS8MnxdIr5+J181XFO1HEETe/4KavZhHIFLzFh7mSk1/lZTWyAEG1j8vwQu7VFecv5772QO1QRCgyZwxqgHn69/tczNrnuGgDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; arc=none smtp.client-ip=58.32.228.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+Received: from droid10-sz.amlogic.com (10.28.11.69) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.6; Wed, 3 Jul 2024
+ 14:16:13 +0800
+From: zelong dong <zelong.dong@amlogic.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Rob Herring
+	<robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Jerome Brunet <jbrunet@baylibre.com>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kelvin.zhang@amlogic.com>, Zelong Dong <zelong.dong@amlogic.com>
+Subject: [PATCH 0/3] reset: amlogic-a4/a5: add reset driver
+Date: Wed, 3 Jul 2024 14:16:07 +0800
+Message-ID: <20240703061610.37217-1-zelong.dong@amlogic.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5oSvLfaqEVebv1DP"
-Content-Disposition: inline
-In-Reply-To: <7417fd8c-e852-45ee-bac9-d92921036e2f@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
---5oSvLfaqEVebv1DP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Zelong Dong <zelong.dong@amlogic.com>
 
-On Wed, Jul 03, 2024 at 06:45:00AM +0200, Krzysztof Kozlowski wrote:
-> On 03/07/2024 05:56, Tengfei Fan wrote:
-> > Introduce support for the QCS9100 SoC device tree (DTSI) and the
-> > QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
-> > While the QCS9100 platform is still in the early design stage, the
-> > QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
-> > mounts the QCS9100 SoC instead of the SA8775p SoC.
->=20
-> The same huge patchset, to huge number of recipients was sent twice.
-> First, sorry, this is way too big. Second, it has way too many
-> recipients, but this is partially a result of first point. Only
-> partially because you put here dozen of totally unrelated emails. Sorry,
-> that does not make even sense. See form letter at the end how this
-> works. Third, sending it to everyone twice is a way to annoy them off
-> twice... Fourth,
->=20
-> Please split your work and do not cc dozen of unrelated folks.
+This patchset adds Reset controller driver support for
+Amlogic A4/A5 SoC. The RESET registers count and offset
+for A4/A5 Soc are same as S4 Soc.
 
-One of the extra recipients is cos that of that patch I sent adding the
-cache bindings to the cache entry, forgetting that that would CC the
-riscv list on all cache bindings. I modified that patch to drop the riscv
-list from the entry.
+Zelong Dong (3):
+  dt-bindings: reset: Add compatible and DT bindings for Amlogic A4/A5
+    Reset Controller
+  arm64: dts: amlogic: Add Amlogic A4 reset controller
+  arm64: dts: amlogic: Add Amlogic A5 reset controller
 
-Cheers,
-Conor.
+ .../bindings/reset/amlogic,meson-reset.yaml   | 22 +++--
+ .../boot/dts/amlogic/amlogic-a4-common.dtsi   |  8 ++
+ .../arm64/boot/dts/amlogic/amlogic-a4-reset.h | 93 ++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi   |  1 +
+ .../arm64/boot/dts/amlogic/amlogic-a5-reset.h | 95 +++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi   |  1 +
+ 6 files changed, 213 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/amlogic-a4-reset.h
+ create mode 100644 arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h
 
---5oSvLfaqEVebv1DP
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.35.1
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoTvpQAKCRB4tDGHoIJi
-0iuiAP9Wgtx8LiFpImc+BXo3h8CTF/4nY5kHoihO91fC51FsogEAnEhd56PAeLdE
-Uxg8sGMCKh5qjR+u3kQIZlblyU1rmwA=
-=Khim
------END PGP SIGNATURE-----
-
---5oSvLfaqEVebv1DP--
