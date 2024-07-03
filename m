@@ -1,535 +1,162 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DD21DA31C;
-	Wed,  3 Jul 2024 14:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597C21EA90;
+	Wed,  3 Jul 2024 14:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720016433; cv=none; b=QeIC+TYTg5dzDLl50ExvOxZ8RLvFx/ec7W/cBXXOERvrEjV5Paatg14T64cEhq2hvBTbOpEmuBRBgtrWeEtDZW9WlQaaL2vNsZX/Gua/lR3DA8+ETslWvFPkZT+z8+/fajpIhvnAMG4MDuSQs+dW2c4i/uVvQNlRE/tkcZcgenQ=
+	t=1720016539; cv=none; b=BuBdtig0WIc3TBPLB8CknGRtuKWmWLJEfnGUz/Smj1BltBGxWP3PS3gqySHBVdkPHD8cv/Vwq6Ft/mb/G8i+A7IFHJEdC2ZNO+KQjpA+ssZPU2exDukGmsOXBrCkpoUK1Sp4GXN8HFezmOYOv6KloXxSadwn7PrjvzpJlvCoBzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720016433; c=relaxed/simple;
-	bh=K9jm7xM/YkfIxjg6xtysmikLTC+pdy71S7xCBt7aLyo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=en8GVoJrUWJPZeZpG4Fn4/HPBzON2c8/fraiJXGTQof1zyVNiefx/BqQUh7f3TRQ9otjEeTKJu5Q7Pb1gPJGPNBOK4pLlqmdmbRfYBJn+giaCGN4uO5pLPGThPgok4xchaXrMX33akdhOy7ZG5kb5e16K4Yp3/Fncktv8i4mIqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GGATveDQ; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGATveDQ"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a724cd0e9c2so554179666b.3;
-        Wed, 03 Jul 2024 07:20:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720016429; x=1720621229; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ny8W4aA5Tso2C+7h1F8CjQuXEYBmcLsryPxVrQdHovg=;
-        b=GGATveDQTIu/0gXK8zgTKnmMYTUsL8J7PMPzqSb9c+ge4fb9I9nN38SROgztI/n9Be
-         YqoOacRkqapFcboqCLtbjpNz9O120MfdKMtC76V9xn2CY6jV1Ku2V+L6/UPlF4ZgR3Fo
-         J5b3O/rXROy/6xMiHnMEzzpax36tim89kgGL8RkRzSfx+FOXZc0wiT4BXfcnFqwouOtX
-         1DKH61XNR99h+x5YexA6fpMtnzg3+Ug1PBm9TrFH9K3kaFtlCEVN965SNv96UJjS9j0c
-         A5tHIsmzpSLfLoE3ggdReGi7lOhRkczKsn+pHAhlh9Y8JRTSTXlYWPu1PxWwhIujR+ZJ
-         bEKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720016429; x=1720621229;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ny8W4aA5Tso2C+7h1F8CjQuXEYBmcLsryPxVrQdHovg=;
-        b=q+yE4j39pXkvOe1az/ZLWpjiGjmt4dHWiWMsjpflbeXTEsGwibFwqRtU/93fmq/Jz1
-         Z0OUWiE///bKFIhxpSxNZsXmwlRskyTWgbZaDbY79y8/uko5CLQXXBJjKrdQGg7S+2G4
-         8/uymx+klKZxmIMbyjScUhOrJTrMy8eAotsUfrXLexMGtIgBktu9gzRBIyFHlvP0x2YF
-         9cpR8dNIGp4/DQmR1d8nGX5l+HEWi/jO/SOgPdRQrT7sF2ywBuVjfTS/h181+pBLTjuI
-         UURhALvUlc3Zz4jb9pGK3YRL0hhJB9Khi1cdx96NkyADA1QVJuJxaOnvYGCnrLTGZlN8
-         xXvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXyV468MzIt95SgR5TsaDrK4GAJxwItc2k4yvDjPxHupWW8mhU04itbs7ihNPs3QSaRYDMqVURFdFmpVlzu5rly1OaJOqbubdei6dMJmQ/0Kz9+214v0A2BCkwGJG9D3ZhVPiEIIJo3jJw=
-X-Gm-Message-State: AOJu0YwYjTeViobzA6hRsEdg7JJa3rWd1V9l/Q3Zbpjbsf3NkZcPisH4
-	GkhN70aTp9iVqDUuYEVC1jRy5sRyA2J9Z8ZUOZ6LEul8GjSNwniS
-X-Google-Smtp-Source: AGHT+IExGZLNW4rjQfNX/hHpeqp9/yy7ktTYAuJ/veJLQblXOlGkeo7YGjFT1TIEyE4vJm3o8M0S+Q==
-X-Received: by 2002:a17:906:6b91:b0:a72:690d:a177 with SMTP id a640c23a62f3a-a7514438b07mr678462066b.17.1720016428985;
-        Wed, 03 Jul 2024 07:20:28 -0700 (PDT)
-Received: from ?IPV6:2a02:a449:4071:1:32d0:42ff:fe10:6983? (2a02-a449-4071-1-32d0-42ff-fe10-6983.fixed6.kpn.net. [2a02:a449:4071:1:32d0:42ff:fe10:6983])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf5a585sm513050766b.52.2024.07.03.07.20.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 07:20:28 -0700 (PDT)
-Message-ID: <feaad47f-c85b-4fd9-a63f-cdda1d621b70@gmail.com>
-Date: Wed, 3 Jul 2024 16:20:27 +0200
+	s=arc-20240116; t=1720016539; c=relaxed/simple;
+	bh=f4NbyDhmUMSoMc3JreD102aM4vkKTbicMQZs0rsnIK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=okgw7DhXql/selLDY7rI35IFLm7IQXyRs5Y/DXY+ASa2uah/cp+qQVaLRMxEsI2sfi+4CakE5ISlg2jT/omZrRh/zRnejlWQMUxtOzwRNwrwESbwqGDZbBhSkJ8nQ6XEORlDaI8LmTwM1qKd6r0EckRMUUsg8Eb3z7sEyZcS044=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Date: Wed, 3 Jul 2024 14:22:13 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Conor Dooley <conor@kernel.org>, Inochi Amaoto <inochiama@outlook.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org,
+	Meng Zhang <zhangmeng.kevin@spacemit.com>,
+	Yangyu Chen <cyy@cyyself.name>
+Subject: Re: [PATCH v2 08/10] riscv: dts: add initial SpacemiT K1 SoC device
+ tree
+Message-ID: <20240703142213.GA2734247@ofsar>
+References: <20240627-k1-01-basic-dt-v2-0-cc06c7555f07@gentoo.org>
+ <20240627-k1-01-basic-dt-v2-8-cc06c7555f07@gentoo.org>
+ <CAJM55Z9jeAQTsVjRiLeofDm1RyMWCuHXC0a-pdKtpUiTkSjJCA@mail.gmail.com>
+ <20240702012847.GA2447193@ofsar>
+ <IA1PR20MB4953C031CB453AA0E51657B3BBDC2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <20240702-appease-attire-6afbe758bf0f@spud>
+ <20240703094049.GB2676251@ofsar>
+ <CAJM55Z9AdOq_yd7sK_VhkutokK+-QKscdq9i759H3N1UKVwJkQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v9] drm/rockchip: rk3066_hdmi: add sound support
-To: heiko@sntech.de
-Cc: hjc@rock-chips.com, andy.yan@rock-chips.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, daniel@ffwll.ch, lgirdwood@gmail.com, broonie@kernel.org,
- linux-sound@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJM55Z9AdOq_yd7sK_VhkutokK+-QKscdq9i759H3N1UKVwJkQ@mail.gmail.com>
 
-Add sound support to the RK3066 HDMI driver.
-The HDMI TX audio source is connected to I2S_8CH.
+On 04:22 Wed 03 Jul     , Emil Renner Berthing wrote:
+> Yixun Lan wrote:
+> > Hi Conor:
+> >
+> > On 16:25 Tue 02 Jul     , Conor Dooley wrote:
+> > > On Tue, Jul 02, 2024 at 09:35:45AM +0800, Inochi Amaoto wrote:
+> > > > On Tue, Jul 02, 2024 at 01:28:47AM GMT, Yixun Lan wrote:
+> > > > > On 12:49 Mon 01 Jul     , Emil Renner Berthing wrote:
+> > > > > > Yixun Lan wrote:
+> > > > > > > From: Yangyu Chen <cyy@cyyself.name>
+> > > > > > >
+> > > > > > > Banana Pi BPI-F3 motherboard is powered by SpacemiT K1[1].
+> > > > > > >
+> > > > > > > Key features:
+> > > > > > > - 4 cores per cluster, 2 clusters on chip
+> > > > > > > - UART IP is Intel XScale UART
+> > > > > > >
+> > > > > > > Some key considerations:
+> > > > > > > - ISA string is inferred from vendor documentation[2]
+> > > > > > > - Cluster topology is inferred from datasheet[1] and L2 in vendor dts[3]
+> > > > > > > - No coherent DMA on this board
+> > > > > > >     Inferred by taking vendor ethernet and MMC drivers to the mainline
+> > > > > > >     kernel. Without dma-noncoherent in soc node, the driver fails.
+> > > > > > > - No cache nodes now
+> > > > > > >     The parameters from vendor dts are likely to be wrong. It has 512
+> > > > > > >     sets for a 32KiB L1 Cache. In this case, each set is 64B in size.
+> > > > > > >     When the size of the cache line is 64B, it is a directly mapped
+> > > > > > >     cache rather than a set-associative cache, the latter is commonly
+> > > > > > >     used. Thus, I didn't use the parameters from vendor dts.
+> > > > > > >
+> > > > > > > Currently only support booting into console with only uart, other
+> > > > > > > features will be added soon later.
+> > > > > > >
+> > > > > ...
+> > > > >
+> > > > > > > +		clint: timer@e4000000 {
+> > > > > > > +			compatible = "spacemit,k1-clint", "sifive,clint0";
+> > > > > > > +			reg = <0x0 0xe4000000 0x0 0x10000>;
+> > > > > > > +			interrupts-extended = <&cpu0_intc 3>, <&cpu0_intc 7>,
+> > > > > > > +					      <&cpu1_intc 3>, <&cpu1_intc 7>,
+> > > > > > > +					      <&cpu2_intc 3>, <&cpu2_intc 7>,
+> > > > > > > +					      <&cpu3_intc 3>, <&cpu3_intc 7>,
+> > > > > > > +					      <&cpu4_intc 3>, <&cpu4_intc 7>,
+> > > > > > > +					      <&cpu5_intc 3>, <&cpu5_intc 7>,
+> > > > > > > +					      <&cpu6_intc 3>, <&cpu6_intc 7>,
+> > > > > > > +					      <&cpu7_intc 3>, <&cpu7_intc 7>;
+> > > > > > > +		};
+> > > > > > > +
+> > > > > > > +		uart0: serial@d4017000 {
+> > > > > > > +			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+> > > > > > > +			reg = <0x0 0xd4017000 0x0 0x100>;
+> > > > > > > +			interrupts = <42>;
+> > > > > > > +			clock-frequency = <14857000>;
+> > > > > > > +			reg-shift = <2>;
+> > > > > > > +			reg-io-width = <4>;
+> > > > > > > +			status = "disabled";
+> > > > > > > +		};
+> > > > > > > +
+> > > > > > > +		/* note: uart1 skipped */
+> > > > > >
+> > > > > > The datasheet page you link to above says "-UART (×10)", but here you're
+> > > > > > skipping one of them. Why? I can see the vendor tree does the same, but it
+> > > > > > would be nice with an explanation of what's going on.
+> > > > > >
+> > > > > /* note: uart1 in 0xf0612000, reserved for TEE usage */
+> > > > > I would put something like this, does this sound ok to you?
+> > > > >
+> > > > > more detail, iomem range from 0xf000,0000 - 0xf080,0000 are dedicated for TEE purpose,
+> > > > > It won't be exposed to Linux once TEE feature is enabled..
+> > > > >
+> > > > > skipping uart1 may make people confused but we are trying to follow datasheet..
+> > > >
+> > > > Instead of skipping it, I suggest adding this to reserved-memory area,
+> > > > which make all node visible and avoid uart1 being touched by mistake.
+> > >
+> > > No, don't make it reserved-memory - instead add it as
+> > > status = "reserved"; /* explanation for why */
+> > Ok, got
+> >
+> > > Also, I'd appreciate if the nodes were sorted by unit address in the
+> > > dtsi.
+> > so I would move "plic, clint" after node of uart9 as this suggestion
+> >
+> > for uart1, its unit-address is 0xf0610000, it should be moved to after clint
+> > (once unit-address sorted), if we follow this rule strictly.
+> > but it occur to me this is not very intuitive, if no objection, I would put
+> > it between uart0 and uart2 (thus slightly break the rule..)
+> 
+> No, please order nodes by their address as Conor said. It actually says so in
+> the DTS coding style:
+> 
+> https://docs.kernel.org/devicetree/bindings/dts-coding-style.html
+> 
+I was thinking about grouping all same type devices (uart here) together
+according to "1. Order of Nodes", but after reconsideration, I'd just follow
+yours and Conor's suggestion, thus it will be more straightforward, also match
+more well with datasheet[1] if we have to add more "reserved" nodes in the future.
 
-Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
+Link: https://developer.spacemit.com/#/documentation?token=LzJyw97BCipK1dkUygrcbT0NnMg [1]
 
-Changed V9:
-  Use late_register and early_unregister hooks to
-  (un)register the "hdmi-audio-codec" driver.
-  restyle
-
-Changed V8:
-  return -EPROBE_DEFER as early as possible
-  move rk3066_hdmi_audio_codec_init() function after rk3066_hdmi_register()
-  restyle
-
-Changed V7:
-  rebase
----
- drivers/gpu/drm/rockchip/Kconfig       |   2 +
- drivers/gpu/drm/rockchip/rk3066_hdmi.c | 320 +++++++++++++++++++++++--
- 2 files changed, 300 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index 1bf3e2829cd0..a32ee558408c 100644
---- a/drivers/gpu/drm/rockchip/Kconfig
-+++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -102,6 +102,8 @@ config ROCKCHIP_RGB
- config ROCKCHIP_RK3066_HDMI
- 	bool "Rockchip specific extensions for RK3066 HDMI"
- 	depends on DRM_ROCKCHIP
-+	select SND_SOC_HDMI_CODEC if SND_SOC
-+	select SND_SOC_ROCKCHIP_I2S if SND_SOC
- 	help
- 	  This selects support for Rockchip SoC specific extensions
- 	  for the RK3066 HDMI driver. If you want to enable
-diff --git a/drivers/gpu/drm/rockchip/rk3066_hdmi.c b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-index 784de990da1b..6081e1e062f2 100644
---- a/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-+++ b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-@@ -15,12 +15,20 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-
-+#include <sound/hdmi-codec.h>
-+
- #include "rk3066_hdmi.h"
-
- #include "rockchip_drm_drv.h"
-
- #define DEFAULT_PLLA_RATE 30000000
-
-+struct rk3066_hdmi_audio_info {
-+	int channels;
-+	int sample_rate;
-+	int sample_width;
-+};
-+
- struct hdmi_data_info {
- 	int vic; /* The CEA Video ID (VIC) of the current drm display mode. */
- 	unsigned int enc_out_format;
-@@ -40,7 +48,6 @@ struct rk3066_hdmi_i2c {
-
- struct rk3066_hdmi {
- 	struct device *dev;
--	struct drm_device *drm_dev;
- 	struct regmap *grf_regmap;
- 	int irq;
- 	struct clk *hclk;
-@@ -54,9 +61,16 @@ struct rk3066_hdmi {
-
- 	unsigned int tmdsclk;
-
-+	struct platform_device *audio_pdev;
-+	struct rk3066_hdmi_audio_info audio;
-+	bool audio_enable;
-+
- 	struct hdmi_data_info hdmi_data;
- };
-
-+static int rk3066_hdmi_audio_config(struct rk3066_hdmi *hdmi);
-+static int rk3066_hdmi_audio_codec_init(struct rk3066_hdmi *hdmi);
-+
- static struct rk3066_hdmi *encoder_to_rk3066_hdmi(struct drm_encoder *encoder)
- {
- 	struct rockchip_encoder *rkencoder = to_rockchip_encoder(encoder);
-@@ -214,6 +228,22 @@ static int rk3066_hdmi_config_avi(struct rk3066_hdmi *hdmi,
- 					HDMI_INFOFRAME_AVI, 0, 0, 0);
- }
-
-+static int rk3066_hdmi_config_aai(struct rk3066_hdmi *hdmi)
-+{
-+	union hdmi_infoframe frame;
-+	int rc;
-+
-+	rc = hdmi_audio_infoframe_init(&frame.audio);
-+
-+	frame.audio.coding_type = HDMI_AUDIO_CODING_TYPE_STREAM;
-+	frame.audio.sample_frequency = HDMI_AUDIO_SAMPLE_FREQUENCY_STREAM;
-+	frame.audio.sample_size = HDMI_AUDIO_SAMPLE_SIZE_STREAM;
-+	frame.audio.channels = hdmi->audio.channels;
-+
-+	return rk3066_hdmi_upload_frame(hdmi, rc, &frame,
-+					HDMI_INFOFRAME_AAI, 0, 0, 0);
-+}
-+
- static int rk3066_hdmi_config_video_timing(struct rk3066_hdmi *hdmi,
- 					   struct drm_display_mode *mode)
- {
-@@ -364,6 +394,7 @@ static int rk3066_hdmi_setup(struct rk3066_hdmi *hdmi,
- 		hdmi_modb(hdmi, HDMI_HDCP_CTRL, HDMI_VIDEO_MODE_MASK,
- 			  HDMI_VIDEO_MODE_HDMI);
- 		rk3066_hdmi_config_avi(hdmi, mode);
-+		rk3066_hdmi_audio_config(hdmi);
- 	} else {
- 		hdmi_modb(hdmi, HDMI_HDCP_CTRL, HDMI_VIDEO_MODE_MASK, 0);
- 	}
-@@ -380,9 +411,20 @@ static int rk3066_hdmi_setup(struct rk3066_hdmi *hdmi,
- 	 */
- 	rk3066_hdmi_i2c_init(hdmi);
-
--	/* Unmute video output. */
-+	/* Unmute video and audio output. */
- 	hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
- 		  HDMI_VIDEO_AUDIO_DISABLE_MASK, HDMI_AUDIO_DISABLE);
-+	if (hdmi->audio_enable) {
-+		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2, HDMI_AUDIO_DISABLE, 0);
-+		/* Reset audio capture logic. */
-+		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
-+			  HDMI_AUDIO_CP_LOGIC_RESET_MASK,
-+			  HDMI_AUDIO_CP_LOGIC_RESET);
-+		usleep_range(900, 1000);
-+		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
-+			  HDMI_AUDIO_CP_LOGIC_RESET_MASK, 0);
-+	}
-+
- 	return 0;
- }
-
-@@ -431,6 +473,7 @@ static void rk3066_hdmi_encoder_disable(struct drm_encoder *encoder,
- 			  HDMI_AUDIO_CP_LOGIC_RESET);
- 		usleep_range(500, 510);
- 	}
-+
- 	rk3066_hdmi_set_power_mode(hdmi, HDMI_SYS_POWER_MODE_A);
- }
-
-@@ -518,39 +561,260 @@ static void rk3066_hdmi_connector_destroy(struct drm_connector *connector)
- 	drm_connector_cleanup(connector);
- }
-
-+static int rk3066_hdmi_connector_late_register(struct drm_connector *connector)
-+{
-+	struct rk3066_hdmi *hdmi = connector_to_rk3066_hdmi(connector);
-+
-+	return rk3066_hdmi_audio_codec_init(hdmi);
-+}
-+
-+static void rk3066_hdmi_connector_early_unregister(struct drm_connector *connector)
-+{
-+	struct rk3066_hdmi *hdmi = connector_to_rk3066_hdmi(connector);
-+
-+	platform_device_unregister(hdmi->audio_pdev);
-+}
-+
- static const struct drm_connector_funcs rk3066_hdmi_connector_funcs = {
--	.fill_modes = rk3066_hdmi_probe_single_connector_modes,
--	.detect = rk3066_hdmi_connector_detect,
--	.destroy = rk3066_hdmi_connector_destroy,
--	.reset = drm_atomic_helper_connector_reset,
-+	.fill_modes             = rk3066_hdmi_probe_single_connector_modes,
-+	.detect                 = rk3066_hdmi_connector_detect,
-+	.destroy                = rk3066_hdmi_connector_destroy,
-+	.reset                  = drm_atomic_helper_connector_reset,
- 	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
--	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+	.atomic_destroy_state   = drm_atomic_helper_connector_destroy_state,
-+	.late_register          = rk3066_hdmi_connector_late_register,
-+	.early_unregister       = rk3066_hdmi_connector_early_unregister,
- };
-
- static const
- struct drm_connector_helper_funcs rk3066_hdmi_connector_helper_funcs = {
--	.get_modes = rk3066_hdmi_connector_get_modes,
--	.mode_valid = rk3066_hdmi_connector_mode_valid,
-+	.get_modes    = rk3066_hdmi_connector_get_modes,
-+	.mode_valid   = rk3066_hdmi_connector_mode_valid,
- 	.best_encoder = rk3066_hdmi_connector_best_encoder,
- };
-
--static int
--rk3066_hdmi_register(struct drm_device *drm, struct rk3066_hdmi *hdmi)
-+static int rk3066_hdmi_audio_config(struct rk3066_hdmi *hdmi)
- {
--	struct drm_encoder *encoder = &hdmi->encoder.encoder;
--	struct device *dev = hdmi->dev;
-+	u32 rate, channel, word_length, N, CTS;
-+	struct rk3066_hdmi_audio_info *audio = &hdmi->audio;
-+	u64 tmp;
-+
-+	if (audio->channels < 3)
-+		channel = HDMI_AUDIO_I2S_CHANNEL_1_2;
-+	else if (audio->channels < 5)
-+		channel = HDMI_AUDIO_I2S_CHANNEL_3_4;
-+	else if (audio->channels < 7)
-+		channel = HDMI_AUDIO_I2S_CHANNEL_5_6;
-+	else
-+		channel = HDMI_AUDIO_I2S_CHANNEL_7_8;
-+
-+	switch (audio->sample_rate) {
-+	case 32000:
-+		rate = HDMI_AUDIO_SAMPLE_FRE_32000;
-+		N = N_32K;
-+		break;
-+	case 44100:
-+		rate = HDMI_AUDIO_SAMPLE_FRE_44100;
-+		N = N_441K;
-+		break;
-+	case 48000:
-+		rate = HDMI_AUDIO_SAMPLE_FRE_48000;
-+		N = N_48K;
-+		break;
-+	case 88200:
-+		rate = HDMI_AUDIO_SAMPLE_FRE_88200;
-+		N = N_882K;
-+		break;
-+	case 96000:
-+		rate = HDMI_AUDIO_SAMPLE_FRE_96000;
-+		N = N_96K;
-+		break;
-+	case 176400:
-+		rate = HDMI_AUDIO_SAMPLE_FRE_176400;
-+		N = N_1764K;
-+		break;
-+	case 192000:
-+		rate = HDMI_AUDIO_SAMPLE_FRE_192000;
-+		N = N_192K;
-+		break;
-+	default:
-+		DRM_DEV_ERROR(hdmi->dev, "no support for sample rate %d\n",
-+			      audio->sample_rate);
-+		return -ENOENT;
-+	}
-+
-+	switch (audio->sample_width) {
-+	case 16:
-+		word_length = 0x02;
-+		break;
-+	case 20:
-+		word_length = 0x0a;
-+		break;
-+	case 24:
-+		word_length = 0x0b;
-+		break;
-+	default:
-+		DRM_DEV_ERROR(hdmi->dev, "no support for word length %d\n",
-+			      audio->sample_width);
-+		return -ENOENT;
-+	}
-+
-+	tmp = (u64)hdmi->tmdsclk * N;
-+	do_div(tmp, 128 * audio->sample_rate);
-+	CTS = tmp;
-+
-+	/* Set_audio source I2S. */
-+	hdmi_writeb(hdmi, HDMI_AUDIO_CTRL1, 0x00);
-+	hdmi_writeb(hdmi, HDMI_AUDIO_CTRL2, 0x40);
-+	hdmi_writeb(hdmi, HDMI_I2S_AUDIO_CTRL,
-+		    HDMI_AUDIO_I2S_FORMAT_STANDARD | channel);
-+	hdmi_writeb(hdmi, HDMI_I2S_SWAP, 0x00);
-+	hdmi_modb(hdmi, HDMI_AV_CTRL1, HDMI_AUDIO_SAMPLE_FRE_MASK, rate);
-+	hdmi_writeb(hdmi, HDMI_AUDIO_SRC_NUM_AND_LENGTH, word_length);
-+
-+	/* Set N value. */
-+	hdmi_modb(hdmi, HDMI_LR_SWAP_N3,
-+		  HDMI_AUDIO_N_19_16_MASK, (N >> 16) & 0x0F);
-+	hdmi_writeb(hdmi, HDMI_N2, (N >> 8) & 0xFF);
-+	hdmi_writeb(hdmi, HDMI_N1, N & 0xFF);
-+
-+	/* Set CTS value. */
-+	hdmi_writeb(hdmi, HDMI_CTS_EXT1, CTS & 0xff);
-+	hdmi_writeb(hdmi, HDMI_CTS_EXT2, (CTS >> 8) & 0xff);
-+	hdmi_writeb(hdmi, HDMI_CTS_EXT3, (CTS >> 16) & 0xff);
-+
-+	if (audio->channels > 2)
-+		hdmi_modb(hdmi, HDMI_LR_SWAP_N3,
-+			  HDMI_AUDIO_LR_SWAP_MASK,
-+			  HDMI_AUDIO_LR_SWAP_SUBPACKET1);
-+	rate = (~(rate >> 4)) & 0x0f;
-+	hdmi_writeb(hdmi, HDMI_AUDIO_STA_BIT_CTRL1, rate);
-+	hdmi_writeb(hdmi, HDMI_AUDIO_STA_BIT_CTRL2, 0);
-+
-+	return rk3066_hdmi_config_aai(hdmi);
-+}
-+
-+static int rk3066_hdmi_audio_hw_params(struct device *dev, void *d,
-+				       struct hdmi_codec_daifmt *daifmt,
-+				       struct hdmi_codec_params *params)
-+{
-+	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
-+	struct drm_display_info *display = &hdmi->connector.display_info;
-
--	encoder->possible_crtcs =
--		drm_of_find_possible_crtcs(drm, dev->of_node);
-+	if (!display->has_audio) {
-+		DRM_DEV_ERROR(hdmi->dev, "no audio support\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!hdmi->encoder.encoder.crtc)
-+		return -ENODEV;
-+
-+	switch (daifmt->fmt) {
-+	case HDMI_I2S:
-+		break;
-+	default:
-+		DRM_DEV_ERROR(dev, "invalid format %d\n", daifmt->fmt);
-+		return -EINVAL;
-+	}
-+
-+	hdmi->audio.channels = params->channels;
-+	hdmi->audio.sample_rate = params->sample_rate;
-+	hdmi->audio.sample_width = params->sample_width;
-+
-+	return rk3066_hdmi_audio_config(hdmi);
-+}
-+
-+static void rk3066_hdmi_audio_shutdown(struct device *dev, void *d)
-+{
-+	/* Do nothing. */
-+}
-+
-+static int rk3066_hdmi_audio_mute_stream(struct device *dev, void *d, bool mute, int direction)
-+{
-+	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
-+	struct drm_display_info *display = &hdmi->connector.display_info;
-+
-+	if (!display->has_audio) {
-+		DRM_DEV_ERROR(hdmi->dev, "no audio support\n");
-+		return -ENODEV;
-+	}
-+
-+	hdmi->audio_enable = !mute;
-+
-+	if (mute)
-+		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
-+			  HDMI_AUDIO_DISABLE, HDMI_AUDIO_DISABLE);
-+	else
-+		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2, HDMI_AUDIO_DISABLE, 0);
-
- 	/*
--	 * If we failed to find the CRTC(s) which this encoder is
--	 * supposed to be connected to, it's because the CRTC has
--	 * not been registered yet.  Defer probing, and hope that
--	 * the required CRTC is added later.
-+	 * Under power mode E we need to reset the audio capture logic to
-+	 * make the audio setting update.
- 	 */
--	if (encoder->possible_crtcs == 0)
--		return -EPROBE_DEFER;
-+	if (rk3066_hdmi_get_power_mode(hdmi) == HDMI_SYS_POWER_MODE_E) {
-+		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
-+			  HDMI_AUDIO_CP_LOGIC_RESET_MASK,
-+			  HDMI_AUDIO_CP_LOGIC_RESET);
-+		usleep_range(900, 1000);
-+		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
-+			  HDMI_AUDIO_CP_LOGIC_RESET_MASK, 0);
-+	}
-+
-+	return 0;
-+}
-+
-+static int rk3066_hdmi_audio_get_eld(struct device *dev, void *d, u8 *buf, size_t len)
-+{
-+	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
-+	struct drm_mode_config *config = &hdmi->encoder.encoder.dev->mode_config;
-+	struct drm_connector *connector;
-+	int ret = -ENODEV;
-+
-+	mutex_lock(&config->mutex);
-+	list_for_each_entry(connector, &config->connector_list, head) {
-+		if (&hdmi->encoder.encoder == connector->encoder) {
-+			memcpy(buf, connector->eld,
-+			       min(sizeof(connector->eld), len));
-+			ret = 0;
-+		}
-+	}
-+	mutex_unlock(&config->mutex);
-+
-+	return ret;
-+}
-+
-+static const struct hdmi_codec_ops rk3066_hdmi_audio_codec_ops = {
-+	.hw_params       = rk3066_hdmi_audio_hw_params,
-+	.audio_shutdown  = rk3066_hdmi_audio_shutdown,
-+	.mute_stream     = rk3066_hdmi_audio_mute_stream,
-+	.get_eld         = rk3066_hdmi_audio_get_eld,
-+	.no_capture_mute = 1,
-+};
-+
-+static int rk3066_hdmi_audio_codec_init(struct rk3066_hdmi *hdmi)
-+{
-+	struct hdmi_codec_pdata rk3066_hdmi_codec_data = {
-+		.i2s = 1,
-+		.ops = &rk3066_hdmi_audio_codec_ops,
-+		.max_i2s_channels = 8,
-+	};
-+
-+	hdmi->audio.channels = 2;
-+	hdmi->audio.sample_rate = 48000;
-+	hdmi->audio.sample_width = 16;
-+	hdmi->audio_enable = false;
-+	hdmi->audio_pdev = platform_device_register_data(hdmi->dev,
-+							 HDMI_CODEC_DRV_NAME,
-+							 PLATFORM_DEVID_NONE,
-+							 &rk3066_hdmi_codec_data,
-+							 sizeof(rk3066_hdmi_codec_data));
-+
-+	return PTR_ERR_OR_ZERO(hdmi->audio_pdev);
-+}
-+
-+static int rk3066_hdmi_register(struct drm_device *drm, struct rk3066_hdmi *hdmi)
-+{
-+	struct drm_encoder *encoder = &hdmi->encoder.encoder;
-
- 	drm_encoder_helper_add(encoder, &rk3066_hdmi_encoder_helper_funcs);
- 	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
-@@ -740,6 +1004,7 @@ static int rk3066_hdmi_bind(struct device *dev, struct device *master,
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct drm_device *drm = data;
-+	struct drm_encoder *encoder;
- 	struct rk3066_hdmi *hdmi;
- 	int irq;
- 	int ret;
-@@ -748,8 +1013,19 @@ static int rk3066_hdmi_bind(struct device *dev, struct device *master,
- 	if (!hdmi)
- 		return -ENOMEM;
-
-+	encoder = &hdmi->encoder.encoder;
-+	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-+
-+	/*
-+	 * If we failed to find the CRTC(s) which this encoder is
-+	 * supposed to be connected to, it's because the CRTC has
-+	 * not been registered yet.  Defer probing, and hope that
-+	 * the required CRTC is added later.
-+	 */
-+	if (encoder->possible_crtcs == 0)
-+		return -EPROBE_DEFER;
-+
- 	hdmi->dev = dev;
--	hdmi->drm_dev = drm;
- 	hdmi->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(hdmi->regs))
- 		return PTR_ERR(hdmi->regs);
---
-2.39.2
-
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
