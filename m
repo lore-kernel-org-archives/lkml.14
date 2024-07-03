@@ -1,106 +1,258 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50B818411C
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 17:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7800E17B50C
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 17:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720028456; cv=none; b=OJKLl/yIN0/xm/H069bxV+Ki9Cz/FS1T0s4p06tTLO8x1jUCEeTwVLoHuMVchJlgFeLCl18+hNpMLcC5yFKnRiBU04Q8+Mid64aweuqEuCriUxv+4seExhxb5CSeRwiVBXJGxq4eBuYruRL2Om/FoNM1HGCwSAbdWWMcQACMysU=
+	t=1720028552; cv=none; b=s3D8f0tLr157apMlzsC6yG1B2JPkxSQguacDrYxxO8qkpxKmiXggdRvXJbfVyrfxkFNItvl7YUtHVsW/Rvs8w4o+pvH3bIZt9mtcE5AzrQFQ4kYCREeyy7Tg3XhKkjRBhRK+vRQpLMiCmDhC91jsI/0Q5Z2/ScfE5nZrFixOEp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720028456; c=relaxed/simple;
-	bh=OmJgZmMNMA+vqsqmuMadaQXQgXYtB0kLJuTl566s2uI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F14/771q07sACr6IAmcIEf/4QPLb4lUD6JwJlPiNGX36cXzgKx/+zVYK7A4Otq+YjzRSctDwLLqMCvoMfJ5j/W7DFENbRP8CBOiwdZMvlXRJP05Omjc52nxGJOAfqC8be4TqAXN2cCLH926sD8FY1Y08qeXWIfF23SSdkv2xg50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=b3lMPF8r; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720028552; c=relaxed/simple;
+	bh=HLZ4mpGCqa4K37zneCCqxcinEXBYwu2salBgrPOLw+g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=LUNWUIsP9fU72iReYiP9xDcrjkyQk9tNFytAUKUYtWZkwxTwqG/xW6X1BLqCs+/VCQmDM74TIuE4JYdS7DCKtBqg7ivsC138iGwUV9p+++LjROogkfoCtm3G3RtqAL/ssHk18xSTkNN0caELqYeW3HjdUKaIXdRvtM3xUXN+mL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=deV2mL2h; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="b3lMPF8r"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so69435661fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 10:40:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="deV2mL2h"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e03654427f6so9679705276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 10:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720028453; x=1720633253; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kNRq2xwEntheuQ6TeaPDnSkqCd5DNGo6bKIeeb/W6x4=;
-        b=b3lMPF8rmDP6HzT1KqUaa4AIyeGODUdFmdFEe930WkPhjt+zguvrUa2VKj2HsgTZwS
-         8xXbvZsX03DuveKTJdU/TATdffxAFCDBl9gw3Sn6trOqCZJFJhMdV4v/205EzKG0rMVt
-         nX1noVjepoTyqstn5ResANwLuH/7GJ9/t7SqI=
+        d=google.com; s=20230601; t=1720028549; x=1720633349; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cHmmenAJD4Xuv33/PGus2uArSA74vyhiLTN2TNueFk0=;
+        b=deV2mL2heJHBfKiyrVzzvjR49LVqJDzIC1/rfHFGaGDneWIZPTeuu9452D0z8BpWtD
+         Xp/q9asABuBX0dGrtX7QgdVu1/l5g/hDWm6kV21HHLroFYw8HRclJMpurMUhLaSnxw4l
+         RoPlsG7zkqdgh8Pczi28Y+vXlBXsdZqB8KtVuNqAaks1rC3UZjSQdsSTDCu0eOeajeLS
+         qMepmuILdweR4/7u+Kel+7rW/lyIsjzY9m4WTYz+L8ICNuXedcC/I/gzeeBJZEbFoCEU
+         QNHq86tILhlW8xjsglBfnf4F+dLBayFOb4UzMlzOF0FlIGnjQzGlRDrgF509BCMZq+L3
+         AmAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720028453; x=1720633253;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kNRq2xwEntheuQ6TeaPDnSkqCd5DNGo6bKIeeb/W6x4=;
-        b=fycvEghhNVoDEjCZSUtQsmROzhL5TcV6xZFFcqcroYyehUnin7oTt4I8zqFxUBiiay
-         eEKDcPA47rXGQyUtGrnoFllf8sfs8eWmzN2CWLbYv5f5KWTqF9s8HVdZbgVVr1ujM0JS
-         X9wb3/uvO/QI6dFhn/M1Tdyf0+B76RsnNvA0DRQGEUqvwBJ05ZVxN2bvEahLw00CcTxz
-         lZL60CAcloMFcoCsDe6FhMUfNCa1hOKgFDxj4Gd+inU38ob4RC3p6mzfndqAYSVUd2Bh
-         qQpqHBhVPlFWGIbVhw6tcaPy1pyL3XBRex8My2f7gFiTcEGZeh7TWT8UHxds44tI4EHh
-         QE7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXOrm08sUzntekm0bzLME66grheKLsS+OIVBNZ9iQigDLzo5oi9y6itquHu5ShWsktOdZQFFuUOiefZtLH5M18GgGT7+vnjhpdOf8Ff
-X-Gm-Message-State: AOJu0YyDkTbLUqMQD3AnoDM7bt92JbhUlO/yOoXZC7ZL+zD7KYiNPxsA
-	lSvH4E2o44/x2YFgmziyUrl139DUpuEtVKgIh4nuyAjAWKi0w88R6IEWlsjYqqP5K7jqUneIRB3
-	gUtsAVA==
-X-Google-Smtp-Source: AGHT+IHzlQ7W+2YV0g60NBy0164g66x433anP4Q+w1jSdUOrTSnFFMBchDsRcWdJNwtotlijdBipPg==
-X-Received: by 2002:a05:6512:1056:b0:52c:8596:5976 with SMTP id 2adb3069b0e04-52e82701398mr8400278e87.55.1720028451982;
-        Wed, 03 Jul 2024 10:40:51 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab2f77dsm2211062e87.229.2024.07.03.10.40.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 10:40:51 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ec3f875e68so63907971fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 10:40:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW/3KWE+r/Xu8u5qlbT0Ib6vNpeKYLkX/9uBlWP1m/3pnAsbwja+sDXHejOU0f01hSHgqhSD2/OlHNY27GsOPBhrdPzdfY+1gAspqBg
-X-Received: by 2002:a05:6512:ac6:b0:52c:d90d:d482 with SMTP id
- 2adb3069b0e04-52e827459a3mr8256135e87.66.1720028450692; Wed, 03 Jul 2024
- 10:40:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720028549; x=1720633349;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cHmmenAJD4Xuv33/PGus2uArSA74vyhiLTN2TNueFk0=;
+        b=nXFGhuk2J2PNJQvlkI32P9xR6FkNds/gH2tDNuMmZtHWvpCtUKwijeeDGcqs9tkv1s
+         wlgQubA3RdJQ20YQVx2lLXPZdXLNjUrQ05mX3gLzEws+DkPK4IhdBZaPPYYfEEZ2ikye
+         LPWWXHNtCLc4SvI+/MyeO8e/0gq/8AixxzQfR4kinXDWRJaOIRNWQbCPxpF2jJZpVhiJ
+         5IfftHSZx79OYm/RQo4jRbDtXGNqUas6sr/jTDHcyqdiTfD5QDXNn0EpfkowDsQS2YIR
+         PSqLCehbddG9mRdzV3XyjRCojna/5nTf60bIE31qTlpVH1RmRUR/4Y52EUUc9dlvjwpX
+         cZ0A==
+X-Forwarded-Encrypted: i=1; AJvYcCURDQIav9fJkbxozw/zbYpnNWuxyWbiVMJz8Ya2Bg7F99LsabQMTM5tDrTbrleNDmNYH1NeyHccfDWpYPjuolx6c+9WQKkmPAfmlbB9
+X-Gm-Message-State: AOJu0YzRRORku4Qp3iIgkvJe0UFT6hANDR/dpzOBN9syDtttS3tUI5Tn
+	ISLCmDuQEphbGdG+XQ+1KHWiPQvbpDYh3hjbZwKJDzDSBcaovD3je+2B9a/U3nX3I5SXruvAf7D
+	UBg==
+X-Google-Smtp-Source: AGHT+IFqhs8YAXy71fS/OG8wb/RazDJEP/UmJcIZGBEuKGVV5zkwlO2Qnshi5IQglkMDLXF+R6xYdSLhDko=
+X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:7049:5206:eaa8:8edd])
+ (user=surenb job=sendgmr) by 2002:a25:dd46:0:b0:dfa:b328:475d with SMTP id
+ 3f1490d57ef6-e036ec80d10mr192889276.12.1720028549451; Wed, 03 Jul 2024
+ 10:42:29 -0700 (PDT)
+Date: Wed,  3 Jul 2024 10:42:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240625110029.606032-1-mjguzik@gmail.com> <20240625110029.606032-3-mjguzik@gmail.com>
- <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
- <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
- <CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
- <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
- <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com> <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
- <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com> <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
- <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
- <8b6d59ffc9baa57fee0f9fa97e72121fd88cf0e4.camel@xry111.site>
- <CAHk-=wif5KJEdvZZfTVX=WjOOK7OqoPwYng6n-uu=VeYUpZysQ@mail.gmail.com> <b60a61b8c9171a6106d50346ecd7fba1cfc4dcb0.camel@xry111.site>
-In-Reply-To: <b60a61b8c9171a6106d50346ecd7fba1cfc4dcb0.camel@xry111.site>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 3 Jul 2024 10:40:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjH3F1jTVfADgo0tAnYStuaUZLvz+1NkmtM-TqiuubWcw@mail.gmail.com>
-Message-ID: <CAHk-=wjH3F1jTVfADgo0tAnYStuaUZLvz+1NkmtM-TqiuubWcw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Christian Brauner <brauner@kernel.org>, libc-alpha@sourceware.org, 
-	"Andreas K. Huettel" <dilfridge@gentoo.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, loongarch@lists.linux.dev
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240703174225.3891393-1-surenb@google.com>
+Subject: [PATCH 1/1] mm: add comments for allocation helpers explaining why
+ they are macros
+From: Suren Baghdasaryan <surenb@google.com>
+To: akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, jack@suse.cz, thorsten.blum@toblux.com, 
+	christian.koenig@amd.com, hch@lst.de, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, surenb@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 3 Jul 2024 at 10:30, Xi Ruoyao <xry111@xry111.site> wrote:
->
-> struct stat64 {
->
-> // ...
->
->     int     st_atime;   /* Time of last access.  */
+A number of allocation helper functions were converted into macros to
+account them at the call sites. Add a comment for each converted
+allocation helper explaining why it has to be a macro and why we
+typecast the return value wherever required.
+The patch also moves acpi_os_acquire_object() closer to other allocation
+helpers to group them together under the same comment.
+The patch has no functional changes.
 
-Oh wow. Shows just *how* long ago that was - and how long ago I looked
-at 32-bit code. Because clearly, I was wrong.
+Fixes: 2c321f3f70bc ("mm: change inlined allocation helpers to account at the call site")
+Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+---
+ fs/nfs/iostat.h                   |  4 ++++
+ include/acpi/platform/aclinuxex.h |  9 ++++++---
+ include/linux/bpf.h               |  4 ++++
+ include/linux/dma-fence-chain.h   |  4 ++++
+ include/linux/hid_bpf.h           |  5 +++++
+ include/linux/jbd2.h              | 10 ++++++++++
+ include/linux/skbuff.h            |  8 ++++++++
+ include/linux/skmsg.h             |  5 +++++
+ 8 files changed, 46 insertions(+), 3 deletions(-)
 
-I guess it shows how nobody actually cares about 32-bit any more, at
-least in the 2037 sense.
+diff --git a/fs/nfs/iostat.h b/fs/nfs/iostat.h
+index b17a9eb9b148..49862c95b224 100644
+--- a/fs/nfs/iostat.h
++++ b/fs/nfs/iostat.h
+@@ -46,6 +46,10 @@ static inline void nfs_add_stats(const struct inode *inode,
+ 	nfs_add_server_stats(NFS_SERVER(inode), stat, addend);
+ }
+ 
++/*
++ * This specialized allocator has to be a macro for its allocations to be
++ * accounted separately (to have a separate alloc_tag).
++ */
+ #define nfs_alloc_iostats()	alloc_percpu(struct nfs_iostats)
+ 
+ static inline void nfs_free_iostats(struct nfs_iostats __percpu *stats)
+diff --git a/include/acpi/platform/aclinuxex.h b/include/acpi/platform/aclinuxex.h
+index 62cac266a1c8..eeff40295b4b 100644
+--- a/include/acpi/platform/aclinuxex.h
++++ b/include/acpi/platform/aclinuxex.h
+@@ -46,6 +46,9 @@ acpi_status acpi_os_terminate(void);
+  * Interrupts are off during resume, just like they are for boot.
+  * However, boot has  (system_state != SYSTEM_RUNNING)
+  * to quiet __might_sleep() in kmalloc() and resume does not.
++ *
++ * These specialized allocators have to be macros for their allocations to be
++ * accounted separately (to have separate alloc_tag).
+  */
+ #define acpi_os_allocate(_size)	\
+ 		kmalloc(_size, irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL)
+@@ -53,14 +56,14 @@ acpi_status acpi_os_terminate(void);
+ #define acpi_os_allocate_zeroed(_size)	\
+ 		kzalloc(_size, irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL)
+ 
++#define acpi_os_acquire_object(_cache)	\
++		kmem_cache_zalloc(_cache, irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL)
++
+ static inline void acpi_os_free(void *memory)
+ {
+ 	kfree(memory);
+ }
+ 
+-#define acpi_os_acquire_object(_cache)	\
+-		kmem_cache_zalloc(_cache, irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL)
+-
+ static inline acpi_thread_id acpi_os_get_thread_id(void)
+ {
+ 	return (acpi_thread_id) (unsigned long)current;
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 5e694a308081..4cef340737c4 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -2261,6 +2261,10 @@ void *bpf_map_kvcalloc(struct bpf_map *map, size_t n, size_t size,
+ void __percpu *bpf_map_alloc_percpu(const struct bpf_map *map, size_t size,
+ 				    size_t align, gfp_t flags);
+ #else
++/*
++ * These specialized allocators have to be macros for their allocations to be
++ * accounted separately (to have separate alloc_tag).
++ */
+ #define bpf_map_kmalloc_node(_map, _size, _flags, _node)	\
+ 		kmalloc_node(_size, _flags, _node)
+ #define bpf_map_kzalloc(_map, _size, _flags)			\
+diff --git a/include/linux/dma-fence-chain.h b/include/linux/dma-fence-chain.h
+index ad9e2506c2f4..68c3c1e41014 100644
+--- a/include/linux/dma-fence-chain.h
++++ b/include/linux/dma-fence-chain.h
+@@ -85,6 +85,10 @@ dma_fence_chain_contained(struct dma_fence *fence)
+  * dma_fence_chain_alloc
+  *
+  * Returns a new struct dma_fence_chain object or NULL on failure.
++ *
++ * This specialized allocator has to be a macro for its allocations to be
++ * accounted separately (to have a separate alloc_tag). The typecast is
++ * intentional to enforce typesafety.
+  */
+ #define dma_fence_chain_alloc()	\
+ 		((struct dma_fence_chain *)kmalloc(sizeof(struct dma_fence_chain), GFP_KERNEL))
+diff --git a/include/linux/hid_bpf.h b/include/linux/hid_bpf.h
+index eec2592dec12..99a3edb6cf07 100644
+--- a/include/linux/hid_bpf.h
++++ b/include/linux/hid_bpf.h
+@@ -152,6 +152,11 @@ static inline int hid_bpf_connect_device(struct hid_device *hdev) { return 0; }
+ static inline void hid_bpf_disconnect_device(struct hid_device *hdev) {}
+ static inline void hid_bpf_destroy_device(struct hid_device *hid) {}
+ static inline void hid_bpf_device_init(struct hid_device *hid) {}
++/*
++ * This specialized allocator has to be a macro for its allocations to be
++ * accounted separately (to have a separate alloc_tag). The typecast is
++ * intentional to enforce typesafety.
++ */
+ #define call_hid_bpf_rdesc_fixup(_hdev, _rdesc, _size)	\
+ 		((u8 *)kmemdup(_rdesc, *(_size), GFP_KERNEL))
+ 
+diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+index ab04c1c27fae..a280f42c8c76 100644
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -1588,6 +1588,11 @@ void jbd2_journal_put_journal_head(struct journal_head *jh);
+  */
+ extern struct kmem_cache *jbd2_handle_cache;
+ 
++/*
++ * This specialized allocator has to be a macro for its allocations to be
++ * accounted separately (to have a separate alloc_tag). The typecast is
++ * intentional to enforce typesafety.
++ */
+ #define jbd2_alloc_handle(_gfp_flags)	\
+ 		((handle_t *)kmem_cache_zalloc(jbd2_handle_cache, _gfp_flags))
+ 
+@@ -1602,6 +1607,11 @@ static inline void jbd2_free_handle(handle_t *handle)
+  */
+ extern struct kmem_cache *jbd2_inode_cache;
+ 
++/*
++ * This specialized allocator has to be a macro for its allocations to be
++ * accounted separately (to have a separate alloc_tag). The typecast is
++ * intentional to enforce typesafety.
++ */
+ #define jbd2_alloc_inode(_gfp_flags)	\
+ 		((struct jbd2_inode *)kmem_cache_alloc(jbd2_inode_cache, _gfp_flags))
+ 
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 1c2902eaebd3..fd51f2de51da 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -3400,6 +3400,10 @@ static inline struct page *__dev_alloc_pages_noprof(gfp_t gfp_mask,
+ }
+ #define __dev_alloc_pages(...)	alloc_hooks(__dev_alloc_pages_noprof(__VA_ARGS__))
+ 
++/*
++ * This specialized allocator has to be a macro for its allocations to be
++ * accounted separately (to have a separate alloc_tag).
++ */
+ #define dev_alloc_pages(_order) __dev_alloc_pages(GFP_ATOMIC | __GFP_NOWARN, _order)
+ 
+ /**
+@@ -3416,6 +3420,10 @@ static inline struct page *__dev_alloc_page_noprof(gfp_t gfp_mask)
+ }
+ #define __dev_alloc_page(...)	alloc_hooks(__dev_alloc_page_noprof(__VA_ARGS__))
+ 
++/*
++ * This specialized allocator has to be a macro for its allocations to be
++ * accounted separately (to have a separate alloc_tag).
++ */
+ #define dev_alloc_page()	dev_alloc_pages(0)
+ 
+ /**
+diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+index c9efda9df285..d9b03e0746e7 100644
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -414,6 +414,11 @@ void sk_psock_stop_verdict(struct sock *sk, struct sk_psock *psock);
+ int sk_psock_msg_verdict(struct sock *sk, struct sk_psock *psock,
+ 			 struct sk_msg *msg);
+ 
++/*
++ * This specialized allocator has to be a macro for its allocations to be
++ * accounted separately (to have a separate alloc_tag). The typecast is
++ * intentional to enforce typesafety.
++ */
+ #define sk_psock_init_link()	\
+ 		((struct sk_psock_link *)kzalloc(sizeof(struct sk_psock_link),	\
+ 						 GFP_ATOMIC | __GFP_NOWARN))
 
-The point stands, though - statx isn't a replacement for existing binaries.
+base-commit: 8a9c6c40432e265600232b864f97d7c675e8be52
+-- 
+2.45.2.803.g4e1b14247a-goog
 
-             Linus
