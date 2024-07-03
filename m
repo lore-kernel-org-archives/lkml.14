@@ -1,112 +1,277 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A25191F7C;
-	Wed,  3 Jul 2024 10:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B770F18C348
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003651; cv=none; b=ax822m8tF3L8gC1nAsSunZNfSliKff0ugbE5jfguoV7TI4lpiJpPhegZg7OF5M7xN73czMOT7ymEgm6AeDh2VKQOx/wpCLe7hqPcaH2n3aYNt2Q1PF8J6Zr2yGB6h/dBMZpXSkx5otG/jGpJs4iKmgw42iFi/YEXJEZgAOGCT9c=
+	t=1720003660; cv=none; b=Jod6waxvTI/oiN3gpgmxlDGIQj3b5jaN2UcCYjM0Xm2fZqFjjJ1o4HxTrl9kDmEghvr/a3XnHrNnPBMeFqwv6DZjRhyLCOgrPMBUA4PbFhyrEkgnjKzo4yEhmOja+5xdtX6trtKbzdsg8KEVKRsrBA+VpQy5idgN7t+aQ8+Wv/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003651; c=relaxed/simple;
-	bh=vdFTUY9nNj7LgWRzHeIcZNDEjYdAlSuD7fp++jdPR4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gzw8dMmnfRmUfyWVjaTk9xsHS0XPfHol9pfsO2z7pFvq4/NkycLNgACsIT/3am7ccWxGeF3bwZ+axlvdW1kGcyCnbyW2iBSa8Q0WFrd2iAaC9wuIdAkER0HTRSRwHQLFvwUS+1hJRcmpNyglp3vipkIMGgPkI2BDRBhp53afA14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=uvNzKFQd; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1720003660; c=relaxed/simple;
+	bh=zDcA3kVnwBsHHRrz1TXGJ78LB7jEWJ9deRMN/t5hJak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IjL0BC7EOVbd99GXsfJ8uplTchHdLOYLa0ezgouMe+XFgERqB/HF5zdkcJ+Q3/qRJ6ZaQZ0kETrLR2Jt9ztAubYS9r1yQWXEd9ZU5qc/I5bwbb/c86CR/ZFFPSiTUxIibmHfj9agQy/+BQIDbyJu5WDABeFmIgSfwEL7F8b8Wrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BniktTIX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Mj3IDtQg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BniktTIX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Mj3IDtQg; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="uvNzKFQd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1720003636;
-	bh=vdFTUY9nNj7LgWRzHeIcZNDEjYdAlSuD7fp++jdPR4M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uvNzKFQdPFvMQuXC6Hf0my6vL7liE+AYcLPM5NtYmRpergtzc4u8+ZMaDDRCmip8O
-	 q/+fnIdO5MxuPWNVZWwyIU8J57Q+ObWfXpmTMJM+PBYp5KbZ8AIShSABFqlJ7MGDCH
-	 erDYjdiL9rJ0WyU/B5O0XNAr+YsClplMQKSrAAql92U0BbCPfN7jMjkkRtQygpZmqE
-	 nb1eg6WVLZp+Hw/hFWzz43Oru+up11bW7FPXRlHjGXOURb2YIrF8lwgopY0omQi1No
-	 d4eezfstboPNxPNGAsYxzFh1SRVbeenB3yWwbn+OM/vBPjS7OsFCh1nHEcyO/tJgUp
-	 qtwUcKGlhjV5g==
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 1727E60079;
-	Wed,  3 Jul 2024 10:46:59 +0000 (UTC)
-Received: by x201s (Postfix, from userid 1000)
-	id 0BB032044BD; Wed, 03 Jul 2024 10:46:23 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	Davide Caratti <dcaratti@redhat.com>,
-	Ilya Maximets <i.maximets@ovn.org>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Ratheesh Kannoth <rkannoth@marvell.com>,
-	Florian Westphal <fw@strlen.de>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 3/9] net/sched: cls_flower: add policy for TCA_FLOWER_KEY_FLAGS
-Date: Wed,  3 Jul 2024 10:45:52 +0000
-Message-ID: <20240703104600.455125-4-ast@fiberby.net>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240703104600.455125-1-ast@fiberby.net>
-References: <20240703104600.455125-1-ast@fiberby.net>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BniktTIX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Mj3IDtQg";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BniktTIX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Mj3IDtQg"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C0B981FCD5;
+	Wed,  3 Jul 2024 10:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1720003655; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sd/3698zPjMXhtpZ19auMMYBrjyhs4iVIUv6dBSSr70=;
+	b=BniktTIXUY2cV0SFH4BGujRZ6Dq4fAx1yJ+R6B+HQjHcG/m9MbcQRsJaY8Ygjey9OzqOal
+	tPy9ixo8az8epCUo2QRC4wLh8gI4Z2S3LUPsIr0gRtzGhnQ0RQMISE7JYZUJkcM6z7n4DJ
+	ioj510XthAw0Kp0mCafjoqDcdTeLTNg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1720003655;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sd/3698zPjMXhtpZ19auMMYBrjyhs4iVIUv6dBSSr70=;
+	b=Mj3IDtQg0I3mH0J71a6dT18qzZmm0PBJIcYx2WPGJ8OUjZw5VX/IzQqms4oW5t5UJSYUVM
+	QgGYkN05eZ432WDA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=BniktTIX;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Mj3IDtQg
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1720003655; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sd/3698zPjMXhtpZ19auMMYBrjyhs4iVIUv6dBSSr70=;
+	b=BniktTIXUY2cV0SFH4BGujRZ6Dq4fAx1yJ+R6B+HQjHcG/m9MbcQRsJaY8Ygjey9OzqOal
+	tPy9ixo8az8epCUo2QRC4wLh8gI4Z2S3LUPsIr0gRtzGhnQ0RQMISE7JYZUJkcM6z7n4DJ
+	ioj510XthAw0Kp0mCafjoqDcdTeLTNg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1720003655;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sd/3698zPjMXhtpZ19auMMYBrjyhs4iVIUv6dBSSr70=;
+	b=Mj3IDtQg0I3mH0J71a6dT18qzZmm0PBJIcYx2WPGJ8OUjZw5VX/IzQqms4oW5t5UJSYUVM
+	QgGYkN05eZ432WDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9E1D713889;
+	Wed,  3 Jul 2024 10:47:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id RwBCJkcshWYlbQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 03 Jul 2024 10:47:35 +0000
+Message-ID: <be221a24-fec2-4ae4-9020-c684902870e7@suse.cz>
+Date: Wed, 3 Jul 2024 12:47:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] mm, slab: move allocation tagging code in the alloc
+ path into a hook
+Content-Language: en-US
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, cl@linux.com, penberg@kernel.org,
+ rientjes@google.com, iamjoonsoo.kim@lge.com, roman.gushchin@linux.dev,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240703015354.3370503-1-surenb@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20240703015354.3370503-1-surenb@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	XM_UA_NO_VERSION(0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: C0B981FCD5
+X-Spam-Flag: NO
+X-Spam-Score: -4.50
+X-Spam-Level: 
 
-This policy guards fl_set_key_flags() from seeing flags
-not used in the context of TCA_FLOWER_KEY_FLAGS.
+On 7/3/24 3:53 AM, Suren Baghdasaryan wrote:
+> Move allocation tagging specific code in the allocation path into
+> alloc_tagging_slab_alloc_hook, similar to how freeing path uses
+> alloc_tagging_slab_free_hook. No functional changes, just code
+> cleanup.
+> 
+> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> ---
+>  mm/slub.c | 34 +++++++++++++++++++++++++++++-----
+>  1 file changed, 29 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 4927edec6a8c..99d53190cfcf 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -2033,11 +2033,18 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
+>  	return slab_obj_exts(slab) + obj_to_index(s, slab, p);
+>  }
+>  
+> +#ifdef CONFIG_MEM_ALLOC_PROFILING
 
-In order For the policy check to be performed with the
-correct endianness, then we also needs to change the
-attribute type to NLA_BE32 (Thanks Davide).
+I think if you extract this whole #ifdef CONFIG_MEM_ALLOC_PROFILING section
+to go outside of CONFIG_SLAB_OBJ_EXT sections, i.e. below the final
 
-TCA_FLOWER_KEY_FLAGS{,_MASK} already has a be32 comment
-in include/uapi/linux/pkt_cls.h.
+#endif /* CONFIG_SLAB_OBJ_EXT */
 
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
----
- net/sched/cls_flower.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+then it wouldn't be necessary to have two instances of the empty hooks?
 
-diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
-index 6a5cecfd9561..fc9a9a0b4897 100644
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -41,6 +41,10 @@
- #define TCA_FLOWER_KEY_CT_FLAGS_MASK \
- 		(TCA_FLOWER_KEY_CT_FLAGS_MAX - 1)
- 
-+#define TCA_FLOWER_KEY_FLAGS_POLICY_MASK \
-+		(TCA_FLOWER_KEY_FLAGS_IS_FRAGMENT | \
-+		TCA_FLOWER_KEY_FLAGS_FRAG_IS_FIRST)
-+
- #define TUNNEL_FLAGS_PRESENT (\
- 	_BITUL(IP_TUNNEL_CSUM_BIT) |		\
- 	_BITUL(IP_TUNNEL_DONT_FRAGMENT_BIT) |	\
-@@ -676,8 +680,10 @@ static const struct nla_policy fl_policy[TCA_FLOWER_MAX + 1] = {
- 	[TCA_FLOWER_KEY_ENC_UDP_SRC_PORT_MASK]	= { .type = NLA_U16 },
- 	[TCA_FLOWER_KEY_ENC_UDP_DST_PORT]	= { .type = NLA_U16 },
- 	[TCA_FLOWER_KEY_ENC_UDP_DST_PORT_MASK]	= { .type = NLA_U16 },
--	[TCA_FLOWER_KEY_FLAGS]		= { .type = NLA_U32 },
--	[TCA_FLOWER_KEY_FLAGS_MASK]	= { .type = NLA_U32 },
-+	[TCA_FLOWER_KEY_FLAGS]		= NLA_POLICY_MASK(NLA_BE32,
-+							  TCA_FLOWER_KEY_FLAGS_POLICY_MASK),
-+	[TCA_FLOWER_KEY_FLAGS_MASK]	= NLA_POLICY_MASK(NLA_BE32,
-+							  TCA_FLOWER_KEY_FLAGS_POLICY_MASK),
- 	[TCA_FLOWER_KEY_ICMPV4_TYPE]	= { .type = NLA_U8 },
- 	[TCA_FLOWER_KEY_ICMPV4_TYPE_MASK] = { .type = NLA_U8 },
- 	[TCA_FLOWER_KEY_ICMPV4_CODE]	= { .type = NLA_U8 },
--- 
-2.45.2
+> +
+> +static inline void
+> +alloc_tagging_slab_alloc_hook(struct slabobj_ext *obj_exts, unsigned int size)
+> +{
+> +	alloc_tag_add(&obj_exts->ref, current->alloc_tag, size);
+> +}
+> +
+>  static inline void
+>  alloc_tagging_slab_free_hook(struct kmem_cache *s, struct slab *slab, void **p,
+>  			     int objects)
+>  {
+> -#ifdef CONFIG_MEM_ALLOC_PROFILING
+>  	struct slabobj_ext *obj_exts;
+>  	int i;
+>  
+> @@ -2053,9 +2060,23 @@ alloc_tagging_slab_free_hook(struct kmem_cache *s, struct slab *slab, void **p,
+>  
+>  		alloc_tag_sub(&obj_exts[off].ref, s->size);
+>  	}
+> -#endif
+>  }
+>  
+> +#else /* CONFIG_MEM_ALLOC_PROFILING */
+> +
+> +static inline void
+> +alloc_tagging_slab_alloc_hook(struct slabobj_ext *obj_exts, unsigned int size)
+> +{
+> +}
+> +
+> +static inline void
+> +alloc_tagging_slab_free_hook(struct kmem_cache *s, struct slab *slab, void **p,
+> +			     int objects)
+> +{
+> +}
+> +
+> +#endif /* CONFIG_MEM_ALLOC_PROFILING*/
+> +
+>  #else /* CONFIG_SLAB_OBJ_EXT */
+>  
+>  static int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+> @@ -2079,6 +2100,11 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
+>  	return NULL;
+>  }
+>  
+> +static inline void
+> +alloc_tagging_slab_alloc_hook(struct slabobj_ext *obj_exts, unsigned int size)
+> +{
+> +}
+> +
+>  static inline void
+>  alloc_tagging_slab_free_hook(struct kmem_cache *s, struct slab *slab, void **p,
+>  			     int objects)
+> @@ -3944,7 +3970,6 @@ bool slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
+>  		kmemleak_alloc_recursive(p[i], s->object_size, 1,
+>  					 s->flags, init_flags);
+>  		kmsan_slab_alloc(s, p[i], init_flags);
+> -#ifdef CONFIG_MEM_ALLOC_PROFILING
+>  		if (need_slab_obj_ext()) {
+>  			struct slabobj_ext *obj_exts;
+>  
+> @@ -3955,9 +3980,8 @@ bool slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
+>  			 * check should be added before alloc_tag_add().
+>  			 */
+>  			if (likely(obj_exts))
+> -				alloc_tag_add(&obj_exts->ref, current->alloc_tag, s->size);
+> +				alloc_tagging_slab_alloc_hook(obj_exts, s->size);
+>  		}
+
+Could this whole "if (need_slab_obj_ext())" block be part of
+alloc_tagging_slab_alloc_hook()? That would match
+__memcg_slab_post_alloc_hook also taking care of calloing
+alloc_slab_obj_exts on its own. Maybe then we won't even need empty versions
+of prepare_slab_obj_exts_hook()
+
+> -#endif
+>  	}
+>  
+>  	return memcg_slab_post_alloc_hook(s, lru, flags, size, p);
+> 
+> base-commit: e9d22f7a6655941fc8b2b942ed354ec780936b3e
 
