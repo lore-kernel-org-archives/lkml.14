@@ -1,111 +1,71 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pb-smtp21.pobox.com (pb-smtp21.pobox.com [173.228.157.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCB717BCE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6426617BA2
 	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 03:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.228.157.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719977774; cv=none; b=XLapxzhZTukWAOGrSU1XVDE4skZYrrnjmS7MgY/nUh096XVSUfllCZ/PG6GejcFBlle+/3U7dIvJlQNMeB+e4qSd+GFUn3xfc3hI9qwqcb5HkSN3J8Tv3fGP1jEQ6JNhbwkxkVUXWK6q4P8s7EBBSyNZC34Hnb5eXLXq8m/wYNQ=
+	t=1719977774; cv=none; b=dNyMHoTmhDxVkK1A0wgUJ+G7YT2ltRLd6sdUeYfTQL1ZZZ5e0Ua856glQjy/048ZZatcrC03hKX3iYde0W26W9yMp6Is8atvfJRBJtODBNMuKz/NL6/eJm5hrpQAhCo3XVuEpxWWVXRux0jHS2ZSTXfDqioscnD6DUxLMY/GuT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719977774; c=relaxed/simple;
-	bh=kfVfIUpaxcr171PH8DCDoG+zD7xsW9GTLz4zvQJLWMI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=poO3aQDMYMHi2TxSZ541ehJe0keRUQ0if/zssUcB4vkYRAcalM/mMJyQ7+piHHmXsOSQn56G/kwiaRXK6x95ejaU9qf6YbfxARdzeFFFqmgcSRSk4IhOW9050tIVc98kDqHJ5Ql5b89u3wT0y5zWeKwJSPRJprhNDqtrpUikOY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CXmKqFI/; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=sJ/0Y0US+YmrNKKtDWfsP2IwcHc6tZwz8z7wevcvAC4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y6NXaFciidN+HZ+pHQfQWzccj1RNnVrG2R3o7KrR7UEb4NjbSWJN5014uDbfwS779K+Zt77Dv5FTkbwIUuwkBZbum9fzExmfvZmv6smWhtO+sEOjdssrXtnCkvR7YQ4Kpo6bb1jiwaXGRFp1RpFUI9tMIDsjmHqMp/OxMN1kLPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=kN8xoRpK; dkim=fail (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=Wsd/zUeQ reason="signature verification failed"; arc=none smtp.client-ip=173.228.157.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXmKqFI/"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fab03d2f23so38079555ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 20:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719977772; x=1720582572; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4GJ1xuGIg/34+KoYPJFdTKabqBtfsZIj48w+G481zs0=;
-        b=CXmKqFI/wjz+Yy3dO4pEu/r4vKYHfNmxIS7xtN/RHG19AaboGU4ZDUrST6dTi3IKR8
-         VqDLmN4hLWtWSBfWrAzdImi21TKG1+3Rgg0Stg1yjaV9U/pDPUnpbqyceobAcGCyv7O+
-         TzJu3MtIs4MQZprU0bhXRUv+5UbnNz/APFzb2tl+cfLAQu8RNi8QtMjoUB+AKZ5w8Yb9
-         n68TANI8P+nhhCcJXBiBrBocrhOH+ZxOC5eGw3oDO4eflF+rp/dRvXe3XyIK6CvfzmjA
-         gpp8WXXeY35X/lFOnJ+fa7BF3nvXVDrbEno4ePMDG5XTdDo2Z8fx/JQ/A8BZ2gadNBhM
-         q4ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719977772; x=1720582572;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4GJ1xuGIg/34+KoYPJFdTKabqBtfsZIj48w+G481zs0=;
-        b=G2sPakNEl94DPJ2kyb9E+HsH68fXu0m/snICB+oltchGf4G6VmHSJG3YBUAUwJOoMm
-         fLc4NR3iBMUA3ZfRkJVWIvV9iXS/Xvpibb6QrghHC6ihngTzbUEeclh/jrrGfwn6Mf6V
-         dfiPAAzopz1BN2VVVMPqUz+38siwjDaEf5UI2D9nyV2N9EbPQ2N9UX2Rv7yMHfpOzfM9
-         WvHK4fwDG7HBJcEv/WHsRPhBQF/0nIC5Fjb7qkM+Ck4E2cc88woMX6dhXqV79iP+MQC4
-         D8QKS1onBj/xOTNZCvF5AcTvR192HPL+SIqOIwHUPY0is8r00OGqfduNIos9jl/kF++M
-         +7EQ==
-X-Gm-Message-State: AOJu0Yy89r7OZ4KCoxowG1twF3pxZhBjzx3h2fwbgyfL5vLlQyOzXD0H
-	O1o2XDdo36pV7NEz3MP7YdAzea8iB0Xqt40Qix7eMUVzJVgO+RRQfi2HHg==
-X-Google-Smtp-Source: AGHT+IGWu9ztojNDm+/rzblVADUU5I3e7uzJjkc7CF3Q9H/fd/D62poomL6IIZKCcyzRNxj+qpYgHg==
-X-Received: by 2002:a17:902:e88f:b0:1f7:2479:a50b with SMTP id d9443c01a7336-1fadbce9d4emr72308405ad.54.1719977772012;
-        Tue, 02 Jul 2024 20:36:12 -0700 (PDT)
-Received: from localhost ([198.11.178.15])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1faf92d84cbsm22478025ad.127.2024.07.02.20.36.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2024 20:36:11 -0700 (PDT)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH 1/6] workqueue: Register sysfs after the whole creation of the new wq
-Date: Wed,  3 Jul 2024 11:38:50 +0800
-Message-Id: <20240703033855.3373-2-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240703033855.3373-1-jiangshanlai@gmail.com>
-References: <20240703033855.3373-1-jiangshanlai@gmail.com>
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="kN8xoRpK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="Wsd/zUeQ"
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+	by pb-smtp21.pobox.com (Postfix) with ESMTP id DDA103647C;
+	Tue,  2 Jul 2024 23:36:11 -0400 (EDT)
+	(envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=from:to:cc
+	:subject:date:message-id:mime-version:content-transfer-encoding;
+	 s=sasl; bh=sJ/0Y0US+YmrNKKtDWfsP2IwcHc6tZwz8z7wevcvAC4=; b=kN8x
+	oRpKQmTu+//YbdeXtzjaWBvjgWUrGWiwS8Jy1asiIuIA1FlY5+Rf9rKWrkz0dzpm
+	e7l6FwA/0H2RSV9+PE2ZbRI2KQe384eqc3Uc67ItqlytAJQoLbNp97qn8AtznanQ
+	tQY0Cek0vYxPW7BKxYxKiiMtmhlb4vQGeGElf6I=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+	by pb-smtp21.pobox.com (Postfix) with ESMTP id C7E653647B;
+	Tue,  2 Jul 2024 23:36:11 -0400 (EDT)
+	(envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=from:to:cc:subject:date:message-id:mime-version:content-transfer-encoding;
+ s=2016-12.pbsmtp; bh=sJ/0Y0US+YmrNKKtDWfsP2IwcHc6tZwz8z7wevcvAC4=;
+ b=Wsd/zUeQRdb4KbG6E+QdHWIunz83HU27AsJNq5lue08+WYfwWm4mmc1M+vBC5RNEvyDwZu5i9BW1mch620FqDFECXZkpmkywSfbagezNeZqUBGQQwoU/n1+E56bIxrKRbQDF+eK2zs3yVGR0DjxTjGL4aI1EDdWSJiPv5c2ie7A=
+Received: from yoda.fluxnic.net (unknown [184.162.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by pb-smtp21.pobox.com (Postfix) with ESMTPSA id CE54D36479;
+	Tue,  2 Jul 2024 23:36:07 -0400 (EDT)
+	(envelope-from nico@fluxnic.net)
+Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 6FD01D31180;
+	Tue,  2 Jul 2024 23:36:05 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Nicolas Pitre <npitre@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] mul_u64_u64_div_u64: new implementation
+Date: Tue,  2 Jul 2024 23:34:07 -0400
+Message-ID: <20240703033552.906852-1-nico@fluxnic.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Pobox-Relay-ID:
+ 62411B34-38ED-11EF-8FCF-DFF1FEA446E2-78420484!pb-smtp21.pobox.com
+Content-Transfer-Encoding: quoted-printable
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+This provides an implementation for mul_u64_u64_div_u64() that always
+produces exact results.
 
-workqueue creation includes adding it to the workqueue list.
+Changes from v1 (https://lkml.org/lkml/2024/6/28/1130):
 
-Prepare for moving the whole workqueue initializing procedure into
-wq_pool_mutex and cpu hotplug locks.
-
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
----
- kernel/workqueue.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 7a33f958dcb2..c738b3024cc2 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -5689,9 +5689,6 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	if (wq_online && init_rescuer(wq) < 0)
- 		goto err_destroy;
- 
--	if ((wq->flags & WQ_SYSFS) && workqueue_sysfs_register(wq))
--		goto err_destroy;
--
- 	/*
- 	 * wq_pool_mutex protects global freeze state and workqueues list.
- 	 * Grab it, adjust max_active and add the new @wq to workqueues
-@@ -5707,6 +5704,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 
- 	mutex_unlock(&wq_pool_mutex);
- 
-+	if ((wq->flags & WQ_SYSFS) && workqueue_sysfs_register(wq))
-+		goto err_destroy;
-+
- 	return wq;
- 
- err_free_node_nr_active:
--- 
-2.19.1.6.gb485710b
-
+- Use the already available u128 type instead of "unsigned __int128".
+- Add a test module.
