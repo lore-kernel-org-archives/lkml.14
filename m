@@ -1,149 +1,255 @@
-Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010009.outbound.protection.outlook.com [52.101.69.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C4917C9EE
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720024347; cv=none; b=iXAGKTP9VieljaB8lSZl7EpYS6rn3QRkOMlL1FdZ1TPmlaOUPCJwwYE5fT8aiOhcoINhzhGAU+oWjV258ficlqFj+TWWOZBNDy9TeKx+3eB0GDjDSS50CMSuVw4gQ+TrSWq8/MiJ5KjhUfn5FINBV/edZyNUfzW95itebDjLLQ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720024347; c=relaxed/simple;
-	bh=6fg4dcswb0DQev8Wi78l8xEElSEY+gN/LTKix/A82Lc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bL3AgkZRZlDGSO5Ill37zdVs74V9EXJViXwVsgx1dHsTNi8238gdFqG9XhrBpwQ2QSmBtkb1BAwUCY//soaQmw8572iqr8+TOB9L9fXE6f45cTsdGGc4AfBVPYFvggZhmOKYZgXAZQPko/ZT6LPqFlK5aSuFRxI2UB5MqoKaCbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=ZToUQMJI; arc=none smtp.client-ip=98.142.107.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42833282E1
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720024386; cv=fail; b=TEtaM/xYPvw+nF0DabMJAhzrXlLvKqLxNmuZKl77DaDlDJyHnJt9k7eS+R4Grou2qC3wwKQGpFUqNL5qdxKLT8Jb1xlmiXZSsfeN47DyNCjJSEjB+RXsL2/j/ou30ADsceMJB62x5omAiifS+9iCkKAL0nDQnQMBE+nRyFHyoG8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720024386; c=relaxed/simple;
+	bh=Gs7wXChJqaTLzE5lh0TEaSZRZKEc1pkI59kk7LP1ze8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=nSeFFwk6cGONC15VBCmu3tuwlltxJnsQjwHo1GRwDY+5wADit15qMt9iYb+z9f0Cj5zejuQnl1Q6K0uwIKF2jq8hX9V3j7QgdExovc9KxUIXuNGZfNY+mdWuXyioiLXV7fPPNfvIXGQ/QRmDacqN21cQ09xCsvt20VCE+Or0HO0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=l63O/Frs; arc=fail smtp.client-ip=52.101.69.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="ZToUQMJI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1iV7tm49eSCwyOVyED7fSFNlOEYvfAvEQ0ypI3kf1ww=; b=ZToUQMJIkNIBcrEMx7cD61NJ1C
-	CRLtbX8YtyICn2iPpXnFdBluNcb3O7trvfhI8lbbQompEgpt5nVz6U0yV0s/6US+rKOn/CQiIfwIK
-	1vgPG/H95XfvzWUcALaAsd5f+wtwQeFsQMRq7SM5HRMCIoCNIF7Uv2BVddA87xCG2AgYyAqPIt92M
-	6Zpo1kZEzmG05YFIdANCyZMe7/cfmbzhU4TRLcE4Ri3HV6+icVNVWWVpuZyQgitbgUHqOX9UMkkNq
-	md4YhLdIHoxfnvQy8c0TcyKfMAECjnGb37ZFjDW9AfDvV3fZg5X4J/wHShcFTPtGjTH/+IJauX3a/
-	lpOB8aUQ==;
-Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:40114 helo=[192.168.0.142])
-	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <david@lechnology.com>)
-	id 1sP2YG-0007NE-1u;
-	Wed, 03 Jul 2024 12:07:38 -0400
-Message-ID: <3f4e9dfa-6373-4b34-8097-48c870e69daa@lechnology.com>
-Date: Wed, 3 Jul 2024 11:07:35 -0500
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="l63O/Frs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M7FJ/6lfYsJ/58lNbUhoNWBgpx7G1LlSLNHTLY4jYsYcfMN0JHZtyV43S9t9NWU2zeRsB+PKk8Sl3cbrd18f3l0AyMpzX4bFeo0j7r5RgNHZdkdcxRmtENF84g9p2oWTMQHJFlRWxOF4ieLElXQO5V43qJg6TmM/vNqF4ZzUBoGO3UEopFUWBsynyvBelVwZ/owjXIzNE7XbpzfsxIEjbCQNwU6lmsRXbiBbolz0Rud9slY413aBuxwLwPMuX8XPfkW6p3sB4fy7aOFCWeHxg9d+lkNGCgFrLIO4iAAMvl5cpbJuE4sT1AjaiHqkhw9qBiBPfzZcSn+i+5URo/dDQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fiMGaSdwi8CrmbPKBdzCI3wWPztvyWNa9svQfeECg48=;
+ b=dgUuRZBqBFyQeDVW4OG/1Gsj+SdDtFRTTYOhQdZnMApsdtNff0cPwcL87UevnQgVedz3KwBTzym1Hrop5Kh6jLjrB7venRj8zjwCCxfyss92b2Ci7UyWZszMVuzHQMDYvacv9iDOuQVqwsp5IG1lWOjY2goRSdNVJPlxdmix97gLby70aKd7M9v2XgHKuxw6UVnbpJbWOQbFQ9O6+KywMUWggru130THWD5c+9u5oVFJW4NmwTc78A4AP8vq60B8i6xWOHbtffvPRlgatQz1k9q8KA6gT+qjaP9PyV/IAfFmvwboStdh4THfSmiFdW1OxYshtpxkiD+kGbXMUIjBOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fiMGaSdwi8CrmbPKBdzCI3wWPztvyWNa9svQfeECg48=;
+ b=l63O/Frs6sUHOQMDiruV35Uw/W7t5PkTHpxYuoJrh2VsJ39qRwtFF1lggK3zCG7WUqLV+PCiAPSvzbf88z+c066OV4LeO4SfDicopXQyOthKshNUBxq6ItBgez3VwnVY+AfXLwIOQMKlY9b2wh5RvU5NBKq76+09MsWiUOlHfsc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
+ by AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.29; Wed, 3 Jul
+ 2024 16:33:01 +0000
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::21bf:975e:f24d:1612]) by PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::21bf:975e:f24d:1612%2]) with mapi id 15.20.7698.025; Wed, 3 Jul 2024
+ 16:33:01 +0000
+From: Shenwei Wang <shenwei.wang@nxp.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-imx@nxp.com,
+	Shenwei Wang <shenwei.wang@nxp.com>
+Subject: [PATCH] irqchip/imx-irqsteer: Add irq_bus_lock/sync_unlock handlers
+Date: Wed,  3 Jul 2024 11:32:50 -0500
+Message-Id: <20240703163250.47887-1-shenwei.wang@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0071.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::16) To PAXPR04MB9185.eurprd04.prod.outlook.com
+ (2603:10a6:102:231::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] drm/tiny: Add support for Sitronix ST7539
-To: Christian Eggers <ceggers@arri.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <20240703140504.8518-1-ceggers@arri.de>
-Content-Language: en-US
-From: David Lechner <david@lechnology.com>
-Autocrypt: addr=david@lechnology.com; keydata=
- xsFNBFFxkZ8BEADXzbnj9t8XSZYxKJGHdHqYgEBVzRElb3+f11qhDZKzVCMsn1+AN+PlHqC7
- VrCWLsWTSY7WsHB2fW3aXaoidtac5FYoX2IXAun1Sbv15NcBdapImkMv6zxhAyWz6LqPfdCp
- QV+3x6qwUPFeLHdmew8mkSq56qTFgDQr9oQhsrXKHkXFD7aIAf5bM6janQCHgGTVDraRDfEO
- rV9rj7Wu/SfjUCVSCvW/SuWBa3IXTLNgbrNwBfo7Pl/tHuto0jxkVCIJ6J3xa85BKMw1WjA+
- jKzh12S6KWrLUfhEUt64G9WJHiZOnVAjxgCR7TUahVM2OQHcp49ouG/JZsGNniulXH4ErA2O
- Wt6seUEx8XQIm48H96RWgKrwKJ+1WoLEmUcYOJDZUcguMZVc3Astx8aSaRjf6IRBO8XlJSJV
- OorkguvrTQBZJfjoicuFx7VlpdMggMZayv0cqEvzZMSHUt8DCUG74rLhtab9LCg/9wdCwqyE
- JEi/8jaV7JWxwiCmzVpw0mHn1DiUlp5kapZT+Hart0Gc1WW915psA4G6KneisFM5DJe+S5mn
- dUJb5IttTOx37jQQi2igwlSBdSC/M+Zy3sb+DXYJUVjVxK56RGAnlSvjHUx/TkID6Vb6HXvm
- Fgm9vQamTEf+C3XzlY2v1YaMMX8yQjfrzQSoGfB0+9zaD9J/cwARAQABzSREYXZpZCBMZWNo
- bmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT7CwXgEEwECACIFAlFxkZ8CGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAAAoJEB+K+IyC93wDdcMQALkIsjA/nWJZY+Z6AkpL9HfeyYA6D2LK
- LFwWQ5fPok9G5wArvf+yHnbnVvtlZKPEdUAzbBacaATeLGRC0Kzei1asDgb/IR5YXQRMdshj
- 5Bd+DutTbT270p6jrzI3p7r1K7AycFcpfgSpOUQY7Wde7AT7KHCHaDjsy/a4d8EVjEhKZBg1
- wgBr8L+2lVgjQP4x/tuj4KrWKygcCNiombhKW4iz2uR7EspoS18D+9MD8vLVrOqDKBWGswes
- cDblcjMv8FXIc7JR8x6ZbubFODoRzAs4MAlOgGT8FBAK/DUD63gMHTtKJrVghjoDNe77pmW1
- zQK0P0zu9zciPg4h3AE+ENsJxqHoOEwCvJMQbhliFVYL4O0tM648V6K0o1btt4Ps0FEFASfX
- ZDa7uO30YZG+uqevP4wp6bfPpiHEUku32tSKZstbxljprLe0wDwYFSgXvVYUDUD6G3N1e3p0
- xDXo+Oj/8yoZaPrOzMbqL66uSVghVTya7FjgT2aG1HfzH19NfO7SN+BQ4ld94gnDL2wWjA6h
- pddm+me8Aqa/xp0Wfhzs77/tyYd2FhV8RRs/tt1RN/8COblLnFGpNjtHCtpUuPCMTPN04+hg
- fEQVsW03//yRgt4teDogaklG+mYSbpkANMjyMN1LKVWM3YJTQcKIgpT8HvZwdrYBjB8CMHLb
- K2zgzsFNBFFxkZ8BEADSVjyceG8Up24FFXwv5YmV7yX520kM97N11e1RJVMI1RSU+Na3Xo9J
- 1BW6EFMAdibD6hH8PiMmToKxBrfYSLStLh2MbHA2T/3zqicU1nuk376LMyrAuoV/fl8/7Jld
- wh1c9AADaYXNQfZ84R6nyaTRjy4fqcc/dG2kw5ZMln909SMKZc3HdVynmo9pLT2HBOnXu2d3
- bIGmzuDnDXzh1X8+ods4gViuvB31xU1WiANr4TbhaNU+/LmEVfvhS+34Cmz3U5Xs5x7nWdpM
- 6fFfDOSz2sIYXOGAcaV3oJ121Uul2U2bMTsXxiwdbjmZP9jrzEfvhD5KIOutX+0OzdtM9QVB
- 70QQOEh3maW/FwGdL5stYcadsBiEEI6Y2ymVpBgzrPS6HzC+UZLUShOE+aLx+SYBYAuypikM
- PvG9W3MqWHCsXXEfyp2mCeorKb7PafyaBO/E5REjPmYUpkGMNZH1lGV3jegE9WdOBfXW9xvC
- wf0UefoFaVhjsjtzvl8lMQndrDBdKPpJ7zIIG6FGSsUYmCtvE+JAk83tfpUpSZKDSzsqtLTI
- 8GE2fQzEuZcBqm6Yk2V1+u6rjUjmqEBIzunyeUupaUc+p00JiwNE8v/wcx7UbD5m+PGOkNoL
- MLe0ti0O7nFlY8avZzy3eLBQenu4WsJjPVYeQGeGB3oLvCGIhT9/WwARAQABwsFfBBgBAgAJ
- BQJRcZGfAhsMAAoJEB+K+IyC93wDC44P/0bAjHgFUPHl7jG5CrWGwgdTNN8NrjpmIxSk37kI
- uKMzcwP9BWhFF0mx6mCUEaxvGdAQ9Va/uXB2TOyhLCGXhlf8uCwxcIyrOlhi2bK6ZIwwovyj
- jh7GCRnm8cP8ohDCJlDUpHkOpmU4tcapbZiBrFaFAahxPMjwK9GJ3JY0lx63McgCEIwm6txN
- cMnVX5Y3HeW5Wo8DtmeM3XajJLFaBXIhEfoNHMfDON6UGiXFeR8S9W8dpaX8XEwzPUjZyOG2
- LvOMAEPXx+kB9mZPTogong8LekL1HZHSY4OYffzQy5fVE+woHAMADkrmuosGkTRCP4IQHXOa
- goax/Dox01lKTLnlUL1iWWQjfRaFXVKxEc2PF1RZUpoO/IQYFB1twcaF2ibT3TlGolbmb3qU
- YBo/Apl5GJUj/xOWwrbikD+Ci+vx8yuFUlulbS9Ht+3z1dFjBUDbtZ4Bdy/1heNpA9xORiRs
- +M4GyTil33pnBXEZp29nh7ev4VJ96sVvnQFzls3motvG+pq/c37Ms1gYayeCzA2iCDuKx6Zk
- ybHg7IzNEduqZQ4bkaBpnEt+vwE3Gg5l4dAUFWAs9qY13nyBANQ282FNctziEHCUJZ/Map6T
- dzHWO6hU1HuvmlwcJSFCOey8yhkt386E6KfVYzrIhwTtabg+DLyMZK40Rop1VcU7Nx0M
-In-Reply-To: <20240703140504.8518-1-ceggers@arri.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9185:EE_|AS8PR04MB8676:EE_
+X-MS-Office365-Filtering-Correlation-Id: 88e48531-021c-4db6-685d-08dc9b7dce13
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?uPOohj3JHFDIZyvU0HElcRBpv4yUoeTM5sMKx+WxreDLLjADAgpnQlaShQov?=
+ =?us-ascii?Q?/T+jdjNVDH81hpzujerN3odRd/kT/vvD98BSk6/oDIINZOnsLCSpUqcNj3sT?=
+ =?us-ascii?Q?ANJl4bZxHIhTqF6+k72aGMMQoyWHRj5tVbT2mre9YIlzljCHrmb4lm7X2w6D?=
+ =?us-ascii?Q?1gl/fiD87T6JgBLfJTbF1QRiKcj576JoNR2AqnOYTNJggHYIOmbfh5vkb87e?=
+ =?us-ascii?Q?7+TUfy76lFXMdNBQ2QpU+29+U4HeO2xD9t0s5zUQBaVxSiaq+SAGw6NKqWTt?=
+ =?us-ascii?Q?nGOgF9hI/+cBEW4riV3FmSwwOtv1SqyXeKrP0N1cJ71qAoLc5Nj3yakUaEs9?=
+ =?us-ascii?Q?MWi29Snz1MIRpOO3+EKIwfvhGbrSOxboaDttY3+yDwQ2pMfAl/WebCqznCxk?=
+ =?us-ascii?Q?6whEEvIt5sVJei2eApiK2XySnNN1nIsSlRDBtR/dYF4yWQH8Auq3EH/WxYsc?=
+ =?us-ascii?Q?wkegxUb7+RQ5eFODTZLsavzcuaRsEMXldRN3/DPdB0yUXaDlZwgqD1XMU7Sw?=
+ =?us-ascii?Q?i1jNujF0Hls9MoIWfbcfymiIoXDDuD7uvYadi9hrjqbBhPzhnsR3FcAqQkGl?=
+ =?us-ascii?Q?OuPS5TM0W2/eppOBBBi42B7VU2eowejxSr7PCGyEiWazr0INfdyY/iqMmgm5?=
+ =?us-ascii?Q?8hCuYVGMnDGzIKm16EH1SY3+m+KTqvX8jzJ8Ra1ZajTyH3XOx8olq+o2SrfF?=
+ =?us-ascii?Q?6K0fSmFR9HDuCVJ1+cbYakKE3y6AzT2ozWhmATd+uWtpUVu8ICWh7j+G32+a?=
+ =?us-ascii?Q?7NwnbEak4u7BtkjNoTrp2eIflMKqlh+agLaseh1bWSRhJzZRALeNG4XhTR8Z?=
+ =?us-ascii?Q?b+fqGiGVi+2t/QrQ7iCe9nPlKHYCjksxMmxIMl7H40dKyXvguvgXHP/4AAYX?=
+ =?us-ascii?Q?sItROfmAXUD+aB5l5uWJjAJwZTW9H0eFX86PswciOgdnfJ+EMzawpoLxITTS?=
+ =?us-ascii?Q?7/Y05V2hSTrTXglmwJfMxnXoaMcRGrT3S056d9VidECfiO3mPr83uEa3Dx58?=
+ =?us-ascii?Q?cUaeljiQtqJtNgm0anHPLwspdE0iSecBzZJjaBGLvVWqpgCscMUJwidvqYXb?=
+ =?us-ascii?Q?1muuJA5dFWMueWgMWsEj7SPQwSvIEG4vRyk7cFjEbj4Q43qtDKPVSQXXR68Z?=
+ =?us-ascii?Q?iCE1pGrjlLUeVyYjpek2XwML6Eqg5jWgKugZxUCYwiCo+WSdB8jLxFkXnPSo?=
+ =?us-ascii?Q?FheHBNpxekR5f0snpFailb/9Z5WUQzYsLnt//vI47c33zfS1MRPDMjY2dMCp?=
+ =?us-ascii?Q?KhDjjYGO//yLsnJwpqEyuySyA5l7jwJOmlcsI0TveWoPkqnrvFbnDz/d+YIi?=
+ =?us-ascii?Q?axHjcZrTpuioRrQ1k3aUBcdupTLJ3JscTr/uvKfIY0AZDpcmGJqRuFgkPa24?=
+ =?us-ascii?Q?Eow62vIw6A1WzXK2GSxH+LoIJ7JbfQpy8kX3lwYHhR/QWXAmIw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ThQ+NKcp/ZdAgCge06KPMWyI5iEgDCb/14fIXLuCbnoecvVn1CM05Jha8iS0?=
+ =?us-ascii?Q?CFaZgT4QMUiXWzmt6qq/mZYDq9TmhCwqe0LStWsXIUJYgBkHanKK+0Hxhq1k?=
+ =?us-ascii?Q?8LI4tv4UusMZaJtmPOnpuOjfP9AvEP89ia8o9B6SCyvBCM6h+JFohFvYvrdU?=
+ =?us-ascii?Q?2LygGDLNTO4U95XIxLtpCjo0R4/sUU7dCxDPrSH63JF5mBiv6Eh5A/QUjJPc?=
+ =?us-ascii?Q?M5aU1ojCfusl2faSui2k+IomuAs76O8hr6sUBDoawC3q51DmeEnfIa96ivmL?=
+ =?us-ascii?Q?hnQtrGOem7hXuRREjCn2qvl7rMbDWMJukykIUhe7rJ4B0m3kNRDa4GmtWfnZ?=
+ =?us-ascii?Q?AI+qxUFEzQVutNPjY4UQp+MM8k4LpM3rBm8T86EkDFeT0PFKkPUt1Xl5uGFx?=
+ =?us-ascii?Q?st1WeNdwRPHQ69KGN66ocdg87O8W3JrhQ9MMeQigtru4pNzvGBNYhfTTE+t+?=
+ =?us-ascii?Q?EHMpQeNNIfHhFjvmPOh/bGQ66gLw8MxX80ELBrlLv7JJLL/IQ5eQnn4OVUbx?=
+ =?us-ascii?Q?Bky8ZPqyxHtn4Jgn9FwmKRW9aX3gno6Lc6xIDKTmCoxzgghgtfw2xJNuXElJ?=
+ =?us-ascii?Q?fna82pJ1z+4Ztf7/z9EdMnCTmFBFGfJI88znH5SC3wj9GvhTdLGV4sCb74MZ?=
+ =?us-ascii?Q?dMH/8jN0s2LKS+DiX47WMasF+n7Z7TSPAn42HMzecUas1muWSd90LKhqMesP?=
+ =?us-ascii?Q?Evk7V+xOPqiT/2Mg7eJzxA470K50a8mSiS5fEVUCPZCrJVWT0FiNt5CxosZ1?=
+ =?us-ascii?Q?7UNLUVoXy4zXYN9rtDRdY02yL4Dy+w8ZfkILPwzzikK0GjrBxnpTiiKpB2WP?=
+ =?us-ascii?Q?j7h/B8abQo+18YPDf80btfseHGMa4URjUCGMi1OOBU0Yer6e0OnYP5SzO+sl?=
+ =?us-ascii?Q?QXQ0NkeGYviz3OcDf3xXmF7RsMJOa6X43cJolhAGEF5okIE7B+X0ZxLoXeZI?=
+ =?us-ascii?Q?ZMl4S/T2f4T4F+PMx5ojzahC8qfMAWk8IxTWvj6qywg/iO/zcA4H770pgqkw?=
+ =?us-ascii?Q?j9QEZ6jZX6fBDy/2MV23u/qBYQyncpV0yH0g3MFPwM16y7jtPv5cOkjpCzQ4?=
+ =?us-ascii?Q?zIArAfyM83Tzf46oVWZDBZ9T0H+nMPz95yXr+vMi3c+9x6bxlTuofgL2OF/j?=
+ =?us-ascii?Q?nKNJWRPw1lAX1CtN7wFjIc2UQnbpCqORvk/niyBRUAPP8/56KKNH7nlclTLh?=
+ =?us-ascii?Q?XNt/vuvusKey+7oqwL0rR5uHFGVH7zIiYYO6q5Z0uEbxQK2ZwwiszZNcK3bv?=
+ =?us-ascii?Q?xYx17xTBQyDdNLSlbaESWbnpabXZ2b4SVGQ4V8G3kUcQOFkR83XTkwDnezcz?=
+ =?us-ascii?Q?amUXG6iT3gb3IX1MAiSqPE1i2bZLsPAqBTDi5eq0kdvJ+NljDyHpyv3U5gDc?=
+ =?us-ascii?Q?hv1bbPq7nRyKUUPMC6EPlbJfQ4azDAQ24IEfoa3xhSpm4lmbjvsOkfyNMJev?=
+ =?us-ascii?Q?dllgDUFkSNgcZyyoutAaYQmNXwdkVV6vpROW9g1P2rPZTcOMqp98fN4nlTvz?=
+ =?us-ascii?Q?OAEAEqjgovbPaiJawCTSWLEOYPDDaqQ0c86JR1K03GvN6rc43IODcZw8IjTm?=
+ =?us-ascii?Q?8hGihSWyagZcAOCLhWM0Bmh2C38nvOGKTdWm92ms?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88e48531-021c-4db6-685d-08dc9b7dce13
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 16:33:01.3042
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OUNNy58FfxLHjgCfww8YVPrwTuxKbA7GM4lqOg7XAI43VXsagghroYecmMYt+A31N/4UdR770/Cf5GrwsdAvhg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8676
 
-On 7/3/24 9:05 AM, Christian Eggers wrote:
-> Based on the existing ST7586 driver. But the ST7539 ...
-> - is monochrome only
-> - has 8 VERTICAL pixels per byte
-> - doesn't support any MIPI DCS commands
-> - has (a few) 16 bit commands
-> - doesn't support setting a clipping rect when writing to the RAM
-> - doesn't support rotation (only mirroring of X and/or Y axis)
-> 
-> Questions/TODO:
+Add irq_bus_lock/sync_unlock handlers.
 
-To start with, I would suggest reading [1]. This patch is really hard to
-read because it isn't properly formatted. If you don't change the patch,
-you can resend it as [RFC PATCH RESEND] using `git send-email`, or if you
-do change the patch before re-sending, e.g. because you fixed checkpatch
-style issues, just call it v2.
+Without these handlers, the power domain is automatically activated during
+clk_prepare. However, on certain platforms like i.MX8QM and i.MX8QXP, the
+power-on phase may involve sleep function calls, which can lead to random
+system dumps during driver probes at system boot.
 
-[1]: https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+By adding these handlers, the actual power-on actions are moved to occur
+before clk_prepare, thus resolving the system dump issue.
 
-> - should drivers for such old displays be mainlined?
+The following is the example of system dump on i.MX8QM MEK.
 
-If it is actually going to be used and you are willing to maintain it,
-then yes.
+[    3.135799] BUG: scheduling while atomic: kworker/u13:1/48/0x00000002
+[    3.142270] Modules linked in:
+[    3.145349] CPU: 0 PID: 48 Comm: kworker/u13:1 Not tainted 6.6.3-lts-next-g5a913c7fc95d #1
+[    3.153616] Hardware name: Freescale i.MX8QM MEK (DT)
+[    3.158678] Workqueue: events_unbound deferred_probe_work_func
+[    3.164529] Call trace:
+[    3.166981]  dump_backtrace+0x90/0xe8
+[    3.170652]  show_stack+0x18/0x24
+[    3.173971]  dump_stack_lvl+0x48/0x60
+[    3.177644]  dump_stack+0x18/0x24
+[    3.180964]  __schedule_bug+0x54/0x6c
+[    3.184628]  __schedule+0x7f0/0xa94
+[    3.188121]  schedule+0x5c/0xc4
+[    3.191266]  schedule_preempt_disabled+0x24/0x40
+[    3.195887]  __mutex_lock.constprop.0+0x2c0/0x540
+[    3.200596]  __mutex_lock_slowpath+0x14/0x20
+[    3.204870]  mutex_lock+0x48/0x54
+[    3.208189]  clk_prepare_lock+0x44/0xa0
+[    3.212040]  clk_prepare+0x20/0x44
+[    3.215452]  imx_irqsteer_resume+0x28/0xe0
+[    3.219552]  pm_generic_runtime_resume+0x2c/0x44
+[    3.224174]  __genpd_runtime_resume+0x30/0x80
+[    3.228535]  genpd_runtime_resume+0xc8/0x2c0
+[    3.232809]  __rpm_callback+0x48/0x1d8
+[    3.236562]  rpm_callback+0x6c/0x78
+[    3.240055]  rpm_resume+0x490/0x6b4
+[    3.243549]  __pm_runtime_resume+0x50/0x94
+[    3.247648]  irq_chip_pm_get+0x2c/0xa0
+[    3.251401]  __irq_do_set_handler+0x178/0x24c
+[    3.255762]  irq_set_chained_handler_and_data+0x60/0xa4
+[    3.260992]  mxc_gpio_probe+0x160/0x4b0
+[    3.264840]  platform_probe+0x68/0xc8
+[    3.268506]  really_probe+0x148/0x2b0
+[    3.272172]  __driver_probe_device+0x78/0x12c
+[    3.276536]  driver_probe_device+0xd8/0x15c
+[    3.280721]  __device_attach_driver+0xb8/0x134
+[    3.285169]  bus_for_each_drv+0x88/0xe8
+[    3.289009]  __device_attach+0xa0/0x190
+[    3.292849]  device_initial_probe+0x14/0x20
+[    3.297036]  bus_probe_device+0xac/0xb0
+[    3.300876]  deferred_probe_work_func+0x80/0xb8
+[    3.305411]  process_one_work+0x138/0x248
+[    3.309427]  worker_thread+0x320/0x438
+[    3.313177]  kthread+0x110/0x114
+[    3.316409]  ret_from_fork+0x10/0x20
 
-> - shall I use mipi_dbi_ although the display doesn't implement MIPI DCS
-> (and has some 16 bit commands)?
-> - can the conversion to 8 vertical pixels/byte (taken from
-> solomon/ssd130x.c) be avoided / simplified / made more efficient?
-> - how to implement setting of the display contrast (required by my
-> application)?
+Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+---
+ drivers/irqchip/irq-imx-irqsteer.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-I see that ssd130x_update_bl() is using brightness to control
-contrast. Don't know if it that is the best way though.
+diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
+index 20cf7a9e9ece..f81e4ff3aec3 100644
+--- a/drivers/irqchip/irq-imx-irqsteer.c
++++ b/drivers/irqchip/irq-imx-irqsteer.c
+@@ -36,6 +36,7 @@ struct irqsteer_data {
+ 	int			channel;
+ 	struct irq_domain	*domain;
+ 	u32			*saved_reg;
++	struct device		*dev;
+ };
+ 
+ static int imx_irqsteer_get_reg_index(struct irqsteer_data *data,
+@@ -72,10 +73,26 @@ static void imx_irqsteer_irq_mask(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&data->lock, flags);
+ }
+ 
++static void imx_irqsteer_irq_bus_lock(struct irq_data *d)
++{
++	struct irqsteer_data *data = d->chip_data;
++
++	pm_runtime_get_sync(data->dev);
++}
++
++static void imx_irqsteer_irq_bus_sync_unlock(struct irq_data *d)
++{
++	struct irqsteer_data *data = d->chip_data;
++
++	pm_runtime_put_autosuspend(data->dev);
++}
++
+ static const struct irq_chip imx_irqsteer_irq_chip = {
+ 	.name		= "irqsteer",
+ 	.irq_mask	= imx_irqsteer_irq_mask,
+ 	.irq_unmask	= imx_irqsteer_irq_unmask,
++	.irq_bus_lock		= imx_irqsteer_irq_bus_lock,
++	.irq_bus_sync_unlock	= imx_irqsteer_irq_bus_sync_unlock,
+ };
+ 
+ static int imx_irqsteer_irq_map(struct irq_domain *h, unsigned int irq,
+@@ -150,6 +167,7 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
++	data->dev = &pdev->dev;
+ 	data->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(data->regs)) {
+ 		dev_err(&pdev->dev, "failed to initialize reg\n");
+-- 
+2.34.1
 
-> - add device tree binding
-> 
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
-> ---
