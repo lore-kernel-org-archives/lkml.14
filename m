@@ -1,67 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C8F7F7FB;
-	Wed,  3 Jul 2024 02:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E2612F5A0;
+	Wed,  3 Jul 2024 02:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719972798; cv=none; b=kG4YvUoDxNRu85ge3Uz91Rm3rJsww5v8EHGfJG9k7H7dUF/PrIg2W9q5REdFoZmavsbsMlwdr0X9vLfiU2wO098SHVgqakzWBOXpqtIirX7MU1X75taKKeaD+yfzkAEPtrlKcOdxbBzmSjWyCBicuG2vUqHM5mXELv3zme0ZdF4=
+	t=1719972801; cv=none; b=jMJIPZUJt+YQ/wxmP/WTWqO4oLP7vqCs/W3zU+DLvCZjlrkDdil8CvrXNo+6jYjw9M/dpX6ZrjEzmF1R/uCzPo+RmEhObz1/lcCX/5ZqjDHHivNvzGa14kp6neGMhQankra1J2hUpwpRJZuwxA79+IDVq3iF71QkUKZq9+zvXgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719972798; c=relaxed/simple;
-	bh=EsSYbw1fuhkoGtZEXGpFBIGsk6gKUJSdriMbXjiW8/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hyPlSEJCxnJJaW7nG3Fyfl72wFiMFao4ruq1+8JT2FPoflm4yBznJI5yFzKaHchyNzYzrVh3o15/frf1Hznh/ctU0Xke+XRCgnEvD5r+wiD6SUrp6jFvHwoJ/8MbIhXZygNC7L2x6oUIIht12nqwuXCTfP9e14E0+s36OTeWyRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FRjS16e2; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719972801; c=relaxed/simple;
+	bh=w/1rwRGbSd+x48cBrawS9ygwKtHv3Yd42T/+V4bBG5w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ggJ7putWZ3hVtzozLolDHePO7/VdOGlwt279yLSSD2jWtZZgU44NWPv4JqStYtjV8c/bgfnA+7q4IMD1uNUk4ZQeYqBGcQ3J3ASFwqQV/HpsDtUZEIzCdp8Ta8HYdHOTu+PAFQRJFHlKrKNJPAdoa93haexuM7DMP2WWv4/CXiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mb41AVne; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FRjS16e2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mb41AVne"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719972797; x=1751508797;
+  t=1719972800; x=1751508800;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=EsSYbw1fuhkoGtZEXGpFBIGsk6gKUJSdriMbXjiW8/Y=;
-  b=FRjS16e24ny+CYyR5vidMIs1/UOsjcjDo1EzryRe3lhMRrjGso5koF9N
-   XJn00vYOrF+gmB6z8ifYxzGjHLlzc/MoFo2f1pbAULHZNVql+YrhiRXHw
-   ZMvbZewdDyY1TMRzOlLVepRFx+DlTOSsC6YmZdK7/MGH5neL4KDOwh5vC
-   /ZGD7oe6smCLWvlIb73pL3eoHRJWbE5l752KyGF01Yak5/eHnDMbF2pUK
-   tQrq1ie2taiBPgqJaGuG0d6h8PCAcu7sz52C/0YjVJgGDiI7uwG9tCAeH
-   Q8sUvpOyYvePYzMwI8q1luuDyVGd63rUOVSXoj85C3PhC65yUY1+R+DD9
-   w==;
-X-CSE-ConnectionGUID: zDEI6B2cSoOQxz7SPt+HNg==
-X-CSE-MsgGUID: ddMRgbTsTg6cEfJbPCoSIg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17311131"
+  bh=w/1rwRGbSd+x48cBrawS9ygwKtHv3Yd42T/+V4bBG5w=;
+  b=mb41AVneLdEQkJuXtsKobl4/9depaEM24z4HPdUQDaZ+Gs721+ng5GEK
+   3aYq/r4OYICNW/iDTLMKE1VskjKH/VwKw3bMOEuI6mBivWDzZVu/bJg3H
+   t4BIcbWutgL8HejT96NN8E6fbW3yr5pSACp+n+C13M12hJdc5nMyUTwLA
+   5QMGfK0Bs73XpTe4OwhHaCuvEZHEAKV78pl7DhBPEf4IOcPRzWUMLTxrX
+   F4CQBJ/0mZZR8qQOTUtnM6MBtRD1Y6asbdAUxsSZ79hrC1bAQOjBnElp4
+   nZyGykFsCwoGUoAwrNRVbkGh6Wa37Si6ESDyXMq7+o/Bgd0SHePEuWDww
+   A==;
+X-CSE-ConnectionGUID: eV/OL/DqQmqSiHlhDGf8iA==
+X-CSE-MsgGUID: nDk8+QzuSVWC5sNcQMbXsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="20082372"
 X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="17311131"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:13:17 -0700
-X-CSE-ConnectionGUID: yzNWfzGyTt2Ie6cgaGg6kg==
-X-CSE-MsgGUID: r3uUIS/MSyqiftxw4TSiqA==
+   d="scan'208";a="20082372"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:13:19 -0700
+X-CSE-ConnectionGUID: 93II0wvEQSSN6l+4srTpuQ==
+X-CSE-MsgGUID: Waa3/Xu1TaGd8y8/bBAt7g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="46148833"
-Received: from emr.sh.intel.com ([10.112.229.56])
-  by fmviesa010.fm.intel.com with ESMTP; 02 Jul 2024 19:13:14 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org,
+   d="scan'208";a="76832476"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:13:16 -0700
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com
+Cc: rick.p.edgecombe@intel.com,
+	kai.huang@intel.com,
+	isaku.yamahata@intel.com,
+	dmatlack@google.com,
+	sagis@google.com,
+	erdemaktas@google.com,
+	graf@amazon.com,
 	linux-kernel@vger.kernel.org,
-	Jim Mattson <jmattson@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Xiong Zhang <xiong.y.zhang@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Like Xu <like.xu.linux@gmail.com>,
-	Jinrong Liang <cloudliang@tencent.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v5 16/18] x86: pmu: Adjust lower boundary of branch-misses event
-Date: Wed,  3 Jul 2024 09:57:10 +0000
-Message-Id: <20240703095712.64202-17-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240703095712.64202-1-dapeng1.mi@linux.intel.com>
-References: <20240703095712.64202-1-dapeng1.mi@linux.intel.com>
+	kvm@vger.kernel.org,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH v2 3/4] KVM: selftests: Allow slot modification stress test with quirk disabled
+Date: Wed,  3 Jul 2024 10:12:06 +0800
+Message-ID: <20240703021206.13923-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240703020921.13855-1-yan.y.zhao@intel.com>
+References: <20240703020921.13855-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,107 +70,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since the IBPB command is added to force to trigger a branch miss at
-least, the lower boundary of branch misses event is increased to 1 by
-default. For these CPUs without IBPB support, adjust dynamically the
-lower boundary to 0 to avoid false positive.
+Add a new user option to memslot_modification_stress_test to allow testing
+with slot zap quirk KVM_X86_QUIRK_SLOT_ZAP_ALL disabled.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
 ---
- x86/pmu.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ .../kvm/memslot_modification_stress_test.c    | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/x86/pmu.c b/x86/pmu.c
-index 498b18d0..4026deab 100644
---- a/x86/pmu.c
-+++ b/x86/pmu.c
-@@ -90,12 +90,12 @@ struct pmu_event {
- 	{"llc references", 0x4f2e, 1, 2*N},
- 	{"llc misses", 0x412e, 1, 1*N},
- 	{"branches", 0x00c4, 1*N, 1.1*N},
--	{"branch misses", 0x00c5, 0, 0.1*N},
-+	{"branch misses", 0x00c5, 1, 0.1*N},
- }, amd_gp_events[] = {
- 	{"core cycles", 0x0076, 1*N, 50*N},
- 	{"instructions", 0x00c0, 10*N, 10.2*N},
- 	{"branches", 0x00c2, 1*N, 1.1*N},
--	{"branch misses", 0x00c3, 0, 0.1*N},
-+	{"branch misses", 0x00c3, 1, 0.1*N},
- }, fixed_events[] = {
- 	{"fixed 0", MSR_CORE_PERF_FIXED_CTR0, 10*N, 10.2*N},
- 	{"fixed 1", MSR_CORE_PERF_FIXED_CTR0 + 1, 1*N, 30*N},
-@@ -111,6 +111,7 @@ enum {
- 	INTEL_REF_CYCLES_IDX	= 2,
- 	INTEL_LLC_MISSES_IDX	= 4,
- 	INTEL_BRANCHES_IDX	= 5,
-+	INTEL_BRANCH_MISS_IDX	= 6,
+diff --git a/tools/testing/selftests/kvm/memslot_modification_stress_test.c b/tools/testing/selftests/kvm/memslot_modification_stress_test.c
+index 05fcf902e067..c6f22ded4c96 100644
+--- a/tools/testing/selftests/kvm/memslot_modification_stress_test.c
++++ b/tools/testing/selftests/kvm/memslot_modification_stress_test.c
+@@ -85,6 +85,7 @@ struct test_params {
+ 	useconds_t delay;
+ 	uint64_t nr_iterations;
+ 	bool partition_vcpu_memory_access;
++	bool disable_slot_zap_quirk;
  };
  
- /*
-@@ -120,6 +121,7 @@ enum {
- enum {
- 	AMD_INSTRUCTIONS_IDX    = 1,
- 	AMD_BRANCHES_IDX	= 2,
-+	AMD_BRANCH_MISS_IDX	= 3,
- };
- 
- char *buf;
-@@ -183,7 +185,8 @@ static inline void loop(u64 cntrs)
- }
- 
- static void adjust_events_range(struct pmu_event *gp_events,
--				int instruction_idx, int branch_idx)
-+				int instruction_idx, int branch_idx,
-+				int branch_miss_idx)
- {
- 	/*
- 	 * If HW supports GLOBAL_CTRL MSR, enabling and disabling PMCs are
-@@ -198,6 +201,17 @@ static void adjust_events_range(struct pmu_event *gp_events,
- 		gp_events[branch_idx].min = LOOP_BRANCHES;
- 		gp_events[branch_idx].max = LOOP_BRANCHES;
- 	}
+ static void run_test(enum vm_guest_mode mode, void *arg)
+@@ -95,6 +96,13 @@ static void run_test(enum vm_guest_mode mode, void *arg)
+ 	vm = memstress_create_vm(mode, nr_vcpus, guest_percpu_mem_size, 1,
+ 				 VM_MEM_SRC_ANONYMOUS,
+ 				 p->partition_vcpu_memory_access);
++#ifdef __x86_64__
++	if (p->disable_slot_zap_quirk)
++		vm_enable_cap(vm, KVM_CAP_DISABLE_QUIRKS2, KVM_X86_QUIRK_SLOT_ZAP_ALL);
 +
-+	/*
-+	 * For CPUs without IBPB support, no way to force to trigger a
-+	 * branch miss and the measured branch misses is possible to be
-+	 * 0. Thus overwrite the lower boundary of branch misses event
-+	 * to 0 to avoid false positive.
-+	 */
-+	if (!has_ibpb()) {
-+		/* branch misses event */
-+		gp_events[branch_miss_idx].min = 0;
-+	}
- }
++	pr_info("Memslot zap quirk %s\n", p->disable_slot_zap_quirk ?
++		"disabled" : "enabled");
++#endif
  
- volatile uint64_t irq_received;
-@@ -903,6 +917,7 @@ int main(int ac, char **av)
+ 	pr_info("Finished creating vCPUs\n");
+ 
+@@ -113,11 +121,12 @@ static void run_test(enum vm_guest_mode mode, void *arg)
+ static void help(char *name)
  {
- 	int instruction_idx;
- 	int branch_idx;
-+	int branch_miss_idx;
+ 	puts("");
+-	printf("usage: %s [-h] [-m mode] [-d delay_usec]\n"
++	printf("usage: %s [-h] [-m mode] [-d delay_usec] [-q]\n"
+ 	       "          [-b memory] [-v vcpus] [-o] [-i iterations]\n", name);
+ 	guest_modes_help();
+ 	printf(" -d: add a delay between each iteration of adding and\n"
+ 	       "     deleting a memslot in usec.\n");
++	printf(" -q: Disable memslot zap quirk.\n");
+ 	printf(" -b: specify the size of the memory region which should be\n"
+ 	       "     accessed by each vCPU. e.g. 10M or 3G.\n"
+ 	       "     Default: 1G\n");
+@@ -143,7 +152,7 @@ int main(int argc, char *argv[])
  
- 	setup_vm();
- 	handle_irq(PMI_VECTOR, cnt_overflow);
-@@ -919,6 +934,7 @@ int main(int ac, char **av)
- 		gp_events_size = sizeof(intel_gp_events)/sizeof(intel_gp_events[0]);
- 		instruction_idx = INTEL_INSTRUCTIONS_IDX;
- 		branch_idx = INTEL_BRANCHES_IDX;
-+		branch_miss_idx = INTEL_BRANCH_MISS_IDX;
+ 	guest_modes_append_default();
  
- 		/*
- 		 * For legacy Intel CPUS without clflush/clflushopt support,
-@@ -935,9 +951,10 @@ int main(int ac, char **av)
- 		gp_events = (struct pmu_event *)amd_gp_events;
- 		instruction_idx = AMD_INSTRUCTIONS_IDX;
- 		branch_idx = AMD_BRANCHES_IDX;
-+		branch_miss_idx = AMD_BRANCH_MISS_IDX;
- 		report_prefix_push("AMD");
- 	}
--	adjust_events_range(gp_events, instruction_idx, branch_idx);
-+	adjust_events_range(gp_events, instruction_idx, branch_idx, branch_miss_idx);
- 
- 	printf("PMU version:         %d\n", pmu.version);
- 	printf("GP counters:         %d\n", pmu.nr_gp_counters);
+-	while ((opt = getopt(argc, argv, "hm:d:b:v:oi:")) != -1) {
++	while ((opt = getopt(argc, argv, "hm:d:qb:v:oi:")) != -1) {
+ 		switch (opt) {
+ 		case 'm':
+ 			guest_modes_cmdline(optarg);
+@@ -166,6 +175,12 @@ int main(int argc, char *argv[])
+ 		case 'i':
+ 			p.nr_iterations = atoi_positive("Number of iterations", optarg);
+ 			break;
++		case 'q':
++			p.disable_slot_zap_quirk = true;
++
++			TEST_REQUIRE(kvm_check_cap(KVM_CAP_DISABLE_QUIRKS2) &
++				     KVM_X86_QUIRK_SLOT_ZAP_ALL);
++			break;
+ 		case 'h':
+ 		default:
+ 			help(argv[0]);
 -- 
-2.40.1
+2.43.2
 
