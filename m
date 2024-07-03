@@ -1,551 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8396317A5A8
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 15:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A951DFD1;
+	Wed,  3 Jul 2024 15:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019949; cv=none; b=cPn2GXAOqKLAswETtxPtq5vrS+PDJywoi8T+GMn2jeRKw0A5mLvTvBXZ3nTi6JmfnCs4Ggo60bh45NzV2Rj6Eqmr+uQ5AwCqEs+j75mLjEYQLAq/WC6jJjz+/fgnkq7SnZWtsiUZZD58NBMy0tk5a+QrhIF4ea+E3OXIsGNj24o=
+	t=1720020026; cv=none; b=iGKoZB3wTD5B6BmfoQHesmJalFQkurKUzAmW0VK8YoQ0327BWYrVNsWYJ62Ex5DE1ZWemVlJyScBwr30DHi17X0d0QuqJx3iBp+JNHBLFT/4e6If9L90EGY6MhBDVRmlAdr8sE/5Ad0ReDPzdf8ob3vtZlf1gv7ljq2tD5cgAWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019949; c=relaxed/simple;
-	bh=AhEkhUjwAwCZNGM1WbRYMLuiqUmlSqwK6e/NTWOSKQ8=;
+	s=arc-20240116; t=1720020026; c=relaxed/simple;
+	bh=rRgZmzWkq1RNfqzPXVEsRA4y3AQD9TvNW/JDpsjuBvY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LOyrfQzEE0vqpwrSK9ZV/Fxm9lT08x2D6kTiP5TzYhZKpClRHTbnsTLkxGAMGxt2mor5SSpywiRaihggNKUVDvd6bJ97gxLxCJOzKv04PR7Ljg45KCYoH4bgj+vYQo77Vk15+73Q17PY9DuKelqZTBzNAYH459l00/efhHnBtVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KBeM/ssN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QcQcTjlvDY56PCeaHnZRi2Y6txuZLzIbd3cibFg7Qdf6m2oXbO071Vs587u6jj1aaIimG0RFwm0ruHX/WwkgcdDwK28uWjrUcWTGsqcJOViB29gl7Ljge3113h3ek4ZZwSdkBuSowZPMyUijnSRn8b+cUwGtjm0GS4RISjiW7Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qb3wrzoZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KBeM/ssN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720019946;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rdbvXL65U7gamXn5Q823zN/r/LJrVkQ2GWKPVXvliZo=;
-	b=KBeM/ssNhamXOi1zKoWX5Dyvct6cxZV2hEptfAFnHry7iMek+ldXexykvz22MHe1gWH9fA
-	W3JB8DzagJqUFcbZS/MZB33XN8lMjU/PKhyrRTIfIyhvebYtFiN2OwjyyCITXc8ugZJeOq
-	v7Fo6U1iZQKrmr+mtCoZzw4d436VeuQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-252-IpV7pusbOOyTe0kT5M_Gng-1; Wed, 03 Jul 2024 11:19:05 -0400
-X-MC-Unique: IpV7pusbOOyTe0kT5M_Gng-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4256f895ce8so41634365e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 08:19:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720019944; x=1720624744;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rdbvXL65U7gamXn5Q823zN/r/LJrVkQ2GWKPVXvliZo=;
-        b=cVSExb7CjyW4aCORLc7rN5OefPEx1siv0UgqVIx6c8nG4cCX7vzz6Rl6U48Y9YHNRU
-         nkvF/cKk8ZJkDKUeNfj9nmGMCoWgCZQkujWhzhzGnRR2mfzMQLggaFecW8bWnysDKQXP
-         db3K2VPlHm16fMX7bTyOaJdaBP72qNq3mOZg+ut2a2tNenRea/0X3ZQMoOMKTlyRgHT+
-         2U6jW78qXH2yR/NlwEh1+v2BuoFviRZx0y/hoHstyJTnFINS+SCxr8Osaw/zw+RAB2Wi
-         6qz39w+XBSlIAZlan+ivvNx3FQ97NaWBOhGxy3OpA1+d8ZFZzBn8x4ThgEGp/Kl3PkHH
-         oMBw==
-X-Gm-Message-State: AOJu0Ywr0Xjnb6OoCms4Twi3o1IFPMs3+gTfg34ohFS5C6vmBh/2VE5P
-	L7geOtdBCdLIDnMb/TJFviJDoCfkcMXl1ucbfLD3uI+7LJosB+WzjXWtd5Ti/oMpCrikcaivW83
-	4y3buCfqdoOoeVKML7231YsAuoBCotlDq6uQuzBm8vZ+ScoiKiE6FRlxnmpxuqg==
-X-Received: by 2002:a05:600c:19cb:b0:425:6424:6e47 with SMTP id 5b1f17b1804b1-4257a02b896mr77069035e9.2.1720019943804;
-        Wed, 03 Jul 2024 08:19:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMlxI9ojuQUPBpffMCpVF2/NXtOEHSVKe5S8Qvgkg6OFTtQC/ccbL4Q7nV8X0yPo3kZ1PZYQ==
-X-Received: by 2002:a05:600c:19cb:b0:425:6424:6e47 with SMTP id 5b1f17b1804b1-4257a02b896mr77068835e9.2.1720019943037;
-        Wed, 03 Jul 2024 08:19:03 -0700 (PDT)
-Received: from redhat.com ([31.187.78.171])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4257f44c730sm149183695e9.39.2024.07.03.08.19.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 08:19:02 -0700 (PDT)
-Date: Wed, 3 Jul 2024 11:18:58 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Mikhail Krasheninnikov <krashmisha@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-mmc@vger.kernel.org,
-	Matwey Kornilov <matwey.kornilov@gmail.com>
-Subject: Re: [PATCH] mmc/virtio: Add virtio MMC driver for QEMU emulation
-Message-ID: <20240703110812-mutt-send-email-mst@kernel.org>
-References: <20240701120642.30001-1-krashmisha@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qb3wrzoZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3887CC2BD10;
+	Wed,  3 Jul 2024 15:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720020025;
+	bh=rRgZmzWkq1RNfqzPXVEsRA4y3AQD9TvNW/JDpsjuBvY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qb3wrzoZ684EOWe4U72NdJKqewE7FfZIPbGzwqTgVY0uE9PJqtmB4FAPAWEwfoS+B
+	 S7pdvYDJujZFb79nVPifQVYifpGU4qlSgykhhEAimfHP8fUp2Wp/Kx6uBoo82ITB/j
+	 gSrsS9+kKoXjP4DrG5wfWkNjm6DPFyVPYjKJTBB1eq8sGFTtQ+knbHjL4iF0w8X53q
+	 ZlO5CZA4UPETFDUaQ9by21HOA3IcupbAR/8TstTAFfEWxhC+7quXTROq6MGJFNFzVO
+	 B1sQ9wPDIIetiX40oSC70SeLJlrTMD4iugM0CoetpTmVPgW2hpR15clArhBfp6FlgH
+	 CFlT/qsgHlaAw==
+Date: Wed, 3 Jul 2024 16:20:21 +0100
+From: Conor Dooley <conor@kernel.org>
+To: utsav.agarwal@analog.com
+Cc: Michael Hennerich <michael.hennerich@analog.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arturs Artamonovs <arturs.artamonovs@analog.com>,
+	Vasileios Bimpikas <vasileios.bimpikas@analog.com>,
+	Oliver Gaskell <oliver.gaskell@analog.com>
+Subject: Re: [PATCH v5 3/3] dt-bindings: input: Update dtbinding for adp5588
+Message-ID: <20240703-safehouse-flame-0b751b853623@spud>
+References: <20240703-adp5588_gpio_support-v5-0-49fcead0d390@analog.com>
+ <20240703-adp5588_gpio_support-v5-3-49fcead0d390@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="I265JjUt3ALiy5BD"
+Content-Disposition: inline
+In-Reply-To: <20240703-adp5588_gpio_support-v5-3-49fcead0d390@analog.com>
+
+
+--I265JjUt3ALiy5BD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240701120642.30001-1-krashmisha@gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 01, 2024 at 12:06:42PM +0000, Mikhail Krasheninnikov wrote:
-> Introduce a new virtio MMC driver to enable virtio SD/MMC card
-> emulation with QEMU. This driver allows emulating MMC cards in
-> virtual environments, enhancing functionality and testing
-> capabilities within QEMU.
-> 
-> Link to the QEMU patch: https://lists.nongnu.org/archive/html/qemu-block/2024-06/msg00664.html
-> 
-> No changes to existing dependencies or documentation.
-> 
-> Signed-off-by: Mikhail Krasheninnikov <krashmisha@gmail.com>
-> CC: Ulf Hansson <ulf.hansson@linaro.org>
-> CC: linux-mmc@vger.kernel.org
-> CC: Matwey Kornilov <matwey.kornilov@gmail.com>
-
-
-you should likely add a MAINTAINERS entry so people
-know to copy virtio ML and core maintainers when they are
-making changes.
-
+On Wed, Jul 03, 2024 at 11:58:16AM +0100, Utsav Agarwal via B4 Relay wrote:
+> From: Utsav Agarwal <utsav.agarwal@analog.com>
+>=20
+> Updating dt bindings for adp5588. Since the device can now function in a
+> purely gpio mode, the following keypad specific properties are now made
+> optional:
+> 	- interrupts
+> 	- keypad,num-rows
+> 	- keypad,num-columns
+> 	- linux,keymap
+>=20
+> However since the above properties are required to be specified when
+> configuring the device as a keypad, dependencies have been added
+> such that specifying either one would require the remaining as well.
+>=20
+> Signed-off-by: Utsav Agarwal <utsav.agarwal@analog.com>
 > ---
->  drivers/mmc/core/mmc_ops.c      |   2 +
->  drivers/mmc/host/Kconfig        |  14 ++
->  drivers/mmc/host/Makefile       |   2 +
->  drivers/mmc/host/virtio-mmc.c   | 266 ++++++++++++++++++++++++++++++++
->  drivers/mmc/host/virtio-mmc.h   |  42 +++++
->  include/uapi/linux/virtio_ids.h |   1 +
->  6 files changed, 327 insertions(+)
->  create mode 100644 drivers/mmc/host/virtio-mmc.c
->  create mode 100644 drivers/mmc/host/virtio-mmc.h
-> 
-> diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
-> index 3b3adbddf664..4e663140048a 100644
-> --- a/drivers/mmc/core/mmc_ops.c
-> +++ b/drivers/mmc/core/mmc_ops.c
-> @@ -5,6 +5,7 @@
->   *  Copyright 2006-2007 Pierre Ossman
->   */
->  
-> +#include "linux/printk.h"
->  #include <linux/slab.h>
->  #include <linux/export.h>
->  #include <linux/types.h>
-> @@ -459,6 +460,7 @@ int mmc_switch_status(struct mmc_card *card, bool crc_err_fatal)
->  
->  static int mmc_busy_cb(void *cb_data, bool *busy)
->  {
-> +	pr_info("mmc_busy_cb\n");
->  	struct mmc_busy_data *data = cb_data;
->  	struct mmc_host *host = data->card->host;
->  	u32 status = 0;
+>  .../devicetree/bindings/input/adi,adp5588.yaml     | 33 ++++++++++++++++=
+++----
+>  1 file changed, 28 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/input/adi,adp5588.yaml b/D=
+ocumentation/devicetree/bindings/input/adi,adp5588.yaml
+> index 26ea66834ae2..6c06464f822b 100644
+> --- a/Documentation/devicetree/bindings/input/adi,adp5588.yaml
+> +++ b/Documentation/devicetree/bindings/input/adi,adp5588.yaml
+> @@ -49,7 +49,10 @@ properties:
+>    interrupt-controller:
+>      description:
+>        This property applies if either keypad,num-rows lower than 8 or
+> -      keypad,num-columns lower than 10.
+> +      keypad,num-columns lower than 10. This property does not apply if
+> +      keypad,num-rows or keypad,num-columns are not specified since the
+> +      device then acts as gpio only, during which interrupts are not
+> +      utilized.
+> =20
+>    '#interrupt-cells':
+>      const: 2
+> @@ -65,13 +68,15 @@ properties:
+>      minItems: 1
+>      maxItems: 2
+> =20
+> +dependencies:
+> +  keypad,num-rows: ["keypad,num-columns"]
+> +  keypad,num-cols: ["keypad,num-rows"]
+> +  linux,keymap: ["keypad,num-rows"]
 
+Is what you've got here sufficient? Adding "keypad,num-rows" won't
+mandate "linux,keymap" which I think is wrong. I think all 3 entries
+here need to contain both of the other two.
 
-Debugging leftovers? Does not inspire confidence...
+> +  interrupts: ["linux,keymap"]
 
+I still don't understand why interrupts are only allowed when the keymap
+is present. I'd cover the interrupts with something like
 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 554e67103c1a..eb0b0e80250d 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -1069,3 +1069,17 @@ config MMC_LITEX
->  	  module will be called litex_mmc.
->  
->  	  If unsure, say N.
-> +
-> +config MMC_VIRTIO
-> +	tristate "VirtIO MMC Host Controller support"
-> +	depends on VIRTIO
-> +	help
-> +	  This enables support for the Virtio MMC driver, which allows the
-> +	  kernel to interact with MMC devices over Virtio. Virtio is a
-> +	  virtualization standard for network and disk device drivers,
-> +	  providing a common API for virtualized environments.
-> +
-> +	  Enable this option if you are running the kernel in a virtualized
-> +	  environment and need MMC support via Virtio.
-> +
-> +	  If unsure, say N.
-> \ No newline at end of file
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index a693fa3d3f1c..d53493d0a692 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -108,3 +108,5 @@ endif
->  
->  obj-$(CONFIG_MMC_SDHCI_XENON)	+= sdhci-xenon-driver.o
->  sdhci-xenon-driver-y		+= sdhci-xenon.o sdhci-xenon-phy.o
-> +
-> +obj-$(CONFIG_MMC_VIRTIO)	+= virtio-mmc.o
-> \ No newline at end of file
-> diff --git a/drivers/mmc/host/virtio-mmc.c b/drivers/mmc/host/virtio-mmc.c
-> new file mode 100644
-> index 000000000000..b192bd0b9ffd
-> --- /dev/null
-> +++ b/drivers/mmc/host/virtio-mmc.c
-> @@ -0,0 +1,266 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  VirtIO SD/MMC driver
-> + *
-> + *  Author: Mikhail Krasheninnikov <krashmisha@gmail.com>
-> + */
-> +
-> +#include "virtio-mmc.h"
-> +#include "asm-generic/int-ll64.h"
-> +#include "linux/completion.h"
-> +#include "linux/kern_levels.h"
-> +#include "linux/mmc/core.h"
-> +#include "linux/mmc/host.h"
-> +#include "linux/printk.h"
-> +#include "linux/scatterlist.h"
-> +#include "linux/types.h"
-> +#include "linux/virtio_config.h"
-> +#include <linux/virtio.h>
-> +#include <linux/cdev.h>
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
+if:
+  required:
+    - linux,keymap
+  then:
+    required:
+      - interrupts
 
-why this weird order and way to do includes?
-and it looks like you are including way too much stuff.
+so that interrupts can be used while not in keypad mode. Unless of
+course there's something (unmentioned in this patch) that prevents that.
+
+Thanks,
+Conor.
 
 > +
-> +struct mmc_req {
-> +	u32 opcode;
-> +	u32 arg;
-
-Using CPU endian format for driver to device communication
-is not a good idea.
-
-> +};
-> +
-> +struct virtio_mmc_request {
-> +	u8 flags;
-> +
-> +#define VIRTIO_MMC_REQUEST_DATA BIT(1)
-> +#define VIRTIO_MMC_REQUEST_WRITE BIT(2)
-> +#define VIRTIO_MMC_REQUEST_STOP BIT(3)
-> +#define VIRTIO_MMC_REQUEST_SBC BIT(4)
-> +
-> +	struct mmc_req request;
-> +
-> +	u8 buf[4096];
-> +	size_t buf_len;
-
-size_t is definitely not a good idea in a driver to device
-communication.
-
-> +
-> +	struct mmc_req stop_req;
-> +	struct mmc_req sbc_req;
-> +};
-> +
-> +struct virtio_mmc_response {
-> +	u32 cmd_resp[4];
-
-> +	int cmd_resp_len;
-
-int is also not a good idea in a driver to device communication.
-
-
-> +	u8 buf[4096];
-> +};
-
-
-looks like there's a bunch of stuff here that belongs in
-uapi/linux/virtio-mmc.h (or whatever you decide to name this).
-
-> +
-> +struct virtio_mmc_host {
-> +	struct virtio_device *vdev;
-> +	struct mmc_host *mmc;
-> +	struct virtqueue *vq;
-> +	struct mmc_request *current_request;
-> +
-> +	struct virtio_mmc_request virtio_request;
-> +	struct virtio_mmc_response virtio_response;
-> +
-> +	struct completion request_handled;
-> +};
-> +
-> +static void virtio_mmc_vq_callback(struct virtqueue *vq)
-> +{
-> +	unsigned int len;
-> +	struct mmc_host *mmc;
-> +	struct virtio_mmc_host *host;
-> +	struct virtio_mmc_request *virtio_request;
-> +	struct virtio_mmc_response *virtio_response;
-> +	struct mmc_request *mrq;
-> +
-> +	mmc = vq->vdev->priv;
-> +	host = mmc_priv(mmc);
-> +	mrq = host->current_request;
-> +	virtio_request = &host->virtio_request;
-> +
-> +	virtio_response = virtqueue_get_buf(vq, &len);
-> +
-> +	memcpy(mrq->cmd->resp, virtio_response->cmd_resp,
-> +	       virtio_response->cmd_resp_len);
-
-blindly trusting device that cmd_resp_len will not overflow
-the buffer is not a good idea.
-
-
-> +
-> +	if (virtio_request->flags & VIRTIO_MMC_REQUEST_DATA) {
-> +		if (!(virtio_request->flags & VIRTIO_MMC_REQUEST_WRITE)) {
-> +			sg_copy_from_buffer(mrq->data->sg, mrq->data->sg_len,
-> +					    virtio_response->buf,
-> +					    virtio_request->buf_len);
-> +		}
-> +		mrq->data->bytes_xfered = virtio_request->buf_len;
-
-same here - validate it's reasonable
-
-
-> +	}
-> +
-> +	host->current_request = NULL;
-> +	mmc_request_done(mmc, mrq);
-> +	complete(&host->request_handled);
-> +}
-> +
-> +static void virtio_mmc_send_request_to_qemu(struct virtio_mmc_host *data)
-> +{
-> +	struct scatterlist sg_out_linux, sg_in_linux;
-> +
-> +	sg_init_one(&sg_out_linux, &data->virtio_request,
-> +		    sizeof(struct virtio_mmc_request));
-> +	sg_init_one(&sg_in_linux, &data->virtio_response,
-> +		    sizeof(struct virtio_mmc_response));
-> +
-> +	struct scatterlist *request[] = { &sg_out_linux, &sg_in_linux };
-> +
-> +	if (virtqueue_add_sgs(data->vq, request, 1, 1, &data->virtio_response,
-> +			      GFP_KERNEL) < 0) {
-> +		dev_crit(&data->vdev->dev, "virtio_mmc: Failed to add sg\n");
-> +		return;
-> +	}
-> +
-> +	virtqueue_kick(data->vq);
-> +	wait_for_completion(&data->request_handled);
-> +}
-> +
-> +static inline size_t __calculate_len(struct mmc_data *data)
-> +{
-> +	size_t len = 0;
-> +
-> +	for (int i = 0; i < data->sg_len; i++)
-> +		len += data->sg[i].length;
-> +	return len;
-> +}
-> +
-> +/* MMC layer callbacks */
-> +
-> +static void virtio_mmc_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> +{
-> +	struct virtio_mmc_host *host;
-> +	struct virtio_mmc_request *virtio_req;
-> +	struct mmc_data *mrq_data;
-> +
-> +	host = mmc_priv(mmc);
-> +	host->current_request = mrq; // Saving the request for the callback
-
-no locking anywhere ...
-does something else guarantee there's always just one request
-outstanding?
-
-
-> +
-> +	virtio_req = &host->virtio_request;
-> +	memset(virtio_req, 0, sizeof(struct virtio_mmc_request));
-> +
-> +	virtio_req->request.opcode = mrq->cmd->opcode;
-> +	virtio_req->request.arg = mrq->cmd->arg;
-> +
-> +	mrq_data = mrq->data;
-> +	if (mrq_data) {
-> +		virtio_req->flags |= VIRTIO_MMC_REQUEST_DATA;
-> +
-> +		virtio_req->buf_len = __calculate_len(mrq->data);
-> +
-> +		virtio_req->flags |= ((mrq_data->flags & MMC_DATA_WRITE) ?
-> +					      VIRTIO_MMC_REQUEST_WRITE :
-> +					      0);
-> +		if (virtio_req->flags & VIRTIO_MMC_REQUEST_WRITE) {
-> +			sg_copy_to_buffer(mrq_data->sg, mrq_data->sg_len,
-> +					  virtio_req->buf, virtio_req->buf_len);
-> +		}
-> +	}
-> +
-> +	if (mrq->stop) {
-> +		virtio_req->flags |= VIRTIO_MMC_REQUEST_STOP;
-> +
-> +		virtio_req->stop_req.opcode = mrq->stop->opcode;
-> +		virtio_req->stop_req.arg = mrq->stop->arg;
-> +	}
-> +
-> +	if (mrq->sbc) {
-> +		virtio_req->flags |= VIRTIO_MMC_REQUEST_SBC;
-> +
-> +		virtio_req->sbc_req.opcode = mrq->sbc->opcode;
-> +		virtio_req->sbc_req.arg = mrq->sbc->arg;
-> +	}
-> +
-> +	virtio_mmc_send_request_to_qemu(host);
-> +}
-> +
-> +static void virtio_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
-> +{
-> +}
-> +
-> +static int virtio_mmc_get_ro(struct mmc_host *mmc)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int virtio_mmc_get_cd(struct mmc_host *mmc)
-> +{
-> +	return 1;
-> +}
-> +
-> +static const struct mmc_host_ops virtio_mmc_host_ops = {
-> +	.request = virtio_mmc_request,
-> +	.set_ios = virtio_mmc_set_ios,
-> +	.get_ro = virtio_mmc_get_ro,
-> +	.get_cd = virtio_mmc_get_cd,
-> +};
-> +
-> +static inline void __fill_host_attr(struct mmc_host *host)
-> +{
-> +	host->ops = &virtio_mmc_host_ops;
-> +	host->f_min = 300000;
-> +	host->f_max = 500000;
-> +	host->ocr_avail = MMC_VDD_32_33 | MMC_VDD_33_34;
-> +	host->caps = MMC_CAP_SD_HIGHSPEED;
-> +	host->caps2 = MMC_CAP2_NO_SDIO | MMC_CAP2_NO_MMC | MMC_CAP2_HS400;
-> +}
-> +
-> +static int create_host(struct virtio_device *vdev)
-> +{
-> +	int err;
-> +	struct mmc_host *mmc;
-> +	struct virtio_mmc_host *host;
-> +
-> +	mmc = mmc_alloc_host(sizeof(struct virtio_mmc_host), &vdev->dev);
-> +	if (!mmc) {
-> +		pr_err("virtio_mmc: Failed to allocate host\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	__fill_host_attr(mmc);
-> +
-> +	vdev->priv = mmc;
-> +
-> +	host = mmc_priv(mmc);
-> +
-> +	init_completion(&host->request_handled);
-> +
-> +	host->vq =
-> +		virtio_find_single_vq(vdev, virtio_mmc_vq_callback, "vq_name");
-> +	if (!host->vq) {
-> +		pr_err("virtio_mmc: Failed to find virtqueue\n");
-> +		mmc_free_host(mmc);
-> +		return -ENODEV;
-> +	}
-> +
-> +	err = mmc_add_host(mmc);
-
-
-can you get requests immediately at this point?
-if yes you need to call virtio_device_ready before
-you add buffers.
-
-> +	if (err) {
-> +		pr_err("virtio_mmc: Failed to add host\n");
-> +		mmc_free_host(mmc);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int virtio_mmc_probe(struct virtio_device *vdev)
-> +{
-> +	int err;
-> +
-> +	err = create_host(vdev);
-> +	if (err)
-> +		pr_err("virtio_mmc: Failed to make host\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static void remove_host(struct mmc_host *host)
-> +{
-
-does not look like you are doing anything to quiesce the
-device.
-
-
-> +	mmc_remove_host(host);
-> +	mmc_free_host(host);
-> +}
-> +
-> +static void virtio_mmc_remove(struct virtio_device *vdev)
-> +{
-> +	struct mmc_host *host = vdev->priv;
-> +
-> +	remove_host(host);
-> +}
-> diff --git a/drivers/mmc/host/virtio-mmc.h b/drivers/mmc/host/virtio-mmc.h
-> new file mode 100644
-> index 000000000000..086f33307f84
-> --- /dev/null
-> +++ b/drivers/mmc/host/virtio-mmc.h
-> @@ -0,0 +1,42 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later
-> + *
-> + *  VirtIO SD/MMC driver
-> + *
-> + *  Author: Mikhail Krasheninnikov <krashmisha@gmail.com>
-> + */
-> +
-> +#ifndef _VIRTIO_MMC_H
-> +#define _VIRTIO_MMC_H
-> +
-> +#include <linux/virtio.h>
-> +#include <linux/virtio_ids.h>
-> +
-> +#define VIRTIO_MMC_DEV_ID 42
-> +
-> +static int virtio_mmc_probe(struct virtio_device *vdev);
-> +
-> +static void virtio_mmc_remove(struct virtio_device *vdev);
-> +
-> +static const struct virtio_device_id id_table[] = {
-> +	{ VIRTIO_MMC_DEV_ID, VIRTIO_DEV_ANY_ID },
-> +	{ 0 },
-> +};
-> +
-> +static struct virtio_driver virtio_mmc_driver = {
-> +	.driver = {
-> +		.name	= KBUILD_MODNAME,
-> +		.owner	= THIS_MODULE,
-> +	},
-> +	.id_table	= id_table,
-> +	.probe		= virtio_mmc_probe,
-> +	.remove		= virtio_mmc_remove,
-> +};
-> +
-> +module_virtio_driver(virtio_mmc_driver);
-> +MODULE_DEVICE_TABLE(virtio, id_table);
-> +
-> +MODULE_AUTHOR("Mikhail Krasheninnikov");
-> +MODULE_DESCRIPTION("VirtIO SD/MMC driver");
-> +MODULE_LICENSE("GPL");
-> +
-> +#endif
-> diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio_ids.h
-> index 7aa2eb766205..9c8a09b0f004 100644
-> --- a/include/uapi/linux/virtio_ids.h
-> +++ b/include/uapi/linux/virtio_ids.h
-> @@ -68,6 +68,7 @@
->  #define VIRTIO_ID_AUDIO_POLICY		39 /* virtio audio policy */
->  #define VIRTIO_ID_BT			40 /* virtio bluetooth */
->  #define VIRTIO_ID_GPIO			41 /* virtio gpio */
-> +#define VIRTIO_ID_MMC           42 /* virtio mmc */
->  
->  /*
->   * Virtio Transitional IDs
-> -- 
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupts
+> -  - keypad,num-rows
+> -  - keypad,num-columns
+> -  - linux,keymap
+> =20
+>  unevaluatedProperties: false
+> =20
+> @@ -108,4 +113,22 @@ examples:
+>              >;
+>          };
+>      };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/input/input.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +        gpio@34 {
+> +            compatible =3D "adi,adp5588";
+> +            reg =3D <0x34>;
+> +
+> +            #gpio-cells =3D <2>;
+> +            gpio-controller;
+> +            };
+> +        };
+> +
+>  ...
+>=20
+> --=20
 > 2.34.1
-> 
+>=20
+>=20
 
+--I265JjUt3ALiy5BD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoVsNQAKCRB4tDGHoIJi
+0qIjAP9FGMpejmxLN4Q2htHtCSRLXqXsNGQOcfGQBKOdfwL57QEAonj/PljB6JDy
+SZFCvkBKNqPyyxLazAzjnuzX+3V2lAk=
+=Eqf2
+-----END PGP SIGNATURE-----
+
+--I265JjUt3ALiy5BD--
