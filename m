@@ -1,99 +1,131 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A9F61FEB
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 03:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9931799F;
+	Wed,  3 Jul 2024 03:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719976796; cv=none; b=p867pECSz8AfWv8leNrvRWe2rE2jlMW7sG9+u9sCkwFGmeBCT8f+JUvS+9q5x4GAGTaQA/PewiZC/9SNBv9Po6PVh1P+yAXB9Pnzw6Qfo9WRAg1OtboexYDYEic0cgcopPY/oGDTRWsnPT+vCv9cPbXlimJD1o8lHKNT1MGLP8Q=
+	t=1719977041; cv=none; b=JdgVFJzUoq+Z9MRHBMEj94NNDCkiMHwbevo0eL4XFaVcR1om2seaC0VbXRaBJCnFQ1uFH0USEYEHe0lc7RxZcb7YDAjlB2e68wFwWAoK1/eGOPVedk3k4ugEd1X+85oYQXRVz6U6RnBimhTqtNoUWKhEGkfnDR8dZJlaLVquxIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719976796; c=relaxed/simple;
-	bh=RatMWj2BUFUCGlW5BmkZlB2amBhxKVbF+t41AJ4GYE8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BgLoqR2mJTzw6XSSJ9sy9VrwomxlRQY02CoMpsnABJ15cZiuPcY7j2lek4I6P69kyymTzpihOfojBeTa6HauTY62XtXw6XLrOVyKx7tkrDOMnJj/rKEMLxkeNsfovWvLoC9OrZpXfZ7LNp2wwlxyjqWFCqjyU5TQ0Ej4iVh8vic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WDQ4Q5T9Bz4f3jcs
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:19:34 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id F21AB1A0185
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:19:45 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.103.91])
-	by APP2 (Coremail) with SMTP id Syh0CgBn0YZHw4Rm+T8VBA--.56302S8;
-	Wed, 03 Jul 2024 11:19:45 +0800 (CST)
-From: Yang Yingliang <yangyingliang@huaweicloud.com>
-To: linux-kernel@vger.kernel.org
-Cc: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	tglx@linutronix.de,
-	yu.c.chen@intel.com,
-	tim.c.chen@linux.intel.com,
-	yangyingliang@huawei.com,
-	liwei391@huawei.com
-Subject: [PATCH 4/4] sched/core: fix unbalance set_rq_online/offline() in sched_cpu_deactivate()
-Date: Wed,  3 Jul 2024 11:16:10 +0800
-Message-Id: <20240703031610.587047-5-yangyingliang@huaweicloud.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240703031610.587047-1-yangyingliang@huaweicloud.com>
-References: <20240703031610.587047-1-yangyingliang@huaweicloud.com>
+	s=arc-20240116; t=1719977041; c=relaxed/simple;
+	bh=qzEG3oESDXRJMNTCffvSAEMa/1sN/tHpyXP/Rj1Sn+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z3flJQmVQZBUbKV8i12jvOe/r3XE30NOX6q2sY88ngpTpra+HKRe+Xx3bQ03mdYlplS0bRL1bSi6Z06ntwHK7SBpa3shEbtjpOylqKMsXx6X0QRpFbzjlMXY8n9hnnR/R/tUcyW7eicXHAL3/I2vouoHjkhjG3m4TFe7qBbmz6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOr+k0fq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOr+k0fq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB074C116B1;
+	Wed,  3 Jul 2024 03:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719977041;
+	bh=qzEG3oESDXRJMNTCffvSAEMa/1sN/tHpyXP/Rj1Sn+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fOr+k0fqC1evUmg6/mUVKlLo6zR2tW4KkrPNeoLk/GSHeSOPVEoKjeG261K3q6jUY
+	 4NsIADTauazrNwuRNeEIfuY3KATdXiC3/1rqDVyavOhfYLL2zlPV+AsV5QbypMbE9K
+	 7NTq4pQdUlEAeogk+5qrjIYs0rqumcRMgNp9NpBHF9UwU4dc/4N4oenTQ/RRFjM4l9
+	 /iaTJvhV2SDQMj2wh5yy5gDvqLmaXmkKSOf6kOtV2nZRFpZAAzAuYG67d57Bjn5xVf
+	 Tyniog03qtH0xxdV9tC55hFAWHRvW8KRL3w4vWZB7ypYclN7+vZplGZcY7fyOu5FoB
+	 FD/ZcLD8PvhpQ==
+Date: Tue, 2 Jul 2024 20:23:58 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tools subcmd: Add non-waitpid
+ check_if_command_finished()
+Message-ID: <ZoTETvgcPdl9EUJV@google.com>
+References: <20240701044236.475098-1-irogers@google.com>
+ <20240701044236.475098-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBn0YZHw4Rm+T8VBA--.56302S8
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFyfWw43tw1fXFWrZw4fXwb_yoW3Awc_X3
-	W5WF1kJr95A3WI9r9xWF4fWryFva4UuF4FkrW7CFy7AFy5K39rtwn8KFyrurn8Grs3WFy2
-	vF1vqa1qvw1DCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbSxYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r126s
-	0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2
-	WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkE
-	bVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUoeOJUUUUU
-X-CM-SenderInfo: 51dqw5xlqjzxhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240701044236.475098-2-irogers@google.com>
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+Hi Ian,
 
-If cpuset_cpu_inactive() fails, set_rq_online() need be called to rollback.
+On Sun, Jun 30, 2024 at 09:42:35PM -0700, Ian Rogers wrote:
+> Using waitpid can cause stdout/stderr of the child process to be
+> lost. Use Linux's /prod/<pid>/status file to determine if the process
+> has reached the zombie state. Use the 'status' file rather than 'stat'
+> to avoid issues around skipping the process name.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/subcmd/run-command.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+> index 4e3a557a2f37..ec06683e77a0 100644
+> --- a/tools/lib/subcmd/run-command.c
+> +++ b/tools/lib/subcmd/run-command.c
+> @@ -2,6 +2,7 @@
+>  #include <unistd.h>
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+> +#include <ctype.h>
+>  #include <fcntl.h>
+>  #include <string.h>
+>  #include <linux/string.h>
+> @@ -217,8 +218,40 @@ static int wait_or_whine(struct child_process *cmd, bool block)
+>  
+>  int check_if_command_finished(struct child_process *cmd)
+>  {
+> +#ifdef __linux__
 
-Fixes: 120455c514f7 ("sched: Fix hotplug vs CPU bandwidth control")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- kernel/sched/core.c | 1 +
- 1 file changed, 1 insertion(+)
+Is this really necessary?  I don't think we plan to support other OS..
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2e114bce517a..01172d8bfe02 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -9781,6 +9781,7 @@ int sched_cpu_deactivate(unsigned int cpu)
- 	ret = cpuset_cpu_inactive(cpu);
- 	if (ret) {
- 		sched_smt_present_inc(cpu);
-+		sched_set_rq_online(rq, cpu);
- 		balance_push_set(cpu, false);
- 		set_cpu_active(cpu, true);
- 		sched_update_numa(cpu, true);
--- 
-2.25.1
+Thanks,
+Namhyung
 
+
+> +	char filename[FILENAME_MAX + 12];
+> +	char status_line[256];
+> +	FILE *status_file;
+> +
+> +	/*
+> +	 * Check by reading /proc/<pid>/status as calling waitpid causes
+> +	 * stdout/stderr to be closed and data lost.
+> +	 */
+> +	sprintf(filename, "/proc/%d/status", cmd->pid);
+> +	status_file = fopen(filename, "r");
+> +	if (status_file == NULL) {
+> +		/* Open failed assume finish_command was called. */
+> +		return true;
+> +	}
+> +	while (fgets(status_line, sizeof(status_line), status_file) != NULL) {
+> +		char *p;
+> +
+> +		if (strncmp(status_line, "State:", 6))
+> +			continue;
+> +
+> +		fclose(status_file);
+> +		p = status_line + 6;
+> +		while (isspace(*p))
+> +			p++;
+> +		return *p == 'Z';
+> +	}
+> +	/* Read failed assume finish_command was called. */
+> +	fclose(status_file);
+> +	return true;
+> +#else
+>  	wait_or_whine(cmd, /*block=*/false);
+>  	return cmd->finished;
+> +#endif
+>  }
+>  
+>  int finish_command(struct child_process *cmd)
+> -- 
+> 2.45.2.803.g4e1b14247a-goog
+> 
