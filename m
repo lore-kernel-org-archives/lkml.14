@@ -1,170 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721DE944E
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 07:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E3C13791F
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 07:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719993455; cv=none; b=b4Gt/dcEgb57+lKggSLylutefi9q8M5uWlWUtv6TL19c7CPxGsftObbW7ImTW7+MuuVWyCyi1QKEp2YzEfBA2tlZuu+JbjfAOicLfB+xr1rFV/sG040YuHBtOgYyisE9avlsWnamC5ml1PoFOtpUSAL/LC2+9Gm5+s0E3YwDM+k=
+	t=1719993545; cv=none; b=mn8iW8QSfmtLrZIiQBsEITVP6wHiehqHkhNl9Qp8q2tY+TFMv/aKknWUeqc5T2QgUuu1Pp6Y1RloCkh+KjWL0LbFKG8byfYqxSYXwXMLjRRANmEaVdGHx32tzziAiLrUDZl29keBgdlu3S6sX9KcHE8BiX5Pq8fg96VfI+613Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719993455; c=relaxed/simple;
-	bh=U+tuZf+gHrZIew88Zq0HhyZ0+J7x2Mhz/9FZdbvH6Bg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J9vyurBE0roQgx74wnWsx0OYrpNc+491UzfohxoCTH3Qr6HrK3fEbfpuMkgNRHf96mnSyl695lWjiTOHLCVz9K/D9j/5YhHiDDBbqy2RQ2usoKO8H73gxr14tjIybcZUSIRPYegbCE6vCr4fYa/W5PjllFXdNKNmTHobITM/rJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hTyE90hr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hTyE90hr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719993451;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ATgbDzJNw/2oGwBMOiWIjN3Qn1UCklmeTzoV2zYR45Y=;
-	b=hTyE90hrZpPA7rCvoJMFBttsO84hdETHQoiOo1/6jzwCukxY6T2bJqoE6G7z6J9+icfcYG
-	AV8QBOcXUB6QoJI9IMwhAm8nFAhK13lqnAX9/y5aAnaatKQBzWTyqkW3hob8jBfxMtWMoI
-	asOHuqBjUXLAYd31D9SeL1stxR9nv4g=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-609-ZdTBe2BGPsCytkSzIed9OA-1; Wed, 03 Jul 2024 03:57:30 -0400
-X-MC-Unique: ZdTBe2BGPsCytkSzIed9OA-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-36248c176c4so3236211f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 00:57:29 -0700 (PDT)
+	s=arc-20240116; t=1719993545; c=relaxed/simple;
+	bh=ctwAXw63syGVsiHuw0ufkQ8ZHLQHFEJy8pvxsdX9RdQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=EuxXjtfMW+HSkSKWZNgQVG5BdODzr3YTtj8MHkAzeNne+74eg1hsByif250G5VR5iuRieYuW7TF5eLmQYAbemTSftNpsqV9Z+wTeveFREguSHO303eNU8uD7O19ABc02ib+oyumv3oju/XnKu4HhWqsITLjJAU9rGyxrxKAvmIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7f3d2fd6ad6so580682139f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 00:59:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719993449; x=1720598249;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1719993543; x=1720598343;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ATgbDzJNw/2oGwBMOiWIjN3Qn1UCklmeTzoV2zYR45Y=;
-        b=EH91f3Npttb064XbNh0v1jY6SqlIe1dX+kxqrwC099ixigL/ZVAuNVosJUdo+Ojig2
-         tGecLzyvhUUDkILeNeCLlleyA4k7EkROheQ0FWSTW3OaqTiZJPkA4MyNKVMtn1UeNZWn
-         9yvz1vSvgyQnixJ/AhPdg1i9A/6vUxG0Q/jlK7MzIreF+DQyOje144w8K8Y/LDkZ5SiR
-         pq5GHwnKq2wWZ3myVxvbdvgxlKswklbEpsWaP7uD//ZfF2B0XJJtLpBqHx8XZEvJxpUN
-         9ZZbVbfdXFPtHJLj7tyAHM6RX0xRCtbks9ebCke+pLI/od3D6A2i1nYsQG5gLHYYEtFR
-         /nsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVoYZtSxwhEqMWv4YlPkv/P0lB0wzgbFnpy96BBfj2iVzAsy3EfXlFqAa57o04zVFCIw2DzJY6gP/riIR233jnBZm/uewct0mzV0bM2
-X-Gm-Message-State: AOJu0Yw6mCQzjXTah4vNnYTwy1Ao7KgUa9noaJkoGq4gKLn66HW79FV+
-	F62IGYesL3+pmYTdxXXzMUm4AZupOHclO0pZidVaVoRNqtZvt6oSDcuOXp5zK5ZoiDBjx8ss5Ut
-	RkVQqcdfebE4Gjow+IJGH7afQ3NtvGRZ4e4tCkTqdA6KtNoF9mLeunJ0+T5GHig==
-X-Received: by 2002:a05:6000:400d:b0:366:e685:d0cb with SMTP id ffacd0b85a97d-3677569762bmr7597289f8f.6.1719993449003;
-        Wed, 03 Jul 2024 00:57:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEgd9U2eqDjR78JXH16dEWMefFhv6oCfwMwNT/hPSpZD56c2ut2zLCAdpneI7XMTfA346aUUg==
-X-Received: by 2002:a05:6000:400d:b0:366:e685:d0cb with SMTP id ffacd0b85a97d-3677569762bmr7597268f8f.6.1719993448595;
-        Wed, 03 Jul 2024 00:57:28 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:d5:a000:680e:9bf4:b6a9:959b? ([2a01:e0a:d5:a000:680e:9bf4:b6a9:959b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0cd623sm15223623f8f.16.2024.07.03.00.57.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 00:57:28 -0700 (PDT)
-Message-ID: <10ea2ea1-e692-443e-8b48-ce9884e8b942@redhat.com>
-Date: Wed, 3 Jul 2024 09:57:26 +0200
+        bh=g5sRen1boiDRBnVM1/vjjXqoEqZQkJQ//9Z2zKOkZLg=;
+        b=lB49JFVw52oHNiF+fm1SNZvLRt7/Pm/FFjkA7Wmf8PJLQj1W3LpgaLYnOUViyinHyQ
+         pP+l4+ZWjIxlzqGfn2BnxSwnYcd6mnowtuow6Zwy+TAnQMJOn/6sJqLhFSzOsFr1A6Il
+         be8zKODt7b1GaTVwBsvUAatTo/2QS4MvcgRDzOaTuVu3Saw3JMYJre8r92nQYEa8TS74
+         q2zvEYsv1Kd9jFw3CME9BKsVa1XfjaSXImz6hitz37+4ZLPJIOwuF1tlLG7NsM95vH/V
+         M5+9Z2kJkrrQez3Ijj3Kzh8+icpMcwf9um9WAHDbFenR1BYvWRMs3WXxYrEVtaxxBpu4
+         Omfw==
+X-Gm-Message-State: AOJu0YymCbg1yDhyTuT5TBCEgJGLvFoIF8oBpkmo+L2AYo1s74hDLTaj
+	tzkJABpgWBRZa8K5GCNY2nWu9y0twU57rBtXUfVu+q7TMkjFKn2YFZ86fybyTSO1IkoRLphYrBV
+	7KNgpHw0oL7oJfacPb3r6N0AEBWCNJPCHKSFWON2sZp71NosXPK2loDE=
+X-Google-Smtp-Source: AGHT+IEyQ0jo0NZZ7/qwzTXqOTitt7dSWt7El2ekAvOYCjV8jYSaUF5fiWKx+mPo2NBzj7Vo4omBba8aMNt8+hevCeEOyCXvh6K0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
-To: Kees Cook <kees@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, Petr Mladek <pmladek@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>, John Ogness
- <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jani Nikula <jani.nikula@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20240702122639.248110-1-jfalempe@redhat.com>
- <202407021326.E75B8EA@keescook>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <202407021326.E75B8EA@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6602:1614:b0:7f3:d924:8618 with SMTP id
+ ca18e2360f4ac-7f62ed69089mr70984039f.0.1719993542917; Wed, 03 Jul 2024
+ 00:59:02 -0700 (PDT)
+Date: Wed, 03 Jul 2024 00:59:02 -0700
+In-Reply-To: <20240703072541.643035-2-radoslaw.zielonek@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000244dcc061c53341e@google.com>
+Subject: Re: [syzbot] [bpf?] [mm?] INFO: rcu detected stall in sys_clone (8)
+From: syzbot <syzbot+c4c6c3dc10cc96bcf723@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, radoslaw.zielonek@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+INFO: rcu detected stall in pipe_write
+
+rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: { 0-...D } 2685 jiffies s: 1749 root: 0x1/.
+rcu: blocking rcu_node structures (internal RCU debug):
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 5372 Comm: syz-executor.0 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+RIP: 0010:native_save_fl arch/x86/include/asm/irqflags.h:32 [inline]
+RIP: 0010:arch_local_save_flags arch/x86/include/asm/irqflags.h:67 [inline]
+RIP: 0010:arch_local_irq_save arch/x86/include/asm/irqflags.h:103 [inline]
+RIP: 0010:lock_acquire+0x17e/0x530 kernel/locking/lockdep.c:5750
+Code: 4c 89 fb 48 c1 eb 03 42 80 3c 2b 00 74 08 4c 89 ff e8 d6 a7 86 00 48 c7 84 24 80 00 00 00 00 00 00 00 9c 8f 84 24 80 00 00 00 <42> 80 3c 2b 00 74 08 4c 89 ff e8 c3 a6 86 00 48 8d 5c 24 60 4c 8b
+RSP: 0018:ffffc90000007b20 EFLAGS: 00000046
+RAX: 0000000000000000 RBX: 1ffff92000000f74 RCX: ffffffff8171b8f4
+RDX: 0000000000000000 RSI: ffffffff8bfec3a0 RDI: ffffffff8bfec360
+RBP: ffffc90000007c68 R08: ffffffff8f8638ef R09: 1ffffffff1f0c71d
+R10: dffffc0000000000 R11: fffffbfff1f0c71e R12: 1ffff92000000f6c
+R13: dffffc0000000000 R14: 0000000000000000 R15: ffffc90000007ba0
+FS:  0000555559d06480(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000c0000ab000 CR3: 000000004ddde000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <NMI>
+ </NMI>
+ <IRQ>
+ __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+ _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+ spin_lock include/linux/spinlock.h:351 [inline]
+ advance_sched+0xab/0xca0 net/sched/sch_taprio.c:924
+ __run_hrtimer kernel/time/hrtimer.c:1692 [inline]
+ __hrtimer_run_queues+0x595/0xd00 kernel/time/hrtimer.c:1756
+ hrtimer_interrupt+0x396/0x990 kernel/time/hrtimer.c:1818
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1032 [inline]
+ __sysvec_apic_timer_interrupt+0x107/0x3a0 arch/x86/kernel/apic/apic.c:1049
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
+ sysvec_apic_timer_interrupt+0xa1/0xc0 arch/x86/kernel/apic/apic.c:1043
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:finish_task_switch+0x1ea/0x870 kernel/sched/core.c:5284
+Code: c9 50 e8 c9 cc 0b 00 48 83 c4 08 4c 89 f7 e8 1d 38 00 00 0f 1f 44 00 00 4c 89 f7 e8 b0 ec 13 0a e8 db 58 36 00 fb 48 8b 5d c0 <48> 8d bb f0 15 00 00 48 89 f8 48 c1 e8 03 49 be 00 00 00 00 00 fc
+RSP: 0018:ffffc90004d9f608 EFLAGS: 00000286
+RAX: 0cc8c24fa40d4e00 RBX: ffff88807b770000 RCX: ffffffff944ba603
+RDX: dffffc0000000000 RSI: ffffffff8baac1e0 RDI: ffffffff8bfec3c0
+RBP: ffffc90004d9f650 R08: ffffffff8f8638ef R09: 1ffffffff1f0c71d
+R10: dffffc0000000000 R11: fffffbfff1f0c71e R12: 1ffff11017287e17
+R13: dffffc0000000000 R14: ffff8880b943e340 R15: ffff8880b943f0b8
+ context_switch kernel/sched/core.c:5413 [inline]
+ __schedule+0x17db/0x4a20 kernel/sched/core.c:6737
+ preempt_schedule_common+0x84/0xd0 kernel/sched/core.c:6916
+ preempt_schedule+0xe1/0xf0 kernel/sched/core.c:6940
+ preempt_schedule_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:12
+ __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+ _raw_spin_unlock_irqrestore+0x130/0x140 kernel/locking/spinlock.c:194
+ spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+ __wake_up_common_lock+0x18c/0x1e0 kernel/sched/wait.c:108
+ pipe_write+0x128d/0x1a40 fs/pipe.c:602
+ call_write_iter include/linux/fs.h:2108 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0xa84/0xcb0 fs/read_write.c:590
+ ksys_write+0x1a0/0x2c0 fs/read_write.c:643
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f1049e7cbef
+Code: 89 54 24 18 48 89 74 24 10 89 7c 24 08 e8 b9 80 02 00 48 8b 54 24 18 48 8b 74 24 10 41 89 c0 8b 7c 24 08 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 31 44 89 c7 48 89 44 24 08 e8 0c 81 02 00 48
+RSP: 002b:00007ffd35cde690 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007f1049e7cbef
+RDX: 000000000000000c RSI: 00007ffd35cde780 RDI: 00000000000000f8
+RBP: 00007ffd35cde71c R08: 0000000000000000 R09: 00007f104ab390b0
+R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000032
+R13: 0000000000017c34 R14: 0000000000017c2c R15: 0000000000000004
+ </TASK>
 
 
+Tested on:
 
-On 02/07/2024 22:29, Kees Cook wrote:
-> On Tue, Jul 02, 2024 at 02:26:04PM +0200, Jocelyn Falempe wrote:
->> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
->> callback.
->> This patch adds a new struct kmsg_dump_detail, that will hold the
->> reason and description, and pass it to the dump() callback.
-> 
-> Thanks! I like this much better. :)
-> 
->>
->> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
->> function and a macro for backward compatibility.
->>
->> I've written this for drm_panic, but it can be useful for other
->> kmsg_dumper.
->> It allows to see the panic reason, like "sysrq triggered crash"
->> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
->>
->> v2:
->>   * Use a struct kmsg_dump_detail to hold the reason and description
->>     pointer, for more flexibility if we want to add other parameters.
->>     (Kees Cook)
->>   * Fix powerpc/nvram_64 build, as I didn't update the forward
->>     declaration of oops_to_nvram()
-> 
-> The versioning history commonly goes after the "---".
-
-ok, I was not aware of this.
-> 
->> [...]
->> diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
->> index 906521c2329c..65f5a47727bc 100644
->> --- a/include/linux/kmsg_dump.h
->> +++ b/include/linux/kmsg_dump.h
->> @@ -39,6 +39,17 @@ struct kmsg_dump_iter {
->>   	u64	next_seq;
->>   };
->>   
->> +/**
->> + *struct kmsg_dump_detail - kernel crash detail
-> 
-> Is kern-doc happy with this? I think there is supposed to be a space
-> between the "*" and the first word:
-> 
->   /**
->    * struct kmsg...
-> 
-> 
-Good catch, yes there is a space missing.
-
-I just checked with "make htmldocs", and in fact 
-include/linux/kmsg_dump.h is not indexed for kernel documentation.
-And you can't find the definition of struct kmsg_dumper in the online doc.
-https://www.kernel.org/doc/html/latest/search.html?q=kmsg_dumper
-
-> Otherwise looks good to me!
-> 
-
-Thanks.
-
-As this patch touches different subsystems, do you know on which tree it 
-should land ?
-
--- 
-
-Jocelyn
+commit:         fe46a7dd Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b491be980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2bf01fac005fe0a9
+dashboard link: https://syzkaller.appspot.com/bug?extid=c4c6c3dc10cc96bcf723
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12de23c6980000
 
