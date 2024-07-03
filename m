@@ -1,113 +1,141 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18F017C7AB;
-	Wed,  3 Jul 2024 17:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900B817F511
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 17:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720028837; cv=none; b=Lg8rM27poiKhaiJeAZEKzYOq9KEKDhyBLzN3auoJPF4mUQ+ZBTtztp00XozU18sMei7SK74wcvXx5sQ7iDjEe2HV+fSDvdravJE0MQTBfO8HmVYz7HGIel2RLWBEAp+O+6pNyjee7OE/mUOL/1cTiO912Vlm5BZS2zOSd0ykyhk=
+	t=1720028910; cv=none; b=XqQcY1ykeNNSH8NsLXLHml2CdYnMp+JxjWg6C+yIXZxYS/mLnJouQvjXZaiJQFlztnN4Nbki4tZcCG32a68fu/UjWtdIjteNT3ogpVJ5UWN/Xr5v3YNjwMRUZG6NsVFEMPoWgSiBU8gcvCAzEuqzTUgTjxWLlhBSDlw8jjOrvao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720028837; c=relaxed/simple;
-	bh=0BOoSN/vwKF5iPbUzVkATDPa38qHBiYNj4pLU49zhPs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=QVEfhMnJfFPh6VfnozlAK2VBJKr1V/5bPLffD4ZK+4EMtLML5BaXezZnDZ5N+OhfAGbFH3ttvdh0WWyj0BF3V+jQnnh/cgDqvOQx7poxvyOVgR9wOtvGoVn3BDCx0hkzx0TsdwH3XqANhVQh8Ej5Nktxtf/B9tOVEZYWez7c9xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y3aHrPsx; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720028910; c=relaxed/simple;
+	bh=N8V2R60Um4mvF/DP+2QgAWbUsTYcbkQA65824qtqEKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lsaf/dL7VyLNOn5xxYzbvL/17yXAedM8QojaqHWpCpHzxku2tcCj0C5H7w+ymj+sE/3PDMK8ph5DOHahl1kO0sEkTEMCggzp7sOj301D21Dc3cErr0GzTBG1uWusQvp7i9NxXBzn5DyHsy1L3O2I01Wjo18VGu7t1EKduL7LUUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vEoJGHUm; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y3aHrPsx"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463Ec3eS023282;
-	Wed, 3 Jul 2024 17:47:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	K8kXkUMRuS5ZJkoOu4J5Www9AwgUv/jNADsGdmLz0Q0=; b=Y3aHrPsx9irOOfYH
-	IHk9HNyLrCH8FqWyhimSTUQjWhPKx93NlkUgNGTLeBG0pMccoS1aiChgkpEWyfT+
-	SEQT3I2l6A1hfXk+czHC/bc1hld1tfy86XBgL+CyQrjEB9fZnXQoS+PA+N93BT25
-	9hpZOxMZYSi79tZx0fhRNZS2Tr41Nf4duqaEuKsKIvGrZaCKtsR6EkLhRF200Xf8
-	8dqgA3U0y8j4OSWBmvXLOjQGV2IgPynZT/lyW22kgu4Ts+hpzUw+CtqwKj/EkfOw
-	537cHsc/0hmuf+v8jxMOWeSvQiLmXocwEi2dlawpIA8QT68IH/wR8YEawRaXJEIe
-	3+cagg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4050cy9qk8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 17:47:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 463HlAFU021100
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Jul 2024 17:47:10 GMT
-Received: from [10.216.27.55] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 3 Jul 2024
- 10:47:04 -0700
-Message-ID: <8b19c43e-6b13-4b09-9498-ee0b24749d3f@quicinc.com>
-Date: Wed, 3 Jul 2024 23:17:01 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEoJGHUm"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4e4efbc3218so2092583e0c.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 10:48:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720028906; x=1720633706; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SjTTtlNb0syE5KHwXFKv4dS9jF5tUNRtWjSxSGgYhH8=;
+        b=vEoJGHUmZiE8r859Sd05aMMQeZp69insLmefrK2b9m0wBH3S5UKAed9BPNFxofjm8z
+         039zaDIfhLi4/OEhzOGG801EcnAnzyzzX+W2+p/ybCUl0CP6AHk8Z+46nTaiuJA/J5a9
+         jt1TjR4ykl3aBMyM3v2eZVwBTyeF6ZQC2vgLlTymIhOIbREPbxCHwOgfcaG/eLAAynWq
+         uVeewVNge0LY5RQIqiK/88FLSqPutFjspGZfPWk60nJXCpBz0nO2+zyVQXhVBco7AxCS
+         +2JUfrEOmwt/miEKpU3IC2HllL7BvUj2riL6THx/pLW6Lzu0tqzZOHBD3bm+7/BiFWfR
+         vBsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720028906; x=1720633706;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SjTTtlNb0syE5KHwXFKv4dS9jF5tUNRtWjSxSGgYhH8=;
+        b=iNv9Ya0jXOp6pMS5kRn1EMcXAJy4xXegrnc437DjmhXjgX05ursr+W3rF+fVsFmZph
+         6CItSLGJdiaHV2cSmHq7O6yEz82vbv53qzt2RXCKCj6hZ2FVUnQR06DrGafcjqSZE6CJ
+         tDBCWPbfKZtTt/yQvgmb0SQxtWhKN1ufJ2MvysI/JPn+m+89LGBVlgzpHZ6kqmeAt9SK
+         wl4aLCE71U5eFb2FsChhMty4ZPm/Fj6Rv0npwnGbzsCALfY7N9jRqXOpQricEyYRD62r
+         CVEOG/wVXi/ISDqAYsJFZbt2Gjw1qDw+HuyIpjnpFzwUZas8Use1GOz4ViZhjjLFlYj/
+         ovoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5ihgojuZlYRQzj62ougo/L0vM5nhPjFfbSIBURdDSSvPLLJWr8qf2QzPCpWUpoy7He085Z6Ry/CGJcsmd0PEQ5G8ND1kT+blI1ySJ
+X-Gm-Message-State: AOJu0YwFa5Vy80gELrNex69RvNt8KWmo4bbPmIFlzq1HA5YoiSzfTQwu
+	XK6Zv6Cf5h84aNAV2Gh/+ouWEC5zvZ3wUhVioq89IeOjd3/Ax/ms+rFtyVHGVJ0zpCy/fI+Mfp+
+	MsMictzGeMJXjd69rCKPELZlwreGsMViXF5Md2A==
+X-Google-Smtp-Source: AGHT+IHq4gQLLZyc40X+uhVEaroOxiBVWeM6dpArotla1mzYAwd70XY8Y0gppC8vzwEKdeysF2KmeOOv9KP+gfgSVoE=
+X-Received: by 2002:a05:6122:f0b:b0:4ef:320f:9f13 with SMTP id
+ 71dfb90a1353d-4f2a55043e0mr15627099e0c.0.1720028906555; Wed, 03 Jul 2024
+ 10:48:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] clk: qcom: Add support for Display clock Controllers
- on SA8775P
-From: Taniya Das <quic_tdas@quicinc.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_jkona@quicinc.com>, <quic_imrashai@quicinc.com>
-References: <20240612-sa8775p-mm-clock-controllers-v1-0-db295a846ee7@quicinc.com>
- <20240612-sa8775p-mm-clock-controllers-v1-6-db295a846ee7@quicinc.com>
- <37bbd466-742a-4a23-b3f7-97f8da109608@linaro.org>
- <053e047b-7594-48bc-ac1b-2368c0c8f1cc@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <053e047b-7594-48bc-ac1b-2368c0c8f1cc@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 8H2dPhFn5YhAlR8i7vPvW68GStYIusos
-X-Proofpoint-ORIG-GUID: 8H2dPhFn5YhAlR8i7vPvW68GStYIusos
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_12,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- mlxlogscore=955 priorityscore=1501 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407030132
+References: <20240703102841.492044697@linuxfoundation.org>
+In-Reply-To: <20240703102841.492044697@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 3 Jul 2024 23:18:15 +0530
+Message-ID: <CA+G9fYvXVQ599HH3ZYfNEZrZwacR-0hzKCqrLa=+ON0hDTwwGQ@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/189] 5.4.279-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+
+On Wed, 3 Jul 2024 at 16:20, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.279 release.
+> There are 189 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 05 Jul 2024 10:28:06 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.279-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
 
+The s390 builds failed on stable-rc 5.4.279-rc1 due to following build
+warnings / errors.
 
-On 6/21/2024 10:03 AM, Taniya Das wrote:
->> Please merge this into one to save on boilerplate, take a look
->> at dispcc-sc8280xp.c
->>
-> 
-> I did take a look at the dispcc for SC8280XP before posting the series, 
-> but it kind of looked tricky to add fixes for a particular dispcc.
-> Debugging could also be difficult in my opinion.
-> Though I understand that we are trying to optimize by re-using few 
-> common structures/probe but from clocks side they are all redefined.
-> That was the reason to keep them separate.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Konrad, are you good with the proposal to keep the two instance of 
-display clock controllers as separate drivers? As I looking to post
-the next patch series, please let me know your comments.
+Regressions found on s390:
 
--- 
-Thanks & Regards,
-Taniya Das.
+  - gcc-12-defconfig
+  - gcc-8-defconfig-fe40093d
+
+
+Build log:
+------
+arch/s390/include/asm/cpacf.h: In function 'cpacf_km':
+arch/s390/include/asm/cpacf.h:320:29: error: storage size of 'd' isn't known
+  320 |         union register_pair d, s;
+      |                             ^
+arch/s390/include/asm/cpacf.h:320:32: error: storage size of 's' isn't known
+  320 |         union register_pair d, s;
+      |                                ^
+arch/s390/include/asm/cpacf.h:320:32: warning: unused variable 's'
+[-Wunused-variable]
+arch/s390/include/asm/cpacf.h:320:29: warning: unused variable 'd'
+[-Wunused-variable]
+  320 |         union register_pair d, s;
+      |                             ^
+
+Build log link,
+ [1] https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.278-190-gccd91126c63d/testrun/24509933/suite/build/test/gcc-12-defconfig/log
+ [2] https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.278-190-gccd91126c63d/testrun/24509933/suite/build/test/gcc-12-defconfig/details/
+
+Build config url:
+  config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ijXtfDw1Nbem1ANR1V8mLxfNeR/config
+  download_url:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2ijXtfDw1Nbem1ANR1V8mLxfNeR/
+
+metadata:
+  git_describe: v5.4.278-190-gccd91126c63d
+  git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git_short_log: ccd91126c63d ("Linux 5.4.279-rc1")
+  toolchain: gcc-12
+  arch: s390
+
+--
+Linaro LKFT
+https://lkft.linaro.org
