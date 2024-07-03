@@ -1,29 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CA9F13DDA1
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B2DA143C51
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 10:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720001275; cv=none; b=N+UKv3MxVsCIuD/uXt1dILG//Mn+eTADNvXkUYVxXJc59YrCG8ms07RyN5BFURYWV27/2iNhqeY/me6ZZ3uT+2D1E1wVOpRnmVucVVjvXztEAI6PmBuVPgPEw9n8JyTeMd0bOsLBKiKm5tiZJlPFZGPtQDPqMhYIe+WvTFAAaZI=
+	t=1720001276; cv=none; b=bF/TsT0x2qaWmP2iPwj/u5kLBDl+X+mCEVSU3F2kFJEAKbnENj1VyFv+/OH/JtLh1T3Q2I3qCSLGuTY3HD+bsaq2tx7Q31J5fD24bCwRj8yromLoV/4kRAx116HIq7s6FTQC8W8iMmpE+dom6R1IsNFkHrKwzzqnF8LCptIDb3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720001275; c=relaxed/simple;
-	bh=9DJYjW/ca2L9cBZDJA7xYMtpGPyERgP8agG4YVqMgzg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FGx9tehvVLl78ZCJTJuquqlvoHrBcLk5TEE383Aiofq0XWIxyHS8KN8oXU5yNApz5/W3prTeJJ0PWbIrUrcZzZc73d+hK1v5FM/Bi4Khscj5rwP0giUmZM2S7ij56RHvRYkV7vksrINCO8ukiY44YTvE+9dSA9pxKsh844E6iY4=
+	s=arc-20240116; t=1720001276; c=relaxed/simple;
+	bh=SgHDnlKUpFZa1mecD7sSwc8oq/o6fVz9O73YRXtmBVQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=K4vM+lhT5vt9LELEAAkJHO9I001P6/TUEziwhb0gWC/mQOXmybgfzDzQJ8afchT0xTDXdBF9mPlUX5I5FoVLkCyHRLSu4UKrZZrSoDXtk/o+ZuNzRa5VRS/vbdjVZhrIZCUTi916B1daH5dE2vcwUv9fIxT2QPLq3VyxEga/Mkc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A22C9367;
-	Wed,  3 Jul 2024 03:08:17 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8D311688;
+	Wed,  3 Jul 2024 03:08:18 -0700 (PDT)
 Received: from e130256.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36FC63F766;
-	Wed,  3 Jul 2024 03:07:52 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E9BB3F766;
+	Wed,  3 Jul 2024 03:07:53 -0700 (PDT)
 From: Hongyan Xia <hongyan.xia2@arm.com>
 To: Tejun Heo <tj@kernel.org>
 Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] Move uclamp to each sched_class
-Date: Wed,  3 Jul 2024 11:07:46 +0100
-Message-Id: <cover.1719999165.git.hongyan.xia2@arm.com>
+Subject: [PATCH 2/2] sched/ext: Add BPF functions for uclamp inc and dec
+Date: Wed,  3 Jul 2024 11:07:48 +0100
+Message-Id: <34f3e33aa236445d677ea2b48d2d556178c1ac34.1719999165.git.hongyan.xia2@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1719999165.git.hongyan.xia2@arm.com>
+References: <cover.1719999165.git.hongyan.xia2@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,39 +35,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi. I only just started looking at sched_ext a couple of days ago so
-feel free to correct me if sched_ext patches have different rules,
-different cc's and different mailing lists than normal LKML.
+A sched_ext scheduler may have different choices for uclamp:
 
-This mini series delegates uclamp operations to each sched_class. The
-problem with the current handling of uclamp is that it seems to be a
-global thing but it conditions on sched_class->uclamp_enabled anyway, so
-it is in fact already kind of sched_class-specific. So, remove
-sched_class->uclamp_enabled and just let each class decide what to do.
+1. Re-use the current uclamp implementation
+2. Ignore uclamp completely
+3. Have its own custom uclamp implemenation
 
-More importantly, sched_ext no longer unconditionally follows the
-existing uclamp implementation, but instead each custom scheduler
-decides itself what to do. It can re-use the existing uclamp, ignore
-uclamp completely, or have its own uclamp implementation.
+We expose uclamp BPF functions and let the scheduler itself decide what
+to do.
 
-Some simple testing with trace_printk() shows uclamp_rq_{inc,dec}() are
-called successfully from a sched_ext scheduler:
-
-	[002] d..21  1016.017441: uclamp_rq_dec: sched_ext uclamp dec
-	[002] dN.21  1016.017456: uclamp_rq_inc: sched_ext uclamp inc
-
-Hongyan Xia (2):
-  sched/uclamp: Delegate uclamp to each sched_class
-  sched/ext: Add BPF functions for uclamp inc and dec
-
- kernel/sched/core.c                      | 14 ++------------
- kernel/sched/ext.c                       | 16 ++++++++++++----
- kernel/sched/fair.c                      |  6 ++----
- kernel/sched/rt.c                        |  7 +++----
- kernel/sched/sched.h                     | 15 +++++++++++----
+Signed-off-by: Hongyan Xia <hongyan.xia2@arm.com>
+---
+ kernel/sched/ext.c                       | 12 ++++++++++++
  tools/sched_ext/include/scx/common.bpf.h |  2 ++
- 6 files changed, 32 insertions(+), 28 deletions(-)
+ 2 files changed, 14 insertions(+)
 
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 0b120104a7ce..48c553b6f0c3 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -6108,6 +6108,16 @@ __bpf_kfunc s32 scx_bpf_task_cpu(const struct task_struct *p)
+ 	return task_cpu(p);
+ }
+ 
++__bpf_kfunc void scx_bpf_uclamp_rq_inc(s32 cpu, struct task_struct *p)
++{
++	uclamp_rq_inc(cpu_rq(cpu), p);
++}
++
++__bpf_kfunc void scx_bpf_uclamp_rq_dec(s32 cpu, struct task_struct *p)
++{
++	uclamp_rq_dec(cpu_rq(cpu), p);
++}
++
+ __bpf_kfunc_end_defs();
+ 
+ BTF_KFUNCS_START(scx_kfunc_ids_any)
+@@ -6132,6 +6142,8 @@ BTF_ID_FLAGS(func, scx_bpf_pick_idle_cpu, KF_RCU)
+ BTF_ID_FLAGS(func, scx_bpf_pick_any_cpu, KF_RCU)
+ BTF_ID_FLAGS(func, scx_bpf_task_running, KF_RCU)
+ BTF_ID_FLAGS(func, scx_bpf_task_cpu, KF_RCU)
++BTF_ID_FLAGS(func, scx_bpf_uclamp_rq_inc)
++BTF_ID_FLAGS(func, scx_bpf_uclamp_rq_dec)
+ BTF_KFUNCS_END(scx_kfunc_ids_any)
+ 
+ static const struct btf_kfunc_id_set scx_kfunc_set_any = {
+diff --git a/tools/sched_ext/include/scx/common.bpf.h b/tools/sched_ext/include/scx/common.bpf.h
+index dbbda0e35c5d..85ddc94fb4c1 100644
+--- a/tools/sched_ext/include/scx/common.bpf.h
++++ b/tools/sched_ext/include/scx/common.bpf.h
+@@ -57,6 +57,8 @@ s32 scx_bpf_pick_idle_cpu(const cpumask_t *cpus_allowed, u64 flags) __ksym;
+ s32 scx_bpf_pick_any_cpu(const cpumask_t *cpus_allowed, u64 flags) __ksym;
+ bool scx_bpf_task_running(const struct task_struct *p) __ksym;
+ s32 scx_bpf_task_cpu(const struct task_struct *p) __ksym;
++void scx_bpf_uclamp_rq_inc(s32 cpu, struct task_struct *p) __ksym;
++void scx_bpf_uclamp_rq_dec(s32 cpu, struct task_struct *p) __ksym;
+ 
+ static inline __attribute__((format(printf, 1, 2)))
+ void ___scx_bpf_bstr_format_checker(const char *fmt, ...) {}
 -- 
 2.34.1
 
