@@ -1,152 +1,297 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813A7184101;
-	Wed,  3 Jul 2024 14:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50FB181BA6;
+	Wed,  3 Jul 2024 14:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720015702; cv=none; b=AXipp6iH+zMY2frcu8TDf+sOvjt0FYHxjW/KlHIIXGuzioC7SNbvBIKIJyuUSI7hcxYUcpNPqqI8prLEA7bkNwdKX6I1acRmyoEl/Q7LZ4UiNMgIMx+3l7tEtW5jsD+L6LhFKedhhDdtfM0Ld2R0Uc+6/bqyABdoDB+1nMvMhvM=
+	t=1720015701; cv=none; b=a0MFjjelVBYxfMpdkMFmIuVQs2Wsqy9bjxX0XwpdjP0oXkr6WMTe045kYpYFP5EHxnfVVKGcimA0KqTLOkqUlYpSirC6+/jEquyFb7PySt21eVhuBfDSFBZLnvSk4djkOHvBZizWc63g7walG7hXLCNjAd3gsv8e0w7IjCw/ATg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720015702; c=relaxed/simple;
-	bh=ML2AEriOnHqO1QXh0j87+85SYqypaQr6iAt1xf7pymA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KCSjpPAKfjMYH6b2NmfoGpnQRdSrQE/fZPMV5hN7b1aGp5hGRH7x9fFaB88gXninCZwXa0iAt4NHFKh4YpS5FDjUMvfmMEbh+SMKCFDkElPAXfC/ulmXDF5mqW9hCzg8A+XEy6Nozxm8E4vFVhO05e1ubyGePrfo2zOR4cwXSkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/ZaJTbm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720015701; c=relaxed/simple;
+	bh=T2reYrMTmf+Fd0m4HL+t0mvKjWTXe1crbuU324G/4CQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JKlZvE3CKjas3KU0eocLK+br0UcFy+g0R0oGX0OtEeNKbkZEsQRuUfFQE6s7JatdWpoSeiDCyAgX+BALytCOzndSO8/VXP1SSDrEc7sBAJjGptxLEldfBby1qiHshW7zn1MoEtTgOYXm50HZg6m28twu2yPtiBbuzF2dGJuZiLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Xyb1uXAX; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/ZaJTbm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0017CC4AF19;
-	Wed,  3 Jul 2024 14:08:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720015702;
-	bh=ML2AEriOnHqO1QXh0j87+85SYqypaQr6iAt1xf7pymA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=j/ZaJTbm+XyN1fiRowPjnCzjA8P+hve726cRrUseYOEkgBjpelsI5ibpyPttVZ3OW
-	 HpwMEWhCGSiwXbCvEt0HLD9C4BbKd7NEv7ZRBxI6tgTE9U0MYM5sdEjLbY60WoBFiK
-	 2jAE4eGWYIiACmVjNg+ChMF5uHKQgNnSHuZ9uj4MdGyFtKwsy8bblIan0RD0c6FW4f
-	 LvuptEzgd4pQG2+jq4VTCG3shuKFMoSvoHf+yLVMBJNzxyiysNzLHSKJflJWvEBHuN
-	 SEDU8uRP8JxJuWHwS84dpBxkHQP/Guwe2IOXjTdl2JYSt8MbghBSsxIxm/k2teMl8x
-	 SB5MUAOFRTdWQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 93CF5CE0BC3; Wed,  3 Jul 2024 07:08:21 -0700 (PDT)
-Date: Wed, 3 Jul 2024 07:08:21 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com,
-	bpf@vger.kernel.org, jolsa@kernel.org, clm@meta.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
- and per-CPU RW semaphore
-Message-ID: <6b728325-b628-488f-aabf-dbd9afa388fb@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240702102353.GG11386@noisy.programming.kicks-ass.net>
- <20240702115447.GA28838@noisy.programming.kicks-ass.net>
- <CAEf4BzaQUzQdba2=F2NoV7=Th98fxz2EN62QX2Ej92bazt1GAg@mail.gmail.com>
- <20240702191857.GJ11386@noisy.programming.kicks-ass.net>
- <fd1d8b71-2a42-4649-b7ba-1b2e88028a20@paulmck-laptop>
- <20240703075057.GK11386@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Xyb1uXAX"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0E9A2E0008;
+	Wed,  3 Jul 2024 14:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720015697;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zvBYGfieJNSgOMTMs4ygDpieBcSveTVULv9bAWmHcks=;
+	b=Xyb1uXAXr47SKsY3f4HYeDYTkKnFr/7aOF7HSwj5hYQzo5JoLTWDqHfOtIKwSKTdLP+xMd
+	bQdCTbDmymq6MVtT6eHEdHhYdXNAcdD3TvQFmiZxsQkDs1uJBUSY9Hjaw+5zEfscI2RPDH
+	IkbpGXfswXBgR4Kun9bMXfbmtoaMT9VGWzkxDxrho+m2oMllAQpOSlv109e6hA9EfoBqga
+	OHt6OQjRGXkth4vYPYsImaM/Ifa97ykkILvuhK4YNL5URvEb3xPlT7nmpu5YiD7hI2ARWG
+	zedA7ai1RBuiLq+FIp2fvzEYKD/xGOLAueo7ELdk3warLGVNaKhtyvTH4Tw/DA==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	mwojtas@chromium.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Antoine Tenart <atenart@kernel.org>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH net-next v15 05/14] net: ethtool: Allow passing a phy index for some commands
+Date: Wed,  3 Jul 2024 16:07:55 +0200
+Message-ID: <20240703140806.271938-6-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240703140806.271938-1-maxime.chevallier@bootlin.com>
+References: <20240703140806.271938-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703075057.GK11386@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Wed, Jul 03, 2024 at 09:50:57AM +0200, Peter Zijlstra wrote:
-> On Tue, Jul 02, 2024 at 04:56:53PM -0700, Paul E. McKenney wrote:
-> 
-> > > Paul, isn't this the RCU flavour you created to deal with
-> > > !rcu_is_watching()? The flavour that never should have been created in
-> > > favour of just cleaning up the mess instead of making more.
-> > 
-> > My guess is that you are instead thinking of RCU Tasks Rude, which can
-> > be eliminated once all architectures get their entry/exit/deep-idle
-> > functions either inlined or marked noinstr.
-> 
-> Would it make sense to disable it for those architectures that have
-> already done this work?
+Some netlink commands are target towards ethernet PHYs, to control some
+of their features. As there's several such commands, add the ability to
+pass a PHY index in the ethnl request, which will populate the generic
+ethnl_req_info with the passed phy_index.
 
-It might well.  Any architectures other than x86 at this point?
+Add a helper that netlink command handlers need to use to grab the
+targeted PHY from the req_info. This helper needs to hold rtnl_lock()
+while interacting with the PHY, as it may be removed at any point.
 
-But this is still used in common code, so let's see...  In that case,
-synchronize_rcu_tasks_rude() becomes a no-op, call_rcu_tasks_rude() can be
-a wrapper around something like queue_work(), and rcu_barrier_tasks_rude()
-can be a wrapper around something like flush_work().
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ Documentation/networking/ethtool-netlink.rst |  7 +++
+ include/uapi/linux/ethtool_netlink.h         |  1 +
+ net/ethtool/netlink.c                        | 57 +++++++++++++++++++-
+ net/ethtool/netlink.h                        | 28 ++++++++++
+ 4 files changed, 91 insertions(+), 2 deletions(-)
 
-Except that call_rcu_tasks_rude() and rcu_barrier_tasks_rude() are not
-actually used outside of testing, so maybe they can be dropped globally.
+diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
+index bfe2eda8580d..0b5712d7c0cb 100644
+--- a/Documentation/networking/ethtool-netlink.rst
++++ b/Documentation/networking/ethtool-netlink.rst
+@@ -57,6 +57,7 @@ Structure of this header is
+   ``ETHTOOL_A_HEADER_DEV_INDEX``  u32     device ifindex
+   ``ETHTOOL_A_HEADER_DEV_NAME``   string  device name
+   ``ETHTOOL_A_HEADER_FLAGS``      u32     flags common for all requests
++  ``ETHTOOL_A_HEADER_PHY_INDEX``  u32     phy device index
+   ==============================  ======  =============================
+ 
+ ``ETHTOOL_A_HEADER_DEV_INDEX`` and ``ETHTOOL_A_HEADER_DEV_NAME`` identify the
+@@ -81,6 +82,12 @@ the behaviour is backward compatible, i.e. requests from old clients not aware
+ of the flag should be interpreted the way the client expects. A client must
+ not set flags it does not understand.
+ 
++``ETHTOOL_A_HEADER_PHY_INDEX`` identifies the Ethernet PHY the message relates to.
++As there are numerous commands that are related to PHY configuration, and because
++there may be more than one PHY on the link, the PHY index can be passed in the
++request for the commands that needs it. It is, however, not mandatory, and if it
++is not passed for commands that target a PHY, the net_device.phydev pointer
++is used.
+ 
+ Bit sets
+ ========
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index 840dabdc9d88..754e662ffdf4 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -134,6 +134,7 @@ enum {
+ 	ETHTOOL_A_HEADER_DEV_INDEX,		/* u32 */
+ 	ETHTOOL_A_HEADER_DEV_NAME,		/* string */
+ 	ETHTOOL_A_HEADER_FLAGS,			/* u32 - ETHTOOL_FLAG_* */
++	ETHTOOL_A_HEADER_PHY_INDEX,		/* u32 */
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_A_HEADER_CNT,
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 81fe2e5b95f6..65cc453b60dd 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -2,6 +2,7 @@
+ 
+ #include <net/sock.h>
+ #include <linux/ethtool_netlink.h>
++#include <linux/phy_link_topology.h>
+ #include <linux/pm_runtime.h>
+ #include "netlink.h"
+ #include "module_fw.h"
+@@ -31,6 +32,24 @@ const struct nla_policy ethnl_header_policy_stats[] = {
+ 							  ETHTOOL_FLAGS_STATS),
+ };
+ 
++const struct nla_policy ethnl_header_policy_phy[] = {
++	[ETHTOOL_A_HEADER_DEV_INDEX]	= { .type = NLA_U32 },
++	[ETHTOOL_A_HEADER_DEV_NAME]	= { .type = NLA_NUL_STRING,
++					    .len = ALTIFNAMSIZ - 1 },
++	[ETHTOOL_A_HEADER_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
++							  ETHTOOL_FLAGS_BASIC),
++	[ETHTOOL_A_HEADER_PHY_INDEX]		= NLA_POLICY_MIN(NLA_U32, 1),
++};
++
++const struct nla_policy ethnl_header_policy_phy_stats[] = {
++	[ETHTOOL_A_HEADER_DEV_INDEX]	= { .type = NLA_U32 },
++	[ETHTOOL_A_HEADER_DEV_NAME]	= { .type = NLA_NUL_STRING,
++					    .len = ALTIFNAMSIZ - 1 },
++	[ETHTOOL_A_HEADER_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
++							  ETHTOOL_FLAGS_STATS),
++	[ETHTOOL_A_HEADER_PHY_INDEX]		= NLA_POLICY_MIN(NLA_U32, 1),
++};
++
+ int ethnl_sock_priv_set(struct sk_buff *skb, struct net_device *dev, u32 portid,
+ 			enum ethnl_sock_type type)
+ {
+@@ -119,7 +138,7 @@ int ethnl_parse_header_dev_get(struct ethnl_req_info *req_info,
+ 			       const struct nlattr *header, struct net *net,
+ 			       struct netlink_ext_ack *extack, bool require_dev)
+ {
+-	struct nlattr *tb[ARRAY_SIZE(ethnl_header_policy)];
++	struct nlattr *tb[ARRAY_SIZE(ethnl_header_policy_phy)];
+ 	const struct nlattr *devname_attr;
+ 	struct net_device *dev = NULL;
+ 	u32 flags = 0;
+@@ -134,7 +153,7 @@ int ethnl_parse_header_dev_get(struct ethnl_req_info *req_info,
+ 	/* No validation here, command policy should have a nested policy set
+ 	 * for the header, therefore validation should have already been done.
+ 	 */
+-	ret = nla_parse_nested(tb, ARRAY_SIZE(ethnl_header_policy) - 1, header,
++	ret = nla_parse_nested(tb, ARRAY_SIZE(ethnl_header_policy_phy) - 1, header,
+ 			       NULL, extack);
+ 	if (ret < 0)
+ 		return ret;
+@@ -175,11 +194,45 @@ int ethnl_parse_header_dev_get(struct ethnl_req_info *req_info,
+ 		return -EINVAL;
+ 	}
+ 
++	if (tb[ETHTOOL_A_HEADER_PHY_INDEX]) {
++		if (dev) {
++			req_info->phy_index = nla_get_u32(tb[ETHTOOL_A_HEADER_PHY_INDEX]);
++		} else {
++			NL_SET_ERR_MSG_ATTR(extack, header,
++					    "phy_index set without a netdev");
++			return -EINVAL;
++		}
++	}
++
+ 	req_info->dev = dev;
+ 	req_info->flags = flags;
+ 	return 0;
+ }
+ 
++struct phy_device *ethnl_req_get_phydev(const struct ethnl_req_info *req_info,
++					const struct nlattr *header,
++					struct netlink_ext_ack *extack)
++{
++	struct phy_device *phydev;
++
++	ASSERT_RTNL();
++
++	if (!req_info->dev)
++		return NULL;
++
++	if (!req_info->phy_index)
++		return req_info->dev->phydev;
++
++	phydev = phy_link_topo_get_phy(req_info->dev, req_info->phy_index);
++	if (!phydev) {
++		NL_SET_ERR_MSG_ATTR(extack, header,
++				    "no phy matching phyindex");
++		return ERR_PTR(-ENODEV);
++	}
++
++	return phydev;
++}
++
+ /**
+  * ethnl_fill_reply_header() - Put common header into a reply message
+  * @skb:      skb with the message
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index 46ec273a87c5..4db16048f8d4 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -251,6 +251,9 @@ static inline unsigned int ethnl_reply_header_size(void)
+  * @dev:   network device the request is for (may be null)
+  * @dev_tracker: refcount tracker for @dev reference
+  * @flags: request flags common for all request types
++ * @phy_index: phy_device index connected to @dev this request is for. Can be
++ *	       0 if the request doesn't target a phy, or if the @dev's attached
++ *	       phy is targeted.
+  *
+  * This is a common base for request specific structures holding data from
+  * parsed userspace request. These always embed struct ethnl_req_info at
+@@ -260,6 +263,7 @@ struct ethnl_req_info {
+ 	struct net_device	*dev;
+ 	netdevice_tracker	dev_tracker;
+ 	u32			flags;
++	u32			phy_index;
+ };
+ 
+ static inline void ethnl_parse_header_dev_put(struct ethnl_req_info *req_info)
+@@ -267,6 +271,27 @@ static inline void ethnl_parse_header_dev_put(struct ethnl_req_info *req_info)
+ 	netdev_put(req_info->dev, &req_info->dev_tracker);
+ }
+ 
++/**
++ * ethnl_req_get_phydev() - Gets the phy_device targeted by this request,
++ *			    if any. Must be called under rntl_lock().
++ * @req_info:	The ethnl request to get the phy from.
++ * @header:	The netlink header, used for error reporting.
++ * @extack:	The netlink extended ACK, for error reporting.
++ *
++ * The caller must hold RTNL, until it's done interacting with the returned
++ * phy_device.
++ *
++ * Return: A phy_device pointer corresponding either to the passed phy_index
++ *	   if one is provided. If not, the phy_device attached to the
++ *	   net_device targeted by this request is returned. If there's no
++ *	   targeted net_device, or no phy_device is attached, NULL is
++ *	   returned. If the provided phy_index is invalid, an error pointer
++ *	   is returned.
++ */
++struct phy_device *ethnl_req_get_phydev(const struct ethnl_req_info *req_info,
++					const struct nlattr *header,
++					struct netlink_ext_ack *extack);
++
+ /**
+  * struct ethnl_reply_data - base type of reply data for GET requests
+  * @dev:       device for current reply message; in single shot requests it is
+@@ -409,9 +434,12 @@ extern const struct ethnl_request_ops ethnl_rss_request_ops;
+ extern const struct ethnl_request_ops ethnl_plca_cfg_request_ops;
+ extern const struct ethnl_request_ops ethnl_plca_status_request_ops;
+ extern const struct ethnl_request_ops ethnl_mm_request_ops;
++extern const struct ethnl_request_ops ethnl_phy_request_ops;
+ 
+ extern const struct nla_policy ethnl_header_policy[ETHTOOL_A_HEADER_FLAGS + 1];
+ extern const struct nla_policy ethnl_header_policy_stats[ETHTOOL_A_HEADER_FLAGS + 1];
++extern const struct nla_policy ethnl_header_policy_phy[ETHTOOL_A_HEADER_PHY_INDEX + 1];
++extern const struct nla_policy ethnl_header_policy_phy_stats[ETHTOOL_A_HEADER_PHY_INDEX + 1];
+ extern const struct nla_policy ethnl_strset_get_policy[ETHTOOL_A_STRSET_COUNTS_ONLY + 1];
+ extern const struct nla_policy ethnl_linkinfo_get_policy[ETHTOOL_A_LINKINFO_HEADER + 1];
+ extern const struct nla_policy ethnl_linkinfo_set_policy[ETHTOOL_A_LINKINFO_TP_MDIX_CTRL + 1];
+-- 
+2.45.1
 
-Let me see what happens when I do this:
-
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 7d18b90356fd..5c8492a054f5 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -936,8 +936,8 @@ static struct rcu_torture_ops tasks_rude_ops = {
- 	.deferred_free	= rcu_tasks_rude_torture_deferred_free,
- 	.sync		= synchronize_rcu_tasks_rude,
- 	.exp_sync	= synchronize_rcu_tasks_rude,
--	.call		= call_rcu_tasks_rude,
--	.cb_barrier	= rcu_barrier_tasks_rude,
-+	// .call		= call_rcu_tasks_rude,
-+	// .cb_barrier	= rcu_barrier_tasks_rude,
- 	.gp_kthread_dbg	= show_rcu_tasks_rude_gp_kthread,
- 	.get_gp_data	= rcu_tasks_rude_get_gp_data,
- 	.cbflood_max	= 50000,
-
-It should be at least mildly amusing...
-
-> > > > I will
-> > > > ultimately use it anyway to avoid uprobe taking unnecessary refcount
-> > > > and to protect uprobe->consumers iteration and uc->handler() calls,
-> > > > which could be sleepable, so would need rcu_read_lock_trace().
-> > > 
-> > > I don't think you need trace-rcu for that. SRCU would do nicely I think.
-> > 
-> > From a functional viewpoint, agreed.
-> > 
-> > However, in the past, the memory-barrier and array-indexing overhead
-> > of SRCU has made it a no-go for lightweight probes into fastpath code.
-> > And these cases were what motivated RCU Tasks Trace (as opposed to RCU
-> > Tasks Rude).
-> 
-> I'm thinking we're growing too many RCU flavours again :/ I suppose I'll
-> have to go read up on rcu/tasks.* and see what's what.
-
-Well, you are in luck.  I am well along with the task of putting together
-the 2024 LWN RCU API article, which will include RCU Tasks Trace.  ;-)
-
-And I do sympathize with discomfort with lots of RCU flavors.  After all,
-hhad you told me 30 years ago that there would be more than one flavor,
-I would have been quite surprised.  Of course, I would also have been
-surprised by a great many other things (just how many flavors of locking
-and reference counting???), so maybe having three flavors (four if we
-cannot drop RCU Tasks RUDE) is not so bad.
-
-Oh, and no one is yet using srcu_down_read() and srcu_up_read(), so
-if they stay unused for another year or so...
-
-> > The other rule for RCU Tasks Trace is that although readers are permitted
-> > to block, this blocking can be for no longer than a major page fault.
-> > If you need longer-term blocking, then you should instead use SRCU.
-> 
-> I think this would render it unsuitable for uprobes. The whole point of
-> having a sleepable handler is to be able to take faults.
-
-???
-
-I said "longer than a major page fault", so it is OK to take a fault,
-just not one that potentially blocks forever.  (And those faulting onto
-things like NFS filesystems have enough other problems that this would
-be in the noise for them, right?)
-
-And yes, RCU Tasks Trace is specialized.  I would expect that unexpected
-new uses would get serious scrutiny by those currently using it.
-
-							Thanx, Paul
