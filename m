@@ -1,181 +1,161 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2059.outbound.protection.outlook.com [40.107.243.59])
+Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DFA17B43C;
-	Wed,  3 Jul 2024 13:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720013251; cv=fail; b=gkCsM1BJBet8xb6Y4V6KsBUGgN+S1XV999cirI1g6w1979h8v1jGfI3JxOHjAZKnZtRgXzJ3YfwMximlE2eTwVnr0Lj+KVHyII7zcrN1df+3IiixhRYS1tEx842qHku2qGyca/0xouvbmhx266ZbjYWIeyyR2A5ewOAC2y5j4Vg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720013251; c=relaxed/simple;
-	bh=wG6NSR2OeLgKJVQSrUuZuI9labgBJCHIosZFpfCOgmY=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=V4vTY0JDGW+7GO6Ck+sHlSvVM9to2gtLNQQM3Dw4zX8OWYo8MgdRxUtHBUVW1+Ugam7TRfmIRvBW2B4lc/Zt+2OnSmhI7/2xi8CwCn0O49LcvHOQiMqSkw9hrj38Wg+3UYN/SoWRdR4G10ZBCiL77LJodwnU8pacZCAKX4IvvJ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=E+SuontM; arc=fail smtp.client-ip=40.107.243.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA40617A58B;
+	Wed,  3 Jul 2024 13:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720013269; cv=none; b=NAtWa0r7+41/lod0J3GyxkeAg8KAbWOj1QjnEsicMevNHnRXdlowKi8o4d5kLDxeAerMtFCId5Xj/Rik0yOwSQiiinNzs4kEVWSn1CVyqT1avl1/ndPAWOILVrwVOOaKIuNLrcRSQCoYKw67XcZgNHJpk13Bsxa/OSoxcqVtea4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720013269; c=relaxed/simple;
+	bh=7+VmwCVzDq6PXFQ11tmEPnhfZ7ihj+bBGwrOGKnxCSk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lXhMvuOaiPSJL6+Q8aCuSBvOeTTcu0cCADD6ewn+BnN7XIddd9mIQKE7utuCevybbNTW2FuajAm3jwO+U5b+GGaJFgkNV2+p4xP3PBCZrUgfuyIGtB0R1lX3jbpXkwn2JLzjRFGGt9ZYMCEOHmnUyAaha3rmERm5M1JqiFpGwxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=Nc9K4YpL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A29OwE26; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="E+SuontM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=brgPm5tCW2+wSdFombixIqA3StITEPIH1jcyJ74euSpfliY/Ad1wo+fNf7UjPOKR4T7pj4+Pz3N77dPODlD2axJZ1pETNLySmKF5ooB+0Tu//qx+QdHDz/9IoNlB2HGQL263Wh7WaPkV7k2oINfhGyq0Vs309VuTRlyc5xopW+/tQY1Mb0bhhmnk5lkUS0nGpxhY0R5dgs3FaJGrReX5yfVWNSo4wMYmpz0H2fUPybPE8RgmHXhZKzRzPlsjvCi5csROKln1qKITERkMeYss6WCTrr3QMQy+0rQIu5WR04nhD/pzkzUqCa/wEX9uZEVHFPMgvmgBC4s/tLEEIuPvow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dMzHUA7kTxkIvTeoafeWMf/saO5tTbVhQCyXjDefVpc=;
- b=PIWKzsKJMKxd0+WCJMgO0vvT2Hnam7/4ktAvNlE5kyCKWK22+VqqW6jQUt7QcCz9lgSC9PvaAPhWZ2HlisBidMj682nNodrz04EzpYA5+SMIcyyxpUxop7E5qE5XelUTavijSPR2gBKlMooXayty22iNWaZaBvp6q3eCXxvNL6S/s1bRvD9ARzSKB988rQJkMnODOKTzkrsE3Rq8ej49Y9r6ecfzZcf0DwWgd48QI9FoLA0pHMu+WSuusAfMb8FM52e2oWAkdZ+kfyH8DEdrRRgkeRcuvfwQ6B9xv1fbINlyr8LnEdAkUEmVTcZJ6kzRumxFsOCSzKMotk894CEGTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dMzHUA7kTxkIvTeoafeWMf/saO5tTbVhQCyXjDefVpc=;
- b=E+SuontMd+pDoJSDcSR1mYLn6EyAcvx2611juFu9mK3OCqKUb5ULLD+PvnQROAt4o4wdfUhCTjE4kqXqQmsDk0rEtYxyNtM/M1HONpbNZSA5d40LUb3TXu0T2CDk85UqFIYdCDdT96u8ajtHjxAH7zboM0NiXGwWfF6i0FFHvMoCf7ow+IDQGikrc4kTj+ocAIcfZG1u4Ux5EgxjAF+kPezaqLk8fRiK3JzJ+lvOi9Yeq2czc/ZWKRqGSQC6FXKrE2UoiryoUk3N/Pw93EaMzjsLxH9II/c5t0a9v6AAx9Kih4AW9xoRHlWkobXj4Xb2d2kd61IAwz1uzgDz5QyVEA==
-Received: from BLAPR03CA0146.namprd03.prod.outlook.com (2603:10b6:208:32e::31)
- by IA1PR12MB6627.namprd12.prod.outlook.com (2603:10b6:208:3a1::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.29; Wed, 3 Jul
- 2024 13:27:24 +0000
-Received: from BL6PEPF0001AB57.namprd02.prod.outlook.com
- (2603:10b6:208:32e:cafe::30) by BLAPR03CA0146.outlook.office365.com
- (2603:10b6:208:32e::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.23 via Frontend
- Transport; Wed, 3 Jul 2024 13:27:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BL6PEPF0001AB57.mail.protection.outlook.com (10.167.241.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7741.18 via Frontend Transport; Wed, 3 Jul 2024 13:27:24 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 3 Jul 2024
- 06:27:06 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 3 Jul 2024
- 06:27:05 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4 via Frontend
- Transport; Wed, 3 Jul 2024 06:27:05 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <allen.lkml@gmail.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 000/139] 4.19.317-rc1 review
-In-Reply-To: <20240703102830.432293640@linuxfoundation.org>
-References: <20240703102830.432293640@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="Nc9K4YpL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A29OwE26"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id E895E11401FA;
+	Wed,  3 Jul 2024 09:27:45 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Wed, 03 Jul 2024 09:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1720013265;
+	 x=1720099665; bh=zHsCkdbRs04MeYzE1MvM8IvQ6gKzRN5ln4russl7Bto=; b=
+	Nc9K4YpLasjbur5Yp0FYWzHbCIVAC427TJKai7UrSLC5cwAA0Cuad7SUU74mmuxA
+	3XqfVi35lnUPUn/sbUXZ3+VpfoCYltsA1t0dTstwenU7QKrIKdyLCdmJp44DYHZA
+	TLhJkMvBg76Qao7PcrMbot9NB4GPvdITByzL31NfCoDcKrX/260lTi5U43F7Kxkh
+	iUU0qi0M/KxlwP9N/hiX9vDVpNZoVhEcEv1m29o3Z3pcUHsu2KZC9+AYQoxGQJcD
+	3xH3YBd/RjX9zQkA5UV88UuyX2Px5HTr9TFvAVzMBB73PAUw4WEa+2Yt/EymmpO+
+	grLAb64Q7oGpdOEIb0xP3w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720013265; x=
+	1720099665; bh=zHsCkdbRs04MeYzE1MvM8IvQ6gKzRN5ln4russl7Bto=; b=A
+	29OwE26qb2dT7DYMBz95DFAK9i6d0auZtEiIsCjnmV5PhAWb/o9lxpi4n7I3R06L
+	Qu5/Fmev0hPbGiPOBdjHCnnTIh9nhzv7jP9jfRoDzqj8vPBI1zVyrk2pBZO7z712
+	5gRlcnoO3hspHuJpXoSzY3mdLLo4OM97u/4Jm6+SRUreh4227gpZ5xxRchonpeNi
+	0IQBtrojS/iQgEEHsbmTWEGQt39A+20uhlmEgTi4Tey38n6Vvvk80nhWVBpKTu+j
+	9tsIycthcETGyM2+UlbP8jRUW2P74jQn28vBTY6Nl3Om6HRkHpmDHiUhMd9/ZiU0
+	HjgjLSvErZh/9Zz5vr7Ug==
+X-ME-Sender: <xms:0VGFZjUNwVCvSIE15GnlibTzJ63vNLzR5cDb5lVK_oFe1FZH37OEPQ>
+    <xme:0VGFZrlZ4j44LKeMd91wibr4b5nXtyvTxy29TBtmhGDRgHVN7vbMubGPKHbuEEyXZ
+    hSrwMPM-RYrgvEG>
+X-ME-Received: <xmr:0VGFZvbB6D78O_-cnzbntBa3nE5v-S3eyb0YW7ObXEdez1TALte5DdlkLBahDUoTLrmb_9XtRtnHcKxnQsyLS3_ycjeX29gCwYRkK8WJbwL5FfTzx67G>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudejgdeigecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepuegvrhhn
+    ugcuufgthhhusggvrhhtuceosggvrhhnugdrshgthhhusggvrhhtsehfrghsthhmrghilh
+    drfhhmqeenucggtffrrghtthgvrhhnpeevhffgvdeltddugfdtgfegleefvdehfeeiveej
+    ieefveeiteeggffggfeulefgjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegsvghrnhgurdhstghhuhgsvghrthesfhgrshhtmhgrihhlrdhf
+    mh
+X-ME-Proxy: <xmx:0VGFZuUFCU_TJmdhBB_1MiletzaS30GTXqtI3-0JJjWMl_Hf-pMLAw>
+    <xmx:0VGFZtkEgwNAl0a0Buu3euD7J0i10sf44xY3u_U8S5dzNUirbz4Jpw>
+    <xmx:0VGFZreiFlxkdLYINkgzvgm1FVEl5YGEL1vZplTwY-qe3onmPcoGAg>
+    <xmx:0VGFZnFDJbEatO8P7cwCtPWmldJ8Yr9wzrhYqA-bn8BOTfQhVZCyMQ>
+    <xmx:0VGFZrYpkIp0peuJ6DVlUv30paeBpC9Uw23oxo1qviPyqdwKsYcY5WOI>
+Feedback-ID: id8a24192:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 3 Jul 2024 09:27:44 -0400 (EDT)
+Message-ID: <315aef06-794d-478f-93a3-8a2da14ec18c@fastmail.fm>
+Date: Wed, 3 Jul 2024 15:27:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <00efb5e8-dd97-4c48-9f4a-b24e61a0a17b@rnnvmail201.nvidia.com>
-Date: Wed, 3 Jul 2024 06:27:05 -0700
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB57:EE_|IA1PR12MB6627:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5dd3510f-ee27-4b6f-31ab-08dc9b63e06d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aFphbVlyZzhnWlU5S1ZIK3pkWmRtL1hxWWw4SWNKZ3F4b0VNdVJFRmI3cS93?=
- =?utf-8?B?dExiZVh5aURwYXE1a2RVSlpXaHE4V2JzSXNhdlBTclkrRjBmQzFRR3Ivc09U?=
- =?utf-8?B?T0psWkhoSVl1Ym1YOVhsN3AxWFVGakhzU2tYOVR3dVFxdjV0d1ZQd3Y1K1dV?=
- =?utf-8?B?dzBvZDRCMG9mZFRzOVh4NFFxQXNGYnpWOWxsMGJzMFJYcE84cFpyTFRWVlpG?=
- =?utf-8?B?M0hIR2pvOHJuRnM5MGJBc0hTV3J5c3pwNnBjVmF3dlR4TjFjNkEyNU1HQzRW?=
- =?utf-8?B?NXlWRWdnbXluQkxEN09VbWluNThhYW1OTnBNN0NtdGE1eWFnUVFxUlVkb1da?=
- =?utf-8?B?c0o4dlJSZkx2dm1KVHFiZ0lpZHd1cjhFYXQzQXdZdVM1b3JNbmVodmxGcVlm?=
- =?utf-8?B?ODMxWmt4V0xvN29lK3UvSDdnZnNXMFRZbEFDNG8ycndrN1VLeisvK1NiZmFT?=
- =?utf-8?B?OFQwSlA4TTBDVjFFcHBHeW5pdlVUbmxadUlGZXRQSHdxYUtDdDk0MGtKZVk0?=
- =?utf-8?B?T2hlZjBkZERBb2FrdmV0M3hPNDNBUXZ3ak9FYklpM2VvRUgrVHV4cStPVzMr?=
- =?utf-8?B?eExIRGhiMm8rL3pFakNsM1dUMmw1cUZBeU5MQ3hzcm85cDhldmY0RERLRTAw?=
- =?utf-8?B?UlN4SEh6YklUMXRqSWNnSUtHaDNuOGx2VWdHeENBRmtSV0crYmlvSzJZUlg3?=
- =?utf-8?B?ZUVyRHk4L29DL0pRem94cHE0Wk16SElydjRaQ3NaZTBqTlpvZXcyNVpiRG5s?=
- =?utf-8?B?TG56YlNtZkpmbXZrc3hSem1CeVU1bGFmMUdJU29vRWU5eUZZODVFYmpTdU00?=
- =?utf-8?B?Mmo1Y0VOcEZZNnVjUytabTExWm1TcVZJU2YrU1YybVF4MXpCUTNmbDVEUUh3?=
- =?utf-8?B?RzRPdTErWGsvWjVRZ05pdzZSNzlXbFNwTXVZVTJLZG1LSUhuWWROZ0RPVWQx?=
- =?utf-8?B?NDZFVTZhK0t6eUlvRmVUQVRFSkhPZEJ4OHg1ZHdZT1RzUlNPb1VYMmNRYzZr?=
- =?utf-8?B?VGRyYVA0dWs4OUlLRFc2TmJPRzh5WmdkYkFGckd6ZUNzck1VVVdmV25udll4?=
- =?utf-8?B?Y0xFSmh6SDNrUHdSUWtpM1FOcG4rMWxoYzd4NzdDWEZuVmFCK1JpSVk0VlRH?=
- =?utf-8?B?cTlyNHZ3anNtUkJldUVrb2hpRnhjS0M2N2txU2FMUUhxMXBZSUdqaEVSU011?=
- =?utf-8?B?N2Rrb3g1MUVGOGd5ejVrYlVIQWZMcWUxcXBLTnREZll4QXc5TmhhV2RZaGVk?=
- =?utf-8?B?VktLeTkyYklMaXl3eno2UGkrNFZkUnZNMTNMa0J6bXNYL2VHZCtJZ0Q3ZHo0?=
- =?utf-8?B?T2dMWk90V0wrZEs2NkNiL3RacnRQWTB0WkhreTh2WHN1YTRQMStVeTJpQUp3?=
- =?utf-8?B?dUZEcFdWVExxWk1IZzRBUU4vaXJTbkxXQWFCcVU4dC92ZFdSeHhRKytjRjNr?=
- =?utf-8?B?SVRrZWRvY3NxMTlzcGJnSHVyWDFvN0RGcUppK3lvNWVPcjAzV3NEdTIvSXZm?=
- =?utf-8?B?RUJ4L2QxZjYwbFRCdFEwWWwxcnl3TVMzT0ZhZmNSRUVCRlNudUl1N0FaSms2?=
- =?utf-8?B?MEdxRWNxQkxieDJVYmpLYTBIb1YySW9CWFBmQUh3S2Eybk5oRG54SHQ5bXpU?=
- =?utf-8?B?aUJDWCtpM2dFQjRWejA3OHBSWTlmMytoTEF0RktZSmU1ZkZtdTdWOUNSZEMx?=
- =?utf-8?B?dk9kb01YbEFhVVdvVDNST25sNmh0V0xPdk5VSUt5UUxkaDd3bW5GUVlRR3lK?=
- =?utf-8?B?Z3pBcVpQNmpTOEI3MlJTREFjb01HOTZ1L1BCOGpkUGNsM003b1ZGZTFlZW5V?=
- =?utf-8?B?ak4xVjVFWm9zOXIyaDhMajBFbERhR1dyKzZmeGRJclBSbUFHc2pFa2xCazRw?=
- =?utf-8?B?Y0FyRDI0SXNQbWR0cW9TZXozNTFrbm4xeTkxSlNPWGdlNEQvVjVtd1laTisr?=
- =?utf-8?Q?+PbNC6b/DZzh/GI8qSN+hSCBs9dVHHye?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 13:27:24.7212
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5dd3510f-ee27-4b6f-31ab-08dc9b63e06d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB57.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6627
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] Fuse Passthrough cache issues
+To: Daniel Rosenberg <drosen@google.com>, Miklos Szeredi <miklos@szeredi.hu>,
+ Amir Goldstein <amir73il@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ kernel-team@android.com
+References: <20240703010215.2013266-1-drosen@google.com>
+From: Bernd Schubert <bernd.schubert@fastmail.fm>
+Content-Language: fr, en-US
+In-Reply-To: <20240703010215.2013266-1-drosen@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 03 Jul 2024 12:38:17 +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.317 release.
-> There are 139 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+
+
+On 7/3/24 03:02, Daniel Rosenberg wrote:
+> I've been attempting to recreate Android's usage of Fuse Passthrough with the
+> version now merged in the kernel, and I've run into a couple issues. The first
+> one was pretty straightforward, and I've included a patch, although I'm not
+> convinced that it should be conditional, and it may need to do more to ensure
+> that the cache is up to date.
 > 
-> Responses should be made by Fri, 05 Jul 2024 10:28:04 +0000.
-> Anything received after that time might be too late.
+> If your fuse daemon is running with writeback cache enabled, writes with
+> passthrough files will cause problems. Fuse will invalidate attributes on
+> write, but because it's in writeback cache mode, it will ignore the requested
+> attributes when the daemon provides them. The kernel is the source of truth in
+> this case, and should update the cached values during the passthrough write.
+
+Could you explain why you want to have the combination passthrough and
+writeback cache?
+
+I think Amirs intention was to have passthrough and cache writes
+conflicting, see fuse_file_passthrough_open() and
+fuse_file_cached_io_open().
+
+Also in <libfuse>/example/passthrough_hp.cc in sfs_init():
+
+    /* Passthrough and writeback cache are conflicting modes */
+
+
+
+With that I wonder if either fc->writeback_cache should be ignored when
+a file is opened in passthrough mode, or if fuse_file_io_open() should
+ignore FOPEN_PASSTHROUGH when fc->writeback_cache is set. Either of both
+would result in the opposite of what you are trying to achieve - which
+is why I think it is important to understand what is your actual goal.
+
+I think idea for conflicting file cached and passthrough modes is that
+the backing inode can already provide a cache - why another one for fuse?
+
+
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.317-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
+> The other issue I ran into is the restriction on opening a file in passthrough
+> and non passthrough modes. In Android, one of our main usecases for passthrough
+> is location metadata redaction. Apps without the location permission get back
+> nulled out data when they read image metadata location. If an app has that
+> permission, it can open the file in passthrough mode, but otherwise the daemon
+> opens the file in normal fuse mode where it can do the redaction.
 > 
-> thanks,
+> Currently in passthrough, this behavior is explicitly blocked. What's needed to
+> allow this? The page caches can contain different data, but in this case that's
+> a feature, not a bug. They could theoretically be backed by entirely different
+> things, although that would be fairly confusing. I would think the main thing
+> we'd need would be to invalidate areas of the cache when writing in passthrough
+> mode to give the daemon the opportunity to react to what's there now, and also
+> something in the other direction. Might make more sense as something the daemon
+> can opt into.
 > 
-> greg k-h
+> Any thoughts on these issues? And does the proposed fix make sense to you?
+> 
+> 
+> 
+> Daniel Rosenberg (1):
+>   fuse: Keep attributes consistent with Passthrough
+> 
+>  fs/fuse/passthrough.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> 
+> base-commit: 73e931504f8e0d42978bfcda37b323dbbd1afc08
 
-All tests passing for Tegra ...
 
-Test results for stable-v4.19:
-    10 builds:	10 pass, 0 fail
-    20 boots:	20 pass, 0 fail
-    37 tests:	37 pass, 0 fail
-
-Linux version:	4.19.317-rc1-g485999dcb7d9
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
+Thanks,
+Bernd
