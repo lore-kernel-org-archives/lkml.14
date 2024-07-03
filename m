@@ -1,115 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB734683;
-	Wed,  3 Jul 2024 01:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116A633EC;
+	Wed,  3 Jul 2024 01:02:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719968421; cv=none; b=QhC3OUav6N1jfkGFV9nm4in/y9hQwTlOqC28bMfalGW6lNvCLWXTZBGCLCYvjr7VxVpHMYXOOWMNhTzjkzrNdlsv5MY+VdjsTnv2je0XKd6c7YXVm9yQCbhWqVjECpgba+e0/koqePHetgIDfCRgq0AxHh+pRYkYNC1GgJWYUks=
+	t=1719968564; cv=none; b=ryiQSyWYHWkx5S6d+svAk5KzmXgLA4WDDLHmPwwMBCkdWXb6YbD3d+7qiWMfSFcVF62a2tT17CDakxEYuLjvMh1eniTd7PN7rRf5EsQf82z2ClwaoO9c+1SPPypdWNaW0NJacoA5GQr3X9muqHjSFA9ctsrgIOvXhwnvK7l/mKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719968421; c=relaxed/simple;
-	bh=v9a2giiEKnJ5XVS6wLgrehH9OKCuZrkXtBNVi2LQQ9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sD8BGRXI5xxSq43toWUG2XIy/HsDsnfTcvS+eorBSivvXlV7uZgYxxYfQSXDE+r8P/0+qPocFHFdUjfnpOnzlQReUu/SHuctGvVtJidLNglu/G0d/hWr/pV4hzQfZPZiZ03nSWi+CbNyYKKprDK8pUPq97p+o3PcuoP0aGI2TQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DO26YFnF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719968564; c=relaxed/simple;
+	bh=c/gXnwPNnzdukWWfkJ7Qka//R0UAcsn4I6dRkZtRk9s=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=RCv72qjfLhWRGWDiNz205UGT9Gcg6lb2AYgDYyA+/J5jfBc3HYCGGc4jBpudSxyEFmJe6Ih3yUcLqJBpDRtBlyvkU40DFVcrqXPPwtPS7GDayAQ53bJfJ0QdQ7Vfu8N9X7JPH8Y59d4wN3ddHJNBT6cx6JBOhuoe0hrKAC5j0GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1zwOFf7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DO26YFnF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77E99C116B1;
-	Wed,  3 Jul 2024 01:00:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1zwOFf7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A0E5C116B1;
+	Wed,  3 Jul 2024 01:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719968421;
-	bh=v9a2giiEKnJ5XVS6wLgrehH9OKCuZrkXtBNVi2LQQ9Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DO26YFnF9wBh74tR67gPrg2v8ZmxbBN+ni3IolIIsRvlGZc6uOulxvOSRKngFVnPp
-	 FsthxQy5KMcdT7wFVXdGjccRxxmmii7aJQvEOuw/B395d+ipSm0BnrO9JoKNtxgLod
-	 DErqeUGG7R0I2US28DVfx5P1ZcB7mY4twXsskdBrSW38K7XHQcYP+ddVLGT+zxGh+F
-	 pVuSuuOSmO4CWC/8MZgXqzNVEuqeqWS03kLbGD9g7AuBErfG3OsouZaxG2jVx8Qc5H
-	 U+h2Np1VWZW0cUfFFkqRXpXf8Q2HXQuUsYUTHo7cZoTx9uC9oGsLzX/t+4I6c1Y7ds
-	 PD1QerVrdxxZQ==
-Date: Tue, 2 Jul 2024 18:00:18 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH PATCH v2 8/9] x86/bugs: Declutter vulnerable CPU list
-Message-ID: <20240703010018.qov5lxldvou7fhhl@treble>
-References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
- <20240627-add-cpu-type-v2-8-f927bde83ad0@linux.intel.com>
+	s=k20201202; t=1719968563;
+	bh=c/gXnwPNnzdukWWfkJ7Qka//R0UAcsn4I6dRkZtRk9s=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=O1zwOFf7Ltz0cFmSiUion3KhOFixneddMP+X/wXDfV0QbMxxKt1HalypBWgvfM+EC
+	 QnWqvaR+ARnsyqbaQXiJaiEqWdSePlc3JH3YA1CEDv7NeK/Pu0H8tolFFT9FERL+vb
+	 l+VFObZGMuGaJ1/EHrT212ih2iAb/ruBVZfEsbGyIs0RGsQyGfGGD6H/HFI2jHV1V2
+	 f43bXSoLRpOpmHgbxljowRkKusU3Hxbu8n4DrAUhn1WIdyi+wj5eiqP5eRm5W0i6go
+	 VM5/WWiKoyYn9TtoV26ecz5MvpNgtGHT5y81WDkCC4Z6pUEI3MVRLpKU/19GRzL1Q5
+	 cylN6wdAnzijg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240627-add-cpu-type-v2-8-f927bde83ad0@linux.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 03 Jul 2024 04:02:38 +0300
+Message-Id: <D2FHYVV7GNCV.3G1XOEUI3LZFB@kernel.org>
+Cc: <stable@vger.kernel.org>, "Stefan Berger" <stefanb@linux.ibm.com>,
+ "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>, "James
+ Bottomley" <James.Bottomley@HansenPartnership.com>, "Mimi Zohar"
+ <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
+ <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "Serge E.
+ Hallyn" <serge@hallyn.com>, <linux-kernel@vger.kernel.org>,
+ <keyrings@vger.kernel.org>, <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Limit TCG_TPM2_HMAC to known good drivers
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, <linux-integrity@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240703003033.19057-1-jarkko@kernel.org>
+In-Reply-To: <20240703003033.19057-1-jarkko@kernel.org>
 
-On Thu, Jun 27, 2024 at 01:44:48PM -0700, Pawan Gupta wrote:
-> The affected processor table has a lot of repetition and redundant
-> information that can be omitted. For example:
-> 
->   VULNBL_INTEL_STEPPINGS(INTEL_IVYBRIDGE,		X86_STEPPING_ANY,		SRBDS),
-> 
-> can easily be simplified to:
-> 
->   VULNBL_INTEL(IVYBRIDGE,	SRBDS),
-> 
-> Apply this to all the entries in the affected processor table.
-> 
-> No functional change. Disassembly of arch/x86/kernel/cpu/common.o does not
-> show any difference before and after the change.
+On Wed Jul 3, 2024 at 3:30 AM EEST, Jarkko Sakkinen wrote:
+> +	depends on TCG_CRB || TCG_TIS_CORE
 
-This patch only changes data, not code.  So there's not much point in
-diffing the disassembly ;-)
+Needs to be "depends on !TCG_IBMVTPM":
 
-A diff of the .init.rodata sections actually shows one (non-functional)
-difference in cpu_vuln_blacklist[].
+https://lore.kernel.org/linux-integrity/D2FHWYEXITS4.1GNXEB8V6KJM7@kernel.o=
+rg/
 
-The COMETLAKE_L entries were moved to a new section below the rest of
-the entries:
-
-	/* Match more than Vendor/Family/Model */
-	VULNBL_INTEL_STEPPINGS(COMETLAKE_L,	X86_STEPPINGS(0x0, 0x0),	MMIO | RETBLEED),
-	VULNBL_INTEL	      (COMETLAKE_L,					MMIO | MMIO_SBDS | RETBLEED | GDS),
-
-While that's functionally correct, it breaks the visual sorting, which
-is confusing and even a bit dangerous.  One would reasonably expect the
-COMETLAKE_L entries to come immediately after COMETLAKE, so it would be
-quite possible for somebody to come along later and add a new
-COMETLAKE_L there which conflicts with the later entries.
-
-I'd much rather leave the STEPPINGS entry in the original list where it
-belongs.  Something like:
-
-	...
-	VULNBL_INTEL(ICELAKE_L,			MMIO | MMIO_SBDS | RETBLEED | GDS),
-	VULNBL_INTEL(ICELAKE_D,			MMIO | GDS),
-	VULNBL_INTEL(ICELAKE_X,			MMIO | GDS),
-	VULNBL_INTEL(COMETLAKE,			MMIO | MMIO_SBDS | RETBLEED | GDS),
-	VULNBL_INTEL_STEPPINGS(COMETLAKE_L,
-			       X86_STEPPINGS(0x0, 0x0),
-			       MMIO | RETBLEED),
-	VULNBL_INTEL(COMETLAKE_L,		MMIO | MMIO_SBDS | RETBLEED | GDS),
-	VULNBL_INTEL(TIGERLAKE_L,		GDS),
-	VULNBL_INTEL(TIGERLAKE,			GDS),
-	...
-
-Yes, that's a little ugly, but at least the sorting is correct so it's
-less confusing and more robust overall.
-
--- 
-Josh
+BR, Jarkko
