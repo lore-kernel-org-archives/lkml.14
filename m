@@ -1,67 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B7BBA38;
-	Wed,  3 Jul 2024 02:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C09717552;
+	Wed,  3 Jul 2024 02:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719972755; cv=none; b=i3IW47s0WgdN+0muk86C8d3bBF+LHE9hc5wGUhVQHczSl/5wacPZF5ubnFFi3/KxAhp4qkV194b6aL0rjkbVDtItFRHJXep0y1qTIkiAoF1UY/qkDv1TIqkHXYPFVmni2crhu4evCH9z3ogMgGLnua15pERZYkVNNKPmwximzLw=
+	t=1719972759; cv=none; b=K2q0koUBZ2+sQJaakDHz6wb+Sx+LLfcy7MspgI/tSdUhjoW31weiaTS5T+7q/eVrY2SGBDQQBUmTkxEyVN+oe0eRhZgI9Wa1u9Wlqkum30XPcoWpnrRoAa6ASzj7x3GuYqZ4mdw0ArGx0Q6z5wznTVzpNXoCIOXRQW60zxlG7Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719972755; c=relaxed/simple;
-	bh=xELkib58GVsHFnJOyikK4lxSSfPcXfJatrw+PYgf+/A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iKhHiXSxujeS+TYAR/Dzc3sx+e7GgrVQYRCQ4xrErtUfxdTmYsiy0/aF/deZ3vwWlCkIeZEo6yQHXAVYgOsAn/nKayTIz+aRey6Mp6awLVLg+dAUx8RpwFSiapLp0a+3NpqGbH7pMnO96fo3qm8bsOVKLsEZM31XFbiiwhVSXgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TrcPyI1e; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719972759; c=relaxed/simple;
+	bh=KhG3sJ5luiiC8MFnE8cG6eZUNJPJ5V6DemW66c/WrE0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ni6GUuZDNUpfLfAG+quYGcTAq8QEkeqc7oexpiG3pde8BZCH4AGdxtjj307OWgulHsniGzwW5CBV4JB1RLrNSPlPxSLsGOkC9VDR7+ZyvIbnWNtjjJ32j2Pn1X/WCADJd3L/PkvuTnoHchitKdW1xobryIQuUKH6R+v98Jz8LZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LiXRxKNz; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TrcPyI1e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LiXRxKNz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719972754; x=1751508754;
+  t=1719972757; x=1751508757;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xELkib58GVsHFnJOyikK4lxSSfPcXfJatrw+PYgf+/A=;
-  b=TrcPyI1edF4SW4eulaBGFluo1HQ2cp/2jluWady4Lha9Sl5lfnmD7D6U
-   j2diJ8xCtlSPDmmyYYNUjZBrEdU0BfW8ajS0/iXCVh+gBIArIWe46PaaJ
-   0CbR14D9aeqf2cOqeg+1w1vY5IAP53cP2g9MRdFj8bZYLydA5NkQeRJlP
-   kZjjqIFGCtR6GIsycZrtPJtMFGamzQ+58hY5qo+OHcDe14IMArDQqGJhJ
-   t9533g5T3urCAXRAH88o2Jmz/1rI/FARkPrsk/fON99jXeHD7KNBdpayf
-   wjU5+azsSf7FlGBaf8La+JRHYF4mCkyniuM5otGW01DfMW7GXmxI9MuuD
-   Q==;
-X-CSE-ConnectionGUID: NhscTyeTTBKYZarblZHoxQ==
-X-CSE-MsgGUID: S4QjrT4GQnW0MG1LpXgvBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="21052136"
+  bh=KhG3sJ5luiiC8MFnE8cG6eZUNJPJ5V6DemW66c/WrE0=;
+  b=LiXRxKNzlrVwKuv8e5CRG9wi7D30ONh34ajd5+Y4anqIsHXHC/Mw2iTB
+   K1FT42ofNAbsmjyF2LnRbzgXLIUvya/+zMrrHsV2mMMcqMfmAQhfKepz4
+   cjU2DIchmQHoDZfrP2YDuWMPFyEKIIiQTwVaNc3FfnAgKH0DNdnkX2JrW
+   E5wR8LACfrct15Pk4RAL0pDRlQgXYgZXDTF56tYXbK/bBjImpIxLpBa1m
+   I5m7s3CjYuzX8JWWQBePaY9A6hs9707O0xldg2xYW/JhIrdDxKkU0uWFj
+   o1m5NWrinzpviarQFNcevEXVxWOUBAadeulTURObKT3Rx8YVDCiS+2iKq
+   w==;
+X-CSE-ConnectionGUID: 01Dq6B5qSzGP/Y7jHInvsA==
+X-CSE-MsgGUID: yXzm0mx5R8uTkIfhTpzCuQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17310959"
 X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="21052136"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:12:33 -0700
-X-CSE-ConnectionGUID: kGJWyL5JQgKKAelzLxEcFQ==
-X-CSE-MsgGUID: PUctjiZqTS6rWw0lyvYK9g==
+   d="scan'208";a="17310959"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:12:37 -0700
+X-CSE-ConnectionGUID: CYW1qWbHR6+ERb9dcgelBQ==
+X-CSE-MsgGUID: GAK1yrreSKSxOSPKwIjinQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="46507093"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:12:30 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: rick.p.edgecombe@intel.com,
-	kai.huang@intel.com,
-	isaku.yamahata@intel.com,
-	dmatlack@google.com,
-	sagis@google.com,
-	erdemaktas@google.com,
-	graf@amazon.com,
+   d="scan'208";a="46148535"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by fmviesa010.fm.intel.com with ESMTP; 02 Jul 2024 19:12:34 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v2 2/4] KVM: selftests: Test slot move/delete with slot zap quirk enabled/disabled
-Date: Wed,  3 Jul 2024 10:11:19 +0800
-Message-ID: <20240703021119.13904-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240703020921.13855-1-yan.y.zhao@intel.com>
-References: <20240703020921.13855-1-yan.y.zhao@intel.com>
+	Jim Mattson <jmattson@google.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	Jinrong Liang <cloudliang@tencent.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v5 03/18] x86: pmu: Refine fixed_events[] names
+Date: Wed,  3 Jul 2024 09:56:57 +0000
+Message-Id: <20240703095712.64202-4-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240703095712.64202-1-dapeng1.mi@linux.intel.com>
+References: <20240703095712.64202-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,92 +70,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update set_memory_region_test to make sure memslot move and deletion
-function correctly both when slot zap quirk KVM_X86_QUIRK_SLOT_ZAP_ALL is
-enabled and disabled.
+In SDM the fixed counter is numbered from 0 but currently the
+fixed_events names are numbered from 1. It would cause confusion for
+users. So Change the fixed_events[] names to number from 0 as well and
+keep identical with SDM.
 
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Reviewed-by: Mingwei Zhang <mizhang@google.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- .../selftests/kvm/set_memory_region_test.c    | 29 ++++++++++++++-----
- 1 file changed, 21 insertions(+), 8 deletions(-)
+ x86/pmu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
-index bb8002084f52..a8267628e9ed 100644
---- a/tools/testing/selftests/kvm/set_memory_region_test.c
-+++ b/tools/testing/selftests/kvm/set_memory_region_test.c
-@@ -175,7 +175,7 @@ static void guest_code_move_memory_region(void)
- 	GUEST_DONE();
- }
+diff --git a/x86/pmu.c b/x86/pmu.c
+index 865dbe67..60db8bdf 100644
+--- a/x86/pmu.c
++++ b/x86/pmu.c
+@@ -45,9 +45,9 @@ struct pmu_event {
+ 	{"branches", 0x00c2, 1*N, 1.1*N},
+ 	{"branch misses", 0x00c3, 0, 0.1*N},
+ }, fixed_events[] = {
+-	{"fixed 1", MSR_CORE_PERF_FIXED_CTR0, 10*N, 10.2*N},
+-	{"fixed 2", MSR_CORE_PERF_FIXED_CTR0 + 1, 1*N, 30*N},
+-	{"fixed 3", MSR_CORE_PERF_FIXED_CTR0 + 2, 0.1*N, 30*N}
++	{"fixed 0", MSR_CORE_PERF_FIXED_CTR0, 10*N, 10.2*N},
++	{"fixed 1", MSR_CORE_PERF_FIXED_CTR0 + 1, 1*N, 30*N},
++	{"fixed 2", MSR_CORE_PERF_FIXED_CTR0 + 2, 0.1*N, 30*N}
+ };
  
--static void test_move_memory_region(void)
-+static void test_move_memory_region(bool disable_slot_zap_quirk)
- {
- 	pthread_t vcpu_thread;
- 	struct kvm_vcpu *vcpu;
-@@ -184,6 +184,9 @@ static void test_move_memory_region(void)
- 
- 	vm = spawn_vm(&vcpu, &vcpu_thread, guest_code_move_memory_region);
- 
-+	if (disable_slot_zap_quirk)
-+		vm_enable_cap(vm, KVM_CAP_DISABLE_QUIRKS2, KVM_X86_QUIRK_SLOT_ZAP_ALL);
-+
- 	hva = addr_gpa2hva(vm, MEM_REGION_GPA);
- 
- 	/*
-@@ -266,7 +269,7 @@ static void guest_code_delete_memory_region(void)
- 	GUEST_ASSERT(0);
- }
- 
--static void test_delete_memory_region(void)
-+static void test_delete_memory_region(bool disable_slot_zap_quirk)
- {
- 	pthread_t vcpu_thread;
- 	struct kvm_vcpu *vcpu;
-@@ -276,6 +279,9 @@ static void test_delete_memory_region(void)
- 
- 	vm = spawn_vm(&vcpu, &vcpu_thread, guest_code_delete_memory_region);
- 
-+	if (disable_slot_zap_quirk)
-+		vm_enable_cap(vm, KVM_CAP_DISABLE_QUIRKS2, KVM_X86_QUIRK_SLOT_ZAP_ALL);
-+
- 	/* Delete the memory region, the guest should not die. */
- 	vm_mem_region_delete(vm, MEM_REGION_SLOT);
- 	wait_for_vcpu();
-@@ -553,7 +559,10 @@ int main(int argc, char *argv[])
- {
- #ifdef __x86_64__
- 	int i, loops;
-+	int j, disable_slot_zap_quirk = 0;
- 
-+	if (kvm_check_cap(KVM_CAP_DISABLE_QUIRKS2) & KVM_X86_QUIRK_SLOT_ZAP_ALL)
-+		disable_slot_zap_quirk = 1;
- 	/*
- 	 * FIXME: the zero-memslot test fails on aarch64 and s390x because
- 	 * KVM_RUN fails with ENOEXEC or EFAULT.
-@@ -579,13 +588,17 @@ int main(int argc, char *argv[])
- 	else
- 		loops = 10;
- 
--	pr_info("Testing MOVE of in-use region, %d loops\n", loops);
--	for (i = 0; i < loops; i++)
--		test_move_memory_region();
-+	for (j = 0; j <= disable_slot_zap_quirk; j++) {
-+		pr_info("Testing MOVE of in-use region, %d loops, slot zap quirk %s\n",
-+			loops, j ? "disabled" : "enabled");
-+		for (i = 0; i < loops; i++)
-+			test_move_memory_region(!!j);
- 
--	pr_info("Testing DELETE of in-use region, %d loops\n", loops);
--	for (i = 0; i < loops; i++)
--		test_delete_memory_region();
-+		pr_info("Testing DELETE of in-use region, %d loops, slot zap quirk %s\n",
-+			loops, j ? "disabled" : "enabled");
-+		for (i = 0; i < loops; i++)
-+			test_delete_memory_region(!!j);
-+	}
- #endif
- 
- 	return 0;
+ char *buf;
 -- 
-2.43.2
+2.40.1
 
