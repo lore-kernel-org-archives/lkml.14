@@ -1,84 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC9917B51A;
-	Wed,  3 Jul 2024 14:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4654E17BB12;
+	Wed,  3 Jul 2024 14:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720015632; cv=none; b=ueAIuVudK8DTBXjwsOTFlrw0TpIXFL2lBqis6uc9P4U8Ud8SR2tgXsbK3f3zKGTa9iegH+1+lj06tEyvfA4vd6LLHxpkhvcAySylfePD8M6nU2MbNS0momnN6uUKLOZHLaFBOSpJUc9fThWQyHzshs0+C4f+HnjYM16CIEgtMGM=
+	t=1720015635; cv=none; b=LfJQ9FcMA+7h8ZGGb1r2y0FJDuoOUpoYr624qFVNeQACWZ3NgR8tzWmahqx+OTJvWjBhbE148jYbt1gVYfAp/7ktG8jMgwHONj8ObBd+whEHBw3xUxZhQNT8GE3MBBZyin56tohscdfggiZvw4l1KWNpCcBTpKlKfxlwpjOY9DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720015632; c=relaxed/simple;
-	bh=cg4oQWa4mAvOE44mdOlcpdj6cbZ+HMPUwfv7SHiAbQ0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Y0+dVM8k/Wtc4sHT8orRQjxoiYkAsXV/+2x5OOFQmrp47qMlXQ4XkrO7ZzPYZUgIROZdjN3qDm/+z3/faZqGcrr4L7t6TOSmg8Nl1D4n4zxDwZ1eLSjOAmHBds7nzqYXwKGEMqe/n83UQl6kkzQP514pJ9DADa2a8T2CeBMz4JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pozSQlOP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720015635; c=relaxed/simple;
+	bh=hTpxPUXvEU8n4GM4NIa7g8llxJ/C3fr7LbX8OlU0qZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Pi03X6d9/Lz3K8lYBBDirxU3V0Bv9NcRXrx4ab9Udyx7tBjvQpsqA2sN49COWr2EsA2jV+pS/QjN8GcD1V3zh3QXJmS8IsXaGlVZNBD7ZMEHUGZ6qGR7pil517gdR/72lveiaYWHC1RJsTFHQzue98sSu7QnrBItTPbTkvI6MyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ie3SajtA; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pozSQlOP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5C45C4AF07;
-	Wed,  3 Jul 2024 14:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720015632;
-	bh=cg4oQWa4mAvOE44mdOlcpdj6cbZ+HMPUwfv7SHiAbQ0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pozSQlOP0sdfd+dpy5AHIdtEZc2q59DrIN3Ite/3XX7RzlDpnJ0Zp8o4ocQSD1fWp
-	 5Vgp2/jRIfWDsgm9HsK2G1f8krds1YE8j4PCvvEqPSE7aEGyrT094SkcyPALUhHABc
-	 EC46aHoU3H6cft9nY3M6P+uN6NVuQGu6DpLttyw/q0gfWt90yllorgQKaEfSs5XlMg
-	 f1mKGCZi6Pj6Rk0DmnwSMaQaFxPIYdX41Y0/rcXI5nwLZm2ZXegGRAA6Yb9sRvVjgr
-	 657oKwd+BTXoxDK5TnzX8SV//1M6GHKg2ox9QJ9muwltAeUxaxsd7WDesk1TmVB1Yx
-	 Wc6S2OYm97T0g==
-From: Mark Brown <broonie@kernel.org>
-To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
- Baojun Xu <baojun.xu@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240702215402.839673-1-robh@kernel.org>
-References: <20240702215402.839673-1-robh@kernel.org>
-Subject: Re: [PATCH] ASoC: tas2781: Use of_property_read_reg()
-Message-Id: <172001563047.37877.18071249071920971995.b4-ty@kernel.org>
-Date: Wed, 03 Jul 2024 15:07:10 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ie3SajtA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720015634; x=1751551634;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hTpxPUXvEU8n4GM4NIa7g8llxJ/C3fr7LbX8OlU0qZ0=;
+  b=Ie3SajtAuXjGg8UeGEb3enlFyyyAmbSo64jhYzBF+2BbZZjCmQjLm/np
+   QsJzIaGSZWR9JxqbSCIc8mkNSvCvwWSNwqPkPjbgpkAePj6J/si3ffZZi
+   52PxUxK0OGPd4jt8o5cJMOc4id48fIbdBgX91hcK1QB+icys2qIhuYHKB
+   KyQLL9VCpNFvjQj5yq3HrMYSaYZHQRXvMBf7lLstRDqfCc0aJM0DH4gxd
+   0ZWpPqN/HxmH2NdWBdxFjIsntve8yp17b7yaHZX7h4quQLq+Eei9SxR99
+   YA16oodt8IjOcwgVUcy/m9pY448o3RY3FYvB1FqfwbLkn8aZm8qJzZUXc
+   A==;
+X-CSE-ConnectionGUID: CBEAYyxxS7mSpj92P5qNDA==
+X-CSE-MsgGUID: OfzPcqjdQyG0GNbZTAbrjQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="16900688"
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="16900688"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 07:07:13 -0700
+X-CSE-ConnectionGUID: D0WeKrJrQleqCjfg6QH6qA==
+X-CSE-MsgGUID: S6D4843kTsCHHxqOJTA+OQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="46693450"
+Received: from linux-pnp-server-16.sh.intel.com ([10.239.177.152])
+  by orviesa006.jf.intel.com with ESMTP; 03 Jul 2024 07:07:09 -0700
+From: Yu Ma <yu.ma@intel.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	mjguzik@gmail.com,
+	edumazet@google.com
+Cc: yu.ma@intel.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pan.deng@intel.com,
+	tianyou.li@intel.com,
+	tim.c.chen@intel.com,
+	tim.c.chen@linux.intel.com
+Subject: [PATCH v3 0/3] fs/file.c: optimize the critical section of file_lock in
+Date: Wed,  3 Jul 2024 10:33:08 -0400
+Message-ID: <20240703143311.2184454-1-yu.ma@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240614163416.728752-1-yu.ma@intel.com>
+References: <20240614163416.728752-1-yu.ma@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-d4707
+Content-Transfer-Encoding: 8bit
 
-On Tue, 02 Jul 2024 15:54:01 -0600, Rob Herring (Arm) wrote:
-> Replace the open-coded parsing of "reg" with of_property_read_reg().
-> The #ifdef is also easily replaced with IS_ENABLED().
-> 
-> 
+pts/blogbench-1.1.0 is a benchmark designed to replicate the
+load of a real-world busy file server by multiple threads of
+random reads, writes, and rewrites. When running default configuration
+with multiple parallel threads, hot spin lock contention is observed
+from alloc_fd(), file_closed_fd() and put_unused_fd() around file_lock.
 
-Applied to
+These 3 patches are created to reduce the critical section of file_lock
+in alloc_fd() and close_fd(). As a result, on top of patch 1,
+pts/blogbench-1.1.0 has been improved by 28% for read and 12% for write
+on Intel ICX 160 cores configuration with v6.10-rc6.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+v2 -> v3:
+1. Rebased the patch set to latest v6.10-rc6 and updated the performance results
+2. Reordered the patches as suggested by Mateusz Guzik <mjguzik gmail.com>
+3. Updated the fast path from alloc_fd() to find_next_fd() as suggested by
+Mateusz Guzik <mjguzik gmail.com> and Jan Kara <jack@suse.cz>, it is efficient
+and more concise than v2.
 
-Thanks!
+v1 -> v2:
+1. Rebased the patch set to latest v6.10-rc4 and updated the performance results
+2. Fixed the bug identified by Mateusz Guzik in patch 1 with adding rlimit check
+for fast path
+3. Updated patch 3 to remove sanity_check directly per the alignment with
+maintainer
 
-[1/1] ASoC: tas2781: Use of_property_read_reg()
-      commit: 31a45f9190b5b4f5cd8cdec8471babd5215eee04
+Yu Ma (3):
+  fs/file.c: remove sanity_check and add likely/unlikely in alloc_fd()
+  fs/file.c: conditionally clear full_fds
+  fs/file.c: add fast path in find_next_fd()
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+ fs/file.c | 47 ++++++++++++++++++++++++-----------------------
+ 1 file changed, 24 insertions(+), 23 deletions(-)
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
+2.43.0
 
