@@ -1,90 +1,66 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36ACD184136
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 17:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8D04181B9F;
+	Wed,  3 Jul 2024 17:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720028133; cv=none; b=iKqFFY9OI9ixpL8bm5aQhyMbFVncEeSI3PnsgDv0bA2adCVl6GhGUKDPG7TX/dAxKKDuGgShlgwg+RxnpX/SxbE52IMpzosiNY2d80O5CGq2SI5RO9eGg5lT595+q4EKOLcCX1AppfUf84V+xyDnyZf+mgzwPLld4RaqqkkL9QM=
+	t=1720028186; cv=none; b=YzlRiTr5DwXTEvlI2Z6drnr0uzS306bT6cRm3LctwtaJjHMqYylmdcPV13hFGrhEH6LNiMtvKIYKSo8mNzHOSTITLy4UcHU6OWeDSmAGv/lP2VuD5fbukYEvunaKeG5mzXuqGdiMcc0LHFDjRcvlyw7ANSfby9ULaIzy1bls73M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720028133; c=relaxed/simple;
-	bh=wJqbm0cbDl3OnGsiCx+j3UvhXYjJ+xSxrF8iQeOZADw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jgizOZi5zTAnTHOSPHOJENDEhcw88QBcGMXmpwai/GmrgqxvT5ggVhc5PO/2V2G62yNrkh/DG76at3wCqoep0PhbSTtZLt6/0iDHntmM5EiSiDwRabAxuMrQAqdCFYhUH1hu9FT6XIPKIvziHVwsYVhzPOOTbUcg0+bneYHCkAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=Ew771wkM; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
+	s=arc-20240116; t=1720028186; c=relaxed/simple;
+	bh=/gUMVRgul6lcAgrcClET5+UcbQ2CnjMiDHP/4hoUcpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rORi73md1aNnYUpQwG1zKQ2ExkdPiY9ehVlR7IjDGdlPZk+6KNYOdCS+iHw6+pFPCaAVvTY6HhPiSRaLrEfDdiMI4nt1tfyU+fTugQ1HdJ0ScmtCOVdDSQvJALfwvVuOJwZ18Q0UCAoVcmcUVMvatxRa0BpNcVV3fa/M8yTgYns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Sub6UK6U; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="Ew771wkM"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-58b966b4166so2848172a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 10:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1720028129; x=1720632929; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=La/5eaYjg7H10Or0G7dRQblWRQsDom6PBTc29FvwiUA=;
-        b=Ew771wkMq+bZe9z1mdKOOaCBmlghWM4YQ1pE7iwmJv6xNqWZA//bGGIsqKVXtqHijg
-         A8KEDQrzybsV0tScp0gjMsEOuAhsn5da8O4YVxqMTh5odB1BV8Nh0eoa+2nPiBvYaew2
-         AnxAL9um6v/FsGNM0QmEe5lN1eeZtLtQTTs6z0b+SNubM+CibLB4xgKEoPYWGNdlfx7v
-         8o+X8rZqVYXTpw2wRTwBX1ei7mCrGMVcFwxLWPW8/PSqfz1osR2Vklgg4PKMUvP1MuXR
-         u9p1EECek7zDD8GzEM8TqRz16NOhDY2BecPbKa26K31emH+4R4KjDn/PZeFEhFL9Ihts
-         PKtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720028129; x=1720632929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=La/5eaYjg7H10Or0G7dRQblWRQsDom6PBTc29FvwiUA=;
-        b=K848z43LC9h45v8FN4HDVSATxGYeiEHR99F9EZq7ibL6P2ZL8x9YrfhIJMUNqcZB2+
-         1E2LS81SyvqCiqEoho0wrqLTUzVOk+x/6am4s1E+Doeipy/9qeHygVtN59VGb4IXq5YF
-         HQWmCMmFS6pL5P8VGRErzQVtj1+zno7T+LWKB/IytWqP0rCZsb0solD9pHRb1ZRGtOSn
-         6FeKA56bSQlzrHr4U+PAtoMDZxpbxMKTYoWlVAWppAgOBxE9oTcBIA+Mwqi5kqbALgSU
-         m6+YVBf9Vq7WuAhTCQtigoHzarr6pB9cIEIeTDta9uJnRz1QnE6xMnqo4vTGSlBHnlIX
-         IXhg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbQJ+QQ4f5DNqEGKYR6j6ed2cdWvPJ5RJ4UWtg8H4f7G9w/fXm88ZWYmujYvHHTCFGQQfL4oCNNMYtgCcDkLlvDgiAWUBbbzTZFEYO
-X-Gm-Message-State: AOJu0YzvjSIo/y9N3t26Gm2c1WpzkB403tfT/TEtax6M1zWuyvQknqWT
-	h1kb7Az8OOVjSsCUWtbgDuMiOb9ObSbOSsT90+wDi/ibyw/oRY/E+/eKSKyoGRpHZT5y5cbOWt4
-	k/TIh7GsqHVGnpqJ66bvkJxXtll3fJGwwXX9xlA==
-X-Google-Smtp-Source: AGHT+IFBjLDcJRjLamuVf5zi9ojzKBMa9/VQRJAc3OBE+azv+Z6WVHDWucZC0ZTibSml6j6VgCjcl6c8rGjZ4ILsUhM=
-X-Received: by 2002:a05:6402:2345:b0:58d:10a0:36c0 with SMTP id
- 4fb4d7f45d1cf-58d10a03b2cmr1425175a12.14.1720028129456; Wed, 03 Jul 2024
- 10:35:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Sub6UK6U"
+Received: by linux.microsoft.com (Postfix, from userid 1131)
+	id 2FB1520B7001; Wed,  3 Jul 2024 10:29:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2FB1520B7001
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1720027760;
+	bh=lojtzhkZgYBDqXbGu4tXhZ3dbkmsj3C4IOg0gC/mFQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sub6UK6U75CDZXdVbcN5gv88Ix/3z6HN/Fx0P34VNUZuwCp2hgNtxzg1WziW6kqLR
+	 nbmN133M9je2FziU7yx9Ep8hR7lSUfdnNsSkcKWeqPxH2oP27XYlc17asywizKSJuC
+	 NnWVXBhu6mRfeFseuWaeJ56uHsEAsZ4Y06CU0bpM=
+Date: Wed, 3 Jul 2024 10:29:20 -0700
+From: Kelsey Steele <kelseysteele@linux.microsoft.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 6.1 000/128] 6.1.97-rc1 review
+Message-ID: <20240703172920.GA11716@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20240702170226.231899085@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703172117.810918-1-irogers@google.com> <20240703172117.810918-2-irogers@google.com>
-In-Reply-To: <20240703172117.810918-2-irogers@google.com>
-From: Matt Fleming <matt@readmodwrite.com>
-Date: Wed, 3 Jul 2024 18:35:18 +0100
-Message-ID: <CAENh_SR=4axuur1=ibGnGre8vm7tHNeG0VT-f1UQS1mHCUb-Uw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf comm str: Avoid sort during insert
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Steinar Gunderson <sesse@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240702170226.231899085@linuxfoundation.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, Jul 3, 2024 at 6:21=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> The array is sorted, so just move the elements and insert in order.
->
-> Reported-by: Matt Fleming <matt@readmodwrite.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/comm.c | 29 ++++++++++++++++++-----------
->  1 file changed, 18 insertions(+), 11 deletions(-)
+On Tue, Jul 02, 2024 at 07:03:21PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.97 release.
+> There are 128 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 04 Jul 2024 17:01:55 +0000.
+> Anything received after that time might be too late.
+> 
+No regressions found on WSL (x86 and arm64).
 
-Thanks, this fixes the issue I had where perf-top would spend >40% of
-its time sorting comm_strs.
+Built, booted, and reviewed dmesg.
 
-Tested-by: Matt Fleming <matt@readmodwrite.com>
+Thank you. :)
+
+Tested-by: Kelsey Steele <kelseysteele@linux.microsoft.com> 
