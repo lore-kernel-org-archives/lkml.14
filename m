@@ -1,117 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87DD2170836;
-	Wed,  3 Jul 2024 12:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5DF85298
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 12:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720009326; cv=none; b=U6zj5KqprfpY+EhQNyENymP5dybWeSALcuqCGXECz2LvBPEdlBn7Lhc7wrA52+RdqGpAJCBZVbXZotCi8NDmtQw2qdCoXt7V7aPICn75dMfebsd2WwbPL2gsrSmydJwPEcSsq/40P3D5EAayjXZr+BMsJE2/Cs+8eq/VwfZnIQE=
+	t=1720009363; cv=none; b=Noh5DOzCt/EYz39ySPZfjv9k33PeH7CX6ibNO8bTyK72vCtR4r/+nOXGLd5TZw26VwqZkA9EszVOJOt2MSQuTK6oQ0tBu2plLrfboZqYMQc2iyf6EVmp4HOe1X07X/Vgspb8e5EpSu/3DrqaHCr9boNGkzoMlVm7cEAqfNkYSDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720009326; c=relaxed/simple;
-	bh=vYuco9/NSRpqebQ4mYUp/0sTq0aoO3JjDyeQJOZxcqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gN4fa1LmimKXZFyT08WDq5IiYMVETjeD5FN2cHTaNzwFEEZMNCHVkMeiI7KIYO69opxr6IbBsQXPZm82YepUvxJXVYtPIlCDZiE2Py3/TPb1gQJUWZ0fHU6a9vhXpk4Aw3kKlGPTg8e/+CCCsPDF9bZ2RS21TN1u6z3STXs8aiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0FA3367;
-	Wed,  3 Jul 2024 05:22:27 -0700 (PDT)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 079283F766;
-	Wed,  3 Jul 2024 05:21:54 -0700 (PDT)
-Date: Wed, 3 Jul 2024 13:21:52 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Nathan Chancellor <nathan@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Tony Lindgren <tony@atomide.com>, Bjorn Andersson
- <andersson@kernel.org>, Emilio =?UTF-8?B?TMOzcGV6?= <emilio@elopez.com.ar>,
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Krzysztof Kozlowski
- <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas
- Gleixner <tglx@linutronix.de>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan
- Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Richard
- Leitner <richard.leitner@linux.dev>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
- <naveen.n.rao@linux.ibm.com>, Damien Le Moal <dlemoal@kernel.org>, "Peng
- Fan (OSS)" <peng.fan@oss.nxp.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, llvm@lists.linux.dev,
- linux-clk@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-usb@vger.kernel.org, patches@opensource.cirrus.com,
- linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 04/20] clk: sunxi: clk-simple-gates: convert to
- of_property_for_each_u32_new()
-Message-ID: <20240703132152.6c306a48@donnerap.manchester.arm.com>
-In-Reply-To: <20240703-of_property_for_each_u32-v1-4-42c1fc0b82aa@bootlin.com>
-References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
-	<20240703-of_property_for_each_u32-v1-4-42c1fc0b82aa@bootlin.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1720009363; c=relaxed/simple;
+	bh=TX2gvgdit2no2Bm4JOYvYuXVgfwUmwr1dfS1rQTimbE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=inK16ndukrw4axHruTKcz4uGJEOkNhUU+/3NOE8NDMhSyCL63Avv5PUhDVOIyB+ywCVslBt+bx2k+aBl5lCCuvtld8wEiLJ5N2c4eUw3xG2J9KEARkUQPs9CACUrIe2dtGCuVwLT+o1prBVz7qUmvJL8GJcRbQ5J2dRrfLkedaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QXkAxWXB; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QXkAxWXB"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ec4eefbaf1so56690341fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 05:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1720009358; x=1720614158; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sYo5IBsgfXZoFfV/jrH0cWY+s6dZqG1CrWcT7nsdClQ=;
+        b=QXkAxWXBHNwL167XOVQY5fWzRVOXxoEm2BmBn6sxC+LcqcFSbJohvP8kh3jrOcXevG
+         TfNZQqv5GC6NvzJBzBD7Iv0i5s26+QRtwI6uJgIy183ciDlwcTmNKPz4w/4+d7KulSXT
+         b+8V2C4n3ZTDkNd4qe8VAuOZN6sALW7zkbQQPmqHIFmv0YB+NRQFS/7ybc+fBXL49yv7
+         OPlYo9hBiA1t9Z7E+7nYYyUTGZ+nDAoB24tVhXr7lm38ctyNct8h5PNpYfZXNBVnDBI3
+         EyRu3MXoOL0wW3O6118tjF4tQDA4DNYfLUDFHSU/FxiqzL+eHiOSTI0gKQrHI3iFUwdV
+         2JOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720009358; x=1720614158;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sYo5IBsgfXZoFfV/jrH0cWY+s6dZqG1CrWcT7nsdClQ=;
+        b=YvWzmBx0uG4cmqauvQRGbswNQEkEj0fwPB6G3vvydWUgz70xszBrrzZd5WnGYE0me1
+         xB7gVdwkVo7zJeWvbWo+g/culaeS1vh/WXzRTUKkoTe+uSYy/nFbbemm6JtmXZPoUhlK
+         j5YC6s9l9bHun/kNmEEVb0PJQFVUVKyt3y5yqmIvmwZGNGSSSt/5+ClqTGd2WSrR4j2m
+         GMcGPV5g128NCYV73F7esQN8EXY/wNvQI18Pcyau2lYV4TKiP0P0ZGy4tE1qbvB9xEi3
+         FDFROjd8bp1S6NpJ2AibxkQonBfj56YrwZtji4mB47VCCxMpIgCAUIdcf2N4lvy189xa
+         yovw==
+X-Forwarded-Encrypted: i=1; AJvYcCV56MV+JAqVw22GdD8uQxQbv9Nr6vold02EewXAXTla6zZGFMFOhKbcmyKb59O/gJ4kQqEjM7HGz6jEDocgnLoyyq3iFOwvYLhflV+d
+X-Gm-Message-State: AOJu0YyC9SwqkureR1DfnQoRKCVpyp63efB9r/keyAr2wXlcCMjD29vo
+	Qwf59tbG0LT6VTGsUAEy5gTTti2q8BhQlv5epw2fjqb+XrPH48tHnszbJUPPJpk=
+X-Google-Smtp-Source: AGHT+IHZ4VR/Z2EA5bNROzM44bBxwS+VTMY4KF41urbY5op+dc5ajamiSRVwX7gtAx+LOXib0By3RA==
+X-Received: by 2002:a2e:a902:0:b0:2ee:6062:b559 with SMTP id 38308e7fff4ca-2ee6062b816mr81975241fa.8.1720009358326;
+        Wed, 03 Jul 2024 05:22:38 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:757f:69b1:bdb0:82db:8b8b? ([2a10:bac0:b000:757f:69b1:bdb0:82db:8b8b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b064f16sm236821285e9.27.2024.07.03.05.22.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jul 2024 05:22:37 -0700 (PDT)
+Message-ID: <d405c84e-2b8c-4139-b4ea-d716fe53dfca@suse.com>
+Date: Wed, 3 Jul 2024 15:22:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv5 3/4] x86/tdx: Dynamically disable SEPT violations from
+ causing #VEs
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240624114149.377492-1-kirill.shutemov@linux.intel.com>
+ <20240624114149.377492-4-kirill.shutemov@linux.intel.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+In-Reply-To: <20240624114149.377492-4-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 03 Jul 2024 12:36:48 +0200
-Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
 
-> Simplify code using of_property_for_each_u32_new() as the two additional
-> parameters in of_property_for_each_u32() are not used here.
-> 
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+On 24.06.24 г. 14:41 ч., Kirill A. Shutemov wrote:
 
-Cheers,
-Andre
+<snip>
 
-> ---
->  drivers/clk/sunxi/clk-simple-gates.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
-> index 0399627c226a..a30d14937e0b 100644
-> --- a/drivers/clk/sunxi/clk-simple-gates.c
-> +++ b/drivers/clk/sunxi/clk-simple-gates.c
-> @@ -21,11 +21,9 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
->  {
->  	struct clk_onecell_data *clk_data;
->  	const char *clk_parent, *clk_name;
-> -	struct property *prop;
->  	struct resource res;
->  	void __iomem *clk_reg;
->  	void __iomem *reg;
-> -	const __be32 *p;
->  	int number, i = 0, j;
->  	u8 clk_bit;
->  	u32 index;
-> @@ -47,7 +45,7 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
->  	if (!clk_data->clks)
->  		goto err_free_data;
->  
-> -	of_property_for_each_u32(node, "clock-indices", prop, p, index) {
-> +	of_property_for_each_u32_new(node, "clock-indices", index) {
->  		of_property_read_string_index(node, "clock-output-names",
->  					      i, &clk_name);
->  
-> 
 
+
+> --- a/arch/x86/include/asm/shared/tdx.h
+> +++ b/arch/x86/include/asm/shared/tdx.h
+> @@ -19,9 +19,17 @@
+>   #define TDG_VM_RD			7
+>   #define TDG_VM_WR			8
+>   
+> -/* TDCS fields. To be used by TDG.VM.WR and TDG.VM.RD module calls */
+> +/* TDX TD-Scope Metadata. To be used by TDG.VM.WR and TDG.VM.RD */
+> +#define TDCS_CONFIG_FLAGS		0x1110000300000016
+> +#define TDCS_TD_CTLS			0x1110000300000017
+>   #define TDCS_NOTIFY_ENABLES		0x9100000000000010
+>   
+> +/* TDCS_CONFIG_FLAGS bits */
+> +#define TDCS_CONFIG_FLEXIBLE_PENDING_VE	BIT_ULL(1)
+
+
+So where is this bit documented, because in td_scope_metadata.json 
+CONFIG_FLAGS' individual bits aren't documented. All other TDX docs 
+refer to the ABI .json file.
+
+Landing code for undocumented bits unfortunately precludes any quality 
+review on behalf of independent parties.
+
+> +
+> +/* TDCS_TD_CTLS bits */
+> +#define TD_CTLS_PENDING_VE_DISABLE	BIT_ULL(0)
+
+In contrast the TD_CTLS bits are documented in the same .json file.
+
+> +
+>   /* TDX hypercall Leaf IDs */
+>   #define TDVMCALL_MAP_GPA		0x10001
+>   #define TDVMCALL_GET_QUOTE		0x10002
