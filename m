@@ -1,167 +1,148 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF51174EFE
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 14:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698C6177980;
+	Wed,  3 Jul 2024 14:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720016137; cv=none; b=LdxNuWvqESraae5xzPBNHHPuwzu2MLLhkxmfyh3TKkkBE36hrxVfoxr+htiDxpUx9dHW5v1V4CTfcGipI5VMHPSpxoOi5EZiww6DZKqAmCwu/n5MEZl5cTV1+evy+HZVwEyYYG/72oEwUoeyPF4EXeWVHMUVb8vFiXPvUPvc6ps=
+	t=1720016238; cv=none; b=pvMYySfQXhAkgo5AjGqBVJy8uObmqBjb+2mGGGtOSZxjrwWHLNYRZYthhijbrh/UI6jz6y7qko7Bn8HaToeTwFnP+AD1lOyERrfOpWPtsMFDANxkXjMZ8HFpIarMrtAlUJ29x1ORCHAAnrwd/9ivpLwKQ/AFhSLilM6XVoHDYU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720016137; c=relaxed/simple;
-	bh=k7Uh6TiIwijhGvQ5X8qOkdHrkUfVv5I9WX7RRyk0FyU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eSiPpvJu76TA+5ldRxOa5KpxfcrMuxj88XDu6RCz33YWnqgw231tmO/Nx/myZYwqxp5ev3yBDMeTwSvlkyJjhTDY3U9U1M0YyMem0zM0zUxVrnUiIM2+vzx+kw2iHvawizU1IQ3eDlRi4QpVrUiQMoeHsbT6S3+uJaLhms/ApAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=YX7yZ3yu; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
+	s=arc-20240116; t=1720016238; c=relaxed/simple;
+	bh=YOtEnpbAo8NExKuGIzIbRGxUNo536AZi2Dk1xY8zYZU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=juWF+E87pU8fH5d9EltFbmKaRwCzVSjhSU6wWRsbGJJSGDsBOpXJImAdtMekvWBAMF5eE7nMafzDCAynl5xlJ1IEfLxc4cTXVAVesSrjbkR/G50yAzU0GG05wvBdF3ahp1SBtb7pD0JyzntZgCSP2n9ZuEyuDhO8YWhfGDqxTOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BV5S2IWc; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="YX7yZ3yu"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fb03c6f9f3so827835ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 07:15:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BV5S2IWc"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00ba6so3924554a12.1;
+        Wed, 03 Jul 2024 07:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1720016135; x=1720620935; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CU2G2QPdVJo7NFVCvoDy5kVuUs8JHX+8IiCe10N61ds=;
-        b=YX7yZ3yu79oG3rgaAUrCEOgalttL+WTXkz49/ZwWhdEm1Y9kjysM/G+3PZbwPoMIa5
-         2vuSNeUfB2H9OFB/sNMLDU5K0Z69mXQOZSaN/vXXmRHQSgLy2eUBaWCjGT2482uOQilf
-         /82miU/fR+6CQqGCxFa6r4u2Nq1mxYOJI57VhmX39b4POE9f37977zuPgmDkqTUB7oDb
-         eyoqAiKbpiXtFwqOK2Qxku630S/86PaCcwsYvYTICVBP+a8YKB2VDqFQkJrjS86fqFx/
-         0N7IA7n5poF0HTVXlyARr1/ns7qx9moD2snEaDmBfgGduhCf7WI1jYbOKxk9igQ8z6GG
-         YJqw==
+        d=gmail.com; s=20230601; t=1720016235; x=1720621035; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/BQrfEzxPNRTRt+VVxHgrXsFxplM3fveQqZGfKVIAN0=;
+        b=BV5S2IWcd+AuIsUI/kctpxCojs+10pCaQIPxaAQ5SZ02MeByEHAXiInQF29Fk/W4hc
+         WrhX1Uq119CDonVwVzT0HIy+YOmy2GuN0JZJjxpvKDelTdD1z5vv/dqRl59rEDyoKhay
+         BPK+sSrC1QC3MNk8TvOiOjCHm1yMP+8ljpgnkAKI94ynZ+vCTXe2M+iDToN2yJxhsbDJ
+         t5pnOSEnT1nGnwHnGP1KmDZRGGWUrJ/UwcgbT/uTLGYPwZw+fkVvkLlGIsTfLu9IT+L1
+         YdLKLRmuewdM+vobTIU+oXQkiNikD3lKeThQ4P9nJmHTDZaLy/PhI6N2kKtd6Tqjiy5w
+         chMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720016135; x=1720620935;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CU2G2QPdVJo7NFVCvoDy5kVuUs8JHX+8IiCe10N61ds=;
-        b=UYkS2cVki9mu5cIIFe5Tq3ZLtm1QlIXq+zvA5kiZpmaH0bFloxZ90E1ScQAinnHZjX
-         Naho1TBUlrsCaZbvU8+oGH1/rSavDcfnXfHvdzBgu+BGCYG9uxLSraihC5FSXrspLyCv
-         m+O1udDYjAKHV/1du11m5I9TWGRqGzd22Dmm3wlHZn66LdtPWbd5YBMRo7k5JJ47RmuK
-         f6wAYpBSWckVcjh1ujlbIxjpxa5LaerLN0miMELdKzFoyKeuNzRRUu6gVSZ3I38bSLJH
-         8Uo9mEH2DgL83KNVjiAjVZLNLAE4zMGEoH1CxPKMWGMpNOeSKtl5mAOR8xoT6dlYXNIx
-         UQGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtN+D+T1oQ1x9kK32q4cwTfVL947M5QnHd/jNC6Jwvs1ekPAr5Pq2qcr4Yxsr5jpFnR/mTr9Ao+drwS8DA95w6HM4+tz6g0alFgBeX
-X-Gm-Message-State: AOJu0YwP5W37PVZYcAv82UC2wngbrqhTsMiT/bC2Jq20oih4v6RQbPn8
-	lNawcv3gChnrcDPRtq2YBd8xeM7vMsgCC4V4qIk108YO96rcyDS5xlfW/yUQ3w==
-X-Google-Smtp-Source: AGHT+IGo869GVlsk/l4JHWjfBYDiVEDQKhSinOIfUneVdHSCReXfSXBs/FkDvw5QRRJ4R9m6Yk4XaQ==
-X-Received: by 2002:a17:902:e54e:b0:1f7:2b3:3331 with SMTP id d9443c01a7336-1fadbd2b877mr134228095ad.4.1720016133284;
-        Wed, 03 Jul 2024 07:15:33 -0700 (PDT)
-Received: from ?IPV6:2401:4900:1f3e:250a:7d55:4ad6:87a3:5c5c? ([2401:4900:1f3e:250a:7d55:4ad6:87a3:5c5c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1569046sm103869395ad.210.2024.07.03.07.15.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 07:15:33 -0700 (PDT)
-Message-ID: <df0f9705-b1e9-4dce-b110-09be540d5e25@beagleboard.org>
-Date: Wed, 3 Jul 2024 19:45:26 +0530
+        d=1e100.net; s=20230601; t=1720016235; x=1720621035;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/BQrfEzxPNRTRt+VVxHgrXsFxplM3fveQqZGfKVIAN0=;
+        b=qanmwSgPxlfdysK+gZ/So4O/vKhNWJcUXHU8Zgt5QrsDMakGhCP8JJcg3NVg5MpqKx
+         FDy7i95/3SNgwyNLtmeBVEpuVnQC3ELdpYDAFWguwRSZUACuQr6BxySygEWLeiE84/HL
+         SNEtEL7rsc6Wr2U0xK0zhLeILpFNNTBPAbjITr54AGvmFpwyHyNHT8oTYQq0zuTDnkUj
+         +99eBlL3L8W8/YDBgQI7SSoks7XWBZlsJf+8uetLAa/YQ35icVprtomkup0Pf2za1z8N
+         fmL0gH8IfDuBpn7UVQAWuEVs0LlzPFH3o3/U4MEUvtwFPyfIHfqjAo8nE+AtHNE1NjNi
+         lIvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlS8x9J+odubBBQtLzCVtwsdtswFhxsdPvoiz0eg1HOFt9XgmQ0JzGJ/LzrnOOODE2xnce8AVvC+SlnT+IpwWQ+hzcWA/xWY9p+MWxysnAYC+t5LifbjsNkvcDpLvDrwSFJJWecVEQeY6ZxQ==
+X-Gm-Message-State: AOJu0YxmrY62GpBpckYX/kBwmo+3AC/UYeYvqjr2W88h9OkeVd9nJcnZ
+	synAtEoN5+x0qHiv3lFMUiHQJZfpbktKkx6EBy25Tsm1rrczvE0zrnkGD4oiRHmMGZZzwKXHjIw
+	Eqo3PqCl+DWYmXwg4qYpAMI5DFdQ=
+X-Google-Smtp-Source: AGHT+IEOGny2bm3IXPyTOETnvE8CxQWGikfadV7NWbNnDPwFylRSVaOUtzljKmrHgGxfWNhLBGozaWTfuk38wb+L6GQ=
+X-Received: by 2002:a05:6402:5253:b0:58c:1af:bb67 with SMTP id
+ 4fb4d7f45d1cf-58c01afbbf6mr2548281a12.41.1720016234569; Wed, 03 Jul 2024
+ 07:17:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 3/3] arm64: dts: ti: grove: Add Grove Sunlight Sensor
- overlay
-To: Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- Vaishnav M A <vaishnav@beagleboard.org>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Michael Walle <mwalle@kernel.org>, Jason Kridner <jkridner@beagleboard.org>,
- Robert Nelson <robertcnelson@beagleboard.org>,
- Robert Nelson <robertcnelson@gmail.com>,
- Ayush Singh <ayushdevel1325@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240702164403.29067-1-afd@ti.com>
- <20240702164403.29067-4-afd@ti.com>
-Content-Language: en-US
-From: Ayush Singh <ayush@beagleboard.org>
-In-Reply-To: <20240702164403.29067-4-afd@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240614163416.728752-1-yu.ma@intel.com> <20240703143311.2184454-1-yu.ma@intel.com>
+ <20240703143311.2184454-4-yu.ma@intel.com>
+In-Reply-To: <20240703143311.2184454-4-yu.ma@intel.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 3 Jul 2024 16:17:01 +0200
+Message-ID: <CAGudoHEcb3g16O1daqGdViHoPEnEC7iJ-Z2B+ZC9JA9LucimDA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] fs/file.c: add fast path in find_next_fd()
+To: Yu Ma <yu.ma@intel.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	edumazet@google.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, pan.deng@intel.com, tianyou.li@intel.com, 
+	tim.c.chen@intel.com, tim.c.chen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/2/24 22:14, Andrew Davis wrote:
-
-> Add DT overlay for the Grove Sunlight Sensor[0].
+On Wed, Jul 3, 2024 at 4:07=E2=80=AFPM Yu Ma <yu.ma@intel.com> wrote:
 >
-> [0] https://wiki.seeedstudio.com/Grove-Sunlight_Sensor/
+> There is available fd in the lower 64 bits of open_fds bitmap for most ca=
+ses
+> when we look for an available fd slot. Skip 2-levels searching via
+> find_next_zero_bit() for this common fast path.
 >
-> Signed-off-by: Andrew Davis <afd@ti.com>
+> Look directly for an open bit in the lower 64 bits of open_fds bitmap whe=
+n a
+> free slot is available there, as:
+> (1) The fd allocation algorithm would always allocate fd from small to la=
+rge.
+> Lower bits in open_fds bitmap would be used much more frequently than hig=
+her
+> bits.
+> (2) After fdt is expanded (the bitmap size doubled for each time of expan=
+sion),
+> it would never be shrunk. The search size increases but there are few ope=
+n fds
+> available here.
+> (3) There is fast path inside of find_next_zero_bit() when size<=3D64 to =
+speed up
+> searching.
+>
+> As suggested by Mateusz Guzik <mjguzik gmail.com> and Jan Kara <jack@suse=
+.cz>,
+> update the fast path from alloc_fd() to find_next_fd(). With which, on to=
+p of
+> patch 1 and 2, pts/blogbench-1.1.0 read is improved by 13% and write by 7=
+% on
+> Intel ICX 160 cores configuration with v6.10-rc6.
+>
+> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+> Signed-off-by: Yu Ma <yu.ma@intel.com>
 > ---
->   arch/arm64/boot/dts/ti/Makefile               |  3 ++
->   .../boot/dts/ti/grove-sunlight-sensor.dtso    | 31 +++++++++++++++++++
->   2 files changed, 34 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/ti/grove-sunlight-sensor.dtso
+>  fs/file.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> index a859629a6072c..7d1ce7a5d97bc 100644
-> --- a/arch/arm64/boot/dts/ti/Makefile
-> +++ b/arch/arm64/boot/dts/ti/Makefile
-> @@ -8,6 +8,9 @@
->   # Entries are grouped as per SoC present on the board. Groups are sorted
->   # alphabetically.
->   
-> +# This needs a better directory location
-> +dtb-$(CONFIG_OF_OVERLAY) += grove-sunlight-sensor.dtbo
+> diff --git a/fs/file.c b/fs/file.c
+> index a15317db3119..f25eca311f51 100644
+> --- a/fs/file.c
+> +++ b/fs/file.c
+> @@ -488,6 +488,11 @@ struct files_struct init_files =3D {
+>
+>  static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start=
+)
+>  {
+> +       unsigned int bit;
+> +       bit =3D find_next_zero_bit(fdt->open_fds, BITS_PER_LONG, start);
+> +       if (bit < BITS_PER_LONG)
+> +               return bit;
 > +
->   # Boards with AM62x SoC
->   dtb-$(CONFIG_ARCH_K3) += k3-am625-beagleplay.dtb
->   dtb-$(CONFIG_ARCH_K3) += k3-am625-beagleplay-csi2-ov5640.dtbo
-> diff --git a/arch/arm64/boot/dts/ti/grove-sunlight-sensor.dtso b/arch/arm64/boot/dts/ti/grove-sunlight-sensor.dtso
-> new file mode 100644
-> index 0000000000000..ab2f102e1f8ab
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/grove-sunlight-sensor.dtso
-> @@ -0,0 +1,31 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-> +/**
-> + * Grove - Sunlight Sensor v1.0
-> + *
-> + * https://wiki.seeedstudio.com/Grove-Sunlight_Sensor/
-> + *
-> + * Copyright (C) 2024 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +&GROVE_CONNECTOR {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&GROVE_PIN1_MUX_I2C_SCL>,
-> +	            <&GROVE_PIN2_MUX_I2C_SDA>;
-> +};
 
-On setting pinctrl in the mikrobus connector, I seem to encounter 
-problem with the SPI driver trying to use the device before the pins are 
-ready. So I think, the pinctrl should probably be defined in the 
-respective i2c, spi, etc nodes instead of connector.
+The rest of the patchset looks good on cursory read.
 
-> +
-> +&GROVE_PIN1_I2C {
-> +	status = "okay";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	clock-frequency = <100000>;
-> +
-> +	si1145@60 {
-> +		compatible = "si,si1145";
-> +		reg = <0x60>;
-> +	};
-> +};
+As for this one, the suggestion was to make it work across the entire range=
+.
+
+Today I wont have time to write and test what we proposed, but will
+probably find some time tomorrow. Perhaps Jan will do the needful(tm)
+in the meantime.
+
+That said, please stay tuned for a patch. :)
+
+>         unsigned int maxfd =3D fdt->max_fds; /* always multiple of BITS_P=
+ER_LONG */
+>         unsigned int maxbit =3D maxfd / BITS_PER_LONG;
+>         unsigned int bitbit =3D start / BITS_PER_LONG;
+> --
+> 2.43.0
+>
 
 
-I also have question regarding how to define reg property in SPI 
-(chipselect). Ideally, we want to define it relative to the connector 
-pins, but since the SPI device(s) is a child of SPI controller, I am not 
-sure how I can do remapping.
-
-
-Ayush Singh
-
+--=20
+Mateusz Guzik <mjguzik gmail.com>
