@@ -1,310 +1,168 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16316186285
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 18:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E2419067C
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 18:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720029797; cv=none; b=Vzfn8UuQzNVfH7cBqUT/HQU+VX08AEKmbRVN1Ky/O398/ImrBjpgGudFKXas7ttCSN7cm9YkXqpsLIk6vq4a6Vi2GHkWX5ncUber7RICHS17C25VLQJo/WP5rpi5N4PJhLQ5VmubQ1elvbUo+RjPmaA/9eX8Mp1OASisZAbdN9s=
+	t=1720029799; cv=none; b=qDlR5zJZnIaGcbsXxOxMHFTbRuqcgHph4FVmmanjrAiB/PHrGw3h4NlZ3uGqkyjDTMJepSlR3AWjrzUNlOKNwvCjAdgtgWEkJv7n7vER5fWKNa0xXoRMEyhkEEU9DXoWz7EVEbZXa6xhZl/lsicDg1AicLrWOKvJ0SA0UJ7DV0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720029797; c=relaxed/simple;
-	bh=Y/mo5p4XsiOueTQ/ZADL/UzpMLvM5PlvWfAxXOu3I+w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type; b=bhoCYHKa0avuv0Do6Oafjx2VVmzXwDybtnHCPBDbG9nYjwKjQeOmIgYjmenfzxsqJa4tcxIBgGgciXKRYqRt21vYMM+wkpfID91lbXjVpHFNNUfS9PjI9MOb68Cfu6aTZuRbNLyPK8lcGQDpBBWVimdb4ugNXywKeFLVllcsvVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=RWj5EHrq; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1720029799; c=relaxed/simple;
+	bh=79qYu5602aJY3EdQbkuHxkpNHe5e7OMs2hD5R/sSmhw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=qJvvvOO4/vUkVnYPUvL0nfQOXro7eE8aR02wY7etwV+HHWXqh/mpBcXgkTHpVzHlSCv/6GrK6YtVztSSl6V+P5L0mTDq6X9VPvRSj9uKS1cwMzlnVx8AemEyUVYgsCngnedlzS2syo70WUfO/jZBNTYX7GkXfTSy/qQZW/WQRVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dB6EiuS9; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RWj5EHrq"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6b2c6291038so8371756d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 11:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1720029795; x=1720634595; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SFk9ymgmrx8Zh0+6qUCNHZTt5WGxkLiCvPDqhA+6ML4=;
-        b=RWj5EHrq3Q8WzZZIX2Wazl8fdVfxWV5CJoonyyNwcLBFobIUgQLB6vxjIDxNtvbLiF
-         oOvZA2vO0c51Rr6up3lBvqSTsz34GXgX4zcWvcTvQa2gNFLbhazmARtATE3O8RKx7T+v
-         Hu0Vw/nhhK9WfiJFQWPDcL9phtUQw6BXrcQpc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720029795; x=1720634595;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SFk9ymgmrx8Zh0+6qUCNHZTt5WGxkLiCvPDqhA+6ML4=;
-        b=luuYrL8i2RhbIBBF+zsLFw5N+8jXRimSuQPKQPhZSE5L0w6w3wMNACcsm286UbOxG/
-         +Tzo3eWwIEcwwz9lO+CEyzH9F3uaOfbExaNnSZGjSPFXwaYSvqQm2UhLKMSSNH0CTcUl
-         v2JGPtZeEJJn2NOQPnb2zFMfxyiWZXB4CQvyhjfmBI8g8eLSMgCrqn04aZXeC+fl/nUY
-         FzYm7Rt1qjKYQC7ljcPcSO+orl6lVGUYuUi0u3J9l80JMuiuZEmlo8e43mc+w4pwxNZK
-         b8uONDB/AgSqmJ06WZD6OJxY9LZxqxb2NrLrYhcy1GJmtJNe1xYn7UmCD24V3oHgjXMo
-         B1HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVN0L/MiwQGGcmQsfo3f9SUFe+yAV48zoQMkdYx4QROB4HSp7fxQ/cEze7NIh35pO/CB39BRicGv8dSY6QTAAG6z+3ji6EYLphctIaC
-X-Gm-Message-State: AOJu0YxCi+4wdYTfW4tyhsEMgna5tKBtq3Bmr6+PnT09u2kRiFlOCoh0
-	RuuqXSbgsZ1aYs+lw6wngyfYt1gIXy7jrmFqohBEeaeeJo0+mzTYspTtjoM56A==
-X-Google-Smtp-Source: AGHT+IFVkg5UeCybsdO7WWu4hT/GW38dRqFzzVEfzcG22MbePizXsOO4RJeJmKh4oI91Y7COhumL5w==
-X-Received: by 2002:a05:6214:48e:b0:6b5:1cea:649d with SMTP id 6a1803df08f44-6b5e18b1889mr40862876d6.11.1720029794888;
-        Wed, 03 Jul 2024 11:03:14 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e5f1a6dsm55589626d6.83.2024.07.03.11.03.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 11:03:14 -0700 (PDT)
-From: Jim Quinlan <james.quinlan@broadcom.com>
-To: linux-pci@vger.kernel.org,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	bcm-kernel-feedback-list@broadcom.com,
-	jim2101024@gmail.com,
-	james.quinlan@broadcom.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 06/12] PCI: brcmstb: PCI: brcmstb: Make HARD_DEBUG, INTR2_CPU_BASE offsets SoC-specific
-Date: Wed,  3 Jul 2024 14:02:50 -0400
-Message-Id: <20240703180300.42959-7-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240703180300.42959-1-james.quinlan@broadcom.com>
-References: <20240703180300.42959-1-james.quinlan@broadcom.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000f73fe6061c5ba475"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dB6EiuS9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720029797; x=1751565797;
+  h=date:from:to:cc:subject:message-id;
+  bh=79qYu5602aJY3EdQbkuHxkpNHe5e7OMs2hD5R/sSmhw=;
+  b=dB6EiuS92m/ehLvx6NFCag5lzguUo6Z2wW4SqNHPW17+vLl8l9cMk8G6
+   IXuZ7MfvtmDqp1ME95OiZ7DSUoVRpyWbVxCIr3rfdxUgpN/n0HRIYDeyI
+   x9AybtKcsbRvABBrR86rg/dJpff/RZTwQPhqx5xjZXMe6k3q3Lm3iVM7t
+   c1cokJLV/w8OtOwRIvGAtYAQnE5y2SK6ZztLC7iJMwy4ICk8AyJGWKnYT
+   MNzSw/LBOjD0NvUiArTZVEb6awb6F2OyGuO6XL2mW/EwSbhsoPhDyrbhi
+   +quGoTL7iRq2vFbhoEUfo2bong2w1u3OkOIDFUmkVmQ76TeehDZ9YOhwx
+   Q==;
+X-CSE-ConnectionGUID: 2hm70/o2SQCYRLHmfOWRMA==
+X-CSE-MsgGUID: xL5SpZxXQCW4Xo4Npc1C4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17002045"
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="17002045"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 11:03:17 -0700
+X-CSE-ConnectionGUID: bS2QyeXlTo+A9eMibCoC+g==
+X-CSE-MsgGUID: UsMP0SnOTBqDptSUviw8Mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="47000722"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 03 Jul 2024 11:03:16 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sP4K1-000Q5C-0h;
+	Wed, 03 Jul 2024 18:03:13 +0000
+Date: Thu, 04 Jul 2024 02:02:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/mm] BUILD SUCCESS
+ b7c35279e0da414e7d90eba76f58a16223a734cb
+Message-ID: <202407040253.Srm21HH8-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
---000000000000f73fe6061c5ba475
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/daveh/devel.git x86/mm
+branch HEAD: b7c35279e0da414e7d90eba76f58a16223a734cb  x86/mm: Cleanup prctl_enable_tagged_addr() nr_bits error checking
 
-Our HW design has again changed a register offset which used to be standard
-for all Broadcom SOCs with PCIe cores.  This difference is now reconciled
-for the registers HARD_DEBUG and INTR2_CPU_BASE.
+elapsed time: 1391m
 
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 33 +++++++++++++++++----------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+configs tested: 91
+configs skipped: 206
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 59daa4b2e6c5..d8c0f1474369 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -122,7 +122,6 @@
- #define PCIE_MEM_WIN0_LIMIT_HI(win)	\
- 		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI + ((win) * 8)
- 
--#define PCIE_MISC_HARD_PCIE_HARD_DEBUG					0x4204
- #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK	0x2
- #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK		0x200000
- #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x08000000
-@@ -131,9 +130,9 @@
- 	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
- 	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
- 
--#define PCIE_INTR2_CPU_BASE		0x4300
- #define PCIE_MSI_INTR2_BASE		0x4500
--/* Offsets from PCIE_INTR2_CPU_BASE and PCIE_MSI_INTR2_BASE */
-+
-+/* Offsets from INTR2_CPU and MSI_INTR2 BASE offsets */
- #define  MSI_INT_STATUS			0x0
- #define  MSI_INT_CLR			0x8
- #define  MSI_INT_MASK_SET		0x10
-@@ -187,6 +186,8 @@
- #define IDX_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_INDEX])
- #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
- #define PCIE_RGR1_SW_INIT_1(pcie)	(pcie->reg_offsets[RGR1_SW_INIT_1])
-+#define	HARD_DEBUG(pcie)		(pcie->reg_offsets[PCIE_HARD_DEBUG])
-+#define	INTR2_CPU_BASE(pcie)		(pcie->reg_offsets[PCIE_INTR2_CPU_BASE])
- 
- /* Rescal registers */
- #define PCIE_DVT_PMU_PCIE_PHY_CTRL				0xc700
-@@ -205,6 +206,8 @@ enum {
- 	RGR1_SW_INIT_1,
- 	EXT_CFG_INDEX,
- 	EXT_CFG_DATA,
-+	PCIE_HARD_DEBUG,
-+	PCIE_INTR2_CPU_BASE,
- };
- 
- enum {
-@@ -651,7 +654,7 @@ static int brcm_pcie_enable_msi(struct brcm_pcie *pcie)
- 	BUILD_BUG_ON(BRCM_INT_PCI_MSI_LEGACY_NR > BRCM_INT_PCI_MSI_NR);
- 
- 	if (msi->legacy) {
--		msi->intr_base = msi->base + PCIE_INTR2_CPU_BASE;
-+		msi->intr_base = msi->base + INTR2_CPU_BASE(pcie);
- 		msi->nr = BRCM_INT_PCI_MSI_LEGACY_NR;
- 		msi->legacy_shift = 24;
- 	} else {
-@@ -898,12 +901,12 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	/* Take the bridge out of reset */
- 	pcie->bridge_sw_init_set(pcie, 0);
- 
--	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-+	tmp = readl(base + HARD_DEBUG(pcie));
- 	if (is_bmips(pcie))
- 		tmp &= ~PCIE_BMIPS_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK;
- 	else
- 		tmp &= ~PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK;
--	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-+	writel(tmp, base + HARD_DEBUG(pcie));
- 	/* Wait for SerDes to be stable */
- 	usleep_range(100, 200);
- 
-@@ -1072,7 +1075,7 @@ static void brcm_config_clkreq(struct brcm_pcie *pcie)
- 	}
- 
- 	/* Start out assuming safe mode (both mode bits cleared) */
--	clkreq_cntl = readl(pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-+	clkreq_cntl = readl(pcie->base + HARD_DEBUG(pcie));
- 	clkreq_cntl &= ~PCIE_CLKREQ_MASK;
- 
- 	if (strcmp(mode, "no-l1ss") == 0) {
-@@ -1115,7 +1118,7 @@ static void brcm_config_clkreq(struct brcm_pcie *pcie)
- 			dev_err(pcie->dev, err_msg);
- 		mode = "safe";
- 	}
--	writel(clkreq_cntl, pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-+	writel(clkreq_cntl, pcie->base + HARD_DEBUG(pcie));
- 
- 	dev_info(pcie->dev, "clkreq-mode set to %s\n", mode);
- }
-@@ -1337,9 +1340,9 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
- 	writel(tmp, base + PCIE_MISC_PCIE_CTRL);
- 
- 	/* Turn off SerDes */
--	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-+	tmp = readl(base + HARD_DEBUG(pcie));
- 	u32p_replace_bits(&tmp, 1, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
--	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-+	writel(tmp, base + HARD_DEBUG(pcie));
- 
- 	/* Shutdown PCIe bridge */
- 	pcie->bridge_sw_init_set(pcie, 1);
-@@ -1425,9 +1428,9 @@ static int brcm_pcie_resume_noirq(struct device *dev)
- 	pcie->bridge_sw_init_set(pcie, 0);
- 
- 	/* SERDES_IDDQ = 0 */
--	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-+	tmp = readl(base + HARD_DEBUG(pcie));
- 	u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
--	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-+	writel(tmp, base + HARD_DEBUG(pcie));
- 
- 	/* wait for serdes to be stable */
- 	udelay(100);
-@@ -1499,12 +1502,16 @@ static const int pcie_offsets[] = {
- 	[RGR1_SW_INIT_1] = 0x9210,
- 	[EXT_CFG_INDEX]  = 0x9000,
- 	[EXT_CFG_DATA]   = 0x9004,
-+	[PCIE_HARD_DEBUG] = 0x4204,
-+	[PCIE_INTR2_CPU_BASE] = 0x4300,
- };
- 
- static const int pcie_offsets_bmips_7425[] = {
- 	[RGR1_SW_INIT_1] = 0x8010,
- 	[EXT_CFG_INDEX]  = 0x8300,
- 	[EXT_CFG_DATA]   = 0x8304,
-+	[PCIE_HARD_DEBUG] = 0x4204,
-+	[PCIE_INTR2_CPU_BASE] = 0x4300,
- };
- 
- static const struct pcie_cfg_data generic_cfg = {
-@@ -1539,6 +1546,8 @@ static const int pcie_offset_bcm7278[] = {
- 	[RGR1_SW_INIT_1] = 0xc010,
- 	[EXT_CFG_INDEX] = 0x9000,
- 	[EXT_CFG_DATA] = 0x9004,
-+	[PCIE_HARD_DEBUG] = 0x4204,
-+	[PCIE_INTR2_CPU_BASE] = 0x4300,
- };
- 
- static const struct pcie_cfg_data bcm7278_cfg = {
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                         haps_hs_defconfig   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                          collie_defconfig   gcc-13.2.0
+arm                          gemini_defconfig   gcc-13.2.0
+arm                           imxrt_defconfig   gcc-13.2.0
+arm                       netwinder_defconfig   gcc-13.2.0
+arm                        spear3xx_defconfig   gcc-13.2.0
+arm                         wpcm450_defconfig   gcc-13.2.0
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+i386                             allmodconfig   clang-18
+i386                              allnoconfig   clang-18
+i386                             allyesconfig   clang-18
+i386         buildonly-randconfig-001-20240703   clang-18
+i386         buildonly-randconfig-002-20240703   clang-18
+i386         buildonly-randconfig-003-20240703   clang-18
+i386         buildonly-randconfig-004-20240703   clang-18
+i386         buildonly-randconfig-005-20240703   clang-18
+i386         buildonly-randconfig-006-20240703   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240703   clang-18
+i386                  randconfig-002-20240703   clang-18
+i386                  randconfig-003-20240703   clang-18
+i386                  randconfig-004-20240703   clang-18
+i386                  randconfig-005-20240703   clang-18
+i386                  randconfig-006-20240703   clang-18
+i386                  randconfig-011-20240703   clang-18
+i386                  randconfig-012-20240703   clang-18
+i386                  randconfig-013-20240703   clang-18
+i386                  randconfig-014-20240703   clang-18
+i386                  randconfig-015-20240703   clang-18
+i386                  randconfig-016-20240703   clang-18
+loongarch                        allmodconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc-13.2.0
+m68k                             allmodconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                         allyesconfig   gcc-13.2.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                           allmodconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                           allyesconfig   gcc-13.2.0
+parisc                              defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc                          allyesconfig   gcc-13.2.0
+powerpc                   motionpro_defconfig   gcc-13.2.0
+powerpc                 mpc8315_rdb_defconfig   gcc-13.2.0
+riscv                            allmodconfig   gcc-13.2.0
+riscv                             allnoconfig   gcc-13.2.0
+riscv                            allyesconfig   gcc-13.2.0
+riscv                               defconfig   gcc-13.2.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   gcc-13.2.0
+s390                             allyesconfig   clang-19
+s390                                defconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                         ap325rxa_defconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                          polaris_defconfig   gcc-13.2.0
+sh                   rts7751r2dplus_defconfig   gcc-13.2.0
+sh                              ul2_defconfig   gcc-13.2.0
+sparc                       sparc64_defconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+um                               allmodconfig   gcc-13.2.0
+um                                allnoconfig   gcc-13.2.0
+um                               allyesconfig   gcc-13.2.0
+um                                  defconfig   gcc-13.2.0
+um                             i386_defconfig   gcc-13.2.0
+um                           x86_64_defconfig   gcc-13.2.0
+x86_64                           alldefconfig   gcc-13.2.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64                              defconfig   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                       common_defconfig   gcc-13.2.0
+
 -- 
-2.17.1
-
-
---000000000000f73fe6061c5ba475
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDwywl6QbgPUWHzU46mFpmGMgJg7QxJ
-ktX57ITVMZjvPDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
-MDMxODAzMTVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAadj7bF3uCs19a6Rx+dypx7A8m6J8d6ozgGJI5Bnk+gSWydNj
-dCXYcHiF32L3atQSqydJx/F/VLh03DaQ6u2IDJTbUiHunQIE/OGQR/um7ajU305cvsUeDB9PWgMD
-9SebR8YAgDw1tc+UROMixDHD4OM1bpejzXoD/NCAU/gaBjmVIaTfBcv1zHtpRMigLZsNRsgKU2LZ
-smexbY5Sy1kTYtN9o38UpU2H3efBJss0soVBKPFNIgeJGmMoswbCzGQzBxIAe/4PXVONazRxD+rU
-Zw8g0WSz/0w52FWa8Twesii0ucu1l35Rt2GMFvIzSp0Ed96S7efCF40/+ylcaVsQyg==
---000000000000f73fe6061c5ba475--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
