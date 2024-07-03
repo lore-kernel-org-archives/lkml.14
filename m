@@ -1,118 +1,251 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2F617FABD;
-	Wed,  3 Jul 2024 14:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BCF17B42D;
+	Wed,  3 Jul 2024 14:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720015646; cv=none; b=OPHdQnT8fPHoN5aBPHZFqb+EJNCD7Ns68pz7mF/1AdR4AfN001eoJvLPkk6LVgQXESHCOGjBZ9ekrUrtRhX9B8zpnDr34BCv6hgg1xxznpgJMsAkpMnKabLC+isxx+7jKBwN7DVpHfHKG3V30iKMe3OuWfkHmQ0hQlNBeg+5TYo=
+	t=1720015685; cv=none; b=KgQPOiF/6C9WhAWtgoE5ph04WKR8NrAe0ncuQRmDyqMOKWEuRyY8OcPv6wsPf71WUZSxklrf+f8tFeBHWOWwjHmjiOrjd9mB1JP2Dl8jP8QbyOmZXjZOMitrrIreu3kqWnxKiRCfc65WLekjf+tFN1Cf3DyFDJ0AMrS31Yc4dDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720015646; c=relaxed/simple;
-	bh=L4N3eNb+hTwnRqOC9zrQnPwJrLZ4wp6PpFdHRrO6tkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CB+TpC+k3yQnLeAg3DZPf1DEFldXoWdNQP/DnRJ5qU/IyHu39fE3iumQwci1kool33PrqVWoYXimQkFbDCOGNyddrLt2ota3xxok7dBQ9VaQa5OW2FUgp7ZwsR/JZ0u9/TqF21g1RZxA0YigPz4GhEkJcL+UmNfQy3ASk2Qu8mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OPzep+Ir; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720015685; c=relaxed/simple;
+	bh=02eHILJyLciKFg1168N1dDyXaCh1yXlOvufYhidflI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dxrce1OUmBL4QA1Jh/FjKR7S8N+Qrx8eBsHdP6Sl6tfhJRey9WUlU0NzB8B1BB92jyvtRiEN+ql6TOao34uqrFZgcD7PLefg/28ddd150VgffMdFhwZpZ++qUguwpnhq4mjl4pcHUR78HnyZQh5ANR+cMnJR90WUXGVmBuW+/68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YzjavNIP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OPzep+Ir"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720015646; x=1751551646;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=L4N3eNb+hTwnRqOC9zrQnPwJrLZ4wp6PpFdHRrO6tkU=;
-  b=OPzep+Ir+doochKpEDrcqT1JZoPWQDB3bV6reFOaERd7S78yctGt1zv8
-   9a+SL6LwtkwptFeBo5SB4OurgncPZ+NmMLBeWb6EEle1BrNqASIxTC6U0
-   1haZtdtl0N0qi7gqkP/xCQCOkYKzKKs+WsvTkjbVoKnnezVgl5mFsKIMW
-   5W/ZVWG0pF8Xh1pz20/BBZWaKL1pbTm70z4PLjri5kdpWupcaDCg4jWbv
-   veD6Q+UrJg+Flz5DCNR/vGRfqk2Al0NDdRk72x0qzlH69fKcxeb8TiFtT
-   /ISt+z+7xmS2xUw5ShG41SUjmgLaEmqR11u6wHErZpjevcBrCc6J17vxU
-   A==;
-X-CSE-ConnectionGUID: sUSNJtu0Q2CXUWw8/6PWfA==
-X-CSE-MsgGUID: Kg3WhDsxQ1mf51F+SnBBjQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="16900731"
-X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="16900731"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 07:07:25 -0700
-X-CSE-ConnectionGUID: mTsZkbyJTsapUGliTg5XdQ==
-X-CSE-MsgGUID: h119Mf75TQOy7vvAYg3Iaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="46693515"
-Received: from linux-pnp-server-16.sh.intel.com ([10.239.177.152])
-  by orviesa006.jf.intel.com with ESMTP; 03 Jul 2024 07:07:22 -0700
-From: Yu Ma <yu.ma@intel.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	mjguzik@gmail.com,
-	edumazet@google.com
-Cc: yu.ma@intel.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pan.deng@intel.com,
-	tianyou.li@intel.com,
-	tim.c.chen@intel.com,
-	tim.c.chen@linux.intel.com
-Subject: [PATCH v3 3/3] fs/file.c: add fast path in find_next_fd()
-Date: Wed,  3 Jul 2024 10:33:11 -0400
-Message-ID: <20240703143311.2184454-4-yu.ma@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240703143311.2184454-1-yu.ma@intel.com>
-References: <20240614163416.728752-1-yu.ma@intel.com>
- <20240703143311.2184454-1-yu.ma@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YzjavNIP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B1DC2BD10;
+	Wed,  3 Jul 2024 14:08:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720015685;
+	bh=02eHILJyLciKFg1168N1dDyXaCh1yXlOvufYhidflI4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YzjavNIPaGjLy/hCryPk4Geig2gH3Nnjh5v8gB6Ux5p/RNk6QanzaD8I3dlvOgsql
+	 NSBk7rV2slYKoUFQL6KILlJN8H9BqOqFA7qustkUfGi71yiOORFObtBQUWX01pyU4Z
+	 Xwj7lsW4b4UJ+xIa8RbfMion2uU8nWUTaqdm+ztxvuKiYuZDA7dkZis4fNc+ygwUj4
+	 b3DVvgB8ILFCwqYsOcozkpLFhPFST8LbvrNKSzXlYuNEJkVvWnxc20oT8fP6CiDTTP
+	 h1wAjkwcnlGkhzWtJSVnag/bdDtAFDZxVKXaH8QDybmexCx80YIipPtCCYlOP8atEv
+	 6of852aXzLXew==
+Date: Wed, 3 Jul 2024 16:08:00 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Jiri Kosina <jikos@kernel.org>, 
+	Orlando Chamberlain <orlandoch.dev@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] HID: apple: Add support for magic keyboard backlight
+ on T2 Macs
+Message-ID: <cg3rwpc7wr7ppxb46qx4ruea7mklbz6q25cercv3fjr4zn4qau@gujyoheohawj>
+References: <16C35623-78AE-44B9-8D54-CA9584AEC49E@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16C35623-78AE-44B9-8D54-CA9584AEC49E@live.com>
 
-There is available fd in the lower 64 bits of open_fds bitmap for most cases
-when we look for an available fd slot. Skip 2-levels searching via
-find_next_zero_bit() for this common fast path.
+On Jul 03 2024, Aditya Garg wrote:
+> From: Orlando Chamberlain <orlandoch.dev@gmail.com>
+> 
+> Unlike T2 Macs with Butterfly keyboard, who have their keyboard backlight
+> on the USB device the T2 Macs with Magic keyboard have their backlight on
+> the Touchbar backlight device (05ac:8102).
+> 
+> Support for Butterfly keyboards has already been added in 9018eacbe623
+> ("HID: apple: Add support for keyboard backlight on certain T2 Macs.").
+> This patch adds support for the Magic keyboards.
+> 
+> Co-developed-by: Aditya Garg <gargaditya08@live.com>
+> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
 
-Look directly for an open bit in the lower 64 bits of open_fds bitmap when a
-free slot is available there, as:
-(1) The fd allocation algorithm would always allocate fd from small to large.
-Lower bits in open_fds bitmap would be used much more frequently than higher
-bits.
-(2) After fdt is expanded (the bitmap size doubled for each time of expansion),
-it would never be shrunk. The search size increases but there are few open fds
-available here.
-(3) There is fast path inside of find_next_zero_bit() when size<=64 to speed up
-searching.
+Nitpick: the ordering of the signed-off is weird. It should be in order
+of persons who touched this driver.
 
-As suggested by Mateusz Guzik <mjguzik gmail.com> and Jan Kara <jack@suse.cz>,
-update the fast path from alloc_fd() to find_next_fd(). With which, on top of
-patch 1 and 2, pts/blogbench-1.1.0 read is improved by 13% and write by 7% on
-Intel ICX 160 cores configuration with v6.10-rc6.
+Given that the From is Orlando and Aditya is submitting, I would have
+expected Orlando, then Aditya...
 
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-Signed-off-by: Yu Ma <yu.ma@intel.com>
----
- fs/file.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> ---
+>  drivers/hid/hid-apple.c | 87 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 86 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+> index bd022e004356..2d1cd4456303 100644
+> --- a/drivers/hid/hid-apple.c
+> +++ b/drivers/hid/hid-apple.c
+> @@ -8,6 +8,8 @@
+>   *  Copyright (c) 2006-2007 Jiri Kosina
+>   *  Copyright (c) 2008 Jiri Slaby <jirislaby@gmail.com>
+>   *  Copyright (c) 2019 Paul Pawlowski <paul@mrarm.io>
+> + *  Copyright (c) 2023 Orlando Chamberlain <orlandoch.dev@gmail.com>
+> + *  Copyright (c) 2024 Aditya Garg <gargaditya08@live.com>
+>   */
+>  
+>  /*
+> @@ -23,6 +25,7 @@
+>  #include <linux/timer.h>
+>  #include <linux/string.h>
+>  #include <linux/leds.h>
+> +#include <dt-bindings/leds/common.h>
+>  
+>  #include "hid-ids.h"
+>  
+> @@ -37,13 +40,18 @@
+>  #define APPLE_NUMLOCK_EMULATION	BIT(8)
+>  #define APPLE_RDESC_BATTERY	BIT(9)
+>  #define APPLE_BACKLIGHT_CTL	BIT(10)
+> -#define APPLE_IS_NON_APPLE	BIT(11)
+> +#define APPLE_MAGIC_BACKLIGHT	BIT(11)
+> +#define APPLE_IS_NON_APPLE	BIT(12)
 
-diff --git a/fs/file.c b/fs/file.c
-index a15317db3119..f25eca311f51 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -488,6 +488,11 @@ struct files_struct init_files = {
- 
- static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
- {
-+	unsigned int bit;
-+	bit = find_next_zero_bit(fdt->open_fds, BITS_PER_LONG, start);
-+	if (bit < BITS_PER_LONG)
-+		return bit;
-+
- 	unsigned int maxfd = fdt->max_fds; /* always multiple of BITS_PER_LONG */
- 	unsigned int maxbit = maxfd / BITS_PER_LONG;
- 	unsigned int bitbit = start / BITS_PER_LONG;
--- 
-2.43.0
+Please keep existing quirks definition in place, it adds noise for
+nothing in the patch. Also, technically, these quirks are used in
+.driver_data so they are uapi.
 
+>  
+>  #define APPLE_FLAG_FKEY		0x01
+>  
+>  #define HID_COUNTRY_INTERNATIONAL_ISO	13
+>  #define APPLE_BATTERY_TIMEOUT_MS	60000
+>  
+> +#define HID_USAGE_MAGIC_BL			0xff00000f
+> +#define APPLE_MAGIC_REPORT_ID_POWER		3
+> +#define APPLE_MAGIC_REPORT_ID_BRIGHTNESS	1
+> +
+>  static unsigned int fnmode = 3;
+>  module_param(fnmode, uint, 0644);
+>  MODULE_PARM_DESC(fnmode, "Mode of fn key on Apple keyboards (0 = disabled, "
+> @@ -81,6 +89,12 @@ struct apple_sc_backlight {
+>  	struct hid_device *hdev;
+>  };
+>  
+> +struct apple_magic_backlight {
+> +	struct led_classdev cdev;
+> +	struct hid_report *brightness;
+> +	struct hid_report *power;
+> +};
+> +
+>  struct apple_sc {
+>  	struct hid_device *hdev;
+>  	unsigned long quirks;
+> @@ -822,6 +836,66 @@ static int apple_backlight_init(struct hid_device *hdev)
+>  	return ret;
+>  }
+>  
+> +static void apple_magic_backlight_report_set(struct hid_report *rep, s32 value, u8 rate)
+> +{
+> +	rep->field[0]->value[0] = value;
+> +	rep->field[1]->value[0] = 0x5e; /* Mimic Windows */
+> +	rep->field[1]->value[0] |= rate << 8;
+> +
+> +	hid_hw_request(rep->device, rep, HID_REQ_SET_REPORT);
+> +}
+> +
+> +static void apple_magic_backlight_set(struct apple_magic_backlight *backlight,
+> +				     int brightness, char rate)
+> +{
+> +	apple_magic_backlight_report_set(backlight->power, brightness ? 1 : 0, rate);
+> +	if (brightness)
+> +		apple_magic_backlight_report_set(backlight->brightness, brightness, rate);
+> +}
+> +
+> +static int apple_magic_backlight_led_set(struct led_classdev *led_cdev,
+> +					 enum led_brightness brightness)
+> +{
+> +	struct apple_magic_backlight *backlight = container_of(led_cdev,
+> +			struct apple_magic_backlight, cdev);
+> +
+> +	apple_magic_backlight_set(backlight, brightness, 1);
+> +	return 0;
+> +}
+> +
+> +static int apple_magic_backlight_init(struct hid_device *hdev)
+> +{
+> +	struct apple_magic_backlight *backlight;
+> +
+> +	/*
+> +	 * Ensure this usb endpoint is for the keyboard backlight, not touchbar
+> +	 * backlight.
+> +	 */
+> +	if (hdev->collection[0].usage != HID_USAGE_MAGIC_BL)
+> +		return -ENODEV;
+> +
+> +	backlight = devm_kzalloc(&hdev->dev, sizeof(*backlight), GFP_KERNEL);
+> +	if (!backlight)
+> +		return -ENOMEM;
+> +
+> +	backlight->brightness = hid_register_report(hdev, HID_FEATURE_REPORT,
+> +			APPLE_MAGIC_REPORT_ID_BRIGHTNESS, 0);
+> +	backlight->power = hid_register_report(hdev, HID_FEATURE_REPORT,
+> +			APPLE_MAGIC_REPORT_ID_POWER, 0);
+> +
+> +	if (!backlight->brightness || !backlight->power)
+> +		return -ENODEV;
+> +
+> +	backlight->cdev.name = ":white:" LED_FUNCTION_KBD_BACKLIGHT;
+> +	backlight->cdev.max_brightness = backlight->brightness->field[0]->logical_maximum;
+
+This is weird: a few lines above, you register a new report with
+hid_register_report() and now you are directly accessing
+field[0]->logical_maximum in that new report, which should be set to 0.
+
+Unless you are using hid_register_report() to retrieve an existing
+report, which is bending the API a bit but is OK, but you should at
+least check that report->size is > 0 (and put a comment that the reports
+exist already).
+
+(or do what is done in apple_fetch_battery() to retrieve the current
+report)
+
+
+> +	backlight->cdev.brightness_set_blocking = apple_magic_backlight_led_set;
+> +
+> +	apple_magic_backlight_set(backlight, 0, 0);
+> +
+> +	return devm_led_classdev_register(&hdev->dev, &backlight->cdev);
+> +
+> +}
+> +
+>  static int apple_probe(struct hid_device *hdev,
+>  		const struct hid_device_id *id)
+>  {
+> @@ -860,6 +934,15 @@ static int apple_probe(struct hid_device *hdev,
+>  	if (quirks & APPLE_BACKLIGHT_CTL)
+>  		apple_backlight_init(hdev);
+>  
+> +	if (quirks & APPLE_MAGIC_BACKLIGHT) {
+> +		ret = apple_magic_backlight_init(hdev);
+> +		if (ret) {
+> +			del_timer_sync(&asc->battery_timer);
+> +			hid_hw_stop(hdev);
+> +			return ret;
+
+Instead of manually unwind the probe in each sub-quirk, please add a new
+goto label and do goto out_err;
+
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1073,6 +1156,8 @@ static const struct hid_device_id apple_devices[] = {
+>  		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
+>  	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2021),
+>  		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+> +	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_TOUCHBAR_BACKLIGHT),
+> +		.driver_data = APPLE_MAGIC_BACKLIGHT },
+>  
+>  	{ }
+>  };
+> -- 
+> 2.45.2
+> 
+
+Other than those few nitpicks, patch looks good. Please roll a v3 and
+I'll apply it.
+
+Cheers,
+Benjamin
