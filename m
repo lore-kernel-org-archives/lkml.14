@@ -1,253 +1,111 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B81413B584;
-	Wed,  3 Jul 2024 08:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6F9133291
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 08:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719996865; cv=none; b=PufuwjkgxfGT97r6R6U6WqFBastNbBfrDZRzL/w9Wq0Mg6J8eXDq9si7Sb7HIhpRkqUNInsQ9Ztc0Rw4igZ9wzlSiyYrZYBJB7smeqd2i95w5iuKoOf5jVf2VUx/kA0gcDe42KxgYnxKBFoUIYGek6Ii7va0ozcKTI7xlubzsmw=
+	t=1719996911; cv=none; b=RoDrAAuIclZ0md+4gTDTyHaSbl+a67vF/c3b0tWJ1+mapbwthl74c+2zZycawXdxc74AHn7tmizD6ZX8Q0buWi9n8WrATLvTXcYJNnPeDO+XtPTiABn45JdjCv1yH3+Abh5TWpfljv3RNswI7eFPJ+7NXaV3CKpCq5Urbpp+0NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719996865; c=relaxed/simple;
-	bh=woE19g9vPhpqXW1hrwIwclZfrMDdDIgvIF9jxblDFw8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=G+us8vYemZdNHZO44ntLSfCrXvRn8qzCHTDdIP8Hf1UYVrNJTv/rg7UHMrLnavmZNtkQ+JbXZpd80C4vRgz+PcIz2F7NyG1VHLGqdStbqO5zCpbuw22YpjZNGDEkVx9deKZY8ZbB1MjedvyPUws0yuHIaiV9ftjwbAkFAu0w108=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WDYPJ0CYkz1T4w3;
-	Wed,  3 Jul 2024 16:49:40 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 370901402CE;
-	Wed,  3 Jul 2024 16:54:13 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 3 Jul 2024 16:54:12 +0800
-Message-ID: <f04da18d-bded-fb21-301d-1a6dd6b3b6c7@huawei.com>
-Date: Wed, 3 Jul 2024 16:54:11 +0800
+	s=arc-20240116; t=1719996911; c=relaxed/simple;
+	bh=TWoIecHkxnmQ5CI1vLC3ZAecLTeVYy7pmZuisYvLqOU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G/t5BMny82dokOocmYP3PDhUespRtCPwCCtee8Q41iw/ex+I5Vrfu5ODm886qkHcy6IqjnK3PaAotd8i6FG4pqNIZoO68f2t3SXYhsZFJEachpBSRM52VE2bCJmaut9LX7/rRKb6uN7dLm3hvjL1wW71uK9FlsM7M+8AXFK4X/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=UYlhhlp5; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UYlhhlp5"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4638sQ18274819
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Wed, 3 Jul 2024 01:54:32 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4638sQ18274819
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024061501; t=1719996873;
+	bh=+f2c92dRlNI6Bo2LbRHWJ0Bigiez0ZfjI89E6Xah1/g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UYlhhlp528Y1DPjzmqIvsckdKWNWFYRMv0Ylhlm4Z8z7IwfBy+akwwLypwpKtwOmt
+	 4zw4Mo9D5Pi3IYAmRQJT+MVJd5YgXRcqVPpC+XzxNP6YnseUlvW7x79NJkMhLaiU3g
+	 PTBDTTW+HRYUzh55jD9x/Zk8yTkziLk2IRFWJMBy+3sT8RAze5074FQ7S4l/UOeT/k
+	 VMaLB8GvFd+K6tuwkX/nYAbmQZyCbBm8j389AzSiAB0f7FoqcuQWrWleC6U0LHuV2C
+	 Czl+JjobdxIHqB3b2evXrDr1xpGV77adGV42KmLefoa9kJVsibesIVSmA/pgMsg4p2
+	 bD/LlVdBR5lIQ==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org
+Cc: hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, peterz@infradead.org,
+        andrew.cooper3@citrix.com, nik.borisov@suse.com,
+        houwenlong.hwl@antgroup.com
+Subject: [PATCH v1 2/4] x86/fred: Write to FRED MSRs with wrmsrns()
+Date: Wed,  3 Jul 2024 01:54:24 -0700
+Message-ID: <20240703085426.274801-3-xin@zytor.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240703085426.274801-1-xin@zytor.com>
+References: <20240703085426.274801-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
- uretprobe trampoline
-From: "Liao, Chang" <liaochang1@huawei.com>
-To: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>
-CC: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <ast@kernel.org>,
-	<daniel@iogearbox.net>, <andrii@kernel.org>, <nathan@kernel.org>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-References: <20240619013411.756995-1-liaochang1@huawei.com>
- <20240619143852.GA24240@redhat.com>
- <7cfa9f1f-d9ce-b6bb-3fe0-687fae9c77c4@huawei.com>
- <20240620083602.GB30070@redhat.com> <ZnPxFbUJVUQd80hs@krava>
- <11ae956a-9d0c-ca80-c3a7-a16b2c53e737@huawei.com>
-In-Reply-To: <11ae956a-9d0c-ca80-c3a7-a16b2c53e737@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
-Hi Jiri and Oleg,
+Do FRED MSR writes with wrmsrns() rather than wrmsrl().
 
-在 2024/6/20 19:27, Liao, Chang 写道:
-> 
-> 
-> 在 2024/6/20 17:06, Jiri Olsa 写道:
->> On Thu, Jun 20, 2024 at 10:36:02AM +0200, Oleg Nesterov wrote:
->>> On 06/20, Liao, Chang wrote:
->>>>
->>>> However, when i asm porting uretprobe trampoline to arm64
->>>> to explore its benefits on that architecture, i discovered the problem that
->>>> single slot is not large enought for trampoline code.
->>
->> ah ok, makes sense now.. x86_64 has the slot big enough for the trampoline,
->> but arm64 does not
->>
->>>
->>> Ah, but then I'd suggest to make the changelog more clear. It looks as
->>> if the problem was introduced by the patch from Jiri. Note that we was
->>> confused as well ;)
->>>
->>> And,
->>>
->>> 	+	/* Reserve enough slots for the uretprobe trampoline */
->>> 	+	for (slot_nr = 0;
->>> 	+	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
->>> 	+	     slot_nr++)
->>>
->>> this doesn't look right. Just suppose that insns_size = UPROBE_XOL_SLOT_BYTES + 1.
->>> I'd suggest DIV_ROUND_UP(insns_size, UPROBE_XOL_SLOT_BYTES).
->>>
->>> And perhaps it would be better to send this change along with
->>> uretprobe_trampoline_for_arm64 ?
->>
->> +1, also I'm curious what's the gain on arm64?
-> 
-> I am currently finalizing the uretprobe trampoline and syscall implementation on arm64.
-> While i have addressed most of issues, there are stiil a few bugs that reguire more effort.
-> Once these are fixed, i will use Redis to evaluate the performance gains on arm64. In the
-> next revision, i will submit a patchset that includes all relevant code changs, testcases
-> and benchmark data, which will allows a comprehensive review and dicussion.
+No functional change intended.
 
-This is an update on the development of uretprobe syscall for ARM64 architecture.
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+---
+ arch/x86/kernel/fred.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-I've recently completed a basic implementation of the uretprobe syscall and trampoline
-code for ARM64, with the uprobe syscall selftest passed. This allow me to revisit the
-performance benchmark using uretprobe. With running Redis benchmark a Kunpeng server,
-I observed a slight performance gain with the uretprobe syscall on ARM64. The performance
-test spawned a Redis-server and Redis-benchmark on seperate cores within the same NUMA
-node. The Redis-server handled each SET and GET request from Redis-benchmark which triggered
-three uretprobe events with attached bpftrace program that increments the counter.
-Here is the benchmark result:
-
-On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Cores @ 2.4GHz :
-
--------------------------------------------------------------------------------
-Test case       |  No uretprobe |  uretprobe(breakpoint) |  uretprobe (syscall)
-===============================================================================
-Redis SET (RPS) |  47025        |  40619   -13.6%        |  40670   -13.5%
--------------------------------------------------------------------------------
-Redis GET (RPS) |  46715        |  41426   -11.3%        |  41274   -11.6%
--------------------------------------------------------------------------------
-
-The detailed test scripts and bpf program are available upon any request.
-
-Additionally, I've attempted to optimize the implementation of the uretprobe syscall and
-trampoline, but the cause of the lower than expected performance gain compared to x86
-remains unclear. Further investigation is necessary to identify potentail bottlenecks or
-inefficiencies specific to ARM64. It is grateful for any insights or suggestions the
-community might have on the potential reasons for the performance difference between
-ARM64 and X86. The patch for the uretprobe syscall is attached below for reference.
-
----------------------------%<----------------------------
-diff --git a/arch/arm64/kernel/probes/Makefile b/arch/arm64/kernel/probes/Makefile
-index 8e4be92e25b1..059f38c0857f 100644
---- a/arch/arm64/kernel/probes/Makefile
-+++ b/arch/arm64/kernel/probes/Makefile
-@@ -3,4 +3,5 @@ obj-$(CONFIG_KPROBES)		+= kprobes.o decode-insn.o	\
- 				   kprobes_trampoline.o		\
- 				   simulate-insn.o
- obj-$(CONFIG_UPROBES)		+= uprobes.o decode-insn.o	\
-+				   uprobes_trampoline.o		\
- 				   simulate-insn.o
-diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
-index d49aef2657cd..632f97afd50f 100644
---- a/arch/arm64/kernel/probes/uprobes.c
-+++ b/arch/arm64/kernel/probes/uprobes.c
-@@ -5,12 +5,69 @@
- #include <linux/highmem.h>
- #include <linux/ptrace.h>
- #include <linux/uprobes.h>
-+#include <linux/syscalls.h>
- #include <asm/cacheflush.h>
-
- #include "decode-insn.h"
-
- #define UPROBE_INV_FAULT_CODE	UINT_MAX
-
-+extern char uretprobe_trampoline[] __read_mostly;
-+extern char uretprobe_trampoline_end[] __read_mostly;
-+extern char uretprobe_trampoline_svc[] __read_mostly;
-+
-+void *arch_uprobe_trampoline(unsigned long *psize)
-+{
-+	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
-+	struct pt_regs *regs = task_pt_regs(current);
-+
-+	if (!compat_user_mode(regs)) {
-+		*psize = uretprobe_trampoline_end - uretprobe_trampoline;
-+		return uretprobe_trampoline;
-+	}
-+
-+	*psize = UPROBE_SWBP_INSN_SIZE;
-+	return &insn;
-+}
-+
-+static unsigned long syscall_at_uprobe_trampoline(void)
-+{
-+	unsigned long tramp = uprobe_get_trampoline_vaddr();
-+
-+	return tramp + (uretprobe_trampoline_svc - uretprobe_trampoline);
-+}
-+
-+SYSCALL_DEFINE0(uretprobe)
-+{
-+	int err;
-+	struct pt_regs *regs = task_pt_regs(current);
-+
-+	if (compat_user_mode(regs))
-+		goto sigill;
-+
-+	/* ensure uretprobe syscall invoked from uretprobe trampoline */
-+	if ((regs->pc - AARCH64_INSN_SIZE) != syscall_at_uprobe_trampoline())
-+		goto sigill;
-+
-+	/* restore the clobbered context used to invoke uretprobe syscall */
-+	err = copy_from_user(&regs->regs[8], (void __user *)(regs->sp - 8),
-+			     sizeof(regs->regs[8]));
-+	if (err)
-+		goto sigill;
-+
-+	uprobe_handle_trampoline(regs);
-+
-+	/* restore the real LR before return to the caller. */
-+	regs->regs[30] = regs->pc;
-+
-+	/* use the real return value */
-+	return regs->regs[0];
-+
-+sigill:
-+	force_sig(SIGILL);
-+	return -1;
-+}
-+
- void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
- 		void *src, unsigned long len)
- {
-diff --git a/arch/arm64/kernel/probes/uprobes_trampoline.S b/arch/arm64/kernel/probes/uprobes_trampoline.S
-new file mode 100644
-index 000000000000..670d4d9e97ec
---- /dev/null
-+++ b/arch/arm64/kernel/probes/uprobes_trampoline.S
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * trampoline entry and return code for uretprobes.
-+ */
-+
-+#include <linux/linkage.h>
-+#include <asm/asm-bug.h>
-+#include <asm/assembler.h>
-+#include <asm/unistd.h>
-+
-+	.text
-+
-+SYM_CODE_START(uretprobe_trampoline)
-+	str x8, [sp, #-8]
-+	mov x8, #__NR_uretprobe
-+
-+SYM_CODE_START(uretprobe_trampoline_svc)
-+	svc #0x000
-+
-+SYM_CODE_START(uretprobe_trampoline_end)
-+	nop
---------------------------->%----------------------------
-
-Thanks.
-
-> 
->>
->> thanks,
->> jirka
-> 
-
+diff --git a/arch/x86/kernel/fred.c b/arch/x86/kernel/fred.c
+index 4bcd8791ad96..b202685b8e77 100644
+--- a/arch/x86/kernel/fred.c
++++ b/arch/x86/kernel/fred.c
+@@ -26,27 +26,27 @@ void cpu_init_fred_exceptions(void)
+ 	/* When FRED is enabled by default, remove this log message */
+ 	pr_info("Initialize FRED on CPU%d\n", smp_processor_id());
+ 
+-	wrmsrl(MSR_IA32_FRED_CONFIG,
+-	       /* Reserve for CALL emulation */
+-	       FRED_CONFIG_REDZONE |
+-	       FRED_CONFIG_INT_STKLVL(0) |
+-	       FRED_CONFIG_ENTRYPOINT(asm_fred_entrypoint_user));
++	wrmsrns(MSR_IA32_FRED_CONFIG,
++		/* Reserve for CALL emulation */
++		FRED_CONFIG_REDZONE |
++		FRED_CONFIG_INT_STKLVL(0) |
++		FRED_CONFIG_ENTRYPOINT(asm_fred_entrypoint_user));
+ 
+ 	/*
+ 	 * The purpose of separate stacks for NMI, #DB and #MC *in the kernel*
+ 	 * (remember that user space faults are always taken on stack level 0)
+ 	 * is to avoid overflowing the kernel stack.
+ 	 */
+-	wrmsrl(MSR_IA32_FRED_STKLVLS,
+-	       FRED_STKLVL(X86_TRAP_DB,  FRED_DB_STACK_LEVEL) |
+-	       FRED_STKLVL(X86_TRAP_NMI, FRED_NMI_STACK_LEVEL) |
+-	       FRED_STKLVL(X86_TRAP_MC,  FRED_MC_STACK_LEVEL) |
+-	       FRED_STKLVL(X86_TRAP_DF,  FRED_DF_STACK_LEVEL));
++	wrmsrns(MSR_IA32_FRED_STKLVLS,
++		FRED_STKLVL(X86_TRAP_DB,  FRED_DB_STACK_LEVEL) |
++		FRED_STKLVL(X86_TRAP_NMI, FRED_NMI_STACK_LEVEL) |
++		FRED_STKLVL(X86_TRAP_MC,  FRED_MC_STACK_LEVEL) |
++		FRED_STKLVL(X86_TRAP_DF,  FRED_DF_STACK_LEVEL));
+ 
+ 	/* The FRED equivalents to IST stacks... */
+-	wrmsrl(MSR_IA32_FRED_RSP1, __this_cpu_ist_top_va(DB));
+-	wrmsrl(MSR_IA32_FRED_RSP2, __this_cpu_ist_top_va(NMI));
+-	wrmsrl(MSR_IA32_FRED_RSP3, __this_cpu_ist_top_va(DF));
++	wrmsrns(MSR_IA32_FRED_RSP1, __this_cpu_ist_top_va(DB));
++	wrmsrns(MSR_IA32_FRED_RSP2, __this_cpu_ist_top_va(NMI));
++	wrmsrns(MSR_IA32_FRED_RSP3, __this_cpu_ist_top_va(DF));
+ 
+ 	/* Enable FRED */
+ 	cr4_set_bits(X86_CR4_FRED);
 -- 
-BR
-Liao, Chang
+2.45.2
+
