@@ -1,94 +1,117 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F9E178377
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2024 23:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7115A1C68D;
+	Wed,  3 Jul 2024 23:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720049657; cv=none; b=d+J41JXF7BtoElnFyhss34jllfBL/rGgq3dUodxTRdEhuz0JSI+dsfT4v9eOEdS4xsX9xTkLeooFnEhlDlhSmDeu39FiqMwFFIDvYkpZBHVqBxK6ijQA4lhqVWH3Y3iBYJT7ebQ1M0J1yQPKD94nhzCPfzq3fXRT/GCOPb9HAX4=
+	t=1720049919; cv=none; b=ccIxVp54lV9GK4f5YyAUaHstyVItEYkQtXDswTwlFZFs90XIs8dh49ZsBHaxP6C3pnVFJGfaAqHL/jrTVKl0Odx9MfiAhkPkIik6lgP37YBeObfhyD3xjYEQ03sS7cSoTQqv5rEc6zq4fszdB5XwyxGRwOwcZTtVa/zXHkjlW7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720049657; c=relaxed/simple;
-	bh=9ChJsKd9nUrCCIHOcicgHlKupltI6o7lz0YIiqLHyiQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cqs4sV25O41zKAkr7EOlsD+aLS6i0saj3nEMNBhBzvenGMRxxG5sBTAWJUQCgGXKM+Ko1xEVMLR8MjbWztOT06wFTrj+GOnYge3O93zhTohx9HBviCbqi566jGfgJRLbDRtjH6yip6qgMdr8mCUYE+4rPov14Fc/F8X7mQ7vrS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bade.nz; spf=pass smtp.mailfrom=leithalweapon.geek.nz; dkim=pass (2048-bit key) header.d=bade.nz header.i=@bade.nz header.b=i7wx02Rv; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bade.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leithalweapon.geek.nz
+	s=arc-20240116; t=1720049919; c=relaxed/simple;
+	bh=DQANRoZlWcBn5MSR4esKceMThOyrEVTNXCDaUV26OdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LxXibBCMsC3z6Sq/iyM9xCO3oAofH3dyg89MHTCMb5RtA2ScMJOzbWJ3dM9SuSTTcO9EhshVaMbTe4c1LOCvADiRhHKiUm4RM0zfrA6FtQYH9zEq0WIZdf60DqHoHb20bsjCZU+wOjls10LEGscotW/2jCF3ljDAIUq/fK22jqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pV/Vs/WO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bade.nz header.i=@bade.nz header.b="i7wx02Rv"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5c45d13e658so648930eaf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 16:34:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bade.nz; s=google; t=1720049653; x=1720654453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ChJsKd9nUrCCIHOcicgHlKupltI6o7lz0YIiqLHyiQ=;
-        b=i7wx02Rvh8LsEJHmo9l/k86LvUOD+foEX55ZlZgtA+NKQnbE06vLbMnzp6BcbbWgRP
-         LhSWIr0hqrjMlWcelwBq+nTSt1vGLbva21sWp78AGmulnb3re9ttRrvpf2qYWtCH3vXZ
-         HdQTbywest2ztOcGkC2pi3FwGEvvJYZ116KUsHFe1kUFuuLjhbhLEIMZchZIwhvM5wjc
-         Pkm3d793XCQ9NiIInhtTSzv+8WT7H7EHwb5oh4n5xzc4l+KNCJshsTJieFtolXflsjk0
-         fkJhgfAhRdgBr8v5+2votdlT4CgsOK7jFes5vlOE0HOHSdJnPipTEuho/xv9AbQJ5ZFM
-         86tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720049653; x=1720654453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9ChJsKd9nUrCCIHOcicgHlKupltI6o7lz0YIiqLHyiQ=;
-        b=oiF5PPmt4yVBQJhz18Y2NPm98yYd45VBq3W+YRQasZrMeUIb5XG0Ao7qNI4YCqUg7P
-         CFtvnwOdnAFNPanhaDa95+MXHOLqfn+mcuh3RLIpYty0XljxTtZRUbYOxag2n+gIr1AV
-         Atmyxw9eS+Zs85EcI3AElLKG86OyrG+XTYYXOc/jp9GK7uqE667b0UTWqkgT0FMMU26y
-         BghK95tcpMzYK9t2fyuDEnr3b856acqxkUeRrRJQ6gs+mvc2YUNZh3cwb+7gaNsBbjVe
-         8cCFDFudhYQueG3dfwlhGmQEmFAxRKfQIbPNdRd4G0NRTFkAYq93bXJqZuEm5p/OfbSa
-         L/ww==
-X-Forwarded-Encrypted: i=1; AJvYcCW2xpOC2O/dujG5mqcjIZInMt9G8r0vPVXORROjMhC+ZHhN6HdeuGbiHehE9eA7zpVt025VV2nP/AxNPQVZpPNM8umnk6lMat0bjy6i
-X-Gm-Message-State: AOJu0Yw76nRKjZJjYp62M+dUKKdg5jg33bUNF/9vVQwjABAXjxC+qzbm
-	QMR1oXXCF2GpuPtXJHen1kmJRc+0u0ySS9LFiuw5TS8myxmAVtqWM24WVE73802D2AceKoZTWo/
-	qfjEGmiyP7d0cUupIIbLS9d8kaeaMPU0ac0zF
-X-Google-Smtp-Source: AGHT+IGKlQ2pI7mo0VbCXTl1zMtiImR+Q3bkZ5aDzc2+PetUeMf8KI9s1d1gy4XqYnABgmOWCY4KaVO4ZAo/Zk+wakQ=
-X-Received: by 2002:a05:6870:718f:b0:25c:9bf2:cc18 with SMTP id
- 586e51a60fabf-25e10337e4emr1508238fac.7.1720049653415; Wed, 03 Jul 2024
- 16:34:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pV/Vs/WO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF577C2BD10;
+	Wed,  3 Jul 2024 23:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720049919;
+	bh=DQANRoZlWcBn5MSR4esKceMThOyrEVTNXCDaUV26OdU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pV/Vs/WOTGsgBuJaNkcF1i2kPFuB0wmAWOm9nirn1/qI/bQLpdHP6kLu+PNBD3VnO
+	 Lvnmo3GIkDyDFrF53NF2XAZ5ORAhrSRX5hSFW0zB/YajPMnKw+2uzeJd3Mj8oDnG3I
+	 zonRgFVWi5VtVNdbfj4ccxMHR0/omvAEgWFdmoRem7VKMGbPlFW/zFeWX+UZx2WE3f
+	 vhSfmKyfpXEg4bG16+H5e5O6jk4FEtM2AZsvgsdBQHiyvoAlTf9j2RSs4Uj+5I22MP
+	 TJDFx4W095t8a92CnGyH3jns9mLuueZeNpWLIB5IQxltNM7/gIKr3gUIS79GXorwNj
+	 7tq/WcKHaQCIg==
+Date: Wed, 3 Jul 2024 16:38:37 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: weilin.wang@intel.com
+Cc: Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>
+Subject: Re: [RFC PATCH v15 8/8] perf test: Add test for Intel TPEBS counting
+ mode
+Message-ID: <ZoXg_fk7HRZn89ij@google.com>
+References: <20240702220757.262825-1-weilin.wang@intel.com>
+ <20240702220757.262825-9-weilin.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240608080530.9436-1-linux@fw-web.de> <20240608080530.9436-2-linux@fw-web.de>
- <trinity-82c94d49-2a78-4470-83cd-3c6747e01849-1719434738199@3c-app-gmx-bs52>
- <726f2ed3-675f-45e8-94f0-d392181e7f92@collabora.com> <951E802C-1B53-45C4-B3E6-4A3400F47214@public-files.de>
-In-Reply-To: <951E802C-1B53-45C4-B3E6-4A3400F47214@public-files.de>
-From: Leith Bade <leith@bade.nz>
-Date: Thu, 4 Jul 2024 09:34:02 +1000
-Message-ID: <CAPDEroWUeR3iUFnjVr6WFLg3=dkML+5cbRPph9bj64F=zc1UWA@mail.gmail.com>
-Subject: Re: Aw: [PATCH v3 1/2] arm64: dts: mt7986: add dtbs with applied
- overlays for bpi-r3
-To: frank-w@public-files.de
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	devicetree@vger.kernel.org, Daniel Golle <daniel@makrotopia.org>, 
-	Rob Herring <robh+dt@kernel.org>, Frank Wunderlich <linux@fw-web.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240702220757.262825-9-weilin.wang@intel.com>
 
-> Yes, 1st reason is to check if overlay can be applied to base dts (the pa=
-rt rob was requested). The second thing that was solved is that some users =
-wanting a "full" dtb without the need to handle overlays in bootloader. Due=
- to hardware design of the board there are 4 "full" dtb's.
+Hello,
 
-I have been looking at using the "u-boot-update" package in Debian to
-generate an extlinux.conf file so I can use the U-boot standard/distro
-boot. This script seems to currently assume that you pick a single
-.dtb file for the board, and then the user can put additional .dtbo
-files in /boot/dtbo/ for any additional hardware the user has plugged
-in.
+On Tue, Jul 02, 2024 at 06:07:55PM -0400, weilin.wang@intel.com wrote:
+> From: Weilin Wang <weilin.wang@intel.com>
+> 
+> Intel TPEBS sampling mode is supported through perf record. The counting mode
+> code uses perf record to capture retire_latency value and use it in metric
+> calculation. This test checks the counting mode code.
+> 
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>  .../perf/tests/shell/test_stat_intel_tpebs.sh  | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> 
+> diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> new file mode 100755
+> index 000000000000..220b830eac61
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> @@ -0,0 +1,18 @@
+> +#!/bin/bash
+> +# test Intel TPEBS counting mode
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set e
 
-So having a series of "merged" base files would be useful for this use case=
-.
+Probably you want 'set -e'.
+
+> +
+> +# Use this event for testing because it should exist in all platforms
+> +e=cache-misses:R
+
+Please rename it to 'event'.
+
+> +
+> +# Without this cmd option, default value or zero is returned
+> +echo "Testing without --enable-tpebs-recording"
+
+I think you need to update the option name.
+
+
+> +result=$(perf stat -e "$e" true 2>&1)
+> +[[ "$result" =~ $e ]] || exit 1
+> +
+> +# In platforms that do not support TPEBS, it should execute without error.
+> +echo "Testing with --enable-tpebs-recording"
+> +result=$(perf stat -e "$e" --enable-tpebs-recording -a sleep 0.01 2>&1)
+
+Ditto.
 
 Thanks,
-Leith Bade
+Namhyung
+
+
+> +[[ "$result" =~ "perf record" && "$result" =~ $e ]] || exit 1
+> -- 
+> 2.43.0
+> 
