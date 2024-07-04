@@ -1,180 +1,216 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479F861FE7;
-	Thu,  4 Jul 2024 19:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720119713; cv=pass; b=h6ZZHvg3LP9UK0U5hDhRIiKami96/yHLhdf26WMordHK6pPruejGwYfk3Cws9fAS8Hw8t6wbRPjlbRuv0NJuRkrt0Mzkl2jThegcK4Q5PCqq3WAKXb7w1RI4gZo5LrweK+8Bn0qeIl3ziZYKQXGEk/WijltFygKNPsDIubHj1kE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720119713; c=relaxed/simple;
-	bh=k1nFAQI+oZ1dJfJaPTdzgzXQOrsrZGBEskWuZjoPA5o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=I48vR361hxqjHkDw1rBW2atuptllM9kKRMmXgOiilBtDt5rglVDc0+Ijgkaodz9ax67FZlXdybzLfj/ESLzSLMikzWwFtcfzsIp+FDLlY3o7xA4OTGtCFtLkqbbQFa1WG9K0oTPeAXwm0Q8lMYjZC2/n9agdMPMCg9fR5v0D2qc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=mQxfqbiW; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=PfbQKpq/; arc=pass smtp.client-ip=85.215.255.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98A67344D;
+	Thu,  4 Jul 2024 19:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720119720; cv=none; b=hGzHwYAKC4FSv/y+I5isojw5FjFIreNvuBMJyijg/9JTVtUA+ZYQYY6zXr2hB0XrJsWmEx/Im7TUj3gDoy9xT7QqU7UxTdricRzKVnSQQDVcimHFcFm97WsX976PRqxGzmqwGD3ojw4m/W5SIDP2eUMBDiTBdYI7E4qpxLfmbrs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720119720; c=relaxed/simple;
+	bh=nmMRH5pXrMMRKuug0BuIt4QE4BnydUTQpv/mMb3qEJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rMiQX9P/vavZsMzXzOgo4mrOCguQPy3r4rsg4+TenPWxusFpWttimOCC65+TevLIfOfK3CSu4n7ut8F0CQNXY6kHWsl2ILaVfU9+3SjFoI+a9OXc4GswWBS+Qllol+cxXG1pA//f7PetEqajPQdVJgxDcrvckOHsBFy5Wy+TwAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0doIfOC; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="mQxfqbiW";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="PfbQKpq/"
-ARC-Seal: i=1; a=rsa-sha256; t=1720119521; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=R2OKa8uar4LMLdXGcdJNgLtz/M2pzcV12YyN2a99fJazWGNB+oQS8R6X53/jwiqt6D
-    lVv8/gjgvzdQMNj0oTdxwOBNN2ZMB4yAMNY38qFBqCZDWvd5AAq50Rdb4PpatJTbIEzg
-    AM9emp5n9m/1gEwoMR8xGZIKF2wbv+4FifozK6a/F89nwf09HgmKY0lfDt/PbPsWD1sj
-    /cx9ksb2jxL3G+k5jPQ/14tfWfE0pBwjzh2I5WpLnUxOVhEfnC1m63lr2FJct4tGr7Ba
-    nwVcD50Hyu2NFIYHcu/4WERxKwHMbylkjiy9SNVXH9CbYQBZSA6P9BUDNdH41nZwnWnU
-    l7cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1720119521;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=BslT/2fg7mlj0cn70yAR1at5reI4vwwa/29bm/p6uqU=;
-    b=d9irVQE4EGOQoaZS0oVve+ubnoYzO6XoEvjM0TWxExpKT+zA9rcdu+3X4WLypfNNFQ
-    PVZtooFBYMxkiyUGDUtuq/u7Gasjvd6KThOU7eEJx/bHLDIEVWmipHCcHhB65bEwYcQr
-    zXSjstrIwWjedcTojYn99cGj/s3tcRoptG7ppkjswScJBoCZtTzY+kUne5qyZgFyOJr1
-    OAfvtly6Sj+XrS4dzBb7JWuhcdk6IGCBiA5C8LxMQ2xCVn6lDdBGTBokPhiExH9oab5F
-    DLG6mmERKHcQHAbxBdATKlNF5SWS9hk69rC4nwo1wtBmC490zjAmTNacJi3U5sfjVFno
-    i3fQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1720119521;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=BslT/2fg7mlj0cn70yAR1at5reI4vwwa/29bm/p6uqU=;
-    b=mQxfqbiWoPlYiRW5yDXDyjwlMXq8Dbfyfm4b6S7p7ZI0P8Jcwem22SRu2/gUb2xKGK
-    0c4iSZQrBDR01yMAYxcBeX8V/AUIC5IoIEMYuXMf5zB8igM3F0qstsxdmxy/HCBUp2K1
-    lHW58SJy8JpesvcWl7kT+voYO8+qjRGmxi3IUGLbrbSjBj+Koj9Pat6tX/xdAxGa21aJ
-    I0hjPdMyg2dOBjfuESKwyiSnV2iRPPNrWsrZ4oCHfv6hzfcqcCIIWeXXVi+DZKH4qlIT
-    al6RcRQ6eLm8ibu6SyaED7boopjXGG2+Wa4FndtLqsYc9fSjQujz9bi7b2vVZPjan8sX
-    0y3w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1720119521;
-    s=strato-dkim-0003; d=xenosoft.de;
-    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=BslT/2fg7mlj0cn70yAR1at5reI4vwwa/29bm/p6uqU=;
-    b=PfbQKpq/Ofcrmk17ZZrVeSZH5Z6shH5tqBKS3UTGHKt84AXQFfULB5fc+/6+HHkwgL
-    ONksLpEDqLwb4qB1QVBg==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHvJzedR43JwnbXz/kFsuSUCat82PJROdEuWUwpcR8HY5"
-Received: from [IPV6:2a01:599:806:6955:6d1:546c:8e64:4d8]
-    by smtp.strato.de (RZmta 50.5.0 AUTH)
-    with ESMTPSA id e08389064IwfUB2
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Thu, 4 Jul 2024 20:58:41 +0200 (CEST)
-Message-ID: <dfc7ec00-5216-4590-9347-ee10cd1e8380@xenosoft.de>
-Date: Thu, 4 Jul 2024 20:59:16 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0doIfOC"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-367a23462e6so422288f8f.3;
+        Thu, 04 Jul 2024 12:01:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720119717; x=1720724517; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YEliSMC16j7aM+RT12WbhyFPc+cpM+7NR5Vb+5oa/1w=;
+        b=T0doIfOCWbfCM0uSzB6OKzB3a9ynCTgT/u20enp4rZTBpfnlmCojhdlu3qsq15PbQp
+         87gKpgQWfzChf8vd21dt9VDa8Sm/roGjSb0d4aFBfL65oreJW/2/wUxybaHPVB7wpWDV
+         xig7nXqXBb+xSrqMAir/5qeRKGSvr/f/6uqpKk9ok2rBPlLWUmodkYDBv3qOnX1r2wPy
+         kC4c0/m8DbHpn6M/xjDF28JWozaREzR4pQitYUnUBFDjKfrNWyvh482QQA8cqb5Ze4bv
+         vwhHMmqE/7tY+wmAIo0m09PJsv+74G4jhFoxIQcyvmXe9DxN30e6LNuTq2IUSGddh9xp
+         Ud7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720119717; x=1720724517;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YEliSMC16j7aM+RT12WbhyFPc+cpM+7NR5Vb+5oa/1w=;
+        b=cEfUZfAHBntt8UKCy08IHcTLF28DIEsw+3r0MIOK57HaLHavY7WZJ9VIDyc9259cG6
+         Rba7yw+F0egdpwW1rgIUFBNWLkZ9UyjlSqgzcKS/SFOiasssF5VXKwTcsHTqTNQgbnPc
+         9MDmeJ2+Dm4rNTLQmXpOO5+96/lTi0cD5tZxU9DlgNr+P+hU/tLD279GzDHgaA/fLQzu
+         hjG/1mToSS1wokm0E0RSk34TnCVG7KKIm9/oGPRgo5tBUgjYbb6+ZK3Z3xErvpvQPrSD
+         T/Ej2yrFSETKqYMXu9SwoBzbeeGbIHrYQy5YoGakTOxOxnwLvfpHarqWpcd9PgNQaJLH
+         rPtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXUikAJsKbdSfxeCGzznS/KQCc3SzqRIAlTIgCdvoCap3LFHlxco9yZ0W1rOlgFiKGhNBHKMsXnoMdzsKL5b+T59A5YK7VM+awDA==
+X-Gm-Message-State: AOJu0YwRrkTRd9ZrmTz8Gs3jdhLhcWFyBSaf4pdirc6PzLtfZS3dBpAY
+	ZvLlb/TJtHeVdH5WeSnUSgQr8MweljurvXUTYjqYP0ffoXj+x+g5
+X-Google-Smtp-Source: AGHT+IE9o2urE3a2f9G2KQXy1ofKL771HQTP7bu92yZO6KSXO8w4D7Y8Zf4OKZRL1AyQIvyv9ZnAEg==
+X-Received: by 2002:a05:6000:1245:b0:367:88c2:bcfc with SMTP id ffacd0b85a97d-3679dd15b9bmr1983390f8f.1.1720119717032;
+        Thu, 04 Jul 2024 12:01:57 -0700 (PDT)
+Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3679224d11dsm5098853f8f.12.2024.07.04.12.01.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 12:01:56 -0700 (PDT)
+Date: Thu, 4 Jul 2024 21:01:54 +0200
+From: Stanislav Jakubek <stano.jakubek@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Baolin Wang <baolin.wang7@gmail.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] dt-bindings: regulator: sprd,sc2731-regulator: convert to
+ YAML
+Message-ID: <ZobxoobZvA8k3pyi@standask-GA-A55M-S2HP>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PowerPC] [PASEMI] Issue with the identification of ATA drives
- after the of/irq updates 2024-05-29
-Content-Language: en-US
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-To: Michael Ellerman <mpe@ellerman.id.au>, Marc Zyngier <maz@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, apatel@ventanamicro.com,
- DTML <devicetree@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- Matthew Leaman <matthew@a-eon.biz>, Darren Stevens
- <darren@stevens-zone.net>, Christian Zigotzky <info@xenosoft.de>
-References: <3ab66fab-c3f2-4bed-a04d-a10c57dcdd9b@xenosoft.de>
- <86zfqzhgys.wl-maz@kernel.org>
- <ccf14173-9818-44ef-8610-db2900c67ae8@xenosoft.de>
- <874j95jrur.fsf@mail.lhotse>
- <3baff554-e8f6-42b0-b931-207175a4d8fd@xenosoft.de>
-In-Reply-To: <3baff554-e8f6-42b0-b931-207175a4d8fd@xenosoft.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 04.07.24 20:27, Christian Zigotzky wrote:
-> On 04.07.24 13:53, Michael Ellerman wrote:
->> Christian Zigotzky <chzigotzky@xenosoft.de> writes:
->>> On 02.07.24 18:54, Marc Zyngier wrote:
->>>> On Sun, 30 Jun 2024 11:21:55 +0100,
->>>> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
->>>>> Hello,
->>>>>
->>>>> There is an issue with the identification of ATA drives with our
->>>>> P.A. Semi Nemo boards [1] after the
->>>>> commit "of/irq: Factor out parsing of interrupt-map parent
->>>>> phandle+args from of_irq_parse_raw()" [2].
->> ...
->>>> --- a/drivers/of/irq.c
->>>> +++ b/drivers/of/irq.c
->>>> @@ -282,8 +282,10 @@ int of_irq_parse_raw(const __be32 *addr, 
->>>> struct of_phandle_args *out_irq)
->>>>                   oldimap = imap;
->>>>                imap = of_irq_parse_imap_parent(oldimap, imaplen, 
->>>> out_irq);
->>>> -            if (!imap)
->>>> -                goto fail;
->>>> +            if (!imap) {
->>>> +                match = 0;
->>>> +                break;
->>>> +            }
->>>>                   match &= of_device_is_available(out_irq->np);
->>>>                if (match)
->>>>
->>>>
->>> We tested this patch yesterday and it solves the boot problem.
->> Hi Christian,
->>
->> Instead of that patch, can you try the one below. AFAICS the device tree
->> fixups done in early boot mean the interrupt-map is not needed, and also
->> has the wrong content, so if we can remove it entirely that might avoid
->> the problems in the parsing code.
->>
->> I don't know if your firmware actually implements those methods, I
->> couldn't find anything online to confirm or deny it. Seems the only
->> option is to test it.
->>
->> cheers
->>
->>
->> diff --git a/arch/powerpc/kernel/prom_init.c 
->> b/arch/powerpc/kernel/prom_init.c
->> index fbb68fc28ed3..28fe082ede57 100644
->> --- a/arch/powerpc/kernel/prom_init.c
->> +++ b/arch/powerpc/kernel/prom_init.c
->> @@ -3138,6 +3138,14 @@ static void __init fixup_device_tree_pasemi(void)
->>         prom_setprop(iob, name, "interrupt-controller", &val, 0);
->>   +    prom_printf("nemo: deleting interrupt-map properties\n");
->> +    rc = call_prom("interpret", 1, 1,
->> +              " s\" /pxp@0,e0000000\" find-device"
->> +              " s\" interrupt-map\" delete-property"
->> +              " s\" interrupt-map-mask\" delete-property"
->> +              " device-end");
->> +    prom_printf("nemo: interpret returned %d\n", rc);
->> +
->>       pci_name = "/pxp@0,e0000000/pci@11";
->>       node = call_prom("finddevice", 1, 1, ADDR(pci_name));
->>       parent = ADDR(iob);
-> Hi Michael,
->
-> Many thanks for your patch. We will test it as soon as possible.
->
-> Christian
-Michael,
+Convert the Spreadtrum SC2731 regulator bindings to DT schema.
 
-Unfortunately, the kernel 6.10-rc6 doesn't compile with your patch. "rc" 
-is undeclared.
+Change during conversion:
+  - switch compatible from sprd,sc27xx-regulator to sprd,sc2731-regulator,
+    same as the only in-tree user has done back in 2019 [1]
 
-Error messages:
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm64/boot/dts/sprd/sc2731.dtsi?h=v6.9&id=0419a75b1808dda225b17ba1509f195f23c0db88
 
-arch/powerpc/kernel/prom_init.c: In function ‘fixup_device_tree_pasemi’:
-arch/powerpc/kernel/prom_init.c:3142:2: error: ‘rc’ undeclared (first 
-use in this function); did you mean ‘rq’?
-  3142 |  rc = call_prom("interpret", 1, 1,
-       |  ^~
-       |  rq
+Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
+---
+ .../regulator/sprd,sc2731-regulator.txt       | 43 ------------
+ .../regulator/sprd,sc2731-regulator.yaml      | 67 +++++++++++++++++++
+ 2 files changed, 67 insertions(+), 43 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.yaml
 
-Christian
+diff --git a/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt b/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
+deleted file mode 100644
+index 63dc07877cd6..000000000000
+--- a/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-Spreadtrum SC2731 Voltage regulators
+-
+-The SC2731 integrates low-voltage and low quiescent current DCDC/LDO.
+-14 LDO and 3 DCDCs are designed for external use. All DCDCs/LDOs have
+-their own bypass (power-down) control signals. External tantalum or MLCC
+-ceramic capacitors are recommended to use with these LDOs.
+-
+-Required properties:
+- - compatible: should be "sprd,sc27xx-regulator".
+-
+-List of regulators provided by this controller. It is named according to
+-its regulator type, BUCK_<name> and LDO_<name>. The definition for each
+-of these nodes is defined using the standard binding for regulators at
+-Documentation/devicetree/bindings/regulator/regulator.txt.
+-
+-The valid names for regulators are:
+-BUCK:
+-	BUCK_CPU0, BUCK_CPU1, BUCK_RF
+-LDO:
+-	LDO_CAMA0, LDO_CAMA1, LDO_CAMMOT, LDO_VLDO, LDO_EMMCCORE, LDO_SDCORE,
+-	LDO_SDIO, LDO_WIFIPA, LDO_USB33, LDO_CAMD0, LDO_CAMD1, LDO_CON,
+-	LDO_CAMIO, LDO_SRAM
+-
+-Example:
+-	regulators {
+-		compatible = "sprd,sc27xx-regulator";
+-
+-		vddarm0: BUCK_CPU0 {
+-			regulator-name = "vddarm0";
+-			regulator-min-microvolt = <400000>;
+-			regulator-max-microvolt = <1996875>;
+-			regulator-ramp-delay = <25000>;
+-			regulator-always-on;
+-		};
+-
+-		vddcama0: LDO_CAMA0 {
+-			regulator-name = "vddcama0";
+-			regulator-min-microvolt = <1200000>;
+-			regulator-max-microvolt = <3750000>;
+-			regulator-enable-ramp-delay = <100>;
+-		};
+-		...
+-	};
+diff --git a/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.yaml b/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.yaml
+new file mode 100644
+index 000000000000..ffb2924dde36
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/sprd,sc2731-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Spreadtrum SC2731 Power Management IC regulators
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++description: |
++  The SC2731 integrates low-voltage and low quiescent current DCDC/LDO.
++  14 LDO and 3 DCDCs are designed for external use. All DCDCs/LDOs have
++  their own bypass (power-down) control signals. It is recommended to use
++  external tantalum or MLCC ceramic capacitors with these LDOs.
++  Valid names for the regulators are:
++    BUCK:
++      BUCK_CPU0, BUCK_CPU1, BUCK_RF
++    LDO:
++      LDO_CAMA0, LDO_CAMA1, LDO_CAMD0, LDO_CAMD1, LDO_CAMIO, LDO_CAMMOT,
++      LDO_CON, LDO_EMMCCORE, LDO_SDCORE, LDO_SDIO, LDO_SRAM, LDO_USB33,
++      LDO_VLDO, LDO_WIFIPA
++
++properties:
++  compatible:
++    const: sprd,sc2731-regulator
++
++patternProperties:
++  "^BUCK_(CPU[0-1]|RF)$":
++    type: object
++    $ref: regulator.yaml#
++    unevaluatedProperties: false
++
++  "^LDO_(CAM(A0|A1|D0|D1|IO|MOT)|CON|EMMCCORE|SD(CORE|IO)|SRAM|USB33|VLDO|WIFIPA)$":
++    type: object
++    $ref: regulator.yaml#
++    unevaluatedProperties: false
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    regulators {
++      compatible = "sprd,sc2731-regulator";
++
++      BUCK_CPU0 {
++        regulator-name = "vddarm0";
++        regulator-min-microvolt = <400000>;
++        regulator-max-microvolt = <1996875>;
++        regulator-ramp-delay = <25000>;
++        regulator-always-on;
++      };
++
++      LDO_CAMA0 {
++        regulator-name = "vddcama0";
++        regulator-min-microvolt = <1200000>;
++        regulator-max-microvolt = <3750000>;
++        regulator-enable-ramp-delay = <100>;
++      };
++    };
++...
+-- 
+2.34.1
+
