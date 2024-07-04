@@ -1,110 +1,88 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B76215491
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 14:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23531B0117;
+	Thu,  4 Jul 2024 15:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720105149; cv=none; b=Y8aJO3keMwJPdJlfXiMO6OM4hi+3XOdlQ3SUC7SRfK6yfxVlDPQxZDdRYKp5Y9t7GjsPdqd8erp1uEyN+uNLYMYhfBDT4LhRvA5kOjL1ilRkB5V6heAQn3EZ0SubD4urbwvjVJUck4WfZgOrHibpsQVLRu3lR8/ueQQ7k1kj94E=
+	t=1720105318; cv=none; b=hCoS+ZH5m7UN5Y4BVDo1QeDHRZ+DQHx/3XIDlXrg4TV8Aa6ygqEHcRW/gYnG0rC5rvOfhSfrlzpVgKf2me9/1kXw8FtqqQN6cBRPH/eTrHjjj+GEhKAfUkEl1CO/7Ud54FKRi2ZVj/4VbvmG1aaCZPE+WSiR5ueAEsk7e4j9cZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720105149; c=relaxed/simple;
-	bh=WATt3D7J/IVmxltuxLMBwEcE4iWsmNPb4qKThKSzr2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mpAufE3a66d7brynWTsVisPNhHbXozRSIjpkP1rNDFDR1ZPJ0Y0Rzowzz7OhNPRsZRvvWSuwk/fZTS0wwhMx4g4cvCIjy+wcVDmxUElOy73Dzkhd35eejUYSwwvHYtMWGWMugakTeATG5SnXVFbA/B/+hRwJtF6HPYLG9+28CzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bxYldRAv; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720105318; c=relaxed/simple;
+	bh=GD38v98uEi0utGYisW2QYjJqD4Hgh4wQJEQUjjOKZFA=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jRypIRGoJQ+xMSChO//smGvpkwMY8vwhoDxLTCXpDsfGgUYl95SzhKr1or5lCQNET2p9s7ljyEHjnVTCFBbf7VghsS9NJMTQrEBxOhYteioXhxBCz+bE6IKBpfW/U18QttKLXQq8RX8OY0GtHGwPTi4uJoGpSiflhoHx8TjZLeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+CqAF47; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bxYldRAv"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-36733f09305so446598f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 07:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720105147; x=1720709947; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ipW5yF2l0h3JDASUEZRIOOwGfpjoQU4vCS+os4NDlfs=;
-        b=bxYldRAv6Vt7ItneTQy/pcQsdJnrYyv84EsKjlQ4hQ5MAyTeYijtBAH/9poltQhBJy
-         VBKsJ/BAQw5xjfs7l4eHRrTyDY66lcy0uMxrg2fgs8MubeHfhrGJIM3SzhG1His+MR+A
-         7FOn5Vhu/qUNpg6pvT7vUq9ZvpbEkiTDAKxmz7OqgthD/m0cE0V70Imr3x+DO/hdvPsi
-         N8SrxTOzILTerHWrsVWWZGpg1rxrxzzgkmpdOgYZMtUhWWX3ac3xYeBDDWKrOjlI5Qms
-         5Si9KRPy8rJGxabwZXAd/YogktxyD/6aXwirJdxd4OO4IJiSSgpBm8WBOf47s2uc/YoZ
-         q3TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720105147; x=1720709947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ipW5yF2l0h3JDASUEZRIOOwGfpjoQU4vCS+os4NDlfs=;
-        b=PdW/mMUp433VUF+iVDznPd17aMBaNDs/PBoys+p9anHrfa6+NiG1cguACTocs/xz8A
-         KPwp4ihIOED3V4xDIGGkHUE5Sb1nQqRS4XSEVAGGGwLfZSgRAUC5TYtqVTofeXa61BqF
-         h6NCa7S3N2BBkaHnJ7xjuIxAsYTI9LFEebr+NC3TLKXEfQmxnzztkZm/qt4sUgK6xWJP
-         kFQ9/HjyKE6FTlFJqGgAbZhUU27HhpT8YIVnvVmTjblug+UfFOzwDjhHf6Mnj9eBPaQw
-         2gW5dNdlvD/uXnXxH0+aTEHOjNueHxvIL/ulzc1APQhi9RGQZoj1y8T18tdiHPKsx2tL
-         5JBw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEcIqIltV4pQ4suF+8axz2E2UWRQAHOkAcUG4hhmHf9olNx6Q6umQsCmkR5Q7XYTrr3o+OhE/4CTa9lEwa+17clqjS8O8IHnrzXUG9
-X-Gm-Message-State: AOJu0YwPo9LEv9HlIIfjaQ5/e4B0oG/wUZC5KqmOtY5EjoFsIvBpZ/sk
-	yCCENpwYMVB8JMUtyO8UX8W+aI/dxlNGBJGjXjQdRjGPCWBJm+0zmn7B9ZOcFXL6d8eV62PkeVV
-	gjlb3KcqzkiF4WGDpo8zt5NWZGlCQ5FCz2ps0
-X-Google-Smtp-Source: AGHT+IHiGxLMhUSTF5OSbTLNnCaVI7g8cxF0kLlNGQwwQL9PZ17CqMlQ4bzjGShedrKKcdwCCgJYMl/YYBc5f5VGRgE=
-X-Received: by 2002:adf:ff83:0:b0:367:4d9d:568b with SMTP id
- ffacd0b85a97d-3679de96b24mr1510125f8f.68.1720105146546; Thu, 04 Jul 2024
- 07:59:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+CqAF47"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 696E0C4AF0A;
+	Thu,  4 Jul 2024 15:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720105318;
+	bh=GD38v98uEi0utGYisW2QYjJqD4Hgh4wQJEQUjjOKZFA=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=F+CqAF47A923IQmQNjQ27xkQ6SW5Zd2kFaXfJDvsChXEnG6+0TBrRkKyWN7V6HLu0
+	 ziDESXcO/N/NBHgGsH8SkO9y9KIk+zJsXkjIgT6DK0Dh6nUF4FppPDlcqY6BQd6fNp
+	 6RHM2vQzcrtWMHPMe2QOBSpkyvbnoe+2VNu1w+4qUSr9Gqbdd/Hcis/zFs03iV/uEs
+	 5rTic+ZvEoyhaPMhVVi8OZxsUPHoWOOrSaurXeYvRfEcZusPCoHiohG5ezJ0uTkpDJ
+	 u2GntCvu/fhem6l1AZSfYwNPqQCD/umaDvon5wFBMXFM9xzEnFhzk/+r+fiyhXt+2I
+	 ly7YBQ497pejg==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ ckeepax@opensource.cirrus.com, andriy.shevchenko@linux.intel.com, 
+ heiko@sntech.de, robh@kernel.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, shengjiu.wang@gmail.com, 
+ Shengjiu Wang <shengjiu.wang@nxp.com>
+In-Reply-To: <1720009575-11677-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1720009575-11677-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH] ASoC: ak4458: remove "reset-gpios" property handler
+Message-Id: <172010531616.64240.2044968074924246988.b4-ty@kernel.org>
+Date: Thu, 04 Jul 2024 16:01:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701112448.28638-1-ethan.twardy@gmail.com>
- <20240701112448.28638-5-ethan.twardy@gmail.com> <CAH5fLgi5HdoPzJHZUrS7r3wdQ6GheJDbzGRGKZpk9oC=U6SdHA@mail.gmail.com>
- <D2GU6M1F3QN4.31TYYGTCNHJ9F@gmail.com>
-In-Reply-To: <D2GU6M1F3QN4.31TYYGTCNHJ9F@gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 4 Jul 2024 16:58:53 +0200
-Message-ID: <CAH5fLgi=PPX5aUiN7=kh+z8KHRmbFLLtwGw+XK1Qmf4_-Ye+_g@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] rust: macros: Enable the rest of the tests
-To: "Ethan D. Twardy" <ethan.twardy@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Trevor Gross <tmgross@umich.edu>, 
-	Aswin Unnikrishnan <aswinunni01@gmail.com>, "open list:RUST" <rust-for-linux@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev-d4707
 
-On Thu, Jul 4, 2024 at 4:49=E2=80=AFPM Ethan D. Twardy <ethan.twardy@gmail.=
-com> wrote:
->
-> On Thu Jul 4, 2024 at 4:43 AM CDT, Alice Ryhl wrote:
-> > On Mon, Jul 1, 2024 at 1:28=E2=80=AFPM Ethan D. Twardy <ethan.twardy@gm=
-ail.com> wrote:
-> > >
-> > > Now that the rusttest target for the macros crate is compiled with th=
-e
-> > > kernel crate as a dependency, the rest of the rustdoc tests can be
-> > > enabled.
-> > >
-> > > Signed-off-by: Ethan D. Twardy <ethan.twardy@gmail.com>
-> >
-> > I would drop the newline before `fn main()` here:
-> >
-> > > @@ -221,6 +248,8 @@ pub fn concat_idents(ts: TokenStream) -> TokenStr=
-eam {
-> > >  ///         unsafe { bindings::destroy_info(self.raw_info) };
-> > >  ///     }
-> > >  /// }
-> > > +///
-> > > +/// # fn main() {}
-> > >  /// ```
->
-> So close! v3 incoming :). Thank you for your review!
+On Wed, 03 Jul 2024 20:26:15 +0800, Shengjiu Wang wrote:
+> commit c721f189e89c0 ("reset: Instantiate reset GPIO controller for
+> shared reset-gpios") check if there is no "resets" property
+> will fallback to "reset-gpios".
+> 
+> So don't need to handle "reset-gpios" separately in the driver,
+> the "reset-gpios" handler is duplicated with "resets" control handler,
+> remove it.
+> 
+> [...]
 
-You're welcome :)
+Applied to
 
-Unfortunately, I'm not really able to review the first patch in this series=
-.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Alice
+Thanks!
+
+[1/1] ASoC: ak4458: remove "reset-gpios" property handler
+      commit: 1e0dff741b0a8af35645e5c3ffc4050893002a9c
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
