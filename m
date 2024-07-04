@@ -1,93 +1,106 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2AE373452
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 18:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6371F4E1CA;
+	Thu,  4 Jul 2024 18:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720119167; cv=none; b=kcgViWZyiBal1Y2SVz3QUI8a2SFnVKvtV20ga6GOMYkFdwG+p42SKcXhszJ78kYGqNnC03Vfn6le1d8OrEUbo7Hecm/yxO48Cvls6W4AmEAneQiXhfshK8oTObbflqFzKh5RQf57l0nmaPXiYn8TwzAgiEcSTwQCCk9vtCIOPPQ=
+	t=1720119201; cv=none; b=OYl8bf/uRTjrLtIBEzVNNXO10nzoEuxv2CLDManqE8qwC8CYcPQtq22E2bTAZRmVhmvvzhe2E1lklzKEt1/lwCu8GAPZqvbN9mDy4AFpmLPU9e3HR4jh24lmaUaKQ7UsTRUVTjbd6VJ9EuO8apewJFeuTEN03tr65/ePv3WwBsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720119167; c=relaxed/simple;
-	bh=GQBx1MxgEDAe5DdKAvCgpIEoVogab7OgI3MQjkxoDZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zc53UqDJxJDYvG0rcYiyVMxxDJzthX/vfnDEqHxxMQnTg0v5lUt6qSAhp6MHklehhh2+ifKE6yf5kMwCDhnKDW8g/eCEs0VsuJRUmZihrW3Tz4fZ1Ync2DmrOqUN06uX4/ubf6u7co0qsnY3+tJpdi1dK3bdmUwzXb7t2oqrRC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by mail.home.local (8.17.1/8.17.1/Submit) id 464IiPxH012837;
-	Thu, 4 Jul 2024 20:44:25 +0200
-Date: Thu, 4 Jul 2024 20:44:25 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, jolsa@kernel.org,
-        mhiramat@kernel.org, cgzones@googlemail.com, brauner@kernel.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de
-Subject: Re: deconflicting new syscall numbers for 6.11
-Message-ID: <Zobtia2Zsaamh9KQ@1wt.eu>
-References: <ZobXdDCYBi8OM-Fo@zx2c4.com>
- <CAHk-=wiGk+1eNy4Vk6QsEgM=Ru3jE40qrDwgq_CSKgqwLgMdRg@mail.gmail.com>
- <Zobf3fZOuvOJOGPN@zx2c4.com>
- <CAHk-=whf2Pb8fSmUsLRSn6CnYvQoyUkLikKpFDWN_xnTJqix=A@mail.gmail.com>
+	s=arc-20240116; t=1720119201; c=relaxed/simple;
+	bh=CYarSEwmlNaTYzL/Nt8gn0Rbqf1Axm3ojbF4GWmppx4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fG9DcJlWqYcdiV6R6r43MZJF+LPx1NGcrjDbJPetwXrNgxF8mWdKnE8BL946JZuohECaNJYPR/yVfDeaqImAHoaE9eekSxem+xb3nI/6NTIrw4JyZzc/l1HV3Z4+9TW6/IJLd6tN1FGiRE5TIFXS7JrbRuUppLxjt8KjYaSCmUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pkyE1hMP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pkyE1hMP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62180C3277B;
+	Thu,  4 Jul 2024 18:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720119200;
+	bh=CYarSEwmlNaTYzL/Nt8gn0Rbqf1Axm3ojbF4GWmppx4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pkyE1hMPc2e0AURPNzjW9xJHzsMAuoDmcWBJxevXKdYlcyNpbS4P81BCzssSQIkIN
+	 jBJmMNy42KUL6cqXJ6Zu/TRKHc8/VEMJ61r+4WjlTm8u8uok2okbbHvPX3nRP5zwqN
+	 1HCeFWmIofY1kkTNo1yb0mjBhMtwItMk03VWYw6qhHO8dSX1mJB/Cbnxn9HZSwo13/
+	 ZBwqQWHlDtp9wiBXcJFYshpcCQNiVxrJJQSsvKW2XoDfLpZGDEPucdmQkRlcngkoMN
+	 CEml0T9pEjPzqWJbYkxPtsYKClIP2c64D2hcTRBsg2TXhUpcNFbV7gaWXXe8PiEbwP
+	 a9NT77lz/6nUA==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: linux-integrity@vger.kernel.org
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/3] Address !chip->auth
+Date: Thu,  4 Jul 2024 21:53:05 +0300
+Message-ID: <20240704185313.224318-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whf2Pb8fSmUsLRSn6CnYvQoyUkLikKpFDWN_xnTJqix=A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 04, 2024 at 10:55:46AM -0700, Linus Torvalds wrote:
-> A trivial google for "rdrand library" finds lots of hits for things
-> that then use the AES-NI instructions to whiten things etc.
+Unless tpm2_sessions_init() is called, then chip->auth ends up being a null
+pointer, which is ignored by authenticated sessions code. These patches aim
+to fully address the bug, and hopefully still make into 6.10-rc7.
 
-As a userland developer, I can say that dealing with external libs for
-low-level stuff, which themselves sometimes even come with their own
-set of dependencies, is always a pain. There must be compelling reasons
-for adding dependencies. It's reinforced when you have to deal with
-long term support on your software that goes beyond the lib's.
+Tested on x86-64 with:
 
-And having to go through instruction support detection and open-coding
-all that stuff with runtime fallbacks for older CPUs is also a pain. Not
-to mention the cases where you run in VMs where features are there but
-not listed or presented but slowly emulated.
+- TCG_TPM2_HMAC disabled.
+- TCG_TPM2_HMAC enabled.
+- TCG_TPM2_HMAC enabled, and "/* rc = tpm2_sessions_init(chip); */".
 
-I'm using a lot of arch-specific code at build time, I'm often fine with
-detecting -ENOSYS at run time to fall back to an older implementation of
-a syscall, but I've not crossed the barrier of runtime CPU features
-detection which adds further burden and further fragments bug reports
-between users.
+For drivers that do not initialize with tpm2_chip_bootstrap(), the lack of
+auth sessions is reported once per power cycle by:
 
-Regarding VM migration, my code is not concerned because I'm not aware
-of users migrating such VMs. BUT I've got complains in the past from
-some users generating UUIDs for each forwarded request that they were
-seeing duplicates in their logs due to the lack of thread safety on
-random(), which made me work on an alternative. Thus I can easily
-imagine that equivalent applications that just want to assign a unique
-ID to an event that ends up in a log, and when such applications suffer
-a VM migration could face a similar problem that is not easy to address
-in userland.
+"tpm tpm0: auth session is not active"
 
-In my opinion, abstracting the hardware is the role of the kernel. If
-getrandom() is fast enough for my uses, why not. If it's not, I find
-value in having a much faster proposal that offers the same API to all
-applications without each having to reinvent the wheel. I can't judge
-on the merits of vgetrandom() vs getrandom() though. But to give you an
-idea, years ago for portability reasons (random() thread safety, multiple
-OS support, performance), I ended up writing my own xoroshiro128 generator
-to address multiple problems at once and I must confess I was a bit sad
-to see that randoms remain so little portable between operating systems
-and their various versions, and that the work left to be done for users
-is non trivial.
+This is expected output for the following drivers:
 
-I can imagine that users with higher expectations than mine would want
-to adopt vgetrandom() when available.
+* tpm_ftpm_tee.c
+* tpm_i2c_nuvoton.c
+* tpm_ibmvtpm.c
+* tpm_tis_i2c_cr50.c
+* tpm_vtpm_proxy.c
 
-Now would I replace my existing RNG with this new syscall when it gets
-widely available ? Maybe, if it brings some value. It's easy enough to
-deal with two code branches, one with the new, optimal syscall, and the
-legacy generic fallback.
+They need to later on enable auth sessions, if they eager to. This
+patch set only fixes any collateral damage of not doing so.
 
-Hoping this matches the type of feedback you were looking for.
+v4:
+* Address:
+  https://lore.kernel.org/linux-integrity/CAHk-=wiM=Cyw-07EkbAH66pE50VzJiT3bVHv9CS=kYR6zz5mTQ@mail.gmail.com/
+* Git: https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/log/?h=auth-null-4
+v3:
+* Address:
+  https://lore.kernel.org/linux-integrity/922603265d61011dbb23f18a04525ae973b83ffd.camel@HansenPartnership.com/
+* Git: https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/log/?h=auth-null-3
+* Did a full QA run given the changes in config flag handling.
+v2:
+* Rebase to commit 8a9c6c40432e ("Merge tag 'io_uring-6.10-20240703' of git://git.kernel.dk/linux").
+* Couple of cosmetic fixes.
 
-Willy
+Jarkko Sakkinen (3):
+  tpm: Address !chip->auth in tpm2_*_auth_session()
+  tpm: Address !chip->auth in tpm_buf_append_name()
+  tpm: Address !chip->auth in tpm_buf_append_hmac_session*()
+
+ drivers/char/tpm/Makefile        |   2 +-
+ drivers/char/tpm/tpm2-sessions.c | 419 ++++++++++++++++++-------------
+ include/linux/tpm.h              |  81 +++---
+ 3 files changed, 269 insertions(+), 233 deletions(-)
+
+-- 
+2.45.2
+
