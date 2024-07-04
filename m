@@ -1,30 +1,30 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38B31AC44A
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 11:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23C91AD3E5
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 11:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720092321; cv=none; b=hdiyJtgc4D113SsHYoHM52K3Tx2eMy/TNwX161PXO/R6qxpdh9q6BlScOQ+h1IAFLEdcKz0+oyFG3qlCKQyE4TxKZfoG0EwnYjqS9kjOXabUJKGlIbjva/nDjbFaCRdGITmh7zefiWh2VfuRfc32ST1ZwsydKhfoRDTK2wsHL1s=
+	t=1720092322; cv=none; b=AQa7/aKmaT/NkfNL05kSJLZHqbJjlukELun24dgWjrxNKTVg9SBdiu5h7Mc7jkannzB+ubVs0evXCQSgnQxwkFt07A2mcwWD8o0mFS38wmL9rA/tU3ZhW7r/A+3TPN43WtarSW11CqaFlYTeTBz0tkjX4Hrh1XAyfwIF1bqpSgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720092321; c=relaxed/simple;
-	bh=oIfcQgh9jJLbjDRVKTDuP9iEV81A7jbp3RZN79VALFI=;
+	s=arc-20240116; t=1720092322; c=relaxed/simple;
+	bh=ExZ/jWRz3JNp2OD5lRM7K74HdX5ErPggTIbY4d/k8H8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p8o1pBsxoA9YN05IBQBODyKt/vt0B5eYdVRoig5PuCP7iu+HQaFzc9BeO+50/VQd+Fy+U0rX3qluVKLRN1YCRs3xfWU8hvkCd1lbyIAI2bZrWz0wF/pOU+0Ma6GkcnQNCop28ZbbE5Pby0QYxThanjTJmpOrq0MaehrXKn75ETU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=TiIL5X24; arc=none smtp.client-ip=115.124.30.124
+	 MIME-Version; b=s4Y9Z4vEO2BmpcXPQLEQjhDjRRLr71hbsQdGaZNUWW3BwEnSektsm4jrKpNsfYM//Uby9o9mbIwwIKHhsYarUjd2Ntu+pJ5TF3cnDe9ossP8XH3i2jWheiffjZrUAOaF0+t1xNMkqvTyOE9+REkQ+j8KwekUmsEune+iLVtsDA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IrS06H/i; arc=none smtp.client-ip=115.124.30.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="TiIL5X24"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IrS06H/i"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1720092311; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=NCJfA953k4EF8smVyxxG9pGEmrjgEHhQRz3PIQnFNcQ=;
-	b=TiIL5X246bXrDN6TpR/ITxJp2OTX7npzaLg7/WcLV5tyOnffV+Vu3lMTA8/Eyd4TWKzRBFI3Cf2Xd2mZI4SdeoA1M6HO5zSdfzpsov3Vipj7+x6FXmusRnSDH+u6A4xBJWUELlbkrVFYNp2tAs0+YKOdKI7SUG0EpeY8YH1priI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W9qWV3G_1720092309;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9qWV3G_1720092309)
+	t=1720092318; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=8wAGNXuI1qwPyzOykQd8DO+mgTfhYkp9bBwCtZr1ZS0=;
+	b=IrS06H/iF5itsGarec0zMq66fvnKviknZOMpv4ixZNbFt+hT1k9Mc9heQNTieGwAT6uEDaE9DleKwhrlRIZNQasOBa/b1G+gd51Bt9fmVKlEyY3ZLachUipr7SzDEYDAZuCRw/laQw7Joig4PDNedgwDF+tgO1GmOJb2ZH38SYg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033023225041;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W9qWV5z_1720092316;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9qWV5z_1720092316)
           by smtp.aliyun-inc.com;
-          Thu, 04 Jul 2024 19:25:09 +0800
+          Thu, 04 Jul 2024 19:25:17 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org,
 	hughd@google.com
@@ -43,9 +43,9 @@ Cc: willy@infradead.org,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/10] mm: swap: extend swap_shmem_alloc() to support batch SWAP_MAP_SHMEM flag setting
-Date: Thu,  4 Jul 2024 19:24:51 +0800
-Message-Id: <7da9021dcb4f59249d4738c4e6fea093bcbe5586.1720079976.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH v3 09/10] mm: shmem: split large entry if the swapin folio is not large
+Date: Thu,  4 Jul 2024 19:24:58 +0800
+Message-Id: <7d831561b1daa14234c409cb1677a367d3ce5e0b.1720079976.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1720079976.git.baolin.wang@linux.alibaba.com>
 References: <cover.1720079976.git.baolin.wang@linux.alibaba.com>
@@ -57,219 +57,134 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To support shmem large folio swap operations, add a new parameter to
-swap_shmem_alloc() that allows batch SWAP_MAP_SHMEM flag setting for
-shmem swap entries.
-
-While we are at it, using folio_nr_pages() to get the number of pages
-of the folio as a preparation.
+Now the swap device can only swap-in order 0 folio, even though a large
+folio is swapped out. This requires us to split the large entry previously
+saved in the shmem pagecache to support the swap in of small folios.
 
 Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- include/linux/swap.h |  4 +-
- mm/shmem.c           |  6 ++-
- mm/swapfile.c        | 98 +++++++++++++++++++++++---------------------
- 3 files changed, 57 insertions(+), 51 deletions(-)
+ mm/shmem.c | 95 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 483b760d49a4..8839bb2f2fa6 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -475,7 +475,7 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry);
- extern swp_entry_t get_swap_page_of_type(int);
- extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
- extern int add_swap_count_continuation(swp_entry_t, gfp_t);
--extern void swap_shmem_alloc(swp_entry_t);
-+extern void swap_shmem_alloc(swp_entry_t, int);
- extern int swap_duplicate(swp_entry_t);
- extern int swapcache_prepare(swp_entry_t);
- extern void swap_free_nr(swp_entry_t entry, int nr_pages);
-@@ -542,7 +542,7 @@ static inline int add_swap_count_continuation(swp_entry_t swp, gfp_t gfp_mask)
- 	return 0;
- }
- 
--static inline void swap_shmem_alloc(swp_entry_t swp)
-+static inline void swap_shmem_alloc(swp_entry_t swp, int nr)
- {
- }
- 
 diff --git a/mm/shmem.c b/mm/shmem.c
-index 13d139abe69a..6244b909b069 100644
+index eb030827f7fb..b4468076f0e9 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
-@@ -1443,6 +1443,7 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
- 	struct shmem_sb_info *sbinfo = SHMEM_SB(inode->i_sb);
- 	swp_entry_t swap;
- 	pgoff_t index;
-+	int nr_pages;
+@@ -1990,6 +1990,82 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+ 	swap_free_nr(swap, nr_pages);
+ }
  
- 	/*
- 	 * Our capabilities prevent regular writeback or sync from ever calling
-@@ -1475,6 +1476,7 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
- 	}
- 
- 	index = folio->index;
-+	nr_pages = folio_nr_pages(folio);
- 
- 	/*
- 	 * This is somewhat ridiculous, but without plumbing a SWAP_MAP_FALLOC
-@@ -1527,8 +1529,8 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
- 	if (add_to_swap_cache(folio, swap,
- 			__GFP_HIGH | __GFP_NOMEMALLOC | __GFP_NOWARN,
- 			NULL) == 0) {
--		shmem_recalc_inode(inode, 0, 1);
--		swap_shmem_alloc(swap);
-+		shmem_recalc_inode(inode, 0, nr_pages);
-+		swap_shmem_alloc(swap, nr_pages);
- 		shmem_delete_from_page_cache(folio, swp_to_radix_entry(swap));
- 
- 		mutex_unlock(&shmem_swaplist_mutex);
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 2f5203aa2d2c..0cc8a5a72a2f 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3387,62 +3387,58 @@ void si_swapinfo(struct sysinfo *val)
-  * - swap-cache reference is requested but the entry is not used. -> ENOENT
-  * - swap-mapped reference requested but needs continued swap count. -> ENOMEM
-  */
--static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
-+static int __swap_duplicate(struct swap_info_struct *p, unsigned long offset,
-+			    int nr, unsigned char usage)
- {
--	struct swap_info_struct *p;
- 	struct swap_cluster_info *ci;
--	unsigned long offset;
- 	unsigned char count;
- 	unsigned char has_cache;
--	int err;
-+	int err, i;
- 
--	p = swp_swap_info(entry);
--
--	offset = swp_offset(entry);
- 	ci = lock_cluster_or_swap_info(p, offset);
- 
--	count = p->swap_map[offset];
--
--	/*
--	 * swapin_readahead() doesn't check if a swap entry is valid, so the
--	 * swap entry could be SWAP_MAP_BAD. Check here with lock held.
--	 */
--	if (unlikely(swap_count(count) == SWAP_MAP_BAD)) {
--		err = -ENOENT;
--		goto unlock_out;
--	}
--
--	has_cache = count & SWAP_HAS_CACHE;
--	count &= ~SWAP_HAS_CACHE;
--	err = 0;
--
--	if (usage == SWAP_HAS_CACHE) {
-+	for (i = 0; i < nr; i++) {
-+		count = p->swap_map[offset + i];
- 
--		/* set SWAP_HAS_CACHE if there is no cache and entry is used */
--		if (!has_cache && count)
--			has_cache = SWAP_HAS_CACHE;
--		else if (has_cache)		/* someone else added cache */
--			err = -EEXIST;
--		else				/* no users remaining */
-+		/*
-+		 * swapin_readahead() doesn't check if a swap entry is valid, so the
-+		 * swap entry could be SWAP_MAP_BAD. Check here with lock held.
-+		 */
-+		if (unlikely(swap_count(count) == SWAP_MAP_BAD)) {
- 			err = -ENOENT;
-+			break;
++static int shmem_split_large_entry(struct inode *inode, pgoff_t index,
++				   swp_entry_t swap, int new_order, gfp_t gfp)
++{
++	struct address_space *mapping = inode->i_mapping;
++	XA_STATE_ORDER(xas, &mapping->i_pages, index, new_order);
++	void *alloced_shadow = NULL;
++	int alloced_order = 0, i;
++
++	for (;;) {
++		int order = -1, split_order = 0;
++		void *old = NULL;
++
++		xas_lock_irq(&xas);
++		old = xas_load(&xas);
++		if (!xa_is_value(old) || swp_to_radix_entry(swap) != old) {
++			xas_set_err(&xas, -EEXIST);
++			goto unlock;
 +		}
- 
--	} else if (count || has_cache) {
-+		has_cache = count & SWAP_HAS_CACHE;
-+		count &= ~SWAP_HAS_CACHE;
-+		err = 0;
 +
-+		if (usage == SWAP_HAS_CACHE) {
-+			/* set SWAP_HAS_CACHE if there is no cache and entry is used */
-+			if (!has_cache && count)
-+				has_cache = SWAP_HAS_CACHE;
-+			else if (has_cache)		/* someone else added cache */
-+				err = -EEXIST;
-+			else				/* no users remaining */
-+				err = -ENOENT;
-+		} else if (count || has_cache) {
-+			if ((count & ~COUNT_CONTINUED) < SWAP_MAP_MAX)
-+				count += usage;
-+			else if ((count & ~COUNT_CONTINUED) > SWAP_MAP_MAX)
-+				err = -EINVAL;
-+			else if (swap_count_continued(p, offset + i, count))
-+				count = COUNT_CONTINUED;
-+			else
-+				err = -ENOMEM;
-+		} else
-+			err = -ENOENT;			/* unused swap entry */
- 
--		if ((count & ~COUNT_CONTINUED) < SWAP_MAP_MAX)
--			count += usage;
--		else if ((count & ~COUNT_CONTINUED) > SWAP_MAP_MAX)
--			err = -EINVAL;
--		else if (swap_count_continued(p, offset, count))
--			count = COUNT_CONTINUED;
--		else
--			err = -ENOMEM;
--	} else
--		err = -ENOENT;			/* unused swap entry */
-+		if (err)
++		if (order == -1)
++			order = xas_get_order(&xas);
++
++		/* Swap entry may have changed before we re-acquire the lock */
++		if (alloced_order &&
++		    (old != alloced_shadow || order != alloced_order)) {
++			xas_destroy(&xas);
++			alloced_order = 0;
++		}
++
++		/* Try to split large swap entry in pagecache */
++		if (order > 0 && order > new_order) {
++			if (!alloced_order) {
++				split_order = order;
++				goto unlock;
++			}
++			xas_split(&xas, old, order);
++
++			/*
++			 * Re-set the swap entry after splitting, and the swap
++			 * offset of the original large entry must be continuous.
++			 */
++			for (i = 0; i < 1 << order; i += (1 << new_order)) {
++				pgoff_t aligned_index = round_down(index, 1 << order);
++				swp_entry_t tmp;
++
++				tmp = swp_entry(swp_type(swap), swp_offset(swap) + i);
++				__xa_store(&mapping->i_pages, aligned_index + i,
++					   swp_to_radix_entry(tmp), 0);
++			}
++		}
++
++unlock:
++		xas_unlock_irq(&xas);
++
++		/* split needed, alloc here and retry. */
++		if (split_order) {
++			xas_split_alloc(&xas, old, split_order, gfp);
++			if (xas_error(&xas))
++				goto error;
++			alloced_shadow = old;
++			alloced_order = split_order;
++			xas_reset(&xas);
++			continue;
++		}
++
++		if (!xas_nomem(&xas, gfp))
 +			break;
- 
--	if (!err)
--		WRITE_ONCE(p->swap_map[offset], count | has_cache);
-+		WRITE_ONCE(p->swap_map[offset + i], count | has_cache);
 +	}
- 
--unlock_out:
- 	unlock_cluster_or_swap_info(p, ci);
- 	return err;
- }
-@@ -3451,9 +3447,12 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
-  * Help swapoff by noting that swap entry belongs to shmem/tmpfs
-  * (in which case its reference count is never incremented).
-  */
--void swap_shmem_alloc(swp_entry_t entry)
-+void swap_shmem_alloc(swp_entry_t entry, int nr)
- {
--	__swap_duplicate(entry, SWAP_MAP_SHMEM);
-+	struct swap_info_struct *p = swp_swap_info(entry);
-+	unsigned long offset = swp_offset(entry);
 +
-+	__swap_duplicate(p, offset, nr, SWAP_MAP_SHMEM);
- }
- 
++error:
++	if (xas_error(&xas))
++		return xas_error(&xas);
++
++	return alloced_order;
++}
++
  /*
-@@ -3465,9 +3464,11 @@ void swap_shmem_alloc(swp_entry_t entry)
-  */
- int swap_duplicate(swp_entry_t entry)
- {
-+	struct swap_info_struct *p = swp_swap_info(entry);
-+	unsigned long offset = swp_offset(entry);
- 	int err = 0;
- 
--	while (!err && __swap_duplicate(entry, 1) == -ENOMEM)
-+	while (!err && __swap_duplicate(p, offset, 1, 1) == -ENOMEM)
- 		err = add_swap_count_continuation(entry, GFP_ATOMIC);
- 	return err;
- }
-@@ -3482,7 +3483,10 @@ int swap_duplicate(swp_entry_t entry)
-  */
- int swapcache_prepare(swp_entry_t entry)
- {
--	return __swap_duplicate(entry, SWAP_HAS_CACHE);
-+	struct swap_info_struct *p = swp_swap_info(entry);
-+	unsigned long offset = swp_offset(entry);
+  * Swap in the folio pointed to by *foliop.
+  * Caller has to make sure that *foliop contains a valid swapped folio.
+@@ -2026,12 +2102,31 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	/* Look it up and read it in.. */
+ 	folio = swap_cache_get_folio(swap, NULL, 0);
+ 	if (!folio) {
++		int split_order, offset;
 +
-+	return __swap_duplicate(p, offset, 1, SWAP_HAS_CACHE);
- }
- 
- void swapcache_clear(struct swap_info_struct *si, swp_entry_t entry)
+ 		/* Or update major stats only when swapin succeeds?? */
+ 		if (fault_type) {
+ 			*fault_type |= VM_FAULT_MAJOR;
+ 			count_vm_event(PGMAJFAULT);
+ 			count_memcg_event_mm(fault_mm, PGMAJFAULT);
+ 		}
++
++		/*
++		 * Now swap device can only swap in order 0 folio, then we
++		 * should split the large swap entry stored in the pagecache
++		 * if necessary.
++		 */
++		split_order = shmem_split_large_entry(inode, index, swap, 0, gfp);
++		if (split_order < 0) {
++			error = split_order;
++			goto failed;
++		}
++
++		if (split_order > 0) {
++			offset = index - round_down(index, 1 << split_order);
++			swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
++		}
++
+ 		/* Here we actually start the io */
+ 		folio = shmem_swapin_cluster(swap, gfp, info, index);
+ 		if (!folio) {
 -- 
 2.39.3
 
