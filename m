@@ -1,166 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C698A1862F
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 03:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4469182D8
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 03:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720062157; cv=none; b=Kj2XgvRjI1RgE8dBPt8eytu8Dx1M37XAqv0CIFeViKaxrgblRQrbiDmHieEkBSgH9TuDabReCZA0RgJsZW+Har3SHzZqan7aKWzG2jBOwWCapWsAp2O4CcNg5mZBJMl195NRzoqPYzuwjqvsyCz6nVge6UZGSW7m1WHZP09zwGk=
+	t=1720062198; cv=none; b=iXNTbirD7BN+dLNDyvtVx03j5VD4Pk+Xrl8qc/Ncg07CBI+fYcqvZXfoW8dz0Zdn+whMOoEA4A0RflDHrIloc4ahc3tJ5ghZRcDlqOCdDJ795yn0LcHXC18KAwhxewANJgIBizdravdJ13m6HGK1XIHsBImWQcwd1LNPlXqm9WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720062157; c=relaxed/simple;
-	bh=+kcZ1X9JjlxsvYhu42cGMpuRp/ZGcCJLflR2cd6Au/8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bQLQ4YlZrrZAfJH3TSWA2ugaOE6zGbLLWr+PYb+jkgGpTukfzoilrYQTsVJvNlajTMMXRw31OY2j4l4QnpKYoRQZTiJBC9q71dHntHQGG48jCEIVFtDxCD0OIl2OaY0IbFzY+ZZDEtzq6WhCWN8tK+LxnHLiS0u8g2arVfltq/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bl3zAErQ; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720062198; c=relaxed/simple;
+	bh=eAbd92YIK2R+VcrvjPqGGg4NCF+Faq0RSo7WGEIPKk8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZnOmktvFvXP349OJE32vv5nElgppvhH3LivE/R9bramg9iXhTr7XmAGd/uz+h9CkZTy8708Wg0dNf8lk9Tl55s42Qi/5S4EhwQ3/ZIW/OJqRyR61ER1TIIDLbfJ8PEBDrFrUbnwNHFo3KeDvpDn0bpt8hESlyCB5lVWQ1L378w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=NjmfXILg; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bl3zAErQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720062156; x=1751598156;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+kcZ1X9JjlxsvYhu42cGMpuRp/ZGcCJLflR2cd6Au/8=;
-  b=Bl3zAErQl42izIzPM3FTI9zo1U14ah4dGqsmO8REmj9WeyBXHs7MoiFZ
-   lx3vUFyRvIkYt+50COZ5a1FAyhgOkVCXhTsRmZaakytYNtLC48AX3AIgD
-   pAHgN0L5dejrdbULDg6K0JIa5LYtWGbKjSJDN3fpI+htiDLWPPaJ2WNrg
-   25W2H6yQdvVT+YzXy+ehMwSjELvnBhqGEO2WYdj/GAJR9O8jKYOJZHq6f
-   I9znLik5At2bztvHN2ejCrL3qMwo8md/1AaZhISNPCHy1wJKSJq5ibeuV
-   CvbCj1JhI9BZGSihEY+dFjRM2GSihaZuCeL1CJfXcGd7gqClVYZRL7y5P
-   Q==;
-X-CSE-ConnectionGUID: Vjv/pWaOQa+qzoj94L3pPg==
-X-CSE-MsgGUID: 8fdbFYSUSIODE/GLUDun1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17459191"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="17459191"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 20:02:36 -0700
-X-CSE-ConnectionGUID: ry6BGg4WQ02kI5AnyNuMqA==
-X-CSE-MsgGUID: dJblXAP8QI2e5VpUwXL21g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="77188479"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa002.jf.intel.com with ESMTP; 03 Jul 2024 20:02:32 -0700
-Message-ID: <309e37d1-6066-4ba1-b30c-402a3c3e7c76@linux.intel.com>
-Date: Thu, 4 Jul 2024 10:59:45 +0800
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="NjmfXILg"
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id AF6BD3F183
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 03:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1720062193;
+	bh=ohrBX0V1iHxcURIO9c2jyrcgYuEKd6isy0JKLA+gdFE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=NjmfXILg+iIGXF3zlmlLZMH9tEhH/mDcaO6F3QihHfqbgbR1RKUzcYi89hG2v5Iyo
+	 iGFZHBR1kSPDhevfcLZ7tizpXZRnmwsSGqxeY8nvDHvKqvC89GRdXOgYcAja1oMATg
+	 73ky1idQFLQ+V4dJP2uhLtGt+WAk8vbSGyYSJ1Fk13NCMJpKyUSvmOYj7vKGzHnSVe
+	 2Un/fjErUTA0ZwVfKabd26Ul8KFPyHMuraIOhhlsvCiys5G5iToUlyPHc41uXrGPfY
+	 VjZS46pSMImXxi2VNw1XS6LpGqw1Ai3o+spkSGWZFyi3YPDM5w1xPi2H6anlUIZnZv
+	 MnaX+zimpXYIg==
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2c96f6bed83so216494a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 20:03:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720062192; x=1720666992;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ohrBX0V1iHxcURIO9c2jyrcgYuEKd6isy0JKLA+gdFE=;
+        b=KsNwlxMEDB2xexyM8a31QCOBcSiQs5wh6B0dt24JXPQJI0FmgDggZlIJl8cJxs84OO
+         jgzs17TBOCGCd9gIa19gBS9u4EvMKCxqUuM38RMP9HmQ4zxAsYO0qhhfkUXRaLeH1EES
+         xi9G/c2CoxxVF5VV99SBzmzb4n9XSqsLD3Al/5kqVG7A5N2sBjSw7DXN8iYVMBDCSZbq
+         j7A8Aj0vR/onCZzKSbCeM5RjabNEbCka8Dwy3AgckdxAIb4FmPUtr4yvyeHba39axnnb
+         Lyd+OZsew8mHHh/MlNxsABxg1KfaYKzOwG4K7MUcJPkD/qJtpjnXP2Ptx27QUhNhsnNj
+         KDHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXp8e18PegksnTi9KEgIufH8K8NicLfpmq0mHW3veHk9I9prgptMqUwbXcPgJdZW2LwBzp3/F2rqybRSIVUaynW/3UL+XYXeYwyFduU
+X-Gm-Message-State: AOJu0YwLFfdERuYmUQFldqKdMGYVttw0OZZvC2z7WPDmcUyalCk0Ra4l
+	qsGZ7vqHI5tmtSt6AmyR+Fg6Bbd3M+w1hveYCbpVHEmm6N087/JdPHEfGE3FCv5XMoyH1HyhlNK
+	aWHcm/+Bz81Dt7zj+weuU2Rv3bjUSSIj+EKnZrou5FxzDzTzTJr7MamHZ9ftkEI+L/f5J1lyNHj
+	qKzg==
+X-Received: by 2002:a17:902:724b:b0:1f7:124:b820 with SMTP id d9443c01a7336-1fb33f0a61amr2494685ad.50.1720062192159;
+        Wed, 03 Jul 2024 20:03:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFMEWUcskLLci8Rsep6v8yYezpc9Xezgy2DUGtZT7vj7K6+huCRlRjsCNdkhNYXQSR//GZHNQ==
+X-Received: by 2002:a17:902:724b:b0:1f7:124:b820 with SMTP id d9443c01a7336-1fb33f0a61amr2494145ad.50.1720062189756;
+        Wed, 03 Jul 2024 20:03:09 -0700 (PDT)
+Received: from rickywu0421-ThinkPad-X1-Carbon-Gen-11.. (211-75-139-220.hinet-ip.hinet.net. [211.75.139.220])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac15967f2sm110803655ad.260.2024.07.03.20.03.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 20:03:09 -0700 (PDT)
+From: En-Wei Wu <en-wei.wu@canonical.com>
+To: kvalo@kernel.org,
+	edumazet@google.com,
+	davem@davemloft.net,
+	en-wei.wu@canonical.com,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: rickywu0421@gmail.com,
+	syzbot+d6eb9cee2885ec06f5e3@syzkaller.appspotmail.com
+Subject: [PATCH] wifi: virt_wifi: avoid reporting connection success with wrong SSID
+Date: Thu,  4 Jul 2024 11:03:04 +0800
+Message-ID: <20240704030304.16213-1-en-wei.wu@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Jason Gunthorpe <jgg@ziepe.ca>,
- Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>, Yi Liu
- <yi.l.liu@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
- virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
- Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v8 06/10] iommufd: Add iommufd fault object
-To: Nicolin Chen <nicolinc@nvidia.com>
-References: <20240702063444.105814-1-baolu.lu@linux.intel.com>
- <20240702063444.105814-7-baolu.lu@linux.intel.com>
- <ZoXZZ2SJ/WdlMJaX@Asurada-Nvidia>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <ZoXZZ2SJ/WdlMJaX@Asurada-Nvidia>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/4/24 7:06 AM, Nicolin Chen wrote:
-> Hi Baolu,
+When user issues a connection with a different SSID than the one
+virt_wifi has advertised, the __cfg80211_connect_result() will
+trigger the warning: WARN_ON(bss_not_found).
 
-Hi Nicolin,
+The issue is because the connection code in virt_wifi does not
+check the SSID from user space (it only checks the BSSID), and
+virt_wifi will call cfg80211_connect_result() with WLAN_STATUS_SUCCESS
+even if the SSID is different from the one virt_wifi has advertised.
+Eventually cfg80211 won't be able to find the cfg80211_bss and generate
+the warning.
 
-> On Tue, Jul 02, 2024 at 02:34:40PM +0800, Lu Baolu wrote:
-> 
->> An iommufd fault object provides an interface for delivering I/O page
->> faults to user space. These objects are created and destroyed by user
->> space, and they can be associated with or dissociated from hardware page
->> table objects during page table allocation or destruction.
->>
->> User space interacts with the fault object through a file interface. This
->> interface offers a straightforward and efficient way for user space to
->> handle page faults. It allows user space to read fault messages
->> sequentially and respond to them by writing to the same file. The file
->> interface supports reading messages in poll mode, so it's recommended that
->> user space applications use io_uring to enhance read and write efficiency.
->>
->> A fault object can be associated with any iopf-capable iommufd_hw_pgtable
->> during the pgtable's allocation. All I/O page faults triggered by devices
->> when accessing the I/O addresses of an iommufd_hw_pgtable are routed
->> through the fault object to user space. Similarly, user space's responses
->> to these page faults are routed back to the iommu device driver through
->> the same fault object.
-> There is a need for VIOMMU object to report HW fault to VMM. For
-> example, a HW-accelerated VCMDQ may encounter HW errors. HW will
-> raise an IRQ to the host kernel and the host kernel will forward
-> it to the guest. I think we can have a viommu->fault, similar to
-> the hwpt->fault introduced by this series. This viommu->fault can
-> also benefit nested IOMMU for reporting translation error.
-> 
-> I learned that this hwpt->fault is exclusively for IOPF/PRI. And
-> Jason suggested me to add a different one for VIOMMU. Yet, after
-> taking a closer look, I found the fault object in this series is
-> seemingly quite generic at the uAPI level: its naming/structure,
-> and the way how it's allocated and passed to hwpt, despite being
-> highly correlated with IOPF in its fops code. So, I feel that we
-> might have a chance of reusing it for different fault types:
-> 
-> +enum iommu_fault_type {
-> +	IOMMU_FAULT_TYPE_HWPT_IOPF,
-> +	IOMMU_FAULT_TYPE_VIOMMU_IRQ,
-> +};
-> 
->   struct iommu_fault_alloc {
->   	__u32 size;
->   	__u32 flags;
-> +	__u32 type;  /* enum iommu_fault_type */
->   	__u32 out_fault_id;
->   	__u32 out_fault_fd;
->   };
-> 
-> I understand that this is already v8. So, maybe we can, for now,
-> apply the small diff above with an IOMMU_FAULT_TYPE_HWPT_IOPF type
-> check in the ioctl handler. And a decoupling for the iopf fops in
-> the ioctl handler can come later in the viommu series:
-> 	switch (type) {
-> 	case IOMMU_FAULT_TYPE_HWPT_IOPF:
-> 		filep = anon_inode_getfile("[iommufd-pgfault]",
-> 					   &iommufd_fault_fops_iopf);
-> 	case IOMMU_FAULT_TYPE_VIOMMU_IRQ:
-> 		filep = anon_inode_getfile("[iommufd-viommu-irq]",
-> 					   &iommufd_fault_fops_viommu);
-> 	default:
-> 		return -EOPNOSUPP;
-> 	}
-> 
-> Since you are the designer here, I think you have a better 10000
-> foot view -- maybe I am missing something here implying that the
-> fault object can't be really reused by viommu.
-> 
-> Would you mind sharing some thoughts here?
+Fixed it by checking the SSID (from user space) in the connection code.
 
-I think this is a choice between "two different objects" vs. "same
-object with different FD interfaces". If I understand it correctly, your
-proposal of unrecoverable fault delivery is not limited to vcmdq, but
-generic to all unrecoverable events that userspace should be aware of
-when the passed-through device is affected.
+Fixes: c7cdba31ed8b ("mac80211-next: rtnetlink wifi simulation device")
+Reported-by: syzbot+d6eb9cee2885ec06f5e3@syzkaller.appspotmail.com
+Signed-off-by: En-Wei Wu <en-wei.wu@canonical.com>
+---
+ drivers/net/wireless/virtual/virt_wifi.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
- From a hardware architecture perspective, the interfaces for
-unrecoverable events don't always match the page faults. For example,
-VT-d architecture defines a PR queue for page faults, but uses a
-register set to report unrecoverable events. The 'reason', 'request id'
-and 'pasid' fields of the register set indicate what happened on the
-hardware. New unrecoverable events will not be reported until the
-previous one has been fetched.
+diff --git a/drivers/net/wireless/virtual/virt_wifi.c b/drivers/net/wireless/virtual/virt_wifi.c
+index 6a84ec58d618..86a8f74be654 100644
+--- a/drivers/net/wireless/virtual/virt_wifi.c
++++ b/drivers/net/wireless/virtual/virt_wifi.c
+@@ -136,6 +136,9 @@ static struct ieee80211_supported_band band_5ghz = {
+ /* Assigned at module init. Guaranteed locally-administered and unicast. */
+ static u8 fake_router_bssid[ETH_ALEN] __ro_after_init = {};
+ 
++#define VIRT_WIFI_SSID_LEN 8
++#define VIRT_WIFI_SSID "VirtWifi"
++
+ static void virt_wifi_inform_bss(struct wiphy *wiphy)
+ {
+ 	u64 tsf = div_u64(ktime_get_boottime_ns(), 1000);
+@@ -146,8 +149,8 @@ static void virt_wifi_inform_bss(struct wiphy *wiphy)
+ 		u8 ssid[8];
+ 	} __packed ssid = {
+ 		.tag = WLAN_EID_SSID,
+-		.len = 8,
+-		.ssid = "VirtWifi",
++		.len = VIRT_WIFI_SSID_LEN,
++		.ssid = VIRT_WIFI_SSID,
+ 	};
+ 
+ 	informed_bss = cfg80211_inform_bss(wiphy, &channel_5ghz,
+@@ -213,6 +216,8 @@ struct virt_wifi_netdev_priv {
+ 	struct net_device *upperdev;
+ 	u32 tx_packets;
+ 	u32 tx_failed;
++	u32 connect_requested_ssid_len;
++	u8 connect_requested_ssid[IEEE80211_MAX_SSID_LEN];
+ 	u8 connect_requested_bss[ETH_ALEN];
+ 	bool is_up;
+ 	bool is_connected;
+@@ -224,11 +229,21 @@ static int virt_wifi_connect(struct wiphy *wiphy, struct net_device *netdev,
+ 			     struct cfg80211_connect_params *sme)
+ {
+ 	struct virt_wifi_netdev_priv *priv = netdev_priv(netdev);
++	u32 ssid_len;
+ 	bool could_schedule;
+ 
+ 	if (priv->being_deleted || !priv->is_up)
+ 		return -EBUSY;
+ 
++	if (!sme->ssid) {
++		wiphy_err(wiphy, "invalid SSID\n");
++		return -EINVAL;
++	}
++
++	ssid_len = min_t(u32, sme->ssid_len, IEEE80211_MAX_SSID_LEN);
++	priv->connect_requested_ssid_len = ssid_len;
++	memcpy(priv->connect_requested_ssid, sme->ssid, ssid_len);
++
+ 	could_schedule = schedule_delayed_work(&priv->connect, HZ * 2);
+ 	if (!could_schedule)
+ 		return -EBUSY;
+@@ -252,12 +267,15 @@ static void virt_wifi_connect_complete(struct work_struct *work)
+ 		container_of(work, struct virt_wifi_netdev_priv, connect.work);
+ 	u8 *requested_bss = priv->connect_requested_bss;
+ 	bool right_addr = ether_addr_equal(requested_bss, fake_router_bssid);
++	bool right_ssid = (priv->connect_requested_ssid_len == VIRT_WIFI_SSID_LEN ?
++			  !memcmp(priv->connect_requested_ssid, VIRT_WIFI_SSID,
++				  priv->connect_requested_ssid_len) : false);
+ 	u16 status = WLAN_STATUS_SUCCESS;
+ 
+ 	if (is_zero_ether_addr(requested_bss))
+ 		requested_bss = NULL;
+ 
+-	if (!priv->is_up || (requested_bss && !right_addr))
++	if (!priv->is_up || (requested_bss && !right_addr) || !right_ssid)
+ 		status = WLAN_STATUS_UNSPECIFIED_FAILURE;
+ 	else
+ 		priv->is_connected = true;
+-- 
+2.43.0
 
-With the above being said, I have no strong opinions between these two
-choices. Jason and Kevin should have more insights.
-
-Thanks,
-baolu
