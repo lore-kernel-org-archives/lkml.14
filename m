@@ -1,96 +1,132 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133024964A
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 18:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703E72F23;
+	Thu,  4 Jul 2024 18:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720118627; cv=none; b=lWgm7eo2FTsb2OQmznqdyemkegzagDon/5vOtQHPpbepmgv58rskxNhAVgonzvzpZCJyx+dPgAbCP09gBSUnRPVjRlqqgsWskAq/J1k1L9r0/JKozXiMECUhJ/GpTigl+q7DHrbHgIJ0F6Po6ta9dRKu9brJYqJDWC5MLyVTbGI=
+	t=1720118740; cv=none; b=nYqUsJ7Jb+jqmIE6+G4CihJur7y8uBLMrvIA/2QSRQtZfbwiG3t+3amXRXZIPt2PtOJ7nMXgbf9XC4h4l11Z2SP9sHrS68diJ57F5JDfVnGkVmS0eCds2f73IKfECu53AL96Om334kEYGwhAvNdj+mkcPw72PU3NPWUzZsk4wdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720118627; c=relaxed/simple;
-	bh=rzKbnaZUmIdktLW7DeqDQh/+ZOewtJWOKFWPTVfkCWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VDFnE+EQii4fPcj6/RYg3EcSUVNLU0RzenSgfplcb9ONr5yFBSB3MLD8DBlGeYUyIdslybeDmRyPEVkcpRkgvGUgWcn7eOzI5eIauDqac7sjyf3rq9uLJQ6TRpxMZQsOgC1heNjkqZwYVryAaXoh0OC/EL8pSP4EmUswfbJ3k0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MdOagRrY; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720118740; c=relaxed/simple;
+	bh=FnX7KH7JCEhdAe0IU//y4JvexhfTris0susPp/B70kk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CsDeRefZA1U/APiPd7hn5KCIpXGqoTEb9lrj1vVjFBX/376RvX+ekMX/ODjLCVGV/qXoXd4rrPDz3PPXEFhSvomVorLQlgofU9yQe1ofkEemExW+6qpwL7Sj/2MJ/xirYABFyb0PoULZnkGRKuVwb1AVJNqzn2+S2Q49hW38jYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=a9fBAGlz; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MdOagRrY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=sNKtxBcfq1FOj6FTpkpQvKnBvmpEW5e+Aixwe6zCgS0=; b=MdOagRrY9qMVl0YUfx5iwBc0EE
-	0P1KFELrr68trhEYby80unYdLWGwZY5N0u0YpRLhVlL6IEnPzuwSLdigi3cOVSS3wn+kScJfSw+h5
-	w1sDlmuAIK+0W7M6umWLTTAsO8h9Dn1FzwMWR3cCMiIoXCaCvEvjX8DqP2tLlxOt6gxDxDyyQ7AY+
-	aWq5cx3r2fh4tOgkRPVVOBwrsoeU/twYCEkcU2M4mkZzJd1Nn8x3Prj7/FwE3NziISXnft/matHFc
-	zx8bzFhPHBBrkmBClkKgh2WGbxx3PSKmDTGmOhXPfNoB7KihOQ7+8ioMSBxinnpbgJiZ9oUokqYBY
-	Wry0GP4w==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sPRQU-000000038qQ-0kqN;
-	Thu, 04 Jul 2024 18:43:26 +0000
-Date: Thu, 4 Jul 2024 19:43:26 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com,
-	wangkefeng.wang@huawei.com, ying.huang@intel.com, 21cnbao@gmail.com,
-	ryan.roberts@arm.com, shy828301@gmail.com, ziy@nvidia.com,
-	ioworker0@gmail.com, da.gomez@samsung.com, p.raghav@samsung.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/6] add mTHP support for anonymous shmem
-Message-ID: <ZobtTmzj0AmNXcav@casper.infradead.org>
-References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="a9fBAGlz"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A4F59C0008;
+	Thu,  4 Jul 2024 18:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1720118729;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WNOwyJfeFW+rZWEfskpZ4fSkCUgp0l0+Lt+tt17+jPQ=;
+	b=a9fBAGlz/l8UtJponmhZWr5KHT+kH0qCfBjhofSQ1Bb24ju6JNhMv01pScmzIfiV97Vj8v
+	X2GIojfgOL4hbD+sMWmuFmieJsExHJZ0Qk3MoCjsmVXT/RheXjPK4hnDlxFULGUvxfZ+F+
+	sLeqMF9qZJPe/uD2A7m74u9NKgP0rmUrN70iqmddtuQ08PJVEcNPeHhS40qrHanIDMrm7q
+	IH7eZNOzEkCeA43Y8WT2KZK7XNkTZIRUd4WEdjQgpkfxr7q2us5ucBz4Um967DOSW0IRWw
+	PQOInov0/7+wuKCpAOh8KIxY1Bmxc7zTPq9AzG0g2L+FpqlDqH46fUH704iMcg==
+Message-ID: <11d18c59-c995-4520-9d37-a7879c53bafb@arinc9.com>
+Date: Thu, 4 Jul 2024 21:45:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v4] net: dsa: mt7530: fix impossible MDIO address and
+ issue warning
+To: Daniel Golle <daniel@makrotopia.org>, Vladimir Oltean <olteanv@gmail.com>
+Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
+ Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Landen Chao <Landen.Chao@mediatek.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <1c378be54d0fb76117f6d72dadd4a43a9950f0dc.1720105125.git.daniel@makrotopia.org>
+ <20240704171604.3ownsxasch5hokty@skbuf> <ZobgcXm9-am7xX6f@makrotopia.org>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <ZobgcXm9-am7xX6f@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-On Tue, Jun 11, 2024 at 06:11:04PM +0800, Baolin Wang wrote:
-> Anonymous pages have already been supported for multi-size (mTHP) allocation
-> through commit 19eaf44954df, that can allow THP to be configured through the
-> sysfs interface located at '/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
+On 04/07/2024 20:48, Daniel Golle wrote:
+> Hi Vladimir,
 > 
-> However, the anonymous shmem will ignore the anonymous mTHP rule configured
-> through the sysfs interface, and can only use the PMD-mapped THP, that is not
-> reasonable. Many implement anonymous page sharing through mmap(MAP_SHARED |
-> MAP_ANONYMOUS), especially in database usage scenarios, therefore, users expect
-> to apply an unified mTHP strategy for anonymous pages, also including the
-> anonymous shared pages, in order to enjoy the benefits of mTHP. For example,
-> lower latency than PMD-mapped THP, smaller memory bloat than PMD-mapped THP,
-> contiguous PTEs on ARM architecture to reduce TLB miss etc.
+> On Thu, Jul 04, 2024 at 08:16:04PM +0300, Vladimir Oltean wrote:
+>> On Thu, Jul 04, 2024 at 04:08:22PM +0100, Daniel Golle wrote:
+>>> The MDIO address of the MT7530 and MT7531 switch ICs can be configured
+>>> using bootstrap pins. However, there are only 4 possible options for the
+>>> switch itself: 7, 15, 23 and 31. As in MediaTek's SDK the address of the
+>>> switch is wrongly stated in the device tree as 0 (while in reality it is
+>>> 31), warn the user about such broken device tree and make a good guess
+>>> what was actually intended.
+>>
+>> Zero is the MDIO broadcast address. Doesn't the switch respond to it, or
+>> what's exactly the problem?
+> 
+> No, MT7530 main device (ie. the switch itself, not the built-in PHYs
+> which on MT7530 can also be exposed on the same bus) only responds to
+> address 31 (default), 7, 15 or 23 (the latter 3 via non-default
+> bootstrap configuration).
+> 
+> MT7531 always uses address 31 by default and also doesn't respond on
+> address 0.
+> 
+> See also https://lkml.org/lkml/2024/5/31/236
 
-OK, this makes sense.
+To address my incorrect "0x0 is just another PHY address" remark there; in
+22.2.4.5.5 of IEEE Std 802.3-2022, it is described that a PHY that is
+connected to the station management entity via the mechanical interface
+defined in 22.6 shall always respond to transactions addressed to PHY
+Address zero <00000>. A station management entity that is attached to
+multiple PHYs has to have prior knowledge of the appropriate PHY Address
+for each PHY.
 
-> As discussed in the bi-weekly MM meeting[1], the mTHP controls should control
-> all of shmem, not only anonymous shmem, but support will be added iteratively.
-> Therefore, this patch set starts with support for anonymous shmem.
+The MT7530 switch has the function to make its PHYs appear on the MDIO bus
+which the switch also listens on. This feature is controlled by the
+relevant bootstrap pin or by modifying the relevant bit on the modifiable
+trap register. The MT7530 DSA subdriver currently configures the modifiable
+trap register to enable this function. So one of the switch PHYs listens at
+the PHY address 0x0. I don't know whether the switch would respond to
+transactions addressed to the PHY address 0x0, if this function was
+disabled. Finding this out doesn't seem too relevant to this topic.
 
-But then this doesn't.  You say first that users want the same controls
-to control all anonymous memory, then you introduce a completely
-separate set of controls for shared anonymous memory.
+>>> as with commit 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY address of
+>>> switch from device tree") the address in device tree will be taken into
+>>> account, while before it was hard-coded to 0x1f.
+>>>
+>>> Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+>>
+>> I fail to understand the logic behind blaming this commit. There was no
+>> observable issue prior to 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY
+>> address of switch from device tree"), was there?
+> 
+> Please see the lengthy debate here:
+> 
+> https://lore.kernel.org/linux-arm-kernel/af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com/T/#mc967f795a062f6aaedea7375a3be104266e88cc4
 
-shmem has two uses:
+This thread may not directly answer the question. The understanding Daniel
+and I have come to is that the fact that the issue appeared after commit
+868ff5f4944a ("net: dsa: mt7530-mdio: read PHY address of switch from
+device tree") doesn't make it the commit to blame. But rather, the commit
+that introduced a hardcoded 0x1f PHY address which, in result, allowed
+broken device trees to work is to blame.
 
- - MAP_ANONYMOUS | MAP_SHARED (this patch set)
- - tmpfs
+> 
+> I should have provided a reference to that in the commit message or
+> cover letter.
 
-For the second use case we don't want controls *at all*, we want the
-same heiristics used for all other filesystems to apply to tmpfs.
+I agree, it would be a good idea to put it in the commit message.
 
-There's no reason to have separate controls for choosing folio size
-in shmem.
-
-> The primary strategy is similar to supporting anonymous mTHP. Introduce
-> a new interface '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled',
-> which can have almost the same values as the top-level
-> '/sys/kernel/mm/transparent_hugepage/shmem_enabled', with adding a new
-> additional "inherit" option and dropping the testing options 'force' and
-> 'deny'. By default all sizes will be set to "never" except PMD size, which
-> is set to "inherit". This ensures backward compatibility with the anonymous
-> shmem enabled of the top level, meanwhile also allows independent control of
-> anonymous shmem enabled for each mTHP.
+Arınç
