@@ -1,43 +1,36 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3903E1AE864;
-	Thu,  4 Jul 2024 13:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5E4846F
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720099393; cv=none; b=ZYECFmBpwqRYiz7m8Jhqe4u2dhkGFnc0xE9Ol07XYux+0tbQP0Xo0IIGwTOYFNP8q5pszxOM49JObCpBbJzUE6ooBcr0LMV5r3APyIfbMqADTzoKvlB+qZyPpd0FKqA8Q8ODM/ef8+9lfGuibzksWgda5WPtfEv5YN8n58XcSyQ=
+	t=1720099500; cv=none; b=Q99YE8iCa1MrYaYZadxbEwqICn25MyQTeQBtjHFYi6UjJZTH/IcwiSAKRFlG/14EG/7WiNx9PFHslXBkpg4FxzGmK0NJCFjUIOAdNgOuennWN+PhL1gsM1Ms3CmV85S2+T3l3kr7Ub031em0Y9DUf+8vepNp/zIZYQDoGJL8SJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720099393; c=relaxed/simple;
-	bh=qgfF4sjhfBrT1SQha/doaxEaVH9Z4HK1JT4TroN2RLk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qV9SPzBL1tj2suQDJcojJpn5v/hZoDW1NO+2QUKZSdtCiti1Hv7CnflbqiURKMXUKLnET78vROoYz8K5vo6EHAy1DOXgHzNkwjqqOidFprW4VeckawXfnL7LD3f5J3Y30EnQZ0w0DV/YIQT4L2+Kxyncx8kj4aYosYd9L4aeoLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 33C2E1A001F;
-	Thu,  4 Jul 2024 15:23:05 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F065A1A0008;
-	Thu,  4 Jul 2024 15:23:04 +0200 (CEST)
-Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 73134180222B;
-	Thu,  4 Jul 2024 21:23:03 +0800 (+08)
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
+	s=arc-20240116; t=1720099500; c=relaxed/simple;
+	bh=CRRg/SQ8OTxdPTkd/uzCUZaSGZqMSVHW0vsJ1UfRGUM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p26bTYorAdrQnQseImQPPnLb/xgVoLh81Hb9elP14+GLJyAPe/inttfAuIOEIr2/QgiCPUdNP3y0vF2Elv1NYtmB3mklqQyh6fvVIda3IZ7D+OTrSvkBj9IykDX6+X7KbBujcbhEMUFbCkuzUKYrr27j3dBIfkuT0VsJPt6BqZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-01 (Coremail) with SMTP id qwCowAAH6U2CooZmXzyOAQ--.1294S2;
+	Thu, 04 Jul 2024 21:24:29 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	sam@ravnborg.org,
+	noralf@tronnes.org
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	rohit.fule@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	ziniu.wang_1@nxp.com,
-	haibo.chen@nxp.com,
-	LnxRevLi@nxp.com
-Subject: [PATCH v1 1/2] Bluetooth: btnxpuart: Add support for AW693 A1 chipset
-Date: Thu,  4 Jul 2024 18:50:57 +0530
-Message-Id: <20240704132058.716164-1-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.34.1
+	Ma Ke <make24@iscas.ac.cn>
+Subject: [PATCH RESEND] drm/client: fix null pointer dereference in drm_client_modeset_probe
+Date: Thu,  4 Jul 2024 21:24:16 +0800
+Message-Id: <20240704132416.299319-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,65 +38,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+X-CM-TRANSID:qwCowAAH6U2CooZmXzyOAQ--.1294S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr4DZw18XFyUuw4xtw4Dtwb_yoWDCwb_GF
+	yUX39rCrsxWa4kCanI9a1xAF12ya4UCr48AF12vayFy3s8J3ZxZr9rJr1rZ3W8XFyUAryU
+	tasruFnxAr4IkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb38FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+	1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMc
+	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v
+	4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+	evJa73UjIFyTuYvjfUFYFADUUUU
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-This adds support for AW693 A1 chipset with it's bootloader signature
-and firmware file.
+In drm_client_modeset_probe(), the return value of drm_mode_duplicate() is
+assigned to modeset->mode, which will lead to a possible NULL pointer
+dereference on failure of drm_mode_duplicate(). Add a check to avoid npd.
 
-No firmware name change needed for AW693 A0 chipset.
-
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Fixes: cf13909aee05 ("drm/fb-helper: Move out modeset config code")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 ---
- drivers/bluetooth/btnxpuart.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_client_modeset.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index da18fd4f54f3..e81c995748da 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -46,6 +46,8 @@
- #define FIRMWARE_SECURE_IW624	"uartiw624_bt.bin.se"
- #define FIRMWARE_AW693		"uartaw693_bt.bin"
- #define FIRMWARE_SECURE_AW693	"uartaw693_bt.bin.se"
-+#define FIRMWARE_AW693_A1		"uartaw693_bt_v1.bin"
-+#define FIRMWARE_SECURE_AW693_A1	"uartaw693_bt_v1.bin.se"
- #define FIRMWARE_HELPER		"helper_uart_3000000.bin"
+diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+index 31af5cf37a09..bbe21522dc6a 100644
+--- a/drivers/gpu/drm/drm_client_modeset.c
++++ b/drivers/gpu/drm/drm_client_modeset.c
+@@ -880,6 +880,8 @@ int drm_client_modeset_probe(struct drm_client_dev *client, unsigned int width,
  
- #define CHIP_ID_W9098		0x5c03
-@@ -53,7 +55,8 @@
- #define CHIP_ID_IW612		0x7601
- #define CHIP_ID_IW624a		0x8000
- #define CHIP_ID_IW624c		0x8001
--#define CHIP_ID_AW693		0x8200
-+#define CHIP_ID_AW693a0		0x8200
-+#define CHIP_ID_AW693a1		0x8201
- 
- #define FW_SECURE_MASK		0xc0
- #define FW_OPEN			0x00
-@@ -906,7 +909,7 @@ static char *nxp_get_fw_name_from_chipid(struct hci_dev *hdev, u16 chipid,
- 		else
- 			bt_dev_err(hdev, "Illegal loader version %02x", loader_ver);
- 		break;
--	case CHIP_ID_AW693:
-+	case CHIP_ID_AW693a0:
- 		if ((loader_ver & FW_SECURE_MASK) == FW_OPEN)
- 			fw_name = FIRMWARE_AW693;
- 		else if ((loader_ver & FW_SECURE_MASK) != FW_AUTH_ILLEGAL)
-@@ -914,6 +917,14 @@ static char *nxp_get_fw_name_from_chipid(struct hci_dev *hdev, u16 chipid,
- 		else
- 			bt_dev_err(hdev, "Illegal loader version %02x", loader_ver);
- 		break;
-+	case CHIP_ID_AW693a1:
-+		if ((loader_ver & FW_SECURE_MASK) == FW_OPEN)
-+			fw_name = FIRMWARE_AW693_A1;
-+		else if ((loader_ver & FW_SECURE_MASK) != FW_AUTH_ILLEGAL)
-+			fw_name = FIRMWARE_SECURE_AW693_A1;
-+		else
-+			bt_dev_err(hdev, "Illegal loader version %02x", loader_ver);
-+		break;
- 	default:
- 		bt_dev_err(hdev, "Unknown chip signature %04x", chipid);
- 		break;
+ 			kfree(modeset->mode);
+ 			modeset->mode = drm_mode_duplicate(dev, mode);
++			if (!modeset->mode)
++				continue;
+ 			drm_connector_get(connector);
+ 			modeset->connectors[modeset->num_connectors++] = connector;
+ 			modeset->x = offset->x;
 -- 
-2.34.1
+2.25.1
 
