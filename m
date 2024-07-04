@@ -1,16 +1,16 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378B9101DB;
-	Thu,  4 Jul 2024 18:01:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6E139FD6;
+	Thu,  4 Jul 2024 18:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720116098; cv=none; b=g0JUbufmU0pz1HHkU75i0MjjWi6yKaIqCrXNjwmoZaL5Zk2ob5gqbpZF7YCBHonveSQkBZQ/d8TwS5nRyRHQPV0Lcg2mcdE4FSugr412Z6Mm614oewRptZYMzhluLlpLafTluwa1Aasb6FBjpY4JiYOiq5oOi5IdC1zmzJ00UBo=
+	t=1720116098; cv=none; b=ZRtijdX5c33wfsENuAeGmUz/7osEu117UoKa4voP69i4F1K1dVoEv5d/JcnaWbg6oDj2sQIr3xyiPKN6IlA2otqyLz0Vulxe2g7ajX5CPThZ74ah7I8OAPwQek+/MV+u9a5hvX/FpRWEaLQnCntycG6S+Gg9uCUjC5pTOMneI/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720116098; c=relaxed/simple;
-	bh=QNcQI7Lncx7DTyZihuUSMq+AUVBrbFHOAde02Tlg+FY=;
+	bh=s5g2oKzUbnUhfk/IkhBNq7odBOHQVLv2kPEmzVqdBbo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OuiL6gaDTn5+MLBYijv5nhlXwqe9URAk/0SlOlvFTluLUijRXGi7ftScMh+0UxBQuEdKZfhuJJjpHI7uWcdjhSEnaKX/FkFbeIs/CYGB6k3+dIPLdv0BbuvVfBMsYiaJwdrYF5/PIYBO14r8lTYXbwxW/7v7lrQtnbKd5PJwHaM=
+	 MIME-Version:Content-Type; b=RWlk0WRHOIDFD/ov6vpyMv0I5wHNiARh53fjJfByfaWexdhk2ejW0JoqS/bjcnRrHi5N/0l6aeeGaD9pfIwYpb8PKYKhXIkBmIALTzj6fyapQT1EjJPI/2ohmAkLTWLDG6Ye7a/k7+mtkFPiaXtC1nYW3ajpXekVyeAKXX+wVM8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
@@ -18,26 +18,25 @@ Received: from i53875ac2.versanet.de ([83.135.90.194] helo=phil.lan)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1sPQlt-00049m-Mp; Thu, 04 Jul 2024 20:01:29 +0200
+	id 1sPQls-00049m-5C; Thu, 04 Jul 2024 20:01:28 +0200
 From: Heiko Stuebner <heiko@sntech.de>
-To: Johan Jonker <jbx6244@gmail.com>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
 Cc: Heiko Stuebner <heiko@sntech.de>,
 	linux-kernel@vger.kernel.org,
-	robh@kernel.org,
 	linux-rockchip@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org,
-	krzk+dt@kernel.org,
-	linux-clk@vger.kernel.org,
-	sboyd@kernel.org,
-	mturquette@baylibre.com,
-	devicetree@vger.kernel.org,
-	conor+dt@kernel.org
-Subject: Re: [PATCH v1] dt-bindings: clock: rk3188-cru-common: remove CLK_NR_CLKS
-Date: Thu,  4 Jul 2024 20:01:25 +0200
-Message-Id: <172011606371.897267.1165262107995336205.b4-ty@sntech.de>
+	kernel@collabora.com,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Add missing power-domains for rk356x vop_mmu
+Date: Thu,  4 Jul 2024 20:01:22 +0200
+Message-Id: <172011606366.897267.12834973782810902236.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <6f21c09b-e8d2-4749-aca6-572c79df775d@gmail.com>
-References: <6f21c09b-e8d2-4749-aca6-572c79df775d@gmail.com>
+In-Reply-To: <20240702-rk356x-fix-vop-mmu-v1-1-a66d1a0c45ea@collabora.com>
+References: <20240702-rk356x-fix-vop-mmu-v1-1-a66d1a0c45ea@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,16 +46,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Thu, 27 Jun 2024 23:17:45 +0200, Johan Jonker wrote:
-> CLK_NR_CLKS should not be part of the binding.
-> Remove since the kernel code no longer uses it.
+On Tue, 02 Jul 2024 04:12:52 +0300, Cristian Ciocaltea wrote:
+> The iommu@fe043e00 on RK356x SoC shares the VOP power domain, but the
+> power-domains property was not provided when the node has been added.
 > 
+> The consequence is that an attempt to reload the rockchipdrm module will
+> freeze the entire system.  That is because on probe time,
+> pm_runtime_get_suppliers() gets called for vop@fe040000, which blocks
+> when pm_runtime_get_sync() is being invoked for iommu@fe043e00.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: clock: rk3188-cru-common: remove CLK_NR_CLKS
-      commit: d89e8096957e35742c9922d3f6628f24de0d6163
+[1/1] arm64: dts: rockchip: Add missing power-domains for rk356x vop_mmu
+      commit: 9d42c3ee3ce37cdad6f98c9e77bfbd0d791ac7da
 
 Best regards,
 -- 
