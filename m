@@ -1,168 +1,213 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A061AEFF5
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 11:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A1D1AC449
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 11:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720092326; cv=none; b=GQTI4g2hLNkocbfWDMYykpNFpvb+efMfdKWsx+lZFQp1VlIBQqs9xn93YhY8f8IHZZhQTISqzSXXVe0kdIXMCu05DHD6JWp5ovh+zB/fVWg9AgLNL47y0WQ6KaDWhX5wwOVPLUQ0xRNcAnqbCnny0Ywk2TNZ+HAecUpGI7LlX74=
+	t=1720092376; cv=none; b=FZtxRsOUWu5y8wTF9xm28qjy5wFymvwQcMS2/8uEltsQKGajNfL5IoNb1DN9VAeEyLxc0H9triiDsdESCkv0HEOdfYiTefdxgJ3PVtxknuliavrrhLNuFquqrRpc2HBzQfsvlv6PxtY4+xdsUmSBTFZC3J5T/zqWUOG7JprarmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720092326; c=relaxed/simple;
-	bh=R07TDF3CisBjdERBpb4eSb+ShSKFctbefy+wKorqthE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hpy8q4DMK+7WSuystbUXlLe+6SC08FYNza0vEFKqIBN6wGRP9YdJxkS4bh8E5rkQ1VsV+kbrgRsn25W301QrZXmIUsQlP5sEnddQ32yST8sgPTvE+wtgIfpZ2QjOWSLQYcucraCwVyyNWRJ3GjbTaYgsO9tBCQ1Vu5QRaiaFpi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=i7I+btv1; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1720092376; c=relaxed/simple;
+	bh=Dg3JTq0ZBWP2D2Vr8U1r3aGFATnfejdOWc8Xk9rIx4E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SqrS2yb4pClqIr6GoCtic5jb8us2iTEo4gmbrVDAm1BGMq9MxTGs5aQ5ohkQfNcuH8odPHie9J4X2Zx1EShqnRj66DOjMqkQCePMGw26cQuqEQ5gQCn+xmCrXiDHbWZXx5HkazlQS0TBADiIaXAa10uvG7UYic6Gho2uCltQ2YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mEkAuid9; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="i7I+btv1"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1720092317; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=JZrqpGDPBtXPHidCmEmeC3ZJ9JHyMn+COl4BmjCUDX8=;
-	b=i7I+btv18YAGuvX6jJNHbRUJ3w6QVQDbiEsmvKDM0elWifTJylRPFbkq1Cc8pvXH4I8Efa30I15lnTTVySnCPBCq6iMHJRIRFiHQgOl1QxoO/tcTDTyjVi6N8CG01OoF1aAp7JmgL33KGcLf1Cc4InLCuVVOP/s+2yP3YGYka6M=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W9qjOyu_1720092314;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9qjOyu_1720092314)
-          by smtp.aliyun-inc.com;
-          Thu, 04 Jul 2024 19:25:15 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	hughd@google.com
-Cc: willy@infradead.org,
-	david@redhat.com,
-	wangkefeng.wang@huawei.com,
-	chrisl@kernel.org,
-	ying.huang@intel.com,
-	21cnbao@gmail.com,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	ziy@nvidia.com,
-	ioworker0@gmail.com,
-	da.gomez@samsung.com,
-	p.raghav@samsung.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 07/10] mm: shmem: support large folio allocation for shmem_replace_folio()
-Date: Thu,  4 Jul 2024 19:24:56 +0800
-Message-Id: <b8c0e4e7f99bf2d1393316ee39923e584efbc254.1720079976.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1720079976.git.baolin.wang@linux.alibaba.com>
-References: <cover.1720079976.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mEkAuid9"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-64b101294c0so4784807b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 04:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720092373; x=1720697173; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wz4auga2ihI3UY4J8JDbIVFDxmJf4jQfyvh3R1LfKJQ=;
+        b=mEkAuid9SZNozokiF88nNNapNf46Jynmz0sjs+tnMynRIs/AW9CovslVAiwuYz4n8x
+         dqt9vS9r6l5GotCvJJm8X1VKvtJscvyUkl6ytG10fAPCoWbdhPMDRhvKPaB+Sc3dpxRg
+         VoctEsBhNwW1nFoJuYTvrbHHGW2gQ8pm/5LoI9z9Mvxph/Xm6SnjvoWIXvcNjpbUqKSq
+         cZFd4qWO2liLWHS3iOhTw9BvhG/EEdMrU6MjXkTejm4Mmjqq9YizexeyoaZL39qS45GK
+         ORXNvXRiepWpsPP+Z1/CexRVcDtVU0PLrTS7tXrBf07CGh9iXknnTeJhCe8BSQwCF2IS
+         SCJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720092373; x=1720697173;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wz4auga2ihI3UY4J8JDbIVFDxmJf4jQfyvh3R1LfKJQ=;
+        b=aiMOOyuH0aBVvWu9akENXpFT9oY7vAJzS8k5AgyPb8UBl80HePbqWtmSjrNNFbi21M
+         wAsdw4k/a79XXeBZ8KKKpFnJAF7mA9aOoKgheweZ0SViFUrwe7sPQVPf8Aq3D6/CaFOa
+         Cz86YGFMl45V2CLoftPW7u8ArXj90IRoOD8VdYMnfFpPJuRA+BQVI7z2kBwSD1i2Cusk
+         BYiCmkhwgLSxHD3F4yiNGeM2KOY31jHDGgBG+anFYqKT/t/lzHGDzpYViGlA2Ozu//40
+         tYnbP19G5k+xDnoNzIrjI675hHixPtWct4mPf4BTbze3osD3o10ZEQtc80UVfKRik3nE
+         EGlA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqnn0g9Hb7EuGrWetqjE/gTyOfGKnnWkq/CFNhwuJOYMRepQ+EH9EadUtqCq4HLSduIT3HkUVpI12f5PStkyjgGjev5UbxW2uj40+u
+X-Gm-Message-State: AOJu0YwYCyBTqW6nof3KO7oV0TgCDkBKajs0FMm5LXzRIXpdnWIMyFQG
+	Swj3dAPDaVm7+zdEHbZhlDdzTMYbZUc05vOS7yv32XqMc+yMJRe8mhRcV4c5Q7jom2qmy2ZgQfK
+	eexu+LreMDM5lvvoxq1T78PkhYp3uHOuMbSELow==
+X-Google-Smtp-Source: AGHT+IGUuy8LiMm7CRx7RcUn3ERP1YBHOTaS7EuRnYAtXbHY8JFSwXprjEPPOPd0GIcSCtt0Mrw7VgCiJ21+Ale1Jug=
+X-Received: by 2002:a05:690c:6801:b0:62c:f82b:553f with SMTP id
+ 00721157ae682-652d62e4a62mr15119967b3.31.1720092372647; Thu, 04 Jul 2024
+ 04:26:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240628140435.1652374-1-quic_bibekkum@quicinc.com>
+ <20240628140435.1652374-5-quic_bibekkum@quicinc.com> <ueuhu5xfzp2rnuxzeqqd6cho476adidztgx7oq2tbiufauv6h4@obblpxvqwnno>
+ <6da77880-2ba4-4b02-8b3e-cb0fbd0a9daf@quicinc.com> <20240703130209.GA5750@willie-the-truck>
+ <6ad2e62d-8672-4b64-848a-6634d7a9410e@quicinc.com>
+In-Reply-To: <6ad2e62d-8672-4b64-848a-6634d7a9410e@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 4 Jul 2024 14:26:01 +0300
+Message-ID: <CAA8EJpqDFeCVEiuVM4RJoYPVjRn+PNRAYbe3RcFdDsDTj_Gkwg@mail.gmail.com>
+Subject: Re: [PATCH v13 4/6] iommu/arm-smmu: add ACTLR data and support for SM8550
+To: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+Cc: Will Deacon <will@kernel.org>, robdclark@gmail.com, robin.murphy@arm.com, 
+	joro@8bytes.org, jgg@ziepe.ca, jsnitsel@redhat.com, robh@kernel.org, 
+	krzysztof.kozlowski@linaro.org, quic_c_gdjako@quicinc.com, 
+	konrad.dybcio@linaro.org, iommu@lists.linux.dev, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To support large folio swapin for shmem in the following patches, add
-large folio allocation for the new replacement folio in shmem_replace_folio().
-Moreover large folios occupy N consecutive entries in the swap cache
-instead of using multi-index entries like the page cache, therefore
-we should replace each consecutive entries in the swap cache instead
-of using the shmem_replace_entry().
+On Thu, 4 Jul 2024 at 12:12, Bibek Kumar Patro
+<quic_bibekkum@quicinc.com> wrote:
+>
+>
+>
+> On 7/3/2024 6:32 PM, Will Deacon wrote:
+> > On Wed, Jul 03, 2024 at 05:45:23PM +0530, Bibek Kumar Patro wrote:
+> >>
+> >>
+> >> On 7/2/2024 12:04 AM, Dmitry Baryshkov wrote:
+> >>> On Fri, Jun 28, 2024 at 07:34:33PM GMT, Bibek Kumar Patro wrote:
+> >>>> Add ACTLR data table for SM8550 along with support for
+> >>>> same including SM8550 specific implementation operations.
+> >>>>
+> >>>> Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+> >>>> ---
+> >>>>    drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 89 +++++++++++++++++=
++++++
+> >>>>    1 file changed, 89 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/io=
+mmu/arm/arm-smmu/arm-smmu-qcom.c
+> >>>> index 77c9abffe07d..b4521471ffe9 100644
+> >>>> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> >>>> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> >>>> @@ -23,6 +23,85 @@
+> >>>>
+> >>>>    #define CPRE                    (1 << 1)
+> >>>>    #define CMTLB                   (1 << 0)
+> >>>> +#define PREFETCH_SHIFT            8
+> >>>> +#define PREFETCH_DEFAULT  0
+> >>>> +#define PREFETCH_SHALLOW  (1 << PREFETCH_SHIFT)
+> >>>> +#define PREFETCH_MODERATE (2 << PREFETCH_SHIFT)
+> >>>> +#define PREFETCH_DEEP             (3 << PREFETCH_SHIFT)
+> >>>> +
+> >>>> +static const struct actlr_config sm8550_apps_actlr_cfg[] =3D {
+> >>>> +  { 0x18a0, 0x0000, PREFETCH_SHALLOW | CPRE | CMTLB },
+> >>>> +  { 0x18e0, 0x0000, PREFETCH_SHALLOW | CPRE | CMTLB },
+> >>>> +  { 0x0800, 0x0020, PREFETCH_DEFAULT | CMTLB },
+> >>>> +  { 0x1800, 0x00c0, PREFETCH_DEFAULT | CMTLB },
+> >>>> +  { 0x1820, 0x0000, PREFETCH_DEFAULT | CMTLB },
+> >>>> +  { 0x1860, 0x0000, PREFETCH_DEFAULT | CMTLB },
+> >>>> +  { 0x0c01, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
+> >>>
+> >>> - Please keep the list sorted
+> >>
+> >> Sure Dmitry, will sort this list in reverse-christmas-tree order
+> >> in next iteration. Thanks for this input.
+> >>
+> >>> - Please comment, which devices use these settings.
+> >>
+> >> As discussed in earlier versions of this patch, these table entries
+> >> are kind of just blind values for SMMU device, where SMMU do not have
+> >> idea on which SID belong to which client. During probe time when the
+> >> clients' Stream-ID has corresponding ACTLR entry then the driver would
+> >> set value in register.
+> >
+> > I'm still firmly of the opinion that this stuff needs a higher-level
+> > description in the device-tree and should not be hard-coded in the driv=
+er
+> > like this. It's not just a list of opaque values; it describes
+> > SoC-specific topological information that should not be this rigid.
+> >
+>
+> As per my understanding since ACTLR register is an implementation
+> defined register,
+> so I think the placement can also depend on factor of how these
+> registers are used?
+>
+> For Qualcomm SoCs, it stores prefetch values for each client, improving
+> performance without defining hardware design.
+> Even without setting this value, clients on these Stream-IDs would still
+> function, albeit with reduced performance.
+>
+> The SteamID/Mask pair in first two columns <which is a SoC topology> is
+> only used as reference to find preferred prefetch setting for the
+> corresponding client on this StreamID
+>
+> To refer initial discussion and Robin's thoughts on device-tree approach
+> for this property which we proposed as a part of RFC:
+> https://lore.kernel.org/all/a01e7e60-6ead-4a9e-ba90-22a8a6bbd03f@quicinc.=
+com/
+>
+> " On 9/18/2023 4:49 PM, Robin Murphy wrote: "
+>  >
+>  > At the very least this would need to be in a implementation-specific
+>  > backend, since everything about ACTLR is implementation-defined; there
+>  > could be bits in there that the driver needs to manage itself and
+>  > clients have absolutely no business overriding (e.g. the MMU-500 errat=
+a
+>  > workarounds). The generic driver can't know what's valid, nor what the
+>  > consequences are of not being able to satisfy a particular setting. Th=
+en
+>  > there's still the question of what if two clients ask for different
+>  > settings but want to attach to the same context?
+>  >
+>  > It's also questionable whether this would belong in DT at all, since i=
+t
+>  > has a bit of a smell of software policv about it.
+>  >
+>  > If it could be
+>  > sufficiently justified then it would need a proper binding proposal, a=
+nd
+>  > "write this opaque value into this register" type properties are
+>  > generally not approved of.
+>  >
+>  > Thanks,
+>  > Robin.
+>  >
+>
+> So as per the initial discussions it felt right to have this data stored
+> inside driver.
+> One potential downside is that the driver file could become cluttered
+> with this data, but this can be mitigated by storing the table in a
+> separate file if necessary.
+>
+> For use cases or vendor that implement the ACTLR register differently,
+> deeply involving SoC topology values or defining hardware design
+> (something similar to Stream Matching Register),then it might be more
+> appropriate to place it in the devicetree?
+>
+> This is just my understanding. I=E2=80=99d appreciate your further though=
+ts on
+> this - Will, Robin, Dmitry, Rob.
 
-As well as updating statistics and folio reference count using the number
-of pages in the folio.
+My understanding was that DT should be a place for variable
+information. In this case the mapping between Stream-IDs and the
+corresponding register programming is more or less fixed for a
+particular Soc.
+Probably the only way this can be handled outside of the driver is by
+increasing #iommu-cells and encoding these values in this extra IOMMU
+cell.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- mm/shmem.c | 54 +++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 31 insertions(+), 23 deletions(-)
-
-diff --git a/mm/shmem.c b/mm/shmem.c
-index c1b6cdc61619..1718da7eefab 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1889,28 +1889,24 @@ static bool shmem_should_replace_folio(struct folio *folio, gfp_t gfp)
- static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
- 				struct shmem_inode_info *info, pgoff_t index)
- {
--	struct folio *old, *new;
--	struct address_space *swap_mapping;
--	swp_entry_t entry;
--	pgoff_t swap_index;
--	int error;
--
--	old = *foliop;
--	entry = old->swap;
--	swap_index = swap_cache_index(entry);
--	swap_mapping = swap_address_space(entry);
-+	struct folio *new, *old = *foliop;
-+	swp_entry_t entry = old->swap;
-+	struct address_space *swap_mapping = swap_address_space(entry);
-+	pgoff_t swap_index = swap_cache_index(entry);
-+	XA_STATE(xas, &swap_mapping->i_pages, swap_index);
-+	int nr_pages = folio_nr_pages(old);
-+	int error = 0, i;
- 
- 	/*
- 	 * We have arrived here because our zones are constrained, so don't
- 	 * limit chance of success by further cpuset and node constraints.
- 	 */
- 	gfp &= ~GFP_CONSTRAINT_MASK;
--	VM_BUG_ON_FOLIO(folio_test_large(old), old);
--	new = shmem_alloc_folio(gfp, 0, info, index);
-+	new = shmem_alloc_folio(gfp, folio_order(old), info, index);
- 	if (!new)
- 		return -ENOMEM;
- 
--	folio_get(new);
-+	folio_ref_add(new, nr_pages);
- 	folio_copy(new, old);
- 	flush_dcache_folio(new);
- 
-@@ -1920,18 +1916,25 @@ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
- 	new->swap = entry;
- 	folio_set_swapcache(new);
- 
--	/*
--	 * Our caller will very soon move newpage out of swapcache, but it's
--	 * a nice clean interface for us to replace oldpage by newpage there.
--	 */
-+	/* Swap cache still stores N entries instead of a high-order entry */
- 	xa_lock_irq(&swap_mapping->i_pages);
--	error = shmem_replace_entry(swap_mapping, swap_index, old, new);
-+	for (i = 0; i < nr_pages; i++) {
-+		void *item = xas_load(&xas);
-+
-+		if (item != old) {
-+			error = -ENOENT;
-+			break;
-+		}
-+
-+		xas_store(&xas, new);
-+		xas_next(&xas);
-+	}
- 	if (!error) {
- 		mem_cgroup_replace_folio(old, new);
--		__lruvec_stat_mod_folio(new, NR_FILE_PAGES, 1);
--		__lruvec_stat_mod_folio(new, NR_SHMEM, 1);
--		__lruvec_stat_mod_folio(old, NR_FILE_PAGES, -1);
--		__lruvec_stat_mod_folio(old, NR_SHMEM, -1);
-+		__lruvec_stat_mod_folio(new, NR_FILE_PAGES, nr_pages);
-+		__lruvec_stat_mod_folio(new, NR_SHMEM, nr_pages);
-+		__lruvec_stat_mod_folio(old, NR_FILE_PAGES, -nr_pages);
-+		__lruvec_stat_mod_folio(old, NR_SHMEM, -nr_pages);
- 	}
- 	xa_unlock_irq(&swap_mapping->i_pages);
- 
-@@ -1951,7 +1954,12 @@ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
- 	old->private = NULL;
- 
- 	folio_unlock(old);
--	folio_put_refs(old, 2);
-+	/*
-+	 * The old folio are removed from swap cache, drop the 'nr_pages'
-+	 * reference, as well as one temporary reference getting from swap
-+	 * cache.
-+	 */
-+	folio_put_refs(old, nr_pages + 1);
- 	return error;
- }
- 
--- 
-2.39.3
-
+--=20
+With best wishes
+Dmitry
