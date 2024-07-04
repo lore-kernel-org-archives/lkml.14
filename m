@@ -1,126 +1,188 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD8A1B1503
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 17:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291091B3756
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 17:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720112897; cv=none; b=QCB8/lhmMMWLcX48Trmuztrkgd5VxqvWYicKA/WpDLd+XMcR9/uJ7h0vwt3ewej1uzYarkSeLIiFwGTsFdFDjLQMW8RlaqMLAiZK/KdePwXHpf4MRSsNCHBdyvOa9X2sQMFR85HJPjQYGerXD6hyLlfhkUQlpkUuht0SpknUbvQ=
+	t=1720112899; cv=none; b=UuP0IiLgZRun21+UiRQnWpfsShIsz5QATobbJDHSnqggp49ZlBMNWODq4lRxwVs2GUf3gpemqmaVxORtFU1TWtAuRjJmNaW0GDlUgh9U/kj4ndbfvskqLA7Sgn/Qj/gSCxdP1axqtLJRIt8nd9ev9JV6b/zxwO5tt3NtW+JCxVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720112897; c=relaxed/simple;
-	bh=QguQgLZBBttmrru34w9QMLWo5wJFt+WRZM0wpZpr6UY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A/z//t3S/Wyn2oTNhA8fg88xmCtb0YoxmR4/+qkaxuetSodIx93azTBEyKjtymCs87Vt5rFZOXNt7a1TKpZiOhDrEYvk2c+/LrcarMRjlI+aWg6RcCBcWf2iNXt6rF0vI/vEETF66jH0Z4PbLhSDxXur2fTpe8JRKgkE7Pf9lXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GCmFU+vj; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720112899; c=relaxed/simple;
+	bh=U4aI2Fw151R0hgG/sWSZALpaq3wkC6dEsk6KR/u8YMQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JCgQ/S687dHsx6hsB8xtckuXyo+hhhRaLnCez5xifT1BlzSiaHrHC18e8MG57Le/ma3jPcsvYy+KJfvrW/ITnmQV+dIzj6/A/Fm7ep0ZgscoUwyAMbrFOkDIYJpm7MdPW4IB9iktp4zYuHIbJHqgs74MedW0fyxXEkWjGmvi4Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KVhJJ3pb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GCmFU+vj"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ee77db6f97so11647251fa.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KVhJJ3pb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720112897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9Dx4Yd3rp515xHPB0odOvS14xUDbZuuALCi/43WF61E=;
+	b=KVhJJ3pbsnVMLroWbsKPa2RmYMKmaRMC/AJ5DxA+9o/y6mMrnB8nXXR0HeeUgiraLBhbWE
+	Vc2dAIma+wBBfXeGV/7ly0arZX36hQtYj5xkijk8efVjPWv6i7JpcfCrH+dCmuFiRwRWdQ
+	fG31dB35vnu9izqJbGe4y63qvbUoWKg=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-313-QU7l6TMfMNqHqyGK5cShUg-1; Thu, 04 Jul 2024 13:08:15 -0400
+X-MC-Unique: QU7l6TMfMNqHqyGK5cShUg-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52e9d91ec1bso879898e87.0
         for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 10:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720112894; x=1720717694; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UlrKQa45wt6qlKqqrZr7W5l7lANNYZzO1+mSmOq7i9c=;
-        b=GCmFU+vjTvyzSneyN7I8hdFl4DW1ZAvLTsY4E/mnHvsWKC9RbjOPc5mf2KDqk0e44l
-         F5SnDbjCIsGvjVucQsslqESmxvSsucLsNvaemwINZYRdok/Zw/bzYx63z4YYkpUhrx6T
-         5slX9AP6k7xzM+ynG0lDcAba+960v4ZrJrybQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1720112894; x=1720717694;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UlrKQa45wt6qlKqqrZr7W5l7lANNYZzO1+mSmOq7i9c=;
-        b=VDmnHARkVpH+ThJKmMtRuJQ7AgEi7v5t6MSsy4gdGCMmExe0szQEKyzxOQBLDBq3xT
-         Wx9m+GIR9Yrqb9fIG3Bx1ZH7TCYp4xeolOO4KqCCZ5iYVybuUbBq6hAjpHHJxNwMfRtg
-         JGPjk2VJgI9ZyylARw91EFtwW/buzWyY9Va81IPaNHOsU6HO//jO8Vb7TO47VL7cSMRd
-         HVmq6AYlxEjvX0gLOyVe0rx+WRdmMOC3TDBTgB3wfQL5AXY0bdVrkx0h2jCvIhRQz1JZ
-         o5qAS1NT8AKIs9L2y89MkB7jS7ouwu8HAAOxO7i3KJy4esPHjSvD6t2U+Si/scwYIMep
-         FWLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyEiuwbC2daoVk2i4Zq7lHlGOrdrNlfeDYDD6wOYMGd9/a5+JfBGqBWqHQsV+ghr/IZExQhcpwn1Di+GthuX/cGoug/vbfav0G9UkT
-X-Gm-Message-State: AOJu0YzlqSGEeKOy2nxtkkH5Y8GsS28e84i6pbGiFPTTaFFDqVJf/Z4Z
-	TlVppTHTzC6x8HclXgCNGQbIysRc95e7JV8ecPJdy1YLhrhsLufUze+C7ZrItNPJKmkf7h76IxD
-	lKm0XSQ==
-X-Google-Smtp-Source: AGHT+IH0QyxmFu0ourIHusbsJCi8D1tpEbBiGWf0NuT5ShUpVrwHVlUf3+BhOf4JWQNlKyEzEUGdtg==
-X-Received: by 2002:a2e:9c8a:0:b0:2ee:80b2:1ea9 with SMTP id 38308e7fff4ca-2ee8ee21297mr17809481fa.49.1720112892386;
-        Thu, 04 Jul 2024 10:08:12 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee89936f2bsm4428601fa.10.2024.07.04.10.08.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 10:08:12 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cd80e55efso1456693e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 10:08:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVHYdaCwAEDbZjzQk0p0vV9QugfYJj9buLS+RW7hURs9Ot7Bul9JDUUHOjiawXfmc/ZfCjBJvyQ6VdaYVVksrd6PfC6spCnLDoPiAcy
-X-Received: by 2002:a05:6512:204:b0:52c:8075:4f3 with SMTP id
- 2adb3069b0e04-52ea0632781mr2063767e87.36.1720112891664; Thu, 04 Jul 2024
- 10:08:11 -0700 (PDT)
+        bh=9Dx4Yd3rp515xHPB0odOvS14xUDbZuuALCi/43WF61E=;
+        b=lfcCGwvZABy5u1Zv9KvFA3xkBCXktz/29dbQSc7tZtBaGasHD+GzK2He3fgjJ7/lpE
+         S7KKPidcixF3v0uFsDUpZhKxghkbbPpI7Pz4HYGT6QkrVvUGVNI0KmvYU42wL5bDAwRv
+         jwFRdnu0N+5sTvxPyavGKJMy9u+YGjkccrblKGIEHSFZM3Kt16W1FDmTPu9AHM0ow7fy
+         exnnBQIINH9u/wJbvL4kpXRRG0wTBDqI9z58jFRy07wCc0AyYYAnGJ0OtIRUQUre4iYI
+         I6FZvmkxBNIqlxjwQTvliADw65rEUM4bfUaBAQ6kjGCuxgmsLXR4OcrKo28H0zW9FXD3
+         0nVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU50tvDaK3V/WMN3EFpvoRtGQF49/sWdUdk5/IYAsvvWm6z7Y9EmUZJKzGA/aypHd+q4OHLL0o2HORG3A3GqEX17sIkNOyxtyEdNHkv
+X-Gm-Message-State: AOJu0YyM1W1zj9tQtYNMA98ydfq07J7zgw345aHPpznSn+i2UtJTXR6d
+	wj/wKzQICR47slpV43Szz8zxFuS8plCChjWJfIhsL81AtAHzG65gamfgIguP0p54XLYxqX+VKIV
+	z8J2Zz+7ETRsYvawqRPYxSX+SSuBfHvhEGZbM44jIvN/J9UrWfj1OaT9cHw26jw==
+X-Received: by 2002:a19:5e1a:0:b0:52e:99fd:e3d2 with SMTP id 2adb3069b0e04-52ea06de234mr1381888e87.66.1720112894310;
+        Thu, 04 Jul 2024 10:08:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFFnYte4aJcYpwixpiOxylyZNgxkQHSVsC4h2pAHitvCPf3Gav0iFNOeK65HzurCDgna6WqiA==
+X-Received: by 2002:a19:5e1a:0:b0:52e:99fd:e3d2 with SMTP id 2adb3069b0e04-52ea06de234mr1381860e87.66.1720112893870;
+        Thu, 04 Jul 2024 10:08:13 -0700 (PDT)
+Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36797718618sm3589884f8f.31.2024.07.04.10.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 10:08:13 -0700 (PDT)
+From: Danilo Krummrich <dakr@redhat.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	wedsonaf@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com
+Cc: daniel.almeida@collabora.com,
+	faith.ekstrand@collabora.com,
+	boris.brezillon@collabora.com,
+	lina@asahilina.net,
+	mcanal@igalia.com,
+	zhiw@nvidia.com,
+	acurrid@nvidia.com,
+	cjia@nvidia.com,
+	jhubbard@nvidia.com,
+	airlied@redhat.com,
+	ajanulgu@redhat.com,
+	lyude@redhat.com,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>
+Subject: [PATCH 00/20] Generic `Allocator` support for Rust
+Date: Thu,  4 Jul 2024 19:06:28 +0200
+Message-ID: <20240704170738.3621-1-dakr@redhat.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703182453.1580888-1-jarkko@kernel.org> <20240703182453.1580888-3-jarkko@kernel.org>
- <922603265d61011dbb23f18a04525ae973b83ffd.camel@HansenPartnership.com>
-In-Reply-To: <922603265d61011dbb23f18a04525ae973b83ffd.camel@HansenPartnership.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 4 Jul 2024 10:07:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiM=Cyw-07EkbAH66pE50VzJiT3bVHv9CS=kYR6zz5mTQ@mail.gmail.com>
-Message-ID: <CAHk-=wiM=Cyw-07EkbAH66pE50VzJiT3bVHv9CS=kYR6zz5mTQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] tpm: Address !chip->auth in tpm_buf_append_name()
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, linux-integrity@vger.kernel.org, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org, 
-	Stefan Berger <stefanb@linux.ibm.com>, Peter Huewe <peterhuewe@gmx.de>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Mario Limonciello <mario.limonciello@amd.com>, linux-kernel@vger.kernel.org, 
-	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 3 Jul 2024 at 13:11, James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> if (__and(IS_ENABLED(CONFIG_TCG_TPM2_HMAC), chip->auth))
+Hi,
 
-Augh. Please don't do this.
+This patch series adds generic kernel allocator support for Rust, which so far
+is limited to `kmalloc` allocations.
 
-That "__and()" thing may work, but it's entirely accidental that it does.
+In order to abstain from (re-)adding unstable Rust features to the kernel, this
+patch series does not extend the `Allocator` trait from Rust's `alloc` crate,
+nor does it extend the `BoxExt` and `VecExt` extensions.
 
-It's designed for config options _only_, and the fact that it then
-happens to work for "first argument is config option, second argument
-is C conditional".
+Instead, this series introduces a kernel specific `Allocator` trait, which is
+implemented by the `Kmalloc`, `Vmalloc` and `KVmalloc` allocators, also
+implemented in the context of this series.
 
-The comment says that it's implementing "&&" using preprocessor
-expansion only, but it's a *really* limited form of it. The arguments
-are *not* arbitrary.
+As a consequence we need our own `Box` and `Vec` types, which are implemented by
+this series as `KBox` and `KVec`.
 
-So no. Don't do this.
+With that, we can start using `KBox` and `KVec` throughout the tree and remove
+the now obolete extensions `BoxExt` and `VecExt`.
 
-Just create a helper inline like
+For a final cleanup, this series removes the last minor dependencies to Rust's
+`alloc` crate and removes it from the entire kernel build.
 
-    static inline struct tpm2_auth *chip_auth(struct tpm_chip *chip)
-    {
-    #ifdef CONFIG_TCG_TPM2_HMAC
-        return chip->auth;
-    #else
-        return NULL;
-    #endif
-    }
+The series ensures not to break the `rusttest` make target by implementing the
+`allocator_test` module providing a stub implementation for all kernel
+`Allocator`s.
 
-and if we really want to have some kind of automatic way of doing
-this, we will *NOT* be using __and(), we'd do something like
+This patch series passes all KUnit tests, including the ones added by this
+series. Additionally, the tests were run with `kmemleak` and `KASAN` enabled,
+without any issues.
 
-        /* Return zero or 'value' depending on whether OPTION is
-enabled or not */
-        #define IF_ENABLED(option, value) __and(IS_ENABLED(option), value)
+This series is also available in [1].
 
-that actually would be documented and meaningful.
+[1] https://gitlab.freedesktop.org/drm/nova/-/tree/topic/allocator
 
-Not this internal random __and() implementation that is purely a
-kconfig.h helper macro and SHOULD NOT be used anywhere else.
+Danilo Krummrich (20):
+  rust: alloc: add `Allocator` trait
+  rust: alloc: separate `aligned_size` from `krealloc_aligned`
+  rust: alloc: rename `KernelAllocator` to `Kmalloc`
+  rust: alloc: implement `Allocator` for `Kmalloc`
+  rust: alloc: add module `allocator_test`
+  rust: alloc: remove `krealloc_aligned`
+  rust: alloc: implement `Vmalloc` allocator
+  rust: alloc: implement `KVmalloc` allocator
+  rust: types: implement `Unique<T>`
+  rust: alloc: implement `KBox`
+  rust: treewide: switch to `KBox`
+  rust: alloc: remove `BoxExt` extension
+  rust: alloc: implement `KVec`
+  rust: alloc: implement `IntoIterator` for `KVec`
+  rust: alloc: implement `collect` for `IntoIter`
+  rust: treewide: switch to `KVec`
+  rust: alloc: remove `VecExt` extension
+  rust: error: use `core::alloc::LayoutError`
+  rust: str: test: replace `alloc::format`
+  kbuild: rust: remove the `alloc` crate
 
-             Linus
+ rust/Makefile                       |  44 +-
+ rust/bindings/bindings_helper.h     |   1 +
+ rust/exports.c                      |   1 -
+ rust/kernel/alloc.rs                |  92 ++-
+ rust/kernel/alloc/allocator.rs      | 177 +++++-
+ rust/kernel/alloc/allocator_test.rs |  23 +
+ rust/kernel/alloc/box_ext.rs        |  56 --
+ rust/kernel/alloc/kbox.rs           | 333 +++++++++++
+ rust/kernel/alloc/kvec.rs           | 861 ++++++++++++++++++++++++++++
+ rust/kernel/alloc/vec_ext.rs        | 182 ------
+ rust/kernel/error.rs                |   2 +-
+ rust/kernel/init.rs                 |  72 +--
+ rust/kernel/init/__internal.rs      |   2 +-
+ rust/kernel/lib.rs                  |   1 -
+ rust/kernel/prelude.rs              |   5 +-
+ rust/kernel/str.rs                  |  78 ++-
+ rust/kernel/sync/arc.rs             |  17 +-
+ rust/kernel/sync/condvar.rs         |   5 +-
+ rust/kernel/sync/lock/mutex.rs      |   3 +-
+ rust/kernel/sync/lock/spinlock.rs   |   3 +-
+ rust/kernel/sync/locked_by.rs       |   2 +-
+ rust/kernel/types.rs                | 186 +++++-
+ rust/kernel/workqueue.rs            |  22 +-
+ samples/rust/rust_minimal.rs        |   4 +-
+ scripts/Makefile.build              |   7 +-
+ 25 files changed, 1769 insertions(+), 410 deletions(-)
+ create mode 100644 rust/kernel/alloc/allocator_test.rs
+ delete mode 100644 rust/kernel/alloc/box_ext.rs
+ create mode 100644 rust/kernel/alloc/kbox.rs
+ create mode 100644 rust/kernel/alloc/kvec.rs
+ delete mode 100644 rust/kernel/alloc/vec_ext.rs
+
+
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+-- 
+2.45.2
+
