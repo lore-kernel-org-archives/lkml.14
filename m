@@ -1,78 +1,78 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B9D14901B
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4E6149DE9
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720067566; cv=none; b=k7hwlktjpX+XsPXGd/G9eLoIea0V1E89MS3QNCwagJZi9R/JmpIyXQCADcbJ2WnEygvqIxp0Nys/gRSq7JOQG6eEuK99MUUvSO6ScZDPNWoUpujizbUU2cQg3CAVyGiUzZVzFz/yewC2M60u8n8OhHSVlkFfvUxys1n/7KyU7v8=
+	t=1720067568; cv=none; b=PdbY9P/X8fUovlVC37M4PpdQkJ+ZlYWjGhlPugHxups8QEuXkxwD/DcqIiMk7ir0V7BysmLLxh4C2bCrtaHvPmk2UsMmdPl6DQuEO6n1q9+LQwkfVx5hioChu1teo1dXI6+WTeNhVIZNR03z3JWKeAeAV0wx6N1D95OUeQi2UAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720067566; c=relaxed/simple;
-	bh=SvWtT8eXdxiInxt0lWb3Rj5G0POa5eYV4UnyF6GLYLo=;
+	s=arc-20240116; t=1720067568; c=relaxed/simple;
+	bh=RcwFClZPGTFoXt0drfryl0gzPaFgfKFSVQ5t/DvqB4o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c3+pXD3Ql530GO5v/ZvM/EMdiARqPOhw2wMgHLOipzErPWL3Q4Dxhe5HwdPPlCKJ4/wPf4VVqc0fld0qkiPjfC3dL9coSDsBHyny0x0f1zrjKRRQ3YFtyNCptHe6KwOWFT/ovyIkv9+IDjeSr3qBlzNmDhDCGW8Hdn7jIWNqm3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=f6TMrMH1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7wTQx6i+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=f6TMrMH1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7wTQx6i+; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=cPJZkq80HPfQGs4wVdZs0DHy7oN6KVG8NqkSM14BugIEuYzepruNAmi1iZ3QntzGaaUtSgRi+kHJCmYlWnnd0I9TgQpgX8lFN3ZO6rFIqf5a0jpFv3BRy+MvU/hFVDPCmVlwQlFnUNE4gmLjiyF/tNm2xQE+W6oZmdMcPKxSXh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qWQLNf4E; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9PS3LOnT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qWQLNf4E; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9PS3LOnT; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="f6TMrMH1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7wTQx6i+";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="f6TMrMH1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7wTQx6i+"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qWQLNf4E";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9PS3LOnT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qWQLNf4E";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9PS3LOnT"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 69E391FCFA;
-	Thu,  4 Jul 2024 04:32:43 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D89E621180;
+	Thu,  4 Jul 2024 04:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720067563; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1720067565; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OvwrckhnGQ1ia89v5nuOKOB6N7ZG52TVWWVE7z3ysd0=;
-	b=f6TMrMH1l0DF/S8bfNE80GfcQ/4KU9eJ27sxLCy3LzyHrHWU4yVZdFy7kYhwfc7mVnZVdu
-	xsRX3Nb1px3A9NnzgBOX5ai81npXNqEkbHs8Yk6Z2158wI9WwdgLuclp+kv3Leuji+b1kc
-	vOC5FehQO0GHOMoxqJ/B9oV+I3yygyc=
+	bh=9eR5Nhbb0ANiKXQprN8VC6tLG959+ERIV2i0QqHsYD4=;
+	b=qWQLNf4EDHAPFOcSiw8o9yIVaDWy3wN7EvJ2sANX/QaSm9/dzdpfyxkS+tGCPT67FTj67/
+	qxSBubrEfCFMg2meOU9ONT/982yfM0wORqljjkCK0CIkPk/MmyWkBuIbujyg+alQu42Nox
+	+3A8UPaXHPIjQsi6zuoCjBr/Vxx+ZLY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720067563;
+	s=susede2_ed25519; t=1720067565;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OvwrckhnGQ1ia89v5nuOKOB6N7ZG52TVWWVE7z3ysd0=;
-	b=7wTQx6i+oEK8SbN8wor1yxW+lVrtevHmwonbwTOp+kRSZvWPS1cw79vzxMRpqgGlJBhIHR
-	U7Fz/q4+qA9HUzCQ==
-Authentication-Results: smtp-out2.suse.de;
+	bh=9eR5Nhbb0ANiKXQprN8VC6tLG959+ERIV2i0QqHsYD4=;
+	b=9PS3LOnTWX4tc9eF256ZXVJczKFHze/Ne7gNltkr5CcTePNcTuvg5Xdekx74hNiZwcr4HX
+	nEMGuKsw4KpydzBA==
+Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720067563; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1720067565; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OvwrckhnGQ1ia89v5nuOKOB6N7ZG52TVWWVE7z3ysd0=;
-	b=f6TMrMH1l0DF/S8bfNE80GfcQ/4KU9eJ27sxLCy3LzyHrHWU4yVZdFy7kYhwfc7mVnZVdu
-	xsRX3Nb1px3A9NnzgBOX5ai81npXNqEkbHs8Yk6Z2158wI9WwdgLuclp+kv3Leuji+b1kc
-	vOC5FehQO0GHOMoxqJ/B9oV+I3yygyc=
+	bh=9eR5Nhbb0ANiKXQprN8VC6tLG959+ERIV2i0QqHsYD4=;
+	b=qWQLNf4EDHAPFOcSiw8o9yIVaDWy3wN7EvJ2sANX/QaSm9/dzdpfyxkS+tGCPT67FTj67/
+	qxSBubrEfCFMg2meOU9ONT/982yfM0wORqljjkCK0CIkPk/MmyWkBuIbujyg+alQu42Nox
+	+3A8UPaXHPIjQsi6zuoCjBr/Vxx+ZLY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720067563;
+	s=susede2_ed25519; t=1720067565;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OvwrckhnGQ1ia89v5nuOKOB6N7ZG52TVWWVE7z3ysd0=;
-	b=7wTQx6i+oEK8SbN8wor1yxW+lVrtevHmwonbwTOp+kRSZvWPS1cw79vzxMRpqgGlJBhIHR
-	U7Fz/q4+qA9HUzCQ==
+	bh=9eR5Nhbb0ANiKXQprN8VC6tLG959+ERIV2i0QqHsYD4=;
+	b=9PS3LOnTWX4tc9eF256ZXVJczKFHze/Ne7gNltkr5CcTePNcTuvg5Xdekx74hNiZwcr4HX
+	nEMGuKsw4KpydzBA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4B28813889;
-	Thu,  4 Jul 2024 04:32:42 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C103213889;
+	Thu,  4 Jul 2024 04:32:44 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WEYNDuolhmbnDAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:32:42 +0000
+	id +JDnKuwlhmbnDAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:32:44 +0000
 From: Oscar Salvador <osalvador@suse.de>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -86,9 +86,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 42/45] mm/memcontrol: Make mem_cgroup_move_test_walk skip hugetlb vmas
-Date: Thu,  4 Jul 2024 06:31:29 +0200
-Message-ID: <20240704043132.28501-43-osalvador@suse.de>
+Subject: [PATCH 44/45] mm/hugetlb_vmemmap: Make vmemmap_test_walk skip hugetlb vmas
+Date: Thu,  4 Jul 2024 06:31:31 +0200
+Message-ID: <20240704043132.28501-45-osalvador@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240704043132.28501-1-osalvador@suse.de>
 References: <20240704043132.28501-1-osalvador@suse.de>
@@ -129,19 +129,19 @@ Skip hugetlb vmas as we are not interested in those.
 
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- mm/memcontrol-v1.c | 12 ++++++++++++
+ mm/hugetlb_vmemmap.c | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
-diff --git a/mm/memcontrol-v1.c b/mm/memcontrol-v1.c
-index 99cc9501eec1..542922562cf9 100644
---- a/mm/memcontrol-v1.c
-+++ b/mm/memcontrol-v1.c
-@@ -1319,8 +1319,20 @@ static int mem_cgroup_move_charge_pte_range(pmd_t *pmd,
- 	return ret;
+diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+index 829112b0a914..3e6fd5ae27bd 100644
+--- a/mm/hugetlb_vmemmap.c
++++ b/mm/hugetlb_vmemmap.c
+@@ -151,9 +151,21 @@ static int vmemmap_pte_entry(pte_t *pte, unsigned long addr,
+ 	return 0;
  }
  
-+static int mem_cgroup_move_test_walk(unsigned long start, unsigned long end,
-+				     struct mm_walk *walk)
++static int vmemmap_test_walk(unsigned long start, unsigned long end,
++			     struct mm_walk *walk)
 +{
 +	struct vm_area_struct *vma = walk->vma;
 +
@@ -151,12 +151,13 @@ index 99cc9501eec1..542922562cf9 100644
 +	return 0;
 +}
 +
- static const struct mm_walk_ops charge_walk_ops = {
- 	.pmd_entry	= mem_cgroup_move_charge_pte_range,
-+	.test_walk      = mem_cgroup_move_test_walk,
- 	.walk_lock	= PGWALK_RDLOCK,
+ static const struct mm_walk_ops vmemmap_remap_ops = {
+ 	.pmd_entry	= vmemmap_pmd_entry,
+ 	.pte_entry	= vmemmap_pte_entry,
++	.test_walk	= vmemmap_test_walk,
  };
  
+ static int vmemmap_remap_range(unsigned long start, unsigned long end,
 -- 
 2.26.2
 
