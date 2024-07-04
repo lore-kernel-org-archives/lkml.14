@@ -1,30 +1,33 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 077511BDCF;
-	Thu,  4 Jul 2024 06:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.6
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3DE1BDCF;
+	Thu,  4 Jul 2024 06:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720074337; cv=none; b=rWyTLhm4DD4u5GIHJLI0kUr0hnAVWCeMn17Tz9RH0XFufFo+41mlMPDTlkPvgZZHyYd/QeSl7rHy2caCLciK7PrcOZpuCRKXKRKVRinJ7gjGM+o0a0udMcVW0HF31PYHYY33HYfSFuq9JNEG6GJA0RB0yMnAKhrkB7rrMsaGWwM=
+	t=1720074364; cv=none; b=PpnEKuDQsv3Sh0h23wRzUFDj3bKGnJnq2HJFDoLUkwFh5Pq6C682tQfhD4YbkYgJ9hB0b7MmVEDDZWZCsGXh6EzgNrbUCePuHStQgxyICtODdFg7MXZiVnxS8wvT9j8AQ3AMZTOvtnESZLz2MqOyOZ5/Jpwo+LGyOJizPdQ0F0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720074337; c=relaxed/simple;
-	bh=T2BXVPG0Xciyi6KtfRni/IEp7xhSTzvD3uma1vOVg90=;
+	s=arc-20240116; t=1720074364; c=relaxed/simple;
+	bh=q7udoVJl5yTg51eTfZNs+WlAf/x0e0Bje3mXtuTT8g0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gnmPHsxOFDF6QGAUnR8Qy+cEekXH25aJCDJVrHbXnpwQ+vxBLwMKkjsx0/yeXp396JGwmvuFcMv79a3gSqHgyt9e+zTjpv5czUqL3frQFK7R3I69plWoAwLbCNcwMPdsVwP1q1ScDJu+c3Oh0vAYKH3rKz4S/M6sOcLpr+M3p5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=BOfhcVi8; arc=none smtp.client-ip=220.197.31.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	 In-Reply-To:Content-Type; b=T3/+A5QVgk7cBlhmQOTtiD9PbQMV6Xb7yWADVfK0a0N0Xg8HThbrLGbh99+uwLRNQS3PxrsSMbbGwI20sazvtsGxN29r5vEQGpTyyGcybt24VpYDt6tYFQApvKQZdEiirFbVGCip9LxrK7mHj0CjMHmO2mymcbzjwVtnfQhgteY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GDoCuzMt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="BOfhcVi8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=/AKERoNUk3QOspjtoJsYJHGJH3MzhEmNn77tnVZjOls=;
-	b=BOfhcVi8iWK8aFiViJYt4G9BC6pASMp8AFGgf4Bp6m/VWeZu+8Dzp1sjCZYUpA
-	2UWjo+FI+O0h8TGOSchnGjmfY9YPLl3fxxoRDMTge7DTifnBkFhjegFd0eeAJib4
-	XOz8G0V3CNHrRWx68NDaHoMV/bQSrZ/a9JiKW9wxqOk84=
-Received: from [172.21.22.210] (unknown [118.242.3.34])
-	by gzga-smtp-mta-g0-2 (Coremail) with SMTP id _____wD3P+YOQIZm42A0AQ--.856S2;
-	Thu, 04 Jul 2024 14:24:16 +0800 (CST)
-Message-ID: <ef7eee42-ebee-477c-83f5-d2103886ccd5@126.com>
-Date: Thu, 4 Jul 2024 14:24:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GDoCuzMt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7859C3277B;
+	Thu,  4 Jul 2024 06:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720074364;
+	bh=q7udoVJl5yTg51eTfZNs+WlAf/x0e0Bje3mXtuTT8g0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GDoCuzMtoE6Q9ahsq83O7CL53sP37Qx/Y3uFj7uQIqddlW/wyUFEPoCpSjuYRufug
+	 p286Jbza9+eqQmSq0NI2NrkF3zqqJwrqRJ6V6EpQRy1sp9zRmAWx1FH0u8JzJVALv4
+	 +qEh48qHOKmp3eeMtzFNw5Y/nvm2jlTJGd3w8sS9ofjizoA6DewrojvgvZaAp+ID/+
+	 U48FzMs+aEZsQTK+UG7Vye7kROskoD9+qR8Rldng9WPE2IcpBPXs92DVY1XQLVgFJT
+	 8gIkys5DfXvsm0tKY8OQnB8lQO5W84/NDVDRS4FxIZpyNKQX2JfwAtag81CF6ttr7o
+	 i909kC9mW6HFA==
+Message-ID: <5e7041ad-8e76-469f-9698-b7debcdde5b0@kernel.org>
+Date: Thu, 4 Jul 2024 08:25:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,84 +35,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] mm/gup: Clear the LRU flag of a page before adding to
- LRU batch
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- 21cnbao@gmail.com, baolin.wang@linux.alibaba.com, liuzixing@hygon.cn
-References: <1719038884-1903-1-git-send-email-yangge1116@126.com>
- <26efe5f2-0cad-404c-82ca-a556469ba9c7@redhat.com>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <26efe5f2-0cad-404c-82ca-a556469ba9c7@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3P+YOQIZm42A0AQ--.856S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuF1rCryxAr4UuF45CF1xXwb_yoW5XryrpF
-	Wft3WakrWDXFZa9rn7J3yDCr1SyrZ2yw45Ar1fJr18Cws8WFya9rW5K3WDWa45CrWYga1a
-	vr409rn5uF4DZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j5WrXUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiGBUSG2VLcMptdgAAsL
+Subject: Re: [PATCH v3 1/2] dt-bindings: net: qcom: ethernet: Add interconnect
+ properties
+To: Sagar Cheluvegowda <quic_scheluve@quicinc.com>,
+ Vinod Koul <vkoul@kernel.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Cc: kernel@quicinc.com, Andrew Halaney <ahalaney@redhat.com>,
+ Andrew Lunn <andrew@lunn.ch>, linux-arm-msm@vger.kernel.org,
+ netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20240703-icc_bw_voting_from_ethqos-v3-0-8f9148ac60a3@quicinc.com>
+ <20240703-icc_bw_voting_from_ethqos-v3-1-8f9148ac60a3@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240703-icc_bw_voting_from_ethqos-v3-1-8f9148ac60a3@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 04/07/2024 00:15, Sagar Cheluvegowda wrote:
+> Add documentation for the interconnect and interconnect-names
+> properties required when voting for AHB and AXI buses.
+> 
+> Suggested-by: Andrew Halaney <ahalaney@redhat.com>
+> Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+> ---
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-在 2024/7/3 20:02, David Hildenbrand 写道:
-> On 22.06.24 08:48, yangge1116@126.com wrote:
->> From: yangge <yangge1116@126.com>
->>
->> If a large number of CMA memory are configured in system (for example, 
->> the
->> CMA memory accounts for 50% of the system memory), starting a virtual
->> virtual machine, it will call pin_user_pages_remote(..., FOLL_LONGTERM,
->> ...) to pin memory.  Normally if a page is present and in CMA area,
->> pin_user_pages_remote() will migrate the page from CMA area to non-CMA
->> area because of FOLL_LONGTERM flag. But the current code will cause the
->> migration failure due to unexpected page refcounts, and eventually cause
->> the virtual machine fail to start.
->>
->> If a page is added in LRU batch, its refcount increases one, remove the
->> page from LRU batch decreases one. Page migration requires the page is 
->> not
->> referenced by others except page mapping. Before migrating a page, we
->> should try to drain the page from LRU batch in case the page is in it,
->> however, folio_test_lru() is not sufficient to tell whether the page is
->> in LRU batch or not, if the page is in LRU batch, the migration will 
->> fail.
->>
->> To solve the problem above, we modify the logic of adding to LRU batch.
->> Before adding a page to LRU batch, we clear the LRU flag of the page so
->> that we can check whether the page is in LRU batch by 
->> folio_test_lru(page).
->> Seems making the LRU flag of the page invisible a long time is no 
->> problem,
->> because a new page is allocated from buddy and added to the lru batch,
->> its LRU flag is also not visible for a long time.
->>
-> 
-> I think we need to describe the impact of this change in a better way. 
-> This example here is certainly interesting, but if pages are new they 
-> are also not candidate for immediate reclaim (tail of the LRU).
-> 
-> The positive thing is that we can more reliably identify pages that are 
-> on an LRU batch.
-> 
-> Further, a page can now only be on exactly one LRU batch.
-> 
-> But, as long as a page is on a LRU batch, we cannot isolate it, and we 
-> cannot check if it's an LRU page. The latter can currently already 
-> happen for a shorter time when moving LRU pages, and temporarily 
-> clearing the flag.
-> 
-> I shared some examples where we don't care, because we'd check for 
-> additional folio references either way (and the one from the LRU batch).
-> 
-> But I think we have to identify if there are any LRU folio/page checks 
-> that could now be impacted "more". At least we should document it 
-> properly to better understand the possible impact (do we maybe have to 
-> flush more often?).
-> 
-
-Thanks.
-I have reviewed a lot of paths using LRU folio/page checks and haven't 
-seen more impact. I will documnt possible impact in next version, thanks.
-
+Best regards,
+Krzysztof
 
