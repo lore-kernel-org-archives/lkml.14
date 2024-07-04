@@ -1,177 +1,154 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8393573458
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 17:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E8673458
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 17:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720115591; cv=none; b=RJ/C0iTQY3dBvW0L8HZVDFxGH2ft5gSh/FRa94BQlKEq3n8YG0hNzyXsLSVQFlCwuQc5LTbFtHA5LLgTf3vunNosUFOazSIL8M/lKftp2KL+Hex9XIb2KLuM1jhSPofSuLwCf1801d2e/M1b7sd1eY2EbWNkNO3unXWhPZSx5es=
+	t=1720115606; cv=none; b=o++7/Wu90IJDrcYVLtV9wSzXEMww4c7hlh/CoO3z3IsRL01ptM4xdhAHseMq0e/X8pTOzey8sNQEW/nM874hz8KSC3Rvcen4eXDtqNSxhim/e1/cQFRx5Wi59f3re2BtJoMPXk4OnWDN5I3c1pbpUiGB4UB2QnQoYhovT/+UsdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720115591; c=relaxed/simple;
-	bh=CvifkHUdGRKSvx1UjB6MK+FRqd4uOB5IU7coWKdD97s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V6vb8J3pWm4yBLBU8to19j0BmXoKbnDBNILdO84ACmENs1OHyLhgclPYIs7kSEmq1jEPSYzJnMAd3GUgjAg5YuY/Z6PmB2RGHieYT9+SrqVIyMjedA9nvqkot4bX3zOEXs8Eo7lXPtl5ca1SO4D8QaJF4ATkCB9hcUvgPu9OaNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xrc12jRs; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720115606; c=relaxed/simple;
+	bh=l1uxIG0dbpQ3vxd8XuFSAJOOykrgwtWmdtGyfes2CDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RcEv8s+V0s8EjvsncDZBkFDe6UQJ7Fewy3ClyvtGwlg4izDcVU2l0sgSp4dQKddyenxYmJD0VoupCzaVWCKk76z+dEjMi54btQsM0G7pJx90m61B6bkwZz+cLcz5ZwsnHSt+rlKC6KtSyuzj6Y+mEfWBuh49zxn4BHLiVdh533g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=FkKLwZUH; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xrc12jRs"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-58ef19aa6c4so600272a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 10:53:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="FkKLwZUH"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f4c7b022f8so5536845ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 10:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720115588; x=1720720388; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GorGvo3dqH3oj9ZZZsXyRZ+VMILEjEKT1veO1qV13kI=;
-        b=xrc12jRsh+tY4QuLQOKy62B4XRsGR1HcWF12Hl4K4uV+fYCr9/CoWb24mLt6BDqPmc
-         qJa3QVa3xViTWuXRPA4zuOP9BbSSxJsvlNg1iA1KhF9cVBjzGl7r9OPncuPtBSKX5+s8
-         cyL2drRn9BsD5z66HkcnrOEC7siavkJ8dh5BAzmhKMUr7Vqg65j+I4mhptlx8i3mnLHN
-         vtXQzCmQgfJm4alAPC+gAshUrTw0b/W5cuLkPQxE1t8q11xoA+Ln1SUxURriqeFiOJNY
-         hJbGlEOOnD193wpaCDvl/5XCuJv2DrfKvHOD+wXXuBVeC8UZt/xibY+wIHquBPzh8nno
-         FG+A==
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1720115603; x=1720720403; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8uryZ79GMK3Hbevhm1GUwmInwdQUDjClI1eiCDdIwGw=;
+        b=FkKLwZUHYrqqT/KTWdrSJ82iX7uPO5AUF2mxxnc+SoMCak83WJg9PUB/UzDytTK+xg
+         N4Q4FC9anjKKv8fkkfN4fn6/oETpAfrlLE2ci5wDeddEsGh4jNpFIDFtGDAOofn1SiIn
+         9kZT5aeFF2fAhHnrj1gZ6AExEp5Fpc57pf3QJMJu6KhCyO9jZ/tWBfm2pMqvNc8lsqNT
+         ORPQxy+sytZolrHWF83Rd2Zhb4WST+mFb/7oj5/sJyxKfTQ5xqueb3aUbk099PTkHBU1
+         tfs5KN1qTxgHA7QMVKG688LwtbFko1TMjzkl1oDamGDvfOEf1m8b9rPU/k86Ylre8Nks
+         cMJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720115588; x=1720720388;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GorGvo3dqH3oj9ZZZsXyRZ+VMILEjEKT1veO1qV13kI=;
-        b=QDgfRa5LM38Rcv57xk/ScxkIODtjVHQwKA90EdNv/w3MfrGEHdrnJOgtxvZWzOiYIE
-         v6iv5C+zt3mbRXDjZvVKp2E1xm6rWmQkEDNPRRe+Qy7fZ9TGhrC3DFTdTu4CUBOrCGTX
-         9LMIOdpzmH98krryDA6E73D7e7q9wsc8N9IqprV7QBw5JEI7amFyU7BmfOy/C2E1rJvG
-         f2U6hdFYS0IxR2A8AGsrulYy0Ev1aqpAaw3VN1PZ3JZA1YZx+3Qd7XKnWcaaH/SWMkZx
-         tBNy9pwjAoyDbXLaV8cwwFh9sycUWYpk8Z5iEDy8J8QCvyEhFCjuPhxGK6iIfo5g8VA0
-         gLHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVRTZU2V2UkZ85j3x4CwqP/cMusKbfsAQ70vKd2PpR70P4EAhFv1XGIWb3TMVFFiKl4MTaMyTFWm1nu2/avu0ao18C4VlmSLybswFF
-X-Gm-Message-State: AOJu0YzbkaRUoR7unX0qCuz7vYxLb89RJoOd5RS1hydngNsx2XJGpoV1
-	WQIU5dvvWsneptwk+t947llIT9i0VffVqdh43sXnMWjCtP0NXlJf2FUxEQbO78OW9BXBztHDhz7
-	DbbJr7teGsEb6qLyjsg8PnFm7RjzkQdvBIbsZ
-X-Google-Smtp-Source: AGHT+IF4AuPS7UKCOENONhcvXkRgVR3N6FHFHaIQR/6qkRUomCZ6PNDgZ3xDtrCJN3vH/nfmSRkEFjtG+LczGMIVq2k=
-X-Received: by 2002:a17:907:97c8:b0:a77:a58f:7f6a with SMTP id
- a640c23a62f3a-a77ba70e417mr242751466b.38.1720115587430; Thu, 04 Jul 2024
- 10:53:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720115603; x=1720720403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8uryZ79GMK3Hbevhm1GUwmInwdQUDjClI1eiCDdIwGw=;
+        b=AsZLLqMkxaHLTVBeIiCUQf/8kZhTmhxKjBLaeZBNKM7328+bXq1KMGS2IbDvi/PTsp
+         Ikoo9rzb1unVeVgRwmq3gDc+p9k8KpPxE52dq8ZSqatJ4f2PpawhrYSNYJ/r/UBpGmyf
+         5N+yia/N88H1CEslBnWMbd+dse67XDU+3mZFRSgq/O8AtWOW2rDQUFNeA9sjGyq5z7Fk
+         NBZSicG8mG1qgkXi36AR3Y2FkRDPemodn2WjfY7Yn0467XmKBv+acUoGZc0ECiWU7qWs
+         mw0iJlsn96DwfqhBcMkXgNVPDSz9T1S8jawNyMXLLpjPC9NO+bVD1hisWHTzjFQLxnkw
+         W2fw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjOSef4iiEVPC43dBiVo1SWoTjWp7dK5CVZ2tlKUJhjBLbhD33pY007B20v1pO4HWxF82w7+5yGhmfg6q8GbILyvQNwdQ8OaVpAUWh
+X-Gm-Message-State: AOJu0Yylsd+hL7NsFUv+BB6ppvgstrJFcMuHAYcLOTa3fP8JtJ1HFC61
+	P49gGTDuedoA3tjsw2LQ+tOxtFQdmKOv+dyvVK61dvBpX3x9zZxJUWkuw0RwqBA=
+X-Google-Smtp-Source: AGHT+IHr2Ly4uGxHjqpvelPSNVZYUdi1gXcvcSsc8YvBTQFpKVrUUJwR8TdaP1EKvh1cnQR14j81oQ==
+X-Received: by 2002:a17:903:192:b0:1fa:cec7:9a9d with SMTP id d9443c01a7336-1fb33e0de4cmr17233465ad.15.1720115603590;
+        Thu, 04 Jul 2024 10:53:23 -0700 (PDT)
+Received: from x1 ([2601:1c2:1802:170:8756:5e46:4951:e2d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb3dbd7dcdsm10711545ad.157.2024.07.04.10.53.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 10:53:23 -0700 (PDT)
+Date: Thu, 4 Jul 2024 10:53:21 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Drew Fustini <pdp7pdp7@gmail.com>
+Cc: Conor Dooley <conor@kernel.org>,
+	Kanak Shilledar <kanakshilledar@gmail.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] riscv: dts: thead: add basic spi node
+Message-ID: <Zobhkf5qr13rKcWH@x1>
+References: <20240701121355.262259-2-kanakshilledar@gmail.com>
+ <20240701121355.262259-5-kanakshilledar@gmail.com>
+ <20240703-juice-refreeze-62c468a56ea5@spud>
+ <ZobU6K/R3pfHrK9c@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703164635.221203-1-zenghuchen@google.com> <20240704165000.GA501857@google.com>
-In-Reply-To: <20240704165000.GA501857@google.com>
-From: Jack Chen <zenghuchen@google.com>
-Date: Thu, 4 Jul 2024 13:52:54 -0400
-Message-ID: <CALvyBcV8b_AiKK-QBRU1sphrWjgATecTyd7c27Y-gNtJv1hV8A@mail.gmail.com>
-Subject: Re: [PATCH] leds:lm3601x:calculate max_brightness and brightness properly
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Mark Brown <broonie@kernel.org>, 
-	Vadim Pasternak <vadimp@nvidia.com>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZobU6K/R3pfHrK9c@x1>
 
-Many thanks to Lee for the quick response. I will submit a V2 patch later.
-> > -     ret =3D regmap_write(led->regmap, LM3601X_LED_TORCH_REG, brightne=
-ss);
-> > +     ret =3D regmap_write(led->regmap, LM3601X_LED_TORCH_REG, brightne=
-ss - 1);
+On Thu, Jul 04, 2024 at 09:59:20AM -0700, Drew Fustini wrote:
+> On Wed, Jul 03, 2024 at 03:45:37PM +0100, Conor Dooley wrote:
+> > Kanak, Drew,
+> > 
+> > On Mon, Jul 01, 2024 at 05:43:54PM +0530, Kanak Shilledar wrote:
+> > > created spi0 node with fixed clock. the spi0 node
+> > > uses synopsis designware driver and has the following
+> > > compatible "snps,dw-apb-ssi". the spi0 node is connected
+> > > to a SPI NOR flash pad which is left unpopulated on the back
+> > > side of the board.
+> > > 
+> > > Signed-off-by: Kanak Shilledar <kanakshilledar@gmail.com>
+> > > ---
+> > > Changes in v2:
+> > > - Separated from a single patch file
+> > > ---
+> > >  .../boot/dts/thead/th1520-beaglev-ahead.dts      |  9 +++++++++
+> > >  .../boot/dts/thead/th1520-lichee-module-4a.dtsi  |  4 ++++
+> > >  .../riscv/boot/dts/thead/th1520-lichee-pi-4a.dts |  5 +++++
+> > 
+> > Didn't you say there was a flash on one of these two boards?
+> > 
+> > >  arch/riscv/boot/dts/thead/th1520.dtsi            | 16 ++++++++++++++++
+> > >  4 files changed, 34 insertions(+)
+> > > 
+> > > diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+> > > index d9b4de9e4757..3103b74e0288 100644
+> > > --- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+> > > +++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+> > > @@ -17,6 +17,7 @@ aliases {
+> > >  		gpio1 = &gpio1;
+> > >  		gpio2 = &gpio2;
+> > >  		gpio3 = &gpio3;
+> > > +		spi0 = &spi0;
+> > 
+> > "spi" would sort after "serial".
+> > 
+> > >  		serial0 = &uart0;
+> > >  		serial1 = &uart1;
+> > >  		serial2 = &uart2;
+> > > @@ -52,6 +53,10 @@ &sdhci_clk {
+> > >  	clock-frequency = <198000000>;
+> > >  };
+> > >  
+> > > +&spi_clk {
+> > > +	clock-frequency = <396000000>;
+> > > +};
+> > 
+> > I'm pretty sceptical about adding more of these fixed clocks, rather
+> > than waiting for the clock driver. Drew, what do you think? Should we
+> > just add one more to your fixup list or would you rather delay? Guess it
+> > depends on how long more you think that clock driver is likely to take.
+> 
+> I think the clk driver [1] is in good shape but it has not been reviewed
+> by the clk maintainer yet. Thus it is hard to predict any timeline for
+> it getting merged.
+> 
+> SPI support doesn't require any driver changes so I'd be inclined to
+> allow the fixed clock in this case. It will be simple to change it over
+> to a real clock once the clk driver is upstream.
+> 
+> Acked-by: Drew Fustini <drew@pdp7.com>
+> 
+> Thanks,
+> Drew
 
-> Why is there now a need to start adding/subtracting 1s to make the maths =
-work?
-This is because lm3601x torch brightness register takes 0 as the
-minimum output current (2.4mA). But led_brightness uses 0 as LED_OFF.
-So we need to add -1 offset to avoid blocking users who want to set
-the torch output minimum.
+Sorry, I meant to include the link to the most recent clk series:
+https://lore.kernel.org/linux-riscv/20240623-th1520-clk-v2-0-ad8d6432d9fb@tenstorrent.com/
 
-
-On Thu, Jul 4, 2024 at 12:50=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> Subject line needs fixing.
->
-> `git log --oneline -- drivers/<subsystem>` is your friend.
->
-> > 1) check the range of torch_current_max,
-> > 2) calcualtes max_brightness precisely,
-> > 3) lm3601x torch brightness register starts from 0 (2.4 mA).
->
-> Please write this out as a proper paragraph.
->
-> This isn't really a numbered list type situation.
->
-> > Tested: tested with a lm36011 and it can set its brightness to lowest
-> > value (2.4 mA)
->
-> What is the Tested: trailer?  Again, please write this out properly.
->
-> > Signed-off-by: Jack Chen <zenghuchen@google.com>
-> > ---
-> >  drivers/leds/flash/leds-lm3601x.c | 15 ++++++++++++---
-> >  1 file changed, 12 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/leds/flash/leds-lm3601x.c b/drivers/leds/flash/led=
-s-lm3601x.c
-> > index 7e93c447fec5..fc4df904ea90 100644
-> > --- a/drivers/leds/flash/leds-lm3601x.c
-> > +++ b/drivers/leds/flash/leds-lm3601x.c
-> > @@ -190,7 +190,7 @@ static int lm3601x_brightness_set(struct led_classd=
-ev *cdev,
-> >               goto out;
-> >       }
-> >
-> > -     ret =3D regmap_write(led->regmap, LM3601X_LED_TORCH_REG, brightne=
-ss);
-> > +     ret =3D regmap_write(led->regmap, LM3601X_LED_TORCH_REG, brightne=
-ss - 1);
->
-> Why is there now a need to start adding/subtracting 1s to make the maths =
-work?
->
-> >       if (ret < 0)
-> >               goto out;
-> >
-> > @@ -341,8 +341,9 @@ static int lm3601x_register_leds(struct lm3601x_led=
- *led,
-> >
-> >       led_cdev =3D &led->fled_cdev.led_cdev;
-> >       led_cdev->brightness_set_blocking =3D lm3601x_brightness_set;
-> > -     led_cdev->max_brightness =3D DIV_ROUND_UP(led->torch_current_max,
-> > -                                             LM3601X_TORCH_REG_DIV);
-> > +     led_cdev->max_brightness =3D DIV_ROUND_UP(
->
-> This is no place to break a line.
->
-> Break after the '=3D' and wrap at 100-chars instead.
->
-> > +                     led->torch_current_max - LM3601X_MIN_TORCH_I_UA +=
- 1,
-> > +                     LM3601X_TORCH_REG_DIV);
-> >       led_cdev->flags |=3D LED_DEV_CAP_FLASH;
-> >
-> >       init_data.fwnode =3D fwnode;
-> > @@ -386,6 +387,14 @@ static int lm3601x_parse_node(struct lm3601x_led *=
-led,
-> >               goto out_err;
-> >       }
-> >
-> > +     if (led->torch_current_max > LM3601X_MAX_TORCH_I_UA) {
-> > +             dev_warn(&led->client->dev,
-> > +                      "led-max-microamp cannot be higher than %d\n",
-> > +                      LM3601X_MAX_TORCH_I_UA);
->
-> "Max torch current set too high (%d vs %d)"
->
-> > +             led->torch_current_max =3D LM3601X_MAX_TORCH_I_UA;
-> > +     }
-> > +
-> > +
->
-> 2 lines?
->
-> >       ret =3D fwnode_property_read_u32(child, "flash-max-microamp",
-> >                               &led->flash_current_max);
-> >       if (ret) {
-> > --
-> > 2.45.2.803.g4e1b14247a-goog
-> >
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+-Drew
