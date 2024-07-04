@@ -1,93 +1,112 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197A31A3BC5;
-	Thu,  4 Jul 2024 08:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152171A4F11;
+	Thu,  4 Jul 2024 08:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720081685; cv=none; b=twUnbOKImGK2GAmgTOBliVygB6Jw41uD6EbWN3CaWI9mlxk2fgFCOpRu5xWNVO94GrnXZLKyp4IVFt0kFkcZAbq7Cab2Qu6IoLDxx1NVfOjKhgSZ+a3FU5mZwnHChkO8I3vVZQXx2KTsWtcCGfo1U2PXrnaXwsUtZj0ynSzRfUY=
+	t=1720081688; cv=none; b=UaTkvs3fBKOayYo7DCnPbzaVhi9ThktbsHjCJyOSiPuDgx3yV1rOGwO41P8PEd371TzmycCdPseK2Z39MJF8NxHmN8hy9xvy2dpHKiBlIX7OcLbOmcmLSP+Zs/3ZngRv9w8MsqqZMyalctwRvPsmbXvRDmTKuyauXkQGTujqk2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720081685; c=relaxed/simple;
-	bh=wVc3mDrD8ZHGcxEpI3RL80GBUfv7tqc7amf82VOOdic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TFWEI8CUKTSU0nNT8rUPdjkdsPOMGPr8Mbqcbk1oauSOPKIsM6Dq/+74FTV47fednp3bc2zcxklzsBDKTFlOjK1KulNW1gUyRlLdXdw9M6EpJXKlECHBAkW7KlVhEQZj1R3vtdGDsGG+V4HBJfN9/k+dd/yfGODevSbKc1EgAO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=I9wSr5qn; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1720081688; c=relaxed/simple;
+	bh=aLX+cQ7ZMCPfMJJMI0dTwZLnxQrSI/CsTSLm9hXHCX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LauiPWckWP+iymR/pwYFB6izv2egqDDTdkW8UTyl7cqDmPFWga+ufueIZRl+d071C6liC6r/SgRMkiKnQ3Fwubk8VZIlLizLby4ITc0MM7JXffxbr0lqUyeR5NXkP2YMd4PONNK0iPqYSmfQodcS7DXxYqqi/fywvhdOwmcgktQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FhhbiS9n; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="I9wSr5qn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1720081682;
-	bh=wVc3mDrD8ZHGcxEpI3RL80GBUfv7tqc7amf82VOOdic=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I9wSr5qndJJgZNK1GxM3ELWQWxcNRB0+T2ztlEssHpreWLW1x0yx/AW8C8CjFao7q
-	 6tunopOnUy9YaYgE6BhE8LLp/MMeFR9xq5+hu8qRwq2dq2N8b0o1AgcmIv6XOPXExI
-	 SOB6RiEioW7sWw7YaHcV26LEQmTVgkOOV4rxnUhjZgaURn/sxkqmInVgzBi8Nf9xg1
-	 zzQ9MyIkkaBIfpaMD9nANIAFKME2+NH9lhW1iXLwdr6zGpV3HpHBtRCVS2ghQJvc20
-	 P/hQHND/IWN5dEj8pOdBPWdb3hp7Ua4Cb94yo8VbN2Y5tV+kQX5JNm5YDoFQ3+qQZy
-	 DQ1/PpgNHDFeA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E651C37821A0;
-	Thu,  4 Jul 2024 08:27:59 +0000 (UTC)
-Message-ID: <2a1e25ad-c9d2-44f1-b52e-74f12b437381@collabora.com>
-Date: Thu, 4 Jul 2024 10:27:59 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhhbiS9n"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fa9ecfb321so2234675ad.0;
+        Thu, 04 Jul 2024 01:28:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720081686; x=1720686486; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BC+tk4kFCafFZXuwLW+ovs6K6GL9Zx5oLe2owdS+qcs=;
+        b=FhhbiS9naJHCX3yQBKZDOFTA8/R7bx2JaCO3cBbabPgoRFZ84ydSuLJ9aQVbBVgiZO
+         uqssYi6h6/LmTK845fLw+WLgUuUEi00Dgudkvbjqo+Du+4e8EnuV8lx9FHFSrGZAOkNh
+         41eTrZLvFAvXDS5WkRu6naNAHhi4QFsPSdxEt4DUpyuNrSUd6CDbEtv8q/aWe9uMNQDu
+         D751t+7Yk1Butzmy5zeCzHJtYJKChFem9TjuORej67WPinlBI9INSC5vH/5OtD6riSh5
+         7T+MZ3IIsTcntk8NzH4i/6VDdNxPpBLxu7J/KKswQbvwEgH5r/rL+0FeuWZnMAfgzxNV
+         muBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720081686; x=1720686486;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BC+tk4kFCafFZXuwLW+ovs6K6GL9Zx5oLe2owdS+qcs=;
+        b=efg6BWkLpVk3oaoz486Ae2b85+KPapnwPC1FX4gYoo5nXYZBFpisEAgwu+ecXnnfwD
+         6v8u/RIRzuWgA0x40ZYMXh2On/MYDerI6GV9N652BIpE1+Az90Cs33tJuoSpHd3VNc9p
+         IHhyob22EGwpbOqjl11JyGT1a5DoYp4L79WiJQeHexDTD/qKF7lj/hzLOgxvry9Oz6LA
+         EW9CYYzEiAQk3yw2dE8aBqkCJtOctJmfW3D1b8qrgaQM3ne4SbgLElXHXJVdmukqApUm
+         OU1qxN+DKDDYsp1D0NSNPXJXOxb8Pf+6+k+2ZqAXQ6pqPbFnqAq1EvqJr71LI6GXD1QP
+         Mw8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV8W1sgndS0E/kjY4XJOLMiEFofmXo9CFlwMspE+dwJ5HdqXbD5qYJG0wdoGzGAU7VHLSsV+Wo3prn5l+m+ncwQwbv4zeQrUiJ+YiuVO7XJq+VWGw2lsnVcLsNc7BtU5hRJAdRdrAFGLFqo
+X-Gm-Message-State: AOJu0YyDEW7oDNgn1pGUH5aL5w+qpBSfmbIaxz6MtqvsXD1/CxbPVLpf
+	agXPddvl0cwcg9vDqHBMCWA3W0RMAevreZvj1uQs1bZtYw8JaEUH
+X-Google-Smtp-Source: AGHT+IEXOXaWIp5OuoFajO1WGvUf9znyJi+0ZEu+cWN2MdeSvi6OzBKSamv+oJUzJoJFU4kWg6tmLA==
+X-Received: by 2002:a17:903:2284:b0:1fa:2420:33fc with SMTP id d9443c01a7336-1fb33edfd51mr8817535ad.48.1720081686196;
+        Thu, 04 Jul 2024 01:28:06 -0700 (PDT)
+Received: from oslab.. ([101.6.43.211])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1535b13sm117139555ad.169.2024.07.04.01.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 01:28:05 -0700 (PDT)
+From: Tuo Li <islituo@gmail.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
+Cc: baijiaju1990@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Tuo Li <islituo@gmail.com>
+Subject: [PATCH] tty: n_gsm: fix a possible data race in gsmtty_open
+Date: Thu,  4 Jul 2024 16:26:58 +0800
+Message-ID: <20240704082658.189577-1-islituo@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] cpufreq: Make cpufreq_driver->exit() return void
-To: Viresh Kumar <viresh.kumar@linaro.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Huang Rui <ray.huang@amd.com>,
- "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, Hector Martin <marcan@marcan.st>,
- Sven Peter <sven@svenpeter.dev>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Markus Mayer <mmayer@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Sudeep Holla <sudeep.holla@arm.com>,
- Cristian Marussi <cristian.marussi@arm.com>,
- Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>,
- Lizhe <sensor1010@163.com>, linux-kernel@vger.kernel.org,
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-mediatek@lists.infradead.org
-References: <cover.1720075640.git.viresh.kumar@linaro.org>
- <3f73fda736818128558b61ad5fe2bed5dce3ddc4.1720075640.git.viresh.kumar@linaro.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <3f73fda736818128558b61ad5fe2bed5dce3ddc4.1720075640.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 04/07/24 08:53, Viresh Kumar ha scritto:
-> From: Lizhe <sensor1010@163.com>
-> 
-> The cpufreq core doesn't check the return type of the exit() callback
-> and there is not much the core can do on failures at that point. Just
-> drop the returned value and make it return void.
-> 
-> Signed-off-by: Lizhe <sensor1010@163.com>
-> [ Viresh: Reworked the patches to fix all missing changes together. ]
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+In the function gsmtty_open(), the counter port->count is updated without
+holding the lock port->lock, which may lead to a data race.
 
-For MediaTek:
+This possible data race is found by an experimental static analysis tool.
+This tool analyzes the locking APIs to deduce locking rules about which
+variable should be protected by which lock. And then the tool checks
+whether a given variable access violates the deduced locking rules, to
+detect data races. The above possible data race is reported, when the tool
+analyzes the source code of Linux 6.2.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Referring to the function tty_port_open() in tty_port.c:
+  spin_lock_irq(&port->lock);
+  ++port->count;
+  spin_unlock_irq(&port->lock);
+    
+we add a lock/unlock pair to protect the access to port->count, to fix
+this possible data race.
+
+Fixes: 86176ed90545 ("TTY: n_gsm, use tty_port_install")
+Signed-off-by: Tuo Li <islituo@gmail.com>
+---
+ drivers/tty/n_gsm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index be35f7334ecd..b709f1a6bd2d 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -4307,7 +4307,9 @@ static int gsmtty_open(struct tty_struct *tty, struct file *filp)
+ 	struct gsm_dlci *dlci = tty->driver_data;
+ 	struct tty_port *port = &dlci->port;
+ 
++	spin_lock_irq(&port->lock);
+ 	port->count++;
++	spin_unlock_irq(&port->lock);
+ 	tty_port_tty_set(port, tty);
+ 
+ 	dlci->modem_rx = 0;
+-- 
+2.43.0
 
