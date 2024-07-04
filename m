@@ -1,358 +1,475 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C51815DBB6
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 07:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C2BFC02;
+	Thu,  4 Jul 2024 07:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720079562; cv=none; b=OafSb4JlZzJh9i3Z2pTtuKnTxUSTJ6qPdozNPacrDEgYp6gecF8ZMOhwKZtYzWDX7/eHTA7IxqRQpTZV25Gqv22+z894S9Y2hcPwO7SpM4tj938kyTI7DUT0ueKSFGJse2E4jkBDrEss3dFNCEbDrIGF2OydAWmFqDsQ3s/WwEo=
+	t=1720079720; cv=none; b=e+pUzEAwJ9fQK22TgVQHb53AVq4CnnO2YCXSE7V9dYR39zgZo+pJT8nQENfxSdvfrc4TguTjgBeFlba/xjx5rbxKVqU99/bNOibraQz3/dO0TA5wIuyI/l44E9bF6HIwpE+oV6l0jrGfmW7R5sSqpX/tTu6pqqig1zj2Eprw7nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720079562; c=relaxed/simple;
-	bh=6rm7CRikLRRUfZiM8K6ai9vavzf5YghHtaHorOkO/sA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GYxV6XA2UHwC7kj6/fit2qa2WJQQw+DNgW0IaPJhy9I7CfHB9RVesCeTpN6kHvuqr302YcF2327V90GRa7FxJefWp5xCUZLwHdOnQwz0NztEdWqJDnMOzJT0pfyqBXPCTOhcyQ/1M/CMNLu5U+9Qct0g7XDJwW0pMMh7e3QKB3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbUc08Qi; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720079720; c=relaxed/simple;
+	bh=VFF+HeeWXNjRwQLfKhg4IAkGpnqgW/GHtEvlIQ9T+f0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tPQOjhE9JG4UMuZ18AYDf3eNnpjOTLk0t2nXVM6kCfrg6r8/v5HSiZEiXyDqUHjAq8E/MXkJ1LnnOZA1Qbah2EZZFuWlGe0byLsgZESJ2VOz+x+qQrO8SoaaTJSvlIqkqF2o6bqirKJCigdhf9LZ7NmcPV2ujshKaP+n6VX3vYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BBrvef3M; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbUc08Qi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720079559; x=1751615559;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=6rm7CRikLRRUfZiM8K6ai9vavzf5YghHtaHorOkO/sA=;
-  b=GbUc08QiHwdQ8Mhe7rF/2lyNp4GmClGNvb5mzc0yfTQljma7Hqk87qAt
-   54jElRoUPfRNxoxVtkzjZXBclZTjIvv5KXA8mJZWFOOb5mqd4Y1cejoCU
-   wKMnv7autmZWTQiTKvXAHvH87NYGGpwvyoMbtXcaY/AKD/zIS2rJ32E6F
-   Q6ptsL8Mm6vrkm7E/3nqvB8Qpu4WeDBbA7t3wzA5xOO5NhRkgx+4hICoD
-   Vbf63S+IQYVJO54ClMWgJT9VJFPmJT2BOmdHccMM4sGr26dF444W3ereX
-   cw4q85OD78ewWdeGPFPDKpMDCH0x2YyVejTa8LywuPKRWbibHUQiT54rK
-   A==;
-X-CSE-ConnectionGUID: prinwlU/Qp+7AFXR/bqiFg==
-X-CSE-MsgGUID: F+Ng5Sg7TlOmwM1yBZtVyQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="21107266"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="21107266"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 00:52:38 -0700
-X-CSE-ConnectionGUID: WsWIho8wS6yj+0o2VkMDcg==
-X-CSE-MsgGUID: cxFPmgaCSgSMd7zrMMI8JA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="77668172"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 00:52:33 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: Tvrtko Ursulin <tursulin@igalia.com>,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org,  kernel-dev@igalia.com,  Mel Gorman
- <mgorman@suse.de>,  Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar
- <mingo@redhat.com>,  Rik van Riel <riel@surriel.com>,  Johannes Weiner
- <hannes@cmpxchg.org>,  "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-  Dave Hansen <dave.hansen@intel.com>,  Andi Kleen <ak@linux.intel.com>,
-  Michal Hocko <mhocko@suse.com>,  David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v2] mm/numa_balancing: Teach mpol_to_str about the
- balancing mode
-In-Reply-To: <3b4c4e9f-6714-4ad5-a9e4-9c0190365641@igalia.com> (Tvrtko
-	Ursulin's message of "Thu, 4 Jul 2024 08:15:21 +0100")
-References: <20240702150006.35206-1-tursulin@igalia.com>
-	<87o77fkprp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<2fe66068-4419-4bfc-a92b-2ece3cfcb2ad@igalia.com>
-	<87ed8akivq.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<a95b70c0-b386-4189-a06a-008d58a8c2ae@igalia.com>
-	<874j96j6fu.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<3b4c4e9f-6714-4ad5-a9e4-9c0190365641@igalia.com>
-Date: Thu, 04 Jul 2024 15:50:42 +0800
-Message-ID: <87y16hh9yl.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBrvef3M"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3d55ed47cc6so232656b6e.2;
+        Thu, 04 Jul 2024 00:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720079717; x=1720684517; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ta1uMwhlM6Hnrl7VtiRoXXUn0L8NwQA3nKU9EyK86OU=;
+        b=BBrvef3Mi/swDfX3A3L2Wv+gqyRq2hzYVg7zhf4ulwvyk53pVtfmWmXr5pMBOQNJnE
+         LjhLYDi8caAHrv82QGxHV9bwN/A1foWb9BTV1XpiIrvG8832z5f/2BdCfPpi1s/vVEHF
+         iyIjSy7Xi9ksYTPFdkxZXKurvez5yjblhvRrF8rYx/RtVQn1TJE+rr2BKjHhR8v4h3pg
+         qug+Q3U3YC6YJOltSPgorQYEKS1AiJUsvE1WHgmg+bhfEhGZKNW4zTQvH7HCROhi8b5E
+         +d6JWVHCffT52yttdjwi7ePriV5cywu2dRvcm7/Mm92+yGk7nPptDWvPYuNKUQ6PKN3C
+         mhEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720079717; x=1720684517;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ta1uMwhlM6Hnrl7VtiRoXXUn0L8NwQA3nKU9EyK86OU=;
+        b=o9VdWl/PLCv73Iv2xEMADm9to5Ss9maI0umG0FIbuQ7KgRqAK8x8c7BtNtUJJQFd9q
+         DD+K9ukYdR29fdkFvCiytBk0SqrVhIepOhkeRp8TIXxdzMsyCmF0I5yaqmk76+W1rKE8
+         2NAVHQUjyPgy2i5v0gD5sD8DbbKj/wi75J31SlO2OtsjvjQVQXI7KkjHI5w9oST3rljD
+         0Sl1W/n7ujCQKDxtP4ajXNCL5o0Cac8Be1Z6L/ZdafQ7irXSWD2WSYh2qLo7Wa4agrrB
+         WlW1PgczJ8avXrLcxlqqACXkmyAXUqx85B8oyQeCG5suo05h3wOLNeRNwLkCgjJGqDo3
+         hEKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBy8G9fwq9qsC9/thYgM+gOCGFq14tpdw5vD+wLvaLp+Q/GWS5Wn4vLhyClrI/J1itaCeSJgcSnZHGXABQ+r3mAMBjbn6acQyu49cztjL5SV3J6VuDh+gLl8WvgYOU/Ysn4YuvgRK/pTY=
+X-Gm-Message-State: AOJu0YwF6TsCWYVjMfSZt5WhpIL5mgPtdTKhlwS4I9XTb6Chx7FXjlM5
+	1j82ObDWk1sxbbCtM6L8sO1O5V3rfwKxDVUibDZzIFFAW32gv8GkOHSwFh1o
+X-Google-Smtp-Source: AGHT+IGku++d3RzoNy4tQT5GTrJWke0DhhzkNoX2AVhpma4OyFVzwXVxRSOR0wzdUXIb80uXI8Zjqg==
+X-Received: by 2002:a05:6808:4cc:b0:3d2:2b43:1804 with SMTP id 5614622812f47-3d914c5e901mr813473b6e.19.1720079717211;
+        Thu, 04 Jul 2024 00:55:17 -0700 (PDT)
+Received: from JammyHuang-PC.aspeed.com ([118.99.208.177])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708029582fasm11634646b3a.88.2024.07.04.00.55.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 00:55:16 -0700 (PDT)
+From: Jammy Huang <orbit.huang@gmail.com>
+X-Google-Original-From: Jammy Huang <jammy_huang@aspeedtech.com>
+To: eajames@linux.ibm.com,
+	mchehab@kernel.org,
+	joel@jms.id.au,
+	andrew@aj.id.au,
+	linux-media@vger.kernel.org,
+	openbmc@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Cc: Jammy Huang <jammy_huang@aspeedtech.com>
+Subject: [PATCH] media: aspeed: Add additional input type, GFX, to capture
+Date: Thu,  4 Jul 2024 15:55:10 +0800
+Message-Id: <20240704075510.27034-1-jammy_huang@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
 
-Tvrtko Ursulin <tvrtko.ursulin@igalia.com> writes:
+ASPEED BMC IC has 2 different display engines.
+1. VGA on PCIe
+2. SoC Display(GFX)
 
-> On 04/07/2024 02:23, Huang, Ying wrote:
->> Tvrtko Ursulin <tvrtko.ursulin@igalia.com> writes:
->> 
->>> On 03/07/2024 08:57, Huang, Ying wrote:
->>>> Tvrtko Ursulin <tvrtko.ursulin@igalia.com> writes:
->>>>
->>>>> On 03/07/2024 06:28, Huang, Ying wrote:
->>>>>> Tvrtko Ursulin <tursulin@igalia.com> writes:
->>>>>>
->>>>>>> From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
->>>>>>>
->>>>>>> Since balancing mode was added in
->>>>>>> bda420b98505 ("numa balancing: migrate on fault among multiple bound nodes"),
->>>>>>> it was possible to set this mode but it wouldn't be shown in
->>>>>>> /proc/<pid>/numa_maps since there was no support for it in the
->>>>>>> mpol_to_str() helper.
->>>>>>>
->>>>>>> Furthermore, because the balancing mode sets the MPOL_F_MORON flag, it
->>>>>>> would be displayed as 'default' due a workaround introduced a few years
->>>>>>> earlier in
->>>>>>> 8790c71a18e5 ("mm/mempolicy.c: fix mempolicy printing in numa_maps").
->>>>>>>
->>>>>>> To tidy this up we implement two changes:
->>>>>>>
->>>>>>> First we introduce a new internal flag MPOL_F_KERNEL and with it mark the
->>>>>>> kernel's internal default and fallback policies (for tasks and/or VMAs
->>>>>>> with no explicit policy set). By doing this we generalise the current
->>>>>>> special casing and replace the incorrect 'default' with the correct
->>>>>>> 'bind'.
->>>>>>>
->>>>>>> Secondly, we add a string representation and corresponding handling for
->>>>>>> MPOL_F_NUMA_BALANCING. We do this by adding a sparse mapping array of
->>>>>>> flags to names. With the sparseness being the downside, but with the
->>>>>>> advantage of generalising and removing the "policy" from flags display.
->>>>>> Please split these 2 changes into 2 patches.  Because we will need
->>>>>> to
->>>>>> back port the first one to -stable kernel.
->>>>>
->>>>> Why two? AFAICT there wasn't a issue until bda420b98505, and to fix it
->>>>> all changes from this patch are needed.
->>>> After bda420b98505, MPOL_BIND with MPOL_F_NUMA_BALANCING will be
->>>> shown
->>>> as "default", which is a bug.  While it's a new feature to show
->>>> "balancing".  The first fix should be back-ported to -stable kernel
->>>> after bda420b98505.  While we don't need to do that for the second one.
->>>
->>> You lost me but it could be I am not at my best today so if you could
->>> please explain more precisely what you mean?
->>>
->>> When bda420b98505 got in, it added MPOL_F_NUMA_BALANCING. But there
->>> was no "balancing" in mpol_to_str(). That's one fix for bda420b98505.
->> IMO, it's not a big issue to miss "balancing" in mpol_to_str().
->> It's
->> not absolutely necessary to backport this part.
->> 
->>> But also it did not change the pre-existing check for MPOL_F_MORON
->>> added in 8790c71a18e5, many years before it, which was the thing
->>> causing bind+balancing to be printed as default. So that's the second
->>> part of the fix. But also AFAICS to tag as fixes bda420b98505.
->>>
->>> Making 8790c71a18e5 target of Fixes: does not IMO make sense though
->>> because *at the time* of that patch it wasn't broken. What am I
->>> missing?
->> Yes, we should use "Fixes: bda420b98505 ..." for this part.  This is
->> a
->> big issue, because "default" will be shown for MPOL_BIND, which is
->
-> Not for MPOL_BIND, only when MPOL_F_NUMA_BALANCING is also set. Plain
-> bind works fine.
->
->> totally wrong.  We need to backport this fix.  It's good for backporting
->> to keep it small and focused.
->
-> I agree in principle fixes should be kept small but question is what
-> this is fixing. Is "fixing" bind+balancing to display as only "bind"
-> _the_ fix we want? Is it worth doing for 5.12 to 6.10, while only 6.11
-> potentially to actually show the accurate information?
+By default, video engine(VE) will capture video from VGA. This patch
+adds an option to caputre video from GFX with standard ioctl,
+vidioc_s_input.
 
-Yes.  This is my opinion.
+An enum, aspeed_video_input, is added for this purpose.
+enum aspeed_video_input {
+	VIDEO_INPUT_VGA = 0,
+	VIDEO_INPUT_GFX,
+	VIDEO_INPUT_MAX
+};
 
->>>>>>> End result:
->>>>>>>
->>>>>>> $ numactl -b -m 0-1,3 cat /proc/self/numa_maps
->>>>>>> 555559580000 bind=balancing:0-1,3 file=/usr/bin/cat mapped=3 active=0 N0=3 kernelpagesize_kB=16
->>>>>>> ...
->>>>>>>
->>>>>>> v2:
->>>>>>>     * Fully fix by introducing MPOL_F_KERNEL.
->>>>>>>
->>>>>>> Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
->>>>>>> Fixes: bda420b98505 ("numa balancing: migrate on fault among multiple bound nodes")
->>>>>>> References: 8790c71a18e5 ("mm/mempolicy.c: fix mempolicy printing in numa_maps")
->>>>>>> Cc: Huang Ying <ying.huang@intel.com>
->>>>>>> Cc: Mel Gorman <mgorman@suse.de>
->>>>>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>>>>> Cc: Ingo Molnar <mingo@redhat.com>
->>>>>>> Cc: Rik van Riel <riel@surriel.com>
->>>>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>>>>>> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->>>>>>> Cc: Dave Hansen <dave.hansen@intel.com>
->>>>>>> Cc: Andi Kleen <ak@linux.intel.com>
->>>>>>> Cc: Michal Hocko <mhocko@suse.com>
->>>>>>> Cc: David Rientjes <rientjes@google.com>
->>>>>>> ---
->>>>>>>     include/uapi/linux/mempolicy.h |  1 +
->>>>>>>     mm/mempolicy.c                 | 44 ++++++++++++++++++++++++----------
->>>>>>>     2 files changed, 32 insertions(+), 13 deletions(-)
->>>>>>>
->>>>>>> diff --git a/include/uapi/linux/mempolicy.h b/include/uapi/linux/mempolicy.h
->>>>>>> index 1f9bb10d1a47..bcf56ce9603b 100644
->>>>>>> --- a/include/uapi/linux/mempolicy.h
->>>>>>> +++ b/include/uapi/linux/mempolicy.h
->>>>>>> @@ -64,6 +64,7 @@ enum {
->>>>>>>     #define MPOL_F_SHARED  (1 << 0)	/* identify shared policies */
->>>>>>>     #define MPOL_F_MOF	(1 << 3) /* this policy wants migrate on fault */
->>>>>>>     #define MPOL_F_MORON	(1 << 4) /* Migrate On protnone Reference On Node */
->>>>>>> +#define MPOL_F_KERNEL   (1 << 5) /* Kernel's internal policy */
->>>>>>>       /*
->>>>>>>      * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
->>>>>>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->>>>>>> index aec756ae5637..8ecc6d9f100a 100644
->>>>>>> --- a/mm/mempolicy.c
->>>>>>> +++ b/mm/mempolicy.c
->>>>>>> @@ -134,6 +134,7 @@ enum zone_type policy_zone = 0;
->>>>>>>     static struct mempolicy default_policy = {
->>>>>>>     	.refcnt = ATOMIC_INIT(1), /* never free it */
->>>>>>>     	.mode = MPOL_LOCAL,
->>>>>>> +	.flags = MPOL_F_KERNEL,
->>>>>>>     };
->>>>>>>       static struct mempolicy preferred_node_policy[MAX_NUMNODES];
->>>>>>> @@ -3095,7 +3096,7 @@ void __init numa_policy_init(void)
->>>>>>>     		preferred_node_policy[nid] = (struct mempolicy) {
->>>>>>>     			.refcnt = ATOMIC_INIT(1),
->>>>>>>     			.mode = MPOL_PREFERRED,
->>>>>>> -			.flags = MPOL_F_MOF | MPOL_F_MORON,
->>>>>>> +			.flags = MPOL_F_MOF | MPOL_F_MORON | MPOL_F_KERNEL,
->>>>>>>     			.nodes = nodemask_of_node(nid),
->>>>>>>     		};
->>>>>>>     	}
->>>>>>> @@ -3150,6 +3151,12 @@ static const char * const policy_modes[] =
->>>>>>>     	[MPOL_PREFERRED_MANY]  = "prefer (many)",
->>>>>>>     };
->>>>>>>     +static const char * const policy_flags[] = {
->>>>>>> +	[ilog2(MPOL_F_STATIC_NODES)] = "static",
->>>>>>> +	[ilog2(MPOL_F_RELATIVE_NODES)] = "relative",
->>>>>>> +	[ilog2(MPOL_F_NUMA_BALANCING)] = "balancing",
->>>>>>> +};
->>>>>>> +
->>>>>>>     #ifdef CONFIG_TMPFS
->>>>>>>     /**
->>>>>>>      * mpol_parse_str - parse string to mempolicy, for tmpfs mpol mount option.
->>>>>>> @@ -3293,17 +3300,18 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
->>>>>>>      * @pol:  pointer to mempolicy to be formatted
->>>>>>>      *
->>>>>>>      * Convert @pol into a string.  If @buffer is too short, truncate the string.
->>>>>>> - * Recommend a @maxlen of at least 32 for the longest mode, "interleave", the
->>>>>>> - * longest flag, "relative", and to display at least a few node ids.
->>>>>>> + * Recommend a @maxlen of at least 42 for the longest mode, "weighted
->>>>>>> + * interleave", the longest flag, "balancing", and to display at least a few
->>>>>>> + * node ids.
->>>>>>>      */
->>>>>>>     void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
->>>>>>>     {
->>>>>>>     	char *p = buffer;
->>>>>>>     	nodemask_t nodes = NODE_MASK_NONE;
->>>>>>>     	unsigned short mode = MPOL_DEFAULT;
->>>>>>> -	unsigned short flags = 0;
->>>>>>> +	unsigned long flags = 0;
->>>>>>>     -	if (pol && pol != &default_policy && !(pol->flags &
->>>>>>> MPOL_F_MORON)) {
->>>>>>> +	if (!(pol->flags & MPOL_F_KERNEL)) {
->>>>>> Can we avoid to introduce a new flag?  Whether the following code
->>>>>> work?
->>>>>>            if (pol && pol != &default_policy && !(pol->mode !=
->>>>>>                MPOL_PREFERRED) && !(pol->flags & MPOL_F_MORON))
->>>>>> But I think that this is kind of fragile.  A flag is better.  But
->>>>>> personally, I don't think MPOL_F_KERNEL is a good name, maybe
->>>>>> MPOL_F_DEFAULT?
->>>>>
->>>>> I thought along the same lines, but as you have also shown we need to
->>>>> exclude both default and preferred fallbacks so naming the flag
->>>>> default did not feel best. MPOL_F_INTERNAL? MPOL_F_FALLBACK?
->>>>> MPOL_F_SHOW_AS_DEFAULT? :))
->>>>>
->>>>> What I dislike about the flag more is the fact internal flags are for
->>>>> some reason in the uapi headers. And presumably we cannot zap them.
->>>>>
->>>>> But I don't think we can check for MPOL_PREFERRED since it can be a
->>>>> legitimate user set policy.
->>>> It's not legitimate (yet) to use MPOL_PREFERRED +
->>>> MPOL_F_NUMA_BALANCING.
->>>>
->>>>>
->>>>> We could check for the address of preferred_node_policy[] members with
->>>>> a loop covering all possible nids? If that will be the consensus I am
->>>>> happy to change it. But flag feels more elegant and robust.
->>>> Yes.  I think that this is doable.
->>>>           (unsigned long)addr >= (unsigned
->>>> long)(preferred_node_policy) && \
->>>>                   (unsigned long)addr < (unsigned long)(preferred_node_policy) + \
->>>>                   sizeof(preferred_node_policy)
->>>
->>> Not the prettiest but at least in the spirit of the existing
->>> &default_policy check. I can do that, no problem. If someone has a
->>> different opinion please shout soon.
->>>
->>>>>>>     		mode = pol->mode;
->>>>>>>     		flags = pol->flags;
->>>>>>>     	}
->>>>>>> @@ -3328,15 +3336,25 @@ void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
->>>>>>>     	p += snprintf(p, maxlen, "%s", policy_modes[mode]);
->>>>>>>       	if (flags & MPOL_MODE_FLAGS) {
->>>>>>> -		p += snprintf(p, buffer + maxlen - p, "=");
->>>>>>> +		unsigned int bit, cnt = 0;
->>>>>>>     -		/*
->>>>>>> -		 * Currently, the only defined flags are mutually exclusive
->>>>>>> -		 */
->>>>>>> -		if (flags & MPOL_F_STATIC_NODES)
->>>>>>> -			p += snprintf(p, buffer + maxlen - p, "static");
->>>>>>> -		else if (flags & MPOL_F_RELATIVE_NODES)
->>>>>>> -			p += snprintf(p, buffer + maxlen - p, "relative");
->>>>>>> +		for_each_set_bit(bit, &flags, ARRAY_SIZE(policy_flags)) {
->>>>>>> +			if (bit <= ilog2(MPOL_F_KERNEL))
->>>>>>> +				continue;
->>>>>>> +
->>>>>>> +			if (cnt == 0)
->>>>>>> +				p += snprintf(p, buffer + maxlen - p, "=");
->>>>>>> +			else
->>>>>>> +				p += snprintf(p, buffer + maxlen - p, ",");
->>>>>>> +
->>>>>>> +			if (WARN_ON_ONCE(!policy_flags[bit]))
->>>>>>> +				p += snprintf(p, buffer + maxlen - p, "bit%u",
->>>>>>> +					      bit);
->>>>>>> +			else
->>>>>>> +				p += snprintf(p, buffer + maxlen - p,
->>>>>>> +					      policy_flags[bit]);
->>>>>>> +			cnt++;
->>>>>>> +		}
->>>>>> Please refer to commit 2291990ab36b ("mempolicy: clean-up
->>>>>> mpol-to-str()
->>>>>> mempolicy formatting") for the original format.
->>>>>
->>>>> That was in 2008 so long time ago and in the meantime there were no
->>>>> bars. The format in this patch tries to align with the input format
->>>>> and I think it manages, apart from deciding to print unknown flags as
->>>>> bit numbers (which is most probably an irrelevant difference). Why do
->>>>> you think the pre-2008 format is better?
->>>> If you think that your format is better, please explain why you not
->>>> use
->>>> the original format in the patch description.  You can also show
->>>> examples to compare.
->>>
->>> Because there is no "old" format? If you refer to the one which ended
->>> in 2008. Or if you refer to the one this patch replaces, then it is
->>> effectively the same format for a single flag. And for multiple flags
->>> before this patch that wasn't a possibility. So I am not sure what I
->>> would include as a comparison. Broken "default" vs
->>> "bind=balancing:0-1"? Am I missing something?
->> In the old format (not in the old code), it is,
->> bind=relative|balancing:0-1
->> while in your format,
->> bind=relative,balancing:0-1
->> Please explain why you make the change.
->
-> I can explain the format in the commit message more, if that what you
-> are suggesting?
+Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+---
+ drivers/media/platform/aspeed/aspeed-video.c | 177 ++++++++++++++++---
+ include/uapi/linux/aspeed-video.h            |   7 +
+ 2 files changed, 158 insertions(+), 26 deletions(-)
 
-Thanks, please do that.
+diff --git a/drivers/media/platform/aspeed/aspeed-video.c b/drivers/media/platform/aspeed/aspeed-video.c
+index fc6050e3be0d..da5bf512a8ab 100644
+--- a/drivers/media/platform/aspeed/aspeed-video.c
++++ b/drivers/media/platform/aspeed/aspeed-video.c
+@@ -25,6 +25,8 @@
+ #include <linux/workqueue.h>
+ #include <linux/debugfs.h>
+ #include <linux/ktime.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-dev.h>
+ #include <media/v4l2-device.h>
+@@ -203,6 +205,25 @@
+ #define VE_MEM_RESTRICT_START		0x310
+ #define VE_MEM_RESTRICT_END		0x314
+ 
++// SCU's registers
++#define SCU_MISC_CTRL			0xC0
++#define  SCU_DPLL_SOURCE		BIT(20)
++
++// GFX's registers
++#define GFX_CTRL			0x60
++#define  GFX_CTRL_ENABLE		BIT(0)
++#define  GFX_CTRL_FMT			GENMASK(9, 7)
++
++#define GFX_H_DISPLAY			0x70
++#define  GFX_H_DISPLAY_DE		GENMASK(28, 16)
++#define  GFX_H_DISPLAY_TOTAL		GENMASK(12, 0)
++
++#define GFX_V_DISPLAY			0x78
++#define  GFX_V_DISPLAY_DE		GENMASK(27, 16)
++#define  GFX_V_DISPLAY_TOTAL		GENMASK(11, 0)
++
++#define GFX_DISPLAY_ADDR		0x80
++
+ /*
+  * VIDEO_MODE_DETECT_DONE:	a flag raised if signal lock
+  * VIDEO_RES_CHANGE:		a flag raised if res_change work on-going
+@@ -273,6 +294,7 @@ struct aspeed_video_perf {
+  * yuv420:		a flag raised if JPEG subsampling is 420
+  * format:		holds the video format
+  * hq_mode:		a flag raised if HQ is enabled. Only for VIDEO_FMT_ASPEED
++ * input:		holds the video input
+  * frame_rate:		holds the frame_rate
+  * jpeg_quality:	holds jpeq's quality (0~11)
+  * jpeg_hq_quality:	holds hq's quality (1~12) only if hq_mode enabled
+@@ -298,6 +320,8 @@ struct aspeed_video {
+ 	struct video_device vdev;
+ 	struct mutex video_lock;	/* v4l2 and videobuf2 lock */
+ 
++	struct regmap *scu;
++	struct regmap *gfx;
+ 	u32 jpeg_mode;
+ 	u32 comp_size_read;
+ 
+@@ -316,6 +340,7 @@ struct aspeed_video {
+ 	bool yuv420;
+ 	enum aspeed_video_format format;
+ 	bool hq_mode;
++	enum aspeed_video_input input;
+ 	unsigned int frame_rate;
+ 	unsigned int jpeg_quality;
+ 	unsigned int jpeg_hq_quality;
+@@ -485,6 +510,7 @@ static const struct v4l2_dv_timings_cap aspeed_video_timings_cap = {
+ 
+ static const char * const format_str[] = {"Standard JPEG",
+ 	"Aspeed JPEG"};
++static const char * const input_str[] = {"VGA", "BMC GFX"};
+ 
+ static unsigned int debug;
+ 
+@@ -609,6 +635,14 @@ static int aspeed_video_start_frame(struct aspeed_video *video)
+ 		aspeed_video_free_buf(video, &video->bcd);
+ 	}
+ 
++	if (video->input == VIDEO_INPUT_GFX) {
++		u32 val;
++
++		// update input buffer address as gfx's
++		regmap_read(video->gfx, GFX_DISPLAY_ADDR, &val);
++		aspeed_video_write(video, VE_TGS_0, val);
++	}
++
+ 	spin_lock_irqsave(&video->lock, flags);
+ 	buf = list_first_entry_or_null(&video->buffers,
+ 				       struct aspeed_video_buffer, link);
+@@ -1026,9 +1060,23 @@ static void aspeed_video_get_timings(struct aspeed_video *v,
+ 	}
+ }
+ 
++static void aspeed_video_get_resolution_gfx(struct aspeed_video *video,
++					    struct v4l2_bt_timings *det)
++{
++	u32 h_val, v_val;
++
++	regmap_read(video->gfx, GFX_H_DISPLAY, &h_val);
++	regmap_read(video->gfx, GFX_V_DISPLAY, &v_val);
++
++	det->width = FIELD_GET(GFX_H_DISPLAY_DE, h_val) + 1;
++	det->height = FIELD_GET(GFX_V_DISPLAY_DE, v_val) + 1;
++	video->v4l2_input_status = 0;
++}
++
+ #define res_check(v) test_and_clear_bit(VIDEO_MODE_DETECT_DONE, &(v)->flags)
+ 
+-static void aspeed_video_get_resolution(struct aspeed_video *video)
++static void aspeed_video_get_resolution_vga(struct aspeed_video *video,
++					    struct v4l2_bt_timings *det)
+ {
+ 	bool invalid_resolution = true;
+ 	int rc;
+@@ -1036,7 +1084,6 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
+ 	u32 mds;
+ 	u32 src_lr_edge;
+ 	u32 src_tb_edge;
+-	struct v4l2_bt_timings *det = &video->detected_timings;
+ 
+ 	det->width = MIN_WIDTH;
+ 	det->height = MIN_HEIGHT;
+@@ -1113,14 +1160,20 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
+ 
+ 	aspeed_video_get_timings(video, det);
+ 
+-	/*
+-	 * Enable mode-detect watchdog, resolution-change watchdog and
+-	 * automatic compression after frame capture.
+-	 */
++	/* Enable mode-detect watchdog, resolution-change watchdog */
+ 	aspeed_video_update(video, VE_INTERRUPT_CTRL, 0,
+ 			    VE_INTERRUPT_MODE_DETECT_WD);
+-	aspeed_video_update(video, VE_SEQ_CTRL, 0,
+-			    VE_SEQ_CTRL_AUTO_COMP | VE_SEQ_CTRL_EN_WATCHDOG);
++	aspeed_video_update(video, VE_SEQ_CTRL, 0, VE_SEQ_CTRL_EN_WATCHDOG);
++}
++
++static void aspeed_video_get_resolution(struct aspeed_video *video)
++{
++	struct v4l2_bt_timings *det = &video->detected_timings;
++
++	if (video->input == VIDEO_INPUT_GFX)
++		aspeed_video_get_resolution_gfx(video, det);
++	else
++		aspeed_video_get_resolution_vga(video, det);
+ 
+ 	v4l2_dbg(1, debug, &video->v4l2_dev, "Got resolution: %dx%d\n",
+ 		 det->width, det->height);
+@@ -1156,7 +1209,7 @@ static void aspeed_video_set_resolution(struct aspeed_video *video)
+ 	aspeed_video_write(video, VE_SRC_SCANLINE_OFFSET, act->width * 4);
+ 
+ 	/* Don't use direct mode below 1024 x 768 (irqs don't fire) */
+-	if (size < DIRECT_FETCH_THRESHOLD) {
++	if (video->input == VIDEO_INPUT_VGA && size < DIRECT_FETCH_THRESHOLD) {
+ 		v4l2_dbg(1, debug, &video->v4l2_dev, "Capture: Sync Mode\n");
+ 		aspeed_video_write(video, VE_TGS_0,
+ 				   FIELD_PREP(VE_TGS_FIRST,
+@@ -1171,10 +1224,20 @@ static void aspeed_video_set_resolution(struct aspeed_video *video)
+ 				    VE_CTRL_INT_DE | VE_CTRL_DIRECT_FETCH,
+ 				    VE_CTRL_INT_DE);
+ 	} else {
++		u32 ctrl, val, bpp;
++
+ 		v4l2_dbg(1, debug, &video->v4l2_dev, "Capture: Direct Mode\n");
++		ctrl = VE_CTRL_DIRECT_FETCH;
++		if (video->input == VIDEO_INPUT_GFX) {
++			regmap_read(video->gfx, GFX_CTRL, &val);
++			bpp = FIELD_GET(GFX_CTRL_FMT, val) ? 32 : 16;
++			if (bpp == 16)
++				ctrl |= VE_CTRL_INT_DE;
++			aspeed_video_write(video, VE_TGS_1, act->width * (bpp >> 3));
++		}
+ 		aspeed_video_update(video, VE_CTRL,
+ 				    VE_CTRL_INT_DE | VE_CTRL_DIRECT_FETCH,
+-				    VE_CTRL_DIRECT_FETCH);
++				    ctrl);
+ 	}
+ 
+ 	size *= 4;
+@@ -1207,6 +1270,22 @@ static void aspeed_video_set_resolution(struct aspeed_video *video)
+ 		aspeed_video_free_buf(video, &video->srcs[0]);
+ }
+ 
++/*
++ * Update relative parameters when timing changed.
++ *
++ * @video: the struct of aspeed_video
++ * @timings: the new timings
++ */
++static void aspeed_video_update_timings(struct aspeed_video *video, struct v4l2_bt_timings *timings)
++{
++	video->active_timings = *timings;
++	aspeed_video_set_resolution(video);
++
++	video->pix_fmt.width = timings->width;
++	video->pix_fmt.height = timings->height;
++	video->pix_fmt.sizeimage = video->max_compressed_size;
++}
++
+ static void aspeed_video_update_regs(struct aspeed_video *video)
+ {
+ 	u8 jpeg_hq_quality = clamp((int)video->jpeg_hq_quality - 1, 0,
+@@ -1219,6 +1298,8 @@ static void aspeed_video_update_regs(struct aspeed_video *video)
+ 	u32 ctrl = 0;
+ 	u32 seq_ctrl = 0;
+ 
++	v4l2_dbg(1, debug, &video->v4l2_dev, "input(%s)\n",
++		 input_str[video->input]);
+ 	v4l2_dbg(1, debug, &video->v4l2_dev, "framerate(%d)\n",
+ 		 video->frame_rate);
+ 	v4l2_dbg(1, debug, &video->v4l2_dev, "jpeg format(%s) subsample(%s)\n",
+@@ -1234,6 +1315,9 @@ static void aspeed_video_update_regs(struct aspeed_video *video)
+ 	else
+ 		aspeed_video_update(video, VE_BCD_CTRL, VE_BCD_CTRL_EN_BCD, 0);
+ 
++	if (video->input == VIDEO_INPUT_VGA)
++		ctrl |= VE_CTRL_AUTO_OR_CURSOR;
++
+ 	if (video->frame_rate)
+ 		ctrl |= FIELD_PREP(VE_CTRL_FRC, video->frame_rate);
+ 
+@@ -1252,7 +1336,9 @@ static void aspeed_video_update_regs(struct aspeed_video *video)
+ 	aspeed_video_update(video, VE_SEQ_CTRL,
+ 			    video->jpeg_mode | VE_SEQ_CTRL_YUV420,
+ 			    seq_ctrl);
+-	aspeed_video_update(video, VE_CTRL, VE_CTRL_FRC, ctrl);
++	aspeed_video_update(video, VE_CTRL,
++			    VE_CTRL_FRC | VE_CTRL_AUTO_OR_CURSOR |
++			    VE_CTRL_SOURCE, ctrl);
+ 	aspeed_video_update(video, VE_COMP_CTRL,
+ 			    VE_COMP_CTRL_DCT_LUM | VE_COMP_CTRL_DCT_CHR |
+ 			    VE_COMP_CTRL_EN_HQ | VE_COMP_CTRL_HQ_DCT_LUM |
+@@ -1280,6 +1366,7 @@ static void aspeed_video_init_regs(struct aspeed_video *video)
+ 	aspeed_video_write(video, VE_JPEG_ADDR, video->jpeg.dma);
+ 
+ 	/* Set control registers */
++	aspeed_video_write(video, VE_SEQ_CTRL, VE_SEQ_CTRL_AUTO_COMP);
+ 	aspeed_video_write(video, VE_CTRL, ctrl);
+ 	aspeed_video_write(video, VE_COMP_CTRL, VE_COMP_CTRL_RSVD);
+ 
+@@ -1311,12 +1398,7 @@ static void aspeed_video_start(struct aspeed_video *video)
+ 	aspeed_video_get_resolution(video);
+ 
+ 	/* Set timings since the device is being opened for the first time */
+-	video->active_timings = video->detected_timings;
+-	aspeed_video_set_resolution(video);
+-
+-	video->pix_fmt.width = video->active_timings.width;
+-	video->pix_fmt.height = video->active_timings.height;
+-	video->pix_fmt.sizeimage = video->max_compressed_size;
++	aspeed_video_update_timings(video, &video->detected_timings);
+ }
+ 
+ static void aspeed_video_stop(struct aspeed_video *video)
+@@ -1414,15 +1496,44 @@ static int aspeed_video_enum_input(struct file *file, void *fh,
+ 
+ static int aspeed_video_get_input(struct file *file, void *fh, unsigned int *i)
+ {
+-	*i = 0;
++	struct aspeed_video *video = video_drvdata(file);
++
++	*i = video->input;
+ 
+ 	return 0;
+ }
+ 
+ static int aspeed_video_set_input(struct file *file, void *fh, unsigned int i)
+ {
+-	if (i)
++	struct aspeed_video *video = video_drvdata(file);
++
++	if (i >= VIDEO_INPUT_MAX)
++		return -EINVAL;
++
++	if (IS_ERR(video->scu)) {
++		v4l2_dbg(1, debug, &video->v4l2_dev, "%s: scu isn't ready for input-control\n", __func__);
++		return -EINVAL;
++	}
++
++	if (IS_ERR(video->gfx) && i == VIDEO_INPUT_GFX) {
++		v4l2_dbg(1, debug, &video->v4l2_dev, "%s: gfx isn't ready for GFX input\n", __func__);
+ 		return -EINVAL;
++	}
++
++	video->input = i;
++
++	// modify dpll source per current input
++	if (video->input == VIDEO_INPUT_VGA)
++		regmap_update_bits(video->scu, SCU_MISC_CTRL, SCU_DPLL_SOURCE, 0);
++	else
++		regmap_update_bits(video->scu, SCU_MISC_CTRL, SCU_DPLL_SOURCE, SCU_DPLL_SOURCE);
++
++	aspeed_video_update_regs(video);
++
++	// update signal status
++	aspeed_video_get_resolution(video);
++	if (!video->v4l2_input_status)
++		aspeed_video_update_timings(video, &video->detected_timings);
+ 
+ 	return 0;
+ }
+@@ -1527,13 +1638,7 @@ static int aspeed_video_set_dv_timings(struct file *file, void *fh,
+ 	if (vb2_is_busy(&video->queue))
+ 		return -EBUSY;
+ 
+-	video->active_timings = timings->bt;
+-
+-	aspeed_video_set_resolution(video);
+-
+-	video->pix_fmt.width = timings->bt.width;
+-	video->pix_fmt.height = timings->bt.height;
+-	video->pix_fmt.sizeimage = video->max_compressed_size;
++	aspeed_video_update_timings(video, &timings->bt);
+ 
+ 	timings->type = V4L2_DV_BT_656_1120;
+ 
+@@ -1911,6 +2016,7 @@ static int aspeed_video_debugfs_show(struct seq_file *s, void *data)
+ 	val08 = aspeed_video_read(v, VE_CTRL);
+ 	if (FIELD_GET(VE_CTRL_DIRECT_FETCH, val08)) {
+ 		seq_printf(s, "  %-20s:\tDirect fetch\n", "Mode");
++		seq_printf(s, "  %-20s:\t%s\n", "Input", input_str[v->input]);
+ 		seq_printf(s, "  %-20s:\t%s\n", "VGA bpp mode",
+ 			   FIELD_GET(VE_CTRL_INT_DE, val08) ? "16" : "32");
+ 	} else {
+@@ -2070,12 +2176,31 @@ static int aspeed_video_setup_video(struct aspeed_video *video)
+ 	return 0;
+ }
+ 
++// Get regmap without checking res, such as clk/reset, that could lead to conflict.
++static struct regmap *aspeed_regmap_lookup(struct device_node *np, const char *property)
++{
++	struct device_node *syscon_np;
++	struct regmap *regmap;
++
++	syscon_np = of_parse_phandle(np, property, 0);
++	if (!syscon_np)
++		return ERR_PTR(-ENODEV);
++
++	regmap = device_node_to_regmap(syscon_np);
++	of_node_put(syscon_np);
++
++	return regmap;
++}
++
+ static int aspeed_video_init(struct aspeed_video *video)
+ {
+ 	int irq;
+ 	int rc;
+ 	struct device *dev = video->dev;
+ 
++	video->scu = aspeed_regmap_lookup(dev->of_node, "aspeed,scu");
++	video->gfx = aspeed_regmap_lookup(dev->of_node, "aspeed,gfx");
++
+ 	irq = irq_of_parse_and_map(dev->of_node, 0);
+ 	if (!irq) {
+ 		dev_err(dev, "Unable to find IRQ\n");
+diff --git a/include/uapi/linux/aspeed-video.h b/include/uapi/linux/aspeed-video.h
+index 6586a65548c4..44173be4c8dd 100644
+--- a/include/uapi/linux/aspeed-video.h
++++ b/include/uapi/linux/aspeed-video.h
+@@ -8,6 +8,13 @@
+ 
+ #include <linux/v4l2-controls.h>
+ 
++// enum for aspeed video's v4l2 s_input
++enum aspeed_video_input {
++	VIDEO_INPUT_VGA = 0,
++	VIDEO_INPUT_GFX,
++	VIDEO_INPUT_MAX
++};
++
+ #define V4L2_CID_ASPEED_HQ_MODE			(V4L2_CID_USER_ASPEED_BASE  + 1)
+ #define V4L2_CID_ASPEED_HQ_JPEG_QUALITY		(V4L2_CID_USER_ASPEED_BASE  + 2)
+ 
 
-> But as for "making the change" we may be talking past each other I
-> just don't know how. Again, could you please explain how am I changing
-> the format? Where is the old format? AFAICS it does not exist in
-> reality. The bar formatting ended in 2.6.26.
+base-commit: e9d22f7a6655941fc8b2b942ed354ec780936b3e
+-- 
+2.25.1
 
-OK.  One choice is to follow the old bar format, another choice is to
-invent a new format.
-
---
-Best Regards,
-Huang, Ying
