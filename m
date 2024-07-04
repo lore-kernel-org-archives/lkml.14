@@ -1,210 +1,141 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6D91B375B;
-	Thu,  4 Jul 2024 17:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7962D1B3F06
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 17:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720112910; cv=none; b=RYWlCdseXGYRhHrcoBOgoKNqyZgYpE2y3xhfRL7KzjPfsmqPSBOUJn07apiVEvBMaZevNsWbCLmce9LaMCyuVLbTRCNtGu6aQGoEi1P2M4MbPCsxcISlxx1lE/W8ngSV905bt+Mos69i3Qi3IklGvsWuUwTTtqqvMETXLUFze4M=
+	t=1720112911; cv=none; b=Bx4DQiOBOuEtgBcNbq3bCw2p5bd+4bmWWiFWACLi5XOkt/jl43uqg2WPfft+QsGWobAjafJKrwsnb3k8y3QLnKbpDj4GGmMpfcjIeWkQlSmAwFwrZESeOVa9JKKNtgSARQyrwAQcQZ9ZXroDmkmEMoh/5M7SMtI6qr4liHwcr9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720112910; c=relaxed/simple;
-	bh=QiLJeBMBiVux1LfvRktK0NFIY7T3PnMvUz3RB/H8SM4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sk4NnhrUn6lHgVmH1maRbl68LvR3S5marA0g/q+Peo5jJG7j+a8KZUgIvVmorbKp/60nwbxmUIx6ftENddKEAmuw4bZKNsRLrJXEx4CDYJ3hskkbaBvtIVcbqUtPtfMZGeWlSnX3KBtxVP+uPwLeH4M4yo4ITVe8qEO7SBRPTjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFNP12qNzz67Hm8;
-	Fri,  5 Jul 2024 01:07:17 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C7BFF14065C;
-	Fri,  5 Jul 2024 01:08:24 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 4 Jul
- 2024 18:08:24 +0100
-Date: Thu, 4 Jul 2024 18:08:23 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>
-CC: "Huang, Ying" <ying.huang@intel.com>, Gregory Price
-	<gourry.memverge@gmail.com>, <aneesh.kumar@linux.ibm.com>, <mhocko@suse.com>,
-	<tj@kernel.org>, <john@jagalactic.com>, Eishan Mirakhur
-	<emirakhur@micron.com>, Vinicius Tavares Petrucci <vtavarespetr@micron.com>,
-	Ravis OpenSrc <Ravis.OpenSrc@micron.com>, Alistair Popple
-	<apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>,
-	"SeongJae  Park" <sj@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, "Andrew Morton" <akpm@linux-foundation.org>,
-	Dave Jiang <dave.jiang@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, "Ho-Ren (Jack)
-  Chuang" <horenchuang@bytedance.com>, "Ho-Ren (Jack) Chuang"
-	<horenchuang@gmail.com>, <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
-Subject: Re: [PATCH v2 1/1] memory tier: consolidate the initialization of
- memory tiers
-Message-ID: <20240704180823.0000212d@Huawei.com>
-In-Reply-To: <84b43294411bb1fe0ed58f2da59abf554ef48f7d@linux.dev>
-References: <20240628060925.303309-1-horen.chuang@linux.dev>
-	<20240628060925.303309-2-horen.chuang@linux.dev>
-	<20240702142535.00003dc0@Huawei.com>
-	<84b43294411bb1fe0ed58f2da59abf554ef48f7d@linux.dev>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1720112911; c=relaxed/simple;
+	bh=dBkn8uWErKq0NfiBMQ9moE7lJwn+ZFUPDGAulmb98hI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NK03iyWK7i9nDc0c015l9m1pZa/B6yemV05okCNuSmKI4FIPaBeum/r37B5ka5ZRnFr/kcqcZlnICnzmW6wp7Xv0Nw1IOtz40kBHUzTq0XnK2Hoc0gscHhe2+LwtMzwdOb9OvCX+LMeSFJmP/9XWbKW0KMZQfnAuHEMC7nbimkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=faR4Ld11; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="faR4Ld11"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720112908;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xi1xjBHaOdM6NCOm6B2REEcdukdUD5LuLilmDyDwG4g=;
+	b=faR4Ld11T81gZuLnjE19OgU95cXwzI3YJJOL8rUDPDEDn5b5WDbwAO6ULcveWwIyxsKMjX
+	3wgPA17EMqk1rn9rzQgXlS2XB58FzunDghKTRONIrS1mtwrZk5tpz8jtLgWioYBH9xblm7
+	89CocErhU6BDXk2k4COehazOqNFXwfE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-32-doAIwN3bOvGSNpLfYa0gVQ-1; Thu, 04 Jul 2024 13:08:27 -0400
+X-MC-Unique: doAIwN3bOvGSNpLfYa0gVQ-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-367987cff30so601698f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 10:08:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720112906; x=1720717706;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xi1xjBHaOdM6NCOm6B2REEcdukdUD5LuLilmDyDwG4g=;
+        b=aptP8F5lQzmbNdjwnBeOmZP7HTXFH4KqC5XcBARKXRew1lPaUKklibmnZ2fKQiHu2Y
+         JPezZYrkwNPnYR1i3Cab66iFHdeO7NpdjWc680j+TEscMRg6BdozaXkUfHLxQYJ6Clgn
+         ysS/eVowtVSFdtDgQLRgsmbsODW7mGR0L7qf/9UjPThcsY+8/AhhIp3kEFm2MXj6Fp/9
+         I36eQmD1a4EiJnWlojdI1aPPIv/wWlhvvj0TWbLLUhzjEYEXQ1zGsOrpEYam4B8UaC4g
+         KFIlQ6sojwLNjDLVWBzSOEasJpTU6o/UqdOMow1n0u03Ztk7VuASF3kfuUqA8J4WoeMz
+         3BGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWfUlvQwfGFVlXn/Ivm/qGbOYZljbnb67f2qEZdxNMne6gjoT2vcYqbjtfIb9IiQxMJrUyjBjzCxtHnbXDNbGFXiQAfu5CLNcpPuyNg
+X-Gm-Message-State: AOJu0Yx2hhqve32+yfHnpWM00Kn/sFTSHLlFDWsEofyTDy6QGkLRrHlC
+	x5a8IbFCGF8Rbm2v7u9Pn0lpZ8t4s6M66p+JlzWtJKuojJlhVCb6kZ2ZZdkDKY6PeTyAvTeyB5s
+	b+eLuD9tYNZ8+sWpvO0+yprKhlP8coqlP4HwE6oSRn481tkl4ZojopIQfiIGMCw==
+X-Received: by 2002:adf:f548:0:b0:366:ec2c:8648 with SMTP id ffacd0b85a97d-3679dd66b0emr1473881f8f.43.1720112906043;
+        Thu, 04 Jul 2024 10:08:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEZE9lqxekh8vlvO7Znvqy+xmMypbyEYcSxQDzUKYJCWAgpo4YD19f2xbFzHmbfg5HdXDdSSQ==
+X-Received: by 2002:adf:f548:0:b0:366:ec2c:8648 with SMTP id ffacd0b85a97d-3679dd66b0emr1473853f8f.43.1720112905720;
+        Thu, 04 Jul 2024 10:08:25 -0700 (PDT)
+Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3679983882csm2704593f8f.78.2024.07.04.10.08.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 10:08:25 -0700 (PDT)
+From: Danilo Krummrich <dakr@redhat.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	wedsonaf@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com
+Cc: daniel.almeida@collabora.com,
+	faith.ekstrand@collabora.com,
+	boris.brezillon@collabora.com,
+	lina@asahilina.net,
+	mcanal@igalia.com,
+	zhiw@nvidia.com,
+	acurrid@nvidia.com,
+	cjia@nvidia.com,
+	jhubbard@nvidia.com,
+	airlied@redhat.com,
+	ajanulgu@redhat.com,
+	lyude@redhat.com,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>
+Subject: [PATCH 03/20] rust: alloc: rename `KernelAllocator` to `Kmalloc`
+Date: Thu,  4 Jul 2024 19:06:31 +0200
+Message-ID: <20240704170738.3621-4-dakr@redhat.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240704170738.3621-1-dakr@redhat.com>
+References: <20240704170738.3621-1-dakr@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
+Subsequent patches implement `Vmalloc` and `KVmalloc` allocators, hence
+align `KernelAllocator` to this naming scheme.
 
-Hi,
+Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+---
+ rust/kernel/alloc/allocator.rs | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> > > 
-> > >  static int __init memory_tier_init(void)
-> > > 
-> > >  {
-> > > 
-> > >  - int ret, node;
-> > > 
-> > >  - struct memory_tier *memtier;
-> > > 
-> > >  + int ret;
-> > > 
-> > >  
-> > > 
-> > >  ret = subsys_virtual_register(&memory_tier_subsys, NULL);
-> > > 
-> > >  if (ret)
-> > > 
-> > >  @@ -887,7 +897,8 @@ static int __init memory_tier_init(void)
-> > > 
-> > >  GFP_KERNEL);
-> > > 
-> > >  WARN_ON(!node_demotion);
-> > > 
-> > >  #endif
-> > > 
-> > >  - mutex_lock(&memory_tier_lock);
-> > > 
-> > >  +
-> > > 
-> > >  + guard(mutex)(&memory_tier_lock);
-> > >   
-> > 
-> > If this was safe to do without the rest of the change (I think so)
-> > 
-> > then better to pull that out as a trivial precursor so less noise
-> > 
-> > in here.
-> >   
-> 
-> Do you mean instead of using guard(mutex)(),
-> use mutex_lock() as it was? or?
-> 
+diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
+index 49fb33cc18d9..e47ab8fe21ab 100644
+--- a/rust/kernel/alloc/allocator.rs
++++ b/rust/kernel/alloc/allocator.rs
+@@ -6,7 +6,7 @@
+ use core::alloc::{GlobalAlloc, Layout};
+ use core::ptr;
+ 
+-struct KernelAllocator;
++struct Kmalloc;
+ 
+ fn aligned_size(new_layout: Layout) -> usize {
+     // Customized layouts from `Layout::from_size_align()` can have size < align, so pad first.
+@@ -48,7 +48,7 @@ pub(crate) unsafe fn krealloc_aligned(ptr: *mut u8, new_layout: Layout, flags: F
+     }
+ }
+ 
+-unsafe impl GlobalAlloc for KernelAllocator {
++unsafe impl GlobalAlloc for Kmalloc {
+     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+         // SAFETY: `ptr::null_mut()` is null and `layout` has a non-zero size by the function safety
+         // requirement.
+@@ -84,7 +84,7 @@ unsafe fn alloc_zeroed(&self, layout: Layout) -> *mut u8 {
+ }
+ 
+ #[global_allocator]
+-static ALLOCATOR: KernelAllocator = KernelAllocator;
++static ALLOCATOR: Kmalloc = Kmalloc;
+ 
+ // See <https://github.com/rust-lang/rust/pull/86844>.
+ #[no_mangle]
+-- 
+2.45.2
 
-Code as here, but possibly pull the guard(mutex) part out as
-a patch 1 as it's an unrelated improvement to the rest of the set
-which would be in patch 2.
-
-Not particularly important though as you've sent a v3 in the
-meantime and it's fine to have it in one patch.
-
-> > > 
-> > > /*
-> > > 
-> > >  * For now we can have 4 faster memory tiers with smaller adistance
-> > > 
-> > >  * than default DRAM tier.
-> > > 
-> > >  @@ -897,29 +908,9 @@ static int __init memory_tier_init(void)
-> > > 
-> > >  if (IS_ERR(default_dram_type))
-> > > 
-> > >  panic("%s() failed to allocate default DRAM tier\n", __func__);
-> > > 
-> > >  
-> > > 
-> > >  - /*
-> > > 
-> > >  - * Look at all the existing N_MEMORY nodes and add them to
-> > > 
-> > >  - * default memory tier or to a tier if we already have memory
-> > > 
-> > >  - * types assigned.
-> > > 
-> > >  - */
-> > > 
-> > >  - for_each_node_state(node, N_MEMORY) {
-> > > 
-> > >  - if (!node_state(node, N_CPU))
-> > > 
-> > >  - /*
-> > > 
-> > >  - * Defer memory tier initialization on
-> > > 
-> > >  - * CPUless numa nodes. These will be initialized
-> > > 
-> > >  - * after firmware and devices are initialized.
-> > > 
-> > >  - */
-> > > 
-> > >  - continue;
-> > > 
-> > >  -
-> > > 
-> > >  - memtier = set_node_memory_tier(node);
-> > > 
-> > >  - if (IS_ERR(memtier))
-> > > 
-> > >  - /*
-> > > 
-> > >  - * Continue with memtiers we are able to setup
-> > > 
-> > >  - */
-> > > 
-> > >  - break;
-> > > 
-> > >  - }
-> > > 
-> > >  - establish_demotion_targets();
-> > > 
-> > >  - mutex_unlock(&memory_tier_lock);
-> > > 
-> > >  + /* Record nodes with memory and CPU to set default DRAM performance. */
-> > > 
-> > >  + nodes_and(default_dram_nodes, node_states[N_MEMORY],
-> > > 
-> > >  + node_states[N_CPU]);
-> > >   
-> > 
-> > There are systems where (for various esoteric reasons, such as describing an
-> > 
-> > association with some other memory that isn't DRAM where the granularity
-> > 
-> > doesn't match) the CPU nodes contain no DRAM but rather it's one node away.
-> > 
-> > Handling that can be a job for another day though.
-> >   
-> 
-> Thank you for informing me of this situation.
-> Sounds like handling that also requires a mapping table between
-> the CPU and the corresponding DRAM.
-
-I've not yet looked at how it interacts with this, but
-from an ACPI point of view it's just 'near' in SLIT and
-HMAT.  The nearest thing to a description is
-Memory Proximity Domain Attributes structures in HMAT.
-That allows you to describe the location of the memory
-controller, but in this type of system there may be
-a many to 1 mapping (interleaving across memory controllers
-in some CPU only nodes) for example.
-
-Anyhow, guess I need to spin up some emulated machines and
-see what breaks :)
-
-Jonathan
