@@ -1,37 +1,37 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3770F6DD0D
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23B413698E
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720067522; cv=none; b=olfN9O35vIM/rVB6kn2ZqCL7RW/aubssWC0PfdLrhuqeSceNnubW1VE2N6XOJlK3Fv931dg85zAaaTVGDuRrAMfSUnMV/C2RNifUZsG5U3t7U7ceqkh8pqiAczqMo+4IW5++PEXm0wJkuIHdwwWfWzBAHs+loPNdz2/0ASMRcw0=
+	t=1720067525; cv=none; b=om1ONVPrZeGxzVQ02bVKn1Vpygw40rBb3lNb5Jf4KyVaIj47BNJtntrucT745TK+XUgX0lG2U10Ux+dk3atp+r0U9hECuuhSQNgfhDBJRj0y8thpj5WFHfpzPDZbPP/7XgtGrDdwTKivRw51GJ2VrUhZtwR1DPZMDs/turP6NJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720067522; c=relaxed/simple;
-	bh=y25WqAsEYH7fwKRx+uFvYqGe8nKyVWi2BDSC44TtPHo=;
+	s=arc-20240116; t=1720067525; c=relaxed/simple;
+	bh=7J11hfigJ61V9ZKKSCxcuGfKdKkC/8ZzJ7ODULGmkWc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vl5JI8jDfBqTtZiCTWwfgMXLPJSFQ4kSGBv4vJrsRQROGdzsAPF7VZmCYs3Qh/BSvlgiLrCKtCaT7kiuCPyig3kCV5cXukDk5h9pQddTiYZPXsIBcyyn8tuYDdyBHaldZFYCKp4AFE6Z2FXlzWdpjRFBEVJC4MaUgOF1sB8X1b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=e6Jc7eM00EpXrnDqA9xGqMeoulsooj3y9T5cu64BlqPHriKtzyn4KP3TVbFML1H/LXRx/cDddm6sntDSBoRWHCrb78HK4EoPVtMiTt3JrSgcB914XBZs/itni5Z+aHPjoWBGjBirudp83/UBZdorsOetYTEv44ZgMusQVPsNAW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 824D71FCF7;
-	Thu,  4 Jul 2024 04:31:59 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 26D7421C0D;
+	Thu,  4 Jul 2024 04:32:02 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
 	none
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5F5B113889;
-	Thu,  4 Jul 2024 04:31:58 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 01D7013889;
+	Thu,  4 Jul 2024 04:32:00 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AKLwEr4lhmbnDAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:31:58 +0000
+	id MCZPN8AlhmbnDAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:32:00 +0000
 From: Oscar Salvador <osalvador@suse.de>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -45,9 +45,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 08/45] fs/proc: Enable smaps_pmd_entry to handle PMD-mapped hugetlb vmas
-Date: Thu,  4 Jul 2024 06:30:55 +0200
-Message-ID: <20240704043132.28501-9-osalvador@suse.de>
+Subject: [PATCH 10/45] fs/proc: Create smaps_pud_range to handle PUD-mapped hugetlb vmas
+Date: Thu,  4 Jul 2024 06:30:57 +0200
+Message-ID: <20240704043132.28501-11-osalvador@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240704043132.28501-1-osalvador@suse.de>
 References: <20240704043132.28501-1-osalvador@suse.de>
@@ -61,95 +61,86 @@ Content-Transfer-Encoding: 8bit
 X-Rspamd-Pre-Result: action=no action;
 	module=replies;
 	Message is reply to one we originated
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Queue-Id: 824D71FCF7
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
 X-Spam-Flag: NO
 X-Spam-Score: -4.00
 X-Spam-Level: 
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Queue-Id: 26D7421C0D
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-PMD-mapped hugetlb vmas will also reach smaps_pmd_entry.
-Add the required code so it knows how to handle those there.
+Normal THP cannot be PUD-mapped (besides devmap), but hugetlb can, so create
+smaps_pud_range in order to handle PUD-mapped hugetlb vmas.
 
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- fs/proc/task_mmu.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ fs/proc/task_mmu.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 775a2e8d600c..78d84d7e2353 100644
+index 78d84d7e2353..3f3460ff03b0 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
-@@ -804,6 +804,18 @@ static void smaps_pte_hole_lookup(unsigned long addr, struct mm_walk *walk)
- #endif
+@@ -912,6 +912,40 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
  }
+ #endif
  
 +#ifdef CONFIG_HUGETLB_PAGE
-+static void mss_hugetlb_update(struct mem_size_stats *mss, struct folio *folio,
-+			       struct vm_area_struct *vma, pte_t *pte)
++static int smaps_pud_range(pud_t *pudp, unsigned long addr, unsigned long end,
++			   struct mm_walk *walk)
 +{
-+	if (folio_likely_mapped_shared(folio) ||
-+	    hugetlb_pmd_shared(pte))
-+		mss->shared_hugetlb += huge_page_size(hstate_vma(vma));
-+	else
-+		mss->private_hugetlb += huge_page_size(hstate_vma(vma));
-+}
-+#endif
++	spinlock_t *ptl;
++	struct folio *folio;
++	struct vm_area_struct *vma = walk->vma;
++	struct mem_size_stats *mss = walk->private;
 +
- static void smaps_pte_entry(pte_t *pte, unsigned long addr,
- 		struct mm_walk *walk)
- {
-@@ -851,12 +863,13 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
- 	smaps_account(mss, page, false, young, dirty, locked, present);
- }
- 
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+#ifdef CONFIG_PGTABLE_HAS_HUGE_LEAVES
- static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
- 		struct mm_walk *walk)
- {
- 	struct mem_size_stats *mss = walk->private;
- 	struct vm_area_struct *vma = walk->vma;
-+	bool hugetlb = is_vm_hugetlb_page(vma);
- 	bool locked = !!(vma->vm_flags & VM_LOCKED);
- 	struct page *page = NULL;
- 	bool present = false;
-@@ -865,7 +878,7 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
- 	if (pmd_present(*pmd)) {
- 		page = vm_normal_page_pmd(vma, addr, *pmd);
- 		present = true;
--	} else if (unlikely(thp_migration_supported() && is_swap_pmd(*pmd))) {
-+	} else if (is_swap_pmd(*pmd)) {
- 		swp_entry_t entry = pmd_to_swp_entry(*pmd);
- 
- 		if (is_pfn_swap_entry(entry))
-@@ -874,6 +887,12 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
- 	if (IS_ERR_OR_NULL(page))
- 		return;
- 	folio = page_folio(page);
++	ptl = pud_huge_lock(pudp, vma);
++	if (!ptl)
++		return 0;
 +
-+	if (hugetlb) {
-+		mss_hugetlb_update(mss, folio, vma, (pte_t *)pmd);
-+		return;
++	if (pud_present(*pudp)) {
++		folio = vm_normal_folio_pud(vma, addr, *pudp);
++	} else if (is_swap_pud(*pudp)) {
++		/* PUD-hugetlbs can have swap entries */
++		swp_entry_t swpent = pud_to_swp_entry(*pudp);
++
++		if (is_pfn_swap_entry(swpent))
++			folio = pfn_swap_entry_folio(swpent);
 +	}
 +
- 	if (folio_test_anon(folio))
- 		mss->anonymous_thp += HPAGE_PMD_SIZE;
- 	else if (folio_test_swapbacked(folio))
-@@ -900,7 +919,7 @@ static int smaps_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
- 	pte_t *pte;
- 	spinlock_t *ptl;
++	if (folio)
++		/* Only for now hugetlb pages can end up here */
++		mss_hugetlb_update(mss, folio, vma, (pte_t *)pudp);
++
++	spin_unlock(ptl);
++	return 0;
++}
++#else
++#define smaps_pud_range NULL
++#endif
++
+ static int smaps_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+ 			   struct mm_walk *walk)
+ {
+@@ -1061,12 +1095,14 @@ static int smaps_hugetlb_range(pte_t *pte, unsigned long hmask,
+ #endif /* HUGETLB_PAGE */
  
--	ptl = pmd_trans_huge_lock(pmd, vma);
-+	ptl = pmd_huge_lock(pmd, vma);
- 	if (ptl) {
- 		smaps_pmd_entry(pmd, addr, walk);
- 		spin_unlock(ptl);
+ static const struct mm_walk_ops smaps_walk_ops = {
++	.pud_entry              = smaps_pud_range,
+ 	.pmd_entry		= smaps_pte_range,
+ 	.hugetlb_entry		= smaps_hugetlb_range,
+ 	.walk_lock		= PGWALK_RDLOCK,
+ };
+ 
+ static const struct mm_walk_ops smaps_shmem_walk_ops = {
++	.pud_entry              = smaps_pud_range,
+ 	.pmd_entry		= smaps_pte_range,
+ 	.hugetlb_entry		= smaps_hugetlb_range,
+ 	.pte_hole		= smaps_pte_hole,
 -- 
 2.26.2
 
