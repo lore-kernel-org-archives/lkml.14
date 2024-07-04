@@ -1,30 +1,48 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60DB64C83;
-	Thu,  4 Jul 2024 01:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5C7632;
+	Thu,  4 Jul 2024 01:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720055710; cv=none; b=HGoEUz8+VVhtfX/rZDIqiQtbvjAkF0VRuw/fv+/YejiCoi7tRmdQ7E1AX9MPEIEqlCFrOEFMuktK+Pg5+B3TUSBGZ+RmJx1glu0LozGKUYXJLUIKaP+NJHxNd6V0+YzZ+aF+4e4wS/JhVKG5xeB6LpL6bNIYw/hh9PmR51LYYwQ=
+	t=1720055711; cv=none; b=adguVh7r2U/9iKh/b8NrHTB5/05KZ33RlPp4taNfciQemlu6KbFMcI7NxOE6dLOA4KPqAaygFPFEr1XyWrnouVd5xiA8iQ8C2Yedu2ZR2wumPK6gMGDKxc9B9TsHA6hr/URZ0OL7JmeAb3dIWVa0I9FQ1Am3eyqVLbkpRmw/KuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720055710; c=relaxed/simple;
-	bh=hl7tqM8UQXxV1DLO1bxGWFM5khCBkNdB71K2vwf+aTU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ef9U9l+R0DanPZzKec7RMBL/KYXjCmT/drp6lV1Yxn0GYeH7UERtPE4x1shySDr/gSxpxIUBdDhhtUTLXedJk0KpdAOs0BAMp0G6RFWq7YOj9/7egcvh5VNvGVAAGAMKKjPwvygOthonqLM4F3Ovaj729kNMF5cb2XZBK1WovCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=P+qp9KtA; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1720055711; c=relaxed/simple;
+	bh=rMBJ1PmabKWenqjBIEI5AJNNZs15S+sLP8qDr93PA78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=evrirs0vLGqPYa1QJ7TtGH685ayxGlBGqeXDmhmp0qon3IZl1aYLeF4wCPorYZRBOyThm4udgT/siJudsPJOr9aD+4T7P/gyf7gXM3D4RHYeNrJi/R4Wzc4H8gjSEYv5d0l1PUVq5k1Ce6WUuODTj4pjYof1mTdJG2qWINsXjiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I0UgO50r; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="P+qp9KtA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=Sgcsx2tAZ8g67PHUjM2qPlMmPPLYQP+xUO4tGYkjnSE=;
-	b=P+qp9KtAzlzaJRFzGOFC5dFfksF1bzDSH0RdEEUMiRREHP3P84M+KuuJ06j++z
-	Z+MxcG4I7XZjgA392Mi2izopvY/cdZKlDUo8s26mIw1tZbDKmbzT7oVuTXjOYxP5
-	0zkom0hw0ly0QsgUc4+wJ7usd8qSl2Y5zO0CzmRfzCFFY=
-Received: from [172.21.22.210] (unknown [118.242.3.34])
-	by gzga-smtp-mta-g1-1 (Coremail) with SMTP id _____wD3XziM84VmfbwtAQ--.20333S2;
-	Thu, 04 Jul 2024 08:57:50 +0800 (CST)
-Message-ID: <dea5afcf-be7d-4377-8b95-754c2f0245c4@126.com>
-Date: Thu, 4 Jul 2024 08:57:48 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I0UgO50r"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463J5REs004615;
+	Thu, 4 Jul 2024 01:14:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	uRpXLfcsvuxp+p8SsgPzPXaUhVpL09CJ831wMJ2Y/vg=; b=I0UgO50rDrjeRMJF
+	BILIdUuwdLmbrSNFIfaTFtwmz/KxMj7Dr6CWyrNVYFR0TFK8Y5yzTbDVbOCv5vEy
+	CR1zZtsFcUGSEiHucqt04C6VOIk7bXUZL9ciyCgE5LRCW/mmjBzqzBI+9PkFWx90
+	ZyNCgKv1Hb+HsiZs5zKItolFMIsURCjHg+RhnXW6j4kIVi4Xo2MPbz5ve5e/jayg
+	l8qtMhya6USe188vSIG2yyCNddQSRJxXlrblHfo8Zz3nPJRYJwI5lXEOq++PbpTe
+	Da6XnoIOhmWzfwIsVmhuhwfea12Ni235a9aIxG0PY/fidynTiw7q/iIpYMXM621n
+	xXSQkQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 405cg28gk6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jul 2024 01:14:23 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4641EMjB015598
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 4 Jul 2024 01:14:22 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 3 Jul 2024
+ 18:14:01 -0700
+Message-ID: <f4162b7f-d957-4dd6-90a0-f65c1cbc213a@quicinc.com>
+Date: Thu, 4 Jul 2024 09:13:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,66 +50,143 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] mm/gup: Clear the LRU flag of a page before adding to
- LRU batch
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- 21cnbao@gmail.com, david@redhat.com, baolin.wang@linux.alibaba.com,
- aneesh.kumar@linux.ibm.com, liuzixing@hygon.cn
-References: <1720008153-16035-1-git-send-email-yangge1116@126.com>
- <20240703130843.ad421344a0f3f05564a7f706@linux-foundation.org>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <20240703130843.ad421344a0f3f05564a7f706@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3XziM84VmfbwtAQ--.20333S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7WrWxXrWUtFyUGr1UGr48WFg_yoW8ZFW8pF
-	4xJ3W3trWDX3WSkrs7J398ur1Syrs2yr45Jr13Ar1UCwn8Wr12v3y8KF1DW3W3CrWYgF1Y
-	vr4UWwn3ua1DCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jjLvtUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWQwRG2VLbI9L5QADs-
+Subject: Re: [PATCH 29/47] dt-bindings: net: qcom,ethqos: add description for
+ qcs9100
+To: Andrew Halaney <ahalaney@redhat.com>
+CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <djakov@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <jassisinghbrar@gmail.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <manivannan.sadhasivam@linaro.org>,
+        <will@kernel.org>, <joro@8bytes.org>, <conor@kernel.org>,
+        <tglx@linutronix.de>, <amitk@kernel.org>, <thara.gopinath@gmail.com>,
+        <linus.walleij@linaro.org>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
+        <vkoul@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>,
+        <robimarko@gmail.com>, <bartosz.golaszewski@linaro.org>,
+        <kishon@kernel.org>, <quic_wcheng@quicinc.com>,
+        <alim.akhtar@samsung.com>, <avri.altman@wdc.com>, <bvanassche@acm.org>,
+        <agross@kernel.org>, <gregkh@linuxfoundation.org>,
+        <quic_tdas@quicinc.com>, <robin.murphy@arm.com>,
+        <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
+        <lukasz.luba@arm.com>, <quic_rjendra@quicinc.com>,
+        <ulf.hansson@linaro.org>, <quic_sibis@quicinc.com>,
+        <otto.pflueger@abscue.de>, <luca@z3ntu.xyz>,
+        <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>,
+        <bhupesh.sharma@linaro.org>, <alexandre.torgue@foss.st.com>,
+        <peppe.cavallaro@st.com>, <joabreu@synopsys.com>,
+        <netdev@vger.kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <krzysztof.kozlowski@linaro.org>,
+        <u.kleine-koenig@pengutronix.de>, <dmitry.baryshkov@linaro.org>,
+        <quic_cang@quicinc.com>, <danila@jiaxyga.com>,
+        <quic_nitirawa@quicinc.com>, <mantas@8devices.com>,
+        <athierry@redhat.com>, <quic_kbajaj@quicinc.com>,
+        <quic_bjorande@quicinc.com>, <quic_msarkar@quicinc.com>,
+        <quic_devipriy@quicinc.com>, <quic_tsoni@quicinc.com>,
+        <quic_rgottimu@quicinc.com>, <quic_shashim@quicinc.com>,
+        <quic_kaushalk@quicinc.com>, <quic_tingweiz@quicinc.com>,
+        <quic_aiquny@quicinc.com>, <srinivas.kandagatla@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-crypto@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux.dev>, <linux-gpio@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703025850.2172008-30-quic_tengfan@quicinc.com>
+ <u5ekupjqvgoehkl76pv7ljyqqzbnnyh6ci2dilfxfkcdvdy3dp@ehdujhkul7ow>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <u5ekupjqvgoehkl76pv7ljyqqzbnnyh6ci2dilfxfkcdvdy3dp@ehdujhkul7ow>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 2ToY-VFWJVX4PxSXMxm7v7m6lN_KrTeg
+X-Proofpoint-ORIG-GUID: 2ToY-VFWJVX4PxSXMxm7v7m6lN_KrTeg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_18,2024-07-03_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 spamscore=0 mlxscore=0 bulkscore=0 mlxlogscore=915
+ malwarescore=0 priorityscore=1501 impostorscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407040008
 
 
 
-在 2024/7/4 4:08, Andrew Morton 写道:
-> On Wed,  3 Jul 2024 20:02:33 +0800 yangge1116@126.com wrote:
+On 7/3/2024 11:09 PM, Andrew Halaney wrote:
+> On Wed, Jul 03, 2024 at 10:58:32AM GMT, Tengfei Fan wrote:
+>> Add the compatible for the MAC controller on qcs9100 platforms. This MAC
+>> works with a single interrupt so add minItems to the interrupts property.
+>> The fourth clock's name is different here so change it. Enable relevant
+>> PHY properties. Add the relevant compatibles to the binding document for
+>> snps,dwmac as well.
 > 
->> From: yangge <yangge1116@126.com>
->>
->> If a large number of CMA memory are configured in system (for example, the
->> CMA memory accounts for 50% of the system memory), starting a virtual
->> virtual machine with device passthrough, it will
->> call pin_user_pages_remote(..., FOLL_LONGTERM, ...) to pin memory.
->> Normally if a page is present and in CMA area, pin_user_pages_remote()
->> will migrate the page from CMA area to non-CMA area because of
->> FOLL_LONGTERM flag. But the current code will cause the migration failure
->> due to unexpected page refcounts, and eventually cause the virtual machine
->> fail to start.
->>
->> If a page is added in LRU batch, its refcount increases one, remove the
->> page from LRU batch decreases one. Page migration requires the page is not
->> referenced by others except page mapping. Before migrating a page, we
->> should try to drain the page from LRU batch in case the page is in it,
->> however, folio_test_lru() is not sufficient to tell whether the page is
->> in LRU batch or not, if the page is in LRU batch, the migration will fail.
->>
->> To solve the problem above, we modify the logic of adding to LRU batch.
->> Before adding a page to LRU batch, we clear the LRU flag of the page so
->> that we can check whether the page is in LRU batch by folio_test_lru(page).
->> Seems making the LRU flag of the page invisible a long time is no problem,
->> because a new page is allocated from buddy and added to the lru batch,
->> its LRU flag is also not visible for a long time.
->>
-> 
-> Thanks.
-> 
-> I'll add this to the mm-hotfixes branch for additional testing.  Please
-> continue to work with David on the changelog enhancements.
-> 
-> In mm-hotfixes I'd expect to send it to Linus next week.  I could move
-> it into mm-unstable (then mm-stable) for merging into 6.11-rc1.  This
-> is for additional testing time - it will still be backported into
-> earlier kernels.  We can do this with any patch.
+> This description doesn't match what was done in this patch, its what
+> Bart did when he made changes to add the sa8775 changes. Please consider
+> using a blurb indicating that this is the same SoC as sa8775p, just with
+> different firmware strategies or something along those lines?
 
-Ok, thanks.
+I will update this commit message as you suggested.
 
+> 
+>>
+>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>> ---
+>>   Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 1 +
+>>   Documentation/devicetree/bindings/net/snps,dwmac.yaml  | 3 +++
+>>   2 files changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+>> index 6672327358bc..8ab11e00668c 100644
+>> --- a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+>> +++ b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+>> @@ -20,6 +20,7 @@ properties:
+>>     compatible:
+>>       enum:
+>>         - qcom,qcs404-ethqos
+>> +      - qcom,qcs9100-ethqos
+>>         - qcom,sa8775p-ethqos
+>>         - qcom,sc8280xp-ethqos
+>>         - qcom,sm8150-ethqos
+>> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>> index 3bab4e1f3fbf..269c21779396 100644
+>> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>> @@ -67,6 +67,7 @@ properties:
+>>           - loongson,ls2k-dwmac
+>>           - loongson,ls7a-dwmac
+>>           - qcom,qcs404-ethqos
+>> +        - qcom,qcs9100-ethqos
+>>           - qcom,sa8775p-ethqos
+>>           - qcom,sc8280xp-ethqos
+>>           - qcom,sm8150-ethqos
+>> @@ -582,6 +583,7 @@ allOf:
+>>                 - ingenic,x1600-mac
+>>                 - ingenic,x1830-mac
+>>                 - ingenic,x2000-mac
+>> +              - qcom,qcs9100-ethqos
+>>                 - qcom,sa8775p-ethqos
+>>                 - qcom,sc8280xp-ethqos
+>>                 - snps,dwmac-3.50a
+>> @@ -639,6 +641,7 @@ allOf:
+>>                 - ingenic,x1830-mac
+>>                 - ingenic,x2000-mac
+>>                 - qcom,qcs404-ethqos
+>> +              - qcom,qcs9100-ethqos
+>>                 - qcom,sa8775p-ethqos
+>>                 - qcom,sc8280xp-ethqos
+>>                 - qcom,sm8150-ethqos
+>> -- 
+>> 2.25.1
+>>
+> 
+
+-- 
+Thx and BRs,
+Tengfei Fan
