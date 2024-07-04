@@ -1,193 +1,137 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7182118A93F
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 09:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012A31AB8E6;
+	Thu,  4 Jul 2024 09:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720086569; cv=none; b=mz1LyeOLNLND8Jxv2Ock0dzpCyl4yldsHBPgEt10aIRWIrxPMKZr+lNd32+GjoFfoU7O23CGEOFFr6nWYAQxw0M4I+0aHbFpzV4MBTbwrkRbMo09RVTctaVyo5LHofIlRL0SbPAhS1ljGZuNJG5PTmLFmOzzVVmyvcklZLOPraw=
+	t=1720086570; cv=none; b=CMujw2bNlR7e6LNN+vowWHfHfZ54vBMpzh6VgIvmAyrGb9Hh2kOOhLWMWyNYCLtYykTHRxpc77cy+QDWrLIcBF0D1v/KBZ5D+0P11n9SPC1SoiZ9nk+zTP8cgFT77gQGzMR6DhoBH68SRXyPYyYVzP2Wi17mR+J1S56VHcRoDhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720086569; c=relaxed/simple;
-	bh=Jus/G1QYt5pW2GkfcctBOFu2WhTByPL9AV0yxHR2FHg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HoXgqZVvsMFzCvXGPAzN3q8OrQCKGEah2c2e8gdYbQSe0GXud5cH2K/PsBEOpGoirgZhNMwz7159F+FqoD1f0F4OGBaCPfuyLbMW9y2Sa0/Bn4JBDGZy1WdfwL30F/NzHOTjK4qTqEyv0HzSgD4nZsOm2tJqYsk/eart7mBEF0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=payb6GNg; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720086570; c=relaxed/simple;
+	bh=b00IxYDAeikWpgDJD4xLbTBlof/vNk7MI6sw5PDIdo0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KKQ4hmsWalZ1HMNSPNifnaBudf4sSlZwx74Kd/gjc3GC5vIti7VkQH2bQAd3vbM3qJwSFuTE9A3hckRa8hohWE1kFnkpM05xcBRn9ZbSY4mVdIfY6DpiJ8vpeZQl8mPBH81CCC72JHiPBy8Ewglpt6qlkXealiDxIzGoVVfkJrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/YIfZe+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="payb6GNg"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52ea1a69624so306580e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 02:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720086566; x=1720691366; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=S8rvIrULCnR035Tkdqz8WyVCTyK2R7YGhGSnwvvSM2Y=;
-        b=payb6GNgMrjJCItZWq+Z8qtQ/MyZG6p3FpgvLiWvHm/Ym4tHyzIy3L5Id+GLAWBeNY
-         hJBC8lzXrBreocWvR2U1Q3GOBf9KVMgO62wbK/TMn+39aalvQsipzdcCwRIs5FMfagCi
-         B/OcdECcdcl0mp7fJUAwI+3yd1+O/qjhK/Pk6ua3sa+QvK1/grwaMLRItsHhM/xrSiBN
-         8e47yJ2XbY5p6wqmA1KdPpm4Y/+s8J8ZToJvmNgDKS3SrwxP4dx3JpX0NXfJRGGvff72
-         d31Dwp7sqEldj+/gJ7fn6HR7lo1RgUj9as2u0UZzmQX0FUy2RrOUz6mP1tuAOP4in41B
-         hLjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720086566; x=1720691366;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S8rvIrULCnR035Tkdqz8WyVCTyK2R7YGhGSnwvvSM2Y=;
-        b=cDP9lIJwkIbfc8avnBgLrppuy0ZX6r+uvil6AIykepkX786pIFAdTJkzBSLjxZmK9H
-         GYJqdEHTrnq0EOWoPJdxY8hgmq/VQytmvLzsk6gUHl1hzwIIKPP6HTBkzWHT4+2hVQBS
-         9/eF5uW2qCyCXr/UpFEsV9AZ5HiRcOCDVvPVpzBuVlkIU0hchdRuVIV0oJnDlstQDpqt
-         TV8cxIfDCfPkeOmp5Afdqdk1zsTOqSWfqU9MwTK3is6Mdt9EglV9nQjMQcZIogkqQIMQ
-         gXKlq5hdBDdACu0989DIek1pEorqW82LqX6fjIsuXkZOry1/yskFHiG+Vzddb7nyKSMW
-         Yyjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWe1NOQoonqlwGxJktNNp1gblZgOSNzNPEyOA/r6QBYDHzeP2DjQS5poTl5wR5rGG5qEGu8mumIGfA3dNmZdy4Rgw7vDR+DadPneh7/
-X-Gm-Message-State: AOJu0Yxg3lz8A/z9aHd1YsoJtyF5d+0l7q/ddYFvoWIBtsZR/hlxZ/mo
-	hEtFxk6gk4St7ua36yb/fYZLre1c+b4m/P8MWHoRHMmEmMrve0r3QJ1KYBvrYM4=
-X-Google-Smtp-Source: AGHT+IFDsgZIA5XCVA0hy0WJu20063Iw4EiHYumlyD4TmspDV/EGAzJwVtvHSU1EkA2BUbUHNOdVpA==
-X-Received: by 2002:a05:6512:716:b0:52c:dec1:4578 with SMTP id 2adb3069b0e04-52ea06ebef5mr672002e87.60.1720086565677;
-        Thu, 04 Jul 2024 02:49:25 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a1046f2sm17875224f8f.112.2024.07.04.02.49.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 02:49:25 -0700 (PDT)
-Message-ID: <8d8363b4-e817-40f1-9265-16018b14497c@linaro.org>
-Date: Thu, 4 Jul 2024 11:49:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/YIfZe+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24A6C4AF11;
+	Thu,  4 Jul 2024 09:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720086569;
+	bh=b00IxYDAeikWpgDJD4xLbTBlof/vNk7MI6sw5PDIdo0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Q/YIfZe+HLRZsqTOXHUjVoT1YVMaopeFByadpWoLIC6Ae8PQc7HFk4jjwLH4TWjLw
+	 Fbb9MLU5qMzwcZdD8KhjopAHkmikyeMnmqYcnSHtTOCiB8hj5DSVacn5CU5uhtVl9E
+	 mdInJCl+QpiU8sukf0oXa9uFOj0Y7g+Cb2SFl9LyUd4WxQGDRbDD9LeDGywb5NNz1M
+	 g2IeRkfLbtakP5FXo9aHAtDpjU7aJiOHGGli1ABz1ffyOJRYUE/3ftS7VDBegjX91b
+	 cWvSg6/Gz/85Zf+/8mJAsvDeeP8Zj/W0zF8nuT7NmcuO5bnsnNN70QfANKGeb/ZEgP
+	 aU35l9UmFPfLA==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00ba6so619124a12.1;
+        Thu, 04 Jul 2024 02:49:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVjxsP2Dp8oa0cpe0OWMZG7vUTsFUZ1kHXXV+spD6qmyD76OeopGY16auaDUHqnNLTqsbleUX6xkVpPqv8rg+wx9YJG8evSSLjsBwtgo3QjX0mY+uYkV9yGyHMBHNw8ld2Qilu93w2RI7U=
+X-Gm-Message-State: AOJu0YzLD+8pKKEPd6Tij7U+ip98qyComrGSSzqFl50cj7BdbDryQFMD
+	HkRj7BYjh+CDWpziBSIUGtSJhng2hVh5SwMEVDUjW2g/vB0wgM1QbsP5tiPAfi9hNurPd6wlJrE
+	EjFOyK8K1Jt3E1vKKZOiu/OnZ9+Q=
+X-Google-Smtp-Source: AGHT+IHv4dV38PoUbX9m+h4A+7s5pTuFTanK6I1V7kPNHqAr4eytUG4G29nV3hhGsCAZN2J8p55FwDaJTvQx/PX/9j8=
+X-Received: by 2002:a17:906:4089:b0:a6f:c4d6:4874 with SMTP id
+ a640c23a62f3a-a77ba4c5901mr63594166b.34.1720086568232; Thu, 04 Jul 2024
+ 02:49:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] iio: pressure: Add driver for Sensirion SDP500
-To: Petar Stoykov <pd.pstoykov@gmail.com>
-Cc: linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240702-mainline_sdp500-v3-0-0902047b3eee@gmail.com>
- <20240702-mainline_sdp500-v3-2-0902047b3eee@gmail.com>
- <64fd897b-f87d-4a17-af92-5c6ffb481061@linaro.org>
- <CADFWO8FF24UyoD9cfF5NL1OzcHErx8+=bJYLrajrJNHFseK2HQ@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CADFWO8FF24UyoD9cfF5NL1OzcHErx8+=bJYLrajrJNHFseK2HQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+ <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com> <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+In-Reply-To: <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Thu, 4 Jul 2024 10:48:51 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+Message-ID: <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Andrea Gelmini <andrea.gelmini@gmail.com>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/07/2024 09:49, Petar Stoykov wrote:
-> On Tue, Jul 2, 2024 at 5:17 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 02/07/2024 16:59, Petar Stoykov via B4 Relay wrote:
->>> From: Petar Stoykov <pd.pstoykov@gmail.com>
->>>
->>> Sensirion SDP500 is a digital differential pressure sensor. The sensor is
->>> accessed over I2C.
->>>
->>
->> ...
->>
->>> +
->>> +static const struct of_device_id sdp500_of_match[] = {
->>> +     { .compatible = "sensirion,sdp500" },
->>> +     { .compatible = "sensirion,sdp510" },
->>
->> Devices look compatible, so express it in the bindings with fallback to
->> sdp500 (oneOf, see example-schema).
-> 
-> Hi Krzysztof,
-> I tried to understand the explanation in the example-schema. I must say it is
-> a bit confusing, but I can't offer improvement because I'm not sure I
-> understand it fully yet.
-> Can you verify if this is what you expect the bindings file to read?
-> properties:
->   compatible:
->     oneOf:
->       - items:
->         - const: sensirion,sdp510
->         - const: sensirion,sdp500
->       - items:
->         - const: sensirion,sdp500
+On Wed, Jul 3, 2024 at 10:07=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gmai=
+l.com> wrote:
+>
+> Il giorno mer 3 lug 2024 alle ore 13:59 Filipe Manana
+> <fdmanana@kernel.org> ha scritto:
+> >
+> > I'm collecting all the patches in this branch:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/fdmanana/linux.git/log/=
+?h=3Dem_shrinker_6.10
+> >
+> > They apply cleanly to 6.10-rc.
+>
+> Yeap, as I wrote before, same problem here.
+> I tried the branch over today Linus git (master), and nothing changed.
+> But, good news, I can provide a few more details.
+>
+> So, no need to use restic. On my laptop (nvme + ssd, 32GB RAM, Lenovo T48=
+0):
+> a) boot up;
+> b) just open Window Maker and two Konsole, one with htop (with a few
+> tricks to view PSI and so on);
+> c) on one terminal run: tar cp /home/ | pv > /dev/null
+> d) wait less than one minutes, and I see "PSI full memory" increase
+> more than 50, memory pressure on swap, and two CPU threads (out of
+> eight) busy at  100%;
 
-Almost.
+I'll try that soon and see if I can reproduce.
 
-    oneOf:
-      - items:
-          - const: sensirion,sdp510
-          - const: sensirion,sdp500
-      - const: sensirion,sdp500
+In the meanwhile, just curious: are you using swapfiles on btrfs?
 
-> 
-> So the device tree should have either this
->   compatible = "sensirion,sdp510", "sensirion,sdp500"
-> Or
->   compatible = "sensirion,sdp500"
-> The first would mean that 510 falls back to 500, right?
+Thanks.
 
-Yes
-
-> 
-> From what I've seen it is rare to have two strings in "compatible" so I didn't
-
-Rare? It's everywhere in SoC and in many places for standalone
-devices/hardware.
-
-> know of this mechanism of "fallback" in the dts. I expected to just write the
-> name of my device (let's say "sensirion,sdp510") and the driver would handle it.
-> But I'm learning. Expectations change.
-
-
-
-Best regards,
-Krzysztof
-
+> e) system get sluggish (on htop I see no process eating CPU);
+> f) if I kill tar, PSI memory keeps going up and down, so the threads.
+> After lots of minutes, everything get back to no activity. In these
+> minutes I see by iotop there's no activity nor on ssd or nvme. Until
+> the end, the system is unresponsive, oh well, really slow.
+>
+> My / is BTRFS. Not many years of aging. Usually with daily snapshots
+> and forced compression.
+>
+> Less than 4.000.000 files on the system. Usually .git and source code.
+>
+> root@glen:/home/gelma# btrfs filesystem usage /
+> Overall:
+>    Device size:                   3.54TiB
+>    Device allocated:              2.14TiB
+>    Device unallocated:            1.40TiB
+>    Device missing:                  0.00B
+>    Device slack:                    0.00B
+>    Used:                          2.03TiB
+>    Free (estimated):              1.50TiB      (min: 1.50TiB)
+>    Free (statfs, df):             1.50TiB
+>    Data ratio:                       1.00
+>    Metadata ratio:                   1.00
+>    Global reserve:              512.00MiB      (used: 0.00B)
+>    Multiple profiles:                  no
+>
+> Data,single: Size:2.12TiB, Used:2.02TiB (95.09%)
+>   /dev/mapper/sda6_crypt          2.12TiB
+>
+> Metadata,single: Size:16.00GiB, Used:14.73GiB (92.04%)
+>   /dev/mapper/sda6_crypt         16.00GiB
+>
+> System,single: Size:32.00MiB, Used:320.00KiB (0.98%)
+>   /dev/mapper/sda6_crypt         32.00MiB
+>
+> Unallocated:
+>   /dev/mapper/sda6_crypt          1.40TiB
