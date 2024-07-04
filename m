@@ -1,117 +1,619 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D501AAE04
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 09:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D621AAE07
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 09:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720085020; cv=none; b=PbfO7bgPhItSkcnFRz5BWBJq++vhCsDUEpIbCglt/C1ulzhVIejX/2rTMS5Pqy9xU9UMUcXqenGqdPHCXuUb4LSMXbQroaGd50jdfYaA9G+Qu+i/DQCmzEWxqHQwQ7ZOc+5oxVwLJaH1yD9dHO02ZkmVZkQnICeDDUaMds8Elxw=
+	t=1720085050; cv=none; b=UtHcub7hsJPUOikHrFtlxZvWMex/fRqdx8UDOi3FVaqZ9icbC5VEt9CeW9H0b8XfIfnEkGh4911QeyoEw+5DgV0YAtAaRWKz58Up3ulsIfENbU5ytOttWC4tCjoyLcw5lr7S82QpYh0GTpln4lR1Xdvlpav6Q9yJyGFgcTgCZ0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720085020; c=relaxed/simple;
-	bh=dEGTWfoKjFlj5C1nKfElD5GiOMdw2Ju6YoUyK5a8BoY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=k32oSlz+ebI5jkhbUQizpL4c/4ZHGKZ01KwM8Gq1+kIEpCdg2g2YsvZhTmDsjn2nerW+Aun60ztZnlq0Xb2QiYNeqcwB4EHVFnL2jdouvEU3URBRN4cdOZobV6mE1jYY6O/gZPnKpOirIBYK1FsDoxkAIRqi4kllDpTWeXYt0hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AHLex2lZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720085050; c=relaxed/simple;
+	bh=AfvdIEciI0jroJCHaF+3kjiVyxYh7CbCJ0sEgKpaHjk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GPWWEG6m9BPSU5PQvfvGNSr2Z8/LVjgrxW4El6KlxAlDretVUS57oSQLmAKMh9Gcm6gZCtuC9CZZpEel3ecbrLDujAruAcBlDdsZX2d7nukEI+tnh3hj7iaSSGGBWoIlFC9Yu2TGcZbb82JB1HlcNbp9IcUJe+6JPNqHs0Vwja8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=geFzgZVm; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AHLex2lZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720085017;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=EREf30CB2yfC93XCiBYFFt0mtS7JECc3ORfxXMovnJM=;
-	b=AHLex2lZbkuBQ8qfUtIt1xOAhxr5fJLj2dL0qiW8zTWTordQ7Hd3PuPb8AK8CEUDLjZ989
-	umfCjRIh10Sw4U6fN2MMh0hWRMtOS3mEMmmQFIYzwNPpzdXqXHbA/kAgF7CebXXKkk5b+p
-	BxSNsa1tmS51gOsPJzFzSUk4CJi2eLY=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-528-UToGfd7yOgCf_v85faT_Sg-1; Thu, 04 Jul 2024 05:23:35 -0400
-X-MC-Unique: UToGfd7yOgCf_v85faT_Sg-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ec67e2be29so1055701fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 02:23:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720085014; x=1720689814;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EREf30CB2yfC93XCiBYFFt0mtS7JECc3ORfxXMovnJM=;
-        b=RS8A6dLXEEGHpdW3c9GgjMZEIADiSoplug2OanuQsa1KGfa0EwuyYY6QSH6wdavMPi
-         voMA2AHTykDzwMlppCfJVYTblyM5nfJxf5g43/zEaph6GmdjC7K+qigHaNtSexPi/WMF
-         5fazdxcJ4elRCq0fxwPFHSJIB3oQA9+ATnq/nwS2S5VDHheLhbysPGUol0haidHE7AsI
-         kM41kG29we+ReQGei2YjQm9BrcShviL6EKhM6t9JEAJWztt5OhAV4EK4UvUX5p2koKwE
-         W1KMoxl8R4SWsSfWca78i6hwfBoHPmjeVTdCi7TDMR2XXWOLHg7v16VtBgDdDqlm0HBR
-         wdnw==
-X-Forwarded-Encrypted: i=1; AJvYcCW3QgdUVYyvdRymH7RafK+lfG3PhlpPdB82Qqba5ZHdf5fsWIPz+rSE7WIdUrWPPhGh8yR1bK4q3Bbmnp4zTnkjPbw+wCF8D2G64mio
-X-Gm-Message-State: AOJu0Yz9PZKwwKzz4uM+NOty3CAhrxYL/69ihKCmp+wXS2xc5FRPH/uV
-	/u9Ssv23bwt3+WbBH/qhdWNdXrJGOooQLHP2g1ba5YAbmBWQHL4ftA9g2eTXQdcSi8dKIjAMUpE
-	E/zkDpy0x3KFuNGcohsSIAP1edEm8VSn8hZl2of5KBId4WxCo14Zy1DqnB0Dh9w==
-X-Received: by 2002:a2e:8183:0:b0:2eb:e6fe:3092 with SMTP id 38308e7fff4ca-2ee8eea1cadmr6815911fa.4.1720085014357;
-        Thu, 04 Jul 2024 02:23:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEvzES1PxTyuPmoljfchYrYs0AYiE0uu2HDh4U2teqfChKHv00AvINQ5JjPeK6CG9Kz4ZmUfg==
-X-Received: by 2002:a2e:8183:0:b0:2eb:e6fe:3092 with SMTP id 38308e7fff4ca-2ee8eea1cadmr6815781fa.4.1720085013921;
-        Thu, 04 Jul 2024 02:23:33 -0700 (PDT)
-Received: from gerbillo.redhat.com ([2a0d:3344:172b:1510:dd78:6ccd:a776:5943])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1d0b19sm16361675e9.10.2024.07.04.02.23.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 02:23:33 -0700 (PDT)
-Message-ID: <54d30d951eddf0846b88b7f9f73ce16994550bd7.camel@redhat.com>
-Subject: Re: [PATCH net 2/2] net: ioam6: mitigate the two reallocations
- problem
-From: Paolo Abeni <pabeni@redhat.com>
-To: Justin Iurman <justin.iurman@uliege.be>, netdev@vger.kernel.org
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- kuba@kernel.org,  linux-kernel@vger.kernel.org
-Date: Thu, 04 Jul 2024 11:23:31 +0200
-In-Reply-To: <20240702174451.22735-3-justin.iurman@uliege.be>
-References: <20240702174451.22735-1-justin.iurman@uliege.be>
-	 <20240702174451.22735-3-justin.iurman@uliege.be>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="geFzgZVm"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4649IQEw006975;
+	Thu, 4 Jul 2024 02:24:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=y
+	USc8CHLt/yRU31r7xOxGUwhNzLL4r/Yr5MUm7eefPQ=; b=geFzgZVmOxqty0iV2
+	udrWF4M7kxGOfNWUPDCdX5aOAwQWkkhk6EATkSxzJHeDE3hbFZEDTVKo8ZDbFMe2
+	jjjIGebhwo8CmHi94tow7NLu8aYrNkM3D5AbhXM5lV6mY1IrRKNgDLzEXzCrveWT
+	16KOUyn/By/Bx/aInPODKJRA4ljmtgLY62lKCP+rGlp0mHUBOfJtGZjGYoYYFlD0
+	ie6jqGOqhXmvVvMWt33eZ2iafO6YOPwX6x1ZAYgvlHwXkiHUCfPs+XDsDb4BT8XX
+	h6+zpX07X6LbNzjQ2GqGQ5QBBeexSlqGyIUaeSQPEGXVOWI5djxzrxBlUmWAKWSY
+	U0RBw==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 405s01r16y-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jul 2024 02:23:59 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 4 Jul 2024 02:20:32 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 4 Jul 2024 02:20:32 -0700
+Received: from IPBU-BLR-SERVER1.marvell.com (IPBU-BLR-SERVER1.marvell.com [10.28.8.41])
+	by maili.marvell.com (Postfix) with ESMTP id 334755B6931;
+	Thu,  4 Jul 2024 02:20:28 -0700 (PDT)
+From: Gowthami Thiagarajan <gthiagarajan@marvell.com>
+To: <will@kernel.org>, <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <gcherian@marvell.com>, <sgoutham@marvell.com>, <bbhushan2@marvell.com>,
+        Gowthami Thiagarajan <gthiagarajan@marvell.com>
+Subject: [PATCH v6 1/3] perf/marvell: Refactor to extract platform data - no functional change
+Date: Thu, 4 Jul 2024 14:50:20 +0530
+Message-ID: <20240704092022.1136805-2-gthiagarajan@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240704092022.1136805-1-gthiagarajan@marvell.com>
+References: <20240704092022.1136805-1-gthiagarajan@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: bbWI7YEQWmPK-mQCqx8OxYAq6lXXKisg
+X-Proofpoint-ORIG-GUID: bbWI7YEQWmPK-mQCqx8OxYAq6lXXKisg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-04_06,2024-07-03_01,2024-05-17_01
 
-On Tue, 2024-07-02 at 19:44 +0200, Justin Iurman wrote:
-> @@ -313,6 +316,10 @@ static int ioam6_output(struct net *net, struct sock=
- *sk, struct sk_buff *skb)
-> =20
->  	orig_daddr =3D ipv6_hdr(skb)->daddr;
-> =20
-> +	local_bh_disable();
-> +	dst =3D dst_cache_get(&ilwt->cache);
-> +	local_bh_enable();
-> +
->  	switch (ilwt->mode) {
->  	case IOAM6_IPTUNNEL_MODE_INLINE:
+This commit introduces a refactor to the Marvell driver
+code, specifically targeting the extraction of platform data
+(referred to as "pdata") from the existing driver. The purpose of
+this refactor is to prepare for the upcoming support of the next
+version of the Performance Monitoring Unit (PMU) in this
+driver.
 
-I now see that the way you coded patch 1/2 makes this one easier.
+No functional changes are introduced in this refactor. Its sole
+purpose is to improve code organization and pave the way for
+future enhancements to the driver.
 
-Still I think it's quite doubtful to make the dst cache access
-unconditional.
+Signed-off-by: Gowthami Thiagarajan <gthiagarajan@marvell.com>
+---
+ drivers/perf/marvell_cn10k_ddr_pmu.c | 282 ++++++++++++++++++++-------
+ 1 file changed, 210 insertions(+), 72 deletions(-)
 
-Given the above I suggest to replace the 2 patches with a single one
-moving the whole dst_cache logic before the switch statement.
-
-Also this does not address a functional issue, IMHO it's more a
-performance improvement, could as well target net-next with no fixes
-tag.
-
-WRT seg6 and rpl tunnels, before any patch, I think we first need
-confirmation the problem is present there, too.
-
-Thanks,
-
-Paolo
+diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn10k_ddr_pmu.c
+index e2abca188dbe..a8cd90c45817 100644
+--- a/drivers/perf/marvell_cn10k_ddr_pmu.c
++++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
+@@ -1,7 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/* Marvell CN10K DRAM Subsystem (DSS) Performance Monitor Driver
++/*
++ * Marvell CN10K DRAM Subsystem (DSS) Performance Monitor Driver
+  *
+- * Copyright (C) 2021 Marvell.
++ * Copyright (C) 2024 Marvell.
+  */
+ 
+ #include <linux/init.h>
+@@ -14,24 +15,24 @@
+ #include <linux/platform_device.h>
+ 
+ /* Performance Counters Operating Mode Control Registers */
+-#define DDRC_PERF_CNT_OP_MODE_CTRL	0x8020
+-#define OP_MODE_CTRL_VAL_MANNUAL	0x1
++#define CN10K_DDRC_PERF_CNT_OP_MODE_CTRL	0x8020
++#define OP_MODE_CTRL_VAL_MANUAL	0x1
+ 
+ /* Performance Counters Start Operation Control Registers */
+-#define DDRC_PERF_CNT_START_OP_CTRL	0x8028
++#define CN10K_DDRC_PERF_CNT_START_OP_CTRL	0x8028
+ #define START_OP_CTRL_VAL_START		0x1ULL
+ #define START_OP_CTRL_VAL_ACTIVE	0x2
+ 
+ /* Performance Counters End Operation Control Registers */
+-#define DDRC_PERF_CNT_END_OP_CTRL	0x8030
++#define CN10K_DDRC_PERF_CNT_END_OP_CTRL	0x8030
+ #define END_OP_CTRL_VAL_END		0x1ULL
+ 
+ /* Performance Counters End Status Registers */
+-#define DDRC_PERF_CNT_END_STATUS		0x8038
++#define CN10K_DDRC_PERF_CNT_END_STATUS		0x8038
+ #define END_STATUS_VAL_END_TIMER_MODE_END	0x1
+ 
+ /* Performance Counters Configuration Registers */
+-#define DDRC_PERF_CFG_BASE		0x8040
++#define CN10K_DDRC_PERF_CFG_BASE		0x8040
+ 
+ /* 8 Generic event counter + 2 fixed event counters */
+ #define DDRC_PERF_NUM_GEN_COUNTERS	8
+@@ -42,17 +43,19 @@
+ 					 DDRC_PERF_NUM_FIX_COUNTERS)
+ 
+ /* Generic event counter registers */
+-#define DDRC_PERF_CFG(n)		(DDRC_PERF_CFG_BASE + 8 * (n))
++#define DDRC_PERF_CFG(base, n)		((base) + 8 * (n))
+ #define EVENT_ENABLE			BIT_ULL(63)
+ 
+ /* Two dedicated event counters for DDR reads and writes */
+ #define EVENT_DDR_READS			101
+ #define EVENT_DDR_WRITES		100
+ 
++#define DDRC_PERF_REG(base, n)		((base) + 8 * (n))
+ /*
+  * programmable events IDs in programmable event counters.
+  * DO NOT change these event-id numbers, they are used to
+  * program event bitmap in h/w.
++ *
+  */
+ #define EVENT_OP_IS_ZQLATCH			55
+ #define EVENT_OP_IS_ZQSTART			54
+@@ -63,8 +66,8 @@
+ #define EVENT_VISIBLE_WIN_LIMIT_REACHED_RD	49
+ #define EVENT_BSM_STARVATION			48
+ #define EVENT_BSM_ALLOC				47
+-#define EVENT_LPR_REQ_WITH_NOCREDIT		46
+-#define EVENT_HPR_REQ_WITH_NOCREDIT		45
++#define EVENT_RETRY_FIFO_FULL_OR_LPR_REQ_NOCRED	46
++#define EVENT_DFI_OR_HPR_REQ_NOCRED		45
+ #define EVENT_OP_IS_ZQCS			44
+ #define EVENT_OP_IS_ZQCL			43
+ #define EVENT_OP_IS_LOAD_MODE			42
+@@ -102,28 +105,38 @@
+ #define EVENT_HIF_RD_OR_WR			1
+ 
+ /* Event counter value registers */
+-#define DDRC_PERF_CNT_VALUE_BASE		0x8080
+-#define DDRC_PERF_CNT_VALUE(n)	(DDRC_PERF_CNT_VALUE_BASE + 8 * (n))
++#define CN10K_DDRC_PERF_CNT_VALUE_BASE	0x8080
+ 
+ /* Fixed event counter enable/disable register */
+-#define DDRC_PERF_CNT_FREERUN_EN	0x80C0
++#define CN10K_DDRC_PERF_CNT_FREERUN_EN		0x80C0
+ #define DDRC_PERF_FREERUN_WRITE_EN	0x1
+ #define DDRC_PERF_FREERUN_READ_EN	0x2
+ 
+ /* Fixed event counter control register */
+-#define DDRC_PERF_CNT_FREERUN_CTRL	0x80C8
++#define CN10K_DDRC_PERF_CNT_FREERUN_CTRL	0x80C8
+ #define DDRC_FREERUN_WRITE_CNT_CLR	0x1
+ #define DDRC_FREERUN_READ_CNT_CLR	0x2
+ 
+-/* Fixed event counter value register */
+-#define DDRC_PERF_CNT_VALUE_WR_OP	0x80D0
+-#define DDRC_PERF_CNT_VALUE_RD_OP	0x80D8
+ #define DDRC_PERF_CNT_VALUE_OVERFLOW	BIT_ULL(48)
+ #define DDRC_PERF_CNT_MAX_VALUE		GENMASK_ULL(48, 0)
+ 
++/* Fixed event counter value register */
++#define CN10K_DDRC_PERF_CNT_VALUE_WR_OP		0x80D0
++#define CN10K_DDRC_PERF_CNT_VALUE_RD_OP		0x80D8
++
++enum mrvl_ddr_pmu_version {
++	DDR_PMU_V1 = 1,
++};
++
++struct ddr_pmu_data {
++	int id;
++};
++
+ struct cn10k_ddr_pmu {
+ 	struct pmu pmu;
+ 	void __iomem *base;
++	const struct ddr_pmu_platform_data *p_data;
++	int version;
+ 	unsigned int cpu;
+ 	struct	device *dev;
+ 	int active_events;
+@@ -132,8 +145,35 @@ struct cn10k_ddr_pmu {
+ 	struct hlist_node node;
+ };
+ 
++struct ddr_pmu_ops {
++	void (*enable_read_freerun_counter)(struct cn10k_ddr_pmu *pmu,
++					    bool enable);
++	void (*enable_write_freerun_counter)(struct cn10k_ddr_pmu *pmu,
++					     bool enable);
++	void (*clear_read_freerun_counter)(struct cn10k_ddr_pmu *pmu);
++	void (*clear_write_freerun_counter)(struct cn10k_ddr_pmu *pmu);
++	void (*pmu_overflow_handler)(struct cn10k_ddr_pmu *pmu, int evt_idx);
++};
++
+ #define to_cn10k_ddr_pmu(p)	container_of(p, struct cn10k_ddr_pmu, pmu)
+ 
++struct ddr_pmu_platform_data {
++	u64 counter_overflow_val;
++	u64 counter_max_val;
++	u64 ddrc_perf_cnt_base;
++	u64 ddrc_perf_cfg_base;
++	u64 ddrc_perf_cnt_op_mode_ctrl;
++	u64 ddrc_perf_cnt_start_op_ctrl;
++	u64 ddrc_perf_cnt_end_op_ctrl;
++	u64 ddrc_perf_cnt_end_status;
++	u64 ddrc_perf_cnt_freerun_en;
++	u64 ddrc_perf_cnt_freerun_ctrl;
++	u64 ddrc_perf_cnt_freerun_clr;
++	u64 ddrc_perf_cnt_value_wr_op;
++	u64 ddrc_perf_cnt_value_rd_op;
++	const struct ddr_pmu_ops *ops;
++};
++
+ static ssize_t cn10k_ddr_pmu_event_show(struct device *dev,
+ 					struct device_attribute *attr,
+ 					char *page)
+@@ -189,9 +229,9 @@ static struct attribute *cn10k_ddr_perf_events_attrs[] = {
+ 	CN10K_DDR_PMU_EVENT_ATTR(ddr_zqcl, EVENT_OP_IS_ZQCL),
+ 	CN10K_DDR_PMU_EVENT_ATTR(ddr_cam_wr_access, EVENT_OP_IS_ZQCS),
+ 	CN10K_DDR_PMU_EVENT_ATTR(ddr_hpr_req_with_nocredit,
+-					EVENT_HPR_REQ_WITH_NOCREDIT),
++				 EVENT_DFI_OR_HPR_REQ_NOCRED),
+ 	CN10K_DDR_PMU_EVENT_ATTR(ddr_lpr_req_with_nocredit,
+-					EVENT_LPR_REQ_WITH_NOCREDIT),
++				 EVENT_RETRY_FIFO_FULL_OR_LPR_REQ_NOCRED),
+ 	CN10K_DDR_PMU_EVENT_ATTR(ddr_bsm_alloc, EVENT_BSM_ALLOC),
+ 	CN10K_DDR_PMU_EVENT_ATTR(ddr_bsm_starvation, EVENT_BSM_STARVATION),
+ 	CN10K_DDR_PMU_EVENT_ATTR(ddr_win_limit_reached_rd,
+@@ -266,7 +306,8 @@ static ktime_t cn10k_ddr_pmu_timer_period(void)
+ 	return ms_to_ktime((u64)cn10k_ddr_pmu_poll_period_sec * USEC_PER_SEC);
+ }
+ 
+-static int ddr_perf_get_event_bitmap(int eventid, u64 *event_bitmap)
++static int ddr_perf_get_event_bitmap(int eventid, u64 *event_bitmap,
++				     struct cn10k_ddr_pmu *ddr_pmu)
+ {
+ 	switch (eventid) {
+ 	case EVENT_HIF_RD_OR_WR ... EVENT_WAW_HAZARD:
+@@ -354,6 +395,8 @@ static int cn10k_ddr_perf_event_init(struct perf_event *event)
+ static void cn10k_ddr_perf_counter_enable(struct cn10k_ddr_pmu *pmu,
+ 					  int counter, bool enable)
+ {
++	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
++	const struct ddr_pmu_ops *ops = p_data->ops;
+ 	u32 reg;
+ 	u64 val;
+ 
+@@ -363,7 +406,7 @@ static void cn10k_ddr_perf_counter_enable(struct cn10k_ddr_pmu *pmu,
+ 	}
+ 
+ 	if (counter < DDRC_PERF_NUM_GEN_COUNTERS) {
+-		reg = DDRC_PERF_CFG(counter);
++		reg = DDRC_PERF_CFG(p_data->ddrc_perf_cfg_base, counter);
+ 		val = readq_relaxed(pmu->base + reg);
+ 
+ 		if (enable)
+@@ -373,19 +416,10 @@ static void cn10k_ddr_perf_counter_enable(struct cn10k_ddr_pmu *pmu,
+ 
+ 		writeq_relaxed(val, pmu->base + reg);
+ 	} else {
+-		val = readq_relaxed(pmu->base + DDRC_PERF_CNT_FREERUN_EN);
+-		if (enable) {
+-			if (counter == DDRC_PERF_READ_COUNTER_IDX)
+-				val |= DDRC_PERF_FREERUN_READ_EN;
+-			else
+-				val |= DDRC_PERF_FREERUN_WRITE_EN;
+-		} else {
+-			if (counter == DDRC_PERF_READ_COUNTER_IDX)
+-				val &= ~DDRC_PERF_FREERUN_READ_EN;
+-			else
+-				val &= ~DDRC_PERF_FREERUN_WRITE_EN;
+-		}
+-		writeq_relaxed(val, pmu->base + DDRC_PERF_CNT_FREERUN_EN);
++		if (counter == DDRC_PERF_READ_COUNTER_IDX)
++			ops->enable_read_freerun_counter(pmu, enable);
++		else
++			ops->enable_write_freerun_counter(pmu, enable);
+ 	}
+ }
+ 
+@@ -393,13 +427,18 @@ static u64 cn10k_ddr_perf_read_counter(struct cn10k_ddr_pmu *pmu, int counter)
+ {
+ 	u64 val;
+ 
++	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
++
+ 	if (counter == DDRC_PERF_READ_COUNTER_IDX)
+-		return readq_relaxed(pmu->base + DDRC_PERF_CNT_VALUE_RD_OP);
++		return readq_relaxed(pmu->base +
++				     p_data->ddrc_perf_cnt_value_rd_op);
+ 
+ 	if (counter == DDRC_PERF_WRITE_COUNTER_IDX)
+-		return readq_relaxed(pmu->base + DDRC_PERF_CNT_VALUE_WR_OP);
++		return readq_relaxed(pmu->base +
++				     p_data->ddrc_perf_cnt_value_wr_op);
+ 
+-	val = readq_relaxed(pmu->base + DDRC_PERF_CNT_VALUE(counter));
++	val = readq_relaxed(pmu->base +
++			    DDRC_PERF_REG(p_data->ddrc_perf_cnt_base, counter));
+ 	return val;
+ }
+ 
+@@ -407,6 +446,7 @@ static void cn10k_ddr_perf_event_update(struct perf_event *event)
+ {
+ 	struct cn10k_ddr_pmu *pmu = to_cn10k_ddr_pmu(event->pmu);
+ 	struct hw_perf_event *hwc = &event->hw;
++	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
+ 	u64 prev_count, new_count, mask;
+ 
+ 	do {
+@@ -414,7 +454,7 @@ static void cn10k_ddr_perf_event_update(struct perf_event *event)
+ 		new_count = cn10k_ddr_perf_read_counter(pmu, hwc->idx);
+ 	} while (local64_xchg(&hwc->prev_count, new_count) != prev_count);
+ 
+-	mask = DDRC_PERF_CNT_MAX_VALUE;
++	mask = p_data->counter_max_val;
+ 
+ 	local64_add((new_count - prev_count) & mask, &event->count);
+ }
+@@ -435,6 +475,8 @@ static void cn10k_ddr_perf_event_start(struct perf_event *event, int flags)
+ static int cn10k_ddr_perf_event_add(struct perf_event *event, int flags)
+ {
+ 	struct cn10k_ddr_pmu *pmu = to_cn10k_ddr_pmu(event->pmu);
++	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
++	const struct ddr_pmu_ops *ops = p_data->ops;
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	u8 config = event->attr.config;
+ 	int counter, ret;
+@@ -454,8 +496,8 @@ static int cn10k_ddr_perf_event_add(struct perf_event *event, int flags)
+ 
+ 	if (counter < DDRC_PERF_NUM_GEN_COUNTERS) {
+ 		/* Generic counters, configure event id */
+-		reg_offset = DDRC_PERF_CFG(counter);
+-		ret = ddr_perf_get_event_bitmap(config, &val);
++		reg_offset = DDRC_PERF_CFG(p_data->ddrc_perf_cfg_base, counter);
++		ret = ddr_perf_get_event_bitmap(config, &val, pmu);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -463,11 +505,9 @@ static int cn10k_ddr_perf_event_add(struct perf_event *event, int flags)
+ 	} else {
+ 		/* fixed event counter, clear counter value */
+ 		if (counter == DDRC_PERF_READ_COUNTER_IDX)
+-			val = DDRC_FREERUN_READ_CNT_CLR;
++			ops->clear_read_freerun_counter(pmu);
+ 		else
+-			val = DDRC_FREERUN_WRITE_CNT_CLR;
+-
+-		writeq_relaxed(val, pmu->base + DDRC_PERF_CNT_FREERUN_CTRL);
++			ops->clear_write_freerun_counter(pmu);
+ 	}
+ 
+ 	hwc->state |= PERF_HES_STOPPED;
+@@ -512,17 +552,19 @@ static void cn10k_ddr_perf_event_del(struct perf_event *event, int flags)
+ static void cn10k_ddr_perf_pmu_enable(struct pmu *pmu)
+ {
+ 	struct cn10k_ddr_pmu *ddr_pmu = to_cn10k_ddr_pmu(pmu);
++	const struct ddr_pmu_platform_data *p_data = ddr_pmu->p_data;
+ 
+ 	writeq_relaxed(START_OP_CTRL_VAL_START, ddr_pmu->base +
+-		       DDRC_PERF_CNT_START_OP_CTRL);
++		       p_data->ddrc_perf_cnt_start_op_ctrl);
+ }
+ 
+ static void cn10k_ddr_perf_pmu_disable(struct pmu *pmu)
+ {
+ 	struct cn10k_ddr_pmu *ddr_pmu = to_cn10k_ddr_pmu(pmu);
++	const struct ddr_pmu_platform_data *p_data = ddr_pmu->p_data;
+ 
+ 	writeq_relaxed(END_OP_CTRL_VAL_END, ddr_pmu->base +
+-		       DDRC_PERF_CNT_END_OP_CTRL);
++		       p_data->ddrc_perf_cnt_end_op_ctrl);
+ }
+ 
+ static void cn10k_ddr_perf_event_update_all(struct cn10k_ddr_pmu *pmu)
+@@ -547,8 +589,63 @@ static void cn10k_ddr_perf_event_update_all(struct cn10k_ddr_pmu *pmu)
+ 	}
+ }
+ 
++static void ddr_pmu_enable_read_freerun(struct cn10k_ddr_pmu *pmu, bool enable)
++{
++	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
++	u64 val;
++
++	val = readq_relaxed(pmu->base + p_data->ddrc_perf_cnt_freerun_en);
++	if (enable)
++		val |= DDRC_PERF_FREERUN_READ_EN;
++	else
++		val &= ~DDRC_PERF_FREERUN_READ_EN;
++
++	writeq_relaxed(val, pmu->base +	p_data->ddrc_perf_cnt_freerun_en);
++}
++
++static void ddr_pmu_enable_write_freerun(struct cn10k_ddr_pmu *pmu, bool enable)
++{
++	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
++	u64 val;
++
++	val = readq_relaxed(pmu->base + p_data->ddrc_perf_cnt_freerun_en);
++	if (enable)
++		val |= DDRC_PERF_FREERUN_WRITE_EN;
++	else
++		val &= ~DDRC_PERF_FREERUN_WRITE_EN;
++
++	writeq_relaxed(val, pmu->base +	p_data->ddrc_perf_cnt_freerun_en);
++}
++
++static void ddr_pmu_read_clear_freerun(struct cn10k_ddr_pmu *pmu)
++{
++	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
++	u64 val;
++
++	val = DDRC_FREERUN_READ_CNT_CLR;
++	writeq_relaxed(val, pmu->base + p_data->ddrc_perf_cnt_freerun_ctrl);
++}
++
++static void ddr_pmu_write_clear_freerun(struct cn10k_ddr_pmu *pmu)
++{
++	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
++	u64 val;
++
++	val = DDRC_FREERUN_WRITE_CNT_CLR;
++	writeq_relaxed(val, pmu->base + p_data->ddrc_perf_cnt_freerun_ctrl);
++}
++
++static void ddr_pmu_overflow_hander(struct cn10k_ddr_pmu *pmu, int evt_idx)
++{
++	cn10k_ddr_perf_event_update_all(pmu);
++	cn10k_ddr_perf_pmu_disable(&pmu->pmu);
++	cn10k_ddr_perf_pmu_enable(&pmu->pmu);
++}
++
+ static irqreturn_t cn10k_ddr_pmu_overflow_handler(struct cn10k_ddr_pmu *pmu)
+ {
++	const struct ddr_pmu_platform_data *p_data = pmu->p_data;
++	const struct ddr_pmu_ops *ops = p_data->ops;
+ 	struct perf_event *event;
+ 	struct hw_perf_event *hwc;
+ 	u64 prev_count, new_count;
+@@ -586,11 +683,9 @@ static irqreturn_t cn10k_ddr_pmu_overflow_handler(struct cn10k_ddr_pmu *pmu)
+ 			continue;
+ 
+ 		value = cn10k_ddr_perf_read_counter(pmu, i);
+-		if (value == DDRC_PERF_CNT_MAX_VALUE) {
++		if (value == p_data->counter_max_val) {
+ 			pr_info("Counter-(%d) reached max value\n", i);
+-			cn10k_ddr_perf_event_update_all(pmu);
+-			cn10k_ddr_perf_pmu_disable(&pmu->pmu);
+-			cn10k_ddr_perf_pmu_enable(&pmu->pmu);
++			ops->pmu_overflow_handler(pmu, i);
+ 		}
+ 	}
+ 
+@@ -629,13 +724,44 @@ static int cn10k_ddr_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
+ 	return 0;
+ }
+ 
++static const struct ddr_pmu_ops ddr_pmu_ops = {
++	.enable_read_freerun_counter = ddr_pmu_enable_read_freerun,
++	.enable_write_freerun_counter = ddr_pmu_enable_write_freerun,
++	.clear_read_freerun_counter = ddr_pmu_read_clear_freerun,
++	.clear_write_freerun_counter = ddr_pmu_write_clear_freerun,
++	.pmu_overflow_handler = ddr_pmu_overflow_hander,
++};
++
++static const struct ddr_pmu_platform_data cn10k_ddr_pmu_pdata = {
++	.counter_overflow_val =  BIT_ULL(48),
++	.counter_max_val = GENMASK_ULL(48, 0),
++	.ddrc_perf_cnt_base = CN10K_DDRC_PERF_CNT_VALUE_BASE,
++	.ddrc_perf_cfg_base = CN10K_DDRC_PERF_CFG_BASE,
++	.ddrc_perf_cnt_op_mode_ctrl = CN10K_DDRC_PERF_CNT_OP_MODE_CTRL,
++	.ddrc_perf_cnt_start_op_ctrl = CN10K_DDRC_PERF_CNT_START_OP_CTRL,
++	.ddrc_perf_cnt_end_op_ctrl = CN10K_DDRC_PERF_CNT_END_OP_CTRL,
++	.ddrc_perf_cnt_end_status = CN10K_DDRC_PERF_CNT_END_STATUS,
++	.ddrc_perf_cnt_freerun_en = CN10K_DDRC_PERF_CNT_FREERUN_EN,
++	.ddrc_perf_cnt_freerun_ctrl = CN10K_DDRC_PERF_CNT_FREERUN_CTRL,
++	.ddrc_perf_cnt_freerun_clr = 0,
++	.ddrc_perf_cnt_value_wr_op = CN10K_DDRC_PERF_CNT_VALUE_WR_OP,
++	.ddrc_perf_cnt_value_rd_op = CN10K_DDRC_PERF_CNT_VALUE_RD_OP,
++	.ops = &ddr_pmu_ops,
++};
++
++static const struct ddr_pmu_data ddr_pmu_data = {
++	.id   = DDR_PMU_V1,
++};
++
+ static int cn10k_ddr_perf_probe(struct platform_device *pdev)
+ {
++	const struct ddr_pmu_data *dev_data;
+ 	struct cn10k_ddr_pmu *ddr_pmu;
+ 	struct resource *res;
+ 	void __iomem *base;
+ 	char *name;
+ 	int ret;
++	int version;
+ 
+ 	ddr_pmu = devm_kzalloc(&pdev->dev, sizeof(*ddr_pmu), GFP_KERNEL);
+ 	if (!ddr_pmu)
+@@ -644,30 +770,42 @@ static int cn10k_ddr_perf_probe(struct platform_device *pdev)
+ 	ddr_pmu->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, ddr_pmu);
+ 
++	dev_data = device_get_match_data(&pdev->dev);
++	if (!dev_data) {
++		dev_err(&pdev->dev, "Error: No device match data found\n");
++		return -ENODEV;
++	}
++	version = dev_data->id;
++	ddr_pmu->version = version;
++
+ 	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+ 	ddr_pmu->base = base;
+ 
+-	/* Setup the PMU counter to work in manual mode */
+-	writeq_relaxed(OP_MODE_CTRL_VAL_MANNUAL, ddr_pmu->base +
+-		       DDRC_PERF_CNT_OP_MODE_CTRL);
+-
+-	ddr_pmu->pmu = (struct pmu) {
+-		.module	      = THIS_MODULE,
+-		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
+-		.task_ctx_nr = perf_invalid_context,
+-		.attr_groups = cn10k_attr_groups,
+-		.event_init  = cn10k_ddr_perf_event_init,
+-		.add	     = cn10k_ddr_perf_event_add,
+-		.del	     = cn10k_ddr_perf_event_del,
+-		.start	     = cn10k_ddr_perf_event_start,
+-		.stop	     = cn10k_ddr_perf_event_stop,
+-		.read	     = cn10k_ddr_perf_event_update,
+-		.pmu_enable  = cn10k_ddr_perf_pmu_enable,
+-		.pmu_disable = cn10k_ddr_perf_pmu_disable,
+-	};
++	if (version == DDR_PMU_V1) {
++		ddr_pmu->pmu = (struct pmu) {
++			.module       = THIS_MODULE,
++			.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
++			.task_ctx_nr = perf_invalid_context,
++			.attr_groups = cn10k_attr_groups,
++			.event_init  = cn10k_ddr_perf_event_init,
++			.add         = cn10k_ddr_perf_event_add,
++			.del         = cn10k_ddr_perf_event_del,
++			.start       = cn10k_ddr_perf_event_start,
++			.stop        = cn10k_ddr_perf_event_stop,
++			.read        = cn10k_ddr_perf_event_update,
++			.pmu_enable  = cn10k_ddr_perf_pmu_enable,
++			.pmu_disable = cn10k_ddr_perf_pmu_disable,
++		};
++
++		ddr_pmu->p_data = &cn10k_ddr_pmu_pdata;
++
++		/* Setup the PMU counter to work in manual mode */
++		writeq_relaxed(OP_MODE_CTRL_VAL_MANUAL, ddr_pmu->base +
++			       (ddr_pmu->p_data->ddrc_perf_cnt_op_mode_ctrl));
++	}
+ 
+ 	/* Choose this cpu to collect perf data */
+ 	ddr_pmu->cpu = raw_smp_processor_id();
+@@ -688,7 +826,7 @@ static int cn10k_ddr_perf_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto error;
+ 
+-	pr_info("CN10K DDR PMU Driver for ddrc@%llx\n", res->start);
++	pr_info("DDR PMU Driver for ddrc@%llx\n", res->start);
+ 	return 0;
+ error:
+ 	cpuhp_state_remove_instance_nocalls(
+@@ -710,7 +848,7 @@ static void cn10k_ddr_perf_remove(struct platform_device *pdev)
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id cn10k_ddr_pmu_of_match[] = {
+-	{ .compatible = "marvell,cn10k-ddr-pmu", },
++	{ .compatible = "marvell,cn10k-ddr-pmu", .data = &ddr_pmu_data},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, cn10k_ddr_pmu_of_match);
+@@ -718,7 +856,7 @@ MODULE_DEVICE_TABLE(of, cn10k_ddr_pmu_of_match);
+ 
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id cn10k_ddr_pmu_acpi_match[] = {
+-	{"MRVL000A", 0},
++	{"MRVL000A", (kernel_ulong_t)&ddr_pmu_data},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(acpi, cn10k_ddr_pmu_acpi_match);
+-- 
+2.25.1
 
