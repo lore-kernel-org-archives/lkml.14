@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394FB1AE848;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCB11AED27;
 	Thu,  4 Jul 2024 13:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098657; cv=none; b=Wh9HcWg0uyI/3uKSfcnIMTMclN0+nb8VbC30yw6fktl+rnHO3733cCsp00XI/EvzJr9waGeiuIFXOu2OUeLWi1lAmuKL6bxin9KgvyHkg4J0o85l0lE5ZwT3dixW+LbZD42xnEfaDJU8X3LRy4AYXYUgseasJKvKNj3T3WUVfko=
+	t=1720098657; cv=none; b=T1bimdxh2rVFcOl2kgoOO/80LNzoKVqK3OLxkXhGtsyFq3/lSI13mp8rLeGoASEqBHFP5xQUXBfoF+a0EKhOc+/F/ArG08POcJtCzjyVIgVQN44sa9+FSAp5MDVUGpEWnd1CTRME2ybm4VI/mbsXUo7onZYmSO/JTGUwzuUCsSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720098657; c=relaxed/simple;
-	bh=LgXnJFsYyRvjaEK1ntPm88fL7Wm+lyk5mTRJwn5WJdg=;
+	bh=lJXnONd5ISVvmE4QQ4QJTEc1T2lWaVBV5IrBFXcFzSs=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=swGvLiif/eJiSOgzak0tQ218pmikXRlh50OYjNcr0byIjlzEZpMjFMBSAdmT7aa37pEbbLiYjtJ6S/zNfWlAzhWRtusXtoq4vUiGjtmYQ2CEl+b5RWNgwiqjCSWWErb2pubRndqge027TqN9CW9iPkFBYRTPsbSOfePvAQos+CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=paZrJQyA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=RyziWlbFZvksz6E4/oP+1W+KIi7FZiDd4FTFBCD7JtY0i+Ur4CFq1L666XpInDwEF3in4G9fHc9JLkuegwl51fk/Cu5zwQI5/LU7Ko2uFgmaTQHlSgaV+1KF1Nt0FVsrAsLLRNG8W2UerE67Gr8ydTWwCsbo0rqweEvBlivS6HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vpwd2tcY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="paZrJQyA"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D6BDBC4AF0D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vpwd2tcY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E2A1DC4AF11;
 	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720098656;
-	bh=LgXnJFsYyRvjaEK1ntPm88fL7Wm+lyk5mTRJwn5WJdg=;
+	s=k20201202; t=1720098657;
+	bh=lJXnONd5ISVvmE4QQ4QJTEc1T2lWaVBV5IrBFXcFzSs=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=paZrJQyAWMUf3S9qd1u1maQM6otdP/Ej229Xc/6APRWTyHd9CYXxmXvkow2LijCvB
-	 xwXJUdLqcAM6e00HmrI8z+OpimD6hTFvVEQ2QH1kMmDAvuR/kVpGGWbvXObh28F4I+
-	 HngTCDSU9HlYOh4j1BNg4tVHE8By8lZGQkdhD2D9kFmv0YmdWK6Pqa0NM8Cww2vFsU
-	 LB+IwQVV4liBIt9A2TiXD3dOgmaSNr+06FKfTZzPS0wgDGCVlBraKVRjKLSN9WHybI
-	 b/TqoPHrOYhLEirInV5azf06QiqZ41gVT0NKy4j6iRFwNg49nHpvTH4IxSJ+FgwVtI
-	 MlPMDBOyElgBg==
+	b=Vpwd2tcYqNgW1dMG4DUsuYkKBIfDlCn4PVslQ+vVDvZ3zq5iOcb6vvRYYnY6zPLqm
+	 b7qRPNJMCF708+0X9bllMigap/i9FHO/+hiquNIRAZExPqCwtGbOBjIJuQ7OkQnqn0
+	 sPH8SB9WW3Zr18pR0U7e1oUFPHWfJ1HJqEs8ZH2+2KSpcEudv6FOxA6WTWsch9b6Or
+	 Tab2z58GTWX2feeNdjzi6LpoNRXkbTLsvakMu53Ah1izJcjwti+u6cCNBmIy7ILBgZ
+	 8q99pCDwKY1JTEl8QytqRgm64Qa8FzCXj9BCjgdlSwIP/Xyncj4Y/MSAwHIEK4Njwe
+	 nAqxfUSP9Im+g==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C4DE3C43614;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D4BA4C433A2;
 	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,41 +37,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: selftests: Fix vsetivli args for clang
+Subject: Re: [PATCH] randomize_kstack: Remove non-functional per-arch entropy
+ filtering
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <172009865679.17306.1065674073385433619.git-patchwork-notify@kernel.org>
+ <172009865686.17306.9398253862841269029.git-patchwork-notify@kernel.org>
 Date: Thu, 04 Jul 2024 13:10:56 +0000
-References: <20240702-fix_sigreturn_test-v1-1-485f88a80612@rivosinc.com>
-In-Reply-To: <20240702-fix_sigreturn_test-v1-1-485f88a80612@rivosinc.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, shuah@kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- nathan@kernel.org, ndesaulniers@google.com, morbo@google.com,
- justinstitt@google.com, andy.chiu@sifive.com, bjorn@rivosinc.com,
- palmer@rivosinc.com, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20240619214711.work.953-kees@kernel.org>
+In-Reply-To: <20240619214711.work.953-kees@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-riscv@lists.infradead.org, arnd@arndb.de, liuyuntao12@huawei.com,
+ mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com, svens@linux.ibm.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ gustavoars@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, leobras@redhat.com, imbrenda@linux.ibm.com,
+ pawan.kumar.gupta@linux.intel.com, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
-by Palmer Dabbelt <palmer@rivosinc.com>:
+by Kees Cook <kees@kernel.org>:
 
-On Tue, 02 Jul 2024 18:54:48 -0700 you wrote:
-> Clang does not support implicit LMUL in the vset* instruction sequences.
-> Introduce an explicit LMUL in the vsetivli instruction.
-> 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> Fixes: 9d5328eeb185 ("riscv: selftests: Add signal handling vector tests")
-> ---
-> There is one more error that occurs when the test cases for riscv are
-> compiled with llvm:
+On Wed, 19 Jun 2024 14:47:15 -0700 you wrote:
+> An unintended consequence of commit 9c573cd31343 ("randomize_kstack:
+> Improve entropy diffusion") was that the per-architecture entropy size
+> filtering reduced how many bits were being added to the mix, rather than
+> how many bits were being used during the offsetting. All architectures
+> fell back to the existing default of 0x3FF (10 bits), which will consume
+> at most 1KiB of stack space. It seems that this is working just fine,
+> so let's avoid the confusion and update everything to use the default.
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: selftests: Fix vsetivli args for clang
-    https://git.kernel.org/riscv/c/3582ce0d7ccf
+  - randomize_kstack: Remove non-functional per-arch entropy filtering
+    https://git.kernel.org/riscv/c/6db1208bf95b
 
 You are awesome, thank you!
 -- 
