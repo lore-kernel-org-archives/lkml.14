@@ -1,141 +1,113 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6E11AEFF5;
-	Thu,  4 Jul 2024 14:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1B71AED3B;
+	Thu,  4 Jul 2024 14:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720103084; cv=none; b=J6T4tcL6vCesS18fxFemVzC6Hl8xBQWe+lFKpZ1tqkETty9vMJyBK/kgXEVWEkPE3QfQy0RtO7pUkyhxYpsvqZx47ynPz5DYpFYNT7QG1Crz+G20l/i8GFzlr1jm0HavP/mjvhQzZzH+EXFKjxjFi7/YovZQ4lTErlKLUDectoc=
+	t=1720103172; cv=none; b=Ivra6ZQwl5LVFADNNWDZ0ydS+tO3SLaR9hPpkgz16zvPwaFqkSMQhNxtqsBIys9F3x5TAlemxX0Iyyo4PlogHfCgtc7WRoNH+JgEBKcdwCKLULpitaOn/BClIqWR02mDrNVhu6yOAqncLOxAhE3vX00+7VBWZVuLjXGjV+YN8U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720103084; c=relaxed/simple;
-	bh=WkASUccS1iaI0JkyEUG7v6JqDw0zQ1RrOOfIwZhPcm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DO2h7nR0YlJbRObyCVq0syhw1fFQGxsiVD3hUMdupSEt6+0bKlMvd+QWV6gwOozRJijh+8lGYXWCJs9VxIz1IW3Z6oEngf0uERCDutwWfD+pSW7OSdzbORsTMJsssRcr+2ZtjGnjgNJnVLlO+y22n7s9PAefPoNNapo3KG9j2r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ZQT63EZy; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1720103172; c=relaxed/simple;
+	bh=uWs+KI/NnNRYahU8cZs7MxLdZZhTS8AEn/oPUiUEj8E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LFCNLKiaBDK2ZseokGf/Wv+8i68aSg6K6lQ7ayvo8y2HAkKQVzwcuCoNsegKCcoAswQdmOtdSNeGZSKv2XtanynZqlvVnQx2zU8qfkV5DPxIQMP2FWcE5cVnYjJ4SxC3L4Z2hCzcz9fay6yjeV2TDWE2kdWzzys6qx0gDNgEBos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=Wvpig7nN; arc=none smtp.client-ip=49.12.72.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZQT63EZy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=xe3YJWWLCTD5Uj3YuzCc3NRG9utaZux7QG2xA/rd4XM=; b=ZQ
-	T63EZytTgwDmnKkR6YBG7Kvn3tXnOx1bs54ZZEmFEadHyBeluMIogHjFIUShwN9PuUttSdWntHLmX
-	p7R+JxJlZJFUAE5WpTMihYrdAii1Cl9MqCH/9YV8PaOjO4Srx/fkozqTRWxl9pO7r3SCjQGpc9a60
-	5OKLTMJNHdhzdNk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sPNNn-001oh6-Oq; Thu, 04 Jul 2024 16:24:23 +0200
-Date: Thu, 4 Jul 2024 16:24:23 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kamil =?iso-8859-1?Q?Hor=E1k_=282N=29?= <kamilh@axis.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] net: phy: bcm-phy-lib: Implement BroadR-Reach
- link modes
-Message-ID: <f598ebe0-4e43-45e9-878e-49ec06383ef3@lunn.ch>
-References: <20240621112633.2802655-1-kamilh@axis.com>
- <20240621112633.2802655-5-kamilh@axis.com>
- <5a77ba27-1a0e-4f29-bf94-04effb37eefb@lunn.ch>
- <26dcc3ee-6ea8-435e-b9e9-f22c712e5b4c@axis.com>
+	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="Wvpig7nN"
+From: Finn Behrens <me@kloenk.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
+	t=1720103160; bh=klEyNORmTUCopsPqwvQ4SusCT6WUx2UKJes8fXdkRVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Wvpig7nN4lrs7VsYh/M3O45Lg3AnmUcPuxZQYexSIJck67xx6x0BQcdxk8qs6WGav
+	 1s6gBDc5m3Go3ZRPEMuQ7zT5gVdMu16xsruZyW5X9ndKUxnn0BVE4gZcLYZxK7XFLY
+	 5/Gh4axfm8Wnm3dfBkZY2zORWBqxFN6ifcOhbDRQ=
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Wedson Almeida Filho <wedsonaf@gmail.com>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ patches@lists.linux.dev
+Subject: Re: [PATCH 01/13] rust: macros: indent list item in `paste!`'s docs
+Date: Thu, 04 Jul 2024 16:25:58 +0200
+Message-ID: <E3504594-6CD3-4D12-B0DA-92B032CD73AA@kloenk.dev>
+In-Reply-To: <20240701183625.665574-2-ojeda@kernel.org>
+References: <20240701183625.665574-1-ojeda@kernel.org>
+ <20240701183625.665574-2-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <26dcc3ee-6ea8-435e-b9e9-f22c712e5b4c@axis.com>
-
-On Thu, Jul 04, 2024 at 04:01:13PM +0200, Kamil Horák (2N) wrote:
-> 
-> On 6/22/24 21:12, Andrew Lunn wrote:
-> > On Fri, Jun 21, 2024 at 01:26:33PM +0200, Kamil Horák (2N) wrote:
-> > > Implement single-pair BroadR-Reach modes on bcm5481x PHY by Broadcom.
-> > > Create set of functions alternative to IEEE 802.3 to handle
-> > > configuration of these modes on compatible Broadcom PHYs.
-> > What i've not seen anywhere is a link between BroadR-Reach and LRE.
-> > Maybe you could explain the relationship here in the commit message?
-> > And maybe also how LDS fits in.
-> 
-> Tried to extend it a bit... LRE should be for "Long Reach Ethernet" but
-> Broadcom
-> 
-> only uses the acronym in the datasheets... LDS is "Long-Distance Signaling",
-> really screwed
-> 
-> term for a link auto-negotiation...
-
-You are allowed to ignore the data sheet. If using AN makes the code
-more understandable, use AN. Just add a comment in the commit message.
-
-> > > +static int bcm54811_read_abilities(struct phy_device *phydev)
-> > > +{
-> > > +	int i, val, err;
-> > > +	u8 brr_mode;
-> > > +
-> > > +	for (i = 0; i < ARRAY_SIZE(bcm54811_linkmodes); i++)
-> > > +		linkmode_clear_bit(bcm54811_linkmodes[i], phydev->supported);
-> > I think that needs a comment since it is not clear what is going on
-> > here. What set these bits in supported?
-> 
-> This is an equivalent of genphy_read_abilities for an IEEE PHY, that is, it
-> fills the phydev->supported bit array exactly
-> 
-> as genphy_read_abilities does. The genphy_read_abilities is even called if
-> the PHY is not in BRR mode.
-
-I lost the context. But genphy_read_abilities() is only called if
-phydrv->get_features is not set. Don't you make use of this
-bcm54811_read_abilities for get_features? So i'm wondering, what set
-these bits in the first place?
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-> > > +
-> > > +	err = bcm5481x_get_brrmode(phydev, &brr_mode);
-> > > +	if (err)
-> > > +		return err;
-> > > +
-> > > +	if (brr_mode) {
-> > I would expect the DT property to be here somewhere. If the DT
-> > property is present, set phydev->supported to only the BRR modes,
-> > otherwise set it to the standard baseT modes. That should then allow
-> > the core to do most of the validation. This is based on my
-> > understanding the coupling hardware makes the two modes mutually
-> > exclusive?
-> 
-> From my point of view relying on DT property only would imply to validate
-> the setting with what is read from the PHY on
-> 
-> all code locations where it is currently read by bcm5481x_get_brrmode.
 
-In general, the DT value is the source of truth. It does not matter
-how the PHY is strapped etc, we should reconfigure it how the DT
-property indicates. So i really would set phydev->supported based on
-it.
+On 1 Jul 2024, at 20:36, Miguel Ojeda wrote:
 
-> > > +	/* With BCM54811, BroadR-Reach implies no autoneg */
-> > > +	if (brr)
-> > > +		phydev->autoneg = 0;
-> > So long as phydev->supported does not indicate autoneg, this should
-> > not happen.
-> 
-> I also thought so but unfortunately our batch of bcm54811 indicates possible
-> autoneg in its status register
-> 
->  (LRESR_LDSABILITY) but refuses to negotiate. So this is rather a
-> preparation for bcm54810 full support. Unlike bcm54811,
+> A new style lint, `doc_lazy_continuation` [1], has been introduced in t=
+he
+> upcoming Rust 1.80 (currently in beta), which detects missing indentati=
+on
+> in code documentation.
+>
+> We have one such case:
+>
+>     error: doc list item missing indentation
+>     --> rust/macros/lib.rs:315:5
+>         |
+>     315 | /// default the span of the `[< >]` group is used.
+>         |     ^
+>         |
+>         =3D help: if this is supposed to be its own paragraph, add a bl=
+ank line
+>         =3D help: for further information visit https://rust-lang.githu=
+b.io/rust-clippy/master/index.html#doc_lazy_continuation
+>         =3D note: `-D clippy::doc-lazy-continuation` implied by `-D cli=
+ppy::style`
+>         =3D help: to override `-D clippy::style` add `#[allow(clippy::d=
+oc_lazy_continuation)]`
+>     help: indent this line
+>         |
+>     315 | ///   default the span of the `[< >]` group is used.
+>         |     ++
+>
+> While the rendering of the docs by `rustdoc` is not affected, we apply
+> this kind of indentation elsewhere since it looks better.
+>
+> Thus clean it up.
+>
+> Link: https://rust-lang.github.io/rust-clippy/master/index.html#/doc_la=
+zy_continuation [1]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-If the hardware is broke, feel free to ignore the bit. I would also
-keep it KISS. If somebody does want bcm54810 to auto-neg, they can add
-the feature, and ask you to test for regressions with the bcm54811.
+Reviewed-by: Finn Behrens <me@kloenk.dev>
 
-	Andrew
+> ---
+>  rust/macros/lib.rs | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+> index 520eae5fd792..05d976b3c09a 100644
+> --- a/rust/macros/lib.rs
+> +++ b/rust/macros/lib.rs
+> @@ -312,7 +312,7 @@ pub fn pinned_drop(args: TokenStream, input: TokenS=
+tream) -> TokenStream {
+>  ///
+>  /// Currently supported modifiers are:
+>  /// * `span`: change the span of concatenated identifier to the span o=
+f the specified token. By
+> -/// default the span of the `[< >]` group is used.
+> +///   default the span of the `[< >]` group is used.
+>  /// * `lower`: change the identifier to lower case.
+>  /// * `upper`: change the identifier to upper case.
+>  ///
+> -- =
+
+> 2.45.2
