@@ -1,91 +1,121 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3CD1A4F24;
-	Thu,  4 Jul 2024 08:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862FB1A0AE1;
+	Thu,  4 Jul 2024 08:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720081689; cv=none; b=XQZUpdEYnYL6XO6Rjcs/12twhhApefQbH5e58C4TVbdxIhx4cr6+UXkYZU/PRicIxFbMdKjqU/1tdmTtuNaMXlKobK/qE0NgkBlx/Ud0O76qnHIA5wLchgSGOioOsDOezdDNVI4Q0MD9iSgYv11M2qvkjlmAiZ2QhxdqxbyKnDw=
+	t=1720081699; cv=none; b=SAJhfxbgwP+h8x0g9oz1BVpLVnW4t/9AJtLmnqwiWBcLIjWWJJO8OeLsabwFcnnOWWMd7oWWGkcPxs3eE4waODKoTFmAF0uKZLNUE6deHJog7WHWp+4mM2hCj5yUVD7UmcT8cS4/Yn2bemOM5p76T3k/XvKDxAH7r4RaZESryh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720081689; c=relaxed/simple;
-	bh=NACgDJXBWNPYw9Ngq7uQTOiENa1dwMYocn7viIg36Ek=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rar9TFPLSXHZl85/evU9vGyiyImMMDNi4eT+quDZnmoa08+H0jGrRsApB7hcezOnkBZQzYsB2ML+zDlo2NrzuSYpkk7s5JkbnfHx9JO6tqprGacsCb0sVPXLLlofUl4CUalIEZiFkk7+pygHHRBaBedcgXpIFAKHfPbY1fe6M5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PR9rB9dg; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720081699; c=relaxed/simple;
+	bh=6hGIw3dGd3aMp5e6MG7Mw6yQmhyNFDXqXn4N3IV6BOM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iQuMV4jBQpsRPQJ7Cx7HlReD2qFQVSdokm0MJVTXvk/dZHQFyLIBsG5E5JeNAcJvHsgPsg/BGfJpCzc/+5vWGqdXIBffbsQ4o/JdT5Nwe6hoSSXxcxoWbmqpNBPf/MpO7QVzSKYX3SVNErJDnkyTbtA+wY29uB+YYNgVtaU4Yjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDH/NlOy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PR9rB9dg"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2c9785517c0so308279a91.0;
-        Thu, 04 Jul 2024 01:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720081687; x=1720686487; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VqmuX6C9I4AJfUwdN8mu0VpBGXtWyEp985SM/nEyh8s=;
-        b=PR9rB9dgvdMRNrIme3+fH9C0hGyt3jonwYEmRXbGqgDJ2Jyg3/wsQT+pvOWXDlwG+N
-         Jijp0C236DhFgiW3ejN6SUVxQz7FhIKimAuz6M8ZifrVMvOnmyy4hUPucvf+uNtfmqBU
-         yx6osiKp0g8pmCqxaHwRyRD8Skn0YYU3xoiQRpAY24V+G/wwxQmsFqvRgVt2t1qaaP6B
-         fGU0iPXVYiZ5lIqgJ6mfk81UMz9s3GXA/KumR07PqQMDXGB35QvExlh65hi73i56yZes
-         ph2j8E72N5zK90Z/Lb/4ZVI1W+GnCehCqcPQzXsQvPY3313ooD0I9Q9cG+RTGzs8gxzi
-         U5bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720081687; x=1720686487;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VqmuX6C9I4AJfUwdN8mu0VpBGXtWyEp985SM/nEyh8s=;
-        b=PrEDZLmg1QNIJDNNLodjWfiJcqWVrVvRFyJ3zOLaVCS+E6SyMx+adQK2ZcbLZgNUqi
-         QbDF5G7C/oOossjHtfs1T/8IS0csOrwJ/7GE1cEQYsNBmYwt4ysFEFMc7NboS6APllay
-         Qehh10743Ydo+aI3o+z2qTBzo4PciBCaL9Tq5BIHxze1i5LwDvpg45FfyUA/d2hn8i8W
-         kMxCIJXZpEUZm7V/xNDlNbippYfQoTMnHr6LJk6syJh4TJUxkQaAkA+f3/OGq6Rfr/k0
-         gre8MeOgkLEo9qe/9SW0JelwqJozhM6ZAMmN3WwnY/bEHuSGIoZ0CqWmt7pVrgpjrqUJ
-         f6og==
-X-Forwarded-Encrypted: i=1; AJvYcCUPxgncqE4Vj9Tl7yDObx2NJZtH+jF5V+87+r6BoOGswEIrGcoMlLcH4Mdc1xivT2uE5qMMiGNB5NfwNLBXrysGNlxLwzITjLBeNwThJ9lBl1CgOvpx0p7lfTp1jJj0Iw3oBqcgXtSH108X6d0=
-X-Gm-Message-State: AOJu0YwPn2YdEVbAdSafR6EuoSbRXj5DsEw7Ws+aotQKKd8HIMiyjZmr
-	TaSxwegVogKUio2kiGRrpOkoKUMjYxthnXV0DiXix2jdjVpBQo5314sf3z+zMRZQ3u9phqSW5F4
-	tkAVl60Sf1lJkYUgNJVkL4pdgqm4=
-X-Google-Smtp-Source: AGHT+IEpwhI5B0ua49mWTjBo4KXXy9eQRzJQa3Fwh6aYFAXYWC3S+24kRsdY76+yGN5g+sXoux0AVXwMQNSoWcarS04=
-X-Received: by 2002:a17:90a:f2c4:b0:2c9:8f97:d2ea with SMTP id
- 98e67ed59e1d1-2c99c6cc3d9mr671455a91.6.1720081686806; Thu, 04 Jul 2024
- 01:28:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDH/NlOy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6D3C3277B;
+	Thu,  4 Jul 2024 08:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720081699;
+	bh=6hGIw3dGd3aMp5e6MG7Mw6yQmhyNFDXqXn4N3IV6BOM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pDH/NlOy0EnoCnKiqthrmDakLYAtXPbPZJN68zWCfqI4PwNTwVf55tf+MApcQ25YZ
+	 Ext8UICd3yf0wsqkFW1bW686bDqy5NbW6jHj8qv3ptDJn2NDVIl12XEqDEsLbVCZQh
+	 n1GOZ3XpS1XJ/QJoRBIm+na3gX7oStwltIeBKl+W5w4I62k/n4R6FKasYjlAGj/lOW
+	 Gfk2qmMRD4J+V2LyfJ4I8vD/Wlc1DMoJi7WAll/PD+o+x1MFFTSUpkz1lwiIb3b7ya
+	 1gWspKy8tpl4P5uk1/2suKLeRbNLNcEgfkXI3ADJu9TzVVqNfjHy7qz8QS9RIkcLyF
+	 gmi5dLK3mrs0Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sPHpA-009ghh-2H;
+	Thu, 04 Jul 2024 09:28:16 +0100
+Date: Thu, 04 Jul 2024 09:28:07 +0100
+Message-ID: <86ed894l48.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc: Rob Herring <robh@kernel.org>,
+	apatel@ventanamicro.com,
+	DTML <devicetree@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	mad skateman <madskateman@gmail.com>,
+	"R.T.Dickinson" <rtd2@xtra.co.nz>,
+	Matthew Leaman <matthew@a-eon.biz>,
+	Darren Stevens
+ <darren@stevens-zone.net>,
+	Christian Zigotzky <info@xenosoft.de>
+Subject: Re: [PowerPC] [PASEMI] Issue with the identification of ATA drives after the of/irq updates 2024-05-29
+In-Reply-To: <ccf14173-9818-44ef-8610-db2900c67ae8@xenosoft.de>
+References: <3ab66fab-c3f2-4bed-a04d-a10c57dcdd9b@xenosoft.de>
+	<86zfqzhgys.wl-maz@kernel.org>
+	<ccf14173-9818-44ef-8610-db2900c67ae8@xenosoft.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240703154309.426867-1-jfalempe@redhat.com> <2024070417-husked-edgy-f527@gregkh>
-In-Reply-To: <2024070417-husked-edgy-f527@gregkh>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 4 Jul 2024 10:27:54 +0200
-Message-ID: <CANiq72=iqquz3a0sN5BUa=-hxW3WBZTAKdA6HxwTh7rGBJJBsA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] drm/panic: Add a qr_code panic screen
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Jocelyn Falempe <jfalempe@redhat.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	Bjorn Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	rust-for-linux@vger.kernel.org, Danilo Krummrich <dakr@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: chzigotzky@xenosoft.de, robh@kernel.org, apatel@ventanamicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, madskateman@gmail.com, rtd2@xtra.co.nz, matthew@a-eon.biz, darren@stevens-zone.net, info@xenosoft.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, Jul 4, 2024 at 7:03=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> Wait, we can put .rs files in any directory now?  I didn't think that
-> worked properly yet.
+On Thu, 04 Jul 2024 05:10:46 +0100,
+Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
+> 
+> On 02.07.24 18:54, Marc Zyngier wrote:
+> > On Sun, 30 Jun 2024 11:21:55 +0100,
+> > Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
+> >> Hello,
+> >> 
+> >> There is an issue with the identification of ATA drives with our
+> >> P.A. Semi Nemo boards [1] after the
+> >> commit "of/irq: Factor out parsing of interrupt-map parent
+> >> phandle+args from of_irq_parse_raw()" [2].
+> > [snip]
+> > 
+> > My earlier request for valuable debug information still stands. But
+> > while you're at it, can you please give the following hack a go?
+> > 
+> > 	M.
+> > 
+> > --- a/drivers/of/irq.c
+> > +++ b/drivers/of/irq.c
+> > @@ -282,8 +282,10 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+> >     			oldimap = imap;
+> >   			imap = of_irq_parse_imap_parent(oldimap, imaplen, out_irq);
+> > -			if (!imap)
+> > -				goto fail;
+> > +			if (!imap) {
+> > +				match = 0;
+> > +				break;
+> > +			}
+> >     			match &= of_device_is_available(out_irq->np);
+> >   			if (match)
+> > 
+> > This may not be the final workaround even if it solves your boot
+> > problem, but will at least give us a hint at what is going wrong.
+> > 
+> > I have the fuzzy feeling that we may be able to lob this broken system
+> > as part of the of_irq_imap_abusers[] array, which would solve things
+> > pretty "neatly".
+> > 
+> > 	M.
+> > 
+> We tested this patch yesterday and it solves the boot problem.
 
-We can put leaves of the crate graph (e.g. in-tree we have the samples
-and the PHY driver), but not the rest of the graph. The former fits
-just fine in Kbuild (which is why it was good enough for what we did
-so far), the other part is what requires a rework of how things will
-work.
+How about the other patch[1], which would be far preferable?
 
-Cheers,
-Miguel
+	M.
+
+[1] https://lore.kernel.org/all/86ed8ba2sp.wl-maz@kernel.org
+
+-- 
+Without deviation from the norm, progress is not possible.
