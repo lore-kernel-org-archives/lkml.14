@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086481B0112;
-	Thu,  4 Jul 2024 14:37:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B92D1B11F9;
+	Thu,  4 Jul 2024 14:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720103861; cv=none; b=M0C8TD5UFovomi2X1+0+LkqMS7XT/k5EeBO+4jAK+eUsGMImuUXTFYPBUzV9DU1gKJU1O5psXcM0K2wvBKY34tYUuhgC7FK6oIxr3fUFnt8+D8jqaEaXWt4OI3oxY2Oc3lsheDWZKmV/h6f3a57lnLen8xD6FyvuJrxEPOJFOzg=
+	t=1720103876; cv=none; b=NQpco+XzQJ82uiHaM4Th4QBg7/T00xjKTKi36v+I5hZmBHyfxLXYjbmxhe45W+mwa1xniPKDV+XUS7MtjnCM2zbF9sUNpD5ZNJwBCzswsQ1ZBIVWEDSi2yWsajHQpuhC58EO3WK1Hy2YORJml1Z0ZozQlLH8+yfrhuUxOdcl3Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720103861; c=relaxed/simple;
-	bh=SGxdMT+s6TdyFUJTUykvjKQsqRmp3AbcEBt+9JQTwHs=;
+	s=arc-20240116; t=1720103876; c=relaxed/simple;
+	bh=nZGoGsld/DUw3AVg7vD7mXB59Rr8GgAXxGVkFPOubWI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oi5IEI1iqH6kbYP/DaqRW65Mfdc/DdEqVUw8s39zHz2djZKslCJRoTmw0U0MLHDjna2EUad5j804SUe6wpI962WRu6Yep16mmSNGg9S1KRzXcHrUje+teVS38oriYE7s75/0LQxjZxpmdkrruI+TIQhzX15GEul5xdhgpfA7rU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1htzPLc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q9XFN/27Ihq6JvkpNLRWTD9xoor2WcJdrbKNRIUMI3E40QWiicbo4s/ogNOt3H7MxDTYBO2DYkXn+cfb/ZrABE/FqdwJoKzFLpb6Ia1puvHPGeUtZTte2xlyjt34G7kt4WNK1KBznRNch7ain9ozTZhiMiRZ0+9LY3ShKIhUoNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVXxYUaM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1htzPLc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9DEFC4AF13;
-	Thu,  4 Jul 2024 14:37:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVXxYUaM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09ABAC3277B;
+	Thu,  4 Jul 2024 14:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720103860;
-	bh=SGxdMT+s6TdyFUJTUykvjKQsqRmp3AbcEBt+9JQTwHs=;
+	s=k20201202; t=1720103876;
+	bh=nZGoGsld/DUw3AVg7vD7mXB59Rr8GgAXxGVkFPOubWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S1htzPLcjs7pU16Tmrqttia/HNLUDban3aE6r5b02ODibeyQMutURMDJItDEDIVhf
-	 AI6n7Kh7lHx2hFh6wAavVYu447eqoscgcQJ76Z6IsmPRzxb8rRyYY7thZGrnJIozAJ
-	 X7ozCtr3cbAZKq262p8lYtXTuZ29fMxAjOgLS9ydB6ZxZix/ZGVaUYWcaimYJhJ0TV
-	 3/RpNKQNl+g3L/RcWXW/rVfEZDB2IA+5qhwRX2I4802GfFz6GopJBOsiQXZyY4brNC
-	 5VzgU4QgLA/eJjtaHKF7ODNFrkh+RSMFlFo0E5dGHyAFpbN2Lz5vabrUMcsYlrcvTv
-	 RKaMOdejnyfEg==
+	b=JVXxYUaMIFExsZ9KH6GofYN627sH7sWihH7abVtu0seuRwuE69WyU26iNHsLQWNzH
+	 gzk110N8UMZqijpiSwrKOVNZWsyMIstyUjjvbUDTP6vZIofa00veXipVpbCZNL5wl+
+	 gd7WfktcSKVOL8+/lD3cDEvYsTln9WifVFedFGSZneD3d2bBY0RqvxvI62xTVsk2W2
+	 qY6aV7Aije9aa4nle+LZbf6H3Y5g9UloFGsWUZP51T1ZbIyMophz0iAajit+vYbDV9
+	 uBk4zCuyK6SvyimShQ+RGwcsuJwsYImjosHwqAsxyvVPR8NLF/LGEPo3No4vU7PTUD
+	 KtdN0wKnc4Nhw==
 From: Arnd Bergmann <arnd@kernel.org>
 To: linux-arch@vger.kernel.org
 Cc: Arnd Bergmann <arnd@arndb.de>,
@@ -62,9 +62,9 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	loongarch@lists.linux.dev,
 	linux-openrisc@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH 08/17] arc: convert to generic syscall table
-Date: Thu,  4 Jul 2024 16:36:02 +0200
-Message-Id: <20240704143611.2979589-9-arnd@kernel.org>
+Subject: [PATCH 10/17] arm64: generate 64-bit syscall.tbl
+Date: Thu,  4 Jul 2024 16:36:04 +0200
+Message-Id: <20240704143611.2979589-11-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240704143611.2979589-1-arnd@kernel.org>
 References: <20240704143611.2979589-1-arnd@kernel.org>
@@ -78,169 +78,174 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The uapi/asm/unistd_32.h and asm/syscall_table_32.h headers can now be
-generated from scripts/syscall.tbl, which makes this consistent with
-the other architectures that have their own syscall.tbl.
+Change the asm/unistd.h header for arm64 to no longer include
+asm-generic/unistd.h itself, but instead generate both the asm/unistd.h
+contents and the list of entry points using the syscall.tbl scripts that
+we use on most other architectures.
 
-arc has a couple of architecture specific system calls, which I add to the
-generic table. This for some reason includes the deprecated sys_sysfs()
-syscall that was presumably added by accident.
+Once his is done for the remaining architectures, the generic unistd.h
+header can be removed and the generated tbl file put in its place.
 
-The time32, renameat, stat64 and rlimit entries in the syscall_abis_32
-entry are for system calls that were part of the generic ABI when arch/arc
-got added but are no longer enabled by default for new architectures.
-
-Both the user visible side of asm/unistd.h and the internal syscall
-table in the kernel should have the same effective contents after this.
+The Makefile changes are more complex than they should be, I need
+a little help to improve those. Ideally this should be done in an
+architecture-independent way as well.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arc/include/asm/Kbuild        |  2 ++
- arch/arc/include/asm/unistd.h      | 14 ++++++++++
- arch/arc/include/uapi/asm/Kbuild   |  2 ++
- arch/arc/include/uapi/asm/unistd.h | 43 +-----------------------------
- arch/arc/kernel/Makefile.syscalls  |  3 +++
- arch/arc/kernel/sys.c              |  5 ++--
- scripts/syscall.tbl                |  5 ++++
- 7 files changed, 30 insertions(+), 44 deletions(-)
- create mode 100644 arch/arc/include/asm/unistd.h
- create mode 100644 arch/arc/kernel/Makefile.syscalls
+ arch/arm64/include/asm/Kbuild        |  1 +
+ arch/arm64/include/asm/seccomp.h     |  1 +
+ arch/arm64/include/asm/unistd.h      |  5 ++---
+ arch/arm64/include/uapi/asm/Kbuild   |  1 +
+ arch/arm64/include/uapi/asm/unistd.h | 24 +-----------------------
+ arch/arm64/kernel/Makefile.syscalls  |  1 +
+ arch/arm64/kernel/sys.c              |  6 ++++--
+ arch/arm64/tools/Makefile            |  6 +++++-
+ arch/arm64/tools/syscall_64.tbl      |  1 +
+ 9 files changed, 17 insertions(+), 29 deletions(-)
+ create mode 120000 arch/arm64/tools/syscall_64.tbl
 
-diff --git a/arch/arc/include/asm/Kbuild b/arch/arc/include/asm/Kbuild
-index 3c1afa524b9c..49285a3ce239 100644
---- a/arch/arc/include/asm/Kbuild
-+++ b/arch/arc/include/asm/Kbuild
-@@ -1,4 +1,6 @@
+diff --git a/arch/arm64/include/asm/Kbuild b/arch/arm64/include/asm/Kbuild
+index 3fc45ef32e85..7d7d97ad3cd5 100644
+--- a/arch/arm64/include/asm/Kbuild
++++ b/arch/arm64/include/asm/Kbuild
+@@ -1,5 +1,6 @@
  # SPDX-License-Identifier: GPL-2.0
-+syscall-y += syscall_table_32.h
-+
- generic-y += extable.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-diff --git a/arch/arc/include/asm/unistd.h b/arch/arc/include/asm/unistd.h
-new file mode 100644
-index 000000000000..211c230d88d6
---- /dev/null
-+++ b/arch/arc/include/asm/unistd.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _ASM_ARC_UNISTD_H
-+#define _ASM_ARC_UNISTD_H
-+
-+#include <uapi/asm/unistd.h>
-+
-+#define __ARCH_WANT_STAT64
-+#define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_VFORK
-+#define __ARCH_WANT_SYS_FORK
-+
-+#define NR_syscalls __NR_syscalls
-+
-+#endif
-diff --git a/arch/arc/include/uapi/asm/Kbuild b/arch/arc/include/uapi/asm/Kbuild
-index e78470141932..2501e82a1a0a 100644
---- a/arch/arc/include/uapi/asm/Kbuild
-+++ b/arch/arc/include/uapi/asm/Kbuild
-@@ -1,2 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
-+syscall-y += unistd_32.h
-+
- generic-y += ucontext.h
-diff --git a/arch/arc/include/uapi/asm/unistd.h b/arch/arc/include/uapi/asm/unistd.h
-index 5eafa1115162..cb2905c7c5da 100644
---- a/arch/arc/include/uapi/asm/unistd.h
-+++ b/arch/arc/include/uapi/asm/unistd.h
-@@ -7,45 +7,4 @@
-  * published by the Free Software Foundation.
-  */
+ syscall-y += syscall_table_32.h
++syscall-y += syscall_table_64.h
  
--/******** no-legacy-syscalls-ABI *******/
--
+ # arm32 syscall table used by lib/compat_audit.c:
+ syscall-y += unistd_32.h
+diff --git a/arch/arm64/include/asm/seccomp.h b/arch/arm64/include/asm/seccomp.h
+index d56164d3cac5..c83ca2c8b936 100644
+--- a/arch/arm64/include/asm/seccomp.h
++++ b/arch/arm64/include/asm/seccomp.h
+@@ -23,6 +23,7 @@
+ #define SECCOMP_ARCH_NATIVE_NR		NR_syscalls
+ #define SECCOMP_ARCH_NATIVE_NAME	"aarch64"
+ #ifdef CONFIG_COMPAT
++#include <asm/unistd_compat_32.h>
+ # define SECCOMP_ARCH_COMPAT		AUDIT_ARCH_ARM
+ # define SECCOMP_ARCH_COMPAT_NR		__NR_compat32_syscalls
+ # define SECCOMP_ARCH_COMPAT_NAME	"arm"
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 55ac26355be4..fdd16052f9bc 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -41,9 +41,8 @@
+ #endif
+ 
+ #define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_NEW_STAT
+ 
+-#ifndef __COMPAT_SYSCALL_NR
+-#include <uapi/asm/unistd.h>
+-#endif
++#include <asm/unistd_64.h>
+ 
+ #define NR_syscalls (__NR_syscalls)
+diff --git a/arch/arm64/include/uapi/asm/Kbuild b/arch/arm64/include/uapi/asm/Kbuild
+index 602d137932dc..c6d141d7b7d7 100644
+--- a/arch/arm64/include/uapi/asm/Kbuild
++++ b/arch/arm64/include/uapi/asm/Kbuild
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
++syscall-y += unistd_64.h
+ 
+ generic-y += kvm_para.h
+diff --git a/arch/arm64/include/uapi/asm/unistd.h b/arch/arm64/include/uapi/asm/unistd.h
+index 9306726337fe..038dddf8f554 100644
+--- a/arch/arm64/include/uapi/asm/unistd.h
++++ b/arch/arm64/include/uapi/asm/unistd.h
+@@ -1,24 +1,2 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 -/*
-- * Non-typical guard macro to enable inclusion twice in ARCH sys.c
-- * That is how the Generic syscall wrapper generator works
+- * Copyright (C) 2012 ARM Ltd.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 - */
--#if !defined(_UAPI_ASM_ARC_UNISTD_H) || defined(__SYSCALL)
--#define _UAPI_ASM_ARC_UNISTD_H
 -
 -#define __ARCH_WANT_RENAMEAT
--#define __ARCH_WANT_STAT64
+-#define __ARCH_WANT_NEW_STAT
 -#define __ARCH_WANT_SET_GET_RLIMIT
--#define __ARCH_WANT_SYS_EXECVE
--#define __ARCH_WANT_SYS_CLONE
--#define __ARCH_WANT_SYS_VFORK
--#define __ARCH_WANT_SYS_FORK
 -#define __ARCH_WANT_TIME32_SYSCALLS
--
--#define sys_mmap2 sys_mmap_pgoff
+-#define __ARCH_WANT_MEMFD_SECRET
 -
 -#include <asm-generic/unistd.h>
--
--#define NR_syscalls	__NR_syscalls
--
--/* Generic syscall (fs/filesystems.c - lost in asm-generic/unistd.h */
--#define __NR_sysfs		(__NR_arch_specific_syscall + 3)
--
--/* ARC specific syscall */
--#define __NR_cacheflush		(__NR_arch_specific_syscall + 0)
--#define __NR_arc_settls		(__NR_arch_specific_syscall + 1)
--#define __NR_arc_gettls		(__NR_arch_specific_syscall + 2)
--#define __NR_arc_usr_cmpxchg	(__NR_arch_specific_syscall + 4)
--
--__SYSCALL(__NR_cacheflush, sys_cacheflush)
--__SYSCALL(__NR_arc_settls, sys_arc_settls)
--__SYSCALL(__NR_arc_gettls, sys_arc_gettls)
--__SYSCALL(__NR_arc_usr_cmpxchg, sys_arc_usr_cmpxchg)
--__SYSCALL(__NR_sysfs, sys_sysfs)
--
--#undef __SYSCALL
--
--#endif
-+#include <asm/unistd_32.h>
-diff --git a/arch/arc/kernel/Makefile.syscalls b/arch/arc/kernel/Makefile.syscalls
-new file mode 100644
-index 000000000000..391d30ab7a83
---- /dev/null
-+++ b/arch/arc/kernel/Makefile.syscalls
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+syscall_abis_32 += arc time32 renameat stat64 rlimit
-diff --git a/arch/arc/kernel/sys.c b/arch/arc/kernel/sys.c
-index 1069446bdc58..36a2a95c083b 100644
---- a/arch/arc/kernel/sys.c
-+++ b/arch/arc/kernel/sys.c
-@@ -8,11 +8,12 @@
++#include <unistd_64.h>
+diff --git a/arch/arm64/kernel/Makefile.syscalls b/arch/arm64/kernel/Makefile.syscalls
+index 1e14effb3921..3cfafd003b2d 100644
+--- a/arch/arm64/kernel/Makefile.syscalls
++++ b/arch/arm64/kernel/Makefile.syscalls
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
  
- #define sys_clone	sys_clone_wrapper
- #define sys_clone3	sys_clone3_wrapper
-+#define sys_mmap2	sys_mmap_pgoff
+ syscall_abis_32 +=
++syscall_abis_64 += renameat newstat rlimit memfd_secret
  
--#undef __SYSCALL
- #define __SYSCALL(nr, call) [nr] = (call),
+ syscalltbl = arch/arm64/tools/syscall_%.tbl
+diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
+index d5ffaaab31a7..f08408b6e826 100644
+--- a/arch/arm64/kernel/sys.c
++++ b/arch/arm64/kernel/sys.c
+@@ -48,14 +48,16 @@ asmlinkage long __arm64_sys_ni_syscall(const struct pt_regs *__unused)
+  */
+ #define __arm64_sys_personality		__arm64_sys_arm64_personality
+ 
 +#define __SYSCALL_WITH_COMPAT(nr, native, compat)  __SYSCALL(nr, native)
- 
- void *sys_call_table[NR_syscalls] = {
- 	[0 ... NR_syscalls-1] = sys_ni_syscall,
++
+ #undef __SYSCALL
+ #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
 -#include <asm/unistd.h>
-+#include <asm/syscall_table_32.h>
++#include <asm/syscall_table_64.h>
+ 
+ #undef __SYSCALL
+ #define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
+ 
+ const syscall_fn_t sys_call_table[__NR_syscalls] = {
+ 	[0 ... __NR_syscalls - 1] = __arm64_sys_ni_syscall,
+-#include <asm/unistd.h>
++#include <asm/syscall_table_64.h>
  };
-diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
-index 7871bbfa9b58..13f4c79ba5c2 100644
---- a/scripts/syscall.tbl
-+++ b/scripts/syscall.tbl
-@@ -288,6 +288,11 @@
- 243	time32	recvmmsg			sys_recvmmsg_time32		compat_sys_recvmmsg_time32
- 243	64	recvmmsg			sys_recvmmsg
- # Architectures may provide up to 16 syscalls of their own between 244 and 259
-+244	arc	cacheflush			sys_cacheflush
-+245	arc	arc_settls			sys_arc_settls
-+246	arc	arc_gettls			sys_arc_gettls
-+247	arc	sysfs				sys_sysfs
-+248	arc	arc_usr_cmpxchg			sys_arc_usr_cmpxchg
- 260	time32	wait4				sys_wait4			compat_sys_wait4
- 260	64	wait4				sys_wait4
- 261	common	prlimit64			sys_prlimit64
+diff --git a/arch/arm64/tools/Makefile b/arch/arm64/tools/Makefile
+index fa2251d9762d..c2b34e761006 100644
+--- a/arch/arm64/tools/Makefile
++++ b/arch/arm64/tools/Makefile
+@@ -3,12 +3,16 @@
+ gen := arch/$(ARCH)/include/generated
+ kapi := $(gen)/asm
+ 
+-kapi-hdrs-y := $(kapi)/cpucap-defs.h $(kapi)/sysreg-defs.h
++kapisyshdr-y := cpucap-defs.h sysreg-defs.h
++
++kapi-hdrs-y := $(addprefix $(kapi)/, $(kapisyshdr-y))
+ 
+ targets += $(addprefix ../../../, $(kapi-hdrs-y))
+ 
+ PHONY += kapi
+ 
++all: $(syscall64) kapi
++
+ kapi:   $(kapi-hdrs-y)
+ 
+ quiet_cmd_gen_cpucaps = GEN     $@
+diff --git a/arch/arm64/tools/syscall_64.tbl b/arch/arm64/tools/syscall_64.tbl
+new file mode 120000
+index 000000000000..63135cf34b65
+--- /dev/null
++++ b/arch/arm64/tools/syscall_64.tbl
+@@ -0,0 +1 @@
++../../../scripts/syscall.tbl
+\ No newline at end of file
 -- 
 2.39.2
 
