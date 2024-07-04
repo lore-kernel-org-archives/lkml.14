@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3DE1BDCF;
-	Thu,  4 Jul 2024 06:26:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D14D125BA;
+	Thu,  4 Jul 2024 06:26:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720074364; cv=none; b=PpnEKuDQsv3Sh0h23wRzUFDj3bKGnJnq2HJFDoLUkwFh5Pq6C682tQfhD4YbkYgJ9hB0b7MmVEDDZWZCsGXh6EzgNrbUCePuHStQgxyICtODdFg7MXZiVnxS8wvT9j8AQ3AMZTOvtnESZLz2MqOyOZ5/Jpwo+LGyOJizPdQ0F0g=
+	t=1720074402; cv=none; b=rq1ZHecW1kROVF5yq3Y7Ttij35rtxjJrvC+tJyJFjZuZTb3Pt2hz1S++NsFDNw0+ulPDAcJWZfzkmooJR8JRGvSbCl9WsX7JkLrrL+4DRxUYjF6lpK6nrf1Vpu08/q7CmJgNmcooWdJQjx4VypWXddxLRAZSMNkLp+EAnqtx8jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720074364; c=relaxed/simple;
-	bh=q7udoVJl5yTg51eTfZNs+WlAf/x0e0Bje3mXtuTT8g0=;
+	s=arc-20240116; t=1720074402; c=relaxed/simple;
+	bh=jcM/fhAJp7dFCi0qsIbK+ywgCnEPK+G2cH6y/QUE3c8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T3/+A5QVgk7cBlhmQOTtiD9PbQMV6Xb7yWADVfK0a0N0Xg8HThbrLGbh99+uwLRNQS3PxrsSMbbGwI20sazvtsGxN29r5vEQGpTyyGcybt24VpYDt6tYFQApvKQZdEiirFbVGCip9LxrK7mHj0CjMHmO2mymcbzjwVtnfQhgteY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GDoCuzMt; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=STnZTj5SZ7npN/Ov7U9Wf6IkWr+DDab81MkBiPpCs0k5LQEYBTfe7BdFt+BHS1UZTP79tVitsqi7UHAo9TO6e1QVFba/jpRCY9rf7U5r8IOsgyQr3A+kXGBkVwPINQJ8z9imK9MW8lSIAtaiTNuuxBWDAeMQC1Pdqd3rXCPz3Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUmz8AwC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GDoCuzMt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7859C3277B;
-	Thu,  4 Jul 2024 06:25:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUmz8AwC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE1E8C32781;
+	Thu,  4 Jul 2024 06:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720074364;
-	bh=q7udoVJl5yTg51eTfZNs+WlAf/x0e0Bje3mXtuTT8g0=;
+	s=k20201202; t=1720074401;
+	bh=jcM/fhAJp7dFCi0qsIbK+ywgCnEPK+G2cH6y/QUE3c8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GDoCuzMtoE6Q9ahsq83O7CL53sP37Qx/Y3uFj7uQIqddlW/wyUFEPoCpSjuYRufug
-	 p286Jbza9+eqQmSq0NI2NrkF3zqqJwrqRJ6V6EpQRy1sp9zRmAWx1FH0u8JzJVALv4
-	 +qEh48qHOKmp3eeMtzFNw5Y/nvm2jlTJGd3w8sS9ofjizoA6DewrojvgvZaAp+ID/+
-	 U48FzMs+aEZsQTK+UG7Vye7kROskoD9+qR8Rldng9WPE2IcpBPXs92DVY1XQLVgFJT
-	 8gIkys5DfXvsm0tKY8OQnB8lQO5W84/NDVDRS4FxIZpyNKQX2JfwAtag81CF6ttr7o
-	 i909kC9mW6HFA==
-Message-ID: <5e7041ad-8e76-469f-9698-b7debcdde5b0@kernel.org>
-Date: Thu, 4 Jul 2024 08:25:53 +0200
+	b=dUmz8AwCwde0hkvJLPnaIChpqwlhwZsctB42xOA5J7lavx4XrRLRYxjKEAhD6SiQ/
+	 0bARRYFZJS2Ojjsb3lIuC4UD5NrqjrTqp0CcpQAvF1CZJwOU7zxm9s8y+vUUPSFAFH
+	 w7Tz6qUsCnShJLbJ5Y60rXGM9v755nVNhgBrKwhVxwJMKJQD+J+ABLkXxR9uLh775u
+	 qopOBlV0GBho5riwQBa55+WfYOQ+svtmRa7vLBaYR3CitjfaJoX0qTCpbEyCCW6DmZ
+	 aWpZgOWdoZ3qhHFLmw23LJg7uTK1qGfCaYuFovw6bfxyJpDlCnYzDUv3uZswc9JzYj
+	 01PWLFYQezSLQ==
+Message-ID: <13e0a35a-729c-42e7-874b-f0d263ba6f35@kernel.org>
+Date: Thu, 4 Jul 2024 08:26:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,25 +35,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: net: qcom: ethernet: Add interconnect
- properties
-To: Sagar Cheluvegowda <quic_scheluve@quicinc.com>,
- Vinod Koul <vkoul@kernel.org>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc: kernel@quicinc.com, Andrew Halaney <ahalaney@redhat.com>,
- Andrew Lunn <andrew@lunn.ch>, linux-arm-msm@vger.kernel.org,
- netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240703-icc_bw_voting_from_ethqos-v3-0-8f9148ac60a3@quicinc.com>
- <20240703-icc_bw_voting_from_ethqos-v3-1-8f9148ac60a3@quicinc.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Add Rock 5 ITX board
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240703210524.776455-1-heiko@sntech.de>
+ <20240703210524.776455-2-heiko@sntech.de>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -99,19 +87,17 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240703-icc_bw_voting_from_ethqos-v3-1-8f9148ac60a3@quicinc.com>
+In-Reply-To: <20240703210524.776455-2-heiko@sntech.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/07/2024 00:15, Sagar Cheluvegowda wrote:
-> Add documentation for the interconnect and interconnect-names
-> properties required when voting for AHB and AXI buses.
+On 03/07/2024 23:05, Heiko Stuebner wrote:
+> Add devicetree binding for the Rock 5 ITX board, build around the rk3588.
 > 
-> Suggested-by: Andrew Halaney <ahalaney@redhat.com>
-> Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 > ---
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
