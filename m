@@ -1,167 +1,184 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E62918637;
-	Thu,  4 Jul 2024 10:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB18E18637;
+	Thu,  4 Jul 2024 10:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720087596; cv=none; b=TA6haB8t3YxjbeDRtIz8KrRsCnFKOUOCi1yCiOkjYbLb9bxN/zOR3TeFDwF/FexekW8frG6uG31vzu0Q3n6St5gdyiLcaEsNoyt/CczItuh8qLfio/+7T7udbRGBazupZwjdWyM12m5GqyvtAJzAyWk5pWkVp84zHqOFnkK1IpU=
+	t=1720087639; cv=none; b=CkOCOizp085dUgFx9MGSfcCVfrUfUbcDJofqMX3QDfbkSJ67ilWBHxZ1K921WtTXAaM+xym8XVNqRhCun+YAfoILhTC8ptfCwiFRGMUvj45v8LB1nDA6uVkBzgNJrmLbg3/Eo93OrRMgx8uESU+8iBYnZZ/s/ugOJbmcTIASLr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720087596; c=relaxed/simple;
-	bh=tSzlOKj7J16zKhWQxfbOxXq2j9lBM1d7lqleazh6Vg8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=EGymL35WxyTGG8k+xp2Txg8Q7ZqZPGyBVHtaeUrwl1K+upad8FdeMCoFWbOjtrSPBqYNhe07GtiEMyDBy3IFrRaR55ITCWxl0vdLXckVJbU/qh2LUGFNJbc1u8uZ/6cjx6ejfBmu9RFrxcOHSq45xRIyzsyD7RjrYpC2MA4828A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NpMk3Rqg; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720087639; c=relaxed/simple;
+	bh=hxsuoh71wfORW3jgVluGq83IqgoV8iRPXbKMm5fjJD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYRFQIiAUhGGcI0F52vTjiBN61uUt4sFD8BEWTW+pICsL4E5Oz4uoGWgNDfZ7lJdT/LueXkVMr1BxQEf3VlwgSnTg9xBLueaHDovtod7o8cQNPmLliWld1PRnWLS1I3IId3zjh33UnkguQveFvJXoXPW9zD+STDxCekPICgyCTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MKzBvm8J; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=107LPPl3; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=twWpHAt9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kJq0cezH; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpMk3Rqg"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4264a3847b6so3092305e9.0;
-        Thu, 04 Jul 2024 03:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720087593; x=1720692393; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WlIjn4Ntu69O5x5oWoN15bYcnfbMpOVbMNKPzZXPEAw=;
-        b=NpMk3Rqg8GlGcbPkt3gXCMgSGDbkVv1W8gf9lGP7do+v1ej5fgLVnwytRamp6erN7x
-         RSdELUyeBmjfT6eijkKjvvJf1J17u/19bp8PBFxrNKgkleLy839PNrqLzL4STYsBa3cS
-         EncvX3ocUpKSHw6SBqHTd3J5VMVZcRoTjc81k9jRas5v72ELlZV9Zbr/W10yRfWQbK6d
-         OhxJJrQPCT66R6g721MDNeRO/FaJ4MNE2AogXYJmo5q7kzqbvGjgP3rmz8gBUjkC9WsX
-         K80W4tPJUSjniFvL17bKspwtLGdfW9edLQulDQU7EEIW7dbRfASZoF1g2gTgQiZ0jEN5
-         YBrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720087593; x=1720692393;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WlIjn4Ntu69O5x5oWoN15bYcnfbMpOVbMNKPzZXPEAw=;
-        b=wxBzxEMIkuxk8CMnDmpIH4LEO//0nn3M8xTLb9Ph7QQcGZP2qXTYpp4pipR11KWz2+
-         duR1PAgsjHD5b8c36sEB7TGsCU5bL/lu48lalA2N0goa4f1h75UmhvE9NxpkouyfBonz
-         VVHMIBxiYAYS7IzqHQXoUijdrjdP+QRPzaaVJt0skLtKElCTxK94se+VxXzZXnuUbUcH
-         yNHRd7UuaXL+Rf7hsXoPFOjLxoq9HpIrARlr/CbTn03oEEAMyMJSB2zIviZOk6mmBa3b
-         Jz5hYaHmd6gG+NfRlInPiTcD6iwCytumvVuH2RxNS9VH+GxSfpqDg4WnKQbBJrELXEVy
-         Q4eg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9ymb+aWXfEiNkMDQGTJB/Q09MC78a2ZHRTUKEQCvLfPc5lqAD6PqO/j5Gc7x0xcK+CoeanbOFQkLCoWkfD8eSsIGL/Gwi1S6FDLZqhsCG/NRpDwHLyJC3bhLpFgkUDGjTmG6NhNQRTTqxCxFI2Whas9fIPAfvnz27wxwFKRb1tNLKbw==
-X-Gm-Message-State: AOJu0YzM6M8Oh40Sg7Au4RBFniXn0Y5DLIx5j6yblNdxPbEMNp7enERd
-	RSwEUjvCH1PtdprsVA0o2OKFmi/IsJTdWtPWkLJLZwIpY5zGckIp
-X-Google-Smtp-Source: AGHT+IFz93kR9vhi8ICmWkFiLx7dTQqOBD/dGHu72Dday1rvCW+zLBePP+YmKjm2UF0fS5UbinrlDQ==
-X-Received: by 2002:a05:600c:1ca4:b0:426:4765:16f7 with SMTP id 5b1f17b1804b1-4264a3dc17fmr8529705e9.21.1720087593190;
-        Thu, 04 Jul 2024 03:06:33 -0700 (PDT)
-Received: from localhost (host-79-55-57-217.retail.telecomitalia.it. [79.55.57.217])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1e8014sm17597385e9.21.2024.07.04.03.06.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 03:06:32 -0700 (PDT)
-Date: Thu, 04 Jul 2024 12:06:31 +0200
-From: Matteo Martelli <matteomartelli3@gmail.com>
-To: Conor Dooley <conor@kernel.org>, 
- Matteo Martelli <matteomartelli3@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- linux-iio@vger.kernel.org, 
- devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Message-ID: <668674271f02d_92937078@njaxe.notmuch>
-In-Reply-To: <20240703-bovine-thumping-c3747fd7caa1@spud>
-References: <20240703-iio-pac1921-v1-0-54c47d9180b6@gmail.com>
- <20240703-iio-pac1921-v1-1-54c47d9180b6@gmail.com>
- <20240703-bovine-thumping-c3747fd7caa1@spud>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: add binding for pac1921
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MKzBvm8J";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="107LPPl3";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="twWpHAt9";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kJq0cezH"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D00CE1F7B7;
+	Thu,  4 Jul 2024 10:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1720087636; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bc+TSGhY4xzlZZbkOaKUVRj2Dc5/7oDx0D4PudXyKVQ=;
+	b=MKzBvm8JaWou4CMDx4D8fnc7Xf9t+QRg9Yym68ZzH1qZClM2HEDTfM9d+EZm1HItrbTYav
+	WmNyK4dy5f2HVK2z09l6yyTkDyY1nwi2PhXvRoFd32doe19k3nIkRiz6agM29cAcS56aU8
+	n/qM0ueVQzZnEvhmhr3XNRzHr4KhOGo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1720087636;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bc+TSGhY4xzlZZbkOaKUVRj2Dc5/7oDx0D4PudXyKVQ=;
+	b=107LPPl3svmk5c2OuM1wpdzZ8E5h0KgoHYKG2wqoq+l+wzOkxu8m29hZIvjiE4YONq2Aru
+	PQ5AFlN3hF00JuCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1720087635; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bc+TSGhY4xzlZZbkOaKUVRj2Dc5/7oDx0D4PudXyKVQ=;
+	b=twWpHAt9+XrprrkgBKJcUjYYTGsuyVDdxqL9sYPlXnmfLHbJn6QqQ/ojKgixpU7XtdGxBi
+	BojLc3fmJufcTV5uSdN3MpSl/6jauva+prwnz8AetdutgDhtYqDZXWAjDlPbECw4ciW/Z1
+	Xa9U4I7OZveki6G71OKrXI9lfpxMXqA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1720087635;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bc+TSGhY4xzlZZbkOaKUVRj2Dc5/7oDx0D4PudXyKVQ=;
+	b=kJq0cezHBMKsAISBqvbzpMiEHPuRiFPkYrbHwqVcBNXQTwnCQG41tPp4eGBleicG5VkVnc
+	S4KBMfxTBAm68XCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C0FA71369F;
+	Thu,  4 Jul 2024 10:07:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id c/jKLlN0hma9YQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 04 Jul 2024 10:07:15 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7230EA088E; Thu,  4 Jul 2024 12:07:15 +0200 (CEST)
+Date: Thu, 4 Jul 2024 12:07:15 +0200
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Yu Ma <yu.ma@intel.com>, viro@zeniv.linux.org.uk, brauner@kernel.org,
+	jack@suse.cz, edumazet@google.com, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, pan.deng@intel.com,
+	tianyou.li@intel.com, tim.c.chen@intel.com,
+	tim.c.chen@linux.intel.com
+Subject: Re: [PATCH v3 3/3] fs/file.c: add fast path in find_next_fd()
+Message-ID: <20240704100715.6mlnuusse6iv64ny@quack3>
+References: <20240614163416.728752-1-yu.ma@intel.com>
+ <20240703143311.2184454-1-yu.ma@intel.com>
+ <20240703143311.2184454-4-yu.ma@intel.com>
+ <CAGudoHEcb3g16O1daqGdViHoPEnEC7iJ-Z2B+ZC9JA9LucimDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGudoHEcb3g16O1daqGdViHoPEnEC7iJ-Z2B+ZC9JA9LucimDA@mail.gmail.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,intel.com:email]
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spam-Level: 
 
-Hi Conor, thanks for your feedback,
-
-Conor Dooley wrote:
+On Wed 03-07-24 16:17:01, Mateusz Guzik wrote:
+> On Wed, Jul 3, 2024 at 4:07 PM Yu Ma <yu.ma@intel.com> wrote:
+> >
+> > There is available fd in the lower 64 bits of open_fds bitmap for most cases
+> > when we look for an available fd slot. Skip 2-levels searching via
+> > find_next_zero_bit() for this common fast path.
+> >
+> > Look directly for an open bit in the lower 64 bits of open_fds bitmap when a
+> > free slot is available there, as:
+> > (1) The fd allocation algorithm would always allocate fd from small to large.
+> > Lower bits in open_fds bitmap would be used much more frequently than higher
+> > bits.
+> > (2) After fdt is expanded (the bitmap size doubled for each time of expansion),
+> > it would never be shrunk. The search size increases but there are few open fds
+> > available here.
+> > (3) There is fast path inside of find_next_zero_bit() when size<=64 to speed up
+> > searching.
+> >
+> > As suggested by Mateusz Guzik <mjguzik gmail.com> and Jan Kara <jack@suse.cz>,
+> > update the fast path from alloc_fd() to find_next_fd(). With which, on top of
+> > patch 1 and 2, pts/blogbench-1.1.0 read is improved by 13% and write by 7% on
+> > Intel ICX 160 cores configuration with v6.10-rc6.
+> >
+> > Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+> > Signed-off-by: Yu Ma <yu.ma@intel.com>
+> > ---
+> >  fs/file.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/fs/file.c b/fs/file.c
+> > index a15317db3119..f25eca311f51 100644
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -488,6 +488,11 @@ struct files_struct init_files = {
+> >
+> >  static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
+> >  {
+> > +       unsigned int bit;
+> > +       bit = find_next_zero_bit(fdt->open_fds, BITS_PER_LONG, start);
+> > +       if (bit < BITS_PER_LONG)
+> > +               return bit;
 > > +
-> > +  microchip,dv-gain:
-> > +    description:
-> > +      Digital multiplier to control the effective bus voltage gain. The gain
-> > +      value of 1 is the setting for the full-scale range and it can be increased
-> > +      when the system is designed for a lower VBUS range.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    enum: [1, 2, 4, 8, 16, 32]
-> > +    default: 1
-> > +
-> > +  microchip,di-gain:
 > 
-> Why is this gain a fixed property in the devicetree, rather than
-> something the user can control? Feels like it should be user
-> controllable.
-
-Gains are user controllable via the IIO_CHAN_INFO_HARDWAREGAIN. I also added
-them as DT properties thinking that they could be pre-set depending on hardware
-specifications: for instance by board design the monitored section is already
-known to be in a particular voltage/current range (datasheet specifies
-gains-ranges mapping at table 4-6 and table 4-7). Then, even if gains are
-pre-set, the user can change them at runtime for instance by scaling them down
-upon an overflow event. However, I can get rid of those gain properties if they
-are out of the DT scope.
-
-> > +    description:
-> > +      Digital multiplier to control the effective current gain. The gain
-> > +      value of 1 is the setting for the full-scale range and it can be
-> > +      increased when the system is designed for a lower VSENSE range.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    enum: [1, 2, 4, 8, 16, 32, 64, 128]
-> > +    default: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - shunt-resistor-micro-ohms
+> The rest of the patchset looks good on cursory read.
 > 
-> You're missing a vdd-supply btw and the !read/int pin isn't described
-> here either. I think the latter needs a property to control it (probably
-> a GPIO since it is intended for host control) and a default value for if
-> the GPIO isn't provided?
+> As for this one, the suggestion was to make it work across the entire range.
 
-The driver does not currently handle the vdd regulator nor the gpio for the
-!read/int pin. Should they be added to the DT schema anyway?
+I'm not sure what do you exactly mean by "make it work across the entire
+range" because what Ma has implemented is exactly what I originally had in
+mind - i.e., search the first word of open_fds starting from next_fd (note
+that 'start' in this function is already set to max(start, next_fd)), if
+that fails, go through the two level bitmap.
 
-I think I can add the vdd regulator handling with little effort, my guess is
-that the "vdd-supply" property can be optional and defined as "vdd-supply: true"
-in the DT schema. Then the driver, if the vdd-supply property is present in the
-DT, would enable the regulator during device initialization and PM resume, and
-disable it on driver removal and PM suspend.
-
-Reguarding the !read/int pin, the current driver overrides it with a register
-bit so it would not be considered at all by the device.
-
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        adc@4c {
-> > +            compatible = "microchip,pac1921";
-> > +            #io-channel-cells = <1>;
-> > +            label = "vbat";
-> > +            reg = <0x4c>;
-> 
-> Order here should be compatible, reg, generic properties and then finally
-> vendor ones.
-
-Thanks, I will fix this in next patch version.
-
-> 
-> Thanks for your patch,
-> Conor.
-> 
-
-Thanks again for you feedback,
-Matteo
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
