@@ -1,176 +1,64 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA94F131736;
-	Thu,  4 Jul 2024 19:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C3E4CB28;
+	Thu,  4 Jul 2024 19:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720121611; cv=none; b=MuPMheS3zpzWkU6R3pXmnW2MmkyeI1x/AmehAG3m7Boyug8XIyJMsuM3JA9Xnzyg6i7AXYHx8SVEo1ZAHVs7IjFiwodlJeMkF43I2n+BBweNB3Gc+zR7qNatbw1MfJffOUu/PPYvoQVNJ6BchZehSmXSTLrvRv+Ea1EFNMD6VmQ=
+	t=1720121815; cv=none; b=H33OohxdsvlaGvZr2RWnKdI1R5FwM/w5I6NTs2ecRjKlxXsEEZNKxVnn3EWg2QRYqhEnU6BfgH5/0hu4bXl6+hoMaGoX/dcM7XOohY5OQLvMycYzysrnVtfgfCUR/aGGEcIfuq8MgSYLsuckdSHkRHyVEfuikjsA62lXzUswZc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720121611; c=relaxed/simple;
-	bh=JUEzBsblFz0LTrgNHbshd4E+vAIOOPSbCwfybvfKwoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y2CHtweGwzT9BHfcykZQs3cGum9uBHWcjOTmE5lDXzPK+bdmt7pWTDzdQQvORONOyj464I7nhd1qHa31bV5X9hJOg/0xRea4LhI71D7/aHh68st2hYjH4BNiXQS+7ZqNV29uWxyk9ejg5JgEy9I4pxY3+TiK9QspwLI3C/ybJ1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=pigS2z5e; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1720121815; c=relaxed/simple;
+	bh=TatNQtxn5JyqmX3Ox0iKpM8SH6exsf48BoqyvDPWe5g=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=rIvaSFiJME3V1MQrhMlRIj5otkH/ZCE3oi+p3kSonGhcrhh89KSkqBRFEFWBRB1k+X8hOVPFGy0tVdrIeLVZ/1/d3xgVYONTndm79nMYj0muq5q+6LorFxLtz4amormbW4qErxjkskguEDsRVtTJZPYqFUJOng0gtAG6wJuBgS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=moLC8QlR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="pigS2z5e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1720121606;
-	bh=JUEzBsblFz0LTrgNHbshd4E+vAIOOPSbCwfybvfKwoU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pigS2z5ezmgcE1AhiGiLJUZ7hPRIA5OPsGBouaMkxm4vz0vW0eWv434JKct0QrORm
-	 /5qDwxDevK0Ir3p/MkDZaA+qqU/vZC9xBIavUH0sKCbYl5K9LtGHpXwvX0nEge0j/i
-	 LcwJ6nEYKUCpKbnLgTdghMGSQEOZZ618fNWu8G6g=
-Date: Thu, 4 Jul 2024 21:33:25 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH] kbuild: add script and target to generate pacman package
-Message-ID: <c1aa960c-27de-41f9-bdb3-d5cad954047a@t-8ch.de>
-References: <20240704-kbuild-pacman-pkg-v1-1-ac2f63f5fa7b@weissschuh.net>
- <63c53ab962254e49d0eb3a67a067b48023d679b0.camel@archlinux.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="moLC8QlR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A96FFC3277B;
+	Thu,  4 Jul 2024 19:36:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720121814;
+	bh=TatNQtxn5JyqmX3Ox0iKpM8SH6exsf48BoqyvDPWe5g=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=moLC8QlRspJNwkVtBnauz0eSgdNHwCs2eGOFqJC8kcWQZSWm8i3sQqpnWkjxwwWpq
+	 YwUV2/E3tEJBwh0OAzdq3WY5Ij9+Xukjg7MZAvORJUkxT1jSoaL4RYDH+nhQM3P7Vs
+	 dk3URQpqelgHpgkbweTCKgPIVvSi9LZNI76JvDqPKHveJHdVhOCWzY0KpTpEdhxwgK
+	 TmQZc8KZITgGA/Npr81QTBMltMrtn71E6VvYZBSage0vWTAz7yD2B+zne9PyFGS0zB
+	 DS/9I7WY8q5QlUr5DcGlWWdlS4o41e2SG/NLZ0Qwpeh3UGEoBDE00EoEH595riZtmX
+	 0wiEtnNlYe5DA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 98BE5C433A2;
+	Thu,  4 Jul 2024 19:36:54 +0000 (UTC)
+Subject: Re: [GIT PULL] Kselftest fixes for v6.10
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240704123816.669022-1-mic@digikod.net>
+References: <20240704123816.669022-1-mic@digikod.net>
+X-PR-Tracked-List-Id: <kvm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240704123816.669022-1-mic@digikod.net>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/kselftest-fix-2024-07-04
+X-PR-Tracked-Commit-Id: 130e42806773013e9cf32d211922c935ae2df86c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4d85acef10252c59e3b6c197c61d9252ff950431
+Message-Id: <172012181461.16688.4465728826585876343.pr-tracker-bot@kernel.org>
+Date: Thu, 04 Jul 2024 19:36:54 +0000
+To: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, Christian Brauner <brauner@kernel.org>, David Gow <davidgow@google.com>, "David S . Miller" <davem@davemloft.net>, Florian Fainelli <florian.fainelli@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>, Jakub Kicinski <kuba@kernel.org>, Johannes Berg <johannes@sipsolutions.net>, Jon Hunter <jonathanh@nvidia.com>, Kees Cook <keescook@chromium.org>, Mark Brown <broonie@kernel.org>, Richard Weinberger <richard@nod.at>, Ron Economos <re@w6rz.net>, Ronald Warsow <rwarsow@gmx.de>, Sasha Levin <sashal@kernel.org>, Sean Christopherson <seanjc@google.com>, Shengyu Li <shengyu.li.evgeny@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Will Drewry <wad@chromiu
+ m.org>, kernel test robot <oliver.sang@intel.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-um@lists.infradead.org, netdev@vger.kernel.org, stable@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <63c53ab962254e49d0eb3a67a067b48023d679b0.camel@archlinux.org>
 
-Hi,
+The pull request you sent on Thu,  4 Jul 2024 14:38:16 +0200:
 
-thanks for the review!
+> https://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/kselftest-fix-2024-07-04
 
-On 2024-07-04 21:02:50+0000, Jan Alexander Steffens (heftig) wrote:
-> On Thu, 2024-07-04 at 18:36 +0200, Thomas Weißschuh wrote:
-> > diff --git a/scripts/package/PKGBUILD b/scripts/package/PKGBUILD
-> > new file mode 100644
-> > index 000000000000..29daf357edc1
-> > --- /dev/null
-> > +++ b/scripts/package/PKGBUILD
-> > @@ -0,0 +1,72 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
-> > +# Maintainer: Thomas Weißschuh <linux@weissschuh.net>
-> 
-> Nitpick: Normally these lines are sorted newest to oldest, with the
-> current maintainer(s) at the top.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4d85acef10252c59e3b6c197c61d9252ff950431
 
-Ack.
+Thank you!
 
-> > +
-> > +pkgbase=linux-upstream
-> > +pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-api-headers")
-> > +pkgver="${KERNELRELEASE//-/_}"
-> > +pkgrel="$KBUILD_REVISION"
-> > +pkgdesc='Linux'
-> > +url='https://www.kernel.org/'
-> > +arch=("$UTS_MACHINE")
-> > +options=(!strip)
-> 
-> You should have !debug !strip here, otherwise makepkg can attempt (and
-> will fail) to gather source files, creating an empty
-> /usr/src/debug/$pkgbase.
-
-Ack.
-
-> Might also be worth considering !buildflags (to turn off injection of
-> CFLAGS etc) and !makeflags (to turn off injection of MAKEFLAGS).
-
-Ack.
-
-!makeflags doesn't really help because the MAKEFLAGS inherited from
-Kbuild are still overwritten, but with empty values.
-Which is why the KBUILD_MAKEFLAGS variable is used.
-
-But it's still better to have for safety.
-
-> 
-> > +license=(GPL-2.0-only)
-> > +
-> > +build() {
-> > +  export MAKEFLAGS="${KBUILD_MAKEFLAGS}"
-> 
-> I think you can have this export at the top level instead of in each
-> function.
-
-That doesn't seem to work, MAKEFLAGS seem to be set before the function
-is called.
-
-> 
-> > +  cd "$objtree"
-> > +
-> > +  ${MAKE} -f "${srctree}/Makefile"
-> > +
-> > +}
-> > +
-> > +package_linux-upstream() {
-> > +  pkgdesc="The $pkgdesc kernel and modules"
-> > +
-> > +  export MAKEFLAGS="${KBUILD_MAKEFLAGS}"
-> > +  cd "$objtree"
-> > +  local modulesdir="$pkgdir/usr/$MODLIB"
-> > +
-> > +  echo "Installing boot image..."
-> > +  # systemd expects to find the kernel here to allow hibernation
-> > +  # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-> > +  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
-> 
-> An invocation of make that could also use ${MAKE} for consistency.
-
-Ack, Nathan also proposed this.
-
-> > +
-> > +  # Used by mkinitcpio to name the kernel
-> > +  echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
-> > +
-> > +  echo "Installing modules..."
-> > +  ${MAKE} INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
-> > +    DEPMOD=/doesnt/exist modules_install  # Suppress depmod
-> > +
-> > +  # remove build link
-> > +  rm -f "$modulesdir/build"
-> > +}
-> > +
-> > +package_linux-upstream-headers() {
-> > +  pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
-> > +
-> > +  export MAKEFLAGS="${KBUILD_MAKEFLAGS}"
-> > +  cd "$objtree"
-> > +  local builddir="$pkgdir/usr/$MODLIB/build"
-> > +
-> > +  echo "Installing build files..."
-> > +  "$srctree/scripts/package/install-extmod-build" "$builddir"
-> 
-> Should we be using this script upstream as well instead of our
-> homegrown mess of install commands?
-
-Maybe. It is missing a few things like resolve_btfids.
-In the kernel repo if something is missing we can fix the script itself.
-Downstream would still require custom logic.
-
-> > +
-> > +  echo "Adding symlink..."
-> > +  mkdir -p "$pkgdir/usr/src"
-> > +  ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
-> > +}
-> > +
-> > +package_linux-upstream-api-headers() {
-> > +  pkgdesc="Kernel headers sanitized for use in userspace"
-> > +  provides=(linux-api-headers)
-> > +  conflicts=(linux-api-headers)
-> > +
-> > +  export MAKEFLAGS="${KBUILD_MAKEFLAGS}"
-> > +  cd "$objtree"
-> > +
-> > +  ${MAKE} headers_install INSTALL_HDR_PATH="$pkgdir/usr"
-> > +}
-> > +
-> > +# vim:set ts=8 sts=2 sw=2 et:
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
