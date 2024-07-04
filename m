@@ -1,221 +1,213 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2120.outbound.protection.outlook.com [40.107.21.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7983D1AC252
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 15:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720106618; cv=none; b=YlwQBzTAjbegG5UfYweHlhyRSapTuKljQc6tf/V+795x3vzSOJkx8erzs7aHQxuLPKWSpmPiscDKCED0QS01stPBZZTdaOHawg9MSVgLkWg4YLih2MbTeUIcxdY3GLooRNVjLih4s72FKRPNqHodZa8i8BexgojF+uHqd3BeM8Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720106618; c=relaxed/simple;
-	bh=eFmVF0Fp3Y6Vy+GNUeRbkNyRQilUq7bFkpSNHKz7MBs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O9ZJqRA84DfYX4+OJkzC529l9pj8jQutPH+AHYoi2M25ixuBt52Afzqx3uLwZrb+Qz/PWPi3SSZh8KiLTZZ7q+o3bwHCIzHPdOx18A1Us1bmKnUMt827FcCxf+7Oq3bqLtkP/ZgQl5Lre555lqyEUxJIR7cO2bDeQiVlV2bK39A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VEa1c5Ou; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710861AC252;
+	Thu,  4 Jul 2024 15:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.120
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720106626; cv=fail; b=MyCGY6rVDP4qyegRnHFci/0Sot7ZpqGpzQFnexZ5AEKDPbQYW9ufpqOOnGVRZWcUQ86rn1L8L0ZARm9kg9MLgWuhw96M8LRFHoLQAPuKKqCkvexE0ADb5jf1yMD2YQtJ6eljzBI7kEmbgmLzLNKzYWlS9sTJKK2UIgeg3ZhAZ/s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720106626; c=relaxed/simple;
+	bh=y/BMKg9qkc78GP4f78Xf4oU8zVffFP+i0ySAljwKdlk=;
+	h=From:Date:Subject:Content-Type:Message-Id:To:Cc:MIME-Version; b=eOvE8q80lJoIJs63PwU/N+vQfvDJmtzr+cUVBvl0HxuYaULbU+ICHridlMi3otYDJnk2QMcjfIS4qcX771ovS2HsC5wjNSS//lwQqLj06QRdJYD/K5/JMBNaeUTqWbfKgBYEhNK9uk3J/xi5iz9Dc8RTZp5lbb7jLMomCDdm0n8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=m5cgBpvT; arc=fail smtp.client-ip=40.107.21.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VEa1c5Ou"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720106615;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ciNpI4biZuLDpCsmTQeZWiRYi6l4tqxyig75r9C5Nhc=;
-	b=VEa1c5OucsbrjqSZ6Ts23XZA6+OzWeq6bvigrQWxq8w7cr8R+374GwayyK3SvQJdm0nvOH
-	rDqMXQKeA7iNMWn7rT1ElzIZVIL0MPSl3UzKYP7aVPwpgCMJCeOYFbC5vO/z04t4LkAFLS
-	rh6htBwFxY7DpuRFjsg8y0eEnJFllX0=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-458-bv5jkShAPgWV_pG15IZuOQ-1; Thu, 04 Jul 2024 11:23:33 -0400
-X-MC-Unique: bv5jkShAPgWV_pG15IZuOQ-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2ee8e0dab26so7922641fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 08:23:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720106612; x=1720711412;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ciNpI4biZuLDpCsmTQeZWiRYi6l4tqxyig75r9C5Nhc=;
-        b=VVZRPGfCzYw6Ef++8TBOCVeXjlr7KsKawj4J8j2rsyKezqe2Df9KHpPPcnzSVnJvNy
-         WytRY94S+4AcChJUK2hHJLBts9wd2VNIXg6TM2O7a0//+bGXYfB9gE4tDd6bQM7x6KmB
-         yKOGAd6SUibzseKyThR0357tokhU1nqVz4BSukVUs5pF1ciVy86aQJMgcsIzF0yl1qCA
-         9FG7OdbHPDelBSnlVo0deLczQKNz1Ipl2dan0WKn6WiNBxkEGgmtDL+uDUg7Kms8yVBj
-         kRc9A4PXsjGtRhmBHtTUXVVo/PR15ABxC5Z4+QHWt/0pSjb1yQEy9WcP1qcIKsj1uT1U
-         0sNg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1hCER0+DZ69GmSprnKffBPyh5k9uURzyNG2XCONHTbZsnvHsGieefLbffLEqLUIrC8IIpiAgGp5bh5R/zzHv9QBvwsLWgxoHHSzwW
-X-Gm-Message-State: AOJu0YzwHUxhnXNNrS2d1CaGkEH+TruOHMhQPhGPPWGXIOIztn05i1Z6
-	QObeJ4MVU1zrWivnmnQy8WmrJsRppRA3nfptRcoaZVyGtG4RiKazaCOmJQhx/73E8pga9eN60i1
-	Q1reRraLdlSBm+KMdonxE6umdoNDRb1y1rHBAjN63TdfuFxhsEPSgpnTtfm/C+Q5IykO5vQ==
-X-Received: by 2002:a2e:b1c4:0:b0:2ee:896d:2408 with SMTP id 38308e7fff4ca-2ee8ee001c6mr13627161fa.37.1720106612352;
-        Thu, 04 Jul 2024 08:23:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEQ92AVhPvt7IGMw05PPOJd/errJXQT56kku3/y2KcQeSVDaRGnMAMRUnocazvAmAO3gqCcYQ==
-X-Received: by 2002:a2e:b1c4:0:b0:2ee:896d:2408 with SMTP id 38308e7fff4ca-2ee8ee001c6mr13626971fa.37.1720106611896;
-        Thu, 04 Jul 2024 08:23:31 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c715:8600:f05d:97b6:fb98:2bc1? (p200300cbc7158600f05d97b6fb982bc1.dip0.t-ipconnect.de. [2003:cb:c715:8600:f05d:97b6:fb98:2bc1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a25b5edsm28247945e9.37.2024.07.04.08.23.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 08:23:31 -0700 (PDT)
-Message-ID: <84d4e799-90da-487e-adba-6174096283b5@redhat.com>
-Date: Thu, 4 Jul 2024 17:23:30 +0200
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="m5cgBpvT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fBFAD3VxrAgfebR+S9Dldr4TGJ8CnCLmCQDnMjB0loHXrgecEW8UhROECDALi5vPIXyjajqpZz8fKi7e0xIE4h5eEGUTt7wA6VgqaxMmWb2SCKLYEege4YFhUz/fKYgUi6Q8xkEYPjWoFflNvJ/NnU/fJlxw1W5KJkAFes072GVUz4eDIQ7dbZDJSAU3xtjaCAeIjmy+NwX5Rfkh0OSMDA8s48lvhDmb/t1Smp9UKP6d7GdtlkXze5sudZ7hmncm9ROLJCSACC2yWCHXlyoNFfQK8FoKghMz6Dh6MHrTi9W9cN5wrS45xbnmlAJ6e/9FMH+13qak3Z2bFMUJSeadWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VfkfFgrB23A2GZ/3PtMWi/pCsUJhwZCVPbN1zsPZWI8=;
+ b=Z6GbsTqjuq/sCLOPwCV8kdSS08QoIIWBXX36FWJtrUVtigH330GHYFrT+QsQwyhL208EaAa5Yx/PzAag+eaR0MagBIqApcWIrNouSlWFj48epqTM/uQ1nUnQJegVMrCOdscKC/kFPdgFtBTacTQtRk4zf2UKNoXjg9wYlciXQ9tqpyX8To+RYeWNu7ztiHiIXUY4WRwALvzilLCmXb60tqPZQYnz6KjYF1FBuy88DKQbmOmCpohanErXxBYa72OkBh23JL+WNZITDFDMJukQNYlkfY75S0Z5N66E+UppUU86miyMyxs79uyPhA2f+Cgu8KOtyLCUOB0TfwcUgkCB3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=solid-run.com; dmarc=pass action=none
+ header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VfkfFgrB23A2GZ/3PtMWi/pCsUJhwZCVPbN1zsPZWI8=;
+ b=m5cgBpvTfkdLPaVv8zi+vEH+LqSfgG2otz4Cr4J1szwr+pa+dGNvycmb3HcQjtTLIjtW3bNbNUhCpxxW11jN6IN8pQgVL7m8G/T6SHldvK6TLJDGFXu8kT/I85FsQbGqQVzBhDNj1dkbYEAcy0kTaz88NzFhZcoHsgV9X6im/II=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=solid-run.com;
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
+ by VI1PR04MB9786.eurprd04.prod.outlook.com (2603:10a6:800:1e1::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.27; Thu, 4 Jul
+ 2024 15:23:39 +0000
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::c04e:8a97:516c:5529]) by AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::c04e:8a97:516c:5529%5]) with mapi id 15.20.7741.017; Thu, 4 Jul 2024
+ 15:23:39 +0000
+From: Josua Mayer <josua@solid-run.com>
+Date: Thu, 04 Jul 2024 17:23:38 +0200
+Subject: [PATCH] arm64: dts: ti: k3-am642-sr-som: mux ethernet phy reset
+ signals input
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240704-am64-phy-lockup-v1-1-4a38ded44f9d@solid-run.com>
+X-B4-Tracking: v=1; b=H4sIAHm+hmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDcwMT3cRcMxPdgoxK3Zz85OzSAl1DA/PURNO0tEQjIwsloK6CotS0zAq
+ widGxtbUA9BxJm2EAAAA=
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Josua Mayer <josua@solid-run.com>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: FR0P281CA0260.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b5::17) To AM9PR04MB7586.eurprd04.prod.outlook.com
+ (2603:10a6:20b:2d5::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/45] hugetlb pagewalk unification
-To: Peter Xu <peterx@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Muchun Song <muchun.song@linux.dev>,
- SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
- Michal Hocko <mhocko@suse.com>, Matthew Wilcox <willy@infradead.org>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jason Gunthorpe <jgg@nvidia.com>
-References: <20240704043132.28501-1-osalvador@suse.de>
- <617169bc-e18c-40fa-be3a-99c118a6d7fe@redhat.com> <Zoax9nwi5qmgTQR4@x1n>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Zoax9nwi5qmgTQR4@x1n>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB7586:EE_|VI1PR04MB9786:EE_
+X-MS-Office365-Filtering-Correlation-Id: d3dd612b-0314-4dba-d41c-08dc9c3d481c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Tk94UzF1T0FvckRCZXcxd3RHSUtFeXRoK2hnYU5FVVE2NEFYNDB2YVlSNUVw?=
+ =?utf-8?B?Y2NGdXk5U3pvVi9YVTdoMGhaa2t3TGs4V3d4cERGcUJOTmJuVjQvOWJUUDNI?=
+ =?utf-8?B?MEdSbEloMFo3MWlMRm52ZlFGZDA5eVFKMElVYjFZNjZ3ay8rTlpucDF6RkRr?=
+ =?utf-8?B?aTlNRzd4VjFYcTRuL1FMaUNSbkpLbHJRbktOSHVqK0NUaWJEZFRFMEpHWFVJ?=
+ =?utf-8?B?SFNQcDQvNUNEWUVScnZYOVZoaG14L1YrTzA4UDRXMzNES21GcjY3TXY2REhn?=
+ =?utf-8?B?dUkrdmxySjg2UloydjludkQ3SlBzTUMzemRvQkxTQllycGozSFBTV0V1NUJC?=
+ =?utf-8?B?U2ZFck8vdi9zc0xZaHVnMVU3eDc3aXdwVGpOV3kzdCtDV3RlSjYrcEgxNlhS?=
+ =?utf-8?B?bG5xZHpTMmNSc0hUK3FUV1UxekpubklONmgwem95VDJmVHZQUkluckxLakZO?=
+ =?utf-8?B?Q3NWMzd0NjJhSXR4dm1WQW5nQ2pvTUsxQTRhR254QTZhaWUyS0l0T0ozbFpn?=
+ =?utf-8?B?QU0zSXFsZzQzR1FsMUN2ZFN1VTFCa2pmSUdpQ2IrTm5GK0oyUHZjT1pNQUQ2?=
+ =?utf-8?B?NXZ6OVZycUFkOTBpd1JwZ2RWUEo2OW83Q3ZoMG9jUmVBMjU2Nm5wSkN2bU0r?=
+ =?utf-8?B?c3RDaXFVVDAvdCs1SVRLd3IxbFdXekZONzRvazFZR2dYL2FmY3JFbXNNaWIz?=
+ =?utf-8?B?NnZDcEZ3K3ZwSTJocGVOd2g4MjJ6QWZTbE82ZVp0UW10N21BRUttcFF0MDRD?=
+ =?utf-8?B?V2NtNFp1Sm9ueSs0MWl1b2JaeTNtSGkwTE02OVdZbGdZOTBRUjh5bGhxZDQx?=
+ =?utf-8?B?OXRna2ZTR2dubEUwSnBhNWdlclVqcUpoclMrVEVNa2hrMHdZUFpqMEJyREVW?=
+ =?utf-8?B?MFdSUXhBSUV5c1V5blg5bDFHbS9mbW8yRTB3VXNlNzJicU82V2tZR1h5cGZU?=
+ =?utf-8?B?RE9BMUlkUGpXTHBvaWR5ZUY0clB6NUt2ZlUxenpaVjB5T1V1WWNZczY3cDFY?=
+ =?utf-8?B?ZDdMcmhjSWUyVWM3Z2s4RVVDekwzZS9yZTFaMUNWRUFPaXd4R0p4SWRIbEQz?=
+ =?utf-8?B?cXZEOGtIR0ExSm9heHNXdEh1ZDVTY3RvRU9LUkxoUWxuQkRiUDk0ekJwZUFP?=
+ =?utf-8?B?YUpvTVZweHNsWkg5dnlrZnovNVlVL1gvaDJrS0NHckJkNk1nNEFTU1VYMjJG?=
+ =?utf-8?B?NDZhKytTV1RsVGdFVVpkSkQxUmpoQlN5OTRCaDN3NmdTamFsRzlXTHV6WU54?=
+ =?utf-8?B?djEwcE5ERS9nRFpkY1JQOXV1THI2UDMwRVB0aHJKTkJjM2IwWjlPYU9kMG5r?=
+ =?utf-8?B?ekNCSGlxZjFmVGFFOTZnL25xa1RHWlFKUUlINU0xTmIwMEdXZ0JwelVYQWww?=
+ =?utf-8?B?b3V0bzduZEJ0ZWlRN2tEdTdianhkOFFxMlRhekFYMlhlQzNlL0d6aDNpT2Y2?=
+ =?utf-8?B?MWFwSUpkTzNNL1VhTlArQXA4OXNBR204dkxOZ1Y5TCsrZmN1Wk1zQ3lGc3Jr?=
+ =?utf-8?B?c01iNUwrbmk5eUZ2Y3FtV1FENERZRzFYVk43dVhsdXpxc01uNzFjbEhTMlA2?=
+ =?utf-8?B?Mml1ZzE2dlRIQWRMclI5L2NBcTUza3hsRExLT1RVZWpJTE9lUC9DQWlBS29u?=
+ =?utf-8?B?L3VZMCtRckk5eDZsa29qVDRULzk2SHVkeWhiQ2dya3pPVjI1RlhCR3FNa0hp?=
+ =?utf-8?B?NVZFcElzcTR1dWs5dWNnaXpNQS9uWi9TWEx4OHk1UFQyMWRaMnJHM3ZHcDZa?=
+ =?utf-8?B?NVJrcHBpSzlSZnNtd0pVNHNTUElOdk9IcHVXdW1EMjBEMnZVNUxxRjc5K0x1?=
+ =?utf-8?B?OXd2VlRhY0xVRU45VTFuZlNVVWhobHdxQlJacEUxcG81c2VpNTZ1bzMrY3pa?=
+ =?utf-8?B?MVdyWXdnQkxiOEw5bUdkNmZjUEVwMzhDeEczZHpvRUJtTWc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(52116014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YnhKcTlNcjVhd1RqYzBPMVlCeE9XYThvOFArZlhEMFZKbi9Qd2lqMnZqSUoy?=
+ =?utf-8?B?ZVR3Z28wbEdnbkg1YmJvdEhFbElRSS9lRzhFSVJucVFkMENVNm9SakUvbU9m?=
+ =?utf-8?B?alNzNUtlRUxDRW9YUzVxNkhkS08yK3FRQkhsWU1aVlZ4aFlqeHAwR1pFcERy?=
+ =?utf-8?B?a005SHRwN0gxMVJBMTBBU2x0cG9ibWxrYnVlLzFHMGkrMXpCZElEQXhZcVJO?=
+ =?utf-8?B?N1ExSm5PYTZHMjJqUU1JeUw5czBMdmFaaFBHc1ZQZXhyZjcvWWU5d0tqVWIv?=
+ =?utf-8?B?ODgzMVRZUFpnR0RqUVJtQ1g2dDFnaCtMTjU1NllML0k4RGVFMXhtZkp5SVdX?=
+ =?utf-8?B?Y3I0S0ppejJJNW9SV1VyTVhBWVhXZ1Urd1NJSUIxbVNlVWQ0SnkwVnVBNWZL?=
+ =?utf-8?B?UzE5ZEVFUnpHV1V0UXkwTlFlNlZLb0tXREZKanZXVGx4R0U0eWIyV01OL1hO?=
+ =?utf-8?B?QXhQaVpZeDV4WEZZcXprMjFXc1I5WGJLWFRJZWJ2US9oUUxWNk5yUHBLaitZ?=
+ =?utf-8?B?MWlla2g4eWJYcjk0ZWhDVGhnZXlPU0x4TjBhc1VnQjNtUG4wWHFvVU4zT0pl?=
+ =?utf-8?B?dUFkalArd3pZSlYyZVZ5dHhDNmZxSGN2WHh2bUFYTDB1bTMyNTBmZG54eTZE?=
+ =?utf-8?B?dWZmbG9lamRRQkJ5YVdacTNsQWwxWGY3U1F4Z1VmTnd2KzBnbHFaMzFkZElR?=
+ =?utf-8?B?bVo2NWRvWWc4OUNxbzRmQVNWSXA5R0haUjNSMzViU0k1a3lyeWhSN1Axc0Fr?=
+ =?utf-8?B?Z0dvWU5Uck5VTCt4R2hvMDJLYVZ3RjNrZXJBT2VaR2RkSGFNQ0o2TnZmN1k5?=
+ =?utf-8?B?a0JOMFZuNFlaaDhYWkp0N2xxMmwwRnRvSWdsVFM1a1Faekt1N2RXUnA3ZDdG?=
+ =?utf-8?B?QWo3SEhCTDQyWitON29iMUhrSWVnSWdJcXNTcnlCZTJzaHdrMmViUGdqc0Uy?=
+ =?utf-8?B?WTRvS3BtN0wwQjdFZWk2Ymt6SUc5OFYyU3pxUk82SGpUZG1yWk9GajBYY1My?=
+ =?utf-8?B?bVIrcDdBM1dPRzFhbnNpSjU0cExoN3RqV1MrS2N5eS9TNWY5d3ZlL2xuMjRj?=
+ =?utf-8?B?ZVJYRk5wYzIwaEhPQ0V2NmF0VmZJYVJRMDFOa1FTeW5OS1hkbVlNSHAySGg5?=
+ =?utf-8?B?VjA3UkZVRVEyWEVGQjJIbSt4MjgxWFdIWGNiME9zZ2UxQ3M4R01UKzdzK1Nn?=
+ =?utf-8?B?VHAwcmpOWWttckkzbzRjNU92MU5wTnNTM25ERXdsUVZYYU1aWi9YeU1CM1pZ?=
+ =?utf-8?B?TjZaSUQ4THduYjZBbFdkTjVEY0hXOVlEYVFpY05HR3dyYWVLdXpWdzF1MjMz?=
+ =?utf-8?B?TTBJTm5sSDZQRlBIVERISkNFeEhhZS9mTktBSGx6aC9pZEJFdWpZaUlDSnZS?=
+ =?utf-8?B?RjdGZkNWZ2FXTmYrYUFRVVZibW9MT1RId2NwbW1PZVdyb2ZxM1hickt0NDRL?=
+ =?utf-8?B?elVlRTVBbWlwbUFCZDRrUEtOa21BeGx2Q0lzTjBWT0w1bnFIYzFhQm0zeFBB?=
+ =?utf-8?B?cmlUZG9BeE9tN1ZibGc4Mmc1WkFMUU03V3JReTU0T0g0eEdlT3U5QXdFTVAz?=
+ =?utf-8?B?K2FEYUtxWld6ellpU0k5TGl0N04rcm8rZnFqdWNWMlVycVV4aHRJaEs0NFRi?=
+ =?utf-8?B?VWxsVVNjNXFLT29hQklqVHZDaGNWR3B4WktPRENkZzJYUjlsQ2dYOGZtSDJm?=
+ =?utf-8?B?ZGdwVEUrQ05wSVBUQ01GWlMrRVBRa2pLaE5wOFdZY3hCWFIvTjlCb0tKS0tD?=
+ =?utf-8?B?TGpiMTA5cXk0djVBN09mK0N0dUk4a2xHWWhHK1hNRjMrdHRJWGhSWWFTTTd6?=
+ =?utf-8?B?RlBrSENERnpOTkZESDlpdVJzbXhFSFdxMGpISHBjMmdEb3A5WVFhM204TkNh?=
+ =?utf-8?B?S0NobzA5YmgyTHpsTUZXaFh3RCs3N0UzNERlTkpTUXZ5bTNSSDlrVjVtUkFw?=
+ =?utf-8?B?S2xObWJ2c2R6SWZmaWczMTBKNHdkajNmeVhxMkVKZFl4aFo3TEZqbnUrVll5?=
+ =?utf-8?B?T1lMRVJvNVFQcTRrakdPeThSZFZqb0J6Q1hiM0dDb2JCWndaSkExNlRsZEpY?=
+ =?utf-8?B?TjBUbzhQc1RqbmhpdWtkVjlMQWp2bllKWmpaa05GSFd6STJyNE8rTTVlNldN?=
+ =?utf-8?Q?x6EFiMffexTsQXBd1d6MQEVYC?=
+X-OriginatorOrg: solid-run.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3dd612b-0314-4dba-d41c-08dc9c3d481c
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB7586.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 15:23:39.7303
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2+7iSWFITMRjwQaPmMG6h996cfsaW5YwyYZmjdL9OqyGFxj/3gymdQ3Q2B4D/jJ1jdU3ak03Kd/8x+exZep3FA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9786
 
-On 04.07.24 16:30, Peter Xu wrote:
-> Hey, David,
-> 
+Specifically on AM64 SoM design, the DP83869 phys have a chance to lock
+up if reset gpio are toggled. Update the pinmux to input-only, strongly
+enforcing that these signals are left floating at all times.
 
-Hi!
+This avoids sporadic phy initialisation errors mostly encountered during
+power-on and reset.
 
-> On Thu, Jul 04, 2024 at 12:44:38PM +0200, David Hildenbrand wrote:
->> There are roughly two categories of page table walkers we have:
->>
->> 1) We actually only want to walk present folios (to be precise, page
->>     ranges of folios). We should look into moving away from the walk the
->>     page walker API where possible, and have something better that
->>     directly gives us the folio (page ranges). Any PTE batching would be
->>     done internally.
->>
->> 2) We want to deal with non-present folios as well (swp entries and all
->>     kinds of other stuff). We should maybe implement our custom page
->>     table walker and move away from walk_page_range(). We are not walking
->>     "pages" after all but everything else included :)
->>
->> Then, there is a subset of 1) where we only want to walk to a single address
->> (a single folio). I'm working on that right now to get rid of follow_page()
->> and some (IIRC 3: KSM an daemon) walk_page_range() users. Hugetlb will still
->> remain a bit special, but I'm afraid we cannot hide that completely.
-> 
-> Maybe you are talking about the generic concept of "page table walker", not
-> walk_page_range() explicitly?
-> 
-> I'd agree if it's about the generic concept. For example, follow_page()
-> definitely is tailored for getting the page/folio.  But just to mention
-> Oscar's series is only working on the page_walk API itself.  What I see so
-> far is most of the walk_page API users aren't described above - most of
-> them do not fall into category 1) at all, if any. And they either need to
-> fetch something from the pgtable where having the folio isn't enough, or
-> modify the pgtable for different reasons.
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+---
+ arch/arm64/boot/dts/ti/k3-am642-sr-som.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Right, but having 1) does not imply that we won't be having access to 
-the page table entry in an abstracted form, the folio is simply the 
-primary source of information that these users care about. 2) is an 
-extension of 1), but walking+exposing all (or most) other page table 
-entries as well in some form, which is certainly harder to get right.
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-sr-som.dtsi b/arch/arm64/boot/dts/ti/k3-am642-sr-som.dtsi
+index c19d0b8bbf0f..b1f06071df4c 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-sr-som.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am642-sr-som.dtsi
+@@ -320,7 +320,7 @@ AM64X_IOPAD(0x0278, PIN_INPUT, 7) /* EXTINTn.GPIO1_70 */
+ 	ethernet_phy0_default_pins: ethernet-phy0-default-pins {
+ 		pinctrl-single,pins = <
+ 			/* reset */
+-			AM64X_IOPAD(0x0154, PIN_OUTPUT, 7) /* PRG1_PRU1_GPO19.GPIO0_84 */
++			AM64X_IOPAD(0x0154, PIN_INPUT, 7) /* PRG1_PRU1_GPO19.GPIO0_84 */
+ 			/* reference clock */
+ 			AM64X_IOPAD(0x0274, PIN_OUTPUT, 5) /* EXT_REFCLK1.CLKOUT0 */
+ 		>;
+@@ -329,7 +329,7 @@ AM64X_IOPAD(0x0274, PIN_OUTPUT, 5) /* EXT_REFCLK1.CLKOUT0 */
+ 	ethernet_phy1_default_pins: ethernet-phy1-default-pins {
+ 		pinctrl-single,pins = <
+ 			/* reset */
+-			AM64X_IOPAD(0x0150, PIN_OUTPUT, 7) /* PRG1_PRU1_GPO18.GPIO0_20 */
++			AM64X_IOPAD(0x0150, PIN_INPUT, 7) /* PRG1_PRU1_GPO18.GPIO0_20 */
+ 			/* led0, external pull-down on SoM */
+ 			AM64X_IOPAD(0x0128, PIN_INPUT, 7) /* PRG1_PRU1_GPO8.GPIO0_73 */
+ 			/* led1/rxer */
+@@ -340,7 +340,7 @@ AM64X_IOPAD(0x011c, PIN_INPUT, 7) /* PRG1_PRU1_GPO5.GPIO0_70 */
+ 	ethernet_phy2_default_pins: ethernet-phy2-default-pins {
+ 		pinctrl-single,pins = <
+ 			/* reset */
+-			AM64X_IOPAD(0x00d4, PIN_OUTPUT, 7) /* PRG1_PRU0_GPO7.GPIO0_52 */
++			AM64X_IOPAD(0x00d4, PIN_INPUT, 7) /* PRG1_PRU0_GPO7.GPIO0_52 */
+ 			/* led0, external pull-down on SoM */
+ 			AM64X_IOPAD(0x00d8, PIN_INPUT, 7) /* PRG1_PRU0_GPO8.GPIO0_53 */
+ 			/* led1/rxer */
 
-Taking a look at some examples:
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20240704-am64-phy-lockup-107ea5ffa228
 
-* madvise_cold_or_pageout_pte_range() only cares about present folios.
-* madvise_free_pte_range() only cares about present folios.
-* break_ksm_ops() only cares about present folios.
-* mlock_walk_ops() only cares about present folios.
-* damon_mkold_ops() only cares about present folios.
-* damon_young_ops() only cares about present folios.
-
-There are certainly other page_walk API users that are more involved and 
-need to do way more magic, which fall into category 2). In particular 
-things like swapin_walk_ops(), hmm_walk_ops() and most 
-fs/proc/task_mmu.c. Likely there are plenty of them.
-
-
-Taking a look at vmscan.c/walk_mm(), I'm not sure how much benefit there 
-even is left in using walk_page_range() :)
-
-> 
-> A generic pgtable walker looks still wanted at some point, but it can be
-> too involved to be introduced together with this "remove hugetlb_entry"
-> effort.
-
-My thinking was if "remove hugetlb_entry" cannot wait for "remove 
-page_walk", because we found a reasonable way to do it better and 
-convert the individual users. Maybe it can't.
-
-I've not given up hope that we can end up with something better and 
-clearer than the current page_walk API :)
-
-> 
-> To me, that future work is not yet about "get the folio, ignore the
-> pgtable", but about how to abstract different layers of pgtables, so the
-> caller may get a generic concept of "one pgtable entry" with the level/size
-> information attached, and process it at a single place / hook, and perhaps
-> hopefully even work with a device pgtable, as long as it's a radix tree.
-
-To me 2) is an extension of 1). My thinking is that we can start with 1) 
-without having to are about all details of 2). If we have to make it as 
-generic that we can walk any page table layout out there in this world, 
-I'm not so sure.
-
+Sincerely,
 -- 
-Cheers,
-
-David / dhildenb
+Josua Mayer <josua@solid-run.com>
 
