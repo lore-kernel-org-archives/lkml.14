@@ -1,356 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D51E1AC45C
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 08:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1144F2BB06
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 09:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720083524; cv=none; b=VDM88aqpCzAkVKAuVw3py+685WZh6Xz5NreJDrJNAfPbOFGu8m1/DqNk4OeEeC2/P8sna2e9PW8PEzAMXNXxWSR6pJXeH6Ob6+/0EFSDalPRvG4A/JE8DYA6FcKH1dR7PT+L9HAEXRSCfLFZoxtkd9dG+zZfq6QrWO3gYgkRCPw=
+	t=1720083770; cv=none; b=qb3DEV+PZL0QKStWMlhonzkGHA73Rb/nWjJsuWnYJlDsRstkVv0AWMVT9D+LbyeEYaeahOOS5oU5CuABrUCjTKjIiqPM28HcSNYsdGfEAwAk2HSmfGH8YpDvhFIvuw0dd8+4eGFrMV5LGSIG4OPfgcqogkgdDRcWnzLHmL4Mn/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720083524; c=relaxed/simple;
-	bh=gXYyJAtFATkjz93RgGVL4XAb3nglHPwb/RYHBs1Zbbg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WfWJFz5zeO4ud9MDWGGttgOsJnlWU4SzufiAMyzIvivEONU2yaNRwnnIFLK71GY4tUsD68kpqNSxqu7SMesj1kJrkyDTEJV+Liaudur/flknu3WbS6QeuzKM1uo2F5J88eMXFhr0ASruGhRePC1hP+E3gs0LDUNXVp85LKlldkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VthO5z7u; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720083770; c=relaxed/simple;
+	bh=G7CO/CL4pp10TGPHFmXkvkXMIw9hPunx57cDry4uoXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J8uniFMpWMuk4/pXng5H+p8MlrJqEJayTvDLZVO1jj2Ialtqk23O1I2NpbjYTIBgerRE6fOVhwBLzfziAI+V+NztoQKjtA5cFFBVZ+tnk9q3m+0a2VR17TZVex+vrXzYYH1qivKxCPNdjFHIV+6HK6sYRkOZVcxwKF+McFfjeMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bUt0k7LD; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VthO5z7u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720083521;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8jeNLSBugI0M1dRtmXMBFqt3/bH4xQpzUzLsQB473u4=;
-	b=VthO5z7uIxlsQCR3c9f3Eqa6359NdGnilxSvGW1qo5HTcr5pweWaDUspc2wfswuvHM5UvS
-	8lpRGTz4Tg4LBl6nWrnnqDzG0lXpK+1AxmLqdGbf07BA+8MtXKmZi6BfN3tTBK/2vSZTI0
-	x91ogQAErgePWWoOUVbbqk/7ULrHlq8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-SANUMPCfOAOWJcs0yXUfFA-1; Thu,
- 04 Jul 2024 04:58:36 -0400
-X-MC-Unique: SANUMPCfOAOWJcs0yXUfFA-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 360E019560BA;
-	Thu,  4 Jul 2024 08:58:34 +0000 (UTC)
-Received: from antares.redhat.com (unknown [10.39.194.59])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A8C26195605A;
-	Thu,  4 Jul 2024 08:58:29 +0000 (UTC)
-From: Adrian Moreno <amorenoz@redhat.com>
-To: netdev@vger.kernel.org
-Cc: aconole@redhat.com,
-	echaudro@redhat.com,
-	horms@kernel.org,
-	i.maximets@ovn.org,
-	dev@openvswitch.org,
-	Adrian Moreno <amorenoz@redhat.com>,
-	Pravin B Shelar <pshelar@ovn.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v9 10/10] selftests: openvswitch: add psample test
-Date: Thu,  4 Jul 2024 10:57:01 +0200
-Message-ID: <20240704085710.353845-11-amorenoz@redhat.com>
-In-Reply-To: <20240704085710.353845-1-amorenoz@redhat.com>
-References: <20240704085710.353845-1-amorenoz@redhat.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bUt0k7LD"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ec1ac1aed2so4042951fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 02:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1720083766; x=1720688566; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YmTXwmh1YVZIuuasStO2QRvsBLiKm7EOJYEtTyW4F4U=;
+        b=bUt0k7LD9XjnjcO83BPS4KJ4BJoDrtxzFXHwyRrSQpD0ACDQxVrUdnwqSpv1mHz3ng
+         75j4obTN3HoEQMCFaZB4nx1BDh+HILYN9gB7tt7gHBNI1UK3FfCN/uUKPSn/DZO/YKHY
+         HIuPt88pXY1UIaePwn0tw6/uWSv9MJ/VTPviNmxt+7piRcUpZW8SY4cY23iamujJlBaR
+         rb/54yKW7UX3+ZJeArkTrFEZWKqMyrCZAfoF+GjCZ5xkEuPEaTuIOasc6IYxh0nMO4/d
+         RowNrxILPc/h7Yq6t7XxmpS8bTZlACy8IJlu00NIGPYiiExK9NFSsmso2O5/Vtsmotk1
+         JceA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720083766; x=1720688566;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YmTXwmh1YVZIuuasStO2QRvsBLiKm7EOJYEtTyW4F4U=;
+        b=Wng8H2/xajhzG3zk6e+Kt11mbFGVl2mvRvds15YPaitqGb8BzeO7lrX0vo/+YtFkLM
+         rRAtdFLEnMzRkuoWbxO6jx2UBGp0vl4wsKFnq/fJ3C0yEg3dCyekN5gkPS89CNRucEqk
+         Gj/3pNcu2RbsiRldobuEXnJwunQNrv1Ui3/UN2aNSbPO/WECjQ73aeDAfgxBPKaCNC5d
+         B6bDvL2o9JMIQpFGcsCblmV8ny6na5Q6NK3j94lj+69K1EVdM4gWX/hcWe0vW3c9ZTDQ
+         lTvEjXHwz7loKpLN3p20+mcEK3dz+CocyXJ3Oa0m+97eUz9AnI8121EYZ8UMZ8IJnC+B
+         oL0w==
+X-Forwarded-Encrypted: i=1; AJvYcCW9UvFqOfTISgkXtQ7GSTbAZDGoKJsCcrFiS6ZTkn6GXxhxj4AdbWT2kQ/DUcNAQa0Tir+XBBZtZDhijuYhO01dM5TWhZbMjmxHg9FC
+X-Gm-Message-State: AOJu0YwQynsTQKg357wS0VMqurud5jh3bAJuCHIJ/lMog+TQCYRFCRMm
+	JvQE8VnpL254i2cbYELmsEQUfP8vmvyBIukBJWlhQsRYG6KqCwXojQ71DZNt920=
+X-Google-Smtp-Source: AGHT+IGBdC/+ZkuCypIRlFRUUAawwwMvrs2VcrlAwPmzy3O+A1bo954nfyMjIo5nhBQhpQhi5s4SVQ==
+X-Received: by 2002:a2e:8007:0:b0:2ee:7e6c:34d6 with SMTP id 38308e7fff4ca-2ee8edf14a9mr7759961fa.53.1720083749350;
+        Thu, 04 Jul 2024 02:02:29 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb3ce7144esm3116645ad.300.2024.07.04.02.02.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 02:02:28 -0700 (PDT)
+Date: Thu, 4 Jul 2024 11:02:18 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+	Sami Tolvanen <samitolvanen@google.com>, Song Liu <song@kernel.org>,
+	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jikos@kernel.org, joe.lawrence@redhat.com, nathan@kernel.org,
+	morbo@google.com, justinstitt@google.com,
+	thunder.leizhen@huawei.com, kees@kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] kallsyms, livepatch: Fix livepatch with CONFIG_LTO_CLANG
+Message-ID: <ZoZlGnVDzVONxUDs@pathway.suse.cz>
+References: <20240605032120.3179157-1-song@kernel.org>
+ <alpine.LSU.2.21.2406071458531.29080@pobox.suse.cz>
+ <CAPhsuW5th55V3PfskJvpG=4bwacKP8c8DpVYUyVUzt70KC7=gw@mail.gmail.com>
+ <alpine.LSU.2.21.2406281420590.15826@pobox.suse.cz>
+ <Zn70rQE1HkJ_2h6r@bombadil.infradead.org>
+ <ZoKrWU7Gif-7M4vL@pathway.suse.cz>
+ <20240703055641.7iugqt6it6pi2xy7@treble>
+ <ZoVumd-b4CaRu5nW@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoVumd-b4CaRu5nW@bombadil.infradead.org>
 
-Add a test to verify sampling packets via psample works.
+On Wed 2024-07-03 08:30:33, Luis Chamberlain wrote:
+> On Tue, Jul 02, 2024 at 10:56:41PM -0700, Josh Poimboeuf wrote:
+> > On Mon, Jul 01, 2024 at 03:13:23PM +0200, Petr Mladek wrote:
+> > > So, you suggest to search the symbols by a hash. Do I get it correctly?
+> 
+> I meant, that in the Rust world the symbols go over the allowed limit,
+> and so an alternative for them is to just use a hash. What I'm
+> suggesting is for a new kconfig option where that world is the
+> new one, so that they have to also do the proper userspace tooling
+> for it. Without that, I don't see it as properly tested or scalable.
+> And if we're gonna have that option for Rust for modules, then it begs
+> the question if this can be used by other users.
 
-In order to do that, create a subcommand in ovs-dpctl.py to listen to
-on the psample multicast group and print samples.
+I am still not sure at which level the symbol names would get hashed ;-)
 
-Reviewed-by: Aaron Conole <aconole@redhat.com>
-Tested-by: Ilya Maximets <i.maximets@ovn.org>
-Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
----
- .../selftests/net/openvswitch/openvswitch.sh  | 115 +++++++++++++++++-
- .../selftests/net/openvswitch/ovs-dpctl.py    |  73 ++++++++++-
- 2 files changed, 182 insertions(+), 6 deletions(-)
+The symbols names are used in many situations, e.g. backtraces,
+crashdump, objdump, nm, gdb, tracing, livepatching, kprobes, ...
 
-diff --git a/tools/testing/selftests/net/openvswitch/openvswitch.sh b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-index 531951086d9c..bc71dbc18b21 100755
---- a/tools/testing/selftests/net/openvswitch/openvswitch.sh
-+++ b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-@@ -20,7 +20,8 @@ tests="
- 	nat_related_v4				ip4-nat-related: ICMP related matches work with SNAT
- 	netlink_checks				ovsnl: validate netlink attrs and settings
- 	upcall_interfaces			ovs: test the upcall interfaces
--	drop_reason				drop: test drop reasons are emitted"
-+	drop_reason				drop: test drop reasons are emitted
-+	psample					psample: Sampling packets with psample"
- 
- info() {
- 	[ "${ovs_dir}" != "" ] &&
-@@ -105,12 +106,21 @@ ovs_netns_spawn_daemon() {
- 	shift
- 	netns=$1
- 	shift
--	info "spawning cmd: $*"
--	ip netns exec $netns $*  >> $ovs_dir/stdout  2>> $ovs_dir/stderr &
-+	if [ "$netns" == "_default" ]; then
-+		$*  >> $ovs_dir/stdout  2>> $ovs_dir/stderr &
-+	else
-+		ip netns exec $netns $*  >> $ovs_dir/stdout  2>> $ovs_dir/stderr &
-+	fi
- 	pid=$!
- 	ovs_sbx "$sbx" on_exit "kill -TERM $pid 2>/dev/null"
- }
- 
-+ovs_spawn_daemon() {
-+	sbx=$1
-+	shift
-+	ovs_netns_spawn_daemon $sbx "_default" $*
-+}
-+
- ovs_add_netns_and_veths () {
- 	info "Adding netns attached: sbx:$1 dp:$2 {$3, $4, $5}"
- 	ovs_sbx "$1" ip netns add "$3" || return 1
-@@ -173,6 +183,19 @@ ovs_drop_reason_count()
- 	return `echo "$perf_output" | grep "$pattern" | wc -l`
- }
- 
-+ovs_test_flow_fails () {
-+	ERR_MSG="Flow actions may not be safe on all matching packets"
-+
-+	PRE_TEST=$(dmesg | grep -c "${ERR_MSG}")
-+	ovs_add_flow $@ &> /dev/null $@ && return 1
-+	POST_TEST=$(dmesg | grep -c "${ERR_MSG}")
-+
-+	if [ "$PRE_TEST" == "$POST_TEST" ]; then
-+		return 1
-+	fi
-+	return 0
-+}
-+
- usage() {
- 	echo
- 	echo "$0 [OPTIONS] [TEST]..."
-@@ -187,6 +210,92 @@ usage() {
- 	exit 1
- }
- 
-+
-+# psample test
-+# - use psample to observe packets
-+test_psample() {
-+	sbx_add "test_psample" || return $?
-+
-+	# Add a datapath with per-vport dispatching.
-+	ovs_add_dp "test_psample" psample -V 2:1 || return 1
-+
-+	info "create namespaces"
-+	ovs_add_netns_and_veths "test_psample" "psample" \
-+		client c0 c1 172.31.110.10/24 -u || return 1
-+	ovs_add_netns_and_veths "test_psample" "psample" \
-+		server s0 s1 172.31.110.20/24 -u || return 1
-+
-+	# Check if psample actions can be configured.
-+	ovs_add_flow "test_psample" psample \
-+	'in_port(1),eth(),eth_type(0x0806),arp()' 'psample(group=1)' &> /dev/null
-+	if [ $? == 1 ]; then
-+		info "no support for psample - skipping"
-+		ovs_exit_sig
-+		return $ksft_skip
-+	fi
-+
-+	ovs_del_flows "test_psample" psample
-+
-+	# Test action verification.
-+	OLDIFS=$IFS
-+	IFS='*'
-+	min_key='in_port(1),eth(),eth_type(0x0800),ipv4()'
-+	for testcase in \
-+		"cookie to large"*"psample(group=1,cookie=1615141312111009080706050403020100)" \
-+		"no group with cookie"*"psample(cookie=abcd)" \
-+		"no group"*"psample()";
-+	do
-+		set -- $testcase;
-+		ovs_test_flow_fails "test_psample" psample $min_key $2
-+		if [ $? == 1 ]; then
-+			info "failed - $1"
-+			return 1
-+		fi
-+	done
-+	IFS=$OLDIFS
-+
-+	ovs_del_flows "test_psample" psample
-+	# Allow ARP
-+	ovs_add_flow "test_psample" psample \
-+		'in_port(1),eth(),eth_type(0x0806),arp()' '2' || return 1
-+	ovs_add_flow "test_psample" psample \
-+		'in_port(2),eth(),eth_type(0x0806),arp()' '1' || return 1
-+
-+	# Sample first 14 bytes of all traffic.
-+	ovs_add_flow "test_psample" psample \
-+	    "in_port(1),eth(),eth_type(0x0800),ipv4()" \
-+            "trunc(14),psample(group=1,cookie=c0ffee),2"
-+
-+	# Sample all traffic. In this case, use a sample() action with both
-+	# psample and an upcall emulating simultaneous local sampling and
-+	# sFlow / IPFIX.
-+	nlpid=$(grep -E "listening on upcall packet handler" \
-+            $ovs_dir/s0.out | cut -d ":" -f 2 | tr -d ' ')
-+
-+	ovs_add_flow "test_psample" psample \
-+            "in_port(2),eth(),eth_type(0x0800),ipv4()" \
-+            "sample(sample=100%,actions(psample(group=2,cookie=eeff0c),userspace(pid=${nlpid},userdata=eeff0c))),1"
-+
-+	# Record psample data.
-+	ovs_spawn_daemon "test_psample" python3 $ovs_base/ovs-dpctl.py psample-events
-+
-+	# Send a single ping.
-+	sleep 1
-+	ovs_sbx "test_psample" ip netns exec client ping -I c1 172.31.110.20 -c 1 || return 1
-+	sleep 1
-+
-+	# We should have received one userspace action upcall and 2 psample packets.
-+	grep -E "userspace action command" $ovs_dir/s0.out >/dev/null 2>&1 || return 1
-+
-+	# client -> server samples should only contain the first 14 bytes of the packet.
-+	grep -E "rate:4294967295,group:1,cookie:c0ffee data:[0-9a-f]{28}$" \
-+			 $ovs_dir/stdout >/dev/null 2>&1 || return 1
-+	grep -E "rate:4294967295,group:2,cookie:eeff0c" \
-+			 $ovs_dir/stdout >/dev/null 2>&1 || return 1
-+
-+	return 0
-+}
-+
- # drop_reason test
- # - drop packets and verify the right drop reason is reported
- test_drop_reason() {
-diff --git a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-index e8dc9af10d4d..1e15b0818074 100644
---- a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-+++ b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-@@ -28,8 +28,10 @@ try:
-     from pyroute2.netlink import genlmsg
-     from pyroute2.netlink import nla
-     from pyroute2.netlink import nlmsg_atoms
-+    from pyroute2.netlink.event import EventSocket
-     from pyroute2.netlink.exceptions import NetlinkError
-     from pyroute2.netlink.generic import GenericNetlinkSocket
-+    from pyroute2.netlink.nlsocket import Marshal
-     import pyroute2
-     import pyroute2.iproute
- 
-@@ -2460,10 +2462,70 @@ class OvsFlow(GenericNetlinkSocket):
-         print("MISS upcall[%d/%s]: %s" % (seq, pktpres, keystr), flush=True)
- 
-     def execute(self, packetmsg):
--        print("userspace execute command")
-+        print("userspace execute command", flush=True)
- 
-     def action(self, packetmsg):
--        print("userspace action command")
-+        print("userspace action command", flush=True)
-+
-+
-+class psample_sample(genlmsg):
-+    nla_map = (
-+        ("PSAMPLE_ATTR_IIFINDEX", "none"),
-+        ("PSAMPLE_ATTR_OIFINDEX", "none"),
-+        ("PSAMPLE_ATTR_ORIGSIZE", "none"),
-+        ("PSAMPLE_ATTR_SAMPLE_GROUP", "uint32"),
-+        ("PSAMPLE_ATTR_GROUP_SEQ", "none"),
-+        ("PSAMPLE_ATTR_SAMPLE_RATE", "uint32"),
-+        ("PSAMPLE_ATTR_DATA", "array(uint8)"),
-+        ("PSAMPLE_ATTR_GROUP_REFCOUNT", "none"),
-+        ("PSAMPLE_ATTR_TUNNEL", "none"),
-+        ("PSAMPLE_ATTR_PAD", "none"),
-+        ("PSAMPLE_ATTR_OUT_TC", "none"),
-+        ("PSAMPLE_ATTR_OUT_TC_OCC", "none"),
-+        ("PSAMPLE_ATTR_LATENCY", "none"),
-+        ("PSAMPLE_ATTR_TIMESTAMP", "none"),
-+        ("PSAMPLE_ATTR_PROTO", "none"),
-+        ("PSAMPLE_ATTR_USER_COOKIE", "array(uint8)"),
-+    )
-+
-+    def dpstr(self):
-+        fields = []
-+        data = ""
-+        for (attr, value) in self["attrs"]:
-+            if attr == "PSAMPLE_ATTR_SAMPLE_GROUP":
-+                fields.append("group:%d" % value)
-+            if attr == "PSAMPLE_ATTR_SAMPLE_RATE":
-+                fields.append("rate:%d" % value)
-+            if attr == "PSAMPLE_ATTR_USER_COOKIE":
-+                value = "".join(format(x, "02x") for x in value)
-+                fields.append("cookie:%s" % value)
-+            if attr == "PSAMPLE_ATTR_DATA" and len(value) > 0:
-+                data = "data:%s" % "".join(format(x, "02x") for x in value)
-+
-+        return ("%s %s" % (",".join(fields), data)).strip()
-+
-+
-+class psample_msg(Marshal):
-+    PSAMPLE_CMD_SAMPLE = 0
-+    PSAMPLE_CMD_GET_GROUP = 1
-+    PSAMPLE_CMD_NEW_GROUP = 2
-+    PSAMPLE_CMD_DEL_GROUP = 3
-+    PSAMPLE_CMD_SET_FILTER = 4
-+    msg_map = {PSAMPLE_CMD_SAMPLE: psample_sample}
-+
-+
-+class PsampleEvent(EventSocket):
-+    genl_family = "psample"
-+    mcast_groups = ["packets"]
-+    marshal_class = psample_msg
-+
-+    def read_samples(self):
-+        while True:
-+            try:
-+                for msg in self.get():
-+                    print(msg.dpstr(), flush=True)
-+            except NetlinkError as ne:
-+                raise ne
- 
- 
- def print_ovsdp_full(dp_lookup_rep, ifindex, ndb=NDB(), vpl=OvsVport()):
-@@ -2530,7 +2592,7 @@ def main(argv):
-         help="Increment 'verbose' output counter.",
-         default=0,
-     )
--    subparsers = parser.add_subparsers()
-+    subparsers = parser.add_subparsers(dest="subcommand")
- 
-     showdpcmd = subparsers.add_parser("show")
-     showdpcmd.add_argument(
-@@ -2605,6 +2667,8 @@ def main(argv):
-     delfscmd = subparsers.add_parser("del-flows")
-     delfscmd.add_argument("flsbr", help="Datapath name")
- 
-+    subparsers.add_parser("psample-events")
-+
-     args = parser.parse_args()
- 
-     if args.verbose > 0:
-@@ -2619,6 +2683,9 @@ def main(argv):
- 
-     sys.setrecursionlimit(100000)
- 
-+    if args.subcommand == "psample-events":
-+        PsampleEvent().read_samples()
-+
-     if hasattr(args, "showdp"):
-         found = False
-         for iface in ndb.interfaces:
--- 
-2.45.2
+Would kallsyms provide some translation table between the usual
+"long" symbol name and a hash?
 
+Would it allows to search the symbols both ways?
+
+
+I am a bit scared because using hashed symbol names in backtraces, gdb,
+... would be a nightmare. Hashes are not human readable and
+they would complicate the life a lot. And using different names
+in different interfaces would complicate the life either.
+
+Best Regards,
+Petr
