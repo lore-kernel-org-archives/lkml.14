@@ -1,153 +1,80 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28D11B120A;
-	Thu,  4 Jul 2024 14:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D6D1B140E;
+	Thu,  4 Jul 2024 14:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720105050; cv=none; b=QCOGZoDOzXTUPOHGEVsAWD8lBS1/qYHfLpmTei6ndyCWpQQ+CdzafbW8xUCkymoncEel6tr6ggb7OBjSVWvN6o1au/h9qcXSaJ+MzW2UtFRNX5ul2ktC0ku2BPVpdtPb84xdtObMnsVPWZHe/Mijw357KYpGoKxGjyu2rcmyXeg=
+	t=1720105052; cv=none; b=dpDQ6ASGYMvBfQ57JXBED7lD5YhoJXp3OP8X7Bu6rHnwkN+6IP4y7e7/dNWMD1mBRC3Qg8YDKLHIRKk2AGChBqshZnNFwmxyJdZ5bIQIXvOsDohlfx9FT7viNPy2R7ywKI8edbPFf8SNdaoriHbVmbcTG97LXzcUoqXFgHXQoUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720105050; c=relaxed/simple;
-	bh=Asb3OsmaU4xur7jTKhpefAUeM3PR7wjkzqbeEqFt1vk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f7u0SKgHg65Gfjr3n2ibbXkTkxTyH5DM2CdACUG2f++A++nJKn+DPwCPnJLj3e4GyCgF8qIIMaOlhHIXN6y/updHPCEu8bxRaBNbBsoJzNnRRyTyrD/3jjVQwE0QHXhjhe9EDJjFN39zXEb72+HrPkqGij9VWRUo9gzD3BakuO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WBAsuh/Y; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1720105052; c=relaxed/simple;
+	bh=wXM+lJtWqpCmqArY5lzSjLj6RYQU+kkOlea0ctvZMa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=egL51UDIRUTJr2btoulI/bm9mjLEyOzIjhMB6R7wO9KbsMrYGrvZ1KmlK5W8vqvq+SHoSDZlAjBAZ8++Hg4bq2x4iig7r7hDIXeHhyUAB2LnPUt8n0jmpEPc6kfAYNFAs4fGnj3SH7/ES2qrBy/hNjNJGZ5wu/SOgMzgQRC9loo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBAsuh/Y"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7f3c5af0a04so40382539f.0;
-        Thu, 04 Jul 2024 07:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720105048; x=1720709848; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YS4FeN8/6jzuogXItnqNR+Y++d8T9MSODY7gDNOWrGo=;
-        b=WBAsuh/YtWqF5OJUvPklrQnRyL9eDcmQg9eAGSefGLCJFA8SRmnOmDwyMgrBFSwhwe
-         YkcAoN6rMvOaCY+VA3onqfTaUZvHLqNcSlXbMFEiPvuCZTOX8DnTpEZ8abBWOsAlrKwk
-         K0RfJelbcphtiIhrf6TXtxjdLGeKUYk1ci4Gxp9P8GhvqQ1Ifs6ER7ML+Um5MsAdyduF
-         0NUlBWysWT7aQgWemr4iCIJjKe2LNzu7fGNxZKoioUQMWArofUY0Mbz+z7gm+xAfQqpZ
-         xRty3+4FOnYuF1jze88+DTDyPBHZoPlT1uxiLZmdYy3fVZsOG0Pl50OioyPi5GsGKmAu
-         ITTQ==
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fb3cf78ff3so3567085ad.0;
+        Thu, 04 Jul 2024 07:57:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720105048; x=1720709848;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YS4FeN8/6jzuogXItnqNR+Y++d8T9MSODY7gDNOWrGo=;
-        b=dgRtLnYMNSobq/0YZOhZo8pCK9E20+hfY++54wqcUHcHJ9yDEDL90LZZgI+PdAeg6o
-         lxTD13Bkro8u9kQQ3Z5jIK02bCk7ozVYna758cc/HHBk2xqfY5dVZC8/0acvktjiIyR5
-         3Z3hdlU0N8FIwvesgmJFzfIYvf+cf6CNCNIZx8FuunMHgA0TTHCTm3RNfZw2BhGDo8JC
-         SQB59/C1V0Xut+7XNiNiYlxhoTmpbg9wL3lGyxsTYKBu6Xfb0jQIW7X5lo7dBTboLc9w
-         8VyHdoJFXpgi4NBo4+1IiITJijsU3hWDRUb272yv9MgZeSX81wv7/8NE9SjtbUrjJV6K
-         4kVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUENB8NeaHuIhMAiVmNMYN3LXDwoZG4hgF8VhkKDzVJuHPEZtpXYY6G8QfyAGtiEu4kB0v0eSJLOEW8zZlhGR+xHB6lY1HWKL41vQet3jNym93a2Y7EqlOWXe1ypcjyci0nGOEN0bnDLeuvjFE=
-X-Gm-Message-State: AOJu0Yy29FyTJbgIzPvNQnTlFzTofPDoz1hInlL0geajDk53xxcrNb57
-	9mPlkeT3QPPQmkoZSA3VqkdYalOxsg2Lf53zvMHjoBp6p33R1xsa
-X-Google-Smtp-Source: AGHT+IHmT4M+fJI4PcJf4RElkH9Xa6Im8XFst1pbdkA3tOoDRK2h+O7oGNWrVw2ZDlnqNaZ2H1FcIA==
-X-Received: by 2002:a6b:7b4c:0:b0:7f6:522d:2714 with SMTP id ca18e2360f4ac-7f66def0274mr213062839f.16.1720105047999;
-        Thu, 04 Jul 2024 07:57:27 -0700 (PDT)
-Received: from localhost.localdomain (h135-131-130-199.ashwwi.broadband.dynamic.tds.net. [135.131.130.199])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4bb73bb388asm3940867173.5.2024.07.04.07.57.27
+        d=1e100.net; s=20230601; t=1720105050; x=1720709850;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5DuG8BbNPK7ojcgHp1GrfarVfxf/VgJ2PLuBOxAwREc=;
+        b=e5GCrdQyQOoP8qImxD3X5vmgJloS3H3+FIX6A5kc0nF/l0h0X3rIWi8rA68mqH+qJn
+         fqAFT3UV3OJ14LacTO5T9P4WahTO6BNZvbuYFEIdx+UUGfWCDeV9YUM43s3VfOCotVPM
+         y7FLlJCDMH2jxXNcvNGzii/HuHNflpJ1iMqHKPLj9Ksr56vbcZrnxsgBQhrG2/oJB5N+
+         KyB1bk1jYD4OTUz/GrYAyBOIrmM2aKBj6l+l0dto9X9/PD6gF9HbXF6omsfdi7nvoryU
+         /HNh/89qljQ61BWyCgJwE3QlXvQUtb46hedrokMfFPBYyHczbrv/OUhewNdUPkRb1fkk
+         1saA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKNvJae4rsebOqgzyX/lmHvQfSXoG4ZEEHiX3HB6JYAOnBtHplCUt81LScdXSRJM2W/zeKWzlxmGMSAZaBz096fm6RO0A18POfbGnEi0utJwtLgVMQl+RKgkH5u7crjYBDkxfLsG3y
+X-Gm-Message-State: AOJu0YxCZ6X37x/SSQNNQFGuAUGFsqbWu/tWKPG/mohC/lNYe5FFDfeZ
+	6mPlth1AiPEqPS0v0k49nPBKRo8H+hDeq7GZRmzONw/y+K/WuJMF8JbwIZvINZw=
+X-Google-Smtp-Source: AGHT+IHk5PkhvF9EcZ3zJ6njIbJGTp/esa3YKK4JMSn2BQdtg/TkdHRJSLj1ooKN9HxkK4SpokV7yA==
+X-Received: by 2002:a17:902:f688:b0:1fb:2ba3:2f7d with SMTP id d9443c01a7336-1fb33efe3cfmr16243485ad.45.1720105050293;
+        Thu, 04 Jul 2024 07:57:30 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1598cfbsm123832235ad.250.2024.07.04.07.57.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 07:57:27 -0700 (PDT)
-From: "Ethan D. Twardy" <ethan.twardy@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
-	"Ethan D. Twardy" <ethan.twardy@gmail.com>,
-	Aswin Unnikrishnan <aswinunni01@gmail.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	rust-for-linux@vger.kernel.org (open list:RUST),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 2/4] rust: Enable test for macros::module
-Date: Thu,  4 Jul 2024 09:55:43 -0500
-Message-ID: <20240704145607.17732-3-ethan.twardy@gmail.com>
-X-Mailer: git-send-email 2.44.2
-In-Reply-To: <20240704145607.17732-1-ethan.twardy@gmail.com>
-References: <20240704145607.17732-1-ethan.twardy@gmail.com>
+        Thu, 04 Jul 2024 07:57:29 -0700 (PDT)
+Date: Thu, 4 Jul 2024 23:57:27 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Xiaowei Song <songxiaowei@hisilicon.com>,
+	Binghui Wang <wangbinghui@hisilicon.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: kirin: fix memory leak in kirin_pcie_parse_port()
+Message-ID: <20240704145727.GC1215610@rocinante>
+References: <20240609-pcie-kirin-memleak-v1-1-62b45b879576@gmail.com>
+ <7a8d4e4d-4e2b-48a6-b8e2-d23460154777@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a8d4e4d-4e2b-48a6-b8e2-d23460154777@gmail.com>
 
-Previously, this test was ignored due to a missing necessary dependency
-on the `kernel` crate. Enable the test, and update it to remove the use
-of a kernel parameter mechanism that was never merged.
+Hello,
 
-Signed-off-by: Ethan D. Twardy <ethan.twardy@gmail.com>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+[...]
+> Hi, has this patch been applied anywhere? I couldn't find it in
+> linux-next and pci/next.
 
-diff --git a/rust/Makefile b/rust/Makefile
-index df389df4db9c..3ace8506ee8d 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -256,6 +256,7 @@ rusttest-prepare: FORCE
- 
- quiet_cmd_rustdoc_test_macros = RUSTDOC T $<
-       cmd_rustdoc_test_macros = \
-+	export RUST_MODFILE=test.rs; \
- 	OBJTREE=$(abspath $(objtree)) \
- 	$(RUSTDOC) --test $(rust_common_flags) \
- 		@$(objtree)/include/generated/rustc_cfg \
-diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-index 520eae5fd792..1c4ae5789cfa 100644
---- a/rust/macros/lib.rs
-+++ b/rust/macros/lib.rs
-@@ -26,9 +26,13 @@
- ///
- /// # Examples
- ///
--/// ```ignore
-+/// ```rust
-+/// # #[macro_use] extern crate macros;
-+/// # #[macro_use] extern crate kernel;
- /// use kernel::prelude::*;
- ///
-+/// struct MyModule(i32);
-+///
- /// module!{
- ///     type: MyModule,
- ///     name: "my_kernel_module",
-@@ -37,22 +41,14 @@
- ///     license: "GPL",
- /// }
- ///
--/// struct MyModule;
--///
- /// impl kernel::Module for MyModule {
--///     fn init() -> Result<Self> {
--///         // If the parameter is writeable, then the kparam lock must be
--///         // taken to read the parameter:
--///         {
--///             let lock = THIS_MODULE.kernel_param_lock();
--///             pr_info!("i32 param is:  {}\n", writeable_i32.read(&lock));
--///         }
--///         // If the parameter is read only, it can be read without locking
--///         // the kernel parameters:
--///         pr_info!("i32 param is:  {}\n", my_i32.read());
--///         Ok(Self)
-+///     fn init(module: &'static ThisModule) -> Result<Self> {
-+///         let foo: i32 = 42;
-+///         pr_info!("I contain:  {}\n", foo);
-+///         Ok(Self(foo))
- ///     }
- /// }
-+/// # fn main() {}
- /// ```
- ///
- /// # Supported argument types
--- 
-2.44.2
+No, not yet.  It's on my TODO list.  You can always have a peek at our
+Patchwork to see how are things progressing.
 
+Meanwhile, there are always patches to be reviewed, if you feel particularly
+restless, so feel free.
+
+Thank you!
+
+	Krzysztof
