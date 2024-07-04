@@ -1,123 +1,97 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtpcmd02101.aruba.it (smtpcmd02101.aruba.it [62.149.158.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204F116A945;
-	Thu,  4 Jul 2024 11:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145B01AD9EA
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 11:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720094021; cv=none; b=AD0wTeGJbRziEUdyN92Ja7CIuYEbqwB20h5sutgMlig1zMCjRuqCTEjwQTEzNjtIkUGUj/Ix0W+U5Z9Cbxbf1x6vSP3O35ywzQ4SghdTQGmeSBUHZ9wTeWSceRnWS8v0M6Tp6siAzyBB/P+vezzjAdUdj5K7p5blUhPrrfjgKtI=
+	t=1720094027; cv=none; b=ifLIZ4PAdi5dKLsIjeUvYMXAzOWK0n/LQ5M05TcOC0UC+BoSJK96SVhfEQxi0y/NQtF1uXvHjyui2RWr8gI3go3qzsn4l0qOx5t+x41psn8nM9cHMbRYCRA2V+FJBdNE55vOy5SH128zT6ERFBcoI/3IZXWVXCdzsikR/r+NTcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720094021; c=relaxed/simple;
-	bh=LUKKqXDRtPTs8fwKoTUODWegGw2rUYI8Ob+iOihmyto=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ygh/n2eg4b6Pep83Pg3OPHF4CSS1jFuOFRqfpmJQT98G0HXT3nnF5R+9RIUr6h1J2gnLZde/6E27iU712c8e7oNFJZR6NsMQGY8clq9oJpwo6hLelzLJRASRUs/rC0RbVJf9v5skVJA5ImLHGS0boj+CJo+wlaSbFwVj1isuGso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=fHVydoH/; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1720094027; c=relaxed/simple;
+	bh=eh3FLln4NGZyYClFo0FJIgNTWuxuqbiWfuDw4ps0rWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ugx9KDENGw3Y0QiHGDwdpzN+GsbnTLYKSroVGuQ+o0QGjWPzb54ZX9v9ywKXK6ND79HPiqo3Wa7dRVwgzKKWprve8B5Kl2TnXAJ8q9mqpKl/UBW5FjlLfVz1I2mDinwhUkfWHFgaDCuvuCrxkt8vW/FhTghsNkjE6icZdKBmeuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=hoGDsGFh; arc=none smtp.client-ip=62.149.158.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="fHVydoH/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1720094015;
-	bh=Uk9degHg/Z1P6m2/0OM79LElxTX1OBh3M5kqaL4bWSE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=fHVydoH/PVY7laXT4hMSD557OSb5R8yAcRpLMi5ulEWFVjqaVntnyKvov/ojV1e61
-	 iSzIkDKnubhZrKc2fmC+xQHTBDmZTDROKRzY6zQVnvKmGru/PmP7wfYogPBavu3rNf
-	 68o4HMp/oaLFc/tkbmpZfq4ht86Mj9yzlS6C4TjajGp4w5eytEWbfBEKYPVYx8B7gp
-	 n0wtRAgm53AMWikl/4RrvAiYegQAvJ2CYNyNjU9P0fnZQPFvvATzWcoF8kvn1bNSjP
-	 P3py82HVp0HBqcL2Ia8VXiEKEFzvOri7h6FrHp8NfEGEhW13z2fA8PYjbc/Qxe6GB1
-	 mcWsr36DlxVAA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WFFR22Qlhz4wx6;
-	Thu,  4 Jul 2024 21:53:33 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Christian Zigotzky <chzigotzky@xenosoft.de>, Marc Zyngier <maz@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, apatel@ventanamicro.com, DTML
- <devicetree@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, linuxppc-dev
- <linuxppc-dev@lists.ozlabs.org>, mad skateman <madskateman@gmail.com>,
- "R.T.Dickinson" <rtd2@xtra.co.nz>, Matthew Leaman <matthew@a-eon.biz>,
- Darren Stevens <darren@stevens-zone.net>, Christian Zigotzky
- <info@xenosoft.de>
-Subject: Re: [PowerPC] [PASEMI] Issue with the identification of ATA drives
- after the of/irq updates 2024-05-29
-In-Reply-To: <ccf14173-9818-44ef-8610-db2900c67ae8@xenosoft.de>
-References: <3ab66fab-c3f2-4bed-a04d-a10c57dcdd9b@xenosoft.de>
- <86zfqzhgys.wl-maz@kernel.org>
- <ccf14173-9818-44ef-8610-db2900c67ae8@xenosoft.de>
-Date: Thu, 04 Jul 2024 21:53:32 +1000
-Message-ID: <874j95jrur.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="hoGDsGFh"
+Received: from [192.168.1.58] ([79.0.204.227])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id PKyvsCu1uzLFGPKywsI88b; Thu, 04 Jul 2024 13:50:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1720093835; bh=eh3FLln4NGZyYClFo0FJIgNTWuxuqbiWfuDw4ps0rWg=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=hoGDsGFhmHUnjCZVVQ4ey0YbRuqbgT5Iy9BO20KyhXNUGkSvycaUolXCiQL13Qn0p
+	 HZu9/WfZV2qe9xdHKdL5gQlxCuL9eQkM1EvGbGm5lWZ2zhGAnkJMWviFNrGz67Gy1Y
+	 lW3fIER5mPx8FeU87WtfecOFDEQZuz9lxjTTJUXx1vd6NVVG470lLeBiMqiuj2HSBl
+	 ImpA5Le7xW4KijH4UDh361wGdy7lIPKtectL/rB0vX2/Yrft5LF82bLgI3Xj4UdCr5
+	 MQuyb4Rk/bjASnI+NG6eg2XVvN5JpATw4ueWhvTRlzdtLWunOzSbd6nsMJymgJvB+l
+	 sIaO5M1YWhcQA==
+Message-ID: <d463bd28-9890-47a5-97cc-14f96db2db22@enneenne.com>
+Date: Thu, 4 Jul 2024 13:50:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 0/3] Add support for Intel PPS Generator
+To: "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "corbet@lwn.net"
+ <corbet@lwn.net>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+ "Dong, Eddie" <eddie.dong@intel.com>,
+ "Hall, Christopher S" <christopher.s.hall@intel.com>,
+ "N, Pandith" <pandith.n@intel.com>,
+ "Mohan, Subramanian" <subramanian.mohan@intel.com>,
+ "T R, Thejesh Reddy" <thejesh.reddy.t.r@intel.com>
+References: <20240612035359.7307-1-lakshmi.sowjanya.d@intel.com>
+ <CY8PR11MB736490B761DBA045513AF078C4DD2@CY8PR11MB7364.namprd11.prod.outlook.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
+Content-Language: en-US
+In-Reply-To: <CY8PR11MB736490B761DBA045513AF078C4DD2@CY8PR11MB7364.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfNw/GJG7NfJC3Orqnad1dvoxIQzjrwIsk9VE1qjl4UZ6wvBCu58y/F8Nbs5D+MPrkMatUItes1REacCg2kySN7vU964GrQFRf3Ds4oacAddn8dR0WU6Z
+ 0TnrNrrza3FR0uz32kaQNHyphkyH5zmlPOwgTvFu1tQx22eo9PDgAk9vA1hzYkJ0APOT9XQaWsrxQRrl2nn/qJp9+dRAI+beGoxGm6MJqxm4TZ5dX7pWUUI7
+ 7wCBMT+nmp3ukJaJL7OO/CIfLldVjc0U0uPovhMzNqX5hmKrboz/eL+JP2GtMvTNHJiuTF8Ni9pbW57BXqxrwD/Vs3GxTt5QdjJrqqSocnvP9xAqF71s/9BF
+ QrUfDFeyFYunT90v19etPsbPEenieKRZZkol1W8wZeJGnZcuCDqS/8amUwQiLWBvmXNlus0SsMDsKXc+pP4L2MzHGPqzanqrdfkRAaWLa/6TROAd6Y2mawcq
+ vTzvMr2ybY6iVRw5PIGQEwcJNhsFPv60HNuMEEiptyAk/zY3GBb8tLd+epgkHqGuDFGoTXlu19NTFeWhPESK/EvfRJDdZw931BhkjJ9xRmc2p/+mgqlcfI3c
+ 5Vfjhgsd8NNSH2mwVT1B7ZOH
 
-Christian Zigotzky <chzigotzky@xenosoft.de> writes:
-> On 02.07.24 18:54, Marc Zyngier wrote:
->> On Sun, 30 Jun 2024 11:21:55 +0100,
->> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
->>> Hello,
->>>
->>> There is an issue with the identification of ATA drives with our
->>> P.A. Semi Nemo boards [1] after the
->>> commit "of/irq: Factor out parsing of interrupt-map parent
->>> phandle+args from of_irq_parse_raw()" [2].
-...
+On 03/07/24 16:47, D, Lakshmi Sowjanya wrote:
+
+[sbip]
+
+>> Subject: [PATCH v10 0/3] Add support for Intel PPS Generator
 >>
->> --- a/drivers/of/irq.c
->> +++ b/drivers/of/irq.c
->> @@ -282,8 +282,10 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
->>   
->>   			oldimap = imap;
->>   			imap = of_irq_parse_imap_parent(oldimap, imaplen, out_irq);
->> -			if (!imap)
->> -				goto fail;
->> +			if (!imap) {
->> +				match = 0;
->> +				break;
->> +			}
->>   
->>   			match &= of_device_is_available(out_irq->np);
->>   			if (match)
+>> From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 >>
->>
-> We tested this patch yesterday and it solves the boot problem.
+>> The goal of the PPS (Pulse Per Second) hardware/software is to generate a
+>> signal from the system on a wire so that some third-party hardware can observe
+>> that signal and judge how close the system's time is to another system or piece
+>> of hardware.
 
-Hi Christian,
+[snip]
 
-Instead of that patch, can you try the one below. AFAICS the device tree
-fixups done in early boot mean the interrupt-map is not needed, and also
-has the wrong content, so if we can remove it entirely that might avoid
-the problems in the parsing code.
+> Hi,
+> 
+> A gentle reminder for the review of the pps patchset.
 
-I don't know if your firmware actually implements those methods, I
-couldn't find anything online to confirm or deny it. Seems the only
-option is to test it.
+I already acked these patchset, didn't I? =8-o
 
-cheers
+Please let me know if I missed something.
 
+Rodolfo
 
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-index fbb68fc28ed3..28fe082ede57 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -3138,6 +3138,14 @@ static void __init fixup_device_tree_pasemi(void)
- 
- 	prom_setprop(iob, name, "interrupt-controller", &val, 0);
- 
-+	prom_printf("nemo: deleting interrupt-map properties\n");
-+	rc = call_prom("interpret", 1, 1,
-+		      " s\" /pxp@0,e0000000\" find-device"
-+		      " s\" interrupt-map\" delete-property"
-+		      " s\" interrupt-map-mask\" delete-property"
-+		      " device-end");
-+	prom_printf("nemo: interpret returned %d\n", rc);
-+
- 	pci_name = "/pxp@0,e0000000/pci@11";
- 	node = call_prom("finddevice", 1, 1, ADDR(pci_name));
- 	parent = ADDR(iob);
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
+
