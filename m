@@ -1,99 +1,99 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374611369A7;
-	Thu,  4 Jul 2024 05:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FBB748F
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 05:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720072122; cv=none; b=fC6AryFC+L2Wa+abkNabZOmQ9i/H0QwM0/IbwPo4x6rEY5KpeFDxYL9u7mCe6/FxH7CL1F/af6yL0lLLGREIpdSduF/W8t+GGrFOD3WoY31Wqarr8DqImaAFBbafiqxWjwNQbB4wkthDB2sQcUeK1ZZXMn7Jk7yt/pKrmZnKtnQ=
+	t=1720072537; cv=none; b=pDj8Mph+Tfm2J057lbVFqx3S18jvkE5eSGaFXobmMxoZ/oV2AB9E7YJQjRxOTcj+fPo/cO2wl3ptaD4SqFUTIAO6I7uv/t/oxIJ3gQD8nPfk78Hh71nbWORocGvGyLSyYk7IgLokrydb7jt9gVPUgEDWwQEMCJEPQMRX4KOX4h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720072122; c=relaxed/simple;
-	bh=ETiXUSdUNkqvQTr20H04++pbgV0yc6V3cMGeLljFAMQ=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iAzZqN8awDneY465JLWcm6Rjf97MkebDY/306VbC6yhejbcpvbmq5ZGm7MxzREnuS5KVXLQtdgxsMuir93f4p5IXWiUnm42gmKYnqtnDInpliia0dpUFYnrhrfV+kdU9Es6HdgdDFKDEQKwgvKn/B8Mpz0/MxTEzxGTXGN2Wj4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LvHqv8So; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1720072537; c=relaxed/simple;
+	bh=ipEm3wESSAbTe1OELWS7F76Xb/XsCZ6OA2b7x8yAD/k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cAl5QtRf6Kd/H4FoPZejVpq+xv173cLy+FalDZ2MAM6MvkjiiFc8NifjPb2X14bM8w+DXEMftuUwl02ozJ2lNkulnGbewu9Sgqg5/eAEQ8+xfQ+LWD2uw6pcNPmn7v+kbyPpQoFnzSUGGGdT21cCdGKs4zkfFXSkW1aqYBsrJQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HIKLbm1d; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LvHqv8So"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1720072116;
-	bh=ETiXUSdUNkqvQTr20H04++pbgV0yc6V3cMGeLljFAMQ=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=LvHqv8Soe2AuBhrefypzX0dF1O+rTLisyr/8nFP3yLod5Q0JBHrL+r5mWk5ofkZt1
-	 NxLGSuKN4MAN2A4oowKzJavH/ZGK+P9ZoloOY+j6kR4jCJyw7XVi6+fU1tBpcb3W4d
-	 EhJ0Y+YeFcgTa2fnCPuNNv85VNfVD7gzBk0QjYaoYCW3+Q0JOyXMKyWwo8eQP2SgnQ
-	 uP38iND5C4P2FwzlFxrNz98QyLsj2w7Uai4+kwRVwyOFV+9SvRHlh9IA6crP2Koaeb
-	 xwrwZ6BT07wgQw2kuBfzZybr1noJy3q/x+LbnY3gIWdhsMCsD/3Ckoflmw9OAxv9SK
-	 +IBm8zIotzOeQ==
-Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HIKLbm1d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720072534;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TokaimGknrl6W7X/jIUjM2jQEJkeLUj5wpywVtaJow8=;
+	b=HIKLbm1dqstnPxzuUWiNNXeRICsPD57TqV0nnhM5Ns9Cqfgls42EfsJf11Fui7bYhTWIDa
+	k3q6j2Bo/2c5S61vCG1M1GwYYwsrBstD4q5W/uvpd1ZGIH2D5ai4DZ40dJgPPFOZJdRZIi
+	ySE+Rbtu/SJr/+Tqf9VC3KaKExH+Klw=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-434-kzsFOwESPVSdtUt2ugJfDg-1; Thu,
+ 04 Jul 2024 01:55:28 -0400
+X-MC-Unique: kzsFOwESPVSdtUt2ugJfDg-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DEDFE37810CD;
-	Thu,  4 Jul 2024 05:48:31 +0000 (UTC)
-Message-ID: <cd08a86a-8ce0-4ca3-946f-b33ae5a2f133@collabora.com>
-Date: Thu, 4 Jul 2024 10:48:27 +0500
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 68A9319560B3;
+	Thu,  4 Jul 2024 05:55:25 +0000 (UTC)
+Received: from oldenburg.str.redhat.com (unknown [10.45.224.92])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7C67530000DD;
+	Thu,  4 Jul 2024 05:55:19 +0000 (UTC)
+From: Florian Weimer <fweimer@redhat.com>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,  Christian Brauner
+ <brauner@kernel.org>,  libc-alpha@sourceware.org,  "Andreas K. Huettel"
+ <dilfridge@gentoo.org>,  Arnd Bergmann <arnd@arndb.de>,  Huacai Chen
+ <chenhuacai@kernel.org>,  Mateusz Guzik <mjguzik@gmail.com>,  Alexander
+ Viro <viro@zeniv.linux.org.uk>,  Jan Kara <jack@suse.cz>,
+  linux-kernel@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
+  io-uring@vger.kernel.org,  Jens Axboe <axboe@kernel.dk>,
+  loongarch@lists.linux.dev
+Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
+In-Reply-To: <8b6d59ffc9baa57fee0f9fa97e72121fd88cf0e4.camel@xry111.site> (Xi
+	Ruoyao's message of "Thu, 04 Jul 2024 00:54:45 +0800")
+References: <20240625110029.606032-1-mjguzik@gmail.com>
+	<20240625110029.606032-3-mjguzik@gmail.com>
+	<CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
+	<e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
+	<CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
+	<30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
+	<1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com>
+	<CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
+	<8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com>
+	<20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
+	<CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
+	<8b6d59ffc9baa57fee0f9fa97e72121fd88cf0e4.camel@xry111.site>
+Date: Thu, 04 Jul 2024 07:55:16 +0200
+Message-ID: <877ce1ya4b.fsf@oldenburg.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- angquan yu <angquan21@gmail.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Ingo Molnar <mingo@kernel.org>, Binbin Wu <binbin.wu@linux.intel.com>,
- Alexey Dobriyan <adobriyan@gmail.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Sohil Mehta <sohil.mehta@intel.com>, Yu-cheng Yu <yu-cheng.yu@intel.com>,
- Valentin Obst <kernel@valentinobst.de>, linux-kselftest@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev, x86@kernel.org
-Subject: Re: [PATCH v3 0/7] selftests/x86: fix build errors and warnings found
- via clang
-To: John Hubbard <jhubbard@nvidia.com>, Shuah Khan <shuah@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>
-References: <20240531193838.108454-1-jhubbard@nvidia.com>
- <d9c56b70-6120-4de7-920b-9ece52905c00@nvidia.com>
- <64f44840-823a-4b82-8187-c94c6e021c15@collabora.com>
- <17675d27-6a9c-4f1d-a771-4830393465d3@nvidia.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <17675d27-6a9c-4f1d-a771-4830393465d3@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 7/4/24 8:08 AM, John Hubbard wrote:
-> On 7/2/24 3:28 AM, Muhammad Usama Anjum wrote:
->> On 6/29/24 1:06 AM, John Hubbard wrote:
->>> On 5/31/24 12:38 PM, John Hubbard wrote:
->>>> Hi,
->>>>
->>>> Dave Hansen, Muhammad Usama Anjum, here is the combined series that we
->>>> discussed yesterday [1].
->>>
->>> Hi Dave, Shuah,
->>>
->>> Are either of you planning to take this series? I ask because I have a
->>> very slightly overlapping series that enhances the LLVM/clang checks,
->>> that I'm about to post. And I'm not sure if I should try to include
->>> a small fix that would apply to patch 5/7 here.
->> This series is important. Please accept it.
->>
-> 
-> Hi Muhammad,
-> 
-> May I add your acked by to the series? I can use that as a weak excuse to
-> resend this, rebased onto the latest, and keep trying to get attention on
-> it.
-Yeah, sure. I've reviewed the patches. But haven't found time to send the
-tags to patches individually.
+* Xi Ruoyao:
 
-> 
-> thanks,
+> Also some bad news: Glibc has this:
+>
+> #if (__WORDSIZE == 32 \
+>      && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32)) \
+>     || defined STAT_HAS_TIME32 \
+>     || (!defined __NR_newfstatat && !defined __NR_fstatat64)
+> # define FSTATAT_USE_STATX 1
+> #else
+> # define FSTATAT_USE_STATX 0
+> #endif
 
--- 
-BR,
-Muhammad Usama Anjum
+These __NR_* constants come from the glibc headers, not the kernel
+headers.  In other words, the result of the preprocessor condition does
+not depend on the kernel header version.
+
+Thanks,
+Florian
+
