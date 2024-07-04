@@ -1,37 +1,37 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33291448D2
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A008145321
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720067542; cv=none; b=dIW5E9Q88mH/BAK4/abKimmOaz+i065YJGGmWFJ3GoFzaDVGUToIR+2aOSu/Iaz+tO4c+RAHmUj2J6o/sxMs2a81fywTY9/dlEpEohtbjZQtwuqXQB6Xz3Z0C890EQMNE4ir/65DrN40LYDWpnRiFH3Em7ZsnWtFX5YKJON+608=
+	t=1720067544; cv=none; b=se85nRSlXCcCatiV407qPoRrrb6skKxT2N2STrQgQbC1MUkVWJ97MbsUX5qWGPHN3FPalbL/2PI3kBj9U2dKsEqQcw1wDDwbh93KTyObJqQBgyLZqB3uDlvAE6FBuFsOzdFjyFhFEKNxUJ/dxJSB8uykjCQtK3UepvFk65dFP8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720067542; c=relaxed/simple;
-	bh=n8CwSRarq4ActNGgFQhYTPVt1+MvFBSEx/o9wxAsuUM=;
+	s=arc-20240116; t=1720067544; c=relaxed/simple;
+	bh=bGPa2HcHFWxQQ0CcFTQOgWln/PaFjOUQol7Z0orXRkM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iOeY6lPaZPwL5ZTr3coj5j4UVIgUBjsV4H/z+sfpiEAw1LGaLuBIb12BIwLjO/Iw23E/thA6mcmUVnu8hduCGZ3RmJsKZk0DXBDJMk5FhCOvxCDFc6CQ0i1AiwwH7NIDteOCqUnjattU6AiI0klqbVaORpFSclkEanQcXPdqeag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=eSNnjYVc2x3ozlUeg7PPdN41uuikUg4LfqF1MOSSbSAXEEvEHjcXtEQNU4yuvfhmOqoxMsidPVDd3vJ9X7R46JX4KXnhiCx05vlJix5i5YraCqPVVXj8wURky6dEXVBI6RlMS29df73jcOUly13r+dTX4+UeqtJZcUMuV7yXi7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2B07D21C0D;
-	Thu,  4 Jul 2024 04:32:19 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ABF721FD00;
+	Thu,  4 Jul 2024 04:32:21 +0000 (UTC)
+Authentication-Results: smtp-out2.suse.de;
 	none
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 06B6F13889;
-	Thu,  4 Jul 2024 04:32:17 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8D48513889;
+	Thu,  4 Jul 2024 04:32:20 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cMqbONElhmbnDAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:32:17 +0000
+	id sKv0HdQlhmbnDAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:32:20 +0000
 From: Oscar Salvador <osalvador@suse.de>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -45,9 +45,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 23/45] mm/mempolicy: Create queue_folios_pud to handle PUD-mapped hugetlb vmas
-Date: Thu,  4 Jul 2024 06:31:10 +0200
-Message-ID: <20240704043132.28501-24-osalvador@suse.de>
+Subject: [PATCH 25/45] mm/memory-failure: Create check_hwpoisoned_pud_entry to handle PUD-mapped hugetlb vmas
+Date: Thu,  4 Jul 2024 06:31:12 +0200
+Message-ID: <20240704043132.28501-26-osalvador@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240704043132.28501-1-osalvador@suse.de>
 References: <20240704043132.28501-1-osalvador@suse.de>
@@ -61,114 +61,82 @@ Content-Transfer-Encoding: 8bit
 X-Rspamd-Pre-Result: action=no action;
 	module=replies;
 	Message is reply to one we originated
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Queue-Id: 2B07D21C0D
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
 X-Spam-Flag: NO
 X-Spam-Score: -4.00
 X-Spam-Level: 
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Queue-Id: ABF721FD00
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
 Normal THP cannot be PUD-mapped (besides devmap), but hugetlb can, so create
-queue_folios_pud in order to handle PUD-mapped hugetlb vmas.
-Also implement is_pud_migration_entry and pud_folio, as they will be used in this patch.
+check_hwpoisoned_pud_entry in order to handle PUD-mapped hugetlb vmas.
 
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- include/linux/pgtable.h |  1 +
- include/linux/swapops.h | 12 ++++++++++++
- mm/mempolicy.c          | 32 ++++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+)
+ mm/memory-failure.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 458e3cbc96b2..23d51fec81ac 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -51,6 +51,7 @@
- #endif
- 
- #define pmd_folio(pmd) page_folio(pmd_page(pmd))
-+#define pud_folio(pud) page_folio(pud_page(pud))
- 
- /*
-  * A page table page can be thought of an array like this: pXd_t[PTRS_PER_PxD]
-diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-index 182957f0d013..a23900961d11 100644
---- a/include/linux/swapops.h
-+++ b/include/linux/swapops.h
-@@ -542,6 +542,18 @@ static inline bool is_pfn_swap_entry(swp_entry_t entry)
- 
- struct page_vma_mapped_walk;
- 
-+#ifdef CONFIG_HUGETLB_PAGE
-+static inline int is_pud_migration_entry(pud_t pud)
-+{
-+	return is_swap_pud(pud) && is_migration_entry(pud_to_swp_entry(pud));
-+}
-+#else
-+static inline int is_pud_migration_entry(pud_t pud)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
- extern int set_pmd_migration_entry(struct page_vma_mapped_walk *pvmw,
- 		struct page *page);
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 5baf29da198c..93b14090d484 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -501,6 +501,37 @@ static inline bool queue_folio_required(struct folio *folio,
- 	return node_isset(nid, *qp->nmask) == !(flags & MPOL_MF_INVERT);
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 8cae95e36365..622862c4c300 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -771,6 +771,43 @@ static int check_hwpoisoned_entry(pte_t pte, unsigned long addr, short shift,
+ 	return 1;
  }
  
-+static int queue_folios_pud(pud_t *pud, unsigned long addr, unsigned long end,
-+			     struct mm_walk *walk)
++#ifdef CONFIG_PGTABLE_HAS_HUGE_LEAVES
++static int hwpoison_pud_range(pud_t *pudp, unsigned long addr,
++			      unsigned long end, struct mm_walk *walk)
 +{
++	int ret = 0;
 +	spinlock_t *ptl;
-+	struct folio *folio;
-+	struct vm_area_struct *vma = walk->vma;
-+	struct queue_pages *qp = walk->private;
++	pud_t pud = *pudp;
++	unsigned long pfn;
++	struct hwpoison_walk *hwp = walk->private;
 +
-+	ptl = pud_huge_lock(pud, vma);
++	ptl = pud_huge_lock(pudp, walk->vma);
 +	if (!ptl)
 +		return 0;
 +
-+	if (unlikely(is_pud_migration_entry(*pud))) {
-+		qp->nr_failed++;
-+		goto out;
++	if (pud_present(pud)) {
++		pfn = pud_pfn(pud);
++	} else {
++		swp_entry_t swp = pud_to_swp_entry(pud);
++
++		if (!is_hwpoison_entry(swp))
++			goto out_unlock;
++		pfn = swp_offset_pfn(swp);
 +	}
-+	folio = pud_folio(*pud);
-+	if (!queue_folio_required(folio, qp))
-+		goto out;
-+	if (!(qp->flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) ||
-+	    !vma_migratable(walk->vma) ||
-+	    !migrate_folio_add(folio, qp->pagelist, qp->flags, walk->vma, false))
-+		qp->nr_failed++;
 +
++	if (!pfn || pfn != hwp->pfn)
++		goto out_unlock;
++
++	set_to_kill(&hwp->tk, addr, huge_page_shift(hstate_vma(walk->vma)));
++	ret = 1;
++out_unlock:
 +	spin_unlock(ptl);
-+out:
-+	if (qp->nr_failed && strictly_unmovable(qp->flags))
-+		return -EIO;
-+	return 0;
++	return ret;
 +}
++#else
++hwpoison_pud_range NULL
++#endif
 +
- static void queue_folios_pmd(pmd_t *pmd, struct mm_walk *walk)
- {
- 	struct folio *folio;
-@@ -730,6 +761,7 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
+ #ifdef CONFIG_PGTABLE_HAS_HUGE_LEAVES
+ static int check_hwpoisoned_pmd_entry(pmd_t *pmdp, unsigned long addr,
+ 				      struct hwpoison_walk *hwp,
+@@ -862,6 +899,7 @@ static int hwpoison_hugetlb_range(pte_t *ptep, unsigned long hmask,
+ #endif
  
- static const struct mm_walk_ops queue_pages_walk_ops = {
- 	.hugetlb_entry		= queue_folios_hugetlb,
-+	.pud_entry		= queue_folios_pud,
- 	.pmd_entry		= queue_folios_pte_range,
- 	.test_walk		= queue_pages_test_walk,
- 	.walk_lock		= PGWALK_RDLOCK,
+ static const struct mm_walk_ops hwpoison_walk_ops = {
++	.pud_entry = hwpoison_pud_range,
+ 	.pmd_entry = hwpoison_pte_range,
+ 	.hugetlb_entry = hwpoison_hugetlb_range,
+ 	.walk_lock = PGWALK_RDLOCK,
 -- 
 2.26.2
 
