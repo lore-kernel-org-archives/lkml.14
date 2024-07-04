@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196A91A3BDA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3949E1AD9DE
 	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098657; cv=none; b=ZeTq1JXYZU1gp1GUfvBvnKGwyC81Elm4F9f7gM37FcXsAtHN3iW7ilnp+bQ82aJoHyXeQ4Y44UxNdAw7VbWB0rSEojlg/N0bUUhHtjxvBA5pqJJI1alseEEknZ4pNArLjLFWUnBVavcpBpuumx7dXhJTx4kxWZVa9YRJlc8sx6s=
+	t=1720098657; cv=none; b=MOSwK8SnFMZVaPeiIaa+JfbEewgPSRTQEwy3oefIULdzp177KicjDGUbIbOhaEyIJX7Q2RUKaY2aZDfFrX/ZTaiwuyGZPKf9S68i2/qcblJK6ldSkh5M9Z9SSn0il+7gvOPxoA24rpgR2SWdsYFq5ax7yg3h5GbZg7KrXh4OBIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720098657; c=relaxed/simple;
-	bh=dlHwO2nGfEIPQRND3XuHL5U3U23kIOrurw+F13qm/ZQ=;
+	bh=d1R6VyIbkJ6U7w801EO8l21bk3qkW3imoEOlfi6mJ0o=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ncdRpk93FR75FPN50PnVOTFCNFSwNwzzo/pEh7ZjgEf73TnXyvc6cnwwEICO0aeNuWa1+6YGp267edKHo7aWn2i4McGTMjRmym1oTPcC1drpfBgevsQohZBq61yfJDBSo1jGbEZ7K1tYEY0ab5BkeKfogGI0K9/WxK5gv/F63HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=InBIbUHd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=GQXAWzKzy9KE1dNCyvhRYqQXQcA79vBgR/qWuPbgHRai/QCHGXYdzit+LXHLdcRwmQcSCczRHZuV3eoMzi69ABcJs1KOfzlYnK1yCGtAacSejItg+YdPborDkM/auKp5e5immdZHGBVQQoFSjLDowmPC4V0OaeTsw9ZidupcJD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fo2jZkvc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="InBIbUHd"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C0D5FC4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fo2jZkvc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CB4A9C4AF0C;
 	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720098656;
-	bh=dlHwO2nGfEIPQRND3XuHL5U3U23kIOrurw+F13qm/ZQ=;
+	bh=d1R6VyIbkJ6U7w801EO8l21bk3qkW3imoEOlfi6mJ0o=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=InBIbUHdpMnMo7f1ektkDLglWqxh9mBUdbKu9I8TEsJvLdwk1i5Boy8crJvO30KXJ
-	 b7LxBNJTKdxW6HEb0Wm3eGokL6O8gDR/fnw7iraRCRofIXZP93T5FJ1kipm67ktLkb
-	 pFMTBZk9ZoAowQ7AcjjfFupZwW3nN5qqzFXIbcJtLLCdN86pmls3mRsblbUqRHDivD
-	 mAbTQLzqSmAmP4WYyZ1DXo2CYtdtIXitJdFeXmiYaNRJqH5rff0YtQr4Lo87EpwVRa
-	 HeqWLQvqYHmOIqgsJrPG05Bo0ARM9a36Uz0n2prZJzBn1Ie/TehuDgn05k6Fjvify+
-	 pkyZbQVJNcfZg==
+	b=fo2jZkvcZSDt1fGr5ZrtsubKDg0lm7xDjMC9jQnY4iYDYlIxVv8JLu59v3NRhkhb3
+	 +31IvMoMqRPLlLD5TnKhcbpCo+WEl+FmkFY3ULZtIzz0lmwEu8T+L/OkXcGagr4DYd
+	 CsoqzJteqGJOKYigMc5UDq+YNWx+UgHY9sVD08nqjFvsweG2GUZ4gRb5AGXYlvkorr
+	 g254OZ7RieYGkdAlQPCGpbG61KIRqBnBqZuq/bicQ9M4WMOnl//qrOUT1t9sCRdq08
+	 KHsOzteSG9RJ7k1Uhhha9F5VoIwT2QOUpQQ+mj2gwc9CdFhS3nzsXh5VWho1I3KNVl
+	 y1rXL7FyCDNZA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B246CC43612;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B9FA3C43331;
 	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,37 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: stacktrace: fix usage of ftrace_graph_ret_addr()
+Subject: Re: [PATCH V2 -fixes] riscv: kexec: Avoid deadlock in kexec crash path
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <172009865672.17306.10078143988695346844.git-patchwork-notify@kernel.org>
+ <172009865675.17306.18375440466203340384.git-patchwork-notify@kernel.org>
 Date: Thu, 04 Jul 2024 13:10:56 +0000
-References: <20240618145820.62112-1-puranjay@kernel.org>
-In-Reply-To: <20240618145820.62112-1-puranjay@kernel.org>
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, samuel.holland@sifive.com,
- dev.mbstr@gmail.com, linux-kernel@vger.kernel.org, puranjay12@gmail.com,
- rostedt@goodmis.org
+References: <20240626023316.539971-1-songshuaishuai@tinylab.org>
+In-Reply-To: <20240626023316.539971-1-songshuaishuai@tinylab.org>
+To: Song Shuai <songshuaishuai@tinylab.org>
+Cc: linux-riscv@lists.infradead.org, takakura@valinux.co.jp, alex@ghiti.fr,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ bhe@redhat.com, akpm@linux-foundation.org, guoren@kernel.org,
+ xianting.tian@linux.alibaba.com, linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Tue, 18 Jun 2024 14:58:20 +0000 you wrote:
-> ftrace_graph_ret_addr() takes an `idx` integer pointer that is used to
-> optimize the stack unwinding. Pass it a valid pointer to utilize the
-> optimizations that might be available in the future.
+On Wed, 26 Jun 2024 10:33:16 +0800 you wrote:
+> If the kexec crash code is called in the interrupt context, the
+> machine_kexec_mask_interrupts() function will trigger a deadlock while
+> trying to acquire the irqdesc spinlock and then deactivate irqchip in
+> irq_set_irqchip_state() function.
 > 
-> The commit is making riscv's usage of ftrace_graph_ret_addr() match
-> x86_64.
+> Unlike arm64, riscv only requires irq_eoi handler to complete EOI and
+> keeping irq_set_irqchip_state() will only leave this possible deadlock
+> without any use. So we simply remove it.
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: stacktrace: fix usage of ftrace_graph_ret_addr()
-    https://git.kernel.org/riscv/c/393da6cbb2ff
+  - [V2,-fixes] riscv: kexec: Avoid deadlock in kexec crash path
+    https://git.kernel.org/riscv/c/c562ba719df5
 
 You are awesome, thank you!
 -- 
