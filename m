@@ -1,78 +1,78 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2D3757E7
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D7613B7BC
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720067524; cv=none; b=sXQYLHBqi7tyGBKd15heIDlV19aMZfhJojGMq7GbooxH7yDy5JPLIF0Zb45QD2y/y3tJIo2w01kf0qRxpPIF5jvuQrzv6TDe6jFxwPyytyqjfa/QBQYoQteeWTpXfZgxVbsKZYaNMwm/nIf7U4URzEKRFs1rQej/WFTucQg6Hu4=
+	t=1720067528; cv=none; b=QbhvJQ4RobbrM6mzh1RJ1cH1N6hXDinlhI66MOKAuJypcAcR8KwHDg6u1yFdbOhbzVW/DIWDHiJwQTno+drUzpCmFgMy2F4+8lAYZHofZMCRN7yXJPMMv4CMMowhRwKbjX4cipxn6GnGkziQb7qgDJixvBGblfC93LiVgWb5nV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720067524; c=relaxed/simple;
-	bh=cjk/JLRgvQpbw0r3DIONPGQ7F/AxQIIt+ehoTwPy9T0=;
+	s=arc-20240116; t=1720067528; c=relaxed/simple;
+	bh=5GkIn/zV+sv8ou4yiI1OchGUrKPM0/dydgHojNwLtfA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=isv4pxPuzOnVf5aU00UYcXPLxvLngiulGAXE8MD+O6M+lQSoSlbop9AOoYkl/O5ljRJ/X8vMXLujr9UpueoyEgpWVjqnrm7CGyL98LtpjgCOmjcDJTBD50I9UB900UnyD8sY2B9Z0YEVJ4nygUmslg8f0d8rsrJ3u8kR0TJxw24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mvxA8c0w; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gtiiSyL8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mvxA8c0w; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gtiiSyL8; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=c/ch7Uch8ugvwkbSzyYc0z6YVu9p5Qi+JV7Zj4twQ+bYJlam+9xgBLtJkfeS/e3KmNsCOtuVnuj6bGdAWPj2gFbxhV9r36AXO7W3aX1OZo0y155eGYH+sVzDUJrHPLqRsnLj+aQZLHuK1wMV9Lz/60cUWLOB5vwhIjuTugOi9pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RIxxEKxG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qELKKw+j; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RIxxEKxG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qELKKw+j; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mvxA8c0w";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gtiiSyL8";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mvxA8c0w";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gtiiSyL8"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RIxxEKxG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qELKKw+j";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RIxxEKxG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qELKKw+j"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D4A8C1FCF8;
-	Thu,  4 Jul 2024 04:32:00 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C84641FCFC;
+	Thu,  4 Jul 2024 04:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720067520; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1720067524; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=759iJlxKnytdAlee8rRqvYsRUqK1GzIE0jiP12kfaog=;
-	b=mvxA8c0wNNkkavEyFQzOp2mf8378ze4FIH4m4ZfgOZRJ7zpzcoSPW950dQZsa3S/CK+ttv
-	iZlMjg840j6JYRueSYvhI7YBduf5ZmQglN6zSGHvYGjJBa7Jy2q7URNYkz9x4o2JnliPCw
-	zchyR+/MljAZfrr+nxrpTvg2ZDweQk4=
+	bh=TzRTJDegzctm0o/zod38K6uM5eCrhph5+Nc4qITcL0E=;
+	b=RIxxEKxG5cR+JdvOXGvScHx2quxv+jhuEkgOckg4pFfPpwOj9VOZl1vh5qJmR4/JuTNxQ4
+	D/UknVe0GOar65hwsjkxTWr72/C44FARudhSihdPho6fBNUUoiPDaqE3fz2zwhDes4iDuP
+	OItI5Fg3f+Kf/XMNa7u2ylOqzbGXysA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720067520;
+	s=susede2_ed25519; t=1720067524;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=759iJlxKnytdAlee8rRqvYsRUqK1GzIE0jiP12kfaog=;
-	b=gtiiSyL8IoxKC27iK+u4Mo4MByRQvcwll4qDeKH5vMoKVQYazRAVgxQtYJlScwNErbS0UE
-	MtZSHFG7y/+A7DCQ==
+	bh=TzRTJDegzctm0o/zod38K6uM5eCrhph5+Nc4qITcL0E=;
+	b=qELKKw+j6f1vh0ZBQrKxzDcNKdWTqCngnE0ElYT6ZMBZDJuWGRwB7g2w0Ut5FIQYasv9A8
+	JRnzseqZKYp7iOAQ==
 Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720067520; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1720067524; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=759iJlxKnytdAlee8rRqvYsRUqK1GzIE0jiP12kfaog=;
-	b=mvxA8c0wNNkkavEyFQzOp2mf8378ze4FIH4m4ZfgOZRJ7zpzcoSPW950dQZsa3S/CK+ttv
-	iZlMjg840j6JYRueSYvhI7YBduf5ZmQglN6zSGHvYGjJBa7Jy2q7URNYkz9x4o2JnliPCw
-	zchyR+/MljAZfrr+nxrpTvg2ZDweQk4=
+	bh=TzRTJDegzctm0o/zod38K6uM5eCrhph5+Nc4qITcL0E=;
+	b=RIxxEKxG5cR+JdvOXGvScHx2quxv+jhuEkgOckg4pFfPpwOj9VOZl1vh5qJmR4/JuTNxQ4
+	D/UknVe0GOar65hwsjkxTWr72/C44FARudhSihdPho6fBNUUoiPDaqE3fz2zwhDes4iDuP
+	OItI5Fg3f+Kf/XMNa7u2ylOqzbGXysA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720067520;
+	s=susede2_ed25519; t=1720067524;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=759iJlxKnytdAlee8rRqvYsRUqK1GzIE0jiP12kfaog=;
-	b=gtiiSyL8IoxKC27iK+u4Mo4MByRQvcwll4qDeKH5vMoKVQYazRAVgxQtYJlScwNErbS0UE
-	MtZSHFG7y/+A7DCQ==
+	bh=TzRTJDegzctm0o/zod38K6uM5eCrhph5+Nc4qITcL0E=;
+	b=qELKKw+j6f1vh0ZBQrKxzDcNKdWTqCngnE0ElYT6ZMBZDJuWGRwB7g2w0Ut5FIQYasv9A8
+	JRnzseqZKYp7iOAQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A5A4213889;
-	Thu,  4 Jul 2024 04:31:59 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9BDC913889;
+	Thu,  4 Jul 2024 04:32:03 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id uIG7I78lhmbnDAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:31:59 +0000
+	id SDs9IcMlhmbnDAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:32:03 +0000
 From: Oscar Salvador <osalvador@suse.de>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -86,9 +86,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 09/45] mm: Implement pud-version functions for swap and vm_normal_page_pud
-Date: Thu,  4 Jul 2024 06:30:56 +0200
-Message-ID: <20240704043132.28501-10-osalvador@suse.de>
+Subject: [PATCH 12/45] fs/proc: Enable pagemap_pmd_range to handle hugetlb vmas
+Date: Thu,  4 Jul 2024 06:30:59 +0200
+Message-ID: <20240704043132.28501-13-osalvador@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240704043132.28501-1-osalvador@suse.de>
 References: <20240704043132.28501-1-osalvador@suse.de>
@@ -125,148 +125,65 @@ X-Spam-Flag: NO
 X-Spam-Score: -6.80
 X-Spam-Level: 
 
-HugeTLB pages will be handled on pud level as well, so we need to
-implement pud-version of vm_normal_page_pud and swp-pud functions.
+PMD-mapped hugetlb vmas will also reach pagemap_pmd_range.
+Add the required code so it knows how to handle those there.
 
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- arch/powerpc/include/asm/book3s/64/pgtable.h |  1 +
- include/linux/mm.h                           |  4 ++
- include/linux/pgtable.h                      |  6 +++
- include/linux/swapops.h                      | 15 ++++++
- mm/memory.c                                  | 51 ++++++++++++++++++++
- 5 files changed, 77 insertions(+)
+ fs/proc/task_mmu.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 519b1743a0f4..fa4bb8d6356f 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -687,6 +687,7 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val((pte)) & ~_PAGE_PTE })
- #define __swp_entry_to_pte(x)	__pte((x).val | _PAGE_PTE)
- #define __pmd_to_swp_entry(pmd)	(__pte_to_swp_entry(pmd_pte(pmd)))
-+#define __pud_to_swp_entry(pud)	(__pte_to_swp_entry(pud_pte(pud)))
- #define __swp_entry_to_pmd(x)	(pte_pmd(__swp_entry_to_pte(x)))
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 4d94b6ce58dd..ec429d82b921 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -1824,9 +1824,9 @@ static int pagemap_pmd_range(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 	spinlock_t *ptl;
+ 	pte_t *pte, *orig_pte;
+ 	int err = 0;
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++#ifdef CONFIG_PGTABLE_HAS_HUGE_LEAVES
  
- #ifdef CONFIG_MEM_SOFT_DIRTY
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 5f1075d19600..baade06b159b 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2371,6 +2371,10 @@ struct folio *vm_normal_folio_pmd(struct vm_area_struct *vma,
- 				  unsigned long addr, pmd_t pmd);
- struct page *vm_normal_page_pmd(struct vm_area_struct *vma, unsigned long addr,
- 				pmd_t pmd);
-+struct folio *vm_normal_folio_pud(struct vm_area_struct *vma,
-+				  unsigned long addr, pud_t pud);
-+struct page *vm_normal_page_pud(struct vm_area_struct *vma, unsigned long addr,
-+				pud_t pud);
+-	ptl = pmd_trans_huge_lock(pmdp, vma);
++	ptl = pmd_huge_lock(pmdp, vma);
+ 	if (ptl) {
+ 		unsigned int idx = (addr & ~PMD_MASK) >> PAGE_SHIFT;
+ 		u64 flags = 0, frame = 0;
+@@ -1848,7 +1848,6 @@ static int pagemap_pmd_range(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 			if (pm->show_pfn)
+ 				frame = pmd_pfn(pmd) + idx;
+ 		}
+-#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+ 		else if (is_swap_pmd(pmd)) {
+ 			swp_entry_t entry = pmd_to_swp_entry(pmd);
+ 			unsigned long offset;
+@@ -1861,7 +1860,8 @@ static int pagemap_pmd_range(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 				frame = swp_type(entry) |
+ 					(offset << MAX_SWAPFILES_SHIFT);
+ 			}
+-			flags |= PM_SWAP;
++			if (!is_vm_hugetlb_page(vma))
++				flags |= PM_SWAP;
+ 			if (pmd_swp_soft_dirty(pmd))
+ 				flags |= PM_SOFT_DIRTY;
+ 			if (pmd_swp_uffd_wp(pmd))
+@@ -1869,7 +1869,6 @@ static int pagemap_pmd_range(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 			VM_BUG_ON(!is_pmd_migration_entry(pmd));
+ 			page = pfn_swap_entry_to_page(entry);
+ 		}
+-#endif
  
- void zap_vma_ptes(struct vm_area_struct *vma, unsigned long address,
- 		  unsigned long size);
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 3a7b8751747e..a9edeb86b7fe 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1990,4 +1990,10 @@ pgprot_t vm_get_page_prot(unsigned long vm_flags)			\
- }									\
- EXPORT_SYMBOL(vm_get_page_prot);
+ 		if (page) {
+ 			folio = page_folio(page);
+@@ -1899,7 +1898,7 @@ static int pagemap_pmd_range(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 		spin_unlock(ptl);
+ 		return err;
+ 	}
+-#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++#endif /* CONFIG_PGTABLE_HAS_HUGE_LEAVES */
  
-+#ifdef CONFIG_HUGETLB_PAGE
-+#ifndef __pud_to_swp_entry
-+#define __pud_to_swp_entry(pud) ((swp_entry_t) { pud_val(pud) })
-+#endif
-+#endif
-+
- #endif /* _LINUX_PGTABLE_H */
-diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-index cb468e418ea1..182957f0d013 100644
---- a/include/linux/swapops.h
-+++ b/include/linux/swapops.h
-@@ -126,6 +126,21 @@ static inline int is_swap_pte(pte_t pte)
- 	return !pte_none(pte) && !pte_present(pte);
- }
- 
-+#ifdef CONFIG_HUGETLB_PAGE
-+static inline int is_swap_pud(pud_t pud)
-+{
-+	return !pud_none(pud) && !pud_present(pud);
-+}
-+
-+static inline swp_entry_t pud_to_swp_entry(pud_t pud)
-+{
-+	swp_entry_t arch_entry;
-+
-+	arch_entry = __pud_to_swp_entry(pud);
-+	return swp_entry(__swp_type(arch_entry), __swp_offset(arch_entry));
-+}
-+#endif
-+
- /*
-  * Convert the arch-dependent pte representation of a swp_entry_t into an
-  * arch-independent swp_entry_t.
-diff --git a/mm/memory.c b/mm/memory.c
-index 0a769f34bbb2..90c5dfac35c6 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -718,6 +718,57 @@ struct folio *vm_normal_folio_pmd(struct vm_area_struct *vma,
- }
- #endif
- 
-+#ifdef CONFIG_HUGETLB_PAGE
-+struct page *vm_normal_page_pud(struct vm_area_struct *vma, unsigned long addr,
-+				pud_t pud)
-+{
-+	unsigned long pfn = pud_pfn(pud);
-+
-+	/*
-+	 * There is no pmd_special() but there may be special pmds, e.g.
-+	 * in a direct-access (dax) mapping, so let's just replicate the
-+	 * !CONFIG_ARCH_HAS_PTE_SPECIAL case from vm_normal_page() here.
-+	 */
-+	if (unlikely(vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP))) {
-+		if (vma->vm_flags & VM_MIXEDMAP) {
-+			if (!pfn_valid(pfn))
-+				return NULL;
-+			goto out;
-+		} else {
-+			unsigned long off;
-+
-+			off = (addr - vma->vm_start) >> PAGE_SHIFT;
-+			if (pfn == vma->vm_pgoff + off)
-+				return NULL;
-+			if (!is_cow_mapping(vma->vm_flags))
-+				return NULL;
-+		}
-+	}
-+
-+	if (pud_devmap(pud))
-+		return NULL;
-+	if (unlikely(pfn > highest_memmap_pfn))
-+		return NULL;
-+
-+	/*
-+	 * NOTE! We still have PageReserved() pages in the page tables.
-+	 * eg. VDSO mappings can cause them to exist.
-+	 */
-+out:
-+	return pfn_to_page(pfn);
-+}
-+
-+struct folio *vm_normal_folio_pud(struct vm_area_struct *vma,
-+				  unsigned long addr, pud_t pud)
-+{
-+	struct page *page = vm_normal_page_pud(vma, addr, pud);
-+
-+	if (page)
-+		return page_folio(page);
-+	return NULL;
-+}
-+#endif
-+
- static void restore_exclusive_pte(struct vm_area_struct *vma,
- 				  struct page *page, unsigned long address,
- 				  pte_t *ptep)
+ 	/*
+ 	 * We can assume that @vma always points to a valid one and @end never
 -- 
 2.26.2
 
