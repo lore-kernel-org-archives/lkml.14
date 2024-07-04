@@ -1,226 +1,353 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FE0FBF6
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 07:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720077399; cv=none; b=DQfZYERjEmhj3RZq2no/uHfTvFOkGxEgMYCtKUDRML13oIbKwrAbRFgrRgBj/ECJtpqH1O091aBndOuxBmbOlSu336YSIg6maojHh3eGt7SHw61H5sNS7TorNTwieigBfhHvRhDvxYg7lgtF6E77kdnwr7Z0Q5ICtdwdwDiEIBE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720077399; c=relaxed/simple;
-	bh=LjsrTi2z4CRnVuzdIQm+l232jl550YGPl6TpAJ00+q0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CqM2WzKZowA627kVDdEjMZUtjH2/P+5xoGEEKb2WRnVPaWcnjp17kUp3WH/m17xhytAbfieL1QmgG+6wRBr/I66556qq08wNjuv3y2xdfnMaujigmqCW0N7MghnVf/2FdAoXQNkYoI4vslcPV/bqu8QHehMx9CzXPaSUC9CNsns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=E9tF0cyR; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9917FBF6;
+	Thu,  4 Jul 2024 07:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720077840; cv=fail; b=HTnKwYkk0zLEtRNoDAnYMbC803FQ/WmfyCZTpFIbHCmCBFpuuQ9RZ4ki8VuVRqspO7s8M36+Yw2S9TM4HsIdqMkSuy+irGa2tF0fe+Kw2dcgVc+6z24j+JZCQTIEv3CW85I8/SqMMoOqPSz6lAC4HbgoYly7ai73o+rZG94iUSA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720077840; c=relaxed/simple;
+	bh=tzvlrFPfdgqTyoyR2bKEdrHPj6Q6YpK8wc0y355jNF4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=aPwaVv43H3NEjImhB2xQexf7FzBYZfkfT/36jmpjcWBVck+lT3lC0UVIqU/xTk1+xWkjTd/8h2h2wwKWWYsVDF2IaJDfBBALPVPROl4hf+buTezPQcWutV0Q0bjahoqiSED6vMmCGqbvkuXUEEqsDOAcL0bXPM/+8G/9Qtkuqvg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FBqvIV5N; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="E9tF0cyR"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-75ebcd9d586so7583a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 00:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1720077396; x=1720682196; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TvyZAWnNNxx/fwTfnUe4tHKME28aoZVHnncLaVmTBU4=;
-        b=E9tF0cyRazVYn0OjCTxHNfTJ8YPBAMyY/2t39a6/ZnNkpRG2xLEinhwVZBdKFHEZJV
-         gZ6GNaOHSI3OcwxsOluSuedeXSTFChJ60BaZRxEAHKv3mgURpdW38MZx5C2NNXSPxfZe
-         Aig4DsJFwxL6olFRdS2mWiM4GX71mVyGIRG0O1e/PnZgKMqTxqCrDYreg6wCTAQZcV05
-         PvFVobbgysXG75P0ry4tdVLdRWIEZft9eqlsNkqP6Olni6RpMMhZxER3+Ka894wNAJQv
-         rY/KVz9ez0r/Fjv36KkfnWQxeLX/H6buvBZBK1e9LTytydbb7z1H+FhdO3LInYKtrZrq
-         SNzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720077396; x=1720682196;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TvyZAWnNNxx/fwTfnUe4tHKME28aoZVHnncLaVmTBU4=;
-        b=F7A5hOnBQWppS9apteg6AxxKBB+y34neym6ZJmTr0egfwfJQdCm92Lc8n2CHam85qj
-         TY7pnhxahovxtU+43H7vy73VPjIMX9ABRGYJ57q+GWZPoVCqa2nfJ4Q0LDt6dLIEmU42
-         IXzYslHiXJuDE6VIs4mrtwAfoIM7vnamxNFfISa8vB0c/r724rPrdBZP1OLSvpHfBql1
-         o8lEh1Ak6ZChtAShIaI/jbeR5Z4T4jbV/V7XRydfaKe5GEQrTZevR8JqD/7DcXNsWYMs
-         bmeV7MhF/eyNeHn1YM2lbgODYLu6aaTBgq260PzEGlISl4m2OXEBRhAdchlq1PUNVmvB
-         +v8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXIovgtsxwtBuvTx2C07yCor+YFEBHsI5Unp3XhNdUB5k3m2nLizDr4Zl1fjf4ZdP607sWYHiWNfSF4s0QgUI5+aw6ozYLVKxOCdwql
-X-Gm-Message-State: AOJu0YyXzO4c64kwroQEQmEJg5hT/npVPepBbYeqnsgUoKVqA8M61EHv
-	jkxVpC3UgCwwbZL0k1k00KwcXB/q4HDL5M1JTKaaMW6lfvEVUeEJ7c8r1mMYyXE=
-X-Google-Smtp-Source: AGHT+IHPhEdFOtrGOq2so3f8fczbnDBB6HPj0uqaZE26HNY2schGIgbSlQBBjMxKmLniz35MD8p+4Q==
-X-Received: by 2002:a17:902:e74c:b0:1f8:6e3f:9e7 with SMTP id d9443c01a7336-1fb33e18421mr8824975ad.1.1720077396279;
-        Thu, 04 Jul 2024 00:16:36 -0700 (PDT)
-Received: from [10.255.188.228] ([139.177.225.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1599c44sm115243885ad.273.2024.07.04.00.16.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 00:16:35 -0700 (PDT)
-Message-ID: <e7a8ddb2-52b5-4267-859b-e212644440b1@bytedance.com>
-Date: Thu, 4 Jul 2024 15:16:29 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FBqvIV5N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720077838; x=1751613838;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=tzvlrFPfdgqTyoyR2bKEdrHPj6Q6YpK8wc0y355jNF4=;
+  b=FBqvIV5NZ1FH2oNT/BYgbsnAMVHxu9P/XttNDlKewgJUaY7xC2X7UOMJ
+   jc6OLxNbUZ/d76HP4O07jhVFUBBKrOqZTDko5TP35/R1YYjdSkrvf7BTK
+   mCooNi/qPo/IjZQngmD/2HgjpTnymvpeuSpJ3mmO41No+rdWy71q0mX15
+   lbYeQFgvBBwxjzAYovm5eGzlgmc7YnMBfLR/5DyU5YVbjMPfx/7zTbttY
+   ei3KkuVfmTR7QUpxBHmGhT0K44KvSccwX782cN4SMpAYZZuuO9gQuIAaX
+   MDQL2bFDhKKimi/JTvGVXQVQ7yeFsQ2ta+6IwMi29+PBicsSZZZHiDUr0
+   w==;
+X-CSE-ConnectionGUID: ZWn4KgRfRl6utcKtL55yVw==
+X-CSE-MsgGUID: YwE6iJxiQj6O+RLFOTP2TQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17289588"
+X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
+   d="scan'208";a="17289588"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 00:23:58 -0700
+X-CSE-ConnectionGUID: iGMvQLWwSvCaBJnc8ax3Ug==
+X-CSE-MsgGUID: 3H8WAyVgSZeQ9XdUTb1TeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
+   d="scan'208";a="46450114"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Jul 2024 00:23:58 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 4 Jul 2024 00:23:57 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 4 Jul 2024 00:23:57 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 4 Jul 2024 00:23:57 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.170)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 4 Jul 2024 00:23:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sb0/yl+PfpN7QGEwr8Lf4HO4drr7obIHU0nwsE3qa6N+tQ7LXRViYlMf8JcIldu6+7USarTZxy47hdu3S3MIpHGrxWqxGPUFooSQzmqIEjGIu0dFZqRTCteihQ6o73U76Nz++AoPAVSWk76FFrn2bOmj+sqHcElsDhrcqLzecrGWh4M6LiwqSdSKMzt3KLS6YowX3rV2/Ls6PQoM3l6xsM0pGNktmB7qB0LfmTTS9hA5cMv/arQCHasekVTUnSwxdTXB+h9r8mPxSfUqCyMH90moCfnkwEWOWwSCCIFXmCaI9NUglj+k8bSUdSaSCtt/eaq1AsH1rPUwZm9oFGVIkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RA4vjEttalHfvm5EUB6AMqfR4wZYkO9SIlf4c75zTBM=;
+ b=PkIOkyPsxApNAlkSaAynZ0pUXBE5V3KXMWAoJM8uE0YfLnJ4oHnIhcZ3dvflmRvNTxJwGBzYL55QT239/juX61X2HOj3Zp+BBF0Jl+FCOj/NRlSP2ILuPbBB8mZUZLhhqW0XFOUFUnn8alVhWVPRZtXWZQpkKdmZkKowFmlkW270RkJltT9XKEUF3HdJBDEw/rbyEWDKYZWB3nuRSQsq1vAt+1doCsQqk/pCWhSlt+cI0Gicg/Z12pW/osvbdoB5jKDuuCPjuEiVFaHduv23GqPrP6Cmup4Gun9PpXSt5fCokksUpC71uLaRUk7oxGD4Mv7pY4k+lhNpZcKo9eq0yA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com (2603:10b6:208:3c4::15)
+ by SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.29; Thu, 4 Jul
+ 2024 07:23:54 +0000
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::a137:ffd0:97a3:1db4]) by MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::a137:ffd0:97a3:1db4%3]) with mapi id 15.20.7741.017; Thu, 4 Jul 2024
+ 07:23:54 +0000
+Date: Thu, 4 Jul 2024 09:23:37 +0200
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+CC: <shuah@kernel.org>, <fenghua.yu@intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<ilpo.jarvinen@linux.intel.com>, <tony.luck@intel.com>
+Subject: Re: [PATCH v3 2/2] selftests/resctrl: Adjust SNC support messages
+Message-ID: <xfhv744t2ol274w6lddon77rn5dkf7dzbwqcoknok4kk4guehz@hwjsusvhoerb>
+References: <cover.1719842207.git.maciej.wieczor-retman@intel.com>
+ <484aef5f10e2a13a7c4f575f4a0b3eb726271277.1719842207.git.maciej.wieczor-retman@intel.com>
+ <c1ec4e04-20cd-4717-83ed-da6a55c91889@intel.com>
+ <0b9210d3-2e47-4ff3-ac06-f6347627b0d3@intel.com>
+ <d5bd6275-ab86-439a-887f-17c04a586716@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d5bd6275-ab86-439a-887f-17c04a586716@intel.com>
+X-ClientProxiedBy: DU7P194CA0027.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:10:553::7) To MN0PR11MB6231.namprd11.prod.outlook.com
+ (2603:10b6:208:3c4::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/7] synchronously scan and reclaim empty user PTE
- pages
-To: the arch/x86 maintainers <x86@kernel.org>
-Cc: david@redhat.com, hughd@google.com, willy@infradead.org, mgorman@suse.de,
- muchun.song@linux.dev, akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1719570849.git.zhengqi.arch@bytedance.com>
-Content-Language: en-US
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <cover.1719570849.git.zhengqi.arch@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6231:EE_|SA1PR11MB6734:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e87a433-0350-4e02-b989-08dc9bfa4265
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|27256017;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?mpXsRPX8OanhXgik3IzROOwSRsZteeuXnJ2joeQT1hUgQmHGzeb6UCmVkc?=
+ =?iso-8859-1?Q?VI38ySnvSgIeeIfDUHiHPZNODl8f7cqCpm8DeeG3+TLPS/qzSaTte8XOEg?=
+ =?iso-8859-1?Q?vOMEpM8MobJpG3QL2B0Kq33sgvHNrOjgC2cziDU/xOcT3rxx5fwLn8fDip?=
+ =?iso-8859-1?Q?rICjbTHQivC+aaaIQ/u2XIjaGyQsNA6cATOsERrBpheyqXF/hc4hsWogu0?=
+ =?iso-8859-1?Q?DvSnVL0OCWfgghFeudaNkMua29/D9pk/ZgYv0u8G3WZMl+4cZQ+UJMep5c?=
+ =?iso-8859-1?Q?1bQ2HDwbKBvqK5/vo6UG5eEv5JtJtF26zXH0PaJD3PVloQSF+vqG4h+uPU?=
+ =?iso-8859-1?Q?UGARIzb3hhm6tbO4NzU3NZzR+T5RaDSR1WbKZGPELKx0aVRn03UJXUGwHI?=
+ =?iso-8859-1?Q?PBqCQM7Z7phB1l8D8pge5W1kHLY7IJJHXFuRGzpKreCigOo2JOzhm6tWER?=
+ =?iso-8859-1?Q?z3maeIUuh4XqtkI34HTZFouNK05orTB7abhg5kbwgF2ucwkSLVvg0qGCoT?=
+ =?iso-8859-1?Q?+Wzk/9zS1uWg/R3T5AOKg0JdStY2NSQKdvnvZpLtBzZfOYI3i4qfD3CNE9?=
+ =?iso-8859-1?Q?QhXeMWYg2T7iO+71Fhle7SUthZIQ3x3UELyHkDdjNC0T3X5yAMiGOPfC54?=
+ =?iso-8859-1?Q?pyf+icGiWpl2IRSy968vP+4IpC9HjSGEFYGoDV0se6HgKTnOwVF51ccBjq?=
+ =?iso-8859-1?Q?3KAITNe57x2K/+tw8Xd4f0nwdc6YSMCgfaSRVn6zYd3HSt2/2K7QqND2Wx?=
+ =?iso-8859-1?Q?4h/3Wd0ycKcADWSO1MzHp47lVUqJL2G9mYuMvniqxW5ag8ygCRgbU6PI6A?=
+ =?iso-8859-1?Q?cmlQHl8cbyHxh3zxbx6Mdgw5YU2OEdYpY3+5YYFBwsiaK9buTSRdx4D2rO?=
+ =?iso-8859-1?Q?m3pI5ff9NZlP8gVr+Nv7+znnOb3keVkvPmjiMnWk61vqS2bDGYOC6FzKHL?=
+ =?iso-8859-1?Q?hGX50fXc+f3IVlNFBMmB2/pnuRaDM8C6fZndgBa+2ge5ooPS0/X+XfiXB4?=
+ =?iso-8859-1?Q?VGeVL7wWAFTkV/BjWWjvr/PLYagxB/D5FRq7jIEBgqZ8d+Nf27fA8yn6Cs?=
+ =?iso-8859-1?Q?k/CwxM0JIfqhUEMX8PMI83f0o71OhD0pqP1GwYkwJwyVy+8cS7wE44edSF?=
+ =?iso-8859-1?Q?ed2hh/S9ZTd5F3uhcfsPoSge3/x7XoyoNY8aTe6sMUMFWPCGqTbiB6MAm6?=
+ =?iso-8859-1?Q?tJ494quCGFQI9M0HRPqxJHt4DWRKpf02RAvD10dRm4WYUU6t9x+J67HFdF?=
+ =?iso-8859-1?Q?XmzDqzj3EvfCJ8MDWXJ1v00q0QE7qaAGwby5Y6egDx/2EG7VQYOpyK1TJQ?=
+ =?iso-8859-1?Q?4pFh75gb863atVhgcGyxGZ+xz+IGysG3rnPRqcIcqmHlpAEuHYEkRBAjhP?=
+ =?iso-8859-1?Q?KecCvEtmi/j57jKYWJIsCARnhaqHm6lixOhBuTPwDTBGeAYF7SxC3Z5r1n?=
+ =?iso-8859-1?Q?SHSkCXZ69Bj9edvjNir3KCzwg84L3Det8sgXmQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6231.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(27256017);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?KW7WTuFJ1eLywjuKUsSzpAY8CuY2r81V3z2LYPDA4qQzbjnCGg6UNs/gxN?=
+ =?iso-8859-1?Q?55zjbFos8GR9+S45qgQ5X0klUtyf0Jkbw3WoOAsL05KuC4+sFOH7/M/m6h?=
+ =?iso-8859-1?Q?AvTbPhNKwI9i8kBKrxHtdIJzn+wtsf8t62xh2MatjOe0iG8S7C7vFRFmps?=
+ =?iso-8859-1?Q?RuHz57EMvXNunjpm1gQdiNfwle3sGRD3qmQjZzlWNjpaPEOCNryWKXVq70?=
+ =?iso-8859-1?Q?0a0iUEqEYVAZ6CDbR6mVuu70pxk61oacCghENQRmZFrQJsOP+3I6DCNiSg?=
+ =?iso-8859-1?Q?7r+mwP6n/nvu06cs2YzFe43v169rA2HwLt/sCuxU5TwH9oeXfmrJk+xXW0?=
+ =?iso-8859-1?Q?L0K3/HAbTnQhbBa0QFsr/wqUDbHPA+0Uwq1RP70ElcCj/BESbIKaDVew67?=
+ =?iso-8859-1?Q?TR+E3+giU3UmcwcmjGCp73+5ar2X+0J/56ZnhYgKmDdEHlEU4pLOd4Lqiv?=
+ =?iso-8859-1?Q?pmaiBxOVxiQ55wW7vbEB8SCrBGwU1ZR5/vBfamsBJmBk5J15aFyfCDhAcF?=
+ =?iso-8859-1?Q?wanWth/8wFGf0ZM7WhHUbZP9AUdHCV056G1y79tWaNuW4KtQBw+nhDJHov?=
+ =?iso-8859-1?Q?+RTN3oeyqIN2z3DI7D97Ox8TCqKnCEoMowNlhIUS8tYwBhRTPqYcCvrPjO?=
+ =?iso-8859-1?Q?zNvXBHVE3YuwsSDyIJ94q30ha2+PsRcupr7zDjmcwCCq2K/LFJTl87Ilu4?=
+ =?iso-8859-1?Q?9QzcH5h7sv+E2aeK4BmHtmstQ24GE91haP2Q8tZ4blShOgESGdRNS/KO/h?=
+ =?iso-8859-1?Q?dhfqDlxVIW68N8IFfLrKzLPe/7wUtKZKDP24tF3lQ7pyahI5OO3ytbxtXA?=
+ =?iso-8859-1?Q?mXutFsB0JiMnudOiLaFc3nF8sF8APP8ZwpwStgU7tzSfFEI5yYXDqEwAAn?=
+ =?iso-8859-1?Q?jCdA7VuUY7b+2v1Jwm+GTOkIYoB2iAE7tKNqd29YQybM0rZq6snt3k4INm?=
+ =?iso-8859-1?Q?CaKq6Uj154ftETCv144ul09fHTEaQiQcvKf46Zer0T2TFgxlolpfGHX2WD?=
+ =?iso-8859-1?Q?Jktvyxsy8WXwF0g6h5CxzDBr7ZIHG5R/0Y4IfoUuK64C2DcOrVoqpJdKF4?=
+ =?iso-8859-1?Q?DdyY8+DzAc/KOsBqTw0NkCasKFNLGMeZx8G0Y9+f7wShEtdFw/xl4wg1MD?=
+ =?iso-8859-1?Q?Oo8Oiws8u1VNb6ITLivbyLI2Cu751y8cDSmKhdmuZsdKmLJOXIEypnbBVm?=
+ =?iso-8859-1?Q?08vFMPHYeEegQrgSFl1OVCHDJsu2DKIAThLKCy0JF5qe4M/UMYg2D5PUrF?=
+ =?iso-8859-1?Q?Mdo1Df7pSia5QkuHeBfpq6iQ0AMt2WMENSvK9uEKJxsrZYZnM+ZQmf1pYZ?=
+ =?iso-8859-1?Q?DSCrj/lF/9m6upc73jB8llB4DD3BPQ6wEsQzrlioD8lgpARmrR+8ECBiTu?=
+ =?iso-8859-1?Q?emEYvn563BUwdtWVqxAvlVieXzHsRqt47CUriCUmaefbdsNkEAKXhAJhEU?=
+ =?iso-8859-1?Q?8s+s6RemzGIh9GbdJeb6Je/h0zRj9oaN3cpKTgNqYdmB7DsRDia30eQ1GM?=
+ =?iso-8859-1?Q?pokG6k7SIxBqkrmAw1E5GQoX+2m4EcKVbCb02tF16NV2P6GjVkFxo5O+J7?=
+ =?iso-8859-1?Q?r/j3m9/WaVXBRtG33Uob4NhEQRIvX59OjwwOxDaCO2W6BFhGaPtJft252z?=
+ =?iso-8859-1?Q?31sAwqgrqAsOsGfvb101keN8jeSHR3SUKL7dLOmu7TpAmmz+wMomtXPyXA?=
+ =?iso-8859-1?Q?X9iamSdfjZjsHtQ6Dk8=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e87a433-0350-4e02-b989-08dc9bfa4265
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6231.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 07:23:54.0453
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZVP+rDuoT+YZzVB6X+dLu7nD2hLyfbphpotI5UU6xcnNCZNM984d7EonRGt21MgPac8WrsRTnzr4FLKvUIrdIo7ByVCvQfGLxUEfBvpymvA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6734
+X-OriginatorOrg: intel.com
 
-Add the x86 mailing list that I forgot to CC before.
+Hi Reinette,
 
-On 2024/7/1 16:46, Qi Zheng wrote:
-> Hi all,
-> 
-> Previously, we tried to use a completely asynchronous method to reclaim empty
-> user PTE pages [1]. After discussing with David Hildenbrand, we decided to
-> implement synchronous reclaimation in the case of madvise(MADV_DONTNEED) as the
-> first step.
-> 
-> So this series aims to synchronously scan and reclaim empty user PTE pages in
-> zap_page_range_single() (madvise(MADV_DONTNEED) etc will invoke this). In
-> zap_page_range_single(), mmu_gather is used to perform batch tlb flushing and
-> page freeing operations. Therefore, if we want to free the empty PTE page in
-> this path, the most natural way is to add it to mmu_gather as well. There are
-> two problems that need to be solved here:
-> 
-> 1. Now, if CONFIG_MMU_GATHER_RCU_TABLE_FREE is selected, mmu_gather will free
->     page table pages by semi RCU:
-> 
->     - batch table freeing: asynchronous free by RCU
->     - single table freeing: IPI + synchronous free
-> 
->     But this is not enough to free the empty PTE page table pages in paths other
->     that munmap and exit_mmap path, because IPI cannot be synchronized with
->     rcu_read_lock() in pte_offset_map{_lock}(). So we should let single table
->     also be freed by RCU like batch table freeing.
-> 
-> 2. When we use mmu_gather to batch flush tlb and free PTE pages, the TLB is not
->     flushed before pmd lock is unlocked. This may result in the following two
->     situations:
-> 
->     1) Userland can trigger page fault and fill a huge page, which will cause
->        the existence of small size TLB and huge TLB for the same address.
-> 
->     2) Userland can also trigger page fault and fill a PTE page, which will
->        cause the existence of two small size TLBs, but the PTE page they map
->        are different.
-> 
->     For case 1), according to Intel's TLB Application note (317080), some CPUs of
->     x86 do not allow it:
-> 
->     ```
->     If software modifies the paging structures so that the page size used for a
->     4-KByte range of linear addresses changes, the TLBs may subsequently contain
->     both ordinary and large-page translations for the address range.12 A reference
->     to a linear address in the address range may use either translation. Which of
->     the two translations is used may vary from one execution to another and the
->     choice may be implementation-specific.
-> 
->     Software wishing to prevent this uncertainty should not write to a paging-
->     structure entry in a way that would change, for any linear address, both the
->     page size and either the page frame or attributes. It can instead use the
->     following algorithm: first mark the relevant paging-structure entry (e.g.,
->     PDE) not present; then invalidate any translations for the affected linear
->     addresses (see Section 5.2); and then modify the relevant paging-structure
->     entry to mark it present and establish translation(s) for the new page size.
->     ```
-> 
->     We can also learn more information from the comments above pmdp_invalidate()
->     in __split_huge_pmd_locked().
-> 
->     For case 2), we can see from the comments above ptep_clear_flush() in
->     wp_page_copy() that this situation is also not allowed. Even without
->     this patch series, madvise(MADV_DONTNEED) can also cause this situation:
-> 
->             CPU 0                         CPU 1
-> 
->     madvise (MADV_DONTNEED)
->     -->  clear pte entry
->          pte_unmap_unlock
->                                        touch and tlb miss
-> 				      --> set pte entry
->          mmu_gather flush tlb
-> 
->     But strangely, I didn't see any relevant fix code, maybe I missed something,
->     or is this guaranteed by userland?
-> 
->     Anyway, this series defines the following two functions to be implemented by
->     the architecture. If the architecture does not allow the above two situations,
->     then define these two functions to flush the tlb before set_pmd_at().
-> 
->     - arch_flush_tlb_before_set_huge_page
->     - arch_flush_tlb_before_set_pte_page
-> 
-> As a first step, we supported this feature on x86_64 and selectd the newly
-> introduced CONFIG_ARCH_SUPPORTS_PT_RECLAIM.
-> 
-> In order to reduce overhead, we only handle the cases with a high probability
-> of generating empty PTE pages, and other cases will be filtered out, such as:
-> 
->   - hugetlb vma (unsuitable)
->   - userfaultfd_wp vma (may reinstall the pte entry)
->   - writable private file mapping case (COW-ed anon page is not zapped)
->   - etc
-> 
-> For userfaultfd_wp and writable private file mapping cases (and MADV_FREE case,
-> of course), consider scanning and freeing empty PTE pages asynchronously in
-> the future.
-> 
-> This series is based on next-20240627.
-> 
-> Comments and suggestions are welcome!
-> 
-> Thanks,
-> Qi
-> 
-> [1]. https://lore.kernel.org/lkml/cover.1718267194.git.zhengqi.arch@bytedance.com/
-> 
-> Qi Zheng (7):
->    mm: pgtable: make pte_offset_map_nolock() return pmdval
->    mm: introduce CONFIG_PT_RECLAIM
->    mm: pass address information to pmd_install()
->    mm: pgtable: try to reclaim empty PTE pages in zap_page_range_single()
->    x86: mm: free page table pages by RCU instead of semi RCU
->    x86: mm: define arch_flush_tlb_before_set_huge_page
->    x86: select ARCH_SUPPORTS_PT_RECLAIM if X86_64
-> 
->   Documentation/mm/split_page_table_lock.rst |   3 +-
->   arch/arm/mm/fault-armv.c                   |   2 +-
->   arch/powerpc/mm/pgtable.c                  |   2 +-
->   arch/x86/Kconfig                           |   1 +
->   arch/x86/include/asm/pgtable.h             |   6 +
->   arch/x86/include/asm/tlb.h                 |  23 ++++
->   arch/x86/kernel/paravirt.c                 |   7 ++
->   arch/x86/mm/pgtable.c                      |  15 ++-
->   include/linux/hugetlb.h                    |   2 +-
->   include/linux/mm.h                         |  13 +-
->   include/linux/pgtable.h                    |  14 +++
->   mm/Kconfig                                 |  14 +++
->   mm/Makefile                                |   1 +
->   mm/debug_vm_pgtable.c                      |   2 +-
->   mm/filemap.c                               |   4 +-
->   mm/gup.c                                   |   2 +-
->   mm/huge_memory.c                           |   3 +
->   mm/internal.h                              |  17 ++-
->   mm/khugepaged.c                            |  24 +++-
->   mm/memory.c                                |  21 ++--
->   mm/migrate_device.c                        |   2 +-
->   mm/mmu_gather.c                            |   2 +-
->   mm/mprotect.c                              |   8 +-
->   mm/mremap.c                                |   4 +-
->   mm/page_vma_mapped.c                       |   2 +-
->   mm/pgtable-generic.c                       |  21 ++--
->   mm/pt_reclaim.c                            | 131 +++++++++++++++++++++
->   mm/userfaultfd.c                           |  10 +-
->   mm/vmscan.c                                |   2 +-
->   29 files changed, 307 insertions(+), 51 deletions(-)
->   create mode 100644 mm/pt_reclaim.c
-> 
+On 2024-07-03 at 13:51:03 -0700, Reinette Chatre wrote:
+>Hi Maciej,
+>
+>On 7/3/24 12:43 AM, Maciej Wieczór-Retman wrote:
+>> On 3.07.2024 00:21, Reinette Chatre wrote:
+>> > On 7/1/24 7:18 AM, Maciej Wieczor-Retman wrote:
+>
+>> > > diff --git a/tools/testing/selftests/resctrl/cache.c b/tools/testing/selftests/resctrl/cache.c
+>> > > index 1ff1104e6575..9885d64b8a21 100644
+>> > > --- a/tools/testing/selftests/resctrl/cache.c
+>> > > +++ b/tools/testing/selftests/resctrl/cache.c
+>> > > @@ -186,4 +186,7 @@ void show_cache_info(int no_of_bits, __u64 avg_llc_val, size_t cache_span, bool
+>> > >        ksft_print_msg("Average LLC val: %llu\n", avg_llc_val);
+>> > >        ksft_print_msg("Cache span (%s): %zu\n", lines ? "lines" : "bytes",
+>> > >                   cache_span);
+>> > > +    if (snc_unreliable)
+>> > > +        ksft_print_msg("SNC detection unreliable due to offline CPUs!\n");
+>> > 
+>> > The message abour SNC detection being unreliable is already printed at beginning of every
+>> > test so I do not think it is necessary to print it again at this point.
+>> > 
+>> 
+>> The "SNC detection was unreliable" only gets printed on the first execution of run_single_test().
+>
+>There is more about this later, but this can be printed at start of each test.
+
+Okay, thanks.
+
+>
+>> That's what the global snc_mode was for mostly, it starts initialized to 0, and then on the first
+>> run of run_single_test() it is set so other tests don't call get_snc_mode(). And then the local static
+>> variable inside get_snc_mode() prevents the detection from running more than once when other places
+>> call get_snc_mode() (like when the cache size is adjusted).
+>
+>The shadowing of variables can get confusing. I think the global snc_mode is not necessary, having the
+>local static variable within snc_nodes_per_l3_cache() should be sufficient and run_single_test()
+>can just do a:
+>
+>	int snc_mode; /* new name welcome */
+>
+>	snc_mode = snc_nodes_per_l3_cache();
+>	if (snc_mode > 1)
+>		ksft_print_msg("SNC-%d mode discovered\n", snc_mode);
+>	else if (snc_unreliable)
+>		ksft_print_msg("SNC detection unreliable due to offline CPUs. Test results may not be accurate if SNC enabled.\n");
+
+This sounds good, thanks.
+
+>
+>> 
+>> And as we discussed last time it's beneficial to put error messages at the end of the test in case the
+>> user misses the initial warning at the very beginning.
+>
+>Right. What I found unexpected was that it is done "at the end" but from two places, from the show*info()
+>as well as from run*test(). I expect "the end" to be a single place.
+
+Okay, I'll remove messages from show*info().
+
+>
+>> > >    }
+>> > > diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
+>> > > index 0c045080d808..588543ae2654 100644
+>> > > --- a/tools/testing/selftests/resctrl/cmt_test.c
+>> > > +++ b/tools/testing/selftests/resctrl/cmt_test.c
+>> > > @@ -175,8 +175,8 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
+>> > >            goto out;
+>> > >          ret = check_results(&param, span, n);
+>> > > -    if (ret && (get_vendor() == ARCH_INTEL))
+>> > > -        ksft_print_msg("Intel CMT may be inaccurate when Sub-NUMA Clustering is enabled. Check BIOS configuration.\n");
+>> > 
+>> > This message does seem to still be applicable if snc_unreliable == 1.
+>> 
+>> I was going for this one error message to specifically catch the kernel
+>> not having snc support for resctrl while snc is enabled. While the
+>> above message could be true when snc_unreliable == 1, it doesn't have to.
+>
+>If a test fails when snc_unreliable == 1 then nothing is certain and some generic message
+>is needed.
+
+Right
+
+>
+>> SNC might not be enabled at all so there would be no reason to send the user
+>> to check their BIOS - instead they can learn they have offline CPUs and they can
+>> work on fixing that. In my opinion it could be beneficial to have more specialized
+>> messages in the selftests to help users diagnose problems quicker.
+>
+>My goal is indeed to have specialized messages. There cannot be a specialized message
+>if snc_reliable == 1. In this case it needs to be generic since SNC may or may not be
+>enabled and it is up to the user to investigate further.
+
+How about this in cmt_run_test() for example:
+
+	if (snc_unreliable)
+		ksft_print_msg("Intel CMT may be inaccurate or inefficient when Sub-NUMA Clustering is enabled and not properly detected.\n");
+	else if (ret && (get_vendor() == ARCH_INTEL) && !snc_kernel_support())
+		ksft_print_msg("Kernel doesn't support Sub-NUMA Clustering but it is enabled. Check BIOS configuration.\n");
+
+This way there is a generic message when snc_unreliable == 1.
+
+And as you mentioned at the end of this email, the user can be expected to
+backtrack to the beginning of the test if there are any problems so they can
+discover the exact source of the issue - offline cpus.
+
+>
+>> 
+>> Having only this one message wihtout the "if snc unreliable" messages would
+>> mean nothing would get printed at the end on success with unreliable SNC detection.
+>
+>Having a pass/fail is what user will focus on. If the test passes then SNC detection
+>should not matter. The messages are just there to help user root cause where a failure
+>may be.
+
+My train of thought was that if test passes with broken SNC detection it means
+SNC was used inefficiently right? (either the portion of L3 used was bigger or
+smaller than that allocated for one cluster)
+
+It's not exactly a failure but I thought it deserves a warning at the very end
+to alert the user.
+
+If you don't think the warning should be printed on success I guess the
+condition can be:
+	if (ret && snc_unreliable)
+and the user can look at the start of the test if they care about more
+information. And the message can lose the "inefficient" word since it would only
+happen on error.
+
+>
+>...
+>> > 
+>> > >    volatile int *value_sink = &sink_target;
+>> > >      static struct resctrl_test *resctrl_tests[] = {
+>> > > @@ -123,6 +124,12 @@ static void run_single_test(const struct resctrl_test *test, const struct user_p
+>> > >        if (test->disabled)
+>> > >            return;
+>> > >    +    if (!snc_mode) {
+>> > > +        snc_mode = get_snc_mode();
+>> > > +        if (snc_mode > 1)
+>> > 
+>> > 
+>> >  From what I can tell this is the only place the global is used and this can just be:
+>> >          if (get_snc_mode() > 1)
+>> 
+>> I wanted to print the message below only on the first call to run_single_test() and then
+>> print relevant warnings at the very end of each test. I thought that was your intention
+>> when we discussed what messages are supposed to be printed and when in v2 of this series.
+>> 
+>> Do you think it would be better to just print this message at the start of each test?
+>
+>Yes. If there is a problem with a test the user could be expected to start tracing back
+>messages printed from beginning of failing test.
+
+I tried to reply to this comment with the suggestion above.
+
+>
+>> Or should I make "snc_mode" into local static inside run_single_test()? Or maybe add
+>> a second local static variable into get_snc_mode() that would control whether or not
+>> the message should be printed?
+>
+>I do not see where more local static variables may be needed.
+
+Since you agreed with the previous paragraph this one doesn't matter.
+
+>
+>Reinette
+
+-- 
+Kind regards
+Maciej Wieczór-Retman
