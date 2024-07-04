@@ -1,81 +1,157 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124281A4F22;
-	Thu,  4 Jul 2024 08:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDAB1A4F03;
+	Thu,  4 Jul 2024 08:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720082387; cv=none; b=TCU3Q1Tr/eoiestO4MC7D9TuiGNltCHm01IhI1nDy12kYpvePx4l7PQ/HBmTQ0OZ55N7nriDGV2LHQoxIopUq0nqa8sha+lo9Mbqsl6qT7RDWXl/M4T5+pVG7St0KAJpHWzwRcweEXYAvFaxw7YIcf4tGyf0JZenAnXJashAPhk=
+	t=1720082398; cv=none; b=o0ySW6ePCM9hZuMnWL9INOCmiMLxklPsDA1KXRPwLyrl49p3ozOXtshhTmEpqfSbM8dfL7sRh6p+C5iMtfxgSOUCdhYpri4MFKmfT6gJHsUfQjmCcyvqcrG4OjdljUlF5sjbRrHltevzjAYJYkRNILVpJHSjydXHUgsaP0DCx/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720082387; c=relaxed/simple;
-	bh=oYhN/+apSJfsDF6FgPay1/LBoptt7tXd21AcvutSs20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F1p5/Z+gbGrgwaZeC2+ms9BjinI7cQ3+oemWA3mg1ga4nMHMaUC+ylUFLfWlMMwmxQKf1FePSqPR6R6XaepeiLkUMIOwkFFjnp0wr15ZGWT60lP31MoDivd4IWy6r4O7kDd6meyS8FJXziwoiulXOfuhp66/xx2I4ECViM6Am7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TKO+7K3N; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720082398; c=relaxed/simple;
+	bh=fi//By/0BfylN26ma6Q0KWUT4fJdDh/xbXoHLQiZzLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qdbYQRdXvWqGiHQFKMYAfvYvWN18vBtaaUI+kDYUm6n44HI84TfJalXwu5PTxCUoYxbUj9nhAWfs+lOhnSljnCKfS1si3vqNKe2ZUKA52HcrUVs5x37I/OY+Z5u3O5xew5b3oMnhWngzM+OCTekBAs5F0GSBodhlJzAAf3Lr384=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aclfYBjE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TKO+7K3N"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hK3S3qTsE33229u2kAAMlNgGN474Lo9VhEX2kL7iJDM=; b=TKO+7K3NguPB5dm1q1B8fBK9Ru
-	d/8G8elCVQLFPoJ6F8NBELJIv4OPhM4x7gqfT50XwhJXWvCcdURvGj8GCSJsj29cXLAxL/PyXejAM
-	0MswBUpVvYWug9Nt3IwcSRz04/JY/2hHITEDroFZaQivebuG7k3W8PzLUOy/h1avw3RUQVBAAbvzF
-	IAVd/3WBT/9DhUNZAcuzolu3qb3DohoWoisE0eDTr3sm09+GFgsGaRmt1xDMRWuTt58XNHmQrQyXZ
-	6p2d0d5TJxI3pywA5gO/QczbrTpEuf3wxJJZmRXflHf0BD2kUa2Ce5MkOzUh5k9n2xjfykEOdIPoz
-	tsoHGnyg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sPI0C-00000002fAJ-0jIT;
-	Thu, 04 Jul 2024 08:39:40 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D2EF23003FF; Thu,  4 Jul 2024 10:39:35 +0200 (CEST)
-Date: Thu, 4 Jul 2024 10:39:35 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com,
-	bpf@vger.kernel.org, jolsa@kernel.org, clm@meta.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
- and per-CPU RW semaphore
-Message-ID: <20240704083935.GR11386@noisy.programming.kicks-ass.net>
-References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240702102353.GG11386@noisy.programming.kicks-ass.net>
- <20240702115447.GA28838@noisy.programming.kicks-ass.net>
- <CAEf4BzaQUzQdba2=F2NoV7=Th98fxz2EN62QX2Ej92bazt1GAg@mail.gmail.com>
- <20240702191857.GJ11386@noisy.programming.kicks-ass.net>
- <fd1d8b71-2a42-4649-b7ba-1b2e88028a20@paulmck-laptop>
- <20240703075057.GK11386@noisy.programming.kicks-ass.net>
- <6b728325-b628-488f-aabf-dbd9afa388fb@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aclfYBjE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A629AC32786;
+	Thu,  4 Jul 2024 08:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720082398;
+	bh=fi//By/0BfylN26ma6Q0KWUT4fJdDh/xbXoHLQiZzLg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aclfYBjEjJm9H+AH7Lo7iGkMWFoMInDnwYi9OHTC3YpS+NawKptMGYWCwPsSggMqK
+	 hf0lICb5bHpITpMzy1J51ltkGkrKTPb3Xayp941s6wDaCG82WSywWSpdiK5qRGnhjb
+	 OXh2EgzEIQLJCYvK7joYWP+Nb3EF9M5eGO9GmiSvIglQqnRjog79sQt0wccvSRUz8Z
+	 Gaz81z6n7nB9Nky90VfPlDPDX1l/mQl9MRQ4A7lAp8tYW7vJl6ahD+qow3ATfEDn3d
+	 h4vfAslr6zbqIdDFAz+Jm83VwnMEg2tJVZ0aKiybGZyhpFOqKj+47O59ESIhnUcko1
+	 gZK63lV63dRww==
+Message-ID: <577a5623-6dd8-4229-9c07-61e131a01aa8@kernel.org>
+Date: Thu, 4 Jul 2024 10:39:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6b728325-b628-488f-aabf-dbd9afa388fb@paulmck-laptop>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: sophgo,cv18xx-saradc.yaml: Add
+ Sophgo SARADC binding documentation
+To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Inochi Amaoto <inochiama@outlook.com>, Chen Wang <unicorn_wang@outlook.com>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20240702-sg2002-adc-v1-0-ac66e076a756@bootlin.com>
+ <20240702-sg2002-adc-v1-1-ac66e076a756@bootlin.com>
+ <b7913f90-7405-4a77-9c57-97ef124de6e1@kernel.org>
+ <8d368347-7cee-41af-a033-c495eeb62e2a@bootlin.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <8d368347-7cee-41af-a033-c495eeb62e2a@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 03, 2024 at 07:08:21AM -0700, Paul E. McKenney wrote:
-> On Wed, Jul 03, 2024 at 09:50:57AM +0200, Peter Zijlstra wrote:
-
-> > Would it make sense to disable it for those architectures that have
-> > already done this work?
+On 04/07/2024 10:35, Thomas Bonnefille wrote:
+> Hello Krzysztof,
+> Thank you for your feedback
 > 
-> It might well.  Any architectures other than x86 at this point?
+> On 7/3/24 7:08 AM, Krzysztof Kozlowski wrote:
+>> On 02/07/2024 13:52, Thomas Bonnefille wrote:
+>>> The Sophgo SARADC is a Successive Approximation ADC that can be found in
+>>> the Sophgo SoC.
+>>>
+>>> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+>>> ---
+>>>   .../bindings/iio/adc/sophgo,cv18xx-saradc.yaml     | 51 ++++++++++++++++++++++
+>>>   MAINTAINERS                                        |  5 +++
+>>>   2 files changed, 56 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml
+>>> new file mode 100644
+>>> index 000000000000..21fd5dc8e24e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml
+>>> @@ -0,0 +1,51 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/iio/adc/sophgo,cv18xx-adc.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Sophgo 3 channels Successive Approximation Analog to Digital Converters
+>>> +
+>>> +maintainers:
+>>> +  - Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+>>> +
+>>> +description:
+>>> +  Datasheet at https://github.com/sophgo/sophgo-doc/releases
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: sophgo,cv18xx-saradc
+>>
+>> Except that this was never tested... wild-cards are generally not allowed.
+>>
+> 
+> I realized I made a mistake when using the "make dt_binding_check" 
+> command, which led to some errors in this dt_binding. I have now 
+> addressed all of them, but I'm not sure I understand your comment.
+> 
+> I don't see any wildcards in the YAML file. Could you please provide 
+> more details on what you expect?
 
-Per 408b961146be ("tracing: WARN on rcuidle")
-and git grep "select.*ARCH_WANTS_NO_INSTR"
-arch/arm64/Kconfig:     select ARCH_WANTS_NO_INSTR
-arch/loongarch/Kconfig: select ARCH_WANTS_NO_INSTR
-arch/riscv/Kconfig:     select ARCH_WANTS_NO_INSTR
-arch/s390/Kconfig:      select ARCH_WANTS_NO_INSTR
-arch/x86/Kconfig:       select ARCH_WANTS_NO_INSTR
+What is "xx"? Sounds like wildcard. I do not see such SoC compatible.
 
-I'm thinking you can simply use that same condition here?
+Best regards,
+Krzysztof
+
