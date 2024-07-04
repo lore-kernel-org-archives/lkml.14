@@ -1,225 +1,91 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BB91A4F32;
-	Thu,  4 Jul 2024 08:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB471A3BA1
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 08:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720081179; cv=none; b=cZGefHG13oNcVv+r/zfr9D0V9sxl5XQRBzhMdHNCjZPeDnQyjCewuJTqjNpzW1px68t5W5tXf/Q89Y5ACSQKr7d3zSb1QCFrJGwLia8CTne/O6XrxueWmSb0xD9Qkn7u0MWpjNqopwc8TbrPjOZ/MkQ6VXmjuuzxepftltVm6Lg=
+	t=1720081246; cv=none; b=qVhizlkRSyMZtaO+E/pTUet03OK6f3kxlam/+yAAI5oLIrOWPSSqgfjI+Gyyl9SsMIVjvKfscyKo3mAyJea0Ec5Zm3F4VQ+Q1w2fpesG+KQvwLzSUD2ITdtTjEqFQMd81QbXcvEI8At+Qa1PmOZU5DaMDjCa4V7JdbzwfnH9CBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720081179; c=relaxed/simple;
-	bh=upmZAW8dn69PnkO8E8xNmjChTgJpfXDrhWbIGwNqiFI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QXfrJRvmUNUjF8AP6z4oCc4BimYKRs/3/eq1FiTml0W/m8+yZSa9LZ3EpqmF/hygAPQPkvTmT643sIfU98+p0NV+1fI94Zk1ofhnvldit8LqwjPAVk6gV9JJTb7wgCydyhl8ycx4Djid7SKovmTXMdw43yOoeBI4v9QB13BFtJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EApAlsOb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720081246; c=relaxed/simple;
+	bh=lWxpE80jJmqS6sCZoSvNul+Utq90SiJ8cm8FsIPCszo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L5oTsJAcB4ZacvaUslMyxy0rawIBcrTPPuhAuQ33aPWGHNFC2lM9NJBQ44ruCO1C1NnKfSdn8SYy+rypkr42lbt2d1zkksNQ4XaEKyOlMcdagWe+rFMzxTXOL+Y3dWy6icnmViZ3tHsjfNrCKLq4N6Vj6dDlHwJwRPwlTnf4PtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r9eOHOlu; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EApAlsOb"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463JgnbU015287;
-	Thu, 4 Jul 2024 08:19:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	o22hio7VyV4ycaCVCMQlLHB5tAzv6dao/1poTjxR9NU=; b=EApAlsObfCuurAqW
-	voTM/ZT2WDaAJf4o9oGTJbxkh/Ph4mwbyizGaGF9kIShKzKvgkbMKZsJGlfvpp+S
-	IeRRsrsoFxb6+2FzuktHDy2tbb2hUNMtzxdnRI8Ifcw7w/9973Q6c7w642LoaggY
-	JxO9+BEI0UMVgcenoqRthpHssahwoEEhPqlIFKtySZMhzmwgFa/7Ifzm6VSbvPk2
-	Ru6KFWzKfLFP2s3zKN111StLS3FSHvf/mbaefVjyOz4SR/o1vgI5xL2bFjug+Nq5
-	E5bYKXLDvVqgZkN+SznNWalt5bI35MSgKmbbXPNkG2Z3DapdLPqLiCIOO+5b1vEP
-	ta+nVw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4052yhjmxy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jul 2024 08:19:19 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4648JIkn031119
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 4 Jul 2024 08:19:18 GMT
-Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 4 Jul 2024 01:19:15 -0700
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        "Mohammad
- Rafi Shaik" <quic_mohs@quicinc.com>,
-        Prasad Kumpatla
-	<quic_pkumpatl@quicinc.com>
-CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_rohkumar@quicinc.com>,
-        Christophe JAILLET
-	<christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v2 3/3] ASoC: codecs: wcd937x: Remove separate handling for vdd-buck supply
-Date: Thu, 4 Jul 2024 13:47:23 +0530
-Message-ID: <20240704081723.3394153-4-quic_mohs@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240704081723.3394153-1-quic_mohs@quicinc.com>
-References: <20240704081723.3394153-1-quic_mohs@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r9eOHOlu"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-36799a67d9cso353404f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 01:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720081243; x=1720686043; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+arIzU3LXYjgnA4ueWO0skmcvyTi9fBY5ba/c7i1+hY=;
+        b=r9eOHOluJelwx1ZCdZ0izF6hf5o2N8eIT/irVMpi1aGDHlKlEH8KecwwjbFV8Yhwvr
+         tacPZMLa/69qOWrqra2PJ7AhJUFmU8m5RbOogZ2OCKbkM9SyI0eCK3ct560ldMFrU1Dn
+         5VUEVugNEjtXIoY/236/Ei6xzaRSZC16tHVdohCxjVSGyuD971mJwLTdWiLeZSGY9njw
+         3E0uhq0PYMuQtaR/mgOYCd1lSNMhCbVLKR/Xb4eqOpPbptUwaUi7eYlCPeYJ39U98BOp
+         AqCbn9ev3EEu4fg8r6TXcM3zYVl9sPuVVPx0OhT+hw0DeW81fZzb8CG8NqCSr+809e0c
+         x7eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720081243; x=1720686043;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+arIzU3LXYjgnA4ueWO0skmcvyTi9fBY5ba/c7i1+hY=;
+        b=h9LL4T8T6DAUBkca+LUUlXHEIWQN7A6hzzpu73TVGUDSy1kztmgPNRsl4GvW9CTz1V
+         fC34B3fdEmNfqxEDjPKrSpsicRIf+7yAOlrNy6JxDSg5AAUb6EdkLk8GEKe1KQTVDBNw
+         IoUJMS4TF7kLFf4zSE9bDpJJvdvBEIHe7Gj3W9ODsGuinkyatZa0BBGisT21+Gk0kFSu
+         8KYIWSg5EoY8tFKYuoUJmfe7omQmjxlJVs0Q2Ufxqj1++b3oDG5tLdY7IkomeoubTMl/
+         qeKXTRRYNo3O//MKF1T/hnC6P6JjbGW5ac+Ri9Z47uj1dO7RPwqT6W/I9jLu3VO7ysZ8
+         Q2cA==
+X-Gm-Message-State: AOJu0Yz8BgunUbJsvU48qaHhAnlHu+agUFixhvTOgijmer4vR0Jgy/OV
+	3mihn+v6+d+1bXTDhi31oLfFyc7YxHmbWAcVD4x9492Y37LNar4Q0jM5DJSEsK4I2g4CA/EUH4P
+	DMDQv3JduaeJ41uT9/9cKJqvSdj8gLeoXnhTO
+X-Google-Smtp-Source: AGHT+IEUZz5voZk91pUyiEn2nST6nFZr9MCFzx9zPoVVjbBLSKdNuK1O5hinsYLKbZaQ20WAABfGIk7cKXNlhokMqg4=
+X-Received: by 2002:a5d:5187:0:b0:367:927f:980e with SMTP id
+ ffacd0b85a97d-3679dd71fb5mr857005f8f.63.1720081242517; Thu, 04 Jul 2024
+ 01:20:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 9eHRJvyNRn9UwheURdooeFR7trTVYoav
-X-Proofpoint-GUID: 9eHRJvyNRn9UwheURdooeFR7trTVYoav
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_18,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 impostorscore=0 clxscore=1015
- bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407040057
+References: <2dbd1491-149d-443c-9802-75786a6a3b73@gmail.com>
+In-Reply-To: <2dbd1491-149d-443c-9802-75786a6a3b73@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 4 Jul 2024 10:20:30 +0200
+Message-ID: <CAH5fLgj3z4TMnXz=zygLW9Fku6N6nX0jyw2b0uvg=Kat-d-o2Q@mail.gmail.com>
+Subject: Re: [PATCH v2] arm: rust: Enable Rust support for ARMv7
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
+	Jamie Cunliffe <Jamie.Cunliffe@arm.com>, Sven Van Asbroeck <thesven73@gmail.com>, 
+	Geert Stappers <stappers@stappers.nl>, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove separate handling for vdd-buck regulator supply which is not
-required. The vdd-buck regulator supply enabled using bulk enable.
+On Mon, Jun 17, 2024 at 6:04=E2=80=AFPM Christian Schrefl
+<chrisi.schrefl@gmail.com> wrote:
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index 71afdd98ddf2..9cc10e32e8be 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -150,6 +150,7 @@ endif
+>  KBUILD_CPPFLAGS        +=3D$(cpp-y)
+>  KBUILD_CFLAGS  +=3D$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(cal=
+l cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft=
+-float -Uarm
+>  KBUILD_AFLAGS  +=3D$(CFLAGS_ABI) $(AFLAGS_ISA) -Wa,$(arch-y) $(tune-y) -=
+include asm/unified.h -msoft-float
+> +KBUILD_RUSTFLAGS +=3D --target=3Darm-unknown-linux-gnueabi
 
-Add the error handling in wcd937x_probe() and disable the regulators in
-error case.
+On arm64 we use a target called aarch64-unknown-none. Should you also
+be using arm-unknown-none? Or maybe the arm64 target should be changed
+to aarch64-unknown-linux-gnueabi?
 
-Reported-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Closes: https://lore.kernel.org/linux-sound/834d31cc-f4bc-4db7-a25b-f9869e550eb6@wanadoo.fr/
-Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
----
- sound/soc/codecs/wcd937x.c | 61 ++++++++------------------------------
- sound/soc/codecs/wcd937x.h |  2 +-
- 2 files changed, 14 insertions(+), 49 deletions(-)
-
-diff --git a/sound/soc/codecs/wcd937x.c b/sound/soc/codecs/wcd937x.c
-index 94282499fa33..13926f4b0d9f 100644
---- a/sound/soc/codecs/wcd937x.c
-+++ b/sound/soc/codecs/wcd937x.c
-@@ -869,37 +869,6 @@ static int wcd937x_enable_rx3(struct snd_soc_dapm_widget *w,
- 	return 0;
- }
- 
--static int wcd937x_codec_enable_vdd_buck(struct snd_soc_dapm_widget *w,
--					 struct snd_kcontrol *kcontrol,
--					 int event)
--{
--	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
--	struct wcd937x_priv *wcd937x = snd_soc_component_get_drvdata(component);
--	int ret = 0;
--
--	switch (event) {
--	case SND_SOC_DAPM_PRE_PMU:
--		if (test_bit(ALLOW_BUCK_DISABLE, &wcd937x->status_mask)) {
--			dev_err(component->dev, "buck already in enabled state\n");
--			clear_bit(ALLOW_BUCK_DISABLE, &wcd937x->status_mask);
--			return 0;
--		}
--		ret = regulator_enable(wcd937x->buck_supply);
--		if (ret) {
--			dev_err(component->dev, "VDD_BUCK is not enabled\n");
--			return ret;
--		}
--		clear_bit(ALLOW_BUCK_DISABLE, &wcd937x->status_mask);
--		usleep_range(200, 250);
--		break;
--	case SND_SOC_DAPM_POST_PMD:
--		set_bit(ALLOW_BUCK_DISABLE, &wcd937x->status_mask);
--		break;
--	}
--
--	return 0;
--}
--
- static int wcd937x_get_micb_vout_ctl_val(u32 micb_mv)
- {
- 	if (micb_mv < 1000 || micb_mv > 2850) {
-@@ -2226,10 +2195,7 @@ static const struct snd_soc_dapm_widget wcd937x_dapm_widgets[] = {
- 			    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
- 			    SND_SOC_DAPM_POST_PMD),
- 
--	SND_SOC_DAPM_SUPPLY("VDD_BUCK", SND_SOC_NOPM, 0, 0,
--			    wcd937x_codec_enable_vdd_buck,
--			    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
--
-+	SND_SOC_DAPM_SUPPLY("VDD_BUCK", SND_SOC_NOPM, 0, 0, NULL, 0),
- 	SND_SOC_DAPM_SUPPLY_S("CLS_H_PORT", 1, SND_SOC_NOPM, 0, 0, NULL, 0),
- 
- 	/* RX widgets */
-@@ -2915,24 +2881,17 @@ static int wcd937x_probe(struct platform_device *pdev)
- 	wcd937x->supplies[0].supply = "vdd-rxtx";
- 	wcd937x->supplies[1].supply = "vdd-px";
- 	wcd937x->supplies[2].supply = "vdd-mic-bias";
-+	wcd937x->supplies[3].supply = "vdd-buck";
- 
- 	ret = devm_regulator_bulk_get(dev, WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to get supplies\n");
- 
- 	ret = regulator_bulk_enable(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
--	if (ret)
-+	if (ret) {
-+		regulator_bulk_free(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
- 		return dev_err_probe(dev, ret, "Failed to enable supplies\n");
--
--	/* Get the buck separately, as it needs special handling */
--	wcd937x->buck_supply = devm_regulator_get(dev, "vdd-buck");
--	if (IS_ERR(wcd937x->buck_supply))
--		return dev_err_probe(dev, PTR_ERR(wcd937x->buck_supply),
--				     "Failed to get buck supply\n");
--
--	ret = regulator_enable(wcd937x->buck_supply);
--	if (ret)
--		return dev_err_probe(dev, ret, "Failed to enable buck supply\n");
-+	}
- 
- 	wcd937x_dt_parse_micbias_info(dev, wcd937x);
- 
-@@ -2949,13 +2908,13 @@ static int wcd937x_probe(struct platform_device *pdev)
- 
- 	ret = wcd937x_add_slave_components(wcd937x, dev, &match);
- 	if (ret)
--		return ret;
-+		goto err_disable_regulators;
- 
- 	wcd937x_reset(wcd937x);
- 
- 	ret = component_master_add_with_match(dev, &wcd937x_comp_ops, match);
- 	if (ret)
--		return ret;
-+		goto err_disable_regulators;
- 
- 	pm_runtime_set_autosuspend_delay(dev, 1000);
- 	pm_runtime_use_autosuspend(dev);
-@@ -2964,6 +2923,12 @@ static int wcd937x_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	pm_runtime_idle(dev);
- 
-+	return 0;
-+
-+err_disable_regulators:
-+	regulator_bulk_disable(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
-+	regulator_bulk_free(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
-+
- 	return ret;
- }
- 
-diff --git a/sound/soc/codecs/wcd937x.h b/sound/soc/codecs/wcd937x.h
-index f267c66ca959..37bff16e88dd 100644
---- a/sound/soc/codecs/wcd937x.h
-+++ b/sound/soc/codecs/wcd937x.h
-@@ -483,7 +483,7 @@
- #define WCD937X_MAX_REGISTER			(WCD937X_DIGITAL_EFUSE_REG_31)
- 
- #define WCD937X_MAX_MICBIAS			3
--#define WCD937X_MAX_BULK_SUPPLY			3
-+#define WCD937X_MAX_BULK_SUPPLY			4
- #define WCD937X_MAX_TX_SWR_PORTS		4
- #define WCD937X_MAX_SWR_PORTS			5
- #define WCD937X_MAX_SWR_CH_IDS			15
--- 
-2.25.1
-
+Alice
