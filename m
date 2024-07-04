@@ -1,286 +1,177 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A50A41;
-	Thu,  4 Jul 2024 10:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2491C1AB53B;
+	Thu,  4 Jul 2024 10:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720088558; cv=none; b=GfX6vLsTjldUVPyvrfEAkmE1iEcArPSoYkBvbXNukEeJnmKQNDZPPLMkKlsgcLINMJLVUxKkeZ2KDV/lDqMJx4HMDKRUjQQA74QfEwL6kbsHhSHDXIYc0sht/18DFIE8s3XPeLgrmvkp0qux531kRj6+RHBys521LJBUr3o1OyU=
+	t=1720088590; cv=none; b=aM1VqeSn2YTcDfamLiEwAJE8RnruaVeT0cPdreV+uUiSKRRHUi75PTzpEers4SVdu4wrYNKPKkuL2UtyNTjVji1UxSR9HhjHyBaStbHFbx/J/OmnzHUxmoV2JPOL734H/9PrvjZhqSzoYpUkiGECS3L3KyFSrOBhNZ1wFgAFuxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720088558; c=relaxed/simple;
-	bh=RrseeKsIw4zTkLal4NO5ir7XI5QFiSYTEFrSIo6M9BQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=H8hMU1xiWOMwAkvPvLlif3swMJpAn/BmSLL+qP8m+pc24q50XAOGBl0JN5FFTC/DWaXzOnzpxvF6iEoQhPQ3AHLxJ6OcuoACDtFqZFxaxmv8wCJJ9F0tSA1ZATuQ9pI60P7E/Fi54k2tUY9eISHTMERO9J4gEuhhEjjZsNu0gIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=p1MfI5Sj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720088590; c=relaxed/simple;
+	bh=7nyOpKME690gkvlBcGeJF0SLp1Y4QA/z18+829pfKwg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FYkurxbWqvUbLiUMYDMA9w0lLRQCGDve3VHKaXLjBXKRMBCrcYqZVbdglRvac2/sV41JBoZkAEx7KlYtBs6oK4oYjWF1Jbu6hJPvSBLvrGisLfGKxVbrcs6e+LwazQYJ64D6gVr/yfNIPWeY9E9L5GGuxzIDfpFtsv5S7XQvBs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=l3mca594; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="p1MfI5Sj"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4645jbXH023219;
-	Thu, 4 Jul 2024 10:22:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9cggr0TA87Qww/pVCkSy8RIFZHHrOSFsCB8KjZ4LaSw=; b=p1MfI5Sjpuxh6qvm
-	n5C5jf4rkOxCNkzdjfKjFf+/Ki6P2ezZlNWC6m/TmzUKr7sOpk95jH7fpONx4uR6
-	Rex9C3NeA3X6i9kP/6S6Ef9esRDvRqwkG7bbkaxN+9tayhCYMIXeZis6b/qPyTau
-	yRwJI8KASfxb+PK/7K3k0LFc9evNDLudMlQvcPYkq1w3CjT8xWbWbgQd52BJJZZc
-	jI1NNrYz5kdewiZe47FOsXkDjcngRQsVFNH5rhhxbS457xhcBIpLxAnNn9myguG8
-	GlnZ7MR/eLbMUCYv512tIdon2rEh8/ud8w49yse0nfwV1Dg5sDswotw+TjYNFyUE
-	iwRKxw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4050cybd1d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jul 2024 10:22:20 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 464AMJ4o027188
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 4 Jul 2024 10:22:19 GMT
-Received: from [10.131.33.37] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 4 Jul 2024
- 03:22:13 -0700
-Message-ID: <e647ae63-2f30-c55f-7124-ecef1d0d74d3@quicinc.com>
-Date: Thu, 4 Jul 2024 15:52:10 +0530
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="l3mca594"
+Received: from pecola.lan (unknown [159.196.93.152])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 8A9AC200E9;
+	Thu,  4 Jul 2024 18:23:03 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1720088585;
+	bh=7nyOpKME690gkvlBcGeJF0SLp1Y4QA/z18+829pfKwg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=l3mca594A+J75xqCfbb8jWGh8SOWpbzVHF08kUhIZ81tD2orne5B6vF19VFYx5VD3
+	 D+6FaMqwBheR/TmKEcpzGBI+Q5kkbOjXNKdINEOUpIDbBHUXtVo3SaQPqMTTinoAyO
+	 AHpVndrY4Qm6urEgvhpJmskSU5gEgVffNPDDWq+zvOoy8APicNrbwVR6GlX/GKxIqB
+	 ZHnG1JEBBGAKqwSxPfGBIz7AWOitZXeZXhCOeNx5VBLfYh9k9tuD38xOEe7Djh4P1c
+	 OF9lF5caWsjCTkiZxMsmx5G20+kHRWOfjA9wpcKwqY5iegynPRuBnJxZDHPQUtB32w
+	 RehSnSN/2fTww==
+Message-ID: <35d8f28ef8d7de30733da7d8b1b16da39545879e.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v4 3/3] mctp pcc: Implement MCTP over PCC Transport
+From: Jeremy Kerr <jk@codeconstruct.com.au>
+To: admiyo@os.amperecomputing.com, Matt Johnston
+ <matt@codeconstruct.com.au>,  "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Sudeep Holla
+	 <sudeep.holla@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Huisong Li <lihuisong@huawei.com>
+Date: Thu, 04 Jul 2024 18:23:03 +0800
+In-Reply-To: <20240702225845.322234-4-admiyo@os.amperecomputing.com>
+References: <20240702225845.322234-1-admiyo@os.amperecomputing.com>
+	 <20240702225845.322234-4-admiyo@os.amperecomputing.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V6 5/5] arm64: dts: qcom: x1e80100: Enable cpufreq
-Content-Language: en-US
-To: Nikunj Kela <quic_nkela@quicinc.com>, Johan Hovold <johan@kernel.org>
-CC: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <jassisinghbrar@gmail.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <dmitry.baryshkov@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
-        <conor+dt@kernel.org>, <quic_psodagud@quicinc.com>,
-        <abel.vesa@linaro.org>
-References: <20240612124056.39230-1-quic_sibis@quicinc.com>
- <20240612124056.39230-6-quic_sibis@quicinc.com>
- <ZoQjAWse2YxwyRJv@hovoldconsulting.com>
- <f53bc00f-8217-1dc8-5203-1a83c24d353d@quicinc.com>
- <1fcea728-6ee6-4361-b3c5-63d8a2facd74@quicinc.com>
- <65ce72e1-7106-0872-88f7-bfdfcef7a24b@quicinc.com>
- <0f94978c-dad7-418b-b911-edf7e81d7460@quicinc.com>
-From: Sibi Sankar <quic_sibis@quicinc.com>
-In-Reply-To: <0f94978c-dad7-418b-b911-edf7e81d7460@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: R77jCa3RnW-CSyz4PketkcN7Pd0I10S2
-X-Proofpoint-ORIG-GUID: R77jCa3RnW-CSyz4PketkcN7Pd0I10S2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-04_06,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- mlxlogscore=999 priorityscore=1501 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407040072
 
+SGkgQWRhbSwKClN0aWxsIHNvbWUgbWlub3IgdGhpbmdzLCBhbmQgbG9ja2luZyBxdWVyeSwgaW5s
+aW5lLgoKWW91J2xsIHdhbnQgdG8gYWRkcmVzcyB0aGUga2VybmVsLXRlc3Qtcm9ib3QgZmFpbHVy
+ZSB0b287IGl0IGxvb2tzIGxpa2UKdGhlIGNvbmZpZyBpdCdzIGhpdHRpbmcgZW5kcyB1cCB3aXRo
+b3V0IHRoZSBhY3BpIGRlZmluaXRpb25zIGF2YWlsYWJsZTsKcG9zc2libHkgQ09ORklHX0FDUEkg
+aXMgbm90IHNldC4gTWF5YmUgeW91IG5lZWQgYSBkZXBlbmRzIGluc3RlYWQgb2YgYQpzZWxlY3Q/
+Cgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9tY3RwL0tjb25maWcgYi9kcml2ZXJzL25ldC9t
+Y3RwL0tjb25maWcKPiBpbmRleCBjZTlkMmQyY2NmM2IuLmZmNGVmZmQ4ZTk5YyAxMDA2NDQKPiAt
+LS0gYS9kcml2ZXJzL25ldC9tY3RwL0tjb25maWcKPiArKysgYi9kcml2ZXJzL25ldC9tY3RwL0tj
+b25maWcKPiBAQCAtNDIsNiArNDIsMTkgQEAgY29uZmlnIE1DVFBfVFJBTlNQT1JUX0kzQwo+IMKg
+wqDCoMKgwqDCoMKgwqDCoCBBIE1DVFAgcHJvdG9jb2wgbmV0d29yayBkZXZpY2UgaXMgY3JlYXRl
+ZCBmb3IgZWFjaCBJM0MgYnVzCj4gwqDCoMKgwqDCoMKgwqDCoMKgIGhhdmluZyBhICJtY3RwLWNv
+bnRyb2xsZXIiIGRldmljZXRyZWUgcHJvcGVydHkuCj4gwqAKPiArY29uZmlnIE1DVFBfVFJBTlNQ
+T1JUX1BDQwo+ICvCoMKgwqDCoMKgwqDCoHRyaXN0YXRlICJNQ1RQwqAgUENDIHRyYW5zcG9ydCIK
+Ck5pdDogeW91IGhhdmUgdHdvIHNwYWNlcyB0aGVyZS4KCj4gK3N0cnVjdCBtY3RwX3BjY19oZHIg
+ewo+ICvCoMKgwqDCoMKgwqDCoHUzMiBzaWduYXR1cmU7Cj4gK8KgwqDCoMKgwqDCoMKgdTMyIGZs
+YWdzOwo+ICvCoMKgwqDCoMKgwqDCoHUzMiBsZW5ndGg7Cj4gK8KgwqDCoMKgwqDCoMKgY2hhciBt
+Y3RwX3NpZ25hdHVyZVs0XTsKPiArfTsKCkkgc2VlIHlvdSd2ZSBhZGRlZCB0aGUgX19sZSBhbm5v
+dGF0aW9ucyB0aGF0IEkgbWVudGlvbmVkLCBidXQgdG8gYQpkaWZmZXJlbnQgcGF0Y2ggaW4gdGhl
+IHNlcmllcy4gV2FzIHRoYXQgaW50ZW50aW9uYWw/Cgo+ICsKPiArc3RydWN0IG1jdHBfcGNjX2h3
+X2FkZHIgewo+ICvCoMKgwqDCoMKgwqDCoHUzMiBpbmJveF9pbmRleDsKPiArwqDCoMKgwqDCoMKg
+wqB1MzIgb3V0Ym94X2luZGV4Owo+ICt9Owo+ICsKPiArLyogVGhlIG5ldGRldiBzdHJ1Y3R1cmUu
+IE9uZSBvZiB0aGVzZSBwZXIgUENDIGFkYXB0ZXIuICovCj4gK3N0cnVjdCBtY3RwX3BjY19uZGV2
+IHsKPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbGlzdF9oZWFkIG5leHQ7CgpUaGlzIGlzIG5vdyB1
+bnVzZWQuCgo+ICvCoMKgwqDCoMKgwqDCoC8qIHNwaW5sb2NrIHRvIHNlcmlhbGl6ZSBhY2Nlc3Mg
+dG8gcGNjIGJ1ZmZlciBhbmQgcmVnaXN0ZXJzKi8KPiArwqDCoMKgwqDCoMKgwqBzcGlubG9ja190
+IGxvY2s7CgpUaGUgYWRkaXRpb24gb2YgdGhlIGNvbW1lbnQgaXMgZ29vZCwgYnV0IEknbSBzdGls
+bCBub3QgY2xlYXIgb24gd2hhdApkYXRhIHRoaXMgbG9jayBpcyBzZXJpYWxpc2luZyBhY2Nlc3Mg
+dG8uIERvZXMgInBjYyBidWZmZXIiIHJlZmVyIHRvIGJvdGgKdGhlIHBjY19jb21tX2luYm94X2Fk
+ZHIgYW5kIHBjY19jb21tX291dGJveF9hZGRyIGJ1ZmZlcj8KCklmIHNvLCB5b3UgbWF5IGJlIG1p
+c3NpbmcgbG9ja2luZyBvbiB0aGUgY2xpZW50X3J4X2NhbGxiYWNrLgoKQW5kIHdoYXQgYXJlIHRo
+ZSAicmVnaXN0ZXJzIiByZWZlcnJpbmcgdG8gaGVyZT8gZXZlcnl0aGluZyBzZWVtcyB0byBiZQph
+Y2Nlc3NlZCB0aHJvdWdoIHRoZSBtYm94IGludGVyZmFjZS4gRG9lcyB0aGF0IHJlcXVpcmUgc2Vy
+aWFsaXNhdGlvbj8KCihpZiB5b3UgY2FuIGxpc3QgYWN0dWFsIHN0cnVjdCBtZW1iZXJzIHRoYXQg
+YXJlIG9ubHkgYWNjZXNzZWQgdW5kZXIgdGhlCmxvY2ssIHRoYXQgbWF5IG1ha2UgdGhpbmdzIG1v
+cmUgY2xlYXIgLSBidXQgaXQgY2FuIGJlIGEgYml0IG9mIGEgYmFsYW5jZQppbiBub3QgZ29pbmcg
+KnRvbyogb3ZlcmJvYXJkIHdpdGggdGhlIGRlc2NyaXB0aW9uISkKCj4gK8KgwqDCoMKgwqDCoMKg
+c3RydWN0IG1jdHBfZGV2IG1kZXY7Cj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IGFjcGlfZGV2aWNl
+ICphY3BpX2RldmljZTsKPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgcGNjX21ib3hfY2hhbiAqaW5f
+Y2hhbjsKPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgcGNjX21ib3hfY2hhbiAqb3V0X2NoYW47Cj4g
+K8KgwqDCoMKgwqDCoMKgc3RydWN0IG1ib3hfY2xpZW50IG91dGJveF9jbGllbnQ7Cj4gK8KgwqDC
+oMKgwqDCoMKgc3RydWN0IG1ib3hfY2xpZW50IGluYm94X2NsaWVudDsKPiArwqDCoMKgwqDCoMKg
+wqB2b2lkIF9faW9tZW0gKnBjY19jb21tX2luYm94X2FkZHI7Cj4gK8KgwqDCoMKgwqDCoMKgdm9p
+ZCBfX2lvbWVtICpwY2NfY29tbV9vdXRib3hfYWRkcjsKPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3Qg
+bWN0cF9wY2NfaHdfYWRkciBod19hZGRyOwo+ICt9Owo+ICsKPiArc3RhdGljIHZvaWQgbWN0cF9w
+Y2NfY2xpZW50X3J4X2NhbGxiYWNrKHN0cnVjdCBtYm94X2NsaWVudCAqYywgdm9pZCAqYnVmZmVy
+KQo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IG1jdHBfcGNjX25kZXYgKm1jdHBfcGNjX2Rl
+djsKPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbWN0cF9wY2NfaGRyIG1jdHBfcGNjX2hkcjsKPiAr
+wqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbWN0cF9za2JfY2IgKmNiOwo+ICvCoMKgwqDCoMKgwqDCoHN0
+cnVjdCBza19idWZmICpza2I7Cj4gK8KgwqDCoMKgwqDCoMKgdm9pZCAqc2tiX2J1ZjsKPiArwqDC
+oMKgwqDCoMKgwqB1MzIgZGF0YV9sZW47Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoG1jdHBfcGNjX2Rl
+diA9IGNvbnRhaW5lcl9vZihjLCBzdHJ1Y3QgbWN0cF9wY2NfbmRldiwgaW5ib3hfY2xpZW50KTsK
+PiArwqDCoMKgwqDCoMKgwqBtZW1jcHlfZnJvbWlvKCZtY3RwX3BjY19oZHIsIG1jdHBfcGNjX2Rl
+di0+cGNjX2NvbW1faW5ib3hfYWRkciwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBzaXplb2Yoc3RydWN0IG1jdHBfcGNjX2hkcikpOwo+ICvCoMKgwqDCoMKgwqDC
+oGRhdGFfbGVuID0gbWN0cF9wY2NfaGRyLmxlbmd0aCArIE1DVFBfSEVBREVSX0xFTkdUSDsKPiAr
+Cj4gK8KgwqDCoMKgwqDCoMKgaWYgKGRhdGFfbGVuID4gbWN0cF9wY2NfZGV2LT5tZGV2LmRldi0+
+bWF4X210dSkgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtY3RwX3BjY19kZXYt
+Pm1kZXYuZGV2LT5zdGF0cy5yeF9kcm9wcGVkKys7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoHJldHVybjsKPiArwqDCoMKgwqDCoMKgwqB9CgpTaG91bGRuJ3QgdGhpcyBiZSBjb21w
+YXJpbmcgb24gdGhlIGN1cnJlbnRseS1zZXQgTVRVLCByYXRoZXIgdGhhbiB0aGUKbWF4PwoKW2lu
+IGVpdGhlciBjYXNlLCB0aGlzIGFzc3VtZXMgdGhhdCB3ZSB3YW50IHRvIGVuZm9yY2UgUlggcGFj
+a2V0cyB0byBiZQp3aXRoaW4gdGhlIHRyYW5zbWl0IGxpbWl0LCB3aGljaCBtYXkgYmUgcmVhc29u
+YWJsZSwgYnV0IG1heWJlIG5vdApzdHJpY3RseSBuZWNlc3NhcnldCgo+ICsKPiArwqDCoMKgwqDC
+oMKgwqBza2IgPSBuZXRkZXZfYWxsb2Nfc2tiKG1jdHBfcGNjX2Rldi0+bWRldi5kZXYsIGRhdGFf
+bGVuKTsKPiArwqDCoMKgwqDCoMKgwqBpZiAoIXNrYikgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBtY3RwX3BjY19kZXYtPm1kZXYuZGV2LT5zdGF0cy5yeF9kcm9wcGVkKys7Cj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybjsKPiArwqDCoMKgwqDCoMKgwqB9
+Cj4gK8KgwqDCoMKgwqDCoMKgbWN0cF9wY2NfZGV2LT5tZGV2LmRldi0+c3RhdHMucnhfcGFja2V0
+cysrOwo+ICvCoMKgwqDCoMKgwqDCoG1jdHBfcGNjX2Rldi0+bWRldi5kZXYtPnN0YXRzLnJ4X2J5
+dGVzICs9IGRhdGFfbGVuOwo+ICvCoMKgwqDCoMKgwqDCoHNrYi0+cHJvdG9jb2wgPSBodG9ucyhF
+VEhfUF9NQ1RQKTsKPiArwqDCoMKgwqDCoMKgwqBza2JfYnVmID0gc2tiX3B1dChza2IsIGRhdGFf
+bGVuKTsKPiArwqDCoMKgwqDCoMKgwqBtZW1jcHlfZnJvbWlvKHNrYl9idWYsIG1jdHBfcGNjX2Rl
+di0+cGNjX2NvbW1faW5ib3hfYWRkciwgZGF0YV9sZW4pOwo+ICsKPiArwqDCoMKgwqDCoMKgwqBz
+a2JfcmVzZXRfbWFjX2hlYWRlcihza2IpOwo+ICvCoMKgwqDCoMKgwqDCoHNrYl9wdWxsKHNrYiwg
+c2l6ZW9mKHN0cnVjdCBtY3RwX3BjY19oZHIpKTsKPiArwqDCoMKgwqDCoMKgwqBza2JfcmVzZXRf
+bmV0d29ya19oZWFkZXIoc2tiKTsKPiArwqDCoMKgwqDCoMKgwqBjYiA9IF9fbWN0cF9jYihza2Ip
+Owo+ICvCoMKgwqDCoMKgwqDCoGNiLT5oYWxlbiA9IDA7Cj4gK8KgwqDCoMKgwqDCoMKgbmV0aWZf
+cngoc2tiKTsKPiArfQo+ICsKPiArc3RhdGljIG5ldGRldl90eF90IG1jdHBfcGNjX3R4KHN0cnVj
+dCBza19idWZmICpza2IsIHN0cnVjdCBuZXRfZGV2aWNlICpuZGV2KQo+ICt7Cj4gK8KgwqDCoMKg
+wqDCoMKgc3RydWN0IG1jdHBfcGNjX2hkciBwY2NfaGVhZGVyOwo+ICvCoMKgwqDCoMKgwqDCoHN0
+cnVjdCBtY3RwX3BjY19uZGV2ICptcG5kOwo+ICvCoMKgwqDCoMKgwqDCoHZvaWQgX19pb21lbSAq
+YnVmZmVyOwo+ICvCoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGxvbmcgZmxhZ3M7Cj4gKwo+ICvCoMKg
+wqDCoMKgwqDCoG5kZXYtPnN0YXRzLnR4X2J5dGVzICs9IHNrYi0+bGVuOwo+ICvCoMKgwqDCoMKg
+wqDCoG5kZXYtPnN0YXRzLnR4X3BhY2tldHMrKzsKPiArwqDCoMKgwqDCoMKgwqBtcG5kID0gbmV0
+ZGV2X3ByaXYobmRldik7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHNwaW5fbG9ja19pcnFzYXZlKCZt
+cG5kLT5sb2NrLCBmbGFncyk7Cj4gK8KgwqDCoMKgwqDCoMKgYnVmZmVyID0gbXBuZC0+cGNjX2Nv
+bW1fb3V0Ym94X2FkZHI7Cj4gK8KgwqDCoMKgwqDCoMKgcGNjX2hlYWRlci5zaWduYXR1cmUgPSBQ
+Q0NfTUFHSUMgfCBtcG5kLT5od19hZGRyLm91dGJveF9pbmRleDsKPiArwqDCoMKgwqDCoMKgwqBw
+Y2NfaGVhZGVyLmZsYWdzID0gUENDX0hFQURFUl9GTEFHUzsKPiArwqDCoMKgwqDCoMKgwqBtZW1j
+cHkocGNjX2hlYWRlci5tY3RwX3NpZ25hdHVyZSwgTUNUUF9TSUdOQVRVUkUsIFNJR05BVFVSRV9M
+RU5HVEgpOwo+ICvCoMKgwqDCoMKgwqDCoHBjY19oZWFkZXIubGVuZ3RoID0gc2tiLT5sZW4gKyBT
+SUdOQVRVUkVfTEVOR1RIOwoKQXJlIHRoZXJlIGFueSBjb25zdHJhaW50cyBvbiB0aGlzIGxlbmd0
+aD8KCj4gK8KgwqDCoMKgwqDCoMKgbWVtY3B5X3RvaW8oYnVmZmVyLCAmcGNjX2hlYWRlciwgc2l6
+ZW9mKHN0cnVjdCBtY3RwX3BjY19oZHIpKTsKPiArwqDCoMKgwqDCoMKgwqBtZW1jcHlfdG9pbyhi
+dWZmZXIgKyBzaXplb2Yoc3RydWN0IG1jdHBfcGNjX2hkciksIHNrYi0+ZGF0YSwgc2tiLT5sZW4p
+Owo+ICvCoMKgwqDCoMKgwqDCoG1wbmQtPm91dF9jaGFuLT5tY2hhbi0+bWJveC0+b3BzLT5zZW5k
+X2RhdGEobXBuZC0+b3V0X2NoYW4tPm1jaGFuLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIE5VTEwpOwo+ICvCoMKgwqDCoMKgwqDCoHNwaW5fdW5sb2NrX2ly
+cXJlc3RvcmUoJm1wbmQtPmxvY2ssIGZsYWdzKTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgZGV2X2Nv
+bnN1bWVfc2tiX2FueShza2IpOwo+ICvCoMKgwqDCoMKgwqDCoHJldHVybiBORVRERVZfVFhfT0s7
+Cj4gK30KPiArCj4gK3N0YXRpYyB2b2lkCj4gK21jdHBfcGNjX25ldF9zdGF0cyhzdHJ1Y3QgbmV0
+X2RldmljZSAqbmV0X2RldiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
+dHJ1Y3QgcnRubF9saW5rX3N0YXRzNjQgKnN0YXRzKQo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKgc3Ry
+dWN0IG1jdHBfcGNjX25kZXYgKm1wbmQ7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoG1wbmQgPSBuZXRk
+ZXZfcHJpdihuZXRfZGV2KTsKPiArwqDCoMKgwqDCoMKgwqBzdGF0cy0+cnhfZXJyb3JzID0gMDsK
+PiArwqDCoMKgwqDCoMKgwqBzdGF0cy0+cnhfcGFja2V0cyA9IG1wbmQtPm1kZXYuZGV2LT5zdGF0
+cy5yeF9wYWNrZXRzOwo+ICvCoMKgwqDCoMKgwqDCoHN0YXRzLT50eF9wYWNrZXRzID0gbXBuZC0+
+bWRldi5kZXYtPnN0YXRzLnR4X3BhY2tldHM7Cj4gK8KgwqDCoMKgwqDCoMKgc3RhdHMtPnJ4X2Ry
+b3BwZWQgPSAwOwo+ICvCoMKgwqDCoMKgwqDCoHN0YXRzLT50eF9ieXRlcyA9IG1wbmQtPm1kZXYu
+ZGV2LT5zdGF0cy50eF9ieXRlczsKPiArwqDCoMKgwqDCoMKgwqBzdGF0cy0+cnhfYnl0ZXMgPSBt
+cG5kLT5tZGV2LmRldi0+c3RhdHMucnhfYnl0ZXM7CgpJc24ndCBtcG5kLT5tZGV2LmRldiBqdXN0
+IG5ldF9kZXY/CgpTaG91bGQgd2UgYmUgZG9pbmcgdGhpcyAoYXMgd2VsbCBhcyB0aGUgc3RhdHMg
+dXBkYXRlcykgd2l0aCBtcG5kLT5sb2NrCmhlbGQ/IAoKPiArc3RhdGljIHZvaWQgbWN0cF9wY2Nf
+ZHJpdmVyX3JlbW92ZShzdHJ1Y3QgYWNwaV9kZXZpY2UgKmFkZXYpCj4gK3sKPiArwqDCoMKgwqDC
+oMKgwqBzdHJ1Y3QgbWN0cF9wY2NfbmRldiAqbWN0cF9wY2NfbmRldiA9IGFjcGlfZHJpdmVyX2Rh
+dGEoYWRldik7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHBjY19tYm94X2ZyZWVfY2hhbm5lbChtY3Rw
+X3BjY19uZGV2LT5vdXRfY2hhbik7Cj4gK8KgwqDCoMKgwqDCoMKgcGNjX21ib3hfZnJlZV9jaGFu
+bmVsKG1jdHBfcGNjX25kZXYtPmluX2NoYW4pOwo+ICvCoMKgwqDCoMKgwqDCoG1jdHBfdW5yZWdp
+c3Rlcl9uZXRkZXYobWN0cF9wY2NfbmRldi0+bWRldi5kZXYpOwo+ICt9CgpOaWNlIQoKQ2hlZXJz
+LAoKCkplcmVteQo=
 
-
-On 7/3/24 19:35, Nikunj Kela wrote:
-> 
-> On 7/3/2024 4:23 AM, Sibi Sankar wrote:
->>
->>
->> On 7/3/24 01:43, Nikunj Kela wrote:
->>>
->>> On 7/2/2024 12:59 PM, Sibi Sankar wrote:
->>>>
->>>>
->>>> On 7/2/24 21:25, Johan Hovold wrote:
->>>>> On Wed, Jun 12, 2024 at 06:10:56PM +0530, Sibi Sankar wrote:
->>>>>> Enable cpufreq on X1E80100 SoCs through the SCMI perf protocol node.
->>>>>>
->>>>>> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
->>>>>> ---
->>>>>>     arch/arm64/boot/dts/qcom/x1e80100.dtsi | 63
->>>>>> ++++++++++++++++----------
->>>>>>     1 file changed, 39 insertions(+), 24 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->>>>>> b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->>>>>> index 7b619db07694..d134dc4c7425 100644
->>>>>> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->>>>>> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->>>>>> @@ -69,8 +69,8 @@ CPU0: cpu@0 {
->>>>>>                 reg = <0x0 0x0>;
->>>>>>                 enable-method = "psci";
->>>>>>                 next-level-cache = <&L2_0>;
->>>>>> -            power-domains = <&CPU_PD0>;
->>>>>> -            power-domain-names = "psci";
->>>>>> +            power-domains = <&CPU_PD0>, <&scmi_dvfs 0>;
->>>>>> +            power-domain-names = "psci", "perf";
->>>>>>                 cpu-idle-states = <&CLUSTER_C4>;
->>>>>
->>>>>> +        scmi {
->>>>>> +            compatible = "arm,scmi";
->>>>>> +            mboxes = <&cpucp_mbox 0>, <&cpucp_mbox 2>;
->>>>>> +            mbox-names = "tx", "rx";
->>>>>> +            shmem = <&cpu_scp_lpri0>, <&cpu_scp_lpri1>;
->>>>>> +
->>>>>> +            #address-cells = <1>;
->>>>>> +            #size-cells = <0>;
->>>>>> +
->>>>>> +            scmi_dvfs: protocol@13 {
->>>>>> +                reg = <0x13>;
->>>>>> +                #power-domain-cells = <1>;
->>>>>> +            };
->>>>>> +        };
->>>>>>         };
->>>>>
->>>>
->>>> Hey Johan,
->>>>
->>>> Thanks for trying out the series.
->>>>
->>>>> This series gives a nice performance boost on the x1e80100 CRD, but
->>>>> I'm
->>>>> seeing a bunch of warnings and errors that need to be addressed:
->>>>>
->>>>> [    9.533053] arm-scmi firmware:scmi: Failed to get FC for protocol
->>>>> 13 [MSG_ID:6 / RES_ID:0] - ret:-95. Using regular messaging.
->>>>> [    9.549458] arm-scmi firmware:scmi: Failed to add opps_by_lvl at
->>>>> 3417600 for NCC - ret:-16
->>>>> [    9.563925] arm-scmi firmware:scmi: Failed to add opps_by_lvl at
->>>>> 3417600 for NCC - ret:-16
->>>>> [    9.572835] arm-scmi firmware:scmi: Failed to get FC for protocol
->>>>> 13 [MSG_ID:6 / RES_ID:1] - ret:-95. Using regular messaging.
->>>>> [    9.609471] arm-scmi firmware:scmi: Failed to add opps_by_lvl at
->>>>> 3417600 for NCC - ret:-16
->>>>> [    9.633341] arm-scmi firmware:scmi: Failed to add opps_by_lvl at
->>>>> 3417600 for NCC - ret:-16
->>>>> [    9.650000] arm-scmi firmware:scmi: Failed to get FC for protocol
->>>>> 13 [MSG_ID:6 / RES_ID:2] - ret:-95. Using regular messaging.
->>>>
->>>> X1E uses fast channels only for message-id: 7 (level set) and regular
->>>> channels for all the other messages. The spec doesn't mandate fast
->>>> channels for any of the supported message ids for the perf protocol.
->>>> So nothing to fix here.
->>>>
->>>>> [    9.727098] cpu cpu4: _opp_is_duplicate: duplicate OPPs detected.
->>>>> Existing: freq: 3417600000, volt: 0, enabled: 1. New: freq:
->>>>> 3417600000, volt: 0, enabled: 1
->>>>> [    9.737157] cpu cpu4: _opp_is_duplicate: duplicate OPPs detected.
->>>>> Existing: freq: 3417600000, volt: 0, enabled: 1. New: freq:
->>>>> 3417600000, volt: 0, enabled: 1
->>>>> [    9.875039] cpu cpu8: _opp_is_duplicate: duplicate OPPs detected.
->>>>> Existing: freq: 3417600000, volt: 0, enabled: 1. New: freq:
->>>>> 3417600000, volt: 0, enabled: 1
->>>>> [    9.888428] cpu cpu8: _opp_is_duplicate: duplicate OPPs detected.
->>>>> Existing: freq: 3417600000, volt: 0, enabled: 1. New: freq:
->>>>> 3417600000, volt: 0, enabled: 1
->>>>
->>>> The duplicate entries reported by the perf protocol come directly from
->>>> the speed bins. I was told the duplicate entry with volt 0 is meant to
->>>> indicate a lower power way of achieving the said frequency at a lower
->>>> core count. We have no way of using it in the kernel and it gets safely
->>>> discarded. So again nothing to fix in the kernel.
->>>
->>> Hi Sibi,
->>>
->>> Can you try increasing the max_msg_size to 256 bytes in mailbox
->>> transport? We saw the same issue but got resolved by increasing the
->>> max_msg_size for the transport(obviously, I reduced the max_msg to 10 to
->>> keep the total shmem size same). Even the opps_by_lvl warning went away
->>> with this for us.
->>
->> Nikunj,
->> Thanks for taking time to review the series :)
->>
->> Not sure if we are talking about the same things here, are you
->> suggesting that tweaking with the max_msg size will stop the SCMI
->> controller from reporting duplicate OPPs? Even if it does go away
->> magically wouldn't it mean you are dropping messages? Also opps_by_lvl
->> failing with -16 and duplicate opps detected in the opp core have the
->> same root cause i.e. duplicate entries reported by the controller.
-> 
-> 
-> Sibi,
-> 
-> My observation was that only 12 OPPs could fit it 128bytes msg_size and
-> our platform was sending 16 OPPs in one go. OPPs above 12 were getting
-> clobbered so the duplicate warning/error were not genuine. You may need
-> to tweak platform to send only 12(or less) OPPs in one go.
-
-Nikunj,
-
-The platform we are talking abt in this thread is X1E and the number
-of performance levels returned by the PERFORMANCE_DESCRIBE_LEVELS
-is just one. I relies on the skip_index and iterator ops to get
-all the available levels. So the clobbering you are talking abt
-in whatever platform you are referring to does not apply here.
-Please find the logs below for Domain 1. Hope this clears up
-whatever misunderstanding you had about X1E.
-
-Logs Domain -1:
-arm-scmi: iter_perf_levels_update_state num_returned: 1 num_remaining: 15
-arm-scmi firmware:scmi: Level 710400 Power 23243 Latency 30us Ifreq 
-710400 Index 0
-...
-[snip]
-...
-arm-scmi: iter_perf_levels_update_state num_returned: 1 num_remaining: 3
-arm-scmi firmware:scmi: Level 3417600 Power 307141 Latency 30us Ifreq 
-3417600 Index 12
-arm-scmi: iter_perf_levels_update_state num_returned: 1 num_remaining: 2
-arm-scmi firmware:scmi: Failed to add opps_by_lvl at 3417600 for NCC - 
-ret:-16
-arm-scmi firmware:scmi: Level 3417600 Power 307141 Latency 30us Ifreq 
-3417600 Index 13
-arm-scmi: iter_perf_levels_update_state num_returned: 1 num_remaining: 1
-arm-scmi firmware:scmi: Failed to add opps_by_lvl at 3417600 for NCC - 
-ret:-16
-arm-scmi firmware:scmi: Level 3417600 Power 307141 Latency 30us Ifreq 
-3417600 Index 14
-arm-scmi: iter_perf_levels_update_state num_returned: 1 num_remaining: 0
-arm-scmi firmware:scmi: Level 4012800 Power 539962 Latency 30us Ifreq 
-4012800 Index 15
-
-
--Sibi
-
-> 
-> 
->>
->>>
->>> Thanks,
->>>
->>> -Nikunj
->>>
->>>>
->>>>> [    9.913506] debugfs: Directory 'NCC' with parent 'pm_genpd'
->>>>> already present!
->>>>> [    9.922198] debugfs: Directory 'NCC' with parent 'pm_genpd'
->>>>> already present!
->>>>
->>>> Yeah I did notice ^^ during dev, the series isn't the one
->>>> introducing it
->>>> so it shouldn't block the series acceptance. Meanwhile I'll spend some
->>>> cycles to get this warn fixed.
->>
->> Johan,
->>
->> https://lore.kernel.org/lkml/20240703110741.2668800-1-quic_sibis@quicinc.com/
->>
->>
->> Posted a fix for the warn ^^
->>
->>>>
->>>> -Sibi
->>>>
->>>>>
->>>>> Johan
->>>>>
