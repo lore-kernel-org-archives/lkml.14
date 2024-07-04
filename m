@@ -1,133 +1,84 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AF61891DE;
-	Thu,  4 Jul 2024 08:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F0D1891DE
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 08:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720082330; cv=none; b=XUrZI9cuEv6VkdLiubUOU2xSCJ8Sp+S3nnDU+2NJ8cfAlDvuVZs6f28iJe3tJGbGt8dvOiATa3djPYsa+5gdOjqSmUPwipLr6UflfXlo9v/w0gIcEhAKv8dNB6QsEyWPZlD+FmyaFEJZ+mBLtjjD800oGkFjBbLFp9sDkpd9i9s=
+	t=1720082383; cv=none; b=jmvrROazwscCwrwHGqy5PBqVC4D1v74fTqgeXIW84MWqNHPVIMkxp2sCX4pQVuVVclgloXFNZO9OV36mW8A4FpASA6DSThWOb3ZysPpi3xsUgpRXu2ZZs0beDxZIjCdSEZCzLl7D8gfG9pEFhxVe0i1tfM5x23BfgsMkNVdrNXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720082330; c=relaxed/simple;
-	bh=u7aRjPjfHUtsWIhXuK0woV/rPv/LQQHRWApUhoOwyJQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=arIHoYIHgsiwNpP4y/2DBwO5TI7+KfiqTprhU9ojhpZ4g9VpdF7GQrk/RTmNYaYhoYOutx5mKvqYjwcrkaoW4giUn3LJwxKrAG02q6mSfHKCQx4LPxIPLbZktJ2IfZg4JlqhPPBheyDNaj32j95klzx2PsGJyqzV16XrW2Z5TEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PxVvV6GP; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720082383; c=relaxed/simple;
+	bh=sA8QHdLjPfav8TbcR6YQwgjbQ2b9bEIoala4MwhSdHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RB2+i23biY7SvHbp6Yy9LWjOEdITjz4BW2fEuWJXTf86BEIFtFiUrUETz0zxDzRRpVRJKzOrqNdTzvJ2j5Mxr6SI7LWLLVa1jo/qm24Jwm8fGDR+g8LkqWcD2dsoCKxyV1A4/6sFl3gdb2jIkVdeVmt1qz8DH3GS7/vbpKG+9Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=16eO5BK7; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxVvV6GP"
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-424ad991cbbso2600545e9.0;
-        Thu, 04 Jul 2024 01:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720082326; x=1720687126; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QG4eZvU0MlJftauF4Foggzy1qvM1CPkGDM2HmV9sP/w=;
-        b=PxVvV6GPqeekYfqmMppgBWhxJWw1egpEEUVs1QuhZ+GxjxPv5kTUxRQRSkdb2PI7tb
-         zLbkH+70jLkx48DCenpbryEcdlLZk5nBvG7h3lYSpEBFQltAjWP5AeDQMpFyvX9DK209
-         ZhxJfp2T0f5INLTTA0mv9RVFNsu5s8Rmbz78tJ4ymRuhEG7H69LM7F4egitSQVBuvjdb
-         lWCPASB7QgMw0twTS3DvPSzt5t6gnQZKWabbexIwMkVJ5hgY5AzvDFHKBYGp12NLVibf
-         fbsJRZVyZRwZfh3f5NI4yPhil+U/ykEg5rCpndx3tKwKiolMEV6smKu1Hh7DsGXIzM6M
-         UWxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720082326; x=1720687126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QG4eZvU0MlJftauF4Foggzy1qvM1CPkGDM2HmV9sP/w=;
-        b=gILEKgoRq//Yyzi08MGiKP78U4+meZmd/C3ISxc5puCEUYw/FKC5wLotZFsgKwQxTK
-         cJrjrcKSCf8KpZRQjfMfPZwNmL1c/W1J14HIZTzDC+O36ieMXPQFQMxa2qnq0ofuRi4Z
-         2f2B8mb4Q+apVP4xVn0Gb7NXQiXLohqMmgUKQmUvQz5FHTQl79UiDgkLMiyP8KmE2J5M
-         gq26ygFvhEpxfuxOPLAWuSx8+5PR/6Emo7Ar31oCTaH/z6zXUMDSdN1sj7GCTd6ujgE0
-         MpXHP5bsQnLNXkyshS5T0QLcbhhm/RFBE4BLmWBv+Bo/AThrtCbEtLNbmymbOPNywWz0
-         fFfA==
-X-Forwarded-Encrypted: i=1; AJvYcCXn53UMvR4UgPDT02+lL9Y9GQI5Ygg9ayYcU2dYYizUqh9vZV5rZ6xFMLPwplmFh8GXUZTkiMTpFON2Z32AlDcP7hzLa7WItAhhFFQy8Bjq8CdVr/8NlqzfHg3zd083tlsCqPKwlEc/2tqaoZg2RYhxANE84tnJ7v5DiujWBTUzjvYvoA==
-X-Gm-Message-State: AOJu0YxO1gglps4vLnKwOK3zZcF4aRXzjgZcxUFdEHnG5IoB0mPbK7ZA
-	aBbTMe/ip1KGREx8R8AN+WrV6zZpXkpTQvHaiRDit6Yr9FvfZeL5vn4yAN4ezQ1pKc9/vBoVXEN
-	0jGcJqAmOZRmrY7HHIi2G3JDe2yI=
-X-Google-Smtp-Source: AGHT+IGh+G0Wo9NUvnBFBdxqTfvyXFzMLOSpfkbscMrfYPWLvaNorcg31cDT6xysRPm6qfKMLnEknDpz7gl2DA5h3ls=
-X-Received: by 2002:a5d:6182:0:b0:367:9409:f7f7 with SMTP id
- ffacd0b85a97d-3679dd34158mr702967f8f.31.1720082326425; Thu, 04 Jul 2024
- 01:38:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="16eO5BK7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1720082380;
+	bh=sA8QHdLjPfav8TbcR6YQwgjbQ2b9bEIoala4MwhSdHQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=16eO5BK7kK2Lkg2zf6iwJnuoX6jV/9md/Okmd/oDGJysDlbvLlL+iiBSsjnBCrVmB
+	 o7NgTFQSGV4KKd60agtZrmIGWQa494sujbbYTh3It9tz5hnGCIJyBBgsnzipSnFd6o
+	 B96BSRjoOKoI4mbGiywgmOCdDPRzYcmbsoPvJ2hGmr+6iUv7z/gogwd6jn/knibjpu
+	 OICww3UMFyne62ITObPlocHg65aSvPjJsMzD/wc5PDofjTzs1jepFIi2dPP2qHX4jt
+	 kU9sTEjwzjgIPwjI7Pm64pxGb2yAZsTBe4A1LFgz5F2wcO7zFsFw/ervuV56PP9vHo
+	 vAkfAa9Sd7knA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D4130378216A;
+	Thu,  4 Jul 2024 08:39:39 +0000 (UTC)
+Message-ID: <7c1d5e3f-ed2d-4f12-945c-32ee90e78e2a@collabora.com>
+Date: Thu, 4 Jul 2024 10:39:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702-mainline_sdp500-v3-0-0902047b3eee@gmail.com>
- <20240702-mainline_sdp500-v3-1-0902047b3eee@gmail.com> <171993784259.3739500.10383587148467749192.robh@kernel.org>
-In-Reply-To: <171993784259.3739500.10383587148467749192.robh@kernel.org>
-From: Petar Stoykov <pd.pstoykov@gmail.com>
-Date: Thu, 4 Jul 2024 10:38:35 +0200
-Message-ID: <CADFWO8Enf1yqACpjqZBoQpROK7Pjyf2upfm0FnsAABX5K46Asg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: iio: pressure: Add Sensirion SDP500
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Conor Dooley <conor+dt@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-iio@vger.kernel.org, 
-	Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, 
-	Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/mediatek: Fix missing configuration flags in
+ mtk_crtc_ddp_config()
+To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ Jeffrey Kardatzke <jkardatzke@google.com>
+References: <20240703103308.10198-1-jason-jh.lin@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240703103308.10198-1-jason-jh.lin@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 2, 2024 at 6:30=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org> =
-wrote:
->
->
-> On Tue, 02 Jul 2024 16:59:08 +0200, Petar Stoykov wrote:
-> > Sensirion SDP500 is a digital differential pressure sensor. It provides
-> > a digital I2C output. Add devicetree bindings requiring the compatible
-> > string and I2C slave address (reg).
-> >
-> > Signed-off-by: Petar Stoykov <pd.pstoykov@gmail.com>
-> > ---
-> >  .../bindings/iio/pressure/sensirion,sdp500.yaml    | 41 ++++++++++++++=
-++++++++
-> >  1 file changed, 41 insertions(+)
-> >
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> yamllint warnings/errors:
->
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i=
-io/pressure/sensirion,sdp500.yaml: $id: Cannot determine base path from $id=
-, relative path/filename doesn't match actual path or filename
->          $id: http://devicetree.org/schemas/iio/pressure/sdp500.yaml
->         file: /builds/robherring/dt-review-ci/linux/Documentation/devicet=
-ree/bindings/iio/pressure/sensirion,sdp500.yaml
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i=
-io/pressure/sensirion,sdp500.example.dtb: pressure@40: 'vdd-supply' does no=
-t match any of the regexes: 'pinctrl-[0-9]+'
->         from schema $id: http://devicetree.org/schemas/iio/pressure/sdp50=
-0.yaml#
->
-> doc reference errors (make refcheckdocs):
->
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/202407=
-02-mainline_sdp500-v3-1-0902047b3eee@gmail.com
->
-> The base for the series is generally the latest rc1. A different dependen=
-cy
-> should be noted in *this* patch.
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->
-> pip3 install dtschema --upgrade
+Il 03/07/24 12:33, Jason-JH.Lin ha scritto:
+> In mtk_crtc_ddp_config(), mtk_crtc will use some configuration flags to
+> generate instructions to cmdq_handle, such as:
+>    state->pending_config
+>    mtk_crtc->pending_planes
+>    plane_state->pending.config
+>    mtk_crtc->pending_async_planes
+>    plane_state->pending.async_config
+> 
+> These configuration flags may be set to false when a GCE IRQ comes calling
+> ddp_cmdq_cb(). This may result in missing prepare instructions,
+> especially if mtk_crtc_update_config() with the flase need_vblank (no need
+> to wait for vblank) cases.
+> 
+> Therefore, use the mtk_crtc->config_updating flag set at the beginning of
+> mtk_crtc_update_config() to ensure that these configuration flags won't be
+> changed when the mtk_crtc_ddp_config() is preparing instructions.
+> 
+> Fixes: 7f82d9c43879 ("drm/mediatek: Clear pending flag when cmdq packet is done")
+> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
 
-I did not know about this tool before. And I did need to update a bunch of
-dependencies to make it work. Thanks!
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
->
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your sch=
-ema.
->
 
-The setting of DT_SCHEMA_FILES was a huge help in saving time!!
