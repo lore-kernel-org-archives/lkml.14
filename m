@@ -1,130 +1,244 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AF21B011B
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC10E1B0114
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720100213; cv=none; b=mbYYLuTH/RfDpOtUR8dG6tveUFoAqxKKE1pg7WLzmdDRwJgf7mrtP2VOQ8B/HLhKMiyUZxLegJi/8imJ47MCPpeEyG/4yb8eNLSnmJX4wBkaALsa/bSp3uyZH07zXu6EMy+QHQ6gArsm8DZH2NI7k9Bvt3hnM3sT4natJ1ku0Cg=
+	t=1720100213; cv=none; b=OGLXRz2cQcayplgRWZ8WLhNCi/5jwnQi+UwiY54DT8/55t0vy3bg1xC4kqOeeCMSQxpyeyyZ2JSXEdNkAaQY++Uvi7K00/tm+vp1Re10i7grldzYwuFv5xK+685ziyPJ/5Jlhi0B5USs9T2zchpONheuU3eUtOiUUvOcrQwfp0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720100213; c=relaxed/simple;
-	bh=V2tOAHaVrYonStI9abDwgL3tFaJn3HXhUBB56LP2hL0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UHX2pCqCTncXI1n+gb4OzPpxe4qXsdmgFgN7u++8qdl2/zroYc7r6P1CQCVtBQ/4ai+sM+mgxsntgED4Ef4ppJnF48QO/smj0dUdt1hrW6GPRduED/OsmhpSjMkIt0oPrIoIUSeyK1SGxdUCte77wEss3lL+ZImFVf/P3xUBfxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pzz7/Ilj; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	bh=NWQ/+FxNiWlPrriG/RCWg4yhrkTbbHsDm3/fAZGeotE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qgBRG24zIEp8sSuzmw0slr0GttAeB97Dj1kAHyiT+20jmfHqBKPbIUhe4/rxsx3Y23LYK44HVPR2aCcnwnZ6O8XHXIhm3QqEZcZrSnwSbB2cAfGJspe3iRB91Yrlzw0N4uRHKcLyh3bu9y+tomcLuM9Rit0ZDVpbyOUycPixDq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KKpOXSoV; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pzz7/Ilj"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52ce08616a9so2519e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 06:36:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KKpOXSoV"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52e7693c369so843506e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 06:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720100209; x=1720705009; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GqKWhDVIpU54/3Lm4p0n8dZsoucJ9m4r5oxiQez9CN0=;
-        b=Pzz7/Ilj1w04GL34Szws4M9O6AreAnw47HuYtYKtPbzSgtaLgjMhYQUKP03R8it125
-         CYku+anocFMD7gmgIa8lQL3cIe4W+DyixYgNqG/KMJGOB3rN4Xz/dWTIeAlkfsA6yjlI
-         vFdJ59kY8stS/aWTud/fBaGAyjnhAU6svvqsse4JxUd+OXxKNdrErB6xnj7oaFCdbI9o
-         PUuXgF5D/srTGjaP6DZcpTWtArdR4eCCnT4sScXZDl6f/1WH6cpqWUGngeqFxprsFTGz
-         4djQvDjQtvWY1a6Xksaaq+Ko9oAWDjrkCbLdMoAS+pmv2lWCrUN7THMFYI0s9lgKVmRT
-         dZRQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720100209; x=1720705009; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/0KWVZAazUejIoLcfyGV2EIZ0xgocIz1579DC73ilE8=;
+        b=KKpOXSoVnp2QDTvF3K8wxmq9d3gtRlXSwCWGAi6+yf121e4/4X6oHnEfDtoxiMVmkq
+         BDRXHKYR8bgSyDfrrRPFLDTTGHpLIjNTY8TeO+VdvwZCPEw2IePLabLsNqp2wtbe48od
+         rbooE/IM8csD5PF3IDsMkdw6+qq8lJeBFF9cfk/2tAL8foCXWzD++YzAz3mjzx31Zhgm
+         JeOc6lvMjwjtlDgOk0ewHC0hw5mdVGv5puBPRD2oqmK6Sbjt9G8oJ5tQpHMMDYr53xJn
+         wWa5M7nH8ImM0AWSGgjBzc3y0u8f5m+Kjh0Wcm2db4z8Vv1YKiQIzlVSvaQkkZny5y4S
+         ICYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1720100209; x=1720705009;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GqKWhDVIpU54/3Lm4p0n8dZsoucJ9m4r5oxiQez9CN0=;
-        b=JZxBqIZhEj6BmEgv+MCOqNazckhZ5n+uhi6JfO07JfTHywbI9ruigh9wtd2h3QEvRU
-         4R4QXicC7hCYFOieZfPLsNY0dNqcXrwXknlGi1x+Q2j5IbOR5pGfDtY8yjMl7sMPjeDp
-         D9VWmj5ApfxP5SHXWbPCNANWjUa9/wMO62KpXwZn66klPCOpCxHQs6bN+hgJ9SmuuN0j
-         JPE3sAqJwhwA6GQVBtkYwDcmPIJPOdd96/7+VxmpXTVgprQOooOvqwoHYxoDAwGKTk+0
-         JkSIZRKF9NS1b6H8JbczQPW7Zw2NwwkZkdUsRB6E74PFJX5ZoR2bNYE62juG+7bhHK6r
-         vuGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXK1bYCYMISCG1GALxt5DUDYE1eEdjeHZalCLtMGlUOUP2Wjx9T3T/u6X6p+C43+PpmXhiiXAhtVuEWsOIwePMuKNtE8PAOBhPQfh1p
-X-Gm-Message-State: AOJu0Yyoepl7Dvg1y/Va+dr0YOUzVXSUbVr2aqrZ5/OTdVOx7GO/8xut
-	v9RinHrIX1QbXqemLtX2DFhfY/gQzGZXsCcNh8oBE7EZJaBmRyZuOUbiE6Uf8F66xpzrzRVoapx
-	nDcc/C/GHu/OCIkyivEPq08nya7tE5eJaP0mOZcPM9wnQsAz9u9aF
-X-Google-Smtp-Source: AGHT+IH6SWc1AXTl+5ysSGba6hAiJwdZ9zfcwMC0vSQ9DYlubLUsWHEgrhDgFV9pvmLBGi0YR6GhhmlJxdASvzp4g1A=
-X-Received: by 2002:ac2:596a:0:b0:52c:dd94:73f3 with SMTP id
- 2adb3069b0e04-52e9f2a8ea6mr93485e87.3.1720100209127; Thu, 04 Jul 2024
- 06:36:49 -0700 (PDT)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/0KWVZAazUejIoLcfyGV2EIZ0xgocIz1579DC73ilE8=;
+        b=ifp9q/omIYZgKvj8+zifK3PiEawiUjGp/0M8QlEucoXAr9pZ7Ylb8qt1JR/EnEchRG
+         jocjgsiGdjhDjJ8NOAGKRYP2ju95biIMG7jytusU3HOgo+joYADFmsKL3J9SuT+oJBiF
+         gHQRU7wdPYycL8gun+31ASNSqvXLuw5HC3kaSDU/LuwSIpalgfV3+zaGJIBvvDxf5Od7
+         f2utPIL/UBpAax3lPknaWQunjIAOtN9APgf7LnxJu9LISN+znhLZCSqWPjSPdUKD7x27
+         23otGPmzMToktD83s3imreSXSoglMe258wktEUHB0NTF7PoRp/YgKpsOH2ljrS5wkcSY
+         /SpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwmtCGT465jXEgDi6XR5exxcFYNPsyNgckGS+NEz/fruTUsMeSV3xEM1koGAvsXq06NW7UTJFKG++dhS4Z4MTD2LeRLBKrYWlqZ4DC
+X-Gm-Message-State: AOJu0Yy/SzS0uA7b5EqjdTZ1ilM49RoFzJnDawp2qJgVYtzp7qg+vwxz
+	sHuF4se4UIDPEinvrxZ111sCW3QoF1La6fe5fqBzaDRFlEtLnUafK91Yv+RQUVU=
+X-Google-Smtp-Source: AGHT+IE+XUgzIP2fhSWzqNdccIr/yDFzS1seo1QGzBE8M/IswaP+OxSP7/SNQRIVCTgrLI5teEx4UA==
+X-Received: by 2002:a19:c20b:0:b0:52e:768e:4d1f with SMTP id 2adb3069b0e04-52ea0643b98mr1166545e87.36.1720100207994;
+        Thu, 04 Jul 2024 06:36:47 -0700 (PDT)
+Received: from [192.168.42.0] ([2a02:8428:e55b:1101:1e41:304e:170b:482f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2ca5d5sm25382025e9.30.2024.07.04.06.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 06:36:47 -0700 (PDT)
+From: Julien Stephan <jstephan@baylibre.com>
+Date: Thu, 04 Jul 2024 15:36:44 +0200
+Subject: [PATCH v5 5/5] arm64: dts: mediatek: mt8365: Add support for
+ camera
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <00000000000037162f0618b6fefb@google.com> <tencent_8BBB6433BC9E1C1B7B4BDF1BF52574BA8808@qq.com>
-In-Reply-To: <tencent_8BBB6433BC9E1C1B7B4BDF1BF52574BA8808@qq.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Thu, 4 Jul 2024 15:36:37 +0200
-Message-ID: <CACT4Y+agurcHCQnLTrVjLXr1-kEj1wbmXCHX6LPM=J1-o5wT2g@mail.gmail.com>
-Subject: Re: [PATCH] hfsplus: fix uninit-value in copy_name
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: syzbot+efde959319469ff8d4d7@syzkaller.appspotmail.com, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240704-add-mtk-isp-3-0-support-v5-5-bfccccc5ec21@baylibre.com>
+References: <20240704-add-mtk-isp-3-0-support-v5-0-bfccccc5ec21@baylibre.com>
+In-Reply-To: <20240704-add-mtk-isp-3-0-support-v5-0-bfccccc5ec21@baylibre.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Andy Hsieh <andy.hsieh@mediatek.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, Julien Stephan <jstephan@baylibre.com>
+X-Mailer: b4 0.13.0
 
-On Tue, 21 May 2024 at 07:28, 'Edward Adam Davis' via syzkaller-bugs
-<syzkaller-bugs@googlegroups.com> wrote:
->
-> [syzbot reported]
-> BUG: KMSAN: uninit-value in sized_strscpy+0xc4/0x160
->  sized_strscpy+0xc4/0x160
->  copy_name+0x2af/0x320 fs/hfsplus/xattr.c:411
->  hfsplus_listxattr+0x11e9/0x1a50 fs/hfsplus/xattr.c:750
->  vfs_listxattr fs/xattr.c:493 [inline]
->  listxattr+0x1f3/0x6b0 fs/xattr.c:840
->  path_listxattr fs/xattr.c:864 [inline]
->  __do_sys_listxattr fs/xattr.c:876 [inline]
->  __se_sys_listxattr fs/xattr.c:873 [inline]
->  __x64_sys_listxattr+0x16b/0x2f0 fs/xattr.c:873
->  x64_sys_call+0x2ba0/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:195
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> Uninit was created at:
->  slab_post_alloc_hook mm/slub.c:3877 [inline]
->  slab_alloc_node mm/slub.c:3918 [inline]
->  kmalloc_trace+0x57b/0xbe0 mm/slub.c:4065
->  kmalloc include/linux/slab.h:628 [inline]
->  hfsplus_listxattr+0x4cc/0x1a50 fs/hfsplus/xattr.c:699
->  vfs_listxattr fs/xattr.c:493 [inline]
->  listxattr+0x1f3/0x6b0 fs/xattr.c:840
->  path_listxattr fs/xattr.c:864 [inline]
->  __do_sys_listxattr fs/xattr.c:876 [inline]
->  __se_sys_listxattr fs/xattr.c:873 [inline]
->  __x64_sys_listxattr+0x16b/0x2f0 fs/xattr.c:873
->  x64_sys_call+0x2ba0/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:195
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> [Fix]
-> When allocating memory to strbuf, initialize memory to 0.
->
-> Reported-and-tested-by: syzbot+efde959319469ff8d4d7@syzkaller.appspotmail.com
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> ---
->  fs/hfsplus/xattr.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
-> index 9c9ff6b8c6f7..858029b1c173 100644
-> --- a/fs/hfsplus/xattr.c
-> +++ b/fs/hfsplus/xattr.c
-> @@ -698,7 +698,7 @@ ssize_t hfsplus_listxattr(struct dentry *dentry, char *buffer, size_t size)
->                 return err;
->         }
->
-> -       strbuf = kmalloc(NLS_MAX_CHARSET_SIZE * HFSPLUS_ATTR_MAX_STRLEN +
-> +       strbuf = kzalloc(NLS_MAX_CHARSET_SIZE * HFSPLUS_ATTR_MAX_STRLEN +
->                         XATTR_MAC_OSX_PREFIX_LEN + 1, GFP_KERNEL);
->         if (!strbuf) {
->                 res = -ENOMEM;
+Add base support for cameras for mt8365 platforms. This requires nodes
+for the sensor interface, camsv, and CSI receivers.
 
-Hi Edward,
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8365.dtsi | 125 +++++++++++++++++++++++++++++++
+ 1 file changed, 125 insertions(+)
 
-Was this ever merged anywhere? I still don't see it upstream.
+diff --git a/arch/arm64/boot/dts/mediatek/mt8365.dtsi b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+index 24581f7410aa..cabdb51f4041 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8365.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/power/mediatek,mt8365-power.h>
++#include <dt-bindings/memory/mediatek,mt8365-larb-port.h>
+ 
+ / {
+ 	compatible = "mediatek,mt8365";
+@@ -703,6 +704,23 @@ ethernet: ethernet@112a0000 {
+ 			status = "disabled";
+ 		};
+ 
++		mipi_csi0: mipi-csi0@11c10000 {
++			compatible = "mediatek,mt8365-csi-rx";
++			reg = <0 0x11c10000 0 0x2000>;
++			status = "disabled";
++			num-lanes = <4>;
++			#phy-cells = <1>;
++		};
++
++		mipi_csi1: mipi-csi1@11c12000 {
++			compatible = "mediatek,mt8365-csi-rx";
++			reg = <0 0x11c12000 0 0x2000>;
++			phy-type = <PHY_TYPE_DPHY>;
++			status = "disabled";
++			num-lanes = <4>;
++			#phy-cells = <0>;
++		};
++
+ 		u3phy: t-phy@11cc0000 {
+ 			compatible = "mediatek,mt8365-tphy", "mediatek,generic-tphy-v2";
+ 			#address-cells = <1>;
+@@ -773,6 +791,113 @@ larb2: larb@15001000 {
+ 			mediatek,larb-id = <2>;
+ 		};
+ 
++		seninf: seninf@15040000 {
++			compatible = "mediatek,mt8365-seninf";
++			reg = <0 0x15040000 0 0x6000>;
++			interrupts = <GIC_SPI 210 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&camsys CLK_CAM_SENIF>,
++				 <&topckgen CLK_TOP_SENIF_SEL>;
++			clock-names = "camsys", "top_mux";
++
++			power-domains = <&spm MT8365_POWER_DOMAIN_CAM>;
++
++			phys = <&mipi_csi0 PHY_TYPE_DPHY>, <&mipi_csi1>;
++			phy-names = "csi0", "csi1";
++
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++				};
++
++				port@1 {
++					reg = <1>;
++				};
++
++				port@2 {
++					reg = <2>;
++				};
++
++				port@3 {
++					reg = <3>;
++				};
++
++				port@4 {
++					reg = <4>;
++					seninf_camsv1_endpoint: endpoint {
++						remote-endpoint =
++							<&camsv1_endpoint>;
++					};
++				};
++
++				port@5 {
++					reg = <5>;
++					seninf_camsv2_endpoint: endpoint {
++						remote-endpoint =
++							<&camsv2_endpoint>;
++					};
++				};
++			};
++		};
++
++		camsv1: camsv@15050000 {
++			compatible = "mediatek,mt8365-camsv";
++			reg = <0 0x15050000 0 0x0040>,
++			      <0 0x15050208 0 0x0020>,
++			      <0 0x15050400 0 0x0100>;
++			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&camsys CLK_CAM>,
++				 <&camsys CLK_CAMTG>,
++				 <&camsys CLK_CAMSV0>;
++			clock-names = "cam", "camtg", "camsv";
++			iommus = <&iommu M4U_PORT_CAM_IMGO>;
++			mediatek,larb = <&larb2>;
++			power-domains = <&spm MT8365_POWER_DOMAIN_CAM>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				port@0 {
++					reg = <0>;
++					camsv1_endpoint: endpoint {
++						remote-endpoint = <&seninf_camsv1_endpoint>;
++					};
++				};
++			};
++		};
++
++		camsv2: camsv@15050800 {
++			compatible = "mediatek,mt8365-camsv";
++			reg = <0 0x15050800 0 0x0040>,
++			      <0 0x15050228 0 0x0020>,
++			      <0 0x15050c00 0 0x0100>;
++			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&camsys CLK_CAM>,
++				 <&camsys CLK_CAMTG>,
++				 <&camsys CLK_CAMSV1>;
++			clock-names = "cam", "camtg", "camsv";
++			iommus = <&iommu M4U_PORT_CAM_IMGO>;
++			mediatek,larb = <&larb2>;
++			power-domains = <&spm MT8365_POWER_DOMAIN_CAM>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				port@0 {
++					reg = <0>;
++					camsv2_endpoint: endpoint {
++						remote-endpoint = <&seninf_camsv2_endpoint>;
++					};
++				};
++			};
++		};
++
+ 		vdecsys: syscon@16000000 {
+ 			compatible = "mediatek,mt8365-vdecsys", "syscon";
+ 			reg = <0 0x16000000 0 0x1000>;
+
+-- 
+2.45.1
+
