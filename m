@@ -1,97 +1,99 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7076CDA1
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 19:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A6C6CDA1;
+	Thu,  4 Jul 2024 19:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720120780; cv=none; b=Ctb7XXU9srBFPL0Y+bAZecBOmYCIxajTYJK4VTQ3ZpOBMzc2CJTN2QZGpjYLDkwOC2W+IZIjuKlSQ4U8b5MyvnLNO6YTCRJ28gjmNGYxYFyA5kkOcbv3yO6CnDqGIMnDn67qy1Ln0PH8Jb50b5g3EvsTworOULTHofvr3Y6yf7A=
+	t=1720120801; cv=none; b=PmK368iQuPW6waNgtfL9PHt5DUm0gqrJTnhELxH9Urau6ass6Uk7usOMDcN7TJW0DvG+l9eYh8f+hXwb/xC3SFAhxIhN9LtGzAisXdHZujV0ymnCG6GTz3PUEY0x9PyYera0wWZZeKvGCnmvkHYC6r4TshlejLvc/R/gOFpMOtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720120780; c=relaxed/simple;
-	bh=RvsSi8CcWuxf7mDNmjpLZS5c1lR7wLo8IR2uo53gc+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bt3dW7qtDPavah0oJCzI+dBqHfRDFi1PGKyrHP/ruyzQbsg6/UUuXqE+f86UKssCc+KqLKs+rFaXS0RCZRjmBNXd6dYbciF2gEdv48Ttv6CNLL9U9OXm4DyAsDgf7qkwYPkanDiAz33+VsEwmHDmbfDwSQXK0W8u82XwSM4JNmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KW5MXy6o; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720120801; c=relaxed/simple;
+	bh=5EKYtMONthEsFSA+n04NFH8luj6pT4LCFD5nneRT3jk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YhCJFyU2SAFmH7KLnCH/ZkqR6fcdH+XGvDZ1rjyXXRS5LdoIHBzILB++/E+xG4aGxUF+lCoJboznnrXxM+qMFpa20isvthEypXsRPdqBi1rNloMuL1daxHOehm6F50buoEAhBIWl8VsJ6IWyjnPm/F3dyj56Ob3mN0qqu42IN9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=e5yZkCE9; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KW5MXy6o"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52e9f788e7bso949390e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 12:19:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720120776; x=1720725576; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dMTxsKYHdaYJleEB9Ia1vgf9WyawD3quuYCxDUxBExA=;
-        b=KW5MXy6oUxe2YdheS7mutUiYiXHPUw4HhUQYGTjO1/hiBQmYt9B+2EcnBCmO1LMbMP
-         bYgSGpdXh03JczoTt5a3BaPa4GKu+j5sCrpi977stMECj6tBxqYaPSSv9OwTgSTOR1EW
-         9p4zmA4/dKBI5Jt84SqK4AiEcKIi9M0edufDQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720120776; x=1720725576;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dMTxsKYHdaYJleEB9Ia1vgf9WyawD3quuYCxDUxBExA=;
-        b=cPZNWf7+keBCZbOYM3ViYOTDs7EhxYPSJ0VytpeZfYTSoo0BKT4+1uZe1p+zNF0DQt
-         EuNqTNxSQMd0SYYYBvVtHGCeM/CA756JFX5EdNvot5NqIYe5MlFyAGWNNowtcJzpAnC/
-         e8TX0UAqKxeMYhfuE7XZyL+YkFW2ZYI6G3RHYELJTaZ/WPIUIbV8scL2grwouLAw6LCp
-         YVSGAyLtdl2SdH0cAxlNLg68VscBzKywIyFvhKevYTFVZXCS39Z1YHdpsPBlDUeCMWb0
-         FjMIGjr8XIkWOMXZFyYuYLlQcI3Rub0cgUylTyXksHOeHdz8oF9UEJZkUYwpYikAW0iA
-         UBBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVsEbNlOVE0wWJRFzWqQikPzuZD37TuQWm3KgD8I2pq0mgMU8OD2XnjHBMdm5tTv23E0uLOCK0MFtmya9pyaFFdNMQCPOXxbqttbO5K
-X-Gm-Message-State: AOJu0Ywb89gXui9aRAEzVYHg5Q7hlDQbpjemma/hsfiMtyWepU6w2J8J
-	nAXCCQFunFeApETBZVcpT+hGM5n2T3jWh9yDjsfYlne/BwXqE5ZnyIG4Vaz85nVnLQ3wGUDOxzB
-	fQK+6mw==
-X-Google-Smtp-Source: AGHT+IH+dVcN2XxBz50IJhjj/dwxpKufDSr/sg3M0Iuf5HEvEivLVSGCfpbpTn9IcRSFpbqZVA9WMA==
-X-Received: by 2002:a05:6512:20b:b0:52e:9b9e:2c14 with SMTP id 2adb3069b0e04-52ea06e23a4mr1713988e87.60.1720120776169;
-        Thu, 04 Jul 2024 12:19:36 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e9f8747d2sm319198e87.208.2024.07.04.12.19.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 12:19:35 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52ea2f58448so640201e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 12:19:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVhR86S0OB3ILCDCWwQcZJys6ROcDkbRK28VAUeYXny24HSVzZt1LTEfIzQhr5NxrQwgrtSa1bRZ4GNgOwS1KfiAb62+DSW+jbwQMuq
-X-Received: by 2002:ac2:5323:0:b0:52e:9905:eb98 with SMTP id
- 2adb3069b0e04-52ea0637a8bmr1492910e87.35.1720120774571; Thu, 04 Jul 2024
- 12:19:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="e5yZkCE9"
+X-Envelope-To: heiko@sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1720120794;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=12kQGJpaxYXve/bNP2Rvzy67ptC3odJSOf9IDo8D060=;
+	b=e5yZkCE9Ici3nvB7wz3sGd0TYcyIk2C3zY2FsiTaZiC9RFqNZwenUU0Pi0C9dQCkiaQLVx
+	GthxTDvHEs0RrfGFiKJgkZwiwis9mQTzfH4h2QdHMKZAM+LW44xMIZN9Dl6Bs9nr1l0NN1
+	Aqv+tLEuQo0AtZpWbzfI+SqBL7Nb66MQTznoHVT+p3fUyMa3sA65aBn5x6VJHStbpQv5mh
+	niIEg3sAHNZQdI/rvMSO2sw04gpwjejRa/iNHmzpANDuSALc4qDbyDPi2QPB4Qlqt6lwKq
+	oEgwIVGIxzjV9Mz3qFrIcQczJ+MlRVi8Qx4NHx0JZL5ohtdJXj/PxTNrZtIq6w==
+X-Envelope-To: knaerzche@gmail.com
+X-Envelope-To: dsimic@manjaro.org
+X-Envelope-To: linux-rockchip@lists.infradead.org
+X-Envelope-To: devicetree@vger.kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: didi.debian@cknow.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Diederik de Haas <didi.debian@cknow.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Alex Bee <knaerzche@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Diederik de Haas <didi.debian@cknow.org>
+Subject: [PATCH] arm64: dts: rockchip: Add avdd supplies to hdmi on rock64
+Date: Thu,  4 Jul 2024 21:18:33 +0200
+Message-ID: <20240704191919.38856-1-didi.debian@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZobXdDCYBi8OM-Fo@zx2c4.com> <CAHk-=wiGk+1eNy4Vk6QsEgM=Ru3jE40qrDwgq_CSKgqwLgMdRg@mail.gmail.com>
- <Zobf3fZOuvOJOGPN@zx2c4.com> <CAHk-=whf2Pb8fSmUsLRSn6CnYvQoyUkLikKpFDWN_xnTJqix=A@mail.gmail.com>
- <CAHmME9pm+ZE2_qf1DNxukB6ufPrjTAsnwin05-VX_gS03Yq-ag@mail.gmail.com>
- <CAHk-=whTjdO6szgRKp51ZeDLDmA1+YYSbg+vEUt9OsxTMDUtjQ@mail.gmail.com>
- <CAHk-=wgqD9h0Eb-n94ZEuK9SugnkczXvX497X=OdACVEhsw5xQ@mail.gmail.com>
- <Zobt_M91PEnVobML@zx2c4.com> <CAHk-=wh47WSNQYuSWqdu_8XeRzfpWbozzTDL6KtkGbSmLrWU4g@mail.gmail.com>
- <CAHmME9pgFXhSdWpTwt_x51pFu2Qm878dhcQjG9WhPXV_XFXm9w@mail.gmail.com>
-In-Reply-To: <CAHmME9pgFXhSdWpTwt_x51pFu2Qm878dhcQjG9WhPXV_XFXm9w@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 4 Jul 2024 12:19:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjCmw1L42W-o=pW7_i=nJK5r0_HFQTWD_agKWGt4hE7JQ@mail.gmail.com>
-Message-ID: <CAHk-=wjCmw1L42W-o=pW7_i=nJK5r0_HFQTWD_agKWGt4hE7JQ@mail.gmail.com>
-Subject: Re: deconflicting new syscall numbers for 6.11
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: jolsa@kernel.org, mhiramat@kernel.org, cgzones@googlemail.com, 
-	brauner@kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 4 Jul 2024 at 11:57, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> I really do not want to expose random.c internals, and then deal with
-> the consequences of breaking user code that relied on that. The fake
-> entropy count API was already a nightmare to move away from. And I
-> think there's tremendous value in letting users use the kernel's
-> *exact algorithm*, whatever it happens to be, without syscall
-> overhead. Plus, this means further proliferation of bad userspace
-> RNGs. So I think the deal is a bad one.
+Pine64's Rock64 was missing the avdd supply properties on the hdmi node,
+causing the following warnings:
 
-Bah. I guess I'll have to walk through the patch series once again.
+  dwhdmi-rockchip ff3c0000.hdmi: supply avdd-0v9 not found, using dummy regulator
+  dwhdmi-rockchip ff3c0000.hdmi: supply avdd-1v8 not found, using dummy regulator
 
-I'm still not thrilled about it. But I'll give it another go.
+In the Rock64 Schematic document version 2.0 those supplies are marked
+as DVIDEO_AVDD_1V0 and DVIDEO_AVDD_1V8 respectively, but in version 3.0
+those are named HDMI_AVDD_1V0 and HDMI_AVDD_1V8, which is a bit clearer.
+In both versions those are connected to LDO3 and LDO1 respectively.
 
-                 Linus
+While the DeviceTree property is named 'avdd-0v9-supply' the
+'rockchip,dw-hdmi.yaml' binding document notes the following:
+
+  A 0.9V supply that powers up the SoC internal circuitry. The actual
+  pin name varies between the different SoCs and is usually
+  HDMI_TX_AVDD_0V9 or sometimes HDMI_AVDD_1V0.
+
+So the 'vdd_10' reference is not an error.
+
+Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 229fe9da9c2d..90fef766f3ae 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -154,6 +154,8 @@ &gmac2io {
+ };
+ 
+ &hdmi {
++	avdd-0v9-supply = <&vdd_10>;
++	avdd-1v8-supply = <&vcc_18>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.45.2
+
