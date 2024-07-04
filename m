@@ -1,161 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB02D1957E2;
-	Thu,  4 Jul 2024 15:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 043131A2C1E
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 15:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720108399; cv=none; b=k/ZAIMCsiYTNu6hijXRTDUtDIIfMN5As1o/CqvLZjuoBNFPTTHZ+wJcd1QhLbAJVr2bcfx8lINEfHY4UaW0jER5eV73oiDcy6b7xLjYikxYsYE2L0NBXblilhgWAIGxDxMeZdOMNKUF1T/2591Lu34hsik7e0410rjAD0wgEo/g=
+	t=1720108498; cv=none; b=ozfVQa3A9L/yoo0TuMyZZiAIvJhSo3aLfWdEtM8ChGhETzn6qVUvngghU9PThKPWUc9+eajYOz72qNghUMgTgeLpsqnDwiCrgXK29fiGnk7vVzj/2h24rBVjyoK8kz97asvuUOKrkh/kCaw+9eeE1nNi8SRNXkkScLYOezIg86g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720108399; c=relaxed/simple;
-	bh=61l6teuJlEzZyOFcsWs+mbD0J9foS4nJQ+B9XDWMorQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N5CoUrf12i8Vs4+0y8PiL2g1kMkhVNgMdpXbQUJiYTZOaRCj0obr2d5cqMG0IYsfg2iEJfMKSa+szZEZG7hBk86j/FB2MrQV8HNb5N0DI/ZwLisg0h2907DiNEwdvR5bon/MEPgfCnWubc6DYj8FUx59CUtyH3ffXew828KyUBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdRimx31; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdRimx31"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40970C4AF0B;
-	Thu,  4 Jul 2024 15:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720108399;
-	bh=61l6teuJlEzZyOFcsWs+mbD0J9foS4nJQ+B9XDWMorQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gdRimx3175BZ3d+E62tb/17JlZd5eqDNABguLplJJ3VHOS3kNBmAQawRvOdAoSS6y
-	 x87YKgtermBnwASS3thCOuxZ+z0aDKPRoCrzUk5SKRVIO6CuWC4p1MNiziHQIMSFIV
-	 9LzwoWdXtSNHapeSGY0wGyzdFozm3zgHh0ZnDjxvvxqAjNnd5yKkl5urcXIxZZwdJF
-	 R5uIEZjsG7l3xBfl4nNOt5BzZUUNY3J5Soy6W7pyJEe600PF6PYFSebY2JnClUiSpS
-	 7ZczG86C0tNLqBlwJOmDFz44GS82g14JgGaoz/sAfna797FBxcPSTtuJ8QwWiSGtH6
-	 cucas6OwtTikA==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so8323961fa.1;
-        Thu, 04 Jul 2024 08:53:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWM9GfM1F8bpohN93aBdgkvIO75o4HVrIUNXsJD9+pLhHY+EhS+DnqQmVUq63i241WwueFrFM4TiJW+mb1ZOCWTS9Cs0T38PbdYfvoT
-X-Gm-Message-State: AOJu0YwPUnXgfpS/b7gcM0t1QGVV8HXZ7p+kUzhBFvaloehXxMjDuktk
-	RIk/ChVOsDmj/Af6qUX8stYNmZJi8i/VZbskLrwNlPAKBl7XdVTouX1VPGu0b+AWyPBr4LQscQZ
-	uqBChDy2WrpO5fUdGHg4JFR9FYFE=
-X-Google-Smtp-Source: AGHT+IF+Aw1bgS7PdZsgoo1/EVMcqZxz2NTYdi53SZKrEOA58gppKFHLxoNv+6Y0O5QXKPjZqZzNHnk9VyEFaDXFxEc=
-X-Received: by 2002:a2e:91d6:0:b0:2ec:529e:6522 with SMTP id
- 38308e7fff4ca-2ee8ed62d25mr13737001fa.31.1720108397778; Thu, 04 Jul 2024
- 08:53:17 -0700 (PDT)
+	s=arc-20240116; t=1720108498; c=relaxed/simple;
+	bh=GYVjXUMXWOSB0S5uEJ5hsnw6MGDS9cy7pdS0qsPlUFU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aMd/vbQxYye5EqGutdtuKkAEqawM7t+rRcEaBZFh6EitdtvI2yUKU4WoXHx+oO5sTrJniSZOzU6TcZ7kFc5bbNeEn5WLjg+oD5ZBDNqbCKXeun4+QggW9fsdhxTch5Dddm/vcmG5lTmBRoJftYTSM9H9P1p+7J+dvLMtyxUmgo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E862367;
+	Thu,  4 Jul 2024 08:55:21 -0700 (PDT)
+Received: from [10.1.29.168] (XHFQ2J9959.cambridge.arm.com [10.1.29.168])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F399A3F762;
+	Thu,  4 Jul 2024 08:54:53 -0700 (PDT)
+Message-ID: <ed383686-e71a-453c-b751-182531b46a76@arm.com>
+Date: Thu, 4 Jul 2024 16:54:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAK7LNATxSePzOrHaQvS1MQo4mpAwdfwrDu3iuUsYZ+RL=LiirA@mail.gmail.com>
- <20240611211123.959459-3-aquini@redhat.com>
-In-Reply-To: <20240611211123.959459-3-aquini@redhat.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 5 Jul 2024 00:52:41 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQba5CDetpwevSoaOLJ21s1tO9ZHh=7gJpPCNK0AnHfJw@mail.gmail.com>
-Message-ID: <CAK7LNAQba5CDetpwevSoaOLJ21s1tO9ZHh=7gJpPCNK0AnHfJw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kbuild: rpm-pkg: introduce a simple changelog section
- for kernel.spec
-To: Rafael Aquini <aquini@redhat.com>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/6] mm: shmem: add mTHP support for anonymous shmem
+Content-Language: en-GB
+To: Bang Li <libang.linux@gmail.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
+ ying.huang@intel.com, 21cnbao@gmail.com, shy828301@gmail.com,
+ ziy@nvidia.com, ioworker0@gmail.com, da.gomez@samsung.com,
+ p.raghav@samsung.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
+ <65796c1e72e51e15f3410195b5c2d5b6c160d411.1718090413.git.baolin.wang@linux.alibaba.com>
+ <65c37315-2741-481f-b433-cec35ef1af35@arm.com>
+ <475332ea-a80b-421c-855e-a663d1d5bfc7@linux.alibaba.com>
+ <b33b94bb-38c7-4b54-bdd3-51dec0535438@arm.com>
+ <33d04365-c129-453e-b3b3-0691cfecd36e@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <33d04365-c129-453e-b3b3-0691cfecd36e@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 12, 2024 at 6:11=E2=80=AFAM Rafael Aquini <aquini@redhat.com> w=
-rote:
->
-> Fix the following rpmbuild warning:
->
->   $ make srcrpm-pkg
->   ...
->   RPM build warnings:
->       source_date_epoch_from_changelog set but %changelog is missing
->
-> Signed-off-by: Rafael Aquini <aquini@redhat.com>
-> ---
->  scripts/package/kernel.spec | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
-> index 19e458341f45..126b23c1f6c2 100644
-> --- a/scripts/package/kernel.spec
-> +++ b/scripts/package/kernel.spec
-> @@ -132,3 +132,8 @@ fi
->  /usr/src/kernels/%{KERNELRELEASE}
->  /lib/modules/%{KERNELRELEASE}/build
->  %endif
-> +
-> +%changelog
-> +* %(echo "$(LC_ALL=3DC; date +'%a %b %d %Y') $(git config --get user.nam=
-e) \
-> +<$(git config --get user.email)>") - %{version}-%{release}
-> +- Custom built Linux kernel.
-> --
-> 2.45.1
->
+On 04/07/2024 16:05, Bang Li wrote:
+> Hey Ryan,
+> 
+> On 2024/7/4 21:58, Ryan Roberts wrote:
+>>>> Then for tmpfs, which doesn't support non-PMD-sizes yet, we just always use the
+>>>> PMD-size control for decisions.
+>>>>
+>>>> I'm also really struggling with the concept of shmem_is_huge() existing along
+>>>> side shmem_allowable_huge_orders(). Surely this needs to all be refactored into
+>>>> shmem_allowable_huge_orders()?
+>>> I understood. But now they serve different purposes: shmem_is_huge() will be
+>>> used to check the huge orders for the top level, for*tmpfs*  and anon shmem;
+>>> whereas shmem_allowable_huge_orders() will only be used to check the per-size
+>>> huge orders for anon shmem (excluding tmpfs now). However, as I plan to add mTHP
+>>> support for tmpfs, I think we can perform some cleanups.
+>>>
+>>>>> +    /* Allow mTHP that will be fully within i_size. */
+>>>>> +    order = highest_order(within_size_orders);
+>>>>> +    while (within_size_orders) {
+>>>>> +        index = round_up(index + 1, order);
+>>>>> +        i_size = round_up(i_size_read(inode), PAGE_SIZE);
+>>>>> +        if (i_size >> PAGE_SHIFT >= index) {
+>>>>> +            mask |= within_size_orders;
+>>>>> +            break;
+>>>>> +        }
+>>>>> +
+>>>>> +        order = next_order(&within_size_orders, order);
+>>>>> +    }
+>>>>> +
+>>>>> +    if (vm_flags & VM_HUGEPAGE)
+>>>>> +        mask |= READ_ONCE(huge_shmem_orders_madvise);
+>>>>> +
+>>>>> +    if (global_huge)
+>>>> Perhaps I've misunderstood global_huge, but I think its just the return value
+>>>> from shmem_is_huge()? But you're also using shmem_huge directly in this
+>>> Yes.
+>>>
+>>>> function. I find it all rather confusing.
+>>> I think I have explained why need these logics as above. Since mTHP support for
+>>> shmem has just started (tmpfs is still in progress). I will make it more clear
+>>> in the following patches.
+>> OK as long as you have a plan for the clean up, that's good enough for me.
+> 
+> Can I continue to push the following patch [1]? When other types of shmem mTHP
+> are supported, we will perform cleanups uniformly.
 
+I guess that makes sense.
 
-This approach is wrong because %(...) is not expanded when generating
-the source package.
+> 
+> [1] https://lore.kernel.org/linux-mm/20240702023401.41553-1-libang.li@antgroup.com/
+> 
+> Thanks,
+> Bang
 
-
-Expand the generated SRPM to see what has happened.
-
-
-[vagrant@fedora39 ~]$ rpm2cpio
-kernel-6.10.0_rc3_00002_gdb908e378f93-6.src.rpm | cpio -idvm
-
-[vagrant@fedora39 ~]$ tail -n 4 kernel.spec
-%changelog
-* %(echo "$(LC_ALL=3DC; date +'%a %b %d %Y') $(git config --get user.name) =
-\
-<$(git config --get user.email)>") - %{version}-%{release}
-- Custom built Linux kern
-
-
-
-This %changelog section is meaningless, as it does not contain
-any useful information about the person who packaged it.
-
-
-
-Just like mkdebian, this log information must be generated
-when you create the package.
-
-
-Using 'git config' is OK, but git is optional for 'make binrpm-pkg'.
-
-So, you need to add fallback defaults in case git is not available.
-(this code is available in scripts/package/mkdebian)
-
-
-
-
-
-How about adding this to scripts/package/mkspec?
-
-
-if [ "$(command -v git)" ]; then
-        name=3D$(git config user.name) || true
-        email=3D$(git config user.email) || true
-fi
-
-if [ ! "${name:+set}" ]; then
-        name=3D${KBUILD_BUILD_USER:-$(id -nu)}
-fi
-
-if [ ! "${email:+set}" ]; then
-        email=3D"${KBUILD_BUILD_USER:-$(id
--nu)}@${KBUILD_BUILD_HOST:-$(hostname -f 2>/dev/null || hostname)}"
-fi
-
-cat<<EOF
-
-%changelog
-* $(LC_ALL=3DC date +'%a %b %d %Y') ${name} <${email}>
-- Custom built Linux kernel.
-EOF
-
-
-
-
---
-Best Regards
-
-Masahiro Yamada
