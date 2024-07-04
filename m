@@ -1,152 +1,173 @@
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazolkn19011034.outbound.protection.outlook.com [52.103.43.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B63146558;
-	Thu,  4 Jul 2024 17:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.43.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720114040; cv=fail; b=auqv3H0zabnJPDiuko2pOxZcwoey3h+VqDe8nKZN3Ax5sV5xZIT739GS85oYtbYIrLYxULxBW24cNqqArz+XsgkWNBX7IlJtDVVVnpNGe3Da1tbBLEn3byYa4IsV8sCfthKihlKhdtZ3XMLZIlosme/eq5euxBe1B76cq9rkkfc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720114040; c=relaxed/simple;
-	bh=QRzEwtJUgte0stVvkVq6fFSQkT7qhXm9xIkUOgZXBcA=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=u4WTqCDoFQmzLnwcxTHGA35t63mfWx36+0DS0wAr0Sd9hmmIICEqDGWEsltMPGfqQlyOJNuEYiougwnfk4Cdiu8XxY5i/hvV0VoGdfiXtxWNyqWeYXuOcA4n/9NNjr+tSO5hofBu+DY5nxghz4XlefrydigyDvquHQ5kEIZGkLU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=AtCfyTbx; arc=fail smtp.client-ip=52.103.43.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="AtCfyTbx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=flot+wDE5IwvzgaDcXRJLULxI0+qonSpZ4Hg4AtvQ8lgxVG4B7Szb6gF291SDH0i4iWWFaJd+fVQPqn3OViqpkKcCle4MN2Sjp9Nmq7RlBfKjc2CX/koN4I4ymMk2ZqcsgZ2v+d+c+kBohd8s7NA6t3wl63ukivJ7Q9uzVZvE420SPp6UClMZm10FS40y/MjmtX/MCfUkdN+zYBvlRJTUhwCfkn0TBhYdYpJLn+n4sLlHr2JBqZ6j6M9cCeu38WCMBAyjrS0BYfOPx9coYERxWxVf8Js6TcTy+kp+oJLwpAFGAbS6Uq4iNh7oMNqEnDuY5J8r32WHQEj92ZKR0GiEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kwtbvqBATPkfC3LN2Cd5baBxjOBJ9G7HT0Q+oeeJlvA=;
- b=dxggL/nTKiLWmbqGPvPMCzqIDvRWcH7irNKZnJ/b1upP4HnK1+XhUJMx19gl/MwPDBjCBtDn3oTVrB7+8fxLktRLqunou0FSyn3XIr6OfLZG35yJDKWDjB3FwBHWbA0WPcvfr6mxOJOTMq7vMRWmgkujJT6F7TSqpw9v2LL20phQm7cE4nLiL5qncumNuN2wHWKp0Pa+EHwZrMa4gkxR/1lrumwXTl0Ysn1JMIjfp6J02aG+aBUKr0XoTUj3ZtCAppU+lFKXwTV8yBJ0UIunlLoBt6awQE9oKAlgYAJoMcnRlCCa9nKz2w0u8XYUHgemOOQWHdX8Df9O8YwVByOBIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kwtbvqBATPkfC3LN2Cd5baBxjOBJ9G7HT0Q+oeeJlvA=;
- b=AtCfyTbx9jQ1EEDtbESQ6awuuLKrqhRJjpkxuWQo2bhGqQ0Lv9PpxM3mmdhdDoWfNhH7N0eBoS0fwYxAICfvzmU+7AW4X1prf35P9/zYIVnTWV37gdgdnAqPVEt/K4jTVcTZ0jzkEP3lDGUtifOHkuPvUxTN8gCpBeX7xQESczXWmFvUM/QgsBqupSeSnhPCOSg4HcEgBFNy3TE1XZvV4Du+2anG70f2T+o3f0BIxa/w/IKzA9VPbAQaWEb4RJFdVpH0LUV8FlWV9Q2x3d4ExrtHti5nevY3ToViZXz9tsXb7gGCNUW+9xrAgycV8vIAkxVKiD6pHqvPrWKyxLcJ6A==
-Received: from TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:23e::10)
- by TYWP286MB3666.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:3f6::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.30; Thu, 4 Jul
- 2024 17:27:14 +0000
-Received: from TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM
- ([fe80::85b8:3d49:3d3e:2b3]) by TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM
- ([fe80::85b8:3d49:3d3e:2b3%5]) with mapi id 15.20.7719.029; Thu, 4 Jul 2024
- 17:27:14 +0000
-From: Shengyu Qu <wiagn233@outlook.com>
-To: nbd@nbd.name,
-	sean.wang@mediatek.com,
-	Mark-MC.Lee@mediatek.com,
-	lorenzo@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: Shengyu Qu <wiagn233@outlook.com>,
-	Elad Yifee <eladwf@gmail.com>
-Subject: [PATCH v3] net: ethernet: mtk_ppe: Change PPE entries number to 16K
-Date: Fri,  5 Jul 2024 01:26:26 +0800
-Message-ID:
- <TY3P286MB261103F937DE4EEB0F88437D98DE2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [94TgD1qXQdtUVP5ZiV+qK02L3VN9AH/U]
-X-ClientProxiedBy: SG2PR02CA0006.apcprd02.prod.outlook.com
- (2603:1096:3:17::18) To TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:23e::10)
-X-Microsoft-Original-Message-ID: <20240704172626.73719-1-wiagn233@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0F646447;
+	Thu,  4 Jul 2024 17:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720114120; cv=none; b=pVT7kc2NA1SUTwOe6AmHgCimrYJK9bsIHu2p4HRZM17637Qt2cb5TUsAS94g+HxF+zPgra2bdWyML9PYKSoZdHsFKUYWopCm5n/UVg6wIzC9fzW7y5ipNBplk2rCRc4rK6R4ueSR9wjEcVyEmV2Tu6RypmFHOC6auqBKyPZH6bk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720114120; c=relaxed/simple;
+	bh=k90wRWSNtXsHHg1DxapLwrN3QXfr/aKyoh7wMXQ/E8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gEo4T8CBbhixq2NErLoJnKN9y5dUI3QF+4xEKNBX6rDtR5j9bVW6uBzSX2aazg7kBIVv2AaoNEjoey/j2ezO1xV0sHslI3JmOCC23XOOJqeCPzGBPjZHplAis/vxHkfc+qH8gEYJR2HOv9qnmg7pjsPcsOejw3A2tAW3qxHRFhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-64b5617ba47so8045047b3.3;
+        Thu, 04 Jul 2024 10:28:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720114117; x=1720718917;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qR61nMwSwM6cVFAnAbtSvi4Auo1YFRorV0GSWe+xw9k=;
+        b=nisAMJlLL6SI/5+upq2IF+cMsgfL0ebC4NYnbooXhzCX1vBNW+YfpVQzlt1DsYk3hI
+         PTNTqyfVw5X+XuKmdvO8kciFm5CrCplVH25/WwoKNSSaMMdiQKjpR5bxEIs+6Sz/aGZ+
+         scRyqruh/wEDRMrSvEkNjNpRTRGzn6X7x0sz3nXtONUza8aFw4Bx7imSaOP/k6QVOLIt
+         q4pkGaWv8DNrguFbMd+67TyF98FpR2/C4A2JhbtrFV/YE+emxdP+acSl3TPk21oTWoFx
+         0LUWicXFDRSiO/RPc+HMcji5H38cY7OY1ApsO8opfipzlcLQFbUBo8BE0XZhMQwb2T5J
+         ZOsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnFl+KwGS5NTkktojMgghTImyTmpbxQ1umYHNeNnjpZpV2K7CU5PfVD5LkPiJjCZi1UwHOe4qb+h2cb1H7F9mfbEMxn7Hpw1ov4PCM6uxeGVoxKPNHX0mwchvrsuUKWgX/LoOtmJc4qV1Fs21shysP/tXByMgdxhOIKhaU+gYfxfLkLXJ90CbEXQZmri6dYyGTOtXT2wmkDoiQqyWk6/ZE8PRy9l7kqw==
+X-Gm-Message-State: AOJu0Yyw1Uw5dOxctB+Mizji0GpRXx09dFCGcv2+4Xfs6JjpwHJZxwao
+	CgPZgp3CH3+SxHJewydI6EiG/TPeVhDJ7riFVpuBiVoAwqgY4FUNfhbj4/xj
+X-Google-Smtp-Source: AGHT+IG4rmnI6tzdIpaZGrZGOlyCAXKjNpsFd9zECWXLb5g00KGkMsOI4J2B4yYhIV9IUit1mC3+BA==
+X-Received: by 2002:a0d:ea8c:0:b0:61d:fcf7:3377 with SMTP id 00721157ae682-652d85369abmr22209757b3.44.1720114116969;
+        Thu, 04 Jul 2024 10:28:36 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-64b3a625488sm23794837b3.43.2024.07.04.10.28.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jul 2024 10:28:36 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e0360f8901aso875778276.2;
+        Thu, 04 Jul 2024 10:28:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUqc8Znx3b6XQvn+mY3usrq0h1sFUTqmEk8n5nZSEPaumn99FNx+yX2sz26lXTV1kOba9igQUmqvTPTQWLrJ+6JC2X8pY2HkEpK70dUsfF1KifioZ3BGq0DPqRkkIlwdZqyvfpIxmiAd55hKMWSLo0iKaFt3pHWxg6OMLYh6EDdpCzZuiDeRkymcF4mikxVh2X88Cg1LqZFqil1X58Oj2L9CSqkzKV3dg==
+X-Received: by 2002:a81:8450:0:b0:648:857c:1530 with SMTP id
+ 00721157ae682-652d803a2bamr21894747b3.34.1720114116374; Thu, 04 Jul 2024
+ 10:28:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY3P286MB2611:EE_|TYWP286MB3666:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7e20f607-5cf6-4a01-9154-08dc9c4e8b4b
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|8060799006|3412199025|440099028|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	8a48axsqjnDYRXv3Shfh+xVB89zkIsP5XG4K8+TbiRV5ouqgc9sfBdN3VE8IBQQsHGDYazTFSd6NPxq7gk5ulME5c7Zd6t8Z7xs4Mmmb2k/jyLyYcP5tVqJOtpzw48v5fLQxkm2RLjoOu7jawSVDQhTRaRuTRKLHy1I7sZXj6h4EiKPNIdy3ro5eQVxTRtvscv462cRZfmomZ6SLtk1G0yqJ1g1xjwuIiqVe+JScnpKn/5Mt76t4LkAtEmpDc0d+WoTFNxzg7AiLphrp8uoBrRxWGSlwZoe3vuXG70wAJA+zO+3+HGFf698B0k+uqtDNTMtUkoXbuGllxDZkzW/ehl5dgAllDI7sovcAKgq5D3lWBJYawj084UGXcvzRWQ3Jnygp3+AE4xtvpGTSlL+xhBR4mXjpmCXEWZYx417VgYHrMoTETKc8KAjVShTXeIhpzt88Rf7J8lN6hlR9xecK8XNIoAPVA1asp3JuRh67xFrvhRJv1QIOlXpk643ySsQLmJId7sC2jJ2hKH1IupQEdDF9f1b2E9fyu1R3Gg59q3Y8Ibjt4ztpfPE5o7qZnR+sn6pORFknbxldgbX3/JBolUvAhsw/PM3dYmHf50klrvNGAuRzMZQ2t28nJxWgp2E9WGoFjPap0Dl25QU0TeqkSw==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3JMX0oqDHZn7nBE3/lhvK71D7LV4766n4WFjaHrdZ4yemTGhoE6RjSFhaaeN?=
- =?us-ascii?Q?L8+JtDLtpXhg3iW96R4L3o5l5eX7Enk4cHMGi65LOMidzypRSCcr9pg5nKQB?=
- =?us-ascii?Q?KrEd5hRl5PviE0kF9YKJhY6WVDmvazRgsxz8JTSaICNt3kfRWf5hARgRnFXs?=
- =?us-ascii?Q?Knmpdz6nkh3VSsoY7pPjMrABW5BjRD8F7lo5tv0EocWVdpnAfyZtcSoXAOVH?=
- =?us-ascii?Q?1+lGZViDKabPqmm3OwGmZ9147jI/zXpXvUNm1sPQ/cJWh8rzdFwcXeisEqiM?=
- =?us-ascii?Q?aCJOb6/PErlZEqTLqMHdu6WVV6pXEvHRbV2TDO7I2TubnOzeTg8S6jzrhRQB?=
- =?us-ascii?Q?RQmd52I9NkXWwKgfUO9ewIJWFrs/bVO1Ut8qeMm7lnjblb+uNFr6Jb6lnxIa?=
- =?us-ascii?Q?fXOCQfr9SbefIQM9rT7WiYRfFZZcRwyO8mOJGgUSCaowbjVQwLEWt7HWWRwp?=
- =?us-ascii?Q?yyY7YYRidJn+q49SKH394tonEUID/DuEwiMRyd4ph9+wdwSN/bTf0Sbh4EjC?=
- =?us-ascii?Q?YGAMEMlCBdZWZq5UNSJ1QgFBNbSWJrPot18vlI8FEcqes1IhyUg/mjBjWD2D?=
- =?us-ascii?Q?f/Bcshg5qIjK/R1jhu+S5wgyX6MeRFSqIAOtYtG70I4mltUGMQt72YmbJuE4?=
- =?us-ascii?Q?stuH4KUICYGWYa+aAXbmOCe2eieILScScOVrmoyTG8Ct5BgU3pcPlsN1AxQX?=
- =?us-ascii?Q?BrrfG8nbvqzBA6ON3UCU/nRjpaaEHmUx329xX0/t8tboCF05IO578hWHz0Ep?=
- =?us-ascii?Q?PuscNRFZWi/I7ZF/iAB5nDImqbYIzlk/btvGZXC8yCZeNS2yvZqacAqDQ+hM?=
- =?us-ascii?Q?uFfrta1AKeEzCof2369O1eMUPDlnjQhbP3epKjiwVvOACiGW2hhEg2cfmbze?=
- =?us-ascii?Q?8Z7ZNVF8alzSnJoBzKoL0cLkQbry+nrg/baWkt7Wr0cAWt/ARnee8e9JzaZe?=
- =?us-ascii?Q?eFeGHaelKzMat6PITcSh00XNrv7zkjUVpCMjPCkPwHw+cL4DgK9NOBxXCxLe?=
- =?us-ascii?Q?MW23BBmcGQZEe12ZLSiZ3+SgLuMnWNt02uz3B1Zj5CIENu3MDPvcoRR0yTBf?=
- =?us-ascii?Q?4ek5YuXpcWozXiOgvlrSdzKU1tw4tH/G4plH/H01koaRfYaqOqcJxdkwG56y?=
- =?us-ascii?Q?F0uVW577igqHOqb1gOK5zUgl1V5WLSTjg2n65ljals0lWQRCVhU3WJjTmeWS?=
- =?us-ascii?Q?P114b0Ssi2qIrLHT/D6oWIpWVlK7OgbGslkIcqOcskXhky1b7RFK7BDd2Ck?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e20f607-5cf6-4a01-9154-08dc9c4e8b4b
-X-MS-Exchange-CrossTenant-AuthSource: TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 17:27:14.0953
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWP286MB3666
+References: <20240625200316.4282-1-paul.barker.ct@bp.renesas.com> <20240625200316.4282-3-paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20240625200316.4282-3-paul.barker.ct@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 4 Jul 2024 19:28:24 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWKUq=Tf9zTx2LDr_gkbsxBPnQeK=buDSsQ__-QUHX5Gw@mail.gmail.com>
+Message-ID: <CAMuHMdWKUq=Tf9zTx2LDr_gkbsxBPnQeK=buDSsQ__-QUHX5Gw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/9] pinctrl: renesas: rzg2l: Clean up and refactor OEN
+ read/write functions
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-MT7981,7986 and 7988 all supports 32768 PPE entries, and MT7621/MT7620
-supports 16384 PPE entries, but only set to 8192 entries in driver. So
-incrase max entries to 16384 instead.
+Hi Paul,
 
-Signed-off-by: Elad Yifee <eladwf@gmail.com>
-Signed-off-by: Shengyu Qu <wiagn233@outlook.com>
----
-Changes since V1:
- - Reduced max entries from 32768 to 16384 to keep compatible with MT7620/21 devices.
- - Add fixes tag
+On Tue, Jun 25, 2024 at 10:03=E2=80=AFPM Paul Barker
+<paul.barker.ct@bp.renesas.com> wrote:
+> The variable naming in the various OEN functions has been confusing. We
+> were passing the _pin & bit variables from rzg2l_pinctrl_pinconf_get()
+> and rzg2l_pinctrl_pinconf_set() as the offset & pin argument to the
+> oen_read() and oen_write() functions. This doesn't make sense, the first
+> of these isn't actually an offset and the second is not needed for
+> RZ/V2H but leads to confusion with the bit variable used within these
+> functions.
+>
+> To tidy this up, instead pass the _pin variable directly to the
+> oen_read() and oen_write() functions with consistent naming. Then
+> rzg3s_read_oen() and rzg3s_write_oen() can use macros to get the port
+> and pin numbers it needs.
+>
+> Instead of passing the pin capabilities into oen_read() and oen_write(),
+> we can check that the pin supports OEN before calling these functions.
+>
+> Also, merge rzg3s_oen_is_supported() into rzg3s_pin_to_oen_bit() to give
+> a single translation function which returns an error if the pin doesn't
+> support OEN. While we're here, remove an unnecessary branch and clarify
+> the variable naming. Lastly, check that we are not dealing with a
+> dedicated pin before calling RZG2L_PIN_ID_TO_{PORT,PIN}().
+>
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Changes v2->v3:
+>   * Picked up Linus W's Acked-by tag.
+>   * Skipped Geert's Reviewed-by tag as I've made a few changes here and
+>     want another review.
+>   * Check pin caps before calling oen_{read,write}() so we can drop the
+>     caps argument to those functions.
+>   * Simplify arguments to rzg3s_pin_to_oen_bit() and decode
+>     pin_data/port/pin inside this function.
+>   * Check for dedicated pin before calling RZG2L_PIN_ID_TO_{PORT,PIN}().
 
-Changes since V2:
- - Remove fixes tag (Thanks to Jakub)
----
- drivers/net/ethernet/mediatek/mtk_ppe.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the update!
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.h b/drivers/net/ethernet/mediatek/mtk_ppe.h
-index 691806bca372..223f709e2704 100644
---- a/drivers/net/ethernet/mediatek/mtk_ppe.h
-+++ b/drivers/net/ethernet/mediatek/mtk_ppe.h
-@@ -8,7 +8,7 @@
- #include <linux/bitfield.h>
- #include <linux/rhashtable.h>
- 
--#define MTK_PPE_ENTRIES_SHIFT		3
-+#define MTK_PPE_ENTRIES_SHIFT		4
- #define MTK_PPE_ENTRIES			(1024 << MTK_PPE_ENTRIES_SHIFT)
- #define MTK_PPE_HASH_MASK		(MTK_PPE_ENTRIES - 1)
- #define MTK_PPE_WAIT_TIMEOUT_US		1000000
--- 
-2.34.1
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 
+> -static u32 rzg3s_oen_read(struct rzg2l_pinctrl *pctrl, u32 caps, u32 off=
+set, u8 pin)
+> +static int rzg3s_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned in=
+t _pin)
+>  {
+> +       u64 *pin_data =3D pctrl->desc.pins[_pin].drv_data;
+>         u8 max_port =3D pctrl->data->hwcfg->oen_max_port;
+>         u8 max_pin =3D pctrl->data->hwcfg->oen_max_pin;
+
+As max_port and max_pin are used only once...
+
+> -       u8 bit;
+> +       u8 port, pin, bit;
+>
+> -       if (!rzg3s_oen_is_supported(caps, pin, max_pin))
+> -               return 0;
+> +       if (*pin_data & RZG2L_SINGLE_PIN)
+> +               return -EINVAL;
+>
+> -       bit =3D rzg3s_pin_to_oen_bit(offset, pin, max_port);
+> +       port =3D RZG2L_PIN_ID_TO_PORT(_pin);
+> +       pin =3D RZG2L_PIN_ID_TO_PIN(_pin);
+> +       if (pin > max_pin)
+
+... I'd rather use their origins here...
+
+> +               return -EINVAL;
+> +
+> +       bit =3D pin * 2;
+> +       if (port =3D=3D max_port)
+
+... and here.
+I can do that while applying.
+
+> +               bit +=3D 1;
+> +
+> +       return bit;
+> +}
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+I'll check with Linus whether I can still queue this in renesas-pinctrl
+for v6.11.  As the first three patches of this series are a hard
+dependency for the DTS parts, it would be good to get them in sooner
+rather than later.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
