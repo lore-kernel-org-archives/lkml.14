@@ -1,165 +1,256 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E19939FC1;
-	Thu,  4 Jul 2024 17:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119A140BF5;
+	Thu,  4 Jul 2024 17:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720114936; cv=none; b=WSN1WoBSP3cq9wUmgdVMw+5EjMFlOahYojl4/TgjKzwlVJxeEI5IaN39kvMRXT+X8H7ypVSB79c4GTttVFCnYkUp1psIchlOdcuq5ar4TMpiFQ4S12dqdYIjf9CPs/3Q46I1ri+QE1qiwnzjep33fQCo7C2LXZwJ/DO1n1RjkD0=
+	t=1720114943; cv=none; b=GPHCc+vsdFVoDHynLGPhMLFd5RWkFRiEvyN31v/0Udd2m+So3vXTzQQFtaNiPM+E06r6M9mWL9TRMdLyRgJH+P9XSP4yca96JgsvjbcC2L8toG9dM9pjwNKd5eoMxll/lVq10kq5kIstkZ5msVgpztszld5a/M6xT70EEf5WSLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720114936; c=relaxed/simple;
-	bh=lhkjKV6etROwmKYt7ji8RneUVGzDtOb8jYPIZN1kl6o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CkIaSttvWBs3FFh5RW0alw042y+kXRYm5GvSI/Wshfx2Jwfy6oI5OnZPQKqRDoQb0knAz7prYrvE9okGtdO0X8AuGZKLbZqJNERitN56C053AsDHeqjdque3QUQgbPTGXXQgV7ZPjW9DLa3tLEgH46fFj2ceKjeseKGv/WcYvI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dbFss0iK; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1720114943; c=relaxed/simple;
+	bh=SfTt+NBuVrVtPOpSZ07yog9q01tmg9ZnlppWLbsDaWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hO/EdRHWYc9QVEIgeraYAkmaMqVx5sVHF0q3UaX7KQ8qMuwCFjc8d38Xkg2Amu/Z2usG3qIybRASupOxvELGI+9Ydatg/GhwO+p0XG8vGynv/K9gZGv7iINj0apGHivz137wTucgbREYMOWKl8iUeju6ArPvtjfoQoUqkDZCLyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g4DsgEov; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbFss0iK"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4256eec963eso5722575e9.1;
-        Thu, 04 Jul 2024 10:42:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g4DsgEov"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-42648961d7aso5893295e9.0;
+        Thu, 04 Jul 2024 10:42:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720114932; x=1720719732; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GDY0TLQz375z/4v/wiF5RMOfJ90TnWvvIn6hociwdaE=;
-        b=dbFss0iKI5vzN5DF69C+ojnzzQ68Z5MsM8FkT0hp4mEJJlpHLOnxqR44TO9MaB9Qg4
-         MLuwdGb4e55W9lKhxKx+CXdG0j4AKSf+1HTK216SdCk4ecbwj0Hq7RtNLn87W/1FVtJ+
-         mStuzr2NdYSq20jpIp7FvgZHM+jKcBFQsiCNFf0FqXyoGK3U+B/4pjJ/53j14DDRRZQ/
-         UqdESlgiLYMeoiugCai/nVk/WmzjNXM2MQC4scwji4DhKeA8+av2GxPyCf6/zXn0mErI
-         TT9ofI0KE0iu9nNAhpNEk8a6EiPl1HJqZP7AuFj3KOJs4xMbKOGFwfaI7jvEREw3rz5F
-         ZFOQ==
+        d=gmail.com; s=20230601; t=1720114940; x=1720719740; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DO7q/NGNcPdvMIxjhvqwBYf8uSmJ6wXA8Ckn0WCsX4c=;
+        b=g4DsgEov/BWUoUoZe2sjPeLPqOueTbh/hA+ouxDTtA+Lr9vpQvXBK10UqQD3o6NYz6
+         4PIJpgT8/ywsXZwBw+buSXC8Drg+CLKAWy2VaIyfCbQO8MltcqnAbhEch9gQ0uA8754P
+         NxiA2M/xAXmuHHxSXRmG3q7+TfbCFPp1VD4SlMCCEbjjhiv/cunjTgy3aE7JiTiBEbpR
+         o9KMCXB2EnKTw5ixKBiC2assc1h5z0CM5moKO8NXINJydo7f6BYzQ6Ja84RNdJETpLLR
+         +X/ge4BlnjTtfsUF+kh8fBBHWiOPPt2J4oi0rS33ALJ9aW5/r0DwE1VHocCofs3xrMak
+         UqfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720114932; x=1720719732;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GDY0TLQz375z/4v/wiF5RMOfJ90TnWvvIn6hociwdaE=;
-        b=D6aV1B8psCEEBT5HTGPUXpBU+yrAWVMZ11owcYWZwfINhYMDo9yYdRPt8o5Lqpzvar
-         VjEt4ylQjEsjtvr3Mcqw/DHjx4uHf7LpTZS+e6uU8zULsaQiImTFPbELRp3awTgiwlyx
-         G4AszUPMqJl1OTBMJCItlKzQnp8SPbWGs7muQw5XBr9uWMLxn25apje1y3COE9OsSTRM
-         q9cnhlQpoZVIScVH5VZUC7ZYLsGmYadVvetp2j7YWX7+Q0+VQ+d7JLf0ldv53SeFRZbB
-         oDjY8QbSWmgQT7pRopOnJNvgtlUXX9UJ4PF5s3r/SF1M0FKIi04e+qcV9w/PgzJjzXgV
-         ltWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUyfSjWpnJulNN9I9ZQFrCkZ2NfWuDgJgln4/OnZBpv5mGgHTycM++1Hs1MWnxG5xUyqdzJqdoXcbZ15qoEGMhwphJfT9KwYutKUzRsL096ZWf9wSs2hM50KW456IS9l64e85dtzfQ7w==
-X-Gm-Message-State: AOJu0YyxhEwOdxL4Al7mD1OobYfjYooZ6nb7P5kKjRbT+6bqiU105Qdu
-	KjI15i+XdNr4ZN1XB2iWOp7Ww5n+U8UbR5XrzLRlH2S0nbz0QBDq
-X-Google-Smtp-Source: AGHT+IFWiXEkiyUlWgPKEnzDp5P4XmxoVOZj9814mhAsjtvlE3iXD1P+O6ta5BjTJKqlDIwnfEq7cA==
-X-Received: by 2002:a05:600c:4395:b0:424:a3d7:2a89 with SMTP id 5b1f17b1804b1-4264a3d8c05mr18404925e9.4.1720114932544;
-        Thu, 04 Jul 2024 10:42:12 -0700 (PDT)
-Received: from localhost (host-79-55-57-217.retail.telecomitalia.it. [79.55.57.217])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42649dfcc73sm17734295e9.1.2024.07.04.10.42.12
+        d=1e100.net; s=20230601; t=1720114940; x=1720719740;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DO7q/NGNcPdvMIxjhvqwBYf8uSmJ6wXA8Ckn0WCsX4c=;
+        b=oXPH37RmsWrKow7fES5ujyF54RIuyNd/WojTsns9a+j5lG01fFOpRWvlVZxOOIRpD+
+         Vj9Q4C2vu2FyVcuZ+3n0hqe7OuMOn4502J7XJJrOl8vs25CWivUS4+vX+9NZej/Gknuv
+         +8EKwDoKJoNbflnW1rWpa354oVjUfWp5HxTRZaWvX88E9gtfNTUoEPSlFgSHuQpWo3yt
+         TlwYDP0FnljypTdydfVHvevhgD1ZiETvZWgzxcLcL1SDt9y2CIx5gyB6oMuFsEmv/buQ
+         TpIMyM+M1kIgrWd2p1A6D/JwEUN82mr0pfJU2vojmlAq/oCBPXAqmZO11hX+mWSFoHLx
+         RUaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURdPSSrdlbed5ZhNzmvFXhFm/sPFMAiQbIjjxZzuhBXILHrB0EjTcpFA26CSBtpHuAoqytGI5QB+gVyIPzhUQ+P5ZhciN6J9X+ycbK
+X-Gm-Message-State: AOJu0Yxvq2uPYt8XYUTtmjrs0wLMPYvqqUtdUZr2LM/vsZG7n1nSkRf0
+	o5UxCtf6JC9/EaSGt9YwIV947uPM4xdOJXH2S1BrPnH6r8ttYM1g
+X-Google-Smtp-Source: AGHT+IFCwuIDDla90x+4B9eGYmM36tynt3nGQCnGhZ+87WBaBNnvKSxXhQRuFh4TsAVnci4xfZkbPg==
+X-Received: by 2002:a05:600c:5126:b0:424:bb93:7aad with SMTP id 5b1f17b1804b1-4264a36eebbmr19192325e9.0.1720114940403;
+        Thu, 04 Jul 2024 10:42:20 -0700 (PDT)
+Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2ca4c2sm32598535e9.36.2024.07.04.10.42.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 10:42:12 -0700 (PDT)
-From: Matteo Martelli <matteomartelli3@gmail.com>
-Date: Thu, 04 Jul 2024 19:42:01 +0200
-Subject: [PATCH v2 1/2] dt-bindings: iio: adc: add binding for pac1921
+        Thu, 04 Jul 2024 10:42:20 -0700 (PDT)
+Date: Thu, 4 Jul 2024 19:42:18 +0200
+From: Stanislav Jakubek <stano.jakubek@gmail.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Baolin Wang <baolin.wang7@gmail.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] arm64: dts: sprd: reorder clock-names after clocks
+Message-ID: <9623744b096c026f481fc5d03ba8f1643e487534.1720112081.git.stano.jakubek@gmail.com>
+References: <cover.1720112081.git.stano.jakubek@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240704-iio-pac1921-v2-1-0deb95a48409@gmail.com>
-References: <20240704-iio-pac1921-v2-0-0deb95a48409@gmail.com>
-In-Reply-To: <20240704-iio-pac1921-v2-0-0deb95a48409@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Marius Cristea <marius.cristea@microchip.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Matteo Martelli <matteomartelli3@gmail.com>
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1720112081.git.stano.jakubek@gmail.com>
 
-Add binging for Microchip PAC1921 Power/Current monitor
+DT convention is to have property-names after property.
+While at it, cleanup indentation for some clocks.
+No functional change.
 
-Signed-off-by: Matteo Martelli <matteomartelli3@gmail.com>
+Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
 ---
- .../bindings/iio/adc/microchip,pac1921.yaml        | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+ arch/arm64/boot/dts/sprd/sc9863a.dtsi |  4 +--
+ arch/arm64/boot/dts/sprd/ums512.dtsi  |  4 +--
+ arch/arm64/boot/dts/sprd/whale2.dtsi  | 38 +++++++++++++++------------
+ 3 files changed, 25 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/microchip,pac1921.yaml b/Documentation/devicetree/bindings/iio/adc/microchip,pac1921.yaml
-new file mode 100644
-index 000000000000..b6f01b79b91d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/microchip,pac1921.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/microchip,pac1921.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip PAC1921 High-Side Power/Current Monitor with Anaog Output
-+
-+maintainers:
-+  - Matteo Martelli <matteomartelli3@gmail.com>
-+
-+description: |
-+  The PAC1921 is a power/current monitoring device with an analog output
-+  and I2C/SMBus interface.
-+
-+  Datasheet can be found here:
-+  https://ww1.microchip.com/downloads/en/DeviceDoc/PAC1921-Data-Sheet-DS20005293E.pdf
-+
-+properties:
-+  compatible:
-+    const: microchip,pac1921
-+
-+  reg:
-+    maxItems: 1
-+
-+  vdd-supply: true
-+
-+  "#io-channel-cells":
-+    const: 1
-+
-+  shunt-resistor-micro-ohms:
-+    description:
-+      Value in micro Ohms of the shunt resistor connected between
-+      the SENSE+ and SENSE- inputs, across which the current is measured.
-+      Value is needed to compute the scaling of the measured current.
-+
-+  label:
-+    description: Unique name to identify which device this is.
-+
-+  microchip,read-int-gpios:
-+    description:
-+      READ/INT input pin to control the current state of the device, either in
-+      the INTEGRATE state when driven high, or in the READ state when driven low.
-+      When not connected the pin is floating and it can be overridden by the
-+      INT_EN register bit after asserting the READ/INT_OVR register bit.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+  - shunt-resistor-micro-ohms
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adc@4c {
-+            compatible = "microchip,pac1921";
-+            reg = <0x4c>;
-+            vdd-supply = <&vdd>;
-+            #io-channel-cells = <1>;
-+            label = "vbat";
-+            shunt-resistor-micro-ohms = <10000>;
-+        };
-+    };
-+...
-
+diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
+index a7b897966882..e5a2857721e2 100644
+--- a/arch/arm64/boot/dts/sprd/sc9863a.dtsi
++++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
+@@ -556,9 +556,9 @@ sdio0: mmc@20300000 {
+ 				reg = <0 0x20300000 0 0x1000>;
+ 				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-				clock-names = "sdio", "enable";
+ 				clocks = <&aon_clk CLK_SDIO0_2X>,
+ 					 <&apahb_gate CLK_SDIO0_EB>;
++				clock-names = "sdio", "enable";
+ 				assigned-clocks = <&aon_clk CLK_SDIO0_2X>;
+ 				assigned-clock-parents = <&rpll CLK_RPLL_390M>;
+ 
+@@ -572,9 +572,9 @@ sdio3: mmc@20600000 {
+ 				reg = <0 0x20600000 0 0x1000>;
+ 				interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-				clock-names = "sdio", "enable";
+ 				clocks = <&aon_clk CLK_EMMC_2X>,
+ 					 <&apahb_gate CLK_EMMC_EB>;
++				clock-names = "sdio", "enable";
+ 				assigned-clocks = <&aon_clk CLK_EMMC_2X>;
+ 				assigned-clock-parents = <&rpll CLK_RPLL_390M>;
+ 
+diff --git a/arch/arm64/boot/dts/sprd/ums512.dtsi b/arch/arm64/boot/dts/sprd/ums512.dtsi
+index 4c080df48724..efa14309cc4e 100644
+--- a/arch/arm64/boot/dts/sprd/ums512.dtsi
++++ b/arch/arm64/boot/dts/sprd/ums512.dtsi
+@@ -849,9 +849,9 @@ sdio0: mmc@1100000 {
+ 				compatible = "sprd,sdhci-r11";
+ 				reg = <0x1100000 0x1000>;
+ 				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+-				clock-names = "sdio", "enable";
+ 				clocks = <&ap_clk CLK_SDIO0_2X>,
+ 					 <&apapb_gate CLK_SDIO0_EB>;
++				clock-names = "sdio", "enable";
+ 				assigned-clocks = <&ap_clk CLK_SDIO0_2X>;
+ 				assigned-clock-parents = <&pll1 CLK_RPLL>;
+ 				status = "disabled";
+@@ -861,9 +861,9 @@ sdio3: mmc@1400000 {
+ 				compatible = "sprd,sdhci-r11";
+ 				reg = <0x1400000 0x1000>;
+ 				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+-				clock-names = "sdio", "enable";
+ 				clocks = <&ap_clk CLK_EMMC_2X>,
+ 					 <&apapb_gate CLK_EMMC_EB>;
++				clock-names = "sdio", "enable";
+ 				assigned-clocks = <&ap_clk CLK_EMMC_2X>;
+ 				assigned-clock-parents = <&pll1 CLK_RPLL>;
+ 				status = "disabled";
+diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
+index cdf52fd78ee4..a28f995fb3ff 100644
+--- a/arch/arm64/boot/dts/sprd/whale2.dtsi
++++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
+@@ -75,9 +75,10 @@ uart0: serial@0 {
+ 					     "sprd,sc9836-uart";
+ 				reg = <0x0 0x100>;
+ 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+-				clock-names = "enable", "uart", "source";
+ 				clocks = <&apapb_gate CLK_UART0_EB>,
+-				       <&ap_clk CLK_UART0>, <&ext_26m>;
++					 <&ap_clk CLK_UART0>,
++					 <&ext_26m>;
++				clock-names = "enable", "uart", "source";
+ 				status = "disabled";
+ 			};
+ 
+@@ -86,9 +87,10 @@ uart1: serial@100000 {
+ 					     "sprd,sc9836-uart";
+ 				reg = <0x100000 0x100>;
+ 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+-				clock-names = "enable", "uart", "source";
+ 				clocks = <&apapb_gate CLK_UART1_EB>,
+-				       <&ap_clk CLK_UART1>, <&ext_26m>;
++					 <&ap_clk CLK_UART1>,
++					 <&ext_26m>;
++				clock-names = "enable", "uart", "source";
+ 				status = "disabled";
+ 			};
+ 
+@@ -97,9 +99,10 @@ uart2: serial@200000 {
+ 					     "sprd,sc9836-uart";
+ 				reg = <0x200000 0x100>;
+ 				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+-				clock-names = "enable", "uart", "source";
+ 				clocks = <&apapb_gate CLK_UART2_EB>,
+-				       <&ap_clk CLK_UART2>, <&ext_26m>;
++					 <&ap_clk CLK_UART2>,
++					 <&ext_26m>;
++				clock-names = "enable", "uart", "source";
+ 				status = "disabled";
+ 			};
+ 
+@@ -108,9 +111,10 @@ uart3: serial@300000 {
+ 					     "sprd,sc9836-uart";
+ 				reg = <0x300000 0x100>;
+ 				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+-				clock-names = "enable", "uart", "source";
+ 				clocks = <&apapb_gate CLK_UART3_EB>,
+-				       <&ap_clk CLK_UART3>, <&ext_26m>;
++					 <&ap_clk CLK_UART3>,
++					 <&ext_26m>;
++				clock-names = "enable", "uart", "source";
+ 				status = "disabled";
+ 			};
+ 		};
+@@ -129,8 +133,8 @@ ap_dma: dma-controller@20100000 {
+ 				/* For backwards compatibility: */
+ 				#dma-channels = <32>;
+ 				dma-channels = <32>;
+-				clock-names = "enable";
+ 				clocks = <&apahb_gate CLK_DMA_EB>;
++				clock-names = "enable";
+ 			};
+ 
+ 			sdio3: mmc@50430000 {
+@@ -138,10 +142,10 @@ sdio3: mmc@50430000 {
+ 				reg = <0 0x50430000 0 0x1000>;
+ 				interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-				clock-names = "sdio", "enable", "2x_enable";
+ 				clocks = <&aon_prediv CLK_EMMC_2X>,
+-				       <&apahb_gate CLK_EMMC_EB>,
+-				       <&aon_gate CLK_EMMC_2X_EN>;
++					 <&apahb_gate CLK_EMMC_EB>,
++					 <&aon_gate CLK_EMMC_2X_EN>;
++				clock-names = "sdio", "enable", "2x_enable";
+ 				assigned-clocks = <&aon_prediv CLK_EMMC_2X>;
+ 				assigned-clock-parents = <&clk_l0_409m6>;
+ 
+@@ -194,8 +198,8 @@ hwlock: hwspinlock@40500000 {
+ 				compatible = "sprd,hwspinlock-r3p0";
+ 				reg = <0 0x40500000 0 0x1000>;
+ 				#hwlock-cells = <1>;
+-				clock-names = "enable";
+ 				clocks = <&aon_gate CLK_SPLK_EB>;
++				clock-names = "enable";
+ 			};
+ 
+ 			eic_debounce: gpio@40210000 {
+@@ -258,9 +262,9 @@ watchdog@40310000 {
+ 				reg = <0 0x40310000 0 0x1000>;
+ 				interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+ 				timeout-sec = <12>;
+-				clock-names = "enable", "rtc_enable";
+ 				clocks = <&aon_gate CLK_APCPU_WDG_EB>,
+-				       <&aon_gate CLK_AP_WDG_RTC_EB>;
++					 <&aon_gate CLK_AP_WDG_RTC_EB>;
++				clock-names = "enable", "rtc_enable";
+ 			};
+ 		};
+ 
+@@ -277,9 +281,9 @@ agcp_dma: dma-controller@41580000 {
+ 				/* For backwards compatibility: */
+ 				#dma-channels = <32>;
+ 				dma-channels = <32>;
+-				clock-names = "enable", "ashb_eb";
+ 				clocks = <&agcp_gate CLK_AGCP_DMAAP_EB>,
+-				       <&agcp_gate CLK_AGCP_AP_ASHB_EB>;
++					 <&agcp_gate CLK_AGCP_AP_ASHB_EB>;
++				clock-names = "enable", "ashb_eb";
+ 			};
+ 		};
+ 	};
 -- 
-2.45.1
+2.34.1
 
