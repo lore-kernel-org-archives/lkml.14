@@ -1,110 +1,117 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4435240BF2;
-	Thu,  4 Jul 2024 08:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A2940BF2;
+	Thu,  4 Jul 2024 08:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720081128; cv=none; b=E4iOHG3pnJABQC+bj0RUwdWQ2KgqwFcQCpnGl8jfY7U/ark+ZUz8gs+Yq5LCFkDbHEfW6PJ6YivfDUqI+4ou0xSBC0wonZkZJpPaTH+MFfWripItwZ/STwo2mOzMDfj6U244KNjucHfXCWxvNIfFxmH26/lgcyKRThip2DCc54s=
+	t=1720081164; cv=none; b=fse9wiwqMMNItjN7WSWWUpemJl5IPTZE5UogPBPVzVLXFWtH9X0MWr4qlKVM7mK4jpsivyTN5AJTUL49oAgRtp27mqDyzSoU2kuW7sIX0tFp8L8mLSEoyrQYgRcOiXwkiGUXePAeX8OzPzKgSbtAuNTp1KQwwb5pbNcjcNiLV3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720081128; c=relaxed/simple;
-	bh=6/zPblrqcHg0wS138MP652lBp+ZaoHvh+/0sq4DtdMw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YjlkExfWw/EsPYQ7/7ATIQdGSPWarQPjyPsGhUJlpxonhKLTLHdzwJWATvB881tp8SEfQZzmJQ3+BI7olgLRkhe2w+chbqNy/GAeI597UtAKHZxHSAb70BgxNFNRC2h/vQUJc9T3hBQPpOdB3eFarZXP8wil1bdS4n/uUPaXOyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2z1qyOr; arc=none smtp.client-ip=209.85.221.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720081164; c=relaxed/simple;
+	bh=3knMpZHgzR7f69CQVQ68vB+p7FEWmq4/tjkWzISEutM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uWBhF07fWH4XirKy1sN1QaCtL2n4fpJfxNrfZujDzzlgkN/26r7N+T1swzzjZnmN1ODIBQ5gBByMfmw6jqG2zS+VabV9HdFtxKpF+2OLR2hAsEmcslHPDsrdRlSBtl78ZCf6PFRcsuGhQwuIydsco51di8IhC4y97dgcMwc+Tvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oOYmZ+0M; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2z1qyOr"
-Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-367940c57ddso236468f8f.3;
-        Thu, 04 Jul 2024 01:18:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720081125; x=1720685925; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6/zPblrqcHg0wS138MP652lBp+ZaoHvh+/0sq4DtdMw=;
-        b=M2z1qyOreGt/fyIwpnOh7KE2qHDRM3i81IqQ4/Lnt6j7XkaD2QqVLhvte0M1mz/vPs
-         PUUmhpjg+nyG7ZFSG0cEHQGY9Dpk5guoAhbv7HdldDUWiagfv5X9dG+DOON0f/hPxCGj
-         kPEjaX/RMuLnC59tpSGszAQVCSsZfVwd2UYN/VQCyQsTDMJVPMG30aqczKwAlqeIK+N9
-         VPkxCzEMdppVot4762K+dSwFlR0nECP9DgOEXuhRYn5gRaDBoo2SODag9TTy+HjnMxgB
-         NJfxwq3ILOVUkXJo967IKu7M1lIjH/eCWtLOf8h9gI/aExHPaWNTAz2ZzTXA5gOP1K8D
-         boeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720081125; x=1720685925;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6/zPblrqcHg0wS138MP652lBp+ZaoHvh+/0sq4DtdMw=;
-        b=iBdPb9RUeJyFp7q0xgTO6W68a2mKvxJQQyqc8ywCsytC/KF30mOzaU0d1H0g2UHXLO
-         W/QLBm0qoBXMfc15LQqT/AZPlNFBR5g/Ee2sH8pFPUV1mvIGt5v4VB2vQkxOZ1gw5Dr+
-         RN9ZViAjWkDWW30W8TNZhLMt+bBuyIjFqUq9fpaoejwEUeOU22aYS3Y/GwhbWK+LXTKC
-         7yi/gUeLQPbVg2woZNIX76YWUImthsUqbRJNWUP0+qPBnJrHAEgQXReev+zQj9nnEtk8
-         OX4Cn69ese9H4W82iewdjMiC3/ec8IQNJR0l+w36eIKJc9e4C9gCdmHoVIDUrnu3Jjhn
-         yMUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCWL5PONLCp6U6DJa2dRaMkvp7IeweXNzrwg+A5Mwt0HnS8YIP6cYKria8gqP1hwyX5e3BWiKAUgfmoNqE2S+RLemJmeWXgFT9Xbv4UJDgPFIYE1V1DDqLQSq5T3pLdY0741dPK8N8+w==
-X-Gm-Message-State: AOJu0Yw3dmJr8LR0pwwExYdWyLZw6F8C74mT+NxeV39z8ZO2WrnV6y3m
-	pumq1uaC1GFKEjPpoydHxelfVWAyrLq8gEk/E/NTwKozLzDw3DKFiXbRHA042fBRI+vMbWP4OiU
-	60nUT7oCYxiBa88UNPpgvQ9v74Y0=
-X-Google-Smtp-Source: AGHT+IE4xiUQw4dA1SxZD9H8hd0AhnHzluII0lZ3PaApoihwyyt3Sqaxa2JgTFbDWdLCz+VUsHZ+XDj1tTAoqJEElVM=
-X-Received: by 2002:adf:f744:0:b0:366:e9f9:99c1 with SMTP id
- ffacd0b85a97d-3679dd63cc6mr847228f8f.53.1720081125395; Thu, 04 Jul 2024
- 01:18:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oOYmZ+0M"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463JPdMo006059;
+	Thu, 4 Jul 2024 08:18:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=1TWDs8bthjJxV46juERV9k
+	GY3wi9oWria9K9paXfeEg=; b=oOYmZ+0MEVv2wcUpT4Nj8V47VtZT1pjZ8VhvV5
+	FGTXhQJS+CcFv5yTt1G6HPrTGi+vlZOAab4qyt1nOIP43jaVoDYxQ5OyG7TvXX1d
+	U8Kl3qMzeCSsipANB6W7ziYdLglwyK3KKErNOZ5HIEYTXOwX/Ic5bqhUPYUe8MhZ
+	YPSYgPv0df62BrZUGdQ1xrwqN0wGIhZXQWRCG8Ct/vPWSjeb1IHPTkbD3xaOfHpT
+	YAfeG8gL9zU/2FM3yMgHb+TkQ+bDX1UDGuM5d6cmNhtP/4SUeGiILhVgjidf2Png
+	/HKLXQi81RTkwWffx/uIC3B59A4odTDvIIjh50y9Soo1d2qw==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4029uxjv0x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jul 2024 08:18:54 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4648IrEw029958
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 4 Jul 2024 08:18:53 GMT
+Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 4 Jul 2024 01:18:50 -0700
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        "Mohammad
+ Rafi Shaik" <quic_mohs@quicinc.com>,
+        Prasad Kumpatla
+	<quic_pkumpatl@quicinc.com>
+CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_rohkumar@quicinc.com>
+Subject: [PATCH v2 0/3] Fix the unbalanced pm_runtime_enable in wcd937x-sdw soundwire slave
+Date: Thu, 4 Jul 2024 13:47:20 +0530
+Message-ID: <20240704081723.3394153-1-quic_mohs@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702-mainline_sdp500-v3-0-0902047b3eee@gmail.com>
- <20240702-mainline_sdp500-v3-1-0902047b3eee@gmail.com> <51563155-c53f-47ce-bf68-5a6da72f8655@linaro.org>
-In-Reply-To: <51563155-c53f-47ce-bf68-5a6da72f8655@linaro.org>
-From: Petar Stoykov <pd.pstoykov@gmail.com>
-Date: Thu, 4 Jul 2024 10:18:34 +0200
-Message-ID: <CADFWO8GWZzwuV_CSue9_GcBre2OdY4uBs8CiCtUePy4PW9BCuw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: iio: pressure: Add Sensirion SDP500
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: MQcdktzic7wLO2nI32H81Ykq6f_jXYtu
+X-Proofpoint-ORIG-GUID: MQcdktzic7wLO2nI32H81Ykq6f_jXYtu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_18,2024-07-03_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=816
+ priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0 mlxscore=0
+ clxscore=1015 phishscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407040057
 
-On Tue, Jul 2, 2024 at 5:15=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 02/07/2024 16:59, Petar Stoykov via B4 Relay wrote:
-> > From: Petar Stoykov <pd.pstoykov@gmail.com>
-> >
-> > Sensirion SDP500 is a digital differential pressure sensor. It provides
-> > a digital I2C output. Add devicetree bindings requiring the compatible
-> > string and I2C slave address (reg).
-> >
->
-> You did not test your code before sending.
+This patch set change will fix the unbalanced pm_runtime_enable in wcd937x-sdw soundwire slave.
 
-I tested the driver for sdp500 on our system and it worked well.
-I must admit that I forgot to change the dts to sdp510 and retest.
+And removed the string compare with widget name in MIC BIAS settings, instead
+of string compare use the MIC BIAS id's as value.
 
->
-> Please respond to existing feedback from v1 and v2, thus confirm that
-> you understood it and you are or are not going to implement it.
->
+Removed separate handling for vdd-buck regulator supply which is not
+required. The vdd-buck regulator supply enabled using bulk enable.
 
-I tried to reply to all previous comments. Sorry if I missed something.
+Added the error handling in wcd937x_probe() and disable the regulators in error case.
 
-> It does not look like you tested the bindings, at least after quick
-> look. Please run `make dt_binding_check` (see
-> Documentation/devicetree/bindings/writing-schema.rst for instructions).
-> Maybe you need to update your dtschema and yamllint.
+Changes in v2:
+ - Remove Unrelated devm_free_irq change as suggested by Mark Brown
+ - Link to v1: https://lore.kernel.org/linux-sound/a8a670f9-f03f-eff8-5cb2-b40b06267bc6@quicinc.com/
+  
+Changes in v1:
+ - Fixed the unbalanced pm_runtime_enable in wcd937x-sdw soundwire slave
+ - Removed the string compare with widget name in MIC BIAS widget settings
+   suggested by Srinivas Kandagatla
+   https://lore.kernel.org/all/33772eab-74c6-c5c3-fa25-3a643a2f9c57@quicinc.com/
+ - Removed separate handling for vdd-buck supply
+   Suggested by Christophe JAILLET
+   https://lore.kernel.org/all/834d31cc-f4bc-4db7-a25b-f9869e550eb6@wanadoo.fr/
+   https://lore.kernel.org/all/288156b9-2f72-6929-3422-c3aecb9c2c07@quicinc.com/   
 
-I didn't know about that dt_binding_check. Then I spent a few hours
-yesterday fighting with dependencies to get it running.
-Thanks!
+Mohammad Rafi Shaik (3):
+  ASoC: codecs: wcd937x-sdw: Fix Unbalanced pm_runtime_enable
+  ASoC: codecs: wcd937x: Remove the string compare in MIC BIAS widget
+    settings
+  ASoC: codecs: wcd937x: Remove separate handling for vdd-buck supply
 
->
-> Best regards,
-> Krzysztof
->
+ sound/soc/codecs/wcd937x-sdw.c | 18 +++----
+ sound/soc/codecs/wcd937x.c     | 95 ++++++++--------------------------
+ sound/soc/codecs/wcd937x.h     |  2 +-
+ 3 files changed, 30 insertions(+), 85 deletions(-)
+
+
+base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+-- 
+2.25.1
+
