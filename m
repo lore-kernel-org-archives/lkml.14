@@ -1,84 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329251B013E;
-	Thu,  4 Jul 2024 15:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967241AED55;
+	Thu,  4 Jul 2024 15:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720106055; cv=none; b=YB55LGziWTAexcXZRQMtp0YaJIlEkBWkELma6/ixiLm4gdfuhGpg8pzY822MnMKx69RxebOygDJy5w74d49SyN8NblaNiO8PMBQhu2ePz0XSSGJ1KfNA+gdHikvQXtGZ/yQBgOd2JuJgZpz8R0XC5MwTCEB10VNDzZDochX0kkI=
+	t=1720106100; cv=none; b=CX53oF6wg2WhRRZCmzginL2BUV8UnMYbOhWd5IsCxjvU6IlvGqZJrfZcLKhfQKBFZpQHu4vbGOvHwBJMbCsFH4/I9ok7uj0TD1vu8gUKRDUB93ef4xsVef4TyXdBXTCul6UeLPiYOSH1g74wnugRVUbPEkbZJtJcijhbWtyfdHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720106055; c=relaxed/simple;
-	bh=7VKCl0ANeLlZNUXeoeWD7I9NeKOT1/lix9behB2i6Bw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=W0ew6y7WavNndX/QvoR6A/K4b4HtBe293dbW793tbrt6UDgj9x593WywakkBuFznm78tHpPYu2lDZJtKXxe+aNOmiSZwMSg81r1Oh1PfaGirWcN19+1I54Nn9rAQT1luRQQp0JDteBu5H6lfMtZlNFJnxqB2zS4/FriFxsnfB+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljvH83bk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720106100; c=relaxed/simple;
+	bh=n03wDCvXM92XTDf9U5mj020XVXdBf5n8TY7CUvk3uTg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U0iYlshDLmX49K6saqTJud4hRZ5CSkFq1AJSnwY7YqwLxVl41LdrKT8HfhIR0Cy7HKXH9Y6dpoaPOVzcY7+XyPA1u3x/j5n0UZloOl4gtBgqp0R6ewYjEtMbcDP6W073Y5WZpMcf8ADIzJLajW7nS70idQN3UCSZ86qgzE0Umm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=GMJ9YPEJ; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljvH83bk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E730C3277B;
-	Thu,  4 Jul 2024 15:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720106054;
-	bh=7VKCl0ANeLlZNUXeoeWD7I9NeKOT1/lix9behB2i6Bw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ljvH83bkA2QRkEXvlGZru55/g3h/4kPxQab8EmulHc5P6LK/uuV9pNTiCNIw+y40G
-	 I4Q3KHsg4eaOQyVJw/KgSsN3Sfjn1GmAL1yjsphDsAuTXXkpWeP0oxHeEp0rilqrXx
-	 otNywCZZv06PfbPza5zPQiA3hHbJoLHSTJ71zmrMuBCzwMY0ydEDaFmZinD/U4yp0J
-	 cykes2QMzcx6G2spstO0BDAUsdag1DWRkbDddIxt7l2l4qozIV5gQNekLs+bDhs8w4
-	 N9IL8rQACLGhhK3usw6pRGSQjvptLM2fhCEGCeVyysx0w0fcmrzOlpLrJjRknvzU5s
-	 kRi4rio7NYLrg==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Stanislav Jakubek <stano.jakubek@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-In-Reply-To: <ZoWxnEY944ht2EWf@standask-GA-A55M-S2HP>
-References: <ZoWxnEY944ht2EWf@standask-GA-A55M-S2HP>
-Subject: Re: [PATCH] dt-bindings: regulator: ti,tps65132: document VIN
- supply
-Message-Id: <172010605276.69326.9636234013507796222.b4-ty@kernel.org>
-Date: Thu, 04 Jul 2024 16:14:12 +0100
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="GMJ9YPEJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1720106098; x=1751642098;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=n03wDCvXM92XTDf9U5mj020XVXdBf5n8TY7CUvk3uTg=;
+  b=GMJ9YPEJaHWbAfgZJ/u7Bb08p/7w+lxgbFznOydSbhLtj3maM1wVv+jy
+   Wyf04rlBRCYOJqcjslGz1kKIWGUBLc2Xh637fq3lRLmsJ8e9Pwyp1ASLW
+   1yuNNBs1bu9r7nbYSqyYf5r30gOg0c62NufqX22Cx8rD3J2izXJ3xIh3b
+   hq1W006xAtTlNcYNTDKFz49LYHRaf0ie3WnTqYeYVAMdMEbBNiqBwnBv1
+   uHU5SDXfQl1MgdDswrBI2S4CUITn4nCjOXjpWoqbMuTZoYzhf7lnovvhF
+   L1+CqQfkpEdOViQ4WtS/p3VTBDcZri2xVdiVhOXK5JtgxkMZ6Y9kBaRxL
+   w==;
+X-CSE-ConnectionGUID: QsL3knLaRq6A8nmQ6t3mOw==
+X-CSE-MsgGUID: HORkfyXQQliBaZQyZIVpYw==
+X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
+   d="scan'208";a="29497510"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Jul 2024 08:14:57 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 4 Jul 2024 08:14:38 -0700
+Received: from ROB-ULT-M76677.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 4 Jul 2024 08:14:35 -0700
+From: Andrei Simion <andrei.simion@microchip.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>
+CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Andrei Simion <andrei.simion@microchip.com>
+Subject: [PATCH 0/7] Update the eeprom nodename following device tree specification
+Date: Thu, 4 Jul 2024 18:14:04 +0300
+Message-ID: <20240704151411.69558-1-andrei.simion@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-d4707
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed, 03 Jul 2024 22:16:28 +0200, Stanislav Jakubek wrote:
-> TPS65132 is powered by its VIN supply, document it.
-> 
-> 
+Change the nodename for each eeprom according to device tree specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+and according to the format specified in at24.yaml
 
-Applied to
+Andrei Simion (7):
+  ARM: dts: microchip: at91-sama5d2_xplained: Align the eeprom nodename
+  ARM: dts: microchip: at91-sama5d2_ptc_ek: Align the eeprom nodename
+  ARM: dts: microchip: at91-sama5d34ek: Align the eeprom nodename
+  ARM: dts: microchip: at91-sama5d27_som1: Align the eeprom nodename
+  ARM: dts: microchip: at91sam9g20ek_common: Align the eeprom nodename
+  ARM: dts: microchip: at91sam9260ek: Align the eeprom nodename
+  ARM: dts: microchip: at91sam9263ek: Align the eeprom nodename
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+ arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi   | 2 +-
+ arch/arm/boot/dts/microchip/at91-sama5d2_ptc_ek.dts   | 2 +-
+ arch/arm/boot/dts/microchip/at91-sama5d2_xplained.dts | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9260ek.dts         | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9263ek.dts         | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9g20ek_common.dtsi | 2 +-
+ arch/arm/boot/dts/microchip/sama5d34ek.dts            | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-Thanks!
 
-[1/1] dt-bindings: regulator: ti,tps65132: document VIN supply
-      commit: 82fe56c6fe02fde86784bad7f59a340306967efe
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+-- 
+2.34.1
 
