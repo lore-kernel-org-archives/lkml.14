@@ -1,188 +1,130 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C391AED27;
-	Thu,  4 Jul 2024 12:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41811AEFE5;
+	Thu,  4 Jul 2024 12:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720097068; cv=none; b=Gm/s7kCcfjZAL0s9D3SR37CZkcCnrMnSbntvR4FQIhw6/CwOEnFDecQWKwQgnfikQ+CxrLLe+t+aShHeHxkAdfYMmMwhJkq4oCotsFWynGenMnPc5KN9tkg4uhj5mv+Mg2jy+TwScstLqGbmqzjvuHBmXZhhtARQGgeC8OJw03o=
+	t=1720097069; cv=none; b=o6pX0N6bufak/UJWhuutbRnBIul1Na9pzlQV2AwMmSp+WJdqJsSWcwnLpvSv9JRk9XIXTy4Ovy4JolLEyWu/iDwVI55d2/HiYaW5zGZfK5Q+OEuzpPWPV21XtWYuMJy2zk2bfhMDX6PHFTqR2GEx/QN8cNO7+6gi8rtJpAjpItU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720097068; c=relaxed/simple;
-	bh=/EDhtoZGuMjUrPv+ooBwV8B0wduikxo/o9z3vV4TzHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SK0CNSOytjfonWWxM0F+2UymNLHtypmuxL1gtM0rUZd0PG0FoG9107+/9f20Yvud0KbylgKdm57ns8ZsqzVVFWY+fJSXrGfbpfy/rPj9PZo8j/EqbS2dhntP4Nxw2m/g2nMUoEm4inblk8y5/lqR9k6XS7ubOZqSh/CdH1sdd74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+EYktf/; arc=none smtp.client-ip=209.85.215.180
+	s=arc-20240116; t=1720097069; c=relaxed/simple;
+	bh=y/HsSvOsh+wSPPsva/vntMH7pEcZmfES+GyQgqd8Ntc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AF2RqZ92oQ18ElKAmGMG6MBTsVfzcuVwyKoG8MPpJs5ADSERDhtqVDfF4xyXT2eCVd78eTWWCDW8s/E+6iOWX0o+NJSxh/I/k+H5c8rtEqE+ol4v0RFRGiZ0+1bZegKysHxaEqcgfZZ2sdYVVHlYg+9yIzgpC26ZiS9D2vAvaH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cpxxz5P2; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+EYktf/"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-71871d5e087so363863a12.1;
-        Thu, 04 Jul 2024 05:44:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cpxxz5P2"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a77abe5c709so74183666b.2;
+        Thu, 04 Jul 2024 05:44:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720097065; x=1720701865; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1720097066; x=1720701866; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TLeFXsSxx3g+J1fD+mwT7HmIZf3vVjDYwcLJ5dlu1g4=;
-        b=P+EYktf/dAA/KsRstci9D8Pk1jM6+tzWNEUNmqaxjFE3WL3kDsZ3WnTgE2WG/LRJzG
-         uZfcjnqExOT8dYH3WdoqYLADVEXg/chvJPp2Ak6ZbyLQzTN9bUIJBdQf2PSKb2vwH5iT
-         yL8pco1JlsjgSlxTqpuD6DeIFIrr3mdUyYNRm0MU3A/ofYpByn0KcMbcjG6J1b86Vn+9
-         f7L8IfdY3C/I8bIIdvXHb5KAY2EZMjYHVbByviMde3e3xT9MlEpw4tlvmRfyfYjQ5Bzm
-         U/miNPLUkuVKjQ67zHaZF1fs42aPoe89NeSdA79TfRShSoHVeL4ZsBOuKbthwz3bdKKc
-         dyqA==
+        bh=WkfUMcSsV+/cyyr0qSLUuAVHTphAAYzuKlDg7eow7nI=;
+        b=Cpxxz5P24CVCXfR6QBFh/jy8/JIhBSsr4c0lv4W4tqtmd500XKUGt/zdM9iBSc5wcW
+         GzFUQqkoiQdFBHJ6tvAnBW+KAA4A5jBzkwMjh6v3hhpf7WqyJojXHxNCU5zMDobAH6wY
+         W8tdIDQFTbVQI4OB8rGaJZo8YmdGxqwIF+Pgc1/fwif4PslrYJUnL/pAOAlwgsoKC52b
+         awkI/p9Q0ZuyDCXvgXdtaGf9kMPm2U5oSJp2Fij2NHz1U6rWH9hUhOxY8Dr/hgfElkpU
+         6H0GIkwb1BLNirzBjbiSqadPRqc4chSonZe+mPnalfHPiuY4bH9v5+PGiJye5SOVQbkL
+         DHdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720097065; x=1720701865;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1720097066; x=1720701866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TLeFXsSxx3g+J1fD+mwT7HmIZf3vVjDYwcLJ5dlu1g4=;
-        b=SQf5CZg1eXGLfquZDCrst9zs92WJvW3CylRXanIjxYku2/YMscg5/IJHopET4r1RX2
-         qdptN/YAA56AeivQcFQqedsN3VtdEYe6SDz7mLO4JwRWpGhwZshy99CV3MthGqrucp47
-         LsiQoNS3Paw83D30IJOknbVhQcdm78Vv1gmgF8tSn+Vto8WDEuDhca3i7m7VL1QghfCR
-         QhdEF1bifqQQuMPzn8H4p1e1OyDDIbF18+R2jFv8hLtKp/5NtXiM78BxLwJD/0ZYy7HT
-         v6T4Ts890GDqWCGhdpogIZXwTTicXU19vUcJ2pFYKGeQMeMDZrp1yzeqmDVNNVBoL80F
-         Q1/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW+rcIidPJQm0bEK44A3udR3B7J5sfiUNbOI66f12DQ/ZjsBAu+yq3sRDUwyD4Nbh2hACXtXgON1tCdUJgbeigdy4siiXRaQZrLRUE9ytsoJLzPzyDvaIX8MEtoI4xV0Bl2724xzyXAF90op4lw3w==
-X-Gm-Message-State: AOJu0YwXwoP349NwFu55Fc3mFeEngHpKZbCRvHPb0QCTeA1bEgh1IGl9
-	9HQda1UBOfIkhH/vk3R3fMo/9tZK7zo/+a7bGDAmMaNN4r9ggdq2
-X-Google-Smtp-Source: AGHT+IF1wQK+EIYXuJjTq6zI2ckz5T4RsUsZRVQG8MhPcu8EHiz3RNjJnmIeWWDdnuLtvz4+KK5Bow==
-X-Received: by 2002:a05:6a20:9189:b0:1be:4c54:b891 with SMTP id adf61e73a8af0-1c0cc8ba7d8mr1327606637.47.1720097064869;
-        Thu, 04 Jul 2024 05:44:24 -0700 (PDT)
-Received: from localhost.localdomain ([120.229.49.158])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1598d35sm121578245ad.285.2024.07.04.05.44.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 05:44:24 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: adrian.hunter@intel.com,
-	irogers@google.com,
-	jolsa@kernel.org,
-	kan.liang@linux.intel.com,
-	namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 7/8] perf trace: Introduce trace__btf_scnprintf()
-Date: Thu,  4 Jul 2024 20:43:53 +0800
-Message-ID: <20240704124354.904540-8-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240704124354.904540-1-howardchu95@gmail.com>
-References: <20240704124354.904540-1-howardchu95@gmail.com>
+        bh=WkfUMcSsV+/cyyr0qSLUuAVHTphAAYzuKlDg7eow7nI=;
+        b=INI4HrAhdHNK8HFNPy8CR8O42k/ctu7YNdpZxKsTbCgXXbTKOKOL7wXzkHoB3hjbkb
+         BZpfhppRBgDknswKGimmilpUJts49yeLDW6jijK87wQ0qz10S1Q5otB2HjlK7mILXPEL
+         gzGt8kMfffOcWm1fluul9FxHQUg8jWVQCv9yujLdeQkvMC1N7FxQ6QaBRIdr6CyJtr6X
+         xwC10zvMyaabcyWIVQ6jKH6DeTqkyVnWd08vVRiqeFZypkZXueYy+4/yV4eSv0vV8hne
+         99SAH7TPTT6RFjq4fg7REIkE7qqByRbQ9xo3AbpDK0HxA1+lcetCmBWwL5cf2Ds+Z4R7
+         Rp/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUEKDE2gSd240l/dcc3JuDIzknOtXaHysJahVCPXgGMmP/KDY6tslCzyJDUOVbat1MOYoDzpm2hv5R1hQU0DC+QwBGCFVJu7qJtSXFFUj9JgXQa6JnPVtlbgrvYigO2l5HHVEFUCeWyet1rtNRVrCuvFWuuV3w4gzSeJNvdXXhqQoKoOK9s
+X-Gm-Message-State: AOJu0Yz9H4+bnaoQYHdfUBnyftOusE2AiYuNj6BHlvWjDoTrt6FbQyWL
+	hVwInCZsNi7peAc9HvR1v+2yjB8ttlmLpUc/o0CSqwm29dfqKF00GXXnbMY/V0eRqdmqyTmcEL5
+	lX0RFObZcnb7P2kEiWWUlP4lAGqg=
+X-Google-Smtp-Source: AGHT+IHFmYCKgNY1r2DGoJqg9mycJo12H8wKTENfBuwuWClUZZSD55krwAQWiym2HlVp5aZfkeM/sJwbR95fBp60Y6I=
+X-Received: by 2002:a17:906:19c9:b0:a6f:b080:cf79 with SMTP id
+ a640c23a62f3a-a77ba848085mr110339066b.67.1720097065822; Thu, 04 Jul 2024
+ 05:44:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240606172813.2755930-1-isaacmanjarres@google.com>
+ <4x5wsktkcwt7einzjowricl27pzusx6ggls43zionql7ixi5cz@icbegmuqqxcl> <ZoXEiCvdNRr_tj2N@google.com>
+In-Reply-To: <ZoXEiCvdNRr_tj2N@google.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Thu, 4 Jul 2024 14:44:12 +0200
+Message-ID: <CAGudoHFH+bCK6+tjgFRSfUvKhPwPTY6AGcD_S1pWy5ESYKUw2g@mail.gmail.com>
+Subject: Re: [PATCH v5] fs: Improve eventpoll logging to stop indicting timerfd
+To: Isaac Manjarres <isaacmanjarres@google.com>
+Cc: tglx@linutronix.de, "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+	Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	saravanak@google.com, Manish Varma <varmam@google.com>, 
+	Kelly Rossmoyer <krossmo@google.com>, kernel-team@android.com, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Wed, Jul 3, 2024 at 11:37=E2=80=AFPM Isaac Manjarres
+<isaacmanjarres@google.com> wrote:
+>
+> On Tue, Jun 25, 2024 at 07:58:43PM +0200, Mateusz Guzik wrote:
+> > On Thu, Jun 06, 2024 at 10:28:11AM -0700, Isaac J. Manjarres wrote:
+> > > +static atomic_t wakesource_create_id  =3D ATOMIC_INIT(0);
+> > >  static const struct file_operations eventpoll_fops;
+> > >
+> > >  static inline int is_file_epoll(struct file *f)
+> > > @@ -1545,15 +1546,21 @@ static int ep_create_wakeup_source(struct epi=
+tem *epi)
+> > >  {
+> > >     struct name_snapshot n;
+> > >     struct wakeup_source *ws;
+> > > +   pid_t task_pid;
+> > > +   int id;
+> > > +
+> > > +   task_pid =3D task_pid_nr(current);
+> > >
+> > >     if (!epi->ep->ws) {
+> > > -           epi->ep->ws =3D wakeup_source_register(NULL, "eventpoll")=
+;
+> > > +           id =3D atomic_inc_return(&wakesource_create_id);
+> > > +           epi->ep->ws =3D wakeup_source_register(NULL, "epoll:%d:%d=
+", id, task_pid);
+> >
+> > How often does this execute? Is it at most once per task lifespan?
+> Thank you for your feedback! This can execute multiple times throughout
+> a task's lifespan. However, I haven't seen it execute that often.
+>
+> > The var probably wants to be annotated with ____cacheline_aligned_in_sm=
+p
+> > so that it does not accidentally mess with other stuff.
+> >
+> > I am assuming there is no constant traffic on it.
+> Right, I don't see much traffic on it. Can you please elaborate a bit
+> more on what interaction you're concerned with here? If it's a
+> concern about false sharing, I'm worried that we may be prematurely
+> optimizing this.
+>
 
-To have a central place that will look at the BTF type and call the
-right scnprintf routine or return zero, meaning BTF pretty printing
-isn't available or not implemented for a specific type.
+I am concerned with false sharing indeed, specifically with this
+landing with something unrelated to epoll.
 
-Tested-by: Howard Chu <howardchu95@gmail.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/builtin-trace.c | 49 +++++++++++++++++++++-----------------
- 1 file changed, 27 insertions(+), 22 deletions(-)
+Preferably the linker would not merge cachelines across different .o
+files and that would make the problem mostly sorted out.
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index e664001d5ed7..d9104fc4f61f 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -981,18 +981,28 @@ static size_t btf_enum_scnprintf(const struct btf_type *type, struct btf *btf, c
- static size_t trace__btf_enum_scnprintf(struct trace *trace, struct syscall_arg_fmt *arg_fmt, char *bf,
- 					size_t size, int val, char *type)
- {
--	if (trace->btf == NULL)
--		return 0;
--
- 	if (syscall_arg_fmt__cache_btf_enum(arg_fmt, trace->btf, type) < 0)
- 		return 0;
- 
- 	return btf_enum_scnprintf(arg_fmt->type, trace->btf, bf, size, val);
- }
-+
-+static size_t trace__btf_scnprintf(struct trace *trace, struct syscall_arg_fmt *arg_fmt, char *bf,
-+				   size_t size, int val, char *type)
-+{
-+	if (trace->btf == NULL)
-+		return 0;
-+
-+	if (arg_fmt->is_enum)
-+		return trace__btf_enum_scnprintf(trace, arg_fmt, bf, size, val, type);
-+
-+	return 0;
-+}
-+
- #else // HAVE_LIBBPF_SUPPORT
--static size_t trace__btf_enum_scnprintf(struct trace *trace __maybe_unused, struct syscall_arg_fmt *arg_fmt __maybe_unused,
--					char *bf __maybe_unused, size_t size __maybe_unused, int val __maybe_unused,
--					char *type __maybe_unused)
-+static size_t trace__btf_scnprintf(struct trace *trace __maybe_unused, struct syscall_arg_fmt *arg_fmt __maybe_unused,
-+				   char *bf __maybe_unused, size_t size __maybe_unused, int val __maybe_unused,
-+				   char *type __maybe_unused)
- {
- 	return 0;
- }
-@@ -2183,7 +2193,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 				      unsigned char *args, void *augmented_args, int augmented_args_size,
- 				      struct trace *trace, struct thread *thread)
- {
--	size_t printed = 0;
-+	size_t printed = 0, btf_printed;
- 	unsigned long val;
- 	u8 bit = 1;
- 	struct syscall_arg arg = {
-@@ -2237,13 +2247,11 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 			if (trace->show_arg_names)
- 				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
- 
--			if (sc->arg_fmt[arg.idx].is_enum) {
--				size_t p = trace__btf_enum_scnprintf(trace, &sc->arg_fmt[arg.idx], bf + printed,
--								     size - printed, val, field->type);
--				if (p) {
--					printed += p;
--					continue;
--				}
-+			btf_printed = trace__btf_scnprintf(trace, &sc->arg_fmt[arg.idx], bf + printed,
-+							   size - printed, val, field->type);
-+			if (btf_printed) {
-+				printed += btf_printed;
-+				continue;
- 			}
- 
- 			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
-@@ -2892,7 +2900,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 	size_t size = sizeof(bf);
- 	struct tep_format_field *field = evsel->tp_format->format.fields;
- 	struct syscall_arg_fmt *arg = __evsel__syscall_arg_fmt(evsel);
--	size_t printed = 0;
-+	size_t printed = 0, btf_printed;
- 	unsigned long val;
- 	u8 bit = 1;
- 	struct syscall_arg syscall_arg = {
-@@ -2942,13 +2950,10 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 		if (trace->show_arg_names)
- 			printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
- 
--		if (arg->is_enum) {
--			size_t p = trace__btf_enum_scnprintf(trace, arg, bf + printed,
--							     size - printed, val, field->type);
--			if (p) {
--				printed += p;
--				continue;
--			}
-+		btf_printed = trace__btf_scnprintf(trace, arg, bf + printed, size - printed, val, field->type);
-+		if (btf_printed) {
-+			printed += btf_printed;
-+			continue;
- 		}
- 
- 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
--- 
-2.45.2
+In the meantime I would argue basic multicore hygiene dictates vars
+like this one get moved out of the way if only to not accidentally
+mess with other stuff.
 
+But I am not going to pester you about it, It's not my call for this
+code either.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
