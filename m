@@ -1,127 +1,151 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E64C8BE0;
-	Thu,  4 Jul 2024 00:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6D9746E;
+	Thu,  4 Jul 2024 00:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720054617; cv=none; b=ORTH7chksyTxXEL5VmiZMn0q3MGpvftdywchM2eO7IYz4gUfM62HPiZBYk3d417tB+iAUVvEfRT3mv8dDavWQGxCXQ65wxtKDzSPg7PyoUId5SKR0lTs1nAIkHdcKhyba3Z5AuwYeC8fW5xBZMnpXrf2EbxaEobxOb/Y3GDOG3w=
+	t=1720054746; cv=none; b=J60FGi8GTeZFeAQ9LOC3DD8D4uHsXd1XAeqps8+v3duKV3qBVl40LXYRWt1QER2O7djDmhjWvvsWkYAN7sPfRP3eEsJRA6nDUnJxIWybey23Y7G+g4eDeIPTclBJN/aoX44vqTA3BUueO1vjNUpsoVpFvnZqXuJ3irFcOBpVUso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720054617; c=relaxed/simple;
-	bh=S3icOhB+rcMyncTGKfjG3tO3NMuT6YuzvmfXrnL1mds=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BLuaGIoPGyQLthsV4byaNVF+5CeOm/ORyRz0DcG7OBvmVB9PI2o1rVBqI0FB/dH4NHqsZHJHcn96TQ+Vn5nY2SQfInk1cP9ekEQPkBaXQeZ9363Ur61gaK9WopxorpudOdtRn1yN7dIQ2K/wI+DKErt0GJPChNw3oUgsK2SJxDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WDyrx543RznZ9B;
-	Thu,  4 Jul 2024 08:56:33 +0800 (CST)
-Received: from kwepemd100013.china.huawei.com (unknown [7.221.188.163])
-	by mail.maildlp.com (Postfix) with ESMTPS id 75FD9140417;
-	Thu,  4 Jul 2024 08:56:51 +0800 (CST)
-Received: from huawei.com (10.67.174.121) by kwepemd100013.china.huawei.com
- (7.221.188.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Thu, 4 Jul
- 2024 08:56:50 +0800
-From: Chen Ridong <chenridong@huawei.com>
-To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
-	<longman@redhat.com>
-CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 -next] cgroup/rstat: add force idle show helper
-Date: Thu, 4 Jul 2024 00:50:07 +0000
-Message-ID: <20240704005007.1400414-1-chenridong@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1720054746; c=relaxed/simple;
+	bh=uGkt73nDgGqWhK7coLd29VBDAnB/RU/avdNFQwiqkeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uMmJVtUuyarH6Z+RDPM3Fsl3bFFr2NA3iYzLhw3+HhP1pT9pBOvd0giVP7fq0N609tNDV3pEzCzOuLAQLQ7rOcd8pl3dg5s/Ge2CB+Rf0+g6l/VsjpC88ZhTj7nk/Wh9Fe0hS/fTXuthvZ5fvKAFaSNTQioTGOoYInTrotnKzzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fbaaApgw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fbaaApgw"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463HXxnI031975;
+	Thu, 4 Jul 2024 00:58:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	k+v8hKKqQzTQAKxChzMkw5arZNejlV7Pr3r0pQa7uSw=; b=fbaaApgwtTd9tOjm
+	fQQjkj/uPIbngXgbJZoorsNdKf4g5zh2SG669zZk/xPJjtVPnnp5ZI5q0v3PZrjc
+	kbjxGJ/Bt9E3Wi75TORyL5+qbPWTrR3kX29GmjmzAQQmcE4q//M7i1S+GAEC3r4G
+	Y/49M+SDBS4mYPazmgeZwKsrvXrrBaziYUE6ca3+dUIwgfpISL7mWKjL1ikkptDL
+	loswFddKfw/4OriGjCPtmkU09doCsqG69nkmYAe4y6fJB3lBacwlcJsQWupYiBtX
+	VHrrCcED+ywxMB3sDZbz9F8B6CXlF9+qa0pAGlkljLPVLuh2OuGstcnM1PWgfsmP
+	retbDA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402abtt5h4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jul 2024 00:58:19 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4640wH94001093
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 4 Jul 2024 00:58:17 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 3 Jul 2024
+ 17:57:56 -0700
+Message-ID: <fa63aa02-6a62-417a-a946-9ecd2d6071e6@quicinc.com>
+Date: Thu, 4 Jul 2024 08:57:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd100013.china.huawei.com (7.221.188.163)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <djakov@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <jassisinghbrar@gmail.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <manivannan.sadhasivam@linaro.org>,
+        <will@kernel.org>, <joro@8bytes.org>, <conor@kernel.org>,
+        <tglx@linutronix.de>, <amitk@kernel.org>, <thara.gopinath@gmail.com>,
+        <linus.walleij@linaro.org>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
+        <vkoul@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>,
+        <robimarko@gmail.com>, <quic_gurus@quicinc.com>,
+        <bartosz.golaszewski@linaro.org>, <kishon@kernel.org>,
+        <quic_wcheng@quicinc.com>, <alim.akhtar@samsung.com>,
+        <avri.altman@wdc.com>, <bvanassche@acm.org>, <agross@kernel.org>,
+        <gregkh@linuxfoundation.org>, <quic_tdas@quicinc.com>,
+        <robin.murphy@arm.com>, <daniel.lezcano@linaro.org>,
+        <rui.zhang@intel.com>, <lukasz.luba@arm.com>,
+        <quic_rjendra@quicinc.com>, <ulf.hansson@linaro.org>,
+        <quic_sibis@quicinc.com>, <otto.pflueger@abscue.de>,
+        <quic_rohiagar@quicinc.com>, <luca@z3ntu.xyz>,
+        <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>,
+        <bhupesh.sharma@linaro.org>, <alexandre.torgue@foss.st.com>,
+        <peppe.cavallaro@st.com>, <joabreu@synopsys.com>,
+        <netdev@vger.kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <ahalaney@redhat.com>,
+        <krzysztof.kozlowski@linaro.org>, <u.kleine-koenig@pengutronix.de>,
+        <quic_cang@quicinc.com>, <danila@jiaxyga.com>,
+        <quic_nitirawa@quicinc.com>, <mantas@8devices.com>,
+        <athierry@redhat.com>, <quic_kbajaj@quicinc.com>,
+        <quic_bjorande@quicinc.com>, <quic_msarkar@quicinc.com>,
+        <quic_devipriy@quicinc.com>, <quic_tsoni@quicinc.com>,
+        <quic_rgottimu@quicinc.com>, <quic_shashim@quicinc.com>,
+        <quic_kaushalk@quicinc.com>, <quic_tingweiz@quicinc.com>,
+        <quic_aiquny@quicinc.com>, <srinivas.kandagatla@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-crypto@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703035735.2182165-1-quic_tengfan@quicinc.com>
+ <43nktnqp6mthafojiph7ouzfchmudtht634gtxwg7gmutb5l7y@a5j27mpl7d23>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <43nktnqp6mthafojiph7ouzfchmudtht634gtxwg7gmutb5l7y@a5j27mpl7d23>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 0KuPc1MkWau3uWN3TtPR5ge92T_hyVGL
+X-Proofpoint-ORIG-GUID: 0KuPc1MkWau3uWN3TtPR5ge92T_hyVGL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_18,2024-07-03_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1015 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0 impostorscore=0
+ mlxlogscore=894 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407040006
 
-In the function cgroup_base_stat_cputime_show, there are five
-instances of #ifdef, which makes the code not concise.
-To address this, add the function cgroup_force_idle_show
-to make the code more succinct.
 
-Signed-off-by: Chen Ridong <chenridong@huawei.com>
----
- kernel/cgroup/rstat.c | 36 ++++++++++++++++--------------------
- 1 file changed, 16 insertions(+), 20 deletions(-)
 
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index fb8b49437573..1568558e36e5 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -594,49 +594,45 @@ static void root_cgroup_cputime(struct cgroup_base_stat *bstat)
- 	}
- }
- 
-+
-+static void cgroup_force_idle_show(struct seq_file *seq, struct cgroup_base_stat *bstat)
-+{
-+#ifdef CONFIG_SCHED_CORE
-+	u64 forceidle_time = bstat->forceidle_sum;
-+
-+	do_div(forceidle_time, NSEC_PER_USEC);
-+	seq_printf(seq, "core_sched.force_idle_usec %llu\n", forceidle_time);
-+#endif
-+}
-+
- void cgroup_base_stat_cputime_show(struct seq_file *seq)
- {
- 	struct cgroup *cgrp = seq_css(seq)->cgroup;
- 	u64 usage, utime, stime;
--	struct cgroup_base_stat bstat;
--#ifdef CONFIG_SCHED_CORE
--	u64 forceidle_time;
--#endif
- 
- 	if (cgroup_parent(cgrp)) {
- 		cgroup_rstat_flush_hold(cgrp);
- 		usage = cgrp->bstat.cputime.sum_exec_runtime;
- 		cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime,
- 			       &utime, &stime);
--#ifdef CONFIG_SCHED_CORE
--		forceidle_time = cgrp->bstat.forceidle_sum;
--#endif
- 		cgroup_rstat_flush_release(cgrp);
- 	} else {
--		root_cgroup_cputime(&bstat);
--		usage = bstat.cputime.sum_exec_runtime;
--		utime = bstat.cputime.utime;
--		stime = bstat.cputime.stime;
--#ifdef CONFIG_SCHED_CORE
--		forceidle_time = bstat.forceidle_sum;
--#endif
-+		root_cgroup_cputime(&cgrp->bstat);
-+		usage = cgrp->bstat.cputime.sum_exec_runtime;
-+		utime = cgrp->bstat.cputime.utime;
-+		stime = cgrp->bstat.cputime.stime;
- 	}
- 
- 	do_div(usage, NSEC_PER_USEC);
- 	do_div(utime, NSEC_PER_USEC);
- 	do_div(stime, NSEC_PER_USEC);
--#ifdef CONFIG_SCHED_CORE
--	do_div(forceidle_time, NSEC_PER_USEC);
--#endif
- 
- 	seq_printf(seq, "usage_usec %llu\n"
- 		   "user_usec %llu\n"
- 		   "system_usec %llu\n",
- 		   usage, utime, stime);
- 
--#ifdef CONFIG_SCHED_CORE
--	seq_printf(seq, "core_sched.force_idle_usec %llu\n", forceidle_time);
--#endif
-+	cgroup_force_idle_show(seq, &cgrp->bstat);
- }
- 
- /* Add bpf kfuncs for cgroup_rstat_updated() and cgroup_rstat_flush() */
+On 7/3/2024 6:33 PM, Dmitry Baryshkov wrote:
+> On Wed, Jul 03, 2024 at 11:56:48AM GMT, Tengfei Fan wrote:
+>> Introduce support for the QCS9100 SoC device tree (DTSI) and the
+>> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
+>> While the QCS9100 platform is still in the early design stage, the
+>> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
+>> mounts the QCS9100 SoC instead of the SA8775p SoC.
+> 
+> Your patch series includes a second copy of your patches, wich have
+> different Message-IDs:
+> 
+> 20240703035735.2182165-1-quic_tengfan@quicinc.com vs
+> 20240703025850.2172008-1-quic_tengfan@quicinc.com
+> 
+> Please consider switching to the b4 tool or just
+> checking what is being sent.
+> 
+
+This is because I encountered a "Connection timed out" error while 
+sending this patch series using "git send-email". I wanted to add 
+"--in-reply-to=" git paramater to resend the patches that haven't been 
+pushed yet, which resulted in this second copy error result.
+
+I'll following your suggestion and use the b4 tool when sending the new 
+version patch series to avoid similar error.
+
 -- 
-2.34.1
-
+Thx and BRs,
+Tengfei Fan
