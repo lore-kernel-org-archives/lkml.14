@@ -1,68 +1,105 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409421B0132
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 15:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD0F1B0122
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 15:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720106408; cv=none; b=Y4YUUH0DRYz0UJ8rpaUFy/S2KKv5yY+DDGJkbvjkPeQTTZTVlXkXkjVYhs1xMcG4RwGEPLJRZMa9sjXGFTDczPRVHrKzYoeRztdDwWZL8isLD0E7twTP1QasthYs0tfr5oOmeOMkO0nWS0uq7TCAUiBbSgjI4AyJqmuYvfb+0OA=
+	t=1720106431; cv=none; b=INJynP8ObR4zLb83iQZBiGZwtQ29mxAv28ap+cbhIFBOD/ogDKlVCpIqOiM6FUgfabZYIpdPIDaLfbC8PlPIBiMdIe88TZ8PySXKnxb2XPuG/U4dFU9uVuy0VhsnMtt5gZsa0sFHS2srfm7G+vt3GOxzPDgBe/CSvQJtg0vXg9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720106408; c=relaxed/simple;
-	bh=LRBnNjsH1CyBlK27vH4HjxzagefLojGK6jhHT2bCEms=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=IceWCq/3gnhTYi4wIMcHoB1Q/kB2OkGps6SjuD7ZzomomhlKfC2KyBiL9ea5uU1R6ZA1be9a3E6SILea7ttlIoPdwzpsTd/q6CIgupuTeP6MyMKdeMABLMpgmn3cNuWfj1PzqBJg528W9X5zyKu/PwIvEUJK3JezwR03RgVqQ8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EBoYolrH; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720106431; c=relaxed/simple;
+	bh=/PizTQVDlkIyNELY350ZONH8Gfc08NYf27/JwjBxgRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQ8YUdQHCL0LcKvX7OrUE9euaSWCWRJNXmwFeT7bEYvEUNKOvWKY/1PMSQ7OvAHI8V1bbpytirz7CnCAJnEARpKLvko4S60yMB5S6nd1+ROX6hBWcSIRc4Wi85nc4tf4rjxQB6kCrWJAEpEq5blSaBpCTbTwyEIVu0kx+ZZpTLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fu1hIWQC; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EBoYolrH"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3d850109679so433937b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 08:20:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fu1hIWQC"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1faad2f1967so13899695ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 08:20:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720106406; x=1720711206; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3dDOkW0PAFspV1Nsbjh2zbZUyCnV1dEkHmg1HqSY2cw=;
-        b=EBoYolrHK3eXkZb2Sao25jmck/Pl/7AVO4kE5vMnRJWfsRHW6YdVW/k07p2yCICN2i
-         vYiZjs1W9mL1xR9titcWzYBHRhioXIAP4qsEPe8Y4sAhTRTcgk97ENSwMZwuruRi7Dj5
-         lV3kXswDzJA9eZsEWHsZPfn8oA09zpuQjEGRwCcf67QVIxu3P+hbeJ6i/psQXBMHWsql
-         lFPnO2i4dJsNgT7pijHNXyqCCICJw3OhXFTpb5XZvHY5R9VWnXdvHy/SHyagVncHThXl
-         mRPnDJEK29sn6b4CXoze0hIiyyMYqG4jDb8Xvfg9Pc1MrsthYOhKosj3N12lGaQCXme9
-         DD5w==
+        d=google.com; s=20230601; t=1720106429; x=1720711229; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wMtQ8G7gYG0PtXSm+9oSte5ras/tptARhMk8vAyTBpM=;
+        b=Fu1hIWQC/Sh/lpNuKEDxDoKokku3Y7aOEw1EuiIfNAFF3DTgfpsDw0pYkpgzopT6Xt
+         7UECkjZaO5+TPym0K8iv7eoNWcZrmT9O5jfpKVGSkISRGVKggSoes7aGcev7nTsp9gA8
+         fPXKDpkUfOp7Txy04cbUv9T5KDpQ6JLfrObHuQYnVGXn5kpt3jiphDkj0hnbapEDZFpr
+         6ncJvtDOLQAtaBAZhDLGfZmSg0jeGVZD4R3WFlFeJwXmbQtYWUfYHfN8G7RG2/KTM16i
+         Fh8SjLY45v6AX/qx64phLWH/9KLyYu1+/8RZwyMDiRV+Z9dffxfFgA+787OpAisg5HaL
+         k1xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720106406; x=1720711206;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3dDOkW0PAFspV1Nsbjh2zbZUyCnV1dEkHmg1HqSY2cw=;
-        b=EFnUZ6EkeksGVeXauIDGTlAah4kdd6Z+TorEjxATv1svQxmc/XF3lUWDE3DeOj5UJc
-         GaPruCQ4E71ycKejJlTQwiZyMAKHrtDgoMV3/4V+mPD/hzMQPcWJrCxUxUVRSchT3wFl
-         8C6bOPEY86YVFMARhxv9FZKoWgHrm/WAnT4izdbVhhF9qP+lW59p8sTLGVGgP8Y/ML+h
-         sDxqmRsVF976Mlm6szkZemB7dWStgW8JbLzBDFqaS3/AsibAzu1i4L8PV6mxgCmAi0KV
-         Gd0YLJTk7IAHCJFCpZFFAgk4Mnr4bAiOW+RGK+3DWk55O6NTqXEyG9hh1UqOH//OJaHw
-         de6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVroGUNKJiwYr7S7VFgDaQfV1V+zuqezIMABAqhftpO3uG81gdOPzX1GDyvX8LKFsFrcYVaS2y8Tth/GVGRYR8DrABwyHXaVy/7e7SD
-X-Gm-Message-State: AOJu0YwD7qOhJxTbTlZp2xvbGbOKznxSSxtrT0Ll0NxU/UJqYtqJ3kQq
-	hTRNdw//0nyB5tNq8GrhDe3cSueUWIMztEfId6uk6gF+2qcZzmExjiGsSAVPr84=
-X-Google-Smtp-Source: AGHT+IHHk3pE4TLFr7KRVvJS5XlXRIKfpvIedOe6u7433gzwuERp8u/tr3qO5KeYVUGyta7Gx3L7RQ==
-X-Received: by 2002:a05:6808:1404:b0:3d6:2bab:16ca with SMTP id 5614622812f47-3d915b0c6b5mr771492b6e.13.1720106406264;
-        Thu, 04 Jul 2024 08:20:06 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:96a0:e6e9:112e:f4c])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d62fb41f77sm2484567b6e.51.2024.07.04.08.20.05
+        d=1e100.net; s=20230601; t=1720106429; x=1720711229;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wMtQ8G7gYG0PtXSm+9oSte5ras/tptARhMk8vAyTBpM=;
+        b=ItY7oMcfCtr0kqONMjcWJdbn7X6eSgmw4E+OCckWD+F75E4exSYVEEdCTLtIfIpXuE
+         O+M7yw1wPQea5IlMIOZveQqNJLmPxGMngT6hiNLLFziNxRlQaxyv7BZpG4tZqQTSEWvW
+         XYY1LDm4NE4lV1KZzii8lwGWJtFJVw45EExoax1x4sEQ+jfY4ZxMU2OfJyUQ7Nhm02oc
+         aEXqraMOTGqhmPjM+2tsewwiEELuoJp0cu88BN0XPgTbhW3cDhuQ9gVolJBUlkoz4hOH
+         ydAgXZB7xErHaUaWoitQhL/4bJFJKnwdyz9TugdV2h2OjD6/h9acg/P3apoQy8EnkYKR
+         wvFg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7/GnLXo59SWPGwcjfar3ltzqTnrbweHMQb2ECq3yWzNIBkD3Ge8+zS34VNbi7UDy0ryPxQ4u7EFwjyewwK9kA+hzPlDVZs4tBAP1K
+X-Gm-Message-State: AOJu0YyLOxxSn1smVSve+9+dWnqnzjUC6F0Wab+Q9KvxZ0UxYfT1/woB
+	vSkjilIjTEEAwGF9hh6pDXnYR0qONcvxubmQ8WUEkTgh7gyxkoa290tQn32gcw==
+X-Google-Smtp-Source: AGHT+IGCoEg+2iwgq2yFecGonukG4K9qxoer7A69funkZsv0Vc/pIw4JkTQQWYN93RAWKE9BO0pBlQ==
+X-Received: by 2002:a17:902:dacd:b0:1fa:1a78:b5a9 with SMTP id d9443c01a7336-1fb3700ccffmr27138855ad.3.1720106429108;
+        Thu, 04 Jul 2024 08:20:29 -0700 (PDT)
+Received: from google.com (201.215.168.34.bc.googleusercontent.com. [34.168.215.201])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac15388bdsm124081885ad.168.2024.07.04.08.20.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 08:20:05 -0700 (PDT)
-Date: Thu, 4 Jul 2024 10:20:03 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@weissschuh.net>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>, chrome-platform@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] power: supply: cros_charge-control: Fix signedness bug in
- charge_behaviour_store()
-Message-ID: <ZoWKEs4mCqeLyTOB@stanley.mountain>
+        Thu, 04 Jul 2024 08:20:28 -0700 (PDT)
+Date: Thu, 4 Jul 2024 15:20:24 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradaed.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 2/2] rust: add tracepoint support
+Message-ID: <Zoa9uMODCjTfM741@google.com>
+References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
+ <20240628-tracepoint-v4-2-353d523a9c15@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,41 +108,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+In-Reply-To: <20240628-tracepoint-v4-2-353d523a9c15@google.com>
 
-The C standard is vague about the signedness of enums, but in this case
-here, they are treated as unsigned so the error handling does not work.
-Use an int type to fix this.
+On Fri, Jun 28, 2024 at 01:23:32PM +0000, Alice Ryhl wrote:
+> Make it possible to have Rust code call into tracepoints defined by C
+> code. It is still required that the tracepoint is declared in a C
+> header, and that this header is included in the input to bindgen.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  include/linux/tracepoint.h      | 18 +++++++++++++++-
+>  include/trace/define_trace.h    | 12 +++++++++++
+>  rust/bindings/bindings_helper.h |  1 +
+>  rust/kernel/lib.rs              |  1 +
+>  rust/kernel/tracepoint.rs       | 47 +++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 78 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index 689b6d71590e..d82af4d77c9f 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -238,6 +238,20 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  #define __DECLARE_TRACE_RCU(name, proto, args, cond)
+>  #endif
+>  
+> +/*
+> + * Declare an exported function that Rust code can call to trigger this
+> + * tracepoint. This function does not include the static branch; that is done
+> + * in Rust to avoid a function call when the tracepoint is disabled.
+> + */
+> +#define DEFINE_RUST_DO_TRACE(name, proto, args)
+> +#define DEFINE_RUST_DO_TRACE_REAL(name, proto, args)			\
+nit: IMO using a __* prefix would be a better option to describe the
+internal use of the macro instead of the _REAL suffix.
 
-Fixes: c6ed48ef5259 ("power: supply: add ChromeOS EC based charge control driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/power/supply/cros_charge-control.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Other than that, this patch looks good to me:
 
-diff --git a/drivers/power/supply/cros_charge-control.c b/drivers/power/supply/cros_charge-control.c
-index 73d7f2dc0fa3..3183a13eefd0 100644
---- a/drivers/power/supply/cros_charge-control.c
-+++ b/drivers/power/supply/cros_charge-control.c
-@@ -204,14 +204,13 @@ static ssize_t charge_behaviour_store(struct device *dev, struct device_attribut
- {
- 	struct cros_chctl_priv *priv = cros_chctl_attr_to_priv(&attr->attr,
- 							       CROS_CHCTL_ATTR_CHARGE_BEHAVIOUR);
--	enum power_supply_charge_behaviour behaviour;
- 	int ret;
- 
--	behaviour = power_supply_charge_behaviour_parse(EC_CHARGE_CONTROL_BEHAVIOURS, buf);
--	if (behaviour < 0)
--		return behaviour;
-+	ret = power_supply_charge_behaviour_parse(EC_CHARGE_CONTROL_BEHAVIOURS, buf);
-+	if (ret < 0)
-+		return ret;
- 
--	priv->current_behaviour = behaviour;
-+	priv->current_behaviour = ret;
- 
- 	ret = cros_chctl_configure_ec(priv);
- 	if (ret < 0)
--- 
-2.43.0
-
+Reviewed-by: Carlos Llamas <cmllamas@google.com>
