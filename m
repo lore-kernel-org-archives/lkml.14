@@ -1,199 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B42119B3FF;
-	Thu,  4 Jul 2024 13:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3C11AE85D
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720100189; cv=none; b=KrsdpTR6w7Kd8ZZrwsrqOCFM5BkSkXwE04CWJftgHUO0IPFTHWBNYxTc7NdcJ0otapGqoDaSaLb4zbJM51UcMAr/LH4Rqqe9n2MQftxYj0ky845/zsKHpn02+LYjcJGniv8R9hxdTOcqwfuHtQQOyq/oTfL5rXfZHNtBa2eK3HU=
+	t=1720100205; cv=none; b=A/rk1N0RopQGfEtt9mNQnIJvAxqnLUFZWvIJAI54BWKuKwSpentekDxVtpdUxtAwpZpEjjeukBToqSs58ynMgm/nyKl5TSHXqFCluXP1VZFqH/qU6eGCW4O5uUhFfghSMOSncjEe4rYWfWsh2hwmLUuNlWE29h7fTTi+haNqGT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720100189; c=relaxed/simple;
-	bh=06N+dy5yGVfEX5kHj7Fo14pFgqUOSQBJnG+lGDKRRhQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mdnkEmAC8o8yy1xTa0NjWWaRSYunsp3K12VlwDwBWNt+Lw//CXXfysrdhsYtucm2hEDQmd/V71ZvnQ6VQungz178npOYw33ja5VVpRbR2Qz5Ca1HkhnkSMRNgiulexSMM6gepOzz+gLEAEAnuY81hm6LicorBd4XimNZX9LOKN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9AEsbiy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720100205; c=relaxed/simple;
+	bh=5BBSDi8TvQ9AY5QuY/Aj2OoWuzfPdYtoGL+k8OgWvEY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GQEq8+LdwIPb/FFGOwFBFiuYKTQO9WVOEHvMnsGOGXWcUFmrG4g6iqo+hSPY+iiJOg2iQEVutawkwNzxZzLV7zfyWfPo418K4FfmdgeqsoJ2oCdOWeE/B80xehHM34kJeo4P2NYpu/uoU6y097bN7Q+jY7c/ppemfjedKMWME6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2xXxZlGy; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9AEsbiy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4964AC3277B;
-	Thu,  4 Jul 2024 13:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720100189;
-	bh=06N+dy5yGVfEX5kHj7Fo14pFgqUOSQBJnG+lGDKRRhQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I9AEsbiyC8txX+EYPohPJ2OLc0C31bftUTvoEsPIe4YuRMlWP/RmhhnjwPEbtovxN
-	 1m0P+Su6Bt71Bhzo/DgqmyfQt6QKzGZwKvtVSy/+mk4OhEmd7+RHqQMXXW/e7utMah
-	 tXkPxp/7Vo+5RkcpZJmD1uU+tRGrX1/gTDRxFR7c11GVwTqNDJkOipDFudm7GrToy2
-	 fmr6j4j44wxxy+bLPbNlR92yyPp1mpOaoHBz0LvfnN2Bv25bDKo+emOYwrVtivTtkH
-	 D+ZT3FcKBnEdtuEsb5E3Hohtgp9rhJ+GXWGCXe+Gg1eB73cCucxbYIWVPpUntKWKyv
-	 X4ssROhB073LQ==
-Message-ID: <25e29357-8976-4471-af95-08056e8652de@kernel.org>
-Date: Thu, 4 Jul 2024 15:36:21 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2xXxZlGy"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-425809eef0eso4218845e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 06:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720100201; x=1720705001; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HmDEGcYVnqW29UdeleiXLs3oBwwnPw6cUkNXeZbqtPw=;
+        b=2xXxZlGy4rBpkkmQ/k7hkXjOKZzuKHVn4TwdqrBQYoRBZbssmlE1xEerEdQYyRksZB
+         rjyC131x0zFFhZmfCu5vFiCpVggNbfy+D4Uc9JVuqWrRBZqz5HHS02U2fOAeguVWKacv
+         ZT93KeiQFwWDLO8opOHFVzQ49C5RjuEA2LoD1dlzrlw+VyVQ6B4iasiu+1O6I3dJTUw2
+         PncAYjU9TBtknfPhlwRI/VJQ4jI0EuSFPdoA3JD7LIlVjryEUUpuvznRRwW8/bO4Bl96
+         IAZczWeN/uNPePM79++2UBAAIzVXiIRBzS398jGehwh0N202Egbo+UuwAk/cpCylkHEE
+         /zUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720100201; x=1720705001;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HmDEGcYVnqW29UdeleiXLs3oBwwnPw6cUkNXeZbqtPw=;
+        b=GyubKZ9UyMyplRhRaL/92vGftbXxqCTyF91m2bgSPhUey42wKBguG9w8PvBs1KeiaZ
+         raZPvKMb8jtehym1E4AIK5XvXXrY4J3/BVCRlxgezlFarEP/Cpu6pPRkenwZMVZ+yg7B
+         AsPtAKulowAHJapMf8tNYjvA8KDyHE//JimlscMq93G6U2voZFzAL5jYbTFwUphn9y3a
+         Yc98bsEgy7JNP0osyxrHrUZYVM0aJRWx2JjMXXglVKX/8RSdSjZ7oJrVDWyz2hFWH8KJ
+         +d7WL/+NeDbdDmhrvfIouQKEylgUmVa9mTn5o5KNm6tNdF/qh+2lIxUFBQOsZrp2hCzp
+         WEAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgGD0u23nLmT7QcRYfGPECvqdPk6ZvcLYqK/TmjE/XRsr5JLr5lQtd94xOjvG5IvSKJB7IueghG+RvtAGvYBQn8yrS0mPYNygZGJHU
+X-Gm-Message-State: AOJu0YxLkMaHYwfxQUyVsn490aYiBAqdX2Hx3p2dJBkupSBR3396zFOb
+	GtsiG4k+5Kx1+TQRdgnxfo03irmopkiHln7Kcmck7oiF5idUSdZdghbYGQ6MJ3I3p4qDh1rbehA
+	z
+X-Google-Smtp-Source: AGHT+IEnwsl0E+g8xdryhGuWa8dY3VAhuYEKnIZxskaLPzsW6LR0drF4Cil6yfo52blmMWh71oq3DA==
+X-Received: by 2002:a1c:4b0d:0:b0:424:a2ad:69a with SMTP id 5b1f17b1804b1-4264a3e877fmr13123835e9.23.1720100201352;
+        Thu, 04 Jul 2024 06:36:41 -0700 (PDT)
+Received: from [192.168.42.0] ([2a02:8428:e55b:1101:1e41:304e:170b:482f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2ca5d5sm25382025e9.30.2024.07.04.06.36.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 06:36:40 -0700 (PDT)
+From: Julien Stephan <jstephan@baylibre.com>
+Subject: [PATCH v5 0/5] Add Mediatek ISP3.0
+Date: Thu, 04 Jul 2024 15:36:39 +0200
+Message-Id: <20240704-add-mtk-isp-3-0-support-v5-0-bfccccc5ec21@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/3] dt-bindings: input: Update dtbinding for adp5588
-To: utsav.agarwal@analog.com, Michael Hennerich
- <michael.hennerich@analog.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Arturs Artamonovs <arturs.artamonovs@analog.com>,
- Vasileios Bimpikas <vasileios.bimpikas@analog.com>,
- Oliver Gaskell <oliver.gaskell@analog.com>
-References: <20240704-adp5588_gpio_support-v7-0-e34eb7eba5ab@analog.com>
- <20240704-adp5588_gpio_support-v7-3-e34eb7eba5ab@analog.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240704-adp5588_gpio_support-v7-3-e34eb7eba5ab@analog.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGelhmYC/x3MwQqDMAyA4VeRnBcI6rTbqwwPoY0axrQ0KkLx3
+ S07fof/z2CSVAzeVYYkh5quS8HzUYGfeZkENRRDTXVLPbXIIeBv+6JaxAYJbY9xTRsyOX71zrN
+ vOih1TDLq+T9/huu6AaTgnvNpAAAA
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Andy Hsieh <andy.hsieh@mediatek.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, Julien Stephan <jstephan@baylibre.com>, 
+ Louis Kuo <louis.kuo@mediatek.com>, Phi-Bang Nguyen <pnguyen@baylibre.com>, 
+ Florian Sylvestre <fsylvestre@baylibre.com>, 
+ Paul Elder <paul.elder@ideasonboard.com>
+X-Mailer: b4 0.13.0
 
-On 04/07/2024 15:03, Utsav Agarwal via B4 Relay wrote:
-> From: Utsav Agarwal <utsav.agarwal@analog.com>
+This series adds the support of the Mediatek ISP3.0 found on some
+Mediatek SoCs such as the mt8365. The driver is divided into 2 parts:
 
-Subject: everything is an update, be more specific.
+* SENINF: the sensor interface
+* CAMSV: this driver provides a path to bypass the SoC ISP so that image
+  data coming from the SENINF can go directly into memory without any
+  image processing. This allows the use of an external ISP or camera
+  sensor directly.
 
-> 
-> Updating dt bindings for adp5588. Since the device can now function in a
-> purely gpio mode, the following keypad specific properties are now made
-> optional:
-> 	- interrupts
-> 	- keypad,num-rows
-> 	- keypad,num-columns
-> 	- linux,keymap
-> 
-> However the above properties are required to be specified when
-> configuring the device as a keypad, dependencies have been added
-> such that specifying either one would require the remaining as well.
-> 
-> Note that interrupts are optional, but required when the device has been
-> configured in keypad mode.
-> 
-> Signed-off-by: Utsav Agarwal <utsav.agarwal@analog.com>
-> ---
->  .../devicetree/bindings/input/adi,adp5588.yaml     | 46 +++++++++++++++++++---
->  1 file changed, 41 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/adi,adp5588.yaml b/Documentation/devicetree/bindings/input/adi,adp5588.yaml
-> index 26ea66834ae2..481c37595ebb 100644
-> --- a/Documentation/devicetree/bindings/input/adi,adp5588.yaml
-> +++ b/Documentation/devicetree/bindings/input/adi,adp5588.yaml
-> @@ -49,7 +49,10 @@ properties:
->    interrupt-controller:
->      description:
->        This property applies if either keypad,num-rows lower than 8 or
-> -      keypad,num-columns lower than 10.
-> +      keypad,num-columns lower than 10. This property is optional if
-> +      keypad,num-rows or keypad,num-columns are not specified since the
-> +      device then acts as gpio only, during which interrupts may or may
-> +      not be utilized.
->  
->    '#interrupt-cells':
->      const: 2
-> @@ -65,13 +68,28 @@ properties:
->      minItems: 1
->      maxItems: 2
->  
-> +
-> +dependencies:
-> +  keypad,num-rows:
-> +    - linux,keymap
-> +    - keypad,num-columns
-> +  keypad,num-columns:
-> +    - linux,keymap
-> +    - keypad,num-rows
-> +  linux,keymap:
-> +    - keypad,num-rows
-> +    - keypad,num-columns
-> +
-> +if:
-> +  required:
-> +    - linux,keymap
-> +then:
-> +  required:
-> +    - interrupts
-> +
->  required:
->    - compatible
->    - reg
-> -  - interrupts
-> -  - keypad,num-rows
-> -  - keypad,num-columns
-> -  - linux,keymap
->  
->  unevaluatedProperties: false
->  
-> @@ -108,4 +126,22 @@ examples:
->              >;
->          };
->      };
-> +
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/input/input.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        gpio@34 {
-> +              compatible = "adi,adp5588";
-> +              reg = <0x34>;
+The SENINF driver is based on previous work done by Louis Kuo available
+as an RFC here: https://lore.kernel.org/all/20200708104023.3225-1-louis.kuo@mediatek.com/
 
-Still messed indentation.
+This series depends on the following series for the phy [1]
 
-Didn't you get already such feedback?
+Changes on v5:
+drivers:
+- rebase on 6.10-rc1
+- fix various comments from all reviews (mostly style issues and minor
+  code refactor)
+- add a function to calculate the clock divider for the master sensor
+  clock: NOTE: setting this register seems to have no effect at all,
+  currently checking with mediatek apps engineer (OOO until 17/04)
 
+bindings:
+- camsv: update description
+- seninf: fix phy definition and example indentation
+- use generic name for node example
+
+dts:
+- sort nodes by addresses
+- use lower case for hexadecimal
+
+Changes in v4:
+- fix suspend/resume deadlock
+- fix various locking issues reported by Laurent Pinchart on v3
+- run LOCKDEP
+- add missing include reported by kernel-test-robot for non mediatek arch and COMPILE_TEST=y
+- use atomic poll inside mtk_camsv30_setup
+- drop second lane support as it was not used
+- remove useless members in structs
+- fix media entity initialization
+- initialize correct pad for camsv video device
+- add isp support in mt8365.dtsi
+- rebase on 6.7
+
+Changes in v3:
+- fix a lot of formatting issues/coding style issues found in camsv/seninf reported by Angelo on v2
+- fix camsv/seninf binding file error reported by Rob
+
+Changes in v2:
+- renamed clock `cam_seninf` to `camsys`
+- renamed clock `top_mux_seninf` to `top_mux`
+- moved phy properties from port nodes to top level
+- remove patternProperties
+- specify power management dependency in the cover letter description to fix
+  missing include in dt-binding example
+- change '$ref' properties on some endpoint nodes from
+  '$ref: video-interfaces.yaml#' to '$ref: /schemas/graph.yaml#/$defs/endpoint-base'
+ where applicable
+
+Best
+Julien Stephan
+
+Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+---
+Julien Stephan (1):
+      arm64: dts: mediatek: mt8365: Add support for camera
+
+Louis Kuo (2):
+      dt-bindings: media: add mediatek ISP3.0 sensor interface
+      media: platform: mediatek: isp_30: add mediatek ISP3.0 sensor interface
+
+Phi-bang Nguyen (2):
+      dt-bindings: media: add mediatek ISP3.0 camsv
+      media: platform: mediatek: isp_30: add mediatek ISP3.0 camsv
+
+ .../bindings/media/mediatek,mt8365-camsv.yaml      |  109 ++
+ .../bindings/media/mediatek,mt8365-seninf.yaml     |  275 ++++
+ MAINTAINERS                                        |   10 +
+ arch/arm64/boot/dts/mediatek/mt8365.dtsi           |  125 ++
+ drivers/media/platform/mediatek/Kconfig            |    1 +
+ drivers/media/platform/mediatek/Makefile           |    1 +
+ drivers/media/platform/mediatek/isp/Kconfig        |    2 +
+ drivers/media/platform/mediatek/isp/Makefile       |    3 +
+ drivers/media/platform/mediatek/isp/isp_30/Kconfig |   35 +
+ .../media/platform/mediatek/isp/isp_30/Makefile    |    4 +
+ .../platform/mediatek/isp/isp_30/camsv/Makefile    |    7 +
+ .../platform/mediatek/isp/isp_30/camsv/mtk_camsv.c |  327 ++++
+ .../platform/mediatek/isp/isp_30/camsv/mtk_camsv.h |  196 +++
+ .../mediatek/isp/isp_30/camsv/mtk_camsv30_hw.c     |  413 +++++
+ .../mediatek/isp/isp_30/camsv/mtk_camsv30_regs.h   |   60 +
+ .../mediatek/isp/isp_30/camsv/mtk_camsv_video.c    |  750 ++++++++++
+ .../platform/mediatek/isp/isp_30/seninf/Makefile   |    5 +
+ .../mediatek/isp/isp_30/seninf/mtk_seninf.c        | 1576 ++++++++++++++++++++
+ .../mediatek/isp/isp_30/seninf/mtk_seninf_reg.h    |  117 ++
+ 19 files changed, 4016 insertions(+)
+---
+base-commit: 99b9aaac4abdf30968b2ce9c9848951290fbde92
+change-id: 20240704-add-mtk-isp-3-0-support-a08a978cac36
 
 Best regards,
-Krzysztof
+-- 
+Julien Stephan <jstephan@baylibre.com>
 
