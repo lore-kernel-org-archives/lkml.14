@@ -1,95 +1,127 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2009523AD;
-	Thu,  4 Jul 2024 00:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E64C8BE0;
+	Thu,  4 Jul 2024 00:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720054527; cv=none; b=Ufmbalm2FkBmL735sqdFdQUCUCnwLlr9hdQKunHlkc92mVavIeDkq4XT5/ozc5d2s5R1GjhuvSDtm6FRZVwqobkBwnCxM1f2g0EsZ/BXuA4Qopq3Tn8JFoBSkEeiNpy8VbDzby/KbFOU9XwX3OcP/XTNlNQNS1u02tjE7wAqq0w=
+	t=1720054617; cv=none; b=ORTH7chksyTxXEL5VmiZMn0q3MGpvftdywchM2eO7IYz4gUfM62HPiZBYk3d417tB+iAUVvEfRT3mv8dDavWQGxCXQ65wxtKDzSPg7PyoUId5SKR0lTs1nAIkHdcKhyba3Z5AuwYeC8fW5xBZMnpXrf2EbxaEobxOb/Y3GDOG3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720054527; c=relaxed/simple;
-	bh=axQyEzblYvbHETJ0gbmBRA+rd+VfcEu1m3BvOP9jEHI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SgCsofL7ZK5uFajvTGBAvvNy5ihNTz3UAgumYTRRh0t0wXFwEgTGOzmitiZvWaruCvv1dM2fqkRd7Hz2/JMKReLURBq6Q9yDc8f7c1kf55b91jntjTmKP0GQIyndDReL7umTXcUNqQVsPGdoh1j+D9RWpP1gLW8NwAwDZ6/Wl+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: db2219da399d11ef93f4611109254879-20240704
-X-CID-CACHE: Type:Local,Time:202407040836+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:609fb93d-499c-441d-bd66-d59e0adbce4c,IP:0,U
-	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-30
-X-CID-META: VersionHash:82c5f88,CLOUDID:d57457d2ed1d8ecb447419be162a7b40,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:2,IP:nil,URL:0,
-	File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:N
-	O,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: db2219da399d11ef93f4611109254879-20240704
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <liuhuan01@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1909068126; Thu, 04 Jul 2024 08:39:22 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id E46EB16002082;
-	Thu,  4 Jul 2024 08:39:21 +0800 (CST)
-X-ns-mid: postfix-6685EF39-6795893
-Received: from localhost.localdomain (unknown [172.29.156.133])
-	by node4.com.cn (NSMail) with ESMTPA id 649E916002082;
-	Thu,  4 Jul 2024 00:39:21 +0000 (UTC)
-From: liuh <liuhuan01@kylinos.cn>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	liuh <liuhuan01@kylinos.cn>
-Subject: [PATCH] NFS: AIO doesn't require revert iterator
-Date: Thu,  4 Jul 2024 08:40:02 +0800
-Message-ID: <20240704004002.5787-1-liuhuan01@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1720054617; c=relaxed/simple;
+	bh=S3icOhB+rcMyncTGKfjG3tO3NMuT6YuzvmfXrnL1mds=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BLuaGIoPGyQLthsV4byaNVF+5CeOm/ORyRz0DcG7OBvmVB9PI2o1rVBqI0FB/dH4NHqsZHJHcn96TQ+Vn5nY2SQfInk1cP9ekEQPkBaXQeZ9363Ur61gaK9WopxorpudOdtRn1yN7dIQ2K/wI+DKErt0GJPChNw3oUgsK2SJxDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WDyrx543RznZ9B;
+	Thu,  4 Jul 2024 08:56:33 +0800 (CST)
+Received: from kwepemd100013.china.huawei.com (unknown [7.221.188.163])
+	by mail.maildlp.com (Postfix) with ESMTPS id 75FD9140417;
+	Thu,  4 Jul 2024 08:56:51 +0800 (CST)
+Received: from huawei.com (10.67.174.121) by kwepemd100013.china.huawei.com
+ (7.221.188.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Thu, 4 Jul
+ 2024 08:56:50 +0800
+From: Chen Ridong <chenridong@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
+	<longman@redhat.com>
+CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 -next] cgroup/rstat: add force idle show helper
+Date: Thu, 4 Jul 2024 00:50:07 +0000
+Message-ID: <20240704005007.1400414-1-chenridong@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd100013.china.huawei.com (7.221.188.163)
 
-For AIO, nfs_direct_wait return -EIOCBQUEUED would be expected.
-Revert iter is redundant.
+In the function cgroup_base_stat_cputime_show, there are five
+instances of #ifdef, which makes the code not concise.
+To address this, add the function cgroup_force_idle_show
+to make the code more succinct.
 
-Signed-off-by: liuh <liuhuan01@kylinos.cn>
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
 ---
- fs/nfs/direct.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/cgroup/rstat.c | 36 ++++++++++++++++--------------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 90079ca13..1483f1965 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -469,7 +469,8 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, stru=
-ct iov_iter *iter,
- 			requested -=3D result;
- 			iocb->ki_pos +=3D result;
- 		}
--		iov_iter_revert(iter, requested);
-+		if (is_sync_kiocb(iocb))
-+			iov_iter_revert(iter, requested);
- 	} else {
- 		result =3D requested;
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index fb8b49437573..1568558e36e5 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -594,49 +594,45 @@ static void root_cgroup_cputime(struct cgroup_base_stat *bstat)
  	}
-@@ -1028,7 +1029,8 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, s=
-truct iov_iter *iter,
- 			/* XXX: should check the generic_write_sync retval */
- 			generic_write_sync(iocb, result);
- 		}
--		iov_iter_revert(iter, requested);
-+		if (is_sync_kiocb(iocb))
-+			iov_iter_revert(iter, requested);
+ }
+ 
++
++static void cgroup_force_idle_show(struct seq_file *seq, struct cgroup_base_stat *bstat)
++{
++#ifdef CONFIG_SCHED_CORE
++	u64 forceidle_time = bstat->forceidle_sum;
++
++	do_div(forceidle_time, NSEC_PER_USEC);
++	seq_printf(seq, "core_sched.force_idle_usec %llu\n", forceidle_time);
++#endif
++}
++
+ void cgroup_base_stat_cputime_show(struct seq_file *seq)
+ {
+ 	struct cgroup *cgrp = seq_css(seq)->cgroup;
+ 	u64 usage, utime, stime;
+-	struct cgroup_base_stat bstat;
+-#ifdef CONFIG_SCHED_CORE
+-	u64 forceidle_time;
+-#endif
+ 
+ 	if (cgroup_parent(cgrp)) {
+ 		cgroup_rstat_flush_hold(cgrp);
+ 		usage = cgrp->bstat.cputime.sum_exec_runtime;
+ 		cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime,
+ 			       &utime, &stime);
+-#ifdef CONFIG_SCHED_CORE
+-		forceidle_time = cgrp->bstat.forceidle_sum;
+-#endif
+ 		cgroup_rstat_flush_release(cgrp);
  	} else {
- 		result =3D requested;
+-		root_cgroup_cputime(&bstat);
+-		usage = bstat.cputime.sum_exec_runtime;
+-		utime = bstat.cputime.utime;
+-		stime = bstat.cputime.stime;
+-#ifdef CONFIG_SCHED_CORE
+-		forceidle_time = bstat.forceidle_sum;
+-#endif
++		root_cgroup_cputime(&cgrp->bstat);
++		usage = cgrp->bstat.cputime.sum_exec_runtime;
++		utime = cgrp->bstat.cputime.utime;
++		stime = cgrp->bstat.cputime.stime;
  	}
---=20
-2.27.0
+ 
+ 	do_div(usage, NSEC_PER_USEC);
+ 	do_div(utime, NSEC_PER_USEC);
+ 	do_div(stime, NSEC_PER_USEC);
+-#ifdef CONFIG_SCHED_CORE
+-	do_div(forceidle_time, NSEC_PER_USEC);
+-#endif
+ 
+ 	seq_printf(seq, "usage_usec %llu\n"
+ 		   "user_usec %llu\n"
+ 		   "system_usec %llu\n",
+ 		   usage, utime, stime);
+ 
+-#ifdef CONFIG_SCHED_CORE
+-	seq_printf(seq, "core_sched.force_idle_usec %llu\n", forceidle_time);
+-#endif
++	cgroup_force_idle_show(seq, &cgrp->bstat);
+ }
+ 
+ /* Add bpf kfuncs for cgroup_rstat_updated() and cgroup_rstat_flush() */
+-- 
+2.34.1
 
