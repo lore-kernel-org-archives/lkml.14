@@ -1,200 +1,229 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677311ACE67;
-	Thu,  4 Jul 2024 15:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691481B14E2;
+	Thu,  4 Jul 2024 15:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720108692; cv=none; b=o6xzWEqFc+4tKtKaAGYvmxL+oZu+QaLIV90aAAj0GTMUEp4kkWgTWGYZzzEPPblAeJ8+Gq3Vz1tyWb03+zbh+eCGnYljpugTuF54+mAT/2T4zxO65fkoctLrOzR+NjqOzRCFsPzrzS7UoIHm+sP6RoMAwnCMR2HQsbq9nj8oWvw=
+	t=1720108719; cv=none; b=iMZ0o3RdgiqUsuA5g6WMHCT9Bpi4E3AT8IXb9CoXE9uGkVcp90v3pPX2avFouQUJI2DdH0aBinHepFhhmnlYaItYQnzj/Yne5ypgofy269M46pOoQ7iXvqdaYYdEO9heTEHkz2QKXrkOPma249KQ22/46QFDJwzzPfa+X2F5gXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720108692; c=relaxed/simple;
-	bh=wJE7HlCPQ2VZ9sr7/loD0hwkFhbboA9WmXEnW4+ChsQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=orgkQGoQCEx7Ffkguj34NQy7tQWkLxTfo9ebzOtFShuNqrcgGqMIDQd44+QVcVLKvCbwTDvdva7ZmTqE74F0GyYDEMikDmjKMYwILtF4E0yKgIces+tEhfsSGOQh5Fyp4j356eZx/4pX1SsP/0rniwo9W+mz80trEcDzQPAA+qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fzah5f2j; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720108719; c=relaxed/simple;
+	bh=safQY3Fn2zFb/VG4MzyuKw0omUP5p5cGxwB+mZRfmGI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MRcgHZAMojCTPU48B46R0uBMRPCGTworcWTmzL1zoTpKae3vf8cbpM92YyIzd/mUl7i8xZfZ/bBlp6nrv35sKB89obdR/IjS+6q9APXirFv9FkY8YODBnF0HEy7koWc1Z2ui8uJvbsWAiOMWViVu3oLspQKYUXxJ7hceBic85WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=qoowIqh3; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzah5f2j"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4ef6c8e3602so326850e0c.0;
-        Thu, 04 Jul 2024 08:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720108689; x=1720713489; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n97CqCq+SpioBUdMovQEEVaZXmKGUSWX+N+6ZspvJ5Y=;
-        b=fzah5f2jPp6xeoFelee2+jl1Jn3hKibubDigkvbQsHgv5GzFC0+nFQris9eZwQ+NOv
-         C8r4OwujqbDFBfGp5PuYGdFVygq9IjqdKzsZhOn6MarqHKJHmQI8OVZYjfXf4u+d0e/A
-         niNupZ9nwSJa1XuVz78JbSbP/4X7322uh8tfjRZpbSkkYcN2mde8al0O0GS6auW89S7X
-         XrME3v8yxfjby9iiEEcmFuKbxEFVY+nl+iPNCiiVN72FldRTEedUwDc9eSvE+zmPaLvK
-         YjakGdyZD3zLSWeOY7JftCVArKFCuq4qOmda6m7TNJrRhW854H1JGVf37RpktRXFOPyT
-         vmvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720108689; x=1720713489;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n97CqCq+SpioBUdMovQEEVaZXmKGUSWX+N+6ZspvJ5Y=;
-        b=c47otx7njgEewVCWLFfCNjnj+cPMLfUatpFJK9a7D/ra1IX9FtyEWg9YBTl3XblmoV
-         lBqz0sw0iI70GJK5xmxP8F9oJF1x8GqKSMowfybKSePAbpCy4hst8KRVE2aZLDke4/ft
-         zIjqFxVqjO9rLnS7pOR7dT78hvM4KGmEisP3Zqni4aa4GhGXnYNALUIrfkmqaQdvK+pD
-         7mofMNUIIS1i119+MmLkvU+3VqXl26ChyB8Y2pi+dtI8UGzHUJ1PLxHOMDgAPKo0vYZO
-         sE/1gJLyfLI4oJfCPyf6eSS2jkl7XBv6RueKhOwy1/IP7mmxF6zbB9sLDMGgUcoxcnTY
-         USLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPnMaayVI6UqPSkxl/wWWdcUDZmXaVfjhjGJEgDNfLOthlhUZaQFGu/CGFjd+/cvRMGq11Y2DVpyAYv+Uf1u4qKTeYLJ/qzf3hqqvtHD8BBZnVr6qvylWV7zrnecE8A2r/9gpsuViln+EYorvAuShD+rNNeVmFfnB30Sl72QWDFeFnsEVjpgE0JPLTf5qlNreQEZRKYaw31oNqC1j0+z3GYAk6b9B/
-X-Gm-Message-State: AOJu0Yw0vS/g5Zst0KfddZGebQi5AmWoBPDhKvM/euNn54qeBbTvkD9e
-	y6XLeEWTtndTw4u6rlx96s64GewRznvOTreCrHzJ/t5kxBt+Ow0cvLnGO4WN0rF5bCUX0o08RO1
-	zhuzpqqDaMV9J1LKg7ZVwlK/BBq4=
-X-Google-Smtp-Source: AGHT+IFZ1AIkhnIlR1F2PajHwGmAM3QHm7zYfUYNlGkAcCt+TyLYZj4pGDx0Qw5zZbScstvZjUXz2fAMKekKDEkjrCQ=
-X-Received: by 2002:a05:6122:3887:b0:4ef:4b35:896f with SMTP id
- 71dfb90a1353d-4f2f3e9ea73mr2621613e0c.7.1720108688497; Thu, 04 Jul 2024
- 08:58:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="qoowIqh3"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 464ElubJ013845;
+	Thu, 4 Jul 2024 17:58:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	EfcaGHRE0IyvisjBYwh0Vxzl024Zih/W8ulbiu0kQPk=; b=qoowIqh3fOswWhg1
+	05m1JTWETvk7k6LT9MCMdAxuWigviDP0q35CVBMTZttlnj4Pt5HdiTMVAU2hYmfx
+	mJJc2Sq//CoiZOdDXUf2eFmRrGsqRHWoyrgkijSP7FuEDHu9oWjXJb7yXZtj0BhR
+	NLwxYBLVQ1H9lJFqgAfg6xKaAdzgOFvSJKQPnHMAOYFklYcsJV8pz9c0gIC1Fv+e
+	rhr9Oyim2dD9Vy0Y7nMfw8yrSyf5W2E/WE2kKe3z0062Xia+HvMcKY4E5+x/5DWl
+	XAUQSZXhvekottNx0/I0S38M67pfY3nxskCQ4Lm5glGIcHF0mG+cH0PR+oVvsmG4
+	AhriUg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 402w7jbg5b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jul 2024 17:58:21 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 57A1F40044;
+	Thu,  4 Jul 2024 17:58:17 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F087D229A66;
+	Thu,  4 Jul 2024 17:57:51 +0200 (CEST)
+Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 4 Jul
+ 2024 17:57:51 +0200
+From: Olivier Moysan <olivier.moysan@foss.st.com>
+To: <fabrice.gasnier@foss.st.com>, Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+CC: Olivier Moysan <olivier.moysan@foss.st.com>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 7/8] iio: add iio backend support to sd modulator
+Date: Thu, 4 Jul 2024 17:53:35 +0200
+Message-ID: <20240704155338.2387858-8-olivier.moysan@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
+References: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626132341.342963-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240626132341.342963-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <ZoUdUyrld2kZorvU@shikoro>
-In-Reply-To: <ZoUdUyrld2kZorvU@shikoro>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 4 Jul 2024 16:56:56 +0100
-Message-ID: <CA+V-a8v5VcBRjp-kPGp2pKXZ2RhCSXHdsL9X5YDOxjL6W1Mg=Q@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] mmc: renesas_sdhi: Add support for RZ/V2H(P) SoC
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Prabhakar <prabhakar.csengg@gmail.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	Magnus Damm <magnus.damm@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-04_10,2024-07-03_01,2024-05-17_01
 
-Hi Wolfram,
+The legacy sd modulator driver registers the sigma delta modulator as
+an IIO channel provider. This implementation is not convenient when the
+SD modulator has to be cascaded with another IIO device. The scaling
+information is distributed across devices, which makes it difficult to
+report consistent scaling data on IIO devices.
 
-Thank you for the review.
+The solution is to expose these cascaded IIO devices as an aggregate
+device, which report global scaling information.
+Add IIO backend support to SD modulator to allow scaling information
+management.
 
-On Wed, Jul 3, 2024 at 10:43=E2=80=AFAM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, Jun 26, 2024 at 02:23:41PM +0100, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > The SDHI/eMMC IPs found in the RZ/V2H(P) (a.k.a. r9a09g057) are very
-> > similar to those found in R-Car Gen3. However, they are not identical,
-> > necessitating an SoC-specific compatible string for fine-tuning driver
-> > support.
-> >
-> > Key features of the RZ/V2H(P) SDHI/eMMC IPs include:
-> > - Voltage level control via the IOVS bit.
-> > - PWEN pin support via SD_STATUS register.
-> > - Lack of HS400 support.
-> > - Fixed address mode operation.
-> >
-> > internal regulator support is added to control the voltage levels of SD
-> > pins via sd_iovs/sd_pwen bits in SD_STATUS register.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com> # on RZ/G3=
-S
-> > ---
-> > v3->v4
-> > - Dropped using 'renesas,sdhi-use-internal-regulator' property
-> > - Now using of_device_is_available() to check if regulator is available=
- and enabled
-> > - Dropped extra spaces during operations
-> > - Included tested by tag from Claudiu
-> > - Rebased patch on top of https://patchwork.kernel.org/project/linux-re=
-nesas-soc/patch/20240626085015.32171-2-wsa+renesas@sang-engineering.com/
-> >
-> > v2->v3
-> > - Moved regulator info to renesas_sdhi_of_data instead of quirks
-> > - Added support to configure the init state of regulator
-> > - Added function pointers to configure regulator
-> > - Added REGULATOR_CHANGE_VOLTAGE mask
-> >
-> > v1->v2
-> > - Now controlling PWEN bit get/set_voltage
-> > ---
-> >  drivers/mmc/host/renesas_sdhi.h               |  13 ++
-> >  drivers/mmc/host/renesas_sdhi_core.c          |  98 ++++++++++++
-> >  drivers/mmc/host/renesas_sdhi_internal_dmac.c | 147 ++++++++++++++++++
-> >  drivers/mmc/host/tmio_mmc.h                   |   5 +
-> >  4 files changed, 263 insertions(+)
-> >
-> > diff --git a/drivers/mmc/host/renesas_sdhi.h b/drivers/mmc/host/renesas=
-_sdhi.h
-> > index f12a87442338..cd509e7142ba 100644
-> > --- a/drivers/mmc/host/renesas_sdhi.h
-> > +++ b/drivers/mmc/host/renesas_sdhi.h
-> > @@ -11,6 +11,8 @@
-> >
-> >  #include <linux/dmaengine.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/regulator/driver.h>
-> > +#include <linux/regulator/machine.h>
-> >  #include <linux/workqueue.h>
-> >  #include "tmio_mmc.h"
-> >
-> > @@ -36,6 +38,12 @@ struct renesas_sdhi_of_data {
-> >       unsigned int max_blk_count;
-> >       unsigned short max_segs;
-> >       unsigned long sdhi_flags;
-> > +     struct regulator_desc *rdesc;
-> > +     struct regulator_init_data *reg_init_data;
-> > +     bool regulator_init_state;
-> > +     unsigned int regulator_init_voltage;
-> > +     int (*regulator_force_endis)(struct regulator_dev *rdev, bool ena=
-ble);
-> > +     int (*regulator_force_voltage)(struct regulator_dev *rdev, unsign=
-ed int voltage);
->
-> I am open for discussing this but maybe here only
->
-> +       struct renesas_sdhi_regulator *internal_regulator
->
-> or something and create the new struct with the additions above?
->
-> > +     int (*regulator_force_endis)(struct regulator_dev *rdev, bool ena=
-ble);
-> > +     int (*regulator_force_voltage)(struct regulator_dev *rdev, unsign=
-ed int voltage);
->
-> Do we need these functions because the regulator framework cannot force
-> these actions because it caches the old state? I wonder if we can avoid
-> these functions...
->
-Yes, for the voltage setting, it caches the values. However, for the
-regulator enable/disable, we can use is_enabled(), which probes the
-hardware.
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+---
+ drivers/iio/adc/Kconfig            |  1 +
+ drivers/iio/adc/sd_adc_modulator.c | 92 +++++++++++++++++++++++++++++-
+ 2 files changed, 92 insertions(+), 1 deletion(-)
 
-The reset value for PWEN is 1. The regulator_force_endis() callback is
-mainly added for a scenario where, consider a code flow where the
-regulator is disabled (using regulator_disable()) and now we land in
-the reset callback (i.e., renesas_sdhi_reset()). Here, after issuing
-the reset, the PWEN value will be 1, but we need to restore it back.
-Hence, this callback is necessary. Note that is_enabled() cannot be
-used, as it probes the hardware when it switches states after a reset.
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index f60fe85a30d5..14b1773f02d9 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -1171,6 +1171,7 @@ config SD_ADC_MODULATOR
+ 	tristate "Generic sigma delta modulator"
+ 	select IIO_BUFFER
+ 	select IIO_TRIGGERED_BUFFER
++	select IIO_BACKEND
+ 	help
+ 	  Select this option to enables sigma delta modulator. This driver can
+ 	  support generic sigma delta modulators.
+diff --git a/drivers/iio/adc/sd_adc_modulator.c b/drivers/iio/adc/sd_adc_modulator.c
+index 327cc2097f6c..06f9c5cacd53 100644
+--- a/drivers/iio/adc/sd_adc_modulator.c
++++ b/drivers/iio/adc/sd_adc_modulator.c
+@@ -6,11 +6,14 @@
+  * Author: Arnaud Pouliquen <arnaud.pouliquen@st.com>.
+  */
+ 
++#include <linux/iio/backend.h>
+ #include <linux/iio/iio.h>
+ #include <linux/iio/triggered_buffer.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/regulator/consumer.h>
+ 
+ static const struct iio_info iio_sd_mod_iio_info;
+ 
+@@ -24,7 +27,54 @@ static const struct iio_chan_spec iio_sd_mod_ch = {
+ 	},
+ };
+ 
+-static int iio_sd_mod_probe(struct platform_device *pdev)
++struct iio_sd_backend_priv {
++	struct regulator *vref;
++	int vref_mv;
++};
++
++static int iio_sd_mod_enable(struct iio_backend *backend)
++{
++	struct iio_sd_backend_priv *priv = iio_backend_get_priv(backend);
++
++	if (priv->vref)
++		return regulator_enable(priv->vref);
++
++	return 0;
++};
++
++static void iio_sd_mod_disable(struct iio_backend *backend)
++{
++	struct iio_sd_backend_priv *priv = iio_backend_get_priv(backend);
++
++	if (priv->vref)
++		regulator_disable(priv->vref);
++};
++
++static int iio_sd_mod_read(struct iio_backend *backend, struct iio_chan_spec const *chan, int *val,
++			   int *val2, long mask)
++{
++	struct iio_sd_backend_priv *priv = iio_backend_get_priv(backend);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_SCALE:
++		*val = priv->vref_mv;
++		return IIO_VAL_INT;
++
++	case IIO_CHAN_INFO_OFFSET:
++		*val = 0;
++		return IIO_VAL_INT;
++	}
++
++	return -EOPNOTSUPP;
++};
++
++static const struct iio_backend_ops sd_backend_ops = {
++	.enable = iio_sd_mod_enable,
++	.disable = iio_sd_mod_disable,
++	.read_raw = iio_sd_mod_read,
++};
++
++static int iio_sd_mod_register(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct iio_dev *iio;
+@@ -45,6 +95,45 @@ static int iio_sd_mod_probe(struct platform_device *pdev)
+ 	return devm_iio_device_register(&pdev->dev, iio);
+ }
+ 
++static int iio_sd_mod_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct regulator *vref;
++	struct iio_sd_backend_priv *priv;
++	int ret;
++
++	/* If sd modulator is not defined as an IIO backend device, fallback to legacy */
++	if (!device_property_present(dev, "#io-backend-cells"))
++		return iio_sd_mod_register(pdev);
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	/*
++	 * Get regulator reference if any, but don't enable regulator right now.
++	 * Rely on enable and disable callbacks to manage regulator power.
++	 */
++	vref = devm_regulator_get_optional(dev, "vref");
++	if (IS_ERR(vref)) {
++		if (PTR_ERR(vref) != -ENODEV)
++			return dev_err_probe(dev, PTR_ERR(vref), "Failed to get vref\n");
++	} else {
++		/*
++		 * Retrieve voltage right now, as regulator_get_voltage() provides it whatever
++		 * the state of the regulator.
++		 */
++		ret = regulator_get_voltage(vref);
++		if (ret < 0)
++			return ret;
++
++		priv->vref = vref;
++		priv->vref_mv = ret / 1000;
++	}
++
++	return devm_iio_backend_register(&pdev->dev, &sd_backend_ops, priv);
++};
++
+ static const struct of_device_id sd_adc_of_match[] = {
+ 	{ .compatible = "sd-modulator" },
+ 	{ .compatible = "ads1201" },
+@@ -65,3 +154,4 @@ module_platform_driver(iio_sd_mod_adc);
+ MODULE_DESCRIPTION("Basic sigma delta modulator");
+ MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen@st.com>");
+ MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS(IIO_BACKEND);
+-- 
+2.25.1
 
-The reset value for IOVS is 3.3V. Below is the scenario for which
-regulator_force_voltage() is added:
-
------> Current value: 1.8V (cached by the regulator)
---------------> After reset:
-------------------> Hardware has 3.3V, but the regulator core cache
-still has 1.8V.
-----------------------> When requested to switch to 1.8V from MMC
-core: The regulator core returns success, as it sees 1.8V in the
-cached state.
-----------------------------> As a result, the SD card won't work.
-
-Cheers,
-Prabhakar
