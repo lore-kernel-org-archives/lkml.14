@@ -1,364 +1,392 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96111B1504;
-	Thu,  4 Jul 2024 15:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1BE1B1504;
+	Thu,  4 Jul 2024 15:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720108721; cv=none; b=FsUcoLeGB0DvrfYiN4iQBZ1vy5+OxyHUaOrKhA4nsB46OQRKTcqjMKsxNB5xULryr4mwDWKfBEXRHCN87yfbB75+G73PBWJXl3HukHXEcMnt9RDKdtoTpnMu0vKgzC+NScPXCmeYjFIiAEeH5VX+srJgggKwvgeinScyxP8T7ls=
+	t=1720108732; cv=none; b=T5OIJHNFjhTVouQRqdpXhQ347eeG/Y7wO7I1jW+abbJmgLZvy/vpwtEU1z8GvHgHtP+Z1Otcl/BWo6yZ4JmeaMaGxd6D9oamn4nAmLiuhGgam/gLpaP6AkEoRq4zanl+L9l9J3aaI8AtbtFRQmUzdpMnGpa149yKe0iV5I8zEbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720108721; c=relaxed/simple;
-	bh=Vw9cYiWmBWfb8TTsaP6MPM8WxWX5thyZbtwBWEFIH6A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nYKHWl9rj5xcOsu6iE90tJURny6pdE8O69x90wdprkt4rlvwpA45Kj7S+Mt4mvF4u9klKggY+jouBHrbRrYqUptVQlDqHsy6utsSOxkVuVJv9U9Zxsbbv5u56iFlmVcJoCHyI47so/ZaRqrh7Zvddx3NnN8RXLcVwVsw3KMzljU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUuhV4bH; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720108732; c=relaxed/simple;
+	bh=miTdIW03+gCfk4U+Cz/DHPo6T+x3t3RZv88YBKSPhGE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TqiiW69JlCTp0g1cphWBtJYt6olltL616g6Qe3W3oPleDIR4Q8jZ/W3hq+1SSQu0dAlurRMNJ/UNd8RjXtXq3ms+i24odsPJCwcfUW4lgDSYKl5TqKoYLq3wYfQczEi4ohP2Xz5xmTlwaEBG56osQPeY8bJ42TSsqoKhvybrV7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=nR4A41hk; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUuhV4bH"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-58ef19aa6b3so265243a12.1;
-        Thu, 04 Jul 2024 08:58:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720108718; x=1720713518; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mGlL/uE7TDzKfiVbTPhEKK0ePrDxqpfFWq/HFd9CIio=;
-        b=WUuhV4bHvFhNQCyQyarav8gCNSsqOrOGqGOKoY4T8uNL0nz1kgZ+n9cvUr/8rg+Rdo
-         Rb4y/W9UR1G/2+nab8QCV6iORRoOo90Aurh5JKbhlKz2E9oJ+egbcdrxuy6vjHEO4nj2
-         s5WZ0eT6eG+SOCdlHYKwDCdWkfjE7XiDd3jAraHpnl17TrWk4i74Pg8HtzRGRJMG+qkN
-         Dvon3U5bEGCOoe62BjWgnpNZNsMsxvr6YcWp6rCDAU3qq21O3ORFCilZVk+0o2OmT4RE
-         JgMgMeZ3nCsNZWEMXEC8X+xsFPSrDU6lKHt8QcfW9XSQ/t3D/+IdZIunYUVABpnMgYXQ
-         PcaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720108718; x=1720713518;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mGlL/uE7TDzKfiVbTPhEKK0ePrDxqpfFWq/HFd9CIio=;
-        b=EzkWNHgaWv3QcpvmqLIlRCG0nL0RStCDOCQlHmeK01lh1oP3NLYkTfb4UQL+Q5qjRJ
-         /vWZ8W62xLDzFfQ8OmLOW0Y6v7D+1fZn9wNzSVJcXtgiCEQVy/uo4DW2uJLINKL1L02Q
-         Pl6PsFq6/SghiNNxd+kQjZZpvfABgw5UuRGpxrdKQsy3PCFzOhBL/AuJYHSdY3ALIdg0
-         AgK0g6tSdvfDUMe/Ua68yyzmdBmh8aI1Ly0AejGx66N5Si0+TQ79nXiq4JnafytH3jMc
-         7ow+uIKm8W8wJCXz3pyP9gKdE3y//uqnF4OgPIu4mATUR6UBgM6v7C0PaJwDwwNWMCFy
-         qYQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWoi9fxBXTA/+uzviEc4jhPSjKOswT092ighSuttnROEwPqmj1kKuh2UOB02uXDCxgNpvJyz56SO/cz+IDVAAPdLZ7rvSRKaK6Uvg/XxY+bY/YNOUKMqXzJkSSqOG+aw4j8Xm3FolBZ6zUeEg==
-X-Gm-Message-State: AOJu0Ywi/pzXMuGEVF7e0WOpMy+HZDNVd5vdqNYPeAWRbzMvFrWFnkxj
-	K6yQ4lDokyfJgmBOlOiG5R1Ut3H0m0MIexpqK/l8EWmcHXuflkZh4b//HWX3j223b6I8Mm1qW7K
-	AdUpJYUeXGK2yv8qdfy670H/wwQroOg==
-X-Google-Smtp-Source: AGHT+IErblZt7bgFomQcrLEXumFkfKSXuHPwhtBd2lP9n6LZzEj45+6eygT0JdMZl+luoWXHBcNvx4nQ61KnR9k20lo=
-X-Received: by 2002:a05:6402:27d0:b0:57a:3046:1cd8 with SMTP id
- 4fb4d7f45d1cf-58e5994dfc1mr1915766a12.7.1720108717922; Thu, 04 Jul 2024
- 08:58:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="nR4A41hk"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 464BtKdo003029;
+	Thu, 4 Jul 2024 17:58:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	53gohECmv3blfnBLse0suF14Wnzkm2nWQA5ErnOdSYU=; b=nR4A41hkFY3YLxf6
+	6WJV4otih6bnL/DNxZ+N828F5HgyJSO1PSAMpNmQUO0lfywF4jZp7RFdooc9gCwk
+	KYm3ErQsLFgrV5uwtARpdyiqwAjWM+b/ThnHVdoN5sclJdfXccQ0g4Gic6e7rJ1r
+	iFoYPzDpE1Df166gTrHT5un7OBh7VUp5WWAFrKv4/A8m5slu1Chac7ZcIMBC71aj
+	XcRtyr3GAGOrHXvyyqQYQgHLcVN+mMd9K9f1+X0xGHxEg3lYcBoF3LCqO/3Nabu7
+	McQg3V0kDECWuH+1KD7UAy5waT9OxcKybBaDA9WNtnkPaC7hIEJDNNGFxseaaY9K
+	rjsfTA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 405u9srw6r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jul 2024 17:58:24 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 816C940048;
+	Thu,  4 Jul 2024 17:58:20 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D7A95229A65;
+	Thu,  4 Jul 2024 17:57:50 +0200 (CEST)
+Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 4 Jul
+ 2024 17:57:50 +0200
+From: Olivier Moysan <olivier.moysan@foss.st.com>
+To: <fabrice.gasnier@foss.st.com>, Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+CC: Olivier Moysan <olivier.moysan@foss.st.com>, <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 6/8] iio: adc: stm32-dfsdm: adopt generic channels bindings
+Date: Thu, 4 Jul 2024 17:53:34 +0200
+Message-ID: <20240704155338.2387858-7-olivier.moysan@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
+References: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628140435.1652374-1-quic_bibekkum@quicinc.com>
- <20240628140435.1652374-7-quic_bibekkum@quicinc.com> <CAF6AEGvroi8rJimFv95tkWmRFa5_aTpBJ7GFcRAuZpLGdSyEYQ@mail.gmail.com>
- <0650ba0a-4453-4e2d-8a76-0f396ac1999c@quicinc.com> <CAF6AEGv_9e-TDW1r0N4-db6pY_aV_EZFqrpNbATVS5Vy6+fs1g@mail.gmail.com>
- <4a5f54c7-120e-427d-8a0a-9fb83e13a72e@quicinc.com> <CAF6AEGtrtFNxDWtuADA4oOHhZJ=dJZcGaJ1XLFJt4fe4Xp=pTA@mail.gmail.com>
- <3b7c05b1-8f36-4c81-a55c-dbb467314099@quicinc.com> <CAF6AEGuRKU+DkL0-b3xdR1R45_MiiKQYRRXEXYz-xohu8rUaEQ@mail.gmail.com>
-In-Reply-To: <CAF6AEGuRKU+DkL0-b3xdR1R45_MiiKQYRRXEXYz-xohu8rUaEQ@mail.gmail.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 4 Jul 2024 08:58:25 -0700
-Message-ID: <CAF6AEGtbw06-gOSvX9gAbi=SA801gmD3_8c5xkOU-G9g2qKptQ@mail.gmail.com>
-Subject: Re: [PATCH v13 6/6] iommu/arm-smmu: add support for PRR bit setup
-To: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-Cc: will@kernel.org, robin.murphy@arm.com, joro@8bytes.org, jgg@ziepe.ca, 
-	jsnitsel@redhat.com, robh@kernel.org, krzysztof.kozlowski@linaro.org, 
-	quic_c_gdjako@quicinc.com, dmitry.baryshkov@linaro.org, 
-	konrad.dybcio@linaro.org, iommu@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Rob Clark <robdclark@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-04_12,2024-07-03_01,2024-05-17_01
 
-On Thu, Jul 4, 2024 at 7:46=E2=80=AFAM Rob Clark <robdclark@gmail.com> wrot=
-e:
->
-> On Wed, Jul 3, 2024 at 4:38=E2=80=AFAM Bibek Kumar Patro
-> <quic_bibekkum@quicinc.com> wrote:
-> >
-> >
-> >
-> > On 7/2/2024 2:01 AM, Rob Clark wrote:
-> > > On Mon, Jul 1, 2024 at 4:01=E2=80=AFAM Bibek Kumar Patro
-> > > <quic_bibekkum@quicinc.com> wrote:
-> > >>
-> > >>
-> > >>
-> > >> On 6/28/2024 9:14 PM, Rob Clark wrote:
-> > >>> On Fri, Jun 28, 2024 at 8:10=E2=80=AFAM Bibek Kumar Patro
-> > >>> <quic_bibekkum@quicinc.com> wrote:
-> > >>>>
-> > >>>>
-> > >>>>
-> > >>>> On 6/28/2024 7:47 PM, Rob Clark wrote:
-> > >>>>> On Fri, Jun 28, 2024 at 7:05=E2=80=AFAM Bibek Kumar Patro
-> > >>>>> <quic_bibekkum@quicinc.com> wrote:
-> > >>>>>>
-> > >>>>>> Add an adreno-smmu-priv interface for drm/msm to call
-> > >>>>>> into arm-smmu-qcom and initiate the PRR bit setup or reset
-> > >>>>>> sequence as per request.
-> > >>>>>>
-> > >>>>>> This will be used by GPU to setup the PRR bit and related
-> > >>>>>> configuration registers through adreno-smmu private
-> > >>>>>> interface instead of directly poking the smmu hardware.
-> > >>>>>>
-> > >>>>>> Suggested-by: Rob Clark <robdclark@gmail.com>
-> > >>>>>> Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-> > >>>>>> ---
-> > >>>>>>     drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 23 ++++++++++++=
-++++++++++
-> > >>>>>>     drivers/iommu/arm/arm-smmu/arm-smmu.h      |  2 ++
-> > >>>>>>     include/linux/adreno-smmu-priv.h           |  6 +++++-
-> > >>>>>>     3 files changed, 30 insertions(+), 1 deletion(-)
-> > >>>>>>
-> > >>>>>> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/driver=
-s/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> > >>>>>> index bd101a161d04..64571a1c47b8 100644
-> > >>>>>> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> > >>>>>> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> > >>>>>> @@ -28,6 +28,7 @@
-> > >>>>>>     #define PREFETCH_SHALLOW       (1 << PREFETCH_SHIFT)
-> > >>>>>>     #define PREFETCH_MODERATE      (2 << PREFETCH_SHIFT)
-> > >>>>>>     #define PREFETCH_DEEP          (3 << PREFETCH_SHIFT)
-> > >>>>>> +#define GFX_ACTLR_PRR          (1 << 5)
-> > >>>>>>
-> > >>>>>>     static const struct actlr_config sc7280_apps_actlr_cfg[] =3D=
+Move to generic channels binding to ease new backend framework adoption
+and prepare the convergence with MDF IP support on STM32MP2 SoC family.
+
+Legacy binding:
+DFSDM is an IIO channel consumer.
+SD modulator is an IIO channels provider.
+The channel phandles are provided in DT through io-channels property
+and channel indexes through st,adc-channels property.
+
+New binding:
+DFSDM is an IIO channel provider.
+The channel indexes are given by reg property in channel child node.
+
+This new binding is intended to be used with SD modulator IIO backends.
+It does not support SD modulator legacy IIO devices.
+The st,adc-channels property presence is used to discriminate
+between legacy and backend bindings.
+
+The support of the DFSDM legacy channels and SD modulator IIO devices
+is kept for backward compatibility.
+
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+---
+ drivers/iio/adc/stm32-dfsdm-adc.c | 200 ++++++++++++++++++++++++------
+ 1 file changed, 164 insertions(+), 36 deletions(-)
+
+diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+index fabd654245f5..ae5d95e38cd7 100644
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -666,6 +666,64 @@ static int stm32_dfsdm_channel_parse_of(struct stm32_dfsdm *dfsdm,
+ 	return 0;
+ }
+ 
++static int stm32_dfsdm_generic_channel_parse_of(struct stm32_dfsdm *dfsdm,
++						struct iio_dev *indio_dev,
++						struct iio_chan_spec *ch,
++						struct fwnode_handle *node)
++{
++	struct stm32_dfsdm_channel *df_ch;
++	const char *of_str;
++	int ret, val;
++
++	ret = fwnode_property_read_u32(node, "reg", &ch->channel);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Missing channel index %d\n", ret);
++		return ret;
++	}
++
++	if (ch->channel >= dfsdm->num_chs) {
++		dev_err(&indio_dev->dev, " Error bad channel number %d (max = %d)\n",
++			ch->channel, dfsdm->num_chs);
++		return -EINVAL;
++	}
++
++	ret = fwnode_property_read_string(node, "label", &ch->datasheet_name);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev,
++			" Error parsing 'label' for idx %d\n", ch->channel);
++		return ret;
++	}
++
++	df_ch =  &dfsdm->ch_list[ch->channel];
++	df_ch->id = ch->channel;
++
++	ret = fwnode_property_read_string(node, "st,adc-channel-type", &of_str);
++	if (!ret) {
++		val = stm32_dfsdm_str2val(of_str, stm32_dfsdm_chan_type);
++		if (val < 0)
++			return val;
++	} else {
++		val = 0;
++	}
++	df_ch->type = val;
++
++	ret = fwnode_property_read_string(node, "st,adc-channel-clk-src", &of_str);
++	if (!ret) {
++		val = stm32_dfsdm_str2val(of_str, stm32_dfsdm_chan_src);
++		if (val < 0)
++			return val;
++	} else {
++		val = 0;
++	}
++	df_ch->src = val;
++
++	ret = fwnode_property_read_u32(node, "st,adc-alt-channel", &df_ch->alt_si);
++	if (ret != -EINVAL)
++		df_ch->alt_si = 0;
++
++	return 0;
++}
++
+ static ssize_t dfsdm_adc_audio_get_spiclk(struct iio_dev *indio_dev,
+ 					  uintptr_t priv,
+ 					  const struct iio_chan_spec *chan,
+@@ -1227,7 +1285,8 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
+ 		ret = iio_device_claim_direct_mode(indio_dev);
+ 		if (ret)
+ 			return ret;
+-		ret = iio_hw_consumer_enable(adc->hwc);
++		if (adc->hwc)
++			ret = iio_hw_consumer_enable(adc->hwc);
+ 		if (ret < 0) {
+ 			dev_err(&indio_dev->dev,
+ 				"%s: IIO enable failed (channel %d)\n",
+@@ -1236,7 +1295,8 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
+ 			return ret;
+ 		}
+ 		ret = stm32_dfsdm_single_conv(indio_dev, chan, val);
+-		iio_hw_consumer_disable(adc->hwc);
++		if (adc->hwc)
++			iio_hw_consumer_disable(adc->hwc);
+ 		if (ret < 0) {
+ 			dev_err(&indio_dev->dev,
+ 				"%s: Conversion failed (channel %d)\n",
+@@ -1362,15 +1422,20 @@ static int stm32_dfsdm_dma_request(struct device *dev,
+ 	return 0;
+ }
+ 
+-static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
+-					 struct iio_chan_spec *ch)
++static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev, struct iio_chan_spec *ch,
++					 struct fwnode_handle *child)
  {
-> > >>>>>>            { 0x0800, 0x04e0, PREFETCH_DEFAULT | CMTLB },
-> > >>>>>> @@ -235,6 +236,27 @@ static void qcom_adreno_smmu_resume_transla=
-tion(const void *cookie, bool termina
-> > >>>>>>            arm_smmu_cb_write(smmu, cfg->cbndx, ARM_SMMU_CB_RESUM=
-E, reg);
-> > >>>>>>     }
-> > >>>>>>
-> > >>>>>> +static void qcom_adreno_smmu_set_prr(const void *cookie, phys_a=
-ddr_t page_addr, bool set)
-> > >>>>>> +{
-> > >>>>>> +       struct arm_smmu_domain *smmu_domain =3D (void *)cookie;
-> > >>>>>> +       struct arm_smmu_cfg *cfg =3D &smmu_domain->cfg;
-> > >>>>>> +       struct arm_smmu_device *smmu =3D smmu_domain->smmu;
-> > >>>>>> +       u32 reg =3D 0;
-> > >>>>>> +
-> > >>>>>> +       writel_relaxed(lower_32_bits(page_addr),
-> > >>>>>> +                               smmu->base + ARM_SMMU_GFX_PRR_CF=
-G_LADDR);
-> > >>>>>> +
-> > >>>>>> +       writel_relaxed(upper_32_bits(page_addr),
-> > >>>>>> +                               smmu->base + ARM_SMMU_GFX_PRR_CF=
-G_UADDR);
-> > >>>>>> +
-> > >>>>>> +       reg =3D  arm_smmu_cb_read(smmu, cfg->cbndx, ARM_SMMU_CB_=
-ACTLR);
-> > >>>>>> +       reg &=3D ~GFX_ACTLR_PRR;
-> > >>>>>> +       if (set)
-> > >>>>>> +               reg |=3D FIELD_PREP(GFX_ACTLR_PRR, 1);
-> > >>>>>> +       arm_smmu_cb_write(smmu, cfg->cbndx, ARM_SMMU_CB_ACTLR, r=
-eg);
-> > >>>>>> +
-> > >>>>>
-> > >>>>> nit, extra line
-> > >>>>>
-> > >>>>
-> > >>>> Ack, will remove this. Thanks for pointing out.
-> > >>>>
-> > >>>>> Also, if you passed a `struct page *` instead, then you could dro=
-p the
-> > >>>>> bool param, ie. passing NULL for the page would disable PRR.  But=
- I
-> > >>>>> can go either way if others have a strong preference for phys_add=
-r_t.
-> > >>>>>
-> > >>>>
-> > >>>> Oh okay, this looks simple to reset the prr bit.
-> > >>>> But since this page is allocated and is used inside gfx driver
-> > >>>> before being utilized for prr bit operation, would it be safe for
-> > >>>> drm/gfx driver to keep a reference to this page in smmu driver?
-> > >>>>
-> > >>>> Since we only need the page address for configuring the
-> > >>>> CFG_UADDR/CFG_LADDR registers so passed the phys_addr_t.
-> > >>>
-> > >>> I don't think the smmu driver needs to keep a reference to the page=
-..
-> > >>> we can just say it is the responsibility of the drm driver to call
-> > >>> set_prr(NULL) before freeing the page
-> > >>>
-> > >>
-> > >> That makes sense. If we go by this NULL page method to disable the P=
-RR,
-> > >> we would have to set the address registers to reset value as well.
-> > >>
-> > >> The sequence would be like the following as per my understaning:
-> > >> - Check if it's NULL page
-> > >> - Set the PRR_CFG_UADDR/PRR_CFG_LADDR to reset values i.e - 0x0 for
-> > >>     these registers
-> > >> - Reset the PRR bit in actlr register
-> > >>
-> > >> Similar to this snippet:
-> > >>
-> > >> #PRR_RESET_ADDR 0x0
-> > >>
-> > >> --------------
-> > >> reg =3D  arm_smmu_cb_read(smmu, cfg->cbndx, ARM_SMMU_CB_ACTLR);
-> > >> reg &=3D ~GFX_ACTLR_PRR;
-> > >> arm_smmu_cb_write(smmu, cfg->cbndx, ARM_SMMU_CB_ACTLR, reg);
-> > >>
-> > >> if (!prr_page) {
-> > >>          writel_relaxed(PRR_RESET_ADDR,
-> > >>                          smmu->base + ARM_SMMU_GFX_PRR_CFG_LADDR);
-> > >>          writel_relaxed(PRR_RESET_ADDR),
-> > >>                           smmu->base + ARM_SMMU_GFX_PRR_CFG_UADDR);
-> > >>          return;
-> > >> }
-> > >>
-> > >>
-> > >> writel_relaxed(lower_32_bits(page_to_phys(prr_page)),
-> > >>                  smmu->base + ARM_SMMU_GFX_PRR_CFG_LADDR);
-> > >>
-> > >> writel_relaxed(upper_32_bits(page_to_phys(prr_page)),
-> > >>                  smmu->base + ARM_SMMU_GFX_PRR_CFG_UADDR);
-> > >>
-> > >> reg |=3D FIELD_PREP(GFX_ACTLR_PRR, 1);
-> > >> arm_smmu_cb_write(smmu, cfg->cbndx, ARM_SMMU_CB_ACTLR, reg);
-> > >> -----------------
-> > >>
-> > >> If looks good, will implement the same in next version.
-> > >
-> > > yeah, that looks like it could work..
-> > >
-> > > you probably don't need to zero out the PRR_CFG_*ADDR when disabling,
-> > > and probably could avoid double writing ACTLR, but that is getting
-> > > into bikeshedding
-> > >
-> >
-> > Actually Rob, since you rightly pointed this out.
-> > I crosschecked again on these registers.
-> > PRR_CFG_*ADDR is a global register in SMMU space but
-> > ACTLR register including PRR bit is a per-domain register.
-> > There might also be a situation where PRR feature need to be
-> > disabled or enabled separately for each domain.
-> > So I think it would be cleaner to have two apis, set_prr_addr(),
-> > set_prr_bit().
-> > set_prr_addr() will be used only to set this PRR_CFG_*ADDR
-> > register by passing a 'struct page *'
-> > set_prr_bit() will be used as a switch for PRR feature,
-> > where required smmu_domain will be passed along with
-> > the bool value to set/reset the PRR bit depending on which this
-> > feature will be enabled/disabled for the selected domain.
->
-> on a related note, adreno has been using arm-smmu for a number of
-> generations, I guess not all support PRR?  The drm driver will need to
-> know whether PRR is supported (and expose that to userspace to let the
-> UMD know whether to expose certain extensions).  How should this work?
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+ 	int ret;
+ 
+-	ret = stm32_dfsdm_channel_parse_of(adc->dfsdm, indio_dev, ch);
+-	if (ret < 0)
+-		return ret;
++	if (child)
++		ret = stm32_dfsdm_generic_channel_parse_of(adc->dfsdm, indio_dev, ch, child);
++	else /* Legacy binding */
++		ret = stm32_dfsdm_channel_parse_of(adc->dfsdm, indio_dev, ch);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Failed to parse channel\n");
++		return dev_err_probe(&indio_dev->dev, ret, "Failed to parse channel\n");
++	}
+ 
+ 	ch->type = IIO_VOLTAGE;
+ 	ch->indexed = 1;
+@@ -1385,6 +1450,7 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
+ 
+ 	if (adc->dev_data->type == DFSDM_AUDIO) {
+ 		ch->ext_info = dfsdm_adc_audio_ext_info;
++		ch->scan_index = 0;
+ 	} else {
+ 		ch->scan_type.shift = 8;
+ 	}
+@@ -1396,20 +1462,67 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
+ 					  &adc->dfsdm->ch_list[ch->channel]);
+ }
+ 
++static int stm32_dfsdm_chan_init(struct iio_dev *indio_dev, struct iio_chan_spec *channels)
++{
++	int num_ch = indio_dev->num_channels;
++	int chan_idx = 0;
++	int ret;
++
++	for (chan_idx = 0; chan_idx < num_ch; chan_idx++) {
++		channels[chan_idx].scan_index = chan_idx;
++		ret = stm32_dfsdm_adc_chan_init_one(indio_dev, &channels[chan_idx], NULL);
++		if (ret < 0)
++			return dev_err_probe(&indio_dev->dev, ret, "Channels init failed\n");
++	}
++
++	return 0;
++}
++
++static int stm32_dfsdm_generic_chan_init(struct iio_dev *indio_dev, struct iio_chan_spec *channels)
++{
++	int chan_idx = 0, ret;
++
++	device_for_each_child_node_scoped(&indio_dev->dev, child) {
++		/* Skip DAI node in DFSDM audio nodes */
++		if (fwnode_property_present(child, "compatible"))
++			continue;
++
++		channels[chan_idx].scan_index = chan_idx;
++		ret = stm32_dfsdm_adc_chan_init_one(indio_dev, &channels[chan_idx], child);
++		if (ret < 0)
++			return dev_err_probe(&indio_dev->dev, ret, "Channels init failed\n");
++
++		chan_idx++;
++	}
++
++	return chan_idx;
++}
++
+ static int stm32_dfsdm_audio_init(struct device *dev, struct iio_dev *indio_dev)
+ {
+ 	struct iio_chan_spec *ch;
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+ 	struct stm32_dfsdm_channel *d_ch;
+-	int ret;
++	bool legacy = false;
++	int num_ch, ret;
++
++	/* If st,adc-channels is defined legacy binding is used. Else assume generic binding. */
++	num_ch = of_property_count_u32_elems(indio_dev->dev.of_node, "st,adc-channels");
++	if (num_ch == 1)
++		legacy = true;
+ 
+ 	ch = devm_kzalloc(&indio_dev->dev, sizeof(*ch), GFP_KERNEL);
+ 	if (!ch)
+ 		return -ENOMEM;
+ 
+-	ch->scan_index = 0;
++	indio_dev->num_channels = 1;
++	indio_dev->channels = ch;
++
++	if (legacy)
++		ret = stm32_dfsdm_chan_init(indio_dev, ch);
++	else
++		ret = stm32_dfsdm_generic_chan_init(indio_dev, ch);
+ 
+-	ret = stm32_dfsdm_adc_chan_init_one(indio_dev, ch);
+ 	if (ret < 0) {
+ 		dev_err(&indio_dev->dev, "Channels init failed\n");
+ 		return ret;
+@@ -1420,9 +1533,6 @@ static int stm32_dfsdm_audio_init(struct device *dev, struct iio_dev *indio_dev)
+ 	if (d_ch->src != DFSDM_CHANNEL_SPI_CLOCK_EXTERNAL)
+ 		adc->spi_freq = adc->dfsdm->spi_master_freq;
+ 
+-	indio_dev->num_channels = 1;
+-	indio_dev->channels = ch;
+-
+ 	return stm32_dfsdm_dma_request(dev, indio_dev);
+ }
+ 
+@@ -1430,43 +1540,61 @@ static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
+ {
+ 	struct iio_chan_spec *ch;
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+-	int num_ch;
+-	int ret, chan_idx;
++	int num_ch, ret;
++	bool legacy = false;
+ 
+ 	adc->oversamp = DFSDM_DEFAULT_OVERSAMPLING;
+ 	ret = stm32_dfsdm_compute_all_osrs(indio_dev, adc->oversamp);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	num_ch = of_property_count_u32_elems(indio_dev->dev.of_node,
+-					     "st,adc-channels");
+-	if (num_ch < 0 || num_ch > adc->dfsdm->num_chs) {
+-		dev_err(&indio_dev->dev, "Bad st,adc-channels\n");
+-		return num_ch < 0 ? num_ch : -EINVAL;
++	num_ch = device_get_child_node_count(&indio_dev->dev);
++	if (!num_ch) {
++		/* No channels nodes found. Assume legacy binding */
++		num_ch = of_property_count_u32_elems(indio_dev->dev.of_node, "st,adc-channels");
++		if (num_ch < 0) {
++			dev_err(&indio_dev->dev, "Bad st,adc-channels\n");
++			return num_ch;
++		}
++
++		legacy = true;
+ 	}
+ 
+-	/* Bind to SD modulator IIO device */
+-	adc->hwc = devm_iio_hw_consumer_alloc(&indio_dev->dev);
+-	if (IS_ERR(adc->hwc))
+-		return -EPROBE_DEFER;
++	if (num_ch > adc->dfsdm->num_chs) {
++		dev_err(&indio_dev->dev, "Number of channel [%d] exceeds [%d]\n",
++			num_ch, adc->dfsdm->num_chs);
++		return -EINVAL;
++	}
++	indio_dev->num_channels = num_ch;
+ 
+-	ch = devm_kcalloc(&indio_dev->dev, num_ch, sizeof(*ch),
+-			  GFP_KERNEL);
+-	if (!ch)
+-		return -ENOMEM;
++	if (legacy) {
++		/* Bind to SD modulator IIO device. */
++		adc->hwc = devm_iio_hw_consumer_alloc(&indio_dev->dev);
++		if (IS_ERR(adc->hwc))
++			return dev_err_probe(&indio_dev->dev, -EPROBE_DEFER,
++					     "waiting for SD modulator\n");
++	} else {
++		/* Generic binding. SD modulator IIO device not used. Use SD modulator backend. */
++		adc->hwc = NULL;
+ 
+-	for (chan_idx = 0; chan_idx < num_ch; chan_idx++) {
+-		ch[chan_idx].scan_index = chan_idx;
+-		ret = stm32_dfsdm_adc_chan_init_one(indio_dev, &ch[chan_idx]);
+-		if (ret < 0) {
+-			dev_err(&indio_dev->dev, "Channels init failed\n");
+-			return ret;
+-		}
++		adc->backend = devm_kzalloc(&indio_dev->dev, sizeof(*adc->backend) * num_ch,
++					    GFP_KERNEL);
++		if (!adc->backend)
++			return -ENOMEM;
+ 	}
+ 
+-	indio_dev->num_channels = num_ch;
++	ch = devm_kcalloc(&indio_dev->dev, num_ch, sizeof(*ch), GFP_KERNEL);
++	if (!ch)
++		return -ENOMEM;
+ 	indio_dev->channels = ch;
+ 
++	if (legacy)
++		ret = stm32_dfsdm_chan_init(indio_dev, ch);
++	else
++		ret = stm32_dfsdm_generic_chan_init(indio_dev, ch);
++	if (ret < 0)
++		return ret;
++
+ 	init_completion(&adc->completion);
+ 
+ 	/* Optionally request DMA */
+-- 
+2.25.1
 
-So, I noticed in the x1e80100.dtsi that there is a gpu_prr_mem
-reserved section..  maybe we should be connecting this to the smmu
-driver in dt, and using that to detect presence of PRR?  Ie. the smmu
-driver would configure PRR_CFG_*ADDR based on the reserved mem, and
-the interface to drm would just be to enable/disable PRR, returning an
-error code if the reserved mem section isn't there.
-
-This simplifies the interface, and handles the question of how to
-detect if PRR is supported.
-
-BR,
--R
-
-> BR,
-> -R
->
-> > Thanks & regards,
-> > Bibek
-> >
-> > > BR,
-> > > -R
-> > >
-> > >>
-> > >> Thanks & regards,
-> > >> Bibek
-> > >>
-> > >>> BR,
-> > >>> -R
-> > >>>
-> > >>>>> Otherwise, lgtm
-> > >>>>>
-> > >>>>> BR,
-> > >>>>> -R
-> > >>>>>
-> > >>>>
-> > >>>> Thanks & regards,
-> > >>>> Bibek
-> > >>>>
-> > >>>>>> +}
-> > >>>>>> +
-> > >>>>>>     #define QCOM_ADRENO_SMMU_GPU_SID 0
-> > >>>>>>
-> > >>>>>>     static bool qcom_adreno_smmu_is_gpu_device(struct device *de=
-v)
-> > >>>>>> @@ -407,6 +429,7 @@ static int qcom_adreno_smmu_init_context(str=
-uct arm_smmu_domain *smmu_domain,
-> > >>>>>>            priv->get_fault_info =3D qcom_adreno_smmu_get_fault_i=
-nfo;
-> > >>>>>>            priv->set_stall =3D qcom_adreno_smmu_set_stall;
-> > >>>>>>            priv->resume_translation =3D qcom_adreno_smmu_resume_=
-translation;
-> > >>>>>> +       priv->set_prr =3D qcom_adreno_smmu_set_prr;
-> > >>>>>>
-> > >>>>>>            actlrvar =3D qsmmu->data->actlrvar;
-> > >>>>>>            if (!actlrvar)
-> > >>>>>> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iom=
-mu/arm/arm-smmu/arm-smmu.h
-> > >>>>>> index d9c2ef8c1653..3076bef49e20 100644
-> > >>>>>> --- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-> > >>>>>> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-> > >>>>>> @@ -154,6 +154,8 @@ enum arm_smmu_cbar_type {
-> > >>>>>>     #define ARM_SMMU_SCTLR_M               BIT(0)
-> > >>>>>>
-> > >>>>>>     #define ARM_SMMU_CB_ACTLR              0x4
-> > >>>>>> +#define ARM_SMMU_GFX_PRR_CFG_LADDR     0x6008
-> > >>>>>> +#define ARM_SMMU_GFX_PRR_CFG_UADDR     0x600C
-> > >>>>>>
-> > >>>>>>     #define ARM_SMMU_CB_RESUME             0x8
-> > >>>>>>     #define ARM_SMMU_RESUME_TERMINATE      BIT(0)
-> > >>>>>> diff --git a/include/linux/adreno-smmu-priv.h b/include/linux/ad=
-reno-smmu-priv.h
-> > >>>>>> index c637e0997f6d..d6e2ca9f8d8c 100644
-> > >>>>>> --- a/include/linux/adreno-smmu-priv.h
-> > >>>>>> +++ b/include/linux/adreno-smmu-priv.h
-> > >>>>>> @@ -49,7 +49,10 @@ struct adreno_smmu_fault_info {
-> > >>>>>>      *                 before set_ttbr0_cfg().  If stalling on f=
-ault is enabled,
-> > >>>>>>      *                 the GPU driver must call resume_translati=
-on()
-> > >>>>>>      * @resume_translation: Resume translation after a fault
-> > >>>>>> - *
-> > >>>>>> + * @set_prr:      Extendible interface to be used by GPU to mod=
-ify the
-> > >>>>>> + *                 ACTLR register bits, currently used to confi=
-gure
-> > >>>>>> + *                 Partially-Resident-Region (PRR) feature's
-> > >>>>>> + *                 setup and reset sequence as requested.
-> > >>>>>>      *
-> > >>>>>>      * The GPU driver (drm/msm) and adreno-smmu work together fo=
-r controlling
-> > >>>>>>      * the GPU's SMMU instance.  This is by necessity, as the GP=
-U is directly
-> > >>>>>> @@ -67,6 +70,7 @@ struct adreno_smmu_priv {
-> > >>>>>>         void (*get_fault_info)(const void *cookie, struct adreno=
-_smmu_fault_info *info);
-> > >>>>>>         void (*set_stall)(const void *cookie, bool enabled);
-> > >>>>>>         void (*resume_translation)(const void *cookie, bool term=
-inate);
-> > >>>>>> +    void (*set_prr)(const void *cookie, phys_addr_t page_addr, =
-bool set);
-> > >>>>>>     };
-> > >>>>>>
-> > >>>>>>     #endif /* __ADRENO_SMMU_PRIV_H */
-> > >>>>>> --
-> > >>>>>> 2.34.1
-> > >>>>>>
