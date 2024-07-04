@@ -1,51 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145AD10A19;
-	Thu,  4 Jul 2024 02:13:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B829746E;
+	Thu,  4 Jul 2024 02:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720059191; cv=none; b=ljGdVgrtmLXQu0u6PtZq39IWaRb4DfXo26Dh+XW4uvBzYCvWyJlC7EDLmK57YdFfmRjNL1UgiFVcPojdwvS8Bg2C5m9BglpovxRV1kMD5FXgE66+pRu/lj9T8njE3O1zO+3vA4v4llEmkUQYlO+GVonb17Z3iv9gw3JASfmYWGU=
+	t=1720059517; cv=none; b=tlpYESLHymoSUyGBcoCxS4udvSfskUTZcwcvXNYrisFruEx8n1IhryLRXlTcalT3oruhg8dI4XPmdoBWSRMqBQyyde1fzG29An1CJ5JHJvaE6kI4Ll2ONWS/47adPfF7p+3T2eJTfIRlKg83xbAl5PAKgW/RZLV4dtsWMrOVvbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720059191; c=relaxed/simple;
-	bh=7aPBsszqMYduEcu5a5wXNLYXdxnU8/yyohMqYvXO56c=;
+	s=arc-20240116; t=1720059517; c=relaxed/simple;
+	bh=bzxG6FQCK4DTM7wjB53HY0++y2BjGiKWfc9ZeGo4RZk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BlX9YaiMGhwf76g0LszQKjHiidpp7OUsvFjHukRNF7ltkRP7ErkVG5LUJhIEqoCtJt2sAKlVusMyLUtRaQAvNyqLcBdhiorWO+HihYclFWsqrt1LyUfqz5iBQBhRQnEoOoJ9BoWPqyzwGU9HxOAqdTBvTcKNqAeJdgARK3LeOds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rH8a5j8F; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hMiAuEQ2SnWQlZLGh4hVBbR3NVAOrAkF/Y/DMLrYFPawWvNCNBjNgFajm/cD5C08Fucyi6Vbo7/+zdRt+4NY2N8KNO6GRxT8r/jF45GVLhI8au25KSRHCGH4lPp6DTJYRWP3LiaNWSz3Uw7WksIcqMDCXqSMrazvOAuK7LinPz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCFgzSWM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rH8a5j8F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF7D4C2BD10;
-	Thu,  4 Jul 2024 02:13:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCFgzSWM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD3AC2BD10;
+	Thu,  4 Jul 2024 02:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720059190;
-	bh=7aPBsszqMYduEcu5a5wXNLYXdxnU8/yyohMqYvXO56c=;
+	s=k20201202; t=1720059516;
+	bh=bzxG6FQCK4DTM7wjB53HY0++y2BjGiKWfc9ZeGo4RZk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rH8a5j8FtGcFZikQ/khrBlA/nEUjRassUOXtiiwFAoL18Wak0TVJP+LGuumESiKEh
-	 Kbs+ZSo5/m1AxakP01xHVU0pLFpoJ2oqsWRnUjDh1CGch3Pz0JRa+8Xk3QQsnRv0Cd
-	 QmjaFB5XedvS4ykjbEPZcT4BtDpk+chwbTyW2VbNGYZZRioNgLzfJNi3lZQQhmmeyk
-	 5kG1dGRitMwqwLgV6H102nBtdNawaBUmj2nMODjHr28MCSOCVfpfL/uMuezp4G/IX4
-	 DO5XGcZSQlfXqs+Fh865Y2FOjnFtAeMrJc73HYKq94CJS5eCB2WCbQcuG2WX96wlqx
-	 8MkVKPsgGNxig==
-Date: Wed, 3 Jul 2024 19:13:08 -0700
+	b=jCFgzSWMImIi6srb9NugYrCifg2ICF3a660/AR9VIc9SY+/JC0+n7VbTxbWb/dlMa
+	 ZGOWxZuAn7x8e0zBzCJ1WQeq0QkuNmUNq4b2kTzZ+a6d/7Nm4jI6b79tYINvj77HwS
+	 0sFv3b7tISt77bxvcS5LiGipLD6O+A+y0ZGRQzPPoN58jR0wRto2wu4IHd9W76SeDP
+	 zqEmMPt/FIm3r0bszMmmrj71h1ADalSqRGcxyMEcq3GUL8GnFzTSVnbPotrE3mEJJp
+	 P1NrywAqtcpCsZe3+8WCNeqPBCGxpmS52bVn6gLQgEFo7kbBj507MS9JjZkEmEQZEl
+	 RKkZ7gft9F3CQ==
+Date: Wed, 3 Jul 2024 19:18:35 -0700
 From: Jakub Kicinski <kuba@kernel.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>, DENG Qingfang
- <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Andrew Lunn
- <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
- <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Landen Chao
- <Landen.Chao@mediatek.com>, Frank Wunderlich <linux@fw-web.de>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- regressions@lists.linux.dev
-Subject: Re: [PATCH net v3] net: dsa: mt7530: fix impossible MDIO address
- and issue warning
-Message-ID: <20240703191308.3703099c@kernel.org>
-In-Reply-To: <7e3fed489c0bbca84a386b1077c61589030ff4ab.1719963228.git.daniel@makrotopia.org>
-References: <7e3fed489c0bbca84a386b1077c61589030ff4ab.1719963228.git.daniel@makrotopia.org>
+To: Yunseong Kim <yskelg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+ Paolo Abeni <pabeni@redhat.com>, Sasha Levin <sashal@kernel.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Taehee Yoo <ap420073@gmail.com>, Pedro
+ Tammela <pctammela@mojatatu.com>, Austin Kim <austindh.kim@gmail.com>,
+ MichelleJin <shjy180909@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ ppbuk5246@gmail.com, Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: Re: [PATCH] tracing/net_sched: NULL pointer dereference in
+ perf_trace_qdisc_reset()
+Message-ID: <20240703191835.2cc2606f@kernel.org>
+In-Reply-To: <20240702180146.5126-2-yskelg@gmail.com>
+References: <20240702180146.5126-2-yskelg@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,22 +50,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 3 Jul 2024 00:44:28 +0100 Daniel Golle wrote:
-> +	/* The corrected address is calculated as stated below:
-> +	 * 0~6   -> 31
-> +	 * 8~14  -> 7
-> +	 * 16~22 -> 15
-> +	 * 24~30 -> 23
-> +	 */
-> +return ((((phy_addr - MT7530_NUM_PORTS) & ~MT7530_NUM_PORTS) % PHY_MAX_ADDR) +
-> +	MT7530_NUM_PORTS) & (PHY_MAX_ADDR - 1);
+On Wed,  3 Jul 2024 03:01:47 +0900 Yunseong Kim wrote:
+> Support backports for stable version. There are two places where null
+> deref could happen before
+> commit 2c92ca849fcc ("tracing/treewide: Remove second parameter of __assign_str()")
+> Link: https://lore.kernel.org/linux-trace-kernel/20240516133454.681ba6a0@rorschach.local.home/
+> 
+> I've checked +v6.1.82 +v6.6.22 +v6.7.10, +v6.8, +6.9, this version need
+> to be applied, So, I applied the patch, tested it again, and confirmed
+> working fine.
 
-nit: the return statement lacks indentation
-
-but also based on the comment, isn't it:
-
-	return (round_down(phy_addr, MT7530_NUM_PORTS + 1) - 1)	& (PHY_MAX_ADDR - 1);
-
-?
--- 
-pw-bot: cr
+You're missing the customary "[ Upstream commit <upstream commit> ]"
+line, not sure Greg will pick this up.
