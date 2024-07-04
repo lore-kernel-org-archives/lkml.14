@@ -1,65 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0F849659;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AB753389;
 	Thu,  4 Jul 2024 18:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720117977; cv=none; b=nZlrdcUBgdgG3uH6y059DP04eRXJ8yfjuM1eKKBQb1TKarEqm4eFc9cZ2N+DagRGIz48iQ5x0g6pwnLOD/oH7T78A1NdGVzyS94Jr0CrO1YV9ZRvPabLpVpngzSFS2+yCJ0/wDXQfJMqHw409cdl0owXJGTpDy4MfMXjMAOkvt4=
+	t=1720117978; cv=none; b=DDsL1M9OW91NFLO/OIfYAH8i5m5RmFvxzy4UXJcCoA85mEB/MYLwcAXF0DqeknswzpH94gXSHKzh7wgazwVwtZGhXcGMGiuTYljoMzeu9AkfkplYX3/aiKt7cTEl+DDx4CFSopRHZd8gf3u1/zJLPQt0r96Wmb+L4fDwms/papc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720117977; c=relaxed/simple;
-	bh=fYELC4EjlBpUAKwPJ3i0m3ickCYffUu/XC3h4sYMa2U=;
+	s=arc-20240116; t=1720117978; c=relaxed/simple;
+	bh=+Y60s2VvL8X1HfFgIy9Avia87RHRepDNsI3LU9cn+qI=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=AA+0UGYtPMeNF0dd/TLxhrDv8FJ2w/2RYKRXiwpHIJ8I5DBbuRZqx2D57LKShCQpTnlrwtRZl73iYoNRCl7eoQoQNUqslMCqIzHC0I0y+WBfZwhR/Tw53O08Uy/h7CHWVA09w4cxtB2IUG6CceApKXPcPSmPH2q09ToXY1rro8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PSihj7Up; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NdrRWqdR; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=T42wQgYX1+EmUiTaG5iwTkNIBUfuoGY6i3ovGAS1bUzgBTevQnwHLksZk4JyM/TfA1lAsfcoczfBU94yvnwD5jFUX2av80fmpmRljOL1sMH64rYyOq1aGg2jOaOl8FJijkR25oPcKGjkbuNnA+OdHeyvROMCacG0DTAypM4E6x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KdrNNqBZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wRfNvXYJ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PSihj7Up";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NdrRWqdR"
-Date: Thu, 04 Jul 2024 18:32:53 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KdrNNqBZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wRfNvXYJ"
+Date: Thu, 04 Jul 2024 18:32:54 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720117973;
+	s=2020; t=1720117974;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FW5cNxAzs9alqalWxS3Aa6AdOvTfB1OGr2QtXXzW7vk=;
-	b=PSihj7UpcsDKSQf5g3e30RZJocZSqHDPYcbmdE3tvZe+TzNEvp2lIY8iivLy53AYa4yY1L
-	UoJFjlFtbqM8wk3inMGAsjOcoTsXwt+Nw8danirSx0Xdn2Kos9z7znRaBt6g+mV+CeY/2/
-	8+u4u/pzNiBlB94WOk15PlYeCdz4id1VFqZ+sK6B/cNmrBgvModJ6a6OvHAyT+cQ2mBLu0
-	ayhbSnsQDhoWOfKxr6qkEX8qjipeSkuwHp5sC0Db41JVmgEwPOEvRp1KRVHJ5+syXZ6vmG
-	slUzWP8tb6O71kPPODgX32rjrNi9s2pd7WfADgZ0rXzebTXi5TCbeF9/XFl6Kw==
+	bh=9e/edFNh0DkHwfMy+hhYMI8CxcKyRFfWMbVxcvpWZR4=;
+	b=KdrNNqBZEaJVJhBU/gO2VF7RTp2qn+3xMOQOfH9+u0UpmnkJmaJKMlR/LMFAvvMf383wLD
+	kD8tmBtHTHKWIJ0KWP9ooS1Bn2bhDjXndVuxZZD8cyg1dqKQSGZEqnAx+Hh0qr7UZyJOGd
+	2ujLsulHey16UAVoy2YSviheU93QGKxMKTb1b9oBzoik6zHt/XUYOrjr66Au6eieS5YeHg
+	jb5oFkEm76f7ELkMZWadJJ6LoUAP1kmeO39dw5PLWcE/ysuGfccDJIiETkOaEsdj2noERC
+	2zcg6o+ckiUIbWX6PrNWJSblVxMVHrvHMm1Ncle1eZVou4cDeq9Li3hxK3r1ww==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720117973;
+	s=2020e; t=1720117974;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FW5cNxAzs9alqalWxS3Aa6AdOvTfB1OGr2QtXXzW7vk=;
-	b=NdrRWqdR/8UMZhK0s3KJWLUrXbdXbuxMNroStih6e4T/aU/V2Np4vzL/NgnoVbRV/mmTQf
-	piXX6h1hUw+bPACQ==
+	bh=9e/edFNh0DkHwfMy+hhYMI8CxcKyRFfWMbVxcvpWZR4=;
+	b=wRfNvXYJ0VMGudnSnMT0e4+4ykyvPxHgIBe65mZtc9pYVVFiGdlP4y+eepvFaeNaGMf+oc
+	vmajV/Xm/jtdT+BA==
 From: "tip-bot2 for Anna-Maria Behnsen" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] timers/migration: Rename childmask by groupmask to
- make naming more obvious
+Subject: [tip: timers/core] timers/migration: Use a single struct for
+ hierarchy walk data
 Cc: "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
  Thomas Gleixner <tglx@linutronix.de>,
  Frederic Weisbecker <frederic@kernel.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240703203115.9028-1-anna-maria@linutronix.de>
-References: <20240703203115.9028-1-anna-maria@linutronix.de>
+In-Reply-To: <20240701-tmigr-fixes-v3-4-25cd5de318fb@linutronix.de>
+References: <20240701-tmigr-fixes-v3-4-25cd5de318fb@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172011797357.2215.15226180143133231077.tip-bot2@tip-bot2>
+Message-ID: <172011797427.2215.9432866375692645538.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,218 +69,243 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     633c77727d32ab3487a10ec8f125c26b416236ad
-Gitweb:        https://git.kernel.org/tip/633c77727d32ab3487a10ec8f125c26b416236ad
+Commit-ID:     6dbb59418c5c7b014e542db76595417c9b95ccde
+Gitweb:        https://git.kernel.org/tip/6dbb59418c5c7b014e542db76595417c9b95ccde
 Author:        Anna-Maria Behnsen <anna-maria@linutronix.de>
-AuthorDate:    Wed, 03 Jul 2024 22:31:15 +02:00
+AuthorDate:    Mon, 01 Jul 2024 12:18:40 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Thu, 04 Jul 2024 20:24:57 +02:00
 
-timers/migration: Rename childmask by groupmask to make naming more obvious
+timers/migration: Use a single struct for hierarchy walk data
 
-childmask in the group reflects the mask that is required to 'reference'
-this group in the parent. When reading childmask, this might be confusing,
-as this suggests, that this is the mask of the child of the group.
+Two different structs are defined for propagating data from one to another
+level when walking the hierarchy. Several struct members exist in both
+structs which makes generalization harder.
 
-Clarify this by renaming childmask in the tmigr_group and tmc_group by
-groupmask.
+Merge those two structs into a single one and use it directly in
+walk_groups() and the corresponding function pointers instead of
+introducing pointer casting all over the place.
 
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lore.kernel.org/r/20240703203115.9028-1-anna-maria@linutronix.de
+Link: https://lore.kernel.org/r/20240701-tmigr-fixes-v3-4-25cd5de318fb@linutronix.de
 
 ---
- include/trace/events/timer_migration.h |  4 ++--
- kernel/time/timer_migration.c          | 24 ++++++++++++------------
- kernel/time/timer_migration.h          | 15 +++++++--------
- 3 files changed, 21 insertions(+), 22 deletions(-)
+ kernel/time/timer_migration.c | 126 ++++++++++++++-------------------
+ 1 file changed, 55 insertions(+), 71 deletions(-)
 
-diff --git a/include/trace/events/timer_migration.h b/include/trace/events/timer_migration.h
-index 79f19e7..f1a447f 100644
---- a/include/trace/events/timer_migration.h
-+++ b/include/trace/events/timer_migration.h
-@@ -52,7 +52,7 @@ TRACE_EVENT(tmigr_connect_child_parent,
- 		__entry->lvl		= child->parent->level;
- 		__entry->numa_node	= child->parent->numa_node;
- 		__entry->num_children	= child->parent->num_children;
--		__entry->childmask	= child->childmask;
-+		__entry->childmask	= child->groupmask;
- 	),
- 
- 	TP_printk("group=%p childmask=%0x parent=%p lvl=%d numa=%d num_children=%d",
-@@ -81,7 +81,7 @@ TRACE_EVENT(tmigr_connect_cpu_parent,
- 		__entry->lvl		= tmc->tmgroup->level;
- 		__entry->numa_node	= tmc->tmgroup->numa_node;
- 		__entry->num_children	= tmc->tmgroup->num_children;
--		__entry->childmask	= tmc->childmask;
-+		__entry->childmask	= tmc->groupmask;
- 	),
- 
- 	TP_printk("cpu=%d childmask=%0x parent=%p lvl=%d numa=%d num_children=%d",
 diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index 1fb9305..9ff61f9 100644
+index f78258a..39eb77e 100644
 --- a/kernel/time/timer_migration.c
 +++ b/kernel/time/timer_migration.c
-@@ -495,7 +495,7 @@ static bool tmigr_check_lonely(struct tmigr_group *group)
-  *			outcome is a CPU which might wake up a little early.
-  * @evt:		Pointer to tmigr_event which needs to be queued (of idle
-  *			child group)
-- * @childmask:		childmask of child group
-+ * @childmask:		groupmask of child group
-  * @remote:		Is set, when the new timer path is executed in
-  *			tmigr_handle_remote_cpu()
-  * @basej:		timer base in jiffies
-@@ -535,7 +535,7 @@ static void __walk_groups(up_f up, struct tmigr_walk *data,
- 
- 		child = group;
- 		group = group->parent;
--		data->childmask = group->childmask;
-+		data->childmask = group->groupmask;
- 	} while (group);
+@@ -475,69 +475,31 @@ static bool tmigr_check_lonely(struct tmigr_group *group)
+ 	return bitmap_weight(&active, BIT_CNT) <= 1;
  }
  
-@@ -669,7 +669,7 @@ static void __tmigr_cpu_activate(struct tmigr_cpu *tmc)
+-typedef bool (*up_f)(struct tmigr_group *, struct tmigr_group *, void *);
+-
+-static void __walk_groups(up_f up, void *data,
+-			  struct tmigr_cpu *tmc)
+-{
+-	struct tmigr_group *child = NULL, *group = tmc->tmgroup;
+-
+-	do {
+-		WARN_ON_ONCE(group->level >= tmigr_hierarchy_levels);
+-
+-		if (up(group, child, data))
+-			break;
+-
+-		child = group;
+-		group = group->parent;
+-	} while (group);
+-}
+-
+-static void walk_groups(up_f up, void *data, struct tmigr_cpu *tmc)
+-{
+-	lockdep_assert_held(&tmc->lock);
+-
+-	__walk_groups(up, data, tmc);
+-}
+-
+ /**
+  * struct tmigr_walk - data required for walking the hierarchy
+  * @nextexp:		Next CPU event expiry information which is handed into
+  *			the timer migration code by the timer code
+  *			(get_next_timer_interrupt())
+- * @firstexp:		Contains the first event expiry information when last
+- *			active CPU of hierarchy is on the way to idle to make
+- *			sure CPU will be back in time. It is updated in top
+- *			level group only. Be aware, there could occur a new top
+- *			level of the hierarchy between the 'top level call' in
+- *			tmigr_update_events() and the check for the parent group
+- *			in walk_groups(). Then @firstexp might contain a value
+- *			!= KTIME_MAX even if it was not the final top
+- *			level. This is not a problem, as the worst outcome is a
+- *			CPU which might wake up a little early.
++ * @firstexp:		Contains the first event expiry information when
++ *			hierarchy is completely idle.  When CPU itself was the
++ *			last going idle, information makes sure, that CPU will
++ *			be back in time. When using this value in the remote
++ *			expiry case, firstexp is stored in the per CPU tmigr_cpu
++ *			struct of CPU which expires remote timers. It is updated
++ *			in top level group only. Be aware, there could occur a
++ *			new top level of the hierarchy between the 'top level
++ *			call' in tmigr_update_events() and the check for the
++ *			parent group in walk_groups(). Then @firstexp might
++ *			contain a value != KTIME_MAX even if it was not the
++ *			final top level. This is not a problem, as the worst
++ *			outcome is a CPU which might wake up a little early.
+  * @evt:		Pointer to tmigr_event which needs to be queued (of idle
+  *			child group)
+  * @childmask:		childmask of child group
+  * @remote:		Is set, when the new timer path is executed in
+  *			tmigr_handle_remote_cpu()
+- */
+-struct tmigr_walk {
+-	u64			nextexp;
+-	u64			firstexp;
+-	struct tmigr_event	*evt;
+-	u8			childmask;
+-	bool			remote;
+-};
+-
+-/**
+- * struct tmigr_remote_data - data required for remote expiry hierarchy walk
+  * @basej:		timer base in jiffies
+  * @now:		timer base monotonic
+- * @firstexp:		returns expiry of the first timer in the idle timer
+- *			migration hierarchy to make sure the timer is handled in
+- *			time; it is stored in the per CPU tmigr_cpu struct of
+- *			CPU which expires remote timers
+- * @childmask:		childmask of child group
+  * @check:		is set if there is the need to handle remote timers;
+  *			required in tmigr_requires_handle_remote() only
+  * @tmc_active:		this flag indicates, whether the CPU which triggers
+@@ -546,15 +508,43 @@ struct tmigr_walk {
+  *			idle, only the first event of the top level has to be
+  *			considered.
+  */
+-struct tmigr_remote_data {
+-	unsigned long	basej;
+-	u64		now;
+-	u64		firstexp;
+-	u8		childmask;
+-	bool		check;
+-	bool		tmc_active;
++struct tmigr_walk {
++	u64			nextexp;
++	u64			firstexp;
++	struct tmigr_event	*evt;
++	u8			childmask;
++	bool			remote;
++	unsigned long		basej;
++	u64			now;
++	bool			check;
++	bool			tmc_active;
+ };
+ 
++typedef bool (*up_f)(struct tmigr_group *, struct tmigr_group *, struct tmigr_walk *);
++
++static void __walk_groups(up_f up, struct tmigr_walk *data,
++			  struct tmigr_cpu *tmc)
++{
++	struct tmigr_group *child = NULL, *group = tmc->tmgroup;
++
++	do {
++		WARN_ON_ONCE(group->level >= tmigr_hierarchy_levels);
++
++		if (up(group, child, data))
++			break;
++
++		child = group;
++		group = group->parent;
++	} while (group);
++}
++
++static void walk_groups(up_f up, struct tmigr_walk *data, struct tmigr_cpu *tmc)
++{
++	lockdep_assert_held(&tmc->lock);
++
++	__walk_groups(up, data, tmc);
++}
++
+ /*
+  * Returns the next event of the timerqueue @group->events
+  *
+@@ -625,10 +615,9 @@ static u64 tmigr_next_groupevt_expires(struct tmigr_group *group)
+ 
+ static bool tmigr_active_up(struct tmigr_group *group,
+ 			    struct tmigr_group *child,
+-			    void *ptr)
++			    struct tmigr_walk *data)
  {
- 	struct tmigr_walk data;
+ 	union tmigr_state curstate, newstate;
+-	struct tmigr_walk *data = ptr;
+ 	bool walk_done;
+ 	u8 childmask;
  
--	data.childmask = tmc->childmask;
-+	data.childmask = tmc->groupmask;
+@@ -867,10 +856,8 @@ unlock:
  
- 	trace_tmigr_cpu_active(tmc);
+ static bool tmigr_new_timer_up(struct tmigr_group *group,
+ 			       struct tmigr_group *child,
+-			       void *ptr)
++			       struct tmigr_walk *data)
+ {
+-	struct tmigr_walk *data = ptr;
+-
+ 	return tmigr_update_events(group, child, data);
+ }
  
-@@ -1049,7 +1049,7 @@ void tmigr_handle_remote(void)
+@@ -1002,9 +989,8 @@ unlock:
+ 
+ static bool tmigr_handle_remote_up(struct tmigr_group *group,
+ 				   struct tmigr_group *child,
+-				   void *ptr)
++				   struct tmigr_walk *data)
+ {
+-	struct tmigr_remote_data *data = ptr;
+ 	struct tmigr_event *evt;
+ 	unsigned long jif;
+ 	u8 childmask;
+@@ -1062,7 +1048,7 @@ again:
+ void tmigr_handle_remote(void)
+ {
+ 	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+-	struct tmigr_remote_data data;
++	struct tmigr_walk data;
+ 
  	if (tmigr_is_not_available(tmc))
  		return;
+@@ -1104,9 +1090,8 @@ void tmigr_handle_remote(void)
  
--	data.childmask = tmc->childmask;
-+	data.childmask = tmc->groupmask;
- 	data.firstexp = KTIME_MAX;
+ static bool tmigr_requires_handle_remote_up(struct tmigr_group *group,
+ 					    struct tmigr_group *child,
+-					    void *ptr)
++					    struct tmigr_walk *data)
+ {
+-	struct tmigr_remote_data *data = ptr;
+ 	u8 childmask;
  
- 	/*
-@@ -1057,7 +1057,7 @@ void tmigr_handle_remote(void)
- 	 * in tmigr_handle_remote_up() anyway. Keep this check to speed up the
- 	 * return when nothing has to be done.
- 	 */
--	if (!tmigr_check_migrator(tmc->tmgroup, tmc->childmask)) {
-+	if (!tmigr_check_migrator(tmc->tmgroup, tmc->groupmask)) {
- 		/*
- 		 * If this CPU was an idle migrator, make sure to clear its wakeup
- 		 * value so it won't chase timers that have already expired elsewhere.
-@@ -1150,7 +1150,7 @@ bool tmigr_requires_handle_remote(void)
- 		return ret;
+ 	childmask = data->childmask;
+@@ -1164,7 +1149,7 @@ out:
+ bool tmigr_requires_handle_remote(void)
+ {
+ 	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+-	struct tmigr_remote_data data;
++	struct tmigr_walk data;
+ 	unsigned long jif;
+ 	bool ret = false;
  
- 	data.now = get_jiffies_update(&jif);
--	data.childmask = tmc->childmask;
-+	data.childmask = tmc->groupmask;
- 	data.firstexp = KTIME_MAX;
- 	data.tmc_active = !tmc->idle;
- 	data.check = false;
-@@ -1310,7 +1310,7 @@ static u64 __tmigr_cpu_deactivate(struct tmigr_cpu *tmc, u64 nextexp)
- 	struct tmigr_walk data = { .nextexp = nextexp,
- 				   .firstexp = KTIME_MAX,
- 				   .evt = &tmc->cpuevt,
--				   .childmask = tmc->childmask };
-+				   .childmask = tmc->groupmask };
+@@ -1252,10 +1237,9 @@ u64 tmigr_cpu_new_timer(u64 nextexp)
  
- 	/*
- 	 * If nextexp is KTIME_MAX, the CPU event will be ignored because the
-@@ -1388,7 +1388,7 @@ u64 tmigr_quick_check(u64 nextevt)
- 	if (WARN_ON_ONCE(tmc->idle))
- 		return nextevt;
+ static bool tmigr_inactive_up(struct tmigr_group *group,
+ 			      struct tmigr_group *child,
+-			      void *ptr)
++			      struct tmigr_walk *data)
+ {
+ 	union tmigr_state curstate, newstate, childstate;
+-	struct tmigr_walk *data = ptr;
+ 	bool walk_done;
+ 	u8 childmask;
  
--	if (!tmigr_check_migrator_and_lonely(tmc->tmgroup, tmc->childmask))
-+	if (!tmigr_check_migrator_and_lonely(tmc->tmgroup, tmc->groupmask))
- 		return KTIME_MAX;
- 
- 	do {
-@@ -1551,7 +1551,7 @@ static void tmigr_connect_child_parent(struct tmigr_group *child,
- 	raw_spin_lock_nested(&parent->lock, SINGLE_DEPTH_NESTING);
- 
- 	child->parent = parent;
--	child->childmask = BIT(parent->num_children++);
-+	child->groupmask = BIT(parent->num_children++);
- 
- 	raw_spin_unlock(&parent->lock);
- 	raw_spin_unlock_irq(&child->lock);
-@@ -1582,7 +1582,7 @@ static void tmigr_connect_child_parent(struct tmigr_group *child,
- 	 *   the new childmask and parent to subsequent walkers through this
- 	 *   @child. Therefore propagate active state unconditionally.
- 	 */
--	data.childmask = child->childmask;
-+	data.childmask = child->groupmask;
- 
- 	/*
- 	 * There is only one new level per time (which is protected by
-@@ -1648,7 +1648,7 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
- 			raw_spin_lock_irq(&group->lock);
- 
- 			tmc->tmgroup = group;
--			tmc->childmask = BIT(group->num_children++);
-+			tmc->groupmask = BIT(group->num_children++);
- 
- 			raw_spin_unlock_irq(&group->lock);
- 
-@@ -1711,7 +1711,7 @@ static int tmigr_cpu_prepare(unsigned int cpu)
- 	if (ret < 0)
- 		return ret;
- 
--	if (tmc->childmask == 0)
-+	if (tmc->groupmask == 0)
- 		return -EINVAL;
- 
- 	timerqueue_init(&tmc->cpuevt.nextevt);
-diff --git a/kernel/time/timer_migration.h b/kernel/time/timer_migration.h
-index 494f68c..154accc 100644
---- a/kernel/time/timer_migration.h
-+++ b/kernel/time/timer_migration.h
-@@ -51,9 +51,8 @@ struct tmigr_event {
-  * @num_children:	Counter of group children to make sure the group is only
-  *			filled with TMIGR_CHILDREN_PER_GROUP; Required for setup
-  *			only
-- * @childmask:		childmask of the group in the parent group; is set
-- *			during setup and will never change; can be read
-- *			lockless
-+ * @groupmask:		mask of the group in the parent group; is set during
-+ *			setup and will never change; can be read lockless
-  * @list:		List head that is added to the per level
-  *			tmigr_level_list; is required during setup when a
-  *			new group needs to be connected to the existing
-@@ -69,7 +68,7 @@ struct tmigr_group {
- 	unsigned int		level;
- 	int			numa_node;
- 	unsigned int		num_children;
--	u8			childmask;
-+	u8			groupmask;
- 	struct list_head	list;
- };
- 
-@@ -89,7 +88,7 @@ struct tmigr_group {
-  *			hierarchy
-  * @remote:		Is set when timers of the CPU are expired remotely
-  * @tmgroup:		Pointer to the parent group
-- * @childmask:		childmask of tmigr_cpu in the parent group
-+ * @groupmask:		mask of tmigr_cpu in the parent group
-  * @wakeup:		Stores the first timer when the timer migration
-  *			hierarchy is completely idle and remote expiry was done;
-  *			is returned to timer code in the idle path and is only
-@@ -102,7 +101,7 @@ struct tmigr_cpu {
- 	bool			idle;
- 	bool			remote;
- 	struct tmigr_group	*tmgroup;
--	u8			childmask;
-+	u8			groupmask;
- 	u64			wakeup;
- 	struct tmigr_event	cpuevt;
- };
-@@ -118,8 +117,8 @@ union tmigr_state {
- 	u32 state;
- 	/**
- 	 * struct - split state of tmigr_group
--	 * @active:	Contains each childmask bit of the active children
--	 * @migrator:	Contains childmask of the child which is migrator
-+	 * @active:	Contains each mask bit of the active children
-+	 * @migrator:	Contains mask of the child which is migrator
- 	 * @seq:	Sequence counter needs to be increased when an update
- 	 *		to the tmigr_state is done. It prevents a race when
- 	 *		updates in the child groups are propagated in changed
