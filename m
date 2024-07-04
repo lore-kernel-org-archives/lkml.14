@@ -1,234 +1,106 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB631A4F3D
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 09:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDA01AAE2A;
+	Thu,  4 Jul 2024 09:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720084849; cv=none; b=NT0GOhglYnVzb8XMe5M2vqKLLYZhQTL8T1DVmfSW3ei0q5Uf5Tq8Jjdy63jIqqDZhhJQBNq0dRHL2VkDPIE4TEv6aGWedlKUuulavAY1MfjN//ynX0jbPA2AYWihYm1wqrfM8EBuEguJyEadVHpVYxcSiorA+fAhEBMbYBep/Us=
+	t=1720084983; cv=none; b=Y8L+J3V7xL9bdov4OoBLjKhjdvGCrH40AVbCWOZr/7MG6C1V36Nc1y9fuK/55fXXq5EecNF8baRMBz9oA/4EbtwS4SuwBvxcaTRTF/d5K6JzndPPE+21oGB27l6qW3+vIDcnD+Q4bDS8lFYzpAGSCsgIPCg5IqRilS40QS8PV9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720084849; c=relaxed/simple;
-	bh=8iemnVt/v8lo6oKHuispsmxBJMg2zqeJz5e6DemUIiQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ePDIFu9p8z1D5qTfBFfx10iGgxs4xV/TVTWRSM4OSG5/KdArRVuIhJMpNU2XjwKA6ZrS3yZw8eqLWMNC87y2Nk9iw6O837gkQ7FVoF2hhjM3pqHGeYdNODVZVVftUVsfxyd4NpZYJ91qa2zhxGH1td/L+piOuHKeRAmRTQgzPRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=OYoAGWJ5; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1720084983; c=relaxed/simple;
+	bh=06as5BSvzilWjvhyp+ERYWakzCKolExpyqn7MKb+tp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o6hmCHI9Kgm5eSmRaU2HJcuq+rIOxQurR+Q9Sdy2lkvk6h/SBtaWPyTgxjcRroPAS/KkTzfhvL76OFHOnpnWpe9oSQODK6RSWIS+kV7o17XT3PUm2qCgRoW2TiJs4gatMgiELx9qORcP2HAS+yFr6MQfbsH1+qAKI9YRcBBLd9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XdQl5w4h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OYoAGWJ5"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4649IgSb007482;
-	Thu, 4 Jul 2024 02:20:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=l
-	bwIaqtBjUpPywTvNT+A//Z9OMD6EnrC9WX/QZHN0JA=; b=OYoAGWJ568YbeX3wd
-	vK5dG8Eb41uo/dnZZktlta0QT6OfLbnUwN/MKqyZqw1feOAk6lBTfDCeqrdhJohX
-	VQtmnbU0CaDPxOIKo2enLPZvBGNxPjmtIeDvXdR/IxDeJ5epSa35lbbddk2xGrJO
-	4ms7J3kZnJmKW/TZLGEdbyAnM51MLsP2xYatM+5+LL9MmY0FSl3912O8ua7PRnXp
-	pK2ORBweUvTPW8ClgO53gtzj3/FaYdfayEE4rCSLieYV9YCUaj8YB33COKnZJMUZ
-	pN7YUaC3KxAePr57lwsxQrHiP7o2qB0xBn/kFmcPP+mvspHsfxYGn0NcgHCsI6TL
-	w1oXg==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 405s01r08b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jul 2024 02:20:40 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 4 Jul 2024 02:20:39 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 4 Jul 2024 02:20:39 -0700
-Received: from IPBU-BLR-SERVER1.marvell.com (IPBU-BLR-SERVER1.marvell.com [10.28.8.41])
-	by maili.marvell.com (Postfix) with ESMTP id DD43B5B692F;
-	Thu,  4 Jul 2024 02:20:36 -0700 (PDT)
-From: Gowthami Thiagarajan <gthiagarajan@marvell.com>
-To: <will@kernel.org>, <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <gcherian@marvell.com>, <sgoutham@marvell.com>, <bbhushan2@marvell.com>,
-        Gowthami Thiagarajan <gthiagarajan@marvell.com>
-Subject: [PATCH v6 3/3] perf/marvell : Odyssey LLC-TAD performance monitor support
-Date: Thu, 4 Jul 2024 14:50:22 +0530
-Message-ID: <20240704092022.1136805-4-gthiagarajan@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240704092022.1136805-1-gthiagarajan@marvell.com>
-References: <20240704092022.1136805-1-gthiagarajan@marvell.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XdQl5w4h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E05D9C3277B;
+	Thu,  4 Jul 2024 09:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720084983;
+	bh=06as5BSvzilWjvhyp+ERYWakzCKolExpyqn7MKb+tp0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XdQl5w4hibwsvoFcvyqbIF6922YZwN8ioFVVi1XjsiUP57Cc/N6U5OmyiCfiDLjw4
+	 SLMIgxen0L/I+Qyf5u0rKUTHPAlMHeJT/f9T+GtrONuSjpbLBh5lyf3wxPM2WTIVI9
+	 CzPt34rPX6MvAimaC+M5eN1Dg9DEKaHFbpCppPqs=
+Date: Thu, 4 Jul 2024 11:12:41 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rhyland Klein <rklein@nvidia.com>,
+	Anton Vorontsov <cbouatmailru@gmail.com>,
+	Jenny TC <jenny.tc@intel.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] power: supply: core: return -EAGAIN on uninitialized
+ read temp
+Message-ID: <2024070430-backer-cedar-f1ea@gregkh>
+References: <20240704-topic-sm8x50-upstream-fix-battmgr-temp-tz-warn-v1-1-9d66d6f6efde@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: v6Q8rPVmjsl-emAtKI3wQJh-cia3WzcA
-X-Proofpoint-ORIG-GUID: v6Q8rPVmjsl-emAtKI3wQJh-cia3WzcA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-04_06,2024-07-03_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240704-topic-sm8x50-upstream-fix-battmgr-temp-tz-warn-v1-1-9d66d6f6efde@linaro.org>
 
-Each TAD provides eight 64-bit counters for monitoring
-cache behavior.The driver always configures the same counter for
-all the TADs. The user would end up effectively reserving one of
-eight counters in every TAD to look across all TADs.
-The occurrences of events are aggregated and presented to the user
-at the end of running the workload. The driver does not provide a
-way for the user to partition TADs so that different TADs are used for
-different applications.
+On Thu, Jul 04, 2024 at 10:52:08AM +0200, Neil Armstrong wrote:
+> If the thermal core tries to update the temperature from an
+> uninitialized power supply, it will swawn the following warning:
+> thermal thermal_zoneXX: failed to read out thermal zone (-19)
+> 
+> But reading from an uninitialized power supply should not be
+> considered as a fatal error, but the thermal core expects
+> the -EAGAIN error to be returned in this particular case.
+> 
+> So convert -ENODEV as -EAGAIN to express the fact that reading
+> temperature from an uninitialized power supply shouldn't be
+> a fatal error, but should indicate to the thermal zone it should
+> retry later.
+> 
+> It notably removes such messages on Qualcomm platforms using the
+> qcom_battmgr driver spawning warnings until the aDSP firmware
+> gets up and the battery manager reports valid data.
+> 
+> Link: https://lore.kernel.org/all/2ed4c630-204a-4f80-a37f-f2ca838eb455@linaro.org/
+> Fixes: 5bc28b93a36e ("power_supply: power_supply_read_temp only if use_cnt > 0")
+> Fixes: 3be330bf8860 ("power_supply: Register battery as a thermal zone")
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  drivers/power/supply/power_supply_core.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 
-The performance events reflect various internal or interface activities.
-By combining the values from multiple performance counters, cache
-performance can be measured in terms such as: cache miss rate, cache
-allocations, interface retry rate, internal resource occupancy, etc.
+Hi,
 
-Each supported counter's event and formatting information is exposed
-to sysfs at /sys/devices/tad/. Use perf tool stat command to measure
-the pmu events. For instance:
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-perf stat -e tad_hit_ltg,tad_hit_dtg <workload>
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-Signed-off-by: Gowthami Thiagarajan <gthiagarajan@marvell.com>
----
- drivers/perf/marvell_cn10k_tad_pmu.c | 66 ++++++++++++++++++++++++++--
- 1 file changed, 63 insertions(+), 3 deletions(-)
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
 
-diff --git a/drivers/perf/marvell_cn10k_tad_pmu.c b/drivers/perf/marvell_cn10k_tad_pmu.c
-index 9e635f355470..29976b435417 100644
---- a/drivers/perf/marvell_cn10k_tad_pmu.c
-+++ b/drivers/perf/marvell_cn10k_tad_pmu.c
-@@ -37,6 +37,15 @@ struct tad_pmu {
- 	DECLARE_BITMAP(counters_map, TAD_MAX_COUNTERS);
- };
- 
-+enum mrvl_tad_pmu_version {
-+	TAD_PMU_V1 = 1,
-+	TAD_PMU_V2,
-+};
-+
-+struct tad_pmu_data {
-+	int id;
-+};
-+
- static int tad_pmu_cpuhp_state;
- 
- static void tad_pmu_event_counter_read(struct perf_event *event)
-@@ -214,6 +223,24 @@ static const struct attribute_group tad_pmu_events_attr_group = {
- 	.attrs = tad_pmu_event_attrs,
- };
- 
-+static struct attribute *ody_tad_pmu_event_attrs[] = {
-+	TAD_PMU_EVENT_ATTR(tad_req_msh_in_exlmn, 0x3),
-+	TAD_PMU_EVENT_ATTR(tad_alloc_dtg, 0x1a),
-+	TAD_PMU_EVENT_ATTR(tad_alloc_ltg, 0x1b),
-+	TAD_PMU_EVENT_ATTR(tad_alloc_any, 0x1c),
-+	TAD_PMU_EVENT_ATTR(tad_hit_dtg, 0x1d),
-+	TAD_PMU_EVENT_ATTR(tad_hit_ltg, 0x1e),
-+	TAD_PMU_EVENT_ATTR(tad_hit_any, 0x1f),
-+	TAD_PMU_EVENT_ATTR(tad_tag_rd, 0x20),
-+	TAD_PMU_EVENT_ATTR(tad_tot_cycle, 0xFF),
-+	NULL
-+};
-+
-+static const struct attribute_group ody_tad_pmu_events_attr_group = {
-+	.name = "events",
-+	.attrs = ody_tad_pmu_event_attrs,
-+};
-+
- PMU_FORMAT_ATTR(event, "config:0-7");
- 
- static struct attribute *tad_pmu_format_attrs[] = {
-@@ -252,8 +279,16 @@ static const struct attribute_group *tad_pmu_attr_groups[] = {
- 	NULL
- };
- 
-+static const struct attribute_group *ody_tad_pmu_attr_groups[] = {
-+	&ody_tad_pmu_events_attr_group,
-+	&tad_pmu_format_attr_group,
-+	&tad_pmu_cpumask_attr_group,
-+	NULL
-+};
-+
- static int tad_pmu_probe(struct platform_device *pdev)
- {
-+	const struct tad_pmu_data *dev_data;
- 	struct device *dev = &pdev->dev;
- 	struct tad_region *regions;
- 	struct tad_pmu *tad_pmu;
-@@ -261,6 +296,7 @@ static int tad_pmu_probe(struct platform_device *pdev)
- 	u32 tad_pmu_page_size;
- 	u32 tad_page_size;
- 	u32 tad_cnt;
-+	int version;
- 	int i, ret;
- 	char *name;
- 
-@@ -270,6 +306,13 @@ static int tad_pmu_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, tad_pmu);
- 
-+	dev_data = device_get_match_data(&pdev->dev);
-+	if (!dev_data) {
-+		dev_err(&pdev->dev, "Error: No device match data found\n");
-+		return -ENODEV;
-+	}
-+	version = dev_data->id;
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
- 		dev_err(&pdev->dev, "Mem resource not found\n");
-@@ -319,7 +362,6 @@ static int tad_pmu_probe(struct platform_device *pdev)
- 	tad_pmu->pmu = (struct pmu) {
- 
- 		.module		= THIS_MODULE,
--		.attr_groups	= tad_pmu_attr_groups,
- 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
- 				  PERF_PMU_CAP_NO_INTERRUPT,
- 		.task_ctx_nr	= perf_invalid_context,
-@@ -332,6 +374,11 @@ static int tad_pmu_probe(struct platform_device *pdev)
- 		.read		= tad_pmu_event_counter_read,
- 	};
- 
-+	if (version == TAD_PMU_V1)
-+		tad_pmu->pmu.attr_groups = tad_pmu_attr_groups;
-+	else
-+		tad_pmu->pmu.attr_groups = ody_tad_pmu_attr_groups;
-+
- 	tad_pmu->cpu = raw_smp_processor_id();
- 
- 	/* Register pmu instance for cpu hotplug */
-@@ -360,16 +407,29 @@ static void tad_pmu_remove(struct platform_device *pdev)
- 	perf_pmu_unregister(&pmu->pmu);
- }
- 
-+#if defined(CONFIG_OF) || defined(CONFIG_ACPI)
-+static const struct tad_pmu_data tad_pmu_data = {
-+	.id   = TAD_PMU_V1,
-+};
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+static const struct tad_pmu_data tad_pmu_v2_data = {
-+	.id   = TAD_PMU_V2,
-+};
-+#endif
-+
- #ifdef CONFIG_OF
- static const struct of_device_id tad_pmu_of_match[] = {
--	{ .compatible = "marvell,cn10k-tad-pmu", },
-+	{ .compatible = "marvell,cn10k-tad-pmu", .data = &tad_pmu_data },
- 	{},
- };
- #endif
- 
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id tad_pmu_acpi_match[] = {
--	{"MRVL000B", 0},
-+	{"MRVL000B", (kernel_ulong_t)&tad_pmu_data},
-+	{"MRVL000D", (kernel_ulong_t)&tad_pmu_v2_data},
- 	{},
- };
- MODULE_DEVICE_TABLE(acpi, tad_pmu_acpi_match);
--- 
-2.25.1
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
+thanks,
+
+greg k-h's patch email bot
