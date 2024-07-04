@@ -1,127 +1,114 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75346107A0
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BDCA41
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720067144; cv=none; b=a03JnuelwoWA6Bt4xQR9g0grXcVWHhmv9YlzEoaCHM2IoQvGDkSkUIXKfm44TC9+2Hg/rOsZO439H6mtHsItkgPGJ3Bfvbe7HrP/zY3poCyAp6n9QUeyFTz7lSHCJdT9AjcgonsfBYv5+v82paCuG4fmR1khTm/KYXwk+VwSoKo=
+	t=1720067372; cv=none; b=hgKaXRtmid6GT/kY/yGCnrWgnhk78oc7S6/v5yvoPsbKsiKiTR2udJ+ChW3w4PXeT0LuWQxF1e3/YwbyUZ+sA4QYiX3IQ9piaE4WZDgiPiq21O+E55g1/H8AnhYaBKbNo89V+ozp3UpLMhjRh5uYoeAopfiztWMjtKDCZorUTXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720067144; c=relaxed/simple;
-	bh=Ntd4/kC0r4eB4HdPlMY3OKpmwjBNmj5DuXQb6fpNyjk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FcREolNMY/UFPuFAd2mJtGpWM8ClDti22UdTYKGgoXC7BbJpAiJFAe1CcCCWit5y0gcRWYrQVSKZaEOOx9ywXRijlclrQ4M6NFGbECaJORR7Pbt5j/sjuALzLrnFUMOFadfVI2sOsDhubJQ4BIrTCZMC2dQ1DkovukggeLIn0ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P30v27HF; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720067372; c=relaxed/simple;
+	bh=+yRqvyR1p+ZCtAk0YX1m/3MWWdkXMJ3dlJ3d0eJdkFo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lhROM2S2LP6Iho9mTQoCAaX7i2mfPJUDJK3TuRVjlYhRK/ugMHVd8wXDKGHaxs051xojDtn13Gllp3QM+YLyxQk2yNdan/n7SusCnhTaK7EMtNAvBEmVQcrPV/sXJBrFeLpN58SJ5w6hNDuhtECdj4q/OBhEPTTcRZmVu3jLpdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=OquwXcS2; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P30v27HF"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-64b5617ba47so1906977b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 21:25:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="OquwXcS2"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-380d8ba4548so129065ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 21:29:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720067141; x=1720671941; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T9twH5qkSgSY75LRVfS9EDzs/Uj7txRv8120x7sQF9o=;
-        b=P30v27HFgfN1LQnBvxIiKKPjegpKeoOhhpIqn+9dC757KTepcPipl+F4eDWZ4RYmoF
-         4oSkCk1qJMcwC4KJ2bTzd+OUN1/b2jMJCJbrJUTqt7r2wb8IRJVaG7gwlp+XxAbEX00X
-         JtH5D0gJjWjdNQj+NKwp+fEhpUxhFvuA0sAD/Lk7gcshzRdOgKee+nB8TSYwEXrRl5R6
-         UrF2Uj7x8Teib/Ty8HL/YPNP7RILz/rJK+MifAAC1EjwhN5elyJNbtzeEdMgl5wV/A5L
-         u5nlNLdYuqxMn2d3i2QGCNXIAJogau8/yulMrbysybvSMtV4HSA7FKLLBTz6bUPS9R2h
-         3zCQ==
+        d=tenstorrent.com; s=google; t=1720067369; x=1720672169; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/x8uqtBWEOzlRCQu86kjjAnrFAC8DqXpnxLOvgdulDI=;
+        b=OquwXcS2FVQj0uOdZPNZcRLaHGmrCZROuGwDIf0nrsd46bU/pHCXE5aEBUce/6NIN1
+         MjZbixyGWuuqfyG9Wbg1ntQfjoYyvn4M/AWy2D1IDl7Vh+5YclwzqJQmk0p/z3Br1O8O
+         PWzJI0wGJmbfVS1JqLwerzmDcU4dFJeVKAHAJlJi8ZIhS7D4STVH/xTSoM/CaYZwzCse
+         YLwhsF10mWSwBmgSWh6IVZ/15OXeis7wvS8ynHs6xFh1jfxavQkS2OYt1PFs9sB9YVAV
+         4Wu2nqyZQh/TcXQQ73pufmU0aACIXyIV2MAyd62XQU+/oOGi8VF5QRuVsSj5WAXlMQPS
+         ecsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720067141; x=1720671941;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T9twH5qkSgSY75LRVfS9EDzs/Uj7txRv8120x7sQF9o=;
-        b=L11WWMfoYsMTxxgkGHol46EvvSP0meUI485wsHx2uBtFEMXKV4MSOwamgBHpjGg333
-         JjtxG9fdB3nJcqklj0L89xGsbeoN8cXQ5a56fcbOOzkswoMzqPj79TfmKiEHeAmZmU3M
-         mILUrSae1F5UnGtIwgo6k8yKyDEL3GS1S2cC2uDq7Pa+pexCKMmh7AENwo9eC8pg+3XH
-         SqeDIFOk/3B0YAPqB5Q/g+1cLyNzeGTuCKXtEZh8BUswvrurVlNz9qGheZ5P53MfjBII
-         bbc2aw0MlJmsu9saZlgrRSTcgK2r1Vot0G+IInP4utEesqjiCHPN/EnC796CrJWzQ/oM
-         xDxw==
-X-Forwarded-Encrypted: i=1; AJvYcCXMlyA4Lujt+kTly7knUKRIoQdzkB50Ll9L6MkNvmAnSLdpPPHlHOYk9I7RDAvWMdCs/U0POk4k34ak70a3DZjVCZFSFP9/IDNoqfUA
-X-Gm-Message-State: AOJu0YzP9lAcTfjLYrSrVsKqW6G7xDv2ehWps8+ODD95vxTDikLz+Ns1
-	jTpXvn7jWdDmEfaaC2zGS7mmXgaX4p4In8BNkl/FTZVZ1Ynm/pMgD547fdtxyh4AXHP+F5bNgXK
-	f8n07Rm6cyRTeK0KMPf+4i42jPWPP0TmvOurn
-X-Google-Smtp-Source: AGHT+IFAwEoVU8wxC04BayIiEFSXlc0nTD9EC7c/CydPSiHIHz6Z+w/BHUfFbwGBl4XQHff0JjFGe4JgyfBFcuojEuk=
-X-Received: by 2002:a81:ad1e:0:b0:632:6615:3d67 with SMTP id
- 00721157ae682-652d5334868mr5549247b3.6.1720067141071; Wed, 03 Jul 2024
- 21:25:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720067369; x=1720672169;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/x8uqtBWEOzlRCQu86kjjAnrFAC8DqXpnxLOvgdulDI=;
+        b=TDEiTnV7XSO3+QYzBlhv6O9thDXqA6IpX8U0rK4eAQEIxKyccl2OKWrHwGAsfqayqc
+         ywPX4T0q92fITr8NVL86S6GKDfmaWwcQXgPVdqMjk2nZkCsJPIO8HnTKEa37+jG3Z/ma
+         Nc6j4Oe//hBmPzwmmOOKH0kvsaD+7JrrAzlt0fqmLRVlY8Mauo8kznT9JNlQ5mr1kDEL
+         +Pu7pEBZ4QYPAVEaOutKO+d3hou/ZFbRgGFUI82w2g2fZUhcArHe7Zz2eNZ0325djr7G
+         sYCxUECxACeZgKCX2aEYfj6Eghpgh03TeDLfNyJtJw1YtZNzSG/RiOTqDFYMzce/pxOc
+         m4Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBIxXRUNRgKU9t1fIKgqV97FXGK+wVBurGuxsLILPhsGL+uZBnyrA/Yl2JmD5HR7hAAjAoO2FKwGdtqPzOr7AhCHzaRBPKyOZ/sa+y
+X-Gm-Message-State: AOJu0Ywfe8N/PnKGQoEHqa2v4mhzuNu+PCCbSad3p5RNEmnonE8IC1cv
+	ner0niSfPFoSKdZcmrsuAhrh9tr9PfGkesyaealVmkXo2NLaIUsADGvWPU70Vg==
+X-Google-Smtp-Source: AGHT+IHktRWVslmmx7Xk3Q69c9B87Qql/AEyNyH9YU/soO+uZ55IsjIvet+79ZawprWgeW5wyoS5IA==
+X-Received: by 2002:a05:6e02:13a9:b0:381:c5f0:20d5 with SMTP id e9e14a558f8ab-383953e23c4mr9787485ab.0.1720067369370;
+        Wed, 03 Jul 2024 21:29:29 -0700 (PDT)
+Received: from [192.168.86.39] (121-45-188-148.tpgi.com.au. [121.45.188.148])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6abbcc26sm7527085a12.38.2024.07.03.21.29.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jul 2024 21:29:29 -0700 (PDT)
+Message-ID: <23ce05ba-105d-480f-968a-1ecc2e482634@tenstorrent.com>
+Date: Thu, 4 Jul 2024 14:29:24 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703221520.4108464-1-surenb@google.com> <20240703155129.cbd023c14dee61e5727bb750@linux-foundation.org>
- <CAJuCfpFGRmQXxkaUjasyVGu74su_a-319o5zYe_eJD_KfbmNdg@mail.gmail.com>
- <CAJuCfpGA5Jy0NmO6oT0Y-KQSPvjj-=pDsM9AiT0vSUUGAM96OA@mail.gmail.com>
- <CAJuCfpEJkCN1XDDE+2B4ePoFKbvSCaUA8=RO1TTg23XV56mRZg@mail.gmail.com>
- <20240703205415.de49467352601290c9fb27e8@linux-foundation.org>
- <CAJuCfpHvNjFQYU0zHOuang2mNOLNHHiNfaWACPWuP4mSMX_OmQ@mail.gmail.com> <20240703211747.97e7740df8c9d91de324c5ce@linux-foundation.org>
-In-Reply-To: <20240703211747.97e7740df8c9d91de324c5ce@linux-foundation.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 3 Jul 2024 21:25:30 -0700
-Message-ID: <CAJuCfpEO3Lo9EZGQtdPUeyycbNwqJ7zvHq2N9nzd_Cc6pARchw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] sched.h: always_inline alloc_tag_{save|restore} to
- fix modpost warnings
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, kent.overstreet@linux.dev, 
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: vdso: do not strip debugging info for vdso.so.dbg
+To: duchangbin <changbin.du@huawei.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240611040947.3024710-1-changbin.du@huawei.com>
+ <ef2b1430475140c88a929b1678338726@huawei.com>
+Content-Language: en-US
+From: Cyril Bur <cyrilbur@tenstorrent.com>
+In-Reply-To: <ef2b1430475140c88a929b1678338726@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 3, 2024 at 9:17=E2=80=AFPM Andrew Morton <akpm@linux-foundation=
-.org> wrote:
->
-> On Wed, 3 Jul 2024 21:07:56 -0700 Suren Baghdasaryan <surenb@google.com> =
-wrote:
->
-> > On Wed, Jul 3, 2024 at 8:54=E2=80=AFPM Andrew Morton <akpm@linux-founda=
-tion.org> wrote:
-> > >
-> > > On Wed, 3 Jul 2024 20:46:11 -0700 Suren Baghdasaryan <surenb@google.c=
-om> wrote:
-> > >
-> > > > Ok, I confirmed that the warning is happening due to the access to
-> > > > "current" from alloc_tag_save()/alloc_tag_restore() functions. I gu=
-ess
-> > > > when these functions access "thread_info" variable:
-> > > > https://elixir.bootlin.com/linux/v6.10-rc6/source/arch/xtensa/inclu=
-de/asm/thread_info.h#L96,
-> > > > compiler flags that because the variable is on the stack of an __in=
-it
-> > > > function while alloc_tag_save()/alloc_tag_restore() when not inline=
-d
-> > > > are from .text section.
-> > >
-> > > Well, is the warning legitimate?  I don't see why an automatic variab=
-le
-> > > of an __init function should be considered to be .init storage - we c=
-an
-> > > assume it won't become an invalid reference while the .init function =
-is
-> > > executing?
-> >
-> > I don't think it's really a problem. __init function is executing, it
-> > calls a function from .text (say alloc_tag_save() that was not
-> > inlined) which in turn calls get_current(), which returns a pointer
-> > somewhere inside __initdata. That should be fine since this can only
-> > happen during init stage. If this call happens after init,
-> > get_current() can't return a pointer from __initdata. If it does then
-> > we have a much bigger problem.
->
-> So I think you're saying "yes, the warning is legitimate and this might
-> be a problem, but it isn't in this case, so the checking code is OK so
-> let's just work around it"?
 
-Yes, that's my understanding. If get_current() always returns a valid
-pointer for the given execution stage (during init/after init) then it
-should be safe to call it even from a function residing in the .text
-section during init.
 
->
+On 4/7/2024 11:57 am, duchangbin wrote:
+> Hello,
+> Is there any problem with this change? Ping~
+> 
+> On Tue, Jun 11, 2024 at 12:09:47PM +0800, Changbin Du wrote:
+>> The vdso.so.dbg is a debug version of vdso and could be used for debugging
+>> purpose. For example, perf-annotate requires debugging info to show source
+>> lines. So let's keep its debugging info.
+>>
+>> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+
+Looks good to me
+
+Reviewed-by: Cyril Bur <cyrilbur@tenstorrent.com>
+>> ---
+>>   arch/riscv/kernel/vdso/Makefile | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+>> index f7ef8ad9b550..960feb1526ca 100644
+>> --- a/arch/riscv/kernel/vdso/Makefile
+>> +++ b/arch/riscv/kernel/vdso/Makefile
+>> @@ -45,7 +45,7 @@ $(obj)/vdso.o: $(obj)/vdso.so
+>>   # link rule for the .so file, .lds has to be first
+>>   $(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) FORCE
+>>   	$(call if_changed,vdsold)
+>> -LDFLAGS_vdso.so.dbg = -shared -S -soname=linux-vdso.so.1 \
+>> +LDFLAGS_vdso.so.dbg = -shared -soname=linux-vdso.so.1 \
+>>   	--build-id=sha1 --hash-style=both --eh-frame-hdr
+>>   
+>>   # strip rule for the .so file
+>> -- 
+>> 2.34.1
+>>
+> 
