@@ -1,89 +1,123 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E871A2555;
-	Thu,  4 Jul 2024 11:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88561A2555
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 11:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720091559; cv=none; b=IUDp2er1OSQ6EqsLDH+KnR79vos2tcOnzFcsm7C2xwlwWwJ3fJKg94xdqCGKR1ykLgyj/hfxd4TMmuEF2z3JrygKiH1HBxHt5ZkK5bR/9+uZ4hoNIq+c+BjffH9cpNawWa9fg1tTxLpWzJ7i0zuePFygncpwA7Y28wOMBNF/dv8=
+	t=1720091572; cv=none; b=qDBkXgeuH2K5vjiej6AUofhR9N6Z6iOQnOdyK303R2TNODQ+9dUAfh4JS33VYLTon3vs8K7THnOCk1PsZsM/zvDokaJG8aOl67qvDWfcN+zaH6Te4VVyCT5J6yMo4ii2pZfDrxAEF/NEuvs8+Jgoj6ZYcDS5P26nZ+/ACoh3BKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720091559; c=relaxed/simple;
-	bh=BnBRTBk9+SJHSF1mQcVfRDaxS2dfZurj/v37IwkL+p0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=J4vbD7jbPNPJxHNmIlcoIjYJKDcusLnPj83pYYYRoqQjXbaKL2m9wSdWDdxPbZu2FmUkD379eFRHgRIxYChVZ79Fnzk1eNbQTiPIqqfvvMW0fhJowPrHHFHsLvpgSXjUiXWG0ur4Uy5m3Kf+PsSErtTxOO6ZpLMUiXUnwMqr8Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yn/RqVcS; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720091572; c=relaxed/simple;
+	bh=kwlzyQko3YrlL9qqxe77HjjjJn+6EPX3Akye8+HUD68=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sy7mClvY6tO61/fEGYg6qfXg2D4X2e9yyoSw0pY7mwpMXqMqLyf0CrWElE+hrYLeo2WzG0/BnXLCDKntX83JQvuGsFMHBLCPY6M+9d/Gg5Sdmrt4gtZG2XmUb3yNIzJPaRHqy9ZL0ZS9UcB6gVFpdrsTTZcfxW3Xp1RWnDtwvYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zc8x2B4N; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yn/RqVcS"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57cc30eaf0aso343840a12.2;
-        Thu, 04 Jul 2024 04:12:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zc8x2B4N"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ec3f875e68so5786961fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 04:12:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720091556; x=1720696356; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BnBRTBk9+SJHSF1mQcVfRDaxS2dfZurj/v37IwkL+p0=;
-        b=Yn/RqVcSW/GkpXmRNxL9CDAjLNeranaqhiGBHHx2e3fe1xpOV3+r6nMdXnfvScIxzW
-         XPVBHZwIGj54EvnGF7GQvBQr4TE0jTPxFBAZVzBv49frD1Sux0KgGFRes2eVgUKtrXTi
-         toV1RVuma8Dr4pvrNxebdLgtbnU2Dl3832Uxmn0F0u4lnV7rzmFL/WgBd/1UqAYa6xab
-         7F1bCpjrU5l97pfXusNUrgcfXrD1VuP0MKMfTvQHVpu3rq3/kYUuiNggZ8YQemKv4MrI
-         RpsNkKeSDbvaDDep/3epdkLX+j8dKd81JcWJTVZ/tEMUSzHhuiZmXoJAH/CuLJ7+BkBw
-         YiuQ==
+        d=linaro.org; s=google; t=1720091569; x=1720696369; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tPC43rasB/6PLGfsWyLsHpREn7UhdyM0rRDUzfTMoaw=;
+        b=Zc8x2B4Nhj0vNk5z8ePe4ReNaOvU/FyZ1Q4mHE5CK4FqarS7Fz06f7a8MkafRPyanY
+         t68uQFxMdEwM0HxWbe11a1rp8MliDMw6eadyxKw9NTmanN7kovxcs+SqM5AYM3oWDCra
+         n4/bgrdYP4nkONXzdf6fiM35Ru+Lr1AjAp2Pp+WXcf0I+i7nACNF6udOOSQA0tisbBPt
+         b0EbYXyYyEnioL49crz956U6HV21CdX7AqoEvC2kAxhf5wFXCXksNgvUsuMDotROP/u4
+         oS/vNEWnxRHQOy1X8R5M6JGEM5iNEWVyr2vZDE54NhtJO0xETdQjPq/HCAtRm6sOpwvr
+         +RJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720091556; x=1720696356;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BnBRTBk9+SJHSF1mQcVfRDaxS2dfZurj/v37IwkL+p0=;
-        b=FuGjRaiH2CUy03wfoIJ+/PoRSf1YYEVf5Sjk1u7ZUJado0T4gWQz4a518XPEGligUn
-         4OtD3xBnZX8rVTIWaWr2TlKSYy96sIWJQUn+ZSChj5mG7WslDRvB/kFYFjSEZp78FTBq
-         icHM6xTTJgGWfhyuXqUqiEXDnmdb6i9YvXWce20/FrVbrw0OO7DTnd7X//SSUSCQjSiV
-         a32ov0bGDCnAa1m+3LGgbKDPEPMVYGXh93eYIXena125hY5vBFcbsqV4X7gGBzBhrO1Q
-         V6pY/GFEnjQRvJlKxX+0Kg57rto5WmXPY6X+8BNexO+YsXPJgCIzpP2RUV79tLNnLU0T
-         UApA==
-X-Forwarded-Encrypted: i=1; AJvYcCWj7uWIIro15O9YCzM/M6spwzNCBOdH8IAMCyjJBl+8p/7z8dFZlWWMunhgsD6c+hngqMnM1pou3pbr4CTZ5V87PkrZm4/tEN2vaghX
-X-Gm-Message-State: AOJu0Ywr4YOlc0vcge6iTw+AeNdT6Mh35B8lB2iUQI5T5uaAItW968LT
-	+b+aJWQRpq7SWLskAnbfOwcGPmlIRBhCXYS4WmXxxgy1HhTXzWCj
-X-Google-Smtp-Source: AGHT+IGsH406YtT6ofg0bm00Lbm6uPc7tvsMKNj57uHp/K3zGu5KpLHW0DtPO9SChhDMSaF8w362vw==
-X-Received: by 2002:a05:6402:354b:b0:57d:3df:f881 with SMTP id 4fb4d7f45d1cf-58e5994de19mr1587321a12.3.1720091555885;
-        Thu, 04 Jul 2024 04:12:35 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58614d503b1sm8252921a12.67.2024.07.04.04.12.35
+        d=1e100.net; s=20230601; t=1720091569; x=1720696369;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tPC43rasB/6PLGfsWyLsHpREn7UhdyM0rRDUzfTMoaw=;
+        b=VLfKeavXa73H18Spn6+Y46U3wcQ9cY3O70rEA9zGWbhZl47WSKtdlKZaEPJ3eMjy77
+         lreXzL/6ATxNLfOr3EHnm8+AXArFfdKRZ5aLdPmL7TXn7BwZ73ChyQE2I+WXcqBERHnX
+         1e+SejYY9Y5nJUXrXa0Z5KRL8Q408K+Z4om1reVSXZMze9Mlh56bUdQR+Xgn+x3mbuK+
+         OmOytLZ/4E+8RXUkK7rtlXg6ThoVtI1QflPQZWdgh42LspU6+4biirVyCSsaKXJNowTS
+         k4CFSAbwUp2KrqnTPg0HBFL+W5u1NMhcyypdvhO4QA85SDLWmgLn9OJcSxnxJxhYmycK
+         nqGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPKWnuHLe1oVMtrkm+SBe5qe5FdqfpEzE8KtdqJk1b2QGDSW07wpBNWSGHI4x4ZYPdo/L9VwSwEyVVKxZIWzc1Ma7RG2lIxU4s/zI+
+X-Gm-Message-State: AOJu0YwPCzKEHEY61DtTqMxMZGsUjyv7LWErXBqJ2d7zURJPoUCnXDED
+	DSBHC0QPAnDMwch0PgnRhB9m4okVUsg9LAMire8VcteeKf5mX9tt9F8uswYDNH4=
+X-Google-Smtp-Source: AGHT+IFms/l9EmzZxMph8D1Drc8PuDALxOm8EuU40LrFeEyesL8Xp6EbT7z6hzNTjKi0IszFb3Au2w==
+X-Received: by 2002:a2e:b049:0:b0:2ec:57c7:c72c with SMTP id 38308e7fff4ca-2ee8ee01fd8mr7848291fa.35.1720091569001;
+        Thu, 04 Jul 2024 04:12:49 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee8d0396a3sm2113881fa.68.2024.07.04.04.12.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 04:12:35 -0700 (PDT)
-Message-ID: <d74451d360a2d629ff08ef541ae48141a7f5b0e5.camel@gmail.com>
-Subject: Re: [PATCH 04/10] iio: adc: ad7091r8: Constify struct regmap_bus
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>, Cosmin Tanislav
- <cosmin.tanislav@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
- <jic23@kernel.org>, Dan Robertson <dan@dlrobertson.com>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>, Jagath Jog J <jagathjog1996@gmail.com>, Linus Walleij
- <linus.walleij@linaro.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 04 Jul 2024 13:16:29 +0200
-In-Reply-To: <20240703-iio-cont-regmap_bus-v1-4-34754f355b65@gmail.com>
-References: <20240703-iio-cont-regmap_bus-v1-0-34754f355b65@gmail.com>
-	 <20240703-iio-cont-regmap_bus-v1-4-34754f355b65@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+        Thu, 04 Jul 2024 04:12:48 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 04 Jul 2024 14:12:46 +0300
+Subject: [PATCH] firmware: qcom: tzmem: blacklist more platforms for SHM
+ Bridge
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240704-shmbridge-blacklist-v1-1-14b027b3b2dc@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAK2DhmYC/x2MSQqAMBDAviJztlBrQetXxEOX0Q6udEQE8e8Wj
+ yEkDzAmQoaueCDhRUz7lqEqC/DRbhMKCplBSaVlI7XguLpEIQu3WD8vxKeQqnLBNK61poZcHgl
+ Huv9rP7zvB3IiPBplAAAA
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Elliot Berman <quic_eberman@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1354;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=kwlzyQko3YrlL9qqxe77HjjjJn+6EPX3Akye8+HUD68=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmhoOwm1V5jQ1hxjuCBndjf0/vDRv6bE6MnpyJ+
+ adV5W46kCGJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZoaDsAAKCRCLPIo+Aiko
+ 1ZJXCACusvt3u67ChJfBSVHOT/JoRoltQEburmBUDlSvNJSEVvbU9u3pJ+Kg4W0yfSBVQXKEtfp
+ B2zhCPFT/1/nOzxVmv5IZHp9diWBDeiDvCjxvSqagj2QirpQRmMd+ANy0KTYTDWhfmNDTkbYuR+
+ LbfOticztug72JKVKat0PTY9SXBGIFnyT75Cvf0adm1jrOyWT/G0wgoR5UjwsGSExIk3Z1ytfCF
+ 6Z63KbkSsLn/1AX3dESoThPwIskEUTXdEhCu4lgagAcnIKkW7RANV4Sq8fnGxTmZh7ZlVhAvhnN
+ x93nYIDEASo6FLjGW/+1VJowJW2OM77sq+IO3ptsOD1zBK+2
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On Wed, 2024-07-03 at 23:04 +0200, Javier Carrasco wrote:
-> `ad7091r8_regmap_bus` is not modified and can be declared as const to
-> move its data to a read-only section.
->=20
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-> ---
+The SHM bridge makes the Qualcomm RB3 and SM8150-HDK reset while probing
+the RMTFS (in qcom_scm_assign_mem()). Blacklist the SHM Bridge on
+corresponding platforms using SoC-level compat string. If later it's
+found that the bad behaviour is limited just to the particular boards
+rather than SoC, the compat strings can be adjusted.
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+Reported-by: Neil Armstrong <neil.armstrong@linaro.org>
+Fixes: f86c61498a57 ("firmware: qcom: tzmem: enable SHM Bridge support")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/firmware/qcom/qcom_tzmem.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/firmware/qcom/qcom_tzmem.c b/drivers/firmware/qcom/qcom_tzmem.c
+index 5d526753183d..c715729f071c 100644
+--- a/drivers/firmware/qcom/qcom_tzmem.c
++++ b/drivers/firmware/qcom/qcom_tzmem.c
+@@ -78,6 +78,8 @@ static bool qcom_tzmem_using_shm_bridge;
+ /* List of machines that are known to not support SHM bridge correctly. */
+ static const char *const qcom_tzmem_blacklist[] = {
+ 	"qcom,sc8180x",
++	"qcom,sdm845", /* reset in rmtfs memory assignment */
++	"qcom,sm8150", /* reset in rmtfs memory assignment */
+ 	NULL
+ };
+ 
+
+---
+base-commit: 82e4255305c554b0bb18b7ccf2db86041b4c8b6e
+change-id: 20240704-shmbridge-blacklist-021bd97b8a93
+
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
