@@ -1,68 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B7E41A81;
-	Thu,  4 Jul 2024 14:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6701ABC25;
+	Thu,  4 Jul 2024 14:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720102038; cv=none; b=B9mczxcJx79zeTF8nPNP8xZiinFLa4oD+p4df9GphhfZL2VIWusT14rFi1Z74H35wagBrbLyte5jyqN48fHYWwZUjbz9bMzlH1nte1RQ24zkvn5xp6UnW7jpv16e/Gv76zb3JJwyViDp7/IZGLF7eWZaytN52u9p+l5MBRcn2+M=
+	t=1720102091; cv=none; b=cx0g6UfyiG1IF/wQ+6TVmqHYMpppipA79A5DClrpye+kxrb1IFpDxcVFleSZsTq6TJoV1zURayI0sQwMP6o1/z2wanFHbUVA2XZ6siJxNfHgwyH+PWLRxbeYLxGhJ62XalM6Qo0DdeTOjfvZAqGzKKDd1AEcIL1EK5zvmiJjwWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720102038; c=relaxed/simple;
-	bh=3/qvQlW/P53Rcj1MyrqxxazGgI/iuShcKu8AoUpghDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H98lBKF5kOmI8wCC61u0fOJ2vrAvYJ21fUgA63BJrdZs75Vhxug4PatKWKI1vd81fXBR2X3x9JkHM/0TtLtuap7UKGNTKftPElbK9sEUwDQi/k1TMK4gAoHX1hSjJVF+/AZappD3E8Me24Hqaz8lKd0tIcGQuU66MPvPxvkbtUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfL5cptN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfL5cptN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3269CC3277B;
-	Thu,  4 Jul 2024 14:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720102037;
-	bh=3/qvQlW/P53Rcj1MyrqxxazGgI/iuShcKu8AoUpghDI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rfL5cptNuZ1YXnB62bWt+Nix3Ap9MUcZ1ZS6o33/TFp2HtT1tSecrsssyaAOTFt4A
-	 EmBOicavSpHCQqARXP8ijEakwx3vcZb0SpRXdteOmMTstGl/Yc30eZHor+U37INq+g
-	 wQCoKiie3eZ8m5+VD2/CPIEDNJjIZ4xAoJhR1DNpVl0U6KMZhGzb4HAWy6GV6e8Rvv
-	 lg3I1UA1GpZQ2WoO1NTAoNwDUBQy4Yw+FR5UHxwHy/CkmUxJKs/ziwnCoEgTu7s+XO
-	 c79QPdkoKv4/GClBqovNm7VWINTlMs3I8HJNkCrtaCKkw1BPctvUau984hSnls4vqS
-	 99lDnNEETrKyA==
-Date: Thu, 4 Jul 2024 07:07:16 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Shengyu Qu <wiagn233@outlook.com>
-Cc: nbd@nbd.name, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
- lorenzo@kernel.org, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, pablo@netfilter.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- stable@vger.kernel.org, Elad Yifee <eladwf@gmail.com>
-Subject: Re: [PATCH v2] net: ethernet: mtk_ppe: Change PPE entries number to
- 16K
-Message-ID: <20240704070716.118db29e@kernel.org>
-In-Reply-To: <TY3P286MB261180E580D838704E6123B598DE2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
-References: <TY3P286MB2611AD036755E0BC411847FC98D52@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
-	<20240702110224.74abfcea@kernel.org>
-	<TY3P286MB26119C0A14621AD8D411466A98DD2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
-	<20240703164818.13e1d33c@kernel.org>
-	<TY3P286MB261180E580D838704E6123B598DE2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1720102091; c=relaxed/simple;
+	bh=5vauRKs+mI0HCOqYXSQH5t3rrarEc79hnDKBjFJzNNk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LMnbZDswAcVYZjTD8bOYQzZjB+DvCO/DHmbMp+t8Jk48h0xK6ZfO32m8WWA1mixIrgzMKFDIT4xITlaCiMnAiNdWcOcS9uP/ybNy2dHNmZvwixxklOQpFMAvAwHAJCM5OfxCRk+Wi7NJf+ta3MtMqgSs8Iv4iFoK1YIAZT7m19E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WFJPs288yznYT3;
+	Thu,  4 Jul 2024 22:07:45 +0800 (CST)
+Received: from kwepemd100013.china.huawei.com (unknown [7.221.188.163])
+	by mail.maildlp.com (Postfix) with ESMTPS id DD69C140417;
+	Thu,  4 Jul 2024 22:08:03 +0800 (CST)
+Received: from huawei.com (10.67.174.121) by kwepemd100013.china.huawei.com
+ (7.221.188.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Thu, 4 Jul
+ 2024 22:08:03 +0800
+From: Chen Ridong <chenridong@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
+	<longman@redhat.com>
+CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 -next] cgroup/rstat: add force idle show helper
+Date: Thu, 4 Jul 2024 14:01:19 +0000
+Message-ID: <20240704140119.1423196-1-chenridong@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd100013.china.huawei.com (7.221.188.163)
 
-On Thu, 4 Jul 2024 19:06:29 +0800 Shengyu Qu wrote:
-> PCDN means P2P CDN[1]; This modification already exists in a heavily
-> modified openwrt fork here[2] for over 2 years so it should be working
-> with to regression. Although a higher limit would be better for PCDN use
-> case, but only newer devices like MT7986 supports 32768 max entries.
-> Setting to 16384 would keep old devices working.
-> 
-> [1] https://www.w3.org/wiki/Networks/P2P_CDN
-> [2] https://github.com/coolsnowwolf/lede/blob/2ef8b6a6142798b5e58501fe12ffd10b0961947f/target/linux/ramips/files/drivers/net/ethernet/mtk/mtk_hnat/hnat.h#L604
+In the function cgroup_base_stat_cputime_show, there are five
+instances of #ifdef, which makes the code not concise.
+To address this, add the function cgroup_force_idle_show
+to make the code more succinct.
 
-Makes sense but not a fix, please resend without CC stable and without
-the fixes tag.
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
+---
+ kernel/cgroup/rstat.c | 37 +++++++++++++++++--------------------
+ 1 file changed, 17 insertions(+), 20 deletions(-)
+
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index fb8b49437573..a06b45272411 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -594,49 +594,46 @@ static void root_cgroup_cputime(struct cgroup_base_stat *bstat)
+ 	}
+ }
+ 
++
++static void cgroup_force_idle_show(struct seq_file *seq, struct cgroup_base_stat *bstat)
++{
++#ifdef CONFIG_SCHED_CORE
++	u64 forceidle_time = bstat->forceidle_sum;
++
++	do_div(forceidle_time, NSEC_PER_USEC);
++	seq_printf(seq, "core_sched.force_idle_usec %llu\n", forceidle_time);
++#endif
++}
++
+ void cgroup_base_stat_cputime_show(struct seq_file *seq)
+ {
+ 	struct cgroup *cgrp = seq_css(seq)->cgroup;
+ 	u64 usage, utime, stime;
+-	struct cgroup_base_stat bstat;
+-#ifdef CONFIG_SCHED_CORE
+-	u64 forceidle_time;
+-#endif
+ 
+ 	if (cgroup_parent(cgrp)) {
+ 		cgroup_rstat_flush_hold(cgrp);
+ 		usage = cgrp->bstat.cputime.sum_exec_runtime;
+ 		cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime,
+ 			       &utime, &stime);
+-#ifdef CONFIG_SCHED_CORE
+-		forceidle_time = cgrp->bstat.forceidle_sum;
+-#endif
+ 		cgroup_rstat_flush_release(cgrp);
+ 	} else {
+-		root_cgroup_cputime(&bstat);
+-		usage = bstat.cputime.sum_exec_runtime;
+-		utime = bstat.cputime.utime;
+-		stime = bstat.cputime.stime;
+-#ifdef CONFIG_SCHED_CORE
+-		forceidle_time = bstat.forceidle_sum;
+-#endif
++		/* cgrp->bstat of root is not actually used, reuse it */
++		root_cgroup_cputime(&cgrp->bstat);
++		usage = cgrp->bstat.cputime.sum_exec_runtime;
++		utime = cgrp->bstat.cputime.utime;
++		stime = cgrp->bstat.cputime.stime;
+ 	}
+ 
+ 	do_div(usage, NSEC_PER_USEC);
+ 	do_div(utime, NSEC_PER_USEC);
+ 	do_div(stime, NSEC_PER_USEC);
+-#ifdef CONFIG_SCHED_CORE
+-	do_div(forceidle_time, NSEC_PER_USEC);
+-#endif
+ 
+ 	seq_printf(seq, "usage_usec %llu\n"
+ 		   "user_usec %llu\n"
+ 		   "system_usec %llu\n",
+ 		   usage, utime, stime);
+ 
+-#ifdef CONFIG_SCHED_CORE
+-	seq_printf(seq, "core_sched.force_idle_usec %llu\n", forceidle_time);
+-#endif
++	cgroup_force_idle_show(seq, &cgrp->bstat);
+ }
+ 
+ /* Add bpf kfuncs for cgroup_rstat_updated() and cgroup_rstat_flush() */
+-- 
+2.34.1
+
