@@ -1,355 +1,200 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD391ACE67;
-	Thu,  4 Jul 2024 15:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677311ACE67;
+	Thu,  4 Jul 2024 15:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720108684; cv=none; b=PLm6xiQrmSAaMoSNUZXelf6c+6HnYCSe6EJP2Obbp3fV7GGdcAeLa/C3TGHyk+k2oLJW+553t8MYX/thxIoVomD7aIi7rTKEFVltklyJaY9Y65xb0fntMB8bryn9ca3NPTucaWgiRzw1J7loCTyM0WyQMyfVqf6ntr2/5QUxyJ0=
+	t=1720108692; cv=none; b=o6xzWEqFc+4tKtKaAGYvmxL+oZu+QaLIV90aAAj0GTMUEp4kkWgTWGYZzzEPPblAeJ8+Gq3Vz1tyWb03+zbh+eCGnYljpugTuF54+mAT/2T4zxO65fkoctLrOzR+NjqOzRCFsPzrzS7UoIHm+sP6RoMAwnCMR2HQsbq9nj8oWvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720108684; c=relaxed/simple;
-	bh=uKJH5a0+6vkjwBTaDOSOxhl4qQyveqQZPb1wba4xWXQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eRBA8m/p8dkXoSvTtTBg3xMVkd0AQxWWzL230YfxRJYntyUkdG2cJZZyuNf4pcfBPRfSs54Fua5otvP8dENpUnYJYfCGdiQk1dyejiLfF/l/yQnN2zkxXRNj7P4JR+c007hWmthGecS8tV7GJHLzrCAJOPPM50OXjgKI2FD6Cks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=37vF8T7h; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1720108692; c=relaxed/simple;
+	bh=wJE7HlCPQ2VZ9sr7/loD0hwkFhbboA9WmXEnW4+ChsQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=orgkQGoQCEx7Ffkguj34NQy7tQWkLxTfo9ebzOtFShuNqrcgGqMIDQd44+QVcVLKvCbwTDvdva7ZmTqE74F0GyYDEMikDmjKMYwILtF4E0yKgIces+tEhfsSGOQh5Fyp4j356eZx/4pX1SsP/0rniwo9W+mz80trEcDzQPAA+qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fzah5f2j; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="37vF8T7h"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 464BGSxJ015863;
-	Thu, 4 Jul 2024 17:57:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	Tv/R5KXfBaoQyssH47WsyM3KwW77pZ8ZcYwk4SeudZg=; b=37vF8T7huGcEYeMj
-	jjqK2ivHzClTUj4knxzKoCbiY4exRK1+atQrSKmqPt3QWduL/5kXrS1wQm3JqD1d
-	GrfUa/K+opNVgTNEhUZi6z6HMNRaZvHDBtNROIb+BXqKyskoJMZqoFJH/zrLkoHE
-	7zYKJL0zKRaF7OLT7CMV83n529zxPVi4EE4UWtxz8De0+cG+8+parN/1RcSDB/qE
-	InzbRVfdzuYCRw22wVlGa8Vnmeb1oQ3c8XtuH89YFdSZv/nvfqTHyCD7S49pkbtJ
-	SVbmJXUqR6wM7qDGVayjtxSU6QBZBbx3ci1bFuyW5reXcbIUy3MNnAptrWIvcKhv
-	OdK7Dg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4027d5nxtp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jul 2024 17:57:40 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6AF4F40044;
-	Thu,  4 Jul 2024 17:57:36 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C7B14229A62;
-	Thu,  4 Jul 2024 17:56:48 +0200 (CEST)
-Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 4 Jul
- 2024 17:56:48 +0200
-From: Olivier Moysan <olivier.moysan@foss.st.com>
-To: <fabrice.gasnier@foss.st.com>,
-        Olivier Moysan
-	<olivier.moysan@foss.st.com>,
-        Arnaud Pouliquen
-	<arnaud.pouliquen@foss.st.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>
-CC: <alsa-devel@alsa-project.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 4/8] dt-bindings: iio: dfsdm: move to backend framework
-Date: Thu, 4 Jul 2024 17:53:32 +0200
-Message-ID: <20240704155338.2387858-5-olivier.moysan@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
-References: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzah5f2j"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4ef6c8e3602so326850e0c.0;
+        Thu, 04 Jul 2024 08:58:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720108689; x=1720713489; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n97CqCq+SpioBUdMovQEEVaZXmKGUSWX+N+6ZspvJ5Y=;
+        b=fzah5f2jPp6xeoFelee2+jl1Jn3hKibubDigkvbQsHgv5GzFC0+nFQris9eZwQ+NOv
+         C8r4OwujqbDFBfGp5PuYGdFVygq9IjqdKzsZhOn6MarqHKJHmQI8OVZYjfXf4u+d0e/A
+         niNupZ9nwSJa1XuVz78JbSbP/4X7322uh8tfjRZpbSkkYcN2mde8al0O0GS6auW89S7X
+         XrME3v8yxfjby9iiEEcmFuKbxEFVY+nl+iPNCiiVN72FldRTEedUwDc9eSvE+zmPaLvK
+         YjakGdyZD3zLSWeOY7JftCVArKFCuq4qOmda6m7TNJrRhW854H1JGVf37RpktRXFOPyT
+         vmvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720108689; x=1720713489;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n97CqCq+SpioBUdMovQEEVaZXmKGUSWX+N+6ZspvJ5Y=;
+        b=c47otx7njgEewVCWLFfCNjnj+cPMLfUatpFJK9a7D/ra1IX9FtyEWg9YBTl3XblmoV
+         lBqz0sw0iI70GJK5xmxP8F9oJF1x8GqKSMowfybKSePAbpCy4hst8KRVE2aZLDke4/ft
+         zIjqFxVqjO9rLnS7pOR7dT78hvM4KGmEisP3Zqni4aa4GhGXnYNALUIrfkmqaQdvK+pD
+         7mofMNUIIS1i119+MmLkvU+3VqXl26ChyB8Y2pi+dtI8UGzHUJ1PLxHOMDgAPKo0vYZO
+         sE/1gJLyfLI4oJfCPyf6eSS2jkl7XBv6RueKhOwy1/IP7mmxF6zbB9sLDMGgUcoxcnTY
+         USLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPnMaayVI6UqPSkxl/wWWdcUDZmXaVfjhjGJEgDNfLOthlhUZaQFGu/CGFjd+/cvRMGq11Y2DVpyAYv+Uf1u4qKTeYLJ/qzf3hqqvtHD8BBZnVr6qvylWV7zrnecE8A2r/9gpsuViln+EYorvAuShD+rNNeVmFfnB30Sl72QWDFeFnsEVjpgE0JPLTf5qlNreQEZRKYaw31oNqC1j0+z3GYAk6b9B/
+X-Gm-Message-State: AOJu0Yw0vS/g5Zst0KfddZGebQi5AmWoBPDhKvM/euNn54qeBbTvkD9e
+	y6XLeEWTtndTw4u6rlx96s64GewRznvOTreCrHzJ/t5kxBt+Ow0cvLnGO4WN0rF5bCUX0o08RO1
+	zhuzpqqDaMV9J1LKg7ZVwlK/BBq4=
+X-Google-Smtp-Source: AGHT+IFZ1AIkhnIlR1F2PajHwGmAM3QHm7zYfUYNlGkAcCt+TyLYZj4pGDx0Qw5zZbScstvZjUXz2fAMKekKDEkjrCQ=
+X-Received: by 2002:a05:6122:3887:b0:4ef:4b35:896f with SMTP id
+ 71dfb90a1353d-4f2f3e9ea73mr2621613e0c.7.1720108688497; Thu, 04 Jul 2024
+ 08:58:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-04_10,2024-07-03_01,2024-05-17_01
+References: <20240626132341.342963-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240626132341.342963-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <ZoUdUyrld2kZorvU@shikoro>
+In-Reply-To: <ZoUdUyrld2kZorvU@shikoro>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 4 Jul 2024 16:56:56 +0100
+Message-ID: <CA+V-a8v5VcBRjp-kPGp2pKXZ2RhCSXHdsL9X5YDOxjL6W1Mg=Q@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] mmc: renesas_sdhi: Add support for RZ/V2H(P) SoC
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Prabhakar <prabhakar.csengg@gmail.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	Magnus Damm <magnus.damm@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Change the DFSDM binding to use the new IIO backend framework,
-along with the adoption of IIO generic channels.
-This binding change allows to add scaling support to the DFSDM.
+Hi Wolfram,
 
-Keep the legacy binding as deprecated for backward compatibility.
+Thank you for the review.
 
-The io-backends property is supported only in generic IIO channel
-binding.
+On Wed, Jul 3, 2024 at 10:43=E2=80=AFAM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On Wed, Jun 26, 2024 at 02:23:41PM +0100, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > The SDHI/eMMC IPs found in the RZ/V2H(P) (a.k.a. r9a09g057) are very
+> > similar to those found in R-Car Gen3. However, they are not identical,
+> > necessitating an SoC-specific compatible string for fine-tuning driver
+> > support.
+> >
+> > Key features of the RZ/V2H(P) SDHI/eMMC IPs include:
+> > - Voltage level control via the IOVS bit.
+> > - PWEN pin support via SD_STATUS register.
+> > - Lack of HS400 support.
+> > - Fixed address mode operation.
+> >
+> > internal regulator support is added to control the voltage levels of SD
+> > pins via sd_iovs/sd_pwen bits in SD_STATUS register.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com> # on RZ/G3=
+S
+> > ---
+> > v3->v4
+> > - Dropped using 'renesas,sdhi-use-internal-regulator' property
+> > - Now using of_device_is_available() to check if regulator is available=
+ and enabled
+> > - Dropped extra spaces during operations
+> > - Included tested by tag from Claudiu
+> > - Rebased patch on top of https://patchwork.kernel.org/project/linux-re=
+nesas-soc/patch/20240626085015.32171-2-wsa+renesas@sang-engineering.com/
+> >
+> > v2->v3
+> > - Moved regulator info to renesas_sdhi_of_data instead of quirks
+> > - Added support to configure the init state of regulator
+> > - Added function pointers to configure regulator
+> > - Added REGULATOR_CHANGE_VOLTAGE mask
+> >
+> > v1->v2
+> > - Now controlling PWEN bit get/set_voltage
+> > ---
+> >  drivers/mmc/host/renesas_sdhi.h               |  13 ++
+> >  drivers/mmc/host/renesas_sdhi_core.c          |  98 ++++++++++++
+> >  drivers/mmc/host/renesas_sdhi_internal_dmac.c | 147 ++++++++++++++++++
+> >  drivers/mmc/host/tmio_mmc.h                   |   5 +
+> >  4 files changed, 263 insertions(+)
+> >
+> > diff --git a/drivers/mmc/host/renesas_sdhi.h b/drivers/mmc/host/renesas=
+_sdhi.h
+> > index f12a87442338..cd509e7142ba 100644
+> > --- a/drivers/mmc/host/renesas_sdhi.h
+> > +++ b/drivers/mmc/host/renesas_sdhi.h
+> > @@ -11,6 +11,8 @@
+> >
+> >  #include <linux/dmaengine.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/regulator/driver.h>
+> > +#include <linux/regulator/machine.h>
+> >  #include <linux/workqueue.h>
+> >  #include "tmio_mmc.h"
+> >
+> > @@ -36,6 +38,12 @@ struct renesas_sdhi_of_data {
+> >       unsigned int max_blk_count;
+> >       unsigned short max_segs;
+> >       unsigned long sdhi_flags;
+> > +     struct regulator_desc *rdesc;
+> > +     struct regulator_init_data *reg_init_data;
+> > +     bool regulator_init_state;
+> > +     unsigned int regulator_init_voltage;
+> > +     int (*regulator_force_endis)(struct regulator_dev *rdev, bool ena=
+ble);
+> > +     int (*regulator_force_voltage)(struct regulator_dev *rdev, unsign=
+ed int voltage);
+>
+> I am open for discussing this but maybe here only
+>
+> +       struct renesas_sdhi_regulator *internal_regulator
+>
+> or something and create the new struct with the additions above?
+>
+> > +     int (*regulator_force_endis)(struct regulator_dev *rdev, bool ena=
+ble);
+> > +     int (*regulator_force_voltage)(struct regulator_dev *rdev, unsign=
+ed int voltage);
+>
+> Do we need these functions because the regulator framework cannot force
+> these actions because it caches the old state? I wonder if we can avoid
+> these functions...
+>
+Yes, for the voltage setting, it caches the values. However, for the
+regulator enable/disable, we can use is_enabled(), which probes the
+hardware.
 
-- Channel description with the generic binding (Audio and Analog):
+The reset value for PWEN is 1. The regulator_force_endis() callback is
+mainly added for a scenario where, consider a code flow where the
+regulator is disabled (using regulator_disable()) and now we land in
+the reset callback (i.e., renesas_sdhi_reset()). Here, after issuing
+the reset, the PWEN value will be 1, but we need to restore it back.
+Hence, this callback is necessary. Note that is_enabled() cannot be
+used, as it probes the hardware when it switches states after a reset.
 
-  Properties superseded by generic properties:
-    st,adc-channels: becomes "reg" property in channel node
-    st,adc-channel-names: becomes "label" property in channel node
-  Properties moved to channel child node:
-    st,adc-channel-types: becomes st,adc-channel-type
-    st,adc-channel-clk-src, st,adc-alt-channel
+The reset value for IOVS is 3.3V. Below is the scenario for which
+regulator_force_voltage() is added:
 
-- Analog binding:
+-----> Current value: 1.8V (cached by the regulator)
+--------------> After reset:
+------------------> Hardware has 3.3V, but the regulator core cache
+still has 1.8V.
+----------------------> When requested to switch to 1.8V from MMC
+core: The regulator core returns success, as it sees 1.8V in the
+cached state.
+----------------------------> As a result, the SD card won't work.
 
-  DFSDM filter channel is configured as an IIO backend consumer.
-  Add io-backends property in channel child nodes.
-
-  DFSDM is no more configured as a channel consumer from SD modulator.
-  Use of io-channels in DFSDM node is deprecated.
-
-- Audio binding:
-
-  DFSDM audio DAI is configured as a channel consumer from DFSDM filter.
-  No change compare to legacy.
-
-Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
----
- .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  | 153 +++++++++++++++++-
- 1 file changed, 147 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-index 2722edab1d9a..5a5bc8b96402 100644
---- a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-@@ -102,9 +102,11 @@ patternProperties:
-         items:
-           minimum: 0
-           maximum: 7
-+        deprecated: true
- 
-       st,adc-channel-names:
-         description: List of single-ended channel names.
-+        deprecated: true
- 
-       st,filter-order:
-         description: |
-@@ -118,6 +120,12 @@ patternProperties:
-       "#io-channel-cells":
-         const: 1
- 
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-       st,adc-channel-types:
-         description: |
-           Single-ended channel input type.
-@@ -128,6 +136,7 @@ patternProperties:
-         items:
-           enum: [ SPI_R, SPI_F, MANCH_R, MANCH_F ]
-         $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+        deprecated: true
- 
-       st,adc-channel-clk-src:
-         description: |
-@@ -139,6 +148,7 @@ patternProperties:
-         items:
-           enum: [ CLKIN, CLKOUT, CLKOUT_F, CLKOUT_R ]
-         $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+        deprecated: true
- 
-       st,adc-alt-channel:
-         description:
-@@ -147,6 +157,7 @@ patternProperties:
-           If not set, channel n is connected to SPI input n.
-           If set, channel n is connected to SPI input n + 1.
-         type: boolean
-+        deprecated: true
- 
-       st,filter0-sync:
-         description:
-@@ -165,11 +176,60 @@ patternProperties:
-       - compatible
-       - reg
-       - interrupts
--      - st,adc-channels
--      - st,adc-channel-names
-       - st,filter-order
-       - "#io-channel-cells"
- 
-+    patternProperties:
-+      "^channel@([0-7])$":
-+        type: object
-+        $ref: adc.yaml
-+        unevaluatedProperties: false
-+        description: Represents the external channels which are connected to the DFSDM.
-+
-+        properties:
-+          reg:
-+            maxItems: 1
-+
-+          label:
-+            description:
-+              Unique name to identify which channel this is.
-+
-+          st,adc-channel-type:
-+            description: |
-+              Single-ended channel input type.
-+              - "SPI_R": SPI with data on rising edge (default)
-+              - "SPI_F": SPI with data on falling edge
-+              - "MANCH_R": manchester codec, rising edge = logic 0, falling edge = logic 1
-+              - "MANCH_F": manchester codec, rising edge = logic 1, falling edge = logic 0
-+            $ref: /schemas/types.yaml#/definitions/string
-+            enum: [ SPI_R, SPI_F, MANCH_R, MANCH_F ]
-+
-+          st,adc-channel-clk-src:
-+            description: |
-+              Conversion clock source.
-+              - "CLKIN": external SPI clock (CLKIN x)
-+              - "CLKOUT": internal SPI clock (CLKOUT) (default)
-+              - "CLKOUT_F": internal SPI clock divided by 2 (falling edge).
-+              - "CLKOUT_R": internal SPI clock divided by 2 (rising edge).
-+            $ref: /schemas/types.yaml#/definitions/string
-+            enum: [ CLKIN, CLKOUT, CLKOUT_F, CLKOUT_R ]
-+
-+          st,adc-alt-channel:
-+            description:
-+              Must be defined if two sigma delta modulators are
-+              connected on same SPI input.
-+              If not set, channel n is connected to SPI input n.
-+              If set, channel n is connected to SPI input n + 1.
-+            type: boolean
-+
-+          io-backends:
-+            description:
-+              Used to pipe external sigma delta modulator or internal ADC backend to DFSDM channel.
-+            maxItems: 1
-+
-+        required:
-+          - reg
-+
-     allOf:
-       - if:
-           properties:
-@@ -199,9 +259,19 @@ patternProperties:
-               description:
-                 From common IIO binding. Used to pipe external sigma delta
-                 modulator or internal ADC output to DFSDM channel.
-+              deprecated: true
- 
--          required:
--            - io-channels
-+          if:
-+            required:
-+              - st,adc-channels
-+          then:
-+            required:
-+              - io-channels
-+
-+          patternProperties:
-+            "^channel@([0-9])$":
-+              required:
-+                - io-backends
- 
-       - if:
-           properties:
-@@ -298,7 +368,77 @@ examples:
-       #address-cells = <1>;
-       #size-cells = <0>;
- 
-+      // Example 1: Audio use case with generic binding
-       dfsdm0: filter@0 {
-+        compatible = "st,stm32-dfsdm-dmic";
-+        reg = <0>;
-+        interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&dmamux1 101 0x400 0x01>;
-+        dma-names = "rx";
-+        #io-channel-cells = <1>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        st,filter-order = <5>;
-+
-+        channel@1 {
-+          reg = <1>;
-+          label = "dmic0";
-+          st,adc-channel-type = "SPI_R";
-+          st,adc-channel-clk-src = "CLKOUT";
-+          st,adc-alt-channel;
-+        };
-+
-+        asoc_pdm0: dfsdm-dai {
-+          compatible = "st,stm32h7-dfsdm-dai";
-+          #sound-dai-cells = <0>;
-+          io-channels = <&dfsdm0 0>;
-+        };
-+      };
-+
-+      // Example 1: Analog use case with generic binding
-+      dfsdm1: filter@1 {
-+        compatible = "st,stm32-dfsdm-adc";
-+        reg = <1>;
-+        interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&dmamux1 102 0x400 0x01>;
-+        dma-names = "rx";
-+        st,filter-order = <1>;
-+        #io-channel-cells = <1>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        channel@2 {
-+          reg = <2>;
-+          label = "in2";
-+          st,adc-channel-type = "SPI_F";
-+          st,adc-channel-clk-src = "CLKOUT";
-+          st,adc-alt-channel;
-+          io-backends = <&sd_adc2>;
-+        };
-+
-+        channel@3 {
-+          reg = <3>;
-+          label = "in3";
-+          st,adc-channel-type = "SPI_R";
-+          st,adc-channel-clk-src = "CLKOUT";
-+          io-backends = <&sd_adc3>;
-+        };
-+      };
-+    };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    dfsdm_2: dfsdm@4400d000 {
-+      compatible = "st,stm32mp1-dfsdm";
-+      reg = <0x4400d000 0x800>;
-+      clocks = <&rcc DFSDM_K>, <&rcc ADFSDM_K>;
-+      clock-names = "dfsdm", "audio";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      // Example 3: Audio use case with legacy binding
-+      dfsdm0_2: filter@0 {
-         compatible = "st,stm32-dfsdm-dmic";
-         reg = <0>;
-         interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-@@ -311,14 +451,15 @@ examples:
-         st,adc-channel-clk-src = "CLKOUT";
-         st,filter-order = <5>;
- 
--        asoc_pdm0: dfsdm-dai {
-+        asoc_pdm0_2: dfsdm-dai {
-           compatible = "st,stm32h7-dfsdm-dai";
-           #sound-dai-cells = <0>;
-           io-channels = <&dfsdm0 0>;
-         };
-       };
- 
--      dfsdm_pdm1: filter@1 {
-+      // Example 3: Analog use case with legacy binding
-+      dfsdm1_2: filter@1 {
-         compatible = "st,stm32-dfsdm-adc";
-         reg = <1>;
-         interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.25.1
-
+Cheers,
+Prabhakar
