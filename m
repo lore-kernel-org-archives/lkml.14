@@ -1,270 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8C11822FB;
-	Thu,  4 Jul 2024 12:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDB51AB8F8;
+	Thu,  4 Jul 2024 12:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720096283; cv=none; b=UhIQeRMCFvNUXBWG1v0ZJb+FwmfxJ3nkpWmvqI7HifVnvpItWJXXO91nYNJN17/RpOQiWj4o7xMLpdsTuSkBTJc/xv8H+1rZVW1WZVM7TnFN7+1ko5Fcj4sGi7YgapfHyyo6eWQZBJXYEm+pC6XB7EUcOnN2PwmhFnnHv8+Eu8c=
+	t=1720096352; cv=none; b=bocoPNqg3DpSNTdtVJr25FvbNJI9yvUJzOSBnP6jlQHW+dyBmQikYOx7Nsa+48LbcVJqEykX6/JIJwUiNUkBc3k84k8BeSwIKf+G9dmN+dZVpcMpB2aXlPI0H0FMV6QEFD8lyPUlISnavO5fc/uPQaqgg4nPJbnjDQ/UAQEtrEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720096283; c=relaxed/simple;
-	bh=NrMOdvTHRfD6/EsYygG6xW5j1RcLbOwnQz82914Hkto=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tH3Mk3T6g8W4aLEzeoJaCQl8O/P1lkVrqiWvsT3GCqp5nK3WY5NvrOHrdJnNFRzuExMR6Lj14NTsjQmVbvJZE2lon621IaSof53rJiRdrl5qX+1EPCNJfYQJZ0RoXLObu5+gIZo4sZdF3rYfGQCkGCDs/wrHP8Rm/Hrk/7uHLhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHFCjWiu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720096352; c=relaxed/simple;
+	bh=IzeWJYYp6m5cyiUP0hsBAU7OPxm6xFSfbz0WFTaEY1k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kEPKgiPOgQZdackM9cJvyZr3pH28WB9epLJUht5g3iEiEu6skjGuN7XD0tEQfHLixrSmsvJgEgyQLkIqytgoDiQJyyJbneG2QLHsGspfp4piG8UATiF2Ff2Smnt93/cUMgb7etLE0dTGHQNK8tdk/IJYyIiNI0iigFLZzXbe2pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=eC9J/ndt; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHFCjWiu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8336EC4AF10;
-	Thu,  4 Jul 2024 12:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720096282;
-	bh=NrMOdvTHRfD6/EsYygG6xW5j1RcLbOwnQz82914Hkto=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EHFCjWiuLWsNEZEzppNdUTY4pbRY24icGXWiW+La46jmCSQuOWEiKrLLQmNGx/7tm
-	 n8vozMQ91ujB44hYlDZ65PguTZ9a8zrtwZvlsMrfrT65mVqPfhWpEmTfFQd/GbWbbR
-	 xVr4P33izq0nzf7wPvuRJdAkTAYn/0c5SVkQ4V06nmK2+4NL++SCdoL/KETAGda9uf
-	 /tj40T4Riv+yQaLGwLuo5xLPnhu6X0uyAEdx+FZzgEkwmvvHtohpbe7Wyxmjk7agUv
-	 x0OXP73bCElTl3O7Z4L9MOiTUa+G8XLS5Dzp77RbDeofrSa15TiKDSgdvL2T6r4YNd
-	 q9lEeqDSAKJlQ==
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-25cb5ee9d2dso100855fac.1;
-        Thu, 04 Jul 2024 05:31:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVBY7YkKj9g/7vB5bPxX/9oFGuIU17OIwJZfr5BZIzulPB50yBFolAnp1wr96LjmKkA6s+EFvcgVi470V3VgjJzKeGpXvLHkRXjf7Xp287W3KbgnGL9r+b3XPk0V2F5YM59LIj3ZGyDOOzKfJj1fRyWmwtC8jeEdQk5oDYecb9lyLbPsZrY
-X-Gm-Message-State: AOJu0YxPAnQh6XG9OS9LlP0oYrZdFpp8ffY/tW6cZZ8g/Jf4m3YUiyZF
-	Iq3DLgZfAxptA/j/rX5CELpi2cdVoWJB6RYjAbX3e0aGf+u70DvbPbvlVMcNcO6k3xbqZiZDNOW
-	12GyqvNSyDs2ovDNl5D5XQj97PUw=
-X-Google-Smtp-Source: AGHT+IGvQjd8yj5g2VnXn6ZjT/Wc4/TD5l5l8Rj/Lpm695mm8KbI+B1Rfuqz3a2+DNIfcwRnKsG29Drd7eA2IMD48J8=
-X-Received: by 2002:a4a:9219:0:b0:5c2:20aa:db25 with SMTP id
- 006d021491bc7-5c646ec7d4bmr1689927eaf.1.1720096281712; Thu, 04 Jul 2024
- 05:31:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="eC9J/ndt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1720096348;
+	bh=Kg76KaOIbqnAt68SmtPouOnB34EHvYcOG9w3BrvhJDM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=eC9J/ndtD3JZYC5bXcIUuL9baGS+FEO9OPeVGtvMcAfVWSbN1jia1Em79xmhsbey1
+	 ix9jF1OFtfcOlZ/PsqE/Cvdjd8DLaWVIBdk7XuVWxnJoX2/CWaCi5AkFef0js7DppK
+	 OC3c5wY7L7QYjUDAEc6m9bBbylPc/VqSre7llqaC2XyjUOi+CBaaUqaUmWFNRlOpUz
+	 0ML8tWrrT5/3TQOqY0c4e9+cb8ag/vk/IqVx5siUeoR33KgCPUaRrvakLHSmPIRUQT
+	 phQdAm+PVhNIF9AIn6IEESqQLrzgtxLQyggahFovqM4i3jtiA8bOPJTHCJeF4HNGcm
+	 HfMLzR0cSNYhQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WFGHt5Rmjz4wbp;
+	Thu,  4 Jul 2024 22:32:26 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen
+ N. Rao" <naveen.n.rao@linux.ibm.com>, Scott Wood <oss@buserror.net>, Arnd
+ Bergmann <arnd@arndb.de>, Jeremy Kerr <jk@ozlabs.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] powerpc: add missing MODULE_DESCRIPTION() macros
+In-Reply-To: <2509b43d-630c-4295-8330-5976677bf8bc@quicinc.com>
+References: <20240615-md-powerpc-arch-powerpc-v1-1-ba4956bea47a@quicinc.com>
+ <2509b43d-630c-4295-8330-5976677bf8bc@quicinc.com>
+Date: Thu, 04 Jul 2024 22:32:26 +1000
+Message-ID: <87y16hibhh.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703214315.454407-1-isaacmanjarres@google.com>
-In-Reply-To: <20240703214315.454407-1-isaacmanjarres@google.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 4 Jul 2024 14:31:10 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j6xSD4FJGe1=hb=A4UsCqOqBczQ5QNN_0VJAd-7ePZWQ@mail.gmail.com>
-Message-ID: <CAJZ5v0j6xSD4FJGe1=hb=A4UsCqOqBczQ5QNN_0VJAd-7ePZWQ@mail.gmail.com>
-Subject: Re: [PATCH v6] fs: Improve eventpoll logging to stop indicting timerfd
-To: "Isaac J. Manjarres" <isaacmanjarres@google.com>
-Cc: tglx@linutronix.de, jstultz@google.com, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, saravanak@google.com, 
-	mjguzik@gmail.com, Manish Varma <varmam@google.com>, Kelly Rossmoyer <krossmo@google.com>, 
-	kernel-team@android.com, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Jul 3, 2024 at 11:43=E2=80=AFPM Isaac J. Manjarres
-<isaacmanjarres@google.com> wrote:
+Jeff Johnson <quic_jjohnson@quicinc.com> writes:
+> On 6/15/2024 10:06 AM, Jeff Johnson wrote:
+>> With ARCH=powerpc, make allmodconfig && make W=1 C=1 reports:
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/kernel/rtas_flash.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/sysdev/rtc_cmos_setup.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/pseries/papr_scm.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/spufs/spufs.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/cbe_thermal.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/cpufreq_spudemand.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/cbe_powerbutton.o
+>> 
+>> Add the missing invocation of the MODULE_DESCRIPTION() macro to all
+>> files which have a MODULE_LICENSE().
+>> 
+>> This includes 85xx/t1042rdb_diu.c and chrp/nvram.c which, although
+>> they did not produce a warning with the powerpc allmodconfig
+>> configuration, may cause this warning with other configurations.
+>> 
+>> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+>> ---
+>> Corrections to these descriptions are welcomed. I'm not an expert in
+>> this code so in most cases I've taken these descriptions directly from
+>> code comments, Kconfig descriptions, or git logs.  History has shown
+>> that in some cases these are originally wrong due to cut-n-paste
+>> errors, and in other cases the drivers have evolved such that the
+>> original information is no longer accurate.
+...
 >
-> From: Manish Varma <varmam@google.com>
->
-> We'll often see aborted suspend operations that look like:
->
->  PM: suspend entry 2024-07-03 15:55:15.372419634 UTC
->  PM: PM: Pending Wakeup Sources: [timerfd]
->  Abort: Pending Wakeup Sources: [timerfd]
->  PM: suspend exit 2024-07-03 15:55:15.445281857 UTC
->
-> From this, it seems a timerfd caused the abort, but that can be
-> confusing, as timerfds don't create wakeup sources. However,
-> eventpoll can, and when it does, it names them after the underlying
-> file descriptor. Unfortunately, all the file descriptors are called
-> "[timerfd]", and a system may have many timerfds, so this isn't very
-> useful to debug what's going on to cause the suspend to abort.
->
-> To improve this, change the way eventpoll wakeup sources are named:
->
-> 1) The top-level per-process eventpoll wakeup source is now named
-> "epollN:P" (instead of just "eventpoll"), where N is a unique ID token,
-> and P is the PID of the creating process.
->
-> 2) Individual eventpoll item wakeup sources are now named
-> "epollitemN:P.F", where N is a unique ID token, P is PID of the creating
-> process, and F is the name of the underlying file descriptor.
->
-> Now, when the scenario described earlier is encountered, the following
-> kernel logs are emitted:
->
->  PM: suspend entry 2024-07-03 15:39:24.945791824 UTC
->  PM: PM: Pending Wakeup Sources: epollitem30:6375.[timerfd]
->  Abort: Pending Wakeup Sources: epollitem30:6375.[timerfd]
->  PM: suspend exit 2024-07-03 15:39:25.017775019 UTC
->
-> There are various benefits to this new naming convention:
->
-> 1) It is clear that the wakeup source is linked to an eventpoll
-> item.
->
-> 2) Now that the PID of the process associated with that timerfd
-> instance is known, it is easy to map the PID of the process to the
-> name of the process. With this information, it is easy to start
-> debugging which process is causing this issue to occur.
->
-> 3) Even if process 6375 creates multiple timerfd instances, the
-> ID token is useful in identifying which timerfd instance associated
-> with the process is causing suspend to abort, as it is monotonically
-> increasing. So if the order in which the timerfd instances for the
-> process is known, then one can pinpoint which timerfd instance is
-> causing this issue.
->
-> Co-developed-by: Kelly Rossmoyer <krossmo@google.com>
-> Signed-off-by: Kelly Rossmoyer <krossmo@google.com>
-> Signed-off-by: Manish Varma <varmam@google.com>
-> Co-developed-by: Isaac J. Manjarres <isaacmanjarres@google.com>
-> Signed-off-by: Isaac J. Manjarres <isaacmanjarres@google.com>
-> ---
->  drivers/base/power/wakeup.c | 12 +++++++++---
+> Following up to see if anything else is needed from me. Hoping to see this in
+> linux-next so I can remove it from my tracking spreadsheet :)
 
-For the changes in wakeup.c
+I have this in my test branch, it will appear in linux-next next week.
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+A spreadsheet seems like overkill ;)
 
->  fs/eventpoll.c              | 11 +++++++++--
->  include/linux/pm_wakeup.h   |  8 ++++----
->  3 files changed, 22 insertions(+), 9 deletions(-)
->
->  v1 -> v2:
->  - Renamed instance count to wakesource_create_id to better describe
->    its purpose.
->  - Changed the wakeup source naming convention for wakeup sources
->    created by eventpoll to avoid changing the timerfd names.
->  - Used the PID of the process instead of the process name for the
->    sake of uniqueness when creating wakeup sources.
->
-> v2 -> v3:
->  - Changed wakeup_source_register() to take in a format string
->    and arguments to avoid duplicating code to construct wakeup
->    source names.
->  - Moved the definition of wakesource_create_id so that it is
->    always defined to fix an compilation error.
->
-> v3 -> v4:
->  - Changed the naming convention for the top-level epoll wakeup
->    sources to include an ID for uniqueness. This is needed in
->    cases where a process is using two epoll fds.
->  - Edited commit log to reflect new changes and add new tags.
->
-> v4 -> v5:
->  - Added the format attribute to the wakeup_source_register()
->    function to address a warning from the kernel test robot:
->    https://lore.kernel.org/all/202406050504.UvdlPAQ0-lkp@intel.com/
->
-> v5 -> v6:
->  - Reworded the commit text to clarify the scenarios in which this
->    patch is helpful, as per feedback from
->    John Stultz <jstultz@google.com>
->
-> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> index 752b417e8129..04a808607b62 100644
-> --- a/drivers/base/power/wakeup.c
-> +++ b/drivers/base/power/wakeup.c
-> @@ -209,13 +209,19 @@ EXPORT_SYMBOL_GPL(wakeup_source_remove);
->  /**
->   * wakeup_source_register - Create wakeup source and add it to the list.
->   * @dev: Device this wakeup source is associated with (or NULL if virtua=
-l).
-> - * @name: Name of the wakeup source to register.
-> + * @fmt: format string for the wakeup source name
->   */
-> -struct wakeup_source *wakeup_source_register(struct device *dev,
-> -                                            const char *name)
-> +__printf(2, 3) struct wakeup_source *wakeup_source_register(struct devic=
-e *dev,
-> +                                                           const char *f=
-mt, ...)
->  {
->         struct wakeup_source *ws;
->         int ret;
-> +       char name[128];
-> +       va_list args;
-> +
-> +       va_start(args, fmt);
-> +       vsnprintf(name, sizeof(name), fmt, args);
-> +       va_end(args);
->
->         ws =3D wakeup_source_create(name);
->         if (ws) {
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index f53ca4f7fced..941df15208a4 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -338,6 +338,7 @@ static void __init epoll_sysctls_init(void)
->  #define epoll_sysctls_init() do { } while (0)
->  #endif /* CONFIG_SYSCTL */
->
-> +static atomic_t wakesource_create_id  =3D ATOMIC_INIT(0);
->  static const struct file_operations eventpoll_fops;
->
->  static inline int is_file_epoll(struct file *f)
-> @@ -1545,15 +1546,21 @@ static int ep_create_wakeup_source(struct epitem =
-*epi)
->  {
->         struct name_snapshot n;
->         struct wakeup_source *ws;
-> +       pid_t task_pid;
-> +       int id;
-> +
-> +       task_pid =3D task_pid_nr(current);
->
->         if (!epi->ep->ws) {
-> -               epi->ep->ws =3D wakeup_source_register(NULL, "eventpoll")=
-;
-> +               id =3D atomic_inc_return(&wakesource_create_id);
-> +               epi->ep->ws =3D wakeup_source_register(NULL, "epoll:%d:%d=
-", id, task_pid);
->                 if (!epi->ep->ws)
->                         return -ENOMEM;
->         }
->
-> +       id =3D atomic_inc_return(&wakesource_create_id);
->         take_dentry_name_snapshot(&n, epi->ffd.file->f_path.dentry);
-> -       ws =3D wakeup_source_register(NULL, n.name.name);
-> +       ws =3D wakeup_source_register(NULL, "epollitem%d:%d.%s", id, task=
-_pid, n.name.name);
->         release_dentry_name_snapshot(&n);
->
->         if (!ws)
-> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> index 76cd1f9f1365..1fb6dca981c2 100644
-> --- a/include/linux/pm_wakeup.h
-> +++ b/include/linux/pm_wakeup.h
-> @@ -99,8 +99,8 @@ extern struct wakeup_source *wakeup_source_create(const=
- char *name);
->  extern void wakeup_source_destroy(struct wakeup_source *ws);
->  extern void wakeup_source_add(struct wakeup_source *ws);
->  extern void wakeup_source_remove(struct wakeup_source *ws);
-> -extern struct wakeup_source *wakeup_source_register(struct device *dev,
-> -                                                   const char *name);
-> +extern __printf(2, 3) struct wakeup_source *wakeup_source_register(struc=
-t device *dev,
-> +                                                                  const =
-char *fmt, ...);
->  extern void wakeup_source_unregister(struct wakeup_source *ws);
->  extern int wakeup_sources_read_lock(void);
->  extern void wakeup_sources_read_unlock(int idx);
-> @@ -140,8 +140,8 @@ static inline void wakeup_source_add(struct wakeup_so=
-urce *ws) {}
->
->  static inline void wakeup_source_remove(struct wakeup_source *ws) {}
->
-> -static inline struct wakeup_source *wakeup_source_register(struct device=
- *dev,
-> -                                                          const char *na=
-me)
-> +static inline __printf(2, 3) struct wakeup_source *wakeup_source_registe=
-r(struct device *dev,
-> +                                                                        =
- const char *fmt, ...)
->  {
->         return NULL;
->  }
-> --
-> 2.45.2.803.g4e1b14247a-goog
->
+cheers
