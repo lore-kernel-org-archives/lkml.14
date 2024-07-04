@@ -1,164 +1,121 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1334962A;
-	Thu,  4 Jul 2024 17:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CC73D97F
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 17:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720115067; cv=none; b=iXFEQ44KXHHIah2m92LKlxyQAl7IdOUe1fPoNhDNf6BdRQ64+LcXeI0ufOG/vkGsIBAOzPVU21S7ANieubAW0F6O15yJQXisn5Nch+MLHYEj8tmqYSM9EIYsZMPR7gV0N4SfvNxZS8yKOq5OPmMaQ60sSEnVrQFnx1KKBmaWCKQ=
+	t=1720115171; cv=none; b=Wux7rauQ1DjgtXmPH6UwX8cZPMkbPHJWM3fkxVYB1Mq/jECsBYfI6niVH8HiWWEcuygm7e3kgc4n3kvdfiPAtt9oTRTgehvWTJB/lH5EQxkA5UG5QWnpuzWqyoPXUqPKv54c5fYpWG1ztcDwjMEbJ+ucBNpYojA2cUB7BNT+E5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720115067; c=relaxed/simple;
-	bh=9OEohVoOHp7ONwqat1DbjfbKll05SHnUm4vHkbNilOo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uDpdOUGay2T8gkqOr2+DdYkhDrqUUj4uZgCYJUc/lUw5mWRHKNr5px0AsACSBCqWnbrvUqGKq+nI8FoXR/BWrVbuWIvBZnYjM3RFfO+jLLuMWIlIuALgXfoagv6YhwPuN9kia4jR4/x2MB5f9T2ODQ770p23IVIl07OJnPKfCQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H1Uf2aDr; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720115171; c=relaxed/simple;
+	bh=8bFwUULAnMeSdCGnsqaBkZdIz2KulTG3Sn00lHqMa44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nOXE78qhZNQHMhkBCUOOAhi9oi04erIRxlpHtEqldtF5DKKAtsHjrzr0ocNjbrWaQBh9CC9c/UzM2XPc+yG0b1qVV0r8ERCn4WXJrWzu9jNgNdtyyHyyR/mG5g9IrMvx5NYvqpFNZ2fZlK1yayFK2C1t8Een1hbANiL+H58Otm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=HaaaI559; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1Uf2aDr"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-58b447c5112so1061980a12.3;
-        Thu, 04 Jul 2024 10:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720115064; x=1720719864; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p/ICCxXD8DFSBJSvnIefNzr4Mlp1WXZIIEXOl9gBP5Q=;
-        b=H1Uf2aDr/h+TCokntzQJQGt/3TgUnHe56M2RLn38MOiwUE4IWH5vbn+2cJNJVItK+s
-         1a54Fiy29UOiKGNs7z53Vxd2nXl5zryh6BFOzYHBjfhHMmB9frBEsHrsqIQOxjIA23s8
-         dC/lQnnlFtZJmRlzUX1c8EBeGCykQk7Wy8YgzS1aA7fPY3ecjWWNRtWwLFj1Lo64C7xf
-         PJpVH+waXlNKkkGbJISka2qNEJuE4P+k2PO8E1jjCaSyxS5yi7NQrSpMnY6qMVDm5+s3
-         RgOK7aPTgRRk6y6kBtS/t5y6hGiYlBh3lXDRStu7qmmQW6gbVsee5kcD5cjaEgz4FTiH
-         RHHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720115064; x=1720719864;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p/ICCxXD8DFSBJSvnIefNzr4Mlp1WXZIIEXOl9gBP5Q=;
-        b=LuUdszaDKj4aZu7apYtRhQMbUeO2quE2bNMHCDWNNVyHC0l2dMySSRuR+Z3SUWSn1F
-         Wb4N3olvrmbVJkPpWwlHt5ZAkWiYxVWiOKiiVzgZHKgbm0i2Zu9tGia0Gu7q4dRoHwvU
-         avRZ9xGotsQdcJHmIueqEs1hYz1+1c8OaYG8d1rNCGs1L0kH+X+Zfn/TqEmN91dCZZvR
-         9cVGqjw6nFN/kfxP8AiCkhZgKlMrohyoTHvvFOt1PHzKLmtRqozJ6Lqc3WiVHOyem4iQ
-         RjAXXwwWCqTBLHpR2iZtX175yWMAIDmxzxVceSeE+u9gVT5WJ7omuTXzv7hdvZgIQlA6
-         2Njw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhfIlrsKbKLCwLjXmxtHhHRp0IKaVSShRAba/dCWmt1M5LKlklCeDvtwuGWJh9IkInabcn5QhPWZISD5QD405uGm8ll9aKJKGzqOqkNw1fPlCfq+0gBsE7/6By7DXpzskOiaeq4WLY1PB2xA==
-X-Gm-Message-State: AOJu0Yz9+NBtp2C+psSpunTcX3JPfqkLv+S6fFHwXx+h+KkrIrR8+sgl
-	2yR/dJ602pomt3l5fd7x7CY+xZ9nfHfAbRGN0asQ4MdcsbHchMHaON0HZhtDHA7rt720taSFHok
-	W7lSeBDnwVAn7LeIL5btIX1YYSPaTMXQELik=
-X-Google-Smtp-Source: AGHT+IFVorgdyabSVYQdv+WoEM+LSfcE2ygWrtpA1sx7rpmpEZto/8sJYdffCwq4xoaYmYhuE62OetDh63Qm/FMKct4=
-X-Received: by 2002:a05:6402:2108:b0:57c:fda3:b669 with SMTP id
- 4fb4d7f45d1cf-58e5abdd399mr1523307a12.17.1720115063714; Thu, 04 Jul 2024
- 10:44:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="HaaaI559"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F38C3277B;
+	Thu,  4 Jul 2024 17:46:09 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="HaaaI559"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1720115167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R2mNOONS7BIHJlKmGVX9T1qMVuQ+XxtgDeiJEUwEq9k=;
+	b=HaaaI559co+IFQDYSeRiXcPkdpd85zjBUPjoioMh829Z0VfWPPccLtMpAGqlUsfCMu9HwM
+	xoAumcbGl3yW4U1U6pXzDAgRJ7oojXKMclruLDU381Fp1FazZNTVYnbs7EK5GRZnCZrjy4
+	pqs+TCMccRrUHE6m7of/VL78oGvyL68=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id efbd4fcc (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 4 Jul 2024 17:46:07 +0000 (UTC)
+Date: Thu, 4 Jul 2024 19:46:05 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: jolsa@kernel.org, mhiramat@kernel.org, cgzones@googlemail.com,
+	brauner@kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de
+Subject: Re: deconflicting new syscall numbers for 6.11
+Message-ID: <Zobf3fZOuvOJOGPN@zx2c4.com>
+References: <ZobXdDCYBi8OM-Fo@zx2c4.com>
+ <CAHk-=wiGk+1eNy4Vk6QsEgM=Ru3jE40qrDwgq_CSKgqwLgMdRg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240614163416.728752-1-yu.ma@intel.com> <20240703143311.2184454-1-yu.ma@intel.com>
- <20240703143311.2184454-4-yu.ma@intel.com>
-In-Reply-To: <20240703143311.2184454-4-yu.ma@intel.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 4 Jul 2024 19:44:10 +0200
-Message-ID: <CAGudoHH_P4LGaVN1N4j8FNTH_eDm3SDL7azMc25+HY2_XgjvJQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] fs/file.c: add fast path in find_next_fd()
-To: Yu Ma <yu.ma@intel.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	edumazet@google.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, pan.deng@intel.com, tianyou.li@intel.com, 
-	tim.c.chen@intel.com, tim.c.chen@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiGk+1eNy4Vk6QsEgM=Ru3jE40qrDwgq_CSKgqwLgMdRg@mail.gmail.com>
 
-On Wed, Jul 3, 2024 at 4:07=E2=80=AFPM Yu Ma <yu.ma@intel.com> wrote:
->
-> There is available fd in the lower 64 bits of open_fds bitmap for most ca=
-ses
-> when we look for an available fd slot. Skip 2-levels searching via
-> find_next_zero_bit() for this common fast path.
->
-> Look directly for an open bit in the lower 64 bits of open_fds bitmap whe=
-n a
-> free slot is available there, as:
-> (1) The fd allocation algorithm would always allocate fd from small to la=
-rge.
-> Lower bits in open_fds bitmap would be used much more frequently than hig=
-her
-> bits.
-> (2) After fdt is expanded (the bitmap size doubled for each time of expan=
-sion),
-> it would never be shrunk. The search size increases but there are few ope=
-n fds
-> available here.
-> (3) There is fast path inside of find_next_zero_bit() when size<=3D64 to =
-speed up
-> searching.
->
-> As suggested by Mateusz Guzik <mjguzik gmail.com> and Jan Kara <jack@suse=
-.cz>,
-> update the fast path from alloc_fd() to find_next_fd(). With which, on to=
-p of
-> patch 1 and 2, pts/blogbench-1.1.0 read is improved by 13% and write by 7=
-% on
-> Intel ICX 160 cores configuration with v6.10-rc6.
->
-> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-> Signed-off-by: Yu Ma <yu.ma@intel.com>
-> ---
->  fs/file.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/fs/file.c b/fs/file.c
-> index a15317db3119..f25eca311f51 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -488,6 +488,11 @@ struct files_struct init_files =3D {
->
->  static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start=
-)
->  {
-> +       unsigned int bit;
-> +       bit =3D find_next_zero_bit(fdt->open_fds, BITS_PER_LONG, start);
-> +       if (bit < BITS_PER_LONG)
-> +               return bit;
-> +
->         unsigned int maxfd =3D fdt->max_fds; /* always multiple of BITS_P=
-ER_LONG */
->         unsigned int maxbit =3D maxfd / BITS_PER_LONG;
->         unsigned int bitbit =3D start / BITS_PER_LONG;
-> --
-> 2.43.0
->
+Hi Linus,
 
-I had something like this in mind:
-diff --git a/fs/file.c b/fs/file.c
-index a3b72aa64f11..4d3307e39db7 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -489,6 +489,16 @@ static unsigned int find_next_fd(struct fdtable
-*fdt, unsigned int start)
-        unsigned int maxfd =3D fdt->max_fds; /* always multiple of
-BITS_PER_LONG */
-        unsigned int maxbit =3D maxfd / BITS_PER_LONG;
-        unsigned int bitbit =3D start / BITS_PER_LONG;
-+       unsigned int bit;
-+
-+       /*
-+        * Try to avoid looking at the second level map.
-+        */
-+       bit =3D find_next_zero_bit(&fdt->open_fds[bitbit], BITS_PER_LONG,
-+                               start & (BITS_PER_LONG - 1));
-+       if (bit < BITS_PER_LONG) {
-+               return bit + bitbit * BITS_PER_LONG;
-+       }
+On Thu, Jul 04, 2024 at 10:21:34AM -0700, Linus Torvalds wrote:
+> On Thu, 4 Jul 2024 at 10:10, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > The three of us all have new syscalls planned for 6.11. Arnd suggested
+> > that we coordinate to deconflict, to make the merge easier.
+> 
+> Nobody has explained to me what has changed since your last vdso
+> getrandom, and I'm not planning on pulling it unless that fundamental
+> flaw is fixed.
 
-        bitbit =3D find_next_zero_bit(fdt->full_fds_bits, maxbit,
-bitbit) * BITS_PER_LONG;
-        if (bitbit >=3D maxfd)
+Oh. That's an unpleasant surprise. I've been hard at work on bringing
+everything up to snuff. That's pretty much been my sole focus.
 
-can you please test it out. I expect it to provide a tiny improvement
-over your patch.
+Changes since the last time I worked on this are explained in large at
+the top of this:
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+https://lore.kernel.org/lkml/20240703183115.1075219-1-Jason@zx2c4.com/
+
+The big issue before was that the mm additions were too insane. I've
+paired those down and made them really minimal. Then the mm people piped
+up and it became even more minimal. Now I think it's pretty alright.
+
+But I think, perhaps evidently barring you, the use case of this in the
+first place and need for it is well understood and appreciated at large
+by now. So to answer that,
+
+> Why is this _so_ critical that it needs a vdso?
+> 
+> Why isn't user space just doing it itself?
+> 
+> What's so magical about this all?
+> 
+> This all seems entirely pointless to me still, because it's optimizing
+> something that nobody seems to care about
+>
+> IOW, I want to see actual *users* piping up and saying "this is a
+> problem, here's my real load that spends 10% of time on getrandom(),
+> and this fixes it".
+>
+> I'm not AT ALL interested in microbenchmarks or theoretical "if users
+> need high-performance random numbers".
+>
+> I need a real actual live user that says "I can't just use rdrand and
+> my own chacha mixing on top" and explains why having a SSE2 chachacha
+> in kernel code exposed as a vdso is so critical, and a magical buffer
+> maintained by the kernel.
+
+As far as speed goes, there are many legitimate applications that cannot
+make a syscall every time. TLS nonces and keys come to mind as a huge
+one. "Make getrandom() fast enough that the TLS library can use it" is
+something that's come up over and over. There's now also arc4random() in
+glibc, whose addition is what sparked this whole patchset two years ago.
+That's not a micro benchmark thing either. I too don't really care for
+microbenchmarks with the random driver. But I do want it to be actually
+useable, so that people use it, because it is the best facility for the
+task. With regards to why VDSO, the cover letter lays that out in
+detail. Userspace does not have access to the information in a timely
+manner that the kernel does, and the particulars of the kernel's
+accounting are bound to change, especially as all this matures with VMs.
+The RNG in the vDSO needs to be tightly coupled with the RNG in the
+kernel; these are part of the same thing.
+
+Anyway, those actual users exist, and the partial solutions and hacks
+required to workaround this shortcoming are kind of grotesque and in one
+way or another bad. This isn't theoretical. I'm not working on this for
+"fun".
+
+Jason
