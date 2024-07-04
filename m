@@ -1,219 +1,141 @@
-Received: from mail-40138.protonmail.ch (mail-40138.protonmail.ch [185.70.40.138])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C271AD403
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 15:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D481ACE67;
+	Thu,  4 Jul 2024 15:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720108554; cv=none; b=lefOFVz/gspIX1nOQnzKqZ+APyX7bIWPc5dEfbLa7FREEomSg/bDAyF7ZTd7vu2K3JMHQJC8Zmk1FIc2EAGJlZ81E+ipx0MeLhfiYb0jyLw1AlHJT7HZFLxF3bxshx5vE9Oo8NKi9cWzG7dE/w/tg3eEU4ZIIiWwDaXxOQDlB5c=
+	t=1720108597; cv=none; b=Ycq7YDoQx1FZuCf29jpxtoPX9tw/TvKNgKaWPOKDzFVE7PsCA6BVFuBkZQnYLtPcvTi/q2uRKQIh0HLE8vWMWd3pGxrZbkMH5JeEf+mQAxEymdAFVAgY/ifa1vMOM3uGPiCtif8Ks5FP1cJOz+ZvMhPdfdR0UfQFR2Z4SVV1teo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720108554; c=relaxed/simple;
-	bh=NQBXm07UgisIZcKAKlLXrr/ih/lhjv1PKO0rzT0aANo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RHFDIzomNV0MX7TJRUeLrNnulyYm+Ajh88sIBCMl5oG4Z4jQv4BoJF8pdyyE5Vn2CyLXMuHlEfJJsAwgKGKLapEh+VnaZooNx84UvOtahl6WAQAV8KeRyAfgCmrCcCSs1FgtWV0WzcxdyuJin0BUVOl2uzIt/xNz6qojduue5FY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=s37utGms; arc=none smtp.client-ip=185.70.40.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1720108597; c=relaxed/simple;
+	bh=vJBJEQHuExlG3eTxzzhqOwNwIeSKl4ApGj6qCQwK2dg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g666+kV7aMESvih7bmLjfbE+1zKr4k9FKbukaYGwAkUH3jyZf82EPqvCHi+NGDch+K3JGV0OCFnR9aiZAEIIp4atXmwWMtXn4G5zXQeGtxuu00t8iJqb4kWEMGf95up9Wdf1OOOvOh3DVsd+dqUVDDxjuaYOkYg9eF5CH62tCQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=gVaaCIOI; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="s37utGms"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1720108544; x=1720367744;
-	bh=Vf4EBtRpfOHSJIVm4HDyh243ysNrpJBCZq4+gPHvMd4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=s37utGmsss6uYVMBve8RQDmW6zdTAvNMYJlSxy08MuzSzWOiDQfQtzHFfK24z6aaN
-	 00NDFx/gVvZO3EBvPgrZ/8A4K3h8QS16ekEZDoOfFqMdoCZ0SGoUZLcPsD5ZEs1HMf
-	 SO8wkm0IL/qLTqUsPzh/mZk1LHV5rOviwESptHlO3iBoorud4FwMz4oEjQkuqQHZMC
-	 73yBxgM35/Me6HNOKXdQ0g6bZ97BhOQkQzb4eWu/FttbmfzU4NpaHM2E96B6pOi6U7
-	 TxCUhzSf0o6xxJuyKCVReGiIk4hB9LnX5LHdfE3v1QKvVSSvwP/vT1Og0splqw2CZi
-	 6MNivvW0e4jVg==
-Date: Thu, 04 Jul 2024 15:55:37 +0000
-To: Alice Ryhl <aliceryhl@google.com>
-From: =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, Dan Williams <dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org, Trevor Gross <tmgross@umich.edu>, Martin Rodriguez
-	Reboredo <yakoyoku@gmail.com>
-Subject: Re: [PATCH v7 1/8] rust: types: add `NotThreadSafe`
-Message-ID: <0GQUdWtJ1sJSw0JSoR4NqDUt9vO2S3G9Y2JqaHX_8BW5O0FB3lfHXwC1mbYNgSBh4t1MIFFyocJGyKUgB7CnJsZK_TvRnL1R61TOsLV1gb0=@protonmail.com>
-In-Reply-To: <20240628-alice-file-v7-1-4d701f6335f3@google.com>
-References: <20240628-alice-file-v7-0-4d701f6335f3@google.com> <20240628-alice-file-v7-1-4d701f6335f3@google.com>
-Feedback-ID: 27884398:user:proton
-X-Pm-Message-ID: a9fcff4144967cc27072678e1f6fdc577680704a
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="gVaaCIOI"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 464F8wKH001949;
+	Thu, 4 Jul 2024 17:56:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	utCxzv0w4p0gPLLgoEdfExA6XJkBabrTOtHoTLU6wdo=; b=gVaaCIOI/ENxmnqk
+	6AyAvGFck19TZcinVB3no27I+0aqv6eG1jedaKnO2hDF0XAAsSvqnUJO68nSuvao
+	Atp4BGywgOMaX1/6DSA07nJPgruJNz6L3+O/uDatbNtG2EOuQ9jJV3j5Z2vwi2FM
+	mEufOVvqdP7fpm+a2M+yQ1OwHf1IP9wxcRav3d09pp5AXQxJyCHFNyzeiCFsEoTE
+	LDjbXHNigWIY/65VNLApLsskHhmwnfSbq1Y+nFDdUaCxB4uOSXRdwc97YkWFZi6r
+	v1p6zwOm6PoQZQhWbxEXIxDS5bmTBtJVypx0new2hASeCagEefx0UYnW5lR9lsP4
+	C0Qskw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 402w7jbg09-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jul 2024 17:56:16 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E017040044;
+	Thu,  4 Jul 2024 17:56:06 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 81AB02291D2;
+	Thu,  4 Jul 2024 17:55:46 +0200 (CEST)
+Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 4 Jul
+ 2024 17:55:46 +0200
+From: Olivier Moysan <olivier.moysan@foss.st.com>
+To: <fabrice.gasnier@foss.st.com>, Nuno Sa <nuno.sa@analog.com>,
+        Olivier
+ Moysan <olivier.moysan@foss.st.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 2/8] iio: add enable and disable services to iio backend framework
+Date: Thu, 4 Jul 2024 17:53:30 +0200
+Message-ID: <20240704155338.2387858-3-olivier.moysan@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
+References: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-04_10,2024-07-03_01,2024-05-17_01
 
-> This introduces a new marker type for types that shouldn't be thread
-> safe. By adding a field of this type to a struct, it becomes non-Send
-> and non-Sync, which means that it cannot be accessed in any way from
-> threads other than the one it was created on.
->=20
-> This is useful for APIs that require globals such as `current` to remain
-> constant while the value exists.
->=20
-> We update two existing users in the Kernel to use this helper:
->=20
->  * `Task::current()` - moving the return type of this value to a
->    different thread would not be safe as you can no longer be guaranteed
->    that the `current` pointer remains valid.
->  * Lock guards. Mutexes and spinlocks should be unlocked on the same
->    thread as where they were locked, so we enforce this using the Send
->    trait.
->=20
-> There are also additional users in later patches of this patchset. See
-> [1] and [2] for the discussion that led to the introduction of this
-> patch.
->=20
-> Link: https://lore.kernel.org/all/nFDPJFnzE9Q5cqY7FwSMByRH2OAn_BpI4H53NQf=
-WIlN6I2qfmAqnkp2wRqn0XjMO65OyZY4h6P4K2nAGKJpAOSzksYXaiAK_FoH_8QbgBI4=3D@pro=
-ton.me/ [1]
-> Link: https://lore.kernel.org/all/nFDPJFnzE9Q5cqY7FwSMByRH2OAn_BpI4H53NQf=
-WIlN6I2qfmAqnkp2wRqn0XjMO65OyZY4h6P4K2nAGKJpAOSzksYXaiAK_FoH_8QbgBI4=3D@pro=
-ton.me/ [2]
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Reviewed-by: Trevor Gross <tmgross@umich.edu>
-> Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  rust/kernel/sync/lock.rs | 13 +++++++++----
->  rust/kernel/task.rs      | 10 ++++++----
->  rust/kernel/types.rs     | 18 ++++++++++++++++++
->  3 files changed, 33 insertions(+), 8 deletions(-)
->=20
-> diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-> index f6c34ca4d819..d6e9bab114b8 100644
-> --- a/rust/kernel/sync/lock.rs
-> +++ b/rust/kernel/sync/lock.rs
-> @@ -6,8 +6,13 @@
->  //! spinlocks, raw spinlocks) to be provided with minimal effort.
->=20
->  use super::LockClassKey;
-> -use crate::{init::PinInit, pin_init, str::CStr, types::Opaque, types::Sc=
-opeGuard};
-> -use core::{cell::UnsafeCell, marker::PhantomData, marker::PhantomPinned}=
-;
-> +use crate::{
-> +    init::PinInit,
-> +    pin_init,
-> +    str::CStr,
-> +    types::{NotThreadSafe, Opaque, ScopeGuard},
-> +};
-> +use core::{cell::UnsafeCell, marker::PhantomPinned};
->  use macros::pin_data;
->=20
->  pub mod mutex;
-> @@ -139,7 +144,7 @@ pub fn lock(&self) -> Guard<'_, T, B> {
->  pub struct Guard<'a, T: ?Sized, B: Backend> {
->      pub(crate) lock: &'a Lock<T, B>,
->      pub(crate) state: B::GuardState,
-> -    _not_send: PhantomData<*mut ()>,
-> +    _not_send: NotThreadSafe,
->  }
->=20
->  // SAFETY: `Guard` is sync when the data protected by the lock is also s=
-ync.
-> @@ -191,7 +196,7 @@ pub(crate) unsafe fn new(lock: &'a Lock<T, B>, state:=
- B::GuardState) -> Self {
->          Self {
->              lock,
->              state,
-> -            _not_send: PhantomData,
-> +            _not_send: NotThreadSafe,
->          }
->      }
->  }
-> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-> index 55dff7e088bf..278c623de0c6 100644
-> --- a/rust/kernel/task.rs
-> +++ b/rust/kernel/task.rs
-> @@ -4,10 +4,12 @@
->  //!
->  //! C header: [`include/linux/sched.h`](srctree/include/linux/sched.h).
->=20
-> -use crate::types::Opaque;
-> +use crate::{
-> +    bindings,
-> +    types::{NotThreadSafe, Opaque},
-> +};
->  use core::{
->      ffi::{c_int, c_long, c_uint},
-> -    marker::PhantomData,
->      ops::Deref,
->      ptr,
->  };
-> @@ -106,7 +108,7 @@ impl Task {
->      pub unsafe fn current() -> impl Deref<Target =3D Task> {
->          struct TaskRef<'a> {
->              task: &'a Task,
-> -            _not_send: PhantomData<*mut ()>,
-> +            _not_send: NotThreadSafe,
->          }
->=20
->          impl Deref for TaskRef<'_> {
-> @@ -125,7 +127,7 @@ fn deref(&self) -> &Self::Target {
->              // that `TaskRef` is not `Send`, we know it cannot be transf=
-erred to another thread
->              // (where it could potentially outlive the caller).
->              task: unsafe { &*ptr.cast() },
-> -            _not_send: PhantomData,
-> +            _not_send: NotThreadSafe,
->          }
->      }
->=20
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index 2e7c9008621f..93734677cfe7 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -409,3 +409,21 @@ pub enum Either<L, R> {
->      /// Constructs an instance of [`Either`] containing a value of type =
-`R`.
->      Right(R),
->  }
-> +
-> +/// Zero-sized type to mark types not [`Send`].
-> +///
-> +/// Add this type as a field to your struct if your type should not be s=
-ent to a different task.
-> +/// Since [`Send`] is an auto trait, adding a single field that is `!Sen=
-d` will ensure that the
-> +/// whole type is `!Send`.
-> +///
-> +/// If a type is `!Send` it is impossible to give control over an instan=
-ce of the type to another
-> +/// task. This is useful to include in types that store or reference tas=
-k-local information. A file
-> +/// descriptor is an example of such task-local information.
-> +pub type NotThreadSafe =3D PhantomData<*mut ()>;
+Add iio_backend_disable() and iio_backend_enable() APIs to allow
+IIO backend consumer to request backend disabling and enabling.
 
-This also makes the type not Sync. For mutex guards it should be fine to
-be Sync if the wrapped type is Sync. Mutex guards not being Sync is
-pre-existing, so not something to fix in this patch. NotThreadSafe should
-probably document that it also markes a type as not Sync though.
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+---
+ drivers/iio/industrialio-backend.c | 25 ++++++++++++++++++++++++-
+ include/linux/iio/backend.h        |  2 ++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
 
-(For those not familiar with the difference, Send indicates that ownership
-of a value can be transferred to another thread, while Sync indicates that
-a value can be accessed from another thread through a shared reference,
-but not necessarily dropped from said thread.)
+diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+index 4e0ff6e6e9d4..893a55242aef 100644
+--- a/drivers/iio/industrialio-backend.c
++++ b/drivers/iio/industrialio-backend.c
+@@ -146,6 +146,29 @@ static void __iio_backend_disable(void *back)
+ 	iio_backend_void_op_call(back, disable);
+ }
+ 
++/**
++ * iio_backend_disable - Backend disable
++ * @back: Backend device
++ */
++void iio_backend_disable(struct iio_backend *back)
++{
++	__iio_backend_disable(back);
++}
++EXPORT_SYMBOL_NS_GPL(iio_backend_disable, IIO_BACKEND);
++
++/**
++ * iio_backend_enable - Backend enable
++ * @back: Backend device
++ *
++ * RETURNS:
++ * 0 on success, negative error number on failure.
++ */
++int iio_backend_enable(struct iio_backend *back)
++{
++	return iio_backend_op_call(back, enable);
++}
++EXPORT_SYMBOL_NS_GPL(iio_backend_enable, IIO_BACKEND);
++
+ /**
+  * devm_iio_backend_enable - Device managed backend enable
+  * @dev: Consumer device for the backend
+@@ -158,7 +181,7 @@ int devm_iio_backend_enable(struct device *dev, struct iio_backend *back)
+ {
+ 	int ret;
+ 
+-	ret = iio_backend_op_call(back, enable);
++	ret = iio_backend_enable(back);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
+index 2d80e3fa58ce..2bfb849fff2c 100644
+--- a/include/linux/iio/backend.h
++++ b/include/linux/iio/backend.h
+@@ -122,6 +122,8 @@ struct iio_backend_ops {
+ int iio_backend_chan_enable(struct iio_backend *back, unsigned int chan);
+ int iio_backend_chan_disable(struct iio_backend *back, unsigned int chan);
+ int devm_iio_backend_enable(struct device *dev, struct iio_backend *back);
++int iio_backend_enable(struct iio_backend *back);
++void iio_backend_disable(struct iio_backend *back);
+ int iio_backend_data_format_set(struct iio_backend *back, unsigned int chan,
+ 				const struct iio_backend_data_fmt *data);
+ int iio_backend_data_source_set(struct iio_backend *back, unsigned int chan,
+-- 
+2.25.1
 
-Having a dedicated type for this makes things clearer.
-
-Reviewed-by: Bj=C3=B6rn Roy Baron <bjorn3_gh@protonmail.com>
-with the docs updated to mention Sync.
-
-> +
-> +/// Used to construct instances of type [`NotThreadSafe`] similar to how=
- `PhantomData` is
-> +/// constructed.
-> +///
-> +/// [`NotThreadSafe`]: type@NotThreadSafe
-> +#[allow(non_upper_case_globals)]
-> +pub const NotThreadSafe: NotThreadSafe =3D PhantomData;
->=20
-> --
-> 2.45.2.803.g4e1b14247a-goog
