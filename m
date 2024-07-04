@@ -1,105 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394521A2FCB;
-	Thu,  4 Jul 2024 07:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449101A2FCF
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 07:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720078223; cv=none; b=IhNmukaAMUUWoQKSJjxEDZCmgtkgtDjTzubQ/aEawJOAroBGv9tXtW7oepvfPbJUEebfMuNpwEYehHOhUVHztZLvtKsgJN5AWPj1F1NcZoqUM7o4ApjVypl2boG8j6+qXDy4S/9Q843sUCt+3CTjlUS7wbAx78TtiaVC/J8aAUU=
+	t=1720078225; cv=none; b=Ik7dFwCPF7FpaRbxgO8lAwjZ1cGWBEYIoQKp9zfPKu7hCi74pEJq9MsBEqRQRIZaaIXeBezyRwbtr1diDph2wXjypY6DSHf/Gih4JHkEaaCwhlQkCv7U8jhU1ekhDR8vZ87H4T79NxcbI0AnAnm3Dpgx7U/gfU7r1e10fKNNJco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720078223; c=relaxed/simple;
-	bh=+XsSWaLUJdjgW6Z1Yd0izygnXPmE2jOzvUc6dpxUa+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=psGm80K+g/mMJbVx3Rw3qoLqnC3jlv6h2vHiXVF/KFNFG803AgRT6sI0oHCE4Io5UJjKDP26EU+rByJR503hf/DAIk56wdCNqyP0q2Zo8up9GXNPjecZTwWbTSw59HRud+e0Vt1SsyuLFwAFyoD6gVZAieG0TsjCrS4E2N4Ctys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uY1ughWE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720078225; c=relaxed/simple;
+	bh=1HtQIw/F554XqyBf3fxv9byew8tC9OUoFF9RTeTPC6k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=FSeuYisnWY7VVTesTZpZXH04Y+2ARHtjNIh90Le/UDADPTQuZ/b2V0RY9tiB4q7CMuXTPHbhPWjwZyn7frVUJ2C+ZHdCmosZ+0a2cYN2rnqZO35oqDIDqTHFYh4GK8fVpu41khY4ZVYuePo0TVNMbrEUk2FQnDr7A2YRqJvJmTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=PwVme4Ve; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uY1ughWE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 350EEC3277B;
-	Thu,  4 Jul 2024 07:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720078222;
-	bh=+XsSWaLUJdjgW6Z1Yd0izygnXPmE2jOzvUc6dpxUa+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uY1ughWENbV8QUsIX5F2WqorH3to6TH7dUVMkCfSEGcXui6eV7Y2+xgu3TsY1DSNO
-	 bY8kzwmOvI+cOj7ccTba2nyaAmcq+g9EjbIbK97XWtJru9eQX50wEPYhZgmBNo4z/I
-	 6AD1jyTSEq1mUORKrG0L4M/WAJLJnwQS/OWCCIC4=
-Date: Thu, 4 Jul 2024 09:30:19 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Kees Cook <keescook@chromium.org>,
-	Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH 6.6 000/163] 6.6.37-rc1 review
-Message-ID: <2024070458-compile-amused-7d1c@gregkh>
-References: <20240702170233.048122282@linuxfoundation.org>
- <CA+G9fYs=KkeYFMS01s3VZmeSYd1zJphinPFCk1G2AJ7LZ=+8=A@mail.gmail.com>
- <CA+G9fYvcbdKN8B9t-ukO2aZCOwkjNme8+XhLcL-=wcd+XXRP6g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="PwVme4Ve"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-375f713a099so1288965ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 00:30:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1720078222; x=1720683022; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=njjqiW8Ns8mYNrJ80NgEfDcYprJVubWaVkRJskWAXIs=;
+        b=PwVme4Ve5yV9ti4U8XiLFeaHS7pE923fpGqFl1e85YWFr4rdw1u0ya1nDBrE+I5q29
+         czK5i+fRk2TPA7ixuzHVXV6grEyNAr70hI+D6UjE6pX2v+s8tI2c7JyJzCLOqJtGb0nS
+         EkU5sc9MOuepJ+KIi1FOy3LBSJbDAlpXGecyFhonITYC9eVIMu88o7AWbGWxXoOALsCj
+         Wfu7FJBe6V/jbAfrBGAmmgNpLbRT6aTKTOQwk+nPQh+UBsEqmu0SV7yi6WlyEVOZ5IE4
+         ndS4hS9IQTF3GKKOxeiVTvojKtsYCSODimFNOPMrOc6U8p0phQAjrwTTvugcEwxAxhYn
+         Q6qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720078222; x=1720683022;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=njjqiW8Ns8mYNrJ80NgEfDcYprJVubWaVkRJskWAXIs=;
+        b=ip6EPNFjz/iha6f8VOALRlaz965zQE2K1KzjvzQvsrUQ5FUuNOJU5N+tEiS9S56as7
+         aJfwKHT1h0xWP4pPTFVTPHyahWQWdXoTqbdTKZZSHlnYPTHdAnFu3MIwJYUYM5YOng0d
+         xkl2i+JrVAxnG23R7vwUNUCsU4d7O7DZqthrHL5J0Uu7aVtV4qrDi2bPxvkzHVtwk5MJ
+         XBHbhLh83biQm8AcDVhZOHWs7DD/OtAKEwtjjRhfil8H1XRroQZ82TFhVhRMSlrxi3Qr
+         pcTAJfgJVMzJrBfumCkIe9B2i1h7lQ5MliyJatLhcheVOvlv7d+DDu1Nw26saOTXYi//
+         8YAA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJAEftCOQ4mwA/l1nOumyeQH0dTMsGC+PbBWWRCmAbk6IFYZ/QHruRWWwx2MBOPwpptNgrs3zDE1326yRtA21p1Uuts4Bk/njNI4ck
+X-Gm-Message-State: AOJu0YweVP3B5j+AMapheD8nesNgtFBMAyCoEct1W2nA5TTMNhpLwOVH
+	rOv4+Y3YCcy3AsVTW1QfVeD3m74WhAViZFFHHqIUnVYh72HZF0dyqpL3g6V/a14=
+X-Google-Smtp-Source: AGHT+IHq5LpUPHgza6khej7OkvBbetS3RDUKCfz4i9ClMIDyTpJOLGhpWp+pTp8XNe59IpOUtdzLfg==
+X-Received: by 2002:a05:6e02:160d:b0:383:8ec6:6d0d with SMTP id e9e14a558f8ab-383953e2419mr12869495ab.0.1720078222348;
+        Thu, 04 Jul 2024 00:30:22 -0700 (PDT)
+Received: from lvzhaoxiong-KLVC-WXX9.huaqin.com ([116.66.212.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6a8dbb2fsm7735699a12.31.2024.07.04.00.30.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 00:30:21 -0700 (PDT)
+From: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+To: neil.armstrong@linaro.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	mripard@kernel.org,
+	dianders@google.com,
+	hsinyi@google.com,
+	awarnecke002@hotmail.com,
+	quic_jesszhan@quicinc.com,
+	dmitry.baryshkov@linaro.org
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Subject: [PATCH v5 2/5] drm/panel: boe-th101mb31ig002: switch to devm_gpiod_get_optional() for reset_gpio
+Date: Thu,  4 Jul 2024 15:29:55 +0800
+Message-Id: <20240704072958.27876-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240704072958.27876-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+References: <20240704072958.27876-1-lvzhaoxiong@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvcbdKN8B9t-ukO2aZCOwkjNme8+XhLcL-=wcd+XXRP6g@mail.gmail.com>
 
-On Wed, Jul 03, 2024 at 06:04:57PM +0530, Naresh Kamboju wrote:
-> On Wed, 3 Jul 2024 at 14:27, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > On Tue, 2 Jul 2024 at 22:48, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > This is the start of the stable review cycle for the 6.6.37 release.
-> > > There are 163 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > >
-> > > Responses should be made by Thu, 04 Jul 2024 17:01:55 +0000.
-> > > Anything received after that time might be too late.
-> > >
-> > > The whole patch series can be found in one patch at:
-> > >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.37-rc1.gz
-> > > or in the git tree and branch at:
-> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> > > and the diffstat can be found below.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > The following powerpc builds failed on stable-rc 6.6.
-> >
-> > powerpc:
-> >  - gcc-13-defconfig
-> >  - clang-18-defconfig
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > Build log:
-> > ---------
-> > arch/powerpc/net/bpf_jit_comp.c: In function 'bpf_int_jit_compile':
-> > arch/powerpc/net/bpf_jit_comp.c:208:17: error: ignoring return value
-> > of 'bpf_jit_binary_lock_ro' declared with attribute
-> > 'warn_unused_result' [-Werror=unused-result]
-> >   208 |                 bpf_jit_binary_lock_ro(bpf_hdr);
-> >       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > cc1: all warnings being treated as errors
-> >
-> 
-> Anders bisected this down to,
-> first bad commit: [28ae2e78321b5ac25958b3fcae0dcc80116e0c50]
->   bpf: Take return from set_memory_rox() into account with
-> bpf_jit_binary_lock_ro()
+Switch the driver to use devm_gpiod_get_optional() on reset_gpio to avoid
+driver probe issues when reset line is not specified.
 
-Thanks, that's due to some changes that happened in 6.7 in this area,
-I've queued those changes up now and will push out a -rc2 later today.
+Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+---
+ drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
+index 159e401ad0e6..9f225c15b21c 100644
+--- a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
++++ b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
+@@ -286,7 +286,7 @@ static int boe_th101mb31ig002_dsi_probe(struct mipi_dsi_device *dsi)
+ 		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->enable),
+ 				     "Failed to get enable GPIO\n");
+ 
+-	ctx->reset = devm_gpiod_get(&dsi->dev, "reset", GPIOD_OUT_HIGH);
++	ctx->reset = devm_gpiod_get_optional(&dsi->dev, "reset", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(ctx->reset))
+ 		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->reset),
+ 				     "Failed to get reset GPIO\n");
+-- 
+2.17.1
+
