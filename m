@@ -1,91 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806C61B1409;
-	Thu,  4 Jul 2024 15:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477E2182D8;
+	Thu,  4 Jul 2024 15:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720106636; cv=none; b=gJWCq08qqBxyaweAahgO41WcC2flWgLR1nWx2Ft+D9GBTBaPjFjoCEiu78ydllVxlfzSEs8vlq2ZXUyDFGSB4P+S8f2nmZrTFb72nf7aYNd9RPNdCJlYKkKPYzAXn6TerOAEUTob5q9yaOFPxrVWI4UvRZPlcr+gcOy9cMVi/Fs=
+	t=1720106681; cv=none; b=VUl4rf/KUNym0S6WMxmxd9wI7BZpOvrBmyuKMxQamEBneifECWzJe00FWzvxMD2cz4XiHPl5q2Bv0h9ec8vVGR+YA+VSYM1f5M+qGGzxUGweWGzdPME4puutGQrAEYa8hTMMdVe8+Ns/3Y2yZeAhXJkRoW+x7/TQy5S2rZFWUuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720106636; c=relaxed/simple;
-	bh=1G7Ua2w5pwj1vzd80lgSEf5Gu1FS96EaOAuyyE4ofNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J6IT0jGM/TrwV3vr44Jcs8mGAefYpcKw+geHd7dJC5r01IARDkyxj18PlmP2I5BnLNP153GU7julaLZQbNY4dAOzgc39ETKLsQaXjczWq6ewIj4Nldl/edve6fkq3g7BK64rQGrUnl0U3PnGCXMqwKqJIMqkKnRHzhSq+Zd+kL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA206367;
-	Thu,  4 Jul 2024 08:24:18 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E2F73F766;
-	Thu,  4 Jul 2024 08:23:50 -0700 (PDT)
-Message-ID: <249ec228-4ffd-4121-bd51-f4a19275fee1@arm.com>
-Date: Thu, 4 Jul 2024 16:23:47 +0100
+	s=arc-20240116; t=1720106681; c=relaxed/simple;
+	bh=WHYGuOqdGVCRppQhu6+DVQnNoHe/r6TKCd2h94xPz/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pkPKut/O65KOsmxUmCtFxtpsooE6n06f62lThaOF4Zw9VeZZtmjT6NviqkSWzIhtlYK7CIEGgB72Pyo+uti/2ew44eDqKkQ4By0yhDR+Mh5qaydUObrObIbRk1uZ5LVOUIV2CGwYUztuJLvxasDSSNLQxwFr8oCB9Nk7UqMS3Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XLXdo3cp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XLXdo3cp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FFF6C3277B;
+	Thu,  4 Jul 2024 15:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720106680;
+	bh=WHYGuOqdGVCRppQhu6+DVQnNoHe/r6TKCd2h94xPz/s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XLXdo3cpgVM9aXIZZjxnWAK56VtbC45CowVpS36UKYOq2bupL2lsKaVIcBoFEJMqG
+	 AD7TGYpU/YwNBvREg0bkaqK2fH2hilIn/7cdc2frgQB2OZPqvbHODk3wOGZSklLhei
+	 K88qo5kl6QkrYAFfscp9S9tTYwkkV7hDGn83drfCgeeL5IhgV1zrqRyjd7fyHfXkAh
+	 LDzo0gG9QB2c1X9R7oiAMJoR0uxmilqwNm1Ind04j5vgo3hJxYVdc6Htepa57pHDln
+	 OeC0w5yG9BW5jXIhEkX97vZQyANYiGvFzAr1fsHXfEHxz1Nw28+SR9kew6fpHfzEHI
+	 /Af/gciykg+XA==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>
+Subject: [PATCH] kbuild: deb-pkg: use default string when variable is unset or null
+Date: Fri,  5 Jul 2024 00:23:32 +0900
+Message-ID: <20240704152400.1527619-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 18/18] nvme-pci: use new dma API
-To: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
- Christoph Hellwig <hch@lst.de>, "Zeng, Oak" <oak.zeng@intel.com>,
- Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>, Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- Kevin Tian <kevin.tian@intel.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-References: <cover.1719909395.git.leon@kernel.org>
- <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 02/07/2024 10:09 am, Leon Romanovsky wrote:
-[...]
-> +static inline dma_addr_t nvme_dma_link_page(struct page *page,
-> +					   unsigned int poffset,
-> +					   unsigned int len,
-> +					   struct nvme_iod *iod)
->   {
-> -	int i;
-> -	struct scatterlist *sg;
-> +	struct dma_iova_attrs *iova = &iod->dma_map->iova;
-> +	struct dma_iova_state *state = &iod->dma_map->state;
-> +	dma_addr_t dma_addr;
-> +	int ret;
-> +
-> +	if (iod->dma_map->use_iova) {
-> +		phys_addr_t phys = page_to_phys(page) + poffset;
+${DEBFULLNAME-${user}} falls back to ${user} when DEBFULLNAME is unset.
+It is more reasonable to do so when DEBFULLNAME is unset or null.
 
-Yeah, there's no way this can possibly work. You can't do the 
-dev_use_swiotlb() check up-front based on some overall DMA operation 
-size, but then build that operation out of arbitrarily small fragments 
-of different physical pages that *could* individually need bouncing to 
-not break coherency.
+Otherwise, the command:
 
-Thanks,
-Robin.
+  $ DEBFULLNAME= make deb-pkg
 
-> +
-> +		dma_addr = state->iova->addr + state->range_size;
-> +		ret = dma_link_range(&iod->dma_map->state, phys, len);
-> +		if (ret)
-> +			return DMA_MAPPING_ERROR;
-> +	} else {
-> +		dma_addr = dma_map_page_attrs(iova->dev, page, poffset, len,
-> +					      iova->dir, iova->attrs);
-> +	}
-> +	return dma_addr;
-> +}
+will leave the name field blank.
+
+The same applies to KBUILD_BUILD_USER and KBUILD_BUILD_HOST.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/package/mkdebian | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+index 0cc1913aad30..196b14e8ad47 100755
+--- a/scripts/package/mkdebian
++++ b/scripts/package/mkdebian
+@@ -125,12 +125,12 @@ gen_source ()
+ rm -rf debian
+ mkdir debian
+ 
+-user=${KBUILD_BUILD_USER-$(id -nu)}
+-name=${DEBFULLNAME-${user}}
++user=${KBUILD_BUILD_USER:-$(id -nu)}
++name=${DEBFULLNAME:-${user}}
+ if [ "${DEBEMAIL:+set}" ]; then
+ 	email=${DEBEMAIL}
+ else
+-	buildhost=${KBUILD_BUILD_HOST-$(hostname -f 2>/dev/null || hostname)}
++	buildhost=${KBUILD_BUILD_HOST:-$(hostname -f 2>/dev/null || hostname)}
+ 	email="${user}@${buildhost}"
+ fi
+ maintainer="${name} <${email}>"
+-- 
+2.43.0
+
