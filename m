@@ -1,138 +1,124 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D13146581
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 07:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A13156679;
+	Thu,  4 Jul 2024 07:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720078482; cv=none; b=U9YYTz/Vel4O6UA2mPgpC0pnuce/4inTvPdewwe8/b4ZF7YaNLSsh4oiCnkwFX9qdp4pYtlgdS1k3DWvryDZhTh1DiYvJAddjeJXjRojX66SiW6UupPpXz1x036B23TIAUVbpAXzcg0uCSpsyWSZqozg0tYqgSxwC7JVsvR0eGA=
+	t=1720078659; cv=none; b=itIVDZEo5GvfCdKpwhdUBh5r3IOrj7Mb5fy0QEvtXYkSE1oTpr1hiKSATEvQESnybsY0UYX66sidKqSPBvm1I630F5TIo1+/j7BH2aBf6sZ6H6eDVwDvIHXROoKmGTZ79cFqh24745e37WjJWUZjJIk6lavljg+AsS09sV6q4mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720078482; c=relaxed/simple;
-	bh=VpoVS15y2XzQcFZvsnd8dfEx4qTU+ufCG2U//TBJJec=;
+	s=arc-20240116; t=1720078659; c=relaxed/simple;
+	bh=4b8M2Kr1D8wWFbEG11gulaaYlKoocvWNkaRYNPG4rX8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tjugrvl8LRzc6fA1e+R4ZVn7KmlAUUw72ty8AI8s7sqlcOfhcfZHYq3xhFKXMx7JbDWLxdusl+aPOnt3CNrOPCHjlrgGiZPCCyxnaxBetrRoo7wkF8stH3dY23VED67iYH3WmEsPlZrtv0TjG4yf5pRVTERh5WxHbnp3b9w2wk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TLCg/vkR; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=BtxxDukI1Edl1vcUPiq+CiJS0ythIh4owQ201zZQIrGVoVyL+d5lDG3mriEg1SKaC/N+qcN6gH8ItlHRlsnhMdveEp9gK+qmRjhytphzv9gKuI5llOUNHmpO6mkWu97NVjEbpzxkqDOZn0vPcqqmX9tsYZjMdVqExMm/B2B2Lpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ntFiyolL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TLCg/vkR"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-650b8e0a6ceso3111687b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 00:34:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720078480; x=1720683280; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZSJbA3DiJ1YzPD3LPw7LD0YqK/n1egS96uxWCsi6+XA=;
-        b=TLCg/vkRTTtUFKkKRTeCs2qyoehhCLmiONSC1OzuwdGy4Qr4e3K2l30r/vLYIo7i27
-         XybKLsFJOwtb0xTeS5Eg3jsmZu5B3xPjv0Bdi2/QO6CQXVl3A6Hrpr+89qIV5+a4R/ZF
-         M1da+vDW9IdmDjVjrKP77AvvlF4k065yib33dym6lhGQr/lgi53yhK+tZ7T3V/7vna1Q
-         RKfl436r5r4HTrevjLzJJgK44NX1uYNfx8WRtToYdLrkPRTKl1UchnWUnajYGDMUE9TH
-         Bs2h9INYwRS7vceQ9ZELNM/bziuk4+pfXhcZAITYfvcelvFLOzSpG2OnAYYIwQJLdIpF
-         UrBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720078480; x=1720683280;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZSJbA3DiJ1YzPD3LPw7LD0YqK/n1egS96uxWCsi6+XA=;
-        b=LYclX77CD7gUwZbwOBFki8syuoxpJKgBEBWnYm5PKkBw9p76TNQX/1Cgm1KhsiwGsM
-         7+f7iD5STB4LRqwEJD6c7u/OB5ZZTYl8vL/l37bK9PRmjK28WOEJKNqqYoqpe9GBMkJ8
-         a1LneHVjw6HQ7ovjD2iaVNfZG5kXiGzYCXiuB6Qxmt2ecr0xk3ifRsHeIfK//mrumHwB
-         vAr5E2Edf1AzfIHJKu9y5qoROMlV3KQglmwBAwi0awN2gilcZgUmHOTjGtYDhE90QHn9
-         UC6qCnkUIPJph6xlHcDuuvkwumvvJL0v8a8zndqUOzmDWinNY0clSn4XrgUojFWPb8Hs
-         XbGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWisYKxG3W3eOnn5igFZQorpGmoEFM+Ft9Y6jUFyW9GzadV3C84jXnFlwx2P1hrXcdgJOakjA/6ZSojnpuNt6N8Gy3row0BbsW8D4CQ
-X-Gm-Message-State: AOJu0Yxz9bOcplCzlMgyFLnzNiX3mihcSqRXXrI4MMHSHeOfqRe10HpW
-	Zu23ofi2dOwUvDB/VyJKiFvOC1/Rf9aACkpnw29hDGK5tlLF+v8PV80mlXc+QvFdJCdG/OHkPJa
-	w0pCkkHJQj3lqtlN/ru+8r6J7nkw/ElgNnUsWQivoNSP+sSCuLHQ=
-X-Google-Smtp-Source: AGHT+IHhzigWq58lUOH6s/Jt2RBqXA0UUUMkvO30rPZCplWLfh0mEABxieG1yDWZSLhKM2T0i2/FZBaIpwaJfjilpU0=
-X-Received: by 2002:a05:690c:7483:b0:631:2ebf:b8dc with SMTP id
- 00721157ae682-652d5333721mr10121657b3.4.1720078479809; Thu, 04 Jul 2024
- 00:34:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ntFiyolL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9FADC4AF13;
+	Thu,  4 Jul 2024 07:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720078658;
+	bh=4b8M2Kr1D8wWFbEG11gulaaYlKoocvWNkaRYNPG4rX8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ntFiyolL4XzVk9jl29/9X3ioFhy4aeS69BJzLHxmKM/29sWYFvI2vTFnsI8o4mqyj
+	 ZPNqrXzLt4rkKhmngB1hgLYUhrxQls1mPTk7Ehf14SZRE0MSxd1A89GQsKDWwrBLm6
+	 5iGMyyT73zEJhd1Kt4jdvQQP0VTKacAEuhS6XBTq4lZx0EzJbx4KUOIFP8jCfMd3rx
+	 i3F4v1fp2tiO1ECJDQddvHpa24cnLtPDtBQlOWlx9R1aemTSP70gyiiO1DEH+7Zcsg
+	 xUC1tisL/dJQ5hyG7lYzZxOp3xt2n2j4z3Iebeul7Rzyhs1A0KhKrkIEFa5S8bIJWL
+	 umr8qUZe+HCYA==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-58b447c5112so370936a12.3;
+        Thu, 04 Jul 2024 00:37:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVbJ3tEJ5uGLL0YDCADzvzGsmABTQa9vHNg5ZTqoNbAH3n9bKPOo2iuJ3yLxYuz7O7vY5r8VVzHrVEsUr16fatGSFnCJ+dbdQWiCiJWCqVmCKaIezd2aXgw10yCoLoninlgYc4+JEE=
+X-Gm-Message-State: AOJu0YwMl3FfIviaDm5zvReCENhm5ZgrJf/X4bbSsuz0rCnbGVQ3aqCd
+	V8ykQKp/h8wlzGOZJ5QDLHikwXgFJgPwDyUrKZ8/uKQvfdNozSmg365St4hgCn3K4S5we2OLKtL
+	4o8ftUvPsECxnH3aZ1Rv3Ku4DJio=
+X-Google-Smtp-Source: AGHT+IGv5wn4a6TI1CPUD8KsvqfV8JNoexVkDkXwdzMRAPLV8uUZztDLHe8kJIUE6xbMcSQzf7IFTkDSXG2N/w0LFVg=
+X-Received: by 2002:a17:906:5acd:b0:a77:b052:877e with SMTP id
+ a640c23a62f3a-a77ba46af61mr57544066b.19.1720078657344; Thu, 04 Jul 2024
+ 00:37:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702-qcom-tee-object-and-ioctls-v1-0-633c3ddf57ee@quicinc.com>
- <20240702-qcom-tee-object-and-ioctls-v1-1-633c3ddf57ee@quicinc.com>
- <ink4tq3wk2jkpybiisaudkun3g2x2drfogrdw43zdpi6yh2u5g@yrvrxzxsi46g> <836dab13-9c59-4d87-a600-a0be6506deb2@quicinc.com>
-In-Reply-To: <836dab13-9c59-4d87-a600-a0be6506deb2@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 4 Jul 2024 10:34:28 +0300
-Message-ID: <CAA8EJprp2veCaQq8GsYv4Mu1HQbx8nWv0XWtxcE4cu5kxkA16w@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/3] firmware: qcom: implement object invoke support
-To: Amirreza Zarrabi <quic_azarrabi@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20240702152737.1184244-1-chenhuacai@loongson.cn>
+ <20240702152737.1184244-3-chenhuacai@loongson.cn> <20240703101850.dtck223pleiiwfxp@vireshk-i7>
+ <CAAhV-H74HJr0=8g0GtHj=zZH5nJijRpc90zLLRY_sXJfKFVtHA@mail.gmail.com> <20240704031532.5bkh4nr7d3vcvzwq@vireshk-i7>
+In-Reply-To: <20240704031532.5bkh4nr7d3vcvzwq@vireshk-i7>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 4 Jul 2024 15:37:13 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4HbZ02BdtE47gVyZGdNKj4QWzMSuZgHR6d9RHE36Nv=A@mail.gmail.com>
+Message-ID: <CAAhV-H4HbZ02BdtE47gVyZGdNKj4QWzMSuZgHR6d9RHE36Nv=A@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] cpufreq: Add Loongson-3 CPUFreq driver support
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, "Rafael J . Wysocki" <rafael@kernel.org>, loongarch@lists.linux.dev, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Binbin Zhou <zhoubinbin@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 4 Jul 2024 at 00:40, Amirreza Zarrabi <quic_azarrabi@quicinc.com> wrote:
+On Thu, Jul 4, 2024 at 11:15=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
 >
+> On 03-07-24, 22:37, Huacai Chen wrote:
+> > On Wed, Jul 3, 2024 at 6:18=E2=80=AFPM Viresh Kumar <viresh.kumar@linar=
+o.org> wrote:
+> > > > +static int loongson3_cpufreq_target(struct cpufreq_policy *policy,=
+ unsigned int index)
+> > > > +{
+> > > > +     /* setting the cpu frequency */
+> > > > +     return loongson3_cpufreq_set(policy, index);
+> > >
+> > > Why use a separate function for calling do_service_request() ? Just
+> > > open code it here.
+> > Hmm, there is a loongson3_cpufreq_get() function, so I make a
+> > loongson3_cpufreq_set() function, too.
 >
->
-> On 7/3/2024 10:13 PM, Dmitry Baryshkov wrote:
-> > On Tue, Jul 02, 2024 at 10:57:36PM GMT, Amirreza Zarrabi wrote:
-> >> Qualcomm TEE hosts Trusted Applications and Services that run in the
-> >> secure world. Access to these resources is provided using object
-> >> capabilities. A TEE client with access to the capability can invoke
-> >> the object and request a service. Similarly, TEE can request a service
-> >> from nonsecure world with object capabilities that are exported to secure
-> >> world.
-> >>
-> >> We provide qcom_tee_object which represents an object in both secure
-> >> and nonsecure world. TEE clients can invoke an instance of qcom_tee_object
-> >> to access TEE. TEE can issue a callback request to nonsecure world
-> >> by invoking an instance of qcom_tee_object in nonsecure world.
-> >
-> > Please see Documentation/process/submitting-patches.rst on how to write
-> > commit messages.
->
-> Ack.
->
-> >
-> >>
-> >> Any driver in nonsecure world that is interested to export a struct (or a
-> >> service object) to TEE, requires to embed an instance of qcom_tee_object in
-> >> the relevant struct and implements the dispatcher function which is called
-> >> when TEE invoked the service object.
-> >>
-> >> We also provids simplified API which implements the Qualcomm TEE transport
-> >> protocol. The implementation is independent from any services that may
-> >> reside in nonsecure world.
-> >
-> > "also" usually means that it should go to a separate commit.
->
-> I will split this patch to multiple smaller ones.
->
+> The counterpart of _get is _target and so a separate set function
+> isn't required at all. Just get rid of it.
+OK, will do.
 
-[...]
-
-> >
-> >> +    } in, out;
-> >> +};
-> >> +
-> >> +int qcom_tee_object_do_invoke(struct qcom_tee_object_invoke_ctx *oic,
-> >> +    struct qcom_tee_object *object, unsigned long op, struct qcom_tee_arg u[], int *result);
-> >
-> > What's the difference between a result that gets returned by the
-> > function and the result that gets retuned via the pointer?
 >
-> The function result, is local to kernel, for instance memory allocation failure,
-> or failure to issue the smc call. The result in pointer, is the remote result,
-> for instance return value from TA, or the TEE itself.
+> > > > +static int loongson3_cpufreq_get_freq_table(int cpu)
+> > > > +{
+> > > > +     int i, ret, boost_level, max_level, freq_level;
+> > > > +     struct cpufreq_frequency_table *table;
+> > > > +
+> > > > +     if (per_cpu(freq_table, cpu))
+> > > > +             return 0;
+> > > > +
+> > > > +     ret =3D do_service_request(cpu, 0, CMD_GET_FREQ_LEVEL_NUM, 0,=
+ 0);
+> > > > +     if (ret < 0)
+> > > > +             return ret;
+> > > > +     max_level =3D ret;
+> > > > +
+> > > > +     ret =3D do_service_request(cpu, 0, CMD_GET_FREQ_BOOST_LEVEL, =
+0, 0);
+> > > > +     if (ret < 0)
+> > > > +             return ret;
+> > > > +     boost_level =3D ret;
+> > > > +
+> > > > +     freq_level =3D min(max_level, FREQ_MAX_LEVEL);
+> > > > +     table =3D kzalloc(sizeof(struct cpufreq_frequency_table) * (f=
+req_level + 1), GFP_KERNEL);
+> > >
+> > > devm_kcalloc(pdev, ...) instead ?
+> > I remember you told me this in V1, but devm_kalloc() needs a pdev
+> > instance, which doesn't exist here, so I keep kzalloc().
 >
-> I'll use better name, e.g. 'remote_result'?
+> See how drivers/cpufreq/brcmstb-avs-cpufreq.c stores the pdev in
+> cpufreq_driver's driver_data and reuses later on.
+OK, I have learned that devm_kzalloc() allocated memory will be
+automatically freed at driver dettach.
+But I have another question: can the "kfree(table)" after
+do_service_request() fail be removed?  Because I think in this case
+the probe will fail, then no driver detach happens.
 
-See how this is handled by other parties. For example, PSCI. If you
-have a standard set of return codes, translate them to -ESOMETHING in
-your framework and let everybody else see only the standard errors.
+Huacai
 
-
--- 
-With best wishes
-Dmitry
+>
+> --
+> viresh
