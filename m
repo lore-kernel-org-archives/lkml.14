@@ -1,89 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f66.google.com (mail-io1-f66.google.com [209.85.166.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121EF1AE0AB;
-	Thu,  4 Jul 2024 14:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ED615491
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 14:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720104358; cv=none; b=sRIymJfShbzb9UZ+rRY64yj1BenRUMrQjNJVBCan8+X8rPl77DYOBoF6v4JYa369JiJPlSoxiDvTmSJHVqvF1zehEQAdQ2JZkzcv7l/bCo0eypGqSyZs/ekiCn4bHSMQZ+5UBinwRiMqkEWXnGh02sdhfifzXUCOMnusbhWym0s=
+	t=1720104403; cv=none; b=EvdSnDRKlb2ZHgfw+s1i4PILf/3TllGaQFUkWVFHW7BhJ232fQ5SrUnZ9Hso3TfWqETt4aOxAF/F5zaSx9DxBw1f5WZUWcB6eXmyJujOIA/436xuIxOWa7XpFbrdSIMWlLtXU5knpKaDx1yepPs6nhqcWIL3tEKDFt7M4EKcPkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720104358; c=relaxed/simple;
-	bh=VNx0ZjDb8+kmHLzs3w/SQLmxZ0fgDInqhkK3KV20yJ4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=JbiNHpUfluVpwlqgR6XPopH7+nqzim+LmMF/HtWr6Q20334t2SUzqYpv9z2z/Y+L1G5fl8cZfhpzui2QXoSVUlMT/BOFFTOOpQasfFDOmsdPUFIKGXdwReDNAXLztjeijMhXJoUCbXZfBA83oeps5PSc9QsS4ewGRnbLlm5wSbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YxJiLyDO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720104403; c=relaxed/simple;
+	bh=2/IgjV6ddwK2/2EGwMX/wecagPQI7cWCL7ScRUtsf/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OEuFvTtiszsD//ctl1NOUgF5YsNPcLV5BkkP/M//UVCpKK605FdSDZd/WIUNc19ja+yU+Z2MRjRsAWfgvuWY7Vru4XrRd0gT5NMwIkiJdgJ8sSH2Mxxj/P2dE2xaKo0ZX4tvjgEprMOvYWERzThOXWwVNu2LXl4bBrv++XocOFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kPxAdgDx; arc=none smtp.client-ip=209.85.166.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YxJiLyDO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE8BC3277B;
-	Thu,  4 Jul 2024 14:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720104357;
-	bh=VNx0ZjDb8+kmHLzs3w/SQLmxZ0fgDInqhkK3KV20yJ4=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=YxJiLyDO1LviZNkUfgCBFmukLUJQv7uznSUB+E4eqnKPoc5/L2KhEZ7Fs8/e4ZlF1
-	 w5wzheSyUgxWuIVb2Erx2TnbpuX4aaK/L8e4gB1hdZQnHFNf6YdsQid2uiJO5m0r6L
-	 ZgMof75k7DCWitUEfO0szLfKD6Ay6g/xmcxmm8NrV4zMU4S2JeW3FMqT+2HqGNuvLo
-	 VGfkkPeBYYcZcXg823H2+wR/Elv+yjgFfFVkJs1jIdHbQFulDeKDu4Yx4kW8gumAAq
-	 zGac+VEZG5sH/o3PdOXIGiENnwpkYFBBhleIJYpxqa+XHJpMlLxGccj1y1NkyGyjfG
-	 ft6dsUOy7X3/A==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPxAdgDx"
+Received: by mail-io1-f66.google.com with SMTP id ca18e2360f4ac-7f624e70870so41595939f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 07:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720104401; x=1720709201; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ovAGVS3VHRPu/ayJ7OgBZYBcLdsO3egzdp3KRf/I5wo=;
+        b=kPxAdgDxJ1H57Gz8gzTEEPmOUjhC6DIuBCmMdoeEWT6aBK4Mz5GrDd+Nhb7dIMQTam
+         087Ji0FExYU+Asi3zVSg7+3MeFgQHvXjFQmUpVP4nwbjBN1Nq7zHNk9yatyEhqaGcDAc
+         YE89p/mnA9ZMOW+E2AhCRyhMDpWs4s1Mk+9/hjNy+/bPN2R3CZPIErR0ro6L0gOw7lR3
+         AVMIEf40lb0M8bVQUaCpIUDBrIgA7rr+S66gS5zpWUV2u3zR891AgLChHoTGs8h/DvsX
+         t5MG6v9VeVjPTN2885w6r1Ra1mMzmPp2aoHryBb4AWKcXbGGQj7ZDDIUDW2545gJjYm5
+         9WJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720104401; x=1720709201;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ovAGVS3VHRPu/ayJ7OgBZYBcLdsO3egzdp3KRf/I5wo=;
+        b=ndJdcnYhvTSroLUhRLusZ7xj3xdSPBmyEHSzHSBTlUo3xYkF25hu4nSATrqUcE3pK6
+         asiVdAfQScF6yf9La1ShunMR6rzOnD64wAgpKalMGb6if2ZTCz0PfVrvokMjgtg7mZbm
+         sa8QJRJtQ3GJg2utg0iYFgBIWFQfxcUX+0kS5I8FuSq6vsKWdV8j6kx7U/0Ux2hYWIv9
+         zgxoWpklhNm6lQBE3SkX1B7N9ooMIjRbgHpiK91ugiAwtHl3ZxS8ANPemv4xNXNFmFw2
+         fd7N5yPNa2MCFgBg0eN0fiCYaNjywxPxhwd4Hv6I92xkdMGmZ7PcxfBnvGX10OHS8LNQ
+         OfGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWDqkxXeVYwmGJ9G2LOVqwLjgX11Z6Mk9g24Bd4uH9oQpQeojaH5CkTKfIeO8vtPS4tpWl7tTlMYyiWNT0JleI1NW5m/mnPYg6jmvUu
+X-Gm-Message-State: AOJu0YxqV5lUv8GlOUASLLodn4o2gvz9BqqAr46O5gsyVOzGgfccvSo/
+	VayQ9HzX+S6wf6vXaxJaKHDeI41eCmXNfV4RIxrVAM+lXoNvMwKt
+X-Google-Smtp-Source: AGHT+IFdC1bMPgh1nTtndsMYHB4W0rmDbASqI2lZOfJfEaAmurqWXB3XbObe/2fTuuwrn3LykuqoYQ==
+X-Received: by 2002:a05:6602:e43:b0:7f6:200a:ba8c with SMTP id ca18e2360f4ac-7f66de8c749mr238274939f.1.1720104400628;
+        Thu, 04 Jul 2024 07:46:40 -0700 (PDT)
+Received: from [192.168.3.24] ([36.24.57.127])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7080256af87sm12319914b3a.70.2024.07.04.07.46.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jul 2024 07:46:40 -0700 (PDT)
+Message-ID: <a3910f60-6e2e-4ede-b3f3-47d8dfe9f23b@gmail.com>
+Date: Thu, 4 Jul 2024 22:46:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 04 Jul 2024 17:45:52 +0300
-Message-Id: <D2GU3QOR9Y2O.2OXK62J2V9C2T@kernel.org>
-Cc: "James Bottomley" <James.Bottomley@HansenPartnership.com>, "Mimi Zohar"
- <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
- <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "Serge E.
- Hallyn" <serge@hallyn.com>, <keyrings@vger.kernel.org>,
- <linux-security-module@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 0/3] Address !chip->auth
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Michael Ellerman" <mpe@ellerman.id.au>,
- <linux-integrity@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240703170815.1494625-1-jarkko@kernel.org>
- <D2G2QR0DMG8B.R0B95Z5T5YAF@kernel.org> <87v81lia1d.fsf@mail.lhotse>
-In-Reply-To: <87v81lia1d.fsf@mail.lhotse>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/6] mm: shmem: add mTHP support for anonymous shmem
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
+ ying.huang@intel.com, 21cnbao@gmail.com, shy828301@gmail.com,
+ ziy@nvidia.com, ioworker0@gmail.com, da.gomez@samsung.com,
+ p.raghav@samsung.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
+ <65796c1e72e51e15f3410195b5c2d5b6c160d411.1718090413.git.baolin.wang@linux.alibaba.com>
+ <65c37315-2741-481f-b433-cec35ef1af35@arm.com>
+ <475332ea-a80b-421c-855e-a663d1d5bfc7@linux.alibaba.com>
+Content-Language: en-US
+From: Bang Li <libang.linux@gmail.com>
+In-Reply-To: <475332ea-a80b-421c-855e-a663d1d5bfc7@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu Jul 4, 2024 at 4:03 PM EEST, Michael Ellerman wrote:
-> "Jarkko Sakkinen" <jarkko@kernel.org> writes:
-> > On Wed Jul 3, 2024 at 8:08 PM EEST, Jarkko Sakkinen wrote:
-> >> Tested on x86-64 with:
-> >>
-> >> - TCG_TPM2_HMAC disabled.
-> >> - TCG_TPM2_HMAC enabled.
-> >> - TCG_TPM2_HMAC enabled, and "/* rc =3D tpm2_sessions_init(chip); */".
-> >>
-> >> Jarkko Sakkinen (3):
-> >>   tpm: Address !chip->auth in tpm2_*_auth_session()
-> >>   tpm: Address !chip->auth in tpm_buf_append_name()
-> >>   tpm: Address !chip->auth in tpm_buf_append_hmac_session*()
-> >>
-> >>  drivers/char/tpm/Makefile        |   2 +-
-> >>  drivers/char/tpm/tpm2-sessions.c | 400 +++++++++++++++++-------------=
--
-> >>  include/linux/tpm.h              |  75 ++----
-> >>  3 files changed, 245 insertions(+), 232 deletions(-)
-> >
-> > Aiming these still to 6.10 so that there would not be known regressions
-> > in hmac authenticated sessions. Note that issue is wider than "just"
-> > tpm_ibmvtpm.
->
-> This seems OK on my PowerVM box using tpm_ibmvtpm and TCG_TPM2_HMAC=3Dy.
-> I do see one new message:
->
->   [    2.475208] tpm2_start_auth_session: encryption is not active
->
-> But no error messages like on mainline.
->
-> Tested-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Hi Bao lin,
 
-Thank you, appreciate this!
+On 2024/7/4 19:15, Baolin Wang wrote:
+>
+>>> +
+>>> +    /*
+>>> +     * Only allow inherit orders if the top-level value is 'force', 
+>>> which
+>>> +     * means non-PMD sized THP can not override 'huge' mount option 
+>>> now.
+>>> +     */
+>>> +    if (shmem_huge == SHMEM_HUGE_FORCE)
+>>> +        return READ_ONCE(huge_shmem_orders_inherit);
+>>
+>> I vaguely recall that we originally discussed that trying to set 
+>> 'force' on the
+>> top level control while any per-size controls were set to 'inherit' 
+>> would be an
+>> error, and trying to set 'force' on any per-size control except the 
+>> PMD-size
+>> would be an error?
+>
+> Right.
+>
+>> I don't really understand this logic. Shouldn't we just be looking at 
+>> the
+>> per-size control settings (or the top-level control as a proxy for every
+>> per-size control that has 'inherit' set)?
+>
+> ‘force’ will apply the huge orders for anon shmem and tmpfs, so now we 
+> only allow pmd-mapped THP to be forced. We should not look at per-size 
+> control settings for tmpfs now (mTHP for tmpfs will be discussed in 
+> future).
+>
+>>
+>> Then for tmpfs, which doesn't support non-PMD-sizes yet, we just 
+>> always use the
+>> PMD-size control for decisions.
+>>
+>> I'm also really struggling with the concept of shmem_is_huge() 
+>> existing along
+>> side shmem_allowable_huge_orders(). Surely this needs to all be 
+>> refactored into
+>> shmem_allowable_huge_orders()?
+>
+> I understood. But now they serve different purposes: shmem_is_huge() 
+> will be used to check the huge orders for the top level, for *tmpfs* 
+> and anon shmem; whereas shmem_allowable_huge_orders() will only be 
+> used to check the per-size huge orders for anon shmem (excluding tmpfs 
+> now). However, as I plan to add mTHP support for tmpfs, I think we can 
+> perform some cleanups. 
 
-BR, Jarkko
+Please count me in, I'd be happy to contribute to the cleanup and 
+enhancement
+process if I can.
+
+Thanks,
+Bang
+
