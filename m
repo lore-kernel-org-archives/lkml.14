@@ -1,200 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BF61AED39
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676C81822E2;
+	Thu,  4 Jul 2024 13:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720100668; cv=none; b=UHuWVnPyB9k/IiqkByB/MFjaJmyCI95HAdZOeQYUTlI6n/BuLbnipwQY/NSxI5qm5rrJ4j9yyz/+KKRdzSQkRw0dfp5FbTyJPA/ztLYEa6bRDSMOpw/Nh8jHhlf5y6uhh8oo2JRaesbWOmZJfVqypSSPYAvfn6kvTxVZNItRJao=
+	t=1720100844; cv=none; b=I5QJko6UdXL0mW2BPmxMtpLb4zr6YjP462oFZgbX+f+avcEkBBPF74sGyF0nnIJ+xMzcoOrVw84uy/moBdzSQFgl4GjNA6utDVUJFUWU49NOefcX1d9UJQkmNC6EKPQNcl3U5iEpA3wrU3XCfawmerawxn0jjZ0J+v4cC2wUIGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720100668; c=relaxed/simple;
-	bh=IOLw4Ke9P2gvCmPtKCvxwi5KAeia0MwABdV2lhg5nsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GSpXPs/0gNBj/Fly22N2NzDs6UNsEbVPGFSSmwDKARP4w97Ng0U/BL/QwuCgtGukLnu1r7sGNmrnFDKCO48YPZvUy1wlzj6Kj4F9+cBgpLWBiC+zINfopQTL5HTDLbLL5OgYlEUFHFK1Ayil7nXpWvnsOw9r63ov40IPelLAJ8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5024DC3277B;
-	Thu,  4 Jul 2024 13:44:26 +0000 (UTC)
-Date: Thu, 4 Jul 2024 14:44:23 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Yang Shi <yang@os.amperecomputing.com>
-Cc: muchun.song@linux.dev, will@kernel.org, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hugetlbfs: add MTE support
-Message-ID: <ZoanN7hkWDBjCTu3@arm.com>
-References: <20240625233717.2769975-1-yang@os.amperecomputing.com>
- <ZoPz14fYSqVyvRTw@arm.com>
- <7a4a60af-e471-484b-a4a3-ed31daaca30b@os.amperecomputing.com>
- <546bf8d4-3680-4af3-8d4d-af2d7c192d04@os.amperecomputing.com>
+	s=arc-20240116; t=1720100844; c=relaxed/simple;
+	bh=UI3dF8OYMSUWU9X9suKWJKp7BkGBDJB8qJBGh0o1NCQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H2EbjMRQfBqG/Acictv8BkKgGMER85/PNQbdDAZ7dX4lkq0E9oF1a3iPLOXyauOApipFExGJKMRBXI5KGubIsw6Qgya/WtMpdOYvgkr9sHaIr78lD9K8f66L//nwNhcWsZk7hfP9348LiPPGe5W1xG7+2ma357Zzp40YigpoBTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jIYD2mAp; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIYD2mAp"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-64b5617ba47so6238197b3.3;
+        Thu, 04 Jul 2024 06:47:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720100842; x=1720705642; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UI3dF8OYMSUWU9X9suKWJKp7BkGBDJB8qJBGh0o1NCQ=;
+        b=jIYD2mApLnki36+FRFCLpRPx1VHiiADPsjE4quJXRR2SDQPIza12/Hrp/A4t1bWIpN
+         UEGRTAdnT3oO+SsB9eaKzEtCp16fIIK930POvSTJVTCrfnYytQ3rUroAbMURcuyz+lru
+         g7GZSd0RziVPNYztI1iYh2RThuRv+4o10wppCMIQhj06SroO2mGsthhl6tawZZUBdVPW
+         3xx+2U3dfOk+ERLvFJvgGZ8D+FVB3l+fI6LH1f78zxwthPKYdgqxiDThHo05u3UIZczd
+         M31Dpzpq1IbKF9u4p5SDdTnpBf0fN4VCTtEW9qM10+GlOnuJ6UBZLXTRc22g5vna9SeY
+         efOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720100842; x=1720705642;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UI3dF8OYMSUWU9X9suKWJKp7BkGBDJB8qJBGh0o1NCQ=;
+        b=fj6+T/rxdqJLaltx0v6u932HvWkN78HtN2K+GH9unqiCJE1nZdvjak+8ZW71JXWR6m
+         VZWa/KbtgICYER60BgjibjjUgbSObhStjzOex7f2ZIJZ4+Gvi9IJBJZWWBbxp965kCA5
+         dedU72hDswbLXE311arOZShVitfnl9XMhA0BFenq1gs6X6y0T/V6AGVrotdA0VN42/cI
+         9vtXjbTVpGt0KUqK6QTdxiStbjE8KjCN3xxpBFVMVlciklzzDmscpFW6fQqMHTvMMfHx
+         UFWcbXDTx6KF78JUkLrgqV+lwM8Yizf37eHh7BpdksKN8scs1Nb9RxbOL4qrBj7hoCuw
+         X9zw==
+X-Forwarded-Encrypted: i=1; AJvYcCXUxTLJibev4aH8gGJnFb2RpSeGVgemUqRe+oWUQO7i49pwYy5mhX95LP0TF4ilKySIMVMLdkVbXqAJHTq3KVl5251/c7NBSpSqd1U/RqrwEHd2ygYpaScg8CAb/eb+EFVNGjgaJiEjuLw=
+X-Gm-Message-State: AOJu0YweFxB8X7AG/1NdQQg0BVMGPRm8tQsPz+YVB8gythBs9znP8oAg
+	jQdrs9cAoFqzx6Nv0KQ0mw1RJhd8vlNXYXOhLexSLqOfpO4RSMohCMTt98O+cEfpLm3DsxMhjSU
+	Pvq9IcS6Ax9dBPceBuNo3r6f+X4Y=
+X-Google-Smtp-Source: AGHT+IH6YM6GLafKg9XBe0axWFXO3AhGkvxdQYhJOJum9ZzTHvtWe5dJcPzvzcyam1htB/hWj7nXRx0+wUWo96dItps=
+X-Received: by 2002:a81:ab52:0:b0:62c:c65d:8d1c with SMTP id
+ 00721157ae682-652d8636094mr15666627b3.52.1720100842308; Thu, 04 Jul 2024
+ 06:47:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <546bf8d4-3680-4af3-8d4d-af2d7c192d04@os.amperecomputing.com>
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+ <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
+ <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+ <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+ <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com> <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+In-Reply-To: <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+From: Andrea Gelmini <andrea.gelmini@gmail.com>
+Date: Thu, 4 Jul 2024 15:47:06 +0200
+Message-ID: <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jul 02, 2024 at 05:15:12PM -0700, Yang Shi wrote:
-> On 7/2/24 5:04 PM, Yang Shi wrote:
-> > On 7/2/24 5:34 AM, Catalin Marinas wrote:
-> > > Last time I checked, about a year ago, this was not sufficient. One
-> > > issue is that there's no arch_clear_hugetlb_flags() implemented by your
-> > > patch, leaving PG_arch_{2,3} set on a page. The other issue was that I
-> > > initially tried to do this only on the head page but this did not go
-> > > well with the folio_copy() -> copy_highpage() which expects the
-> > > PG_arch_* flags on each individual page. The alternative was for
-> > > arch_clear_hugetlb_flags() to iterate over all the pages in a folio.
-> > 
-> > Thanks for pointing this out. I did miss this point. I took a quick look
-> > at when the PG_ flags are set. IIUC, it is set by post_alloc_hook() for
-> > order-0 anonymous folio (clearing page and tags) and set_ptes() for
-> > others (just clear tags), for example, THP and hugetlb.
-> > 
-> > I can see THP does set the PG_mte_tagged flag for each sub pages. But it
-> > seems it does not do it for hugetlb if I read the code correctly. The
-> > call path is:
-> > 
-> > hugetlb_fault() ->
-> >   hugetlb_no_page->
-> >     set_huge_pte_at ->
-> >       __set_ptes() ->
-> >         __sync_cache_and_tags() ->
-> > 
-> > 
-> > The __set_ptes() is called in a loop:
-> > 
-> > if (!pte_present(pte)) {
-> >         for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
-> >             __set_ptes(mm, addr, ptep, pte, 1);
-> >         return;
-> >     }
-> > 
-> > The ncontig and pgsize are returned by num_contig_ptes(). For example,
-> > 2M hugetlb, ncontig is 1 and pgsize is 2M IIUC. So it means actually
-> > just the head page has PG_mte_tagged set. If so the copy_highpage() will
-> > just copy the old head page's flag to the new head page, and the tag.
-> > All the sub pages don't have PG_mte_tagged set.
-> > 
-> > Is it expected behavior? I'm supposed we need tags for every sub pages
-> > too, right?
-> 
-> We should need something like the below to have tags and page flag set up
-> for each sub page:
-> 
-> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> index 3f09ac73cce3..528164deef27 100644
-> --- a/arch/arm64/mm/hugetlbpage.c
-> +++ b/arch/arm64/mm/hugetlbpage.c
-> @@ -228,9 +228,12 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned
-> long addr,
->         int ncontig;
->         unsigned long pfn, dpfn;
->         pgprot_t hugeprot;
-> +       unsigned long nr = sz >> PAGE_SHIFT;
-> 
->         ncontig = num_contig_ptes(sz, &pgsize);
-> 
-> +       __sync_cache_and_tags(pte, nr);
-> +
->         if (!pte_present(pte)) {
->                 for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
->                         __set_ptes(mm, addr, ptep, pte, 1);
+Il giorno gio 4 lug 2024 alle ore 15:33 Andrea Gelmini
+<andrea.gelmini@gmail.com> ha scritto:
+> Well, I have the nighlty snapshot (well, it's not on every subvolume
+> of the fs). I ran tar on that, and we see.
 
-We only need this for the last loop when we have a present pte. I'd also
-avoid calling __set_ptes(...., 1) if we call the __sync_cache_and_tags()
-here already. Basically just unroll __set_ptes() in set_huge_pte_at()
-and call __set_pte() directly.
+Well, using the laptop for daily work and running tar on snapshots,
+recreate the issue.
+I am collecting the htop output and bfptrace.
 
-It might be better to convert those page flag checks to only happen on
-the head page. My stashed changes from over a year ago (before we had
-more folio conversions) below. However, as I mentioned, I got stuck on
-folio_copy() which also does a cond_resched() between copy_highpage().
-
----------8<--------------------------------
-diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-index f5bcb0dc6267..a84ad0e46f12 100644
---- a/arch/arm64/kernel/mte.c
-+++ b/arch/arm64/kernel/mte.c
-@@ -49,7 +49,9 @@ static void mte_sync_page_tags(struct page *page, pte_t old_pte,
- 		return;
- 
- 	if (try_page_mte_tagging(page)) {
--		mte_clear_page_tags(page_address(page));
-+		unsigned long i, nr_pages = compound_nr(page);
-+		for (i = 0; i < nr_pages; i++)
-+			mte_clear_page_tags(page_address(page + i));
- 		set_page_mte_tagged(page);
- 	}
- }
-@@ -57,22 +59,23 @@ static void mte_sync_page_tags(struct page *page, pte_t old_pte,
- void mte_sync_tags(pte_t old_pte, pte_t pte)
- {
- 	struct page *page = pte_page(pte);
--	long i, nr_pages = compound_nr(page);
--	bool check_swap = nr_pages == 1;
-+	bool check_swap = !PageCompound(page);
- 	bool pte_is_tagged = pte_tagged(pte);
- 
- 	/* Early out if there's nothing to do */
- 	if (!check_swap && !pte_is_tagged)
- 		return;
- 
-+	/*
-+	 * HugeTLB pages are always fully mapped, so only setting head page's
-+	 * PG_mte_* flags is enough.
-+	 */
-+	if (PageHuge(page))
-+		page = compound_head(page);
-+
- 	/* if PG_mte_tagged is set, tags have already been initialised */
--	for (i = 0; i < nr_pages; i++, page++) {
--		if (!page_mte_tagged(page)) {
--			mte_sync_page_tags(page, old_pte, check_swap,
--					   pte_is_tagged);
--			set_page_mte_tagged(page);
--		}
--	}
-+	if (!page_mte_tagged(page))
-+		mte_sync_page_tags(page, old_pte, check_swap, pte_is_tagged);
- 
- 	/* ensure the tags are visible before the PTE is set */
- 	smp_wmb();
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index 5626ddb540ce..692198d8c0d2 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -1079,7 +1079,7 @@ long kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
- 
- 			/* uaccess failed, don't leave stale tags */
- 			if (num_tags != MTE_GRANULES_PER_PAGE)
--				mte_clear_page_tags(page);
-+				mte_clear_page_tags(page_address(page));
- 			set_page_mte_tagged(page);
- 
- 			kvm_release_pfn_dirty(pfn);
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 31d7fa4c7c14..b531b1d75cda 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -1173,11 +1173,10 @@ static void sanitise_mte_tags(struct kvm *kvm, kvm_pfn_t pfn,
- 	if (!kvm_has_mte(kvm))
- 		return;
- 
--	for (i = 0; i < nr_pages; i++, page++) {
--		if (try_page_mte_tagging(page)) {
--			mte_clear_page_tags(page_address(page));
--			set_page_mte_tagged(page);
--		}
-+	if (try_page_mte_tagging(page)) {
-+		for (i = 0; i < nr_pages; i++)
-+			mte_clear_page_tags(page_address(page + i));
-+		set_page_mte_tagged(page);
- 	}
- }
- 
-
--- 
-Catalin
+I send you everything when I collect enough data.
