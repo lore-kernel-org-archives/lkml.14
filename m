@@ -1,104 +1,124 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E581A08DF;
-	Thu,  4 Jul 2024 06:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720075253; cv=pass; b=mACBVNH+aeyhAKhmHXv60Z6PO5LyhSkQEIDqEh3ZHsClkHFHLiG/6n65wIj9qQBHHyV8k0vS5ibAu89e/gI2xK8O6JIjAp0BfCxwkanjFVW7y/uAYMVP5wNeVMONekRgh5abV5K3AiBg0y6ldKp/euycMiV1mB4W+iiThIgA1Sk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720075253; c=relaxed/simple;
-	bh=8hFZAidPcDdSv5uZH+SmygHMQQ9j5VWMuPUkSwHgy9M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NSOdHpRU02sUO4DjBYBX4ejPH40HCaIU2nBSiCaQnW3+1W8yTLqWkEBk8uDf6DW4bftbP/uFCOr540rAP4gU/PmbXJMGUg8LRv8AAW20ZUUcoFIpiy4kA7G4HTojFF26TQYpkI03ZNBoRLKRlwZP+Zahw1wEmX9fEdjFjc+3RR8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=BPClduXN; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC27C1A08C5;
+	Thu,  4 Jul 2024 06:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720075275; cv=none; b=K6i/ORGagmiLmrnRarx/w2MRsITTWkUyb1WdSHhJjLPrVggoTcCYgfSQGtH7mYIcL08xAYtP6tLqiRCgc1S8+62x1ambRPgBRScAo0957Kg3rf8iOHbREe2rPxSm7ku//SdF0op0edjW8CONoi0eNEF3Xpvs7wLiH9Ztv46mhQo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720075275; c=relaxed/simple;
+	bh=+bWi1+if3WErd1/KnsdGciJEtBFRJDW87a6ElQhCzz8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=K3YHKaU5P2t37EW4OF7Jn3Tq8hgTokvrQVThEi5Mt5sjGC5ihe9uCOkKQkOnvPluXvXh1uowW8qtWcv4GcHdC9E6cUM3e1ajtiwJHFV2sg5xTbBNjTJR5f0mUogYU/G/BsrtS5w2At0LcMDZ7I8DLYPuENyB6DoUWnDoYgo+edQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWzOgCP/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="BPClduXN"
-ARC-Seal: i=1; a=rsa-sha256; t=1720075230; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cbsMDJ54XPbGsKgUiQwKU7Ossbnsg8BxvxEELPKGPAuY/PP74KQ1THVR+f+2W9o+ADhwkcIKw/Ctx5zj0k/8FlCiAPC4pXTwZCwo9zH85KIST7mZ4xeHleItb8vlDzhoPD0amRqk+9HrOdhYr4dxCzesUz9s1QbZI5Y8lXXadRU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1720075230; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8hFZAidPcDdSv5uZH+SmygHMQQ9j5VWMuPUkSwHgy9M=; 
-	b=aGksZX+N7VCE5DHcZjN5gmSkFCrauOkc3ItXGeXGF8xcbTegqshMq2K92D4c2iwdnrQLgSpoIVYjsw44+pbL62OinZEdvNhpdUHdOhfCSQ5jm8RuaGylhxtXYl+ZQ/DjqrS61LRgO6/AmnsAdtl4cl2V+n9Y/2XajWV05d7kpmw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1720075230;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=8hFZAidPcDdSv5uZH+SmygHMQQ9j5VWMuPUkSwHgy9M=;
-	b=BPClduXNj8xNP1fWI91lDWKzZEdUHdscAWayV9vvGrlTnyYXi9iJC9YJ+nu+saxo
-	CjtOLXf66Iqa6VfImP7P9rWowH+8uJHhbXhI2mtJXqqdsoR7R8Ub2Y4Mh8GnFKY+k5k
-	urMMQ8m4Cb3znWg2Sv3yYplh+Rp0+h2oXH604TfTw7zUCIlM/I1kmchLW3qr63g3CYN
-	7RkB1ueWuLspSYOPNbHCrOV/dpdkVOtHLguWI5uWiWu3rIySJBJ/9NALdsiKNFs5j7j
-	XVjrC10DVJbjjhW9zfTXDRww3vqTqZKdKmoHqJI4KpUbLrucdGUSmXTQiSn0Widtx47
-	N2QEBmh2jg==
-Received: by mx.zohomail.com with SMTPS id 1720075227349371.7068907339411;
-	Wed, 3 Jul 2024 23:40:27 -0700 (PDT)
-Message-ID: <51603213d16493879c85417c0c8cc3f2df0cf7cf.camel@icenowy.me>
-Subject: Re: PCIe coherency in spec (was: [RFC PATCH 2/2] drm/ttm: downgrade
- cached to write_combined when snooping not available)
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>,  Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- bhelgaas@google.com, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Date: Thu, 04 Jul 2024 14:40:16 +0800
-In-Reply-To: <ZoY9HZwon3_yiq6F@infradead.org>
-References: <20240703210831.GA63958@bhelgaas>
-	 <99ff395019901c5c1a7b298481c8261b30fdbd01.camel@icenowy.me>
-	 <ZoY9HZwon3_yiq6F@infradead.org>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWzOgCP/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E51C32781;
+	Thu,  4 Jul 2024 06:41:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720075275;
+	bh=+bWi1+if3WErd1/KnsdGciJEtBFRJDW87a6ElQhCzz8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=tWzOgCP/EY25airxSQYJHCskq3zPKTdAWsRYJtzuTtc9khjy++FWX4h8GHPI3mflO
+	 LYgUCUgPvjeQcUF4+qkBTLIBmG7e6IWgD0Am2KngPakPJWA51tYv3gLPm/qgSN22Q1
+	 46MjU+0SCzJgJWGOlcq1e+fi5opQGcEVCZsknvtYlZUKjRyP9Jyh0cR4hNxmSZJlHM
+	 pykWqKay0aReMRchPSwqgk0uQqXSGc3enLT0QnjPJXBVV6YvOXVIOIxS5YIia9WHDP
+	 w/apUz0Nd7mCkdvUdKlZReK4V6Z5Idu10Uy2RHYoIZvO6VfDjAHKrMIWMI4Q0T0G4X
+	 62KRI7TjeGgHw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ZohoMailClient: External
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 04 Jul 2024 09:41:08 +0300
+Message-Id: <D2GJSLLC0LSF.2RP57L3ALBW38@kernel.org>
+Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, <stable@vger.kernel.org>, "Peter Huewe"
+ <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>, "James Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Mimi Zohar"
+ <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
+ <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "Serge E.
+ Hallyn" <serge@hallyn.com>, "Ard Biesheuvel" <ardb@kernel.org>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, <linux-kernel@vger.kernel.org>,
+ <keyrings@vger.kernel.org>, <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] tpm: Address !chip->auth in
+ tpm_buf_append_hmac_session*()
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>,
+ <linux-integrity@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240703182453.1580888-1-jarkko@kernel.org>
+ <20240703182453.1580888-4-jarkko@kernel.org>
+ <c90ce151-c6e5-40c6-8d3d-ccec5a97d10f@linux.ibm.com>
+In-Reply-To: <c90ce151-c6e5-40c6-8d3d-ccec5a97d10f@linux.ibm.com>
 
-=E5=9C=A8 2024-07-03=E6=98=9F=E6=9C=9F=E4=B8=89=E7=9A=84 23:11 -0700=EF=BC=
-=8CChristoph Hellwig=E5=86=99=E9=81=93=EF=BC=9A
-> On Thu, Jul 04, 2024 at 10:00:52AM +0800, Icenowy Zheng wrote:
-> > So I here want to ask a question as an individual hacker: what's
-> > the
-> > policy of linux-pci towards these non-coherent PCIe
-> > implementations?
+On Thu Jul 4, 2024 at 4:56 AM EEST, Stefan Berger wrote:
+>
+>
+> On 7/3/24 14:24, Jarkko Sakkinen wrote:
+> > Unless tpm_chip_bootstrap() was called by the driver, !chip->auth can
+>
+> Doesn't tpm_chip_register() need to be called by all drivers? This=20
+> function then calls tpm_chip_bootstrap().
+>
+> > cause a null derefence in tpm_buf_hmac_session*().  Thus, address
+> > !chip->auth in tpm_buf_hmac_session*() and remove the fallback
+> > implementation for !TCG_TPM2_HMAC.
 > >=20
-> > If the sentences of Christian is right, these implementations are
-> > just
-> > out-of-spec, should them get purged out of the kernel, or at least
-> > raising a warning that some HW won't work because of inconformant
-> > implementation?
->=20
-> Nothing in the PCIe specifications that mandates a programming model.
-> Non-coherent DMA is extremely common in lower end devices, and
-> despite
-> all the issues that it causes well supported in Linux.
->=20
-> What are you trying to solve?
+> > Cc: stable@vger.kernel.org # v6.9+
+> > Reported-by: Stefan Berger <stefanb@linux.ibm.com>
+> > Closes: https://lore.kernel.org/linux-integrity/20240617193408.1234365-=
+1-stefanb@linux.ibm.com/
+> > Fixes: 1085b8276bb4 ("tpm: Add the rest of the session HMAC API")
+> > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+>
+> I applied this series now but it doesn't solve the reported problem. The=
+=20
 
-Currently the DRM TTM subsystem (and GPU drivers using it) will assume
-coherency and fail on these non-coherent systems with cryptic error
-messages (like `[drm:amdgpu_ring_test_helper [amdgpu]] *ERROR* ring gfx
-test failed (-110)`) without mentioning coherency issues at all.
+It fixes the issues of which symptoms was shown by your transcript:
 
-My original patchset tries to solve this problem by make the TTM
-subsystem sensible of coherency status (and prevent CPU-side cached
-mapping when non-coherent), but got argued by TTM maintainer and the
-maintainer says TTM's ignorance on non-coherent systems is intentional.
+[    2.987131] tpm tpm0: tpm2_load_context: failed with a TPM error 0x01C4
+[    2.987140] ima: Error Communicating to TPM chip, result: -14
 
->=20
+Your original thread identified zero problems, so thus your claim here
+is plain untrue.
 
+Before the null derefence is fixed all other patches related are
+blocked, including ibm_tpmvtpm patches, because it would be insane
+to accept them when there is known memory corruption bug, which
+this patch set fixes.
+
+What is so difficult to understand in this?
+
+> error message is gone but the feature can still be enabled=20
+> (CONFIG_TCG_TPM2_HMAC=3Dy) but is unlikely actually doing what it is=20
+> promising to do with this config option. So you either still have to=20
+> apply my patch, James's patch, or your intended "depends on=20
+> !TCG_IBMVTPM" patch.
+
+Well this somewhat misleading imho...
+
+None of the previous patches, including your, do nothing to fix the null
+derefence bug and that is the *only* bug we care about ATM. With these
+fixes drivers that do not call tpm_chip_bootstrap() will be fully
+working still but without encryption.
+
+There's five drivers which would require update for that:
+
+drivers/char/tpm/tpm_ftpm_tee.c:        pvt_data->chip->flags |=3D TPM_CHIP=
+_FLAG_TPM2;
+drivers/char/tpm/tpm_i2c_nuvoton.c:             chip->flags |=3D TPM_CHIP_F=
+LAG_TPM2;
+drivers/char/tpm/tpm_ibmvtpm.c:         chip->flags |=3D TPM_CHIP_FLAG_TPM2=
+;
+drivers/char/tpm/tpm_tis_i2c_cr50.c:    chip->flags |=3D TPM_CHIP_FLAG_TPM2=
+;
+drivers/char/tpm/tpm_vtpm_proxy.c:              proxy_dev->chip->flags |=3D=
+ TPM_CHIP_FLAG_TPM2;
+
+
+BR, Jarkko
