@@ -1,150 +1,138 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8536CDA1;
-	Thu,  4 Jul 2024 19:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720119615; cv=pass; b=YGZdkQ/SJc7C41N/HM7hqk/DFGS74J31y+X2ZnCJYW/h50GCt14LLXoZP4YswUMFm0ucB/p6jcQEe/VWRRjPi7gDKmiG5dCtVw38AvltWggNHzMQydIdITFjROvVnkfsSS6DcJa7VVp1aUdPt6Icz6wkW/wZJdIt1r54NoYh550=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720119615; c=relaxed/simple;
-	bh=IC9p+MRoRRz0HKEpCsqwAaN92/sAl5jhuLFVRzE8XLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mPctpJba3gOfOacEwgIxL4QLHkm0zO/sY+FMrwqzgyd0l7x4caxfPmExT0mCYw08D2Hxn5fzk/hqYkZ7u1ZaHikD18+pZpMpg1zbhlFuX1aShgFpg/zWFlNXYHUzVW4q4ZBlBzosBn+bxLq2bgaDD/4PXQNGm4wz3/mD/Am7nsw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=pr4IL2r7; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=xOLsMFvL; arc=pass smtp.client-ip=85.215.255.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA086CDA1
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 19:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720119651; cv=none; b=AUtmE8f5O1KBzVWpxQJTQdHD7AfLcmJlz8psUnfl73B0pcr5Y36lmNtJzXwGLtqd5RTnUlGiftmNek1mZLCS3EQg60de7ZFzZScETyRiWjg4sfEWM/jXj+IBz3lMpF9Mbcx8BRowEXXkQcyxakqT6FDQH/LgGeWeiLxiDMHFaV0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720119651; c=relaxed/simple;
+	bh=NtItNwO/2aCZjg4nZ5dSSeFSK1mQZv/1XB0GzdvLLhc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cX23Qrsv3LOS7xnPaYat90iiu5EqtNQ/bRuNrePTffV5sb6BP6uWXYAHoXdJVFLB3xZNMZr2Nk3Dzv03pXtlE+9H9VnhPBWPWOLRD6P/MAWOivdw2jvgd60XQNDTf7I9Hj4aOEbCQRD4WF5OdkhKNPjOJfS6RPzPFkEKndnzqcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T0AlOo1M; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="pr4IL2r7";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="xOLsMFvL"
-ARC-Seal: i=1; a=rsa-sha256; t=1720119248; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=Mc3stmrwc7ESbeLm9P4wa4lqI1JK1TgJLetRde4RCCKGaBgLN0fNz0PFR3vlVyzhH+
-    bdynQ6h1o6peu5YWLh5FKbadmN61rXksjIuDaKQnGLs41X5CbZRuBdcNj9KTkZIbdwuT
-    D5iropfjGOCLEqmmY5DnYd7nnqYJUYNqau1a+rkDgULH753bA1YUKl0r+z167gnskLOD
-    Fkc1+qkboWcRJmWclAloGWwOdwqwTZyjeIiofvXpXMC6QnPqjVUAoNXxdY691MuwPTX1
-    +EkIili3qDaIPz3i7WsEC1lIlZrQfn/RS8M5OWobYcCm0jwcYIm/WI3yWuW+AeJvgfk+
-    1ZXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1720119248;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=apTDHF46wlKCwkzD7joD6xmv+z0R4Z2m/26qnRUS808=;
-    b=EpN/XM31U3/fqJJppaIY2ljQ8JDFvChPox/QxxrtaCNygzfvEDgbGvyuiWnDxTrq8R
-    DmyP1SVVwT4c4XNjMJgnT/x+zSkNfPeGnZhgwdtxI82CNZCLWGI8BtsvDmosS2yad1C6
-    mg8MduTl8EHopSimDZOsg81XYYBD84JAei5TGtLa8756fwS8JQCxusjDqH6+9fa1Bre3
-    F1/Tb8FbwN/WJAFOJdcJ+NVBm8oYNgEE60rP9l2TuKi9kzGFJJ9cxcjyEDrtiBS/+50/
-    HelHQ3fzmp9ukG+XOW4q3VusVCxudNlhpzfq1xjAhS3w4qN/AHIL/dlX75j5Zq09nTTY
-    Hw2A==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1720119248;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=apTDHF46wlKCwkzD7joD6xmv+z0R4Z2m/26qnRUS808=;
-    b=pr4IL2r70nT8nSo8PciLwb9V135tbNHG4OiTDxHMh0OIwlv9RMMJKjcgZY/r0LJy6B
-    of5wWpKSlL8kLIPqTOPLS8U6vVmts4V74IUnSpXwJbZR6/Pc811+EXBdWkRRWBHud0Cs
-    wro1AR1GU/2nGEuU3NiDnFOmQcBpnm5SrAd7e+tHRKrnLPugqiaurx/g7jxDuaqJQxKT
-    9nTIBP+qnpZ92vE+hGWgXmi5q23BYjBKk16R4K+hkfr90/Ll4PQNFcc2szUXmXdD3xIH
-    G0oQmFWzdrI418ZwjjMBVZXdvky8+qzKMJ3SgQXRd5EETRqwmXlD9kG2mdaWr/o5LP8B
-    x7VQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1720119248;
-    s=strato-dkim-0003; d=xenosoft.de;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=apTDHF46wlKCwkzD7joD6xmv+z0R4Z2m/26qnRUS808=;
-    b=xOLsMFvLt329BiX+R1cOs7xrsvzYlgnMKSFQj7dKC3jAL1jrgpW+OA49yjRxF4WTVY
-    2xBcV9hEimqrLEd7RuDQ==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHvJzedR43JwnbXz/kFsuSUCat82PJROdEuWUwpcR8HY5"
-Received: from [IPV6:2a01:599:806:6955:6d1:546c:8e64:4d8]
-    by smtp.strato.de (RZmta 50.5.0 AUTH)
-    with ESMTPSA id e08389064Is7UAd
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Thu, 4 Jul 2024 20:54:07 +0200 (CEST)
-Message-ID: <3c045b0e-70da-48af-9196-2f4225477a32@xenosoft.de>
-Date: Thu, 4 Jul 2024 20:54:43 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T0AlOo1M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720119649;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W/qwYn98KjC1XCfQ1ZEHhXRILHt8fBZuMz3Loy8zZv8=;
+	b=T0AlOo1MYZs+2lGmHgIjeZs/vOmESOoMMaOe1+GfG0FqolfJC3FJFX4s2RUK64jS9F6J7w
+	0UbYGYhey2uZRAVJK991g+oRGUrzZBUvJTXEI0B8Pt8XANV5BIwu1t0B3BGmT9RYXiDPqC
+	ik2ynn/WCoRA9Pqy6uAslQR+dMJ5oDU=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-513-9qNX2hRbPFeIQ2o1uxLQ2A-1; Thu,
+ 04 Jul 2024 15:00:45 -0400
+X-MC-Unique: 9qNX2hRbPFeIQ2o1uxLQ2A-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5622B1955F49;
+	Thu,  4 Jul 2024 19:00:43 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8D70F3000180;
+	Thu,  4 Jul 2024 19:00:42 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id EB62130C1C14; Thu,  4 Jul 2024 19:00:40 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id E8BE23FB5B;
+	Thu,  4 Jul 2024 21:00:40 +0200 (CEST)
+Date: Thu, 4 Jul 2024 21:00:40 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Li Dong <lidong@vivo.com>, Damien Le Moal <dlemoal@kernel.org>, 
+    Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
+    Jens Axboe <axboe@kernel.dk>
+cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+    "open list:DEVICE-MAPPER  (LVM)" <dm-devel@lists.linux.dev>, 
+    open list <linux-kernel@vger.kernel.org>, opensource.kernel@vivo.com, 
+    linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Non-power-of-2 zone size (was: [PATCH] dm-table:fix zone block_device
+ not aligned with zonesize)
+In-Reply-To: <cd05398-cffa-f4ca-2ac3-74433be2316c@redhat.com>
+Message-ID: <c4ee654e-3120-e1a9-80b6-cb7073aa5c1a@redhat.com>
+References: <20240704151549.1365-1-lidong@vivo.com> <cd05398-cffa-f4ca-2ac3-74433be2316c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PowerPC] [PASEMI] Issue with the identification of ATA drives
- after the of/irq updates 2024-05-29
-To: Marc Zyngier <maz@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, apatel@ventanamicro.com,
- DTML <devicetree@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- Matthew Leaman <matthew@a-eon.biz>, Darren Stevens
- <darren@stevens-zone.net>, Christian Zigotzky <info@xenosoft.de>
-References: <3ab66fab-c3f2-4bed-a04d-a10c57dcdd9b@xenosoft.de>
- <86zfqzhgys.wl-maz@kernel.org>
- <ccf14173-9818-44ef-8610-db2900c67ae8@xenosoft.de>
- <86ed894l48.wl-maz@kernel.org>
-Content-Language: en-US
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-In-Reply-To: <86ed894l48.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 04.07.24 10:28, Marc Zyngier wrote:
-> On Thu, 04 Jul 2024 05:10:46 +0100,
-> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
->> On 02.07.24 18:54, Marc Zyngier wrote:
->>> On Sun, 30 Jun 2024 11:21:55 +0100,
->>> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
->>>> Hello,
->>>>
->>>> There is an issue with the identification of ATA drives with our
->>>> P.A. Semi Nemo boards [1] after the
->>>> commit "of/irq: Factor out parsing of interrupt-map parent
->>>> phandle+args from of_irq_parse_raw()" [2].
->>> [snip]
->>>
->>> My earlier request for valuable debug information still stands. But
->>> while you're at it, can you please give the following hack a go?
->>>
->>> 	M.
->>>
->>> --- a/drivers/of/irq.c
->>> +++ b/drivers/of/irq.c
->>> @@ -282,8 +282,10 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
->>>      			oldimap = imap;
->>>    			imap = of_irq_parse_imap_parent(oldimap, imaplen, out_irq);
->>> -			if (!imap)
->>> -				goto fail;
->>> +			if (!imap) {
->>> +				match = 0;
->>> +				break;
->>> +			}
->>>      			match &= of_device_is_available(out_irq->np);
->>>    			if (match)
->>>
->>> This may not be the final workaround even if it solves your boot
->>> problem, but will at least give us a hint at what is going wrong.
->>>
->>> I have the fuzzy feeling that we may be able to lob this broken system
->>> as part of the of_irq_imap_abusers[] array, which would solve things
->>> pretty "neatly".
->>>
->>> 	M.
->>>
->> We tested this patch yesterday and it solves the boot problem.
-> How about the other patch[1], which would be far preferable?
->
-> 	M.
->
-> [1] https://lore.kernel.org/all/86ed8ba2sp.wl-maz@kernel.org
->
-Marc,
 
-We will test the patch as soon as possible.
 
-Christian
+> On Thu, 4 Jul 2024, Li Dong wrote:
+> 
+> > For zone block devices, device_area_is_invalid may return an incorrect 
+> > value.
+> > 
+> > Failure log:
+> > [   19.337657]: device-mapper: table: 254:56: len=836960256 not aligned to
+> > h/w zone size 3244032 of sde
+> > [   19.337665]: device-mapper: core: Cannot calculate initial queue limits
+> > [   19.337667]: device-mapper: ioctl: unable to set up device queue for 
+> > new table.
+> > 
+> > Actually, the device's zone length is aligned to the zonesize.
+> > 
+> > Fixes: 5dea271b6d87 ("dm table: pass correct dev area size to device_area_is_valid")
+> > Signed-off-by: Li Dong <lidong@vivo.com>
+> > ---
+> >  drivers/md/dm-table.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> > index 33b7a1844ed4..0bddae0bee3c 100644
+> > --- a/drivers/md/dm-table.c
+> > +++ b/drivers/md/dm-table.c
+> > @@ -257,7 +257,7 @@ static int device_area_is_invalid(struct dm_target *ti, struct dm_dev *dev,
+> >  	if (bdev_is_zoned(bdev)) {
+> >  		unsigned int zone_sectors = bdev_zone_sectors(bdev);
+> >  
+> > -		if (start & (zone_sectors - 1)) {
+> > +		if (start % zone_sectors) {
+> >  			DMERR("%s: start=%llu not aligned to h/w zone size %u of %pg",
+> >  			      dm_device_name(ti->table->md),
+> >  			      (unsigned long long)start,
+> > @@ -274,7 +274,7 @@ static int device_area_is_invalid(struct dm_target *ti, struct dm_dev *dev,
+> >  		 * devices do not end up with a smaller zone in the middle of
+> >  		 * the sector range.
+> >  		 */
+> > -		if (len & (zone_sectors - 1)) {
+> > +		if (len % zone_sectors) {
+> >  			DMERR("%s: len=%llu not aligned to h/w zone size %u of %pg",
+> >  			      dm_device_name(ti->table->md),
+> >  			      (unsigned long long)len,
+> > -- 
+> > 2.31.1.windows.1
+
+I grepped the kernel for bdev_zone_sectors and there are more assumptions 
+that bdev_zone_sectors is a power of 2.
+
+drivers/md/dm-zone.c:           sector_t mask = bdev_zone_sectors(disk->part0) - 1
+drivers/nvme/target/zns.c:      if (get_capacity(bd_disk) & (bdev_zone_sectors(ns->bdev) - 1))
+drivers/nvme/target/zns.c:      if (sect & (bdev_zone_sectors(req->ns->bdev) - 1)) {
+fs/zonefs/super.c:      sbi->s_zone_sectors_shift = ilog2(bdev_zone_sectors(sb->s_bdev));
+fs/btrfs/zoned.c:       return (sector_t)zone_number << ilog2(bdev_zone_sectors(bdev));
+fs/btrfs/zoned.c:	zone_info->zone_size_shift = ilog2(zone_info->zone_size);
+include/linux/blkdev.h: return sector & (bdev_zone_sectors(bdev) - 1);
+fs/f2fs/super.c:	if (nr_sectors & (zone_sectors - 1))
+
+So, if we want to support non-power-of-2 zone size, we need some 
+systematic fix. Now it appears that Linux doesn't even attempt to support 
+disks non-power-of-2 zone size.
+
+I added Damien Le Moal so that he can help with testing disks with 
+non-power-of-2 zone size (if WD is actually making them).
+
+Mikulas
+
