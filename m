@@ -1,112 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69492208E;
-	Thu,  4 Jul 2024 06:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FF62208E;
+	Thu,  4 Jul 2024 06:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720074961; cv=none; b=bJkYW/ZJvg57ETThz6GrTLDt05WHPjsdK+kcI15gZ+jIpFINAzMxCv675q3IZsM0lW2vyBbACmlp3UkQQYVnEwBRTaK7apn3i59xTtJHqwAtxM7eJ+cSpZsYDr1g/0rQS9Yev9ZQhF4xDR8aj/dlS5x+Iq1I64EmzZTCPgRaaJg=
+	t=1720075055; cv=none; b=faYdasGmYYQ12cRsPB2DnbJxOL58FkSA+yFVHBkMOgzjy1seW2BoMo5uW3trL8WYWuygoUgEcbZVr3jaQSmX7e7LsHNBQPasVdjFXLYah76evgUngzt0YXoUhu+DY/1vfmrKFPaN65uktjDZdq7iHbgbJaaZk8+bDt0s+6D/pow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720074961; c=relaxed/simple;
-	bh=dQAOyy4u2ojOlaqtI0C9LmzKJCVj2BKUuLY/SaNuf6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lP8zUKamq+NX6LLWFEiJ6VNG2Y/OgKZkecbZse3Z1igkiKJJJpq7koobdwMJBX0QlxSyMLhGsAmybsGQYpRjP7XYL0xRoEb+UOWb75sHuZ8B0Y0DiEpZg3eZqM7MOkZxcZhQ+EntSEoTYgtCb7SIu0zNzJpVmqvA7biSOxWOGuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aY8hkonS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720075055; c=relaxed/simple;
+	bh=AkZrkSFSx5lc0JtPptkBI5YnorqqqY84dL+IvfE81kM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=raXZ0f+UaWRnCIUS/6ex6YlhXyc6FUr1cD1x7G/1mwBFQOJegQ6fbwvMXEp5KxkbKYyEK6Ti+jPLANCGZDR98Q4NI2rWYieSeV0KqSvyrS2xGRXLcjXBhgvRaXMJVnQVQfrqYtgJyEj/ELr3ydNfNUxHzg7tOjAAAUQMCX+6NVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iDFbQCZy; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aY8hkonS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49888C3277B;
-	Thu,  4 Jul 2024 06:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720074961;
-	bh=dQAOyy4u2ojOlaqtI0C9LmzKJCVj2BKUuLY/SaNuf6U=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=aY8hkonS17/kTiv3K2cQt/YQER6dwmteH5bBNftQPG0IiowkHyzLink50NE5e35OF
-	 vNf30b+/RdCB09bUJ5YA4EMgddB96DgGjsxjTtvRuImUAU1hSsABL2wpFizaRiEmwf
-	 q0eTtpl6OZrt6cJzTvDBn7uuwea7AVBDkiHb9wnrG+4P1XbYRE47472ua1ick2kJfD
-	 jc7Vm2x6cGXhQtr2gzaI6QcKcUtfzJMbNXeAeddn580kmVS4bRtdLgtCjsFDFfVhaM
-	 za/IoELtov6NgcA81eMsXX2mgQypnNo4l+doS3FMwGJRcHqSWqGaOzGSWWSBjz+eRD
-	 SHDTKnJ2EK92g==
-Message-ID: <47952714-d7b9-4bf0-92c7-48029d0cd1e3@kernel.org>
-Date: Thu, 4 Jul 2024 08:35:49 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDFbQCZy"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2bfdae7997aso239371a91.2;
+        Wed, 03 Jul 2024 23:37:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720075053; x=1720679853; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q9wcD4PWr8YAogAElKHlzCUbgCE7uJ7/yxnZjstIV5o=;
+        b=iDFbQCZyxYCnA8fOUJE0zmtTUupmK0kGbnMIHrTJpJ7pk/LbA2ovjXZpeRXki2KOqX
+         SKo+LF77ULp6ZTVajY6j+j/SRxOuVwgS2NlnVXxwHc6LkCnIy0welmoG5YdTgI8ib1RM
+         zg6AB7c43us8A8b65ikzzLZdTSW8qiVn87WlU7DnJjA3F9mp33jc1mMmZ0z3eJ/qgMkl
+         //OHARrCwnmWLqmCovMbfHg0eR0BGFqARin46UrmsOfSfRGTCdj5WVe4uGSq0RzM0ZAM
+         UcLePUiAxjBUEH1brYnWdRv9N8b4pn05yKKuhmykDGA4o2A3D3QJTCUVWfKEqPbVKVO6
+         chmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720075053; x=1720679853;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q9wcD4PWr8YAogAElKHlzCUbgCE7uJ7/yxnZjstIV5o=;
+        b=emOuzefyP4/4CQMmU5NHiF2ImcTF8OQ+WXqF13OyNEE4b6konJ9oI+n//QBEQghZe1
+         x27KtrQjNmQ1F0k7E6sgPzorAHH4mOZQ4uT+hwNmMsQKVH33wFkiz5AeK7yqL0tvM47E
+         4JXWqt0SAJb5kdXltRwyhGCC3r9a7foSJkKYdOOijr32TFcbAhX/FxDSC5tFCOTjJHUW
+         onjTMhgdQR2NpDAoPvmoxUT+2RGhs8zUxZh2TG5z0aV/CIoFu5cXOH5uUroRn33CwbX3
+         zZbncO5twpwtzD6/vmyjcv1ZIiNbL/KJn9zUV9/XeNQfokt4bSASc0V+8q9OPt1XMVG7
+         bKdg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8834jqVMOf8Tg9ABy365Eur+txf/dzjfenTGvfumEz0jUDikoTNFEYHbXz4+rxGNdwAXWD7a3tOGRGxoWF1NMMCrUp+PDeHEvU7KXoGu+fUEA74xFRMc4m52Yu4qXH9nGFs1uk3qWn8Becauz7uz/YJvbA/2oSQAbQDQk9sMQwajn6g==
+X-Gm-Message-State: AOJu0YyOC5U4zSCqxOfXEZ188Gc93XhOtsr5P9uY83iBTEXGUoysi1mV
+	LS9J4IrKWdb9Vfb2KYH3qg6dBTq3m/qIRr3l0gZ0kg7SVwAIB2v7
+X-Google-Smtp-Source: AGHT+IEXpW7QC6BZPKVS4Pkn43o+XVWNg9bvWBSKIs78gLrv3gqo0RR3sbFIBeXVBHfqY2DiBvHZwQ==
+X-Received: by 2002:a17:90b:618:b0:2c9:83f3:128c with SMTP id 98e67ed59e1d1-2c99c86be82mr550963a91.31.1720075053011;
+        Wed, 03 Jul 2024 23:37:33 -0700 (PDT)
+Received: from localhost.localdomain (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99aa6fd28sm666835a91.36.2024.07.03.23.37.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 23:37:32 -0700 (PDT)
+From: Shan-Chun Hung <shanchun1218@gmail.com>
+To: ulf.hansson@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	adrian.hunter@intel.com,
+	p.zabel@pengutronix.de,
+	pbrobinson@gmail.com,
+	serghox@gmail.com,
+	mcgrof@kernel.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	forbidden405@outlook.com,
+	tmaimon77@gmail.com,
+	andy.shevchenko@gmail.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ychuang3@nuvoton.com,
+	schung@nuvoton.com,
+	Shan-Chun Hung <shanchun1218@gmail.com>
+Subject: [PATCH v4 0/2] Add support for Nuvoton MA35D1 SDHCI
+Date: Thu,  4 Jul 2024 14:26:21 +0800
+Message-Id: <20240704062623.1480062-1-shanchun1218@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 04/10] dt-bindings: soc: qcom: cpr3: Add bindings for
- IPQ9574
-To: Varadarajan Narayanan <quic_varada@quicinc.com>, vireshk@kernel.org,
- nm@ti.com, sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, angelogioacchino.delregno@collabora.com,
- andersson@kernel.org, konrad.dybcio@linaro.org, mturquette@baylibre.com,
- ilia.lin@kernel.org, rafael@kernel.org, ulf.hansson@linaro.org,
- quic_sibis@quicinc.com, quic_rjendra@quicinc.com, quic_rohiagar@quicinc.com,
- abel.vesa@linaro.org, otto.pflueger@abscue.de, danila@jiaxyga.com,
- quic_ipkumar@quicinc.com, luca@z3ntu.xyz, stephan.gerhold@kernkonzept.com,
- nks@flawful.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20240703091651.2820236-1-quic_varada@quicinc.com>
- <20240703091651.2820236-5-quic_varada@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240703091651.2820236-5-quic_varada@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/07/2024 11:16, Varadarajan Narayanan wrote:
-> Add the bindings for the IPQ9574 CPR3 driver to the documentation.
-> 
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> ---
+This patch adds the SDHCI driver and DT binding documentation
+for the Nuvoton MA35D1 platform.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This MA35D1 SDHCI driver has been tested on the MA35D1 SOM board with
+Linux 6.10
 
-Best regards,
-Krzysztof
+v4:
+  - Update to nuvoton,ma35d1-sdhci.yaml
+    - Fixing overlooked issues.
+
+v3:
+  - Update ma35d1 sdhci driver
+    - Fixing "Alignment" and "spaces preferred around".
+    - Fixing style for multi-line comments.
+    - Fixing double call to sdhci_pltfm_free().
+
+v2:
+  - Update to nuvoton,ma35d1-sdhci.yaml
+    - Remove some redundant descriptions.
+    - Replace 'minitem' with 'maxitem' in the clock settings.
+    - Make corrections to nuvoton,sys description.
+    - Add sdhci-common.yaml.
+    - Remove '|' except where necessary to be preserved.
+    - Keeping one example is sufficient.
+    - Add regulators in the example.
+  - Update ma35d1 sdhci driver
+    - Refer to 'include what you use' to modify included header files.
+    - Replace the number 8 with sizeof(u8), and similarly for others.
+    - Use "dev" instead of "&pdev->dev".
+    - Use the min() macro to improve the code.
+    - Use dev_err_probe() instead of dev_err().
+    - Implement an error reset check mechanism.
+    - Add devm_add_action_or_reset() to help with sdhci_pltfm_free().
+    - Use devm_reset_control_get_exclusive() instead of devm_reset_control_get().
+
+Shan-Chun Hung (2):
+  dt-bindings: mmc: nuvoton,ma35d1-sdhci: Document MA35D1 SDHCI
+    controller
+  mmc: sdhci-of-ma35d1: Add Nuvoton MA35D1 SDHCI driver
+
+ .../bindings/mmc/nuvoton,ma35d1-sdhci.yaml    |  87 +++++
+ drivers/mmc/host/Kconfig                      |  12 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-ma35d1.c            | 297 ++++++++++++++++++
+ 4 files changed, 397 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/nuvoton,ma35d1-sdhci.yaml
+ create mode 100644 drivers/mmc/host/sdhci-of-ma35d1.c
+
+--
+2.25.1
 
