@@ -1,86 +1,280 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EA3C12D76E;
-	Thu,  4 Jul 2024 10:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFC731ABC3F
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 10:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720089403; cv=none; b=ljwo0GzH4XkDnGWb/Ps8T/ZeCRRfGuMXdGrOnm9NIuTqSH8Rs1bZgzjrRmuSzXfvSI+MExe1fKOog/RPuciuq1y6FYS8cUcBMayw09APV939O4rXfUJskvixJaaiOhHfKEks3vPHqgXER70nsSDLiIOHYnUuvQU4/Dzrdyv++a0=
+	t=1720089425; cv=none; b=fb6uS67z3qfCzb6eH9T/vZRL5z32bP0Wm54WbMMYZ07wDRH5t91zDzVLMUzH+Rk03ZEdIZgSFAK3yc+CGouRiEmWBSpPOWnS43eh6seu04l+7snBqKapWC18P9zBhvmQjt/M0szJ2ix+nn4wmMNt2sqS9TnZKzS3FHZpMVruQBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720089403; c=relaxed/simple;
-	bh=tc+zXpW5EumM4Y5w1BQmomPKVoA3wzt9NxV5ihkiHlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TAKlEE5JT2U5vpMSoDrqz+rD5dyx7SH1ueYbPqyLK6i+CsMXvxx794lwufd0CGFVTq86dEX1DfM2rtvD4qhkNv99Uh0u4jf11l7MDCocI66rnwPEZli2XRzORdLI03N8DGE7zbd5+f4+mRTABviIJFsBPbM6E7VrnP5ZdtXNn8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DACF367;
-	Thu,  4 Jul 2024 03:37:06 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4933B3F762;
-	Thu,  4 Jul 2024 03:36:39 -0700 (PDT)
-Date: Thu, 4 Jul 2024 11:36:36 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: cristian.marussi@arm.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
-	Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: arm,scmi: introduce
- property mbox-rx-timeout-ms
-Message-ID: <ZoZ7NCSaG0YRK-60@bogus>
-References: <20240703031715.379815-1-peng.fan@oss.nxp.com>
+	s=arc-20240116; t=1720089425; c=relaxed/simple;
+	bh=tiJYDB50plaW3sNOCvJoWbniE0IpI0rX4tPrIDLcVTg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=p1CK2UHPdHou+pFMfAqHZyhixwQy6zw/YF5zByyuhpon7WNV1Zi4PQ5BL89mz3rklct2+O+dhZHp4Sac5H/ScQcVQJCYhV10bckU+ADHJtZflMuAFR2+JAXTHr3yQLMuNLR0+jW4ADKKwrSkARmDDWGcFbrgy2NdHtsI4JPaTHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Hu6XfAg7; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Hu6XfAg7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Ltjdz
+	xKyhYhDYgQd38DjpnlGmWC1h3DS/QgiILardZ8=; b=Hu6XfAg7RP2M+pb7+iRzf
+	ThuKAE0JoR9//c8HU8QJYKAB3vgqxjVpXgejndRUIWR6Pm2VUCE8F4js3543SPy0
+	AnXJNIAkA2qJfNxs8qSPttjH0Y5Fq1IA2nh+D7S/s3Tj0KnUtBVfHQfR5pYo6WOK
+	WsxWIes0ifOxzHJMmXSaHM=
+Received: from localhost.localdomain (unknown [183.192.130.88])
+	by gzga-smtp-mta-g1-3 (Coremail) with SMTP id _____wDnDxsqe4Zm5Yo3Bg--.37145S2;
+	Thu, 04 Jul 2024 18:36:27 +0800 (CST)
+From: Ping Gan <jacky_gam_2001@163.com>
+To: sagi@grimberg.me,
+	hch@lst.de,
+	kch@nvidia.com,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: ping.gan@dell.com
+Subject: Re: [PATCH 0/2] nvmet: support polling task for RDMA and TCP 
+Date: Thu,  4 Jul 2024 18:35:32 +0800
+Message-Id: <20240704103533.68118-1-jacky_gam_2001@163.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <2797ce03-a52a-459a-a1a1-7591233f51cd@grimberg.me>
+References: <2797ce03-a52a-459a-a1a1-7591233f51cd@grimberg.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703031715.379815-1-peng.fan@oss.nxp.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnDxsqe4Zm5Yo3Bg--.37145S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3XrW7Jw4ftFW3Jry3Jw1DKFg_yoW3XrW7pr
+	W5JF1UJr4DJr1jyr1qyw4DZryUKw18Jw15XF1rJr1UJr1Dt34UJr1Utry5GrykGr18tr15
+	tF1DJF9xZF1jyw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIFAXUUUUU=
+X-CM-SenderInfo: 5mdfy55bjdzsisqqiqqrwthudrp/1tbiKAsSKWXAmGPvLgAAsH
 
-On Wed, Jul 03, 2024 at 11:17:14AM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> System Controller Management Interface(SCMI) firmwares might have
-> different designs by SCMI firmware developers. So the maximum receive
-> channel timeout value might also varies in the various designs.
-> 
-> So introduce property mbox-rx-timeout-ms to let each platform could
-> set its own timeout value in device tree.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> 
-> V2:
->  Drop defaults, update description.
-> 
->  Documentation/devicetree/bindings/firmware/arm,scmi.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> index ebf384e76df1..dcac0b36c76f 100644
-> --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> @@ -121,6 +121,12 @@ properties:
->        atomic mode of operation, even if requested.
->      default: 0
->  
-> +  max-rx-timeout-ms:
-> +    description:
-> +      An optional time value, expressed in milliseconds, representing the
-> +      mailbox maximum timeout value for receive channel. The value should
-> +      be a non-zero value if set.
-> +
+> On 7/4/24 11:10, Ping Gan wrote:
+>>> On 02/07/2024 13:02, Ping Gan wrote:
+>>>>> On 01/07/2024 10:42, Ping Gan wrote:
+>>>>>>> Hey Ping Gan,
+>>>>>>>
+>>>>>>>
+>>>>>>> On 26/06/2024 11:28, Ping Gan wrote:
+>>>>>>>> When running nvmf on SMP platform, current nvme target's RDMA
+>>>>>>>> and
+>>>>>>>> TCP use kworker to handle IO. But if there is other high
+>>>>>>>> workload
+>>>>>>>> in the system(eg: on kubernetes), the competition between the
+>>>>>>>> kworker and other workload is very radical. And since the
+>>>>>>>> kworker
+>>>>>>>> is scheduled by OS randomly, it's difficult to control OS
+>>>>>>>> resource
+>>>>>>>> and also tune the performance. If target support to use
+>>>>>>>> delicated
+>>>>>>>> polling task to handle IO, it's useful to control OS resource
+>>>>>>>> and
+>>>>>>>> gain good performance. So it makes sense to add polling task in
+>>>>>>>> rdma-rdma and rdma-tcp modules.
+>>>>>>> This is NOT the way to go here.
+>>>>>>>
+>>>>>>> Both rdma and tcp are driven from workqueue context, which are
+>>>>>>> bound
+>>>>>>> workqueues.
+>>>>>>>
+>>>>>>> So there are two ways to go here:
+>>>>>>> 1. Add generic port cpuset and use that to direct traffic to the
+>>>>>>> appropriate set of cores
+>>>>>>> (i.e. select an appropriate comp_vector for rdma and add an
+>>>>>>> appropriate
+>>>>>>> steering rule
+>>>>>>> for tcp).
+>>>>>>> 2. Add options to rdma/tcp to use UNBOUND workqueues, and allow
+>>>>>>> users
+>>>>>>> to
+>>>>>>> control
+>>>>>>> these UNBOUND workqueues cpumask via sysfs.
+>>>>>>>
+>>>>>>> (2) will not control interrupts to steer to other workloads
+>>>>>>> cpus,
+>>>>>>> but
+>>>>>>> the handlers may
+>>>>>>> run on a set of dedicated cpus.
+>>>>>>>
+>>>>>>> (1) is a better solution, but harder to implement.
+>>>>>>>
+>>>>>>> You also should look into nvmet-fc as well (and nvmet-loop for
+>>>>>>> that
+>>>>>>> matter).
+>>>>>> hi Sagi Grimberg,
+>>>>>> Thanks for your reply, actually we had tried the first advice you
+>>>>>> suggested, but we found the performance was poor when using spdk
+>>>>>> as initiator.
+>>>>> I suggest that you focus on that instead of what you proposed.
+>>>>> What is the source of your poor performance?
+>>>> Before these patches, we had used linux's RPS to forward the
+>>>> packets
+>>>> to a fixed cpu set for nvmet-tcp. But when did that we can still
+>>>> not
+>>>> cancel the competition between softirq and workqueue since nvme
+>>>> target's
+>>>> kworker cpu core bind on socket's cpu which is from skb. Besides
+>>>> that
+>>>> we found workqueue's wait latency was very high even we enabled
+>>>> polling
+>>>> on nvmet-tcp by module parameter idle_poll_period_usecs. So when
+>>>> initiator
+>>>> is polling mode, the target of workqueue is the bottleneck. Below
+>>>> is
+>>>> work's wait latency trace log of our test on our cluster(per node
+>>>> uses
+>>>> 4 numas 96 cores, 192G memory, one dual ports mellanox CX4LX(25Gbps
+>>>> X
+>>>> 2)
+>>>> ethernet adapter and randrw 1M IO size) by RPS to 6 cpu cores. And
+>>>> system's CPU and memory were used about 80%.
+>>> I'd try a simple unbound CPU case, steer packets to say cores [0-5]
+>>> and
+>>> assign
+>>> the cpumask of the unbound workqueue to cores [6-11].
+>> Okay, thanks for your guide.
+>>
+>>>> ogden-brown:~ #/usr/share/bcc/tools/wqlat -T -w nvmet_tcp_wq 1 2
+>>>> 01:06:59
+>>>>    usecs               : count     distribution
+>>>>        0 -> 1          : 0        |                              |
+>>>>        2 -> 3          : 0        |                              |
+>>>>        4 -> 7          : 0        |                              |
+>>>>        8 -> 15         : 3        |                              |
+>>>>       16 -> 31         : 10       |                              |
+>>>>       32 -> 63         : 3        |                              |
+>>>>       64 -> 127        : 2        |                              |
+>>>>      128 -> 255        : 0        |                              |
+>>>>      256 -> 511        : 5        |                              |
+>>>>      512 -> 1023       : 12       |                              |
+>>>>     1024 -> 2047       : 26       |*                             |
+>>>>     2048 -> 4095       : 34       |*                             |
+>>>>     4096 -> 8191       : 350      |************                  |
+>>>>     8192 -> 16383      : 625      |******************************|
+>>>>    16384 -> 32767      : 244      |*********                     |
+>>>>    32768 -> 65535      : 39       |*                             |
+>>>>
+>>>> 01:07:00
+>>>>    usecs               : count     distribution
+>>>>        0 -> 1          : 1        |                              |
+>>>>        2 -> 3          : 0        |                              |
+>>>>        4 -> 7          : 4        |                              |
+>>>>        8 -> 15         : 3        |                              |
+>>>>       16 -> 31         : 8        |                              |
+>>>>       32 -> 63         : 10       |                              |
+>>>>       64 -> 127        : 3        |                              |
+>>>>      128 -> 255        : 6        |                              |
+>>>>      256 -> 511        : 8        |                              |
+>>>>      512 -> 1023       : 20       |*                             |
+>>>>     1024 -> 2047       : 19       |*                             |
+>>>>     2048 -> 4095       : 57       |**                            |
+>>>>     4096 -> 8191       : 325      |****************              |
+>>>>     8192 -> 16383      : 647      |******************************|
+>>>>    16384 -> 32767      : 228      |***********                   |
+>>>>    32768 -> 65535      : 43       |**                            |
+>>>>    65536 -> 131071     : 1        |                              |
+>>>>
+>>>> And the bandwidth of a node is only 3100MB. While we used the patch
+>>>> and enable 6 polling task, the bandwidth can be 4000MB. It's a good
+>>>> improvement.
+>>> I think you will see similar performance with unbound workqueue and
+>>> rps.
+>> Yes, I remodified the nvmet-tcp/nvmet-rdma code for supporting
+>> unbound
+>> workqueue, and in same prerequisites of above to run test, and
+>> compared
+>> the result of unbound workqueue and polling mode task. And I got a
+>> good
+>> performance for unbound workqueue. For unbound workqueue TCP we got
+>> 3850M/node, it's almost equal to polling task. And also tested
+>> nvmet-rdma
+>> we get 5100M/node for unbound workqueue RDMA versus 5600M for polling
+>> task,
+>> seems the diff is very small. Anyway, your advice is good.
+>
+> I'm a bit surprised that you see ~10% delta here. I would look into
+> what 
+> is the root-cause of
+> this difference. If indeed the load is high, the overhead of the 
+> workqueue mgmt should be
+> negligible. I'm assuming you used IB_POLL_UNBOUND_WORKQUEUE ?
 
-IIRC, you had the min and max constraint in the earlier response. You
-need to have rushed and posted another version before I could respond
-with my preference.
+Yes, we used IB_POLL_UNBOUND_WORKQUEUE to create ib CQ. And I observed
+3% CPU
+usage of unbound workqueue versus 6% of polling task. 
 
-So there is no rush, these are v6.12 material. Take time for respining
-and give some time for the review.
+>>   Do you think
+>> we
+>> should submit the unbound workqueue patches for nvmet-tcp and
+>> nvmet-rdma
+>> to upstream nvmet?
+>
+> For nvmet-tcp, I think there is merit to split socket processing from 
+> napi context. For nvmet-rdma
+> I think the only difference is if you have multiple CQs assigned with 
+> the same comp_vector.
+>
+> How many queues do you have in your test?
 
--- 
-Regards,
-Sudeep
+We used 24 IO queues to nvmet-rdma target. I think this may also be 
+related to workqueue's wait latency. We still see some several ms wait
+latency for unbound workqueue of RMDA. You can see below trace log.
+
+ogden-brown:~ # /usr/share/bcc/tools/wqlat -T -w ib-comp-unb-wq 1 3
+Tracing work queue request latency time... Hit Ctrl-C to end.
+
+10:09:10
+     usecs               : count     distribution
+         0 -> 1          : 6        |                              |
+         2 -> 3          : 105      |**                            |
+         4 -> 7          : 1732     |******************************|
+         8 -> 15         : 1597     |******************************|
+        16 -> 31         : 526      |************                  |
+        32 -> 63         : 543      |************                  |
+        64 -> 127        : 950      |*********************         |
+       128 -> 255        : 1335     |***************************** |
+       256 -> 511        : 1534     |******************************|
+       512 -> 1023       : 1039     |***********************       |
+      1024 -> 2047       : 592      |*************                 |
+      2048 -> 4095       : 112      |**                            |
+      4096 -> 8191       : 6        |                              |
+
+10:09:11
+     usecs               : count     distribution
+         0 -> 1          : 3        |                              |
+         2 -> 3          : 62       |*                             |
+         4 -> 7          : 1459     |***************************** |
+         8 -> 15         : 1869     |******************************|
+        16 -> 31         : 612      |*************                 |
+        32 -> 63         : 478      |**********                    |
+        64 -> 127        : 844      |******************            |
+       128 -> 255        : 1123     |************************      |
+       256 -> 511        : 1278     |***************************   |
+       512 -> 1023       : 1113     |***********************       |
+      1024 -> 2047       : 632      |*************                 |
+      2048 -> 4095       : 158      |***                           |
+      4096 -> 8191       : 18       |                              |
+      8192 -> 16383      : 1        |                              |
+
+10:09:12
+     usecs               : count     distribution
+         0 -> 1          : 1        |                              |
+         2 -> 3          : 68       |*                             |
+         4 -> 7          : 1399     |***************************   |
+         8 -> 15         : 1822     |******************************|
+        16 -> 31         : 559      |************                  |
+        32 -> 63         : 513      |***********                   |
+        64 -> 127        : 906      |*******************           |
+       128 -> 255        : 1217     |***********************       |
+       256 -> 511        : 1391     |***************************   |
+       512 -> 1023       : 1135     |************************      |
+      1024 -> 2047       : 569      |************                  |
+      2048 -> 4095       : 110      |**                            |
+      4096 -> 8191       : 26       |                              |
+      8192 -> 16383      : 11       |                              |
+
+Thanks,
+Ping
+
+
