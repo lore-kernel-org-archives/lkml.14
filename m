@@ -1,200 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4391B29B3
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 16:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B54A1BC57;
+	Thu,  4 Jul 2024 16:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720111464; cv=none; b=dTxk5uxzGwQahca8rQ5xcf0JpyrhnxJOvpk7PKt/j6rjkkbbRlvkddLrCfPFn2XK+Up1C8xv9/Ogzn3gpeCn+hsPQTY/A9CavTAriLs/h7bKONWpAi2YXtELTgusUiLGS6EmbPYZopzeNnNdxiu7b5JTdYibypvhpnVQy04J3S0=
+	t=1720111551; cv=none; b=gkTdqAjkvifN3hIcDhTvoxQQAH10CUgPbRBM47ordBp0k+JMOvVKLx07zr5gptI7oiyCrgE4KFhnMfj3c758vX5hPqI/kESywdZtSkCSaDw9I+KZluzfQ2mW+2dYyMdEuBIV1h7hWh5ok6vXBfJrfYCG+uFCmi7iauaf2smuRMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720111464; c=relaxed/simple;
-	bh=HtDfW4RmeOzDrUSddUaG6I+IXN8ccaGkkmEOavbi1H8=;
+	s=arc-20240116; t=1720111551; c=relaxed/simple;
+	bh=WheJjgM7xwoYDL2h9KMuA8Uv+Mr1sZiDhbDrO6nNij0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YGez9+BOa+6CnPGQKA+98Blyi/50iVb+yVFsWNQTgsBfbHiii70ZVJef/MDDwKdazP3wzyZW7/QUPvfotuBi75DTJ6dgn/52ixKkIE6mSAfOcx/gKYGDbl70yGjGYKA+mpwJuaKqXK9qbk4X8xkV2CZeqWT+3hl2l2xfZU5v5rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UD8Y3jj/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pbv3iBDP3JF9Miv5uFZL9Pvy5CC29mIjDqT18q++cyuZcX2X/anOkG1d/yvKGGb+5i4wAq4pr39m/ROTUOZj1X/JG3oJwSkPKn1hpOPqu5UrHnCG7D/507Mv19QWmxQXUP5Tg156fbZuUJQZxNTcVui1bcRJCh4YGWv5PoLiXWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/8Qk5IF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UD8Y3jj/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720111461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qBw/J0yJYmD9f3CV3xbbj8+BC2H9ZQJrZWYrHVafND0=;
-	b=UD8Y3jj//PGLcgMjqKrJWpVmK+H5One5Q2JrpAHOTTnP/ICrqD4eDniFFQ/QrY+scS4OSN
-	B2+QIBr0UL6Cvs1kfOQzp4orkmYmWgGNhXFxnPfaTpR9qrrr3snOb8I4SIGWDJZDETZRGP
-	12j4BJdtj+BSm0/atCYYDs3TCjUjeF4=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-615-02gFSe2COpShW9uYbeQBpw-1; Thu, 04 Jul 2024 12:44:20 -0400
-X-MC-Unique: 02gFSe2COpShW9uYbeQBpw-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2c97832f28eso270731a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 09:44:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720111458; x=1720716258;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qBw/J0yJYmD9f3CV3xbbj8+BC2H9ZQJrZWYrHVafND0=;
-        b=ExlxqkEooh9m3ewmbIKhw+qptMK5AuzoLhx0hRLa7ocd+nCy+dx6hgKa1qi9CHVBEd
-         CFSu2B5EZcG2NbL6usbr1huo0oj3Xk7sggd26+d/9drOKzQBbOTBho4k8M4zazhorn7w
-         A82U8C9r6A5wAVuU/B/rCXshuh0E1EzKSbJrWjwDJ3H5jJ1ABvjRXMS+yQzSYCLYIWox
-         7jeeT1+V76fr0TxOly6655aJMV2Yvg8STpYZyHK4UiuQzpUkyQQwM0khCGF4ys8iKsVB
-         QrpRZ2QwbV+scTMUu2/dx1upFyGG+n5UUfyE7IZBPV5+/i805rIRtDYT6yxXqncW59+u
-         qtPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXtI2dTg/SWYQdU4f8cvdoXodnIGO0KNd3hRYwHXU+ZTLkkSt/8AN+5DK3AFifP2hvIjsCPAUSfMscx22CT21y82wyajRJuAfw81Jcd
-X-Gm-Message-State: AOJu0Yw/MqSSp6MKFHrSkB8zzF640fg5Z76OI4h5Kt1CE9XA28pvtBLa
-	jhHsgLlZfwWXosm/9fD3i9ZRdQZQ4SKdQTp8GWMF4rMjHXabdhGau/fi1Q+fcUAQ3JzWUcGzmJM
-	73uPjTpytF9H7IAvkfgVHgTZi4OoWUlDA68g6YxDYKfvNiwrk3ID5BPrIKaF7D3KOUYNO9w==
-X-Received: by 2002:a17:90b:110e:b0:2c9:36d3:8934 with SMTP id 98e67ed59e1d1-2c99c559213mr2080768a91.1.1720111457991;
-        Thu, 04 Jul 2024 09:44:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF5ZRD9473lpYFoMcreih2hHxW/kHYYnWWxv5eMI9U+zI40J+3J6xNYuTJ4g1nRRxrgSbZtow==
-X-Received: by 2002:a05:6358:2489:b0:1a5:a04d:14fa with SMTP id e5c5f4694b2df-1aa98c761a5mr253873555d.2.1720111437196;
-        Thu, 04 Jul 2024 09:43:57 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b5d8fa573fsm26424426d6.37.2024.07.04.09.43.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 09:43:56 -0700 (PDT)
-Date: Thu, 4 Jul 2024 12:43:53 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Muchun Song <muchun.song@linux.dev>, SeongJae Park <sj@kernel.org>,
-	Miaohe Lin <linmiaohe@huawei.com>, Michal Hocko <mhocko@suse.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH 00/45] hugetlb pagewalk unification
-Message-ID: <ZobRSSOCfPW2T3Kx@x1n>
-References: <20240704043132.28501-1-osalvador@suse.de>
- <617169bc-e18c-40fa-be3a-99c118a6d7fe@redhat.com>
- <Zoax9nwi5qmgTQR4@x1n>
- <84d4e799-90da-487e-adba-6174096283b5@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/8Qk5IF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D042C3277B;
+	Thu,  4 Jul 2024 16:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720111551;
+	bh=WheJjgM7xwoYDL2h9KMuA8Uv+Mr1sZiDhbDrO6nNij0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N/8Qk5IFaMOxhwedoQRRXvwxJ7aRBZtVyf1mVXOzpkF9wog9F4dXJ2mHn+ROUdue0
+	 yZNdABnYecO8PZLjZ6DY5oZLAhV6bGO5W72583Hkh95G3iu9m5CGvUjcmdwH1B9pQA
+	 m2lWQUbTD5ZF0y08aUnTgpzpa0KK9CXJivtY6SJD1kpCNnzsNkSapldCHUVW3H0778
+	 c3Tcqc4eP8/jNB0b3ihZWSRQ/plFmkAnkHRwvBc3LyDr3lEzRKLtM+495jjSccaz8b
+	 9mqZumxHPEjoWJYugOu6AS2QcZozZ5GmiNch3Qtrwoozq6/u3YwAOH1zCZ/6dBa1Cm
+	 H0JPrHAv76+bQ==
+Date: Thu, 4 Jul 2024 09:45:48 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mark Brown <broonie@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Kees Cook <keescook@chromium.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Valentin Obst <kernel@valentinobst.de>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	rust-for-linux@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] rust: SHADOW_CALL_STACK is incompatible with Rust
+Message-ID: <20240704164548.GB1394865@thelio-3990X>
+References: <20240704-shadow-call-stack-v3-0-d11c7a6ebe30@google.com>
+ <20240704-shadow-call-stack-v3-1-d11c7a6ebe30@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <84d4e799-90da-487e-adba-6174096283b5@redhat.com>
+In-Reply-To: <20240704-shadow-call-stack-v3-1-d11c7a6ebe30@google.com>
 
-On Thu, Jul 04, 2024 at 05:23:30PM +0200, David Hildenbrand wrote:
-> On 04.07.24 16:30, Peter Xu wrote:
-> > Hey, David,
-> > 
+On Thu, Jul 04, 2024 at 03:07:57PM +0000, Alice Ryhl wrote:
+> When using the shadow call stack sanitizer, all code must be compiled
+> with the -ffixed-x18 flag, but this flag is not currently being passed
+> to Rust. This results in crashes that are extremely difficult to debug.
 > 
-> Hi!
+> To ensure that nobody else has to go through the same debugging session
+> that I had to, prevent configurations that enable both SHADOW_CALL_STACK
+> and RUST.
 > 
-> > On Thu, Jul 04, 2024 at 12:44:38PM +0200, David Hildenbrand wrote:
-> > > There are roughly two categories of page table walkers we have:
-> > > 
-> > > 1) We actually only want to walk present folios (to be precise, page
-> > >     ranges of folios). We should look into moving away from the walk the
-> > >     page walker API where possible, and have something better that
-> > >     directly gives us the folio (page ranges). Any PTE batching would be
-> > >     done internally.
-> > > 
-> > > 2) We want to deal with non-present folios as well (swp entries and all
-> > >     kinds of other stuff). We should maybe implement our custom page
-> > >     table walker and move away from walk_page_range(). We are not walking
-> > >     "pages" after all but everything else included :)
-> > > 
-> > > Then, there is a subset of 1) where we only want to walk to a single address
-> > > (a single folio). I'm working on that right now to get rid of follow_page()
-> > > and some (IIRC 3: KSM an daemon) walk_page_range() users. Hugetlb will still
-> > > remain a bit special, but I'm afraid we cannot hide that completely.
-> > 
-> > Maybe you are talking about the generic concept of "page table walker", not
-> > walk_page_range() explicitly?
-> > 
-> > I'd agree if it's about the generic concept. For example, follow_page()
-> > definitely is tailored for getting the page/folio.  But just to mention
-> > Oscar's series is only working on the page_walk API itself.  What I see so
-> > far is most of the walk_page API users aren't described above - most of
-> > them do not fall into category 1) at all, if any. And they either need to
-> > fetch something from the pgtable where having the folio isn't enough, or
-> > modify the pgtable for different reasons.
+> It is rather common for people to backport 724a75ac9542 ("arm64: rust:
+> Enable Rust support for AArch64"), so I recommend applying this fix all
+> the way back to 6.1.
 > 
-> Right, but having 1) does not imply that we won't be having access to the
-> page table entry in an abstracted form, the folio is simply the primary
-> source of information that these users care about. 2) is an extension of 1),
-> but walking+exposing all (or most) other page table entries as well in some
-> form, which is certainly harder to get right.
-> 
-> Taking a look at some examples:
-> 
-> * madvise_cold_or_pageout_pte_range() only cares about present folios.
-> * madvise_free_pte_range() only cares about present folios.
-> * break_ksm_ops() only cares about present folios.
-> * mlock_walk_ops() only cares about present folios.
-> * damon_mkold_ops() only cares about present folios.
-> * damon_young_ops() only cares about present folios.
-> 
-> There are certainly other page_walk API users that are more involved and
-> need to do way more magic, which fall into category 2). In particular things
-> like swapin_walk_ops(), hmm_walk_ops() and most fs/proc/task_mmu.c. Likely
-> there are plenty of them.
-> 
-> 
-> Taking a look at vmscan.c/walk_mm(), I'm not sure how much benefit there
-> even is left in using walk_page_range() :)
+> Cc: <stable@vger.kernel.org> # 6.1 and later
+> Fixes: 724a75ac9542 ("arm64: rust: Enable Rust support for AArch64")
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-Hmm, I need to confess from a quick look I didn't yet see why the current
-page_walk API won't work under p4d there.. it could be that I missed some
-details.
+Would it be better to move this to arch/arm64/Kconfig?
 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 167e51067508..080907776db9 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -90,7 +90,7 @@ config ARM64
+ 	select ARCH_SUPPORTS_DEBUG_PAGEALLOC
+ 	select ARCH_SUPPORTS_HUGETLBFS
+ 	select ARCH_SUPPORTS_MEMORY_FAILURE
+-	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
++	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK && !RUST
+ 	select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN
+ 	select ARCH_SUPPORTS_CFI_CLANG
+
+RISC-V probably needs the same change, which further leads me to believe
+that this workaround should be architecture specific, as they may be
+fixed and enabled at different rates.
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 6b4d71aa9bed..4d89afdd385d 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -213,6 +213,7 @@ config HAVE_SHADOW_CALL_STACK
+ 	def_bool $(cc-option,-fsanitize=shadow-call-stack)
+ 	# https://github.com/riscv-non-isa/riscv-elf-psabi-doc/commit/a484e843e6eeb51f0cb7b8819e50da6d2444d769
+ 	depends on $(ld-option,--no-relax-gp)
++	depends on !RUST
+ 
+ config RISCV_USE_LINKER_RELAXATION
+ 	def_bool y
+
+> ---
+>  arch/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> > 
-> > A generic pgtable walker looks still wanted at some point, but it can be
-> > too involved to be introduced together with this "remove hugetlb_entry"
-> > effort.
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 975dd22a2dbd..238448a9cb71 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -690,6 +690,7 @@ config SHADOW_CALL_STACK
+>  	bool "Shadow Call Stack"
+>  	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+>  	depends on DYNAMIC_FTRACE_WITH_ARGS || DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+> +	depends on !RUST
+>  	depends on MMU
+>  	help
+>  	  This option enables the compiler's Shadow Call Stack, which
 > 
-> My thinking was if "remove hugetlb_entry" cannot wait for "remove
-> page_walk", because we found a reasonable way to do it better and convert
-> the individual users. Maybe it can't.
+> -- 
+> 2.45.2.803.g4e1b14247a-goog
 > 
-> I've not given up hope that we can end up with something better and clearer
-> than the current page_walk API :)
-
-Oh so you meant you have plan to rewrite some of the page_walk API users to
-use the new API you plan to propose?
-
-It looks fine by me. I assume anything new will already taking hugetlb
-folios into account, so it'll "just work" and actually reduce number of
-patches here, am I right?
-
-If it still needs time to land, I think it's also fine that it's done on
-top of Oscar's.  So it may boil down to the schedule in that case, and we
-may also want to know how Oscar sees this.
-
-> 
-> > 
-> > To me, that future work is not yet about "get the folio, ignore the
-> > pgtable", but about how to abstract different layers of pgtables, so the
-> > caller may get a generic concept of "one pgtable entry" with the level/size
-> > information attached, and process it at a single place / hook, and perhaps
-> > hopefully even work with a device pgtable, as long as it's a radix tree.
-> 
-> To me 2) is an extension of 1). My thinking is that we can start with 1)
-> without having to are about all details of 2). If we have to make it as
-> generic that we can walk any page table layout out there in this world, I'm
-> not so sure.
-
-I still see a hope there, after all the radix pgtable is indeed a common
-abstraction and it looks to me a lot of things share that structure. IIUC
-one challenge of it is being fast.  So.. I don't know. But I'll be more
-than happy to see it come if someone can work it out, and it just sounds
-very nice too if some chunk of code can be run the same for mm/, kvm/ and
-iommu/.
-
-Thanks,
-
--- 
-Peter Xu
-
