@@ -1,113 +1,167 @@
-Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1B71AED3B;
-	Thu,  4 Jul 2024 14:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7351B0103;
+	Thu,  4 Jul 2024 14:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720103172; cv=none; b=Ivra6ZQwl5LVFADNNWDZ0ydS+tO3SLaR9hPpkgz16zvPwaFqkSMQhNxtqsBIys9F3x5TAlemxX0Iyyo4PlogHfCgtc7WRoNH+JgEBKcdwCKLULpitaOn/BClIqWR02mDrNVhu6yOAqncLOxAhE3vX00+7VBWZVuLjXGjV+YN8U4=
+	t=1720103199; cv=none; b=epssv83wSbW3hpJqbRriuYgAsBOOfE0S9smS0YtE1+2zf+V6eYyzlyrFv05uVzqP3gnooG4k4luXDDJRm9vQYqGXXTtVSCBIIzMnmd9nY7jdDKw/BJWy6AvSbR2ggQ0ZM9ixEL7qAwTBcT3bu8P1kCGf07GrBspKf956zMf3LO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720103172; c=relaxed/simple;
-	bh=uWs+KI/NnNRYahU8cZs7MxLdZZhTS8AEn/oPUiUEj8E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LFCNLKiaBDK2ZseokGf/Wv+8i68aSg6K6lQ7ayvo8y2HAkKQVzwcuCoNsegKCcoAswQdmOtdSNeGZSKv2XtanynZqlvVnQx2zU8qfkV5DPxIQMP2FWcE5cVnYjJ4SxC3L4Z2hCzcz9fay6yjeV2TDWE2kdWzzys6qx0gDNgEBos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=Wvpig7nN; arc=none smtp.client-ip=49.12.72.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
+	s=arc-20240116; t=1720103199; c=relaxed/simple;
+	bh=I7gIk1P9S6nG2gciBBlkLoH607NzfMspV0b9zqkWr9A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tOoJcvxY2zKgx44iAqkvnrM8aGt/RvwHw+9odEZtkYm4rTPC2Gefw5OIhuYQAKqdS70SmzKa38wD47BPYI8MtWLkuwQ1fo5WJA9aVofpCQBvXTggCiXv6n3DqdjSjkBawhNrVJI9pl9qm+cIh6o4nGeX17hlSJrNs67BPJPQoaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXQNJ/K5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="Wvpig7nN"
-From: Finn Behrens <me@kloenk.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
-	t=1720103160; bh=klEyNORmTUCopsPqwvQ4SusCT6WUx2UKJes8fXdkRVM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Wvpig7nN4lrs7VsYh/M3O45Lg3AnmUcPuxZQYexSIJck67xx6x0BQcdxk8qs6WGav
-	 1s6gBDc5m3Go3ZRPEMuQ7zT5gVdMu16xsruZyW5X9ndKUxnn0BVE4gZcLYZxK7XFLY
-	 5/Gh4axfm8Wnm3dfBkZY2zORWBqxFN6ifcOhbDRQ=
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Wedson Almeida Filho <wedsonaf@gmail.com>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- patches@lists.linux.dev
-Subject: Re: [PATCH 01/13] rust: macros: indent list item in `paste!`'s docs
-Date: Thu, 04 Jul 2024 16:25:58 +0200
-Message-ID: <E3504594-6CD3-4D12-B0DA-92B032CD73AA@kloenk.dev>
-In-Reply-To: <20240701183625.665574-2-ojeda@kernel.org>
-References: <20240701183625.665574-1-ojeda@kernel.org>
- <20240701183625.665574-2-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXQNJ/K5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BD7F7C4AF0F;
+	Thu,  4 Jul 2024 14:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720103198;
+	bh=I7gIk1P9S6nG2gciBBlkLoH607NzfMspV0b9zqkWr9A=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=ZXQNJ/K5p4qnTn30/BzCmmPnRxI1MfVRk0jf+2hJ+4kE38kLf/onTFOautxi5AGKT
+	 f0zCKfttCqglUspDT9+DXbhjIBl+Zg8LHeQ6nYajRjMxkSeyv6yR6n+gTjorhyy725
+	 QEdvYFv+cuwmQD4kgOKoKXUge0K1CErUnYC8HiDDUnRHuxQhnioHvIHT+xL9lTInM5
+	 beTaf0m7sjIBDd1ppFCmgnQxClAwRk36lc53dZZWmkFcsSedniKDWslMwtsvaK3a3k
+	 HeNlEM/KoZdWky1OJw7xufg77gOE0a5k6+KMn9dk7CiTpGbZF7We0fcc9i5eDaQASz
+	 WIoMO+0+1hz7A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE571C3DA41;
+	Thu,  4 Jul 2024 14:26:38 +0000 (UTC)
+From: Utsav Agarwal via B4 Relay <devnull+utsav.agarwal.analog.com@kernel.org>
+Date: Thu, 04 Jul 2024 15:26:32 +0100
+Subject: [PATCH v8 3/3] dt-bindings: input: Update dtbinding for adp5588
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240704-adp5588_gpio_support-v8-3-208cf5d4c2d6@analog.com>
+References: <20240704-adp5588_gpio_support-v8-0-208cf5d4c2d6@analog.com>
+In-Reply-To: <20240704-adp5588_gpio_support-v8-0-208cf5d4c2d6@analog.com>
+To: Utsav Agarwal <utsav.agarwal@analog.com>, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Arturs Artamonovs <arturs.artamonovs@analog.com>, 
+ Vasileios Bimpikas <vasileios.bimpikas@analog.com>, 
+ Oliver Gaskell <oliver.gaskell@analog.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720103192; l=2556;
+ i=utsav.agarwal@analog.com; s=20240701; h=from:subject:message-id;
+ bh=Ra3/HCJMBQdCHapgLF9TJHngpmod+ZLUYz39Zx5T23w=;
+ b=gctcYHlXbmcVtUQMIZy8b7CyfVJegJbSWAOh8ARG/WmcsFFdM04FPzu58rwSuYJEovK5yAiYR
+ oFB38/kwgslBGqF7W+8e0TjAcpBWM10g8+KEdl10mQOHUQxN1D/I00x
+X-Developer-Key: i=utsav.agarwal@analog.com; a=ed25519;
+ pk=mIG5Dmd3TO5rcICwTsixl2MoUcf/i2u+jYqifd7+fmI=
+X-Endpoint-Received: by B4 Relay for utsav.agarwal@analog.com/20240701 with
+ auth_id=178
+X-Original-From: Utsav Agarwal <utsav.agarwal@analog.com>
+Reply-To: utsav.agarwal@analog.com
+
+From: Utsav Agarwal <utsav.agarwal@analog.com>
+
+Updating dt bindings for adp5588. Since the device can now function in a
+purely gpio mode, the following keypad specific properties are now made
+optional:
+	- interrupts
+	- keypad,num-rows
+	- keypad,num-columns
+	- linux,keymap
+
+However the above properties are required to be specified when
+configuring the device as a keypad, dependencies have been added
+such that specifying either one would require the remaining as well.
+
+Note that interrupts are optional, but required when the device has been
+configured in keypad mode.
+
+Signed-off-by: Utsav Agarwal <utsav.agarwal@analog.com>
+---
+ .../devicetree/bindings/input/adi,adp5588.yaml     | 45 +++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/adi,adp5588.yaml b/Documentation/devicetree/bindings/input/adi,adp5588.yaml
+index 26ea66834ae2..ccb24b8b7566 100644
+--- a/Documentation/devicetree/bindings/input/adi,adp5588.yaml
++++ b/Documentation/devicetree/bindings/input/adi,adp5588.yaml
+@@ -49,7 +49,10 @@ properties:
+   interrupt-controller:
+     description:
+       This property applies if either keypad,num-rows lower than 8 or
+-      keypad,num-columns lower than 10.
++      keypad,num-columns lower than 10. This property is optional if
++      keypad,num-rows or keypad,num-columns are not specified since the
++      device then acts as gpio only, during which interrupts may or may
++      not be utilized.
+ 
+   '#interrupt-cells':
+     const: 2
+@@ -65,13 +68,28 @@ properties:
+     minItems: 1
+     maxItems: 2
+ 
++
++dependencies:
++  keypad,num-rows:
++    - linux,keymap
++    - keypad,num-columns
++  keypad,num-columns:
++    - linux,keymap
++    - keypad,num-rows
++  linux,keymap:
++    - keypad,num-rows
++    - keypad,num-columns
++
++if:
++  required:
++    - linux,keymap
++then:
++  required:
++    - interrupts
++
+ required:
+   - compatible
+   - reg
+-  - interrupts
+-  - keypad,num-rows
+-  - keypad,num-columns
+-  - linux,keymap
+ 
+ unevaluatedProperties: false
+ 
+@@ -108,4 +126,21 @@ examples:
+             >;
+         };
+     };
++
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/input/input.h>
++    #include <dt-bindings/gpio/gpio.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        gpio@34 {
++            compatible = "adi,adp5588";
++            reg = <0x34>;
++
++            #gpio-cells = <2>;
++            gpio-controller;
++        };
++    };
++
+ ...
+
+-- 
+2.34.1
 
 
-
-On 1 Jul 2024, at 20:36, Miguel Ojeda wrote:
-
-> A new style lint, `doc_lazy_continuation` [1], has been introduced in t=
-he
-> upcoming Rust 1.80 (currently in beta), which detects missing indentati=
-on
-> in code documentation.
->
-> We have one such case:
->
->     error: doc list item missing indentation
->     --> rust/macros/lib.rs:315:5
->         |
->     315 | /// default the span of the `[< >]` group is used.
->         |     ^
->         |
->         =3D help: if this is supposed to be its own paragraph, add a bl=
-ank line
->         =3D help: for further information visit https://rust-lang.githu=
-b.io/rust-clippy/master/index.html#doc_lazy_continuation
->         =3D note: `-D clippy::doc-lazy-continuation` implied by `-D cli=
-ppy::style`
->         =3D help: to override `-D clippy::style` add `#[allow(clippy::d=
-oc_lazy_continuation)]`
->     help: indent this line
->         |
->     315 | ///   default the span of the `[< >]` group is used.
->         |     ++
->
-> While the rendering of the docs by `rustdoc` is not affected, we apply
-> this kind of indentation elsewhere since it looks better.
->
-> Thus clean it up.
->
-> Link: https://rust-lang.github.io/rust-clippy/master/index.html#/doc_la=
-zy_continuation [1]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-
-Reviewed-by: Finn Behrens <me@kloenk.dev>
-
-> ---
->  rust/macros/lib.rs | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-> index 520eae5fd792..05d976b3c09a 100644
-> --- a/rust/macros/lib.rs
-> +++ b/rust/macros/lib.rs
-> @@ -312,7 +312,7 @@ pub fn pinned_drop(args: TokenStream, input: TokenS=
-tream) -> TokenStream {
->  ///
->  /// Currently supported modifiers are:
->  /// * `span`: change the span of concatenated identifier to the span o=
-f the specified token. By
-> -/// default the span of the `[< >]` group is used.
-> +///   default the span of the `[< >]` group is used.
->  /// * `lower`: change the identifier to lower case.
->  /// * `upper`: change the identifier to upper case.
->  ///
-> -- =
-
-> 2.45.2
