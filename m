@@ -1,95 +1,109 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0083D17BC9;
-	Thu,  4 Jul 2024 02:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FEC9457;
+	Thu,  4 Jul 2024 02:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720059523; cv=none; b=gAWF4Tp1l5JhGvt4TlVZDn2YfFAKVGcCBsanZ08ReAtvpofAUjBg5qjjxQhJ4rHa5txS+i2K0pDifqJc29zfayF3uJb9khSZjnZvftqS+PvVAoKUbAulWVo0IQXoFrHx+0xOLARl/RPGm/4pMYJqyaCGhSJFrqLWcH8UU3du5qI=
+	t=1720059942; cv=none; b=LVr+GULfu7FFZie8ANS/5H2VDLVwmSzG5CvKf+wyWzwMfP6jTpU0Ggn692n6ab7AVeIb9FgI00vP4tlienZnbwBLkC6Ij9X+y1WBfP1QDWhUIzpUjGuzvm3Sm0hMYCu5l2HW4QZqPytukQRQalBwgPbpkpWDUcLJVhBwfipnf6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720059523; c=relaxed/simple;
-	bh=Kvg4uFFS+cAF10ezRPJVO6ka+cVbzGF66bEBj7SFleQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OHh4vXsDgF+fOAp4wnQQ4GoB5BarzTizAemxImS73Vz9u/dI+EeIU6/Y4qZ+ko8OYZv94ZF+1zaP+gVQWbbfA8dfPvyEwl81pjweeea5HUXp8eL6img3lxl/2p0EXwz2u5mKOv9Yv4J25wS9ZFzoihfRbYUjZV/hUF0XZwe6+Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=x+5GUD8q; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720059942; c=relaxed/simple;
+	bh=dVK3JwyGY6+ZxaownZlNQSE2BC7btSfN5OnAiAZQZ4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WkFY5nt00DJKOB4IXvt/AmBuF9yhx2kbx7HW+eePpBTFMK02Tql1ldny8YEvv8vDlmceVRinqQ3ijmVwkDSAtACImPgtv/imSIaWikFgH3OYHJrZKIIKMYOVWa3VqMbGkzQxZZvre0qDPhZqZyRPqDsn4nfumqj5b2dRE8/ENy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ct4RJi4U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="x+5GUD8q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=94REdKfYR7keuLl0NvxhS+99V2sHMpOB+7xBvMYVslo=; b=x+5GUD8qyxaMpRyngAU0uPUxTJ
-	TozvgJh1Dm/co3t7c5K8Jl5rhhprfx7fRsmvLJpgdAjvDw++b+7cvaAUo09C3cWS7/DT/IsuiaJ0I
-	6Ygmi1jZcPHEO3i30B3+j/J8I5rvMv2YOFulDELzCaN+dOYLX5CSS4XmSctxhq4Yitraf3wmnF4V5
-	Lw2gvgRZKiJLAQ+H4rnSY1ylbpmbgPZzkW9pEA4soqOnT6M5M0g8wrD2GzqTX/2EPVkfM892+C/CA
-	J73bwMW/TtdzvV5m0D2303E639GLnZBK44lpfJXkd3hts5DXjSFsVtGSKVLj0qMl35M4x5flb1jXq
-	q2y2XT6A==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sPC3P-0000000BvQt-1W1H;
-	Thu, 04 Jul 2024 02:18:35 +0000
-Message-ID: <1d805df8-748a-4bbc-a3d9-d6aa01a0b16e@infradead.org>
-Date: Wed, 3 Jul 2024 19:18:32 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ct4RJi4U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0636EC2BD10;
+	Thu,  4 Jul 2024 02:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720059941;
+	bh=dVK3JwyGY6+ZxaownZlNQSE2BC7btSfN5OnAiAZQZ4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ct4RJi4UBlXR8zvL7tq3WfcJzNxSMfIBvhReVvdfk4/yeM7j+bpJpMY/TfOhEVMrU
+	 D6OaR8M3vzOTpamEc81Sjau1qBtqxVvD/T3iD32AqdLMootP6kBgJRAVwLhbOEdKis
+	 htf0LDi3L4b1Xj5wED+T5Mxd7fHQ33flEzxBYrBER8sa5ElC668hF/S+9rlYzULKdE
+	 vc9zjHUdewDsspd09EMUHfuy9J2zuhahCLpg98fqhLhC8LmAQLI+iBUoapSkPo2qGa
+	 mK9rlyv4y6h+SXjIiKeevneGgLbC6EeZomiaxAxwi95PCJ3DfUWgcGCMdrd/O5TORT
+	 gSKtN+CzRSWcA==
+Date: Wed, 3 Jul 2024 21:25:37 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: David Collins <quic_collinsd@quicinc.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] spmi: pmic-arb: add missing newline in dev_err format
+ strings
+Message-ID: <ansfnfz2ttzdq3l6t2xr4xxd2bi7uixt45hghgqjppf47lvvnf@yoc63yszrohc>
+References: <20240703221248.3640490-1-quic_collinsd@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] Docs/mm/index: move allocation profiling document to
- unsorted documents chapter
-To: Suren Baghdasaryan <surenb@google.com>, SeongJae Park <sj@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Kent Overstreet <kent.overstreet@linux.dev>
-References: <87msmyt8zh.fsf@trenco.lwn.net>
- <20240703230040.90283-1-sj@kernel.org>
- <CAJuCfpFO_C_LgxrRWrxG9o==RRtYAbkbP3ZJULwdmTjDcAJNrg@mail.gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <CAJuCfpFO_C_LgxrRWrxG9o==RRtYAbkbP3ZJULwdmTjDcAJNrg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240703221248.3640490-1-quic_collinsd@quicinc.com>
 
-
-
-On 7/3/24 7:10 PM, Suren Baghdasaryan wrote:
-> On Wed, Jul 3, 2024 at 4:00 PM SeongJae Park <sj@kernel.org> wrote:
->>
->> On Wed, 03 Jul 2024 16:18:42 -0600 Jonathan Corbet <corbet@lwn.net> wrote:
->>
->>> SeongJae Park <sj@kernel.org> writes:
->>>
->>>> The memory allocation profiling document was added to the bottom of the
->>>> new outline.  Apparently it was not decided by well-defined guidelines
->>>> or a thorough discussions.  Rather than that, it was added there just
->>>> because there was no place for such unsorted documents.  Now there is
->>>> the chapter.  Move the document to the new place.
->>>
->>> I'll take this for now, but it's truly sad to see new documentation
->>> being added to the slushpile at the end.  It seems better to create a
->>> "development tools" section in the new outline and put the allocation
->>> profiling document there?
->>
->> I have no strong opinions about that.  Cc-ing Suren and Kent, as they are the
->> author of the allocation profiling document and hence might have some opinion.
+On Wed, Jul 03, 2024 at 03:12:48PM GMT, David Collins wrote:
+> dev_err() format strings should end with '\n'.  Several such
+> format strings in the spmi-pmic-arb driver are missing it.
+> Add newlines where needed.
 > 
-> IMHO if this would be the only document belonging to "development
-> tools" then keeping it under unsorted is fine.
-> If more documents will fall into that category then Jonathan's
-> suggestion makes sense to me. Looking at the current list, page_owner
-> and maybe damon might be considered for this category as well.
-> SeongJae, WDYT?
-> Thanks,
-> Suren.
+> Fixes: 02922ccbb330 ("spmi: pmic-arb: Register controller for bus instead of arbiter")
+> Signed-off-by: David Collins <quic_collinsd@quicinc.com>
+
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/spmi/spmi-pmic-arb.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-
-Documentation/dev-tools/ already contains 20 files.
-Unless you want to keep it under Documentation/mm/, that is.
-
--- 
-~Randy
+> diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
+> index 791cdc160c51..c408ded0c00f 100644
+> --- a/drivers/spmi/spmi-pmic-arb.c
+> +++ b/drivers/spmi/spmi-pmic-arb.c
+> @@ -398,7 +398,7 @@ static int pmic_arb_fmt_read_cmd(struct spmi_pmic_arb_bus *bus, u8 opc, u8 sid,
+>  
+>  	*offset = rc;
+>  	if (bc >= PMIC_ARB_MAX_TRANS_BYTES) {
+> -		dev_err(&bus->spmic->dev, "pmic-arb supports 1..%d bytes per trans, but:%zu requested",
+> +		dev_err(&bus->spmic->dev, "pmic-arb supports 1..%d bytes per trans, but:%zu requested\n",
+>  			PMIC_ARB_MAX_TRANS_BYTES, len);
+>  		return  -EINVAL;
+>  	}
+> @@ -477,7 +477,7 @@ static int pmic_arb_fmt_write_cmd(struct spmi_pmic_arb_bus *bus, u8 opc,
+>  
+>  	*offset = rc;
+>  	if (bc >= PMIC_ARB_MAX_TRANS_BYTES) {
+> -		dev_err(&bus->spmic->dev, "pmic-arb supports 1..%d bytes per trans, but:%zu requested",
+> +		dev_err(&bus->spmic->dev, "pmic-arb supports 1..%d bytes per trans, but:%zu requested\n",
+>  			PMIC_ARB_MAX_TRANS_BYTES, len);
+>  		return  -EINVAL;
+>  	}
+> @@ -1702,7 +1702,7 @@ static int spmi_pmic_arb_bus_init(struct platform_device *pdev,
+>  
+>  	index = of_property_match_string(node, "reg-names", "cnfg");
+>  	if (index < 0) {
+> -		dev_err(dev, "cnfg reg region missing");
+> +		dev_err(dev, "cnfg reg region missing\n");
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -1712,7 +1712,7 @@ static int spmi_pmic_arb_bus_init(struct platform_device *pdev,
+>  
+>  	index = of_property_match_string(node, "reg-names", "intr");
+>  	if (index < 0) {
+> -		dev_err(dev, "intr reg region missing");
+> +		dev_err(dev, "intr reg region missing\n");
+>  		return -EINVAL;
+>  	}
+>  
+> -- 
+> 2.25.1
+> 
+> 
