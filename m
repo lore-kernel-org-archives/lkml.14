@@ -1,105 +1,63 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4BB1AB8E0
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 10:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959571AAE30
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 10:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720087657; cv=none; b=st/9GD21pWVNid8shNKma2w0F7Z/LBIGIdarvbh+LvX0H4T4ZwmpUzPRm0IjPFPxuXgWNM04E95E7iGiCgMOkr2p3nojqQXxYtKI8+fnLLIMXatWQ1b70c8UHBwLMyCKf//aisfNGeAVUrDRQ0Fy3SFs/NS+XWr2mc9tLxkGSIY=
+	t=1720087671; cv=none; b=hkYdZGmkiSFkTTg0CPQw9KugsUi/Eij7bxBUfm8ny0w4el/JYbpK3FTfUNMPF/YULafjWMnWIdxoml0ZfSVtYccbfi4AGsUuqS3Epp2IHrFzYdAnObEmUfIUrtiIviOri8GFc0Zgz5MSz8Z/r2fndttVg9l0deuP8evCb8Bn8Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720087657; c=relaxed/simple;
-	bh=L1au4gRMKcI5BIEcsS+8zjDDar+BRU9MILS6EafA7W4=;
+	s=arc-20240116; t=1720087671; c=relaxed/simple;
+	bh=vLLD9LStezIyvooTMxotMgJ/Ciiv2crq+kgdVIIA2RM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VLr7JLpKKq02tiaMTx2YYiIWPIAkfKAdMyRcUOFzmJNg+PfkN1y21eKqwfAcBG0sKf2+coCaXplxxam6zvGexBuVW/FtDRO4wUKfkCf4QwGpRW74bwhbJ/as+KnOJY2gV0mbi7UMXPJ5XEyh3BS/z0cghVgd+q45P7a+CIm1ILk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1sPJMm-0004rB-JU; Thu, 04 Jul 2024 12:07:04 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1sPJMl-007460-14; Thu, 04 Jul 2024 12:07:03 +0200
-Received: from pengutronix.de (p5de45302.dip0.t-ipconnect.de [93.228.83.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 97EF92FABC2;
-	Thu, 04 Jul 2024 10:07:02 +0000 (UTC)
-Date: Thu, 4 Jul 2024 12:07:02 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"open list:CAN NETWORK DRIVERS" <linux-can@vger.kernel.org>, "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dt-bindings: can: fsl,flexcan: add common
- 'can-transceiver' for fsl,flexcan
-Message-ID: <20240704-outstanding-outrageous-herring-003368-mkl@pengutronix.de>
-References: <20240629021754.3583641-1-Frank.Li@nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=r0oSfliRn5NHqlzpxf4lP1o/Y6LAy6uL6G5xfZOloMNO0J2PwtUP2FpMrm6ZoWWVSND4sBHNM+1RkTLs9/PR+xtkxeXrMKhSyy/hsBXly+HxX0oK2/rOSoev/G90edK81DxNKzcO+zlrLivw77iESqbq4WbCugVAEPnpRvoVNrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bR+o6uEm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bR+o6uEm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A23C3277B;
+	Thu,  4 Jul 2024 10:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720087671;
+	bh=vLLD9LStezIyvooTMxotMgJ/Ciiv2crq+kgdVIIA2RM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bR+o6uEmRrRkzThDDecdaxhgBtbIQCXCH1pKCrKZnGpbZVQDpI/Y+asuzXoCPZ76x
+	 qzS3IrUotT955BkJ1qZETwm+TM1gDSaI7qUQTPnlIfYFe3AwqIiKy7tDQKf1jUWU9a
+	 w7j0UBPmMPjYFaa1kSIMfSAC6Fen3i69ad6yQYck=
+Date: Thu, 4 Jul 2024 12:07:47 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: tuhaowen <tuhaowen@uniontech.com>
+Cc: sudipm.mukherjee@gmail.com, alexander.deucher@amd.com,
+	linux-kernel@vger.kernel.org, huangbibo@uniontech.com,
+	wangyuli@uniontech.com
+Subject: Re: [PATCH] dev/parport: fix the array out-of-bounds risk
+Message-ID: <2024070413-obsessive-stack-7c62@gregkh>
+References: <20240626021136.12282-1-tuhaowen@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dr2n3t7ohmn737hp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240629021754.3583641-1-Frank.Li@nxp.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240626021136.12282-1-tuhaowen@uniontech.com>
 
+On Wed, Jun 26, 2024 at 10:11:36AM +0800, tuhaowen wrote:
+> The array buffer size is 20 bytes.
+> When executing code in a 64-bit CPU environment, up to 42 bytes of
+> data will be written into this array
+> (the size of "%lu\t%lu\n" is 20 + 1 + 20 + 1).
+> 
+> In fact, this line of code for 32-bit CPUs also has the risk of
+> crossing the boundary, but it can exceed 2 bytes at most. With good
+> luck, it is local variables that are damaged, and there are no serious
+> consequences.
 
---dr2n3t7ohmn737hp
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Usually because no one actually has this hardware anymore :)
 
-On 28.06.2024 22:17:54, Frank Li wrote:
-> Add common 'can-transceiver' children node for fsl,flexcan.
->=20
-> Fix below warning:
-> arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dtb: can@2180000: 'can-tran=
-sceiver' does not match any of the regexes: 'pinctrl-[0-9]+'
->         from schema $id: http://devicetree.org/schemas/net/can/fsl,flexca=
-n.yaml#
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Can you also properly test the buffer size when writing into it so that
+even if the math is incorrect, it will not overflow?
 
-Applied to linux-can-next.
+thanks,
 
-Thanks,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---dr2n3t7ohmn737hp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmaGdEMACgkQKDiiPnot
-vG+ndwgAmTD3vI+lh+SpHXPC8faiwWnvlpIAuwu1ia2S5LNiIxhehoz6+WgxW3h/
-0KkIbn2zQva+MUsldVljBQd1tGssLrV54uni1v1OF1Hwnjd/E89cYqEZasllZEX/
-sBlUbgBOxj9DW8liWUhk7hsPxPmrSKHJIgnMDq6lW8998oT+EG2DSfTGyU19aJJr
-/mbyaZ/IXIGplQKbS/4tVGABrip20ab95BrbDf6WphlTIgtleyt9ZICdT7CQ6YCH
-WtWHrmy9L6hSNOSTR7qUSG7af7fcXVgg6P1Scmw1DyEirWKyqxXYldb9Tyl1H8gj
-RezwMSF47aHNA9/vXmPeX7WjWsH2Cw==
-=36qY
------END PGP SIGNATURE-----
-
---dr2n3t7ohmn737hp--
+greg k-h
