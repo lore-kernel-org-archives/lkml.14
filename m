@@ -1,117 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C281B11E1
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 14:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872421DA22
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 14:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720103405; cv=none; b=t1+bN8IdCR2qxY6w+A80ACsc/R2DdHsO5SdBCCABDUeJwlgh6xUp74+CaY2SNE9FgpqssKz3F/ixr9X3C7mRPjBzcmxo+as3xAGaHOw7sTyJilaZGZQrDf2+7ywLyWKdIaDfivHwf23fVL7AdnNokMI4jTQmUtv4cssLYltXTJM=
+	t=1720103422; cv=none; b=Uz0G4EYwNlLwyNkFnX5TWQsulVLqFEQKT8wfIZMWb/jvqYzEkrzzgjBD1Oea5OzMj22wVWV+Ev8TJh5iP/EIHk4Nn2b0cGYVF9nCVzpZHTW2g4VmUFG0SYS0nOsrBDfbsKISqtnROVKtcjyjG05XSnVDlyvcZhY2uKjuX3jV0Vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720103405; c=relaxed/simple;
-	bh=aqW9gjTA95ciOjlGYFV47g4h2LobgpnPA7tQQS4gw9E=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gSLxwRUoin1hQet5gYUDUECYP65S3I0tNKOThXIorbUhZzYdehlEpo1VOCvjXWA1vd0BWVoxNWqisGGy95ASGRBY2uPmG8MUKD7FpyzAlfGOYiVV/foiQg1J2CHiOu+Rjnb8hwQgbQdBhihIrncVfPz1YvvnWWzZ/vG+J1L2MOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TByTh8Qo; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720103422; c=relaxed/simple;
+	bh=rxkoVLANAgsiRg1BdlHYZ9ggrSz46s9m15oRQWmwMJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RurjokVT9ag7dOwSjMmA7ZlIk7YImQUzojaUv7T2N0xViuBkqLfBHy7EAp1DvFjod9cZb8X55wnMLRP7HqDDJdASroUtGW4AxsRWvZfcId4y5QwRpi/qAvwSbHk+YW/4CxOUpdJXboEFEJqpMZ8R9EIJWwVMfkhz/ISfqlq3pg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iEJuLrVk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TByTh8Qo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720103403; x=1751639403;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=aqW9gjTA95ciOjlGYFV47g4h2LobgpnPA7tQQS4gw9E=;
-  b=TByTh8QoJSgyfbrxaeR2TzOVwZ5ibkZMOYi/fBfVheL1/L+VgOEKdwQe
-   NP/gtQULHuP8+vdW0xorrrqhGWNcWy4BkGbhQ32vIMibS/LTupA8wgqg6
-   ijoC6htBzVDH6YKj5qVq8LBEVwCXav9qm9asKgGvpbPxt/ygbMNOi26FK
-   XA/6HZda9I0Ee3GCkngxnlKWSxvBEb5Slns2HsHXGOpBgbdSN6h47uCn6
-   qxXYokoDYnc8Chi/WzXMTiN6Q9tpp+ThnrRZQLNH9J6lpitdxocWczgND
-   QSGJ0naSjxAR3J3teOY+wTC/T+2nDbZcdLAvMND6Ft+AagDlSnPhAR94m
-   A==;
-X-CSE-ConnectionGUID: on1ksiqWSIi8XPA8iXk2UA==
-X-CSE-MsgGUID: kZ5afCSUQaydptDXbpP8Ww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="17522267"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="17522267"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 07:25:00 -0700
-X-CSE-ConnectionGUID: up9qyxkjSw6G1sTT0A8oiw==
-X-CSE-MsgGUID: KX0cngofS5azc7TaKb/4Jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="84166564"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.125.248.220]) ([10.125.248.220])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 07:24:54 -0700
-Message-ID: <f273615a-ebbd-488c-a301-e5cefc0715b1@linux.intel.com>
-Date: Thu, 4 Jul 2024 22:24:52 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iEJuLrVk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720103419;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w/AAPZgMjlC+NouAvQxaat3L1IUvbO4yc2zitpvelSI=;
+	b=iEJuLrVk8yN1I43ak2F+1nTz4dlcrRSc6E4nqvq5VLb9aEHNJJ6io7jx4utRYmtMnrDnyA
+	tPnxJKr6FQzRkUQWdURyWJ+SGXgnUE+QkipaYr40yZppIkBxxPgaDIHfm0028Fs5HOyhcd
+	D+wq4ewrGALhW/xcWjFSTD4fmU179tg=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-AF2siz_MPaqraf0t0EXHbA-1; Thu, 04 Jul 2024 10:30:18 -0400
+X-MC-Unique: AF2siz_MPaqraf0t0EXHbA-1
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-444f87a6c3cso1709161cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 07:30:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720103417; x=1720708217;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w/AAPZgMjlC+NouAvQxaat3L1IUvbO4yc2zitpvelSI=;
+        b=RyU8KqyDyHzZruuB342gDsE8beaKFCFz1r/WmQrTPjyyWyk3vH+M+oCXJATLk/o7gN
+         injxw142NUDwSDTE57FbPXl3Isccniy3WzrWfRpEBNOA/od66aEg7nUPEf7ot5A/A7xx
+         zU3lTaN+ItEwCjFrD4k4ufUnKBdhqYdHfNsjSyGs10jvWKjNIRUJL5czjXG47XI9FCEN
+         iXfW40XcSeeZcIApiYnhnpJGJKjuD+BRlyIXlseAc7OFuCG5crM2ehVwrMzZwtmOgjm/
+         UFSEHgwjI3NCtFotvZMOqBIBZy+E1sWbpW/fscN5fguZdqjEbXzRiHOi7wW3c+sjkmx7
+         T6mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXXlkwcaCXrn9kbNeY8s0viUAca7DKJTz0eotiDeGoRWdScecRiJAePKYVWpK0utlkf6KN3/ziRBNXaYWV3ivEmw8ROvZOGgRJqr+J0
+X-Gm-Message-State: AOJu0YyeoHmyh9jtrLwzOb1sq+0FmOvZGbF5P5Q/Zds6ttITGz0EbY1h
+	bRpTzWsRxdykcwJIdFEf8B1JOD43u/9vMDrPPg2hgTeUriZ32N24Dy+2NqnU3reTHfhYIydc7+y
+	xHZx5hmywwQJTRPllaFU8KOQMjACCfXo+/ww/iCf/Gm9XbmzL44K2D9FlYX1tkA==
+X-Received: by 2002:a05:620a:5373:b0:79d:6273:9993 with SMTP id af79cd13be357-79eee26ee8dmr156438285a.6.1720103417642;
+        Thu, 04 Jul 2024 07:30:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFj0u2XdT5CTZX+Koii9wFhsrVmpQ6ohxOQzjPcSeWjkjtqMUBPFWDoI8rAxzOAQLrY6Nq4MQ==
+X-Received: by 2002:a05:620a:5373:b0:79d:6273:9993 with SMTP id af79cd13be357-79eee26ee8dmr156435385a.6.1720103417282;
+        Thu, 04 Jul 2024 07:30:17 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79d693060b2sm679117385a.104.2024.07.04.07.30.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 07:30:16 -0700 (PDT)
+Date: Thu, 4 Jul 2024 10:30:14 -0400
+From: Peter Xu <peterx@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Muchun Song <muchun.song@linux.dev>, SeongJae Park <sj@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>, Michal Hocko <mhocko@suse.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH 00/45] hugetlb pagewalk unification
+Message-ID: <Zoax9nwi5qmgTQR4@x1n>
+References: <20240704043132.28501-1-osalvador@suse.de>
+ <617169bc-e18c-40fa-be3a-99c118a6d7fe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, catalin.marinas@arm.com,
- kernel-team@android.com, Yi Liu <yi.l.liu@intel.com>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Kalle Valo <kvalo@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
- Jason Wang <jasowang@redhat.com>, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Mikko Perttunen <mperttunen@nvidia.com>,
- Jeff Johnson <quic_jjohnson@quicinc.com>, ath10k@lists.infradead.org,
- ath11k@lists.infradead.org, iommu@lists.linux.dev,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/21] iommu: Refactoring domain allocation interface
-To: Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
- Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Kevin Tian <kevin.tian@intel.com>
-References: <20240610085555.88197-1-baolu.lu@linux.intel.com>
- <172009858593.2049787.5200500337719932334.b4-ty@kernel.org>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <172009858593.2049787.5200500337719932334.b4-ty@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <617169bc-e18c-40fa-be3a-99c118a6d7fe@redhat.com>
 
-On 2024/7/4 22:18, Will Deacon wrote:
-> On Mon, 10 Jun 2024 16:55:34 +0800, Lu Baolu wrote:
->> The IOMMU subsystem has undergone some changes, including the removal
->> of iommu_ops from the bus structure. Consequently, the existing domain
->> allocation interface, which relies on a bus type argument, is no longer
->> relevant:
->>
->>      struct iommu_domain *iommu_domain_alloc(struct bus_type *bus)
->>
->> [...]
-> Applied a few of these to iommu (iommufd/paging-domain-alloc), thanks!
-> 
-> [01/21] iommu: Add iommu_paging_domain_alloc() interface
->          https://git.kernel.org/iommu/c/a27bf2743cb8
-> [02/21] iommufd: Use iommu_paging_domain_alloc()
->          https://git.kernel.org/iommu/c/26a581606fab
-> [03/21] vfio/type1: Use iommu_paging_domain_alloc()
->          https://git.kernel.org/iommu/c/60ffc4501722
-> [04/21] vhost-vdpa: Use iommu_paging_domain_alloc()
->          https://git.kernel.org/iommu/c/9c159f6de1ae
-> [05/21] drm/msm: Use iommu_paging_domain_alloc()
->          https://git.kernel.org/iommu/c/45acf35af200
-> 
-> [10/21] wifi: ath10k: Use iommu_paging_domain_alloc()
->          https://git.kernel.org/iommu/c/d5b7485588df
-> [11/21] wifi: ath11k: Use iommu_paging_domain_alloc()
->          https://git.kernel.org/iommu/c/ef50d41fbf1c
-> 
-> [14/21] RDMA/usnic: Use iommu_paging_domain_alloc()
->          https://git.kernel.org/iommu/c/3b10f25704be
-> [15/21] iommu/vt-d: Add helper to allocate paging domain
->          https://git.kernel.org/iommu/c/9e9ba576c259
+Hey, David,
 
-Will, the patch [15/21] has already been included in my VT-d update pull
-request. I have also addressed Yi's comment in that patch. So can you
-please remove it from this branch?
+On Thu, Jul 04, 2024 at 12:44:38PM +0200, David Hildenbrand wrote:
+> There are roughly two categories of page table walkers we have:
+> 
+> 1) We actually only want to walk present folios (to be precise, page
+>    ranges of folios). We should look into moving away from the walk the
+>    page walker API where possible, and have something better that
+>    directly gives us the folio (page ranges). Any PTE batching would be
+>    done internally.
+> 
+> 2) We want to deal with non-present folios as well (swp entries and all
+>    kinds of other stuff). We should maybe implement our custom page
+>    table walker and move away from walk_page_range(). We are not walking
+>    "pages" after all but everything else included :)
+> 
+> Then, there is a subset of 1) where we only want to walk to a single address
+> (a single folio). I'm working on that right now to get rid of follow_page()
+> and some (IIRC 3: KSM an daemon) walk_page_range() users. Hugetlb will still
+> remain a bit special, but I'm afraid we cannot hide that completely.
+
+Maybe you are talking about the generic concept of "page table walker", not
+walk_page_range() explicitly?
+
+I'd agree if it's about the generic concept. For example, follow_page()
+definitely is tailored for getting the page/folio.  But just to mention
+Oscar's series is only working on the page_walk API itself.  What I see so
+far is most of the walk_page API users aren't described above - most of
+them do not fall into category 1) at all, if any. And they either need to
+fetch something from the pgtable where having the folio isn't enough, or
+modify the pgtable for different reasons.
+
+A generic pgtable walker looks still wanted at some point, but it can be
+too involved to be introduced together with this "remove hugetlb_entry"
+effort.
+
+To me, that future work is not yet about "get the folio, ignore the
+pgtable", but about how to abstract different layers of pgtables, so the
+caller may get a generic concept of "one pgtable entry" with the level/size
+information attached, and process it at a single place / hook, and perhaps
+hopefully even work with a device pgtable, as long as it's a radix tree.
+
+[Adding Jason into the loop too. PS: Oscar, please consider copying Jason
+ for the works too; Jason provided great lots of useful discussions in the
+ past on relevant topics]
 
 Thanks,
-baolu
+
+-- 
+Peter Xu
+
