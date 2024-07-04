@@ -1,113 +1,123 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8802743AB3
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 15:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA031B120E
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 15:29:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720106901; cv=none; b=fmB8YGyaq85Qf4bvJbo6CBwV8iDsQZWiU3p8qSs4J93JGCpxqRNWpd5DBxAQpPIFbscEMGJoPnVen4jzigBq1Sxv7i4kGwMPD8xKcTQSMuIhwcHBoN70gn7Za/2DdfhTzg+YgTA9Q8KmFELgDS3TE/uvW0GRqJu51Nylkjh1a+M=
+	t=1720106967; cv=none; b=ka3asLWCrH8hsa18kSVBEWUEHfsrGfoorsiH5MuSuUDOQKCokmbcdPbp9CRNHAf7LpuwFpCsI7DvveIGieQeqtBgANhihDx1HTcg82agoJQcjMXDza4mD8lANIu3YjhLEkO8drPH+yLk+UpixXsbhebb7e0iLP6LeUdCHA3PO/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720106901; c=relaxed/simple;
-	bh=K+9khsHPrGl9+kaP0GvrXu0P9KWKNyzA+GM5yKpaUmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2FKv8omKEATmYx/k1cPH7s5rbZQC3dqXvPcM6/Eat9uh4YNXRQ9PzDHtFKymY5gTe/DeB9PTsiNlUdpTlpDjFeheub6B9D/+roTAA3uC+3MIWP1KUTxWblFwxYbRU8HEpfmy4Bd2EkXo1NmGkhYiZm8u8+BDFGJAIriuYQs+gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZoYo+zhs; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1720106967; c=relaxed/simple;
+	bh=P76FYceHrJYP3VHRuG3OJOpUDhLADam7CDPSRK6G1uA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WGjf7VN7ADEDJYb0zwJ1Ix7yzo2LfuJ91OqC8Amkjo71H0Ok4/JChYjyOhGMlr88DL7hOsp0KlbV4AyVhIHGJjAdDD1c+q5t5Mwgak/J9IMoI0Odhxma6XGLW3rQpZTdb+q1UxnJ9JifG0qtb7sxl61GbCOvHYeWW4NQzy2qlJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e8dtpcal; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZoYo+zhs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e8dtpcal"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720106897;
+	s=mimecast20190719; t=1720106964;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EHDQLEHUfgvmw0ktLAaUo/x5tRI2fcgOxkiiF8qk/9g=;
-	b=ZoYo+zhsBKsBvBVGPDNEVQOStsjr/kx/QJznV76fejpJ684AOMvMEgHzmHvdPuaHkUgt9s
-	sjAo2LukeSfjGpIW2jI2P22jNn7qbIhLAAd3qONd1ceMLJ7muKoTbUFaN/AOXErdapk8N8
-	WYrFRz/uZ0DGn/pAFrS66R2tTsmEtYo=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-vOe2KNUvMoiTRuUfLq92WQ-1; Thu, 04 Jul 2024 11:28:16 -0400
-X-MC-Unique: vOe2KNUvMoiTRuUfLq92WQ-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-79cca22db8aso96122485a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 08:28:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720106895; x=1720711695;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EHDQLEHUfgvmw0ktLAaUo/x5tRI2fcgOxkiiF8qk/9g=;
-        b=ADP0g21GWzZoItpbXuexfvUVvqTEkGP/lGpb6WesNhG+jRijdGld8D2kfxMKT3nkGL
-         zO7H9kuHFijmLh+LCvkXPWNbVjy4kiX73ih1pvepS1GtRqdnzI7xhFWqIiiAm18RdrCY
-         1rWQeRvCnHiFb/URiWZ+VnToCWKR5oeMlfX6FdRa3iQjepxc96it5pJu6oSszFAMUKsB
-         KAB8u9bigDZYg/H/sRXqYTW+weJe5c/9eRafQJ89iS19kqGyI+iFVF4HoNnxr4ZO1sDD
-         zZRDvYgRua4F8OV6j5Qa1CX9D/RjNTbqyg/UxLq85MnPlEjzXHyxmTetm8Y7SMDmrCKt
-         GeMw==
-X-Gm-Message-State: AOJu0YyIXRzaxdrl9O7n9AjaZZpfKxdEDohtNH3uP60SmQRuX0uFiURW
-	NsOkI9zk+DnNFgO+AmNi5mkoUQryfHk39pw7uUV6II8C/OazmJG6KgJ5XMyzvjGcq/tNpUUeeHd
-	7g52UxEyx6wOHBP8+AcQ6YAAqjj1k5TnaXwA6G+stFFtemHc7sWRcrWkeyzsNXojHb6OdzA==
-X-Received: by 2002:a05:620a:1a1a:b0:79c:2d:1f40 with SMTP id af79cd13be357-79eee1bf27dmr255650085a.26.1720106895748;
-        Thu, 04 Jul 2024 08:28:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHes96ObGy5APTGY18HYlFTXCHgVASL0xqXVWp48t1abDxvgyujx+r7kVow6rFIGUnPQZIjqg==
-X-Received: by 2002:a05:620a:1a1a:b0:79c:2d:1f40 with SMTP id af79cd13be357-79eee1bf27dmr255628085a.26.1720106891095;
-        Thu, 04 Jul 2024 08:28:11 -0700 (PDT)
-Received: from optiplex-fbsd (c-174-169-122-120.hsd1.nh.comcast.net. [174.169.122.120])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79ef26f843dsm24794385a.136.2024.07.04.08.28.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 08:28:10 -0700 (PDT)
-Date: Thu, 4 Jul 2024 11:28:08 -0400
-From: Rafael Aquini <aquini@redhat.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 2/2] kbuild: rpm-pkg: introduce a simple changelog section
- for kernel.spec
-Message-ID: <Zoa_iCGGrMWvbJEb@optiplex-fbsd>
-References: <CAK7LNATxSePzOrHaQvS1MQo4mpAwdfwrDu3iuUsYZ+RL=LiirA@mail.gmail.com>
- <20240611211123.959459-3-aquini@redhat.com>
+	bh=VMo09GIbeWWei76D143X+Swf4hFzKnjD2EXCX4KLGFs=;
+	b=e8dtpcal+uYdoNBH6RdXrmWolkgSCaHT5cEbLOv530Gk0VpSxDYhz44JDWDXJRaA/Pq1eT
+	DQdo1EY0trnxDFVNcyBe6JXRbub8cgiOgjMqQVE7ddZX90bwhjeD1huMqW8GgmspRgx8/C
+	hIPh5uLXlQY8eiHivSwf/kBjK10bGQs=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-523-wXl8dIxCNLSLp0e58Hk67w-1; Thu,
+ 04 Jul 2024 11:29:21 -0400
+X-MC-Unique: wXl8dIxCNLSLp0e58Hk67w-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7D007196CE02;
+	Thu,  4 Jul 2024 15:29:20 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0503195605A;
+	Thu,  4 Jul 2024 15:29:19 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id B3EF730C1C14; Thu,  4 Jul 2024 15:29:18 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id B163D3FB52;
+	Thu,  4 Jul 2024 17:29:18 +0200 (CEST)
+Date: Thu, 4 Jul 2024 17:29:18 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Li Dong <lidong@vivo.com>
+cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+    "open list:DEVICE-MAPPER  (LVM)" <dm-devel@lists.linux.dev>, 
+    open list <linux-kernel@vger.kernel.org>, opensource.kernel@vivo.com
+Subject: Re: [PATCH] dm-table:fix zone block_device not aligned with
+ zonesize
+In-Reply-To: <20240704151549.1365-1-lidong@vivo.com>
+Message-ID: <cd05398-cffa-f4ca-2ac3-74433be2316c@redhat.com>
+References: <20240704151549.1365-1-lidong@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611211123.959459-3-aquini@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Tue, Jun 11, 2024 at 05:11:22PM -0400, Rafael Aquini wrote:
-> Fix the following rpmbuild warning:
+
+
+On Thu, 4 Jul 2024, Li Dong wrote:
+
+> For zone block devices, device_area_is_invalid may return an incorrect 
+> value.
 > 
->   $ make srcrpm-pkg
->   ...
->   RPM build warnings:
->       source_date_epoch_from_changelog set but %changelog is missing
+> Failure log:
+> [   19.337657]: device-mapper: table: 254:56: len=836960256 not aligned to
+> h/w zone size 3244032 of sde
+> [   19.337665]: device-mapper: core: Cannot calculate initial queue limits
+> [   19.337667]: device-mapper: ioctl: unable to set up device queue for 
+> new table.
 > 
-> Signed-off-by: Rafael Aquini <aquini@redhat.com>
+> Actually, the device's zone length is aligned to the zonesize.
+> 
+> Fixes: 5dea271b6d87 ("dm table: pass correct dev area size to device_area_is_valid")
+> Signed-off-by: Li Dong <lidong@vivo.com>
 > ---
->  scripts/package/kernel.spec | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/md/dm-table.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
-> index 19e458341f45..126b23c1f6c2 100644
-> --- a/scripts/package/kernel.spec
-> +++ b/scripts/package/kernel.spec
-> @@ -132,3 +132,8 @@ fi
->  /usr/src/kernels/%{KERNELRELEASE}
->  /lib/modules/%{KERNELRELEASE}/build
->  %endif
-> +
-> +%changelog
-> +* %(echo "$(LC_ALL=C; date +'%a %b %d %Y') $(git config --get user.name) \
-> +<$(git config --get user.email)>") - %{version}-%{release}
-> +- Custom built Linux kernel.
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index 33b7a1844ed4..0bddae0bee3c 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> @@ -257,7 +257,7 @@ static int device_area_is_invalid(struct dm_target *ti, struct dm_dev *dev,
+>  	if (bdev_is_zoned(bdev)) {
+>  		unsigned int zone_sectors = bdev_zone_sectors(bdev);
+>  
+> -		if (start & (zone_sectors - 1)) {
+> +		if (start % zone_sectors) {
+>  			DMERR("%s: start=%llu not aligned to h/w zone size %u of %pg",
+>  			      dm_device_name(ti->table->md),
+>  			      (unsigned long long)start,
+> @@ -274,7 +274,7 @@ static int device_area_is_invalid(struct dm_target *ti, struct dm_dev *dev,
+>  		 * devices do not end up with a smaller zone in the middle of
+>  		 * the sector range.
+>  		 */
+> -		if (len & (zone_sectors - 1)) {
+> +		if (len % zone_sectors) {
+>  			DMERR("%s: len=%llu not aligned to h/w zone size %u of %pg",
+>  			      dm_device_name(ti->table->md),
+>  			      (unsigned long long)len,
 > -- 
-> 2.45.1
-> 
+> 2.31.1.windows.1
 
-Please, don't forget this one.
+Hi
 
-Thank you!
+This probably won't compile on 32-bit architectures because the operators 
+for 64-bit divide and modulo don't work there.
+
+Please, rework the patch using dm_sector_div64.
+
+Mikulas
 
