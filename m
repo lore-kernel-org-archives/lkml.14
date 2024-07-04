@@ -1,113 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5501AC449;
-	Thu,  4 Jul 2024 11:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4267A1AC43C
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 11:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720092321; cv=none; b=GdfqZ8FuFf/P0feXW6SYopWUoVNcX6d95PL0CEjla/hTewFr5ie7fOjs9AOhgz36ZHvT2LFRynepC07nXhn7FIzhBbDBb7hzaWdHKZYuzpa4YLTnjV1oM22m8VfE2Do+RCM2vO0Xotvbjhnc+XZyFZtqXYkBOUr+XObgMGv7ZY4=
+	t=1720092321; cv=none; b=NaqzVCF2r9Y9N1cNUyYckNL718Lh2g1uNkLwCWHu2h8fxWiSHQJqkmG10MTPCmM0aKypG/CWmIREkXclOt/EBjE1qNy0fuQvWxavBHhbPvGkfbLMwr9r8aAuP4UGBu3CJHPREf4+dxv+LH1xliJbgSTCVPX60JWf4VjO5XRtHYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720092321; c=relaxed/simple;
-	bh=jkDP8M9nS6zbeKG8Ls4A6Gkiqj2sTDusTpp/rBGe0V8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K1r4zA9H4hYxwVCbLCgHspU4Xdk4YHu3BMekApe63F96/MZQKQDT1S9eltIxGeFyw5NYw7vQwtJZGbUqVprSKBXVxMq3bxpF1xmm3IyYU3QpyX7Ov3d3ujZwvFgNpZn+Qm21IZjpmiAlZKaBNWf9rErcM6tezWQS8qpTNBuKCgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k+iyaGdx; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=EwMq0nRZSO0UNVZcx6vJx8Z3PbK3Biscr0/ozCwmLws=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WKMZMcHDv2dCLbkkXygX3lPi0aA74m6djewAbm79G+b29ytuElmo2uZ7ovMyiS657EU/MQhJjbeQHw6Oyd9oi4qjnBQ22CoLhzo2jiFT7A9yoRe78t8XZBILJyCYF6GNdmT0Pl1rTJbF5zBYiwv7jK0TqMy75J2cMLmL9sVYEI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=B7EEJvKz; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k+iyaGdx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720092319; x=1751628319;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jkDP8M9nS6zbeKG8Ls4A6Gkiqj2sTDusTpp/rBGe0V8=;
-  b=k+iyaGdxIEE+bEjjCbngFqguf9ZVanRXNGituaRAbFsY8+naKNzNnEf9
-   LiBHVI0wOlH1/pXTIA/Ox2V6biHD/ZzWlvhEyjoNL3fvDq5KhOgwVhmwb
-   hh48MQTtWtl/f46nF6BmmTPiVsAoIGu0DS0QfHhECe1VydMwBn0zuz//p
-   lJSRKrp4d82MpSrysQTyGrEc810L6R745wpnj4VNoEhVKwdnYosx0ZxRB
-   XRRqMh0WbJRPeaQ96/d4BDqp9dWFWeN5WEUfvyu1AOghrgd3fKOwpeZ67
-   Scam5T7W+3X4YyaOAvB+0OO5v8yaB9aPAwW/F43r+GrAEKoVU/OiwIW24
-   g==;
-X-CSE-ConnectionGUID: Hn0X33VeTmeKrDWy1OdVMA==
-X-CSE-MsgGUID: 3cHolDtUQoiCJ41gtJS2TA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17477832"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="17477832"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 04:25:18 -0700
-X-CSE-ConnectionGUID: ws7LtSdaR264xMczHG3i8g==
-X-CSE-MsgGUID: K9y0McSiT7qKUb2J70jrew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="69759893"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO [10.245.246.90]) ([10.245.246.90])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 04:25:12 -0700
-Message-ID: <f9923336-3dd3-4f36-b5f6-f45f4ed09e0c@linux.intel.com>
-Date: Thu, 4 Jul 2024 13:25:09 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="B7EEJvKz"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1720092316; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=cw7XWKxljyeN4WJVgu0jE9S3cyW8I72GFf5V991lB4Y=;
+	b=B7EEJvKz/X883XfMGuFi9jG+UE8TcyudSYkIYIzSCzUj4Prl/bx6hMf3/ErL9rvba1KHDRrX5YPn333FhqxQQWGYSaYs49Gl9f60zGHW1Ak0fQUaL8Ut2xb6N3nF65CfHt4esy3VCbonkJzPDsYblZfuEtfjyLXAOh8QGjrwKuY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033023225041;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W9qjnNh_1720092313;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9qjnNh_1720092313)
+          by smtp.aliyun-inc.com;
+          Thu, 04 Jul 2024 19:25:14 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	hughd@google.com
+Cc: willy@infradead.org,
+	david@redhat.com,
+	wangkefeng.wang@huawei.com,
+	chrisl@kernel.org,
+	ying.huang@intel.com,
+	21cnbao@gmail.com,
+	ryan.roberts@arm.com,
+	shy828301@gmail.com,
+	ziy@nvidia.com,
+	ioworker0@gmail.com,
+	da.gomez@samsung.com,
+	p.raghav@samsung.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 06/10] mm: shmem: use swap_free_nr() to free shmem swap entries
+Date: Thu,  4 Jul 2024 19:24:55 +0800
+Message-Id: <23ca2d1733c1a4e9f9781312a2dc21c8873b3bd5.1720079976.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <cover.1720079976.git.baolin.wang@linux.alibaba.com>
+References: <cover.1720079976.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v23 32/32] ASoC: doc: Add documentation for SOC USB
-To: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>, Wesley Cheng
- <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
- mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
- corbet@lwn.net, broonie@kernel.org, lgirdwood@gmail.com, krzk+dt@kernel.org,
- Thinh.Nguyen@synopsys.com, bgoswami@quicinc.com, tiwai@suse.com,
- robh@kernel.org, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
- alsa-devel@alsa-project.org
-References: <20240610235808.22173-1-quic_wcheng@quicinc.com>
- <5be51e1f-70c9-4bbc-96fa-1e50e441bd35@linux.intel.com>
- <408d9e8e-0f40-7e66-54be-2f8d2c0783a3@quicinc.com>
- <ca1e1063-e1bd-4e03-a7cd-91985e9954e9@linux.intel.com>
- <096d59a0-5e18-092c-c9ae-d98130226f06@quicinc.com>
- <368d9019-2c96-468e-b472-7e1127f76213@linux.intel.com>
- <eb6370ea-47a0-3659-3c10-cb7f95e3e520@quicinc.com>
- <510468c7-b181-48d0-bf2d-3e478b2f2aca@linux.intel.com>
- <c7a95157-1b71-1489-3657-8fe67f9acb4e@quicinc.com>
- <90463a4e-c2e7-4b59-9a79-23533b4acd1e@linux.intel.com>
- <fd8f1eb0-4b21-4697-8175-a61bc3858852@quicinc.com>
- <f982842a-1804-420b-a539-a609ecf8fb8a@linux.intel.com>
- <3c358604-6926-4f90-8fc8-8139c68c3418@quicinc.com>
- <70bf10a7-7f87-4fd1-bd44-1733d3b2b15e@linux.intel.com>
- <b1fcef2a-2af9-4985-ae00-f348ca5df3f1@linux.intel.com>
- <ab734271-58ee-4981-926c-9b57f36b8ac6@linux.intel.com>
- <ccbf9366-f3de-4a80-bffc-e32a8409e1a7@quicinc.com>
- <adb4e27b-b328-4eef-87ca-9b8bad6639e6@linux.intel.com>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <adb4e27b-b328-4eef-87ca-9b8bad6639e6@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+As a preparation for supporting shmem large folio swapout, use swap_free_nr()
+to free some continuous swap entries of the shmem large folio when the
+large folio was swapped in from the swap cache. In addition, the index
+should also be round down to the number of pages when adding the swapin
+folio into the pagecache.
 
->> Just so I understand...is it really desired that userspace doesn't
->> have the flexibility to choose which USB device is offloaded?  I know
->> it complicates what needs to be done, but it could be just an
->> additional feature that can be added later on.  Again, by default, we
->> select the last USB headset plugged in to be enabled for offload by
->> default.
-> 
-> If it chooses endpoint by itself perhaps you can send patch set without
-> controls first? This has added benefit of less patches in series, making
-> it easier to review and it won't block whole patch set by discussion on
-> controls feature. Controls can be added in followup series.
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+ mm/shmem.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-We do need read-only controls for userspace to know that offload is
-possible and which card/device to use. That can be done in a first step
-assuming there's a single device plugged-in.
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 5159d60456ed..c1b6cdc61619 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1961,6 +1961,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+ 	struct address_space *mapping = inode->i_mapping;
+ 	swp_entry_t swapin_error;
+ 	void *old;
++	int nr_pages;
+ 
+ 	swapin_error = make_poisoned_swp_entry();
+ 	old = xa_cmpxchg_irq(&mapping->i_pages, index,
+@@ -1969,6 +1970,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+ 	if (old != swp_to_radix_entry(swap))
+ 		return;
+ 
++	nr_pages = folio_nr_pages(folio);
+ 	folio_wait_writeback(folio);
+ 	delete_from_swap_cache(folio);
+ 	/*
+@@ -1976,8 +1978,8 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+ 	 * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
+ 	 * in shmem_evict_inode().
+ 	 */
+-	shmem_recalc_inode(inode, -1, -1);
+-	swap_free(swap);
++	shmem_recalc_inode(inode, -nr_pages, -nr_pages);
++	swap_free_nr(swap, nr_pages);
+ }
+ 
+ /*
+@@ -1996,7 +1998,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	struct swap_info_struct *si;
+ 	struct folio *folio = NULL;
+ 	swp_entry_t swap;
+-	int error;
++	int error, nr_pages;
+ 
+ 	VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
+ 	swap = radix_to_swp_entry(*foliop);
+@@ -2043,6 +2045,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 		goto failed;
+ 	}
+ 	folio_wait_writeback(folio);
++	nr_pages = folio_nr_pages(folio);
+ 
+ 	/*
+ 	 * Some architectures may have to restore extra metadata to the
+@@ -2056,19 +2059,20 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 			goto failed;
+ 	}
+ 
+-	error = shmem_add_to_page_cache(folio, mapping, index,
++	error = shmem_add_to_page_cache(folio, mapping,
++					round_down(index, nr_pages),
+ 					swp_to_radix_entry(swap), gfp);
+ 	if (error)
+ 		goto failed;
+ 
+-	shmem_recalc_inode(inode, 0, -1);
++	shmem_recalc_inode(inode, 0, -nr_pages);
+ 
+ 	if (sgp == SGP_WRITE)
+ 		folio_mark_accessed(folio);
+ 
+ 	delete_from_swap_cache(folio);
+ 	folio_mark_dirty(folio);
+-	swap_free(swap);
++	swap_free_nr(swap, nr_pages);
+ 	put_swap_device(si);
+ 
+ 	*foliop = folio;
+-- 
+2.39.3
 
-Dealing with multiple devices and defining rules or configuration
-options to select the offloaded device is a second-level problem.
-
-In most cases the only thing that will be offloaded is a headset
-anyways, so the selection could be rather static based on a
-vendor/system ID, all other USB devices would be ignored.
