@@ -1,103 +1,75 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B626A1B960
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 06:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930671B960;
+	Thu,  4 Jul 2024 06:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720075838; cv=none; b=B2+4eJfJAYVzF/kF5aJGZSLgW1JxqGB4z4Rpccj0+bYXZERhaTvu1h4cHk4ev394RSWikJpcrWKnS76fuQXd0wVUzqsKRzr05dHf5l7kT31Q+LuLzFhgzq2bCzTHCWGqo8yaP8HN0uMrCkGNOuIm/BmT0xB85Q0A+xFRwXW0b/4=
+	t=1720075942; cv=none; b=uMGF9D8mrd8ibv4D6ZUCpHvijqAMl/5obn+O714KfOc+yVFSP97cmWfJY1ZwuBzXM4iY36bZ9pdNY8ON0nchurk2+YCgcBrS0BT/m+LIfnypxHqlJ51wumUYHXzqOxsgm8UzdKNORBOCXK+8Mdmk7c23/3o6+9wztCXgBUjmcW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720075838; c=relaxed/simple;
-	bh=Ndc+9Qc/wSd8cgS0VuGQFkVzbnR7y1hmuot87Sn0J4w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rfEN3a/u5KkI0ZGbI0iMQLvvs1/GTENyS5uhlYDvT1QGpk7thVmLXZHObF3v04MkGUyK1Jyf92SXYqcUjPX6nDxrz3pI916jHawWaDYVVTmim85R37ywfcgZKp+u+sO8k7llDE2cl6iKIci3Z88/ugBJM+y6ZqT0YSUdpKfzaqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4WF6Fr2ZTFz9sS7;
-	Thu,  4 Jul 2024 08:30:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 0IvprGPQSDHR; Thu,  4 Jul 2024 08:30:08 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4WF6Fr1r3Wz9sRy;
-	Thu,  4 Jul 2024 08:30:08 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F33D8B774;
-	Thu,  4 Jul 2024 08:30:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 2OEaojhVLPzU; Thu,  4 Jul 2024 08:30:08 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.202.46])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8311F8B764;
-	Thu,  4 Jul 2024 08:30:07 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	x86@kernel.org,
-	linux-riscv@lists.infradead.org,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 1/3] arch/x86: Drop own definition of pgd,p4d_leaf
-Date: Thu,  4 Jul 2024 08:30:03 +0200
-Message-ID: <b601e1a88e3a5d4d93b130fa20184b555e2a2bea.1720074307.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1720075942; c=relaxed/simple;
+	bh=AbbkD8QGrQK5+Az2vQlPRB5MMIbzZidfDuhnrw52HQ8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=HH1p4c9LvCRcQYhRMl/I6PE3ag7jh4YxtB4J8Rs7NoOlApr3I2YUDvX5zvSROloGs7lLrfeHDc95CFNWyH/0VdiFxKajT4TQN5psrkyVcV1yIQRpdVS03jL5qMqDgkmZD1sMmfBXYDOGiaXTZ137+PWPO++qmc/9tbNZ2lxMPhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHtHFFRg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHtHFFRg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D882C3277B;
+	Thu,  4 Jul 2024 06:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720075942;
+	bh=AbbkD8QGrQK5+Az2vQlPRB5MMIbzZidfDuhnrw52HQ8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=DHtHFFRgVSbONvqa5SX+U5QoIdZYjOsOvo44/G3l3tm36zbOYLH8iFbyZbC/hhSWV
+	 fcJDKapQrGY2L5Siq+TohbYZ1Cd7bcyfPt6n+paqi5TAIBtVUSSGRLAhs9HMWhBQwc
+	 AOXFYZeY8iWMIAonS3vqvfIyUHWSwi5ek5oVkbe1kn/2OL1/FNRIS2wzKO1tToOZjn
+	 C2rhogX3ubVLVqBiu/YbT8dBpgsYmqvrPXpVrUzCttq/l11tySFVf4SqeV0of6+wn0
+	 p27oRoQgU5pgjv48CIgudoGqMaZLtg7dBw1VeVEIj/WECfhU08ytjcNpy6zTbnfWJc
+	 VY8gwkCROvc2Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720074605; l=1393; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=y1Fku5Ig+SrLh/mlbGZSDg5khbyWLz2sNH+Fhxvf8CY=; b=Pn3cDPQjTJsynYwMXz4i7tu+dV52gAPkJmLyMuCh4slMgVe6g/HMgDSmdujn73izysJbgmI+t xg36IxeSmYXAH00CChn+Qo0WztBTLEw0miy96K/UdsZPHZRXd7EOvR/
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 04 Jul 2024 09:52:16 +0300
+Message-Id: <D2GK14M15OCE.XO5Y1ZPO01CG@kernel.org>
+Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, <stable@vger.kernel.org>, "Peter Huewe"
+ <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>, "James Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Mimi Zohar"
+ <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
+ <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "Serge E.
+ Hallyn" <serge@hallyn.com>, "Ard Biesheuvel" <ardb@kernel.org>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, <linux-kernel@vger.kernel.org>,
+ <keyrings@vger.kernel.org>, <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] tpm: Address !chip->auth in
+ tpm_buf_append_hmac_session*()
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>,
+ <linux-integrity@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240703182453.1580888-1-jarkko@kernel.org>
+ <20240703182453.1580888-4-jarkko@kernel.org>
+ <c90ce151-c6e5-40c6-8d3d-ccec5a97d10f@linux.ibm.com>
+In-Reply-To: <c90ce151-c6e5-40c6-8d3d-ccec5a97d10f@linux.ibm.com>
 
-From: Oscar Salvador <osalvador@suse.de>
+On Thu Jul 4, 2024 at 4:56 AM EEST, Stefan Berger wrote:
+> [    1.449673] tpm_ibmvtpm 5000: CRQ initialized
+> [    1.449726] tpm_ibmvtpm 5000: CRQ initialization completed
+> [    2.483218] tpm tpm0: auth session is not active
 
-We provide generic definitions of pXd_leaf in pgtable.h when the arch
-do not define their own, where the generic pXd_leaf always return false.
+This expected result and the driver should work as expected.
+And it correctly reports that auth session is not active.
 
-Although x86 defines {pgd,p4d}_leaf, they end up being a no-op, so drop them
-and make them fallback to the generic one.
+The reported error was exactly the TPM errors, which I guess
+do not happen anymore.
 
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/x86/include/asm/pgtable.h | 10 ----------
- 1 file changed, 10 deletions(-)
+Reported-by counts as much as reporting the symptom you are
+having, i.e. very different from something more "suggestive".
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 65b8e5bb902c..772f778bac06 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -252,13 +252,6 @@ static inline unsigned long pgd_pfn(pgd_t pgd)
- 	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
- }
- 
--#define p4d_leaf p4d_leaf
--static inline bool p4d_leaf(p4d_t p4d)
--{
--	/* No 512 GiB pages yet */
--	return 0;
--}
--
- #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
- 
- #define pmd_leaf pmd_leaf
-@@ -1396,9 +1389,6 @@ static inline bool pgdp_maps_userspace(void *__ptr)
- 	return (((ptr & ~PAGE_MASK) / sizeof(pgd_t)) < PGD_KERNEL_START);
- }
- 
--#define pgd_leaf	pgd_leaf
--static inline bool pgd_leaf(pgd_t pgd) { return false; }
--
- #ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
- /*
-  * All top-level MITIGATION_PAGE_TABLE_ISOLATION page tables are order-1 pages
--- 
-2.44.0
+Does that count as tested-by or not?
 
+BR, Jarkko
