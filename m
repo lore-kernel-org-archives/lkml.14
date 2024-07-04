@@ -1,191 +1,153 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84C11A4F1B
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 11:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8942C1AB513;
+	Thu,  4 Jul 2024 11:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720091058; cv=none; b=p0IpOSinlAEhmchr94SOQUALHT91YgqGyc8XHO4mRbMZpx9gYsaV/ozTJxM4Sdjy0b/6HEoPFsRTf1GKJrxEFN5Snd//Wdvprkbe7yKrrwI0DvBzzPA1Aa1EgrRfnRKQQdZvX1QXrbPTZpyGElI5r58cwl8ohl67XYNIdCSkYPw=
+	t=1720091180; cv=none; b=C2b2h+8MJbrNd0NW4Z91ceJwp9L3lbXCAzXapZ76v9NkxsrkT1KMBADMdb7dKJAADtpriss6gyx/kbgs2BgLlFM8LoD1hNPzQZosrUS5cknUBqZxZgL1adITxWfb1JGJDSkVnqnqkskVCiYbnjAorpyVX603t+t0OFrhYF4NLW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720091058; c=relaxed/simple;
-	bh=gYS2whrZY86Kq5/Ysa/GGAOdZHOWk5qsRXJF/IiNlY0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=V/LJpjdf6wl+TjEbAdhEzp2Kdn/S+sP28ygx4J2QKQnWSUOQZXMpxAyNO1+GsM0ICf38e33AQHWLKeYgLeDR0N2Dgu2xsCvGpcYJDpTqwkenzLdlwSW4wxxouWFPx3orVkbq6DZtk1ZocaTQxh2dOVyp/yHvhfwcAokTUJl2EcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7f59855336cso73750639f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 04:04:16 -0700 (PDT)
+	s=arc-20240116; t=1720091180; c=relaxed/simple;
+	bh=kvST1rvipBfVLNwN66rt1V71FvGSHg/H+eoBL4MtfrY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UNhjRJVlAq1b3QrZ5t1FMtL+a7MKg6QBwm1C5onWKT6aYWqLyvtNs1qmQj2qDlSOT6U8qDpYZcyBge97FznX7WgP1bv9xUyBf1r90rbMMyZutx3eKNDA2wb7Zqf3d+sbB49d67xQ8DiWJCWqwobnGM2s5N7wziFVOVt9jHn47gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LJUJJuVe; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJUJJuVe"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3679e9bfb08so277726f8f.1;
+        Thu, 04 Jul 2024 04:06:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720091177; x=1720695977; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=D950wyfI9R9DcheKTK0zZ2zHLBsWZJePc69tdMO64tk=;
+        b=LJUJJuVeIeln8kZ01CfdSar0fOD2Lv3rKqD9HTZdPF0Kf2OL0KWVQ1fr+YwTpINIoW
+         kXP4vdS1FesuOoZw/QjsII8qFoSHC4eMcmD6CCiQc59/Yvuot/eYoIyU6hTpdz2MakJa
+         PG16razPQxrnbuD73rAXpeMCbiJhFqkws4FgatW7awh5XJHvlYm347/xUC+FuulM9npK
+         PyCe9qKIiGrZixewJuETLR7TsZlwBzreea0vIinZscbgsBZAmz976ACEW2p2WtCPwiCQ
+         me814M/ue1rZc6mEVKWRid6pKDEL7suSwVJpsZf8soyGdlggKiXkOr8wPvY8Op4/pDIg
+         KWEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720091056; x=1720695856;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BIc8y7SfIQseVVtb2caKhWpDcc0rvRRo+xzgagIpOBQ=;
-        b=o6LTYznJXGK2FcGQ8Zs+Nnq7w+0Jc1O5n6wM9Rs4RqWhwkNzcqf00QvafDYbwyKe3L
-         FqNZ23Z+5y+BCioJuLy+30+OdObc9S7b/4chh1P13R/3yVB8RKX+GjDc2EKJ7QEFec7y
-         8Py/LwaQ/2EKOpumoj0cTrxrQz6TeZc+O9mklnk7NI6RpJPX0mJjuLfbZJIHpMDL0LlH
-         xKZvqJCkZ8K1lsvuPRoPCk52pbYwho6L2VU9og++F5wJfURh7z2BOkCZz8q5w+Ogbak0
-         d1M+7/h5eXfUoS9wa816CmpgeHW/R2uXC9Xl834tUGLLLHgRGKJGGykQWxrd077xRaQs
-         3raw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPYKb0sfx+4vsDf4fJIPOZB/mmU6HL9sxlo5uakHtAWlJeTCoIYshtIkbhgMR9jYM3xloKi3AFWiibh/M3drJZGj6aEkrrSwsOjPsf
-X-Gm-Message-State: AOJu0YzZzC+J92Lt9js75I8kyNKKFIxbMCo1OYuAk5Jfa8Vpm6TYDQaj
-	HnfWXOs02VH4zaFfHE6UsugpUD0dK9mpeKqKpicx/Uu4Qg5B2Md/TGTpTgWBI3EqP1JIlG2VPcd
-	blWFKngRVYhtTl+KCku0DDEJOelrXGG18V0o+qZKRu1d79ebtqNoo/hQ=
-X-Google-Smtp-Source: AGHT+IFeaPd5H1fJzhRGyCJpOUmF0sfxC90youmbetsLBodBTMQDNfXlWodcq3yNZuDvPmc4Y7wFs56GFlgR4MdgtAx1Y4qkgmBr
+        d=1e100.net; s=20230601; t=1720091177; x=1720695977;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D950wyfI9R9DcheKTK0zZ2zHLBsWZJePc69tdMO64tk=;
+        b=DH6gBWHk6DVZY18K/odquRtfpvoqgBXh5caiVElZjvgWfj39ty/wc6B2m7Pi39JMxF
+         oWqnV/mTlk6azuneLtWq320rbb1wwcsVb3KEaM/8x8Jxe+QixKVlzRTwnyeDhDNIOk/K
+         7O/cUJgxYOi0Y/TZkdEUME8MY5numJ4l+gWhHhhKcgRNKa17vLF97aIHGdsEXxJ9iUIH
+         qnDUvSJZT8PvoNWCGKIxyOZFfQpWG7TQyhtwr6pnb/FtK7qBJ74EKDrgNxw1iuhemnU8
+         F37NnKxP42E0ZFnVlNzgqIxLgX7j54c6eT/Z/PsbYDadbuT/bRAPU2d2kGM6108GSmop
+         DzAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuxMzhh66fJY3hfWQHmfHFhjYGHGGA2A9VoxBq/qeGyhkKNtrWZJd6/7nXcM1o2BJL6xGKjf5U0vAyacv8dWjfFEzbzUz+i2cZmUU2BGLizw29YPs7Qe/rXgrWVYOzajplxydFHjgmwA==
+X-Gm-Message-State: AOJu0YzhipgmxcwFvdpCNT9pkLF47CiinFiJZ3ZQO2YArPJy7m4W8Kqo
+	DqjZx3dq/pG8Cs5d66FbRd0lYoPTafl0LKeKJMdmg+ysGWd/jxXf
+X-Google-Smtp-Source: AGHT+IGcr5+/HlIE4XPF3IkQFuLT5rydlJyv0HT9ULTEdCdNV7pH2/rmn/4+GCjTb8VOWj4ZxNsyKg==
+X-Received: by 2002:a5d:4525:0:b0:367:3282:a258 with SMTP id ffacd0b85a97d-3679f703046mr1035415f8f.18.1720091176580;
+        Thu, 04 Jul 2024 04:06:16 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a043a16sm18440772f8f.0.2024.07.04.04.06.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 04:06:16 -0700 (PDT)
+Message-ID: <fc12a44eccc1e3843bb9ae0f25ee5df6eecddafb.camel@gmail.com>
+Subject: Re: [PATCH v6 2/3] Input: adp5588-keys - add support for pure gpio
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: utsav.agarwal@analog.com, Michael Hennerich
+ <michael.hennerich@analog.com>,  Dmitry Torokhov
+ <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Arturs Artamonovs
+ <arturs.artamonovs@analog.com>,  Vasileios Bimpikas
+ <vasileios.bimpikas@analog.com>, Oliver Gaskell <oliver.gaskell@analog.com>
+Date: Thu, 04 Jul 2024 13:10:09 +0200
+In-Reply-To: <20240704-adp5588_gpio_support-v6-2-cb65514d714b@analog.com>
+References: <20240704-adp5588_gpio_support-v6-0-cb65514d714b@analog.com>
+	 <20240704-adp5588_gpio_support-v6-2-cb65514d714b@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6086:b0:7f3:a80e:8cec with SMTP id
- ca18e2360f4ac-7f66db5e21amr6845439f.0.1720091055821; Thu, 04 Jul 2024
- 04:04:15 -0700 (PDT)
-Date: Thu, 04 Jul 2024 04:04:15 -0700
-In-Reply-To: <0000000000000538640617a80980@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005d2c82061c69e8ca@google.com>
-Subject: Re: [syzbot] [gfs2?] KASAN: stack-out-of-bounds Read in gfs2_dump_glock
-From: syzbot <syzbot+7efd59a5a532c57037e6@syzkaller.appspotmail.com>
-To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-syzbot has found a reproducer for the following issue on:
+On Thu, 2024-07-04 at 11:45 +0100, Utsav Agarwal via B4 Relay wrote:
+> From: Utsav Agarwal <utsav.agarwal@analog.com>
+>=20
+> Keypad specific setup is relaxed if no keypad rows/columns are specified,
+> enabling a purely gpio operation.
+>=20
+> Signed-off-by: Utsav Agarwal <utsav.agarwal@analog.com>
+> ---
+> =C2=A0drivers/input/keyboard/adp5588-keys.c | 27 ++++++++++++++++++++++++=
++++
+> =C2=A01 file changed, 27 insertions(+)
+>=20
+> diff --git a/drivers/input/keyboard/adp5588-keys.c
+> b/drivers/input/keyboard/adp5588-keys.c
+> index 09bcfc6b9408..572335c8ef0f 100644
+> --- a/drivers/input/keyboard/adp5588-keys.c
+> +++ b/drivers/input/keyboard/adp5588-keys.c
+> @@ -188,6 +188,7 @@ struct adp5588_kpad {
+> =C2=A0	u32 cols;
+> =C2=A0	u32 unlock_keys[2];
+> =C2=A0	int nkeys_unlock;
+> +	bool gpio_only;
+> =C2=A0	unsigned short keycode[ADP5588_KEYMAPSIZE];
+> =C2=A0	unsigned char gpiomap[ADP5588_MAXGPIO];
+> =C2=A0	struct gpio_chip gc;
+> @@ -632,6 +633,21 @@ static int adp5588_fw_parse(struct adp5588_kpad *kpa=
+d)
+> =C2=A0	struct i2c_client *client =3D kpad->client;
+> =C2=A0	int ret, i;
+> =C2=A0
+> +	/*
+> +	 * Check if the device is to be operated purely in GPIO mode. To do
+> +	 * so, check that no keypad rows or columns have been specified,
+> +	 * since all GPINS should be configured as GPIO.
+> +	 */
+> +	ret =3D device_property_present(&client->dev,
+> +			"keypad,num-rows");
+> +	ret |=3D device_property_present(&client->dev,
+> +			"keypad,num-columns");
+> +	/* If purely GPIO, skip keypad setup */
+> +	if (!ret) {
+> +		kpad->gpio_only =3D true;
+> +		return 0;
+> +	}
+> +
+> =C2=A0	ret =3D matrix_keypad_parse_properties(&client->dev, &kpad->rows,
+> =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0 &kpad->cols);
+> =C2=A0	if (ret)
+> @@ -775,6 +791,11 @@ static int adp5588_probe(struct i2c_client *client)
+> =C2=A0	if (error)
+> =C2=A0		return error;
+> =C2=A0
+> +	if (kpad->gpio_only && !client->irq) {
+> +		dev_info(&client->dev, "Rev.%d, started as GPIO only\n",
+> revid);
+> +		return 0;
+> +	}
 
-HEAD commit:    795c58e4c7fc Merge tag 'trace-v6.10-rc6' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16418635980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1ace69f521989b1f
-dashboard link: https://syzkaller.appspot.com/bug?extid=7efd59a5a532c57037e6
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e82849980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b55181980000
+You're still missing something regarding interrupts. If there's no client->=
+irq
+then you should not setup the gpio_irq_chip. Hence, in adp5588_gpio_add(), =
+you
+should have:
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/947727e7be17/disk-795c58e4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/8898920020bb/vmlinux-795c58e4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9aed6052df98/bzImage-795c58e4.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/7bee2c9df91a/mount_0.gz
+if (kpad->client->irq) {
+	girq =3D &kpad->gc.irq;
+	gpio_irq_chip_set_chip(girq, &adp5588_irq_chip);
+	girq->handler =3D handle_bad_irq;
+	girq->threaded =3D true;
+}
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7efd59a5a532c57037e6@syzkaller.appspotmail.com
+- Nuno S=C3=A1
 
-gfs2: fsid=syz:syz.0:  H: s:SH f:H e:0 p:5123 [syz-executor201] iterate_dir+0x57a/0x810 fs/readdir.c:110
-==================================================================
-BUG: KASAN: stack-out-of-bounds in gfs2_dump_glock+0x15b1/0x1bb0
-Read of size 8 at addr ffffc900034a7ca0 by task syz-executor201/5125
-
-CPU: 0 PID: 5125 Comm: syz-executor201 Not tainted 6.10.0-rc6-syzkaller-00069-g795c58e4c7fc #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:488
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- gfs2_dump_glock+0x15b1/0x1bb0
- gfs2_consist_inode_i+0xf5/0x110 fs/gfs2/util.c:457
- gfs2_dirent_scan+0x52b/0x670
- gfs2_dirent_search+0x30e/0x8c0 fs/gfs2/dir.c:853
- gfs2_dir_search+0xb2/0x2f0 fs/gfs2/dir.c:1653
- gfs2_lookupi+0x461/0x5e0 fs/gfs2/inode.c:340
- __gfs2_lookup+0xa4/0x280 fs/gfs2/inode.c:896
- __lookup_slow+0x28c/0x3f0 fs/namei.c:1692
- lookup_slow+0x53/0x70 fs/namei.c:1709
- walk_component fs/namei.c:2004 [inline]
- link_path_walk+0x9ea/0xea0 fs/namei.c:2331
- path_parentat fs/namei.c:2540 [inline]
- __filename_parentat+0x263/0x6f0 fs/namei.c:2564
- filename_parentat fs/namei.c:2582 [inline]
- filename_create+0xf6/0x540 fs/namei.c:3887
- do_mknodat+0x18b/0x5b0 fs/namei.c:4052
- __do_sys_mknod fs/namei.c:4098 [inline]
- __se_sys_mknod fs/namei.c:4096 [inline]
- __x64_sys_mknod+0x8e/0xa0 fs/namei.c:4096
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fc9a7de9779
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 1f 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fc9a7d75168 EFLAGS: 00000246 ORIG_RAX: 0000000000000085
-RAX: ffffffffffffffda RBX: 00007fc9a7e7d6d8 RCX: 00007fc9a7de9779
-RDX: 0000000000000701 RSI: 0000000000000000 RDI: 0000000020000680
-RBP: 00007fc9a7e7d6d0 R08: 00007ffc076d7ae7 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc9a7e7d6dc
-R13: 000000000000006e R14: 00007ffc076d7a00 R15: 00007ffc076d7ae8
- </TASK>
-
-The buggy address belongs to the virtual mapping at
- [ffffc900034a0000, ffffc900034a9000) created by:
- copy_process+0x5d1/0x3dc0 kernel/fork.c:2220
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88802c96fd80 pfn:0x2c96f
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000000000 0000000000000000 dead000000000122 0000000000000000
-raw: ffff88802c96fd80 0000000000000000 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x2dc2(GFP_KERNEL|__GFP_HIGHMEM|__GFP_NOWARN|__GFP_ZERO), pid 5106, tgid 5106 (syz-executor201), ts 62007196465, free_ts 61954421151
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1473
- prep_new_page mm/page_alloc.c:1481 [inline]
- get_page_from_freelist+0x2e4c/0x2f10 mm/page_alloc.c:3425
- __alloc_pages_noprof+0x256/0x6c0 mm/page_alloc.c:4683
- alloc_pages_mpol_noprof+0x3e8/0x680 mm/mempolicy.c:2265
- vm_area_alloc_pages mm/vmalloc.c:3575 [inline]
- __vmalloc_area_node mm/vmalloc.c:3651 [inline]
- __vmalloc_node_range_noprof+0x971/0x1460 mm/vmalloc.c:3832
- alloc_thread_stack_node kernel/fork.c:309 [inline]
- dup_task_struct+0x444/0x8c0 kernel/fork.c:1115
- copy_process+0x5d1/0x3dc0 kernel/fork.c:2220
- kernel_clone+0x223/0x870 kernel/fork.c:2797
- __do_sys_clone3 kernel/fork.c:3098 [inline]
- __se_sys_clone3+0x2cb/0x350 kernel/fork.c:3082
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 5074 tgid 5074 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1093 [inline]
- free_unref_page+0xd19/0xea0 mm/page_alloc.c:2588
- discard_slab mm/slub.c:2527 [inline]
- __put_partials+0xeb/0x130 mm/slub.c:2995
- put_cpu_partial+0x17c/0x250 mm/slub.c:3070
- __slab_free+0x2ea/0x3d0 mm/slub.c:4308
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x9e/0x140 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:322
- kasan_slab_alloc include/linux/kasan.h:201 [inline]
- slab_post_alloc_hook mm/slub.c:3940 [inline]
- slab_alloc_node mm/slub.c:4002 [inline]
- kmem_cache_alloc_node_noprof+0x16b/0x320 mm/slub.c:4045
- __alloc_skb+0x1c3/0x440 net/core/skbuff.c:656
- netlink_sendmsg+0x631/0xcb0 net/netlink/af_netlink.c:1880
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:745
- ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
- ___sys_sendmsg net/socket.c:2639 [inline]
- __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffffc900034a7b80: 00 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
- ffffc900034a7c00: 00 00 00 00 f1 f1 f1 f1 00 00 00 00 00 00 00 00
->ffffc900034a7c80: 00 f3 f3 f3 f3 f3 f3 f3 00 00 00 00 00 00 00 00
-                               ^
- ffffc900034a7d00: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
- ffffc900034a7d80: 04 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
