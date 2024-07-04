@@ -1,201 +1,71 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1332A171A7;
-	Thu,  4 Jul 2024 09:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294C013B29D;
+	Thu,  4 Jul 2024 09:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720085497; cv=none; b=AReX6EEZRkrpfmtWqk4/pYWJ2cWrzi02ZY7hisxfwptCKJTJEu6c5EaRSC2FcXUpTrXDX8pscJEp6vS2IzUBMu0YJFwk2EqA/FpZBa0/Meq+77ZgOo/UL9QfkHqjO3K7JsLCkG9vGCYvj2pZr5PiPBdXq5+RIShuYCHft1HfGEo=
+	t=1720085547; cv=none; b=hXO2yWLRzvi+eixKryHURq4L16408dqDRlIHDeAE4gbj8jayM+61aV8VBgnWNp2uEW/0ukE3/KY65I4RDkxsmmKyStnUNVAl8v1VTzRbPZ+yPJIVfsdFlO3mePi/71xnHZjjC+WEtoAy1kOzClCyJYW+dkP7wf0su5K10CiKq1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720085497; c=relaxed/simple;
-	bh=6JvIoGeJYxTilGdyGLvutd4vO5hzpifvREfdh9Tlzy4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oRiB/L0TpxZzasuYemmdU3b8VZfaU2P4PmxAemcRoUw/iTtJn6TcH5WtCazGYNMqenSBULC7jqZartGPrBPe3/ozp9ljFZ3p87oVudSLX4byDkZvkjlQOgbZsk7LqUqaK5NGEY+i+H7xRJTk9wSRiYxgLehqjLIckVKJ3irJubE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74E3ADA7;
-	Thu,  4 Jul 2024 02:32:00 -0700 (PDT)
-Received: from [10.1.29.168] (XHFQ2J9959.cambridge.arm.com [10.1.29.168])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FF323F766;
-	Thu,  4 Jul 2024 02:31:34 -0700 (PDT)
-Message-ID: <92b7375f-7239-4fbd-bedd-b3b8d55bf7a1@arm.com>
-Date: Thu, 4 Jul 2024 10:31:32 +0100
+	s=arc-20240116; t=1720085547; c=relaxed/simple;
+	bh=w19DchiW/7C37L4MuQM+qfzoS3IEIWVbJxorCmkgc9I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M64ITIAVeV/nywuhNjoPfesBcdfCZ9Ivjp+CLp/eAlif62nBxmGgkWnjjaSWkH5GPgJSrPrzlAfcyNm5ZFAm6iDZHzbsLvR/p0f3seP5rFexSZ0/hu9Mu7YM4DvteiuCajTsTdYd0kcBcNgAg/ZQjIsGgh74zQQRIvdpRPll6Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BNAqwIcf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BNAqwIcf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34C3DC32786;
+	Thu,  4 Jul 2024 09:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720085546;
+	bh=w19DchiW/7C37L4MuQM+qfzoS3IEIWVbJxorCmkgc9I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BNAqwIcfUM2oyPOu+N0omQ/Aw48pvHWGoHOgMqmb5UR/G0e4vgIkVFYvqx0iZDSOr
+	 9t/ejfmTQYtXZniUGFqg8BDScdTYtrChTtBeGk24je6r2xBdutolp7FTElPJcm36lH
+	 v09x0CK3UNja4i6Jbm9A34j6eGriKxcgbWG9I3Vw=
+Date: Thu, 4 Jul 2024 11:32:24 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Yunseong Kim <yskelg@gmail.com>, stable@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>, Sasha Levin <sashal@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Taehee Yoo <ap420073@gmail.com>,
+	Pedro Tammela <pctammela@mojatatu.com>,
+	Austin Kim <austindh.kim@gmail.com>,
+	MichelleJin <shjy180909@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	ppbuk5246@gmail.com, Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: Re: [PATCH] tracing/net_sched: NULL pointer dereference in
+ perf_trace_qdisc_reset()
+Message-ID: <2024070400-slideshow-professor-af80@gregkh>
+References: <20240702180146.5126-2-yskelg@gmail.com>
+ <20240703191835.2cc2606f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] selftests: introduce and use SELFTESTS_CC_IS_CLANG
- instead of LLVM
-Content-Language: en-GB
-To: John Hubbard <jhubbard@nvidia.com>, Shuah Khan <shuah@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>,
- linux-kselftest@vger.kernel.org, llvm@lists.linux.dev,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240704030452.88793-1-jhubbard@nvidia.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240704030452.88793-1-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240703191835.2cc2606f@kernel.org>
 
-On 04/07/2024 04:04, John Hubbard wrote:
-> Current practice in the selftests Makefiles is to use $(LLVM) as a way
-> to decide if clang is being used as the compiler (and/or the linker
-> front end). Unfortunately, this does not cover all of the use cases:
+On Wed, Jul 03, 2024 at 07:18:35PM -0700, Jakub Kicinski wrote:
+> On Wed,  3 Jul 2024 03:01:47 +0900 Yunseong Kim wrote:
+> > Support backports for stable version. There are two places where null
+> > deref could happen before
+> > commit 2c92ca849fcc ("tracing/treewide: Remove second parameter of __assign_str()")
+> > Link: https://lore.kernel.org/linux-trace-kernel/20240516133454.681ba6a0@rorschach.local.home/
+> > 
+> > I've checked +v6.1.82 +v6.6.22 +v6.7.10, +v6.8, +6.9, this version need
+> > to be applied, So, I applied the patch, tested it again, and confirmed
+> > working fine.
 > 
-> 1) CC could have been set within selftests/lib.mk, by inferring it from
-> LLVM==1, or
+> You're missing the customary "[ Upstream commit <upstream commit> ]"
+> line, not sure Greg will pick this up.
 > 
-> 2) CC could have been set externally, such as when cross compiling.
-> 
-> Solution: In order to allow subsystem selftests to more accurately
-> control clang-specific behavior, such as compiler options, provide a new
-> Makefile variable: SELFTESTS_CC_IS_CLANG. If $(CC) contains an
-> invocation of clang in any form, then SELFTESTS_CC_IS_CLANG will be
-> non-empty.
-> 
-> SELFTESTS_CC_IS_CLANG does not specify which linker is being used.
-> However, it can still help with linker options, because $(CC) is often
-> used to do both the compile and link steps (often in the same step).
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
-> 
-> Hi,
-> 
-> If this looks reasonable, I'll break it up into separate patches and
-> post it as a non-RFC.
 
-I'm makefile-illiterate so not really qualified to review. But the concept
-certainly looks fine to me.
+Yeah, I missed this, needs to be very obvious what is happening here.
+I'll replace the version in the queues with this one now, thanks.
 
-Thanks,
-Ryan
-
-> 
-> thanks,
-> John Hubbard
-> 
->  tools/testing/selftests/bpf/Makefile       |  2 +-
->  tools/testing/selftests/fchmodat2/Makefile | 12 +++++++-----
->  tools/testing/selftests/hid/Makefile       |  2 +-
->  tools/testing/selftests/lib.mk             | 15 +++++++++++++++
->  tools/testing/selftests/openat2/Makefile   | 16 +++++++++-------
->  5 files changed, 33 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-> index dd49c1d23a60..6b924297ab71 100644
-> --- a/tools/testing/selftests/bpf/Makefile
-> +++ b/tools/testing/selftests/bpf/Makefile
-> @@ -55,7 +55,7 @@ progs/test_sk_lookup.c-CFLAGS := -fno-strict-aliasing
->  progs/timer_crash.c-CFLAGS := -fno-strict-aliasing
->  progs/test_global_func9.c-CFLAGS := -fno-strict-aliasing
->  
-> -ifneq ($(LLVM),)
-> +ifeq ($(SELFTESTS_CC_IS_CLANG),)
->  # Silence some warnings when compiled with clang
->  CFLAGS += -Wno-unused-command-line-argument
->  endif
-> diff --git a/tools/testing/selftests/fchmodat2/Makefile b/tools/testing/selftests/fchmodat2/Makefile
-> index 4373cea79b79..d00b01be5d96 100644
-> --- a/tools/testing/selftests/fchmodat2/Makefile
-> +++ b/tools/testing/selftests/fchmodat2/Makefile
-> @@ -2,14 +2,16 @@
->  
->  CFLAGS += -Wall -O2 -g -fsanitize=address -fsanitize=undefined $(KHDR_INCLUDES)
->  
-> +TEST_GEN_PROGS := fchmodat2_test
-> +
-> +include ../lib.mk
-> +
->  # gcc requires -static-libasan in order to ensure that Address Sanitizer's
->  # library is the first one loaded. However, clang already statically links the
->  # Address Sanitizer if -fsanitize is specified. Therefore, simply omit
->  # -static-libasan for clang builds.
-> -ifeq ($(LLVM),)
-> +# This check must be done after including ../lib.mk, in order to pick up the
-> +# correct value of SELFTESTS_CC_IS_CLANG.
-> +ifeq ($(SELFTESTS_CC_IS_CLANG),)
->      CFLAGS += -static-libasan
->  endif
-> -
-> -TEST_GEN_PROGS := fchmodat2_test
-> -
-> -include ../lib.mk
-> diff --git a/tools/testing/selftests/hid/Makefile b/tools/testing/selftests/hid/Makefile
-> index 2b5ea18bde38..734a53dc8ad9 100644
-> --- a/tools/testing/selftests/hid/Makefile
-> +++ b/tools/testing/selftests/hid/Makefile
-> @@ -27,7 +27,7 @@ CFLAGS += -I$(OUTPUT)/tools/include
->  LDLIBS += -lelf -lz -lrt -lpthread
->  
->  # Silence some warnings when compiled with clang
-> -ifneq ($(LLVM),)
-> +ifeq ($(SELFTESTS_CC_IS_CLANG),)
->  CFLAGS += -Wno-unused-command-line-argument
->  endif
->  
-> diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-> index 429535816dbd..f321ad5a1d0c 100644
-> --- a/tools/testing/selftests/lib.mk
-> +++ b/tools/testing/selftests/lib.mk
-> @@ -43,6 +43,21 @@ else
->  CC := $(CROSS_COMPILE)gcc
->  endif # LLVM
->  
-> +# SELFTESTS_CC_IS_CLANG allows subsystem selftests to more accurately control
-> +# clang-specific behavior, such as compiler options. If CC is an invocation of
-> +# clang in any form, then SELFTESTS_CC_IS_CLANG will be non-empty. Notes:
-> +#
-> +# 1) CC could have been set above, by inferring it from LLVM==1, or externally,
-> +# from the CC shell environment variable.
-> +#
-> +# 2) SELFTESTS_CC_IS_CLANG does not specify which linker is being used. However,
-> +#    it can still help with linker options, if clang or gcc is used for the
-> +#    linker front end.
-> +SELFTESTS_CC_IS_CLANG :=
-> +ifeq ($(findstring clang,$(CC)),clang)
-> +    SELFTESTS_CC_IS_CLANG := 1
-> +endif
-> +
->  ifeq (0,$(MAKELEVEL))
->      ifeq ($(OUTPUT),)
->  	OUTPUT := $(shell pwd)
-> diff --git a/tools/testing/selftests/openat2/Makefile b/tools/testing/selftests/openat2/Makefile
-> index 185dc76ebb5f..7acb85a8f2ac 100644
-> --- a/tools/testing/selftests/openat2/Makefile
-> +++ b/tools/testing/selftests/openat2/Makefile
-> @@ -3,16 +3,18 @@
->  CFLAGS += -Wall -O2 -g -fsanitize=address -fsanitize=undefined
->  TEST_GEN_PROGS := openat2_test resolve_test rename_attack_test
->  
-> +LOCAL_HDRS += helpers.h
-> +
-> +include ../lib.mk
-> +
-> +$(TEST_GEN_PROGS): helpers.c
-> +
->  # gcc requires -static-libasan in order to ensure that Address Sanitizer's
->  # library is the first one loaded. However, clang already statically links the
->  # Address Sanitizer if -fsanitize is specified. Therefore, simply omit
->  # -static-libasan for clang builds.
-> -ifeq ($(LLVM),)
-> +# This check must be done after including ../lib.mk, in order to pick up the
-> +# correct value of SELFTESTS_CC_IS_CLANG.
-> +ifeq ($(SELFTESTS_CC_IS_CLANG),)
->      CFLAGS += -static-libasan
->  endif
-> -
-> -LOCAL_HDRS += helpers.h
-> -
-> -include ../lib.mk
-> -
-> -$(TEST_GEN_PROGS): helpers.c
-> 
-> base-commit: 9a5cd459be8a425d70cda1fa1c89af7875a35d17
-
+greg k-h
