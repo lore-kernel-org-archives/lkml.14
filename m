@@ -1,92 +1,288 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF581A2571;
-	Thu,  4 Jul 2024 10:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB98191F8F;
+	Thu,  4 Jul 2024 10:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720090471; cv=none; b=G5RBugnkjuSYnk+lvC+lAJ5GuVy8HyX6GryqWK/jTHogJweoCqJYceFY/n58CVAiDryu8C2uculG89Yd6v0TtcVlYq/1Jp8P8780wTpnrRDKOciO0ujBPqX5WB9ziZVKD2EEeS4Jv4hQYqHgqqs5FNrEJ/69LS0t+Zi7p7rbz5c=
+	t=1720090668; cv=none; b=ZUW1m9u1BrCCOXw3fNDx6lWsTZIvhCG14bh7WtXj19vDDPq2CzqbX8p6FJHC8bnk8/LCTWGk6eMYoN36lCRVoG8gM+lNFyAY6ks3nT6rH8EVwEkqYKFyoZD1lVeDQn4nvL2QZ8T9pYoOUzDfoBh7DB6KEE4ZMhNS7NXsN/rOfqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720090471; c=relaxed/simple;
-	bh=/UEgsCPONLf606TxctUMDbmnfBYD1aoc3d8qtpjuxLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dJu+pah1ANXzIMtfZwi2JjQcgPKNZBcu+c8Nk2trahyAJS1FWBHqsWr/6fXLFaUA5lhHDHYJhrlZDrk2nhDaj9rs5NOWoQWwo9mdjCDuu0w2BX6jSY2aw0TefGSVs2Jr1A4yujMf6yMHx+v6atkxF/EYRTqzZvnGRs0EiY0kvn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1sPK6U-0008GL-8q; Thu, 04 Jul 2024 12:54:18 +0200
-Date: Thu, 4 Jul 2024 12:54:18 +0200
-From: Florian Westphal <fw@strlen.de>
-To: Hillf Danton <hdanton@sina.com>
-Cc: Florian Westphal <fw@strlen.de>, netfilter-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com
-Subject: Re: [PATCH nf] netfilter: nf_tables: unconditionally flush pending
- work before notifier
-Message-ID: <20240704105418.GA31039@breakpoint.cc>
-References: <20240703130107.GB29258@breakpoint.cc>
- <20240704103514.3035-1-hdanton@sina.com>
+	s=arc-20240116; t=1720090668; c=relaxed/simple;
+	bh=V+KXgBsdWqqQhukSQm9HVIb7N1iIDvx2Pq5wFVvJehc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FRuMyP/jKSvKZ+RbK3uWT9xLle94pxxbLeZEA1xypvwBiif43/cVxik2cr0xHmknOXEl+NEdnJGQ9mLfM0NuRivbQjam8gr7VRoh1EQP0SO7a3vlXEGmveLmtoxdipyXEaDNVgFjAJVMNymITjx3jkA9AQwKmOAxoj9ZBv+krT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzEeOL+y; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzEeOL+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B91F3C3277B;
+	Thu,  4 Jul 2024 10:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720090668;
+	bh=V+KXgBsdWqqQhukSQm9HVIb7N1iIDvx2Pq5wFVvJehc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lzEeOL+yPLEs0bGyrbd0GAzjxXb0c1N+FUB1VEp3X/qGeQqC84RuSyq1ZQG7jZODt
+	 CLdovOSEGbKIiyZ6EKpp4cS/CCV5vVIUkI2pXC5pKPGvhSywzR/oxQfuiLDY441gmh
+	 VA5Oog6Nh5I+zrj2WCgJdozyNteE7S/01MrvhFID2yrt2xErHcQ4wuSdz1JLl7LOfn
+	 TSTxl0O7UH+U2nsblLAjeb1Z92ANmkjr9+p7RW9Jm5rPI5xBHurBJ10MH8fkND7Lu5
+	 +bu4ZWwx8Fhf5TAB4C7lN1JYrxrJA6gV/HABStOau1Yb3LjEgfsoC45Oz4IQSoy5xN
+	 wiCeraEQ4YHxg==
+Message-ID: <9ef5a1ba-e404-46e0-8513-5fffbfb5618b@kernel.org>
+Date: Thu, 4 Jul 2024 12:57:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240704103514.3035-1-hdanton@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] drm/bridge: add Microchip DSI controller support for
+ sam9x7 SoC series
+To: Manikandan Muralidharan <manikandan.m@microchip.com>,
+ andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, airlied@gmail.com, daniel@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux@armlinux.org.uk, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev, arnd@arndb.de,
+ Jason@zx2c4.com, palmer@rivosinc.com, mpe@ellerman.id.au,
+ rdunlap@infradead.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: Hari.PrasathGE@microchip.com
+References: <20240704084837.168075-1-manikandan.m@microchip.com>
+ <20240704084837.168075-3-manikandan.m@microchip.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240704084837.168075-3-manikandan.m@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hillf Danton <hdanton@sina.com> wrote:
-> On Wed, 3 Jul 2024 15:01:07 +0200 Florian Westphal <fw@strlen.de>
-> > Hillf Danton <hdanton@sina.com> wrote:
-> > > On Wed, 3 Jul 2024 12:52:15 +0200 Florian Westphal <fw@strlen.de>
-> > > > Hillf Danton <hdanton@sina.com> wrote:
-> > > > > Given trans->table goes thru the lifespan of trans, your proposal is a bandaid
-> > > > > if trans outlives table.
-> > > > 
-> > > > trans must never outlive table.
-> > > > 
-> > > What is preventing trans from being freed after closing sock, given
-> > > trans is freed in workqueue?
-> > > 
-> > > 	close sock
-> > > 	queue work
-> > 
-> > The notifier acquires the transaction mutex, locking out all other
-> > transactions, so no further transactions requests referencing
-> > the table can be queued.
-> > 
-> As per the syzbot report, trans->table could be instantiated before
-> notifier acquires the transaction mutex. And in fact the lock helps
-> trans outlive table even with your patch.
+On 04/07/2024 10:48, Manikandan Muralidharan wrote:
+> Add the Microchip's DSI controller wrapper driver that uses
+> the Synopsys DesignWare MIPI DSI host controller bridge.
 > 
-> 	cpu1			cpu2
-> 	---			---
-> 	transB->table = A
-> 				lock trans mutex
-> 				flush work
-> 				free A
-> 				unlock trans mutex
-> 
-> 	queue work to free transB
+> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+> ---
 
-Can you show a crash reproducer or explain how this assign
-and queueing happens unordered wrt. cpu2?
 
-This should look like this:
+...
 
- 	cpu1			cpu2
- 	---			---
-	lock trans mutex
-  				lock trans mutex -> blocks
- 	transB->table = A
-  	queue work to free transB
-	unlock trans mutex
-				lock trans mutex returns
-  				flush work
-  				free A
-  				unlock trans mutex
+> +
+> +#define HSTT(_maxfreq, _c_lp2hs, _c_hs2lp, _d_lp2hs, _d_hs2lp)	\
+> +{					\
+> +	.maxfreq = _maxfreq,		\
+> +	.timing = {			\
+> +		.clk_lp2hs = _c_lp2hs,	\
+> +		.clk_hs2lp = _c_hs2lp,	\
+> +		.data_lp2hs = _d_lp2hs,	\
+> +		.data_hs2lp = _d_hs2lp,	\
+> +	}				\
+> +}
+> +
+> +struct hstt hstt_table[] = {
+
+So more globals? No.
+
+> +	HSTT(90,  32, 20,  26, 13),
+> +	HSTT(100,  35, 23,  28, 14),
+> +	HSTT(110,  32, 22,  26, 13),
+> +	HSTT(130,  31, 20,  27, 13),
+> +	HSTT(140,  33, 22,  26, 14),
+> +	HSTT(150,  33, 21,  26, 14),
+> +	HSTT(170,  32, 20,  27, 13),
+> +	HSTT(180,  36, 23,  30, 15),
+> +	HSTT(200,  40, 22,  33, 15),
+> +	HSTT(220,  40, 22,  33, 15),
+> +	HSTT(240,  44, 24,  36, 16),
+> +	HSTT(250,  48, 24,  38, 17),
+> +	HSTT(270,  48, 24,  38, 17),
+> +	HSTT(300,  50, 27,  41, 18),
+> +	HSTT(330,  56, 28,  45, 18),
+> +	HSTT(360,  59, 28,  48, 19),
+> +	HSTT(400,  61, 30,  50, 20),
+> +	HSTT(450,  67, 31,  55, 21),
+> +	HSTT(500,  73, 31,  59, 22),
+> +	HSTT(550,  79, 36,  63, 24),
+> +	HSTT(600,  83, 37,  68, 25),
+> +	HSTT(650,  90, 38,  73, 27),
+> +	HSTT(700,  95, 40,  77, 28),
+> +	HSTT(750, 102, 40,  84, 28),
+> +	HSTT(800, 106, 42,  87, 30),
+> +	HSTT(850, 113, 44,  93, 31),
+> +	HSTT(900, 118, 47,  98, 32),
+> +	HSTT(950, 124, 47, 102, 34),
+> +	HSTT(1000, 130, 49, 107, 35),
+> +};
+> +
+
+...
+
+> +
+> +static void dw_mipi_dsi_mchp_power_on(void *priv_data)
+> +{
+> +	struct dw_mipi_dsi_mchp *dsi = priv_data;
+> +
+> +	/* Enable the DSI wrapper */
+> +	dsi_write(dsi, DSI_PWR_UP, HOST_PWRUP);
+> +}
+> +
+> +static void dw_mipi_dsi_mchp_power_off(void *priv_data)
+> +{
+> +	struct dw_mipi_dsi_mchp *dsi = priv_data;
+> +
+> +	/* Disable the DSI wrapper */
+> +	dsi_write(dsi, DSI_PWR_UP, HOST_RESET);
+> +}
+> +
+> +struct dw_mipi_dsi_phy_ops dw_mipi_dsi_mchp_phy_ops = {
+
+Why this is not static?
+
+Why this is not const?
+
+> +	.init = dw_mipi_dsi_mchp_init,
+> +	.power_on = dw_mipi_dsi_mchp_power_on,
+> +	.power_off = dw_mipi_dsi_mchp_power_off,
+> +	.get_lane_mbps = dw_mipi_dsi_mchp_get_lane_mbps,
+> +	.get_timing = dw_mipi_dsi_mchp_get_timing,
+> +};
+> +
+> +static int dw_mipi_dsi_mchp_probe(struct platform_device *pdev)
+> +{
+> +	struct dw_mipi_dsi_mchp *dsi;
+> +	struct resource *res;
+> +	struct regmap *sfr;
+> +	const struct dw_mipi_dsi_mchp_chip_data *cdata;
+> +	int ret;
+> +
+> +	dsi = devm_kzalloc(&pdev->dev, sizeof(*dsi), GFP_KERNEL);
+> +	if (!dsi)
+> +		return -ENOMEM;
+> +
+> +	dsi->dev = &pdev->dev;
+> +	cdata = of_device_get_match_data(dsi->dev);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	dsi->base = devm_ioremap_resource(&pdev->dev, res);
+
+There is a helper for these two.
+
+> +	if (IS_ERR(dsi->base)) {
+> +		ret = PTR_ERR(dsi->base);
+> +		dev_err(dsi->dev, "Unable to get DSI Base address: %d\n", ret);
+
+return dev_err_probe
+
+> +		return ret;
+> +	}
+> +
+> +	dsi->pclk = devm_clk_get(&pdev->dev, "pclk");
+> +	if (IS_ERR(dsi->pclk)) {
+> +		ret = PTR_ERR(dsi->pclk);
+> +		dev_err(dsi->dev, "Unable to get pclk: %d\n", ret);
+
+return dev_err_probe
+
+You are upstreaming some old code, aren't you?
+
+> +		return ret;
+> +	}
+> +
+> +	dsi->pllref_clk = devm_clk_get(&pdev->dev, "refclk");
+> +	if (IS_ERR(dsi->pllref_clk)) {
+> +		ret = PTR_ERR(dsi->pllref_clk);
+> +		dev_err(dsi->dev, "Unable to get DSI PHY PLL reference clock: %d\n",
+
+return dev_err_probe
+
+
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	clk_set_rate(dsi->pllref_clk, DSI_PLL_REF_CLK);
+> +	if (clk_get_rate(dsi->pllref_clk) != DSI_PLL_REF_CLK) {
+> +		dev_err(dsi->dev, "Failed to set DSI PHY PLL reference clock\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = clk_prepare_enable(dsi->pllref_clk);
+
+Enable clock later, so your error paths will be simpler.
+
+> +	if (ret) {
+> +		dev_err(dsi->dev, "Failed to enable DSI PHY PLL reference clock: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	sfr = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "microchip,sfr");
+> +	if (IS_ERR_OR_NULL(sfr)) {
+
+NULL? Can it be NULL?
+
+> +		ret = PTR_ERR(sfr);
+> +		dev_err(dsi->dev, "Failed to get handle on Special Function Register: %d\n",
+> +			ret);
+
+ret = dev_err_probe
+
+> +		goto err_dsi_probe;
+> +	}
+> +	/* Select DSI in SFR's ISS Configuration Register */
+> +	ret = regmap_write(sfr, SFR_ISS_CFG, ISS_CFG_DSI_MODE);
+> +	if (ret) {
+> +		dev_err(dsi->dev, "Failed to enable DSI in SFR ISS configuration register: %d\n",
+> +			ret);
+> +		goto err_dsi_probe;
+> +	}
+
+
+
+Best regards,
+Krzysztof
+
