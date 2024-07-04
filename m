@@ -1,89 +1,141 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00501ABC25
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 14:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18E691AED59;
+	Thu,  4 Jul 2024 14:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720102137; cv=none; b=JVPJQx9CDOU/wXPdiRZQYSpcWodBZrI5q46pfJEcTYyv5E0GZRsOykKTK45BQSvZkajdGfEjTeUWLFWrrK+fwEV+YeO2iZXScgCkyHsa1BhZDLT2h9rW8Trs0eD8Ba1x1v36VDp/FvdwWJNqGAKYOHvZFmDrk6lEA2oKm7mtV1g=
+	t=1720102151; cv=none; b=QSYBhKPVgTGfp9Ik/aPtZcFlW6Rq72OVZzZD3a2N0RasBEw86y7chNqN3IKaLeh4O+NGw7KPKIRXyrKdJpGXp4nFJnyuEu/MZTcGmcU6aCAjgtZOmkML3VuBQV/SPxlTGk1KkQgh7potD1T4VgJqxOdXQzCdc2QuS47KtdX4svU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720102137; c=relaxed/simple;
-	bh=OjnbuG9TO3j0bqvuijnRXhWJSCu36Kq2cDcGRW+hUIA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CmQidQ2IRF4MQ+/B6CtNTdXNWUNrWLO4hXJSjeanO6kzlChAwLTRb1ajzCt1k/eXaquYt1JZShOQeMA/oxoo/HM7gY0ndWc9ijLtwFpB2wjOtxSHthsxoqK9GlXgVu9hKhhli7MfOlj3qBpINK5RFeHnz38Ax731aCRBOAzOVCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wyDArH+t; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wyDArH+t"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58c92e77ac7so9878a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 07:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720102134; x=1720706934; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OjnbuG9TO3j0bqvuijnRXhWJSCu36Kq2cDcGRW+hUIA=;
-        b=wyDArH+tf1Df/l2NMx4gT9QOH5+MpABv6flQObIFKHaEDelV8WFn3v/0nYfbCrIz6N
-         zcysWf2jjTyUw5LE6fKu41EH9/drrYPFnr1duVrut3an/ZE3Tyvr1QN6pJJJLQFv7YeN
-         JuzaMFZn3MFUabp2m+7p4LcjCdrzemIbHjgnfShBBRxlc901XnmZy4zWLFextSKn71n/
-         BqUK+Z92hbZwFeiWEe7ad5KvpPiv9RHW/JPdbY2yZJXT5E+31D8POC5CNHl7LDqw1jVQ
-         HzuBZ+WfQpcPN9XcrfitVkKvhZaTo1U4cZhIlU7xQD16vONH7dadL/A1EFWRFeAyjWzr
-         82oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720102134; x=1720706934;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OjnbuG9TO3j0bqvuijnRXhWJSCu36Kq2cDcGRW+hUIA=;
-        b=hK+fJx7SnwNyHxDAvjRcj61BNl92k2BHSlal0CpQ3avtu/ps0qfpP1EnbJxYujq4Ql
-         MGbETlK1IrPTyfi88yik9sc2se9pQczlD9L+TvG/SXMTyMpNcgNW8FA/8EiOK92NlIvy
-         viMIDWrM0qkH2vT2zbNsbEw8Bim0T0krunAAQ0BvVvCZVgMDy/iFG1TvxmwKK8P/47rC
-         yg4/tO1lX/7K/TBuLx+hKTr5OjklRvTv10xSqDaCm8Odm4KxGEAaggvuceysM8Qs2Pkv
-         Pui4agSUsgrAusbLLcHvIkspchnWEvnQbVUv9gJ84rOIHSr4r8f4Rtbfu5ZpRS2qnlq+
-         PhTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXWD609ce9ovv2S9hq89xcrhkfC/4sqmsbb+H7CMgQclg8Te2jIB+mFs62K8PmCTdp2j2gdNsoV0Pd5l/jumXvsx5KhgCEp5l3BO7eC
-X-Gm-Message-State: AOJu0YxpmkmIbkDfWbO3RlHbrGmsACsGtAepHiuamVh2sBtxdFfaLaHn
-	grP4eI3AVZ/MrbMyrt/T+l8z4lpwUQ+JR8de22Lio2Hoqx96ShN+yqOnygZieC1ZZXLVYlyp1dQ
-	L/khlsaH92wMBusa+5EMh0sTtx4LZEsVHc0TJ
-X-Google-Smtp-Source: AGHT+IFNnwi98SKMXkQJ3oJUKdSHHCJvcB2RfS4C3O9g2BWDLdJHEL3niZX6BcFP4guB/up0cv3ENf2NQHdkJ1jjNaw=
-X-Received: by 2002:a50:d49c:0:b0:58b:5725:dedc with SMTP id
- 4fb4d7f45d1cf-58e02738dbamr140013a12.4.1720102132332; Thu, 04 Jul 2024
- 07:08:52 -0700 (PDT)
+	s=arc-20240116; t=1720102151; c=relaxed/simple;
+	bh=pFRLn+y1mz1uVUqeKtVvQepYQ3kownJiUBKeIvxzUsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H78YXlDty1Vt9CtXoJViqK1XdaSewykr2twNXBpJtxNfBPkit7+OSq1gHMcpv32qP8EB1bZfRb2ZjyV0VJTmwcAeK3ITMo1SqEDCoF0uaXTxf4hp7QUHYBeepTO7/mT7GZ5PkE6Zu7H6SZO8hhdCZDtBSXPNsGtIg7DGU7LC79o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F369367;
+	Thu,  4 Jul 2024 07:09:33 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1D933F766;
+	Thu,  4 Jul 2024 07:09:06 -0700 (PDT)
+Date: Thu, 4 Jul 2024 15:09:04 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	"cristian.marussi@arm.com" <cristian.marussi@arm.com>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: arm,scmi: introduce
+ property mbox-rx-timeout-ms
+Message-ID: <ZoatADKjBfpRCeLz@pluto>
+References: <20240703031715.379815-1-peng.fan@oss.nxp.com>
+ <ZoZ7NCSaG0YRK-60@bogus>
+ <AM6PR04MB5941A61736496B9850A3B52C88DE2@AM6PR04MB5941.eurprd04.prod.outlook.com>
+ <ZoZ8pfi5KZZGY1wd@bogus>
+ <AM6PR04MB5941F61DFB15AFDA384C153A88DE2@AM6PR04MB5941.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2023082746-antelope-drop-down-5562@gregkh> <20240704135057.1174408-1-dvyukov@google.com>
- <2024070416-hatbox-playlist-9886@gregkh>
-In-Reply-To: <2024070416-hatbox-playlist-9886@gregkh>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Thu, 4 Jul 2024 16:08:40 +0200
-Message-ID: <CACT4Y+arKNML2gLvmXzqdfyJY5ydj0yjfk-NbrZpOLgTOTNH6A@mail.gmail.com>
-Subject: Re: [PATCH] fs/befs: fix shift-out-of-bounds in befs_check_sb
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: 88c258bd-3d0c-de79-b411-6552841eb8d0@gmail.com, 
-	Linux-kernel-mentees@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	luisbg@kernel.org, salah.triki@gmail.com, 
-	syzbot+fc26c366038b54261e53@syzkaller.appspotmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR04MB5941F61DFB15AFDA384C153A88DE2@AM6PR04MB5941.eurprd04.prod.outlook.com>
 
-On Thu, 4 Jul 2024 at 16:04, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 04, 2024 at 03:50:57PM +0200, Dmitry Vyukov wrote:
-> > Hi,
-> >
-> > What's the kernel policy for such cases?
->
-> What "case"?
->
-> There is no context here at all, and I can't find any patch on lore at
-> all.
->
-> Please always properly quote stuff...
+On Thu, Jul 04, 2024 at 12:33:09PM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: arm,scmi: introduce
+> > property mbox-rx-timeout-ms
+> > 
+> > On Thu, Jul 04, 2024 at 10:39:53AM +0000, Peng Fan wrote:
+> > > > Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: arm,scmi:
+> > > > introduce property mbox-rx-timeout-ms
+> > > >
+> > > > On Wed, Jul 03, 2024 at 11:17:14AM +0800, Peng Fan (OSS) wrote:
+> > > > > From: Peng Fan <peng.fan@nxp.com>
+> > > > >
+> > > > > System Controller Management Interface(SCMI) firmwares might
+> > > > have
+> > > > > different designs by SCMI firmware developers. So the maximum
+> > > > receive
+> > > > > channel timeout value might also varies in the various designs.
+> > > > >
+> > > > > So introduce property mbox-rx-timeout-ms to let each platform
+> > > > > could set its own timeout value in device tree.
+> > > > >
+> > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > > ---
+> > > > >
+> > > > > V2:
+> > > > >  Drop defaults, update description.
+> > > > >
+> > > > >  Documentation/devicetree/bindings/firmware/arm,scmi.yaml | 6
+> > > > ++++++
+> > > > >  1 file changed, 6 insertions(+)
+> > > > >
+> > > > > diff --git
+> > > > a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > index ebf384e76df1..dcac0b36c76f 100644
+> > > > > ---
+> > a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > +++
+> > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > @@ -121,6 +121,12 @@ properties:
+> > > > >        atomic mode of operation, even if requested.
+> > > > >      default: 0
+> > > > >
+> > > > > +  max-rx-timeout-ms:
+> > > > > +    description:
+> > > > > +      An optional time value, expressed in milliseconds,
+> > > > > + representing
+> > > > the
+> > > > > +      mailbox maximum timeout value for receive channel. The
+> > > > > + value
+> > > > should
+> > > > > +      be a non-zero value if set.
+> > > > > +
+> > > >
+> > > > IIRC, you had the min and max constraint in the earlier response.
+> > > > You need to have rushed and posted another version before I could
+> > > > respond with my preference.
+> > > >
+> > > > So there is no rush, these are v6.12 material. Take time for
+> > > > respining and give some time for the review.
+> > >
+> > > Sure. I just not sure what the maximum should be set, so I drop the
+> > > minimum and maximum from my previous email.
+> > >
+> > 
+> > Worst case we can just have min constraint to indicate it must be non-
+> > zero value as you have mentioned above and drop that statement as it
+> > becomes explicit with the constraint.
+> 
+> I'll use below in v3:
+>   max-rx-timeout-ms:                                                                                
+>     description:                                                                                    
+>       An optional time value, expressed in milliseconds, representing the                           
+>       mailbox maximum timeout value for receive channel. The value should                           
+>       be a non-zero value if set.                                                                   
+>     minimum: 1
+> 
+> Put the binding away, when you have time, please check
+> whether the driver changes are good or not.
+> BTW, since our Android team is waiting for this patchset
+> got R-b or A-b, then the patches could be accepted by Google common
+> kernel, we could support GKI in our release which is soon in near
+> days. So I am being pushed :) 
 
-It's not easy with kernel lists. I used the lore suggested reply-to
-command. Here is full thread:
-https://lore.kernel.org/all/20240704135057.1174408-1-dvyukov@google.com/
+Hi Peng,
+
+once the bindings are accepted I wanted to fold also this series of
+yours in my transport rework series.
+
+Thanks,
+Cristian
