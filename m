@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3949E1AD9DE
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394FB1AE848;
+	Thu,  4 Jul 2024 13:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098657; cv=none; b=MOSwK8SnFMZVaPeiIaa+JfbEewgPSRTQEwy3oefIULdzp177KicjDGUbIbOhaEyIJX7Q2RUKaY2aZDfFrX/ZTaiwuyGZPKf9S68i2/qcblJK6ldSkh5M9Z9SSn0il+7gvOPxoA24rpgR2SWdsYFq5ax7yg3h5GbZg7KrXh4OBIA=
+	t=1720098657; cv=none; b=Wh9HcWg0uyI/3uKSfcnIMTMclN0+nb8VbC30yw6fktl+rnHO3733cCsp00XI/EvzJr9waGeiuIFXOu2OUeLWi1lAmuKL6bxin9KgvyHkg4J0o85l0lE5ZwT3dixW+LbZD42xnEfaDJU8X3LRy4AYXYUgseasJKvKNj3T3WUVfko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720098657; c=relaxed/simple;
-	bh=d1R6VyIbkJ6U7w801EO8l21bk3qkW3imoEOlfi6mJ0o=;
+	bh=LgXnJFsYyRvjaEK1ntPm88fL7Wm+lyk5mTRJwn5WJdg=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=GQXAWzKzy9KE1dNCyvhRYqQXQcA79vBgR/qWuPbgHRai/QCHGXYdzit+LXHLdcRwmQcSCczRHZuV3eoMzi69ABcJs1KOfzlYnK1yCGtAacSejItg+YdPborDkM/auKp5e5immdZHGBVQQoFSjLDowmPC4V0OaeTsw9ZidupcJD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fo2jZkvc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=swGvLiif/eJiSOgzak0tQ218pmikXRlh50OYjNcr0byIjlzEZpMjFMBSAdmT7aa37pEbbLiYjtJ6S/zNfWlAzhWRtusXtoq4vUiGjtmYQ2CEl+b5RWNgwiqjCSWWErb2pubRndqge027TqN9CW9iPkFBYRTPsbSOfePvAQos+CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=paZrJQyA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fo2jZkvc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CB4A9C4AF0C;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="paZrJQyA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D6BDBC4AF0D;
 	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720098656;
-	bh=d1R6VyIbkJ6U7w801EO8l21bk3qkW3imoEOlfi6mJ0o=;
+	bh=LgXnJFsYyRvjaEK1ntPm88fL7Wm+lyk5mTRJwn5WJdg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=fo2jZkvcZSDt1fGr5ZrtsubKDg0lm7xDjMC9jQnY4iYDYlIxVv8JLu59v3NRhkhb3
-	 +31IvMoMqRPLlLD5TnKhcbpCo+WEl+FmkFY3ULZtIzz0lmwEu8T+L/OkXcGagr4DYd
-	 CsoqzJteqGJOKYigMc5UDq+YNWx+UgHY9sVD08nqjFvsweG2GUZ4gRb5AGXYlvkorr
-	 g254OZ7RieYGkdAlQPCGpbG61KIRqBnBqZuq/bicQ9M4WMOnl//qrOUT1t9sCRdq08
-	 KHsOzteSG9RJ7k1Uhhha9F5VoIwT2QOUpQQ+mj2gwc9CdFhS3nzsXh5VWho1I3KNVl
-	 y1rXL7FyCDNZA==
+	b=paZrJQyAWMUf3S9qd1u1maQM6otdP/Ej229Xc/6APRWTyHd9CYXxmXvkow2LijCvB
+	 xwXJUdLqcAM6e00HmrI8z+OpimD6hTFvVEQ2QH1kMmDAvuR/kVpGGWbvXObh28F4I+
+	 HngTCDSU9HlYOh4j1BNg4tVHE8By8lZGQkdhD2D9kFmv0YmdWK6Pqa0NM8Cww2vFsU
+	 LB+IwQVV4liBIt9A2TiXD3dOgmaSNr+06FKfTZzPS0wgDGCVlBraKVRjKLSN9WHybI
+	 b/TqoPHrOYhLEirInV5azf06QiqZ41gVT0NKy4j6iRFwNg49nHpvTH4IxSJ+FgwVtI
+	 MlPMDBOyElgBg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B9FA3C43331;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C4DE3C43614;
 	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,39 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH V2 -fixes] riscv: kexec: Avoid deadlock in kexec crash path
+Subject: Re: [PATCH] riscv: selftests: Fix vsetivli args for clang
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <172009865675.17306.18375440466203340384.git-patchwork-notify@kernel.org>
+ <172009865679.17306.1065674073385433619.git-patchwork-notify@kernel.org>
 Date: Thu, 04 Jul 2024 13:10:56 +0000
-References: <20240626023316.539971-1-songshuaishuai@tinylab.org>
-In-Reply-To: <20240626023316.539971-1-songshuaishuai@tinylab.org>
-To: Song Shuai <songshuaishuai@tinylab.org>
-Cc: linux-riscv@lists.infradead.org, takakura@valinux.co.jp, alex@ghiti.fr,
+References: <20240702-fix_sigreturn_test-v1-1-485f88a80612@rivosinc.com>
+In-Reply-To: <20240702-fix_sigreturn_test-v1-1-485f88a80612@rivosinc.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, shuah@kernel.org,
  paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- bhe@redhat.com, akpm@linux-foundation.org, guoren@kernel.org,
- xianting.tian@linux.alibaba.com, linux-kernel@vger.kernel.org
+ nathan@kernel.org, ndesaulniers@google.com, morbo@google.com,
+ justinstitt@google.com, andy.chiu@sifive.com, bjorn@rivosinc.com,
+ palmer@rivosinc.com, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed, 26 Jun 2024 10:33:16 +0800 you wrote:
-> If the kexec crash code is called in the interrupt context, the
-> machine_kexec_mask_interrupts() function will trigger a deadlock while
-> trying to acquire the irqdesc spinlock and then deactivate irqchip in
-> irq_set_irqchip_state() function.
+On Tue, 02 Jul 2024 18:54:48 -0700 you wrote:
+> Clang does not support implicit LMUL in the vset* instruction sequences.
+> Introduce an explicit LMUL in the vsetivli instruction.
 > 
-> Unlike arm64, riscv only requires irq_eoi handler to complete EOI and
-> keeping irq_set_irqchip_state() will only leave this possible deadlock
-> without any use. So we simply remove it.
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Fixes: 9d5328eeb185 ("riscv: selftests: Add signal handling vector tests")
+> ---
+> There is one more error that occurs when the test cases for riscv are
+> compiled with llvm:
 > 
 > [...]
 
 Here is the summary with links:
-  - [V2,-fixes] riscv: kexec: Avoid deadlock in kexec crash path
-    https://git.kernel.org/riscv/c/c562ba719df5
+  - riscv: selftests: Fix vsetivli args for clang
+    https://git.kernel.org/riscv/c/3582ce0d7ccf
 
 You are awesome, thank you!
 -- 
