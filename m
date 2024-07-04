@@ -1,93 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550DC101DB;
-	Thu,  4 Jul 2024 18:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378B9101DB;
+	Thu,  4 Jul 2024 18:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720116030; cv=none; b=fzrdDj+3B9m+8zt1oio+ISMlT4exXbTP1Xw/Ce+TU+12fevPjjigQIoSDu2nOTym78f8c8/mCoYi3gwjGfooz/TW9857QrbmPyOAGnP00YFiDdH38tS+rw8HOW6la54X/6X4ooqCedjJTa4vNA8zExk1IHz/cbX77e0c8l5hr2g=
+	t=1720116098; cv=none; b=g0JUbufmU0pz1HHkU75i0MjjWi6yKaIqCrXNjwmoZaL5Zk2ob5gqbpZF7YCBHonveSQkBZQ/d8TwS5nRyRHQPV0Lcg2mcdE4FSugr412Z6Mm614oewRptZYMzhluLlpLafTluwa1Aasb6FBjpY4JiYOiq5oOi5IdC1zmzJ00UBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720116030; c=relaxed/simple;
-	bh=7CM7LCzL/FexzNhEv5GX0DgAZg5LMKsi2jK7Gi5eIC4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=nntdxPfyOhjIqiUU33BdRw3v2XrM/FThjIjnsTrrBLjMKZFWqaubByVFZIibietS4AdmH2kXXTdV2hcM6STCpzxoVDbAjEiEBE6BcwFRtv5w17oMH3o1kVXKgYJq3yZ2Jk6udieU2cbjRvsIrNZNVO87UmYhmbHDjHG5CJnZ/Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFxuJQSG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFxuJQSG"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CC16FC32781;
-	Thu,  4 Jul 2024 18:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720116029;
-	bh=7CM7LCzL/FexzNhEv5GX0DgAZg5LMKsi2jK7Gi5eIC4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=rFxuJQSGu4WBvXc43cqzFG6wic7ngA2MyGRm46FspP+as0YNbNTFK9QRPfmlDC7L/
-	 2WgckPwYVVEmed3iBZhmDByLvNHHQS04UL+Ow/w8t8PZjbI/hScxAXXnOJbJ2rcIaT
-	 v6Fph2lLmTVLdOz4BBmVpepm8g8WJkegZpLm0spNBsB5JKJzteN878iKvUvhMkJA60
-	 a1FQy+0g6voH52HSx+h73CD+QZpfjcKsOb8FylIGHS7fhS93YFqdox75BVqPtdq9SU
-	 KwsIIZjrVUjlpPYkPDrpBRSxU0uo7TpKkfIdY+o6fDVtvuocpgAGGKtPAOc3RIb304
-	 20/+ve1yHTgPQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B7EF5C43331;
-	Thu,  4 Jul 2024 18:00:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1720116098; c=relaxed/simple;
+	bh=QNcQI7Lncx7DTyZihuUSMq+AUVBrbFHOAde02Tlg+FY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OuiL6gaDTn5+MLBYijv5nhlXwqe9URAk/0SlOlvFTluLUijRXGi7ftScMh+0UxBQuEdKZfhuJJjpHI7uWcdjhSEnaKX/FkFbeIs/CYGB6k3+dIPLdv0BbuvVfBMsYiaJwdrYF5/PIYBO14r8lTYXbwxW/7v7lrQtnbKd5PJwHaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875ac2.versanet.de ([83.135.90.194] helo=phil.lan)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sPQlt-00049m-Mp; Thu, 04 Jul 2024 20:01:29 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Johan Jonker <jbx6244@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	krzk+dt@kernel.org,
+	linux-clk@vger.kernel.org,
+	sboyd@kernel.org,
+	mturquette@baylibre.com,
+	devicetree@vger.kernel.org,
+	conor+dt@kernel.org
+Subject: Re: [PATCH v1] dt-bindings: clock: rk3188-cru-common: remove CLK_NR_CLKS
+Date: Thu,  4 Jul 2024 20:01:25 +0200
+Message-Id: <172011606371.897267.1165262107995336205.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <6f21c09b-e8d2-4749-aca6-572c79df775d@gmail.com>
+References: <6f21c09b-e8d2-4749-aca6-572c79df775d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3 0/3] crypto: caam: Unembed net_dev
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172011602974.29043.12028718630944239259.git-patchwork-notify@kernel.org>
-Date: Thu, 04 Jul 2024 18:00:29 +0000
-References: <20240702185557.3699991-1-leitao@debian.org>
-In-Reply-To: <20240702185557.3699991-1-leitao@debian.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, horia.geanta@nxp.com, pankaj.gupta@nxp.com,
- gaurav.jain@nxp.com, linux-crypto@vger.kernel.org, horms@kernel.org,
- netdev@vger.kernel.org, herbert@gondor.apana.org.au,
- linux-kernel@vger.kernel.org
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue,  2 Jul 2024 11:55:50 -0700 you wrote:
-> This will un-embed the net_device struct from inside other struct, so we
-> can add flexible array into net_device.
+On Thu, 27 Jun 2024 23:17:45 +0200, Johan Jonker wrote:
+> CLK_NR_CLKS should not be part of the binding.
+> Remove since the kernel code no longer uses it.
 > 
-> This also enable COMPILE test for FSL_CAAM, as any config option that
-> depends on ARCH_LAYERSCAPE.
 > 
-> Changelog:
-> v3:
-> 	* Fix free_netdev() deference per-cpu (Simon)
-> 	* Hide imx8m_machine_match under CONFIG_OF (Jakub)
-> v2:
->         * added a cover letter (Jakub)
->         * dropped the patch that makes FSL_DPAA dependent of
->           COMPILE_TEST, since it exposes other problems.
-> v1:
->         * https://lore.kernel.org/all/20240624162128.1665620-1-leitao@debian.org/
-> 
-> [...]
 
-Here is the summary with links:
-  - [net-next,v3,1/4] crypto: caam: Avoid unused imx8m_machine_match variable
-    https://git.kernel.org/netdev/net-next/c/9b5c33b1a3b7
-  - [net-next,v3,2/4] crypto: caam: Make CRYPTO_DEV_FSL_CAAM dependent of COMPILE_TEST
-    https://git.kernel.org/netdev/net-next/c/beba3771d9e0
-  - [net-next,v3,3/4] crypto: caam: Unembed net_dev structure from qi
-    https://git.kernel.org/netdev/net-next/c/82c81e740def
-  - [net-next,v3,4/4] crypto: caam: Unembed net_dev structure in dpaa2
-    https://git.kernel.org/netdev/net-next/c/0e1a4d427f58
+Applied, thanks!
 
-You are awesome, thank you!
+[1/1] dt-bindings: clock: rk3188-cru-common: remove CLK_NR_CLKS
+      commit: d89e8096957e35742c9922d3f6628f24de0d6163
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Heiko Stuebner <heiko@sntech.de>
