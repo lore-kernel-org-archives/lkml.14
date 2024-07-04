@@ -1,105 +1,93 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A106240BF5
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 18:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2AE373452
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 18:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720119154; cv=none; b=aR60BlCdNtbTEk1UZrJOKnPAcnJxKiWSsLZ1dxTN/wJ5ty7GFwFK2FHOoNvrlBC5rYEDYsrt5sGzI3Uh8S1iY9TFR+osmRM0/t9hP7QYP0WsHifJdAEmXivx95PeZxezDDC9tH7iRn4xWd6+vJXGM362uPqu9Dxvkhjh06Fv2pE=
+	t=1720119167; cv=none; b=kcgViWZyiBal1Y2SVz3QUI8a2SFnVKvtV20ga6GOMYkFdwG+p42SKcXhszJ78kYGqNnC03Vfn6le1d8OrEUbo7Hecm/yxO48Cvls6W4AmEAneQiXhfshK8oTObbflqFzKh5RQf57l0nmaPXiYn8TwzAgiEcSTwQCCk9vtCIOPPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720119154; c=relaxed/simple;
-	bh=+93Aq5gRk1QUFv6/zcEDBVacdtTPGRpPKUqs9kJAJBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G2qkDF47QK/yC+QYeSxiqkG2cJ/qtKjlpVvu/j1isMDc3CJWc/XtiWueXHcW3vmgEA+oDTWJ09/8oplyPMr2h4tt1UbBI2rTCKEBgMKI3TYubRg6WQ2Cup4Phx97Se2ttRnaWOizbrJRTtrBsYcWzrMmAWkV2A6JYzDQr7yBOg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=d3+4C7LD; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="d3+4C7LD"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a77b4387302so118271866b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 11:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720119151; x=1720723951; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ebaU5nRCNutbW0xREH8nKuSp9Alz78vjbtHSVH4o2bA=;
-        b=d3+4C7LDkn94nA+MKC8uVImwrNaC47CZpMfrmERR4YACo/6EtA1K5tkVClKg6/MQdw
-         sgC6jO5FbciMaiJuG1yJjR3+Zasmvd4egF34edvji+bN17pxv7CMFFL66ZNbem3Be/Bj
-         eyRhrCdFfsggMcWrpiIohIXPZKTfTMNOGwLFY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720119151; x=1720723951;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ebaU5nRCNutbW0xREH8nKuSp9Alz78vjbtHSVH4o2bA=;
-        b=ItrjXZunVuw7Y/kHSDyLPBZz6nAwVGysBgWQJBqrNTpK8mHVAuym1Tej73orqg3KAT
-         Pdvl+kg2A0V4giCipdin65izfOA2K8PPWD+KTwCO9kDzBnhNvTb8Tl897PteHZ22ao+r
-         NO0/2lSKHMCYjZCQRdJiDoEWQ4rxsC1HDRaesdR5QQHcXh3TyPL9QLbF54JXsNwG3Uxl
-         nwu30L8+6GBAjAkmYFuvnggT0bejA820rdk+jtx4UaF9YcbREwfhK4G2UGyTutwCYpSD
-         isnObLfm0jj5SucKh25teBaAtpy6aV5P0MFzcUUTL7ag4VSuhLNz/zOzwvoZ3CdZG3OE
-         psTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOfyxAEdGd6+UgV3uA0qB8dXF90bUYljqkHBkdjpxeC5nq6ZVVuYE+bkjb1hQ7ws4AjeKljfmjzGNxChZJkUd4ul+weZoiBv7NVtwM
-X-Gm-Message-State: AOJu0YwnK40xf93m8K78MrAoI+G9fCs4gxV4zIMJPWLDESk3TiPJ9VMP
-	bS/3jD4/dAxr9aTxPichCp6Wik1FbO4ZGScfjc0gTabBF31XJniqw/wsOgX8KwhMY1sjevL2Waj
-	uEosxMg==
-X-Google-Smtp-Source: AGHT+IFOSXBA1INFpiTIQa7gafG41EbdvNIhpjB9Z2eAQWxXRkvwW7fro1CnAngs0Y0Ibl+bHe3T7Q==
-X-Received: by 2002:a17:906:34d3:b0:a6f:3155:bb89 with SMTP id a640c23a62f3a-a77ba72759cmr176873766b.70.1720119150854;
-        Thu, 04 Jul 2024 11:52:30 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72b4125807sm575015866b.86.2024.07.04.11.52.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 11:52:30 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58ba3e38028so1244129a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 11:52:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVoQeiZYcpmZqdEAFjWwUXrYkCWLRm9IQ5UQ309Z/vCYbDeFwkt63KkxWwhp06g0Bc8WeAcO2DBJGsKEt/SplOnRqOIgi6RSVomVttW
-X-Received: by 2002:a17:906:581:b0:a72:b287:1e04 with SMTP id
- a640c23a62f3a-a77ba48debcmr132743466b.34.1720119149587; Thu, 04 Jul 2024
- 11:52:29 -0700 (PDT)
+	s=arc-20240116; t=1720119167; c=relaxed/simple;
+	bh=GQBx1MxgEDAe5DdKAvCgpIEoVogab7OgI3MQjkxoDZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zc53UqDJxJDYvG0rcYiyVMxxDJzthX/vfnDEqHxxMQnTg0v5lUt6qSAhp6MHklehhh2+ifKE6yf5kMwCDhnKDW8g/eCEs0VsuJRUmZihrW3Tz4fZ1Ync2DmrOqUN06uX4/ubf6u7co0qsnY3+tJpdi1dK3bdmUwzXb7t2oqrRC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by mail.home.local (8.17.1/8.17.1/Submit) id 464IiPxH012837;
+	Thu, 4 Jul 2024 20:44:25 +0200
+Date: Thu, 4 Jul 2024 20:44:25 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, jolsa@kernel.org,
+        mhiramat@kernel.org, cgzones@googlemail.com, brauner@kernel.org,
+        linux-kernel@vger.kernel.org, arnd@arndb.de
+Subject: Re: deconflicting new syscall numbers for 6.11
+Message-ID: <Zobtia2Zsaamh9KQ@1wt.eu>
+References: <ZobXdDCYBi8OM-Fo@zx2c4.com>
+ <CAHk-=wiGk+1eNy4Vk6QsEgM=Ru3jE40qrDwgq_CSKgqwLgMdRg@mail.gmail.com>
+ <Zobf3fZOuvOJOGPN@zx2c4.com>
+ <CAHk-=whf2Pb8fSmUsLRSn6CnYvQoyUkLikKpFDWN_xnTJqix=A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZobXdDCYBi8OM-Fo@zx2c4.com> <CAHk-=wiGk+1eNy4Vk6QsEgM=Ru3jE40qrDwgq_CSKgqwLgMdRg@mail.gmail.com>
- <Zobf3fZOuvOJOGPN@zx2c4.com> <CAHk-=whf2Pb8fSmUsLRSn6CnYvQoyUkLikKpFDWN_xnTJqix=A@mail.gmail.com>
- <CAHmME9pm+ZE2_qf1DNxukB6ufPrjTAsnwin05-VX_gS03Yq-ag@mail.gmail.com>
- <CAHk-=whTjdO6szgRKp51ZeDLDmA1+YYSbg+vEUt9OsxTMDUtjQ@mail.gmail.com>
- <CAHk-=wgqD9h0Eb-n94ZEuK9SugnkczXvX497X=OdACVEhsw5xQ@mail.gmail.com> <Zobt_M91PEnVobML@zx2c4.com>
-In-Reply-To: <Zobt_M91PEnVobML@zx2c4.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 4 Jul 2024 11:52:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh47WSNQYuSWqdu_8XeRzfpWbozzTDL6KtkGbSmLrWU4g@mail.gmail.com>
-Message-ID: <CAHk-=wh47WSNQYuSWqdu_8XeRzfpWbozzTDL6KtkGbSmLrWU4g@mail.gmail.com>
-Subject: Re: deconflicting new syscall numbers for 6.11
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: jolsa@kernel.org, mhiramat@kernel.org, cgzones@googlemail.com, 
-	brauner@kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whf2Pb8fSmUsLRSn6CnYvQoyUkLikKpFDWN_xnTJqix=A@mail.gmail.com>
 
-On Thu, 4 Jul 2024 at 11:46, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
->
-> I addressed this in the cover letter:
->
-> | How do we rectify this? By putting a safe implementation of getrandom()
-> | in the vDSO, which has access to whatever information a
-> | particular iteration of random.c is using to make its decisions. I use
-> | that careful language of "particular iteration of random.c", because the
-> | set of things that a vDSO getrandom() implementation might need for making
-> | decisions as good as the kernel's will likely change over time.
+On Thu, Jul 04, 2024 at 10:55:46AM -0700, Linus Torvalds wrote:
+> A trivial google for "rdrand library" finds lots of hits for things
+> that then use the AES-NI instructions to whiten things etc.
 
-Jason. This smells. It's BS.
+As a userland developer, I can say that dealing with external libs for
+low-level stuff, which themselves sometimes even come with their own
+set of dependencies, is always a pain. There must be compelling reasons
+for adding dependencies. It's reinforced when you have to deal with
+long term support on your software that goes beyond the lib's.
 
-Christ, let's make a deal: do a five-liner patch that adds the
-generation number to the vdso data, and basically document it as a
-"the kernel thinks you need to reseed your buffers using getrandom"
-flag.
+And having to go through instruction support detection and open-coding
+all that stuff with runtime fallbacks for older CPUs is also a pain. Not
+to mention the cases where you run in VMs where features are there but
+not listed or presented but slowly emulated.
 
-And *if* it turns out in the future that there is then any major
-reason why that doesn't work, I'll take the 1000+ line thing, ok?
+I'm using a lot of arch-specific code at build time, I'm often fine with
+detecting -ENOSYS at run time to fall back to an older implementation of
+a syscall, but I've not crossed the barrier of runtime CPU features
+detection which adds further burden and further fragments bug reports
+between users.
 
-Deal?
+Regarding VM migration, my code is not concerned because I'm not aware
+of users migrating such VMs. BUT I've got complains in the past from
+some users generating UUIDs for each forwarded request that they were
+seeing duplicates in their logs due to the lack of thread safety on
+random(), which made me work on an alternative. Thus I can easily
+imagine that equivalent applications that just want to assign a unique
+ID to an event that ends up in a log, and when such applications suffer
+a VM migration could face a similar problem that is not easy to address
+in userland.
 
-                    Linus
+In my opinion, abstracting the hardware is the role of the kernel. If
+getrandom() is fast enough for my uses, why not. If it's not, I find
+value in having a much faster proposal that offers the same API to all
+applications without each having to reinvent the wheel. I can't judge
+on the merits of vgetrandom() vs getrandom() though. But to give you an
+idea, years ago for portability reasons (random() thread safety, multiple
+OS support, performance), I ended up writing my own xoroshiro128 generator
+to address multiple problems at once and I must confess I was a bit sad
+to see that randoms remain so little portable between operating systems
+and their various versions, and that the work left to be done for users
+is non trivial.
+
+I can imagine that users with higher expectations than mine would want
+to adopt vgetrandom() when available.
+
+Now would I replace my existing RNG with this new syscall when it gets
+widely available ? Maybe, if it brings some value. It's easy enough to
+deal with two code branches, one with the new, optimal syscall, and the
+legacy generic fallback.
+
+Hoping this matches the type of feedback you were looking for.
+
+Willy
