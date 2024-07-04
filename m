@@ -1,118 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3559D1AB915;
-	Thu,  4 Jul 2024 09:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1581B1AB503;
+	Thu,  4 Jul 2024 09:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720085345; cv=none; b=f02bgCENgOls4Cpmsyc11vo0sU+YeSrgtZcJ3Lu5tgSVTYRljN6YtgY6TCno3tCd+Ge806sGtOirRf8sy673CiLtqcVT70/eW4rP+CNDWFKY0/u87HNS7a1tMLka47JlbE+QNGMoEc8CmnwhJzX/42w3qax94kj4gaUbYmwMOyg=
+	t=1720085348; cv=none; b=AeEQfkvqUarm8n5vNy0QYOhzSHJT//1UDPB295cfBfeRhVSuvaTa0g7jixmIfwUyDyl3pokBnrRKoPfMXWBJBjq0Hj8YBI+t8a65VUQy0Kzl+k9hiEpagjeF1ie2TTDjmT+ya/BmFHIFbIIazE5DGk5+5G5jekDz6vz4pAl6TPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720085345; c=relaxed/simple;
-	bh=ICJO2BIPLeaVKA/OpeWVCC50eAVgdLJ4opEqlcEfH6A=;
+	s=arc-20240116; t=1720085348; c=relaxed/simple;
+	bh=JDTNdtJ9EjeVWEDYTvfOUcNAXPH8Vd9Rhq0lQHPhMQ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBXWWeocTiDwdLEAoWER5PEPFpreoQpz9UMZB13toSOURaZpoFpZSbsRoZsKQcRvrg0ST4re/AAso8g2QWSSILONr2LZwsIAyblNeXXSozLFiIeeCD6vyIDkDxSD4C7G6GCXbORaa41p/ynDBgTJbacAhilIB/kt72sXvtYE2so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jd6lBk/Y; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D33MZ8KbcjD3NkCpEzT923dphfoWAVajCvpgQMxwsRGnXv8no51t+1yYv7/xjHKO9RWMjWNqYhGL2WazDF7wNkZ6VhTiVEXqoZRsQNdeL3Q2gjU2z8h+WColSRddhqMnJ9FTfbJ2AQhG1Lk7WcUYcNgGM/tRK0rxvnjwcv7isWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=fjasle.eu; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=kRjyWWuP; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jd6lBk/Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B081C4AF0D;
-	Thu,  4 Jul 2024 09:29:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720085344;
-	bh=ICJO2BIPLeaVKA/OpeWVCC50eAVgdLJ4opEqlcEfH6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jd6lBk/Y27dZsYEgxnYuvMxHXjRKr6W4OnI4Iz+AOGiiwzVm3Qkk/xQO496Dy4+8o
-	 ufltP+NiJku2P2jKLDFKeJtAM3jXd/uWFMyMegECs+W4w7/s4FQmLfosRRbAKZQKSp
-	 o+z2aYBOuvHCXAEA5/ymnbPtIWWg3xklqUJoxA/4=
-Date: Thu, 4 Jul 2024 11:28:12 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 5.4 000/189] 5.4.279-rc1 review
-Message-ID: <2024070407-lanky-fifty-9b12@gregkh>
-References: <20240703102841.492044697@linuxfoundation.org>
- <CA+G9fYvXVQ599HH3ZYfNEZrZwacR-0hzKCqrLa=+ON0hDTwwGQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="kRjyWWuP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fjasle.eu;
+	s=ds202307; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=DyhZ1iiyVfmixs11acANLVksd56ZyeYAxvhyNmQKIEg=; b=kRjyWWuPokEiKl8Bvt6Fxjj9kc
+	d87O+HpRNTplQZpbC2VmmSEbFE3Z3+iFDm3CNz6SwebtLm7Iu6uiUSGc7L+X2C4i832aOnr330ZzH
+	bSb7VrVgxRN6uxhVhexKI2c5EqsJn+sH1RmRWueMOeEQcuekrRXVmTENvfcPL2up+1yi7Hr7UWPge
+	NjxE4U6/s0YFGDopxMEi83OF3y9vkxLrVfKb1QaxHLKORa8tJ+TmoQwQD67kAQhmPcjpB7WTOjQJP
+	CqD7ENgBuxJFxuxSJMb/BmDnND1rr2sCa6qNPOH8NKq08HHuoZdOKITDS7lTB3Rq3nR2pkDOb1b/Z
+	wCeI6D1A==;
+Received: from [2001:9e8:9da:801:3235:adff:fed0:37e6] (port=34396 helo=lindesnes.fjasle.eu)
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <nicolas@fjasle.eu>)
+	id 1sPIlu-006gwG-Ae;
+	Thu, 04 Jul 2024 11:28:58 +0200
+Date: Thu, 4 Jul 2024 11:28:52 +0200
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>, riku.voipio@iki.fi,
+	Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH v2 2/3] kbuild: deb-pkg: remove support for "name
+ <email>" form for DEBEMAIL
+Message-ID: <20240704-defiant-gopher-from-mars-7c0ae8@lindesnes>
+References: <20240702180332.398978-1-masahiroy@kernel.org>
+ <20240702180332.398978-2-masahiroy@kernel.org>
+ <CAK7LNASQvNVq_hrbZo3SXoFvke3EENVC6tfxiN11dOk4O54C6w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYvXVQ599HH3ZYfNEZrZwacR-0hzKCqrLa=+ON0hDTwwGQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNASQvNVq_hrbZo3SXoFvke3EENVC6tfxiN11dOk4O54C6w@mail.gmail.com>
 
-On Wed, Jul 03, 2024 at 11:18:15PM +0530, Naresh Kamboju wrote:
-> On Wed, 3 Jul 2024 at 16:20, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
+On Thu, Jul 04, 2024 at 12:06:13AM +0900, Masahiro Yamada wrote:
+> +CC
+> 
+> 
+> 
+> On Wed, Jul 3, 2024 at 3:03 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 > >
-> > This is the start of the stable review cycle for the 5.4.279 release.
-> > There are 189 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+> > Commit d5940c60e057 ("kbuild: deb-pkg improve maintainer address
+> > generation") supported the "name <email>" form for DEBEMAIL, with
+> > behavior slightly different from devscripts.
 > >
-> > Responses should be made by Fri, 05 Jul 2024 10:28:06 +0000.
-> > Anything received after that time might be too late.
+> > In Kbuild, if DEBEMAIL has the form "name <email>", it will be used
+> > as-is for debian/changelog. DEBFULLNAME will be ignored.
 > >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.279-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
+> > In contrast, debchange takes the name from DEBFULLNAME (or NAME) if set,
+> > as described in 'man debchange':
 > >
-> > thanks,
+> >   If this variable has the form "name <email>", then the maintainer name
+> >   will also be taken from here if neither DEBFULLNAME nor NAME is set.
 > >
-> > greg k-h
-> 
-> 
-> The s390 builds failed on stable-rc 5.4.279-rc1 due to following build
-> warnings / errors.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Regressions found on s390:
-> 
->   - gcc-12-defconfig
->   - gcc-8-defconfig-fe40093d
-> 
-> 
-> Build log:
-> ------
-> arch/s390/include/asm/cpacf.h: In function 'cpacf_km':
-> arch/s390/include/asm/cpacf.h:320:29: error: storage size of 'd' isn't known
->   320 |         union register_pair d, s;
->       |                             ^
-> arch/s390/include/asm/cpacf.h:320:32: error: storage size of 's' isn't known
->   320 |         union register_pair d, s;
->       |                                ^
-> arch/s390/include/asm/cpacf.h:320:32: warning: unused variable 's'
-> [-Wunused-variable]
-> arch/s390/include/asm/cpacf.h:320:29: warning: unused variable 'd'
-> [-Wunused-variable]
->   320 |         union register_pair d, s;
->       |                             ^
-> 
-> Build log link,
->  [1] https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.278-190-gccd91126c63d/testrun/24509933/suite/build/test/gcc-12-defconfig/log
->  [2] https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.278-190-gccd91126c63d/testrun/24509933/suite/build/test/gcc-12-defconfig/details/
-> 
-> Build config url:
->   config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ijXtfDw1Nbem1ANR1V8mLxfNeR/config
->   download_url:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2ijXtfDw1Nbem1ANR1V8mLxfNeR/
-> 
-> metadata:
->   git_describe: v5.4.278-190-gccd91126c63d
->   git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
->   git_short_log: ccd91126c63d ("Linux 5.4.279-rc1")
->   toolchain: gcc-12
->   arch: s390
+> > This commit removes support for the "name <email> form for DEBEMAIL,
+> > as the current behavior is already different from debchange, and the
+> > Debian manual suggests setting the email address and name separately in
+> > DEBEMAIL and DEBFULLNAME. [1]
+> >
+> > If there are any complaints about this removal, we can re-add it,
+> > with better alignment with the debchange implementation. [2]
+> >
+> > [1]: https://www.debian.org/doc/manuals/debmake-doc/ch03.en.html#email-setup
+> > [2]: https://salsa.debian.org/debian/devscripts/-/blob/v2.23.7/scripts/debchange.pl#L802
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> > Changes in v2:
+> >  - New patch
+> >
+> >  scripts/package/mkdebian | 20 +++++++-------------
+> >  1 file changed, 7 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+> > index 589f92b88c42..83c6636fadb8 100755
+> > --- a/scripts/package/mkdebian
+> > +++ b/scripts/package/mkdebian
+> > @@ -125,21 +125,15 @@ gen_source ()
+> >  rm -rf debian
+> >  mkdir debian
+> >
+> > -email=${DEBEMAIL}
+> > -
+> > -# use email string directly if it contains <email>
+> > -if echo "${email}" | grep -q '<.*>'; then
+> > -       maintainer=${email}
+> > +user=${KBUILD_BUILD_USER-$(id -nu)}
+> > +name=${DEBFULLNAME-${user}}
+> > +if [ "${DEBEMAIL:+set}" ]; then
+> > +       email=${DEBEMAIL}
+> >  else
+> > -       # or construct the maintainer string
+> > -       user=${KBUILD_BUILD_USER-$(id -nu)}
+> > -       name=${DEBFULLNAME-${user}}
+> > -       if [ -z "${email}" ]; then
+> > -               buildhost=${KBUILD_BUILD_HOST-$(hostname -f 2>/dev/null || hostname)}
+> > -               email="${user}@${buildhost}"
+> > -       fi
+> > -       maintainer="${name} <${email}>"
+> > +       buildhost=${KBUILD_BUILD_HOST-$(hostname -f 2>/dev/null || hostname)}
+> > +       email="${user}@${buildhost}"
+> >  fi
+> > +maintainer="${name} <${email}>"
+> >
+> >  if [ "$1" = --need-source ]; then
+> >         gen_source
+> > --
+> > 2.43.0
 
-Should now be fixed, thanks.
-
-greg k-h
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
