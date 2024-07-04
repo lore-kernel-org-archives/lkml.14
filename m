@@ -1,117 +1,231 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD96A1465B3;
-	Thu,  4 Jul 2024 17:24:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542A13308A;
+	Thu,  4 Jul 2024 17:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720113853; cv=none; b=K0aeFIdH4okS7s6vuDPCRoZcHI8Tn1KN5YdwlHkLKPRPlkyyeqJ3j7nyJMZ0QNacFObxkQYuCYHR/8NiDplUHfR8QkG3mkWBB3P21kYsSJY4RlKhbLHNOutF2OuDqmFLsF/1+uvhVpP0m9aIlOyrSWql7EJe18Va8pGucxunVGQ=
+	t=1720113956; cv=none; b=auIeOrwlhX7lIvW6IBfexyNrLc+SZuv815/cY70ylUSQZ3bpTvxA0xhE6uSAlM+lvVCKZwrG0AxEIYz3pqc3JTjfpz71+PUmiB8Lqq9ciTb8N31kXI0nCViFbNqKjWC69rKBGRDQfgQdG8neE1T7Xd6vVeb9ao3gIzoUNTXiuu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720113853; c=relaxed/simple;
-	bh=bSrh6dRMhrjSnNp2eZHSzRWT+oe0XS3yo9fzlNPFI3o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AodKa5yB28crxewM9hCrLaTvKUTnDrGQz5MIxFp9MNoWHpLCrSXaf6hIHwgHgsuldIXuNFdH4zahl8V3e7Apfq6yK9gWexa/jAjXwFBHdsQQwKjFAwugi65SYtAmgL6VFS7LHH1L0nYZJh2gECKjkafOg/khIa5HXfuOM0+gWLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BhqP26br; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720113956; c=relaxed/simple;
+	bh=ivjABJQIZ/XjKkNr92Gnumgb4BuLwGJuayEUON94iIo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G31g3wpmFRBnABufGinK0CdvXYZCzF9N49Dbv/J0KiW2ogealUcEmmLpLnjA4cMZEwkghde0nUOxP0m9pcuOt8hlFFAUM/tjlBu1i84yF/yRW8a92vREDckPvut0cXrx9YRSdcEtCWQkbIp9RtUbTSGsYvAAACkXk+NUjbVTDWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MGR6Sz06; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BhqP26br"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ee7885aa5fso9062611fa.1;
-        Thu, 04 Jul 2024 10:24:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720113850; x=1720718650; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cY6xfOZvlcet+ySjb9JWf/+SsmV4UTmCb1l/EHDXfC8=;
-        b=BhqP26brsmr8A6NhQ0l5flhVvJHbg7EfE/q6HB/kpEw/DvY6xxYvv50zkSbc5cwFFy
-         JNS51kJH+F5uCqyhJXJK+d9DdCCwmhchscTKOuDiD8k0UyzhgDBB7U7Jfy/1krfKcdBS
-         NrX1cKKTwKXPEkrK7ENNBvSuzIL7dKQhyRq9HcrQbHmd4gEcneif/0CY2Gm2ExBZ9O2k
-         4qLlrQJ11k7RLbc5vjdLRTJuYWhDHKFuYBNmw9BxqFsLT89Yyfa9IKmFOhRdTlTqcEc4
-         vnPI5Aki6kxhKNIzDkALgX8ECFMuVQTc6XaR3jMF+08qlXjz/mqi/cLr6/AkGp3XmlYE
-         g1zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720113850; x=1720718650;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cY6xfOZvlcet+ySjb9JWf/+SsmV4UTmCb1l/EHDXfC8=;
-        b=l+Z4DWX1gPhSEo0oG3XIiMJ4cBvYGhcNYg55T2t53SB1fvxHj4vIdqADCHC/587etq
-         hISQZNB8XUQriZTZhjQYqLJxzcW9UthHkzFfagPGaNODt3oULvjTjVEf2jjx5BP/mIgQ
-         W0/vpM3z5ejJLhzNUls3Kngy889SoFNTOIhhC7w8sL3ONMossJlDOnOGx5FSqzbhKI5T
-         RvDKBGVsVN8Ycjp43VtS52GmvxzIgo9tOJdTtOfFmV9mt1PjoHp8QOokfRobkZBG0d42
-         iWEKznQBoFR1i8lsvHNWU00s0x+VQVa2m4J2FedBCPLOIVv3A/tAesHatrQ0nr1WQrOn
-         AUwg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/5imTQ43J9D5n34/tExo+r7/ezfVEmIAHqa7eDzBy2UGlCSDAqj/PASqb17CMArE+ecEfwszDuiCn+rgn8/SNsMPz9m7NMJ6jTxT8F6GOkX5bd/vvqjoLq4w8PhuCxAUBaGjTzV8AYotYQ3aM
-X-Gm-Message-State: AOJu0YzJgMzoupTwAZkCzXaHhFOgaJ3LrMxiKZqefda8cilRthjJNjkU
-	TuaQW4luYwOxpAK9LuM1EWq5WHue/VqaN8YUdwVWj9iOet4cUdNj
-X-Google-Smtp-Source: AGHT+IGtnAvbW4no2BJkVizF7QyWI4V6mUEbSxAj8vrlcD/ecnkkHDmGxX/0R/e7YeC7WvAUoP8myQ==
-X-Received: by 2002:a2e:8889:0:b0:2ec:3d2e:2408 with SMTP id 38308e7fff4ca-2ee8ee00250mr15810741fa.33.1720113848939;
-        Thu, 04 Jul 2024 10:24:08 -0700 (PDT)
-Received: from [127.0.1.1] (84-115-213-37.cable.dynamic.surfer.at. [84.115.213.37])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1d6133sm32330965e9.13.2024.07.04.10.24.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 10:24:08 -0700 (PDT)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Thu, 04 Jul 2024 19:23:34 +0200
-Subject: [PATCH v2 24/24] mfd: sprd-sc27xx-spi: Constify struct regmap_bus
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGR6Sz06"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10253C4AF0C;
+	Thu,  4 Jul 2024 17:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720113956;
+	bh=ivjABJQIZ/XjKkNr92Gnumgb4BuLwGJuayEUON94iIo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MGR6Sz06/uFgdzWis82KjYXYZx7aygIcldk0nNZ1ZTUYzL0UpQ9EiUAkyNHuNIoGp
+	 i5vBWqDjqPZt3ive3RD7OUc4W415x1hcrZmpUpIuGyYeXMbWbBQ/fRO5XQEkLzaZJV
+	 qh6cat5pxD3TOIy+8g1KwaKBkgO9tGEdKFIs3Ied+kyyo3xHbVK2db+VYydOeBL3aN
+	 iEePqdAwhs6C6RmF77IFV6egA0UhptiZIf2zIEJXYxu30B6nRCXaHRrfvZtyAe87jB
+	 ZN7Z0aBlGy91pQkpyYqdUJkfR8IPdfGXDeIoVl/e42N4T3vKdRLWa+YkT8LTLFmf7q
+	 5Djx6ZnMXo/kw==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a724b3a32d2so90327466b.2;
+        Thu, 04 Jul 2024 10:25:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVy3k0nV6ZGk1BG5U9Hl3DA/f48/IXjqCdnxtiT2+a77tRc+k7aseHS9lAl10FNVS6opyY0mhOwUhf10JCzltWYbQF8z3wyrJkHCL/2vRPHE4h4Zt8oFL01U55cIM522+bdtvPoOxjLEwQ=
+X-Gm-Message-State: AOJu0Yz7T8JNtTGN3vLBp7Y86JTAkCqxlpESEfB3QqVR3BdFFmQFRiId
+	cqrNTlTqdbagK9PEK1o9JLMU6aJ6wnB9tkXBt9trEXUblKretDzdYpOh7HXnVeTLUE//nJ4NxJQ
+	MCrzUuuKOi+aHzuca3elQm3gmCoQ=
+X-Google-Smtp-Source: AGHT+IHCaoSwecixF8KG9KKvBxFl5NV3BQBYQCNzIjG/bYJzqUiPJlG5EdctlAZ6Hm67lBypQxg9Uf/fgDEdfZlK8N0=
+X-Received: by 2002:a17:907:97c8:b0:a72:8c15:c73e with SMTP id
+ a640c23a62f3a-a77ba7099dbmr162064966b.55.1720113954579; Thu, 04 Jul 2024
+ 10:25:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240704-mfd-const-regmap_config-v2-24-0c8785b1331d@gmail.com>
-References: <20240704-mfd-const-regmap_config-v2-0-0c8785b1331d@gmail.com>
-In-Reply-To: <20240704-mfd-const-regmap_config-v2-0-0c8785b1331d@gmail.com>
-To: Support Opensource <support.opensource@diasemi.com>, 
- Lee Jones <lee@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Matti Vaittinen <mazziesaccount@gmail.com>, Xu Yilun <yilun.xu@intel.com>, 
- Tom Rix <trix@redhat.com>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, 
- Tim Harvey <tharvey@gateworks.com>, Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>
-Cc: linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
- linux-omap@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720113803; l=780;
- i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=bSrh6dRMhrjSnNp2eZHSzRWT+oe0XS3yo9fzlNPFI3o=;
- b=DezkfXYqRxh+l8xH0kAqtfFdbmPbZ6IPk/AWxl17e20cmNX8etXGB8bY4Kz0Nd43R0lo58BHn
- Zy45XHOUm9nArbuXRULBjg/edSFn9HKpD5rSni6VE2XuT+YjdZnsqq2
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+ <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
+ <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+ <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+ <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
+ <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+ <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com> <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
+In-Reply-To: <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Thu, 4 Jul 2024 18:25:17 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
+Message-ID: <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Andrea Gelmini <andrea.gelmini@gmail.com>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-`sprd_pmic_regmap` is not modified and can be declared as const to
-move its data to a read-only section.
+On Thu, Jul 4, 2024 at 3:48=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gmail=
+.com> wrote:
+>
+> Il giorno gio 4 lug 2024 alle ore 15:47 Andrea Gelmini
+> <andrea.gelmini@gmail.com> ha scritto:
+> > I send you everything when I collect enough data.
+>
+> Here we are.
+>
+> Kernel rc6+branch:
+>     Output of bfptrace:
+>     https://pastebin.com/P9RFp5mg
 
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
- drivers/mfd/sprd-sc27xx-spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So a couple interesting things here, which we didn't get in the short
+capture from Mikhail:
 
-diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
-index 81e517cdfb27..7186e2108108 100644
---- a/drivers/mfd/sprd-sc27xx-spi.c
-+++ b/drivers/mfd/sprd-sc27xx-spi.c
-@@ -135,7 +135,7 @@ static int sprd_pmic_spi_read(void *context,
- 	return 0;
- }
- 
--static struct regmap_bus sprd_pmic_regmap = {
-+static const struct regmap_bus sprd_pmic_regmap = {
- 	.write = sprd_pmic_spi_write,
- 	.read = sprd_pmic_spi_read,
- 	.reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
+1) There's apparently multiple tasks entering the shrinker at the same time=
+:
+     kswapd0, Chrome_ChildIOT, Chrome_IOThread, chrome, Xorg.
 
--- 
-2.40.1
+2) In some cases we get very large negative numbers for the number of
+extent maps to scan.
+    This shouldn't happen and either our own btrfs counter might have
+overflowed or some other bug,
+    or the super block's shrinker is being called with sc->nr_to_scan
+negative, and outside btrfs' control,
+    and it seems outside of control of the VFS's shrinker callback
+(see fs/super.c:super_cache_scan()).
 
+>
+>     Recording of tar session: (summary: start fast, then flipping super s=
+low)
+>     https://asciinema.org/a/BxYI83TkrlOhEe42IWXNY135D
+>
+>     Recording of htop session: (summary: PSI high and two threads at 100%=
+)
+>     https://asciinema.org/a/ZwGSepZZ8TSpFfPssACUUXcCB
+
+Ok, so maybe I missed it, but I haven't kswapd0 in there, or nothing
+taking 100% CPU.
+Maybe it was just Mikhail running into that?
+
+I was looking at the memory PSI and I never noticed it going over 60%.
+As for cpu and IO PSI, for cpu it was always low, under 3% from what
+I've seen and for IO even lower than that, very close to 0%.
+
+So I'm surprised that you get an unresponsive desktop.
+
+>
+>
+> Kernel 6.6.36:
+>     Recording of tar session: (summary: tar always fast)
+>     https://asciinema.org/a/a6dOkbjyPFkkQ5aNTaRiFD3H8
+>
+>     Recording of htop session: (summary: no threads and PSI load)
+>     https://asciinema.org/a/mFsypWzHfSdsjrIQf8zpzNpKo
+
+Interestingly, here the memory PSI stays at 0% or very close to that,
+it never reaches anything close to the 60%.
+
+>
+> If you need to run for longer time, I can do it in the weekend.
+> If you need dump of my BTRFS fs, no problem, but I need 'btrfs image
+> -s" working (point is: scrambling filenames).
+
+Ok, so I haven been delaying my reply because I kept accumulating
+things for you (or Mikhail) to try, and avoid sending several messages
+with very little.
+
+So first thing, I tried reproducing your scenario like you described
+in a previous message using tar:
+
+On a fresh btrfs filesystem, I cloned Linus' kernel tree into /mnt/git/linu=
+x
+Compiled a kernel.
+Then copied the tree 3 times like this:
+
+cd /mnt/git
+cp --reflink=3Dnever -r linux linux2
+cp --reflink=3Dnever -r linux linux3
+cp --reflink=3Dnever -r linux linux4
+
+The total size of /mnt/git was 62G (as reported by:  du -hs /mnt/git).
+
+Than I ran:
+
+cd /mnt/git
+tar cp git/ | pv > /dev/null
+
+With htop in parallel, the bpftrace script, and since my htop version
+doesn't show PSI information (probably an older version than yours), I
+kept monitoring PSI like this:
+
+watch -d -n 3 'echo "cpu:\n"; cat /proc/pressure/cpu ; echo
+"\nmemory:\n" ; cat /proc/pressure/memory ; echo "\nio:\n" ; cat
+/proc/pressure/io'
+
+Nothing went out of the roof, the machine was always responsive, never
+seen kswapd0 anywhere near the top, and the process using most CPU was
+tar (and always under 30%).
+PSI had all values low.
+
+The shrinker was being triggered very often, for small numbers (mostly
+under 1000, and most of the time much less than that), but I never had
+those large negative numbers nor apparently different tasks entering
+into it concurrently.
+It took a few seconds at most in each run.
+
+I also tried monitoring while doing the "cp --reflink=3Dnever -r"
+commands and while PSI often peaked to 92%, 93%, the system was always
+responsive (and such IO PSI seems reasonable since we are doing a lot
+of read and write IO).
+
+So several different things to try here:
+
+1) First let's check that the problem is really a consequence of the shrink=
+er.
+    Try this patch:
+
+    https://gist.githubusercontent.com/fdmanana/b44abaade0000d28ba0e1e1ae3a=
+c4fee/raw/5c9bf0beb5aa156b893be2837c9244d035962c74/gistfile1.txt
+
+    This disables the shrinker. This is just to confirm if I'm looking
+in the right direction, if your problem is the same as Mikhail's and
+double check his bisection.
+
+2) Then drop that patch that disables the shrinker.
+     With all the previous 4 patches applied, apply this one on top of them=
+:
+
+     https://gist.githubusercontent.com/fdmanana/9cea16ca56594f8c7e20b67dc6=
+6c6c94/raw/557bd5f6b37b65d210218f8da8987b74bfe5e515/gistfile1.txt
+
+     The goal here is to see if the extent map eviction done by the
+shrinker is making reads from other tasks too slow, and check if
+that's what0s making your system unresponsive.
+
+3) Then drop the patch from step 2), and on top of the previous 4
+patches from my git tree, apply this one:
+
+     https://gist.githubusercontent.com/fdmanana/a7c9c2abb69c978cf5b80c2f78=
+4243d5/raw/b4cca964904d3ec15c74e36ccf111a3a2f530520/gistfile1.txt
+
+     This is just to confirm if we do have concurrent calls to the
+shrinker, as the tracing seems to suggest, and where the negative
+numbers come from.
+     It also helps to check if not allowing concurrent calls to it, by
+skipping if it's already running, helps making the problems go away.
+
+>
+> Thanks a lot,
+
+Thanks a lot to you and Mikhail, not just for the reporting but also
+to apply patches, compile a kernel, run the tests and do all those
+valuable observations which are all very time consuming.
+
+Thanks!
+
+> Gelma
