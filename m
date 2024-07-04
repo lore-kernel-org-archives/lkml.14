@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1963B1A0AE5;
-	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196A91A3BDA
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098657; cv=none; b=OLqirINuO2Owrt/Up4LZw7m3DotNwcXn9t1pZe/oJQwHFepNwTOoK2xOTEkeh/bzd8JN/e7NYP+aTHLpnk6x1kNmLX2ZW/F6D0lkgRwXPjpqyU+UhrhCjGUTiq8vLJGbRfmnm/6Tb4gViToPdvgWnNmQQ9LM+KOq97Nbx1uoK00=
+	t=1720098657; cv=none; b=ZeTq1JXYZU1gp1GUfvBvnKGwyC81Elm4F9f7gM37FcXsAtHN3iW7ilnp+bQ82aJoHyXeQ4Y44UxNdAw7VbWB0rSEojlg/N0bUUhHtjxvBA5pqJJI1alseEEknZ4pNArLjLFWUnBVavcpBpuumx7dXhJTx4kxWZVa9YRJlc8sx6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720098657; c=relaxed/simple;
-	bh=5Z/JhMWlZOiA4gMPtEvpcd72gMvcEm+EciKo2a/8g/0=;
+	bh=dlHwO2nGfEIPQRND3XuHL5U3U23kIOrurw+F13qm/ZQ=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Ovmca77DqbNzszTPyc8afsoBHFW60Ned404vvxieX3d7htXQ4aP1/USlG2ZUXqWc9CF4dBjNMMLj/3FPEWNmon+uHqVE2Mr8G61eqR9w1+i8LWkjpASdXkAyBSRyBoSXmn1gfGU8g/o3K6ZaWY5nmth411lbIEHy51WCXO0rt6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TYcypi+6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ncdRpk93FR75FPN50PnVOTFCNFSwNwzzo/pEh7ZjgEf73TnXyvc6cnwwEICO0aeNuWa1+6YGp267edKHo7aWn2i4McGTMjRmym1oTPcC1drpfBgevsQohZBq61yfJDBSo1jGbEZ7K1tYEY0ab5BkeKfogGI0K9/WxK5gv/F63HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=InBIbUHd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TYcypi+6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B8979C4AF07;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="InBIbUHd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C0D5FC4AF0B;
 	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720098656;
-	bh=5Z/JhMWlZOiA4gMPtEvpcd72gMvcEm+EciKo2a/8g/0=;
+	bh=dlHwO2nGfEIPQRND3XuHL5U3U23kIOrurw+F13qm/ZQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=TYcypi+6JnHBpY4lZ+cKwjZQXSNSWSdg1CMGaYgL6jNS/VWlfNA5H0c8BOxNzmE/u
-	 Ken1JVEeKRQvpC6ysrZ/awEHnBd0sHH0w0KO0ZrLT4GH1l8K8HXt9ALEiY0w8sSGpe
-	 bKNzYA+Bp+c+CmYrH/zsEsTx2bliYMnRwl/9AkaasfTTlfQ7KQ3kBCpaigfLMdi9WC
-	 6MyCwml9mDKAv0Y8HSG8UgLHEtCm86vI4CstzqwIP61t18YHjL9iKipLL4ReikrbOg
-	 TwXkGINP5tVXCLqEGHJ8QdsI6OgD9V9T/J3Wy/fHQlz4gh+U+GPISJKRe/o9aAjuVb
-	 troCPvtdDExzg==
+	b=InBIbUHdpMnMo7f1ektkDLglWqxh9mBUdbKu9I8TEsJvLdwk1i5Boy8crJvO30KXJ
+	 b7LxBNJTKdxW6HEb0Wm3eGokL6O8gDR/fnw7iraRCRofIXZP93T5FJ1kipm67ktLkb
+	 pFMTBZk9ZoAowQ7AcjjfFupZwW3nN5qqzFXIbcJtLLCdN86pmls3mRsblbUqRHDivD
+	 mAbTQLzqSmAmP4WYyZ1DXo2CYtdtIXitJdFeXmiYaNRJqH5rff0YtQr4Lo87EpwVRa
+	 HeqWLQvqYHmOIqgsJrPG05Bo0ARM9a36Uz0n2prZJzBn1Ie/TehuDgn05k6Fjvify+
+	 pkyZbQVJNcfZg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A5FACC43332;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B246CC43612;
 	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,44 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 0/3] Assorted fixes in RISC-V PMU driver
+Subject: Re: [PATCH] riscv: stacktrace: fix usage of ftrace_graph_ret_addr()
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <172009865667.17306.8198164921917389320.git-patchwork-notify@kernel.org>
+ <172009865672.17306.10078143988695346844.git-patchwork-notify@kernel.org>
 Date: Thu, 04 Jul 2024 13:10:56 +0000
-References: <20240628-misc_perf_fixes-v4-0-e01cfddcf035@rivosinc.com>
-In-Reply-To: <20240628-misc_perf_fixes-v4-0-e01cfddcf035@rivosinc.com>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, kvm-riscv@lists.infradead.org,
- atishp@atishpatra.org, anup@brainfault.org, will@kernel.org,
- mark.rutland@arm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- ajones@ventanamicro.com, conor.dooley@microchip.com,
- samuel.holland@sifive.com, palmer@rivosinc.com, alexghiti@rivosinc.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, garthlei@pku.edu.cn
+References: <20240618145820.62112-1-puranjay@kernel.org>
+In-Reply-To: <20240618145820.62112-1-puranjay@kernel.org>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, samuel.holland@sifive.com,
+ dev.mbstr@gmail.com, linux-kernel@vger.kernel.org, puranjay12@gmail.com,
+ rostedt@goodmis.org
 
 Hello:
 
-This series was applied to riscv/linux.git (fixes)
+This patch was applied to riscv/linux.git (fixes)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Fri, 28 Jun 2024 00:51:40 -0700 you wrote:
-> This series contains 3 fixes out of which the first one is a new fix
-> for invalid event data reported in lkml[2]. The last two are v3 of Samuel's
-> patch[1]. I added the RB/TB/Fixes tag and moved 1 unrelated change
-> to its own patch. I also changed an error message in kvm vcpu_pmu from
-> pr_err to pr_debug to avoid redundant failure error messages generated
-> due to the boot time quering of events implemented in the patch[1]
+On Tue, 18 Jun 2024 14:58:20 +0000 you wrote:
+> ftrace_graph_ret_addr() takes an `idx` integer pointer that is used to
+> optimize the stack unwinding. Pass it a valid pointer to utilize the
+> optimizations that might be available in the future.
+> 
+> The commit is making riscv's usage of ftrace_graph_ret_addr() match
+> x86_64.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v4,1/3] drivers/perf: riscv: Do not update the event data if uptodate
-    https://git.kernel.org/riscv/c/a3f24e83d11d
-  - [v4,2/3] drivers/perf: riscv: Reset the counter to hpmevent mapping while starting cpus
-    https://git.kernel.org/riscv/c/7dd646cf745c
-  - [v4,3/3] perf: RISC-V: Check standard event availability
-    https://git.kernel.org/riscv/c/16d3b1af0944
+  - riscv: stacktrace: fix usage of ftrace_graph_ret_addr()
+    https://git.kernel.org/riscv/c/393da6cbb2ff
 
 You are awesome, thank you!
 -- 
