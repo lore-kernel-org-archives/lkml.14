@@ -1,67 +1,101 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522341AED4C
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9801AE864;
+	Thu,  4 Jul 2024 13:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720099321; cv=none; b=VSG+589iJHaqhV+gqpQX4xTJ3KXlh1XE+pxnxI/6wKxsDiJqc51UzbTPnBK3kpEdrEZWWDlO3DUkBcyWn6dQSS6ZLwvN9lw93AVyCml/VwrTh//PlXudJIguKAkJa0b+dpy0naUa99wPLbCgbG31xnie3WAPxeEp78Rrb2smYpg=
+	t=1720099389; cv=none; b=juDwEAHyXdxIVAKODBcEo6DmDMDnwe6GldARuGZGhYQ9zqageiKXzg850XA0v9qwd3Ky4T9NmD8y6KWm1HEvmk/8kgvEjeiZ+zP00I3SOpmXg9AQO+/yTUxter6Cf2aaAA2o0sWKZxGxqx/auBRXfBd+FpzXv0bNrdZMOiAVidM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720099321; c=relaxed/simple;
-	bh=Muph26Et/g7iLxzsg6geI7Jw3wTi8VRqF0z9G11Rd0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MgW9tlkC4k7wgQxTL22ERo3ARQyuU9YJYs68aQsOwoNVAQNE7SnAfybCJqAriOMNRm0VGlWKkcKiyUWVlT/Cz5rn3Q4snU4RG5bynnTcCzycY0cNDqm7Cr6GK96VDABE2dvnai1qBsIXEgaHwYgvN4JTpelT4V7e5died2AGeSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav120.sakura.ne.jp (fsav120.sakura.ne.jp [27.133.134.247])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 464DLo5W045136;
-	Thu, 4 Jul 2024 22:21:50 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav120.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav120.sakura.ne.jp);
- Thu, 04 Jul 2024 22:21:50 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav120.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 464DLorq045133
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 4 Jul 2024 22:21:50 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <e0c7a2f8-9147-42bd-b531-f51c4d0c5082@I-love.SAKURA.ne.jp>
-Date: Thu, 4 Jul 2024 22:21:50 +0900
+	s=arc-20240116; t=1720099389; c=relaxed/simple;
+	bh=eV8haKKesia/HpOgKa8I/3DVswIM2msePbyY/laR3zo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GzxVAf3a5VCsZUgBMQ0p3Gi/i89zsN4ajyEmNQkqTCiMvz4QdT2kf7c2AYDE/dePqlnKUt0XJP3GLOb8eIYbfdDg0gOfoABOpF1bIpCXMSwdHliqtSnfa0nZoTomhoFaXVlphtZqZav1F6aGEOV17ruCjjs8DdUmzV0U29lIOug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3AA67200099;
+	Thu,  4 Jul 2024 15:23:06 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 006CB200F8D;
+	Thu,  4 Jul 2024 15:23:06 +0200 (CEST)
+Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 78545180226C;
+	Thu,  4 Jul 2024 21:23:04 +0800 (+08)
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	amitkumar.karwar@nxp.com,
+	rohit.fule@nxp.com,
+	neeraj.sanjaykale@nxp.com,
+	sherry.sun@nxp.com,
+	ziniu.wang_1@nxp.com,
+	haibo.chen@nxp.com,
+	LnxRevLi@nxp.com
+Subject: [PATCH v1 2/2] Bluetooth: btnxpuart: Add support for IW615 chipset
+Date: Thu,  4 Jul 2024 18:50:58 +0530
+Message-Id: <20240704132058.716164-2-neeraj.sanjaykale@nxp.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240704132058.716164-1-neeraj.sanjaykale@nxp.com>
+References: <20240704132058.716164-1-neeraj.sanjaykale@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] possible deadlock in __mmap_lock_do_trace_released
-To: Axel Rasmussen <axelrasmussen@google.com>
-Cc: syzbot+16b6ab88e66b34d09014@syzkaller.appspotmail.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        nsaenz@amazon.com
-References: <0000000000002be09b061c483ea1@google.com>
- <98dcfbda-6237-4bf6-bc66-6f31cf12f678@I-love.SAKURA.ne.jp>
- <CAJHvVcjOjOTyrf4K+pTQ30doOx7hqheTExZY6_U+PCcdLigg7g@mail.gmail.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <CAJHvVcjOjOTyrf4K+pTQ30doOx7hqheTExZY6_U+PCcdLigg7g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On 2024/07/03 7:35, Axel Rasmussen wrote:
-> But, note that stack_map_get_build_id calls mmap_read_trylock, so I
-> would expect in the recursive case that call will simply fail, and
-> then stack_map_get_build_id_offset appears to deal gracefully with
-> that?
+This adds support for IW615 chipset with it's bootloader signature
+and firmware file.
 
-Unless that mmap was already held for write (or someone has started waiting
-to hold it for write), recursive mmap_read_trylock() will succeed. Thus,
-unless there is a guarantee of no infinite recursion, we should implement
-a safeguard based on the worst scenario.
+Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+---
+ drivers/bluetooth/btnxpuart.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
+index e81c995748da..e9c2f2f7acc6 100644
+--- a/drivers/bluetooth/btnxpuart.c
++++ b/drivers/bluetooth/btnxpuart.c
+@@ -42,6 +42,8 @@
+ #define FIRMWARE_W9098_OLD	"uartuart9098_bt_v1.bin"
+ #define FIRMWARE_IW416		"uartiw416_bt_v0.bin"
+ #define FIRMWARE_IW612		"uartspi_n61x_v1.bin.se"
++#define FIRMWARE_IW615		"uartspi_iw610_v0.bin"
++#define FIRMWARE_SECURE_IW615	"uartspi_iw610_v0.bin.se"
+ #define FIRMWARE_IW624		"uartiw624_bt.bin"
+ #define FIRMWARE_SECURE_IW624	"uartiw624_bt.bin.se"
+ #define FIRMWARE_AW693		"uartaw693_bt.bin"
+@@ -57,6 +59,8 @@
+ #define CHIP_ID_IW624c		0x8001
+ #define CHIP_ID_AW693a0		0x8200
+ #define CHIP_ID_AW693a1		0x8201
++#define CHIP_ID_IW615a0		0x8800
++#define CHIP_ID_IW615a1		0x8801
+ 
+ #define FW_SECURE_MASK		0xc0
+ #define FW_OPEN			0x00
+@@ -925,6 +929,15 @@ static char *nxp_get_fw_name_from_chipid(struct hci_dev *hdev, u16 chipid,
+ 		else
+ 			bt_dev_err(hdev, "Illegal loader version %02x", loader_ver);
+ 		break;
++	case CHIP_ID_IW615a0:
++	case CHIP_ID_IW615a1:
++		if ((loader_ver & FW_SECURE_MASK) == FW_OPEN)
++			fw_name = FIRMWARE_IW615;
++		else if ((loader_ver & FW_SECURE_MASK) != FW_AUTH_ILLEGAL)
++			fw_name = FIRMWARE_SECURE_IW615;
++		else
++			bt_dev_err(hdev, "Illegal loader version %02x", loader_ver);
++		break;
+ 	default:
+ 		bt_dev_err(hdev, "Unknown chip signature %04x", chipid);
+ 		break;
+-- 
+2.34.1
 
