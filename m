@@ -1,230 +1,397 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A90C8FE
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 01:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73ABB4C6E;
+	Thu,  4 Jul 2024 01:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720056214; cv=none; b=jEt44/sblvAaIB9ltTNDque8MloBSBpFI1NUnhmDLVxQr7xB0QW2vhMM+z7+UYuxukH1LJpVrHBNnFaoSpqZlnTAEydCpFQw6j+xG7dllSMSvu3vC6Lnfr38aCyw7uS+T/wYLwrbaSmQnvLWThQGF0+PBxoIisV2VIHERNcqX/g=
+	t=1720056276; cv=none; b=lC0reeaCYArNf8f+cM2HIwqFSTXlX4KI8kbEkhLMN+Oyo/ZRW/2iIAl+v6rNT80iqYLdWS2C9IPiFioOWiG33nW0YKjAIX9mPIE1/vQT9VDk2A6x/fcpgK3QKOllpqYlF/UWmJYS10o8ZMT6VBQRwKovVWSmfzsyDgXD0wrHNJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720056214; c=relaxed/simple;
-	bh=BJuD4oAjNQoCbhV7ixlJNa0Tqo9H+rGhCNfLXI3JiFE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D0lgQDokZuNWbYWincuztzUKbnaB+/TV18oZDin7gigtXSK6HJsp7X144nDcKGY1KALU/S55zmnf1zvuSn+iwfy8E5K+zHslQ+WPai8co0YGJWNdHpo4YyP3rk+KrzwV2GYu5YIgZNddeC8NLhqph7t5Mw7oiwRZj85QdqlhvoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sz98+7TI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sz98+7TI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720056212;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FRVKU5kn7p5hiRZbKq//TD3FV740MSwrSEc3Yw2owhc=;
-	b=Sz98+7TIWa/puJo60HehjZ51xzLUJBf5r2mlXHSF6GBoBQRbg2fWnLVi/BjJk1gb4cK/sC
-	4GNLwHK9YQ4+yzX5BzKwjjLEIO0x4Rl/ZI0TGYv6POR47P7p4wvLSuyE4Z6jq5bbU9QLWx
-	hkffI/X6vOONWfGtqjKsZJMb3hQb3SA=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-oChz6qfHNeOcDtEtvvi5HQ-1; Wed, 03 Jul 2024 21:23:30 -0400
-X-MC-Unique: oChz6qfHNeOcDtEtvvi5HQ-1
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1faf6f0854eso715595ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 18:23:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720056209; x=1720661009;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FRVKU5kn7p5hiRZbKq//TD3FV740MSwrSEc3Yw2owhc=;
-        b=snCDPcwKtD/k2LCB0AjCgNFKCKqxglzfzCEZ4A0hIkolc9g3Zi6jGgLdiQPNBz28AI
-         C7BKzGNb0LLZkTHsz/XekomAuYVCeYMwhWM1iKKxBtymhyzabRRyTUEhSrqKlhrafsHZ
-         p2VoDzZ7eKjRs2YFtYdkZ4PHzSJb/cQnRXN2qI876TwD56UMydND/TcXQ83n+guuntlJ
-         HCY9owEtvmD4Y+Dz/29K8HRQui8sQQLglBqX2BuNA8Y1w0l2MNqNKegE6ljK+3ULdH37
-         ZY8vXlJg5iezght8NwCY4l5hKgxAz2a6AyVIYpXJjv8CREfYBqF54QHKhd5khSF4F4sZ
-         1tOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvIpMrsvF+/Ku2eZ76NYOpp4K7g1DYOLnfHTyod7iPb70s+stC49PA65WhpGEcs6x93I9Omn/kBku1pAtdPysX1M6l0hAoFdV15+g7
-X-Gm-Message-State: AOJu0YymT+ezRnqy49Y5fADgA7hEu7SkwvtQFML8O3Oji+WfmXnoJO+6
-	kQiu2o4oXYogAyqbMLzr0v8SOPqZBGJUU3l5HLmrLM1oR4nQu8xPlD4WBexc85IbClw1EvljpU/
-	0Sq9bkSH29yQw/fXJdj8TH18WlEe4Xc5X/ljermirXRs1KTvEwPBVe1sr/OgO8A==
-X-Received: by 2002:a17:903:249:b0:1fb:3107:ec4b with SMTP id d9443c01a7336-1fb33e1834fmr2829405ad.17.1720056209143;
-        Wed, 03 Jul 2024 18:23:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFszBYXZNwZtza786wpYXfORflgdeux+IguQTTUJ9knX2GD8dRgjr1QGJ/LO6MayT4S1BpZig==
-X-Received: by 2002:a17:903:249:b0:1fb:3107:ec4b with SMTP id d9443c01a7336-1fb33e1834fmr2829205ad.17.1720056208654;
-        Wed, 03 Jul 2024 18:23:28 -0700 (PDT)
-Received: from [192.168.1.229] (159-196-82-144.9fc452.per.static.aussiebb.net. [159.196.82.144])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fafc656e96sm38854365ad.65.2024.07.03.18.23.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 18:23:27 -0700 (PDT)
-Message-ID: <9781c2a8-7ee5-44f4-8218-dcd59e4a172d@redhat.com>
-Date: Thu, 4 Jul 2024 09:23:21 +0800
+	s=arc-20240116; t=1720056276; c=relaxed/simple;
+	bh=GU+TvkUVrTgWGtAhwcUyRQA50B33D/7lGv9sRiHYabU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=C6GrN5XaHXf7ZgKKZCVvT2SUphrnCpYfCFJEitXKEfv5T5VFn5ilIgauzzGzT2Z4wOmMJSZrPZYdae3ssKEDFzBESMRnw5WrW4J7VN1SwqTvxsewl5uf6JLF0JNDFliEgcVkiPBzvYJc1R9w07bn3eTpAANthWUGZsWMdyMuz+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxDOvL+YVmtcIAAA--.2279S3;
+	Thu, 04 Jul 2024 09:24:28 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxDMfJ+YVmOm86AA--.4554S3;
+	Thu, 04 Jul 2024 09:24:27 +0800 (CST)
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240626063239.3722175-1-maobibo@loongson.cn>
+ <20240626063239.3722175-3-maobibo@loongson.cn>
+ <CAAhV-H4O8QNb61xkErd9y_1tK_70=Y=LNqzy=9Ny5EQK1XZJaQ@mail.gmail.com>
+ <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
+ <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
+ <9c7d242e-660b-8d39-b69e-201fd0a4bfbf@loongson.cn>
+ <CAAhV-H4wwrYyMYpL1u5Z3sFp6EeW4eWhGbBv0Jn9XYJGXgwLfg@mail.gmail.com>
+ <059d66e4-dd5d-0091-01d9-11aaba9297bd@loongson.cn>
+ <CAAhV-H41B3_dLgTQGwT-DRDbb=qt44A_M08-RcKfJuxOTfm3nw@mail.gmail.com>
+ <7e6a1dbc-779a-4669-4541-c5952c9bdf24@loongson.cn>
+ <CAAhV-H7jY8p8eY4rVLcMvVky9ZQTyZkA+0UsW2JkbKYtWvjmZg@mail.gmail.com>
+ <81dded06-ad03-9aed-3f07-cf19c5538723@loongson.cn>
+ <CAAhV-H520i-2N0DUPO=RJxtU8Sn+eofQAy7_e+rRsnNdgv8DTQ@mail.gmail.com>
+ <0e28596c-3fe9-b716-b193-200b9b1d5516@loongson.cn>
+ <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <aac97476-0a3a-657d-9340-c129bc710791@loongson.cn>
+Date: Thu, 4 Jul 2024 09:24:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v3 1/1] fs/namespace: remove RCU sync for MNT_DETACH umount
-To: Christian Brauner <brauner@kernel.org>,
- Alexander Larsson <alexl@redhat.com>
-Cc: Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
- Lucas Karpinski <lkarpins@redhat.com>, viro@zeniv.linux.org.uk,
- raven@themaw.net, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Eric Chanudet <echanude@redhat.com>
-References: <50512ec3-da6d-4140-9659-58e0514a4970@redhat.com>
- <20240627115418.lcnpctgailhlaffc@quack3>
- <20240627-abkassieren-grinsen-6ce528fe5526@brauner>
- <d1b449cb-7ff8-4953-84b9-04dd56ddb187@redhat.com>
- <20240628-gelingen-erben-0f6e14049e68@brauner>
- <CAL7ro1HtzvcuQbRpdtYAG1eK+0tekKYaTh-L_8FqHv_JrSFcZg@mail.gmail.com>
- <97cf3ef4-d2b4-4cb0-9e72-82ca42361b13@redhat.com>
- <20240701-zauber-holst-1ad7cadb02f9@brauner>
- <CAL7ro1FOYPsN3Y18tgHwpg+VB=rU1XB8Xds9P89Mh4T9N98jyA@mail.gmail.com>
- <20240701-treue-irrtum-e695ee5efe83@brauner>
- <20240703-mahnung-bauland-ffcacea4101e@brauner>
+In-Reply-To: <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Ian Kent <ikent@redhat.com>
-Autocrypt: addr=ikent@redhat.com; keydata=
- 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
-In-Reply-To: <20240703-mahnung-bauland-ffcacea4101e@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxDMfJ+YVmOm86AA--.4554S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9fXoW3ZF17KF4fAF1kWryxuFy3GFX_yoW8Gry8Go
+	W5Jr1xJr18Jr1UAF1UJ34DJr1UJw1UJr1UJryUJr15Jr1Utw1UAr1UJr1UJF47Jr1UGryU
+	JryUJr1UAF17Jr1Ul-sFpf9Il3svdjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUYJ7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2MKZDUUUU
 
 
-On 3/7/24 17:22, Christian Brauner wrote:
-> On Mon, Jul 01, 2024 at 02:10:31PM GMT, Christian Brauner wrote:
->> On Mon, Jul 01, 2024 at 10:41:40AM GMT, Alexander Larsson wrote:
->>> On Mon, Jul 1, 2024 at 7:50 AM Christian Brauner <brauner@kernel.org> wrote:
->>>>> I always thought the rcu delay was to ensure concurrent path walks "see" the
->>>>>
->>>>> umount not to ensure correct operation of the following mntput()(s).
->>>>>
->>>>>
->>>>> Isn't the sequence of operations roughly, resolve path, lock, deatch,
->>>>> release
->>>>>
->>>>> lock, rcu wait, mntput() subordinate mounts, put path.
->>>> The crucial bit is really that synchronize_rcu_expedited() ensures that
->>>> the final mntput() won't happen until path walk leaves RCU mode.
+
+On 2024/7/3 下午11:35, Huacai Chen wrote:
+> On Wed, Jul 3, 2024 at 11:15 AM maobibo <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2024/7/2 下午11:43, Huacai Chen wrote:
+>>> On Tue, Jul 2, 2024 at 4:42 PM maobibo <maobibo@loongson.cn> wrote:
 >>>>
->>>> This allows caller's like legitimize_mnt() which are called with only
->>>> the RCU read-lock during lazy path walk to simple check for
->>>> MNT_SYNC_UMOUNT and see that the mnt is about to be killed. If they see
->>>> that this mount is MNT_SYNC_UMOUNT then they know that the mount won't
->>>> be freed until an RCU grace period is up and so they know that they can
->>>> simply put the reference count they took _without having to actually
->>>> call mntput()_.
 >>>>
->>>> Because if they did have to call mntput() they might end up shutting the
->>>> filesystem down instead of umount() and that will cause said EBUSY
->>>> errors I mentioned in my earlier mails.
->>> But such behaviour could be kept even without an expedited RCU sync.
->>> Such as in my alternative patch for this:
->>> https://www.spinics.net/lists/linux-fsdevel/msg270117.html
+>>>>
+>>>> On 2024/7/2 下午3:28, Huacai Chen wrote:
+>>>>> On Tue, Jul 2, 2024 at 12:13 PM maobibo <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 2024/7/2 上午10:34, Huacai Chen wrote:
+>>>>>>> On Tue, Jul 2, 2024 at 10:25 AM maobibo <maobibo@loongson.cn> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 2024/7/2 上午9:59, Huacai Chen wrote:
+>>>>>>>>> On Tue, Jul 2, 2024 at 9:51 AM maobibo <maobibo@loongson.cn> wrote:
+>>>>>>>>>>
+>>>>>>>>>> Huacai,
+>>>>>>>>>>
+>>>>>>>>>> On 2024/7/1 下午6:26, Huacai Chen wrote:
+>>>>>>>>>>> On Mon, Jul 1, 2024 at 9:27 AM maobibo <maobibo@loongson.cn> wrote:
+>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Huacai,
+>>>>>>>>>>>>
+>>>>>>>>>>>> On 2024/6/30 上午10:07, Huacai Chen wrote:
+>>>>>>>>>>>>> Hi, Bibo,
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> On Wed, Jun 26, 2024 at 2:32 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Two kinds of LBT feature detection are added here, one is VCPU
+>>>>>>>>>>>>>> feature, the other is VM feature. VCPU feature dection can only
+>>>>>>>>>>>>>> work with VCPU thread itself, and requires VCPU thread is created
+>>>>>>>>>>>>>> already. So LBT feature detection for VM is added also, it can
+>>>>>>>>>>>>>> be done even if VM is not created, and also can be done by any
+>>>>>>>>>>>>>> thread besides VCPU threads.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Loongson Binary Translation (LBT) feature is defined in register
+>>>>>>>>>>>>>> cpucfg2. Here LBT capability detection for VCPU is added.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Here ioctl command KVM_HAS_DEVICE_ATTR is added for VM, and macro
+>>>>>>>>>>>>>> KVM_LOONGARCH_VM_FEAT_CTRL is added to check supported feature. And
+>>>>>>>>>>>>>> three sub-features relative with LBT are added as following:
+>>>>>>>>>>>>>>         KVM_LOONGARCH_VM_FEAT_X86BT
+>>>>>>>>>>>>>>         KVM_LOONGARCH_VM_FEAT_ARMBT
+>>>>>>>>>>>>>>         KVM_LOONGARCH_VM_FEAT_MIPSBT
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>>>>>>>>>> ---
+>>>>>>>>>>>>>>         arch/loongarch/include/uapi/asm/kvm.h |  6 ++++
+>>>>>>>>>>>>>>         arch/loongarch/kvm/vcpu.c             |  6 ++++
+>>>>>>>>>>>>>>         arch/loongarch/kvm/vm.c               | 44 ++++++++++++++++++++++++++-
+>>>>>>>>>>>>>>         3 files changed, 55 insertions(+), 1 deletion(-)
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+>>>>>>>>>>>>>> index ddc5cab0ffd0..c40f7d9ffe13 100644
+>>>>>>>>>>>>>> --- a/arch/loongarch/include/uapi/asm/kvm.h
+>>>>>>>>>>>>>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+>>>>>>>>>>>>>> @@ -82,6 +82,12 @@ struct kvm_fpu {
+>>>>>>>>>>>>>>         #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_64(KVM_REG_LOONGARCH_CSR, REG)
+>>>>>>>>>>>>>>         #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_64(KVM_REG_LOONGARCH_CPUCFG, REG)
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> +/* Device Control API on vm fd */
+>>>>>>>>>>>>>> +#define KVM_LOONGARCH_VM_FEAT_CTRL     0
+>>>>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_X86BT   0
+>>>>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_ARMBT   1
+>>>>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_MIPSBT  2
+>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>         /* Device Control API on vcpu fd */
+>>>>>>>>>>>>>>         #define KVM_LOONGARCH_VCPU_CPUCFG      0
+>>>>>>>>>>>>>>         #define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
+>>>>>>>>>>>>> If you insist that LBT should be a vm feature, then I suggest the
+>>>>>>>>>>>>> above two also be vm features. Though this is an UAPI change, but
+>>>>>>>>>>>>> CPUCFG is upstream in 6.10-rc1 and 6.10-final hasn't been released. We
+>>>>>>>>>>>>> have a chance to change it now.
+>>>>>>>>>>>>
+>>>>>>>>>>>> KVM_LOONGARCH_VCPU_PVTIME_CTRL need be attr percpu since every vcpu
+>>>>>>>>>>>> has is own different gpa address.
+>>>>>>>>>>> Then leave this as a vm feature.
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> For KVM_LOONGARCH_VCPU_CPUCFG attr, it will not changed. We cannot break
+>>>>>>>>>>>> the API even if it is 6.10-rc1, VMM has already used this. Else there is
+>>>>>>>>>>>> uapi breaking now, still will be in future if we cannot control this.
+>>>>>>>>>>> UAPI changing before the first release is allowed, which means, we can
+>>>>>>>>>>> change this before the 6.10-final, but cannot change it after
+>>>>>>>>>>> 6.10-final.
+>>>>>>>>>> Now QEMU has already synced uapi to its own directory, also I never hear
+>>>>>>>>>> about this, with my experience with uapi change, there is only newly
+>>>>>>>>>> added or removed deprecated years ago.
+>>>>>>>>>>
+>>>>>>>>>> Is there any documentation about UAPI change rules?
+>>>>>>>>> No document, but learn from my more than 10 years upstream experience.
+>>>>>>>> Can you show me an example about with your rich upstream experience?
+>>>>>>> A simple example,
+>>>>>>> e877d705704d7c8fe17b6b5ebdfdb14b84c revert
+>>>>>>> 1dccdba084897443d116508a8ed71e0ac8a0 and it changes UAPI.
+>>>>>>> 1dccdba084897443d116508a8ed71e0ac8a0 is upstream in 6.9-rc1, and
+>>>>>>> e877d705704d7c8fe17b6b5ebdfdb14b84c can revert the behavior before
+>>>>>>> 6.9-final, but not after that.
+>>>>>>>
+>>>>>>> Before the first release, the code status is treated as "unstable", so
+>>>>>>> revert, modify is allowed. But after the first release, even if an
+>>>>>>> "error" should also be treated as a "bad feature".
+>>>>>> Huacai,
+>>>>>>
+>>>>>> Thanks for showing the example.
+>>>>>>
+>>>>>> For this issue, Can we adding new uapi and mark the old as deprecated?
+>>>>>> so that it can be removed after years.
+>>>>> Unnecessary, just remove the old one. Deprecation is for the usage
+>>>>> after the first release.
+>>>>>
+>>>>>>
+>>>>>> For me, it is too frequent to revert the old uapi, it is not bug and
+>>>>>> only that we have better method now. Also QEMU has synchronized the uapi
+>>>>>> to its directory already.
+>>>>> QEMU also hasn't been released after synchronizing the uapi, so it is
+>>>>> OK to remove the old api now.
+>>>> No, I will not do such thing. It is just a joke to revert the uapi.
+>>>>
+>>>> So just create new world and old world on Loongarch system again?
+>>> Again, code status before the first release is *unstable*, that status
+>>> is not enough to be a "world".
 >>>
->>> I.e. we would still guarantee the final mput is called, but not block
->>> the return of the unmount call.
->> That's fine but the patch as sent doesn't work is my point. It'll cause
->> exactly the issues described earlier, no? So I'm confused why this
->> version simply ended up removing synchronize_rcu_expedited() when
->> the proposed soluton seems to have been to use queue_rcu_work().
+>>> It's your responsibility to make a good design at the beginning, but
+>>> you fail to do that. Fortunately we are before the first release;
+>>> unfortunately you don't want to do that.
+>> Yes, this is flaw at the beginning, however it can works and new abi can
+>> be added.
 >>
->> But anyway, my concern with this is still that this changes the way
->> MNT_DETACH behaves when you shut down a non-busy filesystem with
->> MNT_DETACH as outlined in my other mail.
+>> If there is no serious bug and it is synced to QEMU already, I am not
+>> willing to revert uabi. Different projects have its own schedule plan,
+>> that is one reason. The most important reason may be that different
+>> peoples have different ways handling these issues.
+> In another thread I found that Jiaxun said he has a solution to make
+> LBT be a vcpu feature and still works well. However, that may take
+> some time and is too late for 6.11.
+
+It is welcome if Jiaxun provide patch for host machine type, I have no 
+time give any feedback with suggestion of Jianxun now.
+
+> 
+> But we have another choice now: just remove the UAPI and vm.c parts in
+> this series, let the LBT main parts be upstream in 6.11, and then
+> solve other problems after 6.11. Even if Jiaxun's solution isn't
+> usable, we can still use this old vm feature solution then.
+
+There is not useul if only LBT main part goes upstream. VMM cannot use 
+LBT if control part is not merged.
+
+ From another side, what do you like to do? Reviewing patch of others 
+and give comments whatever grammar spelling or useful suggestions, or 
+Writing patch which needs much efforts rather than somethings like 
+feature configuration, BSP drivers.
+
+Regards
+Bibo Mao
+
+> 
+> 
+> Huacai
 >>
->> If you find a workable version I'm not entirely opposed to try this but
->> I wouldn't be surprised if this causes user visible issues for anyone
->> that uses MNT_DETACH on a non-used filesystem.
-> Correction: I misremembered that umount_tree() is called with
-> UMOUNT_SYNC only in the case that umount() isn't called with MNT_DETACH.
-> I mentioned this yesterday in the thread but just in case you missed it
-> I want to spell it out in detail as well.
-
-Thanks Christian, I did see that, yep.
-
-There's also the seqlock in there to alert the legitimize that it needs
-
-to restart using ref-walk.
-
-
->
-> This is relevant because UMOUNT_SYNC will raise MNT_SYNC_UMOUNT on all
-> mounts it unmounts. And that ends up being checked in legitimize_mnt()
-> to ensure that legitimize_mnt() doesn't call mntput() during path lookup
-> and risking EBUSY for a umount(..., 0) + mount() sequence for the same
-> filesystem.
->
-> But for umount(.., MNT_DETACH) UMOUNT_SYNC isn't passed and so
-> MNT_SYNC_UMOUNT isn't raised on the mount and so legitimize_mnt() may
-> end up doing the last mntput() and cleaning up the filesystem.
->
-> In other words, a umount(..., MNT_DETACH) caller needs to be prepared to
-> deal with EBUSY for a umount(..., MNT_DETACH) + mount() sequence.
->
-> So I think we can certainly try this as long as we make it via
-> queue_rcu_work() to handle the other mntput_no_expire() grace period
-> dependency we discussed upthread.
->
-> Thanks for making take a closer look.
-
-I'm still not sure I fully understand the subtleties of how this works, I
-
-think I'll need to do a deep dive into the rcu code and then revisit the
-
-umount code. At least I won't be idle, ;(
-
-
-Nevertheless I have to thank both you and Honza for your efforts and 
-tolerance.
-
-
-Ian
-
-Ian
-
+>> Regards
+>> Bibo, Mao
+>>>
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo, Mao
+>>>>
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>> Regards
+>>>>>> Bibo, Mao
+>>>>>>>
+>>>>>>> Huacai
+>>>>>>>
+>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> How about adding new extra features capability for VM such as?
+>>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_LSX   3
+>>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_LASX  4
+>>>>>>>>>>> They should be similar as LBT, if LBT is vcpu feature, they should
+>>>>>>>>>>> also be vcpu features; if LBT is vm feature, they should also be vm
+>>>>>>>>>>> features.
+>>>>>>>>>> On other architectures, with function kvm_vm_ioctl_check_extension()
+>>>>>>>>>>          KVM_CAP_XSAVE2/KVM_CAP_PMU_CAPABILITY on x86
+>>>>>>>>>>          KVM_CAP_ARM_PMU_V3/KVM_CAP_ARM_SVE on arm64
+>>>>>>>>>> These features are all cpu features, at the same time they are VM features.
+>>>>>>>>>>
+>>>>>>>>>> If they are cpu features, how does VMM detect validity of these features
+>>>>>>>>>> passing from command line? After all VCPUs are created and send bootup
+>>>>>>>>>> command to these VCPUs? That is too late, VMM main thread is easy to
+>>>>>>>>>> detect feature validity if they are VM features also.
+>>>>>>>>>>
+>>>>>>>>>> To be honest, I am not familiar with KVM still, only get further
+>>>>>>>>>> understanding after actual problems solving. Welcome to give comments,
+>>>>>>>>>> however please read more backgroud if you insist on, else there will be
+>>>>>>>>>> endless argument again.
+>>>>>>>>> I just say CPUCFG/LSX/LASX and LBT should be in the same class, I
+>>>>>>>>> haven't insisted on whether they should be vcpu features or vm
+>>>>>>>>> features.
+>>>>>>>> It is reasonable if LSX/LASX/LBT should be in the same class, since
+>>>>>>>> there is feature options such as lsx=on/off,lasx=on/off,lbt=on/off.
+>>>>>>>>
+>>>>>>>> What is the usage about CPUCFG capability used for VM feature? It is not
+>>>>>>>> a detailed feature, it is only feature-set indicator like cpuid.
+>>>>>>>>
+>>>>>>>> Regards
+>>>>>>>> Bibo Mao
+>>>>>>>>>
+>>>>>>>>> Huacai
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Regards
+>>>>>>>>>> Bibo, Mao
+>>>>>>>>>>>
+>>>>>>>>>>> Huacai
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Regards
+>>>>>>>>>>>> Bibo Mao
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Huacai
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>>>>>>>>>>>> index 233d28d0e928..9734b4d8db05 100644
+>>>>>>>>>>>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>>>>>>>>>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>>>>>>>>>>>> @@ -565,6 +565,12 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>>>>>>>>>>>>>>                                *v |= CPUCFG2_LSX;
+>>>>>>>>>>>>>>                        if (cpu_has_lasx)
+>>>>>>>>>>>>>>                                *v |= CPUCFG2_LASX;
+>>>>>>>>>>>>>> +               if (cpu_has_lbt_x86)
+>>>>>>>>>>>>>> +                       *v |= CPUCFG2_X86BT;
+>>>>>>>>>>>>>> +               if (cpu_has_lbt_arm)
+>>>>>>>>>>>>>> +                       *v |= CPUCFG2_ARMBT;
+>>>>>>>>>>>>>> +               if (cpu_has_lbt_mips)
+>>>>>>>>>>>>>> +                       *v |= CPUCFG2_MIPSBT;
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>                        return 0;
+>>>>>>>>>>>>>>                case LOONGARCH_CPUCFG3:
+>>>>>>>>>>>>>> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+>>>>>>>>>>>>>> index 6b2e4f66ad26..09e05108c68b 100644
+>>>>>>>>>>>>>> --- a/arch/loongarch/kvm/vm.c
+>>>>>>>>>>>>>> +++ b/arch/loongarch/kvm/vm.c
+>>>>>>>>>>>>>> @@ -99,7 +99,49 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>>>>>>>>>>>>>>                return r;
+>>>>>>>>>>>>>>         }
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> +static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr)
+>>>>>>>>>>>>>> +{
+>>>>>>>>>>>>>> +       switch (attr->attr) {
+>>>>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_X86BT:
+>>>>>>>>>>>>>> +               if (cpu_has_lbt_x86)
+>>>>>>>>>>>>>> +                       return 0;
+>>>>>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_ARMBT:
+>>>>>>>>>>>>>> +               if (cpu_has_lbt_arm)
+>>>>>>>>>>>>>> +                       return 0;
+>>>>>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_MIPSBT:
+>>>>>>>>>>>>>> +               if (cpu_has_lbt_mips)
+>>>>>>>>>>>>>> +                       return 0;
+>>>>>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>>>>>> +       default:
+>>>>>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>>>>>> +       }
+>>>>>>>>>>>>>> +}
+>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>> +static int kvm_vm_has_attr(struct kvm *kvm, struct kvm_device_attr *attr)
+>>>>>>>>>>>>>> +{
+>>>>>>>>>>>>>> +       switch (attr->group) {
+>>>>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_CTRL:
+>>>>>>>>>>>>>> +               return kvm_vm_feature_has_attr(kvm, attr);
+>>>>>>>>>>>>>> +       default:
+>>>>>>>>>>>>>> +               return -ENXIO;
+>>>>>>>>>>>>>> +       }
+>>>>>>>>>>>>>> +}
+>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>         int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+>>>>>>>>>>>>>>         {
+>>>>>>>>>>>>>> -       return -ENOIOCTLCMD;
+>>>>>>>>>>>>>> +       struct kvm *kvm = filp->private_data;
+>>>>>>>>>>>>>> +       void __user *argp = (void __user *)arg;
+>>>>>>>>>>>>>> +       struct kvm_device_attr attr;
+>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>> +       switch (ioctl) {
+>>>>>>>>>>>>>> +       case KVM_HAS_DEVICE_ATTR:
+>>>>>>>>>>>>>> +               if (copy_from_user(&attr, argp, sizeof(attr)))
+>>>>>>>>>>>>>> +                       return -EFAULT;
+>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>> +               return kvm_vm_has_attr(kvm, &attr);
+>>>>>>>>>>>>>> +       default:
+>>>>>>>>>>>>>> +               return -EINVAL;
+>>>>>>>>>>>>>> +       }
+>>>>>>>>>>>>>>         }
+>>>>>>>>>>>>>> --
+>>>>>>>>>>>>>> 2.39.3
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>
+>>>>>>
+>>>>
+>>
+>>
 
