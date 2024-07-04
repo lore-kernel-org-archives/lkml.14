@@ -1,97 +1,130 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDED1A2554;
-	Thu,  4 Jul 2024 08:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106F51370;
+	Thu,  4 Jul 2024 08:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720083004; cv=none; b=AlvHzxCh6URlCf/JH27KXhytTt5+RmlfrPVj368pB6XyRE5tn57UTF7teYNGEmjfWCkkAulzczo/nDJA+TInvS9WrLoq2zZ7BT3mtMmhC+0DbYOEbLxOHRL/ai4W7IapVLWNZof2zTrdiMdFvQxE/WxwEXozp23xlmq2IBsdka8=
+	t=1720083137; cv=none; b=CoM7eeHaeviPkf/KLjsZRxalVvftg454v+MFZGwZ2LRvWZZZ88p3XXVP41ErZKIP2kxXyPi0r4MjfDddJ1mES6emJueAdlw6/FJZ2yZE6ztJiH9Q6zC4UHG62D56jKcfn1kYPBRZFJ/3RImz5XkPIdfGPA2IMGOEb4w7K2uSmoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720083004; c=relaxed/simple;
-	bh=taELz09kemQcRTcnI5iQ5KPDeTeYJTdJK5+QS+mBmtQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h2hcdTyRpaMEH3j2uHbUL/NtD9c7ejkAiS8YJwS8IwDE/KZZjZXBVhVzlKAxKv9Bi7NWedRXV3ZVxLxZpKKcjYQxjGxK5ZkmS/eY3LOBWDQq8dx8q7od4fJJzzaQf0sj3NRZKsSckDLA3TNccEdzYat4XuYIycuIMGFlqgsVW0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=zbMOtq5w; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1720083137; c=relaxed/simple;
+	bh=cgfOYOmbTPyQRvkyPgg9BCON57/Yve9lHmySYjtZ0gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UKA8O8Pg2oECIWOeDXOKWWdLhaQKODeKOS48wJN2MguoEYIn4QVgZRlsgwBfvCmKbRVDFqNu+YhwHdFYA6ykgHFBuMY5XLFdx38ac3XD9Upehngba+WSVwiXJbsUJtWRd/cEP7LpnTc15nrrap4f5kMq6MzGZwmzoyjKXFVe3ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QvbeuyiH; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zbMOtq5w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720083002; x=1751619002;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=taELz09kemQcRTcnI5iQ5KPDeTeYJTdJK5+QS+mBmtQ=;
-  b=zbMOtq5wxHblZWbmSzYvx47wqcdqUvA6a+IgILuVlgvMwn1ezJquKR0y
-   Lb8N9BuZzI+ibVKgVcOdP3b7TVTQLeE2gKL0J2HYbxAfXYP+meGKwXOTf
-   1K6NV3YiQAXpCab01LygKM/snEBGUNuSHWiHixAcjkwo9exgGQfFJVmWC
-   M9eqim61P7DbQu+ZhUDbgroyySkA8MF8ju7DU5oPxiw27AwhrPrpkzmHX
-   t5p72pJPfe/eBOjZJwJ2I5ZL9+FuG9agMyYZUPdmTTMrdTdwFOBFTtARj
-   g+NBwfkEKFIg45UagHGw0nJWKHpTbc8urXPLDD78LmfoeOLV8ZdoZYAxG
-   g==;
-X-CSE-ConnectionGUID: kCPvKpFuTFyELXI+0A+2CQ==
-X-CSE-MsgGUID: 6Zy3XaIjSHW4BIiCUH1q7w==
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="28816296"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Jul 2024 01:50:01 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 4 Jul 2024 01:49:21 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 4 Jul 2024 01:49:10 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-	<rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-	<jernej.skrabec@gmail.com>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <linux@armlinux.org.uk>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <arnd@arndb.de>, <Jason@zx2c4.com>,
-	<palmer@rivosinc.com>, <mpe@ellerman.id.au>, <rdunlap@infradead.org>,
-	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <manikandan.m@microchip.com>, <Hari.PrasathGE@microchip.com>,
-	<Nicolas.Ferre@microchip.com>
-Subject: [PATCH 4/4] ARM: configs: at91: Enable Microchip's MIPI DSI Host Controller support
-Date: Thu, 4 Jul 2024 14:18:37 +0530
-Message-ID: <20240704084837.168075-5-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240704084837.168075-1-manikandan.m@microchip.com>
-References: <20240704084837.168075-1-manikandan.m@microchip.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QvbeuyiH"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9E3BF60014;
+	Thu,  4 Jul 2024 08:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720083127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IDKEjeOdgfEzXewLaWpZ2kvSxdcVTfMIj4W1FAZEaKo=;
+	b=QvbeuyiHV0xdNYQtUPU5sR8XmOZ4dwHKnjvtXtTTlYa4aTJuaZvsZXv5tV8mVUsn7E+PM9
+	yOvzG3rLiaOvFXIxA6qeyO/gBdOnhxLhe2Y3Irv8/dm2aL25YSxD+xaQuO7ml2C37ot5pC
+	5ez3laFbifKSS35JPIhrioDcGeMiih1M4zJ26WldmiczpHxGQskCWubzfX7Ry+GCby4qmh
+	DPRo4tk419q5PaxSDcFWOh8o1yWsNjzTJtcrNCur1x9JjFTusyYdMG/dIphN+TPur/DHo3
+	EdowHlLe0K7KraEFSfWvc0ZgBVWX4vq3GqgM2BdacqnZ5u7IB46ImBqDgSfDEA==
+Message-ID: <0d50df10-4b4e-47c4-930f-cd8f645a7e2d@bootlin.com>
+Date: Thu, 4 Jul 2024 10:52:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: sophgo,cv18xx-saradc.yaml: Add
+ Sophgo SARADC binding documentation
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Inochi Amaoto <inochiama@outlook.com>, Chen Wang <unicorn_wang@outlook.com>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20240702-sg2002-adc-v1-0-ac66e076a756@bootlin.com>
+ <20240702-sg2002-adc-v1-1-ac66e076a756@bootlin.com>
+ <b7913f90-7405-4a77-9c57-97ef124de6e1@kernel.org>
+ <8d368347-7cee-41af-a033-c495eeb62e2a@bootlin.com>
+ <577a5623-6dd8-4229-9c07-61e131a01aa8@kernel.org>
+Content-Language: en-US
+From: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+In-Reply-To: <577a5623-6dd8-4229-9c07-61e131a01aa8@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.bonnefille@bootlin.com
 
-Enable the Microchip's DSI controller wrapper driver that uses
-the Synopsys DesignWare MIPI DSI host controller bridge.
 
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
----
- arch/arm/configs/at91_dt_defconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
-index 1d53aec4c836..c5c8623f1075 100644
---- a/arch/arm/configs/at91_dt_defconfig
-+++ b/arch/arm/configs/at91_dt_defconfig
-@@ -143,6 +143,7 @@ CONFIG_VIDEO_OV2640=m
- CONFIG_VIDEO_OV7740=m
- CONFIG_DRM=y
- CONFIG_DRM_ATMEL_HLCDC=y
-+CONFIG_DRM_MICROCHIP_DW_MIPI_DSI=y
- CONFIG_DRM_PANEL_SIMPLE=y
- CONFIG_DRM_PANEL_EDP=y
- CONFIG_FB_ATMEL=y
--- 
-2.25.1
+On 7/4/24 10:39 AM, Krzysztof Kozlowski wrote:
+> On 04/07/2024 10:35, Thomas Bonnefille wrote:
+>> Hello Krzysztof,
+>> Thank you for your feedback
+>>
+>> On 7/3/24 7:08 AM, Krzysztof Kozlowski wrote:
+>>> On 02/07/2024 13:52, Thomas Bonnefille wrote:
+>>>> The Sophgo SARADC is a Successive Approximation ADC that can be found in
+>>>> the Sophgo SoC.
+>>>>
+>>>> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+>>>> ---
+>>>>    .../bindings/iio/adc/sophgo,cv18xx-saradc.yaml     | 51 ++++++++++++++++++++++
+>>>>    MAINTAINERS                                        |  5 +++
+>>>>    2 files changed, 56 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..21fd5dc8e24e
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/iio/adc/sophgo,cv18xx-saradc.yaml
+>>>> @@ -0,0 +1,51 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/iio/adc/sophgo,cv18xx-adc.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Sophgo 3 channels Successive Approximation Analog to Digital Converters
+>>>> +
+>>>> +maintainers:
+>>>> +  - Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+>>>> +
+>>>> +description:
+>>>> +  Datasheet at https://github.com/sophgo/sophgo-doc/releases
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: sophgo,cv18xx-saradc
+>>>
+>>> Except that this was never tested... wild-cards are generally not allowed.
+>>>
+>>
+>> I realized I made a mistake when using the "make dt_binding_check"
+>> command, which led to some errors in this dt_binding. I have now
+>> addressed all of them, but I'm not sure I understand your comment.
+>>
+>> I don't see any wildcards in the YAML file. Could you please provide
+>> more details on what you expect?
+> 
+> What is "xx"? Sounds like wildcard. I do not see such SoC compatible.
+> 
 
+The point of cv18xx is to have a single compatible for all SoCs of the 
+cv18xx series from Sophgo (cv1800b, cv1812h but also sg2000 and sg2002). 
+I used that as a reflection of the cv18xx.dtsi used for all those SoCs.
+
+Should I create multiple compatible for all the SoCs of a same brand ?
+
+> Best regards,
+> Krzysztof
+> 
