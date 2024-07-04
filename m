@@ -1,112 +1,104 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A131B0122;
-	Thu,  4 Jul 2024 15:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A681A08D4;
+	Thu,  4 Jul 2024 15:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720106438; cv=none; b=R14qL7qQIZiICA92+s380FKaw1o4ppwrLoqGB/8NrTmyggEIR91E3PM74ZtlAmztCNVG4Kd1ZfHYQVy2mbvQ49KhULYcNzr8Tgs8dhwL8DoWC+heV0+GcDyESiMfzI2zeYLzDgoqD7QG3WNXbR3Kni84FVllTTOEmBlRvnicv+s=
+	t=1720106566; cv=none; b=gK2JM0U9WZBMaYnEBV98Z1WLTGzl/LUfx0YMe7KLhxoRLfTPuS+lUfzQP0kypA1FYqlqLFINQYrQMXzNNVfeF+AXBpfP/IPHrXQQo7m+Z6iZ6sVEQIFuIwsGi1nAaV0Ffy0kRP/VWjGSMZFkS/lzeTsrpKqKYB54GoDls2esgrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720106438; c=relaxed/simple;
-	bh=uLrqDxpb+tvF7mkqkCnn0LFKeFwLUAS1XvCZnPc3+hk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nDYplMEcYZz0COENriFvP7U3AaVURNeaYDwp4gSlM7PeVIHFvPC+YPhwPH1q7g96l9jO0lH9a2VA90gyzWiCvwsCOhMa0vY3JQbe1UnAfgHUVSL1ERY2coI3/C2outVWdSupjwUoJwzmIUM6KXPt/g5UkcfPc+qEvD9TgZr4M/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hUt/QK6Q; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720106566; c=relaxed/simple;
+	bh=wFHhVJumckKsysKCIZR45w+PkOdLpxaZi2rmHtCtQr0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S6ZH/F59e9bPQbhDKQIporjfD5F0jPB8DWe2WiBZ47B5V2s+Iyl/XgTtTrE6XqSn7bGUveBHvqG9vMzbGpoYHBxseU8+xJ6eH3W9r1TkM/4pKLUE7vNBz00EWpzBQPJngSCUj1O5mq+k4xWkTKMqM/9Jy2bIhuBoWGN04GqHa6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gZGB4JxL; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hUt/QK6Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=T1W+cwrYdEZzgH6Ohx8queoWljwDE94ghf7And0NMPQ=; b=hUt/QK6QIkaT0GDYXczMay3Z5A
-	pmDxONmeAqHPE6Ljy1yY/Vm91+/doA5NrrDK0Qwhwytnxn7Ylg0sFitz55Gm0ZLgPkMCwAvCfjr6n
-	3a1HI8Dn9MsAoLjYVdcTyGWA2WIn8fmctH4PCnIbpZ3hX41eDAdm8bUziFfCU6z7OCmo3Mn1mzZaI
-	vnSZj65ciww3h03aGnLAS30sfEl1Bm5eCEC/HSZZ6Hy3FFxu/3HcekPS0lfRLoUwNGfuYjqu26tCL
-	/myW50CvKTFe+tNi0TCOWfObPVA4DuLa2NhuatSohg5GHb39arRD1HzbIvryZZcBQOMCd3LMo4T5u
-	1Gt5maMg==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sPOFp-00000002yac-1247;
-	Thu, 04 Jul 2024 15:20:13 +0000
-Date: Thu, 4 Jul 2024 16:20:13 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
-	david@fromorbit.com, chandan.babu@oracle.com, djwong@kernel.org,
-	brauner@kernel.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
-	linux-mm@kvack.org, john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
-	mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org, hch@lst.de, Zi Yan <zi.yan@sent.com>
-Subject: Re: [PATCH v8 01/10] fs: Allow fine-grained control of folio sizes
-Message-ID: <Zoa9rQbEUam467-q@casper.infradead.org>
-References: <20240625114420.719014-1-kernel@pankajraghav.com>
- <20240625114420.719014-2-kernel@pankajraghav.com>
- <cb644a36-67a7-4692-b002-413e70ac864a@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZGB4JxL"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2c8e7553c9eso548080a91.3;
+        Thu, 04 Jul 2024 08:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720106565; x=1720711365; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xVFK2WSYZ965lLjkevQH4tcohQ9krtqpk0QXLUCUgcA=;
+        b=gZGB4JxLN/FOFQo8lyeZDfQy/YVhWdEP3KchqzkAex8Z4RYdlu2m/eFwNzMmJz+9kt
+         763bYqXatIij7/72bEzNlgVpj2iRaTwkicf1vwhvz0BwChiQr0QjmQIpsP/RTzdNf5Fx
+         RTMN5u1OY1RLmEHpj/gRHTiN4CQBJiVOvlZ9eQ7ohEpcbVXjY+SjeW9YDoguQ5vSPjlc
+         cdsFhUrbakjb2xR/ZBph4LqweKrnxE/kF1OLXYfTwzPNQDwhNI79Nf6VwNbdjIx4/JdX
+         +iHBLUacVBjTz6IREwtiZ7Q37ujgcY/JgOS1PLeiqbewOqRfIai8On8Ck2B3xXzqTv3w
+         YXfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720106565; x=1720711365;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xVFK2WSYZ965lLjkevQH4tcohQ9krtqpk0QXLUCUgcA=;
+        b=lGlILspJUYt174vzfcfFg3MUW/1n90bLim7DNQoOGszmVpQhd1VO0UEk++WcbmSQbF
+         KRjLsMKJTjGxG6Yc8n/15GHkM231oLxrd5MENydLVaWYrj+WzRn70dXpKPyAt1C4+2e0
+         JSXk2HE68zEBZVgjII2jXE2Ngqou2TQ0A1dHxk6BXauP5jyzEu/xhOvc0q9xzANmuZpS
+         V67ZBRGLUnlNLW+rQV+HiRteRvpdlxdR1h5mkHEVLVNdBJkoUuX4L+/OsM4MuMmT42+L
+         KxWsMBKWYLaQIaJS76KFHzjtQdgaqb4jmAP/76yyRsoyPXTw3g6qHiPKkMSxTH513gkU
+         e7OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6rMp+xLUJeYV/Pl/bkDtdlY0V+yIDT2IpOGOpq1v6DM7PekT8KJ1uwpyBX7av3jqC3qTTVgWHyy5hcf1liEmbajWFGicQcK9LATjXXFDZoh3zCMO/9INKNUVSq1nsuwwGdZeV/oGM1bTs6rtwKSvbWPWJoe+DbwR/b0fdxC+TC7foF2z+EdUiMjennA1IzQhCLCXrRoePM57aKT/hcpYSxhY=
+X-Gm-Message-State: AOJu0YwGR41maLLrp5pBC5xABYDDoHtke8mV+rbEQAhGi3/qsPrWWTj+
+	Mhu4nar/fDHqvhxJ5o65GV/+1fc+gURxtkZUbKEFD7G/B1YgFUXnbB67TvPldzQEMsU/ezJSbXR
+	SW1iG4akeLjoFBcQ6CfnYveHyA+0=
+X-Google-Smtp-Source: AGHT+IFfBoeinZVknPJ2qB+zv1AA45Y+rwAXZJ2EypvSPSD3MCuzlu8qe3Z/aXwaSOKHiC9JvGHvi//0bilEXU7z030=
+X-Received: by 2002:a17:90a:f2cc:b0:2c9:8f97:d2e7 with SMTP id
+ 98e67ed59e1d1-2c99c6b91d2mr1536223a91.37.1720106564696; Thu, 04 Jul 2024
+ 08:22:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb644a36-67a7-4692-b002-413e70ac864a@arm.com>
+References: <87ed8a8ka3.fsf@metaspace.dk>
+In-Reply-To: <87ed8a8ka3.fsf@metaspace.dk>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 4 Jul 2024 17:22:32 +0200
+Message-ID: <CANiq72n=dF4Zzpoq9zpQ_Baapy_MXYJh3OHkuDRAySCThCh6Pw@mail.gmail.com>
+Subject: Re: [PATCH 06/13] rust: start supporting several compiler versions
+To: Andreas Hindborg <nmi@metaspace.dk>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
+	Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 04, 2024 at 01:23:20PM +0100, Ryan Roberts wrote:
-> > -	AS_LARGE_FOLIO_SUPPORT = 6,
-> 
-> nit: this removed enum is still referenced in a comment further down the file.
+On Wed, Jul 3, 2024 at 7:20=E2=80=AFPM Andreas Hindborg <nmi@metaspace.dk> =
+wrote:
+>
+> This does not set a max version. Will older versions of the kernel
+> always compile with newer releases of `rustc`?
 
-Thanks.  Pankaj, let me know if you want me to send you a patch or if
-you'll do it directly.
+That depends on how many changes Rust introduces around the remaining
+unstable features (as well as plain bugs in new versions, like for any
+other tool). With the kernel being tested in the Rust pre-merge CI,
+hopefully we will reduce those to a minimum.
 
-> > +	/* Bits 16-25 are used for FOLIO_ORDER */
-> > +	AS_FOLIO_ORDER_BITS = 5,
-> > +	AS_FOLIO_ORDER_MIN = 16,
-> > +	AS_FOLIO_ORDER_MAX = AS_FOLIO_ORDER_MIN + AS_FOLIO_ORDER_BITS,
-> 
-> nit: These 3 new enums seem a bit odd.
+It is also why we need to keep reducing the unstable features and get
+into stable Rust as soon as possible. The Rust project is starting to
+support us more here, and they are setting up a project goal for
+2024h2 on their side to resolve the biggest blockers for the kernel:
 
-Yes, this is "too many helpful suggestions" syndrome.  It made a lot
-more sense originally.
+    https://rust-lang.github.io/rust-project-goals/2024h2/rfl_stable.html
 
-https://lore.kernel.org/linux-fsdevel/ZlUQcEaP3FDXpCge@dread.disaster.area/
+Meanwhile, on our side, we can do our best to backport any workarounds
+for new versions into supported kernels, i.e. stable and LTSs.
 
-> > +static inline void mapping_set_folio_order_range(struct address_space *mapping,
-> > +						 unsigned int min,
-> > +						 unsigned int max)
-> > +{
-> > +	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
-> > +		return;
-> > +
-> > +	if (min > MAX_PAGECACHE_ORDER)
-> > +		min = MAX_PAGECACHE_ORDER;
-> > +	if (max > MAX_PAGECACHE_ORDER)
-> > +		max = MAX_PAGECACHE_ORDER;
-> > +	if (max < min)
-> > +		max = min;
-> 
-> It seems strange to silently clamp these? Presumably for the bs>ps usecase,
-> whatever values are passed in are a hard requirement? So wouldn't want them to
-> be silently reduced. (Especially given the recent change to reduce the size of
-> MAX_PAGECACHE_ORDER to less then PMD size in some cases).
+But, at least, this series should already help kernel developers (they
+will be able to compile the kernel with Rust enabled using their
+distribution) and Linux distributions (they will have more freedom to
+pick a Rust toolchain version and avoid having to package another
+version just for the kernel).
 
-Hm, yes.  We should probably make this return an errno.  Including
-returning an errno for !IS_ENABLED() and min > 0.
-
-> > -	if (new_order < MAX_PAGECACHE_ORDER) {
-> > +	if (new_order < mapping_max_folio_order(mapping)) {
-> >  		new_order += 2;
-> > -		new_order = min_t(unsigned int, MAX_PAGECACHE_ORDER, new_order);
-> > +		new_order = min(mapping_max_folio_order(mapping), new_order);
-> >  		new_order = min_t(unsigned int, new_order, ilog2(ra->size));
-> 
-> I wonder if its possible that ra->size could ever be less than
-> mapping_min_folio_order()? Do you need to handle that?
-
-I think we take care of that in later patches?  This patch is mostly
-about honouring the max properly and putting in the infrastructure for
-the min, but not doing all the necessary work for min.
+Cheers,
+Miguel
