@@ -1,59 +1,62 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030B91AED3B;
-	Thu,  4 Jul 2024 13:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C501ABC25
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098295; cv=none; b=H22WDyJcmEeBxd3cCYE6mPH5kpbM6rknW9zhCPAUopHAmiQaFYzCLC0nnMTzOybd6605APhN93v1+6cJ1fL7GqWsN5myKyDi+DY6w8D5Vwoe5t3OGQMWAKPIuFLuiztDFh6nFNiMw6Jm78OPLV3kWGhG1FvCxEiNyUvsa843xlY=
+	t=1720098323; cv=none; b=H+THlz771rGpvr08TuDatX+4QabEe7BPkWwStFk1a7zcLTiCoGYx1GiOee3Q60pEhQB2EwnR3DUjeF59tiB8K8/oDoJr73MMPkB3xwHitFeOhGV5PkqdBYsDgGjI+tRD/mr2ugqbxK/VTN2Bguzepdl8MH5+OC3Y0xEL5eVhoRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720098295; c=relaxed/simple;
-	bh=LKgKk74S0lYEgrU1pNpB/tiD4Mcnke6T0foRtegJ9lc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dcArzClRf26yEHOxPVv63/ITy9oePTmxV+B4WgvXM4521K0OMCsAcEyD7en/lrOj5CjUSTVZmM6DcVO3rvdLDefStjn47my+nekKbA14NlQAwImtEjKTwg0EHVZK1LHd5HMmtuiJsDXFMMrLN5XgeOAlsN7Voa/qXDpQ+PSunsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ErufTdfu; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720098323; c=relaxed/simple;
+	bh=kEgHvrKkP/JmOKG/+VNDIUUpwZumLitFBjNUA3WIU0g=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=H6zlwKR1FB6GgVTc3H7v5ovBZmsVkEVttAM0Zzf6r8HlP100or/Ksw1rgQl2LMjDZCj+jAohLVdTi4qFYxdPxJaOmDu/d/D7FRfeVJggSX8l9RF24Ee7c7tThjh4p08sANDP7Xy+1XYIaOUdEb4UTyXNMCqkksUGhn0Sf5VKVKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IKx10rfU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErufTdfu"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a77b550128dso79401466b.0;
-        Thu, 04 Jul 2024 06:04:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720098292; x=1720703092; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2uPuMCUt+0PiW5wgXWRLYWMzfYRTfHb3fi4+BnRHVqA=;
-        b=ErufTdfu2FJGcxLfQ9iECTyxSCfyDPayL6BcA2qWuJvZ4Mtcm8ieT3v5wUrfrUN92q
-         Af3m7YcY495+rrmNfqcm7pttQDtZemo2CVW9cCcWB8jFTSF8laelyDndd31R1PfpN2vh
-         mTLUZved2wR0HJi6I9qeijgR6tzGlC24SeqYmq/k54mtFiEAgAw4SEGbkneeDG0EzEzY
-         iJdLcbLLO0sd1G4IlcTMHF5XbwoOloV2Pa1j9N9pQI0/g2oTuBM15IuoqGu7ZLZfoxIN
-         +4/D58AlGQrlY1OwI6j4b6FiH6bW08rIOug/T+YxYUX29by8CKDILwLY19S/xCkaAQrM
-         kmUw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IKx10rfU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720098321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K0LIkgFk3FChOL7eIhbF4O+FeLzO9NmnpeAt7yD+xlo=;
+	b=IKx10rfUn2RZMhnFoB4cq/GXLhsKH8bcYHZYzLI3Wf6qpwruVZ+MoJPoUlaLAKhDwKfpGS
+	xusRcxZN0UpK48twizn55Tt9cYrdQo+8CGHY6PxOjENoBp5mFrQzxgsdETBvjCvkA9QXlx
+	AAWT8tOR5vMC8xGVEtkB4I49R7azwfk=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-513-zG7GKWI0P6uJwORhHby8Yg-1; Thu, 04 Jul 2024 09:05:19 -0400
+X-MC-Unique: zG7GKWI0P6uJwORhHby8Yg-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-57d3eca4bb7so1032869a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 06:05:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720098292; x=1720703092;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2uPuMCUt+0PiW5wgXWRLYWMzfYRTfHb3fi4+BnRHVqA=;
-        b=wN1a/80G+f3ZdXpaBnWqAAM5rZ/E6ZiVamGNFLPzAu2BfM8KNEDmDaKAfVbnvjjAJz
-         7jCmVygD2WJg/WowX2GcAmUaH9K2AJFILvQpj2fot7o34InlA5TaTXDZmnfTND6vnSPc
-         28jMrgWbtjNimMqp3pHllhTKjwLSewI+c38YSNMy758Mfniwwoq0sZC9PcL/MazdSYX5
-         7pZ1uVM2nuEH56fZM3dp4pA/zq9X0fpPZPwKgcMXNjt2zCdsD7mF1H/9cJ4FWDBduEBj
-         lxwV2xjWjSUH4d0PdrFgR308mapgZB4Js6iCM58ivbHjpjYPEOerAqX80/SSo8nS0tq7
-         Hbeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZqQyw/1rgkBTokKs/IvgLy9nFv7COZui6LqztDHuMWbxjNGIeW7rJ4lBvRMFVMF5/y/tH8YZU8wvomFfHQ/5jmn4ZFLNYlWtOx4cjdfA+Y53II6hacEi25345QJ7oBrvOrPveVotRPg==
-X-Gm-Message-State: AOJu0YwZiNAjuzpnw96p5s4UaD+J4GyFXJ8kUxIiB3LS41iv57aumCo+
-	g+LAYxcx3eGvfk0kIHNDsMZDIiMGe7c46YVj0jp6QIiHwhicir+bJutJ
-X-Google-Smtp-Source: AGHT+IFZIcyALDt43Fk8aUWhime9uuJbu6aaRpQ6g07IxAblZfpNL/zdJWjjDDngZz0vSZjneaXhtQ==
-X-Received: by 2002:a17:906:1158:b0:a72:8d4f:6720 with SMTP id a640c23a62f3a-a77ba72b9dfmr113893666b.69.1720098291839;
-        Thu, 04 Jul 2024 06:04:51 -0700 (PDT)
-Received: from ?IPV6:2a02:810b:f40:4600:ec22:4ef6:28e0:c5f3? ([2a02:810b:f40:4600:ec22:4ef6:28e0:c5f3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf1bb6bsm595903366b.30.2024.07.04.06.04.51
+        d=1e100.net; s=20230601; t=1720098318; x=1720703118;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=K0LIkgFk3FChOL7eIhbF4O+FeLzO9NmnpeAt7yD+xlo=;
+        b=EvyU7xGARs+CkPVqRQuRR3hdVbt4OZrrtqp7OMxtgIC/ulds6JE1oLiL8BC/ljM84r
+         2LgeTM4+d9WBGnUBQeoGkZaoa0X2DtnjU/6878c1IK57T3SjuVxbBhhGXZxYM1XQBMZV
+         xHEgvbFEehy/NsmVwt5/oJy38eWSbwkL78cGuWvTndI7sJ8gor37p6AfAyjF4mS4pTMM
+         EImBeQie0C3lpcWfwqNt1oSXn/4dbu9CzclvAoYSUpan9leHhNO8NPUoiIfyb3lL9SBk
+         C/5PPtHqNjdyT43UIy5WbWGUpbZXtOWG3xRhfAy1Ije2u0HI3KBxiOhs4msc10l0nwFy
+         8e2Q==
+X-Gm-Message-State: AOJu0YzKAvQJ3vbzTjrPqe+Zb4b3FoMMaGBPmBWSiK7Xpc7atkRHw+rw
+	C9KtlpZL76BFWeJ574xXEfDTGTXfStticKwvTSmH1TMJRCKncKRvCWiOGL9uLqaNZrMdSNgM3LK
+	BWh2UWDIhoscUG/xI4RNuA9nMt/n3MGovpUr6bS5i4ze27QqdILoPPqTWe++omg==
+X-Received: by 2002:a05:6402:2692:b0:57d:5442:a709 with SMTP id 4fb4d7f45d1cf-58e7744e613mr1449069a12.0.1720098318665;
+        Thu, 04 Jul 2024 06:05:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFaDxYn9Pqu6TsWtxIem2XZpMIKWwXHc7vlrDGTnHQPn/nhfDycg9sSKf42JvwhrYxeAfSSZw==
+X-Received: by 2002:a05:6402:2692:b0:57d:5442:a709 with SMTP id 4fb4d7f45d1cf-58e7744e613mr1449047a12.0.1720098318211;
+        Thu, 04 Jul 2024 06:05:18 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58614d50580sm8454972a12.72.2024.07.04.06.05.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 06:04:51 -0700 (PDT)
-Message-ID: <85e2ed16-47aa-498c-90a3-0910e5dd97f4@gmail.com>
-Date: Thu, 4 Jul 2024 15:04:50 +0200
+        Thu, 04 Jul 2024 06:05:17 -0700 (PDT)
+Message-ID: <1cf4578a-3499-47e2-85de-03887de1f05f@redhat.com>
+Date: Thu, 4 Jul 2024 15:05:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,110 +64,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add rock5 itx board
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- linux-rockchip@lists.infradead.org, Diederik de Haas <didi.debian@cknow.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240703210524.776455-1-heiko@sntech.de>
- <4552794.8F6SAcFxjW@diego> <2c46dfb7-5ef3-494f-8cf1-413033e73412@gmail.com>
- <2004736.8hb0ThOEGa@diego>
-Content-Language: en-US
-From: Alex Bee <knaerzche@gmail.com>
-In-Reply-To: <2004736.8hb0ThOEGa@diego>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 6.10-5
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Armin Wolf <W_Armin@gmx.de>
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi Linus,
+
+Here is (hopefully) the last platform-drivers-x86 fixes pull-request
+for 6.10.
+
+This contains a single fix for a regression in toshiba_acpi introduced
+in 6.10-rc1.
+
+Highlights:
+ -  Fix lg-laptop driver not working with 2024 LG laptop models
+ -  Add missing MODULE_DESCRIPTION() macros to various modules
+ -  nvsw-sn2201: Add check for platform_device_add_resources
+
+Regards,
+
+Hans
 
 
-Am 04.07.24 um 14:05 schrieb Heiko Stübner:
-> Am Donnerstag, 4. Juli 2024, 13:43:47 CEST schrieb Alex Bee:
->> Am 04.07.24 um 12:05 schrieb Heiko Stübner:
->>> Hi Diederik,
->>>
->>> Am Donnerstag, 4. Juli 2024, 11:38:51 CEST schrieb Diederik de Haas:
->>>> Thanks for submitting this. A quick scan indicates it should work with a
->>>> (recent) Debian kernel OOTB :-)
->>>>
->>>> On Wednesday, 3 July 2024 23:05:24 CEST Heiko Stuebner wrote:
->>>>> +&sdhci {
->>>>> +       bus-width = <8>;
->>>>> +       no-sdio;
->>>>> +       no-sd;
->>>>> +       non-removable;
->>>>> +       max-frequency = <200000000>;
->>>>> +       mmc-hs400-1_8v;
->>>>> +       mmc-hs400-enhanced-strobe;
->>>>> +       mmc-hs200-1_8v;
->>>>> +       status = "okay";
->>>>> +};
->>>>> +
->>>>> +&sdmmc {
->>>>> +       max-frequency = <200000000>;
->>>>> +       no-sdio;
->>>>> +       no-mmc;
->>>>> +       bus-width = <4>;
->>>>> +       cap-mmc-highspeed;
->>>>> +       cap-sd-highspeed;
->>>>> +       disable-wp;
->>>>> +       sd-uhs-sdr104;
->>>>> +       vmmc-supply = <&vcc_3v3_s3>;
->>>>> +       vqmmc-supply = <&vccio_sd_s0>;
->>>>> +       pinctrl-names = "default";
->>>>> +       pinctrl-0 = <&sdmmc_bus4 &sdmmc_clk &sdmmc_cmd &sdmmc_det>;
->>>>> +       status = "okay";
->>>>> +};
->>>>> +
->>>>> +/* M.2 E-KEY */
->>>>> +&sdio {
->>>>> +       broken-cd;
->>>>> +       bus-width = <4>;
->>>>> +       cap-sdio-irq;
->>>>> +       disable-wp;
->>>>> +       keep-power-in-suspend;
->>>>> +       max-frequency = <150000000>;
->>>>> +       mmc-pwrseq = <&sdio_pwrseq>;
->>>>> +       no-sd;
->>>>> +       no-mmc;
->>>>> +       non-removable;
->>>>> +       pinctrl-names = "default";
->>>>> +       pinctrl-0 = <&sdiom0_pins>;
->>>>> +       sd-uhs-sdr104;
->>>>> +       vmmc-supply = <&vcc3v3_ekey>;
->>>>> +       status = "okay";
->>>>> +};
->>>>> +
->>>>> +&sfc {
->>>>> +       pinctrl-names = "default";
->>>>> +       pinctrl-0 = <&fspim2_pins>;
->>>>> +       status = "okay";
->>>> Shouldn't those properties be sorted alphabetically? Or at least consistently?
->>>> Note that the same issue is present on other places too, but I believe the
->>>> above quoted part shows the issue enough.
->>> The main sorting is
->>> - compatible
->>> - reg
->>> [... alphabetically ...]
->>> - status
->>>
->> Yeah ... that's always the question when adding new board files. Do it like
->> "it's always been done" or re-sort the properties alphanumeric _everywhere_
->> which looks quite strange at times. If I'm getting the newly added dt
->> coding style correctly common (subsystem?) properties should also be placed
->> before vendor (driver?) specific ones. Yet I didn't see a board file which
->> places 'regulator-max-microvolt' before 'regulator-min-microvolt'. So I
->> guess it's fine if it's done consistently within the same file?
-> I always see it as a best-effort thing. If all regulator-* stuff is grouped
-> together it will be mostly fine. I'm not going to haggle over the sorting
-> of the 10th character of property names ;-) .
->
-> (and of course reading min before max, is sort of more intuitive)
->
-> And of course leaf-things (board dts) are less "important" than the core
-> nodes in soc devicetrees.
->
-Great, thanks for sharing. Will (try) to follow in future.
+The following changes since commit 7add1ee34692aabd146b86a8e88abad843ed6659:
 
-Alex
+  platform/x86: add missing MODULE_DESCRIPTION() macros (2024-06-24 13:33:20 +0200)
 
->
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-5
+
+for you to fetch changes up to e527a6127223b644e0a27b44f4b16e16eb6c7f0a:
+
+  platform/x86: toshiba_acpi: Fix quickstart quirk handling (2024-07-02 16:01:45 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.10-5
+
+Highlights:
+ -  Fix regression in toshiba_acpi introduced in 6.10-rc1
+
+The following is an automated git shortlog grouped by driver:
+
+toshiba_acpi:
+ -  Fix quickstart quirk handling
+
+----------------------------------------------------------------
+Armin Wolf (1):
+      platform/x86: toshiba_acpi: Fix quickstart quirk handling
+
+ drivers/platform/x86/toshiba_acpi.c | 31 ++++++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 13 deletions(-)
+
