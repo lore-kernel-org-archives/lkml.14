@@ -1,91 +1,204 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F101BC4E
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 06:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 917DA1B960;
+	Thu,  4 Jul 2024 06:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720075944; cv=none; b=tSeGikvqAkdnyi9f+kvzmwrzr7Ri/DlRndcTxtvnEb2FRzjnBX6vL1NdkpPNM4PyXNL0whITLd9ewgaWBSVmUudXNml+9yX5QCN4xHy0rONIRwmmfxIC/RYqtx7EglSY5nCZSjZq8q3C71rnkOUubw7vqncAn5b1sY2pWbD5oGo=
+	t=1720076012; cv=none; b=h0Xpnr044hZi4bJKHDV/b4Tf8RjAj+xhSFJ2mw2mHu9uexuAwFTKAT0YH7WT+IBc6CpdFO6Rguaob9djzwbyXl8pgUSWZ/ycOGgXiQkL4WyLpOGgsuTmksRT8UgxHhohTyiBtBdgwZDdG+EMPTt4JCZIAKALCIqvxiuwDZR9Flg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720075944; c=relaxed/simple;
-	bh=HJDaGmoijA8IivDlw4ITokq/M9xuWc6aBVPFDUB0iYg=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=uGkEGRPkvfFymF0RQzMMuq/bM+dQoni7KdsfotzOiCJQ02UV/U9hHadcYILfGRuoA3XlL6H4dRA0y4+1ANeNAt5mgiNjMj2rLfUlvaDGFVvDlTZNgw8MxwIPXWSdpVFT9l5Z+2ohYr425uEIGvB8FlPsPGESnyr94g0S9jd9iHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LUcVL8qX; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720076012; c=relaxed/simple;
+	bh=LtzL+5nzrxroaiXUiVmHZGJ801+M2qbN8Dqcc9EBJUQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=AMhOMtPKff0ne47VTSEBaZMf4kHLhBpAzbifbu3QkxtqXFz2CiCiGhxLP+g2tQMmopkyuFxYHLoc0EQMd/mNzN4zrWOelsGg/xnDrGh2GIYmuKgCaVNnAgNEeVbeBUaAkSQ7pPY3ZwatOtgYZkZixr0MY4V6fuir6W3iPm8Ay24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=bvlQ9sk8; arc=none smtp.client-ip=117.135.210.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUcVL8qX"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fa244db0b2so1998895ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2024 23:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720075942; x=1720680742; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qb7qEMakmFij5zhdLHflF693Oy2d+rmi2NgGIv7uThI=;
-        b=LUcVL8qXzpTX+kcwSueVLz+Vc22VkxONUFrQo+qpSKw1+wXdksjaNdg7RasC+XNbPn
-         QOuW8fc8k3/p6ZSQSvVqnt3JKLRZJ6bzB+AnNxzrsX7g0y6yPYshCb+MwQPIPey1saDP
-         C7y9Mj/te7VUHvLjT6EBtyo08qXyT0Dzbq31S8i828Zyx3y4nvWnPowfOql7Zx6O72y/
-         +mNfCEfG6KGvBUMMn8+ibyYOfoglUfNVA50J3twrOA9K+VOuRHnYkDXShP/v3WwaPR98
-         PJBOA0rkNKC9VdqnnS41hwynjtkKPXlwIVyCpKXakaqK8mXHNuU5lsRkTbT6gXvuSrdc
-         uJ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720075942; x=1720680742;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qb7qEMakmFij5zhdLHflF693Oy2d+rmi2NgGIv7uThI=;
-        b=ASKKlZL3tiugydjtK7MP9zio4oaZgsPX/d+yGg43iTCLyLRTb3M9ZW8a7I4MM2A8Mr
-         thDq3WEC+W2bP895qz0SOemLiJ8u6j0NpbTYVldOARBUWc4i1DKVBrgvBtWoeDjIrczR
-         AOm/Jdn+A3p2B1Dymwe4j+56WkEAOfHd9dyRvfrRyzycq8ux2yLDN7hPCIN2mL962QA+
-         ocymqnDxdKP3JqUKdu9SIKmDF5wPLFgvH/EyGTiZdCGy4rEI0A6FrHad6XLSeGfg3/FY
-         g1PAhFjrKSNlmUx4xq9c1FZd4oF8/cW3iy4MtInPFDX6Ca16Ox0Oz0wjr/994fFgZuTd
-         RYUw==
-X-Gm-Message-State: AOJu0Yy3eQLe5u8yUU+Gsq+3q7u+MPc+/QShxFLzNKXsvWQQQ9bop+dv
-	k4Zz8IpEPHvtkFlb+k5PYDCay11Ki0piDh0PEH4vXRU+ADHpXOrB
-X-Google-Smtp-Source: AGHT+IFGhuYncYUd5lCY/Rs8aSDcoWkdWxNKb66fdLNPpmPLF28xg8Jzo48BCnbCswA2XTGI3/LRCA==
-X-Received: by 2002:a17:902:f690:b0:1f7:1b42:431d with SMTP id d9443c01a7336-1fb33e7a014mr6436945ad.30.1720075941786;
-        Wed, 03 Jul 2024 23:52:21 -0700 (PDT)
-Received: from MSCND1355B05.fareast.nevint.com ([117.128.58.94])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb1cad5b4dsm22615155ad.105.2024.07.03.23.52.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 23:52:21 -0700 (PDT)
-From: Zqiang <qiang.zhang1211@gmail.com>
-To: paulmck@kernel.org,
-	imran.f.khan@oracle.com,
-	tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] smp: Fix missed destroy_work_on_stack() calls in smp_call_on_cpu()
-Date: Thu,  4 Jul 2024 14:52:13 +0800
-Message-Id: <20240704065213.13559-1-qiang.zhang1211@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="bvlQ9sk8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=G2ce0ny7NpQUp89do8
+	pJiahKyj8CvImCsHF65fd4k1Y=; b=bvlQ9sk8liOXi6532J7WtvtTn3qnv8NjhX
+	7PIb/N1lBDJasCvIlUvCDbUMFYG4BxnsRcwj8TcpNMh2yRXPuYm/qVHsGLm9+L+Z
+	DDXb8OvhVBVB7kh76INqycJApPsLmJ9OHzP451YwirtIxVYZ8bdomkp2H66JiSTG
+	k7RA4qBNg=
+Received: from hg-OptiPlex-7040.hygon.cn (unknown [118.242.3.34])
+	by gzga-smtp-mta-g1-5 (Coremail) with SMTP id _____wDHba3ERoZm+hJAAQ--.15286S2;
+	Thu, 04 Jul 2024 14:52:54 +0800 (CST)
+From: yangge1116@126.com
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	21cnbao@gmail.com,
+	david@redhat.com,
+	baolin.wang@linux.alibaba.com,
+	aneesh.kumar@linux.ibm.com,
+	liuzixing@hygon.cn,
+	yangge <yangge1116@126.com>
+Subject: [PATCH V4] mm/gup: Clear the LRU flag of a page before adding to LRU batch
+Date: Thu,  4 Jul 2024 14:52:24 +0800
+Message-Id: <1720075944-27201-1-git-send-email-yangge1116@126.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID:_____wDHba3ERoZm+hJAAQ--.15286S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3WF4rGF4DJF1DCr4rXw1xGrg_yoW7tr17pF
+	W7Gr9IqFWDGFsrur47Xw15Ar1Yk393Xa1UJFWxGry7ZF45Xw1qkF1xKw1UJa9xJry5uFna
+	v3WUJF1vgF1UAF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRoGQDUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWQsSG2VLbKWqWQAAsP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-For builts with CONFIG_DEBUG_OBJECTS_WORK=y kernels, the sscs.work
-defined using INIT_WORK_ONSTACK() will be initialized by
-debug_object_init_on_stack() for debug check in __init_work().
-This commit therefore invoke destroy_work_on_stack() to free
-sscs.work debug objects before smp_call_on_cpu() returns.
+From: yangge <yangge1116@126.com>
 
-Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+If a large number of CMA memory are configured in system (for example, the
+CMA memory accounts for 50% of the system memory), starting a virtual
+virtual machine with device passthrough, it will
+call pin_user_pages_remote(..., FOLL_LONGTERM, ...) to pin memory.
+Normally if a page is present and in CMA area, pin_user_pages_remote()
+will migrate the page from CMA area to non-CMA area because of
+FOLL_LONGTERM flag. But the current code will cause the migration failure
+due to unexpected page refcounts, and eventually cause the virtual machine
+fail to start.
+
+If a page is added in LRU batch, its refcount increases one, remove the
+page from LRU batch decreases one. Page migration requires the page is not
+referenced by others except page mapping. Before migrating a page, we
+should try to drain the page from LRU batch in case the page is in it,
+however, folio_test_lru() is not sufficient to tell whether the page is
+in LRU batch or not, if the page is in LRU batch, the migration will fail.
+
+To solve the problem above, we modify the logic of adding to LRU batch.
+Before adding a page to LRU batch, we clear the LRU flag of the page so
+that we can check whether the page is in LRU batch by folio_test_lru(page).
+It's quite valuable, because likely we don't want to blindly drain the LRU
+batch simply because there is some unexpected reference on a page, as
+described above.
+
+This change makes the LRU flag of a page invisible for longer, which
+may impact some programs. For example, as long as a page is on a LRU
+batch, we cannot isolate it, and we cannot check if it's an LRU page.
+Further, a page can now only be on exactly one LRU batch. This doesn't
+seem to matter much, because a new page is allocated from buddy and
+added to the lru batch, or be isolated, it's LRU flag may also be
+invisible for a long time.
+
+Fixes: 9a4e9f3b2d73 ("mm: update get_user_pages_longterm to migrate pages allocated from CMA region")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: yangge <yangge1116@126.com>
 ---
- kernel/smp.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/swap.c | 43 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/smp.c b/kernel/smp.c
-index cc13e73a887c..61f10f982341 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -1135,6 +1135,7 @@ int smp_call_on_cpu(unsigned int cpu, int (*func)(void *), void *par, bool phys)
+V4:
+   Adjust commit message according to David's comments
+V3:
+   Add fixes tag
+V2:
+   Adjust code and commit message according to David's comments
+
+diff --git a/mm/swap.c b/mm/swap.c
+index dc205bd..9caf6b0 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -211,10 +211,6 @@ static void folio_batch_move_lru(struct folio_batch *fbatch, move_fn_t move_fn)
+ 	for (i = 0; i < folio_batch_count(fbatch); i++) {
+ 		struct folio *folio = fbatch->folios[i];
  
- 	queue_work_on(cpu, system_wq, &sscs.work);
- 	wait_for_completion(&sscs.done);
-+	destroy_work_on_stack(&sscs.work);
+-		/* block memcg migration while the folio moves between lru */
+-		if (move_fn != lru_add_fn && !folio_test_clear_lru(folio))
+-			continue;
+-
+ 		folio_lruvec_relock_irqsave(folio, &lruvec, &flags);
+ 		move_fn(lruvec, folio);
  
- 	return sscs.ret;
- }
+@@ -255,11 +251,16 @@ static void lru_move_tail_fn(struct lruvec *lruvec, struct folio *folio)
+ void folio_rotate_reclaimable(struct folio *folio)
+ {
+ 	if (!folio_test_locked(folio) && !folio_test_dirty(folio) &&
+-	    !folio_test_unevictable(folio) && folio_test_lru(folio)) {
++	    !folio_test_unevictable(folio)) {
+ 		struct folio_batch *fbatch;
+ 		unsigned long flags;
+ 
+ 		folio_get(folio);
++		if (!folio_test_clear_lru(folio)) {
++			folio_put(folio);
++			return;
++		}
++
+ 		local_lock_irqsave(&lru_rotate.lock, flags);
+ 		fbatch = this_cpu_ptr(&lru_rotate.fbatch);
+ 		folio_batch_add_and_move(fbatch, folio, lru_move_tail_fn);
+@@ -352,11 +353,15 @@ static void folio_activate_drain(int cpu)
+ 
+ void folio_activate(struct folio *folio)
+ {
+-	if (folio_test_lru(folio) && !folio_test_active(folio) &&
+-	    !folio_test_unevictable(folio)) {
++	if (!folio_test_active(folio) && !folio_test_unevictable(folio)) {
+ 		struct folio_batch *fbatch;
+ 
+ 		folio_get(folio);
++		if (!folio_test_clear_lru(folio)) {
++			folio_put(folio);
++			return;
++		}
++
+ 		local_lock(&cpu_fbatches.lock);
+ 		fbatch = this_cpu_ptr(&cpu_fbatches.activate);
+ 		folio_batch_add_and_move(fbatch, folio, folio_activate_fn);
+@@ -700,6 +705,11 @@ void deactivate_file_folio(struct folio *folio)
+ 		return;
+ 
+ 	folio_get(folio);
++	if (!folio_test_clear_lru(folio)) {
++		folio_put(folio);
++		return;
++	}
++
+ 	local_lock(&cpu_fbatches.lock);
+ 	fbatch = this_cpu_ptr(&cpu_fbatches.lru_deactivate_file);
+ 	folio_batch_add_and_move(fbatch, folio, lru_deactivate_file_fn);
+@@ -716,11 +726,16 @@ void deactivate_file_folio(struct folio *folio)
+  */
+ void folio_deactivate(struct folio *folio)
+ {
+-	if (folio_test_lru(folio) && !folio_test_unevictable(folio) &&
+-	    (folio_test_active(folio) || lru_gen_enabled())) {
++	if (!folio_test_unevictable(folio) && (folio_test_active(folio) ||
++	    lru_gen_enabled())) {
+ 		struct folio_batch *fbatch;
+ 
+ 		folio_get(folio);
++		if (!folio_test_clear_lru(folio)) {
++			folio_put(folio);
++			return;
++		}
++
+ 		local_lock(&cpu_fbatches.lock);
+ 		fbatch = this_cpu_ptr(&cpu_fbatches.lru_deactivate);
+ 		folio_batch_add_and_move(fbatch, folio, lru_deactivate_fn);
+@@ -737,12 +752,16 @@ void folio_deactivate(struct folio *folio)
+  */
+ void folio_mark_lazyfree(struct folio *folio)
+ {
+-	if (folio_test_lru(folio) && folio_test_anon(folio) &&
+-	    folio_test_swapbacked(folio) && !folio_test_swapcache(folio) &&
+-	    !folio_test_unevictable(folio)) {
++	if (folio_test_anon(folio) && folio_test_swapbacked(folio) &&
++	    !folio_test_swapcache(folio) && !folio_test_unevictable(folio)) {
+ 		struct folio_batch *fbatch;
+ 
+ 		folio_get(folio);
++		if (!folio_test_clear_lru(folio)) {
++			folio_put(folio);
++			return;
++		}
++
+ 		local_lock(&cpu_fbatches.lock);
+ 		fbatch = this_cpu_ptr(&cpu_fbatches.lru_lazyfree);
+ 		folio_batch_add_and_move(fbatch, folio, lru_lazyfree_fn);
 -- 
-2.17.1
+2.7.4
 
