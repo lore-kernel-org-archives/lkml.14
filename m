@@ -1,814 +1,347 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55E714A091
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E391C2A5
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720067571; cv=none; b=VzFHtC7XQHPeDRUgX5V5LwuBex1hW4PFVgXw2vnrqcBrSGO5ejihPE5Hffke5D5wThbL7M4/dv2ZRzTNsWEQHpHRkiamPsFqaD73sYrmyHlleuqmH7t1kFkCIYiU8vyILCWMUlYCj4z+++wKqfWAOvA/qDk7Z9357GqQq9hrTNY=
+	t=1720067693; cv=none; b=AuUmptm2pXXX1p9LzpTyG/r5j+Aa0C6DFW3HtuIS8hClhaJgk04X4xovuhynIXs4QIfHtX9iIkOmM9cZKiEJTbZ4tASXuvsN2EbpdbB+LnuOfg0oygO6Ni3Y3TFeEMxe0jwXg21Sk0hwFqOlVOrgIB5BzWF1ISqwJHZE2VSReyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720067571; c=relaxed/simple;
-	bh=QshJOkmDi71DB8T1DtsDIKnVd/jaoOR9uj57jxAL840=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EKxjP0wMY77xn2xgM+36tDauEBzgDJvgvuTY0C6TWVeWr14j6FqZsQ2ZLDIhVW6s/4xugHdiAXImK67lSz6Yudh/IKkuEKbC5XXguL3TuC2jAgElFM9flVqCBFv4BAkIV08uiXOGDMDG351NpbKHEkwSIIjieApzAP0jZJ6NO/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1983A1FCF7;
-	Thu,  4 Jul 2024 04:32:47 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 06B7013889;
-	Thu,  4 Jul 2024 04:32:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0LqbOO0lhmbnDAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:32:45 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Peter Xu <peterx@redhat.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	David Hildenbrand <david@redhat.com>,
-	SeongJae Park <sj@kernel.org>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 45/45] mm: Delete all hugetlb_entry entries
-Date: Thu,  4 Jul 2024 06:31:32 +0200
-Message-ID: <20240704043132.28501-46-osalvador@suse.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240704043132.28501-1-osalvador@suse.de>
-References: <20240704043132.28501-1-osalvador@suse.de>
+	s=arc-20240116; t=1720067693; c=relaxed/simple;
+	bh=sLU0HGXpQVIjIcKm2LtpYq8wU5K+GUMCiD2DC7XAPq8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=t3hLe6LCKPeDDGZWFp3lMnc5bMaaY8r/Sh6I6JgSASJTXaMFjjkct5Oty6KxCrxuV1zR8uuKOu9d523B//0FIHxpb4gniQs5YDWMmI4da38sXW+9IDq+x5BBp7tt666x1mZoEqDXh8uhew3O3A7hsSFHaozVO57/hX2L3dzDcao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=YtO98JWi; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YtO98JWi"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240704043448epoutp03a60726454f2a76659e1df6a0d05efab9~e6HMgSPQc0931309313epoutp03N
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:34:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240704043448epoutp03a60726454f2a76659e1df6a0d05efab9~e6HMgSPQc0931309313epoutp03N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1720067688;
+	bh=GxkhhqZtQSwEd6USk9LeX5xb31fX0CQaVQqgdQPIH3M=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=YtO98JWio8xbE+tixeOEM7fSE2/8bWnkkhLCq5Go4mt++Xx5EPf13JjrQmPXG+OH5
+	 bNMKTImt1JpQvpYRSrLFuC3hMafTgG37Z0gbfCz/RlqfYHsMshcj2v4SB/Ohm9nqs7
+	 2+/rU6xI6pfSiXSgmuJTd1I9jI2d2j1VHM4Pexk4=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240704043448epcas5p32892e7123a50310cff1ab6c61edb0dbd~e6HMLVFCC1534215342epcas5p38;
+	Thu,  4 Jul 2024 04:34:48 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.183]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4WF3hk1YV0z4x9QK; Thu,  4 Jul
+	2024 04:34:46 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	7C.66.09989.66626866; Thu,  4 Jul 2024 13:34:46 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240704043358epcas5p282acd174113c7baf3f7a3472ba4c39ff~e6GeAgdRy1008710087epcas5p25;
+	Thu,  4 Jul 2024 04:33:58 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240704043358epsmtrp223643ba3041a76e8350bd942bd3de7db~e6Gd_piuf1646316463epsmtrp2G;
+	Thu,  4 Jul 2024 04:33:58 +0000 (GMT)
+X-AuditID: b6c32a4a-bffff70000002705-17-668626666d91
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	1B.A3.29940.63626866; Thu,  4 Jul 2024 13:33:58 +0900 (KST)
+Received: from cheetah.sa.corp.samsungelectronics.net (unknown
+	[107.109.115.53]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240704043357epsmtip295fdbc756b1b96dc7c4e35db83668dc5~e6GcRq2yG1541315413epsmtip2d;
+	Thu,  4 Jul 2024 04:33:56 +0000 (GMT)
+From: Vishnu Reddy <vishnu.reddy@samsung.com>
+To: krzysztof.kozlowski@linaro.org, s.nawrocki@samsung.com,
+	alim.akhtar@samsung.com, linus.walleij@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
+Subject: [PATCH v3] pinctrl: samsung: Add support for pull-up and pull-down
+Date: Thu,  4 Jul 2024 09:56:29 +0530
+Message-Id: <20240704042629.26151-1-vishnu.reddy@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIKsWRmVeSWpSXmKPExsWy7bCmhm6aWluawZpVLBYP5m1js7h5YCeT
+	xd7XW9ktpvxZzmSx6fE1VovN8/8wWlzeNYfNYsb5fUwWi7Z+Ybd4+GEPu8XhN+2sDtwed67t
+	YfPYvKTeo2/LKkaPz5vkAliism0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTy
+	EnNTbZVcfAJ03TJzgI5SUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BSYFOgVJ+YW
+	l+al6+WlllgZGhgYmQIVJmRnfJ+/gr2g0aHiXU9CA+M70y5GTg4JAROJnScXsHQxcnEICexm
+	lPh05zMbhPOJUWL9xntMEM43Rok7D78xwrS83bwaqmovo8Sri3MZIZxWJol1M5aBVbEJ6Ep8
+	XnKWBcQWEciXWHnhH9goZoGLjBL/tuxnBUkIC3hL7J95ng3EZhFQlfi0+A4TiM0rYCsx/doW
+	Voh18hKrNxxgBmmWEDjELrH6xgt2iISLxK7ur1A3CUu8Or4FKi4l8fndXjYIO1li/e9TQHEO
+	IDtHomeaAkTYXuLAlTksIGFmAU2J9bv0IcKyElNPrQM7gVmAT6L39xMmiDivxI55MLaaxLFJ
+	06FOk5HoXHED6gIPiX2bNoJdICQQK7Fqzx72CYyysxA2LGBkXMUomVpQnJueWmxaYJSXWg6P
+	qOT83E2M4LSm5bWD8eGDD3qHGJk4GA8xSnAwK4nwSr1vThPiTUmsrEotyo8vKs1JLT7EaAoM
+	sonMUqLJ+cDEmlcSb2hiaWBiZmZmYmlsZqgkzvu6dW6KkEB6YklqdmpqQWoRTB8TB6dUA5PO
+	4kWXf15lC/tQ18IgsPmp/knnvvucBvc/XONkXFsnuTx2Qa3n3ZbOvtVpta/P7FK+ZuWqX/FT
+	z/3ey+1tmTu0Vx/8/7s38Gn9zLhdLOGdr56kXnywcO8RT2HdtcfUI05HdYS0Xpr5b9oGs3n1
+	fQu4y1OZOxb/lxDLnyAbuGLPwZ1/VwioFeR1VmzYc+O8S1rYzPLva7y4xWcuknxrL9bZz/Sr
+	8FtF9XpPrh/cLkXTmxmusu6siDx1ZOrhbRF6rVyHp2w+ksekcodlpvKSYpdbzIsteC2nbOAs
+	3H6C8V3C/dq1K0O3RHfeE2hVSv71n0G0UjDa24PpraxpvYupU8iqtiieLM3Q++rmxg2PhJRY
+	ijMSDbWYi4oTATPue8D0AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplluLIzCtJLcpLzFFi42LZdlhJXtdMrS3N4OwzHYsH87axWdw8sJPJ
+	Yu/rrewWU/4sZ7LY9Pgaq8Xm+X8YLS7vmsNmMeP8PiaLRVu/sFs8/LCH3eLwm3ZWB26PO9f2
+	sHlsXlLv0bdlFaPH501yASxRXDYpqTmZZalF+nYJXBnf569gL2h0qHjXk9DA+M60i5GTQ0LA
+	ROLt5tVsXYxcHEICuxklXlz6wAqRkJH4cGcLM4QtLLHy33N2iKJmJonrzycxgSTYBHQlPi85
+	ywJiiwgUS1x5vY8JpIhZ4CajRN/WL2AJYQFvif0zz7OB2CwCqhKfFt8Ba+YVsJWYfm0L1DZ5
+	idUbDjBPYORZwMiwilEytaA4Nz232LDAMC+1XK84Mbe4NC9dLzk/dxMjOMS0NHcwbl/1Qe8Q
+	IxMH4yFGCQ5mJRFeqffNaUK8KYmVValF+fFFpTmpxYcYpTlYlMR5xV/0pggJpCeWpGanphak
+	FsFkmTg4pRqY9Fz+BJedi9JnFjhoe6vu30tzCRum31x3bnLU/XpqLGk8N5Zn7eHnU3fo/w1q
+	LK956Hvo5ZI7UyV6VxlEpAb+VZp7KOdSVZlC1JM5CxwTvj3e1Oe2senbuT/Fs8q+7tl8YE1q
+	kNPKyJmiXkw5rxaxM5pf2vkmpml2SjzbOn+hH7n3dEwWmt1g9zT9/fzk2383W/06Ww0Xccz6
+	8E/sYAUHi+2kiqsbdof/ajAxcCzKnXFn0eqYqgX638udztV5vbf13COXukowc9vSTi8/Nzbp
+	l27GwRd2GvLFT5JKmbpws6eo2xzJDRfnv8yrSFu2eeasNev3SlfE525/Epnl+uZorixXV/aD
+	1nMGH8o9/h6/q8RSnJFoqMVcVJwIAJ8gQzygAgAA
+X-CMS-MailID: 20240704043358epcas5p282acd174113c7baf3f7a3472ba4c39ff
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240704043358epcas5p282acd174113c7baf3f7a3472ba4c39ff
+References: <CGME20240704043358epcas5p282acd174113c7baf3f7a3472ba4c39ff@epcas5p2.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Queue-Id: 1983A1FCF7
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
 
-Generic pagewalker can now deal with hugetlb pages as well, so there is
-no need for specific hugetlb_entry functions.
-Drop them all.
+gpiolib framework has the implementation of setting up the
+PUD configuration for GPIO pins but there is no driver support.
 
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Add support to handle the PUD configuration request from the
+userspace in samsung pinctrl driver.
+
+Signed-off-by: Vishnu Reddy <vishnu.reddy@samsung.com>
 ---
- arch/s390/mm/gmap.c      |  27 ------
- fs/proc/task_mmu.c       | 181 ---------------------------------------
- include/linux/pagewalk.h |  10 ---
- mm/damon/vaddr.c         |  89 -------------------
- mm/hmm.c                 |  54 ------------
- mm/memory-failure.c      |  17 ----
- mm/mempolicy.c           |  47 ----------
- mm/mincore.c             |  22 -----
- mm/mprotect.c            |  10 ---
- mm/pagewalk.c            |  49 +----------
- 10 files changed, 1 insertion(+), 505 deletions(-)
+ drivers/pinctrl/samsung/pinctrl-exynos-arm.c | 15 ++++
+ drivers/pinctrl/samsung/pinctrl-s3c64xx.c    | 15 ++++
+ drivers/pinctrl/samsung/pinctrl-samsung.c    | 80 ++++++++++++++++++++
+ drivers/pinctrl/samsung/pinctrl-samsung.h    | 24 ++++++
+ 4 files changed, 134 insertions(+)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 580e4ab6f018..3307f0ec505c 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -2743,34 +2743,7 @@ static int __s390_enable_skey_pmd(pmd_t *pmd, unsigned long addr,
- 	return 0;
- }
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+index 85ddf49a5188..426d1daacef2 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+@@ -40,6 +40,20 @@ static const struct samsung_pin_bank_type bank_type_alive = {
+ #define S5P_OTHERS_RET_MMC		(1 << 29)
+ #define S5P_OTHERS_RET_UART		(1 << 28)
  
--static int __s390_enable_skey_hugetlb(pte_t *pte, unsigned long addr,
--				      unsigned long hmask, unsigned long next,
--				      struct mm_walk *walk)
--{
--	pmd_t *pmd = (pmd_t *)pte;
--	unsigned long start, end;
--	struct page *page = pmd_page(*pmd);
--
--	/*
--	 * The write check makes sure we do not set a key on shared
--	 * memory. This is needed as the walker does not differentiate
--	 * between actual guest memory and the process executable or
--	 * shared libraries.
--	 */
--	if (pmd_val(*pmd) & _SEGMENT_ENTRY_INVALID ||
--	    !(pmd_val(*pmd) & _SEGMENT_ENTRY_WRITE))
--		return 0;
--
--	start = pmd_val(*pmd) & HPAGE_MASK;
--	end = start + HPAGE_SIZE;
--	__storage_key_init_range(start, end);
--	set_bit(PG_arch_1, &page->flags);
--	cond_resched();
--	return 0;
--}
--
- static const struct mm_walk_ops enable_skey_walk_ops = {
--	.hugetlb_entry		= __s390_enable_skey_hugetlb,
- 	.pte_entry		= __s390_enable_skey_pte,
- 	.pmd_entry		= __s390_enable_skey_pmd,
- 	.walk_lock		= PGWALK_WRLOCK,
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index df94f2093588..52fa82336825 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -1066,52 +1066,15 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
- 	seq_putc(m, '\n');
- }
- 
--#ifdef CONFIG_HUGETLB_PAGE
--static int smaps_hugetlb_range(pte_t *pte, unsigned long hmask,
--				 unsigned long addr, unsigned long end,
--				 struct mm_walk *walk)
--{
--	struct mem_size_stats *mss = walk->private;
--	struct vm_area_struct *vma = walk->vma;
--	pte_t ptent = huge_ptep_get(walk->mm, addr, pte);
--	struct folio *folio = NULL;
--	bool present = false;
--
--	if (pte_present(ptent)) {
--		folio = page_folio(pte_page(ptent));
--		present = true;
--	} else if (is_swap_pte(ptent)) {
--		swp_entry_t swpent = pte_to_swp_entry(ptent);
--
--		if (is_pfn_swap_entry(swpent))
--			folio = pfn_swap_entry_folio(swpent);
--	}
--
--	if (folio) {
--		/* We treat non-present entries as "maybe shared". */
--		if (!present || folio_likely_mapped_shared(folio) ||
--		    hugetlb_pmd_shared(pte))
--			mss->shared_hugetlb += huge_page_size(hstate_vma(vma));
--		else
--			mss->private_hugetlb += huge_page_size(hstate_vma(vma));
--	}
--	return 0;
--}
--#else
--#define smaps_hugetlb_range	NULL
--#endif /* HUGETLB_PAGE */
--
- static const struct mm_walk_ops smaps_walk_ops = {
- 	.pud_entry              = smaps_pud_range,
- 	.pmd_entry		= smaps_pte_range,
--	.hugetlb_entry		= smaps_hugetlb_range,
- 	.walk_lock		= PGWALK_RDLOCK,
- };
- 
- static const struct mm_walk_ops smaps_shmem_walk_ops = {
- 	.pud_entry              = smaps_pud_range,
- 	.pmd_entry		= smaps_pte_range,
--	.hugetlb_entry		= smaps_hugetlb_range,
- 	.pte_hole		= smaps_pte_hole,
- 	.walk_lock		= PGWALK_RDLOCK,
- };
-@@ -1987,66 +1950,10 @@ static int pagemap_pud_range(pud_t *pudp, unsigned long addr, unsigned long end,
- #define pagemap_pud_range NULL
- #endif
- 
--#ifdef CONFIG_HUGETLB_PAGE
--/* This function walks within one hugetlb entry in the single call */
--static int pagemap_hugetlb_range(pte_t *ptep, unsigned long hmask,
--				 unsigned long addr, unsigned long end,
--				 struct mm_walk *walk)
--{
--	struct pagemapread *pm = walk->private;
--	struct vm_area_struct *vma = walk->vma;
--	u64 flags = 0, frame = 0;
--	int err = 0;
--	pte_t pte;
--
--	if (vma->vm_flags & VM_SOFTDIRTY)
--		flags |= PM_SOFT_DIRTY;
--
--	pte = huge_ptep_get(walk->mm, addr, ptep);
--	if (pte_present(pte)) {
--		struct folio *folio = page_folio(pte_page(pte));
--
--		if (!folio_test_anon(folio))
--			flags |= PM_FILE;
--
--		if (!folio_likely_mapped_shared(folio) &&
--		    !hugetlb_pmd_shared(ptep))
--			flags |= PM_MMAP_EXCLUSIVE;
--
--		if (huge_pte_uffd_wp(pte))
--			flags |= PM_UFFD_WP;
--
--		flags |= PM_PRESENT;
--		if (pm->show_pfn)
--			frame = pte_pfn(pte) +
--				((addr & ~hmask) >> PAGE_SHIFT);
--	} else if (pte_swp_uffd_wp_any(pte)) {
--		flags |= PM_UFFD_WP;
--	}
--
--	for (; addr != end; addr += PAGE_SIZE) {
--		pagemap_entry_t pme = make_pme(frame, flags);
--
--		err = add_to_pagemap(&pme, pm);
--		if (err)
--			return err;
--		if (pm->show_pfn && (flags & PM_PRESENT))
--			frame++;
--	}
--
--	cond_resched();
--
--	return err;
--}
--#else
--#define pagemap_hugetlb_range	NULL
--#endif /* HUGETLB_PAGE */
--
- static const struct mm_walk_ops pagemap_ops = {
- 	.pud_entry      = pagemap_pud_range,
- 	.pmd_entry	= pagemap_pmd_range,
- 	.pte_hole	= pagemap_pte_hole,
--	.hugetlb_entry	= pagemap_hugetlb_range,
- 	.walk_lock	= PGWALK_RDLOCK,
- };
- 
-@@ -2789,67 +2696,6 @@ static int pagemap_scan_pud_entry(pud_t *pud, unsigned long start,
- #define pagemap_scan_pud_entry	NULL
- #endif
- 
--#ifdef CONFIG_HUGETLB_PAGE
--static int pagemap_scan_hugetlb_entry(pte_t *ptep, unsigned long hmask,
--				      unsigned long start, unsigned long end,
--				      struct mm_walk *walk)
--{
--	struct pagemap_scan_private *p = walk->private;
--	struct vm_area_struct *vma = walk->vma;
--	unsigned long categories;
--	spinlock_t *ptl;
--	int ret = 0;
--	pte_t pte;
--
--	if (~p->arg.flags & PM_SCAN_WP_MATCHING) {
--		/* Go the short route when not write-protecting pages. */
--
--		pte = huge_ptep_get(walk->mm, start, ptep);
--		categories = p->cur_vma_category | pagemap_hugetlb_category(pte);
--
--		if (!pagemap_scan_is_interesting_page(categories, p))
--			return 0;
--
--		return pagemap_scan_output(categories, p, start, &end);
--	}
--
--	i_mmap_lock_write(vma->vm_file->f_mapping);
--	ptl = huge_pte_lock(hstate_vma(vma), vma->vm_mm, ptep);
--
--	pte = huge_ptep_get(walk->mm, start, ptep);
--	categories = p->cur_vma_category | pagemap_hugetlb_category(pte);
--
--	if (!pagemap_scan_is_interesting_page(categories, p))
--		goto out_unlock;
--
--	ret = pagemap_scan_output(categories, p, start, &end);
--	if (start == end)
--		goto out_unlock;
--
--	if (~categories & PAGE_IS_WRITTEN)
--		goto out_unlock;
--
--	if (end != start + HPAGE_SIZE) {
--		/* Partial HugeTLB page WP isn't possible. */
--		pagemap_scan_backout_range(p, start, end);
--		p->arg.walk_end = start;
--		ret = 0;
--		goto out_unlock;
--	}
--
--	make_uffd_wp_huge_pte(vma, start, ptep, pte);
--	flush_hugetlb_tlb_range(vma, start, end);
--
--out_unlock:
--	spin_unlock(ptl);
--	i_mmap_unlock_write(vma->vm_file->f_mapping);
--
--	return ret;
--}
--#else
--#define pagemap_scan_hugetlb_entry NULL
--#endif
--
- static int pagemap_scan_pte_hole(unsigned long addr, unsigned long end,
- 				 int depth, struct mm_walk *walk)
++/*
++ * s5pv210_pud_value_init: initialize the drvdata pud_val with s5pv210 pud values
++ * s5pv210_pull_disable:	0
++ * s5pv210_pull_down_enable:	1
++ * s5pv210_pull_up_enable:	2
++ */
++static void s5pv210_pud_value_init(struct samsung_pinctrl_drv_data *drvdata)
++{
++	unsigned int i, *pud_val = drvdata->pud_val;
++
++	for (i = 0; i < PUD_MAX; i++)
++		pud_val[i] = i;
++}
++
+ static void s5pv210_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
  {
-@@ -2879,7 +2725,6 @@ static const struct mm_walk_ops pagemap_scan_ops = {
- 	.pud_entry = pagemap_scan_pud_entry,
- 	.pmd_entry = pagemap_scan_pmd_entry,
- 	.pte_hole = pagemap_scan_pte_hole,
--	.hugetlb_entry = pagemap_scan_hugetlb_entry,
- };
- 
- static int pagemap_scan_get_args(struct pm_scan_arg *arg,
-@@ -3275,34 +3120,8 @@ static int gather_pte_stats(pmd_t *pmd, unsigned long addr,
- 	cond_resched();
- 	return 0;
- }
--#ifdef CONFIG_HUGETLB_PAGE
--static int gather_hugetlb_stats(pte_t *pte, unsigned long hmask,
--		unsigned long addr, unsigned long end, struct mm_walk *walk)
--{
--	pte_t huge_pte = huge_ptep_get(walk->mm, addr, pte);
--	struct numa_maps *md;
--	struct page *page;
--
--	if (!pte_present(huge_pte))
--		return 0;
--
--	page = pte_page(huge_pte);
--
--	md = walk->private;
--	gather_stats(page, md, pte_dirty(huge_pte), 1);
--	return 0;
--}
--
--#else
--static int gather_hugetlb_stats(pte_t *pte, unsigned long hmask,
--		unsigned long addr, unsigned long end, struct mm_walk *walk)
--{
--	return 0;
--}
--#endif
- 
- static const struct mm_walk_ops show_numa_ops = {
--	.hugetlb_entry = gather_hugetlb_stats,
- 	.pud_entry = gather_pud_stats,
- 	.pmd_entry = gather_pte_stats,
- 	.walk_lock = PGWALK_RDLOCK,
-diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-index 27cd1e59ccf7..6df0726eecb6 100644
---- a/include/linux/pagewalk.h
-+++ b/include/linux/pagewalk.h
-@@ -31,16 +31,6 @@ enum page_walk_lock {
-  *			depth is -1 if not known, 0:PGD, 1:P4D, 2:PUD, 3:PMD.
-  *			Any folded depths (where PTRS_PER_P?D is equal to 1)
-  *			are skipped.
-- * @hugetlb_entry:	if set, called for each hugetlb entry. This hook
-- *			function is called with the vma lock held, in order to
-- *			protect against a concurrent freeing of the pte_t* or
-- *			the ptl. In some cases, the hook function needs to drop
-- *			and retake the vma lock in order to avoid deadlocks
-- *			while calling other functions. In such cases the hook
-- *			function must either refrain from accessing the pte or
-- *			ptl after dropping the vma lock, or else revalidate
-- *			those items after re-acquiring the vma lock and before
-- *			accessing them.
-  * @test_walk:		caller specific callback function to determine whether
-  *			we walk over the current vma or not. Returning 0 means
-  *			"do page table walk over the current vma", returning
-diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
-index 6a383ce5a775..82a8d3146f05 100644
---- a/mm/damon/vaddr.c
-+++ b/mm/damon/vaddr.c
-@@ -360,63 +360,9 @@ static int damon_mkold_pud_entry(pmd_t *pud, unsigned long addr,
- 	return 0;
+ 	void __iomem *clk_base = (void __iomem *)drvdata->retention_ctrl->priv;
+@@ -133,6 +147,7 @@ static const struct samsung_pin_ctrl s5pv210_pin_ctrl[] __initconst = {
+ 		.nr_banks	= ARRAY_SIZE(s5pv210_pin_bank),
+ 		.eint_gpio_init = exynos_eint_gpio_init,
+ 		.eint_wkup_init = exynos_eint_wkup_init,
++		.pud_value_init	= s5pv210_pud_value_init,
+ 		.suspend	= exynos_pinctrl_suspend,
+ 		.resume		= exynos_pinctrl_resume,
+ 		.retention_data	= &s5pv210_retention_data,
+diff --git a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
+index c5d92db4fdb1..cf57b0f16999 100644
+--- a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
++++ b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
+@@ -255,6 +255,20 @@ static int s3c64xx_irq_get_trigger(unsigned int type)
+ 	return trigger;
  }
  
--#ifdef CONFIG_HUGETLB_PAGE
--static void damon_hugetlb_mkold(pte_t *pte, struct mm_struct *mm,
--				struct vm_area_struct *vma, unsigned long addr)
--{
--	bool referenced = false;
--	pte_t entry = huge_ptep_get(mm, addr, pte);
--	struct folio *folio = pfn_folio(pte_pfn(entry));
--	unsigned long psize = huge_page_size(hstate_vma(vma));
--
--	folio_get(folio);
--
--	if (pte_young(entry)) {
--		referenced = true;
--		entry = pte_mkold(entry);
--		set_huge_pte_at(mm, addr, pte, entry, psize);
--	}
--
--#ifdef CONFIG_MMU_NOTIFIER
--	if (mmu_notifier_clear_young(mm, addr,
--				     addr + huge_page_size(hstate_vma(vma))))
--		referenced = true;
--#endif /* CONFIG_MMU_NOTIFIER */
--
--	if (referenced)
--		folio_set_young(folio);
--
--	folio_set_idle(folio);
--	folio_put(folio);
--}
--
--static int damon_mkold_hugetlb_entry(pte_t *pte, unsigned long hmask,
--				     unsigned long addr, unsigned long end,
--				     struct mm_walk *walk)
--{
--	struct hstate *h = hstate_vma(walk->vma);
--	spinlock_t *ptl;
--	pte_t entry;
--
--	ptl = huge_pte_lock(h, walk->mm, pte);
--	entry = huge_ptep_get(walk->mm, addr, pte);
--	if (!pte_present(entry))
--		goto out;
--
--	damon_hugetlb_mkold(pte, walk->mm, walk->vma, addr);
--
--out:
--	spin_unlock(ptl);
--	return 0;
--}
--#else
--#define damon_mkold_hugetlb_entry NULL
--#endif /* CONFIG_HUGETLB_PAGE */
--
- static const struct mm_walk_ops damon_mkold_ops = {
- 	.pud_entry = damon_mkold_pud_entry,
- 	.pmd_entry = damon_mkold_pmd_entry,
--	.hugetlb_entry = damon_mkold_hugetlb_entry,
- 	.walk_lock = PGWALK_RDLOCK,
- };
- 
-@@ -562,44 +508,9 @@ static int damon_young_pmd_entry(pmd_t *pmd, unsigned long addr,
- 	return 0;
- }
- 
--#ifdef CONFIG_HUGETLB_PAGE
--static int damon_young_hugetlb_entry(pte_t *pte, unsigned long hmask,
--				     unsigned long addr, unsigned long end,
--				     struct mm_walk *walk)
--{
--	struct damon_young_walk_private *priv = walk->private;
--	struct hstate *h = hstate_vma(walk->vma);
--	struct folio *folio;
--	spinlock_t *ptl;
--	pte_t entry;
--
--	ptl = huge_pte_lock(h, walk->mm, pte);
--	entry = huge_ptep_get(walk->mm, addr, pte);
--	if (!pte_present(entry))
--		goto out;
--
--	folio = pfn_folio(pte_pfn(entry));
--	folio_get(folio);
--
--	if (pte_young(entry) || !folio_test_idle(folio) ||
--	    mmu_notifier_test_young(walk->mm, addr))
--		priv->young = true;
--	*priv->folio_sz = huge_page_size(h);
--
--	folio_put(folio);
--
--out:
--	spin_unlock(ptl);
--	return 0;
--}
--#else
--#define damon_young_hugetlb_entry NULL
--#endif /* CONFIG_HUGETLB_PAGE */
--
- static const struct mm_walk_ops damon_young_ops = {
- 	.pud_entry = damon_young_pud_entry,
- 	.pmd_entry = damon_young_pmd_entry,
--	.hugetlb_entry = damon_young_hugetlb_entry,
- 	.walk_lock = PGWALK_RDLOCK,
- };
- 
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 2b752f703b6d..fccde5dae818 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -463,59 +463,6 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
- #define hmm_vma_walk_pud	NULL
- #endif
- 
--#ifdef CONFIG_HUGETLB_PAGE
--static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
--				      unsigned long start, unsigned long end,
--				      struct mm_walk *walk)
--{
--	unsigned long addr = start, i, pfn;
--	struct hmm_vma_walk *hmm_vma_walk = walk->private;
--	struct hmm_range *range = hmm_vma_walk->range;
--	struct vm_area_struct *vma = walk->vma;
--	unsigned int required_fault;
--	unsigned long pfn_req_flags;
--	unsigned long cpu_flags;
--	spinlock_t *ptl;
--	pte_t entry;
--
--	ptl = huge_pte_lock(hstate_vma(vma), walk->mm, pte);
--	entry = huge_ptep_get(walk->mm, addr, pte);
--
--	i = (start - range->start) >> PAGE_SHIFT;
--	pfn_req_flags = range->hmm_pfns[i];
--	cpu_flags = pte_to_hmm_pfn_flags(range, entry) |
--		    hmm_pfn_flags_order(huge_page_order(hstate_vma(vma)));
--	required_fault =
--		hmm_pte_need_fault(hmm_vma_walk, pfn_req_flags, cpu_flags);
--	if (required_fault) {
--		int ret;
--
--		spin_unlock(ptl);
--		hugetlb_vma_unlock_read(vma);
--		/*
--		 * Avoid deadlock: drop the vma lock before calling
--		 * hmm_vma_fault(), which will itself potentially take and
--		 * drop the vma lock. This is also correct from a
--		 * protection point of view, because there is no further
--		 * use here of either pte or ptl after dropping the vma
--		 * lock.
--		 */
--		ret = hmm_vma_fault(addr, end, required_fault, walk);
--		hugetlb_vma_lock_read(vma);
--		return ret;
--	}
--
--	pfn = pte_pfn(entry) + ((start & ~hmask) >> PAGE_SHIFT);
--	for (; addr < end; addr += PAGE_SIZE, i++, pfn++)
--		range->hmm_pfns[i] = pfn | cpu_flags;
--
--	spin_unlock(ptl);
--	return 0;
--}
--#else
--#define hmm_vma_walk_hugetlb_entry NULL
--#endif /* CONFIG_HUGETLB_PAGE */
--
- static int hmm_vma_walk_test(unsigned long start, unsigned long end,
- 			     struct mm_walk *walk)
++/*
++ * s3c64xx_pud_value_init: initialize the drvdata pud_val with s3c64xx pud values
++ * s3c64xx_pull_disable:	0
++ * s3c64xx_pull_down_enable:	1
++ * s3c64xx_pull_up_enable:	2
++ */
++static void s3c64xx_pud_value_init(struct samsung_pinctrl_drv_data *drvdata)
++{
++	unsigned int i, *pud_val = drvdata->pud_val;
++
++	for (i = 0; i < PUD_MAX; i++)
++		pud_val[i] = i;
++}
++
+ static void s3c64xx_irq_set_handler(struct irq_data *d, unsigned int type)
  {
-@@ -554,7 +501,6 @@ static const struct mm_walk_ops hmm_walk_ops = {
- 	.pud_entry	= hmm_vma_walk_pud,
- 	.pmd_entry	= hmm_vma_walk_pmd,
- 	.pte_hole	= hmm_vma_walk_hole,
--	.hugetlb_entry	= hmm_vma_walk_hugetlb_entry,
- 	.test_walk	= hmm_vma_walk_test,
- 	.walk_lock	= PGWALK_RDLOCK,
- };
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 622862c4c300..c4ce4cf16651 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -882,26 +882,9 @@ static int hwpoison_pte_range(pmd_t *pmdp, unsigned long addr,
- 	return ret;
- }
- 
--#ifdef CONFIG_HUGETLB_PAGE
--static int hwpoison_hugetlb_range(pte_t *ptep, unsigned long hmask,
--			    unsigned long addr, unsigned long end,
--			    struct mm_walk *walk)
--{
--	struct hwpoison_walk *hwp = walk->private;
--	pte_t pte = huge_ptep_get(walk->mm, addr, ptep);
--	struct hstate *h = hstate_vma(walk->vma);
--
--	return check_hwpoisoned_entry(pte, addr, huge_page_shift(h),
--				      hwp->pfn, &hwp->tk);
--}
--#else
--#define hwpoison_hugetlb_range	NULL
--#endif
--
- static const struct mm_walk_ops hwpoison_walk_ops = {
- 	.pud_entry = hwpoison_pud_range,
- 	.pmd_entry = hwpoison_pte_range,
--	.hugetlb_entry = hwpoison_hugetlb_range,
- 	.walk_lock = PGWALK_RDLOCK,
+ 	/* Edge- and level-triggered interrupts need different handlers */
+@@ -797,6 +811,7 @@ static const struct samsung_pin_ctrl s3c64xx_pin_ctrl[] __initconst = {
+ 		.nr_banks	= ARRAY_SIZE(s3c64xx_pin_banks0),
+ 		.eint_gpio_init = s3c64xx_eint_gpio_init,
+ 		.eint_wkup_init = s3c64xx_eint_eint0_init,
++		.pud_value_init	= s3c64xx_pud_value_init,
+ 	},
  };
  
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 93b14090d484..8b5ca719193c 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -645,51 +645,6 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+index 623df65a5d6f..7d7e924c1fdb 100644
+--- a/drivers/pinctrl/samsung/pinctrl-samsung.c
++++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+@@ -997,6 +997,80 @@ static int samsung_pinctrl_unregister(struct platform_device *pdev,
  	return 0;
  }
  
--static int queue_folios_hugetlb(pte_t *pte, unsigned long hmask,
--			       unsigned long addr, unsigned long end,
--			       struct mm_walk *walk)
--{
--#ifdef CONFIG_HUGETLB_PAGE
--	struct queue_pages *qp = walk->private;
--	unsigned long flags = qp->flags;
--	struct folio *folio;
--	spinlock_t *ptl;
--	pte_t entry;
--
--	ptl = huge_pte_lock(hstate_vma(walk->vma), walk->mm, pte);
--	entry = huge_ptep_get(walk->mm, addr, pte);
--	if (!pte_present(entry)) {
--		if (unlikely(is_hugetlb_entry_migration(entry)))
--			qp->nr_failed++;
--		goto unlock;
--	}
--	folio = pfn_folio(pte_pfn(entry));
--	if (!queue_folio_required(folio, qp))
--		goto unlock;
--	if (!(flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) ||
--	    !vma_migratable(walk->vma)) {
--		qp->nr_failed++;
--		goto unlock;
--	}
--	/*
--	 * Unless MPOL_MF_MOVE_ALL, we try to avoid migrating a shared folio.
--	 * Choosing not to migrate a shared folio is not counted as a failure.
--	 *
--	 * See folio_likely_mapped_shared() on possible imprecision when we
--	 * cannot easily detect if a folio is shared.
--	 */
--	if ((flags & MPOL_MF_MOVE_ALL) ||
--	    (!folio_likely_mapped_shared(folio) && !hugetlb_pmd_shared(pte)))
--		if (!isolate_hugetlb(folio, qp->pagelist))
--			qp->nr_failed++;
--unlock:
--	spin_unlock(ptl);
--	if (qp->nr_failed && strictly_unmovable(flags))
--		return -EIO;
--#endif
--	return 0;
--}
--
- #ifdef CONFIG_NUMA_BALANCING
- /*
-  * This is used to mark a range of virtual addresses to be inaccessible.
-@@ -760,7 +715,6 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
- }
- 
- static const struct mm_walk_ops queue_pages_walk_ops = {
--	.hugetlb_entry		= queue_folios_hugetlb,
- 	.pud_entry		= queue_folios_pud,
- 	.pmd_entry		= queue_folios_pte_range,
- 	.test_walk		= queue_pages_test_walk,
-@@ -768,7 +722,6 @@ static const struct mm_walk_ops queue_pages_walk_ops = {
++/*
++ * samsung_pud_value_init: initialize the drvdata pud_val
++ */
++static void samsung_pud_value_init(struct samsung_pinctrl_drv_data *drvdata)
++{
++	unsigned int  *pud_val = drvdata->pud_val;
++
++	pud_val[PUD_PULL_DISABLE] = PIN_PUD_PULL_UP_DOWN_DISABLE;
++	pud_val[PUD_PULL_DOWN] = PIN_PUD_PULL_DOWN_ENABLE;
++	pud_val[PUD_PULL_UP] = PIN_PUD_PULL_UP_ENABLE;
++}
++
++/*
++ * samsung_gpio_set_pud will enable or disable the pull-down and
++ * pull-up for the gpio pins in the PUD register.
++ */
++static void samsung_gpio_set_pud(struct gpio_chip *gc, unsigned int offset,
++				 unsigned int value)
++{
++	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
++	const struct samsung_pin_bank_type *type = bank->type;
++	void __iomem *reg;
++	unsigned int data, mask;
++
++	reg = bank->pctl_base + bank->pctl_offset;
++	data = readl(reg + type->reg_offset[PINCFG_TYPE_PUD]);
++	mask = (1 << type->fld_width[PINCFG_TYPE_PUD]) - 1;
++	data &= ~(mask << (offset * type->fld_width[PINCFG_TYPE_PUD]));
++	data |= value << (offset * type->fld_width[PINCFG_TYPE_PUD]);
++	writel(data, reg + type->reg_offset[PINCFG_TYPE_PUD]);
++}
++
++/*
++ * samsung_gpio_set_config will identify the type of PUD config based
++ * on the gpiolib request to enable or disable the PUD configuration.
++ */
++static int samsung_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
++				   unsigned long config)
++{
++	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
++	struct samsung_pinctrl_drv_data *drvdata = bank->drvdata;
++	unsigned int value;
++	int ret = 0;
++	unsigned long flags;
++
++	switch (pinconf_to_config_param(config)) {
++	case PIN_CONFIG_BIAS_DISABLE:
++		value = drvdata->pud_val[PUD_PULL_DISABLE];
++		break;
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		value = drvdata->pud_val[PUD_PULL_DOWN];
++		break;
++	case PIN_CONFIG_BIAS_PULL_UP:
++		value = drvdata->pud_val[PUD_PULL_UP];
++		break;
++	default:
++		return -ENOTSUPP;
++	}
++
++	ret = clk_enable(drvdata->pclk);
++	if (ret) {
++		dev_err(drvdata->dev, "failed to enable clock\n");
++		return ret;
++	}
++
++	raw_spin_lock_irqsave(&bank->slock, flags);
++	samsung_gpio_set_pud(gc, offset, value);
++	raw_spin_unlock_irqrestore(&bank->slock, flags);
++
++	clk_disable(drvdata->pclk);
++
++	return ret;
++}
++
+ static const struct gpio_chip samsung_gpiolib_chip = {
+ 	.request = gpiochip_generic_request,
+ 	.free = gpiochip_generic_free,
+@@ -1006,6 +1080,7 @@ static const struct gpio_chip samsung_gpiolib_chip = {
+ 	.direction_output = samsung_gpio_direction_output,
+ 	.to_irq = samsung_gpio_to_irq,
+ 	.add_pin_ranges = samsung_add_pin_ranges,
++	.set_config = samsung_gpio_set_config,
+ 	.owner = THIS_MODULE,
  };
  
- static const struct mm_walk_ops queue_pages_lock_vma_walk_ops = {
--	.hugetlb_entry		= queue_folios_hugetlb,
- 	.pmd_entry		= queue_folios_pte_range,
- 	.test_walk		= queue_pages_test_walk,
- 	.walk_lock		= PGWALK_WRLOCK,
-diff --git a/mm/mincore.c b/mm/mincore.c
-index 786df7246899..26f699a47371 100644
---- a/mm/mincore.c
-+++ b/mm/mincore.c
-@@ -23,27 +23,6 @@
- #include <linux/uaccess.h>
- #include "swap.h"
+@@ -1237,6 +1312,11 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
+ 	if (ctrl->eint_wkup_init)
+ 		ctrl->eint_wkup_init(drvdata);
  
--static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned long addr,
--			unsigned long end, struct mm_walk *walk)
--{
--#ifdef CONFIG_HUGETLB_PAGE
--	unsigned char present;
--	unsigned char *vec = walk->private;
--
--	/*
--	 * Hugepages under user process are always in RAM and never
--	 * swapped out, but theoretically it needs to be checked.
--	 */
--	present = pte && !huge_pte_none_mostly(huge_ptep_get(walk->mm, addr, pte));
--	for (; addr != end; vec++, addr += PAGE_SIZE)
--		*vec = present;
--	walk->private = vec;
--#else
--	BUG();
--#endif
--	return 0;
--}
--
- /*
-  * Later we can get more picky about what "in core" means precisely.
-  * For now, simply check to see if the page is in the page cache,
-@@ -197,7 +176,6 @@ static const struct mm_walk_ops mincore_walk_ops = {
- 	.pud_entry		= mincore_pud_range,
- 	.pmd_entry		= mincore_pte_range,
- 	.pte_hole		= mincore_unmapped_range,
--	.hugetlb_entry		= mincore_hugetlb,
- 	.walk_lock		= PGWALK_RDLOCK,
++	if (ctrl->pud_value_init)
++		ctrl->pud_value_init(drvdata);
++	else
++		samsung_pud_value_init(drvdata);
++
+ 	ret = samsung_gpiolib_register(pdev, drvdata);
+ 	if (ret)
+ 		goto err_unregister;
+diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
+index d50ba6f07d5d..61384096b6d7 100644
+--- a/drivers/pinctrl/samsung/pinctrl-samsung.h
++++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
+@@ -61,6 +61,28 @@ enum pincfg_type {
+ #define PIN_CON_FUNC_INPUT		0x0
+ #define PIN_CON_FUNC_OUTPUT		0x1
+ 
++/*
++ * Values for the pin PUD register.
++ */
++#define PIN_PUD_PULL_UP_DOWN_DISABLE	0x0
++#define PIN_PUD_PULL_DOWN_ENABLE	0x1
++#define PIN_PUD_PULL_UP_ENABLE		0x3
++
++/*
++ * enum pud_index: Index values to access the pud_val array in
++ *	struct samsung_pinctrl_drv_data.
++ * @PUD_PULL_DISABLE: Index for value of pud disable
++ * @PUD_PULL_DOWN: Index for the value of pull down enable
++ * @PUD_PULL_UP: Index for the value of pull up enable
++ * @PUD_MAX: Maximun value of the index
++ */
++enum pud_index {
++	PUD_PULL_DISABLE,
++	PUD_PULL_DOWN,
++	PUD_PULL_UP,
++	PUD_MAX,
++};
++
+ /**
+  * enum eint_type - possible external interrupt types.
+  * @EINT_TYPE_NONE: bank does not support external interrupts
+@@ -261,6 +283,7 @@ struct samsung_pin_ctrl {
+ 
+ 	int		(*eint_gpio_init)(struct samsung_pinctrl_drv_data *);
+ 	int		(*eint_wkup_init)(struct samsung_pinctrl_drv_data *);
++	void		(*pud_value_init)(struct samsung_pinctrl_drv_data *drvdata);
+ 	void		(*suspend)(struct samsung_pinctrl_drv_data *);
+ 	void		(*resume)(struct samsung_pinctrl_drv_data *);
  };
+@@ -307,6 +330,7 @@ struct samsung_pinctrl_drv_data {
+ 	struct samsung_pin_bank		*pin_banks;
+ 	unsigned int			nr_banks;
+ 	unsigned int			nr_pins;
++	unsigned int			pud_val[PUD_MAX];
  
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 222ab434da54..ca1962d5cb95 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -555,15 +555,6 @@ static int prot_none_pte_entry(pte_t *pte, unsigned long addr,
- 		0 : -EACCES;
- }
+ 	struct samsung_retention_ctrl	*retention_ctrl;
  
--static int prot_none_hugetlb_entry(pte_t *pte, unsigned long hmask,
--				   unsigned long addr, unsigned long next,
--				   struct mm_walk *walk)
--{
--	return pfn_modify_allowed(pte_pfn(ptep_get(pte)),
--				  *(pgprot_t *)(walk->private)) ?
--		0 : -EACCES;
--}
--
- static int prot_none_test(unsigned long addr, unsigned long next,
- 			  struct mm_walk *walk)
- {
-@@ -572,7 +563,6 @@ static int prot_none_test(unsigned long addr, unsigned long next,
- 
- static const struct mm_walk_ops prot_none_walk_ops = {
- 	.pte_entry		= prot_none_pte_entry,
--	.hugetlb_entry		= prot_none_hugetlb_entry,
- 	.test_walk		= prot_none_test,
- 	.walk_lock		= PGWALK_WRLOCK,
- };
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index 78d45f1450aa..7e2721f49e68 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -257,49 +257,6 @@ static int walk_pgd_range(unsigned long addr, unsigned long end,
- 	return err;
- }
- 
--#ifdef CONFIG_HUGETLB_PAGE
--static unsigned long hugetlb_entry_end(struct hstate *h, unsigned long addr,
--				       unsigned long end)
--{
--	unsigned long boundary = (addr & huge_page_mask(h)) + huge_page_size(h);
--	return boundary < end ? boundary : end;
--}
--
--static int walk_hugetlb_range(unsigned long addr, unsigned long end,
--			      struct mm_walk *walk)
--{
--	struct vm_area_struct *vma = walk->vma;
--	struct hstate *h = hstate_vma(vma);
--	unsigned long next;
--	unsigned long hmask = huge_page_mask(h);
--	unsigned long sz = huge_page_size(h);
--	pte_t *pte;
--	const struct mm_walk_ops *ops = walk->ops;
--	int err = 0;
--
--	do {
--		next = hugetlb_entry_end(h, addr, end);
--		pte = hugetlb_walk(vma, addr & hmask, sz);
--		if (pte)
--			err = ops->hugetlb_entry(pte, hmask, addr, next, walk);
--		else if (ops->pte_hole)
--			err = ops->pte_hole(addr, next, -1, walk);
--		if (err)
--			break;
--	} while (addr = next, addr != end);
--
--	return err;
--}
--
--#else /* CONFIG_HUGETLB_PAGE */
--static int walk_hugetlb_range(unsigned long addr, unsigned long end,
--			      struct mm_walk *walk)
--{
--	return 0;
--}
--
--#endif /* CONFIG_HUGETLB_PAGE */
--
- /*
-  * Decide whether we really walk over the current vma on [@start, @end)
-  * or skip it via the returned value. Return 0 if we do walk over the
-@@ -346,11 +303,7 @@ static int __walk_page_range(unsigned long start, unsigned long end,
- 	}
- 
- 	vma_pgtable_walk_begin(vma);
--	if (is_vm_hugetlb_page(vma)) {
--		if (ops->hugetlb_entry)
--			err = walk_hugetlb_range(start, end, walk);
--	} else
--		err = walk_pgd_range(start, end, walk);
-+	err = walk_pgd_range(start, end, walk);
- 	vma_pgtable_walk_end(vma);
- 
- 	if (ops->post_vma)
 -- 
-2.26.2
+2.17.1
 
