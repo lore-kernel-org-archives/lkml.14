@@ -1,109 +1,179 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88867E9;
-	Thu,  4 Jul 2024 13:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391D37E9;
+	Thu,  4 Jul 2024 13:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098049; cv=none; b=ptX4K0XhIxiOdjHCgh4NN3hYePbChXs2t5pN2CoRgIZd5whF/XPf6a+Zwlz9NtpyX7FB/oFx0ogOoOE0sguQHCgnlktnGl6rHi7/xGITkDpcTbQgXqBGKxFSYiKvW9Yy+QgvU7wI+haInflTX6DSU1m0Wrym3joG9InJzIVdR1M=
+	t=1720098060; cv=none; b=YuRmi1RaKjeokVNPp+1zLVoWP552vF3TZ4fPR+6I1iZiM/pQWerH97L3G5j/WGzfEfJxSoU+4d+/+DyIOGtrjJ1Xo4DTOhCm1Q0asoQ6PCrFDR5hy3pPSRmy8TQ+pBUGlCHf1LZmqTeYUxHwh43w6ztMF2sCvu59lzqqHxkrRrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720098049; c=relaxed/simple;
-	bh=6iEPaEZmh+B842HzffrRpZPpysqpM05orObQ1SfKGdk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BpDPFC/jMoxqySN7IQYiJBnLA7JAp2fBx1aG1VEOUC7SksxI7A/gMtiaQma5u6fbDwdE6tHTsMFPRMVlZB0Q+HREs7gm49TznXrPreQo5UVak8MqpiZOPjYubPpfeKNm0ii4rOsjwzNSMahu1P9BgH3A/UHwh5Ec/gyA/vcYcjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 71E4A2013AD;
-	Thu,  4 Jul 2024 15:00:40 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 42EBD2013B7;
-	Thu,  4 Jul 2024 15:00:40 +0200 (CEST)
-Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id BAA13180222B;
-	Thu,  4 Jul 2024 21:00:38 +0800 (+08)
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	rohit.fule@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	ziniu.wang_1@nxp.com,
-	haibo.chen@nxp.com,
-	LnxRevLi@nxp.com
-Subject: [PATCH v1] Bluetooth: btnxpuart: Add system suspend and resume handlers
-Date: Thu,  4 Jul 2024 18:28:26 +0530
-Message-Id: <20240704125826.715387-1-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1720098060; c=relaxed/simple;
+	bh=c+fU3icWBiTQt4AHFwhZp2eFHRMUlRaZydFPjgyQ5jA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oCNb6xHcq3b5bX1aUfWHm2QUEi+eN59L+LpMa6p+BD3CpfW7RPl64KOA6HwTFF40nHbky2jFzwpfjhtOWiYW8VlV/+/XRcKjcT+mDEQ+5v+CfrM7nr9XNdUwl2BvCx/ejH4o42xad3yPxbUdA77sgWiZMOjIc5dhkVcNNXtQDjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sbEWGAbJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rFTWPRpZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sbEWGAbJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rFTWPRpZ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sbEWGAbJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rFTWPRpZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sbEWGAbJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rFTWPRpZ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 568891F7BC;
+	Thu,  4 Jul 2024 13:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720098057; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LqxVYzgl/rHw+s+BWRzpBzVsp4eAcq71WWPLsHaqS/s=;
+	b=sbEWGAbJf/UiX1Wrrarr4Nxjngefo/RdlQE4ZJgXs7O6AY3zQ0gcAfjDCmVGdst49OX1Jw
+	O+uBId4Ym5x1DUht09eSx9GWAlgA4s93qXwR9B4yKjJDWcaZ9QyT9oosEHp/6OtVcJ301R
+	SAAsgmI23FDonVlHOOYELtD80kgB3XA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720098057;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LqxVYzgl/rHw+s+BWRzpBzVsp4eAcq71WWPLsHaqS/s=;
+	b=rFTWPRpZDi0a3VLPq9Th75eyAo5Wt2zzmmsprTfuTFp1JSN1DeD4Rp5M0ZbzghAB/iuc3E
+	/3PJwxa8nIZuseAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720098057; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LqxVYzgl/rHw+s+BWRzpBzVsp4eAcq71WWPLsHaqS/s=;
+	b=sbEWGAbJf/UiX1Wrrarr4Nxjngefo/RdlQE4ZJgXs7O6AY3zQ0gcAfjDCmVGdst49OX1Jw
+	O+uBId4Ym5x1DUht09eSx9GWAlgA4s93qXwR9B4yKjJDWcaZ9QyT9oosEHp/6OtVcJ301R
+	SAAsgmI23FDonVlHOOYELtD80kgB3XA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720098057;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LqxVYzgl/rHw+s+BWRzpBzVsp4eAcq71WWPLsHaqS/s=;
+	b=rFTWPRpZDi0a3VLPq9Th75eyAo5Wt2zzmmsprTfuTFp1JSN1DeD4Rp5M0ZbzghAB/iuc3E
+	/3PJwxa8nIZuseAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4387013889;
+	Thu,  4 Jul 2024 13:00:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lCspDgidhmbqFwAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Thu, 04 Jul 2024 13:00:56 +0000
+Message-ID: <c3576d2a-53c8-41f9-a825-13e9bc6417ee@suse.de>
+Date: Thu, 4 Jul 2024 16:00:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/12] PCI: brcmstb: Get resource before we start
+ asserting reset controllers
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240703180300.42959-1-james.quinlan@broadcom.com>
+ <20240703180300.42959-6-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <20240703180300.42959-6-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -4.28
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.28 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.19)[-0.974];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,suse.de,gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-This adds handling for system suspend and resume. While the host enters
-suspend state, the driver will drive the chip into low power state.
+Hi Jim,
 
-Similarly when system is resuming, the driver will wake up the chip.
+On 7/3/24 21:02, Jim Quinlan wrote:
+> Place all of the devm_reset_contol_get*() calls above the calls that
+> assert the reset controllers.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 69926ee5c961..59daa4b2e6c5 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1644,6 +1644,11 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>  		ret = PTR_ERR(pcie->perst_reset);
+>  		goto clk_out;
+>  	}
+> +	pcie->bridge = devm_reset_control_get_optional_exclusive(&pdev->dev, "bridge");
+> +	if (IS_ERR(pcie->bridge)) {
+> +		ret = PTR_ERR(pcie->bridge);
+> +		goto clk_out;
+> +	}
+>  
 
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
----
- drivers/bluetooth/btnxpuart.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+This change must be merged in 3/12 - "PCI: brcmstb: Use bridge reset if
+available"
 
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index da18fd4f54f3..acd360fcc3b8 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -1498,6 +1498,24 @@ static void nxp_serdev_remove(struct serdev_device *serdev)
- 	hci_free_dev(hdev);
- }
- 
-+static int nxp_suspend(struct device *dev)
-+{
-+	struct btnxpuart_dev *nxpdev = dev_get_drvdata(dev);
-+	struct ps_data *psdata = &nxpdev->psdata;
-+
-+	ps_control(psdata->hdev, PS_STATE_SLEEP);
-+	return 0;
-+}
-+
-+static int nxp_resume(struct device *dev)
-+{
-+	struct btnxpuart_dev *nxpdev = dev_get_drvdata(dev);
-+	struct ps_data *psdata = &nxpdev->psdata;
-+
-+	ps_control(data->hdev, PS_STATE_AWAKE);
-+	return 0;
-+}
-+
- static struct btnxpuart_data w8987_data __maybe_unused = {
- 	.helper_fw_name = NULL,
- 	.fw_name = FIRMWARE_W8987,
-@@ -1517,12 +1535,17 @@ static const struct of_device_id nxpuart_of_match_table[] __maybe_unused = {
- };
- MODULE_DEVICE_TABLE(of, nxpuart_of_match_table);
- 
-+static const struct dev_pm_ops nxp_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(nxp_suspend, nxp_resume)
-+};
-+
- static struct serdev_device_driver nxp_serdev_driver = {
- 	.probe = nxp_serdev_probe,
- 	.remove = nxp_serdev_remove,
- 	.driver = {
- 		.name = "btnxpuart",
- 		.of_match_table = of_match_ptr(nxpuart_of_match_table),
-+		.pm = &nxp_pm_ops,
- 	},
- };
- 
--- 
-2.34.1
-
+~Stan
+>  	ret = reset_control_assert(pcie->swinit);
+>  	if (ret) {
+> @@ -1662,12 +1667,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>  		goto clk_out;
+>  	}
+>  
+> -	pcie->bridge = devm_reset_control_get_optional_exclusive(&pdev->dev, "bridge");
+> -	if (IS_ERR(pcie->bridge)) {
+> -		ret = PTR_ERR(pcie->bridge);
+> -		goto clk_out;
+> -	}
+> -
+>  	ret = brcm_phy_start(pcie);
+>  	if (ret) {
+>  		reset_control_rearm(pcie->rescal);
