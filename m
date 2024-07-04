@@ -1,239 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1866170836;
-	Thu,  4 Jul 2024 07:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FE0FBF6
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 07:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720077371; cv=none; b=nJtC4dbCAGL8jGZkkX+ajlxaR7GS5jPjvmt0ExTQC7pNS/wwLnS2t/z00Ev8cd+fe1f3fdv3SAN7u7XQDBGmD/0A+sg6qdaejJrjmzyHG3xwvtZMaZainKH14YuYowB09Lcl/Eo116ftPaL4bzKd7F0kT9+ASRmAHwi1QF8GH4M=
+	t=1720077399; cv=none; b=DQfZYERjEmhj3RZq2no/uHfTvFOkGxEgMYCtKUDRML13oIbKwrAbRFgrRgBj/ECJtpqH1O091aBndOuxBmbOlSu336YSIg6maojHh3eGt7SHw61H5sNS7TorNTwieigBfhHvRhDvxYg7lgtF6E77kdnwr7Z0Q5ICtdwdwDiEIBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720077371; c=relaxed/simple;
-	bh=ykK2NmqiAhRxDgi+CJocifOaQpjFRrk4m3nuxZ7ne5s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R72CjNNTgsHpx2wVAP6etwwVeliAQ/lXtWRRWLfcjLLSwTo7hIA3ut6GpH4dnGt0cTnqTN8d/f+A6BgWDAFDEhMOm3/mn9xgeIWBDxpf82XIvWpYvb4fPETaHSNnFHmscjiWl3I2u1Z3fTyocXVzDRLIahqtfKK8Se6Df7+YpEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S+04g6wU; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720077399; c=relaxed/simple;
+	bh=LjsrTi2z4CRnVuzdIQm+l232jl550YGPl6TpAJ00+q0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CqM2WzKZowA627kVDdEjMZUtjH2/P+5xoGEEKb2WRnVPaWcnjp17kUp3WH/m17xhytAbfieL1QmgG+6wRBr/I66556qq08wNjuv3y2xdfnMaujigmqCW0N7MghnVf/2FdAoXQNkYoI4vslcPV/bqu8QHehMx9CzXPaSUC9CNsns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=E9tF0cyR; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S+04g6wU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720077370; x=1751613370;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ykK2NmqiAhRxDgi+CJocifOaQpjFRrk4m3nuxZ7ne5s=;
-  b=S+04g6wUgG0iE/PKYJtsLity3nipXCCi2Ob3OAapSYwAE+x51oCM/2pf
-   JEPC89+IL8ZO6dGrwRz8C40unsIqJZClYcJK2N4hn14D7hsfMN7U+D0Zg
-   kU0CigaqI5Qe5QrSjOrirxyCeovhsOCAItthqK+okWvqAAleren+ssPM3
-   MidW5Y5Jv7KnNaVZdiRpo2G3Xuc7XsxY0Z5yT0lvF/z0pF057bKhXtRXJ
-   Og+8uKse4gLOzHXKOHipge6t/KiO31xsu1Kk/9OBwXvCUw/Yn+pU2kCEG
-   mnEwSJ273fQ32xXmdKLNz8XZ3Er2QnyxKtYA/0FQUwJdSEMpvnL6Dro5Y
-   Q==;
-X-CSE-ConnectionGUID: uyCLFcZ0TyCSssg0GgIwIg==
-X-CSE-MsgGUID: sWEDoBatSkKVbED4LFowYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17174898"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="17174898"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 00:16:10 -0700
-X-CSE-ConnectionGUID: pevV34pxT9WgreqQaTK5og==
-X-CSE-MsgGUID: dh3meRwSR3mxkmSNK3eLxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="77246664"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 00:16:06 -0700
-Date: Thu, 4 Jul 2024 09:14:52 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Geethasowjanya Akula <gakula@marvell.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"edumazet@google.com" <edumazet@google.com>,
-	Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-	Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
-	Hariprasad Kelam <hkelam@marvell.com>
-Subject: Re: [EXTERNAL] Re: [net-next PATCH v7 00/10] Introduce RVU
- representors
-Message-ID: <ZoZL7Hc5l3amIxIs@mev-dev.igk.intel.com>
-References: <20240628133517.8591-1-gakula@marvell.com>
- <ZoUri0XggubbjQvg@mev-dev.igk.intel.com>
- <CH0PR18MB4339D4A85FA97B2136BF7E1CCDDD2@CH0PR18MB4339.namprd18.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="E9tF0cyR"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-75ebcd9d586so7583a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 00:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1720077396; x=1720682196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TvyZAWnNNxx/fwTfnUe4tHKME28aoZVHnncLaVmTBU4=;
+        b=E9tF0cyRazVYn0OjCTxHNfTJ8YPBAMyY/2t39a6/ZnNkpRG2xLEinhwVZBdKFHEZJV
+         gZ6GNaOHSI3OcwxsOluSuedeXSTFChJ60BaZRxEAHKv3mgURpdW38MZx5C2NNXSPxfZe
+         Aig4DsJFwxL6olFRdS2mWiM4GX71mVyGIRG0O1e/PnZgKMqTxqCrDYreg6wCTAQZcV05
+         PvFVobbgysXG75P0ry4tdVLdRWIEZft9eqlsNkqP6Olni6RpMMhZxER3+Ka894wNAJQv
+         rY/KVz9ez0r/Fjv36KkfnWQxeLX/H6buvBZBK1e9LTytydbb7z1H+FhdO3LInYKtrZrq
+         SNzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720077396; x=1720682196;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TvyZAWnNNxx/fwTfnUe4tHKME28aoZVHnncLaVmTBU4=;
+        b=F7A5hOnBQWppS9apteg6AxxKBB+y34neym6ZJmTr0egfwfJQdCm92Lc8n2CHam85qj
+         TY7pnhxahovxtU+43H7vy73VPjIMX9ABRGYJ57q+GWZPoVCqa2nfJ4Q0LDt6dLIEmU42
+         IXzYslHiXJuDE6VIs4mrtwAfoIM7vnamxNFfISa8vB0c/r724rPrdBZP1OLSvpHfBql1
+         o8lEh1Ak6ZChtAShIaI/jbeR5Z4T4jbV/V7XRydfaKe5GEQrTZevR8JqD/7DcXNsWYMs
+         bmeV7MhF/eyNeHn1YM2lbgODYLu6aaTBgq260PzEGlISl4m2OXEBRhAdchlq1PUNVmvB
+         +v8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXIovgtsxwtBuvTx2C07yCor+YFEBHsI5Unp3XhNdUB5k3m2nLizDr4Zl1fjf4ZdP607sWYHiWNfSF4s0QgUI5+aw6ozYLVKxOCdwql
+X-Gm-Message-State: AOJu0YyXzO4c64kwroQEQmEJg5hT/npVPepBbYeqnsgUoKVqA8M61EHv
+	jkxVpC3UgCwwbZL0k1k00KwcXB/q4HDL5M1JTKaaMW6lfvEVUeEJ7c8r1mMYyXE=
+X-Google-Smtp-Source: AGHT+IHPhEdFOtrGOq2so3f8fczbnDBB6HPj0uqaZE26HNY2schGIgbSlQBBjMxKmLniz35MD8p+4Q==
+X-Received: by 2002:a17:902:e74c:b0:1f8:6e3f:9e7 with SMTP id d9443c01a7336-1fb33e18421mr8824975ad.1.1720077396279;
+        Thu, 04 Jul 2024 00:16:36 -0700 (PDT)
+Received: from [10.255.188.228] ([139.177.225.243])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1599c44sm115243885ad.273.2024.07.04.00.16.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jul 2024 00:16:35 -0700 (PDT)
+Message-ID: <e7a8ddb2-52b5-4267-859b-e212644440b1@bytedance.com>
+Date: Thu, 4 Jul 2024 15:16:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH0PR18MB4339D4A85FA97B2136BF7E1CCDDD2@CH0PR18MB4339.namprd18.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/7] synchronously scan and reclaim empty user PTE
+ pages
+To: the arch/x86 maintainers <x86@kernel.org>
+Cc: david@redhat.com, hughd@google.com, willy@infradead.org, mgorman@suse.de,
+ muchun.song@linux.dev, akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1719570849.git.zhengqi.arch@bytedance.com>
+Content-Language: en-US
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <cover.1719570849.git.zhengqi.arch@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 03, 2024 at 02:34:03PM +0000, Geethasowjanya Akula wrote:
+Add the x86 mailing list that I forgot to CC before.
+
+On 2024/7/1 16:46, Qi Zheng wrote:
+> Hi all,
 > 
+> Previously, we tried to use a completely asynchronous method to reclaim empty
+> user PTE pages [1]. After discussing with David Hildenbrand, we decided to
+> implement synchronous reclaimation in the case of madvise(MADV_DONTNEED) as the
+> first step.
 > 
-> >-----Original Message-----
-> >From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-> >Sent: Wednesday, July 3, 2024 4:14 PM
-> >To: Geethasowjanya Akula <gakula@marvell.com>
-> >Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; kuba@kernel.org;
-> >davem@davemloft.net; pabeni@redhat.com; edumazet@google.com; Sunil
-> >Kovvuri Goutham <sgoutham@marvell.com>; Subbaraya Sundeep Bhatta
-> ><sbhatta@marvell.com>; Hariprasad Kelam <hkelam@marvell.com>
-> >Subject: [EXTERNAL] Re: [net-next PATCH v7 00/10] Introduce RVU representors
-> >On Fri, Jun 28, 2024 at 07:05:07PM +0530, Geetha sowjanya wrote:
-> >> This series adds representor support for each rvu devices.
-> >> When switchdev mode is enabled, representor netdev is registered for
-> >> each rvu device. In implementation of representor model, one NIX HW LF
-> >> with multiple SQ and RQ is reserved, where each RQ and SQ of the LF
-> >> are mapped to a representor. A loopback channel is reserved to support
-> >> packet path between representors and VFs.
-> >> CN10K silicon supports 2 types of MACs, RPM and SDP. This patch set
-> >> adds representor support for both RPM and SDP MAC interfaces.
-> >>
-> >> - Patch 1: Refactors and exports the shared service functions.
-> >> - Patch 2: Implements basic representor driver.
-> >> - Patch 3: Add devlink support to create representor netdevs that
-> >>   can be used to manage VFs.
-> >> - Patch 4: Implements basec netdev_ndo_ops.
-> >> - Patch 5: Installs tcam rules to route packets between representor and
-> >> 	   VFs.
-> >> - Patch 6: Enables fetching VF stats via representor interface
-> >> - Patch 7: Adds support to sync link state between representors and VFs .
-> >> - Patch 8: Enables configuring VF MTU via representor netdevs.
-> >> - Patch 9: Add representors for sdp MAC.
-> >> - Patch 10: Add devlink port support.
-> >>
-> >> Command to create VF representor
-> >> #devlink dev eswitch set pci/0002:1c:00.0 mode switchdev VF
-> >> representors are created for each VF when switch mode is set switchdev
-> >> on representor PCI device
-> >
-> >Does it mean that VFs needs to be created before going to switchdev mode? (in
-> >legacy mode). Keep in mind that in both mellanox and ice driver assume that
-> >VFs are created after chaning mode to switchdev (mode can't be changed if
-> >VFs).
-> No. RVU representor driver implementation is similar to mellanox and ice drivers. 
-> It assumes that VF gets created only after switchdev mode is enabled. 
-> Sorry, if above commit description is confusing. Will rewrite it.
->   
-
-Ok, but why the rvu_rep_create() is called in switching mode to
-switchdev function? In this function you are creating netdevs, only for PF
-representor? It looks like it doesn't called from other context in this
-patchset, so where the port representor netdevs for VFs are created?
-
-Thanks,
-Michal
-
-> >
-> >Different order can be problematic. For example (AFAIK) kubernetes scripts for
-> >switchdev assume that first is switching to switchdev and VFs creation is done
-> >after that.
-> >
-> >Thanks,
-> >Michal
-> >
-> >> # devlink dev eswitch set pci/0002:1c:00.0  mode switchdev # ip link
-> >> show
-> >> 25: r0p1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode
-> >DEFAULT group default qlen 1000
-> >>     link/ether 32:0f:0f:f0:60:f1 brd ff:ff:ff:ff:ff:ff
-> >> 26: r1p1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode
-> >DEFAULT group default qlen 1000
-> >>     link/ether 3e:5d:9a:4d:e7:7b brd ff:ff:ff:ff:ff:ff
-> >>
-> >> #devlink dev
-> >> pci/0002:01:00.0
-> >> pci/0002:02:00.0
-> >> pci/0002:03:00.0
-> >> pci/0002:04:00.0
-> >> pci/0002:05:00.0
-> >> pci/0002:06:00.0
-> >> pci/0002:07:00.0
-> >>
-> >> ~# devlink port
-> >> pci/0002:1c:00.0/0: type eth netdev r0p1v0 flavour pcipf controller 0
-> >> pfnum 1 vfnum 0 external false splittable false
-> >> pci/0002:1c:00.0/1: type eth netdev r1p1v1 flavour pcivf controller 0
-> >> pfnum 1 vfnum 1 external false splittable false
-> >> pci/0002:1c:00.0/2: type eth netdev r2p1v2 flavour pcivf controller 0
-> >> pfnum 1 vfnum 2 external false splittable false
-> >> pci/0002:1c:00.0/3: type eth netdev r3p1v3 flavour pcivf controller 0
-> >> pfnum 1 vfnum 3 external false splittable false
-> >>
-> >> -----------
-> >> v1-v2:
-> >>  -Fixed build warnings.
-> >>  -Address review comments provided by "Kalesh Anakkur Purayil".
-> >>
-> >> v2-v3:
-> >>  - Used extack for error messages.
-> >>  - As suggested reworked commit messages.
-> >>  - Fixed sparse warning.
-> >>
-> >> v3-v4:
-> >>  - Patch 2 & 3: Fixed coccinelle reported warnings.
-> >>  - Patch 10: Added devlink port support.
-> >>
-> >> v4-v5:
-> >>   - Patch 3: Removed devm_* usage in rvu_rep_create()
-> >>   - Patch 3: Fixed build warnings.
-> >>
-> >> v5-v6:
-> >>   - Addressed review comments provided by "Simon Horman".
-> >>   - Added review tag.
-> >>
-> >> v6-v7:
-> >>   - Rebased on top net-next branch.
-> >>
-> >> Geetha sowjanya (10):
-> >>   octeontx2-pf: Refactoring RVU driver
-> >>   octeontx2-pf: RVU representor driver
-> >>   octeontx2-pf: Create representor netdev
-> >>   octeontx2-pf: Add basic net_device_ops
-> >>   octeontx2-af: Add packet path between representor and VF
-> >>   octeontx2-pf: Get VF stats via representor
-> >>   octeontx2-pf: Add support to sync link state between representor and
-> >>     VFs
-> >>   octeontx2-pf: Configure VF mtu via representor
-> >>   octeontx2-pf: Add representors for sdp MAC
-> >>   octeontx2-pf: Add devlink port support
-> >>
-> >>  .../net/ethernet/marvell/octeontx2/Kconfig    |   8 +
-> >>  .../ethernet/marvell/octeontx2/af/Makefile    |   3 +-
-> >>  .../ethernet/marvell/octeontx2/af/common.h    |   2 +
-> >>  .../net/ethernet/marvell/octeontx2/af/mbox.h  |  74 ++
-> >>  .../net/ethernet/marvell/octeontx2/af/npc.h   |   1 +
-> >>  .../net/ethernet/marvell/octeontx2/af/rvu.c   |  11 +
-> >>  .../net/ethernet/marvell/octeontx2/af/rvu.h   |  30 +-
-> >>  .../marvell/octeontx2/af/rvu_debugfs.c        |  27 -
-> >>  .../marvell/octeontx2/af/rvu_devlink.c        |   6 +
-> >>  .../ethernet/marvell/octeontx2/af/rvu_nix.c   |  81 ++-
-> >>  .../marvell/octeontx2/af/rvu_npc_fs.c         |   5 +
-> >>  .../ethernet/marvell/octeontx2/af/rvu_reg.h   |   4 +
-> >>  .../ethernet/marvell/octeontx2/af/rvu_rep.c   | 464 ++++++++++++
-> >>  .../marvell/octeontx2/af/rvu_struct.h         |  26 +
-> >>  .../marvell/octeontx2/af/rvu_switch.c         |  20 +-
-> >>  .../ethernet/marvell/octeontx2/nic/Makefile   |   2 +
-> >>  .../ethernet/marvell/octeontx2/nic/cn10k.c    |   4 +-
-> >>  .../ethernet/marvell/octeontx2/nic/cn10k.h    |   2 +-
-> >>  .../marvell/octeontx2/nic/otx2_common.c       |  56 +-
-> >>  .../marvell/octeontx2/nic/otx2_common.h       |  84 ++-
-> >>  .../marvell/octeontx2/nic/otx2_devlink.c      |  49 ++
-> >>  .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 305 +++++---
-> >>  .../marvell/octeontx2/nic/otx2_txrx.c         |  38 +-
-> >>  .../marvell/octeontx2/nic/otx2_txrx.h         |   3 +-
-> >>  .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  19 +-
-> >> .../net/ethernet/marvell/octeontx2/nic/rep.c  | 684 ++++++++++++++++++
-> >> .../net/ethernet/marvell/octeontx2/nic/rep.h  |  53 ++
-> >>  27 files changed, 1834 insertions(+), 227 deletions(-)  create mode
-> >> 100644 drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
-> >>  create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-> >>  create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-> >>
-> >> --
-> >> 2.25.1
-> >>
+> So this series aims to synchronously scan and reclaim empty user PTE pages in
+> zap_page_range_single() (madvise(MADV_DONTNEED) etc will invoke this). In
+> zap_page_range_single(), mmu_gather is used to perform batch tlb flushing and
+> page freeing operations. Therefore, if we want to free the empty PTE page in
+> this path, the most natural way is to add it to mmu_gather as well. There are
+> two problems that need to be solved here:
+> 
+> 1. Now, if CONFIG_MMU_GATHER_RCU_TABLE_FREE is selected, mmu_gather will free
+>     page table pages by semi RCU:
+> 
+>     - batch table freeing: asynchronous free by RCU
+>     - single table freeing: IPI + synchronous free
+> 
+>     But this is not enough to free the empty PTE page table pages in paths other
+>     that munmap and exit_mmap path, because IPI cannot be synchronized with
+>     rcu_read_lock() in pte_offset_map{_lock}(). So we should let single table
+>     also be freed by RCU like batch table freeing.
+> 
+> 2. When we use mmu_gather to batch flush tlb and free PTE pages, the TLB is not
+>     flushed before pmd lock is unlocked. This may result in the following two
+>     situations:
+> 
+>     1) Userland can trigger page fault and fill a huge page, which will cause
+>        the existence of small size TLB and huge TLB for the same address.
+> 
+>     2) Userland can also trigger page fault and fill a PTE page, which will
+>        cause the existence of two small size TLBs, but the PTE page they map
+>        are different.
+> 
+>     For case 1), according to Intel's TLB Application note (317080), some CPUs of
+>     x86 do not allow it:
+> 
+>     ```
+>     If software modifies the paging structures so that the page size used for a
+>     4-KByte range of linear addresses changes, the TLBs may subsequently contain
+>     both ordinary and large-page translations for the address range.12 A reference
+>     to a linear address in the address range may use either translation. Which of
+>     the two translations is used may vary from one execution to another and the
+>     choice may be implementation-specific.
+> 
+>     Software wishing to prevent this uncertainty should not write to a paging-
+>     structure entry in a way that would change, for any linear address, both the
+>     page size and either the page frame or attributes. It can instead use the
+>     following algorithm: first mark the relevant paging-structure entry (e.g.,
+>     PDE) not present; then invalidate any translations for the affected linear
+>     addresses (see Section 5.2); and then modify the relevant paging-structure
+>     entry to mark it present and establish translation(s) for the new page size.
+>     ```
+> 
+>     We can also learn more information from the comments above pmdp_invalidate()
+>     in __split_huge_pmd_locked().
+> 
+>     For case 2), we can see from the comments above ptep_clear_flush() in
+>     wp_page_copy() that this situation is also not allowed. Even without
+>     this patch series, madvise(MADV_DONTNEED) can also cause this situation:
+> 
+>             CPU 0                         CPU 1
+> 
+>     madvise (MADV_DONTNEED)
+>     -->  clear pte entry
+>          pte_unmap_unlock
+>                                        touch and tlb miss
+> 				      --> set pte entry
+>          mmu_gather flush tlb
+> 
+>     But strangely, I didn't see any relevant fix code, maybe I missed something,
+>     or is this guaranteed by userland?
+> 
+>     Anyway, this series defines the following two functions to be implemented by
+>     the architecture. If the architecture does not allow the above two situations,
+>     then define these two functions to flush the tlb before set_pmd_at().
+> 
+>     - arch_flush_tlb_before_set_huge_page
+>     - arch_flush_tlb_before_set_pte_page
+> 
+> As a first step, we supported this feature on x86_64 and selectd the newly
+> introduced CONFIG_ARCH_SUPPORTS_PT_RECLAIM.
+> 
+> In order to reduce overhead, we only handle the cases with a high probability
+> of generating empty PTE pages, and other cases will be filtered out, such as:
+> 
+>   - hugetlb vma (unsuitable)
+>   - userfaultfd_wp vma (may reinstall the pte entry)
+>   - writable private file mapping case (COW-ed anon page is not zapped)
+>   - etc
+> 
+> For userfaultfd_wp and writable private file mapping cases (and MADV_FREE case,
+> of course), consider scanning and freeing empty PTE pages asynchronously in
+> the future.
+> 
+> This series is based on next-20240627.
+> 
+> Comments and suggestions are welcome!
+> 
+> Thanks,
+> Qi
+> 
+> [1]. https://lore.kernel.org/lkml/cover.1718267194.git.zhengqi.arch@bytedance.com/
+> 
+> Qi Zheng (7):
+>    mm: pgtable: make pte_offset_map_nolock() return pmdval
+>    mm: introduce CONFIG_PT_RECLAIM
+>    mm: pass address information to pmd_install()
+>    mm: pgtable: try to reclaim empty PTE pages in zap_page_range_single()
+>    x86: mm: free page table pages by RCU instead of semi RCU
+>    x86: mm: define arch_flush_tlb_before_set_huge_page
+>    x86: select ARCH_SUPPORTS_PT_RECLAIM if X86_64
+> 
+>   Documentation/mm/split_page_table_lock.rst |   3 +-
+>   arch/arm/mm/fault-armv.c                   |   2 +-
+>   arch/powerpc/mm/pgtable.c                  |   2 +-
+>   arch/x86/Kconfig                           |   1 +
+>   arch/x86/include/asm/pgtable.h             |   6 +
+>   arch/x86/include/asm/tlb.h                 |  23 ++++
+>   arch/x86/kernel/paravirt.c                 |   7 ++
+>   arch/x86/mm/pgtable.c                      |  15 ++-
+>   include/linux/hugetlb.h                    |   2 +-
+>   include/linux/mm.h                         |  13 +-
+>   include/linux/pgtable.h                    |  14 +++
+>   mm/Kconfig                                 |  14 +++
+>   mm/Makefile                                |   1 +
+>   mm/debug_vm_pgtable.c                      |   2 +-
+>   mm/filemap.c                               |   4 +-
+>   mm/gup.c                                   |   2 +-
+>   mm/huge_memory.c                           |   3 +
+>   mm/internal.h                              |  17 ++-
+>   mm/khugepaged.c                            |  24 +++-
+>   mm/memory.c                                |  21 ++--
+>   mm/migrate_device.c                        |   2 +-
+>   mm/mmu_gather.c                            |   2 +-
+>   mm/mprotect.c                              |   8 +-
+>   mm/mremap.c                                |   4 +-
+>   mm/page_vma_mapped.c                       |   2 +-
+>   mm/pgtable-generic.c                       |  21 ++--
+>   mm/pt_reclaim.c                            | 131 +++++++++++++++++++++
+>   mm/userfaultfd.c                           |  10 +-
+>   mm/vmscan.c                                |   2 +-
+>   29 files changed, 307 insertions(+), 51 deletions(-)
+>   create mode 100644 mm/pt_reclaim.c
+> 
