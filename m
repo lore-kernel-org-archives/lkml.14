@@ -1,81 +1,139 @@
-Received: from forwardcorp1d.mail.yandex.net (forwardcorp1d.mail.yandex.net [178.154.239.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C611BC57;
-	Thu,  4 Jul 2024 16:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FE71B29B3;
+	Thu,  4 Jul 2024 16:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720111564; cv=none; b=rzvFE0d27LYCPhrmNEPoC4RPOkckSUfJh9lXk6Gbg5Ih42ybzAj+QIzADvE35I8cBgIcmv7CBzD5bOg0VydkNXYr/nlgsakxbgHHtNcFSCS6WUrEssKPIjZIGr5RccqdlJktt8lkRy3e1THKhZ9z3KunEu0hlVpz33Kbv9c7sL0=
+	t=1720111687; cv=none; b=XlU8cWmcaV/Z81hzh37VBkyWRx5F7QccDXhECvoWhM4otdjfNXt2q3RUFB7q9Ed/WRvCMVHCIDe9tE5QYAAxxHFn+pYOA1xnGofvplwVVh5OHdT6Gz7gKv6BbkjIVTzHjZROuWcftsqJQo8MJ7MKoJisEm6Bsq+Tbt6YmYOvr44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720111564; c=relaxed/simple;
-	bh=qDJHiMza4kMB26AZbmpwgiW27bTdimD6C6D0lx7cggc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YOOpTVdEESFRMnrySfxePdzpc2cmjiRFYN5ljTVN72rjFC2CwADDene2Vkzy0AA/zMRo0dqaD8ONdoHcW9ohrpTWwHg/T/p5pTmyVHhq9kXtNgYSaGIQP14LMV/5T3vPCwUVuGhxB6yOu60bCcqWMGzjU+99omczeNDVuz6cm6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=H6gpPCxs; arc=none smtp.client-ip=178.154.239.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1720111687; c=relaxed/simple;
+	bh=XcJtSuXQaEpDB4k3O8CW7Y7Ik25cpq7G3KBR2xOKg+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VM1Snd4tUnVZ0xRWn6v1JFUsAMgunklCmt/vZg3Ll5BLeUUpDJnB1g0k6BqhJzU1DkBYyI4FjUQjXFh3589OPd2f/+rV1M1HryOy8yyBw5GAH3YhscLAhcHuMHwrU6RzCbKkYitC/rRx9MZgAOJUzxSfxrSVAYVEL5GdqbwomtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EaQzhY82; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="H6gpPCxs"
-Received: from mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:70c6:0:640:97e8:0])
-	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id E7EFD60A69;
-	Thu,  4 Jul 2024 19:44:30 +0300 (MSK)
-Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:b642::1:38])
-	by mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id PibgQC0PkuQ0-5gjVnlmA;
-	Thu, 04 Jul 2024 19:44:30 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1720111470;
-	bh=Ze3Pe2Z+VMgwAD4BxMVGBEkiIJQR5BwfjJWnEIH7bxU=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=H6gpPCxsnVlSkeDDY8MIflDORlj/I8k16PEkklx2tZImo4f9W7kmqVxZM9AGmz3dm
-	 cO0EK2+KLL//4EUaKjkwCVCjmV91Xhu+qO5DX37CijsdEeUYb2JMPII89AMOq7+uYV
-	 kAvlQbv2hftt3TBx7HN4BjodwjdHgDfZ/sPlV2tE=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Nikolay Kuratov <kniv@yandex-team.ru>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Francis Laniel <flaniel@linux.microsoft.com>,
-	Nikolay Kuratov <kniv@yandex-team.ru>
-Subject: [PATCH] tracing/kprobes: Add missing check for skipping symbol counting logic
-Date: Thu,  4 Jul 2024 19:43:36 +0300
-Message-Id: <20240704164336.1176281-1-kniv@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EaQzhY82"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8431DC4AF0A;
+	Thu,  4 Jul 2024 16:48:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720111686;
+	bh=XcJtSuXQaEpDB4k3O8CW7Y7Ik25cpq7G3KBR2xOKg+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EaQzhY82FK+j0bBDDIKvpCTMrTijDwIvjizYlcoOeXU+j8ejLtaXIaZxPf5ncuwnE
+	 K2RFFfh+m/Nxsq7wJSCC/Zu/9Z2YR70axQwXN6qHj3WkiCYYln0fhQ5m1RQO3zgiDr
+	 AVAEFxIJCuEd7SJitKzT5Xmyd1fp6COyek4PVD0fcSSX9YUniHvQ4Xg1097DcYYmj4
+	 HnOhNse4DIQCBHBtO8OiV/q+hjE/utMUhpDw5yMUSxG06LaHbYTOdXDzxK45WdxArm
+	 0tV+6EnhQcDomG1U+wYvLqhPHaRWjr7F6v12AL1tr3ZijtjWFrHA1/suhBEfmFfEYR
+	 E9GDs6ztX1+Jg==
+Date: Thu, 4 Jul 2024 17:48:01 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Cc: neil.armstrong@linaro.org, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	airlied@gmail.com, daniel@ffwll.ch, mripard@kernel.org,
+	dianders@google.com, hsinyi@google.com, awarnecke002@hotmail.com,
+	quic_jesszhan@quicinc.com, dmitry.baryshkov@linaro.org,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/5] dt-bindings: display: panel: Add compatible for
+ starry-er88577
+Message-ID: <20240704-cacti-bunny-83fc57eebd8b@spud>
+References: <20240704072958.27876-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <20240704072958.27876-5-lvzhaoxiong@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RykSl8c0tZ5L9jJS"
+Content-Disposition: inline
+In-Reply-To: <20240704072958.27876-5-lvzhaoxiong@huaqin.corp-partner.google.com>
 
-In commit b022f0c7e404
-("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
-it was already done for symbol in __trace_kprobe_create(), but func in
-create_local_trace_kprobe() is also valid usage.
-Not doing so leads to ENOENT for module_name:symbol_name
-constructions passed over perf_event_open().
 
-Fixes: b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
-Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
----
- kernel/trace/trace_kprobe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--RykSl8c0tZ5L9jJS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 16383247bdbf..3f4c9195dc0d 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1834,7 +1834,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
- 	int ret;
- 	char *event;
- 
--	if (func) {
-+	if (func && !strchr(func, ':')) {
- 		unsigned int count;
- 
- 		count = number_of_same_symbols(func);
--- 
-2.34.1
+On Thu, Jul 04, 2024 at 03:29:57PM +0800, Zhaoxiong Lv wrote:
+> The starry-er88577 is a 10.1" WXGA TFT-LCD panel. Hence, we=20
+> add a new compatible with panel specific config.
+>=20
+> Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+> ---
+> Changes between V5 and V4:
+> -  1. We are compatible with starry-er88577 panels in the boe-th101mb31ig=
+002
+> -     driver, so add it to the "boe,th101mb31ig002-28a.yaml".
 
+Are you sure that "compatible" is the right word here? It seems like the
+devices are rather similar, but compatible would mean that the driver
+would work for both without changes. The driver patch (and the lack of a
+fallback compatible here) implies that the panels are not actually
+compatible.
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+>=20
+> v4: https://lore.kernel.org/all/20240620115245.31540-2-lvzhaoxiong@huaqin=
+=2Ecorp-partner.google.com/
+>=20
+> Changes between V4 and V3:
+> -  1. Move positions to keep the list sorted.
+>=20
+> v3: https://lore.kernel.org/all/20240614145609.25432-2-lvzhaoxiong@huaqin=
+=2Ecorp-partner.google.com/
+>=20
+> Changes between V3 and V2:
+> -  1. Separate the Starry bindings from kingdisplay, and add it to panel-=
+simple-dsi.yaml
+>=20
+> v2: https://lore.kernel.org/all/20240601084528.22502-4-lvzhaoxiong@huaqin=
+=2Ecorp-partner.google.com/
+>=20
+> Changes between V2 and V1:
+> -  1. Add compatible for Starry er88577 in Kingdisplay kd101ne3 dt-bindin=
+gs.
+> ---
+>  .../bindings/display/panel/boe,th101mb31ig002-28a.yaml          | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/panel/boe,th101mb3=
+1ig002-28a.yaml b/Documentation/devicetree/bindings/display/panel/boe,th101=
+mb31ig002-28a.yaml
+> index 32df26cbfeed..2f251703a121 100644
+> --- a/Documentation/devicetree/bindings/display/panel/boe,th101mb31ig002-=
+28a.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/boe,th101mb31ig002-=
+28a.yaml
+> @@ -17,6 +17,8 @@ properties:
+>      enum:
+>          # BOE TH101MB31IG002-28A 10.1" WXGA TFT LCD panel
+>        - boe,th101mb31ig002-28a
+> +        # The Starry-er88577 is a 10.1" WXGA TFT-LCD panel
+> +      - starry,er88577
+> =20
+>    reg: true
+>    backlight: true
+> --=20
+> 2.17.1
+>=20
+
+--RykSl8c0tZ5L9jJS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZobSQQAKCRB4tDGHoIJi
+0n0BAPwM1wnWItNs6WI3AwZCgk5MoSXvVYzWf9JAa8uWhdN//wEAvt+kBecbADu6
+XQe4iZTVmBZ1wU/wBEoU1gPCcr9KZwU=
+=2pS9
+-----END PGP SIGNATURE-----
+
+--RykSl8c0tZ5L9jJS--
