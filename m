@@ -1,62 +1,39 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C501ABC25
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2692F7E9;
+	Thu,  4 Jul 2024 13:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098323; cv=none; b=H+THlz771rGpvr08TuDatX+4QabEe7BPkWwStFk1a7zcLTiCoGYx1GiOee3Q60pEhQB2EwnR3DUjeF59tiB8K8/oDoJr73MMPkB3xwHitFeOhGV5PkqdBYsDgGjI+tRD/mr2ugqbxK/VTN2Bguzepdl8MH5+OC3Y0xEL5eVhoRY=
+	t=1720098331; cv=none; b=f9LQz3HmlFKzUoVvrB9IhVlwnpHqqk92TnXt2TDBIWDVigK+HL2V8p+rC2KZvoxc5Tz3GZXID8WdU/5/vJj5MqUkoFGcGfhwXNIVa+foUXIIJp46DHoX3Tz0Pzbb8H3bLLNKtplnhedXttJhgoz2bUIIw6roRFlTf8zW7wr47XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720098323; c=relaxed/simple;
-	bh=kEgHvrKkP/JmOKG/+VNDIUUpwZumLitFBjNUA3WIU0g=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=H6zlwKR1FB6GgVTc3H7v5ovBZmsVkEVttAM0Zzf6r8HlP100or/Ksw1rgQl2LMjDZCj+jAohLVdTi4qFYxdPxJaOmDu/d/D7FRfeVJggSX8l9RF24Ee7c7tThjh4p08sANDP7Xy+1XYIaOUdEb4UTyXNMCqkksUGhn0Sf5VKVKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IKx10rfU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IKx10rfU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720098321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K0LIkgFk3FChOL7eIhbF4O+FeLzO9NmnpeAt7yD+xlo=;
-	b=IKx10rfUn2RZMhnFoB4cq/GXLhsKH8bcYHZYzLI3Wf6qpwruVZ+MoJPoUlaLAKhDwKfpGS
-	xusRcxZN0UpK48twizn55Tt9cYrdQo+8CGHY6PxOjENoBp5mFrQzxgsdETBvjCvkA9QXlx
-	AAWT8tOR5vMC8xGVEtkB4I49R7azwfk=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-513-zG7GKWI0P6uJwORhHby8Yg-1; Thu, 04 Jul 2024 09:05:19 -0400
-X-MC-Unique: zG7GKWI0P6uJwORhHby8Yg-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-57d3eca4bb7so1032869a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 06:05:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720098318; x=1720703118;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=K0LIkgFk3FChOL7eIhbF4O+FeLzO9NmnpeAt7yD+xlo=;
-        b=EvyU7xGARs+CkPVqRQuRR3hdVbt4OZrrtqp7OMxtgIC/ulds6JE1oLiL8BC/ljM84r
-         2LgeTM4+d9WBGnUBQeoGkZaoa0X2DtnjU/6878c1IK57T3SjuVxbBhhGXZxYM1XQBMZV
-         xHEgvbFEehy/NsmVwt5/oJy38eWSbwkL78cGuWvTndI7sJ8gor37p6AfAyjF4mS4pTMM
-         EImBeQie0C3lpcWfwqNt1oSXn/4dbu9CzclvAoYSUpan9leHhNO8NPUoiIfyb3lL9SBk
-         C/5PPtHqNjdyT43UIy5WbWGUpbZXtOWG3xRhfAy1Ije2u0HI3KBxiOhs4msc10l0nwFy
-         8e2Q==
-X-Gm-Message-State: AOJu0YzKAvQJ3vbzTjrPqe+Zb4b3FoMMaGBPmBWSiK7Xpc7atkRHw+rw
-	C9KtlpZL76BFWeJ574xXEfDTGTXfStticKwvTSmH1TMJRCKncKRvCWiOGL9uLqaNZrMdSNgM3LK
-	BWh2UWDIhoscUG/xI4RNuA9nMt/n3MGovpUr6bS5i4ze27QqdILoPPqTWe++omg==
-X-Received: by 2002:a05:6402:2692:b0:57d:5442:a709 with SMTP id 4fb4d7f45d1cf-58e7744e613mr1449069a12.0.1720098318665;
-        Thu, 04 Jul 2024 06:05:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFaDxYn9Pqu6TsWtxIem2XZpMIKWwXHc7vlrDGTnHQPn/nhfDycg9sSKf42JvwhrYxeAfSSZw==
-X-Received: by 2002:a05:6402:2692:b0:57d:5442:a709 with SMTP id 4fb4d7f45d1cf-58e7744e613mr1449047a12.0.1720098318211;
-        Thu, 04 Jul 2024 06:05:18 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58614d50580sm8454972a12.72.2024.07.04.06.05.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 06:05:17 -0700 (PDT)
-Message-ID: <1cf4578a-3499-47e2-85de-03887de1f05f@redhat.com>
-Date: Thu, 4 Jul 2024 15:05:16 +0200
+	s=arc-20240116; t=1720098331; c=relaxed/simple;
+	bh=RQk7tE0/w5gVbSYZXfznfyC1ncfi65f6dAeeTU+5b1E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MQuhcz/zov1E1WZjGbJnCpjJrFk6zFXZYLyvmcPlg50rGUp8CkaGLvLIQxUbjw9a3sbwn1rd1N7wPT/2fE8yfEbRx05vqbxf6VvjGf0zIa+BqRNlBQV+uzxFuRrM+ax0HOGMmiwTmiRzZuavn7B0YPSWYSDm44ohd0BEMnYKQ0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6D3FA211E5;
+	Thu,  4 Jul 2024 13:05:28 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9354513889;
+	Thu,  4 Jul 2024 13:05:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id aU6OIReehmY0GQAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Thu, 04 Jul 2024 13:05:27 +0000
+Message-ID: <8e21c868-2409-4260-9b56-6feb0eea512a@suse.de>
+Date: Thu, 4 Jul 2024 16:05:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,62 +41,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 6.10-5
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Armin Wolf <W_Armin@gmx.de>
-Content-Language: en-US, nl
+Subject: Re: [PATCH v2 06/12] PCI: brcmstb: PCI: brcmstb: Make HARD_DEBUG,
+ INTR2_CPU_BASE offsets SoC-specific
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240703180300.42959-1-james.quinlan@broadcom.com>
+ <20240703180300.42959-7-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <20240703180300.42959-7-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Queue-Id: 6D3FA211E5
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spam-Level: 
 
-Hi Linus,
+Hi Jim,
 
-Here is (hopefully) the last platform-drivers-x86 fixes pull-request
-for 6.10.
+On 7/3/24 21:02, Jim Quinlan wrote:
+> Our HW design has again changed a register offset which used to be standard
+> for all Broadcom SOCs with PCIe cores.  This difference is now reconciled
+> for the registers HARD_DEBUG and INTR2_CPU_BASE.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 33 +++++++++++++++++----------
+>  1 file changed, 21 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 59daa4b2e6c5..d8c0f1474369 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -122,7 +122,6 @@
+>  #define PCIE_MEM_WIN0_LIMIT_HI(win)	\
+>  		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI + ((win) * 8)
+>  
+> -#define PCIE_MISC_HARD_PCIE_HARD_DEBUG					0x4204
+>  #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK	0x2
+>  #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK		0x200000
+>  #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x08000000
+> @@ -131,9 +130,9 @@
+>  	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
+>  	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
+>  
+> -#define PCIE_INTR2_CPU_BASE		0x4300
+>  #define PCIE_MSI_INTR2_BASE		0x4500
+> -/* Offsets from PCIE_INTR2_CPU_BASE and PCIE_MSI_INTR2_BASE */
+> +
+> +/* Offsets from INTR2_CPU and MSI_INTR2 BASE offsets */
+>  #define  MSI_INT_STATUS			0x0
+>  #define  MSI_INT_CLR			0x8
+>  #define  MSI_INT_MASK_SET		0x10
+> @@ -187,6 +186,8 @@
+>  #define IDX_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_INDEX])
+>  #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
+>  #define PCIE_RGR1_SW_INIT_1(pcie)	(pcie->reg_offsets[RGR1_SW_INIT_1])
+> +#define	HARD_DEBUG(pcie)		(pcie->reg_offsets[PCIE_HARD_DEBUG])
+> +#define	INTR2_CPU_BASE(pcie)		(pcie->reg_offsets[PCIE_INTR2_CPU_BASE])
+>  
 
-This contains a single fix for a regression in toshiba_acpi introduced
-in 6.10-rc1.
+Drop the tab before HARD_DEBUG & INTR2_CPU_BASE. Also checkpatch should
+complain about missing brackets around pcie:
 
-Highlights:
- -  Fix lg-laptop driver not working with 2024 LG laptop models
- -  Add missing MODULE_DESCRIPTION() macros to various modules
- -  nvsw-sn2201: Add check for platform_device_add_resources
+#define	HARD_DEBUG(pcie) ((pcie)->reg_offsets[PCIE_HARD_DEBUG])
 
-Regards,
-
-Hans
-
-
-The following changes since commit 7add1ee34692aabd146b86a8e88abad843ed6659:
-
-  platform/x86: add missing MODULE_DESCRIPTION() macros (2024-06-24 13:33:20 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-5
-
-for you to fetch changes up to e527a6127223b644e0a27b44f4b16e16eb6c7f0a:
-
-  platform/x86: toshiba_acpi: Fix quickstart quirk handling (2024-07-02 16:01:45 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.10-5
-
-Highlights:
- -  Fix regression in toshiba_acpi introduced in 6.10-rc1
-
-The following is an automated git shortlog grouped by driver:
-
-toshiba_acpi:
- -  Fix quickstart quirk handling
-
-----------------------------------------------------------------
-Armin Wolf (1):
-      platform/x86: toshiba_acpi: Fix quickstart quirk handling
-
- drivers/platform/x86/toshiba_acpi.c | 31 ++++++++++++++++++-------------
- 1 file changed, 18 insertions(+), 13 deletions(-)
-
+~Stan
