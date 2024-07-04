@@ -1,78 +1,37 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32747144D15
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB03145347
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 04:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720067543; cv=none; b=leO7vEf4Ljb7X5acrfZrrUVvMDfBqbSGiyNsWfuZVioBCysOS8ja35P9cvKOZ4lQkaY/hBQGTPV17chlJhff5e2xcEG/n30ckrFqocAJxJE++/fQMMzo7Oe5ra3kl5MgLUOYMdIiEJ32c6q1YiJ6YqB+M4gWtpgh0SPAoS9XM5k=
+	t=1720067546; cv=none; b=t/0P+V1tpeTem7PbHjDRv1SDI3hm/zIkIDz7bApBWbOvEBJH1vZxPtvsBvSewduZ2oVLNI8bSJrlmpy4O8Lr7FQdPtoSl9xnFvTMcc5txTJLnIayIDPj9Fgkl38FCJiIazpWHfkQYiI2W3odbvie+ypQB3iT6lbIfrMr337mqBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720067543; c=relaxed/simple;
-	bh=EXDhJ09O2OJ9GtxQDINsaKUIPFQVmSM1oh/3/rS4he4=;
+	s=arc-20240116; t=1720067546; c=relaxed/simple;
+	bh=tdPuf/5twvbRvm8RjGKcz4r5SkWuHK/Bp9g/YU26wy8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OKEZuhScsS5tVplstysaP1qBX1D3z+XMfz1IaZhEzg14Ij7OTHVbpns2qNP0N33EsaJ79jCRjcrvjkJuGbFq9YZEIfNDcJzGhKQ2mRso5RHQFaW7CIPx5+r+nNcl4/ebgwDr/FcJ+7Ta0pfPijQj+bDRm/iuGjUlcUhNZzSCGwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZZlPRFX8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DZydrxp6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZZlPRFX8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DZydrxp6; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=o9zVvzes+thPiMIhUQYzvfbLqaIniXfeje0Z3qhzCnpM5fp2hApwMjCa7EUmj3DDZjJruBEorceeZS3fhyKku2cIbuq4CTSer4mAsmNKztPKQDcMNax+fAteteQHL/ChRm3yowO0SL18WHRrCZkXnmtObfcMKPLVbD51/xSgxRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZZlPRFX8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DZydrxp6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZZlPRFX8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DZydrxp6"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6CA131FCFE;
-	Thu,  4 Jul 2024 04:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720067540; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HbU3NixA+ORa4pbwAalk6/qaoqPhUeSqtYDCOzcSsu0=;
-	b=ZZlPRFX8HPVeyLyltxoPjntrB3vyrMGorhnSIvawEhprDCtQiJ8kvY1aBNeBJMEnFNoka7
-	zEhX5cg2k/xkhsjTOrqeSfEe1lZe8CG3PQEh3+8UdhDAt9ff/QXS9LBS82y+sKrbT8fyYn
-	t7/3YM8I8df36X7okK3RGPJBJuuuMoQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720067540;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HbU3NixA+ORa4pbwAalk6/qaoqPhUeSqtYDCOzcSsu0=;
-	b=DZydrxp6It5HlKS3mNh//5MUdSN05oCnIEplA26v4hntyU+xxNFeMDdkBpvi66dQmJHnJM
-	/gkrpKtXKANlwKBg==
-Authentication-Results: smtp-out2.suse.de;
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 09ECD21180;
+	Thu,  4 Jul 2024 04:32:23 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
 	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720067540; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HbU3NixA+ORa4pbwAalk6/qaoqPhUeSqtYDCOzcSsu0=;
-	b=ZZlPRFX8HPVeyLyltxoPjntrB3vyrMGorhnSIvawEhprDCtQiJ8kvY1aBNeBJMEnFNoka7
-	zEhX5cg2k/xkhsjTOrqeSfEe1lZe8CG3PQEh3+8UdhDAt9ff/QXS9LBS82y+sKrbT8fyYn
-	t7/3YM8I8df36X7okK3RGPJBJuuuMoQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720067540;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HbU3NixA+ORa4pbwAalk6/qaoqPhUeSqtYDCOzcSsu0=;
-	b=DZydrxp6It5HlKS3mNh//5MUdSN05oCnIEplA26v4hntyU+xxNFeMDdkBpvi66dQmJHnJM
-	/gkrpKtXKANlwKBg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5045F13889;
-	Thu,  4 Jul 2024 04:32:19 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CD1EE13889;
+	Thu,  4 Jul 2024 04:32:21 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +B4rDtMlhmbnDAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:32:19 +0000
+	id UADILdUlhmbnDAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 04 Jul 2024 04:32:21 +0000
 From: Oscar Salvador <osalvador@suse.de>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -86,9 +45,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 24/45] mm/memory_failure: Enable check_hwpoisoned_pmd_entry to handle hugetlb vmas
-Date: Thu,  4 Jul 2024 06:31:11 +0200
-Message-ID: <20240704043132.28501-25-osalvador@suse.de>
+Subject: [PATCH 26/45] mm/damon: Enable damon_young_pmd_entry to handle hugetlb vmas
+Date: Thu,  4 Jul 2024 06:31:13 +0200
+Message-ID: <20240704043132.28501-27-osalvador@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240704043132.28501-1-osalvador@suse.de>
 References: <20240704043132.28501-1-osalvador@suse.de>
@@ -99,112 +58,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -6.80
-X-Spam-Level: 
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
 X-Spam-Flag: NO
-X-Spamd-Result: default: False [-6.80 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	R_RATELIMIT(0.00)[to_ip_from(RLghcz9uomn9ay1xnuhrww8uur)];
-	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -4.00
+X-Spam-Level: 
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Queue-Id: 09ECD21180
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-PMD-mapped hugetlb vmas will also check_hwpoisoned_pmd_entry.
+PMD-mapped hugetlb vmas will also reach damon_young_pmd_entry.
 Add the required code so it knows how to handle those there.
 
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- mm/memory-failure.c | 44 ++++++++++++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+ mm/damon/vaddr.c | 31 ++++++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 0cb1b7bea9a5..8cae95e36365 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -771,27 +771,43 @@ static int check_hwpoisoned_entry(pte_t pte, unsigned long addr, short shift,
- 	return 1;
- }
+diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
+index 58829baf8b5d..00d32beffe38 100644
+--- a/mm/damon/vaddr.c
++++ b/mm/damon/vaddr.c
+@@ -443,30 +443,35 @@ static int damon_young_pmd_entry(pmd_t *pmd, unsigned long addr,
+ 	struct folio *folio;
+ 	struct damon_young_walk_private *priv = walk->private;
  
 -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	if (pmd_trans_huge(pmdp_get(pmd))) {
+-		pmd_t pmde;
+-
+-		ptl = pmd_lock(walk->mm, pmd);
+-		pmde = pmdp_get(pmd);
 +#ifdef CONFIG_PGTABLE_HAS_HUGE_LEAVES
- static int check_hwpoisoned_pmd_entry(pmd_t *pmdp, unsigned long addr,
--				      struct hwpoison_walk *hwp)
-+				      struct hwpoison_walk *hwp,
-+				      struct vm_area_struct *vma)
- {
- 	pmd_t pmd = *pmdp;
- 	unsigned long pfn;
--	unsigned long hwpoison_vaddr;
-+	unsigned short shift;
-+	unsigned long hwpoison_vaddr = addr;
++	ptl = pmd_huge_lock(vma, pmd);
++	if (ptl) {
++		unsigned long pfn;
  
--	if (!pmd_present(pmd))
--		return 0;
--	pfn = pmd_pfn(pmd);
--	if (pfn <= hwp->pfn && hwp->pfn < pfn + HPAGE_PMD_NR) {
--		hwpoison_vaddr = addr + ((hwp->pfn - pfn) << PAGE_SHIFT);
--		set_to_kill(&hwp->tk, hwpoison_vaddr, PAGE_SHIFT);
--		return 1;
-+	if (pmd_present(pmd)) {
-+		pfn = pmd_pfn(pmd);
-+	} else {
-+		swp_entry_t swp = pmd_to_swp_entry(pmd);
-+
-+		if (!is_hwpoison_entry(swp))
-+			return 0;
-+		pfn = swp_offset_pfn(swp);
- 	}
--	return 0;
-+
-+	shift = is_vm_hugetlb_page(vma) ? huge_page_shift(hstate_vma(vma))
-+					: PAGE_SHIFT;
-+
-+	if (pfn > hwp->pfn || hwp->pfn > pfn + HPAGE_PMD_NR)
-+		return 0;
-+
-+	if (!is_vm_hugetlb_page(vma))
-+		hwpoison_vaddr += (hwp->pfn - pfn) << PAGE_SHIFT;
-+
-+	set_to_kill(&hwp->tk, hwpoison_vaddr, shift);
-+
-+	return 1;
- }
- #else
- static int check_hwpoisoned_pmd_entry(pmd_t *pmdp, unsigned long addr,
--				      struct hwpoison_walk *hwp)
-+				      struct hwpoison_walk *hwp,
-+				      struct vm_area_struct *vma)
- {
- 	return 0;
- }
-@@ -805,9 +821,9 @@ static int hwpoison_pte_range(pmd_t *pmdp, unsigned long addr,
- 	pte_t *ptep, *mapped_pte;
- 	spinlock_t *ptl;
+-		if (!pmd_present(pmde)) {
++		if (!pmd_present(*pmd)) {
+ 			spin_unlock(ptl);
+ 			return 0;
+ 		}
  
--	ptl = pmd_trans_huge_lock(pmdp, walk->vma);
-+	ptl = pmd_huge_lock(pmdp, walk->vma);
- 	if (ptl) {
--		ret = check_hwpoisoned_pmd_entry(pmdp, addr, hwp);
-+		ret = check_hwpoisoned_pmd_entry(pmdp, addr, hwp, walk->vma);
+-		if (!pmd_trans_huge(pmde)) {
+-			spin_unlock(ptl);
+-			goto regular_page;
++		pfn = pmd_pfn(*pmd);
++		if (is_vm_hugetlb_page(walk->vma)) {
++			folio = pfn_folio(pfn);
++			if (folio)
++				folio_get(folio);
++		} else {
++			folio = damon_get_folio(pfn);
+ 		}
+-		folio = damon_get_folio(pmd_pfn(pmde));
+ 		if (!folio)
+ 			goto huge_out;
+ 		if (pmd_young(pmde) || !folio_test_idle(folio) ||
+ 					mmu_notifier_test_young(walk->mm,
+ 						addr))
+ 			priv->young = true;
+-		*priv->folio_sz = HPAGE_PMD_SIZE;
++
++		if (is_vm_hugetlb_page(walk->vma))
++			*priv->folio_sz = huge_page_size(h);
++		else
++			*priv->folio_sz = HPAGE_PMD_SIZE;
+ 		folio_put(folio);
+ huge_out:
  		spin_unlock(ptl);
- 		goto out;
+@@ -474,7 +479,7 @@ static int damon_young_pmd_entry(pmd_t *pmd, unsigned long addr,
  	}
+ 
+ regular_page:
+-#endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
++#endif	/* CONFIG_PGTABLE_HAS_HUGE_LEAVES */
+ 
+ 	pte = pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
+ 	if (!pte) {
 -- 
 2.26.2
 
