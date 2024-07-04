@@ -1,71 +1,215 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6703113E024;
-	Thu,  4 Jul 2024 07:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECC8FBF6;
+	Thu,  4 Jul 2024 07:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720077250; cv=none; b=gWe2HtBu8InO/PIdKGH8db2sP6zN8OCEG50BagLLIQWDbOJP26yK4Foby3TBD1FVDDpC45hJomeDdN79M+Ay/KodgRHAI8ac1enJX4eqzr2JuWFhdfA7uwsFnBeUl4WT1Pq99aB86X/pChPJuiboZQEYvZxsqxYhSXZR/f2Of+E=
+	t=1720077334; cv=none; b=HhYLdPS0xRRWTsWFqb4BsIZGVZ5EWqV4BVeRHB+Nnl9pWV5fNaQKMA2K0/BfxrQlN/ZeZpiVhuI+1GvTHSR0L2rNcvS+PxND+xlZkNgR/2QCUW633mgGGHU5V15BYaGEJZNEuZmGWSWyhV0WkouVq3aZQWU2VponHCHgNhIEV70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720077250; c=relaxed/simple;
-	bh=tj9yNwlUIOcUFugv9LXKvCjof10V014dJ1Bv2oFdMOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oE703y3UuzPER7aDafoisnMxxMDqE9Cidduh3IobBTflI+LpSYEu7pM/Agf+jKfpEciWUsDJPdQktnJ3DJshZR4dpbyxkE2RsKVMjm9E6j7O0/7R772mwgJRrCc7jqVjVzKW22jdx+oxUKKyKylBkBOLN0kQYKpcbIMoRdfHnFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+	s=arc-20240116; t=1720077334; c=relaxed/simple;
+	bh=lZ/lqchbV1ZqzGPk3v4UVJ9pBGXfkyVEn4YOVaxcOk0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=njiM/IUoa5j8P1Xs2K4HIQmnZqR0cNU0TxrWTM6Ofa3WIeKXgdAS5nJFb6y49811sE/nkUGuX4u5LS1KaqQuxgnuUwgZRgSi9+gRsC9+fvqdcmeqBuJrvr4JfXeiUQiTga1taEo3Y4h1doP//YfYuZ3qUdRaSVisGWvJFuJKu9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lLCfexAb; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-713fa1aea36so98365a12.1;
-        Thu, 04 Jul 2024 00:14:09 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLCfexAb"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-58b0dddab8cso478365a12.0;
+        Thu, 04 Jul 2024 00:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720077331; x=1720682131; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pqqPxi9GFea+OeTvn8PO5uRaTOTc+yG0hq5j6l0g4FE=;
+        b=lLCfexAb0igdrUx6jiknUx0avGfJOK60ZbLHZ+eYdBdfqDFTLN+mtvbDB6+kKR0alW
+         2ry00rKcbzqV9uiWeWkFULvCidCfZhn/kxEh9U68V5TmkM1CSvsa45FKKo+W+C4ah0St
+         NhECwTVFXs9qXijffk4f7hu61poACdzIYD35dpSsAGdr0RcerYsGQ690WVGjEPR2fskx
+         afuTAzNsfMKYRVL7QJLS5YZxuLwwTL7qKa/ruWYKlTy8peJdV3LaXMLRRuD8RcL0cgxh
+         GxRvoY3GbcT/YpzAefuINz7fAoqaPf6nZur58ay9YNCXnVYLOW0sSuvr1bYSqSJvr1sY
+         Dfaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720077249; x=1720682049;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H74/f8x03FUG3BDt391zaig/HBmXDzV+z27vo8M+/2k=;
-        b=LadX0eKU5+AJ7raeSJzSQjGK+mpJ1IN8eNkPmG+TXfI2fZOnuHWa/wRANhgp7EfA9b
-         SNpqfGKb5Ia3eKIRBLgqQBGX+PlcnoPJLwRn1IPxi8LcHlrTXaA2utpw4rXfrgMroRDa
-         B3wqoA1ycjpTAWiK0gLSz23QZx0AOO1Vg5/skEjxwLvujAoa8C5iFbPGw+Dbya+FUar2
-         79NnhCgqI9PUoGooRc/mjM1rEMhh5kvbaR6EbOE0iTH0exn2ldD/UcleEmSYbislT59C
-         YrC6rL2qcfHwASHfVnlEe1sCtKoFcfBCEoNoM2gvyPysEUHLn4iy9+VU6CPv1b/N3HfD
-         /HOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqcOl90hCFZu7BRiWp0B28JT/aB8/jG7joFWdag04Zx1qnxBZCAsE14MtIvLlzw1e4T27mC+fNEcx2t8MiMkobOk7DMipWyGuh0Z8t7C/l0A+JNMLUU0MrQw0FojaPaOWPew+nPSmQ
-X-Gm-Message-State: AOJu0YzLGI8ETJOOcjnXsxAN5cL3xTM7v3ePvkUcxuVGFbiK0scQll5L
-	bs8xs3lIcbiAGQCz9HH7q1FJwz5u8ImcVYCt6tQQcyfYNf8ngSg0
-X-Google-Smtp-Source: AGHT+IE1qiGN1ScEWjOCXA9MaFnDN6kocxyeCLRtgfWaGTfcne56Ja13NPR8zln6aWuqLklQjEy5IA==
-X-Received: by 2002:a05:6a20:7346:b0:1bd:2485:b83c with SMTP id adf61e73a8af0-1c0cc74aa44mr679071637.21.1720077248539;
-        Thu, 04 Jul 2024 00:14:08 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99aa90ab4sm737795a91.52.2024.07.04.00.14.07
+        d=1e100.net; s=20230601; t=1720077331; x=1720682131;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pqqPxi9GFea+OeTvn8PO5uRaTOTc+yG0hq5j6l0g4FE=;
+        b=VcojGu37cXie0JySDPnR5zpYnmkLJYDAvA359SrTsP/lDP478LHRM36o5a1myrgsPv
+         roQnWshRYDwOnHYe0UaaHlAB8+7A4ybPdkVY/3fCiXkc1oO/QwDDbgI81rbrXDi+I3nv
+         8a/edy8Fc400BzQb0zq8fgPO22wdMS/OHzTqPdA706ZSp/+5LoOfzud5LGnG2ABU42mg
+         fj02Pu0MfjsXocD/W6SKn7Tbm/0xMXFZX0BjGlFHvarNGvSP4lgJ9igUY84Ka8tCUmmT
+         n7qKVV1VB0ahxKkDX2fVohsbCRTgLR0yq0JRuu8pHkAXTKkjsDsp1T3QUlqOQv78AyXI
+         yxFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNryGzYoZVoUlPcWkthF2wmvwe3841uOgflBUpGsNdubVe4IvHJrnb2w3iz9vnlmM7ye6sIfsEehbAxmSbCjeCkdllqaFvdmKmNhYqu8U1mWHeJgUEO/tUh/8L413wMDmHZ1R+ocAGp3gsROENe2mpDoV8XWit/C1go0+nx7kx0hFl0Wpi
+X-Gm-Message-State: AOJu0Yz8XjA8to/pi/7xgluZoDNJ0RTAjGhtaxgx9ux8t3arKm+9KFjX
+	7Rn/TyMc9rSqZv/NRhFiI2a4AGedqZn8yCAx+LybScz4pEfYvYSd
+X-Google-Smtp-Source: AGHT+IG3F2ZpfqdQldXn+rgvvAvq07dW1pZfkDqUzfdoBfCR0uLBmCANZoclVDTGLfrrrtCQUNxIyg==
+X-Received: by 2002:a05:6402:2105:b0:58c:2a57:b230 with SMTP id 4fb4d7f45d1cf-58e5955a333mr616316a12.13.1720077329339;
+        Thu, 04 Jul 2024 00:15:29 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58614f3d415sm8129864a12.85.2024.07.04.00.15.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 00:14:08 -0700 (PDT)
-Date: Thu, 4 Jul 2024 16:14:06 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH -next v2] misc: pci_endpoint_test: Remove some unused
- functions
-Message-ID: <20240704071406.GA2735079@rocinante>
-References: <20240704023227.87039-1-jiapeng.chong@linux.alibaba.com>
+        Thu, 04 Jul 2024 00:15:29 -0700 (PDT)
+Message-ID: <b9a57a014cab9ff7d9578f52bc7faef1dbea6ff6.camel@gmail.com>
+Subject: Re: [PATCH v5 3/3] dt-bindings: input: Update dtbinding for adp5588
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Conor Dooley <conor@kernel.org>, "Agarwal, Utsav"
+ <Utsav.Agarwal@analog.com>
+Cc: "Hennerich, Michael" <Michael.Hennerich@analog.com>, Dmitry Torokhov
+ <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "Sa,
+ Nuno" <Nuno.Sa@analog.com>, "linux-input@vger.kernel.org"
+ <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org"
+ <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "Artamonovs, Arturs"
+ <Arturs.Artamonovs@analog.com>, "Bimpikas, Vasileios"
+ <Vasileios.Bimpikas@analog.com>, "Gaskell, Oliver"
+ <Oliver.Gaskell@analog.com>
+Date: Thu, 04 Jul 2024 09:19:22 +0200
+In-Reply-To: <20240703-mandate-hardy-281ddd048b40@spud>
+References: <20240703-adp5588_gpio_support-v5-0-49fcead0d390@analog.com>
+	 <20240703-adp5588_gpio_support-v5-3-49fcead0d390@analog.com>
+	 <20240703-safehouse-flame-0b751b853623@spud>
+	 <SJ0PR03MB63432316EE8382033A4396369BDD2@SJ0PR03MB6343.namprd03.prod.outlook.com>
+	 <20240703-mandate-hardy-281ddd048b40@spud>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240704023227.87039-1-jiapeng.chong@linux.alibaba.com>
 
-Hello,
+On Wed, 2024-07-03 at 16:57 +0100, Conor Dooley wrote:
+> On Wed, Jul 03, 2024 at 03:55:11PM +0000, Agarwal, Utsav wrote:
+> > Hi Conor,
+> >=20
+> > Thank you for your feedback.
+> > > -----Original Message-----
+> > > From: Conor Dooley <conor@kernel.org>
+> > > Sent: Wednesday, July 3, 2024 4:20 PM
+> > > To: Agarwal, Utsav <Utsav.Agarwal@analog.com>
+> > > Cc: Hennerich, Michael <Michael.Hennerich@analog.com>; Dmitry Torokho=
+v
+> > > <dmitry.torokhov@gmail.com>; Rob Herring <robh@kernel.org>; Krzysztof
+> > > Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; S=
+a,
+> > > Nuno <Nuno.Sa@analog.com>; linux-input@vger.kernel.org;
+> > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Artamonovs,
+> > > Arturs <Arturs.Artamonovs@analog.com>; Bimpikas, Vasileios
+> > > <Vasileios.Bimpikas@analog.com>; Gaskell, Oliver
+> > > <Oliver.Gaskell@analog.com>
+> > > Subject: Re: [PATCH v5 3/3] dt-bindings: input: Update dtbinding for
+> > > adp5588
+> > >=20
+> > > On Wed, Jul 03, 2024 at 11:58:16AM +0100, Utsav Agarwal via B4 Relay
+> > > wrote:
+> > > > From: Utsav Agarwal <utsav.agarwal@analog.com>
+> > > >=20
+> > > > Updating dt bindings for adp5588. Since the device can now function=
+ in a
+> > > > purely gpio mode, the following keypad specific properties are now =
+made
+> > > > optional:
+> > > > 	- interrupts
+> > > > 	- keypad,num-rows
+> > > > 	- keypad,num-columns
+> > > > 	- linux,keymap
+> > > >=20
+> > > > However since the above properties are required to be specified whe=
+n
+> > > > configuring the device as a keypad, dependencies have been added
+> > > > such that specifying either one would require the remaining as well=
+.
+> > > >=20
+> > > > Signed-off-by: Utsav Agarwal <utsav.agarwal@analog.com>
+> > > > ---
+> > > > =C2=A0.../devicetree/bindings/input/adi,adp5588.yaml=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 33
+> > > ++++++++++++++++++----
+> > > > =C2=A01 file changed, 28 insertions(+), 5 deletions(-)
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/input/adi,adp5588.ya=
+ml
+> > > b/Documentation/devicetree/bindings/input/adi,adp5588.yaml
+> > > > index 26ea66834ae2..6c06464f822b 100644
+> > > > --- a/Documentation/devicetree/bindings/input/adi,adp5588.yaml
+> > > > +++ b/Documentation/devicetree/bindings/input/adi,adp5588.yaml
+> > > > @@ -49,7 +49,10 @@ properties:
+> > > > =C2=A0=C2=A0 interrupt-controller:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 description:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This property applies if eithe=
+r keypad,num-rows lower than 8 or
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 keypad,num-columns lower than 10.
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 keypad,num-columns lower than 10. T=
+his property does not apply if
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 keypad,num-rows or keypad,num-colum=
+ns are not specified since the
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device then acts as gpio only, duri=
+ng which interrupts are not
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 utilized.
+> > > >=20
+> > > > =C2=A0=C2=A0 '#interrupt-cells':
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 const: 2
+> > > > @@ -65,13 +68,15 @@ properties:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 minItems: 1
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 maxItems: 2
+> > > >=20
+> > > > +dependencies:
+> > > > +=C2=A0 keypad,num-rows: ["keypad,num-columns"]
+> > > > +=C2=A0 keypad,num-cols: ["keypad,num-rows"]
+> > > > +=C2=A0 linux,keymap: ["keypad,num-rows"]
+> > >=20
+> > > Is what you've got here sufficient? Adding "keypad,num-rows" won't
+> > > mandate "linux,keymap" which I think is wrong. I think all 3 entries
+> > > here need to contain both of the other two.
+> > >=20
+> >=20
+> > Ah, I can see the issue, thank you for pointing it out - I will be
+> > correcting that.
+> >=20
+> > > > +=C2=A0 interrupts: ["linux,keymap"]
+> > >=20
+> > > I still don't understand why interrupts are only allowed when the key=
+map
+> > > is present. I'd cover the interrupts with something like
+> > >=20
+> > > if:
+> > > =C2=A0 required:
+> > > =C2=A0=C2=A0=C2=A0 - linux,keymap
+> > > =C2=A0 then:
+> > > =C2=A0=C2=A0=C2=A0 required:
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - interrupts
+> > >=20
+> > > so that interrupts can be used while not in keypad mode. Unless of
+> > > course there's something (unmentioned in this patch) that prevents th=
+at.
+> >=20
+> > In case when the device is not in keypad mode, i.e, is purely using gpi=
+o -
+> > it doesn't trigger the interrupt.
+> > Due to this, I had restricted the same to keypad mode only(as a
+> > requirement). This was mentioned=20
+> > here:
+> > https://lore.kernel.org/all/d4661ddc1d253678fd62be4c7e19eb0cff4174f6.ca=
+mel@gmail.com/
+>=20
+> This says "not required", not "not functional". How come generating
+> interrupts becomes impossible when not in keypad mode? That's what needs
+> to be explained.
+>=20
 
-> These functions are defined in the pci_endpoint_test.c file, but not
-> called elsewhere, so delete these unused functions.
-> 
-> drivers/misc/pci_endpoint_test.c:144:19: warning: unused function 'pci_endpoint_test_bar_readl'.
-> drivers/misc/pci_endpoint_test.c:150:20: warning: unused function 'pci_endpoint_test_bar_writel'.
+I should have read the patch before replying in v4. Yes, I agree with Conor=
+ that
+what we need is to make the interrupt __required__ when using the keypad. I=
+n the
+case we have gpios, it's optional but it does not mean we should remove it.=
+ One
+usecase would be to use gpios still as inputs through gpio-keys.
 
-Have you see my question to the first version of this patch?
+- Nuno S=C3=A1
 
-	Krzysztof
