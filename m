@@ -1,202 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DAF1AED55;
-	Thu,  4 Jul 2024 14:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C031B3726
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 14:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720103899; cv=none; b=c7RP30AeYCR3pJI8Ndfy760d5CQyaQeupomORe6uh3L20Bh5sIvnsIrAf5ZlrPuYe4CHELj96DICR4YT/l7fa5yEsEqqoG7h8Hd0JYaErqRPEoKV4l7GhSYwqPNy3yUdauE6G92AjEKpAlCLm3aHTP0qUCcUGmN6Lkg0H3yB1oE=
+	t=1720103903; cv=none; b=tMexutbwW7QJPLTe5f2xyRBs2CtD9Q8vkL0si/Y0SJyxs5qu2ie06WRzLndKylMQ15tUA2liS245h0k0zxsmilwpGukXSF2wRLZo7TwpkZzSkZU+d/UBl6SAVhggZi3hZnzm3Dh6/kxFLcfqROSZ7S+Lrvw7+64x+v4JK/jQSPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720103899; c=relaxed/simple;
-	bh=ODPfrstW6z55EUTJBlL5CpBuNw04MBo366IHejLQljg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B4kWB1KgbAbyGdCV96djSMRis0O34IyU8FjL62QhgVvtTd6DhwNa0xrWTb/eiisaZZtCjscMW92vmYpjVCGQqQCo5+hKR3mCOTpr6g0v6LR1E51VYC4m/p892Lw3g3Rng8rM6TP2yNWMyyfpmbffaqD+o/l9aKpR81o6PbN6nmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENcGfyAk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENcGfyAk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF23C3277B;
-	Thu,  4 Jul 2024 14:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720103898;
-	bh=ODPfrstW6z55EUTJBlL5CpBuNw04MBo366IHejLQljg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ENcGfyAkVNir+N00kkmJQU041xFHzk6bryBStS3PHMWYJ3JHfVBOnCsWJFi4f90c/
-	 jcIl0WCIN3kE0BArYuBLN+WZmgCD+3R73p7xAkbD5T/nNlQCjn9ra9IYSqAxWn7Grk
-	 bp5jfk1kWsBi0+wt11ubVSnmUOgq8nvYN7bi1wmDndXmL0mgn5MJmTnne71Z1XyrL3
-	 /gP1XGtd56H2LCrgfUNI4lshCvU9mxujWAMIoIlyanLxlTuEBPt1e/fGPi4wLoWA4M
-	 0WgCCijUZXOOTzDXyGRhBaTHQmDgq7Eg8LyGc8wGXHxTfJYXnippNRxoP/dDttBWq8
-	 tsoFUgKbX83mg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-arch@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Guo Ren <guoren@kernel.org>,
-	Brian Cain <bcain@quicinc.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-openrisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH 13/17] hexagon: use new system call table
-Date: Thu,  4 Jul 2024 16:36:07 +0200
-Message-Id: <20240704143611.2979589-14-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240704143611.2979589-1-arnd@kernel.org>
-References: <20240704143611.2979589-1-arnd@kernel.org>
+	s=arc-20240116; t=1720103903; c=relaxed/simple;
+	bh=11ky+4rAzYeI15IHMbslfVqut9Xl2RbRxbj/jBLcjLU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=p3u7Y4rxegw+IiOiqVvN4u2hy7GO1EUuxIUWO6QTToBJ0EVmrKIFLuZkvjzDAY6K1TJdEx6MJ2yW2CEZV90z9whuqFoXi65IshbZDgZjMrQIIIZCQ3jCTqFjo8Dhke9ZfJHsTt8Qoh2eaySqZu7W2cllMhkPdQKbVuYZrcuOADQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7f6307d584aso92173839f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 07:38:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720103901; x=1720708701;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O8RwYbFd+1D/aayv0GcskSCY5cRhlX3pKTCf8YYDs8E=;
+        b=QQlODOULm0SlxP5phJBEFClqQWjanvJBpjmLwOaTYrdt+AwvW5ezR69Db3gdIRC/Tt
+         B/k/V6a0zTJN0gmOPPZNRBiRMMZPm4DLtmHj8CgxHODJkzV8Lx++gzFI/2LPjTtsANRa
+         pyBglocbIXBXUvyFyrhObRcZNNigudnc9x+QPzqH0qLDrHA+ADvXvS1Xwl9XDofgXhW3
+         7ub2bwqVG2FHXXMrZM0pmXqWJ+XL72hqK4S792ghnJ3LjVl3+KCQFtLsgAYi7ORxvnKK
+         LjItYJbDTIYMR+KKDYJcaOAah4UBT6li6tC874pzoOlp7wo7ZvZ2PJ2K2sPAA0CwY2x4
+         6JgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLNLwHmLCNOL55zbGQapzTVjr3hm0cko0K4SvHYcSbfJMw5Q3PBt9gnfdfwBIm43URx08qiLqO0XeXbPVNMxfARvLGNG4h9/87m3YV
+X-Gm-Message-State: AOJu0YwW2Ogv+b8hnm4Abl64awHbvJ5EWnwvsaGn4W5P15ROMD3FqlPx
+	/ioxsEljScl0YVBm3GZi4Hslp/geDWG/5Xn3PCqJmEyOd77W3q3Olvx1R/diS9EqY4B1tJo5M33
+	hi6809NhcK/n32iYnIqalXRbsiz2ZzOjsuQjklmDaTiN3jn3nhZWW9kQ=
+X-Google-Smtp-Source: AGHT+IFOVQNCaKJ5iTZjG6QaRv+CfxmdTczN97vLfQDQQ6oWENLTqFpkmHp6BhraCtknYITElrqcNFiodB6pncqOQxhnJvQI4WdP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:3f18:b0:4b9:6e79:8155 with SMTP id
+ 8926c6da1cb9f-4bf612d57b9mr88446173.3.1720103900781; Thu, 04 Jul 2024
+ 07:38:20 -0700 (PDT)
+Date: Thu, 04 Jul 2024 07:38:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fbb100061c6ce567@google.com>
+Subject: [syzbot] [fs?] KCSAN: data-race in __ep_remove / __fput (4)
+From: syzbot <syzbot+3195ed1f3a2ab8bea49a@syzkaller.appspotmail.com>
+To: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hello,
 
-The uapi/asm/unistd_32.h and asm/syscall_table_32.h headers can now be
-generated from scripts/syscall.tbl, which makes this consistent with
-the other architectures that have their own syscall.tbl.
+syzbot found the following issue on:
 
-The time32, stat64, rlimit and renameat entries in the syscall_abis_32
-line are for system calls that were part of the generic ABI when
-arch/hexagon got added but are no longer enabled by default for new
-architectures.
+HEAD commit:    22a40d14b572 Linux 6.10-rc6
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10f94dae980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5b9537cd00be479e
+dashboard link: https://syzkaller.appspot.com/bug?extid=3195ed1f3a2ab8bea49a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-As a side-effect, calling an unimplemented syscall now return -ENOSYS
-rather than branching into a NULL pointer.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ebe2f3933faf/disk-22a40d14.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7227032da0fe/vmlinux-22a40d14.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a330dc1e107b/bzImage-22a40d14.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3195ed1f3a2ab8bea49a@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in __ep_remove / __fput
+
+write to 0xffff88810f2358d0 of 8 bytes by task 6036 on cpu 1:
+ __ep_remove+0x3c9/0x450 fs/eventpoll.c:826
+ ep_remove_safe fs/eventpoll.c:864 [inline]
+ ep_clear_and_put+0x158/0x260 fs/eventpoll.c:900
+ ep_eventpoll_release+0x32/0x50 fs/eventpoll.c:937
+ __fput+0x2c2/0x660 fs/file_table.c:422
+ ____fput+0x15/0x20 fs/file_table.c:450
+ task_work_run+0x13a/0x1a0 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0xbe/0x130 kernel/entry/common.c:218
+ do_syscall_64+0xd6/0x1c0 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read to 0xffff88810f2358d0 of 8 bytes by task 6037 on cpu 0:
+ eventpoll_release include/linux/eventpoll.h:45 [inline]
+ __fput+0x234/0x660 fs/file_table.c:413
+ ____fput+0x15/0x20 fs/file_table.c:450
+ task_work_run+0x13a/0x1a0 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0xbe/0x130 kernel/entry/common.c:218
+ do_syscall_64+0xd6/0x1c0 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+value changed: 0xffff888102f1e010 -> 0x0000000000000000
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 6037 Comm: syz.0.1032 Not tainted 6.10.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+==================================================================
+
+
 ---
- arch/hexagon/include/asm/Kbuild        |  2 ++
- arch/hexagon/include/asm/unistd.h      | 10 ++++++++++
- arch/hexagon/include/uapi/asm/Kbuild   |  2 ++
- arch/hexagon/include/uapi/asm/unistd.h | 15 ++-------------
- arch/hexagon/kernel/Makefile.syscalls  |  3 +++
- arch/hexagon/kernel/syscalltab.c       |  8 ++++++--
- 6 files changed, 25 insertions(+), 15 deletions(-)
- create mode 100644 arch/hexagon/include/asm/unistd.h
- create mode 100644 arch/hexagon/kernel/Makefile.syscalls
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/hexagon/include/asm/Kbuild b/arch/hexagon/include/asm/Kbuild
-index 3ece3c93fe08..8c1a78c8f527 100644
---- a/arch/hexagon/include/asm/Kbuild
-+++ b/arch/hexagon/include/asm/Kbuild
-@@ -1,4 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
-+syscall-y += syscall_table_32.h
-+
- generic-y += extable.h
- generic-y += iomap.h
- generic-y += kvm_para.h
-diff --git a/arch/hexagon/include/asm/unistd.h b/arch/hexagon/include/asm/unistd.h
-new file mode 100644
-index 000000000000..1f462bade75c
---- /dev/null
-+++ b/arch/hexagon/include/asm/unistd.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+
-+#define __ARCH_WANT_STAT64
-+#define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_VFORK
-+#define __ARCH_WANT_SYS_FORK
-+
-+#define __ARCH_BROKEN_SYS_CLONE3
-+
-+#include <uapi/asm/unistd.h>
-diff --git a/arch/hexagon/include/uapi/asm/Kbuild b/arch/hexagon/include/uapi/asm/Kbuild
-index e78470141932..2501e82a1a0a 100644
---- a/arch/hexagon/include/uapi/asm/Kbuild
-+++ b/arch/hexagon/include/uapi/asm/Kbuild
-@@ -1,2 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
-+syscall-y += unistd_32.h
-+
- generic-y += ucontext.h
-diff --git a/arch/hexagon/include/uapi/asm/unistd.h b/arch/hexagon/include/uapi/asm/unistd.h
-index 4bea7428e747..6f670347dd61 100644
---- a/arch/hexagon/include/uapi/asm/unistd.h
-+++ b/arch/hexagon/include/uapi/asm/unistd.h
-@@ -27,17 +27,6 @@
-  *  See also:  syscalltab.c
-  */
- 
--#define sys_mmap2 sys_mmap_pgoff
--#define __ARCH_WANT_RENAMEAT
--#define __ARCH_WANT_STAT64
--#define __ARCH_WANT_SET_GET_RLIMIT
--#define __ARCH_WANT_SYS_EXECVE
--#define __ARCH_WANT_SYS_CLONE
--#define __ARCH_WANT_SYS_VFORK
--#define __ARCH_WANT_SYS_FORK
--#define __ARCH_WANT_TIME32_SYSCALLS
--#define __ARCH_WANT_SYNC_FILE_RANGE2
-+#include <asm/unistd_32.h>
- 
--#define __ARCH_BROKEN_SYS_CLONE3
--
--#include <asm-generic/unistd.h>
-+#define __NR_sync_file_range2 __NR_sync_file_range
-diff --git a/arch/hexagon/kernel/Makefile.syscalls b/arch/hexagon/kernel/Makefile.syscalls
-new file mode 100644
-index 000000000000..d2b7c5d44d95
---- /dev/null
-+++ b/arch/hexagon/kernel/Makefile.syscalls
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+syscall_abis_32 += hexagon time32 stat64 rlimit renameat
-diff --git a/arch/hexagon/kernel/syscalltab.c b/arch/hexagon/kernel/syscalltab.c
-index 5d98bdc494ec..b53e2eead4ac 100644
---- a/arch/hexagon/kernel/syscalltab.c
-+++ b/arch/hexagon/kernel/syscalltab.c
-@@ -11,8 +11,10 @@
- 
- #include <asm/syscall.h>
- 
--#undef __SYSCALL
- #define __SYSCALL(nr, call) [nr] = (call),
-+#define __SYSCALL_WITH_COMPAT(nr, native, compat)        __SYSCALL(nr, native)
-+
-+#define sys_mmap2 sys_mmap_pgoff
- 
- SYSCALL_DEFINE6(hexagon_fadvise64_64, int, fd, int, advice,
- 		SC_ARG64(offset), SC_ARG64(len))
-@@ -21,6 +23,8 @@ SYSCALL_DEFINE6(hexagon_fadvise64_64, int, fd, int, advice,
- }
- #define sys_fadvise64_64 sys_hexagon_fadvise64_64
- 
-+#define sys_sync_file_range sys_sync_file_range2
-+
- void *sys_call_table[__NR_syscalls] = {
--#include <asm/unistd.h>
-+#include <asm/syscall_table_32.h>
- };
--- 
-2.39.2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
