@@ -1,142 +1,186 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010056.outbound.protection.outlook.com [52.101.69.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56DC7E9;
-	Thu,  4 Jul 2024 13:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720099194; cv=none; b=CcI5FZj2zgpk2+rW5cRu9zHlKIta2mBBHMlDxuKi7y/jL1WsC3ogf/H+mp4JDN4cyYNkVgL/YSJO7QfjeGaKNdMUlEPc9JGmbRUe9nP0minOMDq4iCiENvH1hMGszQa75RVLXRaYp3cRRGBU6lCk9tJwDC/eyUPUBK4PAITGFRc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720099194; c=relaxed/simple;
-	bh=bEx1ORCE++4Hi7zOuGfdPFW0dAv2Txvp4mLuIr675wo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BGG0iTo3kZmRi3UNsE7Cg4nFOmUFsy8jx81b0U8y0QpCdo7DTg5QgySb2878dmrnQhhxgiKdescJYkELu6andpqrArC4rYgpnbs4ZsY4lWtSkTHl95TGhsXTi6cM7mPtcbK5ZOdrR0AwQKYyT3k9B0PcK8xf8L8sdHXzNZ3ILB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XlRz09DX; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D340F27452
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2024 13:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720099285; cv=fail; b=cE1G5kmzmg8F0P9zKRGFc9vH4HR3KvNOEwktN9/OP++cv4ROXucet9IeUh2pV7gHJu5Rd72JcYOtCJKESCUNDdSO7sg0+4HuM5ncEQfCymGwiq/p9YTWQdgNCmZSjfEbjX60Rlmu6Dt13OWxpySFUAiQMpv16qpMj7ic5ifY0dI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720099285; c=relaxed/simple;
+	bh=RVkWMjcCMqugx7ZXO4KK1b3IZ6Gy54ufQ1NT3e5grp8=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=FDHIUW8t2KgTOyAXdvowsxbiM66UnzrH0fXNjP47DhDMT7L2f/HzXwyz3KCNYYSVT0L3f3DTiDNGRLwZIjS6YMEVGmVqVApzeVUW0I/tnF7ZPPlAIfxzxdnCqOi1j5KNGsjK1S8w1YcOOyuVS7rA8LCa8LqxwB29W3DdxZ68DRM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=IQkwDmAY; arc=fail smtp.client-ip=52.101.69.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlRz09DX"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52cdbc20faeso741337e87.1;
-        Thu, 04 Jul 2024 06:19:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720099191; x=1720703991; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Mio7nA2GrQAf/CO8lwaLayQG4Qad6gjdq+KH1l6Sqc=;
-        b=XlRz09DX2BTfVwFIAAngf/wCYyZLEJV6VtuUPLqkhC23gNgVrxrbxOnAXdo9MatQYi
-         cj8uQ6WYEF1rZKKVu//CPmgfpjAJV4qrxuSlQnskb5Wbe73VE2sLKqOl9mhU5KcRvSld
-         qPYj0ISMpTO8F66++zQZ4Bo0yTPpQtQjFXMHkS93ZV7+R1aUL5ugQZL3Zj2xyCHW1mI0
-         3xmi8rh1C4fRutKFlsKKQO9Wg0I4AmC06okmI7AG2EcqUQpnijkhJuXEbyENN4KpEP7u
-         gNI31Xo8yiCOlncNO4CJnXFQ0+eQelmkHWovtJL371Z5FszIHGWfe4BxeFAZ9MOEUiBv
-         MJNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720099191; x=1720703991;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Mio7nA2GrQAf/CO8lwaLayQG4Qad6gjdq+KH1l6Sqc=;
-        b=bX8rgRixY2QNj56ya8TTRKt8/o4mO7tabphSQ5iohEhHTv69dylyL/VSEBmiQnCdcO
-         KATYUvr1/oParWr0rFSzKsJX1NFtkmS2uTjakaEng5ocm5dFer9Nc2GeGkrFd3gESceu
-         Vd3PmRZNuyHkzq3L6BwqDUFB4LDV3GM0NzXeQSUx9mgCz9QVRnVPxZUyvTHh14tQzDrr
-         +xFHUE6VDO9MxPFwB/tRVbtrJ/tfRt4LWo6cSYszOcTmcd2/ccVEd23NJyXsJMmVlCfh
-         IylvJeJuGbbFUnEihCTLephWu1nv4BolllWTL+xWvsadvkj92pUst8nrpZJ1E1VIG1z2
-         PZiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUkL0CCqzuzGTbenDJvoNV6Q5JzYijiHyeZJJt9uH7f42ogdiu9baMPo3vey8o8WVXFFZajzw+r/lfpc2fUNcvgbrrulphK2u/jJuFDso36nS1VeWLujMjOF/BfFbbY40coi6Q2e8/MZ7FL6eFYhVu2Ddtn0+wIjaA
-X-Gm-Message-State: AOJu0YyQQ7CwheHPNm3wfLI0UsyUnIgrqBJXDeL4nUjpNcP5ZcalvjkU
-	NLaLPfyMQ+fd1hiEKzdfYFC4npq0hctGOQUPiSItDGQ66AYYfTf5
-X-Google-Smtp-Source: AGHT+IFLsJluxr9qbjbQR6D4oopUOzte2TNpjqiQgp9iU60Xia5F2mbvt0C30sUaoP0hA8XPlTqBtA==
-X-Received: by 2002:a05:6512:4819:b0:52c:7fe8:6489 with SMTP id 2adb3069b0e04-52ea07126e6mr985561e87.63.1720099190585;
-        Thu, 04 Jul 2024 06:19:50 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e9fbeb17asm200371e87.194.2024.07.04.06.19.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 06:19:50 -0700 (PDT)
-Date: Thu, 4 Jul 2024 16:19:47 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Halaney <ahalaney@redhat.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, linux-arm-kernel@lists.infradead.org, 
-	linux-stm32@st-md-mailman.stormreply.com, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net-next v2 17/17] net: stmmac: pcs: Drop the _SHIFT
- macros
-Message-ID: <tqghwucifrtbeeucsrbbc4zx22axaij7f4qx3rwhj27kmohgci@zin7ke5272n5>
-References: <Zlmzu7/ANyZxOOQL@shell.armlinux.org.uk>
- <20240624132802.14238-9-fancer.lancer@gmail.com>
- <Zn7L4cP62MsNN61J@shell.armlinux.org.uk>
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="IQkwDmAY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GoVyJkbeTeDnPnOo9IaXEzpFc4Z7MZTo4fO2bqZpRwfKDSvbXNWeEuNNSKBvQg6JtBWPKPm9qwgyFOPflPstMfAEQ8x73Op9ZeBy7KzEvCkm46GPDc/jtAgcvG3BZAXth5G70saJUecd24fd3UTMzvsxAgq+Og89nPf1txYD8N4knJokL/hJaungGbEYYZ54rYiqj9/DPvQqq40dXlCz+QPI6Czxs0LxISSLgOrus1EPUFMub1pgMkwlohjd1z/pS5PLv2MzRxsA4H3FhmrmH61BWtWS91Z0Ne9uF/kT4xJqcX25dnfaPYmvj5aFH83gNt3vez86jwiS0A6aKpI6sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5aIGSENashp1opWHQNZ/LlzM9Td+liywpUh9IgXwvsw=;
+ b=Uo1HzBpG/kQUzoZURUpeeqi/XVSdaG4UIY7sqcaSgjyuUYg98+I5Jp+/Vncj5PxO0XhyasPeyGKMLJYzFxVX6DGCLh2TJdliaQAa7F8uvgwSWURZeRXIr1HU4E8t9eVvq8RduZav2wtyPZmP55IvZvPcLoQDztmE5QwxtT/1Hs9XCEyqa6bOc7+zq98K1VQ6GI9PriKQ4U7dQQMRTnYiCDTXbCE+zFo8hNldHpGdCKG7znPEUskET1LxggJuX9AOV99oj080UzOHXUU61+Xgos8Gw7W7c4h9rwkb/xlf6zpUQH2sTF3whMPZjxBJHg4YD1LBmVwlZZH56nRQZNngtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5aIGSENashp1opWHQNZ/LlzM9Td+liywpUh9IgXwvsw=;
+ b=IQkwDmAYdyLAO6CVXvdFTVKuG4ZlzxHyxgImgYBgS18V0hTXdWfTsrAY+IHQZ5l9bjK83rnDQKmVRrpaBxVXNgKO5azmFaVV24Bq8icKmPGFquzmss1A3G/SMuWbKIgyvvpjIKRNs2KezCMlnhoO5DrGYEIN4uK4bNIBO+2AHb0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9251.eurprd04.prod.outlook.com (2603:10a6:10:352::15)
+ by PA2PR04MB10422.eurprd04.prod.outlook.com (2603:10a6:102:417::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Thu, 4 Jul
+ 2024 13:21:20 +0000
+Received: from DU0PR04MB9251.eurprd04.prod.outlook.com
+ ([fe80::708f:69ee:15df:6ebd]) by DU0PR04MB9251.eurprd04.prod.outlook.com
+ ([fe80::708f:69ee:15df:6ebd%5]) with mapi id 15.20.7741.027; Thu, 4 Jul 2024
+ 13:21:20 +0000
+From: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Haibo Chen <haibo.chen@nxp.com>
+Cc: linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	s32@nxp.com,
+	Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
+Subject: [PATCH 0/4] address several S32G2/S32G3 SoC based boards particularities
+Date: Thu,  4 Jul 2024 16:21:12 +0300
+Message-ID: <20240704132116.2865864-1-ciprianmarian.costea@oss.nxp.com>
+X-Mailer: git-send-email 2.45.2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AS4P195CA0027.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d6::16) To DU0PR04MB9251.eurprd04.prod.outlook.com
+ (2603:10a6:10:352::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zn7L4cP62MsNN61J@shell.armlinux.org.uk>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9251:EE_|PA2PR04MB10422:EE_
+X-MS-Office365-Filtering-Correlation-Id: 108b590b-f7fc-4773-a86e-08dc9c2c316f
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RDNkWlN0MWJEL3NMOXZENjRoa0I2VEpzajN1eERZRVhidDlJaGRPb1NQK1dO?=
+ =?utf-8?B?ZUliR0tkei80cjlOcUlpMGpyYmxRUTVpajd6WTYxa3ZQQldPUmYweEQrbDhR?=
+ =?utf-8?B?NFlkQmVmVlJtYllNeEZGS3gxR1lIVnhkVFlZZWJDOVZaMS9wemN6RkZMelBC?=
+ =?utf-8?B?dTc5UUxGSjRxczRzSHBQZVRzNER2UXRPZHBoOG5rbTgwbEZqdDRzRG9UYnJt?=
+ =?utf-8?B?ZEVZK2w3d2gvNDZGcFdYVmluRUI1SDhZdk9OZHl0amVVV1RSMlhVRC9aR2Rt?=
+ =?utf-8?B?UWxrcWsrMVkzMkNhcCttTERwN0tybEJ5NTNaRG5KMXZNNXljWEJxL0s3anoy?=
+ =?utf-8?B?SXhZYmJ4YTYvNk1TeFBrWGdNNWk5eCtEcHVMcXBIekdPaWdlRHdISDdNeUE3?=
+ =?utf-8?B?S2ZJZTdSVWo5cVVkbUlpZ3puUXpqdmFBbnMzRVZRRjFqUFFhN3NCeVdwK29i?=
+ =?utf-8?B?VEdKbC9ZVDlxbTFrLzVtTjNvYitPWStPQlpJNTR2aFBDbnk3Mnk4eGlqZk03?=
+ =?utf-8?B?S3paYVMyeTJneWE0ekVVR2FJSEJPcHJDRmxlYzNIazZaaENUWUlOdlhDQTBa?=
+ =?utf-8?B?VVZCMmp3SUxpS010OXN3aGxLb1VPdDJMcHNFWnhzT1pPaDFRM1ZpWjk1R3px?=
+ =?utf-8?B?NU9sSFBybStpR1J1eTYrSzl0ZS94SHJ0VGd6TXpxb2JjQXFUOGV4K3B1dU92?=
+ =?utf-8?B?bDJSUWpvTjdlMzhpcWQvMFIwSU0xYktFVitzd1d1N1ArMGFWTlJzb2Z4ejJz?=
+ =?utf-8?B?WWh5VjZMVVB3NTI0R3Y1MjFOcTR5cXBVK3NOaEUzZ1BKcU8wNGxFeUZUVjZ1?=
+ =?utf-8?B?QVZJY3JYaFpaMTlRMUdZbFJTZ2FPY3hXY1JiUVY2cTBGMVZCYTh4Z1ZkMjEz?=
+ =?utf-8?B?dnRqNGxDWWk3ekVnSkw1c2hPYm1PbmVCekRwVi9MSkR3NUQ1MnloWUdVdXEz?=
+ =?utf-8?B?VHg4cFpJY1V5c3cyRllmWktNZS8rYW80RnBXWnR3RmgwTElOMmVOaDlXajNU?=
+ =?utf-8?B?WSs3ZkNrb3BDMGsyRWNtNnRidHFWU0FVU0NvZUF0NjAzQTNlOTNCbW54d1JO?=
+ =?utf-8?B?Uk5TYmorakN0QjBFR3ZPNWpUcERiUjVyRVQvdnlxRFhEVVNTakk0dEFaalVk?=
+ =?utf-8?B?NEtXQVNJR1BIVWVOT3RLUGZXeHFRbFhUVlo5UHJuN2k2bnRYamczMUlvVy91?=
+ =?utf-8?B?cUtZd3N5M01oZ0w4UURTUXhLME9YV2taUXpMK25KNXRvcUgwNzRReWU5aEoy?=
+ =?utf-8?B?RzBrbFZOcEJHODF2TzJRTldDaTR3UFBTTDZBb3MrY2c1VWNBbCtSVlViTlFB?=
+ =?utf-8?B?bFRQRU5ETE5kU3FpZjRFZ1lKRk5KTmROa0p6bFVXbnZveXNhWTVJeE5LczBh?=
+ =?utf-8?B?emVqeFoxVVBsTlhJRzcwVTl4MkxZNlJBOEVYWTlzMHhvYmRvV0pnZlpVVjVE?=
+ =?utf-8?B?cXhlVk04c05BbnFpMVlGQ0g4bFFuNkJiZ3M2NjFKUTJjbG1tdlFUbVdZU2t6?=
+ =?utf-8?B?MVY5dVEwV1JJWmNKZ3FEcElKcGRLUm56VzBFZHpBeW1sdUI2eFAwaWU1amVV?=
+ =?utf-8?B?RVMySHhPY1NEaFZuRGFIMjI1OG5jcHVzUHl6ZjVSOUJLQUt6aUpyaWY4akZP?=
+ =?utf-8?B?U0ptOVRtbnVWTFVwNDBRMlQzNVN0SWdhV2RQWDdCM2pBczRiamM3OVdZeTlw?=
+ =?utf-8?B?UW5TemZrYzgvSlZSNXB4ZnJhZm83ZVNpc3YzNFRyNXFsL3RLcXBzeDg4ajA5?=
+ =?utf-8?B?THBTZnpEemVMcHJtdUZYazJKMFJxSzFhWlE3eDdrTnFRaUplQkF0azkyRmJN?=
+ =?utf-8?B?NnZIZnRGblN4UTRIbHVjQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9251.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Szh0VmJBNDVjMHE1dzZMTUhreHdJVUVFcmV6Q1JOQmMrRVRxeUxlL05pcngx?=
+ =?utf-8?B?UHd2TmwwZVY4VUhuSFkwQlRvRVFWaXFzUENYa3I0WU1KaVN2QW9EWEZmOFl1?=
+ =?utf-8?B?cEZkVEFtMlJDT0wzVWtEMUZ4enk4b01vQ0ZJYnQ0ZzAxZ2t1NVZjSU9IY3gr?=
+ =?utf-8?B?WXI3MEV0Sm90WkszbmxLUlhBMENTTCs3b2QzTGZqOEsrYkZvcXZHUjN0aGZ1?=
+ =?utf-8?B?aGhqTDZUS3BEZzVhZGpaWU9LRWkveHRGbmxsNnJldEduRFZlYjlsRCt3bVhX?=
+ =?utf-8?B?Q3laY2Q5aTJMYkJmUlJYUkhNMGRPVGJldEN1RVBJcTdsTUwzMk5WR3ZoMG5k?=
+ =?utf-8?B?VmlIY3doNVM2a1ZhWXFoaDBsSk5iRnpnSHZjdGlhdGNjd2VtYzBXOFNEN0tZ?=
+ =?utf-8?B?Y1NiR3premdEOHdRYndOVUFPTkl4MXdCZ21hZm9EaUhIQlprUU9SL0RtZzBF?=
+ =?utf-8?B?dEFsSUhlVWZsWVg3NkpYNDZlNW9Qb3VTMkwxVm93UlZIUkJEUThiams1aUpl?=
+ =?utf-8?B?NXlaWmw1Zm5iMTdzeVpGTmZ4ejc3Y1V6YVlqa2xzdG5SRmZZQlIrS2h4SStq?=
+ =?utf-8?B?TkZzNTBXZGhRcW5MbkJKTHY1NW9Uc1RBS2tvWGJMbGJhU3dGY2h1THRFVzFp?=
+ =?utf-8?B?dWVnS0Nya3BrWEJrZStlby9hV0JKd25WM1ZaQ3hEVE52NVFWZURpaG14Yk1H?=
+ =?utf-8?B?VVh2TjdYLzRDNE1VdXAyM2NvKzBhdExTWHRzU0xYaElHanMrWHFjK29WbnFZ?=
+ =?utf-8?B?OWQrdmtkY0NhVjNzREdlSEtXRU0xYjR0YkxCY1RvMjl5RWdEYVdJcGZ6Tm8r?=
+ =?utf-8?B?NTRjU0JPV3NaVFN5LzBncmVncVJNbUI3NlRFNzQwR3VHeEJmcGlxeVRTVlJ5?=
+ =?utf-8?B?WkJaRWRYaDJ0ejFTUEVzNC9KSVRLUmtEZmxGeXlFWSt0WWZqeVl2NUwxWmZU?=
+ =?utf-8?B?UFFTK3JCMnpLOXZTQ2ZLY0UrRzE5NUNhUFdQSVpyYlRtcnlnWFVpekVyaFNT?=
+ =?utf-8?B?Um9vN2ttK1pkY2hFbTRvVGJQVllhV3NlbTVJYUFsQjlKVkZHbWVNcEpuWDZW?=
+ =?utf-8?B?UnJVeHFodXpOVkR2cC8vOC9zQXpic2xYVUplVDJ6Sk1LT3llc1E0eVByTWR3?=
+ =?utf-8?B?aW1ERVZLQjQwMmhjdEhmOGJvM2JqZEpGcjl5S0NVZlpIdXFpaGh1TkpkcGpR?=
+ =?utf-8?B?SnpMenVrUHhXajJuSWRXVy9CdXA5QVlGVWlLWm9iZmxBMUhTZHlxYjQrVTAv?=
+ =?utf-8?B?TkhOOTJLcHhaTFdwRzZzRGxoT1UzRkJtZXZtdk1MdktVZ1FUZEpSZk1GbVo0?=
+ =?utf-8?B?YTkxUy9hSGZ3NjlrbGVrenA3TmNyRk9tOGNwQXdsR2s1a3BSSDNxK2xvMkNS?=
+ =?utf-8?B?bUVpZGNuNlJPZWdob1F2VnRoNFRZYUdOVHMwNEhtTkk5Y1NVVFdWa25NRExn?=
+ =?utf-8?B?Q2lkNkxDQ3cxL3lIL2lsa2xOU1ExSWNDdndQelZyZFppSmJQZzZwaGxKQVhE?=
+ =?utf-8?B?Qkw3WEc0MzFHcVpuSytzdFhlQ1krcGhuVkIvL2ZHTCtrSXBYbE5rUkJtbzQ5?=
+ =?utf-8?B?dWNuQ1VrVnJCcjlDdjZ1V2hGS1hxb0hBSE9NdDNGd3dkTXdwN0VyMkEwa3Ju?=
+ =?utf-8?B?RTB4SXh2R3ZTN2NUR2dJdkdrNFNZdTBpb3l3czhqU0hvQjlQSVhVQWs3ejZ0?=
+ =?utf-8?B?bCt3VkpuaEVEL1IyaGxDdllHN0dubXR0RCtvQnlwVGc0bDJtZ29KUVVvcVNt?=
+ =?utf-8?B?bElyU0JCQUxJZ1NleUNMU3JJNUhsVm9PclQvYlpHelB1dHZvU2lSWEtINURW?=
+ =?utf-8?B?OUJ0SGI0VkxnSW8xMjZOSUViSzdQWHI0a0d0SWhYeEIzVTdhaDVkV09IR2Zt?=
+ =?utf-8?B?WDl1b2VvbFgwdVhydThXWWZrelZJdE1PN1lVMWswT3o1Q2h0TEJkdGFlVzdm?=
+ =?utf-8?B?Ukg2c2drZjJIUTVuUTkzRFM3Y0VZTlB3VWFUZDV3SjFaYXVFcU5keFNQU1ps?=
+ =?utf-8?B?NmNLY0pOSStXekV3SjdDOGxoN0Nod04yeHJsenhseWJ2eTNBZ29JbGFMenBD?=
+ =?utf-8?B?WU5PVXNXUkEzRVNETEdseVV0c0lnYmI5ZUwzdUtES0VHTEMySlFvWDAwWUtF?=
+ =?utf-8?B?cUtoTkVHOGF5bitsMkxUZVV1UnhjSDhJZVI0ZWFaRVhWdVoxc0ZuYjFWbnhv?=
+ =?utf-8?B?bFE9PQ==?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 108b590b-f7fc-4773-a86e-08dc9c2c316f
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9251.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 13:21:20.3719
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8G0wfZl6q7ccqnuhThBY+4gwyUsuCOVsJh/gwJhatCDvyUjHxaOjAYmQhIDLW0gG3hzOeAbQEm+NLsqDtrpJPsZSXb4nO2GCXU3OGj37VWQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10422
 
-On Fri, Jun 28, 2024 at 03:42:41PM +0100, Russell King (Oracle) wrote:
-> On Mon, Jun 24, 2024 at 04:26:34PM +0300, Serge Semin wrote:
-> > The PCS_ANE_PSE_SHIFT and PCS_ANE_RFE_SHIFT are unused anyway. Moreover
-> > PCS_ANE_PSE and PCS_ANE_RFE are the respective field masks. So the
-> > FIELD_GET()/FIELD_SET() macro-functions can be used to get/set the fields
-> > content. Drop the _SHIFT macros for good then.
-> > 
-> > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> > ---
-> >  drivers/net/ethernet/stmicro/stmmac/stmmac_pcs.h | 2 --
-> >  1 file changed, 2 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pcs.h b/drivers/net/ethernet/stmicro/stmmac/stmmac_pcs.h
-> > index a17e5b37c411..0f15c9898788 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pcs.h
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pcs.h
-> > @@ -43,9 +43,7 @@
-> >  #define PCS_ANE_FD		BIT(5)		/* AN Full-duplex flag */
-> >  #define PCS_ANE_HD		BIT(6)		/* AN Half-duplex flag */
-> >  #define PCS_ANE_PSE		GENMASK(8, 7)	/* AN Pause Encoding */
-> > -#define PCS_ANE_PSE_SHIFT	7
-> >  #define PCS_ANE_RFE		GENMASK(13, 12)	/* AN Remote Fault Encoding */
-> > -#define PCS_ANE_RFE_SHIFT	12
-> >  #define PCS_ANE_ACK		BIT(14)		/* AN Base-page acknowledge */
-> 
+This patchset addresses several S32G2/S32G3 SoC based boards
+uSDHC controller particularities such as:
+- GPIO card detect wake mechanism is not available
+- Changing the pinctrl state in suspend routine is not supported
 
-> I would actually like to see all these go away.
-> 
-> PCS_ANE_FD == LPA_1000XFULL
-> PCS_ANE_HD == LPA_1000XHALF
-> PCS_ANE_PSE == LPA_1000XPAUSE and LPA_1000XPAUSE_ASYM
-> PCS_ANE_RFE == LPA_RESV and LPA_RFAULT
-> PCS_ANE_ACK == LPA_LPACK
+It also fixes a clocking usage issue on 'clk_get_rate',
+in case of 'per' clock.
 
-Great! It will be even better.
+Ciprian Costea (4):
+  mmc: sdhci-esdhc-imx: disable card detect wake for S32G based
+    platforms
+  mmc: sdhci-esdhc-imx: obtain the 'per' clock rate after its enablement
+  mmc: sdhci-esdhc-imx: add option to not change pinctrl state in
+    suspend
+  MAINTAINERS: add 's32@nxp.com' as relevant mailing list for
+    'sdhci-esdhc-imx' driver
 
-> 
-> Isn't it rather weird that the field layout matches 802.3z aka
-> 1000base-X and not SGMII? This layout would not make sense for Cisco
-> SGMII as it loses the speed information conveyed by the Cisco SGMII
-> control word.
-> 
-> This isn't a case of the manufacturer using "SGMII" to mean a serial
-> gigabit media independent interface that supports 1000base-X
-> (PHY_INTERFACE_MODE_1000BASEX) rather than Cisco SGMII
-> (PHY_INTERFACE_MODE_SGMII) ?
+ MAINTAINERS                        |  1 +
+ drivers/mmc/host/sdhci-esdhc-imx.c | 28 ++++++++++++++++++++++------
+ 2 files changed, 23 insertions(+), 6 deletions(-)
 
-It's not that weird. The only CSRs available and functional for SGMII
-PCS are PCS_AN_CTRL and PCS_AN_STATUS (plus PCS_SRGMII_CSR where the
-PCS exposes the link status, aka Cisco SGMII tx_config_reg[15:0] with
-the vendor-specific layout). Registers from PCS_ANE_ADV up to PCS_TBI_EXT
-exist for TBI and RTBI PCS only. Since TBI is defined in the IEEE
-802.3z C36 I guess that's why the layout matches to what is described
-in IEEE 802.3z C37.
+-- 
+2.45.2
 
--Serge(y)
-
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
