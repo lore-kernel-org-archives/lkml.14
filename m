@@ -1,66 +1,66 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA8A13C9A1
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 10:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1764E143C48
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 10:16:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720174537; cv=none; b=bb/8jtjr/rDehDOqis/QJDvWrM/KnY70FMEcEie9meIpEeO4d/nkBeSugFg/VRsljZcnGzyfLPkGbQHAtcd6jYxcTBgablKSI88vgJr3upTTxoyfa1qPpP1OgI+6aAhvPDRZIc7vn92CCcGGqR9KE75b7EulKW3X1tkdmKjdcZI=
+	t=1720174581; cv=none; b=gKoGGtR5qvXp+dnIxA3Dl56nbISh7gJOJ/pVNpvKmtrVrlo677pfaOidpFB2zds2ahatD5Fyal3/lFPUxufqNIc0Zrnl7eCrtaeLucX71CWSa86/R0eHhogqzqH2RUK91YJRgzPir0WeMKys7uG2LYA74AU49xhGdxcRu2i7TRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720174537; c=relaxed/simple;
-	bh=fhzbn5vBr27cG/VyC0a5EcFwfmNKIfiOE6XrLB2xtDc=;
+	s=arc-20240116; t=1720174581; c=relaxed/simple;
+	bh=jHGNOsJS2+MlOkpIWkssmyx7/+mHWakhaoPwGNhk2f8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C86L8zK1+iNtnM8gKBd9iU/zU34FDgZ+AtDfpMNtsig3dmXvbEfmtbJCUY/0vLX1AXZego2WBC1uQjZ6gilRCt5JDi5BVYgiKB8zUsEgdr3xdCtgpQLuY+LwNmp8aRm90n6NSyKimcDwDYalniM7+2olxIRuX6Dn4pxbsM4Bryg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fe7Jc34D; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=TaesGCzMndMI50aGkpoJ/RqF5ZBE4nBmtq/9zA4Pe6otnLT/aHGeeK6LPWVRQNP9vnhDf1MyZuAEfgBQdCJ0iqbrqSPUAvXmh5FtS8ZTbjyx8UTGyUkJv3+FxcYsGa1BjonYTNBX0p1l/VRK+HerpS9zMiILfvGuaEN5K3rYzKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZZLTGy9v; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fe7Jc34D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZZLTGy9v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720174535;
+	s=mimecast20190719; t=1720174578;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=CpAl0Fpl3NB564Lc/LRKeaXfpe6ZFr4hGvxBiKx256s=;
-	b=Fe7Jc34DNz2bArGsiqe8p6MVdnkFfUXs+8MKNL0AxDyPPJbTToxvWApjwNvi8PU33oasuB
-	4FimiF+aoxNcYbo6l9QMYIQ3ii9xcCCGna8JpXm/Ik8Rh9kiQNu+Wj7X//HDQEqcadO6Lv
-	WX3PT2dCMbj18KivhK8GmJvlliEJEHU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=8HhAj3uN2f5wqUuSvzkEv2Tp8Mprq+INTWt2qsAJxvw=;
+	b=ZZLTGy9vRnkdox7l7gTc9xg9GLs2/2eeYlysF2w9U0jXPMzF9BlWyzjuW/GfSzTqAGhHYh
+	tUGm97CwXpXoOThl9xyUWGqUiLnK900TVPC0jcxMW87lfBYWz7nXKXyaLkAQTd+K+T5210
+	SxljGtAgrI/aL7dtbkpZD2fO4u8LzTE=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-275-BBMaY_ULMFqcVYFau3ZH3Q-1; Fri, 05 Jul 2024 06:15:33 -0400
-X-MC-Unique: BBMaY_ULMFqcVYFau3ZH3Q-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-367988464ceso1359247f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 03:15:33 -0700 (PDT)
+ us-mta-681-ZkSTwFKaNQSImpffkgHFCQ-1; Fri, 05 Jul 2024 06:16:17 -0400
+X-MC-Unique: ZkSTwFKaNQSImpffkgHFCQ-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-52ea3c7dfdcso969063e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 03:16:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720174532; x=1720779332;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CpAl0Fpl3NB564Lc/LRKeaXfpe6ZFr4hGvxBiKx256s=;
-        b=W2zliDdzZ7RWYeukBpB+qv/af2AV7se91a06Xp+XgJgsOFxlhKsgLutfGD8GOblXIP
-         M5J/F3XZ+XE+I//ABrkP0QF+QYBnD1yAsvnBAWW0JBKolmp+T/R//021eMH21Xruc/IG
-         NUIiY9khEjZo761BqQtYHR8uBGweXeouk9aMOWplMZ5tuu3CR8yUu6wraIA/esta2tqg
-         Gr+QTNriWfBdlu4GE2nrwTbFZFfxNnYHMaHZZ7l7hiixsFpp0+K9gOYKiqtMbIoPq7/Z
-         Dkgh93vaQzDOdqOBy6bf8HjmUkO647Dxc2U8B/n6IGm1ras5y7F3mNP8PsGU7YvODPSh
-         F0ww==
-X-Forwarded-Encrypted: i=1; AJvYcCX60NVjvTBTcj097fKmSl5fAP0QOZG3Mh9BWO6pXToDEpx6MbUuq6g/JSnL2MVKeYUJSl9MYHGEhtqXAlaMdgCDBQNTzMkhJ1yrwZks
-X-Gm-Message-State: AOJu0Yywb3UoIUGUqC+xHn/q4rxreybC8qfcfOu+qGACVK4f02MfVzOj
-	2Hegg0f+rDD62ZzipM7Ud8hk+23oKiPiQvoRt+GdktngfFRl98e+sUYXng9DWPKImHAiJ8ZPTzF
-	SOILHg9mA5Aka9k+J0jFAwx6dINVO9Vk76zN2b9Pvz1x+hXUzKw++7aSCQn8Wew==
-X-Received: by 2002:a5d:4a83:0:b0:367:9511:b612 with SMTP id ffacd0b85a97d-3679dd71cbemr3635323f8f.61.1720174532478;
-        Fri, 05 Jul 2024 03:15:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGs6s8QE8WIcwyL21LHpRd4WlulTum1XgpGj9609wd5hEudePeLvMUrWBHcOBYlBf3LHoGrMg==
-X-Received: by 2002:a5d:4a83:0:b0:367:9511:b612 with SMTP id ffacd0b85a97d-3679dd71cbemr3635300f8f.61.1720174532073;
-        Fri, 05 Jul 2024 03:15:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720174576; x=1720779376;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8HhAj3uN2f5wqUuSvzkEv2Tp8Mprq+INTWt2qsAJxvw=;
+        b=W6H/IQW29V+drbKxcz+GJQiWleebhcPJzdeWQZvgECs8863eXnxwaeyJWEfkSRiiy/
+         YWd+rvRk6u0E9voidDIcJl37pqFIxDDBx5X2SML69pubtblfkCQ79LTjIM4tA4uUJVF8
+         Zw29f5I+Ie+fcKZYyFchXCpJLqV5GMWhXN7sM1oMR02X94oa6MEfeKuBXsAKQH9djakB
+         hhgjnbX9pQswejodBDI4/mHWgd+Cc0O4vPUoBZawhRqqCIGoY31msqsSJEpX5lX5Li/m
+         q5fxF/uD3SzyFjiZzo82XjDXzHBhKQ0+tdamJxKLeBWdHKtD7YsIaXOFg6NILLcBBrLh
+         OMnA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+zMvaPc+X+KHJQNIwJcbEI8ckQike25iH7ZP5Qvie5aJk5QQUTQbPlYHC/RGTEZixacTtha3b4eG6HaZYaZLBgXSWEoa37OhRmx3Y
+X-Gm-Message-State: AOJu0YzKm2YGhhNiV/ToRQaesr0pro19tuMu5y7rGemv+4iB4sH1RFoM
+	RyR3S9GwJeOIMzFuQMdAIJ+ue3gAB087oL0zdw11/qB1b0NthoLcjwNbIOUMokggaQ5BdySnE7S
+	i/7AmXSC8Q2l/yjyIprsuQQJDWtfuXAsBFjgkIDRhC3KqgBDt0IaLXiSUq4Y5xQ==
+X-Received: by 2002:a05:6512:312a:b0:52c:ccb4:ec70 with SMTP id 2adb3069b0e04-52ea0632f20mr2856205e87.22.1720174575955;
+        Fri, 05 Jul 2024 03:16:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHr7D2FteQNEou0Sxfgna0BKaIEgBVar9F6VuRTAz61Bz68giJVx7Ma1fkOVReOmjhWHDaGqQ==
+X-Received: by 2002:a05:6512:312a:b0:52c:ccb4:ec70 with SMTP id 2adb3069b0e04-52ea0632f20mr2856185e87.22.1720174575493;
+        Fri, 05 Jul 2024 03:16:15 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c702:b500:3ed7:a1c7:447e:2279? (p200300cbc702b5003ed7a1c7447e2279.dip0.t-ipconnect.de. [2003:cb:c702:b500:3ed7:a1c7:447e:2279])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3679b8be0f5sm3940484f8f.5.2024.07.05.03.15.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367a0593e2asm3250680f8f.15.2024.07.05.03.16.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jul 2024 03:15:31 -0700 (PDT)
-Message-ID: <dc0a5a70-d691-4d54-ae00-0beb74f4c399@redhat.com>
-Date: Fri, 5 Jul 2024 12:15:30 +0200
+        Fri, 05 Jul 2024 03:16:15 -0700 (PDT)
+Message-ID: <1f10c189-73c3-45fd-b249-88884f3dc3a9@redhat.com>
+Date: Fri, 5 Jul 2024 12:16:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,14 +68,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] virtio-balloon: make it spec compliant
-To: "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <cover.1720173841.git.mst@redhat.com>
-Content-Language: en-US
+Subject: Re: [PATCH v3 1/3] mm/memblock: introduce a new helper
+ memblock_estimated_nr_pages()
+To: Mike Rapoport <rppt@kernel.org>, Wei Yang <richard.weiyang@gmail.com>
+Cc: akpm@linux-foundation.org, brauner@kernel.org, oleg@redhat.com,
+ mjguzik@gmail.com, tandersen@netflix.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240703005151.28712-1-richard.weiyang@gmail.com>
+ <Zoe4XN-gKJnjJtzi@kernel.org>
 From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
  dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
@@ -121,19 +123,53 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <cover.1720173841.git.mst@redhat.com>
+In-Reply-To: <Zoe4XN-gKJnjJtzi@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 05.07.24 12:08, Michael S. Tsirkin wrote:
-> Currently, if VIRTIO_BALLOON_F_FREE_PAGE_HINT is off but
-> VIRTIO_BALLOON_F_REPORTING is on, then the reporting vq
-> gets number 3 while spec says it's number 4.
-> It happens to work because the qemu virtio pci driver
-> is *also* out of spec.
+On 05.07.24 11:09, Mike Rapoport wrote:
+> On Wed, Jul 03, 2024 at 12:51:49AM +0000, Wei Yang wrote:
+>> Instead of using raw memblock api, we wrap a new helper for user.
+> 
+> The changelog should be more elaborate and explain why this function is
+> needed.
+>   
+>> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+>> ---
+>>   include/linux/memblock.h |  1 +
+>>   mm/memblock.c            | 19 +++++++++++++++++++
+>>   2 files changed, 20 insertions(+)
+>>
+>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> index 40c62aca36ec..7d1c32b3dc12 100644
+>> --- a/include/linux/memblock.h
+>> +++ b/include/linux/memblock.h
+>> @@ -486,6 +486,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
+>>   
+>>   phys_addr_t memblock_phys_mem_size(void);
+>>   phys_addr_t memblock_reserved_size(void);
+>> +unsigned long memblock_estimated_nr_pages(void);
+>>   phys_addr_t memblock_start_of_DRAM(void);
+>>   phys_addr_t memblock_end_of_DRAM(void);
+>>   void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index e81fb68f7f88..c1f1aac0459f 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -1729,6 +1729,25 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
+>>   	return memblock.reserved.total_size;
+>>   }
+>>   
+>> +/**
+>> + * memblock_estimated_nr_pages - return number of pages from memblock point of
+>> + * view
+> 
+> This function returns the estimate for free pages, not the number of pages
+> in RAM.
+> 
+> How about memblock_estimated_nr_free_pages()?
 
-I have to ask the obvious: maybe the spec is wrong and we have to refine 
-that?
+I was just about to comment exactly that. Agreed!
 
 -- 
 Cheers,
