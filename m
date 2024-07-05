@@ -1,144 +1,132 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7365E1465A7
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1B1147C91
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720173025; cv=none; b=JSUW+yUXRTpBUQbnXEfFrfZBpQapQW8sI1XfbY+dDd4kB8rNp5hqXxjcQTQrDQ/rId2kaxFOMkwFu+hTfLUBVvvsMhyJui1Rsrv4r05OFddM9YPivXqYsVugQ6TTOuXe3SB5zCqsertLieHJSkfSF7EkVVDOH5m3AU0xOIvNSP4=
+	t=1720173120; cv=none; b=P2eXzwBnW+/i8yWTerId9OvgQbwfZkpJTNn4QnLJdRIPDpSarwgKw/Q+ud0Pr3pL4i7yTob6IZHRb4c2Gd6DI2HMIwc5gJkMaOsfxgSR8XHK+fKpjibMlCer6mGD46O9+yTthF2eLcxziv5zZqoWGGHwtNPia9NQP2cjpBNsjjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720173025; c=relaxed/simple;
-	bh=d5wcdPWEyGn21x2VTQSp5n+O/1DXT3eXHWLqHh4P8rM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CeDFBWRcaKNqCiueeIaLNdf65iRrqYgXdF7XfGaQNQn2KGTeN19SvSM+FVr7IkOGuHoEBQkpRR2tA2lDL+YmiPhAvl4h32tWx+sp6IxY2iuQLexLRLrzf66feLR6HOZoUuiH/bSvuBhDd5Sa9rDNfh+8whYrPhV1wpelMnjfdo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DBnLpLq0; arc=none smtp.client-ip=209.85.167.42
+	s=arc-20240116; t=1720173120; c=relaxed/simple;
+	bh=3EnSa82o7YAfbkSZeSakkuZ4xjdHqVx+EJ+E8oKBlvg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ivXxvKUcktxSwFTBXlw8JAShVNK3qOm7HSvH+p2Ed7V26a6JS6Z32TgkXHCgHZJzFI+LEUpnelHYWAfpunHWq+TsrU7p5CP9bg96CXWA0MItZ9Q+3Dk1cHJyL0yq+sW+e9EzxYiIpnBvO9oeKAb659e0j4gIOeIcFiyIn7nazKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uALLdvYg; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DBnLpLq0"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52ea8320d48so99317e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 02:50:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uALLdvYg"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ee910d6aaeso14223671fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 02:51:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720173022; x=1720777822; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9HMrCTqfqHM+5huN0YwcHxZmMO2Nm0CrRXiR6wyo0nI=;
-        b=DBnLpLq0VnwZ3ZUT1pZtEKYorpK0GBbTeMmDjRBo84nFVWzYzl73NX8iIBB41ysJm1
-         h9ABguJV2ur5fj67hv29aDSnqqfwxSePOqPPR5/S84G/7iF43d6QJpOOoWnvP0wyysNs
-         wB+O3z6dfQdm3rN+xoaiIDWpuKvd7hnJmhIRSfHGP8PPMDOKD5h8bA5dUkKYbyn+FShf
-         eh8a5KG7lSr0jR6hAXb6dP4NX1/WWg4Pjz0xmulLAHUB+xhBTdkTpbFpGLHPbQ3rzGy3
-         JA8p3iWpcJTrwkUbvtj4KqXHTuH+EQnP9o3yv/I8WpYxYGj35/BVPLzPi1pbKjGGSbFR
-         9ZdA==
+        d=linaro.org; s=google; t=1720173116; x=1720777916; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G1lgREowMpDgegSv36xdcxK3AnkFlFwaiDjciQiE+8Y=;
+        b=uALLdvYgWCf4pyOhfaKQ/y/f+F/B7BjTLlG/k8IW/3c6EqVxb3/v9XWS0aYioVjHzt
+         TW96BPdDejya6a289uQrm3k3TWrbgL+bp2cRYcy+zZxrnfrHOJkUNgiR329igr8bcP8d
+         P5YD3YDMBHUgv60TqC6sYmoakk4nzyPtKAk7jKEXWLtIqSAP7pxI0hhNloVsvauxYDw3
+         OW8WlLbS9mMtgQxOgEMOWvSMxGWIFElsNKozzlbqL+AAjAaxWGJ9e5cu8uDxnyBvaUQy
+         OCMd2ixBwA3HdUSadekCtzGDrOXc62kzcVv8SHVfEqzbxYLg/ycw8Sa7KN0Et2iVnp0m
+         eN9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720173022; x=1720777822;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1720173116; x=1720777916;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9HMrCTqfqHM+5huN0YwcHxZmMO2Nm0CrRXiR6wyo0nI=;
-        b=J6LAa+0348g2zeuDIqzmhMBebzLsXQKd/oLoZJCCp5WTNV0Z0z1hqYtLhSlLb/Vazd
-         DQcrAtJM01Ig60DBlkFvVdXQOD6hGFFHVBsquTjhSWTrtLOLpYOBADRpDIlVgZiKQZf+
-         U3p+fJnj9MXXIKePNwrchsSoUQ7TrHaUPD9SlhcY210YDmGQuQWJuww7gr1C6QQEQNIg
-         i9zgUHS4yygVVhVj6EeFhz9EciZYs/+odGh3XIVY4/YKP3Va9vBaviaSSB2yiB/g2X1S
-         zoWQjLKLygGK/NhQBko82A9BjMriGu+4HLhq4a6h8TtCyxAlQhNKwdCUVpd/kXaN4DqF
-         Ldxg==
-X-Forwarded-Encrypted: i=1; AJvYcCW054uIvDouM8h43grMR9tEAjAVTUJJYyEaAqJVL+95dvC7a79kT5RVpj4oq8JkCFH9rNGd9nc2ZBK1Jcsv4jGONTxWNeeg3nYtTLkt
-X-Gm-Message-State: AOJu0YwshpaCUgsxr5F/ACC2zq1925Q2APtiu41NY4JHasdUf6ftvpys
-	mnV7YklCF57FOg4bOxCG/jukYaEv3tPLwHVSBgIBf7H+jMGfWhPuB0xZd+7QeT3RjtQ+9aQXpND
-	TZx3eHStE9KubHBBU7ZJV+o6kZ7xpjS6CGIquFA==
-X-Google-Smtp-Source: AGHT+IFGdMv9mOZcwNG0nGSSpL7siCh/sfgLJr6Xwf7iux7ef6YcjMqCZdysGSFZxujFPIToDjIeInlz7nhm/TgKK3s=
-X-Received: by 2002:a05:6512:3a8c:b0:52b:c1cf:cecb with SMTP id
- 2adb3069b0e04-52ea0e3a688mr1564316e87.24.1720173021517; Fri, 05 Jul 2024
- 02:50:21 -0700 (PDT)
+        bh=G1lgREowMpDgegSv36xdcxK3AnkFlFwaiDjciQiE+8Y=;
+        b=XxQz1jeZjPxm7h85XljAnmqkGKVe1mauQl3PDOfISYIs7drld47RqBkpOC6N9gYnBl
+         wnl1SXb2QXL5yfwtYflzXy0955Eb/avxaRiUyU+/EOymxhvswNuSm7/uP0Du4CLhK1ra
+         TKanuy3E0vTahYvCBbDDFzrQqtqE5BF2xe8B70bdsLeLeHB6EO81JlLNZXlPz5Sq0Av0
+         NxcsF6Nup7RzAA9kAjNMp5Eq1HQi5vkw5xJazeXBlOTCThZhRpnaE7t82Eklz5rWELiP
+         yhFU7WnOz7VQWtCX5ewMiyqhEtx0bZ0uqF6phdzwcPUM9Jp9XJReyAK60hgydjJDjW4T
+         GPUg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5UfyihfFZwl8UjsXFUTQupQ5MFDG6WFv7IggHPw9tD6myUqH+ygcxayV6onzp91qzTyZ+bxh1HhKTHbDz8Rv2dOGmRcrGdGxzqv7i
+X-Gm-Message-State: AOJu0YzL7J3pbtswUv92DwpfSnhfuspAZyT+4PdiKTiS6aXTZYbDvoKf
+	lcCKoh4056ashjoL48z34d37s90EffSEVawAtOBBLclrAX7sw6+oLOGBqt1z+Pk=
+X-Google-Smtp-Source: AGHT+IEeSo1l6X3Fn7oREnziy7wGl86YV+iWvBeIrZ1RnzxH6wICinSt6W9cTAWxOTsN1SfeBkyhoQ==
+X-Received: by 2002:ac2:47fb:0:b0:52e:6d6e:5770 with SMTP id 2adb3069b0e04-52ea061f4a5mr2746219e87.14.1720173116487;
+        Fri, 05 Jul 2024 02:51:56 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1d1650sm55528995e9.2.2024.07.05.02.51.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 02:51:55 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Fri, 05 Jul 2024 11:51:20 +0200
+Subject: [PATCH RESEND 01/22] dt-bindings: thermal: samsung,exynos: specify
+ cells
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <IA1PR20MB49530F0476B98DBB835B344FBBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <IA1PR20MB49530D9BC6C8011B730433C2BBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
-In-Reply-To: <IA1PR20MB49530D9BC6C8011B730433C2BBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 5 Jul 2024 11:50:09 +0200
-Message-ID: <CACRpkdajN7RjE5LOdv_SP6rR8U-vwXHXn=kZZo7thodeMem72Q@mail.gmail.com>
-Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: Add pinctrl for Sophgo CV1800
- series SoC.
-To: Inochi Amaoto <inochiama@outlook.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Haylen Chu <heylenay@outlook.com>, Drew Fustini <dfustini@baylibre.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240705-dt-bindings-thermal-allof-v1-1-554061b52fbc@linaro.org>
+References: <20240705-dt-bindings-thermal-allof-v1-0-554061b52fbc@linaro.org>
+In-Reply-To: <20240705-dt-bindings-thermal-allof-v1-0-554061b52fbc@linaro.org>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Guillaume La Roque <glaroque@baylibre.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, imx@lists.linux.dev, 
+ linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ Florian Fainelli <f.fainelli@gmail.com>, 
+ linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1024;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=3EnSa82o7YAfbkSZeSakkuZ4xjdHqVx+EJ+E8oKBlvg=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmh8IkvFsEQjTwZFnbae9AS2ygRayZquLi0sRos
+ UXLxi65fnCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZofCJAAKCRDBN2bmhouD
+ 17PuD/9a49GewAbEVoD10yTzhnQEIJm7VmLlCWlVgVZiMpLg6K5LLHZn7lT1CAo/2so5Q3+XXF1
+ Tjbp+LcH4moDaYOy3CUt0+YHeNd9BGdOqIwbRBykpRhvc9rKVkMxe3piyICn6h5RhtDePV7NnCt
+ 6Cr5rJCjnFcf2AbZZeOQxZLPwBDwqxET1/yWFebn0e/7AaDIo7JAW6+1okCZcjnqPQIyJa5cDBw
+ vua10epXrG9CiX7NnWzzT3B8QxMahZgtWcUPiUdtO7hnqZmfWCChO4B1VozqWnEheSnRpvSZ3x0
+ zpMYhpkXacNsNT78pm/OgCTK9ZtGQD40/GqQtWScwbJsnytA5Q2ubJH55ro+g8zuc1ZW89uYkDq
+ /x4vhyjvRaYjLeC7C1MeZagVotfluZqWAAufbRbJubk4Xa9n4ZQ8jaak5OEhDd/l1gWJHWE172X
+ aRN0zlVnImPidjB4ONSQ4oO7gog5Umsylxs6EQA9Zx0MlkLZ1ydbxhY0p31lsUnl17b7LYYlqGU
+ TK3+xHPXDGHja8qrdgMTUzvvq82VgcN8s5mqc/EjGE3c49RP1fwFwzzkVleR+PPIxeH/OvTOyXu
+ AXkWN4yvcmqD0ctz8QtvSWiyJSOTLPl3O0ILl7vQwO9ge36B3+c6ILtuQ61lYLyUZre0QUQIlot
+ 5awo2AdWu4Ir/Yg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Hi Inochi,
+All Samsung Exynos SoCs Thermal Management Units have only one sensor,
+so make '#thermal-sensor-cells' fixed at 0.
 
-thanks for your patch!
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/thermal/samsung,exynos-thermal.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Some comments below:
+diff --git a/Documentation/devicetree/bindings/thermal/samsung,exynos-thermal.yaml b/Documentation/devicetree/bindings/thermal/samsung,exynos-thermal.yaml
+index 1344df708e2d..29a08b0729ee 100644
+--- a/Documentation/devicetree/bindings/thermal/samsung,exynos-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/samsung,exynos-thermal.yaml
+@@ -61,7 +61,8 @@ properties:
+           TRIMINFO at 0x10068000 contains data for TMU channel 2
+     minItems: 1
+ 
+-  '#thermal-sensor-cells': true
++  '#thermal-sensor-cells':
++    const: 0
+ 
+   vtmu-supply:
+     description: The regulator node supplying voltage to TMU.
 
-On Thu, Jul 4, 2024 at 7:47=E2=80=AFAM Inochi Amaoto <inochiama@outlook.com=
-> wrote:
+-- 
+2.43.0
 
-> Add pinctrl support for Sophgo CV1800 series SoC.
->
-> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-(...)
-> +          bias-pull-up:
-> +            type: boolean
-
-description: Setting this true will result in how many Ohms of pull up
-and to what voltage?
-
-> +          bias-pull-down:
-> +            type: boolean
-
-How many Ohms by default? It's very helpful for designers writing the
-device tree to know this.
-
-> +          drive-strength:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            minimum: 0
-> +            maximum: 7
-
-0,1,  ... 7 ... units of what? What does the values represent?
-7 mA? I think not. This should be in mA and parsed to any custom
-values.
-
-If you need more resolution, consider using driver-strength-microamp and
-parse that value instead.
-
-> +          input-schmitt:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            minimum: 0
-> +            maximum: 7
-
-What is this custom property? We support input-schmitt-enable
-and input-schmitt-disable, if you want to add a new standard property
-input-schmitt, then send a separate patch to
-Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-and explain what the argument means, it should be in SI units.
-
-For a full custom property, use sophgo, prefixes.
-
-> +          slew-rate:
-> +            enum: [ 0, 1 ]
-
-What is slew rate 0 and 1? What does it represent?
-
-microvolts per second how much (I don't know, just guessing)
-
-> +          sophgo,bus-holder:
-> +            description: enable bus holder
-
-This description is a bit too little, we need to know what this thing
-is and what it is
-used for. If it is definied in some other DT binding then reference that fi=
-le.
-
-Yours,
-Linus Walleij
