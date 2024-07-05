@@ -1,178 +1,71 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF581459E8
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 13:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1F914F102
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 13:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720186474; cv=none; b=sQi4dR3+7N+Szh5Go0/ZyyOA+Z/VdOfHblIfWioSVRXB7VatvqeOiAp70PFGAffsykXhbXXzIXMzwT3oyMcheJbRq57Jl2ZbaANKPade2xZXyVSkrBEylSdoCdb0wF4ia2gwTcv8vvrCo2vwUH1iiGPSGt6Uh0ngVvOEHShMLo0=
+	t=1720186641; cv=none; b=JuIQj7pB5J1Pw9YgmY9NFphHXS66X4q+Cz6BSW//postO7QBCwyIaG6U5/TiAADI73hH77bM4ryVsiajV/0Jnu/ZdcHRe1IHIuMVsS3XnZktzoV46Fz/DtSjJrQpk3in6H0L2/C/9NwekSEQq7qkfZJeyoGT+G2jX+BXBO8t4/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720186474; c=relaxed/simple;
-	bh=/WWUk8xgbMeoX+XMjmJKMzm4jVM0QnM4PPaAAtS6ETg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EdGjnT4WuG0BUgDT6RWmwkRWd37IOJLwRV4KRmUPlOcpLY6USdZ072xrxIsOMkF4Xd7KaUdqPrzyWm+6EFU86/J9XBYDmHErP7kO4obDpDyphy4lS6XBaW+57rwR5X7igl/vOUablJ5+lTRvuSxVUFrWXlNfGViWFiu47E10o+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DBwN7dch; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1720186641; c=relaxed/simple;
+	bh=bW7SJuoSHC50Ot48nvepYpmST048P10fAOtJVbkOwyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O7kkqGaF397NI1cr2eX7YLlfwqKaUrAf1lX+lE91wzRqjHrll2gexsYjtgOOBNofGtT+62H4Rk+uQCC6pDs+VcgNG8RTpGnthNjqOhCsJ4uomaszke1PmWCjrC1zAwddROcPdhAb9mOzZ8o1lAhJLocTZzYWie6JuRnswzfWc1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TNsXabrs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DBwN7dch"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52e991fb456so1575590e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 06:34:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720186469; x=1720791269; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+7lziJDkz8ksR4dmlddeHMdYw7zMgC8DIyGzxNLyJTo=;
-        b=DBwN7dchrM3Uhg+n02ERwvcj+HPkIr+eeN3Y0hVvZU+poqph18SqrUpsRb5dSvPXLP
-         Bl8bNTdNMs/SuoDAoRBr34bDHcresooRAlZ+WI4Z6SF3N6br9Jwyie3873hslJPTC8it
-         XI8TC8TvKqf0slKrVdh1Glb9oUi7fSWUcEaM52pS7/jP7I7Bs11b5DxPaxGn2xXcaH/p
-         D5LTJcH+d1K8VHnMEzisIELFthjn/kqnKQs1eEABc/BEZ8iafqaKpFnsUULTDsuErzoj
-         W9uYmuXDn4S8V82szriUbBspjQ3g5iX133Lc9WTmfo9usHFeIdvyjfV7sL3110MaU3y5
-         JHhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720186469; x=1720791269;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+7lziJDkz8ksR4dmlddeHMdYw7zMgC8DIyGzxNLyJTo=;
-        b=R3nOxd0ZwlOQAxYoFtRUkuzT4ztKAmI2Dh+T+XMNUccZQ0j1/JAwFxOAObLidS68BB
-         ArTspK4/fzzxa4KNST2GqUZMYKXD9+NFxYhhVkB5ZUukTh62vHwJl2+n+OBKW9OfJt3m
-         TsY9g73tvIhsvqDgFfWmro7Af5G6rOoKOdV3Ksnfo2MKWZnbIZ0nOpLdxTlp+lR0sGH5
-         YgUs+4BJzUh9ylIiwnsnuFSh1Kjov0ruvJMCYtsVeBWYC9h2NQdrAJ0xXovt4iBmeBNE
-         KV2EnSCyYk/whDPk1Wsf/TnclWgqjSROVn5nOOfv/QFDWAthsx41tQ8flQaaAHfx8K0M
-         IgUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXF4YdIGzKpU9RAig7bt0QnXVvPAkCv97tI7pzsZsEKD7LHs3iooblV00QExU+As74jIDejwG9AzHcs9hP3L3yshLhTLVWrOrKFIiRR
-X-Gm-Message-State: AOJu0YxO6UB1/xURlhLKWR6sW4peDVk0HS644HuluaYOljo1o1X9EBag
-	m3lA9ORXDlXpolKTqs2KgnBrU7gSbiG2PC5DdPC5MFIv9xCvnMN4ADFopB1BNAjz2APP4kPtK6U
-	lm8jwJzR6WoJ+2j3HXhCDntVAGgDi1cQiC9+Mgg==
-X-Google-Smtp-Source: AGHT+IH002bET0sLDg515bzQ4elXCWBoy5idHfanq8GGKi/meSChCtgNax2EBm7zNVr+Mq15wxISI8Af7tGceGvs1Lk=
-X-Received: by 2002:a05:6512:3694:b0:52c:ebf6:9a87 with SMTP id
- 2adb3069b0e04-52ea0e00c5emr1457812e87.26.1720186469286; Fri, 05 Jul 2024
- 06:34:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TNsXabrs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8882BC116B1;
+	Fri,  5 Jul 2024 13:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720186640;
+	bh=bW7SJuoSHC50Ot48nvepYpmST048P10fAOtJVbkOwyc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TNsXabrs0ShnwnZTHeRTublv86zHKP2tctDSOXhpV5JHiYkfIquIjJJ/uSOabXsgH
+	 r6WWm4zWABnBro+nEL26vAVfoCEFaZyxrKMUyPVy9hgb0aspNOX2ObU5ElrfF5EZ/H
+	 kvDmCeaZZH+RpayjjJS3YJIYxosHkWP1ybEuR76B5oY8GDd/KSlLxe44r1Zbc5OT1Y
+	 bGKaMlmQtjuBNPU6Jm0MBfQYf+qzOkJwrRBcczWWAB/61gWLNSB0aEk/3R2KVc8+Qi
+	 LB7aHVmDqL3urthn8xe+JHynjTsUMmdYia8B+PMtuvrp+5dZJ155uGDlKm7IAOF5im
+	 15i4Yan94IOBA==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] riscv: select ARCH_USE_SYM_ANNOTATIONS
+Date: Fri,  5 Jul 2024 21:23:08 +0800
+Message-ID: <20240705132308.1469-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240705-pwrseq-v1-0-31829b47fc72@amlogic.com> <20240705-pwrseq-v1-1-31829b47fc72@amlogic.com>
-In-Reply-To: <20240705-pwrseq-v1-1-31829b47fc72@amlogic.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 5 Jul 2024 15:34:18 +0200
-Message-ID: <CAMRc=Me+Fd_Kjgm0u0JhUatVEp=XS71xys82snAimpw2U5MQTw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: power: Add power sequence for Amloigc
- WCN chips
-To: yang.li@amlogic.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 5, 2024 at 1:13=E2=80=AFPM Yang Li via B4 Relay
-<devnull+yang.li.amlogic.com@kernel.org> wrote:
->
-> From: Yang Li <yang.li@amlogic.com>
->
-> Add binding document to introduce power sequence of
-> Amlogic WCN chips.
->
+After commit 76329c693924 ("riscv: Use SYM_*() assembly macros instead
+of deprecated ones"), riscv has been to the new style SYM_ assembler
+annotations. So select ARCH_USE_SYM_ANNOTATIONS to ensure the
+deprecated macros such as ENTRY(), END(), WEAK() and so on are not
+available and we don't regress.
 
-Hi! Thanks for the interest in this new subsystem.
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+---
+ arch/riscv/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Signed-off-by: Yang Li <yang.li@amlogic.com>
-> ---
->  .../bindings/power/amlogic,w155s2-pwrseq.yaml      | 62 ++++++++++++++++=
-++++++
->  1 file changed, 62 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/power/amlogic,w155s2-pwrse=
-q.yaml b/Documentation/devicetree/bindings/power/amlogic,w155s2-pwrseq.yaml
-> new file mode 100644
-> index 000000000000..f99a775fcf9b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/amlogic,w155s2-pwrseq.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/amlogic,w155s2-pwrseq.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Amlogic power sequence for WCN chips
-> +
-> +maintainers:
-> +  - Yang Li <yang.li@amlogic.com>
-> +
-> +description:
-> +  The Amlogic WCN chip contains discrete modules for WLAN and Bluetooth.=
- Power on
-> +  Bluetooth and Wi-Fi respectively, including chip_en pull-up and bt_en =
-pull-up,
-> +  and generation of the 32.768KHz clock.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: amlogic,w155s2-pwrseq
-> +      - items:
-> +          - enum:
-> +              - amlogic,w265s1-pwrseq
-> +              - amlogic,w265p1-pwrseq
-> +              - amlogic,w265s2-pwrseq
-> +          - const: amlogic,w155s2-pwrseq
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 0525ee2d63c7..c51b32a8ddff 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -62,6 +62,7 @@ config RISCV
+ 	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
+ 	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
++	select ARCH_USE_SYM_ANNOTATIONS
+ 	select ARCH_USES_CFI_TRAPS if CFI_CLANG
+ 	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if MMU
+ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+-- 
+2.43.0
 
-The name is wrong. There's no such device as 'pwrseq'. There's most
-likely some kind of a Power Management Unit and the compatible string
-must reflect this.
-
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: clock provided to the controller (32.768KHz)
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ext_clock
-> +
-> +  amlogic,chip-enable-gpios:
-> +    maxItems: 1
-> +    description: gpio specifier used to enable chipset
-
-Why not simply: chip-enable-gpios or even enable-gpios?
-
-> +
-> +  amlogic,bt-enable-gpios:
-> +    maxItems: 1
-> +    description: gpio specifier used to enable BT
-> +
-
-Same here: should be simply bt-enable-gpios.
-
-Bart
-
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - amlogic,chip-enable-gpios
-> +  - amlogic,bt-enable-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    wcn_pwrseq {
-> +        compatible =3D "amlogic,w155s2-pwrseq";
-> +        clocks =3D <&extclk>;
-> +        clock-names =3D "ext_clock";
-> +        amlogic,chip-enable-gpios =3D <&gpio 7 GPIO_ACTIVE_HIGH>;
-> +        amlogic,bt-enable-gpios =3D <&gpio 17 GPIO_ACTIVE_HIGH>;
-> +    };
->
-> --
-> 2.42.0
->
->
