@@ -1,44 +1,44 @@
 Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFA342A99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBDE3B7A8
 	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 02:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720145742; cv=none; b=PX0+DNfgrWvqCoV8j6jbYcL8uK5sYazz/ZLaa0EE5bs5cE93UvEIEvNrTzJLdEGx28Es1AhOXumUrwcHayap5aiDBvJcSk4Yil+ShbXnxy88EPz/GBytR6w2yTva+FCkLKebYytVnQi8LJQcSfYfTtPVdn1r1UNsQzv+zfq7swY=
+	t=1720145742; cv=none; b=CDWqcHTwmBiq0tlkUISJrMLfJfaRG3yYcsFWv0phgZOcKQ01d18rqwMLpNz8fadSZH+0HbLZl2+Asv7MKqejubZLe6mWhyz9NOXUJZuK5eh1nSpE51vMDJrfAtQmRMoDUFL8X5Sve/vRseShe1uzw9CgPnACycoeR1d0wQjpvqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720145742; c=relaxed/simple;
-	bh=jpgEhqoiJLFt4eKeu2jNU/GRvW96hmqCQ8VpTR6L5hI=;
+	bh=Uq4exTwcX+kjSTpvsGelscWGiyKlbszfl+PNOH8I1tk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MZPqyOekdAwfDjXP8hZYHSUXDCcXvQFW9puf6K8QKN5SUS/ik48MmKxZo1Cutr7cBcReQ/AHbLgZD+kRwU8QkRxAnahF8OkJqpS8yinvWGMFGLi3JifgZANPuSFPZnHoPvEYEgDQSE8BjGTXjgHDCOWlXZ4LniuJfTwWszu0at4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=xZtP//cR; arc=none smtp.client-ip=202.36.163.20
+	 MIME-Version; b=E7xZ1YFD2zuucVbH8kM6S298xpczB4oTbg4I+QXLilrVNC825YTcT8sxyRfbIRgBd+3cVSIIqE8uRYZbBxnC9vrN1P6+ekNJHHgFTr562GcNDtJWRCIWqMDmcm9WOmn8k/bnrClaNSX60bNIzA0vD35gSclFy9ZjT6sqHQhg+4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=WWoN9k0C; arc=none smtp.client-ip=202.36.163.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="xZtP//cR"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="WWoN9k0C"
 Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id DF87A2C0BEC;
-	Fri,  5 Jul 2024 14:15:27 +1200 (NZST)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 001F22C0C2E;
+	Fri,  5 Jul 2024 14:15:28 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1720145727;
-	bh=0C+q9xo0SRant1J/cPVKZrZxM7tdjJdasqObpEK8TGo=;
+	s=mail181024; t=1720145728;
+	bh=AaoonlzQY7AjfYhYyuw1OGQjwznAzBKn4fTqEmrnqps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=xZtP//cRmUJtA+oJtwM7afSCZRLtf25Di1aXC4Tcw1KP579lrNIK3HN/1voZWK/Bg
-	 qFVmZx/og8YojiDIys+SEkov1VZsrV9yftD6TuJwk3tXiCilv8sQlJJnWrRR+GB++e
-	 rZlncm0h2Pqzj8nN6e82hThGUIoliJRT4GVma7dHioRnqPIiP4eKHwG6CLtAmNL0QU
-	 12zgLejRvdwUaiZu1aqltxOCygmf3c6gxf4QoAepqOugrzaARrNbhUwQYWwkHw3alR
-	 t7JwxwyWZ+H26vgwuX9x295h/AwUSVXrH3p7wcRQ1o5SQl+pw7S3MA8nQyUcnos/hv
-	 K1RTC+w/ZrNoQ==
+	b=WWoN9k0CTqwAGlMkxT5K+6upyTB9VS9sQZofKeYH2981NN7AEv0lu8BUY0H9mLYfk
+	 qwgEILicMjITe2i7pXsoaNaNwSoxACIgCNw5rMmj/iQWj5ULtFiPiUHFYjomvWIyGj
+	 GDI3Ak+3rMHgH9jPdM9pYdHrrKf1hioxS339IVcwizd17rqTk+zCtTuv/xdqh4DQnd
+	 lNmHjwerYA3L3EBsp98H7XLHJbORNO/dvDtniQWtjrcth3r/bigqz7gQSluytQg8/l
+	 qdK3tlkia2k6259sL4YIBouloHBQgaj4i9Yay3CLx4aMsd6RatiUPyQO5lNw885OzO
+	 DUHDTmbJX1dVg==
 Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B6687573e0007>; Fri, 05 Jul 2024 14:15:26 +1200
+	id <B6687573e000a>; Fri, 05 Jul 2024 14:15:26 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 879FA13EE9C;
+	by pat.atlnz.lc (Postfix) with ESMTP id 9A94913EE87;
 	Fri,  5 Jul 2024 14:15:26 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 84D13280930; Fri,  5 Jul 2024 14:15:26 +1200 (NZST)
+	id 97D69280930; Fri,  5 Jul 2024 14:15:26 +1200 (NZST)
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 To: tglx@linutronix.de,
 	robh@kernel.org,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	kabel@kernel.org,
 	ericwouds@gmail.com,
 	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v4 5/9] dt-bindings: timer: Add schema for realtek,otto-timer
-Date: Fri,  5 Jul 2024 14:15:16 +1200
-Message-ID: <20240705021520.2737568-6-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v4 9/9] mips: dts: realtek: Add RTL9302C board
+Date: Fri,  5 Jul 2024 14:15:20 +1200
+Message-ID: <20240705021520.2737568-10-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240705021520.2737568-1-chris.packham@alliedtelesis.co.nz>
 References: <20240705021520.2737568-1-chris.packham@alliedtelesis.co.nz>
@@ -71,104 +71,245 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=CvQccW4D c=1 sm=1 tr=0 ts=6687573e a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=KKAkSRfTAAAA:8 a=gEfo2CItAAAA:8 a=2AJCWd3gv_sDiQv9-YsA:9 a=3ZKOabzyN94A:10 a=cvBusfyB2V15izCimMoJ:22 a=sptkURWiP4Gy88Gu7hUp:22
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=CvQccW4D c=1 sm=1 tr=0 ts=6687573e a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=jdP34snFAAAA:8 a=KBD_zhYaegNxfykauC4A:9 a=3ZKOabzyN94A:10 a=jlphF6vWLdwq7oh3TaWq:22
 X-SEG-SpamProfiler-Score: 0
 x-atlnz-ls: pat
 
-Add the devicetree schema for the realtek,otto-timer present on a number
-of Realtek SoCs.
+Add support for the RTL9302 SoC and the RTL9302C_2xRTL8224_2XGE
+reference board.
+
+The RTL930x family of SoCs are Realtek switches with an embedded MIPS
+core (800MHz 34Kc). Most of the peripherals are similar to the RTL838x
+SoC and can make use of many existing drivers.
+
+Add in full DSA switch support is still a work in progress.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
 
 Notes:
     Changes in v4:
-    - Add r-by from Krzysztof
+    - None
     Changes in v3:
-    - Use items to describe regs and interrupt properties
-    - Remove minItems condition
+    - Use full board name
     Changes in v2:
-    - Use specific compatible (rtl9302-timer instead of rtl930x-timer)
-    - Remove unnecessary label
-    - Remove unused irq flags (interrupt controller is one-cell)
-    - Set minItems for reg and interrupts based on compatible
+    - Use specific compatibles instead of rtl930x
+    - Remove unnecessary irq flags (interrupt controller is one-cell)
+    - Remove earlycon
+    - Name clocks as recommended in dt schema
+   =20
+    Changes in v2:
+    - Use specific compatible for rtl9302-soc
+    - Fix to allow correct board, soc compatible
+   =20
+    This is derrived from openwrt[1],[2]. I've retained the original sign=
+off
+    and added my own.
+   =20
+    [1] https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dblob_plain;f=
+=3Dtarget/linux/realtek/files-5.15/drivers/clocksource/timer-rtl-otto.c;h=
+b=3DHEAD
+    [2] https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dblob_plain;f=
+=3Dtarget/linux/realtek/patches-5.15/302-clocksource-add-otto-driver.patc=
+h;hb=3DHEAD
+   =20
+    Changes in v3:
+    - Remove unnecessary select COMMON_CLK
+    - Use %p when printing pointer
+    Changes in v2
+    - None
+   =20
+    Changes in v3:
+    - Use full board name
+    Changes in v2:
+    - Use specific compatibles instead of rtl930x
+    - Remove unnecessary irq flags (interrupt controller is one-cell)
+    - Remove earlycon
+    - Name clocks as recommended in dt schema
 
- .../bindings/timer/realtek,otto-timer.yaml    | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/realtek,otto-=
-timer.yaml
+ arch/mips/boot/dts/realtek/Makefile           |  1 +
+ .../cameo-rtl9302c-2x-rtl8224-2xge.dts        | 73 +++++++++++++++++
+ arch/mips/boot/dts/realtek/rtl930x.dtsi       | 79 +++++++++++++++++++
+ 3 files changed, 153 insertions(+)
+ create mode 100644 arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-=
+2xge.dts
+ create mode 100644 arch/mips/boot/dts/realtek/rtl930x.dtsi
 
-diff --git a/Documentation/devicetree/bindings/timer/realtek,otto-timer.y=
-aml b/Documentation/devicetree/bindings/timer/realtek,otto-timer.yaml
+diff --git a/arch/mips/boot/dts/realtek/Makefile b/arch/mips/boot/dts/rea=
+ltek/Makefile
+index fba4e93187a6..d2709798763f 100644
+--- a/arch/mips/boot/dts/realtek/Makefile
++++ b/arch/mips/boot/dts/realtek/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-y	+=3D cisco_sg220-26.dtb
++dtb-y	+=3D cameo-rtl9302c-2x-rtl8224-2xge.dtb
+diff --git a/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dt=
+s b/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dts
 new file mode 100644
-index 000000000000..7b6ec2c69484
+index 000000000000..b51e10ae4950
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/realtek,otto-timer.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/realtek,otto-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dts
+@@ -0,0 +1,73 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/dts-v1/;
 +
-+title: Realtek Otto SoCs Timer/Counter
++#include "rtl930x.dtsi"
 +
-+description:
-+  Realtek SoCs support a number of timers/counters. These are used
-+  as a per CPU clock event generator and an overall CPU clocksource.
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/thermal/thermal.h>
 +
-+maintainers:
-+  - Chris Packham <chris.packham@alliedtelesis.co.nz>
++/ {
++	compatible =3D "cameo,rtl9302c-2x-rtl8224-2xge", "realtek,rtl9302-soc";
++	model =3D "RTL9302C Development Board";
 +
-+properties:
-+  $nodename:
-+    pattern: "^timer@[0-9a-f]+$"
++	memory@0 {
++		device_type =3D "memory";
++		reg =3D <0x0 0x8000000>;
++	};
 +
-+  compatible:
-+    items:
-+      - enum:
-+          - realtek,rtl9302-timer
-+      - const: realtek,otto-timer
++	chosen {
++		stdout-path =3D "serial0:115200n8";
++	};
++};
 +
-+  reg:
-+    items:
-+      - description: timer0 registers
-+      - description: timer1 registers
-+      - description: timer2 registers
-+      - description: timer3 registers
-+      - description: timer4 registers
++&uart0 {
++	status =3D "okay";
++};
 +
-+  clocks:
-+    maxItems: 1
++&spi0 {
++	status =3D "okay";
++	flash@0 {
++		compatible =3D "jedec,spi-nor";
++		reg =3D <0>;
++		spi-max-frequency =3D <10000000>;
 +
-+  interrupts:
-+    items:
-+      - description: timer0 interrupt
-+      - description: timer1 interrupt
-+      - description: timer2 interrupt
-+      - description: timer3 interrupt
-+      - description: timer4 interrupt
++		partitions {
++			compatible =3D "fixed-partitions";
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
++			partition@0 {
++				label =3D "u-boot";
++				reg =3D <0x0 0xe0000>;
++				read-only;
++			};
++			partition@e0000 {
++				label =3D "u-boot-env";
++				reg =3D <0xe0000 0x10000>;
++			};
++			partition@f0000 {
++				label =3D "u-boot-env2";
++				reg =3D <0xf0000 0x10000>;
++				read-only;
++			};
++			partition@100000 {
++				label =3D "jffs";
++				reg =3D <0x100000 0x100000>;
++			};
++			partition@200000 {
++				label =3D "jffs2";
++				reg =3D <0x200000 0x100000>;
++			};
++			partition@300000 {
++				label =3D "runtime";
++				reg =3D <0x300000 0xe80000>;
++			};
++			partition@1180000 {
++				label =3D "runtime2";
++				reg =3D <0x1180000 0xe80000>;
++			};
++		};
++	};
++};
+diff --git a/arch/mips/boot/dts/realtek/rtl930x.dtsi b/arch/mips/boot/dts=
+/realtek/rtl930x.dtsi
+new file mode 100644
+index 000000000000..f271940f82be
+--- /dev/null
++++ b/arch/mips/boot/dts/realtek/rtl930x.dtsi
+@@ -0,0 +1,79 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
 +
-+additionalProperties: false
++#include "rtl83xx.dtsi"
 +
-+examples:
-+  - |
-+    timer@3200 {
-+      compatible =3D "realtek,rtl9302-timer", "realtek,otto-timer";
-+      reg =3D <0x3200 0x10>, <0x3210 0x10>, <0x3220 0x10>,
-+            <0x3230 0x10>, <0x3240 0x10>;
++/ {
++	compatible =3D "realtek,rtl9302-soc";
 +
-+      interrupt-parent =3D <&intc>;
-+      interrupts =3D <7>, <8>, <9>, <10>, <11>;
-+      clocks =3D <&lx_clk>;
-+    };
++	cpus {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++
++		cpu@0 {
++			device_type =3D "cpu";
++			compatible =3D "mips,mips34Kc";
++			reg =3D <0>;
++			clocks =3D <&baseclk 0>;
++			clock-names =3D "cpu";
++		};
++	};
++
++	baseclk: clock-800mhz {
++		compatible =3D "fixed-clock";
++		#clock-cells =3D <0>;
++		clock-frequency =3D <800000000>;
++	};
++
++	lx_clk: clock-175mhz {
++		compatible =3D "fixed-clock";
++		#clock-cells =3D <0>;
++		clock-frequency  =3D <175000000>;
++	};
++};
++
++&soc {
++	intc: interrupt-controller@3000 {
++		compatible =3D "realtek,rtl9300-intc", "realtek,rtl-intc";
++		reg =3D <0x3000 0x18>, <0x3018 0x18>;
++		interrupt-controller;
++		#interrupt-cells =3D <1>;
++
++		interrupt-parent =3D <&cpuintc>;
++		interrupts =3D <2>, <3>, <4>, <5>, <6>, <7>;
++	};
++
++	spi0: spi@1200 {
++		compatible =3D "realtek,rtl8380-spi";
++		reg =3D <0x1200 0x100>;
++
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	timer0: timer@3200 {
++		compatible =3D "realtek,rtl9302-timer", "realtek,otto-timer";
++		reg =3D <0x3200 0x10>, <0x3210 0x10>, <0x3220 0x10>,
++		    <0x3230 0x10>, <0x3240 0x10>;
++
++		interrupt-parent =3D <&intc>;
++		interrupts =3D <7>, <8>, <9>, <10>, <11>;
++		clocks =3D <&lx_clk>;
++	};
++};
++
++&uart0 {
++	/delete-property/ clock-frequency;
++	clocks =3D <&lx_clk>;
++
++	interrupt-parent =3D <&intc>;
++	interrupts =3D <30>;
++};
++
++&uart1 {
++	/delete-property/ clock-frequency;
++	clocks =3D <&lx_clk>;
++
++	interrupt-parent =3D <&intc>;
++	interrupts =3D <31>;
++};
++
 --=20
 2.45.2
 
