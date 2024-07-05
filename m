@@ -1,139 +1,173 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410EE146A69
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 14:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC6516A954;
+	Fri,  5 Jul 2024 14:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720189036; cv=none; b=ScGxffMOUjpW96S0SMt6rloZqCUuhmDFTcu/DF5gQzviGZJMTBiq61U5T8CgBvA8GAGGVpeQOo2VmBjXWPD8XlMSu5Hizi/CyEJYespbb9hJMfwczIzFhuUTnROEisEKoV7ObF8rhfeSzEJppxAyuVGPmXmabrefvv2wb/YqDJs=
+	t=1720189040; cv=none; b=sZDVb2BTYt1l0hzCkNvhLcvEKK1+Z048N43VjtcsqeR8B6LpJCg/3r8cgG/rqm7JukCvq2irKLPAeBfG7nzYEqAgdfBVwjNUodKI3ZCAX6OxjsHjBxKuJxGSSGaKfTA9gRKV3FUVvnktUO+ZsJEVF/dW4F4orwtSmhaONtdO9aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720189036; c=relaxed/simple;
-	bh=n8zcsf+cKLFVPpClQ4xkpjOCCIvIJFw2OCxLNBkkVz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vtv0GE/hic1M+KIhRgH84LcCR374oH8Q6sUyr8gRmE0UvQZTDGya8mVBoSqsVwTvZbHj0z5xM6suqK7cngVJsx8hr5YANCxzNYy8n4lLpMWFXAFTPxP2pSjch933psBhhFWZl1gNJVNwJSddmUoGXQmFIkJ40R3L39fyCWS/rNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2oJZCa6; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720189040; c=relaxed/simple;
+	bh=WNu6YnIpjmhZP5sFZYTEwWoNdzLX/he1ifvQopC1xF0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IrvCc/f5kGLtRx6LbZPgqE45lseVlFMPAdfE77+O7xNbA9ZnS1AXQagUZYTkXY3OkmT9OeqQwe/ABVNmoGkuAPgY1QYha16PfJMDiZUniBK3GUrFyc8PN6cSHm6TjHif5yM415v7NQMdpV/9df7kcxxikdmIvnQ7x3FQcuXusGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ihOCk3pr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jeAdMkyP; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2oJZCa6"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-6e7e23b42c3so956919a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 07:17:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720189034; x=1720793834; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b+BcpyzLQnxvJ1Kfe3UTbGBPJSneNJ41TWH5rNXfDpo=;
-        b=J2oJZCa6PJ4gV7EinC/2h5wOucokHcgvRA0FP3Uhp2+r7HwCzWkInHZaJO39FES9Li
-         D4MvSt8SdyRcNUvG9BGaLvvHd6P6OkNKLFt6DbIa6FXLgtRdikO/BO2EUG4ApXTWMbSN
-         UihL33RzAPgQ++Zt/yxEaIUS+e1a8/LvsBLa5Q4Tv6+gs6wPY7FEsmZ9lY67luqp4TAJ
-         NGAL2d8r/2zvnM/QuIldM8rSeoEOS/VMrlYnrAHQQJfkS4XW7BzDDMA5DNnptzy8qam2
-         JBs8iMXAkZbdRQtpmQ7QqRWh5gRUYuYC2mUbv2QXhuPV+2qH5fmCU5XIpCy6dXGpMJHg
-         NKwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720189034; x=1720793834;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b+BcpyzLQnxvJ1Kfe3UTbGBPJSneNJ41TWH5rNXfDpo=;
-        b=G/b4j/0EcCpBso8LfXbU8egY8sOGPn+cQ9deq3uvU97ksMLIAIIBToDwpGOxM3/Mpc
-         HsA5GQrUMtYuNcf/pdUhp/P9MIn8YlljX402PfAugLPdXT/wkBWJj53W98aN7TgSonWN
-         tBLOMrMGEBx598EG8dqw6bXuD0Z4pLe35DFDvUTIX8hZqFo6xAXiQEBM938TnhkGAH5A
-         1K226xJ8nZghNIbXIgMWZCAFtXBfVb9LTk3NKv6CFcMfpqh4n4Jt1EKV2Q2/3nHky65d
-         2b/w/UBBIuEs2NRFneIWZif1mn3LnD2JUXAmu5BIto7+qnAIrPNpXEUZr1DA6gNq1awT
-         AULg==
-X-Gm-Message-State: AOJu0Yz9b8U/QHr4aAbBpo8bxFuCZ1ZCjiNk4srj31Z3tVYMwJzgSzgh
-	KX3UdDA5HT/MuYISdeOEXFv1NAiZFocmZ7nmxNYQ88+kHJEmsJV8
-X-Google-Smtp-Source: AGHT+IH2gZQ/17IR2+hr1qvtD889PWpZBS7KGodEU4flUX6Dz8znVlKZmOM2MVb5TfdJ5+5ARd0vXg==
-X-Received: by 2002:a05:6a20:7347:b0:1be:c0c9:d007 with SMTP id adf61e73a8af0-1c0cc8baa87mr4545783637.44.1720189034362;
-        Fri, 05 Jul 2024 07:17:14 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6b584624sm11321449a12.53.2024.07.05.07.17.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 07:17:13 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 17517185D7BCC; Fri, 05 Jul 2024 21:17:10 +0700 (WIB)
-Date: Fri, 5 Jul 2024 21:17:10 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: "H. Peter Anvin" <hpa@zytor.com>,
-	David Polakovic <email@dpolakovic.space>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Lobakin <alexandr.lobakin@intel.com>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: Re: proposition for fixing Y292B bug
-Message-ID: <ZogAZltQIks_cN-y@archie.me>
-References: <3be3235a-dea7-a5ca-b5ea-4047bdeb695d@dpolakovic.space>
- <ZoFgga45QCh2uA0i@archie.me>
- <9e3b638d-76f2-8520-2a24-7de0cd0bc149@dpolakovic.space>
- <ZoJx5GaBDHg7nayw@archie.me>
- <cef39a6f-426d-4c4d-950e-edbbe5e95acf@intel.com>
- <d88861a6-ccd9-3fe5-67e0-b50a72ca1e51@dpolakovic.space>
- <848ADF85-6138-4D56-8DDD-E327B8AFC5EC@zytor.com>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ihOCk3pr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jeAdMkyP"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id A2FC9114014B;
+	Fri,  5 Jul 2024 10:17:17 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 05 Jul 2024 10:17:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1720189037; x=1720275437; bh=7R
+	O+MTkGcDJKgN6KlbDx7YR+VtmqHM5rQXYYsbr80ZA=; b=ihOCk3prBk9+VP2PHy
+	JNTnw8VXXc+iEZcAdmfTPzxTauhz41h7qZIAYNaPq+p0Sg/fa3n6CuRh2rGaRf3d
+	QTWT/Bw4m0mQ8ICwQ7wejIYx7fTzkCIRA3Ojkj/vsBJa68ikdzswh7W/cePWBdxI
+	+qSxI3UsDcnlirYd9LC5p5evkK6sh3i7PgvtZ7i87/fsi278B2MaIkXQRA2SkcFA
+	iir8X7BRrMKKXT6FqJ6SSavWpavo3pLvoXn4gpxesjg9gslYqSI+ShuH2hsUDZL+
+	wTCQTO3gvdGqZ2tFJiEVwTa4y4yqObzKr8kN57qx07Fh+upu9LfkgP4prul4Xl7u
+	h7Tw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1720189037; x=1720275437; bh=7RO+MTkGcDJKg
+	N6KlbDx7YR+VtmqHM5rQXYYsbr80ZA=; b=jeAdMkyPwsrcEv83W8wFD5Svuvske
+	RHLNk1kCSaSE5CCkdffjCxh5c4ozhVOD022vA+hvCfccrj4ehkQdDldyYFSihlyt
+	SamBgFszFHd/AlHdKo9viYyHBs6W3d2sfHJfcdgJrRF829kBA0hjVl+dhUzphaHX
+	N1UzPLTSjE8/TTMka8Q/GCbFn83eArFtrodgK6NJ9Sw5AcDoVgwjjSBclvhyfSDE
+	QeOtNDFWVsVV5nSGC3POO9PGc93vuKwhu4GFEFqFcjq0tQG5iz3pnZ7nRBtyfDIQ
+	AwkEKq1f3LKvZWleKoe9+4Tbuu5aNF3Ac8cEPuAhbJKpmnjgYld7WgUVQ==
+X-ME-Sender: <xms:bACIZosAYQKia0iHXWDmAEoeWAXG034OgVmL1Dv47sOs7cGsukfvug>
+    <xme:bACIZlc55Hs9XYlwXNfDUM8Eik3NmUQZfWThuNaB8m9xSb8n6-JD-ZDM0HFtzUzDI
+    FtNBE0_x4rXKZoZYEQ>
+X-ME-Received: <xmr:bACIZjzsRBFCKpIizpZ5LHnA516NLsfJy5d-OIsWCzuYIGb3WkbV3_hYFvzkz0vlr6I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddugdejfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomheplfhirgiguhhn
+    ucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenucggtf
+    frrghtthgvrhhnpefgveffjeetgeejfeelgfekteelkefhuefggedvueeujeekjeetkeek
+    vdffffefudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhl
+    hihgohgrthdrtghomh
+X-ME-Proxy: <xmx:bACIZrPpyVqCD4S6PsS_eFYh9isjAN_WXLXeVZGhZqan0hB2idAUEg>
+    <xmx:bACIZo8XN_fi_QacwtxPKl0171OEmb7YE2FHawVmOzms91VzwDZnpg>
+    <xmx:bACIZjUeWvyua12NWAHtDLygtjwKax_VkI_9X5vR9UhgdX1ZHOTakg>
+    <xmx:bACIZhcM_Krgd6_4edLYi_M3PXwlsT_YoIpal0EgtqaymdY7ox-WzQ>
+    <xmx:bQCIZp2rXhBuZd-94KAw5czZGvsNH3i_Ml57Yk6pQ0YJIGcNPkGAi5Eb>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 5 Jul 2024 10:17:13 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH v2 00/10] MIPS: IPI Improvements
+Date: Fri, 05 Jul 2024 22:16:52 +0800
+Message-Id: <20240705-b4-mips-ipi-improvements-v2-0-2d50b56268e8@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fzQRhIhgQALCnCeF"
-Content-Disposition: inline
-In-Reply-To: <848ADF85-6138-4D56-8DDD-E327B8AFC5EC@zytor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFUAiGYC/42NQQqDMBBFryKz7hQTJdquvEdxoXGiA40JiYSKe
+ PemnqDL9+C/f0CkwBThWRwQKHFkt2aQtwL0MqwzIU+ZQZayLpVQONZo2Udkz8jWB5fI0rpFNK1
+ u1SgmrZoG8twHMvy50q8+88Jxc2G/npL42T+iSWCJVFVStY0R6iE7895nN2x37Sz053l+AU1AB
+ q7CAAAA
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Huacai Chen <chenhuacai@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Serge Semin <fancer.lancer@gmail.com>, Paul Burton <paulburton@kernel.org>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2940;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=WNu6YnIpjmhZP5sFZYTEwWoNdzLX/he1ifvQopC1xF0=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrQOhvTEuaUSqyTMo5/dfa54ZulMrmc/lB3evXmd6W77s
+ nzr7t83O0pZGMS4GGTFFFlCBJT6NjReXHD9QdYfmDmsTCBDGLg4BWAikicZGVr7c+pNXON4rln+
+ Mnqzw/Zz0XO+C8J3DWxqrI5qtXDdE2VkuJ79/OnusukbVtSFxF3UcT/f6L1quY2TcKBc627daTZ
+ beAE=
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
+Hi all,
 
---fzQRhIhgQALCnCeF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series improved general handling to MIPS IPI interrupts, made
+IPI numbers scalable, and switch to IPI-MUX for all GERNERIC_IPI
+users on mux.
 
-On Thu, Jul 04, 2024 at 07:59:13PM -0700, H. Peter Anvin wrote:
-> On July 3, 2024 8:29:58 AM PDT, David Polakovic <email@dpolakovic.space> =
-wrote:
-> >I am not sure if I don't understand your solution, but extending the
-> >memory designation from 64 to 128 bits, is another temporary
-> >solution, which will again overflow one day.
-> >
-> >The sole reason why I was proposing the new "BigInt" type was to
-> >store each digit of the time_c as separate element of array, which
-> >could be resized (added one digit) as needed. The only limit would
-> >then be the physical amount of memory in the machine.
-> >
-> >dpo
-> >
->=20
-> So now you are worried about the Y5e30 problem?!
->=20
-> You realize that you are now talking the orders of magnitude of time for =
-which:=20
->=20
-> "	The estimated time until most or all of the remaining 1=E2=80=9310% of =
-stellar remnants not ejected from galaxies fall into their galaxies' centra=
-l supermassive black holes. By this point, with binary stars having fallen =
-into each other, and planets into their stars, via emission of gravitationa=
-l radiation, only solitary objects (stellar remnants, brown dwarfs, ejected=
- planetary-mass objects, black holes) will remain in the universe."
->=20
-> I genuinely thought this whole thread was a practical joke...
+It is a prerequisite for enabling IRQ_WORK for MIPS.
 
-And that's what I thought as unnecessary engineering churn...
+It has been tested on MIPS Boston I6500, malta CoreFPGA3 47K MT/
+interAPtiv MPF, Loongson-2K, Cavium CN7130 (EdgeRouter 4), and an
+unannounced interaptiv UP MT platform with EIC.
 
---=20
-An old man doll... just what I always wanted! - Clara
+I don't really know broadcom platforms and SGI platforms well so
+changes to those platforms are kept minimal (no functional change).
 
---fzQRhIhgQALCnCeF
-Content-Type: application/pgp-signature; name="signature.asc"
+Please review.
+Thanks
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+Changes in v2:
+- Build warning fixes
+- Massage commit messages
+- Link to v1: https://lore.kernel.org/r/20240616-b4-mips-ipi-improvements-v1-0-e332687f1692@flygoat.com
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZogAZgAKCRD2uYlJVVFO
-o8LCAP949QKGFVY+WlBqWM/C08C6TfT9uPLUBdWMyHBy/UJ7/wEAu0VFc6if9CvA
-ihXFSF8fVtTsGOtVZ5kWkUle9QfoUQ8=
-=LWAS
------END PGP SIGNATURE-----
+---
+Jiaxun Yang (10):
+      MIPS: smp: Make IPI interrupts scalable
+      MIPS: smp: Manage IPI interrupts as percpu_devid interrupts
+      MIPS: smp: Provide platform IPI virq & domain hooks
+      MIPS: Move mips_smp_ipi_init call after prepare_cpus
+      MIPS: smp: Implement IPI stats
+      irqchip: irq-mips-gic: Switch to ipi_mux
+      MIPS: Implement get_mips_sw_int hook
+      MIPS: GIC: Implement get_sw_int hook
+      irqchip: irq-mips-cpu: Rework software IRQ handling flow
+      MIPS: smp-mt: Rework IPI functions
 
---fzQRhIhgQALCnCeF--
+ arch/mips/Kconfig                     |   2 +
+ arch/mips/cavium-octeon/smp.c         | 111 ++++++------------
+ arch/mips/fw/arc/init.c               |   1 -
+ arch/mips/generic/irq.c               |  15 +++
+ arch/mips/include/asm/ipi.h           |  71 ++++++++++++
+ arch/mips/include/asm/irq.h           |   1 +
+ arch/mips/include/asm/irq_cpu.h       |   3 +
+ arch/mips/include/asm/mips-gic.h      |  10 ++
+ arch/mips/include/asm/octeon/octeon.h |   2 +
+ arch/mips/include/asm/smp-ops.h       |   8 +-
+ arch/mips/include/asm/smp.h           |  42 +++----
+ arch/mips/kernel/irq.c                |  21 ++++
+ arch/mips/kernel/smp-bmips.c          |  43 ++++---
+ arch/mips/kernel/smp-cps.c            |   2 +
+ arch/mips/kernel/smp-mt.c             |  70 +++++++++++
+ arch/mips/kernel/smp.c                | 213 +++++++++++++++++++++-------------
+ arch/mips/loongson64/smp.c            |  52 +++++----
+ arch/mips/mm/c-octeon.c               |   3 +-
+ arch/mips/sgi-ip27/ip27-smp.c         |  15 ++-
+ arch/mips/sgi-ip30/ip30-smp.c         |  15 ++-
+ arch/mips/sibyte/bcm1480/smp.c        |  19 +--
+ arch/mips/sibyte/sb1250/smp.c         |  13 ++-
+ drivers/irqchip/Kconfig               |   2 +-
+ drivers/irqchip/irq-mips-cpu.c        | 180 ++++++++--------------------
+ drivers/irqchip/irq-mips-gic.c        | 213 +++++++++++++---------------------
+ 25 files changed, 596 insertions(+), 531 deletions(-)
+---
+base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+change-id: 20240616-b4-mips-ipi-improvements-f8c86b1dc677
+
+Best regards,
+-- 
+Jiaxun Yang <jiaxun.yang@flygoat.com>
+
