@@ -1,452 +1,240 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89A41E867;
-	Fri,  5 Jul 2024 12:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720183562; cv=none; b=fHqJG9ZuQHCVqHKOgbVcAnl42ya5kqkpSJV24TD/r0rE8Q5TfZhT1qotsbpH3mSv4FkCwaMurMwbXS1xHgqY6Wti1Z9EnU1nnroIuJHg/0hB3shwEs1S3hZJubI19vvH4m+/mjNEJbcVlPLzAhe0/f1sxT/ueyy7v4Yu1Md55Ds=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A471E4B2;
+	Fri,  5 Jul 2024 12:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720183562; cv=fail; b=IOI4oaMc5AqaIFXH+D1SkExH/jEYID+Jsvw5pPBMereXoHnHuUWSRlVkEkhjpIznkywLmE7htPONboP+azFjezTx/lXyFiFWJRVWONIb2mMKr79+4FtzS8G0cBX+UL815n98leLWkRPx+A8JVvaDA+3Oga7G8hcNwonwCbcQ12E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720183562; c=relaxed/simple;
-	bh=YnlMZWJ2dnf8MfW4QrYMu87iaU5CcHc9yot2NDnHNT4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ql3M9QRGiGnml1ZdoW+IfbHxp3ns0Q8sHQv2WD3d0KxTJIHSRXSBrRvdFRzVCPYfYgNk7hVf8kGcfqu/Eo05zaL/SG1XBcmbOxqlkazaJKUSBvlbOticc3H8ALOJh9ov3JVY91zPLl7E5kMcmpi75pAWpUFx2MNU5HEvVKylHME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2pgFoxA; arc=none smtp.client-ip=10.30.226.201
+	bh=nWhNNPOiLMy3/Ly/5Dzo+UlEtyiu0I34GFvdoH6BNdE=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Su+5IJpVmA5c8c29MD+a0XhQa8r39rIhvll32GeqPTvWMEIv3cQVd9r8CmH3I8k5IvrHrxbwG2E11UunzISXTUUnAPHlkcHgU9mWzp7dh2VRkzh/p38vOqvZPBZ+Eavuy/iUfK5XsQgiCB7Wl9bxSowP+Vdi7J72mtFZgAlLbSQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QSKdlmrh; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2pgFoxA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7292BC116B1;
-	Fri,  5 Jul 2024 12:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720183561;
-	bh=YnlMZWJ2dnf8MfW4QrYMu87iaU5CcHc9yot2NDnHNT4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b2pgFoxA+TLxGoOJP3AoWJyhqN6ruoHdlE4w1QqPeXMfPikTBSkwVyIuM8r2JG9IA
-	 OhB5VR1atbGOJDWDdKoQ2ljI6tOlLY+m2E3QPABN5IKTvaMNflHg7gbgLAYTY5oBpQ
-	 GVyTq7Ysad4o9YxNK9xRb4RuGpf4XoRl45F3SiiBCzHu3JF7EUVOrhE3vEHW66FJlb
-	 PlQ0QL5KRE+tzo02pWmRpbKlJfVD+gfP/9/nJAsOYmXa1HTfZwPD01JUmoRwi6DrUY
-	 ayQ7FsY6Fsz+NHienEmK+XLcR3aOGoNbat5bRPv5+z2tY6mF5i0Z7TjighVbNweumi
-	 +7A4BpnVjUWbQ==
-Message-ID: <31ed22b4-4b6f-4a1d-96ae-930d1c19da85@kernel.org>
-Date: Fri, 5 Jul 2024 14:45:57 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QSKdlmrh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720183561; x=1751719561;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=nWhNNPOiLMy3/Ly/5Dzo+UlEtyiu0I34GFvdoH6BNdE=;
+  b=QSKdlmrhWMtj2qTOyuFwR3wszjK6UZ7OZGML6N21DaPzB5lk5RBAFNeT
+   SRFVGzG/1fqMMScqD7Y2F2r4v5s/MsPwc9fvIobOtQK7+jC+A1SqeMZo5
+   jChizuq01Wtfrn8FhOB9zNW+WkzWm5RZPudjm2P9N+W0eCW+LlPFjNSmZ
+   2pDmffuM3X+IDP329eGXHvbaIBrIzFTKWkSdAFoJNjG4WcFzHijtDJLJ6
+   jJz/GvTAgqcqfPpruRy5f8CE8DxXauPihIPEqUCtBRtK45pUjgZKu1xSc
+   1Qn1kcGG00QByqph2z0PcepIiTrD+qaN5zCWK7L1GdK1hoiez1nGTW0Wr
+   Q==;
+X-CSE-ConnectionGUID: 7eAgTekXS6ex5DmCjrSP8Q==
+X-CSE-MsgGUID: if7MM30kRM6Y8GQqmg7eUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="20382447"
+X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
+   d="scan'208";a="20382447"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 05:46:00 -0700
+X-CSE-ConnectionGUID: hjUIO3LSTxiAb9X3YqRJ7Q==
+X-CSE-MsgGUID: tHjSykYqTrudhBqUPCXMXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
+   d="scan'208";a="51465816"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Jul 2024 05:45:59 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 5 Jul 2024 05:45:59 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 5 Jul 2024 05:45:58 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 5 Jul 2024 05:45:58 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.41) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 5 Jul 2024 05:45:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ja5gKfel7sqNMp3rvwOLK6WpDCpfQcyImPLQsjI4+Ugg+uli6GrJ4Xdgq5On2BDQMLzQIpIjXfKfOzCDI8Y624POboIoVeOhDol3QOEZZmC9a3wIayZ/EjPiCWz1p4TtdJJ0sOGvVp7Aj72X6u9Yt6QlftAJ6Z7pnftHEdVUxoDsEEelLUwjcAZDHAP9e5kFpipruwBr23KkPXcw76drdxl4fqfxNTZqqs/UBUW69+lEBb48k77/PsahXmORrj/xi0mAcPwEMe8W3F9DpJfIT2r+VnGHYuDm7aYfN293vbVAJDT2Y+Pk+BR/p/9DWK0rBNdRChhjOZduCLkOq1wxRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nMXGFlhGDl/P9mX7eMhqfirj+uYzgC6m+T501dqWiCA=;
+ b=oGzKMhZlmC7bCPuJg1rP4AK0n34pNVMZJpneiBRuDT62Db0t4Dw6i8Af4BbZ2V98HArf4fUkBOAR7ciQ4aoBKy/LdtGCDWPIBJ5l+Maps//DIy1++JMRP+DgTSnQWDC7K08uEjO6bZZD1ViySvhjXTfm1ODtCWghuaAc2SW9VEOPn10xZIlGkIGIZiHkczHHlHZbiC94DM0htS4WNa12dhAPMl6Nol7BvUvhzLiAgU9Ns+tnoDAw7w7Zo1Wncwkje+rGQGjSK10KQ2epLoaPEKidPl5Kbv3oE9RuGiSbFZZlv/ZenLE+yKrlE1izx0xzwW/3s1tBiBubeIpGlUYyGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
+ by CH0PR11MB8143.namprd11.prod.outlook.com (2603:10b6:610:193::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26; Fri, 5 Jul
+ 2024 12:45:56 +0000
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808%7]) with mapi id 15.20.7741.029; Fri, 5 Jul 2024
+ 12:45:56 +0000
+Message-ID: <f5754d0a-1640-4d20-95fd-a2d74dfcc084@intel.com>
+Date: Fri, 5 Jul 2024 14:45:50 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 5/5] netdev_features: convert NETIF_F_FCOE_MTU
+ to dev->fcoe_mtu
+To: Jakub Kicinski <kuba@kernel.org>
+CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, David Ahern
+	<dsahern@kernel.org>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Andrew Lunn
+	<andrew@lunn.ch>, <nex.sw.ncis.osdt.itp.upstreaming@intel.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240703150342.1435976-1-aleksander.lobakin@intel.com>
+ <20240703150342.1435976-6-aleksander.lobakin@intel.com>
+ <20240704191646.06bb23c8@kernel.org>
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Content-Language: en-US
+In-Reply-To: <20240704191646.06bb23c8@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MI1P293CA0011.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:2::20) To DS0PR11MB8718.namprd11.prod.outlook.com
+ (2603:10b6:8:1b9::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5] cgroup/rstat: Avoid thundering herd problem by kswapd
- across NUMA nodes
-To: tj@kernel.org, cgroups@vger.kernel.org, yosryahmed@google.com,
- shakeel.butt@linux.dev
-Cc: hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com,
- kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <171956951930.1897969.8709279863947931285.stgit@firesoul>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <171956951930.1897969.8709279863947931285.stgit@firesoul>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|CH0PR11MB8143:EE_
+X-MS-Office365-Filtering-Correlation-Id: aeed157f-4d10-4054-9bb2-08dc9cf069f0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?V1Rrc0Q0eENrZ1k2VURjK01JdFFJczFBcWFGQ2NyV0M1REVPdzV5dHlvZW1E?=
+ =?utf-8?B?U3EydzNBaGdwQ2JaU3ZRNFFETENNT2dyTkVHSmRHRzgyZEQ1dXgwaEs5OEJl?=
+ =?utf-8?B?eWFuVSthZlN0YUtMQ3BCcllsQkZJUWZHbW9LNC9McHNNcEU3NkFsM0t1TTN3?=
+ =?utf-8?B?TVNQbFVGd0ErY1Z3clBIVUkvNU43VkR3azBVZzc1WXRFVit5bVdyS0FWUnd2?=
+ =?utf-8?B?MTdLWDJMZHVMNlBHYUo3b2MwVFlsZlIvbkVldkJaMXl4NUFtUXJWMldwY3JJ?=
+ =?utf-8?B?QzJ0ZnZDVlBmd01wVEFtbVA2bkZSR05Lb1VkcjY2SlZnRGJQbE9yYVhKYnpZ?=
+ =?utf-8?B?MjRaempwMllobzdFOURGRk92RFlrdHVNaGZLSGVBS2kvelBWY0FHRk1YenR3?=
+ =?utf-8?B?a3VIMzFQUjJOdWFTTkQwU1BwL3lDODNwVVZvNThia1pNaXdkUENUcWtYcHI1?=
+ =?utf-8?B?Z1BnT1ErSVNQaVRmRk01azJ0TW1SV1Y1dVA0RjVRVFJYZThWSUs3SnhqZmhB?=
+ =?utf-8?B?K3d1OXpjc0t0Y0RyMzdUUjllYzRMbzBCeGZtbTRHVWkvMHo2OGJxemo3WjNX?=
+ =?utf-8?B?aHk1SjdIUG5FdlVTczlrMCtpVmpNYmN4NWJTL0Vmd3A5RGlrWWkzWVM1anAz?=
+ =?utf-8?B?eE50RklUUENCRmR3YS9QOHJrQ3ozVWFHN2J0RHBXRzR6TWo2WGowWXd5eXpU?=
+ =?utf-8?B?eUJCcGZIejVFM0VrWm1zR2hReC9OcW5GY2tMQUgvcmNicUlVb3dWd3Q5NlB5?=
+ =?utf-8?B?c2hpK00zNlJRVHpqUU5lMCtlN1pjampzSFpyUGFoeUlna3FUQkVPdGNMT1Q3?=
+ =?utf-8?B?bm1ZTC9RcXBhY2tsbjYrVW9ZeS9UV0JxamQzbC9kR3AzUHlYbnN3TVVXcXFu?=
+ =?utf-8?B?Q09WRnBQVDkwdVVHQ0M1K2FXYjE5L05ucGFzcHB3WDdCVnA3RGxkOVJUcHE3?=
+ =?utf-8?B?d1VpZUY4L2tDbHVOUkJIZU1lT2l6ZmkwbDNDUGpzYk5FeEx2Y0dsSGF1NmRl?=
+ =?utf-8?B?SlRyQ3BkYVROMkdwckZtalRwTjMzMm0wTmVzaUM4dkRCSmN2ZE0yVHlZRGZ4?=
+ =?utf-8?B?dys5TkltRG1HSXcvWjJQOU0rYzdoYkpUZHh0L2ZseFoxV0pDTHloWnRHY0la?=
+ =?utf-8?B?TTNQSWM4RFIzN2sycWsrR08yWXc1amh3cUIxUHFPWFI3ZGM2KzZBQ0dmT3A3?=
+ =?utf-8?B?Z20vS3AwbjRVREVZSkplVzRIaW9ING84TzhLQzRIUC84ZFd1R2VGVWRvbHNM?=
+ =?utf-8?B?end3WmxDK0EyNVRhalBsQVQyeUlpL3FxVFR5NytuR2hmV0FHdFJBcTJNMVNv?=
+ =?utf-8?B?RmtBMDNtREFDQytoeHl3TVhsTnRQTEZLTzNIMmo2bE41SmdUQUZFTG9hMlR0?=
+ =?utf-8?B?M2c5L2VHU3VySXB4WGhTSUE4QWFmNDRYZTBSTW5ha3ZoL2NjRXpCaE1OVzFG?=
+ =?utf-8?B?QmsxVDBtU0s0Mm1FQ3VUY1dNbXMvUHBlS3ZhVmNvQlkxZStYNytDZGVlT2U2?=
+ =?utf-8?B?SHhMTUV2MUV3Y3MwMUJXWWFXYlhFL2FHWnhBTlhaL2I5d3F6eEJRZEMyMzVV?=
+ =?utf-8?B?RCtGOUx4WlZYN0pVdEM3dmZnU1pkMzhLczFBL3doOFM2akdpbkNIRjYxR0xN?=
+ =?utf-8?B?TUtERTJaWTRrTWg2MWhVU2FDZTBNRGFYNEVNOVdpMkYwQXlya1c3RUgzTDBZ?=
+ =?utf-8?B?TUNmb1o5SDFaSGJkZXhYSTNwNThzT0tDbG5ZSWN5YnZ6bUJiSWhsaHZlSi9S?=
+ =?utf-8?B?TkNnU2RtbmpNZklsOElZd3NwdWliRzlrdnMrOFVIYWM5UmVqTXNsNFhINlQ1?=
+ =?utf-8?B?RzZnTTE1M0tWSWl2VWFMdz09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dUVxQ0dmUTlQYmp2cW1VYUhJVE84ZXpnMDRza3pubG1FTTk2VUtOVzJZOWMx?=
+ =?utf-8?B?T0JmMERRT3N6N08wRDVjbVUvbnhlT2lQMHIwM0wrckdiMmw3NVowT2xWQnp0?=
+ =?utf-8?B?Rk5ia29nWnhWOWZtV1pBNG1zR1B0WmxXcnBCdEdBMGZ4cWE1aWJzeTAwbW9O?=
+ =?utf-8?B?dGVCTzQvUFdKMGdTblRBY1RBOXppam5LbkRyVVVDZlB0ejF0bVdSNXAxV3Vj?=
+ =?utf-8?B?N3RkdzdrVkZ1VkV6K1A3N2xqTDBMUHhVbnd3b0VmVXhRb0pkYzFSQlZad2Fw?=
+ =?utf-8?B?YWtLZVJQMnA5MEtiYVhXcjlranArNmRVaDlIR2tJVDdSbHljRUw1N0YwN2hh?=
+ =?utf-8?B?RVBTRTZrbmdMTDU2VTdTUWJudTBsRXMyNnRZRER1MTRUOUJTMk0yQzV5S01s?=
+ =?utf-8?B?YjJ3KzI5WU80THV2MXZLZVg3eGpSRVE2MWRaQUZhNnlaY3BhRVVTS2F0Y0FO?=
+ =?utf-8?B?T2RlQXpEZTBNa0ZXY051dmh3cVVZRXZjVmYyNmNvZHp3M2pndCsxaGNMSVJz?=
+ =?utf-8?B?aThRem11MHNBdERqQ0lENGtHMUhLUS9Yalh1R3hxMlpVa3NKeXhJTHFCYXFV?=
+ =?utf-8?B?cUNSRzgwcXFuMkFidnk3MW5DUzBCVWo3N2h5ZUV2cUR0YUMvbThNY2RYR0sw?=
+ =?utf-8?B?NnFBMVY1WUNmdDhyL3k4TWV3QlNiRXFKSlhkdHpTN1E1L01rUnVyS0JmWVBH?=
+ =?utf-8?B?cEtuaWJ3K1VIYUZhZ3NFbHh0ZUZtaytleitncEhjaVo2dzZEc0RjSjIyTnds?=
+ =?utf-8?B?VUVaQlpvYVlpbXdmcFduL0YrWUZGcDdvdzRxbVVJQktueXl4SElwYTNQUnVQ?=
+ =?utf-8?B?TUpUYU1TaW5jaTBQNkhwMGNGcWV4NTlaVlJCVkJnSmdQN2x1RG1DbjFiLy9j?=
+ =?utf-8?B?SU11UTVMV2N1YnVBeGhxeXkyTnkxTXhzYTQ3RVhqVXQ4cjdqMVF2VTlLeWxY?=
+ =?utf-8?B?Wi93WWRBQ0xScklXRjFqQ25kR0dwdHNqN0pQajc2ZG5ITEtseGEyc1MxeHpT?=
+ =?utf-8?B?czJOa3RIQS9WMHplVCt5aFAxcXdWVHk4Rys5anNKTU1oMk9CVTk3aTdoUjF0?=
+ =?utf-8?B?ZGsrZVNWck1uVFdQRmw0akp4M1ZLNWF2czZoVURTbkFhNkRCQmNJN1NqUlJa?=
+ =?utf-8?B?L2FDSllSbFBDTkV6UW5oZy9ubDZpeTM2UzlIQzI4NjJlMUR3M2hWUkIyN2tp?=
+ =?utf-8?B?bUpsemxDVTc1OTdRRHF4SkllWWRHS3pBUWFFWWcxU0JCdVVkSGoxN0FOdi83?=
+ =?utf-8?B?VStoODBsbUIrcTRjMjZsaWNGYkFXWVkwZGx3UTFXZEZSa0xvK3lnc2lpbVlN?=
+ =?utf-8?B?QWhwOGR4TzhTM1IxR2FsQ1I2bk16ZjNQSkNteVZXb0ZXSTZuNVF3bE0yWGhV?=
+ =?utf-8?B?U2Q1UUxRYWorbmROMzlXbGdXMkdIS2ZvZUNGeDBYYTEzL0RzakZSU2I2Y3pO?=
+ =?utf-8?B?NEZhY01XWWhacWIyYmFXeGd5MFBacGhOTUx5WXdOZ3ljcTA4dFlTS0JJUGw3?=
+ =?utf-8?B?cEhoSGhtaU1TdGxTZ2FKRDNkZm5UVkExRmZDajdRYzdaU1dHOEdySmhoNjVa?=
+ =?utf-8?B?aFpCdTdGNDJNQU5aRktxSWMxempmWEVodng3UldsZysvS0ZmeDIyWGdNRWVM?=
+ =?utf-8?B?K3BMMVJRS3NqRkoyMHRvaUdFMzd5MksvU2d3WEtuay9PS25ZNVpmaVplNFJJ?=
+ =?utf-8?B?WHZ6am1Jc0lnbUVDQlorbUtKOHJFdFA3a01YMVQ4Q2xUWnF0RTcwZVFFMmZp?=
+ =?utf-8?B?T1NGUUxmaDFQamJQakdGR0wwT2VyUkhZZEV4U0xla3lteWJvL2dxMlZESWps?=
+ =?utf-8?B?d054eThFcGhuQU5EZGhOU0FxK1o3czVFZzkySmQ2N3dwV1RaZytMRFlhc2xP?=
+ =?utf-8?B?aHhYK3JzMHB0UE1TZDZPZEYyYmZDOFBmNkZ4OFpjQnk0eGpvVDBZU1o3UVRn?=
+ =?utf-8?B?YU05Z2pJcVB0N1BMM1JZdEZnczRtM3lBSXFONStDNVlGcm5heCtVbUhDSGlB?=
+ =?utf-8?B?d2xHMFNuc0ZPOC9yMmFrRWlHYlYxQjhQNXlNOFo3QThNQzdjU3IwVkhvTGNT?=
+ =?utf-8?B?bUhkSVN2a3pEejdVM3o5Q09HclVKQlhKbUdqNk5zOXEvdjV4NVA5RmtCUEtj?=
+ =?utf-8?B?MU1ORElqb1JUQ3RIZ2pHMVVmY0NiVXZYdXk4bGhzTTFPSERLT20rTnBkMk42?=
+ =?utf-8?B?Tnc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: aeed157f-4d10-4054-9bb2-08dc9cf069f0
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2024 12:45:56.5405
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dwgC8odmUpVKeWSht/t4TW+EGfMTwSHgPgt/FksW90JIjxuFIb31F8qMMfPs2dNPZW/XEojtmATlHCfn92Xm+Btp6yDQ0oDrwfeNFSiUe5Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB8143
+X-OriginatorOrg: intel.com
 
-(production results below)
+From: Jakub Kicinski <kuba@kernel.org>
+Date: Thu, 4 Jul 2024 19:16:46 -0700
 
-On 28/06/2024 12.12, Jesper Dangaard Brouer wrote:
-> Avoid lock contention on the global cgroup rstat lock caused by kswapd
-> starting on all NUMA nodes simultaneously. At Cloudflare, we observed
-> massive issues due to kswapd and the specific mem_cgroup_flush_stats()
-> call inlined in shrink_node, which takes the rstat lock.
+> On Wed,  3 Jul 2024 17:03:42 +0200 Alexander Lobakin wrote:
+>> --- a/net/8021q/vlan_dev.c
+>> +++ b/net/8021q/vlan_dev.c
+>> @@ -571,6 +571,7 @@ static int vlan_dev_init(struct net_device *dev)
+>>  
+>>  	dev->features |= dev->hw_features;
+>>  	dev->lltx = true;
+>> +	dev->fcoe_mtu = true;
 > 
-> On our 12 NUMA node machines, each with a kswapd kthread per NUMA node,
-> we noted severe lock contention on the rstat lock. This contention
-> causes 12 CPUs to waste cycles spinning every time kswapd runs.
-> Fleet-wide stats (/proc/N/schedstat) for kthreads revealed that we are
-> burning an average of 20,000 CPU cores fleet-wide on kswapd, primarily
-> due to spinning on the rstat lock.
-> 
-> Help reviewers follow code: __alloc_pages_slowpath calls wake_all_kswapds
-> causing all kswapdN threads to wake up simultaneously. The kswapd thread
-> invokes shrink_node (via balance_pgdat) triggering the cgroup rstat flush
-> operation as part of its work. This results in kernel self-induced rstat
-> lock contention by waking up all kswapd threads simultaneously. Leveraging
-> this detail: balance_pgdat() have NULL value in target_mem_cgroup, this
-> cause mem_cgroup_flush_stats() to do flush with root_mem_cgroup.
-> 
-> To avoid this kind of thundering herd problem, kernel previously had a
-> "stats_flush_ongoing" concept, but this was removed as part of commit
-> 7d7ef0a4686a ("mm: memcg: restore subtree stats flushing"). This patch
-> reintroduce and generalized the concept to apply to all users of cgroup
-> rstat, not just memcg.
-> 
-> If there is an ongoing rstat flush, and current cgroup is a descendant,
-> then it is unnecessary to do the flush. For callers to still see updated
-> stats, wait for ongoing flusher to complete before returning, but add
-> timeout as stats are already inaccurate given updaters keeps running.
-> 
-> Fixes: 7d7ef0a4686a ("mm: memcg: restore subtree stats flushing").
-> Signed-off-by: Jesper Dangaard Brouer <hawk@kernel.org>
-> ---
-> V5:
->   Dropped trylock helper
-> 
-> V4: https://lore.kernel.org/all/171952312320.1810550.13209360603489797077.stgit@firesoul/
-> V3: https://lore.kernel.org/all/171943668946.1638606.1320095353103578332.stgit@firesoul/
-> V2: https://lore.kernel.org/all/171923011608.1500238.3591002573732683639.stgit@firesoul/
-> V1: https://lore.kernel.org/all/171898037079.1222367.13467317484793748519.stgit@firesoul/
-> RFC: https://lore.kernel.org/all/171895533185.1084853.3033751561302228252.stgit@firesoul/
-> 
->   include/linux/cgroup-defs.h |    2 ++
->   kernel/cgroup/rstat.c       |   57 +++++++++++++++++++++++++++++++++++++++----
->   2 files changed, 54 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-> index b36690ca0d3f..a33b37514c29 100644
-> --- a/include/linux/cgroup-defs.h
-> +++ b/include/linux/cgroup-defs.h
-> @@ -548,6 +548,8 @@ struct cgroup {
->   #ifdef CONFIG_BPF_SYSCALL
->   	struct bpf_local_storage __rcu  *bpf_cgrp_storage;
->   #endif
-> +	/* completion queue for cgrp_rstat_ongoing_flusher */
-> +	struct completion flush_done;
->   
->   	/* All ancestors including self */
->   	struct cgroup *ancestors[];
-> diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-> index fb8b49437573..e9d3e2aff698 100644
-> --- a/kernel/cgroup/rstat.c
-> +++ b/kernel/cgroup/rstat.c
-> @@ -2,6 +2,7 @@
->   #include "cgroup-internal.h"
->   
->   #include <linux/sched/cputime.h>
-> +#include <linux/completion.h>
->   
->   #include <linux/bpf.h>
->   #include <linux/btf.h>
-> @@ -11,6 +12,7 @@
->   
->   static DEFINE_SPINLOCK(cgroup_rstat_lock);
->   static DEFINE_PER_CPU(raw_spinlock_t, cgroup_rstat_cpu_lock);
-> +static struct cgroup *cgrp_rstat_ongoing_flusher = NULL;
->   
->   static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu);
->   
-> @@ -299,6 +301,44 @@ static inline void __cgroup_rstat_unlock(struct cgroup *cgrp, int cpu_in_loop)
->   	spin_unlock_irq(&cgroup_rstat_lock);
->   }
->   
-> +#define MAX_WAIT	msecs_to_jiffies(100)
-> +/* Trylock helper that also checks for on ongoing flusher */
-> +static bool cgroup_rstat_trylock_flusher(struct cgroup *cgrp)
-> +{
-> +	struct cgroup *cgrp_ongoing;
-> +
-> +	/* Check if ongoing flusher is already taking care of this, if
-> +	 * we are a descendant skip work, but wait for ongoing flusher
-> +	 * to complete work.
-> +	 */
-> +	cgrp_ongoing = READ_ONCE(cgrp_rstat_ongoing_flusher);
-> +	if (cgrp_ongoing && cgroup_is_descendant(cgrp, cgrp_ongoing)) {
-> +		wait_for_completion_interruptible_timeout(
-> +			&cgrp_ongoing->flush_done, MAX_WAIT);
-> +		/* TODO: Add tracepoint here */
-> +		return false;
-> +	}
-> +
-> +	__cgroup_rstat_lock(cgrp, -1);
-> +	/* Obtained lock, record this cgrp as the ongoing flusher */
-> +	if (!READ_ONCE(cgrp_rstat_ongoing_flusher)) {
-> +		reinit_completion(&cgrp->flush_done);
-> +		WRITE_ONCE(cgrp_rstat_ongoing_flusher, cgrp);
-> +	}
-> +
-> +	return true; /* locked */
-> +}
-> +
+> why?
 
-This scheme doesn't fully stop the kswapd thundering herd problem.
-Below bpftrace script look at cgroup_rstat_trylock_flusher() return
-values.  If false (0) is returned then we avoided a flush operation and
-locking.
+Because (couple lines above on the baseline):
 
-[Data from production- AMD with 12 NUMA nodes]
+	dev->hw_features = NETIF_F_HW_CSUM | NETIF_F_SG |
+			   NETIF_F_FRAGLIST | NETIF_F_GSO_SOFTWARE |
+			   NETIF_F_GSO_ENCAP_ALL |
+			   NETIF_F_HIGHDMA | NETIF_F_SCTP_CRC |
+			   NETIF_F_ALL_FCOE;
 
-bpftrace -e 'kretfunc:cgroup_rstat_trylock_flusher {@cnt = hist(retval)}
-     interval:s:10 {time("%H:%M:%S "); print(@cnt); clear(@cnt)}'
-Attaching 2 probes...
-11:42:28 @cnt:
-[0]    467 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]    203 |@@@@@@@@@@@@@@@@@@@@@@                              |
+			   ^^^^^^^^^^^^^^^^
 
-11:42:38 @cnt:
-[0]    320 |@@@@@@@@@@@@@                                       |
-[1]   1217 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+then
 
-11:42:48 @cnt:
-[0]    256 |@@@@@@@@@@@@@                                       |
-[1]    969 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+	dev->features |= dev->hw_features | NETIF_F_LLTX;
 
-Above data shows that, the success rate (for avoiding concurrent
-flushing) isn't as high as we would expect and had hoped for.
+			 ^^^^^^^^^^^^^^^^
 
-I'm not sure what is the reason for this?
-I can only spegulate.
+#define NETIF_F_ALL_FCOE	(NETIF_F_FCOE_CRC | NETIF_F_FCOE_MTU | \
+				 NETIF_F_FSO)
 
-(A) Pergaps the READ_ONCE() outside the lock isn't sufficient.
-This would imply that wake_all_kswapds() wakes up at exactly same time.
+						    ^^^^^^^^^^^^^^^^
 
-(B) Perhaps wake_all_kswapds() is not exact and there isn't any
-contention and ongoing flusher.
-Unlikely, as we can measure contention (see below for more data), and
-lockhold time is between 64 usec to 256 usec (with outliers around 32 ms).
+IOW, FCOE_MTU was always hitting dev->features previously :>
 
-(C) Sub-tree ongoing flusher could be blocking us.
-This, can happen and I caught come cases of this happening when cadvisor
-collects data.  But for cases where it is only kswapdN running this also
-happens (see below data with 10 sec period with kswapd and periodic
-flusher).
+Re rebase due to 1/5: yeah unfortunately, but that happens :D
+I'll rebase and resend on Monday.
 
-Idea are welcome for what I should try first?
-
-
-> +static void cgroup_rstat_unlock_flusher(struct cgroup *cgrp)
-> +{
-> +	/* Detect if we are the ongoing flusher */
-> +	if (cgrp == READ_ONCE(cgrp_rstat_ongoing_flusher)) {
-> +		WRITE_ONCE(cgrp_rstat_ongoing_flusher, NULL);
-> +		complete_all(&cgrp->flush_done);
-> +	}
-> +	__cgroup_rstat_unlock(cgrp, -1);
-> +}
-> +
->   /* see cgroup_rstat_flush() */
->   static void cgroup_rstat_flush_locked(struct cgroup *cgrp)
->   	__releases(&cgroup_rstat_lock) __acquires(&cgroup_rstat_lock)
-> @@ -350,9 +390,11 @@ __bpf_kfunc void cgroup_rstat_flush(struct cgroup *cgrp)
->   {
->   	might_sleep();
->   
-> -	__cgroup_rstat_lock(cgrp, -1);
-> +	if (!cgroup_rstat_trylock_flusher(cgrp))
-> +		return;
-> +
->   	cgroup_rstat_flush_locked(cgrp);
-> -	__cgroup_rstat_unlock(cgrp, -1);
-> +	cgroup_rstat_unlock_flusher(cgrp);
->   }
->   
->   /**
-> @@ -368,8 +410,11 @@ void cgroup_rstat_flush_hold(struct cgroup *cgrp)
->   	__acquires(&cgroup_rstat_lock)
->   {
->   	might_sleep();
-> -	__cgroup_rstat_lock(cgrp, -1);
-> -	cgroup_rstat_flush_locked(cgrp);
-> +
-> +	if (cgroup_rstat_trylock_flusher(cgrp))
-> +		cgroup_rstat_flush_locked(cgrp);
-> +	else
-> +		__cgroup_rstat_lock(cgrp, -1);
->   }
->   
->   /**
-> @@ -379,7 +424,7 @@ void cgroup_rstat_flush_hold(struct cgroup *cgrp)
->   void cgroup_rstat_flush_release(struct cgroup *cgrp)
->   	__releases(&cgroup_rstat_lock)
->   {
-> -	__cgroup_rstat_unlock(cgrp, -1);
-> +	cgroup_rstat_unlock_flusher(cgrp);
->   }
->   
->   int cgroup_rstat_init(struct cgroup *cgrp)
-> @@ -401,6 +446,8 @@ int cgroup_rstat_init(struct cgroup *cgrp)
->   		u64_stats_init(&rstatc->bsync);
->   	}
->   
-> +	init_completion(&cgrp->flush_done);
-> +
->   	return 0;
->   }
->   
-> 
-> 
-
-
-Data including 'comm'
-
-bpftrace -e 'kretfunc:cgroup_rstat_trylock_flusher 
-{@total=hist(retval);@ret[comm] = hist(retval)} 
-
-     interval:s:10 {time("%H:%M:%S "); print(@ret); print(@total); 
-clear(@ret)}'
-Attaching 2 probes...
-12:13:21 @ret[kworker/u388:15]:
-[1]                    1 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-
-@ret[kworker/u389:20]:
-[1]                    2 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-
-@ret[kworker/u389:3]:
-[1]                    2 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-
-@ret[kswapd3]:
-[0]                   10 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    1 |@@@@@ 
-      |
-
-@ret[kswapd11]:
-[0]                   10 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    2 |@@@@@@@@@@ 
-      |
-
-@ret[kswapd2]:
-[0]                   12 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    1 |@@@@ 
-      |
-
-@ret[kswapd10]:
-[0]                   10 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    5 |@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-
-@ret[kswapd9]:
-[0]                   13 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    2 |@@@@@@@@ 
-      |
-
-@ret[kswapd0]:
-[0]                   11 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    5 |@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-
-@ret[kswapd6]:
-[0]                    9 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    8 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-
-@ret[kswapd7]:
-[0]                   13 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    5 |@@@@@@@@@@@@@@@@@@@@ 
-      |
-
-@ret[kswapd4]:
-[0]                   12 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    7 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-
-@ret[kswapd5]:
-[0]                   13 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    6 |@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-
-@ret[kswapd1]:
-[0]                   16 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                    9 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-
-@ret[kswapd8]:
-[0]                   14 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                   14 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-
-@total:
-[0]                  135 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]                   70 |@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-
-
-How long time is the lock locked (@locked_ns)
-and how long does lock contenders wait to obtain lock (@wait_ns).
-
-bpftrace -e '
-    tracepoint:cgroup:cgroup_rstat_lock_contended {@start[tid]=nsecs}
-    tracepoint:cgroup:cgroup_rstat_locked { @locked[tid]=nsecs;
-      if (args->contended) {
-        @wait_ns=hist(nsecs-@start[tid]); delete(@start[tid]);}}
-    tracepoint:cgroup:cgroup_rstat_unlock {
-        @locked_ns=hist(nsecs-@locked[tid]); delete(@locked[tid]);}
-    interval:s:1 {time("%H:%M:%S ");  print(@wait_ns);print(@locked_ns); }'
-
-
-@locked_ns:
-[256, 512)            94 | 
-      |
-[512, 1K)           5870 |@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-[1K, 2K)            5353 |@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-[2K, 4K)             439 |@ 
-      |
-[4K, 8K)             172 | 
-      |
-[8K, 16K)           6344 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-[16K, 32K)          6954 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-[32K, 64K)          2700 |@@@@@@@@@@@@ 
-      |
-[64K, 128K)        11451 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[128K, 256K)        8362 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-[256K, 512K)        1167 |@@@@@ 
-      |
-[512K, 1M)           114 | 
-      |
-[1M, 2M)              32 | 
-      |
-[2M, 4M)              25 | 
-      |
-[4M, 8M)              55 | 
-      |
-[8M, 16M)            258 |@ 
-      |
-[16M, 32M)           221 |@ 
-      |
-[32M, 64M)            24 | 
-      |
-
-
-@wait_ns:
-[512, 1K)             30 | 
-      |
-[1K, 2K)            2124 |@@@@@@@ 
-      |
-[2K, 4K)            3319 |@@@@@@@@@@@ 
-      |
-[4K, 8K)            1595 |@@@@@ 
-      |
-[8K, 16K)           3288 |@@@@@@@@@@@ 
-      |
-[16K, 32K)          5349 |@@@@@@@@@@@@@@@@@@ 
-      |
-[32K, 64K)          5069 |@@@@@@@@@@@@@@@@@ 
-      |
-[64K, 128K)        15451 
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[128K, 256K)        9420 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
-      |
-[256K, 512K)         707 |@@ 
-      |
-[512K, 1M)             2 | 
-      |
-
-
-
---Jesper
+Thanks,
+Olek
