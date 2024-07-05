@@ -1,173 +1,117 @@
-Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC6516A954;
-	Fri,  5 Jul 2024 14:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C564916B3BA
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 14:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720189040; cv=none; b=sZDVb2BTYt1l0hzCkNvhLcvEKK1+Z048N43VjtcsqeR8B6LpJCg/3r8cgG/rqm7JukCvq2irKLPAeBfG7nzYEqAgdfBVwjNUodKI3ZCAX6OxjsHjBxKuJxGSSGaKfTA9gRKV3FUVvnktUO+ZsJEVF/dW4F4orwtSmhaONtdO9aU=
+	t=1720189046; cv=none; b=R/GCWZEK+43jkN/ecJkHmqtIfZJEdGsmq4vE2iswRaYpofyYF953Vexo+ZJX2fFlaFp5Infha1GBIFSzUriKtmvEe+lVQh/anReLQeawoPitDVPiJYuiXG+h5awILgCBvCivUhZXVirS/kWLk9wLibAC6IzyTRT+GakaTKsgPh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720189040; c=relaxed/simple;
-	bh=WNu6YnIpjmhZP5sFZYTEwWoNdzLX/he1ifvQopC1xF0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IrvCc/f5kGLtRx6LbZPgqE45lseVlFMPAdfE77+O7xNbA9ZnS1AXQagUZYTkXY3OkmT9OeqQwe/ABVNmoGkuAPgY1QYha16PfJMDiZUniBK3GUrFyc8PN6cSHm6TjHif5yM415v7NQMdpV/9df7kcxxikdmIvnQ7x3FQcuXusGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ihOCk3pr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jeAdMkyP; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1720189046; c=relaxed/simple;
+	bh=PLTacBsABDx18/B0CJmijpNycTNE0X9NuN/mgvkRdTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CJZ7Obu4q0zIqCWBjwbqzRNjULSmnF1w8mIIfGXPJNaARMit1VqVILxeLJj77eWoSTnBoqgTzMcbRrwydS6aV/hXiz7KnGC84QlReonmrX9U/RAm00ZstXoRVPRaDi0t8MgRRuKJeKtJ9QZ01WW+ET27XJY07TJPq7MaqFWoJeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=WLN/JoOu; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ihOCk3pr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jeAdMkyP"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id A2FC9114014B;
-	Fri,  5 Jul 2024 10:17:17 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 05 Jul 2024 10:17:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm3; t=1720189037; x=1720275437; bh=7R
-	O+MTkGcDJKgN6KlbDx7YR+VtmqHM5rQXYYsbr80ZA=; b=ihOCk3prBk9+VP2PHy
-	JNTnw8VXXc+iEZcAdmfTPzxTauhz41h7qZIAYNaPq+p0Sg/fa3n6CuRh2rGaRf3d
-	QTWT/Bw4m0mQ8ICwQ7wejIYx7fTzkCIRA3Ojkj/vsBJa68ikdzswh7W/cePWBdxI
-	+qSxI3UsDcnlirYd9LC5p5evkK6sh3i7PgvtZ7i87/fsi278B2MaIkXQRA2SkcFA
-	iir8X7BRrMKKXT6FqJ6SSavWpavo3pLvoXn4gpxesjg9gslYqSI+ShuH2hsUDZL+
-	wTCQTO3gvdGqZ2tFJiEVwTa4y4yqObzKr8kN57qx07Fh+upu9LfkgP4prul4Xl7u
-	h7Tw==
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="WLN/JoOu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1720189037; x=1720275437; bh=7RO+MTkGcDJKg
-	N6KlbDx7YR+VtmqHM5rQXYYsbr80ZA=; b=jeAdMkyPwsrcEv83W8wFD5Svuvske
-	RHLNk1kCSaSE5CCkdffjCxh5c4ozhVOD022vA+hvCfccrj4ehkQdDldyYFSihlyt
-	SamBgFszFHd/AlHdKo9viYyHBs6W3d2sfHJfcdgJrRF829kBA0hjVl+dhUzphaHX
-	N1UzPLTSjE8/TTMka8Q/GCbFn83eArFtrodgK6NJ9Sw5AcDoVgwjjSBclvhyfSDE
-	QeOtNDFWVsVV5nSGC3POO9PGc93vuKwhu4GFEFqFcjq0tQG5iz3pnZ7nRBtyfDIQ
-	AwkEKq1f3LKvZWleKoe9+4Tbuu5aNF3Ac8cEPuAhbJKpmnjgYld7WgUVQ==
-X-ME-Sender: <xms:bACIZosAYQKia0iHXWDmAEoeWAXG034OgVmL1Dv47sOs7cGsukfvug>
-    <xme:bACIZlc55Hs9XYlwXNfDUM8Eik3NmUQZfWThuNaB8m9xSb8n6-JD-ZDM0HFtzUzDI
-    FtNBE0_x4rXKZoZYEQ>
-X-ME-Received: <xmr:bACIZjzsRBFCKpIizpZ5LHnA516NLsfJy5d-OIsWCzuYIGb3WkbV3_hYFvzkz0vlr6I>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddugdejfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomheplfhirgiguhhn
-    ucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenucggtf
-    frrghtthgvrhhnpefgveffjeetgeejfeelgfekteelkefhuefggedvueeujeekjeetkeek
-    vdffffefudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhl
-    hihgohgrthdrtghomh
-X-ME-Proxy: <xmx:bACIZrPpyVqCD4S6PsS_eFYh9isjAN_WXLXeVZGhZqan0hB2idAUEg>
-    <xmx:bACIZo8XN_fi_QacwtxPKl0171OEmb7YE2FHawVmOzms91VzwDZnpg>
-    <xmx:bACIZjUeWvyua12NWAHtDLygtjwKax_VkI_9X5vR9UhgdX1ZHOTakg>
-    <xmx:bACIZhcM_Krgd6_4edLYi_M3PXwlsT_YoIpal0EgtqaymdY7ox-WzQ>
-    <xmx:bQCIZp2rXhBuZd-94KAw5czZGvsNH3i_Ml57Yk6pQ0YJIGcNPkGAi5Eb>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 5 Jul 2024 10:17:13 -0400 (EDT)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 00/10] MIPS: IPI Improvements
-Date: Fri, 05 Jul 2024 22:16:52 +0800
-Message-Id: <20240705-b4-mips-ipi-improvements-v2-0-2d50b56268e8@flygoat.com>
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=7227
+	DF+1lpqCtRtZGuyjnIwZoT+lBkQuRsIH2JWIgu8=; b=WLN/JoOuzI8iXc3vlGYO
+	YqA7K95CiN4KeLvUzyD3467BUwf+KjK7D6MyfaG9hYlVqZetjclQpG7JKYzHGVHR
+	ZXJ5m3DJkzpkqYqbHdlC710F0Hrd3MNlGHNiyOMecSPo7Ns6KTPHVFmdmOEGQ2DK
+	EivPTmLdAtB/HT/ZjBE/ZW3ggKlpJ8zQWpYDzt4aHbeCT4wjQzLR+kE7g2/L0wNL
+	TYwPYeA4wo8M/xI/IPUTzvOBsnTcZPZ4r8a9bSD06oBMLsFc/ykd0GjP4nTORm3d
+	Y/vd4RSeiAdOxbB3PDasJEbc1NYIQuhoie7tjXaRspIKzKEa8jBbwzo5JWdWzjIT
+	hg==
+Received: (qmail 3561634 invoked from network); 5 Jul 2024 16:10:37 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 5 Jul 2024 16:10:37 +0200
+X-UD-Smtp-Session: l3s3148p1@bvSyoIAcdoBQT+F6
+Date: Fri, 5 Jul 2024 16:10:37 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Wolfram Sang <wsa@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Subject: Re: [GIT PULL] i2c-host-fixes for v6.10-rc7
+Message-ID: <Zof-3WEvkBfZeL_w@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+	linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+References: <snxb7qd23vzrhls4duer3bt46m3lwzil5fzx75s7jl4okhexak@2e23wyd6qe76>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFUAiGYC/42NQQqDMBBFryKz7hQTJdquvEdxoXGiA40JiYSKe
- PemnqDL9+C/f0CkwBThWRwQKHFkt2aQtwL0MqwzIU+ZQZayLpVQONZo2Udkz8jWB5fI0rpFNK1
- u1SgmrZoG8twHMvy50q8+88Jxc2G/npL42T+iSWCJVFVStY0R6iE7895nN2x37Sz053l+AU1AB
- q7CAAAA
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Huacai Chen <chenhuacai@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Serge Semin <fancer.lancer@gmail.com>, Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2940;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=WNu6YnIpjmhZP5sFZYTEwWoNdzLX/he1ifvQopC1xF0=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhrQOhvTEuaUSqyTMo5/dfa54ZulMrmc/lB3evXmd6W77s
- nzr7t83O0pZGMS4GGTFFFlCBJT6NjReXHD9QdYfmDmsTCBDGLg4BWAikicZGVr7c+pNXON4rln+
- Mnqzw/Zz0XO+C8J3DWxqrI5qtXDdE2VkuJ79/OnusukbVtSFxF3UcT/f6L1quY2TcKBc627daTZ
- beAE=
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="eQMShuG1BI7VQ/0g"
+Content-Disposition: inline
+In-Reply-To: <snxb7qd23vzrhls4duer3bt46m3lwzil5fzx75s7jl4okhexak@2e23wyd6qe76>
 
-Hi all,
 
-This series improved general handling to MIPS IPI interrupts, made
-IPI numbers scalable, and switch to IPI-MUX for all GERNERIC_IPI
-users on mux.
+--eQMShuG1BI7VQ/0g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It is a prerequisite for enabling IRQ_WORK for MIPS.
+On Fri, Jul 05, 2024 at 03:06:24PM +0200, Andi Shyti wrote:
+> Hi Wolfram,
+>=20
+> Jist a nice fix from Piotr coming in this week.
+>=20
+> Have a good weekend,
+> Andi
+>=20
+> The following changes since commit 22a40d14b572deb80c0648557f4bd502d7e838=
+26:
+>=20
+>   Linux 6.10-rc6 (2024-06-30 14:40:44 -0700)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags=
+/i2c-host-fixes-6.10-rc7
+>=20
+> for you to fetch changes up to f63b94be6942ba82c55343e196bd09b53227618e:
+>=20
+>   i2c: pnx: Fix potential deadlock warning from del_timer_sync() call in =
+isr (2024-07-04 00:17:47 +0200)
+>=20
+> ----------------------------------------------------------------
+> This tag includes a nice fix in the PNX driver that has been
+> pending for a long time. Piotr has replaced a potential lock in
+> the interrupt context with a more efficient and straightforward
+> handling of the timeout signaling.
+>=20
+> ----------------------------------------------------------------
 
-It has been tested on MIPS Boston I6500, malta CoreFPGA3 47K MT/
-interAPtiv MPF, Loongson-2K, Cavium CN7130 (EdgeRouter 4), and an
-unannounced interaptiv UP MT platform with EIC.
+Thanks, pulled!
 
-I don't really know broadcom platforms and SGI platforms well so
-changes to those platforms are kept minimal (no functional change).
 
-Please review.
-Thanks
+--eQMShuG1BI7VQ/0g
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
-Changes in v2:
-- Build warning fixes
-- Massage commit messages
-- Link to v1: https://lore.kernel.org/r/20240616-b4-mips-ipi-improvements-v1-0-e332687f1692@flygoat.com
+-----BEGIN PGP SIGNATURE-----
 
----
-Jiaxun Yang (10):
-      MIPS: smp: Make IPI interrupts scalable
-      MIPS: smp: Manage IPI interrupts as percpu_devid interrupts
-      MIPS: smp: Provide platform IPI virq & domain hooks
-      MIPS: Move mips_smp_ipi_init call after prepare_cpus
-      MIPS: smp: Implement IPI stats
-      irqchip: irq-mips-gic: Switch to ipi_mux
-      MIPS: Implement get_mips_sw_int hook
-      MIPS: GIC: Implement get_sw_int hook
-      irqchip: irq-mips-cpu: Rework software IRQ handling flow
-      MIPS: smp-mt: Rework IPI functions
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmaH/t0ACgkQFA3kzBSg
+KbaPVA/+PPnSuVe4FkBmTTAZaSHO9PjPIXVG2n7rwdIcq7awCN5pD2NtuoVAeXpD
+gXtGORuS6B1Q8uihyX3CJU5TcbaDYDUfzhVQNBhk1mQqRJ5pDz5jPVxTUbaoxPyA
+u+oeFYbhpvFwaExdfAqG8dR+oKNnm7IAoexega+k48YHNhy+AfUK8iY1Bs7yu8HC
+ojPKpiFdebzz0dub8otWxc1gNNhPzqCV5i7JiRl1I679WjGdqsLHJrpoRDGXhMe0
+YT8BaL93b3XxCN1EO3Uma5tP5uN+NmJHkjd6d8+dglg+1zM5jQX65lOeVVWSrwHK
+Ap1mGM+PV9USJRRJt4E8egB4kZ62xC4AK+AbaAFSO0JmDR0mXzFXeB2ue7/nZfap
+pT7TuG2Z1y8zhqvlNUNl5zsiIHgGPefYEd4SFG2rzFDhYh1cxRdIyHsiVUWID9gB
+HeFUZShZe5+PRB8YZNoVzRP9JRQrB0uumkFeLYFAH43h8fsm4OKBfW4uQY3AVVU/
+YNPzgV1kN0fHRovvDYAXl0LsVKvqXtb5zkE9U5F2n1Py8NWCtZbkm8nh4bo+F7ZC
+juf6jSP4/Sw6Fx+IwhIR/C+OzllFqw2MVPX5N0aXylXhglemx//zmqPEF819WbYb
+sS1UrMXWrxBGggGqeedw7j8QoCq9sEvsOm2lgXuGVWMSDXz9DrA=
+=luTg
+-----END PGP SIGNATURE-----
 
- arch/mips/Kconfig                     |   2 +
- arch/mips/cavium-octeon/smp.c         | 111 ++++++------------
- arch/mips/fw/arc/init.c               |   1 -
- arch/mips/generic/irq.c               |  15 +++
- arch/mips/include/asm/ipi.h           |  71 ++++++++++++
- arch/mips/include/asm/irq.h           |   1 +
- arch/mips/include/asm/irq_cpu.h       |   3 +
- arch/mips/include/asm/mips-gic.h      |  10 ++
- arch/mips/include/asm/octeon/octeon.h |   2 +
- arch/mips/include/asm/smp-ops.h       |   8 +-
- arch/mips/include/asm/smp.h           |  42 +++----
- arch/mips/kernel/irq.c                |  21 ++++
- arch/mips/kernel/smp-bmips.c          |  43 ++++---
- arch/mips/kernel/smp-cps.c            |   2 +
- arch/mips/kernel/smp-mt.c             |  70 +++++++++++
- arch/mips/kernel/smp.c                | 213 +++++++++++++++++++++-------------
- arch/mips/loongson64/smp.c            |  52 +++++----
- arch/mips/mm/c-octeon.c               |   3 +-
- arch/mips/sgi-ip27/ip27-smp.c         |  15 ++-
- arch/mips/sgi-ip30/ip30-smp.c         |  15 ++-
- arch/mips/sibyte/bcm1480/smp.c        |  19 +--
- arch/mips/sibyte/sb1250/smp.c         |  13 ++-
- drivers/irqchip/Kconfig               |   2 +-
- drivers/irqchip/irq-mips-cpu.c        | 180 ++++++++--------------------
- drivers/irqchip/irq-mips-gic.c        | 213 +++++++++++++---------------------
- 25 files changed, 596 insertions(+), 531 deletions(-)
----
-base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
-change-id: 20240616-b4-mips-ipi-improvements-f8c86b1dc677
-
-Best regards,
--- 
-Jiaxun Yang <jiaxun.yang@flygoat.com>
-
+--eQMShuG1BI7VQ/0g--
