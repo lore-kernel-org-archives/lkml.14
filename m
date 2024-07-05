@@ -1,83 +1,110 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97797145FE0;
-	Fri,  5 Jul 2024 08:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7912145FE0;
+	Fri,  5 Jul 2024 08:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720168518; cv=none; b=SejqenOC3I8ggaxf+1p99hTzfoOsvWFDWMABJsZn2gXr/YHF/MpPWHQ15TeCcrsBINkPoiakUEtLzSJlSgurkkHO/Qj04J26KGwPzkA0PCP8PWCSEi+A96jB/cNuUMrjjaZwuSH6sB4mdeCVWvcxTpe5KyYVQg5pCe5UjCz5Jts=
+	t=1720168522; cv=none; b=cAWaXd7CKf54fS/WfkUl1Xf2gvqpKoB7VQSQETHicc6aQ+kDSnJyXT8Gso8BYDRVVjfpAATFISf5cmwoQm0o6NbQcGdfzUpMn5gshBqCUajOBRKBKg6fCAHP+Tu8RLI6r9q44CnyYaML1QFoG3WiAu8pIg2ARe33EX5pjeM9T1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720168518; c=relaxed/simple;
-	bh=W51tM3Sdtf5xD4z/lBdRxd4baZPwIZnr6Gb2kXv7IDs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aCrU/e+dIGCsEc2nM+qTIMQU7uoc33AUDry29x3+a5lNLuncgzI+OfoSWYNLiZTlQS9H7+Q26SiGus/FJNEml/XzLK7E1XNd56qxTDIkAKmTBPfeuRPsccteJUlYvUpFlMiqKoC5mj70vDJIGmw8CSjjnIDIcBHpLFfLFvjbj9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowADX37c2sIdm_zalAQ--.39002S2;
-	Fri, 05 Jul 2024 16:35:03 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: dmitry.torokhov@gmail.com,
-	u.kleine-koenig@pengutronix.de,
-	Jonathan.Cameron@huawei.com,
-	broonie@kernel.org
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] Input: pxspad - add check for spi_setup
-Date: Fri,  5 Jul 2024 16:20:57 +0800
-Message-Id: <20240705082057.3006342-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720168522; c=relaxed/simple;
+	bh=7SKVpXebhGtAULUA84jFZRf2ihA+hSwEJm+gpDjigQ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jraB6QADocf7sgdPR6Zf9h1AY9IfGs8sHPIvwnSxQyrOQD1lOVYfypn4H/h+Vk65MPoCsDdYgtrP00iImX2TgjiG+rDu/ExV+5poIWqdefq1zWHF/tLCyHZu19EGHd08cUb6rgN0qb/QoLubw5JjpS9Jqmirfxak7pd09SOzSdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-64b9f11b92aso11605247b3.1;
+        Fri, 05 Jul 2024 01:35:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720168520; x=1720773320;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XE91erkMeoxPa1kwR1rnj3p6jtCHsExCdaiCmXk/lwQ=;
+        b=OlPAdhIbPN32uSMqhih9wxuRbAMECMNJQm123yLJPZ+DNeHILcPfhILxT++uqGTvms
+         zz8/qmS2CXoZFQGVHcdO/V2Kwypw7b28Xw/mXe+r6Sp323MOsZJB+yExBnNB/lsA1svQ
+         0l4pBlKOL1fAqWi5nBBGnhmWR4BilsWqp6mKnL6852wwktHAPZTwb+ssggQy+ln6Zp3Y
+         AKqj+K91ZdPaQx/+gqymnZss/r0Lu2PNz86cIoDcuKxcu4HPEppII7ZYIWWRMIiRu3vg
+         YO8hfY+gsKJz1WrXcuMvyTyPkiMQuaRNQjAERx9HNX0iYgkmoxkRkwwVSEvxGRBTTw9l
+         t4uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1OvK3J1eBHlKdU8gGydGDmkHQB7QxfM9F8tL/AyHAR8BqlWGcM1TfJccdbdS9E6Q68rhp5hW4ByxNg52kcvEZNK3Kzq0GHp6p9RpDfc62CqKw90fWby8gZl/8oQcaAJCp0PsD2NGB0A==
+X-Gm-Message-State: AOJu0YyRov3nFExNXqFZB9wwPs0PdpzvDEDsvBQH0X9CWVeeBnmzunX3
+	HVY7IEPdINMVXuQXP1gIGQDFPyXo61HA0D8MwKZJxzI/BH/1bacBr/Ezjjte
+X-Google-Smtp-Source: AGHT+IE5/lgBUlRXB4hx4/LLpzozqgz/KOnvtK7vZm/XFhpS6yvgQCk/Dhuvj8gdumYUddcAyehMEg==
+X-Received: by 2002:a05:690c:6ac2:b0:64b:1e55:9bc7 with SMTP id 00721157ae682-652d5448f14mr51404657b3.14.1720168519762;
+        Fri, 05 Jul 2024 01:35:19 -0700 (PDT)
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6529cb1d468sm5326457b3.105.2024.07.05.01.35.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 01:35:19 -0700 (PDT)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-64b29539d86so12029317b3.2;
+        Fri, 05 Jul 2024 01:35:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW11Y5FL56O+72KpYAVNVjjtCu2WCDF1fhlSnOrs3CsPRwghZvon8q9KxM2rT88OuUr1D2DV1+5zdOy/GoqwrN4ij3un/xPJ25dNQ0EOBknDzhXE/YTo48GYwS9biLP/e5vzDDa0QMQNw==
+X-Received: by 2002:a81:8b45:0:b0:63c:416f:182d with SMTP id
+ 00721157ae682-652d5444259mr39064367b3.12.1720168518902; Fri, 05 Jul 2024
+ 01:35:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowADX37c2sIdm_zalAQ--.39002S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw4xAr4xAr47ZrW8AF1fJFb_yoWfurX_ur
-	yFva1rAw4v9rnFkr4DX3ySqF92ya98XFZ7uFn2qw13tas093y7JryUZF9rArW3ZayjkF1U
-	JrnxC34xAF40gjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbwxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-	cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
-	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+References: <20240702164403.29067-1-afd@ti.com> <20240702164403.29067-4-afd@ti.com>
+ <df0f9705-b1e9-4dce-b110-09be540d5e25@beagleboard.org> <edfac25c-d708-4a55-a9bb-97d329877444@ti.com>
+In-Reply-To: <edfac25c-d708-4a55-a9bb-97d329877444@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 5 Jul 2024 10:35:07 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU55v0AR_jWojbWqdfWyzM-40Jvm5LnjE+hjdC5zNwRnA@mail.gmail.com>
+Message-ID: <CAMuHMdU55v0AR_jWojbWqdfWyzM-40Jvm5LnjE+hjdC5zNwRnA@mail.gmail.com>
+Subject: Re: [PATCH RFC 3/3] arm64: dts: ti: grove: Add Grove Sunlight Sensor overlay
+To: Andrew Davis <afd@ti.com>
+Cc: Ayush Singh <ayush@beagleboard.org>, Nishanth Menon <nm@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andrew Lunn <andrew@lunn.ch>, Vaishnav M A <vaishnav@beagleboard.org>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Michael Walle <mwalle@kernel.org>, 
+	Jason Kridner <jkridner@beagleboard.org>, Robert Nelson <robertcnelson@beagleboard.org>, 
+	Robert Nelson <robertcnelson@gmail.com>, Ayush Singh <ayushdevel1325@gmail.com>, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add check for the return value of spi_setup() and return the error
-if it fails in order to catch the error.
+Hi Andrew,
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/input/joystick/psxpad-spi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+On Thu, Jul 4, 2024 at 6:56=E2=80=AFPM Andrew Davis <afd@ti.com> wrote:
+> The issue then is the overlay mechanism is not complete. We
+> can add properties to nodes, and add nodes to nodes, and append
+> properties to nodes, but cannot append values to existing properties,
+> only replace them completely. This gap in the overlay system will
+> prevent a general solution. So I've started to work on adding
+> that property appending ability to the overlay system. I should
+> have some patches posted against the upstream dtc/libfdt here
+> in the next week or so.
 
-diff --git a/drivers/input/joystick/psxpad-spi.c b/drivers/input/joystick/psxpad-spi.c
-index c47fc5f34bd0..5b53d43c797a 100644
---- a/drivers/input/joystick/psxpad-spi.c
-+++ b/drivers/input/joystick/psxpad-spi.c
-@@ -344,7 +344,11 @@ static int psxpad_spi_probe(struct spi_device *spi)
- 	/* (PlayStation 1/2 joypad might be possible works 250kHz/500kHz) */
- 	spi->controller->min_speed_hz = 125000;
- 	spi->controller->max_speed_hz = 125000;
--	spi_setup(spi);
-+	err = spi_setup(spi);
-+	if (err < 0) {
-+		dev_err(&spi->dev, "failed to set up spi: %d\n", err);
-+		return err;
-+	}
- 
- 	/* pad settings */
- 	psxpad_set_motor_level(pad, 0, 0);
--- 
-2.25.1
+This is not limited to overlays, but also true for plain dts.
+We have /delete-node/ and /delete-property/, but lack /append-property/.
 
+Hence we end up having to repeat all existing values when appending
+to a property (e.g. see [1] appending to clocks from [2]).
+
+[2] https://elixir.bootlin.com/linux/latest/source/arch/arm64/boot/dts/rene=
+sas/r8a77951-salvator-xs.dts#L39
+[1] https://elixir.bootlin.com/linux/latest/source/arch/arm64/boot/dts/rene=
+sas/r8a77951.dtsi#L3334
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
