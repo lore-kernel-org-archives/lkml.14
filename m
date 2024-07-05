@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D78176257;
-	Fri,  5 Jul 2024 21:06:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FC6176220;
+	Fri,  5 Jul 2024 21:06:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720213609; cv=none; b=sY1pxiHF86W+zwDHfIJQubUy7zwMgRKVqpP0i+1lU6ouiD2lxW8K15Vy5XDh62FEVYuT1egGMAT4CyoCfgpGalm56ah7yGWJzd/PgSnxC9LUbaaxNenAzBY9UL80/7XWQOWY+Q5WuPSLfQQ81z5CZG+LnGHx4nFiobPf8eS5vu4=
+	t=1720213610; cv=none; b=R3NJ2tg1mmN32Ud9YwaLyiuyjvdkzWIDxy23Tl4O4TNdI4nrsXRmlszN7b7wfe5en0UzFDYtGyraoP0UsA6iMHhFPXtfyKg/TGgyzZLnVeu+prfpiV/pCZ3bGsyjcUqn4+n6IEaNJpRvy4RE8aI7AOUEKB5Iq197mjrCYfQMGx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720213609; c=relaxed/simple;
-	bh=kTYss+u12XzFYYidwOHPgwzPw8CURDlGNgPyBiWtNUg=;
+	s=arc-20240116; t=1720213610; c=relaxed/simple;
+	bh=0RqY3FwLpkLsLtMGcOtgePMIryjxJnEcgowHUKp0lyE=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=M72ytb3aeew2Vx0PdvgrDL2DXDRqkowXF9V9BX9qLdvW3mfVZEHiclG5ZVMjKrzGAtSeXE5vG8b4u4waPnH1Ial5VMjnbwE+PgJ5G8I6cvMR5JbRMJof2KmveKygL+gMvti5xOOY7SRmI4QP3S/JPENxwEvTpUOIG6OTjBZdg0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O48c4yuq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vzs9zJid; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=gXATIPv1M3Y2JxLtItnNCKHR/EE5XO3xU3gjTh8PRodGAbRN1bk8KqYE51fA6fgqCM2CM/nfBw0Hw5YUcIeRWhoGrkFmM/xwqu1TCHsvnQoZYpFIUk1bIGSRutbkZJMz9KDEXHBqP5HKmIh2n9YkurysCIXvYRIMgt3g/Xo5XeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w9IUhUeM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WNW1uWdb; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O48c4yuq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vzs9zJid"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w9IUhUeM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WNW1uWdb"
 Date: Fri, 05 Jul 2024 21:06:45 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1720213605;
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w2w01L2sBNeyJHL7OFlBlsWjFB1vvK0mpw37VTzv2Ik=;
-	b=O48c4yuqI6yxXTgXaVo3O9Etrguf4+oa027R+51elono2u8C0Mi3r6jBdJSkrGGQuUnC5X
-	eZImFnwqnlOga8e2bqBp+fUR+EnoLsgfjI6vJ7XPxCS1fxFTUyksTNvDhbpFCByKUGBMCO
-	KS+iQNsrNu6NJRNcJls4RzPgQwDdogY/rRd2nkW+wk2df1kETJgngLfFswy11rQ1+9T3LD
-	d6hTwFwCu/VFQkqvQ3fQP1R3QBK3W/mKSm8bSwLhg568vFCH3WXh9F0PkpLSvGbnYuuvKy
-	pOpOqyLe2JontCwUBwWlLbW6938XOT3cbdUjtPTDnUXqu1eX6OTyGm6WmT1n7Q==
+	bh=AKjupNNatHtjyUZRVKZRQelXjKCdFRKgiJDw9awryJs=;
+	b=w9IUhUeM8kLQNQbZPAp3mZFAkDrxh6WACfCvSZm8laiWb/oDf/qh7ltvF2OkPSZ8QrnArA
+	NJb+ka8gi/R75b7G+t6JycRLR4R8o8Pen/s/VEgMcYx9dEkA6mK0aUFeJW6n/AoXGMkxsA
+	ce3lc9TC7Cj5Pcd7ec4D4Mqf8x+v9Y13pfDxz3ngbOOCEGlrdtzpW43gAdklq1jtjst81H
+	YMuUdg+iDNgTqV5oyoUvgPU7QJixopIwUboUUxmn2uRpCfX3ZPe8KrnumXJZD3sYz55D57
+	Zmx8zV9q3qoUTqdpfIMkKbSVdb5K968jPWRhIHIvKmZ5UPtO83r5y6yQOEh6sA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1720213605;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,26 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w2w01L2sBNeyJHL7OFlBlsWjFB1vvK0mpw37VTzv2Ik=;
-	b=vzs9zJid6BYAxXtGptY2A4eQg0oXRf5lGCU2W5Wh3Jec7Qt2y+xsN/GGnv1QIaKNo6g/Tv
-	TuCcR4e085x4J/CA==
+	bh=AKjupNNatHtjyUZRVKZRQelXjKCdFRKgiJDw9awryJs=;
+	b=WNW1uWdbFIV9Qea2bQwQjdi35/2q96+BMZ9sGx6chnvIG2n/obax9mpTUqkd6vCBQjuJss
+	YtxkpUttpxOb1dDA==
 From: "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf: Fix default aux_watermark calculation
+Subject: [tip: perf/core] perf: Make rb_alloc_aux() return an error
+ immediately if nr_pages <= 0
 Cc: Adrian Hunter <adrian.hunter@intel.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240624201101.60186-7-adrian.hunter@intel.com>
-References: <20240624201101.60186-7-adrian.hunter@intel.com>
+In-Reply-To: <20240624201101.60186-8-adrian.hunter@intel.com>
+References: <20240624201101.60186-8-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172021360548.2215.11914104138278947134.tip-bot2@tip-bot2>
+Message-ID: <172021360515.2215.12296641761413803609.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,46 +68,36 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     43deb76b19663a96ec2189d8f4eb9a9dc2d7623f
-Gitweb:        https://git.kernel.org/tip/43deb76b19663a96ec2189d8f4eb9a9dc2d7623f
+Commit-ID:     0ca4da2412da05fb9dd0b5d90dcc8026219f0f29
+Gitweb:        https://git.kernel.org/tip/0ca4da2412da05fb9dd0b5d90dcc8026219f0f29
 Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Mon, 24 Jun 2024 23:11:00 +03:00
+AuthorDate:    Mon, 24 Jun 2024 23:11:01 +03:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Thu, 04 Jul 2024 16:00:23 +02:00
 
-perf: Fix default aux_watermark calculation
+perf: Make rb_alloc_aux() return an error immediately if nr_pages <= 0
 
-The default aux_watermark is half the AUX area buffer size. In general,
-on a 64-bit architecture, the AUX area buffer size could be a bigger than
-fits in a 32-bit type, but the calculation does not allow for that
-possibility.
+rb_alloc_aux() should not be called with nr_pages <= 0. Make it more robust
+and readable by returning an error immediately in that case.
 
-However the aux_watermark value is recorded in a u32, so should not be
-more than U32_MAX either.
-
-Fix by doing the calculation in a correctly sized type, and limiting the
-result to U32_MAX.
-
-Fixes: d68e6799a5c8 ("perf: Cap allocation order at aux_watermark")
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20240624201101.60186-7-adrian.hunter@intel.com
+Link: https://lore.kernel.org/r/20240624201101.60186-8-adrian.hunter@intel.com
 ---
- kernel/events/ring_buffer.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/events/ring_buffer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 4013408..485cf0a 100644
+index 485cf0a..8cadf97 100644
 --- a/kernel/events/ring_buffer.c
 +++ b/kernel/events/ring_buffer.c
-@@ -688,7 +688,9 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- 		 * max_order, to aid PMU drivers in double buffering.
- 		 */
- 		if (!watermark)
--			watermark = nr_pages << (PAGE_SHIFT - 1);
-+			watermark = min_t(unsigned long,
-+					  U32_MAX,
-+					  (unsigned long)nr_pages << (PAGE_SHIFT - 1));
+@@ -682,6 +682,9 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
+ 	if (!has_aux(event))
+ 		return -EOPNOTSUPP;
  
++	if (nr_pages <= 0)
++		return -EINVAL;
++
+ 	if (!overwrite) {
  		/*
- 		 * Use aux_watermark as the basis for chunking to
+ 		 * Watermark defaults to half the buffer, and so does the
