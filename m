@@ -1,60 +1,60 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3EC1494C8
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 10:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7604149E03
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 10:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720176063; cv=none; b=aEoZZS8fiIj/LZwLkhABTaidCu/AclD1O2YPG5JcjGvp5jIfcL6W+QJ6WPoE/0R7r7EbI4Qyf9hpbsx/0oTpFnZUGcSP4LfrORfBujvURev4t9PJHiINENr9YwY2GiAWpvAhJlG/HmMSVi1r2eOCl03UtuqoAXJ8AHRyKSXlKEc=
+	t=1720176066; cv=none; b=HxV4A0lrX+SPPAERfcKknH8c/qD6MehFqY5Rjv/UPh8f15TNxm2oJUXtXTsiWREEKBTHWwlHt4nhnbfeD6uK0oDVwpM8PEQK1LL4lHY++U829o8Z5K5aL1b/U0UYPBJa87aVbGzENhCRMXLtFztR+sP3JuOhDR7N+fZ6Nyehq88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720176063; c=relaxed/simple;
-	bh=8UqNvu97RyQCvnTqNuJYZZnXKv3X2QTRkCh8H7bl7SE=;
+	s=arc-20240116; t=1720176066; c=relaxed/simple;
+	bh=wAVpbgQ5bIpyCcGTaGFP8RLhuVeOqnrOwZ6oTfnW4nw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kw9X38jM2bp/5qoQQlI3KNmi+EjoG9H70cl1WoZHEJKrisMRjHqdWs6xa98t9Lkawa67Pdp0Fzx1cxklLQgqhpEbLJ0VbNcUIYj93IkusYDX3SwzCX4VPHszIaADuXZHXbNNhOABp9o5l5CLhpl0cOLa8kMQgEhbTJ4daUPIBgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SiNH4KMn; arc=none smtp.client-ip=209.85.221.52
+	 In-Reply-To:To:Cc; b=jRCXAyON5JVtriL8iXNywUsdzd+UDMwz9+5rTbYqkSuCOZAqMPTAK/FXidb9xAk8gAf/Rqt+MCWDuwewwbIVMME2Lx3v1cZbqDRuwmXmGacuo6tYejaOnSmFp8bigX8khBtxcXCTktYgns+TrE/dc+pxkO9n75Ie6Fzxel7QJCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e2j88sPp; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SiNH4KMn"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-367a081d1cdso811315f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 03:41:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e2j88sPp"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3678f36f154so795275f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 03:41:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720176060; x=1720780860; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1720176063; x=1720780863; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oTC/Azk6QuGeCqi4nXZfSzWiS7YtP2rKGZn+knA+oxU=;
-        b=SiNH4KMn4/W5UrURy7iRNUkdTW2nR5pQCry48i/9dBH7GJkCZ3j7SdyRGMW1LA+Ha3
-         yReU965Z1p6/GedPT4OihCuesExJ5oz9dQ5KkJn9DDuB6fS22zQWXNJwhQc8r/t4nJ0q
-         FE2eqLGzzyQXHH4nJemhfE59CFJCEORiAmNgaG0Dlnq9YPR/PE2pRQtfHWo4CKj2pown
-         soUmsoctNudhR6ShYXhtLRY12w1TSKEuFgyvETa2w+V/yZ0APgYbKNcK+gCCHkZ1kT70
-         uZkt26mFOX2lYrqL1HkB+yTKIXKjpZ+nJpZrX/o7SXr5QMcQMjHYkv13eDvTjN8lfZSl
-         fhXQ==
+        bh=z9Np41486ZPQDGlzQweAJezAFo0bzffLP3y8AkeihYA=;
+        b=e2j88sPpT2RQ3VOX7GWnDTllKD8AuIuBchKRXPZ0jGzcDtmZFcYknABYUolITP0BqK
+         fIg4mi55vzxGNBqxRcupDh3ezgn7QIdZJp/dFB3w/n9W31YoaGTlVb74G//4Bir/eNsg
+         K1j3TbeP4JAo1npaszj39xZHDQKwg+KULfHnfjlFYN2iLAenDglkHkJXveZES7QJzw8f
+         tBqn6xGTzgTR9f+XB3lMVCg153w0WMHJ4TX/YZUk5WnYryjo1IgreC32zARESyynC9tf
+         aiFHw6EbwFfxYE0aAVrNOQkUziBq2HKpo7iAje6lPSWrlmc1XbfCAzmH8yWS/PKTCvL6
+         5DHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720176060; x=1720780860;
+        d=1e100.net; s=20230601; t=1720176063; x=1720780863;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oTC/Azk6QuGeCqi4nXZfSzWiS7YtP2rKGZn+knA+oxU=;
-        b=UjIdfGxY6f0Y8C9HkndroC0JZ2UiAR25Krq6BAb1KIzn6HZvbYPJ+o2rEg7YcZlKJh
-         at1nkkm/dOemiSADxLYdmMUZLgzZguE0GfhkhGwVq1FipMTgwePmq3wcdOe5X2ndL2v8
-         +f9z+/HLVVjEokHwLzD2QCyq/BLK4yVVawMTrRXS+EXTFHy2aldOUayhgVlH/nqYm2Xa
-         oIHg+1kvZ7+DQc+Hhi1m1A+qPeA2L+fJx8WXQXbho0AHvOVKg3vHHT/UbtmPPE6Zgb+L
-         25TmguTtH5SRz/kdaTRCWs57sAJAqNPh10Vh8f9oM4DyJAE2N2QTYKMRfvYgA2K3J/2k
-         LFIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKYmBXoeF97II3AL0quaaiP/QJeV+mrZknjEEwK5USMWv5+Bi1/XnEcuxM+IG4BnWQRz2QK4lmQbSBGwrS453Y8RLV0yrtrusy9/Ca
-X-Gm-Message-State: AOJu0YxSWIxU9lCFE/l4lWDE+twDe7A2Tqq1RZEiR5WA2OvxN3+pAdoB
-	YRsUs5kS/F6NzWOsAwLqW8xAih2x4dK4RTI6dU4LMss/tgUgI2Jr3ZWmYDp5b+U=
-X-Google-Smtp-Source: AGHT+IFpPHqmjxp2CPDg1mV84p7LQ3rhp2DLU/4rV2/xi9+XlRjQpCs244ba3YRg8O8NY0lubgaIhw==
-X-Received: by 2002:adf:f7d1:0:b0:366:eade:bfbb with SMTP id ffacd0b85a97d-3679dd651ddmr2544484f8f.46.1720176060011;
-        Fri, 05 Jul 2024 03:41:00 -0700 (PDT)
+        bh=z9Np41486ZPQDGlzQweAJezAFo0bzffLP3y8AkeihYA=;
+        b=JVxkrXuhcy8q2r4ip1XO1to94I/y1oFy/A/mz9k8Dl98DcPRn+ZWhcaYf6lBjN0piC
+         2pAJS+zH2k/NPSDecxkRUulSGuhloUei7lWaPHJ2w2sept5r5hG1a/jjmfRLrrO53PGh
+         +euU+DYy4hz1XS9SZ2rx4fbkR0E5Bqed11hj4CWNEHfo1JQiUmJxVwXgB/+NOxpWWtdo
+         bz7jlIdBe+rqlyfjhg1wzAEQPQgvIY3dfMU9M7EsEWyRq9YXfMjLtR6y0K4swwHwTVz0
+         16nC+RCB4C9c4TjbkA44CQEAnJgJuZ3s8lqq5dMAErwj60JPawGBfsqZMXbtUL6Ta7hU
+         /gvw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3vTcZUYrXjsKiMwi6qteTJOT/jF7E4j6Sfz3EYyj3FJMDg9Mm465VR+HEO4FK4Q/ULOd3ONTbZWAzeA6dj8OZnh5GLMqvBDsTt99R
+X-Gm-Message-State: AOJu0Yy1nwNrbxoRdh2AXUUwF2axSFIuPJc6U55pqVHB45zum/Yn5DOM
+	cM9hUM/TyaG0+7BYz1jUWY/mBdsCromzbsJpsd4eLZNA8qfzCjvnEgfHGDhpg8s=
+X-Google-Smtp-Source: AGHT+IGJmF2yz6CclwNaZobfkh+KzmhezsSI6pZ1+CVEOHBJkhN00D9Q5QVyJPreYMVR2oHvYBqtxQ==
+X-Received: by 2002:a5d:6849:0:b0:367:9614:fb99 with SMTP id ffacd0b85a97d-3679dd31137mr2795078f8f.10.1720176063285;
+        Fri, 05 Jul 2024 03:41:03 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36789d5ec1csm8680446f8f.37.2024.07.05.03.40.58
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36789d5ec1csm8680446f8f.37.2024.07.05.03.41.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 03:40:59 -0700 (PDT)
+        Fri, 05 Jul 2024 03:41:02 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Fri, 05 Jul 2024 12:40:47 +0200
-Subject: [PATCH 4/6] iio: adc: max1363: simplify with cleanup.h
+Date: Fri, 05 Jul 2024 12:40:49 +0200
+Subject: [PATCH 6/6] iio: adc: ad5755: drop redundant devm_kfree()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240705-cleanup-h-iio-v1-4-77114c7e84c5@linaro.org>
+Message-Id: <20240705-cleanup-h-iio-v1-6-77114c7e84c5@linaro.org>
 References: <20240705-cleanup-h-iio-v1-0-77114c7e84c5@linaro.org>
 In-Reply-To: <20240705-cleanup-h-iio-v1-0-77114c7e84c5@linaro.org>
 To: Dan Robertson <dan@dlrobertson.com>, 
@@ -77,107 +77,45 @@ Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2264;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=661;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=8UqNvu97RyQCvnTqNuJYZZnXKv3X2QTRkCh8H7bl7SE=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmh82wGqZAMadIz1XR5aj+8tdWoDISp1r2Kw1oO
- rXfx9a4AMKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZofNsAAKCRDBN2bmhouD
- 16lzD/9AhnxwXv5OrwJjGIWy8uU3qbq+Ay+EYJfL4l7G5eN2ahNnoKc2trvkQGgIk4WpPVAl/We
- GkkGk91bFiIseEUezi8Pq2WkeJE4jah4gZ1ygbkxeSoKAVnlO+SAGNANz7jDm41gc/Cdxfb7gfw
- RoxJrHybC9EUzc/Snj1m8vWzWcqbw6cMpbaZwsYGNA3hOxzdM41aC0zySf1oV/XpDuUoaAfthbA
- M0YWsOzOt987EMMYpFobfLLz9XC3M6CZ3vX4dvm/RRnGqtwg99piq5uPgVHV0lSgCi8EfyJLSZN
- zejEnA1hsYNUX8M22MABU7/A5LHcKcuT54Qm2bqIBl0vV4VqDMnHp1QcTyiVAG9TVcbk4ikpMCM
- iSd3V+bj1cxn2zQfR8C+UxzTzHX92pK5G0YYcL8x4MFdemOQ6VN0Icb46+2qHYmirioczwvybFJ
- 500larK7cxtaZ75pdWVz0Snsfwk6C7wcsPY7n1gf0NZOG14tx2Cc5K6LyWNsfoB9xFndwAAKiUJ
- WETcQ86+nEMU0vwIPBMsPc30EF36mLPmM1ImODNcM9VXC5Myq5luyWftG3KqH+BJXoGGg/KYA8+
- rs9rV6DqNRDyFhplpy3WFo7+5A//cOVA98Oo548YWTh2Qgmbe/ynrm7kVPK6pVp6ACc5YkeH/sx
- FBbXnIJipqkVO6g==
+ bh=wAVpbgQ5bIpyCcGTaGFP8RLhuVeOqnrOwZ6oTfnW4nw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmh82yqE4WDfmxPDBzauwZ3Iq6vku5GtvtWvYVd
+ MK7kTqYSIKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZofNsgAKCRDBN2bmhouD
+ 1+4WD/0QMoTcaJIkRnw0sl/FKPn/9xu4+bNaTVtxm3Oxvxf02oev5VhaxB/RJzKUopuc9Cv9TPc
+ t5V+qudWwmVC3/6vIMZGISLvYkNkpTBIg7SZs74tbZ//7NGVeYfC8s4ev8SJ9r5X3TvMgihmu32
+ JDEMyQ0+klT275tvSKA+cYiaBmUDRGolzvO+uLc/ZMTdTrBOvajCSrjP1LNCSNVaCX7uc4gvXQ0
+ I6VGNMb1glQMD+CqNQQ2/7wHcctG/vqmmMneeln6lYioC3njEV2NVJ7txWExIB3w4NhMQWyIswZ
+ QzPh1o70THWr0Hv7KhbeC6o3777jFBthV8k66WA9cybDPF6SuNwzyFOAIhyuFrBv8q+NxhVeTDr
+ +MUCHc90reVhXMlmtSxpU5I0apW01OHOThkXoKs6GE6/10879YqP4xAcpZYW1hIH52q4dsxmSzh
+ 2J0fts9TPugTQvZO1IU4U4i/1Sk8N/WbyjCzbCuNgjsRXigEtrDALzXboSrFCr4LEijx8y/t8OQ
+ EeYHwqDY8qrVPGVsRCTIg2XARx/A/0pC5G5CEB7vHDQ2IKCDSQ0Bs1f6bSgGXhNI6x5QFVg8Z94
+ zbF2g56BKULxngx2n4TgUEXShv3yzJR5xRh8rRncc0BIluerLglDleXmovbT3iCGLf4g/nWp/kE
+ gfF4RCMThWVj7tQ==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Allocate the memory with scoped/cleanup.h to reduce error handling and
-make the code a bit simpler.
+The driver calls ad5755_parse_fw() only from probe() function, so
+devm_kfree() during error path is not necessary and only makes code
+weirder.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/iio/adc/max1363.c | 34 +++++++++++++---------------------
- 1 file changed, 13 insertions(+), 21 deletions(-)
+ drivers/iio/dac/ad5755.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-index bf4b6dc53fd2..d0c6e94f7204 100644
---- a/drivers/iio/adc/max1363.c
-+++ b/drivers/iio/adc/max1363.c
-@@ -13,6 +13,7 @@
-   */
+diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+index 0b24cb19ac9d..bfbfc3c1b6a5 100644
+--- a/drivers/iio/dac/ad5755.c
++++ b/drivers/iio/dac/ad5755.c
+@@ -803,7 +803,6 @@ static struct ad5755_platform_data *ad5755_parse_fw(struct device *dev)
  
- #include <linux/interrupt.h>
-+#include <linux/cleanup.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/sysfs.h>
-@@ -818,7 +819,6 @@ static int max1363_read_event_config(struct iio_dev *indio_dev,
- 
- static int max1363_monitor_mode_update(struct max1363_state *st, int enabled)
- {
--	u8 *tx_buf;
- 	int ret, i = 3, j;
- 	unsigned long numelements;
- 	int len;
-@@ -850,11 +850,10 @@ static int max1363_monitor_mode_update(struct max1363_state *st, int enabled)
- 	}
- 	numelements = bitmap_weight(modemask, MAX1363_MAX_CHANNELS);
- 	len = 3 * numelements + 3;
--	tx_buf = kmalloc(len, GFP_KERNEL);
--	if (!tx_buf) {
--		ret = -ENOMEM;
--		goto error_ret;
--	}
-+	u8 *tx_buf __free(kfree) = kmalloc(len, GFP_KERNEL);
-+	if (!tx_buf)
-+		return -ENOMEM;
-+
- 	tx_buf[0] = st->configbyte;
- 	tx_buf[1] = st->setupbyte;
- 	tx_buf[2] = (st->monitor_speed << 1);
-@@ -893,11 +892,9 @@ static int max1363_monitor_mode_update(struct max1363_state *st, int enabled)
- 
- 	ret = st->send(st->client, tx_buf, len);
- 	if (ret < 0)
--		goto error_ret;
--	if (ret != len) {
--		ret = -EIO;
--		goto error_ret;
--	}
-+		return ret;
-+	if (ret != len)
-+		return -EIO;
- 
- 	/*
- 	 * Now that we hopefully have sensible thresholds in place it is
-@@ -910,18 +907,13 @@ static int max1363_monitor_mode_update(struct max1363_state *st, int enabled)
- 	tx_buf[1] = MAX1363_MON_INT_ENABLE | (st->monitor_speed << 1) | 0xF0;
- 	ret = st->send(st->client, tx_buf, 2);
- 	if (ret < 0)
--		goto error_ret;
--	if (ret != 2) {
--		ret = -EIO;
--		goto error_ret;
--	}
--	ret = 0;
-+		return ret;
-+	if (ret != 2)
-+		return -EIO;
-+
- 	st->monitor_on = true;
--error_ret:
- 
--	kfree(tx_buf);
--
--	return ret;
-+	return 0;
+  error_out:
+ 	fwnode_handle_put(pp);
+-	devm_kfree(dev, pdata);
+ 	return NULL;
  }
  
- /*
 
 -- 
 2.43.0
