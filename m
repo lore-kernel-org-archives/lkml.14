@@ -1,102 +1,159 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206411482F3;
-	Fri,  5 Jul 2024 11:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B12F1482F3
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 11:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720179388; cv=none; b=Bt0/r5TX0Gizh2QNd4AdXXQhaH24UpBInqkF8CJ1QR6MaexuCD47z+6Lj0Lmde3vpWS3k0f/u+IIJbE9PMybNT92Un7JiCEOSZeIqn9CqLR5UYN3xlX1YUKHnx1r4I2bi5g4eNp1ldvi1UaHPdk9aee7IZgqmM6ppcZh082MK1Y=
+	t=1720179402; cv=none; b=nyoc0tqFvHwO6T+vsxLXCZpYMLL+sSXiXVFzHCzixSGoRcIIz1gW5NkVcR+tPQ3AaYQEQnEfV4U59FmPNM8wLPsZ8OB0IHTHLrJXm+bDI7P46vYVyup11DNAVh8TdpEyYEMLZM8Va9PgaDqRJqSNe3GhpbbXgt4oWbtzJhB+bz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720179388; c=relaxed/simple;
-	bh=aA6UMx8bvIXjhEaoc3nKBlWMNp5+O3VwjJAQjwXbQ20=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Uc+FHRIHp5ymO8eX7WdGGmy0KyiTVSnQG3Ou59oJZazBKzkb2E6bZKDnO/kqShsPQle0UVkOgm5ytaBw5MirZ2nawV+4Cs+Rf8Ilmwa3tLmT41LaPWJ9Li98fNEVHFtjwlnOOCUOo8h8tvkHoir028B0J+rFGAwNl/j/IHwYyEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=OCjZowWY; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1720179402; c=relaxed/simple;
+	bh=vl9UJxKYmmK00tLm3Hc/iglrSeCsatI+wdE0XTAlrI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CSK9Wp+ERfADjdwG3UTGZMrvmooKE9coS2SMHLgCm9nPuR2HwMgc2Q5MuedeTMrDmJA+Xmw+D37MMAjh/7zAXZLksUXe7uZOhKlVE9P45kEQA2/fhkJ/I+/eaUyMT9nL80Ymt9cTOdildojVtywImamHJGf5SR7/99VihpdsENw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=db2upT0o; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="OCjZowWY"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id C393C100003;
-	Fri,  5 Jul 2024 14:36:03 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1720179363; bh=fukh/qCjpOhKPdOYyMdzZj28hZQbEnqAxEmvW5BRgK8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=OCjZowWYV37LAF5SYn/KmciBh1pRlgFDyH2CTIyYDdB/Zokip7QhupzE976GPXDIj
-	 EV547UkCqBjs6dRLbhhL5SUEDc2Yjs2h5H0dra1T33lUHDeDj6MuJ/7arLRkZlTQ6E
-	 iVG+szzVWGMNycYWytMxMv8Es5YaUC6vSNFl7oA8Q1N64ieA29qPaIg2h/UahURC7m
-	 SDNJZg9lIhzkvUN29IS3w5Duibs6lhApx+G7vUWlrBvcgUZbi0C/4XHb0U2naMCErL
-	 SO6GH60DX13LajkgMeIdVQNk56IE6C49/EmW+r61C9pKF1W0JfBU+Uu1517ypV9xAm
-	 8heQZvwQoKSgw==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Fri,  5 Jul 2024 14:35:08 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 5 Jul 2024
- 14:34:48 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Rajmohan Mani <rajmohan.mani@intel.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
-	<andy@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Sakari
- Ailus <sakari.ailus@linux.intel.com>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] ACPI / PMIC: Remove unneeded check in tps68470_pmic_opregion_probe()
-Date: Fri, 5 Jul 2024 14:34:34 +0300
-Message-ID: <20240705113434.17249-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="db2upT0o"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4257a390a4eso10508525e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 04:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720179400; x=1720784200; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ftpwpdpd74QlveoBY7KO0dbT9gEHf6+1Hk4UhbSr99I=;
+        b=db2upT0ooLPi717qXj2q2Me3NrUJm5Nk1LpjrQBEDFWTPpaiTUUR6SbubO2yyOzAIl
+         ZQgwmksU0UYgje+yJ5COay2MYlJatV7MxR22gyXu7UEwBV27HupXqESQaaqwlhUxKaiP
+         vm1PK7MVHvH9iWiewnLQ85cUW7PisIw32kANcpRfSeb8/wIWF2JPW7Kbs8bEB53VQOpo
+         DWpdxlSBu1Yj48S9PgPHIWp/792Po8OWijxeHfP9gFvdpwbnlsr0BuNG23UmN7ZwSH5b
+         qG7EW07xfQ9Ye2JoGWIlME7s2V5jnrieANegPDO/6Rt0Mtt5GfNjYiMVDz6eqvbleC7a
+         DcIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720179400; x=1720784200;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ftpwpdpd74QlveoBY7KO0dbT9gEHf6+1Hk4UhbSr99I=;
+        b=Btf3K6mXYXFXdyvAcOynha16KxLl7DWdDa/Z5RbZkEbpBdXYl8tO91FuXWqJPwNFur
+         2p5q5i99z91YUTZWx+XJWKBAA3fSDMadHabuL8HkH3o/z1PJllt9U4nFwNOzy723/EUL
+         ioammB6UYnoxgJ3SggoZnA2moDA9c+nINS8SsmJ1ujZpokd3zdCLgBmNNUEAYf3vPJX7
+         0CQF8d9ChTmSgrUQbosyLA3ODqO8wTC7GIKWNImR0IN99xyJdFpymKjDveKKGISEIVnE
+         tEQnwiFYE3jD4zmoCmZHQ1eBSLs2p3ArTfLm+x7f7hxYiQ3I3XJWXtsRcV3lK3NOmlfp
+         I0Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkUfI0vJRranSh2Pv2IRjN9VXdJWH1JJDa5LO0pHfAXjwINzHcfXnuyx/o1k7gm8Q63DHjpzKz2SQZ2rG8ilmzHrH5IXJDDqNpwahN
+X-Gm-Message-State: AOJu0YwhXPoFfShhAW3EWW//iO0WRpax1ksOANyW29EutleWEljmke66
+	BxdlXYXUUWBAFJ1fLFrhFiuhntmyZqGMj5ow2fHdBXn2HV3VsPY/OlbIZFKyCvA=
+X-Google-Smtp-Source: AGHT+IHoNggNRmVBDMFmlxr1SI7XUi5lDCC9FhrxjvRoTRfup+gkVCoGLhuu+uxwdOjMivleq2n37Q==
+X-Received: by 2002:a05:600c:4395:b0:425:6f3a:651d with SMTP id 5b1f17b1804b1-4264a4319e2mr27863795e9.27.1720179399774;
+        Fri, 05 Jul 2024 04:36:39 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a21d2basm58124875e9.28.2024.07.05.04.36.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 04:36:39 -0700 (PDT)
+Message-ID: <72069f51-d416-4c55-8c9a-56f2ed1a6ef0@linaro.org>
+Date: Fri, 5 Jul 2024 13:36:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186342 [Jul 05 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/05 10:17:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/05 10:39:00 #25854340
-X-KSMG-AntiVirus-Status: Clean, skipped
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] drm/sti: hdmi: drop driver owner assignment
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Alain Volmat <alain.volmat@foss.st.com>
+References: <20240330203831.87003-1-krzysztof.kozlowski@linaro.org>
+ <20240330205722.93801-1-krzysztof.kozlowski@linaro.org>
+ <20240527144700.GC713992@gnbcxd0016.gnb.st.com>
+ <77b4e4ad-2b1e-4b6d-bc3b-0c7b339bc295@linaro.org>
+ <20240705-bustard-of-unreal-sorcery-bfc9ba@houat>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240705-bustard-of-unreal-sorcery-bfc9ba@houat>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In tps68470_pmic_opregion_probe() pointer 'dev' is compared to NULL which
-is useless.
+On 05/07/2024 13:14, Maxime Ripard wrote:
+> +Alain
+> 
+> On Tue, Jun 04, 2024 at 03:18:55PM GMT, Krzysztof Kozlowski wrote:
+>> On 27/05/2024 16:47, Alain Volmat wrote:
+>>> Hi Krzysztof,
+>>>
+>>> thanks for your patch, sorry for the delay.
+>>>
 
-Fix this issue by removing unneeded check.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+...
 
-Fixes: e13452ac3790 ("ACPI / PMIC: Add TI PMIC TPS68470 operation region driver")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/acpi/pmic/tps68470_pmic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> Acked-by: Alain Volmat <alain.volmat@foss.st.com>
+>>
+>> What does this ack mean? You are the maintainer, so what is supposed to
+>> happen now? If maintainer does not take patches, then the DRM STI looks
+>> orphaned.
+> 
+> The expectation would have been that Alain would have applied these
+> patches. That being said, your reply here dropped him from the
+> recipients list, so it's not surprising you didn't get any answer.
 
-diff --git a/drivers/acpi/pmic/tps68470_pmic.c b/drivers/acpi/pmic/tps68470_pmic.c
-index ebd03e472955..f8de8d0a528b 100644
---- a/drivers/acpi/pmic/tps68470_pmic.c
-+++ b/drivers/acpi/pmic/tps68470_pmic.c
-@@ -376,7 +376,7 @@ static int tps68470_pmic_opregion_probe(struct platform_device *pdev)
- 	struct tps68470_pmic_opregion *opregion;
- 	acpi_status status;
- 
--	if (!dev || !tps68470_regmap) {
-+	if (!tps68470_regmap) {
- 		dev_warn(dev, "dev or regmap is NULL\n");
- 		return -EINVAL;
- 	}
--- 
-2.30.2
+
+Uh, indeed. I don't know how this happened. I was replying to him, which
+is visible in "On 27/05 .... Alain Vormat wrote" header, but... weird.
+
+Alain,
+I apologize, it seems I am responsible for this mishap here.
+
+Best regards,
+Krzysztof
 
