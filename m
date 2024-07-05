@@ -1,257 +1,153 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EBA149C4F
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 11:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5D9146A70
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 11:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720177354; cv=none; b=fKODDxzGs1sUTa++fyzUV66XO/b1SLnrhujf4aTcqxCuml/Et1EXkmFROIICW+P4v7f6VFYMGP1u+sNUL7AubzDoGSByIHJRdJNc2PWzxWiMGweUFECIccolHhr+CzJerJENHiYG7HiqzkO2YVnms60GOVB8D3taC08SpPzCWkI=
+	t=1720177456; cv=none; b=h5vgTTzYWqnV+5KhG6MrpHH0NwAGLsJTg3NLUCfvRaVzHpTggI51nDo1H6hhSZWyVvGlooEiJ6aLK2YmsjDkpFbPR/ywQZbQIkYXEZ1e7ShxU3s3cEgSJbjwkC/5ul7HCc92R3KZ7u8cW+8ToEI3KqYwhzhoznMkJjni6gZHI6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720177354; c=relaxed/simple;
-	bh=S7Om4GQ30fztSBIh/w1AFY6W2F2OWAuCWAmODzJ3pS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwsmI2LV2ZMz0nGZlPsdDiIocx6Uyc1NGF4MJS5v5jM24anWPfXDd8wQ0iCjvwhXoNLr2AyIse/BZOEU/B4EjsmUu8/n6Z8MbXVjk1HyPsOxnQqAhZjFzICeeDRTSt8oJuWHmYGY/8k0x4SVlETea2VeYMnRPrBuetb7/PNzpQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xNy3X87O; arc=none smtp.client-ip=209.85.210.176
+	s=arc-20240116; t=1720177456; c=relaxed/simple;
+	bh=gzFFA5iz/FJG9Oztn1BmLja6YQotxdgEjIoPRRo+FdM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pdCiThIDt6Q/LbQpDhud8q5vrpOZLTX+vDl9YRswwdpKfWBY8hXGZUZ79cGco8DEKFPKxVgRAoj4H4lOABY67wvkv43UloYN5qermtRVtIKVHOkmacCGtlsbQsrd2xGXEZJN/Rhuq+bJ7aBn+Q8SkllPQII0Jm9A2ZGmD9tqIqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gpFF45lM; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xNy3X87O"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-70b04cb28acso859896b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 04:02:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gpFF45lM"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a77c9c5d68bso70182866b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 04:04:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720177352; x=1720782152; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=f92fjw8JYMT1dRrD53VjhAAntEQwgMhVvh6//opJzE8=;
-        b=xNy3X87OrauY7Bu6xLPpMPYKCNZvtVIkC+XZvIMK+UMjyUsAKcp4Won6TSlC+o9rfa
-         f2ctiZcNg1cUd16zC1ouhfxWRxMcInzUvqdnVJBER/4qoWWms/h4+rKS1Gw8BuBjpOUx
-         ghwqgzyOMaSK63zDn4rYF8ET72oL/c/FSEJQFX7Y32SNYWCGIEk/yY+0GvuYwoaeFC4D
-         MgkXXcnYdwjlvSDtl9/9YtSx6JS7bBvq3Rb7NkR9o04Ur+NYv1ISU+g2ROhHsRIIjOkh
-         URZ3WUhJhKDis9s5qBbH3o5ceY0jYxgc815QZ9WJ3+YhmUQJRON93diW4vU+zWjExBac
-         ZH5A==
+        d=linaro.org; s=google; t=1720177453; x=1720782253; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=IzWJLcVV+TWw1YdewZiMFn9FjbSkvBy18SqRor7M/5o=;
+        b=gpFF45lMoAe7qFpwkrWs9ejHVu+rykZk/QlBoRWXabXHl5OIUomjIl2I+6VeWgPyQ1
+         HbcItLJYUD/W5WZltWCaqvEHr+KJ+bSsjFMoZlPm2QMK2vvyBHEbgr0ocSbM/t9EEnlf
+         CtkPwHUMwnD3Y4euYyFW9Hy0Z2KjdZD/wU/3uIcV0ujuP1utvRBqfnYFM2x67YxMuBSP
+         RIZY8hddMUSAzo+ReHaBi0IAC1hdG5xLZXJ2shKcEz6LK4CxN50j91yUScSOofANgluw
+         9desz5cs8O3le9StQixWrQM1X70PkVTkzwh1W/TMLCvNVVm+5i2Q76xsjqb8VPj2AdTa
+         jwbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720177352; x=1720782152;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f92fjw8JYMT1dRrD53VjhAAntEQwgMhVvh6//opJzE8=;
-        b=pFv6BNma3OF7Ye2ZPSzrf59dDUk2u9rUQM/ePoi3PU2Utr75TSOItokw47fchGMAeI
-         ojpPLjJNsx7F3Dok5ONuaamN4BnQdUudfhWkAIm742asak/aKF2wPITD5kDI+YhUE/vk
-         I3hD2RJlwyFmrmZosStnyL7zTHjRa/gip1kc/sMe+g7SGbSUAGLVZjbQl3HnXc2aYU06
-         Y7c88Thsqd/B4ekXvPfUGI3zLfmxb+aeBjGPTMYZNiKpJabO2MsyN1VMIww0mFjFz4qP
-         9rUHrSTHbrfwHNwI5CxBtOYdEcYmqWTqXBm/w18kZq05qH4WZ3INvsbEHibWfct3kcgR
-         aZ1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVrLM/Sed1XlfWcz6TtstRJhiBa1Ikj64r1jaYAyT1jR0K6G/m4gybEbHlFgATw+Z8+V5JycXEdqtBNm5AT4/GlsWGX6jHci1QrqpW4
-X-Gm-Message-State: AOJu0YyIlBZSejTDNdIaTYl1ZYhajYxaCU0c6SV8QK08DKvw0VaSDANw
-	iLR76I9ruFwisyG29b4QvYpc12Q6/wm+owTu4jZU5/nPib44g0DSsBegw8AYutI=
-X-Google-Smtp-Source: AGHT+IGn1rhycWvEt5pEiJxdXzjK4S9Y8JJLU4mSVvnpE1+Y+yvmX3R8Ee/LOSlG8/Svf+b05wC0wA==
-X-Received: by 2002:a62:f205:0:b0:70a:ef84:7683 with SMTP id d2e1a72fcca58-70b01980885mr6239722b3a.1.1720177351516;
-        Fri, 05 Jul 2024 04:02:31 -0700 (PDT)
-Received: from localhost ([122.172.82.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70afffefeafsm2805087b3a.207.2024.07.05.04.02.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 04:02:30 -0700 (PDT)
-Date: Fri, 5 Jul 2024 16:32:28 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>, linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH V3 1/8] rust: Add initial bindings for OPP framework
-Message-ID: <20240705110228.qqhhynbwwuwpcdeo@vireshk-i7>
-References: <cover.1719990273.git.viresh.kumar@linaro.org>
- <fe8e9a96b29122876346fc98a6a9ede7e4f28707.1719990273.git.viresh.kumar@linaro.org>
- <ZoVvn0QCSR8y4HQJ@Boquns-Mac-mini.home>
+        d=1e100.net; s=20230601; t=1720177453; x=1720782253;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IzWJLcVV+TWw1YdewZiMFn9FjbSkvBy18SqRor7M/5o=;
+        b=SLGiL8+yV7nmYvGKviNW0YNtcy8kNl74sJYKJjt347jwLNFog/h8X0KlLau+vg6iRJ
+         NjM0Lwf8gkvEoeJDRRpBIZ5kwVO59Ue2beEaD62CbB+HBzf1CKiWZXJQt3ViLC3+Oyy7
+         Mi0vr8NhRRSg6/sXv1Sl37/OezFZxmIyNNMeH5rX29/jlHNAabgd6fkVCsYCDTBHjfK5
+         oq1wJD+aC5ioKVQj96IyOI/1KcCT/Be0lqDcu8M1xwm/dv76G2U7HICFATgt95c75/X4
+         sdELnTdVCuYeKCm3suONRFQfWLN9ct92+RP99T7XxFEO/xknOxO9TCOHAtNUtweka/pw
+         ip4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVgEku08YL+thd7VDWSNd4lmPE1F8a7JpEA2d1t/SJ17tR6t7NiBZB0VjYiWpxH3r8DE2VRvXgp4UVtMyYAvfvy6L0cfSUgRlcA6ZYf
+X-Gm-Message-State: AOJu0YxvYRTQilRwE0OfKx7UW5EjFoTURVtXEErP41HsUm156zNzjgjG
+	le9WJX5MKVVzACYmDJwbfeoQ30sbOzXL7UZ0f1pM8nkE66wBhfjfX/R6KTzH6aI=
+X-Google-Smtp-Source: AGHT+IF29OzRCHzOdP7Tf7Vq2QkYkcCMXyFdU6xoNQYAB7hk1KdFuAtw90mzQ32FsmnCP/ibfiUtHA==
+X-Received: by 2002:a17:906:a40c:b0:a72:4b4a:a626 with SMTP id a640c23a62f3a-a77ba7278d9mr311938966b.68.1720177452831;
+        Fri, 05 Jul 2024 04:04:12 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf6295csm669675866b.72.2024.07.05.04.04.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 04:04:12 -0700 (PDT)
+Message-ID: <d452970f-804b-4b96-bbd4-a3de73b5ecce@linaro.org>
+Date: Fri, 5 Jul 2024 13:04:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZoVvn0QCSR8y4HQJ@Boquns-Mac-mini.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] drm/sti: hdmi: drop driver owner assignment
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, neil.armstrong@linaro.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240330203831.87003-1-krzysztof.kozlowski@linaro.org>
+ <20240330205722.93801-1-krzysztof.kozlowski@linaro.org>
+ <20240527144700.GC713992@gnbcxd0016.gnb.st.com>
+ <77b4e4ad-2b1e-4b6d-bc3b-0c7b339bc295@linaro.org>
+ <f207b481-f530-4f54-a482-218908869050@linaro.org>
+ <78384e57-4139-47c9-ae5a-480c0d6b9daa@linaro.org>
+ <CAA8EJpqmawrbXyhQ+5SrX+=F5LUuyLNnOb21SPzbg=3vbnDg7g@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CAA8EJpqmawrbXyhQ+5SrX+=F5LUuyLNnOb21SPzbg=3vbnDg7g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Boqun,
-
-On 03-07-24, 08:34, Boqun Feng wrote:
-> On Wed, Jul 03, 2024 at 12:44:26PM +0530, Viresh Kumar wrote:
-> > +/// Operating performance point (OPP).
-> > +///
-> > +/// # Invariants
-> > +///
-> > +/// The pointer stored in `Self` is non-null and valid for the lifetime of the ARef instance. In
-> > +/// particular, the ARef instance owns an increment on underlying object´s reference count.
+On 05/07/2024 12:37, Dmitry Baryshkov wrote:
+>>>>> Acked-by: Alain Volmat <alain.volmat@foss.st.com>
+>>>>
+>>>> What does this ack mean? You are the maintainer, so what is supposed to
+>>>> happen now? If maintainer does not take patches, then the DRM STI looks
+>>>> orphaned.
+>>>
+>>> +Cc Neil, Dmitry,
+>>>
+>>> I pinged and pinged and wanted some sort of clarification here but one
+>>> month passed and nothing was clarified.
+>>>
+>>> I could be understanding the DRM process wrong, but if no one picks up
+>>> trivial cleanups for 1.5 months, then to me subsystem is orphaned. I
+>>> will send respective MAINTAINERS update.
+>>
+>> Let's do that, if Alain doesn't take his own patches that were reviewed
+>> then it should either be orphaned  or moved to drm-misc.
 > 
-> Since you use `ARef` pattern now, you may want to rewrite this
-> "invariants".
+> But it already a part of drm-misc as far as I can see:
 
-I copied it from the device's documentation. What all details should I
-be writing here ? A link to some other implementation would be useful.
+In such case who is going to pick up such patches?
 
-> > +impl Drop for OPP {
-> 
-> I don't think you need the `drop` implementation here, since it should
-> be already handled by `impl AlwaysRefCounted`,
+Best regards,
+Krzysztof
 
-Right.
-
-> could you try to a doc
-> test for this? Something like:
-> 
-> 	let opp: ARef<OPP> = <from a raw dev_pm_opp ponter whose refcount is 1>
-> 	drop(opp);
-
-I now tested it with a kernel test to see what's going on internally
-
-> IIUC, this will result double-free with the current implementation.
-
-Quite the opposite actually. I am getting double get and a single put :)
-
-Thanks a lot for pointing me to this direction as I have found that my
-implementation was incorrect. This is how I understand it, I can be
-wrong since I am okayish with Rust:
-
-- What's getting returned from `from_raw_opp/from_raw_opp_owned` is a
-  reference: `<&'a Self>`.
-
-- Since this is a reference, when it gets out of scope, nothing
-  happens. i.e. the `drop()` fn of `struct OPP` never gets called for
-  the OPP object, as there is no real OPP object, but just a
-  reference.
-
-- When this gets converted to an `ARef` object (implicit typecasting),
-  we increment the count. And when that gets dropped, we decrement it.
-  But Apart from an `ARef` object, only the reference to the OPP gets
-  dropped and hence again, drop() doesn't get called.
-
-- The important part here is that `from_raw_opp()` shouldn't be
-  incrementing the refcount, as drop() will never get called. And
-  since we reach here from the C implementation, the OPP will remain
-  valid for the function call.
-
-- On the other hand, I can't return <&'a Self> from
-  from_raw_opp_owned() anymore. In this case the OPP core has already
-  incremented the refcount of the OPP (while it searched the OPP on
-  behalf of the Rust code). Whatever is returned here, must drop the
-  refcount when it goes out of scope. Also the returned OPP reference
-  can live for a longer period of time in this case, since the call
-  originates from the Rust side. So, it needs to be an explicit
-  conversion to ARef which won't increment the refcount, but just
-  decrement when the ARef gets out of scope.
-
-Here is the diff that I need:
-
-diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
-index aaf220e6aeac..a99950b4d835 100644
---- a/rust/kernel/opp.rs
-+++ b/rust/kernel/opp.rs
-@@ -692,7 +692,7 @@ pub fn opp_from_freq(
-         })?;
- 
-         // SAFETY: The `ptr` is guaranteed by the C code to be valid.
--        Ok(unsafe { OPP::from_raw_opp_owned(ptr)?.into() })
-+        unsafe { OPP::from_raw_opp_owned(ptr) }
-     }
- 
-     /// Finds OPP based on level.
-@@ -718,7 +718,7 @@ pub fn opp_from_level(&self, mut level: u32, stype: SearchType) -> Result<ARef<O
-         })?;
- 
-         // SAFETY: The `ptr` is guaranteed by the C code to be valid.
--        Ok(unsafe { OPP::from_raw_opp_owned(ptr)?.into() })
-+        unsafe { OPP::from_raw_opp_owned(ptr) }
-     }
- 
-     /// Finds OPP based on bandwidth.
-@@ -743,7 +743,7 @@ pub fn opp_from_bw(&self, mut bw: u32, index: i32, stype: SearchType) -> Result<
-         })?;
- 
-         // SAFETY: The `ptr` is guaranteed by the C code to be valid.
--        Ok(unsafe { OPP::from_raw_opp_owned(ptr)?.into() })
-+        unsafe { OPP::from_raw_opp_owned(ptr) }
-     }
- 
-     /// Enable the OPP.
-@@ -834,31 +834,33 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
- }
- 
- impl OPP {
--    /// Creates a reference to a [`OPP`] from a valid pointer.
-+    /// Creates an owned reference to a [`OPP`] from a valid pointer.
-     ///
-     /// # Safety
-     ///
--    /// The caller must ensure that `ptr` is valid and remains valid for the lifetime of the
--    /// returned [`OPP`] reference.
--    pub unsafe fn from_raw_opp_owned<'a>(ptr: *mut bindings::dev_pm_opp) -> Result<&'a Self> {
--        // SAFETY: The caller guarantees that the pointer is not dangling
--        // and stays valid for the duration of 'a. The cast is okay because
--        // `OPP` is `repr(transparent)`.
--        Ok(unsafe { &*ptr.cast() })
-+    /// The caller must ensure that `ptr` is valid and OPP's refcount is incremented. The refcount
-+    /// will be decremented by `dec_ref` when the ARef object is dropped.
-+    pub unsafe fn from_raw_opp_owned(ptr: *mut bindings::dev_pm_opp) -> Result<ARef<Self>> {
-+        let ptr = ptr::NonNull::new(ptr).ok_or(ENODEV)?;
-+
-+        // SAFETY: The safety requirements guarantee the validity of the pointer.
-+        //
-+        // INVARIANT: The refcount is already incremented by the C API that returned the pointer,
-+        // and we pass ownership of the refcount to the new `ARef<OPP>`.
-+        Ok(unsafe { ARef::from_raw(ptr.cast()) })
-     }
- 
-     /// Creates a reference to a [`OPP`] from a valid pointer.
-     ///
-     /// # Safety
-     ///
--    /// The caller must ensure that `ptr` is valid and remains valid for the lifetime of the
--    /// returned [`OPP`] reference.
-+    /// The caller must ensure that `ptr` is valid and remains valid for the duration of 'a. The
-+    /// refcount is not updated by the Rust API unless the returned reference is converted to an
-+    /// ARef object.
-     pub unsafe fn from_raw_opp<'a>(ptr: *mut bindings::dev_pm_opp) -> Result<&'a Self> {
--        let opp = unsafe { Self::from_raw_opp_owned(ptr) }?;
--
--        // Take an extra reference to the OPP since the caller didn't take it.
--        opp.inc_ref();
--        Ok(opp)
-+        // SAFETY: The caller guarantees that the pointer is not dangling and stays valid for the
-+        // duration of 'a. The cast is okay because `OPP` is `repr(transparent)`.
-+        Ok(unsafe { &*ptr.cast() })
-     }
- 
-     #[inline]
-@@ -910,10 +912,3 @@ pub fn is_turbo(&self) -> bool {
-         unsafe { bindings::dev_pm_opp_is_turbo(self.as_raw()) }
-     }
- }
--
--impl Drop for OPP {
--    fn drop(&mut self) {
--        // SAFETY: The safety requirements guarantee that the refcount is nonzero.
--        unsafe { bindings::dev_pm_opp_put(self.as_raw()) }
--    }
--}
-
-Makes sense ?
-
--- 
-viresh
