@@ -1,120 +1,152 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E42913C8F9;
-	Fri,  5 Jul 2024 13:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BC3146D7E;
+	Fri,  5 Jul 2024 13:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720185876; cv=none; b=sTi9RZjYR1tRdc91ILtZo4U6zgm41O/1PWeYAbGQDOOtvi5aYR7/1eSteVC7jmpV8k2UDVryB8zoiA2rbxjJWyqGNV7jcm8Pm0sYzLzR47U0zqOVfzIJI4/fh6ykUCp+gJtW+zGg8Gzj6F2swYmKDEQdvRhGdKm8dzYUshHaAzw=
+	t=1720186025; cv=none; b=RGjnZyKHa6i6hQ5dLBRbUgth/ETcHukBfU5il8qsSJklFStZcQRZJKPCbGNQKjgHyNanS+jWMH9cl31O5JFxuLl8eE5im8tB2xNMxAZKTfmkFaZ7iHzmPUoeWb6fziIRm5PtGkpQJQfLvGO/AuAcJvtUFQLvyAG1HL0XzXcPLs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720185876; c=relaxed/simple;
-	bh=j6OTkQpixN6EN4w4Np+abspGbdF/cicBV7CtNtP5MGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gFB/KsEexwLtrlQY8Ecclg9coyxMMwu6NW1VpP4CpJkhJxF0grbNYhAWbXJ2AGrCDaXRhLCS3/7zPDe8voxPjdUTuU1+J0ZqNb+3hRbNXHGanbmqxcAGlvxV/KSEFgbdBPFPUyLSTq/DIQPYN032nMPi44j9YmeQVcejATwI4No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=ujpc489k; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1720186025; c=relaxed/simple;
+	bh=ru5P37lngQupBugJph3iDkDpO+qTwdsGIFKM9qjfHQ8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hcPoimJZrFyQI3J7Ma7ZkLPNW1mz4ken756c05AqgUfsU0SesLZAhIFyVQcqtw0fS7VQS7SOQCDdL8kGgkLgNjtHJWCAp9TU2XEOCKwdhrZU8pD6XgdxlTIXjugn7z729SFgGSjK4jdAYN3mbvet3vYRuFi07boJB3Juz+DuTAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSBPhYIH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="ujpc489k"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4WFvPN028Wz9t4r;
-	Fri,  5 Jul 2024 15:24:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1720185864;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RI1x0wJ1+JJTcTJDJ2YPYh/0aofRmdFfu4awl092hi0=;
-	b=ujpc489kYfI5CnIfvxBb+PVX93H2UwcqFo/dVZ0+jF/MDJqF1XaxxKsGD8BWyLb0BPjMLn
-	FvwRySW+vd9W8jSoW4cOnd8qEU5Yp9xa7amLTb8sAhXfxXM9ZOJWraBLgjhStd9PzhC+Ej
-	scDeEQRviHNvwIccuzMF/R9X0ep9yfdc0F8Oe9haOh6DrDYGSsK+8wh50sVSl7VtjjfaAP
-	7K+rmK/Y3ANFUjZ6dkmZh21tYlObAQbH+q9BWVegwWy4ukxKKz4wnd4SHz5wsa7N19EKji
-	FovQIf6lKk+VOLB+EPtbw9tOrfZMjm1eBKkJNYGBCdsyGPQomt9JR7rLCNs8Gg==
-Date: Fri, 5 Jul 2024 13:24:18 +0000
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Ryan Roberts <ryan.roberts@arm.com>, chandan.babu@oracle.com,
-	djwong@kernel.org, brauner@kernel.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
-	linux-mm@kvack.org, john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
-	mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org, hch@lst.de, Zi Yan <zi.yan@sent.com>
-Subject: Re: [PATCH v8 01/10] fs: Allow fine-grained control of folio sizes
-Message-ID: <20240705132418.gk7oeucdisat3sq5@quentin>
-References: <20240625114420.719014-1-kernel@pankajraghav.com>
- <20240625114420.719014-2-kernel@pankajraghav.com>
- <cb644a36-67a7-4692-b002-413e70ac864a@arm.com>
- <Zoa9rQbEUam467-q@casper.infradead.org>
- <Zocc+6nIQzfUTPpd@dread.disaster.area>
- <Zoc2rCPC5thSIuoR@casper.infradead.org>
- <Zod3ZQizBL7MyWEA@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSBPhYIH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9DF6C116B1;
+	Fri,  5 Jul 2024 13:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720186024;
+	bh=ru5P37lngQupBugJph3iDkDpO+qTwdsGIFKM9qjfHQ8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aSBPhYIHehQFlP8X/q5YuMtFK8Q4e1FR684Nf+HPiwyAnKVMbvfk91UOXWcWQPD1I
+	 jmbhCFLSKlmv/br+opPe3bgnPN/8NbZLkYsYm3XpZE/xARydvSHBRDdB/bbzVhAXMS
+	 Cxjb+mVgPqPdfMRAUlWXA+SNDLj+eypijFhGbjhSGOG5LuNLl9sgtHM1A4gAMLcn70
+	 oj0B+x18C7xnvSs0HW+mK8TiFHHKCYEgXmYExVjF3Vbw28TyoqZV2aKojNFKSe0EE4
+	 0ey7bBjUc97IzrxV/kZsnFsRifWFU+W5xIvgmWAcJJwoFTXbMQcPCdXqF4NkSaTxbi
+	 1Sk/n5WD5dRVg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sPixq-00A3wi-BU;
+	Fri, 05 Jul 2024 14:27:02 +0100
+Date: Fri, 05 Jul 2024 14:27:01 +0100
+Message-ID: <868qyg3r6i.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v4 3/4] KVM: arm64: Fix FFR offset calculation for pKVM host state save and restore
+In-Reply-To: <20240704-kvm-arm64-fix-pkvm-sve-vl-v4-3-b6898ab23dc4@kernel.org>
+References: <20240704-kvm-arm64-fix-pkvm-sve-vl-v4-0-b6898ab23dc4@kernel.org>
+	<20240704-kvm-arm64-fix-pkvm-sve-vl-v4-3-b6898ab23dc4@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zod3ZQizBL7MyWEA@dread.disaster.area>
-X-Rspamd-Queue-Id: 4WFvPN028Wz9t4r
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, tabba@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-> > I suggest you handle it better than this.  If the device is asking for a
-> > blocksize > PMD_SIZE, you should fail to mount it.
+On Thu, 04 Jul 2024 18:28:18 +0100,
+Mark Brown <broonie@kernel.org> wrote:
 > 
-> That's my point: we already do that.
-> 
-> The largest block size we support is 64kB and that's way smaller
-> than PMD_SIZE on all platforms and we always check for bs > ps 
-> support at mount time when the filesystem bs > ps.
-> 
-> Hence we're never going to set the min value to anything unsupported
-> unless someone makes a massive programming mistake. At which point,
-> we want a *hard, immediate fail* so the developer notices their
-> mistake immediately. All filesystems and block devices need to
-> behave this way so the limits should be encoded as asserts in the
-> function to trigger such behaviour.
+> When saving and restoring the SVE state for the host we configure the
+> hardware for the maximum VL it supports, but when calculating offsets in
+> memory we use the maximum usable VL for the host. Since these two values
+> may not be the same this may result in data corruption.  We can just
+> read the current VL from the hardware with an instruction so do that
+> instead of a saved value, we need to correct the value and this makes
+> the consistency obvious.
 
-I agree, this kind of bug will be encountered only during developement 
-and not during actual production due to the limit we have fs block size
-in XFS.
+Which value are we correcting?
 
 > 
-> > If the device is
-> > asking for a blocksize > PAGE_SIZE and CONFIG_TRANSPARENT_HUGEPAGE is
-> > not set, you should also decline to mount the filesystem.
+> Fixes: b5b9955617bc ("KVM: arm64: Eagerly restore host fpsimd/sve state in pKVM")
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  arch/arm64/include/asm/kvm_hyp.h        | 1 +
+>  arch/arm64/kvm/hyp/fpsimd.S             | 5 +++++
+>  arch/arm64/kvm/hyp/include/hyp/switch.h | 2 +-
+>  arch/arm64/kvm/hyp/nvhe/hyp-main.c      | 2 +-
+>  4 files changed, 8 insertions(+), 2 deletions(-)
 > 
-> What does CONFIG_TRANSPARENT_HUGEPAGE have to do with filesystems
-> being able to use large folios?
+> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+> index b05bceca3385..7510383d78a6 100644
+> --- a/arch/arm64/include/asm/kvm_hyp.h
+> +++ b/arch/arm64/include/asm/kvm_hyp.h
+> @@ -113,6 +113,7 @@ void __fpsimd_save_state(struct user_fpsimd_state *fp_regs);
+>  void __fpsimd_restore_state(struct user_fpsimd_state *fp_regs);
+>  void __sve_save_state(void *sve_pffr, u32 *fpsr, int save_ffr);
+>  void __sve_restore_state(void *sve_pffr, u32 *fpsr, int restore_ffr);
+> +int __sve_get_vl(void);
+
+Is there any case where you'd consider returning a signed value? Given
+the multiplier of '1', I don't see it likely to happen.
+
+>  
+>  u64 __guest_enter(struct kvm_vcpu *vcpu);
+>  
+> diff --git a/arch/arm64/kvm/hyp/fpsimd.S b/arch/arm64/kvm/hyp/fpsimd.S
+> index e950875e31ce..d272dbf36da8 100644
+> --- a/arch/arm64/kvm/hyp/fpsimd.S
+> +++ b/arch/arm64/kvm/hyp/fpsimd.S
+> @@ -31,3 +31,8 @@ SYM_FUNC_START(__sve_save_state)
+>  	sve_save 0, x1, x2, 3
+>  	ret
+>  SYM_FUNC_END(__sve_save_state)
+> +
+> +SYM_FUNC_START(__sve_get_vl)
+> +	_sve_rdvl	0, 1
+> +	ret
+> +SYM_FUNC_END(__sve_get_vl)
+> diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
+> index 0c4de44534b7..06efcca765cc 100644
+> --- a/arch/arm64/kvm/hyp/include/hyp/switch.h
+> +++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
+> @@ -327,7 +327,7 @@ static inline void __hyp_sve_save_host(void)
+>  
+>  	sve_state->zcr_el1 = read_sysreg_el1(SYS_ZCR);
+>  	write_sysreg_s(ZCR_ELx_LEN_MASK, SYS_ZCR_EL2);
+> -	__sve_save_state(sve_state->sve_regs + sve_ffr_offset(kvm_host_sve_max_vl),
+> +	__sve_save_state(sve_state->sve_regs + sve_ffr_offset(__sve_get_vl()),
+>  			 &sve_state->fpsr,
+>  			 true);
+>  }
+> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> index f43d845f3c4e..bd8f671e848c 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> @@ -49,7 +49,7 @@ static void __hyp_sve_restore_host(void)
+>  	 * supported by the system (or limited at EL3).
+>  	 */
+>  	write_sysreg_s(ZCR_ELx_LEN_MASK, SYS_ZCR_EL2);
+> -	__sve_restore_state(sve_state->sve_regs + sve_ffr_offset(kvm_host_sve_max_vl),
+> +	__sve_restore_state(sve_state->sve_regs + sve_ffr_offset(__sve_get_vl()),
+>  			    &sve_state->fpsr,
+>  			    true);
+>  	write_sysreg_el1(sve_state->zcr_el1, SYS_ZCR);
 > 
-> If that's an actual dependency of using large folios, then we're at
-> the point where the mm side of large folios needs to be divorced
-> from CONFIG_TRANSPARENT_HUGEPAGE and always supported.
-> Alternatively, CONFIG_TRANSPARENT_HUGEPAGE needs to selected by the
-> block layer and also every filesystem that wants to support
-> sector/blocks sizes larger than PAGE_SIZE.  IOWs, large folio
-> support needs to *always* be enabled on systems that say
-> CONFIG_BLOCK=y.
 
-Why CONFIG_BLOCK? I think it is enough if it comes from the FS side
-right? And for now, the only FS that needs that sort of bs > ps 
-guarantee is XFS with this series. Other filesystems such as bcachefs 
-that call mapping_set_large_folios() only enable it as an optimization
-and it is not needed for the filesystem to function.
+Thanks,
 
-So this is my conclusion from the conversation:
-- Add a dependency in Kconfig on THP for XFS until we fix the dependency
-  of large folios on THP
-- Add a BUILD_BUG_ON(XFS_MAX_BLOCKSIZE > MAX_PAGECACHE_ORDER)
-- Add a WARN_ON_ONCE() and clamp the min and max value in
-  mapping_set_folio_order_range() ?
+	M.
 
-Let me know what you all think @willy, @dave and @ryan.
-
---
-Pankaj
+-- 
+Without deviation from the norm, progress is not possible.
