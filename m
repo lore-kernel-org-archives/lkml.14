@@ -1,96 +1,106 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D860D146A8E;
-	Fri,  5 Jul 2024 09:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B171448E9
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720172413; cv=none; b=W4OiH1Rmn5LJ8aIHXLgojf5JT4zu+oqwcXn/DIuN4nQ5ZYSYwrv4rPmigion+6yGKTYVEbEwyD4PR0ebWo1UnZKBMJhQJs+yEqfNi4km1xtrHqDE2CyFdEvDRRdoUFcHEMHkj69SoRwJ5HMWsB/i51Z9QW0dyQF66IiTO+kmOx8=
+	t=1720172501; cv=none; b=A6iUL6b4+R8uB++OyZMTK6zYqU7le8xWQlmsk0hj02g6KaDtpv1hN9EJ3IKro48pcXDlcaJsWVq2oG3xoHQXsrWPiwsYgZHIzGzmct13JEfOTAXbe2ihtSSA09KvjdY4/X2xc0RE5s98oE7by1GUFGyVAhF0qTnCnAAambmQ574=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720172413; c=relaxed/simple;
-	bh=X/rJElrjxX53DIdXJSciIy4hopd2eYYkhKvDK+vBV9Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nyULGdi0Kv6KQYgJrdznrB7lfHkT0KXFr7LbeeeatZBk8cNRYeteSvyAK6mDAcH9wcRSsCSmf/BIMVpujxKYsaH4J6B30BxXEQLR3zFthWeESddECFRTA/kw5Qg+G+2htvWitZcr3clPSUT4Jxey1xS1d4kPvTDELNUQSqqiPJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowABXXkZpv4dmjEEkFA--.59861S2;
-	Fri, 05 Jul 2024 17:39:54 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: lee@kernel.org,
-	daniel.thompson@linaro.org,
-	jingoohan1@gmail.com,
-	deller@gmx.de
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH v2] backlight: l4f00242t03: Add check for spi_setup
-Date: Fri,  5 Jul 2024 17:28:00 +0800
-Message-Id: <20240705092800.3221159-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720172501; c=relaxed/simple;
+	bh=qcEniU896ql9bR0TYIg049YAiVeZdNXDkqEzxv761YA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kkTTbL7EnQqRhRTCMDD+jjTpK2z+f0R1q+bW730pvx3vArOgAW6xjrr48jML8H+DmMqOZPLzkFMzpFUKeCT6XatwhmdD8bDOlkLcZdIJ6dcGt1APrdQFm8dO+iiRfZVq81cRlZSPgxJPgchGtfsuZnyXnOFnaLbFkmmLWFjTI3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MJM8UTpo; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJM8UTpo"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7541fad560so163137966b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 02:41:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720172498; x=1720777298; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ibRuZtrZZMgYrymHUI421xN3Rf/Vq9uiSR3JQWnYUpE=;
+        b=MJM8UTpokH83WpWljFDZf63bhzB784ZKZF1fR8v+d/7MsCTOGGUCNsg/x8eea5XRY5
+         kC5H6ZTEeAAur/RMLGKctDwlaX2LdYtRO64UcanTlgEWuLZZEpDSmO1i+Cp6I5E1Kcv/
+         YlwZbcX/Su2FUdf49+Mf0ZLgnlVDvHb0drLg22rk967lv1FqNagz5BeAYjO3dxGZMGsY
+         dXbHAJ1cxWfZJZmvA7TGbfCEhu37vY98MtJ6AsNTQzveHeTxHWXAxh/b7DpYm/u2RU00
+         f72D8ngkUo23vrpnZetfuhClX+BD2KIleAVFlCnnPqovP6bY11JC8iK10Jab0XT4a8ed
+         L+rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720172498; x=1720777298;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ibRuZtrZZMgYrymHUI421xN3Rf/Vq9uiSR3JQWnYUpE=;
+        b=XYW6UTukYq00hJa73Hz5epQdQEBvgJHk1+iY9CfWboza7zcj5+Ae+Hh02Wxcu5cG6S
+         6TtMo3+vR1na9U201IdgcZ5Cps14lsFBaLJ1Sl4y6QTRav2AOH+5qg6O1tBGjVnFBAAG
+         XkqIKpbQCIX/TDA10uKFBAJ1I0g4hkKdyo4g1Nh38WKudi0zC71kTwhtU/SkZ2vyICg+
+         yZMu/AVbWY+UgRDGqEjPp7g6Qe86x1p3VbFDluYmzi6mraThte8iQ6rMWTDbLkrGUa+D
+         hgcGrk+3xtnXQXtpwmqwPN6zXl0/wgBC0skIMOlpM6yZTgge6P2BXX0hgOZyJT2TrP8x
+         /baQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCUQaTOSsPDlLugDKe2RIoOFKOd+YcbqDniLr7dDrX4GjVRy/cvsdnjjbBtwyqj3Y9v5kDZKr3mMl7zCc4mTc7HHkQ9hIruCy8jNtR
+X-Gm-Message-State: AOJu0YxfvA9f5LumkX32X4YqJjXCvQ7/qwFj5sbAGVA3UMMgA4un/mIS
+	YzB9LEeac5+oalKMNuUZR+4WIgkJWqaVgFXGt+YX62rGNz1saQeE
+X-Google-Smtp-Source: AGHT+IG0eaX32YQsM5Si8AqpWLnDXROtFypWQmSnHANlq0N5+MIE8QkDxw3b2jmPa/HPo+5iQU33cg==
+X-Received: by 2002:a17:906:6b19:b0:a77:c9cc:f96f with SMTP id a640c23a62f3a-a77c9ccfaaamr110873466b.7.1720172497452;
+        Fri, 05 Jul 2024 02:41:37 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:eb:d0d0:c7fd:c82c? ([2620:10d:c092:500::6:f496])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77c978763bsm53234366b.109.2024.07.05.02.41.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 02:41:37 -0700 (PDT)
+Message-ID: <3d56d422-8d12-4ba7-9aec-704f08ecf07d@gmail.com>
+Date: Fri, 5 Jul 2024 10:41:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABXXkZpv4dmjEEkFA--.59861S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw4xAr4xAr18JFWUuFyUKFg_yoWkXFgE9w
-	n2v3yxu3yjgr409w47JF1fJayS9F45uFWrWF4v9a4SyasxXrn3urW0qrnrGFyUZr18JF9x
-	CwnFkrWfZry7JjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbc8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GFWl
-	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
-	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY
-	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8KZXUUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/2] mm: store zero pages to be swapped out in a bitmap
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, shakeel.butt@linux.dev,
+ david@redhat.com, ying.huang@intel.com, hughd@google.com,
+ willy@infradead.org, yosryahmed@google.com, nphamcs@gmail.com,
+ chengming.zhou@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, Andi Kleen <ak@linux.intel.com>
+References: <20240627105730.3110705-1-usamaarif642@gmail.com>
+ <20240627105730.3110705-2-usamaarif642@gmail.com>
+ <20240627161852.GA469122@cmpxchg.org>
+ <44a57df4-e54c-47ee-96b8-e2361c549239@gmail.com>
+ <aa573e39-8d27-475d-a3a1-27fdcfdcef56@gmail.com>
+ <5743d4e4-3e34-4ac1-b4a9-0ddc4f0e624d@gmail.com>
+ <6f8b64f8-b7b0-42f4-a1d4-bf79624cff1e@gmail.com>
+ <20240704162256.f64fa9b6752d0d5e003f9c18@linux-foundation.org>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <20240704162256.f64fa9b6752d0d5e003f9c18@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add check for the return value of spi_setup() and return the error
-if it fails in order to catch the error.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
-Changelog:
 
-v1 -> v2:
+On 05/07/2024 02:22, Andrew Morton wrote:
+> On Mon, 1 Jul 2024 20:15:46 +0300 Usama Arif <usamaarif642@gmail.com> wrote:
+> 
+>> Changes from v7 (Johannes):
+>> - Give overview and explain how locking works in zeromap in comments
+>> - Add comment for why last word is checked first when checking if
+>>   folio is zero-filled
+>> - Merge is_folio_zero_filled and is_folio_page_zero_filled into
+>>   1 function.
+>> - Use folio_zero_range to fill a folio with zero at readtime.
+>> - Put swap_zeromap_folio_clear in an else branch (even if checkpatch
+>>   gives warning) and add comment to make it explicitly clear that it
+>>   needs to happen if folio is not zero filled.
+>> - add missing kvfree for zeromap incase swapon fails.
+> 
+> I queued the below as a delta against what was in mm-unstable.
+> 
+> Can we please get this nailed down?  
 
-1. Use dev_err_probe() to match other error paths
----
- drivers/video/backlight/l4f00242t03.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/video/backlight/l4f00242t03.c b/drivers/video/backlight/l4f00242t03.c
-index dd0874f8c7ff..4175a4603071 100644
---- a/drivers/video/backlight/l4f00242t03.c
-+++ b/drivers/video/backlight/l4f00242t03.c
-@@ -166,6 +166,7 @@ static const struct lcd_ops l4f_ops = {
- static int l4f00242t03_probe(struct spi_device *spi)
- {
- 	struct l4f00242t03_priv *priv;
-+	int ret;
- 
- 	priv = devm_kzalloc(&spi->dev, sizeof(struct l4f00242t03_priv),
- 				GFP_KERNEL);
-@@ -174,7 +175,9 @@ static int l4f00242t03_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, priv);
- 	spi->bits_per_word = 9;
--	spi_setup(spi);
-+	ret = spi_setup(spi);
-+	if (ret < 0)
-+		return dev_err_probe(&spi->dev, ret, "Unable to setup spi.\n");
- 
- 	priv->spi = spi;
- 
--- 
-2.25.1
-
+Thanks, yes its finished. There won't be anymore changes on this anymore.
