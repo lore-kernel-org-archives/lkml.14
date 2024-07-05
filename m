@@ -1,38 +1,34 @@
-Received: from norbury.hmeau.com (helcar.hmeau.com [216.24.177.18])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0063D149C42;
-	Fri,  5 Jul 2024 11:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.24.177.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0008214830E;
+	Fri,  5 Jul 2024 11:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720177295; cv=none; b=iq95KuvlTdGCEf/E/ltaIeclOJ97FzSsgGypt8qAaEZOgo7Fhd32blxJUZaQtuLrobi6KGyx2/HuRbFFRXXG2kPZ6DawPxUf/8v4L3LaoAXLHmRu7KuA8roHuTF3K0MLV6o4uGJ3V3Y87uyMf2ffV6XbTXz/B06nPE/fQ65z13Q=
+	t=1720177351; cv=none; b=DzBrP5WZy0YoslgkoUFONrVFrwWw68jMSDgkl2tDofKmaLBqs/ARL3/Dba7tV+rwGZtsRNOboc04kkAss+/4FD+UAoZNcg82gDxnfPcKBke7qYe8vTxEuSmsPXnvr1jgu39HlPbvilVvRv+UCeowYel0MoymwwJjSXQgDsjlYZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720177295; c=relaxed/simple;
-	bh=KzvfaDWRjU809yYCoeOQ+J97c8ySnCM5lrAb48DcVbQ=;
+	s=arc-20240116; t=1720177351; c=relaxed/simple;
+	bh=C+sa5eNWeY59YLL1mRSNYf1QD+iGhlpRvG2MnIJsyBs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMBztBsGEFctbN5e9JFjFP73Nedwy5y6l3qBq5wFSazYcYApdZJfPip0Ie9lnra8q2NPdYw1GEA/BQLkNiQWx6ReHo6cEL6oilavylMaiMn02QDG3tEm/Lv1QdTn+dq3/N975+H80Uxr+HfEk+lSgaAjyH3zCTrvp4FDQDlqBMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=216.24.177.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
-	by norbury.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1sPggW-006VDq-0H;
-	Fri, 05 Jul 2024 21:01:14 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 05 Jul 2024 21:01:00 +1000
-Date: Fri, 5 Jul 2024 21:01:00 +1000
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Horia Geanta <horia.geanta@nxp.com>
-Cc: Marco Felsch <m.felsch@pengutronix.de>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	Gaurav Jain <gaurav.jain@nxp.com>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] crypto: caam - enable hash api only on ARM platforms per
- default
-Message-ID: <ZofSbH2Fu/xLnzif@gondor.apana.org.au>
-References: <20240626155724.4045056-1-m.felsch@pengutronix.de>
- <258feb43-382d-4ea0-9164-357924350dec@nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnawdPYj/qpbuQbPzxns3HkJp5s4w3jNJ9wIBFtf9tDNINh8tWGF3c8Imemt5kZ7G7fjTRElVL4HETlvzgGCji2OwsN/qH18MBsSGyz9M6sydAMQOw53mMFFHlW0eknVmxicGFRUaxMi6rqrYV+m3H3wmo3zuz/v4Y8cjmTm2zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1sPghm-0000R9-Oe; Fri, 05 Jul 2024 13:02:18 +0200
+Date: Fri, 5 Jul 2024 13:02:18 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Hillf Danton <hdanton@sina.com>
+Cc: Florian Westphal <fw@strlen.de>, netfilter-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com
+Subject: Re: [PATCH nf] netfilter: nf_tables: unconditionally flush pending
+ work before notifier
+Message-ID: <20240705110218.GA1616@breakpoint.cc>
+References: <20240704105418.GA31039@breakpoint.cc>
+ <20240705104821.3202-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,19 +37,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <258feb43-382d-4ea0-9164-357924350dec@nxp.com>
+In-Reply-To: <20240705104821.3202-1-hdanton@sina.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, Jul 05, 2024 at 09:39:19AM +0000, Horia Geanta wrote:
->
-> I disagree with compiling out the hash support.
+Hillf Danton <hdanton@sina.com> wrote:
+> > 				lock trans mutex returns
+> >   				flush work
+> >   				free A
+> >   				unlock trans mutex
+> > 
+> If your patch is correct, it should survive a warning.
 > 
-> If needed, algorithm priority could be changed - even at runtime,
-> using NETLINK_CRYPTO messages (needs CONFIG_CRYPTO_USER=y/m).
+> #syz test https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git  1c5fc27bc48a
+> 
+> --- x/net/netfilter/nf_tables_api.c
+> +++ y/net/netfilter/nf_tables_api.c
+> @@ -11552,9 +11552,10 @@ static int nft_rcv_nl_event(struct notif
+>  
+>  	gc_seq = nft_gc_seq_begin(nft_net);
+>  
+> -	if (!list_empty(&nf_tables_destroy_list))
+> -		nf_tables_trans_destroy_flush_work();
+> +	nf_tables_trans_destroy_flush_work();
+>  again:
+> +	WARN_ON(!list_empty(&nft_net->commit_list));
+> +
 
-We should change the default priority.
+You could officially submit this patch to nf-next, this
+is a slow path and the transaction list must be empty here.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I think this change might be useful as it also documents
+this requirement.
