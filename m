@@ -1,489 +1,248 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1481581E3;
-	Fri,  5 Jul 2024 14:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7EB16848F
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 14:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720189694; cv=none; b=gjbK97d2KMlpW8s3cQHXjQQKa3uFGMZc3KeQmoNANhWQrnDeQsS6Pe1VWvPqKv2/+9qSt8MV8ODH/LNLO202zO21nQcJ5wt4OpCcIeQPPRp6A86Ig4nLTe5K9Ia2Wg0QdxF64+E7zQ6GQC1rD6K0u0oEMeaXXxbWzRbuE5bxWag=
+	t=1720189731; cv=none; b=Mu7g4F0W5NAeZpDzdHz/4ROyPfsm/Xr/VhAxrLupm1AYU6fGpWWY4kvd5CVxFTfjlKONdjLYE2+HeZIPVS8aZK/KcBiTh/s0IQXENxTNHNk7YGtU+MJ01EHvd4JBdGAxNdnsD68TvYHQyKuofHufahA0qTnB84heW7fy54I7sjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720189694; c=relaxed/simple;
-	bh=GWJTzrnc5dxJB/XfFLQi7Vj6y8KXDRSFYOGgsZH70LU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RUvr+QISEK9mL6yBw9UdjlIrDXlfzQKneUL2gpDCDgRN8vwWX+vp/fNvbLZSfY27NAHexF98crYjyknxdsHHPnilJFfEWccc58SlhgJ+t/LNnC/693KmudpdQtCVLJDGgOm/72v4dLtvR0nh6D7kESJlNWiWH7nhCQndYsHcOmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cy61sMY6; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720189731; c=relaxed/simple;
+	bh=lfwD5R5PfAuWEwjxvNbM1F0WSvw+HYmfOG6PZVXhS4U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dYD2Erx7DeKM6tjDy+kXyUIRrbYZp7fVVrlkktdQzC2b2qTK8+/o4bBlZ09AcaG1Q9Qb8deQfIkpShT+HWBkDA18MmIKG/E/qEXqxb4vGpwjsOghpBefPnPwcoDOxv3MY+GYDyyYEOFnyQDDf+FH0xFcobyXO2UqkAjB14ohU+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WTcpkC/m; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cy61sMY6"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-70b1207bc22so397757b3a.3;
-        Fri, 05 Jul 2024 07:28:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WTcpkC/m"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ee817dac89so26358561fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 07:28:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720189692; x=1720794492; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=wyfYVKD9xtxSHAXdztHJ99V3RCNC5chxeVnRJQXUl2Y=;
-        b=cy61sMY6gyOZmZkki2xXP+epgB/S8ua6N8BYqKI/5/CanfsxWam0AtYX6V9eKOCYXz
-         ar36lP0qsafHbxeXGMbEeS7/ObbvZ2IpH9HcTzwOjTb7eMW3IgOg+/PnZ7mMGRrvhA95
-         AgIFME4CM+UtQmZO+BzMKrxMR9qhNsne5UeGQC+uuzg1HcFC/DmMQB39U+PMkKxufZqs
-         T1jzgafGXDIc6kvTSw0mcjVkVhPsN2/h81bZIyCO/zI5l98MKQGENG5vfKLUOihYhI4D
-         SToE3ajDB+WPfwCUGllxbQ6RlfTtOMDIcFE810HSPYyzTeV2dAB42v+LSDkjWsOIf+oD
-         IQnw==
+        d=broadcom.com; s=google; t=1720189728; x=1720794528; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/nhZWpTG0eAAKMpJCJXFyyCAjnDAEq8Fh4DgUjr0Fp8=;
+        b=WTcpkC/mR8zyAzuxabiy9t9FEHcrP6so+GAx0NILOlDvL2OYHHRksmlsMd8DNHWuy/
+         ScLhtxwlH0Awf1MGGs78S0ENdCgiru5eZ1YvD2nioGtasKAfT80yXRvUQ/DvduCJprls
+         KLDFV83FNlXnfDIB4UhvSSzSP9EzQ/up8DPww=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720189692; x=1720794492;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wyfYVKD9xtxSHAXdztHJ99V3RCNC5chxeVnRJQXUl2Y=;
-        b=XnmyiR5gjVo5+ytufAb2xhgrz0SMi2yjtbEgn+MLIve4ochoEZj3yZBxvQzIWPzFiX
-         X/j/foYgNNGacYtHD+JE08gocllgE3rt+xZfgiWXOZkn6+rj0xKH6RlEipbU7rA+BOAX
-         +4Bt/HfJkKmBk/FGfNmWH0h7UddWcWKX1GUClAmUEtc9BrCAi3jLebdqz47HAx3RFtDu
-         67vi7plGelZZrzhBQ14rTCpF72JfXEFUpS+cGoPMh1miC9ljyIn4RnCxelqoVHL0MZbq
-         Fx4cVlOh8Zl9pN9Qw26vuaRFEtOpfhYwhOw9WGq6n071V78pxaCwtxdo3yhsXBAHZ1r2
-         ET0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOHSk4lajv89nd8gxEM/Z3R0LkBeZhFFVGKlGef545HBaVUyDSZdXK3PXBeXpE37eUdutCo0nlwFZb1HU31vBXm2MqEnHapYLh2ls=
-X-Gm-Message-State: AOJu0Yzgiqti/z6kc8Q++35imxBBybQECeixLTTKxRGR0/zOCy5oVwpE
-	KQdIRCAQ45D+2TFKcfepda9iDl9oE9XiWsTfI6r1cBbP8ZlLQ1DpOAMLfA==
-X-Google-Smtp-Source: AGHT+IFXjyereFMVHqpNRQvIERW82t+53cM2+U1LrRmpk254CTjl22TUIGokR+agzzdqyS75C3bXwg==
-X-Received: by 2002:a05:6a00:3d0b:b0:706:6af8:e08a with SMTP id d2e1a72fcca58-70b00a642bbmr6010310b3a.2.1720189691579;
-        Fri, 05 Jul 2024 07:28:11 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b13a79f23sm715491b3a.155.2024.07.05.07.28.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jul 2024 07:28:10 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <949d9c32-7722-4afe-a8ae-b2ef57d1cf01@roeck-us.net>
-Date: Fri, 5 Jul 2024 07:28:09 -0700
+        d=1e100.net; s=20230601; t=1720189728; x=1720794528;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/nhZWpTG0eAAKMpJCJXFyyCAjnDAEq8Fh4DgUjr0Fp8=;
+        b=DutednXCdknV0VRuPnskiR6sXYQjxp4BN3yVNw4j0PPEkXWND6McRr6vy5vx5HY9Id
+         06HUy+XsrORJcv9bY3CbpRUIS3mSgXsQSd5feXTy7sqerttgR3M/ap5exCDGgCGQZYNR
+         t5oAgNfqhOISx4APfpG6H51TdDYDEBJp/ESepi7JSYG4gFIthfdZmKtR8GnYihG9RBIH
+         q7G2a0pcm+1Gd6Xs3qmnq3pcurnCDzz7ZGpGdO14Dq8yfwkT8C7VRHc4/MWNKzE7SHGx
+         7GW0wJZelsFAulpTZavkJ+dnSKnF9zq45C9xzk9+EASN+ATDp5TSuQvOcX2Sq2C3Ayu1
+         s1Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtkbKeahHTnqln6bPdFWu39dH+J+yx0aOudiv0Z1jKzpklzNJC55pmsYthEue8zMrBBitVO+3r89u0dsYYXU1LoS4VKqptClI4cI1m
+X-Gm-Message-State: AOJu0YwuYxgVZhS8a8PLcxgpyPVQ9szW4IUpx/HBbXwlDkNgiRpHx4aH
+	37JoAwtYn5pOEBypW6qff+gYA08GGrHU5M7gATPGkbi+vVvM58dV5wX4p+33M0VebfBi+01Pbrr
+	IWyCEKy/7+NQBJ6pdplG5GksX10w7Y5WhlhYT
+X-Google-Smtp-Source: AGHT+IGqteEPvNmFETavcqRCqnx7D0L0eOHclysWQhX9SsGK3tR0w2MhpVQo9DHoSLD3vJi66n7FZBLNyjvc6V33Qdw=
+X-Received: by 2002:a05:6512:3c87:b0:52c:ccf3:f20a with SMTP id
+ 2adb3069b0e04-52ea0dffd18mr1919601e87.23.1720189727862; Fri, 05 Jul 2024
+ 07:28:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/11] hwmon: (amc6821) Convert to use regmap
-To: Quentin Schulz <quentin.schulz@cherry.de>, linux-hwmon@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Farouk Bouabid <farouk.bouabid@cherry.de>
-References: <20240704175207.2684012-1-linux@roeck-us.net>
- <20240704175207.2684012-10-linux@roeck-us.net>
- <773d8bea-7ddb-4138-b75c-219a52c82fc6@cherry.de>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <773d8bea-7ddb-4138-b75c-219a52c82fc6@cherry.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240703180300.42959-1-james.quinlan@broadcom.com>
+ <20240703180300.42959-11-james.quinlan@broadcom.com> <b8705488-2af8-473a-bb2e-7c4c5d5bd736@suse.de>
+In-Reply-To: <b8705488-2af8-473a-bb2e-7c4c5d5bd736@suse.de>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Fri, 5 Jul 2024 10:28:35 -0400
+Message-ID: <CA+-6iNz5rsb0T+rYKJ91q-M4=QcfO6VtPnSp_vMokWpx1FJoRg@mail.gmail.com>
+Subject: Re: [PATCH v2 10/12] PCI: brcmstb: Check return value of all
+ reset_control_xxx calls
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, bcm-kernel-feedback-list@broadcom.com, 
+	jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000b2a3e5061c80e16e"
 
-On 7/5/24 03:59, Quentin Schulz wrote:
-> Hi Guenter,
-> 
-> On 7/4/24 7:52 PM, Guenter Roeck wrote:
->> Use regmap for register accesses and caching.
->>
->> While at it, use sysfs_emit() instead of sprintf() to write sysfs
->> attribute data, and remove spurious debug messages which would only
->> be seen as result of a bug in the code. Also make sure that error
->> codes are propagated and not replaced with -EIO.
->>
->> While at it, introduce rounding of written temperature values and for
->> internal calculations to reduce deviation from written values and as
->> much as possible.
->>
->> No functional change intended except for differences introduced by
->> rounding.
->>
->> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->> ---
->> v3: Add more details to patch description
->>      Cache all attributes
->>      Introduce rounding when writing attributes and for some calculations
->>      Always return error codes from regmap operations; never replace with
->>      -EIO
->>
->> v2: Drop another spurious debug message in this patch instead of patch 10
->>      Add missing "select REGMAP_I2C" to Kconfig
->>      Change misleading variable name from 'mask' to 'mode'.
->>      Use sysfs_emit instead of sprintf everywhere
->>
->>
->>   drivers/hwmon/Kconfig   |   1 +
->>   drivers/hwmon/amc6821.c | 812 ++++++++++++++++++----------------------
->>   2 files changed, 373 insertions(+), 440 deletions(-)
->>
->> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->> index e14ae18a973b..a8fa87a96e8f 100644
->> --- a/drivers/hwmon/Kconfig
->> +++ b/drivers/hwmon/Kconfig
->> @@ -2127,6 +2127,7 @@ config SENSORS_ADS7871
->>   config SENSORS_AMC6821
->>       tristate "Texas Instruments AMC6821"
->>       depends on I2C
->> +    select REGMAP_I2C
->>       help
->>         If you say yes here you get support for the Texas Instruments
->>         AMC6821 hardware monitoring chips.
->> diff --git a/drivers/hwmon/amc6821.c b/drivers/hwmon/amc6821.c
->> index 295a9148779d..a5abd36a1430 100644
->> --- a/drivers/hwmon/amc6821.c
->> +++ b/drivers/hwmon/amc6821.c
->> @@ -8,15 +8,18 @@
->>    * Copyright (C) 2007 Hans J. Koch <hjk@hansjkoch.de>
->>    */
->> +#include <linux/bitfield.h>
->> +#include <linux/bitops.h>
->>   #include <linux/bits.h>
->>   #include <linux/err.h>
->>   #include <linux/hwmon.h>
->>   #include <linux/hwmon-sysfs.h>
->>   #include <linux/i2c.h>
->>   #include <linux/init.h>
->> -#include <linux/jiffies.h>
->> +#include <linux/minmax.h>
->>   #include <linux/module.h>
->>   #include <linux/mutex.h>
->> +#include <linux/regmap.h>
->>   #include <linux/slab.h>
->>   /*
->> @@ -44,6 +47,7 @@ module_param(init, int, 0444);
->>   #define AMC6821_REG_CONF4        0x04
->>   #define AMC6821_REG_STAT1        0x02
->>   #define AMC6821_REG_STAT2        0x03
->> +#define AMC6821_REG_TEMP_LO        0x06
->>   #define AMC6821_REG_TDATA_LOW        0x08
->>   #define AMC6821_REG_TDATA_HI        0x09
->>   #define AMC6821_REG_LTEMP_HI        0x0A
->> @@ -61,11 +65,8 @@ module_param(init, int, 0444);
->>   #define AMC6821_REG_DCY_LOW_TEMP    0x21
->>   #define AMC6821_REG_TACH_LLIMITL    0x10
->> -#define AMC6821_REG_TACH_LLIMITH    0x11
->>   #define AMC6821_REG_TACH_HLIMITL    0x12
->> -#define AMC6821_REG_TACH_HLIMITH    0x13
->>   #define AMC6821_REG_TACH_SETTINGL    0x1e
->> -#define AMC6821_REG_TACH_SETTINGH    0x1f
->>   #define AMC6821_CONF1_START        BIT(0)
->>   #define AMC6821_CONF1_FAN_INT_EN    BIT(1)
->> @@ -108,6 +109,9 @@ module_param(init, int, 0444);
->>   #define AMC6821_STAT2_L_THERM        BIT(6)
->>   #define AMC6821_STAT2_THERM_IN        BIT(7)
->> +#define AMC6821_TEMP_SLOPE_MASK        GENMASK(2, 0)
->> +#define AMC6821_TEMP_LIMIT_MASK        GENMASK(7, 3)
->> +
->>   enum {IDX_TEMP1_INPUT = 0, IDX_TEMP1_MIN, IDX_TEMP1_MAX,
->>       IDX_TEMP1_CRIT, IDX_TEMP2_INPUT, IDX_TEMP2_MIN,
->>       IDX_TEMP2_MAX, IDX_TEMP2_CRIT,
->> @@ -130,224 +134,155 @@ static const u8 fan_reg_low[] = {AMC6821_REG_TDATA_LOW,
->>               AMC6821_REG_TACH_HLIMITL,
->>               AMC6821_REG_TACH_SETTINGL, };
->> -static const u8 fan_reg_hi[] = {AMC6821_REG_TDATA_HI,
->> -            AMC6821_REG_TACH_LLIMITH,
->> -            AMC6821_REG_TACH_HLIMITH,
->> -            AMC6821_REG_TACH_SETTINGH, };
->> -
->>   /*
->>    * Client data (each client gets its own)
->>    */
->>   struct amc6821_data {
->> -    struct i2c_client *client;
->> +    struct regmap *regmap;
->>       struct mutex update_lock;
->> -    bool valid; /* false until following fields are valid */
->> -    unsigned long last_updated; /* in jiffies */
->> -
->> -    /* register values */
->> -    int temp[TEMP_IDX_LEN];
->> -
->> -    u16 fan[FAN1_IDX_LEN];
->> -    u8 fan1_pulses;
->> -
->> -    u8 pwm1;
->> -    u8 temp1_auto_point_temp[3];
->> -    u8 temp2_auto_point_temp[3];
->> -    u8 pwm1_auto_point_pwm[3];
->> -    u8 pwm1_enable;
->> -    u8 pwm1_auto_channels_temp;
->> -
->> -    u8 stat1;
->> -    u8 stat2;
->>   };
->> -static struct amc6821_data *amc6821_update_device(struct device *dev)
->> +/*
->> + * Return set of three temperatures:
-> 
-> It actually returns 0 if successful, negative errno otherwise (matches regmap_* return values).
-> 
-I'll rephrase.
+--000000000000b2a3e5061c80e16e
+Content-Type: multipart/alternative; boundary="000000000000ad1a33061c80e196"
 
-> But it does write to temps array with those values.
-> 
-> Would be nice to say what we're expecting in channel, i.e. 0 for Remote and 1 for Local.
-> 
+--000000000000ad1a33061c80e196
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-1 for remote
+On Thu, Jul 4, 2024 at 9:49=E2=80=AFAM Stanimir Varbanov <svarbanov@suse.de=
+> wrote:
 
->> + * temps[0]: Passive cooling temperature, applies to both channels
->> + * temps[1]: Low temperature, start slope calculations
->> + * temps[2]: High temperature
->> + */
-> 
-> IIUC, we have different units there, >> 3 (/4) °C for 0 and 2, but °C for temps[1] ? If I didn't misunderstand, I think it's worth making it explicit in the docs (or make them have the same unit).
-> 
+> Hi Jim,
+>
+> On 7/3/24 21:02, Jim Quinlan wrote:
+> > In some cases the result of a reset_control_xxx() call have been ignore=
+d.
+> > Now we check all return values of such functions and at the least issue=
+ a
+> > dev_err(...) message if the return value is not zero.
+> >
+>
+> When I made the comment for the return value of reset_control_xxx API I
+> was thinking for propagating the error to upper PCI layer and not just
+> print it.
+>
+> Printing the error is a step forward but I don't think it is enough.
+> Please drop the patch from the series, we can fix that problem in the
+> driver with follow up patches.
+>
 
-It should be all in °C.
+I'll return the value up the chain as you want as there is a list of things
+anyway for v3.
 
->> +static int amc6821_get_auto_point_temps(struct regmap *regmap, int channel, u8 *temps)
->>   {
->> -    struct amc6821_data *data = dev_get_drvdata(dev);
->> -    struct i2c_client *client = data->client;
->> -    int timeout = HZ;
->> -    u8 reg;
->> -    int i;
->> +    u32 pwm, regval;
->> +    int err;
->> -    mutex_lock(&data->update_lock);
->> +    err = regmap_read(regmap, AMC6821_REG_DCY_LOW_TEMP, &pwm);
->> +    if (err)
->> +        return err;
->> -    if (time_after(jiffies, data->last_updated + timeout) ||
->> -            !data->valid) {
->> +    err = regmap_read(regmap, AMC6821_REG_PSV_TEMP, &regval);
->> +    if (err)
->> +        return err;
->> +    temps[0] = regval;
->> -        for (i = 0; i < TEMP_IDX_LEN; i++)
->> -            data->temp[i] = (int8_t)i2c_smbus_read_byte_data(
->> -                client, temp_reg[i]);
->> +    err = regmap_read(regmap,
->> +              channel ? AMC6821_REG_RTEMP_FAN_CTRL : AMC6821_REG_LTEMP_FAN_CTRL,
->> +              &regval);
->> +    if (err)
->> +      return err;
->> +    temps[1] = (regval & 0xF8) >> 1;
-> 
-> I think we want to use AMC6821_TEMP_LIMIT_MASK here instead of 0xF8?
-> 
-> I guess we could also use FIELD_GET?
-> 
+Regards
+Jim Quinlan
+Broadcom STB
 
-Yes. The value in the register is in °C * 4, so that is going to be
-	temps[1] = FIELD_GET(regval, AMC6821_TEMP_LIMIT_MASK) * 4;
-which improves readability and should also clarify the units a bit
-better.
+>
+> ~Stan
+>
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 33 ++++++++++++++++++++-------
+> >  1 file changed, 25 insertions(+), 8 deletions(-)
+> >
+>
 
-Note hat
-	(regval & 0xF8) >> 1;
-resulted in the temperature in °C (shift right 1 instead of 3).
+--000000000000ad1a33061c80e196
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->> -        data->stat1 = i2c_smbus_read_byte_data(client,
->> -            AMC6821_REG_STAT1);
->> -        data->stat2 = i2c_smbus_read_byte_data(client,
->> -            AMC6821_REG_STAT2);
->> +    regval &= 0x07;
-> 
-> I think we want to use AMC6821_TEMP_SLOPE_MASK instead of 0x07 here?
-> 
-> I guess we could also use FIELD_GET?
-> 
-Done, making it
-	regval = BIT(5) >> FIELD_GET(regval, AMC6821_TEMP_SLOPE_MASK);
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
+<div dir=3D"ltr" class=3D"gmail_attr">On Thu, Jul 4, 2024 at 9:49=E2=80=AFA=
+M Stanimir Varbanov &lt;<a href=3D"mailto:svarbanov@suse.de">svarbanov@suse=
+.de</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"marg=
+in:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1e=
+x">Hi Jim,<br>
+<br>
+On 7/3/24 21:02, Jim Quinlan wrote:<br>
+&gt; In some cases the result of a reset_control_xxx() call have been ignor=
+ed.<br>
+&gt; Now we check all return values of such functions and at the least issu=
+e a<br>
+&gt; dev_err(...) message if the return value is not zero.<br>
+&gt; <br>
+<br>
+When I made the comment for the return value of reset_control_xxx API I<br>
+was thinking for propagating the error to upper PCI layer and not just<br>
+print it.<br>
+<br>
+Printing the error is a step forward but I don&#39;t think it is enough.<br=
+>
+Please drop the patch from the series, we can fix that problem in the<br>
+driver with follow up patches.<br></blockquote><div><br></div><div>I&#39;ll=
+ return the value up the chain as you want as there is a list of things any=
+way for v3.</div><div><br></div><div>Regards</div><div>Jim Quinlan</div><di=
+v>Broadcom STB=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin=
+:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"=
+>
+<br>
+~Stan<br>
+<br>
+&gt; Signed-off-by: Jim Quinlan &lt;<a href=3D"mailto:james.quinlan@broadco=
+m.com" target=3D"_blank">james.quinlan@broadcom.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 drivers/pci/controller/pcie-brcmstb.c | 33 ++++++++++++++++++++-=
+------<br>
+&gt;=C2=A0 1 file changed, 25 insertions(+), 8 deletions(-)<br>
+&gt; <br>
+</blockquote></div></div>
 
-> [...]
-> 
->>   static ssize_t temp_auto_point_temp_store(struct device *dev,
->>                         struct device_attribute *attr,
->>                         const char *buf, size_t count)
->>   {
->> -    struct amc6821_data *data = amc6821_update_device(dev);
->> -    struct i2c_client *client = data->client;
->> +    struct amc6821_data *data = dev_get_drvdata(dev);
->>       int ix = to_sensor_dev_attr_2(attr)->index;
->>       int nr = to_sensor_dev_attr_2(attr)->nr;
->> -    u8 *ptemp;
->> -    u8 reg;
->> -    int dpwm;
->> +    struct regmap *regmap = data->regmap;
->> +    u8 temps[3], otemps[3];
->>       long val;
->> -    int ret = kstrtol(buf, 10, &val);
->> +    int ret;
->> +
->> +    ret = kstrtol(buf, 10, &val);
->>       if (ret)
->>           return ret;
->> -    switch (nr) {
->> -    case 1:
->> -        ptemp = data->temp1_auto_point_temp;
->> -        reg = AMC6821_REG_LTEMP_FAN_CTRL;
->> -        break;
->> -    case 2:
->> -        ptemp = data->temp2_auto_point_temp;
->> -        reg = AMC6821_REG_RTEMP_FAN_CTRL;
->> -        break;
->> -    default:
->> -        dev_dbg(dev, "Unknown attr->nr (%d).\n", nr);
->> -        return -EINVAL;
->> -    }
->> -
->>       mutex_lock(&data->update_lock);
->> -    data->valid = false;
->> +
->> +    ret = amc6821_get_auto_point_temps(data->regmap, nr, temps);
->> +    if (ret)
->> +        goto unlock;
->> +    ret = amc6821_get_auto_point_temps(data->regmap, 1 - nr, otemps);
->> +    if (ret)
->> +        goto unlock;
-> 
-> We could reduce the scope of otemps since it's only used in the ix==0 case below.
-> 
-Done.
+--000000000000ad1a33061c80e196--
 
->>       switch (ix) {
->>       case 0:
->> -        ptemp[0] = clamp_val(val / 1000, 0,
->> -                     data->temp1_auto_point_temp[1]);
->> -        ptemp[0] = clamp_val(ptemp[0], 0,
->> -                     data->temp2_auto_point_temp[1]);
->> -        ptemp[0] = clamp_val(ptemp[0], 0, 63);
->> -        if (i2c_smbus_write_byte_data(
->> -                    client,
->> -                    AMC6821_REG_PSV_TEMP,
->> -                    ptemp[0])) {
->> -                dev_err(&client->dev,
->> -                    "Register write error, aborting.\n");
->> -                count = -EIO;
->> -        }
->> -        goto EXIT;
->> +        /*
->> +         * Passive cooling temperature. Range limit against low limit
->> +         * of both channels.
->> +         */
->> +        val = DIV_ROUND_CLOSEST(clamp_val(val, 0, 63000), 1000);
-> 
-> This was already in the original code, but I think 64°C should be doable as well? The datasheet says:
-> 
-> """
-> The PSV ranges from 0°C to +64°C.
-> """
-> 
+--000000000000b2a3e5061c80e16e
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-Yes, but I am sure the datasheet is wrong here. The register has 6 active bits,
-which means the highest possible value is 0x3f or 63.
-
-> And there's a PSV8 bit we can write, meaning we can do (1 << 8) with a step of 4°C which gives us 64°C? In a separate commit though, to not mix too many fixes into one, making it easier for people to identify and possibly revert them if necessary.
-> 
-Not sure I understand. Can you clarify ?
-
-Temperature bit assignments in the datasheet are confusing. PSV3
-means full degrees C, PSV8 means 32 degrees C. That is all in one register.
-On the other side, L-TEMP0 reflects _4_ degrees C.
-
-Am I missing something ?
-
->> +        val = clamp_val(val, 0, min(temps[1], otemps[1]));
->> +        ret = regmap_write(regmap, AMC6821_REG_PSV_TEMP, val);
->> +        break;
->>       case 1:
->> -        ptemp[1] = clamp_val(val / 1000, (ptemp[0] & 0x7C) + 4, 124);
->> -        ptemp[1] &= 0x7C;
->> -        ptemp[2] = clamp_val(ptemp[2], ptemp[1] + 1, 255);
->> +        /*
->> +         * Low limit; must be between passive and high limit,
->> +         * and not exceed 124. Step size is 4 degrees C.
->> +         */
->> +        val = clamp_val(val, DIV_ROUND_UP(temps[0], 4) * 4000, 124000);
-> 
-> Oof. I think the issue is that we have different units for temps[0], temps[1] and temps[2]?
-> 
-> temps[1] is in °C, while temps[0] is in °C >> 3 (so / 4) because we read from PSV-Temp register directly, which only exposes PSV[8:3] and PSV[2:0] are 0. I'm wondering if we shouldn't just have the same unit when filled by amc6821_get_auto_point_temps?
-> 
-No, they are all in °C. I think the confusion arises from L-TEMP[0..4] which is in multiples
-of 4 °C. Since L-TEMP needs to be in multiples of 4 degrees C, and temps[0] is in degrees C,
-the above sets the lower limit to the next multiple of 4 °C at or above temps[0].
-The upper limit is 124 degrees C per datasheet.
-
-> temps[2] is also °C >> 3 (4°C step in the register). I think we would benefit from having the same unit here to make it easier to do maths with temps[1] and temps[0/2]. What do you think?
-> 
-> If we didn't have this °C >> 3 formula, we could simply divide by 1000 to get the value and then do the same maths for writing to the registers (except a different offset for temps[0] than temps[1/2]).
-> 
-> 
->> +        temps[1] = DIV_ROUND_CLOSEST(val, 4000) * 4;
-
-The DIV_ROUND_CLOSEST() here is to improve rounding to 4 degrees C. The resulting value
-in temp[1] is {0, 4, 8, ... 124}.
-
->> +        val = temps[1] / 4;
-
-This is the register value to be written.
-
->> +        /* Auto-adjust high limit if necessary */
->> +        temps[2] = clamp_val(temps[2], temps[1] + 1, 255);
-> 
-> Is this why we didn't want 255 for temps[1]? Because then we could have 256 here?
-> 
-
-The highest possible value for temps[1] is 124, so the lower clamp value
-would never be 256. The above only ensures that temps[2] is > temps[1].
-
->> +        ret = regmap_update_bits(regmap,
->> +                     nr ? AMC6821_REG_RTEMP_FAN_CTRL
->> +                        : AMC6821_REG_LTEMP_FAN_CTRL,
->> +                     AMC6821_TEMP_LIMIT_MASK,
->> +                     FIELD_PREP(AMC6821_TEMP_LIMIT_MASK, val));
->> +        if (ret)
->> +            break;
->> +        ret = set_slope_register(regmap, nr, temps);
-> 
-> I'm wondering if we shouldn't put the writes to the TEMP_LIMIT_MASK and AMC6821_TEMP_SLOPE_MASK into the same regmap write, otherwise there's a small timeframe during which the slope is not matching the TEMP_LIMIT. I guess it's probably not that big of a deal but still bringing this up.
-> 
-
-Hmm, you mean to let set_slope_register() also update the low temperature limit
-based on temps[1] ? Excellent idea. I'll do that; it will save a register write
-to the chip.
-
-Thanks,
-Guenter
-
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCH9sIa/JyXGDoVKI/tNRfLjIucG2bu
+T/cBiaKNKuw7bzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
+MDUxNDI4NDhaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAOBArrpeToFX0+enob0SzGhqRfG76PKBqHS25E1lvXntxWNIk
+NCzz42RovERNtJVyOBZtQnqaF0TD+QFYIXGEb8e7zDv3BDz32RLVIARL/jBEO2OpNrf8V2ipzLPe
+tweJjnNnl9MwY4N2nUSZr3KuLSCeb/KGN3jXlu7IZqjdE117NjLgdY/a2Ksc4Xdp9xoyw2Ul2qha
+dCLtC89DSkUbyvHfHdjCxaWBkKyvmYdXixbVbOXGNfJUuSwzq2WczMhBb1OkAG2AQbKZv45UJ2ny
+6F/4L9E6eutO09PrZfp5Oeu65rpbgp9hSE+D7sIFEaEhLbVgVyPT1PQVMSM9IfqL/Q==
+--000000000000b2a3e5061c80e16e--
