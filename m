@@ -1,36 +1,35 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22275155305;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443DB155A25;
 	Fri,  5 Jul 2024 13:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720186460; cv=none; b=qArmYuusdVXZuo6HJrglOn+NzsfOSsRkFGKc5Mp2YEVFVl1CveT3kdV8VnmFFRfiV28G7kxay9ggicqmsCTcaA1V6VBB8uEFvaPRTBXx5wEln6h8sN9vUQ0PX9H6bw4/X4GiG/ctwuAm2V3AXbnvP8Rnc21l1lkZj9kk+WpU6Ao=
+	t=1720186461; cv=none; b=tGI/V/Fj3UssVQWC8YeqtoQMRGZkB9fMWARoJrXTN1Huwn8qDZnVHg7YhupCL0jCUjTxUiehteVUIMHP7bxoqyA9+22QByUxQEDmWBwkZPOYiU4JrbXJRxDHbyUXcdkYqHW1KQWlv/vEY1FVzAWqwdeXvAt/9o3EOrk89L2LFR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720186460; c=relaxed/simple;
-	bh=hc4cV+xJKLe9gUryam5x32eujRILky1DfHOfzcfSoco=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WIcrErZIDh4T3/41ldu+xxdOiCKPTj2gMiB9jbbW8gVbCEb0WSbnByI6kV+D+cU70mqjnFaWtSGJdaTl737HIG4xy7/4jWeJ9lyJ6ZjwxbAj2uWUdT0LJ4SI8eA+doLacNP/R5ww8CzwWpNuY1CzXm+jcL1np/vLLzX6zhbzxpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=IMRddXfJ; arc=none smtp.client-ip=193.104.135.124
+	s=arc-20240116; t=1720186461; c=relaxed/simple;
+	bh=Ut2thkfTCY+dzcyEc4GpL/dIubksO+vlTjNGrJChsok=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZBuLvH5SwVnDgTht3hnNrqPkJPFAyFzLx9wkAvSxAZTcURHcsZz9D3mTIPW7EZFVT1/Mqcsj48MDwgkNkuUr953ZXO8xKGYiz2/22LYtWCAdHLmFG98I/tFzWEOZdh1DIk6j9sxvx9oV65MuvtBagWurgDL2NKKDTrWifM7keYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=eALgaQeH; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="IMRddXfJ"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="eALgaQeH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1720186451;
-	bh=hc4cV+xJKLe9gUryam5x32eujRILky1DfHOfzcfSoco=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IMRddXfJuP5rh04eP84x0dMONLh0inpl7k4UUA4bPbCq9v1mC9U8TT/wXt2w2e0PO
-	 TXjUsWzZghHjzxXKZh68apk7Z+rhFBjglS+yVWIE6MZy9U9z7//mGAkejOfqocLWmg
-	 mGw4ss0xBOmqnkdtOTexabGMQXxhdHCsxLvq1U2AlowB+7MQUWAtqYbZcI7UkJVBs9
-	 X3R+ec3LpFKuEQopC+nCk09wxcTsBbtP6hPdgeNWaKzsGmcUk3lzGXaiPgYwmpq7P9
-	 iK5/MhW3PtJRr5igpAUqW1a9WwmKI/EpMqzGNrL1b8aW2Z7ptWIdeblea3LE18TGmX
-	 Fygrx/2YDH2ng==
+	bh=Ut2thkfTCY+dzcyEc4GpL/dIubksO+vlTjNGrJChsok=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eALgaQeHRk7+sykJRDVvA9e1JB4i/aKBBNB2IzOeE+oCcbPm4dxF9stDkwPKoolem
+	 lnp98Z5gMjaNbgbfY7lp5xl5datEBUypPLPaQN5fACGrW9wP34EKq596iRihNN8Yii
+	 nA9TvEoY7gfKJxe7JUNIZ/KuU9kCVdXGOVKB+NUsh+AzjdXpCHN1zmNuhVOfvQYmA/
+	 Isf1ZPZYvPbQIowHM3Jr0oDvAYsETgdePw337ceCa64kxCrX1ZnmrOiUXGgTxsHhHR
+	 23MyhIMANaNB7zxO4OCs0jQ8MnzLFaveQsw1ZBnGdoeUjnk+vxiE2xgmht08AAIqqF
+	 5WTjWuo/A+jzg==
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 000996008B;
-	Fri,  5 Jul 2024 13:34:10 +0000 (UTC)
+	by mail1.fiberby.net (Postfix) with ESMTPSA id E574960078;
+	Fri,  5 Jul 2024 13:34:09 +0000 (UTC)
 Received: by x201s (Postfix, from userid 1000)
-	id 5BA302047A2; Fri, 05 Jul 2024 13:33:50 +0000 (UTC)
+	id 4601B20474A; Fri, 05 Jul 2024 13:33:49 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: netdev@vger.kernel.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -49,12 +48,10 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Florian Westphal <fw@strlen.de>,
 	Alexander Lobakin <aleksander.lobakin@intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 03/10] net/sched: cls_flower: prepare fl_{set,dump}_key_flags() for ENC_FLAGS
-Date: Fri,  5 Jul 2024 13:33:39 +0000
-Message-ID: <20240705133348.728901-4-ast@fiberby.net>
+Subject: [PATCH net-next v2 00/10] flower: rework TCA_FLOWER_KEY_ENC_FLAGS usage
+Date: Fri,  5 Jul 2024 13:33:36 +0000
+Message-ID: <20240705133348.728901-1-ast@fiberby.net>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240705133348.728901-1-ast@fiberby.net>
-References: <20240705133348.728901-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,117 +61,57 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Prepare fl_set_key_flags/fl_dump_key_flags() for use with
-TCA_FLOWER_KEY_ENC_FLAGS{,_MASK}.
+This series reworks the recently added TCA_FLOWER_KEY_ENC_FLAGS
+attribute, to be more like TCA_FLOWER_KEY_FLAGS, and use the unused
+u32 flags field in FLOW_DISSECTOR_KEY_ENC_CONTROL, instead of adding
+a new flags field as FLOW_DISSECTOR_KEY_ENC_FLAGS.
 
-This patch adds an encap argument, similar to fl_set_key_ip/
-fl_dump_key_ip(), and determine the flower keys based on the
-encap argument, and use them in the rest of the two functions.
+I have defined the new FLOW_DIS_F_* and TCA_FLOWER_KEY_FLAGS_*
+flags to co-exist with the existing flags, so the meaning
+of the flags field in struct flow_dissector_key_control is not
+depending on the context it is used in. If we run out of bits
+then we can always split them up later, if we really want to.
+Future flags might also be valid in both contexts.
 
-Since these functions are so far, only called with encap set false,
-then there is no functional change.
+iproute2 RFC patch: (needs update of uAPI headers)
+https://lore.kernel.org/897379f1850a50d8c320ca3facd06c5f03943bac.1719506876.git.dcaratti@redhat.com/
 
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
-Tested-by: Davide Caratti <dcaratti@redhat.com>
 ---
- net/sched/cls_flower.c | 40 ++++++++++++++++++++++++++++++----------
- 1 file changed, 30 insertions(+), 10 deletions(-)
+Changelog:
 
-diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
-index eef570c577ac7..6a5cecfd95619 100644
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -1166,19 +1166,28 @@ static void fl_set_key_flag(u32 flower_key, u32 flower_mask,
- 	}
- }
- 
--static int fl_set_key_flags(struct nlattr **tb, u32 *flags_key,
-+static int fl_set_key_flags(struct nlattr **tb, bool encap, u32 *flags_key,
- 			    u32 *flags_mask, struct netlink_ext_ack *extack)
- {
-+	int fl_key, fl_mask;
- 	u32 key, mask;
- 
-+	if (encap) {
-+		fl_key = TCA_FLOWER_KEY_ENC_FLAGS;
-+		fl_mask = TCA_FLOWER_KEY_ENC_FLAGS_MASK;
-+	} else {
-+		fl_key = TCA_FLOWER_KEY_FLAGS;
-+		fl_mask = TCA_FLOWER_KEY_FLAGS_MASK;
-+	}
-+
- 	/* mask is mandatory for flags */
--	if (!tb[TCA_FLOWER_KEY_FLAGS_MASK]) {
-+	if (NL_REQ_ATTR_CHECK(extack, NULL, tb, fl_mask)) {
- 		NL_SET_ERR_MSG(extack, "Missing flags mask");
- 		return -EINVAL;
- 	}
- 
--	key = be32_to_cpu(nla_get_be32(tb[TCA_FLOWER_KEY_FLAGS]));
--	mask = be32_to_cpu(nla_get_be32(tb[TCA_FLOWER_KEY_FLAGS_MASK]));
-+	key = be32_to_cpu(nla_get_be32(tb[fl_key]));
-+	mask = be32_to_cpu(nla_get_be32(tb[fl_mask]));
- 
- 	*flags_key  = 0;
- 	*flags_mask = 0;
-@@ -2086,7 +2095,7 @@ static int fl_set_key(struct net *net, struct nlattr **tb,
- 		return ret;
- 
- 	if (tb[TCA_FLOWER_KEY_FLAGS]) {
--		ret = fl_set_key_flags(tb, &key->control.flags,
-+		ret = fl_set_key_flags(tb, false, &key->control.flags,
- 				       &mask->control.flags, extack);
- 		if (ret)
- 			return ret;
-@@ -3084,12 +3093,22 @@ static void fl_get_key_flag(u32 dissector_key, u32 dissector_mask,
- 	}
- }
- 
--static int fl_dump_key_flags(struct sk_buff *skb, u32 flags_key, u32 flags_mask)
-+static int fl_dump_key_flags(struct sk_buff *skb, bool encap,
-+			     u32 flags_key, u32 flags_mask)
- {
--	u32 key, mask;
-+	int fl_key, fl_mask;
- 	__be32 _key, _mask;
-+	u32 key, mask;
- 	int err;
- 
-+	if (encap) {
-+		fl_key = TCA_FLOWER_KEY_ENC_FLAGS;
-+		fl_mask = TCA_FLOWER_KEY_ENC_FLAGS_MASK;
-+	} else {
-+		fl_key = TCA_FLOWER_KEY_FLAGS;
-+		fl_mask = TCA_FLOWER_KEY_FLAGS_MASK;
-+	}
-+
- 	if (!memchr_inv(&flags_mask, 0, sizeof(flags_mask)))
- 		return 0;
- 
-@@ -3105,11 +3124,11 @@ static int fl_dump_key_flags(struct sk_buff *skb, u32 flags_key, u32 flags_mask)
- 	_key = cpu_to_be32(key);
- 	_mask = cpu_to_be32(mask);
- 
--	err = nla_put(skb, TCA_FLOWER_KEY_FLAGS, 4, &_key);
-+	err = nla_put(skb, fl_key, 4, &_key);
- 	if (err)
- 		return err;
- 
--	return nla_put(skb, TCA_FLOWER_KEY_FLAGS_MASK, 4, &_mask);
-+	return nla_put(skb, fl_mask, 4, &_mask);
- }
- 
- static int fl_dump_key_geneve_opt(struct sk_buff *skb,
-@@ -3632,7 +3651,8 @@ static int fl_dump_key(struct sk_buff *skb, struct net *net,
- 	if (fl_dump_key_ct(skb, &key->ct, &mask->ct))
- 		goto nla_put_failure;
- 
--	if (fl_dump_key_flags(skb, key->control.flags, mask->control.flags))
-+	if (fl_dump_key_flags(skb, false, key->control.flags,
-+			      mask->control.flags))
- 		goto nla_put_failure;
- 
- 	if (fl_dump_key_val(skb, &key->hash.hash, TCA_FLOWER_KEY_HASH,
+v2:
+- Refactor flower control flag definitions
+  (requested by Jakub and Alexander)
+- Add Tested-by from Davide Caratti on patch 3-10.
+
+v1: https://lore.kernel.org/20240703104600.455125-1-ast@fiberby.net/
+- Change netlink attribute type from NLA_U32 to NLA_BE32.
+- Ensure that the FLOW_DISSECTOR_KEY_ENC_CONTROL
+  is also masked for non-IP.
+- Fix preexisting typo in kdoc for struct flow_dissector_key_control
+  (all suggested by Davide)
+
+RFC: https://lore.kernel.org/20240611235355.177667-1-ast@fiberby.net/
+
+Asbjørn Sloth Tønnesen (10):
+  net/sched: flower: refactor tunnel flag definitions
+  net/sched: flower: define new tunnel flags
+  net/sched: cls_flower: prepare fl_{set,dump}_key_flags() for ENC_FLAGS
+  net/sched: cls_flower: add policy for TCA_FLOWER_KEY_FLAGS
+  flow_dissector: prepare for encapsulated control flags
+  flow_dissector: set encapsulated control flags from tun_flags
+  net/sched: cls_flower: add tunnel flags to fl_{set,dump}_key_flags()
+  net/sched: cls_flower: rework TCA_FLOWER_KEY_ENC_FLAGS usage
+  flow_dissector: cleanup FLOW_DISSECTOR_KEY_ENC_FLAGS
+  flow_dissector: set encapsulation control flags for non-IP
+
+ include/net/flow_dissector.h |  30 ++++----
+ include/net/ip_tunnels.h     |  12 ---
+ include/uapi/linux/pkt_cls.h |  11 ++-
+ net/core/flow_dissector.c    |  50 ++++++------
+ net/sched/cls_flower.c       | 142 ++++++++++++++++++++---------------
+ 5 files changed, 135 insertions(+), 110 deletions(-)
+
 -- 
 2.45.2
 
