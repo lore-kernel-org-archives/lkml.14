@@ -1,88 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F0C1DFF4;
-	Fri,  5 Jul 2024 13:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8501D14A0B7;
+	Fri,  5 Jul 2024 13:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720185608; cv=none; b=FcocbNzFD2J/xm4sLZtVVHA0/F1KLxRF2i7JJrI/GiWdpsZVdH9b/9Bhr0lwaajmB2gcn1XBp3YaxGd3onkc12qSlRlOq9q+qFLpb8IKN/hz4Akrw+2ZCL7t9HVuPdHDYsgAllqeijQfzNWqIs4Ufj2FTYO+syYQ4opLg6BHwD8=
+	t=1720185631; cv=none; b=I2WE3CHKlhIGlliQ8BU6lB3rMVXq80bSHAfyirUAYPm/oqdWgTwIFYGPLKicRQ4Bsva1SN4GUqJ2TWFrTJX7LVUcBv4uUtgVo0sj8z/Bvy73zSiRJ6bt7luPrVl07TqQ6GT/qJiapZzDm7W4GVKz8AkksHsDfONZO7xpJuVpzdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720185608; c=relaxed/simple;
-	bh=QUhCNAgTuGB0igzzCmZLsmZgPcifJMCXGxFbVnHj46c=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ivyIbdKHk5EO84Eb66xOnT0u96u1EzNf/2WdmNdaE152KCAEXdg2FPrFRkS6D8Lf/HPjAStugxDDsWgTs5dxzUiosOm16WAwTsVBL4Gaf3Ceyk9VbBsLQnlyLNSmZ8iK8b6VxNDjcBS9FnebOMAnds+OkijemHE4Mg90/BX720A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYQfSzME; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720185631; c=relaxed/simple;
+	bh=7O65BSY1YnjABerUEX/XSkLKOtyucgsCv4IEnEsfzOk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gsu88DOZY3ob+6DQdDrQJRR++o31lYPWthugdVr2U+kvCOam/IllewtcEgvf0buvKProlc7PaMUtb7yuDGr1iAsu6Q8k9PhYw3BbO5EaKaeHPcpA4/qlp3EtBFndPSNy5DfD47vhcs6B6/5b+HJ/D7x1F4SE7PlW/iZ5yn2JQr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=i+NjTql6; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYQfSzME"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A50C116B1;
-	Fri,  5 Jul 2024 13:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720185608;
-	bh=QUhCNAgTuGB0igzzCmZLsmZgPcifJMCXGxFbVnHj46c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tYQfSzMECZKoy7nvUbsYVAKaJud5oS/FlrY4bgTU9EeYbfc5d3dSkOJvy0qNdJRzQ
-	 /rmKievPsI/lyYvKoeF8EMCe28RXbKxIU954Tz0uQY9zYdv9Pfzer6Xwcms3gDmjKI
-	 2Kp6rLI9YIkWGHuLbsDtg3YV3VvVAT4sKf1BUDS0ypDHKXk7EHboOu2ERFlui1NJcB
-	 bSPgM+iEFdkSXVQajXtJVtk1S+phI1cVSbyvcB0+cZhw+pRWEmf9bqhxIlvWARz75a
-	 lB+nUzeNi9w1OSImDcbjcvACMDHTijfU7xGR3ep/vm/RTHk/FT6aG4+j7LlXDsMF4U
-	 r7OXQ+2HNQraw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sPir8-00A3qu-Gl;
-	Fri, 05 Jul 2024 14:20:06 +0100
-Date: Fri, 05 Jul 2024 14:20:05 +0100
-Message-ID: <86a5iw3ri2.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v4 0/4] KVM: arm64: Fix underallocation of storage for SVE state
-In-Reply-To: <20240704-kvm-arm64-fix-pkvm-sve-vl-v4-0-b6898ab23dc4@kernel.org>
-References: <20240704-kvm-arm64-fix-pkvm-sve-vl-v4-0-b6898ab23dc4@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i+NjTql6"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 465DKCfI084749;
+	Fri, 5 Jul 2024 08:20:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1720185612;
+	bh=8GENAj70qaKif1xSCoXGz2QyshHZX03wXyFYQ7Hi+5s=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=i+NjTql6RiTijT1B7B03+IOymnRUsRNKC/UpilHGvq1Ujvm+R+M22h3MdZ+kF0mru
+	 aTwuSDWWwMfi6LGp1Q4VEshAW5lsxoM6TOKwTCYzMBG9+W9CsG3XsphV+jODZ16TNU
+	 Uz/Mir00HVqXrR0+GyZSyBprXSR9vmjusZMot5lI=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 465DKCnJ009840
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 5 Jul 2024 08:20:12 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 5
+ Jul 2024 08:20:12 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 5 Jul 2024 08:20:12 -0500
+Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 465DK7bB072061;
+	Fri, 5 Jul 2024 08:20:07 -0500
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Devarsh Thakkar
+	<devarsht@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, <praneeth@ti.com>,
+        <a-bhatia1@ti.com>, <j-luthra@ti.com>, <b-brnich@ti.com>,
+        <detheridge@ti.com>, <p-mantena@ti.com>, <vijayp@ti.com>
+Subject: Re: (subset)[PATCH 0/3] Add global CMA reserve area
+Date: Fri, 5 Jul 2024 18:48:26 +0530
+Message-ID: <172018547554.2460342.5699091093485450824.b4-ty@ti.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240613150902.2173582-1-devarsht@ti.com>
+References: <20240613150902.2173582-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, tabba@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, 04 Jul 2024 18:28:15 +0100,
-Mark Brown <broonie@kernel.org> wrote:
+Hi Devarsh Thakkar,
+
+On Thu, 13 Jun 2024 20:38:59 +0530, Devarsh Thakkar wrote:
+> Add global CMA reserve area for AM62x, AM62A and AM62P SoCs.
+> These SoCs do not have MMU and hence require contiguous memory pool to
+> support various multimedia use-cases.
 > 
-> As observed during review the pKVM support for saving host SVE state is
-> broken if an asymmetric system has VLs larger than the maximum shared
-> VL, fix this by discovering then using the maximum VL for allocations
-> and using RDVL during the save/restore process.
+> Brandon Brnich (1):
+>   arm64: dts: ti: k3-am62p5-sk: Reserve 576 MiB of global CMA
+> 
+> [...]
 
-I really don't see why we need such complexity here.
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-Fuad did post something[1] that did the trick with a far less invasive
-change, and it really feels like we are putting the complexity at the
-wrong place.
+[1/3] arm64: dts: ti: k3-am62x-sk-common: Reserve 128MiB of global CMA
+      commit: 9e8560556f9c41da28118af3385b4e9dc832ae2b
+[2/3] arm64: dts: ti: k3-am62a7-sk: Reserve 576MiB of global CMA
+      commit: 6406c5d5512c0814b8c155df7f833a98d9069a72
 
-So what's wrong with that approach? I get that you want to shout about
-secondary CPUs, but that's an orthogonal problem.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-	M.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-[1] https://lore.kernel.org/r/20240606092623.2236172-1-tabba@google.com
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
--- 
-Without deviation from the norm, progress is not possible.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
+
