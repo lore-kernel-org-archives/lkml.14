@@ -1,167 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011DD149C52
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 11:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E87D14830E
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 11:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720177258; cv=none; b=rYtttKlEn0R6ji/NS8OSiP8sKocugCbbej61PeFJYmdAsdDyNYhb0U0YGSWSrVSyTa6aLCRCNSXHjCMQlbwMQXQtKkM1OEizekoFV5YmB4WhGmvwNvG7RbzyYplZuo/ID64qcNPXp9jHt6QxGxayK3FqcS8XyN2ta+Vzc2iyi3Y=
+	t=1720177287; cv=none; b=c7nLgI5q2QLxVK+GDJIyNtmczikDUIRId7JQ8/ZJ8/gVaanavrH6Zceh9bxuTzP8b8UoMu1ClJZI6t/vfD5DYjiqJK28Wy5Lrs2YolN/2EBdW7rCgQh6cHdbsU50JTiPrF1WGA0xTX++nCae1N9c4VYnftEQkhXyNZJ2/ej0umo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720177258; c=relaxed/simple;
-	bh=Tb3BFWicLnzq+sDXhgf1Hd6Hh52u6pB86a2WzsYUg8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=untEY5h4WeRggaWoYpbp3mDCBwRxJuPrNIZcokVcwI8No7WYCarThUeXRBA/h10iBaM2ikdWfstskys4KF32F8NfvKvmOttSLb7zNuEqozBTzHhFFbyipiF6eEAV0SVtItrXDIV/wLfyntHMjdk7DPhc+yCHlBqP/WsBYka7j+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Eo6XceDd; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1720177287; c=relaxed/simple;
+	bh=HJLmxBNBhQfKAg6xP07Wabw1Q9MIdul+vdU7VL1GiVY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NjbnNkncomvkcoqVxdocJyFs7OHAne+oyb7+8+Hxp0sK5gwmSF3aBqZB/fFBzeu1l0CvkBKK2nyJqgQ82mcQGFpiE57z36Qa7fglsE/VEpAjfcI18JbM2bCfVA6VdytikR3POUe2zVIkvWVxBbNqnR6eokOzB0rGZ/TC1gDwdFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QuG//H9w; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eo6XceDd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QuG//H9w"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720177255;
+	s=mimecast20190719; t=1720177284;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0VLjGnKnDQJGOvHC5EFxMCqS2Qbbw9JgLiNgqLVa7Mg=;
-	b=Eo6XceDdWRcPkn9Elh6lPvCRZi2qjA1JHcLUbLD6XRvxGNUULgjRTcghV+kIY6vSkY3gq1
-	ouxgF4s9K4uXF8o+Y2pWbGE1fnnmYOr0gm1DKidtNCcQ/Rty4aqN3YoDGQPgx4ILhshG89
-	gDdnSO6e6syGRq0FN5xN4bz3x9M/AnU=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=jsdOBGQRbEZiuJVFLzl7TXLq8jlmfbnrL+M6I+EjsqI=;
+	b=QuG//H9wwJ5NbC8GiTH7qO1AXaB9xiNCSSOL9ImOMo7xDt12fGeEOa/tDbyeTPjsjZEgfV
+	zdBLkdJbswlDWsCgrkh5hzp2uQQN8defcoYPLKzMMe1B+WQwLj1n5WSQjGjX8cBw+p1tjF
+	j0mXmXgKU8uOsEdadpgcih21z3v4Pk8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-Bsu-ST3wPOCfs5OLOZY3bQ-1; Fri, 05 Jul 2024 07:00:54 -0400
-X-MC-Unique: Bsu-ST3wPOCfs5OLOZY3bQ-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52e994d8e26so1783813e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 04:00:53 -0700 (PDT)
+ us-mta-647-cthHdqghPsmGqVFW0sK6Lg-1; Fri, 05 Jul 2024 07:01:21 -0400
+X-MC-Unique: cthHdqghPsmGqVFW0sK6Lg-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4264dc624a5so7248545e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 04:01:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720177252; x=1720782052;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0VLjGnKnDQJGOvHC5EFxMCqS2Qbbw9JgLiNgqLVa7Mg=;
-        b=F9splmua/0eAUzmjxNTUXQaU+dTJmyvGxU2bvp3yWzFYScaZL991GRsbfPHyLKS5bt
-         kdwkETYH1KY4WYzh1OyE4NZqbeiveK2AK75VKgFF/+FmmVjMT4v/cW2q92lSzdaMAXdf
-         A/Y0PtwPpY7Y/v1fbi+cetFz0cVU07chPs9TpvJzzCBfrq21tFwwVU/HIOwd66xCQEKn
-         nSV87zxosRT0Rz1jdGbwcvZ0BVqRFEPO4vo8/Vb49BAqNMxPBear/KfuSI3CtXpBgKqE
-         nkd47byshsNCWBXfWkJJEEBW0CRcJMdDSN9mLyzTdcTP3vY3e+gyahD+5OylS7qOvHyn
-         4CgQ==
-X-Gm-Message-State: AOJu0YzqSRgVB71iPm+4OPl3UIUM/3SetrBwQ9KSP5AfKJ1rwBh+677t
-	/w5i0QJcmvotdhDiNoVvfTnzyXU6O8+fHjiC74CgbxfzxAIR/1qZAmN0U6eqyeXI/TDMf9vDoOI
-	SO2s8s3A1zV5Ly1JKNWaYwx5iWguj5nJ1O3AxON8Z2b4up+zl/DssGoonYqWDtw==
-X-Received: by 2002:ac2:530e:0:b0:52c:dea0:dd55 with SMTP id 2adb3069b0e04-52ea0629e54mr2919896e87.24.1720177251830;
-        Fri, 05 Jul 2024 04:00:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFEjnou8xhKhazGbmdHRH/CksjCVcztVyBOnLHoajjwOkVP6T7RYfWfP/R1ExpPClZwCvMWBA==
-X-Received: by 2002:ac2:530e:0:b0:52c:dea0:dd55 with SMTP id 2adb3069b0e04-52ea0629e54mr2919877e87.24.1720177251353;
-        Fri, 05 Jul 2024 04:00:51 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c702:b500:3ed7:a1c7:447e:2279? (p200300cbc702b5003ed7a1c7447e2279.dip0.t-ipconnect.de. [2003:cb:c702:b500:3ed7:a1c7:447e:2279])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1d0b19sm57331475e9.10.2024.07.05.04.00.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jul 2024 04:00:50 -0700 (PDT)
-Message-ID: <77ba077a-a7a0-49b0-b14a-954cb24901e6@redhat.com>
-Date: Fri, 5 Jul 2024 13:00:50 +0200
+        d=1e100.net; s=20230601; t=1720177280; x=1720782080;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jsdOBGQRbEZiuJVFLzl7TXLq8jlmfbnrL+M6I+EjsqI=;
+        b=qHUfg5zPmZPwXmNafWMPe5HH97j2bQZTFIJZCbJYTc4S5kB+DLrSLon8TOL8tvpvxO
+         Mpf8yE7oZv1G3Qa4vsn+vyL5apVWSjIX0bQtA66KYLXPPYKDOIKMfmngaztX/Bg8thiJ
+         ZYU/itXf9/2bM+h30DNt7NDyTzarOa43aJgC6QlJXfg6gHJuEsgW8lHBLzOKRPxhZXkS
+         k2zgICx72+yKVe8ktU+dFsfVlaEartR6QXCRRXD9ozr2Xc1n3eh1Xy288wQQkLaIcbSL
+         4JjSj5l79j/4ZKFm12u5+PBAsvcNga/QmDS6eOPj1RlUHXQ1zT+ZpX2pKr7c2H58fo05
+         Sw6A==
+X-Forwarded-Encrypted: i=1; AJvYcCU68PmbU9ycV8tXN8tsc56kn+eOJVN7i2zbSijPVTOYHFmRzQmEBLgbMGfs6CKXP5fRQhogw/ebAFm0/kGGFO3ZK+jQPl4boB7Cba5J
+X-Gm-Message-State: AOJu0YxN1rYmY6JQQ2witEpvv/MgwcKtSlwxEpc47xxlOWmlAGb0hqRk
+	a9+OTWIQgWLPTiiq67/K8tvn0ArFjGB5lC1/uvzUDCu48vVR/vKL6ecjnHI4cIHwZMMGGz818Ni
+	n6iuFhjls66Iuje/uxKRYQAQCbOLl9X03UFhg4HFA1WKHavsUxUDjQorrWdGStA==
+X-Received: by 2002:adf:f28e:0:b0:367:4dce:1ff5 with SMTP id ffacd0b85a97d-3679dd36309mr3209444f8f.32.1720177280122;
+        Fri, 05 Jul 2024 04:01:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGapJ7br0AVN/5buxgLShDBUUn055ES3+7oIVK/jWrV2wiSwwyFSGSxAPMocNKmomK6HoVOqQ==
+X-Received: by 2002:adf:f28e:0:b0:367:4dce:1ff5 with SMTP id ffacd0b85a97d-3679dd36309mr3209415f8f.32.1720177279667;
+        Fri, 05 Jul 2024 04:01:19 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36783e9faa8sm9483845f8f.64.2024.07.05.04.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 04:01:19 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 2EA9E13FDC30; Fri, 05 Jul 2024 13:01:18 +0200 (CEST)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Florian Kauer <florian.kauer@linutronix.de>, ast@kernel.org,
+ daniel@iogearbox.net, john.fastabend@gmail.com
+Cc: Florian Kauer <florian.kauer@linutronix.de>, davem@davemloft.net,
+ kuba@kernel.org, hawk@kernel.org, edumazet@google.com, pabeni@redhat.com,
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
+ song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
+ sdf@google.com, haoluo@google.com, jolsa@kernel.org,
+ netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ xdp-newbies@vger.kernel.org
+Subject: Re: [PATCH] bpf: provide map key to BPF program after redirect
+In-Reply-To: <20240705103853.21235-1-florian.kauer@linutronix.de>
+References: <20240705103853.21235-1-florian.kauer@linutronix.de>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Fri, 05 Jul 2024 13:01:18 +0200
+Message-ID: <87zfqw85mp.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] virtio-balloon: make it spec compliant
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
- Alexander Duyck <alexander.h.duyck@linux.intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <cover.1720173841.git.mst@redhat.com>
- <dc0a5a70-d691-4d54-ae00-0beb74f4c399@redhat.com>
- <20240705061647-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240705061647-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 05.07.24 12:19, Michael S. Tsirkin wrote:
-> On Fri, Jul 05, 2024 at 12:15:30PM +0200, David Hildenbrand wrote:
->> On 05.07.24 12:08, Michael S. Tsirkin wrote:
->>> Currently, if VIRTIO_BALLOON_F_FREE_PAGE_HINT is off but
->>> VIRTIO_BALLOON_F_REPORTING is on, then the reporting vq
->>> gets number 3 while spec says it's number 4.
->>> It happens to work because the qemu virtio pci driver
->>> is *also* out of spec.
->>
->> I have to ask the obvious: maybe the spec is wrong and we have to refine
->> that?
-> 
-> Well having vq function shift depending on features is certainly
-> messy ...
+Florian Kauer <florian.kauer@linutronix.de> writes:
 
-Right, but that's how all of this started from the beginning.
+> Both DEVMAP as well as CPUMAP provide the possibility
+> to attach BPF programs to their entries that will be
+> executed after a redirect was performed.
+>
+> With BPF_F_BROADCAST it is in also possible to execute
+> BPF programs for multiple clones of the same XDP frame
+> which is, for example, useful for establishing redundant
+> traffic paths by setting, for example, different VLAN tags
+> for the replicated XDP frames.
+>
+> Currently, this program itself has no information about
+> the map entry that led to its execution. While egress_ifindex
+> can be used to get this information indirectly and can
+> be used for path dependent processing of the replicated frames,
+> it does not work if multiple entries share the same egress_ifindex.
+>
+> Therefore, extend the xdp_md struct with a map_key
+> that contains the key of the associated map entry
+> after performing a redirect.
+>
+> See
+> https://lore.kernel.org/xdp-newbies/5eb6070c-a12e-4d4c-a9f0-a6a6fafa41d1@linutronix.de/T/#u
+> for the discussion that led to this patch.
+>
+> Signed-off-by: Florian Kauer <florian.kauer@linutronix.de>
+> ---
+>  include/net/xdp.h        |  3 +++
+>  include/uapi/linux/bpf.h |  2 ++
+>  kernel/bpf/devmap.c      |  6 +++++-
+>  net/core/filter.c        | 18 ++++++++++++++++++
+>  4 files changed, 28 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/net/xdp.h b/include/net/xdp.h
+> index e6770dd40c91..e70f4dfea1a2 100644
+> --- a/include/net/xdp.h
+> +++ b/include/net/xdp.h
+> @@ -86,6 +86,7 @@ struct xdp_buff {
+>  	struct xdp_txq_info *txq;
+>  	u32 frame_sz; /* frame size to deduce data_hard_end/reserved tailroom*/
+>  	u32 flags; /* supported values defined in xdp_buff_flags */
+> +	u64 map_key; /* set during redirect via a map */
+>  };
+>  
+>  static __always_inline bool xdp_buff_has_frags(struct xdp_buff *xdp)
+> @@ -175,6 +176,7 @@ struct xdp_frame {
+>  	struct net_device *dev_rx; /* used by cpumap */
+>  	u32 frame_sz;
+>  	u32 flags; /* supported values defined in xdp_buff_flags */
+> +	u64 map_key; /* set during redirect via a map */
+>  };
 
-> How do we know no one implemented the spec as written though?
+struct xdp_frame is size constrained, so we shouldn't be using precious
+space on this. Besides, it's not information that should be carried
+along with the packet after transmission. So let's put it into struct
+xdp_txq_info and read it from there the same way we do for egress_ifindex :)
 
-I understand that concern, IIUC it would imply that:
+>  static __always_inline bool xdp_frame_has_frags(struct xdp_frame *frame)
+> @@ -257,6 +259,7 @@ void xdp_convert_frame_to_buff(struct xdp_frame *frame, struct xdp_buff *xdp)
+>  	xdp->data_meta = frame->data - frame->metasize;
+>  	xdp->frame_sz = frame->frame_sz;
+>  	xdp->flags = frame->flags;
+> +	xdp->map_key = frame->map_key;
+>  }
+>  
+>  static inline
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 35bcf52dbc65..7dbb0f2a236c 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -6455,6 +6455,8 @@ struct xdp_md {
+>  	__u32 rx_queue_index;  /* rxq->queue_index  */
+>  
+>  	__u32 egress_ifindex;  /* txq->dev->ifindex */
+> +
+> +	__u64 map_key; /* set during redirect via a map in xdp_buff */
+>  };
 
-a) In case of a hypervisor, we never ran with a Linux guest
-b) In case of a guest, we never ran under QEMU
+Maybe make the comment a bit easier to understand? Something like "key
+of devmap/cpumap entry that is executing"?
 
-It's certainly possible, although I would assume that most other 
-implementation candidates (e.g., cloud-hypervisor) would have complained 
-by now about Linux issues.
-
-What's your experience: if someone would actually implement it according 
-to the spec, would they watch out on the virtio mailing lists for 
-changes (or even be able to vote) and would be able to comment that 
-adjusting the spec to the real first implementation is wrong?
-
--- 
-Cheers,
-
-David / dhildenb
+-Toke
 
