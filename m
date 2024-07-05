@@ -1,65 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AB413D63D;
-	Fri,  5 Jul 2024 21:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61F816F8EC;
+	Fri,  5 Jul 2024 21:06:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720213605; cv=none; b=ZIy20iKpOeF/KTFFfrKV3SbDv4d7mBgSUO81IY0zWg3pA4mTAwfndT8CwDRoftRMOdj4KwKZVG8QZhuFvYW3VRfWruxDe+dHRRZoTduRwWuQZam41aOxWAdRxLct7eRQtSs+hsObzz6hGjE0lLkJqgvMinb0YS425bsvGmY5WZM=
+	t=1720213608; cv=none; b=qm7k6QIn6AgRjszHRmPWXoH51ckvSnTlNxYv9wnBl31BoxztwTb3FtjWAnrS6AULSQvHlD0YcsHR5P16ud2IO56d5DKsk16olJYJ0BxHaTnzs0z4IMyZrJ5NIPiTM81wgrvynlAeN9koxYoEO8hnjSFjr5GbV1+JnG5UiI4nnP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720213605; c=relaxed/simple;
-	bh=DluL7O/+70fSAgET6Fi7V2sNSgmRP8Czesa7hzvpLKw=;
+	s=arc-20240116; t=1720213608; c=relaxed/simple;
+	bh=HORWNaInMxa31FR9APAX3sy92/mT/44Dk/tDafZyz6c=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ubhjeqYJeZoX5nTz5bPKdWVaVGQBZsBjoJYIMaI8VLySMu11c3CjRjBwDVPvLCl3QBmXZ7i9rxziZHyVEx3Dd1mKeTyFQdciixAmwAv7ysq79ShwKtOcH8d5lqmJO8pHOcDVbEj+ZfrqzseGBQSLKFf1JKhLDNZELtphf+H/Sd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mXSGYWWJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BX0tEogx; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=BmStmLe9P2F6GJ91uKdOFW77rQ8iUsBwbXHDB+WUOopd7Dy57mYBl20U9nC/B862eE5lWcUPzjchCTsJHBKklp2QODBq/WOKU4wLt5J3hKIAuyQWLsQpMs6GtqUB9nm0stW3TotcGaZjuFoZIy8LYD9ZGBqPL5RIR9mqkvaIqVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X/hQ6IzZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MdXruBEF; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mXSGYWWJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BX0tEogx"
-Date: Fri, 05 Jul 2024 21:06:41 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X/hQ6IzZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MdXruBEF"
+Date: Fri, 05 Jul 2024 21:06:44 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720213601;
+	s=2020; t=1720213605;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jH2+Ilj4JlNVcNdvu5x7AFPbSb6Wq9vreJsBLrRNTGA=;
-	b=mXSGYWWJTS3zEOLO9LBj/Z6HY82MtDrPRplDkZIW6bX5EvGQHk6S0ioFUM4fb7WtVR59rR
-	7Z5dxU1Z4j/PxMXNmfNekiy92J/z3fEBftYYifWlIL8qaNmNnUI8ppzK74U+cSCC0U80Qd
-	I6fcz9QWHoA5/ob8kDo48fYBXKOPc4nPH1ZdQw2BT2iKIqdTglixn8fjpxcKzAvro8MCAB
-	2GiRKImkCzZdFlNZGzDm/yuZHrY9L2bOzC/YarY+xusG555aMEG5U9JRcHupy41DqlKWuS
-	ntlwyl2R5Uu08cHzwy+IJjhovjCdjDmV6O+nOuh7CvobOaHtpfFIuavXADCKrg==
+	bh=tkhxBYCPER/mI+FoqSXgY9IfqxD5UYz3M6LWhIUfwq8=;
+	b=X/hQ6IzZW4Q3DHJJfYkGkp2f3k4OP/69ZG7jYB5mHwmnZn75Kl+jxjfiAndHprj8qyACmE
+	LKL8PctZrDPIDpA65kRH5qvSRDZGAp/hiIpo2TpyF/l/te+mXxJI0Fj3Z45qhf8M28x4fQ
+	HXcNr0FxZPQV4BvfIkHXFDFwC/R02yUIcPdVFg6SVMF+otT08s1OdPe5vQV2WLC1NrC4OD
+	kZNndxMr8SLBeRDnejyor+7VzFs9zfxTg4xy1texEx3HjqHIwo4Xf8n4oipwhfri9jP+qm
+	8LUdCiQXnzoTNsKhr9j/jdYUde6e8BmU2qvSm3cvkAK03L0wa3oZS14HVbkjQA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720213601;
+	s=2020e; t=1720213605;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jH2+Ilj4JlNVcNdvu5x7AFPbSb6Wq9vreJsBLrRNTGA=;
-	b=BX0tEogxehc67O28pzBuwnWP+MtX9lFhytXS0cFjuFIVMf/qLAjj7EX3orVwCLDWLH7uyO
-	ZHyvSBQGD8ooAMCw==
-From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+	bh=tkhxBYCPER/mI+FoqSXgY9IfqxD5UYz3M6LWhIUfwq8=;
+	b=MdXruBEFpU9uPCylm7CXc901Xz5S6hXtRL9p4pgzW6kHMWRyhNS1nAy8ozd32Rv+8XGwBH
+	b05KAgdcIHYMqeCA==
+From: "tip-bot2 for Zhang Rui" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel: Support PERFEVTSEL extension
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>,
+Subject:
+ [tip: perf/core] perf/x86/intel/cstate: Fix Alderlake/Raptorlake/Meteorlake
+Cc: Zhang Rui <rui.zhang@intel.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Andi Kleen <ak@linux.intel.com>, Ian Rogers <irogers@google.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240626143545.480761-8-kan.liang@linux.intel.com>
-References: <20240626143545.480761-8-kan.liang@linux.intel.com>
+ Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240628031758.43103-2-rui.zhang@intel.com>
+References: <20240628031758.43103-2-rui.zhang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172021360135.2215.18390376313385685944.tip-bot2@tip-bot2>
+Message-ID: <172021360480.2215.2382611613265250508.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,164 +69,62 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     dce0c74d2d180ce21d074b4f977821a567ab0020
-Gitweb:        https://git.kernel.org/tip/dce0c74d2d180ce21d074b4f977821a567ab0020
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Wed, 26 Jun 2024 07:35:39 -07:00
+Commit-ID:     2c3aedd9db6295619d21e50ad29efda614023bf1
+Gitweb:        https://git.kernel.org/tip/2c3aedd9db6295619d21e50ad29efda614023bf1
+Author:        Zhang Rui <rui.zhang@intel.com>
+AuthorDate:    Fri, 28 Jun 2024 11:17:56 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 04 Jul 2024 16:00:40 +02:00
+CommitterDate: Thu, 04 Jul 2024 16:00:34 +02:00
 
-perf/x86/intel: Support PERFEVTSEL extension
+perf/x86/intel/cstate: Fix Alderlake/Raptorlake/Meteorlake
 
-Two new fields (the unit mask2, and the equal flag) are added in the
-IA32_PERFEVTSELx MSRs. They can be enumerated by the CPUID.23H.0.EBX.
+For Alderlake, the spec changes after the patch submitted and PC7/PC9
+are removed.
 
-Update the config_mask in x86_pmu and x86_hybrid_pmu for the true layout
-of the PERFEVTSEL.
-Expose the new formats into sysfs if they are available. The umask
-extension reuses the same format attr name "umask" as the previous
-umask. Add umask2_show to determine/display the correct format
-for the current machine.
+Raptorlake and Meteorlake, which copy the Alderlake cstate PMU, also
+don't have PC7/PC9.
 
-Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Remove PC7/PC9 support for Alderlake/Raptorlake/Meteorlake.
+
+Fixes: d0ca946bcf84 ("perf/x86/cstate: Add Alder Lake CPU support")
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Link: https://lkml.kernel.org/r/20240626143545.480761-8-kan.liang@linux.intel.com
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Link: https://lore.kernel.org/r/20240628031758.43103-2-rui.zhang@intel.com
 ---
- arch/x86/events/intel/core.c      | 69 ++++++++++++++++++++++++++++--
- arch/x86/include/asm/perf_event.h |  4 ++-
- 2 files changed, 69 insertions(+), 4 deletions(-)
+ arch/x86/events/intel/cstate.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 6e42ba0..fa0550e 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4632,8 +4632,55 @@ PMU_FORMAT_ATTR(pc,	"config:19"	);
- PMU_FORMAT_ATTR(any,	"config:21"	); /* v3 + */
- PMU_FORMAT_ATTR(inv,	"config:23"	);
- PMU_FORMAT_ATTR(cmask,	"config:24-31"	);
--PMU_FORMAT_ATTR(in_tx,  "config:32");
--PMU_FORMAT_ATTR(in_tx_cp, "config:33");
-+PMU_FORMAT_ATTR(in_tx,  "config:32"	);
-+PMU_FORMAT_ATTR(in_tx_cp, "config:33"	);
-+PMU_FORMAT_ATTR(eq,	"config:36"	); /* v6 + */
-+
-+static ssize_t umask2_show(struct device *dev,
-+			   struct device_attribute *attr,
-+			   char *page)
-+{
-+	u64 mask = hybrid(dev_get_drvdata(dev), config_mask) & ARCH_PERFMON_EVENTSEL_UMASK2;
-+
-+	if (mask == ARCH_PERFMON_EVENTSEL_UMASK2)
-+		return sprintf(page, "config:8-15,40-47\n");
-+
-+	/* Roll back to the old format if umask2 is not supported. */
-+	return sprintf(page, "config:8-15\n");
-+}
-+
-+static struct device_attribute format_attr_umask2  =
-+		__ATTR(umask, 0444, umask2_show, NULL);
-+
-+static struct attribute *format_evtsel_ext_attrs[] = {
-+	&format_attr_umask2.attr,
-+	&format_attr_eq.attr,
-+	NULL
-+};
-+
-+static umode_t
-+evtsel_ext_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	u64 mask;
-+
-+	/*
-+	 * The umask and umask2 have different formats but share the
-+	 * same attr name. In update mode, the previous value of the
-+	 * umask is unconditionally removed before is_visible. If
-+	 * umask2 format is not enumerated, it's impossible to roll
-+	 * back to the old format.
-+	 * Does the check in umask2_show rather than is_visible.
-+	 */
-+	if (i == 0)
-+		return attr->mode;
-+
-+	mask = hybrid(dev_get_drvdata(dev), config_mask);
-+	if (i == 1)
-+		return (mask & ARCH_PERFMON_EVENTSEL_EQ) ? attr->mode : 0;
-+
-+	return 0;
-+}
- 
- static struct attribute *intel_arch_formats_attr[] = {
- 	&format_attr_event.attr,
-@@ -4786,8 +4833,14 @@ static inline bool intel_pmu_broken_perf_cap(void)
- 
- static void update_pmu_cap(struct x86_hybrid_pmu *pmu)
- {
--	unsigned int sub_bitmaps = cpuid_eax(ARCH_PERFMON_EXT_LEAF);
--	unsigned int eax, ebx, ecx, edx;
-+	unsigned int sub_bitmaps, eax, ebx, ecx, edx;
-+
-+	cpuid(ARCH_PERFMON_EXT_LEAF, &sub_bitmaps, &ebx, &ecx, &edx);
-+
-+	if (ebx & ARCH_PERFMON_EXT_UMASK2)
-+		pmu->config_mask |= ARCH_PERFMON_EVENTSEL_UMASK2;
-+	if (ebx & ARCH_PERFMON_EXT_EQ)
-+		pmu->config_mask |= ARCH_PERFMON_EVENTSEL_EQ;
- 
- 	if (sub_bitmaps & ARCH_PERFMON_NUM_COUNTER_LEAF_BIT) {
- 		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_NUM_COUNTER_LEAF,
-@@ -5810,6 +5863,12 @@ static struct attribute_group group_format_extra_skl = {
- 	.is_visible = exra_is_visible,
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index e64eaa8..bf0bfd7 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -81,7 +81,7 @@
+  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
+  *			       perf code: 0x03
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,CNL,
+- *						KBL,CML,ICL,TGL,RKL,ADL,RPL,MTL
++ *						KBL,CML,ICL,TGL,RKL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C8_RESIDENCY:  Package C8 Residency Counter.
+  *			       perf code: 0x04
+@@ -90,8 +90,7 @@
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C9_RESIDENCY:  Package C9 Residency Counter.
+  *			       perf code: 0x05
+- *			       Available model: HSW ULT,KBL,CNL,CML,ICL,TGL,RKL,
+- *						ADL,RPL,MTL
++ *			       Available model: HSW ULT,KBL,CNL,CML,ICL,TGL,RKL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
+  *			       perf code: 0x06
+@@ -636,9 +635,7 @@ static const struct cstate_model adl_cstates __initconst = {
+ 	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C3_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C6_RES) |
+-				  BIT(PERF_CSTATE_PKG_C7_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C8_RES) |
+-				  BIT(PERF_CSTATE_PKG_C9_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C10_RES),
  };
- 
-+static struct attribute_group group_format_evtsel_ext = {
-+	.name       = "format",
-+	.attrs      = format_evtsel_ext_attrs,
-+	.is_visible = evtsel_ext_is_visible,
-+};
-+
- static struct attribute_group group_default = {
- 	.attrs      = intel_pmu_attrs,
- 	.is_visible = default_is_visible,
-@@ -5823,6 +5882,7 @@ static const struct attribute_group *attr_update[] = {
- 	&group_caps_lbr,
- 	&group_format_extra,
- 	&group_format_extra_skl,
-+	&group_format_evtsel_ext,
- 	&group_default,
- 	NULL,
- };
-@@ -6042,6 +6102,7 @@ static const struct attribute_group *hybrid_attr_update[] = {
- 	&group_caps_gen,
- 	&group_caps_lbr,
- 	&hybrid_group_format_extra,
-+	&group_format_evtsel_ext,
- 	&group_default,
- 	&hybrid_group_cpus,
- 	NULL,
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 400c909..91b7357 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -32,6 +32,8 @@
- #define ARCH_PERFMON_EVENTSEL_INV			(1ULL << 23)
- #define ARCH_PERFMON_EVENTSEL_CMASK			0xFF000000ULL
- #define ARCH_PERFMON_EVENTSEL_BR_CNTR			(1ULL << 35)
-+#define ARCH_PERFMON_EVENTSEL_EQ			(1ULL << 36)
-+#define ARCH_PERFMON_EVENTSEL_UMASK2			(0xFFULL << 40)
- 
- #define INTEL_FIXED_BITS_MASK				0xFULL
- #define INTEL_FIXED_BITS_STRIDE			4
-@@ -185,6 +187,8 @@ union cpuid10_edx {
-  * detection/enumeration details:
-  */
- #define ARCH_PERFMON_EXT_LEAF			0x00000023
-+#define ARCH_PERFMON_EXT_UMASK2			0x1
-+#define ARCH_PERFMON_EXT_EQ			0x2
- #define ARCH_PERFMON_NUM_COUNTER_LEAF_BIT	0x1
- #define ARCH_PERFMON_NUM_COUNTER_LEAF		0x1
  
