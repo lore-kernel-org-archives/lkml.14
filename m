@@ -1,84 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6158D1465AE
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96152146018;
+	Fri,  5 Jul 2024 09:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720172077; cv=none; b=ek6adhjbRKJ/kKa/J+zvSt8+ysBB18U4jGbaKL8pImpiOaAzpHGxv3XaF0tvohd/Ze/1wOKdUt3OGFRqSZe+QjluU0zQglz6KvEyR9675c94UtLVtcq4jpna58VK5/GdSWtEEzQyzoBwYw2/ADTiq3RAS2NgbVvrQVjDeJb1unY=
+	t=1720172090; cv=none; b=grYUWa1H3YrUM7P1flSg30EX/e6V+CWQeI54L67CVh9odz8O+qy20UuFSthTpBqpLAjeWMabOmwvPuC1Bp/U2SY8WxGdiYKwS7wj6gGhK5tq/yiDmyXEcf/urqJAYM5QhlBr6o2INi0CrjuodTmdmSfUkwdEqDHmTYHvxgoUI2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720172077; c=relaxed/simple;
-	bh=vMcvlievpFm8GPT9u46TzE+ZuLyLa6P7B0dOPMWWpN4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uzo9Z5fxNjk5SBAi/hEFtjmHTDG8IzAbGvdxHG2VS04xdfwQpqjGDltj3/Z+latWhH5loNRS81hXl0makyyeTFo5gJn8LTzuUbWePRHzsuqaBOd4MpnTfT8qpBXC0GvJKQpzkmGHKh9l6wqT5Ijqdt454KcHhGa0oiYv3zDDb9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGbHPx+0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGbHPx+0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6FECC4AF0A;
-	Fri,  5 Jul 2024 09:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720172076;
-	bh=vMcvlievpFm8GPT9u46TzE+ZuLyLa6P7B0dOPMWWpN4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eGbHPx+0hdRuGB6DhYhWblYqsyBLxKj9NOcUAVDCpoze5BI9vSzMXD6spbnetZnaW
-	 klPbHtuuEesUIEmeu/EaW5OiUZta+4yMxdiVemufp5Ynk12CK71ydPloZMdgtq+MJF
-	 oUNzE1p5hIEJ+x7/NO+/GiRhs88TrTABaZyQxOD+jnfhT0OaihDRWFoYsxxW8Wo+qt
-	 7/XVh+5izzQCmDSyzBT4KeqovNwuiDgeybBPkCwZdoMX97goqWeBjyGjMpg1GDcjlZ
-	 0YglWAhsI1QP5f7Tk5nGn9iDXNID2zv+fVWO7NxWJahjE1k6QdjpOTEQvG6nfevue7
-	 AIh1ioBVknCVw==
-Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sPfKr-00A0Rl-Ud;
-	Fri, 05 Jul 2024 10:34:34 +0100
-Date: Fri, 05 Jul 2024 10:34:15 +0100
-Message-ID: <878qygp4h4.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Tangnianyao <tangnianyao@huawei.com>
-Cc: <tglx@linutronix.de>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>,
-	<guoyang2@huawei.com>,
-	<wangwudi@hisilicon.com>,
-	"jiangkunkun@huawei.com >> jiangkunkun"
-	<jiangkunkun@huawei.com>
-Subject: Re: [PATCH] irqchip/gic-v4: Fix vcpus racing for vpe->col_idx in vmapp and vmovp
-In-Reply-To: <dacd8f05-63c5-8a4c-4b5f-8a03a9ac09d3@huawei.com>
-References: <20240701072305.4129823-1-tangnianyao@huawei.com>
-	<868qylicj5.wl-maz@kernel.org>
-	<dacd8f05-63c5-8a4c-4b5f-8a03a9ac09d3@huawei.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1720172090; c=relaxed/simple;
+	bh=ClpXwmxX/iI8KJIciRRFV8mBW7xSc8xL23a+yxJ4flI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BuP1zJ4pWDmKYwuQ01ypIJ9HFXaE3tM2OTBfF5wiZlyOkiKwdfyZ2saVVNnjfHoHgTRgeOIZwUrpfDd5M79tR5ZBvXZ05Z7GWRAV7J5FhM1R4NOwm7N/sVVoAt3ah5RWl8bNxKsyp9ciw4Naj8ME+KpfoyU2Pdvxpeqbrwy9Drg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DF55367;
+	Fri,  5 Jul 2024 02:35:13 -0700 (PDT)
+Received: from [10.57.74.223] (unknown [10.57.74.223])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 569DD3F762;
+	Fri,  5 Jul 2024 02:34:45 -0700 (PDT)
+Message-ID: <d3b5e990-90c7-4d68-a83e-0e42142439fd@arm.com>
+Date: Fri, 5 Jul 2024 10:34:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.104.136.29
-X-SA-Exim-Rcpt-To: tangnianyao@huawei.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, guoyang2@huawei.com, wangwudi@hisilicon.com, jiangkunkun@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: Fix khugepaged activation policy
+Content-Language: en-GB
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>,
+ Barry Song <baohua@kernel.org>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Lance Yang <ioworker0@gmail.com>, Yang Shi <shy828301@gmail.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240704091051.2411934-1-ryan.roberts@arm.com>
+ <20240704113325.fb9f1b04f99abaac315b5c88@linux-foundation.org>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240704113325.fb9f1b04f99abaac315b5c88@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 04 Jul 2024 13:42:23 +0100,
-Tangnianyao <tangnianyao@huawei.com> wrote:
-> > I've written the small patch series below (compile-tested only).
-> > Please let me know how it fares for you.
+On 04/07/2024 19:33, Andrew Morton wrote:
+> On Thu,  4 Jul 2024 10:10:50 +0100 Ryan Roberts <ryan.roberts@arm.com> wrote:
 > 
-> I've test the patch series below. It works and fix my issue.
+>> Since the introduction of mTHP, the docuementation has stated that
+>> khugepaged would be enabled when any mTHP size is enabled, and disabled
+>> when all mTHP sizes are disabled. There are 2 problems with this; 1.
+>> this is not what was implemented by the code and 2. this is not the
+>> desirable behavior.
+>>
+>> Desirable behavior is for khugepaged to be enabled when any PMD-sized
+>> THP is enabled, anon or file. (Note that file THP is still controlled by
+>> the top-level control so we must always consider that, as well as the
+>> PMD-size mTHP control for anon). khugepaged only supports collapsing to
+>> PMD-sized THP so there is no value in enabling it when PMD-sized THP is
+>> disabled. So let's change the code and documentation to reflect this
+>> policy.
+>>
+>> Further, per-size enabled control modification events were not
+>> previously forwarded to khugepaged to give it an opportunity to start or
+>> stop. Consequently the following was resulting in khugepaged eroneously
+>> not being activated:
+>>
+>>   echo never > /sys/kernel/mm/transparent_hugepage/enabled
+>>   echo always > /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
+>>
+>> ...
+>>
+>> -static inline bool hugepage_flags_enabled(void)
+>> +static inline bool hugepage_pmd_enabled(void)
+>>  {
+>>  	/*
+>> -	 * We cover both the anon and the file-backed case here; we must return
+>> -	 * true if globally enabled, even when all anon sizes are set to never.
+>> -	 * So we don't need to look at huge_anon_orders_inherit.
+>> +	 * We cover both the anon and the file-backed case here; file-backed
+>> +	 * hugepages, when configured in, are determined by the global control.
+>> +	 * Anon pmd-sized hugepages are determined by the pmd-size control.
+>>  	 */
+>> -	return hugepage_global_enabled() ||
+>> -	       READ_ONCE(huge_anon_orders_always) ||
+>> -	       READ_ONCE(huge_anon_orders_madvise);
+>> +	return (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) && hugepage_global_enabled()) ||
+>> +	       test_bit(PMD_ORDER, &huge_anon_orders_always) ||
+>> +	       test_bit(PMD_ORDER, &huge_anon_orders_madvise) ||
+>> +	       (test_bit(PMD_ORDER, &huge_anon_orders_inherit) && hugepage_global_enabled());
+>>  }
+> 
+> That's rather a mouthful.  Is this nicer?
 
-Thanks. I've now posted the series (slightly reworked) as [1].
-Please give it a go and provide a Tested-by: if it correctly works for
-you.
+Sure, I'll take your version into v3.
 
-Thanks,
+> 
+> static inline bool hugepage_pmd_enabled(void)
+> {
+> 	/*
+> 	 * We cover both the anon and the file-backed case here; file-backed
+> 	 * hugepages, when configured in, are determined by the global control.
+> 	 * Anon pmd-sized hugepages are determined by the pmd-size control.
+> 	 */
+> 	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) &&
+> 			hugepage_global_enabled())
+> 		return true;
+> 	if (test_bit(PMD_ORDER, &huge_anon_orders_always))
+> 		return true;
+> 	if (test_bit(PMD_ORDER, &huge_anon_orders_madvise))
+> 		return true;
+> 	if (test_bit(PMD_ORDER, &huge_anon_orders_inherit) &&
+> 			hugepage_global_enabled())
+> 		return true;
+> 	return false;
+> }
+> 
+> Also, that's a pretty large function to be inlined.  It could be a
+> non-inline function static to khugepaged.c.  But I suppose that's a
+> separate patch.
 
-	M.
+Yeah fair point. I'll respin it now as a static in khugepaged.c.
 
-[1] https://lore.kernel.org/r/20240705093155.871070-1-maz@kernel.org
 
--- 
-Without deviation from the norm, progress is not possible.
