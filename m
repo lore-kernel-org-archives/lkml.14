@@ -1,67 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CE1848A;
-	Fri,  5 Jul 2024 01:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B9D634
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 01:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720144536; cv=none; b=rQR0qheVG9Zcalp4PQcOIvf/cy4G9NwFJLW+/GF2W5bPpVyW9QnXdrl07Z8yB8FiFpHKAOQVgBdb6/F7OiFE48sFWagRV01HF7tSUCDSydj8dVbZN0wKxyssyIAiGHR/StnCqmND1E3ZmWZZ7dxL5geT2AINYAlKaeZDNY4ak9c=
+	t=1720144674; cv=none; b=bk6mYbQ8Xbl0l2+eem7j5J/60Rc8YBylfP6hf+hWwo2szP2mTAC7AAhPhpZsa/JYrOQq0UkRHaJOazsHrQJgpyuRGu0GrMv/mgELXwYrLzAopInQeLbj9RMUoUonnqhY08Dg0ON/Bh1OudPVU/oNqG8Q+e17TxaHM6JGUiVYNGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720144536; c=relaxed/simple;
-	bh=0D07LHAuhhUTF8PFmdgBLlE7Wo0dLVb51mBbu1HxwUc=;
+	s=arc-20240116; t=1720144674; c=relaxed/simple;
+	bh=gzm09+Hms/HlJOhtQ3OuBQp/2ViO/rBhTfvoKv1YULA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c39l1tqYm59K/1gGHmhRdU1zX81WhMy0aJk/cuPcaBwX5ZagMRyHAZf/i7Ck3PpDr/0/WgIfPmbQs+LMVEjGJgmH+JgU8Fwu+dx8B2hf9nlffumzmbODtKdD119eLQzP3mrtaiaFctm4goU5e0b3dKOVFculYb++zC3ZLuuUnio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWZ3cyr9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AyoF34SBJie3xop+WDlVQWtYCujuTOwfsYOpv1biwl6exqho8FHCJ/MAAlsSrDc8gDSuiYqeF5740CearVLeeJ91AcCNo0o0oJZpBt8r7Q6AQi+ZIo4AdwZ3enoOHpFLBTiz3jo8LwQBUQn9I45754wfXsfKOJhgFr2EBT+eKnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=boSIrp0j; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWZ3cyr9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16279C3277B;
-	Fri,  5 Jul 2024 01:55:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720144536;
-	bh=0D07LHAuhhUTF8PFmdgBLlE7Wo0dLVb51mBbu1HxwUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jWZ3cyr9YnRQMnZhzLP9jJLxSHLjRfogDBprSaFxMbke0qmX+aSZyZhZlYmljrGI6
-	 yV+pa+5jjjxKmPyzz5fKdqWdAgPJ56Kvd8CLWWl602mid+IdsoTmoy0Dsw8CyLMpao
-	 3sNC+iHe2icjtFQFXOFJ/Yac+Bt6290hN2mbCKIZeA09i5OI08y17285J5DtsCO1Jk
-	 thYvotCStwHBVioNRLL0qLC2J8aRWPB07gbEpdKGWUd2ePOnHRGoGt75ArI5p87c8P
-	 m4DO5PJI7G1lBT5w5ZdY/EdORiND0BFhEH/xNhmqFsnO/Z05tjue9vLcG//cpOHLQ0
-	 68bbZCmFZ1taw==
-Date: Fri, 5 Jul 2024 01:55:31 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@weissschuh.net>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Sebastian Reichel <sre@kernel.org>, chrome-platform@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] power: supply: cros_charge-control: Fix signedness bug
- in charge_behaviour_store()
-Message-ID: <ZodSk4PRanMnT9-Z@google.com>
-References: <ZoWKEs4mCqeLyTOB@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="boSIrp0j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=jHvlEXaRyA3bpgUlkw1AFojmqIyREXUTTF5JQR72VEw=; b=boSIrp0jsZKUDH4Q
+	UYfjpoVGX9wtBTFsDfrslweT3vAP4T/r9wcec0Rd5uPBgsTzMKEvAZ2Z+mKZfWLznbTofvfoGALoF
+	v3UlPYkcvCS1FGADu1T9ZoMi/pFJEZnjq9QYgir2sbAqpbpXmXKO0qtOXao1SYQQ/YcNr6hkliyqq
+	Xcli8hpzDG+QX2jgxHxyLxAWmNnn5/VGay5w3ME1Eop+NmqsR+wTR0xy1IsssZUuJFS/0GVjAC2tF
+	2p9va1lATSfpwaKBbyRnOdIuD/gNBSM47zWb7zK+yQlvjt7WoWFgMssDvRvfqFstR89fCisoJ/Nkx
+	HN7gVhPQF3PIq7ao7g==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1sPXh0-00A76q-0X;
+	Fri, 05 Jul 2024 01:24:54 +0000
+Date: Fri, 5 Jul 2024 01:24:54 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: jassisinghbrar@gmail.com, rrice@broadcom.com
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mailbox: bcm-pdc: remove unused struct 'pdc_dma_map'
+Message-ID: <ZodLZl8oQSmsUoN2@gallifrey>
+References: <20240523203741.201099-1-linux@treblig.org>
+ <ZmTEqs2PKZZW_mYT@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ZoWKEs4mCqeLyTOB@stanley.mountain>
+In-Reply-To: <ZmTEqs2PKZZW_mYT@gallifrey>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 01:24:39 up 57 days, 12:38,  1 user,  load average: 0.00, 0.00, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Thu, Jul 04, 2024 at 10:20:03AM -0500, Dan Carpenter wrote:
-> The C standard is vague about the signedness of enums, but in this case
-> here, they are treated as unsigned so the error handling does not work.
-> Use an int type to fix this.
+* Dr. David Alan Gilbert (linux@treblig.org) wrote:
+> * linux@treblig.org (linux@treblig.org) wrote:
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > 
+> > 'pdf_dma_map' has been unused since the original
+> > commit a24532f8d17b ("mailbox: Add Broadcom PDC mailbox driver").
+> > 
+> > Remove it.
+> > 
+> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 > 
-> [...]
+> Ping
 
-Applied to
+Ping^2
 
-    https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git for-next
-
-Thanks!
-
-[1/1] power: supply: cros_charge-control: Fix signedness bug in charge_behaviour_store()
-      commit: 4baf1cc54433ff7c6e5178517bc8768001416681
+> 
+> > ---
+> >  drivers/mailbox/bcm-pdc-mailbox.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> > 
+> > diff --git a/drivers/mailbox/bcm-pdc-mailbox.c b/drivers/mailbox/bcm-pdc-mailbox.c
+> > index 242e7504a628..a873672a9082 100644
+> > --- a/drivers/mailbox/bcm-pdc-mailbox.c
+> > +++ b/drivers/mailbox/bcm-pdc-mailbox.c
+> > @@ -158,10 +158,6 @@ enum pdc_hw {
+> >  	PDC_HW		/* PDC/MDE hardware (i.e. Northstar 2, Pegasus) */
+> >  };
+> >  
+> > -struct pdc_dma_map {
+> > -	void *ctx;          /* opaque context associated with frame */
+> > -};
+> > -
+> >  /* dma descriptor */
+> >  struct dma64dd {
+> >  	u32 ctrl1;      /* misc control bits */
+> > -- 
+> > 2.45.1
+> > 
+> -- 
+>  -----Open up your eyes, open up your mind, open up your code -------   
+> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+> \        dave @ treblig.org |                               | In Hex /
+>  \ _________________________|_____ http://www.treblig.org   |_______/
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
