@@ -1,112 +1,166 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510E0143C53;
-	Fri,  5 Jul 2024 07:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5C61862
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 07:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720162838; cv=none; b=A32lHsmdeDf07DAxafviH7Y0JzCCq+sC0z7IKBzBKT1pMt4H0t2JNPgLx2g0hpqxIuV8G8Cr2pTwrnR/Uev4kVtJsZIsjSoZDpstnP/z6JhMYpcvLfx28i0QeKnuAR026YW5snDSCa1Ralpq/ZVLBKlCDxbsxNMzX7b66nHPYRo=
+	t=1720162922; cv=none; b=fdFVWGB4sxNem+WfLE56q8p+75+Tjmh7fDVmDZKYxvXMpz0ycMk3V07fH9UlbFXjFhh0lAjZdgkUehA1S2d44SfzRFmrF8jHn2JodwORL46Ra8MD1JReu0wR94Ebp1hJ/s8JBim9rT04+u2KBtLGAG0cwCJYnn98NJ5FrpqWwqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720162838; c=relaxed/simple;
-	bh=bOFk8R3sjMWU0W/yovems56xZAEkgJVdHq4/eiNM8gE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HkE5wAoESZcgWMlndoh00n4u5UReBPk+Ahv3pKJeHbmkVp8Szq7CpHbx3XDjS7asG6asp4fg3jQwKjY/0yAMrbGXQlXOTJTTj9wcHACSf6lMaUwygh0rJzZSB7+R8Sq3Z3Z5XeVlY1j5bhyDu/WFMWbv4g+8J1s5tE9w4YTS7iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 962E11A051D;
-	Fri,  5 Jul 2024 09:00:35 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D1E61A0516;
-	Fri,  5 Jul 2024 09:00:35 +0200 (CEST)
-Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id C43A5180222B;
-	Fri,  5 Jul 2024 15:00:33 +0800 (+08)
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	rohit.fule@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	ziniu.wang_1@nxp.com,
-	haibo.chen@nxp.com,
-	LnxRevLi@nxp.com
-Subject: [PATCH v2] Bluetooth: btnxpuart: Add system suspend and resume handlers
-Date: Fri,  5 Jul 2024 12:28:26 +0530
-Message-Id: <20240705065826.782059-1-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1720162922; c=relaxed/simple;
+	bh=VAKkdcMAV22H5TKYjJn3hZeGBw0A8+NVpjt+azWY8bY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LA0/5p1d3EZ1+ze/v/8OA0bZVSnnFUzIVcpRZCFhGX9ZwD2jlVK9fowvkNfXhFn1OM/GCsjCtJDrrmCLyWMQ5sJZGoi/LAEeVfgevMa/jV1HTw+4pLKWQIVWOZaQ7RV9aRQ7X/6kY6QwClIYNkKBnh63ZxPg5i13umtD9kZ1lYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l1psIDfg; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l1psIDfg"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4256742f67fso8863565e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 00:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720162919; x=1720767719; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=qxL0nYrDAAM5QZ7OL1HKKyxUv4rZKYb/1zEztV6/A74=;
+        b=l1psIDfgY08kFeGQwp39mNOGAzSJo9CnayoyCyVQJxRLMpHe+yBYYs5F5WfaZhuiDl
+         cm9oSO3T1d4QFyBOB9cMiw6cevDwU1tXGBg0UoS/fMbcn6QkPGcPOnH53jnrGYYcS+1C
+         JeRcd2PHn46+Uo0S8mH5AMvbo1UgopGr4uALNK+I9H/pAnXvfnM2oP4wo6fcznxR/wvr
+         QHla0wezViqZacY8hk5nV7kXaHUZfC0E8iEiijG6L62WX1z3Ll/bQnwpntfkqbA6uWEm
+         NbIBeaBxHvi16W66vrnwbFdCPfUNitDGPGCi9/DG3XdLCO/GoAF8ENh9leQzDKi17ycr
+         O6kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720162919; x=1720767719;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qxL0nYrDAAM5QZ7OL1HKKyxUv4rZKYb/1zEztV6/A74=;
+        b=nduIwCoaraimV8RIAwwSDM/2OS3mhGUFl7KUaksBhnkXB9rEPZ9s4TjKgAmxS2eA7U
+         PCiltmKKfeCaTb4Tp+drdKoVwFmNpOw3pjbU82wi/7uRMQ3euoDInJUh5bGnUoCBJ9Bx
+         KcCSB2nDXzcHlUVS4raabVC4IhdjhKOP2otRHwqofkt8wat1xQtlGmOjv0rKR0WhC7Sc
+         wAv3Uv1JYwZten/mleqe9b+MQzQlkb5NnP/Vb5va3z+zo2E5jkNY4TK1JRM38XaVjl3a
+         QDHltjR4b0A4fl+I1w16jqkKjVUYvZ88mcCjhfy2BRqVk2tB3PraBrOa7H5BD3hH4soS
+         1lHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZxv6Ws8OZdjmroPkLh1qOHwZpkQRGR6YjauN0l8oLI/1IfZJMSWVZdh6iISKoWMluvhwXsTMQdNV5zCnEK94/B58Z7SFQVnswstzl
+X-Gm-Message-State: AOJu0YxsNygbRdu7mMmO3VI+UZUVW7fwcY1a0RW3TdnizNpNg0b1VWoZ
+	IQUleBxIacMy5TpeXfc/BteOLDK3Tw7FeAaxivQ8UGuy6tlXjlPyTCNcx9YS6Jk=
+X-Google-Smtp-Source: AGHT+IHQAG8IK7P+CUqDzGPD2No+Ne3M1+pJ64KJkYb9ZFoSRnlrRaF1wZLZ3R05HAxO4y0JvHLSZA==
+X-Received: by 2002:a05:600c:4204:b0:426:59aa:6755 with SMTP id 5b1f17b1804b1-42659aa68a9mr771105e9.14.1720162919170;
+        Fri, 05 Jul 2024 00:01:59 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3679ac6d60dsm3593008f8f.39.2024.07.05.00.01.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 00:01:58 -0700 (PDT)
+Message-ID: <4141d373-fe12-4cb8-9aed-34477ea29cfe@linaro.org>
+Date: Fri, 5 Jul 2024 09:01:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] Coresight: Set correct cs_mode for dummy source to fix
+ disable issue
+To: Jie Gan <quic_jiegan@quicinc.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Konrad Dybcio <konradybcio@gmail.com>, Mike Leach <mike.leach@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Jinlong Mao <quic_jinlmao@quicinc.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Tao Zhang <quic_taozha@quicinc.com>, Trilok Soni <quic_tsoni@quicinc.com>,
+ Song Chai <quic_songchai@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ andersson@kernel.org, quic_yijiyang@quicinc.com, quic_yuanjiey@quicinc.com,
+ quic_liuxin@quicinc.com, quic_yanzl@quicinc.com, quic_xinlon@quicinc.com,
+ quic_xueqnie@quicinc.com, quic_sijiwu@quicinc.com
+References: <20240626040521.1909119-1-quic_jiegan@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240626040521.1909119-1-quic_jiegan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This adds handling for system suspend and resume. While the host enters
-suspend state, the driver will drive the chip into low power state.
+On 26/06/2024 06:05, Jie Gan wrote:
+> The coresight_disable_source_sysfs function should verify the
+> mode of the coresight device before disabling the source.
+> However, the mode for the dummy source device is always set to
+> CS_MODE_DISABLED, resulting in the check consistently failing.
+> As a result, dummy source cannot be properly disabled.
+> 
+> Configure CS_MODE_SYSFS/CS_MODE_PERF during the enablement.
+> Configure CS_MODE_DISABLED during the disablement.
 
-Similarly when system is resuming, the driver will wake up the chip.
+30 email addresses in CC, 90% of them not related to the patch. Sorry,
+this is way too much spamming. Do not Cc unrelated people. Do not Cc me
+on such stuff.
 
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
----
-v2: Rename new suspend/resume function names to nxp_serdev_suspend and
-nxp_serdev_resume. (Luke Wang)
----
- drivers/bluetooth/btnxpuart.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC (and consider --no-git-fallback argument). It might
+happen, that command when run on an older kernel, gives you outdated
+entries. Therefore please be sure you base your patches on recent Linux
+kernel.
 
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index da18fd4f54f3..c5b40bba6bfa 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -1498,6 +1498,24 @@ static void nxp_serdev_remove(struct serdev_device *serdev)
- 	hci_free_dev(hdev);
- }
- 
-+static int nxp_serdev_suspend(struct device *dev)
-+{
-+	struct btnxpuart_dev *nxpdev = dev_get_drvdata(dev);
-+	struct ps_data *psdata = &nxpdev->psdata;
-+
-+	ps_control(psdata->hdev, PS_STATE_SLEEP);
-+	return 0;
-+}
-+
-+static int nxp_serdev_resume(struct device *dev)
-+{
-+	struct btnxpuart_dev *nxpdev = dev_get_drvdata(dev);
-+	struct ps_data *psdata = &nxpdev->psdata;
-+
-+	ps_control(data->hdev, PS_STATE_AWAKE);
-+	return 0;
-+}
-+
- static struct btnxpuart_data w8987_data __maybe_unused = {
- 	.helper_fw_name = NULL,
- 	.fw_name = FIRMWARE_W8987,
-@@ -1517,12 +1535,17 @@ static const struct of_device_id nxpuart_of_match_table[] __maybe_unused = {
- };
- MODULE_DEVICE_TABLE(of, nxpuart_of_match_table);
- 
-+static const struct dev_pm_ops nxp_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(nxp_serdev_suspend, nxp_serdev_resume)
-+};
-+
- static struct serdev_device_driver nxp_serdev_driver = {
- 	.probe = nxp_serdev_probe,
- 	.remove = nxp_serdev_remove,
- 	.driver = {
- 		.name = "btnxpuart",
- 		.of_match_table = of_match_ptr(nxpuart_of_match_table),
-+		.pm = &nxp_pm_ops,
- 	},
- };
- 
--- 
-2.34.1
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+</form letter>
+
+Best regards,
+Krzysztof
 
