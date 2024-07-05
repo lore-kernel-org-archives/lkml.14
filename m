@@ -1,180 +1,126 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3ED22083;
-	Fri,  5 Jul 2024 16:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A3E3C463
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 16:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720197282; cv=none; b=NycsE1j5me8oyn5N1/eFl+y/Cq2H+//VMNg3mKaJcBffpwuWdyj7rEOC0TCttA0pzoIM+c3iSw08hx7SRIWZWHn0IkQsmkV+C1XagPR5lfINFs4T6gdga8BUAEyxkEDv4Z5+oW8mYdzIelsEZnA4rnVn3Scvk4Yxd06osVare4U=
+	t=1720197284; cv=none; b=pL838PIuafjoXbbmzZKcwQOsFAHX9FoXKjzE3jsyPYuB5vb6mvTyI2dTwbfJuVMyzMc/nFX4gyIk8zRc16jHDjhVU/TdpB0ztqGOig45dFNHFeIwGyyihS3wq+iM65It0VukrkYqFvtkcexPIU8E43Mn2UoXGKzGduCKQxFkrRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720197282; c=relaxed/simple;
-	bh=4RxVKpu7aLmNuCfUq7vwPdBqh7m8Xjan9uzVGMAMblg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cewzEXWgk1dy6Kl9DcEB1iFXc0f2K4LM+NJ5vUctcsJ7nL6zfL+9CppRzoqp2fXtur2FN278WsE9T1DX5LoNG0od5SOzh8UYuizEUCzqJHBf5YomTC4OMStEHIuL60NIY2YXnLGq4MmkdePtEbvk2GzAX2MMPnAkJg34btEtUnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VPRVRd2O; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1720197284; c=relaxed/simple;
+	bh=fYjKPtuLaZ2rvTns7tjcSPLHAonKpULwJRe753eIIV8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=m0SdC7BAVJmLTKKGfR99M16H0D3CZ7fDz6d3GiRcrDZjAHFpbsVbmE7OJpkrPbqd9PicbaRnIQJxjzt6TYe3Fb7ukgMJjMi1+41erurffQsFmrJXkSYrIG9usVDRoxmg0bDXAEn4M+LUbHhCO0ueTOYxKcK7Rjaz/Q5Z+Zgj8EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=dymdx28z; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VPRVRd2O"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 465GYGWS001066;
-	Fri, 5 Jul 2024 11:34:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1720197256;
-	bh=7+MmV/AK8xd7ornr1O1boj8x2ZOEG1OgD7+3rx0WBvw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=VPRVRd2Orwe1QVlKfndwfJXqrfg3VIHYD3xqJBgoEL32CsuuqwwvtdVP1wt/eu9lp
-	 VM7PI+iGfTojK3ogCpW3gpQdPONUQ+Q6qZQSHuS1kUplInk3OhHK0mGGMHb5jK1CiI
-	 9SZIxtOjrzkZRpQEkPsN2pYhF7bA0hY6ASWF04VU=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 465GYGjw129475
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 5 Jul 2024 11:34:16 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 5
- Jul 2024 11:34:15 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 5 Jul 2024 11:34:15 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 465GYEiY090112;
-	Fri, 5 Jul 2024 11:34:14 -0500
-Message-ID: <ca2d7d4b-c22d-4d14-a216-8c19073e4189@ti.com>
-Date: Fri, 5 Jul 2024 11:34:14 -0500
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="dymdx28z"
+X-Envelope-To: heiko@sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1720197279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vTcYQTSND+4YUQLaRdcC8Bj5nXpCzHWY+jMRGob+qxw=;
+	b=dymdx28zX9Qp2rsw/Wq1BBW1oaLHO6PKiVnhBEuA5tkMTpaqAkG6AEFJVlDY8pRSeokcJn
+	J5kKdwVD6OcM0NMfu+Nx7JUso8WEz0PSqHuMGz8EjxKGMsA/eOeJKkvGpuqskTqmffe/gW
+	rRnLZBrPZfc9Ki/QpCFy5va83X8iT0HYFbx8NpQ+Lh0qG66IKv7efq+doWgrHo2ws7KpuB
+	FLjgtfXhXI3+dq0ki9XaTp1c2uJAsJ/Q+74cRU7ETEgXNIdD0OPUQXSOqt7L5wlOjheI54
+	qQDQGngGqZ7epTYR7ql1qezQ2/OEOcM1zHgeAkqmiL4UQ1wV188COAcEHmH1xw==
+X-Envelope-To: mweigand@mweigand.net
+X-Envelope-To: dsimic@manjaro.org
+X-Envelope-To: didi.debian@cknow.org
+X-Envelope-To: linux-rockchip@lists.infradead.org
+X-Envelope-To: devicetree@vger.kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: macromorgan@hotmail.com
+X-Envelope-To: andyshrk@163.com
+X-Envelope-To: jagan@amarulasolutions.com
+X-Envelope-To: amadeus@jmu.edu.cn
+X-Envelope-To: f.kardame@manjaro.org
+X-Envelope-To: michael.riesch@wolfvision.net
+X-Envelope-To: wiagn233@outlook.com
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Diederik de Haas <didi.debian@cknow.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Maximilian Weigand <mweigand@mweigand.net>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Diederik de Haas <didi.debian@cknow.org>,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Andy Yan <andyshrk@163.com>,
+	Jagan Teki <jagan@amarulasolutions.com>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	Furkan Kardame <f.kardame@manjaro.org>,
+	Michael Riesch <michael.riesch@wolfvision.net>,
+	Shengyu Qu <wiagn233@outlook.com>
+Subject: [PATCH] arm64: dts: rockchip: Add dma-names to uart1 on Pine64 rk3566 devices
+Date: Fri,  5 Jul 2024 18:22:14 +0200
+Message-ID: <20240705163004.29678-4-didi.debian@cknow.org>
+In-Reply-To: <20240705163004.29678-2-didi.debian@cknow.org>
+References: <20240705163004.29678-2-didi.debian@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/7] dts: ti: k3-am625-beagleplay: Add mikroBUS
-To: Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Walle
-	<mwalle@kernel.org>
-CC: Ayush Singh <ayush@beagleboard.org>, Mark Brown <broonie@kernel.org>,
-        Vaishnav M A <vaishnav@beagleboard.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Derek Kiernan <derek.kiernan@amd.com>,
-        Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, Andrew Lunn
-	<andrew@lunn.ch>,
-        <jkridner@beagleboard.org>, <robertcnelson@beagleboard.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-References: <20240627-mikrobus-scratch-spi-v5-0-9e6c148bf5f0@beagleboard.org>
- <20240627-mikrobus-scratch-spi-v5-7-9e6c148bf5f0@beagleboard.org>
- <4e23ec81-b278-4f2b-815d-64ed9390ca55@ti.com>
- <D2AZ0QKTPY3B.1I48GLI90XD0P@kernel.org>
- <5b2cd46e-8a51-f145-8876-55b12a6d62d1@linux-m68k.org>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <5b2cd46e-8a51-f145-8876-55b12a6d62d1@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Migadu-Flow: FLOW_OUT
 
-On 7/5/24 3:01 AM, Geert Uytterhoeven wrote:
->      Hi Michael,
-> 
-> On Thu, 27 Jun 2024, Michael Walle wrote:
->> On Thu Jun 27, 2024 at 7:07 PM CEST, Andrew Davis wrote:
->>>> +    mikrobus_boards {
->>>> +        thermo_click: thermo-click {
->>>> +            compatible = "maxim,max31855k", "mikrobus-spi";
->>>
->>> I might be missing something, but your solution cannot possibly be
->>> to list every click board that could be connected (all 1500+ of them)
->>> to every mikroBUS connector on every device's DT file..
->>>
->>> Each click board should have a single DTSO overlay file to describe the
->>> click board, one per click board total. And then that overlay should
->>> apply cleanly to any device that has a mikroBUS interface.
->>>
->>> Which means you have not completely solved the fundamental problem of
->>> abstracting the mikroBUS connector in DT. Each of these click device child
->>> nodes has to be under the parent connector node. Which means a phandle
->>> to the parent node, which is not generically named. For instance
->>> if my board has 2 connectors, I would have mikrobus0 and mikrobus1,
->>> the click board's overlay would look like this:
->>>
->>> /dts-v1/;
->>> /plugin/;
->>>
->>> &mikrobus0 {
-> 
-> Let's use just "&mikrobus" instead...
-> 
->>>     status = "okay";
->>>
->>>     mikrobus_board {
->>>         thermo-click {
->>>             compatible = "maxim,max31855k", "mikrobus-spi";
->>>             spi-max-frequency = <1000000>;
->>>             pinctrl-apply = "spi_default";
->>>         };
->>>     };
->>> };
->>
->> If there should only be one DT overlay per click board, how would
->> you apply that to to different connectors?
-> 
-> You teach fdtoverlay[*] to translate anchors, e.g.
-> 
->      fdtoverlay -i base.dtb -o final.dtb \
->             -t mikrobus=mikrobus0 click1.dtbo \
->             -t mikrobus=mikrobus1 click2.dtbo
-> 
+Similar to bf6f26deb0e8 ("arm64: dts: rockchip: Add dma-names to uart1
+on quartz64-b") also add the dma-names property to the other rk3566
+devices from Pine64 with bluetooth functionality.
 
-This basic idea is where I started also, the result is we end
-up needing a huge number of "anchor" points. And they would
-also be board specific. So we would want to store all these
-anchor points in a file, and what better file than another
-DT file.
+Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi  | 1 +
+ arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts | 1 +
+ arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi  | 1 +
+ 3 files changed, 3 insertions(+)
 
-Putting all the translations in a DT file to allow the DT overlay
-to become generic is the core idea of this series[0] (looks like
-you already found it, linking for other following along).
+diff --git a/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi b/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
+index d899087bf0b5..ae2536c65a83 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
+@@ -674,6 +674,7 @@ &tsadc {
+ };
+ 
+ &uart1 {
++	dma-names = "tx", "rx";
+ 	pinctrl-0 = <&uart1m0_ctsn>, <&uart1m0_rtsn>, <&uart1m0_xfer>;
+ 	pinctrl-names = "default";
+ 	uart-has-rtscts;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
+index 0b191d8462ad..37a1303d9a34 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
+@@ -738,6 +738,7 @@ &uart0 {
+ };
+ 
+ &uart1 {
++	dma-names = "tx", "rx";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn &uart1m0_rtsn>;
+ 	status = "okay";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi b/arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi
+index dd4e9c1893c6..e42c474ef4ad 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi
+@@ -614,6 +614,7 @@ &tsadc {
+ };
+ 
+ &uart1 {
++	dma-names = "tx", "rx";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn &uart1m0_rtsn>;
+ 	uart-has-rtscts;
+-- 
+2.45.2
 
-And as you note, the symbol table trick allows us to do this
-without teaching fdtoverlay anything new, so it should work
-as-is today for any project already supporting overlays.
-
-> I believe the Raspberry Pi people already have something like that.
-> 
-> The mikrobus node handles all other translations (e.g. mapping from
-> Mikrobus pins to GPIO numbers), so you do not have to handle these
-> explicitly when adding an overlay.
-
-This part seems to still be an open item. For pinmux we can name
-the pinmux nodes such that their phandles are resolved on overlay
-application. For Pin number/name to GPIO number we have "gpio-names",
-and the names can also be generic. But for Interrupts and a couple
-others, we are still missing a good way to provide a generic mapping
-from pin name to number.
-
-Andrew
-
-[0] https://lore.kernel.org/linux-arm-kernel/20240702164403.29067-1-afd@ti.com/
-
-> 
-> [*] And anything else that handles overlays (U-Boot, out-of-tree
->      OF_CONFIGFS, ...)
-> 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                  -- Linus Torvalds
