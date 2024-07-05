@@ -1,120 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98EB914659D;
-	Fri,  5 Jul 2024 13:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6CD147C9E;
+	Fri,  5 Jul 2024 13:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720186275; cv=none; b=syISishtu6lts2Ld/QqeC3XIpiYQRO2aR1dq3JIkQ2Dl162hZxWflfFxVIKper5pkOK5s/jbTvzPj4NPrVpfIuN2nyWtp5+QYXbh7TogsNqj+aKROH+1FTjCHvwwOfVWKMltg3VtHStqvMaaNSP5UVgR3Ac4I6lT2e6JxQriNmc=
+	t=1720186456; cv=none; b=LMkR3j5lszHW6BqFR+ZtmXxbwnqpwHvvbBIH+u1jstkDiys6f9zT3jQ1gWx6RJOBtJhMXmwVi0P60sQXZr35Ge8fFGvP+QShz2VT7iSgFdzyNwqdeB5Yuyw/eXZUwUcfg/x0ZXDEk3yxMeMHCSplu5al6VsJ67UPk/N44LwXsFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720186275; c=relaxed/simple;
-	bh=xCug+VBhHtQMhds5DcaiOaD1U8IKIttktt/mKzhQHRk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jHm+J9gHKcEYu04QQjuBFgu4WvEdJ649aYvdG/OOR9RCH2yinyMgalOqrdFSgfSQ10FS7tKkcPOvVQ/EPxUYNn5YKIMfKIhni/CbQmAhvh3DTEEcfEyGr9j4GilwofwRokrfagkz7N6/3vu8ck5Dud2gjt71294nvto2wjDGpcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA57E367;
-	Fri,  5 Jul 2024 06:31:37 -0700 (PDT)
-Received: from [10.57.74.223] (unknown [10.57.74.223])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07DCA3F762;
-	Fri,  5 Jul 2024 06:31:09 -0700 (PDT)
-Message-ID: <1e0e89ea-3130-42b0-810d-f52da2affe51@arm.com>
-Date: Fri, 5 Jul 2024 14:31:08 +0100
+	s=arc-20240116; t=1720186456; c=relaxed/simple;
+	bh=WQvcmcR5yHifzr47skJIiXUoYESrckFNFBxiMIM1XOI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HDzNZRNTLkYpAoPhcB13bfQK1Z9Qss+oi77JPh06BjPkekaDTuWy+8dZk1YKqBsCxHYzo+cDb4HR/9cPW+BTDyWOTxRX8X0/Rcltr6r/FS9Z8G921C86GxqGhRZQYi1cU+LUD+o7SKX+KPa67y938tuE1FDYjBvgKmjNEcNgv4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=YKSD0XDW; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="YKSD0XDW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1720186450;
+	bh=WQvcmcR5yHifzr47skJIiXUoYESrckFNFBxiMIM1XOI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YKSD0XDWkz9KtUopWJduguUJYINY8NMSoJxMDqyj5Zwdls6VBbqNCTxscU9eDRq1w
+	 dRAX2bzRApz5urmXnM49bxnR8jIT+/Jd3Oz0dCT4N3+8US+jkIWObgP+Uxs3+3opOH
+	 w9W5SXaeKdfl1OfJQ/SE+b1vKVVqcu5MWtfE36YHb3VsrkDbZLsWiiIf7RxzdOzA0a
+	 rYEPgoOeK7Yg8732Ld3xZixsHxWtxJ1LVZns+SmTdzynYkgavpMz3bMT2cJ88TCXP+
+	 jjHO4lT6YVWkWRGLclw7g3MfZOorimvax/8LQ4OQWJ+Ld9D0RHjskyV3E9JmPq7J2o
+	 kOuJ7wFysBpaA==
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 70BDA6007A;
+	Fri,  5 Jul 2024 13:34:10 +0000 (UTC)
+Received: by x201s (Postfix, from userid 1000)
+	id D7CF1204863; Fri, 05 Jul 2024 13:33:50 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: netdev@vger.kernel.org
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
+	Davide Caratti <dcaratti@redhat.com>,
+	Ilya Maximets <i.maximets@ovn.org>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	David Ahern <dsahern@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Ratheesh Kannoth <rkannoth@marvell.com>,
+	Florian Westphal <fw@strlen.de>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 06/10] flow_dissector: set encapsulated control flags from tun_flags
+Date: Fri,  5 Jul 2024 13:33:42 +0000
+Message-ID: <20240705133348.728901-7-ast@fiberby.net>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240705133348.728901-1-ast@fiberby.net>
+References: <20240705133348.728901-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 01/10] fs: Allow fine-grained control of folio sizes
-Content-Language: en-GB
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
- Dave Chinner <david@fromorbit.com>
-Cc: Matthew Wilcox <willy@infradead.org>, chandan.babu@oracle.com,
- djwong@kernel.org, brauner@kernel.org, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
- linux-mm@kvack.org, john.g.garry@oracle.com, linux-fsdevel@vger.kernel.org,
- hare@suse.de, p.raghav@samsung.com, mcgrof@kernel.org, gost.dev@samsung.com,
- cl@os.amperecomputing.com, linux-xfs@vger.kernel.org, hch@lst.de,
- Zi Yan <zi.yan@sent.com>
-References: <20240625114420.719014-1-kernel@pankajraghav.com>
- <20240625114420.719014-2-kernel@pankajraghav.com>
- <cb644a36-67a7-4692-b002-413e70ac864a@arm.com>
- <Zoa9rQbEUam467-q@casper.infradead.org>
- <Zocc+6nIQzfUTPpd@dread.disaster.area>
- <Zoc2rCPC5thSIuoR@casper.infradead.org>
- <Zod3ZQizBL7MyWEA@dread.disaster.area>
- <20240705132418.gk7oeucdisat3sq5@quentin>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240705132418.gk7oeucdisat3sq5@quentin>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 05/07/2024 14:24, Pankaj Raghav (Samsung) wrote:
->>> I suggest you handle it better than this.  If the device is asking for a
->>> blocksize > PMD_SIZE, you should fail to mount it.
->>
->> That's my point: we already do that.
->>
->> The largest block size we support is 64kB and that's way smaller
->> than PMD_SIZE on all platforms and we always check for bs > ps 
->> support at mount time when the filesystem bs > ps.
->>
->> Hence we're never going to set the min value to anything unsupported
->> unless someone makes a massive programming mistake. At which point,
->> we want a *hard, immediate fail* so the developer notices their
->> mistake immediately. All filesystems and block devices need to
->> behave this way so the limits should be encoded as asserts in the
->> function to trigger such behaviour.
-> 
-> I agree, this kind of bug will be encountered only during developement 
-> and not during actual production due to the limit we have fs block size
-> in XFS.
-> 
->>
->>> If the device is
->>> asking for a blocksize > PAGE_SIZE and CONFIG_TRANSPARENT_HUGEPAGE is
->>> not set, you should also decline to mount the filesystem.
->>
->> What does CONFIG_TRANSPARENT_HUGEPAGE have to do with filesystems
->> being able to use large folios?
->>
->> If that's an actual dependency of using large folios, then we're at
->> the point where the mm side of large folios needs to be divorced
->> from CONFIG_TRANSPARENT_HUGEPAGE and always supported.
->> Alternatively, CONFIG_TRANSPARENT_HUGEPAGE needs to selected by the
->> block layer and also every filesystem that wants to support
->> sector/blocks sizes larger than PAGE_SIZE.  IOWs, large folio
->> support needs to *always* be enabled on systems that say
->> CONFIG_BLOCK=y.
-> 
-> Why CONFIG_BLOCK? I think it is enough if it comes from the FS side
-> right? And for now, the only FS that needs that sort of bs > ps 
-> guarantee is XFS with this series. Other filesystems such as bcachefs 
-> that call mapping_set_large_folios() only enable it as an optimization
-> and it is not needed for the filesystem to function.
-> 
-> So this is my conclusion from the conversation:
-> - Add a dependency in Kconfig on THP for XFS until we fix the dependency
->   of large folios on THP
+Set the new FLOW_DIS_F_TUNNEL_* encapsulated control flags, based
+on if their counter-part is set in tun_flags.
 
-THP isn't supported on some arches, so isn't this effectively saying XFS can no
-longer be used with those arches, even if the bs <= ps? I think while pagecache
-large folios depend on THP, you need to make this a mount-time check in the FS?
+These flags are not userspace visible yet, as the code to dump
+encapsulated control flags will first be added, and later activated
+in the following patches.
 
-But ideally, MAX_PAGECACHE_ORDER would be set to 0 for
-!CONFIG_TRANSPARENT_HUGEPAGE so you can just check against that and don't have
-to worry about THP availability directly.
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+Tested-by: Davide Caratti <dcaratti@redhat.com>
+---
+ net/core/flow_dissector.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Willy; Why is MAX_PAGECACHE_ORDER set to 8 when THP is disabled currently?
-
-> - Add a BUILD_BUG_ON(XFS_MAX_BLOCKSIZE > MAX_PAGECACHE_ORDER)
-> - Add a WARN_ON_ONCE() and clamp the min and max value in
->   mapping_set_folio_order_range() ?
-> 
-> Let me know what you all think @willy, @dave and @ryan.
-> 
-> --
-> Pankaj
+diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+index 1614c6708ea7c..a0263a4c5489e 100644
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -396,6 +396,15 @@ skb_flow_dissect_tunnel_info(const struct sk_buff *skb,
+ 
+ 	key = &info->key;
+ 
++	if (test_bit(IP_TUNNEL_CSUM_BIT, key->tun_flags))
++		ctrl_flags |= FLOW_DIS_F_TUNNEL_CSUM;
++	if (test_bit(IP_TUNNEL_DONT_FRAGMENT_BIT, key->tun_flags))
++		ctrl_flags |= FLOW_DIS_F_TUNNEL_DONT_FRAGMENT;
++	if (test_bit(IP_TUNNEL_OAM_BIT, key->tun_flags))
++		ctrl_flags |= FLOW_DIS_F_TUNNEL_OAM;
++	if (test_bit(IP_TUNNEL_CRIT_OPT_BIT, key->tun_flags))
++		ctrl_flags |= FLOW_DIS_F_TUNNEL_CRIT_OPT;
++
+ 	switch (ip_tunnel_info_af(info)) {
+ 	case AF_INET:
+ 		skb_flow_dissect_set_enc_control(FLOW_DISSECTOR_KEY_IPV4_ADDRS,
+-- 
+2.45.2
 
