@@ -1,271 +1,114 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD104C61B;
-	Fri,  5 Jul 2024 15:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED69149C7F
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 16:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720194910; cv=none; b=jZknDdS5tw8vIyIkYyD8MfHC4a5/+tOw3JJdNQshSW3gOUgkBNTDuP9GrpSoBTpIhGMIQ7oVK0rc2Efk+HaaGztcpRSHXvJ04n6/c/pr1OEec9z9ESx1hIzHefiC70EylC17yjbwQjFM/xj1Dzk1bLSINCqgvetXs1ZPKk1L/ZA=
+	t=1720195469; cv=none; b=XRRCm7dqjR43Kxyt9YaMtFXs02n22G/qGntcKyex2joKKhLv4c/KuLwr6pWYoSHIB2tF7ZKJUGW6TJ7vgpZbxexwggtGv4WLL9CBBFiOMuD+Xu6ykDQW+B92DahTC/52dgBdwNN5jt534FklODu4tb3Kkxm7L/LIUq/l4wzzclc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720194910; c=relaxed/simple;
-	bh=kOSHRdFyv4jRD2QGO/b2DiRxc1SpOLMXblZO+rnM9s0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UmJwg64WOSZQWB3ormz+1MZLPHzXkeub9TYVhXO5uYm4RzBue5u0qQFzaDwnlNCnr6GvzMnb9+hL7GTLkUOGemJmhNsWecf5VUaN+iiv+joaosEHgyM1FzSOMQ10wUfaAn+nLeX5XkHDmisvDyhhf62abrWtlTMDXsKYWFfVahA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Zi66ywZ2; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1720195469; c=relaxed/simple;
+	bh=FNTBsX+63uIgnWKLXkG5pwYCpWKOxAZZwqQ8X2x73vU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fcM0RIFzRx7L9zpR3yimlJ2EfKOuxg09EYyjuxMLP36dpQ4KItL2B/smGhmpuoLSDneFm53DtbmhnSiyAnzfHZ2IDbw6to8SJmgpIFOBmrwc0gRFzRc5QB3G8o53Qg3qh3VUF2ZHQR/+eDheKjP/Xy5EUG3UyX+aSL3ZIDmlXBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=VCigcpwi; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Zi66ywZ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1720194906;
-	bh=kOSHRdFyv4jRD2QGO/b2DiRxc1SpOLMXblZO+rnM9s0=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Zi66ywZ2qdm2rvaz1PXfD+QusPiU3Jdw5oXGwB9qdUTYV+ohvDijkisXkh4IelSg5
-	 9Cnzq6Hg6Sr0W/H1udQ7TUsxAQZVlNaI6JnPOBtwwRRYaO3xzC6Qj/7JGBv4+Ei8pp
-	 v+Uk2auNzBBZh1BQqqWknJ6nxv3Fw9ra2hAYFcQu4nWz2LB7KzChGaD/E4bsZRSEZA
-	 03EvpDzjLXW0IEIqQzl3lC4MsXEvJOqmaCTOgqEWK8Ad0kbnOYiqlgCb/QvxaihWug
-	 XLMwIXxhRHpcfop5KyF1CuXA0c22f6NZ8oCpnAz73vjswCt2tD4i9dY4V7zv11crbG
-	 1i26/imbPDktQ==
-Received: from [192.168.1.233] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9FD0A37821F8;
-	Fri,  5 Jul 2024 15:55:04 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Fri, 05 Jul 2024 11:54:43 -0400
-Subject: [PATCH v2] cpufreq: mediatek: Use dev_err_probe in every error
- path in probe
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VCigcpwi"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c927152b4bso1239348a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 09:04:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1720195467; x=1720800267; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J0j8hAyQWJjGjX5p48jR0ZeFa7oUdUxgMcRMAfmdz3I=;
+        b=VCigcpwiMEa87gj34MO+kStN38HY0QF0Wx5yxVrnKyFC69AY1ojtgXHqpGdaeNDUpm
+         rzuBqvjQW6TcidsPJ03K8/ovgUJ+WOdBNcLxgjnElbIMGWmz03lhDPvxwWIv7ZSZmKWj
+         1LO2T/gw14YwDLP8CxSpXjhvX1WqsL1E/+YbU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720195467; x=1720800267;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J0j8hAyQWJjGjX5p48jR0ZeFa7oUdUxgMcRMAfmdz3I=;
+        b=cdzTP8/UkbkcHuf1wJV6ELZ/dXL7lZV+TUl08N0XjVLcEsWcB8UtXNNFT4OPwKKfu+
+         cA5erxl3u0j/eDpY35YqFFNVl2cuQbeslwtxCBsQOgYU/FamIbzcYJu+HQl5iFo9Z4YF
+         Z+pemyoBQNLaEydQXxPsRQqdFthgVyc0LQfISinXHLfFbbthRWlq/KtsImtOMgp9E7xW
+         NKt/GyUr63nmaF9OFgs/5Bum4sowyNFpCd9IcrewpNrfNpXZ4g+z80yMURV89MIKl8Sd
+         f/rldhypmUw6OxWWx2GP3wrgTl/exoc68tISO3YF9Nbv4U0WfOB40uSXiDkA5IzILQsw
+         ZtaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlzK51JtZZxTOZ1GVzxH2iTQwni7Lb3R32+SrMhLkzVH1FQ6tRgpVo/ILoTI6WJJtSfDfa82eaWSraQ3VjTFk6KQgr42yhccHcaFP2
+X-Gm-Message-State: AOJu0YyCpaqVSSPPBgdLR7fJDtq/pPuviDOJ7Gj1zEQ1X1a+bagwGpy2
+	GyQZDWxtK1SGb6TyZ+pDWhPTbMSGoNIwH76eUnAeUUcAIE9zXfY9Z0W2ZVCF8A==
+X-Google-Smtp-Source: AGHT+IHgkOSaePxDDnJHq1U7KDyApbljJxbvMpXvGQArIGdlvWKuaNaFIdtcRXK3XVmYMcGfw2r45Q==
+X-Received: by 2002:a17:90b:11d4:b0:2c9:74cc:1c1b with SMTP id 98e67ed59e1d1-2c99c504127mr4043383a91.7.1720195467069;
+        Fri, 05 Jul 2024 09:04:27 -0700 (PDT)
+Received: from prme-hs2-i1009 ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a992c43sm3576853a91.30.2024.07.05.09.04.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Jul 2024 09:04:26 -0700 (PDT)
+Date: Fri, 5 Jul 2024 09:04:17 -0700
+From: Tim Merrifield <tim.merrifield@broadcom.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+	Xin Li <xin3.li@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Kai Huang <kai.huang@intel.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+	Brian Gerst <brgerst@gmail.com>, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	virtualization@lists.linux.dev, alex.james@broadcom.com,
+	doug.covelli@broadcom.com, jeffrey.sheldon@broadcom.com
+Subject: Re: [PATCH 0/2] Support userspace hypercalls for TDX
+Message-ID: <20240705160404.GA15452@prme-hs2-i1009>
+References: <cover.1720046911.git.tim.merrifield@broadcom.com>
+ <33874bf0-c115-4185-85ef-684794de3c8e@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240705-mtk-cpufreq-dvfs-fail-init-err-v2-1-3a7f91b02ab0@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAEIXiGYC/4WNQQ6CMBBFr0K6dkw7Cqgr72FYlHYqE5Fii42Gc
- HcriWvzV+8v3ptFpMAUxamYRaDEkf2QATeFMJ0ergRsMwuUuJcV1nCfbmDGpwv0AJtcBKe5Bx5
- 4AgoBpK4qNLpGSyiyZAzk+LUGLk3mjuPkw3vtJfV9f+rDP3VSkHc0ZWlb3Emlzsb3vW590Fvj7
- 6JZluUDBmdrctAAAAA=
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33874bf0-c115-4185-85ef-684794de3c8e@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-Use the dev_err_probe() helper to log the errors on every error path in
-the probe function and its sub-functions. This includes
-* adding error messages where there was none
-* converting over dev_err/dev_warn
-* removing the top-level error message after mtk_cpu_dvfs_info_init() is
-  called, since every error path inside that function already logs the
-  error reason. This gets rid of the misleading error message when probe
-  is deferred:
 
-    mtk-cpufreq mtk-cpufreq: failed to initialize dvfs info for cpu0
+Thanks for the response, Dave.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
-Changes in v2:
-- Fixed one occurrence of the error code being set after the usage
-- For the paths that need to set the `ret` variable to the error code,
-  changed them so they set it from dev_err_probe()'s return, in a single
-  line.
-- Link to v1: https://lore.kernel.org/r/20240628-mtk-cpufreq-dvfs-fail-init-err-v1-1-19c55db23011@collabora.com
----
- drivers/cpufreq/mediatek-cpufreq.c | 72 ++++++++++++++++++--------------------
- 1 file changed, 34 insertions(+), 38 deletions(-)
+On Wed, Jul 03, 2024 at 05:18:22PM -0700, Dave Hansen wrote:
+> 
+> Could we please be frank and transparent about what you actually want
+> here and how you expect this mechanism to be used?
+>
 
-diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-index 518606adf14e..b3d85b7f2517 100644
---- a/drivers/cpufreq/mediatek-cpufreq.c
-+++ b/drivers/cpufreq/mediatek-cpufreq.c
-@@ -390,28 +390,23 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 	int ret;
- 
- 	cpu_dev = get_cpu_device(cpu);
--	if (!cpu_dev) {
--		dev_err(cpu_dev, "failed to get cpu%d device\n", cpu);
--		return -ENODEV;
--	}
-+	if (!cpu_dev)
-+		return dev_err_probe(cpu_dev, -ENODEV, "failed to get cpu%d device\n", cpu);
- 	info->cpu_dev = cpu_dev;
- 
- 	info->ccifreq_bound = false;
- 	if (info->soc_data->ccifreq_supported) {
- 		info->cci_dev = of_get_cci(info->cpu_dev);
--		if (IS_ERR(info->cci_dev)) {
--			ret = PTR_ERR(info->cci_dev);
--			dev_err(cpu_dev, "cpu%d: failed to get cci device\n", cpu);
--			return -ENODEV;
--		}
-+		if (IS_ERR(info->cci_dev))
-+			return dev_err_probe(cpu_dev, PTR_ERR(info->cci_dev),
-+					     "cpu%d: failed to get cci device\n",
-+					     cpu);
- 	}
- 
- 	info->cpu_clk = clk_get(cpu_dev, "cpu");
--	if (IS_ERR(info->cpu_clk)) {
--		ret = PTR_ERR(info->cpu_clk);
--		return dev_err_probe(cpu_dev, ret,
-+	if (IS_ERR(info->cpu_clk))
-+		return dev_err_probe(cpu_dev, PTR_ERR(info->cpu_clk),
- 				     "cpu%d: failed to get cpu clk\n", cpu);
--	}
- 
- 	info->inter_clk = clk_get(cpu_dev, "intermediate");
- 	if (IS_ERR(info->inter_clk)) {
-@@ -431,7 +426,7 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 
- 	ret = regulator_enable(info->proc_reg);
- 	if (ret) {
--		dev_warn(cpu_dev, "cpu%d: failed to enable vproc\n", cpu);
-+		dev_err_probe(cpu_dev, ret, "cpu%d: failed to enable vproc\n", cpu);
- 		goto out_free_proc_reg;
- 	}
- 
-@@ -439,14 +434,17 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 	info->sram_reg = regulator_get_optional(cpu_dev, "sram");
- 	if (IS_ERR(info->sram_reg)) {
- 		ret = PTR_ERR(info->sram_reg);
--		if (ret == -EPROBE_DEFER)
-+		if (ret == -EPROBE_DEFER) {
-+			dev_err_probe(cpu_dev, ret,
-+				      "cpu%d: Failed to get sram regulator\n", cpu);
- 			goto out_disable_proc_reg;
-+		}
- 
- 		info->sram_reg = NULL;
- 	} else {
- 		ret = regulator_enable(info->sram_reg);
- 		if (ret) {
--			dev_warn(cpu_dev, "cpu%d: failed to enable vsram\n", cpu);
-+			dev_err_probe(cpu_dev, ret, "cpu%d: failed to enable vsram\n", cpu);
- 			goto out_free_sram_reg;
- 		}
- 	}
-@@ -454,31 +452,34 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 	/* Get OPP-sharing information from "operating-points-v2" bindings */
- 	ret = dev_pm_opp_of_get_sharing_cpus(cpu_dev, &info->cpus);
- 	if (ret) {
--		dev_err(cpu_dev,
-+		dev_err_probe(cpu_dev, ret,
- 			"cpu%d: failed to get OPP-sharing information\n", cpu);
- 		goto out_disable_sram_reg;
- 	}
- 
- 	ret = dev_pm_opp_of_cpumask_add_table(&info->cpus);
- 	if (ret) {
--		dev_warn(cpu_dev, "cpu%d: no OPP table\n", cpu);
-+		dev_err_probe(cpu_dev, ret, "cpu%d: no OPP table\n", cpu);
- 		goto out_disable_sram_reg;
- 	}
- 
- 	ret = clk_prepare_enable(info->cpu_clk);
--	if (ret)
-+	if (ret) {
-+		dev_err_probe(cpu_dev, ret, "cpu%d: failed to enable cpu clk\n", cpu);
- 		goto out_free_opp_table;
-+	}
- 
- 	ret = clk_prepare_enable(info->inter_clk);
--	if (ret)
-+	if (ret) {
-+		dev_err_probe(cpu_dev, ret, "cpu%d: failed to enable inter clk\n", cpu);
- 		goto out_disable_mux_clock;
-+	}
- 
- 	if (info->soc_data->ccifreq_supported) {
- 		info->vproc_on_boot = regulator_get_voltage(info->proc_reg);
- 		if (info->vproc_on_boot < 0) {
--			ret = info->vproc_on_boot;
--			dev_err(info->cpu_dev,
--				"invalid Vproc value: %d\n", info->vproc_on_boot);
-+			ret = dev_err_probe(info->cpu_dev, info->vproc_on_boot,
-+					    "invalid Vproc value\n");
- 			goto out_disable_inter_clock;
- 		}
- 	}
-@@ -487,8 +488,8 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 	rate = clk_get_rate(info->inter_clk);
- 	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
- 	if (IS_ERR(opp)) {
--		dev_err(cpu_dev, "cpu%d: failed to get intermediate opp\n", cpu);
--		ret = PTR_ERR(opp);
-+		ret = dev_err_probe(cpu_dev, PTR_ERR(opp),
-+				    "cpu%d: failed to get intermediate opp\n", cpu);
- 		goto out_disable_inter_clock;
- 	}
- 	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
-@@ -501,7 +502,7 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 	info->opp_nb.notifier_call = mtk_cpufreq_opp_notifier;
- 	ret = dev_pm_opp_register_notifier(cpu_dev, &info->opp_nb);
- 	if (ret) {
--		dev_err(cpu_dev, "cpu%d: failed to register opp notifier\n", cpu);
-+		dev_err_probe(cpu_dev, ret, "cpu%d: failed to register opp notifier\n", cpu);
- 		goto out_disable_inter_clock;
- 	}
- 
-@@ -629,11 +630,9 @@ static int mtk_cpufreq_probe(struct platform_device *pdev)
- 	int cpu, ret;
- 
- 	data = dev_get_platdata(&pdev->dev);
--	if (!data) {
--		dev_err(&pdev->dev,
--			"failed to get mtk cpufreq platform data\n");
--		return -ENODEV;
--	}
-+	if (!data)
-+		return dev_err_probe(&pdev->dev, -ENODEV,
-+				     "failed to get mtk cpufreq platform data\n");
- 
- 	for_each_possible_cpu(cpu) {
- 		info = mtk_cpu_dvfs_info_lookup(cpu);
-@@ -642,25 +641,22 @@ static int mtk_cpufreq_probe(struct platform_device *pdev)
- 
- 		info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
- 		if (!info) {
--			ret = -ENOMEM;
-+			ret = dev_err_probe(&pdev->dev, -ENOMEM,
-+					    "Failed to allocate dvfs_info\n");
- 			goto release_dvfs_info_list;
- 		}
- 
- 		info->soc_data = data;
- 		ret = mtk_cpu_dvfs_info_init(info, cpu);
--		if (ret) {
--			dev_err(&pdev->dev,
--				"failed to initialize dvfs info for cpu%d\n",
--				cpu);
-+		if (ret)
- 			goto release_dvfs_info_list;
--		}
- 
- 		list_add(&info->list_head, &dvfs_info_list);
- 	}
- 
- 	ret = cpufreq_register_driver(&mtk_cpufreq_driver);
- 	if (ret) {
--		dev_err(&pdev->dev, "failed to register mtk cpufreq driver\n");
-+		dev_err_probe(&pdev->dev, ret, "failed to register mtk cpufreq driver\n");
- 		goto release_dvfs_info_list;
- 	}
- 
+Sorry for being unclear. open-vm-tools is currently broken on TDX and
+the intent here is to fix that. The idea is that versions of open-vm-tools
+that have been audited and restricted to certain hypercalls, would execute
+prctl to mark the process as capable of executing hypercalls.
+    
+> This inheritance model seems more suited to wrapping a tiny helper app
+> around an existing binary, a la:
+> 
+> 	prctl(ARCH_SET_COCO_USER_HCALL);
+> 	execve("/existing/binary/that/i/surely/did/not/audit", ...);
+> 
+> ... as opposed to something that you set in new versions of
+> open-vm-tools after an extensive audit and a bug fixing campaign to
+> clean up everything that the audit found.
 
----
-base-commit: 0fc4bfab2cd45f9acb86c4f04b5191e114e901ed
-change-id: 20240627-mtk-cpufreq-dvfs-fail-init-err-0a662ca72de2
-
-Best regards,
--- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
-
+I understand the concern about inheritance. I chose prctl primarily
+because of some existing options that seemed similar, mainly speculation
+control. Is there an alternative approach that doesn't suffer from the
+inheritance issue?
