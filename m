@@ -1,104 +1,124 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C22364A1
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 20:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653BA364A1;
+	Fri,  5 Jul 2024 20:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720212383; cv=none; b=Dx8mLZx2RGFi0fPp3EOyl0GkGK0rYPBcRzUqd15vG0G/CZv9bhJXSVn9z2hzVeCwXEEe7fZ2c+OklU6SvcXp0sw3LvWHJ0zPzKKFkd7Q4nL7fvKqpWR3sm6IowcKibTQyXu1uMLbYBvV2CDOZ0Rbh3TQMdaokvAYIBnSDByCSjs=
+	t=1720212449; cv=none; b=bQuoEqEO+BboA/fTGsdeCc+6lfBSCok/HkGnSVScj4n+sNUTZGKvqXIITyBxh/CVySvy5i3v/31E4fEMXd8myjbdKURX9mcmQuUyOh2kBVla7Cbit21eXAB4vnk0/NBlG0vsraBTKjE3nGHLOoakki5tAr+2Z7kyVb1z2MkNVxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720212383; c=relaxed/simple;
-	bh=SuvnL/H4+TlZn0kt0QsUBsLm72ME11Kl/+jE6usH8og=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pr3fV9A+HJmx1ydfBM+4TDDcULVKaXwveHdVmwZjF7SvaA6rZrn1fJgU4x9O68pmMVlPSdqwrqL+78yjNDYIHqlojhV2EhZSpXtXzEf1zYiO41h+WWZrhIG2kRJ7qTpBP1IlHWGQEgqFC+9i9G64xHZJyuzsZ84QnYJ3UuKVEBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=ueGVbsCq; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1720212449; c=relaxed/simple;
+	bh=eMozeeNDGgbnk37xu6KniIO54Iq7u9MW21qt2w/Xsx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=buwWTRtct0M10Yo6ee/SLaDJSpcRJfD0FHoZs3jVmjmxjzdjplNHmgXFYdhO2GIPYrUK5hBz/OOBdx2kMkRp9HhOpo6MJ7RvDYNIX8TK9uUquhIP6ZC9S5G7dUhbT1g95vX8uqKud/EszQVrJ+hU+M4XS64iHatIXjEjk8IVmT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HDoBY2uv; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="ueGVbsCq"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 14E9E100002;
-	Fri,  5 Jul 2024 23:45:59 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1720212359; bh=NbODFl+buakqA8pBykYDl2OyRct9Z6uXLhovbWPeYvM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=ueGVbsCqXDRgL4t4Mo413850k9tXho3Woyw862swHmYbAaOKCGJtxztnxGThqGIJq
-	 +sVGFgg4MI2KpMZSY4gRFrXut0GUd5lj22o4k55OlSqXij1I6bMaZr4devXczK5Mte
-	 fM5t2rKpkwbuIl8CLpIztKZpgt42lSELrfi8hhVnOVyL0g4O4bGlXhkDxzqBCE3K6G
-	 0oqjET1cwx8TjsRoGjKHS9k4Ie59XeXmgOCdT/zcTBxDMcaXksZJ3E3zUSwrpfB6Ib
-	 VvBuqmmeodP4sQFEHX2wjHTZEc3yRk4eeipctSr84OnUaS7C2QyKj9h6H38lAh7FDl
-	 leSpUWtU6qY1Q==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Fri,  5 Jul 2024 23:45:11 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 5 Jul 2024
- 23:44:51 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Dan Carpenter <dan.carpenter@linaro.org>, Zhang
- Shurong <zhang_shurong@foxmail.com>, <linux-staging@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] staging: ks7010: Remove unneeded check in ks_wlan_get_range()
-Date: Fri, 5 Jul 2024 23:44:34 +0300
-Message-ID: <20240705204434.10541-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HDoBY2uv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=PvCy3PrwhnpHfh2tEhiH0ARV1O+qOmWrJCIYLoSkR0g=; b=HDoBY2uv5BE+KAv1dfieKfCWAs
+	mBqV1FcMGoX5ZwQhjkeHTPLXewaSb+bbFZQf4rCdoL8BOc+GwM+ZslUHEkPsxx5w22fv/o94agik1
+	h/Tfw9JbxalAMZY/aaHTPpRJfzkE5H3X84QPpUZ2ArtLy5Uh3+iruV4RpWAsaVSDtUoTObQRRzzYE
+	eIITusz9xgvb5gdVp+1dc7d7O8nI98ALyZYhwZKx2TN4YEhgUXTupScMvJ9Y7wvVj936rUSUhr8tl
+	wGxHJMuYcXsvS02HdAZ6YrI+de+VlhQvw/NUE8QR+d9dwxv9BI2Byj5euPmdLG6MgEflS+zkSNCBy
+	3+If0Svw==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sPpq1-0000000GoN0-1UGv;
+	Fri, 05 Jul 2024 20:47:25 +0000
+Message-ID: <f7c62def-cba4-46bf-aeda-829d2c378ee3@infradead.org>
+Date: Fri, 5 Jul 2024 13:47:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186343 [Jul 05 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, t-argos.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/05 18:39:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/05 17:28:00 #25862371
-X-KSMG-AntiVirus-Status: Clean, skipped
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] firmware: imx: adds miscdev
+To: Pankaj Gupta <pankaj.gupta@nxp.com>, Jonathan Corbet <corbet@lwn.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org
+References: <20240705-imx-se-if-v4-0-52d000e18a1d@nxp.com>
+ <20240705-imx-se-if-v4-5-52d000e18a1d@nxp.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240705-imx-se-if-v4-5-52d000e18a1d@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In ks_wlan_get_range() variable 'i' which value is always 12, is compared
-to 2. This check is unneeded and should be removed.
 
-Remove unneeded check to clean up the code.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+On 7/5/24 6:52 AM, Pankaj Gupta wrote:
+> diff --git a/Documentation/ABI/testing/se-cdev b/Documentation/ABI/testing/se-cdev
+> new file mode 100644
+> index 000000000000..97a5b2ca115d
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/se-cdev
+> @@ -0,0 +1,43 @@
+> +What:		/dev/<se>_mu[0-9]+_ch[0-9]+
+> +Date:		May 2024
+> +KernelVersion:	6.8
+> +Contact:	linux-imx@nxp.com, pankaj.gupta@nxp.com
+> +Description:
+> +		NXP offers multiple hardware IP(s) for  secure enclaves like EdgeLock-
 
-Fixes: 13a9930d15b4 ("staging: ks7010: add driver from Nanonote extra-repository")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/staging/ks7010/ks_wlan_net.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+		                                     ^^^ one space only
 
-diff --git a/drivers/staging/ks7010/ks_wlan_net.c b/drivers/staging/ks7010/ks_wlan_net.c
-index 0fb97a79ad0b..d56dae73e7ed 100644
---- a/drivers/staging/ks7010/ks_wlan_net.c
-+++ b/drivers/staging/ks7010/ks_wlan_net.c
-@@ -972,10 +972,7 @@ static int ks_wlan_get_range(struct net_device *dev,
- 	 * in bit/s that we can expect using this interface.
- 	 * May be use for QoS stuff... Jean II
- 	 */
--	if (i > 2)
--		range->throughput = 5000 * 1000;
--	else
--		range->throughput = 1500 * 1000;
-+	range->throughput = 5000 * 1000;
- 
- 	range->min_rts = 0;
- 	range->max_rts = 2347;
+> +		Enclave(ELE), SECO. The character device file descriptors
+> +		/dev/<se>_mu*_ch* are the interface between user-space NXP's secure-
+
+Please use "userspace" or "user space".
+
+> +		enclave shared library and the kernel driver.
+> +
+> +		The ioctl(2)-based ABI is defined and documented in
+> +		[include]<linux/firmware/imx/ele_mu_ioctl.h>
+
+End the line above with a period.
+
+> +		 ioctl(s) are used primarily for:
+> +			- shared memory management
+> +			- allocation of I/O buffers
+> +			- getting mu info
+> +			- setting a dev-ctx as receiver to receive all the commands from FW
+> +			- getting SoC info
+> +			- send command and receive command response
+> +
+> +		The following file operations are supported:
+> +
+> +		open(2)
+> +		  Currently the only useful flags are O_RDWR.
+> +
+> +		read(2)
+> +		  Every read() from the opened character device context is waiting on
+> +		  wait_event_interruptible, that gets set by the registered mailbox callback
+> +		  function, indicating a message received from the firmware on message-
+> +		  unit.
+> +
+> +		write(2)
+> +		  Every write() to the opened character device context needs to acquire
+> +		  mailbox_lock before sending message on to the message unit.
+> +
+> +		close(2)
+> +		  Stops and frees up the I/O contexts that were associated
+> +		  with the file descriptor.
+> +
+> +Users:		https://github.com/nxp-imx/imx-secure-enclave.git,
+> +		https://github.com/nxp-imx/imx-smw.git
+> +		crypto/skcipher,
+> +		drivers/nvmem/imx-ocotp-ele.c
+
 -- 
-2.30.2
-
+~Randy
