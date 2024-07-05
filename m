@@ -1,265 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928C3135417
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 20:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BE9135417;
+	Fri,  5 Jul 2024 20:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720210927; cv=none; b=nUtViB/ZlXGCni7p2DKi/GVzagrGyj5i1m4LcB7W+ghdt50vxzH/7zNeZn+GoB1x+0EtMsT62u+kiQxWGWW/6uhhwuERFBER+sUJNgAkjSBp3shGTPVmp5fNViKH7EVOZPyBHF348ROGEXov4jyQvcJTc1zxfJlFkD6MGjDEMBs=
+	t=1720210957; cv=none; b=ZIaIDGwX99YInJttPhwi4hw9Wk1sS8a9H+jD0CKAyegbwfWbhptflmXhtbGl8Cx3aGVXoL918QSujE/4Fs7VShn4keaEHHswdA/hVDH9nPmLkqYnhTHdc/JjliM4RBKXeiY3WJktWvLmlfpYa6zPqQ2iUWtXv0ZwrYWpaqOpLLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720210927; c=relaxed/simple;
-	bh=GNNcawL1fSTAjJwg8Wnn/1QbV6Z5vTAIuGOBFCQe5vU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=GVmI60t1itgIptIBkiZHbbbv/LwBXfMf23xJS6BKsXtRPmfZIXM2JWMW3zCGOIL4ln0uESvN8P6E9GTEz+4MK0VH37iy/3wo0DvPpe7x3MBTWq8hSLfAt5qmDaaGxTiJvme4pCo2O+HMsqAwcQAIoAEc8w6W88trtuTchFqffSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gxN60wtm; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720210957; c=relaxed/simple;
+	bh=iQ+b5Jx7WMdrTUsanaaaUzqA8tHQvM7MXl7JMEqouCQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u6PagdB1IRgvFBZlvHJFv4F8oLpQH1HelUpmuSU3Fo+KF3WMmLFjyc9NEO4jFlUQ3ukMRJc00V3mc6LsJ6uFF0i9QwMvjVRk3mrEaB+h8K+62w1S5I/ngvDnazEGa7Mm7zhZe+x7heF9kJ9ZlhkuPx3lmIHPcyJf5SwncnBYMGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=kf5Yh2XB reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gxN60wtm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720210924; x=1751746924;
-  h=date:from:to:cc:subject:message-id;
-  bh=GNNcawL1fSTAjJwg8Wnn/1QbV6Z5vTAIuGOBFCQe5vU=;
-  b=gxN60wtmpinpBy9YF4e3aSC8GpPGwazMiutwePszkm6kZC/TVqJf9rNl
-   +pvxivAmn1d01QocLw1uJmZ01Y3yKTIyRK4kYjwGGOkyxWPfUXIID0IST
-   MKqoyeDP5N94p7iWa/5ER9kTeR3/Priw0n47BIHoAxa2Vv2KjtTon/9jF
-   reWb66SNCPIcdJwV7PX7AuZuCVWIPpEm3n+JiZHz7kJFkLhDW2VOiF0Ot
-   u+/HiWhpT2NsMX/bMhCEHCu6v2L8RMo4B566FOe4/iOvmG6ea03lqpCE3
-   4yLrnv0hskX4qXt1KDoXmvdIKgGMGfWX7uz6FIh6LDcu6nnU6qz18+WMx
-   w==;
-X-CSE-ConnectionGUID: gcjKDzzKRsGGfOQ0bXTRcA==
-X-CSE-MsgGUID: GkeWRFq9RcWEN+LvlRwnog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="34946543"
-X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
-   d="scan'208";a="34946543"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 13:22:04 -0700
-X-CSE-ConnectionGUID: oKqHuX2DShiP3odfgA7z+A==
-X-CSE-MsgGUID: XMbZTnb1TSWtKbJ5M48K2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
-   d="scan'208";a="77698016"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 05 Jul 2024 13:22:03 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sPpRQ-000Sp2-1r;
-	Fri, 05 Jul 2024 20:22:00 +0000
-Date: Sat, 06 Jul 2024 04:21:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:timers/core] BUILD SUCCESS
- 746770499be55cf375a108a321a818b238182446
-Message-ID: <202407060442.9TmIoynw-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="kf5Yh2XB"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.0)
+ id c4c2457a26282e1f; Fri, 5 Jul 2024 21:22:32 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id AF27F7F5773;
+	Fri,  5 Jul 2024 21:22:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1720207352;
+	bh=iQ+b5Jx7WMdrTUsanaaaUzqA8tHQvM7MXl7JMEqouCQ=;
+	h=From:To:Cc:Subject:Date;
+	b=kf5Yh2XBwtGJA/bx0D7vX12i68f4o/QJakhWRzb1ZRmzVHEIVXXp7wPgMDhgPUDfM
+	 UcymDvABuizND04yru9QsOhXihS+tMXPdfgDzjYX+AR8MG41fq3rPgYQiOAvrBu0wh
+	 YhzmB58RRtfkNHL6NMYv5Qoqlt4T6oSIaiqfLZ308MDWe+yP2mPW4RWV5quOBLZETs
+	 goREv6/q9yHelrk8bxmlCEFLJG/xIuArSDludk5jyUn9PqDaXZODIJdy46RDEDdwFh
+	 MIF1e5007tb/QYKW4KAyYv+jPdC7t7AFMbaw6v7k8m6U/uRccwTEz7QDoyPCeRc0Eb
+	 Pfl64nIiHfJ0g==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
+Subject:
+ [PATCH v1] thermal: core: Simplify list sorting in
+ __thermal_zone_device_update()
+Date: Fri, 05 Jul 2024 21:22:31 +0200
+Message-ID: <2745398.mvXUDI8C0e@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddrvddugddufeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepffffffekgfehheffleetieevfeefvefhleetjedvvdeijeejledvieehueevueffnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepgedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
-branch HEAD: 746770499be55cf375a108a321a818b238182446  timers/migration: Fix grammar in comment
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-elapsed time: 1438m
+Notice that it is not necessary to sort way_down_list in descending
+order.  Instead, it can be sorted in ascending order, like way_up_list,
+and walked in reverse order.
 
-configs tested: 188
-configs skipped: 7
+Use this observation to simplify list sorting slightly in
+__thermal_zone_device_update() which also causes the code to
+be somewhat more straightforward and so easier to follow.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/thermal/thermal_core.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc-13.2.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                          axs101_defconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                     haps_hs_smp_defconfig   gcc-13.2.0
-arc                   randconfig-001-20240705   gcc-13.2.0
-arc                   randconfig-002-20240705   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                         axm55xx_defconfig   gcc-13.2.0
-arm                     davinci_all_defconfig   gcc-13.2.0
-arm                                 defconfig   gcc-13.2.0
-arm                       omap2plus_defconfig   gcc-13.2.0
-arm                          pxa3xx_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240705   gcc-13.2.0
-arm                   randconfig-002-20240705   gcc-13.2.0
-arm                   randconfig-003-20240705   gcc-13.2.0
-arm                   randconfig-004-20240705   gcc-13.2.0
-arm                          sp7021_defconfig   gcc-13.2.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240705   gcc-13.2.0
-arm64                 randconfig-002-20240705   gcc-13.2.0
-arm64                 randconfig-003-20240705   gcc-13.2.0
-arm64                 randconfig-004-20240705   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240705   gcc-13.2.0
-csky                  randconfig-002-20240705   gcc-13.2.0
-hexagon                          allmodconfig   clang-19
-hexagon                          allyesconfig   clang-19
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-13
-i386         buildonly-randconfig-001-20240705   gcc-13
-i386         buildonly-randconfig-002-20240705   gcc-13
-i386         buildonly-randconfig-003-20240705   gcc-13
-i386         buildonly-randconfig-004-20240705   gcc-13
-i386         buildonly-randconfig-005-20240705   gcc-13
-i386         buildonly-randconfig-006-20240705   gcc-13
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240705   gcc-13
-i386                  randconfig-002-20240705   gcc-13
-i386                  randconfig-003-20240705   gcc-13
-i386                  randconfig-004-20240705   gcc-13
-i386                  randconfig-005-20240705   gcc-13
-i386                  randconfig-006-20240705   gcc-13
-i386                  randconfig-011-20240705   gcc-13
-i386                  randconfig-012-20240705   gcc-13
-i386                  randconfig-013-20240705   gcc-13
-i386                  randconfig-014-20240705   gcc-13
-i386                  randconfig-015-20240705   gcc-13
-i386                  randconfig-016-20240705   gcc-13
-loongarch                        allmodconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240705   gcc-13.2.0
-loongarch             randconfig-002-20240705   gcc-13.2.0
-m68k                             allmodconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-13.2.0
-m68k                         apollo_defconfig   gcc-13.2.0
-m68k                                defconfig   gcc-13.2.0
-m68k                          hp300_defconfig   gcc-13.2.0
-m68k                            mac_defconfig   gcc-13.2.0
-m68k                          sun3x_defconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                     decstation_defconfig   gcc-13.2.0
-mips                     loongson1c_defconfig   gcc-13.2.0
-mips                          rb532_defconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240705   gcc-13.2.0
-nios2                 randconfig-002-20240705   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                         allyesconfig   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-parisc                           allmodconfig   gcc-13.2.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                           allyesconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                generic-64bit_defconfig   gcc-13.2.0
-parisc                randconfig-001-20240705   gcc-13.2.0
-parisc                randconfig-002-20240705   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-13.2.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc                          allyesconfig   gcc-13.2.0
-powerpc                    amigaone_defconfig   gcc-13.2.0
-powerpc                   bluestone_defconfig   gcc-13.2.0
-powerpc                      cm5200_defconfig   gcc-13.2.0
-powerpc                   currituck_defconfig   gcc-13.2.0
-powerpc                  iss476-smp_defconfig   gcc-13.2.0
-powerpc                      pasemi_defconfig   gcc-13.2.0
-powerpc                      pcm030_defconfig   gcc-13.2.0
-powerpc                      pmac32_defconfig   gcc-13.2.0
-powerpc                      ppc64e_defconfig   gcc-13.2.0
-powerpc                     rainier_defconfig   gcc-13.2.0
-powerpc                     redwood_defconfig   gcc-13.2.0
-powerpc                     tqm8548_defconfig   gcc-13.2.0
-powerpc64             randconfig-001-20240705   gcc-13.2.0
-powerpc64             randconfig-002-20240705   gcc-13.2.0
-powerpc64             randconfig-003-20240705   gcc-13.2.0
-riscv                            allmodconfig   gcc-13.2.0
-riscv                             allnoconfig   gcc-13.2.0
-riscv                            allyesconfig   gcc-13.2.0
-riscv                               defconfig   gcc-13.2.0
-riscv                 randconfig-001-20240705   gcc-13.2.0
-riscv                 randconfig-002-20240705   gcc-13.2.0
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                              allnoconfig   gcc-13.2.0
-s390                             allyesconfig   clang-19
-s390                             allyesconfig   gcc-13.2.0
-s390                                defconfig   gcc-13.2.0
-s390                  randconfig-001-20240705   gcc-13.2.0
-s390                  randconfig-002-20240705   gcc-13.2.0
-s390                       zfcpdump_defconfig   gcc-13.2.0
-sh                               allmodconfig   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                               allyesconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sh                          lboxre2_defconfig   gcc-13.2.0
-sh                    randconfig-001-20240705   gcc-13.2.0
-sh                    randconfig-002-20240705   gcc-13.2.0
-sh                            shmin_defconfig   gcc-13.2.0
-sparc                            allmodconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240705   gcc-13.2.0
-sparc64               randconfig-002-20240705   gcc-13.2.0
-um                               allmodconfig   clang-19
-um                               allmodconfig   gcc-13.2.0
-um                                allnoconfig   clang-17
-um                                allnoconfig   gcc-13.2.0
-um                               allyesconfig   gcc-13
-um                               allyesconfig   gcc-13.2.0
-um                                  defconfig   gcc-13.2.0
-um                             i386_defconfig   gcc-13.2.0
-um                    randconfig-001-20240705   gcc-13.2.0
-um                    randconfig-002-20240705   gcc-13.2.0
-um                           x86_64_defconfig   gcc-13.2.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240705   gcc-7
-x86_64       buildonly-randconfig-002-20240705   gcc-7
-x86_64       buildonly-randconfig-003-20240705   gcc-7
-x86_64       buildonly-randconfig-004-20240705   gcc-7
-x86_64       buildonly-randconfig-005-20240705   gcc-7
-x86_64       buildonly-randconfig-006-20240705   gcc-7
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                randconfig-001-20240705   gcc-7
-x86_64                randconfig-002-20240705   gcc-7
-x86_64                randconfig-003-20240705   gcc-7
-x86_64                randconfig-004-20240705   gcc-7
-x86_64                randconfig-005-20240705   gcc-7
-x86_64                randconfig-006-20240705   gcc-7
-x86_64                randconfig-011-20240705   gcc-7
-x86_64                randconfig-012-20240705   gcc-7
-x86_64                randconfig-013-20240705   gcc-7
-x86_64                randconfig-014-20240705   gcc-7
-x86_64                randconfig-015-20240705   gcc-7
-x86_64                randconfig-016-20240705   gcc-7
-x86_64                randconfig-071-20240705   gcc-7
-x86_64                randconfig-072-20240705   gcc-7
-x86_64                randconfig-073-20240705   gcc-7
-x86_64                randconfig-074-20240705   gcc-7
-x86_64                randconfig-075-20240705   gcc-7
-x86_64                randconfig-076-20240705   gcc-7
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                  audio_kc705_defconfig   gcc-13.2.0
-xtensa                randconfig-001-20240705   gcc-13.2.0
-xtensa                randconfig-002-20240705   gcc-13.2.0
-xtensa                    xip_kc705_defconfig   gcc-13.2.0
+Index: linux-pm/drivers/thermal/thermal_core.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/thermal_core.c
++++ linux-pm/drivers/thermal/thermal_core.c
+@@ -487,16 +487,14 @@ static void thermal_trip_crossed(struct
+ 	thermal_governor_trip_crossed(governor, tz, trip, crossed_up);
+ }
+ 
+-static int thermal_trip_notify_cmp(void *ascending, const struct list_head *a,
++static int thermal_trip_notify_cmp(void *not_used, const struct list_head *a,
+ 				   const struct list_head *b)
+ {
+ 	struct thermal_trip_desc *tda = container_of(a, struct thermal_trip_desc,
+ 						     notify_list_node);
+ 	struct thermal_trip_desc *tdb = container_of(b, struct thermal_trip_desc,
+ 						     notify_list_node);
+-	int ret = tdb->notify_temp - tda->notify_temp;
+-
+-	return ascending ? ret : -ret;
++	return tdb->notify_temp - tda->notify_temp;
+ }
+ 
+ void __thermal_zone_device_update(struct thermal_zone_device *tz,
+@@ -525,12 +523,12 @@ void __thermal_zone_device_update(struct
+ 
+ 	thermal_zone_set_trips(tz);
+ 
+-	list_sort(&way_up_list, &way_up_list, thermal_trip_notify_cmp);
++	list_sort(NULL, &way_up_list, thermal_trip_notify_cmp);
+ 	list_for_each_entry(td, &way_up_list, notify_list_node)
+ 		thermal_trip_crossed(tz, &td->trip, governor, true);
+ 
+ 	list_sort(NULL, &way_down_list, thermal_trip_notify_cmp);
+-	list_for_each_entry(td, &way_down_list, notify_list_node)
++	list_for_each_entry_reverse(td, &way_down_list, notify_list_node)
+ 		thermal_trip_crossed(tz, &td->trip, governor, false);
+ 
+ 	if (governor->manage)
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+
