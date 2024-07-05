@@ -1,74 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4501A433CD
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 17:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A19916B3BA;
+	Fri,  5 Jul 2024 17:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720199440; cv=none; b=XF89tdhx9HWl+XVYWPB6pY4W8ZaVn6yFswe9B2bjHKPxYtD/PYxGRP0Bwx6lFzCo6CmVKfGeAB3L5/9lffuXuC50c03vhobwsWR9muO5NSscl2/6X5KUNBr93A9Kzu01FlYPRS+FWp8j7HVY3xOHUNA5T9KPijO6+hjozKdDEy8=
+	t=1720199614; cv=none; b=rXo7WdJ8yqHhiC7bIQb1zC81O6lk6aaYfqtk9qN5KapI9pn2TZl4kPMsjUtwAw+QW0WlLVeNgDaHR7bmc0EEYFYBaY14bPMFbnVQZgOuKwAFMO1CKbwOPoikTNEQlPzNZ1u1tMBLtagQND91hut6Pwwa8zQ8J8ISiSDkS84tydE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720199440; c=relaxed/simple;
-	bh=rt35NjUgW/C91Lz67ZKBNDSx0DfEz1EQsLfxcW/ZjQk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=afK6vQTbNKsVbtJn4vX5YMmhY6UCx4kByl6CFhBxKnwbWHxHMYzmltu7w3tKrkV5UpYgHla3Y5fdfnaU6xAkDjnl1tovf3C8c84mEyTzCA13k4r0OumDCM0xapR2+MOlbrm4FNgvy5eX/Xd/J69ItzZPTRwPrkCS4lkSOZUXj4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sarjax3u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720199614; c=relaxed/simple;
+	bh=VGVomkM/rYHhvPwoV2bSDwfdJBUjSxyszcJm5AMp2fQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=apxl1vQ5z4BCrIEVthAL+IYEulz8J2JGtWdKKHn+ABY2QKjLuS43lLedfy9I1cy6nTUWDuci8lZ0atk9sjj+CyX+OYevGLCyFuA9yabFiFO4sAlxS787glYnFIcdZqoMj3f5pMzlsSqYIIvpYistM93H7ic0dPUz7lCxnst5SZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQSdstOt; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sarjax3u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B6DEC116B1;
-	Fri,  5 Jul 2024 17:10:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720199439;
-	bh=rt35NjUgW/C91Lz67ZKBNDSx0DfEz1EQsLfxcW/ZjQk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Sarjax3uiZjlafHM4fgMvJ9iCO3kpJVODA3vdFT2ITpdaBX4x9i2CcihQMDyOCPJ0
-	 oU4mQvvqrRmidMRnoeKDkHjYDCH7xjZWjMH6i86oRiOjaDSwfhCsetdP0LwBbyQskV
-	 zDPq3tyhBR1O7NvL943OeGrjXFG8I/5YDTYBjMnaiALxNVRVN7IsuKewy5YKrHqtFT
-	 bsv9vHtPLDJ6GaFA+DyA9ZayRpEFX/AnvjjoMqCw+ZZKsC4eJOs1Sn7MrCNbvIL+lk
-	 ct4z0PZM+/U7917VDEFWLb9cgWAhjrb3e27/E24mwIGMQc3wDhGx9amsZzk2+zci9e
-	 FqwTohwX4Rgxg==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] riscv: define ILLEGAL_POINTER_VALUE for 64bit
-Date: Sat,  6 Jul 2024 00:56:32 +0800
-Message-ID: <20240705165632.3216-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQSdstOt"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fb4fa1bb34so4844665ad.0;
+        Fri, 05 Jul 2024 10:13:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720199612; x=1720804412; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jVFbWqs/ujGoWS6V+Wtmkt0OqRspry6ZAA+kHzk0dpg=;
+        b=NQSdstOtTF9ZZMGADBw8fYWGmyUt9hHlPiIaNiwVzDTvFLRxK5vzNiNgQ+zMqYOO5T
+         OOCmnLfUheCLM11LKYzx+O3Raltm/Hc7uta419CXzmZ19mP0cw7fQF0CV+n884WDEz33
+         v6mCioBVPJTRRfQXlSpU0h5GG94dYT8+7xZUb57MJD2pTBZ1Ft9NLE2o8yltvB4AU8Ml
+         oovdOI7j/BKiFE1dTybrShnEutPN1g3HTpVzE3rA5bgOnUcP6D+AWweE25oqgwzS1anV
+         1nRcCcBMLnrH0D+eQkAQOw+QSVFRu6gkK9fzYRK39Wua6cTR8N7FuIotmrtvURNe6r+n
+         QyUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720199612; x=1720804412;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jVFbWqs/ujGoWS6V+Wtmkt0OqRspry6ZAA+kHzk0dpg=;
+        b=dfFiUYBDJg4quF/H+KmHp9LimyCG2gHxGZpDVN25wERQpJONECTE6F34pi0OKLgWnQ
+         Rua9cIgoIDYLIyRlXwZxmKSdZub3Q0jZBmNYMReYcYDLOCM3lzVc1Bytk0KMCoIZ0rtB
+         bsJITTM7j/ervg3QrYLRQhTxJPZgOnbA3Q8ulZPbwM45PFWBXbfBXUJHbAldK6wzti8o
+         p4KaNVIQokMm4+BHpOP2GWJxni9Ac5uTmXlVtnNwBIHq4KHjPWVzbdk3HvyGDcLffx3C
+         1KjbIe5v1Vg4YLhXkUIVMhmEikvCdoHGlJZC20FSRZjERA1BEN7M40bFHNN4SZGLAzBD
+         qgZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFev5TZSaFIQu6TqcZaJotj0D85WvghgKcq54FBcgHPu7co3jp9n+/yCW2S+0S2cLeECwTq009CN8U+htnm/9Gbg60MsNf50hMcAaW/7kqnr4Twf1wFxNprk/Dm2mPbBzmDvZDCD1WXxrpHN2SORCn7sV1dkgAyxMzzbIU2HosSRA5
+X-Gm-Message-State: AOJu0YxjmjxkKFgM8nXqVBxINglY3zn3I3hvbOE+vttswycvf1gr/3LC
+	EmY0HcSHb6UTVII8EUl5bfrym268Ev2Hib+evwwTIHLiZAapi17O
+X-Google-Smtp-Source: AGHT+IH31dSGm35koHtTUahNqqOpbaEin66n8iLUwVNuXlEOt+qvmQRWPJFKWZW/d4uoEwNBfCOkVQ==
+X-Received: by 2002:a17:902:6805:b0:1fb:3474:9527 with SMTP id d9443c01a7336-1fb34749830mr30241585ad.25.1720199612155;
+        Fri, 05 Jul 2024 10:13:32 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb57299335sm10136725ad.128.2024.07.05.10.13.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 10:13:31 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Fri, 5 Jul 2024 07:13:30 -1000
+From: Tejun Heo <tj@kernel.org>
+To: "boy.wu" <boy.wu@mediatek.com>
+Cc: Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Boris Burkov <boris@bur.io>, cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, iverlin.wang@mediatek.com
+Subject: Re: [PATCH] blk-cgroup: add spin_lock for u64_stats_update
+Message-ID: <Zogpum23mjHZC8yO@slm.duckdns.org>
+References: <20240705075544.11315-1-boy.wu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240705075544.11315-1-boy.wu@mediatek.com>
 
-This is used in poison.h for poison pointer offset. Based on current
-SV39, SV48 and SV59 vm layout, 0xdead000000000000 is a proper value
-that is not mappable, this can avoid potentially turning an oops to
-an expolit.
+Hello,
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- arch/riscv/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+On Fri, Jul 05, 2024 at 03:55:44PM +0800, boy.wu wrote:
+> From: Boy Wu <boy.wu@mediatek.com>
+> 
+> In 32bit SMP systems, if the system is stressed on the sys node
+> by processes, it may cause blkcg_fill_root_iostats to have a concurrent
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index c51b32a8ddff..c992eabbd002 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -313,6 +313,11 @@ config GENERIC_HWEIGHT
- config FIX_EARLYCON_MEM
- 	def_bool MMU
- 
-+config ILLEGAL_POINTER_VALUE
-+	hex
-+	default 0 if 32BIT
-+	default 0xdead000000000000 if 64BIT
-+
- config PGTABLE_LEVELS
- 	int
- 	default 5 if 64BIT
+What is sys node?
+
+> problem on the seqlock in u64_stats_update, which will cause a deadlock 
+> on u64_stats_fetch_begin in blkcg_print_one_stat.
+
+I'm not following the scenario. Can you please detail the scenario where
+this leads to deadlocks?
+
+Thanks.
+
 -- 
-2.43.0
-
+tejun
