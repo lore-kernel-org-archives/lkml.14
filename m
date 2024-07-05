@@ -1,91 +1,101 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFA71459E8;
-	Fri,  5 Jul 2024 13:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD57B1459E8;
+	Fri,  5 Jul 2024 13:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720187605; cv=none; b=gNu8UWMMtFNLD5t41BAwXkvnmcRR8pxemBXFZCi/rndJbxEBX4VWb6fyGEeg3jIHiyooVbw7MGwxop7kYjrCZLHoT8kAFGmgxsmQvf0q/In6UgBvzLCXKLoICch05F18tOpu+KtfEdo30XfgHJlBpe+6rTary5R+PR7vaP7/NOY=
+	t=1720187748; cv=none; b=OnDLHzLCPUHaBsXM94nS2tWECfOemXvTxCi0sGc0KeBQJHANcTj/JL8nfPVbBFMDawm+zQ/w1b0XLyOgoh9XFeajEu0taarZO5cYDXBwK1NxDz/ccePrxwRbz43Yj+kJileT9pJf/hV0dDS2E8e6lijkJd8enlVkQ5EhJUroHwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720187605; c=relaxed/simple;
-	bh=sm118sAxchGuKFASZW6P4OZONsrrpdlZZiLkYDBahYU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PBPI6FyN3HzQbP4C1bwqPT6783rNV5frh8yzJLhVXzRPh9bRL5I8aYbMdgh8iJWdR3IB83fzNg8sfJ2FE1WCEdzpBTnlSdQzdj8/dIgIn4ukcCLt2ge0KWK9TDK6M6IwfTiwmTfU4BLwx+5hcQiirrodO57up3vHKFBnisabKcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 465DfQnK032117;
-	Fri, 5 Jul 2024 06:52:53 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 405jp1hfp3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 05 Jul 2024 06:52:53 -0700 (PDT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 5 Jul 2024 06:52:52 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.39 via Frontend Transport; Fri, 5 Jul 2024 06:52:50 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <dvyukov@google.com>
-CC: <almaz.alexandrovich@paragon-software.com>, <linux-kernel@vger.kernel.org>,
-        <ntfs3@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
-        <syzbot+a426cde6dee8c2884b0b@syzkaller.appspotmail.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: [syzbot] [ntfs3?] KASAN: slab-out-of-bounds Read in mi_enum_attr
-Date: Fri, 5 Jul 2024 21:52:50 +0800
-Message-ID: <20240705135250.3587041-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CACT4Y+ZWjUE6-q1YF=ZaPjKgGZBw4JLD1v2DphSgCAVf1RzE8g@mail.gmail.com>
-References: <CACT4Y+ZWjUE6-q1YF=ZaPjKgGZBw4JLD1v2DphSgCAVf1RzE8g@mail.gmail.com>
+	s=arc-20240116; t=1720187748; c=relaxed/simple;
+	bh=2GtyDYiumgocbV0k0KJwyssg+IUPuxXvh+oveXpe29I=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=q+1muz6hDxHLBnRHMVmt9hA6oe8i0+pRqLXsWTf3bzJ7RV3rwWBA9Se70qJKBNK8HuibnB7c/nui8Vji+7PiKJvore87qf31jhdLQDhnvDSqFJskw5BcnJT1a6DFfnavactm3XkZaWzx5fHR2U1cu8XikHN0nIWP7C/PC10rlKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Pzb/0vwI; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Pzb/0vwI"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 465BGY5T011649;
+	Fri, 5 Jul 2024 13:55:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:date:from:message-id:subject:to; s=qcppdkim1; bh=4IEXmRQWMzUA
+	0qFO7X/W1K+lHS8lisstFRYAcBoTS7M=; b=Pzb/0vwI+FCnirVPKF8jbA0PwLum
+	bq6T1yqBZsk87ZJDN6DdDVmKvz742cBVKx8RTtoUdUIY4JRVEFiWWOGuPiudqAs1
+	GWzJCoUZcxsqUQcX59TxXQRY8GuGyCmUR2wJnb/knAbowZjt1aql4MS2vOclnYbd
+	6ZOuYNVxGpZ+n9mReiCfXhF8iuC/ZPQz4gD+VH5wyUUzmfjFfhdcceoZOdleMsdL
+	K0Ts8KebulErmtSbQZ8aHd6sBzZR8GKuAQSAY5K8bhNeJDh9FeVWLLqWoaFxFX9t
+	02TW6SXSl8AALmgLmW/tw3r30vJsWF45yMRrVHY2Xr0jJizIg9L6pHWoUA==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402996xg5f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Jul 2024 13:55:42 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTP id 465DtclV001986;
+	Fri, 5 Jul 2024 13:55:38 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 402bbm4nnj-1;
+	Fri, 05 Jul 2024 13:55:38 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 465DtcG4001981;
+	Fri, 5 Jul 2024 13:55:38 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 465DtcEx001980;
+	Fri, 05 Jul 2024 13:55:38 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
+	id 692A0DA0; Fri,  5 Jul 2024 19:25:37 +0530 (+0530)
+From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+To: manivannan.sadhasivam@linaro.org, fancer.lancer@gmail.com,
+        vkoul@kernel.org
+Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] Fix unmasking interrupt bit and remove watermark interrupt enablement 
+Date: Fri,  5 Jul 2024 19:25:31 +0530
+Message-Id: <1720187733-5380-1-git-send-email-quic_msarkar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vA6QavletGmcoGhVd5583M8bxidqUXOl
+X-Proofpoint-ORIG-GUID: vA6QavletGmcoGhVd5583M8bxidqUXOl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-05_09,2024-07-05_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ impostorscore=0 mlxscore=0 malwarescore=0 clxscore=1011 mlxlogscore=574
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407050099
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: mYGhZTdY-0RCetm-QbEqRWmKnBK1oLTg
-X-Proofpoint-ORIG-GUID: mYGhZTdY-0RCetm-QbEqRWmKnBK1oLTg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-05_09,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1011 lowpriorityscore=0 malwarescore=0 suspectscore=0
- impostorscore=0 adultscore=0 phishscore=0 mlxlogscore=760 spamscore=0
- bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.21.0-2406140001 definitions=main-2407050099
 
-On Thu, 4 Jul 2024 15:44:02 +0200, Dmitry Vyukov wrote: 
-> > index 53629b1f65e9..a435df98c2b1 100644
-> > --- a/fs/ntfs3/record.c
-> > +++ b/fs/ntfs3/record.c
-> > @@ -243,14 +243,14 @@ struct ATTRIB *mi_enum_attr(struct mft_inode *mi, struct ATTRIB *attr)
-> >                 off += asize;
-> >         }
-> >
-> > -       asize = le32_to_cpu(attr->size);
-> > -
-> >         /* Can we use the first field (attr->type). */
-> >         if (off + 8 > used) {
-> >                 static_assert(ALIGN(sizeof(enum ATTR_TYPE), 8) == 8);
-> >                 return NULL;
-> >         }
-> >
-> > +       asize = le32_to_cpu(attr->size);
-> > +
-> >         if (attr->type == ATTR_END) {
-> >                 /* End of enumeration. */
-> >                 return NULL;
-> 
-> Hi Lizhi,
-> 
-> I don't see this fix mailed as a patch. Do you plan to submit it officially?
-Hi Dmitry Vyukov,
-Here: https://lore.kernel.org/all/20240202033334.1784409-1-lizhi.xu@windriver.com
+This patch series reset STOP_INT_MASK and ABORT_INT_MASK bit and unmask
+these interrupt for HDMA.
 
---
-Lizhi
+and also remove enablement of local watermark interrupt enable(LWIE)
+and remote watermarek interrupt enable(RWIE) bit to avoid unnecessary
+watermark interrupt event.
+
+Testing
+-------
+
+Tested on Qualcomm SA8775P Platform.
+
+Mrinmay Sarkar (2):
+  dmaengine: dw-edma: Add fix to unmask the interrupt bit for HDMA
+  dmaengine: dw-edma: Add change to remove watermark interrupt
+    enablement
+
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
+
+-- 
+2.7.4
+
