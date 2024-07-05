@@ -1,35 +1,35 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31BC1527B8;
-	Fri,  5 Jul 2024 13:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9B5156C68;
+	Fri,  5 Jul 2024 13:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720186039; cv=none; b=FEuFOKTTovVWU6PM1dR+LfHXK0UxcicBaxRlIDD4ltoLknWBB5ht3QU9HuaJGeKnUzKAtkXAaeTo9VqJBgDczTqCDgLYAth/vWu4R+mL95HRb/OiUvqVd0F8XUDDmRt155iIA6EEV3G+oZk2r2E3jWr5VM29iHdM4hXn9KIZEMg=
+	t=1720186041; cv=none; b=HNAvlbDKNjg8MDLAbHKV5vwtfuNdBrklIvzPP+tuERHm8w61wJWLSOciNIM2BvLNbngQ+8stN9LNWrPt3Zrd7z/hKdeHOmmKVJbzqKeieNBZ02mqZepa0AUU8CeRQiLxlw8ihY6KrAgfusFCf0X6bG5zs7SaxsDzyOATVMo6RQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720186039; c=relaxed/simple;
-	bh=CAd5Qlo15/pKBKEu259DqHJMG/vSFX/zyMPS3Uy+hc4=;
+	s=arc-20240116; t=1720186041; c=relaxed/simple;
+	bh=7FIYxRfvmusJYW3NXDOpm3dJjXJR4Z4Kf/2oD5O5l2Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XVW1mxiSKKxZJVA/FZXowe+TZz4NMtmBP4DUEu1o4BLKL8dRWIbtI1+3k1Nb9qkLaSwmz8ZMrRM4raTxTkcviUlmaC4hrwS0RtSqRVN09zlqk7vaSRjsG/lxk9chz3LZRHgkV8ZyUJy7NobpM7QftjUwJB9vhEIdARoGF3mKI2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bPYtqH4L; arc=none smtp.client-ip=217.70.183.197
+	 MIME-Version; b=X9TpPFROuti5ELAsSlJ9w95nieR1YiZUwHSWQ1WheKZrCuFzWVXC+oAhrHG3xb9yYMg4/wA1rPsmVVXGeSwVMh0r9bzWawB5O9w4AU1WP8P2sQ5Hh4OWnuLoazWl5+02iaCR+PGPIZ0Up6VzYZhe61rkN3LL5qX6BHnUoQ2z2zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XWrZLQu+; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bPYtqH4L"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 17F641C000B;
-	Fri,  5 Jul 2024 13:27:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XWrZLQu+"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1623C1C0004;
+	Fri,  5 Jul 2024 13:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720186035;
+	t=1720186038;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1lMI41lkYPrfVKFeLYdb6NDuhFK+s7QWeP97b3mixAs=;
-	b=bPYtqH4LVjyrKfxDBc/OdF4uCndxoPW8CqPekzMMNfCozTZkQh3OSfWGUBZ5iX2nnVSPtR
-	NymxSMdz31MgWLoF/CfHaMNPRRZe+TMZNnvi1YsPiHhyHwxoPUpIGSXpgfblmV2FpCbFWB
-	xJN+ku1TkPO3XzgAWP19Re8QEIP7VawkNTE7TWzrEQkBGyC6++Sd0EABmFV0aLtjpJQ6cB
-	4/kx/GAIVTTELQlK0/HSGS6uM4iQYv37lwrCutRxO6wBOS4SyXiWAkrYb0ubn7gkjFvOT+
-	ytlQhnQwHkx+rKfC6Wxfbg5u4mAixFsYjxNdBlSPTmcMZGTBicYxDZjG09WQEg==
+	bh=uy76o+N0EM0sJl+NqRd3EHqRDxABCoWbyTToYzh4nN4=;
+	b=XWrZLQu+wiJuqTXyGW2DAa/qz32it6KN9QOCzsL3GNr9PN6vG8sNIcZzMI6DLXvcJcrRrL
+	0VD6D0S9a0llOrVMHG2cyTfsTcK/mTZDR3uKu2W4S5uisdA8gWEPQrQkLZxKtmGbav3VH7
+	ISyex0pWQWIkLxY52DZ3fWMluhRK7+f3y3AM12YvrlfuGfpyl+V5MMkIqSudP6aWVB/XXb
+	JIcW3wdSolE0+AAgFMU1/PhYFN8HficcMlukDgWsHIOZRV0bAAI/Pmyal9okOWW715uAxy
+	Gq6yOC+c9aFjyjxd6Y3pX6uoUJBPK/Qmu0iseTOYVdMzdiGakpvRQhP0bqoPIg==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -60,9 +60,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Marc Kleine-Budde <mkl@pengutronix.de>,
 	Dan Carpenter <dan.carpenter@linaro.org>,
 	Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next v16 04/14] net: sfp: Add helper to return the SFP bus name
-Date: Fri,  5 Jul 2024 15:26:55 +0200
-Message-ID: <20240705132706.13588-5-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v16 06/14] netlink: specs: add phy-index as a header parameter
+Date: Fri,  5 Jul 2024 15:26:57 +0200
+Message-ID: <20240705132706.13588-7-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240705132706.13588-1-maxime.chevallier@bootlin.com>
 References: <20240705132706.13588-1-maxime.chevallier@bootlin.com>
@@ -75,77 +75,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Knowing the bus name is helpful when we want to expose the link topology
-to userspace, add a helper to return the SFP bus name.
-
-This call will always be made while holding the RTNL which ensures
-that the SFP driver won't unbind from the device. The returned pointer
-to the bus name will only be used while RTNL is held.
+Update the spec to take the newly introduced phy-index as a generic
+request parameter.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Suggested-by: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/phy/sfp-bus.c | 22 ++++++++++++++++++++++
- include/linux/sfp.h       |  6 ++++++
- 2 files changed, 28 insertions(+)
+ Documentation/netlink/specs/ethtool.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
-index 56953e66bb7b..f13c00b5b449 100644
---- a/drivers/net/phy/sfp-bus.c
-+++ b/drivers/net/phy/sfp-bus.c
-@@ -722,6 +722,28 @@ void sfp_bus_del_upstream(struct sfp_bus *bus)
- }
- EXPORT_SYMBOL_GPL(sfp_bus_del_upstream);
+diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+index 949e2722505d..4ca7c5b8c504 100644
+--- a/Documentation/netlink/specs/ethtool.yaml
++++ b/Documentation/netlink/specs/ethtool.yaml
+@@ -39,6 +39,9 @@ attribute-sets:
+         name: flags
+         type: u32
+         enum: header-flags
++      -
++        name: phy-index
++        type: u32
  
-+/**
-+ * sfp_get_name() - Get the SFP device name
-+ * @bus: a pointer to the &struct sfp_bus structure for the sfp module
-+ *
-+ * Gets the SFP device's name, if @bus has a registered socket. Callers must
-+ * hold RTNL, and the returned name is only valid until RTNL is released.
-+ *
-+ * Returns:
-+ *	- The name of the SFP device registered with sfp_register_socket()
-+ *	- %NULL if no device was registered on @bus
-+ */
-+const char *sfp_get_name(struct sfp_bus *bus)
-+{
-+	ASSERT_RTNL();
-+
-+	if (bus->sfp_dev)
-+		return dev_name(bus->sfp_dev);
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(sfp_get_name);
-+
- /* Socket driver entry points */
- int sfp_add_phy(struct sfp_bus *bus, struct phy_device *phydev)
- {
-diff --git a/include/linux/sfp.h b/include/linux/sfp.h
-index 54abb4d22b2e..60c65cea74f6 100644
---- a/include/linux/sfp.h
-+++ b/include/linux/sfp.h
-@@ -576,6 +576,7 @@ struct sfp_bus *sfp_bus_find_fwnode(const struct fwnode_handle *fwnode);
- int sfp_bus_add_upstream(struct sfp_bus *bus, void *upstream,
- 			 const struct sfp_upstream_ops *ops);
- void sfp_bus_del_upstream(struct sfp_bus *bus);
-+const char *sfp_get_name(struct sfp_bus *bus);
- #else
- static inline int sfp_parse_port(struct sfp_bus *bus,
- 				 const struct sfp_eeprom_id *id,
-@@ -654,6 +655,11 @@ static inline int sfp_bus_add_upstream(struct sfp_bus *bus, void *upstream,
- static inline void sfp_bus_del_upstream(struct sfp_bus *bus)
- {
- }
-+
-+static inline const char *sfp_get_name(struct sfp_bus *bus)
-+{
-+	return NULL;
-+}
- #endif
- 
- #endif
+   -
+     name: bitset-bit
 -- 
 2.45.1
 
