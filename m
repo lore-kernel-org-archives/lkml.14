@@ -1,133 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB03146A9D;
-	Fri,  5 Jul 2024 08:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29BC143887;
+	Fri,  5 Jul 2024 08:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720169573; cv=none; b=t/u/YIPti44xEoRRpvcrqNeWrsNqum2F47nYn1SVuS21LuIMgPeplhcI32nIlShWFqxdRLpvxHkNMgWLmoxQi9CcMNDBq5Qe0nH/w5UOopH89am+zLsxBz434hht+mvwG0r2n5VpsU6x4KCQ9ft2z5T+nsXX2yENqBYzQoTzI4U=
+	t=1720169718; cv=none; b=uO0M16TINTV/0bV1DQfOqlLVoBJbn6ozZaEXX1s35we05jmI10xG8ytpxhx+tYAxGmsOmQ4jPow9m7l89ZxBuWff+W4WFfg8tCrLx41mWDPQT0Ntp7luIYNHnMG1kV7ArUmQ889klwdBhyMwWpSn+urmLHYFFLwL4rS4RAuATHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720169573; c=relaxed/simple;
-	bh=1EDXJsRapLfRsQyZ9e6wT9u++sCHv++Wzgq/ubLI0uY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G1NMFlwKc7K3HhK6vkgfHm8msbtjWSXF+35JRmJ6CmK6tK7vInC+X+ZriZF1OO6kS88VRfS5eugpNrF0NQ9YSMQjC5oBNozsIiMwJoAZ0bDbw6hr59yt/BMaC1yOY84/73rYYAKLtjbhWlCnuXRKW8mZ4sjZyxsshSv88Zlm5nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VYWtVMDE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720169718; c=relaxed/simple;
+	bh=KP8b7bq9PaVBCtI1nYv2y4hyKrMoNo/NQYFnmt6693A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UtimPqYG0tsxHfVo3FeXNimGIjCwkVudJgkqJxDbi+4exe/pe9vMe+nKTxalZOWqMaoU3jDxdXzABsdV5KtTg8b+QZPlwM2G7/xaEE+c2x+od3RCoqiOOuUa6vJ7lG6YnN7G/OCjxmKIcQVqpFFZF15Ws8cFlqnwCKrfK/tAUxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZzWgObx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VYWtVMDE"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4657xhTY020994;
-	Fri, 5 Jul 2024 08:52:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=qb1XPLFu+Q4nDgDk4YaRZrbQ
-	xukeJ6QWiQb1Jo1xbS4=; b=VYWtVMDEPNkxgAcT7Zzjv3jP5ZtIPUQ9YH8GGwlj
-	OU619eZdJyDjEYNVxLWcvzGXlgG9Vnq5RLJIMsxxIComcnsFGg6oLUMW6Th8TnUm
-	J0ysxf6rtz9+X0QX6tJ2uwWZqytkVsNc1jY2pLT3i1fp/Sn6Ea0eaMY1KmYLmx/D
-	jK7dAMGEAvjS1Qw+I1i7N5LejoGaPZSlPrW7XhTFn9EOCE/Sd1fustB1nMAhVQjb
-	H33iFtrzmjeNsr0Dv9vYuYnNSjr41Mt7SE/qiSSM/lbllPujD0AGlo+Y60qKKkpu
-	2q3L4BWsXczn9koi+NY7pfezXyj9Xoz2eklwHl5p+viUMw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406cww84p5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Jul 2024 08:52:40 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4658qd5X020074
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 5 Jul 2024 08:52:39 GMT
-Received: from taozha2-gv.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 5 Jul 2024 01:52:35 -0700
-From: Tao Zhang <quic_taozha@quicinc.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>,
-        Mike Leach <mike.leach@linaro.org>, "Rob Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        James Clark <james.clark@arm.com>
-CC: Tao Zhang <quic_taozha@quicinc.com>,
-        Jinlong Mao
-	<quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
-        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Tingwei Zhang
-	<quic_tingweiz@quicinc.com>,
-        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>,
-        Song Chai <quic_songchai@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        Jie Gan <quic_jiegan@quicinc.com>
-Subject: [PATCH v1 3/3] coresight-tpda: Optimize the function of reading element size
-Date: Fri, 5 Jul 2024 16:51:52 +0800
-Message-ID: <20240705085152.9063-4-quic_taozha@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240705085152.9063-1-quic_taozha@quicinc.com>
-References: <20240705085152.9063-1-quic_taozha@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZzWgObx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C1F2C116B1;
+	Fri,  5 Jul 2024 08:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720169718;
+	bh=KP8b7bq9PaVBCtI1nYv2y4hyKrMoNo/NQYFnmt6693A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PZzWgObx0FH+K+CI5qf2mhMrec+J8Gi2YpOl+Xpw9qYS2bu4959pCKdjNdK7CtlO3
+	 SBg6K4r3Gab28MlMi8ig4Wv1jNxbrT9xOt0TAgkKH5IPQNJefkoi4DV7QRsL3S7O4m
+	 soemNRUHSG0cn2b56vpeIMY8BXbkP5znc4GWRzMvIVhZJmW0hn4ngmAlHMx+noneyi
+	 105VDi0i++3L9uc/7sQbmi1vW7iMblBD1RekLfHiKP6IhMklu/6jNcirIDirnsdnUb
+	 cPxSmAhQDR5FoXmnF/n9eGOYZm4aFtz4SKpgLTYZ2tF3IDLCHemdKK+RzrLFqSku4g
+	 Tak4RsCoKYk9Q==
+Message-ID: <a2631ae1-7500-4422-bda9-01867ddcd069@kernel.org>
+Date: Fri, 5 Jul 2024 10:55:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: IWBEDZdVDVJhSUPY8anBbxp0wzffX-Av
-X-Proofpoint-GUID: IWBEDZdVDVJhSUPY8anBbxp0wzffX-Av
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-05_05,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0 mlxscore=0
- clxscore=1015 suspectscore=0 impostorscore=0 malwarescore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407050066
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: regulator: sprd,sc2731-regulator: convert to
+ YAML
+To: Stanislav Jakubek <stano.jakubek@gmail.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Baolin Wang <baolin.wang7@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <ZobxoobZvA8k3pyi@standask-GA-A55M-S2HP>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ZobxoobZvA8k3pyi@standask-GA-A55M-S2HP>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Since the new funnel device supports multi-port output scenarios,
-there may be more than one TPDM connected to one TPDA. In this
-way, when reading the element size of the TPDM, TPDA driver needs
-to find the expected TPDM corresponding to the filter source.
-When TPDA finds a TPDM or a filter source from a input connection,
-it will read the Devicetree to get the expected TPDM's element
-size.
+On 04/07/2024 21:01, Stanislav Jakubek wrote:
+> Convert the Spreadtrum SC2731 regulator bindings to DT schema.
+> 
+> Change during conversion:
+>   - switch compatible from sprd,sc27xx-regulator to sprd,sc2731-regulator,
+>     same as the only in-tree user has done back in 2019 [1]
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm64/boot/dts/sprd/sc2731.dtsi?h=v6.9&id=0419a75b1808dda225b17ba1509f195f23c0db88
+> 
+> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
 
-Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
----
- drivers/hwtracing/coresight/coresight-tpda.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/drivers/hwtracing/coresight/coresight-tpda.c b/drivers/hwtracing/coresight/coresight-tpda.c
-index 52b0201090fb..fc5a4e46cf5d 100644
---- a/drivers/hwtracing/coresight/coresight-tpda.c
-+++ b/drivers/hwtracing/coresight/coresight-tpda.c
-@@ -110,9 +110,12 @@ static int tpda_get_element_size(struct tpda_drvdata *drvdata,
- 		    csdev->pdata->in_conns[i]->dest_port != inport)
- 			continue;
- 
--		if (coresight_device_is_tpdm(in)) {
-+		if (coresight_device_is_tpdm(in)
-+		    || csdev->pdata->in_conns[i]->filter_src_dev) {
- 			if (drvdata->dsb_esize || drvdata->cmb_esize)
- 				return -EEXIST;
-+			if (csdev->pdata->in_conns[i]->filter_src_dev)
-+				in = csdev->pdata->in_conns[i]->filter_src_dev;
- 			rc = tpdm_read_element_size(drvdata, in);
- 			if (rc)
- 				return rc;
-@@ -124,7 +127,6 @@ static int tpda_get_element_size(struct tpda_drvdata *drvdata,
- 		}
- 	}
- 
--
- 	return rc;
- }
- 
--- 
-2.17.1
+Best regards,
+Krzysztof
 
