@@ -1,65 +1,52 @@
-Received: from smtp-42aa.mail.infomaniak.ch (smtp-42aa.mail.infomaniak.ch [84.16.66.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7176135417
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 17:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21AE14A4C1
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 17:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720202010; cv=none; b=a9uVF694pj+Rhl8YiFKhgvBJ66C+mmwKwucYl5oNlnFVA0XAE24G7z412GffoR1GiFTuOX8tBcRzS/nTWTBSTiPUvCtxkFq9+U8YQ3FQI4hhIe8OMALeac6n8yyB+MiS1ucRmnz5ybpKJ2nb8kBHIRuUR1A3FeAjTRwTJwL65iw=
+	t=1720202025; cv=none; b=GkpTDEEmwZrBE+93gfacl1sSK7hhR14T3q8Oncq1M6i4W4wKezVjayz4dm3EpAaxiEs2LzF1Tjacz+Hu7n4DHqbKacXfgR0QQ97alytPAc48o6jHbAukQ5cqW31x1ZGXzJUbx4ans/EPInxI1mkJx7D4iWLDRnJ7v1PnkKKH0c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720202010; c=relaxed/simple;
-	bh=1ovZsTEE4mGTjZJNE9Bn+x7nEz8rd0oYSMZQ7aLG7dE=;
+	s=arc-20240116; t=1720202025; c=relaxed/simple;
+	bh=Cp0IJ17jnfnktwi9iVEwqyB4oBrs3H4WWIPrsBN5eEI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qxA0BG7o2MsgLGWFLRx7m6znwFLmwtf+Kpa2qNaxZOd9c7nlVwdb4nNRl0uqrSLNz9EIXvzxhXV0gcpMOg/hee5JTVEOyTN3siv85r3AiaxhC7RWcC1SkKhGVmJFXFCWTprv6rpnauvEJtFBCpzOE3Rqpj4MUep6b4MePBO+31U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=vLPJ8Ots; arc=none smtp.client-ip=84.16.66.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=a8UAQuZC5wGRKcyEPbnrzqEH6PwQCNUboQiCqDNiPo9Atdj+o0VgDIqF6qm5r/z+hkI0Jr5o0v8/8lK+E6PcxFM9scu7g6sxdLXJ3TUiJ3oJIOAgrrpa+wsp2thwNw/iMfBVw/24lODI0f03/PXPmsiySFoQjKozCyU9eWoUAdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=pGE/M6sr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="vLPJ8Ots"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4WG1Mk0nY6zGDF;
-	Fri,  5 Jul 2024 19:53:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1720202002;
-	bh=EVA4xGWQR4aMmDX4txfboMVq0fyWNrcCv8C687hvy6M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vLPJ8OtssQOlAqvXDFLxhWrIipCNWzJ6q15HW0SkxoQATmx3f9vwxO6gOmyBI0HrA
-	 4PSkXXW7A+42nK65h5f5pROfqbwAEkOnDtb09VPQhRvNKvA//vbxT1YWHTEfUB9nuq
-	 NcVdFfFqOavW6dvw976SzC/jNfIeam4utTzxBdMA=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4WG1MY3F4nzGZx;
-	Fri,  5 Jul 2024 19:53:13 +0200 (CEST)
-Date: Fri, 5 Jul 2024 19:53:10 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Kees Cook <kees@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Paul Moore <paul@paul-moore.com>, Theodore Ts'o <tytso@mit.edu>, 
-	Alejandro Colomar <alx@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Christian Heimes <christian@python.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, Eric Biggers <ebiggers@kernel.org>, 
-	Eric Chiang <ericchiang@google.com>, Fan Wu <wufan@linux.microsoft.com>, 
-	Florian Weimer <fweimer@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	James Morris <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>, Jann Horn <jannh@google.com>, 
-	Jeff Xu <jeffxu@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Jordan R Abrahams <ajordanr@google.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, 
-	Luca Boccassi <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Matthew Garrett <mjg59@srcf.ucam.org>, Matthew Wilcox <willy@infradead.org>, 
-	Miklos Szeredi <mszeredi@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, Scott Shell <scottsh@microsoft.com>, 
-	Shuah Khan <shuah@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Steve Dower <steve.dower@python.org>, Steve Grubb <sgrubb@redhat.com>, 
-	Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>, Vincent Strubel <vincent.strubel@ssi.gouv.fr>, 
-	Xiaoming Ni <nixiaoming@huawei.com>, Yin Fengwei <fengwei.yin@intel.com>, 
-	kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
-Subject: Re: [RFC PATCH v19 1/5] exec: Add a new AT_CHECK flag to execveat(2)
-Message-ID: <20240705.uch1saeNi6mo@digikod.net>
-References: <20240704190137.696169-1-mic@digikod.net>
- <20240704190137.696169-2-mic@digikod.net>
- <202407041656.3A05153@keescook>
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="pGE/M6sr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9513C116B1;
+	Fri,  5 Jul 2024 17:53:43 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="pGE/M6sr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1720202022;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yEIqcaBhjzZ0Ujk5DWiBooLG+n3C54+PAc5baPVzfxU=;
+	b=pGE/M6srW1GtYg3CEMNBVyYroOjzVh9mF91ToJyq4lNak64JxdBU0r4uGlTK1gxNolzEqV
+	wWD1CNK9H6gbPYgnlUk2hqWshyfLNbWzGozXqZD2fP5QNTHYud0MM3+LoLqUJqwEjvsR4+
+	RFjdmAEajm/A0fE0G0d4xfRjmdJio0Q=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 3ead16b0 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 5 Jul 2024 17:53:42 +0000 (UTC)
+Date: Fri, 5 Jul 2024 19:53:40 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: jolsa@kernel.org, mhiramat@kernel.org, cgzones@googlemail.com,
+	brauner@kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de
+Subject: Re: deconflicting new syscall numbers for 6.11
+Message-ID: <ZogzJCb66vwxwSLN@zx2c4.com>
+References: <CAHmME9pm+ZE2_qf1DNxukB6ufPrjTAsnwin05-VX_gS03Yq-ag@mail.gmail.com>
+ <CAHk-=whTjdO6szgRKp51ZeDLDmA1+YYSbg+vEUt9OsxTMDUtjQ@mail.gmail.com>
+ <CAHk-=wgqD9h0Eb-n94ZEuK9SugnkczXvX497X=OdACVEhsw5xQ@mail.gmail.com>
+ <Zobt_M91PEnVobML@zx2c4.com>
+ <CAHk-=wh47WSNQYuSWqdu_8XeRzfpWbozzTDL6KtkGbSmLrWU4g@mail.gmail.com>
+ <CAHmME9pgFXhSdWpTwt_x51pFu2Qm878dhcQjG9WhPXV_XFXm9w@mail.gmail.com>
+ <CAHk-=wjCmw1L42W-o=pW7_i=nJK5r0_HFQTWD_agKWGt4hE7JQ@mail.gmail.com>
+ <CAHk-=win2mesMNEfL-KZQ_jk1YH8N8dL9r=7XOLp28_WMazpVg@mail.gmail.com>
+ <ZogcxjLv3NAeQYvA@zx2c4.com>
+ <CAHk-=whRpLyY+U9mkKo8O=2_BXNk=7sjYeObzFr3fGi0KLjLJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,64 +55,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202407041656.3A05153@keescook>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <CAHk-=whRpLyY+U9mkKo8O=2_BXNk=7sjYeObzFr3fGi0KLjLJw@mail.gmail.com>
 
-On Thu, Jul 04, 2024 at 05:04:03PM -0700, Kees Cook wrote:
-> On Thu, Jul 04, 2024 at 09:01:33PM +0200, Mickaël Salaün wrote:
-> > Add a new AT_CHECK flag to execveat(2) to check if a file would be
-> > allowed for execution.  The main use case is for script interpreters and
-> > dynamic linkers to check execution permission according to the kernel's
-> > security policy. Another use case is to add context to access logs e.g.,
-> > which script (instead of interpreter) accessed a file.  As any
-> > executable code, scripts could also use this check [1].
-> > 
-> > This is different than faccessat(2) which only checks file access
-> > rights, but not the full context e.g. mount point's noexec, stack limit,
-> > and all potential LSM extra checks (e.g. argv, envp, credentials).
-> > Since the use of AT_CHECK follows the exact kernel semantic as for a
-> > real execution, user space gets the same error codes.
-> 
-> Nice! I much prefer this method of going through the exec machinery so
-> we always have a single code path for these kinds of checks.
-> 
-> > Because AT_CHECK is dedicated to user space interpreters, it doesn't
-> > make sense for the kernel to parse the checked files, look for
-> > interpreters known to the kernel (e.g. ELF, shebang), and return ENOEXEC
-> > if the format is unknown.  Because of that, security_bprm_check() is
-> > never called when AT_CHECK is used.
-> 
-> I'd like some additional comments in the code that reminds us that
-> access control checks have finished past a certain point.
+Hi Linus,
 
-Where in the code? Just before the bprm->is_check assignment?
+On Fri, Jul 05, 2024 at 10:39:48AM -0700, Linus Torvalds wrote:
+> Yes. And it should be pretty trivial.
+> 
+> We just at least initially have to be very careful to limit it to
+> MAP_ANONYMOUS and MAP_PRIVATE. Because dropping dirty bits on shared
+> mappings sounds insane and like a possible source of confusion (and
+> thus bugs and maybe even security issues).
+> 
+> It's possible that we might even use a MAP_TYPE flag for this. Or make
+> it a PROT_xyz bit rather than a MAP_xyz.
+> 
+> So there's some trivial sanity checks and some UI issues to just pick,
+> but apart from "just pick something sane", exposing this for mmap() is
+> _not_ hard, and I do think it needs to be done first.
 
-> 
-> [...]
-> > diff --git a/fs/exec.c b/fs/exec.c
-> > index 40073142288f..ea2a1867afdc 100644
-> > --- a/fs/exec.c
-> > +++ b/fs/exec.c
-> > @@ -931,7 +931,7 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
-> >  		.lookup_flags = LOOKUP_FOLLOW,
-> >  	};
-> >  
-> > -	if ((flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
-> > +	if ((flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH | AT_CHECK)) != 0)
-> >  		return ERR_PTR(-EINVAL);
-> >  	if (flags & AT_SYMLINK_NOFOLLOW)
-> >  		open_exec_flags.lookup_flags &= ~LOOKUP_FOLLOW;
-> [...]
-> > + * To avoid race conditions leading to time-of-check to time-of-use issues,
-> > + * AT_CHECK should be used with AT_EMPTY_PATH to check against a file
-> > + * descriptor instead of a path.
-> 
-> I want this enforced by the kernel. Let's not leave trivial ToCToU
-> foot-guns around. i.e.:
-> 
-> 	if ((flags & AT_CHECK) == AT_CHECK && (flags & AT_EMPTY_PATH) == 0)
->   		return ERR_PTR(-EBADF);
+I can take a stab at it.
 
-There are valid use cases relying on pathnames. See Linus's comment:
-https://lore.kernel.org/r/CAHk-=whb=XuU=LGKnJWaa7LOYQz9VwHs8SLfgLbT5sf2VAbX1A@mail.gmail.com
+> > - The "mechanism" needs to return allocated memory to userspace that can
+> >   be chunked up on a per-thread basis, with no state straddling pages,
+> >   which means it also needs to return the size of each state, and the
+> >   number of states that were allocated.
+> >
+> > - The size of each state might change kernel version to kernel version.
+> 
+> Just pick a size large enough.
+> 
+> And why would that size not  be one page?
+> 
+> Considering that you really don't want to rely on page-crossing state
+> *ANYWAY* because of the whole "one page can go away while another one
+> sticks around" issue, I would expect that states over one page per
+> thread would be a *very* questionable idea to begin with.
+> 
+> I don't think we'll ever see systems with page sizes smaller than 4k.
+> They have existed in the past, but they're not making a comeback.
+> People want larger pages, not smaller ones.
+
+That sounds not so good: the current state is 144 bytes, and it's
+expected that there'll be one of these per thread. Mapping 16k or 4k per
+thread seems pretty bad. At least it certainly seems that way? Wasting
+16240 bytes per thread + a new vmap I can't imagine is okay.
+
+Also, these points still stand:
+
+| - In an effort to match the behaviors of syscall getrandom() as much as
+|   possible, it needs to be mapped with various flags (the ones in the
+|   current vgetrandom_alloc() implementation).
+|
+| - Which flags are needed might change kernel version to kernel version.
+|
+| - Future memory tagging CPU extensions might allow us to prevent the
+|   memory from being accessed unless the accesses are coming from vDSO
+|   code, which would avoid heartbleed-like bugs. This is very appealing.
+
+It seems like leaving it just up to mmap() will not only result in users
+doing it wrong, but kind of limits our options moving forward. And
+there's this whole issue of communicating sizes so as not to be
+wasteful.
+
+Another idea I had, if you hate the syscall, is I could just add this as
+(another) private ioctl() on the /dev/random node. This sounds worse
+than a syscall worse because it means that node has to exist and the fd
+has to be opened -- and concerns about this were what lead to the
+getrandom() syscall being introduced in the first place -- but it would
+at least avoid the syscall. I'm not crazy about that though.
+
+Maybe the winning solution is MAP_DROPPABLE (or PROT_DROPPABLE) in
+mmap(), and then in the following commit, add the vgetrandom_alloc()
+syscall, and then we'll avoid vgetrandom_alloc() getting abused, but
+still have a nice interface that isn't too constraining.
+
+Jason
