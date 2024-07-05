@@ -1,44 +1,44 @@
 Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316A345BFC
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 02:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7126429D06
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 02:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720145742; cv=none; b=bBzagWhBp68zi/AZPCJU126vX27FRDDNaFW/ZSUIYLwHNjhrtlCuKXxZlWLfOma8xwM8jeP6Clcf5tuPjTsyrtuKZPuNbtcIxKaRWqrVFNn31ICBLE0SJ5zegQBRvLboNk3TH5kQYEMzhQktjEV5dTdc9dqYaJk3qLCjbd40VaI=
+	t=1720145741; cv=none; b=Dk4DuWwaARv1330WWK2LbS1Ml2BXd5norhDna0gZsTwASG5QWfDA1652gL6B+PtVL+94+NTKB+OU+54GnWsIeyb1FuW1QEBqqv8s+gaZyqa5eQWlRZmuyU7Hqk+HX0id0B9DyZDtazqMoA9s3cnVi/O3gdEThU+8tIyHJkI96+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720145742; c=relaxed/simple;
-	bh=ljU6sRcs7sQuHTpD9/5+A8t80/9OARDwl6j8aTgrIpc=;
+	s=arc-20240116; t=1720145741; c=relaxed/simple;
+	bh=YSB06eHkR2N4elezzu9WKvc14r2Is2jvWfXF/+LXVwM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fd/44RhXCYYM/Ce3S+MQ+UcZ7o9PyvxoiHI5x09VlXfZbNXs0ortcjRHzzhGWsY2iWRuaDQI9stEKE3lI0+1d5JzViLTuIxSSP+gD3tYs57O2ABidwlSZHNVKZlLemCnkeKz/JriD/Y6U33rrPPvwiGI9IH8/bXj4iK5CIriyp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=Kj7LJRyn; arc=none smtp.client-ip=202.36.163.20
+	 MIME-Version; b=GCBNICW3RP2BOdW3Fhe2O4VP8j+2gl/UVMFoEiSmHdgJkcYd5v9J+zbtUJdp9C18MuTwhjTfrMOLUpoX71MbGE9xvADSOn8oPpMwr71zTilKNM4+Y5Q4vWbk5vWc8w6N6uY5b627DytI7tP7yJ+DbECAunpwStyKUhOQrkfR8+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=zLVEfps3; arc=none smtp.client-ip=202.36.163.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Kj7LJRyn"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zLVEfps3"
 Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 0B1AD2C0C3E;
-	Fri,  5 Jul 2024 14:15:28 +1200 (NZST)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D77A32C0ADD;
+	Fri,  5 Jul 2024 14:15:27 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1720145728;
-	bh=adwuxCP0b2iJnp5YoKfId4BXKuJvpUjFFbukitvRfSg=;
+	s=mail181024; t=1720145727;
+	bh=lbvenbRSE4ChMsqKqz/KuRnODZd0Ubfp4JavkwXY2mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Kj7LJRynW0OKdN3cy9AewJ1zWDtpQmmyygowmRfwLvYlaSjeCuHllpNBI5WFGyoLf
-	 WUI7TVx8819fbMlBo2JeLJYead2GUeYk25Xvr2U5fYvelMxUF0l3HmjQhWMplQL35+
-	 XgRWATrVgIxTA3jYxDYcyDbXzsgGkgnaRHsHjyM9V3fKjhLYmtS9wodLBI+iEg0R9z
-	 SxyfrZHve5yjrnQV04b2mAz+SR7CmpUFWPERcmEGVaPcXzCnRTby37W5AgI1G7SWpv
-	 eP6tHyKJBuQ/tZ5wplMCWMhaE7eKM2k3v8DQjVnAbD0syft2eE5lYGPvhyiwkBgiOp
-	 a7KvY/AjCptHA==
+	b=zLVEfps34rqKEDmP60+ufPCys2pP+trKnAhRL31HwkBjVM0d+88jiEnhGfchk0/U4
+	 gSbxJAtnRZ5zy9/Pyvzk9cBm4Fh9884j+SunHjuaI6LfBHHJ8REpFk65QlGDDmhIuJ
+	 B5j4roPxEOLehWpfVL5IEwmOKhXlh+0tQZNW8FGu91z69KkILSpsoZiPHL8+NpDWzs
+	 XdNXdwi0bx37f0luTOtuenHD6PAYXUoCyCZvsl5M6YPD9Mt/j2NMXGhiCg9VNmW5+0
+	 jvT9/ES+r1SdZfM3BcDnjnhmcEZDl4YnxfGLf6r8D1k1fGHaTLdvsBW5eLAhTwhpcv
+	 eSrf+jcYG2eIg==
 Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B6687573e0006>; Fri, 05 Jul 2024 14:15:26 +1200
+	id <B6687573e0009>; Fri, 05 Jul 2024 14:15:26 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 8C28813ED5B;
+	by pat.atlnz.lc (Postfix) with ESMTP id 9550C13EE85;
 	Fri,  5 Jul 2024 14:15:26 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 896AC280930; Fri,  5 Jul 2024 14:15:26 +1200 (NZST)
+	id 92A88280930; Fri,  5 Jul 2024 14:15:26 +1200 (NZST)
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 To: tglx@linutronix.de,
 	robh@kernel.org,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	kabel@kernel.org,
 	ericwouds@gmail.com,
 	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v4 6/9] dt-bindings: interrupt-controller: realtek,rtl-intc: Add rtl9300-intc
-Date: Fri,  5 Jul 2024 14:15:17 +1200
-Message-ID: <20240705021520.2737568-7-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v4 8/9] mips: generic: add fdt fixup for Realtek reference board
+Date: Fri,  5 Jul 2024 14:15:19 +1200
+Message-ID: <20240705021520.2737568-9-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240705021520.2737568-1-chris.packham@alliedtelesis.co.nz>
 References: <20240705021520.2737568-1-chris.packham@alliedtelesis.co.nz>
@@ -71,82 +71,144 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=CvQccW4D c=1 sm=1 tr=0 ts=6687573e a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=RxOWC8M5BiJtX5JSj5EA:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=CvQccW4D c=1 sm=1 tr=0 ts=6687573e a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=x-EMvBfK1kxHbq4Brr4A:9 a=3ZKOabzyN94A:10
 X-SEG-SpamProfiler-Score: 0
 x-atlnz-ls: pat
 
-Add a compatible string for the interrupt controller found on the
-rtl930x SoCs. The interrupt controller has registers for VPE1 so these
-are added as a second reg cell.
+The bootloader used on the Realtek RTL9302C boards is an ancient vendor
+fork of U-Boot that doesn't understand device trees. So to run a modern
+kernel it is necessary use one of the APPENDED_DTB options.
+
+When appending the DTB the inintrd information, if present, needs to be
+inserted into the /chosen device tree node. The bootloader provides the
+initrd start/size via the firmware environment. Add a fdt fixup that
+will update the device tree with the initrd information.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
 
 Notes:
+    Changes in v4:
+    - use correct compatible string
+    - include printk.h
+    - remove unnecessary include of of_address.h
+    - put realtek_of_match entry on one line
+    - one piece of feedback not addressed is whether this fixup is requir=
+ed
+      on more platforms. I don't have a supply of other mips platforms to=
+ check
+      so I can't confirm. It should be relatively easy to move
+      realtek_add_initrd() to a more generic place, boards could then opt=
+ in
+      to it with the existing apply_mips_fdt_fixups() mechanism.
     Changes in v3:
-    - Add reg::minItems where required
-    Changes in v3:
-    - Use items to describe the regs property
+    - None
     Changes in v2:
-    - Set reg:maxItems to 2 to allow for VPE1 registers on the rtl9300. A=
-dd
-      a condition to enforce the old limit on other SoCs.
-    - Connor and Krzysztof offered acks on v1 but I think the changes her=
-e
-      are big enough to void those.
+    - update compatible string
 
- .../realtek,rtl-intc.yaml                     | 20 ++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ arch/mips/generic/Makefile        |  1 +
+ arch/mips/generic/board-realtek.c | 79 +++++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
+ create mode 100644 arch/mips/generic/board-realtek.c
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/realt=
-ek,rtl-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller=
-/realtek,rtl-intc.yaml
-index fb5593724059..f36aaab73c01 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtl-=
-intc.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtl-=
-intc.yaml
-@@ -25,6 +25,7 @@ properties:
-       - items:
-           - enum:
-               - realtek,rtl8380-intc
-+              - realtek,rtl9300-intc
-           - const: realtek,rtl-intc
-       - const: realtek,rtl-intc
-         deprecated: true
-@@ -35,7 +36,10 @@ properties:
-     const: 1
-=20
-   reg:
--    maxItems: 1
-+    minItems: 1
-+    items:
-+      - description: vpe0 registers
-+      - description: vpe1 registers
-=20
-   interrupts:
-     minItems: 1
-@@ -71,6 +75,20 @@ allOf:
-     else:
-       required:
-         - interrupts
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: realtek,rtl9300-intc
-+    then:
-+      properties:
-+        reg:
-+          minItems: 1
-+          maxItems: 2
-+    else:
-+      properties:
-+        reg:
-+          maxItems: 1
-=20
- additionalProperties: false
-=20
+diff --git a/arch/mips/generic/Makefile b/arch/mips/generic/Makefile
+index 56011d738441..ea0e4ad5e600 100644
+--- a/arch/mips/generic/Makefile
++++ b/arch/mips/generic/Makefile
+@@ -13,3 +13,4 @@ obj-$(CONFIG_LEGACY_BOARD_SEAD3)	+=3D board-sead3.o
+ obj-$(CONFIG_LEGACY_BOARD_OCELOT)	+=3D board-ocelot.o
+ obj-$(CONFIG_MACH_INGENIC)			+=3D board-ingenic.o
+ obj-$(CONFIG_VIRT_BOARD_RANCHU)		+=3D board-ranchu.o
++obj-$(CONFIG_MACH_REALTEK_RTL)		+=3D board-realtek.o
+diff --git a/arch/mips/generic/board-realtek.c b/arch/mips/generic/board-=
+realtek.c
+new file mode 100644
+index 000000000000..9cce6103d24e
+--- /dev/null
++++ b/arch/mips/generic/board-realtek.c
+@@ -0,0 +1,79 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2024 Allied Telesis
++ */
++
++#include <linux/errno.h>
++#include <linux/libfdt.h>
++#include <linux/printk.h>
++#include <linux/types.h>
++
++#include <asm/fw/fw.h>
++#include <asm/machine.h>
++
++static __init int realtek_add_initrd(void *fdt)
++{
++	int node, err;
++	u32 start, size;
++
++	node =3D fdt_path_offset(fdt, "/chosen");
++	if (node < 0) {
++		pr_err("/chosen node not found\n");
++		return -ENOENT;
++	}
++
++	start =3D fw_getenvl("initrd_start");
++	size =3D fw_getenvl("initrd_size");
++
++	if (start =3D=3D 0 && size =3D=3D 0)
++		return 0;
++
++	pr_info("Adding initrd info from environment\n");
++
++	err =3D fdt_setprop_u32(fdt, node, "linux,initrd-start", start);
++	if (err) {
++		pr_err("unable to set initrd-start: %d\n", err);
++		return err;
++	}
++
++	err =3D fdt_setprop_u32(fdt, node, "linux,initrd-end", start + size);
++	if (err) {
++		pr_err("unable to set initrd-end: %d\n", err);
++		return err;
++	}
++
++	return 0;
++}
++
++static const struct mips_fdt_fixup realtek_fdt_fixups[] __initconst =3D =
+{
++	{ realtek_add_initrd, "add initrd" },
++	{},
++};
++
++static __init const void *realtek_fixup_fdt(const void *fdt, const void =
+*match_data)
++{
++	static unsigned char fdt_buf[16 << 10] __initdata;
++	int err;
++
++	if (fdt_check_header(fdt))
++		panic("Corrupt DT");
++
++	fw_init_cmdline();
++
++	err =3D apply_mips_fdt_fixups(fdt_buf, sizeof(fdt_buf), fdt, realtek_fd=
+t_fixups);
++	if (err)
++		panic("Unable to fixup FDT: %d", err);
++
++	return fdt_buf;
++
++}
++
++static const struct of_device_id realtek_of_match[] __initconst =3D {
++	{ .compatible =3D "realtek,rtl9302-soc" },
++	{}
++};
++
++MIPS_MACHINE(realtek) =3D {
++	.matches =3D realtek_of_match,
++	.fixup_fdt =3D realtek_fixup_fdt,
++};
 --=20
 2.45.2
 
