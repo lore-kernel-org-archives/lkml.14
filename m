@@ -1,117 +1,178 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443DB155A25;
-	Fri,  5 Jul 2024 13:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF581459E8
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 13:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720186461; cv=none; b=tGI/V/Fj3UssVQWC8YeqtoQMRGZkB9fMWARoJrXTN1Huwn8qDZnVHg7YhupCL0jCUjTxUiehteVUIMHP7bxoqyA9+22QByUxQEDmWBwkZPOYiU4JrbXJRxDHbyUXcdkYqHW1KQWlv/vEY1FVzAWqwdeXvAt/9o3EOrk89L2LFR4=
+	t=1720186474; cv=none; b=sQi4dR3+7N+Szh5Go0/ZyyOA+Z/VdOfHblIfWioSVRXB7VatvqeOiAp70PFGAffsykXhbXXzIXMzwT3oyMcheJbRq57Jl2ZbaANKPade2xZXyVSkrBEylSdoCdb0wF4ia2gwTcv8vvrCo2vwUH1iiGPSGt6Uh0ngVvOEHShMLo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720186461; c=relaxed/simple;
-	bh=Ut2thkfTCY+dzcyEc4GpL/dIubksO+vlTjNGrJChsok=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZBuLvH5SwVnDgTht3hnNrqPkJPFAyFzLx9wkAvSxAZTcURHcsZz9D3mTIPW7EZFVT1/Mqcsj48MDwgkNkuUr953ZXO8xKGYiz2/22LYtWCAdHLmFG98I/tFzWEOZdh1DIk6j9sxvx9oV65MuvtBagWurgDL2NKKDTrWifM7keYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=eALgaQeH; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1720186474; c=relaxed/simple;
+	bh=/WWUk8xgbMeoX+XMjmJKMzm4jVM0QnM4PPaAAtS6ETg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EdGjnT4WuG0BUgDT6RWmwkRWd37IOJLwRV4KRmUPlOcpLY6USdZ072xrxIsOMkF4Xd7KaUdqPrzyWm+6EFU86/J9XBYDmHErP7kO4obDpDyphy4lS6XBaW+57rwR5X7igl/vOUablJ5+lTRvuSxVUFrWXlNfGViWFiu47E10o+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DBwN7dch; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="eALgaQeH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1720186451;
-	bh=Ut2thkfTCY+dzcyEc4GpL/dIubksO+vlTjNGrJChsok=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eALgaQeHRk7+sykJRDVvA9e1JB4i/aKBBNB2IzOeE+oCcbPm4dxF9stDkwPKoolem
-	 lnp98Z5gMjaNbgbfY7lp5xl5datEBUypPLPaQN5fACGrW9wP34EKq596iRihNN8Yii
-	 nA9TvEoY7gfKJxe7JUNIZ/KuU9kCVdXGOVKB+NUsh+AzjdXpCHN1zmNuhVOfvQYmA/
-	 Isf1ZPZYvPbQIowHM3Jr0oDvAYsETgdePw337ceCa64kxCrX1ZnmrOiUXGgTxsHhHR
-	 23MyhIMANaNB7zxO4OCs0jQ8MnzLFaveQsw1ZBnGdoeUjnk+vxiE2xgmht08AAIqqF
-	 5WTjWuo/A+jzg==
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id E574960078;
-	Fri,  5 Jul 2024 13:34:09 +0000 (UTC)
-Received: by x201s (Postfix, from userid 1000)
-	id 4601B20474A; Fri, 05 Jul 2024 13:33:49 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	Davide Caratti <dcaratti@redhat.com>,
-	Ilya Maximets <i.maximets@ovn.org>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Ratheesh Kannoth <rkannoth@marvell.com>,
-	Florian Westphal <fw@strlen.de>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 00/10] flower: rework TCA_FLOWER_KEY_ENC_FLAGS usage
-Date: Fri,  5 Jul 2024 13:33:36 +0000
-Message-ID: <20240705133348.728901-1-ast@fiberby.net>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DBwN7dch"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52e991fb456so1575590e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 06:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720186469; x=1720791269; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+7lziJDkz8ksR4dmlddeHMdYw7zMgC8DIyGzxNLyJTo=;
+        b=DBwN7dchrM3Uhg+n02ERwvcj+HPkIr+eeN3Y0hVvZU+poqph18SqrUpsRb5dSvPXLP
+         Bl8bNTdNMs/SuoDAoRBr34bDHcresooRAlZ+WI4Z6SF3N6br9Jwyie3873hslJPTC8it
+         XI8TC8TvKqf0slKrVdh1Glb9oUi7fSWUcEaM52pS7/jP7I7Bs11b5DxPaxGn2xXcaH/p
+         D5LTJcH+d1K8VHnMEzisIELFthjn/kqnKQs1eEABc/BEZ8iafqaKpFnsUULTDsuErzoj
+         W9uYmuXDn4S8V82szriUbBspjQ3g5iX133Lc9WTmfo9usHFeIdvyjfV7sL3110MaU3y5
+         JHhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720186469; x=1720791269;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+7lziJDkz8ksR4dmlddeHMdYw7zMgC8DIyGzxNLyJTo=;
+        b=R3nOxd0ZwlOQAxYoFtRUkuzT4ztKAmI2Dh+T+XMNUccZQ0j1/JAwFxOAObLidS68BB
+         ArTspK4/fzzxa4KNST2GqUZMYKXD9+NFxYhhVkB5ZUukTh62vHwJl2+n+OBKW9OfJt3m
+         TsY9g73tvIhsvqDgFfWmro7Af5G6rOoKOdV3Ksnfo2MKWZnbIZ0nOpLdxTlp+lR0sGH5
+         YgUs+4BJzUh9ylIiwnsnuFSh1Kjov0ruvJMCYtsVeBWYC9h2NQdrAJ0xXovt4iBmeBNE
+         KV2EnSCyYk/whDPk1Wsf/TnclWgqjSROVn5nOOfv/QFDWAthsx41tQ8flQaaAHfx8K0M
+         IgUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXF4YdIGzKpU9RAig7bt0QnXVvPAkCv97tI7pzsZsEKD7LHs3iooblV00QExU+As74jIDejwG9AzHcs9hP3L3yshLhTLVWrOrKFIiRR
+X-Gm-Message-State: AOJu0YxO6UB1/xURlhLKWR6sW4peDVk0HS644HuluaYOljo1o1X9EBag
+	m3lA9ORXDlXpolKTqs2KgnBrU7gSbiG2PC5DdPC5MFIv9xCvnMN4ADFopB1BNAjz2APP4kPtK6U
+	lm8jwJzR6WoJ+2j3HXhCDntVAGgDi1cQiC9+Mgg==
+X-Google-Smtp-Source: AGHT+IH002bET0sLDg515bzQ4elXCWBoy5idHfanq8GGKi/meSChCtgNax2EBm7zNVr+Mq15wxISI8Af7tGceGvs1Lk=
+X-Received: by 2002:a05:6512:3694:b0:52c:ebf6:9a87 with SMTP id
+ 2adb3069b0e04-52ea0e00c5emr1457812e87.26.1720186469286; Fri, 05 Jul 2024
+ 06:34:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240705-pwrseq-v1-0-31829b47fc72@amlogic.com> <20240705-pwrseq-v1-1-31829b47fc72@amlogic.com>
+In-Reply-To: <20240705-pwrseq-v1-1-31829b47fc72@amlogic.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 5 Jul 2024 15:34:18 +0200
+Message-ID: <CAMRc=Me+Fd_Kjgm0u0JhUatVEp=XS71xys82snAimpw2U5MQTw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: power: Add power sequence for Amloigc
+ WCN chips
+To: yang.li@amlogic.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This series reworks the recently added TCA_FLOWER_KEY_ENC_FLAGS
-attribute, to be more like TCA_FLOWER_KEY_FLAGS, and use the unused
-u32 flags field in FLOW_DISSECTOR_KEY_ENC_CONTROL, instead of adding
-a new flags field as FLOW_DISSECTOR_KEY_ENC_FLAGS.
+On Fri, Jul 5, 2024 at 1:13=E2=80=AFPM Yang Li via B4 Relay
+<devnull+yang.li.amlogic.com@kernel.org> wrote:
+>
+> From: Yang Li <yang.li@amlogic.com>
+>
+> Add binding document to introduce power sequence of
+> Amlogic WCN chips.
+>
 
-I have defined the new FLOW_DIS_F_* and TCA_FLOWER_KEY_FLAGS_*
-flags to co-exist with the existing flags, so the meaning
-of the flags field in struct flow_dissector_key_control is not
-depending on the context it is used in. If we run out of bits
-then we can always split them up later, if we really want to.
-Future flags might also be valid in both contexts.
+Hi! Thanks for the interest in this new subsystem.
 
-iproute2 RFC patch: (needs update of uAPI headers)
-https://lore.kernel.org/897379f1850a50d8c320ca3facd06c5f03943bac.1719506876.git.dcaratti@redhat.com/
+> Signed-off-by: Yang Li <yang.li@amlogic.com>
+> ---
+>  .../bindings/power/amlogic,w155s2-pwrseq.yaml      | 62 ++++++++++++++++=
+++++++
+>  1 file changed, 62 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/power/amlogic,w155s2-pwrse=
+q.yaml b/Documentation/devicetree/bindings/power/amlogic,w155s2-pwrseq.yaml
+> new file mode 100644
+> index 000000000000..f99a775fcf9b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/amlogic,w155s2-pwrseq.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/amlogic,w155s2-pwrseq.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic power sequence for WCN chips
+> +
+> +maintainers:
+> +  - Yang Li <yang.li@amlogic.com>
+> +
+> +description:
+> +  The Amlogic WCN chip contains discrete modules for WLAN and Bluetooth.=
+ Power on
+> +  Bluetooth and Wi-Fi respectively, including chip_en pull-up and bt_en =
+pull-up,
+> +  and generation of the 32.768KHz clock.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: amlogic,w155s2-pwrseq
+> +      - items:
+> +          - enum:
+> +              - amlogic,w265s1-pwrseq
+> +              - amlogic,w265p1-pwrseq
+> +              - amlogic,w265s2-pwrseq
+> +          - const: amlogic,w155s2-pwrseq
 
----
-Changelog:
+The name is wrong. There's no such device as 'pwrseq'. There's most
+likely some kind of a Power Management Unit and the compatible string
+must reflect this.
 
-v2:
-- Refactor flower control flag definitions
-  (requested by Jakub and Alexander)
-- Add Tested-by from Davide Caratti on patch 3-10.
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: clock provided to the controller (32.768KHz)
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ext_clock
+> +
+> +  amlogic,chip-enable-gpios:
+> +    maxItems: 1
+> +    description: gpio specifier used to enable chipset
 
-v1: https://lore.kernel.org/20240703104600.455125-1-ast@fiberby.net/
-- Change netlink attribute type from NLA_U32 to NLA_BE32.
-- Ensure that the FLOW_DISSECTOR_KEY_ENC_CONTROL
-  is also masked for non-IP.
-- Fix preexisting typo in kdoc for struct flow_dissector_key_control
-  (all suggested by Davide)
+Why not simply: chip-enable-gpios or even enable-gpios?
 
-RFC: https://lore.kernel.org/20240611235355.177667-1-ast@fiberby.net/
+> +
+> +  amlogic,bt-enable-gpios:
+> +    maxItems: 1
+> +    description: gpio specifier used to enable BT
+> +
 
-Asbjørn Sloth Tønnesen (10):
-  net/sched: flower: refactor tunnel flag definitions
-  net/sched: flower: define new tunnel flags
-  net/sched: cls_flower: prepare fl_{set,dump}_key_flags() for ENC_FLAGS
-  net/sched: cls_flower: add policy for TCA_FLOWER_KEY_FLAGS
-  flow_dissector: prepare for encapsulated control flags
-  flow_dissector: set encapsulated control flags from tun_flags
-  net/sched: cls_flower: add tunnel flags to fl_{set,dump}_key_flags()
-  net/sched: cls_flower: rework TCA_FLOWER_KEY_ENC_FLAGS usage
-  flow_dissector: cleanup FLOW_DISSECTOR_KEY_ENC_FLAGS
-  flow_dissector: set encapsulation control flags for non-IP
+Same here: should be simply bt-enable-gpios.
 
- include/net/flow_dissector.h |  30 ++++----
- include/net/ip_tunnels.h     |  12 ---
- include/uapi/linux/pkt_cls.h |  11 ++-
- net/core/flow_dissector.c    |  50 ++++++------
- net/sched/cls_flower.c       | 142 ++++++++++++++++++++---------------
- 5 files changed, 135 insertions(+), 110 deletions(-)
+Bart
 
--- 
-2.45.2
-
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - amlogic,chip-enable-gpios
+> +  - amlogic,bt-enable-gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    wcn_pwrseq {
+> +        compatible =3D "amlogic,w155s2-pwrseq";
+> +        clocks =3D <&extclk>;
+> +        clock-names =3D "ext_clock";
+> +        amlogic,chip-enable-gpios =3D <&gpio 7 GPIO_ACTIVE_HIGH>;
+> +        amlogic,bt-enable-gpios =3D <&gpio 17 GPIO_ACTIVE_HIGH>;
+> +    };
+>
+> --
+> 2.42.0
+>
+>
