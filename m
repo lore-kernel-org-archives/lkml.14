@@ -1,200 +1,55 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5F83A8CB
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA633A8CB;
+	Fri,  5 Jul 2024 09:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720171061; cv=none; b=UkYrb8exekgefqk6h8elajCO4fCxvCsNDLyLSK8jeH1xktpBXGJA6kv4VIQL41KT4NAD6RhF9l+L3KkNrffic7S1EGy9bXUT1bo+FCPjQpXJpCQ3j66ZqLK1gboitYNIgLfuX5CYNyO+FyzJWlEX8h0XT7w6fA208pQeIoxBFHE=
+	t=1720171157; cv=none; b=jt1s6OFuanbUQDemJ6PQSWWHUJzIvaxxTk+hr+h8uywtl38c7az5dYZTCZa6xdUfWh+nGQ+57ec9jpungeA+MP0xshrycyTT7g7jvZ+XR6d2mh4X5Z3pfj726BqTWi2+Z/qlrQnxZ35dWdlzRBYiKT+gQwzlVXCLddIuTkcfZeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720171061; c=relaxed/simple;
-	bh=+Gu0OCQXl6oawvANorDGwRWHs4J3tjs00pMxr/U+jUo=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=tqOq0G5Jktg8BB6FxFtjeXyY5GUie/KxEJdYV4p0V3pb0AScLfxxIRRyTgICKkbE2U3LXvC1wP3vw7PPf5dV94hIbaVxEa8z9xYjTkqz+DXVYwCjZkAhD1Zy5EP/Hp3Cl0LF/QH9LiaiafEfleTpd5Kj6IYguLhKI7fDOPsun1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=d4yQwCP/; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1720171157; c=relaxed/simple;
+	bh=h7tI3UX9MF6Z8Rfjd4kC9TY6gTQpLashC2p1HGV+8b4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=lDvQPq73RrxrY6P/jToLlJ7mHsCuwV6p9XfvcAeDligXtz40aNE0ciH3j5eJHTbR+mDaOAo6qPSLlshjXnECSQkl+GyCrfX2XEgXpxW+ozJSVRjKBO8K2J9jXttRyi5SdWnMtMq61DgB3vuCyNvwny8Brzm+ZgqfrREHvGFAGEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=R7xEq5ze reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="d4yQwCP/"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240705090829epoutp0255f9316dbe7bbf07b99080171af2a73d~fRfbffkX70442904429epoutp020
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:08:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240705090829epoutp0255f9316dbe7bbf07b99080171af2a73d~fRfbffkX70442904429epoutp020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1720170509;
-	bh=+Gu0OCQXl6oawvANorDGwRWHs4J3tjs00pMxr/U+jUo=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=d4yQwCP/Fn82+dZS2Oy+NYMMqiYXAUezr/G2lHCll9a4vLDxyYBPGGyvP6+5TSr3e
-	 V4zCqRTrfbd2Tis9Oe07nnpzwfQf6Ua1/C2vEm3aW5/xn44/U3Pnn1aMbwpRdTPD8W
-	 wj7JytE7BsWcCQm7NV1aa/aRclWFYAJAUwOgC4Ik=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240705090828epcas2p2a835d9548ed765154671ddc3884b58ea~fRfbGkiTx1101711017epcas2p2W;
-	Fri,  5 Jul 2024 09:08:28 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.97]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4WFnk43lkJz4x9Py; Fri,  5 Jul
-	2024 09:08:28 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	27.F0.09848.C08B7866; Fri,  5 Jul 2024 18:08:28 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240705090828epcas2p4d15b9c989c0705bca41534dc701b5da3~fRfaUpOA82840028400epcas2p4J;
-	Fri,  5 Jul 2024 09:08:28 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240705090827epsmtrp2278b674f19aee3d914e0947bf1378e32~fRfaOIkaY2073920739epsmtrp2p;
-	Fri,  5 Jul 2024 09:08:27 +0000 (GMT)
-X-AuditID: b6c32a45-447fe70000002678-13-6687b80cbca1
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	94.7E.07412.B08B7866; Fri,  5 Jul 2024 18:08:27 +0900 (KST)
-Received: from KORCO118965 (unknown [10.229.18.201]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240705090827epsmtip2ce18fd6bd14ba495323e9141d438b832~fRfaBn7hX2096020960epsmtip2-;
-	Fri,  5 Jul 2024 09:08:27 +0000 (GMT)
-From: "sunyeal.hong" <sunyeal.hong@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Sylwester Nawrocki'"
-	<s.nawrocki@samsung.com>, "'Chanwoo Choi'" <cw00.choi@samsung.com>, "'Alim
- Akhtar'" <alim.akhtar@samsung.com>, "'Michael Turquette'"
-	<mturquette@baylibre.com>, "'Stephen Boyd'" <sboyd@kernel.org>
-Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-In-Reply-To: <31778ed0-e4b5-4961-99a5-41ce44ddac26@kernel.org>
-Subject: RE: [PATCH 2/5] dt-bindings: clock: add clock binding definitions
- for Exynos Auto v920
-Date: Fri, 5 Jul 2024 18:08:27 +0900
-Message-ID: <01c601daceba$e5d32570$b1797050$@samsung.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="R7xEq5ze"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=lfNkSWR+BPmvBsA3/0LjgsVzzxpvFDzXGDNdUl4T8cQ=; b=R
+	7xEq5zeF8zahh3ljjQwi4Yqw1bsINRy/6D+hShk0ZpRrEjppyW68IVvAKuQ+rSzN
+	tB6YkiXkdWLaFqMtRLNuD47d3gCv1+BGur3CrwDJfhCN+vvBoZyxxp8PbSR0hGwm
+	hgcfNEZqODwgaH93W2iCzPAiZJ7EsjYdf2MSzbegrk=
+Received: from vanillanwang$163.com ( [124.89.89.114] ) by
+ ajax-webmail-wmsvr-40-137 (Coremail) ; Fri, 5 Jul 2024 17:18:52 +0800 (CST)
+Date: Fri, 5 Jul 2024 17:18:52 +0800 (CST)
+From: vanillanwang  <vanillanwang@163.com>
+To: "Johan Hovold" <johan@kernel.org>
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: option: add Rolling RW350-GL variants
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2024 www.mailtech.cn 163com
+In-Reply-To: <Zn0SY4nQzESrQ4xw@hovoldconsulting.com>
+References: <20240531024012.29805-1-vanillanwang@163.com>
+ <Zn0SY4nQzESrQ4xw@hovoldconsulting.com>
+X-NTES-SC: AL_Qu2ZAv2cvkko5CibZukfm0YWgOk5Ucqzuf8k1YZTO598jBLo9j4Qe1xgLXT998KNJzmtlzu0WRx/58FkVoZ0b7ovXxPWZFjlzJtstf+vF+hJQA==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIPebKt0SL2hL1PGxWEYogtVpy49QFdVAxIAswtgRoBIrCNyQH2oTjfAipr0pqxMxhKQA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmmS7PjvY0gzW7ZCwezNvGZnH9y3NW
-	i/PnN7BbfOy5x2pxedccNosZ5/cxWVw85Wpx+E07q8W/axtZHDg93t9oZffYtKqTzaNvyypG
-	j8+b5AJYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0y
-	c4BOUVIoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBfoFSfmFpfmpevlpZZYGRoY
-	GJkCFSZkZ/y7fYO54ItYxY5JS1kbGN8JdTFyckgImEgsb3jJ0sXIxSEksINR4mXDS2YI5xOj
-	xOs3P9ghnG+MEpM6LrDAtPz7eQCqai+jxMnfZ6GqXjJKHN+wnAmkik1AX2J19202kISIQD+T
-	xLznP1hBEswCaRIrTm0B6uDg4BSwk5i9zgMkLCyQKDH9wxSwEhYBFYllU7qYQUp4BSwlLj1J
-	AgnzCghKnJz5hAViirbEsoWvmSEOUpD4+XQZWKuIQJjEna9PmCBqRCRmd7aBHSohMJNDYuKe
-	D6wQDS4S8/b8ZoSwhSVeHQc5B8SWkvj8bi8bhJ0vMfn6WyaI5gZGiWv/uqG22UssOvMT7H5m
-	AU2J9bv0QUwJAWWJI7egbuOT6Dj8lx0izCvR0QYNajWJT1cuQw2RkTh24hnzBEalWUg+m4Xk
-	s1lIPpiFsGsBI8sqRrHUguLc9NRiowJDeGQn5+duYgSnUi3XHYyT337QO8TIxMF4iFGCg1lJ
-	hFfqfXOaEG9KYmVValF+fFFpTmrxIUZTYFBPZJYSTc4HJvO8knhDE0sDEzMzQ3MjUwNzJXHe
-	e61zU4QE0hNLUrNTUwtSi2D6mDg4pRqYxDlZymumlN9e1Rc+X/tw6ve6nFPt+/h4lrlM0r9r
-	49+838/htdSKidVnrpY1R7J8i9o+w3Ca+ekc788CE14LFyWaensu8/xSrfFk8Qy+OYdtVp8S
-	U1g94/aHyTsuFzIy/zZg/3qJiVPw1dtLvZfXLbI6sII7mCFtTd7it1LiCvEWzXIxp7yZZcJn
-	fTmytOxoVdsVVWW7Ju6cYOuLLkbTFPiY5Z0n3J0892RtWMHrWy85z3bEPVO91/V4nmIB77tq
-	g8QOm1sOq9ni5NjW5SYmTJJd7f54fv2ZmpjXy9myXbWVFL/mzgzTjDz/3Sx0/S93Pv8by156
-	5XcEaK6cEeMQxyLv5sq67IeSxqqVtT+VWIozEg21mIuKEwG9VGO6LgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJXpd7R3uaQf96I4sH87axWVz/8pzV
-	4vz5DewWH3vusVpc3jWHzWLG+X1MFhdPuVocftPOavHv2kYWB06P9zda2T02repk8+jbsorR
-	4/MmuQCWKC6blNSczLLUIn27BK6Ms9fvsBTcFqs4tuEZUwPjaaEuRk4OCQETiX8/DzB3MXJx
-	CAnsZpR4+fE0I0RCRmJjw392CFtY4n7LEVaIoueMEvP+rgUrYhPQl1jdfZsNJCEiMJlJ4uqx
-	tWwgCWaBDIlD196zQXRcZ5K4OOUFSxcjBwengJ3E7HUeIKawQLxE71N7kHIWARWJZVO6mEHC
-	vAKWEpeeJIGEeQUEJU7OfMICMVFb4unNp3D2soWvmSFuU5D4+XQZK4gtIhAmcefrEyaIGhGJ
-	2Z1tzBMYhWchGTULyahZSEbNQtKygJFlFaNkakFxbnpusmGBYV5quV5xYm5xaV66XnJ+7iZG
-	cFRpaexgvDf/n94hRiYOxkOMEhzMSiK8Uu+b04R4UxIrq1KL8uOLSnNSiw8xSnOwKInzGs6Y
-	nSIkkJ5YkpqdmlqQWgSTZeLglGpgulX6Vr1x0o3fqakfxHlr3+rOf8h6sDIhIOCzNQu7yr6D
-	HNJqsUu2Oyb7b/4j7TSDPzPAKCwqcLKcxd8XyRKZjOx9E58J/PqlcFc8seOj2QaT/94/ZNPt
-	xCY/6DyhveypWd5lq9Zz4dn9mxdVelzNecJ08OlP79m5lTNMRMJTp5ky2UpwiSqKf20IFnS/
-	kuFl5CSzN0ug9mEho5iqX5brqgIHfgMhKUs5Rp43MgUblq+5EsJazLl+0zPBuPRvASu8a2XK
-	wtKrnVl7BMy77acu6hC9xGzP7nxDZW1v1bNC/1CuBevav9xTsj81M0iHReXW1evxzesWcD9M
-	rq1za5l3bFW06IVV/3aobPDboMRSnJFoqMVcVJwIAGkruB0ZAwAA
-X-CMS-MailID: 20240705090828epcas2p4d15b9c989c0705bca41534dc701b5da3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240705021200epcas2p273ca089c2cb9882f121e864ec8407367
-References: <20240705021110.2495344-1-sunyeal.hong@samsung.com>
-	<CGME20240705021200epcas2p273ca089c2cb9882f121e864ec8407367@epcas2p2.samsung.com>
-	<20240705021110.2495344-3-sunyeal.hong@samsung.com>
-	<8f4deb36-2a44-414a-9b9f-40b87bc7c949@kernel.org>
-	<01c401daceb1$d64e7450$82eb5cf0$@samsung.com>
-	<31778ed0-e4b5-4961-99a5-41ce44ddac26@kernel.org>
+Message-ID: <5273fe7a.9647.190823077a9.Coremail.vanillanwang@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:_____wD3_7t9uodmlHEoAA--.7805W
+X-CM-SenderInfo: pydqxz5odq4tlqj6il2tof0z/1tbiExETUmXAl9mMewADsc
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Hello Krzysztof Kozlowski,
-
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> Sent: Friday, July 5, 2024 5:52 PM
-> To: sunyeal.hong <sunyeal.hong=40samsung.com>; 'Sylwester Nawrocki'
-> <s.nawrocki=40samsung.com>; 'Chanwoo Choi' <cw00.choi=40samsung.com>; 'Al=
-im
-> Akhtar' <alim.akhtar=40samsung.com>; 'Michael Turquette'
-> <mturquette=40baylibre.com>; 'Stephen Boyd' <sboyd=40kernel.org>
-> Cc: linux-samsung-soc=40vger.kernel.org; linux-clk=40vger.kernel.org; lin=
-ux-
-> kernel=40vger.kernel.org
-> Subject: Re: =5BPATCH 2/5=5D dt-bindings: clock: add clock binding defini=
-tions
-> for Exynos Auto v920
->=20
-> On 05/07/2024 10:03, sunyeal.hong wrote:
-> >
-> >> <form letter>
-> >> Please use scripts/get_maintainers.pl to get a list of necessary
-> >> people and lists to CC. It might happen, that command when run on an
-> >> older kernel, gives you outdated entries. Therefore please be sure
-> >> you base your patches on recent Linux kernel.
-> >>
-> >> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-> >> people, so fix your workflow. Tools might also fail if you work on
-> >> some ancient tree (don't, instead use mainline) or work on fork of
-> >> kernel (don't, instead use mainline). Just use b4 and everything
-> >> should be fine, although remember about =60b4 prep --auto-to-cc=60 if =
-you
-> >> added new patches to the patchset.
-> >>
-> >> You missed at least devicetree list (maybe more), so this won't be
-> >> tested by automated tooling. Performing review on untested code might
-> >> be a waste of time.
-> >>
-> >> Please kindly resend and include all necessary To/Cc entries.
-> >> </form letter>
-> >>
-> >> Best regards,
-> >> Krzysztof
-> >
-> > The mail list was created using get_maintainer.pl. If there is any
-> problem, please let me know.
-> >
-> > ./scripts/get_maintainer.pl -f drivers/clk/samsung/
->=20
-> That's not how you run the command. You ALWAYS (unless you are Linus) run
-> it on the patches. ALWAYS. See submitting patches or numerous
-> presentations how to contribute upstream.
->=20
-> Read my form letter accurately, e.g. switch to b4.
->=20
-> Best regards,
-> Krzysztof
-
-Thank you for your quick and kind response.
-I checked the difference in the mail list through =22./scripts/get_maintain=
-er.pl *.patch=22 and will reflect this.
-
-Could you please answer additional questions I asked?
-=22Is your request to combine PATCH 0 and 1 correct? If correct, I will upd=
-ate it as requested.=22
-
-The reason I'm asking this is that if you check checkpatch.pl, it says to c=
-lassify patches as follows.
-=22DT binding docs and includes should be a separate patch. See: Documentat=
-ion/devicetree/bindings/submitting-patches.rst=22
-PATCH0: Documentation/devicetree/bindings/clock/samsung,exynosautov920-cloc=
-k.yaml
-PATCH1: include/dt-bindings/clock/samsung,exynosautov920.h
-
-Thanks,
-Sunyeal Hong
-
+PkNhbiB5b3UgYmUgbW9yZSBzcGVjaWZpYyBhYm91dCB0aGUgb3RoZXIgaW50ZXJmYWNlPwoKSGkg
+Sm9oYW46Ck9uIHVzYm1vZGU9NjQsIHRoZSBwb3J0cyBhcmU6IAoKICBNQklNKE1JMCkrR05TUyhN
+STIpK0FQIGxvZyhNSTMpICsgQVAgTUVUQShNSTQpICsgQURCKE1JNSkgKyBNRCBBVChNSTYpICsg
+TUQgTUVUQShNSTcpICsgTlBUKE1JOCkgKyBEZWJ1ZyhNSTkpLgoKVGhhbmtz
