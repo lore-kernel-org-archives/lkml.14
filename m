@@ -1,47 +1,39 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF844143C79;
-	Fri,  5 Jul 2024 13:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD92D14A096;
+	Fri,  5 Jul 2024 13:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720184780; cv=none; b=Rzi4xgiuqjBb22rDgHhx7pCadmsTPF49ZFncbFD3UZr+p/H9jODX/lLg6wOHZTnYORB/aPXjg/r/9nf10dN6H45Dm7KrOpsWycRpABVs27l/VdFlms+rwSoPNejF3ZJuI1ZrPvtPuSEvtfy9ahFEIkosxRUhIvKpJWRLbWF9KSM=
+	t=1720184788; cv=none; b=dziwn78HEH+1vIJrT5EuL5+JKBRb7iFaQJtupwlewT1vjAUBNyMV1bFZAfoiJTKft/Hq3wv+QOeDswI/qKZI+lIJS0HBBXhww5IeP/f04KUM2qMCYl9NJZbPbn7tsRR7+aKdi1E+6E2fKxw9O+EUbsBurcvuCdw5spDlzX7ht3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720184780; c=relaxed/simple;
-	bh=WmEhNgDAEyTZUHGmtQezCo9iVLbCkSzU0LJjSId6A9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mu1wGf6XddsW0fbUqpZOhk7Ei6dAhaRQVCLzKJ3iIUIQ097kMEKxhNdOIrQmQrFZsNtuGN3cJS1/9Bff0WGyGXK/sm0K+bP/7Dn+HKD0pFqkpuKvucl/+G4yPNfiyNETix+aA/HeSGd0RLCL4uAn9FnPfO+WPtEZRcHKscN/I3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=RYIHpHiA; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1720184788; c=relaxed/simple;
+	bh=GVDZRjaahNKXDvzRfmcR0YugoOkYGrpXGDu8DeiYkoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=s0Gg33IWmqAxVf15i3E8J8NGAUi8dO0+I2Yvsp7onWXM/iMhQpW3u9lt0wI56WHaj3lAIRHOtv5FiaCii/zjfE/32vP+nmTPLHpgrzf008giLcjyRdEI7tveY5kNS6bO0bsrEfr3mvreta7r/JHqU9nzD01vEA068zMG8keDY4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wd0NAF27; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="RYIHpHiA"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 7336E1F9C8;
-	Fri,  5 Jul 2024 14:57:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1720184251;
-	bh=WmEhNgDAEyTZUHGmtQezCo9iVLbCkSzU0LJjSId6A9s=; h=From:To:Subject;
-	b=RYIHpHiA0QZ3wLmsP1vKyCuRUc0DKvv0COFTjmBHm5fEDEzKdHIo0SaP1OpdqR1t0
-	 j60Xw390URTSJKHFVKtq+BuPOGSqeEanvkYkq0S2zrscWacY1AAboZXhKP76DQwnJs
-	 9OW2pDuBbg+mo8La7WBFzpCXb+pUghVvvMkZFFeg/t/ktEcriC8Dg9r5pw39Xm6fJw
-	 cvKkLrL/MPY77iVjnESuq+rDCLI2OscATmE7XIEPpMaUJB0N49+KswB3R1Om9sywrw
-	 SJvSNDGUY1kEpzvSkqJCajvgb68V57wwKMRBytzidogpZtLlAJ+j4oJeKOKa4rREdh
-	 4tPdlXxijpk2Q==
-Date: Fri, 5 Jul 2024 14:57:26 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Liu Ying <victor.liu@nxp.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, p.zabel@pengutronix.de,
-	airlied@gmail.com, daniel@ffwll.ch,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, tglx@linutronix.de
-Subject: Re: [PATCH 00/10] Add Freescale i.MX8qxp Display Controller support
-Message-ID: <20240705125708.GA73712@francesco-nb>
-References: <20240705090932.1880496-1-victor.liu@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wd0NAF27"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08847C116B1;
+	Fri,  5 Jul 2024 13:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720184788;
+	bh=GVDZRjaahNKXDvzRfmcR0YugoOkYGrpXGDu8DeiYkoA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Wd0NAF27RDAkVhqdeIWFbL66geDI1Kux56cmkz44aJoP3wxNhhC6r/VK36sZG/uya
+	 9bOiNGF1jK/HxP8bsZUJIBfcf35aa28MZMXbn31/RurZwrrEiBTEKvzuVCg3kCmnRn
+	 VYyV5zT09I45GFbv5XQfknHv3vyVnoF8lyzTk0q3gU1Btvs+pDAVcQd2T7xwqFexqT
+	 8f/ywuMOodffxjByeFryO1gyrezrMtdQcRIo0SJRaa3q7qwpFnIWPb7Pbs8vBsAoA8
+	 h/CYqmgwcH3S4wcdOapBxxRLW4lg4OhKnM8dT81aiseKf/WwUEU2+Vt4Y13eOkQoI5
+	 b4ffKWZn/qNBQ==
+Date: Fri, 5 Jul 2024 15:06:24 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa@kernel.org>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, 
+	lkml <linux-kernel@vger.kernel.org>, Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
+	Andi Shyti <andi.shyti@kernel.org>
+Subject: [GIT PULL] i2c-host-fixes for v6.10-rc7
+Message-ID: <snxb7qd23vzrhls4duer3bt46m3lwzil5fzx75s7jl4okhexak@2e23wyd6qe76>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,20 +42,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240705090932.1880496-1-victor.liu@nxp.com>
 
-Hello Liu,
+Hi Wolfram,
 
-On Fri, Jul 05, 2024 at 05:09:22PM +0800, Liu Ying wrote:
-> This patch series aims to add Freescale i.MX8qxp Display Controller support.
+Jist a nice fix from Piotr coming in this week.
 
-I really appreciate your work here, I am looking forward for a better
-support in mainline Linux for both i.MX8QXP and i.MX8QP.
+Have a good weekend,
+Andi
 
-With that said, would be possible to add to this patch series also the
-required changes on the DTSI/DTS file to facilitate testing this?
-Worst case you can just add those as RFC / DO NOT MERGE at the end of
-this series when you'll send a v2.
+The following changes since commit 22a40d14b572deb80c0648557f4bd502d7e83826:
 
-Francesco
+  Linux 6.10-rc6 (2024-06-30 14:40:44 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags/i2c-host-fixes-6.10-rc7
+
+for you to fetch changes up to f63b94be6942ba82c55343e196bd09b53227618e:
+
+  i2c: pnx: Fix potential deadlock warning from del_timer_sync() call in isr (2024-07-04 00:17:47 +0200)
+
+----------------------------------------------------------------
+This tag includes a nice fix in the PNX driver that has been
+pending for a long time. Piotr has replaced a potential lock in
+the interrupt context with a more efficient and straightforward
+handling of the timeout signaling.
+
+----------------------------------------------------------------
+Piotr Wojtaszczyk (1):
+      i2c: pnx: Fix potential deadlock warning from del_timer_sync() call in isr
+
+ drivers/i2c/busses/i2c-pnx.c | 48 ++++++++++--------------------------------------
+ 1 file changed, 10 insertions(+), 38 deletions(-)
