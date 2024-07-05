@@ -1,117 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C941B950
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 02:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231D97E9;
+	Fri,  5 Jul 2024 02:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720145075; cv=none; b=ZzYZZirMMZWh/cCnYQvK98n0kKPm2V4vA3ZLzfFVhe/uVhcW3f1x2omz0DzdZPdsmgmNCl6Nxu8b3V9dElERRkhUNwZQU5PdaeBjtR+LifLzndIk7GW21fwCAo4Dmrn75shzrGhQPWr4c/KzHZ/LFQHyDeIlGDMMWAjqDxOLwc8=
+	t=1720145158; cv=none; b=d21ZJF2uRMWQB+x7yvfFK/SzIPrmL73K/jJ5TcluxraOLBbQcHTpakqCJyN2ZRLm+6cte9VytVcR45cyUSwy5+It+fXNEe7PdQcViXqWI7S16yL5gf93nG6f4+ft0lTL55tvJ/3UfetGJhaiFHwEh/Qg4/yBglOMBhtedbw80wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720145075; c=relaxed/simple;
-	bh=WTmA+XgWzRdUkRAteZOvT4+kv9CoJ3bbmb+9WOsOj8Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cZHXcsHeccZAcSGFw85Hxz6Uvq1vFLVcda8HcownwmFirYfRuZ+yQrZ/7w98McnNzHG+va1kiLHfoxTlsYxgcbRn1ZCbUMnfvCSOtOYdjArlqUFZCA6E+08THBTihZmHlMPStUrHGJdqQ/KTUcb0t6jUNjt5etNHcTUguMw6d+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HRf05Co9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720145158; c=relaxed/simple;
+	bh=jQ+KnmoPJFhcY+yLO2JlSVwFLUUN0eSbHrU/2G2aOws=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iON6RxKjV+yyoNJJ603SQg9ADLHqZuTqNlcO07OPJH5rkDR43PHhLhIbfHvpREV6yjdyVWgEtyC+Nv8e5ONkT9mSEe/svyvxYgremJk3Bb4LoNUf9QLwHeajaG6VGmBzVon8rWpdCfhBGnBhsVxLR81Jpp09IjojiP0Fj8DsRIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hsGSWuUl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HRf05Co9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720145072;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y7sipDhsIgWKuCcOQ9yCWrWbG6HZRi2UbYDjeBYr3i0=;
-	b=HRf05Co9neU1MXpXk/OopCltQrKvI/K1mpbceoeI/FmkiiuzeDOkr1cS1fM8Q0tSJ/U7C/
-	NJEWjIio5InDRmtjSJECzOFh0uV2fINlnFEqWwWqnWfzau/SqMtX5ecQaEIXGST2jdzwKk
-	1PW1Pxb8EadNzN/ru4fn/3ooarZo0ks=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-12-NC_hwUIfOaOxsBQwT7B_Ng-1; Thu, 04 Jul 2024 22:04:30 -0400
-X-MC-Unique: NC_hwUIfOaOxsBQwT7B_Ng-1
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4464a6a2f23so15710791cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 19:04:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720145070; x=1720749870;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y7sipDhsIgWKuCcOQ9yCWrWbG6HZRi2UbYDjeBYr3i0=;
-        b=OTFzVyBR7Z8SzVoF4/juNe0bbgeNnw+e2JtBfAVzblPK14T1td9sWmvzzd7evT4lK7
-         dnOM07LHZOmdhtmlVqXu6yio+j1bZwy/IDBhOWLC+JaWz1d0OXhBgtSOUF/Imj0Scz/u
-         wBhML1FI4wtY1HEJwBHmKCL6guKC44n/8JLbsA8hJ3WIrXGqZWcQCjQ0wmtIe6cz+MD6
-         1wzCYVVElC+8HQsqQJRkloIbW+BeG7AOgBQu5pqN/lBWw0d01MNCN/st8Jj0H5bGYzVP
-         zdRO9KTNhSrgfHMR9miKukNcnzpqwIlnevVGomeLR6xvVMmMhcLrD2WilolVhK+iETA+
-         bd7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVnkAFaTCHy5dgJ2xo0vGLtgD9QDCkTg41/VSZJsYGJKSnLshxztUb3+04JfU4g0X5OAUGmeYNvIL7LZNSeop+G+7NwnySQFnC9Dd8i
-X-Gm-Message-State: AOJu0YwIErTmm3/tdFuLG5ruKI1NxJv1c67slgZdk1mRhiwOnW5/14Dn
-	Wk/9C4ZjdvDVG986pxWIl6GXaT16R66/5QTAjcVsHXk36FrPzSSEE/Q9ufasNgjunJ1EG/n6t3f
-	itvkexgHqfV4U+NpSX0RptWlSDjNxh1Wbpq8krEauGY+pkydZ4y1eneUcdwquXQ==
-X-Received: by 2002:a05:622a:586:b0:445:624:22ed with SMTP id d75a77b69052e-447cbec70e2mr48614261cf.9.1720145070160;
-        Thu, 04 Jul 2024 19:04:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG39LIe8kAoYIDbOQNf9DgLvUvhbcD9nDFSlJCJmAlaf/1jbCEPU6kYB7PDh5wrylOpXHT4ew==
-X-Received: by 2002:a05:622a:586:b0:445:624:22ed with SMTP id d75a77b69052e-447cbec70e2mr48614081cf.9.1720145069864;
-        Thu, 04 Jul 2024 19:04:29 -0700 (PDT)
-Received: from starship ([2607:fea8:fc01:7b7f:6adb:55ff:feaa:b156])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4465149bad4sm64915461cf.65.2024.07.04.19.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 19:04:29 -0700 (PDT)
-Message-ID: <6f17f9620409dbfaa153332b934563405f5fab00.camel@redhat.com>
-Subject: Re: [PATCH v2 34/49] KVM: x86: Advertise HYPERVISOR in
- KVM_GET_SUPPORTED_CPUID
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>,  Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Hou Wenlong
- <houwenlong.hwl@antgroup.com>, Kechen Lu <kechenl@nvidia.com>, Oliver Upton
- <oliver.upton@linux.dev>, Binbin Wu <binbin.wu@linux.intel.com>, Yang
- Weijiang <weijiang.yang@intel.com>, Robert Hoo <robert.hoo.linux@gmail.com>
-Date: Thu, 04 Jul 2024 22:04:28 -0400
-In-Reply-To: <20240517173926.965351-35-seanjc@google.com>
-References: <20240517173926.965351-1-seanjc@google.com>
-	 <20240517173926.965351-35-seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsGSWuUl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C11CC3277B;
+	Fri,  5 Jul 2024 02:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720145157;
+	bh=jQ+KnmoPJFhcY+yLO2JlSVwFLUUN0eSbHrU/2G2aOws=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hsGSWuUl8T6tzyzPawCdY5r0SABSolaIANXpd8rijtIZqbKtFlZzH1NEv7/V3nPau
+	 Hk9aodw7VDIJWLuvgUWQKjI6pIJGCoywuOl6R4Bh+OwNxa8czqU5pdB7D3ZvN9Qhnb
+	 e6kQ7kObGRFxkfQnQvxfyipLyMCv4KDyDhC4V0BOEnBeX+1vocZSDeaQ8qIQd14tMQ
+	 /WFhb7WoFGozpMKPkVD8u8jgWPSHUvi1Vs05+0Lj8hg1xE43GFN6pEGj4sTJOuTftc
+	 QlAQBYu8t6AorEueaNtFFp7TJSPtDJDDqjmvOGJHiPSZ8wLtv6vXp+vO82q3VN1Z1z
+	 UYGWTZ/5qz2Kw==
+Date: Thu, 4 Jul 2024 19:05:56 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: =?UTF-8?B?QXNiasO4cm4=?= Sloth =?UTF-8?B?VMO4bm5lc2Vu?=
+ <ast@fiberby.net>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+ netdev@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>, Ilya Maximets
+ <i.maximets@ovn.org>, Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
+ <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, Simon Horman
+ <horms@kernel.org>, Ratheesh Kannoth <rkannoth@marvell.com>, Florian
+ Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/9] net/sched: flower: define new tunnel flags
+Message-ID: <20240704190556.410667ba@kernel.org>
+In-Reply-To: <7db43f91-80d5-4034-ab25-f589e5510024@fiberby.net>
+References: <20240703104600.455125-1-ast@fiberby.net>
+	<20240703104600.455125-2-ast@fiberby.net>
+	<b501f628-695a-488e-8581-fa28f4c20923@intel.com>
+	<20240703172039.55658e68@kernel.org>
+	<7db43f91-80d5-4034-ab25-f589e5510024@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2024-05-17 at 10:39 -0700, Sean Christopherson wrote:
-> Unconditionally advertise "support" for the HYPERVISOR feature in CPUID,
-> as the flag simply communicates to the guest that's it's running under a
-> hypervisor.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/cpuid.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index d1f427284ccc..de898d571faa 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -681,7 +681,8 @@ void kvm_set_cpu_caps(void)
->  		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
->  		F(XMM4_2) | EMUL_F(X2APIC) | F(MOVBE) | F(POPCNT) |
->  		EMUL_F(TSC_DEADLINE_TIMER) | F(AES) | F(XSAVE) |
-> -		0 /* OSXSAVE */ | F(AVX) | F(F16C) | F(RDRAND)
-> +		0 /* OSXSAVE */ | F(AVX) | F(F16C) | F(RDRAND) |
-> +		EMUL_F(HYPERVISOR)
->  	);
->  
->  	kvm_cpu_cap_init(CPUID_1_EDX,
+On Thu, 4 Jul 2024 21:45:14 +0000 Asbj=C3=B8rn Sloth T=C3=B8nnesen wrote:
+> +       /* These flags are internal to the kernel */
+> +       FLOW_DIS_ENCAPSULATION          =3D (TCA_FLOWER_KEY_FLAGS_MAX << =
+1),
 
-This makes sense.
-
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-
-Best regards,
-	Maxim Levitsky
-
-
+Looks good (assuming TCA_FLOWER_KEY_FLAGS_MAX =3D=3D TCA_FLOWER_KEY_FLAGS_T=
+UNNEL_CRIT_OPT)
