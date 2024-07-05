@@ -1,108 +1,114 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E7414D28C;
-	Fri,  5 Jul 2024 14:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47ACD166318
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 14:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720188646; cv=none; b=XAhJLkEclg9Ac1F82x9HB75F3InocRKLroRvyNxcJ6pPfzZkKUW2WIW9i56I2Y5QjYuvcodZK/ptG0LoWNW5JsAuLfSRPpS0TdaxddVatHx/Olj66jANpaCDWws2HruYu5vG/JlfWjTbpWc8EBtDC32/Gu92lgfs9t4ZKTnTEKM=
+	t=1720188669; cv=none; b=n5GJMpTcI57w/bgrnwA2gj3Dc3ZNz8bjWeGrU5vEIr9PGdeCURjb1Gr3Obrx7iHWVmgH7M0hdWm+785n69AVg3ZrXmnAeYtWJg2qw0hAmH2TYK+ubX86BVZEUv45kZ24F2RydZuryq6bdijJxeQaEUa8n+rDHGj+sf/ezeSf2Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720188646; c=relaxed/simple;
-	bh=zhOC8EgulT623GW8OHmAHlavnJ8n5NEkG+iPKDoE594=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g61MYUGjqUPhTKstwE/rzHXjb+FJqGv8ejbK+I/JLJX09JG51VyVTcd7EGpUPP9EbIX+AKbn6M3MaaEv3LtwZ0qtQpyrSM2UzkTOzFAf3sstVd9r7qqPEog7FPg4BqoSG+9bOd5HppQIuS/5126G0le2dwr3tI1yU2IU2zcwtvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgYM1ut1; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720188669; c=relaxed/simple;
+	bh=zuP+/htUq75qrtouhxbjufUQHe6tuVLRCfDQpICxGf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mcVWXhtFtMMt9Fnx/HXG1nmSU/jIiLflUmp6Ho/RnODFJg9GwYtIb8JkEs5LI0H1nlhlRY1m1BYssk6hok2LmmTZ2+F1bXEcsPh56ex1LYVbxb2kteXk80l6hiiF4B20Vlx7fO0j7mapz76Pnesb/3du2aHLEGprr6CeV/cYxqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L5kfmgf1; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgYM1ut1"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fab03d2f23so11572665ad.0;
-        Fri, 05 Jul 2024 07:10:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L5kfmgf1"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70b05260c39so959584b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 07:11:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720188645; x=1720793445; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9NKT8pIUChblG2z50TWBzNNQKMtBzVs4m5rYofm6wv8=;
-        b=UgYM1ut1ST0v/LXoiHn6oOpXCsHkPxyr+ofGMkojhLbPFrm6hq+5+yXCMQv4Dg4gF8
-         s2hDG93v4eYLKpH4Plyb9ZrPus3cAFxVeNR+T9YJUE1DDolXNEgzFuxB8qx2sivuxuJN
-         gT4MnpHszhQGjyToQ2U3PpfVGMq75VVhbLShtrYUxBQttmusNyekMdz520WPW1yCyQE2
-         ff99HRsbL4bf8TGQd2+d76qRyHy6cPN7OmfiQXgr7Z00DSB3rnwZVQZLAWNvzG/39/xj
-         XVRxi5McB6RTDyhyz882An3uSMVbglgQFn3DrSVk1tqQFRrrzxi37NUYYWbmMX+MMSdj
-         6gsA==
+        d=linaro.org; s=google; t=1720188666; x=1720793466; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XM4HbvawPCBny+Eeb2JRLz0OMBw/Ulb/Z2EqXlrBEew=;
+        b=L5kfmgf1T6p1tliGIxtIvayFkEkqwf5KmcpHPN8yTPpstDizf8NCMGjAdzFXaw+Ktx
+         5L8z6dm5eeQ5mS4q/Ixg4YOC5RuU1MJCZKPumetyekM61SJiaC19wr4D6+RAaHxSGYST
+         ElFpXQO2z+MlvgmP25eT9mtfsLbLX8hNslAKUWiWjVAtxYmmzrdfvlU9Ee3fHz6WzTRm
+         g6HMFh9rlPpn008Kk0EkU3fjUYzyiogH42v8PGBtItX7bXrdDAqBN/W6RS9bC2J/qrK4
+         v4HF1FyzfFtMHmP+aHnKatgjYYRnHJ6oXScUEcYWd2CwN927URa9wwT3EMU0srAlr41H
+         L8kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720188645; x=1720793445;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9NKT8pIUChblG2z50TWBzNNQKMtBzVs4m5rYofm6wv8=;
-        b=S8n1pfCPicWDN/+8guOIGcC6xUSTk5YeZ+isYREosMQ8hqHjBT61DIQIwniuSR0tvw
-         i79yAlqLldC4CRuo8gNfuhgmWMmtFxwi7fFVV5EKAj6IaYuHxAIrzNDTlHbf4qhuHj11
-         v4gousQ3m26eZRx1alFtLSy8kaRZLeybO4LHtA1TRs6ZW+dBTIvqea8CahzmsPWDhh1c
-         1BCiShFjJiW8hpYwMV7vEwekhSLm5rGd/36kUNtEvN360HiKjgsG7GMEu3KOAN4KCAsb
-         aFqDbF5+2d/wRN6mhMH1hBtWpoOqU4iDU5PwcDtyirK99a+G2EyMlAn0DhAZDt5JB8LA
-         gxJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuSuWHGl2arI9z4ISbgUShJFocH3p3Ou6kDeCwikBIRHEwrGt1+x6jPh6/yacaBZucgW2G6z2ZoW/Xex9u/ouTQOyK5p25nv3bfxZsO+ifdiHWjh/lPnnScUOu4Q1tjcyu/YlqZAu4GUU=
-X-Gm-Message-State: AOJu0Yy/82o9HpKugrS10zIVhrl59B0RBckgi/qLBZmKNLFmn5p99xeM
-	wfCT6NpmjreOoJwWBE4TdUeEb2iessYzftmwmo//ZdtU+z9uvs/5
-X-Google-Smtp-Source: AGHT+IGT7yUpAbC699qnMeL/R8v2MCRjyPXMS0+2rpgmZzAs1QhCVFoE3Gq+CJSNiziOvw3cTmTTFA==
-X-Received: by 2002:a17:90a:e60a:b0:2c9:6f5e:f5c1 with SMTP id 98e67ed59e1d1-2c99c5838a8mr3376423a91.10.1720188644772;
-        Fri, 05 Jul 2024 07:10:44 -0700 (PDT)
-Received: from localhost.localdomain ([187.85.146.95])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a9535f3sm3415086a91.17.2024.07.05.07.10.40
+        d=1e100.net; s=20230601; t=1720188666; x=1720793466;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XM4HbvawPCBny+Eeb2JRLz0OMBw/Ulb/Z2EqXlrBEew=;
+        b=AHNLOA56wf4sVosHLpBlVnGWqlyZxcrMNoh5l9SEWFBl+YM4mVKs8gC6ZrL1gAWF5w
+         SxwPmof2ObWmFp6KnSPqGIM9qLHUaTmHwPd1ChR19ztSDI+kBUAxHadlCiWcJdH0lhWF
+         Wa0fXN0F4F8hdlm7ClGXDHyfKZmQioQaY82lGqY0Vo4Q7welkdMjxMRS9XykWwlDJrbx
+         BAjlLfVBqww3zov5cDSVvMqHnoP+Y+W3psrerS3ck8eXqFI6o2m2LrfkVYDBsN15Wtn6
+         8Hl/Z1mWbaCjYG2DeWaStiili4HJb1fdfvznKXuq5MMU4RnYy3SIZw2DGFNaCvS2xDzZ
+         I1yA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhhQXx7RxrjFN/DxdH5TCppSaEmKKvq5yYXn1I+LxYzws55keDwq9DX3OHwIBu1JzKqYxTjG5mBt+zHUZ4uUuNY4pWOi3d7uBtyzNw
+X-Gm-Message-State: AOJu0YxF+kURBLWmZJi32fZWsSJ6L4he3iEKmE043pedwtXRrpvnJaMW
+	s3gHsmhdTvWwC9kGBAQOh1EUjyu1MJDToGdTwWn3uGGfVw2MaDcA+IGgdvbKD40/ok1axERyy9Y
+	=
+X-Google-Smtp-Source: AGHT+IFy25FHZc4IHUBbnmHPL1FZGIlfz/twkzh99J3sTQjp/rXEbOPYKNsKaz8hkfuePIxxixTx/w==
+X-Received: by 2002:a05:6a00:6c98:b0:706:34f3:7b60 with SMTP id d2e1a72fcca58-70b00b62171mr5118719b3a.23.1720188666491;
+        Fri, 05 Jul 2024 07:11:06 -0700 (PDT)
+Received: from thinkpad ([220.158.156.249])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6afb8ef1sm11285704a12.40.2024.07.05.07.11.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 07:10:44 -0700 (PDT)
-From: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
-To: tiwai@suse.com
-Cc: perex@perex.cz,
-	kailang@realtek.com,
-	sbinding@opensource.cirrus.com,
-	shenghao-ding@ti.com,
-	simont@opensource.cirrus.com,
-	foss@athaariq.my.id,
-	rf@opensource.cirrus.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	edson.drosdeck@gmail.com
-Subject: [PATCH] ALSA: hda/realtek: Limit mic boost on VAIO PRO PX
-Date: Fri,  5 Jul 2024 11:10:12 -0300
-Message-Id: <20240705141012.5368-1-edson.drosdeck@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        Fri, 05 Jul 2024 07:11:06 -0700 (PDT)
+Date: Fri, 5 Jul 2024 19:41:01 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: "zheng.dongxiong" <zheng.dongxiong@outlook.com>
+Cc: fancer.lancer@gmail.com, vkoul@kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 2/2] damengine: dw-edma: Add msi wartermark
+ configuration
+Message-ID: <20240705141101.GA57780@thinkpad>
+References: <cover.1720176660.git.zheng.dongxiong@outlook.com>
+ <SY4P282MB26243F37A69E54C2B469DFB2F9DF2@SY4P282MB2624.AUSP282.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <SY4P282MB26243F37A69E54C2B469DFB2F9DF2@SY4P282MB2624.AUSP282.PROD.OUTLOOK.COM>
 
-The internal mic boost on the VAIO models VJFE-CL and VJFE-IL is too high.
-Fix this by applying the ALC269_FIXUP_LIMIT_INT_MIC_BOOST fixup to the machine
-to limit the gain.
+On Fri, Jul 05, 2024 at 06:57:35PM +0800, zheng.dongxiong wrote:
+> HDMA trigger wartermark interrupt, When use the RIE flag.
+> PCIe RC will trigger AER, If msi wartermark addr is not configuration.
+> This patch fix it by add msi wartermark configuration
+> 
+> Signed-off-by: zheng.dongxiong <zheng.dongxiong@outlook.com>
 
-Signed-off-by: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
----
- sound/pci/hda/patch_realtek.c | 2 ++
- 1 file changed, 2 insertions(+)
+HDMA driver is not at all using watermark interrupts. So we should be disabling
+them altogether.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 811e82474200..ca42a662f16e 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10383,6 +10383,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x10cf, 0x1845, "Lifebook U904", ALC269_FIXUP_LIFEBOOK_EXTMIC),
- 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
- 	SND_PCI_QUIRK(0x10ec, 0x118c, "Medion EE4254 MD62100", ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x10ec, 0x11bc, "VAIO VJFE-IL", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
- 	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC295_FIXUP_CHROME_BOOK),
- 	SND_PCI_QUIRK(0x10ec, 0x124c, "Intel Reference board", ALC295_FIXUP_CHROME_BOOK),
- 	SND_PCI_QUIRK(0x10ec, 0x1252, "Intel Reference board", ALC295_FIXUP_CHROME_BOOK),
-@@ -10655,6 +10656,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1d72, 0x1901, "RedmiBook 14", ALC256_FIXUP_ASUS_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1d72, 0x1945, "Redmi G", ALC256_FIXUP_ASUS_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1d72, 0x1947, "RedmiBook Air", ALC255_FIXUP_XIAOMI_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x2782, 0x0214, "VAIO VJFE-CL", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
- 	SND_PCI_QUIRK(0x2782, 0x0232, "CHUWI CoreBook XPro", ALC269VB_FIXUP_CHUWI_COREBOOK_XPRO),
- 	SND_PCI_QUIRK(0x2782, 0x1707, "Vaio VJFE-ADL", ALC298_FIXUP_SPK_VOLUME),
- 	SND_PCI_QUIRK(0x8086, 0x2074, "Intel NUC 8", ALC233_FIXUP_INTEL_NUC8_DMIC),
+See: https://lore.kernel.org/dmaengine/1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com/
+
+- Mani
+
+> ---
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> index d77051d1e..c4d15a7a7 100644
+> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> @@ -280,6 +280,9 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
+>  	/* MSI done addr - low, high */
+>  	SET_CH_32(dw, chan->dir, chan->id, msi_stop.lsb, chan->msi.address_lo);
+>  	SET_CH_32(dw, chan->dir, chan->id, msi_stop.msb, chan->msi.address_hi);
+> +	/* MSI watermark addr - low, high */
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_watermark.lsb, chan->msi.address_lo);
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_watermark.msb, chan->msi.address_hi);
+>  	/* MSI abort addr - low, high */
+>  	SET_CH_32(dw, chan->dir, chan->id, msi_abort.lsb, chan->msi.address_lo);
+>  	SET_CH_32(dw, chan->dir, chan->id, msi_abort.msb, chan->msi.address_hi);
+> -- 
+> 2.34.1
+> 
+
 -- 
-2.39.2
-
+மணிவண்ணன் சதாசிவம்
