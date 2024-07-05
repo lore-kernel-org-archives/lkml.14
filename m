@@ -1,121 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F85B13DDD0;
-	Fri,  5 Jul 2024 06:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA82132103
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 06:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720159810; cv=none; b=YbWVHwJh9vylw8kznt4XWk92g4ZuGaRaFMeVix4dwToBlkHjT3WvbYm8xUkIjwsawxP4xHBqflDKTskvuV63rOsiqSTbwJgJdt4mRsP/wNu/Djewo4FOxpi6bE9bivUJSnb3S1Nzrfh6um7jCrgfI5IuwQrhY7zneNNIzagW1do=
+	t=1720159812; cv=none; b=Tzccr/+6qqtaXgant7kvcjRANMjvr5DeNuuogEMG4keLDITfgV6Qs0Oc3a0I7BIhu3pMJhO+UNsYandzB6eVSZ+H6JUiAPp9/Io5oGapReileJG3KXR1dlFZm4XMnkHEvO56+JqDrgT8xAQpyT2hlOP3e0tat237PMivFTzEk4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720159810; c=relaxed/simple;
-	bh=2M0fguvjxnITBIXwZE83kBtpWTCgS/US+uG4BdqttDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uN7ChRK+0vPZe0TjMnBFFKeMYlLrWZlrNQbhSPThCiWOVXNrGkM0da9MUeEmdBy3VI0iNyfCjkGvphuncYs8v+Tz8g9OkPivViIyfELG1vECT5Xxd9GpOmYr78sIAuGESdV2oKbX1vwXCIsIPkBvpno6rJWoNVTRDHfp1QbEYzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e7qMgmU0; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720159812; c=relaxed/simple;
+	bh=W+qamwsHuyOBrSd6E6yy7gGaZxUWsVukqdHyod550SY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cd52ReKOxaIBCCTDnUxk5uDDgCbTMmwyR4n1mfw7hYJHqY41cb5qn/78ZeSU/ek01QsgvHZ1hjTojYo7xSLnKws5wnxGztirRrh7I3E02lB9MZeYW5sPMR90zNVs82bMl3qpK66KexohQMSdch22KCjLMfFa9I2jLZuMD5rcaI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=yoI0vWtd; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e7qMgmU0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720159810; x=1751695810;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2M0fguvjxnITBIXwZE83kBtpWTCgS/US+uG4BdqttDE=;
-  b=e7qMgmU0wBtYsCM3jHFqRgTDjLM/eX6tRtqRWHk3g90cZ0hIu3mI0o+t
-   acOsc1Qb5LabV3tD0X6wkOJpCZGyD9HpGGr7+D3scmbZleOHW54cjEXcU
-   Slu9Nr/rqDFSkpIYyYlWamhWbVsSP8YZue6K+81PZz4b/a96nnmS2ph6+
-   9SodQUGjPBDeZ3AGvTFfxFd3vvV3hFIpWySZ76INsGxGy9SjmMWsUKGrc
-   QtPQ9TvF7BJwAJJr7/8hl6Saj3g+LQxTkIqebQPe7rVDVUKx5jRlp1F4v
-   hcKXD4fqL/YzCk2shUWAULLgzgw8oFZ78F0Fjgu9aVPlFl4rwyz2soMTF
-   Q==;
-X-CSE-ConnectionGUID: AEelKRdkRuucTvSnutV38w==
-X-CSE-MsgGUID: 5sBAXeqKQPCqlEFCGmF8Wg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="17587070"
-X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
-   d="scan'208";a="17587070"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 23:10:09 -0700
-X-CSE-ConnectionGUID: faNjunHSSmudEYsE/gcmUA==
-X-CSE-MsgGUID: K4hQdQ3qSj68keOXZfwe/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
-   d="scan'208";a="77518698"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 04 Jul 2024 23:10:07 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sPc8x-000S0l-21;
-	Fri, 05 Jul 2024 06:10:03 +0000
-Date: Fri, 5 Jul 2024 14:09:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chris Lu <chris.lu@mediatek.com>, Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Von Dentz <luiz.dentz@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, Sean Wang <sean.wang@mediatek.com>,
-	Aaron Hou <aaron.hou@mediatek.com>,
-	Steve Lee <steve.lee@mediatek.com>,
-	linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-mediatek <linux-mediatek@lists.infradead.org>,
-	Chris Lu <chris.lu@mediatek.com>
-Subject: Re: [PATCH v7 5/8] Bluetooth: btmtk: move btusb_mtk_hci_wmt_sync to
- btmtk.c
-Message-ID: <202407051325.i8Ac4Nz9-lkp@intel.com>
-References: <20240704060116.16600-6-chris.lu@mediatek.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="yoI0vWtd"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-367ab50a07aso157533f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 23:10:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1720159806; x=1720764606; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rOD2jtdAtfNII56GP5rqsRV5KAthLbsUXOQKU9980nY=;
+        b=yoI0vWtdAf2AolvOLzrTOsWksWc2xC9H3Xn+mfrO3SP8SCFUz1Wt5hXkg4o8Assl3q
+         vxbblN9rZ5iNxQDAG7De79y6AK21m3ee+DcnbMMLd8cV2kJpjEy+6o6AGusRzgEX5qDB
+         gPXHpPLgtzpfXY52/TenmkEO1kOiT/N0E1LDWjQ2QTs97A9WadavhKtqrmv0Avgpfobv
+         VK+wrf6//dgvTagN4vDm1aOJWjwm9aUHJQQfwjiYDFNtHpjyXymP/pMkB10WleQbYCk6
+         Kx/wsQK+JAa1CgqGqOaewLbOQB6cc+SWq3H1PtUEHw9qp+p9029PWi4MxTZpBgw2O3L8
+         Llbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720159806; x=1720764606;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rOD2jtdAtfNII56GP5rqsRV5KAthLbsUXOQKU9980nY=;
+        b=RoyrUB/u7CdIw5scob/6tRW5OMVs0854//1taUoV3LjtfSVD5NWg3op7CYlycmUccZ
+         y8PxBlUkt8mtjJOQmqOO8NKx70oXkirEriqHdF12zNBn5GXO81K5XJhq7rlc0KUJtsKw
+         0fPefn+IQkYyGodLmM3SmSPcVIPYK+vrEJS3mh2v6dqJfFI7sf6bkYRu0Ws9J0OxT67v
+         cXx89P//WxOw3ESeVzPP9xhaASPCLH01SOcjh747SCO+wCH7YbIgsMW04VV+mRxu+L5Z
+         i/zS4SFFSC4LlWjODulV9l8pE/dKutbJWyJtC6HsofYHkxfrn8KcaDcU979YUKy2EQxt
+         oBhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRV4xoscLCuswGQ+a4TEhJiOeDNdtWOzhUdFnFxWAGMcSK4z0P49xMPYPkHc/6/+adeDCX5gcfZ1CyMlTMTTROf0LTI1kRc4sgBhwj
+X-Gm-Message-State: AOJu0Yzh/RxCcpPJIRLwDBH0VG9hSW66Vvsb6c2bncacfbY3WjcJzL9O
+	jItt+Y/nL4PKIHyQtZhsP21A4V1GnPHF4N4+AhLSjvX1WlZ76NCe9C0Wq2vMmgk=
+X-Google-Smtp-Source: AGHT+IGSC+YguDLIlW5OOjetUrmmUspzykknqUgbL5edv3k5thftEFlmWv4eaRYhBjzCWN1bS4fzfQ==
+X-Received: by 2002:a5d:410b:0:b0:367:89a7:da5e with SMTP id ffacd0b85a97d-3679dd2997amr2862491f8f.19.1720159806299;
+        Thu, 04 Jul 2024 23:10:06 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367a40a6d4bsm1709446f8f.51.2024.07.04.23.10.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 23:10:05 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Vladimir Isaev <vladimir.isaev@syntacore.com>,
+	Roman Artemev <roman.artemev@syntacore.com>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v2 1/2] riscv: vdso: Prevent gcc from inserting calls to memset()
+Date: Fri,  5 Jul 2024 08:09:01 +0200
+Message-Id: <20240705060902.113294-2-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240705060902.113294-1-alexghiti@rivosinc.com>
+References: <20240705060902.113294-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240704060116.16600-6-chris.lu@mediatek.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Chris,
+gcc is smart enough to insert a call to memset() in
+riscv_vdso_get_cpus(), which generates a dynamic relocation.
 
-kernel test robot noticed the following build errors:
+So prevent gcc from doing that by using the
+-fno-tree-loop-distribute-patterns option.
 
-[auto build test ERROR on bluetooth-next/master]
-[also build test ERROR on next-20240703]
-[cannot apply to bluetooth/master linus/master v6.10-rc6]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/kernel/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Lu/Bluetooth-btusb-mediatek-remove-the-unnecessary-goto-tag/20240705-043833
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git master
-patch link:    https://lore.kernel.org/r/20240704060116.16600-6-chris.lu%40mediatek.com
-patch subject: [PATCH v7 5/8] Bluetooth: btmtk: move btusb_mtk_hci_wmt_sync to btmtk.c
-config: i386-buildonly-randconfig-001-20240705 (https://download.01.org/0day-ci/archive/20240705/202407051325.i8Ac4Nz9-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240705/202407051325.i8Ac4Nz9-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407051325.i8Ac4Nz9-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_submit_wmt_recv_urb':
-   btmtk.c:(.text+0x731): undefined reference to `usb_alloc_urb'
->> ld: btmtk.c:(.text+0x7c5): undefined reference to `usb_anchor_urb'
->> ld: btmtk.c:(.text+0x7d1): undefined reference to `usb_submit_urb'
->> ld: btmtk.c:(.text+0x7de): undefined reference to `usb_free_urb'
->> ld: btmtk.c:(.text+0x820): undefined reference to `usb_unanchor_urb'
-   ld: btmtk.c:(.text+0x829): undefined reference to `usb_free_urb'
-   ld: btmtk.c:(.text+0x83e): undefined reference to `usb_free_urb'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_hci_wmt_sync':
-   btmtk.c:(.text+0x8bd): undefined reference to `usb_autopm_get_interface'
->> ld: btmtk.c:(.text+0x8f9): undefined reference to `usb_autopm_put_interface'
-   ld: btmtk.c:(.text+0x9bf): undefined reference to `usb_autopm_put_interface'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_wmt_recv':
-   btmtk.c:(.text+0xb67): undefined reference to `usb_anchor_urb'
-   ld: btmtk.c:(.text+0xb73): undefined reference to `usb_submit_urb'
-   ld: btmtk.c:(.text+0xc8e): undefined reference to `usb_unanchor_urb'
-
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index f7ef8ad9b550..c7e40bf36371 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -18,6 +18,7 @@ obj-vdso = $(patsubst %, %.o, $(vdso-syms)) note.o
+ 
+ ccflags-y := -fno-stack-protector
+ ccflags-y += -DDISABLE_BRANCH_PROFILING
++ccflags-y += -fno-tree-loop-distribute-patterns
+ 
+ ifneq ($(c-gettimeofday-y),)
+   CFLAGS_vgettimeofday.o += -fPIC -include $(c-gettimeofday-y)
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
