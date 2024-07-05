@@ -1,416 +1,225 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2048.outbound.protection.outlook.com [40.107.21.48])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D86146D45;
-	Fri,  5 Jul 2024 09:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720170083; cv=fail; b=szzF76DH2MUK9SfMPqyOidalUiK27RPYckyq+i97UMo5tirwspD737LtdbdaVtpCFPc+6jdCcCS6dubks6pmo9utK3PkObdZlNSz7pDykp7jaE6rpvZqX41o7G5IGmULKRAsaujxVYRxIo81vUQ7pOw5pSNIhui+UYg0Ip87C04=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720170083; c=relaxed/simple;
-	bh=P+fhb2DOgf7JVnx2dYZUT9lyCYTd54OOZDq1y3pSyac=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=epn+zOO9ihsSwW3OYy1Rm6WDEipEbOHgOLHlKp8gxNy83ayBEeqUzc7QXtatTCkLrW/crgsj773S8CF0EhfOw0sMUhAcOerx3yeccQlSnFLctGTAl2eH1r2fwULfj4jq3L/jUztje1Knt4uMw4OoWD9sJ+lFnRdTatFWzsRIV+o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=LsVs8nhK; arc=fail smtp.client-ip=40.107.21.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB5E1465A9;
+	Fri,  5 Jul 2024 09:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720170087; cv=none; b=aP93+8ySzpduz3c4iqKy8kOHlY6bUAehkB6G6ePZDYrVgBuiduBqCEU/NyFUadDisc6DpdBonlfQvaoirAM5s7+pNH11qeMzigzWfmvZp97yE0N2MG0CVIqwLzG9KyyBteRVPG9zl990oxhacgItzzTe9nakdPoorvUIHcugyoU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720170087; c=relaxed/simple;
+	bh=zShQJ2xaddQPUH0o5D/FiebnKdfM57McvAJECGZDgVU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zj/jIz6Janf2HRh4VTZ+tXDRKyDV54aSXDj0vTLoLmJ+WVSdPhM2k1mNXC3VVahsfpEeH9IA8//rtvyVAJa1px8lSYVMvr9RwpwUtABYbgB7O9P0LQsHJ0j4kkIe+ANOZkgypKrfV6g8ZiYevJEZD1RAfec6Q37TSu03UZndRuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XtH8lL1b; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LsVs8nhK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CxqGrMtZ5pAaTGj1Gqr+o0omvWL1F+7Xgq/txLiqiqZXUpCRplWj9mkAYiFO3FVzLL8fTz517rWNHMMidVVutl5I0Q4BaLF8MIvI8WBKE007jTYjLBiLF+B60MOAm3vtI9Wvbex1ODOiU9nosZSoKqKOqhUaAcVm8s0Yse1RDg69hd814OYYRpoVPM53arGR0AReG82a2/jaLj8f+q9IVhT+Nk1hUg1KpgnPjf6CcDXBAudGtHG2FeM/rJI2vdO4ely4GByfM8A6gvtObRMi4L42b1PRfcwpnySrYj2XIbq+Khgf5sGWy3ZZ83mg6RTVv/5h6m20hiviHAaHiEpibg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W6ubKGAFKtGjOB8UXplivvNBDmBEZpvz78U8EbO0yp4=;
- b=B+19j6ivFydNTJAZnIAfVfNQID1D1IrgmM1wJKi2ctfmGOziICZPYcmUSpy+9wHg9GqwehTL/cMAJsqslwpq/wTFlmpQ+9Y8O1JLvVYFhgxNuPVa8wNlTV3NsOZnHoZUi+GMEihHYkhb7X5KOmW++/swcvAUKxe8VCgEZks6XKtMQqO/d63xwMaqjJTPujEbFSvc+rqPsWbp1swmr85VVBLK4rIqU3avppeLNTBcN+SnTl6gRwzLwGbVogTMkt2iS8yd0DExtgLeBSnD8hjwomX0RNMTPWC2ogw1YHhvjOl9qbKJTvmeNNJWX1hrLwD6Jp2UcTRqRmLEjIu5+NP5mQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W6ubKGAFKtGjOB8UXplivvNBDmBEZpvz78U8EbO0yp4=;
- b=LsVs8nhKD5tfvBpylhhxg0jhT58I1DcgQ4mJGOJNhfLnvyrKK2WvgBAHEEB235YqYEP2/M6XWCx6etNOWvY6wYrKgl/aW6lwgGQZarEKZm6zgCmsNSuQaABfj1TR0Es3f4YSqQcbB6jo8mcWq8ElMyGn4eAponPfnRK+Sv5H9iI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by PAXPR04MB9073.eurprd04.prod.outlook.com (2603:10a6:102:225::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.31; Fri, 5 Jul
- 2024 09:01:18 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%2]) with mapi id 15.20.7741.027; Fri, 5 Jul 2024
- 09:01:18 +0000
-From: Liu Ying <victor.liu@nxp.com>
-To: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	tglx@linutronix.de
-Subject: [PATCH 05/10] dt-bindings: display: imx: Add i.MX8qxp Display Controller
-Date: Fri,  5 Jul 2024 17:09:27 +0800
-Message-Id: <20240705090932.1880496-6-victor.liu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20240705090932.1880496-1-victor.liu@nxp.com>
-References: <20240705090932.1880496-1-victor.liu@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR03CA0110.apcprd03.prod.outlook.com
- (2603:1096:4:91::14) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XtH8lL1b"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4650sc0Y032627;
+	Fri, 5 Jul 2024 09:01:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=gVLD0PfTypd3x/2oUv8q80
+	Q3drogbSippc8/52aK+4M=; b=XtH8lL1bpfk3Wu/ry9SNZnXap83lAM7iw62cHJ
+	1IYNWUWBaZMkFMWEV5LmNfxEZya8RT1Ig7MNtvLBmtqnO4XimMjzrWx23SxLzxiy
+	Hx/FeC6Uqb+RTY0+Yd9noouP7vtlYCOgphWyjqJuGSuVfJUhzA2qF4r9WhUFzhUl
+	pIvnTksgkuIZPiV0gO13vao1xWrRiwErBP+DqhX7WEYRcDeVsFeDR9I7lvw1YlIY
+	H28ftqo5XX3tyzbTnngJk8yWRj2IZkYIR1waR8resSBqeAiK1a13JiULbrue2Zo4
+	3C79M6NLzSvzCymXZsquvvzCv8Cojmf4crWXwZXgFLc2tW0w==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402abtwc3x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Jul 2024 09:01:12 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46591AI5002658
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 5 Jul 2024 09:01:10 GMT
+Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 5 Jul 2024 02:01:05 -0700
+From: Jie Gan <quic_jiegan@quicinc.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>, "Rob Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        James Clark <james.clark@arm.com>
+CC: Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Tingwei Zhang
+	<quic_tingweiz@quicinc.com>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+        "Tao
+ Zhang" <quic_taozha@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        "Song
+ Chai" <quic_songchai@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: [PATCH v2 0/4] Coresight: Add Coresight Control Unit driver
+Date: Fri, 5 Jul 2024 17:00:45 +0800
+Message-ID: <20240705090049.1656986-1-quic_jiegan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|PAXPR04MB9073:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d9e4df9-8c8e-451b-feec-08dc9cd10836
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?MxkvzPRkOaVobFCSzGjfs2zi6qRGwNkCHU/le3JWbnQjEhtgSF0tuztj4l81?=
- =?us-ascii?Q?pRdq173ybdvFUiTFRHKi28dAkA6MNotfgbGGBCRRqxsXaQZ1wrkNaNEVqAmI?=
- =?us-ascii?Q?9YwFpnHyA2Xa67LAd93JiZxZRInM8VDG6LNAFsmtD2PACfq3+aOYFk+dL3y2?=
- =?us-ascii?Q?1lKgIMRJhUPiUonNATP+1P8qbhugR5WxRKq4gFNRH6LRQTL9SUtkDlkArcpl?=
- =?us-ascii?Q?YdzyLayvm9UnBL0vcp82ZpO1Dr1htnk/ZGTD+R1UguGtN9V2ZDEIY/8jr40p?=
- =?us-ascii?Q?qwm5ltVTsMpPyXdbgHEicFlALdQcN+QuJI7sXKP32dBe8oj/hUcxka79y+g5?=
- =?us-ascii?Q?IvfGqIxNqVunuHQM1Pnl5zzqwDpAG/FMbUeT7qbZKtEahSHhootKUkLHZ/SE?=
- =?us-ascii?Q?XkZ+8g3QHWNtf2nAFxdMOHZROhjalzwkNQ5X8OfuFkSZg7oGmnlBjO8Stn5l?=
- =?us-ascii?Q?Z0fpPhcSS5B9r1MrOL/XXv6KWicMuQuEdktuFFudp574hoBqi/AyQDMbApM7?=
- =?us-ascii?Q?yUARG1JeNACxJS6wziP3FNn7F4vGSN/Cyfd3h0isg+ukeSoBGxwZhbURgfIj?=
- =?us-ascii?Q?WHwdDkDn/QhUDM8et/D8WZ7JtDO1YBdNaqAqVmulYqSTrlo9wiPndi9kwzrS?=
- =?us-ascii?Q?qeNxzp35AqLgdWxWbATd8JOBDMhEBB8I/ogQRXTEUOA5unBLkZRBE4O4PMuy?=
- =?us-ascii?Q?hkcmojZXsBQmmdr6PY1dAttPxydW892q0O85sW1esoQmPIfdnxf8/NbowW7R?=
- =?us-ascii?Q?9eDxtaFX4d60BTReCMpeo8GRaoEyfQ6lumyoZj8mN+F7TyWgjGYvkbWvktC+?=
- =?us-ascii?Q?s0PCdvTAELct42nO+O+Vy6RCXFNkfVjzuGVSXIfoPZvhnHcJZHH06/TXXupn?=
- =?us-ascii?Q?xnxSMUhhcygh1heCae8VW1T4GsroQBKVlmEKaitERKNY2Cm/nLRxiGT1V56V?=
- =?us-ascii?Q?rnxBlwO1yXrmsvLxpaEvgqUF2P2kXDbvQmuVWwiFyqyAiOu9uq/P2L5Yfd0S?=
- =?us-ascii?Q?OTfmbA8FpEqhO/yHn75UIRcEaOj1N6iiPh4bmdt2+k7GkY+shrXh4JS5HomX?=
- =?us-ascii?Q?Aq6iyTxqIZyxT4w7sMgQLEg8v8U2K757fIdTZDWYI7ed/r7n0Yx6g2iimbfm?=
- =?us-ascii?Q?ZdEQA6wBVXtF4unSHlLNc1irIAtDJVs1KKWEH75/wHQ/2Iso4KGFTZK/ocwS?=
- =?us-ascii?Q?72nCzjnSuk30UbF3itvsr0CeiLED8h1L+ykZ6/Dwag4g4MC3aydd8bRin0MK?=
- =?us-ascii?Q?HxD3WoKYB4hkQak0ZiTdiXttGPSMn2xiX+eGUk+Frlw8Qi3AhESG8oGJh6WT?=
- =?us-ascii?Q?48htSFgeJ+GWz+8bgPy+UWAn2W+fJkHWE6OAs+dA8MPxmQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?2Ybkz7Wp9qA/yXWlwsYjT+x0DC7SB1BWCFUZtAmeFoJorvqeH1+LxHr/V5u+?=
- =?us-ascii?Q?NCSspBCwSX8aWqyuJ7934MAOhIo7WF5e+uJtGVh4j6ruDRsMDRWHiog9R3s8?=
- =?us-ascii?Q?1+jnY+ykuXXZEnFKEdC6uJUE1bAQIb1gwGjd6nf+DxNz2toEkCb3NTSoh7Ch?=
- =?us-ascii?Q?dSVgS2gEshWEsaE4JFrcImRdXhM5VIJJdupqGqC+XHqFh11X9NNo5HjU5PRa?=
- =?us-ascii?Q?nSVLanHPv7GWBJF4g3m5cvJAdTn0YU1mDToQiM+JszftNrH/Hoq6pGK9CUBw?=
- =?us-ascii?Q?5sBzp0FffgkdwyKjWMeSXj0MKetbUIqsnofN9oDOR+wwUPQSs+89XsKad4fR?=
- =?us-ascii?Q?girKngIVdnbYPpQCTXO4e59liKbd7R1NjMWKFoUBEZrAlpGl/QDP8FVLLG5Z?=
- =?us-ascii?Q?jXTyliq5MyMwb7jDBX6fhbSrf+Ei/xPsdXVAzMvNLaS//F1saTRjlC5fvc0i?=
- =?us-ascii?Q?2uuN5i772H7cCYxoFgawT0GyYuZU6WulDmAPVM8k3fnkuZKijh7EhxfJiSXT?=
- =?us-ascii?Q?yJqDHivBeS04XAMig6CYN4/bwvLrzxMWKPTJCcgRUd1fl61uTmdHmo+0hqHR?=
- =?us-ascii?Q?TQPGTwXxt7Smv8BoYQYZ3yV2jXGeXL5dYoSLskVdvO15pBiLiFK8zwhN6Qma?=
- =?us-ascii?Q?CA8Ytxob+xr8MK+iTBoDbjnbnWiiY4oyXhgBQVPwFcbDRj5PIbEg63JGMpxR?=
- =?us-ascii?Q?0aNRdSsOUgcqPpEZe9S7kR/TNhtrRmReme52Vglf/GmQU4cbGXb1sVU5floR?=
- =?us-ascii?Q?9vq1y9dJZABW290/Sl2AVksQOOMr+Q75BquSZO6ed/EPVoQTdSU+HJsD9Gdf?=
- =?us-ascii?Q?fgygzb2+KRxCCuQumf7B6UstfpDnFgAkQRY9qcwx4CkJnkWEsEQNXbs+Tx3x?=
- =?us-ascii?Q?QnR64qICHcS0yddTyspB75agRJk3ZFi+gYPBYM5J7I0tnlM8QSKqVg1wAcnG?=
- =?us-ascii?Q?BxnuhfSmYLNxHuFmSoDW3TMcAWvkCif5LEmTrdOhGNRD7uR/pAxvZN4q9yFN?=
- =?us-ascii?Q?KTS1PrA4+FTsKHkMU0RfbkfBuNar94AfrsZor82GUvaQf4Ys4RCrGmfW4Gpl?=
- =?us-ascii?Q?5MrpjR2uks8MMgzH0h2vqQ6O6zHCT7QqRFRBLjJXcFWHINJ/9wHwLWkvp5y1?=
- =?us-ascii?Q?3+mrfbazPEAkebeYLxavMyA8AkH6oewXxbXXdLubSWXN07taBGL0pjzG6GXj?=
- =?us-ascii?Q?5OwvIqCyxBUkbBKKu93OKEm7wsIog9PAb8ELqkM/YHiwuuu3c1BZVAW0u/Sl?=
- =?us-ascii?Q?M96VV0FSNQEp43ezO5MUYu0oFgxxLgz42ZmtIMTPCWvyC8Phyvq4RGpL2qKD?=
- =?us-ascii?Q?8gYKnA1lOruSvDumTzml3QW9HurbxBLpbkL5CLo2zEMeyeO2NE2h87kLXq2/?=
- =?us-ascii?Q?+qv+9/dRfhSxT50NHWci+f/fDZq5Xvqnu7ExjDJspfswa0KroYkBSErdjlxg?=
- =?us-ascii?Q?69RLDFskjWaLfY6DK/dvgtnhBkG2Yp924hhg30K4HeZ9czk3S5ywBB3hu+eS?=
- =?us-ascii?Q?M8RNXkFS4G0Hdh7jdtVePh5HyDVp7s3EahRl8ZJf9TfhJUfsrqpGPtZdd+zA?=
- =?us-ascii?Q?ilr5gl2MCB9YrQDSnt9gxNSbRF9gaBH5PUyoRkZi?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d9e4df9-8c8e-451b-feec-08dc9cd10836
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2024 09:01:18.2059
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o8hv1Y9yRkdjuPKqSmmlRz7m3cy2eQcDuAdYP0mKPCcptUzT/H43J/tsne+nVH1piU88u4O+C8dJZuEB30gQVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9073
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ymAvc8GBymTm_U0haFnAqBiqUnZr9yFO
+X-Proofpoint-ORIG-GUID: ymAvc8GBymTm_U0haFnAqBiqUnZr9yFO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-05_05,2024-07-03_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1011 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407050067
 
-i.MX8qxp Display Controller(DC) is comprised of three main components that
-include a blit engine for 2D graphics accelerations, display controller for
-display output processing, as well as a command sequencer.
+The Coresight Control Unit(CCU) device hosts miscellaneous configuration
+registers to control various features related to TMC ETR device.
 
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
----
- .../bindings/display/imx/fsl,imx8qxp-dc.yaml  | 243 ++++++++++++++++++
- 1 file changed, 243 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,imx8qxp-dc.yaml
+The CCU device works as a helper device physically connected to the TMC ETR device.
+---------------------------------------------------------
+             |ETR0|             |ETR1|
+              . \                 / .
+              .  \               /  .
+              .   \             /   .
+              .    \           /    .
+---------------------------------------------------
+ETR0ATID0-ETR0ATID3     CCU     ETR1ATID0-ETR1ATID3
+---------------------------------------------------
+Each ETR has four ATID registers with 128 bits long in total.
+e.g. ETR0ATID0-ETR0ATID3 registers are used by ETR0 device.
 
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx8qxp-dc.yaml b/Documentation/devicetree/bindings/display/imx/fsl,imx8qxp-dc.yaml
-new file mode 100644
-index 000000000000..a2ad280d2839
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx8qxp-dc.yaml
-@@ -0,0 +1,243 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/imx/fsl,imx8qxp-dc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX8qxp Display Controller
-+
-+description: |
-+  The Freescale i.MX8qxp Display Controller(DC) is comprised of three main
-+  components that include a blit engine for 2D graphics accelerations, display
-+  controller for display output processing, as well as a command sequencer.
-+
-+                                  Display buffers              Source buffers
-+                                 (AXI read master)            (AXI read master)
-+                                  | .......... |                  | | |
-+      +---------------------------+------------+------------------+-+-+------+
-+      | Display Controller (DC)   | .......... |                  | | |      |
-+      |                           |            |                  | | |      |
-+      |   @@@@@@@@@@@  +----------+------------+------------+     | | |      |
-+  A   |  | Command   | |          V            V            |     | | |      |
-+  X <-+->| Sequencer | |    @@@@@@@@@@@@@@@@@@@@@@@@@@@@    |     V V V      |
-+  I   |  | (AXI CLK) | |   |                            |   |   @@@@@@@@@@   |
-+      |   @@@@@@@@@@@  |   |       Pixel Engine         |   |  |          |  |
-+      |       |        |   |         (AXI CLK)          |   |  |          |  |
-+      |       V        |    @@@@@@@@@@@@@@@@@@@@@@@@@@@@    |  |          |  |
-+  A   |   ***********  |       |   |            |   |       |  |   Blit   |  |
-+  H <-+->| Configure | |       V   V            V   V       |  |  Engine  |  |
-+  B   |  | (CFG CLK) | |    00000000000      11111111111    |  | (AXI CLK)|  |
-+      |   ***********  |   |  Display  |    |  Display  |   |  |          |  |
-+      |                |   |  Engine   |    |  Engine   |   |  |          |  |
-+      |                |   | (Disp CLK)|    | (Disp CLK)|   |  |          |  |
-+      |   @@@@@@@@@@@  |    00000000000      11111111111    |   @@@@@@@@@@   |
-+  I   |  |  Common   | |         |                |         |       |        |
-+  R <-+--|  Control  | |         |    Display     |         |       |        |
-+  Q   |  | (AXI CLK) | |         |   Controller   |         |       |        |
-+      |   @@@@@@@@@@@  +------------------------------------+       |        |
-+      |                          |                |       ^         |        |
-+      +--------------------------+----------------+-------+---------+--------+
-+              ^                  |                |       |         |
-+              |                  V                V       |         V
-+       Clocks & Resets        Display          Display  Panic   Destination
-+                              Output0          Output1 Control    buffer
-+                                                              (AXI write master)
-+
-+maintainers:
-+  - Liu Ying <victor.liu@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx8qxp-dc
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 2
-+
-+  reset-names:
-+    items:
-+      - const: axi
-+      - const: cfg
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  ranges: true
-+
-+patternProperties:
-+  "^axi-performance-counter@[0-9a-f]+$":
-+    type: object
-+    additionalProperties: true
-+
-+    properties:
-+      compatible:
-+        const: fsl,imx8qxp-dc-axi-performance-counter
-+
-+  "^command-sequencer@[0-9a-f]+$":
-+    type: object
-+    additionalProperties: true
-+
-+    properties:
-+      compatible:
-+        const: fsl,imx8qxp-dc-command-sequencer
-+
-+  "^display-engine@[0-9a-f]+$":
-+    type: object
-+    additionalProperties: true
-+
-+    properties:
-+      compatible:
-+        const: fsl,imx8qxp-dc-display-engine
-+
-+  "^interrupt-controller@[0-9a-f]+$":
-+    type: object
-+    additionalProperties: true
-+
-+    properties:
-+      compatible:
-+        const: fsl,imx8qxp-dc-intc
-+
-+  "^pixel-engine@[0-9a-f]+$":
-+    type: object
-+    additionalProperties: true
-+
-+    properties:
-+      compatible:
-+        const: fsl,imx8qxp-dc-pixel-engine
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - power-domains
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx8-lpcg.h>
-+    #include <dt-bindings/firmware/imx/rsrc.h>
-+
-+    display-controller@56180000 {
-+        compatible = "fsl,imx8qxp-dc";
-+        reg = <0x56180000 0x40000>;
-+        clocks = <&dc0_lpcg IMX_LPCG_CLK_4>;
-+        power-domains = <&pd IMX_SC_R_DC_0>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+
-+        interrupt-controller@56180040 {
-+            compatible = "fsl,imx8qxp-dc-intc";
-+            reg = <0x56180040 0x60>;
-+            clocks = <&dc0_lpcg IMX_LPCG_CLK_5>;
-+            interrupt-controller;
-+            interrupt-parent = <&dc0_irqsteer>;
-+            #interrupt-cells = <1>;
-+            interrupts = <448>, <449>, <450>,  <64>,
-+                          <65>,  <66>,  <67>,  <68>,
-+                          <69>,  <70>, <193>, <194>,
-+                         <195>, <196>, <197>,  <72>,
-+                          <73>,  <74>,  <75>,  <76>,
-+                          <77>,  <78>,  <79>,  <80>,
-+                          <81>, <199>, <200>, <201>,
-+                         <202>, <203>, <204>, <205>,
-+                         <206>, <207>, <208>,   <5>,
-+                           <0>,   <1>,   <2>,   <3>,
-+                           <4>,  <82>,  <83>,  <84>,
-+                          <85>, <209>, <210>, <211>,
-+                         <212>;
-+            interrupt-names = "store9_shdload",
-+                              "store9_framecomplete",
-+                              "store9_seqcomplete",
-+                              "extdst0_shdload",
-+                              "extdst0_framecomplete",
-+                              "extdst0_seqcomplete",
-+                              "extdst4_shdload",
-+                              "extdst4_framecomplete",
-+                              "extdst4_seqcomplete",
-+                              "extdst1_shdload",
-+                              "extdst1_framecomplete",
-+                              "extdst1_seqcomplete",
-+                              "extdst5_shdload",
-+                              "extdst5_framecomplete",
-+                              "extdst5_seqcomplete",
-+                              "disengcfg_shdload0",
-+                              "disengcfg_framecomplete0",
-+                              "disengcfg_seqcomplete0",
-+                              "framegen0_int0",
-+                              "framegen0_int1",
-+                              "framegen0_int2",
-+                              "framegen0_int3",
-+                              "sig0_shdload",
-+                              "sig0_valid",
-+                              "sig0_error",
-+                              "disengcfg_shdload1",
-+                              "disengcfg_framecomplete1",
-+                              "disengcfg_seqcomplete1",
-+                              "framegen1_int0",
-+                              "framegen1_int1",
-+                              "framegen1_int2",
-+                              "framegen1_int3",
-+                              "sig1_shdload",
-+                              "sig1_valid",
-+                              "sig1_error",
-+                              "reserved",
-+                              "cmdseq_error",
-+                              "comctrl_sw0",
-+                              "comctrl_sw1",
-+                              "comctrl_sw2",
-+                              "comctrl_sw3",
-+                              "framegen0_primsync_on",
-+                              "framegen0_primsync_off",
-+                              "framegen0_secsync_on",
-+                              "framegen0_secsync_off",
-+                              "framegen1_primsync_on",
-+                              "framegen1_primsync_off",
-+                              "framegen1_secsync_on",
-+                              "framegen1_secsync_off";
-+        };
-+
-+        pixel-engine@56180800 {
-+            compatible = "fsl,imx8qxp-dc-pixel-engine";
-+            reg = <0x56180800 0xac00>;
-+            clocks = <&dc0_lpcg IMX_LPCG_CLK_5>;
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            ranges;
-+        };
-+
-+        display-engine@5618b400 {
-+            compatible = "fsl,imx8qxp-dc-display-engine";
-+            reg = <0x5618b400 0x14>, <0x5618b800 0x1c00>;
-+            reg-names = "top", "cfg";
-+            interrupt-parent = <&dc0_intc>;
-+            interrupts = <15>, <16>, <17>;
-+            interrupt-names = "shdload", "framecomplete", "seqcomplete";
-+            power-domains = <&pd IMX_SC_R_DC_0_PLL_0>;
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            ranges;
-+            fsl,dc-de-id = <0>;
-+
-+            port {
-+                dc0_disp0_dc0_pixel_combiner_ch0: endpoint {
-+                    remote-endpoint = <&dc0_pixel_combiner_ch0_dc0_disp0>;
-+                };
-+            };
-+        };
-+    };
+Based on the trace id which is programed in CCU ATID register of
+specific ETR, trace data with that trace id can get into ETR's buffer
+while other trace data gets ignored. The number of CCU ATID registers
+depends on the number of defined TMC ETR devices. For example, two TMC
+ETR devices need eight ATID registers. ETR0 with ETR0ATID0-ETR0ATID3
+and ETR1 with ETR1ATID0-ETRATID3.
+
+The significant challenge in enabling the data filter function is how
+to collect the trace ID of the source device. The introduction of
+trace_id callback function addresses this challenge. The callback function
+collects trace ID of the device and return it directly. The trace ID will be
+stored in the structure called cs_sink_data and transmitted to helper
+and sink devices.
+
+The cs_sink_data structure is created to address how to transmit
+parameters needs by coresight_enable_path/coresight_disbale_path
+functions.
+
+Here is an example of the struct cs_sink_data:
+struct cs_sink_data {
+        struct perf_output_handle  *handle; //used by perf mode
+        struct coresight_device    *sink;   //used to retrieve atid_offset
+        u32                        traceid; //traceid needed by CCU
+};
+
+The atid_offset mentioned before is the offset to ATID register in CCU
+device.
+
+Enabling the source device will configure one bit in the ATID register based
+on its trace ID.
+Disabling the source devices will reset the bit in the AITD register
+based on its trace ID.
+
+Useage:
+Enable:
+STM device with trace ID 5 and ETR0 is activated.
+Bitmap before the enablement:
+ETR0ATID0:
+31..................543210
+==========================
+0000000000000000000000...0
+==========================
+
+Bitmap after the enablement:
+31..................543210
+==========================
+0000000000000...0000100000
+==========================
+
+The bit 5 of the ETR0ATID0 register is configured to 1 when enabling the
+STM device.
+
+Disable:
+STM device with trace ID 5 and ETR0 is activated.
+Bitmap before the disablement:
+ETR0ATID0:
+31................6543210
+=========================
+000000000010111...0100000
+=========================
+
+Bitmap after the disablement
+ETR0ATID0:
+31................6543210
+=========================
+000000000010111...0000000
+=========================
+
+The bit 5 of the ETR0ATID0 register is reset to 0 when disabling the STM
+device.
+
+Previous discussion for V1:
+
+https://lore.kernel.org/lkml/20240618072726.3767974-1-quic_jiegan@quicinc.com/T/#t
+
+V1->V2:
+1. Rename the device to Coresight Control Unit.
+2. Introduce the trace_id function pointer to address the challeng how to
+properly collect the trace ID of the device.
+3. Introduce a new way to define the qcom,ccu-atid-offset property in
+device tree.
+4. Disabling the filter function blocked on acquiring the ATID-offset,
+which will be addressed in a separate patch once it’s ready.
+
+Jie Gan (4):
+  Coresight: Add trace_id function to collect trace ID
+  dt-bindings: arm: Add binding document for Coresight Control Unit
+    device.
+  Coresight: Add Coresight Control Unit driver
+  arm64: dts: qcom: Add CCU and ETR nodes for SA8775p
+
+ .../bindings/arm/qcom,coresight-ccu.yaml      |  87 ++++++
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 163 ++++++++++
+ drivers/hwtracing/coresight/Kconfig           |   6 +
+ drivers/hwtracing/coresight/Makefile          |   1 +
+ drivers/hwtracing/coresight/coresight-ccu.c   | 290 ++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-ccu.h   |  18 ++
+ drivers/hwtracing/coresight/coresight-core.c  |  53 +++-
+ drivers/hwtracing/coresight/coresight-etb10.c |   3 +-
+ .../hwtracing/coresight/coresight-etm-perf.c  |  34 +-
+ .../coresight/coresight-etm3x-core.c          |  14 +
+ .../coresight/coresight-etm4x-core.c          |  13 +
+ drivers/hwtracing/coresight/coresight-priv.h  |  12 +-
+ drivers/hwtracing/coresight/coresight-stm.c   |  13 +
+ drivers/hwtracing/coresight/coresight-sysfs.c |  24 +-
+ .../hwtracing/coresight/coresight-tmc-etf.c   |   3 +-
+ .../hwtracing/coresight/coresight-tmc-etr.c   |   6 +-
+ drivers/hwtracing/coresight/coresight-tpda.c  |  13 +
+ drivers/hwtracing/coresight/coresight-trbe.c  |   4 +-
+ drivers/hwtracing/coresight/ultrasoc-smb.c    |   3 +-
+ include/linux/coresight.h                     |   4 +
+ 20 files changed, 739 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/qcom,coresight-ccu.yaml
+ create mode 100644 drivers/hwtracing/coresight/coresight-ccu.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-ccu.h
+
 -- 
 2.34.1
 
