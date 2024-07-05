@@ -1,109 +1,129 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A2014AA0
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 03:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BF61F94C
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 03:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720149662; cv=none; b=fMX7u1DbTEopr2GF34UGpzvMpQ5UiDnRabaRGQadU/8+Gec7xAG6PUaVcekiqZ0jhFaJxpg+9HTnf28K/vg2Wmt2N8OmOp9smwHMyjr5pFP5kS/LQgV+4ZVTvjeuxB4a1ZMV6ArBMcOHWSGZJZ+KGDptRQA/di0kLw/99WSUW6U=
+	t=1720150186; cv=none; b=Dha7gXt4QW/kK8pUGi0H1V6DiSNsu2EWtfdWM7fdKlfVsXXGms+0KmtOouxL4yFOZNL2ud2RaPy80l/v2KUka+qqTmszAgw4qIs6cGzCKgOHvzTQh2Kg2APpmcKP99XAnClD4EaAJvZovh4rvgf122E+FDVm6/iboMERZxXIR6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720149662; c=relaxed/simple;
-	bh=8w+l88N0ay0DP5baXPiAOfw5yIbPXiW0S1kxxDfJ4g4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MbaTg6kFD6xvjj8853YK3ZiaD/hbxbQaPGYZQh3bj1HEJC3PcnkI+0qLKDFyJBsGFVqMUE0ERAfqUfauWC6lsJT3ZYRVJUQNgXS6yLnj3VqbBZmP02PGgjYymk92fmh0fp4wB2RidxDRwdgk/hs3mE4rXfDq44hR1gxw+M2vx3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=0IKqpZJg; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
+	s=arc-20240116; t=1720150186; c=relaxed/simple;
+	bh=JoiE69E1zlTXTCtPfqKhix7BSKVKIRCxzPOGKCLXqk8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K2EtDU31298VRyJzWbqpdkdmMpoPZUE/Nus/Q5MMJsO2bqt0FTk9aGZ3Cfp95iI4LRygtT0bDv5E0pMmQNvLvSyfr8UXxmIHnrv0zpN3yi8WNjtPsn/H6tPkHpFgRwffI7H5Oi8CmmqDhI+NCUrJ+NLmeucVMNUqoazOz48mp9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=l0hK18iM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XB3NGFDV; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="0IKqpZJg"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7021702f3f1so738475a34.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 20:20:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1720149658; x=1720754458; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4m+wLWb9gkModAj2RkagVThSSmZ6lzDQL2hRBJ4sn6M=;
-        b=0IKqpZJgEb7zOeNHrzFg5EsrBTOwXBkYI3lFEDC7H5ErkPQCNXEVfbxNANom4bKzkz
-         LwF33hkfzuyNTocdvzd+ipL9jtKJarKJym91341V/BNQAH2/4+iS1aMrEfFA4f9NelPM
-         vzWU9zPBAIIGdfzjaScIgKZvB2BjUZMNev6yA8zQBsgiqsZULLZiNnhL5jguW+N9b2Hv
-         m4D+8kWUWyjOfypQiT0rvBzb8jDW8FmNdc7iJUhp9Sms+AqR94AmpktwfqlB3gPLG0SC
-         MTc1VQsPgAOdRYABuk3AO4OpviYbb8maZfCUAiSc75IOL5XnlLVg0IIE0UQpIeT6zDiv
-         x0zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720149658; x=1720754458;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4m+wLWb9gkModAj2RkagVThSSmZ6lzDQL2hRBJ4sn6M=;
-        b=UflfFBbwLdVSR7+M8mXkXUeWnx8VicPyepyI4cNlFvWOW3t+wrP/XD3/qr4uPHGWPg
-         8j8fW1UZKbUPMRH0NCz1WqbcIvpQNKCei0kG6QJ/L8Gibuzis/al7UMGTx7YZT5yTJoH
-         xcOw0//Smy4zEqQerE5S+dHFoviAqvVJHvylyUJlM8+z/48KQ6TdRPQQ6kYCRsBzVHky
-         Wne+LXvrL9b3Ql4SI0egPXZZMVznt8wiurqbcJiHgacZmOutXqwVMhRP2xFXlSk9qdQq
-         CrDcA6WZorYVbyqU5MFcX3z/ZOrBVSjBWPdUIvE2aupCJiAW+EjCbM1dDsM3NVtaBVyG
-         SEYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWksUv44uBJNef4Gng2YE4DOdhUhyewnYJ0LirYcPRKSY0LayJUcTDQmU3elFXUw9hDLi1/B1Wxo57Tl5xo1u4Gmuwhxs3GRViaHi17
-X-Gm-Message-State: AOJu0YwtmSgN1m+3ygWYr5Kx76IoAK1rUR/Qm2ZgsxDYph5kkyVeypw7
-	wP5xcg2YKw2yiLLH15GvkmpOnPHde8+wi27f47bLS3KLhX9d2g/I+FU/LxJRnao=
-X-Google-Smtp-Source: AGHT+IFn2XdhgB88bdLcHkqaGNa+vFp/NLHEl4eeGjUKhR5UGYOLVChbMaJJftp5OFbUBLt+g2QsXg==
-X-Received: by 2002:a9d:7382:0:b0:701:f4b0:bef9 with SMTP id 46e09a7af769-7034a74cdebmr3575073a34.14.1720149657296;
-        Thu, 04 Jul 2024 20:20:57 -0700 (PDT)
-Received: from echken.smartx.com ([103.172.41.204])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-70afaa8126dsm2433163b3a.197.2024.07.04.20.20.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 20:20:56 -0700 (PDT)
-From: echken <chengcheng.luo@smartx.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	echken <chengcheng.luo@smartx.com>
-Subject: [PATCH] Support for segment offloading on software interfaces for packets from virtual machine guests without the SKB_GSO_UDP_L4 flag.
-Date: Fri,  5 Jul 2024 03:20:48 +0000
-Message-Id: <20240705032048.110896-1-chengcheng.luo@smartx.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="l0hK18iM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XB3NGFDV"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.nyi.internal (Postfix) with ESMTP id BAEDD1380281;
+	Thu,  4 Jul 2024 23:29:43 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 04 Jul 2024 23:29:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1720150183; x=1720236583; bh=gU
+	cFZLI+jyclOePzN4QN3A7vaUMpYuUHDBMaek3z+nw=; b=l0hK18iMhG6/pzQnUt
+	KdBsLylWJq8X235wCC57PA3edOfdor4F3lMmgE8GLbVlLkY9WKNLEMJyL3Jx0xM4
+	tP3EUim1ifGsAqhjdBekvXOQScU+CV6QI5qiUrCBIQccHCedeMwdV7SN+Odw5sDM
+	oHI8PNT2eL63qGA2Uzq7B75OOlTw9zRKqB9eRZgualL93Fyn8eIWh+un0L2IqXRZ
+	C8n00lNXFU+HRgT545Q8A7aB3tRFx13Xluo0iJO61B5m0BQORaNi2OxKO+2E/LgP
+	Dvg+KIAz8tcK9+QYwS4oiwvtcX15VZGvEyvXmx614Js3xSdzveYMrZfQOj8+D326
+	wl9Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1720150183; x=1720236583; bh=gUcFZLI+jyclO
+	ePzN4QN3A7vaUMpYuUHDBMaek3z+nw=; b=XB3NGFDVCQl4rcqGnfHM+NviZVqwE
+	4gALkE44simtGfPFBZVEnlbJIs4RZjcaqI1aqh9tXvr0qJx7X7CjJYUv712KCeTj
+	xOZOO4GJtqlbLw1drHfMXK0r2Mp5Vx+ngEVxJN3JJIJzFo8izKUX1D7u95yoZLfv
+	4lrac3jMNaz/h34LOT03iaMG/NbAxPlnM1p1Erg72+lEOAzWdp/mR+usqlEqFmj+
+	dh7bfPK0FxrXZp2b7NpRy2+R6p0pGLTadttHtjuFYKxP1UYfLKW1dIaEd6R9J/0b
+	Sg7vpg9Qu3+RshltfzkAHlXl/IyKI2h/wxq8sZQ6QnrBejZeVt2pfv/qA==
+X-ME-Sender: <xms:pmiHZqEzLGltaGzYVFJ49y2py8pZf0If6cdKrkhJejMbZF9iPzNOAg>
+    <xme:pmiHZrW9lvzZd1-RSS6ZcX92VfxHEippIIEzPkfOtoqhQx049b8cbCq4eHmVQ16gT
+    mcyGxH3c-_YKgMz9FI>
+X-ME-Received: <xmr:pmiHZkK828pDKy0cy2q0ort_n77Sxbr6Ja0fg4LNOR6XhKFC4fgl96rqpITm4wrfA0g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtgdejtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomheplfhirgiguhhn
+    ucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenucggtf
+    frrghtthgvrhhnpedufffffffhueehvefhgfelveekueegteefgeeiieejheefkeehkeev
+    udevieegueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:pmiHZkHgbdjh6n-ZleBq52iQy8drikDImuTnWPcadXn0ySIuyrp7QA>
+    <xmx:pmiHZgWmcjSRTU18YZXG2eTx7oMaZz2YHXBj-y870gnaagEKsq7L5A>
+    <xmx:pmiHZnPKezn2em2LVtmUnLT2ghJgRp711WnpUFiDLIm5Jef_RScMMw>
+    <xmx:pmiHZn0WOoCoxHPAJZwFfsJmQhcwtJAsEMxyCJCLwjRJSnz2H8YOAw>
+    <xmx:p2iHZjEfLxgdV4d3jL4GNYgNbvPGuOq5nRpuZhniIFTSz5hQXwKB1T0X>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 4 Jul 2024 23:29:40 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 0/3] LoongArch: CPU parallel bring up
+Date: Fri, 05 Jul 2024 11:29:36 +0800
+Message-Id: <20240705-loongarch-hotplug-v1-0-67d9c4709aa9@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKBoh2YC/x3MQQqAIBBA0avErBNMpaSrRAurUQdEQyuC6O5Jy
+ 7f4/4GCmbDA2DyQ8aJCKVZ0bQOrN9Eho60aBBeKD1yxkFJ0Jq+e+XTs4XRMWq1Fv2htlITa7Rk
+ t3f9zmt/3Awn4C61jAAAA
+To: Thomas Gleixner <tglx@linutronix.de>, 
+ Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1062;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=JoiE69E1zlTXTCtPfqKhix7BSKVKIRCxzPOGKCLXqk8=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrT2jCVBgWZc2cl7r0vfN1dtqU6K7tt6MylkJsefj5Paw
+ v9sFXzaUcrCIMbFICumyBIioNS3ofHigusPsv7AzGFlAhnCwMUpABNhY2D477vFJujZzu68KUmm
+ Gk+zmQRDj7ivO1u6wdF4k8iMMl7zCkaG6QIhDK2Zm0Ui0j7x6L9JW8HDu/TILfWvVT3Zm8/uDfr
+ CBQA=
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-When running virtual machines on a host, and the guest uses a kernel
-version below v6.2 (without commit https://
-github.com/torvalds/linux/commit/860b7f27b8f78564ca5a2f607e0820b2d352a562),
- the UDP packets emitted from the guest do not include the SKB_GSO_UDP_L4
-flag in their skb gso_type. Therefore, UDP packets from such guests always
-bypass the __udp_gso_segment during the udp4_ufo_fragment process and go
-directly to software segmentation prematurely. When the guest sends UDP
-packets significantly larger than the MSS, and there are software
-interfaces in the data path, such as Geneve, this can lead to substantial
-additional performance overhead.
+Hi all,
 
-Signed-off-by: echken <chengcheng.luo@smartx.com>
+This series implemented CPU parallel bring up for LoongArch.
+
+Being the first non-x86 arch enabling that we need to fix some
+infra in patch 1 and 2, then implement everything in patch 3.
+
+Please review.
+Thanks
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- net/ipv4/udp_offload.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Jiaxun Yang (3):
+      cpu/hotplug: Make HOTPLUG_PARALLEL independent of HOTPLUG_SMT
+      cpu/hotplug: Weak fallback for arch_cpuhp_init_parallel_bringup
+      LoongArch: SMP: Implement parallel CPU bring up
 
-diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
-index 59448a2dbf2c..6aa5a97d8bde 100644
---- a/net/ipv4/udp_offload.c
-+++ b/net/ipv4/udp_offload.c
-@@ -402,6 +402,13 @@ static struct sk_buff *udp4_ufo_fragment(struct sk_buff *skb,
- 	if (unlikely(skb->len <= mss))
- 		goto out;
- 
-+	if (skb_gso_ok(skb, features | NETIF_F_GSO_ROBUST)) {
-+		/* Packet is from an untrusted source, reset gso_segs. */
-+		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(skb->len - sizeof(*uh),
-+							 mss);
-+		return NULL;
-+	}
-+
- 	/* Do software UFO. Complete and fill in the UDP checksum as
- 	 * HW cannot do checksum of UDP packets sent as multiple
- 	 * IP fragments.
+ arch/loongarch/Kconfig              |  1 +
+ arch/loongarch/include/asm/smp.h    |  6 ------
+ arch/loongarch/kernel/asm-offsets.c | 10 ----------
+ arch/loongarch/kernel/head.S        |  7 ++++---
+ arch/loongarch/kernel/smp.c         | 35 +++++++----------------------------
+ kernel/cpu.c                        |  9 +++++++++
+ 6 files changed, 21 insertions(+), 47 deletions(-)
+---
+base-commit: 82e4255305c554b0bb18b7ccf2db86041b4c8b6e
+change-id: 20240704-loongarch-hotplug-3f8826b88a43
+
+Best regards,
 -- 
-2.34.1
+Jiaxun Yang <jiaxun.yang@flygoat.com>
 
