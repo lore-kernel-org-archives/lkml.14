@@ -1,152 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BC3146D7E;
-	Fri,  5 Jul 2024 13:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC6D146D7E;
+	Fri,  5 Jul 2024 13:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720186025; cv=none; b=RGjnZyKHa6i6hQ5dLBRbUgth/ETcHukBfU5il8qsSJklFStZcQRZJKPCbGNQKjgHyNanS+jWMH9cl31O5JFxuLl8eE5im8tB2xNMxAZKTfmkFaZ7iHzmPUoeWb6fziIRm5PtGkpQJQfLvGO/AuAcJvtUFQLvyAG1HL0XzXcPLs4=
+	t=1720186034; cv=none; b=NwjQvIyMdfMqIKQH+CGVVDCD0QapGf4+jnokO96Ms9N9RcTTKu0UPRD3SeyHeQwmaCnqPuoXpiIJSqzceNw9dy8hdmcfaI9xH0t07MsTB2uy3bmilDQMG9v208Gj8OApCeJVJWqpwXdSsoPzYDy3qN2KqtuBY3nWIz3CVJ3zhJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720186025; c=relaxed/simple;
-	bh=ru5P37lngQupBugJph3iDkDpO+qTwdsGIFKM9qjfHQ8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hcPoimJZrFyQI3J7Ma7ZkLPNW1mz4ken756c05AqgUfsU0SesLZAhIFyVQcqtw0fS7VQS7SOQCDdL8kGgkLgNjtHJWCAp9TU2XEOCKwdhrZU8pD6XgdxlTIXjugn7z729SFgGSjK4jdAYN3mbvet3vYRuFi07boJB3Juz+DuTAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSBPhYIH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720186034; c=relaxed/simple;
+	bh=nJbuph+RUzwgbDfHIwZskIFi+IW19h7mWMR5gIT2MOY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JYMpAoJMl73nxPjZYAE0SDi9C7KpGu4dLSc4dPPVfg1MF2Y8zf9TTupKZ7ZbVL5FzKNAgLEtyv268uC8QAUnaoKK7HfO8hPGMeamVNJS+bZmgy1g8dgnSgqjnEV9UEPXGChMviCABW5gCwHZUP95nLXSCPtlvs6Ldxxb0J/nZ9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O2yUNiD+; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSBPhYIH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9DF6C116B1;
-	Fri,  5 Jul 2024 13:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720186024;
-	bh=ru5P37lngQupBugJph3iDkDpO+qTwdsGIFKM9qjfHQ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aSBPhYIHehQFlP8X/q5YuMtFK8Q4e1FR684Nf+HPiwyAnKVMbvfk91UOXWcWQPD1I
-	 jmbhCFLSKlmv/br+opPe3bgnPN/8NbZLkYsYm3XpZE/xARydvSHBRDdB/bbzVhAXMS
-	 Cxjb+mVgPqPdfMRAUlWXA+SNDLj+eypijFhGbjhSGOG5LuNLl9sgtHM1A4gAMLcn70
-	 oj0B+x18C7xnvSs0HW+mK8TiFHHKCYEgXmYExVjF3Vbw28TyoqZV2aKojNFKSe0EE4
-	 0ey7bBjUc97IzrxV/kZsnFsRifWFU+W5xIvgmWAcJJwoFTXbMQcPCdXqF4NkSaTxbi
-	 1Sk/n5WD5dRVg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sPixq-00A3wi-BU;
-	Fri, 05 Jul 2024 14:27:02 +0100
-Date: Fri, 05 Jul 2024 14:27:01 +0100
-Message-ID: <868qyg3r6i.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O2yUNiD+"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D720F1C000C;
+	Fri,  5 Jul 2024 13:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720186029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=E2m+9eJRnfx2USMOVWoWK4kDvrhAJh9qV1ylRE1YWS0=;
+	b=O2yUNiD+54pfHbHMSe+Se5ljmvJwWh6yxafH2zvEY3e1YONEcRmuZNxHXJZPSHXhCix46X
+	EwEv1A7y0s45brRgcMsD8KYniALs3L8IApxd6GhYrwXx2ytKKC02Tr23ek9yjRMeuqJGN5
+	l4HTq3ia9Bve40QTN/lpDjiOAZJ3zUGYQXNyZMSqvWO+O9d08jMTkV2U8uWhNeM9+/iuTO
+	l2nga7n3KVngcneqNjn19BWNqkddK75fdid+AE6wDeJCmOAkZUBvYGwfSNKdXYCEidfdWI
+	BNM9fvcENd9aXetilMqPKAEwR/HXA4JZCjbSmi7asEpVxqcdGRGbma8m2IQU6w==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v4 3/4] KVM: arm64: Fix FFR offset calculation for pKVM host state save and restore
-In-Reply-To: <20240704-kvm-arm64-fix-pkvm-sve-vl-v4-3-b6898ab23dc4@kernel.org>
-References: <20240704-kvm-arm64-fix-pkvm-sve-vl-v4-0-b6898ab23dc4@kernel.org>
-	<20240704-kvm-arm64-fix-pkvm-sve-vl-v4-3-b6898ab23dc4@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	mwojtas@chromium.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Antoine Tenart <atenart@kernel.org>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH net-next v16 00/14] Introduce PHY listing and link_topology tracking
+Date: Fri,  5 Jul 2024 15:26:51 +0200
+Message-ID: <20240705132706.13588-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, tabba@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Thu, 04 Jul 2024 18:28:18 +0100,
-Mark Brown <broonie@kernel.org> wrote:
-> 
-> When saving and restoring the SVE state for the host we configure the
-> hardware for the maximum VL it supports, but when calculating offsets in
-> memory we use the maximum usable VL for the host. Since these two values
-> may not be the same this may result in data corruption.  We can just
-> read the current VL from the hardware with an instruction so do that
-> instead of a saved value, we need to correct the value and this makes
-> the consistency obvious.
+Hello everyone,
 
-Which value are we correcting?
+This is V16 of the phy_link_topology series, aiming at improving support
+for multiple PHYs being attached to the same MAC.
 
-> 
-> Fixes: b5b9955617bc ("KVM: arm64: Eagerly restore host fpsimd/sve state in pKVM")
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  arch/arm64/include/asm/kvm_hyp.h        | 1 +
->  arch/arm64/kvm/hyp/fpsimd.S             | 5 +++++
->  arch/arm64/kvm/hyp/include/hyp/switch.h | 2 +-
->  arch/arm64/kvm/hyp/nvhe/hyp-main.c      | 2 +-
->  4 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-> index b05bceca3385..7510383d78a6 100644
-> --- a/arch/arm64/include/asm/kvm_hyp.h
-> +++ b/arch/arm64/include/asm/kvm_hyp.h
-> @@ -113,6 +113,7 @@ void __fpsimd_save_state(struct user_fpsimd_state *fp_regs);
->  void __fpsimd_restore_state(struct user_fpsimd_state *fp_regs);
->  void __sve_save_state(void *sve_pffr, u32 *fpsr, int save_ffr);
->  void __sve_restore_state(void *sve_pffr, u32 *fpsr, int restore_ffr);
-> +int __sve_get_vl(void);
+There are 2 changes in V16 compared to V15 :
 
-Is there any case where you'd consider returning a signed value? Given
-the multiplier of '1', I don't see it likely to happen.
+ - In patch 4, the sfp_get_name() helper was moved around to better
+   match the structure of the file. Russell, I've added a Suggested-by
+   tag from you, as I used a description paragraph verbatim from your
+   last review.
 
->  
->  u64 __guest_enter(struct kvm_vcpu *vcpu);
->  
-> diff --git a/arch/arm64/kvm/hyp/fpsimd.S b/arch/arm64/kvm/hyp/fpsimd.S
-> index e950875e31ce..d272dbf36da8 100644
-> --- a/arch/arm64/kvm/hyp/fpsimd.S
-> +++ b/arch/arm64/kvm/hyp/fpsimd.S
-> @@ -31,3 +31,8 @@ SYM_FUNC_START(__sve_save_state)
->  	sve_save 0, x1, x2, 3
->  	ret
->  SYM_FUNC_END(__sve_save_state)
-> +
-> +SYM_FUNC_START(__sve_get_vl)
-> +	_sve_rdvl	0, 1
-> +	ret
-> +SYM_FUNC_END(__sve_get_vl)
-> diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
-> index 0c4de44534b7..06efcca765cc 100644
-> --- a/arch/arm64/kvm/hyp/include/hyp/switch.h
-> +++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
-> @@ -327,7 +327,7 @@ static inline void __hyp_sve_save_host(void)
->  
->  	sve_state->zcr_el1 = read_sysreg_el1(SYS_ZCR);
->  	write_sysreg_s(ZCR_ELx_LEN_MASK, SYS_ZCR_EL2);
-> -	__sve_save_state(sve_state->sve_regs + sve_ffr_offset(kvm_host_sve_max_vl),
-> +	__sve_save_state(sve_state->sve_regs + sve_ffr_offset(__sve_get_vl()),
->  			 &sve_state->fpsr,
->  			 true);
->  }
-> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> index f43d845f3c4e..bd8f671e848c 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> @@ -49,7 +49,7 @@ static void __hyp_sve_restore_host(void)
->  	 * supported by the system (or limited at EL3).
->  	 */
->  	write_sysreg_s(ZCR_ELx_LEN_MASK, SYS_ZCR_EL2);
-> -	__sve_restore_state(sve_state->sve_regs + sve_ffr_offset(kvm_host_sve_max_vl),
-> +	__sve_restore_state(sve_state->sve_regs + sve_ffr_offset(__sve_get_vl()),
->  			    &sve_state->fpsr,
->  			    true);
->  	write_sysreg_el1(sve_state->zcr_el1, SYS_ZCR);
-> 
+ - Patches 7 and 8 were reworked so that we don't report the phy id in
+   the netlink command PHY_GET, as this is inconsistent between C22 and
+   C45, and C45 wasn't even supported.
 
-Thanks,
+All other patches are left unchanged from V15, besides a net-next
+rebase.
 
-	M.
+As a remainder, here's what the PHY listings would look like :
+ - eth0 has a 88x3310 acting as media converter, and an SFP module with
+   an embedded 88e1111 PHY
+ - eth2 has a 88e1510 PHY
+
+# ethtool --show-phys *
+
+PHY for eth0:
+PHY index: 1
+Driver name: mv88x3310
+PHY device name: f212a600.mdio-mii:00
+Downstream SFP bus name: sfp-eth0
+Upstream type: MAC
+
+PHY for eth0:
+PHY index: 2
+Driver name: Marvell 88E1111
+PHY device name: i2c:sfp-eth0:16
+Upstream type: PHY
+Upstream PHY index: 1
+Upstream SFP name: sfp-eth0
+
+PHY for eth2:
+PHY index: 1
+Driver name: Marvell 88E1510
+PHY device name: f212a200.mdio-mii:00
+Upstream type: MAC
+
+Ethtool patches : https://github.com/minimaxwell/ethtool/tree/mc/topo-v16
+
+Link to V15: https://lore.kernel.org/netdev/20240703140806.271938-1-maxime.chevallier@bootlin.com/
+Link to V14: https://lore.kernel.org/netdev/20240701131801.1227740-1-maxime.chevallier@bootlin.com/
+Link to V13: https://lore.kernel.org/netdev/20240607071836.911403-1-maxime.chevallier@bootlin.com/
+Link to v12: https://lore.kernel.org/netdev/20240605124920.720690-1-maxime.chevallier@bootlin.com/
+Link to v11: https://lore.kernel.org/netdev/20240404093004.2552221-1-maxime.chevallier@bootlin.com/
+Link to V10: https://lore.kernel.org/netdev/20240304151011.1610175-1-maxime.chevallier@bootlin.com/
+Link to V9: https://lore.kernel.org/netdev/20240228114728.51861-1-maxime.chevallier@bootlin.com/
+Link to V8: https://lore.kernel.org/netdev/20240220184217.3689988-1-maxime.chevallier@bootlin.com/
+Link to V7: https://lore.kernel.org/netdev/20240213150431.1796171-1-maxime.chevallier@bootlin.com/
+Link to V6: https://lore.kernel.org/netdev/20240126183851.2081418-1-maxime.chevallier@bootlin.com/
+Link to V5: https://lore.kernel.org/netdev/20231221180047.1924733-1-maxime.chevallier@bootlin.com/
+Link to V4: https://lore.kernel.org/netdev/20231215171237.1152563-1-maxime.chevallier@bootlin.com/
+Link to V3: https://lore.kernel.org/netdev/20231201163704.1306431-1-maxime.chevallier@bootlin.com/
+Link to V2: https://lore.kernel.org/netdev/20231117162323.626979-1-maxime.chevallier@bootlin.com/
+Link to V1: https://lore.kernel.org/netdev/20230907092407.647139-1-maxime.chevallier@bootlin.com/
+
+More discussions on specific issues that happened in 6.9-rc:
+
+https://lore.kernel.org/netdev/20240412104615.3779632-1-maxime.chevallier@bootlin.com/
+https://lore.kernel.org/netdev/20240429131008.439231-1-maxime.chevallier@bootlin.com/
+https://lore.kernel.org/netdev/20240507102822.2023826-1-maxime.chevallier@bootlin.com/
+
+Maxime Chevallier (14):
+  net: phy: Introduce ethernet link topology representation
+  net: sfp: pass the phy_device when disconnecting an sfp module's PHY
+  net: phy: add helpers to handle sfp phy connect/disconnect
+  net: sfp: Add helper to return the SFP bus name
+  net: ethtool: Allow passing a phy index for some commands
+  netlink: specs: add phy-index as a header parameter
+  net: ethtool: Introduce a command to list PHYs on an interface
+  netlink: specs: add ethnl PHY_GET command set
+  net: ethtool: plca: Target the command to the requested PHY
+  net: ethtool: pse-pd: Target the command to the requested PHY
+  net: ethtool: cable-test: Target the command to the requested PHY
+  net: ethtool: strset: Remove unnecessary check on genl_info
+  net: ethtool: strset: Allow querying phy stats by index
+  Documentation: networking: document phy_link_topology
+
+ Documentation/netlink/specs/ethtool.yaml      |  58 ++++
+ Documentation/networking/ethtool-netlink.rst  |  51 +++
+ Documentation/networking/index.rst            |   1 +
+ .../networking/phy-link-topology.rst          | 121 +++++++
+ MAINTAINERS                                   |   1 +
+ drivers/net/phy/Makefile                      |   2 +-
+ drivers/net/phy/marvell-88x2222.c             |   2 +
+ drivers/net/phy/marvell.c                     |   2 +
+ drivers/net/phy/marvell10g.c                  |   2 +
+ drivers/net/phy/phy_device.c                  |  48 +++
+ drivers/net/phy/phy_link_topology.c           | 105 ++++++
+ drivers/net/phy/phylink.c                     |   3 +-
+ drivers/net/phy/qcom/at803x.c                 |   2 +
+ drivers/net/phy/qcom/qca807x.c                |   2 +
+ drivers/net/phy/sfp-bus.c                     |  26 +-
+ include/linux/netdevice.h                     |   4 +-
+ include/linux/phy.h                           |   6 +
+ include/linux/phy_link_topology.h             |  82 +++++
+ include/linux/sfp.h                           |   8 +-
+ include/uapi/linux/ethtool.h                  |  16 +
+ include/uapi/linux/ethtool_netlink.h          |  20 ++
+ net/core/dev.c                                |  15 +
+ net/ethtool/Makefile                          |   3 +-
+ net/ethtool/cabletest.c                       |  35 +-
+ net/ethtool/netlink.c                         |  66 +++-
+ net/ethtool/netlink.h                         |  33 ++
+ net/ethtool/phy.c                             | 308 ++++++++++++++++++
+ net/ethtool/plca.c                            |  30 +-
+ net/ethtool/pse-pd.c                          |  30 +-
+ net/ethtool/strset.c                          |  27 +-
+ 30 files changed, 1057 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/networking/phy-link-topology.rst
+ create mode 100644 drivers/net/phy/phy_link_topology.c
+ create mode 100644 include/linux/phy_link_topology.h
+ create mode 100644 net/ethtool/phy.c
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.45.1
+
