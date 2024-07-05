@@ -1,41 +1,75 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24025143C5B
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 06:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F4817995;
+	Fri,  5 Jul 2024 06:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720161037; cv=none; b=FmtRltg08N+oKXZPGsSVMFox9A/W036axNIBeLb0FeSqVn3/lKkp3FvzA5bHXhMhCqCa5awk6oe6JvvfCY1JoJ4TWoLMX0pKHLf/Ydmpfu0tptHvZc7cg/PYfbNSw+toVslv1kj44fBW6fkJIrVg9E3emEoPF+ZXe9ehRD/LlWU=
+	t=1720161041; cv=none; b=Ty0im/uysxg+H5ZVSb6CMFAi8NrahwQpnZNyMOtC7pRcCos/k0nHRrzyXWnAq5UzCUZ6upmHomNc0SesDi7heLdY4tpaXNuZT1bzitXVXyWeg6GAZEtYLUr7mVGEYZpYukrFrlxadKqB3RVfJ8UgDteQFQdr/GtYAZuPrNfjU7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720161037; c=relaxed/simple;
-	bh=c+EkhjaiwBg9PfY5EaSjMQac2IkjnFQ778b6wqWH9QA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=P9pyDBZdx7XUBMxoKBzNxPEgOT8vej2PmVqVMlAAtRCvyENw0TZYuv0cPIVJ6tPHpB96kCqEUYB7OiuSHGo1RpwTst2TSXF0wMFy8Rbu+F27+JBX6Tr5z/yvUEfVMT4ccst0lydRKWFH+v3MUXieHRNqwxVUk6Z8MsiMttBqPWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gRhvcLb3; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1720161041; c=relaxed/simple;
+	bh=58oOxES0lzM392/6H8RgwAqerwHqbbjny/y5448aMuc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jM58Yg1TO6Kk27oH2FZjExOQWyNIJZXdr0GW0v56WatgVOHPyyCJR9YIuJ5EhjrcJvQTI9Zg3rzSf7n+jdU0Zla6vXqUzbbSKNGhylT4qjAvFvGlK9E4tqCa9M7dr3zG5orhGXcsj1IKdNPh60PEblwbrhWkMajskX45Ho2q4Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OgQnoqJn; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gRhvcLb3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=mNQun
-	qrILf+NqiwFMuOtQI8MYyYs8KBvDgiTEVQhXOQ=; b=gRhvcLb39dZTPRF2atguv
-	ttA91ySmFE3qgd6xe1xs1MUzNM7cBrAnQWuFnZXzcrrC7Okhqb5eP/4a0GTVKLOT
-	cbXPKz9kqQOQ9lxvnegeljxou9Vf2ukrDN7fP3IsqXCBxCGLw0vn4gQMjpMIj5SP
-	5JCEEPm0RX0jSOE28zwPxU=
-Received: from localhost.localdomain (unknown [139.227.195.66])
-	by gzga-smtp-mta-g2-0 (Coremail) with SMTP id _____wDnL_DlkodmBufFBg--.53685S2;
-	Fri, 05 Jul 2024 14:29:58 +0800 (CST)
-From: Ping Gan <jacky_gam_2001@163.com>
-To: sagi@grimberg.me,
-	hch@lst.de,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: ping.gan@dell.com
-Subject: Re: [PATCH 0/2] nvmet: support polling task for RDMA and TCP 
-Date: Fri,  5 Jul 2024 14:28:59 +0800
-Message-Id: <20240705062900.15228-1-jacky_gam_2001@163.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <61d73b28-c818-4a20-97b8-8a95b4c46c05@grimberg.me>
-References: <61d73b28-c818-4a20-97b8-8a95b4c46c05@grimberg.me>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OgQnoqJn"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fa2ea1c443so8920955ad.0;
+        Thu, 04 Jul 2024 23:30:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720161039; x=1720765839; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=znD+DHZ03Xc1hLW5FfmfP3AjgTz3IHInSXaFKd4zqU4=;
+        b=OgQnoqJn0N4hOaiqSwkFDmriuvkhDpKcZY3S9SCd4zJwNlhHc1964zGZbzwfeg2yyR
+         MzAyL9Lg7Jsd8GqWlbabeY8gV8axH8SXH95/DUNDid9r+KDKZUMKl5MJZTJNtIjAZAl8
+         oaeVFCycFNRk2hc2jnZn1d1pY3Obg3Zbqbk6Rg1xREuqXFOeTU5CjQPL66iYbfSP0Wqk
+         R+hQ+420GaTOV9zidqm9md0iU7me8DnBnre4FuFI2a0KXr8vT7RriGoLl8Vsa8XebZ8G
+         f8PyFVmNw5/WI+/RRsiJSKm8nm3cmTUD0R2FhmEfoSmV/gspLdiE/ObGBl2+5jCzrwXd
+         IITw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720161039; x=1720765839;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=znD+DHZ03Xc1hLW5FfmfP3AjgTz3IHInSXaFKd4zqU4=;
+        b=QSHFkzIk6sDOfZCfZsOQk67Pcii/WBu0/8zUwX/EhWrvK1AP6PER6jD520zSLp2jJk
+         aek9faxwNLhUYQU/IRxLX/u2sCqKrhj2uNa4NqaV4IFCuxOmX9/ngNfyQVK3JMb1MdA3
+         ZYUO+PeSFUSefRWpvFEHouEQCWjgIe4+2SAHFOVkbgmav/fY5xZQwSTtSiah+v/Y1Phb
+         AqNYuk+hX1osdQsTRe6iewdivpG/ogocy0kJb84KS9QE+MVuhmP2Kn+PPotqVE258eUy
+         KSvKBQY4Qu7rOx6WRsSKOCJRowjcXDtbS7tB86mWmG9bPWE2dU8RUvXP9XJGGeyqMiAd
+         Rqcg==
+X-Forwarded-Encrypted: i=1; AJvYcCWjMkijNU2PqrF9O4yywoQffUb2k16mnH0GMKCIV1iky7w++F+YiGgByp/+2RTS9uPwvRvmFESK4S/TQyotjEfTIc5xPni6sBUQ8057
+X-Gm-Message-State: AOJu0YyX/btPSDq30xDCb6tO/HvdoTw8UJBcgIe+ERlf+phzLLcrn04R
+	sR+cqS2IT4nmagQllxJiYsL/FI8eYmUOjebbWFOea/T9PdY/4wYe
+X-Google-Smtp-Source: AGHT+IGiekAtzI6KVFfNnBe7S/cylZJ4g2TdGcaP75Xl91oUKJ+AwWvYJL5v9f+jbUZu4wDMKFueRQ==
+X-Received: by 2002:a17:902:e751:b0:1fa:ac73:ca28 with SMTP id d9443c01a7336-1fb33e62d7fmr30255415ad.32.1720161039026;
+        Thu, 04 Jul 2024 23:30:39 -0700 (PDT)
+Received: from localhost.localdomain ([129.146.253.192])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1fb44752cf2sm9976255ad.268.2024.07.04.23.30.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 23:30:38 -0700 (PDT)
+From: Furong Xu <0x1207@gmail.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Joao Pinto <jpinto@synopsys.com>
+Cc: netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	xfr@outlook.com,
+	rock.xu@nio.com,
+	Furong Xu <0x1207@gmail.com>
+Subject: [PATCH net-next v1] net: stmmac: xgmac: add support for HW-accelerated VLAN stripping
+Date: Fri,  5 Jul 2024 14:28:08 +0800
+Message-Id: <20240705062808.805071-1-0x1207@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,205 +77,165 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnL_DlkodmBufFBg--.53685S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Ar1Utr4xCF48Cr4DtrWfuFg_yoWxCw1Upr
-	W5JF47tr4DJr1Yyr1Utw4DZr17Kw15Jr1UXr1rJryUJw1qv347Jr4Utry5CFykGr1xtr15
-	tFyDJF9xZr1jyw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U4a0dUUUUU=
-X-CM-SenderInfo: 5mdfy55bjdzsisqqiqqrwthudrp/1tbiEAkTKWXAlxwkYgAAsL
 
-> On 7/4/24 13:35, Ping Gan wrote:
->>> On 7/4/24 11:10, Ping Gan wrote:
->>>>> On 02/07/2024 13:02, Ping Gan wrote:
->>>>>>> On 01/07/2024 10:42, Ping Gan wrote:
->>>>>>>>> Hey Ping Gan,
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On 26/06/2024 11:28, Ping Gan wrote:
->>>>>>>>>> When running nvmf on SMP platform, current nvme target's RDMA
->>>>>>>>>> and
->>>>>>>>>> TCP use kworker to handle IO. But if there is other high
->>>>>>>>>> workload
->>>>>>>>>> in the system(eg: on kubernetes), the competition between the
->>>>>>>>>> kworker and other workload is very radical. And since the
->>>>>>>>>> kworker
->>>>>>>>>> is scheduled by OS randomly, it's difficult to control OS
->>>>>>>>>> resource
->>>>>>>>>> and also tune the performance. If target support to use
->>>>>>>>>> delicated
->>>>>>>>>> polling task to handle IO, it's useful to control OS resource
->>>>>>>>>> and
->>>>>>>>>> gain good performance. So it makes sense to add polling task
->>>>>>>>>> in
->>>>>>>>>> rdma-rdma and rdma-tcp modules.
->>>>>>>>> This is NOT the way to go here.
->>>>>>>>>
->>>>>>>>> Both rdma and tcp are driven from workqueue context, which are
->>>>>>>>> bound
->>>>>>>>> workqueues.
->>>>>>>>>
->>>>>>>>> So there are two ways to go here:
->>>>>>>>> 1. Add generic port cpuset and use that to direct traffic to
->>>>>>>>> the
->>>>>>>>> appropriate set of cores
->>>>>>>>> (i.e. select an appropriate comp_vector for rdma and add an
->>>>>>>>> appropriate
->>>>>>>>> steering rule
->>>>>>>>> for tcp).
->>>>>>>>> 2. Add options to rdma/tcp to use UNBOUND workqueues, and
->>>>>>>>> allow
->>>>>>>>> users
->>>>>>>>> to
->>>>>>>>> control
->>>>>>>>> these UNBOUND workqueues cpumask via sysfs.
->>>>>>>>>
->>>>>>>>> (2) will not control interrupts to steer to other workloads
->>>>>>>>> cpus,
->>>>>>>>> but
->>>>>>>>> the handlers may
->>>>>>>>> run on a set of dedicated cpus.
->>>>>>>>>
->>>>>>>>> (1) is a better solution, but harder to implement.
->>>>>>>>>
->>>>>>>>> You also should look into nvmet-fc as well (and nvmet-loop for
->>>>>>>>> that
->>>>>>>>> matter).
->>>>>>>> hi Sagi Grimberg,
->>>>>>>> Thanks for your reply, actually we had tried the first advice
->>>>>>>> you
->>>>>>>> suggested, but we found the performance was poor when using
->>>>>>>> spdk
->>>>>>>> as initiator.
->>>>>>> I suggest that you focus on that instead of what you proposed.
->>>>>>> What is the source of your poor performance?
->>>>>> Before these patches, we had used linux's RPS to forward the
->>>>>> packets
->>>>>> to a fixed cpu set for nvmet-tcp. But when did that we can still
->>>>>> not
->>>>>> cancel the competition between softirq and workqueue since nvme
->>>>>> target's
->>>>>> kworker cpu core bind on socket's cpu which is from skb. Besides
->>>>>> that
->>>>>> we found workqueue's wait latency was very high even we enabled
->>>>>> polling
->>>>>> on nvmet-tcp by module parameter idle_poll_period_usecs. So when
->>>>>> initiator
->>>>>> is polling mode, the target of workqueue is the bottleneck. Below
->>>>>> is
->>>>>> work's wait latency trace log of our test on our cluster(per node
->>>>>> uses
->>>>>> 4 numas 96 cores, 192G memory, one dual ports mellanox
->>>>>> CX4LX(25Gbps
->>>>>> X
->>>>>> 2)
->>>>>> ethernet adapter and randrw 1M IO size) by RPS to 6 cpu cores.
->>>>>> And
->>>>>> system's CPU and memory were used about 80%.
->>>>> I'd try a simple unbound CPU case, steer packets to say cores
->>>>> [0-5]
->>>>> and
->>>>> assign
->>>>> the cpumask of the unbound workqueue to cores [6-11].
->>>> Okay, thanks for your guide.
->>>>
->>>>>> ogden-brown:~ #/usr/share/bcc/tools/wqlat -T -w nvmet_tcp_wq 1 2
->>>>>> 01:06:59
->>>>>>     usecs               : count     distribution
->>>>>>      0 -> 1          : 0        |                              |
->>>>>>      2 -> 3          : 0        |                              |
->>>>>>      4 -> 7          : 0        |                              |
->>>>>>      8 -> 15         : 3        |                              |
->>>>>>     16 -> 31         : 10       |                              |
->>>>>>     32 -> 63         : 3        |                              |
->>>>>>     64 -> 127        : 2        |                              |
->>>>>>    128 -> 255        : 0        |                              |
->>>>>>    256 -> 511        : 5        |                              |
->>>>>>    512 -> 1023       : 12       |                              |
->>>>>>   1024 -> 2047       : 26       |*                             |
->>>>>>   2048 -> 4095       : 34       |*                             |
->>>>>>   4096 -> 8191       : 350      |************                  |
->>>>>>   8192 -> 16383      : 625      |******************************|
->>>>>>  16384 -> 32767      : 244      |*********                     |
->>>>>>  32768 -> 65535      : 39       |*                             |
->>>>>>
->>>>>> 01:07:00
->>>>>>     usecs               : count     distribution
->>>>>>      0 -> 1          : 1        |                              |
->>>>>>      2 -> 3          : 0        |                              |
->>>>>>      4 -> 7          : 4        |                              |
->>>>>>      8 -> 15         : 3        |                              |
->>>>>>     16 -> 31         : 8        |                              |
->>>>>>     32 -> 63         : 10       |                              |
->>>>>>     64 -> 127        : 3        |                              |
->>>>>>    128 -> 255        : 6        |                              |
->>>>>>    256 -> 511        : 8        |                              |
->>>>>>    512 -> 1023       : 20       |*                             |
->>>>>>   1024 -> 2047       : 19       |*                             |
->>>>>>   2048 -> 4095       : 57       |**                            |
->>>>>>   4096 -> 8191       : 325      |****************              |
->>>>>>   8192 -> 16383      : 647      |******************************|
->>>>>>  16384 -> 32767      : 228      |***********                   |
->>>>>>  32768 -> 65535      : 43       |**                            |
->>>>>>  65536 -> 131071     : 1        |                              |
->>>>>>
->>>>>> And the bandwidth of a node is only 3100MB. While we used the
->>>>>> patch
->>>>>> and enable 6 polling task, the bandwidth can be 4000MB. It's a
->>>>>> good
->>>>>> improvement.
->>>>> I think you will see similar performance with unbound workqueue
->>>>> and
->>>>> rps.
->>>> Yes, I remodified the nvmet-tcp/nvmet-rdma code for supporting
->>>> unbound
->>>> workqueue, and in same prerequisites of above to run test, and
->>>> compared
->>>> the result of unbound workqueue and polling mode task. And I got a
->>>> good
->>>> performance for unbound workqueue. For unbound workqueue TCP we got
->>>> 3850M/node, it's almost equal to polling task. And also tested
->>>> nvmet-rdma
->>>> we get 5100M/node for unbound workqueue RDMA versus 5600M for
->>>> polling
->>>> task,
->>>> seems the diff is very small. Anyway, your advice is good.
->>> I'm a bit surprised that you see ~10% delta here. I would look into
->>> what
->>> is the root-cause of
->>> this difference. If indeed the load is high, the overhead of the
->>> workqueue mgmt should be
->>> negligible. I'm assuming you used IB_POLL_UNBOUND_WORKQUEUE ?
->> Yes, we used IB_POLL_UNBOUND_WORKQUEUE to create ib CQ. And I
->> observed
->> 3% CPU
->> usage of unbound workqueue versus 6% of polling task.
->>
->>>>    Do you think
->>>> we
->>>> should submit the unbound workqueue patches for nvmet-tcp and
->>>> nvmet-rdma
->>>> to upstream nvmet?
->>> For nvmet-tcp, I think there is merit to split socket processing
->>> from
->>> napi context. For nvmet-rdma
->>> I think the only difference is if you have multiple CQs assigned
->>> with
->>> the same comp_vector.
->>>
->>> How many queues do you have in your test?
->> We used 24 IO queues to nvmet-rdma target. I think this may also be
->> related to workqueue's wait latency. We still see some several ms
->> wait
->> latency for unbound workqueue of RMDA. You can see below trace log.
->
-> What is the queue size of each? what rdma device are you using?
+Commit 750011e239a5 ("net: stmmac: Add support for HW-accelerated VLAN
+stripping") introduced MAC level VLAN tag stripping for gmac4 core.
+This patch extend the support to xgmac core.
 
-All the queue's IO size is 1M and queue depth is 32. The rdma deive is
-Mellanox CX4LX dual ports bonding. And in poll task we used
-IB_POLL_DIRECT
-to create CQ versus IB_POLL_UNBOUND_WORKQUEUE for workqueue.
+Signed-off-by: Furong Xu <0x1207@gmail.com>
+---
+ .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |  7 ++++
+ .../ethernet/stmicro/stmmac/dwxgmac2_core.c   | 39 +++++++++++++++++++
+ .../ethernet/stmicro/stmmac/dwxgmac2_descs.c  | 19 +++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  2 +-
+ 4 files changed, 66 insertions(+), 1 deletion(-)
 
-Thanks,
-Ping
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index 6a2c7d22df1e..db3217784cb0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -60,6 +60,10 @@
+ #define XGMAC_VLAN_TAG			0x00000050
+ #define XGMAC_VLAN_EDVLP		BIT(26)
+ #define XGMAC_VLAN_VTHM			BIT(25)
++#define XGMAC_VLAN_TAG_CTRL_EVLRXS	BIT(24)
++#define XGMAC_VLAN_TAG_CTRL_EVLS	GENMASK(22, 21)
++#define XGMAC_VLAN_TAG_STRIP_NONE	0x0
++#define XGMAC_VLAN_TAG_STRIP_ALL	0x3
+ #define XGMAC_VLAN_DOVLTC		BIT(20)
+ #define XGMAC_VLAN_ESVL			BIT(18)
+ #define XGMAC_VLAN_ETV			BIT(16)
+@@ -477,6 +481,7 @@
+ #define XGMAC_TDES3_VLTV		BIT(16)
+ #define XGMAC_TDES3_VT			GENMASK(15, 0)
+ #define XGMAC_TDES3_FL			GENMASK(14, 0)
++#define XGMAC_RDES0_VLAN_TAG		GENMASK(15, 0)
+ #define XGMAC_RDES2_HL			GENMASK(9, 0)
+ #define XGMAC_RDES3_OWN			BIT(31)
+ #define XGMAC_RDES3_CTXT		BIT(30)
+@@ -490,6 +495,8 @@
+ #define XGMAC_L34T_IP4UDP		0x2
+ #define XGMAC_L34T_IP6TCP		0x9
+ #define XGMAC_L34T_IP6UDP		0xA
++#define XGMAC_RDES3_L2T			GENMASK(19, 16)
++#define XGMAC_L2T_SINGLE_C_VLAN		0x9
+ #define XGMAC_RDES3_ES			BIT(15)
+ #define XGMAC_RDES3_PL			GENMASK(13, 0)
+ #define XGMAC_RDES3_TSD			BIT(6)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 6a987cf598e4..89ac9ad6164a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -1530,6 +1530,41 @@ static void dwxgmac3_fpe_configure(void __iomem *ioaddr, struct stmmac_fpe_cfg *
+ 	writel(value, ioaddr + XGMAC_FPE_CTRL_STS);
+ }
+ 
++static void dwxgmac2_rx_hw_vlan(struct mac_device_info *hw,
++				struct dma_desc *rx_desc, struct sk_buff *skb)
++{
++	u16 vid;
++
++	if (!hw->desc->get_rx_vlan_valid(rx_desc))
++		return;
++
++	vid = hw->desc->get_rx_vlan_tci(rx_desc);
++
++	__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vid);
++}
++
++static void dwxgmac2_set_hw_vlan_mode(struct mac_device_info *hw)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value = readl(ioaddr + XGMAC_VLAN_TAG);
++
++	value &= ~XGMAC_VLAN_TAG_CTRL_EVLS;
++
++	if (hw->hw_vlan_en)
++		/* Always strip VLAN on Receive */
++		value |= FIELD_PREP(XGMAC_VLAN_TAG_CTRL_EVLS,
++				    XGMAC_VLAN_TAG_STRIP_ALL);
++	else
++		/* Do not strip VLAN on Receive */
++		value |= FIELD_PREP(XGMAC_VLAN_TAG_CTRL_EVLS,
++				    XGMAC_VLAN_TAG_STRIP_NONE);
++
++	/* Enable outer VLAN Tag in Rx DMA descriptor */
++	value |= XGMAC_VLAN_TAG_CTRL_EVLRXS;
++
++	writel(value, ioaddr + XGMAC_VLAN_TAG);
++}
++
+ const struct stmmac_ops dwxgmac210_ops = {
+ 	.core_init = dwxgmac2_core_init,
+ 	.set_mac = dwxgmac2_set_mac,
+@@ -1571,6 +1606,8 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.config_l4_filter = dwxgmac2_config_l4_filter,
+ 	.set_arp_offload = dwxgmac2_set_arp_offload,
+ 	.fpe_configure = dwxgmac3_fpe_configure,
++	.rx_hw_vlan = dwxgmac2_rx_hw_vlan,
++	.set_hw_vlan_mode = dwxgmac2_set_hw_vlan_mode,
+ };
+ 
+ static void dwxlgmac2_rx_queue_enable(struct mac_device_info *hw, u8 mode,
+@@ -1628,6 +1665,8 @@ const struct stmmac_ops dwxlgmac2_ops = {
+ 	.config_l4_filter = dwxgmac2_config_l4_filter,
+ 	.set_arp_offload = dwxgmac2_set_arp_offload,
+ 	.fpe_configure = dwxgmac3_fpe_configure,
++	.rx_hw_vlan = dwxgmac2_rx_hw_vlan,
++	.set_hw_vlan_mode = dwxgmac2_set_hw_vlan_mode,
+ };
+ 
+ int dwxgmac2_setup(struct stmmac_priv *priv)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+index fc82862a612c..f5293f75fbb4 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+@@ -67,6 +67,23 @@ static int dwxgmac2_get_tx_ls(struct dma_desc *p)
+ 	return (le32_to_cpu(p->des3) & XGMAC_RDES3_LD) > 0;
+ }
+ 
++static u16 dwxgmac2_wrback_get_rx_vlan_tci(struct dma_desc *p)
++{
++	return (le32_to_cpu(p->des0) & XGMAC_RDES0_VLAN_TAG);
++}
++
++static bool dwxgmac2_wrback_get_rx_vlan_valid(struct dma_desc *p)
++{
++	u32 l2_type;
++
++	if (!(le32_to_cpu(p->des3) & XGMAC_RDES3_LD))
++		return false;
++
++	l2_type = FIELD_GET(XGMAC_RDES3_L2T, le32_to_cpu(p->des3));
++
++	return (l2_type == XGMAC_L2T_SINGLE_C_VLAN);
++}
++
+ static int dwxgmac2_get_rx_frame_len(struct dma_desc *p, int rx_coe)
+ {
+ 	return (le32_to_cpu(p->des3) & XGMAC_RDES3_PL);
+@@ -349,6 +366,8 @@ const struct stmmac_desc_ops dwxgmac210_desc_ops = {
+ 	.set_tx_owner = dwxgmac2_set_tx_owner,
+ 	.set_rx_owner = dwxgmac2_set_rx_owner,
+ 	.get_tx_ls = dwxgmac2_get_tx_ls,
++	.get_rx_vlan_tci = dwxgmac2_wrback_get_rx_vlan_tci,
++	.get_rx_vlan_valid = dwxgmac2_wrback_get_rx_vlan_valid,
+ 	.get_rx_frame_len = dwxgmac2_get_rx_frame_len,
+ 	.enable_tx_timestamp = dwxgmac2_enable_tx_timestamp,
+ 	.get_tx_timestamp_status = dwxgmac2_get_tx_timestamp_status,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 4b6a359e5a94..6f594c455d0f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -7663,7 +7663,7 @@ int stmmac_dvr_probe(struct device *device,
+ #ifdef STMMAC_VLAN_TAG_USED
+ 	/* Both mac100 and gmac support receive VLAN tag detection */
+ 	ndev->features |= NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX;
+-	if (priv->plat->has_gmac4) {
++	if (priv->plat->has_gmac4 || priv->plat->has_xgmac) {
+ 		ndev->hw_features |= NETIF_F_HW_VLAN_CTAG_RX;
+ 		priv->hw->hw_vlan_en = true;
+ 	}
+-- 
+2.34.1
 
