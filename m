@@ -1,111 +1,89 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF32C13791C;
-	Fri,  5 Jul 2024 06:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AC9143C67
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 06:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720161557; cv=none; b=ABh8i86aJtHTijSQSj91XdEEvKWUwI0dDjH0aWOOlOcSwXWHsMl85iVJBkr+U7CmSlzxyQ8xdECbj1c7v/0PEohZpa64Hv17A78gpp3KldyHKWBPMtrJJOq2YZ8xUhYAh1cIuoZ1N8iTTDhWWlASn9tWdslZnxNqKt5FMRL8ejo=
+	t=1720161574; cv=none; b=el/c1Rhjq13hofKczl4GU6m8/Gz7EA70zcKBcbCKg5ax4vypDCWJnbs9E/rt1fQcCpLj4Y8aq/wxVvOKom0ZcqvUI2c71WYh4LnViEwleFmR3mNKVdlwCZeIrV1Cr4zvrqGYB3zaZQWEKCqiuhYrKWqiKFH9ceMSYtZEGq06PsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720161557; c=relaxed/simple;
-	bh=GzgqHGbWqTLMocgiuSblg7y8irfEU3WvGTYpGyhPPWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GrqUOpyyIlIXX8T88q2xmA/nftGM1+DTonvUQ56S4NobD0ZNAtQSBm6KpA4vOZE0WboEM1uQ0ct81Dd+QH+dPYqXoXky6zBd1iDU8RhBByZFaCH5eI9YItBiH/eQV10SYtAlxrsAmzAuAuxzpaENgCGxM83egta2F6PcBDr4pvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id B3F8468AA6; Fri,  5 Jul 2024 08:39:10 +0200 (CEST)
-Date: Fri, 5 Jul 2024 08:39:10 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, "Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
-Message-ID: <20240705063910.GA12337@lst.de>
-References: <cover.1719909395.git.leon@kernel.org>
+	s=arc-20240116; t=1720161574; c=relaxed/simple;
+	bh=T6WXve0n+9VmVGeDaboQtLJzrhucQ2UYIegpdvEOqWw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eiuIT073LqsysAO573XrzR+ZFvn9mRZGralme+eVn3RXnLd2Opo8MfwmnjpwiHQpKofVJ/Y64ayVn109D7UFZGJXLRmvyLSm8zS7faueoPyEAnBVE147wMRrWb60klqIm/hUjEVDAK1amDzwhQ4yUpZ9V3LVhCDf0oUYtvZNiKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-mid: bizesmtp78t1720161421tw7m3sff
+X-QQ-Originating-IP: LYIHzovVFZOArs2YxlwrPYbU/gSDF54QBMa15JEv6mY=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 05 Jul 2024 14:37:00 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 18219518563782160415
+From: tuhaowen <tuhaowen@uniontech.com>
+To: gregkh@linuxfoundation.org
+Cc: alexander.deucher@amd.com,
+	huangbibo@uniontech.com,
+	linux-kernel@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	tuhaowen@uniontech.com,
+	wangyuli@uniontech.com
+Subject: Re: Re: [PATCH] dev/parport: fix the array out-of-bounds risk
+Date: Fri,  5 Jul 2024 14:36:58 +0800
+Message-Id: <20240705063658.8782-1-tuhaowen@uniontech.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <2024070413-obsessive-stack-7c62@gregkh>
+References: <2024070413-obsessive-stack-7c62@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1719909395.git.leon@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-Review from the NVMe driver consumer perspective.  I think if all these
-were implement we'd probably end up with less code than before the
-conversion.
+On Thu, Jul 04, 2024 at 06:07:47PM +0800, Greg Kroah-Hartman wrote:
 
-The split between dma_iova_attrs, dma_memory_type and dma_iova_state is
-odd.  I would have expected them to just be just a single object.  While
-talking about this I think the domain field in dma_iova_state should
-probably be a private pointer instead of being tied to the iommu.
+> Usually because no one actually has this hardware anymore :)
+> 
+> Can you also properly test the buffer size when writing into it so that
+> even if the math is incorrect, it will not overflow?
 
-Also do we need the attrs member in the iova_attrs structure?  The
-"attrs" really are flags passed to the mapping routines that are
-per-operation and not persistent, so I'd expect them to be passed
-per-call and not stored in a structure.
 
-I'd also expect that the use_iova field to be in the mapping state
-and not separately provided by the driver.
+As of now, I have encountered these three devices: BUNET BU1L02,
+EB-LINK EB-2C1B01, and SYBA FG-EMT03A-N. When these PCIe to parallel
+port cards are installed, the system experiences abnormal reboots.
+I am not sure if there are other devices with these issues.
 
-For nvme specific data structures I would have expected a dma_add/
-len pair in struct iod_dma_map, maybe even using a common type.
+Below is the stack trace I encountered during the actual issue:
 
-Also the data structure split seems odd - I'd expect the actual
-mapping state and a small number (at least one) dma_addr/len pair
-to be inside the nvme_iod structure, and then only do the dynamic
-allocation if we need more of them because there are more segments
-and we are not using the iommu.
+[ 66.575408s] [pid:5118,cpu4,QThread,4]Kernel panic - not syncing: stack-protector:
+Kernel stack is corrupted in: do_hardware_base_addr+0xcc/0xd0 [parport]
+[ 66.575408s] [pid:5118,cpu4,QThread,5]CPU: 4 PID: 5118 Comm:
+QThread Tainted: G S W O 5.10.97-arm64-desktop #7100.57021.2
+[ 66.575439s] [pid:5118,cpu4,QThread,6]TGID: 5087 Comm: EFileApp
+[ 66.575439s] [pid:5118,cpu4,QThread,7]Hardware name: HUAWEI HUAWEI QingYun
+PGUX-W515x-B081/SP1PANGUXM, BIOS 1.00.07 04/29/2024
+[ 66.575439s] [pid:5118,cpu4,QThread,8]Call trace:
+[ 66.575469s] [pid:5118,cpu4,QThread,9] dump_backtrace+0x0/0x1c0
+[ 66.575469s] [pid:5118,cpu4,QThread,0] show_stack+0x14/0x20
+[ 66.575469s] [pid:5118,cpu4,QThread,1] dump_stack+0xd4/0x10c
+[ 66.575500s] [pid:5118,cpu4,QThread,2] panic+0x1d8/0x3bc
+[ 66.575500s] [pid:5118,cpu4,QThread,3] __stack_chk_fail+0x2c/0x38
+[ 66.575500s] [pid:5118,cpu4,QThread,4] do_hardware_base_addr+0xcc/0xd0 [parport]
 
-If we had a common data structure for the dma_addr/len pairs
-dma_unlink_range could just take care of the unmap for the non-iommu
-case as well, which would be neat.  I'd also expect that
-dma_free_iova would be covered by it.
 
-I would have expected dma_link_range to return the dma_addr_t instead
-of poking into the iova structure in the callers.
+The array buffer size is 20 bytes.
+When executing code in a 64-bit CPU environment,
+up to 44 bytes of data will be written into this array
+(the size of "%lu\t%lu\n" is 21 + 1 + 21 + 1).
 
-In __nvme_rq_dma_map the <= PAGE_SIZE case is pointless.  In the
-existing code the reason for it is to avoid allocating and mapping the
-sg_table, but that code is still left before we even get to this code.
+This modification will resolve the current issue without introducing new problems.
 
-My suggestion above to only allocate the dma_addr/len pairs when there
-is more than 1 or a few of it would allow to trivially implement that
-suggestion using the normal API without having to keep that special
-case and the dma_len parameter around.
+Thanks,
 
-If this addes a version of dma_map_page_atttrs that directly took
-the physical address as a prep patch the callers would not have to
-bother with page pointer manipulations and just work on physical
-addresses for both the iommu and no-iommu cases.  It would also help
-a little bit with the eventualy switch to store the physical address
-instead of page+offset in the bio_vec.  Talking about that, I've
-been wanting to add a bvec_phys helper for to convert the
-page_phys(bv.bv_page) + bv.bv_offset calculations.  This is becoming
-more urgent with more callers needing to that, I'll try to get it out
-to Jens ASAP so that it can make the 6.11 merge window.
-
-Can we make dma_start_range / dma_end_range simple no-ops for the
-non-iommu code to avoid boilerplate code in the callers to avoid
-boilerplate code in the callers to deal with the two cases?
+Haowen.Tu
