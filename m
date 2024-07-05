@@ -1,326 +1,125 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6D614A61B
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 12:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F405149E0A
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 12:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720183217; cv=none; b=dapksm1sAj8Y9brQ0fcRH6d5Or41mVBl5J/e/B+/lnGAZ0R2aRzbhhiaLR7QfzIb3YM9BwRYnfLpvHnA7JqP3wZTa4w9R73vOD8IPORiVyU7inlSJ5H28jO0N1tkWYM7yng3FoYMw0YYf5VBCJM5FPSKwmDKjJE3UhG6IWY3Gjo=
+	t=1720183316; cv=none; b=Txax3VOBKJRkaCc4+4c/J/7m06fSBIOSCJ8SFn09IhomOkq7iMu2nP7KG5ZN7YhYaFTQdW5wDLxLcykF8XAPQmjVaNAmAD0VeuFydUaLp+2Q3J2xlBG4PAZT0lWXpyBsNZ5YMaVn84+9b0V9YOpt3xGcUwxlH/oZ28VbW+nO618=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720183217; c=relaxed/simple;
-	bh=Nt2iq+qg5boCRZ0EqNaZFVPjBYGDaMf+7TTr358t9AI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jBX1e3FHsKdNEO9RReNySOU64Cgs5CAThsLUINKm3Bml87m4uFHJmYSCK0qqm46PBILDE0vLnO8WpgaJT4C7AAnEG8OURaR7TE2f6FdeMmZNily8SzYgH1K84pDKReb0HhB8aQbu11AaXQHNFem+NoxJOzTJ2k/MeplohcYez8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=qngMOQ17; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1720183316; c=relaxed/simple;
+	bh=0VkwOEYNEGTePOxeBzMH5nAzeX1LMR2wiTaFcPC5G8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KkcQASdADm3tcIEo6aE5bsa5/Ntca8RwH/t2Sr2jUWTIOZSPzJbkyScxWBiYjxeLCd19fNvUnEv/hTyFAn/rB0tIisEfNFr+5BSdS6exwXzb3VyvJTjZhfhjgWmW7+YRd+ihRpu+jspSPdhs4kIH5q/fc6btLu1w9qRdmzznQj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U7Ns89rD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="qngMOQ17"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a77c9d3e593so82055466b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 05:40:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1720183214; x=1720788014; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2TKJxxFdbT1m75EyS915frE7gzWvL0YWMkfBTtcQJ9Y=;
-        b=qngMOQ17999F/az0hully1iuiZASro24Y+zVDlyBw/PoAf7C9daUwsC1weCJ2r/BKX
-         4ORKss41ukmZWFvhme5Z5kefjhwTiToK6UY0/sQxQ2GnZQYlpTqMgjEPhAW+clh/9YFj
-         sn5UvV9wK4ze+XVOcpKSo73XjMX3MbdyJdjihrH/zuhXrcYuKP4mngAdcu7UFlrGXxEO
-         z5NOPsYKBcsjQt0n5gx2AEBDqR7a95slTfV94BvVBu7Hmvj0B/qbu5FEZKo7/ddCBjIk
-         kv8GaeVqNSYcFxuW8WoPwXu5eT5h+3IEWXs5OlKqv6fm4jFi9xn/050jXbRLkT0l7wb6
-         QfRg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U7Ns89rD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720183313;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IUmdoRcwxF0vtGDq5CApO6vlw3HSpxN+XRrrWd5A6/0=;
+	b=U7Ns89rDjXZfdBRrFoJA5fNqUet0mulb8Wr2gCgsmPX/K2MLDkE/jf+ggDLvGSczlMTWRm
+	GPfbGFncWmoOECi80IpDlELpDCB4Slro+ri4mbkCs6bs873C5GDHVmJTe3ufLDgjH/BCz/
+	882sAOclsAXaCmV4SNtAAVm1tz0TKVM=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-662-hw7AewvSNIqz0IDBA7tUng-1; Fri, 05 Jul 2024 08:41:51 -0400
+X-MC-Unique: hw7AewvSNIqz0IDBA7tUng-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a77baa2fc0dso65923266b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 05:41:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720183214; x=1720788014;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2TKJxxFdbT1m75EyS915frE7gzWvL0YWMkfBTtcQJ9Y=;
-        b=hD6UMAkYlRffkXNHB+MXlXAQiUXOXJfyf3foYejwTgrDNsPQdqC+bh6TNsxZyw7vT8
-         H33l5QpIoO/c3YevqwPwv9xUJt2Ye505/AXu/vGWwrofPuHHctVXYBcQ01zLir/Bfr5S
-         nGdvm4HDEihhpWpWezjImywKY+DD9yrBR5jEVQQXoVOfD5cCqwqCw4RZ0sF1Um3JbaZf
-         EdhQJBft0PJh+jZsiNxD3DplqvbwGDDnWlFTnjYU9vlbH5rqStjsniWcRVDEWijHLKV5
-         g6PFwD9dAFDBPY2aB1ARmlWOFG6SRwDXrqkVXmfD5OR2pEo7AOJlfJb62Ip6IK+FEe5u
-         bUjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVg6YE/bZbPl3zrMDotz+RmpywjbdSuz1tPYEfCmKu8eClbPoq0/YGS5aIE8TKHjokwXfdJZSQJwetZLLsM3prbUzJOpNQW8UWym1x8
-X-Gm-Message-State: AOJu0YzsA3Ld6/MYJpH6JTSxbDXwb1PNP+RMDM/BeiS72ENb9SBu0JQy
-	tSoXXPQJN7CHP8/iUKf8EAmPByZkDy0Ry71KwsrIOjewnb6pEE4axxh2e4ZlQAM=
-X-Google-Smtp-Source: AGHT+IEtMbYTsd0gdLTiMY5AKurmr9zYWlPVFpAKFjwrVCKaLJfv2RWnXz+ziKcQ5XLpvY6+6z055A==
-X-Received: by 2002:a17:906:5acd:b0:a77:b81a:2471 with SMTP id a640c23a62f3a-a77ba7115d5mr317894266b.49.1720183214164;
-        Fri, 05 Jul 2024 05:40:14 -0700 (PDT)
-Received: from [100.64.0.4] (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77d0908f51sm40930666b.125.2024.07.05.05.40.13
+        d=1e100.net; s=20230601; t=1720183310; x=1720788110;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IUmdoRcwxF0vtGDq5CApO6vlw3HSpxN+XRrrWd5A6/0=;
+        b=CmJ8FzjlKAtSMlBiebtLuM0kEfNLtLbimyDApEPnNrtRZMlIt5CNDlrIt3klYOtF6W
+         +s5l56OdJteN5OXz8Bwk8xLqMQuKNf9/fdY/rMr7qMBaLYIea6PoYZgHsmYDKOjYDCPv
+         iskTK2qYsYTvfQnfQqTJzBmUlooHmiPm12q4xyZQoH7UTlpYOm9js+Sjzi5HY12CU7+t
+         mnGiqWWsZTG7L593rBiG0j6iEbgqiZTdDI7uqgs7w1TpfY+G8EILfBj0LczBq7IAQFTa
+         q9N2nvApY2eiC73HjrizxV/eJhLwiRkgT1GUwWFk7eRKxjmjiRpd99O6AW98sUWJFqG1
+         cwhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQXLouhZWEgOEHnbwfIiZC/P/6xy1QYKVXDGYvi13PHO337ftXW8Qj+VnHfHFegHyrrrrCIfpJTIWKEA7iEaN1hTOP65Y1VTYkcXdB
+X-Gm-Message-State: AOJu0Yy4z/FTT7WrJPnTCxQ3J/Zi42O8sYM+mGKTHpm7gpNnugtSidwy
+	qjzZaLCdOFEeL4073d6OsVRkNbmQ8bFcs3lunXhjttiQVWkaxTnkfJpJ4JZPps4xM0BAqhRLoWJ
+	5kT9+VPyFHSaTVPWQ3H9X4wtobXTSvXsTL7VAt7jc+qIgbwrf9eSxztQQrR14IA==
+X-Received: by 2002:a05:6402:26cc:b0:579:73b7:b4cc with SMTP id 4fb4d7f45d1cf-58e5994df08mr4069645a12.2.1720183310545;
+        Fri, 05 Jul 2024 05:41:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKvFDzwRQlV+iTOvh4/L4b/Nx5EKEO6E1JE+809E/tI6VMgbL/Y6rWpOPm+MTM4DSqhdFdnQ==
+X-Received: by 2002:a05:6402:26cc:b0:579:73b7:b4cc with SMTP id 4fb4d7f45d1cf-58e5994df08mr4069621a12.2.1720183309878;
+        Fri, 05 Jul 2024 05:41:49 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.218.209])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58eb85cc1bcsm1692664a12.94.2024.07.05.05.41.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 05:40:13 -0700 (PDT)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Fri, 05 Jul 2024 14:40:10 +0200
-Subject: [PATCH v2 2/2] arm64: dts: qcom: sm7225-fairphone-fp4: Add PM6150L
- thermals
+        Fri, 05 Jul 2024 05:41:49 -0700 (PDT)
+Date: Fri, 5 Jul 2024 14:41:43 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>, Cindy Lu <lulu@redhat.com>
+Cc: virtualization@lists.linux.dev, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>
+Subject: Re: [PATCH] vdpa_sim_blk: add `capacity` module parameter
+Message-ID: <25fehn7xgvqyqgd6zcscsjazzfhktyjrazffyrtbp2oibnhkey@ggobdyv4zxkf>
+References: <20240705112821.144819-1-sgarzare@redhat.com>
+ <20240705073017-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240705-fp4-thermals-v2-2-a4870a8d084f@fairphone.com>
-References: <20240705-fp4-thermals-v2-0-a4870a8d084f@fairphone.com>
-In-Reply-To: <20240705-fp4-thermals-v2-0-a4870a8d084f@fairphone.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.14.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240705073017-mutt-send-email-mst@kernel.org>
 
-Configure the thermals for the PA_THERM1, MSM_THERM, PA_THERM0,
-RFC_CAM_THERM, CAM_FLASH_THERM and QUIET_THERM thermistors connected to
-PM6150L.
+On Fri, Jul 05, 2024 at 07:30:51AM GMT, Michael S. Tsirkin wrote:
+>On Fri, Jul 05, 2024 at 01:28:21PM +0200, Stefano Garzarella wrote:
+>> The vDPA block simulator always allocated a 128 MiB ram-disk, but some
+>> filesystems (e.g. XFS) may require larger minimum sizes (see
+>> https://issues.redhat.com/browse/RHEL-45951).
+>>
+>> So to allow us to test these filesystems, let's add a module parameter
+>> to control the size of the simulated virtio-blk devices.
+>> The value is mapped directly to the `capacity` field of the virtio-blk
+>> configuration space, so it must be expressed in sector numbers of 512
+>> bytes.
+>>
+>> The default value (0x40000) is the same as the previous value, so the
+>> behavior without setting `capacity` remains unchanged.
+>>
+>> Before this patch or with this patch without setting `capacity`:
+>>   $ modprobe vdpa-sim-blk
+>>   $ vdpa dev add mgmtdev vdpasim_blk name blk0
+>>   virtio_blk virtio6: 1/0/0 default/read/poll queues
+>>   virtio_blk virtio6: [vdb] 262144 512-byte logical blocks (134 MB/128 MiB)
+>>
+>> After this patch:
+>>   $ modprobe vdpa-sim-blk capacity=614400
+>>   $ vdpa dev add mgmtdev vdpasim_blk name blk0
+>>   virtio_blk virtio6: 1/0/0 default/read/poll queues
+>>   virtio_blk virtio6: [vdb] 614400 512-byte logical blocks (315 MB/300 MiB)
+>>
+>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>
+>What a hack. Cindy was working on adding control over config
+>space, why can't that be used?
 
-Due to hardware constraints we can only register 4 zones with
-pm6150l_adc_tm, the other 2 we can register via generic-adc-thermal.
+If it can be used easily with virtio-blk device too, it will be great.
+@Cindy do you plan to support that changes for a virtio-blk device too?
 
-The trip points can really only be considered as placeholders, more
-configuration with cooling etc. can be added later.
+In the mean time, for the simulator I thought that this change was fine.
+It's just used for testing and debugging...
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts | 189 ++++++++++++++++++++++
- 1 file changed, 189 insertions(+)
+My main question is how to use that when we have `shared_backend` set to 
+true, since we use that setting to test for example live migration. In 
+that case, how do we handle the size of the shared ramdisk between 
+devices?
 
-diff --git a/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts b/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts
-index e263010c348c..2ee2561b57b1 100644
---- a/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts
-+++ b/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts
-@@ -93,6 +93,20 @@ memory@efe01000 {
- 		};
- 	};
- 
-+	msm_therm_sensor: thermal-sensor-msm {
-+		compatible = "generic-adc-thermal";
-+		#thermal-sensor-cells = <0>;
-+		io-channels = <&pm6150l_adc ADC5_AMUX_THM2_100K_PU>;
-+		io-channel-names = "sensor-channel";
-+	};
-+
-+	rear_cam_sensor: thermal-sensor-rear-cam {
-+		compatible = "generic-adc-thermal";
-+		#thermal-sensor-cells = <0>;
-+		io-channels = <&pm6150l_adc ADC5_GPIO2_100K_PU>;
-+		io-channel-names = "sensor-channel";
-+	};
-+
- 	thermal-zones {
- 		chg-skin-thermal {
- 			thermal-sensors = <&pm7250b_adc_tm 0>;
-@@ -118,6 +132,30 @@ active-config0 {
- 			};
- 		};
- 
-+		pa0-thermal {
-+			thermal-sensors = <&pm6150l_adc_tm 1>;
-+
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		pa1-thermal {
-+			thermal-sensors = <&pm6150l_adc_tm 0>;
-+
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
- 		pm8008-thermal {
- 			polling-delay-passive = <100>;
- 			thermal-sensors = <&pm8008>;
-@@ -137,6 +175,64 @@ trip1 {
- 			};
- 		};
- 
-+		quiet-thermal {
-+			thermal-sensors = <&pm6150l_adc_tm 3>;
-+
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		rear-cam-thermal {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&rear_cam_sensor>;
-+
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		rfc-flash-thermal {
-+			thermal-sensors = <&pm6150l_adc_tm 2>;
-+
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		sdm-skin-thermal {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&msm_therm_sensor>;
-+
-+			trips {
-+				trip0 {
-+					temperature = <45000>;
-+					hysteresis = <0>;
-+					type = "passive";
-+				};
-+
-+				trip1 {
-+					temperature = <55000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
- 		xo-thermal {
- 			thermal-sensors = <&pmk8350_adc_tm 0>;
- 
-@@ -596,6 +692,91 @@ &mpss {
- 	status = "okay";
- };
- 
-+&pm6150l_adc {
-+	pinctrl-0 = <&pm6150l_adc_default>;
-+	pinctrl-names = "default";
-+
-+	channel@4d {
-+		reg = <ADC5_AMUX_THM1_100K_PU>;
-+		label = "pa_therm1";
-+		qcom,hw-settle-time = <200>;
-+		qcom,pre-scaling = <1 1>;
-+		qcom,ratiometric;
-+	};
-+
-+	channel@4e {
-+		reg = <ADC5_AMUX_THM2_100K_PU>;
-+		label = "msm_therm";
-+		qcom,hw-settle-time = <200>;
-+		qcom,pre-scaling = <1 1>;
-+		qcom,ratiometric;
-+	};
-+
-+	channel@4f {
-+		reg = <ADC5_AMUX_THM3_100K_PU>;
-+		label = "pa_therm0";
-+		qcom,hw-settle-time = <200>;
-+		qcom,pre-scaling = <1 1>;
-+		qcom,ratiometric;
-+	};
-+
-+	channel@53 {
-+		reg = <ADC5_GPIO2_100K_PU>;
-+		label = "rear_cam_therm";
-+		qcom,hw-settle-time = <200>;
-+		qcom,pre-scaling = <1 1>;
-+		qcom,ratiometric;
-+	};
-+
-+	channel@54 {
-+		reg = <ADC5_GPIO3_100K_PU>;
-+		label = "rear_cam_flash_therm";
-+		qcom,hw-settle-time = <200>;
-+		qcom,pre-scaling = <1 1>;
-+		qcom,ratiometric;
-+	};
-+
-+	channel@55 {
-+		reg = <ADC5_GPIO4_100K_PU>;
-+		label = "quiet_therm";
-+		qcom,hw-settle-time = <200>;
-+		qcom,pre-scaling = <1 1>;
-+		qcom,ratiometric;
-+	};
-+};
-+
-+&pm6150l_adc_tm {
-+	status = "okay";
-+
-+	pa-therm1@0 {
-+		reg = <0>;
-+		io-channels = <&pm6150l_adc ADC5_AMUX_THM1_100K_PU>;
-+		qcom,hw-settle-time-us = <200>;
-+		qcom,ratiometric;
-+	};
-+
-+	pa-therm0@1 {
-+		reg = <1>;
-+		io-channels = <&pm6150l_adc ADC5_AMUX_THM3_100K_PU>;
-+		qcom,hw-settle-time-us = <200>;
-+		qcom,ratiometric;
-+	};
-+
-+	rear-cam-flash-therm@2 {
-+		reg = <2>;
-+		io-channels = <&pm6150l_adc ADC5_GPIO3_100K_PU>;
-+		qcom,hw-settle-time-us = <200>;
-+		qcom,ratiometric;
-+	};
-+
-+	quiet-therm@3 {
-+		reg = <3>;
-+		io-channels = <&pm6150l_adc ADC5_GPIO4_100K_PU>;
-+		qcom,hw-settle-time-us = <200>;
-+		qcom,ratiometric;
-+	};
-+};
-+
- &pm6150l_flash {
- 	status = "okay";
- 
-@@ -618,6 +799,14 @@ led-1 {
- 	};
- };
- 
-+&pm6150l_gpios {
-+	pm6150l_adc_default: adc-default-state {
-+		pins = "gpio6", "gpio7", "gpio10";
-+		function = PMIC_GPIO_FUNC_NORMAL;
-+		bias-high-impedance;
-+	};
-+};
-+
- &pm6150l_wled {
- 	qcom,switching-freq = <800>;
- 	qcom,current-limit-microamp = <20000>;
-
--- 
-2.45.2
+Thanks,
+Stefano
 
