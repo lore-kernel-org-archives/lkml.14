@@ -1,122 +1,165 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171BD149DEF;
-	Fri,  5 Jul 2024 16:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EABB2F32
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 16:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720197504; cv=none; b=lIoeUHvEnJ+cKGl7xab360p7DT8Y+5eAtfTGLkZGoUCHsBstoO66aBOK4zXDNKWpYn+X4nA6XdurdFnmmt7srUz45rAR3trQtDTOOnafY/lK9D+lqp1Y2qzO6OpdkRGtYXKqgaI+9qR/1YZU4btWGWCW2qsPUNkDJ+cHvFx7dTg=
+	t=1720197840; cv=none; b=Xp90PISDQNjxySrJRp2MzuhjGsJehKFMKigYtTJ5ORrxbc0tbC75c5KuLFZXBnG05/dHl1jTRV1G0Oum1FzTeaerhcoIxHfCp4FAs9l5eiG79aXmujwwDYSJxchoVAwGm75LZtQEWYbzBq9dDlwYnB9bXW2YU5CglVxv1T7UQjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720197504; c=relaxed/simple;
-	bh=xq+v2dQwSE3AVf5BhabhYvPbecI04ixjFZd9xxG8bYU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yz9FtSZR8uR+mwUIAPNRBIy9UAEZaI15bzEGLc3/xQ7TW+3pt+V8tExqWsWSYPibSw8xh31PEfGRU/hq8bEL9ZUHeQoznwIrD3kelfxXHeiJPfkdxFTKlmPLwdlXKReJgstBm8JdKjPgzoaTfeK3GeTnhIpxiodyXyTsh8YA3r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=WCqWs5G9; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1720197840; c=relaxed/simple;
+	bh=iPqi9oX8Pg+KoXl3Dj7ioxuGItMxwCEJOz2c4ptlEr4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GK8/phgfSci1XWQQNW28Ci/NH7QGsEhHNTcHpv2jyk6mBc6GJwQ5ey924bEKo6+L8Rs6NAlMozxXKa0M+n8/0RdQhLp8PK3Ry9BpxGOnYgHDnIfbL/f6l14XzVyDM6hFTjiX9OAyiI5OM2ybV0uGP0zZhqN3jvYWxTtCx9+TJHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c0HRefP9; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="WCqWs5G9"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 88AC9100002;
-	Fri,  5 Jul 2024 19:38:02 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1720197482; bh=s+XlZT7Zau6TfDZLEbOwy3xPtGFBs9GZzuVmW0T8wrc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=WCqWs5G9OjmuaIJuFPb2XKbdhfiBWqQmmy4zZlEiypH3kqWGlAyi62lgTBJXYB6OD
-	 ZKvz3TA7DYr9CH4EFXumApiQuFQH4Zj6fPV8F0on2/F+fMZep+79jKcDh5PSuyoxg4
-	 FdvLjlzk5IPvDbo/3ScBccRMFbEWxHOis7n+i+ySqNpzWMy1WHOlSDrkWU+HWPmxj9
-	 6mljpmwFq8ViLQp1oGjSaMMOzgmCbEwZxVgvqcZ7t4WUPeAGpF2EueKMwEUBzTRGA4
-	 qoIjkrd001ytwaMiCoUH/F7xsP6lOeuOcNuHhmXoUQMH0rPvWYDKtDXjsRbY0vgBT4
-	 VdMpoShmJMP3Q==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Fri,  5 Jul 2024 19:36:53 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 5 Jul 2024
- 19:36:33 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Jesse Brandeburg
-	<jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH net] ice: Adjust memory overrun in ice_sched_add_root_node() and ice_sched_add_node()
-Date: Fri, 5 Jul 2024 19:36:20 +0300
-Message-ID: <20240705163620.12429-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0HRefP9"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a77b4387302so235381166b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 09:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720197837; x=1720802637; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZJenFuhYTgsk0Co2eVcbS7MuCtTS3fgyqVgRI/D0SG4=;
+        b=c0HRefP9S3EGtTk0LiCE1BRzTy94lysH5HfMe72dP9aYyVerxr6cD+8R9BPqXgYXMs
+         EgvLAlf1WqUoxPBAdGVON7NCE7cvXvEHswvlfGQxzmaho3ntftAbSt5aCdC+DRyXsO6P
+         Uwo5Okf6w94nwp1NJY7mjzpMNL/efav93LjSouXqkfVrCH1yNkTQGPmQ5rG3wprPtBOb
+         uZhhq8gT5l0HXhAC5njjc8wi3LooKQEcyr0ulDP426MbTsSyLPA/KmYPhLtVOH9ygZhJ
+         3/pkheFIlxHKDxiB6VCMqviW+GeSDY6dzrsbcObYemYIf3LrftMiExIRRv/bjNU9KyKE
+         Y6zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720197837; x=1720802637;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZJenFuhYTgsk0Co2eVcbS7MuCtTS3fgyqVgRI/D0SG4=;
+        b=oVF3n5tnkcqNDntSDs1lT1GruW6bfPOladfnlvbcjJxmETltvbcGZA+dFFahamaWUU
+         SHZdL6BDmDRJLaJJNNqB4qR4R+fUTMZy7e5PLPNy0i9ZVl5YvV+Ifd2z1yFL5YjjtU9F
+         XT6gTYd4ZR6hG6D2ZdB7ZDI9+M40I18crL/ddW1ag/UtymtYywh8Ps214Y1jrpEuXdSF
+         TwCY/0o+UPI6pkDx/N/yXjeCF5uvyEyX8Rpg5shMx9gFQ+q8ts/jVIVohsn5m1dDqPbH
+         xmtew0HxOTNhgV5LeJiqjJZ8sFOo2kvZwoNoN73fcriABRxzyWtWyQIRrfivMTYQWP11
+         4liw==
+X-Gm-Message-State: AOJu0YxZA7u3xYn98a1Ps4q/k69t/2WA4fWc/e3De5sF4sIFArV4tE+B
+	BuAcQ9qX8MVsJXQtu6V8se4CcjpBNqrQmOnF2ixpacYLezNf8NaESj6RyTpPpuJWzRNxbLc0C3m
+	1aWZPDNtZuiG+O8etrn0OS0TN5qg=
+X-Google-Smtp-Source: AGHT+IGcaZiB45U0dGEbln18cDiJd3sDca+NpmXy0yPlfGtDlVRVgn7AC9FOVqrMmcrnP05WjpdOAvlQdl8HbklmSXc=
+X-Received: by 2002:a17:906:17c4:b0:a72:9963:eb8e with SMTP id
+ a640c23a62f3a-a77ba46f9aamr317906466b.28.1720197836518; Fri, 05 Jul 2024
+ 09:43:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186342 [Jul 05 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/05 14:29:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/05 10:39:00 #25854340
-X-KSMG-AntiVirus-Status: Clean, skipped
+References: <20240614040133.24967-1-jason-jh.lin@mediatek.com>
+ <20240614040133.24967-3-jason-jh.lin@mediatek.com> <CABb+yY2bwj2BcdJLGe1ZYwCrnXL3LtcePMb=wQPaBKorBSs2yA@mail.gmail.com>
+ <fc92d51cc6e55301c081ea2d589e1ba6cdd295ee.camel@mediatek.com>
+ <CABb+yY1L+YGjf6O9UgPYkS2gWAdo=7QoojSAUNWC_8o7XtZQSg@mail.gmail.com>
+ <1f815ff8-2b7a-48de-8b47-0bc9b3cb67ab@collabora.com> <CABb+yY1Yy8o3ofAiC-uV+gDrO3QDTWz3_XTUMai_2uyrnj-VrQ@mail.gmail.com>
+ <b7ebc021d391452eaf2149976ea2d53fba3d89fc.camel@mediatek.com>
+ <CABb+yY3+pnuXDK_jZMDYOAzahdSZ5iig51VqzM=FFHrFpK+9LA@mail.gmail.com>
+ <4e5d4362-4940-4ba0-95aa-627b82e21e41@collabora.com> <CABb+yY3eXvJRUq7MOqB8QZ9N4aiuogaUCTfP7MerKdNbAbLkvw@mail.gmail.com>
+ <895af04e45d286c38d01f48b29ad41598b7dadb7.camel@mediatek.com>
+ <CABb+yY1EZOsKUR7WUX0Ni0Ukbqz0+yRHswiu07tNXtY1A1gNUQ@mail.gmail.com>
+ <d6f0e7072ec0e89e573e5720fb2b9c621eb9154c.camel@mediatek.com>
+ <CABb+yY0+fFw7Bg578DFEdrigVFgf4-v3qo2JVruEa3ExtvRsMg@mail.gmail.com>
+ <092d917b4cae2762317a8739c874855554ae913f.camel@mediatek.com>
+ <CABb+yY2-KWYORo_-ZWafyM0VJnh8-2wefvCpeDsK204qB0TchQ@mail.gmail.com> <3f655bc4e1e60cd5e0dfc9baa018553fa8892826.camel@mediatek.com>
+In-Reply-To: <3f655bc4e1e60cd5e0dfc9baa018553fa8892826.camel@mediatek.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Fri, 5 Jul 2024 11:43:45 -0500
+Message-ID: <CABb+yY2zBY_3nEYajdhRNfwb+bPMpFOvbXrqY+jM9rB6qbjJNQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mailbox: mtk-cmdq: Move pm_runimte_get and put to
+ mbox_chan_ops API
+To: =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, 
+	=?UTF-8?B?U2luZ28gQ2hhbmcgKOW8teiIiOWciyk=?= <Singo.Chang@mediatek.com>, 
+	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>, =?UTF-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?= <Nancy.Lin@mediatek.com>, 
+	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, 
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In ice_sched_add_root_node() and ice_sched_add_node() there are calls to
-devm_kcalloc() in order to allocate memory for array of pointers to
-'ice_sched_node' structure. But in this calls there are 'sizeof(*root)'
-instead of 'sizeof(root)' and 'sizeof(*node)' instead of 'sizeof(node)'.
-So memory is allocated for structures instead pointers. This lead to
-significant memory overrun.
-Looks like it was done for "coverity[suspicious_sizeof] workaround".
+On Fri, Jul 5, 2024 at 1:11=E2=80=AFAM Jason-JH Lin (=E6=9E=97=E7=9D=BF=E7=
+=A5=A5)
+<Jason-JH.Lin@mediatek.com> wrote:
+>
+> [snip]
+>
+> > You may disable one to make it easy to capture.
+> > Make sure your kernel prints have timestamps.
+> > Over your patchset, apply the following diff and execute your
+> > usecase.
+> > Then share
+> >  $ dmesg | grep Jason
+> >
+> > diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+> > index bafcc7b0c0b8d..90c0620c0ae63 100644
+> > --- a/drivers/mailbox/mailbox.c
+> > +++ b/drivers/mailbox/mailbox.c
+> > @@ -284,6 +284,7 @@ int mbox_send_message(struct mbox_chan *chan,
+> > void *mssg)
+> >  {
+> >   int t;
+> >
+> > + printk("Jason %s: %p\n", __func__, (void *)chan);
+> >   if (!chan || !chan->cl)
+> >   return -EINVAL;
+> >
+> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c
+> > b/drivers/mailbox/mtk-cmdq-mailbox.c
+> > index 02cef3eee35a5..6436e1b22f353 100644
+> > --- a/drivers/mailbox/mtk-cmdq-mailbox.c
+> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> > @@ -317,6 +317,7 @@ static int cmdq_runtime_resume(struct device
+> > *dev)
+> >  {
+> >   struct cmdq *cmdq =3D dev_get_drvdata(dev);
+> >
+> > + printk("Jason %s: %p\n", __func__, (void *)dev);
+> >   return clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks);
+> >  }
+> >
+> > @@ -324,6 +325,7 @@ static int cmdq_runtime_suspend(struct device
+> > *dev)
+> >  {
+> >   struct cmdq *cmdq =3D dev_get_drvdata(dev);
+> >
+> > + printk("Jason %s: %p\n", __func__, (void *)dev);
+> >   clk_bulk_disable(cmdq->pdata->gce_num, cmdq->clocks);
+> >   return 0;
+> >  }
+> >
+> > Thanks
+>
+> It seems CMDQ driver is not suspend over 100ms.
+>
+here are the time deltas in milli-seconds
+10 6005 52 85 304 59 27 203 29 24 25 38 33 57 34 20 41 28 36 48 71 35
+21 45 51 22 30 46 46 23 16 16 16 16 16 17 17 31 16 19 31 16 16 17 16
+16 16 32 17 32 17 30 21 16 32 18 30 28 25 29 24 31 27 16 17 19 34 30
+15 33 16 35 35 29 18 31 16 16 16 16 17 33 35 33 39 20 21 14 34 49 22
+42 32 13 21 24 9 130 23 32 35 31 32 16 18 31 36 37 26 14 68 76 111 515
+452 64 484 487 497 501 507 161 336 516 486 495 504 495 504 501 500 495
+507 495 499 505 496 502 501 502 500 495 501 507 499 499 496 506 501
+498 507 490 504 496 501 506 413 28 207 31731 34550 3784 30 23
 
-Adjust memory overrun by correcting devm_kcalloc() parameters.
+For detlas <100 we don't expect suspend because your set
+autosuspend_delay to 100ms.
+For deltas >100 you should have seen suspend. Apparently the changes
+you want in the api still don't help you.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Also I see messages are being submitted on 4 channels, but only for
+the  '000000000a4d37b5' channel cmdq_mbox_send_data is ever called.
+Unless you selectively printk only for that channel, your driver has
+some even fundamental problems.  Maybe trace without your patch and
+with pm_runtime_xxx commented out (to avoid stack dump).
 
-Fixes: dc49c7723676 ("ice: Get MAC/PHY/link info and scheduler topology")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/net/ethernet/intel/ice/ice_sched.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_sched.c b/drivers/net/ethernet/intel/ice/ice_sched.c
-index ecf8f5d60292..d8b6054f3436 100644
---- a/drivers/net/ethernet/intel/ice/ice_sched.c
-+++ b/drivers/net/ethernet/intel/ice/ice_sched.c
-@@ -28,9 +28,8 @@ ice_sched_add_root_node(struct ice_port_info *pi,
- 	if (!root)
- 		return -ENOMEM;
- 
--	/* coverity[suspicious_sizeof] */
- 	root->children = devm_kcalloc(ice_hw_to_dev(hw), hw->max_children[0],
--				      sizeof(*root), GFP_KERNEL);
-+				      sizeof(root), GFP_KERNEL);
- 	if (!root->children) {
- 		devm_kfree(ice_hw_to_dev(hw), root);
- 		return -ENOMEM;
-@@ -186,10 +185,9 @@ ice_sched_add_node(struct ice_port_info *pi, u8 layer,
- 	if (!node)
- 		return -ENOMEM;
- 	if (hw->max_children[layer]) {
--		/* coverity[suspicious_sizeof] */
- 		node->children = devm_kcalloc(ice_hw_to_dev(hw),
- 					      hw->max_children[layer],
--					      sizeof(*node), GFP_KERNEL);
-+					      sizeof(node), GFP_KERNEL);
- 		if (!node->children) {
- 			devm_kfree(ice_hw_to_dev(hw), node);
- 			return -ENOMEM;
--- 
-2.30.2
-
+-jassi
