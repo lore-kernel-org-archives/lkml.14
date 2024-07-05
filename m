@@ -1,167 +1,156 @@
-Received: from smtp14.infineon.com (smtp14.infineon.com [217.10.52.160])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D8E18AF4;
-	Fri,  5 Jul 2024 01:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.160
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54814596E
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 01:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720142275; cv=none; b=BEXLguezQ/bOcVWhnJXI3BDvCRxAy5GZYaCpDAuZ5hdrFJeGVgHaP7wlNTb7s97g0pBphJkPWHlXbyVKOHpgRbDZ8QJhH8t3Nzgm7z4+15pW7cUURixUpUiaRb64MiqatkGOZKBNETRhP5nh3NzJE9BoWlQUz3Y6Rx4Alhyl5Ko=
+	t=1720142277; cv=none; b=IYpMRQbUcol8sQmul+Ic6yRLbhNrvqwa0aeLevOgVVDiC6MVxazjIDgJWj1kr+h5d0vtnDJELC1fR15Def53WnIH4kgLtthaJqHEcIYnszt+tIlcknXF4LiiL7ySV0Nb0hm90Xsu2xUFgEQV9vKCBRU+lg5p1fEZKHKHEasrxLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720142275; c=relaxed/simple;
-	bh=y4LbcGBtRHdit0evNdZStkLEJxRXjkVaG3CvHx65cKQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t3nzlL6xh5hNkK3ZtIRVE6wLl1C+Gfnqqasza3jOvaC3aOABaworAmR8nuM0oZODjxNtqRz6itYIUU2MSH836O5+KtLIfMe0ZIjlXER1fuRRX/juZqWPRM8883lk6N1LuIeBnhjdAhFrBKR35DBHVoPqUhySszXrMex2tZWRREQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=Sw6BO4qX; arc=none smtp.client-ip=217.10.52.160
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
+	s=arc-20240116; t=1720142277; c=relaxed/simple;
+	bh=n7UVv1WA93U7YlWGXirVicQTSjGz0eawe+gBS0tcgYA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NHcAJNuj+EW5oqQRXQAVq5EKFDM2kV2hPp+6HQuopYCzzmdXNZ3CXoF6l5AhwqFYdo9JVAB+npknr4czzIjyIXKrVpq2YRikdKhnbe6VtRd1EHXiYY5sZ5gQET0dnUXuWiO3Q/FA/LdeJReaNgK3ekii5icQ/a1s+LdQPYSQ55Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U/XrEzm+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="Sw6BO4qX"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1720142274; x=1751678274;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=y4LbcGBtRHdit0evNdZStkLEJxRXjkVaG3CvHx65cKQ=;
-  b=Sw6BO4qXvSfal5jx5b2pzov1yFMvMKOBDq6JShO/T5w6+0uH2a10/aA/
-   pbIKwWYB7T2zeyqgxE0F5ObmPtHynU8kN3/M4YhvQLWr48wIDP00eyURh
-   rIkVhIGvLIX1sht7x4FKjaE2bZGO60qxOodAvgRTskL+m6MzNyCWD14Sm
-   w=;
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="55502456"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716242400"; 
-   d="scan'208";a="55502456"
-Received: from unknown (HELO MUCSE805.infineon.com) ([172.23.29.31])
-  by smtp14.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 03:16:41 +0200
-Received: from MUCSE832.infineon.com (172.23.7.104) by MUCSE805.infineon.com
- (172.23.29.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Fri, 5 Jul
- 2024 03:16:40 +0200
-Received: from icw-osk-deskmini.osa.infineon.com (10.161.6.196) by
- MUCSE832.infineon.com (172.23.7.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 5 Jul 2024 03:16:37 +0200
-From: Nobuaki Tsunashima <nobuaki.tsunashima@infineon.com>
-To: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz
-	<luiz.dentz@gmail.com>
-CC: <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	"Nobuaki Tsunashima" <Nobuaki.Tsunashima@infineon.com>
-Subject: [PATCH v5] Bluetooth: btbcm: Apply HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER to CYW4373
-Date: Fri, 5 Jul 2024 10:15:25 +0900
-Message-ID: <20240705011525.402650-1-nobuaki.tsunashima@infineon.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/XrEzm+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720142274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1/ry0iGhY1xFy8pb9J/aGWStOny/Pe+IJXWZIUBRwfw=;
+	b=U/XrEzm+1ouQW69mW6OmV/2nUjw/PzPKIiO6K9sIAJQ3yoSBY5997RDPvCUpoKM4iE6LNq
+	IhKwsT9qPpmieJCWctvI0Rm6ZUJIpAqpOz0HQExVt1yQGaSL6lvXtIL93YfGuSEu5tvrma
+	EJ5BrTi6+vlvksCaqSCuBU74G1bcePk=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-256-d9X_7QNXNrenZSFGlKHHrw-1; Thu, 04 Jul 2024 21:17:53 -0400
+X-MC-Unique: d9X_7QNXNrenZSFGlKHHrw-1
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-447d66293fcso665081cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 18:17:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720142273; x=1720747073;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1/ry0iGhY1xFy8pb9J/aGWStOny/Pe+IJXWZIUBRwfw=;
+        b=Py1sdb1kkcHL/1zyNBJoMwXcCw88Fv36x3dMZ4ONKh8jBjp9t0a3OoBwO0Ff7V4D6f
+         gWelXpQRPM/1XXz0NPWuvIDNZo9U7UurEn/+3OiDAMgo1+bjLOACiMO7D39erumvhQHe
+         FAJk9Wxmnheh13gUCQg5M2gCMbOBHSclVBqxINeEQg2DFglm2RZfR4Wy6GwdRwUsEPJa
+         ukJLKZ5/kBSZynxDyEyESCfywrC9GLKcz/zl1Uhh7U6zGcnAhiFkG+iJZ4lvJKOGcxpx
+         Fvj7ocwPTIUIQ/cLOs0DSK9CT8NXpxHt3SGmG04EwB124xKL54Wn8qtaNfGJ4dSoXCv6
+         Osxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiSWNd+zIWMt+k4zxILeSVda0sxkvh/JFDjFNNjjdaUOQ2ROle0GB5w+CJGG5glSuIvKaQRCi4TapcNgl1bvyt8EzzRJHwZHqzVIKp
+X-Gm-Message-State: AOJu0YxKdDUW+A7/dWuLPzcn4oQ8NrZRGfbJhZRWcbg+oZsLesrtplHy
+	apyLGg6mjvu2eyyXgPvgxpQYRv9NlQ5rrHhtsX4Vm/cXPpoMwoGqbsdWMTqTTQTb5hOjbqCumcg
+	hq3zlJkVBt31xsnQJHcMhbxTq32YqcNVRF1plP2SWmxgp2qYiUJ0sU8twR1xbmNlv98LdGg==
+X-Received: by 2002:a05:622a:1104:b0:446:5d98:bbb1 with SMTP id d75a77b69052e-447cbf5778fmr41822461cf.32.1720142273127;
+        Thu, 04 Jul 2024 18:17:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBnWWKQ+/hy3tFj3UGtv2FlkhLclr89+sVQm9HpFjxfb4EOMBspCv6n07WlHrzUboQoHBj4g==
+X-Received: by 2002:a05:622a:1104:b0:446:5d98:bbb1 with SMTP id d75a77b69052e-447cbf5778fmr41822281cf.32.1720142272824;
+        Thu, 04 Jul 2024 18:17:52 -0700 (PDT)
+Received: from starship ([2607:fea8:fc01:7b7f:6adb:55ff:feaa:b156])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4465143eeefsm65145331cf.51.2024.07.04.18.17.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 18:17:52 -0700 (PDT)
+Message-ID: <e24729812e915b4d195ec0259a6dfa0c4c6d5be8.camel@redhat.com>
+Subject: Re: [PATCH v2 17/49] KVM: x86: Do reverse CPUID sanity checks in
+ __feature_leaf()
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>,  Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Hou Wenlong
+ <houwenlong.hwl@antgroup.com>, Kechen Lu <kechenl@nvidia.com>, Oliver Upton
+ <oliver.upton@linux.dev>, Binbin Wu <binbin.wu@linux.intel.com>, Yang
+ Weijiang <weijiang.yang@intel.com>, Robert Hoo <robert.hoo.linux@gmail.com>
+Date: Thu, 04 Jul 2024 21:17:51 -0400
+In-Reply-To: <20240517173926.965351-18-seanjc@google.com>
+References: <20240517173926.965351-1-seanjc@google.com>
+	 <20240517173926.965351-18-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MUCSE801.infineon.com (172.23.29.27) To
- MUCSE832.infineon.com (172.23.7.104)
+Content-Transfer-Encoding: 7bit
 
-From: Nobuaki Tsunashima <Nobuaki.Tsunashima@infineon.com>
+On Fri, 2024-05-17 at 10:38 -0700, Sean Christopherson wrote:
+> Do the compile-time sanity checks on reverse_cpuid in __feature_leaf() so
+> that higher level APIs don't need to "manually" perform the sanity checks.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/cpuid.h         | 3 ---
+>  arch/x86/kvm/reverse_cpuid.h | 6 ++++--
+>  2 files changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 7eb3d7318fc4..d68b7d879820 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -198,7 +198,6 @@ static __always_inline void kvm_cpu_cap_clear(unsigned int x86_feature)
+>  {
+>  	unsigned int x86_leaf = __feature_leaf(x86_feature);
+>  
+> -	reverse_cpuid_check(x86_leaf);
+>  	kvm_cpu_caps[x86_leaf] &= ~__feature_bit(x86_feature);
+>  }
+>  
+> @@ -206,7 +205,6 @@ static __always_inline void kvm_cpu_cap_set(unsigned int x86_feature)
+>  {
+>  	unsigned int x86_leaf = __feature_leaf(x86_feature);
+>  
+> -	reverse_cpuid_check(x86_leaf);
+>  	kvm_cpu_caps[x86_leaf] |= __feature_bit(x86_feature);
+>  }
+>  
+> @@ -214,7 +212,6 @@ static __always_inline u32 kvm_cpu_cap_get(unsigned int x86_feature)
+>  {
+>  	unsigned int x86_leaf = __feature_leaf(x86_feature);
+>  
+> -	reverse_cpuid_check(x86_leaf);
+>  	return kvm_cpu_caps[x86_leaf] & __feature_bit(x86_feature);
+>  }
+>  
+> diff --git a/arch/x86/kvm/reverse_cpuid.h b/arch/x86/kvm/reverse_cpuid.h
+> index 2f4e155080ba..245f71c16272 100644
+> --- a/arch/x86/kvm/reverse_cpuid.h
+> +++ b/arch/x86/kvm/reverse_cpuid.h
+> @@ -136,7 +136,10 @@ static __always_inline u32 __feature_translate(int x86_feature)
+>  
+>  static __always_inline u32 __feature_leaf(int x86_feature)
+>  {
+> -	return __feature_translate(x86_feature) / 32;
+> +	u32 x86_leaf = __feature_translate(x86_feature) / 32;
+> +
+> +	reverse_cpuid_check(x86_leaf);
+> +	return x86_leaf;
+>  }
+>  
+>  /*
+> @@ -159,7 +162,6 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned int x86_featu
+>  {
+>  	unsigned int x86_leaf = __feature_leaf(x86_feature);
+>  
+> -	reverse_cpuid_check(x86_leaf);
+>  	return reverse_cpuid[x86_leaf];
+>  }
+>  
 
-CYW4373 ROM FW has an issue that it claims LE_Read_Transmit_Power command
-as supported in a response of Read_Local_Supported_Command command but
-rejects the LE_Read_Transmit_Power command with "Unknown HCI Command"
-status. Because Bluetooth driver of kernel 5.11 added sending the
-LE_Read_Transmit_Power command in initialize phase, hci up fails due to the
-issue.
+Makes sense.
 
-Especially in USB i/f case, it would be difficult to download patch FW that
-includes its fix unless hci is up.
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
-The driver already contains infrastructure to apply the quirk for the
-issue, but currently it only supports DMI based matching. Add support to
-match by chip id and baseline FW version to detect CYW4373 ROM FW build
-in generic system.
-
-Fixes: 7c395ea521e6 ("Bluetooth: Query LE tx power on startup")
-Signed-off-by: Nobuaki Tsunashima <Nobuaki.Tsunashima@infineon.com>
----
-V4 -> V5: Use skb_pull_data() to access skb->data as safer manner.
-V3 -> V4: Fix a few coding style warnings and refine comments for clarify.
-V2 -> V3: Fix a few coding style warnings and change the subject as more specific.
-V1 -> V2: Fix several coding style warnings.
-
- drivers/bluetooth/btbcm.c | 41 +++++++++++++++++++++++++++++++++++++--
- drivers/bluetooth/btusb.c |  4 ++++
- 2 files changed, 43 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index 0a5445ac5e1b..dd7262a8dc8e 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -437,16 +437,53 @@ static const struct dmi_system_id disable_broken_read_transmit_power[] = {
- 	{ }
- };
- 
-+struct bcm_chip_version_table {
-+	u8 chip_id;			/* Chip ID */
-+	u16 baseline;		/* Baseline version of patch FW */
-+};
-+#define BCM_ROMFW_BASELINE_NUM	0xFFFF
-+static const struct bcm_chip_version_table disable_broken_read_transmit_power_by_chip_ver[] = {
-+	{ 0x87, BCM_ROMFW_BASELINE_NUM }		/* CYW4373/4373E */
-+};
-+static bool btbcm_is_disable_broken_read_tx_power_by_chip_ver(u8 chip_id, u16 baseline)
-+{
-+	int i;
-+	size_t table_size = ARRAY_SIZE(disable_broken_read_transmit_power_by_chip_ver);
-+	const struct bcm_chip_version_table *entry =
-+						&disable_broken_read_transmit_power_by_chip_ver[0];
-+
-+	for (i = 0 ; i < table_size ; i++, entry++)	{
-+		if ((chip_id == entry->chip_id) && (baseline == entry->baseline))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- static int btbcm_read_info(struct hci_dev *hdev)
- {
- 	struct sk_buff *skb;
-+	u8 *chip_id;
-+	u16 *baseline;
- 
- 	/* Read Verbose Config Version Info */
- 	skb = btbcm_read_verbose_config(hdev);
- 	if (IS_ERR(skb))
- 		return PTR_ERR(skb);
--
--	bt_dev_info(hdev, "BCM: chip id %u", skb->data[1]);
-+	skb_pull_data(skb, 1);
-+	chip_id = skb_pull_data(skb, sizeof(*chip_id));
-+	skb_pull_data(skb, 1);
-+	baseline = skb_pull_data(skb, sizeof(*baseline));
-+
-+	if (chip_id) {
-+		bt_dev_info(hdev, "BCM: chip id %u", *chip_id);
-+
-+		if (baseline) {
-+			/* Check Chip ID and disable broken Read LE Min/Max Tx Power */
-+			if (btbcm_is_disable_broken_read_tx_power_by_chip_ver(*chip_id, *baseline))
-+				set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks);
-+		}
-+	}
- 	kfree_skb(skb);
- 
- 	return 0;
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index d31edad7a056..52561c8d8828 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -142,6 +142,10 @@ static const struct usb_device_id btusb_table[] = {
- 	{ USB_VENDOR_AND_INTERFACE_INFO(0x04ca, 0xff, 0x01, 0x01),
- 	  .driver_info = BTUSB_BCM_PATCHRAM },
- 
-+	/* Cypress devices with vendor specific id */
-+	{ USB_VENDOR_AND_INTERFACE_INFO(0x04b4, 0xff, 0x01, 0x01),
-+	  .driver_info = BTUSB_BCM_PATCHRAM },
-+
- 	/* Broadcom devices with vendor specific id */
- 	{ USB_VENDOR_AND_INTERFACE_INFO(0x0a5c, 0xff, 0x01, 0x01),
- 	  .driver_info = BTUSB_BCM_PATCHRAM },
--- 
-2.25.1
+Best regards,
+	Maxim Levitsky
 
