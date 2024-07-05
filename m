@@ -1,97 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010055.outbound.protection.outlook.com [52.101.229.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B55148FF7
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 10:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720174804; cv=none; b=GY0Nos2LzFy474XDKRXlg4cG2aj2cBtonOfMH+8qyRsi1huXaNCghz/PlaKSY/1oFiFZamTxqngm09CFXk42Ac+oMBP0GI2C1BmTLCMJi0yk6+DrNu1BVOD3JX8E2+BsegnU051ZUVOvMYSFDtWJROSCCZq9G8blA/bsjlwX0e4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720174804; c=relaxed/simple;
-	bh=b45DFkE5+vd/DemeRUN5mfWtE9cqLn0I9pyhQTYW0lI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DjnoHxwqdK+O1ShVNskGOGAbSoY6a8zQy3hPSgDvqSXM0tI4PGhzteeqPzzb044Ki2yenVCnmIGoRNB96n8nb4nQPfub05aFbZx0QqTEgLXDZ46iaW0iO2toOVY1vrLl6j9NLBlBJSbJy9ILqQibr86BSYl/dABuKFV5R4GnWRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H1UzUM9A; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5107014831D;
+	Fri,  5 Jul 2024 10:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720175126; cv=fail; b=imQAQ06bubklLZRubJRSOga8py4/BIkhcXXIHcZjvyDVM1JNDt9eb2gmqDTVimxdI/mQxYDPcykmUGOUFqBjvv3g2pSCx7OlpZA8QHpCYSklgeifokv2Y3rJuKfLbvXNeK+oOUX89aXtIfi9ybKVxNmMJiLuXoBrdOPIpe+Pcrg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720175126; c=relaxed/simple;
+	bh=HElkWa+8HWmbFpAUkDQCF+kaAijXM6HdMxW0fcmiByI=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=PnEJltVVBKHWqEWX9hsGAJHda4G7avLnryEnbE+GIb4BKnloHQmuppXFFhoIQ8TO4qKJ8SFkI+gCR1sa23AYMwxiV6kgpliz9L+XqHqBRAuMjEdfpkdjuLtyR2kRSZiwXLnJBifTy65kLiK5KaH5bHMOKtBP/dVNC0S1nxcZYXg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nec.com; spf=pass smtp.mailfrom=nec.com; dkim=pass (2048-bit key) header.d=nec.com header.i=@nec.com header.b=OZ/uKcKw; arc=fail smtp.client-ip=52.101.229.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H1UzUM9A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720174801;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cUUyfZ878Q+zwZKs9EfIJW1aswoVqjfZuS0dHgKy6no=;
-	b=H1UzUM9A0ZwDgNhlirxgGo871tOfP66ukF1tADSdszV1ktKEIpgRWyZaWMwNS8siK/Gtfe
-	NRNP+Tk7/o1wImhoW5Bu/b5Q/F3GltDzHPR8x8vx1ti+VB9fV1c7Rf8DRWB/0qA6Y8wGuc
-	Cjpg0j8HX7N73S1LkDWwCQIziwrL6tY=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-637-Ei6dsL-dPHqYrg_feQqJew-1; Fri, 05 Jul 2024 06:20:00 -0400
-X-MC-Unique: Ei6dsL-dPHqYrg_feQqJew-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ee8eaccb7aso15644811fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 03:20:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720174799; x=1720779599;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cUUyfZ878Q+zwZKs9EfIJW1aswoVqjfZuS0dHgKy6no=;
-        b=wbRk6xraMTxke3KH7Xu/TE+h2oh0vgUa0lb+r8ozAJeVZJDA11ZAlNqqa0ev+UlqUx
-         ms/Q5eDRWy36nGavzWZh9nlMqJ/QTG1KXvzoOI+hac6RpR/CzWnLq4T/W493/wvrGLq9
-         mk45zP5kp9PIpkNoX4DQ+ojL1iuG/QNcWWUSFA7lcG83Caro5yRJQ3f6Emk8Nx1WrplU
-         hewU0k96xCOfwX2hAp6kgsVhxuRhgTkf46E2/hQ0lztngoWy5AJN7DLF1wC/d8xXsGB0
-         e95dTuH9d3gLf4wdmDMDtyaCRRT1cL/fcDx0wGoInHnDblqxxsVmhgKSMSXWQQ6bIKp7
-         7onA==
-X-Gm-Message-State: AOJu0Yz+XvNVjL4fTtUXGqSKTQ0JnE/X3sQX0Y4fZ5zlKcJ/Wi0fOSHn
-	AwMhJ7If6ZJpp8S3+fA/aoB/SCGqbHThCIsW3Albv8ULbL+g9Kzb12Dxh/69Ic36yQLNCIQsRKc
-	1dZ9lLO3WzoxJ1nkVU5YfUiz9/dV8mdsENtTWs2lDXyCslxKdZ4sRRbVGK/pBPA==
-X-Received: by 2002:ac2:5bc7:0:b0:52c:86de:cb61 with SMTP id 2adb3069b0e04-52ea061aef7mr3231149e87.10.1720174798974;
-        Fri, 05 Jul 2024 03:19:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG2bcAOPVaee27OeqMAnVWnDrzOGhrEimtweyv/X8xvSG7bS11fzhz03JD7Xz6uuBaWWr8tqg==
-X-Received: by 2002:ac2:5bc7:0:b0:52c:86de:cb61 with SMTP id 2adb3069b0e04-52ea061aef7mr3231123e87.10.1720174798329;
-        Fri, 05 Jul 2024 03:19:58 -0700 (PDT)
-Received: from redhat.com ([2a02:14f:1f0:a185:2de6:83fc:7632:9788])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367a5a31a1asm1847953f8f.7.2024.07.05.03.19.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 03:19:57 -0700 (PDT)
-Date: Fri, 5 Jul 2024 06:19:51 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/2] virtio-balloon: make it spec compliant
-Message-ID: <20240705061647-mutt-send-email-mst@kernel.org>
-References: <cover.1720173841.git.mst@redhat.com>
- <dc0a5a70-d691-4d54-ae00-0beb74f4c399@redhat.com>
+	dkim=pass (2048-bit key) header.d=nec.com header.i=@nec.com header.b="OZ/uKcKw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dfwKRSnk/q3ROyaFmYrt9QQr4ytUTUdE8tgf08M/lNlNKe+SleihDx18pXVWUBvSpj3q5e/IoZ45U/UKGwAQiIjT5LAx9URxJ99i9WHmJA4lNvq5IbahhZuZwm6ArxHy60LR2h8sIiQOSNX98SCT0tL8TTfbgP9N1WF0qQBvMh8dgkjPXIOELVRV/EnF0bYew28AwNDOM1N9xF7kxgoKfKHKge/rdi/XE8DwCuW/8UTfCoN6QNZtkjJxZjBWWeAtc/An57qiM/CAZUtglBnrkpJ5iUESbaT+gd5RCg/DE4UV6GaWMPQxT1l9rgvms2KeVzKICklW8LW33N2FS7bBJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MuXf34PFJm/Um2clVlGKPtPU9DTUWMjdONesDuGY6lE=;
+ b=eBLTxRp19N0jgWGhC3nHcLLnfFQBMjuKGfaJtcdDpGythwrAlOjLWzFIQzNIorNmye/kdU3CuMEVuBasKwXsYldorHqVrGURy6KmWHDCrSFtscfNHY0woKFYbUbgHk8IqkNe4V4qxAPDCsRF801o+mC4E7CC07t7D/hpAF6l3wUQk/TUiSOlQ4jvqCPMnFy7KsCWIB3QE0rbNhf0g3qhx7IgauWN3WmJpQ0iXgI7b4v9b2Tf3dTF6D5duRWnmkbh22mX1eOuVd9VPQP03iKgmTvR2Y+BqiG2+tLEPI5XTM6a3HVA4G3nckDUzsptmI0Wg4oWEdangFEUG/lLldnbPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MuXf34PFJm/Um2clVlGKPtPU9DTUWMjdONesDuGY6lE=;
+ b=OZ/uKcKwnsj0nf0aOTVugT2poDg9Vnql4snFFhMKdKiQUHXa6+8bS+KKZHWt/uBIVBVPSx+23K7L67/5DWPByemDB7vaNHz6m2mRakFSvMi4fYJmbe68GmWgtXp3wAE5kDUGqvkyNS2g1eCNa1IsWHxNjBKBUpyQ+eug/dCfR7C+k+vfKigScAEI0mLEKjeiN7boTNa/6fuxOvCjY4T1548Lh3lkPrbFjUhWh9K/GxHDIrBSzQhhseTu13Uv0l0BO3AnrsGPzKT2mj9nkyfEL2+1JvPoD2gp2U7UHA3OyADyrFYc1MFcnR66RL6V25IqU9tgE3Bxbtv3iEagvBnk6A==
+Received: from TYCPR01MB8389.jpnprd01.prod.outlook.com (2603:1096:400:15f::5)
+ by TYWPR01MB10806.jpnprd01.prod.outlook.com (2603:1096:400:2a6::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.25; Fri, 5 Jul
+ 2024 10:25:20 +0000
+Received: from TYCPR01MB8389.jpnprd01.prod.outlook.com
+ ([fe80::29dd:6d4f:b2de:f254]) by TYCPR01MB8389.jpnprd01.prod.outlook.com
+ ([fe80::29dd:6d4f:b2de:f254%6]) with mapi id 15.20.7741.029; Fri, 5 Jul 2024
+ 10:25:20 +0000
+From: =?iso-2022-jp?B?Tk9NVVJBIEpVTklDSEkoGyRCTG5CPCEhPV8wbBsoQik=?=
+	<junichi.nomura@nec.com>
+To: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+CC: "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
+	<lenb@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>,
+	"bp@alien8.de" <bp@alien8.de>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+	=?iso-2022-jp?B?Tk9NVVJBIEpVTklDSEkoGyRCTG5CPCEhPV8wbBsoQik=?=
+	<junichi.nomura@nec.com>
+Subject: ACPI: APEI: ERST: Don't retry read when "Record Store Empty"
+Thread-Topic: ACPI: APEI: ERST: Don't retry read when "Record Store Empty"
+Thread-Index: AQHazsWjaDTSYuFPoEWjsVW52y1RuQ==
+Date: Fri, 5 Jul 2024 10:25:20 +0000
+Message-ID: <20240705102517.79689-1-junichi.nomura@nec.com>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.45.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nec.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB8389:EE_|TYWPR01MB10806:EE_
+x-ms-office365-filtering-correlation-id: cbaa7bbf-aa7f-41ee-bf23-08dc9cdcc5e2
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-2022-jp?B?TmZqRFQzeGMvZWNYajFoR05uNWZRMGFtQnBtZFBPaTVQWERtTFdaVUM3?=
+ =?iso-2022-jp?B?V1RQOEpXMEk2WFU1eUpiMlVPREh4OXNCYmNvM3NxVndjWlMvQ25ydUZZ?=
+ =?iso-2022-jp?B?TkRYMVZ5MEFKS3BzQndmNGZraHlnMzZId2lwYldialowQWZ5QlRFQUkv?=
+ =?iso-2022-jp?B?OEw3ODVSK2JuWis5WXJWR2Q4Z05pUWZPM3lxQ1BrMEh0WGdCeWJTK1Za?=
+ =?iso-2022-jp?B?Wk5VMUJLRTlxdXBGVGFQNEhDZXpZU0M0K1Q3MzlJRTJXZlZoei9HaW02?=
+ =?iso-2022-jp?B?endUUmZSYmhWLzBlVlhsM1V2aGJhQ2lmcDJzbjZQWFhHenlldHEyTjhX?=
+ =?iso-2022-jp?B?bmMwTjF2eHdlcnhZMjgwaEpUQ0tBN1cwdE1PUUJHa0VGa0dwc0tiK1Vm?=
+ =?iso-2022-jp?B?WGUzWGhqeVhMSXdlT0poeUZ2c1BrNEg0dThzVzU4NTJRUTR0UjRuTlhE?=
+ =?iso-2022-jp?B?b1IzU3pJU0VmNWhSU0NJc0NkSGNSaTd0SG16bFYzVU91Y3B3eWtGQmhi?=
+ =?iso-2022-jp?B?Rld0YWNTV284NWdsVzh0NFdNbUdhTE9CWGlvWE5xSW1xemFSenBpVHl3?=
+ =?iso-2022-jp?B?ZGVWQk1CYmthUGJUMVB4TGYxdFI5MWlVL2c3a2trMEc1Z2F0elNzRW1D?=
+ =?iso-2022-jp?B?VE5BeXVSd2dheDNJY1NBaHlYa0pmWUllb05PWjlxc2tLSnVza1R5OEpy?=
+ =?iso-2022-jp?B?VlVSRTJONXRjZ2RrRlQ4L3V4L3J3WlZYNktrMGFqR05LM1JVZDVqUzlW?=
+ =?iso-2022-jp?B?VHdpWWoySmdreTBORWR6cG4xcFBURWIzQ1ZxbmZ5Q3Y3REZFQWRPYllW?=
+ =?iso-2022-jp?B?cXFNRGozMTgrQVpHYWxzSlk4YUk1N2xLS1NiLzhxMlY5VlBwc3gwVkd3?=
+ =?iso-2022-jp?B?RHJCN2VRVEV2ZFQ1Uk9LR0V3NDc4VnZqUzViMGNVcHMwOGpobEhFZUMx?=
+ =?iso-2022-jp?B?WjRmUUoyWVI5Z2p1MmxIVG15T2laOUF6K2NNdXZ5aDNqdm00aHBLeXkw?=
+ =?iso-2022-jp?B?UlNLdlpQY1pNM294ZFBJVTdXMXdSK0wzc3BCQ0lpT2s2ZmVBRVMwM3px?=
+ =?iso-2022-jp?B?ZUttZVphWjBsMzNEVmEzaXJrL3RzVzBpcFoyUDRoOTZDTGhxMFRKai9K?=
+ =?iso-2022-jp?B?VzlIbXRDWEs5dDdmQ1JBcTV3aGJDL3RYbHhXTWMwRTdMd1UzZk1mZkJi?=
+ =?iso-2022-jp?B?Z2ZNOXloVXBxR0lOTGlUTFQ1UEtvenZjUit0NVYwS1Z2NTJXdkpBUjZW?=
+ =?iso-2022-jp?B?VTRQOUtQdDB6UVFJTDJad3lzV0Nzb1krNXM2emQ4Wnk4NWpoV3pBQTJu?=
+ =?iso-2022-jp?B?RWNPWTU2WkJyc0N0Z1BmZlBxUlcrV0JRalgxeEljRkcwdTFhcGlsZkg1?=
+ =?iso-2022-jp?B?dVBTcHFwT2ZBRE40ejZRRDlFd3lvTDZvMFBoTXFScTE0dk1UQXpoRVhB?=
+ =?iso-2022-jp?B?ZTd5ZGR2bDRTMFhhK2FLWThKbUtUanU4ekN0akxuaUI5WVA0UUZPRGN2?=
+ =?iso-2022-jp?B?aVdLOHVJc0t1ZnJHcXBTQ0p4aCt3aHZMcThrMWpPak1mVUp1S253Tnhq?=
+ =?iso-2022-jp?B?cm5OS0t0SDRONVBtSVJ0MjFRSE1yZ0tVbU1UN1FzMU0xakxUK0hwMkxO?=
+ =?iso-2022-jp?B?eE03ZzBPTDRpQWpDVEdFcVBXNG5NTVJnQ0xzZjJJTG1mMFp1ZmovSy9i?=
+ =?iso-2022-jp?B?Nkk1bVRZTUF3TnRCdzlFUEdtVWRwVXFXeXB1OTVGNVliYzBPYTc2cWc4?=
+ =?iso-2022-jp?B?T01YSmlTVW1KRkl5TFd3MHArTVN3ZjJKQ3VScTdwckg3eGlrTkZSV045?=
+ =?iso-2022-jp?B?ZEQ2cERvb3F5NllscEZMSnpZemdxZnVjUk5XWUZQaS9pNjMvK1RMOUgr?=
+ =?iso-2022-jp?B?QWJVY1ZMdndSWDZZaThnQWdsNzRvVFh1U2pKdnU1Y09KODFBeDdNbHk0?=
+ =?iso-2022-jp?B?bHV5ZTdpQ0pIWUYxQnRQcVhKZHJISmo2blp4Y2h4Qk1KRmNjcDNBd1hu?=
+ =?iso-2022-jp?B?TS9BUFp3STc2MHdkRnNmb21aTldJMkxpekVhVmhKNUl0UExOZFlIY2c1?=
+ =?iso-2022-jp?B?V3c9PQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB8389.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?NHVWRjIvK1FaU0xxK3dCa1NHLzN4MjgybFEvbzRrdndPSFJmc3dpdlFX?=
+ =?iso-2022-jp?B?YXJxS3YrRlU1R1JiYkloanB4WEFwNDFTR1phem1sc0c2cGw4TGlsMHAz?=
+ =?iso-2022-jp?B?bzVrZ0R5a2xIKzVncnZBVEhMbTdiYWQ2Nk9BRjBLckRMSzl2b3hKWnVM?=
+ =?iso-2022-jp?B?bVVTWW9QY0lCQjJXdWdQcmRZK3czNzh1QmRvVyszZ29JS09PV1ZPb3d1?=
+ =?iso-2022-jp?B?Vm1pQTUvNmZ5SE14WkdUM2tSTDBFcFA3ZEFXOGRSNWtuKzczWTVCdXJm?=
+ =?iso-2022-jp?B?MWhQOHViMDhYUElGR3hHZCtCY21EZnZhS0QzVWxkNDV1d3BaRlJRZnBC?=
+ =?iso-2022-jp?B?cTViUUd4SHQ2NnRyNFVNZlNoUHRMeXliL2tYbE9hdkxvdXdiSGk1dGhp?=
+ =?iso-2022-jp?B?TC92NlZtdW9QOGhMUm4vdUdmK1kzMzBlU3V2VDJQQ2Q2TmNEb25aYlhx?=
+ =?iso-2022-jp?B?VldtTHdqN1E1ZzZHemNOK0lqV05yTElVK05rUzdQS3ZKK3hRa3NBV25j?=
+ =?iso-2022-jp?B?eUlpcXZjaGRDeERBcmRabThvMFBSUXA5WFlIbzhVTG9kQW03QnhqSHdm?=
+ =?iso-2022-jp?B?QWlWTEhES3prRjZFUWczb2pKUWV4RU5wMVZ3cW5TU1Z1d3FLa0s5Nkt5?=
+ =?iso-2022-jp?B?eUNabStERDRjYzA0ditWZFNUM09jQW1PM0QzK3E2QVVrNXJ6V21EQjlO?=
+ =?iso-2022-jp?B?RUJSSWYxUVNGdkhPamNJb3E5S0E3RVE2eWF1dHVHeDk0RTBJMnR4M2lj?=
+ =?iso-2022-jp?B?WkZWM0dSMlBTTUhrc3NpMkZBS1ZPWGFmeUpEMC9pZTV0UHBlVWVOWExZ?=
+ =?iso-2022-jp?B?VDhHWVMwTGI2SlJZOXdIQUREZDZKTUVYV3Y5cktnekUzRjhlWFF1dllD?=
+ =?iso-2022-jp?B?eCtlRkNpZlIzS0psTGE5VU5nVjlBU0ZQMTBUbDdBT0xBWUpjQ1FadXBl?=
+ =?iso-2022-jp?B?cklDNU9xVHNNamo4bTg4eE1vaTJuZnU4SWYxVzFLZGZhNVdkRndaOG40?=
+ =?iso-2022-jp?B?UjM1N1B1UGszcjhibGg4OEF5T1VCTlVlaS9ESHpzQ2p3Z3VCTWNVejhC?=
+ =?iso-2022-jp?B?NUJzSWRZOENiaWYxblhzVEZaTnI5aEVGeG8wenNrWTg5NktrSTNMK1hL?=
+ =?iso-2022-jp?B?cmtPVlVreFUwN290NHBRd1dwVTRsdUN3QU1YbEFFeGpoajliSnlTVXUz?=
+ =?iso-2022-jp?B?cmJjejVKcVFoNldWQUZTUTlUQmwzWWN1T3ZibHp1aUpsNmMrb09IOHZJ?=
+ =?iso-2022-jp?B?QXEydUxEUkc4cWpUWGdYajhBRm9HVHVvNEw0TDZ5V0MzcXJQZ0FnTnFI?=
+ =?iso-2022-jp?B?R0wwblZoL1FXVkRTT0xqUnh4c3EvUW5DSFBZR2JRUWlraUI0NGhTNy9Q?=
+ =?iso-2022-jp?B?NVRKclNPbmk5c2xLM3pIRzJZYmZCK0RCRWdKbW9mZTVSRXREaFBNU2li?=
+ =?iso-2022-jp?B?b1FpWFpXNHdVSEg1cmg1VHBORSsxSXp6S0JrUnZCVTNBckdNNGdUaTFI?=
+ =?iso-2022-jp?B?a1R3WitXK09kbXNkVlNmT3JBdms2eDBhYjkxb0N0L1N3WE44L3F0UGV0?=
+ =?iso-2022-jp?B?ZnVoM0ZNZFBOR1hVWjJXVmZRZWptQnlEY0RGbFdsemZod1BDWDdkZWZG?=
+ =?iso-2022-jp?B?VVppUHhycUV5SlQzK3l4UVhQS01Ebk5kTm1keHZDdFd2WWc3aUZvek9F?=
+ =?iso-2022-jp?B?M0Q5M3BOdjQ5bHA4YTZwRzd1NkFHMm9nYVRHdk1jNGMvWGZXcDBDTzB3?=
+ =?iso-2022-jp?B?TWpXSmFoYm1qcVQzbkJHR083cVFwZFZLZ2llWi8zV2NRTGNJYUU2bmlE?=
+ =?iso-2022-jp?B?aGVxYlhySFM1YWxveERkYjZ3Kzc4QkczTml5a3E2YWtOSnNqMERiZGtD?=
+ =?iso-2022-jp?B?VVlzc1R0YW1VMFVUN3VRbmZhWE9vYm03WHpwMjZIMk5jVEtsYzNoMzNz?=
+ =?iso-2022-jp?B?NWEyR0FCWEx3RlJCVlhxNGtmSTVxcWg3cXpxbkNGdEVpT1F4Z05PeUZw?=
+ =?iso-2022-jp?B?WERKbmJKKzMydjJROURVRFF4Y3dUREZqQk9jNHdhNm5aUE1paGhEVGYy?=
+ =?iso-2022-jp?B?K3FlYWJUZ21KZHgrSzFPZks1RkxBUWlOckRBTUFFaWdNbjRMN0JkSE9K?=
+ =?iso-2022-jp?B?b2tEOWMvanQ1RU1mNllYUi9nRk1rYm1nS0duNk9sUlV0OWtTZkFpNXFY?=
+ =?iso-2022-jp?B?M0gyeWlBb2wwajQxZWlheEtydSsyRFhRNjd6M0x1cllRZnF1Q1lZcUIz?=
+ =?iso-2022-jp?B?Zk40K25sSVVHRHRUaGpFSGp1Nnh5d1FLNmVDRGo3Z3YzR1NzYldQMjBz?=
+ =?iso-2022-jp?B?NWpHNFp6dzFHRVlYdm0xMEh5T3hzRGNxZlE9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc0a5a70-d691-4d54-ae00-0beb74f4c399@redhat.com>
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB8389.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbaa7bbf-aa7f-41ee-bf23-08dc9cdcc5e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2024 10:25:20.6055
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: R7Ds/VbqW6ao5Uy4V4BUQ9QRFnwvJoN5dvxwXYOwATE/1TEMwOQ4dsD57HjAKj1wmP5mAFvPDI9wE00ZoN6Pqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB10806
 
-On Fri, Jul 05, 2024 at 12:15:30PM +0200, David Hildenbrand wrote:
-> On 05.07.24 12:08, Michael S. Tsirkin wrote:
-> > Currently, if VIRTIO_BALLOON_F_FREE_PAGE_HINT is off but
-> > VIRTIO_BALLOON_F_REPORTING is on, then the reporting vq
-> > gets number 3 while spec says it's number 4.
-> > It happens to work because the qemu virtio pci driver
-> > is *also* out of spec.
-> 
-> I have to ask the obvious: maybe the spec is wrong and we have to refine
-> that?
+"ERST: [Firmware Warn]: too many record IDs!" is logged on some platforms
+when there is no record.  That happens because erst_reader() retries read
+when erst_get_record_id_next() returns valid ID and erst_read_record()
+fails with -ENOENT.  On those platforms, ACPI_ERST_GET_RECORD_ID returns
+ID 0x0 even if record store is empty.  Reading record ID 0x0 on
+empty store fails with status code 0x4 (Record Store Empty).  However, both
+"Record Store Empty" and "Record Not Found" are translated to -ENOENT,
+the reader cannot distinguish between them and tries to read the next id,
+which is again 0x0, and repeat that until it fills up the record cache with
+invalid entries.
 
-Well having vq function shift depending on features is certainly
-messy ...
-How do we know no one implemented the spec as written though?
+While such firmware might be buggy, we could make the reading loop more
+robust by returning different error codes for "Record Not Found" and
+"Record Store Empty".
 
--- 
-MST
+Signed-off-by: Jun'ichi Nomura <junichi.nomura@nec.com>
 
+diff --git a/drivers/acpi/apei/erst.c b/drivers/acpi/apei/erst.c
+index bf65e3461531..ce186f8d7a15 100644
+--- a/drivers/acpi/apei/erst.c
++++ b/drivers/acpi/apei/erst.c
+@@ -95,6 +95,7 @@ static inline int erst_errno(int command_status)
+ 	case ERST_STATUS_NOT_ENOUGH_SPACE:
+ 		return -ENOSPC;
+ 	case ERST_STATUS_RECORD_STORE_EMPTY:
++		return -ENODATA;
+ 	case ERST_STATUS_RECORD_NOT_FOUND:
+ 		return -ENOENT;
+ 	default:=
