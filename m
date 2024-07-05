@@ -1,180 +1,239 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCF8A955
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 17:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746002F32
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 17:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720201335; cv=none; b=IfZ/w37ibcyZp3vW8C5klzb2GtGMV8BmFk8gGWKyjCWM7qTOw2xYzyB1cQl1BXhYwX0JL8BMngbxIgppO1zxGGWIsdS/uiG/LLo3yXIDbny9GcKFQJ2o4/qD9aTf/WwVqvnUrVGpQVqKpd4DayTk2hYqPkg2RCT9RrcmsB0M+vo=
+	t=1720201588; cv=none; b=LbaW2dk1BYPoO8cZWRWY/yDqjRPy1sSQfXXnu4v2sTaMKjlfY3UPPQCGpk8B3Pf7x9vyKdZXRUwJt58aJTAw7szq6NN7W1LzRbE+7NpLL2zErajZZLTJXWjrcra0Ll2yhXNWOCvqOHEiEUWTg5rzdfbB0vpMKkMQ5IS07pi0EIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720201335; c=relaxed/simple;
-	bh=Y1+zacs5TVMRhJob78BHvQF5zAh8wQEx+Ri+TVfwNK0=;
+	s=arc-20240116; t=1720201588; c=relaxed/simple;
+	bh=ewV9U2+bKaqzzV4bH4ybymXSBXGTPTN+grBBtw8hsxI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ePFAA+dFFp45TRsHjpnhS1OtJnkCsN0lI8VsTtrpNDusVfgm6eseTB3Hs8E6SLQDcnrmN47lJqN4SJDsQ9vCCOmWc+yar2PjnPoUBxCQSWYdu9NQNmTSWtoV0nZozhZHHux/SR0qhOGxaqyyBFFQTvtoBCOBDGisbSOKLd/bc+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=01o3Gc6R; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=XgXYuReZqllg6w4VR/I+w54mQmEOF8JLkETYnFMAOtHJTmupuXYwiGEz0LJqwZS/3e0AJYJu+yZoq4mAN6OYC2M9X5/Kq03/tFqAPV8kAOrQlSUaulqqstSP0I3UZDNOdbMQ03gspoeLg1jF/f6jLt5J2liDQui4LdIiL8iyiJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=PsUqomQB; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="01o3Gc6R"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-447def0c4e7so40971cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 10:42:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PsUqomQB"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52e99060b0dso2030718e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 10:46:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720201333; x=1720806133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mx6t+420ZDZCraDFpW85LzdL9pA2qdlTORVzQJ7eiy0=;
-        b=01o3Gc6R3aMet5RFPvnX7HkEuXhMJIUF2c4MxZ2OoTJX0bvrzZOB1wqpZ4ZDsUGtgK
-         b7zUcqdY0tK3iutTIwpBR038E3gUw/mU8JG12Yn08yz3JaflmGsfv3IucGBaJaDbJqbg
-         yjugUJy5ceHewKlqPOQrEhZPDfzXOfi7r0O718eums+c0YncOVsR1QsZ8oe/i9acKwsX
-         1hCcvNRCV3mm81ACYjMWN6sWtYgMCKkZA9UviIKmswxo9y8ap0po2n8HfRlIv1AHeT2L
-         auqfJpHgHMWhAk6lJavwxT6V8fjptOH2jww2XdWTaIdZzSHtVkC9xmNykZfbN6LMU7as
-         rv3Q==
+        d=broadcom.com; s=google; t=1720201585; x=1720806385; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6jpSsjwDZQT2yUB92+8+PpFR1qTSiIBd1w6nGMTaY1w=;
+        b=PsUqomQBzI12C+lZH6ZhKCjHW046PddvcBBZu/obOwO/qfP9qXkZ7FkVlCOwNlwy64
+         Ecopkg4KZtR87RYxt0bQCHVfb40JS5bmhsxH/v0kTS9JzjYCy0tt/wWXpXOlVFeUjZmD
+         fEZxg+RHSCYG7vCLztZkXAGV5PU+hfJ4FbnOI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720201333; x=1720806133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mx6t+420ZDZCraDFpW85LzdL9pA2qdlTORVzQJ7eiy0=;
-        b=BDrPJZu1Myk36oN6pdfDAOrtVMa+umrEdpOqqs1YjgCXG3Reo/yuBDMyCalUlzD6ZI
-         L9mzrT4cjl7DmOR7XnRTvndcgijmzEqCSyJ0A8C9snr1wl+SLlzXf2ZNThsN3gBqkFCp
-         GJ34U7qJezzq31ZYUVGnubFgG8RQKjTQXSmHFU1Uzemah/6E1IP2ftIvN7GE6ge42pzu
-         cpWg/AJ6WxMSmtCA+9Peww+wrxt66D19MxXh/kbG0TnWw53ZPwJt2M+28xpHiwDHnQ4L
-         HUTdlgzrdpTYmFjgRecIaYpIIG3bQXq5Po5n8ezunZV8tqv/hMF/twUTeRHvR6AQJ7rx
-         e3/A==
-X-Forwarded-Encrypted: i=1; AJvYcCW2wxu363EII462t7XXhcx0BDSUmNGPqiwfeCQMj76alXpMuqc7apVx5ZVFYbh5mUaiR3Aqihkk50fLMpp7kdGaS4sIUlxu6wJibXrg
-X-Gm-Message-State: AOJu0Yw2aOVUUkE14l6r+IoRguVX+94Y8j4xeE96iVUmeJucKVzGIu0I
-	fwJxnPRfPlKUaov9lZ4vwRgYw0oEBl8j6hxd8CYHQXBY0KEmuX5q9cO8sYMYZ3r7Oui6gOauapQ
-	6PDgHkz3VGZB9dSFs9MiZ1vBFkNzSSjOlTcLa
-X-Google-Smtp-Source: AGHT+IFH+FEn/il/MFGc9qCTllR3mQ+txUjFoNG8+hZggbiPPwy6pLBbbda7EE+80q41BUgsC0ffSk6XRqhDhb0Myh8=
-X-Received: by 2002:ac8:750c:0:b0:447:dd54:2cd4 with SMTP id
- d75a77b69052e-447dd54374amr511811cf.22.1720201332702; Fri, 05 Jul 2024
- 10:42:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720201585; x=1720806385;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6jpSsjwDZQT2yUB92+8+PpFR1qTSiIBd1w6nGMTaY1w=;
+        b=RscJ0lBoSePEE4ZJ5wJ/Z64qS+DrGocrcvbYQjapqKKSYIIiDLTRkrdAn776822J+g
+         ZyU/VAeqn9uYtRTNQNJuVWM4p7g7J7HfI3rq0nzBEj2osk8Lv/la8P8rUA6koM9mWTRz
+         C7sshRTO2fC7MKKlANn42biWIqTpCnK0gVAVfQPicnuYtT4PaYsVL5HYSkdRv4Kjg1ua
+         M48fKHtXpJPPjKuZE0xdsxlDD03Hc1dsKh3/yD1+5lSWAZMkNgMY6buIosPaPFLPLP6q
+         31AUaYHfkNsKwvzkOzUkxItWT7N2YjHSsMZhz8RVe5PAuv/2T7HjM8542TGK/1tWzo5b
+         wyjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXahsSPfwqWasxM4shxU25myxN2/HmV19+tVrURo5nBWFnZtAHQadyRqtppK3Z8a1j3WlP2dfrDKpKZVf6VHmN4vcTbmtU/2C25Jo28
+X-Gm-Message-State: AOJu0YwN7VgaOnXtBLB1jAHO9cXC7URbzXNouu1wvgDzzYRe+lrc5nlE
+	uTqs+TFZ116AWUH9nZ67SnmVTOXnHpWvU3fgU3wSN1Yqca6pU+4Iu1kuGRmvu+dug0ya18SJsT4
+	aH2VuAJvOT2B3hLVVJmjiSXBZCw+VzJM5maIm
+X-Google-Smtp-Source: AGHT+IF4QofgfsHGNulPin5j9vSmFwW/MPiICsmjTVGRD95QtbOW39DLmRRaP+P50VJQX1fJdC/WzVH+W1BhoxQVwAM=
+X-Received: by 2002:ac2:410d:0:b0:52c:d5b3:1a6a with SMTP id
+ 2adb3069b0e04-52ea0636fcbmr3778176e87.28.1720201584620; Fri, 05 Jul 2024
+ 10:46:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240113094436.2506396-1-sunnanyong@huawei.com>
- <ZbKjHHeEdFYY1xR5@arm.com> <d1671959-74a4-8ea5-81f0-539df8d9c0f0@huawei.com>
- <ZcN7P0CGUOOgki71@arm.com> <CAOUHufYo=SQmpaYA3ThrdHcY9fQfFmycriSvOX1iuC4Y=Gj7Xg@mail.gmail.com>
- <ZogV9Iag4mxe6enx@arm.com>
-In-Reply-To: <ZogV9Iag4mxe6enx@arm.com>
-From: Yu Zhao <yuzhao@google.com>
-Date: Fri, 5 Jul 2024 11:41:34 -0600
-Message-ID: <CAOUHufYwoTTsRBF_wWZU_jWzb8e6FF=vN8UKtVHBeXLBkwHWzA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] A Solution to Re-enable hugetlb vmemmap optimize
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Nanyong Sun <sunnanyong@huawei.com>, will@kernel.org, mike.kravetz@oracle.com, 
-	muchun.song@linux.dev, akpm@linux-foundation.org, anshuman.khandual@arm.com, 
-	willy@infradead.org, wangkefeng.wang@huawei.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
+References: <20240703180300.42959-1-james.quinlan@broadcom.com>
+ <20240703180300.42959-5-james.quinlan@broadcom.com> <362a728f-5487-47da-b7b9-a9220b27d567@suse.de>
+In-Reply-To: <362a728f-5487-47da-b7b9-a9220b27d567@suse.de>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Fri, 5 Jul 2024 13:46:12 -0400
+Message-ID: <CA+-6iNynwxcBAbRQ18TfJXwCctf+Ok7DnFyjgv4wNasX9MjV1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 04/12] PCI: brcmstb: Use swinit reset if available
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, bcm-kernel-feedback-list@broadcom.com, 
+	jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000006b763f061c83a46b"
+
+--0000000000006b763f061c83a46b
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 5, 2024 at 9:49=E2=80=AFAM Catalin Marinas <catalin.marinas@arm=
-.com> wrote:
+On Thu, Jul 4, 2024 at 8:56=E2=80=AFAM Stanimir Varbanov <svarbanov@suse.de=
+> wrote:
 >
-> On Thu, Jun 27, 2024 at 03:19:55PM -0600, Yu Zhao wrote:
-> > On Wed, Feb 7, 2024 at 5:44=E2=80=AFAM Catalin Marinas <catalin.marinas=
-@arm.com> wrote:
-> > > On Sat, Jan 27, 2024 at 01:04:15PM +0800, Nanyong Sun wrote:
-> > > > On 2024/1/26 2:06, Catalin Marinas wrote:
-> > > > > On Sat, Jan 13, 2024 at 05:44:33PM +0800, Nanyong Sun wrote:
-> > > > > > HVO was previously disabled on arm64 [1] due to the lack of nec=
-essary
-> > > > > > BBM(break-before-make) logic when changing page tables.
-> > > > > > This set of patches fix this by adding necessary BBM sequence w=
-hen
-> > > > > > changing page table, and supporting vmemmap page fault handling=
- to
-> > > > > > fixup kernel address translation fault if vmemmap is concurrent=
-ly accessed.
-> > > [...]
-> > > > > How often is this code path called? I wonder whether a stop_machi=
-ne()
-> > > > > approach would be simpler.
-> > > >
-> > > > As long as allocating or releasing hugetlb is called.  We cannot
-> > > > limit users to only allocate or release hugetlb when booting or
-> > > > not running any workload on all other cpus, so if use
-> > > > stop_machine(), it will be triggered 8 times every 2M and 4096
-> > > > times every 1G, which is probably too expensive.
-> > >
-> > > I'm hoping this can be batched somehow and not do a stop_machine() (o=
-r
-> > > 8) for every 2MB huge page.
-> >
-> > Theoretically, all hugeTLB vmemmap operations from a single user
-> > request can be done in one batch. This would require the preallocation
-> > of the new copy of vmemmap so that the old copy can be replaced with
-> > one BBM.
+> Hi Jim,
 >
-> Do we ever re-create pmd block entries back for the vmmemap range that
-> was split or do they remain pmd table + pte entries? If the latter, I
-> guess we could do a stop_machine() only for a pmd, it should be self
-> limiting after a while.
-
-It's the latter for now, but it can change in the future: we do want
-to restore the original mapping at the PMD level; instead, we do it at
-the PTE level because high-order pages backing PMD entries are not as
-easy to allocate, compared with order-0 pages backing PTEs.
-
-> I don't want user-space to DoS the system by
-> triggering stop_machine() when mapping/unmapping hugetlbfs pages.
-
-The operations are privileged, and each HVO or de-HVO request would
-require at least one stop_machine(). So in theory, a privileged user
-still can cause DoS.
-
-> If I did the maths right, for a 2MB hugetlb page, we have about 8
-> vmemmap pages (32K). Once we split a 2MB vmemap range,
-
-Correct.
-
-> whatever else
-> needs to be touched in this range won't require a stop_machine().
-
-There might be some misunderstandings here.
-
-To do HVO:
-1. we split a PMD into 512 PTEs;
-2. for every 8 PTEs:
-  2a. we allocate an order-0 page for PTE #0;
-  2b. we remap PTE #0 *RW* to this page;
-  2c. we remap PTEs #1-7 *RO* to this page;
-  2d. we free the original order-3 page.
-
-To do de-HVO:
-1. for every 8 PTEs:
-  1a. we allocate 7 order-0 pages.
-  1b. we remap PTEs #1-7 *RW* to those pages, respectively.
-
-We can in theory restore the original PTE or even PMD mappings at an
-acceptable success rate by making changes on the MM side, e.g., only
-allow movable allocations in the area backing the original PMD. Again,
-we don't do it for now because high-order pages are not as easy to
-allocate.
-
-> > > Just to make sure I understand - is the goal to be able to free struc=
-t
-> > > pages corresponding to hugetlbfs pages?
+> On 7/3/24 21:02, Jim Quinlan wrote:
+> > The 7712 SOC adds a software init reset device for the PCIe HW.
+> > If found in the DT node, use it.
 > >
-> > Correct, if you are referring to the pages holding struct page[].
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
 > >
-> > > Can we not leave the vmemmap in
-> > > place and just release that memory to the page allocator?
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
+ller/pcie-brcmstb.c
+> > index 4104c3668fdb..69926ee5c961 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -266,6 +266,7 @@ struct brcm_pcie {
+> >       struct reset_control    *rescal;
+> >       struct reset_control    *perst_reset;
+> >       struct reset_control    *bridge;
+> > +     struct reset_control    *swinit;
+> >       int                     num_memc;
+> >       u64                     memc_size[PCIE_BRCM_MAX_MEMC];
+> >       u32                     hw_rev;
+> > @@ -1626,6 +1627,13 @@ static int brcm_pcie_probe(struct platform_devic=
+e *pdev)
+> >               dev_err(&pdev->dev, "could not enable clock\n");
+> >               return ret;
+> >       }
+> > +
+> > +     pcie->swinit =3D devm_reset_control_get_optional_exclusive(&pdev-=
+>dev, "swinit");
+> > +     if (IS_ERR(pcie->swinit)) {
+> > +             ret =3D dev_err_probe(&pdev->dev, PTR_ERR(pcie->swinit),
+> > +                                 "failed to get 'swinit' reset\n");
+> > +             goto clk_out;
+> > +     }
+> >       pcie->rescal =3D devm_reset_control_get_optional_shared(&pdev->de=
+v, "rescal");
+> >       if (IS_ERR(pcie->rescal)) {
+> >               ret =3D PTR_ERR(pcie->rescal);
+> > @@ -1637,6 +1645,17 @@ static int brcm_pcie_probe(struct platform_devic=
+e *pdev)
+> >               goto clk_out;
+> >       }
 > >
-> > We cannot, since the goal is to reuse those pages for something else,
-> > i.e., reduce the metadata overhead for hugeTLB.
+> > +     ret =3D reset_control_assert(pcie->swinit);
+> > +     if (ret) {
+> > +             dev_err_probe(&pdev->dev, ret, "could not assert reset 's=
+winit'\n");
+> > +             goto clk_out;
+> > +     }
+> > +     ret =3D reset_control_deassert(pcie->swinit);
+> > +     if (ret) {
+> > +             dev_err(&pdev->dev, "could not de-assert reset 'swinit' a=
+fter asserting\n");
+> > +             goto clk_out;
+> > +     }
 >
-> What I meant is that we can leave the vmemmap alias in place and just
-> reuse those pages via the linear map etc. The kernel should touch those
-> struct pages to corrupt the data. The only problem would be if we
-> physically unplug those pages but I don't think that's the case here.
+> why not call reset_control_reset(pcie->swinit) directly?
+Hi Stan,
 
-Set the repercussions of memory corruption aside, we still can't do
-this because PTEs #1-7 need to map meaningful data, hence step 2c
-above.
+There is no reset_control_reset() method defined for reset-brcmstb.c.
+The only reason I can
+think of for this is that it allows the callers of assert/deassert to
+insert a delay if desired.
+
+Regards,
+Jim Quinlan
+Broadcom STB/CM
+>
+> ~Stan
+> > +
+> >       ret =3D reset_control_reset(pcie->rescal);
+> >       if (ret) {
+> >               dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+
+--0000000000006b763f061c83a46b
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCB2pIZc0u2yOxEN56qUi3caAvuARi7U
+XNtoOERiuSpt7zAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
+MDUxNzQ2MjVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAJsZmlJZlCW98xC45xtFmRjg9p/kBAjHUuXTT3x6OFdtfYqMc
+lWXVlysGd3UQA5/idMfvXZXslWzxjGJk5j4UGHlKVjJJqWAgCUpjOPIofstqATymEjDVmEwmls7a
+0h0yhHE67yx5Px69X000tqXLWGzaM2bPV2hanY4vEQftZd8Umdmsw86S0LmqjJSnC6jisiZTGSq0
+Fg/3btRdIuKsbPkTeH5WeCMZLs7BwhKjCezUYaVfx6Eq08EV8yplZY/T212uXCFLRs0OMzTrNxGd
+V2AxVMUp9R/MBVycAaFaZ48O02tV+X44JFozg8wyl6rNsbDwB2Ijgn3udH6BrTfvqg==
+--0000000000006b763f061c83a46b--
