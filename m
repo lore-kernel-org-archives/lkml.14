@@ -1,128 +1,161 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E5413C9BD
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 22:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D7613C904;
+	Fri,  5 Jul 2024 22:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720216862; cv=none; b=tU6jDFyihqLMH1NHYMF5MjEIgOW5nFzLqN2L0HClKozgzWB2X6n5h6Lrg5Wmcp3lGGF0CX/ShIhedkfrGwG8msr7i8zarhVOOoo9afiA96dy9xLNCEwwnE4Sj+mRZvrMF5ON9YH+jUMQjFkll/gJI4G2Uxuo+0q8ewTnKFmvj2s=
+	t=1720216896; cv=none; b=Cej8cm1zkmmjFYIu0PFUJhmMjbaEpCAL9GSOPmQ6gm1Bqq7HgjzenJK2R/GFFQzrZF6q23Jp65XgQ/p6flA65BnZJFGXgSEcItzLsEOF5n5zCzFM4qPILEccAAXTEbkHa04mbRPPvVsy4W/X8xNnyjPgiLPVnxFDiuZxz/K8BZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720216862; c=relaxed/simple;
-	bh=cRlLcPvgdYI+0d5Q121mKPf07KB4cpgC4kaVtDmI6ao=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=spcpAgJfl0GaX76/LODcqXxNmHqESzeF86NVHxfHr7asDk5qXTz2V/tusjUjZX+qNBk1dPCqAyby8Bd5NxCucaj4HNZR/LP58/t3sWykCosVy5fPYs+2ey8qTpm8qf0PgFE1eoKZ6QBdlVGHQdn569cXk9M5iDUjMqXKLS6v1Zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com; spf=pass smtp.mailfrom=waldekranz.com; dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b=SYfbTbYD; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=waldekranz.com
+	s=arc-20240116; t=1720216896; c=relaxed/simple;
+	bh=SAuIWm3wPtG2dnwpUNYqAR/1tQpz+ysEG2E2wedoVow=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BNXQP+2eeVVBLmu6Dz+rIN7XX5+62SvM8anJm0h9nlUhtauradeJJ2AI1UA4DuQTCXDay6BRsLtw3UsnaFP0VMXFdkAoSBa0Yfh9hi3XKCJcqAP8aYgBe4OP211FdCLr+SSPsmhlajnj9Y10BBgk3o/l2P4n8sEjSxaoBOkNAW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MJTUUPVn; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b="SYfbTbYD"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52ea2f58448so2279852e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 15:01:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJTUUPVn"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-367a464e200so859270f8f.2;
+        Fri, 05 Jul 2024 15:01:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=waldekranz-com.20230601.gappssmtp.com; s=20230601; t=1720216858; x=1720821658; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wBckyEFwh/Rys/nHKmjk7v967dXh+ZDDYWaIn/2UGq0=;
-        b=SYfbTbYDQz/axrX9XOQUknkEm+d1tTBjJWWXVSyIa1At+3bylle2WqWNxuISyDerK7
-         ynTu9RnePZlJGCNuphhLdn/S0PppuzUG1Jnmg2qkVLLILven1cYx3CXPr1AfW8vo2ppR
-         zGbMa/Tc1wuuM6AoNgpYpy7/sPuRVanF3eIMpy31043E5aC1YmP/JvPkSMTbBzEhOOG0
-         B6Jx3l4IbjVHohMW+ALxGT7ZD7858pQil+5WYbeDuy63gG8FxIUqFRH514wP+fFwRwzl
-         g5+NKIgNEYArfKKkDXD9WgTiBmAoVNX7C8x4C26uDWRGkBNDoMikq0LEzslTVV6JakeJ
-         ynXw==
+        d=gmail.com; s=20230601; t=1720216894; x=1720821694; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l9lFkgeeclSskF6UcXnmfoFAFXtci4Vlps2yKhXYf0E=;
+        b=MJTUUPVnpgVLFPoFU6FbGcIOYVzBtTWotzR03ftlcV0ud2mS95kCMQTZt4Do2ZySCP
+         6iZQ6HX/hxsU1AzIgExHBpsrK2WMQnmzRVEEnZNEBYdC4qiwYn9HtJYCm0YRsOsIIZsw
+         B/fi3Tq4+LIBpw7HO6l/aVCtM3I7PMPy6kT417Fvjm9zDZ+i2tA5xhIvBilumOw9mQNy
+         UoOi7x9Xermve73sNGKBOdsYaDUKXtAhKAsKOeXT79mXNxOqU81FlajduF8Ydaa58ZcU
+         wq9X88kUT42JK0Tofb8mvjDHkP64/yg2EyeGiKR6muJ/1/ZM+NtwXOXlo8EmRXhQQx8p
+         6IuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720216858; x=1720821658;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wBckyEFwh/Rys/nHKmjk7v967dXh+ZDDYWaIn/2UGq0=;
-        b=D0/jZutKm+ZnSPACI5NUs+J1W+xLqS6kzE3ITL49cVbeT0fILUuqdKRju8VSE9FtgN
-         jZVljQK5wtYcaBdrUd93EPpzzz21mZpeqpzfLAH4Olx343G7mhLbU7SNVo8loJ8zORlp
-         4zpKlTC+YyO2841u5Wb3TkY9duT6cD8avv8vWDoOywlQYETxVy3RezdzEIN8tau0cpBe
-         UE3G9uvy7KmE+z3v2cjdrq2F7l/+U1ZEDp1rc0Lxou/UYD7WT8eQPsKLzq5ZwLbqgtiF
-         UkOs/CerROFsZxjhJkrZEZnla6mkWhkH6qm3nveFF4DB9rqSpsNICaFSGFBTbmF0eEdV
-         u2Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsI2EUlnlueTONHsAevLlKcD+lL9uf6zdoRbFc76mmFXUi0YccG2k8n7W3DIkNcbG3NQkRs2cHpnT7Q1q8aOOm5gndOqRxng+/8Lgh
-X-Gm-Message-State: AOJu0YxvAcU9aHOKFhYCH5qWnDZa9ldFStBSJiMnt7iq6OEYnj40AVuF
-	ITXOfn2hYV0BdQnAdKU2ruDYloQ6KrMMFK3Tsjskt+ILWNkC2VIa88iXnXg2O5gmTCHA9b71a5W
-	r
-X-Google-Smtp-Source: AGHT+IEmnD1pltRm+NG29AdDzUwJcwOOmeDoXT57EhZSgEaLlRepCcFYfu+F9IeP4PfKXOWtcSR0TA==
-X-Received: by 2002:a19:ca43:0:b0:52c:e1d4:8ecd with SMTP id 2adb3069b0e04-52ea061309bmr4021943e87.8.1720216858175;
-        Fri, 05 Jul 2024 15:00:58 -0700 (PDT)
-Received: from wkz-x13 (h-176-10-146-181.NA.cust.bahnhof.se. [176.10.146.181])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ea6493c4esm287838e87.113.2024.07.05.15.00.57
+        d=1e100.net; s=20230601; t=1720216894; x=1720821694;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l9lFkgeeclSskF6UcXnmfoFAFXtci4Vlps2yKhXYf0E=;
+        b=qxPnsX8iDeyUTNchkAd5qP+QuhssOnp4OANb5kqVyQ0qqDagyOiPXXqESM2z3iQRtb
+         KDaRUXb3ERK/K2dChp+6CAajUqYQNcd7eLMF0mUBigNEve3QdhPW4vRvnfVmzl2YwvWa
+         2HRMUZdn+wcVRGOIMBgpfSYCrTnEYvf0RQtYr/5NeGZ1xZ9hnRO0S9z8AW2KzhmOnUxz
+         ZnfZplb2r579qiWVrI/YwklhC92FS+T3/NPoxJ9iDXDPylJXfz1n3FPyavRoAKrI8coR
+         /H9btGKudc78/BexcWLN6WK9K8dPuEgivHxAWFNUytGlE7Ou2OWnZ+TOXn/Eoo8Qov1T
+         7usw==
+X-Forwarded-Encrypted: i=1; AJvYcCVt4nKJMBSovijQVeDaSlckQfw/WvRH0PvDA1UrOW7iCFhtW3YNn5hGtdEmSlR2UaWdHKw6asAtlHpvHn+WjN6+F3b7PQt/tXkdT5krqAnb4oVznvDNagVkBhwZBPSD8pJQiiZst1wHKP4DL/drvip0xwcXDBWaEawbgjGsXcVWSVFizg==
+X-Gm-Message-State: AOJu0Yw5uldb1wPO7ebHIWzs3VL2xl3obnINvgITGKj5kfGtM08zUbfC
+	KN0Y591sP8XotuD6r1FoyF5rog/ffnllmTU98MlSeUTFGfFUE9P2
+X-Google-Smtp-Source: AGHT+IFY+m4FLaNedzQANSY7YrWfKtoOsSmG4g8tV814E+53QEEAPkP/6sYGPWlb/SwEJ53Qal1z1w==
+X-Received: by 2002:adf:eeca:0:b0:362:d875:6dab with SMTP id ffacd0b85a97d-3679dd2b1b2mr3949311f8f.25.1720216893156;
+        Fri, 05 Jul 2024 15:01:33 -0700 (PDT)
+Received: from localhost.localdomain ([2a10:d582:37c5:0:7569:beb6:ad56:8719])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2fc9besm75443385e9.43.2024.07.05.15.01.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 15:00:57 -0700 (PDT)
-From: Tobias Waldekranz <tobias@waldekranz.com>
-To: Elliot Ayrey <elliot.ayrey@alliedtelesis.co.nz>, davem@davemloft.net
-Cc: Elliot Ayrey <elliot.ayrey@alliedtelesis.co.nz>, Roopa Prabhu
- <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, bridge@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: bridge: mst: Check vlan state for egress decision
-In-Reply-To: <20240705030041.1248472-1-elliot.ayrey@alliedtelesis.co.nz>
-References: <20240705030041.1248472-1-elliot.ayrey@alliedtelesis.co.nz>
-Date: Sat, 06 Jul 2024 00:00:55 +0200
-Message-ID: <87plrrfqi0.fsf@waldekranz.com>
+        Fri, 05 Jul 2024 15:01:32 -0700 (PDT)
+From: Mudit Sharma <muditsharma.info@gmail.com>
+To: jic23@kernel.org,
+	lars@metafoo.de,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	robh@kernel.org
+Cc: Mudit Sharma <muditsharma.info@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	mazziesaccount@gmail.com,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v7 1/2] dt-bindings: iio: light: ROHM BH1745
+Date: Fri,  5 Jul 2024 22:59:07 +0100
+Message-ID: <20240705220018.414771-1-muditsharma.info@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On fre, jul 05, 2024 at 15:00, Elliot Ayrey <elliot.ayrey@alliedtelesis.co.nz> wrote:
-> If a port is blocking in the common instance but forwarding in an MST
-> instance, traffic egressing the bridge will be dropped because the
-> state of the common instance is overriding that of the MST instance.
+Add ROHM BH1745 - 4 channel I2C colour sensor's dt-bindings.
 
-Can't believe I missed this - thanks!
+Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+v6->v7:
+- no change
+v5->v6:
+- no change
+v4->v5:
+- add power supply info
+v3->v4:
+- no changes
+v2->v3:
+- move 'additionalproperties' after 'required' block
+- remove block style indicator '|' from description
+v1->v2:
+- fix yaml issue: make `maintainers` a list
 
-> Fix this by temporarily forcing the port state to forwarding when in
-> MST mode to allow checking the vlan state via br_allowed_egress().
-> This is similar to what happens in br_handle_frame_finish() when
-> checking ingress traffic, which was introduced in the change below.
->
-> Fixes: ec7328b59176 ("net: bridge: mst: Multiple Spanning Tree (MST) mode")
-> Signed-off-by: Elliot Ayrey <elliot.ayrey@alliedtelesis.co.nz>
-> ---
->  net/bridge/br_forward.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/net/bridge/br_forward.c b/net/bridge/br_forward.c
-> index d97064d460dc..911b37a38a32 100644
-> --- a/net/bridge/br_forward.c
-> +++ b/net/bridge/br_forward.c
-> @@ -22,10 +22,16 @@ static inline int should_deliver(const struct net_bridge_port *p,
->  				 const struct sk_buff *skb)
->  {
->  	struct net_bridge_vlan_group *vg;
-> +	u8 state;
-> +
-> +	if (br_mst_is_enabled(p->br))
-> +		state = BR_STATE_FORWARDING;
-> +	else
-> +		state = p->state;
->  
->  	vg = nbp_vlan_group_rcu(p);
->  	return ((p->flags & BR_HAIRPIN_MODE) || skb->dev != p->dev) &&
+ .../bindings/iio/light/rohm,bh1745.yaml       | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
 
-I think it might read a bit better if we model it like the hairpin check
-above. I.e. (special_mode || regular_condition)
+diff --git a/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
+new file mode 100644
+index 000000000000..44896795c67e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/rohm,bh1745.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BH1745 colour sensor
++
++maintainers:
++  - Mudit Sharma <muditsharma.info@gmail.com>
++
++description:
++  BH1745 is an I2C colour sensor with red, green, blue and clear
++  channels. It has a programmable active low interrupt pin.
++  Interrupt occurs when the signal from the selected interrupt
++  source channel crosses set interrupt threshold high/low level.
++
++properties:
++  compatible:
++    const: rohm,bh1745
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vdd-supply: true
++
++required:
++  - compatible
++  - reg
++  - vdd-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        colour-sensor@38 {
++            compatible = "rohm,bh1745";
++            reg = <0x38>;
++            interrupt-parent = <&gpio>;
++            interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
++            vdd-supply = <&vdd>;
++        };
++    };
++
++...
+-- 
+2.43.0
 
-It's not really that the state is forwarding when mst is enabled, we
-simply ignore the port-global state in that case.
-
-> -		p->state == BR_STATE_FORWARDING && br_allowed_egress(vg, skb) &&
-> +		state == BR_STATE_FORWARDING && br_allowed_egress(vg, skb) &&
-
-so something like:
-
-    ...
-    (br_mst_is_enabled(p->br) || p->state == BR_STATE_FORWARDING) &&
-    br_allowed_egress(vg, skb) && nbp_switchdev_allowed_egress(p, skb) &&
-    ...
-
->  		nbp_switchdev_allowed_egress(p, skb) &&
->  		!br_skb_isolated(p, skb);
->  }
