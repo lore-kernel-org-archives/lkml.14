@@ -1,76 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E30132103
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 07:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5D9132103;
+	Fri,  5 Jul 2024 07:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720166040; cv=none; b=kqHhd6oI6u7KJ8N/VnqIFgn03wN7xnGAPyILyHQyuTyw4L6aG7Vz01mvZS8CcHUXDQr3H7ndMtLJecdr7L/bsfxv3Oe32MM9em8+C0kifzWv4cW/1oofYh47KKN0Y+C0i/lXJYsM+MDFvpGjmsYth4m3v/pDsYfzCmUlDQKJfqU=
+	t=1720166050; cv=none; b=OpQr4JAtUyqgIlKO1iXu2ViqMD1GhU4DWtMtAYwUl4B1HfqiZlcLcrGnx1TG6cbVyaOt5NNTVPl9Sz6sgnzB25BG9wlSkmXDk/3e2aKrtzg/tyuySJruipOXGSHtZ2T1v0I6A0J8HAuD6w9QyGPrxxijo756pcdduLv2gYkYUPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720166040; c=relaxed/simple;
-	bh=JOaF6/rLqxwGG3Jqswy40/olv6ayRp2XORfsUqbzAKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qz+2zi4essHhpZkxbzgHoPWGZF6HF0WuWfMbQSKbhW0Rm+C6l49dVFCLyAKLJw9TU+Xxh5rh4dqjR3i0Y2q5X1hrF31q7oS8nZH7o++xDxJTnCQVDLf/B1CHgSh+DHjuk/5AstDold2OplHexNkqymqaSROduBGGzV1I2xept2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Plyp169b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720166050; c=relaxed/simple;
+	bh=4yA/SqWhaSDPZ6/d0XAruoXDmzVaIS+v2bhSzKsdbBs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TRF7xjp5Mz49uFuHhCMAB6cDo8tiCgllUEZItPmh3ZFWU3YsOSspHMNdBOYhWQA81IepwMzNiFgoMKem/TJwu+6Nw17gOqyC00gEpe0vK+ROIfvLjzwBGYzGqs/I+puzapJuHzWedvQpZIyGBw/Qzh8FzA79seXxh3Cp1tt2/HU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J++aJw33; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Plyp169b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF767C116B1;
-	Fri,  5 Jul 2024 07:53:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720166040;
-	bh=JOaF6/rLqxwGG3Jqswy40/olv6ayRp2XORfsUqbzAKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Plyp169bFBML2BZAx5GIqyWTxORNKuTAhHJM90eMn9Hm6A4kPGgUulHFIqPjrHsRY
-	 MXY4gOV2yhmGvcZZP6dEXpjnEu3HIDaEURQ7gspWYah6+ram7vJ1E2XJ5OGKFbIA0s
-	 Y6xIoiIxqW8VkzCJB1qr//po0sXhS8irlC2MSN5k=
-Date: Fri, 5 Jul 2024 09:53:57 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: srinivas.kandagatla@linaro.org
-Cc: linux-kernel@vger.kernel.org, Amit Vadhavana <av2082000@gmail.com>,
-	"Ricardo B . Marliere" <ricardo@marliere.net>
-Subject: Re: [PATCH 1/1] slimbus: Fix struct and documentation alignment in
- stream.c
-Message-ID: <2024070532-romp-clarify-7d2b@gregkh>
-References: <20240705074045.418836-1-srinivas.kandagatla@linaro.org>
- <20240705074045.418836-3-srinivas.kandagatla@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J++aJw33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720166048; x=1751702048;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=4yA/SqWhaSDPZ6/d0XAruoXDmzVaIS+v2bhSzKsdbBs=;
+  b=J++aJw33HUZ2bDMDgSnRCNppRa/bX3ZKFMHGrvc9ePdiO5F0Z96ry18B
+   UKZEPQdjbB5uHmNvwZKoMNg8FIkKeZ7rrxk5HAClN7KUR0scOGUAwbbsX
+   brPEQK+N/dVBW9/ZNRYQ7OVRBt7rbzP+wROL4996CvmuYrLAmXoUut20H
+   uzinBGmYdaNNsoPq7RWmRWTHlGnfPCZ+acNxque4s/5iVvMRjY8hUMORs
+   F5uJVwfNz+eab8aVJUqVdPGFssDaYjBVFooP1Z2jmzr5xHvSsplglOXn+
+   v6etXbnMusK3Nviq6pxPy3WwBjhRabhiLNqJF/Lc/RE3fzgSr+xzWiF0i
+   w==;
+X-CSE-ConnectionGUID: h/PvsrUiQWavRV6IpuIJ9g==
+X-CSE-MsgGUID: TxdkP8OgS22YtMj+5ZdXmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="34892877"
+X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
+   d="scan'208";a="34892877"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 00:53:42 -0700
+X-CSE-ConnectionGUID: TX5lsDZVTyW1ptroyuUwbg==
+X-CSE-MsgGUID: l5NbbIlXTSWBOTPYLj3F0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
+   d="scan'208";a="46918570"
+Received: from mehlow-prequal01.jf.intel.com ([10.54.102.156])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 00:53:43 -0700
+From: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>
+To: dave.hansen@linux.intel.com,
+	jarkko@kernel.org,
+	kai.huang@intel.com,
+	haitao.huang@linux.intel.com,
+	reinette.chatre@intel.com,
+	linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: mona.vij@intel.com,
+	kailun.qin@intel.com,
+	stable@vger.kernel.org,
+	=?UTF-8?q?Marcelina=20Ko=C5=9Bcielnicka?= <mwk@invisiblethingslab.com>
+Subject: [PATCH v4 2/3] x86/sgx: Resolve EAUG race where losing thread returns SIGBUS
+Date: Fri,  5 Jul 2024 00:45:23 -0700
+Message-Id: <20240705074524.443713-3-dmitrii.kuvaiskii@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240705074524.443713-1-dmitrii.kuvaiskii@intel.com>
+References: <20240705074524.443713-1-dmitrii.kuvaiskii@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240705074045.418836-3-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Organization: Intel Deutschland GmbH - Registered Address: Am Campeon 10, 85579 Neubiberg, Germany
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 05, 2024 at 08:40:40AM +0100, srinivas.kandagatla@linaro.org wrote:
-> From: Amit Vadhavana <av2082000@gmail.com>
-> 
-> The placement of the `segdist_codes` array documentation was corrected
-> to conform with kernel documentation guidelines. The `@segdist_codes`
-> was placed incorrectly within the struct `segdist_code` documentation
-> block, which led to a potential misinterpretation of the code structure.
-> 
-> The `segdist_codes` array documentation was moved outside the struct
-> block, and a separate comment block was provided for it. This change
-> ensures that clarity and proper alignment with kernel documentation
-> standards are maintained.
-> 
-> A kernel-doc warning was addressed:
->     ./drivers/slimbus/stream.c:49: warning: Excess struct member 'segdist_codes' description in 'segdist_code'
-> 
-> Signed-off-by: Amit Vadhavana <av2082000@gmail.com>
-> Reviewed-by: Ricardo B. Marliere <ricardo@marliere.net>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  drivers/slimbus/stream.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+Imagine an mmap()'d file. Two threads touch the same address at the same
+time and fault. Both allocate a physical page and race to install a PTE
+for that page. Only one will win the race. The loser frees its page, but
+still continues handling the fault as a success and returns
+VM_FAULT_NOPAGE from the fault handler.
 
-I don't think this was ment to be sent as part of the fastrpc patch
-series :(
+The same race can happen with SGX. But there's a bug: the loser in the
+SGX steers into a failure path. The loser EREMOVE's the winner's EPC
+page, then returns SIGBUS, likely killing the app.
 
-Can you fix this up and resend a v2?
+Fix the SGX loser's behavior. Change the return code to VM_FAULT_NOPAGE
+to avoid SIGBUS and call sgx_free_epc_page() which avoids EREMOVE'ing
+the winner's page and only frees the page that the loser allocated.
 
-thanks,
+The race can be illustrated as follows:
 
-greg k-h
+/*                             /*
+ * Fault on CPU1                * Fault on CPU2
+ * on enclave page X            * on enclave page X
+ */                             */
+sgx_vma_fault() {              sgx_vma_fault() {
+
+  xa_load(&encl->page_array)     xa_load(&encl->page_array)
+      == NULL -->                    == NULL -->
+
+  sgx_encl_eaug_page() {         sgx_encl_eaug_page() {
+
+    ...                            ...
+
+    /*                             /*
+     * alloc encl_page              * alloc encl_page
+     */                             */
+                                   mutex_lock(&encl->lock);
+                                   /*
+                                    * alloc EPC page
+                                    */
+                                   epc_page = sgx_alloc_epc_page(...);
+                                   /*
+                                    * add page to enclave's xarray
+                                    */
+                                   xa_insert(&encl->page_array, ...);
+                                   /*
+                                    * add page to enclave via EAUG
+                                    * (page is in pending state)
+                                    */
+                                   /*
+                                    * add PTE entry
+                                    */
+                                   vmf_insert_pfn(...);
+
+                                   mutex_unlock(&encl->lock);
+                                   return VM_FAULT_NOPAGE;
+                                 }
+                               }
+                               /*
+                                * All good up to here: enclave page
+                                * successfully added to enclave,
+                                * ready for EACCEPT from user space
+                                */
+    mutex_lock(&encl->lock);
+    /*
+     * alloc EPC page
+     */
+    epc_page = sgx_alloc_epc_page(...);
+    /*
+     * add page to enclave's xarray,
+     * this fails with -EBUSY as this
+     * page was already added by CPU2
+     */
+    xa_insert(&encl->page_array, ...);
+
+  err_out_shrink:
+    sgx_encl_free_epc_page(epc_page) {
+      /*
+       * remove page via EREMOVE
+       *
+       * *BUG*: page added by CPU2 is
+       * yanked from enclave while it
+       * remains accessible from OS
+       * perspective (PTE installed)
+       */
+      /*
+       * free EPC page
+       */
+      sgx_free_epc_page(epc_page);
+    }
+
+    mutex_unlock(&encl->lock);
+    /*
+     * *BUG*: SIGBUS is returned
+     * for a valid enclave page
+     */
+    return VM_FAULT_SIGBUS;
+  }
+}
+
+Fixes: 5a90d2c3f5ef ("x86/sgx: Support adding of pages to an initialized enclave")
+Cc: stable@vger.kernel.org
+Reported-by: Marcelina Kościelnicka <mwk@invisiblethingslab.com>
+Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>
+Reviewed-by: Haitao Huang <haitao.huang@linux.intel.com>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+ arch/x86/kernel/cpu/sgx/encl.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
+index c0a3c00284c8..9f7f9e57cdeb 100644
+--- a/arch/x86/kernel/cpu/sgx/encl.c
++++ b/arch/x86/kernel/cpu/sgx/encl.c
+@@ -380,8 +380,11 @@ static vm_fault_t sgx_encl_eaug_page(struct vm_area_struct *vma,
+ 	 * If ret == -EBUSY then page was created in another flow while
+ 	 * running without encl->lock
+ 	 */
+-	if (ret)
++	if (ret) {
++		if (ret == -EBUSY)
++			vmret = VM_FAULT_NOPAGE;
+ 		goto err_out_shrink;
++	}
+ 
+ 	pginfo.secs = (unsigned long)sgx_get_epc_virt_addr(encl->secs.epc_page);
+ 	pginfo.addr = encl_page->desc & PAGE_MASK;
+@@ -417,7 +420,7 @@ static vm_fault_t sgx_encl_eaug_page(struct vm_area_struct *vma,
+ err_out_shrink:
+ 	sgx_encl_shrink(encl, va_page);
+ err_out_epc:
+-	sgx_encl_free_epc_page(epc_page);
++	sgx_free_epc_page(epc_page);
+ err_out_unlock:
+ 	mutex_unlock(&encl->lock);
+ 	kfree(encl_page);
+-- 
+2.43.0
+
