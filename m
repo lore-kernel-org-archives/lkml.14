@@ -1,130 +1,123 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FCBA146595;
-	Fri,  5 Jul 2024 09:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B549813665A;
+	Fri,  5 Jul 2024 09:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720170219; cv=none; b=PvHs8TpOGarB5rFvhj7OyKA6RhoFXVyYsTpEQIAes7apeQCFV5WZtwXdvlYWxkScYNmiBxomOsXJCiyKKMq5uFj8xvYYoBIa3zKYgnEqdBpwoxc7NZM1neBJdaylS/yCZK8k0ISBVokA9WtpThRKtHOx6ThFcqnM88fxaRgPTBc=
+	t=1720170298; cv=none; b=rV2GPJHkiS2HpRPhUzuGH9C8RQJGEE/jKHQej0lI+ZkftVl3B73B1aP/0pcPYc0utYz08ZGh5vvnIgkLKEB3XDhqMgLZnJZNTaaA/NyaT8bYPo8UR7eYjrX4WhLpNTvSJBtLdOaI7WfeTaRNxjI0DL4/PMPo7Qz5PxESXxCz+QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720170219; c=relaxed/simple;
-	bh=yNvAgV4SPQTtkN8fNXBGOMuGF0J3NFl0Do+tQqT3Igs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B7imWMB2zKN5iVnlkdIwAe4hkiZvkGP+0bdWgH80NcM/eFO0T9Bp6HdDwheFIXzDBeT8DOechzei69mJK7zJNN8Lq9PdT7frCgXPQ6tZBQzGgt/w3dlpawW5I70b5XiidyjahduP1PL4z6J/kisCCnd/PT9CbTggPZCCECWJC/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5AD8367;
-	Fri,  5 Jul 2024 02:04:01 -0700 (PDT)
-Received: from [10.57.74.223] (unknown [10.57.74.223])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 813DD3F762;
-	Fri,  5 Jul 2024 02:03:33 -0700 (PDT)
-Message-ID: <03b9ea6c-a3c4-41e8-ad47-4e82344da419@arm.com>
-Date: Fri, 5 Jul 2024 10:03:31 +0100
+	s=arc-20240116; t=1720170298; c=relaxed/simple;
+	bh=dAPZbACw6uK/VTIi6nUF7U//UDZ7wAoHYWWhu6NJtKc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=quLcDwWZA3sqDMXo5D9qUEDL7GA0GmxQktl+qqd3JOwYq+jRs+P2jf6o48hgllLTLH5v3f9yJNAeeqNWzS9BYo+LWTVWYhWA0AkmKhn3kXt7UzujYK4F+LfSZ+gcWRi1Gv8nZKDyG2BxBX6rRZ4pvRW+sMruJTtysg2qEVD1Ah8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WFnbD36Nhz1HF1t;
+	Fri,  5 Jul 2024 17:02:32 +0800 (CST)
+Received: from kwepemf100018.china.huawei.com (unknown [7.202.181.17])
+	by mail.maildlp.com (Postfix) with ESMTPS id A228D140257;
+	Fri,  5 Jul 2024 17:04:52 +0800 (CST)
+Received: from localhost.localdomain (10.90.30.45) by
+ kwepemf100018.china.huawei.com (7.202.181.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 5 Jul 2024 17:04:52 +0800
+From: Junxian Huang <huangjunxian6@hisilicon.com>
+To: <jgg@ziepe.ca>, <leon@kernel.org>
+CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
+Subject: [PATCH for-rc 1/9] RDMA/hns: Check atomic wr length
+Date: Fri, 5 Jul 2024 16:59:29 +0800
+Message-ID: <20240705085937.1644229-2-huangjunxian6@hisilicon.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20240705085937.1644229-1-huangjunxian6@hisilicon.com>
+References: <20240705085937.1644229-1-huangjunxian6@hisilicon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 01/10] fs: Allow fine-grained control of folio sizes
-Content-Language: en-GB
-To: Dave Chinner <david@fromorbit.com>, Matthew Wilcox <willy@infradead.org>
-Cc: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
- chandan.babu@oracle.com, djwong@kernel.org, brauner@kernel.org,
- akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
- yang@os.amperecomputing.com, linux-mm@kvack.org, john.g.garry@oracle.com,
- linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
- mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
- linux-xfs@vger.kernel.org, hch@lst.de, Zi Yan <zi.yan@sent.com>
-References: <20240625114420.719014-1-kernel@pankajraghav.com>
- <20240625114420.719014-2-kernel@pankajraghav.com>
- <cb644a36-67a7-4692-b002-413e70ac864a@arm.com>
- <Zoa9rQbEUam467-q@casper.infradead.org>
- <Zocc+6nIQzfUTPpd@dread.disaster.area>
- <Zoc2rCPC5thSIuoR@casper.infradead.org>
- <Zod3ZQizBL7MyWEA@dread.disaster.area>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <Zod3ZQizBL7MyWEA@dread.disaster.area>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemf100018.china.huawei.com (7.202.181.17)
 
-On 05/07/2024 05:32, Dave Chinner wrote:
-> On Fri, Jul 05, 2024 at 12:56:28AM +0100, Matthew Wilcox wrote:
->> On Fri, Jul 05, 2024 at 08:06:51AM +1000, Dave Chinner wrote:
->>>>> It seems strange to silently clamp these? Presumably for the bs>ps usecase,
->>>>> whatever values are passed in are a hard requirement? So wouldn't want them to
->>>>> be silently reduced. (Especially given the recent change to reduce the size of
->>>>> MAX_PAGECACHE_ORDER to less then PMD size in some cases).
->>>>
->>>> Hm, yes.  We should probably make this return an errno.  Including
->>>> returning an errno for !IS_ENABLED() and min > 0.
->>>
->>> What are callers supposed to do with an error? In the case of
->>> setting up a newly allocated inode in XFS, the error would be
->>> returned in the middle of a transaction and so this failure would
->>> result in a filesystem shutdown.
->>
->> I suggest you handle it better than this.  If the device is asking for a
->> blocksize > PMD_SIZE, you should fail to mount it.
+8 bytes is the only supported length of atomic. Return an error if
+it is not.
 
-A detail, but MAX_PAGECACHE_ORDER may be smaller than PMD_SIZE even on systems
-with CONFIG_TRANSPARENT_HUGEPAGE as of a fix that is currently in mm-unstable:
+Fixes: 384f88185112 ("RDMA/hns: Add atomic support")
+Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+---
+ drivers/infiniband/hw/hns/hns_roce_device.h |  2 ++
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 19 +++++++++++++++----
+ 2 files changed, 17 insertions(+), 4 deletions(-)
 
-	#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-	#define PREFERRED_MAX_PAGECACHE_ORDER	HPAGE_PMD_ORDER
-	#else
-	#define PREFERRED_MAX_PAGECACHE_ORDER	8
-	#endif
-
-	/*
-	 * xas_split_alloc() does not support arbitrary orders. This implies no
-	 * 512MB THP on ARM64 with 64KB base page size.
-	 */
-	#define MAX_XAS_ORDER		(XA_CHUNK_SHIFT * 2 - 1)
-	#define MAX_PAGECACHE_ORDER	min(MAX_XAS_ORDER,
-					    PREFERRED_MAX_PAGECACHE_ORDER)
-
-But that also implies that the page cache can handle up to order-8 without
-CONFIG_TRANSPARENT_HUGEPAGE so sounds like there isn't a dependcy on
-CONFIG_TRANSPARENT_HUGEPAGE in this respect?
-
-
-
-> 
-> That's my point: we already do that.
-> 
-> The largest block size we support is 64kB and that's way smaller
-> than PMD_SIZE on all platforms and we always check for bs > ps 
-> support at mount time when the filesystem bs > ps.
-> 
-> Hence we're never going to set the min value to anything unsupported
-> unless someone makes a massive programming mistake. At which point,
-> we want a *hard, immediate fail* so the developer notices their
-> mistake immediately. All filesystems and block devices need to
-> behave this way so the limits should be encoded as asserts in the
-> function to trigger such behaviour.
-> 
->> If the device is
->> asking for a blocksize > PAGE_SIZE and CONFIG_TRANSPARENT_HUGEPAGE is
->> not set, you should also decline to mount the filesystem.
-> 
-> What does CONFIG_TRANSPARENT_HUGEPAGE have to do with filesystems
-> being able to use large folios?
-> 
-> If that's an actual dependency of using large folios, then we're at
-> the point where the mm side of large folios needs to be divorced
-> from CONFIG_TRANSPARENT_HUGEPAGE and always supported.
-> Alternatively, CONFIG_TRANSPARENT_HUGEPAGE needs to selected by the
-> block layer and also every filesystem that wants to support
-> sector/blocks sizes larger than PAGE_SIZE.  IOWs, large folio
-> support needs to *always* be enabled on systems that say
-> CONFIG_BLOCK=y.
-> 
-> I'd much prefer the former occurs, because making the block layer
-> and filesystems dependent on an mm feature they don't actually use
-> is kinda weird...
-> 
-> -Dave.
-> 
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index ff0b3f68ee3a..05005079258c 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -91,6 +91,8 @@
+ /* Configure to HW for PAGE_SIZE larger than 4KB */
+ #define PG_SHIFT_OFFSET				(PAGE_SHIFT - 12)
+ 
++#define ATOMIC_WR_LEN				8
++
+ #define HNS_ROCE_IDX_QUE_ENTRY_SZ		4
+ #define SRQ_DB_REG				0x230
+ 
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 4287818a737f..a5d746a5cc68 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -164,15 +164,23 @@ static void set_frmr_seg(struct hns_roce_v2_rc_send_wqe *rc_sq_wqe,
+ 	hr_reg_clear(fseg, FRMR_BLK_MODE);
+ }
+ 
+-static void set_atomic_seg(const struct ib_send_wr *wr,
+-			   struct hns_roce_v2_rc_send_wqe *rc_sq_wqe,
+-			   unsigned int valid_num_sge)
++static int set_atomic_seg(struct hns_roce_dev *hr_dev,
++			  const struct ib_send_wr *wr,
++			  struct hns_roce_v2_rc_send_wqe *rc_sq_wqe,
++			  unsigned int valid_num_sge, u32 msg_len)
+ {
+ 	struct hns_roce_v2_wqe_data_seg *dseg =
+ 		(void *)rc_sq_wqe + sizeof(struct hns_roce_v2_rc_send_wqe);
+ 	struct hns_roce_wqe_atomic_seg *aseg =
+ 		(void *)dseg + sizeof(struct hns_roce_v2_wqe_data_seg);
+ 
++	if (msg_len != ATOMIC_WR_LEN) {
++		ibdev_err_ratelimited(&hr_dev->ib_dev,
++				      "invalid atomic wr len, len = %u.\n",
++				      msg_len);
++		return -EINVAL;
++	}
++
+ 	set_data_seg_v2(dseg, wr->sg_list);
+ 
+ 	if (wr->opcode == IB_WR_ATOMIC_CMP_AND_SWP) {
+@@ -185,6 +193,8 @@ static void set_atomic_seg(const struct ib_send_wr *wr,
+ 	}
+ 
+ 	hr_reg_write(rc_sq_wqe, RC_SEND_WQE_SGE_NUM, valid_num_sge);
++
++	return 0;
+ }
+ 
+ static int fill_ext_sge_inl_data(struct hns_roce_qp *qp,
+@@ -592,7 +602,8 @@ static inline int set_rc_wqe(struct hns_roce_qp *qp,
+ 
+ 	if (wr->opcode == IB_WR_ATOMIC_CMP_AND_SWP ||
+ 	    wr->opcode == IB_WR_ATOMIC_FETCH_AND_ADD)
+-		set_atomic_seg(wr, rc_sq_wqe, valid_num_sge);
++		ret = set_atomic_seg(hr_dev, wr, rc_sq_wqe, valid_num_sge,
++				     msg_len);
+ 	else if (wr->opcode != IB_WR_REG_MR)
+ 		ret = set_rwqe_data_seg(&qp->ibqp, wr, rc_sq_wqe,
+ 					&curr_idx, valid_num_sge);
+-- 
+2.33.0
 
