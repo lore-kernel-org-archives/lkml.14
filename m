@@ -1,100 +1,139 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677B1175AA;
-	Fri,  5 Jul 2024 15:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BB32B9B9
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 15:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720194352; cv=none; b=SqZnx2TWq6BtidExDgRZftQXzTX1oS/hqeXI1pYeLUrGzg35vJU7t16xQYbqE970lk4+jvdNaChUAGopIB7y5nKsFFXj1Yx3IdR5sjr0BowKlHSyxCGPlzJW12DsG5sGxHTq0mE1KGnrjd9Rqap7gWEG/iKPSp/rRkUwAjOJsFc=
+	t=1720194536; cv=none; b=OjTJ/KiUOI0Zc/JcVlsM1Zv4aoVB31kZS0VrmQdj1MvH7vtTCqAikAaE29RJmZmNcyZ8QJZVRJVOPihAUh+08bd+mW55s74nHIwd6WVc9GLp7YW57dsyvS0GGjhRNT7Osj9NxCL3HwkMh9LnWaXwnyFWJ+JZ4pABQEQ+q3HDKgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720194352; c=relaxed/simple;
-	bh=i5mRReK4zhlsS2VbJYS68LtF3lq8knZhHv7N6jX0bg8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SmlVvgvXk7fT+JaABg7urw0M5PAHHB6Hrz5ePl+fJapH4yl0E5cQ3hlIQhFOO1Vd293DxKQdp/v54kcYFiJrhxae1Qtx3BaKtu7H2GqJpJViib+nq1RZmlYGMc/abWrwlx4//YKCXjdGnNQOzpe/YizVikSGizfkAeInGhZ9vkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=FhbVQMul; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1720194536; c=relaxed/simple;
+	bh=pPiSmqh4N42c0fqxhIfJbWHM2fvtIXWjI7CELLI5CBw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ot83NKEQszvLBePAStYnuxKDIijiuCkKkhYgDbtidHfWQkr/qCsk6oeQZB1oVFT5BXGSDLGdD3jjBHNhZ6froUuVWEycRU4Z7MvWignffnKWWxQuirSp397xbfsvbwKACsDotFqk7A3s8QBpmveXqlgydPygUaNbBu/LeugLL3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lfM3A8Or; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="FhbVQMul"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720194305; x=1720799105; i=markus.elfring@web.de;
-	bh=+pMBbPA417s0f/+UvCnetAucqbUdHiz+Y2oD4FMRp4U=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=FhbVQMulxO8aSQSfB71huw6YGzmDFWmHF8KzjGi/Gdb4wX4ITVOJQMppHb3M8gOh
-	 iihINY5UjlfOtoot4Lkli4E/fx8y/B+XKs0ZApBPiEr+OA3PAqlh12RCONLY4BLCN
-	 VJMc335pUjCMc427F+jtL7KOpqo8eEW2l5SZW5zmeaB6Cgl3A/ttWdumZjz2/Ahvu
-	 6Sz0cJ62ZWRwUgJmTRmejAUuynSkPl/3qC3A/7mmLMnm/JoFrMAkui5JGhn0x8JQy
-	 g8tSvBgHNULiXoBJuHwh5PLm4CCtcj9rXn26RdSk+biHRFNRSUW2QzpCVFphqXdRx
-	 Xnhvc/5gUoXTQClawg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MLRUX-1siFk21sA7-00TOfX; Fri, 05
- Jul 2024 17:45:05 +0200
-Message-ID: <ba9f5ed8-d548-4ec4-982c-b3f679270c64@web.de>
-Date: Fri, 5 Jul 2024 17:45:04 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lfM3A8Or"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720194535; x=1751730535;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pPiSmqh4N42c0fqxhIfJbWHM2fvtIXWjI7CELLI5CBw=;
+  b=lfM3A8OrnEI4vfgASBpOjsJ75nIqMtyYnyEfVjSX5Mj0cHNSMnPSwM3N
+   RzxUjZhrVnAMNyUlcVYfhUFzXUqjp0oJoKn3EeUiMR6N4RKgmbh2A3LOV
+   rMyt5peYMtqEO4J+HL5rIkSolC6ndEj9nuhfGZ6EhyQilFVlD7bym7Dul
+   KY+XD7F4xGE3osvJrPhkO/aUhbHQ91QX+MMNpoSK45LhTHOq5tmWyWMuk
+   QLym1lXkjv0jJCqUY+GG59eLlZTvh4GlOg9VL0NHt8FWty2HKQNv8jxTz
+   e6mosMy5H26+3j62ASg/Xg0VJyaPd0TZgi/Hcv5OPYBRAIKUd9RZz58/r
+   w==;
+X-CSE-ConnectionGUID: uaKJcZGUR5Si7vbzD6XVqA==
+X-CSE-MsgGUID: jHUMbvv5TsOj++SOxr3Ycg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="17632990"
+X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
+   d="scan'208";a="17632990"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 08:48:54 -0700
+X-CSE-ConnectionGUID: En01POq/QkahHad64bUyMA==
+X-CSE-MsgGUID: d3sW6ClkTy2ZKtluhE5t6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
+   d="scan'208";a="51751275"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 05 Jul 2024 08:48:51 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sPlB3-000SXc-06;
+	Fri, 05 Jul 2024 15:48:49 +0000
+Date: Fri, 5 Jul 2024 23:48:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@redhat.com>, SeongJae Park <sj@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>, Michal Hocko <mhocko@suse.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH 13/45] mm: Implement pud-version uffd functions
+Message-ID: <202407052337.jk13ShDm-lkp@intel.com>
+References: <20240704043132.28501-14-osalvador@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2 02/12] PCI: brcmstb: Use "clk_out" error path label
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Cyril Brulebois <kibi@debian.org>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Stanimir Varbanov <svarbanov@suse.de>, Jim Quinlan <jim2101024@gmail.com>,
- LKML <linux-kernel@vger.kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>
-References: <20240703180300.42959-3-james.quinlan@broadcom.com>
- <54dc90df-fc31-457d-a18d-b2070b055d60@web.de>
- <CA+-6iNxqZRdknUVammcgDC2HUmacZSAkdJNVLba32Ujgsa9vpg@mail.gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <CA+-6iNxqZRdknUVammcgDC2HUmacZSAkdJNVLba32Ujgsa9vpg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:K+33K4BZ4Wefh/fedNJiuZBgh5zoqUv7HyEqkV1QGSNELR2PdYU
- C+jjzkUT6Yh5x6+/ukbjxrm3e9vzzy5tj8MajVMCzHdhBpT5I150PVQjgggLPIvgYuCdW82
- mWYgNHiHBg113bGhN12WOdA6gyj96udJ0fCVbTuMzqbeT/ootr1G3P5WWUf5ogzPCf8+7Cu
- f4otHcgiU9LVGW/MJvw5g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:GCUZUb8tmCQ=;AAbmo2OPV6o39t+VV8lJNn0eBcL
- 0jvWy6aFuKnwQIpKpqlrH6Ou3S3AyLbkYbmYGB2DLx1kTmTZI5h9uXkNNq6d4ElIuRAXKeUCK
- QAGfe+jbv80d5JrvoT6OrHrqLpmucAfVqT4ateIjoQ4aMSzGPjXMMqY98zVL5Lvxz3YvZbKZj
- m+8yTai6GFxu82ePPYrvXgKWCMC/mpDg5NVr3oJxtmqkrtbdaqFwzjbj40O0Id5Hf+klQkwwZ
- l8wGsOMGZLPyAyiygNgQLZeBoAK0Nuuysn/ljc4ZT73hqwPtWVPwhul0HKAYa3WsYShFizVkm
- sdwoZ1FOjloU+rHKXchxyNATMiJAByEy/cZXTU/wFHirtkIVQnzcakJsxsrpC/ixyOUHY6DBT
- duzTCgEmIpfOr7RqbfyGKpxma2uFS8oYvKtkha1cVG44CC5s/wYEcT2fXuWSizQjS7yCmE7FK
- Bd1nxvsfFnR0kHxwU9EwD5T2SHX0nvZdnwf/k7XO6ooYEA357hxDwTUHo/TV7Y+QTVpB1E2Ca
- KW8x4rHyOOsHBYDTb8iqQqWKf1JtUH5E95C0cKgHKfCsntVnQhFYHcl9iL8XggcRlaqxMqacv
- QzdS5tJJJqSB4j0qyVOfs0L34h/WX1sqW0x04CAFgxYF4fg49QM5Qrl5emXG/W/fqQwESaqxO
- pSmHqQhhdDYF7O1xrSiTSCalFnc1Qcb1nO8Bhphh5Ua2wLG5bMq0bQOMp9vdATpqbr0CY+w+Z
- SDaO6KdDQaaYn8XS1syHZ0Ee0hJxNQ+c4GzplBeIWzZ1LjTawIxz/CU/L8El9XUkFeDO7uHZH
- 6Ek3evAisNH5gx6yIez4xJtiTU0h1iE40ehSumuP8ySC8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240704043132.28501-14-osalvador@suse.de>
 
->     > [-- Attachment #1: Type: text/plain, Size: 1685 bytes --]
->
->     Can improved adjustments be provided as regular diff data
->     (without an extra attachment)?
->
->
-> I'm not sure what you are referring to... I see no attachment in the cop=
-y of this email I received, =E2=80=A6
+Hi Oscar,
 
-Do I get inappropriate impressions here from published data representation=
-s?
-https://lore.kernel.org/linux-kernel/20240703180300.42959-3-james.quinlan@=
-broadcom.com/
+kernel test robot noticed the following build errors:
 
-Regards,
-Markus
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on sj/damon/next next-20240703]
+[cannot apply to powerpc/next powerpc/fixes linus/master v6.10-rc6]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Oscar-Salvador/arch-x86-Drop-own-definition-of-pgd-p4d_leaf/20240705-042640
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240704043132.28501-14-osalvador%40suse.de
+patch subject: [PATCH 13/45] mm: Implement pud-version uffd functions
+config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20240705/202407052337.jk13ShDm-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240705/202407052337.jk13ShDm-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407052337.jk13ShDm-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/pgtable.h:17,
+                    from include/linux/mm.h:30,
+                    from include/linux/pid_namespace.h:7,
+                    from include/linux/ptrace.h:10,
+                    from arch/openrisc/kernel/asm-offsets.c:28:
+   include/asm-generic/pgtable_uffd.h: In function 'pud_mkuffd_wp':
+>> include/asm-generic/pgtable_uffd.h:32:16: error: 'pmd' undeclared (first use in this function); did you mean 'pud'?
+      32 |         return pmd;
+         |                ^~~
+         |                pud
+   include/asm-generic/pgtable_uffd.h:32:16: note: each undeclared identifier is reported only once for each function it appears in
+   include/asm-generic/pgtable_uffd.h: In function 'pud_clear_uffd_wp':
+   include/asm-generic/pgtable_uffd.h:47:16: error: 'pmd' undeclared (first use in this function); did you mean 'pud'?
+      47 |         return pmd;
+         |                ^~~
+         |                pud
+   make[3]: *** [scripts/Makefile.build:117: arch/openrisc/kernel/asm-offsets.s] Error 1
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1208: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:240: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:240: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +32 include/asm-generic/pgtable_uffd.h
+
+    29	
+    30	static __always_inline pud_t pud_mkuffd_wp(pud_t pud)
+    31	{
+  > 32		return pmd;
+    33	}
+    34	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
