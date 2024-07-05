@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94D3148853;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1CF148FF3;
 	Fri,  5 Jul 2024 11:13:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720178008; cv=none; b=e//GxiyG619bgUnZj21/2q1eTunBR86J2EnMr4SVkFUBeYvfUQfJhH/sBtaT90bWVxRVbaC/KBdEVbSOYhxnaIfbGkoynYbo9o095DhjtKCes9VAJptObrPsqrSXi5QJeg5ZuXZ/raPgZc98XaXtBvi5i30Zt6SdGR6w0yl85yQ=
+	t=1720178008; cv=none; b=uTe+Fr2flgMl4+zVaaosg7oGKDnJrfj0gXqwOf15cqI5rawJcsnFIZjZcQZYqzoBwCZQwd9+8boEQSEF7PmmpPZu3SghR/gAbnNh9CN+uFW6x21tJxGZNPIxuZ08SYRKzpsh5mI7dMNcAJRzY1fK6D9Ea07Q7NXCRdKjacvtQ54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720178008; c=relaxed/simple;
-	bh=HryCnz5qoaUXH/FBSiZsvPjDEnxJY2JJUVkJawwHDVs=;
+	bh=RqdSmw7cEjVnEde07wAs3Ofz+DufcwRJcjjwmoIh+DI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RZ68XcESeibcKYWuoQU09FTBJSoS7ZOB3Qs0uAvAFoAHOHt0OTnVFUjZf6Fy25r8/mx2+hGVmPknJGbU3uVdpe1/CtoZltD1oaOF2vdyg2CDE9wA9CnJorl1hQeEoqwXmQXRaWiSarD3uHLTcs8+jsUHwK2oLy1iOJ3xZCYM/50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoM4hH0/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=IAdzJukxNAlxAdjz8qXFp2BzbgsdqQ/7MqP8qXgHg1NuGVr22JtMvndmqmm0ItpsEBZy6T9ssfFupmD32dkn5SxJQ8kSTS6wllu9c5jG0oW3rk8qlh28J0pBTdoOINWJz0R8vCWQRowaosB2iSXRMNwRhAZQBlStjW9InQRZJGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnqZ032C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoM4hH0/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6282FC4AF0A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnqZ032C"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7395BC4AF0E;
 	Fri,  5 Jul 2024 11:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720178008;
-	bh=HryCnz5qoaUXH/FBSiZsvPjDEnxJY2JJUVkJawwHDVs=;
+	bh=RqdSmw7cEjVnEde07wAs3Ofz+DufcwRJcjjwmoIh+DI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=UoM4hH0/f8OvRpZci/CA9xk1NWZnkijbFp1/8mZg6BIGvdFsjffJQb7JzYZfenicb
-	 iBg6dnFS64ASjqiQUSPhI3P9QlTYig0/jmGS5y0omlRIwUSsQ79okmOTQFEgv543BO
-	 aVEe7LSGRDz9BhsfrJHkoUZJmTioqlJ19uJsejG3KskOMzYtYlUbvt4skqQiDGdmDq
-	 ao/CFPh2y6AtK5A+Vi+PqK9ow/OCm30Md/lR9ZwsPc/RndDM+UPQB6LFzx/tEE7Kb8
-	 lBuwETdiTXrqUS/u+udSuNW95NK+WOZ7LjFHBaqqTk+Pc5gC4SIrdk3C47S/b8bPo3
-	 zSwZ4X0VLKchQ==
+	b=lnqZ032C/+hbYaWqvDGSW5IUziCA9s93uX/uoF4YSyVasbwWkpBREKDuj2j0nCsDF
+	 Cpcruy+KTOGjKQlQOIO5H5iYZS0dQwv4e71HjOyDJFYg98NhbVbUGNHdoBLYLCQo33
+	 XgOi5bT77b/6wYNRPN1hBzUdZzZfXIR7kwJ3XkB550nB3ZlxdHPfcGrRqG2YEpWX+q
+	 G6Pj+MwvxEUwmOITgMW/GUaVFp0pU18wrOLt3WDPo98z0J2TiQ1oXx5HHe/4vRLSHd
+	 tSiNs6FbZTGHZNQhbq20ZWh6PDToLlwIpWK1DTRBQz0u7ruSibR56aHo+KOAhnQQ/L
+	 z8DrDFSySYNjQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA62C3271F;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F12C3814E;
 	Fri,  5 Jul 2024 11:13:28 +0000 (UTC)
 From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
-Date: Fri, 05 Jul 2024 19:13:25 +0800
-Subject: [PATCH 1/3] dt-bindings: power: Add power sequence for Amloigc WCN
- chips
+Date: Fri, 05 Jul 2024 19:13:27 +0800
+Subject: [PATCH 3/3] MAINTAINERS: Add an entry for Amlogic WCN power
+ sequence
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240705-pwrseq-v1-1-31829b47fc72@amlogic.com>
+Message-Id: <20240705-pwrseq-v1-3-31829b47fc72@amlogic.com>
 References: <20240705-pwrseq-v1-0-31829b47fc72@amlogic.com>
 In-Reply-To: <20240705-pwrseq-v1-0-31829b47fc72@amlogic.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -49,11 +49,11 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pm@vger.kernel.org, Yang Li <yang.li@amlogic.com>
 X-Mailer: b4 0.13-dev-f0463
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720178006; l=2253;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720178006; l=844;
  i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
- bh=Auw5UiFZ9CP6p9qGv3EDPmIfB9jiHZ0hXlsvvoTN/ac=;
- b=A3eWNA2Xhb2xqKFtC1NDx9O6zNPk8xO2nQ2dBMcUTAi9r8HL2TjivlHCg5VDBH6AYeEOK2Ear
- 1bvNUV8YZQHAuYjZKvMOISrEVof3wJSwqigoXnWT8ZWMn5eoq8SQYtK
+ bh=2LQ5HRplZ2LlSPyzOYDNeeV7S6poY56OZ7f06ODqzXY=;
+ b=PCOpuH5dGrWwfCdZFsAqjetcT/FPX1SeagmqXMJ1KkeEskEll8W9pctua+mg06NS6v906tdIe
+ ZHNfuK9mBtKAWpdnStmTqHBzAOQcsh5Bw3Gr2cb8ti1WB8p1+NCLIvG
 X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
  pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
 X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
@@ -63,82 +63,32 @@ Reply-To: yang.li@amlogic.com
 
 From: Yang Li <yang.li@amlogic.com>
 
-Add binding document to introduce power sequence of
-Amlogic WCN chips.
+Add an entry for Amlogic WCN power sequence.
 
 Signed-off-by: Yang Li <yang.li@amlogic.com>
 ---
- .../bindings/power/amlogic,w155s2-pwrseq.yaml      | 62 ++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/amlogic,w155s2-pwrseq.yaml b/Documentation/devicetree/bindings/power/amlogic,w155s2-pwrseq.yaml
-new file mode 100644
-index 000000000000..f99a775fcf9b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/amlogic,w155s2-pwrseq.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/amlogic,w155s2-pwrseq.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index dcb37b635f2c..0773f7040341 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1174,6 +1174,14 @@ F:	Documentation/devicetree/bindings/perf/amlogic,g12-ddr-pmu.yaml
+ F:	drivers/perf/amlogic/
+ F:	include/soc/amlogic/
+ 
++AMLOGIC WCN POWER SEQUENCING
++M:	Yang Li <yang.li@amlogic.com>
++L:	linux-pm@vger.kernel.org
++S:	Maintained
++W:	http://www.amlogic.com
++F:	Documentation/devicetree/bindings/power/amlogic,w1552-pwrseq.yaml
++F:	drivers/power/sequencing/pwrseq-aml-wcn.c
 +
-+title: Amlogic power sequence for WCN chips
-+
-+maintainers:
-+  - Yang Li <yang.li@amlogic.com>
-+
-+description:
-+  The Amlogic WCN chip contains discrete modules for WLAN and Bluetooth. Power on
-+  Bluetooth and Wi-Fi respectively, including chip_en pull-up and bt_en pull-up,
-+  and generation of the 32.768KHz clock.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: amlogic,w155s2-pwrseq
-+      - items:
-+          - enum:
-+              - amlogic,w265s1-pwrseq
-+              - amlogic,w265p1-pwrseq
-+              - amlogic,w265s2-pwrseq
-+          - const: amlogic,w155s2-pwrseq
-+
-+  clocks:
-+    maxItems: 1
-+    description: clock provided to the controller (32.768KHz)
-+
-+  clock-names:
-+    items:
-+      - const: ext_clock
-+
-+  amlogic,chip-enable-gpios:
-+    maxItems: 1
-+    description: gpio specifier used to enable chipset
-+
-+  amlogic,bt-enable-gpios:
-+    maxItems: 1
-+    description: gpio specifier used to enable BT
-+
-+required:
-+  - compatible
-+  - clocks
-+  - clock-names
-+  - amlogic,chip-enable-gpios
-+  - amlogic,bt-enable-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    wcn_pwrseq {
-+        compatible = "amlogic,w155s2-pwrseq";
-+        clocks = <&extclk>;
-+        clock-names = "ext_clock";
-+        amlogic,chip-enable-gpios = <&gpio 7 GPIO_ACTIVE_HIGH>;
-+        amlogic,bt-enable-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-+    };
+ AMPHENOL CHIPCAP 2 HUMIDITY-TEMPERATURE IIO DRIVER
+ M:	Javier Carrasco <javier.carrasco.cruz@gmail.com>
+ L:	linux-hwmon@vger.kernel.org
 
 -- 
 2.42.0
