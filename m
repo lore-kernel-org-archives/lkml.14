@@ -1,464 +1,473 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2075.outbound.protection.outlook.com [40.107.20.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D2E1494A5;
-	Fri,  5 Jul 2024 09:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720170102; cv=none; b=oKf1qpRbaUeCWr4LGKdOfSfMaXj+lFsH0jTwxL7QaJWX+dASKiH5DfJiUcWWmdxEkCqdq20M4hDlxwvfsU3h2PI4X41m7TGoYQNf8TRtJU49dLv9fn3S41obz1G2hBqPs+RltXkcRZz2/k00zVz1tIW+uQQ5fFiRQhQAG1SX5uI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720170102; c=relaxed/simple;
-	bh=HDKWu8GpL13gBgzu0GuJRkhR+f4jcpl/i5zzWg5pse0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S3Wi/DqAwljW1TabOqIy32VfBCm9AvrDQ1WK5cFQCO98HOm6tc8hdcjNmnAnZfGt8CtvUiV99kbZMAxulu+IT8wI3yikhWskCrIRHUMYONsXIEwZYPdZ4KiMhzAfvgoXwhAwke7vY4q8e+5/IBMQs3liKh0I3E+RYR0ZSsz27eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iZ040iaW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536FE146A79;
+	Fri,  5 Jul 2024 09:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720170103; cv=fail; b=l3nAkiv/kzqLDNnYfPNvEafDa6mmbMDPhY1SFzrZIcvyjRgfGtJEXHtgBhmRpipZEWIZb183tTVOFkGZRnVxRk4tzFFXZavWJnfcanASH1EqI/3Cu6PcvBImMNk1wZay3yP4vm+G+J/Sf8cbCvlmJP728Xx6w+C96YL8m68HO5o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720170103; c=relaxed/simple;
+	bh=lRq/6x4S18UveuFMgSuIJVO6RngPPPpxtY1dTsUfrGA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gTjjgRMp6x1cvG1/VkG3mDn7KYBj6kcCdv0iEnZTmbvqm6l8znAw0ofuQn91A+6JNLMAj3KczPSUldPPtIS0rvhAZhFKAOG2Ymk7U+D06l6uXGidmIDQb34T1ZWmm5NZOPlm2JtW3LaT1ECMAQVfwf3x22dZk+imzrKm+IjkWJQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Sf5E05U/; arc=fail smtp.client-ip=40.107.20.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iZ040iaW"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4651DM9M005835;
-	Fri, 5 Jul 2024 09:01:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	d5AP3lmxM8tUTeT43DQAfv0gZDTnoJGo2RiyJyI2Iu4=; b=iZ040iaWHhGQty9L
-	xAT1KtkEi5SVnREKKbgs1Gxoav0CgLF8fp5Lfjw3dPlb05SllhVR629IMH7bQvYN
-	6hOKcFCeCp9aYYbO0hZODcFNf4So+4geymmUMrucEVpG5qu1Hf6YuuZnVVO0Eki4
-	miSB7maY5uc6xvQt/9d0xIAJyZc0dZgGIt0kKym1BbMtq3sVaG2yrjKIA8ffxHbx
-	Bg8rzO5KtGAHTzm+As1oraoJMUug7faOxEAMMPCQq/JBWVXI8I4C4grwNN3w9tI5
-	IqrYcCnJbOKgPY54klk1zQwkyhwVZAdRy/TXIY2s2aR3odzw9YHdy4XgrCugVzxR
-	9S1fhA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4050cydp36-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Jul 2024 09:01:27 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46591PHZ002768
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 5 Jul 2024 09:01:25 GMT
-Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 5 Jul 2024 02:01:20 -0700
-From: Jie Gan <quic_jiegan@quicinc.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>,
-        Mike Leach <mike.leach@linaro.org>, "Rob Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        James Clark <james.clark@arm.com>
-CC: Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
-        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Tingwei Zhang
-	<quic_tingweiz@quicinc.com>,
-        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
-        "Tao
- Zhang" <quic_taozha@quicinc.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>,
-        "Song
- Chai" <quic_songchai@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH v2 3/4] Coresight: Add Coresight Control Unit driver
-Date: Fri, 5 Jul 2024 17:00:48 +0800
-Message-ID: <20240705090049.1656986-4-quic_jiegan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240705090049.1656986-1-quic_jiegan@quicinc.com>
-References: <20240705090049.1656986-1-quic_jiegan@quicinc.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Sf5E05U/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gaiYgUzxQCrzzkGeRBnHmxXsK1FTsqGYIMCuvmUetXpNg9gKa+COXuan9TUzQvyic8KJx1NJS4fXZAEcsl9iUI3nrDeIiqjlnq24j8NRSicPDHzpTRy97Ykp3jHxMpStCMLHV5LmzgM5mRcZqahtDxJ+bIiS7omtKrHIgcut4FOT0FfvV3iG8tKqFHc3Q/ZViCudh41/jnPj21UNcwrpcdi8Shtyxh70C8InT/LMOOw85I+oRgf/IzjbE8cj6HtyuWebsM50IXCyQKR+yeaX+64MkziVX+X8WURUr2QeF91GSC2nmfB0ykovl9ERi08/ClSZG6VJbgLi0fPA6VI03g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+MeLRpZn1o42MnoTkWGwyA65gNRDqvVGA2ryZXyt1N4=;
+ b=WlI6l9GcRxMKnIGhX0f+SlpAH56jxfjdn3w/JLB/m3uSM93IRPe8ivUkIxNy4nDYdjFehYumCFG95iCb3a517zhdBOzm8Zv1WcxcS2PyYvvCKac1j/eVDpmf2ibuIdqj5QHUeYa6+CUeGDsHzojw6nKmnSsjpvYsVFjNOYi1yeiNpdtb6F2gQ446hb5vwXVMKewS9zOHmMOPyy0QtZP/fYs8LYBrKCpd5yrSASEgds+mXYoE8n36IQO8qRzhtEsPaA7mP8xYDL/V6fbvhDoaSaTU/JAOWv9o4W9oJ8jGwzDHleuz+H9sybcd/YbHrpaQ2Finnbk3n+ojIkJXByEGqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+MeLRpZn1o42MnoTkWGwyA65gNRDqvVGA2ryZXyt1N4=;
+ b=Sf5E05U/WpBU5r+nI3ifP6a8gBXr72dm0eKAeKLSbMFF6QmpduO9UoBwQUHcXH77H+QU4jaIb7CG2GtLxXU5eXuOmSRI8IySYkciSyCiTghZyfR22eDUzjVwWVwbqlkoohRC6I2lEH5Bd6NhWCHy9ZsXJX443N+nKH2svNMAqSY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by AS8PR04MB8038.eurprd04.prod.outlook.com (2603:10a6:20b:2aa::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.31; Fri, 5 Jul
+ 2024 09:01:38 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%2]) with mapi id 15.20.7741.027; Fri, 5 Jul 2024
+ 09:01:38 +0000
+From: Liu Ying <victor.liu@nxp.com>
+To: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: p.zabel@pengutronix.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	tglx@linutronix.de
+Subject: [PATCH 08/10] drm/imx: Add i.MX8qxp Display Controller interrupt controller
+Date: Fri,  5 Jul 2024 17:09:30 +0800
+Message-Id: <20240705090932.1880496-9-victor.liu@nxp.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20240705090932.1880496-1-victor.liu@nxp.com>
+References: <20240705090932.1880496-1-victor.liu@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR03CA0110.apcprd03.prod.outlook.com
+ (2603:1096:4:91::14) To AM7PR04MB7046.eurprd04.prod.outlook.com
+ (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: EwiRMf6LzYG2O_9pcCzF9VOtqr-RIv0I
-X-Proofpoint-ORIG-GUID: EwiRMf6LzYG2O_9pcCzF9VOtqr-RIv0I
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-05_05,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- mlxlogscore=999 priorityscore=1501 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407050067
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AS8PR04MB8038:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e049ad2-f5bd-4389-12ed-08dc9cd11443
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|366016|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?5aw53LDPX3S6xZ/RfMGMY7kNvWCnHOSTYltv0N39AZAQY6fw6TpaFkStY4WU?=
+ =?us-ascii?Q?vOsT4ArxHrMx347zTbuLIY+MzLWtv4kGM+2PVsfV+WALvdvBMqvl0yPKv81T?=
+ =?us-ascii?Q?g4iY+nRRlCRI54Zu8JwhPE3++5isa9rU3Q/TBjY74qXz5CYz2PaOUv/Qhi9X?=
+ =?us-ascii?Q?CGFQo7FBVjr0pddVOd3eY1bxvF8OQTx0Bd4RIyVnm+kJ1tz7k/N/rQnoY2lB?=
+ =?us-ascii?Q?Xnv7kRmv2ih4QwxNXw2zsWXdFqBFbo9WUmG1raEiDB1BMJaTtt4kFi7ZeyKf?=
+ =?us-ascii?Q?nweyxPWpSbKDSYvKzVDwXUq4tcD1UWOCsGaXfS2KLhJ3IyUg9D4En+ZrXN3g?=
+ =?us-ascii?Q?UPaG5THzkKNACGMs/am83qZ3VxO0TVqx+D9Bm1FQXNTcHKV8zh8yHCMV+xEH?=
+ =?us-ascii?Q?aqaPTNrTSECDzefLD/eMV7IBFRPAoobzpb83UTobHTat34+UWHmrjGYP4700?=
+ =?us-ascii?Q?INYkU8OZeBtgHEhvOYPj1bGftnh0ERPmpMKDlGWGQTKHIx8mUZ/ES934i60G?=
+ =?us-ascii?Q?uRVGrksdJs+4TPsVysenee2WnAHvOW+dvHhN1WTlAj+w6sGRrCCb4X8ggH0+?=
+ =?us-ascii?Q?kUAzJvmqT3zO5GST/+qP8eAayfT99FyZ5FalBVgc8/EFSNSiCRp56F//ZCDC?=
+ =?us-ascii?Q?LUFY7DAtEHs3twDLovZl/iv3m2zf7VAUROZJw8Ae4cWD8gZoEd+PZ/g4/LSc?=
+ =?us-ascii?Q?x7qToNxO6vi/w8vM8HDE7eDXTQIR1ysoM8bHVavGJoTBOIBl712x4PTOGVV9?=
+ =?us-ascii?Q?rX8nMq/MeiPDK1yQ38dgjCIvMxznaW1E1vLAjyJLAajrpFbc5pmrJVM2hXTI?=
+ =?us-ascii?Q?5zQXZIYRivXl+yONSpMQCsqEsedyLmANkWd1ukQoMqwVYw66ZIGleO++9vwY?=
+ =?us-ascii?Q?dbF+R1YYw147X3YdAc48jod9fCgNCzFz1/T1xEpiV1BDcfGEbLxUHig/JcxL?=
+ =?us-ascii?Q?6neYFR1VuOcaBNMfmIc9mNthBFzEomHy3+TnSTmpOmLCRD0cZ7FYw9aStJs6?=
+ =?us-ascii?Q?gfyi7abOvudBakcJ3KpeetcGLDGXn9m6YPYxp8uIkKU/wmU1vufix+mLEYhx?=
+ =?us-ascii?Q?1Ats7gFQPy5Bze0tXIle7ZLI4ywaH0Wr4oc8rpdTw07tclbVB9zqyUFuoLx+?=
+ =?us-ascii?Q?2+hOYqKd3CWxjmXTtSCtfmtin1yRdV20FfsjIJea+YQJNTxSBHIwePiOnn0q?=
+ =?us-ascii?Q?G4s2E/2ZNR/zUuncsgHc1/d3DGKTHpYxoIUgMu8hAYRtVgzVKSkrwZJTZwLb?=
+ =?us-ascii?Q?HrO7KuDuVVRW+GVy3Q+CKM2Da8h+9c+B5jNg8QywMZt7zMUryvS2urdNHRY/?=
+ =?us-ascii?Q?D/PUaJW542bQ7JKLobMeVBQBmFIMpuleHVva4oXF3EzyIDV8tkAUa4YhGHfM?=
+ =?us-ascii?Q?8ryox0bqmpBfTjf3y4ZwKRdWXjDkRbX2rvJyJsswU6S9q58o1g=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?pmVUTf/DfFl+TzJsTNRKnDDRL59mz77pEA8hSZly3nQAxfiNvZm7ceyTTdyH?=
+ =?us-ascii?Q?M9QYk0+63w8TkrozcSfJcLUAqehiPjQrwtz3RESIk+HC54uO8SkIiIBJA3zj?=
+ =?us-ascii?Q?lDtAlLlsJqH+/GcJQjlQ5IZVi5gW9g+Yec2kSLi9/jn9r8VBFI4WbKQogCLf?=
+ =?us-ascii?Q?XQt+hkROGalayguJlXK12lpnn0ymoIypz20XU0Ncvi6e4PQW646ujL4v/77Q?=
+ =?us-ascii?Q?jwueeBKXFvgdNuP7ZtLEGUY8xIsf4u9TnRWTWEZ+D6CB0vPi6nV67yZnskcz?=
+ =?us-ascii?Q?KA0dGVC/ZwLC/i8IZqXod+efp1j6dtkeCjtGukXz2s8qZo6p47R+I+gP3dBU?=
+ =?us-ascii?Q?sey132cLEqD8G9GcOaNvsGrMU8mJqjaMq3MZkNG0r8WDuEknQF7BTj+zk5tx?=
+ =?us-ascii?Q?2t2mM0bFbDBnyUcze4EgpjjqSrRHO6ydHawowU61RPgX2KJaRttJCPDx1zQY?=
+ =?us-ascii?Q?IRAF7wRsHJLyfoqmOSgUNKZ0AkeCI55CtCuJ7LOO/pvTcBu8gCb04pHbSZA4?=
+ =?us-ascii?Q?Ck0dTxTPt1qSNk2KC175VVP0m59EtD8wqyRxA/n2IjI8bo5g2PE5bjdEGrf8?=
+ =?us-ascii?Q?MqGry8Bic3jpqRm067mgmgXSqDF9JnhV8d0bF+inhKJQhmh4uZchbuCDY57f?=
+ =?us-ascii?Q?g7ZPfuLnTzaiHo3j/S2seA4/6FHI6aQW/8H7nnZEoTen1DF4kjfMRaFiKT2N?=
+ =?us-ascii?Q?J9BhftyRt0F82qNh6XcuGTmwANjhnngAyEWE14yl1XhNqv70pZwVZJvlwgDo?=
+ =?us-ascii?Q?2BeWs3EdgOf3uohX/dZlNnMytEAFpofqurjujieJ3rrnVilRtgo8/aMnDeg/?=
+ =?us-ascii?Q?Z3O1gFXXHuaFnEqj0aJ3jomdr0bzWYUDYCBGuXQ9ucwSquaXDmkh3hjygDR3?=
+ =?us-ascii?Q?Qhge+KUQFJGFVjsADvh/6JRazPtz7iMoXYAbT0Wm7DEcgEOdBLpyJZmAzFT3?=
+ =?us-ascii?Q?EEjhZQpRdG5XXl4emtD1rRy0mpHDVjHUznjzIY1gdDyCHN2wrEp7XzJM7Zyf?=
+ =?us-ascii?Q?61+3uwHGXuwW6xX3nFmt9NhNpRVgZnou+RnGcocrR4OFbK8Rimug+4v1UvIn?=
+ =?us-ascii?Q?1LPKL8dt2TKcrryvZckQM8N7uSMGQMgBqoLB0ep7KtqhYrnWi40FIdEGFVRX?=
+ =?us-ascii?Q?xG8HzQ2mqLDgg5MMhFjb1XEdV9yGJtguRESEvQs4CwohkRc+PA3Rfl0BXbza?=
+ =?us-ascii?Q?b9AM6F2W92QzvWca0JAy0Y7c4IXypBWokaRzbqHbER2SOg1PD08/msfWmzpM?=
+ =?us-ascii?Q?7w8v9WkopIqEFJdPuG2EbndX5nPMqXoGmKctaWH8VPHKsl3zm526MXIl/Mn8?=
+ =?us-ascii?Q?mRmLaxalgkvUtAXzmZ5ttrz8lMmzDkoie5qTpvcZTTspS3tyNqAtxcBcOtS+?=
+ =?us-ascii?Q?FZWiePx06H1Ggjuy0gTD9d7UZl6MTzClq7veFxve9IAiZnyYQwnJmOElucGm?=
+ =?us-ascii?Q?wahVl/D5cDFf31H/z4tips09KkFCIX+LVLvVYunrwYzcmbBW1iJuEgaIPj9E?=
+ =?us-ascii?Q?0z2qZloqHvG/zYHMeK4G3NNYPrNpKQNbRId6Ydjvm5R3GIBxoURX5cO6UkqT?=
+ =?us-ascii?Q?viaSgr0Cxmsbs+nwyhK926Kh7v8maFjHSMPdgX3E?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e049ad2-f5bd-4389-12ed-08dc9cd11443
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2024 09:01:38.4296
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cxwaCzw4OfaWL+gV0MEmY+rL3Qf5+YiEk6fpE/+/uug3Ned/5HdZiwdXJGwmGI6Txh2vwIb3SEFhvwCqlHsmng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8038
 
-The Coresight Control Unit hosts miscellaneous configuration registers
-which control various features related to TMC ETR sink.
+i.MX8qxp Display Controller has a built-in interrupt controller to support
+Enable/Status/Preset/Clear interrupt bit.  Add driver for it.
 
-Based on the trace ID, which is programmed in the related CCU ATID register
-of a specific ETR, trace data with that trace ID gets into the ETR buffer,
-while other trace data gets dropped.
-
-Enabling source device sets one bit of the ATID register based on source
-device's trace ID.
-Disabling source device resets the bit according to the source device's trace ID.
-
-Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
+Signed-off-by: Liu Ying <victor.liu@nxp.com>
 ---
- drivers/hwtracing/coresight/Kconfig         |   6 +
- drivers/hwtracing/coresight/Makefile        |   1 +
- drivers/hwtracing/coresight/coresight-ccu.c | 290 ++++++++++++++++++++
- drivers/hwtracing/coresight/coresight-ccu.h |  18 ++
- 4 files changed, 315 insertions(+)
- create mode 100644 drivers/hwtracing/coresight/coresight-ccu.c
- create mode 100644 drivers/hwtracing/coresight/coresight-ccu.h
+ drivers/gpu/drm/imx/dc/Kconfig  |   1 +
+ drivers/gpu/drm/imx/dc/Makefile |   2 +-
+ drivers/gpu/drm/imx/dc/dc-drv.c |   1 +
+ drivers/gpu/drm/imx/dc/dc-drv.h |   1 +
+ drivers/gpu/drm/imx/dc/dc-ic.c  | 249 ++++++++++++++++++++++++++++++++
+ 5 files changed, 253 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/drm/imx/dc/dc-ic.c
 
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index 06f0a7594169..a36934daa505 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -133,6 +133,12 @@ config CORESIGHT_STM
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called coresight-stm.
+diff --git a/drivers/gpu/drm/imx/dc/Kconfig b/drivers/gpu/drm/imx/dc/Kconfig
+index 32d7471c49d0..b66b815fbdf1 100644
+--- a/drivers/gpu/drm/imx/dc/Kconfig
++++ b/drivers/gpu/drm/imx/dc/Kconfig
+@@ -1,5 +1,6 @@
+ config DRM_IMX8_DC
+ 	tristate "Freescale i.MX8 Display Controller Graphics"
+ 	depends on DRM && COMMON_CLK && OF && (ARCH_MXC || COMPILE_TEST)
++	select GENERIC_IRQ_CHIP
+ 	help
+ 	  enable Freescale i.MX8 Display Controller(DC) graphics support
+diff --git a/drivers/gpu/drm/imx/dc/Makefile b/drivers/gpu/drm/imx/dc/Makefile
+index 2942ae6fd5bd..1ce3e8a8db22 100644
+--- a/drivers/gpu/drm/imx/dc/Makefile
++++ b/drivers/gpu/drm/imx/dc/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
  
-+config CORESIGHT_CCU
-+	tristate "CoreSight Control Unit driver"
-+	help
-+	  This driver provides support for CoreSight Control Unit block
-+	  that hosts miscellaneous configuration registers.
-+
- config CORESIGHT_CPU_DEBUG
- 	tristate "CoreSight CPU Debug driver"
- 	depends on ARM || ARM64
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 4ba478211b31..a668cdba926f 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -51,3 +51,4 @@ coresight-cti-y := coresight-cti-core.o	coresight-cti-platform.o \
- 		   coresight-cti-sysfs.o
- obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
- obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
-+obj-$(CONFIG_CORESIGHT_CCU) += coresight-ccu.o
-diff --git a/drivers/hwtracing/coresight/coresight-ccu.c b/drivers/hwtracing/coresight/coresight-ccu.c
+ imx8-dc-drm-objs := dc-cf.o dc-de.o dc-drv.o dc-ed.o dc-fg.o dc-fl.o dc-fu.o \
+-		    dc-fw.o dc-lb.o dc-pe.o dc-tc.o
++		    dc-fw.o dc-ic.o dc-lb.o dc-pe.o dc-tc.o
+ 
+ obj-$(CONFIG_DRM_IMX8_DC) += imx8-dc-drm.o
+diff --git a/drivers/gpu/drm/imx/dc/dc-drv.c b/drivers/gpu/drm/imx/dc/dc-drv.c
+index 7c64acc863ad..fd68861f770a 100644
+--- a/drivers/gpu/drm/imx/dc/dc-drv.c
++++ b/drivers/gpu/drm/imx/dc/dc-drv.c
+@@ -15,6 +15,7 @@ static struct platform_driver * const dc_drivers[] = {
+ 	&dc_fg_driver,
+ 	&dc_fl_driver,
+ 	&dc_fw_driver,
++	&dc_ic_driver,
+ 	&dc_lb_driver,
+ 	&dc_pe_driver,
+ 	&dc_tc_driver,
+diff --git a/drivers/gpu/drm/imx/dc/dc-drv.h b/drivers/gpu/drm/imx/dc/dc-drv.h
+index c687a36b8153..3b11f4862c6c 100644
+--- a/drivers/gpu/drm/imx/dc/dc-drv.h
++++ b/drivers/gpu/drm/imx/dc/dc-drv.h
+@@ -25,6 +25,7 @@ extern struct platform_driver dc_de_driver;
+ extern struct platform_driver dc_fg_driver;
+ extern struct platform_driver dc_fl_driver;
+ extern struct platform_driver dc_fw_driver;
++extern struct platform_driver dc_ic_driver;
+ extern struct platform_driver dc_lb_driver;
+ extern struct platform_driver dc_pe_driver;
+ extern struct platform_driver dc_tc_driver;
+diff --git a/drivers/gpu/drm/imx/dc/dc-ic.c b/drivers/gpu/drm/imx/dc/dc-ic.c
 new file mode 100644
-index 000000000000..30faf87b1a28
+index 000000000000..8540a0414b39
 --- /dev/null
-+++ b/drivers/hwtracing/coresight/coresight-ccu.c
-@@ -0,0 +1,290 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/gpu/drm/imx/dc/dc-ic.c
+@@ -0,0 +1,249 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright 2024 NXP
 + */
 +
 +#include <linux/clk.h>
-+#include <linux/coresight.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
++#include <linux/component.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/irqdomain.h>
 +#include <linux/of.h>
++#include <linux/of_irq.h>
 +#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/coresight-stm.h>
++#include <linux/pm_runtime.h>
 +
-+#include "coresight-ccu.h"
-+#include "coresight-priv.h"
-+#include "coresight-tmc.h"
-+#include "coresight-trace-id.h"
++#include <drm/drm_managed.h>
 +
-+DEFINE_CORESIGHT_DEVLIST(ccu_devs, "ccu");
++#include "dc-drv.h"
 +
-+#define ccu_writel(drvdata, val, offset)	__raw_writel((val), drvdata->base + offset)
-+#define ccu_readl(drvdata, offset)		__raw_readl(drvdata->base + offset)
++#define USERINTERRUPTMASK(n)	(0x8 + 4 * (n))
++#define INTERRUPTENABLE(n)	(0x10 + 4 * (n))
++#define INTERRUPTCLEAR(n)	(0x20 + 4 * (n))
++#define INTERRUPTSTATUS(n)	(0x28 + 4 * (n))
++#define USERINTERRUPTENABLE(n)	(0x40 + 4 * (n))
++#define USERINTERRUPTCLEAR(n)	(0x50 + 4 * (n))
++#define USERINTERRUPTSTATUS(n)	(0x58 + 4 * (n))
 +
-+/* The Coresight Control Unit uses four ATID registers to control the data filter function based
-+ * on the trace ID for each TMC ETR sink. The length of each ATID register is 32 bits. Therefore,
-+ * the ETR has a related field in CCU that is 128 bits long. Each trace ID is represented by one bit in that filed.
-+ * e.g. ETR0ATID0 layout, set bit 5 for traceid 5
-+ *                                           bit5
-+ * ------------------------------------------------------
-+ * |   |28|   |24|   |20|   |16|   |12|   |8|  1|4|   |0|
-+ * ------------------------------------------------------
-+ *
-+ * e.g. ETR0:
-+ * 127                     0 from ATID_offset for ETR0ATID0
-+ * -------------------------
-+ * |ATID3|ATID2|ATID1|ATID0|
-+ *
-+ */
-+#define CCU_ATID_REG_OFFSET(traceid, atid_offset) \
-+		((traceid / 32) * 4 + atid_offset)
++#define IRQ_COUNT	49
++#define IRQ_RESERVED	35
++#define REG_NUM		2
 +
-+#define CCU_ATID_REG_BIT(traceid)	(traceid % 32)
-+#define CCU_ATID_REG_SIZE		0x10
++struct dc_ic_data {
++	void __iomem		*regs;
++	struct clk		*clk_axi;
++	int			irq[IRQ_COUNT];
++	struct irq_domain	*domain;
++};
 +
-+/*
-+ * __ccu_set_etr_traceid: Set bit in the ATID register based on trace ID when enable is true.
-+ * Reset the bit of the ATID register based on trace ID when enable is false.
-+ *
-+ * @csdev:	coresight_device struct related to the device
-+ * @traceid:	trace ID of the source tracer.
-+ * @enable:	True for set bit and false for reset bit.
-+ *
-+ * Returns 0 indicates success. Non-zero result means failure.
-+ */
-+static int __ccu_set_etr_traceid(struct coresight_device *csdev,
-+			uint32_t traceid, bool enable)
++struct dc_ic_entry {
++	struct dc_ic_data *data;
++	int irq;
++};
++
++static void dc_ic_irq_handler(struct irq_desc *desc)
 +{
-+	uint32_t atid_offset = 0;
-+	struct ccu_drvdata *drvdata;
-+	unsigned long flags;
-+	uint32_t reg_offset;
-+	int bit;
-+	uint32_t val;
++	struct dc_ic_entry *entry = irq_desc_get_handler_data(desc);
++	struct dc_ic_data *data = entry->data;
++	unsigned int virq;
++	u32 status;
 +
-+	drvdata = dev_get_drvdata(csdev->dev.parent);
-+	if (IS_ERR_OR_NULL(drvdata))
-+		return -EINVAL;
++	chained_irq_enter(irq_desc_get_chip(desc), desc);
 +
-+	atid_offset = drvdata->atid_offset;
-+	if (((traceid < 0) && (traceid >= CORESIGHT_TRACE_IDS_MAX)) || atid_offset <= 0)
-+		return -EINVAL;
++	status = readl(data->regs + USERINTERRUPTSTATUS(entry->irq / 32));
++	status &= readl(data->regs + USERINTERRUPTENABLE(entry->irq / 32));
 +
-+	spin_lock_irqsave(&drvdata->spin_lock, flags);
-+	CS_UNLOCK(drvdata->base);
-+
-+	reg_offset = CCU_ATID_REG_OFFSET(traceid, atid_offset);
-+	bit = CCU_ATID_REG_BIT(traceid);
-+	if (reg_offset - atid_offset >= CCU_ATID_REG_SIZE
-+		|| bit >= CORESIGHT_TRACE_IDS_MAX) {
-+		CS_LOCK(drvdata);
-+		spin_unlock_irqrestore(&drvdata->spin_lock, flags);
-+		return -EINVAL;
++	if (status & BIT(entry->irq % 32)) {
++		virq = irq_linear_revmap(data->domain, entry->irq);
++		if (virq)
++			generic_handle_irq(virq);
 +	}
 +
-+	val = ccu_readl(drvdata, reg_offset);
-+	if (enable)
-+		val = val | BIT(bit);
-+	else
-+		val = val & ~BIT(bit);
-+	ccu_writel(drvdata, val, reg_offset);
-+
-+	CS_LOCK(drvdata->base);
-+	spin_unlock_irqrestore(&drvdata->spin_lock, flags);
-+	return 0;
++	chained_irq_exit(irq_desc_get_chip(desc), desc);
 +}
 +
-+/*
-+ * ccu_set_atid_offset: Retrieve the offset of the CCU ATID register and store it in the driver data of ETR.
-+ *
-+ * Returns 0 indicates success. If the result is less than zero, it means
-+ * failure.
-+ */
-+static int __ccu_set_atid_offset(struct device_node *helper_node, struct coresight_device *helper, int port)
++static const unsigned long unused_irq[REG_NUM] = {0x00000000, 0xfffe0008};
++
++static int
++dc_ic_bind(struct device *dev, struct device *master, void *master_data)
 +{
-+	int atid_offset = 0;
-+	struct device_node *node = helper_node;
-+	struct device_node *child_node = NULL;
-+	struct fwnode_handle *child_fwnode = NULL;
-+	struct ccu_drvdata *drvdata;
++	struct platform_device *pdev = to_platform_device(dev);
++	struct dc_drm_device *dc_drm = master_data;
++	struct dc_ic_entry *entry;
++	struct irq_chip_generic *gc;
++	struct dc_ic_data *data;
++	struct irq_chip_type *ct;
++	int i, ret;
 +
-+	if (!helper_node || !helper)
-+		return -EINVAL;
++	data = drmm_kzalloc(&dc_drm->base, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
 +
-+	drvdata = dev_get_drvdata(helper->dev.parent);
-+	if (IS_ERR_OR_NULL(drvdata))
-+		return -EINVAL;
++	entry = drmm_kcalloc(&dc_drm->base, IRQ_COUNT, sizeof(*entry),
++			     GFP_KERNEL);
++	if (!entry)
++		return -ENOMEM;
 +
-+	child_node = of_get_child_by_name(node, "in-ports");
-+	if (!child_node)
-+		return -EINVAL;
-+
-+	child_fwnode = fwnode_graph_get_endpoint_by_id(&child_node->fwnode, port, 0, 0);
-+	if (!child_fwnode)
-+		return -EINVAL;
-+
-+	fwnode_property_read_u32(child_fwnode, "qcom,ccu-atid-offset", &atid_offset);
-+	drvdata->atid_offset = atid_offset;
-+	dev_dbg(&helper->dev, "atid_offset:0x%x\n", atid_offset);
-+
-+	return 0;
-+}
-+
-+static int ccu_set_atid_offset(struct coresight_device *sink, struct coresight_device *helper)
-+{
-+	int port, i, ret = 0;
-+	struct device_node *node;
-+
-+	for (i = 0; i < sink->pdata->nr_outconns; ++i) {
-+		if (sink->pdata->out_conns[i]->dest_dev) {
-+			port = sink->pdata->out_conns[i]->dest_port;
-+			node = sink->pdata->out_conns[i]->dest_fwnode->dev->of_node;
-+			ret = __ccu_set_atid_offset(node, helper, port);
-+			return ret;
-+		}
++	data->regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(data->regs)) {
++		dev_err(dev, "failed to initialize reg\n");
++		return PTR_ERR(data->regs);
 +	}
 +
-+	return -EINVAL;
-+}
++	data->clk_axi = devm_clk_get(dev, NULL);
++	if (IS_ERR(data->clk_axi))
++		return dev_err_probe(dev, PTR_ERR(data->clk_axi),
++				     "failed to get AXI clock\n");
 +
-+/*
-+ * ccu_set_etr_traceid: Retrieve the ATID offset and trace ID.
-+ *
-+ * Returns 0 indicates success. None-zero result means failure.
-+ */
-+static int ccu_set_etr_traceid(struct coresight_device *csdev, struct cs_sink_data *sink_data, bool enable)
-+{
-+	if ((sink_data->traceid < 0) || (csdev == NULL) || (sink_data->sink == NULL)) {
-+		dev_dbg(&csdev->dev, "Invalid parameters\n");
-+		return -EINVAL;
-+	}
++	dev_set_drvdata(dev, data);
 +
-+	if (ccu_set_atid_offset(sink_data->sink, csdev))
-+		return -EINVAL;
-+
-+	dev_dbg(&csdev->dev, "traceid is %d\n", sink_data->traceid);
-+
-+	return __ccu_set_etr_traceid(csdev, sink_data->traceid, enable);
-+}
-+
-+static int ccu_enable(struct coresight_device *csdev, enum cs_mode mode,
-+		       void *data)
-+{
-+	int ret = 0;
-+	struct cs_sink_data *sink_data = (struct cs_sink_data *)data;
-+
-+	ret = ccu_set_etr_traceid(csdev, sink_data, true);
++	ret = devm_pm_runtime_enable(dev);
 +	if (ret)
-+		dev_dbg(&csdev->dev,"enable data filter failed\n");
++		return ret;
++
++	ret = pm_runtime_resume_and_get(dev);
++	if (ret < 0) {
++		dev_err(dev, "failed to get runtime PM sync: %d\n", ret);
++		return ret;
++	}
++
++	for (i = 0; i < REG_NUM; i++) {
++		/* mask and clear all interrupts */
++		writel(0x0, data->regs + USERINTERRUPTENABLE(i));
++		writel(0x0, data->regs + INTERRUPTENABLE(i));
++		writel(0xffffffff, data->regs + USERINTERRUPTCLEAR(i));
++		writel(0xffffffff, data->regs + INTERRUPTCLEAR(i));
++
++		/* set all interrupts to user mode */
++		writel(0xffffffff, data->regs + USERINTERRUPTMASK(i));
++	}
++
++	data->domain = irq_domain_add_linear(dev->of_node, IRQ_COUNT,
++					     &irq_generic_chip_ops, data);
++	if (!data->domain) {
++		dev_err(dev, "failed to create IRQ domain\n");
++		pm_runtime_put(dev);
++		return -ENOMEM;
++	}
++	irq_domain_set_pm_device(data->domain, &pdev->dev);
++
++	ret = irq_alloc_domain_generic_chips(data->domain, 32, 1, "DC",
++					     handle_level_irq, 0, 0, 0);
++	if (ret) {
++		dev_err(dev, "failed to alloc generic IRQ chips: %d\n", ret);
++		irq_domain_remove(data->domain);
++		pm_runtime_put(dev);
++		return ret;
++	}
++
++	for (i = 0; i < IRQ_COUNT; i += 32) {
++		gc = irq_get_domain_generic_chip(data->domain, i);
++		gc->reg_base = data->regs;
++		gc->unused = unused_irq[i / 32];
++		ct = gc->chip_types;
++		ct->chip.irq_ack = irq_gc_ack_set_bit;
++		ct->chip.irq_mask = irq_gc_mask_clr_bit;
++		ct->chip.irq_unmask = irq_gc_mask_set_bit;
++		ct->regs.ack = USERINTERRUPTCLEAR(i / 32);
++		ct->regs.mask = USERINTERRUPTENABLE(i / 32);
++	}
++
++	for (i = 0; i < IRQ_COUNT; i++) {
++		/* skip the reserved IRQ */
++		if (i == IRQ_RESERVED)
++			continue;
++
++		data->irq[i] = irq_of_parse_and_map(dev->of_node, i);
++
++		entry[i].data = data;
++		entry[i].irq = i;
++
++		irq_set_chained_handler_and_data(data->irq[i],
++						 dc_ic_irq_handler, &entry[i]);
++	}
 +
 +	return 0;
 +}
 +
-+static int ccu_disable(struct coresight_device *csdev, void *data)
++static void
++dc_ic_unbind(struct device *dev, struct device *master, void *master_data)
 +{
-+	int ret = 0;
-+	struct cs_sink_data *sink_data = (struct cs_sink_data *)data;
++	struct dc_ic_data *data = dev_get_drvdata(dev);
++	int i;
 +
-+	ret = ccu_set_etr_traceid(csdev, sink_data, false);
++	for (i = 0; i < IRQ_COUNT; i++) {
++		if (i == IRQ_RESERVED)
++			continue;
++
++		irq_set_chained_handler_and_data(data->irq[i], NULL, NULL);
++	}
++
++	irq_domain_remove(data->domain);
++
++	pm_runtime_put_sync(dev);
++}
++
++static const struct component_ops dc_ic_ops = {
++	.bind = dc_ic_bind,
++	.unbind = dc_ic_unbind,
++};
++
++static int dc_ic_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	ret = component_add(&pdev->dev, &dc_ic_ops);
 +	if (ret)
-+		dev_dbg(&csdev->dev,"disable data filter failed\n");
++		return dev_err_probe(&pdev->dev, ret,
++				     "failed to add component\n");
 +
 +	return 0;
 +}
 +
-+static const struct coresight_ops_helper ccu_helper_ops = {
-+	.enable = ccu_enable,
-+	.disable = ccu_disable,
-+};
-+
-+static const struct coresight_ops ccu_ops = {
-+	.helper_ops = &ccu_helper_ops,
-+};
-+
-+static int ccu_probe(struct platform_device *pdev)
++static void dc_ic_remove(struct platform_device *pdev)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct coresight_platform_data *pdata;
-+	struct ccu_drvdata *drvdata;
-+	struct coresight_desc desc = { 0 };
-+	struct resource *res;
++	component_del(&pdev->dev, &dc_ic_ops);
++}
 +
-+	desc.name = coresight_alloc_device_name(&ccu_devs, dev);
-+	if (!desc.name)
-+		return -ENOMEM;
-+	pdata = coresight_get_platform_data(dev);
-+	if (IS_ERR(pdata))
-+		return PTR_ERR(pdata);
-+	pdev->dev.platform_data = pdata;
++static int dc_ic_runtime_suspend(struct device *dev)
++{
++	struct dc_ic_data *data = dev_get_drvdata(dev);
 +
-+	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
-+	drvdata->dev = &pdev->dev;
-+	drvdata->atid_offset = 0;
-+	platform_set_drvdata(pdev, drvdata);
++	clk_disable_unprepare(data->clk_axi);
 +
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ccu-base");
-+	if (!res)
-+		return -ENODEV;
-+	drvdata->pbase = res->start;
-+
-+	drvdata->base = devm_ioremap(dev, res->start, resource_size(res));
-+	if (!drvdata->base)
-+		return -ENOMEM;
-+
-+	desc.type = CORESIGHT_DEV_TYPE_HELPER;
-+	desc.pdata = pdev->dev.platform_data;
-+	desc.dev = &pdev->dev;
-+	desc.ops = &ccu_ops;
-+
-+	drvdata->csdev = coresight_register(&desc);
-+	if (IS_ERR(drvdata->csdev))
-+		return PTR_ERR(drvdata->csdev);
-+
-+	dev_dbg(dev, "CCU initialized: %s\n", desc.name);
 +	return 0;
 +}
 +
-+static void ccu_remove(struct platform_device *pdev)
++static int dc_ic_runtime_resume(struct device *dev)
 +{
-+	struct ccu_drvdata *drvdata = platform_get_drvdata(pdev);
++	struct dc_ic_data *data = dev_get_drvdata(dev);
++	int ret;
 +
-+	coresight_unregister(drvdata->csdev);
++	ret = clk_prepare_enable(data->clk_axi);
++	if (ret)
++		dev_err(dev, "failed to enable AXI clock: %d\n", ret);
++
++	return ret;
 +}
 +
-+static const struct of_device_id ccu_match[] = {
-+	{.compatible = "qcom,coresight-ccu"},
-+	{}
++static const struct dev_pm_ops dc_ic_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
++	RUNTIME_PM_OPS(dc_ic_runtime_suspend, dc_ic_runtime_resume, NULL)
 +};
 +
-+static struct platform_driver ccu_driver = {
-+	.probe          = ccu_probe,
-+	.remove         = ccu_remove,
-+	.driver         = {
-+		.name   = "coresight-ccu",
-+		.of_match_table = ccu_match,
-+		.suppress_bind_attrs = true,
++static const struct of_device_id dc_ic_dt_ids[] = {
++	{ .compatible = "fsl,imx8qxp-dc-intc", },
++	{ /* sentinel */ }
++};
++
++struct platform_driver dc_ic_driver = {
++	.probe = dc_ic_probe,
++	.remove_new = dc_ic_remove,
++	.driver = {
++		.name = "imx8-dc-intc",
++		.of_match_table	= dc_ic_dt_ids,
++		.pm = pm_sleep_ptr(&dc_ic_pm_ops),
 +	},
 +};
-+
-+static int __init ccu_init(void)
-+{
-+	return platform_driver_register(&ccu_driver);
-+}
-+module_init(ccu_init);
-+
-+static void __exit ccu_exit(void)
-+{
-+	platform_driver_unregister(&ccu_driver);
-+}
-+module_exit(ccu_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("CoreSight Control Unit driver");
-diff --git a/drivers/hwtracing/coresight/coresight-ccu.h b/drivers/hwtracing/coresight/coresight-ccu.h
-new file mode 100644
-index 000000000000..d2895d288c88
---- /dev/null
-+++ b/drivers/hwtracing/coresight/coresight-ccu.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _CORESIGHT_CCU_H
-+#define _CORESIGHT_CCU_H
-+
-+struct ccu_drvdata {
-+	void __iomem		*base;
-+	phys_addr_t		pbase;
-+	struct device		*dev;
-+	struct coresight_device	*csdev;
-+	spinlock_t		spin_lock;
-+	uint32_t		atid_offset;
-+};
-+
-+#endif
 -- 
 2.34.1
 
