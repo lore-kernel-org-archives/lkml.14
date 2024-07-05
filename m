@@ -1,60 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2F81741DD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AE0174EC7;
 	Fri,  5 Jul 2024 19:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720208278; cv=none; b=gCMpPb2onHtMTc6uul/6o6TqNl493qNSIx+QUC6n1TS4AJp0b1o7j5DjgQkrxQEZ1FlkfOu+wo70EZkIzrpZNK37jKaJa20izjZq4GL+nl2huuFoUYpKWwqNyCIiTmry+0pGKF2Me2SAcM/OpysQ78vnEoeoVlGVgSmBytu21UY=
+	t=1720208278; cv=none; b=csPb8X9U6znH/YBgroObghMSqe/4BG/Ex4LZowZTQzs8YquCBAIi5F8FneMQ0bdWbQZiSrBi49qDOMXR9DnEgv+jRghqMFG+V7GAHQtcW/xMql+R+/lwG3E2wMMb27qCMVqL6yezuJofW5vZaoXlxd62ME9GsWzNcrpeTPwIVGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720208278; c=relaxed/simple;
-	bh=Um9yAaBxyq1RdNsvWsdMSKXcQ8uJpx1Yfm2LH+FxV54=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qOxQO0nlSFvMMA4jLxxahxKSiDysi8nHnRQ7SqRIK4hcHNn1+gaNSnixmIxh4XWXF+KsnAjYOintuLbZjWPX8qZtJ1LAE9gUZMEzrO+Se+oiIRc/sj5PyFUyKeoAyi5ZxxjcECPC63UJFkADyqmaR8wuvb3UKOezSqf14a6Lse4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbXHBXOL; arc=none smtp.client-ip=10.30.226.201
+	bh=QNfMwN5qGJR/sgjj+OqBVsXNg/5MfQsYCveqepWm8gM=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ZpqyMFjvK/KyJ/Gv3bdiJ0CoKcdMaAluFMnnqjGiVQoPQB6rtCkxlvmgaVUitLNuwnkO81gpLNn/jvT7bE0ToZwdpuduMRf6NEv5C2fTcvRQLgjeq9b7niB0jCQfqP4j/Gogy9+zoj7uBBuwpitCODrw+Gs38Qij476vbmZ1gmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qVvSZdGQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbXHBXOL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5248BC4AF0F;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qVvSZdGQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 744A0C116B1;
 	Fri,  5 Jul 2024 19:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720208278;
-	bh=Um9yAaBxyq1RdNsvWsdMSKXcQ8uJpx1Yfm2LH+FxV54=;
+	bh=QNfMwN5qGJR/sgjj+OqBVsXNg/5MfQsYCveqepWm8gM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=VbXHBXOLBC6GbgUQ3ixfdlK3+NTfJbPBAyBavrtY3rzxwlJgImF2aCv0oFVGt3G3N
-	 6TTdhqXCh5wlawHsNq0st1eeNp/rb2wboz5RoPWnd0Xw5wnriCd5wgoydPFC7563o1
-	 osDpi+FpYBJqUDliCsu7Cq5DCGCh8mJ8aCeCic6WMZQosNIgtGTGid19escEzWsxhn
-	 pPy2Dd12klWJEWoY2wtooR7906noWbZmYdnGtlC/XX07hn8f6NXqxeGj5Xt78AEWHr
-	 GZ8881ok1yztUd2pXb5zkXX0akgIzG+1K8Ik9dIdlCW+TIbMwkp84QOM/r6/NXNDX7
-	 7ZwoVpFPTKIoA==
+	b=qVvSZdGQ8lX8ynjtAVGESnRZcriNYkEW4d/AitdoK8P2yEmHyV1ugrJMByFAfjND0
+	 Z3jvBnpj2V/uUrGN45KQWyRRzpPkl6j8pg0RoZ1Ln6NRioK5bYHjNDSO/kWR4+56IG
+	 hXTJDBEVncqICXZf4+QBH4vt+neSpRy3L3EbIyH+gcGiyLKAO/eAnEEvfCZyPugbkc
+	 yTqxYuJ6qA3FmzZHWUTAG/lDlkTQH2fdTS3pAUYItdNJovWJooZElkbsqhpaJawQCU
+	 ci0nPN3Q0ToB3Bn46xNYj3MKIUnQlh3ilNRkPKVxugmR+JO2+1uSW8cTXCdXD5sRjf
+	 67uaszKnb5Lsw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 44A72C433A2;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 60498C43446;
 	Fri,  5 Jul 2024 19:37:58 +0000 (UTC)
-Subject: Re: [GIT PULL] KVM changes for Linux 6.10-rc7
+Subject: Re: [GIT PULL] TPM DEVICE DRIVER: tpmdd-next-6.10-rc7
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240705085120.659090-1-pbonzini@redhat.com>
-References: <20240705085120.659090-1-pbonzini@redhat.com>
+In-Reply-To: <D2HKE740MWCK.2O7S4KF56L929@kernel.org>
+References: <D2HKE740MWCK.2O7S4KF56L929@kernel.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240705085120.659090-1-pbonzini@redhat.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-X-PR-Tracked-Commit-Id: 8ad209fc6448e1d7fff7525a8d40d2fb549f72d1
+X-PR-Tracked-Message-Id: <D2HKE740MWCK.2O7S4KF56L929@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git tags/tpmdd-next-6.10-rc7
+X-PR-Tracked-Commit-Id: 7ca110f2679b7d1f3ac1afc90e6ffbf0af3edf0d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 75aa87ca486b95ffae678300722022f01d33b7ca
-Message-Id: <172020827826.9250.15215158713497708064.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 5cc467117e61272c522f5922b04dd984deb2411f
+Message-Id: <172020827838.9250.5938565628970546965.pr-tracker-bot@kernel.org>
 Date: Fri, 05 Jul 2024 19:37:58 +0000
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, James
+ Bottomley <James.Bottomley@HansenPartnership.com>, Michael Ellerman <mpe@ellerman.id.au>, Stefan Berger <stefanb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri,  5 Jul 2024 04:51:20 -0400:
+The pull request you sent on Fri, 05 Jul 2024 14:22:00 +0300:
 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git tags/tpmdd-next-6.10-rc7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/75aa87ca486b95ffae678300722022f01d33b7ca
+https://git.kernel.org/torvalds/c/5cc467117e61272c522f5922b04dd984deb2411f
 
 Thank you!
 
