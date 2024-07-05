@@ -1,195 +1,245 @@
-Received: from netz.smurf.noris.de (mail.smurf.noris.de [213.95.149.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA831F61C
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 07:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.149.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A6A132111;
+	Fri,  5 Jul 2024 07:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720164811; cv=none; b=JXGAODZ3t7kWWz2QrHuRoHmX+uFeclb2usER0SDXFPlR2jndgUN3fGDk6AUcBEM8VTbjhOvrzE87TYArOg2O46py8URsb+uFXxqk58Dk2zx2H3jQimgRO8GS9VnKIn8/wrmbbWl5nStkbX0tnDFp//iowMV69gWNkuHHXEAW84A=
+	t=1720164858; cv=none; b=XIUggb48LVyThUOBrQzhtHYoMvOg9mZZWacpINGdcSES/GhEbsXrVNZ3HPEenbeR5uwhhrmQ6iJM0yeBfBA4/G0RvBqBbR4wkleWnaDckl3BMCjmA36SE5wctSjEw2FBAmdV1d7uk4hA7bVusASm9r4GmSvBzSv98P/Gv5c9R+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720164811; c=relaxed/simple;
-	bh=EzPNAvGewXW9DjYDdECfaV8LSJBOak9UT+X47Faku2A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JJQnYNuLiDNE/0SMXu3gbOdcw91ke3QUzhv6f8t3FOJuIjIeyaCH07dP4o6X9mAvGTAJM9SYWgvGjDXjpZXjTxy5XNm2jZyNULEl5IMNQ8M4vp+nLHPkXjXI9fcHAdjPISkcOvTDJcPZPhDPL5r9U8Cwg8gjs3641clH6GCCthc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=urlichs.de; spf=pass smtp.mailfrom=urlichs.de; dkim=pass (4096-bit key) header.d=urlichs.de header.i=@urlichs.de header.b=iFbE1P4E; arc=none smtp.client-ip=213.95.149.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=urlichs.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=urlichs.de
+	s=arc-20240116; t=1720164858; c=relaxed/simple;
+	bh=BHfl/H4utgDSGPe89jxXBrs1DUBNrzQD0UaGIZfZ8uo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RDjhDLwxUHgW4vrIjP338pXDpbPML4OlDLWfyXJE8/M+VxJOHtvka6WO1x3duawMQjsAkCKhwzb4U8Msf9itpp8AGo+PbzmnNCSuQXq4cKptxwiairZA3DiTBmClZdXw2ZlogC370tniEeL3tdKwFrvzuiy45zuPJqzlkAs9HUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qrJSJj86; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=urlichs.de header.i=@urlichs.de header.b="iFbE1P4E"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=urlichs.de;
-	s=20160512; h=From:Date:Message-ID;
-	bh=vo5K66e5bTLNqjd+YMUtqMoPneVLCAQYDXESuJ4z/AA=; b=iFbE1P4EZ8d2VCG2uyfLDXyK0m
-	PZ3ZMWCmALdq+C/Gq/cHJs6KLvt9VcOn+CRaGzqHVyMhLXIefWNzkTs5382Dp/TWEgQf5YellSoPf
-	VJrha7YDuJsJTWBC/P3TX1DvnpeJW9WWdAetatwjY+tpiZadh46AidlO7OskeVXnk9IaWlcfU6S5G
-	EFj2LEjGCUhFD704jtGSA7eeTN/0bwRg8IyppeFxPXZ7WNHc0qxY4fGgiYrfvFbPh6Af9HhkT6sL8
-	5VWHpbw7i87OfwHgQyKXJ1MlF5ZqNsZZxP1Sv7DdLGoo0UNDHFvEnqILkU31rl3Hk5Zhm04KWcajJ
-	/SQbZt4dGU+Au/SpH6Cv2R4RDsyvT0qmvtiLzQq6QG0nHawdzMsFdchNFAkPRad9wVrnq74OnZ6wH
-	xE/qY7/HYHs5rLhNVUeSAfQCCNdhik8rB9676sujbYyS+4Z+NdbnRhsWLFSew4QNOmwupc8TghpCe
-	2EMGaSi1CuATMvrm35vV5bX+zcPz8T6HossGqRwKAOIT1o/tAr7bvXKc7qRJcFP9I2DcGoFyIz6IJ
-	zm+G6dmaCBo5iei3cjwBqTVQZDNOpqZodNQ7do0fwsWZ5zuEwTI5K0ZeR9KbMzJVQjFwBN+hAv7UF
-	Zlmwx6ctelK07u8xtEu/iYlpAzlEgdHJxOV2PAlLI=;
-Received: from asi.s.smurf.noris.de ([2001:780:107:200::a])
-	by mail.vm.smurf.noris.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.97-RC1)
-	(envelope-from <matthias@urlichs.de>)
-	id 1sPcxA-00000000Cbz-1Mxx;
-	Fri, 05 Jul 2024 09:01:56 +0200
-Message-ID: <a8cc875a-8e93-46b9-a6a7-094072c9a1b5@urlichs.de>
-Date: Fri, 5 Jul 2024 09:01:31 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qrJSJj86"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235E2C4AF0D;
+	Fri,  5 Jul 2024 07:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720164858;
+	bh=BHfl/H4utgDSGPe89jxXBrs1DUBNrzQD0UaGIZfZ8uo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qrJSJj86DXIXqU3H+Fn1N4QOEOKsAeINpffJcSISKHCpdMMfSWRahBJOVmLEnJCKF
+	 wsHGqsWV+84SjF3zlApPnnLPWIitk3wVO1/2HBXd+mh/nYFBSObmASUu33hOMXGKxw
+	 9sKSEFTL6opqS7boDiTqs9jE1qvUUUZCHiwN472GHgibQjM4Yh1gf1IN73oUXLwn4u
+	 xueWn1dxeNnrI8g5EjYQV8EPqJ0h9cUpgTRDX5kwWGdOCfG/uzOzKpAEbnsIg1wP3e
+	 123V2Vv/RjqeqQpOqwvfP6cC7ueBVbo2N2/BerbllpEwu+lCcxjVn0/BQFCn8x2XQS
+	 R1ytyVTqXeX9g==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6265d3ba8fso110331366b.0;
+        Fri, 05 Jul 2024 00:34:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVyp3BCeCUIjTPPlhl1L3SlHaomaG51rgrDuRpxh/CnE2A3alHqTJTi0WgGdtGvjUKnbAERNGQo+S3ClZSbns5vw5kQKwhmUHf9A7wL6LDHds+XsXSuwQIvJDCnE28+aHft2HzO0fA=
+X-Gm-Message-State: AOJu0YxRwAtSsUg1cR4TdfFNJDKFE7uAMNhf35gvj3Oo5gvGmwrpULTC
+	5D/SDurDWubt/E1L5bJNdXdF7JE+r7JsbaE4wmwqB9XWHQvOQ9r54DdRLltJoypODCqzXRWSwGp
+	1Dl2OKLSKKPvxaX5KVSH/HNyaVcw=
+X-Google-Smtp-Source: AGHT+IF/eBN0vyUo4OIC8k707QcyExW5K/WQzeKGFnL7+LV0rs6bWLrkRRkYsYPzaUUzV5DmXoLsqXJ3YjHCJTD+tiw=
+X-Received: by 2002:a17:906:e1b:b0:a72:48dd:46a4 with SMTP id
+ a640c23a62f3a-a77b9ddd4b9mr228152166b.0.1720164856482; Fri, 05 Jul 2024
+ 00:34:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: deconflicting new syscall numbers for 6.11
-To: Willy Tarreau <w@1wt.eu>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, jolsa@kernel.org,
- mhiramat@kernel.org, cgzones@googlemail.com, brauner@kernel.org,
- linux-kernel@vger.kernel.org, arnd@arndb.de
-References: <ZobXdDCYBi8OM-Fo@zx2c4.com>
- <CAHk-=wiGk+1eNy4Vk6QsEgM=Ru3jE40qrDwgq_CSKgqwLgMdRg@mail.gmail.com>
- <Zobf3fZOuvOJOGPN@zx2c4.com>
- <CAHk-=whf2Pb8fSmUsLRSn6CnYvQoyUkLikKpFDWN_xnTJqix=A@mail.gmail.com>
- <Zobtia2Zsaamh9KQ@1wt.eu>
-Content-Language: en-US
-From: Matthias Urlichs <matthias@urlichs.de>
-In-Reply-To: <Zobtia2Zsaamh9KQ@1wt.eu>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------DRO4M2V2rAyK8O6cf0Zml5Ib"
-X-Smurf-Spam-Score: -1.0 (-)
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------DRO4M2V2rAyK8O6cf0Zml5Ib
-Content-Type: multipart/mixed; boundary="------------oTUaFac8ZQGy7ZPTOzvYl0Wg";
- protected-headers="v1"
-From: Matthias Urlichs <matthias@urlichs.de>
-To: Willy Tarreau <w@1wt.eu>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, jolsa@kernel.org,
- mhiramat@kernel.org, cgzones@googlemail.com, brauner@kernel.org,
- linux-kernel@vger.kernel.org, arnd@arndb.de
-Message-ID: <a8cc875a-8e93-46b9-a6a7-094072c9a1b5@urlichs.de>
-Subject: Re: deconflicting new syscall numbers for 6.11
-References: <ZobXdDCYBi8OM-Fo@zx2c4.com>
- <CAHk-=wiGk+1eNy4Vk6QsEgM=Ru3jE40qrDwgq_CSKgqwLgMdRg@mail.gmail.com>
- <Zobf3fZOuvOJOGPN@zx2c4.com>
- <CAHk-=whf2Pb8fSmUsLRSn6CnYvQoyUkLikKpFDWN_xnTJqix=A@mail.gmail.com>
- <Zobtia2Zsaamh9KQ@1wt.eu>
-In-Reply-To: <Zobtia2Zsaamh9KQ@1wt.eu>
-
---------------oTUaFac8ZQGy7ZPTOzvYl0Wg
-Content-Type: multipart/alternative;
- boundary="------------zt95k4iwemyGPuUcTSc4rrSN"
-
---------------zt95k4iwemyGPuUcTSc4rrSN
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-T24gMDQuMDcuMjQgMjA6NDQsIFdpbGx5IFRhcnJlYXUgd3JvdGU6DQo+IEJVVCBJJ3ZlIGdv
-dCBjb21wbGFpbnMgaW4gdGhlIHBhc3QgZnJvbQ0KPiBzb21lIHVzZXJzIGdlbmVyYXRpbmcg
-VVVJRHMgZm9yIGVhY2ggZm9yd2FyZGVkIHJlcXVlc3QgdGhhdCB0aGV5IHdlcmUNCj4gc2Vl
-aW5nIGR1cGxpY2F0ZXMgaW4gdGhlaXIgbG9ncyBkdWUgdG8gdGhlIGxhY2sgb2YgdGhyZWFk
-IHNhZmV0eSBvbg0KPiByYW5kb20oKSwgd2hpY2ggbWFkZSBtZSB3b3JrIG9uIGFuIGFsdGVy
-bmF0aXZlLiBUaHVzIEkgY2FuIGVhc2lseQ0KPiBpbWFnaW5lIHRoYXQgZXF1aXZhbGVudCBh
-cHBsaWNhdGlvbnMgdGhhdCBqdXN0IHdhbnQgdG8gYXNzaWduIGEgdW5pcXVlDQo+IElEIHRv
-IGFuIGV2ZW50IHRoYXQgZW5kcyB1cCBpbiBhIGxvZywgYW5kIHdoZW4gc3VjaCBhcHBsaWNh
-dGlvbnMgc3VmZmVyDQo+IGEgVk0gbWlncmF0aW9uIGNvdWxkIGZhY2UgYSBzaW1pbGFyIHBy
-b2JsZW0gdGhhdCBpcyBub3QgZWFzeSB0byBhZGRyZXNzDQo+IGluIHVzZXJsYW5kLg0KDQpJ
-J2QgbGlrZSB0byBzZWNvbmQgdGhhdC4NCg0KSSBzb21ldGltZXMgbmVlZCB0byBkdXBsaWNh
-dGUgYSBydW5uaW5nIFZNLCBtb3N0bHkgaW4gb3JkZXIgdG8gZGVidWcgDQpzdHVmZi4gTm93
-IGJvdGggVk1zIHJ1biB0aGUgc2FtZSBjb2RlIHdpdGggdGhlIHNhbWUgcHNldWRvLVJORywg
-DQpnZW5lcmF0aW5nIHRoZSBzYW1lIG1lc3NhZ2UgSURzIHdoZW4gdGhleSBsb2cgc29tZXRo
-aW5nLiBJJ3ZlIHNlZW4gDQpyZWplY3RzIG9uIGxvZ3MgZnJvbSB0aGUgcmVhbCBWTSBiZWNh
-dXNlIHRoZSBkdXBlIGdvdCB0aGVyZSBmaXJzdC4NCg0KT3djaC4NCg0KQSB1c2Vyc3BhY2Ug
-Uk5HIHdpdGggYSB6YXBwZWQgVk1fRFJPUFBBQkxFIHBhZ2UgdGhhdCByZS1pbml0aWFsaXpl
-cyANCml0c2VsZiBmcm9tIHRoZSBrZXJuZWwgUk5HIHdvdWxkIHNvbHZlIHRoaXMgcHJvYmxl
-bSAoYW5kIG90aGVycykuDQoNClRodXMgYSByZWFzb25hYmxlIGltcGxlbWVudGF0aW9uIHNl
-ZW1zIHRvIGJlDQoNCiogaW1wbGVtZW50IFZNX0RST1BQQUJMRSAod2hpY2ggSSdkIGxpa2Ug
-dG8gdXNlIGZvciB1c2Vyc3BhY2UgY2FjaGluZyANCmFueXdheSkNCg0KKiB0ZWFjaCBWTSBj
-bG9uZXJzLCB0YXNrIG1pZ3JhdG9ycyBhbmQgd2hhdG5vdCBub3QgdG8gY29weSBwYWdlcyBt
-YXJrZWQgdGh1cw0KDQoqIGFkZCBhIFJORyBnZW5lcmF0aW9uIGNvdW50ZXIgdG8gdGhlIFZE
-U08NCg0KKiB0ZWFjaCBsaWJjJ3MgZ2V0cmFuZG9tKCkgdG8gdXNlIHRoZXNlDQoNClllcyB0
-aGlzIGRvZXNuJ3QgdXNlIHRoZSBleGFjdCBzYW1lIGltcGxlbWVudGF0aW9uIG9mIHJhbmRv
-bS5jIHRoYXQncyBpbiANCnRoZSBrZXJuZWwsIGJ1dCBmcmFua2x5IEkgZG9uJ3QgY2FyZSBh
-Ym91dCB0aGF0Lg0KDQotLSANCi0tIHJlZ2FyZHMNCi0tIA0KLS0gTWF0dGhpYXMgVXJsaWNo
-cw0KDQo=
---------------zt95k4iwemyGPuUcTSc4rrSN
-Content-Type: text/html; charset=UTF-8
+References: <20240705060650.243497-1-chenhuacai@loongson.cn>
+ <20240705060650.243497-3-chenhuacai@loongson.cn> <20240705071313.ddl6geg72t4n7j3s@vireshk-i7>
+In-Reply-To: <20240705071313.ddl6geg72t4n7j3s@vireshk-i7>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 5 Jul 2024 15:34:04 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5q5hv2sA7EAm1D1nmbG-VGPzc4kpTnHMDSFuFiTKEH7A@mail.gmail.com>
+Message-ID: <CAAhV-H5q5hv2sA7EAm1D1nmbG-VGPzc4kpTnHMDSFuFiTKEH7A@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] cpufreq: Add Loongson-3 CPUFreq driver support
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, "Rafael J . Wysocki" <rafael@kernel.org>, loongarch@lists.linux.dev, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF=
--8">
-  </head>
-  <body>
-    <div class=3D"moz-cite-prefix">On 04.07.24 20:44, Willy Tarreau wrote=
-:<br>
-    </div>
-    <blockquote type=3D"cite" cite=3D"mid:Zobtia2Zsaamh9KQ@1wt.eu">
-      <pre>BUT I've got complains in the past from
-some users generating UUIDs for each forwarded request that they were
-seeing duplicates in their logs due to the lack of thread safety on
-random(), which made me work on an alternative. Thus I can easily
-imagine that equivalent applications that just want to assign a unique
-ID to an event that ends up in a log, and when such applications suffer
-a VM migration could face a similar problem that is not easy to address
-in userland.</pre>
-    </blockquote>
-    <p>I'd like to second that.</p>
-    <p>I sometimes need to duplicate a running VM, mostly in order to
-      debug stuff. Now both VMs run the same code with the same
-      pseudo-RNG, generating the same message IDs when they log
-      something. I've seen rejects on logs from the real VM because the
-      dupe got there first.<br>
-    </p>
-    <p>Owch.</p>
-    A userspace RNG with a zapped VM_DROPPABLE page that re-initializes
-    itself from the kernel RNG would solve this problem (and others).
-    <p>Thus a reasonable implementation seems to be</p>
-    <p>* implement VM_DROPPABLE (which I'd like to use for userspace
-      caching anyway)<br>
-    </p>
-    <p>* teach VM cloners, task migrators and whatnot not to copy pages
-      marked thus</p>
-    <p>* add a RNG generation counter to the VDSO</p>
-    <p>* teach libc's getrandom() to use these</p>
-    <p>Yes this doesn't use the exact same implementation of random.c
-      that's in the kernel, but frankly I don't care about that.<br>
-    </p>
-    <pre class=3D"moz-signature" cols=3D"72">--=20
--- regards
---=20
--- Matthias Urlichs</pre>
-  </body>
-</html>
+Hi, Viresh,
 
---------------zt95k4iwemyGPuUcTSc4rrSN--
+On Fri, Jul 5, 2024 at 3:13=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.or=
+g> wrote:
+>
+> On 05-07-24, 14:06, Huacai Chen wrote:
+> > Some of LoongArch processors (Loongson-3 series) support DVFS, their
+> > IOCSR.FEATURES has IOCSRF_FREQSCALE set. And they has a micro-core in
+> > the package called SMC (System Management Controller), which can be
+> > used to detect temperature, control fans, scale frequency and voltage,
+> > etc.
+> >
+> > The Loongson-3 CPUFreq driver is very simple now, it communicate with
+> > SMC, get DVFS info, set target frequency from CPUFreq core, and so on.
+> >
+> > There is a command list to interact with SMC, widely-used commands in
+> > the CPUFreq driver include:
+> >
+> > CMD_GET_VERSION: Get SMC firmware version.
+> >
+> > CMD_GET_FEATURE: Get enabled SMC features.
+> >
+> > CMD_SET_FEATURE: Enable SMC features, such as basic DVFS, BOOST.
+> >
+> > CMD_GET_FREQ_LEVEL_NUM: Get the number of all frequency levels.
+> >
+> > CMD_GET_FREQ_BOOST_LEVEL: Get the first boost frequency level.
+> >
+> > CMD_GET_FREQ_LEVEL_INFO: Get the detail info of a frequency level.
+> >
+> > CMD_GET_FREQ_INFO: Get the current frequency.
+> >
+> > CMD_SET_FREQ_INFO: Set the target frequency.
+> >
+> > In future we will add automatic frequency scaling, which is similar to
+> > Intel's HWP (HardWare P-State).
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  MAINTAINERS                         |   1 +
+> >  drivers/cpufreq/Kconfig             |  12 +
+> >  drivers/cpufreq/Makefile            |   1 +
+> >  drivers/cpufreq/loongson3_cpufreq.c | 395 ++++++++++++++++++++++++++++
+> >  4 files changed, 409 insertions(+)
+> >  create mode 100644 drivers/cpufreq/loongson3_cpufreq.c
+>
+> I have made some changes while applying, can you please test these ?
+Thank you for your effort.
 
---------------oTUaFac8ZQGy7ZPTOzvYl0Wg--
+It seems except changing mutex_init to devm_mutex_init, all other
+changes are line breaks? If so, I think additional tests are
+unnecessary. :)
 
---------------DRO4M2V2rAyK8O6cf0Zml5Ib
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+But now long lines (> 80 columns) are accepted by checkpatch.pl. Even
+with --strict, only > 100 columns are warned.
 
------BEGIN PGP SIGNATURE-----
+Especially for the change in loongson3_cpufreq_cpu_exit(), there is
+only 82 columns and I think that line can keep as the original state.
+And if possible, I also want the devm_kzalloc() line keep as original.
 
-wsF5BAABCAAjFiEEr9eXgvO67AILKKGfcs+OXiW0wpMFAmaHmksFAwAAAAAACgkQcs+OXiW0wpOQ
-TQ//c7x3Tsdngrpom96dS5f9LgsUMQaqafhjEmZxZqbNt1fDi9R1I5R8UGy5mQTOSN4YNhunfEeE
-GcPZwLsBa7MVpcTRuBjXcXBAHGJ6jYPXT5IaA5Uua7uZjSM02Ix0uYEC4kLjGYY7WLsv/YES6SML
-QPNZ/aOHjfexG3tBXh+5y733uRaONPazAcEmE3FRO2eV6ThxY0vEkoGUk6lHY/QYVmFVjITimz+I
-lY1wUpebuCPZijkw5Tvv5D/VMgVNBqqdJ7vRx5b7ds51+I050AhKKEIqEI+VeO2BnGH/EVbQRPL1
-qFMnm5OeOAd6hDWwSba9khWbGx9bY4klnQ/XM1LwKJdXomOJnxvl5RWpVVwx3Fg9U232l5kw6Pzh
-pUpZxROatm0NDZPkFEJezbpUOkYdCutxvUarvgW8/k1/lQQKvsfrchtIG5jei4bPtLXMXcrg4kWb
-b91z6H5tmLMVpGqEaf8vyJ83gzoExGnifsnSUjQDGZJYTsVFSXKeN3sYCL8zb03UYQCFXpLzUnCX
-SBDF8Q0FAK5Lnp6zf1eGbUBseLZ7zcqGt28sqwMyhqvYen0G25CRFaIM9eMqPrVLCXZnS1lR6raV
-iTRjkwtydLDkmaqb4Gh14W+saqmhZ1OqkTLIRT4Jy8feNQ/B9dbrciTNyYj3Qi12ws7eTqk7H5wa
-avk=
-=z8Cr
------END PGP SIGNATURE-----
+Others are OK.
 
---------------DRO4M2V2rAyK8O6cf0Zml5Ib--
+Huacai
+
+>
+> diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongs=
+on3_cpufreq.c
+> index a530e4a56b78..cd3efdeeddd9 100644
+> --- a/drivers/cpufreq/loongson3_cpufreq.c
+> +++ b/drivers/cpufreq/loongson3_cpufreq.c
+> @@ -31,10 +31,10 @@ union smc_message {
+>  };
+>
+>  /* Command return values */
+> -#define CMD_OK                         0  /* No error */
+> -#define CMD_ERROR                      1  /* Regular error */
+> -#define CMD_NOCMD                      2  /* Command does not support */
+> -#define CMD_INVAL                      3  /* Invalid Parameter */
+> +#define CMD_OK                         0 /* No error */
+> +#define CMD_ERROR                      1 /* Regular error */
+> +#define CMD_NOCMD                      2 /* Command does not support */
+> +#define CMD_INVAL                      3 /* Invalid Parameter */
+>
+>  /* Version commands */
+>  /*
+> @@ -173,7 +173,8 @@ static struct mutex cpufreq_mutex[MAX_PACKAGES];
+>  static struct cpufreq_driver loongson3_cpufreq_driver;
+>  static DEFINE_PER_CPU(struct loongson3_freq_data *, freq_data);
+>
+> -static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val,=
+ u32 extra)
+> +static inline int
+> +do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 extra)
+>  {
+>         int retries;
+>         unsigned int cpu =3D smp_processor_id();
+> @@ -226,11 +227,13 @@ static unsigned int loongson3_cpufreq_get(unsigned =
+int cpu)
+>         return ret * KILO;
+>  }
+>
+> -static int loongson3_cpufreq_target(struct cpufreq_policy *policy, unsig=
+ned int index)
+> +static int
+> +loongson3_cpufreq_target(struct cpufreq_policy *policy, unsigned int ind=
+ex)
+>  {
+>         int ret;
+>
+> -       ret =3D do_service_request(cpu_data[policy->cpu].core, FREQ_INFO_=
+TYPE_LEVEL, CMD_SET_FREQ_INFO, index, 0);
+> +       ret =3D do_service_request(cpu_data[policy->cpu].core,
+> +                       FREQ_INFO_TYPE_LEVEL, CMD_SET_FREQ_INFO, index, 0=
+);
+>
+>         return (ret >=3D 0) ? 0 : ret;
+>  }
+> @@ -255,14 +258,16 @@ static int configure_freq_table(int cpu)
+>         boost_level =3D ret;
+>
+>         freq_level =3D min(max_level, FREQ_MAX_LEVEL);
+> -       data =3D devm_kzalloc(&pdev->dev, struct_size(data, table, freq_l=
+evel + 1), GFP_KERNEL);
+> +       data =3D devm_kzalloc(&pdev->dev, struct_size(data, table, freq_l=
+evel + 1),
+> +                           GFP_KERNEL);
+>         if (!data)
+>                 return -ENOMEM;
+>
+>         data->def_freq_level =3D boost_level - 1;
+>
+>         for (i =3D 0; i < freq_level; i++) {
+> -               ret =3D do_service_request(cpu, FREQ_INFO_TYPE_FREQ, CMD_=
+GET_FREQ_LEVEL_INFO, i, 0);
+> +               ret =3D do_service_request(cpu, FREQ_INFO_TYPE_FREQ,
+> +                                        CMD_GET_FREQ_LEVEL_INFO, i, 0);
+>                 if (ret < 0) {
+>                         devm_kfree(&pdev->dev, data);
+>                         return ret;
+> @@ -290,6 +295,7 @@ static int loongson3_cpufreq_cpu_init(struct cpufreq_=
+policy *policy)
+>
+>         policy->cpuinfo.transition_latency =3D 10000;
+>         policy->freq_table =3D per_cpu(freq_data, cpu)->table;
+> +
+>         policy->suspend_freq =3D policy->freq_table[per_cpu(freq_data, cp=
+u)->def_freq_level].frequency;
+>         cpumask_copy(policy->cpus, topology_sibling_cpumask(cpu));
+>
+> @@ -314,7 +320,8 @@ static int loongson3_cpufreq_cpu_exit(struct cpufreq_=
+policy *policy)
+>  {
+>         int cpu =3D policy->cpu;
+>
+> -       loongson3_cpufreq_target(policy, per_cpu(freq_data, cpu)->def_fre=
+q_level);
+> +       loongson3_cpufreq_target(policy, per_cpu(freq_data,
+> +                                cpu)->def_freq_level);
+>
+>         return 0;
+>  }
+> @@ -348,13 +355,14 @@ static int loongson3_cpufreq_probe(struct platform_=
+device *pdev)
+>         int i, ret;
+>
+>         for (i =3D 0; i < MAX_PACKAGES; i++)
+> -               mutex_init(&cpufreq_mutex[i]);
+> +               devm_mutex_init(&pdev->dev, &cpufreq_mutex[i]);
+>
+>         ret =3D do_service_request(0, 0, CMD_GET_VERSION, 0, 0);
+>         if (ret <=3D 0)
+>                 return -EPERM;
+>
+> -       ret =3D  do_service_request(FEATURE_DVFS, 0, CMD_SET_FEATURE, FEA=
+TURE_DVFS_ENABLE | FEATURE_DVFS_BOOST, 0);
+> +       ret =3D do_service_request(FEATURE_DVFS, 0, CMD_SET_FEATURE,
+> +                                FEATURE_DVFS_ENABLE | FEATURE_DVFS_BOOST=
+, 0);
+>         if (ret < 0)
+>                 return -EPERM;
+>
+>
+> --
+> viresh
