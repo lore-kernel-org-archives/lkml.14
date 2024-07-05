@@ -1,715 +1,229 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E22C113A88B;
-	Fri,  5 Jul 2024 02:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B60F28E8
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 02:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720148189; cv=none; b=nK6WPiWzIOsX+kEpD6UkaOf5xhBf+ghzBlc1gKlbzMrpcBUFd7MhnlfqGg5dSv4pmySQPlnMga8v8QQph9ujU7KDKyeMoyUE74+JN3fivvVq29RE1YnvRXbvqjdokWbVWhJnPwPbjX+r7iFsjVM1np0ulI4WH2SOJ39T1PZ83Zo=
+	t=1720148219; cv=none; b=nM7Cbe7bbkS74FhxuswtCDlP/RQ8PQ01BVnxC2VUokYcMfznF6sNxAjjSL+hJF9ksvX6oY/2F/NIq3DwtUtjXkHziItOgFxPVCzeKgrbbWltEzrF9cVz2pKIl7WyPMwBKS8XKaKxRX2ouWtF7YHgTC5ZLtDehSGIccW0p1sAHhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720148189; c=relaxed/simple;
-	bh=/j9uWvl0fpK2RC+meqAj9BTLxLyQwoB2y3VKrRCFwng=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=D903MTBUP4z1OYgvIE9/9Q6RiDOhDlJAjolckaoyCLaSqGJRnXWet8iDlDWmEnxdeR4qwmbBR+3lUSEfP2dxIGMHJSO6b0dYFfnTEP4QDxdRgUtVdbneUHLvTXlX49uCUcu6pHbyH3P3r/o5/8Ikkk2cEyd4LiEpglxLKRTlTuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxvfDXYIdm9iQBAA--.3761S3;
-	Fri, 05 Jul 2024 10:56:23 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWcbRYIdm3tE7AA--.7292S8;
-	Fri, 05 Jul 2024 10:56:22 +0800 (CST)
-From: Xianglai Li <lixianglai@loongson.cn>
-To: linux-kernel@vger.kernel.org
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Min Zhou <zhoumin@loongson.cn>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Xianglai li <lixianglai@loongson.cn>
-Subject: [PATCH 06/11] LoongArch: KVM: Add EXTIOI read and write functions
-Date: Fri,  5 Jul 2024 10:38:49 +0800
-Message-Id: <20240705023854.1005258-7-lixianglai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20240705023854.1005258-1-lixianglai@loongson.cn>
-References: <20240705023854.1005258-1-lixianglai@loongson.cn>
+	s=arc-20240116; t=1720148219; c=relaxed/simple;
+	bh=XYv0+VYf6McStPWvE5b2s336YXWELv45BHLgBltfOPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MyX4W7A9fluDpg+PCKSi8D2Dtfz8N2fb2J7vV6Ht3dvclr2mL3L0QEh4zLX6IOV0vRTXq/BvgjZnkEMg4KVsRg79n6nDNjj19vkDpnJ0Qb51mTsxN0xJlALNVuoBHC/gmRygTjQxXzEzPAD0CNah2F4Hjbu3pjsb36QccgSzDKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=flpCj6gC; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="flpCj6gC"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1720148214; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=H5wWlHmE+5CveVCmekjDDbfDTQ7zE9+BBH3gjzdxt8w=;
+	b=flpCj6gCVkpzf6iNSerQZsp6dCsQd51Zdox+2z7EaMHqHiyiBZA7wfUsg41DqLyGHE9EC/n8pEznrLYKhdRKIqWnksrbzyLmWsUF1dKGRA1YyYwBySIfX28RodwEfKFfrU+vVQ5gpKjKRc4qtD/IfKV4Nf6tTaADvxZxj9dsY/w=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033023225041;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W9tBU8V_1720148211;
+Received: from 30.97.56.65(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9tBU8V_1720148211)
+          by smtp.aliyun-inc.com;
+          Fri, 05 Jul 2024 10:56:53 +0800
+Message-ID: <4d8ee659-58ff-4dab-833e-84400bde932a@linux.alibaba.com>
+Date: Fri, 5 Jul 2024 10:56:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/6] mm: shmem: add mTHP support for anonymous shmem
+To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
+ ying.huang@intel.com, 21cnbao@gmail.com, shy828301@gmail.com,
+ ziy@nvidia.com, ioworker0@gmail.com, da.gomez@samsung.com,
+ p.raghav@samsung.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
+ <65796c1e72e51e15f3410195b5c2d5b6c160d411.1718090413.git.baolin.wang@linux.alibaba.com>
+ <65c37315-2741-481f-b433-cec35ef1af35@arm.com>
+ <475332ea-a80b-421c-855e-a663d1d5bfc7@linux.alibaba.com>
+ <b33b94bb-38c7-4b54-bdd3-51dec0535438@arm.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <b33b94bb-38c7-4b54-bdd3-51dec0535438@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxWcbRYIdm3tE7AA--.7292S8
-X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Implementation of EXTIOI interrupt controller address
-space read and write function simulation.
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
----
-Cc: Bibo Mao <maobibo@loongson.cn> 
-Cc: Huacai Chen <chenhuacai@kernel.org> 
-Cc: kvm@vger.kernel.org 
-Cc: loongarch@lists.linux.dev 
-Cc: Min Zhou <zhoumin@loongson.cn> 
-Cc: Paolo Bonzini <pbonzini@redhat.com> 
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn> 
-Cc: WANG Xuerui <kernel@xen0n.name> 
-Cc: Xianglai li <lixianglai@loongson.cn> 
 
- arch/loongarch/include/asm/kvm_extioi.h |  17 +
- arch/loongarch/include/asm/kvm_host.h   |   2 +
- arch/loongarch/kvm/intc/extioi.c        | 577 +++++++++++++++++++++++-
- 3 files changed, 594 insertions(+), 2 deletions(-)
+On 2024/7/4 21:58, Ryan Roberts wrote:
+> On 04/07/2024 12:15, Baolin Wang wrote:
+>>
+>>
+>> On 2024/7/4 01:25, Ryan Roberts wrote:
+>>> On 11/06/2024 11:11, Baolin Wang wrote:
+>>>> Commit 19eaf44954df adds multi-size THP (mTHP) for anonymous pages, that
+>>>> can allow THP to be configured through the sysfs interface located at
+>>>> '/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
+>>>>
+>>>> However, the anonymous shmem will ignore the anonymous mTHP rule
+>>>> configured through the sysfs interface, and can only use the PMD-mapped
+>>>> THP, that is not reasonable. Users expect to apply the mTHP rule for
+>>>> all anonymous pages, including the anonymous shmem, in order to enjoy
+>>>> the benefits of mTHP. For example, lower latency than PMD-mapped THP,
+>>>> smaller memory bloat than PMD-mapped THP, contiguous PTEs on ARM architecture
+>>>> to reduce TLB miss etc. In addition, the mTHP interfaces can be extended
+>>>> to support all shmem/tmpfs scenarios in the future, especially for the
+>>>> shmem mmap() case.
+>>>>
+>>>> The primary strategy is similar to supporting anonymous mTHP. Introduce
+>>>> a new interface '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled',
+>>>> which can have almost the same values as the top-level
+>>>> '/sys/kernel/mm/transparent_hugepage/shmem_enabled', with adding a new
+>>>> additional "inherit" option and dropping the testing options 'force' and
+>>>> 'deny'. By default all sizes will be set to "never" except PMD size,
+>>>> which is set to "inherit". This ensures backward compatibility with the
+>>>> anonymous shmem enabled of the top level, meanwhile also allows independent
+>>>> control of anonymous shmem enabled for each mTHP.
+>>>>
+>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>
+>>> [...]
+>>>
+>>> Hi Baolin,
+>>>
+>>> I'm currently trying to fix a bug where khugepaged is not started if only shmem
+>>> is enabled for THP. See discussion at [1]. It's been broken like this forever.
+>>>
+>>> Assuming anon and shmem THP are initially both disabled:
+>>>
+>>> # echo never > /sys/kernel/mm/transparent_hugepage/shmem_enabled
+>>> # echo never > /sys/kernel/mm/transparent_hugepage/enabled
+>>> <khugepaged is stopped here>
+>>>
+>>> Then shemem THP is enabled:
+>>>
+>>> # echo always > /sys/kernel/mm/transparent_hugepage/shmem_enabled
+>>> <khugepaged is not started, this is a bug>
+>>
+>> Thanks Ryan. Yes, this is a real problem.
+>>
+>>> As part of investigating the fix, I stumbled upon this patch, which I remember
+>>> reviewing an early version of but I've been out for a while and missed the
+>>> latter versions. See below for comments and questions; the answers to which will
+>>> help me figure out how to fix the above...
+>>>
+>>> [1]
+>>> https://lore.kernel.org/linux-mm/20240702144617.2291480-1-ryan.roberts@arm.com/
+>>>
+>>>
+>>>>    +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>>> +static unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>>> +                struct vm_area_struct *vma, pgoff_t index,
+>>>> +                bool global_huge)
+>>>> +{
+>>>> +    unsigned long mask = READ_ONCE(huge_shmem_orders_always);
+>>>> +    unsigned long within_size_orders =
+>>>> READ_ONCE(huge_shmem_orders_within_size);
+>>>> +    unsigned long vm_flags = vma->vm_flags;
+>>>> +    /*
+>>>> +     * Check all the (large) orders below HPAGE_PMD_ORDER + 1 that
+>>>> +     * are enabled for this vma.
+>>>> +     */
+>>>> +    unsigned long orders = BIT(PMD_ORDER + 1) - 1;
+>>>> +    loff_t i_size;
+>>>> +    int order;
+>>>> +
+>>>> +    if ((vm_flags & VM_NOHUGEPAGE) ||
+>>>> +        test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
+>>>> +        return 0;
+>>>> +
+>>>> +    /* If the hardware/firmware marked hugepage support disabled. */
+>>>> +    if (transparent_hugepage_flags & (1 << TRANSPARENT_HUGEPAGE_UNSUPPORTED))
+>>>> +        return 0;
+>>>> +
+>>>> +    /*
+>>>> +     * Following the 'deny' semantics of the top level, force the huge
+>>>> +     * option off from all mounts.
+>>>> +     */
+>>>> +    if (shmem_huge == SHMEM_HUGE_DENY)
+>>>> +        return 0;
+>>>
+>>> I don't quite get this, I don't think its the desirable behaviour. This is
+>>> saying that if the top-level shemem_enabled control is set to 'deny', then all
+>>> mTHP sizes, regardless of their control's setting are disabled?
+>>>
+>>> The anon controls don't work like that; you can set the top-level control to
+>>> anything you like, but its only consumed if the per-size controls are
+>>> inheriting it.
+>>
+>> IMO, 'deny' option is not similar like 'never' option.
+>>
+>>>
+>>> So for the deny case, wouldn't it be better to allow that as an option on all
+>>> the per-size controls (and implicitly let it be inherrited from the top-level)?
+>>
+>>  From 'deny' option's semantics:
+>> "disables huge on shm_mnt and all mounts, for emergency use;"
+> 
+> Right. Today, tmpfs only supports PMD-sized THP. So for all per-size controls
+> except the PMD-size control, 'deny' and 'never' would be the same practically
+> speaking. For the PMD-size control, 'deny' would disable THP for both anon shmem
+> and all tmpfs mounts, whereas 'never' would only disable THP for anon shmem.
+> When tmpfs gains mTHP support, 'deny' in the other per-size controls would also
+> disable that size for the tmpfs mounts.
 
-diff --git a/arch/loongarch/include/asm/kvm_extioi.h b/arch/loongarch/include/asm/kvm_extioi.h
-index 48a117b2be5d..d2af039a7d6f 100644
---- a/arch/loongarch/include/asm/kvm_extioi.h
-+++ b/arch/loongarch/include/asm/kvm_extioi.h
-@@ -19,8 +19,25 @@
- #define EXTIOI_BASE			0x1400
- #define EXTIOI_SIZE			0x900
- 
-+#define EXTIOI_NODETYPE_START		0xa0
-+#define EXTIOI_NODETYPE_END		0xbf
-+#define EXTIOI_IPMAP_START		0xc0
-+#define EXTIOI_IPMAP_END		0xc7
-+#define EXTIOI_ENABLE_START		0x200
-+#define EXTIOI_ENABLE_END		0x21f
-+#define EXTIOI_BOUNCE_START		0x280
-+#define EXTIOI_BOUNCE_END		0x29f
-+#define EXTIOI_ISR_START		0x300
-+#define EXTIOI_ISR_END			0x31f
-+#define EXTIOI_COREISR_START		0x400
-+#define EXTIOI_COREISR_END		0x71f
-+#define EXTIOI_COREMAP_START		0x800
-+#define EXTIOI_COREMAP_END		0x8ff
-+
- #define LS3A_INTC_IP			8
- 
-+#define EXTIOI_SW_COREMAP_FLAG		(1 << 0)
-+
- struct loongarch_extioi {
- 	spinlock_t lock;
- 	struct kvm *kvm;
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 0e4e46e06420..5c2adebd16b2 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -44,6 +44,8 @@ struct kvm_vm_stat {
- 	u64 hugepages;
- 	u64 ipi_read_exits;
- 	u64 ipi_write_exits;
-+	u64 extioi_read_exits;
-+	u64 extioi_write_exits;
- };
- 
- struct kvm_vcpu_stat {
-diff --git a/arch/loongarch/kvm/intc/extioi.c b/arch/loongarch/kvm/intc/extioi.c
-index 2f1b93e95f97..dd18b7a7599a 100644
---- a/arch/loongarch/kvm/intc/extioi.c
-+++ b/arch/loongarch/kvm/intc/extioi.c
-@@ -7,18 +7,591 @@
- #include <asm/kvm_vcpu.h>
- #include <linux/count_zeros.h>
- 
-+#define loongarch_ext_irq_lock(s, flags)	spin_lock_irqsave(&s->lock, flags)
-+#define loongarch_ext_irq_unlock(s, flags)	spin_unlock_irqrestore(&s->lock, flags)
-+
-+static void extioi_update_irq(struct loongarch_extioi *s, int irq, int level)
-+{
-+	int ipnum, cpu, found, irq_index, irq_mask;
-+	struct kvm_interrupt vcpu_irq;
-+	struct kvm_vcpu *vcpu;
-+
-+	ipnum = s->ipmap.reg_u8[irq / 32];
-+	ipnum = count_trailing_zeros(ipnum);
-+	ipnum = (ipnum >= 0 && ipnum < 4) ? ipnum : 0;
-+
-+	cpu = s->sw_coremap[irq];
-+	vcpu = kvm_get_vcpu(s->kvm, cpu);
-+	irq_index = irq / 32;
-+	/* length of accessing core isr is 4 bytes */
-+	irq_mask = 1 << (irq & 0x1f);
-+
-+	if (level) {
-+		/* if not enable return false */
-+		if (((s->enable.reg_u32[irq_index]) & irq_mask) == 0)
-+			return;
-+		s->coreisr.reg_u32[cpu][irq_index] |= irq_mask;
-+		found = find_first_bit(s->sw_coreisr[cpu][ipnum], EXTIOI_IRQS);
-+		set_bit(irq, s->sw_coreisr[cpu][ipnum]);
-+	} else {
-+		s->coreisr.reg_u32[cpu][irq_index] &= ~irq_mask;
-+		clear_bit(irq, s->sw_coreisr[cpu][ipnum]);
-+		found = find_first_bit(s->sw_coreisr[cpu][ipnum], EXTIOI_IRQS);
-+	}
-+
-+	if (found < EXTIOI_IRQS)
-+		/* other irq is handling, need not update parent irq level */
-+		return;
-+
-+	vcpu_irq.irq = level ? INT_HWI0 + ipnum : -(INT_HWI0 + ipnum);
-+	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-+}
-+
-+void extioi_set_irq(struct loongarch_extioi *s, int irq, int level)
-+{
-+	unsigned long *isr = (unsigned long *)s->isr.reg_u8;
-+	unsigned long flags;
-+
-+	level ? set_bit(irq, isr) : clear_bit(irq, isr);
-+	if (!level)
-+		return;
-+	loongarch_ext_irq_lock(s, flags);
-+	extioi_update_irq(s, irq, level);
-+	loongarch_ext_irq_unlock(s, flags);
-+}
-+
-+static inline void extioi_enable_irq(struct kvm_vcpu *vcpu, struct loongarch_extioi *s,
-+				int index, u8 mask, int level)
-+{
-+	u8 val;
-+	int irq;
-+
-+	val = mask & s->isr.reg_u8[index];
-+	irq = ffs(val);
-+	while (irq != 0) {
-+		/*
-+		 * enable bit change from 0 to 1,
-+		 * need to update irq by pending bits
-+		 */
-+		extioi_update_irq(s, irq - 1 + index * 8, level);
-+		val &= ~(1 << (irq - 1));
-+		irq = ffs(val);
-+	}
-+}
-+
-+static int loongarch_extioi_writeb(struct kvm_vcpu *vcpu,
-+				struct loongarch_extioi *s,
-+				gpa_t addr, int len, const void *val)
-+{
-+	int index, irq, ret = 0;
-+	u8 data, old_data, cpu;
-+	u8 coreisr, old_coreisr;
-+	gpa_t offset;
-+
-+	data = *(u8 *)val;
-+	offset = addr - EXTIOI_BASE;
-+
-+	switch (offset) {
-+	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
-+		index = (offset - EXTIOI_NODETYPE_START);
-+		s->nodetype.reg_u8[index] = data;
-+		break;
-+	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
-+		/*
-+		 * ipmap cannot be set at runtime, can be set only at the beginning
-+		 * of intr driver, need not update upper irq level
-+		 */
-+		index = (offset - EXTIOI_IPMAP_START);
-+		s->ipmap.reg_u8[index] = data;
-+		break;
-+	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
-+		index = (offset - EXTIOI_ENABLE_START);
-+		old_data = s->enable.reg_u8[index];
-+		s->enable.reg_u8[index] = data;
-+		/*
-+		 * 1: enable irq.
-+		 * update irq when isr is set.
-+		 */
-+		data = s->enable.reg_u8[index] & ~old_data & s->isr.reg_u8[index];
-+		extioi_enable_irq(vcpu, s, index, data, 1);
-+		/*
-+		 * 0: disable irq.
-+		 * update irq when isr is set.
-+		 */
-+		data = ~s->enable.reg_u8[index] & old_data & s->isr.reg_u8[index];
-+		extioi_enable_irq(vcpu, s, index, data, 0);
-+		break;
-+	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
-+		/* do not emulate hw bounced irq routing */
-+		index = offset - EXTIOI_BOUNCE_START;
-+		s->bounce.reg_u8[index] = data;
-+		break;
-+	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
-+		/* length of accessing core isr is 8 bytes */
-+		index = (offset - EXTIOI_COREISR_START);
-+		/* using attrs to get current cpu index */
-+		cpu = vcpu->vcpu_id;
-+		coreisr = data;
-+		old_coreisr = s->coreisr.reg_u8[cpu][index];
-+		/* write 1 to clear interrupt */
-+		s->coreisr.reg_u8[cpu][index] = old_coreisr & ~coreisr;
-+		coreisr &= old_coreisr;
-+		irq = ffs(coreisr);
-+		while (irq != 0) {
-+			extioi_update_irq(s, irq - 1 + index * 8, 0);
-+			coreisr &= ~(1 << (irq - 1));
-+			irq = ffs(coreisr);
-+		}
-+		break;
-+	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
-+		irq = offset - EXTIOI_COREMAP_START;
-+		index = irq;
-+		s->coremap.reg_u8[index] = data;
-+
-+		cpu = data & 0xff;
-+		cpu = ffs(cpu) - 1;
-+		cpu = (cpu >= 4) ? 0 : cpu;
-+
-+		if (s->sw_coremap[irq] == cpu)
-+			break;
-+
-+		if (test_bit(irq, (unsigned long *)s->isr.reg_u8)) {
-+			/*
-+			 * lower irq at old cpu and raise irq at new cpu
-+			 */
-+			extioi_update_irq(s, irq, 0);
-+			s->sw_coremap[irq] = cpu;
-+			extioi_update_irq(s, irq, 1);
-+		} else
-+			s->sw_coremap[irq] = cpu;
-+
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+	return ret;
-+}
-+
-+static int loongarch_extioi_writew(struct kvm_vcpu *vcpu,
-+				struct loongarch_extioi *s,
-+				gpa_t addr, int len, const void *val)
-+{
-+	int i, index, irq, ret = 0;
-+	u8 cpu;
-+	u32 data, old_data;
-+	u32 coreisr, old_coreisr;
-+	gpa_t offset;
-+
-+	data = *(u32 *)val;
-+	offset = addr - EXTIOI_BASE;
-+
-+	switch (offset) {
-+	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
-+		index = (offset - EXTIOI_NODETYPE_START) >> 2;
-+		s->nodetype.reg_u32[index] = data;
-+		break;
-+	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
-+		/*
-+		 * ipmap cannot be set at runtime, can be set only at the beginning
-+		 * of intr driver, need not update upper irq level
-+		 */
-+		index = (offset - EXTIOI_IPMAP_START) >> 2;
-+		s->ipmap.reg_u32[index] = data;
-+		break;
-+	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
-+		index = (offset - EXTIOI_ENABLE_START) >> 2;
-+		old_data = s->enable.reg_u32[index];
-+		s->enable.reg_u32[index] = data;
-+		/*
-+		 * 1: enable irq.
-+		 * update irq when isr is set.
-+		 */
-+		data = s->enable.reg_u32[index] & ~old_data & s->isr.reg_u32[index];
-+		index = index << 2;
-+		for (i = 0; i < sizeof(data); i++) {
-+			u8 mask = (data >> (i * 8)) & 0xff;
-+
-+			extioi_enable_irq(vcpu, s, index + i, mask, 1);
-+		}
-+		/*
-+		 * 0: disable irq.
-+		 * update irq when isr is set.
-+		 */
-+		data = ~s->enable.reg_u32[index] & old_data & s->isr.reg_u32[index];
-+		for (i = 0; i < sizeof(data); i++) {
-+			u8 mask = (data >> (i * 8)) & 0xff;
-+
-+			extioi_enable_irq(vcpu, s, index, mask, 0);
-+		}
-+		break;
-+	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
-+		/* do not emulate hw bounced irq routing */
-+		index = (offset - EXTIOI_BOUNCE_START) >> 2;
-+		s->bounce.reg_u32[index] = data;
-+		break;
-+	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
-+		/* length of accessing core isr is 8 bytes */
-+		index = (offset - EXTIOI_COREISR_START) >> 2;
-+		/* using attrs to get current cpu index */
-+		cpu = vcpu->vcpu_id;
-+		coreisr = data;
-+		old_coreisr = s->coreisr.reg_u32[cpu][index];
-+		/* write 1 to clear interrupt */
-+		s->coreisr.reg_u32[cpu][index] = old_coreisr & ~coreisr;
-+		coreisr &= old_coreisr;
-+		irq = ffs(coreisr);
-+		while (irq != 0) {
-+			extioi_update_irq(s, irq - 1 + index * 32, 0);
-+			coreisr &= ~(1 << (irq - 1));
-+			irq = ffs(coreisr);
-+		}
-+		break;
-+	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
-+		irq = offset - EXTIOI_COREMAP_START;
-+		index = irq >> 2;
-+
-+		s->coremap.reg_u32[index] = data;
-+
-+		for (i = 0; i < sizeof(data); i++) {
-+			cpu = data & 0xff;
-+			cpu = ffs(cpu) - 1;
-+			cpu = (cpu >= 4) ? 0 : cpu;
-+			data = data >> 8;
-+
-+			if (s->sw_coremap[irq + i] == cpu)
-+				continue;
-+
-+			if (test_bit(irq, (unsigned long *)s->isr.reg_u8)) {
-+				/*
-+				 * lower irq at old cpu and raise irq at new cpu
-+				 */
-+				extioi_update_irq(s, irq + i, 0);
-+				s->sw_coremap[irq + i] = cpu;
-+				extioi_update_irq(s, irq + i, 1);
-+			} else
-+				s->sw_coremap[irq + i] = cpu;
-+		}
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+	return ret;
-+}
-+
-+static int loongarch_extioi_writel(struct kvm_vcpu *vcpu,
-+				struct loongarch_extioi *s,
-+				gpa_t addr, int len, const void *val)
-+{
-+	int i, index, irq, bits, ret = 0;
-+	u8 cpu;
-+	u64 data, old_data;
-+	u64 coreisr, old_coreisr;
-+	gpa_t offset;
-+
-+	data = *(u64 *)val;
-+	offset = addr - EXTIOI_BASE;
-+
-+	switch (offset) {
-+	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
-+		index = (offset - EXTIOI_NODETYPE_START) >> 3;
-+		s->nodetype.reg_u64[index] = data;
-+		break;
-+	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
-+		/*
-+		 * ipmap cannot be set at runtime, can be set only at the beginning
-+		 * of intr driver, need not update upper irq level
-+		 */
-+		index = (offset - EXTIOI_IPMAP_START) >> 3;
-+		s->ipmap.reg_u64 = data;
-+		break;
-+	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
-+		index = (offset - EXTIOI_ENABLE_START) >> 3;
-+		old_data = s->enable.reg_u64[index];
-+		s->enable.reg_u64[index] = data;
-+		/*
-+		 * 1: enable irq.
-+		 * update irq when isr is set.
-+		 */
-+		data = s->enable.reg_u64[index] & ~old_data & s->isr.reg_u64[index];
-+		index = index << 3;
-+		for (i = 0; i < sizeof(data); i++) {
-+			u8 mask = (data >> (i * 8)) & 0xff;
-+
-+			extioi_enable_irq(vcpu, s, index + i, mask, 1);
-+		}
-+		/*
-+		 * 0: disable irq.
-+		 * update irq when isr is set.
-+		 */
-+		data = ~s->enable.reg_u64[index] & old_data & s->isr.reg_u64[index];
-+		for (i = 0; i < sizeof(data); i++) {
-+			u8 mask = (data >> (i * 8)) & 0xff;
-+
-+			extioi_enable_irq(vcpu, s, index, mask, 0);
-+		}
-+		break;
-+	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
-+		/* do not emulate hw bounced irq routing */
-+		index = (offset - EXTIOI_BOUNCE_START) >> 3;
-+		s->bounce.reg_u64[index] = data;
-+		break;
-+	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
-+		/* length of accessing core isr is 8 bytes */
-+		index = (offset - EXTIOI_COREISR_START) >> 3;
-+		/* using attrs to get current cpu index */
-+		cpu = vcpu->vcpu_id;
-+		coreisr = data;
-+		old_coreisr = s->coreisr.reg_u64[cpu][index];
-+		/* write 1 to clear interrupt */
-+		s->coreisr.reg_u64[cpu][index] = old_coreisr & ~coreisr;
-+		coreisr &= old_coreisr;
-+
-+		bits = sizeof(u64) * 8;
-+		irq = find_first_bit((void *)&coreisr, bits);
-+		while (irq < bits) {
-+			extioi_update_irq(s, irq + index * bits, 0);
-+			bitmap_clear((void *)&coreisr, irq, 1);
-+			irq = find_first_bit((void *)&coreisr, bits);
-+		}
-+		break;
-+	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
-+		irq = offset - EXTIOI_COREMAP_START;
-+		index = irq >> 3;
-+
-+		s->coremap.reg_u64[index] = data;
-+
-+		for (i = 0; i < sizeof(data); i++) {
-+			cpu = data & 0xff;
-+			cpu = ffs(cpu) - 1;
-+			cpu = (cpu >= 4) ? 0 : cpu;
-+			data = data >> 8;
-+
-+			if (s->sw_coremap[irq + i] == cpu)
-+				continue;
-+
-+			if (test_bit(irq, (unsigned long *)s->isr.reg_u8)) {
-+				/*
-+				 * lower irq at old cpu and raise irq at new cpu
-+				 */
-+				extioi_update_irq(s, irq + i, 0);
-+				s->sw_coremap[irq + i] = cpu;
-+				extioi_update_irq(s, irq + i, 1);
-+			} else
-+				s->sw_coremap[irq + i] = cpu;
-+		}
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+	return ret;
-+}
-+
- static int kvm_loongarch_extioi_write(struct kvm_vcpu *vcpu,
- 				struct kvm_io_device *dev,
- 				gpa_t addr, int len, const void *val)
- {
--	return 0;
-+	int ret;
-+	struct loongarch_extioi *extioi = vcpu->kvm->arch.extioi;
-+	unsigned long flags;
-+
-+	if (!extioi) {
-+		kvm_err("%s: extioi irqchip not valid!\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	vcpu->kvm->stat.extioi_write_exits++;
-+	loongarch_ext_irq_lock(extioi, flags);
-+
-+	switch (len) {
-+	case 1:
-+		ret = loongarch_extioi_writeb(vcpu, extioi, addr, len, val);
-+		break;
-+	case 4:
-+		ret = loongarch_extioi_writew(vcpu, extioi, addr, len, val);
-+		break;
-+	case 8:
-+		ret = loongarch_extioi_writel(vcpu, extioi, addr, len, val);
-+		break;
-+	default:
-+		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
-+						__func__, addr, len);
-+	}
-+
-+	loongarch_ext_irq_unlock(extioi, flags);
-+
-+
-+	return ret;
-+}
-+
-+static int loongarch_extioi_readb(struct kvm_vcpu *vcpu, struct loongarch_extioi *s,
-+				gpa_t addr, int len, void *val)
-+{
-+	int index, ret = 0;
-+	gpa_t offset;
-+	u64 data;
-+
-+	offset = addr - EXTIOI_BASE;
-+	switch (offset) {
-+	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
-+		index = offset - EXTIOI_NODETYPE_START;
-+		data = s->nodetype.reg_u8[index];
-+		break;
-+	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
-+		index = offset - EXTIOI_IPMAP_START;
-+		data = s->ipmap.reg_u8[index];
-+		break;
-+	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
-+		index = offset - EXTIOI_ENABLE_START;
-+		data = s->enable.reg_u8[index];
-+		break;
-+	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
-+		index = offset - EXTIOI_BOUNCE_START;
-+		data = s->bounce.reg_u8[index];
-+		break;
-+	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
-+		/* length of accessing core isr is 8 bytes */
-+		index = offset - EXTIOI_COREISR_START;
-+		data = s->coreisr.reg_u8[vcpu->vcpu_id][index];
-+		break;
-+	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
-+		index = offset - EXTIOI_COREMAP_START;
-+		data = s->coremap.reg_u8[index];
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	*(u8 *)val = data;
-+
-+	return ret;
-+}
-+
-+static int loongarch_extioi_readw(struct kvm_vcpu *vcpu, struct loongarch_extioi *s,
-+				gpa_t addr, int len, void *val)
-+{
-+	int index, ret = 0;
-+	gpa_t offset;
-+	u64 data;
-+
-+	offset = addr - EXTIOI_BASE;
-+	switch (offset) {
-+	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
-+		index = (offset - EXTIOI_NODETYPE_START) >> 2;
-+		data = s->nodetype.reg_u32[index];
-+		break;
-+	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
-+		index = (offset - EXTIOI_IPMAP_START) >> 2;
-+		data = s->ipmap.reg_u32[index];
-+		break;
-+	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
-+		index = (offset - EXTIOI_ENABLE_START) >> 2;
-+		data = s->enable.reg_u32[index];
-+		break;
-+	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
-+		index = (offset - EXTIOI_BOUNCE_START) >> 2;
-+		data = s->bounce.reg_u32[index];
-+		break;
-+	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
-+		/* length of accessing core isr is 8 bytes */
-+		index = (offset - EXTIOI_COREISR_START) >> 2;
-+		data = s->coreisr.reg_u32[vcpu->vcpu_id][index];
-+		break;
-+	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
-+		index = (offset - EXTIOI_COREMAP_START) >> 2;
-+		data = s->coremap.reg_u32[index];
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	*(u32 *)val = data;
-+
-+	return ret;
-+}
-+
-+static int loongarch_extioi_readl(struct kvm_vcpu *vcpu, struct loongarch_extioi *s,
-+				gpa_t addr, int len, void *val)
-+{
-+	int index, ret = 0;
-+	gpa_t offset;
-+	u64 data;
-+
-+	offset = addr - EXTIOI_BASE;
-+	switch (offset) {
-+	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
-+		index = (offset - EXTIOI_NODETYPE_START) >> 3;
-+		data = s->nodetype.reg_u64[index];
-+		break;
-+	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
-+		index = (offset - EXTIOI_IPMAP_START) >> 3;
-+		data = s->ipmap.reg_u64;
-+		break;
-+	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
-+		index = (offset - EXTIOI_ENABLE_START) >> 3;
-+		data = s->enable.reg_u64[index];
-+		break;
-+	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
-+		index = (offset - EXTIOI_BOUNCE_START) >> 3;
-+		data = s->bounce.reg_u64[index];
-+		break;
-+	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
-+		/* length of accessing core isr is 8 bytes */
-+		index = (offset - EXTIOI_COREISR_START) >> 3;
-+		data = s->coreisr.reg_u64[vcpu->vcpu_id][index];
-+		break;
-+	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
-+		index = (offset - EXTIOI_COREMAP_START) >> 3;
-+		data = s->coremap.reg_u64[index];
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	*(u64 *)val = data;
-+
-+	return ret;
- }
- 
- static int kvm_loongarch_extioi_read(struct kvm_vcpu *vcpu,
- 				struct kvm_io_device *dev,
- 				gpa_t addr, int len, void *val)
- {
--	return 0;
-+	int ret;
-+	struct loongarch_extioi *extioi = vcpu->kvm->arch.extioi;
-+	unsigned long flags;
-+
-+	if (!extioi) {
-+		kvm_err("%s: extioi irqchip not valid!\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	vcpu->kvm->stat.extioi_read_exits++;
-+	loongarch_ext_irq_lock(extioi, flags);
-+
-+	switch (len) {
-+	case 1:
-+		ret = loongarch_extioi_readb(vcpu, extioi, addr, len, val);
-+		break;
-+	case 4:
-+		ret = loongarch_extioi_readw(vcpu, extioi, addr, len, val);
-+		break;
-+	case 8:
-+		ret = loongarch_extioi_readl(vcpu, extioi, addr, len, val);
-+		break;
-+	default:
-+		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
-+						__func__, addr, len);
-+	}
-+
-+	loongarch_ext_irq_unlock(extioi, flags);
-+
-+	return ret;
- }
- 
- static const struct kvm_io_device_ops kvm_loongarch_extioi_ops = {
--- 
-2.39.1
+Not really. We will not add 'deny' and 'force' testing option for each 
+per-size mTHP control as suggested by Hugh in the previous MM meeting[1].
 
+[1] 
+https://lore.kernel.org/all/f1783ff0-65bd-4b2b-8952-52b6822a0835@redhat.com/T/#u
+
+> I disagree with the current implementation where setting it up so that a
+> top-level 'deny' overrides whatever is in the per-size controls simply because
+> it's different to the model implemented for anon THP. That's my 2 cents. If
+> nobody else agrees then that ok - I'll fix the above bug according to the
+> current model.
+
+I remember we have customers who use the 'deny' option to forcibly turn 
+off the huge page option for all mounts (including shm_mnt). But if 
+shmem/tmpfs uses mTHP and users set 'deny', they cannot force all huge 
+orders off and they must also do 'echo never > 
+/sys/kernel/mm/transparent_hugepage/hugepages-XXXkB/shmem_enabled' to 
+disable all huge orders option, which breaks the previous user habits, IMHO.
+
+In additon, I do not think this creates a difference with the anon mTHP 
+model, as anon mTHP does not have these shmem special 'deny' and 'force' 
+options for testing purposes. In my view, the current 'deny' option 
+fulfills the semantic definition of 'For use in emergencies, to force 
+the *huge* option off from all mounts'.
+>> It is usually used for testing to shut down all huge pages from the old ages.
+>> Moreover, mTHP interfaces will be used as a huge order filter to support tmpfs,
+>> so I think it will make life easier to disable all huge orders for testing or
+>> emergency use, as well as to maintain the original semantics.>
+>>>> +
+>>>> +    /*
+>>>> +     * Only allow inherit orders if the top-level value is 'force', which
+>>>> +     * means non-PMD sized THP can not override 'huge' mount option now.
+>>>> +     */
+>>>> +    if (shmem_huge == SHMEM_HUGE_FORCE)
+>>>> +        return READ_ONCE(huge_shmem_orders_inherit);
+>>>
+>>> I vaguely recall that we originally discussed that trying to set 'force' on the
+>>> top level control while any per-size controls were set to 'inherit' would be an
+>>> error, and trying to set 'force' on any per-size control except the PMD-size
+>>> would be an error?
+>>
+>> Right.
+>>
+>>> I don't really understand this logic. Shouldn't we just be looking at the
+>>> per-size control settings (or the top-level control as a proxy for every
+>>> per-size control that has 'inherit' set)?
+>>
+>> ‘force’ will apply the huge orders for anon shmem and tmpfs, so now we only
+>> allow pmd-mapped THP to be forced. We should not look at per-size control
+>> settings for tmpfs now (mTHP for tmpfs will be discussed in future).
+> 
+> But why not just maintain per-size controls and refactor tmpfs to just look at
+> the PMD-size THP control for now. It can ignore the other sizes. That's much
+> simpler and cleaner IMHO.
+
+As I said above, 'force' and 'deny' option will not be added for 
+per-size controls.
