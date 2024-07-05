@@ -1,160 +1,111 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAAF1C6A0
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 06:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B23B1C6A0
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 06:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720159369; cv=none; b=WNBhCZhoz0FVi2iXY+eGEmZd/bCd5WxKvTsobkcpwh+CpIavY10e02pxP8UtJqWrFGyNZRSFbuDIUWi0HMRPQEBv+Zh95LLhAo2tKA+MNE7c4G/7L1OZryyuiyFvPrMa8HjBmocPnJ3aZMQ7YLh9+TmJRVujYyR1EitQAG6BRdE=
+	t=1720159530; cv=none; b=dKnbQhGbwqjrACiez7taiEs/PCYdUr9Ysi6rxTqvpMpRlzHE2kdIIVKxfqPa83Nhxcu8fWzPObPXqhQbc2Yg0DWbG++vInHgAC4v4wp+SBowmlbpDjvmzuuXeIP9cCxxUjXCMRqMvnPSS1PTSKn+tmy/qLj8lIXufK2V/hIR5Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720159369; c=relaxed/simple;
-	bh=hkJl98EoDT03A3Kwqz/YdDle0+Uy2XmHYz7diK/3Fu0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gotyHHSYra/7KikRw9ShekM125TEXIUpno7vxZI5Qwb5Zj+VSRLy+UzHoQYqlH+Mnblou1KgJg5yBurUusMxwjO2/6FkXNHVXsAy8tZqujqyvxQF3hANUOCnLOCFQEWq1VIntw8/suzmWefAAuTmIKW+inPeiQQMxMj1eVic5V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=I+C+35P3; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1720159530; c=relaxed/simple;
+	bh=ocWTpp4xe20M3zX37/BRgdZMFUwjybjL7mOwaBB1GT8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VMItN+jwmjV6OTsAALJf5N57iKxYyDgneemSBFD5PzF6wVBNeOxEkskx4RCsMbI4V7Slg3OVIvTgos72MAtXw4KMIX5eS4LV+fyh8gIxXw9wEE1wG9pTncnlLcgxldw3KA7urpN2wkUz9unRPaXV4+JYz4XriTrkgtxsH+Q9CD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KK4XiiLR; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="I+C+35P3"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1720159358; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=l0XBmP+QWTCsjcPW7DyKmrEN7J5UoybSmB6fGTi8/zc=;
-	b=I+C+35P3Xy7FNkeOL6Iqksf8nrnT2MtEgvgN8gNeCu86Hkt+4IKbu/tPX35ZX7VKJvL/tb14vRbCmMd0vE3NnMDjN7nGF57ycDbWwxzzyn0kVwgITFlVwZqYFjGVvvz5yHam+shRlmIP4lXWuV+PvSkEur2dciDmAg3oKf2OwMI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W9tspwK_1720159355;
-Received: from 30.97.56.65(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9tspwK_1720159355)
-          by smtp.aliyun-inc.com;
-          Fri, 05 Jul 2024 14:02:36 +0800
-Message-ID: <1d795623-8da9-420a-af50-f6308ed5a283@linux.alibaba.com>
-Date: Fri, 5 Jul 2024 14:02:35 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KK4XiiLR"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-58b966b4166so1532127a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 23:05:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720159527; x=1720764327; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CEGiUaZLdnHx0yMh5c5wWBK9rx7H+2K8obOdncrBZg8=;
+        b=KK4XiiLRKU0TfJxn08yGQs8OuwwzJ71eLBdsYURBcI3RqcoOuzS7uxZ6ehzpaUZrIn
+         EAn73YcE8IBl+6rJm6kQ5EwCzS1B+vzkJhgE34c+8XFLZ/8v9bbxBM2kkcfw78IxkDMo
+         7Gl2twpyuqCRPgt5B1V1ngNoNAaAN6nmDE5/9suvdMdi5uRyHtkfhazCwi0xWVsAuafL
+         5EbzW/YjpVoWb8fAy9U23KPg1skrALyEFU0My+pqi7U8yBaKFbpxs41n+t5hGgGJw8gR
+         gUKteTqKd48mOdpdGbN1DHpsN94b4t1gMx1lK/CT0nwijbu2YaiEEP86XZG3u7j9+RF5
+         Z4tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720159527; x=1720764327;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CEGiUaZLdnHx0yMh5c5wWBK9rx7H+2K8obOdncrBZg8=;
+        b=vW75gaBv0ffBcBXuMFFM4EgL62JgOiHngNFlo7s/ElE2Tu8VeXXhtv23vx0b6iB3+c
+         H7LowwCd8ALFZ9gZyWA9NylwUDZAzTWiOzUJJ+BlHvfWPzSnTzZvPfsKbdCLbuVv0uHX
+         VaTED/KC6eZ6dhKCxEdx1iyQYpMY6VwlkPZb6s+sMmFDHA9esOgp75/CxaGmmJld+y4v
+         wMON4SHXQflUxGTsqn4PyKwvmvIUiTmJcKDBPyuVpfU1Se+O8J3jvdLujfjPhtPNZHW9
+         3ArdbwJJ44QCQps3ugGVdadFnKAwkGd+YsKQ6RZpZsyvPrMdIuTkDZ6QM4Az5XJv79Ak
+         hixw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVO3DE7f+fZsaTGdow8fmcVXfTnG4z4iQBrvfGa/ArtxVw/7eZUAX6x+PRSQzt9nxzbH30pqVR+47qZX22hGj6o61JO3OlDXAj3I29
+X-Gm-Message-State: AOJu0YyXoMCIHbSFOjcbzORvYR0VdPN+l3kT7b9EMLfugYkIbzVipVb+
+	JR17MZWYSbV/PjlxQ95GmwX/MRERS3txaI5TKcV9JEVu/Y8uM23tW3J/XGzw
+X-Google-Smtp-Source: AGHT+IFUj5fhyTMHVVSInQGpgKofNVfDPkvLiND5Roh2i0SEAetOK+ekHpZEazZs0rz4hPCrfZivMg==
+X-Received: by 2002:a05:6402:2792:b0:58d:45af:43dd with SMTP id 4fb4d7f45d1cf-58e5b4aed24mr2500973a12.36.1720159526937;
+        Thu, 04 Jul 2024 23:05:26 -0700 (PDT)
+Received: from [127.0.1.1] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58f86619b5fsm521351a12.44.2024.07.04.23.05.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 23:05:26 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Date: Fri, 05 Jul 2024 08:05:18 +0200
+Subject: [PATCH] bus: sunxi-rsb: Constify struct regmap_bus
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: thp: support "THPeligible" semantics for mTHP with
- anonymous shmem
-To: Bang Li <libang.li@antgroup.com>, hughd@google.com,
- akpm@linux-foundation.org
-Cc: david@redhat.com, ryan.roberts@arm.com, wangkefeng.wang@huawei.com,
- ioworker0@gmail.com, ziy@nvidia.com, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-References: <20240705032309.24933-1-libang.li@antgroup.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20240705032309.24933-1-libang.li@antgroup.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240705-sunxi-rsb-bus-const-regmap_bus-v1-1-129094960ce9@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAB2Nh2YC/x2NwQqDMBAFf0X23IVolEJ/pUhJ0qfuoVF2tQjiv
+ zf1OHOYOcigAqNHdZDiKyZzLlDfKkpTyCNY3oWpcU3r7q5j2/IurBY5bsZpzrayYvyE5fUXPgF
+ t8PC1j1Qii2KQ/Ro8+/P8Aftv86VwAAAA
+To: Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720159525; l=958;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=ocWTpp4xe20M3zX37/BRgdZMFUwjybjL7mOwaBB1GT8=;
+ b=2SZJutRFCj2jCTpLniijzBGhIb2SG1TuD5ER+pGGwsq+QPEHY6uSupbgFn8D7Q/4lEkl7+1mg
+ swVrpaiyqrqBLskhB+0vp0txpZpckD774ZSq1SboNiIzh/OR4VJIk/b
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
+`regmap_sunxi_rsb` is not modified and can be declared as const to
+move its data to a read-only section.
 
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+---
+ drivers/bus/sunxi-rsb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2024/7/5 11:23, Bang Li wrote:
-> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
-> anonymous shmem"), we can configure different policies through
-> the multi-size THP sysfs interface for anonymous shmem. But
-> currently "THPeligible" indicates only whether the mapping is
-> eligible for allocating THP-pages as well as the THP is PMD
-> mappable or not for anonymous shmem, we need to support semantics
-> for mTHP with anonymous shmem similar to those for mTHP with
-> anonymous memory.
-> 
-> Signed-off-by: Bang Li <libang.li@antgroup.com>
+diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+index 1e29ba76615d..ac6c7e4900f4 100644
+--- a/drivers/bus/sunxi-rsb.c
++++ b/drivers/bus/sunxi-rsb.c
+@@ -457,7 +457,7 @@ static void regmap_sunxi_rsb_free_ctx(void *context)
+ 	kfree(ctx);
+ }
+ 
+-static struct regmap_bus regmap_sunxi_rsb = {
++static const struct regmap_bus regmap_sunxi_rsb = {
+ 	.reg_write = regmap_sunxi_rsb_reg_write,
+ 	.reg_read = regmap_sunxi_rsb_reg_read,
+ 	.free_context = regmap_sunxi_rsb_free_ctx,
 
-So far, it looks good to me.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+change-id: 20240705-sunxi-rsb-bus-const-regmap_bus-3cee4a3e313b
 
-> ---
-> Changes since v2 [2]:
->   - Move shmem_allowable_huge_orders() to shmem_fs.h (per Baolin)
->   - clean up these coding style issues (per Ryan)
-> 
-> Changes since v1 [1]:
->   - Put anonymous shmem mthp related logic into
->     thp_vma_allowable_orders() (per David)
-> 
-> [1] https://lore.kernel.org/linux-mm/20240628104926.34209-1-libang.li@antgroup.com/
-> [2] https://lore.kernel.org/linux-mm/20240702023401.41553-1-libang.li@antgroup.com/
-> 
->   include/linux/shmem_fs.h |  9 +++++++++
->   mm/huge_memory.c         | 13 +++++++++----
->   mm/shmem.c               |  9 +--------
->   3 files changed, 19 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-> index 3fb18f7eb73e..1d06b1e5408a 100644
-> --- a/include/linux/shmem_fs.h
-> +++ b/include/linux/shmem_fs.h
-> @@ -113,12 +113,21 @@ int shmem_unuse(unsigned int type);
->   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->   extern bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
->   			  struct mm_struct *mm, unsigned long vm_flags);
-> +unsigned long shmem_allowable_huge_orders(struct inode *inode,
-> +				struct vm_area_struct *vma, pgoff_t index,
-> +				bool global_huge);
->   #else
->   static __always_inline bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
->   					  struct mm_struct *mm, unsigned long vm_flags)
->   {
->   	return false;
->   }
-> +static inline unsigned long shmem_allowable_huge_orders(struct inode *inode,
-> +				struct vm_area_struct *vma, pgoff_t index,
-> +				bool global_huge)
-> +{
-> +	return 0;
-> +}
->   #endif
->   
->   #ifdef CONFIG_SHMEM
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 5cbd838e96e6..0985bd75a624 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -151,10 +151,15 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
->   	 * Must be done before hugepage flags check since shmem has its
->   	 * own flags.
->   	 */
-> -	if (!in_pf && shmem_file(vma->vm_file))
-> -		return shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
-> -				     !enforce_sysfs, vma->vm_mm, vm_flags)
-> -			? orders : 0;
-> +	if (!in_pf && shmem_file(vma->vm_file)) {
-> +		bool global_huge = shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
-> +							!enforce_sysfs, vma->vm_mm, vm_flags);
-> +
-> +		if (!vma_is_anon_shmem(vma))
-> +			return global_huge ? orders : 0;
-> +		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
-> +							vma, vma->vm_pgoff, global_huge);
-> +	}
->   
->   	if (!vma_is_anonymous(vma)) {
->   		/*
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index f24177e9d5cc..921d59c3d669 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -1622,7 +1622,7 @@ static gfp_t limit_gfp_mask(gfp_t huge_gfp, gfp_t limit_gfp)
->   }
->   
->   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -static unsigned long shmem_allowable_huge_orders(struct inode *inode,
-> +unsigned long shmem_allowable_huge_orders(struct inode *inode,
->   				struct vm_area_struct *vma, pgoff_t index,
->   				bool global_huge)
->   {
-> @@ -1707,13 +1707,6 @@ static unsigned long shmem_suitable_orders(struct inode *inode, struct vm_fault
->   	return orders;
->   }
->   #else
-> -static unsigned long shmem_allowable_huge_orders(struct inode *inode,
-> -				struct vm_area_struct *vma, pgoff_t index,
-> -				bool global_huge)
-> -{
-> -	return 0;
-> -}
-> -
->   static unsigned long shmem_suitable_orders(struct inode *inode, struct vm_fault *vmf,
->   					   struct address_space *mapping, pgoff_t index,
->   					   unsigned long orders)
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
+
