@@ -1,60 +1,66 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776DC146A65
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4979A145FED
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720170507; cv=none; b=UeQDB9BqeRxyU3A+g/wLE0VkhCmsbJgpmuAw7qandFqkNtTHR3E2uPk1dnrxTYceY+0VorTBH4RQBMeqMfBdtiWjW9F0FvXF3CYlIoJTY/JBTp/jdln0JaSaXECa2UQqcpC1AXux1dBU+8qKtIub6YuRJLB7xA1YnAkpleOuWD0=
+	t=1720170520; cv=none; b=P2EzBc3fAgCgcK/w6OcHWda+QWuEOFkpXyGcKGeQFx43Y1PKaMI4Z5Cqo5E8KkMtJyngXIHqKtydGXj0l5PWPS5S8etbki+petOj1JHiTrevkEa4jY1wEIBKmFRYhM5QTNFhIZa/g3r/lmJexE3nxv6LtnZKH8Y83sYKNG7+nYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720170507; c=relaxed/simple;
-	bh=Q6CV+cKV3vfp1WIWPz496ePmPxh2p3vMQu3u75CY6A4=;
+	s=arc-20240116; t=1720170520; c=relaxed/simple;
+	bh=VkOfb4GRFkR3GmdUWintxSIn9XZqSK7bfXDdy2wfc/0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iRZljK1vvXLnoBSPpYqG7Zugu2QkRCIcTTfFid9oZSmU8NUvC+Ae++tFjp4yUzgbdkBUalGFKxP29Y1TlzI4g3KN5XNaF22R9VXgm0pOjK2epJ8rX/jbSvkKn+znvScs4dAEK0arOjUl2k/+TP5HUOpIpTfshpypv6MA0H957IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pQJeXI//; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=EbAb1rsVFbGog7HwAi2eqEyXlvHWqV01zX4oCDl8vW8zdwqeYqSBGt4DRJZB9v+/7J+J79ufJaOQW6Z+2CJ4oDrAaDQswh8VvCYfMJ2az2SZrFzxJF8VYTuRdqijS+DqNQI17RsYQaO/VWuyuIygrOSwy43ytMB+SI2/bfV/dp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IsLSy0xU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pQJeXI//"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-36796a9b636so1043206f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 02:08:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720170504; x=1720775304; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=03q+yOKYHARHGbY5lKzGA8asSxn/tzdSW6dNG422NKQ=;
-        b=pQJeXI//w91fJE92JSkMFaRxZEraW1TNoDd2onq9/MVokfBOG/Lo6CfyZcL6/HMjQ1
-         qpJeibYtzXhWzzpYikAsltOShJLpXQUx+ME2/YZzSnYuNd+7WBpm7p3ojYzEnIeA+Juh
-         8pprS+yD+o1OI5i3W7hwjuWhE1GDdMThLMM+ZMPbMPAQwzogmyowCfXoS9XQ33xUpL3r
-         PMDYeueMx+jTpzY5lcLEpD0ZF1dDuVBTZ6KSIxka7yOpuFp7x75tLKy1G3ZNkfbqEEn1
-         7ddTSu5ryXU3p9QBRkYzcDT7UGkGMWeyH+E1ko6/yneb4XKYzJ2g9Nv9phvwzAa/wyaj
-         F3vw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IsLSy0xU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720170518;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kLSncZW2G47dCrYrw0elH8PWHvRnnZSmTqNmYVPtGkk=;
+	b=IsLSy0xUUWy/tWoDbxHOFDQoo4Blr4PgjxsZ45GdOR/mKyiZRuN6nunGpXdMthtmxeHkRl
+	N+Mybhst90VjxbBrleiW176TTm5UhOtUR3x4fRkf1T4Li6zeWYbcdMdea3q7LWcG9ae6Sw
+	3LP3CPBk6Ok72yx7+FPdpP8eswCMDeQ=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-80-9eF7u3VKPWCDK_vFUcoZHw-1; Fri, 05 Jul 2024 05:08:35 -0400
+X-MC-Unique: 9eF7u3VKPWCDK_vFUcoZHw-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52ea4178bafso711086e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 02:08:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720170504; x=1720775304;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=03q+yOKYHARHGbY5lKzGA8asSxn/tzdSW6dNG422NKQ=;
-        b=Cmut1CSBZximy6tVl5H9oGq6GwnBUfEcMYBF7aMIhPCBHUJhsruVBQMl2T5zx6jr+s
-         7r1mMQ65Phd6slXmiVIy7l/I8QITWfOmAHaV54Z/DjbJyNSM7RD9/rVqrfF1sa9pGhQV
-         RYqnoUIcs89nAkJDc/ziQZH85JVhK8+fPSwbntwQceTNlO2axnE0wrxxmwyUBSihAaTf
-         fidMOhVWKSxf+hFT1eENTit0OTcF4EyJjbcD7aNuTno0dZ2Z09AML3KZanGo/2+pR8j5
-         H7PsR68EmbQEoFmlAYM9lw15eYjIphYFqi4+rxbF+SIW7Io7o/hUcwnaSM6tne48x4b7
-         HYmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwJ+BtviwobW6IfwKXlApDSUfT2tAdIjLmtitfLTzEdxnfoVg1mQxI0YvluiocnNBbYXjxna2g8cWfkppzixVVrsbdA+G/6iHTKk6b
-X-Gm-Message-State: AOJu0Yx4kFc2yFQRIw+Bfg15VHP+k/oOTpXiPhC4uGORWHM3WI5H3Q58
-	p/ldHA80yFscYmisOF/vs7ycGfXoX+NRge3AxIEw9+hjw/kv8H0dzwCYmH4Lqi4=
-X-Google-Smtp-Source: AGHT+IFkKshORuwAmsZnn8xxofp9a6fcJtaxQLVFg8WAgCFiqFkB3N2AvjI0Q+cJPc7zo1sInebzog==
-X-Received: by 2002:adf:ed52:0:b0:367:96a0:c4b7 with SMTP id ffacd0b85a97d-3679dd73e11mr2952668f8f.62.1720170503963;
-        Fri, 05 Jul 2024 02:08:23 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36788e37b53sm8830126f8f.45.2024.07.05.02.08.20
+        d=1e100.net; s=20230601; t=1720170514; x=1720775314;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kLSncZW2G47dCrYrw0elH8PWHvRnnZSmTqNmYVPtGkk=;
+        b=sT/kH49yIBMBrU5wh+fk3V1AGQ54alZ6WGijtiyTbQGzRsqo6I8VfLnCB8T12u2+RO
+         hntak7Z7LsXIBdqQLqPdMGsYzm7H8peQoEzkN7glhMZav7sQD2+CKdFicj9VrW8FuY7K
+         opJjo2xiUtxxCZq8U1YXq1GmHlyW17HAWUG2Xb39j8C+3tsG5lUYVt2YPorXv4+NobeP
+         WbK38H7A2O8qBlLeRdFpL4sTZVapQSZXW235d15DVqgQJao+7Mt3wVZJpq9OevB2OYEH
+         lbgsHHdTCaZNIPDZwE01YK4uivYizU65cEkG1FqdQAmlPjyWN9b0UZ0whchsyQzhZC8C
+         2suA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeDhOff0inSgrgV7TGOz2FQiU8zP56bmWMIrv47pektwhoJonqSd9rCPXR7w/Ht3uzX1F+v7ztPRPHO9GvtafwGyghAQ6lOaayQG4A
+X-Gm-Message-State: AOJu0YwPvpAMDL+gJyLOVVmMPXvmykN2p2CEu81vHuiqKabRYTxR4dWK
+	QjT5X/GUQcAIarrh1E1rMEVEjU4qSe9JaOrJVdhZmMmn0ln3jWKxwyDuMHjmCXkVzMi6ev8m/Gw
+	e6gu1ZC7MzobUlRabV3yMmsbY2yMHot/PE4EjgBYQ4feQtBXw2jbr3xUsm7rf3Q==
+X-Received: by 2002:a05:6512:3c98:b0:52e:a60e:3a0a with SMTP id 2adb3069b0e04-52ea60e3be2mr1192761e87.2.1720170514418;
+        Fri, 05 Jul 2024 02:08:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGAoAwUORgLXzI29Jn7/prnFy2lTBG1PmjslR57Y6P0FC0SYvvTAA92CwIBmUODU5uxxuWjOQ==
+X-Received: by 2002:a05:6512:3c98:b0:52e:a60e:3a0a with SMTP id 2adb3069b0e04-52ea60e3be2mr1192743e87.2.1720170513944;
+        Fri, 05 Jul 2024 02:08:33 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c702:b500:3ed7:a1c7:447e:2279? (p200300cbc702b5003ed7a1c7447e2279.dip0.t-ipconnect.de. [2003:cb:c702:b500:3ed7:a1c7:447e:2279])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2ca5casm53422175e9.32.2024.07.05.02.08.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jul 2024 02:08:23 -0700 (PDT)
-Message-ID: <d25c2dbb-f862-4f06-acb7-a3e7ebe954db@linaro.org>
-Date: Fri, 5 Jul 2024 11:08:18 +0200
+        Fri, 05 Jul 2024 02:08:33 -0700 (PDT)
+Message-ID: <677fc803-0bb9-48dc-a1ff-3ca1fb0dea15@redhat.com>
+Date: Fri, 5 Jul 2024 11:08:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,100 +68,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: Add CCU and ETR nodes for
- SA8775p
-To: Jie Gan <quic_jiegan@quicinc.com>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Mike Leach <mike.leach@linaro.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- James Clark <james.clark@arm.com>
-Cc: Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Tingwei Zhang <quic_tingweiz@quicinc.com>,
- Yuanfang Zhang <quic_yuanfang@quicinc.com>,
- Tao Zhang <quic_taozha@quicinc.com>, Trilok Soni <quic_tsoni@quicinc.com>,
- Song Chai <quic_songchai@quicinc.com>, linux-arm-msm@vger.kernel.org
-References: <20240705090049.1656986-1-quic_jiegan@quicinc.com>
- <20240705090049.1656986-5-quic_jiegan@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v3 1/2] mm: add per-order mTHP split counters
+To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
+Cc: dj456119@gmail.com, 21cnbao@gmail.com, ryan.roberts@arm.com,
+ shy828301@gmail.com, ziy@nvidia.com, libang.li@antgroup.com,
+ baolin.wang@linux.alibaba.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Barry Song <baohua@kernel.org>,
+ Mingzhe Yang <mingzhe.yang@ly.com>
+References: <20240704012905.42971-1-ioworker0@gmail.com>
+ <20240704012905.42971-2-ioworker0@gmail.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240705090049.1656986-5-quic_jiegan@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240704012905.42971-2-ioworker0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 05/07/2024 11:00, Jie Gan wrote:
-> Add CCU and ETR device tree nodes to enable related functions.
-> 
-> Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 163 ++++++++++++++++++++++++++
->  1 file changed, 163 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> index 23f1b2e5e624..ef4df5e59ab3 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> @@ -1664,6 +1664,38 @@ ice: crypto@1d88000 {
->  			clocks = <&gcc GCC_UFS_PHY_ICE_CORE_CLK>;
->  		};
->  
-> +		ccu@4001000 {
-> +			compatible = "qcom,coresight-ccu";
-> +			reg = <0x0 0x4001000 0x0 0x1000>;
-> +			reg-names = "ccu-base";
+> @@ -3253,8 +3259,9 @@ int split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
+>   		i_mmap_unlock_read(mapping);
+>   out:
+>   	xas_destroy(&xas);
+> -	if (is_thp)
+> +	if (order >= HPAGE_PMD_ORDER)
 
-NAK, not tested.
+We likely should be using "== HPAGE_PMD_ORDER" here, to be safe for the 
+future.
 
-Follow your own internal guidelines - they are precise in what testing
-you must peform.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Best regards,
-Krzysztof
+-- 
+Cheers,
+
+David / dhildenb
 
