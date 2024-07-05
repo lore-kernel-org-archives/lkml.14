@@ -1,216 +1,162 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B2B1459FE;
-	Fri,  5 Jul 2024 20:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A12D6E5FD;
+	Fri,  5 Jul 2024 21:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720213160; cv=none; b=X/zTGv0l+4SztZbgj8xC8lhF9SP5U965tiwgMy+ODP18p0U3FDxIEHB2MYNjz64+uq3zvJGQytOp6EKphXoKY4DlThfFK/Lkleye4Q0RXSobX7gOASh6iZbCWfCU2fujYmFN+fDL3bDBKSW9mIOEpkH/ERm2C82jWERTcJCYNUE=
+	t=1720213604; cv=none; b=C/ebIlzHwGC+s+3aQjWRFxMFNQhrWX2yUyxd7aPp7r7Cvq4/u7zxs5qNGzS9BPkTkoZjHqSsKXKlrAYERBrPlLW5tjnOw+iQ4YnEVmaTOcD+DyHcaL75hD6vKTYw5i5uhTkY3cjaEQNuMfgHc+eqRS+sHOhUo/OZmqkPaZ7FU3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720213160; c=relaxed/simple;
-	bh=DusGE1cbAr1wr2RiyF/fWaMqiaLUnByl1oNy227VTkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LvgBeYFRXHQQ6RjKN2l8KTo0px8zAVnSSgpybu5Y4GJzlGUwMLhr7hhooDDkKZJfQhJvsVvUbacgbtXPV4gJmBW+N9A0mXVXLMRsAtvcX9VMJD5isFQeHeELhB8prbByY2XYzyYvx0LVDm2PDaP8yXYtW3jhg/LsBxSdgNx2qxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=s1PZHYML; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720213604; c=relaxed/simple;
+	bh=XWryfH3TB8cCYM4OZvTyd02VYjCEf4jbm6tttB9OSew=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=aSv1a1U/Uo5VzRF4TnZqOZs+tcRSz2CUdZKuuPO91k4/IJLyPwlXhNC7hMePxSRvLcGxegq2g/k8HfGzQuMc7Isflf9OUwavW6jOML+p/CYBlBbacHmMFU8Z3BZeTAypL0qHc1PdqCENm9NV/9HcyT7E5fINuBPZr+H1Wx+JCI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SBvPPyXb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KjE/+Fi4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s1PZHYML"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=/Kb85RBByRKA+7u8OSLey5Gf4F7B6fkoI9PSqKXpd2Q=; b=s1PZHYMLbcx7leKxCoOb+zA0Fz
-	WIgyuKpHtDdcKqCLFMKJm8ZdS6QhpDzWXz3psaK/RrEFicjAvC9fRqL5HAT31ux5CfxQVeh4HKD0X
-	Dx24gnQRdn8NofoFKxzTI/jnLJmmwJH1h45FomlHuaYKmQ1yIASsbnk8eT7XGeIaOpr7pax7/9R9L
-	8mYcqfXnv1pbLDD9qjjTe0NbegNpKCrQ76+gi3XOO3yEIOPGi7NEb6y8eD/bv/s/jgiRHqnWvbz4C
-	lN6+iO5k1jTKZfqtpQ8SSiC4ZitAY/UPwKEm1V9UOzJ7gah70FkWDPocpHML7eJpZHIMqILz2A6iW
-	+Az7UDbg==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sPq1N-0000000GpGP-3COr;
-	Fri, 05 Jul 2024 20:59:09 +0000
-Message-ID: <27400c92-632b-4f58-956a-eb2cbb0cfe26@infradead.org>
-Date: Fri, 5 Jul 2024 13:59:08 -0700
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SBvPPyXb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KjE/+Fi4"
+Date: Fri, 05 Jul 2024 21:06:40 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720213601;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dcIzD+cP3zSq83stslrSdUAtI/IEQdf9Krzujt0LW6w=;
+	b=SBvPPyXbS1+eAWGxwZHCilTSr+7qQ9zb7yKCZNQiDcWEBtHCTFRmE4FNlOSGgTkA8PcHbC
+	/1U9yMdlIUKThoX4rFPQYX1tRcYnaDW7JyTHaAIf5VvMsGv/2qMUQDhYpTyWc476eUZBd5
+	t154sDMnYMqL5Wg4mAqK7QDmWFtO8+VMg1wAam+AnHdfECM9VV74UgAASwQdGqe0FAfg8a
+	vEBJzbhrB5TqsNYpW46YnYcx22mrNbt1/CebvsDOMA6Tqi3PcVskW2KsoXUOLvSYsdGy/k
+	l91GVJLGPcK5c08G+2HRxvaB9A7Tk0LTRUDXwStfclkBvb/xxkPZN4Bl1bdymQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720213601;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dcIzD+cP3zSq83stslrSdUAtI/IEQdf9Krzujt0LW6w=;
+	b=KjE/+Fi4NEShNs8iuV/bN5LaywX5PqJ4t3/OIVNdQjBcbY55bBgLjBcA5fOnm5Icr7Bu6a
+	mVdLzjjgPeaVE6Aw==
+From: "tip-bot2 for Sandipan Das" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/x86/amd/uncore: Avoid PMU registration if
+ counters are unavailable
+Cc: Sandipan Das <sandipan.das@amd.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240626074404.1044230-1-sandipan.das@amd.com>
+References: <20240626074404.1044230-1-sandipan.das@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] Documentation: add a new file documenting
- multigrain timestamps
-To: Jeff Layton <jlayton@kernel.org>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong"
- <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
- Christoph Hellwig <hch@infradead.org>, kernel-team@fb.com,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
- linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20240705-mgtime-v3-0-85b2daa9b335@kernel.org>
- <20240705-mgtime-v3-5-85b2daa9b335@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240705-mgtime-v3-5-85b2daa9b335@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <172021360059.2215.17531547792114902747.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the perf/core branch of tip:
 
+Commit-ID:     f997e208b6c96858a2f6c0855debfbdb9b52f131
+Gitweb:        https://git.kernel.org/tip/f997e208b6c96858a2f6c0855debfbdb9b52f131
+Author:        Sandipan Das <sandipan.das@amd.com>
+AuthorDate:    Wed, 26 Jun 2024 13:14:04 +05:30
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 04 Jul 2024 16:00:41 +02:00
 
-On 7/5/24 10:02 AM, Jeff Layton wrote:
-> Add a high-level document that describes how multigrain timestamps work,
-> rationale for them, and some info about implementation and tradeoffs.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  Documentation/filesystems/multigrain-ts.rst | 120 ++++++++++++++++++++++++++++
->  1 file changed, 120 insertions(+)
-> 
-> diff --git a/Documentation/filesystems/multigrain-ts.rst b/Documentation/filesystems/multigrain-ts.rst
-> new file mode 100644
-> index 000000000000..70d36955bb83
-> --- /dev/null
-> +++ b/Documentation/filesystems/multigrain-ts.rst
-> @@ -0,0 +1,120 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=====================
-> +Multigrain Timestamps
-> +=====================
-> +
-> +Introduction
-> +============
-> +Historically, the kernel has always used a coarse time values to stamp
+perf/x86/amd/uncore: Avoid PMU registration if counters are unavailable
 
-                                       used coarse time values
+X86_FEATURE_PERFCTR_NB and X86_FEATURE_PERFCTR_LLC are derived from
+CPUID leaf 0x80000001 ECX bits 24 and 28 respectively and denote the
+availability of DF and L3 counters. When these bits are not set, the
+corresponding PMUs have no counters and hence, should not be registered.
 
-> +inodes. This value is updated on every jiffy, so any change that happens
-> +within that jiffy will end up with the same timestamp.
-> +
-> +When the kernel goes to stamp an inode (due to a read or write), it first gets
-> +the current time and then compares it to the existing timestamp(s) to see
-> +whether anything will change. If nothing changed, then it can avoid updating
-> +the inode's metadata.
-> +
-> +Coarse timestamps are therefore good from a performance standpoint, since they
-> +reduce the need for metadata updates, but bad from the standpoint of
-> +determining whether anything has changed, since a lot of things can happen in a
-> +jiffy.
-> +
-> +They are particularly troublesome with NFSv3, where unchanging timestamps can
-> +make it difficult to tell whether to invalidate caches. NFSv4 provides a
-> +dedicated change attribute that should always show a visible change, but not
-> +all filesystems implement this properly, causing the NFS server to substitute
-> +the ctime in many cases.
-> +
-> +Multigrain timestamps aim to remedy this by selectively using fine-grained
-> +timestamps when a file has had its timestamps queried recently, and the current
-> +coarse-grained time does not cause a change.
-> +
-> +Inode Timestamps
-> +================
-> +There are currently 3 timestamps in the inode that are updated to the current
-> +wallclock time on different activity:
-> +
-> +ctime:
-> +  The inode change time. This is stamped with the current time whenever
-> +  the inode's metadata is changed. Note that this value is not settable
-> +  from userland.
-> +
-> +mtime:
-> +  The inode modification time. This is stamped with the current time
-> +  any time a file's contents change.
-> +
-> +atime:
-> +  The inode access time. This is stamped whenever an inode's contents are
-> +  read. Widely considered to be a terrible mistake. Usually avoided with
-> +  options like noatime or relatime.
-> +
-> +Updating the mtime always implies a change to the ctime, but updating the
-> +atime due to a read request does not.
-> +
-> +Multigrain timestamps are only tracked for the ctime and the mtime. atimes are
-> +not affected and always use the coarse-grained value (subject to the floor).
-> +
-> +Inode Timestamp Ordering
-> +========================
-> +
-> +In addition just providing info about changes to individual files, file
-> +timestamps also serve an important purpose in applications like "make". These
-> +programs measure timestamps in order to determine whether source files might be
-> +newer than cached objects.
-> +
-> +Userland applications like make can only determine ordering based on
-> +operational boundaries. For a syscall those are the syscall entry and exit
-> +points. For io_uring or nfsd operations, that's the request submission and
-> +response. In the case of concurrent operations, userland can make no
-> +determination about the order in which things will occur.
-> +
-> +For instance, if a single thread modifies one file, and then another file in
-> +sequence, the second file must show an equal or later mtime than the first. The
-> +same is true if two threads are issuing similar operations that do not overlap
-> +in time.
-> +
-> +If however, two threads have racing syscalls that overlap in time, then there
-> +is no such guarantee, and the second file may appear to have been modified
-> +before, after or at the same time as the first, regardless of which one was
-> +submitted first.
-> +
-> +Multigrain Timestamps
-> +=====================
-> +Multigrain timestamps are aimed at ensuring that changes to a single file are
-> +always recognizeable, without violating the ordering guarantees when multiple
+Fixes: 07888daa056e ("perf/x86/amd/uncore: Move discovery and registration")
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20240626074404.1044230-1-sandipan.das@amd.com
+---
+ arch/x86/events/amd/uncore.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-          recognizable
-according to what I can find on the web.
-
-> +different files are modified. This affects the mtime and the ctime, but the
-> +atime will always use coarse-grained timestamps.
-> +
-> +It uses an unused bit in the i_ctime_nsec field to indicate whether the mtime
-> +or ctime has been queried. If either or both have, then the kernel takes
-> +special care to ensure the next timestamp update will display a visible change.
-> +This ensures tight cache coherency for use-cases like NFS, without sacrificing
-> +the benefits of reduced metadata updates when files aren't being watched.
-> +
-> +The Ctime Floor Value
-> +=====================
-> +It's not sufficient to simply use fine or coarse-grained timestamps based on
-> +whether the mtime or ctime has been queried. A file could get a fine grained
-> +timestamp, and then a second file modified later could get a coarse-grained one
-> +that appears earlier than the first, which would break the kernel's timestamp
-> +ordering guarantees.
-> +
-> +To mitigate this problem, we maintain a global floor value that ensures that
-> +this can't happen. The two files in the above example may appear to have been
-> +modified at the same time in such a case, but they will never show the reverse
-> +order. To avoid problems with realtime clock jumps, the floor is managed as a
-> +monotonic ktime_t, and the values are converted to realtime clock values as
-> +needed.
-> +
-> +Implementation Notes
-> +====================
-> +Multigrain timestamps are intended for use by local filesystems that get
-> +ctime values from the local clock. This is in contrast to network filesystems
-> +and the like that just mirror timestamp values from a server.
-> +
-> +For most filesystems, it's sufficient to just set the FS_MGTIME flag in the
-> +fstype->fs_flags in order to opt-in, providing the ctime is only ever set via
-> +inode_set_ctime_current(). If the filesystem has a ->getattr routine that
-> +doesn't call generic_fillattr, then you should have it call fill_mg_cmtime to
-> +fill those values.
-> 
-
--- 
-~Randy
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 0fafe23..a0b4405 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -658,17 +658,20 @@ int amd_uncore_df_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ {
+ 	struct attribute **df_attr = amd_uncore_df_format_attr;
+ 	struct amd_uncore_pmu *pmu;
++	int num_counters;
+ 
+ 	/* Run just once */
+ 	if (uncore->init_done)
+ 		return amd_uncore_ctx_init(uncore, cpu);
+ 
++	num_counters = amd_uncore_ctx_num_pmcs(uncore, cpu);
++	if (!num_counters)
++		goto done;
++
+ 	/* No grouping, single instance for a system */
+ 	uncore->pmus = kzalloc(sizeof(*uncore->pmus), GFP_KERNEL);
+-	if (!uncore->pmus) {
+-		uncore->num_pmus = 0;
++	if (!uncore->pmus)
+ 		goto done;
+-	}
+ 
+ 	/*
+ 	 * For Family 17h and above, the Northbridge counters are repurposed
+@@ -678,7 +681,7 @@ int amd_uncore_df_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 	pmu = &uncore->pmus[0];
+ 	strscpy(pmu->name, boot_cpu_data.x86 >= 0x17 ? "amd_df" : "amd_nb",
+ 		sizeof(pmu->name));
+-	pmu->num_counters = amd_uncore_ctx_num_pmcs(uncore, cpu);
++	pmu->num_counters = num_counters;
+ 	pmu->msr_base = MSR_F15H_NB_PERF_CTL;
+ 	pmu->rdpmc_base = RDPMC_BASE_NB;
+ 	pmu->group = amd_uncore_ctx_gid(uncore, cpu);
+@@ -789,17 +792,20 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ {
+ 	struct attribute **l3_attr = amd_uncore_l3_format_attr;
+ 	struct amd_uncore_pmu *pmu;
++	int num_counters;
+ 
+ 	/* Run just once */
+ 	if (uncore->init_done)
+ 		return amd_uncore_ctx_init(uncore, cpu);
+ 
++	num_counters = amd_uncore_ctx_num_pmcs(uncore, cpu);
++	if (!num_counters)
++		goto done;
++
+ 	/* No grouping, single instance for a system */
+ 	uncore->pmus = kzalloc(sizeof(*uncore->pmus), GFP_KERNEL);
+-	if (!uncore->pmus) {
+-		uncore->num_pmus = 0;
++	if (!uncore->pmus)
+ 		goto done;
+-	}
+ 
+ 	/*
+ 	 * For Family 17h and above, L3 cache counters are available instead
+@@ -809,7 +815,7 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 	pmu = &uncore->pmus[0];
+ 	strscpy(pmu->name, boot_cpu_data.x86 >= 0x17 ? "amd_l3" : "amd_l2",
+ 		sizeof(pmu->name));
+-	pmu->num_counters = amd_uncore_ctx_num_pmcs(uncore, cpu);
++	pmu->num_counters = num_counters;
+ 	pmu->msr_base = MSR_F16H_L2I_PERF_CTL;
+ 	pmu->rdpmc_base = RDPMC_BASE_LLC;
+ 	pmu->group = amd_uncore_ctx_gid(uncore, cpu);
