@@ -1,239 +1,452 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F5814A61A
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 12:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89A41E867;
+	Fri,  5 Jul 2024 12:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720183478; cv=none; b=HoR0JAtyBvUxvThgIIP9kaPJSdABQZNe7lp4SvaeeGjgWzG8eGAL1gXVWWcErelevlxAXAqmXc/TuFwogzqdaGOgOLPpBEWeGublm8yJT6t4GoTq0ERoAPb/clfMOoPyHIcJvWX2MzYBLFNJ6jAJVsfw75agXP3jzdoBDB1crOU=
+	t=1720183562; cv=none; b=fHqJG9ZuQHCVqHKOgbVcAnl42ya5kqkpSJV24TD/r0rE8Q5TfZhT1qotsbpH3mSv4FkCwaMurMwbXS1xHgqY6Wti1Z9EnU1nnroIuJHg/0hB3shwEs1S3hZJubI19vvH4m+/mjNEJbcVlPLzAhe0/f1sxT/ueyy7v4Yu1Md55Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720183478; c=relaxed/simple;
-	bh=2VnZjseBtDW5O0hq1vK9Aj6FUxApMUCPPIzZyJbs9+0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=IEtkv39dtxaRZxFBSsC0S/Y/0KJWb6wTLB0Xa0e/mjlkOpej1SNZ1YjrX0z3ypjLeT3261c8QYP8Rnnwcorf10Lmr52x9uXMSSBwV8WBqthEcRZPCLMorknTHHDy/axjVxLlgxUOBDk2pg6Q2F5daP8M75SZH+ZPeJjMoq8oSoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=CWx6Qxyk; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1720183562; c=relaxed/simple;
+	bh=YnlMZWJ2dnf8MfW4QrYMu87iaU5CcHc9yot2NDnHNT4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ql3M9QRGiGnml1ZdoW+IfbHxp3ns0Q8sHQv2WD3d0KxTJIHSRXSBrRvdFRzVCPYfYgNk7hVf8kGcfqu/Eo05zaL/SG1XBcmbOxqlkazaJKUSBvlbOticc3H8ALOJh9ov3JVY91zPLl7E5kMcmpi75pAWpUFx2MNU5HEvVKylHME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2pgFoxA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="CWx6Qxyk"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-58ba3e38027so1949997a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 05:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1720183475; x=1720788275; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hKZB2Fgn4uFU68w4TD9tZKFRvd41j+1ZrAavfWI0H/M=;
-        b=CWx6Qxyk+Am94MeP3yeyvze3aj5KCLQhfz7iZ8fx0T9m01ouujxyP1juBvJe3LEmVm
-         0cxvKh9a2KrvQB0S5K0Z850NOWYb+93iHCN+UV8nkuU7jo1yVisWDoZLUe6EBH09Kg89
-         ZEizm8BoQMbzI6wOied3di/9s7STbqZOKFeh8BXJyQRGzAyXXkaD7vkMo3LQ0scbvRf8
-         OntNaiN/XOBgKl5+5uwk0SX77/Gu7EtyiQmfTR2TLQKrjFpPbCmEBKIh7WlHB9tcLNAz
-         v29nQX6kyCDKNrIwnk9FvULS2wC6OQsafy0psiYh/iddZXGn8Y/XSyRz/8KSWZ7ZoWlz
-         hpKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720183475; x=1720788275;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hKZB2Fgn4uFU68w4TD9tZKFRvd41j+1ZrAavfWI0H/M=;
-        b=T42qtkh2oel1y838mXIz0OL6oMbZ1I8FL9h8jwWo7kQPGOl967lwBbwkOKIpsrEm3l
-         haFhhDZbzHPXuE6lK+/I3f1hAW7cmoWNNCRhw+RhRJ5QQ8K7VUsNDos0Az5V3MObGXSS
-         vYE5bU9sxd9c6YgQkJpzd3QnEFlAP5Ltpm6e8xOVDof8v4EHmdB8kRMq5GJXpD5au1Zz
-         py0fj2B6NVLerqCVHMkitWgi/01Ws7AI7NCyTctdPeYXbSJPhFj6IxzugELKQqcLKzw1
-         4+tOSEGN77pfBW0snhJTrmrYQ2uDVnzaK62/ogj/h8CaYTmk7vM6CcLytPVgVUsYex/L
-         7gkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJn65Eiv1xHs4TBxT3moeK6sx6wt1/TLxCdJ7oxOjQ2L+sitdlXP2aqtZ3OZxi3TdJTY+tGkpTXvODfOXvYmG9AmFep3TcSKhv28XR
-X-Gm-Message-State: AOJu0YwLmipg5kpxDNZqzEKa9oeNLdlXNU9GxQYYjnPWF4mFqM918gnA
-	jEp6k5ZS9rXqYSrVvuIWJb2vktmjCQ9E3ZTqiWmD+3ZWZGjXJazjA51lCdlYyRw=
-X-Google-Smtp-Source: AGHT+IH+9WK0Botsjtq1BFzZXkU/n60QSw0IfXpvtq4tv7jxq5yAzdzaUCgwA9ITyxlvi6sLnyzRsA==
-X-Received: by 2002:a05:6402:358e:b0:58b:2d93:ad83 with SMTP id 4fb4d7f45d1cf-58e5b4a138bmr4156561a12.21.1720183475349;
-        Fri, 05 Jul 2024 05:44:35 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58fefca76d0sm541054a12.2.2024.07.05.05.44.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jul 2024 05:44:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2pgFoxA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7292BC116B1;
+	Fri,  5 Jul 2024 12:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720183561;
+	bh=YnlMZWJ2dnf8MfW4QrYMu87iaU5CcHc9yot2NDnHNT4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b2pgFoxA+TLxGoOJP3AoWJyhqN6ruoHdlE4w1QqPeXMfPikTBSkwVyIuM8r2JG9IA
+	 OhB5VR1atbGOJDWDdKoQ2ljI6tOlLY+m2E3QPABN5IKTvaMNflHg7gbgLAYTY5oBpQ
+	 GVyTq7Ysad4o9YxNK9xRb4RuGpf4XoRl45F3SiiBCzHu3JF7EUVOrhE3vEHW66FJlb
+	 PlQ0QL5KRE+tzo02pWmRpbKlJfVD+gfP/9/nJAsOYmXa1HTfZwPD01JUmoRwi6DrUY
+	 ayQ7FsY6Fsz+NHienEmK+XLcR3aOGoNbat5bRPv5+z2tY6mF5i0Z7TjighVbNweumi
+	 +7A4BpnVjUWbQ==
+Message-ID: <31ed22b4-4b6f-4a1d-96ae-930d1c19da85@kernel.org>
+Date: Fri, 5 Jul 2024 14:45:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 05 Jul 2024 14:44:34 +0200
-Message-Id: <D2HM5EVCMBIU.1WTR6DUJH3GB6@fairphone.com>
-Cc: "Andy Gross" <agross@kernel.org>, "Bjorn Andersson"
- <andersson@kernel.org>, "Rob Herring" <robh+dt@kernel.org>, "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Bhupesh Sharma" <bhupesh.linux@gmail.com>, "David
- Heidelberg" <david@ixit.cz>, "Stephan Gerhold" <stephan@gerhold.net>,
- <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
- <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFT] arm64: dts: qcom: sm8350: Reenable crypto &
- cryptobam
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Konrad Dybcio" <konrad.dybcio@linaro.org>, "Dmitry Baryshkov"
- <dmitry.baryshkov@linaro.org>
-X-Mailer: aerc 0.17.0-0-g6ea74eb30457
-References: <20240108-sm8350-qce-v1-1-b7d586ff38af@fairphone.com>
- <a5923bf7-0a05-43bd-b282-b45e5653ac4d@linaro.org>
- <CY9E4ZCHOMWU.C18NR0H7V1QX@fairphone.com>
- <CAA8EJppCAMXds5F4bgeb9VJSwph-+4ekVsJ=rGib5=RR5m0DPg@mail.gmail.com>
- <CZ6FR855VPP7.3GHX4EO9WEZIH@fairphone.com>
- <8eb45771-096a-443f-b017-3ec8bc4940ba@linaro.org>
-In-Reply-To: <8eb45771-096a-443f-b017-3ec8bc4940ba@linaro.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5] cgroup/rstat: Avoid thundering herd problem by kswapd
+ across NUMA nodes
+To: tj@kernel.org, cgroups@vger.kernel.org, yosryahmed@google.com,
+ shakeel.butt@linux.dev
+Cc: hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com,
+ kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <171956951930.1897969.8709279863947931285.stgit@firesoul>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <171956951930.1897969.8709279863947931285.stgit@firesoul>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed Mar 27, 2024 at 10:34 PM CET, Konrad Dybcio wrote:
-> On 16.02.2024 11:36 AM, Luca Weiss wrote:
-> > On Mon Jan 8, 2024 at 11:45 PM CET, Dmitry Baryshkov wrote:
-> >> On Mon, 8 Jan 2024 at 16:23, Luca Weiss <luca.weiss@fairphone.com> wro=
-te:
-> >>>
-> >>> On Mon Jan 8, 2024 at 3:18 PM CET, Konrad Dybcio wrote:
-> >>>> On 8.01.2024 14:49, Luca Weiss wrote:
-> >>>>> When num-channels and qcom,num-ees is not provided in devicetree, t=
-he
-> >>>>> driver will try to read these values from the registers during prob=
-e but
-> >>>>> this fails if the interconnect is not on and then crashes the syste=
-m.
-> >>>>>
-> >>>>> So we can provide these properties in devicetree (queried after pat=
-ching
-> >>>>> BAM driver to enable the necessary interconnect) so we can probe
-> >>>>> cryptobam without reading registers and then also use the QCE as
-> >>>>> expected.
-> >>>>
-> >>>> This really feels a bit backwards.. Enable the resource to query the
-> >>>> hardware for numbers, so that said resource can be enabled, but
-> >>>> slightly later :/
-> >>>
-> >>> If you think adding interconnect support to driver and dtsi is better=
-,
-> >>> let me know.
-> >>
-> >> I'd say, adding the proper interconnect is a better option. Otherwise
-> >> we just depend on the QCE itself to set up the vote for us.
-> >=20
-> > Yes, currently we depend on that.
-> >=20
-> >>
-> >>>
-> >>> Stephan (+CC) mentioned it should be okay like this *shrug*
-> >>>
-> >>> For the record, this is the same way I got the values for sc7280[0] a=
-nd
-> >>> sm6350[1].
-> >>>
-> >>> [0] https://lore.kernel.org/linux-arm-msm/20231229-sc7280-cryptobam-f=
-ixup-v1-1-bd8f68589b80@fairphone.com/
-> >>> [1] https://lore.kernel.org/linux-arm-msm/20240105-sm6350-qce-v1-0-41=
-6e5c7319ac@fairphone.com/
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/qcom/sm8350.dtsi b/arch/arm64/boot/d=
-ts/qcom/sm8350.dtsi
-> >>> index b46236235b7f..cd4dd9852d9e 100644
-> >>> --- a/arch/arm64/boot/dts/qcom/sm8350.dtsi
-> >>> +++ b/arch/arm64/boot/dts/qcom/sm8350.dtsi
-> >>> @@ -1756,8 +1756,8 @@ cryptobam: dma-controller@1dc4000 {
-> >>>                         qcom,controlled-remotely;
-> >>>                         iommus =3D <&apps_smmu 0x594 0x0011>,
-> >>>                                  <&apps_smmu 0x596 0x0011>;
-> >>> -                       /* FIXME: Probing BAM DMA causes some abort a=
-nd system hang */
-> >>> -                       status =3D "fail";
-> >>> +                       interconnects =3D <&aggre2_noc MASTER_CRYPTO =
-0 &mc_virt SLAVE_EBI1 0>;
-> >>> +                       interconnect-names =3D "memory";
-> >>>                 };
-> >>>
-> >>>                 crypto: crypto@1dfa000 {
-> >>> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> >>> index 5e7d332731e0..9de28f615639 100644
-> >>> --- a/drivers/dma/qcom/bam_dma.c
-> >>> +++ b/drivers/dma/qcom/bam_dma.c
-> >>> @@ -40,6 +40,7 @@
-> >>>  #include <linux/circ_buf.h>
-> >>>  #include <linux/clk.h>
-> >>>  #include <linux/dmaengine.h>
-> >>> +#include <linux/interconnect.h>
-> >>>  #include <linux/pm_runtime.h>
-> >>>
-> >>>  #include "../dmaengine.h"
-> >>> @@ -394,6 +395,7 @@ struct bam_device {
-> >>>         const struct reg_offset_data *layout;
-> >>>
-> >>>         struct clk *bamclk;
-> >>> +       struct icc_path *mem_path;
-> >>>         int irq;
-> >>>
-> >>>         /* dma start transaction tasklet */
-> >>> @@ -1206,6 +1208,7 @@ static int bam_init(struct bam_device *bdev)
-> >>>                 bdev->num_channels =3D val & BAM_NUM_PIPES_MASK;
-> >>>         }
-> >>>
-> >>> +       printk(KERN_ERR "%s:%d DBG num_ees=3D%u num_channels=3D%u\n",=
- __func__, __LINE__, bdev->num_ees, bdev->num_channels);
-> >>>         /* Reset BAM now if fully controlled locally */
-> >>>         if (!bdev->controlled_remotely && !bdev->powered_remotely)
-> >>>                 bam_reset(bdev);
-> >>> @@ -1298,6 +1301,14 @@ static int bam_dma_probe(struct platform_devic=
-e *pdev)
-> >>>                 return ret;
-> >>>         }
-> >>>
-> >>> +       bdev->mem_path =3D devm_of_icc_get(bdev->dev, "memory");
-> >>> +       if (IS_ERR(bdev->mem_path))
-> >>> +               return PTR_ERR(bdev->mem_path);
-> >>> +
-> >>> +       ret =3D icc_set_bw(bdev->mem_path, 1, 1);
-> >>
-> >> Probably this needs some more sensible value.
-> >=20
-> > So downstream qcedev driver uses 384 for the interconnect. But this is
-> > crypto-specific and probably different BAMs have different minimum
-> > requirements?
-> >=20
-> > #define CRYPTO_AVG_BW			384
-> > #define CRYPTO_PEAK_BW			384
-> > https://github.com/xiaomi-sm8450-kernel/android_kernel_platform_msm-ker=
-nel/blob/lineage-20/drivers/crypto/msm/qce.h#L57
-> >=20
-> > Do you have any suggestion what to use here?
->
-> I'dve expected this to mean anything, but apparently not.
->
-> My immediate guess is that the 384 was the lowest magic value that didn't
-> result in the bus getting kicked offline.. 1 should be fine upstream due
-> to commit 91e045b93db7 ("interconnect: qcom: Fix small BW votes being
-> truncated to zero").
->
-> >=20
-> > Also I'd assume that with pm_runtime suspended we'd need to clear the
-> > votes in the driver so we don't keep the interconnect alive
-> > unnecessarily?
->
-> My naive understanding is that the power should only be necessary when
-> the thing is in use, so early probe and pm-active sounds about sane..
+(production results below)
 
-Bit of a late update on this, going through my inbox again:
+On 28/06/2024 12.12, Jesper Dangaard Brouer wrote:
+> Avoid lock contention on the global cgroup rstat lock caused by kswapd
+> starting on all NUMA nodes simultaneously. At Cloudflare, we observed
+> massive issues due to kswapd and the specific mem_cgroup_flush_stats()
+> call inlined in shrink_node, which takes the rstat lock.
+> 
+> On our 12 NUMA node machines, each with a kswapd kthread per NUMA node,
+> we noted severe lock contention on the rstat lock. This contention
+> causes 12 CPUs to waste cycles spinning every time kswapd runs.
+> Fleet-wide stats (/proc/N/schedstat) for kthreads revealed that we are
+> burning an average of 20,000 CPU cores fleet-wide on kswapd, primarily
+> due to spinning on the rstat lock.
+> 
+> Help reviewers follow code: __alloc_pages_slowpath calls wake_all_kswapds
+> causing all kswapdN threads to wake up simultaneously. The kswapd thread
+> invokes shrink_node (via balance_pgdat) triggering the cgroup rstat flush
+> operation as part of its work. This results in kernel self-induced rstat
+> lock contention by waking up all kswapd threads simultaneously. Leveraging
+> this detail: balance_pgdat() have NULL value in target_mem_cgroup, this
+> cause mem_cgroup_flush_stats() to do flush with root_mem_cgroup.
+> 
+> To avoid this kind of thundering herd problem, kernel previously had a
+> "stats_flush_ongoing" concept, but this was removed as part of commit
+> 7d7ef0a4686a ("mm: memcg: restore subtree stats flushing"). This patch
+> reintroduce and generalized the concept to apply to all users of cgroup
+> rstat, not just memcg.
+> 
+> If there is an ongoing rstat flush, and current cgroup is a descendant,
+> then it is unnecessary to do the flush. For callers to still see updated
+> stats, wait for ongoing flusher to complete before returning, but add
+> timeout as stats are already inaccurate given updaters keeps running.
+> 
+> Fixes: 7d7ef0a4686a ("mm: memcg: restore subtree stats flushing").
+> Signed-off-by: Jesper Dangaard Brouer <hawk@kernel.org>
+> ---
+> V5:
+>   Dropped trylock helper
+> 
+> V4: https://lore.kernel.org/all/171952312320.1810550.13209360603489797077.stgit@firesoul/
+> V3: https://lore.kernel.org/all/171943668946.1638606.1320095353103578332.stgit@firesoul/
+> V2: https://lore.kernel.org/all/171923011608.1500238.3591002573732683639.stgit@firesoul/
+> V1: https://lore.kernel.org/all/171898037079.1222367.13467317484793748519.stgit@firesoul/
+> RFC: https://lore.kernel.org/all/171895533185.1084853.3033751561302228252.stgit@firesoul/
+> 
+>   include/linux/cgroup-defs.h |    2 ++
+>   kernel/cgroup/rstat.c       |   57 +++++++++++++++++++++++++++++++++++++++----
+>   2 files changed, 54 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+> index b36690ca0d3f..a33b37514c29 100644
+> --- a/include/linux/cgroup-defs.h
+> +++ b/include/linux/cgroup-defs.h
+> @@ -548,6 +548,8 @@ struct cgroup {
+>   #ifdef CONFIG_BPF_SYSCALL
+>   	struct bpf_local_storage __rcu  *bpf_cgrp_storage;
+>   #endif
+> +	/* completion queue for cgrp_rstat_ongoing_flusher */
+> +	struct completion flush_done;
+>   
+>   	/* All ancestors including self */
+>   	struct cgroup *ancestors[];
+> diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+> index fb8b49437573..e9d3e2aff698 100644
+> --- a/kernel/cgroup/rstat.c
+> +++ b/kernel/cgroup/rstat.c
+> @@ -2,6 +2,7 @@
+>   #include "cgroup-internal.h"
+>   
+>   #include <linux/sched/cputime.h>
+> +#include <linux/completion.h>
+>   
+>   #include <linux/bpf.h>
+>   #include <linux/btf.h>
+> @@ -11,6 +12,7 @@
+>   
+>   static DEFINE_SPINLOCK(cgroup_rstat_lock);
+>   static DEFINE_PER_CPU(raw_spinlock_t, cgroup_rstat_cpu_lock);
+> +static struct cgroup *cgrp_rstat_ongoing_flusher = NULL;
+>   
+>   static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu);
+>   
+> @@ -299,6 +301,44 @@ static inline void __cgroup_rstat_unlock(struct cgroup *cgrp, int cpu_in_loop)
+>   	spin_unlock_irq(&cgroup_rstat_lock);
+>   }
+>   
+> +#define MAX_WAIT	msecs_to_jiffies(100)
+> +/* Trylock helper that also checks for on ongoing flusher */
+> +static bool cgroup_rstat_trylock_flusher(struct cgroup *cgrp)
+> +{
+> +	struct cgroup *cgrp_ongoing;
+> +
+> +	/* Check if ongoing flusher is already taking care of this, if
+> +	 * we are a descendant skip work, but wait for ongoing flusher
+> +	 * to complete work.
+> +	 */
+> +	cgrp_ongoing = READ_ONCE(cgrp_rstat_ongoing_flusher);
+> +	if (cgrp_ongoing && cgroup_is_descendant(cgrp, cgrp_ongoing)) {
+> +		wait_for_completion_interruptible_timeout(
+> +			&cgrp_ongoing->flush_done, MAX_WAIT);
+> +		/* TODO: Add tracepoint here */
+> +		return false;
+> +	}
+> +
+> +	__cgroup_rstat_lock(cgrp, -1);
+> +	/* Obtained lock, record this cgrp as the ongoing flusher */
+> +	if (!READ_ONCE(cgrp_rstat_ongoing_flusher)) {
+> +		reinit_completion(&cgrp->flush_done);
+> +		WRITE_ONCE(cgrp_rstat_ongoing_flusher, cgrp);
+> +	}
+> +
+> +	return true; /* locked */
+> +}
+> +
 
-I don't think I'll work on implementing interconnect for the BAM driver,
-I neither really have the motivation to work on it, nor really any
-knowledge on crypto or BAM, or about some details of the hardware.
+This scheme doesn't fully stop the kswapd thundering herd problem.
+Below bpftrace script look at cgroup_rstat_trylock_flusher() return
+values.  If false (0) is returned then we avoided a flush operation and
+locking.
 
-So feel free to pick this patch to unbreak crypto on sm8350 (adding
-num-channels & qcom,num-ees is what's done on many other SoCs as well,
-sm8350 wouldn't be an outlier), or we wait for someone to pick up
-implementing icc for BAM.
+[Data from production- AMD with 12 NUMA nodes]
 
-I'll remove this from my inbox now :)
+bpftrace -e 'kretfunc:cgroup_rstat_trylock_flusher {@cnt = hist(retval)}
+     interval:s:10 {time("%H:%M:%S "); print(@cnt); clear(@cnt)}'
+Attaching 2 probes...
+11:42:28 @cnt:
+[0]    467 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]    203 |@@@@@@@@@@@@@@@@@@@@@@                              |
 
-Regards
-Luca
+11:42:38 @cnt:
+[0]    320 |@@@@@@@@@@@@@                                       |
+[1]   1217 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
 
->
-> Konrad
+11:42:48 @cnt:
+[0]    256 |@@@@@@@@@@@@@                                       |
+[1]    969 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
 
+Above data shows that, the success rate (for avoiding concurrent
+flushing) isn't as high as we would expect and had hoped for.
+
+I'm not sure what is the reason for this?
+I can only spegulate.
+
+(A) Pergaps the READ_ONCE() outside the lock isn't sufficient.
+This would imply that wake_all_kswapds() wakes up at exactly same time.
+
+(B) Perhaps wake_all_kswapds() is not exact and there isn't any
+contention and ongoing flusher.
+Unlikely, as we can measure contention (see below for more data), and
+lockhold time is between 64 usec to 256 usec (with outliers around 32 ms).
+
+(C) Sub-tree ongoing flusher could be blocking us.
+This, can happen and I caught come cases of this happening when cadvisor
+collects data.  But for cases where it is only kswapdN running this also
+happens (see below data with 10 sec period with kswapd and periodic
+flusher).
+
+Idea are welcome for what I should try first?
+
+
+> +static void cgroup_rstat_unlock_flusher(struct cgroup *cgrp)
+> +{
+> +	/* Detect if we are the ongoing flusher */
+> +	if (cgrp == READ_ONCE(cgrp_rstat_ongoing_flusher)) {
+> +		WRITE_ONCE(cgrp_rstat_ongoing_flusher, NULL);
+> +		complete_all(&cgrp->flush_done);
+> +	}
+> +	__cgroup_rstat_unlock(cgrp, -1);
+> +}
+> +
+>   /* see cgroup_rstat_flush() */
+>   static void cgroup_rstat_flush_locked(struct cgroup *cgrp)
+>   	__releases(&cgroup_rstat_lock) __acquires(&cgroup_rstat_lock)
+> @@ -350,9 +390,11 @@ __bpf_kfunc void cgroup_rstat_flush(struct cgroup *cgrp)
+>   {
+>   	might_sleep();
+>   
+> -	__cgroup_rstat_lock(cgrp, -1);
+> +	if (!cgroup_rstat_trylock_flusher(cgrp))
+> +		return;
+> +
+>   	cgroup_rstat_flush_locked(cgrp);
+> -	__cgroup_rstat_unlock(cgrp, -1);
+> +	cgroup_rstat_unlock_flusher(cgrp);
+>   }
+>   
+>   /**
+> @@ -368,8 +410,11 @@ void cgroup_rstat_flush_hold(struct cgroup *cgrp)
+>   	__acquires(&cgroup_rstat_lock)
+>   {
+>   	might_sleep();
+> -	__cgroup_rstat_lock(cgrp, -1);
+> -	cgroup_rstat_flush_locked(cgrp);
+> +
+> +	if (cgroup_rstat_trylock_flusher(cgrp))
+> +		cgroup_rstat_flush_locked(cgrp);
+> +	else
+> +		__cgroup_rstat_lock(cgrp, -1);
+>   }
+>   
+>   /**
+> @@ -379,7 +424,7 @@ void cgroup_rstat_flush_hold(struct cgroup *cgrp)
+>   void cgroup_rstat_flush_release(struct cgroup *cgrp)
+>   	__releases(&cgroup_rstat_lock)
+>   {
+> -	__cgroup_rstat_unlock(cgrp, -1);
+> +	cgroup_rstat_unlock_flusher(cgrp);
+>   }
+>   
+>   int cgroup_rstat_init(struct cgroup *cgrp)
+> @@ -401,6 +446,8 @@ int cgroup_rstat_init(struct cgroup *cgrp)
+>   		u64_stats_init(&rstatc->bsync);
+>   	}
+>   
+> +	init_completion(&cgrp->flush_done);
+> +
+>   	return 0;
+>   }
+>   
+> 
+> 
+
+
+Data including 'comm'
+
+bpftrace -e 'kretfunc:cgroup_rstat_trylock_flusher 
+{@total=hist(retval);@ret[comm] = hist(retval)} 
+
+     interval:s:10 {time("%H:%M:%S "); print(@ret); print(@total); 
+clear(@ret)}'
+Attaching 2 probes...
+12:13:21 @ret[kworker/u388:15]:
+[1]                    1 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+
+@ret[kworker/u389:20]:
+[1]                    2 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+
+@ret[kworker/u389:3]:
+[1]                    2 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+
+@ret[kswapd3]:
+[0]                   10 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    1 |@@@@@ 
+      |
+
+@ret[kswapd11]:
+[0]                   10 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    2 |@@@@@@@@@@ 
+      |
+
+@ret[kswapd2]:
+[0]                   12 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    1 |@@@@ 
+      |
+
+@ret[kswapd10]:
+[0]                   10 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    5 |@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+
+@ret[kswapd9]:
+[0]                   13 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    2 |@@@@@@@@ 
+      |
+
+@ret[kswapd0]:
+[0]                   11 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    5 |@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+
+@ret[kswapd6]:
+[0]                    9 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    8 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+
+@ret[kswapd7]:
+[0]                   13 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    5 |@@@@@@@@@@@@@@@@@@@@ 
+      |
+
+@ret[kswapd4]:
+[0]                   12 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    7 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+
+@ret[kswapd5]:
+[0]                   13 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    6 |@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+
+@ret[kswapd1]:
+[0]                   16 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                    9 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+
+@ret[kswapd8]:
+[0]                   14 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                   14 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+
+@total:
+[0]                  135 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                   70 |@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+
+
+How long time is the lock locked (@locked_ns)
+and how long does lock contenders wait to obtain lock (@wait_ns).
+
+bpftrace -e '
+    tracepoint:cgroup:cgroup_rstat_lock_contended {@start[tid]=nsecs}
+    tracepoint:cgroup:cgroup_rstat_locked { @locked[tid]=nsecs;
+      if (args->contended) {
+        @wait_ns=hist(nsecs-@start[tid]); delete(@start[tid]);}}
+    tracepoint:cgroup:cgroup_rstat_unlock {
+        @locked_ns=hist(nsecs-@locked[tid]); delete(@locked[tid]);}
+    interval:s:1 {time("%H:%M:%S ");  print(@wait_ns);print(@locked_ns); }'
+
+
+@locked_ns:
+[256, 512)            94 | 
+      |
+[512, 1K)           5870 |@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+[1K, 2K)            5353 |@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+[2K, 4K)             439 |@ 
+      |
+[4K, 8K)             172 | 
+      |
+[8K, 16K)           6344 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+[16K, 32K)          6954 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+[32K, 64K)          2700 |@@@@@@@@@@@@ 
+      |
+[64K, 128K)        11451 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[128K, 256K)        8362 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+[256K, 512K)        1167 |@@@@@ 
+      |
+[512K, 1M)           114 | 
+      |
+[1M, 2M)              32 | 
+      |
+[2M, 4M)              25 | 
+      |
+[4M, 8M)              55 | 
+      |
+[8M, 16M)            258 |@ 
+      |
+[16M, 32M)           221 |@ 
+      |
+[32M, 64M)            24 | 
+      |
+
+
+@wait_ns:
+[512, 1K)             30 | 
+      |
+[1K, 2K)            2124 |@@@@@@@ 
+      |
+[2K, 4K)            3319 |@@@@@@@@@@@ 
+      |
+[4K, 8K)            1595 |@@@@@ 
+      |
+[8K, 16K)           3288 |@@@@@@@@@@@ 
+      |
+[16K, 32K)          5349 |@@@@@@@@@@@@@@@@@@ 
+      |
+[32K, 64K)          5069 |@@@@@@@@@@@@@@@@@ 
+      |
+[64K, 128K)        15451 
+|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[128K, 256K)        9420 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+      |
+[256K, 512K)         707 |@@ 
+      |
+[512K, 1M)             2 | 
+      |
+
+
+
+--Jesper
