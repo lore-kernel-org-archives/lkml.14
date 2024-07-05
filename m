@@ -1,225 +1,161 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F045033DD;
-	Fri,  5 Jul 2024 01:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FBF3D6A
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 01:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720142694; cv=none; b=o+Bz37lnIdk9qSfTbxJ2DdIle4PcO+T4bc29BsjSKq5lsUxRs+msi14qAoi5MF8lqy/xHqTksouxUd6SDb7Hss/CN+qniDr4pRCSPujUMu8cLyHGRkwcJYbRM3sCSFW1ZC5DSSRToRMQwiyr7oRjZIM5BaHBaIE7NZOKkprRu1w=
+	t=1720142745; cv=none; b=uzLHoHjPb5h4OCYGjwPXgFPrV271rbR1ow4jE5z8e7Q53ZZLwuhIsuUF2BhepysNvuqZ07tC8Tryz5QzKek/mBBLyI2UlNPg3E09OJeHbjWHAZp+ja+EOpQScDhXPWVBsHsVjfDqUoxA49muF9R9eNtiwPWv48U1kQfKoqj5paQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720142694; c=relaxed/simple;
-	bh=Fgj8tbj91yyhS/Vj4oRJpCZVDxl3ws8xvqFaTEtx97A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tKrFZP1jEcWZPoV7fYAQeXWcnTbbw0eTE/tgk7kfgSglxY6pFb1nnWKjTXQHP62zVk2twsG6laHuSaZqVawvXE8n0+SBVj6kL/W3v/EEvl14teS6DqjrTDp1cNNvhwvPyoLdSz/hLt521AqhQFPBKhnstmuJHm8ZuPeFcWyt4xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kaDZlbp+; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720142745; c=relaxed/simple;
+	bh=Ho+mlu7dwciZ6Q1Dx4nGdHTGlTibYuPSyRWLoE9raII=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KaTHwFpK9Sd/ZlxyCWdFiM74doWMAsf9/5oywnLJhqytqt0NcBszMQhmInTQbDdM6SLRsssL+N274VteNBNvz2ru+EuIuOxwEjXFN/zMMqEN5YW86fIePUm+7mJ2u6dr/Ld5u36z6/2Od3hIGQRUkTy0WAxZZXxW2BFYEvQTs8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iG6MNBns; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaDZlbp+"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4f2ea4d80d6so396562e0c.2;
-        Thu, 04 Jul 2024 18:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720142692; x=1720747492; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/TCgQDZcwng8bXM5BPYmuZDEk5bETYHoKH5imxDkoNw=;
-        b=kaDZlbp+oKANSrOw6kPz454eYKeG+PmNZQbgvXNtIoKJVeNc7ShFapguZsgrl+UlLH
-         jEEEz2lfrflF/WSADDtCY78oN0icEO04AimktHYUbHrcqQn+EwChMNpF6tcW3M85X3KZ
-         uMVJlqpbwJfmzX5x+Sxi5ydI6QDiikxFO+GDNpCzKuCWmnM94x5712JDLgu1iMYwi+XT
-         v4XDsaEAudByuCISnCILCz8pUfIr97FJZilUbs40t7PhJLBI2cAMwcJZkj4ZhXAcef97
-         WXA8xJmpyNT2h32b/D2+F2qG34ud7U/u0uCfPl/tZZw54uQiXx7G6xulD3dNQf9O5FBn
-         +FXg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iG6MNBns"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720142742;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=puZHXeuAThZypm5I/tU/VxCkiNM58sSfmRKMsMa3kvE=;
+	b=iG6MNBnshqYD54ieXdVgrZV1Df0mVKs6ZAfRXQTC93YRPLmF00Qaq+jlaHPqjlBBYtbS7E
+	UDwg/u34cTE9xcEv1zPIQhab4QvdJ1a/Y6VyRjuY+VPEPEbB7RBHF0uR+JGM4/D6myFZgw
+	KPH6NYNnmnY7tGXOwow71tI5LyGzzzw=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-407-KY8Wbv2tMwy1__eTCH9Nkw-1; Thu, 04 Jul 2024 21:25:41 -0400
+X-MC-Unique: KY8Wbv2tMwy1__eTCH9Nkw-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6b5e0b5c9eeso13629296d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 18:25:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720142692; x=1720747492;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/TCgQDZcwng8bXM5BPYmuZDEk5bETYHoKH5imxDkoNw=;
-        b=nAKGgca3rbwr7p06qTM/4DZydetFxG5u1JuzPIl+w/NIyYLsRUtWdiwZpDTrKPyIZC
-         EGLakj3GroOj2wTAZLN5QIxOx4pStuqlPp9ZJabgeswYwIiTyJhP3e8dhwCYoKZN9N8u
-         QHcAq7swCuYp2T6g3XpsxlrVaK7WLlkJTLB2/wDw/0yZryfedlCyiAAZ0BeWQgN+WBmU
-         NqWGsvCIPdsieO6OF967zH4c9SI45MZ1IaZ57tb7y3XmY5NuXfYAKheT0O1GF/LMdcWV
-         OGp/drjBPEEU3Nmo+4S05fBWc2DNPm7fAdGwKIqU1wIeDpKdY+oID/NQ/DWCHrnY+q3a
-         d93A==
-X-Forwarded-Encrypted: i=1; AJvYcCUGJq1cathPtfQWoTVCx9my3QkNqeql9LGOG6/ZYHIXZFHlgyejfb2CnR6E20RiibKNvKt2oRLN0KObMqV4UU8O4shtz+hDy9pU9S99+aQvzrKVnzYwgF9lNAOuJjrCuUOUT44dZr4I
-X-Gm-Message-State: AOJu0Yz1I8dHdIUaCAJ54dkFGhdxCim2uhMe/P1t6wSBFT3eZqOMRwfH
-	gcrCE+hRZnOYw0pnu8A3ev9iePTOf9SK8QmZybFt0p7lC8M8+wigiSTc26DHl8aY3gX3uWAqrZd
-	lBtKJyMXHuRfEQfiDVkvVmgXEw3M34saL
-X-Google-Smtp-Source: AGHT+IG2WtReVuVppXAmKVRmFBS9mPu9FFYDWdrZ1dEdPQ+YNP8wCPhUls6aSK2NWBqqZqqHRHZB8s7kL0xSK1yk/m4=
-X-Received: by 2002:a05:6122:1b10:b0:4ea:edfb:8d89 with SMTP id
- 71dfb90a1353d-4f2f3f518b5mr3181388e0c.12.1720142691734; Thu, 04 Jul 2024
- 18:24:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720142740; x=1720747540;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=puZHXeuAThZypm5I/tU/VxCkiNM58sSfmRKMsMa3kvE=;
+        b=Aukl1bfnG4Rbdr1lE4Oo5heVppyef6pVL7tUEk+TGTAn9QPc6h/Lfa9Bww9w5LCZXr
+         Su7gt7u8KsgSEuXgiwk+NorYBWbzKR0uPxEfohx39mmLUBffLl1qVttkUGXXMAaGmWq7
+         069aGqz8otrRoT0Cdmy3ubq/DuaXVG/Ic0FFUPGfSNz7ll3TscvHRr3cNgff9vyLxUMS
+         CqbmdGxccnjS2CxRrgOxwjjBvbOE4T5y6ZbpvtScjgsbnlrYMuTuVyt5izEFnHf/ZD4D
+         mIGVyfau5ile882niZ4dzE5OsWG9Sv2TIywhdjWhGoV07OtwA6kygXGID2I9STcZ0TF+
+         Kl9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVMmrVfrKD27mrIutsxcEJYT3YjaT2F14IF6lfgMpmKe0dKUsQR5WjIM7xcUtL1goX6bot9Kw+3NYZtCRs6jDn6l57gnIG5zhUZgz4L
+X-Gm-Message-State: AOJu0YwF98oTyOEo1C8uCy/bfdrd8qf3EjuR8eb9zBOHgzXFepLs5IXl
+	fc/oYQnP3qSOON0ZUvWgA1klQUCJQauRQEXxIwsfXyDeK4KwTYjcn9J4Ww/BWWEtdCxkOFrUujP
+	/eQYMYKoFL3SDALhnsvu9JdGC5XgAEiB82DJ6Mi1YAOb6sQ+eaFIxT8DumXBkvw==
+X-Received: by 2002:ad4:5ba4:0:b0:6b5:e099:4d69 with SMTP id 6a1803df08f44-6b5ecfb9422mr31683276d6.26.1720142740557;
+        Thu, 04 Jul 2024 18:25:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEF2U1YD+6q18JF3TqogZJNBg0f79mJvZ/g7DB4yQv9lBC9AAPfmiWQZkt3CycumfSymUOXQ==
+X-Received: by 2002:ad4:5ba4:0:b0:6b5:e099:4d69 with SMTP id 6a1803df08f44-6b5ecfb9422mr31683186d6.26.1720142740270;
+        Thu, 04 Jul 2024 18:25:40 -0700 (PDT)
+Received: from starship ([2607:fea8:fc01:7b7f:6adb:55ff:feaa:b156])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e5f2b77sm69034896d6.92.2024.07.04.18.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 18:25:40 -0700 (PDT)
+Message-ID: <43ef06aca700528d956c8f51101715df86f32a91.camel@redhat.com>
+Subject: Re: [PATCH v2 22/49] KVM: x86: Add a macro to precisely handle
+ aliased 0x1.EDX CPUID features
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>,  Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Hou Wenlong
+ <houwenlong.hwl@antgroup.com>, Kechen Lu <kechenl@nvidia.com>, Oliver Upton
+ <oliver.upton@linux.dev>, Binbin Wu <binbin.wu@linux.intel.com>, Yang
+ Weijiang <weijiang.yang@intel.com>, Robert Hoo <robert.hoo.linux@gmail.com>
+Date: Thu, 04 Jul 2024 21:25:39 -0400
+In-Reply-To: <20240517173926.965351-23-seanjc@google.com>
+References: <20240517173926.965351-1-seanjc@google.com>
+	 <20240517173926.965351-23-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702060418.387500-1-alistair.francis@wdc.com>
- <20240702060418.387500-3-alistair.francis@wdc.com> <20240702145806.0000669b@Huawei.com>
-In-Reply-To: <20240702145806.0000669b@Huawei.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Fri, 5 Jul 2024 11:24:25 +1000
-Message-ID: <CAKmqyKPEX632ywm5DiKvVZU=hr-yHNBJ=tcN2DasKpfWdykgZg@mail.gmail.com>
-Subject: Re: [PATCH v13 3/4] PCI/DOE: Expose the DOE features via sysfs
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, lukas@wunner.de, 
-	alex.williamson@redhat.com, christian.koenig@amd.com, kch@nvidia.com, 
-	gregkh@linuxfoundation.org, logang@deltatee.com, linux-kernel@vger.kernel.org, 
-	chaitanyak@nvidia.com, rdunlap@infradead.org, 
-	Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 2, 2024 at 11:58=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Tue,  2 Jul 2024 16:04:17 +1000
-> Alistair Francis <alistair23@gmail.com> wrote:
->
-> > The PCIe 6 specification added support for the Data Object
-> > Exchange (DOE).
-> > When DOE is supported the DOE Discovery Feature must be implemented per
-> > PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
-> > information about the other DOE features supported by the device.
-> >
-> > The kernel is already querying the DOE features supported and cacheing
-> > the values. Expose the values in sysfs to allow user space to
-> > determine which DOE features are supported by the PCIe device.
-> >
-> > By exposing the information to userspace tools like lspci can relay the
-> > information to users. By listing all of the supported features we can
-> > allow userspace to parse the list, which might include
-> > vendor specific features as well as yet to be supported features.
-> >
-> > After this patch is supported you can see something like this when
-> > attaching a DOE device
-> >
-> > $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
-> > 0001:00        0001:01        0001:02
-> >
-> > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> > ---
-> > v13:
-> >  - Drop pci_doe_sysfs_init() and use pci_doe_sysfs_group
-> >      - As discussed in https://lore.kernel.org/all/20231019165829.GA138=
-1099@bhelgaas/
-> >        we can just modify pci_doe_sysfs_group at the DOE init and let
->
-> Can't do that as it is global so you expose the same DOE features for
-> all DOEs.
->
-> Also, I think that this is only processing features on last doe_mb found
-> for a given device. Fix that and the duplicates problem resurfaces.
->
->
-> >        device_add() handle the sysfs attributes.
->
->
-> > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> > index defc4be81bd4..e7b702afce88 100644
-> > --- a/drivers/pci/doe.c
-> > +++ b/drivers/pci/doe.c
->
-> > +
-> >  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeo=
-ut)
-> >  {
-> >       if (wait_event_timeout(doe_mb->wq,
-> > @@ -687,6 +747,12 @@ void pci_doe_init(struct pci_dev *pdev)
-> >  {
-> >       struct pci_doe_mb *doe_mb;
-> >       u16 offset =3D 0;
-> > +     struct attribute **sysfs_attrs;
-> > +     struct device_attribute *attrs;
-> > +     unsigned long num_features =3D 0;
-> > +     unsigned long i;
-> > +     unsigned long vid, type;
-> > +     void *entry;
-> >       int rc;
-> >
-> >       xa_init(&pdev->doe_mbs);
-> > @@ -707,6 +773,45 @@ void pci_doe_init(struct pci_dev *pdev)
-> >                       pci_doe_destroy_mb(doe_mb);
-> >               }
-> >       }
->
-> The above is looping over multiple DOEs but this just considers last one.
-> That doesn't look right...
+On Fri, 2024-05-17 at 10:38 -0700, Sean Christopherson wrote:
+> Add a macro to precisely handle CPUID features that AMD duplicated from
+> CPUID.0x1.EDX into CPUID.0x8000_0001.EDX.  This will allow adding an
+> assert that all features passed to kvm_cpu_cap_init() match the word being
+> processed, e.g. to prevent passing a feature from CPUID 0x7 to CPUID 0x1.
+> 
+> Because the kernel simply reuses the X86_FEATURE_* definitions from
+> CPUID.0x1.EDX, KVM's use of the aliased features would result in false
+> positives from such an assert.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 24 +++++++++++++++++-------
+>  1 file changed, 17 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 5e3b97d06374..f2bd2f5c4ea3 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -88,6 +88,16 @@ u32 xstate_required_size(u64 xstate_bv, bool compacted)
+>  	F(name);						\
+>  })
+>  
+> +/*
+> + * Aliased Features - For features in 0x8000_0001.EDX that are duplicates of
+> + * identical 0x1.EDX features, and thus are aliased from 0x1 to 0x8000_0001.
+> + */
+> +#define AF(name)								\
+> +({										\
+> +	BUILD_BUG_ON(__feature_leaf(X86_FEATURE_##name) != CPUID_1_EDX);	\
+> +	feature_bit(name);							\
+> +})
+> +
+>  /*
+>   * Magic value used by KVM when querying userspace-provided CPUID entries and
+>   * doesn't care about the CPIUD index because the index of the function in
+> @@ -758,13 +768,13 @@ void kvm_set_cpu_caps(void)
+>  	);
+>  
+>  	kvm_cpu_cap_init(CPUID_8000_0001_EDX,
+> -		F(FPU) | F(VME) | F(DE) | F(PSE) |
+> -		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
+> -		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SYSCALL) |
+> -		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
+> -		F(PAT) | F(PSE36) | 0 /* Reserved */ |
+> -		F(NX) | 0 /* Reserved */ | F(MMXEXT) | F(MMX) |
+> -		F(FXSR) | F(FXSR_OPT) | X86_64_F(GBPAGES) | F(RDTSCP) |
+> +		AF(FPU) | AF(VME) | AF(DE) | AF(PSE) |
+> +		AF(TSC) | AF(MSR) | AF(PAE) | AF(MCE) |
+> +		AF(CX8) | AF(APIC) | 0 /* Reserved */ | F(SYSCALL) |
+> +		AF(MTRR) | AF(PGE) | AF(MCA) | AF(CMOV) |
+> +		AF(PAT) | AF(PSE36) | 0 /* Reserved */ |
+> +		F(NX) | 0 /* Reserved */ | F(MMXEXT) | AF(MMX) |
+> +		AF(FXSR) | F(FXSR_OPT) | X86_64_F(GBPAGES) | F(RDTSCP) |
+>  		0 /* Reserved */ | X86_64_F(LM) | F(3DNOWEXT) | F(3DNOW)
+>  	);
+>  
 
-Yeah... That isn't
+Hi,
 
->
-> I think this needs to be in the loop and having done that
-> the duplicate handing may be an issue.  I'm not sure what happens
-> in that path with a presupplied set of attributes.
->
-> > +
-> > +     if (doe_mb) {
-> > +             xa_for_each(&doe_mb->feats, i, entry)
-> > +                     num_features++;
-> > +
-> > +             sysfs_attrs =3D kcalloc(num_features + 1, sizeof(*sysfs_a=
-ttrs), GFP_KERNEL);
-> > +             if (!sysfs_attrs)
-> > +                     return;
-> > +
-> > +             attrs =3D kcalloc(num_features, sizeof(*attrs), GFP_KERNE=
-L);
-> > +             if (!attrs) {
-> > +                     kfree(sysfs_attrs);
-> > +                     return;
-> > +             }
-> > +
-> > +             doe_mb->device_attrs =3D attrs;
-> > +             doe_mb->sysfs_attrs =3D sysfs_attrs;
-> > +
-> > +             xa_for_each(&doe_mb->feats, i, entry) {
-> > +                     sysfs_attr_init(&attrs[i].attr);
-> > +
-> > +                     vid =3D xa_to_value(entry) >> 8;
-> > +                     type =3D xa_to_value(entry) & 0xFF;
-> > +
-> > +                     attrs[i].attr.name =3D kasprintf(GFP_KERNEL, "%04=
-lx:%02lx", vid, type);
-> > +                     if (!attrs[i].attr.name) {
-> > +                             pci_doe_sysfs_feature_remove(pdev, doe_mb=
-);
-> > +                             return;
-> > +                     }
-> > +                     attrs[i].attr.mode =3D 0444;
-> > +                     attrs[i].show =3D pci_doe_sysfs_feature_show;
-> > +
-> > +                     sysfs_attrs[i] =3D &attrs[i].attr;
-> > +             }
-> > +
-> > +             sysfs_attrs[num_features] =3D NULL;
-> > +
-> > +             pci_doe_sysfs_group.attrs =3D sysfs_attrs;
-> Hmm. Isn't this global?  What if you have multiple devices.
+What if we defined the aliased features instead.
+Something like this:
 
-Any input from a PCI maintainer here?
+#define __X86_FEATURE_8000_0001_ALIAS(feature) \
+	(feature + (CPUID_8000_0001_EDX - CPUID_1_EDX) * 32)
 
-There are basically two approaches.
+#define KVM_X86_FEATURE_FPU_ALIAS	__X86_FEATURE_8000_0001_ALIAS(KVM_X86_FEATURE_FPU)
+#define KVM_X86_FEATURE_VME_ALIAS	__X86_FEATURE_8000_0001_ALIAS(KVM_X86_FEATURE_VME)
 
- 1. We can have a pci_doe_sysfs_init() function that is called where
-we dynamically add the entries, like in v12
- 2. We can go down the dev->groups and device_add() path, like this
-patch and discussed at
-https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
+And then just use for example the 'F(FPU_ALIAS)' in the CPUID_8000_0001_EDX
 
-For the second we will have to create a global pci_doe_sysfs_group
-that contains all possible DOE entries on the system and then have the
-show functions determine if they should be displayed for that device.
 
-Everytime we call pci_doe_init() we can check for any missing entries
-in pci_doe_sysfs_group.attrs and then realloc
-pci_doe_sysfs_group.attrs to add them. Untested, but that should work
-even for hot-plugged devices. pci_doe_sysfs_group.attrs would just
-grow forever though as I don't think we have an easy way to deallocate
-anything as we aren't sure if we are the only entry.
+Best regards,
+	Maxim Levitsky
 
-Thoughts?
-
-Alistair
