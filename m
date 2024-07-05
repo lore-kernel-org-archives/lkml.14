@@ -1,165 +1,172 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D3E14658F;
-	Fri,  5 Jul 2024 10:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D233F14659F;
+	Fri,  5 Jul 2024 10:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720174693; cv=none; b=CVetXmBZOquRiUFA9ymw8qRE6ib7pK4mGFJjRf91+q/wYp4MlMZ5qk4swOvO4qlfQD9b6OZUkjorvXysD4vgmFsAQoUKFaD7UFkcMIYvx9BobTZzCNmxOdDO5LOcPvffonR5OgzWPope1w7b9pj8Q7+hq+wWf9DmJqcVXE9Nnk8=
+	t=1720174701; cv=none; b=TXk/SfOWzke4+pcahRH/jPMXKdymAsLkL7EctMICJ1dVYkYUO7iYE37PpfYfuvwneTbmQuAo4LpXDZSJ9UW3MRYuzPeZojjfIBrUB7z/sunQBK6N6DdR664r1qZpMEQFgZusoGxlqMcmV0zoNWGMFonybHrPHRjmb9BcALYHvhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720174693; c=relaxed/simple;
-	bh=Th4AfzywcjYj8OEFQ3u+l3YaNfR9p1X690dvSI5OpXk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gm8K5gBddckGr72v8POggFZJMJ8lVSVd6I9rzgFC/9i1U1UXwH7mxnAIgEKa6F9Z0j5I08+TK0niSws400B3eKwOU0oCa83iC0kakM7mtWoQ7gIDLBFnTcPWA3Jp7hMXD88h5y3SQgnSM7TQ7VTG/8guUqka5fSUYr46ogFfEzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFqFZ6tSxz6JB2x;
-	Fri,  5 Jul 2024 18:17:22 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E2F6A140A30;
-	Fri,  5 Jul 2024 18:18:06 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 5 Jul
- 2024 11:18:06 +0100
-Date: Fri, 5 Jul 2024 11:18:05 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-CC: Xiaowei Song <songxiaowei@hisilicon.com>, Binghui Wang
-	<wangbinghui@hisilicon.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
-	<kwilczynski@kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: kirin: fix memory leak in kirin_pcie_parse_port()
-Message-ID: <20240705111805.00002010@Huawei.com>
-In-Reply-To: <20240609-pcie-kirin-memleak-v1-1-62b45b879576@gmail.com>
-References: <20240609-pcie-kirin-memleak-v1-1-62b45b879576@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1720174701; c=relaxed/simple;
+	bh=p0wKucMNP2ESwZy6HwLX9yMbUOXNi1BiG2FPMbS/Mes=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KXvDQKTFecPAzm6s/bjYb8cZxnkpR5zrpQJUauESqszOFacAtQOc+Oa+WtBVmqJmfBeHoFM0IC6iZV5P7MCQGGGPnwq41d5hFobP+8HihWcNSRYtkK+9dLC0qJaJP1m4Rme63Tofcp8pGjeIKQoQkQJAlhoGUZvs/+YDwSFM61c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AAtYpGwB; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAtYpGwB"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ee794ebffbso23960871fa.1;
+        Fri, 05 Jul 2024 03:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720174698; x=1720779498; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=43NgL66AZcBZsA04MV0R2l/SVAIXfdD44CFW558QA6o=;
+        b=AAtYpGwBJrsg4UUanIXUwFrwFAyoEoy/Cg1OgEhOjjY2D/6AhAGSNk+3s3y/Skn7AK
+         jhpYPH/FowbLUt7I37KbBQClmOohuxY0tpln1XhZDXZU7vNBoPM0gUK7va0ObJ8yqj+5
+         1gZvL+P3/v3YLqMx3LXI6qLn9PXOdI3yZTpbhr+k6NJ4krLmuZu08mNp1mZBwZd3nCyJ
+         CkkC0vzV23/MPwtR/gwP+YnSqHYZ8ffBLa5kivdV+gkbXHc07zgk64g4E5ToM26T7dOH
+         zaXKS+kW88h6nSQWY8LA+KshQ4JR33PPXSYk5xKg+v5Qw2quCcWeHcdkIJcB4PGD05YM
+         9fiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720174698; x=1720779498;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=43NgL66AZcBZsA04MV0R2l/SVAIXfdD44CFW558QA6o=;
+        b=t730ddj5OCgn7JsM89K6cCFsGLjpCRoUqGA2Hgrkaf+6DiaIUkFMAh4H5DZ5tG2xTv
+         ZLTN8Z2d1fXCNUDW/jd8zMbFYhhsi1v/PBHl1yVBq6J59yU24zTlnxp1YR4S9I6b4ptf
+         haxI45UNtT1wsNnwKdk16V4xZcweiuQNkGCK9lzz2dGetA1CyY2g8K1+RVjN4Etw9bFY
+         i9Xn/36IEFZiUyg5D4ex6LwsyTx1T8nmK4z2xBPy8h9ypbNclxERHOQyl40ub0HEyMyA
+         uhArUhCat13anNwmnN9paf13m28KlxjoW9t0jnYKOF6GBOkZxyZ6VM8mnE8T2hgWR/iC
+         0igg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGlm7SBwPg1HuqoEzcOi7u9va9eW7qT3oFxuNYurvK2buUbAoR+5qbYIUXYycyXEO/mIM7S17ZSQt9ZWZrVLakd4BogyAy7OhrAQmc
+X-Gm-Message-State: AOJu0Yw31tRW5/znZNPvvVANUMXvxTZP7AQ7t/pow6V2gZCyk2ZvuI+X
+	SYS2yPjiMhfDY2Uut6Q6gfMbRORpu+jf4z5Wxe8oLeqxL3OscC2Z
+X-Google-Smtp-Source: AGHT+IEUMDlt94QW/JlVMXt/5txcvz0TQfnqYGXAzmvYCAIPb5YY2MFEUWa0HhdkwQhkDkSI9fSweA==
+X-Received: by 2002:a2e:a605:0:b0:2ee:7d6d:2ce3 with SMTP id 38308e7fff4ca-2ee8ed904a4mr30571031fa.13.1720174697464;
+        Fri, 05 Jul 2024 03:18:17 -0700 (PDT)
+Received: from nsa.fritz.box ([2001:a61:359b:e801:d44:32b3:6924:10d1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a76841c4ffcsm267590866b.41.2024.07.05.03.18.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 03:18:17 -0700 (PDT)
+Message-ID: <e1de64478918e495ccdcbcb5ad5bae0e48d45808.camel@gmail.com>
+Subject: Re: [PATCH v4 1/8] iio: add read scale and offset services to iio
+ backend framework
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Olivier Moysan <olivier.moysan@foss.st.com>,
+ fabrice.gasnier@foss.st.com,  Nuno Sa <nuno.sa@analog.com>, Jonathan
+ Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 05 Jul 2024 12:18:16 +0200
+In-Reply-To: <20240704155338.2387858-2-olivier.moysan@foss.st.com>
+References: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
+	 <20240704155338.2387858-2-olivier.moysan@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Sun, 09 Jun 2024 12:56:14 +0200
-Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
-
-> The conversion of this file to use the agnostic GPIO API has introduced
-> a new early return where the refcounts of two device nodes (parent and
-> child) are not decremented.
-> 
-> Given that the device nodes are not required outside the loops where
-> they are used, and to avoid potential bugs every time a new error path
-> is introduced to the loop, the _scoped() versions of the macros have
-> been applied. The bug was introduced recently, and the fix is not
-> relevant for old stable kernels that might not support the scoped()
-> variant.
-> 
-> Fixes: 1d38f9d89f85 ("PCI: kirin: Convert to use agnostic GPIO API")
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Diff on this on is irritating as it doesn't actually show the
-buggy code...  Ah well.
-
-Change is valid, but one suggestion inline.
-
-Looks like it's queued now already, but if not.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-
+On Thu, 2024-07-04 at 17:53 +0200, Olivier Moysan wrote:
+> Add iio_backend_read_scale() and iio_backend_read_offset() services
+> to read channel scale and offset from an IIO backbend device.
+>=20
+> Also add a read_raw callback which replicates the read_raw callback of
+> the IIO framework, and is intended to request miscellaneous channel
+> attributes from the backend device.
+> Both scale and offset helpers use this callback.
+>=20
+> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 > ---
-> This bug was found while analyzing the code and I don't have hardware to
-> validate it beyond compilation and static analysis. Any test with real
-> hardware to make sure there are no regressions is always welcome.
-> 
-> The dev_err() messages have not been converted into dev_err_probe() to
-> keep the current format, but I am open to convert them if preferred.
-> ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 21 ++++++---------------
->  1 file changed, 6 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index d1f54f188e71..0a29136491b8 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -403,11 +403,10 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  				 struct device_node *node)
->  {
->  	struct device *dev = &pdev->dev;
-> -	struct device_node *parent, *child;
->  	int ret, slot, i;
->  
-> -	for_each_available_child_of_node(node, parent) {
-> -		for_each_available_child_of_node(parent, child) {
-> +	for_each_available_child_of_node_scoped(node, parent) {
-> +		for_each_available_child_of_node_scoped(parent, child) {
->  			i = pcie->num_slots;
->  
->  			pcie->id_reset_gpio[i] = devm_fwnode_gpiod_get_index(dev,
-> @@ -424,14 +423,13 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  			pcie->num_slots++;
->  			if (pcie->num_slots > MAX_PCI_SLOTS) {
->  				dev_err(dev, "Too many PCI slots!\n");
-> -				ret = -EINVAL;
-> -				goto put_node;
-> +				return -EINVAL;
-Perhaps a future change, but this would be nicer as
-				return dev_err_probe(dev, -EINVAL,
-						     "Too many PCI slots!\n");
-Maybe as part of a general change to this driver to use
-dev_err_probe() for all the error prints in paths only called
-from probe().
+> =C2=A0drivers/iio/industrialio-backend.c | 34 +++++++++++++++++++++++++++=
++++
+> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 9 +++++++-
+> =C2=A02 files changed, 42 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
+o-
+> backend.c
+> index efe05be284b6..4e0ff6e6e9d4 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -357,6 +357,40 @@ int devm_iio_backend_request_buffer(struct device *d=
+ev,
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_NS_GPL(devm_iio_backend_request_buffer, IIO_BACKEND);
+> =C2=A0
+> +/**
+> + * iio_backend_read_scale - Request channel scale from the IIO backend.
+> + * @back:	Backend device
+> + * @chan:	IIO channel reference
+> + * @scale:	returned scale value
+> + *
+> + * RETURNS:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_read_scale(struct iio_backend *back,
+> +			=C2=A0=C2=A0 struct iio_chan_spec const *chan, int *scale)
+> +{
+> +	return iio_backend_op_call(back, read_raw, chan, scale, NULL,
+> +				=C2=A0=C2=A0 IIO_CHAN_INFO_SCALE);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_read_scale, IIO_BACKEND);
+> +
+> +/**
+> + * iio_backend_read_offset - Request channel offset from the IIO backend=
+.
+> + * @back:	Backend device
+> + * @chan:	IIO channel reference
+> + * @offset:	returned offset value
+> + *
+> + * RETURNS:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_read_offset(struct iio_backend *back,
+> +			=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan, int *offset)
+> +{
+> +	return iio_backend_op_call(back, read_raw, chan, offset, NULL,
+> +				=C2=A0=C2=A0 IIO_CHAN_INFO_OFFSET);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_read_offset, IIO_BACKEND);
+> +
 
->  			}
->  
->  			ret = of_pci_get_devfn(child);
->  			if (ret < 0) {
->  				dev_err(dev, "failed to parse devfn: %d\n", ret);
-> -				goto put_node;
-> +				return ret;
->  			}
->  
->  			slot = PCI_SLOT(ret);
-> @@ -439,10 +437,8 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  			pcie->reset_names[i] = devm_kasprintf(dev, GFP_KERNEL,
->  							      "pcie_perst_%d",
->  							      slot);
-> -			if (!pcie->reset_names[i]) {
-> -				ret = -ENOMEM;
-> -				goto put_node;
-> -			}
-> +			if (!pcie->reset_names[i])
-> +				return -ENOMEM;
->  
->  			gpiod_set_consumer_name(pcie->id_reset_gpio[i],
->  						pcie->reset_names[i]);
-> @@ -450,11 +446,6 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  	}
->  
->  	return 0;
-> -
-> -put_node:
-> -	of_node_put(child);
-> -	of_node_put(parent);
-> -	return ret;
->  }
->  
->  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
-> 
-> ---
-> base-commit: d35b2284e966c0bef3e2182a5c5ea02177dd32e4
-> change-id: 20240609-pcie-kirin-memleak-18c83a31d111
-> 
-> Best regards,
+Hi Olivier,
+
+Not exactly what I had in mind :). My thinking was to have:
+
+int iio_backend_read_raw(struct iio_backend *back,
+			 struct iio_chan_spec const *chan, int *val, int *val2,
+                         long mask)
+{
+	return iio_backend_op_call(back, read_raw, chan, val, val2, mask);
+}
+EXPORT_SYMBOL_NS_GPL(iio_backend_read_raw, IIO_BACKEND);
+
+Then, on backend.h
+
+static inline int iio_backend_read_scale(struct iio_backend *back, struct
+iio_chan_spec const *chan, int *val, int val2)
+{
+	return iio_backend_read_raw(..., IIO_CHAN_INFO_SCALE);
+}
+
+Advantage is that we only need to export one symbol from the framework. But=
+ the most
+important piece I don't really agree in the patch is assuming NULL for val2=
+ (even
+more in scale where often we use both vals). So I think it already makes se=
+nse to
+expose the API with two int's even if you don't need them for your usecase.
+
+- Nuno S=C3=A1
+
 
