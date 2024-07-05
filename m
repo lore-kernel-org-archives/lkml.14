@@ -1,101 +1,260 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B9D634
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 01:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53ED634
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 01:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720144674; cv=none; b=bk6mYbQ8Xbl0l2+eem7j5J/60Rc8YBylfP6hf+hWwo2szP2mTAC7AAhPhpZsa/JYrOQq0UkRHaJOazsHrQJgpyuRGu0GrMv/mgELXwYrLzAopInQeLbj9RMUoUonnqhY08Dg0ON/Bh1OudPVU/oNqG8Q+e17TxaHM6JGUiVYNGc=
+	t=1720144766; cv=none; b=ERI+VLFXSdV9pWakxSSiLVPFpvVsrFOHDD2/PS3ew+pMQFri4A85+9SOYA8L3rUtabIdhTaU/q3habyWTt7shBskew7Rf34vdERMMtTUCAb82u+To4Dkd6KeRqgpcf8v7nTjmbYpJOVlWezO7Sl+UUsl/fH4rmTIsFLTRwkx7fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720144674; c=relaxed/simple;
-	bh=gzm09+Hms/HlJOhtQ3OuBQp/2ViO/rBhTfvoKv1YULA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AyoF34SBJie3xop+WDlVQWtYCujuTOwfsYOpv1biwl6exqho8FHCJ/MAAlsSrDc8gDSuiYqeF5740CearVLeeJ91AcCNo0o0oJZpBt8r7Q6AQi+ZIo4AdwZ3enoOHpFLBTiz3jo8LwQBUQn9I45754wfXsfKOJhgFr2EBT+eKnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=boSIrp0j; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1720144766; c=relaxed/simple;
+	bh=P+x17QcK16TB+rC0FOa0slgWjBYCB8Oa0A/r8mSwWeo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=umfyLQR4FGmja+5/5SAF4QeUHotzbj6TEFoju2PaTOeCaL4l7q6FubcjtDhAfQxMSGU3Bz6ZTkVwBZtrdL45Th6xG4ryVP1/BLWZN2hxODXXzI/dms1nb76EBmM6v15YYSRFGUIAnQyE6bSCFUdcR5qwhfVSffMeC6a8yRfIA04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TDG2QKpz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="boSIrp0j"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=jHvlEXaRyA3bpgUlkw1AFojmqIyREXUTTF5JQR72VEw=; b=boSIrp0jsZKUDH4Q
-	UYfjpoVGX9wtBTFsDfrslweT3vAP4T/r9wcec0Rd5uPBgsTzMKEvAZ2Z+mKZfWLznbTofvfoGALoF
-	v3UlPYkcvCS1FGADu1T9ZoMi/pFJEZnjq9QYgir2sbAqpbpXmXKO0qtOXao1SYQQ/YcNr6hkliyqq
-	Xcli8hpzDG+QX2jgxHxyLxAWmNnn5/VGay5w3ME1Eop+NmqsR+wTR0xy1IsssZUuJFS/0GVjAC2tF
-	2p9va1lATSfpwaKBbyRnOdIuD/gNBSM47zWb7zK+yQlvjt7WoWFgMssDvRvfqFstR89fCisoJ/Nkx
-	HN7gVhPQF3PIq7ao7g==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1sPXh0-00A76q-0X;
-	Fri, 05 Jul 2024 01:24:54 +0000
-Date: Fri, 5 Jul 2024 01:24:54 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: jassisinghbrar@gmail.com, rrice@broadcom.com
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mailbox: bcm-pdc: remove unused struct 'pdc_dma_map'
-Message-ID: <ZodLZl8oQSmsUoN2@gallifrey>
-References: <20240523203741.201099-1-linux@treblig.org>
- <ZmTEqs2PKZZW_mYT@gallifrey>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TDG2QKpz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720144763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ywWiOICekOAx+dCgMXpZRql7l3Q+/B/WufxX1KJDlfQ=;
+	b=TDG2QKpznXuTS/F+M1FlGyqv9lwQI1V8lA/i5ZnQHejQdYqNvKtvkfo0iUKY7rHyQhjSIS
+	1Y3XOkmBHPixX/a7ZwNC0U0akT8EIjUQnd7DHGmo3MO/EZ19q1NO4aUM8+U1qgYN6H52WN
+	7u44w9grG1xekM/e0Ntvu6F30ezzF1k=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-287-7kaQ3HHLOkSCBVZx1Li6yA-1; Thu, 04 Jul 2024 21:59:22 -0400
+X-MC-Unique: 7kaQ3HHLOkSCBVZx1Li6yA-1
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6b5ddfea466so13906796d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 18:59:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720144762; x=1720749562;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ywWiOICekOAx+dCgMXpZRql7l3Q+/B/WufxX1KJDlfQ=;
+        b=XgId4NNd/Qx6LVwROWu4NqYi2596zxIZsdCuZx992yBjLIjjsSI2A+nj83xV5i4BnA
+         3pdUFrNgyiuBVMsc+G9RMygNLz7/q5S5ZaJoRla2apEV/8HixQVt5LWySzYJSMabOQdl
+         /9BEOIbTcwZU2Tj9kDWRTdGBUGxEibZOl8t1f+EzaloVzTxNNZaWnT4udTZObV0Nxkh8
+         /FRNaApf3uv6Kgx781yI1Hm4ixWbXPr82oJM7m6S2GmiSmgRjaLLY8BLS4ijGwCbuWra
+         +r9w/1o39/5avhPZD/Qv45ibWU0nh4oA5kYhqvXfj569XJYPm2LsTur45au34fKuSHoD
+         fuBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEF5UzEiwveH2P5p5KoZyw4CDExyKmvQLcyHbOdUdYJyX2s6Tf/GC1h6T3VfCyvaeNk5d63ht57cBXpcGC9//j72zGKNwrTAkigqgY
+X-Gm-Message-State: AOJu0YyTWxcmYKZEeYpDthj0hCbqQ/Wao+IJBJNWAfaVjopmj2Im8XCZ
+	JHtVSfwaTe7M2uAnOwfLiSTpJBjsyk+ys2wgC+0GwH8/XFLYSqyrjqtPeJ9BuVIU+JLNyD2UJiP
+	KNARFaHfOyiSDsIrQD7dNMrjG5qMMyIN7K13/dSeV9JoBcle3NE6ricSEnGNVBw==
+X-Received: by 2002:ad4:5bc7:0:b0:6b5:e77b:b76c with SMTP id 6a1803df08f44-6b5ed273f47mr38677256d6.58.1720144762122;
+        Thu, 04 Jul 2024 18:59:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEYDVe42vr9bVRfx185vprKsIMhDKtzKOoKH98FmbaT5UY0VwKm+BwCPDy3yIEevrDuOMdXAA==
+X-Received: by 2002:ad4:5bc7:0:b0:6b5:e77b:b76c with SMTP id 6a1803df08f44-6b5ed273f47mr38677116d6.58.1720144761794;
+        Thu, 04 Jul 2024 18:59:21 -0700 (PDT)
+Received: from starship ([2607:fea8:fc01:7b7f:6adb:55ff:feaa:b156])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e5f262asm68845456d6.89.2024.07.04.18.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 18:59:21 -0700 (PDT)
+Message-ID: <2e0f3fb63c810dd924907bccf9256f6f193b02ec.camel@redhat.com>
+Subject: Re: [PATCH v2 26/49] KVM: x86: Add a macro to init CPUID features
+ that KVM emulates in software
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>,  Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Hou Wenlong
+ <houwenlong.hwl@antgroup.com>, Kechen Lu <kechenl@nvidia.com>, Oliver Upton
+ <oliver.upton@linux.dev>, Binbin Wu <binbin.wu@linux.intel.com>, Yang
+ Weijiang <weijiang.yang@intel.com>, Robert Hoo <robert.hoo.linux@gmail.com>
+Date: Thu, 04 Jul 2024 21:59:20 -0400
+In-Reply-To: <20240517173926.965351-27-seanjc@google.com>
+References: <20240517173926.965351-1-seanjc@google.com>
+	 <20240517173926.965351-27-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <ZmTEqs2PKZZW_mYT@gallifrey>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 01:24:39 up 57 days, 12:38,  1 user,  load average: 0.00, 0.00, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Transfer-Encoding: 7bit
 
-* Dr. David Alan Gilbert (linux@treblig.org) wrote:
-> * linux@treblig.org (linux@treblig.org) wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > 'pdf_dma_map' has been unused since the original
-> > commit a24532f8d17b ("mailbox: Add Broadcom PDC mailbox driver").
-> > 
-> > Remove it.
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+On Fri, 2024-05-17 at 10:39 -0700, Sean Christopherson wrote:
+> Now that kvm_cpu_cap_init() is a macro with its own scope, add EMUL_F() to
+> OR-in features that KVM emulates in software, i.e. that don't depend on
+> the feature being available in hardware.  The contained scope
+> of kvm_cpu_cap_init() allows using a local variable to track the set of
+> emulated leaves, which in addition to avoiding confusing and/or
+> unnecessary variables, helps prevent misuse of EMUL_F().
 > 
-> Ping
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 36 +++++++++++++++++++++---------------
+>  1 file changed, 21 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 1064e4d68718..33e3e77de1b7 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -94,6 +94,16 @@ u32 xstate_required_size(u64 xstate_bv, bool compacted)
+>  	F(name);						\
+>  })
+>  
+> +/*
+> + * Emulated Feature - For features that KVM emulates in software irrespective
+> + * of host CPU/kernel support.
+> + */
+> +#define EMUL_F(name)						\
+> +({								\
+> +	kvm_cpu_cap_emulated |= F(name);			\
+> +	F(name);						\
+> +})
 
-Ping^2
+To me it feels more and more that this patch series doesn't go into the right direction.
 
-> 
-> > ---
-> >  drivers/mailbox/bcm-pdc-mailbox.c | 4 ----
-> >  1 file changed, 4 deletions(-)
-> > 
-> > diff --git a/drivers/mailbox/bcm-pdc-mailbox.c b/drivers/mailbox/bcm-pdc-mailbox.c
-> > index 242e7504a628..a873672a9082 100644
-> > --- a/drivers/mailbox/bcm-pdc-mailbox.c
-> > +++ b/drivers/mailbox/bcm-pdc-mailbox.c
-> > @@ -158,10 +158,6 @@ enum pdc_hw {
-> >  	PDC_HW		/* PDC/MDE hardware (i.e. Northstar 2, Pegasus) */
-> >  };
-> >  
-> > -struct pdc_dma_map {
-> > -	void *ctx;          /* opaque context associated with frame */
-> > -};
-> > -
-> >  /* dma descriptor */
-> >  struct dma64dd {
-> >  	u32 ctrl1;      /* misc control bits */
-> > -- 
-> > 2.45.1
-> > 
-> -- 
->  -----Open up your eyes, open up your mind, open up your code -------   
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> \        dave @ treblig.org |                               | In Hex /
->  \ _________________________|_____ http://www.treblig.org   |_______/
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+How about we just abandon the whole concept of masks and instead just have a list of statements
+
+Pretty much the opposite of the patch series I confess:
+
+
+#define CAP_PASSTHOUGH		0x01
+#define CAP_EMULATED		0x02
+#define CAP_AMD_ALIASED		0x04 // for AMD aliased features
+#define CAP_SCATTERED		0x08
+#define CAP_X86_64		0x10 // supported only on 64 bit hypervisors
+...
+
+
+/* CPUID_1_ECX*/
+
+				/* TMA is not passed though because: xyz*/
+kvm_cpu_cap_init(TMA,           0);
+
+kvm_cpu_cap_init(SSSE3,         CAP_PASSTHOUGH);
+				/* CNXT_ID is not passed though because: xyz*/
+kvm_cpu_cap_init(CNXT_ID,       0);
+kvm_cpu_cap_init(RESERVED,      0);
+kvm_cpu_cap_init(FMA,           CAP_PASSTHOUGH);
+...
+				/* KVM always emulates TSC_ADJUST */
+kvm_cpu_cap_init(TSC_ADJUST,    CAP_EMULATED | CAP_SCATTERED);
+
+...
+
+/* CPUID_D_1_EAX*/
+				/* XFD is disabled on 32 bit systems because: xyz*/
+kvm_cpu_cap_init(XFD, 		CAP_PASSTHOUGH | CAP_X86_64)
+
+
+'kvm_cpu_cap_init' can be a macro if needed to have the compile checks.
+
+There are several advantages to this:
+
+- more readability, plus if needed each statement can be amended with a comment.
+- No weird hacks in 'F*' macros, which additionally eventually evaluate into a bit, which is confusing.
+  In fact no need to even have them at all.
+- No need to verify that bitmask belongs to a feature word.
+- Merge friendly - each capability has its own line.
+
+Disadvantages:
+
+- Longer list - IMHO not a problem, since it is very easy to read / search
+  and can have as much comments as needed.
+  For example this is how the kernel lists the CPUID features and this list IMHO
+  is very manageable.
+
+- Slower - kvm_set_cpu_caps is called exactly once per KVM module load, thus
+  performance is the last thing I would care about in this function.
+
+
+Another note about this patch: It is somewhat confusing that EMUL_F just forces a feature in kvm caps,
+regardless of CPU support, because KVM also has KVM_GET_EMULATED_CPUID and it has a different meaning.
+
+Users can easily confuse the EMUL_F for something that sets a feature bit in the KVM_GET_EMULATED_CPUID.
+
+
+Best regards,
+	Maxim Levitsky
+
+
+
+> +
+>  /*
+>   * Aliased Features - For features in 0x8000_0001.EDX that are duplicates of
+>   * identical 0x1.EDX features, and thus are aliased from 0x1 to 0x8000_0001.
+> @@ -649,6 +659,7 @@ do {									\
+>  do {									\
+>  	const struct cpuid_reg cpuid = x86_feature_cpuid(leaf * 32);	\
+>  	const u32 __maybe_unused kvm_cpu_cap_init_in_progress = leaf;	\
+> +	u32 kvm_cpu_cap_emulated = 0;					\
+>  									\
+>  	if (leaf < NCAPINTS)						\
+>  		kvm_cpu_caps[leaf] &= (mask);				\
+> @@ -656,6 +667,7 @@ do {									\
+>  		kvm_cpu_caps[leaf] = (mask);				\
+>  									\
+>  	kvm_cpu_caps[leaf] &= raw_cpuid_get(cpuid);			\
+> +	kvm_cpu_caps[leaf] |= kvm_cpu_cap_emulated;			\
+>  } while (0)
+>  
+>  /*
+> @@ -684,12 +696,10 @@ void kvm_set_cpu_caps(void)
+>  		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
+>  		F(FMA) | F(CX16) | 0 /* xTPR Update */ | F(PDCM) |
+>  		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
+> -		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
+> +		F(XMM4_2) | EMUL_F(X2APIC) | F(MOVBE) | F(POPCNT) |
+>  		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
+>  		F(F16C) | F(RDRAND)
+>  	);
+> -	/* KVM emulates x2apic in software irrespective of host support. */
+> -	kvm_cpu_cap_set(X86_FEATURE_X2APIC);
+>  
+>  	kvm_cpu_cap_init(CPUID_1_EDX,
+>  		F(FPU) | F(VME) | F(DE) | F(PSE) |
+> @@ -703,13 +713,13 @@ void kvm_set_cpu_caps(void)
+>  	);
+>  
+>  	kvm_cpu_cap_init(CPUID_7_0_EBX,
+> -		F(FSGSBASE) | F(SGX) | F(BMI1) | F(HLE) | F(AVX2) |
+> -		F(FDP_EXCPTN_ONLY) | F(SMEP) | F(BMI2) | F(ERMS) | F(INVPCID) |
+> -		F(RTM) | F(ZERO_FCS_FDS) | 0 /*MPX*/ | F(AVX512F) |
+> -		F(AVX512DQ) | F(RDSEED) | F(ADX) | F(SMAP) | F(AVX512IFMA) |
+> -		F(CLFLUSHOPT) | F(CLWB) | 0 /*INTEL_PT*/ | F(AVX512PF) |
+> -		F(AVX512ER) | F(AVX512CD) | F(SHA_NI) | F(AVX512BW) |
+> -		F(AVX512VL));
+> +		F(FSGSBASE) | EMUL_F(TSC_ADJUST) | F(SGX) | F(BMI1) | F(HLE) |
+> +		F(AVX2) | F(FDP_EXCPTN_ONLY) | F(SMEP) | F(BMI2) | F(ERMS) |
+> +		F(INVPCID) | F(RTM) | F(ZERO_FCS_FDS) | 0 /*MPX*/ |
+> +		F(AVX512F) | F(AVX512DQ) | F(RDSEED) | F(ADX) | F(SMAP) |
+> +		F(AVX512IFMA) | F(CLFLUSHOPT) | F(CLWB) | 0 /*INTEL_PT*/ |
+> +		F(AVX512PF) | F(AVX512ER) | F(AVX512CD) | F(SHA_NI) |
+> +		F(AVX512BW) | F(AVX512VL));
+>  
+>  	kvm_cpu_cap_init(CPUID_7_ECX,
+>  		F(AVX512VBMI) | RAW_F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
+> @@ -728,16 +738,12 @@ void kvm_set_cpu_caps(void)
+>  
+>  	kvm_cpu_cap_init(CPUID_7_EDX,
+>  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+> -		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+> +		F(SPEC_CTRL_SSBD) | EMUL_F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+>  		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
+>  		F(SERIALIZE) | F(TSXLDTRK) | F(AVX512_FP16) |
+>  		F(AMX_TILE) | F(AMX_INT8) | F(AMX_BF16) | F(FLUSH_L1D)
+>  	);
+>  
+> -	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
+> -	kvm_cpu_cap_set(X86_FEATURE_TSC_ADJUST);
+> -	kvm_cpu_cap_set(X86_FEATURE_ARCH_CAPABILITIES);
+> -
+>  	if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
+>  		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL);
+>  	if (boot_cpu_has(X86_FEATURE_STIBP))
+
+
+
+
