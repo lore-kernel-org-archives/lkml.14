@@ -1,108 +1,140 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8501D14A0B7;
-	Fri,  5 Jul 2024 13:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293B613D243;
+	Fri,  5 Jul 2024 13:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720185631; cv=none; b=I2WE3CHKlhIGlliQ8BU6lB3rMVXq80bSHAfyirUAYPm/oqdWgTwIFYGPLKicRQ4Bsva1SN4GUqJ2TWFrTJX7LVUcBv4uUtgVo0sj8z/Bvy73zSiRJ6bt7luPrVl07TqQ6GT/qJiapZzDm7W4GVKz8AkksHsDfONZO7xpJuVpzdA=
+	t=1720185648; cv=none; b=T1NjpzSRqZWq9Di3X4emReIV8MRY9jb88TUyhgtZ1ZaJpmhddW0Qzy/iwf2AIfzcpN8JtC34yfsUPgiQNOtQ1RpCl+kIGXfvEw7i3u1DwSsfMgoG26vRNkwOLj1+ge3g+UHZKyEGFZp8/oQ9AK+wQz2qHT6LF5yuezAImVgZ0NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720185631; c=relaxed/simple;
-	bh=7O65BSY1YnjABerUEX/XSkLKOtyucgsCv4IEnEsfzOk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gsu88DOZY3ob+6DQdDrQJRR++o31lYPWthugdVr2U+kvCOam/IllewtcEgvf0buvKProlc7PaMUtb7yuDGr1iAsu6Q8k9PhYw3BbO5EaKaeHPcpA4/qlp3EtBFndPSNy5DfD47vhcs6B6/5b+HJ/D7x1F4SE7PlW/iZ5yn2JQr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=i+NjTql6; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1720185648; c=relaxed/simple;
+	bh=rTvNpJokC0lG2aO9D2Q7qgzGqbzrym7I10xGbDEqtQI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nGamkjJAS9nNIVIpepFgNGpKUawNCzmkq9TkN1lFxjKbxxJwbpTgmh1x99/DnGZCVOMXiEs/DZes3MCtamzB1XXHYV7R71zGP87wFGIcrzaf9+1hzLX1aLaEZwLb6OThuyJC/g8Cpwzh2Xpen+32K7in9eTKkZB10Dk4MFA963s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQtx+zVb; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i+NjTql6"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 465DKCfI084749;
-	Fri, 5 Jul 2024 08:20:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1720185612;
-	bh=8GENAj70qaKif1xSCoXGz2QyshHZX03wXyFYQ7Hi+5s=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=i+NjTql6RiTijT1B7B03+IOymnRUsRNKC/UpilHGvq1Ujvm+R+M22h3MdZ+kF0mru
-	 aTwuSDWWwMfi6LGp1Q4VEshAW5lsxoM6TOKwTCYzMBG9+W9CsG3XsphV+jODZ16TNU
-	 Uz/Mir00HVqXrR0+GyZSyBprXSR9vmjusZMot5lI=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 465DKCnJ009840
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 5 Jul 2024 08:20:12 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 5
- Jul 2024 08:20:12 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 5 Jul 2024 08:20:12 -0500
-Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 465DK7bB072061;
-	Fri, 5 Jul 2024 08:20:07 -0500
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Devarsh Thakkar
-	<devarsht@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, <praneeth@ti.com>,
-        <a-bhatia1@ti.com>, <j-luthra@ti.com>, <b-brnich@ti.com>,
-        <detheridge@ti.com>, <p-mantena@ti.com>, <vijayp@ti.com>
-Subject: Re: (subset)[PATCH 0/3] Add global CMA reserve area
-Date: Fri, 5 Jul 2024 18:48:26 +0530
-Message-ID: <172018547554.2460342.5699091093485450824.b4-ty@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQtx+zVb"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-707040e3017so1024259a12.3;
+        Fri, 05 Jul 2024 06:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720185646; x=1720790446; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qW+kigcKFLfW1wvMQ24dxSV2zZqmDDqCX6hcBun385k=;
+        b=JQtx+zVbxMCWZ2SV+G/7aFLEVK/lKTSU46iV/uhs0QAzaZflRCIgjuPBaTqz2mSNv8
+         Uv3JsCl3VdivGrB16MyljVGiS8/hUgFk28Ua4+Tj49lLbTYUHjezDqYpQPrYZ2LImMdE
+         T58qr8I4bu9oBGY6KNx7n+DNplw/S3NNVNz2soB92xCKw96+lAbleb1RXuBZUHheTD3u
+         GI+XT8XyNNvPapOPZdvhMz2KgDO4qen78nEamYJVS3IMwr6yrQEvKo4Goq2rgnbGnkTj
+         T0xOTnaetY423JpLC3ljQ9DMFfUpzLktKg2My99BxBruIfWceRPmYk2ULVduicuDzaQq
+         H8+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720185646; x=1720790446;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qW+kigcKFLfW1wvMQ24dxSV2zZqmDDqCX6hcBun385k=;
+        b=G+G41XQhk4c9EhaZelYGOBIv7rMuR/biXr9CZWAUd1zoWfMFAW75I7zmWguii/7df0
+         MG6VvFdXSiETvu4dDhj5uFuJurfK8+AdUWYItYQI3Uw9GY1KuNrOHmxXQygZ94O4YD2C
+         qsDKhBCh6AXrDqEFaSom2VnWQYgp2+V9ov33JUqnB9BZty5UhxQ5DLubdz0Lm6JeR4Cz
+         lUC/nj67dtHCoCkmtZyTzd/fahGpYGxonksVrQxkx/64DlQ4yNrpubkIjksHny91ni57
+         UIU6vrkXmmCN2/B7s6Rv3qQt6vrnFftFrvdaZzOAPOJVz5D83wa4dH+W0c3JNGeyfM0M
+         HVRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhxu1psReondDuwlIrynMDcERjrNAJ4mi8/RKUacgBlkmZIqrMC+TrFd1fR40QkK4xEIoum6JDfP6vZmJJz8GVu00AMxbZllDlWsFGnbIvIqjS2wk4foVyvFViknRgUvJGVbPj2gfjqpwgH/Xskg==
+X-Gm-Message-State: AOJu0YyIq5TCm8B+alGzSqT/x3Gub6ZuzbNexIusXLRXLVTm9PXurH8y
+	3Fv36aoKlQ1Bm47MsKwwYv/PytuPKLsaqKdAkTnNU2EtW761PCRc
+X-Google-Smtp-Source: AGHT+IHFN/lk7+EFngK+6ujr6zRCjz/N7irk0fL//TkIQ9U9VARi9fx1FXCUoCNvSm7aB8N/WGDoTA==
+X-Received: by 2002:a05:6a20:1591:b0:1b4:6f79:e146 with SMTP id adf61e73a8af0-1c0cc87734amr5506858637.17.1720185646277;
+        Fri, 05 Jul 2024 06:20:46 -0700 (PDT)
+Received: from localhost.localdomain ([120.229.49.88])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a956260sm3328974a91.19.2024.07.05.06.20.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 06:20:46 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: adrian.hunter@intel.com,
+	irogers@google.com,
+	jolsa@kernel.org,
+	kan.liang@linux.intel.com,
+	namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/8] perf trace: Augment enum arguments with BTF
+Date: Fri,  5 Jul 2024 21:20:50 +0800
+Message-ID: <20240705132059.853205-1-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240613150902.2173582-1-devarsht@ti.com>
-References: <20240613150902.2173582-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Devarsh Thakkar,
+Changes in v5:
 
-On Thu, 13 Jun 2024 20:38:59 +0530, Devarsh Thakkar wrote:
-> Add global CMA reserve area for AM62x, AM62A and AM62P SoCs.
-> These SoCs do not have MMU and hence require contiguous memory pool to
-> support various multimedia use-cases.
-> 
-> Brandon Brnich (1):
->   arm64: dts: ti: k3-am62p5-sk: Reserve 576 MiB of global CMA
-> 
-> [...]
+- Use hardcoded landlock structs and macros for landlock.c workload to
+make this build in older systems.
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
+Changes in v4:
 
-[1/3] arm64: dts: ti: k3-am62x-sk-common: Reserve 128MiB of global CMA
-      commit: 9e8560556f9c41da28118af3385b4e9dc832ae2b
-[2/3] arm64: dts: ti: k3-am62a7-sk: Reserve 576MiB of global CMA
-      commit: 6406c5d5512c0814b8c155df7f833a98d9069a72
+- Fix landlock workload's build error.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Changes in v3:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+- Add trace__btf_scnprintf() helper function
+- Remove is_enum memeber in struct syscall_arg_fmt, replace it with 
+btf_is_enum()
+- Add syscall_arg_fmt__cache_btf_enum() to cache btf_type only
+- Resolve NO_LIBBPF=1 build error
+- Skip BTF augmentation test if landlock_add_rule syscall and LIBBPF are not
+available
+- Rename landlock.c workload, add a comment to landlock.c workload
+- Change the way of skipping 'enum ' prefix
+- Add type_name member to struct syscall_arg
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Changes in v2:
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+- Add trace_btf_enum regression test, and landlock workload
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
---
-Vignesh
+v1:
+
+In this patch, BTF is used to turn enum value to the corresponding
+enum variable name. There is only one system call that uses enum value
+as its argument, that is `landlock_add_rule()`.
+
+Enum arguments of non-syscall tracepoints can also be augmented, for
+instance timer:hrtimer_start and timer:hrtimer_init's 'mode' argument.
+
+
+Arnaldo Carvalho de Melo (2):
+  perf trace: Introduce trace__btf_scnprintf()
+  perf trace: Remove arg_fmt->is_enum, we can get that from the BTF type
+
+Howard Chu (6):
+  perf trace: Fix iteration of syscall ids in syscalltbl->entries
+  perf trace: BTF-based enum pretty printing for syscall args
+  perf trace: Augment non-syscall tracepoints with enum arguments with
+    BTF
+  perf trace: Filter enum arguments with enum names
+  perf test: Add landlock workload
+  perf test trace_btf_enum: Add regression test for the BTF augmentation
+    of enums in 'perf trace'
+
+ tools/perf/builtin-trace.c               | 229 ++++++++++++++++++++---
+ tools/perf/tests/builtin-test.c          |   1 +
+ tools/perf/tests/shell/trace_btf_enum.sh |  61 ++++++
+ tools/perf/tests/tests.h                 |   1 +
+ tools/perf/tests/workloads/Build         |   2 +
+ tools/perf/tests/workloads/landlock.c    |  66 +++++++
+ tools/perf/trace/beauty/beauty.h         |   1 +
+ tools/perf/util/syscalltbl.c             |   7 +
+ tools/perf/util/syscalltbl.h             |   1 +
+ 9 files changed, 345 insertions(+), 24 deletions(-)
+ create mode 100755 tools/perf/tests/shell/trace_btf_enum.sh
+ create mode 100644 tools/perf/tests/workloads/landlock.c
+
+-- 
+2.45.2
 
