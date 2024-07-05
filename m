@@ -1,108 +1,108 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13513146A70
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 11:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9C813665A;
+	Fri,  5 Jul 2024 11:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720177484; cv=none; b=mzoze7iLQQAKkkHkGTr4rqz+hgrXdwLP7VQOU43kwosZH7eCjEESQXnuYRnY2JVYSJDtVNgZLGSA2zOYOErHhCq10o2nFHD2VSmIIBK6fwI+cJi5xFeinws2GhzBG76sBhH4b2NFPaP5joxlbYhBjuZo8b23XEvNEDwm0iN2ErY=
+	t=1720177604; cv=none; b=YN1f1iOHTKHYOZ3GjuMs7Rihw5DBiAWObR8kkrPjC0gWlatD5Qq1CuoEriuUcN6ts5dIcOOXZEzxuMoWPXXxwZfmkmTR+pZ5oRmNAIFtJb08f9rLo0s+Dr9EUTJuuxYxv8AJxo6OdtmHOc80Mm6gdFOfY93hi+6QQXM3UYFHpN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720177484; c=relaxed/simple;
-	bh=y8qVi77ckYkW9scjpifA6YBU/+LYzRWUULo+xlhCkiY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ux0QyZ5xlGfEdv5gETVx3Wi4wI+FxCalOWXywwD9jMCDOnwo2RJwh05rnaxszaNENuoKr8haap2A+vp+vtH5IFCsKC3QoYeAr1SHQ0gZyyEPzu/aj9XkbF+n8LNSIl2Lju6UG+3UuG/+c92hFSSwdLyxO/YyKe+FVkHkXAdvZnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=MeVV/q/T; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1720177604; c=relaxed/simple;
+	bh=8+WZaP3nhTCnIc1AsENbtDY0K0ju2lbrz8eZmgxBEWs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ueW0E+Ixm0pi7DT98qregxBV2MSfn2iwTPVG2C9LjGa/RAtqut75oa8tKqeJgIVUCeoBYw2U33Ck58v4kiz97v4dtBVu1lCXoehLr7P4L3vKP/L6FRFmJYnzi8Jz/mJSu1GKMY0gKJU9Fu+XkobP3Mg0iwyibGS9qmm2nLeuQnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkuSKhMd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="MeVV/q/T"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 4A870100004;
-	Fri,  5 Jul 2024 14:04:22 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1720177462; bh=SniJIlg0JpEI6DnXcprb6Lcp0NhWTP/XmcYBl44OhjM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=MeVV/q/Tyaqa5o+A4EclpxqOtbG+uPemI9a5vSCTsDlC+SlwW9MRuLR9OwL0zvo7h
-	 a968TGp6e4zW3+n7W/Ph+71k8TvS37HtlZ4aYxbXRKXdbdCRnf475GYzJ3xf+V3/d0
-	 eIB9/WV+S5ns4qdbstqMxEb0HcEaHhjLUI1Ftl4p3oPZ4qxX5DBkiJpB3cPv0ugOjX
-	 VUxZ23DGMhIRcr3o54wARAWuspe9aOnaG347MQlfs5cr1DSKEBFxvfx+KQpPiz0cKN
-	 u7HZ+843lznW9Up87ucXEqYIkSeS995u86A8g/BzP2yP0RMuNG7D1qimgdVSrnDNd7
-	 lAQE22iYKJySA==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Fri,  5 Jul 2024 14:03:07 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 5 Jul 2024
- 14:02:47 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Martyn Welch <martyn.welch@gefanuc.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Soumya Negi <soumya.negi97@gmail.com>, Alexon
- Oliveira <alexondunkan@gmail.com>, Piro Yang <piroyangg@gmail.com>, Andi
- Shyti <andi.shyti@linux.intel.com>, "Ricardo B. Marliere"
-	<ricardo@marliere.net>, Jinjie Ruan <ruanjinjie@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <linux-staging@lists.linux.dev>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH] staging: vme: Remove unneeded check in vme_lm_request()
-Date: Fri, 5 Jul 2024 14:02:34 +0300
-Message-ID: <20240705110234.14969-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkuSKhMd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BB17C32781;
+	Fri,  5 Jul 2024 11:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720177603;
+	bh=8+WZaP3nhTCnIc1AsENbtDY0K0ju2lbrz8eZmgxBEWs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bkuSKhMd/s1M3jLIO5uXA38ScJC4HgzeApnoM5clKKZCYo7ifptsB+wzGZjU7w5xp
+	 YeoEm3oS+aF/P3gmmt4sltJoNAGcmRReYglcyl3vk+a6I5QAOrbMiAFvtE/9FaLB6h
+	 QC4Gxw/PvgvSU8So6P3I7R5ZkRiMvButtyCV+BAStu1WVbfNTsrDQfIEArRiL+BajF
+	 xfj9+OmTSBQuvFRN02Kh9sYRsAYwTZXW7jbR2jHR+ek+jv4uwm9Z8D3EsMVkBpqfNQ
+	 IwSbVlHarIP8UNQPW7dVMttofHu/JQ7/xgZi95yBuByQPg6HstXnNoGa/RphPSg30W
+	 T36vHHWZLfPnA==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6265d3ba8fso129919266b.0;
+        Fri, 05 Jul 2024 04:06:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWwQlweXfgr6Xycl4QwF11Ui4iTfbF/LRfMgbZUrHltSQjvp3GxeYRJtJlwPzfqp0ppgjYpExQgQu5QoSwuPdaIwSzO4XMlukcO0SaGJuxMZ/wJYBi8XbYLOiOm6cCWZZTpc43YjAJ+kYk=
+X-Gm-Message-State: AOJu0YwI1cFvbhPO+TYMFE4O2urzWSPALsp1qOBfvkK8HzF8g5choJa2
+	mkWUbqn8gj7tu9D+SJSt15OjKpfGxqvUXLHDrGdpNH540k4/sQqJ49e68vsA6/IvPPrL4rjxj53
+	xXg6MUFs7xjuBkToluvbSwfPbF3s=
+X-Google-Smtp-Source: AGHT+IH64c+v1szNlZ0nWhKoen4VTG9k6IK/Oj+q+L+IPrB+lOM0thHysuOIn7Ff3Wm2h1RYlJynnym5RR6NAAryEa0=
+X-Received: by 2002:a17:906:34d3:b0:a6f:b58f:ae3c with SMTP id
+ a640c23a62f3a-a77ba468a2amr307138466b.26.1720177601984; Fri, 05 Jul 2024
+ 04:06:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186342 [Jul 05 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1;mx1.t-argos.ru.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/05 10:17:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/05 03:12:00 #25860202
-X-KSMG-AntiVirus-Status: Clean, skipped
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+ <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
+ <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+ <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+ <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
+ <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+ <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
+ <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
+ <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com> <CAK-xaQYwgOKkeD4HvMtNqNqqchW4aS2gtvzGJ-yKwfE6uaUYng@mail.gmail.com>
+In-Reply-To: <CAK-xaQYwgOKkeD4HvMtNqNqqchW4aS2gtvzGJ-yKwfE6uaUYng@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Fri, 5 Jul 2024 12:06:04 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H7MP7HQbyMpGgRrG+rejQX+5Hc7ipPNPN_tjbaUzNBNGQ@mail.gmail.com>
+Message-ID: <CAL3q7H7MP7HQbyMpGgRrG+rejQX+5Hc7ipPNPN_tjbaUzNBNGQ@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Andrea Gelmini <andrea.gelmini@gmail.com>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In vme_lm_request() list_for_each() pointer 'lm' is compared to NULL which
-is useless.
+On Fri, Jul 5, 2024 at 7:30=E2=80=AFAM Andrea Gelmini <andrea.gelmini@gmail=
+.com> wrote:
+>
+> Il giorno gio 4 lug 2024 alle ore 19:25 Filipe Manana
+> <fdmanana@kernel.org> ha scritto:
+> > 1) First let's check that the problem is really a consequence of the sh=
+rinker.
+> >     Try this patch:
+> >
+> >     https://gist.githubusercontent.com/fdmanana/b44abaade0000d28ba0e1e1=
+ae3ac4fee/raw/5c9bf0beb5aa156b893be2837c9244d035962c74/gistfile1.txt
+> >
+> >     This disables the shrinker. This is just to confirm if I'm looking
+> > in the right direction, if your problem is the same as Mikhail's and
+> > double check his bisection.
+>
+> Ok, so, I confirm. With this change, just a little bit of PSI memory
+> sometime (<3%), but no skyrocket. Also, tar at full speed.
 
-Fix this issue by removing unneeded check.
+Ok, so the bisection is reliable and it means you are experiencing the
+same problem that Mikhail reported.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>
+> Now, I'm going to prepare the btrfs image to send you.
 
-Fixes: 42fb503122d8 ("Staging: vme: add VME Location Monitor management mechanism")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/staging/vme_user/vme.c | 6 ------
- 1 file changed, 6 deletions(-)
+That might not be necessary, not sure how it would help, the 2nd patch
+to try would confirm if it's any fragmentation causing too many slow
+reads after extent map eviction.
+So save yourself some time for now because making the image is likely slow.
 
-diff --git a/drivers/staging/vme_user/vme.c b/drivers/staging/vme_user/vme.c
-index 0cd370ab1008..223c4d607c88 100644
---- a/drivers/staging/vme_user/vme.c
-+++ b/drivers/staging/vme_user/vme.c
-@@ -1445,12 +1445,6 @@ struct vme_resource *vme_lm_request(struct vme_dev *vdev)
- 
- 	/* Loop through LM resources */
- 	list_for_each_entry(lm, &bridge->lm_resources, list) {
--		if (!lm) {
--			dev_err(bridge->parent,
--				"Registered NULL Location Monitor resource\n");
--			continue;
--		}
--
- 		/* Find an unlocked controller */
- 		mutex_lock(&lm->mtx);
- 		if (lm->locked == 0) {
--- 
-2.30.2
+>
+> The other steps later.
 
+Thanks!
