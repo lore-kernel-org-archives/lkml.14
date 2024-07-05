@@ -1,36 +1,36 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AC0148FFB;
-	Fri,  5 Jul 2024 13:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A704A146A8D;
+	Fri,  5 Jul 2024 13:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720186456; cv=none; b=KqcMrZtjplI2ZVDcQv2CpdYldOLcL9RjQ8aRWElwqQ10CSfLzknB+1gMZcZRdog2t/FenT1A+sYC3mePShh3yxAok5Jg55drwHbuC42/C2bjBIX69ldAikeiqkHaoCVOig1Z49t77f5jETeaIZ50FFbDAcgQDj08tDiclUR4Bc8=
+	t=1720186456; cv=none; b=stw3znKxuUARikvGDLOoEkVw/QQnww1WeISic/8n/Obnx08zwmDQxP8lcWyn7anQmMFT0ptasvHplbqNRiNAK96FBsm1g7MesQGGL1ShGyjWMMMTmoj8qBY/UH/2e0df0Bne0Obh1bMJHbF5eMOdCAAoSsbT9E44ocYyFK1dZ/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720186456; c=relaxed/simple;
-	bh=SAPg0fozvoj3F2KG1fuguRG7wOIqoyJx/Pogexzx0HQ=;
+	bh=KalIqYrrAmq2wYiKdfTeen2fcLPp3RDkpdrBpHQLS0A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mnB4tfKIMtYjHLtqUhNwGb2AyE2edGDxoQSicSpJrhAZIbb5szfCuQxxjm8gm+moAmqDCDAWBFquasj0HqwIxB7lJOy7CaUFAwqUprq8cUvYCVEP5R7A3K/uVqY7Ml8A9skAKdyyx7T5xtp2zmtmHZbat/WXWfGrvoLEmnuRNpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=hgTWH+iJ; arc=none smtp.client-ip=193.104.135.124
+	 MIME-Version:Content-Type; b=Yd9h6VhQRJu1O1BWXyYgL99beqZXDhYIaWxwQpTIBXdaUM4wqDCHgIbaatq/WBoa4QHAf9thVJ/nGC9X/OMdvoZZHNTFGsibz1NmSdJR0t68OtHbo5uswGGpG20mUTVgunZ3iCzgQKc6t6wyXSM7wNY8uIog9P7N4V7qH2gHBuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=VJkrr0Le; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="hgTWH+iJ"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="VJkrr0Le"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1720186450;
-	bh=SAPg0fozvoj3F2KG1fuguRG7wOIqoyJx/Pogexzx0HQ=;
+	bh=KalIqYrrAmq2wYiKdfTeen2fcLPp3RDkpdrBpHQLS0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hgTWH+iJmgQ8QF3Plh56CdkhZ1encNeXV9yD2DPIyNgKaTizRuo0RxpZ3cZNqxNdu
-	 6gbOBAwrrnonIT1Aam7qAkxZ/N3LG7KJTbvkZ0kz8xco0/vS+NKxC589aKsmoRSid0
-	 5AlNGqXpCNNcwyaYBnrZc49X+hb30nK0oO2WLQhIIIXyQazy6ZXKus8h3YWyIuCbGn
-	 zOjZXDKdlkB2JGxg2XtMnkvvbOh0sK6hPW6T88H3vK7msnm0Y5OsVfOGZ8cqU5jde5
-	 z2kkA4TiVom7+au6mxjTlqU3XOZ3vAVhKV7j0pGJaIwWo9K5XyWWAmf+qMIcyfzV05
-	 pb/uMGUei+ugQ==
+	b=VJkrr0Le+oq7HxC3O4TzjaXuf0NS64kj/fnKQwDZkg8gYepbkEuIkd5iO7rlxmhhZ
+	 XIuyy80eDIercIFx2U5XsCXMhtoWSdoP8E7C+zdKfTfu+wAW736TbdUQY1Wr8wEsoV
+	 J3FrXkHE+Uxvf+pHQku8BTo126Zvgu4ExNS9TL2Q/xWt2pWTwrb8W7LliOsE4PRIlr
+	 OW22mnrMGHfgcHcdbFSLHT7MLO3pCcLAEsp09Z6ondBOEYwbcmcnLEUaa9PIWthE6p
+	 gAYs3kCs6v++o7HWY0K6Z4nNBtL2hh5knu3gRFSSezxCwane/cmFPOO18jdOl7TsMm
+	 /I5L1B+3ny1pA==
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 8DEA16007D;
-	Fri,  5 Jul 2024 13:34:10 +0000 (UTC)
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 73EA06007C;
+	Fri,  5 Jul 2024 13:34:09 +0000 (UTC)
 Received: by x201s (Postfix, from userid 1000)
-	id 9C6C720499A; Fri, 05 Jul 2024 13:33:51 +0000 (UTC)
+	id 849B2204819; Fri, 05 Jul 2024 13:33:50 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: netdev@vger.kernel.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -49,9 +49,9 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Florian Westphal <fw@strlen.de>,
 	Alexander Lobakin <aleksander.lobakin@intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 10/10] flow_dissector: set encapsulation control flags for non-IP
-Date: Fri,  5 Jul 2024 13:33:46 +0000
-Message-ID: <20240705133348.728901-11-ast@fiberby.net>
+Subject: [PATCH net-next v2 04/10] net/sched: cls_flower: add policy for TCA_FLOWER_KEY_FLAGS
+Date: Fri,  5 Jul 2024 13:33:40 +0000
+Message-ID: <20240705133348.728901-5-ast@fiberby.net>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240705133348.728901-1-ast@fiberby.net>
 References: <20240705133348.728901-1-ast@fiberby.net>
@@ -64,47 +64,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Make sure to set encapsulated control flags also for non-IP
-packets, such that it's possible to allow matching on e.g.
-TUNNEL_OAM on a geneve packet carrying a non-IP packet.
+This policy guards fl_set_key_flags() from seeing flags
+not used in the context of TCA_FLOWER_KEY_FLAGS.
 
-Suggested-by: Davide Caratti <dcaratti@redhat.com>
+In order For the policy check to be performed with the
+correct endianness, then we also needs to change the
+attribute type to NLA_BE32 (Thanks Davide).
+
+TCA_FLOWER_KEY_FLAGS{,_MASK} already has a be32 comment
+in include/uapi/linux/pkt_cls.h.
+
 Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 Tested-by: Davide Caratti <dcaratti@redhat.com>
 ---
- net/core/flow_dissector.c | 4 ++++
- net/sched/cls_flower.c    | 3 ++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ net/sched/cls_flower.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
-index 1a9ca129fddde..ada1e39b557e0 100644
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -434,6 +434,10 @@ skb_flow_dissect_tunnel_info(const struct sk_buff *skb,
- 			ipv6->dst = key->u.ipv6.dst;
- 		}
- 		break;
-+	default:
-+		skb_flow_dissect_set_enc_control(0, ctrl_flags, flow_dissector,
-+						 target_container);
-+		break;
- 	}
- 
- 	if (dissector_uses_key(flow_dissector, FLOW_DISSECTOR_KEY_ENC_KEYID)) {
 diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
-index 897d6b683cc6f..38b2df387c1e1 100644
+index 6a5cecfd95619..fc9a9a0b4897c 100644
 --- a/net/sched/cls_flower.c
 +++ b/net/sched/cls_flower.c
-@@ -2199,7 +2199,8 @@ static void fl_init_dissector(struct flow_dissector *dissector,
- 	FL_KEY_SET_IF_MASKED(mask, keys, cnt,
- 			     FLOW_DISSECTOR_KEY_ENC_IPV6_ADDRS, enc_ipv6);
- 	if (FL_KEY_IS_MASKED(mask, enc_ipv4) ||
--	    FL_KEY_IS_MASKED(mask, enc_ipv6))
-+	    FL_KEY_IS_MASKED(mask, enc_ipv6) ||
-+	    FL_KEY_IS_MASKED(mask, enc_control))
- 		FL_KEY_SET(keys, cnt, FLOW_DISSECTOR_KEY_ENC_CONTROL,
- 			   enc_control);
- 	FL_KEY_SET_IF_MASKED(mask, keys, cnt,
+@@ -41,6 +41,10 @@
+ #define TCA_FLOWER_KEY_CT_FLAGS_MASK \
+ 		(TCA_FLOWER_KEY_CT_FLAGS_MAX - 1)
+ 
++#define TCA_FLOWER_KEY_FLAGS_POLICY_MASK \
++		(TCA_FLOWER_KEY_FLAGS_IS_FRAGMENT | \
++		TCA_FLOWER_KEY_FLAGS_FRAG_IS_FIRST)
++
+ #define TUNNEL_FLAGS_PRESENT (\
+ 	_BITUL(IP_TUNNEL_CSUM_BIT) |		\
+ 	_BITUL(IP_TUNNEL_DONT_FRAGMENT_BIT) |	\
+@@ -676,8 +680,10 @@ static const struct nla_policy fl_policy[TCA_FLOWER_MAX + 1] = {
+ 	[TCA_FLOWER_KEY_ENC_UDP_SRC_PORT_MASK]	= { .type = NLA_U16 },
+ 	[TCA_FLOWER_KEY_ENC_UDP_DST_PORT]	= { .type = NLA_U16 },
+ 	[TCA_FLOWER_KEY_ENC_UDP_DST_PORT_MASK]	= { .type = NLA_U16 },
+-	[TCA_FLOWER_KEY_FLAGS]		= { .type = NLA_U32 },
+-	[TCA_FLOWER_KEY_FLAGS_MASK]	= { .type = NLA_U32 },
++	[TCA_FLOWER_KEY_FLAGS]		= NLA_POLICY_MASK(NLA_BE32,
++							  TCA_FLOWER_KEY_FLAGS_POLICY_MASK),
++	[TCA_FLOWER_KEY_FLAGS_MASK]	= NLA_POLICY_MASK(NLA_BE32,
++							  TCA_FLOWER_KEY_FLAGS_POLICY_MASK),
+ 	[TCA_FLOWER_KEY_ICMPV4_TYPE]	= { .type = NLA_U8 },
+ 	[TCA_FLOWER_KEY_ICMPV4_TYPE_MASK] = { .type = NLA_U8 },
+ 	[TCA_FLOWER_KEY_ICMPV4_CODE]	= { .type = NLA_U8 },
 -- 
 2.45.2
 
