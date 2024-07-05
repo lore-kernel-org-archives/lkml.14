@@ -1,96 +1,164 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815DF13C809
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 08:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288FC145FFF;
+	Fri,  5 Jul 2024 08:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720169560; cv=none; b=OA0Hyjm1Bs98sRVGMMRcwDaVi0AI4ORp9SMg6AWJIW81Dv4Jc6xo4ZAj/iJM5MgBPsr4jK+7qMJb/dkqpWDXFhTMr3ztcKkn4dFmZ28y3Onj1OvOvNh20x72cSxlsDwnFZxT4i4EufVD6WrxxeS3a2qQBc45/0ZFCN5OF4gVg6Q=
+	t=1720169562; cv=none; b=kxcGyNr7N5kIpt7c8OKdrJL8wBqpbGzGjGNP/gX3c52xcjmFUXXcHUdQfrC7uUMMQSKAdaa7oTpllBMXSLcB3rE1qNIO6lDSBRmhg/sVbQSwUHKNDodtWA6V93LO8DnpvHkI2veOa2mfnJISGxgrzgFlEznQ4XzL999CzHmLbkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720169560; c=relaxed/simple;
-	bh=nN7bsChoKD+VcXCEBRcLG7JH8o73GTocHnqeU92nWaY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PALhGkMV66i5H1ulyhMeXj4s6mFD6niRU2xqjMO/XovNy0Y4P690WNMetTBMTRFUrThWVvEQlJ91V3p8+cULhac3W+LwuwNIn7boKBR45dVtPXZ0r4YhDDYufI9T6X58qVAOlCrefut3faSGJjFemJHaMNHxF+UTVkWUuIsNSXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vg7Gnau4; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720169562; c=relaxed/simple;
+	bh=tNFKfuk5Ymyt8xk9GhZ2T11xYTpUmsgjx3Rqz+ObP2g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tUPFoMbahzmEp/qgIF1gsqJ8Yg/ByGXbWpsKn6s8gvJvhQjEv0IaQE5JGxi5pDSrepHEcR5YlidWl2k25FKRrigMikMFKJ6SrBVGDF3hxurii5LhdyUTllqBVD4EXidQRqaa8GfX9pDRk9csvCSEhSR4rb8eJfSzwLGAQjv6yAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jUBM0O8R; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vg7Gnau4"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ee77db6f97so19448351fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 01:52:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720169557; x=1720774357; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tm8BTCx8h7cfKJSdK68vXadL7NHJYI5R7P++Unzvos4=;
-        b=vg7Gnau4B7aeRV4B91DU+9LD65EBJ+OgP94cwEFPb8thm0VGtqMEEUi+zSWhI5pS9F
-         GGg4GNP1MOJ4DDT1k3eT3nE548SAKWBqXTn7HVP4jIAdG+B9QJj6c4h9qjeI/jw4t3aj
-         6gmXdVyB+LTZd7A20tvo3QuHUcWjY935HllqKVgHxdplvugTUwyMMOEvBzMYp69JvdQE
-         KTTsUJfmcOoTb3W27gfZsRqc4I4IbyN0EcbTuXzHHxjemk2ZkO2tMQfN7O1RIi4h2qXo
-         XDRgvrZDKWgcIudZDGLUraeAB9JcRDD872J2NW8YaVsPpj8bR1cbEk359fmZ3zIdY+L+
-         QZHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720169557; x=1720774357;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tm8BTCx8h7cfKJSdK68vXadL7NHJYI5R7P++Unzvos4=;
-        b=MesyQvR/Agvgg7RB1D9WQlZoplsxGe36zI3syg9TxSjlbYssIQaAcA74EvwAU/lROx
-         MhbKB+u8KYK999APUEHhZIv7z+KFE40WZ5uG+iLgL9uXEHI0QoOPqgWwS7+o49qVQGG/
-         09ZacOGS62CPb8SNdyeKYblS+tVDaKHUeqAuQJ1m8C4UphQdasbdnY8Qlk+7HA3VfkAp
-         02Vm8tgFv11YexTLlXmcj/8c67tElJwg5p6V2WxJssOh/MKOZEUyCxjtt0a7KMH9y58n
-         qQc15ibqD61MR/oe9TGBPLQbwE9z2g/xoE4YJz77uqEmJIGP0sqCH9sdfeK/jAqfM0sa
-         rWOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2CkV5LFtuOs7mCejmw5Ma2nzgwB9Jf4XUJhStO4rBHYq5Lj/m/KK837+0hhbbgAu1OhL+2871EpI8n1JY/EH2OlR3HNI6KIMLdvXa
-X-Gm-Message-State: AOJu0YxcAWwEBbUCgwFyocFuPM0iv9zqQ/nEl/U9QQvM9lP15MwZAa4z
-	/qcYInGq1r4UkX/NCd6kcZEKLemnCQ9KPxzuyoQubweRW6d+DH0n216JZOJbrkKdzEbjwArcF0S
-	tmSNGRCvM0DB8gxMQ2iF4OgQAwbVqvkisAmnDGQ==
-X-Google-Smtp-Source: AGHT+IEyStM8bjx9bavuGPC5GSUaOWfxD2PnzW5v4/QvDQ8yynppqbpSFxWdpusnNU1frPjGzXjLFnAHphiwhd3Laxk=
-X-Received: by 2002:a2e:9515:0:b0:2ec:5843:2fb8 with SMTP id
- 38308e7fff4ca-2ee8ee0e795mr32501771fa.42.1720169556609; Fri, 05 Jul 2024
- 01:52:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jUBM0O8R"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 464Nid1K026603;
+	Fri, 5 Jul 2024 08:52:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=Sg+a5AmYrZODA6buMyIBZVZhyNMtazQcn/qad/A8YnE=; b=jU
+	BM0O8R1YF3sYtyqUYGaXSuN/CNnkIrwpPgdh6f9A+IaiugGoqHWKJq5vStNCczM3
+	BN+WXiLRim4wThvx2gejIA2vgC8EgeEKHR/S4EvZn+P0XvmW8Y9NmdHURn3m6mZw
+	I12guzaAnPBQp5IN5FEfagSoX7f545LDvtAx+F/c3XSNjB7Ooohz9H1VFNuOwnOU
+	AnDtYMVSXDa1VQa6fiWR/Vpe/Qb8bA6OQdC63fRDQjkYyKJcLUaE+GF8U0BL4QUR
+	neCaGz6/i94gd5NunJ0sQk5LOZcit13AZGeTOR4lhymDru4RINpV9qgd5LafwMHL
+	2yOVJF1Fl8CCkesnzAPA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 405dbe3r13-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Jul 2024 08:52:26 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4658qPig019633
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 5 Jul 2024 08:52:25 GMT
+Received: from taozha2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 5 Jul 2024 01:52:20 -0700
+From: Tao Zhang <quic_taozha@quicinc.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>, "Rob Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        James Clark <james.clark@arm.com>
+CC: Tao Zhang <quic_taozha@quicinc.com>,
+        Jinlong Mao
+	<quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Tingwei Zhang
+	<quic_tingweiz@quicinc.com>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        Song Chai <quic_songchai@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        Jie Gan <quic_jiegan@quicinc.com>
+Subject: [PATCH v1 0/3] Add source filtering for multi-port output
+Date: Fri, 5 Jul 2024 16:51:49 +0800
+Message-ID: <20240705085152.9063-1-quic_taozha@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZoWXwYtwgJIxi-hD@google.com>
-In-Reply-To: <ZoWXwYtwgJIxi-hD@google.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 5 Jul 2024 10:52:25 +0200
-Message-ID: <CACRpkdY2S+G+u88P3x8emeq3-hEiRP89VbwM2TyRBd956Ro9BQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: of: add polarity quirk for TSC2005
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Sebastian Reichel <sre@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: uWUFv2iMHS_yCMLb3UsUwAt8tRg8SDZa
+X-Proofpoint-GUID: uWUFv2iMHS_yCMLb3UsUwAt8tRg8SDZa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-05_05,2024-07-03_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 clxscore=1011 suspectscore=0
+ impostorscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407050066
 
-On Wed, Jul 3, 2024 at 8:26=E2=80=AFPM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+In our hardware design, by combining a funnel and a replicator, it
+implement a hardware device with one-to-one correspondence between
+output ports and input ports. The programming usage on this device
+is the same as funnel. The software uses a funnel and a static
+replicator to implement the driver of this device. Since original
+funnels only support a single output connection and original
+replicator only support a single input connection, the code needs
+to be modified to support this new feature. The following is a
+typical topology diagram of multi-port output mechanism.
+|----------|     |---------|     |----------|   |---------|
+|  TPDM 0  |     | Source0 |     | Source 1 |   | TPDM 1  |
+|----------|     |---------|     |----------|   |---------|
+      |                |                |             |
+      |                |                |             |
+      |      --------- |                |             |
+      |      |                          |             |
+      |      |                          |             |
+      |      |                          |             |
+   \-------------/ ----------------------             |
+    \  Funnel 0 /  |                                  |
+     -----------   |     ------------------------------
+          |        |     |
+          |        |     |
+        \------------------/
+         \    Funnel 1    /     ----|
+          \--------------/          |
+                  |                 |----> Combine a funnel and a
+                  |                 |      static replicator
+          /-----------------\       |
+         /    replicator 0   \  ----|
+        /---------------------\
+             |     |      |
+             |     |      |-----------|
+             |     |---------|        |
+             |               |TPDM0   |TPDM1
+             |            \-----------------/
+             |             \   TPDA 0      /
+             |              \-------------/
+             |                    |
+             |                    |
+             |Source0/1           |
+          \-------------------------------/
+           \           Funnel 2          /
+            \---------------------------/
 
+Changes in V1:
+1. Add a static replicator connect to a funnel to implement the
+correspondence between the output ports and the input ports on
+funnels.
+-- Suzuki K Poulose
+2. Add filter_src_dev and filter_src_dev phandle to
+"coresight_connection" struct, and populate them if there is one.
+-- Suzuki K Poulose
+3. To look at the phandle and then fixup/remove the filter_src
+device in fixup/remove connections.
+-- Suzuki K Poulose
+4. When TPDA reads DSB/CMB element size, it is implemented by
+looking up filter src device in the connections.
+-- Suzuki K Poulose
 
-> DTS for Nokia N900 incorrectly specifies "active high" polarity for
-> the reset line, while the chip documentation actually specifies it as
-> "active low".  In the past the driver fudged gpiod API and inverted
-> the logic internally, but it was changed in d0d89493bff8.
->
-> Fixes: d0d89493bff8 ("Input: tsc2004/5 - switch to using generic device p=
-roperties")
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Tao Zhang (3):
+  dt-bindings: arm: qcom,coresight-static-replicator: Add property for
+    source filtering
+  coresight: Add source filtering for multi-port output
+  coresight-tpda: Optimize the function of reading element size
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+ .../arm/arm,coresight-static-replicator.yaml  | 18 +++-
+ drivers/hwtracing/coresight/coresight-core.c  | 89 ++++++++++++++++---
+ .../hwtracing/coresight/coresight-platform.c  | 13 +++
+ drivers/hwtracing/coresight/coresight-tpda.c  |  6 +-
+ include/linux/coresight.h                     |  5 ++
+ 5 files changed, 115 insertions(+), 16 deletions(-)
 
-> OTOH if this was indeed broken, then it was broken for ~7 years
-> (d0d89493bff8 went in 4.11-rc1), so maybe the best way is not to worry
-> about compatibility with old DTS, update
-> arch/arm/boot/dts/ti/omap/omap3-n900.dts in the tree and call it a day.
+-- 
+2.17.1
 
-I think anybody using the n900 wll be updating DTS and kernel in tandem
-so yeah. But I think it's nice that we do both since you anyway made
-the patch, it doesn't hurt.
-
-Yours,
-Linus Walleij
