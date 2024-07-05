@@ -1,201 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3FE1474A3;
-	Fri,  5 Jul 2024 09:32:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2AC135A69;
+	Fri,  5 Jul 2024 09:34:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720171921; cv=none; b=KUDpdqsPHQTyKch3p2eDrUOB8z44LuJ6jQ26BqysB6UT9QZyXdr7DyWZXEJFrgMkuSqqXzpc9aoGZMS5bDt8N+IizIfQIRbzhLD4jnakx5Ik/2gaii8/HHJvHoJdTQ3vYhadt6Te2F44kdEhLuuoq/gq1D1XNhcSgd2zmlcEiv0=
+	t=1720172042; cv=none; b=FOxUrFVU22uLv7EJYwY8CmGk1pE+5e5n5MtvDA24QAKFOqNRZFZzgwTK9ehhoF2mrDfejNO5L46etlvPll4/Xc8cG0D5H9DgZfGBjJiVTTIt+z6LzYwVR5Kd040G1QYvp/biZGe79Uq/J5WaKpBqHdOX24d3qjnskQVjfr4ch1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720171921; c=relaxed/simple;
-	bh=GJ1I7tTBeFCHTX2tR7t3dckUliPv66ihFKX42pTzlaI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LkoUgbmrNMV0hyb0xgSyvLvCpPad04BnlPALaVpzKfdxKYEOP3+oQO4gvchfYJrAcfGA/zmZsih45wF6Pwt2FDGYbghOWZYLA7ig8YKkQxd1q3Zj3Bo4wJv4JUfC3Ral0fgjjTYewr33y80NiVvP/1RD47cUxegoZoXZS8gOkfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d2jpyzUX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720172042; c=relaxed/simple;
+	bh=//R3KJ2TmEUALF2xuwB2dmF10o7ZvOnc4OH75BUi3nA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NuYMBOFYFe+Xz8oEWQgKqNh/EcDx3xbU8kAM8bIXjdkJX9gOoLfLLZRrTwQSQv+KChMRAVypaeRTvU6L6k9bTvKP9D/ynG/oEfZfvYUdy7xizvg8p5n9N+FfWtamuLbmKNNG4O/H0aTN+mnwvzoFUYHbwsDu6sV0Q9e/nBoBrig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6rLgX99; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d2jpyzUX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CF6C4AF0B;
-	Fri,  5 Jul 2024 09:32:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6rLgX99"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675E4C4AF0B;
+	Fri,  5 Jul 2024 09:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720171921;
-	bh=GJ1I7tTBeFCHTX2tR7t3dckUliPv66ihFKX42pTzlaI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=d2jpyzUXLIecjzta5xVfmWJaZzluULhfveAbqrErKtR46N0Y8mBppf1EjHNHxov7Q
-	 cq6t+A5UH1Z2sTt497M6zQHca1S68fiTtTMiDyhZeGjUoa5ScZFuo+JV3nUqPYzU7+
-	 lpn50ALL4r5VA7uRZXlkhrsi+lkEhEsbHpLL4RpsaQyfb4ZUvexU9EpRix70XlnLiP
-	 v+VDf2XhxedlQh57BMTj1E1/pLN/F9LzcAFrNCd7uikxwxlx+c8lYzK0ROcD3BzBea
-	 EcRzV+mZ/SXvGt/xx9xPZzBUWLKfiAUrf1I3h1Yxi+YVBQZnuI1y2qoRQdrHNYN+TL
-	 VZ3QDPAzuYw5w==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sPfIN-00A0NK-1O;
-	Fri, 05 Jul 2024 10:31:59 +0100
-From: Marc Zyngier <maz@kernel.org>
-To: kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Nianyao Tang <tangnianyao@huawei.com>
-Subject: [PATCH 2/3] irqchip/gic-v4: Substitute vmovp_lock for a per-VM lock
-Date: Fri,  5 Jul 2024 10:31:54 +0100
-Message-Id: <20240705093155.871070-3-maz@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240705093155.871070-1-maz@kernel.org>
-References: <20240705093155.871070-1-maz@kernel.org>
+	s=k20201202; t=1720172042;
+	bh=//R3KJ2TmEUALF2xuwB2dmF10o7ZvOnc4OH75BUi3nA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=P6rLgX99HiBLWg81cA1IJQWfn1CzGaskGIxlxDIjwiZsBxaSXYsKV7zmUHipLEqC5
+	 V9lRTIeVyZVzUIgF33Z9vpN2oLoE3j/GzVAKhiDMoIkLU6hTU+qxIkEZnp4H2kQnDM
+	 VI9WIHsc9JCiv+XQRhHUhBm1IZdVOYmfomT8ga9bdB+LcWuP3IPJHGdO/GFfR1eleC
+	 zXCcgA5pp2AIv+FIpaGoj61m8oo2JmbjQLYFvQprwnp3yrBjjCokh8EyOaZsXJICAB
+	 nHlXvdvXpUnXl8oFnQ6dFSJmkMbKhzEHxbIXLepIzDDWwqSVgUqPtaLoO4Kq8mETzN
+	 rmdaBR7CMtjXw==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57ccd1111b0so1039734a12.3;
+        Fri, 05 Jul 2024 02:34:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVovcJFmeHd6ryRCdnLQgEU6fQkYj/HH3afYNf5klUg2feoMwmACgqzbXpLCTP+NLLpWuZLE8SCGtH8t/JB7Ii9ohFHXXQSDDOfraZcHmIDIIYxPNN9kKBsVQtmtZoZQ3HP
+X-Gm-Message-State: AOJu0YwEDpKXJAH3JmJWjcW2Wzoqr52Nj+gSzB8wnKj6qsmFKHKQtWxy
+	SCFeKNPx072Ed0QINXt7CeADLEpEzx/jNnWWqWtZtqOTRNOuZTbitZ5EHVyUvZMvJwgk065M73q
+	CILmDjuv19FYJIYjnBi84FNe3BsI=
+X-Google-Smtp-Source: AGHT+IFb2JnXJEpZ/8ZNLh3sUIwAnpsOHgPBjHuN17UBwVrsYs5tsKVu3GpfDIgPIRcizOeSQcGzoENl7XHq7IPf16s=
+X-Received: by 2002:a05:6402:4312:b0:58f:44fa:a2b9 with SMTP id
+ 4fb4d7f45d1cf-58f44faa6c8mr1770485a12.16.1720172040928; Fri, 05 Jul 2024
+ 02:34:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, tangnianyao@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20240624071422.3473789-1-maobibo@loongson.cn>
+In-Reply-To: <20240624071422.3473789-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 5 Jul 2024 17:33:48 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4FSKo2+go0aW_4-a06q2FA4cNL_ksSNZoKzd=r+TSykw@mail.gmail.com>
+Message-ID: <CAAhV-H4FSKo2+go0aW_4-a06q2FA4cNL_ksSNZoKzd=r+TSykw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] LoongArch: KVM: VM migration enhancement
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, WANG Rui <wangrui@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-vmovp_lock is abused in a number of cases to serialise updates
-to vlpi_count[] and deal with map/unmap of a VM to ITSs.
+Series applied, thanks.
 
-Instead, provide a per-VM lock and revisit the use of vlpi_count[]
-so that it is always wrapped in this per-VM vmapp_lock.
+Huacai
 
-This reduces the potential contention on a concurrent VMOVP command,
-and paves the way for subsequent VPE locking that holding vmovp_lock
-actively prevents due to the lock ordering.
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c   | 27 ++++++++++++---------------
- include/linux/irqchip/arm-gic-v4.h |  8 ++++++++
- 2 files changed, 20 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index a00c5e8c4ea65..b52d60097cad5 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1317,7 +1317,6 @@ static void its_send_vmovp(struct its_vpe *vpe)
- {
- 	struct its_cmd_desc desc = {};
- 	struct its_node *its;
--	unsigned long flags;
- 	int col_id = vpe->col_idx;
- 
- 	desc.its_vmovp_cmd.vpe = vpe;
-@@ -1329,6 +1328,12 @@ static void its_send_vmovp(struct its_vpe *vpe)
- 		return;
- 	}
- 
-+	/*
-+	 * Protect against concurrent updates of the mapping state on
-+	 * individual VMs.
-+	 */
-+	guard(raw_spinlock_irqsave)(&vpe->its_vm->vmapp_lock);
-+
- 	/*
- 	 * Yet another marvel of the architecture. If using the
- 	 * its_list "feature", we need to make sure that all ITSs
-@@ -1337,8 +1342,7 @@ static void its_send_vmovp(struct its_vpe *vpe)
- 	 *
- 	 * Wall <-- Head.
- 	 */
--	raw_spin_lock_irqsave(&vmovp_lock, flags);
--
-+	guard(raw_spinlock)(&vmovp_lock);
- 	desc.its_vmovp_cmd.seq_num = vmovp_seq_num++;
- 	desc.its_vmovp_cmd.its_list = get_its_list(vpe->its_vm);
- 
-@@ -1353,8 +1357,6 @@ static void its_send_vmovp(struct its_vpe *vpe)
- 		desc.its_vmovp_cmd.col = &its->collections[col_id];
- 		its_send_single_vcommand(its, its_build_vmovp_cmd, &desc);
- 	}
--
--	raw_spin_unlock_irqrestore(&vmovp_lock, flags);
- }
- 
- static void its_send_vinvall(struct its_node *its, struct its_vpe *vpe)
-@@ -1791,12 +1793,10 @@ static bool gic_requires_eager_mapping(void)
- 
- static void its_map_vm(struct its_node *its, struct its_vm *vm)
- {
--	unsigned long flags;
--
- 	if (gic_requires_eager_mapping())
- 		return;
- 
--	raw_spin_lock_irqsave(&vmovp_lock, flags);
-+	guard(raw_spinlock_irqsave)(&vm->vmapp_lock);
- 
- 	/*
- 	 * If the VM wasn't mapped yet, iterate over the vpes and get
-@@ -1814,19 +1814,15 @@ static void its_map_vm(struct its_node *its, struct its_vm *vm)
- 			its_send_vinvall(its, vpe);
- 		}
- 	}
--
--	raw_spin_unlock_irqrestore(&vmovp_lock, flags);
- }
- 
- static void its_unmap_vm(struct its_node *its, struct its_vm *vm)
- {
--	unsigned long flags;
--
- 	/* Not using the ITS list? Everything is always mapped. */
- 	if (gic_requires_eager_mapping())
- 		return;
- 
--	raw_spin_lock_irqsave(&vmovp_lock, flags);
-+	guard(raw_spinlock_irqsave)(&vm->vmapp_lock);
- 
- 	if (!--vm->vlpi_count[its->list_nr]) {
- 		int i;
-@@ -1834,8 +1830,6 @@ static void its_unmap_vm(struct its_node *its, struct its_vm *vm)
- 		for (i = 0; i < vm->nr_vpes; i++)
- 			its_send_vmapp(its, vm->vpes[i], false);
- 	}
--
--	raw_spin_unlock_irqrestore(&vmovp_lock, flags);
- }
- 
- static int its_vlpi_map(struct irq_data *d, struct its_cmd_info *info)
-@@ -3922,6 +3916,8 @@ static void its_vpe_invall(struct its_vpe *vpe)
- {
- 	struct its_node *its;
- 
-+	guard(raw_spinlock_irqsave)(&vpe->its_vm->vmapp_lock);
-+
- 	list_for_each_entry(its, &its_nodes, entry) {
- 		if (!is_v4(its))
- 			continue;
-@@ -4527,6 +4523,7 @@ static int its_vpe_irq_domain_alloc(struct irq_domain *domain, unsigned int virq
- 	vm->db_lpi_base = base;
- 	vm->nr_db_lpis = nr_ids;
- 	vm->vprop_page = vprop_page;
-+	raw_spin_lock_init(&vm->vmapp_lock);
- 
- 	if (gic_rdists->has_rvpeid)
- 		irqchip = &its_vpe_4_1_irq_chip;
-diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index 2c63375bbd43f..ecabed6d33075 100644
---- a/include/linux/irqchip/arm-gic-v4.h
-+++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -25,6 +25,14 @@ struct its_vm {
- 	irq_hw_number_t		db_lpi_base;
- 	unsigned long		*db_bitmap;
- 	int			nr_db_lpis;
-+	/*
-+	 * Ensures mutual exclusion between updates to vlpi_count[]
-+	 * and map/unmap when using the ITSList mechanism.
-+	 *
-+	 * The lock order for any sequence involving the ITSList is
-+	 * vmapp_lock -> vpe_lock ->vmovp_lock.
-+	 */
-+	raw_spinlock_t		vmapp_lock;
- 	u32			vlpi_count[GICv4_ITS_LIST_MAX];
- };
- 
--- 
-2.39.2
-
+On Mon, Jun 24, 2024 at 3:14=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> This patchset is to solve VM migration issues, the first six patches are
+> mmu relative, the last patch is relative with vcpu interrupt status.
+>
+> It fixes potential issue about tlb flush of secondary mmu and huge page
+> selection etc. Also it hardens LoongArch kvm mmu module.
+>
+> With this patchset, VM successfully migrates on my 3C5000 Dual-Way
+> machine with 32 cores.
+>  1. Pass to migrate when unixbench workload runs with 32 vcpus, for
+> some unixbench testcases there is much IPI sending.
+>  2. Pass to migrate with kernel compiling with 8 vcpus in VM
+>  3. Fail to migrate with kernel compiling with 32 vcpus in VM, since
+> there is to much memory writing operation, also there will be file
+> system inode inconsistent error after migration.
+>
+> ---
+> v2 ... v3:
+>  1. Merge patch 7 into this patchset since it is relative with VM
+> migration bugfix.
+>  2. Sync pending interrupt when getting ESTAT register, SW ESTAT
+> register is read after vcpu_put().
+>  3. Add notation about smp_wmb() when update pmd entry, to elimate
+> checkpatch warning.
+>  4. Remove unnecessary modification about function kvm_pte_huge()
+> in patch 2.
+>  5. Add notation about secondary mmu tlb since it is firstly used here.
+>
+> v1 ... v2:
+>  1. Combine seperate patches into one patchset, all are relative with
+> migration.
+>  2. Mark page accessed without mmu_lock still, however with page ref
+> added
+> ---
+> Bibo Mao (7):
+>   LoongArch: KVM: Delay secondary mmu tlb flush until guest entry
+>   LoongArch: KVM: Select huge page only if secondary mmu supports it
+>   LoongArch: KVM: Discard dirty page tracking on readonly memslot
+>   LoongArch: KVM: Add memory barrier before update pmd entry
+>   LoongArch: KVM: Add dirty bitmap initially all set support
+>   LoongArch: KVM: Mark page accessed and dirty with page ref added
+>   LoongArch: KVM: Sync pending interrupt when getting ESTAT from user
+>     mode
+>
+>  arch/loongarch/include/asm/kvm_host.h |  5 ++
+>  arch/loongarch/include/asm/kvm_mmu.h  |  2 +-
+>  arch/loongarch/kvm/main.c             |  1 +
+>  arch/loongarch/kvm/mmu.c              | 67 ++++++++++++++++++++-------
+>  arch/loongarch/kvm/tlb.c              |  5 +-
+>  arch/loongarch/kvm/vcpu.c             | 29 ++++++++++++
+>  6 files changed, 86 insertions(+), 23 deletions(-)
+>
+>
+> base-commit: 50736169ecc8387247fe6a00932852ce7b057083
+> --
+> 2.39.3
+>
+>
