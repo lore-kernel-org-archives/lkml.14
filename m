@@ -1,254 +1,186 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7153713C809
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 08:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D18145B35
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 08:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720169720; cv=none; b=gx1GR7Ex1xs8l9HnnR+EVzf/5R2hLtUWv+g/xD/G3Shis5SN8iFUq6Ll+Zk11evT1mDIyBVfOdUHJnjufnKWngmHS75HAA9E9/lhYsAL2WAIarAJm85cWeqyusjDDxg3kB86xoBgXOQO8AkVtgaMRN9wd+Ozs9IA/dG6zBw10Nc=
+	t=1720169764; cv=none; b=LAPX4vu8o99tDP1nRvhZV8ywv5ZJJyfdx9PmkUg5AeLYopFt1meYyktG7WYxFYBbVY/rFB2Gm1uRXfBWJzyTlp7Q+FeZpdjD96tTQU2Du+tn2NvNkLeXpMGsqAcSnhEyZJBLaEPZoQmbvoRYg3cqrs6fEe1WCLkUqozd2/BAR74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720169720; c=relaxed/simple;
-	bh=T+KklkpzTJzz7v9MtxyoQZ3FEfhFla1zATp2lIZDDpY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k6q9cYkz8U569L0InNzKJpMqwpWXtrYIw3y5wwjeQBV6kJWL2tm8iyAA0GWdbfHz1cNuHAtRR9artuaA7EHpjdP24uTmNG9r4AJeIxeHPn/CIVh46gDLjpI4qgkmgcDsf0qOGPWQYS5c3FA51aHNHeQvYZ8LfS1KdaPphlS/Jcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8529D367;
-	Fri,  5 Jul 2024 01:55:41 -0700 (PDT)
-Received: from [10.57.74.223] (unknown [10.57.74.223])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 685F13F762;
-	Fri,  5 Jul 2024 01:55:14 -0700 (PDT)
-Message-ID: <781cefa8-7a55-46a5-914b-9097b00bd8db@arm.com>
-Date: Fri, 5 Jul 2024 09:55:13 +0100
+	s=arc-20240116; t=1720169764; c=relaxed/simple;
+	bh=nbkxxK6UGd7Kt1FEcuVHaHCYrmPKcTQpdZE4mLL5gMM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wn0mooTnTECyqLTJURY1pCnhylh2Lfk4KrjwzzSUlq16v8wLKf0mHYlmFokhPeNWXkbgyRiRUD4x9oKQr586OLCTzR6bVBBfiOar/7S4/aSI2ZjK3r/765a8BWhGzmiyVVvCZBwPFG9YAhpioXIGzGu/eNaAsRSWgnpp1EYW9SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sPejR-0004U6-6p; Fri, 05 Jul 2024 10:55:53 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sPejQ-007Hr7-3C; Fri, 05 Jul 2024 10:55:52 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sPejQ-000MYL-05;
+	Fri, 05 Jul 2024 10:55:52 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Yuiko Oshino <yuiko.oshino@microchip.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Michal Kubiak <michal.kubiak@intel.com>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com
+Subject: [PATCH net-next v2 1/1] net: phy: microchip: lan937x: add support for 100BaseTX PHY
+Date: Fri,  5 Jul 2024 10:55:50 +0200
+Message-Id: <20240705085550.86678-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/6] mm: shmem: add mTHP support for anonymous shmem
-Content-Language: en-GB
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, david@redhat.com, wangkefeng.wang@huawei.com,
- ying.huang@intel.com, 21cnbao@gmail.com, shy828301@gmail.com,
- ziy@nvidia.com, ioworker0@gmail.com, da.gomez@samsung.com,
- p.raghav@samsung.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
- <65796c1e72e51e15f3410195b5c2d5b6c160d411.1718090413.git.baolin.wang@linux.alibaba.com>
- <65c37315-2741-481f-b433-cec35ef1af35@arm.com>
- <475332ea-a80b-421c-855e-a663d1d5bfc7@linux.alibaba.com>
- <b33b94bb-38c7-4b54-bdd3-51dec0535438@arm.com>
- <4d8ee659-58ff-4dab-833e-84400bde932a@linux.alibaba.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <4d8ee659-58ff-4dab-833e-84400bde932a@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 05/07/2024 03:56, Baolin Wang wrote:
-> 
-> 
-> On 2024/7/4 21:58, Ryan Roberts wrote:
->> On 04/07/2024 12:15, Baolin Wang wrote:
->>>
->>>
->>> On 2024/7/4 01:25, Ryan Roberts wrote:
->>>> On 11/06/2024 11:11, Baolin Wang wrote:
->>>>> Commit 19eaf44954df adds multi-size THP (mTHP) for anonymous pages, that
->>>>> can allow THP to be configured through the sysfs interface located at
->>>>> '/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
->>>>>
->>>>> However, the anonymous shmem will ignore the anonymous mTHP rule
->>>>> configured through the sysfs interface, and can only use the PMD-mapped
->>>>> THP, that is not reasonable. Users expect to apply the mTHP rule for
->>>>> all anonymous pages, including the anonymous shmem, in order to enjoy
->>>>> the benefits of mTHP. For example, lower latency than PMD-mapped THP,
->>>>> smaller memory bloat than PMD-mapped THP, contiguous PTEs on ARM architecture
->>>>> to reduce TLB miss etc. In addition, the mTHP interfaces can be extended
->>>>> to support all shmem/tmpfs scenarios in the future, especially for the
->>>>> shmem mmap() case.
->>>>>
->>>>> The primary strategy is similar to supporting anonymous mTHP. Introduce
->>>>> a new interface '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled',
->>>>> which can have almost the same values as the top-level
->>>>> '/sys/kernel/mm/transparent_hugepage/shmem_enabled', with adding a new
->>>>> additional "inherit" option and dropping the testing options 'force' and
->>>>> 'deny'. By default all sizes will be set to "never" except PMD size,
->>>>> which is set to "inherit". This ensures backward compatibility with the
->>>>> anonymous shmem enabled of the top level, meanwhile also allows independent
->>>>> control of anonymous shmem enabled for each mTHP.
->>>>>
->>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>>>
->>>> [...]
->>>>
->>>> Hi Baolin,
->>>>
->>>> I'm currently trying to fix a bug where khugepaged is not started if only shmem
->>>> is enabled for THP. See discussion at [1]. It's been broken like this forever.
->>>>
->>>> Assuming anon and shmem THP are initially both disabled:
->>>>
->>>> # echo never > /sys/kernel/mm/transparent_hugepage/shmem_enabled
->>>> # echo never > /sys/kernel/mm/transparent_hugepage/enabled
->>>> <khugepaged is stopped here>
->>>>
->>>> Then shemem THP is enabled:
->>>>
->>>> # echo always > /sys/kernel/mm/transparent_hugepage/shmem_enabled
->>>> <khugepaged is not started, this is a bug>
->>>
->>> Thanks Ryan. Yes, this is a real problem.
->>>
->>>> As part of investigating the fix, I stumbled upon this patch, which I remember
->>>> reviewing an early version of but I've been out for a while and missed the
->>>> latter versions. See below for comments and questions; the answers to which
->>>> will
->>>> help me figure out how to fix the above...
->>>>
->>>> [1]
->>>> https://lore.kernel.org/linux-mm/20240702144617.2291480-1-ryan.roberts@arm.com/
->>>>
->>>>
->>>>>    +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>>>> +static unsigned long shmem_allowable_huge_orders(struct inode *inode,
->>>>> +                struct vm_area_struct *vma, pgoff_t index,
->>>>> +                bool global_huge)
->>>>> +{
->>>>> +    unsigned long mask = READ_ONCE(huge_shmem_orders_always);
->>>>> +    unsigned long within_size_orders =
->>>>> READ_ONCE(huge_shmem_orders_within_size);
->>>>> +    unsigned long vm_flags = vma->vm_flags;
->>>>> +    /*
->>>>> +     * Check all the (large) orders below HPAGE_PMD_ORDER + 1 that
->>>>> +     * are enabled for this vma.
->>>>> +     */
->>>>> +    unsigned long orders = BIT(PMD_ORDER + 1) - 1;
->>>>> +    loff_t i_size;
->>>>> +    int order;
->>>>> +
->>>>> +    if ((vm_flags & VM_NOHUGEPAGE) ||
->>>>> +        test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
->>>>> +        return 0;
->>>>> +
->>>>> +    /* If the hardware/firmware marked hugepage support disabled. */
->>>>> +    if (transparent_hugepage_flags & (1 << TRANSPARENT_HUGEPAGE_UNSUPPORTED))
->>>>> +        return 0;
->>>>> +
->>>>> +    /*
->>>>> +     * Following the 'deny' semantics of the top level, force the huge
->>>>> +     * option off from all mounts.
->>>>> +     */
->>>>> +    if (shmem_huge == SHMEM_HUGE_DENY)
->>>>> +        return 0;
->>>>
->>>> I don't quite get this, I don't think its the desirable behaviour. This is
->>>> saying that if the top-level shemem_enabled control is set to 'deny', then all
->>>> mTHP sizes, regardless of their control's setting are disabled?
->>>>
->>>> The anon controls don't work like that; you can set the top-level control to
->>>> anything you like, but its only consumed if the per-size controls are
->>>> inheriting it.
->>>
->>> IMO, 'deny' option is not similar like 'never' option.
->>>
->>>>
->>>> So for the deny case, wouldn't it be better to allow that as an option on all
->>>> the per-size controls (and implicitly let it be inherrited from the top-level)?
->>>
->>>  From 'deny' option's semantics:
->>> "disables huge on shm_mnt and all mounts, for emergency use;"
->>
->> Right. Today, tmpfs only supports PMD-sized THP. So for all per-size controls
->> except the PMD-size control, 'deny' and 'never' would be the same practically
->> speaking. For the PMD-size control, 'deny' would disable THP for both anon shmem
->> and all tmpfs mounts, whereas 'never' would only disable THP for anon shmem.
->> When tmpfs gains mTHP support, 'deny' in the other per-size controls would also
->> disable that size for the tmpfs mounts.
-> 
-> Not really. We will not add 'deny' and 'force' testing option for each per-size
-> mTHP control as suggested by Hugh in the previous MM meeting[1].
-> 
-> [1]
-> https://lore.kernel.org/all/f1783ff0-65bd-4b2b-8952-52b6822a0835@redhat.com/T/#u
-> 
->> I disagree with the current implementation where setting it up so that a
->> top-level 'deny' overrides whatever is in the per-size controls simply because
->> it's different to the model implemented for anon THP. That's my 2 cents. If
->> nobody else agrees then that ok - I'll fix the above bug according to the
->> current model.
-> 
-> I remember we have customers who use the 'deny' option to forcibly turn off the
-> huge page option for all mounts (including shm_mnt). But if shmem/tmpfs uses
-> mTHP and users set 'deny', they cannot force all huge orders off and they must
-> also do 'echo never >
-> /sys/kernel/mm/transparent_hugepage/hugepages-XXXkB/shmem_enabled' to disable
-> all huge orders option, which breaks the previous user habits, IMHO.
+Add support of 100BaseTX PHY build in to LAN9371 and LAN9372 switches.
 
-But if they have enabled mTHP for shmem in the first place, they must be mTHP
-aware. So its not unreasonable to expect them to call:
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
+---
+changes v2:
+- move LAN937X_TX code from microchip_t1.c to microchip.c
+- add Reviewed-by tags
+---
+ drivers/net/phy/microchip.c | 75 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-# echo deny > /sys/kernel/mm/transparent_hugepage/hugepages-XXXkB/shmem_enabled
-
-That's the expectation for anon mTHP anyway. If the user enables mTHP then does:
-
-# echo never > /sys/kernel/mm/transparent_hugepage/enabled
-
-That *does not* disable all mTHP sizes. It only disables the sizes that have
-been set to 'inherit'. The model is that a size is only influenced by the
-top-level control if it has explicitly requested 'inherit'. But here you have
-this special (and weird in my opinion) case where some values of the top-level
-control apply unconditionally to the per-size control and some don't.
-
-> 
-> In additon, I do not think this creates a difference with the anon mTHP model,
-> as anon mTHP does not have these shmem special 'deny' and 'force' options for
-> testing purposes. In my view, the current 'deny' option fulfills the semantic
-> definition of 'For use in emergencies, to force the *huge* option off from all
-> mounts'.
-
-OK. My opinion is logged :) But I'm not hearing anyone joining in support of
-that opinion. I have a better understanding of the intent of your model as a
-result of this discussion so thanks for that. As long as the documentation is
-clear on this behaviour, let's leave it as is.
-
->>> It is usually used for testing to shut down all huge pages from the old ages.
->>> Moreover, mTHP interfaces will be used as a huge order filter to support tmpfs,
->>> so I think it will make life easier to disable all huge orders for testing or
->>> emergency use, as well as to maintain the original semantics.>
->>>>> +
->>>>> +    /*
->>>>> +     * Only allow inherit orders if the top-level value is 'force', which
->>>>> +     * means non-PMD sized THP can not override 'huge' mount option now.
->>>>> +     */
->>>>> +    if (shmem_huge == SHMEM_HUGE_FORCE)
->>>>> +        return READ_ONCE(huge_shmem_orders_inherit);
->>>>
->>>> I vaguely recall that we originally discussed that trying to set 'force' on the
->>>> top level control while any per-size controls were set to 'inherit' would be an
->>>> error, and trying to set 'force' on any per-size control except the PMD-size
->>>> would be an error?
->>>
->>> Right.
->>>
->>>> I don't really understand this logic. Shouldn't we just be looking at the
->>>> per-size control settings (or the top-level control as a proxy for every
->>>> per-size control that has 'inherit' set)?
->>>
->>> ‘force’ will apply the huge orders for anon shmem and tmpfs, so now we only
->>> allow pmd-mapped THP to be forced. We should not look at per-size control
->>> settings for tmpfs now (mTHP for tmpfs will be discussed in future).
->>
->> But why not just maintain per-size controls and refactor tmpfs to just look at
->> the PMD-size THP control for now. It can ignore the other sizes. That's much
->> simpler and cleaner IMHO.
-> 
-> As I said above, 'force' and 'deny' option will not be added for per-size controls.
-
-Understood.
-
-Thanks,
-Ryan
-
+diff --git a/drivers/net/phy/microchip.c b/drivers/net/phy/microchip.c
+index 0b88635f4fbca..b46d5d43e2585 100644
+--- a/drivers/net/phy/microchip.c
++++ b/drivers/net/phy/microchip.c
+@@ -12,6 +12,12 @@
+ #include <linux/of.h>
+ #include <dt-bindings/net/microchip-lan78xx.h>
+ 
++#define PHY_ID_LAN937X_TX			0x0007c190
++
++#define LAN937X_MODE_CTRL_STATUS_REG		0x11
++#define LAN937X_AUTOMDIX_EN			BIT(7)
++#define LAN937X_MDI_MODE			BIT(6)
++
+ #define DRIVER_AUTHOR	"WOOJUNG HUH <woojung.huh@microchip.com>"
+ #define DRIVER_DESC	"Microchip LAN88XX PHY driver"
+ 
+@@ -373,6 +379,66 @@ static void lan88xx_link_change_notify(struct phy_device *phydev)
+ 	}
+ }
+ 
++static int lan937x_tx_read_status(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = genphy_read_status(phydev);
++	if (ret < 0)
++		return ret;
++
++	ret = phy_read(phydev, LAN937X_MODE_CTRL_STATUS_REG);
++	if (ret < 0)
++		return ret;
++
++	if (ret & LAN937X_AUTOMDIX_EN) {
++		phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
++		/* MDI/MDIX status is unknown */
++		phydev->mdix = ETH_TP_MDI_INVALID;
++	} else if (ret & LAN937X_MDI_MODE) {
++		phydev->mdix_ctrl = ETH_TP_MDI_X;
++		phydev->mdix = ETH_TP_MDI_X;
++	} else {
++		phydev->mdix_ctrl = ETH_TP_MDI;
++		phydev->mdix = ETH_TP_MDI;
++	}
++
++	return 0;
++}
++
++static int lan937x_tx_config_mdix(struct phy_device *phydev, u8 ctrl)
++{
++	u16 val;
++
++	switch (ctrl) {
++	case ETH_TP_MDI:
++		val = 0;
++		break;
++	case ETH_TP_MDI_X:
++		val = LAN937X_MDI_MODE;
++		break;
++	case ETH_TP_MDI_AUTO:
++		val = LAN937X_AUTOMDIX_EN;
++		break;
++	default:
++		return 0;
++	}
++
++	return phy_modify(phydev, LAN937X_MODE_CTRL_STATUS_REG,
++			  LAN937X_AUTOMDIX_EN | LAN937X_MDI_MODE, val);
++}
++
++static int lan937x_tx_config_aneg(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = genphy_config_aneg(phydev);
++	if (ret)
++		return ret;
++
++	return lan937x_tx_config_mdix(phydev, phydev->mdix_ctrl);
++}
++
+ static struct phy_driver microchip_phy_driver[] = {
+ {
+ 	.phy_id		= 0x0007c132,
+@@ -400,12 +466,21 @@ static struct phy_driver microchip_phy_driver[] = {
+ 	.set_wol	= lan88xx_set_wol,
+ 	.read_page	= lan88xx_read_page,
+ 	.write_page	= lan88xx_write_page,
++},
++{
++	PHY_ID_MATCH_MODEL(PHY_ID_LAN937X_TX),
++	.name		= "Microchip LAN937x TX",
++	.suspend	= genphy_suspend,
++	.resume		= genphy_resume,
++	.config_aneg	= lan937x_tx_config_aneg,
++	.read_status	= lan937x_tx_read_status,
+ } };
+ 
+ module_phy_driver(microchip_phy_driver);
+ 
+ static struct mdio_device_id __maybe_unused microchip_tbl[] = {
+ 	{ 0x0007c132, 0xfffffff2 },
++	{ PHY_ID_MATCH_MODEL(PHY_ID_LAN937X_TX) },
+ 	{ }
+ };
+ 
+-- 
+2.39.2
 
