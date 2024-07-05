@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542BE224F2;
-	Fri,  5 Jul 2024 18:15:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E6713AD28;
+	Fri,  5 Jul 2024 18:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720203321; cv=none; b=a9PqHSfMVFCiQLVCHAQbZFSpMGaznAxTqpSJbdT0fD+OWW2cnPFQ+kHeNE8M2MurxeOJdogEHWseNTov6wSBcmqbGqjeuxbvvQKPEmH67f2067fAoW2lLFj/91hOHafEgy4FT4SLcoArLAGiPFvyU+4dE3GhRztz7yNMVAwkX88=
+	t=1720203324; cv=none; b=mU4hiKqTLvggHdSkxEdlDGw0nepFg0a6lmzzZP4juzxNnUL7MUhpdJ5DHoJEYZco6I3eNTwlfuOPs6W3SLpz9GM4uma9Yim6h5f45gIaOoVizzo/s1/4PjYxauPbGO46u08APic1fUN2WzQGypW6swqqc0nD/Ds79PShxXxDhjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720203321; c=relaxed/simple;
-	bh=kS7EfrqmMLPCfTSA0oSje2k+PTqM8YIGfH6XLHRZNTE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oATixe1RXtoddIGJ0/rxDSNsFcwy7DBUL56DBdY0ot9L+R1Ypl1yHXz5yd8t2qAOXQfqtare5JVFMWezHuUFQXze4nChV7GvZcqwPN1iHupcQeMspRpswkDF6/tOnrFxjG+wAYzcUu0lIepTTwazhQgsaEnAwk890gFhOrP9RL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7VjPvaN; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1720203324; c=relaxed/simple;
+	bh=siTPzKLH0RjHwMR3sXWKjqOAmHVFayQ8o6rC3wLhP8k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=J/3L/alQDVGDYjqNW/rKjzyh5pmOfZ1dny/OdbJ1gLNC+X4Goix0B6xHQNOqREn8vyBYwwbLgvdG2hpjxqXk4rV96ZE4SPV6+kwUXUgkmdXh5jyMyQaelMPmd8IoX9UcjrPBuJGFb3s435b00PKXn43bgnNVINd3Qb2XMeWPyeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FfvuT8Hv; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7VjPvaN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FfvuT8Hv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720203320; x=1751739320;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kS7EfrqmMLPCfTSA0oSje2k+PTqM8YIGfH6XLHRZNTE=;
-  b=k7VjPvaNk7sXWsBCHM4SBV2VFZT2W8VFgh4Kjjl8ToiGhjmtlW4r1bbh
-   EXrnvXNThMurNoe5blrwPUhyrwxe6guPmzuOeFTDqjcXcUcsKtdbhgHNk
-   9yDAwHRMuy89roplc64oqRask9luL3+d7SNQ8vkzfIwK2W5X5V2XWHm7B
-   H7Wu8WwND+5ymaOlENHpOCs3QCh1nhRl814DWGhnlU5wXkF50xNilShRp
-   EvRLkIxPnQAZCiqqJyDr/55tHTPxwNSH5NgKIcqJyiWB5DV1CX2rNSRYf
-   vnch0qrfyA5/aMFLt5mny99/iMUnJEzf+ywVgeZuWxnRICEQW5piVC4Kc
+  t=1720203322; x=1751739322;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=siTPzKLH0RjHwMR3sXWKjqOAmHVFayQ8o6rC3wLhP8k=;
+  b=FfvuT8Hvx+AQRGjjcQ23nsXoiTgfJQULG/CDyjMmOarX25aLpVh07wwe
+   8tE8+rUsu67bqiUz33bxqyBFRH1Jvw0VHRXWd8EDyA87GLnSYu9aDN740
+   sQJ1TyFojbJez7KIZI/rMVIKURgkgChIU3BSnMdvujsR9TSNFI4baK7Ms
+   vEwQhax8+LRLJYis5lNcd29or78bY2Z2Uu6xTKbf/dIgx7YSLDdv96Efc
+   Gnubtsd8nNXwQ2vcEcpDfeA1W9t++hho/FCXZrCDHc/YYGgswB5Ae6oo0
+   bzOQ3yNc21KlJcTfy9TFaCtM2Sh3bbCB1Fahe9sAfk4rsXs953kcScCce
    g==;
-X-CSE-ConnectionGUID: bb7/KZNeRNOW5inUrM9vBA==
-X-CSE-MsgGUID: DclUgzYrQRWXw0YFCEDU6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="12410717"
+X-CSE-ConnectionGUID: pMik5CFkTu+vT6L+Czk/Dg==
+X-CSE-MsgGUID: C6QFCzZxTNChd1bbLbQcqg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="12410719"
 X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
-   d="scan'208";a="12410717"
+   d="scan'208";a="12410719"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 11:15:19 -0700
-X-CSE-ConnectionGUID: 19uZAlpaSQG9i/tZrWkXIQ==
-X-CSE-MsgGUID: Jq1TIjZuSsWlpPghVmxh2w==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 11:15:20 -0700
+X-CSE-ConnectionGUID: EssZeeqmR36L1o7F+8zh7g==
+X-CSE-MsgGUID: GJwn3zD6QNytjnDEz2reeQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
-   d="scan'208";a="47672691"
+   d="scan'208";a="47672697"
 Received: from fyu1.sc.intel.com ([172.25.103.126])
   by orviesa008.jf.intel.com with ESMTP; 05 Jul 2024 11:15:19 -0700
 From: Fenghua Yu <fenghua.yu@intel.com>
@@ -48,10 +49,12 @@ To: "Vinod Koul" <vkoul@kernel.org>,
 Cc: dmaengine@vger.kernel.org,
 	"linux-kernel" <linux-kernel@vger.kernel.org>,
 	Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH 0/5] Enable FLR for IDXD halt
-Date: Fri,  5 Jul 2024 11:15:13 -0700
-Message-Id: <20240705181519.4067507-1-fenghua.yu@intel.com>
+Subject: [PATCH 2/5] dmaengine: idxd: Binding and unbinding IDXD device and driver
+Date: Fri,  5 Jul 2024 11:15:15 -0700
+Message-Id: <20240705181519.4067507-3-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20240705181519.4067507-1-fenghua.yu@intel.com>
+References: <20240705181519.4067507-1-fenghua.yu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,32 +63,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When IDXD device hits hardware errors, it enters halt state and triggers
-an interrupt to IDXD driver. Currently IDXD driver just prints an error
-message in the interrupt handler.
+Add idxd_bind() and idxd_unbind() helpers to bind and unbind the IDXD
+device and driver.
 
-A better way to handle the interrupt is to do Function Level Reset (FLR)
-and recover the device's hardware and software configurations to its
-previous working state. The device and software can continue to run after
-the interrupt.
+These helpers will be called during Function Level Reset (FLR) processing.
 
-This series enables this FLR handling for IDXD device whose WQs are all
-user type. FLR handling for IDXD device whose WQs are kernel type
-will be implemented in a future series.
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+---
+ drivers/dma/idxd/init.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-Fenghua Yu (5):
-  dmaengine: idxd: Add idxd_pci_probe_alloc() helper
-  dmaengine: idxd: Binding and unbinding IDXD device and driver
-  dmaengine: idxd: Add idxd_device_config_save() and
-    idxd_device_config_restore() helpers
-  dmaengine: idxd: Refactor halt handler
-  dmaengine: idxd: Enable Function Level Reset (FLR) for halt
-
- drivers/dma/idxd/idxd.h |  13 ++
- drivers/dma/idxd/init.c | 478 ++++++++++++++++++++++++++++++++++++----
- drivers/dma/idxd/irq.c  |  85 ++++---
- 3 files changed, 506 insertions(+), 70 deletions(-)
-
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 068103b40223..a6d8097b2dcf 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -716,6 +716,39 @@ static void idxd_cleanup(struct idxd_device *idxd)
+ 		idxd_disable_sva(idxd->pdev);
+ }
+ 
++/*
++ * Attach IDXD device to IDXD driver.
++ */
++static int idxd_bind(struct device_driver *drv, const char *buf)
++{
++	const struct bus_type *bus = drv->bus;
++	struct device *dev;
++	int err = -ENODEV;
++
++	dev = bus_find_device_by_name(bus, NULL, buf);
++	if (dev)
++		err = device_driver_attach(drv, dev);
++
++	put_device(dev);
++
++	return err;
++}
++
++/*
++ * Detach IDXD device from driver.
++ */
++static void idxd_unbind(struct device_driver *drv, const char *buf)
++{
++	const struct bus_type *bus = drv->bus;
++	struct device *dev;
++
++	dev = bus_find_device_by_name(bus, NULL, buf);
++	if (dev && dev->driver == drv)
++		device_release_driver(dev);
++
++	put_device(dev);
++}
++
+ /*
+  * Probe idxd PCI device.
+  * If idxd is not given, need to allocate idxd and set up its data.
 -- 
 2.37.1
 
