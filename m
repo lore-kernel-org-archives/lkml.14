@@ -1,183 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5731465A3;
-	Fri,  5 Jul 2024 11:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011DD149C52
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 11:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720177251; cv=none; b=C4pyrMJ9Z8t6wk9S5c08lvNS9Y1YCQDLZ6SwUpF392JPB17zqDKgbTeeuSdcrmwqvBRc/1bxnHR33heBMtBeu6eTKKmyLZTbccj0NOxw0j1WyH2qwywq+xAapJw4INHCw5VnJWeSkKwQzsbJ+ZjD+Yt9SHgNMWrYkD8huzQAY54=
+	t=1720177258; cv=none; b=rYtttKlEn0R6ji/NS8OSiP8sKocugCbbej61PeFJYmdAsdDyNYhb0U0YGSWSrVSyTa6aLCRCNSXHjCMQlbwMQXQtKkM1OEizekoFV5YmB4WhGmvwNvG7RbzyYplZuo/ID64qcNPXp9jHt6QxGxayK3FqcS8XyN2ta+Vzc2iyi3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720177251; c=relaxed/simple;
-	bh=Fgt3RnGtwmO5wB3uewwZsYlqeRL9Q4dvJgMlsjigWf8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b7IKNPKZg+TcjFqzJDbawH8imXWcnsrVpr57dacZ+wysFLgbpp3CVRM6dvDORbEvrAmFUak+9RCG9U2wQW3LOqweNS3rZ6nHpaQv/h0IpKH9u6mPSbDrrRuExyDNQ8Pq3EUWR7yiNJWHClBrOvyD/Tr0th1b+c7G1XIdObGz1sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFtDFdLJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720177258; c=relaxed/simple;
+	bh=Tb3BFWicLnzq+sDXhgf1Hd6Hh52u6pB86a2WzsYUg8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=untEY5h4WeRggaWoYpbp3mDCBwRxJuPrNIZcokVcwI8No7WYCarThUeXRBA/h10iBaM2ikdWfstskys4KF32F8NfvKvmOttSLb7zNuEqozBTzHhFFbyipiF6eEAV0SVtItrXDIV/wLfyntHMjdk7DPhc+yCHlBqP/WsBYka7j+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Eo6XceDd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFtDFdLJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9695BC116B1;
-	Fri,  5 Jul 2024 11:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720177250;
-	bh=Fgt3RnGtwmO5wB3uewwZsYlqeRL9Q4dvJgMlsjigWf8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bFtDFdLJdRmvD9F9W42sJ63l9PJA+ADSBPMhYYGhWwbbo5N6VBjcZyctbbtaYGu8L
-	 3+cTV7GZZBh17NRGcFsm+9bumcNUjAdcmhemprwgTPG9VxfjTeOoa4uUxab3K9wsmm
-	 Mh0LfLofall1YnvJEwOlEKwsgAqYZ9O0RSL02l2SMZiNx6DANNBPHO/Bd7RUSE+QX/
-	 2dlxx8yZ3K7oT0ncdNxBfMapkQmAS+TqcoIM6SQKLXl0SBHcmJASt57vN0Zo7CrMmA
-	 gMBUnuWlRyw2JESv+bfxscF0i+Sl+JQ2MUvPDzNOtNEXYzSEcvuiKfEJX/1OjEYoBm
-	 hii88eyCQU/pA==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57cd26347d3so2077787a12.1;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eo6XceDd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720177255;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0VLjGnKnDQJGOvHC5EFxMCqS2Qbbw9JgLiNgqLVa7Mg=;
+	b=Eo6XceDdWRcPkn9Elh6lPvCRZi2qjA1JHcLUbLD6XRvxGNUULgjRTcghV+kIY6vSkY3gq1
+	ouxgF4s9K4uXF8o+Y2pWbGE1fnnmYOr0gm1DKidtNCcQ/Rty4aqN3YoDGQPgx4ILhshG89
+	gDdnSO6e6syGRq0FN5xN4bz3x9M/AnU=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-2-Bsu-ST3wPOCfs5OLOZY3bQ-1; Fri, 05 Jul 2024 07:00:54 -0400
+X-MC-Unique: Bsu-ST3wPOCfs5OLOZY3bQ-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52e994d8e26so1783813e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 04:00:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720177252; x=1720782052;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0VLjGnKnDQJGOvHC5EFxMCqS2Qbbw9JgLiNgqLVa7Mg=;
+        b=F9splmua/0eAUzmjxNTUXQaU+dTJmyvGxU2bvp3yWzFYScaZL991GRsbfPHyLKS5bt
+         kdwkETYH1KY4WYzh1OyE4NZqbeiveK2AK75VKgFF/+FmmVjMT4v/cW2q92lSzdaMAXdf
+         A/Y0PtwPpY7Y/v1fbi+cetFz0cVU07chPs9TpvJzzCBfrq21tFwwVU/HIOwd66xCQEKn
+         nSV87zxosRT0Rz1jdGbwcvZ0BVqRFEPO4vo8/Vb49BAqNMxPBear/KfuSI3CtXpBgKqE
+         nkd47byshsNCWBXfWkJJEEBW0CRcJMdDSN9mLyzTdcTP3vY3e+gyahD+5OylS7qOvHyn
+         4CgQ==
+X-Gm-Message-State: AOJu0YzqSRgVB71iPm+4OPl3UIUM/3SetrBwQ9KSP5AfKJ1rwBh+677t
+	/w5i0QJcmvotdhDiNoVvfTnzyXU6O8+fHjiC74CgbxfzxAIR/1qZAmN0U6eqyeXI/TDMf9vDoOI
+	SO2s8s3A1zV5Ly1JKNWaYwx5iWguj5nJ1O3AxON8Z2b4up+zl/DssGoonYqWDtw==
+X-Received: by 2002:ac2:530e:0:b0:52c:dea0:dd55 with SMTP id 2adb3069b0e04-52ea0629e54mr2919896e87.24.1720177251830;
+        Fri, 05 Jul 2024 04:00:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEjnou8xhKhazGbmdHRH/CksjCVcztVyBOnLHoajjwOkVP6T7RYfWfP/R1ExpPClZwCvMWBA==
+X-Received: by 2002:ac2:530e:0:b0:52c:dea0:dd55 with SMTP id 2adb3069b0e04-52ea0629e54mr2919877e87.24.1720177251353;
+        Fri, 05 Jul 2024 04:00:51 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c702:b500:3ed7:a1c7:447e:2279? (p200300cbc702b5003ed7a1c7447e2279.dip0.t-ipconnect.de. [2003:cb:c702:b500:3ed7:a1c7:447e:2279])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1d0b19sm57331475e9.10.2024.07.05.04.00.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Fri, 05 Jul 2024 04:00:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWvfRpY528aeUi8DX2BuLcKGfnxGLJOr8eiG4qIOHyLN65qDuF5n8UfmJNnaWcALzroCSVBDuR3hD6qV9fGDpr5agqxEGD4gF+0DXKwCJCxsAvjA1xiT9/6Oph+rtsbh8IHcH/MMVINqK4=
-X-Gm-Message-State: AOJu0YxNsJH8LJsXpN9RXtS+sGtdvvJjcai8jg5n5NwUSZjB4lim2LzQ
-	uXIzZmRuIs9baITdyYX6g3xpSV7DiJofzlIyLpPuiA+h/xtaeD3jqbGP50aUd0dSn3uD0vgPg6B
-	COn9qs+8gFOtY7qvtT3vmf1iVme8=
-X-Google-Smtp-Source: AGHT+IFuUSm9RlYCkmQLzKs9FUyEgaD5z0JbhqzUNvkEF0C7nb1RcZBZwuulQciVrer2M2tG71l2ufmovAY64qV1q1A=
-X-Received: by 2002:a17:906:c247:b0:a77:c548:6456 with SMTP id
- a640c23a62f3a-a77c54864b3mr189131966b.59.1720177249139; Fri, 05 Jul 2024
- 04:00:49 -0700 (PDT)
+Message-ID: <77ba077a-a7a0-49b0-b14a-954cb24901e6@redhat.com>
+Date: Fri, 5 Jul 2024 13:00:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
- <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
- <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
- <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
- <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
- <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
- <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
- <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
- <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
- <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com> <CAK-xaQa2NP0kfwQZoko-FUsSCbW31F1S48SJy8+94aSs7PCd3w@mail.gmail.com>
-In-Reply-To: <CAK-xaQa2NP0kfwQZoko-FUsSCbW31F1S48SJy8+94aSs7PCd3w@mail.gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Fri, 5 Jul 2024 12:00:11 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H6G43cb-k-efam8=ydR0L_MdEXvFtLf4T6uqakuS1FBiw@mail.gmail.com>
-Message-ID: <CAL3q7H6G43cb-k-efam8=ydR0L_MdEXvFtLf4T6uqakuS1FBiw@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Andrea Gelmini <andrea.gelmini@gmail.com>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] virtio-balloon: make it spec compliant
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+ Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <cover.1720173841.git.mst@redhat.com>
+ <dc0a5a70-d691-4d54-ae00-0beb74f4c399@redhat.com>
+ <20240705061647-mutt-send-email-mst@kernel.org>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240705061647-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 4, 2024 at 11:15=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gmai=
-l.com> wrote:
->
-> Il giorno gio 4 lug 2024 alle ore 19:25 Filipe Manana
-> <fdmanana@kernel.org> ha scritto:
-> > 2) In some cases we get very large negative numbers for the number of
-> > extent maps to scan.
-> >     This shouldn't happen and either our own btrfs counter might have
-> > overflowed or some other bug,
->
-> Well, I was thinking about my specific odds, and I tried this:
-> a) kernel 6.6.36;
-> b) on spare partition nvme created a new shiny btrfs;
-> c) then mount it forcing compression;
-> d) multiple parallel cp of kernel and libreoffice src;
-> e) reboot with same rc6+branch already used;
-> f) tar of the new btrfs: no problem at all;
-> g) let it finish;
-> h) tar of /.snapshots: PSI memory skyrocket, and usual slowdown reading;
-> i) stop it;
-> l) again tar of the new btrfs: no problem
-> m) repeat a few times.
->
-> You can see the output here:
-> https://asciinema.org/a/rJpGWvXYH6IDBXWYhtJckkKWo
->
-> In the end you see I kill tar and let the PSI going down to zero, if
-> you are interested.
->
-> > Ok, so maybe I missed it, but I haven't kswapd0 in there, or nothing
-> > taking 100% CPU.
-> > Maybe it was just Mikhail running into that?
->
-> To have this effect and the extreme luggish response (I mean, click
-> something and it takes more than 30 seconds to react)
-> I need to work at least one day on my laptop. At this point also
-> cycling to virtual desktop takes a lot.
->
-> Thinking about my different use case:
-> a) i always suspend. I just reboot when change kernel. So, I can work
-> for weeks with same kernel. Suspend2RAM, not disk, btw;
-> b) months ago I let run beesd for a day.
->
-> > So I'm surprised that you get an unresponsive desktop.
-> Same point as before. In this case is not so luggish, but - i.e. - if
-> I click for screenlock it doesn't start immediately, it waits for a
-> little bit more than one second.
+On 05.07.24 12:19, Michael S. Tsirkin wrote:
+> On Fri, Jul 05, 2024 at 12:15:30PM +0200, David Hildenbrand wrote:
+>> On 05.07.24 12:08, Michael S. Tsirkin wrote:
+>>> Currently, if VIRTIO_BALLOON_F_FREE_PAGE_HINT is off but
+>>> VIRTIO_BALLOON_F_REPORTING is on, then the reporting vq
+>>> gets number 3 while spec says it's number 4.
+>>> It happens to work because the qemu virtio pci driver
+>>> is *also* out of spec.
+>>
+>> I have to ask the obvious: maybe the spec is wrong and we have to refine
+>> that?
+> 
+> Well having vq function shift depending on features is certainly
+> messy ...
 
-Oh I see that on my main desktop which only uses ext4 and always has 2
-qemu vms usually running debian and opensuse.
-Sometimes even if the VMs aren't doing anything, but they used to be
-doing IO heavy testing, the desktop in the host gets unresponsive,
-clicking the screenlock often takes at least some 5 seconds, or
-changing workspaces takes a few seconds too, etc. Shouldn't happen in
-theory.
+Right, but that's how all of this started from the beginning.
 
->
-> > Interestingly, here the memory PSI stays at 0% or very close to that,
-> > it never reaches anything close to the 60%.
->
-> You see the same thing with the last test with new btrfs partition.
-> New partition: ~0%
-> /.snapshots/: near 60%.
+> How do we know no one implemented the spec as written though?
 
-It could be due to heavy fragmentation, but that should only be too
-slow if you were using a spinning disk.
-I think somewhere you mentioned nvme or ssd.
+I understand that concern, IIUC it would imply that:
 
-Removing the extent maps could cause extra reads of metadata and be slow.
-But the number of extent maps removed on every iteration is relatively
-small, and round-robin, so... it's strange that it causes such huge
-pressure and desktop unresponsiveness.
-We will know if that's the case with the 2nd test patch.
+a) In case of a hypervisor, we never ran with a Linux guest
+b) In case of a guest, we never ran under QEMU
 
->
->
-> > With htop in parallel, the bpftrace script, and since my htop version
-> > doesn't show PSI information (probably an older version than yours), I
-> > kept monitoring PSI like this:
->
-> Well, mine is taken from here:
-> https://github.com/htop-dev/htop.git
-> Compiled with:
-> ./configure --enable-capabilities --enable-delayacct --enable-sensors
-> --enable-werror   --enable-affinity
-> And tweaked config file. If you want I can send it.
+It's certainly possible, although I would assume that most other 
+implementation candidates (e.g., cloud-hypervisor) would have complained 
+by now about Linux issues.
 
-Thanks, I'll have to try it eventually.
+What's your experience: if someone would actually implement it according 
+to the spec, would they watch out on the virtio mailing lists for 
+changes (or even be able to vote) and would be able to comment that 
+adjusting the spec to the real first implementation is wrong?
 
->
->
-> > So several different things to try here:
->
-> I stop here for the moment. I have to sleep.
-> In the weekend I do the rest and reply to you!
+-- 
+Cheers,
 
-Sure, take your time. It takes time patching and building kernels,
-plus the testing, etc.
-Many thanks for that!
+David / dhildenb
 
->
-> > Thanks a lot to you and Mikhail, not just for the reporting but also
-> > to apply patches, compile a kernel, run the tests and do all those
-> > valuable observations which are all very time consuming.
->
-> My little contribution to free software!
->
-> Ciao,
-> Gelma
