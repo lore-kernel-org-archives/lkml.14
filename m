@@ -1,168 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6137146D45;
-	Fri,  5 Jul 2024 11:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306AF146D45
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 11:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720180264; cv=none; b=Xa/d93TpgAKR+t6qSQZQ5tYT44XVSip8SUwXdNwLXY+v272YZ/5MZWF/f0M0Ip+GlaKfiIbu67ffzuRqAQRpWV8llSqpWZoYBRqMGb19YlChZWYNDwn2kSkMuCJRayw4P91hav5c8eyAp0vcarGxMTDkOB57XuWRc9GYZup7ij0=
+	t=1720180310; cv=none; b=cdVGv5ZC20IEhSamsCgYR989ywwozTtECQfVXgTbviMTK+W4nnPGQ03XIaahs6g5Pi+Zj7KfiebsNQPdLLEkgVbJhboDnAW4QKxtE5XAoiw3hSprDDaqaoIzq5n433j6Y0UKB/suiiSjC0dndDjJC8Qw/5jzS9bWopJRGtamE0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720180264; c=relaxed/simple;
-	bh=H+ikbaT9Dvuckpcq1nSfgBg+YOJ4iSoDWTx/I4R7Bo8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hybxv6AqIDTIQUhtEw3VsXntAJDPW5Cg02sKdcZZkQ0zmEF/deR5+8G9DHug9etc6r3vNZxRbbFIF/T5iJBQ9CzohLQglEvhuI0QwVdWcU0AVb7Bqz4Bl2raqelqORFwaw0wILBlrwwwJbtMHB5sZcz0/sJNk9si6k/gA9AQEMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FA1A367;
-	Fri,  5 Jul 2024 04:51:20 -0700 (PDT)
-Received: from [192.168.178.110] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B73EB3F762;
-	Fri,  5 Jul 2024 04:50:52 -0700 (PDT)
-Message-ID: <2e988929-142c-4e69-8e2e-2f3e64c9f08c@arm.com>
-Date: Fri, 5 Jul 2024 13:50:51 +0200
+	s=arc-20240116; t=1720180310; c=relaxed/simple;
+	bh=87QADRvjWpwITWkhJ6ZCRxkd06/1fowLe9WbEwgHq+g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g3bZs0BdcvizS0lcbkuL0FU9VPijpXep5OFenkqE2rhyUc06ij0gKNjckxagj/vnS9WmaXMGtfphoy5sdYtGmrMXGaWsdpoyDfikNlgmWGJdLmJRfzEvzggQh+4x13yOXqCTIDNaUZ1ZxHiumAqFgLI2LY7pa3Ub5vcPbvYqSbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=trWeqCj9; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="trWeqCj9"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-58b447c5112so1824922a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 04:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1720180306; x=1720785106; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+QojLwX8k68lmn9KlieWzohao5qbJAQQ4QJADw03ISo=;
+        b=trWeqCj9K7y5dEAnrYDLyNztiU8Soo8sF0P3U/aGaXrHzYLs7smY+HwYtIrgvlifzs
+         2MooXhSNWElAK81uJCSoCwEswq8RD/LUiK+t0/oW5Us9cV4ivFLdpS/zZeZSoXFGNdMM
+         mB7dhXamkaDcUMLVoqm6xNyj2pt3jPxVB3+xKyqrlbayu7rKJboeNB8MOZTHYrQduuh4
+         YuZktNt5yZZNCaISS/SOXkC0lUi4kPdIO+qC/fDBCVBGVd9Tv5v9cpqjO9bOQZeM+nlk
+         7nt2JlnRouQmWaXiP619ZiKKa2C8/0Md+Q+E+ejaGkjLaSTLKg8GI1/ishgYbdwctzqN
+         JpBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720180306; x=1720785106;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+QojLwX8k68lmn9KlieWzohao5qbJAQQ4QJADw03ISo=;
+        b=AHYwEjkzzahm1vK5SxBtDm7LUzwwpI7ugd3Pw0bmYmLcHYaRBhKpDl3+pp7V2ihi5p
+         S+UII57uHMxOoJeAgF/Ye0R0FXqLEi5Z1SMyIrrXOizrRyjYDv6beMCagAvbuODwCTsP
+         FZYnRS9WWoSDvw5eU0f6VfRm9DjyI2Vj4TujF8wxYuz202a2DqmXhUNKUxYu0i8t51Ak
+         NUHyn+8f0ZrvK9AQfvuWUbXP7X3MP7pv9K4QTdxVqMP5tPQjtZ0ZOQLk5ijfYYeGi7Pi
+         XfBFAwK7XV8WeZZl0gYNf99VHcW/GN7YLwBOtZ53mjOL9BbR6Ac9cpovcD4c4JPqrNvc
+         HxZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRZyr/D9lRHm6BPwZ6s+BzN/AwNcCm1XcYKEzRYRf05o78HD6bVoU8/Y/UbGeVNKmu2zwXE+1ptnTAiGG/KK/KzAOp3PBIM+TCOI52
+X-Gm-Message-State: AOJu0Yzhe2ZxdlIvS+WXYPUhAJfPyioYN0vH/NSOQRtdFRIWf4Wd+Yi5
+	D0s4Op+uAXpgbgioccvSnalmAtZET5aoHHtdOqw4EhqT/AGTeCClrV76J8EGlPs=
+X-Google-Smtp-Source: AGHT+IFHA1gnQKRQ18iPmWbS0NPjG9TbNdQHs95PiwC+5AeAhU74MhAe3PLIFlm88Q5NStc5UX6U7A==
+X-Received: by 2002:a17:906:4751:b0:a74:e717:4259 with SMTP id a640c23a62f3a-a77ba48db88mr281324166b.41.1720180306439;
+        Fri, 05 Jul 2024 04:51:46 -0700 (PDT)
+Received: from localhost.localdomain ([91.216.213.152])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab06531fsm674762866b.100.2024.07.05.04.51.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 04:51:46 -0700 (PDT)
+From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+To: miquel.raynal@bootlin.com
+Cc: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	stable@vger.kernel.org,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Li Zetao <lizetao1@huawei.com>,
+	linux-mtd@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [Patch v2] mtd: rawnand: lpx32xx: Fix dma_request_chan() error checks
+Date: Fri,  5 Jul 2024 13:51:35 +0200
+Message-Id: <20240705115139.126522-1-piotr.wojtaszczyk@timesys.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] sched: Consolidate cpufreq updates
-To: Qais Yousef <qyousef@layalina.io>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>,
- Christian Loehle <christian.loehle@arm.com>,
- Hongyan Xia <hongyan.xia2@arm.com>, John Stultz <jstultz@google.com>,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240619201409.2071728-1-qyousef@layalina.io>
- <f281ba07-d54a-460a-8f78-f7eb6bd8ed88@arm.com>
- <20240628015200.vw75huo53redgkzf@airbuntu>
- <d510f41a-1225-46d9-a2d7-ff9e6ff599d2@arm.com>
- <20240705002205.nnrgq7savzvsoqgl@airbuntu>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <20240705002205.nnrgq7savzvsoqgl@airbuntu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 05/07/2024 02:22, Qais Yousef wrote:
-> On 07/04/24 12:12, Dietmar Eggemann wrote:
->> On 28/06/2024 03:52, Qais Yousef wrote:
->>> On 06/25/24 14:58, Dietmar Eggemann wrote:
->>>
->>>>> @@ -4917,6 +4927,84 @@ static inline void __balance_callbacks(struct rq *rq)
->>>>>  
->>>>>  #endif
->>>>>  
->>>>> +static __always_inline void
->>>>> +__update_cpufreq_ctx_switch(struct rq *rq, struct task_struct *prev)
->>>>> +{
->>>>> +#ifdef CONFIG_CPU_FREQ
->>>>> +	if (prev && prev->dl.flags & SCHED_FLAG_SUGOV) {
->>>>> +		/* Sugov just did an update, don't be too aggressive */
->>>>> +		return;
->>>>> +	}
->>>>> +
->>>>> +	/*
->>>>> +	 * RT and DL should always send a freq update. But we can do some
->>>>> +	 * simple checks to avoid it when we know it's not necessary.
->>>>> +	 *
->>>>> +	 * iowait_boost will always trigger a freq update too.
->>>>> +	 *
->>>>> +	 * Fair tasks will only trigger an update if the root cfs_rq has
->>>>> +	 * decayed.
->>>>> +	 *
->>>>> +	 * Everything else should do nothing.
->>>>> +	 */
->>>>> +	switch (current->policy) {
->>>>> +	case SCHED_NORMAL:
->>>>> +	case SCHED_BATCH:
->>>>
->>>> What about SCHED_IDLE tasks?
->>>
->>> I didn't think they matter from cpufreq perspective. These tasks will just run
->>> at whatever the idle system is happen to be at and have no specific perf
->>> requirement since they should only run when the system is idle which a recipe
->>> for starvation anyway?
->>
->> Not sure we talk about the same thing here? idle_sched_class vs.
->> SCHED_IDLE policy (FAIR task with a tiny weight of WEIGHT_IDLEPRIO).
-> 
-> Yes I am referring to SCHED_IDLE policy too. What is your expectation? AFAIK
-> the goal of this policy to run when there's nothing else needs running.
+The dma_request_chan() returns error pointer in case of error, while
+dma_request_channel() returns NULL in case of error therefore different
+error checks are needed for the two.
 
-IMHO, SCHED_IDLE tasks fight with all the other FAIR task over the
-resource rq. I would include SCHED_IDLE into this switch statement next
-to SCHED_NORMAL and SCHED_BATCH.
-What do you do if only SCHED_IDLE FAIR tasks are runnable? They probably
-also want to have their CPU frequency needs adjusted.
+Fixes: 7326d3fb1ee3 ("mtd: rawnand: lpx32xx: Request DMA channels using DT entries")
+Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Cc: stable@vger.kernel.org
+---
+Changes v2:
+ - Corrected 'Fixes' tag
+ - add Cc: stable 
 
-[...]
+ drivers/mtd/nand/raw/lpc32xx_mlc.c | 2 +-
+ drivers/mtd/nand/raw/lpc32xx_slc.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
->>>>> @@ -4766,11 +4738,8 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->>>>>  		 */
->>>>>  		detach_entity_load_avg(cfs_rq, se);
->>>>>  		update_tg_load_avg(cfs_rq);
->>>>> -	} else if (decayed) {
->>>>> -		cfs_rq_util_change(cfs_rq, 0);
->>>>> -
->>>>> -		if (flags & UPDATE_TG)
->>>>> -			update_tg_load_avg(cfs_rq);
->>>>> +	} else if (cfs_rq->decayed && (flags & UPDATE_TG)) {
->>>>> +		update_tg_load_avg(cfs_rq);
->>>>>  	}
->>>>>  }
->>>>
->>>> You set cfs_rq->decayed for each taskgroup level but you only reset it
->>>> for the root cfs_rq in __update_cpufreq_ctx_switch() and task_tick_fair()?
->>>
->>> Yes. We only care about using it for root level. Tracking the information at
->>> cfs_rq level is the most natural way to do it as this is what update_load_avg()
->>> is acting on.
->>
->> But IMHO this creates an issue with those non-root cfs_rq's within
-> 
-> I am not seeing the issue, could you expand on what is it?
-
-I tried to explained it in the 4 lines below. With a local 'decayed'
-update_cfs_rq_load_avg() and propagate_entity_load_avg() set it every
-time update_load_avg() gets called. And this then determines whether
-update_tg_load_avg() is called on this cfs_rq later in update_load_avg().
-
-The new code:
-
-  cfs_rq->decayed |= update_cfs_rq_load_avg() (*)
-  cfs_rq->decayed |= propagate_entity_load_avg()
-
-will not reset 'cfs_rq->decayed' for non-root cfs_rq's.
-
-(*) You changed this in v3 from:
-
-  cfs_rq->decayed  = update_cfs_rq_load_avg()
-
-
->> update_load_avg() itself. They will stay decayed after cfs_rq->decayed
->> has been set to 1 once and will never be reset to 0. So with UPDATE_TG
->> update_tg_load_avg() will then always be called on those non-root
->> cfs_rq's all the time.
-> 
-> We could add a check to update only the root cfs_rq. But what do we gain? Or
-> IOW, what is the harm of unconditionally updating cfs_rq->decayed given that we
-> only care about the root cfs_rq? I see more if conditions and branches which
-> I am trying to avoid.
-
-Yes, keep 'decayed' local and add a:
-
-    if (cfs_rq == &rq_of(cfs_rq)->cfs)
-        cfs_rq->decayed = decayed
-
-
-
-
+diff --git a/drivers/mtd/nand/raw/lpc32xx_mlc.c b/drivers/mtd/nand/raw/lpc32xx_mlc.c
+index 92cebe871bb4..b9c3adc54c01 100644
+--- a/drivers/mtd/nand/raw/lpc32xx_mlc.c
++++ b/drivers/mtd/nand/raw/lpc32xx_mlc.c
+@@ -575,7 +575,7 @@ static int lpc32xx_dma_setup(struct lpc32xx_nand_host *host)
+ 	dma_cap_mask_t mask;
+ 
+ 	host->dma_chan = dma_request_chan(mtd->dev.parent, "rx-tx");
+-	if (!host->dma_chan) {
++	if (IS_ERR(host->dma_chan)) {
+ 		/* fallback to request using platform data */
+ 		if (!host->pdata || !host->pdata->dma_filter) {
+ 			dev_err(mtd->dev.parent, "no DMA platform data\n");
+diff --git a/drivers/mtd/nand/raw/lpc32xx_slc.c b/drivers/mtd/nand/raw/lpc32xx_slc.c
+index 3b7e3d259785..ade971e4cc3b 100644
+--- a/drivers/mtd/nand/raw/lpc32xx_slc.c
++++ b/drivers/mtd/nand/raw/lpc32xx_slc.c
+@@ -722,7 +722,7 @@ static int lpc32xx_nand_dma_setup(struct lpc32xx_nand_host *host)
+ 	dma_cap_mask_t mask;
+ 
+ 	host->dma_chan = dma_request_chan(mtd->dev.parent, "rx-tx");
+-	if (!host->dma_chan) {
++	if (IS_ERR(host->dma_chan)) {
+ 		/* fallback to request using platform data */
+ 		if (!host->pdata || !host->pdata->dma_filter) {
+ 			dev_err(mtd->dev.parent, "no DMA platform data\n");
+-- 
+2.25.1
 
