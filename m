@@ -1,238 +1,185 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FE5146597
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B881145FFF
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720170559; cv=none; b=G0srDL8FelgWksTKzsFLsZpuQosDjHTqvkmf67DZu90RTltWuoYsCtMBrEkNHx0QIfsNAAYwww53qDKAdyyIEHnohS0aAX7QESnuNYvxGZTySYQ3jPtc9L4MHaL2Yvym6vkj/7AYSym917spM49B+0sWn128pz3byijE9nz+I+U=
+	t=1720170598; cv=none; b=eJIQsdE3xSpR8q2c5jch2cYDHWURPwrL75SSBNmC7F1jr5O/DNpAWGtaMgxagqmnft4GkjO5+k7/uR6a2tB/aTxL4BSlZGZsKIhuQuR0PM9qsDOGJZuh8eleyNjp2AKrjTIasTa72nkJly033v3sc7zHOTDOh86UrxK/2adQw1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720170559; c=relaxed/simple;
-	bh=z7uln/wCHBuVL23Qb6fK90d/XfI2YedBBgXbvaPu1+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X3hrEMqI3K6kabSeJuPm3rPFqNNHK79hL3k3OS9mDDdx9pUTNOtbkHtifsxiM5lkth0N8O47hohfyKgeqJ26fiWBMXOU6N0nXnxFnA+vBSJbi3VNs8nS9k8AMRkuWkUxUv5UrK4KCFGf2odw1c0u2nglaIEuF38p6LOApvuIs+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KK6SxJ5n; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1720170598; c=relaxed/simple;
+	bh=l+jHq9fn81UhHpV8E6Q9Ndw+zI2ygoQDRF6TUweEXwg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kn+5frzhlEj+7BEM/7O6r/01/RRVNlzCEo5G5hT+6KbpQREbHIsaXue+dKMPPkhd+gLgMO0vZAFl+M6mBSlsM/RlGf700kN5h2cohanzCJ0gEfTF6ABe5/SV5Z64iBHM1p42XbGWGyCibnI+pmPhl4WnygEeOi1TRCfjF+OTRps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dGXcW9rO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KK6SxJ5n"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57ccd1111aeso1941913a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 02:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720170554; x=1720775354; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yawcdPmdc9R5nFHXmROZ5YiAiTzKYfck2rMJGJ0W1kc=;
-        b=KK6SxJ5nU4lB3JZ8mP8u1ghrSqksETJhT/kH9xC3+3a8HjgDkh6MKG0pWQPQI9kbjx
-         bJ/oPeOAESH/Iift8cL/5LOuVgOeba08dTKenKMxeyXNEoz8scd+F7UHyMaMwgI/BUTF
-         z+5HiGbEkuBPyZiGQFKMmZgDih9tqs9qZWEzbEAaTd24efRqWxvWka+J9ZVvC2VwhnT0
-         kSOH8zoZI9JcvVJOxhN+JkGgpoCKzpJY7sPKIp5FdYFwYuv2+7yY5zavlfuHhcjxhP/n
-         p2Jc7VKrWIZvfbAtAzUfyZCAtfWCaJvsBerkjUvGbJmOX856jiKb97mKngjb7DsoYnc1
-         2F9Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGXcW9rO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720170595;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aFJYg4m2e2eg3RsBdIgmHBTdxJExCb6R9/Wx7tT8KRg=;
+	b=dGXcW9rO90+a4VC/wXQNYVHQQ8sLrYuj3q7ec1ij8uA8+TYllnNzzdk+g8kisO1OM9T97m
+	9wbA9pGGecNMPMKIF0a/KPdvUq9t2Mcnre2bQfX0G4SEWa9Rfuh4BrJ6XpYPSEZAbzDeJE
+	oae+dA86xX1HbhqtrOyWOXfDBXGjdbA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-468-i1zEz4YrNoKk9e1CmRot8Q-1; Fri, 05 Jul 2024 05:09:54 -0400
+X-MC-Unique: i1zEz4YrNoKk9e1CmRot8Q-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-367962f0cb0so1007229f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 02:09:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720170554; x=1720775354;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1720170593; x=1720775393;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yawcdPmdc9R5nFHXmROZ5YiAiTzKYfck2rMJGJ0W1kc=;
-        b=WtpqUEJuYURECN05GDHpvVN7wtASCU3ZDw5m90shsN5pLwh8EJxbs2TlksfZ54aCDh
-         k0BOco7vR1t9AKLUcCwRzG9N/8d0HxQoiWRaBOGxVkyiJ/k/aAsOSVrXiC5jg4eZz9fs
-         r6JRu6te5JCe4BSFpw/eO+BqXkLQl6IaEBWyfiZ40zBhnxcAh+uawgRL3zF4ooQ65zOE
-         z1icxSkIIIHAk/bhosM3zOqJSQX56HciuLMjS8s6elQSBNnM2+FKCQ1umIvG1Vlg+Mzv
-         8zM9/1twU/pLqOKj93ci2kwt2/5IR6lLFhrjEeg1c5Ttmr+Ls3Hgd8uTrJP3Bfbv9o16
-         mF/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXhDvBymGk/sWxilLd4QcnIt8UT1cpQkHfrzuXy+2MMuZFqwHUMYUmFm5xcmK8P8HgSzEgij442pVw9G0G4eBRCLh0kszIvY7IvExfl
-X-Gm-Message-State: AOJu0YykMS/3MsSCz1hRLlo1IR1q2d5ea8QA4CJsVbvDYp2CmZ9fji2C
-	AVosdE/D+MgBSvSemsYcIg7atBauXtbKeYuQRm6gOheLkAa2kXUpo2VCI5pDbWI=
-X-Google-Smtp-Source: AGHT+IHsYMalDL4OFCPxRq3oohtjYA/UuspzbffcUEicK/5Ws4VMPv3kobeNAJ/RWF12C4F4dwAbOw==
-X-Received: by 2002:a05:6402:278c:b0:587:86d8:8b54 with SMTP id 4fb4d7f45d1cf-58e5a6ee9f5mr3180323a12.4.1720170554293;
-        Fri, 05 Jul 2024 02:09:14 -0700 (PDT)
-Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58f90b20091sm646111a12.45.2024.07.05.02.09.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 02:09:13 -0700 (PDT)
-Date: Fri, 5 Jul 2024 11:09:12 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: jdelvare@suse.com, linux@roeck-us.net, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-hwmon@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Message-ID: <drqvaon5lb2ei3jqofutbr6demibyfdhbmr24sva27gzpqdnon@fxa7rpl33iih>
-References: <20240528225638.1211676-1-chris.packham@alliedtelesis.co.nz>
- <20240528225638.1211676-2-chris.packham@alliedtelesis.co.nz>
+        bh=aFJYg4m2e2eg3RsBdIgmHBTdxJExCb6R9/Wx7tT8KRg=;
+        b=YFmtEIQ29cUtLGMFSjikgu20vzsu90TFFJb4ENt/HCjBfUfxTzLTQjEzM5f2O0Rb77
+         ZWK5Fzo3FnqLKSTWiIRTOL85rShDP6FuZS0em/ZiS+2txxEut6pAQm95tDY/teax7vPk
+         bUw7/B1lR3jB4BE/mMepm+WBQldYSWqk2EoCVSjh0SCu+smg4XtJsBO7JTikScnX4ssb
+         Vmus45jdZq+AXBntZ2mGpr6XbBsZeXBF55P6AkP4P0Ap8vic/9XlKLh2ArYB1umtiMnn
+         krhLTUu85paDl/WBxD7F3NqhZcCDPMdxBCjD8+yr71IU8Unv/4l6hje7Yq8KTPpkWnK8
+         taLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMnTP9ggw2IcI1HnCM4RBhIq5cjZUoQC44x1bEb2XEfT65k1b2tnvFveHaRB7dgxW11r9z/eORBDk+K/GWj4N7q9QRX7D7PVFrAoX2
+X-Gm-Message-State: AOJu0Yx79yBOAID38zLf9ViLfuoRw0shDNC7eEiXLdt8LGPpu2LPES/r
+	b1GKRz6hD5PD7aizOmeG3XvQfdDwp2pHJfkye7xOpoDbDmoCtj3wc6NWCYk1YLq5LwhxJjkcRmA
+	Z8+kVwFYwNjAavuNQU/X1ULs6DsScl5er2B7dRV2LCU3nmv/Ztw0wDRy8yTBiJQ==
+X-Received: by 2002:a5d:4588:0:b0:35f:208e:6172 with SMTP id ffacd0b85a97d-3679dd23984mr2305903f8f.27.1720170592911;
+        Fri, 05 Jul 2024 02:09:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEWCVMiu2eBNN+sKndXDaoR4kVsqkmRb0xwI/eDn0KBHjwCpgzn5GIqq+vsy6s2YdaGbBI4UA==
+X-Received: by 2002:a5d:4588:0:b0:35f:208e:6172 with SMTP id ffacd0b85a97d-3679dd23984mr2305893f8f.27.1720170592485;
+        Fri, 05 Jul 2024 02:09:52 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c702:b500:3ed7:a1c7:447e:2279? (p200300cbc702b5003ed7a1c7447e2279.dip0.t-ipconnect.de. [2003:cb:c702:b500:3ed7:a1c7:447e:2279])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36797bff8cbsm4838919f8f.14.2024.07.05.02.09.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 02:09:52 -0700 (PDT)
+Message-ID: <fe3ccab5-25bc-4cd3-9628-60fe6e8e3cf5@redhat.com>
+Date: Fri, 5 Jul 2024 11:09:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bgu6tv6sylwa4466"
-Content-Disposition: inline
-In-Reply-To: <20240528225638.1211676-2-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] mm: add docs for per-order mTHP split counters
+To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
+Cc: dj456119@gmail.com, 21cnbao@gmail.com, ryan.roberts@arm.com,
+ shy828301@gmail.com, ziy@nvidia.com, libang.li@antgroup.com,
+ baolin.wang@linux.alibaba.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Barry Song <baohua@kernel.org>,
+ Mingzhe Yang <mingzhe.yang@ly.com>
+References: <20240704012905.42971-1-ioworker0@gmail.com>
+ <20240704012905.42971-3-ioworker0@gmail.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240704012905.42971-3-ioworker0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
---bgu6tv6sylwa4466
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Chris,
-
-sorry for taking so long to respond. Don't take it personal, I'm way
-behind my maintainer dutys in general.
-
-On Wed, May 29, 2024 at 10:56:36AM +1200, Chris Packham wrote:
-> Add fan child nodes that allow describing the connections for the
-> ADT7475 to the fans it controls. This also allows setting some
-> initial values for the pwm duty cycle and frequency.
->=20
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+On 04.07.24 03:29, Lance Yang wrote:
+> This commit introduces documentation for mTHP split counters in
+> transhuge.rst.
+> 
+> Reviewed-by: Barry Song <baohua@kernel.org>
+> Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
+> Signed-off-by: Lance Yang <ioworker0@gmail.com>
 > ---
->=20
-> Notes:
->     I realise there is still some discussion about how to express the
->     frequency and duty cycle. I have a personal preference for using hertz
->     for the frequency and 0-255 for the duty cycle but if the consensus is
->     to express these things some other way I'm fine with doing some math.
->    =20
->     Changes in v4:
->     - 0 is not a valid frequency value
->     Changes in v3:
->     - Use the pwm provider/consumer bindings
->     Changes in v2:
->     - Document 0 as a valid value (leaves hardware as-is)
->=20
->  .../devicetree/bindings/hwmon/adt7475.yaml    | 25 ++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
-entation/devicetree/bindings/hwmon/adt7475.yaml
-> index 051c976ab711..bfef4c803bf7 100644
-> --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> @@ -51,6 +51,15 @@ properties:
->        enum: [0, 1]
->        default: 1
-> =20
-> +  "#pwm-cells":
-> +    const: 4
-> +    description: |
-> +      Number of cells in a PWM specifier.
-> +      - 0: The pwm channel
-> +      - 1: The pwm frequency in hertz - 11, 14, 22, 29, 35, 44, 58, 88, =
-22500
+>   Documentation/admin-guide/mm/transhuge.rst | 20 ++++++++++++++++----
+>   1 file changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> index 1f72b00af5d3..0830aa173a8b 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -369,10 +369,6 @@ also applies to the regions registered in khugepaged.
+>   Monitoring usage
+>   ================
+>   
+> -.. note::
+> -   Currently the below counters only record events relating to
+> -   PMD-sized THP. Events relating to other THP sizes are not included.
+> -
+>   The number of PMD-sized anonymous transparent huge pages currently used by the
+>   system is available by reading the AnonHugePages field in ``/proc/meminfo``.
+>   To identify what applications are using PMD-sized anonymous transparent huge
+> @@ -514,6 +510,22 @@ file_fallback_charge
+>   	falls back to using small pages even though the allocation was
+>   	successful.
+>   
+> +split
+> +	is incremented every time a huge page is successfully split into
+> +	smaller orders. This can happen for a variety of reasons but a
+> +	common reason is that a huge page is old and is being reclaimed.
+> +	This action implies splitting any block mappings into PTEs.
+> +
+> +split_failed
+> +	is incremented if kernel fails to split huge
+> +	page. This can happen if the page was pinned by somebody.
+> +
+> +split_deferred
+> +	is incremented when a huge page is put onto split
+> +	queue. This happens when a huge page is partially unmapped and
+> +	splitting it would free up some memory. Pages on split queue are
+> +	going to be split under memory pressure.
 
-Nack, don't deviate from how PWMs are usually referenced. So specify the
-period in nanoseconds, not Hertz.
+".. if splitting is possible." ;)
 
-> +      - 2: PWM flags 0 or PWM_POLARITY_INVERTED
-> +      - 3: The default pwm duty cycle - 0-255
+Acked-by: David Hildenbrand <david@redhat.com>
 
-I'd be ok with that, however please add support for that in the pwm core
-and then just use that.
+-- 
+Cheers,
 
-You wrote that you find it irritating that the duty is specified in
-nanoseconds and not a percentage. The reason for that is historic. Also
-it gives a more precise specification (at least compared to the naive
-representation of the integer percentage as an integer type).
-For the rework of how PWM waveforms are represented I picked
-"duty_length" as variable name for this value, in the hope this is less
-confusing.
+David / dhildenb
 
-untested prototype for a 4th member in pwm specifiers:
-
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 5c1d20985148..f732235df12d 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -251,7 +251,7 @@ int pwm_adjust_config(struct pwm_device *pwm)
- 	 * duty cycle of 0.
- 	 */
- 	if (!state.period) {
--		state.duty_cycle =3D 0;
-+		state.duty_cycle =3D pargs.duty_length;
- 		state.period =3D pargs.period;
- 		state.polarity =3D pargs.polarity;
-=20
-@@ -437,6 +437,10 @@ of_pwm_xlate_with_flags(struct pwm_chip *chip, const s=
-truct of_phandle_args *arg
- 	if (args->args_count > 2 && args->args[2] & PWM_POLARITY_INVERTED)
- 		pwm->args.polarity =3D PWM_POLARITY_INVERSED;
-=20
-+	pwm->args.duty_length =3D 0;
-+	if (args->args_count > 3)
-+		pwm->args.duty_length =3D args->args[3];
-+
- 	return pwm;
- }
- EXPORT_SYMBOL_GPL(of_pwm_xlate_with_flags);
-@@ -457,6 +461,10 @@ of_pwm_single_xlate(struct pwm_chip *chip, const struc=
-t of_phandle_args *args)
- 	if (args->args_count > 1 && args->args[1] & PWM_POLARITY_INVERTED)
- 		pwm->args.polarity =3D PWM_POLARITY_INVERSED;
-=20
-+	pwm->args.duty_length =3D 0;
-+	if (args->args_count > 2)
-+		pwm->args.duty_length =3D args->args[2];
-+
- 	return pwm;
- }
- EXPORT_SYMBOL_GPL(of_pwm_single_xlate);
-@@ -1353,6 +1361,9 @@ static struct pwm_device *acpi_pwm_get(const struct f=
-wnode_handle *fwnode)
- 	if (args.nargs > 2 && args.args[2] & PWM_POLARITY_INVERTED)
- 		pwm->args.polarity =3D PWM_POLARITY_INVERSED;
-=20
-+	/* Maybe extend this to apply args.args[3] if args.nargs > 3? */
-+	pwm->args.duty_cycle =3D 0;
-+
- 	return pwm;
- }
-=20
-@@ -1514,6 +1525,7 @@ struct pwm_device *pwm_get(struct device *dev, const =
-char *con_id)
-=20
- 	pwm->args.period =3D chosen->period;
- 	pwm->args.polarity =3D chosen->polarity;
-+	pwm->args.duty_length =3D 0;
-=20
- 	return pwm;
- }
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index f8c2dc12dbd3..678a97706eac 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -41,6 +41,7 @@ enum pwm_polarity {
-  */
- struct pwm_args {
- 	u64 period;
-+	u32 duty_length;
- 	enum pwm_polarity polarity;
- };
-=20
-(I think it doesn't make sense to use a u64 here. At least the oftree
-values are only 32 bit wide. I didn't check the ACPI part, if that is
-only 32 bit wide, too, it would make sense to make period use a 32 bit
-type, too.)
-
-Best regards
-Uwe
-
---bgu6tv6sylwa4466
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaHuDYACgkQj4D7WH0S
-/k4H9Af+O1HkX2H4GXenGFqpvtMnbx935Ir2D1Fj9LzGpibaiBBA3v2zbr22qpPJ
-YwlBG7YQken7sjySLxHLYTtgsqofwWThNKkRE94iJmGLNcE29IW0oq6ATryTiry4
-V/F3T3X78rjpK5lTWnLZzs1A8lsIwD+XBZfczkq79fcwUOFN5bLCXHv/GyMTkwuQ
-4uedlGEPZZ/kL1QfzBztKuw9Z46Yfkh8KRYAuW75EkDjfyl8VMWGDFi+lX1wGioC
-eIaBxX9qcBhoKmT+27g4HctQ3Cp4XdLD2qM856PO1I5+dTaGFKuZXeN4KdjeULnn
-l/5NTnIRGwFWHmasBFUe0VAxOnWoaQ==
-=KiYp
------END PGP SIGNATURE-----
-
---bgu6tv6sylwa4466--
