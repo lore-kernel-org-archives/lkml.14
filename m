@@ -1,159 +1,148 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C95F16DECE
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 15:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B206168493
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 15:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720192555; cv=none; b=KxrAR0ggmRQm38uEK/8NLolf/nFqBOd4FzYy/BMvC82iTN0D4opHY6NhiuIctDvC+SY76IR1xvHw+C9sgUa25hpZJuU9Co42p1nViXFW1F53qqUBbBreyQPKE4j3DgVaydAi11fKjaQL1INmXTLyMC81T/oO+arrP4DMHNLav3E=
+	t=1720192618; cv=none; b=biUgUkw2doi4L/e8tfRyDXwf4Z/2WwflWxmU8x8xGADSoVF38LhPNrcIzIOpNJ4HM06y7hvVFbChn+uccPwEVR7Tgq6VmiNjNX4cJnkthMbEyT6/XvszK9RljMFMQVz2IXUollDXmXXTViD6i7xD59xBl27jJgl2ob1MDH4PfiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720192555; c=relaxed/simple;
-	bh=t1/HlvCG6Zhx0pjisl7ksXtAM8A3yCQh5GvziDXJ+14=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=asAufZFiwumqxAqUPJVn2Mk4eG0jDuaCMH9iy/VZ/KRblecJfKZU3E+NQV2k2oxi4ZwiQqvDSUI/kfQCVgDt5JcjKaArU6VhaksTaVYG9lfuKmeoIfP+Pj+GsF1HPt27wx3dcGOjE5CkIxtuTGgLzag/rTU4bTQbOvnJQj+f2Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=B0IaeYZl; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1720192618; c=relaxed/simple;
+	bh=1SJmi6roK53nVSxDpk01R+5CCMtW24rzBmgbVvZa2Uo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SjeIxVN/DgD88fQbQ2O2V7TLxDgWZCS3iPNmOU727VuUNuaYua93KGRD+zqhyXvCGqOE9mhaAOSHvJ56UNKiyjME1R26EYorqwa9YWxUS9Mtu8Ain1fGGte8Aoop5UUo7gCsAsuwfOon6nry5LY8RxXXEBre1iHkckyjTP2s/JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W3XEmMPl; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="B0IaeYZl"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 465EAPGY011328;
-	Fri, 5 Jul 2024 17:15:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=selector1; bh=ESFLb13hceD8qR42UqHwxlvV
-	7ImFNkkC7q7BdlvzgaI=; b=B0IaeYZl8RxOfkaoGrz2Zn6G8WOkRg3eE+Q17bTk
-	3YlEuKuddPyeuvkH1o2SM6Xi84n6sz2rynKHEhLMmnQYYFDsL4fgj74x7nOQsZEW
-	Arck9gmqGr8dHF7WElSWW2RTYT7jIp7rtTqmSLbIQK8v/QMyXvVirGN8Mo7DFCCS
-	Qrv0mn7bMR+3cgYhJgSsenL4ulYHjbLnBiWhNry3KNY2KufuRk31NWmqqbZNLNm3
-	ov84r0h2wSf+xWEXCJxWccNVh32lhIDdqoSVX9A1zATm0OXzt75KL6gMerIR9aLb
-	M97+kL7VQ2eX3RcTH+VGQTqGov2MPdH9we3IZ9STzRHh+w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 402uu184km-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Jul 2024 17:15:32 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 483A840046;
-	Fri,  5 Jul 2024 17:15:26 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2AF8622D832;
-	Fri,  5 Jul 2024 17:14:43 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.129.178.213) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 5 Jul
- 2024 17:14:42 +0200
-Date: Fri, 5 Jul 2024 17:14:36 +0200
-From: Alain Volmat <alain.volmat@foss.st.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann
-	<tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dmitry
- Baryshkov <dmitry.baryshkov@linaro.org>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>
-CC: Philippe CORNU <philippe.cornu@foss.st.com>,
-        Yannick FERTRE
-	<yannick.fertre@foss.st.com>,
-        Raphael Gallais-Pou
-	<raphael.gallais-pou@foss.st.com>
-Subject: Re: [PATCH] MAINTAINERS: drm/sti: mark it as Odd Fixes
-Message-ID: <20240705151436.GA3949471@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Philippe CORNU <philippe.cornu@foss.st.com>,
-	Yannick FERTRE <yannick.fertre@foss.st.com>,
-	Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-References: <20240705100356.16760-1-krzysztof.kozlowski@linaro.org>
- <ZofW1v4uEFo9GscF@phenom.ffwll.local>
- <20240705-hysterical-beluga-of-courtesy-38b2e2@houat>
- <ff8b84c9-5bef-4cb9-a10b-b3bb1a017366@linaro.org>
- <Zof4Bp82iu7hZsSZ@phenom.ffwll.local>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W3XEmMPl"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52e98087e32so1961352e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 08:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720192614; x=1720797414; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jAi8Yh8H6kvgELJJaleTT1aA4PEdcZWxJ8yjwouMUBU=;
+        b=W3XEmMPlaruFF4HyT9k2xhRRwhbpFg4N6Qmi4Z7vyUphmTXgvE1GJ1rrnHdqX1nZSW
+         cxAYuxauplJPOV6l0XNM8Gph55reSYZOSVZhxQscmVkxNUK1sZwH9+w/7d7UxKvGIqTX
+         9C16hJpgv2Fa4Hp7vAbA6ZQmZlQySk3haIkl66qeDCbrBq0eXVU5v1AJJglkc2oVPA8u
+         B7Wm9DkOC03RTnKqf8JvhH6A3EUid+bIvtjrOZjp5XTx1u7Ox1lHOlFT1B/Nwp9sskOk
+         em699gf9hAuF6SO8fuac4wlVD3Owi4Bw3yuWTvyl4fCaGuZQs9/lkt22qLdXp9184zuN
+         Av/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720192614; x=1720797414;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jAi8Yh8H6kvgELJJaleTT1aA4PEdcZWxJ8yjwouMUBU=;
+        b=SU873UnuvJwm/a90U0xpkPEOc4Ke0LiAFwcM3FiF6AppsU5065tU68IurCcp5IGUZH
+         JHs5hy+TZjNGA7fyDZeWUun+FG586val1E8SxICnObgUpcO8aLK3JdLwVM7WFom2pF+V
+         afxZctTR6+Zb8rYrrc98ffZdT84MP/0AgXwm365X/hVizhhr+8CUOMwBwoJpfShxWWFr
+         m+QPVspoDELwA585I+OdunYm2iYlp9e5VAv0umoTtMt7+eTsDaJ1qnUCp/5L8+iZ7zVz
+         D69Zw3mdHcZnnQJsvH5pKS4AhitlSxNONqwKbKciVYZiY1GdTP04vrebpntkuKLawDqj
+         gq2g==
+X-Forwarded-Encrypted: i=1; AJvYcCX04yhCjinIYuHS2z2TKkAz3DVWI7Wp99BcOOwvu3lOuR77nOjMPsxn/picvJn7Fv755/BDBpYl1KVtW2I7KRcR4RdLtfgJJkNQ0qQy
+X-Gm-Message-State: AOJu0YzaElUhNaKd7xVtj0nU5VHlff4aB2cf8d/Dlfje109S7Pbej/id
+	Pp0g741/Brcv6+y5saD/y97VXtuLDLiVYiMaWf7ZZspuWI0LnI6j4j88MKGMdNU=
+X-Google-Smtp-Source: AGHT+IFF0x3NMy9LMtTvla/+V+TLaDM4vdzLOeeF5CqOS6ZS3ehsuSFZ/VTsszSK87chi/FZYGvU/g==
+X-Received: by 2002:a05:6512:3da3:b0:52c:db80:d694 with SMTP id 2adb3069b0e04-52ea0626e92mr4204523e87.20.1720192613739;
+        Fri, 05 Jul 2024 08:16:53 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e9baf8e26sm730057e87.128.2024.07.05.08.16.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 08:16:53 -0700 (PDT)
+Date: Fri, 5 Jul 2024 18:16:51 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, angelogioacchino.delregno@collabora.com, 
+	andersson@kernel.org, konrad.dybcio@linaro.org, mturquette@baylibre.com, 
+	ilia.lin@kernel.org, rafael@kernel.org, ulf.hansson@linaro.org, 
+	quic_sibis@quicinc.com, quic_rjendra@quicinc.com, quic_rohiagar@quicinc.com, 
+	abel.vesa@linaro.org, otto.pflueger@abscue.de, danila@jiaxyga.com, 
+	quic_ipkumar@quicinc.com, luca@z3ntu.xyz, stephan.gerhold@kernkonzept.com, nks@flawful.org, 
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v4 01/10] soc: qcom: cpr3: Fix 'acc_desc' usage
+Message-ID: <bsr6l33xllblwwoa3ftbldxvqwe6tcljt3ek2petoc4hc5xgsg@b36fw3wetj5f>
+References: <20240703091651.2820236-1-quic_varada@quicinc.com>
+ <20240703091651.2820236-2-quic_varada@quicinc.com>
+ <u4hzxnecdyow6h4vhddcp53tuxrqhbqu6cv4cznytihsyshzy4@lqxhsn3qvjbz>
+ <ZoYsguLOCnZjxOku@hu-varada-blr.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zof4Bp82iu7hZsSZ@phenom.ffwll.local>
-X-Disclaimer: ce message est personnel / this message is private
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-05_10,2024-07-05_01,2024-05-17_01
+In-Reply-To: <ZoYsguLOCnZjxOku@hu-varada-blr.qualcomm.com>
 
-Hi Krzysztof, Daniel, and Maxime,
-
-On Fri, Jul 05, 2024 at 03:41:26PM +0200, Daniel Vetter wrote:
-> On Fri, Jul 05, 2024 at 01:33:38PM +0200, Krzysztof Kozlowski wrote:
-> > On 05/07/2024 13:22, Maxime Ripard wrote:
-> > > On Fri, Jul 05, 2024 at 01:19:50PM GMT, Daniel Vetter wrote:
-> > >> On Fri, Jul 05, 2024 at 12:03:56PM +0200, Krzysztof Kozlowski wrote:
-> > >>> Patches to STI DRM are not being picked up, so even though there is
-> > >>> maintainer activity, it seems that these drivers are not being actively
-> > >>> looked at.  Reflect this in maintainer status.
-> > >>
-> > >> Note that since the driver is in drm-misc, other committers can also pick
-> > >> up patches and push them. Both Neil and Dimtry have commit rights and
-> > >> should be able to pick up your patches for you, if they get stuck.
-> > > 
-> > > I've applied the patches.
-> > > 
-> > > I don't think we should merge this one though, a one-off mishap can happen.
-> > 
-> > Sure.
-> > 
-> > Folks, maybe then pattern in maintainers should be somehow changed or grew?
-> > 
-> > The recommendation to all submitters is to use get_maintainers.pl. b4
-> > also does it. In this particular case, using get_maintainers.pl or b4
-> > will result in patches not being picked up.
+On Thu, Jul 04, 2024 at 10:30:50AM GMT, Varadarajan Narayanan wrote:
+> On Wed, Jul 03, 2024 at 01:46:54PM +0300, Dmitry Baryshkov wrote:
+> > On Wed, Jul 03, 2024 at 02:46:42PM GMT, Varadarajan Narayanan wrote:
+> > > cpr3 code assumes that 'acc_desc' is available for SoCs
+> > > implementing CPR version 4 or less. However, IPQ9574 SoC
+> > > implements CPRv4 without ACC. This causes NULL pointer accesses
+> > > resulting in crashes. Hence, check if 'acc_desc' is populated
+> > > before using it.
+> > >
+> > > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> > > ---
+> > > v4: Undo the acc_desc validation in probe function as that could
+> > >     affect other SoC.
+> > > ---
+> > >  drivers/pmdomain/qcom/cpr3.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/pmdomain/qcom/cpr3.c b/drivers/pmdomain/qcom/cpr3.c
+> > > index c7790a71e74f..6ceb7605f84d 100644
+> > > --- a/drivers/pmdomain/qcom/cpr3.c
+> > > +++ b/drivers/pmdomain/qcom/cpr3.c
+> > > @@ -2399,12 +2399,12 @@ static int cpr_pd_attach_dev(struct generic_pm_domain *domain,
+> > >  		if (ret)
+> > >  			goto exit;
+> > >
+> > > -		if (acc_desc->config)
+> > > +		if (acc_desc && acc_desc->config)
+> > >  			regmap_multi_reg_write(drv->tcsr, acc_desc->config,
+> > >  					       acc_desc->num_regs_per_fuse);
+> > >
+> > >  		/* Enable ACC if required */
+> > > -		if (acc_desc->enable_mask)
+> > > +		if (acc_desc && acc_desc->enable_mask)
+> > >  			regmap_update_bits(drv->tcsr, acc_desc->enable_reg,
+> > >  					   acc_desc->enable_mask,
+> > >  					   acc_desc->enable_mask);
+> >
+> > Should the same fix be applied to other places which access acc_desc?
+> > For example cpr_pre_voltage() and cpr_post_voltage() which call
+> > cpr_set_acc()?
 > 
-> I think get_maintainers.pl is correct: You get the driver maintainer, plus
-> drm-misc maintainers as official fallback, plus Dave&me as fallback of
-> last resorts. So all correct.
+> With this patch alone, if acc_desc is NULL, cpr_probe() will fail
+> at the start itself because of this check
 > 
-> What's special with the commit rights model is that other committers that
-> work all over the subsystem can also pick up the patches for you, so that
-> the drm-misc mainters don't become a bottleneck. But the ideal person
-> there are drm-misc committers who work in your team or company, or someone
-> else where you have some goodwill credits to spend with and ask them for a
-> favour. And there's just no way to model that and make sure the script
-> gives you the right suggestions.
+> 	if (!data->acc_desc && desc->cpr_type < CTRL_TYPE_CPRH)
+> 		return -EINVAL;
+> 
+> After applying this patch series, cpr_probe will cross the above
+> check to accomodate IPQ9574. However, the check below will ensure
+> drv->tcsr is not initialized.
+> 
+> 	if (desc->cpr_type < CTRL_TYPE_CPRH &&
+> 	    !of_device_is_compatible(dev->of_node, "qcom,ipq9574-cpr4"))
+> 
+> cpr_pre_voltage() and cpr_post_voltage() call cpr_set_acc() only
+> if drv->tcsr is not NULL. Hence acc_desc need not be checked.
+> 
+> Will add the check to cpr_pre_voltage() and cpr_post_voltage() if
+> you feel it will make it more robust regardless of the changes to
+> cpr_probe in future. Please let me know.
 
-Many thanks for all your emails and your support.
+Having !acc_desc check instead of the of_device_is_compatible would
+solve the issue.
 
-In the past, I've never committed patches to drm-misc myself and, to be honest,
-missed the point that as a drm driver maintainer, I should also do so.
-Thanks to recent discussions, I now fully understand how it should be done.
-
-That said, since the volume of drm/sti patches is rather small,
-I will from now on request help for commit from drm/stm (Philippe, Yannick, and Raphael)
-and drm-misc maintainers in a more "pro-active" way :-)
-
-Sorry for the inconvenience, and once again, many thanks for your support.
-
-Alain
-
-
-> -Sima
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+-- 
+With best wishes
+Dmitry
