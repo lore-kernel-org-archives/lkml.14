@@ -1,35 +1,35 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EB2146D7E;
-	Fri,  5 Jul 2024 13:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDCC15A856;
+	Fri,  5 Jul 2024 13:27:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720186040; cv=none; b=jtxTXTgU7sjcBN2diBQfLpV3qfD2Ju5eQT+kaTKATEZIQeaao1h1UxR93BrKBKFnrGBD3DyZ7UVhlXxOetD72yLPXqt10a4uKeHJNYdvcBw1Z/i27UQ67UiwizJSMxhfiOaAhpj3EeyB4fU5YY8OTASDr5O/KWvSXYPxIBwI3c4=
+	t=1720186044; cv=none; b=BlxGr26Rp8fySOpyba20nKfkwS1o+2rEiYjQ9BYZ2FCIfncTfu0H+8Eon5hYl3277XVSNiL2AEm+naIfEbEU0Eh5GLUeWLw7jGzqM66q8nVQf2+TjwSP71wKAYcesX2iz8BVn59ZUF5lxFHq1JWdcOMQ9DeKk7/roARMBvfUBVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720186040; c=relaxed/simple;
-	bh=T2reYrMTmf+Fd0m4HL+t0mvKjWTXe1crbuU324G/4CQ=;
+	s=arc-20240116; t=1720186044; c=relaxed/simple;
+	bh=UvytSadW8cLd5y8V8o4rOoI8GBII6X9rA34w6AVgosg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OlMwdNUUcKfXxDj/B3BjdD7w9oK+igiGp9R4q2dpvIM2GN1U4xMs5i1Tt+bmobt2DiHiKSrHquWMwk5sCqf2XS5sQFisZ0jzkQIoq40Y7Ocnkla3PmS4dqcFcHSK7Rt4aR2ZZxsW2h/d50GOIA7JnrkvoHOxIFttAhUmA+T2fcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mvUEpxsw; arc=none smtp.client-ip=217.70.183.197
+	 MIME-Version; b=C+cLO8jiDgtUUUYmXKQUhtCh9eu0l18Z5kTY5vEM/uHEkshg2XmQQxbmOh53Xr5GFqIayRp3JbNBpWs4fyUwOX4EdXrbx0wI42jX6y/7JfrUPIpGtCrJE5Tj6YVjYkaN/1TjnOEGuJ97zaGAw0OjWAimZ+L1GQJXuSvMdt3zYVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bbCqdP5v; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mvUEpxsw"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8F2B11C0009;
-	Fri,  5 Jul 2024 13:27:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bbCqdP5v"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 26C431C0005;
+	Fri,  5 Jul 2024 13:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720186037;
+	t=1720186041;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zvBYGfieJNSgOMTMs4ygDpieBcSveTVULv9bAWmHcks=;
-	b=mvUEpxswN27hTVnmH5xQRCp5Dd0kLjGHqCrCIf4Dh0Q7QsU5+Xa8+WRjJwdyZIjtiPaBDD
-	qw/IK7pm3imKoFu7zJNKfMutZQKBmtvy2viPe7lrpOfoCtuuPiIlHkb9N8+07IGLzeNccj
-	sGiR8bdpZqhH/7z9TC/MTIyFyt7/2c5hb2yumiAR8zi+FEZck67MZAgbjs054sPeKdtoXx
-	IOgU4aQtxXZGNV8jZ18w4NI9k/tqYgDoEkOnIVOG5lj9Qdu3xBmxZE8XdzSPJW7Ik1rTYc
-	ZWs8qP7qkC7kZ9EKOPvChYRMavFzuRqRZtqwLn2m2SObap1Y4e+nKQGrFdTPYQ==
+	bh=Rl64jal9Q5dVqZMxUX/L7AHYOwNAuSrVdhJAw2Cp7Cs=;
+	b=bbCqdP5vYKHMaUhr3ipD59wTfL3oTSWTeD2/ce9u2m+SBtt14G/aHlq1Z5Xz8ktKeULT89
+	r25S79gbLI33GSTpc1kupc0hSLwKA3sa94JstdfuMtnSrSXbbzsxCA4bpssnlpKvqZXtny
+	2hLWI2EdzN19NF+9LaynF4RBJgR61IQ6Ydp7EbIDSoIq2R9ZNxpbeyH4UfKiWgiCHvC89s
+	R4qC7AU/9uvA3c487tgwLDqUsvILr+Urp7mIje1DEcjUwPVyn55nzVs15HF3mTwFqmydzS
+	oS6EDmV+NiY32gB3e5UsNUxq9oNvpZL/9AVoYnsLCMSLejuO2VC7zrfXNvXW1A==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -60,9 +60,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Marc Kleine-Budde <mkl@pengutronix.de>,
 	Dan Carpenter <dan.carpenter@linaro.org>,
 	Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next v16 05/14] net: ethtool: Allow passing a phy index for some commands
-Date: Fri,  5 Jul 2024 15:26:56 +0200
-Message-ID: <20240705132706.13588-6-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v16 08/14] netlink: specs: add ethnl PHY_GET command set
+Date: Fri,  5 Jul 2024 15:26:59 +0200
+Message-ID: <20240705132706.13588-9-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240705132706.13588-1-maxime.chevallier@bootlin.com>
 References: <20240705132706.13588-1-maxime.chevallier@bootlin.com>
@@ -75,224 +75,94 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Some netlink commands are target towards ethernet PHYs, to control some
-of their features. As there's several such commands, add the ability to
-pass a PHY index in the ethnl request, which will populate the generic
-ethnl_req_info with the passed phy_index.
+The PHY_GET command, supporting both DUMP and GET operations, is used to
+retrieve the list of PHYs connected to a netdevice, and get topology
+information to know where exactly it sits on the physical link.
 
-Add a helper that netlink command handlers need to use to grab the
-targeted PHY from the req_info. This helper needs to hold rtnl_lock()
-while interacting with the PHY, as it may be removed at any point.
+Add the netlink specs corresponding to that command.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- Documentation/networking/ethtool-netlink.rst |  7 +++
- include/uapi/linux/ethtool_netlink.h         |  1 +
- net/ethtool/netlink.c                        | 57 +++++++++++++++++++-
- net/ethtool/netlink.h                        | 28 ++++++++++
- 4 files changed, 91 insertions(+), 2 deletions(-)
+ Documentation/netlink/specs/ethtool.yaml | 55 ++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index bfe2eda8580d..0b5712d7c0cb 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -57,6 +57,7 @@ Structure of this header is
-   ``ETHTOOL_A_HEADER_DEV_INDEX``  u32     device ifindex
-   ``ETHTOOL_A_HEADER_DEV_NAME``   string  device name
-   ``ETHTOOL_A_HEADER_FLAGS``      u32     flags common for all requests
-+  ``ETHTOOL_A_HEADER_PHY_INDEX``  u32     phy device index
-   ==============================  ======  =============================
+diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+index 4ca7c5b8c504..7760ff67dafd 100644
+--- a/Documentation/netlink/specs/ethtool.yaml
++++ b/Documentation/netlink/specs/ethtool.yaml
+@@ -24,6 +24,11 @@ definitions:
+     name: module-fw-flash-status
+     type: enum
+     entries: [ started, in_progress, completed, error ]
++  -
++    name: phy-upstream-type
++    enum-name:
++    type: enum
++    entries: [ mac, phy ]
  
- ``ETHTOOL_A_HEADER_DEV_INDEX`` and ``ETHTOOL_A_HEADER_DEV_NAME`` identify the
-@@ -81,6 +82,12 @@ the behaviour is backward compatible, i.e. requests from old clients not aware
- of the flag should be interpreted the way the client expects. A client must
- not set flags it does not understand.
+ attribute-sets:
+   -
+@@ -1037,6 +1042,35 @@ attribute-sets:
+       -
+         name: total
+         type: uint
++  -
++    name: phy
++    attributes:
++      -
++        name: header
++        type: nest
++        nested-attributes: header
++      -
++        name: index
++        type: u32
++      -
++        name: drvname
++        type: string
++      -
++        name: name
++        type: string
++      -
++        name: upstream-type
++        type: u32
++        enum: phy-upstream-type
++      -
++        name: upstream-index
++        type: u32
++      -
++        name: upstream-sfp-name
++        type: string
++      -
++        name: downstream-sfp-name
++        type: string
  
-+``ETHTOOL_A_HEADER_PHY_INDEX`` identifies the Ethernet PHY the message relates to.
-+As there are numerous commands that are related to PHY configuration, and because
-+there may be more than one PHY on the link, the PHY index can be passed in the
-+request for the commands that needs it. It is, however, not mandatory, and if it
-+is not passed for commands that target a PHY, the net_device.phydev pointer
-+is used.
- 
- Bit sets
- ========
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index 840dabdc9d88..754e662ffdf4 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -134,6 +134,7 @@ enum {
- 	ETHTOOL_A_HEADER_DEV_INDEX,		/* u32 */
- 	ETHTOOL_A_HEADER_DEV_NAME,		/* string */
- 	ETHTOOL_A_HEADER_FLAGS,			/* u32 - ETHTOOL_FLAG_* */
-+	ETHTOOL_A_HEADER_PHY_INDEX,		/* u32 */
- 
- 	/* add new constants above here */
- 	__ETHTOOL_A_HEADER_CNT,
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 81fe2e5b95f6..65cc453b60dd 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -2,6 +2,7 @@
- 
- #include <net/sock.h>
- #include <linux/ethtool_netlink.h>
-+#include <linux/phy_link_topology.h>
- #include <linux/pm_runtime.h>
- #include "netlink.h"
- #include "module_fw.h"
-@@ -31,6 +32,24 @@ const struct nla_policy ethnl_header_policy_stats[] = {
- 							  ETHTOOL_FLAGS_STATS),
- };
- 
-+const struct nla_policy ethnl_header_policy_phy[] = {
-+	[ETHTOOL_A_HEADER_DEV_INDEX]	= { .type = NLA_U32 },
-+	[ETHTOOL_A_HEADER_DEV_NAME]	= { .type = NLA_NUL_STRING,
-+					    .len = ALTIFNAMSIZ - 1 },
-+	[ETHTOOL_A_HEADER_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
-+							  ETHTOOL_FLAGS_BASIC),
-+	[ETHTOOL_A_HEADER_PHY_INDEX]		= NLA_POLICY_MIN(NLA_U32, 1),
-+};
+ operations:
+   enum-model: directional
+@@ -1822,3 +1856,24 @@ operations:
+           - status-msg
+           - done
+           - total
++    -
++      name: phy-get
++      doc: Get PHY devices attached to an interface
 +
-+const struct nla_policy ethnl_header_policy_phy_stats[] = {
-+	[ETHTOOL_A_HEADER_DEV_INDEX]	= { .type = NLA_U32 },
-+	[ETHTOOL_A_HEADER_DEV_NAME]	= { .type = NLA_NUL_STRING,
-+					    .len = ALTIFNAMSIZ - 1 },
-+	[ETHTOOL_A_HEADER_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
-+							  ETHTOOL_FLAGS_STATS),
-+	[ETHTOOL_A_HEADER_PHY_INDEX]		= NLA_POLICY_MIN(NLA_U32, 1),
-+};
++      attribute-set: phy
 +
- int ethnl_sock_priv_set(struct sk_buff *skb, struct net_device *dev, u32 portid,
- 			enum ethnl_sock_type type)
- {
-@@ -119,7 +138,7 @@ int ethnl_parse_header_dev_get(struct ethnl_req_info *req_info,
- 			       const struct nlattr *header, struct net *net,
- 			       struct netlink_ext_ack *extack, bool require_dev)
- {
--	struct nlattr *tb[ARRAY_SIZE(ethnl_header_policy)];
-+	struct nlattr *tb[ARRAY_SIZE(ethnl_header_policy_phy)];
- 	const struct nlattr *devname_attr;
- 	struct net_device *dev = NULL;
- 	u32 flags = 0;
-@@ -134,7 +153,7 @@ int ethnl_parse_header_dev_get(struct ethnl_req_info *req_info,
- 	/* No validation here, command policy should have a nested policy set
- 	 * for the header, therefore validation should have already been done.
- 	 */
--	ret = nla_parse_nested(tb, ARRAY_SIZE(ethnl_header_policy) - 1, header,
-+	ret = nla_parse_nested(tb, ARRAY_SIZE(ethnl_header_policy_phy) - 1, header,
- 			       NULL, extack);
- 	if (ret < 0)
- 		return ret;
-@@ -175,11 +194,45 @@ int ethnl_parse_header_dev_get(struct ethnl_req_info *req_info,
- 		return -EINVAL;
- 	}
- 
-+	if (tb[ETHTOOL_A_HEADER_PHY_INDEX]) {
-+		if (dev) {
-+			req_info->phy_index = nla_get_u32(tb[ETHTOOL_A_HEADER_PHY_INDEX]);
-+		} else {
-+			NL_SET_ERR_MSG_ATTR(extack, header,
-+					    "phy_index set without a netdev");
-+			return -EINVAL;
-+		}
-+	}
-+
- 	req_info->dev = dev;
- 	req_info->flags = flags;
- 	return 0;
- }
- 
-+struct phy_device *ethnl_req_get_phydev(const struct ethnl_req_info *req_info,
-+					const struct nlattr *header,
-+					struct netlink_ext_ack *extack)
-+{
-+	struct phy_device *phydev;
-+
-+	ASSERT_RTNL();
-+
-+	if (!req_info->dev)
-+		return NULL;
-+
-+	if (!req_info->phy_index)
-+		return req_info->dev->phydev;
-+
-+	phydev = phy_link_topo_get_phy(req_info->dev, req_info->phy_index);
-+	if (!phydev) {
-+		NL_SET_ERR_MSG_ATTR(extack, header,
-+				    "no phy matching phyindex");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	return phydev;
-+}
-+
- /**
-  * ethnl_fill_reply_header() - Put common header into a reply message
-  * @skb:      skb with the message
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index 46ec273a87c5..4db16048f8d4 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -251,6 +251,9 @@ static inline unsigned int ethnl_reply_header_size(void)
-  * @dev:   network device the request is for (may be null)
-  * @dev_tracker: refcount tracker for @dev reference
-  * @flags: request flags common for all request types
-+ * @phy_index: phy_device index connected to @dev this request is for. Can be
-+ *	       0 if the request doesn't target a phy, or if the @dev's attached
-+ *	       phy is targeted.
-  *
-  * This is a common base for request specific structures holding data from
-  * parsed userspace request. These always embed struct ethnl_req_info at
-@@ -260,6 +263,7 @@ struct ethnl_req_info {
- 	struct net_device	*dev;
- 	netdevice_tracker	dev_tracker;
- 	u32			flags;
-+	u32			phy_index;
- };
- 
- static inline void ethnl_parse_header_dev_put(struct ethnl_req_info *req_info)
-@@ -267,6 +271,27 @@ static inline void ethnl_parse_header_dev_put(struct ethnl_req_info *req_info)
- 	netdev_put(req_info->dev, &req_info->dev_tracker);
- }
- 
-+/**
-+ * ethnl_req_get_phydev() - Gets the phy_device targeted by this request,
-+ *			    if any. Must be called under rntl_lock().
-+ * @req_info:	The ethnl request to get the phy from.
-+ * @header:	The netlink header, used for error reporting.
-+ * @extack:	The netlink extended ACK, for error reporting.
-+ *
-+ * The caller must hold RTNL, until it's done interacting with the returned
-+ * phy_device.
-+ *
-+ * Return: A phy_device pointer corresponding either to the passed phy_index
-+ *	   if one is provided. If not, the phy_device attached to the
-+ *	   net_device targeted by this request is returned. If there's no
-+ *	   targeted net_device, or no phy_device is attached, NULL is
-+ *	   returned. If the provided phy_index is invalid, an error pointer
-+ *	   is returned.
-+ */
-+struct phy_device *ethnl_req_get_phydev(const struct ethnl_req_info *req_info,
-+					const struct nlattr *header,
-+					struct netlink_ext_ack *extack);
-+
- /**
-  * struct ethnl_reply_data - base type of reply data for GET requests
-  * @dev:       device for current reply message; in single shot requests it is
-@@ -409,9 +434,12 @@ extern const struct ethnl_request_ops ethnl_rss_request_ops;
- extern const struct ethnl_request_ops ethnl_plca_cfg_request_ops;
- extern const struct ethnl_request_ops ethnl_plca_status_request_ops;
- extern const struct ethnl_request_ops ethnl_mm_request_ops;
-+extern const struct ethnl_request_ops ethnl_phy_request_ops;
- 
- extern const struct nla_policy ethnl_header_policy[ETHTOOL_A_HEADER_FLAGS + 1];
- extern const struct nla_policy ethnl_header_policy_stats[ETHTOOL_A_HEADER_FLAGS + 1];
-+extern const struct nla_policy ethnl_header_policy_phy[ETHTOOL_A_HEADER_PHY_INDEX + 1];
-+extern const struct nla_policy ethnl_header_policy_phy_stats[ETHTOOL_A_HEADER_PHY_INDEX + 1];
- extern const struct nla_policy ethnl_strset_get_policy[ETHTOOL_A_STRSET_COUNTS_ONLY + 1];
- extern const struct nla_policy ethnl_linkinfo_get_policy[ETHTOOL_A_LINKINFO_HEADER + 1];
- extern const struct nla_policy ethnl_linkinfo_set_policy[ETHTOOL_A_LINKINFO_TP_MDIX_CTRL + 1];
++      do: &phy-get-op
++        request:
++          attributes:
++            - header
++        reply:
++          attributes:
++            - header
++            - index
++            - drvname
++            - name
++            - upstream-type
++            - upstream-index
++            - upstream-sfp-name
++            - downstream-sfp-name
++      dump: *phy-get-op
 -- 
 2.45.1
 
