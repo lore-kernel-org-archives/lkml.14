@@ -1,139 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A100B145FE0;
-	Fri,  5 Jul 2024 08:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815DF13C809
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 08:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720169504; cv=none; b=AJqp9Wk+TdQTLzU/jKCzoNPzdNYMbX9Y52y5Fuo9IkTva0h+dSCSlEnpUkj8r2nAfvhfHZjFbdNDCo5kFGFtVyngT/X4EuUL2CBmcgg2n9da5NKH8NUtW4+Tdg+EOIrZ81UVuhDx3SYlekzu3M56MlzVDXwDO+OLdrdftPtq82I=
+	t=1720169560; cv=none; b=OA0Hyjm1Bs98sRVGMMRcwDaVi0AI4ORp9SMg6AWJIW81Dv4Jc6xo4ZAj/iJM5MgBPsr4jK+7qMJb/dkqpWDXFhTMr3ztcKkn4dFmZ28y3Onj1OvOvNh20x72cSxlsDwnFZxT4i4EufVD6WrxxeS3a2qQBc45/0ZFCN5OF4gVg6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720169504; c=relaxed/simple;
-	bh=dQ5AnLTlTbUKWBiHqk3Dtw/86b4E3MmIzdNFGDLYa2E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f4cbH4zahzGbF0OvbG1cusX0dAPW2jsiSD5CC55XQM2cV3rYcAR4H+1QVQvWAkQy7ZbB89855j5z1de60xpfebMUfwy+ylZF+bJ0Lq1d769wsV2PkbjyKitiFaCIU34T6oUU5Rul8wvYvO4GGF0aMPlp1gg4LczY01SFGLmoTkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQvfWC36; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720169560; c=relaxed/simple;
+	bh=nN7bsChoKD+VcXCEBRcLG7JH8o73GTocHnqeU92nWaY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PALhGkMV66i5H1ulyhMeXj4s6mFD6niRU2xqjMO/XovNy0Y4P690WNMetTBMTRFUrThWVvEQlJ91V3p8+cULhac3W+LwuwNIn7boKBR45dVtPXZ0r4YhDDYufI9T6X58qVAOlCrefut3faSGJjFemJHaMNHxF+UTVkWUuIsNSXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vg7Gnau4; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQvfWC36"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DEAC116B1;
-	Fri,  5 Jul 2024 08:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720169504;
-	bh=dQ5AnLTlTbUKWBiHqk3Dtw/86b4E3MmIzdNFGDLYa2E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kQvfWC36abuTRmrWOySTTlnFpfGN0VDxsic+Zao3hmF1kFVdBvJhgl9l7SoVrilHh
-	 llKdh0RsnPnslpBpqIKEdQI5tZOZrnSca4yJWuq4z7etf4IgJMgz/M/Ohu5QN0gk6G
-	 JZGhZmNGEn2uj/7YgSsMCIU7EPhLTGMQWOQYg42yCrd9trgGiYZd+OguzArYGJmbm8
-	 9dYo5xurWz2wr+uuuR7J56jiQTI/ckG2Vn1fNuQDrN0hJKL6P/HpR7CeCdYkNsvYl0
-	 CA6t5VcZJr4wyim8IbrQCqH8Cq9UnKJb82Gw/ui9/rghwPaNqYUovV2fKBV1YPCb1O
-	 gvvG65qdaDjGA==
-Message-ID: <31778ed0-e4b5-4961-99a5-41ce44ddac26@kernel.org>
-Date: Fri, 5 Jul 2024 10:51:39 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vg7Gnau4"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ee77db6f97so19448351fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 01:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720169557; x=1720774357; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tm8BTCx8h7cfKJSdK68vXadL7NHJYI5R7P++Unzvos4=;
+        b=vg7Gnau4B7aeRV4B91DU+9LD65EBJ+OgP94cwEFPb8thm0VGtqMEEUi+zSWhI5pS9F
+         GGg4GNP1MOJ4DDT1k3eT3nE548SAKWBqXTn7HVP4jIAdG+B9QJj6c4h9qjeI/jw4t3aj
+         6gmXdVyB+LTZd7A20tvo3QuHUcWjY935HllqKVgHxdplvugTUwyMMOEvBzMYp69JvdQE
+         KTTsUJfmcOoTb3W27gfZsRqc4I4IbyN0EcbTuXzHHxjemk2ZkO2tMQfN7O1RIi4h2qXo
+         XDRgvrZDKWgcIudZDGLUraeAB9JcRDD872J2NW8YaVsPpj8bR1cbEk359fmZ3zIdY+L+
+         QZHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720169557; x=1720774357;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tm8BTCx8h7cfKJSdK68vXadL7NHJYI5R7P++Unzvos4=;
+        b=MesyQvR/Agvgg7RB1D9WQlZoplsxGe36zI3syg9TxSjlbYssIQaAcA74EvwAU/lROx
+         MhbKB+u8KYK999APUEHhZIv7z+KFE40WZ5uG+iLgL9uXEHI0QoOPqgWwS7+o49qVQGG/
+         09ZacOGS62CPb8SNdyeKYblS+tVDaKHUeqAuQJ1m8C4UphQdasbdnY8Qlk+7HA3VfkAp
+         02Vm8tgFv11YexTLlXmcj/8c67tElJwg5p6V2WxJssOh/MKOZEUyCxjtt0a7KMH9y58n
+         qQc15ibqD61MR/oe9TGBPLQbwE9z2g/xoE4YJz77uqEmJIGP0sqCH9sdfeK/jAqfM0sa
+         rWOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2CkV5LFtuOs7mCejmw5Ma2nzgwB9Jf4XUJhStO4rBHYq5Lj/m/KK837+0hhbbgAu1OhL+2871EpI8n1JY/EH2OlR3HNI6KIMLdvXa
+X-Gm-Message-State: AOJu0YxcAWwEBbUCgwFyocFuPM0iv9zqQ/nEl/U9QQvM9lP15MwZAa4z
+	/qcYInGq1r4UkX/NCd6kcZEKLemnCQ9KPxzuyoQubweRW6d+DH0n216JZOJbrkKdzEbjwArcF0S
+	tmSNGRCvM0DB8gxMQ2iF4OgQAwbVqvkisAmnDGQ==
+X-Google-Smtp-Source: AGHT+IEyStM8bjx9bavuGPC5GSUaOWfxD2PnzW5v4/QvDQ8yynppqbpSFxWdpusnNU1frPjGzXjLFnAHphiwhd3Laxk=
+X-Received: by 2002:a2e:9515:0:b0:2ec:5843:2fb8 with SMTP id
+ 38308e7fff4ca-2ee8ee0e795mr32501771fa.42.1720169556609; Fri, 05 Jul 2024
+ 01:52:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: clock: add clock binding definitions for
- Exynos Auto v920
-To: "sunyeal.hong" <sunyeal.hong@samsung.com>,
- 'Sylwester Nawrocki' <s.nawrocki@samsung.com>,
- 'Chanwoo Choi' <cw00.choi@samsung.com>,
- 'Alim Akhtar' <alim.akhtar@samsung.com>,
- 'Michael Turquette' <mturquette@baylibre.com>,
- 'Stephen Boyd' <sboyd@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240705021110.2495344-1-sunyeal.hong@samsung.com>
- <CGME20240705021200epcas2p273ca089c2cb9882f121e864ec8407367@epcas2p2.samsung.com>
- <20240705021110.2495344-3-sunyeal.hong@samsung.com>
- <8f4deb36-2a44-414a-9b9f-40b87bc7c949@kernel.org>
- <01c401daceb1$d64e7450$82eb5cf0$@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <01c401daceb1$d64e7450$82eb5cf0$@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <ZoWXwYtwgJIxi-hD@google.com>
+In-Reply-To: <ZoWXwYtwgJIxi-hD@google.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 5 Jul 2024 10:52:25 +0200
+Message-ID: <CACRpkdY2S+G+u88P3x8emeq3-hEiRP89VbwM2TyRBd956Ro9BQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: of: add polarity quirk for TSC2005
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Sebastian Reichel <sre@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+	Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05/07/2024 10:03, sunyeal.hong wrote:
-> 
->> <form letter>
->> Please use scripts/get_maintainers.pl to get a list of necessary people
->> and lists to CC. It might happen, that command when run on an older kernel,
->> gives you outdated entries. Therefore please be sure you base your patches
->> on recent Linux kernel.
->>
->> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
->> people, so fix your workflow. Tools might also fail if you work on some
->> ancient tree (don't, instead use mainline) or work on fork of kernel
->> (don't, instead use mainline). Just use b4 and everything should be fine,
->> although remember about `b4 prep --auto-to-cc` if you added new patches to
->> the patchset.
->>
->> You missed at least devicetree list (maybe more), so this won't be tested
->> by automated tooling. Performing review on untested code might be a waste
->> of time.
->>
->> Please kindly resend and include all necessary To/Cc entries.
->> </form letter>
->>
->> Best regards,
->> Krzysztof
-> 
-> The mail list was created using get_maintainer.pl. If there is any problem, please let me know.
-> 
-> ./scripts/get_maintainer.pl -f drivers/clk/samsung/
+On Wed, Jul 3, 2024 at 8:26=E2=80=AFPM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-That's not how you run the command. You ALWAYS (unless you are Linus)
-run it on the patches. ALWAYS. See submitting patches or numerous
-presentations how to contribute upstream.
 
-Read my form letter accurately, e.g. switch to b4.
+> DTS for Nokia N900 incorrectly specifies "active high" polarity for
+> the reset line, while the chip documentation actually specifies it as
+> "active low".  In the past the driver fudged gpiod API and inverted
+> the logic internally, but it was changed in d0d89493bff8.
+>
+> Fixes: d0d89493bff8 ("Input: tsc2004/5 - switch to using generic device p=
+roperties")
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Best regards,
-Krzysztof
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
+> OTOH if this was indeed broken, then it was broken for ~7 years
+> (d0d89493bff8 went in 4.11-rc1), so maybe the best way is not to worry
+> about compatibility with old DTS, update
+> arch/arm/boot/dts/ti/omap/omap3-n900.dts in the tree and call it a day.
+
+I think anybody using the n900 wll be updating DTS and kernel in tandem
+so yeah. But I think it's nice that we do both since you anyway made
+the patch, it doesn't hurt.
+
+Yours,
+Linus Walleij
