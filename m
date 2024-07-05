@@ -1,144 +1,98 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA171862
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 07:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B91143C41;
+	Fri,  5 Jul 2024 07:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720163145; cv=none; b=TItoRWR0iN4txN0Gkzh7fpQgx+gajlml9Jicp6ka7tbwNH51jkz0/oQtLVZHFx3kiYAK3Sk0dYgxLisL4mRDDwXIjnz3W/x2ntH0/uDr6SVObpIPBdHUCU84gZWb6dfaV8Hkd79V/DAzAER5wKNFa83tCz+xB4I+/FqAFjisJPE=
+	t=1720163435; cv=none; b=C4XCKgs3i1YSTWAVIo3LsGyFr0VUr2yc8z64pAqnmfVSLhE/BkYAjJvh+ITbybv9NmQ0ix0TzwvW4zAUTzfBOgVUlwy5uUFbL4fy7PmOlnLok1LnnPwMNr41p2Q6iqG81pFhmsbnYRQkO/LF6nvU3gsr1v2f2ddO37pQhIMdRac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720163145; c=relaxed/simple;
-	bh=3CrW8uCnclJiUqfmiuDDclKNgSX9zdIEWWy3tTIlWBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uEmpZT26NPF5nGh0CdTtR9r+PnkP6BBLzi2jLWDHFDuzRLcihoeQ7nMLg/q4Nlh83GUFPjqX6DeA2TaVx1kiwm2opu7mDuR1BOldVG0I8RiWVWTiK4X6EZWuCiSzcXnpIIoDxp8n98wYzHzF1Id/DJXVvXnkL4UlhEJ3wrqC+eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sPd0f-0006NI-Fz; Fri, 05 Jul 2024 09:05:33 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sPd0e-007GvS-1w; Fri, 05 Jul 2024 09:05:32 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sPd0d-00GMlQ-36;
-	Fri, 05 Jul 2024 09:05:31 +0200
-Date: Fri, 5 Jul 2024 09:05:31 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Michal Kubecek <mkubecek@suse.cz>, Woojung.Huh@microchip.com,
-	Arun Ramadoss <arun.ramadoss@microchip.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com,
-	Eric Dumazet <edumazet@google.com>, kernel@pengutronix.de,
-	netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net v1 1/1] ethtool: netlink: do not return SQI value if
- link is down
-Message-ID: <ZoebO_i6P33iX4B1@pengutronix.de>
-References: <20240704054007.969557-1-o.rempel@pengutronix.de>
- <dbfa3bc1-fff0-4dc7-a9f2-6cd304d4eaf8@lunn.ch>
+	s=arc-20240116; t=1720163435; c=relaxed/simple;
+	bh=FXypFo382SIXThuXCUwX7hvFYjAAaZul3NTblqc7hn8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nHKd2nP4fxAMhNfiUD1q+Ybt7qZFAL8YJBNsaX0AIBiqHTt8gBoSmoQPuJWWsoXVIaiCiy0FMwErAVfrvJ+/z+rvGau+CjQ+3oFMspTbzCmlb8CDv1GltelC35f72UoJtFfYZL6eR4eULlzyi8e9mifPQaPQ5SZ7i1t8N80mp18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBNPC1wx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBNPC1wx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA7FFC32786;
+	Fri,  5 Jul 2024 07:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720163434;
+	bh=FXypFo382SIXThuXCUwX7hvFYjAAaZul3NTblqc7hn8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jBNPC1wxwVjFy+4oHxB3t0qmoHVmERtBps8NjFYfeBto6wvCAKNkH/0sDp/iX7+MD
+	 QZgxvH+j/zgTmQjW6bqLTcwzGarRfQ3I5URK516qArFsKhX8ipLeYU+IABcqa8sU+w
+	 l9Az9iG38HF/xnv/VLoDy/geWfGP5RUjdq6RrtpH6Vh4WYMqn4WYBb2UEdzwYQNnQs
+	 RPZepyEn5Ya6vKdbx4za8MP4haMFmiEH9p4ldDG16lna4xssH/4ksfLWIQdYOisZRe
+	 hAWtiIYpxBhldedl4ynisCH9tzBt35hRN1rQNkx/CtUh8IunW6G4DrQ2ynYp/A8ZdL
+	 Y0/6LPXij2VPA==
+Date: Fri, 5 Jul 2024 16:10:30 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Nikolay Kuratov <kniv@yandex-team.ru>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Francis Laniel
+ <flaniel@linux.microsoft.com>
+Subject: Re: [PATCH] tracing/kprobes: Add missing check for skipping symbol
+ counting logic
+Message-Id: <20240705161030.b3ddb33a8167013b9b1da202@kernel.org>
+In-Reply-To: <20240704164336.1176281-1-kniv@yandex-team.ru>
+References: <20240704164336.1176281-1-kniv@yandex-team.ru>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <dbfa3bc1-fff0-4dc7-a9f2-6cd304d4eaf8@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 04, 2024 at 04:01:31PM +0200, Andrew Lunn wrote:
-...
-> >  	ret = linkstate_get_sqi(dev);
-> > -	if (ret < 0 && ret != -EOPNOTSUPP)
-> > +	if (ret < 0 && ret != -EOPNOTSUPP && ret != -ENETDOWN)
-> >  		goto out;
-> >  	data->sqi = ret;
+Hi Nikolay,
+
+Thanks for the patch! But this remind me that I forgot to send a patch
+which can solve this issue more generically.
+
+https://lore.kernel.org/all/171338679446.616570.14456856697191949345.stgit@devnote2/
+
+Why I did not send it...? Anyway let me send the update.
+
+Thank you,
+
+
+On Thu,  4 Jul 2024 19:43:36 +0300
+Nikolay Kuratov <kniv@yandex-team.ru> wrote:
+
+> In commit b022f0c7e404
+> ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
+> it was already done for symbol in __trace_kprobe_create(), but func in
+> create_local_trace_kprobe() is also valid usage.
+> Not doing so leads to ENOENT for module_name:symbol_name
+> constructions passed over perf_event_open().
 > 
-> So data->sqi becomes -ENETDOWN 
+> Fixes: b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
+> Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
+> ---
+>  kernel/trace/trace_kprobe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 16383247bdbf..3f4c9195dc0d 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1834,7 +1834,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+>  	int ret;
+>  	char *event;
+>  
+> -	if (func) {
+> +	if (func && !strchr(func, ':')) {
+>  		unsigned int count;
+>  
+>  		count = number_of_same_symbols(func);
+> -- 
+> 2.34.1
 > 
-> > -	if (data->sqi != -EOPNOTSUPP &&
-> > +	if (data->sqi != -EOPNOTSUPP && data->sqi != -ENETDOWN &&
-> >  	    nla_put_u32(skb, ETHTOOL_A_LINKSTATE_SQI, data->sqi))
-> >  		return -EMSGSIZE;
-> 
-> Thinking about the old code, if the driver returned something other
-> than -EOPNOTSUPP, it looks like the error code would make it to user
-> space. Is ethtool/iproute2 setup to correctly handle this? If it is,
-> maybe pass the -ENETDOWN to user space?
 
-In current state with ethtool v6.5 i'll get following results.
-If no -ENETDOWN is returned:
-Settings for spe4:
-        Supported ports: [ TP ]
-        Supported link modes:   100baseT1/Full
-        Supported pause frame use: No
-        Supports auto-negotiation: No
-        Supported FEC modes: Not reported
-        Advertised link modes:  100baseT1/Full
-        Advertised pause frame use: No
-        Advertised auto-negotiation: No
-        Advertised FEC modes: Not reported
-        Speed: 100Mb/s
-        Duplex: Full
-        Auto-negotiation: off
-        master-slave cfg: forced slave
-        master-slave status: unknown
-        Port: Twisted Pair
-        PHYAD: 6
-        Transceiver: external
-        MDI-X: Unknown
-        Supports Wake-on: d
-        Wake-on: d
-        Link detected: no
 
-If -ENETDOWN is returned:
-Settings for spe4:
-        Supported ports: [ TP ]
-        Supported link modes:   100baseT1/Fulli
-        Supported pause frame use: No
-        Supports auto-negotiation: No
-        Supported FEC modes: Not reported
-        Advertised link modes:  100baseT1/Full
-        Advertised pause frame use: No
-        Advertised auto-negotiation: No
-        Advertised FEC modes: Not reported
-        Speed: 100Mb/s
-        Duplex: Full
-        Auto-negotiation: off
-        master-slave cfg: forced slave
-        master-slave status: unknown
-        Port: Twisted Pair
-        PHYAD: 6
-        Transceiver: external
-        MDI-X: Unknown
-        Supports Wake-on: d
-        Wake-on: d
-netlink error: Network is down
-
-Instead of "Link detected: no", we will get netlink error.
-
-Regards,
-Oleksij
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
