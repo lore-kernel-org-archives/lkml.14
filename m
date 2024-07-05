@@ -1,126 +1,78 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A3E3C463
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 16:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E5A2F52
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 16:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720197284; cv=none; b=pL838PIuafjoXbbmzZKcwQOsFAHX9FoXKjzE3jsyPYuB5vb6mvTyI2dTwbfJuVMyzMc/nFX4gyIk8zRc16jHDjhVU/TdpB0ztqGOig45dFNHFeIwGyyihS3wq+iM65It0VukrkYqFvtkcexPIU8E43Mn2UoXGKzGduCKQxFkrRY=
+	t=1720197499; cv=none; b=TAaDRF/IlkWeI2uXKYJmWZxkxFj0LXfSKI/lWhwRfvNB5xqCExa60LBKm06BlKL9CvdP2VYIl+LgmdpY5L6a7LegS0jotlj4C/eT5noS1/N8cY/aYKtC6GL6oYyUCD+bv6zrhGJBVeLgONABg0t6YapLrazAZWYDfciR0M1Hidw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720197284; c=relaxed/simple;
-	bh=fYjKPtuLaZ2rvTns7tjcSPLHAonKpULwJRe753eIIV8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m0SdC7BAVJmLTKKGfR99M16H0D3CZ7fDz6d3GiRcrDZjAHFpbsVbmE7OJpkrPbqd9PicbaRnIQJxjzt6TYe3Fb7ukgMJjMi1+41erurffQsFmrJXkSYrIG9usVDRoxmg0bDXAEn4M+LUbHhCO0ueTOYxKcK7Rjaz/Q5Z+Zgj8EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=dymdx28z; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1720197499; c=relaxed/simple;
+	bh=vbEdn9s1bX9Apz+VH7pesh77e94L7MUUh+JZaxSbQzo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TIIlbV+s5FAwZkJj7gkHfAma1sa8Oph/tCNe2vpVFvjQPkR1veAPj3NXrUOkf/9waQtts/E+WB6AW4AtO28zE2xYSfdMHdk7lEcWiT5Kbe9KB6EUAb56FNM4thwqJfJb8nURvhHWgL7hh+38IE7AO2/UGyxPD1ORHDVHpbABPzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8NUoOxn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="dymdx28z"
-X-Envelope-To: heiko@sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1720197279;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vTcYQTSND+4YUQLaRdcC8Bj5nXpCzHWY+jMRGob+qxw=;
-	b=dymdx28zX9Qp2rsw/Wq1BBW1oaLHO6PKiVnhBEuA5tkMTpaqAkG6AEFJVlDY8pRSeokcJn
-	J5kKdwVD6OcM0NMfu+Nx7JUso8WEz0PSqHuMGz8EjxKGMsA/eOeJKkvGpuqskTqmffe/gW
-	rRnLZBrPZfc9Ki/QpCFy5va83X8iT0HYFbx8NpQ+Lh0qG66IKv7efq+doWgrHo2ws7KpuB
-	FLjgtfXhXI3+dq0ki9XaTp1c2uJAsJ/Q+74cRU7ETEgXNIdD0OPUQXSOqt7L5wlOjheI54
-	qQDQGngGqZ7epTYR7ql1qezQ2/OEOcM1zHgeAkqmiL4UQ1wV188COAcEHmH1xw==
-X-Envelope-To: mweigand@mweigand.net
-X-Envelope-To: dsimic@manjaro.org
-X-Envelope-To: didi.debian@cknow.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: macromorgan@hotmail.com
-X-Envelope-To: andyshrk@163.com
-X-Envelope-To: jagan@amarulasolutions.com
-X-Envelope-To: amadeus@jmu.edu.cn
-X-Envelope-To: f.kardame@manjaro.org
-X-Envelope-To: michael.riesch@wolfvision.net
-X-Envelope-To: wiagn233@outlook.com
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Maximilian Weigand <mweigand@mweigand.net>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Diederik de Haas <didi.debian@cknow.org>,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Andy Yan <andyshrk@163.com>,
-	Jagan Teki <jagan@amarulasolutions.com>,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	Furkan Kardame <f.kardame@manjaro.org>,
-	Michael Riesch <michael.riesch@wolfvision.net>,
-	Shengyu Qu <wiagn233@outlook.com>
-Subject: [PATCH] arm64: dts: rockchip: Add dma-names to uart1 on Pine64 rk3566 devices
-Date: Fri,  5 Jul 2024 18:22:14 +0200
-Message-ID: <20240705163004.29678-4-didi.debian@cknow.org>
-In-Reply-To: <20240705163004.29678-2-didi.debian@cknow.org>
-References: <20240705163004.29678-2-didi.debian@cknow.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8NUoOxn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5875EC4AF11
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 16:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720197499;
+	bh=vbEdn9s1bX9Apz+VH7pesh77e94L7MUUh+JZaxSbQzo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=j8NUoOxntYSpnSlMTLUAI5bZjgxR2AVn3JqH938neZinLF8bkWcRIXQIJ2jCTsZcu
+	 ZqZCfGsAkHgfuXa9x+Q9dfFgDii4UTv1ewBWYBzUHqz2q9sqiGqSO2JDYTU9FMJwUj
+	 8gbaYF3OWIaAC1PVVA3MQ3a3n7gyaFKeKvjUvOzvXOr6Pr0nD7D4kBgwGMmbiLdizS
+	 FFbH9XZ2ywtP9dFkzeZGLccsBhn2zvq335kDBbmAe9EUaE+pSMdiE0DJHCg6FVzZBw
+	 XD1TRjI5K1JMAw7yf1a6qCRnnQ63f1N0ISOArumcWp6cwUEt7aNXjkQIhhFABNqjMW
+	 SZ4PMVE0AtL8A==
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-64f2fe21015so16455267b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 09:38:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW2bclEML/S+dXarpjIbT4Pp+PuQ42Zxk+mYPac8FV6flB6FeNHgzH1bUwyuuEvU8XqCvcGINse/y8iUySf/ZMHq/Uo3tfukp7+hzq+
+X-Gm-Message-State: AOJu0YwJRBpX2H/00t1M5/kcahZwTDvwiG9PRnyeFbJuWNVeiVXtzx2I
+	/Pt+v9dM+MRZfh2w4QlN8j/TMiluufmdL2lvImkDW62QWd6IpZdHn8apq9zh6I7l63qgK/WHKpp
+	A9rjwufGyEXTwr8LOu936XsSLfDkwU2Hx2xcZHQ==
+X-Google-Smtp-Source: AGHT+IHbSmRZsNNYS2h5JtG2DnZP9kYtxEWmUQAgUpRZSXspcNezTrPrXYVQUe1Q5P4n1ZSFupmxsu/uD5ug/y4uiYI=
+X-Received: by 2002:a05:690c:6801:b0:64a:7e85:9a90 with SMTP id
+ 00721157ae682-652d5c08344mr67634497b3.24.1720197498594; Fri, 05 Jul 2024
+ 09:38:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20240622071231.576056-1-21cnbao@gmail.com> <557d7f05-6ba9-482d-b3fb-29eb72cdf09c@arm.com>
+ <CAGsJ_4zQ0vjX1UM62o0Wsgh9XYW0SGv2cyG5gUpbP_+Tx3WZLg@mail.gmail.com>
+ <76876c5f-f769-43f1-ad53-a4af288af467@arm.com> <CAGsJ_4zpn5dMNNNcVcMngT-mJpWV-bzUV+RfQaLLjxMC73xfig@mail.gmail.com>
+ <f9fde05b-0340-49fc-92f9-7fa091580444@arm.com> <CAGsJ_4xf_s57g5NmxbzFSZqyU05n4CoF5PFTZO73CE4CmB9fEw@mail.gmail.com>
+ <fba6439c-9710-4b0a-873c-334058166c03@arm.com> <20240704161026.1e10805b184d7c7f07158622@linux-foundation.org>
+In-Reply-To: <20240704161026.1e10805b184d7c7f07158622@linux-foundation.org>
+From: Chris Li <chrisl@kernel.org>
+Date: Fri, 5 Jul 2024 09:38:07 -0700
+X-Gmail-Original-Message-ID: <CACePvbVoTxEuMUcoOn7r8z4uLSnOZKDhciKLwOFr2+os5DyHHw@mail.gmail.com>
+Message-ID: <CACePvbVoTxEuMUcoOn7r8z4uLSnOZKDhciKLwOFr2+os5DyHHw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/1] tools/mm: Introduce a tool to assess swap entry
+ allocation for thp_swapout
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org, 
+	david@redhat.com, hughd@google.com, kaleshsingh@google.com, 
+	kasong@tencent.com, linux-kernel@vger.kernel.org, v-songbaohua@oppo.com, 
+	ying.huang@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Similar to bf6f26deb0e8 ("arm64: dts: rockchip: Add dma-names to uart1
-on quartz64-b") also add the dma-names property to the other rk3566
-devices from Pine64 with bluetooth functionality.
+I have been using this tool to help me develop the swap allocator
+patches. It helped me reproduce the kernel crash.
 
-Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
----
- arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi  | 1 +
- arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts | 1 +
- arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi  | 1 +
- 3 files changed, 3 insertions(+)
+Acked-by: Chris Li <chrisl@kernel.org>
+Tested-by: Chris Li <chrisl@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi b/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
-index d899087bf0b5..ae2536c65a83 100644
---- a/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
-@@ -674,6 +674,7 @@ &tsadc {
- };
- 
- &uart1 {
-+	dma-names = "tx", "rx";
- 	pinctrl-0 = <&uart1m0_ctsn>, <&uart1m0_rtsn>, <&uart1m0_xfer>;
- 	pinctrl-names = "default";
- 	uart-has-rtscts;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
-index 0b191d8462ad..37a1303d9a34 100644
---- a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
-@@ -738,6 +738,7 @@ &uart0 {
- };
- 
- &uart1 {
-+	dma-names = "tx", "rx";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn &uart1m0_rtsn>;
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi b/arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi
-index dd4e9c1893c6..e42c474ef4ad 100644
---- a/arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3566-soquartz.dtsi
-@@ -614,6 +614,7 @@ &tsadc {
- };
- 
- &uart1 {
-+	dma-names = "tx", "rx";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn &uart1m0_rtsn>;
- 	uart-has-rtscts;
--- 
-2.45.2
+Chris
 
+On Thu, Jul 4, 2024 at 4:10=E2=80=AFPM Andrew Morton <akpm@linux-foundation=
+.org> wrote:
+>
+> This all seems to have gone way off track.
+>
+> acks or nacks on the patch, please?
