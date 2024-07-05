@@ -1,68 +1,41 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0DF145B25;
-	Fri,  5 Jul 2024 09:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02E113C809
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720170717; cv=none; b=o2Sr9Zuq2h5C3SSZhlPdl4xA3TsRRFFWwXSTxex3nlnrOrkdQ7dYrqdxMFa84jxZp46XRt6h9iBq5llBSoXTHCRdaW0oxatcIANJ3wwCKILDnDUmF5NmIIBDk4mhXU+TuHGBl/nus4c6PlSPDimCeXNeqHy25ZQlxDI06g8mpdI=
+	t=1720170748; cv=none; b=jcyG6Ywl8EoZhK+qZmC2AnHCaX8Hy7KLev0V28Vq/WuaWj964FrRhgDY2DoA7jiuZmPMQRfWU4o52JapeMyGHWEwtsJK6RJMXtlYZnfzSZ+xRYSpgJX7k73y8oZiZmxXx+fJmPMknPKatIhoKUQzqLOnjBbU/9HvO4rir04JcCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720170717; c=relaxed/simple;
-	bh=CnlF5E4a5lr4vVeUZDKo/2jjL1AfhYBBcKFIy4jthv8=;
+	s=arc-20240116; t=1720170748; c=relaxed/simple;
+	bh=tZOrKLTxHWQw0WT54iRymsngckqcvsL1CHpv+SYW4LE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qcF39dIFQsl6P1W1uZiQOq5VFQLxSttPR8284YDRwyhc6uwQjVablyCiFEZaaIXXKi+vwbho1iAnQTlFRLor+pS1VjR/ZZpvthRkf1jQuFmmYCVR5pmHEIHZ7bBau+5Y+p6Gks2wu5Lg7VaakcVViwA60+kJYKPivrvqtXE3PhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQ7yZt1H; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fHodsQGTj/sLljAG2IAiD4MQYEstqehdy78x1Bnxt26xr4+HfQeFkbSznMjJMBjF4DagN9C8Jl/7HPE4FPwuek9shssiXjfBkTBSq+PYwBCaun+jBLewlaxfi9d2LSkO6wO2VwmpCvSVYpkSjLKK35nUoqhc7ug3IIFKkkTU0Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8GIlS8c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQ7yZt1H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720170715; x=1751706715;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CnlF5E4a5lr4vVeUZDKo/2jjL1AfhYBBcKFIy4jthv8=;
-  b=FQ7yZt1HR+5M32ayVk3wxrVUmnDuHYEtNmY8UFXu569GBPZhMvCu2hxM
-   9CMep/oDPCjKrz1fCSH/FMMXf+euOGV3q5+q+tZfwbYioGxnpeLv+mmpQ
-   WYS+2yZvNyMAkMNz9y0nJoky2z2oRArkcOCJTcekc66S1oFGpLS6UbWCQ
-   VAclCg2OLe3a6dgda7DbZJ4UGGEzjSeus3cLAekBWkGEbf2w1tYgRYnDR
-   ilLzJrRRwObQRtWidNWJ56Wn6b9K5hpPDu20Q8jic/gFZ3x5qcMh2OdM0
-   wo6wNigi8Lvb4fAjTmsgNyyxvw6u1/F+QQ+GPQwfRTdQiy7AnROvwfc6e
-   A==;
-X-CSE-ConnectionGUID: yV7RRI7OSnqn+G9xcW+s5Q==
-X-CSE-MsgGUID: J+eBi3/sRYS/Tsn16i6F/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="20362103"
-X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
-   d="scan'208";a="20362103"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 02:11:55 -0700
-X-CSE-ConnectionGUID: MUT4jryPTyesu5F/VdEC4A==
-X-CSE-MsgGUID: JQ705aqCRrSj5eeLcxr05g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
-   d="scan'208";a="46937506"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 05 Jul 2024 02:11:52 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sPeyr-000SAm-1J;
-	Fri, 05 Jul 2024 09:11:49 +0000
-Date: Fri, 5 Jul 2024 17:11:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chris Lu <chris.lu@mediatek.com>, Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Von Dentz <luiz.dentz@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, Sean Wang <sean.wang@mediatek.com>,
-	Aaron Hou <aaron.hou@mediatek.com>,
-	Steve Lee <steve.lee@mediatek.com>,
-	linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-mediatek <linux-mediatek@lists.infradead.org>,
-	Chris Lu <chris.lu@mediatek.com>
-Subject: Re: [PATCH v7 8/8] Bluetooth: btusb: mediatek: add ISO data
- transmission functions
-Message-ID: <202407051652.C743BIjp-lkp@intel.com>
-References: <20240704060116.16600-9-chris.lu@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8GIlS8c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AA4DC4AF0A;
+	Fri,  5 Jul 2024 09:12:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720170748;
+	bh=tZOrKLTxHWQw0WT54iRymsngckqcvsL1CHpv+SYW4LE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X8GIlS8cwm9zDhg0WCkYc7zfrq2CwvZZpjWfg0AXvGNbFrcIRMZeA+Vk54rajSCcx
+	 KsJuAvQpIaPQQ4bApxnBif/Di6D97P5yCZ0Jrmrr7Oizfp97MNSSai4xu/w0fSpL/S
+	 hSTB7iLmciq4+gNw1seNjvQQAxRwFmZljYCaLTqQ0gj5PeRe2gKwGhPUOa10VN+AXp
+	 1Nq7Jog8XpoTFOBiJn0C6kjnGsHvmvGu/eW8a+3o2vmRqvlGYxHn1DHHJzlAR+Ip+V
+	 r3VZYr+iMFEIc90vh3l+q0fPSaE+kHc/quiiTht3/mrPp2Y4ZhSHPTupOJ7/dqN8Sn
+	 QSP5zA41Z0G7A==
+Date: Fri, 5 Jul 2024 12:09:48 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: akpm@linux-foundation.org, brauner@kernel.org, oleg@redhat.com,
+	mjguzik@gmail.com, tandersen@netflix.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, david@redhat.com
+Subject: Re: [PATCH v3 1/3] mm/memblock: introduce a new helper
+ memblock_estimated_nr_pages()
+Message-ID: <Zoe4XN-gKJnjJtzi@kernel.org>
+References: <20240703005151.28712-1-richard.weiyang@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,77 +44,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240704060116.16600-9-chris.lu@mediatek.com>
+In-Reply-To: <20240703005151.28712-1-richard.weiyang@gmail.com>
 
-Hi Chris,
+On Wed, Jul 03, 2024 at 12:51:49AM +0000, Wei Yang wrote:
+> Instead of using raw memblock api, we wrap a new helper for user.
 
-kernel test robot noticed the following build errors:
+The changelog should be more elaborate and explain why this function is
+needed.
+ 
+> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> ---
+>  include/linux/memblock.h |  1 +
+>  mm/memblock.c            | 19 +++++++++++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 40c62aca36ec..7d1c32b3dc12 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -486,6 +486,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
+>  
+>  phys_addr_t memblock_phys_mem_size(void);
+>  phys_addr_t memblock_reserved_size(void);
+> +unsigned long memblock_estimated_nr_pages(void);
+>  phys_addr_t memblock_start_of_DRAM(void);
+>  phys_addr_t memblock_end_of_DRAM(void);
+>  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index e81fb68f7f88..c1f1aac0459f 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1729,6 +1729,25 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
+>  	return memblock.reserved.total_size;
+>  }
+>  
+> +/**
+> + * memblock_estimated_nr_pages - return number of pages from memblock point of
+> + * view
 
-[auto build test ERROR on bluetooth-next/master]
-[also build test ERROR on next-20240703]
-[cannot apply to bluetooth/master linus/master v6.10-rc6]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This function returns the estimate for free pages, not the number of pages
+in RAM.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Lu/Bluetooth-btusb-mediatek-remove-the-unnecessary-goto-tag/20240705-043833
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git master
-patch link:    https://lore.kernel.org/r/20240704060116.16600-9-chris.lu%40mediatek.com
-patch subject: [PATCH v7 8/8] Bluetooth: btusb: mediatek: add ISO data transmission functions
-config: i386-buildonly-randconfig-001-20240705 (https://download.01.org/0day-ci/archive/20240705/202407051652.C743BIjp-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240705/202407051652.C743BIjp-lkp@intel.com/reproduce)
+How about memblock_estimated_nr_free_pages()?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407051652.C743BIjp-lkp@intel.com/
+> + * some calculation before all pages are freed to buddy system, especially
+> + * when CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
 
-All errors (new ones prefixed by >>):
+I'm failing to parse this sentence. The return value here won't depend on
+CONFIG_DEFERRED_STRUCT_PAGE_INIT.
 
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_recv_acl':
-   btmtk.c:(.text+0x749): undefined reference to `usb_disable_autosuspend'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_submit_wmt_recv_urb':
-   btmtk.c:(.text+0x789): undefined reference to `usb_alloc_urb'
-   ld: btmtk.c:(.text+0x81d): undefined reference to `usb_anchor_urb'
-   ld: btmtk.c:(.text+0x829): undefined reference to `usb_submit_urb'
-   ld: btmtk.c:(.text+0x836): undefined reference to `usb_free_urb'
-   ld: btmtk.c:(.text+0x880): undefined reference to `usb_unanchor_urb'
-   ld: btmtk.c:(.text+0x889): undefined reference to `usb_free_urb'
-   ld: btmtk.c:(.text+0x89e): undefined reference to `usb_free_urb'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_submit_intr_urb':
-   btmtk.c:(.text+0x8db): undefined reference to `usb_alloc_urb'
-   ld: btmtk.c:(.text+0x991): undefined reference to `usb_anchor_urb'
-   ld: btmtk.c:(.text+0x99a): undefined reference to `usb_submit_urb'
-   ld: btmtk.c:(.text+0x9a7): undefined reference to `usb_free_urb'
-   ld: btmtk.c:(.text+0xa18): undefined reference to `usb_unanchor_urb'
-   ld: btmtk.c:(.text+0xa28): undefined reference to `usb_free_urb'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_suspend':
-   btmtk.c:(.text+0xa92): undefined reference to `usb_kill_anchored_urbs'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_hci_wmt_sync':
-   btmtk.c:(.text+0xb15): undefined reference to `usb_autopm_get_interface'
-   ld: btmtk.c:(.text+0xb51): undefined reference to `usb_autopm_put_interface'
-   ld: btmtk.c:(.text+0xc0f): undefined reference to `usb_autopm_put_interface'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_isointf_init.constprop.0':
-   btmtk.c:(.text+0xefc): undefined reference to `usb_set_interface'
->> ld: btmtk.c:(.text+0x1063): undefined reference to `usb_kill_anchored_urbs'
-   ld: drivers/bluetooth/btmtk.o: in function `alloc_mtk_intr_urb':
-   btmtk.c:(.text+0x113c): undefined reference to `usb_alloc_urb'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_wmt_recv':
-   btmtk.c:(.text+0x12bb): undefined reference to `usb_anchor_urb'
-   ld: btmtk.c:(.text+0x12c7): undefined reference to `usb_submit_urb'
-   ld: btmtk.c:(.text+0x13e6): undefined reference to `usb_unanchor_urb'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_reg_read':
-   btmtk.c:(.text+0x14cb): undefined reference to `usb_control_msg'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_uhw_reg_write':
-   btmtk.c:(.text+0x1559): undefined reference to `usb_control_msg'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_usb_uhw_reg_read':
-   btmtk.c:(.text+0x1609): undefined reference to `usb_control_msg'
-   ld: drivers/bluetooth/btmtk.o: in function `btmtk_intr_complete':
-   btmtk.c:(.text+0x170f): undefined reference to `usb_anchor_urb'
-   ld: btmtk.c:(.text+0x171b): undefined reference to `usb_submit_urb'
-   ld: btmtk.c:(.text+0x1779): undefined reference to `usb_unanchor_urb'
+> + *
+> + * At this point, we can get this information from memblock. Since the system
+> + * state is not settle down and address alignment, the value is an estimation.
+> + *
+> + * Return:
+> + * An estimated number of pages from memblock point of view.
+
+                            ^ free
+
+> + */
+> +unsigned long __init memblock_estimated_nr_pages(void)
+> +{
+> +	return PHYS_PFN(memblock_phys_mem_size() - memblock_reserved_size());
+> +}
+> +
+>  /* lowest address */
+>  phys_addr_t __init_memblock memblock_start_of_DRAM(void)
+>  {
+> -- 
+> 2.34.1
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sincerely yours,
+Mike.
