@@ -1,108 +1,139 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB8E14F102
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 14:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410EE146A69
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 14:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720188952; cv=none; b=C+EoCnuW5Rr4Kd6t6VFNqQMbAOHpnMDtYfM2xXOe2CmQbRftry3MluwK0D+lsn1mZI3YWL/FkyNKucIyQOp4HZ7JKvgfSmBX2A8+1Of6KbpgOgdtsA/MoleZs36ziHyIO0R5Tz2CG6Pfc5Beu/jxrcFoTZbc2NBwG43NSYBpE90=
+	t=1720189036; cv=none; b=ScGxffMOUjpW96S0SMt6rloZqCUuhmDFTcu/DF5gQzviGZJMTBiq61U5T8CgBvA8GAGGVpeQOo2VmBjXWPD8XlMSu5Hizi/CyEJYespbb9hJMfwczIzFhuUTnROEisEKoV7ObF8rhfeSzEJppxAyuVGPmXmabrefvv2wb/YqDJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720188952; c=relaxed/simple;
-	bh=csMbNIXYbDs8teffXzD2GvgCq5Qy1ZwmaOAcEOMsHVw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jv3WOZV7hU6mLBCa32CxZR2aYt5El62CG/Fp2/uKU6uYueuJgjvMLL0qtK3sy46HbuLoq4Dctj2s803QNMU/IksFsD61M9OFnxYUw5hkBzFvyq/kw3UknLWrstWlHRZmYMGKKivOoBoX3b43XIp+Y6eLba7GZu2w7x9kyx0wvKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mJAu40VO; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1720189036; c=relaxed/simple;
+	bh=n8zcsf+cKLFVPpClQ4xkpjOCCIvIJFw2OCxLNBkkVz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vtv0GE/hic1M+KIhRgH84LcCR374oH8Q6sUyr8gRmE0UvQZTDGya8mVBoSqsVwTvZbHj0z5xM6suqK7cngVJsx8hr5YANCxzNYy8n4lLpMWFXAFTPxP2pSjch933psBhhFWZl1gNJVNwJSddmUoGXQmFIkJ40R3L39fyCWS/rNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2oJZCa6; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mJAu40VO"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ee7a1ad286so18318461fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 07:15:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2oJZCa6"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-6e7e23b42c3so956919a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 07:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720188949; x=1720793749; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vB+CDmf4yU1/047AzwbsEow70avL0EmzWRISr/VcnH8=;
-        b=mJAu40VOb5FmxRqjtCmVTQz43Tp+ETykR4DnpdARa12BsgOkyRVepMN7CNFTP2lfEY
-         tvQLwlNEUzKUDKBH6G1JM+1enmZETp+0eXKf0Rv2PCKfezGYbAcBiQuZX7jawVZvKUBP
-         oYoLtISfmsTHemU0aw3jeYPaHNmfkl0aRrlOASqMpKFQgjUMzVi39Y2Kk4I1xlvdV2O1
-         y5QrHnO2lLlVT30NYVobJxLu6vWXtS6+SX7NJr6vPv+BBQZ2S1ndvUFm/JfqjyrUciel
-         oxKYYtIaCtmuQq2C+Q9SaTgLvlrB73ky8RsqpOWKjs8tZEhW9c3Q8BVNFU/nTjq+ao0F
-         kErQ==
+        d=gmail.com; s=20230601; t=1720189034; x=1720793834; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b+BcpyzLQnxvJ1Kfe3UTbGBPJSneNJ41TWH5rNXfDpo=;
+        b=J2oJZCa6PJ4gV7EinC/2h5wOucokHcgvRA0FP3Uhp2+r7HwCzWkInHZaJO39FES9Li
+         D4MvSt8SdyRcNUvG9BGaLvvHd6P6OkNKLFt6DbIa6FXLgtRdikO/BO2EUG4ApXTWMbSN
+         UihL33RzAPgQ++Zt/yxEaIUS+e1a8/LvsBLa5Q4Tv6+gs6wPY7FEsmZ9lY67luqp4TAJ
+         NGAL2d8r/2zvnM/QuIldM8rSeoEOS/VMrlYnrAHQQJfkS4XW7BzDDMA5DNnptzy8qam2
+         JBs8iMXAkZbdRQtpmQ7QqRWh5gRUYuYC2mUbv2QXhuPV+2qH5fmCU5XIpCy6dXGpMJHg
+         NKwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720188949; x=1720793749;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vB+CDmf4yU1/047AzwbsEow70avL0EmzWRISr/VcnH8=;
-        b=k9eS4hAuG9mrEfSUHQvo+JVYIGQx7De3PMH/y5p/UK4r1FObhqxbUTyg0pMkktn/bV
-         8WnHmspEQ67+xPc04UWgnpVra2cYP++bMOyfEk4nkshLXJMQN8qykPP4kZyThoHEoAXG
-         FfS6EnUCszoTAOg0Fr6aUEvSD34223d+eq9CTxfJfo4aV938BS/56pHFu3j+b0qeaeLC
-         siiz8je7rImMIGiBnu5JZfq3y77YogYy04OWGlRjzOn4+46Xm74NSGMeHfDNl5rpoxG+
-         afcvXqUG0KeQaJlh/74vhBHfKLX6lPGxbZsUWQvLUI+xUb6Ht5enp7Cr2NQ73Q5GHgje
-         FwvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWnFbpx2VLu8PGLlkR0kE1w4HKyY3l4IH3oYVrTzP6fXfjYx+iSLhRpS/nb5U+jgZVLw4olxafBob5to6LP3bOxrOUlKcUAU0ABVyK6
-X-Gm-Message-State: AOJu0YyvRWb9LsvW6xB4ESqcsUEJ0goRDtgVJA6aDi1683jM9RYJYF8+
-	GeNWDqGawMbLOPq64XHW3wC/fvXE9M3xR25oAlvMfNTXAUyGoXLZcS3jESV2KDs=
-X-Google-Smtp-Source: AGHT+IH3FYEYcatWMaLhI+Grsy+GgqRs9QH35DHFk1d7q1MrhiTUsoNESzzybKPztgIRAGXv5IONAg==
-X-Received: by 2002:a2e:8656:0:b0:2ec:3e02:9737 with SMTP id 38308e7fff4ca-2ee8ed69b9cmr34232481fa.2.1720188949395;
-        Fri, 05 Jul 2024 07:15:49 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c688:2842:8675:211])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3678f41116bsm8041805f8f.116.2024.07.05.07.15.48
+        d=1e100.net; s=20230601; t=1720189034; x=1720793834;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b+BcpyzLQnxvJ1Kfe3UTbGBPJSneNJ41TWH5rNXfDpo=;
+        b=G/b4j/0EcCpBso8LfXbU8egY8sOGPn+cQ9deq3uvU97ksMLIAIIBToDwpGOxM3/Mpc
+         HsA5GQrUMtYuNcf/pdUhp/P9MIn8YlljX402PfAugLPdXT/wkBWJj53W98aN7TgSonWN
+         tBLOMrMGEBx598EG8dqw6bXuD0Z4pLe35DFDvUTIX8hZqFo6xAXiQEBM938TnhkGAH5A
+         1K226xJ8nZghNIbXIgMWZCAFtXBfVb9LTk3NKv6CFcMfpqh4n4Jt1EKV2Q2/3nHky65d
+         2b/w/UBBIuEs2NRFneIWZif1mn3LnD2JUXAmu5BIto7+qnAIrPNpXEUZr1DA6gNq1awT
+         AULg==
+X-Gm-Message-State: AOJu0Yz9b8U/QHr4aAbBpo8bxFuCZ1ZCjiNk4srj31Z3tVYMwJzgSzgh
+	KX3UdDA5HT/MuYISdeOEXFv1NAiZFocmZ7nmxNYQ88+kHJEmsJV8
+X-Google-Smtp-Source: AGHT+IH2gZQ/17IR2+hr1qvtD889PWpZBS7KGodEU4flUX6Dz8znVlKZmOM2MVb5TfdJ5+5ARd0vXg==
+X-Received: by 2002:a05:6a20:7347:b0:1be:c0c9:d007 with SMTP id adf61e73a8af0-1c0cc8baa87mr4545783637.44.1720189034362;
+        Fri, 05 Jul 2024 07:17:14 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6b584624sm11321449a12.53.2024.07.05.07.17.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 07:15:49 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-X-Google-Original-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.10-rc7
-Date: Fri,  5 Jul 2024 16:15:44 +0200
-Message-ID: <20240705141544.20101-1-bartosz.golaszewski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        Fri, 05 Jul 2024 07:17:13 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 17517185D7BCC; Fri, 05 Jul 2024 21:17:10 +0700 (WIB)
+Date: Fri, 5 Jul 2024 21:17:10 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "H. Peter Anvin" <hpa@zytor.com>,
+	David Polakovic <email@dpolakovic.space>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Lobakin <alexandr.lobakin@intel.com>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: Re: proposition for fixing Y292B bug
+Message-ID: <ZogAZltQIks_cN-y@archie.me>
+References: <3be3235a-dea7-a5ca-b5ea-4047bdeb695d@dpolakovic.space>
+ <ZoFgga45QCh2uA0i@archie.me>
+ <9e3b638d-76f2-8520-2a24-7de0cd0bc149@dpolakovic.space>
+ <ZoJx5GaBDHg7nayw@archie.me>
+ <cef39a6f-426d-4c4d-950e-edbbe5e95acf@intel.com>
+ <d88861a6-ccd9-3fe5-67e0-b50a72ca1e51@dpolakovic.space>
+ <848ADF85-6138-4D56-8DDD-E327B8AFC5EC@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fzQRhIhgQALCnCeF"
+Content-Disposition: inline
+In-Reply-To: <848ADF85-6138-4D56-8DDD-E327B8AFC5EC@zytor.com>
 
-Linus,
 
-Please pull the following set of fixes for the next RC. There are two OF
-lookup quirks and one fix for an issue in the generic gpio-mmio driver.
+--fzQRhIhgQALCnCeF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best Regards,
-Bartosz Golaszewski
+On Thu, Jul 04, 2024 at 07:59:13PM -0700, H. Peter Anvin wrote:
+> On July 3, 2024 8:29:58 AM PDT, David Polakovic <email@dpolakovic.space> =
+wrote:
+> >I am not sure if I don't understand your solution, but extending the
+> >memory designation from 64 to 128 bits, is another temporary
+> >solution, which will again overflow one day.
+> >
+> >The sole reason why I was proposing the new "BigInt" type was to
+> >store each digit of the time_c as separate element of array, which
+> >could be resized (added one digit) as needed. The only limit would
+> >then be the physical amount of memory in the machine.
+> >
+> >dpo
+> >
+>=20
+> So now you are worried about the Y5e30 problem?!
+>=20
+> You realize that you are now talking the orders of magnitude of time for =
+which:=20
+>=20
+> "	The estimated time until most or all of the remaining 1=E2=80=9310% of =
+stellar remnants not ejected from galaxies fall into their galaxies' centra=
+l supermassive black holes. By this point, with binary stars having fallen =
+into each other, and planets into their stars, via emission of gravitationa=
+l radiation, only solitary objects (stellar remnants, brown dwarfs, ejected=
+ planetary-mass objects, black holes) will remain in the universe."
+>=20
+> I genuinely thought this whole thread was a practical joke...
 
-The following changes since commit 22a40d14b572deb80c0648557f4bd502d7e83826:
+And that's what I thought as unnecessary engineering churn...
 
-  Linux 6.10-rc6 (2024-06-30 14:40:44 -0700)
+--=20
+An old man doll... just what I always wanted! - Clara
 
-are available in the Git repository at:
+--fzQRhIhgQALCnCeF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.10-rc7
+-----BEGIN PGP SIGNATURE-----
 
-for you to fetch changes up to f8d76c2c313c56d5cb894a243dff4550f048278d:
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZogAZgAKCRD2uYlJVVFO
+o8LCAP949QKGFVY+WlBqWM/C08C6TfT9uPLUBdWMyHBy/UJ7/wEAu0VFc6if9CvA
+ihXFSF8fVtTsGOtVZ5kWkUle9QfoUQ8=
+=LWAS
+-----END PGP SIGNATURE-----
 
-  gpiolib: of: add polarity quirk for TSC2005 (2024-07-05 11:00:45 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v6.10-rc7
-
-- add two OF lookup quirks for TSC2005 and MIPS Lantiq
-- don't try to figure out bgpio_bits from the "ngpios" property in gpio-mmio
-
-----------------------------------------------------------------
-Dmitry Torokhov (2):
-      gpiolib: of: fix lookup quirk for MIPS Lantiq
-      gpiolib: of: add polarity quirk for TSC2005
-
-Shiji Yang (1):
-      gpio: mmio: do not calculate bgpio_bits via "ngpios"
-
- drivers/gpio/gpio-mmio.c  |  2 --
- drivers/gpio/gpiolib-of.c | 22 ++++++++++++++++++++--
- 2 files changed, 20 insertions(+), 4 deletions(-)
+--fzQRhIhgQALCnCeF--
