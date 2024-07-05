@@ -1,120 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02E113C809
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 09:12:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E9C13665A;
+	Fri,  5 Jul 2024 09:12:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720170748; cv=none; b=jcyG6Ywl8EoZhK+qZmC2AnHCaX8Hy7KLev0V28Vq/WuaWj964FrRhgDY2DoA7jiuZmPMQRfWU4o52JapeMyGHWEwtsJK6RJMXtlYZnfzSZ+xRYSpgJX7k73y8oZiZmxXx+fJmPMknPKatIhoKUQzqLOnjBbU/9HvO4rir04JcCo=
+	t=1720170769; cv=none; b=UwWED75UnfUYW3FA9FjkrVQrZvdblb3XItU8B7N2wz1a4lpOoQCxWsi1xjlq8ijZzOJRWSu+KWrrwv0EZrDvJpxzup9iVeXVKoNVFELrnmMV2gv7LJQoIIQ4gmnBemjwCxbQVFWCGK7AqCx2mK+gWAVMGORyP4Ac5oMWjNb4Z38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720170748; c=relaxed/simple;
-	bh=tZOrKLTxHWQw0WT54iRymsngckqcvsL1CHpv+SYW4LE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fHodsQGTj/sLljAG2IAiD4MQYEstqehdy78x1Bnxt26xr4+HfQeFkbSznMjJMBjF4DagN9C8Jl/7HPE4FPwuek9shssiXjfBkTBSq+PYwBCaun+jBLewlaxfi9d2LSkO6wO2VwmpCvSVYpkSjLKK35nUoqhc7ug3IIFKkkTU0Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8GIlS8c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720170769; c=relaxed/simple;
+	bh=l/SSCVMHFCglN/nj5v34ooChPINWoqus1AdOICNnzOY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XRrq8qPoj++vv0C4gNRmHIBAQvGsin8VrxwcdETYFv2QSvftpZ5mJDbvY0AYGgPeIuWmeKthF4XiH7Gv2tgzbGillQMzXzS6mtsOv9b1Ed8WqhdESiUlqCFbqPBtVLRbR80C0rxQoxeQM3fd7wB3j+pe+Jb58AQyM1lm0vCKkQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GaIGm0F8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8GIlS8c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AA4DC4AF0A;
-	Fri,  5 Jul 2024 09:12:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GaIGm0F8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39897C116B1;
+	Fri,  5 Jul 2024 09:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720170748;
-	bh=tZOrKLTxHWQw0WT54iRymsngckqcvsL1CHpv+SYW4LE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X8GIlS8cwm9zDhg0WCkYc7zfrq2CwvZZpjWfg0AXvGNbFrcIRMZeA+Vk54rajSCcx
-	 KsJuAvQpIaPQQ4bApxnBif/Di6D97P5yCZ0Jrmrr7Oizfp97MNSSai4xu/w0fSpL/S
-	 hSTB7iLmciq4+gNw1seNjvQQAxRwFmZljYCaLTqQ0gj5PeRe2gKwGhPUOa10VN+AXp
-	 1Nq7Jog8XpoTFOBiJn0C6kjnGsHvmvGu/eW8a+3o2vmRqvlGYxHn1DHHJzlAR+Ip+V
-	 r3VZYr+iMFEIc90vh3l+q0fPSaE+kHc/quiiTht3/mrPp2Y4ZhSHPTupOJ7/dqN8Sn
-	 QSP5zA41Z0G7A==
-Date: Fri, 5 Jul 2024 12:09:48 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: akpm@linux-foundation.org, brauner@kernel.org, oleg@redhat.com,
-	mjguzik@gmail.com, tandersen@netflix.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, david@redhat.com
-Subject: Re: [PATCH v3 1/3] mm/memblock: introduce a new helper
- memblock_estimated_nr_pages()
-Message-ID: <Zoe4XN-gKJnjJtzi@kernel.org>
-References: <20240703005151.28712-1-richard.weiyang@gmail.com>
+	s=k20201202; t=1720170768;
+	bh=l/SSCVMHFCglN/nj5v34ooChPINWoqus1AdOICNnzOY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GaIGm0F8+crTYalVfT7uh9DaNepZ58GmEF18MEbJpjvxhcgtzBAX3nhylOnLvwqzs
+	 0quUFsnblRn/xxnQ4aeycGW0GtnQk+qoEhNgyTjUgRjRVBB8ArI2/d0ysEWA58ZTgW
+	 kjxQkquwczdcQ6WQRk3oteFgfuoPd7bRzVOQ5MeDjtvofQkujYRvydpdmRDmjFAVo5
+	 jrvxTonkt7nnIiIcbT9vn7tJNi/l8wsAWt5w+UF3rBsd/JkNWdQ7NEEgyb7jzfH2C3
+	 bV6k/R0I/s5KCHvA3RWS00g+SyJin/t4A3QcInmV7mGwOmVlobxfBMqMQvOgb9hqP9
+	 IvmPjhnUBcs1g==
+Message-ID: <33a454e5-8a74-4e8b-9284-7b628a1a548b@kernel.org>
+Date: Fri, 5 Jul 2024 11:12:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703005151.28712-1-richard.weiyang@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] dt-bindings: clock: add clock binding definitions for
+ Exynos Auto v920
+To: "sunyeal.hong" <sunyeal.hong@samsung.com>,
+ 'Sylwester Nawrocki' <s.nawrocki@samsung.com>,
+ 'Chanwoo Choi' <cw00.choi@samsung.com>,
+ 'Alim Akhtar' <alim.akhtar@samsung.com>,
+ 'Michael Turquette' <mturquette@baylibre.com>,
+ 'Stephen Boyd' <sboyd@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240705021110.2495344-1-sunyeal.hong@samsung.com>
+ <CGME20240705021200epcas2p273ca089c2cb9882f121e864ec8407367@epcas2p2.samsung.com>
+ <20240705021110.2495344-3-sunyeal.hong@samsung.com>
+ <8f4deb36-2a44-414a-9b9f-40b87bc7c949@kernel.org>
+ <01c401daceb1$d64e7450$82eb5cf0$@samsung.com>
+ <31778ed0-e4b5-4961-99a5-41ce44ddac26@kernel.org>
+ <01c601daceba$e5d32570$b1797050$@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <01c601daceba$e5d32570$b1797050$@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 03, 2024 at 12:51:49AM +0000, Wei Yang wrote:
-> Instead of using raw memblock api, we wrap a new helper for user.
-
-The changelog should be more elaborate and explain why this function is
-needed.
- 
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> ---
->  include/linux/memblock.h |  1 +
->  mm/memblock.c            | 19 +++++++++++++++++++
->  2 files changed, 20 insertions(+)
+On 05/07/2024 11:08, sunyeal.hong wrote:
+> Hello Krzysztof Kozlowski,
 > 
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index 40c62aca36ec..7d1c32b3dc12 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -486,6 +486,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
->  
->  phys_addr_t memblock_phys_mem_size(void);
->  phys_addr_t memblock_reserved_size(void);
-> +unsigned long memblock_estimated_nr_pages(void);
->  phys_addr_t memblock_start_of_DRAM(void);
->  phys_addr_t memblock_end_of_DRAM(void);
->  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index e81fb68f7f88..c1f1aac0459f 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1729,6 +1729,25 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
->  	return memblock.reserved.total_size;
->  }
->  
-> +/**
-> + * memblock_estimated_nr_pages - return number of pages from memblock point of
-> + * view
-
-This function returns the estimate for free pages, not the number of pages
-in RAM.
-
-How about memblock_estimated_nr_free_pages()?
-
-> + * some calculation before all pages are freed to buddy system, especially
-> + * when CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
-
-I'm failing to parse this sentence. The return value here won't depend on
-CONFIG_DEFERRED_STRUCT_PAGE_INIT.
-
-> + *
-> + * At this point, we can get this information from memblock. Since the system
-> + * state is not settle down and address alignment, the value is an estimation.
-> + *
-> + * Return:
-> + * An estimated number of pages from memblock point of view.
-
-                            ^ free
-
-> + */
-> +unsigned long __init memblock_estimated_nr_pages(void)
-> +{
-> +	return PHYS_PFN(memblock_phys_mem_size() - memblock_reserved_size());
-> +}
-> +
->  /* lowest address */
->  phys_addr_t __init_memblock memblock_start_of_DRAM(void)
->  {
-> -- 
-> 2.34.1
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: Friday, July 5, 2024 5:52 PM
+>> To: sunyeal.hong <sunyeal.hong@samsung.com>; 'Sylwester Nawrocki'
+>> <s.nawrocki@samsung.com>; 'Chanwoo Choi' <cw00.choi@samsung.com>; 'Alim
+>> Akhtar' <alim.akhtar@samsung.com>; 'Michael Turquette'
+>> <mturquette@baylibre.com>; 'Stephen Boyd' <sboyd@kernel.org>
+>> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org; linux-
+>> kernel@vger.kernel.org
+>> Subject: Re: [PATCH 2/5] dt-bindings: clock: add clock binding definitions
+>> for Exynos Auto v920
+>>
+>> On 05/07/2024 10:03, sunyeal.hong wrote:
+>>>
+>>>> <form letter>
+>>>> Please use scripts/get_maintainers.pl to get a list of necessary
+>>>> people and lists to CC. It might happen, that command when run on an
+>>>> older kernel, gives you outdated entries. Therefore please be sure
+>>>> you base your patches on recent Linux kernel.
+>>>>
+>>>> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+>>>> people, so fix your workflow. Tools might also fail if you work on
+>>>> some ancient tree (don't, instead use mainline) or work on fork of
+>>>> kernel (don't, instead use mainline). Just use b4 and everything
+>>>> should be fine, although remember about `b4 prep --auto-to-cc` if you
+>>>> added new patches to the patchset.
+>>>>
+>>>> You missed at least devicetree list (maybe more), so this won't be
+>>>> tested by automated tooling. Performing review on untested code might
+>>>> be a waste of time.
+>>>>
+>>>> Please kindly resend and include all necessary To/Cc entries.
+>>>> </form letter>
+>>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>>
+>>> The mail list was created using get_maintainer.pl. If there is any
+>> problem, please let me know.
+>>>
+>>> ./scripts/get_maintainer.pl -f drivers/clk/samsung/
+>>
+>> That's not how you run the command. You ALWAYS (unless you are Linus) run
+>> it on the patches. ALWAYS. See submitting patches or numerous
+>> presentations how to contribute upstream.
+>>
+>> Read my form letter accurately, e.g. switch to b4.
+>>
+>> Best regards,
+>> Krzysztof
 > 
+> Thank you for your quick and kind response.
+> I checked the difference in the mail list through "./scripts/get_maintainer.pl *.patch" and will reflect this.
+> 
+> Could you please answer additional questions I asked?
+> "Is your request to combine PATCH 0 and 1 correct? If correct, I will update it as requested."
+> 
+> The reason I'm asking this is that if you check checkpatch.pl, it says to classify patches as follows.
+> "DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst"
+> PATCH0: Documentation/devicetree/bindings/clock/samsung,exynosautov920-clock.yaml
+> PATCH1: include/dt-bindings/clock/samsung,exynosautov920.h
 
--- 
-Sincerely yours,
-Mike.
+Separate from the drivers, not from each other! This does not make sense
+to keep them separate.
+
+Of course they must be squashed, I asked this in the first comment.
+
+Best regards,
+Krzysztof
+
