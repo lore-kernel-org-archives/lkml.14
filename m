@@ -1,175 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp14.infineon.com (smtp14.infineon.com [217.10.52.160])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A0F405F8
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 01:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D8E18AF4;
+	Fri,  5 Jul 2024 01:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.160
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720142271; cv=none; b=DZ3V7uqMMztNKyBAXpB5b7X7XsfAtGX0sp2toq358h8LdDoTanYXty8cBbBQ17gvyLWWSau33QGt9GH+6syKwt27dms/sQHe4qVeq1BAuvXULS06LVWDVdSAcPoBtWUcM/JnDlPLnk5FNT92qbxUOkX8O/SKVe0RfyF4hjxfLgE=
+	t=1720142275; cv=none; b=BEXLguezQ/bOcVWhnJXI3BDvCRxAy5GZYaCpDAuZ5hdrFJeGVgHaP7wlNTb7s97g0pBphJkPWHlXbyVKOHpgRbDZ8QJhH8t3Nzgm7z4+15pW7cUURixUpUiaRb64MiqatkGOZKBNETRhP5nh3NzJE9BoWlQUz3Y6Rx4Alhyl5Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720142271; c=relaxed/simple;
-	bh=CSoUqM5CdE4URTrdg0/2CXOXP5HlDRhHWf02ErQyjVA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j3JJDz02o4GO9nR2fFwmQsuhZst+QJ1TpDjFH/jfNM1Ctj2S6OLV8j5M4cbNSeJg3s/vEwBw1iMywF3OmopzywFcmbQFzIq0d8p/sf6r0WcynuXG+pZEfPR6kq2sCdO8nG+4mc5Lyu4F0nFwyC5fy4S3HCmeJPM0uKCWwnxrXlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y094xRz3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720142275; c=relaxed/simple;
+	bh=y4LbcGBtRHdit0evNdZStkLEJxRXjkVaG3CvHx65cKQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t3nzlL6xh5hNkK3ZtIRVE6wLl1C+Gfnqqasza3jOvaC3aOABaworAmR8nuM0oZODjxNtqRz6itYIUU2MSH836O5+KtLIfMe0ZIjlXER1fuRRX/juZqWPRM8883lk6N1LuIeBnhjdAhFrBKR35DBHVoPqUhySszXrMex2tZWRREQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=Sw6BO4qX; arc=none smtp.client-ip=217.10.52.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y094xRz3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720142268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C57JsNfHDOwn1B/arEpnckvbaTqrN1W4Vlj4CWKNz/w=;
-	b=Y094xRz35lkfynGA5e+l5P+SVk2AAhlJ7uvUzypQWipkOwGpH/RNCtHAZyAsZTUDaNj8Cv
-	EKk/dlC15bkr/naHYwV3q0a72ZHVum0rzRdvUWIvWBBF4fIjlyVFuqqutPd0Xjf9d+LbOu
-	5sAM/dsQYUEAOjCcHBvHLf1bDpa8QnE=
-Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
- [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-153-JcCHR7OcMRmX6SxTndjpKQ-1; Thu, 04 Jul 2024 21:17:46 -0400
-X-MC-Unique: JcCHR7OcMRmX6SxTndjpKQ-1
-Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-4ee1019ade3so276260e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2024 18:17:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720142266; x=1720747066;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=C57JsNfHDOwn1B/arEpnckvbaTqrN1W4Vlj4CWKNz/w=;
-        b=WOf4IGZxF6CoGuiAbkhdTzLO6WjZL1FH+rLNkhbOR7cfA4OQKS16y74lxDd/0UbBza
-         UNCjJThTYr7vKzo0rN+g1JwImpDba9UUaaVfR68SgUiI+8si8v1wO9F+sXTlAYM4bCOf
-         40Cft5S/FmLbIkg3HOjjn3e0HofjrvtzBfjcZ64meftAX3XmBbgoDrLvEntDRonm0tPD
-         00D057rXbVwPKGSx8BqUcaiBK8cApbuVFC9hYusOTnBRi/nnQ/gvpjcWCMhpIHRQb0U/
-         IAyF+fRIJTSWsTSEnRAywqm+1sSQcIbUkGPY46C1Ym1jzK6y9GkLY7Jh02HHFTXUeEUz
-         xexg==
-X-Forwarded-Encrypted: i=1; AJvYcCXnViETxh/8e5CAHnFHqiF+qDJ1zWmr0zVc39p38mkAJMR3ilIbK4MjWoQR1H3W/nYW9d5I/+TKgo7n4J1rQ2DWQz/olVnZw8B+v62M
-X-Gm-Message-State: AOJu0YwBKbru9Wib3O/kLwucaMMyhvT55KY2xFyY8zRUQFBY9s1LLbcK
-	DBXBEoEMJCyxCDnAGmOx9AmH/5chdI6ubo+2fxXwOrnGTj5YhsuXheh6ewlbFyPDM7w4Y9JDRA8
-	1fVHTPhAAldVkT2tmfxVumEeqkq9C5VnD/p9AcAo3A+STwq6+ShuX+LL8R1OiuA==
-X-Received: by 2002:a05:6122:1693:b0:4f2:fc5c:b89 with SMTP id 71dfb90a1353d-4f2fc5c0e14mr1781524e0c.15.1720142265891;
-        Thu, 04 Jul 2024 18:17:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGsjVtfVQD65fX5PnK3vXNcKyNfEGugS6LTJD1/ZklFbF0Nwi9jlytNq9VNa2KuCl7P3V9z+A==
-X-Received: by 2002:a05:6122:1693:b0:4f2:fc5c:b89 with SMTP id 71dfb90a1353d-4f2fc5c0e14mr1781506e0c.15.1720142265476;
-        Thu, 04 Jul 2024 18:17:45 -0700 (PDT)
-Received: from starship ([2607:fea8:fc01:7b7f:6adb:55ff:feaa:b156])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-446513db848sm65140931cf.1.2024.07.04.18.17.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 18:17:45 -0700 (PDT)
-Message-ID: <2c0cb572deeec525da8e265d64ba20c7a6367fb4.camel@redhat.com>
-Subject: Re: [PATCH v2 16/49] KVM: x86: Don't update PV features caches when
- enabling enforcement capability
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>,  Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Hou Wenlong
- <houwenlong.hwl@antgroup.com>, Kechen Lu <kechenl@nvidia.com>, Oliver Upton
- <oliver.upton@linux.dev>, Binbin Wu <binbin.wu@linux.intel.com>, Yang
- Weijiang <weijiang.yang@intel.com>, Robert Hoo <robert.hoo.linux@gmail.com>
-Date: Thu, 04 Jul 2024 21:17:44 -0400
-In-Reply-To: <20240517173926.965351-17-seanjc@google.com>
-References: <20240517173926.965351-1-seanjc@google.com>
-	 <20240517173926.965351-17-seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="Sw6BO4qX"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1720142274; x=1751678274;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=y4LbcGBtRHdit0evNdZStkLEJxRXjkVaG3CvHx65cKQ=;
+  b=Sw6BO4qXvSfal5jx5b2pzov1yFMvMKOBDq6JShO/T5w6+0uH2a10/aA/
+   pbIKwWYB7T2zeyqgxE0F5ObmPtHynU8kN3/M4YhvQLWr48wIDP00eyURh
+   rIkVhIGvLIX1sht7x4FKjaE2bZGO60qxOodAvgRTskL+m6MzNyCWD14Sm
+   w=;
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="55502456"
+X-IronPort-AV: E=Sophos;i="6.09,183,1716242400"; 
+   d="scan'208";a="55502456"
+Received: from unknown (HELO MUCSE805.infineon.com) ([172.23.29.31])
+  by smtp14.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 03:16:41 +0200
+Received: from MUCSE832.infineon.com (172.23.7.104) by MUCSE805.infineon.com
+ (172.23.29.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Fri, 5 Jul
+ 2024 03:16:40 +0200
+Received: from icw-osk-deskmini.osa.infineon.com (10.161.6.196) by
+ MUCSE832.infineon.com (172.23.7.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 5 Jul 2024 03:16:37 +0200
+From: Nobuaki Tsunashima <nobuaki.tsunashima@infineon.com>
+To: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz
+	<luiz.dentz@gmail.com>
+CC: <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	"Nobuaki Tsunashima" <Nobuaki.Tsunashima@infineon.com>
+Subject: [PATCH v5] Bluetooth: btbcm: Apply HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER to CYW4373
+Date: Fri, 5 Jul 2024 10:15:25 +0900
+Message-ID: <20240705011525.402650-1-nobuaki.tsunashima@infineon.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MUCSE801.infineon.com (172.23.29.27) To
+ MUCSE832.infineon.com (172.23.7.104)
 
-On Fri, 2024-05-17 at 10:38 -0700, Sean Christopherson wrote:
-> Revert the chunk of commit 01b4f510b9f4 ("kvm: x86: ensure pv_cpuid.features
-> is initialized when enabling cap") that forced a PV features cache refresh
-> during KVM_CAP_ENFORCE_PV_FEATURE_CPUID, as whatever ioctl() ordering
-> issue it alleged to have fixed never existed upstream, and likely never
-> existed in any kernel.
-> 
-> At the time of the commit, there was a tangentially related ioctl()
-> ordering issue, as toggling KVM_X86_DISABLE_EXITS_HLT after KVM_SET_CPUID2
-> would have resulted in KVM potentially leaving KVM_FEATURE_PV_UNHALT set.
-> But (a) that bug affected the entire guest CPUID, not just the cache, (b)
-> commit 01b4f510b9f4 didn't address that bug, it only refreshed the cache
-> (with the bad CPUID), and (c) setting KVM_X86_DISABLE_EXITS_HLT after vCPU
-> creation is completely broken as KVM configures HLT-exiting only during
-> vCPU creation, which is why KVM_CAP_X86_DISABLE_EXITS is now disallowed if
-> vCPUs have been created.
-> 
-> Another tangentially related bug was KVM's failure to clear the cache when
-> handling KVM_SET_CPUID2, but again commit 01b4f510b9f4 did nothing to fix
-> that bug.
-> 
-> The most plausible explanation for the what commit 01b4f510b9f4 was trying
-> to fix is a bug that existed in Google's internal kernel that was the
-> source of commit 01b4f510b9f4.  At the time, Google's internal kernel had
-> not yet picked up commit 0d3b2ba16ba68 ("KVM: X86: Go on updating other
-> CPUID leaves when leaf 1 is absent"), i.e. KVM would not initialize the
-> PV features cache if KVM_SET_CPUID2 was called without a CPUID.0x1 entry.
-> 
-> Of course, no sane real world VMM would omit CPUID.0x1, including the KVM
-> selftest added by commit ac4a4d6de22e ("selftests: kvm: test enforcement
-> of paravirtual cpuid features").  And the test didn't actually try to
-> verify multiple orderings, nor did the selftest enter the guest without
-> doing KVM_SET_CPUID2, so who knows what motivated the change.
-> 
-> Regardless of why commit 01b4f510b9f4 ("kvm: x86: ensure pv_cpuid.features
-> is initialized when enabling cap") was added, refreshing the cache during
-> KVM_CAP_ENFORCE_PV_FEATURE_CPUID isn't necessary.
-> 
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/cpuid.c | 2 +-
->  arch/x86/kvm/cpuid.h | 1 -
->  arch/x86/kvm/x86.c   | 3 ---
->  3 files changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index be1c8f43e090..a51e48663f53 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -242,7 +242,7 @@ static struct kvm_cpuid_entry2 *kvm_find_kvm_cpuid_features(struct kvm_vcpu *vcp
->  					     vcpu->arch.cpuid_nent, base);
->  }
->  
-> -void kvm_update_pv_runtime(struct kvm_vcpu *vcpu)
-> +static void kvm_update_pv_runtime(struct kvm_vcpu *vcpu)
->  {
->  	struct kvm_cpuid_entry2 *best = kvm_find_kvm_cpuid_features(vcpu);
->  
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index 0a8b561b5434..7eb3d7318fc4 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -13,7 +13,6 @@ void kvm_set_cpu_caps(void);
->  
->  void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu);
->  void kvm_update_cpuid_runtime(struct kvm_vcpu *vcpu);
-> -void kvm_update_pv_runtime(struct kvm_vcpu *vcpu);
->  struct kvm_cpuid_entry2 *kvm_find_cpuid_entry_index(struct kvm_vcpu *vcpu,
->  						    u32 function, u32 index);
->  struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index c729227c6501..7160c5ab8e3e 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -5849,9 +5849,6 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
->  
->  	case KVM_CAP_ENFORCE_PV_FEATURE_CPUID:
->  		vcpu->arch.pv_cpuid.enforce = cap->args[0];
-> -		if (vcpu->arch.pv_cpuid.enforce)
-> -			kvm_update_pv_runtime(vcpu);
-> -
->  		return 0;
->  	default:
->  		return -EINVAL;
+From: Nobuaki Tsunashima <Nobuaki.Tsunashima@infineon.com>
 
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+CYW4373 ROM FW has an issue that it claims LE_Read_Transmit_Power command
+as supported in a response of Read_Local_Supported_Command command but
+rejects the LE_Read_Transmit_Power command with "Unknown HCI Command"
+status. Because Bluetooth driver of kernel 5.11 added sending the
+LE_Read_Transmit_Power command in initialize phase, hci up fails due to the
+issue.
 
-Best regards,
-	Maxim Levitsky
+Especially in USB i/f case, it would be difficult to download patch FW that
+includes its fix unless hci is up.
+
+The driver already contains infrastructure to apply the quirk for the
+issue, but currently it only supports DMI based matching. Add support to
+match by chip id and baseline FW version to detect CYW4373 ROM FW build
+in generic system.
+
+Fixes: 7c395ea521e6 ("Bluetooth: Query LE tx power on startup")
+Signed-off-by: Nobuaki Tsunashima <Nobuaki.Tsunashima@infineon.com>
+---
+V4 -> V5: Use skb_pull_data() to access skb->data as safer manner.
+V3 -> V4: Fix a few coding style warnings and refine comments for clarify.
+V2 -> V3: Fix a few coding style warnings and change the subject as more specific.
+V1 -> V2: Fix several coding style warnings.
+
+ drivers/bluetooth/btbcm.c | 41 +++++++++++++++++++++++++++++++++++++--
+ drivers/bluetooth/btusb.c |  4 ++++
+ 2 files changed, 43 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+index 0a5445ac5e1b..dd7262a8dc8e 100644
+--- a/drivers/bluetooth/btbcm.c
++++ b/drivers/bluetooth/btbcm.c
+@@ -437,16 +437,53 @@ static const struct dmi_system_id disable_broken_read_transmit_power[] = {
+ 	{ }
+ };
+ 
++struct bcm_chip_version_table {
++	u8 chip_id;			/* Chip ID */
++	u16 baseline;		/* Baseline version of patch FW */
++};
++#define BCM_ROMFW_BASELINE_NUM	0xFFFF
++static const struct bcm_chip_version_table disable_broken_read_transmit_power_by_chip_ver[] = {
++	{ 0x87, BCM_ROMFW_BASELINE_NUM }		/* CYW4373/4373E */
++};
++static bool btbcm_is_disable_broken_read_tx_power_by_chip_ver(u8 chip_id, u16 baseline)
++{
++	int i;
++	size_t table_size = ARRAY_SIZE(disable_broken_read_transmit_power_by_chip_ver);
++	const struct bcm_chip_version_table *entry =
++						&disable_broken_read_transmit_power_by_chip_ver[0];
++
++	for (i = 0 ; i < table_size ; i++, entry++)	{
++		if ((chip_id == entry->chip_id) && (baseline == entry->baseline))
++			return true;
++	}
++
++	return false;
++}
++
+ static int btbcm_read_info(struct hci_dev *hdev)
+ {
+ 	struct sk_buff *skb;
++	u8 *chip_id;
++	u16 *baseline;
+ 
+ 	/* Read Verbose Config Version Info */
+ 	skb = btbcm_read_verbose_config(hdev);
+ 	if (IS_ERR(skb))
+ 		return PTR_ERR(skb);
+-
+-	bt_dev_info(hdev, "BCM: chip id %u", skb->data[1]);
++	skb_pull_data(skb, 1);
++	chip_id = skb_pull_data(skb, sizeof(*chip_id));
++	skb_pull_data(skb, 1);
++	baseline = skb_pull_data(skb, sizeof(*baseline));
++
++	if (chip_id) {
++		bt_dev_info(hdev, "BCM: chip id %u", *chip_id);
++
++		if (baseline) {
++			/* Check Chip ID and disable broken Read LE Min/Max Tx Power */
++			if (btbcm_is_disable_broken_read_tx_power_by_chip_ver(*chip_id, *baseline))
++				set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks);
++		}
++	}
+ 	kfree_skb(skb);
+ 
+ 	return 0;
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index d31edad7a056..52561c8d8828 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -142,6 +142,10 @@ static const struct usb_device_id btusb_table[] = {
+ 	{ USB_VENDOR_AND_INTERFACE_INFO(0x04ca, 0xff, 0x01, 0x01),
+ 	  .driver_info = BTUSB_BCM_PATCHRAM },
+ 
++	/* Cypress devices with vendor specific id */
++	{ USB_VENDOR_AND_INTERFACE_INFO(0x04b4, 0xff, 0x01, 0x01),
++	  .driver_info = BTUSB_BCM_PATCHRAM },
++
+ 	/* Broadcom devices with vendor specific id */
+ 	{ USB_VENDOR_AND_INTERFACE_INFO(0x0a5c, 0xff, 0x01, 0x01),
+ 	  .driver_info = BTUSB_BCM_PATCHRAM },
+-- 
+2.25.1
 
