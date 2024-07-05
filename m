@@ -1,99 +1,79 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06861E867;
-	Fri,  5 Jul 2024 12:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B111494BA;
+	Fri,  5 Jul 2024 12:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720183791; cv=none; b=mMS0eaLzNr8RbnlxO+RdOxlpsrn/CxEgFZCOndJ1RLWUoXi0UIc54hopw6kh8BVRLXEnIvlt1DqNFsz9KCpaqJ2nCQZCfSWsqDiPv4bWzrZlN737hO6lbQ/S6x/Hi8dcNtxPeYCZHiBfYlVztCu4+w51vP0h0CSmjZsQhqCEE88=
+	t=1720183864; cv=none; b=WqpdhqMQS33zi0iNX2ehnBJqGJtzQu0XdqUQN0Xzyca68/kyUBcTf93RMYvEmezOkdp8yCeZQdH0kPxaH+OJCkbWahhZg4f/h2R24sBhyss7hYDuPWoyuX6/+w28aKrY+TiAKcHL+C6xh0k98sjAt0YnqCpODLS9zj+isdzx5nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720183791; c=relaxed/simple;
-	bh=D4tjuDbhWgyOTIWHN/OgVNFB7Aucn44YcNtzcZ384EA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ronulOSJ7PQlb2ym6C8t6GTZPt5CQnL4xDJxeZW/k417zU6gaEsWopILnDI1vcPulfN8ykqeGxr640AS+m/o7VuLmzjPhQ4lTojpajUQ6ThgP6fcH3BzGxZxv16uPFGKJ8ajBv7NfM6i84DlCUltVwVLGkqTfs9zLPwGoiPoEms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JJcHS+pp; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1720183864; c=relaxed/simple;
+	bh=vqcwLqVppRivNG9d58H2sbjIO2fXjQX8Aleb/qnFdn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JYwlqW0+g/9AgfOS7b91+KPaDocdIsuFLmgoGrk7oHXkindDwlhM8t6fWTb13oaS9htt0KEnY3N3ZX2M2RsVlg+UqZHnyL15FrY4xiIeld1QHuWJWAUTrmKwOok6Qnk4MaMHCKxnAcakLQClkIx1pYegX7sUseRhZm9jjExed+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jyD83IjX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s8UIfu5V; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JJcHS+pp"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D852AFF802;
-	Fri,  5 Jul 2024 12:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720183782;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jyD83IjX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s8UIfu5V"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720183860;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kw/k0lzZ2dQGrpiFuHsnrurwkGYwwFuaLcGW35wbvbs=;
-	b=JJcHS+ppkqtOM4SsJIsRd/WOiZkwnWGNA1mWxYW9ey1k9Cf/5/wbfWSSTZkwXuGuUbORfm
-	8SQbX9L2hoi0coBOkY+Pwn5IKUAfqm8FZQfDUvsO1OpMP9lDM9WI5FTmTIOcFUX0Sx6dWq
-	thXVfKcnhL9D0erS+XXYF2yLvDFlb31/LgEXDyLqrpJXXujGFWMnYjJEAtKEtgmnXD2UMY
-	FXR0zvrGdnanpjli6dE6/xwctHD06OCcA81NqNkeKCHRsIZylVmss2g9WKrwgrnmIMLiL2
-	9MuNdD8XZyhlNTX/rW8pAPI6NYMDOeKFJA7UfkDPUr2JX2mpghQ0pzZuzVwRmg==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Andrew Lunn
- <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: armada-3720: align LED node name with
- bindings
-In-Reply-To: <20240701150340.560243-2-krzysztof.kozlowski@linaro.org>
-References: <20240701150340.560243-1-krzysztof.kozlowski@linaro.org>
- <20240701150340.560243-2-krzysztof.kozlowski@linaro.org>
-Date: Fri, 05 Jul 2024 14:49:41 +0200
-Message-ID: <875xtkj95m.fsf@BLaptop.bootlin.com>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LN3ffcMa+ufsjTIDpcIMpCJTf5ZZVSlO79qg6mbrhvo=;
+	b=jyD83IjXJLHtd29C2tdwQe7YbCTyhCU6fvKBhIiNKhgBvRSsMdglk1g//FDv4CHpxvNnH7
+	N4RKD3vjG0NRdEvR7Fl4g25nFV08GXvLrcYSmK4WST8v4d9cI8FP0rqrE2v7bVL2YGSgOJ
+	g1xK/5ZnR8oOr99IZJnBr8dqV67LZ2Mxw1AJ7+JGkoUEN8B5qgWLo3f7IvylW5avZSXxSA
+	961M0C6ovRIMPf853JKomGUh7g12888UcqMVf+cKb92vgN79GB4ClrCsDlpvj4sXCWOY/q
+	E+rnTxR0XD3pdaVpaypoD4hfKT0PtH/iz+XzXF/vLdpjbUCMyfRtvtyW6gB2mQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720183860;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LN3ffcMa+ufsjTIDpcIMpCJTf5ZZVSlO79qg6mbrhvo=;
+	b=s8UIfu5VVjsX4H3pzNVXxgqXKQ161INgFj93C8UwMUl184UvJd1HZvaP+V9/RYxq9Gxvf5
+	PDV4BBMn92ftS3DQ==
+To: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Mike Galbraith <umgwanakikbuti@gmail.com>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>
+Subject: [PATCH v3 0/3] zram: Replace bit spinlocks with a spinlock_t.
+Date: Fri,  5 Jul 2024 14:49:13 +0200
+Message-ID: <20240705125058.1564001-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-GND-Sasl: gregory.clement@bootlin.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> writes:
+Hi,
 
-> Bindings expect the LED node names to follow certain pattern, see
-> dtbs_check warnings:
->
->   armada-3720-gl-mv1000.dtb: leds: 'power', 'vpn', 'wan' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+this is follow up to the previous posting, making the lock
+unconditionally. The original problem with bit spinlock is that it
+disabled preemption and the following operations (within the atomic
+section) perform operations that may sleep on PREEMPT_RT. Mike expressed
+that he would like to keep using zram on PREEMPT_RT.
 
-Applied on mvebu/dt64
+v2=E2=80=A6v3 https://lore.kernel.org/all/20240620153556.777272-1-bigeasy@l=
+inutronix.de/
+  - Do "size_t index" within the for loop.
 
-Thanks,
+v1=E2=80=A6v2: https://lore.kernel.org/all/20240619150814.BRAvaziM@linutron=
+ix.de/:
+  - Add the spinlock_t unconditionally
+  - Remove ZRAM_LOCK since it has no user after the lock has been added.
+  - Make zram_table_entry::flags an integer so struct zram_table_entry
+    does not gain additional weight.
 
-Gregory
-> ---
->  arch/arm64/boot/dts/marvell/armada-3720-gl-mv1000.dts | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-gl-mv1000.dts b/arch/arm64/boot/dts/marvell/armada-3720-gl-mv1000.dts
-> index 07c14bf04b83..56930f2ce481 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-gl-mv1000.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-gl-mv1000.dts
-> @@ -57,17 +57,17 @@ switch {
->  	leds {
->  		compatible = "gpio-leds";
->  
-> -		vpn {
-> +		led-vpn {
->  			label = "green:vpn";
->  			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
->  		};
->  
-> -		wan {
-> +		led-wan {
->  			label = "green:wan";
->  			gpios = <&gpionb 12 GPIO_ACTIVE_LOW>;
->  		};
->  
-> -		led_power: power {
-> +		led_power: led-power {
->  			label = "green:power";
->  			gpios = <&gpionb 13 GPIO_ACTIVE_LOW>;
->  			default-state = "on";
-> -- 
-> 2.43.0
+Sebastian
+
