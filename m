@@ -1,134 +1,324 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from relay2-v.mailbaby.net (relay2-v.mailbaby.net [205.209.127.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5045D17F5;
-	Fri,  5 Jul 2024 00:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B7A1FDA
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2024 00:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.209.127.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720139083; cv=none; b=hYGLnzE7nBk1u/DS4++uSjLnEC44MAsSQg1qyNWUYBPu0sh+b6uixt6C3WsSUdM3y+HOO+O/ax2JjcLaDr+cm6uUjTiBXtBVyNNU/HYQL4Hly4XruHFg/JHUrsEBK3AHz8niL9url9kjY/nHTUjkKXTy4aem+wziNymYtn23BJE=
+	t=1720139183; cv=none; b=ceMqOEhknm9vU3LmBco76lbQ35SF6987GtlM9UO9/c6TeXtx3H0/iDrPv3uaNmO0rrDG6YLaAS5x8Eb5SW/jFT9VtrVh6FqF8549RjVaPjWHl4qk8LrLRRZQxiKMSCoJiYHCfYNcqrE56Y7+wVG0vnCZljABdXRbfCFJQ2gzl6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720139083; c=relaxed/simple;
-	bh=jMgU/ldtR+ELFwjG824hgDWZhrXbeGkg9FUM7GIABp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ikd40MTpEPds0m3AgdORw2AxAFwn6dJKz/NBZNRoY0YClmPLV1qClztQlApLYjP22u2DkFxJGL0mkHeMA9M7N/5l4Ze9VScmZIIXc+SKLRzmy9Gtt0+NXXullTlMdQLxjET5idwpmIvgSS4wi1dZhSzF5XZtbRTRk0co5BzL//w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bJqFuOe/; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720139183; c=relaxed/simple;
+	bh=FBpbhAGsRerAZotohFT3bTnT7U4BB4jCQI2eb3VtOm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kyPzNbBzxnsUB+rg/b+6C5MXLSLwn8Gi8A0Jqt7l3TTlAgBjhxcoDqApHD1EU9M2asWbRCSw0X4zLnTgjQxfULa5CMUcO0/+UIX8Uk1FdOUBcSLnWkiE+MsJgxwM0rHGBAdZ1AdzDX43NrCAe/dxvv2qcgU69z8jAvz18bcHD7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=agatha.dev; spf=fail smtp.mailfrom=agatha.dev; dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b=SYgaGYaX; dkim=pass (2048-bit key) header.d=agatha.dev header.i=@agatha.dev header.b=wxh2VTmq; arc=none smtp.client-ip=205.209.127.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=agatha.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=agatha.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bJqFuOe/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720139082; x=1751675082;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jMgU/ldtR+ELFwjG824hgDWZhrXbeGkg9FUM7GIABp0=;
-  b=bJqFuOe/y7i0KIl9m9Nd9VpHkr/E1ABalWF5V6QLD5NIHFkil9SxF4YU
-   tqmtxJ8Oc9sf+KZ9Gp2ZqlfoeEb/CO2xxuMnLN1/iE/kUXu1JDdGMSXbj
-   WmnN05u+fiFusQTvVoZAEHy0KN2xuVHq3ds3Ljr4UyhqlB34BUYrg0WH1
-   4GHgQBuYWqjUGPNJs4wmTfkUqvW3Ez+y1DJla/45xTBCz3J8HrNXlMUwA
-   g9UD0JEtdAqea8ZNi4isaYjGfeZUthgk06qPVQlNQ7f4zqd6X58H9tE+f
-   VqSfqhsEnZveC7jdA6biu8MReb31GAQhHvNUIHzaHokTFIEOjEwxkZsHH
-   w==;
-X-CSE-ConnectionGUID: 2KmN6b56SkWR/z0OznOWVQ==
-X-CSE-MsgGUID: nMxPpuY6R7Spnk12ZFEFqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="34966790"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="34966790"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 17:24:41 -0700
-X-CSE-ConnectionGUID: tUE5TypWSZehOIoWstmt6Q==
-X-CSE-MsgGUID: UtUTH6htRceS04V0IsWpYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="47158352"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 04 Jul 2024 17:24:37 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sPWkc-000Rgq-1f;
-	Fri, 05 Jul 2024 00:24:34 +0000
-Date: Fri, 5 Jul 2024 08:23:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	intel-wired-lan@lists.osuosl.org
-Cc: oe-kbuild-all@lists.linux.dev, willemb@google.com,
-	Wojciech Drewek <wojciech.drewek@intel.com>,
-	dwaipayanray1@gmail.com,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Igor Bagnucki <igor.bagnucki@intel.com>, joe@perches.com,
-	edumazet@google.com, netdev@vger.kernel.org, apw@canonical.com,
-	lukas.bulwahn@gmail.com, akpm@linux-foundation.org,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: Re: [Intel-wired-lan] [PATCH iwl-next v1 3/6] ice: add Tx hang
- devlink health reporter
-Message-ID: <202407050857.OSYEyokn-lkp@intel.com>
-References: <20240703125922.5625-4-mateusz.polchlopek@intel.com>
+	dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b="SYgaGYaX";
+	dkim=pass (2048-bit key) header.d=agatha.dev header.i=@agatha.dev header.b="wxh2VTmq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbaby.net;
+ q=dns/txt; s=bambino; bh=lbCCbfpAK9yQ72EmN2rHBfOcaxTYvE1fdr8yXnyWw+8=;
+ h=from:subject:date:message-id:to:cc:mime-version:content-type;
+ b=SYgaGYaX9SbpjXjhN9Id9yI3It6QYm4ooviJ4u0K0kfPMUFuSZlEeWsoB700YnGZuCIiS5Wpl
+ am9A9GNahVazC76NACpwoZBxac7c+HzISz6a/6YXUi+xwsrx9v/oZ4C40DXkQwLC+HbI2e8rOlN
+ QW/m0k45v0EeYwmuyzlXgWQ=
+Received: from mia3000.dnsiaas.com ([192.155.110.18] mia3000.dnsiaas.com)
+ (Authenticated sender: mb6724)
+ by relay2-v.mailbaby.net (MailBabyMTA) with ESMTPSA id 1908043f1df000336f.003
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Fri, 05 Jul 2024 00:20:54 +0000
+X-Zone-Loop: b7a799ad6d8413aee546afab5baa942fa0071d204319
+X-Get-Message-Sender-Via: mb6724: authenticated_id: code@agatha.dev
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=agatha.dev;
+	s=default; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=lbCCbfpAK9yQ72EmN2rHBfOcaxTYvE1fdr8yXnyWw+8=; b=wxh2VTmq2x1nEFIlpEZvlpcLfD
+	Rvd3kmAYMSTimLlaXGjenKoxJvETMuksrms29zCw7VYz/qMWyHNXtMq9XxIP0luFkkAQ9YP5fsmb1
+	Dt+2l2XkW8UqniJzpFH1rbMcxxePohfSeXTWsGb7P3BJ9G2TW1J7a9jsFHTPhWEpPrWtWDekueERa
+	785fL5GbOCf+iU21lW6tSFTIirliFvcgOMNzIEJcxrajKS66804joO2A6DqpNyGcKIyg7ZLNvUtDV
+	IMoSdM3sDh9PkJxqqaCh4MoFhCFO8cxDS+ID4Nsng3doBHA0ElKsXDgoqOHfCuA4lEsFgj1kbMoIm
+	NKiYOO/w==;
+Received: from [186.250.91.79] (port=20444 helo=kurupi-arch.blackcat)
+	by mia3000.dnsiaas.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <code@agatha.dev>)
+	id 1sPWh2-00000007ihG-08yn;
+	Thu, 04 Jul 2024 20:20:52 -0400
+Date: Thu, 4 Jul 2024 21:20:49 -0300
+From: =?utf-8?Q?=C3=81gatha?= Isabelle Chris Moreira Guedes <code@agatha.dev>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, patch-reply@agatha.dev
+Subject: [PATCH v2] init: staging: Fix missing warning/taint on builtin code
+Message-ID: <n5plxnkubcnbuyv7l24i4cwsauh4odwk6g5yiys6oiiwj3i34r@izcjggvv2om2>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7004; i=code@agatha.dev;
+ h=from:subject; bh=s8si9TH2BBN48BhHEG1UljdI8wlTApNCHVg3kyKmO3A=;
+ b=owGbwMvMwCX2vcdPlI2bz4fxtFoSQ1q7quvtuNnra3cGZV5/8OPVFTmzwsP2bItK1386H3C6u
+ al5gcrejlIWBjEuBlkxRRaecuEErfg/6e+KdobAzGFlAhnCwMUpABNxc2P4Z1Sx+7RjdaqB0eXp
+ eWu1GpI4jLTvdGQdd3hyyH337rXlPQz/MyzXvldyYOrZoJS2Wk5F5sTFGTW7a3ttym5u3vZ6oY4
+ RNwA=
+X-Developer-Key: i=code@agatha.dev; a=openpgp;
+ fpr=0C7713602A5FFC67EE72B954F78C4E15060B0E4C
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="joaqmbrrn46rr3ud"
 Content-Disposition: inline
-In-Reply-To: <20240703125922.5625-4-mateusz.polchlopek@intel.com>
-
-Hi Mateusz,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on tnguy-next-queue/dev-queue]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Mateusz-Polchlopek/checkpatch-don-t-complain-on-_Generic-use/20240704-184910
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/tnguy/next-queue.git dev-queue
-patch link:    https://lore.kernel.org/r/20240703125922.5625-4-mateusz.polchlopek%40intel.com
-patch subject: [Intel-wired-lan] [PATCH iwl-next v1 3/6] ice: add Tx hang devlink health reporter
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240705/202407050857.OSYEyokn-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240705/202407050857.OSYEyokn-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407050857.OSYEyokn-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/net/ethernet/intel/ice/devlink/devlink_health.c: In function 'ice_tx_hang_reporter_dump':
->> drivers/net/ethernet/intel/ice/devlink/devlink_health.c:76:43: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-      76 |         ice_fmsg_put_ptr(fmsg, "dma-ptr", (void *)event->tx_ring->dma);
-         |                                           ^
+X-AuthUser: me@agatha.dev
 
 
-vim +76 drivers/net/ethernet/intel/ice/devlink/devlink_health.c
+--joaqmbrrn46rr3ud
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    60	
-    61	static int ice_tx_hang_reporter_dump(struct devlink_health_reporter *reporter,
-    62					     struct devlink_fmsg *fmsg, void *priv_ctx,
-    63					     struct netlink_ext_ack *extack)
-    64	{
-    65		struct ice_tx_hang_event *event = priv_ctx;
-    66	
-    67		devlink_fmsg_obj_nest_start(fmsg);
-    68		ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, head);
-    69		ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, intr);
-    70		ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, vsi_num);
-    71		ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, queue);
-    72		ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, next_to_clean);
-    73		ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, next_to_use);
-    74		devlink_fmsg_put(fmsg, "irq-mapping", event->tx_ring->q_vector->name);
-    75		ice_fmsg_put_ptr(fmsg, "desc-ptr", event->tx_ring->desc);
-  > 76		ice_fmsg_put_ptr(fmsg, "dma-ptr", (void *)event->tx_ring->dma);
-    77		devlink_fmsg_binary_pair_put(fmsg, "desc", event->tx_ring->desc,
-    78					     size_mul(event->tx_ring->count,
-    79						      sizeof(struct ice_tx_desc)));
-    80		devlink_fmsg_obj_nest_end(fmsg);
-    81	
-    82		return 0;
-    83	}
-    84	
+Fix the absence of warning message and kernel tainting when initializing
+drivers from the `drivers/staging` subtree from initcalls (when
+configured as built-in).
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+When such a driver is built as module and the module is loaded, the
+`load_module()` function taints the kernel to signal code of unknown
+quality is loaded, and produces a warning like this:
+
+[    8.076352] rts5208: module is from the staging directory, the
+quality is unknown, you have been warned.
+
+The same behaviour is absent, however, when a staging driver is compiled
+as built-in on the kernel image, since loading it happens through
+initcalls and not through load_module().
+
+This might prevent relevant information of being available on a bug
+report (i.e. on a panic log) among other possible problems.
+
+NOTES:
+- The patch is written in such a way that all non-staging drivers are
+  kept the way they were, except for staging drivers built with
+  `-DSTAGING_CODE`.
+- Since it changes some macros related to clang LTO as well, I tested it
+  and it works properly in kernels compiled with both clang and gcc.
+- Some `checkpatch.pl` errors, warnings and checks (with `--strict`) are
+  present. Some were already there, some I introduced but I think
+  they're unavoidable. Some IMHO don=B4t make sense at all, I think they
+  would apply for most regular macros but initcall macros are just way
+  different.
+
+Signed-off-by: =C1gatha Isabelle Chris Moreira Guedes <code@agatha.dev>
+---
+CHANGELOG
+v2:
+- Changed the way we hook into the initcalls as suggested by Uwe, and
+  moved the logic from `include/linux/module.h` to
+  `include/linux/init.h`.
+- Adjusted accordingly to work with both GCC and clang with
+  `CONFIG_LTO_CLANG=3Dy`, since some init scripts required that.
+- Fixed the missing space pointed out by Dan & other minor string
+  details.
+- Changed the subject, since it became somewhat more of an init thing
+  than a staging thing.
+
+ drivers/staging/Makefile |  2 ++
+ include/linux/init.h     | 76 ++++++++++++++++++++++++++++++++++------
+ init/main.c              | 20 +++++++++++
+ kernel/module/main.c     |  4 +--
+ 4 files changed, 88 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+index 5390879b5d1b..7cea13436426 100644
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@ -1,6 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for staging directory
+=20
++subdir-ccflags-y +=3D -DSTAGING_CODE
++
+ obj-y				+=3D media/
+ obj-$(CONFIG_FB_OLPC_DCON)	+=3D olpc_dcon/
+ obj-$(CONFIG_RTL8192E)		+=3D rtl8192e/
+diff --git a/include/linux/init.h b/include/linux/init.h
+index 58cef4c2e59a..c7afee978b42 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -188,6 +188,8 @@ extern struct module __this_module;
+=20
+ #ifndef __ASSEMBLY__
+=20
++extern void staging_taint(const char *code_id, bool module);
++
+ /*
+  * initcalls are now grouped by functionality into separate
+  * subsections. Ordering inside the subsections is determined
+@@ -220,6 +222,14 @@ extern struct module __this_module;
+ 	__PASTE(__,						\
+ 	__PASTE(__iid, id))))
+=20
++#define __define_stub_fn(___stub, fn, __taintcall)		\
++	int __init ___stub(void);				\
++	int __init ___stub(void)				\
++	{							\
++		__taintcall();					\
++		return fn();					\
++	}							\
++
+ #ifdef CONFIG_LTO_CLANG
+ /*
+  * With LTO, the compiler doesn't necessarily obey link order for
+@@ -230,31 +240,75 @@ extern struct module __this_module;
+ #define __initcall_section(__sec, __iid)			\
+ 	#__sec ".init.." #__iid
+=20
++#define ___define_initcall_stub(__stub, fn, __taintcall)	\
++	__define_stub_fn(__stub, fn, __taintcall)		\
++	__ADDRESSABLE(__stub)
++#else
++#define __initcall_section(__sec, __iid)			\
++	#__sec ".init"
++
++#define ___define_initcall_stub(__stub, fn, __taintcall)	\
++	__ADDRESSABLE(fn)
++#endif /* CONFIG_LTO_CLANG */
++
++#ifdef STAGING_CODE
++
+ /*
+  * With LTO, the compiler can rename static functions to avoid
+  * global naming collisions. We use a global stub function for
+  * initcalls to create a stable symbol name whose address can be
+  * taken in inline assembly when PREL32 relocations are used.
++ *
++ * Moreover, when there's staging code, regardless of LTO, we
++ * need to wrap the function inside a new one to taint the
++ * kernel and warn about it in the log. So we need this special
++ * symbol name for the wrapper regardless of that.
+  */
+ #define __initcall_stub(fn, __iid, id)				\
+ 	__initcall_name(initstub, __iid, id)
+=20
++#define __staging_taint_fn()					\
++	staging_taint(KBUILD_MODNAME, false)
++
++#ifdef CONFIG_LTO_CLANG
++
+ #define __define_initcall_stub(__stub, fn)			\
+-	int __init __stub(void);				\
+-	int __init __stub(void)					\
+-	{ 							\
+-		return fn();					\
+-	}							\
+-	__ADDRESSABLE(__stub)
+-#else
+-#define __initcall_section(__sec, __iid)			\
+-	#__sec ".init"
++	___define_initcall_stub(__stub, fn, __staging_taint_fn)
++
++#else /* no CONFIG_LTO_CLANG */
++
++#define __define_initcall_stub(_stub, fn)			\
++	__define_stub_fn(_stub, fn, __staging_taint_fn)		\
++	__ADDRESSABLE(_stub)
++
++#endif /* CONFIG_LTO_CLANG */
++
++#else /* no STAGING_CODE */
++
++#ifdef CONFIG_LTO_CLANG
++
++/*
++ * Same case as before, it's not staging code but there's LTO
++ */
++#define __initcall_stub(fn, __iid, id)				\
++	__initcall_name(initstub, __iid, id)
+=20
++#else /* no CONFIG_LTO_CLANG*/
++
++/* For no LTO outside staging code, the vast majority of drivers
++ * can just be built with their regular symbol names as they
++ * just have been built all the time
++ */
+ #define __initcall_stub(fn, __iid, id)	fn
+=20
++#endif /* CONFIG_LTO_CLANG */
++
++#define __staging_taint_fn()
++
+ #define __define_initcall_stub(__stub, fn)			\
+-	__ADDRESSABLE(fn)
+-#endif
++	___define_initcall_stub(__stub, fn, __staging_taint_fn)
++
++#endif /* STAGING_CODE */
+=20
+ #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+ #define ____define_initcall(fn, __stub, __name, __sec)		\
+diff --git a/init/main.c b/init/main.c
+index 206acdde51f5..a297675dd397 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1602,3 +1602,23 @@ static noinline void __init kernel_init_freeable(voi=
+d)
+=20
+ 	integrity_load_keys();
+ }
++
++#ifdef CONFIG_STAGING
++/**
++ * staging_init_taint() - We need to taint the kernel whenever staging code
++ * is initialized (from built-in drivers) or loaded (as modules) and issue
++ * a warning the first time it happens.
++ */
++void staging_taint(const char *code_id, bool module)
++{
++	char *code_type =3D module ? "module" : "builtin driver";
++
++	pr_warn("%s %s: The kernel contains code from staging directory"
++		", the quality is unknown, you have been warned.\n",
++		code_type, code_id);
++
++	add_taint(TAINT_CRAP, LOCKDEP_STILL_OK);
++}
++EXPORT_SYMBOL(staging_taint);
++
++#endif /* CONFIG_STAGING */
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index d18a94b973e1..d7d33336ab43 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2039,9 +2039,7 @@ static void module_augment_kernel_taints(struct modul=
+e *mod, struct load_info *i
+ 	check_modinfo_retpoline(mod, info);
+=20
+ 	if (get_modinfo(info, "staging")) {
+-		add_taint_module(mod, TAINT_CRAP, LOCKDEP_STILL_OK);
+-		pr_warn("%s: module is from the staging directory, the quality "
+-			"is unknown, you have been warned.\n", mod->name);
++		staging_taint(mod->name, true);
+ 	}
+=20
+ 	if (is_livepatch_module(mod)) {
+--=20
+2.45.2
+
+
+--joaqmbrrn46rr3ud
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQMdxNgKl/8Z+5yuVT3jE4VBgsOTAUCZoc8WAAKCRD3jE4VBgsO
+TAv9AP4gR/WH9Mpl8+MCf19elx1EHvHiMwTuH/+P+ipUxsAR0gD/TS7Hk98Kqzb/
+PnHqZnRxEka6FUZIyEUy419SnxBXHwY=
+=E+nt
+-----END PGP SIGNATURE-----
+
+--joaqmbrrn46rr3ud--
