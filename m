@@ -1,128 +1,109 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F86135A40;
-	Sat,  6 Jul 2024 14:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C9E1F94A
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 14:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720274863; cv=none; b=GmvSOkyQGDFcBv5e9JLs3A5EZYdGuB4tFHNYfGcOXjruKr/hkRSRrT7q71zHevav/hGzBx6m8sOKEikwgO2Sgv1GgniVt7GpnkuRnsZoWycHOuqdsMBU9UT+vFFBuR0ftWZGsBOCjAWRUqPqfJ9s0F7WxjXQu7QeyVEGMw42pWo=
+	t=1720275376; cv=none; b=A6vCsvyEn8ah+gZHDWbcIkMtfEByqhMakCpDFM+dpDc9DQNWPw31kK/7aB35BAS+FuU+5uuf0wxuKRD33TPPmmjlQ9HIogsK4TB0KuP9YdM0L+yQZ9hl/0+P+BvtfbUelpIRIgpaUqBtgWz7Iii0OlkSeiQgkgWl3kjhrhKjnrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720274863; c=relaxed/simple;
-	bh=eNl93zsedAH4XgLxjz4sAfE79oGEd6zlZf9pYotZyPk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HTJvhC+v9OhHEMNNyEdwtIM+aov6WnXl9TToG7l3C71z0dJI4fMnxusKkb8XJ/zWelTCiY7K2Kaii8QHYsVHYPKLZl4VVsqdri0BQlDQhqXUcnMnkxxjv45d6OgF49hMV9mTi8Sy+IgctCNHwU1HzYpAg7b1kVioggl0ZezEc7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=P1QjhmEF; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1720275376; c=relaxed/simple;
+	bh=qswpG7HM9/+63dhg7D5ryWyMPINcfuRDBHyPx9737Zk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KM+wvUqrg8BOOYRoQoV3KEhcAaUYeB749pYHpP3BykechnwnhVc82vqibrIBOTovSE1NesTnmmBJPJ+PII8YrjvZutR0GIrHTzLWpzE1B312dt8FUFKFDRvOryHAjHDggpawKHDAvOmtHZPHRjaBsZ2jrjOSRQ8Ow5Y9hye5XC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=bzwISKtK; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="P1QjhmEF"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 66274100003;
-	Sat,  6 Jul 2024 17:07:12 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1720274832; bh=9OVsh85Dfs0XARwMw+sWdfga+OlFbW2bccJIHpyv98E=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=P1QjhmEFyxTltzs+6NgTumtEWj/CYrYpIm4MiwIBU0KFreARwmCfwdXKMUwC626tB
-	 KLvQiOupHZ6bkGro/LvBD1xo6EfMjkvuUJyF64BksrlnTRblRLmckCpe4IjtMKOkhB
-	 fDl11hjti+Z2i9LJZeG+ieAvIpt5Mg+E8dqb9PMP6nAvtKY4EEbVxOAVsjOk3h9qow
-	 MEdl5EusmbVbOQDr10+/bAwAorq5tMXV5qovEhkT2PTxWe4I8iwsVJsFXPYmokf6WJ
-	 x1BqhMooHVFABEyNBmcRHkGoD+p7GRqOH201HhEj/IXJcT+ujc2VWKi61FoBRL+S5r
-	 LzwXtHEg6UuTQ==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Sat,  6 Jul 2024 17:05:58 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 6 Jul 2024
- 17:05:37 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Jesse Brandeburg
-	<jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Simon Horman
-	<horms@kernel.org>
-Subject: [PATCH net-next v2] ice: Adjust over allocation of memory in ice_sched_add_root_node() and ice_sched_add_node()
-Date: Sat, 6 Jul 2024 17:05:18 +0300
-Message-ID: <20240706140518.9214-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="bzwISKtK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=qswp
+	G7HM9/+63dhg7D5ryWyMPINcfuRDBHyPx9737Zk=; b=bzwISKtKBoTXHNF5pzSO
+	PJ01x6O/PAadKLIHH2CcIVTSrRJY43exp9dIhS2V9QcJ1tolAeS3ns/7YzqXJ2ep
+	JYFxCGNxg+mDHspOZah5Dzb9yaj5tTtFHSWkcG9B8gKaJX4KUmTsU0NGF8/lyGWG
+	7NHjNfpRDANBYDHOKZ7fgUjVNxvJBLqU8pWORzXc5KE7FcUSLxBPJd5Ce632q/tc
+	/B6XTCkxpbOi27QEhaQ2D/3ujYPN1rJsfOCiJbWcZ475JNHEznDfe3e7OdvORf4p
+	RAOyoncTzpzUJzZhbL43C8QMfBEg1faeLmMfQllCzkIijpZg0KUAKISrb/d+uSTT
+	Tw==
+Received: (qmail 3844746 invoked from network); 6 Jul 2024 16:16:02 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 16:16:02 +0200
+X-UD-Smtp-Session: l3s3148p1@G5fb0ZQcLKFQT+F6
+Date: Sat, 6 Jul 2024 16:16:01 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Aleksandr Mishin <amishin@t-argos.ru>,
+	Philipp Hortmann <philipp.g.hortmann@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Zhang Shurong <zhang_shurong@foxmail.com>,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: Re: [PATCH] staging: ks7010: Remove unneeded check in
+ ks_wlan_get_range()
+Message-ID: <ZolRoeaPETSmJMGJ@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Aleksandr Mishin <amishin@t-argos.ru>,
+	Philipp Hortmann <philipp.g.hortmann@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Zhang Shurong <zhang_shurong@foxmail.com>,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+References: <20240705204434.10541-1-amishin@t-argos.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186347 [Jul 06 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;t-argos.ru:7.1.1;lore.kernel.org:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/06 13:56:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/06 10:24:00 #25877639
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nEOPBJ7qUqMeqsl5"
+Content-Disposition: inline
+In-Reply-To: <20240705204434.10541-1-amishin@t-argos.ru>
 
-In ice_sched_add_root_node() and ice_sched_add_node() there are calls to
-devm_kcalloc() in order to allocate memory for array of pointers to
-'ice_sched_node' structure. But in this calls there are 'sizeof(*root)'
-instead of 'sizeof(root)' and 'sizeof(*node)' instead of 'sizeof(node)'.
-So memory is allocated for structures instead pointers. This lead to
-significant over allocation of memory.
 
-Adjust over allocation of memory by correcting devm_kcalloc() parameters.
+--nEOPBJ7qUqMeqsl5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+On Fri, Jul 05, 2024 at 11:44:34PM +0300, Aleksandr Mishin wrote:
+> In ks_wlan_get_range() variable 'i' which value is always 12, is compared
+> to 2. This check is unneeded and should be removed.
+>=20
+> Remove unneeded check to clean up the code.
+>=20
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>=20
+> Fixes: 13a9930d15b4 ("staging: ks7010: add driver from Nanonote extra-rep=
+ository")
+> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
 
-Suggested-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
-v2:
-  - Update comment, remove 'Fixes' tag and change the tree from 'net' to
-    'net-next' as suggested by Simon
-	(https://lore.kernel.org/all/20240706095258.GB1481495@kernel.org/)
-v1: https://lore.kernel.org/all/20240705163620.12429-1-amishin@t-argos.ru/
+I thought this driver was to be removed[1]? Phillip (CCed), what is the
+current status? If you are busy, I can remove it as well...
 
- drivers/net/ethernet/intel/ice/ice_sched.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+[1] https://lore.kernel.org/all/igi27iwrzg3ovgj3sym4gsi45timpkt4vkl5ss5dbft=
+dzat6p4@ctxcjocvunpt/
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_sched.c b/drivers/net/ethernet/intel/ice/ice_sched.c
-index ecf8f5d60292..d8b6054f3436 100644
---- a/drivers/net/ethernet/intel/ice/ice_sched.c
-+++ b/drivers/net/ethernet/intel/ice/ice_sched.c
-@@ -28,9 +28,8 @@ ice_sched_add_root_node(struct ice_port_info *pi,
- 	if (!root)
- 		return -ENOMEM;
- 
--	/* coverity[suspicious_sizeof] */
- 	root->children = devm_kcalloc(ice_hw_to_dev(hw), hw->max_children[0],
--				      sizeof(*root), GFP_KERNEL);
-+				      sizeof(root), GFP_KERNEL);
- 	if (!root->children) {
- 		devm_kfree(ice_hw_to_dev(hw), root);
- 		return -ENOMEM;
-@@ -186,10 +185,9 @@ ice_sched_add_node(struct ice_port_info *pi, u8 layer,
- 	if (!node)
- 		return -ENOMEM;
- 	if (hw->max_children[layer]) {
--		/* coverity[suspicious_sizeof] */
- 		node->children = devm_kcalloc(ice_hw_to_dev(hw),
- 					      hw->max_children[layer],
--					      sizeof(*node), GFP_KERNEL);
-+					      sizeof(node), GFP_KERNEL);
- 		if (!node->children) {
- 			devm_kfree(ice_hw_to_dev(hw), node);
- 			return -ENOMEM;
--- 
-2.30.2
 
+--nEOPBJ7qUqMeqsl5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmaJUaEACgkQFA3kzBSg
+KbYXsg/9F9lDcloURuKEd74oJH0/gSGKTh+Uy1hslnHWs0cjNepYMVPIi/IRC7Cf
+67JRJoeFCdJgNkac3pOBKHLqSDaYgMOnlYRAKKvVFKWO6qC3Pl27aisYLeqgxRm1
+oCDIhr8FpCVFDOmPDBqxcvMHvz583lssPiQiBubjgMV0o4zAUH8l0d4oq1+xIXq/
+nDBBVufSqk4BgTR2yiqpf880pcG2B8OYwwCB/XU7u9tR4pHH1cxaLbIPgN0QJ9eG
+f/GotdC0rygRbURVxc25FvImYY+dEyyAW5M/s+M7QX1UksBohJSYwLs9qcfjRH0k
+DYQp1f96dGMVfLduOOsgLsCedN4S34+NOVpiXtEbmjPt0yKI8BvAyufIDTjup1NJ
+k0NB8EBF9GpJNz2ppOOZO1BcJn1ZXFMu1Q/S8cju8iQhRk2PUaqq4wj1svzgGiJF
+ksiL9YHmiPUIH3q2CRMSZ5SLEKdiU1QtaXyVPlxD/5huFe7YysyrBVaaY6EVEnJB
+2d+BZ0IwhrpI+9eUMdoWd1WhUG3xeU/UNASjKSyxzwWgH66jnwI3vO5iNSVbLJSR
+/soy598yJk9rbGbUcAPeJB1qSPTCepohdPiynHSCalztapZVpTAOO3nOKCoL37QG
+mrWCoBw0Abw8PZSwgCs/jvqr+E8kJQurkbqLxhT7zdDmjzsqwxs=
+=iuBZ
+-----END PGP SIGNATURE-----
+
+--nEOPBJ7qUqMeqsl5--
