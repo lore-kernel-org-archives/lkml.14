@@ -1,88 +1,86 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F661C69D;
-	Sat,  6 Jul 2024 08:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C1F4436C;
+	Sat,  6 Jul 2024 08:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720255387; cv=none; b=qT3C2T4JUh6lWYftLOvzvpPYQDIZ4n6XK++K2ykFwCzdkeYQXuL+mMJ7AAfBsPbFW5czR4GY7FV9XsClOIHMWh1ify1GuIgsK84PCCpBILTxcxTNVnvsIKvvwDNnYrXu4A9CXv+1O0HiGfn6Veg1NT8mo6cETQx2toMsXoaj1Vc=
+	t=1720255420; cv=none; b=gvmSNQ98gj67G+nn4Z7fUuwklt5bLHa/T2IQBTWlOzV64X9Wy59oqTBg4O9egBMfFfiEPruXz2CgqjP1keL6b9BrCIf+IS4dth7VJZLYvazw21m2bVS5JObOxyrieW9kkG5D87lLZOYsGNjn5/eqvQTbrdJZB0V4igmQJY5hYyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720255387; c=relaxed/simple;
-	bh=qtKywlXV9eQoI3XMxuo7EO/3+LdGfDeUhwh6jA9mgRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uYra/MLvV0PyH12MWu0p79HYNwkop44T6GlfmXTgt3JGUUOJyz2iKOBrLfL6CfC3vWNfUOiLrSaY10+Ssim+85JqdxOxaM0p6YNV/grcldPifxcadLNQ1ywHeH/Bovj/d9mMz84nBexhTZhm1jWd0mduNFpEwCvryXGBGNhj+F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 5BD83100DA1D9;
-	Sat,  6 Jul 2024 10:43:00 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id EBE8E5505F; Sat,  6 Jul 2024 10:42:59 +0200 (CEST)
-Date: Sat, 6 Jul 2024 10:42:59 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	caleb.connolly@linaro.org, bhelgaas@google.com,
-	amit.pundir@linaro.org, neil.armstrong@linaro.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pci: bus: only call of_platform_populate() if CONFIG_OF
- is defined
-Message-ID: <ZokDkyfn2Xt2Ki-i@wunner.de>
-References: <20240703091535.3531-1-spasswolf@web.de>
- <CAMRc=Md=PnpHVGGO6Nb_efVZ0a3cMxWbLvYmkka5Wznks70drw@mail.gmail.com>
+	s=arc-20240116; t=1720255420; c=relaxed/simple;
+	bh=luJ5DLdUyXD8SFaZVQleUHpTlDnNDHd76QU1blhacnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SCL/r9qphu1RrdqqLQmBbj3Ntj40LtCBxd8wJgaPUyIrzEGkbrKrFzAhOB1MVhCG2ddAqCcTQymVHVx6qYYw6/6SbnwhKdMYvkQojXixHpet6goQqEQBVA2oyLDhHHLYll3WpJn+h4nLg5VW6scep1Wr2dsu/G+kIf1OqMAHS8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VomqK22i; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VomqK22i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED0FC2BD10;
+	Sat,  6 Jul 2024 08:43:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720255420;
+	bh=luJ5DLdUyXD8SFaZVQleUHpTlDnNDHd76QU1blhacnE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VomqK22i/Sp7tfddlIJ2CbgHTeJmj48WXxMdDLFyt8p7GebDHaWMb/ACS/ia5eJ2o
+	 kOHqLJ/9JO5owU/jzTUaf5cmF532+Axm255G8FqE66ZMF0VNoMrbZtgOrsoH0pRADK
+	 FBUvSI7/zD3AGEFRH2f+6KRgiWhQfDTiuRASp+PNDyjU4IHTi3avL54vAB7uRPE2pK
+	 AXJbP0CH+gg2W9ulWYA/zAMnWIahripkd+azVouj6hOyhDvVOz1O5QBmxc37Tphe6R
+	 QU+alL0oD45iwk4Lb8VLjPkQWpvJ4w6cJHYZLIZlwtz+naUyp3e5bR/JejAMcXdOpt
+	 MFrBS/ZqVg5Gw==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH] serial: 8250: don't lost port's default capabilities
+Date: Sat,  6 Jul 2024 16:29:28 +0800
+Message-ID: <20240706082928.2238-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Md=PnpHVGGO6Nb_efVZ0a3cMxWbLvYmkka5Wznks70drw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 03, 2024 at 11:32:05AM +0200, Bartosz Golaszewski wrote:
-> On Wed, Jul 3, 2024 at 11:15 AM Bert Karwatzki <spasswolf@web.de> wrote:
-> > If of_platform_populate() is called when CONFIG_OF is not defined this
-> > leads to spurious error messages of the following type:
-> >  pci 0000:00:01.1: failed to populate child OF nodes (-19)
-> >  pci 0000:00:02.1: failed to populate child OF nodes (-19)
-> >
-> > Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
-> > Signed-off-by: Bert Karwatzki <spasswolf@web.de>
-> > ---
-> >  drivers/pci/bus.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> > index e4735428814d..b363010664cd 100644
-> > --- a/drivers/pci/bus.c
-> > +++ b/drivers/pci/bus.c
-> > @@ -350,6 +350,7 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >
-> >         pci_dev_assign_added(dev, true);
-> >
-> > +#ifdef CONFIG_OF
-> >         if (pci_is_bridge(dev)) {
+Commit b0b8c84cf58d ("serial: of_serial: Handle auto-flow-control
+property") added support for fifo-size and hw-flow-control properties
+to avoid adding new types to 8250.c for UARTs that are compatible with
+the standard types but that have different size fifo or support 16750
+compatible auto flow control. We avoided many new 8250 port types with
+this nice feature, but there's a problem, if the code detects fifo-size
+or auto-flow-control property, up->capabilities will be set
+accordingly, then serial8250_set_defaults() will ignore the default
+port's capabilities:
 
-Per section 21 of Documentation/process/coding-style.rst,
-IS_ENABLED() is strongly preferred to #ifdef.
+|if (!up->capabilities)
+|	up->capabilities = uart_config[type].flags;
 
+If the port's default capabilities contains other bits such as
+UART_CAP_SLEEP, UART_CAP_EFR and so on, they are lost.
 
-> There's a better (less ifdeffery) fix on the list that I'll pick up
-> later today[1].
-> 
-> [1] https://lore.kernel.org/lkml/20240702180839.71491-1-superm1@kernel.org/T/
+Fixes: b0b8c84cf58d ("serial: of_serial: Handle auto-flow-control property")
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+---
+ drivers/tty/serial/8250/8250_port.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-That other fix doesn't feel very robust as it depends on
-of_platform_populate() never returning -ENODEV in the
-CONFIG_OF=y case.
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 893bc493f662..e20614241229 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -3245,8 +3245,7 @@ void serial8250_set_defaults(struct uart_8250_port *up)
+ 			up->port.fifosize = uart_config[type].fifo_size;
+ 		if (!up->tx_loadsz)
+ 			up->tx_loadsz = uart_config[type].tx_loadsz;
+-		if (!up->capabilities)
+-			up->capabilities = uart_config[type].flags;
++		up->capabilities |= uart_config[type].flags;
+ 	}
+ 
+ 	set_io_from_upio(port);
+-- 
+2.43.0
 
-Thanks,
-
-Lukas
