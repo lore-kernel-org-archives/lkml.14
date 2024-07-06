@@ -1,272 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5550A2837F;
-	Sat,  6 Jul 2024 11:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1980454907;
+	Sat,  6 Jul 2024 11:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720264213; cv=none; b=KSt3+3eVjl/GTL9K3pwUnkzx+FM0Yhfx/RJpbu2CjyHLAz5zTi0J1359NlzwtlX9iD5nMzgIKdkN1FF0iSNrSJNx1GJs7/RWBcvWdSoqGQ9tWhP11kNtvq8bt1f4Lkg7i/gYHnekNxDI47K93oJHCiiSUI/CPzIi2OpSRmMNWKs=
+	t=1720264429; cv=none; b=r2Ka65TENhXaATDYMUSLaB8qIiVQa6jPBWcebLn5U+ANzBdThbfKmEWPO4lIK5gBd14+o9B0uPwB9W4arEV8TP9+4S2x7Ds2Zwc4LMcYSDMZvOmYZrR/xmX9kpP+Cy55WtDa7yZy8u3FnCkSXwYMS6F27lCuOBW1NdGTDOSfbpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720264213; c=relaxed/simple;
-	bh=5A5vfBW6U9H7YwwLUBx1pG9cZrxrnGhdVlAs9baicho=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jeSrnpQTrfu6X+6pcl4RE99fXexF5tq5S5fJIrsOdXpfkDvhgTWebpH8JyrqOubC32HQlnSgjznvc5GnlcKoWwFYvRipUmrrXRoVqdlDxwi1tpU7yNFyIbBnbBVKtaCuSp6toHK3Kxqy1oDUQUxTxKbXIHvx2oBC4kyOQGMkpqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LO4Qf5/Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720264429; c=relaxed/simple;
+	bh=gTn1gxChF+AnLmVYi9zYChJ2t7bCR+Q5zs+W+Sfp71Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=heJOnXHlJ/KqUR93sBfkRf5pHz54Ij98qu8YQKxkVS5G50pZZLBSiN87a7aOHyMf5OX0iGMdPThivzO6qH5dk0u5Z9lqFUaqlTv/Um67i57xuYfZKXjAIcypJWOEjuTIKcllMsYvH5GSLf9Hl6M+Tobg/onFBhBNYNs+mMM/xjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CwJo5WNx; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LO4Qf5/Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F37C2BD10;
-	Sat,  6 Jul 2024 11:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720264212;
-	bh=5A5vfBW6U9H7YwwLUBx1pG9cZrxrnGhdVlAs9baicho=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LO4Qf5/QzGeLa9Ex4CIoLIH66jwQYf8YYQrdTpMs6PskMgSpg8OwBlaWG8Oo51iiL
-	 KSLZAmc/XbNXUUvrMVjvCMoL4IPujwJ+gZRlTyoZRIX3cMfJ6Ex4Vu0ZwjZSxKliTg
-	 IslssCvSiEijwFSquaARAhGkQC8+u1ShQwgHuE7wc1jqOiRQnpjK/eLaJ+VrE+xttP
-	 O0ZHoou8g6e+DfWin4hG07Go/ypIeuVnuE8IAtZfK8YC7lWAkoORFfprKfDBJnEWDR
-	 NS0vfih5BtHc55KhIyDaQcra2cje5kKeErHRlFqc5a+0vYNQGceoViQpsY1UWJhbZ/
-	 md0EPQYkfAy/w==
-Date: Sat, 6 Jul 2024 12:10:04 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto
- <inochiama@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, =?UTF-8?B?TWlxdcOobA==?= Raynal
- <miquel.raynal@bootlin.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 2/3] iio: adc: sophgo-saradc: Add driver for Sophgo
- SARADC
-Message-ID: <20240706121004.37ee9fb5@jic23-huawei>
-In-Reply-To: <20240705-sg2002-adc-v2-2-83428c20a9b2@bootlin.com>
-References: <20240705-sg2002-adc-v2-0-83428c20a9b2@bootlin.com>
-	<20240705-sg2002-adc-v2-2-83428c20a9b2@bootlin.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CwJo5WNx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720264428; x=1751800428;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gTn1gxChF+AnLmVYi9zYChJ2t7bCR+Q5zs+W+Sfp71Y=;
+  b=CwJo5WNxtzwlELuptrgCDCH4GRn7t4mbimlTulXbvoskChwbK0fobWw5
+   9nTJoYmR+z/dxaNY7DZSvyiMQz1JSGJZ20nAhhuTf5qxf15sXkFk7+9ci
+   anHH5D8ZfgnTp3g5C5VWlaL9YwYg8vNLhrLELbj+Xw5zBOFKmFMgNVS+3
+   l6gynt7noMIEekv4DvdX0jTP+XnUuyQDsV/LjA2HBjCCaP8hm+8O0OkAO
+   TCWipibnQ+sveCz5sTWEYtdsV1Z2o+Ip3qC0zQ3gAQRubdZrsKO2taZhU
+   hNF2RUOnJYVQ1LYKBEz7fwWGsKfZxkiK7RW71zPCJVrczoa9Z5CPSFprB
+   A==;
+X-CSE-ConnectionGUID: gZYW64yERVyNqojL0fgnaQ==
+X-CSE-MsgGUID: f/TaXTUtTPmSSF5f1foBwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="17348120"
+X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
+   d="scan'208";a="17348120"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 04:13:47 -0700
+X-CSE-ConnectionGUID: ncFW8IFhRb2LNx+hL5z19Q==
+X-CSE-MsgGUID: Rl78OCbuQf+8QE+nwI3lSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
+   d="scan'208";a="47028304"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 06 Jul 2024 04:13:44 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sQ3ML-000Thg-2k;
+	Sat, 06 Jul 2024 11:13:41 +0000
+Date: Sat, 6 Jul 2024 19:13:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nicolas Pitre <nico@fluxnic.net>, Arnd Bergmann <arnd@arndb.de>,
+	Russell King <linux@armlinux.org.uk>
+Cc: oe-kbuild-all@lists.linux.dev, Nicolas Pitre <npitre@baylibre.com>,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] asm-generic/div64: reimplement __arch_xprod64()
+Message-ID: <202407061823.qXqNlq8o-lkp@intel.com>
+References: <20240705022334.1378363-3-nico@fluxnic.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240705022334.1378363-3-nico@fluxnic.net>
 
-On Fri, 05 Jul 2024 15:42:24 +0200
-Thomas Bonnefille <thomas.bonnefille@bootlin.com> wrote:
+Hi Nicolas,
 
-> This adds a driver for the common Sophgo SARADC.
-> 
-> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Some more minor feedback inline.
+kernel test robot noticed the following build warnings:
 
-Thanks,
+[auto build test WARNING on arnd-asm-generic/master]
+[also build test WARNING on arm/for-next arm/fixes soc/for-next linus/master v6.10-rc6 next-20240703]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Jonathan
+url:    https://github.com/intel-lab-lkp/linux/commits/Nicolas-Pitre/ARM-div64-remove-custom-__arch_xprod_64/20240705-195905
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git master
+patch link:    https://lore.kernel.org/r/20240705022334.1378363-3-nico%40fluxnic.net
+patch subject: [PATCH 2/2] asm-generic/div64: reimplement __arch_xprod64()
+config: parisc-defconfig (https://download.01.org/0day-ci/archive/20240706/202407061823.qXqNlq8o-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240706/202407061823.qXqNlq8o-lkp@intel.com/reproduce)
 
-> diff --git a/drivers/iio/adc/sophgo-cv18xx-adc.c b/drivers/iio/adc/sophgo-cv18xx-adc.c
-> new file mode 100644
-> index 000000000000..dd1188b1923e
-> --- /dev/null
-> +++ b/drivers/iio/adc/sophgo-cv18xx-adc.c
-> @@ -0,0 +1,195 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  Sophgo CV18XX series SARADC Driver
-> + *
-> + *  Copyright (C) Bootlin 2024
-> + *  Author: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/completion.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define CV18XX_ADC_CTRL_REG			0x04
-> +#define		CV18XX_ADC_EN			BIT(0)
-> +#define		CV18XX_ADC_SEL(x)		BIT((x)+4)
-BIT((x) + 4)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407061823.qXqNlq8o-lkp@intel.com/
 
-> +#define CV18XX_ADC_STATUS_REG			0x08
-> +#define		CV18XX_ADC_BUSY			BIT(0)
-> +#define CV18XX_ADC_CYC_SET_REG			0x0C
-> +#define		CV18XX_ADC_DEF_CYC_SETTINGS	0xF1F0F
+All warnings (new ones prefixed by >>):
 
-I'd prefer to see that broken up into fields if we have any info
-on what they are.
-
-> +#define CV18XX_ADC_CH_RESULT_REG(x)		(0x10+4*(x))
-(0x10 + 4 * (x))
-code style also applies in macros.
-
-> +#define		CV18XX_ADC_CH_RESULT		0xfff
-
-GENMASK(11, 0)
-
-> +#define		CV18XX_ADC_CH_VALID		BIT(15)
-> +#define CV18XX_ADC_INTR_EN_REG			0x20
-> +#define CV18XX_ADC_INTR_CLR_REG			0x24
-> +#define CV18XX_ADC_INTR_STA_REG			0x28
->
-> +
-> +static int cv18xx_adc_read_raw(struct iio_dev *indio_dev,
-> +				  struct iio_chan_spec const *chan,
-> +				  int *val, int *val2, long mask)
-> +{
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-{
-> +		struct cv18xx_adc *saradc = iio_priv(indio_dev);
-> +		u32 sample;
-> +		int ret;
-> +
-> +		scoped_guard(mutex, &saradc->lock) {
-> +			cv18xx_adc_start_measurement(saradc, chan->scan_index);
-> +			ret = cv18xx_adc_wait(saradc);
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +			sample = readl(saradc->regs + CV18XX_ADC_CH_RESULT_REG(chan->scan_index));
-> +		}
-> +		if (!(sample & CV18XX_ADC_CH_VALID))
-> +			return -ENODATA;
-> +
-> +		*val = sample & CV18XX_ADC_CH_RESULT;
-> +		return IIO_VAL_INT;
-}
-
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*val = 3300;
-> +		*val2 = 12;
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static irqreturn_t cv18xx_adc_interrupt_handler(int irq, void *private)
-> +{
-> +	struct cv18xx_adc *saradc = private;
-> +
-> +	if (!(readl(saradc->regs + CV18XX_ADC_INTR_STA_REG) & BIT(0)))
-
-Add a define for that BIT(0) and use FIELD_GET() to extract it.
+   security/keys/proc.c: In function 'proc_keys_show':
+   security/keys/proc.c:215:45: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
+     215 |                         sprintf(xbuf, "%llud", div_u64(timo, 60 * 60 * 24));
+         |                                             ^
+   security/keys/proc.c:215:25: note: 'sprintf' output between 3 and 17 bytes into a destination of size 16
+     215 |                         sprintf(xbuf, "%llud", div_u64(timo, 60 * 60 * 24));
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   security/keys/proc.c:213:44: warning: 'h' directive writing 1 byte into a region of size between 0 and 15 [-Wformat-overflow=]
+     213 |                         sprintf(xbuf, "%lluh", div_u64(timo, 60 * 60));
+         |                                            ^
+   security/keys/proc.c:213:25: note: 'sprintf' output between 3 and 18 bytes into a destination of size 16
+     213 |                         sprintf(xbuf, "%lluh", div_u64(timo, 60 * 60));
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> security/keys/proc.c:211:40: warning: '%llu' directive writing between 1 and 19 bytes into a region of size 16 [-Wformat-overflow=]
+     211 |                         sprintf(xbuf, "%llum", div_u64(timo, 60));
+         |                                        ^~~~
+   security/keys/proc.c:211:39: note: directive argument in the range [0, 1229782946264575725]
+     211 |                         sprintf(xbuf, "%llum", div_u64(timo, 60));
+         |                                       ^~~~~~~
+   security/keys/proc.c:211:25: note: 'sprintf' output between 3 and 21 bytes into a destination of size 16
+     211 |                         sprintf(xbuf, "%llum", div_u64(timo, 60));
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-> +		return IRQ_NONE;
-> +
-> +	writel(1, saradc->regs + CV18XX_ADC_INTR_CLR_REG);
+vim +211 security/keys/proc.c
 
-Add a define for the 1 here (I guess it's BIT(0)?)
-as well to show what is logically being cleared rather than simply
-the register value.
+^1da177e4c3f415 Linus Torvalds 2005-04-16  152  
+^1da177e4c3f415 Linus Torvalds 2005-04-16  153  static int proc_keys_show(struct seq_file *m, void *v)
+^1da177e4c3f415 Linus Torvalds 2005-04-16  154  {
+^1da177e4c3f415 Linus Torvalds 2005-04-16  155  	struct rb_node *_p = v;
+^1da177e4c3f415 Linus Torvalds 2005-04-16  156  	struct key *key = rb_entry(_p, struct key, serial_node);
+ab5c69f01313c80 Eric Biggers   2017-09-27  157  	unsigned long flags;
+927942aabbbe506 David Howells  2010-06-11  158  	key_ref_t key_ref, skey_ref;
+074d58989569b39 Baolin Wang    2017-11-15  159  	time64_t now, expiry;
+03dab869b7b239c David Howells  2016-10-26  160  	char xbuf[16];
+363b02dab09b322 David Howells  2017-10-04  161  	short state;
+074d58989569b39 Baolin Wang    2017-11-15  162  	u64 timo;
+06ec7be557a1259 Michael LeMay  2006-06-26  163  	int rc;
+06ec7be557a1259 Michael LeMay  2006-06-26  164  
+4bdf0bc30031414 David Howells  2013-09-24  165  	struct keyring_search_context ctx = {
+ede0fa98a900e65 Eric Biggers   2019-02-22  166  		.index_key		= key->index_key,
+4aa68e07d845562 Eric Biggers   2017-09-18  167  		.cred			= m->file->f_cred,
+462919591a1791e David Howells  2014-09-16  168  		.match_data.cmp		= lookup_user_key_possessed,
+462919591a1791e David Howells  2014-09-16  169  		.match_data.raw_data	= key,
+462919591a1791e David Howells  2014-09-16  170  		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
+dcf49dbc8077e27 David Howells  2019-06-26  171  		.flags			= (KEYRING_SEARCH_NO_STATE_CHECK |
+dcf49dbc8077e27 David Howells  2019-06-26  172  					   KEYRING_SEARCH_RECURSE),
+4bdf0bc30031414 David Howells  2013-09-24  173  	};
+4bdf0bc30031414 David Howells  2013-09-24  174  
+028db3e290f15ac Linus Torvalds 2019-07-10  175  	key_ref = make_key_ref(key, 0);
+927942aabbbe506 David Howells  2010-06-11  176  
+927942aabbbe506 David Howells  2010-06-11  177  	/* determine if the key is possessed by this process (a test we can
+927942aabbbe506 David Howells  2010-06-11  178  	 * skip if the key does not indicate the possessor can view it
+927942aabbbe506 David Howells  2010-06-11  179  	 */
+028db3e290f15ac Linus Torvalds 2019-07-10  180  	if (key->perm & KEY_POS_VIEW) {
+028db3e290f15ac Linus Torvalds 2019-07-10  181  		rcu_read_lock();
+e59428f721ee096 David Howells  2019-06-19  182  		skey_ref = search_cred_keyrings_rcu(&ctx);
+028db3e290f15ac Linus Torvalds 2019-07-10  183  		rcu_read_unlock();
+927942aabbbe506 David Howells  2010-06-11  184  		if (!IS_ERR(skey_ref)) {
+927942aabbbe506 David Howells  2010-06-11  185  			key_ref_put(skey_ref);
+927942aabbbe506 David Howells  2010-06-11  186  			key_ref = make_key_ref(key, 1);
+927942aabbbe506 David Howells  2010-06-11  187  		}
+927942aabbbe506 David Howells  2010-06-11  188  	}
+927942aabbbe506 David Howells  2010-06-11  189  
+4aa68e07d845562 Eric Biggers   2017-09-18  190  	/* check whether the current task is allowed to view the key */
+f5895943d91b41b David Howells  2014-03-14  191  	rc = key_task_permission(key_ref, ctx.cred, KEY_NEED_VIEW);
+06ec7be557a1259 Michael LeMay  2006-06-26  192  	if (rc < 0)
+028db3e290f15ac Linus Torvalds 2019-07-10  193  		return 0;
+^1da177e4c3f415 Linus Torvalds 2005-04-16  194  
+074d58989569b39 Baolin Wang    2017-11-15  195  	now = ktime_get_real_seconds();
+^1da177e4c3f415 Linus Torvalds 2005-04-16  196  
+028db3e290f15ac Linus Torvalds 2019-07-10  197  	rcu_read_lock();
+028db3e290f15ac Linus Torvalds 2019-07-10  198  
+^1da177e4c3f415 Linus Torvalds 2005-04-16  199  	/* come up with a suitable timeout value */
+ab5c69f01313c80 Eric Biggers   2017-09-27  200  	expiry = READ_ONCE(key->expiry);
+39299bdd2546688 David Howells  2023-12-09  201  	if (expiry == TIME64_MAX) {
+^1da177e4c3f415 Linus Torvalds 2005-04-16  202  		memcpy(xbuf, "perm", 5);
+074d58989569b39 Baolin Wang    2017-11-15  203  	} else if (now >= expiry) {
+^1da177e4c3f415 Linus Torvalds 2005-04-16  204  		memcpy(xbuf, "expd", 5);
+7b1b9164598286f David Howells  2009-09-02  205  	} else {
+074d58989569b39 Baolin Wang    2017-11-15  206  		timo = expiry - now;
+^1da177e4c3f415 Linus Torvalds 2005-04-16  207  
+^1da177e4c3f415 Linus Torvalds 2005-04-16  208  		if (timo < 60)
+074d58989569b39 Baolin Wang    2017-11-15  209  			sprintf(xbuf, "%llus", timo);
+^1da177e4c3f415 Linus Torvalds 2005-04-16  210  		else if (timo < 60*60)
+074d58989569b39 Baolin Wang    2017-11-15 @211  			sprintf(xbuf, "%llum", div_u64(timo, 60));
+^1da177e4c3f415 Linus Torvalds 2005-04-16  212  		else if (timo < 60*60*24)
+074d58989569b39 Baolin Wang    2017-11-15  213  			sprintf(xbuf, "%lluh", div_u64(timo, 60 * 60));
+^1da177e4c3f415 Linus Torvalds 2005-04-16  214  		else if (timo < 60*60*24*7)
+074d58989569b39 Baolin Wang    2017-11-15 @215  			sprintf(xbuf, "%llud", div_u64(timo, 60 * 60 * 24));
+^1da177e4c3f415 Linus Torvalds 2005-04-16  216  		else
+074d58989569b39 Baolin Wang    2017-11-15  217  			sprintf(xbuf, "%lluw", div_u64(timo, 60 * 60 * 24 * 7));
+^1da177e4c3f415 Linus Torvalds 2005-04-16  218  	}
+^1da177e4c3f415 Linus Torvalds 2005-04-16  219  
+363b02dab09b322 David Howells  2017-10-04  220  	state = key_read_state(key);
+363b02dab09b322 David Howells  2017-10-04  221  
 
-> +	complete(&saradc->completion);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static const struct iio_info cv18xx_adc_info = {
-> +	.read_raw = &cv18xx_adc_read_raw,
-> +};
-> +
-> +static int cv18xx_adc_probe(struct platform_device *pdev)
-> +{
-> +	struct cv18xx_adc *saradc;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*saradc));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	saradc = iio_priv(indio_dev);
-> +	indio_dev->name = "sophgo-cv18xx-adc";
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->info = &cv18xx_adc_info;
-> +	indio_dev->num_channels = ARRAY_SIZE(sophgo_channels);
-> +	indio_dev->channels = sophgo_channels;
-> +
-
-One blank line is almost always enough for readability and if you use too many
-we get less code on the screen and hence it hurts readability a little.
-
-> +
-> +	if (IS_ERR(devm_clk_get_optional_enabled(&pdev->dev, NULL)))
-> +		dev_dbg(&pdev->dev, "Can't get clock from device tree, using No-Die domain");
-
-Failure to get a clock is an error and you should exit with a suitable
-dev_err_probe().
-Getting a NULL answer from this call reflects that one wasn't provided
-and your handling here would be appropriate for that.
-
-> +
-> +	saradc->regs = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(saradc->regs)) {
-> +		ret = PTR_ERR(saradc->regs);
-> +		return ret;
-
-		return PTR_ERR(saradc->regs);
-and drop the brackets.
-
-> +	}
-> +
-> +	saradc->irq = platform_get_irq_optional(pdev, 0);
-> +	if (saradc->irq >= 0) {
-> +		init_completion(&saradc->completion);
-> +		ret = devm_request_irq(&pdev->dev, saradc->irq,
-> +				cv18xx_adc_interrupt_handler, 0,
-> +				dev_name(&pdev->dev), saradc);
-
-Where it isn't limited by line length, preferred style is to align to
-just after the opening bracket. e.g.
-
-		ret = devm_request_irq(&pdev->dev, saradc->irq,
-				       cv18xx_adc_interrupt_handler, 0,
-				       dev_name(&pdev->dev), saradc);
-
-> +		if (ret)
-> +			return ret;
-> +
-> +		writel(1, saradc->regs + CV18XX_ADC_INTR_EN_REG);
-> +
-
-Drop this blank line.
-
-> +	}
-
-One blank here is plenty.
-
-> +
-> +
-> +	mutex_init(&saradc->lock);
-
-Whilst mutex cleanup is of dubious benefit as only helpful if doing particularly forms
-of mutex debugging and looking for use after free etc, we do finally have devm_mutex_init()
-to make it easy so for new code I'm going to encourage it's use but not insist
-on it yet...
-
-	ret = devm_mutex_init(&saradc->lock);
-	if (ret)
-		return;
-
-> +	platform_set_drvdata(pdev, indio_dev);
-> +	writel(CV18XX_ADC_DEF_CYC_SETTINGS, saradc->regs + CV18XX_ADC_CYC_SET_REG);
-> +	ret = devm_iio_device_register(&pdev->dev, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-	return devm_iio_device_register().
-
-> +}
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
