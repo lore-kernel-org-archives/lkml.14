@@ -1,89 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB754A18
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 01:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7C14A19;
+	Sat,  6 Jul 2024 01:10:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720227862; cv=none; b=HjDjzyZ5ynDnCZvK+Jx6VwupzEi7dVo5Z8vu7vOmeN3Zxw3LSph7P2nvIDMhBPq2HLlA1Nbb3cwM7nPDPHVTVpdhDR9GK8pCHUzP4GY0mBOAm7dn2V5JSVF+fITwoMshe5GQ12jkP8yOh/2VgTReeAYJB7dwyIgiz41B3fv5MSw=
+	t=1720228233; cv=none; b=Cpcjh5w0advIWnvy4yFVB4br3rIiQCnAdfwcZ3EeipMmMESu74+Mw2d6FuW1B3XuI1ygLmB6SdW4ehHgbN5Xp6XbcBuG9gT+LyQfJ6mipsbbJcou29WSDUIdKAObJvy1jkYdfWHMA7Qb9BzwEHI4ZPn9n18gf+tyEm00TFilecg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720227862; c=relaxed/simple;
-	bh=1VaEWo6PugNMlQB4WbArRAI3mDoDE2X6SITcDlMPHWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+ZOBXdslicGhFOcmsinVif5EweFY47dkGGmJgTFUOdW2IGhtKfQlZarBUhchFcvMFA08O7gL2hAtFOK96K8oDVV7YAwDyEkTmwMaaSlcNX68vMYomG53DoR3dWUFUDwtgwRJr7ctAkw6ZNsAzqDSB7NbdTnObWr6ndRqAoCh50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1kTf4oz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720228233; c=relaxed/simple;
+	bh=zkCxmVfyAcZ3ameHi0iJtKJwpuGLKb+DGOkw/aensNY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=fFitaoj8y9hDJGVQQJTdYAytsfyed32zWYtjv1AJ8w3LFx/J2Tq6W3wD7oyv0W+alQpkREJWMmI+bx84+qD/f4O+2pO5ZOGr4WFKHuNmpGH42XGs3AuMrpP+Yjy3xfQl7fNTXknOFDHl7rvGU9s+N7b+9yqsH00Dt0wjScFoMP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfI6cLM1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1kTf4oz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA81FC116B1;
-	Sat,  6 Jul 2024 01:04:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfI6cLM1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BD9F5C32781;
+	Sat,  6 Jul 2024 01:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720227862;
-	bh=1VaEWo6PugNMlQB4WbArRAI3mDoDE2X6SITcDlMPHWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h1kTf4ozGXtICJCRVaBLk/EyqTLd0Q//xdIFcpcTRcr3NVYfnUvx3LEs5nV23GN+H
-	 k2bUsyJuCZ+l4l8y0zvDRMLycQ9+hvgiJ/RC8qQKv6k+wsJ9OsghvhGCX9CCJtrUKV
-	 Gv7/bIJVSIQ0admoUICk7sA+h5p63S4s5k85YznjJgbWDYkKM6KWyPl17Frv8YbWvs
-	 +90zyL+TKyqjB8621uMpbewxlKx91wbMkVWJItovKH0VDUfHJC5t+teiL4MY90YSeu
-	 ZEPxIK/gS1hmIissh/wsFVf1fuUZgbJkyPLJlvJITM/jh2dnozlTnocgcugnpAatnQ
-	 IXalWU/hdvCuA==
-Date: Sat, 6 Jul 2024 08:50:10 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] riscv: define ILLEGAL_POINTER_VALUE for 64bit
-Message-ID: <ZoiUwsFIHcteBSms@xhacker>
-References: <20240705170210.3236-1-jszhang@kernel.org>
+	s=k20201202; t=1720228232;
+	bh=zkCxmVfyAcZ3ameHi0iJtKJwpuGLKb+DGOkw/aensNY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=FfI6cLM1x64E4KFsAMKmN4ng2Xj0cJGiPYZ+qiLGU7tpjnlsQ+eiunOvsE8rJ3oYO
+	 cVchYkPHgW+Und3Kqvp2/9H8GJIdk7vwYaNFMK0dF05BN/L0RjQEFQU+AJLsDudGUS
+	 KqsyGa2nh+F7Y5FanmvKl+uHl2wQ1U3cQ9/7L9gDKk82SVkfYDRqmP2pq9HcO/qdRp
+	 4jp+KyQ+ZLDU2gifyz5JQonqH5JxdjyidIhbOgXsTJNDkfE0/uko3Aav6TthMNU8ps
+	 6qSbjFS59O2h3orpruXLO7ryOcxxQ9pSGEIlP6TrhrDkpZbiuD5arD7urEEbHTdu39
+	 7xYZo8IO0glng==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A51B6C43332;
+	Sat,  6 Jul 2024 01:10:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240705170210.3236-1-jszhang@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v9 00/10] net: openvswitch: Add sample multicasting.
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172022823267.9162.5749363663019747112.git-patchwork-notify@kernel.org>
+Date: Sat, 06 Jul 2024 01:10:32 +0000
+References: <20240704085710.353845-1-amorenoz@redhat.com>
+In-Reply-To: <20240704085710.353845-1-amorenoz@redhat.com>
+To: =?utf-8?q?Adri=C3=A1n_Moreno_=3Camorenoz=40redhat=2Ecom=3E?=@ci.codeaurora.org
+Cc: netdev@vger.kernel.org, aconole@redhat.com, echaudro@redhat.com,
+ horms@kernel.org, i.maximets@ovn.org, dev@openvswitch.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 
-On Sat, Jul 06, 2024 at 01:02:10AM +0800, Jisheng Zhang wrote:
-> This is used in poison.h for poison pointer offset. Based on current
-> SV39, SV48 and SV57 vm layout, 0xdead000000000000 is a proper value
-> that is not mappable, this can avoid potentially turning an oops to
-> an expolit.
+Hello:
 
-Maybe I also need to cc stable? This is a secure hole fix patch.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
+On Thu,  4 Jul 2024 10:56:51 +0200 you wrote:
+> ** Background **
+> Currently, OVS supports several packet sampling mechanisms (sFlow,
+> per-bridge IPFIX, per-flow IPFIX). These end up being translated into a
+> userspace action that needs to be handled by ovs-vswitchd's handler
+> threads only to be forwarded to some third party application that
+> will somehow process the sample and provide observability on the
+> datapath.
 > 
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
-> 
-> Since v1:
->  - fix typo:s/SV59/SV57
-> 
->  arch/riscv/Kconfig | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index c51b32a8ddff..c992eabbd002 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -313,6 +313,11 @@ config GENERIC_HWEIGHT
->  config FIX_EARLYCON_MEM
->  	def_bool MMU
->  
-> +config ILLEGAL_POINTER_VALUE
-> +	hex
-> +	default 0 if 32BIT
-> +	default 0xdead000000000000 if 64BIT
-> +
->  config PGTABLE_LEVELS
->  	int
->  	default 5 if 64BIT
-> -- 
-> 2.43.0
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> [...]
+
+Here is the summary with links:
+  - [net-next,v9,01/10] net: psample: add user cookie
+    https://git.kernel.org/netdev/net-next/c/093b0f366567
+  - [net-next,v9,02/10] net: sched: act_sample: add action cookie to sample
+    https://git.kernel.org/netdev/net-next/c/03448444ae5c
+  - [net-next,v9,03/10] net: psample: skip packet copy if no listeners
+    https://git.kernel.org/netdev/net-next/c/c35d86a23029
+  - [net-next,v9,04/10] net: psample: allow using rate as probability
+    https://git.kernel.org/netdev/net-next/c/7b1b2b60c63f
+  - [net-next,v9,05/10] net: openvswitch: add psample action
+    https://git.kernel.org/netdev/net-next/c/aae0b82b46cb
+  - [net-next,v9,06/10] net: openvswitch: store sampling probability in cb.
+    https://git.kernel.org/netdev/net-next/c/71763d8a8203
+  - [net-next,v9,07/10] selftests: openvswitch: add psample action
+    https://git.kernel.org/netdev/net-next/c/60ccf62d3ceb
+  - [net-next,v9,08/10] selftests: openvswitch: add userspace parsing
+    https://git.kernel.org/netdev/net-next/c/c7815abbea45
+  - [net-next,v9,09/10] selftests: openvswitch: parse trunc action
+    https://git.kernel.org/netdev/net-next/c/b192bf12dbb0
+  - [net-next,v9,10/10] selftests: openvswitch: add psample test
+    https://git.kernel.org/netdev/net-next/c/30d772a03582
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
