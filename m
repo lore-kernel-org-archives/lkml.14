@@ -1,42 +1,42 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE2513CA8A
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 11:21:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD2D13DDCA
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 11:21:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720264910; cv=none; b=n64H/jPoPTY3cux805HXJiOp7sBLMQkocGnzYqiAUC9JQuKMGBjPbE0Wjf+2ZBsSdARFgPFbXdH6whz8eIg4Q2dZTkDaslzgbgf/SCcic9eipYXuoBx9txP9skzFeboU4OaiMyC0YgOkzG7OBhQLSHDhXbIaYuRfkXs8BYIi7U0=
+	t=1720264911; cv=none; b=M342VgrIvRFmPxLNoZLegHdP5VJ9J3EalDUtkZdGwHV50n8px9OcFZduy8ZZv/EFC19DyPKz7pUJ46PmW6VRn7cFh/DsOMdh3Ll/ymuKd2oWqnioQprSAlxfRI1kr5c4o4tk/sE6k3IKYAMRiskmy14elyRs3dynWHm2DNjsHCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720264910; c=relaxed/simple;
-	bh=v+kC+x8BAXHTESQ4t5HlKIn3i7LFkD8XW+OC7jG6D6Y=;
+	s=arc-20240116; t=1720264911; c=relaxed/simple;
+	bh=a9cIdRwbYAsMOQaFrms7Ds63b34iXruWtWg9od9s6BQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rC6ngNRMp1PMmBGFmlfz3gYGCHexuMXfb7aTCcMKkZ1kqhYTYIcczI8hNMiZWfYoOiXSwvm9IOxzlOdP8y53EIYBX0ebX4I9hb2P5hP3IwK1pQnBzg/R9W8CLZqGUrEux4jRriLcWJ/kGshyVP3NfTJPhjDLa7ceXTouBgs7fyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=IyccCOk8; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=jLOo1EKEv55AJno4LMgVzjGuqqwY8yDBGNiDJcpQ47RTtd0wRajOlCLCVRcLXgCkYHNu4jWUBJ0EncvkI1ZnOA0OloOfqtHOFXxtcCqumqoMcTcQPpel4FXrLEKlCZIWBoB4Js/UAiaY/sRgPRJtYuuQ5khmuOPSMPgOxIWlDAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=j43F58M7; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="IyccCOk8"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="j43F58M7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=omQ86OPhxmbCCLS3LFui1sAFN0oi2l5Hf+KSD1OT1QA=; b=IyccCO
-	k86gXm3ptCruc0SlbrlKklTxnrSUojAVv4PUxSvIRMp2XZBqt26FYCwfccInLHSH
-	kBC7mHiA2jUtrmjNTsTOyM/KcVNMUkrjZ+GZAtFDf7eX+L6jL+Buoyc4tBiy7+1M
-	wmIuR4UAwWNpBPvS0Jkwa45Z+DGnOhknukHeMpk3blj/8DQhoT3SU1lT70NDAR03
-	0P2ngURXpP6SkCFOATIJubi9wpQXAYvuTd3gSpWGCfuXB693MYx05aFD/MfyJ3Ib
-	wwGzdLeUJYe71CBUt7rEJGM0br0m5fIX+G7ezt22PyKwb0RF5pZMQanRv2qYYHhW
-	CB640D/utDdtQ0OA==
-Received: (qmail 3809787 invoked from network); 6 Jul 2024 13:21:32 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 13:21:32 +0200
-X-UD-Smtp-Session: l3s3148p1@IVvPYZIcopBQT+F6
+	 s=k1; bh=kFSHAcT0iazh/LMieZ8QFfwZuJMbJ2j1igrsGAApNvY=; b=j43F58
+	M7AOoVPFgVCHH6Yc6H+IQVXaPqSesNy0QUPyzBv9hUe+0e5qjvis/8/LOOZnVtdc
+	S3NIBfaGRdp3isjVrOEcEh7zKaUGbgHN6dcC5536NyRGIVi6eSnpJ/RqTzYBk2qO
+	XQryr//TwJ62OIa7NIKVlCX62No5JDhvFkDZnxhLGEYDffwG6E6ISaxLio8yXHxl
+	txGSbdL8Yjiga+qW8S6qKR4EUzq+sg7qdzSbldooqCzCDyLCBRhAtsYyDLkP92yL
+	4UPLEjrAbR4nd8FMzhIvdvuaDWfkxjK2JZ1HAb2JpqP48h1tntOJ2MC3FJLUnqaN
+	iCdFPqFHarEvu5uw==
+Received: (qmail 3809831 invoked from network); 6 Jul 2024 13:21:33 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 13:21:33 +0200
+X-UD-Smtp-Session: l3s3148p1@ZtDmYZIcsJBQT+F6
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 14/60] i2c: dln2: reword according to newest specification
-Date: Sat,  6 Jul 2024 13:20:14 +0200
-Message-ID: <20240706112116.24543-15-wsa+renesas@sang-engineering.com>
+Subject: [PATCH v2 16/60] i2c: gpio: reword according to newest specification
+Date: Sat,  6 Jul 2024 13:20:16 +0200
+Message-ID: <20240706112116.24543-17-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
 References: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
@@ -54,30 +54,35 @@ specifications and replace "master/slave" with more appropriate terms.
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 ---
- drivers/i2c/busses/i2c-dln2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-gpio.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-dln2.c b/drivers/i2c/busses/i2c-dln2.c
-index 631109c7a098..11ed055143d3 100644
---- a/drivers/i2c/busses/i2c-dln2.c
-+++ b/drivers/i2c/busses/i2c-dln2.c
-@@ -175,7 +175,7 @@ static u32 dln2_i2c_func(struct i2c_adapter *a)
+diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
+index 4f1411b1a775..e0bd218e2f14 100644
+--- a/drivers/i2c/busses/i2c-gpio.c
++++ b/drivers/i2c/busses/i2c-gpio.c
+@@ -216,8 +216,8 @@ static int fops_lose_arbitration_set(void *data, u64 duration)
+ 
+ 	priv->scl_irq_data = duration;
+ 	/*
+-	 * Interrupt on falling SCL. This ensures that the master under test has
+-	 * really started the transfer. Interrupt on falling SDA did only
++	 * Interrupt on falling SCL. This ensures that the controller under test
++	 * has really started the transfer. Interrupt on falling SDA did only
+ 	 * exercise 'bus busy' detection on some HW but not 'arbitration lost'.
+ 	 * Note that the interrupt latency may cause the first bits to be
+ 	 * transmitted correctly.
+@@ -245,8 +245,8 @@ static int fops_inject_panic_set(void *data, u64 duration)
+ 
+ 	priv->scl_irq_data = duration;
+ 	/*
+-	 * Interrupt on falling SCL. This ensures that the master under test has
+-	 * really started the transfer.
++	 * Interrupt on falling SCL. This ensures that the controller under test
++	 * has really started the transfer.
+ 	 */
+ 	return i2c_gpio_fi_act_on_scl_irq(priv, inject_panic_irq);
  }
- 
- static const struct i2c_algorithm dln2_i2c_usb_algorithm = {
--	.master_xfer = dln2_i2c_xfer,
-+	.xfer = dln2_i2c_xfer,
- 	.functionality = dln2_i2c_func,
- };
- 
-@@ -251,6 +251,6 @@ static struct platform_driver dln2_i2c_driver = {
- module_platform_driver(dln2_i2c_driver);
- 
- MODULE_AUTHOR("Laurentiu Palcu <laurentiu.palcu@intel.com>");
--MODULE_DESCRIPTION("Driver for the Diolan DLN2 I2C master interface");
-+MODULE_DESCRIPTION("Driver for the Diolan DLN2 I2C controller interface");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:dln2-i2c");
 -- 
 2.43.0
 
