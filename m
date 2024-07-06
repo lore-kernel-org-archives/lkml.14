@@ -1,44 +1,42 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0DD13AD2B
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 11:21:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE2513CA8A
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 11:21:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720264908; cv=none; b=Pcd55Nj7MKTmPftrAWQywNuEl72XqqWwOWgF13OtRKEraJvI9oSxdy2DvBk7Y8yEeGqTkitfcqUMr0l0NhiBTbFDY25RHo6/i9T5UMXZJDYX42RXjc7VceP64+UveKH9zuYO9MWXBiB6D30dyOeMGhC2UqoY6+npi2JNP/gw7/A=
+	t=1720264910; cv=none; b=n64H/jPoPTY3cux805HXJiOp7sBLMQkocGnzYqiAUC9JQuKMGBjPbE0Wjf+2ZBsSdARFgPFbXdH6whz8eIg4Q2dZTkDaslzgbgf/SCcic9eipYXuoBx9txP9skzFeboU4OaiMyC0YgOkzG7OBhQLSHDhXbIaYuRfkXs8BYIi7U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720264908; c=relaxed/simple;
-	bh=WXFufwTgiKGZ3wQTvX5QSIoPVyXoxhTxDW+DHQ8mI1E=;
+	s=arc-20240116; t=1720264910; c=relaxed/simple;
+	bh=v+kC+x8BAXHTESQ4t5HlKIn3i7LFkD8XW+OC7jG6D6Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QWZbvECxoptxGETSVq52j9vPsYuQrIbdesurFpWdP32EV5E5v0u8xRjT9N1TmyViFgoU3hYk/kDRaRC8TUlvxEp9Kq/BaVLgSZwsHPMGcOZlwr7cgVRZgrLlwk5B2TgZByu1MWPSqzym+f8q4q5hRelZJkqcK8kIdpH01aiZ8W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=EzPI1NPE; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=rC6ngNRMp1PMmBGFmlfz3gYGCHexuMXfb7aTCcMKkZ1kqhYTYIcczI8hNMiZWfYoOiXSwvm9IOxzlOdP8y53EIYBX0ebX4I9hb2P5hP3IwK1pQnBzg/R9W8CLZqGUrEux4jRriLcWJ/kGshyVP3NfTJPhjDLa7ceXTouBgs7fyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=IyccCOk8; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="EzPI1NPE"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="IyccCOk8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=yucbiOR5K/HLeLxrTAh5H0/2HYPSbOao0ZNDnyc3lAQ=; b=EzPI1N
-	PEKD/56rXHsmWq+hT3mJWaMbCa3M0gqfgzIBR0QAMr9G//BwiYPW/GPPUnL/ffrZ
-	83C1mOG1ulYAiKknth3p6HDQfbIjWSxiuatQtlPqkwuQ1YI0xAYhfFzEbaRZCa8F
-	ZnMLWrrHqRxGxt41rCSgNxB2FacMHVNI2P1KVv3I+Ir3euVVAeGBZxZmaG6C5qu4
-	HsjfmOkD9UE9S8BdU5tEwgcprogBY/Z6NSK9srrDQryFGopaxIrlTW8kY4/PDfN4
-	T7XEWU1aPWE89fs+0dbdpBQ2DVcGlpPwxFNQ/kZ98GFQduVMrHRqDbOiIO1aVvWT
-	aTZPzHTCNx6f04lg==
-Received: (qmail 3809685 invoked from network); 6 Jul 2024 13:21:30 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 13:21:30 +0200
-X-UD-Smtp-Session: l3s3148p1@9n+uYZIcgJBQT+F6
+	 s=k1; bh=omQ86OPhxmbCCLS3LFui1sAFN0oi2l5Hf+KSD1OT1QA=; b=IyccCO
+	k86gXm3ptCruc0SlbrlKklTxnrSUojAVv4PUxSvIRMp2XZBqt26FYCwfccInLHSH
+	kBC7mHiA2jUtrmjNTsTOyM/KcVNMUkrjZ+GZAtFDf7eX+L6jL+Buoyc4tBiy7+1M
+	wmIuR4UAwWNpBPvS0Jkwa45Z+DGnOhknukHeMpk3blj/8DQhoT3SU1lT70NDAR03
+	0P2ngURXpP6SkCFOATIJubi9wpQXAYvuTd3gSpWGCfuXB693MYx05aFD/MfyJ3Ib
+	wwGzdLeUJYe71CBUt7rEJGM0br0m5fIX+G7ezt22PyKwb0RF5pZMQanRv2qYYHhW
+	CB640D/utDdtQ0OA==
+Received: (qmail 3809787 invoked from network); 6 Jul 2024 13:21:32 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 13:21:32 +0200
+X-UD-Smtp-Session: l3s3148p1@IVvPYZIcopBQT+F6
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Andi Shyti <andi.shyti@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/60] i2c: davinci: reword according to newest specification
-Date: Sat,  6 Jul 2024 13:20:11 +0200
-Message-ID: <20240706112116.24543-12-wsa+renesas@sang-engineering.com>
+Subject: [PATCH v2 14/60] i2c: dln2: reword according to newest specification
+Date: Sat,  6 Jul 2024 13:20:14 +0200
+Message-ID: <20240706112116.24543-15-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
 References: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
@@ -52,79 +50,34 @@ Content-Transfer-Encoding: 8bit
 
 Change the wording of this driver wrt. the newest I2C v7 and SMBus 3.2
 specifications and replace "master/slave" with more appropriate terms.
-Remove and reword comments while here.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 ---
- drivers/i2c/busses/i2c-davinci.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/i2c/busses/i2c-dln2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
-index 7ae611120cfa..c4fb5e9ab506 100644
---- a/drivers/i2c/busses/i2c-davinci.c
-+++ b/drivers/i2c/busses/i2c-davinci.c
-@@ -263,7 +263,7 @@ static int i2c_davinci_init(struct davinci_i2c_dev *dev)
- 	/* compute clock dividers */
- 	i2c_davinci_calc_clk_dividers(dev);
- 
--	/* Respond at reserved "SMBus Host" slave address" (and zero);
-+	/* Respond at reserved "SMBus Host" target address" (and zero);
- 	 * we seem to have no option to not respond...
- 	 */
- 	davinci_i2c_write_reg(dev, DAVINCI_I2C_OAR_REG, DAVINCI_I2C_OWN_ADDRESS);
-@@ -407,8 +407,8 @@ static int i2c_davinci_wait_bus_not_busy(struct davinci_i2c_dev *dev)
+diff --git a/drivers/i2c/busses/i2c-dln2.c b/drivers/i2c/busses/i2c-dln2.c
+index 631109c7a098..11ed055143d3 100644
+--- a/drivers/i2c/busses/i2c-dln2.c
++++ b/drivers/i2c/busses/i2c-dln2.c
+@@ -175,7 +175,7 @@ static u32 dln2_i2c_func(struct i2c_adapter *a)
  }
  
- /*
-- * Low level master read/write transaction. This function is called
-- * from i2c_davinci_xfer.
-+ * Low level read/write transaction. This function is called from
-+ * i2c_davinci_xfer.
-  */
- static int
- i2c_davinci_xfer_msg(struct i2c_adapter *adap, struct i2c_msg *msg, int stop)
-@@ -428,7 +428,7 @@ i2c_davinci_xfer_msg(struct i2c_adapter *adap, struct i2c_msg *msg, int stop)
- 	if (pdata->bus_delay)
- 		udelay(pdata->bus_delay);
- 
--	/* set the slave address */
-+	/* set the target address */
- 	davinci_i2c_write_reg(dev, DAVINCI_I2C_SAR_REG, msg->addr);
- 
- 	dev->buf = msg->buf;
-@@ -440,10 +440,9 @@ i2c_davinci_xfer_msg(struct i2c_adapter *adap, struct i2c_msg *msg, int stop)
- 	reinit_completion(&dev->cmd_complete);
- 	dev->cmd_err = 0;
- 
--	/* Take I2C out of reset and configure it as master */
-+	/* Take I2C out of reset and configure it as controller */
- 	flag = DAVINCI_I2C_MDR_IRS | DAVINCI_I2C_MDR_MST;
- 
--	/* if the slave address is ten bit address, enable XA bit */
- 	if (msg->flags & I2C_M_TEN)
- 		flag |= DAVINCI_I2C_MDR_XA;
- 	if (!(msg->flags & I2C_M_RD))
-@@ -687,7 +686,7 @@ static irqreturn_t i2c_davinci_isr(int this_irq, void *dev_id)
- 			break;
- 
- 		case DAVINCI_I2C_IVR_AAS:
--			dev_dbg(dev->dev, "Address as slave interrupt\n");
-+			dev_dbg(dev->dev, "Address as target interrupt\n");
- 			break;
- 
- 		default:
-@@ -744,8 +743,8 @@ static inline void i2c_davinci_cpufreq_deregister(struct davinci_i2c_dev *dev)
- #endif
- 
- static const struct i2c_algorithm i2c_davinci_algo = {
--	.master_xfer	= i2c_davinci_xfer,
--	.functionality	= i2c_davinci_func,
-+	.xfer = i2c_davinci_xfer,
-+	.functionality = i2c_davinci_func,
+ static const struct i2c_algorithm dln2_i2c_usb_algorithm = {
+-	.master_xfer = dln2_i2c_xfer,
++	.xfer = dln2_i2c_xfer,
+ 	.functionality = dln2_i2c_func,
  };
  
- static const struct of_device_id davinci_i2c_of_match[] = {
+@@ -251,6 +251,6 @@ static struct platform_driver dln2_i2c_driver = {
+ module_platform_driver(dln2_i2c_driver);
+ 
+ MODULE_AUTHOR("Laurentiu Palcu <laurentiu.palcu@intel.com>");
+-MODULE_DESCRIPTION("Driver for the Diolan DLN2 I2C master interface");
++MODULE_DESCRIPTION("Driver for the Diolan DLN2 I2C controller interface");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("platform:dln2-i2c");
 -- 
 2.43.0
 
