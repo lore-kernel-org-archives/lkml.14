@@ -1,44 +1,45 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE841607BD
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 11:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DB116A923
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 11:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720264934; cv=none; b=eYKEsJK6ejTLmSufr87OFjQdbUQJfdE6AqKUSw3PbIq5y7T/kBOVc9UYsRXd77COebw1hnndhB4THHd6NEIauCA43XblIYRGoiCep2I8wO7Wgh3hdi9AJpfuFsETCyDLhJ/Fe2UlHhAD8gmNJ+HAikxLBafuNr6MP5MgBo+IIkU=
+	t=1720264935; cv=none; b=ALC99WN4udIqvjG3uZ6jvvHkvmD9lLgpZ6qdXKuLd8j3zOclkxtPuR82poB/DfUTzXZJyEt1XnKtgAnnInqlsO8CHWfzkvXCHhOvfwdGhM7zE+wLpvD7MHtjZ7/5h1qN6EDHUtzameMjMZtLKBgcmfwyGK079/QDwCSmPaJF9Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720264934; c=relaxed/simple;
-	bh=V8GzMYxUk0jHdZK4zpgyxLvV94uulnNsO+n9pA51jpk=;
+	s=arc-20240116; t=1720264935; c=relaxed/simple;
+	bh=NqPUGmY4yPckXxebl+IF1xCeops/RXKYXBxYsfQOsj8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f+i98IxN5we4COzA9gJdiileGAyvmnHFobkszNXKEaN8npsFbJQztqiXubMHuQ9IfeB7NmPbg6mjrrvsg/aJ5ZCMUn4FsrLmp7vJdKQ4aC+S1aXnbxRXZ6PY0TAN4HnwcEezY+Rkbfgn/AdtahQsER4d1k4TURieW3hg3x6hVPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ka0BtGaI; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=AjLXj0UXd/V5M0OSUarEXuLLSWDzr6QRIc1AvaYUyeakFICv3Pd/CEnfe5XewMWvH8Yy6U/y/MkAy0Mr7XuPJKaohMNo0TaM+ouDJhj7w1B306sDAeeuf51z5C9FpfDaxiwAU5JS8iP5gMlXhvFqPGvrzl4tBufnqDmPWY0dqzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Xj/BlVad; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ka0BtGaI"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Xj/BlVad"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=/P4DoAP5gYAxjEHPsExZWYzXzNikF5f0sRGxYHSLQ98=; b=ka0BtG
-	aI9yT89bk8EFs1JvtMldAVVSg8CFFNBeR2UiwyHQHn9Bt+H1LSLmD2CmQr2rx3GJ
-	InfW0SZ8Hb2a4kyVaQMmU/TflcKyPnuPpNDOrm3xqk1EGygZ7ENnSO05l6I5Ga2P
-	gSbfPNP7tzt24Xr7gtDAxE+N+tf3qIW/9TDx9uo/yYuxBqTqUEpX2HjLhb3aV0cL
-	7qMbD9X4KKY5anQs7k7Yb0zZaXUmR1eSgoEjnwyDh8Bib3VJmrVwY61ESI/eLE3m
-	37iADGECWFPQkFi6SqvqxpZwQhfTlJR324WTAPtj0efDu9vylxvRg3+aCikzRTOj
-	Bf5kdQGtfUS1ZSuQ==
-Received: (qmail 3810807 invoked from network); 6 Jul 2024 13:21:53 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 13:21:53 +0200
-X-UD-Smtp-Session: l3s3148p1@x9gSY5IcZMJQT+F6
+	 s=k1; bh=SgAWAHCm2OkArTMAHN6HKOX3gXJ4UsWc8pEfBk8i5mY=; b=Xj/BlV
+	adxaqmUG5/jeVIRP4JtcifKgj705u3ftXAcDiZwh9nX0kGzmhEZcyAlbi2tUlii7
+	DT7S/hTiSrc7cMaxqDIxUosN/KEH/hwYsZnnydtlhSud1GEH5u520D5IohU8B4WT
+	C/0O+j0/skUvttwNbkyJcXe4kaiUluQdMeJEqf1WdN+mpJX+j4lvDaB0MdwOJqEz
+	FyqllzLrqTqe8bq6z33tUz4TXfR7T3cxiBDhxH/7hKDwbvyYBhLnXnxtRsbIAAPT
+	1Qd+E1Vz5IPRy6sweIDBT9s8gC9NTyXTcaTrcwUZe/TAspmnoE37U1c/ZybAYJbP
+	JkMthf+GDmqR1ttw==
+Received: (qmail 3810868 invoked from network); 6 Jul 2024 13:21:54 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 13:21:54 +0200
+X-UD-Smtp-Session: l3s3148p1@kBAoY5IcbsJQT+F6
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
-	linux-renesas-soc@vger.kernel.org,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 44/60] i2c: rzv2m: reword according to newest specification
-Date: Sat,  6 Jul 2024 13:20:44 +0200
-Message-ID: <20240706112116.24543-45-wsa+renesas@sang-engineering.com>
+Subject: [PATCH v2 46/60] i2c: sprd: reword according to newest specification
+Date: Sat,  6 Jul 2024 13:20:46 +0200
+Message-ID: <20240706112116.24543-47-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
 References: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
@@ -54,54 +55,75 @@ Change the wording of this driver wrt. the newest I2C v7 and SMBus 3.2
 specifications and replace "master/slave" with more appropriate terms.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- drivers/i2c/busses/i2c-rzv2m.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/i2c/busses/i2c-sprd.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-rzv2m.c b/drivers/i2c/busses/i2c-rzv2m.c
-index b0bfc96b9ede..8380a68538ab 100644
---- a/drivers/i2c/busses/i2c-rzv2m.c
-+++ b/drivers/i2c/busses/i2c-rzv2m.c
-@@ -321,8 +321,8 @@ static int rzv2m_i2c_stop_condition(struct rzv2m_i2c_priv *priv)
- 				  100, jiffies_to_usecs(priv->adap.timeout));
+diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
+index 28c88901d9bc..9c45e75b9187 100644
+--- a/drivers/i2c/busses/i2c-sprd.c
++++ b/drivers/i2c/busses/i2c-sprd.c
+@@ -283,8 +283,8 @@ static int sprd_i2c_handle_msg(struct i2c_adapter *i2c_adap,
+ 	return i2c_dev->err;
  }
  
--static int rzv2m_i2c_master_xfer_msg(struct rzv2m_i2c_priv *priv,
--				  struct i2c_msg *msg, int stop)
-+static int rzv2m_i2c_xfer_msg(struct rzv2m_i2c_priv *priv,
-+			      struct i2c_msg *msg, int stop)
+-static int sprd_i2c_master_xfer(struct i2c_adapter *i2c_adap,
+-				struct i2c_msg *msgs, int num)
++static int sprd_i2c_xfer(struct i2c_adapter *i2c_adap,
++			 struct i2c_msg *msgs, int num)
  {
- 	unsigned int count = 0;
- 	int ret, read = !!(msg->flags & I2C_M_RD);
-@@ -351,8 +351,8 @@ static int rzv2m_i2c_master_xfer_msg(struct rzv2m_i2c_priv *priv,
- 	return ret;
+ 	struct sprd_i2c *i2c_dev = i2c_adap->algo_data;
+ 	int im, ret;
+@@ -314,7 +314,7 @@ static u32 sprd_i2c_func(struct i2c_adapter *adap)
  }
  
--static int rzv2m_i2c_master_xfer(struct i2c_adapter *adap,
--				 struct i2c_msg *msgs, int num)
-+static int rzv2m_i2c_xfer(struct i2c_adapter *adap,
-+			  struct i2c_msg *msgs, int num)
- {
- 	struct rzv2m_i2c_priv *priv = i2c_get_adapdata(adap);
- 	struct device *dev = priv->adap.dev.parent;
-@@ -370,7 +370,7 @@ static int rzv2m_i2c_master_xfer(struct i2c_adapter *adap,
- 
- 	/* I2C main transfer */
- 	for (i = 0; i < num; i++) {
--		ret = rzv2m_i2c_master_xfer_msg(priv, &msgs[i], i == (num - 1));
-+		ret = rzv2m_i2c_xfer_msg(priv, &msgs[i], i == (num - 1));
- 		if (ret < 0)
- 			goto out;
- 	}
-@@ -408,7 +408,7 @@ static const struct i2c_adapter_quirks rzv2m_i2c_quirks = {
+ static const struct i2c_algorithm sprd_i2c_algo = {
+-	.master_xfer = sprd_i2c_master_xfer,
++	.xfer = sprd_i2c_xfer,
+ 	.functionality = sprd_i2c_func,
  };
  
- static struct i2c_algorithm rzv2m_i2c_algo = {
--	.master_xfer = rzv2m_i2c_master_xfer,
-+	.xfer = rzv2m_i2c_xfer,
- 	.functionality = rzv2m_i2c_func,
- };
+@@ -378,12 +378,12 @@ static irqreturn_t sprd_i2c_isr_thread(int irq, void *dev_id)
+ 		i2c_tran = i2c_dev->count;
  
+ 	/*
+-	 * If we got one ACK from slave when writing data, and we did not
++	 * If we got one ACK from target when writing data, and we did not
+ 	 * finish this transmission (i2c_tran is not zero), then we should
+ 	 * continue to write data.
+ 	 *
+ 	 * For reading data, ack is always true, if i2c_tran is not 0 which
+-	 * means we still need to contine to read data from slave.
++	 * means we still need to contine to read data from target.
+ 	 */
+ 	if (i2c_tran && ack) {
+ 		sprd_i2c_data_transfer(i2c_dev);
+@@ -393,7 +393,7 @@ static irqreturn_t sprd_i2c_isr_thread(int irq, void *dev_id)
+ 	i2c_dev->err = 0;
+ 
+ 	/*
+-	 * If we did not get one ACK from slave when writing data, we should
++	 * If we did not get one ACK from target when writing data, we should
+ 	 * return -EIO to notify users.
+ 	 */
+ 	if (!ack)
+@@ -422,7 +422,7 @@ static irqreturn_t sprd_i2c_isr(int irq, void *dev_id)
+ 		i2c_tran = i2c_dev->count;
+ 
+ 	/*
+-	 * If we did not get one ACK from slave when writing data, then we
++	 * If we did not get one ACK from target when writing data, then we
+ 	 * should finish this transmission since we got some errors.
+ 	 *
+ 	 * When writing data, if i2c_tran == 0 which means we have writen
+@@ -653,5 +653,5 @@ static struct platform_driver sprd_i2c_driver = {
+ 
+ module_platform_driver(sprd_i2c_driver);
+ 
+-MODULE_DESCRIPTION("Spreadtrum I2C master controller driver");
++MODULE_DESCRIPTION("Spreadtrum I2C controller driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.43.0
 
