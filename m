@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15251D531;
-	Sat,  6 Jul 2024 04:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138E12B9DE;
+	Sat,  6 Jul 2024 04:55:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720241700; cv=none; b=kRHRU1w2wrywOh4CuX26ohT36hGTx63SNBDLwvLeDCHxgC7XsZyMhpT2SIO7LisYSRIJtuEKn1Q07cOvwd7ovU+p1YR+46XxHlKWYoo4zfhw4d9aVk42mAagyu2bFXIX1Cy8VoPGK+cQhx6aDe9M11F5yIII8/BR+TwEtw2oRRc=
+	t=1720241703; cv=none; b=BP5o4rKZXiSc7xTMU4TosH4XNfauIRY8a2y43IotPpHXCuFVWoVIzH6f4dEVTPjyuJKCgP0Kh0ATLI/oW3SHZV4FG7No4PKcSD9SvcSOpwPlEWdwNnHKu0ufEOBHdrpqxRjCxwD0uLuUCXUTBeLZ2jlpufmSIkjNHkqq5KStd2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720241700; c=relaxed/simple;
-	bh=aGoPC4KnjYin8zPWPQRjuoyHL9UB5EcHgY6V5B/raGk=;
+	s=arc-20240116; t=1720241703; c=relaxed/simple;
+	bh=KwV2WIt8G9niEYFmK0i6SRUe2WfayHMVr7uhmSgiDTo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=azjsN5iY93PU++tTZoYK9YzyY8jrjUbOC+UmBG4Mn9xjRTI5q4NeGPzhG1opWL/n46QVNqhPydnAcDrDKasbICDBYttRALS/E4SHDn9jfqnaTuwQcXAWLvLjYgjIpO/cJMQVHdAqMGBoQEyaOG5IXgdFOXEYh0OWyFdl2B+0OBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IlvF6a/Q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JOmuFmhVkAQTvbnjWe9F2UJ4aOiMVXitliklFihOldddlkE2rBELStJvxLJaBFKszfqrkYXNCqL1gwpXFKkR2Hqpr9zBCOtUvS4qn3kaqVFWEP003R7Vtch9NzAGCXXriJZwk7CuYCDxdBwmcqCKrrBu1euXlwGu6N3p47Cm6Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtYv3QEn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IlvF6a/Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEDC8C4AF10;
-	Sat,  6 Jul 2024 04:54:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtYv3QEn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01716C4AF0E;
+	Sat,  6 Jul 2024 04:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720241700;
-	bh=aGoPC4KnjYin8zPWPQRjuoyHL9UB5EcHgY6V5B/raGk=;
+	s=k20201202; t=1720241702;
+	bh=KwV2WIt8G9niEYFmK0i6SRUe2WfayHMVr7uhmSgiDTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IlvF6a/QwxpvpLdLxWFcbvQlUoSp8H3/o+ieuAtKg1/YIQYylMkHsWmy+qqRhHAMJ
-	 KKVI0EPl+cl7lZO4zAiScsivXcNinPQNFiB4TgDcCh23m7PZpaKPkzNGo3nhfBZbLq
-	 7W0PYw5nb8qSnPRuOGBXAvUkNbiNi/lulwfFYWMgaUuNDu91PhX12Tnrq6ZPfFkw8P
-	 eZFyOuFjG05V64jRTibO0OtvkTUuT4HuEE5eOQ0zxSB/nK+VotrIqi6KW/5eK2TqKr
-	 DCKKGGAAdVBeVqkmmmogMAdYHnjvzxAgmO1ihf4VaBp1K0y8JdJ4bKELObCNo8OUrf
-	 RqsqGHSABCyaw==
+	b=OtYv3QEn8HEy06kSit3e8Uor9XNihNWmQz0LlqKzV3X/Gkaf1oxKP5m/yVpfhoUwn
+	 +jmRFnIFEpIQwZ74Wnl3EFKYvzJlAIpdSZCesIbS3GO7+SwTv7sbOt5ikDuyha2a0f
+	 RKuPRrSl1xQ3uu3NkSeWyB+ypkZUNpy+y8LCXyncoVW4KUAJRbXYfl/9nh3CNcl9k6
+	 E6/aOT89d9gYNRxrOO2qu4WbbBtqE4jLFTjpbD2pY0svEIxih/eek84efiNRCp+SKk
+	 l6/xrBdfdQpV+UOwq3/cWmNmRU/hKv4L7d9U+2CKWvAbWD8qQ64weRptXrlDcKHdpA
+	 C4jKFMXJtcI8A==
 From: Stephen Boyd <sboyd@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>
@@ -47,9 +47,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v6 4/8] of: Add a KUnit test for overlays and test managed APIs
-Date: Fri,  5 Jul 2024 21:54:49 -0700
-Message-ID: <20240706045454.215701-5-sboyd@kernel.org>
+Subject: [PATCH v6 6/8] clk: Add test managed clk provider/consumer APIs
+Date: Fri,  5 Jul 2024 21:54:51 -0700
+Message-ID: <20240706045454.215701-7-sboyd@kernel.org>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 In-Reply-To: <20240706045454.215701-1-sboyd@kernel.org>
 References: <20240706045454.215701-1-sboyd@kernel.org>
@@ -61,206 +61,329 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Test the KUnit test managed overlay APIs. Confirm that platform devices
-are created and destroyed properly. This provides us confidence that the
-test managed APIs work correctly and can be relied upon to provide tests
-with fake platform devices and device nodes via overlays compiled into
-the kernel image.
+Unit tests are more ergonomic and simpler to understand if they don't
+have to hoist a bunch of code into the test harness init and exit
+functions. Add some test managed wrappers for the clk APIs so that clk
+unit tests can write more code in the actual test and less code in the
+harness.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Daniel Latypov <dlatypov@google.com>
+Only add APIs that are used for now. More wrappers can be added in the
+future as necessary.
+
 Cc: Brendan Higgins <brendan.higgins@linux.dev>
-Reviewed-by: David Gow <davidgow@google.com>
+Cc: David Gow <davidgow@google.com>
 Cc: Rae Moar <rmoar@google.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/of/.kunitconfig            |   1 +
- drivers/of/Kconfig                 |  10 +++
- drivers/of/Makefile                |   1 +
- drivers/of/kunit_overlay_test.dtso |   9 +++
- drivers/of/overlay_test.c          | 114 +++++++++++++++++++++++++++++
- 5 files changed, 135 insertions(+)
- create mode 100644 drivers/of/kunit_overlay_test.dtso
- create mode 100644 drivers/of/overlay_test.c
+ Documentation/dev-tools/kunit/api/clk.rst   |  10 +
+ Documentation/dev-tools/kunit/api/index.rst |   5 +
+ drivers/clk/Makefile                        |   5 +
+ drivers/clk/clk_kunit_helpers.c             | 204 ++++++++++++++++++++
+ include/kunit/clk.h                         |  28 +++
+ 5 files changed, 252 insertions(+)
+ create mode 100644 Documentation/dev-tools/kunit/api/clk.rst
+ create mode 100644 drivers/clk/clk_kunit_helpers.c
+ create mode 100644 include/kunit/clk.h
 
-diff --git a/drivers/of/.kunitconfig b/drivers/of/.kunitconfig
-index 5a8fee11978c..4c53d2c7a275 100644
---- a/drivers/of/.kunitconfig
-+++ b/drivers/of/.kunitconfig
-@@ -1,3 +1,4 @@
- CONFIG_KUNIT=y
- CONFIG_OF=y
- CONFIG_OF_KUNIT_TEST=y
-+CONFIG_OF_OVERLAY_KUNIT_TEST=y
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index dd726c7056bf..0e2d608c3e20 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -107,6 +107,16 @@ config OF_OVERLAY
- 	  While this option is selected automatically when needed, you can
- 	  enable it manually to improve device tree unit test coverage.
- 
-+config OF_OVERLAY_KUNIT_TEST
-+	tristate "Device Tree overlay KUnit tests" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	select OF_OVERLAY
-+	help
-+	  This option builds KUnit unit tests for the device tree overlay code.
-+
-+	  If unsure, say N here, but this option is safe to enable.
-+
- config OF_NUMA
- 	bool
- 
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index 2ae909adde49..abd9c578343b 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -21,5 +21,6 @@ endif
- 
- obj-$(CONFIG_KUNIT) += of_kunit_helpers.o
- obj-$(CONFIG_OF_KUNIT_TEST) += of_test.o
-+obj-$(CONFIG_OF_OVERLAY_KUNIT_TEST) += overlay_test.o kunit_overlay_test.dtbo.o
- 
- obj-$(CONFIG_OF_UNITTEST) += unittest-data/
-diff --git a/drivers/of/kunit_overlay_test.dtso b/drivers/of/kunit_overlay_test.dtso
+diff --git a/Documentation/dev-tools/kunit/api/clk.rst b/Documentation/dev-tools/kunit/api/clk.rst
 new file mode 100644
-index 000000000000..85f20b4b4c16
+index 000000000000..eeaa50089453
 --- /dev/null
-+++ b/drivers/of/kunit_overlay_test.dtso
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+/plugin/;
++++ b/Documentation/dev-tools/kunit/api/clk.rst
+@@ -0,0 +1,10 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+&{/} {
-+	kunit-test {
-+		compatible = "test,empty";
-+	};
-+};
-diff --git a/drivers/of/overlay_test.c b/drivers/of/overlay_test.c
++========
++Clk API
++========
++
++The KUnit clk API is used to test clk providers and clk consumers.
++
++.. kernel-doc:: drivers/clk/clk_kunit_helpers.c
++   :export:
+diff --git a/Documentation/dev-tools/kunit/api/index.rst b/Documentation/dev-tools/kunit/api/index.rst
+index 02b26f5e8750..5cdb552a0808 100644
+--- a/Documentation/dev-tools/kunit/api/index.rst
++++ b/Documentation/dev-tools/kunit/api/index.rst
+@@ -9,6 +9,7 @@ API Reference
+ 	test
+ 	resource
+ 	functionredirection
++	clk
+ 	of
+ 	platformdevice
+ 
+@@ -34,6 +35,10 @@ Documentation/dev-tools/kunit/api/functionredirection.rst
+ Driver KUnit API
+ ================
+ 
++Documentation/dev-tools/kunit/api/clk.rst
++
++ - Documents the KUnit clk API
++
+ Documentation/dev-tools/kunit/api/of.rst
+ 
+  - Documents the KUnit device tree (OF) API
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 4abe16c8ccdf..8bb63f1ddd98 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -18,6 +18,11 @@ ifeq ($(CONFIG_OF), y)
+ obj-$(CONFIG_COMMON_CLK)	+= clk-conf.o
+ endif
+ 
++# KUnit specific helpers
++ifeq ($(CONFIG_COMMON_CLK), y)
++obj-$(CONFIG_KUNIT)		+= clk_kunit_helpers.o
++endif
++
+ # hardware specific clock types
+ # please keep this section sorted lexicographically by file path name
+ obj-$(CONFIG_COMMON_CLK_APPLE_NCO)  	+= clk-apple-nco.o
+diff --git a/drivers/clk/clk_kunit_helpers.c b/drivers/clk/clk_kunit_helpers.c
 new file mode 100644
-index 000000000000..14180a4695ee
+index 000000000000..c4287d20214c
 --- /dev/null
-+++ b/drivers/of/overlay_test.c
-@@ -0,0 +1,114 @@
++++ b/drivers/clk/clk_kunit_helpers.c
+@@ -0,0 +1,204 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * KUnit tests for device tree overlays
++ * KUnit helpers for clk providers and consumers
 + */
-+#include <linux/device/bus.h>
-+#include <linux/kconfig.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
 +
-+#include <kunit/of.h>
-+#include <kunit/test.h>
++#include <kunit/clk.h>
++#include <kunit/resource.h>
 +
-+static const char * const kunit_node_name = "kunit-test";
-+static const char * const kunit_compatible = "test,empty";
-+
-+/* Test that of_overlay_apply_kunit() adds a node to the live tree */
-+static void of_overlay_apply_kunit_apply(struct kunit *test)
-+{
-+	struct device_node *np;
-+
-+	KUNIT_ASSERT_EQ(test, 0,
-+			of_overlay_apply_kunit(test, kunit_overlay_test));
-+
-+	np = of_find_node_by_name(NULL, kunit_node_name);
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, np);
-+	of_node_put(np);
-+}
-+
-+/*
-+ * Test that of_overlay_apply_kunit() creates platform devices with the
-+ * expected device_node
++KUNIT_DEFINE_ACTION_WRAPPER(clk_disable_unprepare_wrapper,
++			    clk_disable_unprepare, struct clk *);
++/**
++ * clk_prepare_enable_kunit() - Test managed clk_prepare_enable()
++ * @test: The test context
++ * @clk: clk to prepare and enable
++ *
++ * Return: 0 on success, or negative errno on failure.
 + */
-+static void of_overlay_apply_kunit_platform_device(struct kunit *test)
++int clk_prepare_enable_kunit(struct kunit *test, struct clk *clk)
 +{
-+	struct platform_device *pdev;
-+	struct device_node *np;
++	int ret;
 +
-+	KUNIT_ASSERT_EQ(test, 0,
-+			of_overlay_apply_kunit(test, kunit_overlay_test));
++	ret = clk_prepare_enable(clk);
++	if (ret)
++		return ret;
 +
-+	np = of_find_node_by_name(NULL, kunit_node_name);
-+	of_node_put_kunit(test, np);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
++	return kunit_add_action_or_reset(test, clk_disable_unprepare_wrapper,
++					 clk);
++}
++EXPORT_SYMBOL_GPL(clk_prepare_enable_kunit);
 +
-+	pdev = of_find_device_by_node(np);
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, pdev);
-+	if (pdev)
-+		put_device(&pdev->dev);
++KUNIT_DEFINE_ACTION_WRAPPER(clk_put_wrapper, clk_put, struct clk *);
++
++static struct clk *__clk_get_kunit(struct kunit *test, struct clk *clk)
++{
++	int ret;
++
++	if (IS_ERR(clk))
++		return clk;
++
++	ret = kunit_add_action_or_reset(test, clk_put_wrapper, clk);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return clk;
 +}
 +
-+static int of_overlay_bus_match_compatible(struct device *dev, const void *data)
-+{
-+	return of_device_is_compatible(dev->of_node, data);
-+}
-+
-+/* Test that of_overlay_apply_kunit() cleans up after the test is finished */
-+static void of_overlay_apply_kunit_cleanup(struct kunit *test)
-+{
-+	struct kunit fake;
-+	struct platform_device *pdev;
-+	struct device *dev;
-+	struct device_node *np;
-+
-+	if (!IS_ENABLED(CONFIG_OF_EARLY_FLATTREE))
-+		kunit_skip(test, "requires CONFIG_OF_EARLY_FLATTREE for root node");
-+
-+	kunit_init_test(&fake, "fake test", NULL);
-+	KUNIT_ASSERT_EQ(test, fake.status, KUNIT_SUCCESS);
-+
-+	KUNIT_ASSERT_EQ(test, 0,
-+			of_overlay_apply_kunit(&fake, kunit_overlay_test));
-+
-+	np = of_find_node_by_name(NULL, kunit_node_name);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
-+	of_node_put_kunit(test, np);
-+
-+	pdev = of_find_device_by_node(np);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
-+	put_device(&pdev->dev); /* Not derefing 'pdev' after this */
-+
-+	/* Remove overlay */
-+	kunit_cleanup(&fake);
-+
-+	/* The node and device should be removed */
-+	np = of_find_node_by_name(NULL, kunit_node_name);
-+	KUNIT_EXPECT_PTR_EQ(test, NULL, np);
-+	of_node_put(np);
-+
-+	dev = bus_find_device(&platform_bus_type, NULL, kunit_compatible,
-+			      of_overlay_bus_match_compatible);
-+	KUNIT_EXPECT_PTR_EQ(test, NULL, dev);
-+	put_device(dev);
-+}
-+
-+static struct kunit_case of_overlay_apply_kunit_test_cases[] = {
-+	KUNIT_CASE(of_overlay_apply_kunit_apply),
-+	KUNIT_CASE(of_overlay_apply_kunit_platform_device),
-+	KUNIT_CASE(of_overlay_apply_kunit_cleanup),
-+	{}
-+};
-+
-+/*
-+ * Test suite for test managed device tree overlays.
++/**
++ * clk_get_kunit() - Test managed clk_get()
++ * @test: The test context
++ * @dev: device for clock "consumer"
++ * @con_id: clock consumer ID
++ *
++ * Just like clk_get(), except the clk is managed by the test case and is
++ * automatically put with clk_put() after the test case concludes.
++ *
++ * Return: new clk consumer or ERR_PTR on failure.
 + */
-+static struct kunit_suite of_overlay_apply_kunit_suite = {
-+	.name = "of_overlay_apply_kunit",
-+	.test_cases = of_overlay_apply_kunit_test_cases,
-+};
++struct clk *
++clk_get_kunit(struct kunit *test, struct device *dev, const char *con_id)
++{
++	struct clk *clk;
 +
-+kunit_test_suites(
-+	&of_overlay_apply_kunit_suite,
-+);
-+MODULE_LICENSE("GPL");
++	clk = clk_get(dev, con_id);
++
++	return __clk_get_kunit(test, clk);
++}
++EXPORT_SYMBOL_GPL(clk_get_kunit);
++
++/**
++ * of_clk_get_kunit() - Test managed of_clk_get()
++ * @test: The test context
++ * @np: device_node for clock "consumer"
++ * @index: index in 'clocks' property of @np
++ *
++ * Just like of_clk_get(), except the clk is managed by the test case and is
++ * automatically put with clk_put() after the test case concludes.
++ *
++ * Return: new clk consumer or ERR_PTR on failure.
++ */
++struct clk *
++of_clk_get_kunit(struct kunit *test, struct device_node *np, int index)
++{
++	struct clk *clk;
++
++	clk = of_clk_get(np, index);
++
++	return __clk_get_kunit(test, clk);
++}
++EXPORT_SYMBOL_GPL(of_clk_get_kunit);
++
++/**
++ * clk_hw_get_clk_kunit() - Test managed clk_hw_get_clk()
++ * @test: The test context
++ * @hw: clk_hw associated with the clk being consumed
++ * @con_id: connection ID string on device
++ *
++ * Just like clk_hw_get_clk(), except the clk is managed by the test case and
++ * is automatically put with clk_put() after the test case concludes.
++ *
++ * Return: new clk consumer or ERR_PTR on failure.
++ */
++struct clk *
++clk_hw_get_clk_kunit(struct kunit *test, struct clk_hw *hw, const char *con_id)
++{
++	struct clk *clk;
++
++	clk = clk_hw_get_clk(hw, con_id);
++
++	return __clk_get_kunit(test, clk);
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_clk_kunit);
++
++/**
++ * clk_hw_get_clk_prepared_enabled_kunit() - Test managed clk_hw_get_clk() + clk_prepare_enable()
++ * @test: The test context
++ * @hw: clk_hw associated with the clk being consumed
++ * @con_id: connection ID string on device
++ *
++ * Just like
++ *
++ * .. code-block:: c
++ *
++ *	struct clk *clk = clk_hw_get_clk(...);
++ *	clk_prepare_enable(clk);
++ *
++ * except the clk is managed by the test case and is automatically disabled and
++ * unprepared with clk_disable_unprepare() and put with clk_put() after the
++ * test case concludes.
++ *
++ * Return: new clk consumer that is prepared and enabled or ERR_PTR on failure.
++ */
++struct clk *
++clk_hw_get_clk_prepared_enabled_kunit(struct kunit *test, struct clk_hw *hw,
++				      const char *con_id)
++{
++	int ret;
++	struct clk *clk;
++
++	clk = clk_hw_get_clk_kunit(test, hw, con_id);
++	if (IS_ERR(clk))
++		return clk;
++
++	ret = clk_prepare_enable_kunit(test, clk);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return clk;
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_clk_prepared_enabled_kunit);
++
++KUNIT_DEFINE_ACTION_WRAPPER(clk_hw_unregister_wrapper,
++			    clk_hw_unregister, struct clk_hw *);
++
++/**
++ * clk_hw_register_kunit() - Test managed clk_hw_register()
++ * @test: The test context
++ * @dev: device that is registering this clock
++ * @hw: link to hardware-specific clock data
++ *
++ * Just like clk_hw_register(), except the clk registration is managed by the
++ * test case and is automatically unregistered after the test case concludes.
++ *
++ * Return: 0 on success or a negative errno value on failure.
++ */
++int clk_hw_register_kunit(struct kunit *test, struct device *dev, struct clk_hw *hw)
++{
++	int ret;
++
++	ret = clk_hw_register(dev, hw);
++	if (ret)
++		return ret;
++
++	return kunit_add_action_or_reset(test, clk_hw_unregister_wrapper, hw);
++}
++EXPORT_SYMBOL_GPL(clk_hw_register_kunit);
++
++/**
++ * of_clk_hw_register_kunit() - Test managed of_clk_hw_register()
++ * @test: The test context
++ * @node: device_node of device that is registering this clock
++ * @hw: link to hardware-specific clock data
++ *
++ * Just like of_clk_hw_register(), except the clk registration is managed by
++ * the test case and is automatically unregistered after the test case
++ * concludes.
++ *
++ * Return: 0 on success or a negative errno value on failure.
++ */
++int of_clk_hw_register_kunit(struct kunit *test, struct device_node *node, struct clk_hw *hw)
++{
++	int ret;
++
++	ret = of_clk_hw_register(node, hw);
++	if (ret)
++		return ret;
++
++	return kunit_add_action_or_reset(test, clk_hw_unregister_wrapper, hw);
++}
++EXPORT_SYMBOL_GPL(of_clk_hw_register_kunit);
+diff --git a/include/kunit/clk.h b/include/kunit/clk.h
+new file mode 100644
+index 000000000000..73bc99cefe7b
+--- /dev/null
++++ b/include/kunit/clk.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _CLK_KUNIT_H
++#define _CLK_KUNIT_H
++
++struct clk;
++struct clk_hw;
++struct device;
++struct device_node;
++struct kunit;
++
++struct clk *
++clk_get_kunit(struct kunit *test, struct device *dev, const char *con_id);
++struct clk *
++of_clk_get_kunit(struct kunit *test, struct device_node *np, int index);
++
++struct clk *
++clk_hw_get_clk_kunit(struct kunit *test, struct clk_hw *hw, const char *con_id);
++struct clk *
++clk_hw_get_clk_prepared_enabled_kunit(struct kunit *test, struct clk_hw *hw,
++				      const char *con_id);
++
++int clk_prepare_enable_kunit(struct kunit *test, struct clk *clk);
++
++int clk_hw_register_kunit(struct kunit *test, struct device *dev, struct clk_hw *hw);
++int of_clk_hw_register_kunit(struct kunit *test, struct device_node *node,
++			     struct clk_hw *hw);
++
++#endif
 -- 
 https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
 https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
