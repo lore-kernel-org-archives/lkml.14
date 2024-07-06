@@ -1,95 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DECB52F6F;
-	Sat,  6 Jul 2024 09:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.7])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 876F31804F
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 09:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720258204; cv=none; b=Tw+Vv4Rs16256MgebWsBIbKOY/JvtWBugAZ78PSYgt2Xo3toKXRDvmWFwnoIkIyp3fBJLmWWd0P0wbWj1phHN3kCUXldpW/ijZx0Bo6UyJLWD3hEhgUT9Fu6EFNZa5lBceWfMnKsRxvdg8D9oYEGI8xhxLLcBUxG8t25SnQq6aU=
+	t=1720258274; cv=none; b=ALzjb7Upm2qmddQxE9loK/9sFWnBx7Vo5+zT1vHhPZzZVTO77P3pA+FH5F5CV/zTXRM2v96K5nEX7T+JBIuU4JOmisGjK3SHdDWAzYO0IstTWUyRCzeM9iJfxxxtMJUdI6C75Yp4AqdHAN41MBlGGh2uTgJ+3WK9lIvwsP6wq1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720258204; c=relaxed/simple;
-	bh=Q+ZAuNvfo1PLDNuwb6saf6UKRg3oyUIqT65wz6VNwlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mdBtXg9yQlXGfo9EB1f41eT/wAgePqLI+lr63+guBSxr/j3rooDWE5Zw7R+3fUdApbdeCJctXzagtGTD9Dk9jJTv8QNe8lnDbT9o+smpti+K+mI+Ob1TEWkr3qGpRFZBmzqcdtQ2bpAaiJ+hoN354xqgzT9cyj763LOacmLRPQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Kc5x37IP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720258274; c=relaxed/simple;
+	bh=JqxDCg2+VEXh7cznyrk8ch9DupyREqiMrk3U5f/c33I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rVsVtN1Ls8mktYKJ2gVJHZIeVNRbFgSqEYv66/SaOwbp84U2w48vw4EmUl3NfDUYjK5Ud0Bf7VkcrgGibkzX7U8Y+7GUe8jokNY0GSuoHbGqLL3zmdGgMX16Ii9474m+J24oD6fIFvHhZeEVS7Buy7CwnGgWF95+f7/UecOlUZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=MiZwUbwQ; arc=none smtp.client-ip=220.197.31.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Kc5x37IP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFC60C2BD10;
-	Sat,  6 Jul 2024 09:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720258203;
-	bh=Q+ZAuNvfo1PLDNuwb6saf6UKRg3oyUIqT65wz6VNwlQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kc5x37IPXd/KXYTnyhWVxzDoXwmOXsRa5lkhUApri9j23K0WVDUdWsoChDf/QZzIn
-	 nLBCT1GGHeh3IqQRpILYy+hn/QzfyHCk1qNDsE+52O4RoyRVdr3K26E82uxxYOtDvu
-	 DeHaNNHlFiUxPMmQrYl3UWnAaoMEYUipQBUHvb/o=
-Date: Sat, 6 Jul 2024 11:30:00 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: stable@vger.kernel.org, sashal@kernel.org, ast@kernel.org,
-	keescook@chromium.org, linux-hardening@vger.kernel.org,
-	christophe.leroy@csgroup.eu, catalin.marinas@arm.com,
-	song@kernel.org, puranjay12@gmail.com, daniel@iogearbox.net,
-	andrii@kernel.org, martin.lau@linux.dev, yonghong.song@linux.dev,
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
-	haoluo@google.com, jolsa@kernel.org, illusionist.neo@gmail.com,
-	linux@armlinux.org.uk, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
-	johan.almbladh@anyfinetworks.com, paulburton@kernel.org,
-	tsbogend@alpha.franken.de, linux-mips@vger.kernel.org,
-	deller@gmx.de, linux-parisc@vger.kernel.org, iii@linux.ibm.com,
-	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com,
-	linux-s390@vger.kernel.org, davem@davemloft.net,
-	sparclinux@vger.kernel.org, kuba@kernel.org, hawk@kernel.org,
-	netdev@vger.kernel.org, dsahern@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, guanwentao@uniontech.com,
-	baimingcong@uniontech.com
-Subject: Re: [PATCH] Revert "bpf: Take return from set_memory_rox() into
- account with bpf_jit_binary_lock_ro()" for linux-6.6.37
-Message-ID: <2024070631-unrivaled-fever-8548@gregkh>
-References: <5A29E00D83AB84E3+20240706031101.637601-1-wangyuli@uniontech.com>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="MiZwUbwQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=9skvF
+	UluA3dnDF5CkZEF2S63rntFhUmiVAVYNdNFY6U=; b=MiZwUbwQSBAEkIM77rC8I
+	XgoEReOT9f1/ekiMtitLL6UGq3AZ1SdalUVVY2aNwSwX/4CLpjelLDnwvssD1x5f
+	svfzGqV4d56Qc+rDu1iyZtkgYJSHRE0bTDWjRQSAjPQG0QCEgLfIXGsAIEqlaIZW
+	+xlM0CBf54uexPQz2ikjyo=
+Received: from localhost.localdomain (unknown [113.247.47.60])
+	by gzga-smtp-mta-g0-0 (Coremail) with SMTP id _____wDnz9rHCIlmVNDqAQ--.16563S2;
+	Sat, 06 Jul 2024 17:05:11 +0800 (CST)
+From: Bing Huang <huangbing775@126.com>
+To: dietmar.eggemann@arm.com
+Cc: rostedt@goodmis.org,
+	brauner@kernel.org,
+	bristot@redhat.com,
+	bsegall@google.com,
+	juri.lelli@redhat.com,
+	linux-kernel@vger.kernel.org,
+	mgorman@suse.de,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	vincent.guittot@linaro.org
+Subject: [PATCH] sched/fair: Remove stale buddies comment for last and skip
+Date: Sat,  6 Jul 2024 17:05:11 +0800
+Message-Id: <20240706090511.48818-1-huangbing775@126.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5A29E00D83AB84E3+20240706031101.637601-1-wangyuli@uniontech.com>
+X-CM-TRANSID:_____wDnz9rHCIlmVNDqAQ--.16563S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrur4fKFW3AFW5Ww4DXw17trb_yoWfZFg_C3
+	sYgwn5G340yr1agrW7Gw4fWr9Yqay8KFyrZ3Z8tFZ7ta4Iqr98JFyrCFyfGr93Gwn2kFs8
+	GFn5Was2gF18GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbNJ53UUUUU==
+X-CM-SenderInfo: xkxd0w5elqwlixv6ij2wof0z/1tbiEAQUr2VLcRhnLQABsj
 
-On Sat, Jul 06, 2024 at 11:11:01AM +0800, WangYuli wrote:
-> This reverts commit 08f6c05feb1db21653e98ca84ea04ca032d014c7.
-> 
-> Upstream commit e60adf513275 ("bpf: Take return from set_memory_rox() into account with bpf_jit_binary_lock_ro()")
-> depends on
-> upstream commit 1dad391daef1 ("bpf, arm64: use bpf_prog_pack for memory management").
-> 
-> It will cause a compilation warning on the arm64 if it's not merged:
->   arch/arm64/net/bpf_jit_comp.c: In function ‘bpf_int_jit_compile’:
->   arch/arm64/net/bpf_jit_comp.c:1651:17: warning: ignoring return value of ‘bpf_jit_binary_lock_ro’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
->    1651 |                 bpf_jit_binary_lock_ro(header);
->         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> This will prevent the kernel with the '-Werror' compile option from
-> being compiled successfully.
-> 
-> We might as well revert this commit in linux-6.6.37 to solve the
-> problem in a simple way.
+From: Bing Huang <huangbing@kylinos.cn>
 
-This makes it sound like you are reverting this because of a build
-error, which is not the case here, right?  Isn't this because of the
-powerpc issue reported here:
-	https://lore.kernel.org/r/20240705203413.wbv2nw3747vjeibk@altlinux.org
-?
+commit 5e963f2bd465 ("sched/fair: Commit to EEVDF") has removed last and
+skip. Modify the comment accordingly.
 
-If not, why not just backport the single missing arm64 commit, and why
-didn't this show up in testing?
+Signed-off-by: Bing Huang <huangbing@kylinos.cn>
+---
+ kernel/sched/fair.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-confused,
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 41b58387023d..383582f87def 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5466,8 +5466,6 @@ set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+  * Pick the next process, keeping these things in mind, in this order:
+  * 1) keep things fair between processes/task groups
+  * 2) pick the "next" process, since someone really wants that to run
+- * 3) pick the "last" process, for cache locality
+- * 4) do not run the "skip" process, if something else is available
+  */
+ static struct sched_entity *
+ pick_next_entity(struct cfs_rq *cfs_rq)
+-- 
+2.25.1
 
-greg k-h
