@@ -1,119 +1,69 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0719F135A40;
-	Sat,  6 Jul 2024 13:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C664C79;
+	Sat,  6 Jul 2024 13:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720271222; cv=none; b=Zx10/Q1uepCzukfmhikZyCiCLdHFgzTmwjGJOC0aSxwBauM7oLoRmONSo0At4YgQMwMuVksDhiWvqfUBrzuEJEBYDZAKVdyXJdh1HQZUk0rZ9anElCD/huabNwi4HNbp9youZ6CmNo3JQwcgJWSn6J2P2XK5XwXhGQl4BobBymE=
+	t=1720271608; cv=none; b=NWKBj4VGXoy3ko8Hi5bfKHLtDsFV66w9rv8Nhetk0ktWkj5ZPC5Ng6z8hoLVKuQTOQbDxY4oyBKONC8IWkXpx8RhKtjy7LTm52luEfNTJKHk6zIN0KvNEi7J93Sy7NZr3aASQavXcFfC9kgVtGWfgKX0l8Qig3Tb3BsfZjWdf+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720271222; c=relaxed/simple;
-	bh=LrAtF9S8dBofDJWB2KD8pDGKGOXkjkSRuhluE+pjONU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=POGVW0HPVU2wyvCN5pe8iZKuZUGvH6lBlOn2eKXiEZ68K/iIWdnDMgO4V44GgOecUa9O80elhkrIHJ/5LsOGB0DH+J8HntpCh5jcmNQXHIqifX35y3WlRKZ07F/DA2uL/mZ8FisClQUdIqTLdF4sAppgv1GEAXnLS9pDXZ9apS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=cx5ydO/J; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1720271608; c=relaxed/simple;
+	bh=ZrTRU6FJcwcvxcjQ5CaOXSXfqPwR5U88tYXX6lDz9oo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i48DphuNPXtMRicPjDBuX9YRbiIU8RDcoI/cTiz7ABfkWprIKx74hLegE3tpjOJXHGilDqbgf9BMGtvZyCwDXqt2P3IjQ7hSFdChReBMOVkOntek0RZgEcBSh7eH3OqpP1Gew73WR/0US5/mvtW7Onh52vHvBS6U2QuziGj/hic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IjUDjFLE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=srWxZbri; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="cx5ydO/J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720270585; x=1720875385; i=markus.elfring@web.de;
-	bh=14TLodw7s/2J8eZrvZkejp9GR+Ll8ZAolyhN9V2rcuk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=cx5ydO/JyEOrQ+dKaa0MhH/jlujkDDZyfn7lo/IeULbwD66UhVSqkl4xTz61Kd3W
-	 yWsDmRTfn/kl2i9oyXqKIxut6dNE1nJ/ILZjB+T2XE3+mTcVH5MJtU/eXtB/gyqT7
-	 TpzPphE4wv3643uPjd/3OWDlBxCZb48hZut6rmyolM9ssVhvKZFrgy3Ba+hxFKkq4
-	 M1quctPC1UZN7ixEl32Oysf1EwzKxBPbl6Q1BaD6Kx7gchyZkfc7hlgafXac7D37/
-	 fvlUY/MwY4i4KUl+rjulCEBVHniD4OGonS3FyW1Ti2WN++esXLd3HIHDMhEoKtA79
-	 JOG6jp2tbpUDmw3E/Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M604f-1sSWjS2X6p-00DwFB; Sat, 06
- Jul 2024 14:56:25 +0200
-Message-ID: <4d47b8c3-2f36-4325-b288-0faa40f876eb@web.de>
-Date: Sat, 6 Jul 2024 14:56:21 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IjUDjFLE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="srWxZbri"
+Date: Sat, 6 Jul 2024 15:13:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720271599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZrTRU6FJcwcvxcjQ5CaOXSXfqPwR5U88tYXX6lDz9oo=;
+	b=IjUDjFLEkP2tgYGO0WSs/0SLi1vxxL2ZioqNlFjVtI3bgBepDAdZ/5gjL2FHDA3XgvxC6O
+	zXNqrb3/ctq8onRnDpOOh+BzRdZO3FABhcRhJ4Wl+D3bDfyIyeIHa6Jp9a/pomt66W0JZx
+	18B7U/PiH8BbYtF7BEqolVHxw7DjjPeQGgvmv7ZQQFKsy1/Qo2kHnln9Sva39kSXtK6A5X
+	hE+/42Lx1Y0UQa0qLjASF639Bi5TmzaByYN0X25a9eGLntRsD1In+wEyS5CIHLsPUuYche
+	gH70D2uZUE1nQs0vML3/2BjdBvJLlSUeTgiEFJfVsztIIIJ4PwORjGigZjAhcg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720271599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZrTRU6FJcwcvxcjQ5CaOXSXfqPwR5U88tYXX6lDz9oo=;
+	b=srWxZbrilrJ6z+Ql+CVnw0cehffOu4VCMfjyX27q7OU7UCMxAPDzSQFLQHSQlX4PuGt4OF
+	pA2VuziMzbuosyBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: syzbot <syzbot+08811615f0e17bc6708b@syzkaller.appspotmail.com>,
+	syzbot <syzbot+380f7022f450dd776e64@syzkaller.appspotmail.com>
+Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+	daniel@iogearbox.net, davem@davemloft.net, eddyz87@gmail.com,
+	haoluo@google.com, hawk@kernel.org, john.fastabend@gmail.com,
+	jolsa@kernel.org, kpsingh@kernel.org, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev,
+	netdev@vger.kernel.org, patchwork-bot@kernel.org, sdf@fomichev.me,
+	song@kernel.org, syzkaller-bugs@googlegroups.com,
+	yonghong.song@linux.dev
+Subject: Re: [syzbot] [bpf?] [net?] general protection fault in
+ dev_map_redirect
+Message-ID: <20240706131317.Vx3MriDC@linutronix.de>
+References: <000000000000adb970061c354f06@google.com>
+ <000000000000767898061c8e30e8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Guillaume Stols <gstols@baylibre.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, David Lechner
- <dlechner@baylibre.com>, Julien Stephan <jstephan@baylibre.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20240702-cleanup-ad7606-v3-8-57fd02a4e2aa@baylibre.com>
-Subject: Re: [PATCH v3 8/8] iio: adc: ad7606: switch mutexes to scoped_guard
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240702-cleanup-ad7606-v3-8-57fd02a4e2aa@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JqUKgTvEnWS8bI1jYTwGjfK6bBvMbgyGPpRGexeA5u5IuJe9gxD
- dZSBtn2sHFQ3s0jtxY7j+dIiBbOqndp6g+kfgS0H49CoSeJhNS3H0dgkhIgXDpkfGg2L1F/
- n+Oukuz2QaF8XE8Drj4lGgkKaPZTF19jMVFEYzWAThtig8ARBRJlGlFOkCC0HH41bAo4w4Q
- grd512AxW2jWRr45aCUyg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1RYAwqcg0ic=;AvT02GhXX9HyeFBkZWOTk9IMVqN
- 7HWOggn40I2bqZKyMV20tcgFojyGdpaw+Ycjo+E2hAqA3crje4bIMb/Y0t2UOE+vlrVWJY9q1
- jUHiRP/Pv5t76+V3trzRxETsTEHFXH4RY5Z9TlZhnAi+gO1MMjXU8stCYHoojYeqOxQ2AAXCt
- 3+VS+snek2KdaOLGrdLgUYD7/Olzsdrcildsx/GD9K/eh8ZlylUu33Q01JESa4982Z9/nkRT3
- MfnVbDSi29A4XT80HXlqtJ3q2TEZxwOxi/jzYVSdtMoFlbgXgfg81m/t5jAxSL0JpoEKp8BUb
- 6yEtPRNKeSH8jRrm42i9C5ZFkO32TdCKeFxE2dNZmNPo/BZF1eSto2dHDyZIgTvPoc0LeUHUY
- bWBlq6HAHFIJeLU1VofvCgq5ABtPCh8WL5VuUf0vDIv0ZVR2yT2u/guLzqS1Qk21sJhZ+3Z3I
- hVVqqVU5Ck8khw2DcJNsUd30wMayaF5BKd7IBEGH/YdG5SaMp6UqaJ1NJHH4YUS4gj5wVDL1m
- Jt8bXcp1VyEVeVlx3HVtAz3Ma+oPyLMR6VZeJGWGXCnyOdA6Bet1t/tricX7lpDsuFmUmI1aP
- iRxH0jS3TAK4eH7MQbL1vyCJ0bIqyYXDHN0ItCip2as55+4dqJVulDPKlUaZwSM7ex5ITOrdH
- iuoGHQiCePyiBn5nh0j1WYRuLy2IjqIDXXro1TpOXfpCcuSuQTap42fzrVO77mjj9vRM3po7V
- untROKfhToPRJe1MOCi+wlRRigpOenLtYxok0Z0iFTUouP94nqFUO8WU0YMGuyXqQUYmsvNjl
- xvnw6qXFiPEuCcLOFdCjAkVnDsvxhesc+2FVH3YjBFtkA=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <000000000000767898061c8e30e8@google.com>
 
-> Switching to scoped_guard simplifies the code and avoids to take care to
-> unlock the mutex in case of premature return.
+#syz fix: tun: Assign missing bpf_net_context.
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git main
 
-Can such a change description become more imperative?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n94
-
-
-=E2=80=A6
-> +++ b/drivers/iio/adc/ad7606.c
-=E2=80=A6
-> @@ -124,19 +122,19 @@ static irqreturn_t ad7606_trigger_handler(int irq,=
- void *p)
-=E2=80=A6
->  	ret =3D ad7606_read_samples(st);
-> -	if (ret =3D=3D 0)
-> -		iio_push_to_buffers_with_timestamp(indio_dev, st->data,
-> -						   iio_get_time_ns(indio_dev));
-> +	if (ret)
-> +		goto error_ret;
->
-> +	iio_push_to_buffers_with_timestamp(indio_dev, st->data,
-> +					   iio_get_time_ns(indio_dev));
-> +error_ret:
->  	iio_trigger_notify_done(indio_dev->trig);
-=E2=80=A6
-
-I find that these control flow adjustments do not fit to the changelog.
-They can be offered in another update step (on demand), can't they?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n81
-
-
-There are no scoped_guard() calls performed in your patch.
-How do you think about to use a summary phrase like =E2=80=9CSwitch mutex =
-calls to mutex guard usage=E2=80=9D?
-
-Regards,
-Markus
+Sebastian
