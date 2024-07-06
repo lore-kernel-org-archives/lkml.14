@@ -1,152 +1,136 @@
-Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01olkn2081.outbound.protection.outlook.com [40.92.102.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52DD23BE;
-	Sat,  6 Jul 2024 12:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.102.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720270582; cv=fail; b=YeqSIKdMvwaiWysvkO2RIDqOd/1A0l/3iBfc3mruf2DyyWuK7YsW8M99eriSPRk8lAaCxCY0GXXHskHf79E5swJ26RTXti23jcNREhO+MmxpO7BV0wLyDZNT2cNsIED2evYlBgol2aihBPcpAcJAl9SVNcZWQ75K3s6FuSSbTBY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720270582; c=relaxed/simple;
-	bh=QWNBRCb7JbXWO2xGWDsp3WrYX6YbvrpK3aNJdDamE+s=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uwpICcdlcKcys2RJYLB0hbctpqqOH6M4laawT1htF8MfoWCaM0kdt/9uLRq6W77js57iVR+Tzq6ucRfwnvZS0x2UDMioTGb/Rap0pS1zOC0VTF395u3pCuwsIyZmSuldxfySlSbZjLXDwcUP1FeFJrlFATA8gPdSQ2wSghtwEqE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=Y7TJ9JCu; arc=fail smtp.client-ip=40.92.102.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B244F4C79;
+	Sat,  6 Jul 2024 13:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720271217; cv=none; b=Wb5nuu4aSH4AAHCdfO82nX++4vyU5jleYrr+uAx9g+At80slYbuWmMth32E7bVCDxOurB58S8t3cGYpR71/RTECN4e56lrcgFYOh8RCm08ME8SFmcFSi0kiN1ZdIwRAfGJrNGUKj9QLkPnes/Ka6XCOJwv8SZ00BR/IkryMk8zE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720271217; c=relaxed/simple;
+	bh=ITG/Z8kP1Mn7kjCQSGQLhNgA6BBoYTJl6W2jhxfXJjU=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=GD9ngv3xNWE4dODLLmlQqvP0jUq9CsGc+DZDn3nenOB0gFj8Kt0TObHX0vk08WEVrhZDJkr/8Uc6tFG2F2fdZ2g/F5/6l3zuB/UFpu//VOyvHmYVVDeqa4I7eZDVxCp85fikYWRjtd4jmAONNusyfSUkoeWfYhgU81xOj3MKkYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yw7DzEWC; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="Y7TJ9JCu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J2GWtUNg2M3cI0QPASBLynzcENmLun6g3IkHoIdXiQNKOsdf1rfOBqZPFDIg0zzwuiwEsVPpNmb8q4Re7K+PPcQAJLIlcpExFwrR3KSIBZwE0kJ23/f7I1cyW+xqDFBaNmNur/rm8Haue6L5o/8Zr/lpvJU2Me1dtW0DFNo38ItMB0IawL6+W/tDgzSp88jnQpza1ORTTj25X5f71HBavqZr6ELlaSy/raTkuZm3RGEtUb34pBFt3R8vu86YwJ494iBgnVp8rJpMULOdk9MnIiBqSqSX61QeKUIACOdWAegnIhKorMGHlOM7S5PmNuI/5rjgXeGHXnsgrP3ivIc/Gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QWNBRCb7JbXWO2xGWDsp3WrYX6YbvrpK3aNJdDamE+s=;
- b=n0gFp0pGfiXys5iQLNJA3Z+aU2kKY9nQJI/UgB/A9vHEWsA68gA/RaWupOCGjRBshMhcHu/7QmSm1vJTEDytvK7Orjwph0CgA3b153Ko+bVrZskQ/zcV00MhGaH8Ym8G8IlHQ/msZtOp3qoQ4n9vZh3kM+qDidBs3nGSffXfxU9tfwl6m5bPcr6GrnPxAXmK3JXIeaKrF4Nk/bh4Uzy1fzwu+gMlcSMa8NGl6T0Qsi354FFlepbITOoprnfcI3zYLeBRZZOuyD437jz5Q1d6J0UJv8qI+dNVu8AHESkTU4aF3TYzG4R9k/X4DGo/2OJTIyvzGKXA+YYn9TbvlcFJEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QWNBRCb7JbXWO2xGWDsp3WrYX6YbvrpK3aNJdDamE+s=;
- b=Y7TJ9JCuhWcO9Af+93NVcInNvONvNUXJWUbSir9Hm5Rk2Hmd9ZDcKTUfK40E5dkbGUOEhOrBsEfWvfVL5i6HqkQOW0k6w/c6FTG0IuFALbGkDLP//hFn1ycTJieR3lYiq2CYNOUbC2jeErFZEq5EpdrxRDCq6gtvk13LmcYeXwp3V+Dk6fWntFL9Pkig+AwL8fpQmQlp/+sBfigBoelJb324TMOCQIsdhJQCOk5PFRFPGEWRwNDfBt+3DUv6I2D3wgFkjEK0j6TQf+VFWdMru51YfbHpX88NRwHlSoa6FRUw5Xf/UQqVEib6oEcPAJswGILI2C/8ydUWNm8p9SKj8Q==
-Received: from MA0P287MB0217.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:b3::9) by
- PN3P287MB0789.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:174::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7741.31; Sat, 6 Jul 2024 12:56:15 +0000
-Received: from MA0P287MB0217.INDP287.PROD.OUTLOOK.COM
- ([fe80::98d2:3610:b33c:435a]) by MA0P287MB0217.INDP287.PROD.OUTLOOK.COM
- ([fe80::98d2:3610:b33c:435a%4]) with mapi id 15.20.7741.031; Sat, 6 Jul 2024
- 12:56:15 +0000
-From: Aditya Garg <gargaditya08@live.com>
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC: "oneukum@suse.com" <oneukum@suse.com>, "stern@rowland.harvard.edu"
-	<stern@rowland.harvard.edu>, Kerem Karabay <kekrby@gmail.com>, Orlando
- Chamberlain <orlandoch.dev@gmail.com>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org"
-	<linux-usb@vger.kernel.org>, "linux-scsi@vger.kernel.org"
-	<linux-scsi@vger.kernel.org>, "usb-storage@lists.one-eyed-alien.net"
-	<usb-storage@lists.one-eyed-alien.net>
-Subject: Re: [PATCH v3 1/2] USB: core: add 'shutdown' callback to usb_driver
-Thread-Topic: [PATCH v3 1/2] USB: core: add 'shutdown' callback to usb_driver
-Thread-Index: AQHaz5yAS+i+TdTeKU6c11DkRXEKIrHpoxgAgAACioCAAALZgA==
-Date: Sat, 6 Jul 2024 12:56:13 +0000
-Message-ID: <7CF44361-A11B-4C30-B2F7-A66C986D3143@live.com>
-References: <58227E2C-1886-40AD-8F80-7C618EF2D8F2@live.com>
- <7AAC1BF4-8B60-448D-A3C1-B7E80330BE42@live.com>
- <2024070612-squealer-wackiness-c885@gregkh>
- <1E1BF62B-E8F6-411F-B06C-4A28C96B4897@live.com>
-In-Reply-To: <1E1BF62B-E8F6-411F-B06C-4A28C96B4897@live.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn: [Qoeu7CdgzfrwjYO7YijztYGtA3DtNBvetGnIGEVvsJcGHW4212a+xtyWck0CgThV]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MA0P287MB0217:EE_|PN3P287MB0789:EE_
-x-ms-office365-filtering-correlation-id: 8c5696dd-35fc-4d76-50ae-08dc9dbb0448
-x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799003|8060799006|461199028|3412199025|4302099013|440099028|1602099012|102099032;
-x-microsoft-antispam-message-info:
- GSUpfrP89OQR5qh9pnY4AIl0UNFVzMdrKS6ahE5pLJt9Ps1ofhWuQvdlDQi/PwETz/NL3ay6H8k0bk6DBOPRTYN7QRcaehAGpr1g0aA8RqcdQdic3R2ZQLKL/5VhSlN8Pxb9Ga+2gp0nhY3FAly30HjDEn45bFUke81ykUgY9xGUEfoc2SkRUURV70MpYjgKRSVfVyM3JiFOtOKzboMHR3LTtTbJsxByxJc1Z/YdOhlcbOUGYLKGeu2qfi+eS0C71PAfGdNcW5I92fqoUjh11Zlfv+LgT+rBSLWnEfMl9aec6iC0O843QCiToUqUURNfjG2xp74AAjQKWolqOcJfxQ6wPEYt6yLK02Mu1KkVJnQUi0buCH3x9hsP/fPU/T3yttQlDqLenXLqlm+pxqEH0LuefTTWcpGSP3FYgVS1Xed+oLEJ5TIbeE4zoER1fLIK+YVEZ1+YsuOc/scEUr39i80WgnmtnG1dB22qR3PangGRYfUVdzTRwq1oHxpsI/mLjZZyoOmJW1y9UuVigJ5lEIioXjmbOpCXMD6fj5t1MjMKuyR6QdLX5Pnm5Eaoo1fxU4hs6zDHvzLZLdv9nG4ygfIqPnTBIQa/xvR85o/70X19qx7/8Zg8vpcqZedIxwlI3kzya7rDc3sleDyxvJMjXmslVu6MHChlgY81AeXkrUMB4l8PGgjTIfxfA1FOGdrJEsF7kU8rANOZn7nIwSTmYKr5Li+LSb/rqxKZ/vJqZXQg//UJZJ5FF3/7ltLtUq6Ve2UxXnnoP09eRDYxlP2ilQ==
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?aFRRNmJOQWtRdS9ZRnFTVzZ1dEJZdDNLekQ0NlFxV0ViTEs4QnZ0VXdHMjhz?=
- =?utf-8?B?enNCNFl1dmxSNE9zMnNqK2NwdzNGVEwxZTk5ak9VdGxmUndqamEwMHExdXdU?=
- =?utf-8?B?REVOSHBjWkJHQjZYakQ4YzRFUlYrbDJmTWs2alN5cjRqcXhtR09Vbm5UMkdy?=
- =?utf-8?B?MG5BU1lhSGhlRWVwRFJ0RFA2WnNUcVNoazBPTC9iWVdIQzRHSEJmUVRhQWpK?=
- =?utf-8?B?ajhTL1dDcjB0RnpXM1lkb2Z6OEpQRTA4aWdFSDZVM0JqVUZmNzRvUWY4dlhy?=
- =?utf-8?B?L1BPekczU2Z2bEhERnNUWWFXTURqeDRYbGV4WTZWMHAzNVpuZmluSHl3eUM5?=
- =?utf-8?B?ZmFLK1gxNi8wRHpiSWM2bzdPNjZOVUVFaENJc2p3UnRuZnhyN0tkMytxYWR6?=
- =?utf-8?B?Yzcwd1d1SzVHeEhHTVdrMjZhSmNFdWxaQVE5Smd5Z2diTWx5MktCeEZqRUVV?=
- =?utf-8?B?ekhxc0lwS3JoUXNUdzVoQm01TndjbEVkdXI3ZUVtK21RYkpaRVBXQW8veWtk?=
- =?utf-8?B?VzhaQTY2SnNTSE1RRkd3b3pUWlc2UGh2THhQKzVZTDRaOTRDaTRFczloRXA0?=
- =?utf-8?B?M3RCZHRzL2hLRTVWaXEybGNGdXR0cnRIL0tRd3ovZTZzYUlSWlRnTWtVTnhi?=
- =?utf-8?B?UWh6V09DQ01hYlFUYUNyam5sWlZ3ME40aUhDc2ZxZEJLM3FoYm5HZ2FsSU4w?=
- =?utf-8?B?c2hSRXZiQ2k1VFpBMWc3bkdINlY4UzZQWXRQTW5XNzF0djZ1eTJzQ3BJc0s2?=
- =?utf-8?B?VWVrYlFRVmZhUFFIMzVMN011aEs3bWNLdnNQVnYvWFRaZ1ZyWHQ4eit3d0wr?=
- =?utf-8?B?NDFWNTl4UVN3bUEzUUh0ak5KbG04UitZS0NQSGU4TUhYNmhNell4ZUpvdWIv?=
- =?utf-8?B?SlJmaGtoWm9pajNLM1JYKzl3UUFneEhON1Vsc2IyV2tmOFh4eVVleG5Rb0Rq?=
- =?utf-8?B?ZlNsL2VsNU5mM0ZlQVVIK2RVd0RVamJ0NUJ2M3RrQ01jbDhaVmlRTjlrbXNv?=
- =?utf-8?B?dFpBTnVuV2Rrb0VJNWFqVHNobUtDZmJMTEhsdlBERElvV3g0bmRzTldJOUtV?=
- =?utf-8?B?Ujd6MDN4ckIyTzB6bGQrV0pZL0J2MHA1alpiQVo5dnVaanJsaFFrdnoxOUFp?=
- =?utf-8?B?aGNaVHY4VnNIQlduQ2x2VjQ5Y1VvQ3ViZHEwS0Q4bkwrN1pjY2dYRWpGRnU2?=
- =?utf-8?B?YU42T0RjRXoxekR3b2wraklSdXZQTFlvZXlWUlpXa1UzRUlwWjExTHNsVFVz?=
- =?utf-8?B?L0hqZUMrdmZweUhuQkR0Qk5tc1V2WVFScDRNV0NjZWJjS2IwYVN6NEFIRXJV?=
- =?utf-8?B?MGJKa0pNbmNtYUtubWxxeHNjTTlyT3RnQzg5WUFRQ3grM0NiellzTnlyMFVs?=
- =?utf-8?B?WFVvSnNVMXNySzJKTUFnTHgvQ05lck9VNjBCZG1YSDBNbS90NVdxV2xHWFJa?=
- =?utf-8?B?NnZqc01BZ1ovNmtkYlpGbjhaTStibStIQk90OGRxSjRuaWViWDdrSUtLeThj?=
- =?utf-8?B?d0hpRWVCREkrcDFOZVFPNEhtK09ncjEyeXBzZkFNamdkazd5SnNuZ25rQXFi?=
- =?utf-8?B?UnhPYUNVOUZnYjRtS0dFYmVnYXZyemgxSzhIU2hqQVdORE5ucFpoWEZYK01D?=
- =?utf-8?B?dmFmQ241ZkZhVTdrMFV6bUtibnBwZW03dkc4L2loTDdJVy94K0FxWFZGRXRU?=
- =?utf-8?B?KzU4RDdjcUozMGEvZmkwaXpSRENXNVlQL1E1ZmNEUXIxaG9pTElWZUtReVND?=
- =?utf-8?Q?qTx+91PyC5KiFOOpHxBrBq9wNuJyH4cH9Qc90ep?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0EED9A1C0EE4A34AB199B9B3403048F9@INDP287.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yw7DzEWC"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-79efb877760so60368185a.3;
+        Sat, 06 Jul 2024 06:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720271214; x=1720876014; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qSCQj2degSTK+qsPzw81NmlVV+zzbYgqLm9ceOV5bfw=;
+        b=Yw7DzEWCsvieUYDZsuAybpw/9muDz8QSnu3oQjq2MfiqN7Izw0+sk/xQRguSStBh9e
+         LsOovN2V4onC+5P94sMkDfmr/UYVE/w4exx4IM4alvvqDvp7k+0GLbbrI4sBrmg2nkqr
+         diGQuvE79yGSI2ANwQaUSOPrCFDXuVlLWED9KxcWXM+pS4wzJSisIWMzcFC3W1wARWhp
+         PPtSV9X3oRT2sSHsAsTtTKFF6GUp8irHPJO79b8MLMQrmQ/AsmQaqGe4Mbeb8H4wpE92
+         bcd2KeG2Y9G6jAU4/WfSOHc4kQvs+pUo7WFKg6BQ2aoqTuOahH45ghJwFJunf4BqCH1p
+         es9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720271214; x=1720876014;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qSCQj2degSTK+qsPzw81NmlVV+zzbYgqLm9ceOV5bfw=;
+        b=c0L9hQLKa6AnNFsWkzT7xzpORoKSlPT0LAfRxUXATNzuLEaRuxrdTlClzjGsE8MI/E
+         wsaFFwIDyIIv1Oiqifmc2UTdd2EDDrxKcIS4+ZbJTYPJHTMzUzsItSi0Ly9HfOdHlF9Y
+         e9odS82IkHNTjBl03NDS9ha9kqr7nv3KO9Vno35SSq1oeWlELcJB9tSBgYJ4X7DcvU4Q
+         8GcgbolzOEdVnC0rlvQZbBv3pXZnVDEYyrfVctP8V0Aom1LmJmBlnMXIhYVRZftFH7Zv
+         coPCmcDDn1HcSRhL6gAFe/rk7hQWEoalyblxaaAktGNWz8TdUVDoiR41OiN6o4sD958F
+         6tUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPdneqsI9GHRP2m0hCdphHU08mRTS5oGevjWkL/4w7aQyrxNaZhyf9k6vmFZ/Wx3Ju7eoRZR+yC+cSbKALpCVDM45e6HN/eqynqBrd
+X-Gm-Message-State: AOJu0Ywkiew7kmIBMOts0SCVLPKhQ0CuaC6zONVZ8CWDQzFZLEhR5o4q
+	yVgwpR9GdNpLmrAtpBxYoOfC8dkCvLzJ5Ef2Pkd0Eo55YaSiS66+
+X-Google-Smtp-Source: AGHT+IGIy7gqfCWqSXog2cFahn8QlkKDRIFTZEVOoyXeRoinbhclTmAuGAEy3AAyjKl3kxF2rloeZg==
+X-Received: by 2002:ad4:4ea9:0:b0:6b5:dc3e:fcb5 with SMTP id 6a1803df08f44-6b5ecf8d18amr80474256d6.2.1720271214348;
+        Sat, 06 Jul 2024 06:06:54 -0700 (PDT)
+Received: from localhost (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b609925635sm42726d6.33.2024.07.06.06.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jul 2024 06:06:53 -0700 (PDT)
+Date: Sat, 06 Jul 2024 09:06:53 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: echken <chengcheng.luo@smartx.com>, 
+ davem@davemloft.net, 
+ edumazet@google.com, 
+ kuba@kernel.org, 
+ pabeni@redhat.com
+Cc: netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ echken <chengcheng.luo@smartx.com>
+Message-ID: <6689416d489e3_12869e29438@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20240705032048.110896-1-chengcheng.luo@smartx.com>
+References: <20240705032048.110896-1-chengcheng.luo@smartx.com>
+Subject: Re: [PATCH] Support for segment offloading on software interfaces for
+ packets from virtual machine guests without the SKB_GSO_UDP_L4 flag.
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-24072.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB0217.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c5696dd-35fc-4d76-50ae-08dc9dbb0448
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2024 12:56:13.6017
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3P287MB0789
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-DQoNCj4gT24gNiBKdWwgMjAyNCwgYXQgNjoxNeKAr1BNLCBBZGl0eWEgR2FyZyA8Z2FyZ2FkaXR5
-YTA4QGxpdmUuY29tPiB3cm90ZToNCj4gDQo+IA0KPiANCj4+IE9uIDYgSnVsIDIwMjQsIGF0IDY6
-MDbigK9QTSwgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmcgd3JvdGU6DQo+PiANCj4+IE9uIFNh
-dCwgSnVsIDA2LCAyMDI0IGF0IDEyOjAzOjIzUE0gKzAwMDAsIEFkaXR5YSBHYXJnIHdyb3RlOg0K
-Pj4+IEZyb206IEtlcmVtIEthcmFiYXkgPGtla3JieUBnbWFpbC5jb20+DQo+Pj4gDQo+Pj4gQ3Vy
-cmVudGx5IHRoZXJlIGlzIG5vIHN0YW5kYXJkaXplZCBtZXRob2QgZm9yIFVTQiBkcml2ZXJzIHRv
-IGhhbmRsZQ0KPj4+IHNodXRkb3duIGV2ZW50cy4gVGhpcyBwYXRjaCBzaW1wbGlmaWVzIHJ1bm5p
-bmcgY29kZSBvbiBzaHV0ZG93biBmb3IgVVNCDQo+Pj4gZGV2aWNlcyBieSBhZGRpbmcgYSBzaHV0
-ZG93biBjYWxsYmFjayB0byB1c2JfZHJpdmVyLg0KPj4+IA0KPj4+IFNpZ25lZC1vZmYtYnk6IEtl
-cmVtIEthcmFiYXkgPGtla3JieUBnbWFpbC5jb20+DQo+PiANCj4+IFdoZXJlIGRpZCBLZXJlbSBk
-byB0aGlzIHdvcms/ICBBbnkgcmVhc29uIHdoeSB0aGV5IGFyZW4ndCBzdWJtaXR0aW5nDQo+PiB0
-aGVzZSB0aGVtc2VsdmVzPyAgTm90IHRoYXQgdGhpcyBpcyBhIHByb2JsZW0sIGp1c3QgdHJ5aW5n
-IHRvIGZpZ3VyZSBvdXQNCj4+IHdoYXQgd2VudCB3cm9uZyB3aXRoIHRoZSBkZXZlbG9wbWVudCBw
-cm9jZXNzIGhlcmUuDQo+IA0KPiBJIHdvcmsgYXQgaHR0cHM6Ly90MmxpbnV4Lm9yZy8sIGEgcHJv
-amVjdCBhaW1lZCB0byBicmluZyBMaW51eCB0byBUMiBNYWNzLg0KPiANCj4gS2VyZW0gaGVscGVk
-IGluIGRldmVsb3BpbmcgdGhlIGRyaXZlciBmb3IgdGhlIFRvdWNoIEJhciBvbiB0aGVzZSBNYWNz
-Lg0KPiBEdXJpbmcgZGV2ZWxvcG1lbnQsIGhlIGRpZCBzb21lIGltcHJvdmVtZW50cyB0byB0aGUg
-SElEIGNvcmUsIFVTQiBjb3JlDQo+IGFuZCBEUk0sIHdoaWNoIGFyZSBub3Qgc3BlY2lmaWMgdG8g
-dGhlIE1hY3MsIGJ1dCBhcmUgdXNlZCBpbiB0aGUgZHJpdmVyLg0KPiANCj4gQXMgdG8gd2h5IGhl
-IGRpZG4ndCBzdWJtaXQgaGltc2VsZiwgdW5mb3J0dW5hdGVseSBLZXJlbSBzZWVtcyB0byBoYXZl
-IGxlZnQNCj4gdGhlIHByb2plY3QgYW5kIGlzIG5vdCBjb250YWN0YWJsZSBhdCBhbGwuIEZvcnR1
-bmF0ZWx5LCB0aGUgcGF0Y2hlcyBoZSBjb250cmlidXRlZA0KPiB3ZXJlIHNpZ25lZCBvZmYgYnkg
-aGltLiBTaW5jZSB3ZSBoYXZlIGhpcyBTaWduZWQtb2ZmLWJ5IGFuZCB0aGUgY29kZSBpcyBHUEwy
-LA0KPiBJTU8sIEkgY2FuIGxlZ2FsbHkgc3VibWl0IHRoaXMuDQo+IA0KPiBMaW5rIHRvIG91ciBw
-YXRjaHNldDogaHR0cHM6Ly9naXRodWIuY29tL3QybGludXgvbGludXgtdDItcGF0Y2hlcw0KDQpZ
-b3UgY2FuIGFsc28gZmluZCBoaXMgbGludXggdHJlZSB3aXRoIHRoZSBkcml2ZXIgb3ZlciBoZXJl
-Og0KaHR0cHM6Ly9naXRodWIuY29tL2tla3JieS9saW51eC10Mi90cmVlL3RvdWNoYmFyDQoNCj4+
-IA0KPj4gdGhhbmtzLA0KPj4gDQo+PiBncmVnIGstaA0KDQoNCg==
+echken wrote:
+> When running virtual machines on a host, and the guest uses a kernel
+> version below v6.2 (without commit https://
+> github.com/torvalds/linux/commit/860b7f27b8f78564ca5a2f607e0820b2d352a562),
+
+Prefer format commit 860b7f27b8f7 ("linux/virtio_net.h: Support USO
+offload in vnet header.")
+
+>  the UDP packets emitted from the guest do not include the SKB_GSO_UDP_L4
+> flag in their skb gso_type. Therefore, UDP packets from such guests always
+> bypass the __udp_gso_segment during the udp4_ufo_fragment process and go
+> directly to software segmentation prematurely.
+
+GSO packets should have either SKB_GSO_UDP_L4 (UDP segmentation) or
+SKB_GSO_UDP (UDP fragmentation). Not both. Note that UFO is also long
+deprecated and discouraged.
+
+> When the guest sends UDP
+> packets significantly larger than the MSS, and there are software
+> interfaces in the data path, such as Geneve, this can lead to substantial
+> additional performance overhead.
+> 
+> Signed-off-by: echken <chengcheng.luo@smartx.com>
+> ---
+>  net/ipv4/udp_offload.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+> index 59448a2dbf2c..6aa5a97d8bde 100644
+> --- a/net/ipv4/udp_offload.c
+> +++ b/net/ipv4/udp_offload.c
+> @@ -402,6 +402,13 @@ static struct sk_buff *udp4_ufo_fragment(struct sk_buff *skb,
+>  	if (unlikely(skb->len <= mss))
+>  		goto out;
+>  
+> +	if (skb_gso_ok(skb, features | NETIF_F_GSO_ROBUST)) {
+> +		/* Packet is from an untrusted source, reset gso_segs. */
+> +		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(skb->len - sizeof(*uh),
+> +							 mss);
+> +		return NULL;
+> +	}
+> +
+
+So what this really does is bypass software fragmentation in virtual
+devices that advertise SKB_GSO_UDP.
+
+That's fine, I suppose. But is not what the commit message currently
+says.
+
+>  	/* Do software UFO. Complete and fill in the UDP checksum as
+>  	 * HW cannot do checksum of UDP packets sent as multiple
+>  	 * IP fragments.
+> -- 
+> 2.34.1
+> 
+
+
