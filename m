@@ -1,47 +1,43 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3789816D31C
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 11:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB9516E863
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 11:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720264937; cv=none; b=UyqzCTVOzxqS78kjcEyQd4y9Toi8B8vnhafGTO9tpGgBuPGuzE3JkniXbZfDIA14HRk/sTK6fEj6vAI9USj6DFcrOWPJ38GSCdV54bV82s/7HjO/fQwVvJuMIj2ThR88KUEng+Zxr8hZZfvTX6kR9ALdwtLtBrQNqtwVwg4U5SE=
+	t=1720264938; cv=none; b=q/CiADs2QEocN81UkNZAyO3btsWAkHD8EPs8qYeJMa6yvfqk24bXNf5nVL6fvnpYj6y9XtSCfxw4XQhJW0NzM3EmtB207LIDC4ml3kyxa4uctvea6qU/wTR7QZQtKt7ZDWfcOBUR6Nzjocj015b25cSTrk+Ryrxozb5fV3KpIEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720264937; c=relaxed/simple;
-	bh=xHPnpi6eiQDJE9L+MxdWpmnPjGGiALkR0vdSK6lSWo4=;
+	s=arc-20240116; t=1720264938; c=relaxed/simple;
+	bh=eBHrHkI6Nd4d5SCWQASyR9US5Mg6JBED6ehzIwuKkTw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FUzjU04Ft2FkboF0c6JkoS1OPt9BGYfugzlN4RbV+ZaTWd9NlYPj7ieI7VxZpFJxkcaxUvzCSzLy6VbURY6PCrldkXRk2DHqtOHJX2UVeWzC8QsAX/8zzT2mQaEnHDwz6t2nPIsuGbDpFWS72GbGtwCt1BkSCS1Qfm7TzM+acAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=iZZLcf0C; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=Qexrc6eFuXd3q4RCMkfsjtB968t93Bv6axk4rFZ0IJiIAezApiRQdhFGBPe28PlAJ6N5VccqkN3z0nQfSk8EU2bs2o18yq2jqJkQexMylXG2kQMKsBpZi2PkG2Hl6JkgV3Bh7lo2iQiz04Q3itr8ejpdE8k2oncNUmu7N5th/xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=eaeuSlPf; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="iZZLcf0C"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="eaeuSlPf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=QJWNzgVhiKNUakSn/o8o6saMacqq+3MIaWzpwwRPzks=; b=iZZLcf
-	0C/yqF4Ipvs0fLkbI2GHbneYnvyphkTCN8MGd+HGJadBNkYa44fjrU+RB/Xkbd1e
-	8sErBBV7hK7RHG2JkkSWng5cyR6CFsRrib7xfrJAjQjkfSsRxwuGL1NKkYhaAgaR
-	naJb93vpPDHn+ngOSDBu8TtjxYtjwrl2GPZ2NLZs9RUvjkdOdAKQXgvxgKoDs195
-	kBklfsyqjDehqrrUXtk38Zwb+n8UL3G/Xajz4jQPgHVSHfL8mvv7rkvu4+uayytF
-	t7DWCYKVMSN4IRTXntY47KNp6pCw+GVwrxeoz/8n/jQzoHN8DxC+jS8MoNfoPhvt
-	DPiF7YZZkLWHpYvQ==
-Received: (qmail 3810899 invoked from network); 6 Jul 2024 13:21:55 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 13:21:55 +0200
-X-UD-Smtp-Session: l3s3148p1@uDUyY5IcSuFQT+F6
+	 s=k1; bh=PXtdsFJxyZ9m8awyqCgDuxOaIoekKdLAdMsXbGbMzfs=; b=eaeuSl
+	PflF/EcGuJKwitEEMAX6Wvm2iAHCo9Bt6Ua7JQ3WeL5o6X72L9Rb83zvVyiNwfWX
+	z51+ZV2X34wnVDyhfPgyh+9JACk2ag84yrzN4qqlDhFG6i4SHzuUiTi3b6uYejLx
+	C7BVTWJQ/r7Xwjd8X+d87FD7G5mEfoldRu9xLn6dsXFwU6EboEuxRWW1Qu7TCRBG
+	3ClnKYC/QOGyL07zOXIdkJi1Z4DCaOrHPSu2bN8t9/pt9WX9c0MdGzW+CHa1Qs2/
+	Q/JUW6hi9GKkywLMkc2ng0wFTZFt5oqgESjuSZ84BFi8B5OkHrKQNMg50qV7eI/H
+	mIFbBZzlisYWkRew==
+Received: (qmail 3810957 invoked from network); 6 Jul 2024 13:21:56 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 13:21:56 +0200
+X-UD-Smtp-Session: l3s3148p1@mTdGY5IcXOFQT+F6
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
-	Alain Volmat <alain.volmat@foss.st.com>,
+	Jean Delvare <jdelvare@suse.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 47/60] i2c: stm32f4: reword according to newest specification
-Date: Sat,  6 Jul 2024 13:20:47 +0200
-Message-ID: <20240706112116.24543-48-wsa+renesas@sang-engineering.com>
+Subject: [PATCH v2 49/60] i2c: taos-evm: reword according to newest specification
+Date: Sat,  6 Jul 2024 13:20:49 +0200
+Message-ID: <20240706112116.24543-50-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
 References: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
@@ -58,49 +54,22 @@ specifications and replace "master/slave" with more appropriate terms.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-stm32f4.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-taos-evm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-stm32f4.c b/drivers/i2c/busses/i2c-stm32f4.c
-index f8b12be6ef55..230fff0c0bf9 100644
---- a/drivers/i2c/busses/i2c-stm32f4.c
-+++ b/drivers/i2c/busses/i2c-stm32f4.c
-@@ -95,7 +95,7 @@
- 
- /**
-  * struct stm32f4_i2c_msg - client specific data
-- * @addr: 8-bit slave addr, including r/w bit
-+ * @addr: 8-bit target addr, including r/w bit
-  * @count: number of bytes to be transferred
-  * @buf: data buffer
-  * @result: result of the transfer
-@@ -480,7 +480,7 @@ static void stm32f4_i2c_handle_rx_done(struct stm32f4_i2c_dev *i2c_dev)
- 
- /**
-  * stm32f4_i2c_handle_rx_addr() - Handle address matched interrupt in case of
-- * master receiver
-+ * controller receiver
-  * @i2c_dev: Controller's private data
-  */
- static void stm32f4_i2c_handle_rx_addr(struct stm32f4_i2c_dev *i2c_dev)
-@@ -643,7 +643,7 @@ static irqreturn_t stm32f4_i2c_isr_error(int irq, void *data)
- 
- 	/*
- 	 * Acknowledge failure:
--	 * In master transmitter mode a Stop must be generated by software
-+	 * In controller transmitter mode a Stop must be generated by software
- 	 */
- 	if (status & STM32F4_I2C_SR1_AF) {
- 		if (!(msg->addr & I2C_M_RD)) {
-@@ -749,7 +749,7 @@ static u32 stm32f4_i2c_func(struct i2c_adapter *adap)
- }
- 
- static const struct i2c_algorithm stm32f4_i2c_algo = {
--	.master_xfer = stm32f4_i2c_xfer,
-+	.xfer = stm32f4_i2c_xfer,
- 	.functionality = stm32f4_i2c_func,
- };
- 
+diff --git a/drivers/i2c/busses/i2c-taos-evm.c b/drivers/i2c/busses/i2c-taos-evm.c
+index b0f0120793e1..cb97f72291bc 100644
+--- a/drivers/i2c/busses/i2c-taos-evm.c
++++ b/drivers/i2c/busses/i2c-taos-evm.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Driver for the TAOS evaluation modules
+- * These devices include an I2C master which can be controlled over the
++ * These devices include an I2C controller which can be controlled over the
+  * serial port.
+  *
+  * Copyright (C) 2007 Jean Delvare <jdelvare@suse.de>
 -- 
 2.43.0
 
