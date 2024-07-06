@@ -1,132 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C519C77104;
-	Sat,  6 Jul 2024 14:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52473131E38;
+	Sat,  6 Jul 2024 14:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720274709; cv=none; b=NU36slbWVqpHBI9Byn++uiYGv01kX+X54mf2C89iDx9uKhHvRncxmOGNNp5m+qsZIAo+KSCFAFQbmDnXgb1TEyCiEz7hSBhDb8wDGz00lyZqNNtMdFqwScJPiTnM6nvwoeftSIFWMQE5TAKZrHfTfe3ZwKTwRQiFlfg6pfkYl6A=
+	t=1720274730; cv=none; b=FyWJOVzsQGcOTE5CrB/x6MycQMrY4mphh9f1JSb2zPpQjSe5hbvkh5EmqrQeXzP8MY8uql1YJ3dzb6vZ8DEYJdeV54xvB6ThPRWUdUYvaetXOHFT7v3adoqVws8HoIrknCuRZEHr9tV3n0+0WfQpSLaxD748SMm2zjbCleSGMr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720274709; c=relaxed/simple;
-	bh=zDA7DjIHng7gBzabRQ4/boNw6+/aaA+4H7gLsS+Vfos=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=t3KazlQXzfdv56qEveEqF/aFnTOUT+u79GVc2fGmTBJ6UmHWV6QMl6YKG82lhh7tv6DB0vXO/Yef2mmiRF0W49pZdgkopNa81Cjtk+aqm4DTlrSgTo92MMbtgZC1T0a9ABzGGqHDyIbbobJbkl3thffab36YAWV+aDQvXA/uriw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nS32CIJY; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nS32CIJY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720274708; x=1751810708;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=zDA7DjIHng7gBzabRQ4/boNw6+/aaA+4H7gLsS+Vfos=;
-  b=nS32CIJYMvDn5J/N4X7pDccDyXxlgLA/bcj564WoPGkbsI6HHDi7gs/J
-   NZq+s5KoNe7TEuBJQE/BIl0b3h9ccBeQ8ld3BPFlEjk6ltVRxDTxdkE2x
-   +RqVQnnhmBF5Gv08Ei8H7uyrPQu3V3m26hIR4XIdGfZDBaXtXvBqJ9G6r
-   byD2I377jOmEaS3hvNKf57jycMw42crw7LDQcKMJoieZrAO11iwRGBD7W
-   oG6bHZmbXLJNuAQHHRk7A8fLpfpXLWk/I/eBM1eJkBEg++4s1VG5VT2HF
-   PXeaxnpcVHR8/xgPnyIdT2yGmmRHKHt1bcxHDLKZovPc0+J33QuN+v/yM
-   A==;
-X-CSE-ConnectionGUID: ryql6drFSLKuFAhNxA5sqQ==
-X-CSE-MsgGUID: lQDWxKntQkmApgHIJ8MSEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="17664921"
-X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
-   d="scan'208";a="17664921"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 07:05:07 -0700
-X-CSE-ConnectionGUID: CIx505l9Q+ik7gk6M2SA/Q==
-X-CSE-MsgGUID: oUvsf7XURJqcpTxGFgQn1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
-   d="scan'208";a="47823537"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.111])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 07:05:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sat, 6 Jul 2024 17:05:01 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: linux-doc@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH V4 1/3] platform/x86/intel/sdsi: Add ioctl SPDM
- transport
-In-Reply-To: <20240608034247.181843-1-david.e.box@linux.intel.com>
-Message-ID: <9dff7095-9796-dbf1-3269-d0e480cccaec@linux.intel.com>
-References: <20240608034247.181843-1-david.e.box@linux.intel.com>
+	s=arc-20240116; t=1720274730; c=relaxed/simple;
+	bh=MSc8OTMQZrHOQM8n4bGSW9rNoDlLTQ/CsDbfWASvVmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K8RUJQx5NKx+OnlkSBjwvuxSPyaa7ck1TpxDd5jTAcU9F+bevXloSWfCw93ZItp3xTOupMoakuT2tsBEnOJCVivIw6BaPPRLIuKWMCgFB3yw0g5CITAxG8AXFj3O+YgkBaavRIykpr8EAD+JjdVQcJgPz02Tgm9QGhGDZZ/CEFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Date: Sat, 6 Jul 2024 14:05:24 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] serial: 8250: don't lost port's default capabilities
+Message-ID: <20240706140524.GYA4122589.dlan.gentoo>
+References: <20240706082928.2238-1-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240706082928.2238-1-jszhang@kernel.org>
 
-On Fri, 7 Jun 2024, David E. Box wrote:
+Hi
 
-> Intel On Demand adds attestation and firmware measurement retrieval
-> services through use of the protocols defined the Security Protocols and
-> Data Measurement (SPDM) specification. SPDM messages exchanges are used to
-> authenticate On Demand hardware and to retrieve signed measurements of the
-> NVRAM state used to track feature provisioning and the NVRAM state used for
-> metering services. These allow software to verify the authenticity of the
-> On Demand hardware as well as the integrity of the reported silicon
-> configuration.
+On 16:29 Sat 06 Jul     , Jisheng Zhang wrote:
+> Commit b0b8c84cf58d ("serial: of_serial: Handle auto-flow-control
+> property") added support for fifo-size and hw-flow-control properties
+> to avoid adding new types to 8250.c for UARTs that are compatible with
+> the standard types but that have different size fifo or support 16750
+> compatible auto flow control. We avoided many new 8250 port types with
+> this nice feature, but there's a problem, if the code detects fifo-size
+> or auto-flow-control property, up->capabilities will be set
+> accordingly, then serial8250_set_defaults() will ignore the default
+> port's capabilities:
+
 > 
-> Add an ioctl interface for sending SPDM messages through the On Demand
-> mailbox. Provides commands to get a list of SPDM enabled devices, get the
-> message size limits for SPDM Requesters and Responders, and perform an SPDM
-> message exchange.
+> |if (!up->capabilities)
+> |	up->capabilities = uart_config[type].flags;
 > 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Link: https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf [1]
+so the previous old logic is trying to override the config of 'type' uart,
+while this patch try to extend capabilities with default config of 'type' uart as base
+
+I tend to agree this is right direction (but wasn't 100% sure..)
+
+btw, Jisheng, can you also check serial8250_do_startup()? which has similar logic
+
+> If the port's default capabilities contains other bits such as
+> UART_CAP_SLEEP, UART_CAP_EFR and so on, they are lost.
+> 
+> Fixes: b0b8c84cf58d ("serial: of_serial: Handle auto-flow-control property")
+
+I believe the commit just reveal the problem, make it more visible, but not the root cause,
+'git blame' lead to b6830f6df8914f ("serial: 8250: Split base port operations from universal driver")
+as the original commit introduce this logic which seems exist long time ago..
+
+
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 > ---
-> V4
->    - In sdsi_spdm_do_command(), change rsp_size from u32 to int to
->      catch error from sdsi_spdm_exchange(). Reported by lkp.
->    - Use SPDM_HEADER_SIZE in sdsi_spdm_do_command()
-> V3
->    - Use %zu format for size_t
->    - Simplify return in sdsi_spdm_ioctl()
+>  drivers/tty/serial/8250/8250_port.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> V2
->    - Move size < 4 check into sdsi_spdm_exchange() and add comment
->      clarifying return values of that function.
->    - Use SZ_4K and add helpers
->    - Use devm_kasprintf()
->    - Remove unnecessary parens
->    - Use --attest for long option
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 893bc493f662..e20614241229 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -3245,8 +3245,7 @@ void serial8250_set_defaults(struct uart_8250_port *up)
+>  			up->port.fifosize = uart_config[type].fifo_size;
+>  		if (!up->tx_loadsz)
+>  			up->tx_loadsz = uart_config[type].tx_loadsz;
+> -		if (!up->capabilities)
+> -			up->capabilities = uart_config[type].flags;
+> +		up->capabilities |= uart_config[type].flags;
+>  	}
+>  
+>  	set_io_from_upio(port);
+> -- 
+> 2.43.0
 > 
->  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
->  MAINTAINERS                                   |   1 +
->  drivers/platform/x86/intel/sdsi.c             | 209 +++++++++++++++++-
->  include/uapi/linux/intel_sdsi.h               |  81 +++++++
->  4 files changed, 291 insertions(+), 1 deletion(-)
->  create mode 100644 include/uapi/linux/intel_sdsi.h
-
-> diff --git a/include/uapi/linux/intel_sdsi.h b/include/uapi/linux/intel_sdsi.h
-> new file mode 100644
-> index 000000000000..8e28764f4a98
-> --- /dev/null
-> +++ b/include/uapi/linux/intel_sdsi.h
-
-> +/**
-> + * struct sdsi_spdm_message - The SPDM message sent and received from the device
-> + * @spdm_version:		Supported SPDM version
-> + * @request_response_code:	The SPDM message code for requests and responses
-> + * @param1:			Parameter 1
-> + * @param2:			Parameter 2
-> + * @buffer:			SDPM message specific buffer
-> + *
-
-Extra newline here.
-
-> + */
-> +struct sdsi_spdm_message {
-> +	SPDM_HEADER;
-> +	__u8 buffer[SZ_4K - SPDM_HEADER_SIZE];
-> +};
-
 
 -- 
- i.
-
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
