@@ -1,52 +1,92 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9C7A95B;
-	Sat,  6 Jul 2024 07:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E612B9B7;
+	Sat,  6 Jul 2024 08:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720252793; cv=none; b=rt6MuOpRjMq41QjMdIy/bdiQTAiclnEd93uSw7qmKJr0c1VJjVdBO9NivoQape4TwD5Yzs3OPcsha6LJly3d7cA7zouUvPnI782m2TlWgZJLdzvOTc0pPkcujc914OAi2Kc2sqw+SBPsruOT/7cIlBkxJ7F3i5iSdROdvCb+vh0=
+	t=1720252826; cv=none; b=sDSTQmGiczBEF/omg/xNMKLa/PrhpkoN43VIIVnhP+2I9ZuVOzSYKRzvghSW4GmYJ6s5Qz0o1G4g7QF+kRzALlJekY8mkcDHbA9ipZ875BOh5ZsCU66/CiyjhmXEfH3hkLoEJbrGTdCOB1eVG9YhwbTy3YPDRcd2WtLUPiBn3rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720252793; c=relaxed/simple;
-	bh=4Is1fl9+XVfPQbWOYW0V70tCBSJi6otXstucqqs+T/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XbxGY/hdFPyqk7yvpxpj3q7CT6rtwTEL2wTQ6q4IA4gxUGaVJcJdMwhTrsGBycVGcy5sgRg1gS8k5nLkiYyuD1B00KoJB63l5JkL3ECfiQWluQ1dQSnve6i4Nm/3G2FYve508GTK1BdknEDvHm5Z2dRRnbZeN6qZ30BlSuISAa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 28FEB68AA6; Sat,  6 Jul 2024 09:59:49 +0200 (CEST)
-Date: Sat, 6 Jul 2024 09:59:48 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: John Garry <john.g.garry@oracle.com>
-Cc: chandan.babu@oracle.com, djwong@kernel.org, dchinner@redhat.com,
-	hch@lst.de, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	jack@suse.cz, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	catherine.hoang@oracle.com, martin.petersen@oracle.com
-Subject: Re: [PATCH v2 11/13] xfs: Only free full extents for forcealign
-Message-ID: <20240706075948.GD15212@lst.de>
-References: <20240705162450.3481169-1-john.g.garry@oracle.com> <20240705162450.3481169-12-john.g.garry@oracle.com>
+	s=arc-20240116; t=1720252826; c=relaxed/simple;
+	bh=l0OvSIEh5IK5PphP346o1Y0nzFKcQmfMXuqPHsphDao=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e3Yyyky19z5NHUCWiLZeTV/hnh6KTjurL0yyHNvfneRtoynNX86KZWMEUqTfljpgMUtP4XKIUiMpesX0TMpmaRqxzInjPXqyy6WYCtH/v/MAoRXawdIgXLJGdZpzp+nF50FputQS5sXpRcLm4MUpnUHFpQGNXgP27h3golKl7bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gxmicro.cn; spf=none smtp.mailfrom=gxmicro.cn; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gxmicro.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gxmicro.cn
+X-QQ-mid: bizesmtp83t1720252782t6qsiff5
+X-QQ-Originating-IP: HpfmTQNQuiKiGRsdXbnezJOgPGy94hySGLY76zrPsMc=
+Received: from localhost.localdomain ( [139.227.197.63])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sat, 06 Jul 2024 15:59:40 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 6247354441702454303
+From: dongxiong zheng <zhengdongxiong@gxmicro.cn>
+To: manivannan.sadhasivam@linaro.org
+Cc: dmaengine@vger.kernel.org,
+	fancer.lancer@gmail.com,
+	linux-kernel@vger.kernel.org,
+	vkoul@kernel.org,
+	zhengdongxiong@gxmicro.cn
+Subject: Re: [PATCH RESEND 2/2] damengine: dw-edma: Add msi wartermark configuration
+Date: Sat,  6 Jul 2024 15:59:31 +0800
+Message-Id: <20240706075931.306-1-zhengdongxiong@gxmicro.cn>
+X-Mailer: git-send-email 2.33.0.windows.2
+In-Reply-To: <20240705141101.GA57780@thinkpad>
+References: <20240705141101.GA57780@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240705162450.3481169-12-john.g.garry@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:gxmicro.cn:qybglogicsvrgz:qybglogicsvrgz8a-0
 
-> +	if (xfs_inode_has_forcealign(ip)) {
-> +		startoffset_fsb = roundup_64(startoffset_fsb, ip->i_extsize);
-> +		endoffset_fsb = rounddown_64(endoffset_fsb, ip->i_extsize);
-> +	} else if (xfs_inode_has_bigrtalloc(ip)) {
->  		startoffset_fsb = xfs_rtb_roundup_rtx(mp, startoffset_fsb);
->  		endoffset_fsb = xfs_rtb_rounddown_rtx(mp, endoffset_fsb);
+> On Fri, Jul 05, 2024 at 06:57:35PM +0800, zheng.dongxiong wrote:
+> > HDMA trigger wartermark interrupt, When use the RIE flag.
+> > PCIe RC will trigger AER, If msi wartermark addr is not configuration.
+> > This patch fix it by add msi wartermark configuration
+> >
+> > Signed-off-by: zheng.dongxiong <zheng.dongxiong@outlook.com>
+>
+> HDMA driver is not at all using watermark interrupts. So we should be disabling
+> them altogether.
+>
+> See: https://lore.kernel.org/dmaengine/1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com/
+>
+> - Mani
+>
 
-And just like elsewhere this should use common helpers.
+Hi Mani:
 
-I mean in the end the rtextsize is basically a special case of force
-align.  The checks should be able to cover both easily.
+Ok, Thanks you!
 
+> > ---
+> >  drivers/dma/dw-edma/dw-hdma-v0-core.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > index d77051d1e..c4d15a7a7 100644
+> > --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > @@ -280,6 +280,9 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
+> >  	/* MSI done addr - low, high */
+> >  	SET_CH_32(dw, chan->dir, chan->id, msi_stop.lsb, chan->msi.address_lo);
+> >  	SET_CH_32(dw, chan->dir, chan->id, msi_stop.msb, chan->msi.address_hi);
+> > +	/* MSI watermark addr - low, high */
+> > +	SET_CH_32(dw, chan->dir, chan->id, msi_watermark.lsb, chan->msi.address_lo);
+> > +	SET_CH_32(dw, chan->dir, chan->id, msi_watermark.msb, chan->msi.address_hi);
+> >  	/* MSI abort addr - low, high */
+> >  	SET_CH_32(dw, chan->dir, chan->id, msi_abort.lsb, chan->msi.address_lo);
+> >  	SET_CH_32(dw, chan->dir, chan->id, msi_abort.msb, chan->msi.address_hi);
+> > --
+> > 2.34.1
+> >
+>
+
+Regards,
+dongxiong zheng
