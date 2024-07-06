@@ -1,55 +1,57 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FBF4778B;
-	Sat,  6 Jul 2024 10:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A7D7172F;
+	Sat,  6 Jul 2024 10:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720261455; cv=none; b=gy+MJROPIDYmFjhhrUrpn5gs0B1+QufiaRTHh4wqhCirKE4GI2ujcCW+iTltVNv621xMsNKKev6O+jhQdaqAjVvyxIBlzPhbh47oaxCpWQOj5/fn4+NXe8ITTJiwVyEN79i4xNHYyvj+wEpn8Cw5hMxcfHP3UwFxEhQy3QMV1Eo=
+	t=1720261462; cv=none; b=qnUT8CkwI+xnGZ2R1KT+/ab3aaHJ26gfL2xXAorfSm+gscS3sFMTrGnqYvCP+dnCHu/7c0F4KppCddZaUFXxQ7IYBMuW30N476utEPEcGi3DNoTbUgKJzLISIW1bQYkgDlk77qZHlFus4o0jlGZH9i/bnziAwyDIdfyceQaCErk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720261455; c=relaxed/simple;
-	bh=v7fyDVZ4Zen5Kc42NhGyOL1GP4zenYzvdS/sloF7BMI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HUo6myP0B28IEEKe210Ex37gWm++ezQXoFfe0kxr6DrowTYQgVRAIG/+rUYPbiQ/YMnzhOkjcsiJz/U/M7JYffSC8d6PhzQiI53XJTNCRWhec4RdqV2SFUGjNiB8sbH++Eyd4qQSJBgpprB6ZcgyRFKvzef8EJieCsM6zTzejzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R0SVvUcQ; arc=none smtp.client-ip=209.85.214.172
+	s=arc-20240116; t=1720261462; c=relaxed/simple;
+	bh=xNcPhhbRnzZiWFwFDA+zeSRCL1Crs0ptxekpV/3+PVo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hsZ1elW8C00pObL4LYA3tSO3X6ZLd7jUL1X64R/lQesW1ZRBsgTm+fYO/erHXSF79vBrZEBPB8p9Ky+lcqeKKziFMW/yyc6vPiJkcxMK2FcabuSYcX6gi/WYKWKNPADSDkSO8QVp3E6HzAPjjHnkcAXz7KWMFahAv9QytwTRSUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=COtl24ib; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0SVvUcQ"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f4c7b022f8so16653915ad.1;
-        Sat, 06 Jul 2024 03:24:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COtl24ib"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-75e7e110e89so1401567a12.3;
+        Sat, 06 Jul 2024 03:24:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720261453; x=1720866253; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wukxN0PIXiJkpvJy8jm2igAsjxWST6oYyCh6lRk67BQ=;
-        b=R0SVvUcQkzURDNzAi4GqwLQ471aHL2JCrxUq+53W+ANTgTXwc4HkpiD15iL/d6tbrV
-         2b1g7u7gA5sPcVItI9WBFN50Pb+mluIMuWFF1tV2EkAhC/9txo7OB9OtPY66KAhF2NoN
-         0zEhQheIon6VwrjK38KcCFDi2qIn8E7nUn/PqBw25hu8M0NhLs3AW4nKGy+Gh0WUKzqO
-         auI/9lHGH4Avj29mL6TzP5eHdOPCsfSJjkY3rinyC696emGEi38OZVIDfYso6C2p78Ej
-         m32TJmXGzrXXVSshHzbYdGEC3vfZIvTuc6h8mvaSchGpdDEHgh/9e6wQE97Ia5lSF5uX
-         Ig/g==
+        d=gmail.com; s=20230601; t=1720261461; x=1720866261; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jCLSW0HbBwbaS3nL0I53zWuMSMpYt360azX1zUWdd0k=;
+        b=COtl24ibAgbJEl9kkKifdjbU9XcO/IkxlFrwev031oF5yBbUCCYzy57fa6zl1gi2m0
+         cfVN9IVrvGFWUhhFlq/ljYC5IiZjXfe3cPW49yULf4AwkqLFelSClDFn3Ge9se72qPBg
+         RQTt1940PlqDkhjpFEFmFlCWbE2vUCOyXx/yIureHfZqU/s2stxqg5tQ4WXXLridgpHi
+         fLW1eLG+oDAOFd3ncoZVcCMNrIQSc0SU6CIzRZG3AcIr3LFI6/BQBp7yEq/Syc6Bhxyz
+         GYDk0CEeWuuxNs13iowEh52iJ/09HodXg6hM8FumWvQOkJCtjuGpJ6CX7ntUwV4ATvj3
+         1lHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720261453; x=1720866253;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wukxN0PIXiJkpvJy8jm2igAsjxWST6oYyCh6lRk67BQ=;
-        b=ix7b3A41B/PjyHkXubWy7aOATth67Rv2B7aYadXNg6pl61Xn0sQiZ6ljvmM01W7lTg
-         VizzLU8C3ItOhHtKU0SE1HijK3ZktTg8mKO8ZsvkOCeBd2hp3LsiDl74d9CQuUiv24vl
-         ev4CR0HC2ZDpU2C5zp3qsX04K/4sOygU0V4dC5Veg7jMkQBDlpvLydyTKl5RHYvrWS6U
-         GAkz/+OfFRG+WP5IhdRHh9NwlnH47Y57mANLWI/BwWO1PcQnFFtNQzkvg0E3HlJrrwnh
-         n29Ck/mX4nvBPlStIUJQjqoHpAzIurp61/3pPQ3BI0xUhRR5X2w1Hxn0kbjzlnUn4NK5
-         5t/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVBfIW2YEqWVDdQn1JZAvkfz1GtRmnsMNa8s4/IIZT/Y8bLbzNEwYR2jYb+Zp01r2oh1Z7hgHyygtcRUUrB/JMM7GAkpIJTbxR5Yw==
-X-Gm-Message-State: AOJu0YwHG4kRbY9+WlIHAEg9312spU/A/B7jXYMQYKeTBATfodpA8Wd6
-	LeatLe3RysH/lkdok1MAEoBRc22wU1MJl37RZr+6N4d9UGJ4ScZ+aOPJ93wthnk=
-X-Google-Smtp-Source: AGHT+IGRVGt0AwBNkvSk99WrI8NjrmtZs3O2g4U++wOVairspqjrDCMDgAyi3brqtmPuxNpVtbT3UQ==
-X-Received: by 2002:a17:902:ecc6:b0:1fb:5808:73af with SMTP id d9443c01a7336-1fb5808756fmr27183725ad.61.1720261453365;
-        Sat, 06 Jul 2024 03:24:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720261461; x=1720866261;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jCLSW0HbBwbaS3nL0I53zWuMSMpYt360azX1zUWdd0k=;
+        b=OAqjlvI397feO5qhRWAvgEog6DP0JfCAHfAOxgY2JM+YQ9CamEuyyxq0ieS2ClaDG8
+         /oKglIeVJs/hs+Y05JJKykF1+39A3armLS2nuXI/xBguFD8JuPRStJTR3Htqfaw67AWF
+         eaVcpvnYVF6XvtF00tIYFxVjoK67nZVxu+UmYMbKw82u4jyKe9SC4/S5V7NhnZHk09wN
+         6yhMwKKaIwBj0+SfMlMsKDLI03XyJZXIGc4+coO8EmYZiv8JMsz0JBofMw9YeZ7Hm/11
+         SXYjqdpxYssIZmd/UaWhqu8XL2kv7jklhAgJmiTLHxoORuLERKsbcBeu7fE+pELDs12S
+         R5Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCXpi9rx/HkbnpVgrD1T/y59E3CTRed+Xyfr9laGGZz+5us2j6y2Z5XBNhDgtuJrHmM7CrwPl6rfCurcGUP97euwjzrbRn3KzJc6Ww==
+X-Gm-Message-State: AOJu0Ywzm5ir+2EbWu15schSMpUrVhYKxnvOMubyPOZLPwpizIPfg+NU
+	2LyCZ8tYnXX8wAhBmzXBYcQMm8M5CEZ5KQrVxnJshzwk8iQfP/fkA/yvhJqAKqQ=
+X-Google-Smtp-Source: AGHT+IHPbJwaX0rSPG0rISm/Df/RDW03hjsjQ/2SDn1k/nrgezWcnqmdHbuXDXRDt+tCIxIVRS4ucg==
+X-Received: by 2002:a05:6a21:6b0c:b0:1bd:29f2:c7df with SMTP id adf61e73a8af0-1c0cc8b3ac9mr6769970637.43.1720261460815;
+        Sat, 06 Jul 2024 03:24:20 -0700 (PDT)
 Received: from noel.flets-west.jp ([2405:6586:4480:a10:167:9818:d778:5c14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb67e04f64sm9126625ad.214.2024.07.06.03.24.09
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb67e04f64sm9126625ad.214.2024.07.06.03.24.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jul 2024 03:24:12 -0700 (PDT)
+        Sat, 06 Jul 2024 03:24:20 -0700 (PDT)
 From: Hironori KIKUCHI <kikuchan98@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: Hironori KIKUCHI <kikuchan98@gmail.com>,
@@ -67,10 +69,12 @@ Cc: Hironori KIKUCHI <kikuchan98@gmail.com>,
 	Conor Dooley <conor+dt@kernel.org>,
 	dri-devel@lists.freedesktop.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH v3 0/5] drm/panel: st7701: Add Anbernic RG28XX panel support
-Date: Sat,  6 Jul 2024 19:23:31 +0900
-Message-ID: <20240706102338.99231-1-kikuchan98@gmail.com>
+Subject: [PATCH v3 2/5] drm/panel: st7701: Decouple DSI and DRM parts
+Date: Sat,  6 Jul 2024 19:23:33 +0900
+Message-ID: <20240706102338.99231-3-kikuchan98@gmail.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240706102338.99231-1-kikuchan98@gmail.com>
+References: <20240706102338.99231-1-kikuchan98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,44 +83,144 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for the display panel of the Anbernic RG28XX, a handheld
-gaming device from Anbernic. "RG28XX" is the actual name of the device.
+Split into a DSI-specific part and a DRM-specific part.
 
-This panel is driven by a variant of the ST7701 driver IC internally,
-and is connected via an RGB parallel interface for image transmission and
-an SPI interface for configuration.
+Additionally, use devm_add_action_or_reset() to simplify the flow,
+and disable and unprepare the panel on cleanup.
 
-Since the current code of the panel driver for ST7701 variants only
-supports MIPI DSI as the configuration interface, add support for SPI
-as well.
+Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
+---
+ drivers/gpu/drm/panel/panel-sitronix-st7701.c | 72 ++++++++++++-------
+ 1 file changed, 45 insertions(+), 27 deletions(-)
 
-v3:
-  - Split commits
-  - Remove unnecessary changes
-  - Change Kconfig dependency and adjust for it
-  - Fix incorrect device variable in st7701_get_modes()
-
-v2:
-  - Update dt-bindings
-  - Rename DSI_CMD* macros to ST7701_CMD*
-  - Rename ST7701_DSI macro to ST7701_WRITE
-  - Fix incorrect dev_err_probe() usage
-  - Remove GPIOD_FLAGS_BIT_NONEXCLUSIVE flag
-  - Remove st7701_remove() and st7701_spi_remove()
-  - Call drm_panel_disable() and drm_panel_unprepare() on cleanup
-
-Hironori KIKUCHI (5):
-  drm/panel: st7701: Rename macros
-  drm/panel: st7701: Decouple DSI and DRM parts
-  dt-bindings: display: st7701: Add Anbernic RG28XX panel
-  drm/panel: st7701: Add support for SPI for configuration
-  drm/panel: st7701: Add Anbernic RG28XX panel support
-
- .../display/panel/sitronix,st7701.yaml        |   69 +-
- drivers/gpu/drm/panel/Kconfig                 |    3 +-
- drivers/gpu/drm/panel/panel-sitronix-st7701.c | 1074 ++++++++++-------
- 3 files changed, 734 insertions(+), 412 deletions(-)
-
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7701.c b/drivers/gpu/drm/panel/panel-sitronix-st7701.c
+index a9a8fd85057..a0644f7a4c8 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7701.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7701.c
+@@ -539,7 +539,7 @@ static int st7701_get_modes(struct drm_panel *panel,
+ 
+ 	mode = drm_mode_duplicate(connector->dev, desc_mode);
+ 	if (!mode) {
+-		dev_err(&st7701->dsi->dev, "failed to add mode %ux%u@%u\n",
++		dev_err(panel->dev, "failed to add mode %ux%u@%u\n",
+ 			desc_mode->hdisplay, desc_mode->vdisplay,
+ 			drm_mode_vrefresh(desc_mode));
+ 		return -ENOMEM;
+@@ -974,42 +974,48 @@ static const struct st7701_panel_desc rg_arc_desc = {
+ 	.gip_sequence = rg_arc_gip_sequence,
+ };
+ 
+-static int st7701_dsi_probe(struct mipi_dsi_device *dsi)
++static void st7701_cleanup(void *data)
++{
++	struct st7701 *st7701 = (struct st7701 *)data;
++
++	drm_panel_remove(&st7701->panel);
++	drm_panel_disable(&st7701->panel);
++	drm_panel_unprepare(&st7701->panel);
++}
++
++static int st7701_probe(struct device *dev, int connector_type)
+ {
+ 	const struct st7701_panel_desc *desc;
+ 	struct st7701 *st7701;
+ 	int ret;
+ 
+-	st7701 = devm_kzalloc(&dsi->dev, sizeof(*st7701), GFP_KERNEL);
++	st7701 = devm_kzalloc(dev, sizeof(*st7701), GFP_KERNEL);
+ 	if (!st7701)
+ 		return -ENOMEM;
+ 
+-	desc = of_device_get_match_data(&dsi->dev);
+-	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
+-			  MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS;
+-	dsi->format = desc->format;
+-	dsi->lanes = desc->lanes;
++	desc = of_device_get_match_data(dev);
++	if (!desc)
++		return -ENODEV;
+ 
+ 	st7701->supplies[0].supply = "VCC";
+ 	st7701->supplies[1].supply = "IOVCC";
+ 
+-	ret = devm_regulator_bulk_get(&dsi->dev, ARRAY_SIZE(st7701->supplies),
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(st7701->supplies),
+ 				      st7701->supplies);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	st7701->reset = devm_gpiod_get(&dsi->dev, "reset", GPIOD_OUT_LOW);
++	st7701->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+ 	if (IS_ERR(st7701->reset)) {
+-		dev_err(&dsi->dev, "Couldn't get our reset GPIO\n");
++		dev_err(dev, "Couldn't get our reset GPIO\n");
+ 		return PTR_ERR(st7701->reset);
+ 	}
+ 
+-	ret = of_drm_get_panel_orientation(dsi->dev.of_node, &st7701->orientation);
++	ret = of_drm_get_panel_orientation(dev->of_node, &st7701->orientation);
+ 	if (ret < 0)
+-		return dev_err_probe(&dsi->dev, ret, "Failed to get orientation\n");
++		return dev_err_probe(dev, ret, "Failed to get orientation\n");
+ 
+-	drm_panel_init(&st7701->panel, &dsi->dev, &st7701_funcs,
+-		       DRM_MODE_CONNECTOR_DSI);
++	drm_panel_init(&st7701->panel, dev, &st7701_funcs, connector_type);
+ 
+ 	/**
+ 	 * Once sleep out has been issued, ST7701 IC required to wait 120ms
+@@ -1028,27 +1034,39 @@ static int st7701_dsi_probe(struct mipi_dsi_device *dsi)
+ 
+ 	drm_panel_add(&st7701->panel);
+ 
+-	mipi_dsi_set_drvdata(dsi, st7701);
+-	st7701->dsi = dsi;
++	dev_set_drvdata(dev, st7701);
+ 	st7701->desc = desc;
+ 
+-	ret = mipi_dsi_attach(dsi);
+-	if (ret)
+-		goto err_attach;
++	return devm_add_action_or_reset(dev, st7701_cleanup, st7701);
++}
++
++static int st7701_dsi_probe(struct mipi_dsi_device *dsi)
++{
++	struct st7701 *st7701;
++	int err;
++
++	err = st7701_probe(&dsi->dev, DRM_MODE_CONNECTOR_DSI);
++	if (err)
++		return err;
++
++	st7701 = dev_get_drvdata(&dsi->dev);
++	st7701->dsi = dsi;
++
++	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
++			  MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS;
++	dsi->format = st7701->desc->format;
++	dsi->lanes = st7701->desc->lanes;
++
++	err = mipi_dsi_attach(dsi);
++	if (err)
++		return dev_err_probe(&dsi->dev, err, "Failed to init MIPI DSI\n");
+ 
+ 	return 0;
+-
+-err_attach:
+-	drm_panel_remove(&st7701->panel);
+-	return ret;
+ }
+ 
+ static void st7701_dsi_remove(struct mipi_dsi_device *dsi)
+ {
+-	struct st7701 *st7701 = mipi_dsi_get_drvdata(dsi);
+-
+ 	mipi_dsi_detach(dsi);
+-	drm_panel_remove(&st7701->panel);
+ }
+ 
+ static const struct of_device_id st7701_of_match[] = {
 -- 
 2.45.2
 
