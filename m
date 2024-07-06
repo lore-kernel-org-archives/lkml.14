@@ -1,35 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DDE79F4;
-	Sat,  6 Jul 2024 00:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AD21758F;
+	Sat,  6 Jul 2024 00:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720227032; cv=none; b=Mr3g/uf4VVF0TtJrB2j8tq+qKo53JkG09qh5wXxHgUpRUu6YnEPCK4lneW7IcVzlYObtqOAc7AAfsk0xakz9GPoT0hUhlInxtRk4X6xmjo+FhBXdZX8D9mw7j4n4rd+HzEHHdknSGPVOvQgQLZtfOpcWMCQ3wfpLtAPOQ+GAX5o=
+	t=1720227037; cv=none; b=acuXqRfdImQJudOUenYfR8KBA+BC12HpG9bNflZKBnYnT3l3LPe+UhC6UGi4c6fORnMLoUl6vi2WARYKhAGNx1uo4AK8HIPSkkeLa1PBgg+jgboTGSVPIRZcwgWrqOy3E00C5NWfLN28WmdY6Ieav7mLUqios1m7pvMGwTu+74A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720227032; c=relaxed/simple;
-	bh=qZUYt9aCrtldBy4xJcQnybZR0D/11ePWcBIs/S9zoq4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=OH9lHJ1poKGdGN6duxT+bVQOPQSqKzLbdBwI/s1rr7qS4NUUL2A4X2ppdkMQvXS1eTy6TBhh2s3uTZOHZAOuJzIDCNOJ1yKwFK4mnK1OAzjkQb7+gqafjWQHIuV/N6KA1TtKcFfJMRqhduzbjxvugP3cvGSlkuKmXpBcIbBuf18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bChjxcYB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720227037; c=relaxed/simple;
+	bh=hjcatJzrKY+zgPSsW0kQGkVslVDge9AGFKuusDrivWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q3e2rC9q2niZYpQ6CCxzyloxf5JFtqrcGARVr0wrBhERWFx1Rl1YIlUnHLwoA7U0AbiBZS74rMbuP+ePWaLOYbML0xSD2IyXKQs3YSBQEDCXz2r1+Esd3CIpk/YrEKPNXKBvq91OohUS3s7hCK4v916emkfcZtltPrhzQwwiJQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrNwZ9ef; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bChjxcYB"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A8DD8C116B1;
-	Sat,  6 Jul 2024 00:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720227031;
-	bh=qZUYt9aCrtldBy4xJcQnybZR0D/11ePWcBIs/S9zoq4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bChjxcYBXUcPHYz06ycy3d1LQZn8aauBp9d1ElSFa7FB1mPQKpnIzq+kyQNfV/iau
-	 k3IGfjAsfejpxbK912m6LNif2H3Hi41qPgj1+aMh2wWB/OMPMvX9BxhT5v5g2l/4vg
-	 TYY8q76b1AjJpMuhQJws5yd34CS816/m3xVEAHPjcgD1hLs3AgYTp1aNYBEeId+Jte
-	 I3mLeFsSAl75WoiSw21zRvqZBGuXvRpz6/s7bD17xjUHibXcQ9Wh3pa70dgvVBvpWm
-	 AQ1uMRjMToL/f4l35Gj1u0U0BRNo4JhfB21ibNg+zFY6ylvvdr874E091zCXdLI0u7
-	 vRRNGCjwL+syA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 990A6C43612;
-	Sat,  6 Jul 2024 00:50:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrNwZ9ef"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-424acf3226fso15308505e9.1;
+        Fri, 05 Jul 2024 17:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720227034; x=1720831834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hjcatJzrKY+zgPSsW0kQGkVslVDge9AGFKuusDrivWY=;
+        b=lrNwZ9efSI8dEcFAyooSL0o1XqhNVnuJ7v+mps3HHQJ6mL1cjihTe13L9DvZAyB2Us
+         +YO7t1c+YNGmcOyYug1X/1JSsIviHZNAzCpNKEswq5hP5fpeNKJgqTrmrbUpIbQq1c/O
+         TA4eczJTicGZYHWwM8Xhg5U5iO1y3RexfnnqketR9tNxc25zk41PV07HzLek3WXdJvbZ
+         7EluKqmOkMhUYtfaqcC4OnoyYzOxsftHu7BQb7sbanO9PvOIGwopcmbR689OokaT51dW
+         SYk1cHZKPCVWV91H0TeFMbLiy5LIyOnu6kOvNmfh8pouxnnP8+E9+QLhdF31tHGlIVer
+         IvOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720227034; x=1720831834;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hjcatJzrKY+zgPSsW0kQGkVslVDge9AGFKuusDrivWY=;
+        b=pZD9+5c6CHqlMUq6/MTA8tZ/zLFPG3VW+6G0NPDhhD509w5IXazlNUnxkao51v6pb6
+         0Zv+Cg+5tByzj1/3wlR0B71uQ+iknd9x5GxiSwEHs6NTdV3p3wNQUinR8jPvB5KQh8mm
+         kAoqtVUqBAHD42hvUTqjq8qBBZj02fUOoIv7PY1kCFJj3mCBwchV9jmNMU8tBy9bc8xC
+         ckGrLQhjPz+UmGbaDmt+8vBVoA63R8rm3i3y7w5JpHyOcrEe5jGCulMPyvSyIG7cGNVQ
+         UAmwqnPu5DsJGg+9TCmqyJPWaEywiO1BMXRamSQbGYhOdUoF82OU2vkX0QwA1g6LAL/C
+         5V9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWMF7BAbkrd7dZVP6xSmoL2lFwOCdaciQSAEJ1Ic9nOBefWxB8NqMz+/mBbmRqqDjtZS2MbJEDEZSMiydr7DuCT3+4OK/YUXdcEVvJuIXRWK9EkStW0Kw7/O1BKFGa14MO29EQnwe4hoF8=
+X-Gm-Message-State: AOJu0YxLain/vye+E0WLEvVDhaHYtj6UHu7o8XPodV/IitWwhhrKXkfr
+	99mA8SXqWUQTwAQuuA0C4FeG9SpfJEOmWsKHi7ejHBq4g0b7XDZ/
+X-Google-Smtp-Source: AGHT+IGjYxkTgAFMYrAOqGcyo3iB+xYZ4rGSdz+l/S/21bkE/VIF1e54TQdkswJKtFRzX8Rafy6TwQ==
+X-Received: by 2002:a05:600c:4c15:b0:426:59ec:17a2 with SMTP id 5b1f17b1804b1-42659ec1a4cmr13105125e9.33.1720227033989;
+        Fri, 05 Jul 2024 17:50:33 -0700 (PDT)
+Received: from localhost.localdomain ([188.74.74.117])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367a54f237bsm3382369f8f.16.2024.07.05.17.50.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 17:50:33 -0700 (PDT)
+From: Stuart Hayhurst <stuart.a.hayhurst@gmail.com>
+To: shenghao-ding@ti.com
+Cc: 13916275206@139.com,
+	baojun.xu@ti.com,
+	kevin-lu@ti.com,
+	linux-firmware@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	navada@ti.com,
+	peeyush@ti.com,
+	soyer@irl.hu,
+	Stuart Hayhurst <stuart.a.hayhurst@gmail.com>
+Subject: Re: [PATCH v1] ASoC: tas2781: Add dsp firmware for different laptops
+Date: Sat,  6 Jul 2024 01:49:43 +0100
+Message-ID: <20240706004942.39403-2-stuart.a.hayhurst@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <23e85f35969447ab9161068f2c159845@ti.com>
+References: <23e85f35969447ab9161068f2c159845@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,43 +77,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] net: ethernet: mtk_ppe: Change PPE entries number to 16K
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172022703162.32390.6364958633398952266.git-patchwork-notify@kernel.org>
-Date: Sat, 06 Jul 2024 00:50:31 +0000
-References: <TY3P286MB261103F937DE4EEB0F88437D98DE2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
-In-Reply-To: <TY3P286MB261103F937DE4EEB0F88437D98DE2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
-To: Shengyu Qu <wiagn233@outlook.com>
-Cc: nbd@nbd.name, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
- lorenzo@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, eladwf@gmail.com
 
-Hello:
+Following up on this again, is the licence correct here? "Allegedly GPLv2+ but no source visible" doesn't sound right for something straight from TI, and it can't be distributed in Debian either (see https://salsa.debian.org/kernel-team/linux/-/merge_requests/1033#note_471478 and https://salsa.debian.org/kernel-team/firmware-nonfree/-/merge_requests/96#note_504454).
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Is it supposed to have a binary redistribution licence, such as the licence in LICENCE.ti-tspa (https://gitlab.com/kernel-firmware/linux-firmware/-/blob/main/LICENCE.ti-tspa?ref_type=heads)?
 
-On Fri,  5 Jul 2024 01:26:26 +0800 you wrote:
-> MT7981,7986 and 7988 all supports 32768 PPE entries, and MT7621/MT7620
-> supports 16384 PPE entries, but only set to 8192 entries in driver. So
-> incrase max entries to 16384 instead.
-> 
-> Signed-off-by: Elad Yifee <eladwf@gmail.com>
-> Signed-off-by: Shengyu Qu <wiagn233@outlook.com>
-> 
-> [...]
-
-Here is the summary with links:
-  - [v3] net: ethernet: mtk_ppe: Change PPE entries number to 16K
-    https://git.kernel.org/netdev/net-next/c/ca18300e00d5
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks,
+Stuart
