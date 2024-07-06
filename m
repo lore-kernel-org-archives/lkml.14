@@ -1,145 +1,129 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A8724B5B;
-	Sat,  6 Jul 2024 14:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F51026AC2
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 14:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720275992; cv=none; b=Qkg8na8OPh+h+OGYokkQ2qjWOwYfXiuX+vebv+HiDDlS0kTLIzLuevtfFDQ0LvaeJvctZT/rxs0jehDtgK/1eG3BYN+XuxB1mzZz8r0su1Z5kDbDmy8UHJ2R6SlISSYR6FVKrUmLJLY+fzOUw3nHP0CsrwXweRN57aM/3Tk/p/Q=
+	t=1720276471; cv=none; b=JIQM3ctmZK1FQ/iZ7ZHBa08Ni2GRUg5l9nzhuP2slHlphJoqV9L2/m739RG6g0/xGbbOwDjPqMKyhkQc3YLDgmiZUhSUiwabCpugGOdFaBa9R3T9cYrAXDvP0V3XF78Rr0nqtO3DeXjHfboqH2Tac6lVbrOaakRuG8IfdnBsH8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720275992; c=relaxed/simple;
-	bh=1Yf5eXxazwQxeNpPUkRrRB1Xu3aBBRE79k2g+ye2u20=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=URm2dvq8q97tV7Cx2H8NTN6KdfTvXpoFWU5jvJZbQ+a8tHepM6f2ZFRqMk90uUaj8Cg66t5QYKNgNs8ncwUPabSU73qPAIIa2uk710Y83fPyIEARvt1RBbKbNzR5oiS+st+H4inWsCLVGtYBiXfhNRjQ+wT3na2sRXk2b0xZLik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=keZgZSMY; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720276471; c=relaxed/simple;
+	bh=0aFkKjeQR7yItr5YT5HS0t3s6OuI7El9Wwi8jRk7mbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZjHIbwyBbdlfu8NTcxA/WSVHwPhJKTDw6VDdmSyaX+6lD0QpCLS/vgdkCRqpj3CngQ9zn8TUAfhfHNLP4bzNyuk7sC8ckWWPDUvG3caC+o6eghMjuhgx3H/sbmOsyoGwEjSNmzCapEUOkv7/IUF7fczS5E661viTadzkKvHzGuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=CH71998s; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="keZgZSMY"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6b5def3916bso12385406d6.3;
-        Sat, 06 Jul 2024 07:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720275990; x=1720880790; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=seYqp1dT5F5vy2P9brEQHllr9NxXw0Yqi8+EB26VwJM=;
-        b=keZgZSMYeMUNJZu64O7p/gWG+a0bnSO/FX17ZC54Q1gR1PG9AnD0Y+m+LlS4FQ9hEW
-         uRnLQW7xYMwjUOiCfsU61dmSxYt++jOkKe74ghfez5APLOE5hV69a3XPwoaxvArbC8I4
-         dZxZhAhWQxAqAGj7o+hwtLwh25ok04ePRybit3RzpTEhPouKbelaw3BbWpmG6qDEd6yj
-         TTeG2DI23VU2rHnG1TcL9nG3SvqJ5ZJMxt54Mw57Cw7FbgubZMqGxEJhcWwlXxhAZG/M
-         s/WarVl+SXgFk2GL3l3RAqW9ZLHsEF0heo4jDgSqX5+lZVewtEfJNLbZmwO21YZxK/Mo
-         glVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720275990; x=1720880790;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=seYqp1dT5F5vy2P9brEQHllr9NxXw0Yqi8+EB26VwJM=;
-        b=sy1vY7v0LYXsyN7Nc1dACy0bLxGhIRlXYHW60aR2BjgjREElUNMtCwOii4h4GBd58/
-         HMoA35B5aOFZpMa8fJyX2vQFQkb+ImIhX/t0G432Nl0sU02MsazWTm7z/MBT4tYA/h5/
-         m5yQ/zcHAwrYzOVVwlreUaO8x2O5Vm/RenQTcBhYFdFLdiiku3aMTpufWsgI2d5eNSoy
-         aGB0Fs5Yo54WI48fi/pBwm9Cfj34HUA6f6UNzBU+0XTgDIR66VOfLleuiODlFZTedEBG
-         4wHKmdTZ9vpjkqvxle/i3eKGdl460w4z7JvDcY/f+Uufljxm4e+nXH9wlMWPK96KeE+p
-         erhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXM3jUOUhs9cMJQpo/RJDYuKBNjq0Bf81idhIesMTRRCw8K7vq/4PtJnP6mCXy8pCQiXfusRn6FwdVqyJayIWoS/T6S8OIupy5wmiOC5tJSglcWR1jan84AGYs1x6Sc8njBgD2JgW4J1zLiF7lB6n4ZJ2ktIpkHKQ/g
-X-Gm-Message-State: AOJu0YxMhmuQzJqvVPz65uJkJguuzC5oJiKc3cvnTEYL40TnBsIl5t9l
-	cpTsazmjk42Y/qOK02LBuZKOB97sATJ1/GLwXUt+i5pA7/SGb1Bs
-X-Google-Smtp-Source: AGHT+IHCoEogj25RngjUznqdwqR1FD0j1Dq20vECsA/TsfiSL9Y7zCCU8h42SrUSaOAyGLsoH/xZFA==
-X-Received: by 2002:ad4:4ee5:0:b0:6b5:e3f2:11c9 with SMTP id 6a1803df08f44-6b5ed19c47bmr106387576d6.49.1720275989786;
-        Sat, 06 Jul 2024 07:26:29 -0700 (PDT)
-Received: from localhost (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b5fe1de71esm11176416d6.75.2024.07.06.07.26.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jul 2024 07:26:29 -0700 (PDT)
-Date: Sat, 06 Jul 2024 10:26:29 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Fred Li <dracodingfly@gmail.com>, 
- pabeni@redhat.com
-Cc: aleksander.lobakin@intel.com, 
- andrii@kernel.org, 
- ast@kernel.org, 
- bpf@vger.kernel.org, 
- daniel@iogearbox.net, 
- davem@davemloft.net, 
- dracodingfly@gmail.com, 
- edumazet@google.com, 
- haoluo@google.com, 
- hawk@kernel.org, 
- john.fastabend@gmail.com, 
- jolsa@kernel.org, 
- kpsingh@kernel.org, 
- kuba@kernel.org, 
- linux-kernel@vger.kernel.org, 
- linux@weissschuh.net, 
- martin.lau@linux.dev, 
- mkhalfella@purestorage.com, 
- nbd@nbd.name, 
- netdev@vger.kernel.org, 
- sashal@kernel.org, 
- sdf@google.com, 
- song@kernel.org, 
- yonghong.song@linux.dev, 
- herbert@gondor.apana.org.au
-Message-ID: <6689541517901_12869e29412@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20240703122153.25381-1-dracodingfly@gmail.com>
-References: <fd44c91884d0ebf3625ac85a1049679a987f8f79.camel@redhat.com>
- <20240703122153.25381-1-dracodingfly@gmail.com>
-Subject: Re: [PATCH v2 1/2] net: Fix skb_segment when splitting gso_size
- mangled skb having linear-headed frag_list whose head_frag=true
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="CH71998s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=prJo
+	DUW6lJpKM04RsYU/Ivzc814a5QLaNaF57qPoxNI=; b=CH71998s3J8GAM1vxT1E
+	cEDufy/HqjzkZuTWqXxsVCW85k59D1Yy4rTiFINn6oorRzNU3TuSJoTSAvZx+gIQ
+	ayUPO6BgiVD0AeCGKdb/zY3O5m3wlfw/i7JrMzl5Q0SPWQ2R5O2dsFhW+J9rEt9Y
+	jd/TdflsxPus2zQlQtAzefzvhu5CC7/kl7MA3f0aWlRDFMDGdgmMd+xmrg/fJSYc
+	m49ThRRyd8RIaoQlrCvmsYpatKVszd95ttXbTPu1FnNiDwPdB/hFD1jKCKNUrWjN
+	HzXGdfnp3G6L+VG+izMdUkRIdSaTubnn65Dlw2zgOuW9iB3CV1oNnLsMXpp7O/9k
+	Zw==
+Received: (qmail 3848381 invoked from network); 6 Jul 2024 16:34:27 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 16:34:27 +0200
+X-UD-Smtp-Session: l3s3148p1@udy5E5UcQJdQT+F6
+Date: Sat, 6 Jul 2024 16:34:26 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+Cc: Aleksandr Mishin <amishin@t-argos.ru>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Zhang Shurong <zhang_shurong@foxmail.com>,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: Re: [PATCH] staging: ks7010: Remove unneeded check in
+ ks_wlan_get_range()
+Message-ID: <ZolV8vtD4KKo-gg3@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Philipp Hortmann <philipp.g.hortmann@gmail.com>,
+	Aleksandr Mishin <amishin@t-argos.ru>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Zhang Shurong <zhang_shurong@foxmail.com>,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+References: <20240705204434.10541-1-amishin@t-argos.ru>
+ <ZolRoeaPETSmJMGJ@shikoro>
+ <bf57e119-d957-484b-be23-ea43811f30e3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HLurbxx7uv6xj442"
+Content-Disposition: inline
+In-Reply-To: <bf57e119-d957-484b-be23-ea43811f30e3@gmail.com>
 
-Fred Li wrote:
-> > I must admit I more than a bit lost in the many turns of skb_segment(),
-> > but the above does not look like the correct solution, as it will make
-> > the later BUG_ON() unreachable/meaningless.
-> 
-> Sorry, the subsequent BUG_ON maybe should be removed in this patch, because
-> for skb_headlen(list_skb) > len, it will continue splitting as commit 13acc94eff122 
-> (net: permit skb_segment on head_frag frag_list skb) does.
-> 
-> > 
-> > Do I read correctly that when the BUG_ON() triggers:
-> > 
-> > list_skb->len is 125
-> > len is 75
-> > list_skb->frag_head is true
-> >
-> 
-> yes, it's correct.
-> list_skb->len is 125
-> gso_size is 75, also the len in the BUG_ON conditon
-> list_skb->head_frag is true
->  
-> > It looks like skb_segment() is becoming even and ever more complex to
-> > cope with unexpected skb layouts, only possibly when skb_segment() is
-> > called by some BPF helpers.
-> > 
-> > Thanks,
-> > 
-> > Paolo
-> 
-> I'll wait for more suggestions from others.
 
-In general, agreed with Paolo. Segmentation is getting ever more
-complex and the code hard to follow.
+--HLurbxx7uv6xj442
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Maybe at some point we'll have to bite the bullet and seriously
-refactor it. Or at least parts, such as the frag_list handling case.
-But that kills any odds of backporting fixes, so not if we can avoid
-it.
+Hi Philipp,
 
-In particular, changing gso_size on skbs with frag_list is fragile.
+> no the driver is not removed yet. Planned to do this on the next cycle. I
 
-Instead of adding another special case, how about just linearizing
-sbks after BPF calls adjust_room (at least if called without
-BPF_F_ADJ_ROOM_FIXED_GSO) if they have frag_list.
+Ah, this is good to know!
 
+> did remove two others and wanted to wait some time to see if any complains
+> arise. I am a bit scared.
+
+No worries, it is okay to be rather a tad too cautios than too careless
+IMO.
+
+> Please always consider: If you do not use the driver, it does not mean that
+> anybody else is also not using it.
+
+I am very well aware of that. However, hardware is super-rare (it was
+even some years ago) and it doesn't support network encryptions we
+really want users to use. Risk is low. And even in the unlikely case of
+someone complaining, we can revert, right?
+
+> But may be you are right. I am a bit slow and to hesitant.
+
+I don't think removing it next cycle is "slow". But it is good, of
+course, to let people know of your plans. Like a reply to my mail saying
+"OK, let's remove it next cycle" would keep me in the loop. But no harm
+done, I can also ask what the status is. Like I did now. All good.
+
+> I plan to send deletion in 3 weeks.
+
+Perfect. You can already add my
+
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+Thank you and happy hacking,
+
+   Wolfram
+
+
+--HLurbxx7uv6xj442
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmaJVfIACgkQFA3kzBSg
+KbYIzg//VWYJpFhB8j2a4YEBptlF5VgMeDqheO80Ox8M6wTD+4BYUgSSEVBP+0iO
+bQtKP8VoQq7VqR/waLw26qhI8rwF9vHI4z2/fskDVjK8fh0GZdr3rHcRfCwCsNK3
+qIGZX2Lc3ptEdOEjZqKsJRqYZUwFzD8HqR5VggtBIbn43x0G2SP9pXfb2RGGPW49
+dGDzzbxz7/Sm2/NW07dhPXjq6zz1n75nPInvJZcLkHIKqnQLtdIBKUK0gtNNkuNj
+Tepo8n7q7u+rzGJ9zT+jZJC6twH8kiuzbslQDKAd4KMRo3IdlnoCyoVTL+vdRnQi
+7hiiWxRLqnj1hKHCKlWca/wjS3MVoM+bZ3+VISAj6rqW1zuwQqrWfSo3bA3FLIRw
+Fd4HyDqZDcPuULF+tzGLwcIyCAfbq15kkn1cNypJsZkexxX6gcyhRe1zJ0hW3hmE
+TKeOac5d41+ftVPhVTh4+fNQvfYa59V9WxylgEo0C+N/L+FfattWfiwc9zGzEvVS
+hS2zzhbRXa4ywlwdjoyPP7nm9EMnpkartgxrzW811i6Z1LzwCnmXwb8EUUbUVYyI
+cDh+QCC/YRgvWO803xg4OBsSAH04qd6bPdllPJd7SyQYyJ0Kjjm6L7I5QmaHABnq
+2FCD4PTJtEvb40hcbjvcnjp58vz6x/zYMMqQKFey3rbrpNxo9Mw=
+=Svpi
+-----END PGP SIGNATURE-----
+
+--HLurbxx7uv6xj442--
