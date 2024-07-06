@@ -1,16 +1,16 @@
 Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B827C4D9E3;
-	Sat,  6 Jul 2024 23:13:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7478013790B;
+	Sat,  6 Jul 2024 23:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720307589; cv=none; b=ruVNxASkZTLRBzHNl2rwnL6g000VFqVYermSjTVnVxNSiZe/KkQvSGiVlrPi5KisHASLwqONYDHmhe2/G+mtf96oB2IBsqfP4Zqiqpy6TmYE/Ctu2C2WYuS4SKC4kRrLuMee4L2SgbMnIB5ARn3adAEbM6oKDctZxMF1HXWh3XE=
+	t=1720307589; cv=none; b=BOSOseEATi/NEXEKePNKkUw8tpY3D3BhPZ4JCTxadrjf6wsCVT2ieF1AseRFYeY54aiEF2PtbNVhRODbOGGiyiTWytcGkC7I/Cjm6VGbsne7aZRCfG2FYJ/ZrtUJz+igVIy8ZCuKnBGCWJoVYMDiGY9vMOb7wei61sAH8ySKK18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720307589; c=relaxed/simple;
-	bh=544ZRQ1vobRwkWvYQwOUHCUhgftqjA6qesBSXj73EaY=;
+	bh=+7Q38uJHrNsOYRaVMVxrspaOTQyWNxvjndN9JnzkfWg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=rOvxdpWkhj7FX2RVW+XI5BuRuabDy9eYCvZYTx+OSs0O/D+IyE7hOnIkrRvWBLECj8MT4UVG+hWagS0kdoMOF2UlxT6UG3BbZwjpdAv9XnD5yKD1MbmXAOMUTGZGh+FI2oelg20SC0xNzaaI+GsqDoCqH+tCJEbgv+5RCklZXEo=
+	 MIME-Version:Content-Type; b=nz5M2a1psRk/3xdqG/E6mA5dEZUbq4FXLm/T4mKpxgUACG8EZIbinHN7MGCT3LUDtU52NbG31klYizKXpdKw7yxRhHYVhUAXUHVnB2uLzx0elw5Q06bYaAKJMo//jIF/YL87x+OIAiDNJJWdlqXfTlJjzqQj2VRHLABrSisRqiQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,15 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WGmQ41lL0z4xPf;
-	Sun,  7 Jul 2024 09:13:00 +1000 (AEST)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WGmQ74gwWz4xQM;
+	Sun,  7 Jul 2024 09:13:03 +1000 (AEST)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Scott Wood <oss@buserror.net>, Arnd Bergmann <arnd@arndb.de>, Jeremy Kerr <jk@ozlabs.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <20240615-md-powerpc-arch-powerpc-v1-1-ba4956bea47a@quicinc.com>
-References: <20240615-md-powerpc-arch-powerpc-v1-1-ba4956bea47a@quicinc.com>
-Subject: Re: [PATCH] powerpc: add missing MODULE_DESCRIPTION() macros
-Message-Id: <172030740426.964765.16456298836722102264.b4-ty@ellerman.id.au>
+To: mpe@ellerman.id.au, tpearson@raptorengineering.com, alex.williamson@redhat.com, linuxppc-dev@lists.ozlabs.org, aik@amd.com, Shivaprasad G Bhat <sbhat@linux.ibm.com>
+Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com, gbatra@linux.ibm.com, brking@linux.ibm.com, aik@ozlabs.ru, jgg@ziepe.ca, ruscur@russell.cc, robh@kernel.org, sanastasio@raptorengineering.com, linux-kernel@vger.kernel.org, joel@jms.id.au, kvm@vger.kernel.org, msuchanek@suse.de, oohall@gmail.com, mahesh@linux.ibm.com, jroedel@suse.de, vaibhav@linux.ibm.com, svaidy@linux.ibm.com
+In-Reply-To: <171923268781.1397.8871195514893204050.stgit@linux.ibm.com>
+References: <171923268781.1397.8871195514893204050.stgit@linux.ibm.com>
+Subject: Re: [PATCH v4 0/6] powerpc: pSeries: vfio: iommu: Re-enable support for SPAPR TCE VFIO
+Message-Id: <172030740409.964765.9717587564748516161.b4-ty@ellerman.id.au>
 Date: Sun, 07 Jul 2024 09:10:04 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,21 +37,32 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Sat, 15 Jun 2024 10:06:18 -0700, Jeff Johnson wrote:
-> With ARCH=powerpc, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/kernel/rtas_flash.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/sysdev/rtc_cmos_setup.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/pseries/papr_scm.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/spufs/spufs.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/cbe_thermal.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/cpufreq_spudemand.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/cbe_powerbutton.o
+On Mon, 24 Jun 2024 12:38:07 +0000, Shivaprasad G Bhat wrote:
+> The patches reimplement the iommu table_group_ops for pSeries
+> for VFIO SPAPR TCE sub-driver thereby bringing consistency with
+> PowerNV implementation and getting rid of limitations/bugs which
+> were emanating from these differences on the earlier approach on
+> pSeries.
+> 
+> Structure of the patchset:
+> -------------------------
+> The first and fifth patches just code movements.
 > 
 > [...]
 
 Applied to powerpc/next.
 
-[1/1] powerpc: add missing MODULE_DESCRIPTION() macros
-      https://git.kernel.org/powerpc/c/9c5f64734f895528128605e2f3b170d220be086d
+[1/6] powerpc/iommu: Move pSeries specific functions to pseries/iommu.c
+      https://git.kernel.org/powerpc/c/b09c031d9433dda3186190e5845ba0d720212567
+[2/6] powerpc/pseries/iommu: Fix the VFIO_IOMMU_SPAPR_TCE_GET_INFO ioctl output
+      https://git.kernel.org/powerpc/c/6af67f2ddfcbbca551d786415beda14c48fb6ddf
+[3/6] powerpc/pseries/iommu: Use the iommu table[0] for IOV VF's DDW
+      https://git.kernel.org/powerpc/c/aed6e4946ed9654fc965482b045b84f9b9572bb8
+[4/6] vfio/spapr: Always clear TCEs before unsetting the window
+      https://git.kernel.org/powerpc/c/4ba2fdff2eb174114786784926d0efb6903c88a6
+[5/6] powerpc/iommu: Move dev_has_iommu_table() to iommu.c
+      https://git.kernel.org/powerpc/c/35146eadcb81d72153a1621f3cc0d5588cae19d3
+[6/6] powerpc/iommu: Reimplement the iommu_table_group_ops for pSeries
+      https://git.kernel.org/powerpc/c/f431a8cde7f102fce412546db6e62fdbde1131a7
 
 cheers
