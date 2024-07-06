@@ -1,89 +1,151 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC381CAA1;
-	Sat,  6 Jul 2024 08:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E94F4D8A3;
+	Sat,  6 Jul 2024 08:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720254076; cv=none; b=E+PFrwF+npGbyKpC3u8hokzh5ZmT4yHpfSYr/539evlm80XkhydoMkSu/nYcKA07mRkJuZIgqJkcG4cZm832jzKRk7JPGMXcVYgPbGrdyA4KMT7hRvi9ARF04iJj6V/AgFxeSxZ93fUzvxvbSfIaGkcchkUAUZQKyZoUkjrrcmg=
+	t=1720254819; cv=none; b=ut3xtEC/tvOuxErpiPaXRrXYO5HXt4q5y6+vSDkQolFW8O+AiYEYYCk5twHyCSSxR72BED5U5V1/2XfsKWQL9P0SHxUr2ymjy1b+6igaPqnc8e9S+wDCZpnvLx78OvrpFPwU2dISnfKooHFy5pJis00pB86E1OEykocQAHNLuL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720254076; c=relaxed/simple;
-	bh=EjHeaYK2lnlH/aBaBonNUcb+1o8ishy8edVJ2Dtl4YM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=YEBZPU2PORXJx7xE/vq5FLvBhVnJwYP4xQLxz1gmD/4+mMfXhM71HHbK/lDyh0ATz7oC3AmaKGD/GGZ8mj90oljeFfcx9Unq6zGCzzJaeOPQQISiZGG73MNXkX/UDWE5SQ9xa8PxgEA3Vgw7xBAQxAbAjIaN8lGsR1FK1EeVoTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=rBHnu9EL; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1720254819; c=relaxed/simple;
+	bh=gweVUkEpsyKJeMAR+yP604+Q865gQcQV9BkPOORMKFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IFf129TUfMMMQv27edqPUCL3SmQfJQN99sCv7okTCtu8IDIXoFKpyVEuloLv053E4Ztrf+UPgb1wUd3j0DkKLxZWyFZcjQBd9kRtTv+EFg8pbrkv19i2Oj4LkEiImkPfJBkta/9VvD2y08FcCu55dVarqtqlk0zrQNH7lGj4sIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SAuj91tl; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="rBHnu9EL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720254059; x=1720858859; i=markus.elfring@web.de;
-	bh=afApj3YSZ72YjMYkr6dhqIbPRpKKBwBEycFGRfMGKew=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=rBHnu9ELc0Zp6QzdiZ3GzhBzdaCwys8+4UPMQRP4gPQWNiUca4+VPo3MlVE+7JMw
-	 1KT5cpHiumcxpNJHN+KZ2z9ekzsUDMEax4I59gFYM3rdpcIHltxgs54gEJD+Dxjp0
-	 cZIFP5tzBQ6mcavd0HEF91+nnAm9Iln5Z6f99WweIctnHSk/Ow9y3LgxFQVQHh3CK
-	 a/qCBJwJ2koiWbCibImmTOQgfL9zJRW7UccAVMea0Ji6kcXaiR0jH4ZmQCE2EqINx
-	 iYor/FFIzmd7289gyXgtfVO8LREw6ksmseDWrYtfGMpXZOpl8ltsZ8L3EZWjyd//g
-	 nvFMehniVAqxa3xkRg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M3V6E-1sQYcy44fa-00BMyI; Sat, 06
- Jul 2024 10:20:59 +0200
-Message-ID: <c88eb0bc-b86a-4077-b5ee-09d46a3074e3@web.de>
-Date: Sat, 6 Jul 2024 10:20:24 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SAuj91tl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720254817; x=1751790817;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gweVUkEpsyKJeMAR+yP604+Q865gQcQV9BkPOORMKFc=;
+  b=SAuj91tlNC1/MHIKYsVtdYdnXXIwXlbPSM/1p49q6UqSrUtuRAjAGDOx
+   9a7VceXeEx4XKhRbgmuy05ZHrtHo2XpRHR3/lXHKSbxzgkzLmRrXJS20b
+   ThwS1drNfgjbNsCnb5homK2CKsIjouCjD0+2+z3ZxVYDJzw8bSPCLQ3NO
+   y4c3qXfOzR+uFRuxjTLXctTJqRAdMvtsxz/s1AtZK4g4nAjRmIizOW455
+   UsX7fYfBgRM8V4Ics//iotLcqmbgStZ/ywPP6IRu//U8kouL5d1BEZgNc
+   nZ+eKnfJhSa98rTFkk6WTB/YMOCL+zXNn5cGLieYcZoFIKS+RQ8fEAQ9w
+   A==;
+X-CSE-ConnectionGUID: /1mpumi3SyG+Yo1Zweruow==
+X-CSE-MsgGUID: tGwOKKWbTsqdzXD/rr2nzA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="34966871"
+X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
+   d="scan'208";a="34966871"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 01:33:37 -0700
+X-CSE-ConnectionGUID: +6MHJ8tASyijdlSEPfvsFQ==
+X-CSE-MsgGUID: tf2SDI7TS0CzyEzgmnh1ZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
+   d="scan'208";a="47702042"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 06 Jul 2024 01:33:34 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sQ0rL-000TVw-1h;
+	Sat, 06 Jul 2024 08:33:31 +0000
+Date: Sat, 6 Jul 2024 16:33:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+	manivannan.sadhasivam@linaro.org, fancer.lancer@gmail.com,
+	vkoul@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, quic_shazhuss@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com,
+	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] dmaengine: dw-edma: Add change to remove
+ watermark interrupt enablement
+Message-ID: <202407061620.Z6kfeKgF-lkp@intel.com>
+References: <1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
- kernel-janitors@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Minchan Kim <minchan@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Nick Terrell <terrelln@fb.com>
-References: <20240706045641.631961-2-senozhatsky@chromium.org>
-Subject: Re: [PATCH v5 01/23] lib: zstd: export API needed for dictionary
- support
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240706045641.631961-2-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:xrOf52OENPzB+Ci0nFX9hGxOSVLPOJGRqivp5JAzBzPfQXYvr+U
- LdpEc9W6NneLF57ebyBqzLRHNOAJ+f+XrnYT0am4pX8maSUeXIYoEKA/SdmWq0shgwZc5Gd
- 9hCuMu5UtNGwH9d/Wy5LNHeVXaAI+GKPF/vA2crhOmLprl5OqBDggfUWUnUybC9cMfHvzJE
- 90XNuNc4V4Hs/33C/IYyw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:k+zZ8mjY9X4=;Ts042HU7h5cuIEesrYVFolPFtfB
- s2kxgfjps7FjoTT+1ansowdx0atkUZ9W6ByHlg2b99GmNWfMt3d1SF8doA7cIDJTKg9q4UBQu
- Pl4QQye3M2wD5pibPGNMAqx6plGG/a7XAzc3ErHR/OZXy4+l//KayyFYDUKd/J6J6tpjbTcE7
- 9SQNh+Er0M+DkPhpnbf316c+al3QLHW2i4HIMZCItWZN1S6lQSuSbk1Pu2FdNuZ8k2hPvBjJR
- udWVzFsV7tjE/m3S44VmM3TipUQ7CWGNiBatYqj64wmtI3dpyo8cSE4h5pKI8APhonUeEQVob
- DMtfC7hIxYj6p/e+AndmaAkhoEYuMUntePvUnt3Xa2fzsyTGGYBHJ3Q2SwWA7idtlXgz4+AV1
- I7SVvWFkClE0CcRY4qIqkIaH3s96bg4zSsnt5iLp8KHxQ3F+3++GjHFMa9oikHDEG8kRPvuy/
- in6qmKvMIdYulnHaCR1NeN8V/pW9Sj/RzXJpMCPWCMQpsfgbCSF/fCUDX95k4jOD8VFA2OSf6
- CE/qc0H2Z/V8iUKhQLL2vmepNPBUhStOz9br+X9019LPkJev7nkjloZxDWPngwaANYSmYp4Jp
- 7QfIu28VhFURYG+OAcDaNBMfO9tuBKkxjxwfaLLnBPNmzedfe+lgef2D5wuYCT/jPNp8Zwf94
- cKFBgpxSORJs/KWdc7CaXdRYJ7Zdp2WKmKUQaE/MDmykerJ2UzJleqqwNFiA54q6d4USaWJ0J
- QPF+Loz6a4HbSzWzjFX3YJVGPKvXXlYCNIlnSgxy/2DZnaEPBJrBVMBDyJPDtnSmAXV2hf00l
- W4mEIWUsltbY7tl57OjO25+N7RopDe9jn1ex3ZMgwkIF0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com>
 
-> We need to export a number of API functions that enable
-> advanced zstd usage - C/D dictionaries, dictionaries
-> sharing between contexts, etc.
+Hi Mrinmay,
 
-* Please adjust the word wrapping.
-  You may occasionally put more than 55 characters into text lines here.
+kernel test robot noticed the following build errors:
 
-* Under which circumstances would you care more for remaining patch review concerns
-  also according to better change descriptions (or changelogs)?
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.10-rc6#n94
+[auto build test ERROR on vkoul-dmaengine/next]
+[also build test ERROR on mani-mhi/mhi-next linus/master v6.10-rc6 next-20240703]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mrinmay-Sarkar/dmaengine-dw-edma-Add-fix-to-unmask-the-interrupt-bit-for-HDMA/20240706-040233
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/1720187733-5380-3-git-send-email-quic_msarkar%40quicinc.com
+patch subject: [PATCH v1 2/2] dmaengine: dw-edma: Add change to remove watermark interrupt enablement
+config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20240706/202407061620.Z6kfeKgF-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240706/202407061620.Z6kfeKgF-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407061620.Z6kfeKgF-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   arch/mips/kernel/head.o: in function `__kernel_entry':
+>> (.text+0x0): relocation truncated to fit: R_MIPS_26 against `kernel_entry'
+   arch/mips/kernel/head.o: in function `smp_bootstrap':
+>> (.ref.text+0xd8): relocation truncated to fit: R_MIPS_26 against `start_secondary'
+   init/main.o: in function `set_reset_devices':
+   main.c:(.init.text+0x10): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x18): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `debug_kernel':
+   main.c:(.init.text+0x50): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x58): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `quiet_kernel':
+   main.c:(.init.text+0x90): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x98): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `warn_bootconfig':
+   main.c:(.init.text+0xd0): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0xd8): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `init_setup':
+   main.c:(.init.text+0x108): additional relocation overflows omitted from the output
+--
+   drivers/dma/dw-edma/dw-hdma-v0-core.c: In function 'dw_hdma_v0_core_write_chunk':
+>> drivers/dma/dw-edma/dw-hdma-v0-core.c:198:30: warning: unused variable 'chan' [-Wunused-variable]
+     198 |         struct dw_edma_chan *chan = chunk->chan;
+         |                              ^~~~
 
 
-Regards,
-Markus
+vim +/chan +198 drivers/dma/dw-edma/dw-hdma-v0-core.c
+
+e74c39573d35e9 Cai Huoqing    2023-05-20  194  
+e74c39573d35e9 Cai Huoqing    2023-05-20  195  static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+e74c39573d35e9 Cai Huoqing    2023-05-20  196  {
+e74c39573d35e9 Cai Huoqing    2023-05-20  197  	struct dw_edma_burst *child;
+e74c39573d35e9 Cai Huoqing    2023-05-20 @198  	struct dw_edma_chan *chan = chunk->chan;
+e74c39573d35e9 Cai Huoqing    2023-05-20  199  	u32 control = 0, i = 0;
+e74c39573d35e9 Cai Huoqing    2023-05-20  200  
+e74c39573d35e9 Cai Huoqing    2023-05-20  201  	if (chunk->cb)
+e74c39573d35e9 Cai Huoqing    2023-05-20  202  		control = DW_HDMA_V0_CB;
+e74c39573d35e9 Cai Huoqing    2023-05-20  203  
+882e8634dc8dd2 Mrinmay Sarkar 2024-07-05  204  	list_for_each_entry(child, &chunk->burst->list, list)
+e74c39573d35e9 Cai Huoqing    2023-05-20  205  		dw_hdma_v0_write_ll_data(chunk, i++, control, child->sz,
+e74c39573d35e9 Cai Huoqing    2023-05-20  206  					 child->sar, child->dar);
+e74c39573d35e9 Cai Huoqing    2023-05-20  207  
+e74c39573d35e9 Cai Huoqing    2023-05-20  208  	control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
+e74c39573d35e9 Cai Huoqing    2023-05-20  209  	if (!chunk->cb)
+e74c39573d35e9 Cai Huoqing    2023-05-20  210  		control |= DW_HDMA_V0_CB;
+e74c39573d35e9 Cai Huoqing    2023-05-20  211  
+e74c39573d35e9 Cai Huoqing    2023-05-20  212  	dw_hdma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
+e74c39573d35e9 Cai Huoqing    2023-05-20  213  }
+e74c39573d35e9 Cai Huoqing    2023-05-20  214  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
