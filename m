@@ -1,16 +1,16 @@
 Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A544E1A2
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 23:13:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B827C4D9E3;
+	Sat,  6 Jul 2024 23:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720307589; cv=none; b=fVn7Gx5r/ENrl6gqvibBjU5U3Ry1bcvdMP6wAv0qffycRx7sa++ntRa8s3m6zApcXKT4HYifKImL6MIJfQIpiDizbiv7ct/FX8/jLLWCHmE1GPuKLYQbuURRkTVFAHd5EzxSnwZT/bO29U6631BI7Ckk1O8zu3Ts6B3oNI/SV6E=
+	t=1720307589; cv=none; b=ruVNxASkZTLRBzHNl2rwnL6g000VFqVYermSjTVnVxNSiZe/KkQvSGiVlrPi5KisHASLwqONYDHmhe2/G+mtf96oB2IBsqfP4Zqiqpy6TmYE/Ctu2C2WYuS4SKC4kRrLuMee4L2SgbMnIB5ARn3adAEbM6oKDctZxMF1HXWh3XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720307589; c=relaxed/simple;
-	bh=uvw7kayH72MKWUgP6tooALqZ+prlnp+fvkEIGqh0Liw=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=MEC3hkQZHqTM0fDQ8lz39+M3L9+9vXXkzccQZYKRPnmx+bIUI+MzLvoE/FGtjw1Dtwyk6VBFbNGKUzjRR4WfZjg24Is1VAABUkN1qJT3cR1XKY6cw18cl3Y2PFYoqjc+5ko9eEMs4Kvy4/EyUzZzzGG2uLsd/AGj3TDt00Tjpl4=
+	bh=544ZRQ1vobRwkWvYQwOUHCUhgftqjA6qesBSXj73EaY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rOvxdpWkhj7FX2RVW+XI5BuRuabDy9eYCvZYTx+OSs0O/D+IyE7hOnIkrRvWBLECj8MT4UVG+hWagS0kdoMOF2UlxT6UG3BbZwjpdAv9XnD5yKD1MbmXAOMUTGZGh+FI2oelg20SC0xNzaaI+GsqDoCqH+tCJEbgv+5RCklZXEo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,14 +18,15 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WGmQ3421Jz4xPd;
-	Sun,  7 Jul 2024 09:12:59 +1000 (AEST)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WGmQ41lL0z4xPf;
+	Sun,  7 Jul 2024 09:13:00 +1000 (AEST)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240509-mac_hid-md-v1-1-4091f1e4e4e0@quicinc.com>
-References: <20240509-mac_hid-md-v1-1-4091f1e4e4e0@quicinc.com>
-Subject: Re: [PATCH] macintosh/mac_hid: add MODULE_DESCRIPTION()
-Message-Id: <172030740423.964765.11410477570460429115.b4-ty@ellerman.id.au>
+To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Scott Wood <oss@buserror.net>, Arnd Bergmann <arnd@arndb.de>, Jeremy Kerr <jk@ozlabs.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <20240615-md-powerpc-arch-powerpc-v1-1-ba4956bea47a@quicinc.com>
+References: <20240615-md-powerpc-arch-powerpc-v1-1-ba4956bea47a@quicinc.com>
+Subject: Re: [PATCH] powerpc: add missing MODULE_DESCRIPTION() macros
+Message-Id: <172030740426.964765.16456298836722102264.b4-ty@ellerman.id.au>
 Date: Sun, 07 Jul 2024 09:10:04 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -36,15 +37,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 09 May 2024 18:23:37 -0700, Jeff Johnson wrote:
-> Fix the make W=1 warning:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/macintosh/mac_hid.o
+On Sat, 15 Jun 2024 10:06:18 -0700, Jeff Johnson wrote:
+> With ARCH=powerpc, make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/kernel/rtas_flash.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/sysdev/rtc_cmos_setup.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/pseries/papr_scm.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/spufs/spufs.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/cbe_thermal.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/cpufreq_spudemand.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/platforms/cell/cbe_powerbutton.o
 > 
-> 
+> [...]
 
 Applied to powerpc/next.
 
-[1/1] macintosh/mac_hid: add MODULE_DESCRIPTION()
-      https://git.kernel.org/powerpc/c/50b5fed94e21c0992c79fafdd041c9863c1fd2d2
+[1/1] powerpc: add missing MODULE_DESCRIPTION() macros
+      https://git.kernel.org/powerpc/c/9c5f64734f895528128605e2f3b170d220be086d
 
 cheers
