@@ -1,63 +1,92 @@
-Received: from norbury.hmeau.com (helcar.hmeau.com [216.24.177.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B6F17FE;
-	Sat,  6 Jul 2024 00:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.24.177.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93BA360
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 00:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720224668; cv=none; b=u0zBsCLrAsEel+hwgfjmnz8P0OIyrM8uTgewOUQNO+zjehw4Jt9V1MPb+ysPPiLOfKEXedWa9RJn/F6yVkmHa1yZGTZhxGKmruh1gwi3a8svEf7w/C6w5aZLjVbSqHiCjT1124sGlGiIxXG0hJ/5nwEnzD28IJIxgGYR6XLyeuA=
+	t=1720224728; cv=none; b=XivpFFpqmazFlq0k06P+nb9UomWfIPOYjPvWWVogGrzSXEtAOS+G9ruoSE+hMhl4rW9pB0zABfB7b1QRWZstgnNiUHaD4Vk5vd5nvHckZR+DF9bR4ftmeq8dK6p7g9pWpN47q1gT3cvxKEck4kxng58zYqAVs2K6QdMdX0eY5LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720224668; c=relaxed/simple;
-	bh=LguLmIQSB/dZ75aSBBP49WT4ZtDGzUukxhPYqFXnGx8=;
+	s=arc-20240116; t=1720224728; c=relaxed/simple;
+	bh=jn93tI6Ecgv8ripCCk/bBZy/npDcXNgnxyv6HSkEpag=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvQJhvwgtK0J2sKMz0no+AbHvoUFsCQbuxwlGZu7lKz+yBc751+SJ61jKYSfgnC1KFVbHMjTYLRRe0D212F4ssCZJuFoAWC7nNnhh6UMHH4uGGcoc9PSy/nakI38Z8S4jxqQ1udzVauBX3E7xwCIQjiIVnb7bVSlTb4QPu3XjXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=216.24.177.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
-	by norbury.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1sPt0Z-006gdt-04;
-	Sat, 06 Jul 2024 10:10:45 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 06 Jul 2024 10:10:31 +1000
-Date: Sat, 6 Jul 2024 10:10:31 +1000
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Francesco Dolcini <francesco@dolcini.it>,
-	Bharat Bhushan <bbhushan2@marvell.com>
-Cc: Olivia Mackall <olivia@selenic.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] hwrng: Kconfig - Do not enable by default CN10K driver
-Message-ID: <ZoiLd/Cezq2CS4Zp@gondor.apana.org.au>
-References: <20240625195746.48905-1-francesco@dolcini.it>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lFjchlJUj0+rNzaaTgiS+TigTK4w9nM/++ByFcMHc1qBxM0kes3X7QDG+07rIBuaKe0LRgD+TDsbXAITAuLsZycqMSr/vibpW9l/xXf6J0eEJqTAwIFZ+iRikHDNi+5aFXqqQq1sV7RxgBzh2wF0A/l9YKEKz6e8LtEeU+QidTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=DzhTaylS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="DzhTaylS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB15C116B1;
+	Sat,  6 Jul 2024 00:12:06 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="DzhTaylS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1720224722;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6kkzCG1yU6CNYE6GToxrNpzNj95WbzRwOqplwdV0la8=;
+	b=DzhTaylSx/bqMBPRwXV7WIcxe4lW8lmsEETKnfwKF/lsQe9u4PbX3ReXBn+RhglNaO5Oc3
+	wjt/mjdxR7LSNGdglwyHMFw6FGQTyaKhwNRpos2aN8bqfE3VJK1eZgUckAp1XapCpP5mWN
+	n7uPJZfyk2uKT+lTf2JKlznBj69vqUM=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 16013217 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Sat, 6 Jul 2024 00:12:01 +0000 (UTC)
+Date: Sat, 6 Jul 2024 02:11:59 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: jolsa@kernel.org, mhiramat@kernel.org, cgzones@googlemail.com,
+	brauner@kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de
+Subject: Re: deconflicting new syscall numbers for 6.11
+Message-ID: <ZoiLzzM94m_sjfVK@zx2c4.com>
+References: <CAHmME9pgFXhSdWpTwt_x51pFu2Qm878dhcQjG9WhPXV_XFXm9w@mail.gmail.com>
+ <CAHk-=wjCmw1L42W-o=pW7_i=nJK5r0_HFQTWD_agKWGt4hE7JQ@mail.gmail.com>
+ <CAHk-=win2mesMNEfL-KZQ_jk1YH8N8dL9r=7XOLp28_WMazpVg@mail.gmail.com>
+ <ZogcxjLv3NAeQYvA@zx2c4.com>
+ <CAHk-=whRpLyY+U9mkKo8O=2_BXNk=7sjYeObzFr3fGi0KLjLJw@mail.gmail.com>
+ <ZogzJCb66vwxwSLN@zx2c4.com>
+ <CAHk-=wgH=d8MUzJ32QNW_=KDQz7U5g_1Mm9sR9zB1iNUpxft7Q@mail.gmail.com>
+ <ZohB6uPAVX03Sc96@zx2c4.com>
+ <CAHk-=wgC5tWThswb1EO5W75wWL-OhB0fqrnF9nR+Fnsgjp-NfA@mail.gmail.com>
+ <CAHk-=wjwU6o4QExra5qNzBxtX5NwTfaX8ytZKk8BFtOng6zqSQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240625195746.48905-1-francesco@dolcini.it>
+In-Reply-To: <CAHk-=wjwU6o4QExra5qNzBxtX5NwTfaX8ytZKk8BFtOng6zqSQ@mail.gmail.com>
 
-On Tue, Jun 25, 2024 at 09:57:46PM +0200, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
-> 
-> Do not enable by default the CN10K HW random generator driver.
-> 
-> CN10K Random Number Generator is available only on some specific
-> Marvell SoCs, however the driver is in practice enabled by default on
-> all arm64 configs.
-> 
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> ---
-> as an alternative I could propose
-> 
-> default HW_RANDOM if ARCH_THUNDER=y
+Hi Linus,
 
-Adding marvell Cc.
+On Fri, Jul 05, 2024 at 12:46:37PM -0700, Linus Torvalds wrote:
+> If saying "the state size is fixed at 256 bytes" means that ten years
+> from now, we won't be updating to some super-duper fancy new algorithm
+> that wants to keep a huge state size - then that's a GOOD thing.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I'm all for avoiding fanciness. I can imagine three plausible scenarios
+where we benefit from the kernel doing the allocation, rather than mmap,
+or where it's nice to have the kernel decide on the size:
+
+- On some platform, it's actually more efficient to generate N blocks,
+  such that the state there needs to be larger.
+
+- The amount of state that we buffer increases according to some speed
+  vs practicality trade off that changes. (Right now we buffer 1.5
+  blocks; maybe 3.5 would be better eventually.)
+
+- We find out that there's a better way of doing all this with a special
+  mapping instead, or some other means.
+
+What I have in mind, IOW, isn't fanciness. But alright, let me run with
+where you're urging me and see where that takes things. 
+
+> Side note: you could just stick the size as a constant in the vdso too.
+
+Yea, this sounds more like solution (4) from my last email. I'll give
+that a shot and see what it's like nuking the syscall. I'll ping here
+when v21 of the series is ready, and hopefully you like it more.
+
+Thanks for brainstorming this all with me.
+
+Jason
