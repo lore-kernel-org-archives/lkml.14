@@ -1,16 +1,16 @@
 Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5DE208BA
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 23:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A544E1A2
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 23:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720307587; cv=none; b=ZYrvd6pJsd//pHJFj04ir8D9OD1E/EPZy20M7/zCTb2kP5c/ac45tSvx6xSmpI8pp92y3tbxnNMrWS5qIcJWqaL2gsYbaNHbwzrhlGILXIzJVuBvO8FP/bMcK8XUoH2faxUhDekrh1kRDCdsdvVQnUCB2PS0+gYL4fWPc31w03I=
+	t=1720307589; cv=none; b=fVn7Gx5r/ENrl6gqvibBjU5U3Ry1bcvdMP6wAv0qffycRx7sa++ntRa8s3m6zApcXKT4HYifKImL6MIJfQIpiDizbiv7ct/FX8/jLLWCHmE1GPuKLYQbuURRkTVFAHd5EzxSnwZT/bO29U6631BI7Ckk1O8zu3Ts6B3oNI/SV6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720307587; c=relaxed/simple;
-	bh=Is/urjQoAePpGrHkra08FRP8w9uIpD0POq3sE5K1A1A=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QvW4Pze33xcpDtmlez+2mvUkx2Fdcs84AqetPOdM37mXj5LgJpQmB5UaPPC4LIRHaeF02UEvViYPjw2rJM+ySEzqE5hOFamCAwVZVjOck47ZR8p4FtiGhtwrcK6hd+1oT+2MkEw5LQ7fbrM1QuxYZdtJ+v1/ocburWJUUOcsNOg=
+	s=arc-20240116; t=1720307589; c=relaxed/simple;
+	bh=uvw7kayH72MKWUgP6tooALqZ+prlnp+fvkEIGqh0Liw=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=MEC3hkQZHqTM0fDQ8lz39+M3L9+9vXXkzccQZYKRPnmx+bIUI+MzLvoE/FGtjw1Dtwyk6VBFbNGKUzjRR4WfZjg24Is1VAABUkN1qJT3cR1XKY6cw18cl3Y2PFYoqjc+5ko9eEMs4Kvy4/EyUzZzzGG2uLsd/AGj3TDt00Tjpl4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,14 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WGmQ53pPpz4xPh;
-	Sun,  7 Jul 2024 09:13:01 +1000 (AEST)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WGmQ3421Jz4xPd;
+	Sun,  7 Jul 2024 09:12:59 +1000 (AEST)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, Shivaprasad G Bhat <sbhat@linux.ibm.com>
-Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, gbatra@linux.ibm.com, jgg@ziepe.ca, ruscur@russell.cc, linux-kernel@vger.kernel.org, tpearson@raptorengineering.com, msuchanek@suse.de, vaibhav@linux.ibm.com
-In-Reply-To: <172008854222.784.13666247605789409729.stgit@linux.ibm.com>
-References: <172008854222.784.13666247605789409729.stgit@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/pseries/iommu: Define spapr_tce_table_group_ops only with CONFIG_IOMMU_API
-Message-Id: <172030740421.964765.9452921118927851661.b4-ty@ellerman.id.au>
+To: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240509-mac_hid-md-v1-1-4091f1e4e4e0@quicinc.com>
+References: <20240509-mac_hid-md-v1-1-4091f1e4e4e0@quicinc.com>
+Subject: Re: [PATCH] macintosh/mac_hid: add MODULE_DESCRIPTION()
+Message-Id: <172030740423.964765.11410477570460429115.b4-ty@ellerman.id.au>
 Date: Sun, 07 Jul 2024 09:10:04 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,19 +36,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 04 Jul 2024 10:22:37 +0000, Shivaprasad G Bhat wrote:
-> The patch fixes the below warning,
-> arch/powerpc/platforms/pseries/iommu.c:1824:37: warning: 'spapr_tce_table_group_ops' defined but not used [-Wunused-variable]
-> 
-> The other error reported by the test robot no longer exists on the top
-> of the tree due to later changes on the file.
+On Thu, 09 May 2024 18:23:37 -0700, Jeff Johnson wrote:
+> Fix the make W=1 warning:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/macintosh/mac_hid.o
 > 
 > 
-> [...]
 
 Applied to powerpc/next.
 
-[1/1] powerpc/pseries/iommu: Define spapr_tce_table_group_ops only with CONFIG_IOMMU_API
-      https://git.kernel.org/powerpc/c/af199e6ca29c77fb8fea9a78f18dfb165af37cd7
+[1/1] macintosh/mac_hid: add MODULE_DESCRIPTION()
+      https://git.kernel.org/powerpc/c/50b5fed94e21c0992c79fafdd041c9863c1fd2d2
 
 cheers
