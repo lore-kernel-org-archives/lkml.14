@@ -1,178 +1,91 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDFC22EE4
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 07:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD631A29A;
+	Sat,  6 Jul 2024 07:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720250703; cv=none; b=R5mdCoiVEPgr+VJ6zYTZeTSP3ECV9kvSgD/+lg4j+lVFFffEauZnHoE243xSWaVyD6l4+xqwUdDfj6rDy3tlyBHMz1P4z5BvPEd1PrfN/zxqAnDj6mEdlPDcCFec166gyKuzCtXfuRFWZMTGyQZfHmL5XqdRhFTGr0+YmS0RJ1U=
+	t=1720250748; cv=none; b=a6RqSv3dVnwdixrmkAckA4MIL1CUxpcel8P9Tv1vYoBVV3+oe1IAzl7atoYpMxBgYdj3Pj7x36ghHgGc11l7dEDHw8zaZhY5LcVx3YmtDDyMR1bfHU3bbVppJgzRbSFry3/kuMDYbKFPy9K2i3fAMTewC4PODi1jBIxZVKgGzMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720250703; c=relaxed/simple;
-	bh=/DdiIPqa5tH2kZOOu8nmRlttA0monFsAOUcUN1HldhI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lra0q7eh8PXlcmH1uwESFzi09BdimsLI+UsxkP85+Df9tVz9pBtKWsTnVSMCg32BIh7bdlLbrENND0r79GkDGwr6kvN1AUm7O5nr+r46XvZTzcuJGO7hQ04+jtAmMev8dmI3enz0Q5CckN97pqRdi6G+wafCFPmQP2pSZy8u/TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=obBieLA1; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1720250748; c=relaxed/simple;
+	bh=enV4Pmz9JYqoPxrbZ7WoUiNHOT9xZDkPD53ffPmZ6ec=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=DcjEAkuCSeoCzvl2coSDw5Pa9jxF7xotvnBUZQ8HJtEh+yQlyhlgO2yNZr0tzfHJL3DNBuxeYngVeKLw2mzRfPR9zEOUQon1/b780yYlhMJIJG/QbMb6sHcQCTaFXXuKH5eZyw9YScZny5hkqt1aIK7833bepxBWdCSygstGGm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=NBzdTE48; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="obBieLA1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xGdheUenmNwaEUYa4vrPZFuS1XhkjyAUWG8jCK6KoFk=; b=obBieLA10y5E1PGhDlfuxRwHe1
-	b2ESR8lkpbR6xR8rGWwrOEB3tVql+s4JNBR53t+Snao2UNtM/NKN57qvGguWHIVYgQB6U4UiwTFuT
-	VNAfk7o7kHowCdlxpNw2VO5bT8JMFGF3j8lwubFxjMyRD/nt/nY5Q043BfMlt+oOLJCUw75hvzZb0
-	boGwAb+573aC2NlbyYY4eDqtmc4NF+SrV1aTznHrujx8Nl7HTEy31sJZFZp2EXM0Hqd+p7dM+nWpx
-	XIs3KN9ee11CL1/ROH+8K1njh8lnzYPQ1Lmpl/MUypk4W8NWmpxPX8MQKYJSR74jUEMeKa8945zvF
-	/YmugySg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35736)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sPzmh-000106-08;
-	Sat, 06 Jul 2024 08:24:39 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sPzmi-0005rV-3D; Sat, 06 Jul 2024 08:24:40 +0100
-Date: Sat, 6 Jul 2024 08:24:39 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: wanglinhui <wanglinhui@huawei.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	wangfangpeng1@huawei.com, zhangxun38@huawei.com,
-	yangzhuohao1@huawei.com
-Subject: Re: [PATCH] ARM: Fix "external abort on non-linefetch" kernel panic
- caused by userspace
-Message-ID: <ZojxN5iOHhGAt3A5@shell.armlinux.org.uk>
-References: <20240706032005.122654-1-wanglinhui@huawei.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="NBzdTE48"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720250738; x=1720855538; i=markus.elfring@web.de;
+	bh=IZviilEXqtAESXHA45V3MqR+qjy8V7xE6K2KvJiIJuU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=NBzdTE48zB75GH1cIbjj8DhKztJazc02uYPVYk0aZnvCwXP3esDYJdtjl9d1vUJo
+	 ht0QnqJ9lkMjiWUla+zQzpewKTo+CF0mTz54mjLSKLqZ6Ag7Jg385aD566MkpEkBe
+	 2mGf6LrxBScpnukxZ6a7NwbSjC/8VpvGCeSIuLFKIChAqzjH4VeW9GfpMKMu5CnYE
+	 JJc79/xIuov/UgYBAxEk2IS59XcbOcYU1w8UvsDO7D6SYQU0RSfzYhCexmqoe4l8c
+	 JKd30OfoBiM99gfZgbj5ruh29PiiS+IHp6fEz+Y5PeTmOFvFdWSpNxu+xWmYpFmLi
+	 ejSbYzMnrZ6zDLI1eg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mx0N5-1sBD3f2JyN-0149MY; Sat, 06
+ Jul 2024 09:20:04 +0200
+Message-ID: <90779f58-9fe3-4d64-a449-f08f5eef7369@web.de>
+Date: Sat, 6 Jul 2024 09:20:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240706032005.122654-1-wanglinhui@huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+To: Sergey Senozhatsky <senozhatsky@chromium.org>,
+ kernel-janitors@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Minchan Kim <minchan@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Nick Terrell <terrelln@fb.com>
+References: <20240706045641.631961-4-senozhatsky@chromium.org>
+Subject: Re: [PATCH v5 03/23] lib: zstd: fix null-deref in
+ ZSTD_createCDict_advanced2()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240706045641.631961-4-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Km/vDPiXp2BPvMcRE46bACQq+CFLlZKgrDCpRquZORNjwnw3hZM
+ grTaNSXbwKURJzJL14MKYZWLRUKVaPLNV86E8bNMJ77ObiQpDuT8jUoJDdAFRLmgbQLIJVH
+ bZ0ToYgXzBHPZW657yxkYj5B4TVlCdLf77EMg5/j3R85tpZaVgyP/n1wAjanBPapGIfNvDT
+ 7by/OuVlqbeEG+Z6Xk/fA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:UXwnxxGvBaA=;P1NogJ1YKVOgnzjl88/twQDNnL/
+ +KxAV2UIWohZ9dWi2J2+peWpES4w+FatxhLgrtnB9vSbvjnj2UdAvY5oyEThbIut6AdirhP48
+ 3QEvtISsaCLloAm/m6Tk8KfLgUikuvIk3RofeC1gg5KSnZUfftJEL3eQ4outl8mxcdjdHKZ5L
+ 7IUsQYnVzMozvd8rswgWT0R12Pe0VVL1Wb+LWnom4Lmm+2NUN3hnCviYv0Q/hrp5LCgAHDOOE
+ d4rjeoSNmGqCjUMx3Naq7dabdPg2Cog5f30ctfoVBFV4WqURVBEqMmZVR0ATygqjieM0CbcYD
+ 31kc/xriKTZ/ppfgcqECZfodkVxGmao3ZG6qh23CLtIDVEEBACcc3YSTQRA8jyjI37SCzuylp
+ 5io0fhZQoRarTW1byeeAp92Hmm4Uu751ffi5JxwN2A0R+QuYBkA+Kr+AD7U0PIsn5+HC/bBm4
+ o1HAF5PKzaUTgUJrv9rDSxwonIfkYXqbaFHpnzTCB4VYM2zVJCLqQl1zmvvmj2z2pVsfDiATJ
+ UQGNruVMjBBE+TbeYRQx5I3+Iv1NnBqi1J6BJzDDdIHqgmG7ltKxoJe0/7sTwhtUNgKzSTYm7
+ yATlpuMvYujW0xBBjLzNrmlOkV0MSnb/zzsdXUDjMju6hTPCiZquESiX5g7mc8iIkyJCGlDKG
+ eZYeqTriMSwJ2a2uqGn/h3XEHspqLFAVSevm0oiGEA3Y/GYz/JQJsGYOqMtPxwllWBxI5xNUl
+ wtGEylw/rFAf4RGFnIXvot+FQz19y3SVas8S3LOINv44+e+du0criJCoupgm7mLUmnijHBz9P
+ 4scvCF4ikuks4g3ZP1b9QFLD4aflD+yxsXa2OKToQYfuM=
 
-On Sat, Jul 06, 2024 at 11:20:05AM +0800, wanglinhui wrote:
-> 0x16800000 is a peripheral physical address that supports only
-> 4-byte-aligned access.
-> 
-> Use /dev/mem to enable the user space to access 0x16800000. Then userspace
-> unexpectedly tried to read four bytes from 0x16800001 (actually access
-> its virtual address), which caused the kernel to trigger an
-> "external abort on non-linefetch" panic:
-> 
->   Unhandled fault: external abort on non-linefetch (0x1018) at 0x0100129b
->   [0100129b] *pgd=85038831, *pte=16801703, *ppte=16801e33
->   Internal error: : 1018 [#1] SMP ARM
->   ...
->   CPU: 2 PID: xxxx Comm: xxxx Tainted: G           O      5.10.0 #1
->   Hardware name: Hisilicon A9
->   PC is at do_alignment_ldrstr+0xb8/0x100
->   LR is at 0xc1f203fc
->   psr: 200f0313
->   sp : c7081ed4  ip : 00000008  fp : 00000011
->   r10: b42250c8  r9 : c7081f0c  r8 : c7081fb0
->   r7 : 0100129b  r6 : 00000004  r5 : 00000000  r4 : e5908000
->   r3 : 00000000  r2 : c7081f0c  r1 : 200f0210  r0 : 0100129b
->   Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
->   Control: 1ac5387d  Table: 82c3c04a  DAC: 55555555
->   Process LcnNCoreTask (pid: 4049, stack limit = 0x14066b0e)
->   Call trace:
->     do_alignment_ldrstr
->     --do_alignment
->     ----do_DataAbort
->     ------__dabt_usr
-> 
-> It triggers a data abort exception twice. The first time occurs when
-> an unaligned address is accessed in user mode. The second time occurs
-> when the peripheral address is actually accessed in kernel mode,
-> and it crashes the kernel. However, the code location for the second
-> data abort is as follows:
-> 
->   ```
->   #define __get8_unaligned_check(ins, val, addr, err) \
->   	__asm__(\
->    ARM("1: "ins" %1, [%2], #1\n") \ <-- Second data abort is triggered here
->    THUMB("1: "ins" %1, [%2]\n") \
->    THUMB(" add %2, %2, #1\n") \
->   	"2:\n" \
->   	" .pushsection .text.fixup,\"ax\"\n" \
->   ```
-> 
-> It is an exception table entry that can be fixed up.
-> 
-> There is another test that indicates that
-> "external abort on non-linefetch" needs to be fixed up.
-> 
-> Similarly, use /dev/mem to map 0x16800000 to the user space.
-> Pass 0x16800001 (actually passes its virtual address) to the
-> kernel via the write() system call and write 1 byte.
-> It also causes the kernel to trigger an
-> "external abort on non-linefetch" panic:
-> 
->   Unhandled fault: external abort on non-linefetch (0x1018) at 0xb6f95000
->   [b6f95000] *pgd=83fb6831, *pte=16800783, *ppte=16800e33
->   Internal error: : 1018 [#1] SMP ARM
->   ...
->   CPU: 1 PID: xxxx Comm: xxxx Tainted: G           O      5.10.0 #1
->   Hardware name: Hisilicon A9
->   PC is at __get_user_1+0x14/0x20
->   LR is at iov_iter_fault_in_readable+0x7c/0x198
->   psr: 800b0213
->   sp : c195be18  ip : 00000001  fp : c35a2478
->   r10: c06b5260  r9 : 00000000  r8 : c356fee0
->   r7 : ffffe000  r6 : b6f95000  r5 : 00000001  r4 : c195bf10
->   r3 : b6f95000  r2 : f7f95000  r1 : beffffff  r0 : b6f95000
->   Call trace looks like:
->     __get_user_1
->     --iov_iter_fault_in_readable
->     ----generic_perform_write
->     ------__generic_file_write_iter
->     --------generic_file_write_iter
-> 
-> The location of the instruction that triggers the data abort
-> is as follows:
->   ```
->   ENTRY(__get_user_1)
->   	check_uaccess r0, 1, r1, r2, __get_user_bad
->   1: TUSER(ldrb) r2, [r0] <-- Data abort is triggered here
->   	mov r0, #0
->   	ret lr
->   ENDPROC(__get_user_1)
->   _ASM_NOKPROBE(__get_user_1)
->   ```
-> It is also an exception table entry that can be fixed up.
-> 
-> Address passed in from user space should not crash the kernel.
-> Therefore, fixup_exception() is added to fix up such exception.
+> ZSTD_createCDict_advanced2() must ensure that
+> ZSTD_createCDict_advanced_internal() has successfully
+> allocated cdict.  customMalloc() may be called under
+> low memory condition and may be unable to allocate
+> workspace for cdict.
 
-NAK because:
+* Please improve such a change description with imperative wordings.
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n94
 
-1) you're using /dev/mem which requires privileges - you're holding
-   the gun, pointing it at your foot.
+* Would you like to use the term =E2=80=9Cnull pointer dereference=E2=80=
+=9D (in the summary phrase)?
 
-2) you're performing an unaligned access to a device which is
-   architecturally not permitted - you're pulling the trigger.
 
-It's not surprising that the result is you've shot yourself in the
-foot!
-
-If you access /dev/mem, then you need to know what you're doing and
-you must access it according to the requirements of the memory space
-you are accessing, otherwise undefined behaviour will occur - not
-only architecturally, but also by the kernel.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Regards,
+Markus
