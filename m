@@ -1,166 +1,128 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F200512F5B1;
-	Sat,  6 Jul 2024 14:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F86135A40;
+	Sat,  6 Jul 2024 14:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720274819; cv=none; b=MH2fElY2JKeUKVPz5NbA4ri41kwc2ycy5kvJQnspHlGr7CZ07QFCIgeKX6ySLE1mjJweun3njPuA+PJVmn+RtIv+K9Yhc7Ic4ti4vGzlUxWn0vdTe9Cth7dwl9Su77CPG7CulQqRTrEJvWKFYZ0pFMIe0rMAwKGKb8Lv9q0N74o=
+	t=1720274863; cv=none; b=GmvSOkyQGDFcBv5e9JLs3A5EZYdGuB4tFHNYfGcOXjruKr/hkRSRrT7q71zHevav/hGzBx6m8sOKEikwgO2Sgv1GgniVt7GpnkuRnsZoWycHOuqdsMBU9UT+vFFBuR0ftWZGsBOCjAWRUqPqfJ9s0F7WxjXQu7QeyVEGMw42pWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720274819; c=relaxed/simple;
-	bh=FJYWZgERK6AfPlLkLPSaJP2zKhwTtNKHakJxE7nKzkI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H/0POvenHfAIahKyTHbTJkMm4SQMMEq/kxByBlt0pJofF4rWV1Z0f2K+sRPhXsfIncNj2K/SbMHULER1k4SgtewFCe+2iA17ApGVn92piOhIQkTW7G1WFyYXCJsuJa5ql6lxOvAoSNoYabY7E0580B8V6qKCdUIyuomJh709d0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgY7G3jm; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720274863; c=relaxed/simple;
+	bh=eNl93zsedAH4XgLxjz4sAfE79oGEd6zlZf9pYotZyPk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HTJvhC+v9OhHEMNNyEdwtIM+aov6WnXl9TToG7l3C71z0dJI4fMnxusKkb8XJ/zWelTCiY7K2Kaii8QHYsVHYPKLZl4VVsqdri0BQlDQhqXUcnMnkxxjv45d6OgF49hMV9mTi8Sy+IgctCNHwU1HzYpAg7b1kVioggl0ZezEc7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=P1QjhmEF; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgY7G3jm"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a77c2d89af8so247313766b.2;
-        Sat, 06 Jul 2024 07:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720274816; x=1720879616; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X4lGVJnjwiIgh/4bKQak60cgJ03UTxinvLEVUXyN/F0=;
-        b=hgY7G3jmYjroVeIj/nN9trJ4UeA36GFNVpGMzYnqbFcewfWzjiNHqXDYYt7lt2Sj+F
-         08HE1A9kq5wjz6MMilngh/VrWHJZ2kcfeC9Q1lPQPM1WULCebrBYsPiHNGsT/iTjTB2L
-         dCiWNV3CpDTM2BOHFbMnG0F8sM2pTXa2apKqF9ZeBTKs4vs7cxdMQW/yya4SBP45v6he
-         BN1YB149456hjsZxDBo1ape69rsPlgRevf4HTmauNv8vnkjWzPWLjbe2gsnXBDKcE0vy
-         K2BYJnVnTNejS6YC5fgQv9GW8/+yoYoszSJ1VmqEYGSNE2dQApGBEINNM3msjpSW5FtH
-         qMxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720274816; x=1720879616;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X4lGVJnjwiIgh/4bKQak60cgJ03UTxinvLEVUXyN/F0=;
-        b=Ox40Zcdysr7293kpKXrd7OTyOnp1nTC5fCM9M5jdKHxUybVW21y+a6RRImFmyoCOjt
-         6YEIX/OWAT6KGhSJNQwTnqLv5zaL0sG4z9d/K0GjB+pppcUWwA8elrx/2MCilbtN+mid
-         n5fXTm2os440Fy6pab1DEq9W3coBI/3+RlqAcUK7HmGzsVs+pfAeUZCZkEmz1LpLUhKl
-         QQtTr0GS/RjYiUrTN2SDBOHIobqHs6JsfPxpRL/5jrZMMej9hI3hNDHVKgWCG+aQ4Lv+
-         mY8gFTiKIfJtJItWU3YfNkOFmCseLrARyzNuBGO8sgjML42o2JVEPQf88T5/DmRpjTjp
-         Uufg==
-X-Forwarded-Encrypted: i=1; AJvYcCUO3FiuLpiNxNQpRO22AFBlaLHiBksWRHiCpxesaMBwpPkU1BdZqMvL/ByWGdltNuMJf1LU3iHHfkuaqJyuuNvo32V0HwnBpxTJnqzVMYQB5D4QCCIge0T/Hnv7JB95xZNyvSdbPSE4u/9E0vPqU320x5h7PKoH0fR54359dLv99x6MXSx6CM5KFiMrziLH3RdqB4YIeVsYg/O9nDg2Bwe+qw==
-X-Gm-Message-State: AOJu0Yx1u+18tzEDYURs+sRmxXOz04/Spc+Sm2sMgIDQdruPs5/cVzoz
-	JOr+10n3BPZ9MhVdUGbWxpuZ1gAyd5RhHUiydlZtHw7P12nYo8I8
-X-Google-Smtp-Source: AGHT+IHrupOKilPkKjgsniBzZ76M0pNSKz1zD6YUiQRTviCVntMFiiCFl5J31jzwgec/M3YvxvJYmw==
-X-Received: by 2002:a17:906:fc08:b0:a77:d6c7:df5c with SMTP id a640c23a62f3a-a77d6c7e065mr266697566b.17.1720274816092;
-        Sat, 06 Jul 2024 07:06:56 -0700 (PDT)
-Received: from [192.168.1.13] (bzc167.neoplus.adsl.tpnet.pl. [83.30.48.167])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77e6e700f4sm42056466b.60.2024.07.06.07.06.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jul 2024 07:06:53 -0700 (PDT)
-Message-ID: <7e918762-1175-4ad1-b595-3d1992b6c4f7@gmail.com>
-Date: Sat, 6 Jul 2024 16:06:51 +0200
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="P1QjhmEF"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 66274100003;
+	Sat,  6 Jul 2024 17:07:12 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1720274832; bh=9OVsh85Dfs0XARwMw+sWdfga+OlFbW2bccJIHpyv98E=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=P1QjhmEFyxTltzs+6NgTumtEWj/CYrYpIm4MiwIBU0KFreARwmCfwdXKMUwC626tB
+	 KLvQiOupHZ6bkGro/LvBD1xo6EfMjkvuUJyF64BksrlnTRblRLmckCpe4IjtMKOkhB
+	 fDl11hjti+Z2i9LJZeG+ieAvIpt5Mg+E8dqb9PMP6nAvtKY4EEbVxOAVsjOk3h9qow
+	 MEdl5EusmbVbOQDr10+/bAwAorq5tMXV5qovEhkT2PTxWe4I8iwsVJsFXPYmokf6WJ
+	 x1BqhMooHVFABEyNBmcRHkGoD+p7GRqOH201HhEj/IXJcT+ujc2VWKi61FoBRL+S5r
+	 LzwXtHEg6UuTQ==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Sat,  6 Jul 2024 17:05:58 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 6 Jul 2024
+ 17:05:37 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Jesse Brandeburg
+	<jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Simon Horman
+	<horms@kernel.org>
+Subject: [PATCH net-next v2] ice: Adjust over allocation of memory in ice_sched_add_root_node() and ice_sched_add_node()
+Date: Sat, 6 Jul 2024 17:05:18 +0300
+Message-ID: <20240706140518.9214-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] dt-bindings: interconnect: qcom: Add Qualcomm
- MSM8976 NoC
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Georgi Djakov <djakov@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240704200327.8583-1-a39.skl@gmail.com>
- <20240704200327.8583-2-a39.skl@gmail.com>
- <03e96fa4-b916-4121-a9bd-bfcd40fb10b3@linaro.org>
-Content-Language: en-US
-From: Adam Skladowski <a39.skl@gmail.com>
-In-Reply-To: <03e96fa4-b916-4121-a9bd-bfcd40fb10b3@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186347 [Jul 06 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;t-argos.ru:7.1.1;lore.kernel.org:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/07/06 13:56:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/06 10:24:00 #25877639
+X-KSMG-AntiVirus-Status: Clean, skipped
 
+In ice_sched_add_root_node() and ice_sched_add_node() there are calls to
+devm_kcalloc() in order to allocate memory for array of pointers to
+'ice_sched_node' structure. But in this calls there are 'sizeof(*root)'
+instead of 'sizeof(root)' and 'sizeof(*node)' instead of 'sizeof(node)'.
+So memory is allocated for structures instead pointers. This lead to
+significant over allocation of memory.
 
-On 7/5/24 08:55, Krzysztof Kozlowski wrote:
-> On 04/07/2024 22:02, Adam Skladowski wrote:
->> Add bindings for Qualcomm MSM8976 Network-On-Chip interconnect devices.
->>
->> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
->> ---
->>  .../bindings/interconnect/qcom,msm8976.yaml   | 63 ++++++++++++
->>  .../dt-bindings/interconnect/qcom,msm8976.h   | 97 +++++++++++++++++++
->>  2 files changed, 160 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8976.yaml
->>  create mode 100644 include/dt-bindings/interconnect/qcom,msm8976.h
->>
-> This is not a valid path. Please correct it, otherwise tools cannot
-> validate it.
+Adjust over allocation of memory by correcting devm_kcalloc() parameters.
 
-Somehow got this weird idea out of qcom,msm8953.yaml
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-seems its wrong over there too.
+Suggested-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+v2:
+  - Update comment, remove 'Fixes' tag and change the tree from 'net' to
+    'net-next' as suggested by Simon
+	(https://lore.kernel.org/all/20240706095258.GB1481495@kernel.org/)
+v1: https://lore.kernel.org/all/20240705163620.12429-1-amishin@t-argos.ru/
 
-Should proper line be like? :
-  See also:: include/dt-bindings/interconnect/qcom,msm8976.h
+ drivers/net/ethernet/intel/ice/ice_sched.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,msm8976-bimc
->> +      - qcom,msm8976-pcnoc
->> +      - qcom,msm8976-snoc
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  '#interconnect-cells':
->> +    const: 2
->> +
-> I don't know what and why happened here. I asked for different order of
-> properties and properties are gone. Provide detailed changelog.
-
-For disappearing props it turns out clocks which i had defined for it
-aren't required so these were wiped from yaml+driver.
-
->> +patternProperties:
->> +  '^interconnect-[a-z0-9\-]+$':
->> +    type: object
->> +    $ref: qcom,rpm-common.yaml#
->> +    unevaluatedProperties: false
->> +    description:
->> +      The interconnect providers do not have a separate QoS register space,
->> +      but share parent's space.
->> +
->> +    properties:
->> +      compatible:
->> +        const: qcom,msm8976-snoc-mm
->> +
->> +    required:
->> +      - compatible
->> +      - '#interconnect-cells'
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#interconnect-cells'
->> +
->
-> So no schema? Sorry, this is very confusing.
->
-> I am not going to review the rest. You implemented some odd changes, not
-> what was asked. At least not entirely. With no changelog explaining
-> this, you basically expect me to do review from scratch like there was
-> no previous review.
->
-> That's not how it works.
->
-> Best regards,
-> Krzysztof
->
-As both yamls will not differ much from qcom,msm8939.yaml 
-i moved compatibles in it for v3.
-
-Would be great to discuss it before resending on #linux-msm
+diff --git a/drivers/net/ethernet/intel/ice/ice_sched.c b/drivers/net/ethernet/intel/ice/ice_sched.c
+index ecf8f5d60292..d8b6054f3436 100644
+--- a/drivers/net/ethernet/intel/ice/ice_sched.c
++++ b/drivers/net/ethernet/intel/ice/ice_sched.c
+@@ -28,9 +28,8 @@ ice_sched_add_root_node(struct ice_port_info *pi,
+ 	if (!root)
+ 		return -ENOMEM;
+ 
+-	/* coverity[suspicious_sizeof] */
+ 	root->children = devm_kcalloc(ice_hw_to_dev(hw), hw->max_children[0],
+-				      sizeof(*root), GFP_KERNEL);
++				      sizeof(root), GFP_KERNEL);
+ 	if (!root->children) {
+ 		devm_kfree(ice_hw_to_dev(hw), root);
+ 		return -ENOMEM;
+@@ -186,10 +185,9 @@ ice_sched_add_node(struct ice_port_info *pi, u8 layer,
+ 	if (!node)
+ 		return -ENOMEM;
+ 	if (hw->max_children[layer]) {
+-		/* coverity[suspicious_sizeof] */
+ 		node->children = devm_kcalloc(ice_hw_to_dev(hw),
+ 					      hw->max_children[layer],
+-					      sizeof(*node), GFP_KERNEL);
++					      sizeof(node), GFP_KERNEL);
+ 		if (!node->children) {
+ 			devm_kfree(ice_hw_to_dev(hw), node);
+ 			return -ENOMEM;
+-- 
+2.30.2
 
