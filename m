@@ -1,163 +1,399 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37CD20B04
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 05:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1EE1CF92;
+	Sat,  6 Jul 2024 05:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720242504; cv=none; b=mOMX3ty2aR1CBwrxf20Dbul+7UpyrMqcvsj5LA74H/QWn6ZoKKYnQLC22BDhvObVDyBZAzPGiuBByHU7+hEld6H4OEoezrVAoQlMsxFv5RH9VUJfrJfOkTlrBmKP369LLyTGd76nwCUCkQ7YHyLZcTe2zvUIaEMoc/n0pHqzmxo=
+	t=1720242503; cv=none; b=Q4+fk5mjoFDLoTNI17aX9AxTLk5UYjin+ds/S39VfkYp0siXoOJRcFKR2rg/0ZmuWbQisQ7532MR8OnhKq6YS0b1NjeDyINh1rXhonB57hT/PvKzUhEVx3YpHSFTJRw5CGez1h9LudHY/l7oUtkes6RhH8jsBe/ok5mPCgJJayo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720242504; c=relaxed/simple;
-	bh=zNgwfH6InNsnWWKPwSRPQOgaum/vvGCcbSzXoI9VjYI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=tmEkp3YPRjx3nLM0Q+5Hu83Ppp+z4qRhaJ/RT1Wz+fXf891wR3BEq9j+HMyKCQqCDHcVfl6G9dJ/pBJrR5fQG7qfMxOh4cgOtldbpYSSQFzlZEa+CXatIw553cU3pgWCCBGAUWJMwKvR98qnQloQ5443azqNhSQHnb9Cwb4WyGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7f63ce98003so274045739f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 22:08:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720242502; x=1720847302;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uMnth4lpZqa54DWQFc+Nscp7G5diBYCWrU+izZnqnwE=;
-        b=Rq2Z9Xhy0JYX3ZEPE/x3cXhBjs6hp1OzNeiPYJ4sKNfLM+WcvRgnLe++P22KQqKvfO
-         YlXRGzg106gKeczCydDvRo9y5YyX7TfYB24XT/DVfJKliPxz3hL6ttXfWJpeWGFgHZ8a
-         rTOBtSW3z2Tpf51i8dFccQxAoAJiUSE1INrXmuqfREspP3HKKOQQrbncVZA1hJFDsuqr
-         dAEzMz8CUuJe2Y1Xc1bdV7AlLgNkVqBYOgsA2Poy8m7F6JaZ0WcmquM/Ro+pwIfDeSak
-         zT9yIPPa4BAOw/EenRTLMy2T71Eu5WaPsrUBR6S1kIHFt3TeHEA6aF638hE3UbVHwkFP
-         favw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaKNlu2uv+RmTRBdKivFdTJldxIi5d3MWx6cBGEvSM7VceeFSaePs8214R86Hs+GNTc3aTSzzbo6nLUuxHyk7ylBjywu2EMoQBpd1m
-X-Gm-Message-State: AOJu0YxyFsg87j2werJK4vsugveHTn+FXy1r0996kXB+5WyfS3v/Isfq
-	Fe26idxlLemOyp1mYcSu4afUF6Vy3QecBf+rAoNvdiWTua8Vvm/PD0x+Xc5wPUndxhSOEKytVNP
-	HiNS8A4YKOsG+2spWLiKJoYOHzCd1kI1vSvvhMmonK+dbFG/4Ia0Dqhk=
-X-Google-Smtp-Source: AGHT+IFr4AsctvjiD5hASZ8o+wMepJiBeGtuBChIyn9BbPMd4UnjcMUWz+fifv4uC5+sdUUtcxKT9HnpOHj9ChVOOZf4dAxjVZ9C
+	s=arc-20240116; t=1720242503; c=relaxed/simple;
+	bh=40UuOsBIwHIFrdQhruCGrsQbCHrE7MzAtbIQKbDhmG8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YRJ23JjhQ9mJDfp0sB563LGvX3AKPTpTCjD8Frjb+3vTsRBGjxpQ/USokvUZlMz9KWzQF8fySO9oA9hNTPE9MKoe5BRwnokMjGwP/6fbXWWobIbev9bYGNEFER3fQPld+AhS5l8/5pxuAQvOmRHW0MFm0dM0Jb3fbYjdCyOl2M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=CTsvPm6F; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Kkni2iiW; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="CTsvPm6F";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kkni2iiW"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 983A511402C1;
+	Sat,  6 Jul 2024 01:08:20 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sat, 06 Jul 2024 01:08:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1720242500;
+	 x=1720328900; bh=HXny34oNFwETrkhfzSAjHQISVkQHR6yL0d1WvUtzV4s=; b=
+	CTsvPm6Fp3c/7ka3sYJ5zSI0lB9nOmtuxaAniZIQ+n8gRAyTqiI0QaLhlbiVH7xt
+	y9NrzyBHigPEMdW8HC/jFpvY3TKiRRD0j/wTeH7aBT4FCEFNmrcBKC+V3z2WOqDY
+	66okjDhnGDCCTwWaVjKGDA7ap9qmoBqHz7BYWtO2VG4UicgxROGxKTJvHRj7Uz44
+	ohVaPwwjkCHGLLzRIkuz1OwTn/Ml7i9bkx6NhYar5nfHiE+Jm8DURXOnpwDgoYnL
+	t2op7ytvmvB3tywAiCz+qyaL3tmbslMwOSvnp2Wdej/2BO265OaJgXyCSe8+iu5X
+	JP2Mwajhft7+2kYMxiINqA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720242500; x=
+	1720328900; bh=HXny34oNFwETrkhfzSAjHQISVkQHR6yL0d1WvUtzV4s=; b=K
+	kni2iiWWiJ3WC5vDpumkAhXt8/mwMikr/NZJgBt0AMJqAHPj57uKm6MeKmn5byg2
+	7cAWDeJs1t2QCyBhQlEjrZXYAsj4EgOSOtabJwJ8xC+Qp5kx0V0LSfLfFP2dNTVq
+	FlFiRD5VYXLnNyJ7MgePxiIESVgkY0705CCk35waMxKXgoudGOuzRAEKlQlb07Fy
+	2ZnHSId3T6ZDd9cgH9CUElaLTHbouDqt/jPvuEeQSP1UuEQZbqTQKm/r78pKGc/u
+	V0AJVrNzHB/HQXq9aBNMvdlh06+wUr1We0nMHkpTpUDxEokLIgayqMdqiNk6zE4y
+	5BqzU9hsKxBNqo3gO3IDg==
+X-ME-Sender: <xms:RNGIZqUTG-7hPQEO96jgEJi582T62iye3RDedeDThSBdrI7ZIPajkA>
+    <xme:RNGIZmm3Py_97BASAJqMDATQAZtiJ2qLwILntSB7aTKiaAgf9CkO_GR0MBeG__OGr
+    oy_vmFybdR68fcaciY>
+X-ME-Received: <xmr:RNGIZubFFXcrnDvjid659kNgmXIF0D6lXodys1yPKK-hjOGIMDrepkMq08TlwcYkv9I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvgdeltdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheplfhirgig
+    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpedvkeeihfefveekueevteefleffkeegudeghfdtuddugefhueev
+    geffgedukeejleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:RNGIZhVT_WzlvptndB2hp5tnPL7ilVQ2RQNW1RR7V4ddaTbAfBuzVQ>
+    <xmx:RNGIZkkCIQpTxUDwlGRGfxlcwe1pxwfsAJKpJyjq3slVXtyu7C1r9w>
+    <xmx:RNGIZmcrTuJBXUwLAMEbmJmslqrV80xbUhgLzFqXvTKf8xdMR8UPOQ>
+    <xmx:RNGIZmGW2F2AyVusQGxzUmtQhQcOXXyYycv3Kdq2fTco5Pv4dnL-eg>
+    <xmx:RNGIZlAwSO6bwTLDBLrzm0_xevGwlwdgXXhC0P-LPXIIOebT9XX9zBzd>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 6 Jul 2024 01:08:18 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Sat, 06 Jul 2024 13:08:01 +0800
+Subject: [PATCH 4/4] MIPS: config: Add ip30_defconfig
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2cc4:b0:7f6:5c77:ce16 with SMTP id
- ca18e2360f4ac-7f66df29b61mr44280539f.3.1720242502048; Fri, 05 Jul 2024
- 22:08:22 -0700 (PDT)
-Date: Fri, 05 Jul 2024 22:08:22 -0700
-In-Reply-To: <00000000000079d168061c36ce83@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000432cc7061c8d2b68@google.com>
-Subject: Re: [syzbot] [bpf?] [net?] stack segment fault in dev_hash_map_redirect
-From: syzbot <syzbot+c1e04a422bbc0f0f2921@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, davem@davemloft.net, eddyz87@gmail.com, 
-	haoluo@google.com, hawk@kernel.org, john.fastabend@gmail.com, 
-	jolsa@kernel.org, kpsingh@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240706-config-refresh-v1-4-5dba0064cf08@flygoat.com>
+References: <20240706-config-refresh-v1-0-5dba0064cf08@flygoat.com>
+In-Reply-To: <20240706-config-refresh-v1-0-5dba0064cf08@flygoat.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6971;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=40UuOsBIwHIFrdQhruCGrsQbCHrE7MzAtbIQKbDhmG8=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrSOixZzVvjfkDu3uOXkHLG3Rttqnuy8nnCwv+aV+ZNKn
+ paMjwtnd5SyMIhxMciKKbKECCj1bWi8uOD6g6w/MHNYmUCGMHBxCsBEEr0Y/ifLdcvueshTbpr7
+ 4P+O1y9jONdErPo9tXvDlp7sVa7R2hsY/iee4mnlWTr18KMLrZ/45hpxOat5ORyWy2d/f7H82Pt
+ 1WTwA
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-syzbot has found a reproducer for the following issue on:
+Add ip30_defconfig derived from ip27_defconfig to ensure this
+target is build tested by various kernel testing projects.
 
-HEAD commit:    0b58e108042b Add linux-next specific files for 20240703
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=165ce371980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ed034204f2e40e53
-dashboard link: https://syzkaller.appspot.com/bug?extid=c1e04a422bbc0f0f2921
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14987969980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11955485980000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/1d079762feae/disk-0b58e108.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e53996c8d8c2/vmlinux-0b58e108.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a0bf21cdd844/bzImage-0b58e108.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c1e04a422bbc0f0f2921@syzkaller.appspotmail.com
-
-Oops: stack segment: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 0 UID: 0 PID: 5094 Comm: syz-executor316 Not tainted 6.10.0-rc6-next-20240703-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-RIP: 0010:bpf_net_ctx_get_ri include/linux/filter.h:788 [inline]
-RIP: 0010:__bpf_xdp_redirect_map include/linux/filter.h:1699 [inline]
-RIP: 0010:dev_hash_map_redirect+0x64/0x620 kernel/bpf/devmap.c:1022
-Code: 00 48 89 d8 48 c1 e8 03 42 80 3c 38 00 74 08 48 89 df e8 9f 9c 3d 00 48 8b 03 48 89 44 24 08 48 8d 58 38 48 89 dd 48 c1 ed 03 <42> 0f b6 44 3d 00 84 c0 0f 85 f5 03 00 00 44 8b 33 44 89 f6 83 e6
-RSP: 0018:ffffc9000356f958 EFLAGS: 00010202
-RAX: 0000000000000000 RBX: 0000000000000038 RCX: ffff8880276e9e00
-RDX: 0000000000000000 RSI: 000000000356f9b0 RDI: ffff88802f22f000
-RBP: 0000000000000007 R08: 0000000000000007 R09: ffffffff81b5ee2f
-R10: 0000000000000004 R11: ffff8880276e9e00 R12: 0000000000000008
-R13: 000000000356f9b0 R14: 0000000000000000 R15: dffffc0000000000
-FS:  000055557ccb9380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000021d5ab98 CR3: 0000000022250000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bpf_prog_ec9efaa32d58ce69+0x56/0x5a
- __bpf_prog_run include/linux/filter.h:691 [inline]
- bpf_prog_run_xdp include/net/xdp.h:514 [inline]
- tun_build_skb drivers/net/tun.c:1711 [inline]
- tun_get_user+0x3321/0x4560 drivers/net/tun.c:1819
- tun_chr_write_iter+0x113/0x1f0 drivers/net/tun.c:2048
- new_sync_write fs/read_write.c:497 [inline]
- vfs_write+0xa72/0xc90 fs/read_write.c:590
- ksys_write+0x1a0/0x2c0 fs/read_write.c:643
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbd788a7f10
-Code: 40 00 48 c7 c2 b8 ff ff ff f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d b1 e1 07 00 00 74 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 48 83 ec 28 48 89
-RSP: 002b:00007ffde33a9838 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fbd788a7f10
-RDX: 000000000000004e RSI: 0000000020000540 RDI: 00000000000000c8
-RBP: 0000000000000000 R08: 00007ffde33a9968 R09: 00007ffde33a9968
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bpf_net_ctx_get_ri include/linux/filter.h:788 [inline]
-RIP: 0010:__bpf_xdp_redirect_map include/linux/filter.h:1699 [inline]
-RIP: 0010:dev_hash_map_redirect+0x64/0x620 kernel/bpf/devmap.c:1022
-Code: 00 48 89 d8 48 c1 e8 03 42 80 3c 38 00 74 08 48 89 df e8 9f 9c 3d 00 48 8b 03 48 89 44 24 08 48 8d 58 38 48 89 dd 48 c1 ed 03 <42> 0f b6 44 3d 00 84 c0 0f 85 f5 03 00 00 44 8b 33 44 89 f6 83 e6
-RSP: 0018:ffffc9000356f958 EFLAGS: 00010202
-RAX: 0000000000000000 RBX: 0000000000000038 RCX: ffff8880276e9e00
-RDX: 0000000000000000 RSI: 000000000356f9b0 RDI: ffff88802f22f000
-RBP: 0000000000000007 R08: 0000000000000007 R09: ffffffff81b5ee2f
-R10: 0000000000000004 R11: ffff8880276e9e00 R12: 0000000000000008
-R13: 000000000356f9b0 R14: 0000000000000000 R15: dffffc0000000000
-FS:  000055557ccb9380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000021d5ab98 CR3: 0000000022250000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	00 48 89             	add    %cl,-0x77(%rax)
-   3:	d8 48 c1             	fmuls  -0x3f(%rax)
-   6:	e8 03 42 80 3c       	call   0x3c80420e
-   b:	38 00                	cmp    %al,(%rax)
-   d:	74 08                	je     0x17
-   f:	48 89 df             	mov    %rbx,%rdi
-  12:	e8 9f 9c 3d 00       	call   0x3d9cb6
-  17:	48 8b 03             	mov    (%rbx),%rax
-  1a:	48 89 44 24 08       	mov    %rax,0x8(%rsp)
-  1f:	48 8d 58 38          	lea    0x38(%rax),%rbx
-  23:	48 89 dd             	mov    %rbx,%rbp
-  26:	48 c1 ed 03          	shr    $0x3,%rbp
-* 2a:	42 0f b6 44 3d 00    	movzbl 0x0(%rbp,%r15,1),%eax <-- trapping instruction
-  30:	84 c0                	test   %al,%al
-  32:	0f 85 f5 03 00 00    	jne    0x42d
-  38:	44 8b 33             	mov    (%rbx),%r14d
-  3b:	44 89 f6             	mov    %r14d,%esi
-  3e:	83                   	.byte 0x83
-  3f:	e6                   	.byte 0xe6
-
-
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ arch/mips/configs/ip30_defconfig | 285 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 285 insertions(+)
+
+diff --git a/arch/mips/configs/ip30_defconfig b/arch/mips/configs/ip30_defconfig
+new file mode 100644
+index 000000000000..c0e790e68977
+--- /dev/null
++++ b/arch/mips/configs/ip30_defconfig
+@@ -0,0 +1,285 @@
++CONFIG_SYSVIPC=y
++CONFIG_POSIX_MQUEUE=y
++CONFIG_NO_HZ=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_IKCONFIG=y
++CONFIG_IKCONFIG_PROC=y
++CONFIG_LOG_BUF_SHIFT=15
++CONFIG_CGROUPS=y
++CONFIG_CPUSETS=y
++CONFIG_RELAY=y
++CONFIG_EXPERT=y
++CONFIG_SGI_IP30=y
++CONFIG_SMP=y
++CONFIG_NR_CPUS=2
++CONFIG_HZ_1000=y
++CONFIG_MIPS32_O32=y
++CONFIG_MIPS32_N32=y
++CONFIG_PM=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_MODULE_SRCVERSION_ALL=y
++CONFIG_PARTITION_ADVANCED=y
++CONFIG_SGI_PARTITION=y
++CONFIG_DEFAULT_MMAP_MIN_ADDR=65536
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_XFRM_USER=m
++CONFIG_XFRM_STATISTICS=y
++CONFIG_NET_KEY=y
++CONFIG_NET_KEY_MIGRATE=y
++CONFIG_INET=y
++CONFIG_IP_MULTICAST=y
++CONFIG_IP_PNP=y
++CONFIG_TCP_MD5SIG=y
++CONFIG_IPV6_ROUTER_PREF=y
++CONFIG_IPV6_ROUTE_INFO=y
++CONFIG_IPV6_OPTIMISTIC_DAD=y
++CONFIG_INET6_AH=m
++CONFIG_INET6_ESP=m
++CONFIG_INET6_IPCOMP=m
++CONFIG_IPV6_MIP6=m
++CONFIG_IPV6_SIT=m
++CONFIG_IPV6_SIT_6RD=y
++CONFIG_IPV6_TUNNEL=m
++CONFIG_IPV6_MULTIPLE_TABLES=y
++CONFIG_IPV6_SUBTREES=y
++CONFIG_IPV6_MROUTE=y
++CONFIG_IPV6_PIMSM_V2=y
++CONFIG_NETWORK_SECMARK=y
++CONFIG_NET_SCHED=y
++CONFIG_NET_SCH_HTB=m
++CONFIG_NET_SCH_HFSC=m
++CONFIG_NET_SCH_PRIO=m
++CONFIG_NET_SCH_MULTIQ=y
++CONFIG_NET_SCH_RED=m
++CONFIG_NET_SCH_SFQ=m
++CONFIG_NET_SCH_TEQL=m
++CONFIG_NET_SCH_TBF=m
++CONFIG_NET_SCH_GRED=m
++CONFIG_NET_SCH_NETEM=m
++CONFIG_NET_SCH_INGRESS=m
++CONFIG_NET_CLS_BASIC=m
++CONFIG_NET_CLS_ROUTE4=m
++CONFIG_NET_CLS_FW=m
++CONFIG_NET_CLS_U32=m
++CONFIG_CLS_U32_MARK=y
++CONFIG_NET_CLS_FLOW=m
++CONFIG_NET_CLS_CGROUP=y
++CONFIG_NET_CLS_ACT=y
++CONFIG_NET_ACT_POLICE=y
++CONFIG_NET_ACT_GACT=m
++CONFIG_GACT_PROB=y
++CONFIG_NET_ACT_MIRRED=m
++CONFIG_NET_ACT_NAT=m
++CONFIG_NET_ACT_PEDIT=m
++CONFIG_NET_ACT_SKBEDIT=m
++CONFIG_CFG80211=m
++CONFIG_MAC80211=m
++CONFIG_RFKILL=m
++# CONFIG_VGA_ARB is not set
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_CDROM_PKTCDVD=m
++CONFIG_ATA_OVER_ETH=m
++CONFIG_SCSI=y
++CONFIG_BLK_DEV_SD=y
++CONFIG_CHR_DEV_ST=y
++CONFIG_BLK_DEV_SR=m
++CONFIG_CHR_DEV_SG=m
++CONFIG_CHR_DEV_SCH=m
++CONFIG_SCSI_CONSTANTS=y
++CONFIG_SCSI_LOGGING=y
++CONFIG_SCSI_SCAN_ASYNC=y
++CONFIG_SCSI_SPI_ATTRS=y
++CONFIG_SCSI_FC_ATTRS=y
++CONFIG_SCSI_CXGB3_ISCSI=m
++CONFIG_SCSI_BNX2_ISCSI=m
++CONFIG_BE2ISCSI=m
++CONFIG_SCSI_HPSA=m
++CONFIG_SCSI_3W_SAS=m
++CONFIG_SCSI_AIC94XX=m
++# CONFIG_AIC94XX_DEBUG is not set
++CONFIG_SCSI_MVSAS=m
++# CONFIG_SCSI_MVSAS_DEBUG is not set
++CONFIG_SCSI_MPT2SAS=m
++CONFIG_LIBFC=m
++CONFIG_SCSI_QLOGIC_1280=y
++CONFIG_SCSI_PMCRAID=m
++CONFIG_SCSI_BFA_FC=m
++CONFIG_SCSI_DH=y
++CONFIG_SCSI_DH_RDAC=m
++CONFIG_SCSI_DH_HP_SW=m
++CONFIG_SCSI_DH_EMC=m
++CONFIG_SCSI_DH_ALUA=m
++CONFIG_MD=y
++CONFIG_BLK_DEV_MD=y
++CONFIG_MD_RAID0=y
++CONFIG_MD_RAID1=y
++CONFIG_MD_RAID10=m
++CONFIG_MD_RAID456=y
++CONFIG_BLK_DEV_DM=m
++CONFIG_DM_CRYPT=m
++CONFIG_DM_SNAPSHOT=m
++CONFIG_DM_MIRROR=m
++CONFIG_DM_LOG_USERSPACE=m
++CONFIG_DM_ZERO=m
++CONFIG_DM_MULTIPATH=m
++CONFIG_DM_MULTIPATH_QL=m
++CONFIG_DM_MULTIPATH_ST=m
++CONFIG_DM_UEVENT=y
++CONFIG_IFB=m
++CONFIG_MACVLAN=m
++CONFIG_VETH=m
++CONFIG_ATL2=m
++CONFIG_ATL1E=m
++CONFIG_ATL1C=m
++CONFIG_B44=m
++CONFIG_BNX2X=m
++CONFIG_ENIC=m
++CONFIG_DNET=m
++CONFIG_BE2NET=m
++CONFIG_E1000E=m
++CONFIG_IGB=m
++CONFIG_IGBVF=m
++CONFIG_IXGBE=m
++CONFIG_JME=m
++CONFIG_MLX4_EN=m
++# CONFIG_MLX4_DEBUG is not set
++CONFIG_KS8851_MLL=m
++CONFIG_AX88796=m
++CONFIG_AX88796_93CX6=y
++CONFIG_ETHOC=m
++CONFIG_QLA3XXX=m
++CONFIG_NETXEN_NIC=m
++CONFIG_SFC=m
++CONFIG_SMC91X=m
++CONFIG_SMSC911X=m
++CONFIG_NIU=m
++CONFIG_TEHUTI=m
++CONFIG_VIA_VELOCITY=m
++CONFIG_PHYLIB=y
++CONFIG_CICADA_PHY=m
++CONFIG_DAVICOM_PHY=m
++CONFIG_ICPLUS_PHY=m
++CONFIG_LXT_PHY=m
++CONFIG_LSI_ET1011C_PHY=m
++CONFIG_MARVELL_PHY=m
++CONFIG_NATIONAL_PHY=m
++CONFIG_QSEMI_PHY=m
++CONFIG_REALTEK_PHY=m
++CONFIG_SMSC_PHY=m
++CONFIG_STE10XP=m
++CONFIG_VITESSE_PHY=m
++CONFIG_ADM8211=m
++CONFIG_ATH5K=m
++CONFIG_ATH9K=m
++CONFIG_B43=m
++CONFIG_B43LEGACY=m
++# CONFIG_B43LEGACY_DEBUG is not set
++CONFIG_IPW2100=m
++CONFIG_IPW2100_MONITOR=y
++CONFIG_IPW2100_DEBUG=y
++CONFIG_IPW2200=m
++CONFIG_IPW2200_MONITOR=y
++CONFIG_IPW2200_PROMISCUOUS=y
++CONFIG_IPW2200_QOS=y
++CONFIG_IPW2200_DEBUG=y
++CONFIG_IWLWIFI=m
++CONFIG_P54_COMMON=m
++CONFIG_P54_PCI=m
++CONFIG_LIBERTAS_THINFIRM=m
++CONFIG_MWL8K=m
++CONFIG_RT2X00=m
++CONFIG_RT2400PCI=m
++CONFIG_RT2500PCI=m
++CONFIG_RT61PCI=m
++CONFIG_RT2800PCI=m
++CONFIG_RTL8180=m
++CONFIG_WL1251=m
++CONFIG_WL12XX=m
++# CONFIG_INPUT is not set
++CONFIG_SERIO_LIBPS2=m
++CONFIG_SERIO_RAW=m
++CONFIG_SERIO_ALTERA_PS2=m
++# CONFIG_VT is not set
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_EXTENDED=y
++CONFIG_SERIAL_8250_MANY_PORTS=y
++CONFIG_SERIAL_8250_SHARE_IRQ=y
++CONFIG_NOZOMI=m
++CONFIG_HW_RANDOM_TIMERIOMEM=m
++CONFIG_I2C_CHARDEV=m
++CONFIG_I2C_ALI1535=m
++CONFIG_I2C_ALI1563=m
++CONFIG_I2C_ALI15X3=m
++CONFIG_I2C_AMD756=m
++CONFIG_I2C_AMD8111=m
++CONFIG_I2C_I801=m
++CONFIG_I2C_ISCH=m
++CONFIG_I2C_PIIX4=m
++CONFIG_I2C_NFORCE2=m
++CONFIG_I2C_SIS5595=m
++CONFIG_I2C_SIS630=m
++CONFIG_I2C_SIS96X=m
++CONFIG_I2C_VIA=m
++CONFIG_I2C_VIAPRO=m
++CONFIG_I2C_OCORES=m
++CONFIG_I2C_PCA_PLATFORM=m
++CONFIG_I2C_SIMTEC=m
++CONFIG_I2C_TAOS_EVM=m
++CONFIG_I2C_STUB=m
++# CONFIG_HWMON is not set
++CONFIG_THERMAL=y
++CONFIG_MFD_PCF50633=m
++CONFIG_PCF50633_ADC=m
++CONFIG_PCF50633_GPIO=m
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_M48T35=y
++CONFIG_UIO=y
++CONFIG_UIO_AEC=m
++CONFIG_UIO_SERCOS3=m
++CONFIG_UIO_PCI_GENERIC=m
++CONFIG_EXT2_FS=y
++CONFIG_EXT2_FS_XATTR=y
++CONFIG_EXT2_FS_POSIX_ACL=y
++CONFIG_EXT2_FS_SECURITY=y
++CONFIG_EXT3_FS=y
++CONFIG_EXT3_FS_POSIX_ACL=y
++CONFIG_EXT3_FS_SECURITY=y
++CONFIG_XFS_FS=m
++CONFIG_XFS_QUOTA=y
++CONFIG_XFS_POSIX_ACL=y
++CONFIG_BTRFS_FS=m
++CONFIG_BTRFS_FS_POSIX_ACL=y
++CONFIG_QUOTA_NETLINK_INTERFACE=y
++CONFIG_FUSE_FS=m
++CONFIG_CUSE=m
++CONFIG_PROC_KCORE=y
++CONFIG_TMPFS=y
++CONFIG_TMPFS_POSIX_ACL=y
++CONFIG_SQUASHFS=m
++CONFIG_OMFS_FS=m
++CONFIG_NFS_FS=y
++CONFIG_SECURITYFS=y
++CONFIG_CRYPTO_CRYPTD=m
++CONFIG_CRYPTO_BLOWFISH=m
++CONFIG_CRYPTO_CAMELLIA=m
++CONFIG_CRYPTO_CAST5=m
++CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_FCRYPT=m
++CONFIG_CRYPTO_SERPENT=m
++CONFIG_CRYPTO_TWOFISH=m
++CONFIG_CRYPTO_CTS=m
++CONFIG_CRYPTO_LRW=m
++CONFIG_CRYPTO_PCBC=m
++CONFIG_CRYPTO_XTS=m
++CONFIG_CRYPTO_HMAC=y
++CONFIG_CRYPTO_MD4=m
++CONFIG_CRYPTO_RMD160=m
++CONFIG_CRYPTO_VMAC=m
++CONFIG_CRYPTO_WP512=m
++CONFIG_CRYPTO_XCBC=m
++CONFIG_CRYPTO_LZO=m
++CONFIG_CRC_T10DIF=m
+
+-- 
+2.45.2
+
