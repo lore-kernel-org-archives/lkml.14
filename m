@@ -1,61 +1,62 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-io1-f67.google.com (mail-io1-f67.google.com [209.85.166.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C571D12B17C
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 04:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7776137757
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 04:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720241850; cv=none; b=t4Yk0FT6VnOyB2vkrBFGDyXoc9nR9pQG4KO6xkuJT8aYpqsI9LKPd+me3Wt7qfRVwldfAWreuascYtJMBb8Pups59pa6dT5LOXhHTjU0BEvEWoLiqB8YH21tmRftyO8h/xyjQE1SJ8+RSo74myPXUCMsDvVeKGNoNvg+BN9PoXQ=
+	t=1720241856; cv=none; b=im9E0RB7KThOJ3xQxBkjkhAXhUjm6GlZeSPM7QZHdN9sdBI9RMOFRN3OeztMCtNpgmH0vAB/E+hFpxEKKVZSEG7DtxjpoIK/xU+k4tTY/JzkU+K6RJnZZqqpFfWUHarGvfptSiEv2zVKH/6+PWjqPQ42r8Y5Aq3dmkD5DtnaFXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720241850; c=relaxed/simple;
-	bh=HzeaU/l84JP69XEkeHwGz11Ln21m1tk3zMDEPKfzAt8=;
+	s=arc-20240116; t=1720241856; c=relaxed/simple;
+	bh=Jokkp4jRyqJcm0A1DYn+TcAVitWw78wyN6aHy2nyTtA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VDdgM0o7y81EPirVbqVKjgbzKqoUveUkfYreuT8AThoMh0AwPCr0ywWgqaQEDfuvR9Ivao6k2VEOmbYPHwlLoEI+Pcck0YjI7G7Lz3aDFeW+ZYrki0CzflIPXTf0jaBBB2EHT00kAxuhUNt2UTg/Wf5DqfnnhBbeo2frjSTE6mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WZEDpYpS; arc=none smtp.client-ip=209.85.219.179
+	 MIME-Version; b=SoaBQBpnyI90DFlzkQ6TiytLVBUqWRlAidVhSHlnQvdn25puneeB6q7LrMVqWwVqi3IZBPk6DZA/kGdrpUedDx37248+JtL5Od48b6nO0LlQIjSAgYOdkjkp9eVkz1d+eOpTtyUY7jMIbou+yzBiWOr9YENdl7UW1z14kGY4iYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ad/b2Z5E; arc=none smtp.client-ip=209.85.166.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WZEDpYpS"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e035ecb35ffso2104150276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 21:57:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ad/b2Z5E"
+Received: by mail-io1-f67.google.com with SMTP id ca18e2360f4ac-7f3cd64e71cso86725439f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 21:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1720241848; x=1720846648; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1720241854; x=1720846654; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tH44H1TVzwAUobTzGL/ZANlz+pOfAMXef1PqW4dbSJQ=;
-        b=WZEDpYpSY1F0lcAnlzCF7WlbLWnh3MlA1DdZOrWhtEfXfVrCWax3H9kWvqEtGQCsrS
-         IBWmogAdcxVcHwtS/I8HOC9JIyes4rLCODaca7hXhvWSRS7ur32YQXiyL/SLeyc5g+PD
-         t+Xe2XV8XvDxPnAxI160GjbYQA7FMiFuvafgw=
+        bh=9r+dUMO71IOpvidHYnn6tdfSiwaLYwJEZsT8F2XyCEk=;
+        b=Ad/b2Z5EJSi6d0vC+P20ieWQtsXyQDYwdUtfjLBHUg39zTusEDd1/CbM1CoN1ymzyj
+         tMWLuwhQnEjKEfbCVbDYCmHnR4/IBwKSTC8QQ0T6ifI1dm8T3Ojfg6kOn1aNLcT+WEY1
+         WsefvHMaG8ZS4/vev1YAV+xescl7+VBtcKZC0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720241848; x=1720846648;
+        d=1e100.net; s=20230601; t=1720241854; x=1720846654;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tH44H1TVzwAUobTzGL/ZANlz+pOfAMXef1PqW4dbSJQ=;
-        b=w+TlEI9hyElnNWcMpF2SdqvTvVRduIDdFQEsf72Ia0umBQPHNRnGUeWB3fmc6gGmgs
-         YR9reE4pffRLoBfKjtptKxW29Mfhj1JO/zpHQfuYA+yyGsnB9Rvft1zQqfRC9PVyAeqo
-         AqdQM21hWS38WgVC9i6JQtNhMXNYW15QTkHvedxUECdyqu7FjkST/UkU4Gt2CapmYovS
-         nFtcLj5m2kpguKcf0ooNNACffqzv6XA0c+hsmOKzVCXUXvAJcLAFMlq/9mJ6d8RlRzZL
-         mDLydsWOBsOo1LPpRy5i5feQFxlh9tG66gon4uxqiU1RWgeOu6Ec/0Q8bmvWM5ImtviS
-         ByuA==
-X-Gm-Message-State: AOJu0YyaHEUGwVFi/qk5OJcWa6S1xFUPsUENtvbsZ335bOAt5u//fzyO
-	x+x5Y4DY6mJERXeKVh7zuU75xH0W7mcIJagNTabOTiqGWfNllne4JhEINPZ9uA==
-X-Google-Smtp-Source: AGHT+IHAkGII32UrL24EsLKuvJnI3yDPAlt44SMYXQKHtOowtgYRy3I1lOMgE6pU+D5tGMvsZ5DR0Q==
-X-Received: by 2002:a25:9246:0:b0:e03:ab72:fe71 with SMTP id 3f1490d57ef6-e03c1933997mr6310661276.10.1720241847684;
-        Fri, 05 Jul 2024 21:57:27 -0700 (PDT)
+        bh=9r+dUMO71IOpvidHYnn6tdfSiwaLYwJEZsT8F2XyCEk=;
+        b=RsHUwmdZJkt7gfB2sSWI3dcy+omDrLCB7XldX2bFRekSqy6ZiEctI0rQE12tCn0Ki0
+         RGdpx+ZVip9YOdQ6y90Gml/XiqM+MuGJU2z4RziO4xhWL2o7wJniLAj5+egLv2Nx4ZUH
+         dGSpxiaBYAsBAvNZDEj8o/dJgmo0HGVTr9wOg5nsgj3aXqsQSBVW+r19wP5ECKNbc7hs
+         PV2cRca5lSNBZr4Lb3zUBbE7lgViJ+KCm6FcoQmNF2QKtDrG/xPRP+fCxwIBqMmsJbn7
+         zzw/mM248+dROBeTZBH4Rj6EXVvGYrCOK/VcefEbRsLG6M6ecx15C10/83bHEpf4lzAC
+         DQEA==
+X-Gm-Message-State: AOJu0YyLJtmsL9v39cubrc7nGImLVOVpyg/0jcaNa3mxh1lEdYLFKL/b
+	NSI3talhyUNedODL/FL7HgE59g6mexuv19Hrw0O2QOn5JNbboSWtd1pZ5DwZSmbL04ogUWCNHMH
+	YUB+T
+X-Google-Smtp-Source: AGHT+IFvt1J6zKE9cv1hMVsa+NwAIJfmzdjvtTHGru2vuD24msY4BiJiM6URUXbjaMDes+AnuyrQMQ==
+X-Received: by 2002:a05:6e02:194b:b0:375:c296:bf90 with SMTP id e9e14a558f8ab-38398430c33mr88614215ab.7.1720241854004;
+        Fri, 05 Jul 2024 21:57:34 -0700 (PDT)
 Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:88a7:e7d7:713d:ff09])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7623cd854b2sm2784104a12.38.2024.07.05.21.57.26
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7623cd854b2sm2784104a12.38.2024.07.05.21.57.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 21:57:27 -0700 (PDT)
+        Fri, 05 Jul 2024 21:57:33 -0700 (PDT)
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Minchan Kim <minchan@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
 	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv5 17/23] zram: introduce zcomp_req structure
-Date: Sat,  6 Jul 2024 13:56:19 +0900
-Message-ID: <20240706045641.631961-18-senozhatsky@chromium.org>
+Subject: [PATCHv5 20/23] zram: add dictionary support to lz4
+Date: Sat,  6 Jul 2024 13:56:22 +0900
+Message-ID: <20240706045641.631961-21-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 In-Reply-To: <20240706045641.631961-1-senozhatsky@chromium.org>
 References: <20240706045641.631961-1-senozhatsky@chromium.org>
@@ -67,368 +68,147 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Encapsulate compression/decompression data in zcomp_req
-structure.
+Support pre-trained dictionary param. lz4 doesn't
+mandate specific format of the dictionary and even
+zstd --train can be used to train a dictionary for
+lz4, according to [1].
+
+TEST
+====
+*** lz4
+/sys/block/zram0/mm_stat
+1750654976 664188565 676864000        0 676864000        1        0    34288    34288
+
+*** lz4 dict=/home/ss/lz4-dict-amd64
+/sys/block/zram0/mm_stat
+1750638592 619891141 632053760        0 632053760        1        0    34278    34278
+
+*** lz4 level=5 dict=/home/ss/lz4-dict-amd64
+/sys/block/zram0/mm_stat
+1750638592 727174243 740810752        0 740810752        1        0    34437    34437
+
+[1] https://github.com/lz4/lz4/issues/557
 
 Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- drivers/block/zram/backend_842.c     | 17 ++++++++---------
- drivers/block/zram/backend_deflate.c | 26 +++++++++++---------------
- drivers/block/zram/backend_lz4.c     | 15 +++++++--------
- drivers/block/zram/backend_lz4hc.c   | 13 ++++++-------
- drivers/block/zram/backend_lzo.c     | 12 ++++++------
- drivers/block/zram/backend_lzorle.c  | 13 ++++++-------
- drivers/block/zram/backend_zstd.c    | 15 +++++++--------
- drivers/block/zram/zcomp.c           | 23 ++++++++++++++++-------
- drivers/block/zram/zcomp.h           | 15 ++++++++++-----
- 9 files changed, 77 insertions(+), 72 deletions(-)
+ drivers/block/zram/backend_lz4.c | 74 +++++++++++++++++++++++++++++---
+ 1 file changed, 67 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/zram/backend_842.c b/drivers/block/zram/backend_842.c
-index 9193391626a9..1df0de5a9863 100644
---- a/drivers/block/zram/backend_842.c
-+++ b/drivers/block/zram/backend_842.c
-@@ -38,25 +38,24 @@ static void *create_842(struct zcomp_params *params)
- 	return NULL;
- }
- 
--static int compress_842(void *ctx, const unsigned char *src, size_t src_len,
--			unsigned char *dst, size_t *dst_len)
-+static int compress_842(void *ctx, struct zcomp_req *req)
- {
- 	struct sw842_ctx *zctx = ctx;
--	unsigned int dlen = *dst_len;
-+	unsigned int dlen = req->dst_len;
- 	int ret;
- 
--	ret = sw842_compress(src, src_len, dst, &dlen, zctx->mem);
-+	ret = sw842_compress(req->src, req->src_len, req->dst, &dlen,
-+			     zctx->mem);
- 	if (ret == 0)
--		*dst_len = dlen;
-+		req->dst_len = dlen;
- 	return ret;
- }
- 
--static int decompress_842(void *ctx, const unsigned char *src, size_t src_len,
--			  unsigned char *dst, size_t dst_len)
-+static int decompress_842(void *ctx, struct zcomp_req *req)
- {
--	unsigned int dlen = dst_len;
-+	unsigned int dlen = req->dst_len;
- 
--	return sw842_decompress(src, src_len, dst, &dlen);
-+	return sw842_decompress(req->src, req->src_len, req->dst, &dlen);
- }
- 
- struct zcomp_ops backend_842 = {
-diff --git a/drivers/block/zram/backend_deflate.c b/drivers/block/zram/backend_deflate.c
-index 415ab55f8aeb..19bb61369eb0 100644
---- a/drivers/block/zram/backend_deflate.c
-+++ b/drivers/block/zram/backend_deflate.c
-@@ -74,9 +74,7 @@ static void *deflate_create(struct zcomp_params *params)
- 	return NULL;
- }
- 
--static int deflate_compress(void *ctx, const unsigned char *src,
--			    size_t src_len, unsigned char *dst,
--			    size_t *dst_len)
-+static int deflate_compress(void *ctx, struct zcomp_req *req)
- {
- 	struct deflate_ctx *zctx = ctx;
- 	struct z_stream_s *deflate;
-@@ -87,22 +85,20 @@ static int deflate_compress(void *ctx, const unsigned char *src,
- 	if (ret != Z_OK)
- 		return -EINVAL;
- 
--	deflate->next_in = (u8 *)src;
--	deflate->avail_in = src_len;
--	deflate->next_out = (u8 *)dst;
--	deflate->avail_out = *dst_len;
-+	deflate->next_in = (u8 *)req->src;
-+	deflate->avail_in = req->src_len;
-+	deflate->next_out = (u8 *)req->dst;
-+	deflate->avail_out = req->dst_len;
- 
- 	ret = zlib_deflate(deflate, Z_FINISH);
- 	if (ret != Z_STREAM_END)
- 		return -EINVAL;
- 
--	*dst_len = deflate->total_out;
-+	req->dst_len = deflate->total_out;
- 	return 0;
- }
- 
--static int deflate_decompress(void *ctx, const unsigned char *src,
--			      size_t src_len, unsigned char *dst,
--			      size_t dst_len)
-+static int deflate_decompress(void *ctx, struct zcomp_req *req)
- {
- 	struct deflate_ctx *zctx = ctx;
- 	struct z_stream_s *inflate;
-@@ -114,10 +110,10 @@ static int deflate_decompress(void *ctx, const unsigned char *src,
- 	if (ret != Z_OK)
- 		return -EINVAL;
- 
--	inflate->next_in = (u8 *)src;
--	inflate->avail_in = src_len;
--	inflate->next_out = (u8 *)dst;
--	inflate->avail_out = dst_len;
-+	inflate->next_in = (u8 *)req->src;
-+	inflate->avail_in = req->src_len;
-+	inflate->next_out = (u8 *)req->dst;
-+	inflate->avail_out = req->dst_len;
- 
- 	ret = zlib_inflate(inflate, Z_SYNC_FLUSH);
- 	if (ret != Z_STREAM_END)
 diff --git a/drivers/block/zram/backend_lz4.c b/drivers/block/zram/backend_lz4.c
-index 90801a7a8f75..cb623f16604e 100644
+index cdcf6e3c1826..f686157fb401 100644
 --- a/drivers/block/zram/backend_lz4.c
 +++ b/drivers/block/zram/backend_lz4.c
-@@ -41,26 +41,25 @@ static void *lz4_create(struct zcomp_params *params)
- 	return NULL;
- }
+@@ -5,6 +5,13 @@
  
--static int lz4_compress(void *ctx, const unsigned char *src, size_t src_len,
--			unsigned char *dst, size_t *dst_len)
-+static int lz4_compress(void *ctx, struct zcomp_req *req)
- {
- 	struct lz4_ctx *zctx = ctx;
- 	int ret;
+ #include "backend_lz4.h"
  
--	ret = LZ4_compress_fast(src, dst, src_len, *dst_len,
--				zctx->level, zctx->mem);
-+	ret = LZ4_compress_fast(req->src, req->dst, req->src_len,
-+				req->dst_len, zctx->level, zctx->mem);
- 	if (!ret)
- 		return -EINVAL;
--	*dst_len = ret;
-+	req->dst_len = ret;
- 	return 0;
- }
- 
--static int lz4_decompress(void *ctx, const unsigned char *src,
--			  size_t src_len, unsigned char *dst, size_t dst_len)
-+static int lz4_decompress(void *ctx, struct zcomp_req *req)
- {
- 	int ret;
- 
--	ret = LZ4_decompress_safe(src, dst, src_len, dst_len);
-+	ret = LZ4_decompress_safe(req->src, req->dst, req->src_len,
-+				  req->dst_len);
- 	if (ret < 0)
- 		return -EINVAL;
- 	return 0;
-diff --git a/drivers/block/zram/backend_lz4hc.c b/drivers/block/zram/backend_lz4hc.c
-index 30de6ec511a5..a2314e4c7e9a 100644
---- a/drivers/block/zram/backend_lz4hc.c
-+++ b/drivers/block/zram/backend_lz4hc.c
-@@ -41,26 +41,25 @@ static void *lz4hc_create(struct zcomp_params *params)
- 	return NULL;
- }
- 
--static int lz4hc_compress(void *ctx, const unsigned char *src, size_t src_len,
--			  unsigned char *dst, size_t *dst_len)
-+static int lz4hc_compress(void *ctx, struct zcomp_req *req)
- {
- 	struct lz4hc_ctx *zctx = ctx;
- 	int ret;
- 
--	ret = LZ4_compress_HC(src, dst, src_len, *dst_len,
-+	ret = LZ4_compress_HC(req->src, req->dst, req->src_len, req->dst_len,
- 			      zctx->level, zctx->mem);
- 	if (!ret)
- 		return -EINVAL;
--	*dst_len = ret;
-+	req->dst_len = ret;
- 	return 0;
- }
- 
--static int lz4hc_decompress(void *ctx, const unsigned char *src,
--			    size_t src_len, unsigned char *dst, size_t dst_len)
-+static int lz4hc_decompress(void *ctx, struct zcomp_req *req)
- {
- 	int ret;
- 
--	ret = LZ4_decompress_safe(src, dst, src_len, dst_len);
-+	ret = LZ4_decompress_safe(req->src, req->dst, req->src_len,
-+				  req->dst_len);
- 	if (ret < 0)
- 		return -EINVAL;
- 	return 0;
-diff --git a/drivers/block/zram/backend_lzo.c b/drivers/block/zram/backend_lzo.c
-index c903c15610f8..48d3f051c258 100644
---- a/drivers/block/zram/backend_lzo.c
-+++ b/drivers/block/zram/backend_lzo.c
-@@ -16,21 +16,21 @@ static void lzo_destroy(void *ctx)
- 	kfree(ctx);
- }
- 
--static int lzo_compress(void *ctx, const unsigned char *src, size_t src_len,
--			unsigned char *dst, size_t *dst_len)
-+static int lzo_compress(void *ctx, struct zcomp_req *req)
- {
- 	int ret;
- 
--	ret = lzo1x_1_compress(src, src_len, dst, dst_len, ctx);
-+	ret = lzo1x_1_compress(req->src, req->src_len, req->dst,
-+			       &req->dst_len, ctx);
- 	return ret == LZO_E_OK ? 0 : ret;
- }
- 
--static int lzo_decompress(void *ctx, const unsigned char *src, size_t src_len,
--			  unsigned char *dst, size_t dst_len)
-+static int lzo_decompress(void *ctx, struct zcomp_req *req)
- {
- 	int ret;
- 
--	ret = lzo1x_decompress_safe(src, src_len, dst, &dst_len);
-+	ret = lzo1x_decompress_safe(req->src, req->src_len,
-+				    req->dst, &req->dst_len);
- 	return ret == LZO_E_OK ? 0 : ret;
- }
- 
-diff --git a/drivers/block/zram/backend_lzorle.c b/drivers/block/zram/backend_lzorle.c
-index 3622625abfd9..4638431326c2 100644
---- a/drivers/block/zram/backend_lzorle.c
-+++ b/drivers/block/zram/backend_lzorle.c
-@@ -16,22 +16,21 @@ static void lzorle_destroy(void *ctx)
- 	kfree(ctx);
- }
- 
--static int lzorle_compress(void *ctx, const unsigned char *src, size_t src_len,
--			   unsigned char *dst, size_t *dst_len)
-+static int lzorle_compress(void *ctx, struct zcomp_req *req)
- {
- 	int ret;
- 
--	ret = lzorle1x_1_compress(src, src_len, dst, dst_len, ctx);
-+	ret = lzorle1x_1_compress(req->src, req->src_len, req->dst,
-+				  &req->dst_len, ctx);
- 	return ret == LZO_E_OK ? 0 : ret;
- }
- 
--static int lzorle_decompress(void *ctx, const unsigned char *src,
--			     size_t src_len, unsigned char *dst,
--			     size_t dst_len)
-+static int lzorle_decompress(void *ctx, struct zcomp_req *req)
- {
- 	int ret;
- 
--	ret = lzo1x_decompress_safe(src, src_len, dst, &dst_len);
-+	ret = lzo1x_decompress_safe(req->src, req->src_len,
-+				    req->dst, &req->dst_len);
- 	return ret == LZO_E_OK ? 0 : ret;
- }
- 
-diff --git a/drivers/block/zram/backend_zstd.c b/drivers/block/zram/backend_zstd.c
-index a9808abcf5f2..7e7e4af620fc 100644
---- a/drivers/block/zram/backend_zstd.c
-+++ b/drivers/block/zram/backend_zstd.c
-@@ -67,27 +67,26 @@ static void *zstd_create(struct zcomp_params *params)
- 	return NULL;
- }
- 
--static int zstd_compress(void *ctx, const unsigned char *src, size_t src_len,
--			 unsigned char *dst, size_t *dst_len)
-+static int zstd_compress(void *ctx, struct zcomp_req *req)
- {
- 	struct zstd_ctx *zctx = ctx;
- 	size_t ret;
- 
--	ret = zstd_compress_cctx(zctx->cctx, dst, *dst_len,
--				 src, src_len, &zctx->cprm);
-+	ret = zstd_compress_cctx(zctx->cctx, req->dst, req->dst_len,
-+				 req->src, req->src_len, &zctx->cprm);
- 	if (zstd_is_error(ret))
- 		return -EINVAL;
--	*dst_len = ret;
-+	req->dst_len = ret;
- 	return 0;
- }
- 
--static int zstd_decompress(void *ctx, const unsigned char *src, size_t src_len,
--			   unsigned char *dst, size_t dst_len)
-+static int zstd_decompress(void *ctx, struct zcomp_req *req)
- {
- 	struct zstd_ctx *zctx = ctx;
- 	size_t ret;
- 
--	ret = zstd_decompress_dctx(zctx->dctx, dst, dst_len, src, src_len);
-+	ret = zstd_decompress_dctx(zctx->dctx, req->dst, req->dst_len,
-+				   req->src, req->src_len);
- 	if (zstd_is_error(ret))
- 		return -EINVAL;
- 	return 0;
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index eacead28cc2b..defb04a25d52 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -118,22 +118,31 @@ void zcomp_stream_put(struct zcomp *comp)
- int zcomp_compress(struct zcomp *comp, struct zcomp_strm *zstrm,
- 		   const void *src, unsigned int *dst_len)
- {
--	/* The dst buffer should always be 2 * PAGE_SIZE */
--	size_t dlen = 2 * PAGE_SIZE;
-+	struct zcomp_req req = {
-+		.src = src,
-+		.dst = zstrm->buffer,
-+		.src_len = PAGE_SIZE,
-+		.dst_len = 2 * PAGE_SIZE,
-+	};
- 	int ret;
- 
--	ret = comp->ops->compress(zstrm->ctx, src, PAGE_SIZE,
--				  zstrm->buffer, &dlen);
-+	ret = comp->ops->compress(zstrm->ctx, &req);
- 	if (!ret)
--		*dst_len = dlen;
-+		*dst_len = req.dst_len;
- 	return ret;
- }
- 
- int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
- 		     const void *src, unsigned int src_len, void *dst)
- {
--	return comp->ops->decompress(zstrm->ctx, src, src_len,
--				     dst, PAGE_SIZE);
-+	struct zcomp_req req = {
-+		.src = src,
-+		.dst = dst,
-+		.src_len = src_len,
-+		.dst_len = PAGE_SIZE,
-+	};
++struct lz4_ctx {
++	void *mem;
 +
-+	return comp->ops->decompress(zstrm->ctx, &req);
- }
- 
- int zcomp_cpu_up_prepare(unsigned int cpu, struct hlist_node *node)
-diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
-index 3639c36fb9a9..963c1e80830c 100644
---- a/drivers/block/zram/zcomp.h
-+++ b/drivers/block/zram/zcomp.h
-@@ -21,12 +21,17 @@ struct zcomp_strm {
- 	void *ctx;
- };
- 
--struct zcomp_ops {
--	int (*compress)(void *ctx, const unsigned char *src, size_t src_len,
--			unsigned char *dst, size_t *dst_len);
-+struct zcomp_req {
-+	const unsigned char *src;
-+	const size_t src_len;
-+
-+	unsigned char *dst;
-+	size_t dst_len;
++	LZ4_streamDecode_t *dstrm;
++	LZ4_stream_t *cstrm;
 +};
++
+ static void lz4_release_params(struct zcomp_params *params)
+ {
+ }
+@@ -19,25 +26,66 @@ static int lz4_setup_params(struct zcomp_params *params)
  
--	int (*decompress)(void *ctx, const unsigned char *src, size_t src_len,
--			  unsigned char *dst, size_t dst_len);
-+struct zcomp_ops {
-+	int (*compress)(void *ctx, struct zcomp_req *req);
-+	int (*decompress)(void *ctx, struct zcomp_req *req);
+ static void lz4_destroy(struct zcomp_ctx *ctx)
+ {
+-	vfree(ctx->context);
++	struct lz4_ctx *zctx = ctx->context;
++
++	if (!zctx)
++		return;
++
++	vfree(zctx->mem);
++	kfree(zctx->dstrm);
++	kfree(zctx->cstrm);
++	kfree(zctx);
+ }
  
- 	void *(*create_ctx)(struct zcomp_params *params);
- 	void (*destroy_ctx)(void *ctx);
+ static int lz4_create(struct zcomp_params *params, struct zcomp_ctx *ctx)
+ {
+-	ctx->context = vmalloc(LZ4_MEM_COMPRESS);
+-	if (!ctx->context)
++	struct lz4_ctx *zctx;
++
++	zctx = kzalloc(sizeof(*zctx), GFP_KERNEL);
++	if (!zctx)
+ 		return -ENOMEM;
+ 
++	ctx->context = zctx;
++	if (params->dict_sz == 0) {
++		zctx->mem = vmalloc(LZ4_MEM_COMPRESS);
++		if (!zctx->mem)
++			goto error;
++	} else {
++		zctx->dstrm = kzalloc(sizeof(*zctx->dstrm), GFP_KERNEL);
++		if (!zctx->dstrm)
++			goto error;
++
++		zctx->cstrm = kzalloc(sizeof(*zctx->cstrm), GFP_KERNEL);
++		if (!zctx->cstrm)
++			goto error;
++	}
++
+ 	return 0;
++
++error:
++	lz4_destroy(ctx);
++	return -ENOMEM;
+ }
+ 
+ static int lz4_compress(struct zcomp_params *params, struct zcomp_ctx *ctx,
+ 			struct zcomp_req *req)
+ {
++	struct lz4_ctx *zctx = ctx->context;
+ 	int ret;
+ 
+-	ret = LZ4_compress_fast(req->src, req->dst, req->src_len,
+-				req->dst_len, params->level, ctx->context);
++	if (!zctx->cstrm) {
++		ret = LZ4_compress_fast(req->src, req->dst, req->src_len,
++					req->dst_len, params->level,
++					zctx->mem);
++	} else {
++		/* Cstrm needs to be reset */
++		ret = LZ4_loadDict(zctx->cstrm, params->dict, params->dict_sz);
++		if (ret != params->dict_sz)
++			return -EINVAL;
++		ret = LZ4_compress_fast_continue(zctx->cstrm, req->src,
++						 req->dst, req->src_len,
++						 req->dst_len, params->level);
++	}
+ 	if (!ret)
+ 		return -EINVAL;
+ 	req->dst_len = ret;
+@@ -47,10 +95,22 @@ static int lz4_compress(struct zcomp_params *params, struct zcomp_ctx *ctx,
+ static int lz4_decompress(struct zcomp_params *params, struct zcomp_ctx *ctx,
+ 			  struct zcomp_req *req)
+ {
++	struct lz4_ctx *zctx = ctx->context;
+ 	int ret;
+ 
+-	ret = LZ4_decompress_safe(req->src, req->dst, req->src_len,
+-				  req->dst_len);
++	if (!zctx->dstrm) {
++		ret = LZ4_decompress_safe(req->src, req->dst, req->src_len,
++					  req->dst_len);
++	} else {
++		/* Dstrm needs to be reset */
++		ret = LZ4_setStreamDecode(zctx->dstrm, params->dict,
++					  params->dict_sz);
++		if (!ret)
++			return -EINVAL;
++		ret = LZ4_decompress_safe_continue(zctx->dstrm, req->src,
++						   req->dst, req->src_len,
++						   req->dst_len);
++	}
+ 	if (ret < 0)
+ 		return -EINVAL;
+ 	return 0;
 -- 
 2.45.2.803.g4e1b14247a-goog
 
