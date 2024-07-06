@@ -1,106 +1,147 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567F917740
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 05:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BC1847A;
+	Sat,  6 Jul 2024 05:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720242889; cv=none; b=d5+tsLBv5y3IuwUgxUrHzd2hNdYDTLAqrpVBqnOK8ZAJKB6JNFyL2n0ECDzgVpnJR1ZOr2VFgYcE8rRpQqFgT40kWBpNLywHN0lInsQfqj7e3dAvL1E3aEnSea9pQ17LxwLcD9PJIEFedopPaCEW9EJs7oG0c/kuJP+O6DpxqzI=
+	t=1720243054; cv=none; b=thDLesqz4RWpVUASEfdm8LfBy8SqJH95XFlbgyxqZO6oj7jbZgXWKZ1AztSqUA+iKL+6pM2+8D5dbT+z2aAWHlKIKF/++qTukDHgiIcWATQMvOCIlJpFahNN3iLKsmwlskehrKkt3YBnWkrNepyGaffwpE3UyJQZ91yVetBJHB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720242889; c=relaxed/simple;
-	bh=mgf18Fc9En0jFpIVsTgvmKPyThGPCz/ikS0vOiSXnio=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fssuaQCpa1Pod1GaqkMpcdis0F09m/IlxE3IgBb//o9CRfo3agfBXugHRpCoX0JOG4mAbQyTlJ0CPEpq5yK8h+HP6ce+crDfEd3qjl9m5yMnNLK6M4uey7wgpkYbeIhtr5BUNQq2fbriFYcETJsn4BanxA+J3WXCjeR59kqjuCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=SHVd2YsX; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1720243054; c=relaxed/simple;
+	bh=RFvdfc5SP26/erCYWy3Bh1P2+7EZnv+hwzsSCZjL4tM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E9bLVjvlHknfQYtAqH7VPIQjUugJU94r2h/Y8R/dQyxYVFOKVWeiMJ8qwWX39NCjzpyOmqqjvxnT/1blVKicKlbv7xpU+v41/Knu7RvIo8lafE9+CC4ODzUfesm5cZBnvevY1zNgf33ioDXtNIjvMfyCC/W9temgAnNkkTKTQww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f/FXWOz3; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="SHVd2YsX"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f4a5344ec7so16186655ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2024 22:14:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1720242887; x=1720847687; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Giw87SQe8yuf6FkxysGSg/f7HoKphY0bMqQbHsvLA3c=;
-        b=SHVd2YsXu29HYrL/WxV6hSu7V8Cpe4759sOtZOXD9ergNdhjtWxykVop8QGOY5Id50
-         NDl034feKXh8we1mv5Cfka1WktjrJ+KqbqtBlOYlXxrxSwrunN2lUNc4Q2x14S3/028d
-         ZzGhzm/jNlhOX4ZHodzODcE+256lAGPktuBe0RJvOfQ4fXSk0iECzH8LXtQXWuBAAiw4
-         qWMraRENifRlWK50M9F8fAEZ2wT6lvJIfif2QIZoKZgkC44Fzm3cv38J9DnE1v0zNHYw
-         RnelGw8A5yZBfRmBnUmEs8Ji6U2lvteKq5FDUncRxIp6opy5OA3hUKRtq+Z0VJdA8Jtt
-         gSeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720242887; x=1720847687;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Giw87SQe8yuf6FkxysGSg/f7HoKphY0bMqQbHsvLA3c=;
-        b=ofxs53TLd4u9cErK5r5OuKLitRKqucKgMSu8WChx5BQfqjzsU9SV5mgmNqp3FyfHPP
-         u4534Bclz1bmzDE6XtegyB/CH+2PwU+PjGmGvJk3NpdsuDqMSRS7I8bYPPBEl86VAxfZ
-         oIbM1QPutriiz/V4ePpht82dkZfRRrboUve0e6Rf95ob1SusYondfAFomFgdaUr23T6x
-         XPOxRseaZy1n/CI7owBCw+e1iZEN4VP1CMuNdwovg1nqgxNFGmBev1jfGaIRY96NirOC
-         Y8bGcteHRgeiFZ6PXgWZaa7SSgg+D+Or201ctvgyhvFAGP5acMkpvLT1XbfpRXE6vpZs
-         81Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlOe/+zfSQaR2g2ptdu43hqP7Mp0KFYnmnGsZKkyw0aRz0JaWlJsaFcSG+Of84IppEB5nBEkoj37DxymyUw7bA8uxxOE1xv5n2qyBe
-X-Gm-Message-State: AOJu0YyZsQmhiECJiadOwn43usHqFfncSuX7ALa5ZsMZvu8GFqvBln7E
-	AZ73tHar7JP621LdjUomro4MecPCnTmmJ1bmMuV2FrTQz29l/rJWFrOoJUS5060=
-X-Google-Smtp-Source: AGHT+IFnQuT9OJyrEvKbkFbzI3EZR1voDmFuCU345bHL7OeAXzihbf1UNVrtwjUCvtnM/QKF/0czFw==
-X-Received: by 2002:a17:902:d58a:b0:1f7:1b42:42f3 with SMTP id d9443c01a7336-1fb37055ef2mr103534355ad.18.1720242886676;
-        Fri, 05 Jul 2024 22:14:46 -0700 (PDT)
-Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb3dbd7dcdsm34174015ad.157.2024.07.05.22.14.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 22:14:46 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: martin.lau@linux.dev,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH bpf-next] bpf: Use max() instead of max_t()
-Date: Sat,  6 Jul 2024 07:12:46 +0200
-Message-ID: <20240706051244.216737-3-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f/FXWOz3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720243052; x=1751779052;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RFvdfc5SP26/erCYWy3Bh1P2+7EZnv+hwzsSCZjL4tM=;
+  b=f/FXWOz3aFi+XPpF4fFdjEY1a/SMkoWotMhUJM7p9SXibOLj2AMQ9/CL
+   4Q5vbf+erwHjYrKE0wV5aLvgixDt5CRoHHrkYmUkqqxxQHwH/VmTFMBAY
+   rQ6jk8kXASaMVUdyp/Rjtsol8cj1yBJ3NJMX4FX5mWE7Nvxbicis8rcvJ
+   FAK8qwi+e4of3+mDU7HdDjheDK61t0hAbvYA2wBdEWurrY6HGqH6wS4o7
+   LGgumt31TnF2hq3vZz9Fmkem4OP9YnSBoJBPBdm5TrwGZwUZmZv4UhvvK
+   RLbz59FLcrtO9u4T8MCx8uHeJKaWFolfd+TLg34BT/Xffk0tir+6PUEtE
+   Q==;
+X-CSE-ConnectionGUID: D/jfyn4zS3a7AUhv8JA/xw==
+X-CSE-MsgGUID: 6/3SWh8xSRCPPDPVcqCNyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="28192540"
+X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
+   d="scan'208";a="28192540"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 22:17:32 -0700
+X-CSE-ConnectionGUID: YVCQsgiNSwWQjpuk1p5tAw==
+X-CSE-MsgGUID: CZdNPP4XSZaL+D5Sv3OlhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
+   d="scan'208";a="51626836"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 05 Jul 2024 22:17:27 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sPxnZ-000TLE-11;
+	Sat, 06 Jul 2024 05:17:25 +0000
+Date: Sat, 6 Jul 2024 13:16:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+Subject: Re: [PATCH v2 2/3] iio: adc: sophgo-saradc: Add driver for Sophgo
+ SARADC
+Message-ID: <202407061311.ZEmwMY8m-lkp@intel.com>
+References: <20240705-sg2002-adc-v2-2-83428c20a9b2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240705-sg2002-adc-v2-2-83428c20a9b2@bootlin.com>
 
-Use max() instead of max_t(). The types are already compatible and don't
-need to be cast to u32 using max_t().
+Hi Thomas,
 
-Compile-tested only.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- kernel/bpf/bpf_local_storage.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[auto build test WARNING on d20f6b3d747c36889b7ce75ee369182af3decb6b]
 
-diff --git a/kernel/bpf/bpf_local_storage.c b/kernel/bpf/bpf_local_storage.c
-index 976cb258a0ed..f0a4f5c06b10 100644
---- a/kernel/bpf/bpf_local_storage.c
-+++ b/kernel/bpf/bpf_local_storage.c
-@@ -779,7 +779,7 @@ bpf_local_storage_map_alloc(union bpf_attr *attr,
- 
- 	nbuckets = roundup_pow_of_two(num_possible_cpus());
- 	/* Use at least 2 buckets, select_bucket() is undefined behavior with 1 bucket */
--	nbuckets = max_t(u32, 2, nbuckets);
-+	nbuckets = max(2, nbuckets);
- 	smap->bucket_log = ilog2(nbuckets);
- 
- 	smap->buckets = bpf_map_kvcalloc(&smap->map, sizeof(*smap->buckets),
+url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Bonnefille/dt-bindings-iio-adc-sophgo-cv18xx-saradc-yaml-Add-Sophgo-SARADC-binding-documentation/20240706-040736
+base:   d20f6b3d747c36889b7ce75ee369182af3decb6b
+patch link:    https://lore.kernel.org/r/20240705-sg2002-adc-v2-2-83428c20a9b2%40bootlin.com
+patch subject: [PATCH v2 2/3] iio: adc: sophgo-saradc: Add driver for Sophgo SARADC
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240706/202407061311.ZEmwMY8m-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240706/202407061311.ZEmwMY8m-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407061311.ZEmwMY8m-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/iio/adc/sophgo-cv18xx-adc.c:85:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+      85 |                 struct cv18xx_adc *saradc = iio_priv(indio_dev);
+         |                 ^
+   1 warning generated.
+
+
+vim +85 drivers/iio/adc/sophgo-cv18xx-adc.c
+
+    78	
+    79	static int cv18xx_adc_read_raw(struct iio_dev *indio_dev,
+    80					  struct iio_chan_spec const *chan,
+    81					  int *val, int *val2, long mask)
+    82	{
+    83		switch (mask) {
+    84		case IIO_CHAN_INFO_RAW:
+  > 85			struct cv18xx_adc *saradc = iio_priv(indio_dev);
+    86			u32 sample;
+    87			int ret;
+    88	
+    89			scoped_guard(mutex, &saradc->lock) {
+    90				cv18xx_adc_start_measurement(saradc, chan->scan_index);
+    91				ret = cv18xx_adc_wait(saradc);
+    92				if (ret < 0)
+    93					return ret;
+    94	
+    95				sample = readl(saradc->regs + CV18XX_ADC_CH_RESULT_REG(chan->scan_index));
+    96			}
+    97			if (!(sample & CV18XX_ADC_CH_VALID))
+    98				return -ENODATA;
+    99	
+   100			*val = sample & CV18XX_ADC_CH_RESULT;
+   101			return IIO_VAL_INT;
+   102		case IIO_CHAN_INFO_SCALE:
+   103			*val = 3300;
+   104			*val2 = 12;
+   105			return IIO_VAL_FRACTIONAL_LOG2;
+   106		default:
+   107			return -EINVAL;
+   108		}
+   109	}
+   110	
+
 -- 
-2.45.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
