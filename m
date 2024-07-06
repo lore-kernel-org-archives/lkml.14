@@ -1,164 +1,123 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4790405CC
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 05:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA749134A9;
+	Sat,  6 Jul 2024 05:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720242517; cv=none; b=fgAWDv6MpAbBsaBCBi5z/hdsgEqTJQ2QHPVeleJvmqeZVlXMnHnhrgLtXFxIejCRt/knixO3epgT2AhjqHQNa473LD8uETjMK/d9g21/pWwSZIVjnzx5fNwEbxWG0YGLBw44pdbZG4acgWmiJ9hGIwQKI/yZUlleTM6Z7UTklro=
+	t=1720242624; cv=none; b=MLUZOmJNoQmQW8EBFsImKk55lI+aaruttWnN32g9Q7WxwVCPs+btqQ1H+KIqwsKisCAcgElKC3Uf93dgj3H+x+KWq8hI9MUW7ETE/HyYZQAZ7VghbXTNM5JWB2BRsd1MSYlFCXDHSgmMBMP+qIu/pKxo6UvAz+IubwjwNFYO9W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720242517; c=relaxed/simple;
-	bh=8jdMxxXbT6y02VK36z1BPd7lJxLpS2ah7tvvgVKBBXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6yX8yIH71wj2MKbp17J9x/S0sP2xab2X+PeoPDDWEMc5o529+MHxFY5ynm2XfHacwH+IiWoDrJ+AwS6rY/gcP/kixutrpd0YEi79TRFJx5Eh1TvR9HSTRPMWMOT2s2teKQmTe/SqpyXA0zxWid5Ii7QuWLh561j66Mb8Jdk7X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sPxek-0001bt-VF; Sat, 06 Jul 2024 07:08:18 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sPxeh-007V4g-TI; Sat, 06 Jul 2024 07:08:15 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sPxeh-000hrD-2b;
-	Sat, 06 Jul 2024 07:08:15 +0200
-Date: Sat, 6 Jul 2024 07:08:15 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Dan Robertson <dan@dlrobertson.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, kernel@pengutronix.de,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/6] iio: adc: ti-tsc2046: simplify with cleanup.h
-Message-ID: <ZojRPxa0SWUvqGgC@pengutronix.de>
-References: <20240705-cleanup-h-iio-v1-0-77114c7e84c5@linaro.org>
- <20240705-cleanup-h-iio-v1-5-77114c7e84c5@linaro.org>
+	s=arc-20240116; t=1720242624; c=relaxed/simple;
+	bh=uXJuO0ar4KNAfctKzaMcvzcLTidBa4zbvW5elDHMKgU=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=ALP2wikxbfASm3LpbFuWdur+XLX6mu9zuYLj3oRHvWLI/L1TieX78MOO9P8g8nFYYgA1e3S6cyKkmdKTT7F3chnB2sWhMExrgPNhhkXIqgtnvsiyApSj3o4WKzvfIm0H8yRUu5t9b6WSgJeylv8rXk9FZFn15KYgrcvo0oFleJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=AcQARgW0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qDo66Agc; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="AcQARgW0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qDo66Agc"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 0651611402C1;
+	Sat,  6 Jul 2024 01:10:22 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Sat, 06 Jul 2024 01:10:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1720242622;
+	 x=1720329022; bh=GSLngGMalGZD/Qlig2AUU7rfR0AN7E8izaKIuOLpo6Q=; b=
+	AcQARgW0s4SJP0My25QGHeYpRaGMMEDlwt+klbiCiuvcQ13T+4nhq8ImBI05mh43
+	jo9pVHz35moc7DXyI1f6saDB/FFBGcZDOIGxFqSS2Vtp3rmJKFRrhcMI7YdMHFK/
+	rrpzWbwQOsjviRZsGBLXsALxP2RNFuJJpMxtH1d3G9hgwPiSwXc3sIjbxfWLX1mf
+	nxA2qxydDU4p9uOlAMc1xjcoLFKByQTAUljy/aKtSD/8w05XBVDg6LJY8ZW9l922
+	Xry+P0HIuB+AO4CNVGdIRX7kMXal9pSbSo2zGklx/D7Rk8UG1rvhJ6b9tCYyxiQa
+	QLQ3CUee7OvBSekHJ461sA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720242622; x=
+	1720329022; bh=GSLngGMalGZD/Qlig2AUU7rfR0AN7E8izaKIuOLpo6Q=; b=q
+	Do66AgcxXU04ALV49GJUAlraBQMExbRzlQL7uYYkt0LaaEEqMP6MkkfNBy/XTPBB
+	pTmK19APYOLdNrU41agim1lXkE9WIQb2D1Ug44yGW5wjwqoq1AyUcNayIz9UjorP
+	UBDSRS17duXHmERxrS7tQTXKmb8dGlOvb4nssIaPdjZvXz7W90RI2jri8qZYrmiU
+	xWg3jaQgwfhdrajym7mlR+glgyndPHg7/X83mmf3ivPdoSGqcThTFqonYTU6Js3C
+	J69c+UPuqxSChUaGZsSaSZqrY5I+Fa9JLW+6ltzUQ8xLzF4FhWaCrYs8Ya49iYVP
+	6gEnGjIF/Xmw0hN3UrPCA==
+X-ME-Sender: <xms:vdGIZiYv0sLjORJ7iw85-aK8C6a2qtUVURyoLrjCgNPXDTUjH2Vp4g>
+    <xme:vdGIZlZT2HxL8QYFfaFRdhjSWqD2OUYWk9elpT1MsIcKFaIA7s17OOjj-m55zhaA2
+    ysVjYdYKmKBgtb-G2o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvgdeludcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
+    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:vdGIZs8Xo-EjmBngwmdKl7Hlxk1BGiU3hdpHLgmruba7zm9TYIKhVQ>
+    <xmx:vdGIZkqJjFOCeIoXL8kaQuxhcs9OxpedJJedMu4EXd40cTVB5KZ4zA>
+    <xmx:vdGIZtq0qs7uJTrmeqxA82Bmi4Zh0WZbBpDy96fb93eFL7uPEAOekg>
+    <xmx:vdGIZiR5CaO_SpXqlmPbKQ6XhxLtpjBKvkPy3DAzxDBgX7eYjn6_Dw>
+    <xmx:vdGIZk3DofCj4ql_v1LJTMQo2Izlt9iU-Jg-5kE7fP185XAExRtFu50F>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id BA6D836A0074; Sat,  6 Jul 2024 01:10:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240705-cleanup-h-iio-v1-5-77114c7e84c5@linaro.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
-
-On Fri, Jul 05, 2024 at 12:40:48PM +0200, Krzysztof Kozlowski wrote:
-> Allocate the memory with scoped/cleanup.h to reduce error handling and
-> make the code a bit simpler.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-
-Thank you!
+Message-Id: <f9030076-4356-4eb8-820f-033a324c673a@app.fastmail.com>
+In-Reply-To: <20240706-config-refresh-v1-1-5dba0064cf08@flygoat.com>
+References: <20240706-config-refresh-v1-0-5dba0064cf08@flygoat.com>
+ <20240706-config-refresh-v1-1-5dba0064cf08@flygoat.com>
+Date: Sat, 06 Jul 2024 13:10:01 +0800
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] MIPS: config: Enable MSA and virtualization for MIPS64R6
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
+
+=E5=9C=A82024=E5=B9=B47=E6=9C=886=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
+=8D=881:07=EF=BC=8CJiaxun Yang=E5=86=99=E9=81=93=EF=BC=9A
+> All MIPS64R6 cores so far supports MSA and vz, so it makes sense
+> to enable them in 64R6 default config.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  drivers/iio/adc/ti-tsc2046.c | 29 ++++++++++++-----------------
->  1 file changed, 12 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ti-tsc2046.c b/drivers/iio/adc/ti-tsc2046.c
-> index edcef8f11522..24b1d4390872 100644
-> --- a/drivers/iio/adc/ti-tsc2046.c
-> +++ b/drivers/iio/adc/ti-tsc2046.c
-> @@ -6,6 +6,7 @@
->   */
->  
->  #include <linux/bitfield.h>
-> +#include <linux/cleanup.h>
->  #include <linux/delay.h>
->  #include <linux/module.h>
->  #include <linux/regulator/consumer.h>
-> @@ -273,7 +274,6 @@ static int tsc2046_adc_read_one(struct tsc2046_adc_priv *priv, int ch_idx,
->  				u32 *effective_speed_hz)
->  {
->  	struct tsc2046_adc_ch_cfg *ch = &priv->ch_cfg[ch_idx];
-> -	struct tsc2046_adc_atom *rx_buf, *tx_buf;
->  	unsigned int val, val_normalized = 0;
->  	int ret, i, count_skip = 0, max_count;
->  	struct spi_transfer xfer;
-> @@ -287,18 +287,20 @@ static int tsc2046_adc_read_one(struct tsc2046_adc_priv *priv, int ch_idx,
->  		max_count = 1;
->  	}
->  
-> -	if (sizeof(*tx_buf) * max_count > PAGE_SIZE)
-> +	if (sizeof(struct tsc2046_adc_atom) * max_count > PAGE_SIZE)
->  		return -ENOSPC;
->  
-> -	tx_buf = kcalloc(max_count, sizeof(*tx_buf), GFP_KERNEL);
-> +	struct tsc2046_adc_atom *tx_buf __free(kfree) = kcalloc(max_count,
-> +								sizeof(*tx_buf),
-> +								GFP_KERNEL);
->  	if (!tx_buf)
->  		return -ENOMEM;
->  
-> -	rx_buf = kcalloc(max_count, sizeof(*rx_buf), GFP_KERNEL);
-> -	if (!rx_buf) {
-> -		ret = -ENOMEM;
-> -		goto free_tx;
-> -	}
-> +	struct tsc2046_adc_atom *rx_buf __free(kfree) = kcalloc(max_count,
-> +								sizeof(*rx_buf),
-> +								GFP_KERNEL);
-> +	if (!rx_buf)
-> +		return -ENOMEM;
->  
->  	/*
->  	 * Do not enable automatic power down on working samples. Otherwise the
-> @@ -326,7 +328,7 @@ static int tsc2046_adc_read_one(struct tsc2046_adc_priv *priv, int ch_idx,
->  	if (ret) {
->  		dev_err_ratelimited(&priv->spi->dev, "SPI transfer failed %pe\n",
->  				    ERR_PTR(ret));
-> -		goto free_bufs;
-> +		return ret;
->  	}
->  
->  	if (effective_speed_hz)
-> @@ -337,14 +339,7 @@ static int tsc2046_adc_read_one(struct tsc2046_adc_priv *priv, int ch_idx,
->  		val_normalized += val;
->  	}
->  
-> -	ret = DIV_ROUND_UP(val_normalized, max_count - count_skip);
-> -
-> -free_bufs:
-> -	kfree(rx_buf);
-> -free_tx:
-> -	kfree(tx_buf);
-> -
-> -	return ret;
-> +	return DIV_ROUND_UP(val_normalized, max_count - count_skip);
->  }
->  
->  static size_t tsc2046_adc_group_set_layout(struct tsc2046_adc_priv *priv,
-> 
-> -- 
-> 2.43.0
-> 
-> 
-> 
+>  arch/mips/configs/generic/64r6.config | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/mips/configs/generic/64r6.config=20
+> b/arch/mips/configs/generic/64r6.config
+> index 5dd8e8503e34..2a2036abdd2d 100644
+> --- a/arch/mips/configs/generic/64r6.config
+> +++ b/arch/mips/configs/generic/64r6.config
+> @@ -3,4 +3,6 @@ CONFIG_64BIT=3Dy
+>  CONFIG_MIPS32_O32=3Dy
+>  CONFIG_MIPS32_N32=3Dy
+>=20
+> +CONIFG_CPU_HAS_MSA=3Dy
+^ Ouch, typo here when I copy changes back from my build machine.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Will respin after initial review.
+
+Thanks
+>  CONFIG_CRYPTO_CRC32_MIPS=3Dy
+> +CONFIG_VIRTUALIZATION=3Dy
+>
+> --=20
+> 2.45.2
+
+--=20
+- Jiaxun
