@@ -1,102 +1,86 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAA617C205
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jul 2024 11:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAE417722;
+	Sat,  6 Jul 2024 11:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720264946; cv=none; b=l3IOuh4mX4wkMSYjQyD1m385XIkVJ1+spaXOlcuqAcK9ctdNYPJVZWEqv0DLfDG/EsnE4EZ5yBpXqEZutlsPhcqkWbtasE4xzmm2T/jCdBsI/Vr3YrSxbBFY1sggSVnek55r6CrqYUahFUR8NyOYYciOasu0CR8LgQJj5oZz+gU=
+	t=1720266113; cv=none; b=FGyObo6At4fR9rZa8U8jQSn5WDBNQZovWFFvGzZj+dOgMfhGF2DLATDqirmxZeEjj8lIQMSlglzUXSaKmI5tOrBlRTUf+5QZML3wVCUkhWXqXwRq8ahNJRwfJ5TGFExnmrtLFHHd/5+YUaokUkGKww2E6lK6BtecVhg/319vSjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720264946; c=relaxed/simple;
-	bh=65HBA5AoKxDKUriyLfXIeeIR8lK7hXBV17mOOB5kzcc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YCwBzk804mHcW59YdYPuKnsO67VUy512XZlCitWoQH0h66BOfR/n4mWLzAFP++w4SP3Yaa8XdGH4SUpQ1yJFCEAjZsp18FpkpHE7m9OV84QQaWAiRNAB2H4uYIKEaYkk1K9FMmzSAqXefPSeFKWf2PCxeUj1Zz8qaGtE2ayl0rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=OHVEBbyH; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1720266113; c=relaxed/simple;
+	bh=ZpiVxTkDAGl22bjAArHNJMuQ2aUZXYATBN98gMUP21o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=seH+fK8+/3YRavF2FhxJuUtzkIsZlyRY+IOyNptssQlWHL4F32Egced8+VtLt4bM6J6B9EeyntLIZx/Hlvd65q7ZjNc8HAg/AyKxigaFNLf9A6YvpXbvd6nTbiD+HK+tymfZ99f2YCjPmwONSq0kEZuh5HdSmNWvStpZRXWi4Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdbVrXBM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="OHVEBbyH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=21CzCZ7VMAwEdtjnkGDCPoX24C9KiOgPmWGJZ44YprI=; b=OHVEBb
-	yHj9zjmXvtsm3o+W+bgQZedbU3DiUl/2iAMkC7kCEAZWzD9W8VJVWr7oSj9XP5om
-	pnVm0ajuKEX8oTuO/lCcahMbn7bq6xojIEryUs7IyTH/mBKYei+qOrOtlHSzwTK3
-	YXdFCSGTW86YKVdzRha+aDKbar557QA70dvPWdO0MVxudlgAMEIqfrtVo45JBQik
-	qb+quSYbjeUIoSenzN1OHr28xR0BBssa8sMZ0n7Qcvsa3gLw6HNgA2A8/OWZGodv
-	vulJQyIjtIzTn5ggvl5KvW3qm3S2awkwLeMWc3gYHDBEWVjPgB3xrzsQS29Jbgpp
-	iZuqQP3MeBfiCt7Q==
-Received: (qmail 3811339 invoked from network); 6 Jul 2024 13:22:04 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Jul 2024 13:22:04 +0200
-X-UD-Smtp-Session: l3s3148p1@Mxm9Y5Ic0OFQT+F6
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-i2c@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 60/60] i2c: st: reword according to newest specification
-Date: Sat,  6 Jul 2024 13:21:00 +0200
-Message-ID: <20240706112116.24543-61-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
-References: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdbVrXBM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49B5CC3277B;
+	Sat,  6 Jul 2024 11:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720266113;
+	bh=ZpiVxTkDAGl22bjAArHNJMuQ2aUZXYATBN98gMUP21o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pdbVrXBMMhrkNbPlOYhoopbfyJZKXKB7YfADm1W4wkui0/I0wSjo+olFCsab1Eq49
+	 CUPuhVMV/weIvaJwy+S45vFVEouTkc5c/yMdtq3WzO2bhDpYuQHrYnov/ArFFLWucA
+	 FDOu4lk3VM57dcQaPwXoMIfSQR9b19FvAmoJWqxGdN9zaBh9OKgxv9zm+ReHpTmeKA
+	 Z/jsHtxUKg8+q0PcGbxEcj2BpSYr0Q+HVxJpsdhwpvJ+AEi++AC5QVZHvmvOmekWq7
+	 ZHHxuL3Hn0JfbFUTrDP62xwihhbonXFMHtgtUoZwyrIEKPSC4Z2zhmuZg8N4bFyPo8
+	 dxKj4EKuBlqhQ==
+Date: Sat, 6 Jul 2024 12:41:46 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Aleksandr Mishin <amishin@t-argos.ru>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Datta Shubhrajyoti
+ <shubhrajyoti@ti.com>, linux-iio@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+Subject: Re: [PATCH v2] staging: iio: frequency: ad9834: Validate frequency
+ parameter value
+Message-ID: <20240706124146.036f152a@jic23-huawei>
+In-Reply-To: <59cc60a1-f6d6-4f9f-bc36-6b06315eaee4@suswa.mountain>
+References: <20240703104734.12034-1-amishin@t-argos.ru>
+	<20240703154506.25584-1-amishin@t-argos.ru>
+	<59cc60a1-f6d6-4f9f-bc36-6b06315eaee4@suswa.mountain>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Change the wording of this driver wrt. the newest I2C v7 and SMBus 3.2
-specifications and replace "master/slave" with more appropriate terms.
+On Wed, 3 Jul 2024 18:29:43 +0200
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/i2c/busses/i2c-st.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> On Wed, Jul 03, 2024 at 06:45:06PM +0300, Aleksandr Mishin wrote:
+> > In ad9834_write_frequency() clk_get_rate() can return 0. In such case
+> > ad9834_calc_freqreg() call will lead to division by zero. Checking
+> > 'if (fout > (clk_freq / 2))' doesn't protect in case of 'fout' is 0.
+> > ad9834_write_frequency() is called from ad9834_write(), where fout is
+> > taken from text buffer, which can contain any value.
+> > 
+> > Modify parameters checking.
+> > 
+> > Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> > 
+> > Fixes: 12b9d5bf76bf ("Staging: IIO: DDS: AD9833 / AD9834 driver")
+> > Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+> > ---
+> > v1->v2: Check if clk_freq == 0 directly instead of fout == 0
+> >  as suggested by Dan  
+> 
+> 
+> Thanks!
+> 
+> Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+> 
+Applied and marked for stable.
 
-diff --git a/drivers/i2c/busses/i2c-st.c b/drivers/i2c/busses/i2c-st.c
-index 5e01fe3dbb63..05b19ede65a0 100644
---- a/drivers/i2c/busses/i2c-st.c
-+++ b/drivers/i2c/busses/i2c-st.c
-@@ -2,7 +2,7 @@
- /*
-  * Copyright (C) 2013 STMicroelectronics
-  *
-- * I2C master mode controller driver, used in STMicroelectronics devices.
-+ * I2C controller driver, used in STMicroelectronics devices.
-  *
-  * Author: Maxime Coquelin <maxime.coquelin@st.com>
-  */
-@@ -150,7 +150,7 @@ struct st_i2c_timings {
- 
- /**
-  * struct st_i2c_client - client specific data
-- * @addr: 8-bit slave addr, including r/w bit
-+ * @addr: 8-bit target addr, including r/w bit
-  * @count: number of bytes to be transfered
-  * @xfered: number of bytes already transferred
-  * @buf: data buffer
-@@ -667,7 +667,7 @@ static int st_i2c_xfer_msg(struct st_i2c_dev *i2c_dev, struct i2c_msg *msg,
- 		i2c |= SSC_I2C_ACKG;
- 	st_i2c_set_bits(i2c_dev->base + SSC_I2C, i2c);
- 
--	/* Write slave address */
-+	/* Write target address */
- 	st_i2c_write_tx_fifo(i2c_dev, c->addr);
- 
- 	/* Pre-fill Tx fifo with data in case of write */
-@@ -766,7 +766,7 @@ static u32 st_i2c_func(struct i2c_adapter *adap)
- }
- 
- static const struct i2c_algorithm st_i2c_algo = {
--	.master_xfer = st_i2c_xfer,
-+	.xfer = st_i2c_xfer,
- 	.functionality = st_i2c_func,
- };
- 
--- 
-2.43.0
+> regards,
+> dan carpenter
+> 
 
