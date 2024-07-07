@@ -1,105 +1,111 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D4C1E498;
-	Sun,  7 Jul 2024 12:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B6A224DD;
+	Sun,  7 Jul 2024 12:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720356932; cv=none; b=ISpwuyp1cddrJdcBMfTK5BYaU2o2lhihqr41tZauKgq3wRoCuW0EvLxKArCCCDX0H9ukutIulz4wNKoPe+1d0cyvb77OshmER1zhOJu7Q9VVpy1FcRYYkU72b8akcIg1es/GsQP1/fxvbQExLqGV9T5MjU1w1sSMDvWqrEUhnOE=
+	t=1720356946; cv=none; b=Yupb/ON1mGHlNMkzgEp3q0REWFUJiD6q7UBvbDIe0wPHr+qWunYcNJE32VPIAZfBlHtJtu+x9Xmtg/jJPJvjN1ewV+B5bPmQwJIOOCQcw+b+8AJCH5rfxDT8PV8mpTPcPflayKgcTD8DnM1LgDzzYtBAWZilz6aSeICh1wscmdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720356932; c=relaxed/simple;
-	bh=699Dr1Zzftx7dykQBKJJCEHmbS/vhJfNO9kbYbzbuBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XKBEn8XQKlWFhUJpfw1LV9mWqMqbZpt3DiXYvNCYOeEyo9WAx3xj0Q/0879EnYDHY4u6GFQ/SGJJu7qCuRNObuQnb+hHZrU2RrIkL3GDSCCD4OEow/mEJ86oeSXOAaF+oAaE/BJc+RmJIZufWWSPqEP4tCoggwMBS7Lp9kanpMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DQQYWzK4; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1720356946; c=relaxed/simple;
+	bh=8CQywXGpVZmoXAWi7aQtBVNWRM3RoZSfC5ilnp7epOE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m80t2bPh5G0eQA2k9tUqV356xnseEhr+EKcHAs+AULldSJbgysJ9nb82r2ROxavgjq5OKcuwAjzSWKqy4ItUDlSHCuxpWTfWoboqj7B3CfJSXdOpJWSxQR27cMx/Lt4V3dT/UI5aX1DnCr2wYPxFnDGAuQXHIJ1QPHpxFu4IoVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jbjYVfUw; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DQQYWzK4"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1832B60003;
-	Sun,  7 Jul 2024 12:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720356927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bf1fF8WwiErDA75AsNYKAJh+BycwFxySDUH58lCZ6iY=;
-	b=DQQYWzK4nfe8TvCSLPXaPkrU4Jp4Ov33l2pvuxBymaPFP7LXr5/nz57XxpUmJnBZaR4Q/G
-	BcXUz1IMEjakNEDx3sSaLSXSnBsOmlSCtMTNZ41K/jnVDMtnh49bORy29oLwsZ1gyvkFC4
-	twR2/K7mi4yJo+zD6QiA0sTzYElhZfvKtwKgckR/squSxUdZaVCu4HVadoAYXkNnrX/jN2
-	qXKjXZEAZxUruXdfmEuNcTi57ZlgjGIPr/OTpwi7TuPsBikXR2TP9DG2nwyOu72mVotdkJ
-	4IDoPnXlUU3WOX93pchqu1+cNCBBbh73Xjmf2POgju0D8O5IMEbWAM6IgmqzCA==
-Date: Sun, 7 Jul 2024 14:55:23 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Simon Horman <horms@kernel.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal
- kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, Radu
- Pirea <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh
- <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
- <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Vladimir Oltean <vladimir.oltean@nxp.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Subject: Re: [PATCH net-next v16 13/14] net: ethtool: Add support for
- tsconfig command to get/set hwtstamp config
-Message-ID: <20240707145523.37fdfeec@kmaincent-XPS-13-7390>
-In-Reply-To: <20240707082408.GF1481495@kernel.org>
-References: <20240705-feature_ptp_netnext-v16-0-5d7153914052@bootlin.com>
-	<20240705-feature_ptp_netnext-v16-13-5d7153914052@bootlin.com>
-	<20240707082408.GF1481495@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jbjYVfUw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720356945; x=1751892945;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8CQywXGpVZmoXAWi7aQtBVNWRM3RoZSfC5ilnp7epOE=;
+  b=jbjYVfUwrgMuwy9S+4Ql9FzwL0iOmJCvpT5YDmWwzorAcEpzHWqIK2ZG
+   dmRxuIzGD09vvykSoGWHfAv+ww6pyRmuy5BmDSMafNHLDN2dY7bh4Oa3D
+   meY/cNbFXl0/prg4l0X65Pt3sxisaeeSXsIf8U6QGGV/COy6nWN/t8GJj
+   h00FNw8NcDtFZS/q+Fse1MF5nBWiCw6cpl/B2ufan0wpFJAn8a+y+bpS7
+   Kx4QO00YggelTp8T55S9qei7icTUlitkFpvm+2yF3OnnB3Jlk/dR89hVV
+   G29IN3bRpPdrFBGCvCrqCHDeEsN2jnEX4eR+lfdjhEe1O+OJQmIfptC18
+   w==;
+X-CSE-ConnectionGUID: 6ImWUKwnTKibyeHgUI1Tjg==
+X-CSE-MsgGUID: /SLo8p2uS8u3TnW8RWr5Vw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="28723343"
+X-IronPort-AV: E=Sophos;i="6.09,190,1716274800"; 
+   d="scan'208";a="28723343"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2024 05:55:44 -0700
+X-CSE-ConnectionGUID: 29qQB5d0QByj+IG+noHX1w==
+X-CSE-MsgGUID: tIxHmSCoRHKInGn757BvVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,190,1716274800"; 
+   d="scan'208";a="51692250"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2024 05:55:42 -0700
+Received: from mohdfai2-iLBPG12-1.png.intel.com (mohdfai2-iLBPG12-1.png.intel.com [10.88.227.73])
+	by linux.intel.com (Postfix) with ESMTP id 2973D20738C7;
+	Sun,  7 Jul 2024 05:55:38 -0700 (PDT)
+From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Simon Horman <horms@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Sasha Neftin <sasha.neftin@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+Subject: [PATCH iwl-net v2 0/3] igc bug fixes related to qbv_count usage
+Date: Sun,  7 Jul 2024 08:53:15 -0400
+Message-Id: <20240707125318.3425097-1-faizal.abdul.rahim@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On Sun, 7 Jul 2024 09:24:08 +0100
-Simon Horman <horms@kernel.org> wrote:
+These igc bug fixes are sent as a patch series because:
 
-> On Fri, Jul 05, 2024 at 05:03:14PM +0200, Kory Maincent wrote:
->  [...] =20
->=20
-> > diff --git a/Documentation/networking/timestamping.rst
-> > b/Documentation/networking/timestamping.rst index
-> > 5e93cd71f99f..8b864ae33297 100644 ---
-> > a/Documentation/networking/timestamping.rst +++
-> > b/Documentation/networking/timestamping.rst @@ -493,8 +493,8 @@ implici=
-tly
-> > defined. ts[0] holds a software timestamp if set, ts[1] is again deprec=
-ated
-> > and ts[2] holds a hardware timestamp if set.=20
-> > =20
-> > -3. Hardware Timestamping configuration: SIOCSHWTSTAMP and SIOCGHWTSTAMP
-> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +3. Hardware Timestamping configuration: ETHTOOL_MSG_TSCONFIG_SET/GET
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =20
->=20
-> nit: make htmldocs flags that this title underline is too short
->=20
-> ...
+1.  The two patches below remove the reliance on using the qbv_count field.
+   "igc: Fix qbv_config_change_errors logics"
+   "igc: Fix reset adapter logics when tx mode change"
 
-Arf, indeed forgot to rebuild the doc, sorry.
+    qbv_count field will be removed in future patch via iwl-next.
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2. The patch "igc: Fix qbv tx latency by setting gtxoffset" reuse the
+   function igc_tsn_will_tx_mode_change() which was created in the patch:
+   "igc: Fix reset adapter logics when tx mode change"
+
+v1: https://patchwork.kernel.org/project/netdevbpf/cover/20240702040926.3327530-1-faizal.abdul.rahim@linux.intel.com/
+
+Changelog:
+v1 -> v2
+- Instead of casting to bool, use !! (Simon)
+- Simplify new functions created. Instead of if.. return true, else return false,
+  use single return. (Simon)
+- Remove patch "igc: Remove unused qbv_coun" from this series which is targeting
+  to iwl-net. This patch will be sent to iwl-next. (Simon)
+
+Faizal Rahim (3):
+  igc: Fix qbv_config_change_errors logics
+  igc: Fix reset adapter logics when tx mode change
+  igc: Fix qbv tx latency by setting gtxoffset
+
+ drivers/net/ethernet/intel/igc/igc_main.c |  8 +++--
+ drivers/net/ethernet/intel/igc/igc_tsn.c  | 41 ++++++++++++++++-------
+ drivers/net/ethernet/intel/igc/igc_tsn.h  |  1 +
+ 3 files changed, 36 insertions(+), 14 deletions(-)
+
+--
+2.25.1
+
