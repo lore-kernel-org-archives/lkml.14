@@ -1,80 +1,88 @@
-Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1B579E0
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 05:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1201DAD24;
+	Sun,  7 Jul 2024 05:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720331811; cv=none; b=FfRd9z6eDXqxo9j+J6mbz3CAnjvUPXu4i3AoRNgsw2vfshnBUbOb3hBGVcuRAIqUnGl572Fb/a1x5IKWbjVu8C5QzW0kGyMrbF1qIRdp+RZ12KXS4gbIu2QSEnKxMOzWqLIjpAddcKcXTczrmixPV8vtHzB8z5HIbiq8CH9UK/U=
+	t=1720331964; cv=none; b=djZe57k9tb7gRYh9EpGM+/t3GjpwaQctmfDMXtZEcOtN2a5ELTeeK0nDNB+b6JIe+97+YRZFC6YYyUHUXTI1/eaN2NaYH0lA+T+p4ujscrUrTmhiYJ0f+RDPEHI3+F5P7tQYiaP0l2SSDkMvjjcFHx/0AbwSHH2U6msvPTv8u80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720331811; c=relaxed/simple;
-	bh=OZ6IfSHHRN95XSIF6OwiF3W1o8Ut2XRNgJaDOh3EMsI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qcJ1/6ldnLYeqJxp/0w05x1ZVlpznbfUZmyvcv3oxbY7nXNnx69nZpqAM33e6xt7yvAKVxS7QkBr4vMdb1ozNVzT/BXPZewIYFly9W1QsMHcuyDpF2LOZkOph6FZvYTCZ1GOFp56PUwSUs9fFQQMgH8kgRl+IfMD7xjHdTWwBfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lIOVhAW+; arc=none smtp.client-ip=80.12.242.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1720331964; c=relaxed/simple;
+	bh=Souahe9tmKRZ29JP8McuBBsQCwArtB13MA5Me7subfg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gKrIqghcJyn2sH3l6Xn3/hPCTzNPh9hMbVn1ed0t/dZWK/0d+i/pgjTkn2KG6L46whFWfA4P2XwtPXeDmeRcDBEfurxN3Nrj7YefqR2Rg/ypdWx7cFvV/7vr0/g+MxsXBiTGbDebBBdP4KPxxEM2Jr2opElpSjpzpUkZ71G/RDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+0bs7dI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lIOVhAW+"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id QKkEsyOxChEtDQKkEs8JGj; Sun, 07 Jul 2024 07:47:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1720331253;
-	bh=8pSTgdZnyG0WLlJB7fRFIXGVRIVCBFFXYFkuJxWni6Y=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=lIOVhAW+drTQMVfkDzgXljERlaxfwUOHWEUbsUAQdlUAg4+Ox8JCoD6OD6WNqHu9v
-	 F1k0nngx4C99rcgu3tGXM4m7qLPFua7HGlCqCfNBTkF+euLbbtuCl9t6IFlT/qrJo3
-	 b7pUGDfSn8rrhadTEwd6umJlYgJupUXhrukZ1NuvKpLyRkvMwxdGFc5c9N/Fi5BRxi
-	 44cFKv7OZGUs3Z3qfvnIcf2pGdbmOai/4FJ9m8LNw1PQwcbz4TLKqKq6AosD8ruEwO
-	 3erHBv4gG/2l3A7518DvuS9TCnnJIj1//yon6mFbRlXJe8YlXaNir/OSR6vnu4Wx6z
-	 Kvot4pAGhQ5zQ==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 07 Jul 2024 07:47:33 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	fchiby@baylibre.com,
-	fparent@baylibre.com,
-	s.hauer@pengutronix.de
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v2 0/3] soc: mediatek: pwrap: Constify some data and other improvements
-Date: Sun,  7 Jul 2024 07:47:19 +0200
-Message-ID: <cover.1720331018.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+0bs7dI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8EEC4AF0C;
+	Sun,  7 Jul 2024 05:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720331963;
+	bh=Souahe9tmKRZ29JP8McuBBsQCwArtB13MA5Me7subfg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=G+0bs7dIgTz04LpiO0Iqjg07/+8M+5nIGQcW2RTrA8bMg83F1P4ZnB9aTcjLOKGx9
+	 XIwZ7jV26YpsGgCfbz2hUFYzdgK+OQE2YzfYNlmeuTFTo0LmSJPlcYJaJai/dyUMPn
+	 VsQVHpwUpQYAZzyq8qBDDuSP3Haf79YerhIWc774oYA7hkMyfYMOKBQaECKB7QDfnp
+	 Wx39fp38IO9dcEcxKQ9uTeF+fqGZ6pIOZCvNNGJB/TUub86NOzvOUkzy+63TqsFFbA
+	 pDs3NzdfLiu7xSuzf2QVXqrQZ9oo4z6c4+xQQvgkwKWFP5CN6IQl8JBsWX7fvhT5Hk
+	 1e9VBJy/LBlXw==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52ea8320d48so1152910e87.1;
+        Sat, 06 Jul 2024 22:59:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXscOqZOwtlrKGONu6GHtgEeTV7uT0K7Ptck+iCwMxrU1TJ0HJgQKJ+xl5xkCDpnygkwxe3eInXRUWAbsUxGLMPD2mAkInT7823lqO9YrO7oA5B6E4w7Y/JH/JcA6Hnc1dybOuZ4YK5Zw==
+X-Gm-Message-State: AOJu0YxNRvXTeXCqPmjpFzuGwXQn+GmWTNKga3rqvm9qIkHvQQULdPP1
+	jkd0CGuVKP+hsCaOjENgxBT6Ky4//Bq/QxzHZY4EO3svacUit/JD3unGMfTJbg9lRVlwgDjW0MH
+	/CF3FHHDywxlS+TxfrkkPdAbi0+o=
+X-Google-Smtp-Source: AGHT+IGqKpmq9RauJawwf+Puf56sdjbnUc7rMNCyksTeVaTLeFNdmXhAg3tSMSXmfMoM/Y01GxKm59qa4tjr/PcgscA=
+X-Received: by 2002:ac2:599b:0:b0:52c:81ba:aeba with SMTP id
+ 2adb3069b0e04-52ea0de4274mr2387155e87.14.1720331962185; Sat, 06 Jul 2024
+ 22:59:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240706160511.2331061-1-masahiroy@kernel.org>
+ <20240706160511.2331061-2-masahiroy@kernel.org> <20240707000117.kpotqs3xgfrtllzd@master>
+In-Reply-To: <20240707000117.kpotqs3xgfrtllzd@master>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sun, 7 Jul 2024 14:58:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQBvP8gawg5XFxA=mVRNMgTkYBnPtG+R4e6W6d7BHF3bw@mail.gmail.com>
+Message-ID: <CAK7LNAQBvP8gawg5XFxA=mVRNMgTkYBnPtG+R4e6W6d7BHF3bw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] init/modpost: conditionally check section mismatch to __meminit*
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This series is motivated by patch 1. The 2 other patches are some
-additionnal goodies spotted while looking at the code.
+On Sun, Jul 7, 2024 at 9:01=E2=80=AFAM Wei Yang <richard.weiyang@gmail.com>=
+ wrote:
+>
+> On Sun, Jul 07, 2024 at 01:05:06AM +0900, Masahiro Yamada wrote:
+> >This reverts commit eb8f689046b8 ("Use separate sections for __dev/
+> >_cpu/__mem code/data").
+> >
+> >Check section mismatch to __meminit* only when CONFIG_MEMORY_HOTPLUG=3Dy=
+.
+> >
+> >With this change, the linker script and modpost become simpler, and we
+> >can get rid of the __ref annotations from the memory hotplug code.
+> >
+>
+> Oh, totally get rid of .meminit.*. Looks nice.
+> Maybe we can plan a __ref cleanup after this on is merged?
 
-Patch 1 constifies struct pmic_wrapper_type to move some data to a
-read-only section, in order to increase safety.
 
-Patch 2 does the same for some int arrays. This helps move about 7 ko of
-data to a read-only section. Not that bad!
 
-Patch 3 simplifies code related to clk management. It also fixes an
-issue if the driver is unloaded.
+Yes. We can remove __ref.
 
-Christophe JAILLET (3):
-  soc: mediatek: pwrap: Constify struct pmic_wrapper_type
-  soc: mediatek: pwrap: Constify some struct int[]
-  soc: mediatek: pwrap: Use devm_clk_bulk_get_all_enable()
 
- drivers/soc/mediatek/mtk-pmic-wrap.c | 118 +++++++--------------------
- 1 file changed, 30 insertions(+), 88 deletions(-)
+All __ref annotations in mm/memory_hotplug.c will become
+redundant.
 
--- 
-2.45.2
 
+--=20
+Best Regards
+Masahiro Yamada
