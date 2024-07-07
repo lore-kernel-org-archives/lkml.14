@@ -1,114 +1,158 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90CA55
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 00:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCE144C7B;
+	Sun,  7 Jul 2024 00:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720311666; cv=none; b=MnTUKhO/joMfvNI1/CYVdag/EiRoclXu95uS6LPM4pCbnhPSN/vZQyuSNYZlzNXJGxK/L7SERa2dYR+5L7DMh/xGXr4GjsUgSV5Z1h+kQ2zcuJtu6jrufC+cNGAgKSfGvEtV2Zi4pviIcZ7KHfBPApzHORmj1Kdn4zoxZ04HYhA=
+	t=1720311696; cv=none; b=moAC9VyvKSTQ22AdpQduGQ4Ek85jzLspWsCW3bmT54Qf1ou+YXm1F0ldRZzqIoHvm9fXEdrOBYX+W9thUxZG0j+16P/Rz+2X0ky0tNCLsQ6EQujV4YhneyWkr9Kgrc8TJIgvmTlerk15HoU7KdihpuYXLb3LK6V5I/CNvqrybkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720311666; c=relaxed/simple;
-	bh=rD8K9HjUfQ01sXIhAkd7xbjXW2g7o+CU8pJOsLHhX44=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=N5HiUyf0e4ummLzQ1uf+0uGpn184Kxt81Q6LK3eu+FT5fn7A3AZgylQSyEqxkCq9D43Z+LNW1Ss10PJcEQwqkIjMWCc3te2nZDTRmUUlBGaQZxw9afTWBQKZ9IPB559pcyzfV+1siMkTv0JUj+bw37DG2Eb83Lw+5h5ysPkSHB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7ec0802fd0dso344066439f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2024 17:21:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720311664; x=1720916464;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0RAnPOsIq/QJy+u/k3LH2tH1DUHYGcXiXo7dKKlvWq8=;
-        b=RE9DTO1ukIhaGxR7F/X7iaPY+dmyWEpzMr9PPQvNdIAdo556AL3Zb4UhrEy9IFGaMd
-         mRl4T4DcfWsU5rlwrYTaYt2/oCh68f8SU6UD2Ul0/JZrLbeLq3lYs8PSncQsXQTUEdAa
-         kIzkK3lAnEGEAR6sRBxBx1NrMQevzfn4e4RVRTWf3h9NcVGbQLDgNfq6SVrCYrpems3F
-         eTdB6LcUqchsMoGkCoqj26+iEy/QjhhjumtewUNzkX3wPw3lf97y6daMCysRaIbkNLZt
-         QGxL8jUqMNnbvjSdoSlLzMlKGn4Ib0SA6efL6pLM9yBpEYw4BMYB4UwsRWWzlPo0fCrn
-         rU4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXm3YilVCFKIKkqk27idlelKddlqF+hk6Kw1x5Exm0qhQJRjEf2BsIGGAA82pRs3paQ+VvSnPVP9Q9gsB9NYvPDmswhGufWx9ysVld5
-X-Gm-Message-State: AOJu0YywwZ0dDwgg3Ff4OI66CaOMA3OowbEFw9+0d5aSaNuBExLnPssq
-	oq05QHbTKMHjG+GQMKvuelIZcwRwk6g5ScFlOWunX/ZQY4+oFoFeirT4VRPfiY6YG64w6n1DgOD
-	nHX2+sao0BLya2cw+4GVr6SosWovkfgUXzp3a9xWtCI1ux8LOQ4FOBSo=
-X-Google-Smtp-Source: AGHT+IHwZLmghQb6i9rodsRh23Lrkjxzsltm9rMjTb23083qS4ZdZXhF1kt6p99sCdNgF+6cU2PWgmMBDnSVgzJAROLj1Y+X2UII
+	s=arc-20240116; t=1720311696; c=relaxed/simple;
+	bh=oHOXUljsjplj2hMFLMYDgcenBpbY6CUbLzvvMfLxXug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tzT/1f+u4L5I81DleTYWjYSaNGkszSw0t8zlA6zJivxivMs1xWwkuTKXjsFmD8ZV2KAiwggmiKj5QKABjEfPo0qnoQuas2iQHEHL8m2EuA6omecXZ3t9+nYDNTZmJmmUwRBL1eF0Bh4zqoiXViKkbtfQqmFPkfAUvGaLhvAxyMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CAB0DA7;
+	Sat,  6 Jul 2024 17:21:58 -0700 (PDT)
+Received: from pluto.. (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B756A3F73B;
+	Sat,  6 Jul 2024 17:21:29 -0700 (PDT)
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org
+Cc: sudeep.holla@arm.com,
+	james.quinlan@broadcom.com,
+	f.fainelli@gmail.com,
+	vincent.guittot@linaro.org,
+	etienne.carriere@foss.st.com,
+	peng.fan@oss.nxp.com,
+	michal.simek@amd.com,
+	quic_sibis@quicinc.com,
+	quic_nkela@quicinc.com,
+	ptosi@google.com,
+	dan.carpenter@linaro.org,
+	souvik.chakravarty@arm.com,
+	Cristian Marussi <cristian.marussi@arm.com>
+Subject: [PATCH 0/8] Make SCMI transport as standalone drivers
+Date: Sun,  7 Jul 2024 01:20:47 +0100
+Message-ID: <20240707002055.1835121-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:35ac:b0:4c0:7f51:c3aa with SMTP id
- 8926c6da1cb9f-4c07f51d9b6mr399707173.2.1720311664085; Sat, 06 Jul 2024
- 17:21:04 -0700 (PDT)
-Date: Sat, 06 Jul 2024 17:21:04 -0700
-In-Reply-To: <20240706231332.3261-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a42289061c9d452e@google.com>
-Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in nf_tables_trans_destroy_work
-From: syzbot <syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi all,
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in nft_rcv_nl_event
+SCMI transport layer was till now being embedded built into in the core
+SCMI stack.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 6134 at net/netfilter/nf_tables_api.c:11557 nft_rcv_nl_event+0x1e2/0x730 net/netfilter/nf_tables_api.c:11557
-Modules linked in:
-CPU: 0 PID: 6134 Comm: syz.2.44 Not tainted 6.10.0-rc5-syzkaller-01137-g1c5fc27bc48a-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-RIP: 0010:nft_rcv_nl_event+0x1e2/0x730 net/netfilter/nf_tables_api.c:11557
-Code: 6c 24 40 4c 89 7c 24 60 48 8b 44 24 78 42 80 3c 20 00 74 08 4c 89 ff e8 9c dc 46 f8 49 8b 07 4c 39 f8 74 0b e8 6f 0e e1 f7 90 <0f> 0b 90 eb 1c 48 8b 05 a2 34 b2 05 48 c7 c1 40 4d 67 8f 48 39 c8
-RSP: 0018:ffffc90003eb79e0 EFLAGS: 00010293
-RAX: ffffffff89b51c9f RBX: ffff88807abfac00 RCX: ffff888029719e00
-RDX: 0000000000000000 RSI: ffffffff8bcabb40 RDI: ffffffff8c1fee00
-RBP: ffffc90003eb7b28 R08: ffffffff92fbc657 R09: 1ffffffff25f78ca
-R10: dffffc0000000000 R11: fffffbfff25f78cb R12: dffffc0000000000
-R13: ffff888023bbd700 R14: ffff88807abfac00 R15: ffff88807abfac10
-FS:  00005555803a6500(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000200 CR3: 000000007a250000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- notifier_call_chain+0x19f/0x3e0 kernel/notifier.c:93
- blocking_notifier_call_chain+0x69/0x90 kernel/notifier.c:388
- netlink_release+0x11a6/0x1b10 net/netlink/af_netlink.c:787
- __sock_release net/socket.c:659 [inline]
- sock_close+0xbc/0x240 net/socket.c:1421
- __fput+0x406/0x8b0 fs/file_table.c:422
- task_work_run+0x24f/0x310 kernel/task_work.c:180
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x168/0x370 kernel/entry/common.c:218
- do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f48f9d75b99
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffecf0981a8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
-RAX: 0000000000000000 RBX: 000000000001d197 RCX: 00007f48f9d75b99
-RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
-RBP: ffffffffffffffff R08: 0000000000000001 R09: 00000004cf0984bf
-R10: 00007f48f9c00000 R11: 0000000000000246 R12: 00007f48f9f03fac
-R13: 0000000000000032 R14: 00007f48f9f05aa0 R15: 00007f48f9f03fa0
- </TASK>
+Some of these transports, despite being currently part of the main SCMI
+module, are indeed also registered with different subsystems like optee or
+virtio, and actvely probed also by those: this led to a few awkward and
+convoluted tricks to properly handle such interactions at boot time in the
+SCMI stack.
 
+Moreover some partner expressed the desire to be able to fully modularize
+the transports components.
 
-Tested on:
+This series aim to make all such transports as standalone drivers that can
+be optionally loaded as modules.
 
-commit:         1c5fc27b Merge tag 'nf-next-24-06-28' of git://git.ker..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=16077369980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5264b58fdff6e881
-dashboard link: https://syzkaller.appspot.com/bug?extid=4fd66a69358fc15ae2ad
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=112dca6e980000
+In order to do this, at first some new mechanism is introduced to support
+this new capability while maintaining, in parallel, the old legacy embedded
+transports; then each transport, one by one, is transitioned to be a
+standalone driver and finally the old legacy support for embedded transport
+is removed.
+
+Patch [1/8] is a mostly unrelated (but much needed) clean-up from Peng,
+which I included in this series to avoid conflicts at merge.
+
+Patch [2/8] simply collects the existing datagram manipulation helpers in a
+pair of function pointers structures, in preparation for later reworks.
+
+Patch [3/8] adds the bulk of the new logic to the core SCMI stack and then
+each existing transport is transitioned to be a standalone driver in
+patches 4,5,6,7 while shuffling around the compatibles. (no DT change is
+needed of curse for backward compatibility)
+While doing this I kept the module authorship in line with the main
+author(S) as spitted out by git-blame.
+
+Finally patch [8/8] removes all the legacy dead code from the core SCMI
+stack.
+
+No new symbol EXPORT has been added.
+
+The new transport drivers have been tested, as built-in and LKM, as
+follows:
+
+- mailbox on JUNO
+- virtio on emulation
+- optee on QEMU/optee using Linaro setup
+
+Exercised using the regular SCMI drivers stack and the SCMI ACS suite,
+testing commands, replies, delayed responses and notification.
+
+Multiple virtual SCMI instances support has been tested too.
+
+SMC has NOT been tested/exercised at run-time, only compile-tested.
+(due to lack of hardware)
+
+Note that in this new setup, all the probe deferral and retries between the
+SCMI core stack and the transports has been removed, since no more needed.
+
+Moreover the new drivers have been tested also with a fully modularized
+SCMI stack, i.e.:
+
+  scmi-core.ko + scmi-module.ko + scmi_transport_*.ko [ + vendor modules ]
+
+One thing that I have NOT done still, but that it's an easy pick, would
+be to completely remove any dependency between the SCMI core stack and the
+transports, leaving these latter only dependent on the mere presence of
+the related subsystems like optee/virtio/mailbox/smc: this would allow to
+compile the transports and the related subsys as built-in while keeping the
+core SCMI stack as a module....not sure if it makes sense... but it can be
+already easily done by simply patching further the Kconfig.
+
+Based on sudeep/for-next/scmi/updates.
+
+Any feedback, and especially testing (:D) is welcome.
+
+Thanks,
+Cristian
+
+Cristian Marussi (7):
+  firmware: arm_scmi: Introduce packet handling helpers
+  firmware: arm_scmi: Add support for standalone transport drivers
+  firmware: arm_scmi: Make MBOX transport a standalone driver
+  firmware: arm_scmi: Make SMC transport a standalone driver
+  firmware: arm_scmi: Make OPTEE transport a standalone driver
+  firmware: arm_scmi: Make VirtIO transport a standalone driver
+  firmware: arm_scmi: Remove legacy transport-layer code
+
+Peng Fan (1):
+  firmware: arm_scmi: Introduce setup_shmem_iomap
+
+ drivers/firmware/arm_scmi/Kconfig             |  20 +-
+ drivers/firmware/arm_scmi/Makefile            |   9 +-
+ drivers/firmware/arm_scmi/common.h            | 183 +++++++++++++-----
+ drivers/firmware/arm_scmi/driver.c            | 140 +++++---------
+ drivers/firmware/arm_scmi/msg.c               |  34 +++-
+ .../{mailbox.c => scmi_transport_mailbox.c}   |  69 ++++---
+ .../{optee.c => scmi_transport_optee.c}       | 120 +++++-------
+ .../arm_scmi/{smc.c => scmi_transport_smc.c}  |  52 ++---
+ .../{virtio.c => scmi_transport_virtio.c}     |  95 +++++----
+ drivers/firmware/arm_scmi/shmem.c             |  80 ++++++--
+ 10 files changed, 445 insertions(+), 357 deletions(-)
+ rename drivers/firmware/arm_scmi/{mailbox.c => scmi_transport_mailbox.c} (87%)
+ rename drivers/firmware/arm_scmi/{optee.c => scmi_transport_optee.c} (89%)
+ rename drivers/firmware/arm_scmi/{smc.c => scmi_transport_smc.c} (88%)
+ rename drivers/firmware/arm_scmi/{virtio.c => scmi_transport_virtio.c} (95%)
+
+-- 
+2.45.2
 
