@@ -1,68 +1,78 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D179F376E0;
-	Sun,  7 Jul 2024 17:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22DA1B80F;
+	Sun,  7 Jul 2024 18:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720374989; cv=none; b=bsDVut9l8V+3YaNWhRhXysyDoaH0MVa/q4TaZcg71OWdVGkHOPWuTkFbvpnidzSFqSVR7fvlrU5l+TJB/YofyzUwLq+4MTKT9u/FAfFq3IRKYY8mQlMqL/mEK9KOfMRja2xeKIo3FqSJSjqOMAwIvfYTA2qKAyPFkZcPg6CQ+9k=
+	t=1720375283; cv=none; b=uwkTRenOG7d36k3+OU8l9YB1/RiNveTeXIbVfeVhGuEsDSU0lfhnRedebp2aFfewQ7fZoWbc2UDng6F726QRQS602kKvdGjSpvuxNVCS1dCmHP+NyL8KKFq2NaS2ERVc9Gd2KBQFrBKhCOdxNeOMhPKPrESY94IHTAA19qtN8Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720374989; c=relaxed/simple;
-	bh=ewWpnXjirUiS2aDEeJua0X/ZF8NmbZB3lh2CKSyl4so=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=msJdjo4dnO+zlnMeSnnNoNWXw18zRP+NAV+6lxER+uOPq5mo6b5IWwsgctliR0M0E/ySMCqtd5NBUPoUt2hRBAeg+gCbnO/riH0LieG0uoJwvixJCbAiJUTK+QfGTgw/T8iiYutQmo1NG1E0nEuZZghm/ejaZXB49jgLW77c7zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OrrG6vPQ; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1720375283; c=relaxed/simple;
+	bh=OpxCgfEXEorWNo4Da8hW1Cm7T3Z4snG9SnjNTGfLf4Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Bf/kgm7WEYpIquqH4TdbIwYawcmWZRTcxuaP6vmsSeXhYlftyiWhfPdBo/rXcYwi514Ue9QAvCc7X/csBVDdbUwPVzcUYEn9hirNmkpPp8mM0p0aiBiiJqQvQslR2cm8KXKTsdq9efC1dTjE44zVv4/gRgfsj+H5dHf3eh75/QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P3xnUTPp; arc=none smtp.client-ip=209.85.215.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrrG6vPQ"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4257d5fc9b7so27444825e9.2;
-        Sun, 07 Jul 2024 10:56:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3xnUTPp"
+Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-6c386a3ac43so439928a12.0;
+        Sun, 07 Jul 2024 11:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720374986; x=1720979786; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720375281; x=1720980081; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iAMUnCXuNCKOobFXOCeUddLBCZN7j4rnZb00uQMMV4E=;
-        b=OrrG6vPQBxuUkVAD2tkG5e94c5io7I4CeOipPSIHlGSZnWOWjTWMLtI7MR/yKVuvda
-         rKTTmqBZWNofIo6/ZDmlQ83PUMm6XW2IuTujuTjq9T3rZoHy++ikf3uPBlF1j5OdEeXH
-         KeIVj/yDR1m7NHtjvq0TKoW4HtO67AnJ+Ib6Q7lmVuDEkTxRBfEhVV3fczmh8u9ewFvQ
-         js9and4DX7dzT16wQXgqxAHniPw+8r0n+ytgbD/IFFgJFylaJuw/PdeLCdzKhjHYSg1Y
-         l9IC/BZl0YhTH+maj1Bj6nLYPAXEMKQ/hgxDkr/M/lWcDrG+PwY8r6l4cKYUWfRZ5cxc
-         9Qlw==
+        bh=93Ojm2olTWO/cVVcGJO1BWPZLGlAEblYLC3+GArrsIA=;
+        b=P3xnUTPpZlUoFMPJv1txMnpqJ11FwcljRlcPZBzAtqj7d10LiIWEDDurNK98Cu8uwt
+         a6r87eAjPnYsrrQAc9p5JSMNmN6GLdGafeklYKZdS3SFbkhjZ32dhMaQ7GbQxXQVGTBT
+         BVc/xJRksQwP+aAJetyIe9SZYHGLD2UGgZsZouDSq6AYW9igBX0chVTw7qHRHRcKdQ6F
+         3VCxLbmoZ0z+aEz73mGpFzZzk0/029e9X/BtEga/mLPhKfDJu3Dw7Nrr+E/YRA+xPyF2
+         zlFYC3WQu5mxPFiq/iHs9i1/vqL9CUPJxwSslFjYQk+GFdHfVehWMVrijccjOj9SH/5C
+         e97Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720374986; x=1720979786;
+        d=1e100.net; s=20230601; t=1720375281; x=1720980081;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iAMUnCXuNCKOobFXOCeUddLBCZN7j4rnZb00uQMMV4E=;
-        b=w9mo0CORxhm0O+DMEB42Aovwr9MVcOPYl+kw2y5pzual54pa5slC77To7S+gMdWaFg
-         GKT1+z2LZR9/Gbd/6+xmUdxfu/VH6SIkwRUQoli/SdKTsAVeRuD4C+fInRjj8/KhXEW5
-         mMXvfqBJ0VJ5NVXdNtb0gVI8KazFENe6ankVoOp9i2tp54er5GkFxDn2O073slGn18t9
-         sKQWWkRjX28Df1SSLMC3n6tANbN21TtzNy9zzggIGZ6R5TuPxfLMH7mhnCwVJobtNE4m
-         RSw33WZ2KuuIrXh/11s+xiTFMCAqCvx2YR11vfWz7CRxuUgHLbpPiuBagBthN4lHJab9
-         FyrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnI40iEXHCuvX3y5uSu57czVcBxZ9PNUNNa6SCxw2473y/6V5PXg29I4hMkcVSgSPGNEMlC050ok6KRShamfqnkx65+9kjCHWMQKWa
-X-Gm-Message-State: AOJu0YyS/VsZQigXPw8hQL/WX7Gz+1Q1GVVnx2twdu6b57OL2pZy8S1n
-	03Ia7VYEq2buB4Ej10Mfr8S035vbKIOVJsQnzIyB7/Lom/tGoeFRkzPR8A==
-X-Google-Smtp-Source: AGHT+IEuQ6t6pXpdavTDPEkcKKiERUiuXQRNVoKVd1S6JG0U+ZGk1+xwC6bUe+x0OqcAYqe6YZ+FUA==
-X-Received: by 2002:a05:600c:54eb:b0:426:5269:982c with SMTP id 5b1f17b1804b1-426526999bfmr60254715e9.28.1720374986031;
-        Sun, 07 Jul 2024 10:56:26 -0700 (PDT)
-Received: from localhost.localdomain ([2001:8a0:ed72:2800:17de:b512:9f9e:464b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a28355csm135562825e9.43.2024.07.07.10.56.24
+        bh=93Ojm2olTWO/cVVcGJO1BWPZLGlAEblYLC3+GArrsIA=;
+        b=N0riXi2z3fb7PG87OjhniVheU0deg/UufBr6fz9VDMnfsGIaJTPFRM8vWDGyaNKuHV
+         jkB/aOhvp97GzxCoRflfRBs83Cu2KbobnyRoPKtfwGlVoKqIdKVD1QWR3CCMCyzAODtq
+         gPSp1ag9UWpSmPQT5Mlk1Ugomoa+4QfJ15SekGXzp7CB6e35dTm8MuHbJbUA923Lo+Ot
+         3vIE/9cReRrGTufMWaOCeqwAOhe4w0Hq9DgiUC3u2RoRGYhxhcP+Q/jWI2k01MsbqDKY
+         9y2qpqoxK6UZN3Ctmq/wT2ceRQSc9JTuH6I3/Fm5Y+pER8aPslP4DqooroH6KgIqp0/5
+         YFog==
+X-Forwarded-Encrypted: i=1; AJvYcCUQkvrpNyvcurFb3AHiJWTvhOXLM9SHZfYO5TVz5pFO5Qcj7IPjRm9Rz8c2h4vNfRiTQgWijp8W6So/N1M3Hqt/u+m01UgAhWCB+HuD/QzfHu2lyNj7qTn1dPNMhgxpFBODCEecSqcrXDIoKl6mKg==
+X-Gm-Message-State: AOJu0YzQcKC9BiNUc4Jic/pp3wgEkOtUbsdjVhGVN6TbiWdKxjwS5LWF
+	U4fxX3lAyzftR5dN8ptv1jZXdV19Gm3XPvmjMCpyREF7e1a6vt+u
+X-Google-Smtp-Source: AGHT+IHTE23/0P0T4ySobBhOOM5/UDk/WA3TIXDz2U6mmIginobvrohUUSfRowNxuwgUW6YWmiM1Sw==
+X-Received: by 2002:a17:902:d48b:b0:1f5:e635:21e9 with SMTP id d9443c01a7336-1fb33e88f87mr125721095ad.2.1720375281095;
+        Sun, 07 Jul 2024 11:01:21 -0700 (PDT)
+Received: from localhost.localdomain (n058152114213.netvigator.com. [58.152.114.213])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb8a279debsm10171115ad.19.2024.07.07.11.01.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jul 2024 10:56:24 -0700 (PDT)
-From: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
-To: hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org,
+        Sun, 07 Jul 2024 11:01:20 -0700 (PDT)
+From: Haoze Xie <royenheart@gmail.com>
+To: irogers@google.com
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	carlosmiguelferreira.2003@gmail.com
-Subject: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
-Date: Sun,  7 Jul 2024 18:54:54 +0100
-Message-ID: <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240707175613.27529-1-carlosmiguelferreira.2003@gmail.com>
-References: <20240707175613.27529-1-carlosmiguelferreira.2003@gmail.com>
+	Haoze Xie <royenheart@gmail.com>,
+	Yuan Tan <tanyuan@tinylab.org>
+Subject: [PATCH 1/1] perf record: Fix memset out-of-range error
+Date: Mon,  8 Jul 2024 02:01:00 +0800
+Message-Id: <11e12f171b846577cac698cd3999db3d7f6c4d03.1720372317.git.royenheart@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1720372317.git.royenheart@gmail.com>
+References: <cover.1720372317.git.royenheart@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,353 +81,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This driver adds supports for 4 zone keyboard rgb on omen laptops
-and maps the wmi backlight toggle event to KEY_KBDILLUMTOGGLE.
-For the backlight, it uses the multicolor led api.
+Modified the object of 'memset' from '&lost.lost' to '&lost' in
+record__read_lost_samples. This allows 'memset' to access memory properly
+without causing out-of-bounds problems.
 
-Tested on the HP Omen 15-en1001np.
+The problems got from builtin-record.c are:
 
-Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+In file included from /usr/include/string.h:495,
+                 from util/parse-events.h:13,
+                 from builtin-record.c:14:
+In function 'memset',
+    inlined from 'record__read_lost_samples' at
+    builtin-record.c:1958:6,
+    inlined from '__cmd_record.constprop' at builtin-record.c:2817:2:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:71:10: error:
+'__builtin_memset' offset [17, 64] from the object at 'lost' is out
+of the bounds of referenced subobject 'lost' with type
+'struct perf_record_lost_samples' at offset 0 [-Werror=array-bounds]
+71|return __builtin___memset_chk (__dest,__ch,__len,__bos0 (__dest));
+  |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The error arised when performing a memset operation on the 'lost' variable,
+the bytes of 'sizeof(lost)' exceeds that of '&lost.lost', which are 64
+and 16.
+
+Fixes: 6c1785cd75ef ("perf record: Ensure space for lost samples")
+Signed-off-by: Haoze Xie <royenheart@gmail.com>
+Signed-off-by: Yuan Tan <tanyuan@tinylab.org>
 ---
-Changes in v3:
- - Moved to the multicolor led api
- - Mapped the wmi backlight toggle event to KEY_KBDILLUMTOGGLE
- - Some other minor changes
-Changes in v2:
- - Rearranged code to remove forward declarations
- - Changed from sprintf() to sysfs_emit()
- - Fixed some identation and coding style problems
- - Switched from manual bit manipulation to GENMASK(x, y) + FIELD_PREP(XX, )
- - #define'ed magic constants
----
- drivers/platform/x86/hp/hp-wmi.c | 248 +++++++++++++++++++++++++++++--
- 1 file changed, 239 insertions(+), 9 deletions(-)
+ tools/perf/builtin-record.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 5fa553023842..5eae47961f76 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -14,6 +14,8 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 019305b94e5f..a94516e8c522 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1955,7 +1955,7 @@ static void record__read_lost_samples(struct record *rec)
+ 				}
  
- #include <linux/kernel.h>
-+#include <linux/led-class-multicolor.h>
-+#include <linux/leds.h>
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-@@ -24,6 +26,7 @@
- #include <linux/platform_profile.h>
- #include <linux/hwmon.h>
- #include <linux/acpi.h>
-+#include <linux/bits.h>
- #include <linux/rfkill.h>
- #include <linux/string.h>
- #include <linux/dmi.h>
-@@ -44,6 +47,14 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
+ 				if (count.lost) {
+-					memset(&lost.lost, 0, sizeof(lost));
++					memset(&lost, 0, sizeof(lost));
+ 					lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
+ 					__record__save_lost_samples(rec, evsel, &lost.lost,
+ 								    x, y, count.lost, 0);
+@@ -1965,7 +1965,7 @@ static void record__read_lost_samples(struct record *rec)
  
- #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
- 
-+#define FOURZONE_LIGHTING_SUPPORTED_BIT	0x01
-+#define FOURZONE_LIGHTING_ON		228
-+#define FOURZONE_LIGHTING_OFF		100
-+
-+#define FOURZONE_COLOR_R		GENMASK(23, 16)
-+#define FOURZONE_COLOR_G		GENMASK(15, 8)
-+#define FOURZONE_COLOR_B		GENMASK(7, 0)
-+
- /* DMI board names of devices that should use the omen specific path for
-  * thermal profiles.
-  * This was obtained by taking a look in the windows omen command center
-@@ -143,18 +154,36 @@ enum hp_wmi_commandtype {
- };
- 
- enum hp_wmi_gm_commandtype {
--	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
--	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
--	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
--	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
--	HPWMI_GET_SYSTEM_DESIGN_DATA = 0x28,
-+	HPWMI_FAN_SPEED_GET_QUERY	= 0x11,
-+	HPWMI_SET_PERFORMANCE_MODE	= 0x1A,
-+	HPWMI_FAN_SPEED_MAX_GET_QUERY	= 0x26,
-+	HPWMI_FAN_SPEED_MAX_SET_QUERY	= 0x27,
-+	HPWMI_GET_SYSTEM_DESIGN_DATA	= 0x28,
-+	HPWMI_GET_KEYBOARD_TYPE		= 0x2B,
-+};
-+
-+enum hp_wmi_fourzone_commandtype {
-+	HPWMI_SUPPORTS_LIGHTNING	= 0x01,
-+	HPWMI_FOURZONE_COLOR_GET	= 0x02,
-+	HPWMI_FOURZONE_COLOR_SET	= 0x03,
-+	HPWMI_LED_BRIGHTNESS_GET	= 0x04,
-+	HPWMI_LED_BRIGHTNESS_SET	= 0x05,
-+};
-+
-+enum hp_wmi_keyboardtype {
-+	HPWMI_KEYBOARD_INVALID        = 0x00,
-+	HPWMI_KEYBOARD_NORMAL         = 0x01,
-+	HPWMI_KEYBOARD_WITH_NUMPAD    = 0x02,
-+	HPWMI_KEYBOARD_WITHOUT_NUMPAD = 0x03,
-+	HPWMI_KEYBOARD_RGB	      = 0x04,
- };
- 
- enum hp_wmi_command {
--	HPWMI_READ	= 0x01,
--	HPWMI_WRITE	= 0x02,
--	HPWMI_ODM	= 0x03,
--	HPWMI_GM	= 0x20008,
-+	HPWMI_READ     = 0x01,
-+	HPWMI_WRITE    = 0x02,
-+	HPWMI_ODM      = 0x03,
-+	HPWMI_GM       = 0x20008,
-+	HPWMI_FOURZONE = 0x20009,
- };
- 
- enum hp_wmi_hardware_mask {
-@@ -265,6 +294,7 @@ static struct platform_device *hp_wmi_platform_dev;
- static struct platform_profile_handler platform_profile_handler;
- static bool platform_profile_support;
- static bool zero_insize_support;
-+static bool fourzone_lightning_support;
- 
- static struct rfkill *wifi_rfkill;
- static struct rfkill *bluetooth_rfkill;
-@@ -821,6 +851,40 @@ static struct attribute *hp_wmi_attrs[] = {
- };
- ATTRIBUTE_GROUPS(hp_wmi);
- 
-+static const char * const fourzone_zone_names[4] = {
-+	"hp:rgb:kbd_zoned_backlight-right",
-+	"hp:rgb:kbd_zoned_backlight-middle",
-+	"hp:rgb:kbd_zoned_backlight-left",
-+	"hp:rgb:kbd_zoned_backlight-wasd"
-+};
-+
-+struct hp_fourzone_leds {
-+	struct led_classdev_mc leds[4];
-+	struct mc_subled subleds[4];
-+	u32 color_cache[4];
-+};
-+static struct hp_fourzone_leds fourzone_leds;
-+
-+static enum led_brightness get_fourzone_brightness(struct led_classdev *led_cdev)
-+{
-+	u8 buff[4];
-+
-+	hp_wmi_perform_query(HPWMI_LED_BRIGHTNESS_GET, HPWMI_FOURZONE,
-+		&buff, sizeof(buff), sizeof(buff));
-+
-+	return buff[0] == FOURZONE_LIGHTING_ON ? LED_ON : LED_OFF;
-+}
-+
-+static void fourzone_update_brightness(void)
-+{
-+	unsigned int br;
-+
-+	/* synchronize the brightness level on all zones */
-+	br = get_fourzone_brightness(NULL);
-+	for (size_t i = 0; i < 4; i++)
-+		fourzone_leds.leds[i].led_cdev.brightness = br;
-+}
-+
- static void hp_wmi_notify(u32 value, void *context)
- {
- 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -932,6 +996,14 @@ static void hp_wmi_notify(u32 value, void *context)
- 	case HPWMI_PROXIMITY_SENSOR:
- 		break;
- 	case HPWMI_BACKLIT_KB_BRIGHTNESS:
-+		if (fourzone_lightning_support) {
-+			input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, true);
-+			input_sync(hp_wmi_input_dev);
-+			input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, false);
-+			input_sync(hp_wmi_input_dev);
-+
-+			fourzone_update_brightness();
-+		}
- 		break;
- 	case HPWMI_PEAKSHIFT_PERIOD:
- 		break;
-@@ -1505,6 +1577,154 @@ static int thermal_profile_setup(void)
- 	return 0;
- }
- 
-+static int fourzone_set_colors(u32 color, size_t zone)
-+{
-+	u8 buff[128];
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE,
-+		&buff, sizeof(buff), sizeof(buff));
-+	if (ret != 0)
-+		return -EINVAL;
-+
-+	buff[25 + zone * 3]     = FIELD_GET(FOURZONE_COLOR_R, color);
-+	buff[25 + zone * 3 + 1] = FIELD_GET(FOURZONE_COLOR_G, color);
-+	buff[25 + zone * 3 + 2] = FIELD_GET(FOURZONE_COLOR_B, color);
-+
-+	return hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_SET, HPWMI_FOURZONE,
-+		&buff, sizeof(buff), sizeof(buff));
-+}
-+
-+static int fourzone_get_colors(u32 *colors)
-+{
-+	u8 buff[128];
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE,
-+		&buff, sizeof(buff), sizeof(buff));
-+	if (ret != 0)
-+		return -EINVAL;
-+
-+	for (int i = 0; i < 4; i++) {
-+		colors[i] = FIELD_PREP(FOURZONE_COLOR_R, buff[25 + i * 3])
-+			  | FIELD_PREP(FOURZONE_COLOR_G, buff[25 + i * 3 + 1])
-+			  | FIELD_PREP(FOURZONE_COLOR_B, buff[25 + i * 3 + 2]);
-+	}
-+
-+	return 0;
-+}
-+
-+static void set_fourzone_brightness(struct led_classdev *led_cdev, enum led_brightness brightness)
-+{
-+	size_t zone;
-+
-+	for (size_t i = 0; i < 4; i++)
-+		if (strcmp(led_cdev->name, fourzone_zone_names[i]) == 0)
-+			zone = i;
-+
-+	if (fourzone_leds.leds[zone].subled_info->intensity == fourzone_leds.color_cache[zone]) {
-+		u8 buff[4] = {
-+			brightness == LED_ON ? FOURZONE_LIGHTING_ON : FOURZONE_LIGHTING_OFF,
-+			0, 0, 0
-+		};
-+
-+		hp_wmi_perform_query(HPWMI_LED_BRIGHTNESS_SET, HPWMI_FOURZONE, &buff,
-+			sizeof(buff), 0);
-+
-+		fourzone_update_brightness();
-+	} else {
-+		fourzone_set_colors(fourzone_leds.leds[zone].subled_info->intensity, zone);
-+		fourzone_leds.color_cache[zone] = fourzone_leds.leds[zone].subled_info->intensity;
-+	}
-+}
-+
-+static int __init fourzone_leds_init(struct platform_device *device)
-+{
-+	enum led_brightness brightness;
-+	u32 colors[4];
-+	int ret;
-+
-+	ret = fourzone_get_colors(colors);
-+	if (ret < 0)
-+		return ret;
-+
-+	memcpy(fourzone_leds.color_cache, colors, sizeof(colors));
-+
-+	brightness = get_fourzone_brightness(NULL);
-+
-+	for (size_t i = 0; i < 4; i++) {
-+		fourzone_leds.subleds[i] = (struct mc_subled) {
-+			.color_index = LED_COLOR_ID_RGB,
-+			.brightness = 1,
-+			.intensity = colors[i]
-+		};
-+
-+		fourzone_leds.leds[i] = (struct led_classdev_mc) {
-+			.led_cdev = {
-+				.name = fourzone_zone_names[i],
-+				.brightness = brightness,
-+				.max_brightness = 1,
-+				.brightness_set = set_fourzone_brightness,
-+				.brightness_get = get_fourzone_brightness,
-+				.color = LED_COLOR_ID_RGB,
-+				.flags = LED_BRIGHT_HW_CHANGED
-+			},
-+			.num_colors = 1,
-+			.subled_info = &fourzone_leds.subleds[i]
-+		};
-+
-+		ret = devm_led_classdev_multicolor_register(&device->dev, &fourzone_leds.leds[i]);
-+		if (ret)
-+			return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static enum hp_wmi_keyboardtype fourzone_get_keyboard_type(void)
-+{
-+	u8 buff[128];
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE, HPWMI_GM,
-+		&buff, sizeof(buff), sizeof(buff));
-+	if (ret != 0)
-+		return HPWMI_KEYBOARD_INVALID;
-+
-+	/* the first byte in the response represents the keyboard type */
-+	return (enum hp_wmi_keyboardtype)(buff[0] + 1);
-+}
-+
-+static bool fourzone_supports_lighting(void)
-+{
-+	u8 buff[128];
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_SUPPORTS_LIGHTNING, HPWMI_FOURZONE,
-+		&buff, sizeof(buff), sizeof(buff));
-+	if (ret != 0)
-+		return false;
-+
-+	return buff[0] & FOURZONE_LIGHTING_SUPPORTED_BIT;
-+}
-+
-+static int fourzone_setup(struct platform_device *device)
-+{
-+	if (!fourzone_supports_lighting())
-+		return -ENODEV;
-+
-+	if (fourzone_get_keyboard_type() != HPWMI_KEYBOARD_WITHOUT_NUMPAD)
-+		return -ENODEV;
-+
-+	/* register leds */
-+	if (fourzone_leds_init(device) < 0)
-+		return -ENODEV;
-+
-+	input_set_capability(hp_wmi_input_dev, KE_KEY, KEY_KBDILLUMTOGGLE);
-+
-+	return 0;
-+}
-+
- static int hp_wmi_hwmon_init(void);
- 
- static int __init hp_wmi_bios_setup(struct platform_device *device)
-@@ -1534,6 +1754,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 
- 	thermal_profile_setup();
- 
-+	/* setup 4 zone rgb */
-+	if (!fourzone_setup(device))
-+		fourzone_lightning_support = true;
-+
- 	return 0;
- }
- 
-@@ -1561,6 +1785,12 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
- 
- 	if (platform_profile_support)
- 		platform_profile_remove();
-+
-+	if (fourzone_lightning_support)
-+		for (size_t i = 0; i < 4; i++) {
-+			devm_led_classdev_multicolor_unregister(&device->dev,
-+				&fourzone_leds.leds[i]);
-+		}
- }
- 
- static int hp_wmi_resume_handler(struct device *device)
+ 		lost_count = perf_bpf_filter__lost_count(evsel);
+ 		if (lost_count) {
+-			memset(&lost.lost, 0, sizeof(lost));
++			memset(&lost, 0, sizeof(lost));
+ 			lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
+ 			__record__save_lost_samples(rec, evsel, &lost.lost, 0, 0, lost_count,
+ 						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
 -- 
-2.45.2
+2.25.1
 
