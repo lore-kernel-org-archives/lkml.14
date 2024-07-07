@@ -1,197 +1,114 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E329B181
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 00:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90CA55
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 00:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720311037; cv=none; b=jFrMaXw4Ss7lQD4XmGtwRABdest5OWJIMmUnDfn8vHlkmD91dwJkCQUVsJBZBtKM/6+69tNgy9thwstxn7OK00xyLPEy6sg+Jh91a+uQvOolTqBit5qm2S+UqAXuzTX2737CSPR59kYdTizSH3SzRrg3ui4yD83xF5abq4Baltk=
+	t=1720311666; cv=none; b=MnTUKhO/joMfvNI1/CYVdag/EiRoclXu95uS6LPM4pCbnhPSN/vZQyuSNYZlzNXJGxK/L7SERa2dYR+5L7DMh/xGXr4GjsUgSV5Z1h+kQ2zcuJtu6jrufC+cNGAgKSfGvEtV2Zi4pviIcZ7KHfBPApzHORmj1Kdn4zoxZ04HYhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720311037; c=relaxed/simple;
-	bh=MVehUZlF6Vu/DFgojSa/tE2mpuA+8z5P9jTX3Y13ZvU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=RkhvpguzHUJdqKGKQAXFmThzT5My9/EL1vEDr3e5B2GQ9tGdj7aZ1g08jdbPFA40Fb+uBHp8PNakkIXDa1WrbqbP378ClPRfs44tXeslVD9OfchTb9Chgmm+NtUyqfpOCq0R/7QP30upf5ijk0JSaMvUg+x6ciTW7v/iD+mw5zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ReCrxwlU; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ReCrxwlU"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52e9944764fso3141163e87.3
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2024 17:10:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720311034; x=1720915834; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:from:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QSQHzQJ3Axb1vJzMvaBtOco60Ni4GgW3nF1QDSr55jY=;
-        b=ReCrxwlUy61brVzkmvINfl/1m8wtCbIbbDsyWuQ3oCtYS/rg3KIXoAFbRSN8voWtzh
-         6ARhixBQ7Uners+AgY4mAagzYCfzDP9Q/61I3yTzfFmrgsJ++rDq/vP10H6bxif22FNJ
-         pwlOrFLE0kY53dKQdo0mlAB7Wm1x9TuBRHrEAuO3epRUw4goLYVefuC2DxxOqjsLDfJq
-         TXun+vvlpbOMIy55CcTkQw+tJ2Zq4YZZyuh6j5GPq8nfizlJEZXUt36PJpQDFM7lWH/g
-         Trll8ba5l/8Dy0f4yyxvSX5uncNJW9b19eeTaWjldoDvF5fn9hXLCQ8RlZU85ZDKsGJs
-         +1hg==
+	s=arc-20240116; t=1720311666; c=relaxed/simple;
+	bh=rD8K9HjUfQ01sXIhAkd7xbjXW2g7o+CU8pJOsLHhX44=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=N5HiUyf0e4ummLzQ1uf+0uGpn184Kxt81Q6LK3eu+FT5fn7A3AZgylQSyEqxkCq9D43Z+LNW1Ss10PJcEQwqkIjMWCc3te2nZDTRmUUlBGaQZxw9afTWBQKZ9IPB559pcyzfV+1siMkTv0JUj+bw37DG2Eb83Lw+5h5ysPkSHB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7ec0802fd0dso344066439f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2024 17:21:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720311034; x=1720915834;
-        h=content-transfer-encoding:cc:to:subject:from:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QSQHzQJ3Axb1vJzMvaBtOco60Ni4GgW3nF1QDSr55jY=;
-        b=jGPOk72Vl5qw4UxWYB1wtlIBFJvhRoIBfJ0upcQiCzKxrg38a63SKQiAZC7ZHlf33s
-         5riXulU6LaiY+3FIfYvTgpgEiq3gYLYe4VN7rR9cQPDH1Gy58BV32+22IWb9/p4SvjjD
-         BnchF/OWAFLYyWpEBK4aDffAa7oi/igJa8fFaMBcnm3sVTxtDS14UBmgojcjQoCAjlhC
-         4gYJEhYL2P7x8KDsJ58WK11JFrN+h0ViTmDsGQrqM9uZELA+neIDi3NcPpBMC9mOmJkd
-         vHOk0nnXOKiaPCFPUOuKP0zYnam+5Fwui1jmVOHvMt+07F/KCSulh0QlNN1a9QF7K9nX
-         z4sg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4g5NmGhMaVmPlqmFhDo8Ez0xdU/SOGEGNwQBjJRl3eXC48hRuwfZN9h2quIT7Rb+eytNqNdRS0bD/Bk+xWIMOYt7jHDuCCRkN9KBS
-X-Gm-Message-State: AOJu0Yx0A+hym71o+aVnvG2hHigdAndSEfrTvJzQqJwZhOjgFiNwImhd
-	AqVUwCG5JCItKx373ReBCkvwtSyTDDHY3IGZgIQvinvBAhAKWKYt
-X-Google-Smtp-Source: AGHT+IE4k7AyrHz/Dfv9N1ZosT3VQYZ2AufhQWaafj16Iqwsj5Y9kVe8oNgSVYlFxwpYqKDRU5ArBw==
-X-Received: by 2002:ac2:598e:0:b0:52e:9c63:5fe8 with SMTP id 2adb3069b0e04-52ea06b77camr5191300e87.54.1720311033536;
-        Sat, 06 Jul 2024 17:10:33 -0700 (PDT)
-Received: from [192.168.178.20] (dh207-40-28.xnet.hr. [88.207.40.28])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77cf5c9fa3sm163597966b.4.2024.07.06.17.10.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jul 2024 17:10:33 -0700 (PDT)
-Message-ID: <47e0483d-6e3d-43a8-9273-25278a4a74b9@gmail.com>
-Date: Sun, 7 Jul 2024 02:10:31 +0200
+        d=1e100.net; s=20230601; t=1720311664; x=1720916464;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0RAnPOsIq/QJy+u/k3LH2tH1DUHYGcXiXo7dKKlvWq8=;
+        b=RE9DTO1ukIhaGxR7F/X7iaPY+dmyWEpzMr9PPQvNdIAdo556AL3Zb4UhrEy9IFGaMd
+         mRl4T4DcfWsU5rlwrYTaYt2/oCh68f8SU6UD2Ul0/JZrLbeLq3lYs8PSncQsXQTUEdAa
+         kIzkK3lAnEGEAR6sRBxBx1NrMQevzfn4e4RVRTWf3h9NcVGbQLDgNfq6SVrCYrpems3F
+         eTdB6LcUqchsMoGkCoqj26+iEy/QjhhjumtewUNzkX3wPw3lf97y6daMCysRaIbkNLZt
+         QGxL8jUqMNnbvjSdoSlLzMlKGn4Ib0SA6efL6pLM9yBpEYw4BMYB4UwsRWWzlPo0fCrn
+         rU4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXm3YilVCFKIKkqk27idlelKddlqF+hk6Kw1x5Exm0qhQJRjEf2BsIGGAA82pRs3paQ+VvSnPVP9Q9gsB9NYvPDmswhGufWx9ysVld5
+X-Gm-Message-State: AOJu0YywwZ0dDwgg3Ff4OI66CaOMA3OowbEFw9+0d5aSaNuBExLnPssq
+	oq05QHbTKMHjG+GQMKvuelIZcwRwk6g5ScFlOWunX/ZQY4+oFoFeirT4VRPfiY6YG64w6n1DgOD
+	nHX2+sao0BLya2cw+4GVr6SosWovkfgUXzp3a9xWtCI1ux8LOQ4FOBSo=
+X-Google-Smtp-Source: AGHT+IHwZLmghQb6i9rodsRh23Lrkjxzsltm9rMjTb23083qS4ZdZXhF1kt6p99sCdNgF+6cU2PWgmMBDnSVgzJAROLj1Y+X2UII
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Mirsad Todorovac <mtodorovac69@gmail.com>
-Subject: [PROBLEM linux-next]
-To: linux-mtd@lists.infradead.org
-Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:35ac:b0:4c0:7f51:c3aa with SMTP id
+ 8926c6da1cb9f-4c07f51d9b6mr399707173.2.1720311664085; Sat, 06 Jul 2024
+ 17:21:04 -0700 (PDT)
+Date: Sat, 06 Jul 2024 17:21:04 -0700
+In-Reply-To: <20240706231332.3261-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a42289061c9d452e@google.com>
+Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in nf_tables_trans_destroy_work
+From: syzbot <syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, all,
+Hello,
 
-This is the result of testing randconfig with KCONFIG_SEED=0xEE7AB52F in next-20240703 vanilla tree on
-Ubuntu 22.04 LTS. GCC used is GCC (Ubuntu 12.3.0-1ubuntu1~22.04) 12.3.0.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING in nft_rcv_nl_event
 
-The particular error is as follows:
-
-In file included from ./include/asm-generic/bug.h:22,
-                 from ./arch/x86/include/asm/bug.h:87,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/fortify-string.h:6,
-                 from ./include/linux/string.h:374,
-                 from ./arch/x86/include/asm/page_32.h:18,
-                 from ./arch/x86/include/asm/page.h:14,
-                 from ./arch/x86/include/asm/processor.h:20,
-                 from ./arch/x86/include/asm/timex.h:5,
-                 from ./include/linux/timex.h:67,
-                 from ./include/linux/time32.h:13,
-                 from ./include/linux/time.h:60,
-                 from ./include/linux/stat.h:19,
-                 from ./include/linux/module.h:13,
-                 from drivers/mtd/mtdpart.c:10:
-drivers/mtd/mtdpart.c: In function ‘parse_mtd_partitions’:
-drivers/mtd/mtdpart.c:693:34: error: ‘%s’ directive argument is null [-Werror=format-overflow=]
-  693 |                         pr_debug("%s: got parser %s\n", master->name,
-      |                                  ^~~~~~~~~~~~~~~~~~~~~
-./include/linux/printk.h:376:21: note: in definition of macro ‘pr_fmt’
-  376 | #define pr_fmt(fmt) fmt
-      |                     ^~~
-./include/linux/dynamic_debug.h:248:9: note: in expansion of macro ‘__dynamic_func_call_cls’
-  248 |         __dynamic_func_call_cls(__UNIQUE_ID(ddebug), cls, fmt, func, ##__VA_ARGS__)
-      |         ^~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/dynamic_debug.h:250:9: note: in expansion of macro ‘_dynamic_func_call_cls’
-  250 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
-      |         ^~~~~~~~~~~~~~~~~~~~~~
-./include/linux/dynamic_debug.h:269:9: note: in expansion of macro ‘_dynamic_func_call’
-  269 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
-      |         ^~~~~~~~~~~~~~~~~~
-./include/linux/printk.h:610:9: note: in expansion of macro ‘dynamic_pr_debug’
-  610 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
-      |         ^~~~~~~~~~~~~~~~
-drivers/mtd/mtdpart.c:693:25: note: in expansion of macro ‘pr_debug’
-  693 |                         pr_debug("%s: got parser %s\n", master->name,
-      |                         ^~~~~~~~
-drivers/mtd/mtdpart.c:693:50: note: format string is defined here
-  693 |                         pr_debug("%s: got parser %s\n", master->name,
-      |                                                  ^~
-
-Offending commit is 5b644aa012f67.
-
-Offending code is here:
-
-  668 int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
-  669                          struct mtd_part_parser_data *data)
-  670 {
-  671         struct mtd_partitions pparts = { };
-  672         struct mtd_part_parser *parser;
-  673         int ret, err = 0;
-  674 
-  675         if (!types)
-  676                 types = mtd_is_partition(master) ? default_subpartition_types :
-  677                         default_mtd_part_types;
-  678 
-  679         for ( ; *types; types++) {
-  680                 /*
-  681                  * ofpart is a special type that means OF partitioning info
-  682                  * should be used. It requires a bit different logic so it is
-  683                  * handled in a separated function.
-  684                  */
-  685                 if (!strcmp(*types, "ofpart")) {
-  686                         ret = mtd_part_of_parse(master, &pparts);
-  687                 } else {
-  688                         pr_debug("%s: parsing partitions %s\n", master->name,
-  689                                  *types);
-  690                         parser = mtd_part_parser_get(*types);
-  691                         if (!parser && !request_module("%s", *types))
-  692                                 parser = mtd_part_parser_get(*types);
-→ 693                         pr_debug("%s: got parser %s\n", master->name,
-→ 694                                 parser ? parser->name : NULL);
-  695                         if (!parser)
-  696                                 continue;
-  697                         ret = mtd_part_do_parse(parser, master, &pparts, data);
-  698                         if (ret <= 0)
-  699                                 mtd_part_parser_put(parser);
-  700                 }
-  701                 /* Found partitions! */
-  702                 if (ret > 0) {
-  703                         err = add_mtd_partitions(master, pparts.parts,
-  704                                                  pparts.nr_parts);
-  705                         mtd_part_parser_cleanup(&pparts);
-  706                         return err ? err : pparts.nr_parts;
-  707                 }
-  708                 /*
-  709                  * Stash the first error we see; only report it if no parser
-  710                  * succeeds
-  711                  */
-  712                 if (ret < 0 && !err)
-  713                         err = ret;
-  714         }
-  715         return err;
-  716 }
-
-Proposed non-intrusive fix resolves the warning/error, but I could not test the code.
-(I don't have the physical device.)
-
------------------><------------------------------------------
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index 6811a714349d..81665d67ed2d 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -691,7 +691,7 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
-                        if (!parser && !request_module("%s", *types))
-                                parser = mtd_part_parser_get(*types);
-                        pr_debug("%s: got parser %s\n", master->name,
--                               parser ? parser->name : NULL);
-+                               parser ? parser->name : "(null"));
-                        if (!parser)
-                                continue;
-                        ret = mtd_part_do_parse(parser, master, &pparts, data);
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 6134 at net/netfilter/nf_tables_api.c:11557 nft_rcv_nl_event+0x1e2/0x730 net/netfilter/nf_tables_api.c:11557
+Modules linked in:
+CPU: 0 PID: 6134 Comm: syz.2.44 Not tainted 6.10.0-rc5-syzkaller-01137-g1c5fc27bc48a-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+RIP: 0010:nft_rcv_nl_event+0x1e2/0x730 net/netfilter/nf_tables_api.c:11557
+Code: 6c 24 40 4c 89 7c 24 60 48 8b 44 24 78 42 80 3c 20 00 74 08 4c 89 ff e8 9c dc 46 f8 49 8b 07 4c 39 f8 74 0b e8 6f 0e e1 f7 90 <0f> 0b 90 eb 1c 48 8b 05 a2 34 b2 05 48 c7 c1 40 4d 67 8f 48 39 c8
+RSP: 0018:ffffc90003eb79e0 EFLAGS: 00010293
+RAX: ffffffff89b51c9f RBX: ffff88807abfac00 RCX: ffff888029719e00
+RDX: 0000000000000000 RSI: ffffffff8bcabb40 RDI: ffffffff8c1fee00
+RBP: ffffc90003eb7b28 R08: ffffffff92fbc657 R09: 1ffffffff25f78ca
+R10: dffffc0000000000 R11: fffffbfff25f78cb R12: dffffc0000000000
+R13: ffff888023bbd700 R14: ffff88807abfac00 R15: ffff88807abfac10
+FS:  00005555803a6500(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000200 CR3: 000000007a250000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ notifier_call_chain+0x19f/0x3e0 kernel/notifier.c:93
+ blocking_notifier_call_chain+0x69/0x90 kernel/notifier.c:388
+ netlink_release+0x11a6/0x1b10 net/netlink/af_netlink.c:787
+ __sock_release net/socket.c:659 [inline]
+ sock_close+0xbc/0x240 net/socket.c:1421
+ __fput+0x406/0x8b0 fs/file_table.c:422
+ task_work_run+0x24f/0x310 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x168/0x370 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f48f9d75b99
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffecf0981a8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+RAX: 0000000000000000 RBX: 000000000001d197 RCX: 00007f48f9d75b99
+RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+RBP: ffffffffffffffff R08: 0000000000000001 R09: 00000004cf0984bf
+R10: 00007f48f9c00000 R11: 0000000000000246 R12: 00007f48f9f03fac
+R13: 0000000000000032 R14: 00007f48f9f05aa0 R15: 00007f48f9f03fa0
+ </TASK>
 
 
-Hope this helps.
+Tested on:
 
-Best regards,
-Mirsad Todorovac
+commit:         1c5fc27b Merge tag 'nf-next-24-06-28' of git://git.ker..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=16077369980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5264b58fdff6e881
+dashboard link: https://syzkaller.appspot.com/bug?extid=4fd66a69358fc15ae2ad
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=112dca6e980000
+
