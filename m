@@ -1,37 +1,40 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (msa-217.smtpout.orange.fr [193.252.23.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B925D6FBE;
-	Sun,  7 Jul 2024 04:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122793C0B;
+	Sun,  7 Jul 2024 05:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720327896; cv=none; b=MBWPYuws3Oc3f9N0etLId18CRbjAodQeBWqW3k97IgPVThdsRP1FVZrOKlKCUVU5SfdXwStf/oT1c39HmkA4HfG1g3886ILSQDhGVpykwM4x2sgnbYmOMPTlyJkYlOq/gT2WDTV+SPuu6C1lsxxgh8NdOBKk8dTJ/ylpIqsIH/A=
+	t=1720330202; cv=none; b=lZqjrmd3y8jtuu/tPe7ahdqu5WmBKsGYKY3KclqKm4cHLVknAanbOO/eL7ASWi6qtJ8mstz6mJSRd9t+YbFV1ebuT6ySZYmksdT0nfBcv7geY+ZeYMHTAqK+XM/y8HxJyGbPVlWo0DsWmx8SHndb0nyJGk1zXYa1U95ZUeJB4Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720327896; c=relaxed/simple;
-	bh=CfARi/u/Fjxlqoftj9lntYklY68vu0badl6dd5s2AW8=;
+	s=arc-20240116; t=1720330202; c=relaxed/simple;
+	bh=RrJZGTxd7xygHhaOVoishTvrFUj3gGMe/6VLlgISMgw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iaU/UJGkb6VIAWoqM+faVrM4b1NnIsF42M5ocVO2fEFPICtEHTALpUoxiUsY3oCz87Svud0PgSWo1g6XmwYnN9HtGFGEu2w1ry3/VlgrrHKP978AC1dnB/jnSrMo0o3wf/BNFUvzZnWEgGKfnTb0XTq88EfDMzd81PjWxPzRQmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lAZ8IrrD; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=Sgkmi7/GSfRoAI3JyKG3FHdRaxTj22cDC/2G+MhI7ygz/BOIdxtfjVIbznWo3YFofFXTyiXuoyBQGABQIiPosAfyefdU/qJGeVmLHbtxWHaXrjgq7p0TKi2vY1iIewUs531BCJ6qN3HsrlYXPrW2YXb47BwfQ8vaeWqUKsVj2rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=q1R3tD2R; arc=none smtp.client-ip=193.252.23.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lAZ8IrrD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-	bh=+8eTiFjpxhErd3IxWY+zIjQpbI2d1Wq18AjNJiaZkS8=; b=lAZ8IrrDatXCTq6nh6An+D0z/R
-	VvFaw2xYre3Q2+L8t8xAFyRvRBvvYgtJdJCwt5GkDRgJEeTXAjL1OVQUkbx+1rg/fKxcUKQaEExzm
-	19cTFBqo7QLV07xtlVH4PBMd1rtoQOxqVU6gUTME7hz+R4lqlHCQnBXr47jZX3VuGL9Ze1pTMCWq8
-	x4oLWu1pDD0WETLI+HaGPFoBDEV8vzET0vqbnfidHBijY9ZKLX8E7Sjc/7OyRkwuOI7aJgvzF3PlQ
-	VDiyYlU1HB2xsQbHajkXXbedToEnahODVI+WJva5Pdlj8dqzVb0QG9dqyOH8TSJK2r4TFtPF2MOUK
-	uzZphovg==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sQJs6-00000001LcR-0joK;
-	Sun, 07 Jul 2024 04:51:34 +0000
-Message-ID: <6fa86cb0-a795-4e5f-b8c7-50c69ff86792@infradead.org>
-Date: Sat, 6 Jul 2024 21:51:33 -0700
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="q1R3tD2R"
+Received: from [192.168.1.37] ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id QKT8ssABbbqgGQKT8soUOV; Sun, 07 Jul 2024 07:29:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1720330191;
+	bh=zC54ys3M8a39QLCtSzCZVowyG7EsoN9tlLmkgNqnfvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=q1R3tD2RXdeLFyBEQTmY0fXh19otMgvcnaVayp8aA524Au5Og59rc7IdyRPmdZauT
+	 +JM3S5N5bt5lbojBzDK991fq+LRxD3RckSk5ZggPl2RaefwxZl4P9UTijWJBZseetv
+	 ImAORn69hTuHhzoVO4DMb/wdmEnXGF2xS96UxgSfTp1oCQFq7i/NknY8pmihF6OqV8
+	 54lSTnrL0SnbsyaS202XTF5u3M9fFM8KgcS8BirE3GeiznpeDg3g+T/HaHdtCfUwBg
+	 Km25DkU07YuNSG1aW87wwxnCPrLN0JD/ifJJNB9VbnX7Tqr3ozt7hTZ9Dk6L0LGTSF
+	 Dqswi9a5z0kGg==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sun, 07 Jul 2024 07:29:51 +0200
+X-ME-IP: 86.243.222.230
+Message-ID: <7635709f-9974-4c60-9cb0-78ae7f007cc2@wanadoo.fr>
+Date: Sun, 7 Jul 2024 07:29:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,96 +42,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] Removed extra asterisks from comment beginnings, and
+Subject: Re: [PATCH 1/3] Removed extra asterisks from comment beginnings, and
  removed unnecessary comment end
-To: Gold Side <goldside000@outlook.com>, "perex@perex.cz" <perex@perex.cz>,
- "krzk@kernel.org" <krzk@kernel.org>,
+To: Gold Side <goldside000@outlook.com>, "krzk@kernel.org" <krzk@kernel.org>,
+ "perex@perex.cz" <perex@perex.cz>,
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
  "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
  "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>
-References: <DM4P223MB054192AAFD5EA92A22AC8323F7D92@DM4P223MB0541.NAMP223.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <DM4P223MB054192AAFD5EA92A22AC8323F7D92@DM4P223MB0541.NAMP223.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
+References: <DM4P223MB0541357D7B105C83EF9FCFD5F7D92@DM4P223MB0541.NAMP223.PROD.OUTLOOK.COM>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <DM4P223MB0541357D7B105C83EF9FCFD5F7D92@DM4P223MB0541.NAMP223.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-
-
-On 7/6/24 9:14 PM, Gold Side wrote:
-> From 072a5624cf67614a7f64d6ba15773f85ee5a2e1d Mon Sep 17 00:00:00 2001
+Le 07/07/2024 à 06:14, Gold Side a écrit :
+>  From 3574f0514207f9610a69d82d3dd0d018d6dce5dd Mon Sep 17 00:00:00 2001
 > From: Steven Davis <goldside000@outlook.com>
-> Date: Wed, 3 Jul 2024 16:00:15 -0400
-> Subject: [PATCH 3/3] Removed, like, 30,000 more useless asterisks
+> Date: Tue, 2 Jul 2024 22:57:24 -0400
+> Subject: [PATCH 1/3] Removed extra asterisk from comment beginning
 > 
-> Is there a reason for those extra asterisks to be in there? Seems unnecessary.
+> It saves a byte. I'd imagine bytes are valuable in a project like this.
+> PS: Please forgive my previous patch email, I didn't know the guidelines well.
 
-Yes, they are for kernel-doc comments, which aid in generating documentation.
-They are not unnecessary.
+Hi,
 
-> Signed-off-by: Steven Davis <goldside000@outlook.com>
+no-problem, newcomers are always welcomed and they have to learn. So, 
+IMHO, making small mistakes is part of the learning curve.
+
+
+People/mailing-list should be defined according to the MAINTAINERS file. 
+A script helps you for that: ./scripts/get_maintainer.pl
+
+It can be run either on a patch or on a file/directory.
+
+Here:
+	./scripts/get_maintainer.pl -f kernel/module/main.c
+or
+	./scripts/get_maintainer.pl your_patch.patch
+give:
+	Luis Chamberlain <mcgrof@kernel.org> (maintainer:MODULE SUPPORT)
+	linux-modules@vger.kernel.org (open list:MODULE SUPPORT)
+	linux-kernel@vger.kernel.org (open list:MODULE SUPPORT)
+
+It is perfectly fine to add other people/mailing list that are relevant, 
+as kernel-janitor.
+
+If you are using git mail, it is possible to automate the creation of 
+the To: and cc: fields. (see 
+https://www.marcusfolkesson.se/blog/get_maintainers-and-git-send-email/). 
+If using this --identify, you still can add some other --to, --cc., 
+which is really convenient.
+
+
+
+On your commit log, here are a few comments:
+   - there should be a new-line before the Signed-off-by: line
+   - you can add whatever you want after the --- ending the commit 
+description. These extra comments are informational only, and won't be 
+part of the git history. Here, your PS should have been here.
+    - imperative wording is preferred when writing commit logs
+
+You can also give a look at 
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html, 
+if not already done.
+
+
+Welcome and happy patching :)
+
+CJ
+
+> Signed-off-by: Steven Davis <goldside000@outlook.com
 > ---
->  sound/sound_core.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>   kernel/module/main.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/sound/sound_core.c b/sound/sound_core.c
-> index d81fed1c122699..6d446c5bb94a0f 100644
-> --- a/sound/sound_core.c
-> +++ b/sound/sound_core.c
-> @@ -331,7 +331,7 @@ static void sound_remove_unit(struct sound_unit **list, int unit)
->  
->  static struct sound_unit *chains[SOUND_STEP];
->  
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index d18a94b973e102..25e456f4381c71 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -450,7 +450,7 @@ bool __is_module_percpu_address(unsigned long addr, unsigned long *can_addr)
+>        return false;
+>   }
+>   
 > -/**
 > +/*
->   *   register_sound_special_device - register a special sound node
->   *   @fops: File operations for the driver
->   *   @unit: Unit number to allocate
-> @@ -418,7 +418,7 @@ int register_sound_special(const struct file_operations *fops, int unit)
->  
->  EXPORT_SYMBOL(register_sound_special);
->  
-> -/**
-> +/*
->   *   register_sound_mixer - register a mixer device
->   *   @fops: File operations for the driver
->   *   @dev: Unit number to allocate
-> @@ -443,7 +443,7 @@ EXPORT_SYMBOL(register_sound_mixer);
->   *   in open - see below.
->   */
->   
-> -/**
-> +/*
->   *   register_sound_dsp - register a DSP device
->   *   @fops: File operations for the driver
->   *   @dev: Unit number to allocate
-> @@ -466,7 +466,7 @@ int register_sound_dsp(const struct file_operations *fops, int dev)
->  
->  EXPORT_SYMBOL(register_sound_dsp);
->  
-> -/**
-> +/*
->   *   unregister_sound_special - unregister a special sound device
->   *   @unit: unit number to allocate
->   *
-> @@ -483,7 +483,7 @@ void unregister_sound_special(int unit)
->   
->  EXPORT_SYMBOL(unregister_sound_special);
->  
-> -/**
-> +/*
->   *   unregister_sound_mixer - unregister a mixer
->   *   @unit: unit number to allocate
->   *
-> @@ -498,7 +498,7 @@ void unregister_sound_mixer(int unit)
->  
->  EXPORT_SYMBOL(unregister_sound_mixer);
->  
-> -/**
-> +/*
->   *   unregister_sound_dsp - unregister a DSP device
->   *   @unit: unit number to allocate
->   *
+>    * is_module_percpu_address() - test whether address is from module static percpu
+>    * @addr: address to test
+>    *
 
--- 
-~Randy
