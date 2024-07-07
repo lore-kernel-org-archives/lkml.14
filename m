@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76663193;
-	Sun,  7 Jul 2024 00:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1906C79CD;
+	Sun,  7 Jul 2024 00:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720311699; cv=none; b=VdVLE8ZnD7IGtoU9JGo2dUHaAY3p3aucm8pzEgBjR8/j7IMtdwD7X+YIYkuPe+ULBNc4wmH/vo4BnKs4bCsthkS1z7BoBpYkTK/fatI/CwASuwogwa697X46e5n1qBzzgmV2GtB/9TrTonuiVCq6nPMLsZNDEPQ3dTc0n+867nc=
+	t=1720311703; cv=none; b=vA6VEkyt7pyiz2xjT7druasW53imN61VThslj9IvgU+FkuNZdWjOM+4/UqE5C0rEyvQbTRi4GWyPTQYYppZlXHIljK9KSypNsyHj3us0wfkegmQNiHPDLKgkPqoSFanRXCOSu2DKh09eiypkJ+PFu+vbw3IbvybzaSmwxYRIdPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720311699; c=relaxed/simple;
-	bh=fvYVkid4xNQYOkrpLZpVtAO6NQzzzIVgPpuSdSeBdtU=;
+	s=arc-20240116; t=1720311703; c=relaxed/simple;
+	bh=EJNZ/d5KbREkuKqiPc/RoYeYwuKSYgqe0YIgbqds4Fs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nv/kgtPDFfJMuJUS4JGS93HkPYc2ItTWE5+HiIdYkWWXUHKFR3jjHRezjmkhxIMPs/1TmK2wQweG4Lp/j6zU2ttQMP5Wv0Mx7AxcdlwPUBJMYiFzmsab5awTK1ffdzgeR1WfIH35F3uPLwItJyu+0z9tcpLBTLU9AC1NAIoNecw=
+	 MIME-Version; b=lwrCZ/uSyxL9SMnYZIAcFt12awyPLr9f3isvD2LViuw5D5kMRvo39DdtXBEr04ggRqMxaOPMmI0eF5oPp13Zx2nunjWanRE4ma8XcHWfnYRdAP7zu3/2IiFMvG8udoAelbb0WYEhwnSoJBwKCzn0R4AVbm/NfbHVtC6NeF15dg0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A763612FC;
-	Sat,  6 Jul 2024 17:22:00 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA099DA7;
+	Sat,  6 Jul 2024 17:22:05 -0700 (PDT)
 Received: from pluto.. (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43C3C3F73B;
-	Sat,  6 Jul 2024 17:21:33 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 694D63F73B;
+	Sat,  6 Jul 2024 17:21:38 -0700 (PDT)
 From: Cristian Marussi <cristian.marussi@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -34,11 +34,10 @@ Cc: sudeep.holla@arm.com,
 	ptosi@google.com,
 	dan.carpenter@linaro.org,
 	souvik.chakravarty@arm.com,
-	Peng Fan <peng.fan@nxp.com>,
 	Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH 1/8] firmware: arm_scmi: Introduce setup_shmem_iomap
-Date: Sun,  7 Jul 2024 01:20:48 +0100
-Message-ID: <20240707002055.1835121-2-cristian.marussi@arm.com>
+Subject: [PATCH 3/8] firmware: arm_scmi: Add support for standalone transport drivers
+Date: Sun,  7 Jul 2024 01:20:50 +0100
+Message-ID: <20240707002055.1835121-4-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240707002055.1835121-1-cristian.marussi@arm.com>
 References: <20240707002055.1835121-1-cristian.marussi@arm.com>
@@ -50,221 +49,233 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Peng Fan <peng.fan@nxp.com>
+Extend the core SCMI stack with structures and methods to allow for transports
+to be split out as standalone drivers, while still supporting old style
+transports, defined as built into the SCMI core stack.
 
-To get the address of shmem could be generalized by introducing
-setup_shmem_iomap. Then the duplicated code in mailbox.c, optee.c
-and smc.c could be dropped.
+No functional change.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-[ Cristian: make use of the new helper also in smc.c ]
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
- drivers/firmware/arm_scmi/common.h  |  2 ++
- drivers/firmware/arm_scmi/mailbox.c | 27 ++++------------------
- drivers/firmware/arm_scmi/optee.c   | 35 ++++------------------------
- drivers/firmware/arm_scmi/shmem.c   | 36 +++++++++++++++++++++++++++++
- drivers/firmware/arm_scmi/smc.c     | 23 +++---------------
- 5 files changed, 49 insertions(+), 74 deletions(-)
+Old style transport support will be removed later in this series.
+---
+ drivers/firmware/arm_scmi/common.h | 84 ++++++++++++++++++++++++++++++
+ drivers/firmware/arm_scmi/driver.c | 44 +++++++++++++++-
+ drivers/firmware/arm_scmi/msg.c    |  5 ++
+ drivers/firmware/arm_scmi/shmem.c  |  5 ++
+ 4 files changed, 136 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 4b8c5250cdb5..b4c217641e3a 100644
+index 34df078d1cd3..fda6f96b6750 100644
 --- a/drivers/firmware/arm_scmi/common.h
 +++ b/drivers/firmware/arm_scmi/common.h
-@@ -327,6 +327,8 @@ bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
- 		     struct scmi_xfer *xfer);
- bool shmem_channel_free(struct scmi_shared_mem __iomem *shmem);
- bool shmem_channel_intr_enabled(struct scmi_shared_mem __iomem *shmem);
-+void __iomem *setup_shmem_iomap(struct scmi_chan_info *cinfo, struct device *dev,
-+				bool tx);
+@@ -348,6 +348,8 @@ struct scmi_shared_mem_operations {
+ 				     struct device *dev, bool tx);
+ };
  
++const struct scmi_shared_mem_operations *scmi_shared_mem_operations_get(void);
++
  /* declarations for message passing transports */
  struct scmi_msg_payld;
-diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
-index 0219a12e3209..b0a579f31905 100644
---- a/drivers/firmware/arm_scmi/mailbox.c
-+++ b/drivers/firmware/arm_scmi/mailbox.c
-@@ -178,11 +178,8 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
- 	const char *desc = tx ? "Tx" : "Rx";
- 	struct device *cdev = cinfo->dev;
- 	struct scmi_mailbox *smbox;
--	struct device_node *shmem;
--	int ret, a2p_rx_chan, p2a_chan, p2a_rx_chan, idx = tx ? 0 : 1;
-+	int ret, a2p_rx_chan, p2a_chan, p2a_rx_chan;
- 	struct mbox_client *cl;
--	resource_size_t size;
--	struct resource res;
  
- 	ret = mailbox_chan_validate(cdev, &a2p_rx_chan, &p2a_chan, &p2a_rx_chan);
- 	if (ret)
-@@ -195,25 +192,9 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
- 	if (!smbox)
- 		return -ENOMEM;
+@@ -375,6 +377,88 @@ struct scmi_message_operations {
+ 				   size_t max_len, struct scmi_xfer *xfer);
+ };
  
--	shmem = of_parse_phandle(cdev->of_node, "shmem", idx);
--	if (!of_device_is_compatible(shmem, "arm,scmi-shmem")) {
--		of_node_put(shmem);
--		return -ENXIO;
--	}
--
--	ret = of_address_to_resource(shmem, 0, &res);
--	of_node_put(shmem);
--	if (ret) {
--		dev_err(cdev, "failed to get SCMI %s shared memory\n", desc);
--		return ret;
--	}
--
--	size = resource_size(&res);
--	smbox->shmem = devm_ioremap(dev, res.start, size);
--	if (!smbox->shmem) {
--		dev_err(dev, "failed to ioremap SCMI %s shared memory\n", desc);
--		return -EADDRNOTAVAIL;
--	}
-+	smbox->shmem = setup_shmem_iomap(cinfo, dev, tx);
-+	if (IS_ERR(smbox->shmem))
-+		return PTR_ERR(smbox->shmem);
++const struct scmi_message_operations *scmi_message_operations_get(void);
++
++/**
++ * struct scmi_transport_core_operations  - Transpoert core operations
++ *
++ * @bad_message_trace: An helper to report a malformed/unexpected message
++ * @rx_callback: Callback to report received messages
++ * @shmem: Datagram operations for shared memory based transports
++ * @msg: Datagram operations for message based transports
++ */
++struct scmi_transport_core_operations {
++	void (*bad_message_trace)(struct scmi_chan_info *cinfo,
++				  u32 msg_hdr, enum scmi_bad_msg err);
++	void (*rx_callback)(struct scmi_chan_info *cinfo, u32 msg_hdr,
++			    void *priv);
++	const struct scmi_shared_mem_operations *shmem;
++	const struct scmi_message_operations *msg;
++};
++
++/**
++ * struct scmi_transport  - A structure representing a configured transport
++ *
++ * @supplier: Device representimng the transport and acting as a supplier for
++ *	      the core SCMI stack
++ * @desc: Transport descriptor
++ * @core_ops: A pointer to a pointer used by the core SCMI stack to make the
++ *	      core transport operations accessible to the transports.
++ */
++struct scmi_transport {
++	struct device *supplier;
++	const struct scmi_desc *desc;
++	struct scmi_transport_core_operations **core_ops;
++};
++
++#define DEFINE_SCMI_TRANSPORT_DRIVER(__trans, __match_table, __core_ptr)\
++static int __trans##_probe(struct platform_device *pdev)		\
++{									\
++	struct scmi_transport *scmi_trans;				\
++	struct platform_device *scmi_pdev;				\
++	struct device *dev = &pdev->dev;				\
++									\
++	scmi_trans = devm_kzalloc(dev, sizeof(*scmi_trans), GFP_KERNEL);\
++	if (!scmi_trans)						\
++		return -ENOMEM;						\
++									\
++	scmi_pdev = devm_kzalloc(dev, sizeof(*scmi_pdev), GFP_KERNEL);	\
++	if (!scmi_pdev)							\
++		return -ENOMEM;						\
++									\
++	scmi_trans->supplier = dev;					\
++	scmi_trans->desc = &__trans##_desc;				\
++	scmi_trans->core_ops = __core_ptr;				\
++									\
++	scmi_pdev->name = "arm-scmi";					\
++	scmi_pdev->id = PLATFORM_DEVID_AUTO;				\
++	scmi_pdev->dev.platform_data = scmi_trans;			\
++									\
++	device_set_of_node_from_dev(&scmi_pdev->dev, dev);		\
++									\
++	dev_set_drvdata(dev, scmi_pdev);				\
++									\
++	return platform_device_register(scmi_pdev);			\
++}									\
++									\
++static void __trans##_remove(struct platform_device *pdev)		\
++{									\
++	struct platform_device *scmi_pdev;				\
++									\
++	scmi_pdev = dev_get_drvdata(&pdev->dev);			\
++									\
++	platform_device_unregister(scmi_pdev);				\
++}									\
++									\
++static struct platform_driver __trans##_driver = {			\
++	.driver = {							\
++		   .name = #__trans "_transport",			\
++		   .of_match_table = __match_table,			\
++		   },							\
++	.probe = __trans##_probe,					\
++	.remove_new = __trans##_remove,					\
++}
++
+ extern const struct scmi_shared_mem_operations scmi_shmem_ops;
+ extern const struct scmi_message_operations scmi_msg_ops;
  
- 	cl = &smbox->cl;
- 	cl->dev = cdev;
-diff --git a/drivers/firmware/arm_scmi/optee.c b/drivers/firmware/arm_scmi/optee.c
-index 4e7944b91e38..8abcd668108c 100644
---- a/drivers/firmware/arm_scmi/optee.c
-+++ b/drivers/firmware/arm_scmi/optee.c
-@@ -368,38 +368,11 @@ static int setup_dynamic_shmem(struct device *dev, struct scmi_optee_channel *ch
- static int setup_static_shmem(struct device *dev, struct scmi_chan_info *cinfo,
- 			      struct scmi_optee_channel *channel)
- {
--	struct device_node *np;
--	resource_size_t size;
--	struct resource res;
--	int ret;
--
--	np = of_parse_phandle(cinfo->dev->of_node, "shmem", 0);
--	if (!of_device_is_compatible(np, "arm,scmi-shmem")) {
--		ret = -ENXIO;
--		goto out;
--	}
--
--	ret = of_address_to_resource(np, 0, &res);
--	if (ret) {
--		dev_err(dev, "Failed to get SCMI Tx shared memory\n");
--		goto out;
--	}
--
--	size = resource_size(&res);
-+	channel->req.shmem = setup_shmem_iomap(cinfo, dev, true);
-+	if (IS_ERR(channel->req.shmem))
-+		return PTR_ERR(channel->req.shmem);
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 6b6957f4743f..a1892d4d8c69 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -194,6 +194,11 @@ struct scmi_info {
+ #define bus_nb_to_scmi_info(nb)	container_of(nb, struct scmi_info, bus_nb)
+ #define req_nb_to_scmi_info(nb)	container_of(nb, struct scmi_info, dev_req_nb)
  
--	channel->req.shmem = devm_ioremap(dev, res.start, size);
--	if (!channel->req.shmem) {
--		dev_err(dev, "Failed to ioremap SCMI Tx shared memory\n");
--		ret = -EADDRNOTAVAIL;
--		goto out;
--	}
--
--	ret = 0;
--
--out:
--	of_node_put(np);
--
--	return ret;
-+	return 0;
++static struct scmi_transport_core_operations scmi_trans_core_ops = {
++	.bad_message_trace = scmi_bad_message_trace,
++	.rx_callback = scmi_rx_callback,
++};
++
+ static unsigned long
+ scmi_vendor_protocol_signature(unsigned int protocol_id, char *vendor_id,
+ 			       char *sub_vendor_id, u32 impl_ver)
+@@ -2950,6 +2955,28 @@ static int scmi_debugfs_raw_mode_setup(struct scmi_info *info)
+ 	return ret;
  }
  
- static int setup_shmem(struct device *dev, struct scmi_chan_info *cinfo,
++static const struct scmi_desc *scmi_transport_lookup(struct device *dev)
++{
++	struct scmi_transport *trans;
++
++	trans = dev_get_platdata(dev);
++	if (!trans || !trans->desc || !trans->supplier || !trans->core_ops)
++		return NULL;
++
++	if (!device_link_add(dev, trans->supplier, DL_FLAG_AUTOREMOVE_CONSUMER)) {
++		dev_err(dev,
++			"Adding link to supplier transport device failed\n");
++		return NULL;
++	}
++
++	/* Provide core transport ops */
++	*trans->core_ops = &scmi_trans_core_ops;
++
++	dev_info(dev, "Using %s\n", dev_driver_string(trans->supplier));
++
++	return trans->desc;
++}
++
+ static int scmi_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -2962,8 +2989,14 @@ static int scmi_probe(struct platform_device *pdev)
+ 	struct device_node *child, *np = dev->of_node;
+ 
+ 	desc = of_device_get_match_data(dev);
+-	if (!desc)
+-		return -EINVAL;
++	if (!desc) {
++		desc = scmi_transport_lookup(dev);
++		if (!desc) {
++			err_str = "transport invalid\n";
++			ret = -EINVAL;
++			goto out_err;
++		}
++	}
+ 
+ 	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+ 	if (!info)
+@@ -3130,6 +3163,7 @@ static int scmi_probe(struct platform_device *pdev)
+ clear_ida:
+ 	ida_free(&scmi_id, info->id);
+ 
++out_err:
+ 	return dev_err_probe(dev, ret, "%s", err_str);
+ }
+ 
+@@ -3321,6 +3355,12 @@ static int __init scmi_driver_init(void)
+ 	if (ret)
+ 		return ret;
+ 
++	if (IS_ENABLED(CONFIG_ARM_SCMI_HAVE_SHMEM))
++		scmi_trans_core_ops.shmem = scmi_shared_mem_operations_get();
++
++	if (IS_ENABLED(CONFIG_ARM_SCMI_HAVE_MSG))
++		scmi_trans_core_ops.msg = scmi_message_operations_get();
++
+ 	if (IS_ENABLED(CONFIG_ARM_SCMI_NEED_DEBUGFS))
+ 		scmi_top_dentry = scmi_debugfs_init();
+ 
+diff --git a/drivers/firmware/arm_scmi/msg.c b/drivers/firmware/arm_scmi/msg.c
+index f4ba38afe0bb..0bed1d2825af 100644
+--- a/drivers/firmware/arm_scmi/msg.c
++++ b/drivers/firmware/arm_scmi/msg.c
+@@ -118,3 +118,8 @@ const struct scmi_message_operations scmi_msg_ops = {
+ 	.fetch_response = msg_fetch_response,
+ 	.fetch_notification = msg_fetch_notification,
+ };
++
++const struct scmi_message_operations *scmi_message_operations_get(void)
++{
++	return &scmi_msg_ops;
++}
 diff --git a/drivers/firmware/arm_scmi/shmem.c b/drivers/firmware/arm_scmi/shmem.c
-index b74e5a740f2c..c31f188d74ef 100644
+index c84321ff5428..feb4215831dc 100644
 --- a/drivers/firmware/arm_scmi/shmem.c
 +++ b/drivers/firmware/arm_scmi/shmem.c
-@@ -7,6 +7,8 @@
- 
- #include <linux/ktime.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/processor.h>
- #include <linux/types.h>
- 
-@@ -133,3 +135,37 @@ bool shmem_channel_intr_enabled(struct scmi_shared_mem __iomem *shmem)
- {
- 	return ioread32(&shmem->flags) & SCMI_SHMEM_FLAG_INTR_ENABLED;
- }
+@@ -182,3 +182,8 @@ const struct scmi_shared_mem_operations scmi_shmem_ops = {
+ 	.channel_intr_enabled = shmem_channel_intr_enabled,
+ 	.setup_iomap = shmem_setup_iomap,
+ };
 +
-+void *__iomem
-+setup_shmem_iomap(struct scmi_chan_info *cinfo, struct device *dev, bool tx)
++const struct scmi_shared_mem_operations *scmi_shared_mem_operations_get(void)
 +{
-+	const char *desc = tx ? "Tx" : "Rx";
-+	int ret, idx = tx ? 0 : 1;
-+	struct device *cdev = cinfo->dev;
-+	struct device_node *shmem;
-+	resource_size_t size;
-+	struct resource res;
-+	void __iomem *addr;
-+
-+	shmem = of_parse_phandle(cdev->of_node, "shmem", idx);
-+	if (!of_device_is_compatible(shmem, "arm,scmi-shmem")) {
-+		of_node_put(shmem);
-+		return ERR_PTR(-ENXIO);
-+	}
-+
-+	ret = of_address_to_resource(shmem, 0, &res);
-+	of_node_put(shmem);
-+	if (ret) {
-+		dev_err(cdev, "failed to get SCMI %s shared memory\n", desc);
-+		return ERR_PTR(ret);
-+	}
-+
-+	size = resource_size(&res);
-+	addr = devm_ioremap(dev, res.start, size);
-+	if (!addr) {
-+		dev_err(dev, "failed to ioremap SCMI %s shared memory\n", desc);
-+		return ERR_PTR(-EADDRNOTAVAIL);
-+	}
-+
-+	return addr;
++	return &scmi_shmem_ops;
 +}
-diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
-index 39936e1dd30e..a640a4312472 100644
---- a/drivers/firmware/arm_scmi/smc.c
-+++ b/drivers/firmware/arm_scmi/smc.c
-@@ -132,7 +132,6 @@ static int smc_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
- 	struct scmi_smc *scmi_info;
- 	resource_size_t size;
- 	struct resource res;
--	struct device_node *np;
- 	u32 func_id;
- 	int ret;
- 
-@@ -143,25 +142,9 @@ static int smc_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
- 	if (!scmi_info)
- 		return -ENOMEM;
- 
--	np = of_parse_phandle(cdev->of_node, "shmem", 0);
--	if (!of_device_is_compatible(np, "arm,scmi-shmem")) {
--		of_node_put(np);
--		return -ENXIO;
--	}
--
--	ret = of_address_to_resource(np, 0, &res);
--	of_node_put(np);
--	if (ret) {
--		dev_err(cdev, "failed to get SCMI Tx shared memory\n");
--		return ret;
--	}
--
--	size = resource_size(&res);
--	scmi_info->shmem = devm_ioremap(dev, res.start, size);
--	if (!scmi_info->shmem) {
--		dev_err(dev, "failed to ioremap SCMI Tx shared memory\n");
--		return -EADDRNOTAVAIL;
--	}
-+	scmi_info->shmem = setup_shmem_iomap(cinfo, dev, tx);
-+	if (IS_ERR(scmi_info->shmem))
-+		return PTR_ERR(scmi_info->shmem);
- 
- 	ret = of_property_read_u32(dev->of_node, "arm,smc-id", &func_id);
- 	if (ret < 0)
 -- 
 2.45.2
 
