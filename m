@@ -1,41 +1,42 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6857CEDC;
-	Sun,  7 Jul 2024 22:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88ABE107B3;
+	Sun,  7 Jul 2024 22:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720391860; cv=none; b=oU3imAEiu9imooB7lRUq285zVCjemg7yBuu7851avbloWDhofhI2HRjorStuJCJQI6pjYJMx/KFAORLJ5C5V0dbD7GJEWizrfDSShP5ms8R1bYdTC1yZc4kqjCLklcwRtmOaeEdp2JePYKAG5M/lkVdumv3ISvf+EoWgLZ4LQtQ=
+	t=1720391861; cv=none; b=i3A9IZR0kJPnUMzIsTioFDejGsrzAa4trGU+wJOvtBIRHdTabiiUoOUsIbXvxoG3dtb8VS5b9f2q+0ZfQV6G6IDHhiA5GoTvMha4aBGJsznHRSAwewdtDT2sXuGsgX1l9rjXBTvfgcOpFaw+P6SOwNXod/ozanNuwugZNPoocY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720391860; c=relaxed/simple;
-	bh=O7XVQdyMHMxbunVATdf/LX5GcM2hGQPm9TlJn5WdkTA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SP/V7SJ5bSlPe4nmOng0cEdOQL7LHhGxm8xm6UGfxZG+4x8fWcQIhi7lbRwrdAcmKwbIQekJCkNvhbhzG3MJbPTycf2cr/6xs3inCPe9JwyH664llsJ4h+M+wYpgdmZ42f7zlyiaZCV4wOoQqHsnhOBA3/d0bTKKnmWFh1qsGJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=Pbg16VQE; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1720391861; c=relaxed/simple;
+	bh=O+bEwrnwg4S4cWN+/eKT9QwEoL56qOFANcTDwM8x0Jk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SRL1I3P3wwqG78KA2fA573YiCIqt//NnDyno4CCSruadMvz7gnDu6AH1bvxnhSjeT3JgYZAvtel+7ubHsRHuzuAP2bs8CYTkukRmYtHSOhT0jv/7OlzQpePm5A5W7rHmpx1g5hVYECz3UUQ3qCW1p+gih9iJcy3ZvbLUySwoLCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=M16xJrhm; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="Pbg16VQE"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="M16xJrhm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1720391849; x=1720996649; i=j.neuschaefer@gmx.net;
-	bh=k/2wUJqCS/1bOuRYIc422cgLx2nAzXVqfJrn7v4mg+Y=;
-	h=X-UI-Sender-Class:From:Subject:Date:Message-Id:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:To:Cc:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
+	s=s31663417; t=1720391851; x=1720996651; i=j.neuschaefer@gmx.net;
+	bh=mi0PezsKxlt4YHnZxxM0jZD6ggEqlUX2jNwgc7Ancas=;
+	h=X-UI-Sender-Class:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=Pbg16VQErMMKQt5uc4D1u5x1W0FuGQcf/eUELyTC8PJrW7abo+4yCloLDuXikIyl
-	 Z7eJaQJK/kl4qEN8jBqa3ZVdmkuQggzNOcDSg+j66+DESfjqoMkvov6ICz7dNrELM
-	 AnoWgJKF7S2cCNkgNywFTdDAY7FKZQ1NFTNAThdyTftlriDzLA3su/0EUctjixSGX
-	 yZhOb1eeiXlKIlvxUiIfOMmjOLsoshF9KlAGDCHYIF0P/i2sbieaJ6ZGJHaHN/CKO
-	 WM/Cloojr2Y4So8j1jh8lvup4aFU434BIq9an36m6+PebEiNKBkBYeEno9qdnzPoT
-	 pktlTQmHF1P530IruA==
+	b=M16xJrhmAcM9WZKw2+gndFWN8Fmm6KddUUs45Ds0sNXnZNLQgxkv4BQFEoDiHwfD
+	 /ygwTXRNxZWvzK2q0oa6/NFBPY6sgpk3idMj88NrrcuqKVH+PaVUIPLWwAj6kpMzD
+	 aZyxLm6m+I+TKuu1oL3I/ajLTXVdvvlh0jB4OO14r/MGctIyGAy4JUhkl3FD3gKKK
+	 SVA0JEdO+YAFGtU+xdjBEVVP4nZUwg9ERPHVHErp+UE7n6LTr/qFpK61Vez1fFLI3
+	 MkXEMj3vSsBskpsIEXQWoW8thOOgkfkYNfpUfMFi/XLW3kBoHNbZtaKemhKh/FkxK
+	 v4sp3YvmZ92USy9//w==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from probook ([89.0.46.161]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWzk3-1sszQ13jFx-00Z6oA; Mon, 08
- Jul 2024 00:37:28 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MVeI2-1ssC4N1hRs-00R9Kf; Mon, 08
+ Jul 2024 00:37:31 +0200
 From: =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH RESEND v12 0/6] Nuvoton WPCM450 clock and reset driver
-Date: Mon, 08 Jul 2024 00:37:13 +0200
-Message-Id: <20240708-wpcm-clk-v12-0-1afac539c37d@gmx.net>
+Date: Mon, 08 Jul 2024 00:37:16 +0200
+Subject: [PATCH RESEND v12 3/6] clk: provider: Address documentation
+ pitfall in struct clk_parent_data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,6 +45,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <20240708-wpcm-clk-v12-3-1afac539c37d@gmx.net>
+References: <20240708-wpcm-clk-v12-0-1afac539c37d@gmx.net>
+In-Reply-To: <20240708-wpcm-clk-v12-0-1afac539c37d@gmx.net>
 To: openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
  devicetree@vger.kernel.org
 Cc: Michael Turquette <mturquette@baylibre.com>, 
@@ -53,147 +57,63 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
  Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, 
  =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720391846; l=4460;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720391846; l=1209;
  i=j.neuschaefer@gmx.net; s=20240329; h=from:subject:message-id;
- bh=LHlwXz0xY3IxreqHfZl/rfZVPyckYCVZucb0Ic/3Jx4=;
- b=3vx2VHTzAy3f/sw5YbD5Lfuf7A/GvQe73unYvZpZ28E03+qj3610qUK549NYrgnXfICu28ZlD
- YuF9/CarQxeAAKUllGdrY7uKZBsbqWqwgSvY6kMcHLWYoFUEuCBHQDO
+ bh=1uiYw4A/lLLh/mTtdxttn1wy5i6b5KyOE0h65+zswio=;
+ b=SoPHDFAoOK/kLuq+yWRUtieGEfwTb95/pAmzeW9Um6JRqHEspAR/tqeWlNH3wGdHRxmngwikn
+ kuAlaTSN9/DBuxNWZQ2OjnIXZeTRu09kvz2dA1q/lgeMjn0akQoHK6w
 X-Developer-Key: i=j.neuschaefer@gmx.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Provags-ID: V03:K1:jokVZF9njeuTuV9Gdi0f/8ho8RZIo6O2MkwzzTMqajdkEY6TnCX
- V19p+YOnRRDV3l0nbSMkz8trfgtolb/hg0wnbQzpLGZBL7JDfCl8MKdlHyrRRWbh/G0TYKZ
- MbqYQ2PHx0yCkYYcNau8AdWckgh1yyzGomujXx9A9Wt03cWsdpMJ0pgb8/ZV5eErsYkZs3M
- KGtQUNm5CLTupHJpe4zag==
+X-Provags-ID: V03:K1:rr3gzaxoTF4B6FifwJso/858vBXoLg/bHDfpgjv7fOrjouocjVU
+ 5lbQUMs96Tgf+iKbc3BibhvSmAD9sgQgqo1ZtxA5upI5vPzQH/d9V9DnIXK7qY4B7FqiIIm
+ Fh2VnZuW4dpi0SfYTriH8ktpWUanNEbwLojyCcGxaxZRkYm7I/5xIsAB/tj39MykNd4x7Br
+ YaSl2FPXSfGP3ti99fcMg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ZWyB94pXxsY=;z2pe3s+AvEnqbB3e6T2ZITGDJId
- R4a53ndv2bLz5sCV3IqaY02zhPIxkbXqGbHswjvEpoctw+py6DGDVdrVNv3rrKi6Wuj9PqiyQ
- rTB+nXMV6b/zhQht/AdAdb3EkZimjBmA+2tQdCViJJqLeiP89aHbcCHdHwsxlodiNmmWoj0PN
- USRtgUSbclF8FVBfcDyFV8GcHjApwyooXaHGrSRONFNQ98AKrJwV9sqtR+IB1jYm5FO8VMTg+
- Ws49PvqV2ODlStqZl71ZVaMik2xWU0Wv9Xk3G00Na/6ts1krnVyrc8fKcA5jMwzLlcxDAfkga
- t8jyqlroigj3udWfGuX5ziZgL3ksqlRQyTntquJSWzQzzDsG/qnK28aFzqn5hN38QLTIzfYEu
- wwoJxMf3sn6UPBh1rprmkzJoLTytTEXjPSpMAFsxGGzVjtlRCJSRqQhSHE4k2OJsCrxEkVCxK
- BqkfcaN7hPV/eihj2nfJI+ApUqWT4pUpddBb3ual4cR/9QcX4CRZlhIugryUGdSci0p9DCOxW
- jPXp7YO746yHdMzeOBPQT3jjAkB6HfQJHhtOqWsTXeHtnDQ2KQ/t8jptSB67lsTBS7ZktvW7N
- /91Qs3Tf+W5J68a6STVJeubQ9NxHlQV3GmXK8fjh/Tz9I5rdc1+LYsJTWEOKX2MzjC/+B8We8
- NXTLqsYL56y+jbdBrt+HJzCGPaUFHrbyueWzmkKggXfmDvbTGAlSs+hqSqodN9yxQbphhcZ7m
- OcqCdw1Vqu0lvEamWpvJMcUQfOmlf5lYWQotBAz9GgLqQJbrI/aGDfhvd2mHPXbAuIaHClodr
- JWVT5PVYMEiOoXn0SFQdAu7E6gI4TGRpsr6NYu1Uwmka4=
+UI-OutboundReport: notjunk:1;M01:P0:BldRFGiEc3M=;Pki+aikhIANvKonFR9z2VgwjHgq
+ Bjsr+Xo5t4wtZcu3jBhNNQBcDyj3zqrQVML5i9FbITqaHG5Fo5JIm60wRXuhHTUYFxfjLHroj
+ 7GM5LjQBB0PmFwpGmOirUiYr7kS43lZAYWLsgLjK9kNBNeHe1yjNm4WBV3UaFeWmICRB5jv2W
+ z9bjKqUr/mq2Ev718p9BJf1NA0lHSaFzbem9lQBdwUkWKvp/1QEUXuILH/gw5JiFTzZxcf4aE
+ pPsdwUEJOzD7yw1w56NTs9C31heL9zehNm7a11f8g/JT3u1ggqUJkus8vIi0KEpmdeKx+4aS8
+ OVKoBcJh4P0lII4b8prxUCVPqil9Ty9y7BMIXi8RiuC4KwOIJXkW/BvbBMIwtTH0mYOArAtGN
+ A6ZkDsTHpv+Mt5nDrM3pNo3YYiVvoFPLRz4goMT5FSQB3UVL5xFRYTOP3M8JDTppeNtMP6FKI
+ kPXheRPk8am2n9R6eDb26nYfDpWPpjXRqjxipvJXGgvjEiW4AnrXyLknVNue5X7WMlqAJome6
+ zLnQAYOKY213n+pE3Wi8uY+ZbfVA7cBF4TOucbcwnO8UBGdlnwmYpeEL4oPAeNUKWVCsGgB+o
+ ReGRrjdwp1UxTZlhWqOjwnzeXWKsxbWZDj3YsFFkX4/2bR5l1OrqCSnLnCe7KX3p4Jeo9ftJE
+ KS0L+RloKFPRXugLbsUy3yMPNjsZJN9NNGwkEgJmrhlPF4Y6dvtVSOUTYM7mjhencl1zQP56U
+ e1pfZeImzg2EI3kLcOJOO/1m1Zdn6N7j/0kiJsmxZZQEIDSWgUYIgBsubb73FYDaCTkkJSb6A
+ /+F5ixpS3hvwtX9YY8HHpf/EaERpiTCfeGDifpxRuoShc=
 
-This series adds support for the clock and reset controller in the Nuvoton
-WPCM450 SoC. This means that the clock rates for peripherals will be
-calculated automatically based on the clock tree as it was preconfigured
-by the bootloader.  The 24 MHz dummy clock, that is currently in the
-devicetree, is no longer needed.  Somewhat unfortunately, this also
-means that there is a breaking change once the devicetree starts relying
-on the clock driver, but I find it acceptable in this case, because
-WPCM450 is still at a somewhat early stage.
+For some reason, I understood the description of .index to mean an index
+into the list of clocks defined by the provider itself. This is not the
+case, and it caused me much confusion.
 
-v12:
-- Convert to platform driver, but use fixed-factor-clock for timer
-  (a necessary workaround because npcm7xx-timer needs its clock earlier
-  than a platform driver can provide it)
-- Various driver improvements suggested or inspired by Stephen Boyd
-- New patches:
-  - clk: Introduce devm_clk_hw_register_divider_table_parent_data()
-  - clk: provider: Address documentation pitfall in struct clk_parent_data
-
-v11:
-- Link: https://lore.kernel.org/r/20240401-wpcm-clk-v11-0-379472961244@gmx=
-.net
-- Improved description in "ARM: dts: wpcm450: Remove clock-output-names
-  from reference clock node"
-- some minor format differences due to switching to B4
-
-v10:
-- A small tweak (using selected instead of extending an already-long
-  default line) in Kconfig, for better robustness
-
-v9:
-- Various improvements to the driver
-- No longer use global clock names (and the clock-output-names property)
-  to refer to the reference clock, but instead rely on a phandle reference
-
-v8:
-- https://lore.kernel.org/lkml/20230428190226.1304326-1-j.neuschaefer@gmx.=
-net/
-- Use %pe throughout the driver
-
-v7:
-- Simplified the error handling, by largely removing resource
-  deallocation, which:
-  - was already incomplete
-  - would only happen in a case when the system is in pretty bad state
-    because the clock driver didn't initialize correctly (in other
-    words, the clock driver isn't optional enough that complex error
-    handling really pays off)
-
-v6:
-- Dropped all patches except the clock binding and the clock driver, becau=
-se
-  they have mostly been merged
-- Minor correction to how RESET_SIMPLE is selected
-
-v5:
-- Dropped patch 2 (watchdog: npcm: Enable clock if provided), which
-  was since merged upstream
-- Added patch 2 (clocksource: timer-npcm7xx: Enable timer 1 clock before u=
-se) again,
-  because I wasn't able to find it in linux-next
-- Switched the driver to using struct clk_parent_data
-- Rebased on 6.1-rc3
-
-v4:
-- Leave WDT clock running during after restart handler
-- Fix reset controller initialization
-- Dropped patch 2/7 (clocksource: timer-npcm7xx: Enable timer 1 clock befo=
-re use),
-  as it was applied by Daniel Lezcano
-
-v3:
-- https://lore.kernel.org/lkml/20220508194333.2170161-1-j.neuschaefer@gmx.=
-net/
-- Changed "refclk" string to "ref"
-- Fixed some dead code in the driver
-- Added clk_prepare_enable call to the watchdog restart handler
-- Added a few review tags
-
-v2:
-- https://lore.kernel.org/lkml/20220429172030.398011-1-j.neuschaefer@gmx.n=
-et/
-- various small improvements
-
-v1:
-- https://lore.kernel.org/lkml/20220422183012.444674-1-j.neuschaefer@gmx.n=
-et/
+Let's be a bit more explicit for those who read the documentation after me=
+.
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
-=2D--
-Jonathan Neusch=C3=A4fer (6):
-      dt-bindings: clock: Add Nuvoton WPCM450 clock/reset controller
-      clk: Introduce devm_clk_hw_register_divider_table_parent_data()
-      clk: provider: Address documentation pitfall in struct clk_parent_da=
-ta
-      clk: wpcm450: Add Nuvoton WPCM450 clock/reset controller driver
-      ARM: dts: wpcm450: Remove clock-output-names from reference clock no=
-de
-      ARM: dts: wpcm450: Switch clocks to clock controller
+ include/linux/clk-provider.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- .../bindings/clock/nuvoton,wpcm450-clk.yaml        |  65 +++
- arch/arm/boot/dts/nuvoton/nuvoton-wpcm450.dtsi     |  33 +-
- drivers/clk/Makefile                               |   2 +-
- drivers/clk/nuvoton/Kconfig                        |  10 +-
- drivers/clk/nuvoton/Makefile                       |   1 +
- drivers/clk/nuvoton/clk-wpcm450.c                  | 455 ++++++++++++++++=
-+++++
- include/dt-bindings/clock/nuvoton,wpcm450-clk.h    |  67 +++
- include/linux/clk-provider.h                       |  26 +-
- 8 files changed, 643 insertions(+), 16 deletions(-)
-=2D--
-base-commit: 4cece764965020c22cff7665b18a012006359095
-change-id: 20240330-wpcm-clk-222a37f59cfb
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 5d537d0776a11f..88bdada390c772 100644
+=2D-- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -273,7 +273,9 @@ struct clk_ops {
+  * @hw: parent clk_hw pointer (used for clk providers with internal clks)
+  * @fw_name: parent name local to provider registering clk
+  * @name: globally unique parent name (used as a fallback)
+- * @index: parent index local to provider registering clk (if @fw_name ab=
+sent)
++ * @index: parent index local to provider registering clk (if @fw_name ab=
+sent).
++ *         Note that this is not an index into the provider's own clocks =
+but
++ *         into its list of parents!
+  */
+ struct clk_parent_data {
+ 	const struct clk_hw	*hw;
 
-Best regards,
 =2D-
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+2.43.0
 
