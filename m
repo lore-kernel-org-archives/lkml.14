@@ -1,145 +1,174 @@
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.175])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2135.outbound.protection.outlook.com [40.107.94.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A445428DD1
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 19:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720382224; cv=none; b=LwrtqF6+vtS4AO1U0jh6/lz0JsAO1amL01jI2L+Rx3bN5zNLZKQ1+q8UOxsgfTNku0fD/74gvpc/VTVuzfEPOd7NtdTPfXEEfs+xnJqzdm+42Zhv4yTPimKseF+CGm6/luWGpCZau9jtOhACnaeJflviHgr5rvxJXr2K5mQRdKY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720382224; c=relaxed/simple;
-	bh=q6/jRZtqsE3Cn59iyfo+2FWJygpr/zkT0pcQNmhnO58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JNfyTxtEmuJflxZLDpWUH/qlFeVo38Zm+6Hs8K1tv0WhSwQ3zkDEl2k66M27U3tcNsEwKr15duhbx2ZWbkyp/IUAc5KeSqhmr/O8IVFUujnh5O9H5CEtnM/XtvqxjKT4zUyaEON6dSKewQSd0bQAotD+L9q9FXCkrzrwCAD6LQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=uGlNR3SU; arc=none smtp.client-ip=193.222.135.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4D239AD5;
+	Sun,  7 Jul 2024 19:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720382250; cv=fail; b=k0yrkE5nDfDt34qUEXjd7kqSQYZeUTzlXcc1f0G7sdUJ8ZM2v6XAwNep/UvZYXDgXkbq4h0NrUvf7YEPZphCW8yKrVH6SUtQkarBnVrsPlYLb+9Q+PI8AmyzHYZoN+rdqojlD5UxTni781HQdEVwLcOa8yPlVAKr5p/8e/bmECc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720382250; c=relaxed/simple;
+	bh=S3RwoGIXJR+ZqVMzcJ+7m5fntm4K1Qy14XaPpTXSNe8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CoWawemKJkt+UtwSJ49fE9NaRJU2ZRqItLyQt3TL8t9PCuBWulJwpYRSvTrx5OthhJTYWKHhaCGs2kV/DfrlEZcUdfzZmMQJQKUkOhlbwApT8lxB0JTEmBi/wkpxu6AfLzfT/dSEU0RD8NtpDewWDrwIMpxRJ1m4KZYt07meMeo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=labundy.com; spf=pass smtp.mailfrom=labundy.com; dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b=jhIL5G9w; arc=fail smtp.client-ip=40.107.94.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=labundy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=labundy.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="uGlNR3SU"
-Received: (wp-smtpd smtp.tlen.pl 20924 invoked from network); 7 Jul 2024 21:50:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1720381820; bh=q6/jRZtqsE3Cn59iyfo+2FWJygpr/zkT0pcQNmhnO58=;
-          h=Subject:To:Cc:From;
-          b=uGlNR3SUDtCS2tRHO2hNO1SfM3LZKFcD7329ziYyIGzZh7KlMTkITKperOBL2+h7o
-           jKwHMnSPIeS26fdCfKr/JHGhlNr9TPX25ubXx9voacNFSQkDRjsiqleTEOVJ39e6iN
-           3GOyAvy3VP1p0ZmSW/tW69viKS3SrYgsbRK9T+yM=
-Received: from aafe223.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.134.223])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <linux-raid@vger.kernel.org>; 7 Jul 2024 21:50:19 +0200
-Message-ID: <3f934c1b-756f-4560-9798-98a74c32d857@o2.pl>
-Date: Sun, 7 Jul 2024 21:50:16 +0200
+	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="jhIL5G9w"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YJdCKGpERls+D6JoqNuu46PByUgZO96JhXJO0L0WIZdJtk4/Ml/7a5eN2EmRAfCwTnTTFjNVn8MmVOyhwtI+Q20q49+LrgsjkvrUpSEv9Wa9/xM6doM4rpdbrtUTbfMSLjleZ3AiUyPOgXAPbttbbYL9iPssvp166IFo/Qdm/ruwCDuzRKgzsTEcSAREshwvuwiw8qh/kZ9zGzxbX614XDtx6FUqaPgDJJDnE5k760gZSMDV9UuoqNyt+13IYyS5DtKw/P+alEFsQwajB3qQmBz6GXCsKHDW5Y13ETYQDSxg1fhXec9jhajMFI1sbsXe8EC4m7opzvIr1lBti5ot1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dKRgLpmvjxPin5F643qG9XJWP8i6nji8fqz9InU3tKQ=;
+ b=F/I+MRfg8fJxBOqBzHjMguJ0X+QfoUW+snwZYeyWpa367khYXN5o6TVewVa8quZrTaIWy0Ka4tH9/UbGIIEgMKKphcR+0FnCHZ08LSI5I/ivdSYnIhH6xaVfvLiEMCvpBAv4m3w0mW48+UuFBTYbhaDfIF0sN0dGbkI8cl15tIDkqL9RId8m3cJp5D2syEbTPynkBNbh1Euo/EHZuSDEt83gDF/I0yUZNU240OIhOG9GwU8RgYUICsmSFW9aD+UXitsIyIl7geybONiS+CZxt/bXkJkw3VMs4HbGnMpVww6bDnWD/N4Yeyvv1OL8unZN1OWL0YzZfB6NX3tibdYxKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
+ dkim=pass header.d=labundy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dKRgLpmvjxPin5F643qG9XJWP8i6nji8fqz9InU3tKQ=;
+ b=jhIL5G9wMs3YUQWHWqogniY/mXNd0uNNic4MDTsYHjhjuuu9nTwzNDwxxjotXOVuktGOlMXo1QGvgA9pKyrMDqiqk66xrF/rCydcyQ4b+gbMRIysfuJtKSsiLYzyjY7HCdxee6ec8J4Df+mFZio5zHYk4WtPZb1vPwRl0xVBocs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=labundy.com;
+Received: from BN7PR08MB3937.namprd08.prod.outlook.com (2603:10b6:406:8f::25)
+ by MN2PR08MB6431.namprd08.prod.outlook.com (2603:10b6:208:1ae::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.34; Sun, 7 Jul
+ 2024 19:57:27 +0000
+Received: from BN7PR08MB3937.namprd08.prod.outlook.com
+ ([fe80::b729:b21d:93b4:504d]) by BN7PR08MB3937.namprd08.prod.outlook.com
+ ([fe80::b729:b21d:93b4:504d%6]) with mapi id 15.20.7741.033; Sun, 7 Jul 2024
+ 19:57:27 +0000
+Date: Sun, 7 Jul 2024 14:57:24 -0500
+From: Jeff LaBundy <jeff@labundy.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/7] Input: do not check number of events in
+ input_pass_values()
+Message-ID: <ZorzJNnQKXoWE+wr@nixie71>
+References: <20240703213756.3375978-1-dmitry.torokhov@gmail.com>
+ <20240703213756.3375978-8-dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240703213756.3375978-8-dmitry.torokhov@gmail.com>
+X-ClientProxiedBy: SA0PR11CA0122.namprd11.prod.outlook.com
+ (2603:10b6:806:131::7) To BN7PR08MB3937.namprd08.prod.outlook.com
+ (2603:10b6:406:8f::25)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Cannot start degraded RAID1 array with device with
- write-mostly flag
-To: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev, Song Liu <song@kernel.org>,
- Yu Kuai <yukuai3@huawei.com>, Paul Luse <paul.e.luse@linux.intel.com>,
- Xiao Ni <xni@redhat.com>
-References: <20240706143038.7253-1-mat.jonczyk@o2.pl>
-Content-Language: en-GB
-From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
- 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
- TANkZ3QqXNX2
-In-Reply-To: <20240706143038.7253-1-mat.jonczyk@o2.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: cbed63988452608ec28fa2cdc602d631
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [oVPw]                               
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN7PR08MB3937:EE_|MN2PR08MB6431:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9691329c-2b3e-45d0-edd3-08dc9ebf0736
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Yzx5G11cv/rvjBmXxmm5gyyc2f5ngrGvtO7Lu9k5y6DIwHAsfGmrFuvnGend?=
+ =?us-ascii?Q?K2vrRPeF76dJeWAVdZjYKLS3Wpu0PcJGntqGcLCMqiMuWrfY6ZbEC9F23yiL?=
+ =?us-ascii?Q?xTdJ415KdaELjhgUREerVVa+Rv0AFAJF07t1Vdp/knBAWkEhGN29DXEo4ak0?=
+ =?us-ascii?Q?BJfEjaPfnbln50c6s5M+sBbdyBnEkEQEAOzvCWrPwtOrHZb21EEedS67e9T6?=
+ =?us-ascii?Q?ZEMZYbn1shYL7RrULvJCfDrjQvK9lBE/2pUwP1WN+dIZhAIKLRonlLBf1SEB?=
+ =?us-ascii?Q?Iq4BphqD0RON86MRSZb+q+9vtwArx9uTm9CDVCTqlXfiJeKcB+jLK1c9SkRP?=
+ =?us-ascii?Q?YdJHFn7uIpE8OQTJuB4VBXkCweEBk+RXn4HQClAc6Ctry8zT2OVWc0e+RAGI?=
+ =?us-ascii?Q?gjeVqHU9MzqumH0vEPCM6f4OXdp25sajAyw/x60+qrXUkhPVO3ErDOaCU6YB?=
+ =?us-ascii?Q?CXH6fbsvp9+3u5nP8rt3eLjy8T4vTeaxFiYL3k/F/Tmtc5CFZZpPVghbZsnz?=
+ =?us-ascii?Q?GH6LFooYpPyP693EVa4mOHlHfdivpqJzrEr2iWu9BlHL3PO+1TTNCrHH+/sW?=
+ =?us-ascii?Q?wgfRf83vanTr2pqT9G1YSupfMbVLnMj+pqvq7aXfC71bVD6t1WJ8cNLVm+Jt?=
+ =?us-ascii?Q?uOZjJNhaNIlfv3aMXOFDGSVjtSeux8CttS4OeUhvSMUUSjM+vwQvaYUlkG97?=
+ =?us-ascii?Q?xJfXtTlT8VHR58pVzeiSs4XxwE8M3bBwxsMNndMi5dFx7dXFyd1GGkp7YsHQ?=
+ =?us-ascii?Q?WbFS2teKFEnNkK4OTC2/0w3dAcpVCDpMdbkNtQ92HT8wJfJGb/XCA/pYclDz?=
+ =?us-ascii?Q?776OFhK0d29sXD64aDl3hvn1+fDICDymZ6IgVhx0958f3jT+CnHR8sb6nJD2?=
+ =?us-ascii?Q?tYH9ZCE99RfZ+QjQ57KsG31EKlUaUB6oTWAUAvJZsGzOd4GmuX5UnyapDCwX?=
+ =?us-ascii?Q?QU52Ekeva9EVhuAFgU6S1Z9dHnNOIHESvRuvcq+siXqR5TS8wOjFbuq48oPF?=
+ =?us-ascii?Q?W3kI40SRB73/7G2SI+5Ahha7xwJO6lUAiJOSf4l8TVWkQoeTG9uAcxbGbB5f?=
+ =?us-ascii?Q?FIY+RQMr1AqOdY4Ic8sovmOwTlAaC892NG5ITVc/IWyIMbCCFhxBvvAwaVmf?=
+ =?us-ascii?Q?mZY59Alh2U/c/cnfqFxtdzsn6svxX3EEvIoIfYabS81LfqvcaE2IWUjyiANI?=
+ =?us-ascii?Q?ogjU9CvAe/0/JBZWOS6sAgitHFEcqAVfxzl5vanbPLJpT8Ce7iEUMgJ4I+oJ?=
+ =?us-ascii?Q?5SuHAVUwEsVLC9ghv8hy7CdVyxFIW3xOW8nWhoha6hKpIFNc3RUNRwfPdy0/?=
+ =?us-ascii?Q?RhfLVrPJdS/OnUOT2uyBH1W1VzPSI1SgXcO7bwU3umesRg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR08MB3937.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?uSAopfSPnG4WAGoRoEkiVp2pSLVSmOD8LZF52n8YhGI6JllqUjw+Zp3XKilf?=
+ =?us-ascii?Q?epfM9rs59M7QPnk19l8URGdAjKrWtR25ji8NDp4uJSR4AQv9Ck5NyWVR46q3?=
+ =?us-ascii?Q?6cRv8DKjDWVLjSK872YSEzWCwaue8njHutqxVPjaRYzqFt8GYE1/4WOG169k?=
+ =?us-ascii?Q?eyva3fJ8Dpd2uNwrobpGPT2WJQT1yQEsMjerubt7fzgy6pcJCAYOsFaP/c7w?=
+ =?us-ascii?Q?CfsvgKtJEvhTO9r/GN78wcX3PcL0v+Dp1rKTCsSwmgiMv/fc5hjsMGfKfcJu?=
+ =?us-ascii?Q?2jwTrEJ9yvD3RbW9gG9ODZg75y43pZyDTFBeaKLLtT6+ejN8FTKeGR+zb80P?=
+ =?us-ascii?Q?tjdP0AIvXnSUjSNtozJ+s5g5aGhbR6uRiPERBeqeSiZkGeVVYNpqRB2Nr/f+?=
+ =?us-ascii?Q?5Y23LRABzxw/7MsfTB4msYBht11VAfy8sZ0zoMCWdHVLxAZgPeLGtMCGs9do?=
+ =?us-ascii?Q?0wFtj/Aq3BBPeM7BzhS9LA0Rm0uevG55qyQT3sfZY+V7L/RFZPBetsQy1z6m?=
+ =?us-ascii?Q?xvgkB34pitSrf/mAhvvV/zZcKSgP5hGp6iPoD0qZk+YlLgpRQUxP+mPnEaIb?=
+ =?us-ascii?Q?R4BOYNtxzAaMdUQnSaUlBrzJvkBu7WRmDIPlrFfYP7bmpVrLF9OZVDjffuJZ?=
+ =?us-ascii?Q?0Ui/Cl1GZ4lIwXwLLuJOaSm6EyzMvA1wLpeoQNq5OPgMElGBbue4wtio6rcz?=
+ =?us-ascii?Q?BLYypa/yp5ZkwbUgFl4ViZyRvo3njLe7XKoAuMDxgx/zP708ymZSXFl6hS++?=
+ =?us-ascii?Q?JKPQ+A7Y1eaCA882ttsRgPDDsDKAF0PHNpy25ttrG/M2VMG5rmaI9k/iMpmh?=
+ =?us-ascii?Q?08SFlcPu8VfOa07y7l2CgGJOjAEFFpUvA6S9qhJv7Dz3uCTzioOSWMhrC+Hb?=
+ =?us-ascii?Q?sZSwiGGsXtaTWnj0UZ9OnaQ0oQILjBEACtqFx4yMCnN47lwuA0doOyv+GhMs?=
+ =?us-ascii?Q?krIGUjBVKNOGbNLTxhj8XVaGLZjxgZ7xbpOUtjHjvjYr+Q1aMZd8QC3sWepo?=
+ =?us-ascii?Q?CUXYjdTutToxk9WzgHYM0fxSaipiFCkyvOr/p2X8JWKj/yoYnR7dCn39Y+v/?=
+ =?us-ascii?Q?dfnIdbNjOdtu4LFvX1Rir5NfMwtul2U1OoJWmHdR1JpsIvBcEZBp6P5MvH/D?=
+ =?us-ascii?Q?MeJoKTNj+6RF8D7pKywH6aUcSeCdVvZ9Fe3g2vq8yyyKYYxP6qhmAKTj/zRo?=
+ =?us-ascii?Q?IzlRuoSl6nlyTR3sPtBR1a0ogKBIHzLdU7V3JhWd0KBdEmQftIYswAP7JKL9?=
+ =?us-ascii?Q?fg+RJ/l48QQGQpUwlU6Wm8Cwh+vhujfYD8lcdT5p8jiNihrwxBhC7/dyTAs5?=
+ =?us-ascii?Q?Cwx5jPTBKYahiITmrvqaeuoB+9VzyGDWOSvUd5WvxGcONtmCEaeEfnqCKfY3?=
+ =?us-ascii?Q?a3TFLMk+YQBSE73IJdsHrtoMEmK9vJBzVoleLoSOkAphMVri80KmKe4UG1Es?=
+ =?us-ascii?Q?hIuHKPVrayoBkOuURW6+djpGxTJEG7boh8XSZ8aCAeaOYSO6WwpIWm8sdzei?=
+ =?us-ascii?Q?8+PDEegmfudBGqIauDHSyWywYGXZU+d5WMHjlIJrTmJWmwwY7gg/zySVzDlp?=
+ =?us-ascii?Q?Zy2PMW60zKMrFhEUj2czlID22vNku8p+h2AmCgrg?=
+X-OriginatorOrg: labundy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9691329c-2b3e-45d0-edd3-08dc9ebf0736
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR08MB3937.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2024 19:57:27.7249
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +XOhAAIuTM98tRYxJq1S/eaqxb7ernTGUgVmvsH37hS3r9f6GntjlYpJ7PYzvDubms/Av2NWlMyDMkwizv7KXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB6431
 
-W dniu 6.07.2024 o 16:30, Mateusz Jończyk pisze:
-> Hello,
->
-> Linux 6.9+ cannot start a degraded RAID1 array when the only remaining
-> device has the write-mostly flag set. Linux 6.8.0 works fine, as does
-> 6.1.96.
-[snip]
-> After some investigation, I have determined that the bug is most likely in
-> choose_slow_rdev() in drivers/md/raid1.c, which doesn't set max_sectors
-> before returning early. A test patch (below) seems to fix this issue (Linux
-> boots and appears to be working correctly with it, but I didn't do any more
-> advanced experiments yet).
->
-> This points to
-> commit dfa8ecd167c1 ("md/raid1: factor out choose_slow_rdev() from read_balance()")
-> as the most likely culprit. However, I was running into other bugs in mdadm when
-> trying to test this commit directly.
->
-> Distribution: Ubuntu 20.04, hardware: a HP 17-by0001nw laptop.
+Hi Dmitry,
 
-I have been testing this patch carefully:
+On Wed, Jul 03, 2024 at 02:37:54PM -0700, Dmitry Torokhov wrote:
+> Now that the input_dev->vals array is always there we can be assured
+> that input_pass_values() is always called with a non-0 number of
+> events. Remove the check.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-1. I have been reliably getting deadlocks when adding / removing devices
-on an array that contains a component with the write-mostly flag set
-- while the array was loaded with fsstress. When the array was idle,
-no such deadlocks happened. This occurred also on Linux 6.8.0
-though, but not on 6.1.97-rc1, so this is likely an independent regression.
+Reviewed-by: Jeff LaBundy <jeff@labundy.com>
 
-2. When adding a device to the array (/dev/sda1), I once got the following warnings in dmesg on patched 6.10-rc6:
+> ---
+>  drivers/input/input.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/input/input.c b/drivers/input/input.c
+> index 4e12fa79883e..54c57b267b25 100644
+> --- a/drivers/input/input.c
+> +++ b/drivers/input/input.c
+> @@ -115,9 +115,6 @@ static void input_pass_values(struct input_dev *dev,
+>  
+>  	lockdep_assert_held(&dev->event_lock);
+>  
+> -	if (!count)
+> -		return;
+> -
+>  	rcu_read_lock();
+>  
+>  	handle = rcu_dereference(dev->grab);
+> -- 
+> 2.45.2.803.g4e1b14247a-goog
+> 
 
-        [ 8253.337816] md: could not open device unknown-block(8,1).
-        [ 8253.337832] md: md_import_device returned -16
-        [ 8253.338152] md: could not open device unknown-block(8,1).
-        [ 8253.338169] md: md_import_device returned -16
-        [ 8253.674751] md: recovery of RAID array md2
-
-(/dev/sda1 has device major/minor numbers = 8,1). This may be caused by some interaction with udev, though.
-I have also seen this on Linux 6.8.
-
-Additionally, on an unpatched 6.1.97-rc1 (which was handy for testing), I got a deadlock
-when removing a bitmap from such an array while it was loaded with fsstress.
-
-I'll file independent reports, but wanted to give a head's up.
-
-Greetings,
-
-Mateusz
-
+Kind regards,
+Jeff LaBundy
