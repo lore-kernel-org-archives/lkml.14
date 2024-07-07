@@ -1,55 +1,75 @@
-Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA045AD24
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 06:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B46B4A1D;
+	Sun,  7 Jul 2024 06:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720333432; cv=none; b=kvsi6mu2SVXE7K0lPvDZuctBdUQzqw5QL1I4X/yH4c5Sjz0A6b9kUQdsY5R0HL3CfoEjnjLUWUqIsskLBc3CAFa3HB08kASfyZkIYYihjbF2OPDdrcOLUTP+cMudvsQsM6nGIo7440Ht4qiDxC1CkgUZe4NFj/vJaNicXfieQ4A=
+	t=1720333710; cv=none; b=d8ZA8MzWmfV5Ic+igPtY0vchjyKefyQG/L3Lnuma+bLjaU1yiIU03o26YUJsG5i4ZuoOVQLQxbylPNlE1V3bMHcGL800QhtnjeuZc3VOYGduztE6oO2DglZwC29p2+7Iby6ytLvfDM3AFEvsni6ferI+guNQ8airdwhoK2+9XYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720333432; c=relaxed/simple;
-	bh=Kr8q7jgtvxXVl4D8u942YnL8udJewM780MCOxyFlPCI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FQsUWAOZxhL5bU0deLNsktXMHbx0WxRoV1d4llinQ3zPu24DaO/L8GSlgD19hLzVAOn5Ov+qwgQp/CFE+Ca+40gt8iYvpmfDwM7OTKfQNnfB93Yariasr5JLb+OrqE+9iylt7ifEpU9hVVjYord8mT8r86K4kt5WTIByhwN2rqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UG1BaYS5; arc=none smtp.client-ip=80.12.242.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1720333710; c=relaxed/simple;
+	bh=GADGVIQ+z375aVHvcKgsktFjykd9IRuivqf+FIBeZBk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lHsKCmw6n9psX6olSHKT7x/c93N28xIzF07yEH2biiFa7SLlBVypFF9CSrvvlipZmKYr0yUIT6VF9HAiIskD9Ge8cjaOjcafrttWPsWcUeZVpTHI9B0uQsooGYZgfepBuse3eIw/riqrKCCsYTpwkGMBXRJoSZVh7bEQm89bNR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hwk0XcZD; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UG1BaYS5"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id QKkEsyOxChEtDQKkWs8JLE; Sun, 07 Jul 2024 07:47:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1720331269;
-	bh=Ghi6/9KK5dnA4d7xrwkCyOhDZvJBSxCQgYi3tZ7zCuA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=UG1BaYS5p50YBPSwi/Swqw/Ei+LajcK5WrI3tsOSriwLjEBS4TtTB64qkeuRQBvZq
-	 pqg4k0guhhYIzkmJIY7VzCHzOIEePsz5qPbDzkI0b16m97fmLj1bl7aJNlAXQGmvil
-	 BMwQ63yIMqJ9ogHWOuan2tiWMhtDNBLu/hycRjVlz7vrhDsF3cYA34ROnc4ycw6YcK
-	 TfgO3c9uVxNoXtvCOZnv8DuTsTjbdTivBTLQMNItDjjeBNB5Csa4IIMt2CclcgX6nt
-	 aIgrdKvDO690XhgaYAN0pZgFZzVcaR+8kYKzyHVHuVfVZGEN/UF/muwhDHkh+tyzK2
-	 IERxLON+14o9A==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 07 Jul 2024 07:47:49 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	fchiby@baylibre.com,
-	fparent@baylibre.com,
-	s.hauer@pengutronix.de
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v2 1/3] soc: mediatek: pwrap: Constify struct pmic_wrapper_type
-Date: Sun,  7 Jul 2024 07:47:20 +0200
-Message-ID: <5b4b60c5dfd6d8fe893b05cfc96c0e2d67705463.1720331018.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwk0XcZD"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fa2ea1c443so21479035ad.0;
+        Sat, 06 Jul 2024 23:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720333708; x=1720938508; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l5tNj/A1m7ym+nbplCHex5l79VZ8cqmFsV8y1luHk2U=;
+        b=hwk0XcZD2BNjpBTkOAQCa8aXGEceRCE8WwTt1rcnf2+p9ISLb9hbwInDfJDUZc03An
+         DsPHBwTZHIELB545SZ+478T+8jxNqvLL+yHVgWlRo7WmnbLx4gxf92EMnkIF1xuVlhYC
+         Ks1z8RtG/kz17pPkpAGo4uGO5k5C+OlcDIeBHMxL1MwuN2bsusXCdOR6GKMz+CEKkrAa
+         /5o1ay+8V7nmntl9Kg3A/Fmhj6Jin5RdMb6tLIMGXFhrMLhdUxboSqoNuwWzRzUDasFY
+         JuT+AMJIp+dk15CR1bw/ZLDfgPKmkYjH0gsmIUcmnDq6KSl7J3y8M1YcWDtzGXw/bWch
+         hDVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720333708; x=1720938508;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l5tNj/A1m7ym+nbplCHex5l79VZ8cqmFsV8y1luHk2U=;
+        b=ult5ACXDYVk0ucGs4/roWsjO3WGO5osKtk4mxkDisAe7cHkqDUF5rsLPm7JWj9sVE3
+         /LVS9p50VvmUp5Z0E9ByE11voaW7JsUQC6RsQuJfyDhwMfx+MI8ZbIhLHP2062YATpPo
+         5cCJ1s5f/KMJdeagSydefrOzHl+Z6e/VlR4wzwFOv0odM2C/DLrm/1eSUzID23COK3Y3
+         A55zw/RbKccp+3gRaZZofvPqhVCeqCCGpiPt+yhlN7V1rVcsLj++Bs3w/Ml7j8YXeEni
+         nPIga2EPw+Rl8ZXm00LJnxKbjrlJlUpxPyybJg1h3kGDAmaSsYEtiUwekK7M6zbeCckP
+         ijgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVI7MDcl9MAzXIhYsOvJzSF7qAYshEkkm1mYoLeEGcvwqMxqWFC146TH/fMoOnQ3T00spcgJKlfDnZ5KW5BZwzveYaOC3WH8KivVEg8THUeYEkZZFd/h2g1R4GLlDW0Ib2s0fkkcHVa/yHwg8wpGfJQGFg/dxT53aoJ2pwwB/kUViL+egng
+X-Gm-Message-State: AOJu0YzqO2xEem1RzaaI/FqwNFg4AZG64echEKKeAu2vzzsmlEBceXbJ
+	Ubo2VEtEyhFYDVcjv3W34VTxBzFK6FCVbJ/PQN3xW9XcTQxiU/DH
+X-Google-Smtp-Source: AGHT+IHKfl1KS8Wj4Ovno8Mf6wy204G8pDN8gTXB3LmtLLIxQphYuCcaRx6DqgeB99rn+/r//tkdLg==
+X-Received: by 2002:a17:902:ce8d:b0:1fb:82f5:6648 with SMTP id d9443c01a7336-1fb82f56afdmr10347935ad.36.1720333708260;
+        Sat, 06 Jul 2024 23:28:28 -0700 (PDT)
+Received: from fedora.one.one.one.one ([2405:201:6013:c9a2:59df:d296:bffe:732c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb1cb298cesm72739165ad.252.2024.07.06.23.28.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jul 2024 23:28:27 -0700 (PDT)
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+To: 
+Cc: Animesh Agarwal <animeshagarwal28@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	patches@opensource.cirrus.com,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: dt-bindings: cirrus,cs4270: Convert to dtschema
+Date: Sun,  7 Jul 2024 11:56:58 +0530
+Message-ID: <20240707062702.174390-1-animeshagarwal28@gmail.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1720331018.git.christophe.jaillet@wanadoo.fr>
-References: <cover.1720331018.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,66 +78,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-'struct pmic_wrapper_type' is not modified in this driver.
+Convert the Cirrus Logic CS4270 audio CODEC bindings to DT schema. Add
+missing va-supply, vd-supply and vlc-supply properties, because they
+are already being used in the DTS and the driver for this device.
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
-
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  45336	   8724	     16	  54076	   d33c	drivers/soc/mediatek/mtk-pmic-wrap.o
-
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  45528	   8532	     16	  54076	   d33c	drivers/soc/mediatek/mtk-pmic-wrap.o
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
 ---
-Compile tested-only
+ .../bindings/sound/cirrus,cs4270.yaml         | 53 +++++++++++++++++++
+ .../devicetree/bindings/sound/cs4270.txt      | 21 --------
+ 2 files changed, 53 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs4270.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/cs4270.txt
 
-Changes in v2:
-   - Add R-b
-
-v1: https://lore.kernel.org/all/ee3160978ac6564663d044815f24cf79e2e0744e.1719652155.git.christophe.jaillet@wanadoo.fr/
----
- drivers/soc/mediatek/mtk-pmic-wrap.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index efd9cae212dc..0da0cdec5050 100644
---- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-+++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -2397,7 +2397,7 @@ static const struct pmic_wrapper_type pwrap_mt8183 = {
- 	.init_soc_specific = pwrap_mt8183_init_soc_specific,
- };
- 
--static struct pmic_wrapper_type pwrap_mt8195 = {
-+static const struct pmic_wrapper_type pwrap_mt8195 = {
- 	.regs = mt8195_regs,
- 	.type = PWRAP_MT8195,
- 	.arb_en_all = 0x777f, /* NEED CONFIRM */
-@@ -2423,7 +2423,7 @@ static const struct pmic_wrapper_type pwrap_mt8365 = {
- 	.init_soc_specific = NULL,
- };
- 
--static struct pmic_wrapper_type pwrap_mt8516 = {
-+static const struct pmic_wrapper_type pwrap_mt8516 = {
- 	.regs = mt8516_regs,
- 	.type = PWRAP_MT8516,
- 	.arb_en_all = 0xff,
-@@ -2435,7 +2435,7 @@ static struct pmic_wrapper_type pwrap_mt8516 = {
- 	.init_soc_specific = NULL,
- };
- 
--static struct pmic_wrapper_type pwrap_mt8186 = {
-+static const struct pmic_wrapper_type pwrap_mt8186 = {
- 	.regs = mt8186_regs,
- 	.type = PWRAP_MT8186,
- 	.arb_en_all = 0xfb27f,
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,cs4270.yaml b/Documentation/devicetree/bindings/sound/cirrus,cs4270.yaml
+new file mode 100644
+index 000000000000..824d799ee5ff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cirrus,cs4270.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/cirrus,cs4270.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cirrus Logic CS4270 audio CODEC
++
++maintainers:
++  - patches@opensource.cirrus.com
++
++description:
++  The CS4270 is a stereo audio codec. The driver for this device currently only
++  supports I2C.
++
++properties:
++  compatible:
++    const: cirrus,cs4270
++
++  reg:
++    maxItems: 1
++
++  reset-gpios:
++    description:
++      This pin will be deasserted before communication to the codec starts.
++    maxItems: 1
++
++  va-supply:
++    description: Voltage regulator phandle for the VA supply.
++
++  vd-supply:
++    description: Voltage regulator phandle for the VD supply.
++
++  vlc-supply:
++    description: Voltage regulator phandle for the VLC supply.
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      codec: cs4270@48 {
++          compatible = "cirrus,cs4270";
++          reg = <0x48>;
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/sound/cs4270.txt b/Documentation/devicetree/bindings/sound/cs4270.txt
+deleted file mode 100644
+index c33770ec4c3c..000000000000
+--- a/Documentation/devicetree/bindings/sound/cs4270.txt
++++ /dev/null
+@@ -1,21 +0,0 @@
+-CS4270 audio CODEC
+-
+-The driver for this device currently only supports I2C.
+-
+-Required properties:
+-
+-  - compatible : "cirrus,cs4270"
+-
+-  - reg : the I2C address of the device for I2C
+-
+-Optional properties:
+-
+-  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
+-		  deasserted before communication to the codec starts.
+-
+-Example:
+-
+-codec: cs4270@48 {
+-	compatible = "cirrus,cs4270";
+-	reg = <0x48>;
+-};
 -- 
 2.45.2
 
