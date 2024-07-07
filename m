@@ -1,123 +1,104 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B56A182C9
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 08:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F637F9F5;
+	Sun,  7 Jul 2024 08:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720340944; cv=none; b=El/h4vBZXtbFIIkcEcbVW8L0m48+XroIYBu5P9d0sDoDB/mHsInJJq3+eybDUQ2Tf7+qxeiGLNjepp4Wog8dNyv75ax+qtstrPytq0//U7MF6ZSF8s8cUZ7tqz97XgYPZ5JhJ8+yhJ/zAXy9rZezNUrg5nhgYhuQpu7klCfAuEI=
+	t=1720341012; cv=none; b=RbktyoxlHpwj3sTmcSbo6z+qb2hwlwZjtTOx2oOboIA+U+MvFEoIJmgms9Z2b/EDO01DP//Dqdvk/dstk6u1W0Al81SoiLUrsbFVfjel3DAPEbv8jh+1D5JngJq2w2PixKb/HXVqfjvg8NO/d3kFpjZRtyvjCjBayud0h/nrV+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720340944; c=relaxed/simple;
-	bh=OzHvO6rVAWLMwGOBglvI6ki+1drfBQjh5lYtrpaYyX0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VN7J0bR8H77xZA9KDwePd0uuqIihotS7yHAigzGPH4I0roMBQXrrtzSYRzMHtpVWkJVtAXD/kqkUbqbQYqYZuCo2gtJcyfnkWDe7ghLseZcuhIv+nH0e0qDXZydiDEqPMr9rVCMeCFvfmHy9eIzNmZwLdm+MWooDYXN2fBt2nw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=arzLq/Nt; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1720341012; c=relaxed/simple;
+	bh=Vh8TFzc59yfBw7szW67QjrvrQN/XSyaf8Bs5aoIYs2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sFEEBP9Wnm512F8xjd7Apot1OXqVF6y1iiOI3LIFBl+Q8B7Z8DETqWBznM4ThJvjks/XRFuv+6QXuOTHDwtxZOkHOfrJBe4L4gmc9t7MVcjbcuavrglHdgV2/Cq4BNywKgBiF2mdBrkZy6/5vG6k+ffLoK5B1xVYf+9IeIkW7sE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+gU56lq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="arzLq/Nt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=nc77Nyudax4dUYLrDvKpXrdOETKQVPpzHynxuO9OHTM=; b=arzLq/
-	Nt8S9/n3TfoP5EIKzzC3wBgZKnGNfmkbosqRFGu58ZslWTP7n9F/iYadhoC4wTK2
-	v9Ctt+/9uQCoc8+hzooVNyvf31AXpmTlG2R+z+kcJfS72UF47gYm9GqJ96jHteHu
-	pxa0m75AQjd+CwGwIcAAfKBqr6wp4wHFDvEXGDXS2WolV0lDHBlG81tG/KTmPNr5
-	R78cfkhPXGRPNYlBclBtfM3mILrMdcNVd631MlO94Avk55GuIszRy9ezFeqMsZmH
-	ABht3fXjFuRqrJPswLcFxf1rwl55CnkZQ3J0gSdtBb7FOnrTn01oIXDi/oi1r3J4
-	2f4iNuDhj7qYTpzw==
-Received: (qmail 4044189 invoked from network); 7 Jul 2024 10:28:57 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 7 Jul 2024 10:28:57 +0200
-X-UD-Smtp-Session: l3s3148p1@okB2FqQcRpRQT+F6
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	linux-i2c@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+gU56lq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B09C3277B;
+	Sun,  7 Jul 2024 08:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720341012;
+	bh=Vh8TFzc59yfBw7szW67QjrvrQN/XSyaf8Bs5aoIYs2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y+gU56lqIrDYzeCZ8vUuYcuUoVh2dv0XV8/jrHUtfgjdfeKW5Yb85EgJ4PTTdTOhg
+	 5e4R1Hry+5EkiNW7+JQ/CymfY8aFUe9EnGFOKzRwz1ChP7u2k6nSyrkQGhjst+0fYP
+	 tyoFGrpzp9h+i51ZeP5t15CN++wdlWzrpOH1PDSBWrIcFzh1saLJ6v0ztl4H4h6rcw
+	 Yn8dJAoFf7YqJKKRjdOrsHtuls50g5wpGsTmgsvD3601DW/jhX7Q40pgcR45U2syeX
+	 KJ955JR3zOQ6Ytaz+xiGI/NT/cjIrE3e8+ZqTaV+i40Yrz9dhybuW8j1IZDcb9Oba8
+	 y9uA2sIxJ5WtA==
+Date: Sun, 7 Jul 2024 11:30:07 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Junxian Huang <huangjunxian6@hisilicon.com>
+Cc: jgg@ziepe.ca, linux-rdma@vger.kernel.org, linuxarm@huawei.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] i2c: rcar: bring hardware to known state when probing
-Date: Sun,  7 Jul 2024 10:28:46 +0200
-Message-ID: <20240707082848.5424-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240707082848.5424-1-wsa+renesas@sang-engineering.com>
-References: <20240707082848.5424-1-wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH for-rc 2/9] RDMA/hns: Fix a long wait for cmdq event
+ during reset
+Message-ID: <20240707083007.GE6695@unreal>
+References: <20240705085937.1644229-1-huangjunxian6@hisilicon.com>
+ <20240705085937.1644229-3-huangjunxian6@hisilicon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240705085937.1644229-3-huangjunxian6@hisilicon.com>
 
-When probing, the hardware is not brought into a known state. This may
-be a problem when a hypervisor restarts Linux without resetting the
-hardware, leaving an old state running. Make sure the hardware gets
-initialized, especially interrupts should be cleared and disabled.
+On Fri, Jul 05, 2024 at 04:59:30PM +0800, Junxian Huang wrote:
+> From: wenglianfa <wenglianfa@huawei.com>
+> 
+> During reset, cmdq events won't be reported, leading to a long and
+> unnecessary wait. Notify all the cmdqs to stop waiting at the beginning
+> of reset.
+> 
+> Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
+> Signed-off-by: wenglianfa <wenglianfa@huawei.com>
+> Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+> index a5d746a5cc68..ff135df1a761 100644
+> --- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+> +++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+> @@ -6977,6 +6977,21 @@ static void hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
+>  
+>  	handle->rinfo.instance_state = HNS_ROCE_STATE_NON_INIT;
+>  }
+> +
+> +static void hns_roce_v2_reset_notify_cmd(struct hns_roce_dev *hr_dev)
+> +{
+> +	struct hns_roce_cmdq *hr_cmd = &hr_dev->cmd;
+> +	int i;
+> +
+> +	if (!hr_dev->cmd_mod)
 
-Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Closes: https://lore.kernel.org/r/20240702045535.2000393-1-dirk.behme@de.bosch.com
-Fixes: 6ccbe607132b ("i2c: add Renesas R-Car I2C driver")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
+What prevents cmd_mod from being changed?
 
-Should go to for-current.
-
-Changes since v1:
-* renamed new function to *_reset_slave() instead of *_init_slave()
-  which is more appropriate
-* do not mention refactorization in commit message
-* added Fixes tag
-
- drivers/i2c/busses/i2c-rcar.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 828aa2ea0fe4..ec73463ea9b5 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -257,6 +257,14 @@ static void rcar_i2c_init(struct rcar_i2c_priv *priv)
- 	}
- }
- 
-+static void rcar_i2c_reset_slave(struct rcar_i2c_priv *priv)
-+{
-+	rcar_i2c_write(priv, ICSIER, 0);
-+	rcar_i2c_write(priv, ICSSR, 0);
-+	rcar_i2c_write(priv, ICSCR, SDBS);
-+	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
-+}
-+
- static int rcar_i2c_bus_barrier(struct rcar_i2c_priv *priv)
- {
- 	int ret;
-@@ -1033,11 +1041,8 @@ static int rcar_unreg_slave(struct i2c_client *slave)
- 
- 	/* ensure no irq is running before clearing ptr */
- 	disable_irq(priv->irq);
--	rcar_i2c_write(priv, ICSIER, 0);
--	rcar_i2c_write(priv, ICSSR, 0);
-+	rcar_i2c_reset_slave(priv);
- 	enable_irq(priv->irq);
--	rcar_i2c_write(priv, ICSCR, SDBS);
--	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
- 
- 	priv->slave = NULL;
- 
-@@ -1152,7 +1157,9 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 		goto out_pm_disable;
- 	}
- 
--	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
-+	/* Bring hardware to known state */
-+	rcar_i2c_init(priv);
-+	rcar_i2c_reset_slave(priv);
- 
- 	if (priv->devtype < I2C_RCAR_GEN3) {
- 		irqflags |= IRQF_NO_THREAD;
--- 
-2.43.0
-
+> +		return;
+> +
+> +	for (i = 0; i < hr_cmd->max_cmds; i++) {
+> +		hr_cmd->context[i].result = -EBUSY;
+> +		complete(&hr_cmd->context[i].done);
+> +	}
+> +}
+> +
+>  static int hns_roce_hw_v2_reset_notify_down(struct hnae3_handle *handle)
+>  {
+>  	struct hns_roce_dev *hr_dev;
+> @@ -6997,6 +7012,9 @@ static int hns_roce_hw_v2_reset_notify_down(struct hnae3_handle *handle)
+>  	hr_dev->dis_db = true;
+>  	hr_dev->state = HNS_ROCE_DEVICE_STATE_RST_DOWN;
+>  
+> +	/* Complete the CMDQ event in advance during the reset. */
+> +	hns_roce_v2_reset_notify_cmd(hr_dev);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.33.0
+> 
