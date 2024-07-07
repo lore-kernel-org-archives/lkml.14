@@ -1,64 +1,64 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F58210E7;
-	Sun,  7 Jul 2024 14:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAEA288DB;
+	Sun,  7 Jul 2024 14:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720363492; cv=none; b=SH18XoCiGnaGEaC6Cmopkq69l7WW8pfwPrHUK7vBnO5VNJaiJ41t8DXUjZZz9gw0cSvr5RqHJJZEnkv9zRjB5UiwaEoh5GF8HtYfqFXSE8JujT7x1Xp1N4BYNioRkQ0IhP/TCqrs15+8dIHNNs0ceInipp72ANLNaqH7WORiNgk=
+	t=1720363493; cv=none; b=HRdb7eBVDglM2IY+mbs+gb6SrxikNh9xOhndvC8d5eoReRu255sJvo6by+60qw7kz8bds5okDSCXiluFmMywbaDuSk1o2TCeXRaTQw0pOSA7X3Fr2gzD5WCBJq+y4QTW49VOpx8NolptD9cJyLwH0g3XkizfUpVXY3nVTuVxsMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720363492; c=relaxed/simple;
-	bh=F9uP4rt8fGpXfaLpsUEwoBnPn+QKtAdZX4U20gAtHpg=;
+	s=arc-20240116; t=1720363493; c=relaxed/simple;
+	bh=+8ou4jOda7rMv75YTQ7kLFOSOP6gThDj9zdygA14m1k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VoLm7rOyyFa64jNkPYlkUyU4g5jO+yZuQc7tQCFQIpWux2m7C+CY5nuu1LXi4dFEzjBZEhxV+bSYyUOEOtLchczQC/PQcoH0fRjlnOGAbdoCL9iIkJcQDIfnzaPXfz8Y0h671n2vK7a2eLW7g+ua4HKNTSAeNmIlLqQv/4RvyKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CG37uEbx; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=nr/HwH0e74niKe49S8s5menP8LLcXONIisnpuowZa731YvwZau9ay2PSUYz2zbFY+wYQYfM8iZW81cwJjwDvCzTuuciurdX2Izw1yqrb9X9D0Ar8Ddl01DML2AWx4eKRkg4mSeQEuS86vaYe2jjuthWHNLPrcekPGeA41QuqwKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=a1TPxcBs; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CG37uEbx"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 467DIYvA029756;
-	Sun, 7 Jul 2024 14:44:36 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a1TPxcBs"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 467DGblK014708;
+	Sun, 7 Jul 2024 14:44:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=kQC5VTKaMX+Uc
-	BgJ2AWgO2ehiJXqCbQEXoK+CylhJLA=; b=CG37uEbxhIqoxOJ1+L27UuJYNDXSR
-	KJdu9xQ+/41YM3ZG0Xofe6TVB+J2tUFgFfkwMRgHvC7+iYb7UuvlFtd7VKWrewkq
-	yVCmyzX7oQg+QAgewI36ixd5ZaiSdCw/k1i+GhZAwYIzc2L8UaKUHvfZ6xiCIZMY
-	iYH7JzR4WJuodtnO81bcZYlOfE4J6Y4Bnl4XMpo0yva54rCT5EQ+P1bDRwksFFWN
-	IfQOMkc66SBjC1czKdGKgtTmdUQCQz9yrqMWmc5QLwF2eUO2jO8k+bL4+UgGta2J
-	o14xkFmqNPx79pZ8LNuMVnB369srabHr8FgW+719fRAbQToG0hAJz6PTw==
+	:mime-version:content-transfer-encoding; s=pp1; bh=gaEeJvcdxtPqR
+	OzBKZFbR4JjVC2CIIbd8gbZSMkJASY=; b=a1TPxcBs+uQ145qIU8HbGVHizAWhC
+	PFUwIf6dS6+SFOu4twHKnmhQ77LK2ZfKOQ7Nca0aiKex/YH87O03+OlTuvXJPCDX
+	jI9zjGvc1MSld/GMtWEfq4OMA2z+e58Zn32BOnTe+FRaLsBMrulCkoFz8zF5D+Mu
+	QR2eO8+VJQQjI0Mo5PqUdBQz8msGWhi3oTwogntS9WmSUoxvPDRKaQeBDD//qH37
+	1EBRLrr4YIk8pOo6D4vXCkv4TKF2l03FxOYRUkOUSTh2emqymHDkXsU+VN8pEVN/
+	jIQFTOJiFjw+YR7ENEYjr0zJi/lllHzDlLJXOC3HYHh2pXH2ZqLWmPWHQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 407u23r6f9-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 407ruugcdh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 07 Jul 2024 14:44:36 +0000 (GMT)
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 467EiZxi017407;
-	Sun, 7 Jul 2024 14:44:35 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 407u23r6f6-1
+	Sun, 07 Jul 2024 14:44:41 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 467EifmY003502;
+	Sun, 7 Jul 2024 14:44:41 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 407ruugcde-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 07 Jul 2024 14:44:35 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 467B7XG8024583;
-	Sun, 7 Jul 2024 14:44:34 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 407hrmad74-1
+	Sun, 07 Jul 2024 14:44:40 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 467E1Cqv024664;
+	Sun, 7 Jul 2024 14:44:40 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 407g8ttr7m-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 07 Jul 2024 14:44:34 +0000
+	Sun, 07 Jul 2024 14:44:40 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 467EiShD42926370
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 467EiY9835848458
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 7 Jul 2024 14:44:30 GMT
+	Sun, 7 Jul 2024 14:44:36 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 59DF220049;
-	Sun,  7 Jul 2024 14:44:28 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id CF50E20049;
+	Sun,  7 Jul 2024 14:44:34 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6ECCE20040;
-	Sun,  7 Jul 2024 14:44:25 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id E84AA20040;
+	Sun,  7 Jul 2024 14:44:31 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.43.1.68])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun,  7 Jul 2024 14:44:25 +0000 (GMT)
+	Sun,  7 Jul 2024 14:44:31 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
@@ -67,9 +67,9 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
-Subject: [PATCH V6 01/18] tools/perf: Move the data structures related to register type to header file
-Date: Sun,  7 Jul 2024 20:14:02 +0530
-Message-Id: <20240707144419.92510-2-atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH V6 03/18] tools/perf: Update TYPE_STATE_MAX_REGS to include max of regs in powerpc
+Date: Sun,  7 Jul 2024 20:14:04 +0530
+Message-Id: <20240707144419.92510-4-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20240707144419.92510-1-atrajeev@linux.vnet.ibm.com>
 References: <20240707144419.92510-1-atrajeev@linux.vnet.ibm.com>
@@ -81,192 +81,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: bcRy2bif2y7HvszFu-lZ2qha5j1WHPuQ
-X-Proofpoint-ORIG-GUID: y5F-4WqTK9gqSSRL7EGc_Y7TsBYhsGxY
+X-Proofpoint-GUID: kXL_pYP3JYsmO-oZcP0ykL9Nzw-yPQvx
+X-Proofpoint-ORIG-GUID: OI2VtNJOeKlFw-unLpFhOK6wUd7rYGe0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-07_06,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- impostorscore=0 bulkscore=0 spamscore=0 phishscore=0 clxscore=1015
- adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2406140001 definitions=main-2407070117
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ clxscore=1015 bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407070117
 
-Data type profiling uses instruction tracking by checking each
-instruction and updating the register type state in some data
-structures. This is useful to find the data type in cases when the
-register state gets transferred from one reg to another. Example, in
-x86, "mov" instruction and in powerpc, "mr" instruction. Currently these
-structures are defined in annotate-data.c and instruction tracking is
-implemented only for x86. Move these data structures to
-"annotate-data.h" header file so that other arch implementations can use
-it in arch specific files as well.
+TYPE_STATE_MAX_REGS is arch-dependent. Currently this is defined
+to be 16. While checking if reg is valid using has_reg_type,
+max value is checked using TYPE_STATE_MAX_REGS value. Define
+this conditionally for powerpc.
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Signed-off-by: Athira Rajeev<atrajeev@linux.vnet.ibm.com>
 ---
- tools/perf/util/annotate-data.c | 53 +------------------------------
- tools/perf/util/annotate-data.h | 56 +++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+), 52 deletions(-)
+ tools/perf/util/annotate-data.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 965da6c0b542..a4c7f98a75e3 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -31,15 +31,6 @@
- 
- static void delete_var_types(struct die_var_type *var_types);
- 
--enum type_state_kind {
--	TSR_KIND_INVALID = 0,
--	TSR_KIND_TYPE,
--	TSR_KIND_PERCPU_BASE,
--	TSR_KIND_CONST,
--	TSR_KIND_POINTER,
--	TSR_KIND_CANARY,
--};
--
- #define pr_debug_dtp(fmt, ...)					\
- do {								\
- 	if (debug_type_profile)					\
-@@ -140,49 +131,7 @@ static void pr_debug_location(Dwarf_Die *die, u64 pc, int reg)
- 	}
- }
- 
--/*
-- * Type information in a register, valid when @ok is true.
-- * The @caller_saved registers are invalidated after a function call.
-- */
--struct type_state_reg {
--	Dwarf_Die type;
--	u32 imm_value;
--	bool ok;
--	bool caller_saved;
--	u8 kind;
--};
--
--/* Type information in a stack location, dynamically allocated */
--struct type_state_stack {
--	struct list_head list;
--	Dwarf_Die type;
--	int offset;
--	int size;
--	bool compound;
--	u8 kind;
--};
--
--/* FIXME: This should be arch-dependent */
--#define TYPE_STATE_MAX_REGS  16
--
--/*
-- * State table to maintain type info in each register and stack location.
-- * It'll be updated when new variable is allocated or type info is moved
-- * to a new location (register or stack).  As it'd be used with the
-- * shortest path of basic blocks, it only maintains a single table.
-- */
--struct type_state {
--	/* state of general purpose registers */
--	struct type_state_reg regs[TYPE_STATE_MAX_REGS];
--	/* state of stack location */
--	struct list_head stack_vars;
--	/* return value register */
--	int ret_reg;
--	/* stack pointer register */
--	int stack_reg;
--};
--
--static bool has_reg_type(struct type_state *state, int reg)
-+bool has_reg_type(struct type_state *state, int reg)
- {
- 	return (unsigned)reg < ARRAY_SIZE(state->regs);
- }
 diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 0a57d9f5ee78..cdb5cd8960bb 100644
+index 6fe8ee8b8410..992b7ce4bd11 100644
 --- a/tools/perf/util/annotate-data.h
 +++ b/tools/perf/util/annotate-data.h
-@@ -6,6 +6,11 @@
- #include <linux/compiler.h>
- #include <linux/rbtree.h>
- #include <linux/types.h>
-+#include "annotate.h"
-+
-+#ifdef HAVE_DWARF_SUPPORT
-+#include "debuginfo.h"
+@@ -189,7 +189,11 @@ struct type_state_stack {
+ };
+ 
+ /* FIXME: This should be arch-dependent */
++#ifdef __powerpc__
++#define TYPE_STATE_MAX_REGS  32
++#else
+ #define TYPE_STATE_MAX_REGS  16
 +#endif
  
- struct annotated_op_loc;
- struct debuginfo;
-@@ -15,6 +20,15 @@ struct hist_entry;
- struct map_symbol;
- struct thread;
- 
-+enum type_state_kind {
-+	TSR_KIND_INVALID = 0,
-+	TSR_KIND_TYPE,
-+	TSR_KIND_PERCPU_BASE,
-+	TSR_KIND_CONST,
-+	TSR_KIND_POINTER,
-+	TSR_KIND_CANARY,
-+};
-+
- /**
-  * struct annotated_member - Type of member field
-  * @node: List entry in the parent list
-@@ -143,6 +157,47 @@ struct annotated_data_stat {
- extern struct annotated_data_stat ann_data_stat;
- 
- #ifdef HAVE_DWARF_SUPPORT
-+/*
-+ * Type information in a register, valid when @ok is true.
-+ * The @caller_saved registers are invalidated after a function call.
-+ */
-+struct type_state_reg {
-+	Dwarf_Die type;
-+	u32 imm_value;
-+	bool ok;
-+	bool caller_saved;
-+	u8 kind;
-+};
-+
-+/* Type information in a stack location, dynamically allocated */
-+struct type_state_stack {
-+	struct list_head list;
-+	Dwarf_Die type;
-+	int offset;
-+	int size;
-+	bool compound;
-+	u8 kind;
-+};
-+
-+/* FIXME: This should be arch-dependent */
-+#define TYPE_STATE_MAX_REGS  16
-+
-+/*
-+ * State table to maintain type info in each register and stack location.
-+ * It'll be updated when new variable is allocated or type info is moved
-+ * to a new location (register or stack).  As it'd be used with the
-+ * shortest path of basic blocks, it only maintains a single table.
-+ */
-+struct type_state {
-+	/* state of general purpose registers */
-+	struct type_state_reg regs[TYPE_STATE_MAX_REGS];
-+	/* state of stack location */
-+	struct list_head stack_vars;
-+	/* return value register */
-+	int ret_reg;
-+	/* stack pointer register */
-+	int stack_reg;
-+};
- 
- /* Returns data type at the location (ip, reg, offset) */
- struct annotated_data_type *find_data_type(struct data_loc_info *dloc);
-@@ -160,6 +215,7 @@ void global_var_type__tree_delete(struct rb_root *root);
- 
- int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
- 
-+bool has_reg_type(struct type_state *state, int reg);
- #else /* HAVE_DWARF_SUPPORT */
- 
- static inline struct annotated_data_type *
+ /*
+  * State table to maintain type info in each register and stack location.
 -- 
 2.43.0
 
