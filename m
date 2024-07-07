@@ -1,42 +1,42 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3539F17C66;
-	Sun,  7 Jul 2024 22:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDFB18059;
+	Sun,  7 Jul 2024 22:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720391862; cv=none; b=ebws/jlNCiBsof9lvm5dfF2fRGUlmcCpVtfiV7pKrNmqq+OfvEW7eqGM9W5MHl3BRjPPQOC1tbsLavnNVBoefZX0OkvELWtBm6thvW2toETG331/WMvpfAlVvu5gqt+US3qZ2mWULD4MeRUziyyj4TGhGHTuUnIqW+qhuy1wpsA=
+	t=1720391862; cv=none; b=pQRvkO0e2pn/kTxklhJsvrXObAN94Y8Lqq0OANUgOHo1g/ckKmcVGO60kCH2tYGjOb9OlVobskoRg+mFabBm5k2kbyIavREplZeszxPgFXhmsDvvD+f5GyL+AaAjBJJLFYslZJ2en38+O7uuKGy+25bC6BpMOj2U+Fhl2nqpzJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720391862; c=relaxed/simple;
-	bh=gMCt5Iq5T+zQRh8ES75BAko3Tzsm5Fh8qCw+HGMCgfY=;
+	bh=ScRaDhIpV127IN2u4IRMxbcJ62UMUy4jPlUrmCzVMKY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SLlQmRaN8Y4ADTm1uZqeQbeKnW8/jWC8YzOzbUACHVKM7rLnV+3AfO0vCAyUdCDAckWEgeAL+SzG2KqRii4kFapLEydkxPLwi1Md3X+gxR23UTtTpIKkqJeY+qqBCkxeTaw86enfXYeZyq9L0nUg9MT5cUkeFSQBiJ3jygFE/nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=VCOfdjfX; arc=none smtp.client-ip=212.227.15.15
+	 In-Reply-To:To:Cc; b=PhxrcX8yq9UKsLbIOiYMH1K6Nu3PQWBkBd2SmrIq6OecKC8sQzxtinE4vw1xfwuaACtnSIulAnNRL1R1dpGrvHMAKjcIwt2wNx8zLZ7nuaSixoT8zHtLisQuwwKWhIPLuSUumzhTbzdzn1ynybCTm/polvp7L24P9Y/VMJ1xhPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=hOKbzxsM; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="VCOfdjfX"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="hOKbzxsM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1720391850; x=1720996650; i=j.neuschaefer@gmx.net;
-	bh=L/WjbQC0Uxb9SVhmo+C44+NRCf/fM7QYCwbjyktZyvc=;
+	s=s31663417; t=1720391853; x=1720996653; i=j.neuschaefer@gmx.net;
+	bh=6OXJA6Op8AyXGG0UDDxLGH3tvgeicFvPJqUw6T5kUbc=;
 	h=X-UI-Sender-Class:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 cc:content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=VCOfdjfXrXGH7FtPZDHvukuK0439dUvXDsGIXzaavJS7Sk2gSMVpDFICWGf5/DAd
-	 r+9F7zVZT8HlRkukWzvcX71OJlfutxpVUpda233gIX5aksIbA4bMv8w6dVcoJLtCW
-	 arzp097FdRFGCJNu3eVVxNJ+p6EI1eKnrPEOIHjtvzzBiXZTFS+BRWC4Rfthy5QiT
-	 vWtqJAaLaz97TI8OKKAc7UzlIytL4GYRZ+VbHtVVdmv5qaVo0WH7uWLVH572Syn0s
-	 DJ/tdjTatQW6oXDA2Nqx1/rejSRHmchn0HhpNmM3yaYUShf3NikT/m2OKxAP2mqBY
-	 ElUgQwrYmopJjaHkQQ==
+	b=hOKbzxsMT2Z1GyX9OwxlQ+9XPM6+mGdULGj8hltvpSZIL5yXLH2zBvg4GwhmOf6o
+	 XnIrrp8nqWM2ilWx4CxTz7DrbODRIe+cbgQDRkENhwvqXVOg9nmTgSxebylqcEcHs
+	 wcxMWh6KEPe5s3kX2ftcEGBL6CdEIGD46o0GgYjY6/J9XaNBoKQlT6sZFwnyPYuYQ
+	 49AxXuqG+k8rAvr1WRFgxulTOyuWsibZ5WQRUuYQEo6lhF+/KesM7dAisEXw1XgZ/
+	 JUHGPn5P/mIlG4NNlv6syrW4xW2kaznF29zz/tiunP/i+kyNleUJ0wzDkOOqTOJ8l
+	 2UQlsNmcrvc1VoRrTw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from probook ([89.0.46.161]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWRRZ-1ssRSD0dvH-00HyUx; Mon, 08
- Jul 2024 00:37:30 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MJmGZ-1sfm0i1AwT-00Vjvf; Mon, 08
+ Jul 2024 00:37:33 +0200
 From: =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Date: Mon, 08 Jul 2024 00:37:14 +0200
-Subject: [PATCH RESEND v12 1/6] dt-bindings: clock: Add Nuvoton WPCM450
- clock/reset controller
+Date: Mon, 08 Jul 2024 00:37:19 +0200
+Subject: [PATCH RESEND v12 6/6] ARM: dts: wpcm450: Switch clocks to clock
+ controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <20240708-wpcm-clk-v12-1-1afac539c37d@gmx.net>
+Message-Id: <20240708-wpcm-clk-v12-6-1afac539c37d@gmx.net>
 References: <20240708-wpcm-clk-v12-0-1afac539c37d@gmx.net>
 In-Reply-To: <20240708-wpcm-clk-v12-0-1afac539c37d@gmx.net>
 To: openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
@@ -57,221 +57,149 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
  Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, 
  =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720391846; l=5540;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720391846; l=3443;
  i=j.neuschaefer@gmx.net; s=20240329; h=from:subject:message-id;
- bh=QPzdQUVDkB9QA3Xv6+gOkAHNqMRKKV6HeNLuZ6QtTHg=;
- b=h/J92RiiRFFIsVp1MtZDBR0dZiGxW1z7+Cv3z9scXqOenpPVDmTsunXxwCY+mj16nIlmzZbye
- lAk412XwPtgDY3VyalfZxNOxnVUzaCaqoh1NzSWB4501hztB50rShcq
+ bh=kTIwYF9CzV7EiefFtPbjPQBui0vN/ls9WsnRdurtK5Q=;
+ b=Jvhw7ZM3sg31yGmqSFi0QKOVXKPvvAROu66FWKbLZAcKxN5/88ivEgrnqzKDsxkrK2dQjq4LR
+ lEnoN2gxMbPD0tT/H9ln+/BJvKMw6b5dkadiK2UXV3lp778putQyqcj
 X-Developer-Key: i=j.neuschaefer@gmx.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Provags-ID: V03:K1:Q0HJd+wUc0/gOo83ZttBPpmnQQ8yz+fJlfgR4GXh/Cp2eFQC/rV
- kUzy4Pek9sCEuXwo5Jh9BZJxfjdqhkvf+jWwImFIzlX3LBouHlLYZkkpV20FyVEhMYXG0D0
- FwDIcPtn5a6YjvJITkc0NYU40KKKe9C69/6sFsfTixu+YmE87KRrYKh9PmtMT+G8BRwcspV
- Hz7zvu4tfMIznUyJl//ig==
+X-Provags-ID: V03:K1:Cfn7sVF9yJmxe/Rug/YHADGQRtYxP4GTFoYDHCfBOqRyejKpixx
+ zjWkeIq3n1/umG4CO43FAvpr6GIJze1xiQGuHbMGYU5zWIJLwjXV/asPng+xmkb1EPegY5c
+ 4aQjlXfAIPLEVRBx8r+F0XvrqLII4bVOhVsiONVGlouM+qIaDcbs/TR5616GQRMafq/AW4Q
+ 22Nng/9LzJ/HWAzviFkmw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:B9ougdFV4w4=;ZYgjYENRwVY4Dum+B6lyN9JrBJd
- 2Z2WE0j+/W3mhLJIGcgU8yAgNdJkhWXfMVdvQSqjvMlZW43xqAOEpzULxuGTMIPp4NUgMTYsc
- cTnYsjUmkkPDpoS3n+rx8LqOIxywLmnLaUZ7uE86mTyte+9vuhft5UsyiB6j+oCIjtnDf0mZ+
- 8UACCMPL1+Azrx8OTcSvt+s0bn4Dvi3Zh+P5ATp7TtoO8FxuLOXxECn5iSySTQxOZyFEnI0Vz
- Mud/U9h1juBr6c5Qz1sS9J6vhDjt84DltZLeZ2ePaUXJPW02VomXdQNlZ1zkbohebNqxLECp7
- Q3hjuO40HKRopKSkruXmK3svDMEbICctipenk3sx5bfo6e05EN/lH7Cno1eo/ScyoIaxxmbR6
- RD7HDXGdhV9/Yr8sUA6xOVo5lYWnHROMIHZaNApSgbqN0Y9ZN0aoV2PjzqAuVpuPuX90lcBNK
- bE8wB5iE3jjiH9Nd2m5vRDw7BonRZyZirrzxG9Ha5rq1BFZHkqSBGjaTBHSpuIYr2TtK6vZR5
- t6AnQaCufTxpLL2MU9PYCkaRwh1YwDo340tiFzSgWeGDIBHRpTZdfpRUyA2Tw3rTK8nGkDi3U
- dftwgoUaF2i2cjuVOamMn9hBsDqWR3tYXZUhvq51KmRwv4oiQYrOGe7hEy2oZrC5s803Nz+aa
- tWL5afss04wjzmDG5hGl7dN1bmRIz4+eKpO2/O5K3M49iMffYkvvFiE3xDVIXtLheyCNErTMb
- LIDZrgNZ1r/B4ehSNmCAYWI6d0e9cCaB+l9cptt/h0xTRoRhaewJpPUEAEBQqv4Vi0X+FXi2V
- UNWSCHWm2pTRKyQS9oKU2hI9TJ7VNmWR5BxpekMskZ1xw=
+UI-OutboundReport: notjunk:1;M01:P0:Z5q+TLdM1Og=;3GqVIYz92KmRvpvMABWudVwtk9q
+ Trycz/qINNm5TyC0kML8Zf3GTSbjjzAlAexwK4fAo3ZBqxsjx1xXXiVesfmw75RBJQhCEIqM9
+ 7CgWq7RL8GmNSJLVMnxsICjYOV7kP4tq2VGKFVjlV6l9v2d3qLRG+rNRzwnYhs3VlNkt+jFgD
+ 7/iHo3vwzj5Rf9ilLsIrCnVW1efIT+ZTTd0lk0DJl3ZfLEH2HeyQ9SNnerVYpQOv7mEP9tzVo
+ ZCowKaNKlDBN7XMmhiKvuPDcOEyNP2GFGv8q72YNLZAZSVVEPohhs7XYM5UqzGdVo/vaRySsm
+ 90u235xz97YfCJvbFVRg3WthJnlmfm531/4RrtyzZ4jsA21bt4Nx2lZNWvrLn2d86GEag++v0
+ IcSPb3ipgPoO2w5n5sTaPsHAZFUHu8QAMKClY0Ad5Dv7bWNaI56AHFyAzd9OD0sWti3rlaVgi
+ 9FdCtbaDhzXudzLpVdZFIPeMRr9bG9f8eAdKaT8z7hmkCN80Q6sMPjUXhW/g+Ya/cpFY2vkPL
+ 4XkvU65kWJTEiRv8WrtVcAJYt59hvkQ8PZluRJHt5CBqriWBgJL2gCrpLLxwbSuS9NrVY3Ql7
+ XmFLYjfIBtPyP6KAvlirDQOH7nvZZzZ/ZI7CJv13SiLSq3tUGELno5IusnjUD2N1/hywY7rx3
+ aUBkF5hoWWckj+UX1y8WIT6fWldMVCAPZMY635NJIEXbIHk+5ToiUMHJLInkxC7dGgj16WvOo
+ VMHKDtj+aMW6/FC/f7E5/L++SbwjQY8x6xUOrgUQmaPbmDbQddAohJs5jRinyOtc/LLlekEUr
+ +H9kSoOau6s00wfyUGvPCEIjLvJWmwTcczhksqcSjXN4o=
 
-The Nuvoton WPCM450 SoC has a combined clock and reset controller.
-Add a devicetree binding for it, as well as definitions for the bit
-numbers used by it.
+This change is incompatible with older kernels because it requires the
+clock controller driver, but I think that's acceptable because WPCM450
+support is generally still in an early phase.
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 =2D--
-v10-v11:
+
+It's probably best to delay merging of this patch until after the driver
+is merged; I'm including it here for review, and in case someone wants
+to set up a shared branch between the clock and devicetree parts.
+
+v12:
+- work around timer-npcm7xx driver issue by providing timer clock separate=
+ly
+
+v11:
 - no changes
 
-v9:
-- Remove clock-output-names in example, because it's now unnecessary due
-  to driver improvements
-
-v5-v8:
-- no changes
-
-v4:
-- https://lore.kernel.org/lkml/20220610072141.347795-4-j.neuschaefer@gmx.n=
-et/
-- Add R-b tag
-
-v3:
-- Change clock-output-names and clock-names from "refclk" to "ref", sugges=
-ted
-  by Krzysztof Kozlowski
-
-v2:
-- https://lore.kernel.org/lkml/20220429172030.398011-5-j.neuschaefer@gmx.n=
-et/
-- Various improvements, suggested by Krzysztof Kozlowski
-
-v1:
-- https://lore.kernel.org/lkml/20220422183012.444674-5-j.neuschaefer@gmx.n=
-et/
+v10:
+- Reintroducing this patch as part of the clock/reset controller series
 =2D--
- .../bindings/clock/nuvoton,wpcm450-clk.yaml        | 65 +++++++++++++++++=
-++++
- include/dt-bindings/clock/nuvoton,wpcm450-clk.h    | 67 +++++++++++++++++=
-+++++
- 2 files changed, 132 insertions(+)
+ arch/arm/boot/dts/nuvoton/nuvoton-wpcm450.dtsi | 32 ++++++++++++++++-----=
+-----
+ 1 file changed, 20 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/nuvoton,wpcm450-clk.y=
-aml b/Documentation/devicetree/bindings/clock/nuvoton,wpcm450-clk.yaml
-new file mode 100644
-index 00000000000000..93521cf68a040f
-=2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/nuvoton,wpcm450-clk.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/nuvoton,wpcm450-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/nuvoton/nuvoton-wpcm450.dtsi b/arch/arm/boo=
+t/dts/nuvoton/nuvoton-wpcm450.dtsi
+index ff153858801ccf..daf4d399ecab4c 100644
+=2D-- a/arch/arm/boot/dts/nuvoton/nuvoton-wpcm450.dtsi
++++ b/arch/arm/boot/dts/nuvoton/nuvoton-wpcm450.dtsi
+@@ -2,6 +2,7 @@
+ // Copyright 2021 Jonathan Neusch=C3=A4fer
+
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/clock/nuvoton,wpcm450-clk.h>
+
+ / {
+ 	compatible =3D "nuvoton,wpcm450";
+@@ -30,13 +31,6 @@ cpu@0 {
+ 		};
+ 	};
+
+-	clk24m: clock-24mhz {
+-		/* 24 MHz dummy clock */
+-		compatible =3D "fixed-clock";
+-		clock-frequency =3D <24000000>;
+-		#clock-cells =3D <0>;
+-	};
+-
+ 	refclk: clock-ref {
+ 		/* 48 MHz reference oscillator */
+ 		compatible =3D "fixed-clock";
+@@ -44,6 +38,19 @@ refclk: clock-ref {
+ 		#clock-cells =3D <0>;
+ 	};
+
++	refclk_div2: clock-refdiv2 {
++		/*
++		 * reference oscillator divided by 2, as a workaround because
++		 * the npcm7xx-timer driver needs its clock earlier than the
++		 * clk-wpcm450 driver (as a platform driver) can provide it.
++		 */
++		compatible =3D "fixed-factor-clock";
++		clocks =3D <&refclk>;
++		#clock-cells =3D <0>;
++		clock-mult =3D <1>;
++		clock-div =3D <2>;
++	};
 +
-+title: Nuvoton WPCM450 clock controller
-+
-+maintainers:
-+  - Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-+
-+description:
-+  The clock controller of the Nuvoton WPCM450 SoC supplies clocks and res=
-ets to
-+  the rest of the chip.
-+
-+properties:
-+  compatible:
-+    const: nuvoton,wpcm450-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Reference clock oscillator (should be 48 MHz)
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/nuvoton,wpcm450-clk.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    refclk: clock-48mhz {
-+      /* 48 MHz reference oscillator */
-+      compatible =3D "fixed-clock";
-+      clock-frequency =3D <48000000>;
-+      #clock-cells =3D <0>;
-+    };
-+
-+    clk: clock-controller@b0000200 {
-+      reg =3D <0xb0000200 0x100>;
-+      compatible =3D "nuvoton,wpcm450-clk";
-+      clocks =3D <&refclk>;
-+      clock-names =3D "ref";
-+      #clock-cells =3D <1>;
-+      #reset-cells =3D <1>;
-+    };
-diff --git a/include/dt-bindings/clock/nuvoton,wpcm450-clk.h b/include/dt-=
-bindings/clock/nuvoton,wpcm450-clk.h
-new file mode 100644
-index 00000000000000..86e1c895921b71
-=2D-- /dev/null
-+++ b/include/dt-bindings/clock/nuvoton,wpcm450-clk.h
-@@ -0,0 +1,67 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+
-+#ifndef _DT_BINDINGS_CLOCK_NUVOTON_WPCM450_CLK_H
-+#define _DT_BINDINGS_CLOCK_NUVOTON_WPCM450_CLK_H
-+
-+/* Clocks based on CLKEN bits */
-+#define WPCM450_CLK_FIU            0
-+#define WPCM450_CLK_XBUS           1
-+#define WPCM450_CLK_KCS            2
-+#define WPCM450_CLK_SHM            4
-+#define WPCM450_CLK_USB1           5
-+#define WPCM450_CLK_EMC0           6
-+#define WPCM450_CLK_EMC1           7
-+#define WPCM450_CLK_USB0           8
-+#define WPCM450_CLK_PECI           9
-+#define WPCM450_CLK_AES           10
-+#define WPCM450_CLK_UART0         11
-+#define WPCM450_CLK_UART1         12
-+#define WPCM450_CLK_SMB2          13
-+#define WPCM450_CLK_SMB3          14
-+#define WPCM450_CLK_SMB4          15
-+#define WPCM450_CLK_SMB5          16
-+#define WPCM450_CLK_HUART         17
-+#define WPCM450_CLK_PWM           18
-+#define WPCM450_CLK_TIMER0        19
-+#define WPCM450_CLK_TIMER1        20
-+#define WPCM450_CLK_TIMER2        21
-+#define WPCM450_CLK_TIMER3        22
-+#define WPCM450_CLK_TIMER4        23
-+#define WPCM450_CLK_MFT0          24
-+#define WPCM450_CLK_MFT1          25
-+#define WPCM450_CLK_WDT           26
-+#define WPCM450_CLK_ADC           27
-+#define WPCM450_CLK_SDIO          28
-+#define WPCM450_CLK_SSPI          29
-+#define WPCM450_CLK_SMB0          30
-+#define WPCM450_CLK_SMB1          31
-+
-+/* Other clocks */
-+#define WPCM450_CLK_USBPHY        32
-+
-+#define WPCM450_NUM_CLKS          33
-+
-+/* Resets based on IPSRST bits */
-+#define WPCM450_RESET_FIU          0
-+#define WPCM450_RESET_EMC0         6
-+#define WPCM450_RESET_EMC1         7
-+#define WPCM450_RESET_USB0         8
-+#define WPCM450_RESET_USB1         9
-+#define WPCM450_RESET_AES_PECI    10
-+#define WPCM450_RESET_UART        11
-+#define WPCM450_RESET_MC          12
-+#define WPCM450_RESET_SMB2        13
-+#define WPCM450_RESET_SMB3        14
-+#define WPCM450_RESET_SMB4        15
-+#define WPCM450_RESET_SMB5        16
-+#define WPCM450_RESET_PWM         18
-+#define WPCM450_RESET_TIMER       19
-+#define WPCM450_RESET_ADC         27
-+#define WPCM450_RESET_SDIO        28
-+#define WPCM450_RESET_SSPI        29
-+#define WPCM450_RESET_SMB0        30
-+#define WPCM450_RESET_SMB1        31
-+
-+#define WPCM450_NUM_RESETS        32
-+
-+#endif /* _DT_BINDINGS_CLOCK_NUVOTON_WPCM450_CLK_H */
+ 	soc {
+ 		compatible =3D "simple-bus";
+ 		#address-cells =3D <1>;
+@@ -70,7 +77,7 @@ serial0: serial@b8000000 {
+ 			reg =3D <0xb8000000 0x20>;
+ 			reg-shift =3D <2>;
+ 			interrupts =3D <7 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks =3D <&clk24m>;
++			clocks =3D <&clk WPCM450_CLK_UART0>;
+ 			pinctrl-names =3D "default";
+ 			pinctrl-0 =3D <&bsp_pins>;
+ 			status =3D "disabled";
+@@ -81,7 +88,7 @@ serial1: serial@b8000100 {
+ 			reg =3D <0xb8000100 0x20>;
+ 			reg-shift =3D <2>;
+ 			interrupts =3D <8 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks =3D <&clk24m>;
++			clocks =3D <&clk WPCM450_CLK_UART1>;
+ 			status =3D "disabled";
+ 		};
+
+@@ -89,14 +96,15 @@ timer0: timer@b8001000 {
+ 			compatible =3D "nuvoton,wpcm450-timer";
+ 			interrupts =3D <12 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg =3D <0xb8001000 0x1c>;
+-			clocks =3D <&clk24m>;
++			clocks =3D <&refclk_div2>,
++				 <&refclk_div2>;
+ 		};
+
+ 		watchdog0: watchdog@b800101c {
+ 			compatible =3D "nuvoton,wpcm450-wdt";
+ 			interrupts =3D <1 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg =3D <0xb800101c 0x4>;
+-			clocks =3D <&clk24m>;
++			clocks =3D <&clk WPCM450_CLK_WDT>;
+ 		};
+
+ 		aic: interrupt-controller@b8002000 {
+@@ -480,7 +488,7 @@ fiu: spi-controller@c8000000 {
+ 			#size-cells =3D <0>;
+ 			reg =3D <0xc8000000 0x1000>, <0xc0000000 0x4000000>;
+ 			reg-names =3D "control", "memory";
+-			clocks =3D <&clk 0>;
++			clocks =3D <&clk WPCM450_CLK_FIU>;
+ 			nuvoton,shm =3D <&shm>;
+ 			status =3D "disabled";
+ 		};
 
 =2D-
 2.43.0
