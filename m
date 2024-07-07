@@ -1,62 +1,63 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF49311723
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 06:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6DBF519
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 06:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720335146; cv=none; b=spl6GkmbBfalhUdkWWaLngmHjoKSwiI6GEJV1sL3Ln6YqKsFbqXFqXKwXpzK4rY4bVqS2RI3UU6bqvBQ8+qoMlrxtu/hSDlsNlgczPNaqWB5QPMZy5KpdbxJexFAX8jeoF1R2RwDt1bc6D+BGTD13p9v7JU8Xqgk40C6/JW0fE0=
+	t=1720335163; cv=none; b=IZhBzJ1TMUeIxbH81LccwlnbYejZIgWVmkpJT0+oJ02vCeH5bjJM/Io5Dw2k8oqS/7c5S1d1KC5jqthrW7hTyuLULfFB6dBkvkRIjiKXg0iWcAfJrfPaqGRnqHmKd54WXBF0WPUqzOq0USE1ZmOE7+Ek7YJumrhSwleHxv76VJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720335146; c=relaxed/simple;
-	bh=M0unsPZXof9195t12LQdbKVCLjsDSZCV25BC5Zi3GPg=;
+	s=arc-20240116; t=1720335163; c=relaxed/simple;
+	bh=2gHlRRfe5N0hzfS0ebrcez3lGn41AB8pRSZzX3LKbLg=;
 	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Izp5rrZOgGitIPDM6HcenNumKabHgcjHWEe5YYsmwya6K/wtmFtZnCHbglZGMayZjgMfTluJ9brtUC+YFWy8jqmAcemUgpIvDxTWQ8Pj8n92za4l/RCJImrxmGMdtiknNdXSJzM35avJXhha3MgWRmilJnnT1YGaktdaHLABOog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cte4GR/p; arc=none smtp.client-ip=209.85.208.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=TtHdvJ7bhL7KKDGRoZz4j/iz5hJA71cfr4frndgdcXqGvjLc48018FobGSM8xCSYJfffwds+3bKajbyFzBG7YkveapnNItxcbvV0EDRn2pOFNTUxJsm2VGMQfwUOqwfYXnJ5Tyl5srwu4z6zckQuojkOda5nIoZ5fI7akzNl92o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ewfthhii; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cte4GR/p"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-58cdd58c545so477452a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2024 23:52:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewfthhii"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42111cf2706so3288085e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2024 23:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720335143; x=1720939943; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720335160; x=1720939960; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UTIs2Xhc94fJOZitmW0LJjQdfwpTiVJtqyfruFQJ5rs=;
-        b=Cte4GR/pKyAM3jd8tkmKOMhhTO1T7UBzBzUv5GYgHNc79GbMS0yxhR7c1AaXsJnUmo
-         wAgKZFcua1Dtq/fE2suEX6mB6X51wmMwPPgiawCxxYCFwljj4QugIYSRwXxot5keJ8fV
-         5b8coo04iJV0NyQDqKVnPjlJHZhx9g36+Rwmd32gIj4tZ48mLW25XYk7wNHinim+MB9S
-         hzoq5eiQLfZWjrmTH0MAjzCwKKsu8R1ZW2RX1c+Tnbntrw1rRRqs2/XlroJrrvcyQ6en
-         Kx/W3Q455ml/uei6c6a1QNiCUlWqX6tpEfKItzeh/7lpfpME1kQUtQ86XeCuFC440tzZ
-         MTWg==
+        bh=4nTXTdn8BfpeIUTQTFy+0PL+rg8osqbE7sRCEcbh36A=;
+        b=ewfthhiijy5WtXVroQPaGZWtTDhKhCSsXy1QiDoZ0PftOrCp12rYNqX3Z/JAF6SBr4
+         Qs0n51EKu9p0g/WO9ij4AjlLpG2fVNUgErQZ9+EG2pyoxXK2Ku48O+7Kj8N2ZlbAtohP
+         LiPBHHu+KgXZhw4rq54va+t7O6habKfmSB5gNKmTmw/3XUVBtyqK62hAyvaKOTGZXSa3
+         3+fs/WbUZ4uhkKp6UmLZ1T7huhUnUIvxFrF7hI8TtI7b6MA03Ey0AbXDTxNA9+L4zN/L
+         AsOdS/h2EOHsPcu4QhmCcKgM0vxKW9R2Mb86tNmzLC0l124Umz9Vj4r8vTJzvUDCOwMq
+         fVSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720335143; x=1720939943;
+        d=1e100.net; s=20230601; t=1720335160; x=1720939960;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UTIs2Xhc94fJOZitmW0LJjQdfwpTiVJtqyfruFQJ5rs=;
-        b=TUdzxCQYg+AkHC+1/QRmlnza/h45syE62ikEJamUrLn3q40bWquse/FnCCgVg71K+H
-         Rv4KF+v5tqBB7Mhclu8Oi66r06m2xjb/fJ/52s9poGLj/KLEnlZxpCFq0l3cVRU/o8xm
-         YJKnRtKnicXGeHNq+sDlBFpHMb+ZiLU45+lcd4MDZM94G22RFYRhJ7vovF24D+x0DsnN
-         Ley7cA3dyhnhvTA/v5yJXnkPc87hxwMrsJ19jctv6lVXM96cxc6SB03xhJBQEohcsjVn
-         /yyMYyw49WpLeM1QPhtt9dO4btJxIeumzSfOSjs5jgzL8Hycpt9MfL755g2JTTeN+nTH
-         RJtA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDfbtyAjD1SdLH9UhiyXg5xyoepqpvzZBzQSLCp5td5Jqu4lwSljCj4uHU43SV47qxnGMTAshEJD1+JNqDfZqvFKWDoRJBResj1Rud
-X-Gm-Message-State: AOJu0YzOKxkmJGKp1TACpuTjU0abPCz+NHVytzupjEiTj3NJmR2TQqvn
-	RZR5sdZf9pClZH6WlK1IHa5/517H4pZu7w5CS5r5rMH2FH9Y1eYaSAfj1A==
-X-Google-Smtp-Source: AGHT+IHXUgOcer0IXuTSnfsKDy/tVvQGWERqsJTTQAzfKpkR620KfmWWosIl8JqwXq/40l/fd7pMXw==
-X-Received: by 2002:a17:906:7051:b0:a70:4217:5c8b with SMTP id a640c23a62f3a-a77b9de0734mr481514966b.0.1720335143186;
-        Sat, 06 Jul 2024 23:52:23 -0700 (PDT)
+        bh=4nTXTdn8BfpeIUTQTFy+0PL+rg8osqbE7sRCEcbh36A=;
+        b=t7rZeL80d38PTgQjaSKkeh8KD6ap+awYMiGUbUmuhXUpeZrEvKPntnRqLekmutjrA5
+         iLOyTnEibMrBFaCTvfo7o3pjwqAGiiUVTJQ9nPezG0gopq0mLPwyawLBufjzCLkSYAsA
+         WgL9eA7SM605I+VhIxWy1ryKXjmADskujXh/8hplhnrqOlL3VpyaxhWYDt4hrVA4QSsn
+         CDLMjxsrdCZ92RC/9YhRlKciZAzeGYoyt7xpzMxAcE+86pDaVzmk3PP7Asub3vH863xf
+         VvvT7dGXb3ssp4NW5+PyOd8ZsAvOA2HkvSSY0jWhFJvf+tmm2UlRVeaLbXmuvssHYxZW
+         g2vg==
+X-Forwarded-Encrypted: i=1; AJvYcCXW6PO9fz5cz0Ddkdku7PDZIlMZQkGl9jOAv2BYVBgMsj9vIkoBfTrB1xxO7vhtrSAYQIYee2kjZmfu6f4CVtQwUfq+iRCzyvn9cs9q
+X-Gm-Message-State: AOJu0YwwZZZAi6euUOcGWclO8k+kVXph4fv0pQSnEeBxb4CtWXQg4DYm
+	chg7jIe8WFMo2Wgzit8l7+DNRTtTOzy7gnhD/QzdOVjqadB0mT1c
+X-Google-Smtp-Source: AGHT+IEkAV8bNmuZkYXMin26Xc6b6o7XjXvQBr+yzOkeoBzNz/3QpTUWJQLG0wyYeJeR+246lvNNQQ==
+X-Received: by 2002:a05:600c:35d4:b0:426:4920:2846 with SMTP id 5b1f17b1804b1-4264a46b0bbmr59448925e9.3.1720335160526;
+        Sat, 06 Jul 2024 23:52:40 -0700 (PDT)
 Received: from matrix-ESPRIMO-P710 (p57ba2f9b.dip0.t-ipconnect.de. [87.186.47.155])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77c978763bsm207772066b.109.2024.07.06.23.52.21
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36792881856sm10726712f8f.6.2024.07.06.23.52.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jul 2024 23:52:21 -0700 (PDT)
-Date: Sun, 7 Jul 2024 08:52:20 +0200
+        Sat, 06 Jul 2024 23:52:39 -0700 (PDT)
+Date: Sun, 7 Jul 2024 08:52:38 +0200
 From: Philipp Hortmann <philipp.g.hortmann@gmail.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/13] staging: rtl8723bs: Remove unused macros in rtw_ht.h
-Message-ID: <7bab6def02a4a89c481d20547375d894d538458a.1720245061.git.philipp.g.hortmann@gmail.com>
+Subject: [PATCH 04/13] staging: rtl8723bs: Remove unused macros in
+ hal_phy_reg_8723b.h
+Message-ID: <a478e607d4fcf22f547594c4a569c27da4fb2645.1720245061.git.philipp.g.hortmann@gmail.com>
 References: <cover.1720245061.git.philipp.g.hortmann@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -68,61 +69,74 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1720245061.git.philipp.g.hortmann@gmail.com>
 
-Remove unused macros.
+Remove unused and double defined macros.
 
 Signed-off-by: Philipp Hortmann <philipp.g.hortmann@gmail.com>
 ---
- drivers/staging/rtl8723bs/include/rtw_ht.h | 22 ----------------------
- 1 file changed, 22 deletions(-)
+ .../rtl8723bs/include/hal_phy_reg_8723b.h     | 51 -------------------
+ 1 file changed, 51 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/include/rtw_ht.h b/drivers/staging/rtl8723bs/include/rtw_ht.h
-index 1527d8be2d7a..54fadb92334c 100644
---- a/drivers/staging/rtl8723bs/include/rtw_ht.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_ht.h
-@@ -63,43 +63,21 @@ enum {
- 
- #define	LDPC_HT_ENABLE_RX			BIT0
- #define	LDPC_HT_ENABLE_TX			BIT1
--#define	LDPC_HT_TEST_TX_ENABLE		BIT2
- #define	LDPC_HT_CAP_TX				BIT3
- 
- #define	STBC_HT_ENABLE_RX			BIT0
- #define	STBC_HT_ENABLE_TX			BIT1
--#define	STBC_HT_TEST_TX_ENABLE		BIT2
- #define	STBC_HT_CAP_TX				BIT3
- 
- #define	BEAMFORMING_HT_BEAMFORMER_ENABLE	BIT0	/*  Declare our NIC supports beamformer */
- #define	BEAMFORMING_HT_BEAMFORMEE_ENABLE	BIT1	/*  Declare our NIC supports beamformee */
--#define	BEAMFORMING_HT_BEAMFORMER_TEST		BIT2	/*  Transmiting Beamforming no matter the target supports it or not */
+diff --git a/drivers/staging/rtl8723bs/include/hal_phy_reg_8723b.h b/drivers/staging/rtl8723bs/include/hal_phy_reg_8723b.h
+index b0b1ac1090fc..0791b85b7c57 100644
+--- a/drivers/staging/rtl8723bs/include/hal_phy_reg_8723b.h
++++ b/drivers/staging/rtl8723bs/include/hal_phy_reg_8723b.h
+@@ -14,56 +14,5 @@
+ /*  4. Page9(0x900) */
+ /*  */
+ #define rDPDT_control				0x92c
+-#define rfe_ctrl_anta_src				0x930
+-#define rS0S1_PathSwitch			0x948
+-#define AGC_table_select				0xb2c
 -
 -/*  */
--/*  The HT Control field */
+-/*  PageB(0xB00) */
 -/*  */
--#define SET_HT_CTRL_CSI_STEERING(_pEleStart, _val)					SET_BITS_TO_LE_1BYTE((_pEleStart)+2, 6, 2, _val)
--#define SET_HT_CTRL_NDP_ANNOUNCEMENT(_pEleStart, _val)			SET_BITS_TO_LE_1BYTE((_pEleStart)+3, 0, 1, _val)
--#define GET_HT_CTRL_NDP_ANNOUNCEMENT(_pEleStart)					LE_BITS_TO_1BYTE((_pEleStart)+3, 0, 1)
- 
- /*  20/40 BSS Coexist */
- #define SET_EXT_CAPABILITY_ELE_BSS_COEXIST(_pEleStart, _val)			SET_BITS_TO_LE_1BYTE((_pEleStart), 0, 1, _val)
--#define GET_EXT_CAPABILITY_ELE_BSS_COEXIST(_pEleStart)				LE_BITS_TO_1BYTE((_pEleStart), 0, 1)
+-#define rPdp_AntA						0xb00
+-#define rPdp_AntA_4						0xb04
+-#define rPdp_AntA_8						0xb08
+-#define rPdp_AntA_C						0xb0c
+-#define rPdp_AntA_10					0xb10
+-#define rPdp_AntA_14					0xb14
+-#define rPdp_AntA_18					0xb18
+-#define rPdp_AntA_1C					0xb1c
+-#define rPdp_AntA_20					0xb20
+-#define rPdp_AntA_24					0xb24
 -
- 
- #define GET_HT_CAPABILITY_ELE_LDPC_CAP(_pEleStart)				LE_BITS_TO_1BYTE(_pEleStart, 0, 1)
- #define GET_HT_CAPABILITY_ELE_TX_STBC(_pEleStart)					LE_BITS_TO_1BYTE(_pEleStart, 7, 1)
- 
- #define GET_HT_CAPABILITY_ELE_RX_STBC(_pEleStart)					LE_BITS_TO_1BYTE((_pEleStart)+1, 0, 2)
- 
--/* TXBF Capabilities */
--#define SET_HT_CAP_TXBF_RECEIVE_NDP_CAP(_pEleStart, _val)					SET_BITS_TO_LE_4BYTE(((u8 *)(_pEleStart))+21, 3, 1, ((u8)_val))
--#define SET_HT_CAP_TXBF_TRANSMIT_NDP_CAP(_pEleStart, _val)				SET_BITS_TO_LE_4BYTE(((u8 *)(_pEleStart))+21, 4, 1, ((u8)_val))
--#define SET_HT_CAP_TXBF_EXPLICIT_COMP_STEERING_CAP(_pEleStart, _val)		SET_BITS_TO_LE_4BYTE(((u8 *)(_pEleStart))+21, 10, 1, ((u8)_val))
--#define SET_HT_CAP_TXBF_EXPLICIT_COMP_FEEDBACK_CAP(_pEleStart, _val)		SET_BITS_TO_LE_4BYTE(((u8 *)(_pEleStart))+21, 15, 2, ((u8)_val))
--#define SET_HT_CAP_TXBF_COMP_STEERING_NUM_ANTENNAS(_pEleStart, _val)	SET_BITS_TO_LE_4BYTE(((u8 *)(_pEleStart))+21, 23, 2, ((u8)_val))
+-#define rConfig_Pmpd_AntA				0xb28
+-#define rConfig_ram64x16				0xb2c
 -
--#define GET_HT_CAP_TXBF_EXPLICIT_COMP_STEERING_CAP(_pEleStart)			LE_BITS_TO_4BYTE((_pEleStart)+21, 10, 1)
--#define GET_HT_CAP_TXBF_EXPLICIT_COMP_FEEDBACK_CAP(_pEleStart)			LE_BITS_TO_4BYTE((_pEleStart)+21, 15, 2)
+-#define rBndA							0xb30
+-#define rHssiPar						0xb34
 -
- #endif	/* _RTL871X_HT_H_ */
+-#define rConfig_AntA					0xb68
+-#define rConfig_AntB					0xb6c
+-
+-#define rPdp_AntB						0xb70
+-#define rPdp_AntB_4						0xb74
+-#define rPdp_AntB_8						0xb78
+-#define rPdp_AntB_C						0xb7c
+-#define rPdp_AntB_10					0xb80
+-#define rPdp_AntB_14					0xb84
+-#define rPdp_AntB_18					0xb88
+-#define rPdp_AntB_1C					0xb8c
+-#define rPdp_AntB_20					0xb90
+-#define rPdp_AntB_24					0xb94
+-
+-#define rConfig_Pmpd_AntB				0xb98
+-
+-#define rBndB							0xba0
+-
+-#define rAPK							0xbd8
+-#define rPm_Rx0_AntA					0xbdc
+-#define rPm_Rx1_AntA					0xbe0
+-#define rPm_Rx2_AntA					0xbe4
+-#define rPm_Rx3_AntA					0xbe8
+-#define rPm_Rx0_AntB					0xbec
+-#define rPm_Rx1_AntB					0xbf0
+-#define rPm_Rx2_AntB					0xbf4
+-#define rPm_Rx3_AntB					0xbf8
+ 
+ #endif
 -- 
 2.45.2
 
