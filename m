@@ -1,112 +1,270 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D316F2E0;
-	Sun,  7 Jul 2024 18:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277DA502B1
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 18:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720377575; cv=none; b=Mt1pzvEU+eJs4Rb82P8JTLV2u9c8CtChQPH/GioT/mi4ahkVsnpLlYjg+MIq0G3XL1P2ZOLY+u0UEuTEioejjFXUXZ0d6Afvwgk6AS0lvEc9+I9k/AVMt1bgchRNoDQ8h7lilRbH82RmqeS2bHSG5N8JZISKs04R7X01w1Cu3tQ=
+	t=1720378383; cv=none; b=avcaYmlqukMi+KltXqHM8W+weKHVN5NJ0sUi2I5Cca71F1IF4TboZTlDZY7etezLGp9YQ4Ca+rjXcfrgQAf8yBFEMOADIlQhVrVncSsdhi8KvW1cCZ3/IR28gCNwJw5GN5rDABDkUnJcruSxZnp+ZK4YfbizrVPNV+JcDf/Ls28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720377575; c=relaxed/simple;
-	bh=GvtyekW3cPtgMryxGojlHzw6d60XNdyQNpLAwvJFYCg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Trq7ZcXszCduITEqKjbgV9hBNDd1WxL3tZZ3cm6eyV7rzmFWWBA/Nl3UHzL6fVkxUyCuWfzkU+X/36TMyoEl4E3dHlPD/XCrCqFKIhtsyMxGDBw8jLI9H/vX8M8w85V8gv10+G2h8xtahM3EvaUne74QR9aqOJw24UWBYraTkBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BVLl0olF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pte65TeL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1720378383; c=relaxed/simple;
+	bh=JPYfc9BF9H6U8dBUeojkHLEGzFVngwZiApOd1lH/wrw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=joCnchuedKWvFJPtMb3IsG5gHpxwD3R7928VQRD9vNk9mrpXq6DDJxPvpE6jczdVQLTvsITny3/KmmwddJiZw+I+yKU2TL56BoZW7zPji7MmoHLhn5hOspTjBZGSu92Lt+n7Txqxam6Y2Y+BF9CSk+M47BqW0gTQZ1yyrt3qrwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SdxSxZmN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BVLl0olF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pte65TeL"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720377572;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SdxSxZmN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720378381;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HvnkGbIJ9LI7seSBE7vWaAv++oO2Ma6c/yEoKk5eGss=;
-	b=BVLl0olFwyM4DlgzdlxxKXuIh6v3+fuPF3sY/qLCTy9CAxCDUWgUpi+nBgFdU7nmZbyQNK
-	CBG8PeZPIpjXTB0+6zBhvxKlcb7EwLInlXnFT0kNqVEyxS1WMDvzo6yokryEw1mFwg68sE
-	JRkN/jwzuMjMrhEscgaEnFvxAV3SFfDmEvJFApW7MfOxxxOfQHs990Ajqxmhj9tBoAJMDA
-	GyzdtDbnBhp5MAiZZ/DpiWzi68dzxcykPu05pRfQHz5K5cyihJPmgipOCxrZ8Vdopo76ev
-	8Bv53XUb7PN+niJiVxRhsFWP2KShEAYNG0hht5GIhseegbcbDiTyar0P1aWKWw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720377572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HvnkGbIJ9LI7seSBE7vWaAv++oO2Ma6c/yEoKk5eGss=;
-	b=Pte65TeL3YedPESL1FUXkQ2ZZMonCYOrSp1INe9vGmxtLtsqc0F9jeq520zTO9fGGdU5Iv
-	9XnhsUJ3/HxDMQBg==
-To: Pete Swain <swine@google.com>, linux-kernel@vger.kernel.org
-Cc: Pete Swain <swine@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] FIXUP: genirq: defuse spurious-irq timebomb
-In-Reply-To: <20240615044307.359980-1-swine@google.com>
-References: <20240615044307.359980-1-swine@google.com>
-Date: Sun, 07 Jul 2024 20:39:31 +0200
-Message-ID: <87jzhxvyfw.ffs@tglx>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3zm/t6SmOseYv8YEoerUNFcg810f9Fqt/p2xQiipACY=;
+	b=SdxSxZmNnIf/43HJrKYQ6CRVzUzOeX0PwES3ABn0kBM3YQmXuD2jMeLcHb3eJRj2dxSYAO
+	YZqqf/pRf674uGm0rh8V2+8WA1UwZLncONR1E0hWIAKva9hfyQkeze550rpUk+nGuD2EPZ
+	lZP8tEmkznvCHwLI5/ut8PVCbl57CwU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-50-3D3Uq486PQaPlsZI-h57xQ-1; Sun, 07 Jul 2024 14:52:54 -0400
+X-MC-Unique: 3D3Uq486PQaPlsZI-h57xQ-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-426654e244dso5165595e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2024 11:52:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720378373; x=1720983173;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3zm/t6SmOseYv8YEoerUNFcg810f9Fqt/p2xQiipACY=;
+        b=EnutSYQ0LZV140NRqzj3H8LNBs+LquqbM9BPEmQ/en786AtU5rLAx5mBh1jXrSzI5d
+         7z53VN0STIdtNdg4zsm4Z75WdyjOTh9o58xuNLgIDjcgYJfSAfJRk+PsEvzcDSiGj8w7
+         p833qeDS1mxoahjjbvFoc6bb5J42I/DuqgLiWyISyaGwPBqz17fqoqDTgEfwbmp5KRUI
+         02LGK5HQj65qYD60t7uQYatET1Ny7DicwpxgrCfINqYY+FgU/r4XCUroYEqD4V4//4jV
+         RGZHXYyHzOPc0xX1RzATw4r224XUOuAE7BHPD9I3/3iZ5xPfrDnorAVBYWCRJjWXykKY
+         SqHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUW/V6ZjERodNAntRnXcUWe5jNsNd0J6oGCTIFoc0u+6Vj2gfsd4OelS6Kccz7sS27oaoBSwqhJxCb27L3YsvUxgqCAaGaszgCJYXf7
+X-Gm-Message-State: AOJu0Yy0tROC/ufeSvm8qkX4G4My5MtMEnlyTgjLii+03EsgB7vgLs83
+	qCRA+gJeTAkANZHfg9UOSTro6ljqHRgBKd0kMTj9DuV0B+VEcU+nPCbgAfKz4V7BVIut3atAnRa
+	3eWsI6skRVBXD1DMERBAmWVY/2+g91zy6BPolp+ycIciVCqoyVvb0r5W9Utmldg==
+X-Received: by 2002:a05:600c:4b2a:b0:426:5f7d:add3 with SMTP id 5b1f17b1804b1-4265f7db016mr30227645e9.36.1720378373224;
+        Sun, 07 Jul 2024 11:52:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHUegYzLDxKbbpZ/irMi+0ltYebxXLPy6KTsfxhiulXv6hHieExZTRA+QgATdClvaAzH0XLQ==
+X-Received: by 2002:a05:600c:4b2a:b0:426:5f7d:add3 with SMTP id 5b1f17b1804b1-4265f7db016mr30227425e9.36.1720378372763;
+        Sun, 07 Jul 2024 11:52:52 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c72f:c00:10f0:d1a8:c206:17ac? (p200300cbc72f0c0010f0d1a8c20617ac.dip0.t-ipconnect.de. [2003:cb:c72f:c00:10f0:d1a8:c206:17ac])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367960deabdsm11055402f8f.24.2024.07.07.11.52.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jul 2024 11:52:52 -0700 (PDT)
+Message-ID: <e2f104ac-b6d9-4583-b999-8f975c60d469@redhat.com>
+Date: Sun, 7 Jul 2024 20:52:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v21 1/4] mm: add VM_DROPPABLE for designating always
+ lazily freeable mappings
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org,
+ patches@lists.linux.dev, tglx@linutronix.de, linux-crypto@vger.kernel.org,
+ linux-api@vger.kernel.org, x86@kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
+ Carlos O'Donell <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
+ Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+ Christian Brauner <brauner@kernel.org>,
+ David Hildenbrand <dhildenb@redhat.com>, linux-mm@kvack.org
+References: <20240707002658.1917440-1-Jason@zx2c4.com>
+ <20240707002658.1917440-2-Jason@zx2c4.com>
+ <1583c837-a4d5-4a8a-9c1d-2c64548cd199@redhat.com>
+ <CAHk-=wjs-9DVeoc430BDOv+dkpDkdVvkEsSJxNVZ+sO51H1dJA@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAHk-=wjs-9DVeoc430BDOv+dkpDkdVvkEsSJxNVZ+sO51H1dJA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Pete!
+On 07.07.24 20:19, Linus Torvalds wrote:
+> On Sun, 7 Jul 2024 at 00:42, David Hildenbrand <david@redhat.com> wrote:
+>>
+>> But I don't immediately see why MAP_WIPEONFORK and MAP_DONTDUMP have to
+>> be mmap() flags.
 
-On Fri, Jun 14 2024 at 21:42, Pete Swain wrote:
-> The flapping-irq detector still has a timebomb.
->
-> A pathological workload, or test script,
-> can arm the spurious-irq timebomb described in
->   4f27c00bf80f ("Improve behaviour of spurious IRQ detect")
->
-> This leads to irqs being moved the much slower polled mode,
-> despite the actual unhandled-irq rate being well under the
-> 99.9k/100k threshold that the code appears to check.
->
-> How?
->   - Queued completion handler, like nvme, servicing events
->     as they appear in the queue, even if the irq corresponding
->     to the event has not yet been seen.
->
->   - queues frequently empty, so seeing "spurious" irqs
->     whenever the last events of a threaded handler's
->       while (events_queued()) process_them();
->     ends with those events' irqs posted while thread was scanning.
->     In this case the while() has consumed last event(s),
->     so next handler says IRQ_NONE.
->
->   - In each run of "unhandled" irqs, exactly one IRQ_NONE response
->     is promoted from IRQ_NONE to IRQ_HANDLED, by note_interrupt()'s
->     SPURIOUS_DEFERRED logic.
->
->   - Any 2+ unhandled-irq runs will increment irqs_unhandled.
->     The time_after() check in note_interrupt() resets irqs_unhandled
->     to 1 after an idle period, but if irqs are never spaced more
->     than HZ/10 apart, irqs_unhandled keeps growing.
->
->   - During processing of long completion queues, the non-threaded
->     handlers will return IRQ_WAKE_THREAD, for potentially thousands
->     of per-event irqs. These bypass note_interrupt()'s irq_count++ logic,
->     so do not count as handled, and do not invoke the flapping-irq
->     logic.
->
->   - When the _counted_ irq_count reaches the 100k threshold,
->     it's possible for irqs_unhandled > 99.9k to force a move
->     to polling mode, even though many millions of _WAKE_THREAD
->     irqs have been handled without being counted.
->
-> Solution: include IRQ_WAKE_THREAD events in irq_count.
-> Only when IRQ_NONE responses outweigh (IRQ_HANDLED + IRQ_WAKE_THREAD)
-> by the old 99:1 ratio will an irq be moved to polling mode.
+Hi Linus,
 
-Nice detective work. Though I'm not entirely sure whether that's the
-correct approach as it might misjudge the situation where
-IRQ_WAKE_THREAD is issued but the thread does not make progress at all.
+> 
+> I don't think they have to be mmap() flags, but that said, I think
+> it's technically the better alternative than saying "you have to
+> madvise things later".
 
-Let me think about it some more.
+Having the option to madvise usually means that you can toggle it on/off 
+(e.g., MADV_DONTFORK vs. MADV_DOFORK). Not sure if having that option 
+could be valuable here (droppable) as well; maybe not.
 
-Thanks,
+> 
+> I very much understand the "we don't have a lot of MAP_xyz flags and
+> we don't want to waste them" argument, but at the same time
+> 
+>   (a) we _do_ have those flags
+> 
+>   (b) picking a worse interface seems bad
+> 
+>   (c) we could actually use the PROT_xyz bits, which we have a ton of
+> 
 
-        tglx
+I recall that introducing things like MAP_SHARED_VALIDATE received a lot 
+of pushback in the past. But that was before my MM days, and I only had 
+people tell me stories about it.
+
+(and at LSF/MM it's been a recurring theme that if you want to propose 
+new MMAP flag, you're going to have a hard time)
+
+> And yes, (c) is ugly, but is it uglier than "use two system calls to
+> do one thing"? I mean, "flags" and "prot" are just two sides of the
+> same coin in the end, the split is kind of arbitrary, and "prot" only
+> has four bits right now, and one of them is historical and useless,
+> and actually happens to be *exactly* this kind of MAP_xyz bit.
+
+Yeah, I always had the same feeling about prot vs. flags.
+
+My understanding so far was that we should have madvise() ways to toggle 
+stuff and add mmap bits if not avoidable; at least that's what I learned 
+from the community.
+
+Good to hear that this is changing. (or it's just been an urban myth)
+
+
+I'll use your mail as reference in the future when that topic pops up ;)
+
+
+Maybe, historically we used madvise options so it's easier to sense 
+which options the current kernel actually supports. (e.g., let mmap() 
+succeed but let a separate madvise(MADV_HUGEPAGE) etc. fail if not 
+supported by the kernel; no need to fail the whole operation).
+
+> 
+> (In case it's not clear, I'm talking about PROT_SEM, which is very
+> much a behavioral bit for broken architectures that we've actually
+> never implemented).
+
+Yeah.
+
+> 
+> We also have PROT_GROSDOWN and PROT_GROWSUP , which is basically a
+> "match MAP_GROWSxyz and change the mprotect() limits appropriately"
+
+It's the first time I hear about these two mprotect() options, thanks 
+for mentioning that :)
+
+> 
+> So I actually think we could use the PROT_xyz bits, and anybody who
+> says "those are for PROT_READ and PROT_WRITE is already very very
+> wrong.
+> 
+> Again - not pretty, but mappens to match reality.
+> 
+>> Interestingly, when looking into something comparable in the past I
+>> stumbled over "vrange" [1], which would have had a slightly different
+>> semantic (signal on reaccess).
+> 
+> We literally talked about exactly this with Jason, except unlike you I
+> couldn't find the historical archive (I tried in vain to find
+> something from lore).
+
+Good that you discussed it, I primarily scanned this patch set here only.
+
+I took notes back when I was looking for something like VM_DROPPABLE 
+(also, being more interested in the non-signal version for a VM cache 
+use case).
+
+> 
+>    https://lore.kernel.org/lkml/CAHk-=whRpLyY+U9mkKo8O=2_BXNk=7sjYeObzFr3fGi0KLjLJw@mail.gmail.com/
+> 
+> I do think that a "explicit populate and get a signal on access" is a
+> very valid model, but I think the "zero on access" is a more
+> immediately real model.
+> 
+> And we actually have had the "get signal on access" before: that's
+> what VM_DONTCOPY is.
+> 
+> And it was the *less* useful model, which is why we added
+> VM_WIPEONCOPY, because that's the semantics people actually wanted.
+> 
+> So I think the "signal on thrown out data access" is interesting, but
+> not necessarily the *more* interesting case.
+
+Absolutely agreed.
+
+> 
+> And I think if we do want that case, I think having MAP_DROPPABLE have
+> those semantics for MAP_SHARED would be the way to go. IOW, starting
+> off with the "zero on next access after drop" case doesn't make it any
+> harder to then later add a "fault on next access after drop" version.
+> 
+>> There needs to be better reasoning why we have to consume three mmap
+>> bits for something that can likely be achieved without any.
+> 
+> I think it goes the other way: why are MAP_xyz bits so precious to
+> make this harder to actually use?
+
+If things changed and we can have as many as we want, good!
+
+Things like MADV_HUGEPAGE/MADV_MERGEABLE might benefit from a mmap flag 
+as well.
+
+-- 
+Cheers,
+
+David / dhildenb
+
