@@ -1,38 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D26B1865B;
-	Sun,  7 Jul 2024 15:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF23405E6;
+	Sun,  7 Jul 2024 15:39:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720366743; cv=none; b=ec3XewRUIk1Ncw9jCTD/poOLNfB2RteEML11YsupaS5TDElbc5v+s31e+m4BrmAhiXXbcofGEV22EsUI2bqjwJUc3UNmlZ/lc+rMbtNWaeU83XS10ZFRvQPdaX3VW0uBldjuKxkGhP5O/onlYnUN8XVdeXZsw6GghEsxCeJCIqE=
+	t=1720366745; cv=none; b=MLOpYEZZcbsjF8+vjT2+gU/cf825135N9moe0c9xtNCYrXUOkBIjVuDYhM0oT4wHMae3JIOxxxsr9hQ8OlK0eb203pe8wm03RhLqr5+UL+9oYNjeb7uAGB5NAt73YzWU5DDSEX4fQ46rr5zok5x5VUQ5w/urc1b2ztDDPIfrEg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720366743; c=relaxed/simple;
-	bh=uWSCu9FKRpxsc31Anmfae7tDKV0+IKVLEdfz3P7wDSs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h7FhAk6uPKZcZDse4DPlfoykNLyXQixUojVHsRfsR4TJwb2Zhuo5cyL3nALPoCqCXs6ZvKLDQRRNWVP/Njvzp8QNC9coKNpRdXnGp1iPcvL9m7RxzSHO+p5UgF+hOj2SDZsDBnjaus4HBb8MhSFo9RZdsO79xAtVmi18mx36CS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxulsIlo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720366745; c=relaxed/simple;
+	bh=Bvgq5Dh/o3TVhL4qcwFRWp1OFJpVti4RsoXG1ndKF1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Rpva1mzW/jkWy9+KbVgHYQjj3BpxQmU0jXvASUYpVyr/6CL3/QPB9E50zrRh7vLw3IkgNrr/9FKUANHKjGUgeiuROlzMG8Wh3xidKgHrg7XWmTFa7zcq6rnOYiPlDOFA5UTcg9O2Huz+RqRpYkNcVyWoLY4o6xz9to+kT9JJC9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y37mgM+y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxulsIlo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBB20C4AF0B;
-	Sun,  7 Jul 2024 15:39:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y37mgM+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 648C8C4AF0E;
+	Sun,  7 Jul 2024 15:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720366742;
-	bh=uWSCu9FKRpxsc31Anmfae7tDKV0+IKVLEdfz3P7wDSs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lxulsIloRg2CeJk6OvWo43kBw/+RNw55JopxJWzamG/222fdI1IEgsYfv/sOdO2/i
-	 XMaZs2iPsqhheTW1sb5PNnYA6kbt7N4dk2HF5Bz03e6SoffnxXjqLANWJHE5iXNeWe
-	 mKj4EsFcCH9RwSc/okKYTSG088iHU2GxTLXvCVk+8wq8KABeDOqE+WIWQXYkrZ7sOF
-	 f83jQUKvJrPCQqkX8CfwlPxYEjNGg+mSYrCee5DxkkYYuRpaE4NeIqtksFRjv9HKHz
-	 WZN9quY0MGRJ7lpp8TNkXNBpuS3gPQZArA1oEizZiLX7Eyosj9CVarPNWMs6tbrx2P
-	 on5O1w4hnqD+Q==
+	s=k20201202; t=1720366745;
+	bh=Bvgq5Dh/o3TVhL4qcwFRWp1OFJpVti4RsoXG1ndKF1s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Y37mgM+y88H3AZSDnbM1b43qAjGPcDB+EC+dylnzbafZqvI24n2zp7SpIZtcmZaHf
+	 U/nkJM4h5HC/1Fli572CD7/S6Lamj5IKtXIkcGft7Ejnlt085XNpdI9P1myNFxnBr3
+	 cBQ3rMQqkjQNX0MONyIP1K9/znFM7yvvLSbagjFtvaohP53k8QOtl2fWpPx7aheq6s
+	 a1T4rq2W+PHy+wGpc8xqlIJhI2ByZDg1/Ua+2uZKW4BJhvGKALmFkUpXdKLMaA94gt
+	 dYiS0XWReWRxfc9ZCNeNSDtHJUPMKAovTd5QsQ+JAl7Bal+Ga6HgdTivAG3CuGRd7B
+	 ZO1s57mL1AV/g==
 From: Masahiro Yamada <masahiroy@kernel.org>
 To: linux-kbuild@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 1/4] kconfig: call expr_eliminate_yn() at least once in expr_eliminate_dups()
-Date: Mon,  8 Jul 2024 00:38:04 +0900
-Message-ID: <20240707153856.2483047-1-masahiroy@kernel.org>
+Subject: [PATCH 3/4] kconfig: remove P_CHOICEVAL property
+Date: Mon,  8 Jul 2024 00:38:06 +0900
+Message-ID: <20240707153856.2483047-3-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240707153856.2483047-1-masahiroy@kernel.org>
+References: <20240707153856.2483047-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,94 +44,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Kconfig simplifies expressions, but redundant '&&' and '||' operators
-involving constant symbols 'y' and 'n' are sometimes trimmed and
-sometimes not.
-
-[Test Code]
-
-    config DEP
-            def_bool y
-
-    config A
-            bool "A"
-            depends on DEP && y
-
-    config B
-            bool "B"
-            depends on DEP && y && y
-
-[Result]
-
-    $ make helpnewconfig
-      [ snip ]
-    -----
-
-    There is no help available for this option.
-    Symbol: A [=n]
-    Type  : bool
-    Defined at Kconfig:4
-      Prompt: A
-      Depends on: DEP [=y] && y [=y]
-      Location:
-        -> A (A [=n])
-
-    -----
-    -----
-
-    There is no help available for this option.
-    Symbol: B [=n]
-    Type  : bool
-    Defined at Kconfig:8
-      Prompt: B
-      Depends on: DEP [=y]
-      Location:
-        -> B (B [=n])
-
-    -----
-
-The dependency for A, 'DEP && y', remains as-is, while that for B,
-'DEP && y && y', has been reduced to 'DEP'.
-
-Currently, expr_eliminate_dups() calls expr_eliminate_yn() only when
-trans_count != 0, in other words, only when expr_eliminate_dups1() has
-trimmed at least one leaf. It fails to trim a single '&& y', etc.
-
-To fix this inconsistent behavior, expr_eliminate_yn() should be called
-at least once even if no leaf has been trimmed.
+This flag is unneeded because a choice member can be detected by
+other means.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/expr.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ scripts/kconfig/expr.h   | 1 -
+ scripts/kconfig/gconf.c  | 2 +-
+ scripts/kconfig/lkc.h    | 5 +----
+ scripts/kconfig/menu.c   | 5 -----
+ scripts/kconfig/symbol.c | 6 ++++++
+ 5 files changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
-index 6d4b5a5a1e62..b2dfd3123a5d 100644
---- a/scripts/kconfig/expr.c
-+++ b/scripts/kconfig/expr.c
-@@ -637,7 +637,7 @@ struct expr *expr_eliminate_dups(struct expr *e)
- 		return e;
+diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
+index 54b008c0161d..6e47e0ad6e6e 100644
+--- a/scripts/kconfig/expr.h
++++ b/scripts/kconfig/expr.h
+@@ -131,7 +131,6 @@ struct symbol {
  
- 	oldcount = trans_count;
--	while (1) {
-+	do {
- 		trans_count = 0;
- 		switch (e->type) {
- 		case E_OR: case E_AND:
-@@ -645,11 +645,8 @@ struct expr *expr_eliminate_dups(struct expr *e)
- 		default:
- 			;
- 		}
--		if (!trans_count)
--			/* No simplifications done in this pass. We're done */
--			break;
- 		e = expr_eliminate_yn(e);
--	}
-+	} while (trans_count); /* repeat until we get no more simplifications */
- 	trans_count = oldcount;
- 	return e;
+ #define SYMBOL_CONST      0x0001  /* symbol is const */
+ #define SYMBOL_CHECK      0x0008  /* used during dependency checking */
+-#define SYMBOL_CHOICEVAL  0x0020  /* used as a value in a choice block */
+ #define SYMBOL_VALID      0x0080  /* set when symbol.curr is calculated */
+ #define SYMBOL_WRITE      0x0200  /* write symbol to file (KCONFIG_CONFIG) */
+ #define SYMBOL_WRITTEN    0x0800  /* track info to avoid double-write to .config */
+diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+index 6b50e25133e3..c0f46f189060 100644
+--- a/scripts/kconfig/gconf.c
++++ b/scripts/kconfig/gconf.c
+@@ -1070,7 +1070,7 @@ static gchar **fill_row(struct menu *menu)
+ 		row[COL_BTNVIS] = GINT_TO_POINTER(FALSE);
+ 		return row;
+ 	}
+-	if (sym->flags & SYMBOL_CHOICEVAL)
++	if (sym_is_choice_value(sym))
+ 		row[COL_BTNRAD] = GINT_TO_POINTER(TRUE);
+ 
+ 	stype = sym_get_type(sym);
+diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
+index 3fa46610f25f..401bdf36323a 100644
+--- a/scripts/kconfig/lkc.h
++++ b/scripts/kconfig/lkc.h
+@@ -128,10 +128,7 @@ static inline bool sym_is_choice(const struct symbol *sym)
+ 	return sym->name == NULL;
  }
+ 
+-static inline bool sym_is_choice_value(const struct symbol *sym)
+-{
+-	return sym->flags & SYMBOL_CHOICEVAL ? true : false;
+-}
++bool sym_is_choice_value(const struct symbol *sym);
+ 
+ static inline bool sym_has_value(const struct symbol *sym)
+ {
+diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
+index 2a9b4c4f4428..cd34cc5aefcf 100644
+--- a/scripts/kconfig/menu.c
++++ b/scripts/kconfig/menu.c
+@@ -467,11 +467,6 @@ static void _menu_finalize(struct menu *parent, bool inside_choice)
+ 		sym->dir_dep.expr = expr_alloc_or(sym->dir_dep.expr, parent->dep);
+ 	}
+ 	for (menu = parent->list; menu; menu = menu->next) {
+-		if (sym && sym_is_choice(sym) &&
+-		    menu->sym && !sym_is_choice_value(menu->sym)) {
+-			menu->sym->flags |= SYMBOL_CHOICEVAL;
+-		}
+-
+ 		/*
+ 		 * This code serves two purposes:
+ 		 *
+diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
+index 3255bf310cb2..6c6f238c4f7b 100644
+--- a/scripts/kconfig/symbol.c
++++ b/scripts/kconfig/symbol.c
+@@ -871,6 +871,11 @@ bool sym_is_changeable(const struct symbol *sym)
+ 	return !sym_is_choice(sym) && sym->visible > sym->rev_dep.tri;
+ }
+ 
++bool sym_is_choice_value(const struct symbol *sym)
++{
++	return !list_empty(&sym->choice_link);
++}
++
+ HASHTABLE_DEFINE(sym_hashtable, SYMBOL_HASHSIZE);
+ 
+ struct symbol *sym_lookup(const char *name, int flags)
+@@ -908,6 +913,7 @@ struct symbol *sym_lookup(const char *name, int flags)
+ 	symbol->type = S_UNKNOWN;
+ 	symbol->flags = flags;
+ 	INIT_LIST_HEAD(&symbol->menus);
++	INIT_LIST_HEAD(&symbol->choice_link);
+ 
+ 	hash_add(sym_hashtable, &symbol->node, hash);
+ 
 -- 
 2.43.0
 
