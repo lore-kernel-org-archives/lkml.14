@@ -1,74 +1,55 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A185815EA6
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 05:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72CF7482
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 05:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720331665; cv=none; b=rK0H+nOqSA4hWM5xXO5S5/S19cjJd/U7OJ77LhUxJFtUuFm9qNUUzRo22AAiAjnibkLtG/q9LHpCfDOqM+jjGiVhOJPGd7EJubVin6h3S22pXFcxt4RjEylMzM5jwl4XRyh/FPNOu65M+mBIPhRtCCoG/2A2u8pICIhcPVobAKE=
+	t=1720331809; cv=none; b=L8dzfC4bTaLTbCyFfcNC+ywjZzcAbBJw2liJwPFJh/hn++LP0dUUYR0BH3U2ry8FnBcul1ePPOsvDRIiEdWfWcGXNOhc/jUQBA8Lz013n2kNz6NRPxSc0WZ6E8WDKRET515Bjn1vZmXTXUCzur4p4TUStXM6K1RDLugNfUdluwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720331665; c=relaxed/simple;
-	bh=A+Yqc0Y2sY3QERD0+cTYtcAee5yJA/eRgm7s+R2BFY8=;
+	s=arc-20240116; t=1720331809; c=relaxed/simple;
+	bh=u2h4zXjm5+8RWz+q131yJ9n5hRdE/G52xfNU6ku39vU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WqR319DbYSNtdJB60Co9F0ChiQztMeCe9Zh0p8N/o2Hh+QnHtBVvOxZSCwqQm+6JnK/2DWA7JPNQv6yq1LmSN1q4houMGdSBvx4WgByVSzbDCHYN9fOKcXwo/JpXG6E8w62plxmSb7rdFmDYTc5MDhsKO7un3DNSNfWhezH+TwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VHqv+qM8; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=ZML8MWFLdL7tzDWxG0qCtFco1t2UI/bUTSczMazxSCzOpXTp1z8Zukjb52Neu7BXqjG8WsaDCwMDSgyWyA9HZEdUk6A/QvAow5QXIWSn53WbyBAfM/lIsIPYtipwVLmC1Ci5MTsxpmPoubm5wBoySWrodeOn60F9UviIAyX5un4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=f4UZ+dfp; arc=none smtp.client-ip=80.12.242.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHqv+qM8"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3c9cc66c649so1525129b6e.1
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2024 22:54:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720331663; x=1720936463; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oUg4PV29CFOGLmMvmdWs76G4kY/lh/K0XHciozPPEOE=;
-        b=VHqv+qM8T+cRtDJKRy8AicAxbxMelKJNDFTJw62tyzmkdrYqknu9MI2HK0YelX6clu
-         vfqGZ3j7Iz9tPXY4gAxCeQ18YgC/cSfgffchfV+u9XC4jpyik6R2Q57MLtRjvvmqM53D
-         ot0K7QpaRy0qasMuBphzJtZ33/gIv+BZJtEhtnKMOoyrfVARhxuhloZHhLVYiAH4PzTf
-         Y3Oznt24hATjBlgtda6DKASxvwgO46+GPOfqUM44no+10gokz28BykH/vW2pzNugeJeq
-         li1VcFXs1ysdgB/kEPqCGROx1BgwSNvPvk5AZ+pHOGBfeGN4EmF4cMN+qwDIRUn27Kde
-         e7Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720331663; x=1720936463;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oUg4PV29CFOGLmMvmdWs76G4kY/lh/K0XHciozPPEOE=;
-        b=NnqNJpUVXYqkludzUWNmr8rNtyp8QlvXPEZkpg6yOKrygCcgZgzIOIs4+S0yrKouFH
-         9VH0EmyGlQoFOgsistkGHXniFZW8iZRVzfovOhXaHWwIYZCdaNMVs94aIw3fTfBgeANv
-         XH7NjvqJwkk6XbRLQoY2gp09SmQ768zoSbHj4OBNef5NPm/rf/WsMay4xDWP8EqnTACT
-         iQEg4bZvp4Zbhwb/RH2+tP2ppLeRZooJBhVguyvHISfk4590edlrPKUf/G1PFjKxi3nr
-         rQQN19MdHxKLzOoZXi4RXebaHLT4twomzB2V8mezA98uWGJV/hj6/Pxprj2H4vCOJkum
-         ffyg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJvhIK/z3zrAl0BuIkMEspq5p4Y5KC7Cl0jESsW0KQREeDkpc0cpfc7mu0pOaQc7ENIVyY0q1jH/xuo3AC5goCdZKGlENgtNyN/SoR
-X-Gm-Message-State: AOJu0YxA7qHei2YrgJI98o9SdO2Z4yoP08Jin7ESKokuO9OkbJWmv+LT
-	tzbp8QvtWNTuP2oh+8qVgLdv3gYaVSeYrWPY7qgs/YCo9vy8mJSG
-X-Google-Smtp-Source: AGHT+IFUJJDPOBesbBpJmBoRvVb3Ess8NluFY8+9Qxo64gDShTCPBuINQn3LHw7EIoQS+c8DkpXYLQ==
-X-Received: by 2002:a05:6808:1392:b0:3d9:1f05:845 with SMTP id 5614622812f47-3d91f050a43mr7087381b6e.19.1720331662674;
-        Sat, 06 Jul 2024 22:54:22 -0700 (PDT)
-Received: from kousik.local ([2405:201:c006:312d:252d:94b8:b79c:d7bb])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b2e5fe3dfsm94429b3a.97.2024.07.06.22.54.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jul 2024 22:54:22 -0700 (PDT)
-From: Kousik Sanagavarapu <five231003@gmail.com>
-To: Nishanth Menon <nm@ti.com>,
-	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Julia Lawall <julia.lawall@inria.fr>
-Cc: Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="f4UZ+dfp"
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id QKkEsyOxChEtDQKkZs8JLj; Sun, 07 Jul 2024 07:47:52 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1720331272;
+	bh=m5hfeJJaQd2sDlwjtKUNvEvzR4Fj1xT7GH3XV3uqVeI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=f4UZ+dfpSgIf++oPpNP1xmqTHIJ9Nns4VYsrkS0XHVn54a56e99lj7h89jST+8l1g
+	 X/mHEiSgI/vq3+AnkdDeaydhwpCfzsCW/vO/5jwIjmGZjV+6a91J+paMzPTjA+b4rY
+	 swubC7XIy2uB3jZ5S0HtPXo59GCyL6nczVfXq3Y8Q/KcOZ6ntgfgddqZLvfG3xX8xm
+	 bUYYAhfCIRVV1RodZMpbsNxl3mVbH24/3fZNhWLpx8VXJCeJlhEjO4oFSCCSB7QNuV
+	 Rbb3Hn3ZdbILHcBKki4B1K3Y7IxVtx9El5b3dwVYIdTFZ5/z9LAoTu9rr3cukQL+uw
+	 aeEnuA3zVSEVA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 07 Jul 2024 07:47:52 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	fchiby@baylibre.com,
+	fparent@baylibre.com,
+	s.hauer@pengutronix.de
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Kousik Sanagavarapu <five231003@gmail.com>
-Subject: [PATCH v3 4/4] soc: ti: pm33xx: do device_node auto cleanup
-Date: Sun,  7 Jul 2024 10:44:19 +0530
-Message-ID: <20240707055341.3656-5-five231003@gmail.com>
-X-Mailer: git-send-email 2.45.2.561.g66ac6e4bcd
-In-Reply-To: <20240707055341.3656-1-five231003@gmail.com>
-References: <20240707055341.3656-1-five231003@gmail.com>
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH v2 2/3] soc: mediatek: pwrap: Constify some struct int[]
+Date: Sun,  7 Jul 2024 07:47:21 +0200
+Message-ID: <f1fea00fbaa0fea298bf67732e019f9cc5c407ab.1720331018.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1720331018.git.christophe.jaillet@wanadoo.fr>
+References: <cover.1720331018.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,95 +58,174 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use scope based cleanup instead of manual of_node_put() calls, hence
-simplifying the handling of error paths.
+These arrays are not modified in this driver.
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
+
+On a x86_64, with allmodconfig:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  45528	   8532	     16	  54076	   d33c	drivers/soc/mediatek/mtk-pmic-wrap.o
+
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  52664	   1384	     16	  54064	   d330	drivers/soc/mediatek/mtk-pmic-wrap.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/soc/ti/pm33xx.c | 52 +++++++++++++++++------------------------
- 1 file changed, 21 insertions(+), 31 deletions(-)
+Compile tested-only
 
-diff --git a/drivers/soc/ti/pm33xx.c b/drivers/soc/ti/pm33xx.c
-index 8e983c3c4e03..d0edce53c793 100644
---- a/drivers/soc/ti/pm33xx.c
-+++ b/drivers/soc/ti/pm33xx.c
-@@ -383,54 +383,44 @@ static void am33xx_pm_free_sram(void)
-  */
- static int am33xx_pm_alloc_sram(void)
- {
--	struct device_node *np;
--	int ret = 0;
-+	struct device_node *np __free(device_node) =
-+			of_find_compatible_node(NULL, NULL, "ti,omap3-mpu");
+Changes in v2:
+  - Add R-b tag
+
+v1: https://lore.kernel.org/all/626783bb264a8b3b0c8cd7e1d9f9b241f0a494b6.1719652155.git.christophe.jaillet@wanadoo.fr/
+---
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 30 ++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+index 0da0cdec5050..d57553486383 100644
+--- a/drivers/soc/mediatek/mtk-pmic-wrap.c
++++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+@@ -483,7 +483,7 @@ enum pwrap_regs {
+ 	PWRAP_MSB_FIRST,
+ };
  
--	np = of_find_compatible_node(NULL, NULL, "ti,omap3-mpu");
- 	if (!np) {
- 		np = of_find_compatible_node(NULL, NULL, "ti,omap4-mpu");
--		if (!np) {
--			dev_err(pm33xx_dev, "PM: %s: Unable to find device node for mpu\n",
--				__func__);
--			return -ENODEV;
--		}
-+		if (!np)
-+			return dev_err_probe(pm33xx_dev, -ENODEV,
-+					     "PM: %s: Unable to find device node for mpu\n",
-+					     __func__);
- 	}
+-static int mt2701_regs[] = {
++static const int mt2701_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -569,7 +569,7 @@ static int mt2701_regs[] = {
+ 	[PWRAP_ADC_RDATA_ADDR2] =	0x154,
+ };
  
- 	sram_pool = of_gen_pool_get(np, "pm-sram", 0);
--	if (!sram_pool) {
--		dev_err(pm33xx_dev, "PM: %s: Unable to get sram pool for ocmcram\n",
--			__func__);
--		ret = -ENODEV;
--		goto mpu_put_node;
--	}
-+	if (!sram_pool)
-+		return dev_err_probe(pm33xx_dev, -ENODEV,
-+				     "PM: %s: Unable to get sram pool for ocmcram\n",
-+				     __func__);
+-static int mt6765_regs[] = {
++static const int mt6765_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -601,7 +601,7 @@ static int mt6765_regs[] = {
+ 	[PWRAP_DCM_DBC_PRD] =		0x1E0,
+ };
  
- 	sram_pool_data = of_gen_pool_get(np, "pm-sram", 1);
--	if (!sram_pool_data) {
--		dev_err(pm33xx_dev, "PM: %s: Unable to get sram data pool for ocmcram\n",
--			__func__);
--		ret = -ENODEV;
--		goto mpu_put_node;
--	}
-+	if (!sram_pool_data)
-+		return dev_err_probe(pm33xx_dev, -ENODEV,
-+				     "PM: %s: Unable to get sram data pool for ocmcram\n",
-+				     __func__);
+-static int mt6779_regs[] = {
++static const int mt6779_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -640,7 +640,7 @@ static int mt6779_regs[] = {
+ 	[PWRAP_WACS2_VLDCLR] =		0xC28,
+ };
  
- 	ocmcram_location = gen_pool_alloc(sram_pool, *pm_sram->do_wfi_sz);
--	if (!ocmcram_location) {
--		dev_err(pm33xx_dev, "PM: %s: Unable to allocate memory from ocmcram\n",
--			__func__);
--		ret = -ENOMEM;
--		goto mpu_put_node;
--	}
-+	if (!ocmcram_location)
-+		return dev_err_probe(pm33xx_dev, -ENOMEM,
-+				     "PM: %s: Unable to allocate memory from ocmcram\n",
-+				     __func__);
+-static int mt6795_regs[] = {
++static const int mt6795_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -725,7 +725,7 @@ static int mt6795_regs[] = {
+ 	[PWRAP_EXT_CK] =		0x14c,
+ };
  
- 	ocmcram_location_data = gen_pool_alloc(sram_pool_data,
- 					       sizeof(struct emif_regs_amx3));
- 	if (!ocmcram_location_data) {
--		dev_err(pm33xx_dev, "PM: Unable to allocate memory from ocmcram\n");
- 		gen_pool_free(sram_pool, ocmcram_location, *pm_sram->do_wfi_sz);
--		ret = -ENOMEM;
-+		return dev_err_probe(pm33xx_dev, -ENOMEM,
-+				     "PM: Unable to allocate memory from ocmcram\n");
- 	}
+-static int mt6797_regs[] = {
++static const int mt6797_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -758,7 +758,7 @@ static int mt6797_regs[] = {
+ 	[PWRAP_DCM_DBC_PRD] =		0x1D4,
+ };
  
--mpu_put_node:
--	of_node_put(np);
--	return ret;
-+	return 0;
- }
+-static int mt6873_regs[] = {
++static const int mt6873_regs[] = {
+ 	[PWRAP_INIT_DONE2] =		0x0,
+ 	[PWRAP_TIMER_EN] =		0x3E0,
+ 	[PWRAP_INT_EN] =		0x448,
+@@ -769,7 +769,7 @@ static int mt6873_regs[] = {
+ 	[PWRAP_WACS2_RDATA] =		0xCA8,
+ };
  
- static int am33xx_pm_rtc_setup(void)
+-static int mt7622_regs[] = {
++static const int mt7622_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -881,7 +881,7 @@ static int mt7622_regs[] = {
+ 	[PWRAP_SPI2_CTRL] =		0x244,
+ };
+ 
+-static int mt8135_regs[] = {
++static const int mt8135_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -954,7 +954,7 @@ static int mt8135_regs[] = {
+ 	[PWRAP_DCM_DBC_PRD] =		0x160,
+ };
+ 
+-static int mt8173_regs[] = {
++static const int mt8173_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -1036,7 +1036,7 @@ static int mt8173_regs[] = {
+ 	[PWRAP_DCM_DBC_PRD] =		0x148,
+ };
+ 
+-static int mt8183_regs[] = {
++static const int mt8183_regs[] = {
+ 	[PWRAP_MUX_SEL] =			0x0,
+ 	[PWRAP_WRAP_EN] =			0x4,
+ 	[PWRAP_DIO_EN] =			0x8,
+@@ -1087,7 +1087,7 @@ static int mt8183_regs[] = {
+ 	[PWRAP_WACS2_VLDCLR] =			0xC28,
+ };
+ 
+-static int mt8195_regs[] = {
++static const int mt8195_regs[] = {
+ 	[PWRAP_INIT_DONE2] =		0x0,
+ 	[PWRAP_STAUPD_CTRL] =		0x4C,
+ 	[PWRAP_TIMER_EN] =		0x3E4,
+@@ -1104,7 +1104,7 @@ static int mt8195_regs[] = {
+ 	[PWRAP_WACS2_RDATA] =		0x8A8,
+ };
+ 
+-static int mt8365_regs[] = {
++static const int mt8365_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -1166,7 +1166,7 @@ static int mt8365_regs[] = {
+ 	[PWRAP_WDT_SRC_EN_1] =		0xf8,
+ };
+ 
+-static int mt8516_regs[] = {
++static const int mt8516_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -1251,7 +1251,7 @@ static int mt8516_regs[] = {
+ 	[PWRAP_MSB_FIRST] =		0x170,
+ };
+ 
+-static int mt8186_regs[] = {
++static const int mt8186_regs[] = {
+ 	[PWRAP_MUX_SEL] =		0x0,
+ 	[PWRAP_WRAP_EN] =		0x4,
+ 	[PWRAP_DIO_EN] =		0x8,
+@@ -1377,7 +1377,7 @@ struct pmic_wrapper {
+ };
+ 
+ struct pmic_wrapper_type {
+-	int *regs;
++	const int *regs;
+ 	enum pwrap_type type;
+ 	u32 arb_en_all;
+ 	u32 int_en_all;
 -- 
-2.45.2.561.g66ac6e4bcd
+2.45.2
 
