@@ -1,224 +1,87 @@
-Received: from pb-smtp21.pobox.com (pb-smtp21.pobox.com [173.228.157.53])
+Received: from pb-smtp2.pobox.com (pb-smtp2.pobox.com [64.147.108.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5A25588B
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 19:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.228.157.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B71EDC;
+	Sun,  7 Jul 2024 19:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.108.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720379227; cv=none; b=Z2yv7Lf8YVytPTIbc1WCmBLsf61R6XFPlnp9sS4NY8ttCG778QYq0qksyFNO49/pwmtc08NHAZhTCyryutGyHBlvOORm4sx4Voc3QAznCXPPEDDXV5bhosDy0jThPFBDMqzy47Cmh0pRaR7MNc34FvzhntAEioKyLGvKs17dnL0=
+	t=1720379666; cv=none; b=ekBMcTMMYllUfgNPhD2Ih/5LwyzjaqPXNI/qprWcw5XnfnFJWOuVekTKZ4KsLPbVvxS7bGpatmr1CSL+aQR5l+RUXcrCigO9h9h5TTkEG9OtFSpyBHehIgchDekAX4PtpePkMtOt6LWUC7QiDwSsKKqqdY5fKddueBODeOxTuYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720379227; c=relaxed/simple;
-	bh=6kW25pg6VPwOxN0PpF7KB3SJguMNccZ4U3jj4C23kcc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lNLYsu9OPLWyGsCnArRMpu1w3p3cx1Z5E35Ktw1AEtdNW24uDVIKeQZTePUsizJTFqBkeCNtUKF6r7ZyHYxcWX8GCqvvyuFMSLz8kGj0LcRhdW+MdHdxJYS+3iIAknJfrhvw9NLHTu9szCz5/EarUfLh0yrpqD3mfFJCrNPMv00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=RvCMm0hU; dkim=fail (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=cqswCqqi reason="signature verification failed"; arc=none smtp.client-ip=173.228.157.53
+	s=arc-20240116; t=1720379666; c=relaxed/simple;
+	bh=hJi9qT7NMiPGNELhd/gsQKoJiUPQe9Di6PK9WXAAzkU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FqvicCwPjvLkk+752eWxw/DIrl31q0H3eOtrpImzoMyaCkJqYz7gOBlF3dlCiO5HsUts+uR7zQKJF8l9OIo0o3UMZ1AuuIbgAzc3dmDgZrKtrXI3/5ZnWICVVrY+LB+dxwKx5M8jCIOUm24pTh854ptRyEnTMKIhalG0ctre1Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=NfLe4usG; dkim=pass (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=Ijbdeqxn; arc=none smtp.client-ip=64.147.108.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="RvCMm0hU";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="cqswCqqi"
-Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
-	by pb-smtp21.pobox.com (Postfix) with ESMTP id 2A98D32D97;
-	Sun,  7 Jul 2024 15:07:00 -0400 (EDT)
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="NfLe4usG";
+	dkim=pass (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="Ijbdeqxn"
+Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
+	by pb-smtp2.pobox.com (Postfix) with ESMTP id 0574C1A299;
+	Sun,  7 Jul 2024 15:14:24 -0400 (EDT)
 	(envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=from:to:cc
-	:subject:date:message-id:in-reply-to:references:mime-version
-	:content-type:content-transfer-encoding; s=sasl; bh=6kW25pg6VPwO
-	xN0PpF7KB3SJguMNccZ4U3jj4C23kcc=; b=RvCMm0hUqJXJjAewrYJKbI5g0PJV
-	+tocvkBu2Zc4j6SLLej5nxckXdiYHauVvlaAXqkScod7TjaxH+l38QPjE/eLT3bW
-	oL+ZCURrdooyFpgXhngeUzFz1ARDN0A8SzID/v+dNu/DN3aahCDxN4FFF+zayKZ5
-	LooRsm5sHFI2Lag=
-Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
-	by pb-smtp21.pobox.com (Postfix) with ESMTP id 23FB332D96;
-	Sun,  7 Jul 2024 15:07:00 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=date:from
+	:to:cc:subject:in-reply-to:message-id:references:mime-version
+	:content-type; s=sasl; bh=hJi9qT7NMiPGNELhd/gsQKoJiUPQe9Di6PK9WX
+	AAzkU=; b=NfLe4usGZ65tMdGiRnaEInS7GA3HSU/vESYEuFbuC4Nj+XAc6jN8rk
+	4Lfg/p/F+af65Ea6Vva3ScSwgZKhcunJPUq/0N9yOlvmaVGv5xEbctvuykh2h38o
+	JexLk5KRmJZB++KwsekrJrB8sJPayMd811PqkQia4gLUE55/vfAnk=
+Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
+	by pb-smtp2.pobox.com (Postfix) with ESMTP id DE2C61A298;
+	Sun,  7 Jul 2024 15:14:23 -0400 (EDT)
 	(envelope-from nico@fluxnic.net)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=from:to:cc:subject:date:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=2016-12.pbsmtp; bh=tp8lbijNKahXKUhHOOemSyS81f5Q5sXhy0yV3icmOLs=; b=cqswCqqi7ImjMCPCdUNnHAIenSp/Gl4+n049XGJJ0OlHr8klK3Y5FCxTL6LozKNEVcxNYqYB71wW5E3a7OLi3+qh5bebLv3S6bRMOJWlUwDBmNrMwD9dtGg+lGTB+hZ8xsE2Hn91uxdpzrbgCV+K5Vm3zkj2VggpF09VW/zQ5us=
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=hJi9qT7NMiPGNELhd/gsQKoJiUPQe9Di6PK9WXAAzkU=; b=IjbdeqxnIm+QsnUgpUv0I2waeZDxnrFtS2meCVqqvBnchIkgZ3KjDT8hl02rqTGkDMC40wDh8msX0+kBzMW6zn3cLR3hLxY2G6lNj3svKCXlhdWyuCK1J21a+mITxWFSmWfW0WzcJQ8bWmEY1u6STjC5F6EEJPbH4CaqpsmKmo8=
 Received: from yoda.fluxnic.net (unknown [184.162.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 1869732D92;
-	Sun,  7 Jul 2024 15:06:56 -0400 (EDT)
+	by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 4775B1A297;
+	Sun,  7 Jul 2024 15:14:23 -0400 (EDT)
 	(envelope-from nico@fluxnic.net)
-Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id CB977D3B4E2;
-	Sun,  7 Jul 2024 15:06:53 -0400 (EDT)
+Received: from xanadu (unknown [IPv6:fd17:d3d3:663b:0:9696:df8a:e3:af35])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 16A3FD3B514;
+	Sun,  7 Jul 2024 15:14:22 -0400 (EDT)
+Date: Sun, 7 Jul 2024 15:14:21 -0400 (EDT)
 From: Nicolas Pitre <nico@fluxnic.net>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Nicolas Pitre <npitre@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] mul_u64_u64_div_u64: make it precise always
-Date: Sun,  7 Jul 2024 15:05:19 -0400
-Message-ID: <20240707190648.1982714-2-nico@fluxnic.net>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240707190648.1982714-1-nico@fluxnic.net>
-References: <20240707190648.1982714-1-nico@fluxnic.net>
+To: Arnd Bergmann <arnd@arndb.de>
+cc: Russell King <linux@armlinux.org.uk>, 
+    Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] __arch_xprod64(): make __always_inline when
+ optimizing for performance
+In-Reply-To: <55a8cff0-1d73-4743-9c56-2792616426c7@app.fastmail.com>
+Message-ID: <8251045r-26sn-4674-p820-4qp6s5o322qq@syhkavp.arg>
+References: <20240707171919.1951895-1-nico@fluxnic.net> <20240707171919.1951895-5-nico@fluxnic.net> <55a8cff0-1d73-4743-9c56-2792616426c7@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 X-Pobox-Relay-ID:
- 140FC1A4-3C94-11EF-ADB1-DFF1FEA446E2-78420484!pb-smtp21.pobox.com
-Content-Transfer-Encoding: quoted-printable
+ 1E9BF95C-3C95-11EF-89E4-965B910A682E-78420484!pb-smtp2.pobox.com
 
-From: Nicolas Pitre <npitre@baylibre.com>
+On Sun, 7 Jul 2024, Arnd Bergmann wrote:
 
-Library facilities must always return exact results. If the caller may
-be contented with approximations then it should do the approximation on
-its own.
+> On Sun, Jul 7, 2024, at 19:17, Nicolas Pitre wrote:
+> > From: Nicolas Pitre <npitre@baylibre.com>
+> >
+> > Recent gcc versions started not systematically inline __arch_xprod64()
+> > and that has performance implications. Give the compiler the freedom to
+> > decide only when optimizing for size.
+> >
+> > Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> 
+> Seems reasonable. Just to make sure: do you know if the non-inline
+> version of xprod_64 ends up producing a more effecient division
+> result than the __do_div64() code path on arch/arm?
 
-In this particular case the comment in the code says "the algorithm
-... below might lose some precision". Well, if you try it with e.g.:
+__arch_xprod_64() is part of the __do_div64() code path. So I'm not sure 
+of your question.
 
-	a =3D 18446462598732840960
-	b =3D 18446462598732840960
-	c =3D 18446462598732840961
+Obviously, having __arch_xprod_64() inlined is faster but it increases 
+binary size.
 
-then the produced answer is 0 whereas the exact answer should be
-18446462598732840959. This is _some_ precision lost indeed!
 
-Let's reimplement this function so it always produces the exact result
-regardless of its inputs while preserving existing fast paths
-when possible.
-
-Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-Tested-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- lib/math/div64.c | 108 ++++++++++++++++++++++++++++-------------------
- 1 file changed, 65 insertions(+), 43 deletions(-)
-
-diff --git a/lib/math/div64.c b/lib/math/div64.c
-index 191761b1b6..b7fc752463 100644
---- a/lib/math/div64.c
-+++ b/lib/math/div64.c
-@@ -186,55 +186,77 @@ EXPORT_SYMBOL(iter_div_u64_rem);
- #ifndef mul_u64_u64_div_u64
- u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
- {
--	u64 res =3D 0, div, rem;
--	int shift;
-+	if (ilog2(a) + ilog2(b) <=3D 62)
-+		return div64_u64(a * b, c);
-=20
--	/* can a * b overflow ? */
--	if (ilog2(a) + ilog2(b) > 62) {
--		/*
--		 * Note that the algorithm after the if block below might lose
--		 * some precision and the result is more exact for b > a. So
--		 * exchange a and b if a is bigger than b.
--		 *
--		 * For example with a =3D 43980465100800, b =3D 100000000, c =3D 10000=
-00000
--		 * the below calculation doesn't modify b at all because div =3D=3D 0
--		 * and then shift becomes 45 + 26 - 62 =3D 9 and so the result
--		 * becomes 4398035251080. However with a and b swapped the exact
--		 * result is calculated (i.e. 4398046510080).
--		 */
--		if (a > b)
--			swap(a, b);
-+#if defined(__SIZEOF_INT128__)
-+
-+	/* native 64x64=3D128 bits multiplication */
-+	u128 prod =3D (u128)a * b;
-+	u64 n_lo =3D prod, n_hi =3D prod >> 64;
-+
-+#else
-+
-+	/* perform a 64x64=3D128 bits multiplication manually */
-+	u32 a_lo =3D a, a_hi =3D a >> 32, b_lo =3D b, b_hi =3D b >> 32;
-+	u64 x, y, z;
-+
-+	x =3D (u64)a_lo * b_lo;
-+	y =3D (u64)a_lo * b_hi + (u32)(x >> 32);
-+	z =3D (u64)a_hi * b_hi + (u32)(y >> 32);
-+	y =3D (u64)a_hi * b_lo + (u32)y;
-+	z +=3D (u32)(y >> 32);
-+	x =3D (y << 32) + (u32)x;
-+
-+	u64 n_lo =3D x, n_hi =3D z;
-+
-+#endif
-+
-+	int shift =3D __builtin_ctzll(c);
-=20
-+	/* try reducing the fraction in case the dividend becomes <=3D 64 bits =
-*/
-+	if ((n_hi >> shift) =3D=3D 0) {
-+		u64 n =3D (n_lo >> shift) | (n_hi << (64 - shift));
-+
-+		return div64_u64(n, c >> shift);
- 		/*
--		 * (b * a) / c is equal to
--		 *
--		 *      (b / c) * a +
--		 *      (b % c) * a / c
--		 *
--		 * if nothing overflows. Can the 1st multiplication
--		 * overflow? Yes, but we do not care: this can only
--		 * happen if the end result can't fit in u64 anyway.
--		 *
--		 * So the code below does
--		 *
--		 *      res =3D (b / c) * a;
--		 *      b =3D b % c;
-+		 * The remainder value if needed would be:
-+		 *   res =3D div64_u64_rem(n, c >> shift, &rem);
-+		 *   rem =3D (rem << shift) + (n_lo - (n << shift));
- 		 */
--		div =3D div64_u64_rem(b, c, &rem);
--		res =3D div * a;
--		b =3D rem;
--
--		shift =3D ilog2(a) + ilog2(b) - 62;
--		if (shift > 0) {
--			/* drop precision */
--			b >>=3D shift;
--			c >>=3D shift;
--			if (!c)
--				return res;
--		}
- 	}
-=20
--	return res + div64_u64(a * b, c);
-+	if (n_hi >=3D c) {
-+		/* overflow: result is unrepresentable in a u64 */
-+		return -1;
-+	}
-+
-+	/* Do the full 128 by 64 bits division */
-+
-+	shift =3D __builtin_clzll(c);
-+	c <<=3D shift;
-+
-+	int p =3D 64 + shift;
-+	u64 res =3D 0;
-+	bool carry;
-+
-+	do {
-+		carry =3D n_hi >> 63;
-+		shift =3D carry ? 1 : __builtin_clzll(n_hi);
-+		if (p < shift)
-+			break;
-+		p -=3D shift;
-+		n_hi <<=3D shift;
-+		n_hi |=3D n_lo >> (64 - shift);
-+		n_lo <<=3D shift;
-+		if (carry || (n_hi >=3D c)) {
-+			n_hi -=3D c;
-+			res |=3D 1ULL << p;
-+		}
-+	} while (n_hi);
-+	/* The remainder value if needed would be n_hi << p */
-+
-+	return res;
- }
- EXPORT_SYMBOL(mul_u64_u64_div_u64);
- #endif
---=20
-2.45.2
-
+Nicolas
