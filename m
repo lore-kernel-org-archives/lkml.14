@@ -1,334 +1,296 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95E661B80F;
-	Sun,  7 Jul 2024 00:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0786112;
+	Sun,  7 Jul 2024 00:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720311715; cv=none; b=X99A0t9L5kTFkHVZhIZXt578UchEB1TgPRZ/cnsl4WhWATSsPDenEzWrLjuL586iAossg3qorkFH3A3UElHiE6cIXWzdr8RQMKrH8jXLdZ77N71+J6ZrBRnCj/MHPKmrc/l69vnvcu0AWC+depkJPnFeEDMolqAt7pCdAYcdgeU=
+	t=1720312034; cv=none; b=Yp3AUMsGm5IRbGEEb/1GQcHIKwWF8KkNUYcvZeCctnkIm8Ua/rDL+GpQd2djSuqpJHjwmTJs0ls85b1iJhXrtvyHDazerNCtkZQdR4yZm9xjW9dR+66F5cMDqYjZ2XabXK/UBAiCMGWGJ1p4E9bwkvOCBvGS6pGWRbr/ZWpN/I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720311715; c=relaxed/simple;
-	bh=glQ2VpXuIa7P1WhvIxycbhFQ+9UWi0ioPO1IjygMnbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a2om70TmerYDPPZaoo75g1SMZg7lxbeUhE0r9NOOHdV7N0ouYDglEWv6wvvoqNuDMLpoWkrcng3ESSckT4RhnpXcKS7NB1j7/hzQxRcNgfYbV4rJN2Nxaj8rkTuJuehRx+qRP6uHb6PMyyuW3TIHmq9MTnJygaOPBlybAlVciVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40191DA7;
-	Sat,  6 Jul 2024 17:22:18 -0700 (PDT)
-Received: from pluto.. (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 011A83F73B;
-	Sat,  6 Jul 2024 17:21:50 -0700 (PDT)
-From: Cristian Marussi <cristian.marussi@arm.com>
+	s=arc-20240116; t=1720312034; c=relaxed/simple;
+	bh=L5JbagMUbJt08yuYQI9FS0omO4BxfsUUqnPF8ooyYn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pxHEA/bM0mHXvP91g1o2b+cQ46kJ18NyRKFnyTqK4uk17y4FfP72tAl8B+vJL/apqOWX58/vjkN2jDOYTMOH1cgGDCcoY3j/XB5/bNc+BviQqBI7Q8I73jmzxfgyH/70EVBGxO+dEO0THVW4Du77EZ6+aRUzgcqi22O1Ekz4Fm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=N13wZYMa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="N13wZYMa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40D5CC4AF0A;
+	Sun,  7 Jul 2024 00:27:12 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="N13wZYMa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1720312029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LHq8XfHVr/Er/seq5fzt+staVUiCGh94aZm7Brs1gKI=;
+	b=N13wZYMaqsyR07hZJ3uAEKhMZPN/yeOhVrmFOlBqk9TI+/KXSdgeXtS/VB0H2FZAIn90b2
+	oi0MrTgwsd5nZ3FaRBRI4fldELR/7AOfvqe/TjEAQQQLGqiafOCBns9dlxkxvHVieGAJes
+	gyjrQOmhba/JzhRG+Lu+1V+hKG96j+Y=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 83b94709 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Sun, 7 Jul 2024 00:27:09 +0000 (UTC)
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 To: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org
-Cc: sudeep.holla@arm.com,
-	james.quinlan@broadcom.com,
-	f.fainelli@gmail.com,
-	vincent.guittot@linaro.org,
-	etienne.carriere@foss.st.com,
-	peng.fan@oss.nxp.com,
-	michal.simek@amd.com,
-	quic_sibis@quicinc.com,
-	quic_nkela@quicinc.com,
-	ptosi@google.com,
-	dan.carpenter@linaro.org,
-	souvik.chakravarty@arm.com,
-	Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH 8/8] firmware: arm_scmi: Remove legacy transport-layer code
-Date: Sun,  7 Jul 2024 01:20:55 +0100
-Message-ID: <20240707002055.1835121-9-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240707002055.1835121-1-cristian.marussi@arm.com>
-References: <20240707002055.1835121-1-cristian.marussi@arm.com>
+	patches@lists.linux.dev,
+	tglx@linutronix.de
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	linux-crypto@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	x86@kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
+	Carlos O'Donell <carlos@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jann Horn <jannh@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Hildenbrand <dhildenb@redhat.com>
+Subject: [PATCH v21 0/4] implement getrandom() in vDSO
+Date: Sun,  7 Jul 2024 02:26:50 +0200
+Message-ID: <20240707002658.1917440-1-Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Since all SCMI transports have been made standalone drivers, remove all the
-core SCMI stack legacy support that was needed to run transports as built
-into the stack.
+The plan for this series is to take it through my random.git tree for 6.11.
+It's cooking in linux-next now.
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
- drivers/firmware/arm_scmi/common.h | 18 ------
- drivers/firmware/arm_scmi/driver.c | 96 ++++--------------------------
- drivers/firmware/arm_scmi/msg.c    |  2 +-
- drivers/firmware/arm_scmi/shmem.c  |  2 +-
- 4 files changed, 15 insertions(+), 103 deletions(-)
+Changes v20->v21:
 
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 102b28c3f22a..993bd9df7dd4 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -183,7 +183,6 @@ struct scmi_chan_info {
- /**
-  * struct scmi_transport_ops - Structure representing a SCMI transport ops
-  *
-- * @link_supplier: Optional callback to add link to a supplier device
-  * @chan_available: Callback to check if channel is available or not
-  * @chan_setup: Callback to allocate and setup a channel
-  * @chan_free: Callback to free a channel
-@@ -198,7 +197,6 @@ struct scmi_chan_info {
-  * @poll_done: Callback to poll transfer status
-  */
- struct scmi_transport_ops {
--	int (*link_supplier)(struct device *dev);
- 	bool (*chan_available)(struct device_node *of_node, int idx);
- 	int (*chan_setup)(struct scmi_chan_info *cinfo, struct device *dev,
- 			  bool tx);
-@@ -219,12 +217,6 @@ struct scmi_transport_ops {
- /**
-  * struct scmi_desc - Description of SoC integration
-  *
-- * @transport_init: An optional function that a transport can provide to
-- *		    initialize some transport-specific setup during SCMI core
-- *		    initialization, so ahead of SCMI core probing.
-- * @transport_exit: An optional function that a transport can provide to
-- *		    de-initialize some transport-specific setup during SCMI core
-- *		    de-initialization, so after SCMI core removal.
-  * @ops: Pointer to the transport specific ops structure
-  * @max_rx_timeout_ms: Timeout for communication with SoC (in Milliseconds)
-  * @max_msg: Maximum number of messages for a channel type (tx or rx) that can
-@@ -245,8 +237,6 @@ struct scmi_transport_ops {
-  *		    when requested.
-  */
- struct scmi_desc {
--	int (*transport_init)(void);
--	void (*transport_exit)(void);
- 	const struct scmi_transport_ops *ops;
- 	int max_rx_timeout_ms;
- 	int max_msg;
-@@ -287,8 +277,6 @@ int scmi_xfer_raw_wait_for_message_response(struct scmi_chan_info *cinfo,
- 					    struct scmi_xfer *xfer,
- 					    unsigned int timeout_ms);
- 
--void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr, void *priv);
--
- enum scmi_bad_msg {
- 	MSG_UNEXPECTED = -1,
- 	MSG_INVALID = -2,
-@@ -297,9 +285,6 @@ enum scmi_bad_msg {
- 	MSG_MBOX_SPURIOUS = -5,
- };
- 
--void scmi_bad_message_trace(struct scmi_chan_info *cinfo, u32 msg_hdr,
--			    enum scmi_bad_msg err);
--
- /* shmem related declarations */
- struct scmi_shared_mem;
- 
-@@ -447,9 +432,6 @@ static struct platform_driver __trans##_driver = {			\
- 	.remove_new = __trans##_remove,					\
- }
- 
--extern const struct scmi_shared_mem_operations scmi_shmem_ops;
--extern const struct scmi_message_operations scmi_msg_ops;
--
- void scmi_notification_instance_data_set(const struct scmi_handle *handle,
- 					 void *priv);
- void *scmi_notification_instance_data_get(const struct scmi_handle *handle);
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 2a1f87c97abe..ea0595193dec 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -194,6 +194,11 @@ struct scmi_info {
- #define bus_nb_to_scmi_info(nb)	container_of(nb, struct scmi_info, bus_nb)
- #define req_nb_to_scmi_info(nb)	container_of(nb, struct scmi_info, dev_req_nb)
- 
-+static void scmi_rx_callback(struct scmi_chan_info *cinfo,
-+			     u32 msg_hdr, void *priv);
-+static void scmi_bad_message_trace(struct scmi_chan_info *cinfo,
-+				   u32 msg_hdr, enum scmi_bad_msg err);
-+
- static struct scmi_transport_core_operations scmi_trans_core_ops = {
- 	.bad_message_trace = scmi_bad_message_trace,
- 	.rx_callback = scmi_rx_callback,
-@@ -838,8 +843,8 @@ scmi_xfer_lookup_unlocked(struct scmi_xfers_info *minfo, u16 xfer_id)
-  * timed-out message that arrives and as such, can be traced only referring to
-  * the header content, since the payload is missing/unreliable.
-  */
--void scmi_bad_message_trace(struct scmi_chan_info *cinfo, u32 msg_hdr,
--			    enum scmi_bad_msg err)
-+static void scmi_bad_message_trace(struct scmi_chan_info *cinfo, u32 msg_hdr,
-+				   enum scmi_bad_msg err)
- {
- 	char *tag;
- 	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
-@@ -1165,7 +1170,8 @@ static void scmi_handle_response(struct scmi_chan_info *cinfo,
-  * NOTE: This function will be invoked in IRQ context, hence should be
-  * as optimal as possible.
-  */
--void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr, void *priv)
-+static void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr,
-+			     void *priv)
- {
- 	u8 msg_type = MSG_XTRACT_TYPE(msg_hdr);
- 
-@@ -2988,14 +2994,11 @@ static int scmi_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *child, *np = dev->of_node;
- 
--	desc = of_device_get_match_data(dev);
-+	desc = scmi_transport_lookup(dev);
- 	if (!desc) {
--		desc = scmi_transport_lookup(dev);
--		if (!desc) {
--			err_str = "transport invalid\n";
--			ret = -EINVAL;
--			goto out_err;
--		}
-+		err_str = "transport invalid\n";
-+		ret = -EINVAL;
-+		goto out_err;
- 	}
- 
- 	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-@@ -3035,14 +3038,6 @@ static int scmi_probe(struct platform_device *pdev)
- 			 info->atomic_threshold);
- 	handle->is_transport_atomic = scmi_is_transport_atomic;
- 
--	if (desc->ops->link_supplier) {
--		ret = desc->ops->link_supplier(dev);
--		if (ret) {
--			err_str = "transport not ready\n";
--			goto clear_ida;
--		}
--	}
--
- 	/* Setup all channels described in the DT at first */
- 	ret = scmi_channels_setup(info);
- 	if (ret) {
-@@ -3249,72 +3244,16 @@ static struct attribute *versions_attrs[] = {
- };
- ATTRIBUTE_GROUPS(versions);
- 
--/* Each compatible listed below must have descriptor associated with it */
--static const struct of_device_id scmi_of_match[] = {
--	{ /* Sentinel */ },
--};
--
--MODULE_DEVICE_TABLE(of, scmi_of_match);
--
- static struct platform_driver scmi_driver = {
- 	.driver = {
- 		   .name = "arm-scmi",
- 		   .suppress_bind_attrs = true,
--		   .of_match_table = scmi_of_match,
- 		   .dev_groups = versions_groups,
- 		   },
- 	.probe = scmi_probe,
- 	.remove_new = scmi_remove,
- };
- 
--/**
-- * __scmi_transports_setup  - Common helper to call transport-specific
-- * .init/.exit code if provided.
-- *
-- * @init: A flag to distinguish between init and exit.
-- *
-- * Note that, if provided, we invoke .init/.exit functions for all the
-- * transports currently compiled in.
-- *
-- * Return: 0 on Success.
-- */
--static inline int __scmi_transports_setup(bool init)
--{
--	int ret = 0;
--	const struct of_device_id *trans;
--
--	for (trans = scmi_of_match; trans->data; trans++) {
--		const struct scmi_desc *tdesc = trans->data;
--
--		if ((init && !tdesc->transport_init) ||
--		    (!init && !tdesc->transport_exit))
--			continue;
--
--		if (init)
--			ret = tdesc->transport_init();
--		else
--			tdesc->transport_exit();
--
--		if (ret) {
--			pr_err("SCMI transport %s FAILED initialization!\n",
--			       trans->compatible);
--			break;
--		}
--	}
--
--	return ret;
--}
--
--static int __init scmi_transports_init(void)
--{
--	return __scmi_transports_setup(true);
--}
--
--static void __exit scmi_transports_exit(void)
--{
--	__scmi_transports_setup(false);
--}
--
- static struct dentry *scmi_debugfs_init(void)
- {
- 	struct dentry *d;
-@@ -3330,17 +3269,10 @@ static struct dentry *scmi_debugfs_init(void)
- 
- static int __init scmi_driver_init(void)
- {
--	int ret;
--
- 	/* Bail out if no SCMI transport was configured */
- 	if (WARN_ON(!IS_ENABLED(CONFIG_ARM_SCMI_HAVE_TRANSPORT)))
- 		return -EINVAL;
- 
--	/* Initialize any compiled-in transport which provided an init/exit */
--	ret = scmi_transports_init();
--	if (ret)
--		return ret;
--
- 	if (IS_ENABLED(CONFIG_ARM_SCMI_HAVE_SHMEM))
- 		scmi_trans_core_ops.shmem = scmi_shared_mem_operations_get();
- 
-@@ -3380,8 +3312,6 @@ static void __exit scmi_driver_exit(void)
- 	scmi_powercap_unregister();
- 	scmi_pinctrl_unregister();
- 
--	scmi_transports_exit();
--
- 	platform_driver_unregister(&scmi_driver);
- 
- 	debugfs_remove_recursive(scmi_top_dentry);
-diff --git a/drivers/firmware/arm_scmi/msg.c b/drivers/firmware/arm_scmi/msg.c
-index 0bed1d2825af..ca916817878d 100644
---- a/drivers/firmware/arm_scmi/msg.c
-+++ b/drivers/firmware/arm_scmi/msg.c
-@@ -110,7 +110,7 @@ static void msg_fetch_notification(struct scmi_msg_payld *msg, size_t len,
- 	memcpy(xfer->rx.buf, msg->msg_payload, xfer->rx.len);
- }
- 
--const struct scmi_message_operations scmi_msg_ops = {
-+static const struct scmi_message_operations scmi_msg_ops = {
- 	.tx_prepare = msg_tx_prepare,
- 	.command_size = msg_command_size,
- 	.response_size = msg_response_size,
-diff --git a/drivers/firmware/arm_scmi/shmem.c b/drivers/firmware/arm_scmi/shmem.c
-index feb4215831dc..f450367e4386 100644
---- a/drivers/firmware/arm_scmi/shmem.c
-+++ b/drivers/firmware/arm_scmi/shmem.c
-@@ -171,7 +171,7 @@ static void *__iomem shmem_setup_iomap(struct scmi_chan_info *cinfo,
- 	return addr;
- }
- 
--const struct scmi_shared_mem_operations scmi_shmem_ops = {
-+static const struct scmi_shared_mem_operations scmi_shmem_ops = {
- 	.tx_prepare = shmem_tx_prepare,
- 	.read_header = shmem_read_header,
- 	.fetch_response = shmem_fetch_response,
+- After extensive conversation with Linus, we're nixing the entire
+  vgetrandom_alloc() syscall, in favor of just exposing the functionality
+  needed through mmap() and having the kernel communicate to the caller what
+  arguments/sizes it should pass to mmap(). This simplifies the series
+  considerably. It also means that the first commit adds some new MAP_*
+  constants for mmap().
+
+- Separate vDSO selftests out into separate commit.
+
+--------------
+
+Useful links:
+
+- This series:
+  - https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git/log/
+
+- In case you're actually interested in the v≤14 design where faults were
+  non-fatal and instructions were skipped (which I think is more coherent, even
+  if the implementation is controversial), this lives in my branch here:
+  - https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git/log/?h=jd/vdso-skip-insn
+  Note that I'm *not* actually proposing this for upstream at this time. But it
+  may be of conversational interest.
+
+-------------
+
+Two statements:
+
+  1) Userspace wants faster cryptographically secure random numbers of
+     arbitrary size, big or small.
+
+  2) Userspace is currently unable to safely roll its own RNG with the
+     same security profile as getrandom().
+
+Statement (1) has been debated for years, with arguments ranging from
+"we need faster cryptographically secure card shuffling!" to "the only
+things that actually need good randomness are keys, which are few and
+far between" to "actually, TLS CBC nonces are frequent" and so on. I
+don't intend to wade into that debate substantially, except to note that
+recently glibc added arc4random(), whose goal is to return a
+cryptographically secure uint32_t, and there are real user reports of it
+being too slow. So here we are.
+
+Statement (2) is more interesting. The kernel is the nexus of all
+entropic inputs that influence the RNG. It is in the best position, and
+probably the only position, to decide anything at all about the current
+state of the RNG and of its entropy. One of the things it uniquely knows
+about is when reseeding is necessary.
+
+For example, when a virtual machine is forked, restored, or duplicated,
+it's imparative that the RNG doesn't generate the same outputs. For this
+reason, there's a small protocol between hypervisors and the kernel that
+indicates this has happened, alongside some ID, which the RNG uses to
+immediately reseed, so as not to return the same numbers. Were userspace
+to expand a getrandom() seed from time T1 for the next hour, and at some
+point T2 < hour, the virtual machine forked, userspace would continue to
+provide the same numbers to two (or more) different virtual machines,
+resulting in potential cryptographic catastrophe. Something similar
+happens on resuming from hibernation (or even suspend), with various
+compromise scenarios there in mind.
+
+There's a more general reason why userspace rolling its own RNG from a
+getrandom() seed is fraught. There's a lot of attention paid to this
+particular Linuxism we have of the RNG being initialized and thus
+non-blocking or uninitialized and thus blocking until it is initialized.
+These are our Two Big States that many hold to be the holy
+differentiating factor between safe and not safe, between
+cryptographically secure and garbage. The fact is, however, that the
+distinction between these two states is a hand-wavy wishy-washy inexact
+approximation. Outside of a few exceptional cases (e.g. a HW RNG is
+available), we actually don't really ever know with any rigor at all
+when the RNG is safe and ready (nor when it's compromised). We do the
+best we can to "estimate" it, but entropy estimation is fundamentally
+impossible in the general case. So really, we're just doing guess work,
+and hoping it's good and conservative enough. Let's then assume that
+there's always some potential error involved in this differentiator.
+
+In fact, under the surface, the RNG is engineered around a different
+principle, and that is trying to *use* new entropic inputs regularly and
+at the right specific moments in time. For example, close to boot time,
+the RNG reseeds itself more often than later. At certain events, like VM
+fork, the RNG reseeds itself immediately. The various heuristics for
+when the RNG will use new entropy and how often is really a core aspect
+of what the RNG has some potential to do decently enough (and something
+that will probably continue to improve in the future from random.c's
+present set of algorithms). So in your mind, put away the metal
+attachment to the Two Big States, which represent an approximation with
+a potential margin of error. Instead keep in mind that the RNG's primary
+operating heuristic is how often and exactly when it's going to reseed.
+
+So, if userspace takes a seed from getrandom() at point T1, and uses it
+for the next hour (or N megabytes or some other meaningless metric),
+during that time, potential errors in the Two Big States approximation
+are amplified. During that time potential reseeds are being lost,
+forgotten, not reflected in the output stream. That's not good.
+
+The simplest statement you could make is that userspace RNGs that expand
+a getrandom() seed at some point T1 are nearly always *worse*, in some
+way, than just calling getrandom() every time a random number is
+desired.
+
+For those reasons, after some discussion on libc-alpha, glibc's
+arc4random() now just calls getrandom() on each invocation. That's
+trivially safe, and gives us latitude to then make the safe thing faster
+without becoming unsafe at our leasure. Card shuffling isn't
+particularly fast, however.
+
+How do we rectify this? By putting a safe implementation of getrandom()
+in the vDSO, which has access to whatever information a
+particular iteration of random.c is using to make its decisions. I use
+that careful language of "particular iteration of random.c", because the
+set of things that a vDSO getrandom() implementation might need for making
+decisions as good as the kernel's will likely change over time. This
+isn't just a matter of exporting certain *data* to userspace. We're not
+going to commit to a "data API" where the various heuristics used are
+exposed, locking in how the kernel works for decades to come, and then
+leave it to various userspaces to roll something on top and shoot
+themselves in the foot and have all sorts of complexity disasters.
+Rather, vDSO getrandom() is supposed to be the *same exact algorithm*
+that runs in the kernel, except it's been hoisted into userspace as
+much as possible. And so vDSO getrandom() and kernel getrandom() will
+always mirror each other hermetically.
+
+API-wise, the vDSO gains this function:
+
+  ssize_t vgetrandom(void *buffer, size_t len, unsigned int flags,
+                     void *opaque_state, size_t opaque_len);
+
+The return value and the first 3 arguments are the same as ordinary
+getrandom(), while the penultimate argument is a pointer to some state
+allocated with the right flags passed to mmap(2), explained below. Were all
+five arguments passed to the getrandom syscall, nothing different would happen,
+and the functions would have the exact same behavior.
+
+If vgetrandom(NULL, 0, 0, &params, ~0UL) is called, then params gets populated
+with information about what flags and prot fields to pass to mmap(2), as well
+as how big each state should be, so that the caller can slice up returned
+memory from mmap(2) into chunks for passing to vgetrandom().
+
+Libc is expected to allocate a chunk of these on first use, and then
+dole them out to threads as they're created, allocating more when
+needed.
+
+The interesting meat of the implementation is in lib/vdso/getrandom.c,
+as generic C code, and it aims to mainly follow random.c's buffered fast
+key erasure logic. Before the RNG is initialized, it falls back to the
+syscall. Right now it uses a simple generation counter to make its decisions
+on reseeding (though this could be made more extensive over time).
+
+The actual place that has the most work to do is in all of the other
+files. Most of the vDSO shared page infrastructure is centered around
+gettimeofday, and so the main structs are all in arrays for different
+timestamp types, and attached to time namespaces, and so forth. I've
+done the best I could to add onto this in an unintrusive way.
+
+In my test results, performance is pretty stellar (around 15x for uint32_t
+generation), and it seems to be working. There's an extended example in the
+last commit of this series, showing how the syscall and the vDSO function
+are meant to be used together.
+
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-api@vger.kernel.org
+Cc: x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>
+Cc: Carlos O'Donell <carlos@redhat.com>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jann Horn <jannh@google.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: David Hildenbrand <dhildenb@redhat.com>
+
+Jason A. Donenfeld (4):
+  mm: add VM_DROPPABLE for designating always lazily freeable mappings
+  random: introduce generic vDSO getrandom() implementation
+  x86: vdso: Wire up getrandom() vDSO implementation
+  selftests/vDSO: add tests for vgetrandom
+
+ MAINTAINERS                                   |   4 +
+ arch/alpha/include/uapi/asm/mman.h            |   3 +
+ arch/mips/include/uapi/asm/mman.h             |   3 +
+ arch/parisc/include/uapi/asm/mman.h           |   3 +
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/entry/vdso/Makefile                  |   3 +-
+ arch/x86/entry/vdso/vdso.lds.S                |   2 +
+ arch/x86/entry/vdso/vgetrandom-chacha.S       | 178 +++++++++++
+ arch/x86/entry/vdso/vgetrandom.c              |  17 ++
+ arch/x86/include/asm/vdso/getrandom.h         |  55 ++++
+ arch/x86/include/asm/vdso/vsyscall.h          |   2 +
+ arch/x86/include/asm/vvar.h                   |  16 +
+ arch/xtensa/include/uapi/asm/mman.h           |   3 +
+ drivers/char/random.c                         |  18 +-
+ fs/proc/task_mmu.c                            |   3 +
+ include/linux/mm.h                            |   8 +
+ include/trace/events/mmflags.h                |   7 +
+ include/uapi/asm-generic/mman-common.h        |   4 +
+ include/uapi/linux/random.h                   |  15 +
+ include/vdso/datapage.h                       |  11 +
+ include/vdso/getrandom.h                      |  46 +++
+ lib/vdso/Kconfig                              |   6 +
+ lib/vdso/getrandom.c                          | 252 +++++++++++++++
+ mm/Kconfig                                    |   3 +
+ mm/mmap.c                                     |  15 +
+ mm/mprotect.c                                 |   2 +-
+ mm/rmap.c                                     |  16 +-
+ tools/include/asm/rwonce.h                    |   0
+ tools/include/uapi/asm-generic/mman-common.h  |   4 +
+ tools/testing/selftests/mm/.gitignore         |   1 +
+ tools/testing/selftests/mm/Makefile           |   1 +
+ tools/testing/selftests/mm/droppable.c        |  53 ++++
+ tools/testing/selftests/vDSO/.gitignore       |   2 +
+ tools/testing/selftests/vDSO/Makefile         |  15 +
+ .../testing/selftests/vDSO/vdso_test_chacha.c |  43 +++
+ .../selftests/vDSO/vdso_test_getrandom.c      | 288 ++++++++++++++++++
+ 36 files changed, 1097 insertions(+), 6 deletions(-)
+ create mode 100644 arch/x86/entry/vdso/vgetrandom-chacha.S
+ create mode 100644 arch/x86/entry/vdso/vgetrandom.c
+ create mode 100644 arch/x86/include/asm/vdso/getrandom.h
+ create mode 100644 include/vdso/getrandom.h
+ create mode 100644 lib/vdso/getrandom.c
+ create mode 100644 tools/include/asm/rwonce.h
+ create mode 100644 tools/testing/selftests/mm/droppable.c
+ create mode 100644 tools/testing/selftests/vDSO/vdso_test_chacha.c
+ create mode 100644 tools/testing/selftests/vDSO/vdso_test_getrandom.c
+
+
+base-commit: 22a40d14b572deb80c0648557f4bd502d7e83826
 -- 
 2.45.2
 
