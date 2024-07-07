@@ -1,39 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62697376E0;
-	Sun,  7 Jul 2024 17:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4061F3FB96;
+	Sun,  7 Jul 2024 17:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720374960; cv=none; b=YJ300GOsmaXbHCIXAhXDr1NBUAGUx8o0AOSGdhJzGeM0mbxon2hpiLBR5f4IBrznhTZlkFgk/umbs4lmg7P2j9T8WzLa36GYDHgJ/0M8mVN/g73x1sCRlNSQj7cUHAPS6l8lr0HwS0KGuOSlIklnNCwvyoxiLPJBe04Duu7ZJYU=
+	t=1720374987; cv=none; b=YwBZaIWaQarQLbQ4xCcjluaan4xDpp2p8CVRi3RiaN+siyXRrG7HEvbbqqNrTa/3TkK+tYQvTw2kX2OENE6tVzlLv5H8zdYhr7/3JDu5KCquAg1Nl7OUE60PCIrcc5tWm4a3mB78JDktUoq94SgnNdBILRtBb8WkuxXIGe+v5MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720374960; c=relaxed/simple;
-	bh=tCtzvIADdB8zhgu5nlKpUyUKWSyi/Efze9E/Z4YX6oA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lVQhiFAYih5sZpXANH9v8l/DHRtsZ8FeNzr5Vxi5Sq4tIqXKaMwPs9bj6mqn/5DdEtocTlpe+IhdUmc9Vx1N+/nACrANaNBRIxr8b2/+pL+2MZ61URzYYUANNRhAEFTQYK0trNBUQ9IICNP4C2pJujRDq2n4j3/FCJVG47GjJhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ug5Hyrr1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720374987; c=relaxed/simple;
+	bh=zqxRC/OCWtMYzBfgDiMrxFE0R1/qK2xdfC7+ctzGRKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jBniJ5ITFDBTQVXs78iIeGbLvI/1wLpxtD9yU5qnAsL3k4cnML0RtTlUQwRkSAgxQu0tJ++7lRTXHFQpHAK0Ut98Vws+V6Agva1WYkWWNRKiYcea7qKAiwqPgD8IhQ5gZTvJc/2IzrEdBL+oIjVX3koqW16K9RECSr3WR+GknOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DkS8l/eo; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ug5Hyrr1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E75C3277B;
-	Sun,  7 Jul 2024 17:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720374959;
-	bh=tCtzvIADdB8zhgu5nlKpUyUKWSyi/Efze9E/Z4YX6oA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Ug5Hyrr1o4GFLMRYpODBkeDRNnms4fj0A0EV2Hs8HvN6WY05xse/McpVlSW0re59H
-	 DcuzrT4ZRVBmQy6nBT6AffTsiC4e7vWiqQqOwZTvCirJdGVJ/znaX/ClxemDpHRW//
-	 hgJ0KZ/r2W5nGV5THLhVrbniq2LF7HYbNX+mxwzyg5ghOYtbmwUKbadn2NdpgGR3/D
-	 Y07O/fLMm+CVepo96z2d0qh34Iu6L9GuG9glEv38tUGT/Ql4BeNbDHRhDLYzc7WwYr
-	 TTpffuoj/t08qKxkG2v5tDZzokZ00sp9VyrXuN9trA8IQBbgWNAEPULc8ZajumxLH1
-	 0fmHrLpRncn2w==
-From: Stephen Boyd <sboyd@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] clk fixes for v6.10-rc6
-Date: Sun,  7 Jul 2024 10:55:58 -0700
-Message-ID: <20240707175558.480229-1-sboyd@kernel.org>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkS8l/eo"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4265ddc879aso9020115e9.0;
+        Sun, 07 Jul 2024 10:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720374984; x=1720979784; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iFovd2CBsLr5gf/in/j/bQ114RRO4t9SF/VVgwyJEPs=;
+        b=DkS8l/eoLtZ36X6dno+ib+pyoVEvJ3FSzaRHi8ROV2SrJS0h96o2+uGm7VSFwSwCMQ
+         i5S/Eaw0mJc6fNUwvx4j5m8kFqttanVzeP+CL9HsGAQRFIqdB5mnNutxgnUtgIrp1uO3
+         sQKZnEmOeyMYIZfuMXjgQa9nMp5CdRxl4yD++EkaZ06cYAj3ki9cPsfg7lVOwryQoym4
+         6QHSpVb1sklE6sdv+adUuQIJuw9Vdo6No+DQ15hHSZrNOmXTAygIudSArJhrAF/lmdH+
+         YW5NvTRpvSzV8cJpNiQKYJFNiCRwFRLiXGETNsov9bAhSrhWfHVYeHVfeG5fmoAAQSCI
+         i3Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720374984; x=1720979784;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iFovd2CBsLr5gf/in/j/bQ114RRO4t9SF/VVgwyJEPs=;
+        b=tkXDp/F+OeJEs6a3f2/H7yVnBa26u25+ydJBuTXCoaPijyQZWZ2b98ahePglggWlDJ
+         BVyAyTYU4e/zDRitMG8yhbK+kx3nEbdCOlswrnVZMH1s1/WG1dCuOFaiHWOK5U0yTiH2
+         2DEeFSqst8KQG0rLNDYsdfwi2ON2RyNaYGV2JokR6g0ZBvwd44aMBLmLuSXgiXu60prb
+         ySeYWSVm9s0QvEYHs2gkASTTgr2E0r7fZ93+9skKpLAq/1SBDDCGQK8iredTQrOQQxx1
+         p5hHZzKpeicUcC5xchhQ6xSOaGYnumptrFKMRWZAyi5MFJUzkHqHrss+5zA+AsDx+17/
+         W1Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0wOnwTBQKeXoIryN87r3CTS13SF2Lwb0y27777OHTJNB9rELrMQyZxXppn6TIuW43iaiPzF/f5/n087z2+L0nBTRGVN0HtrbWZvCz
+X-Gm-Message-State: AOJu0Yyckbr12BEItKuXxTotUSv9mqnwhtRlUqypXH3OXYMf+P4cK1kO
+	+/bxklzUN1ZQtL5n6asntQNkqbrAkI04mttfs25bdwnXbN5M7PU8
+X-Google-Smtp-Source: AGHT+IGb1GhRm1vZcj8aUuS3EJE02jgDiPhrPJvQiEI+4bEFweCdI20pOMzoETgdSUFh/j5hTSE1iw==
+X-Received: by 2002:a05:600c:19cf:b0:426:66fb:fcd6 with SMTP id 5b1f17b1804b1-42666fbfd5fmr10513615e9.3.1720374984470;
+        Sun, 07 Jul 2024 10:56:24 -0700 (PDT)
+Received: from localhost.localdomain ([2001:8a0:ed72:2800:17de:b512:9f9e:464b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a28355csm135562825e9.43.2024.07.07.10.56.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jul 2024 10:56:24 -0700 (PDT)
+From: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+To: hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	carlosmiguelferreira.2003@gmail.com
+Subject: [PATCH v3 0/1] HP: wmi: added support for 4 zone keyboard rgb
+Date: Sun,  7 Jul 2024 18:54:53 +0100
+Message-ID: <20240707175613.27529-1-carlosmiguelferreira.2003@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,64 +67,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The following changes since commit 2607133196c35f31892ee199ce7ffa717bea4ad1:
+Hi,
+As suggested, this driver now uses the multicolor led api.
 
-  clk: sifive: Do not register clkdevs for PRCI clocks (2024-05-29 12:31:02 -0700)
+Please note that for brightness, it takes the brightness files in
+each zone and uses them as one as there is no per zone brightness
+control, so all the files control the brightness of the entire keyboard.
+Also, when the backlight toggle key is pressed it updates the brightness
+on all the zones to avoid some edge case problems i ran into
+where setting the same color more than once would set the brightness
+to the previous value.
 
-are available in the Git repository at:
+Please let me know if this is a good approach.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
+Carlos Ferreira (1):
+  HP: wmi: added support for 4 zone keyboard rgb
 
-for you to fetch changes up to 10f84de27bd05bd2648512975d085dbe0a1e71c3:
-
-  Merge tag 'qcom-clk-fixes-for-6.10' of https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into clk-fixes (2024-07-02 12:03:15 -0700)
-
-----------------------------------------------------------------
-A set of clk fixes for the Qualcomm, Mediatek, and Allwinner drivers:
-
- - Fix the Qualcomm Stromer Plus PLL set_rate() clk_op to explicitly set
-   the alpha enable bit and not set bits that don't exist
- - Mark Qualcomm IPQ9574 crypto clks as voted to avoid stuck clk
-   warnings
- - Fix the parent of some PLLs on Qualcomm sm6530 so their rate is
-   correct
- - Fix the min/max rate clamping logic in the Allwinner driver that got
-   broken in v6.9
- - Limit runtime PM enabling in the Mediatek driver to only
-   mt8183-mfgcfg so that system wide resume doesn't break on other
-   Mediatek SoCs
-
-----------------------------------------------------------------
-Frank Oltmanns (1):
-      clk: sunxi-ng: common: Don't call hw_to_ccu_common on hw without common
-
-Gabor Juhos (2):
-      clk: qcom: clk-alpha-pll: set ALPHA_EN bit for Stromer Plus PLLs
-      clk: qcom: apss-ipq-pll: remove 'config_ctl_hi_val' from Stromer pll configs
-
-Luca Weiss (1):
-      clk: qcom: gcc-sm6350: Fix gpll6* & gpll7 parents
-
-Md Sadre Alam (1):
-      clk: qcom: gcc-ipq9574: Add BRANCH_HALT_VOTED flag
-
-Pin-yen Lin (1):
-      clk: mediatek: mt8183: Only enable runtime PM on mt8183-mfgcfg
-
-Stephen Boyd (2):
-      Merge tag 'sunxi-clk-fixes-for-6.10' of https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux into clk-fixes
-      Merge tag 'qcom-clk-fixes-for-6.10' of https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into clk-fixes
-
- drivers/clk/mediatek/clk-mt8183-mfgcfg.c |  1 +
- drivers/clk/mediatek/clk-mtk.c           | 24 ++++++++++++++----------
- drivers/clk/mediatek/clk-mtk.h           |  2 ++
- drivers/clk/qcom/apss-ipq-pll.c          |  2 --
- drivers/clk/qcom/clk-alpha-pll.c         |  3 +++
- drivers/clk/qcom/gcc-ipq9574.c           | 10 ++++++----
- drivers/clk/qcom/gcc-sm6350.c            | 10 +++++-----
- drivers/clk/sunxi-ng/ccu_common.c        | 18 ++++++++++++------
- 8 files changed, 43 insertions(+), 27 deletions(-)
+ drivers/platform/x86/hp/hp-wmi.c | 248 +++++++++++++++++++++++++++++--
+ 1 file changed, 239 insertions(+), 9 deletions(-)
 
 -- 
-https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
-https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
+2.45.2
+
