@@ -1,42 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819EABA2F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6857CEDC;
 	Sun,  7 Jul 2024 22:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720391860; cv=none; b=PgfxY8+4GnMlDtMWw30bWWaS3FxGeYmrE57A89L2D9o8S3cmwzvGErNYRMDrjJ6nYwjV5Nzwv+OSkIPRNCw58IPZZHEuO48dOzhiwcegWIJC4poWR7kv2XprxEdsG/0IEgCAXNJo/PPPvLZI5sW5AWEaJnnjTWTXvO3oxmG+kU8=
+	t=1720391860; cv=none; b=oU3imAEiu9imooB7lRUq285zVCjemg7yBuu7851avbloWDhofhI2HRjorStuJCJQI6pjYJMx/KFAORLJ5C5V0dbD7GJEWizrfDSShP5ms8R1bYdTC1yZc4kqjCLklcwRtmOaeEdp2JePYKAG5M/lkVdumv3ISvf+EoWgLZ4LQtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720391860; c=relaxed/simple;
-	bh=JGRuPp5f7tdBTXkrWe9oHs1o3E3gbeMCdlehVi8h2jw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FKkVOCvCtHAVoaJNs65vYiJsZbFerK7NrcaEV+y1hMDnWrYK/9rgJ8vQDGWPuMKXT50k/Ua2jxl/lfM+2xdTktbNrKEwkgxGwKEuEWT6TANcNH9e80qvfIYatgQiXbmLibSY5s9+R7LrbfnlrOhcFBIlxUNVPj20RGdpYUt0aqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=KJdGAjuJ; arc=none smtp.client-ip=212.227.15.19
+	bh=O7XVQdyMHMxbunVATdf/LX5GcM2hGQPm9TlJn5WdkTA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SP/V7SJ5bSlPe4nmOng0cEdOQL7LHhGxm8xm6UGfxZG+4x8fWcQIhi7lbRwrdAcmKwbIQekJCkNvhbhzG3MJbPTycf2cr/6xs3inCPe9JwyH664llsJ4h+M+wYpgdmZ42f7zlyiaZCV4wOoQqHsnhOBA3/d0bTKKnmWFh1qsGJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=Pbg16VQE; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="KJdGAjuJ"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="Pbg16VQE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1720391851; x=1720996651; i=j.neuschaefer@gmx.net;
-	bh=n2e88QE5epBSVSFicZ+xqo5ic/O/WtKAyeT8qBcSr5U=;
-	h=X-UI-Sender-Class:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	s=s31663417; t=1720391849; x=1720996649; i=j.neuschaefer@gmx.net;
+	bh=k/2wUJqCS/1bOuRYIc422cgLx2nAzXVqfJrn7v4mg+Y=;
+	h=X-UI-Sender-Class:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:To:Cc:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=KJdGAjuJXlaLEqB/olJSe4NX2VxaK5RCGYHZHR3WRiFnUAegjNdK/RvlHTm0f/tf
-	 jphKzkot7QvbhNtfVwgsXdAg0AC1WNFh06HzHXgaE4hqoid+DD5RvRLIUj4I9snV8
-	 b5os4qikT7jBMzg0T0DxnkMWWDw3YPNs66Br6nP1DoiYdEH6suDzTmqb+Oy/bT+EK
-	 rPGb0QaplIYVY1nGyelLo325HYHbBO7Xr9x22o2/PvJSwnXtF2HYA7QHMvwclVpkV
-	 Ozb8Q8epTiNl7hTKrSG1xjzqLNf4LFkiYr3OySN9PsDCaHQMZWiO5GYcWf0o3Ukkb
-	 2avbtfebRX09ZqLuaA==
+	b=Pbg16VQErMMKQt5uc4D1u5x1W0FuGQcf/eUELyTC8PJrW7abo+4yCloLDuXikIyl
+	 Z7eJaQJK/kl4qEN8jBqa3ZVdmkuQggzNOcDSg+j66+DESfjqoMkvov6ICz7dNrELM
+	 AnoWgJKF7S2cCNkgNywFTdDAY7FKZQ1NFTNAThdyTftlriDzLA3su/0EUctjixSGX
+	 yZhOb1eeiXlKIlvxUiIfOMmjOLsoshF9KlAGDCHYIF0P/i2sbieaJ6ZGJHaHN/CKO
+	 WM/Cloojr2Y4So8j1jh8lvup4aFU434BIq9an36m6+PebEiNKBkBYeEno9qdnzPoT
+	 pktlTQmHF1P530IruA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from probook ([89.0.46.161]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSKuA-1sosgE3HLc-00URNO; Mon, 08
- Jul 2024 00:37:30 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWzk3-1sszQ13jFx-00Z6oA; Mon, 08
+ Jul 2024 00:37:28 +0200
 From: =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Date: Mon, 08 Jul 2024 00:37:15 +0200
-Subject: [PATCH RESEND v12 2/6] clk: Introduce
- devm_clk_hw_register_divider_table_parent_data()
+Subject: [PATCH RESEND v12 0/6] Nuvoton WPCM450 clock and reset driver
+Date: Mon, 08 Jul 2024 00:37:13 +0200
+Message-Id: <20240708-wpcm-clk-v12-0-1afac539c37d@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,9 +44,6 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <20240708-wpcm-clk-v12-2-1afac539c37d@gmx.net>
-References: <20240708-wpcm-clk-v12-0-1afac539c37d@gmx.net>
-In-Reply-To: <20240708-wpcm-clk-v12-0-1afac539c37d@gmx.net>
 To: openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
  devicetree@vger.kernel.org
 Cc: Michael Turquette <mturquette@baylibre.com>, 
@@ -57,77 +53,147 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
  Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, 
  =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720391846; l=1760;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720391846; l=4460;
  i=j.neuschaefer@gmx.net; s=20240329; h=from:subject:message-id;
- bh=VjLniaHS+bKcYFjCZNozqsTADYqMusOVNK5lpprhRBg=;
- b=rv01x0ZigBxViCJbV/XFzMikU4XwIA1huopJ6JjXnoERms/MWakBqqDwAG4ZFxZihfAVpXT5d
- Ga3re91UfEJCXrv1dsy0U5vSjPWIfg6htDOfG+0KerApP1NwE68AGl3
+ bh=LHlwXz0xY3IxreqHfZl/rfZVPyckYCVZucb0Ic/3Jx4=;
+ b=3vx2VHTzAy3f/sw5YbD5Lfuf7A/GvQe73unYvZpZ28E03+qj3610qUK549NYrgnXfICu28ZlD
+ YuF9/CarQxeAAKUllGdrY7uKZBsbqWqwgSvY6kMcHLWYoFUEuCBHQDO
 X-Developer-Key: i=j.neuschaefer@gmx.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Provags-ID: V03:K1:1Jc389Kojt8SzfnWbpW5lZPjQN2ceDAA16oAtax4xjmjn84Nm/b
- zPkTwh8LVVRwDoyP2P5cFDxsLv8xhWkzgoLgyV0qpTseGeckok15TOPyowZqVCd5auAMqhB
- 5amQ5+0cwDohE5WL8pr7okh0cQ3B+aw37TxgfMYKjSbsC7Ch+xFCKQ9VYLsZS/fkvLNsAnJ
- RUHGvQRPe375M8R0DFheQ==
+X-Provags-ID: V03:K1:jokVZF9njeuTuV9Gdi0f/8ho8RZIo6O2MkwzzTMqajdkEY6TnCX
+ V19p+YOnRRDV3l0nbSMkz8trfgtolb/hg0wnbQzpLGZBL7JDfCl8MKdlHyrRRWbh/G0TYKZ
+ MbqYQ2PHx0yCkYYcNau8AdWckgh1yyzGomujXx9A9Wt03cWsdpMJ0pgb8/ZV5eErsYkZs3M
+ KGtQUNm5CLTupHJpe4zag==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:D74VmFvLRM4=;LZosBtBuPdECIBkLPqBbwVC1HfQ
- 1y1/yvA5IB0jHsfybbxgkWzW+AFOD4iRW7PssOAXE14FL0KbrLpO+klZ9Wh26zYc7naWRYNk8
- yr9cdIK3CMj1e0ZqCdMYVdW1GCIZn0jouBfUNzRN5MCdYQsfxXDDjK4Wwv48bbdou6pv3oZ//
- kZGDZdWjeKkUBE9R1zQZ2W1VReTpLEQO5Z9mJ68pi7P4jbzRjdU8B5XogZyhjsDuS6zZ8MZ8F
- KCs965Vq76Bp6V5Bj7fC7iPy/dKIOCg1dN894UyldALAzRqOC4SlKfMheh+o4AyEJSoJ2EMvt
- P+0TWNEueKeSi+77zJFAxn4/20ZBJYxixCQxwwMVReeUt5OuFFuuAh+kZwh+qU1/PtEqqCyjt
- 4xQGS+7nSKVqdptG0RkKQmKUorQEVI5DOnPF+ras2voNw41vlSsEVcQOptls6SMwiUThd3pqs
- +IYCXaeHazmzZS44jFkyxRqCxRr7US08f2gkMKUsjd+MVEG53VW3QM7gnP2J4zwS1AVibg6E0
- bG08QBL7SpJ+MKYZDIoZPGD/JYqVLXQEJZequ81OSomqXQvSfTjIKlW5BqX5gi/BzXvI9of18
- l79Ml2k5CXBFN2ryE4QYpTeKUEE/3oaAkfuK9X/CoX0dPaGM2HxlO4G4/gA8eyyqGvkfwxoE6
- JiBtGleLNKpOCvd4iztSj8Q7oS+1zdyMHaeaXHfbqoJuvXlG2DLwyYHFY5LyUMg6A2VpXVxAu
- ZR9CCbp/Eq+FottED286yF5MlLnAKiWIaJbaLe3jOGin3PavO1gkz4qLCTMxYH780l4Vc6PJ7
- 5axIqQBPPoO9bhZ+pU+1xqHoCzD+5Xw6j0kxJiThazvAI=
+UI-OutboundReport: notjunk:1;M01:P0:ZWyB94pXxsY=;z2pe3s+AvEnqbB3e6T2ZITGDJId
+ R4a53ndv2bLz5sCV3IqaY02zhPIxkbXqGbHswjvEpoctw+py6DGDVdrVNv3rrKi6Wuj9PqiyQ
+ rTB+nXMV6b/zhQht/AdAdb3EkZimjBmA+2tQdCViJJqLeiP89aHbcCHdHwsxlodiNmmWoj0PN
+ USRtgUSbclF8FVBfcDyFV8GcHjApwyooXaHGrSRONFNQ98AKrJwV9sqtR+IB1jYm5FO8VMTg+
+ Ws49PvqV2ODlStqZl71ZVaMik2xWU0Wv9Xk3G00Na/6ts1krnVyrc8fKcA5jMwzLlcxDAfkga
+ t8jyqlroigj3udWfGuX5ziZgL3ksqlRQyTntquJSWzQzzDsG/qnK28aFzqn5hN38QLTIzfYEu
+ wwoJxMf3sn6UPBh1rprmkzJoLTytTEXjPSpMAFsxGGzVjtlRCJSRqQhSHE4k2OJsCrxEkVCxK
+ BqkfcaN7hPV/eihj2nfJI+ApUqWT4pUpddBb3ual4cR/9QcX4CRZlhIugryUGdSci0p9DCOxW
+ jPXp7YO746yHdMzeOBPQT3jjAkB6HfQJHhtOqWsTXeHtnDQ2KQ/t8jptSB67lsTBS7ZktvW7N
+ /91Qs3Tf+W5J68a6STVJeubQ9NxHlQV3GmXK8fjh/Tz9I5rdc1+LYsJTWEOKX2MzjC/+B8We8
+ NXTLqsYL56y+jbdBrt+HJzCGPaUFHrbyueWzmkKggXfmDvbTGAlSs+hqSqodN9yxQbphhcZ7m
+ OcqCdw1Vqu0lvEamWpvJMcUQfOmlf5lYWQotBAz9GgLqQJbrI/aGDfhvd2mHPXbAuIaHClodr
+ JWVT5PVYMEiOoXn0SFQdAu7E6gI4TGRpsr6NYu1Uwmka4=
 
-Introduce the devm pendant to clk_hw_register_divider_table_parent_data.
+This series adds support for the clock and reset controller in the Nuvoton
+WPCM450 SoC. This means that the clock rates for peripherals will be
+calculated automatically based on the clock tree as it was preconfigured
+by the bootloader.  The 24 MHz dummy clock, that is currently in the
+devicetree, is no longer needed.  Somewhat unfortunately, this also
+means that there is a breaking change once the devicetree starts relying
+on the clock driver, but I find it acceptable in this case, because
+WPCM450 is still at a somewhat early stage.
+
+v12:
+- Convert to platform driver, but use fixed-factor-clock for timer
+  (a necessary workaround because npcm7xx-timer needs its clock earlier
+  than a platform driver can provide it)
+- Various driver improvements suggested or inspired by Stephen Boyd
+- New patches:
+  - clk: Introduce devm_clk_hw_register_divider_table_parent_data()
+  - clk: provider: Address documentation pitfall in struct clk_parent_data
+
+v11:
+- Link: https://lore.kernel.org/r/20240401-wpcm-clk-v11-0-379472961244@gmx=
+.net
+- Improved description in "ARM: dts: wpcm450: Remove clock-output-names
+  from reference clock node"
+- some minor format differences due to switching to B4
+
+v10:
+- A small tweak (using selected instead of extending an already-long
+  default line) in Kconfig, for better robustness
+
+v9:
+- Various improvements to the driver
+- No longer use global clock names (and the clock-output-names property)
+  to refer to the reference clock, but instead rely on a phandle reference
+
+v8:
+- https://lore.kernel.org/lkml/20230428190226.1304326-1-j.neuschaefer@gmx.=
+net/
+- Use %pe throughout the driver
+
+v7:
+- Simplified the error handling, by largely removing resource
+  deallocation, which:
+  - was already incomplete
+  - would only happen in a case when the system is in pretty bad state
+    because the clock driver didn't initialize correctly (in other
+    words, the clock driver isn't optional enough that complex error
+    handling really pays off)
+
+v6:
+- Dropped all patches except the clock binding and the clock driver, becau=
+se
+  they have mostly been merged
+- Minor correction to how RESET_SIMPLE is selected
+
+v5:
+- Dropped patch 2 (watchdog: npcm: Enable clock if provided), which
+  was since merged upstream
+- Added patch 2 (clocksource: timer-npcm7xx: Enable timer 1 clock before u=
+se) again,
+  because I wasn't able to find it in linux-next
+- Switched the driver to using struct clk_parent_data
+- Rebased on 6.1-rc3
+
+v4:
+- Leave WDT clock running during after restart handler
+- Fix reset controller initialization
+- Dropped patch 2/7 (clocksource: timer-npcm7xx: Enable timer 1 clock befo=
+re use),
+  as it was applied by Daniel Lezcano
+
+v3:
+- https://lore.kernel.org/lkml/20220508194333.2170161-1-j.neuschaefer@gmx.=
+net/
+- Changed "refclk" string to "ref"
+- Fixed some dead code in the driver
+- Added clk_prepare_enable call to the watchdog restart handler
+- Added a few review tags
+
+v2:
+- https://lore.kernel.org/lkml/20220429172030.398011-1-j.neuschaefer@gmx.n=
+et/
+- various small improvements
+
+v1:
+- https://lore.kernel.org/lkml/20220422183012.444674-1-j.neuschaefer@gmx.n=
+et/
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
- include/linux/clk-provider.h | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+=2D--
+Jonathan Neusch=C3=A4fer (6):
+      dt-bindings: clock: Add Nuvoton WPCM450 clock/reset controller
+      clk: Introduce devm_clk_hw_register_divider_table_parent_data()
+      clk: provider: Address documentation pitfall in struct clk_parent_da=
+ta
+      clk: wpcm450: Add Nuvoton WPCM450 clock/reset controller driver
+      ARM: dts: wpcm450: Remove clock-output-names from reference clock no=
+de
+      ARM: dts: wpcm450: Switch clocks to clock controller
 
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 4a537260f6557d..5d537d0776a11f 100644
-=2D-- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -932,6 +932,28 @@ struct clk *clk_register_divider_table(struct device =
-*dev, const char *name,
- 				       (width), (clk_divider_flags), (table), \
- 				       (lock))
+ .../bindings/clock/nuvoton,wpcm450-clk.yaml        |  65 +++
+ arch/arm/boot/dts/nuvoton/nuvoton-wpcm450.dtsi     |  33 +-
+ drivers/clk/Makefile                               |   2 +-
+ drivers/clk/nuvoton/Kconfig                        |  10 +-
+ drivers/clk/nuvoton/Makefile                       |   1 +
+ drivers/clk/nuvoton/clk-wpcm450.c                  | 455 ++++++++++++++++=
++++++
+ include/dt-bindings/clock/nuvoton,wpcm450-clk.h    |  67 +++
+ include/linux/clk-provider.h                       |  26 +-
+ 8 files changed, 643 insertions(+), 16 deletions(-)
+=2D--
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240330-wpcm-clk-222a37f59cfb
 
-+/**
-+ * devm_clk_hw_register_divider_table_parent_data - register a table base=
-d divider clock
-+ * with the clock framework (devres variant)
-+ * @dev: device registering this clock
-+ * @name: name of this clock
-+ * @parent_data: parent clk data
-+ * @flags: framework-specific flags
-+ * @reg: register address to adjust divider
-+ * @shift: number of bits to shift the bitfield
-+ * @width: width of the bitfield
-+ * @clk_divider_flags: divider-specific flags for this clock
-+ * @table: array of divider/value pairs ending with a div set to 0
-+ * @lock: shared register lock for this clock
-+ */
-+#define devm_clk_hw_register_divider_table_parent_data(dev, name, parent_=
-data, flags,   \
-+						       reg, shift, width,               \
-+						       clk_divider_flags, table, lock)  \
-+	__devm_clk_hw_register_divider((dev), NULL, (name), NULL,               =
-        \
-+				       NULL, (parent_data), (flags), (reg), (shift),    \
-+				       (width), (clk_divider_flags), (table),           \
-+				       (lock))
-+
- void clk_unregister_divider(struct clk *clk);
- void clk_hw_unregister_divider(struct clk_hw *hw);
-
-
+Best regards,
 =2D-
-2.43.0
+Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
