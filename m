@@ -1,112 +1,209 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F5F3FBA5;
-	Sun,  7 Jul 2024 16:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3788F1DDCE;
+	Sun,  7 Jul 2024 16:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720369938; cv=none; b=A+37wrnVHhtnE0zn6u714btswTOQPmZ61mL+WIxmNuFDjGyieXPwOb9GKjzJvzBvDFfc+un25DDWqe4s729NfVkQikruA7O/h01SVwaBWGKJC/g3rlhBvu4jmkvD5NvrF6g0gmX4YUcML9UxWLajgg5QxSo0e5VfrZFAwyKJR48=
+	t=1720370516; cv=none; b=Es3RfDV5kC5i4jjyYQb7ndZ4vftTTz8Orfw1yQSvxKPfyAKq7zKfXc7E3DRUG7P0h91ahsub2IApzQcynI7Ae2Y/1ds9Hpl0NbWx+yTc7Q3ebXt/lVMJZb3B25LjPBNorZ68whcdhwRlBR2CePm8QKEC/2nSaZ9n1NF+sEbrxi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720369938; c=relaxed/simple;
-	bh=GryIG9DNPkXL6dOI+O9Y9ATXRgOy1NZX/xATLMxFoNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H2E22vx11F76I/MnhETGvMQDdlY2P6D/bGz9dv2JQbBpuu3giLD+7CvgkCiU+SRub4Xz3aJX06CsegHamdDn2qON/VyIf09l5k1YOm7S6lsWkYILzFQaSkQt4BKjOnzB7RrQYNDUvVsQBW5ZF9JLDATO9au74zGw6RHOqC1on7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N7LxEEfN; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720370516; c=relaxed/simple;
+	bh=ypqCC1y+XCHXp9lKSFWoqLGkfNuFOLXD5Vy4SuI5cDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EsbA/01jb1W7REzVDnS/+NlD6Cf147BZ8WIoyVhaAd2/0yayvFu/5vRvz9h89zHtNmJRnz6RXgj1PTk3K4mKvBpCgyIObrL/G3u1VhhclWHkCa5WTCTU2nIYN6hs98B9XU1TXrWL5rC/iLnA10R3NcVdrArTHVttx/tWYYlUHo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvX6ngFk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7LxEEfN"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ee88c4443eso34176081fa.3;
-        Sun, 07 Jul 2024 09:32:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720369934; x=1720974734; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N1yNnFas/7Lr5aBFTus2w2lifc8IqGeG07znJipdmls=;
-        b=N7LxEEfNrk/N0bPuBhsWhUbs9YeP/cgWjoNK9zGbSKwDyCZJJgVFH5NtdnFXIFtmJs
-         rhxC15ZD4jJOvhWmX18t+sMM0zH+hCWLIvi+HnhqFAZCVVhofigK8vjWxcU70qJ3S/F6
-         R4u7hDGbU30buz4sQqlXwFq7z8HZcZtpovPCBJnGyJ87rd/fCiN4vw9EWjqaGDM+ANu4
-         aQw6DdzvGnqq4SWIUQVlkjtKvJ1WG5xDT+FCn25/MPeMCtJuIq7mwTv8AUFpJmVmnYHp
-         vbXM0fe/wLu1usNR8ZcpqIhGgNlWL+Jbqj7XPRSRqhmNBzRw6FHQDwVDal3qKi6v7Uu9
-         V08Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720369934; x=1720974734;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N1yNnFas/7Lr5aBFTus2w2lifc8IqGeG07znJipdmls=;
-        b=TkSqP6V/15tWnKvj2ZfC5uZ2c4egc8KUotZyi0x6zn2OqLKU+cYLU2H9pwpWcSS16m
-         EJ8nZimDAZfbpy9PUNEbdjMd6sGvn9sueTeDwDl6tA4gcJdVf8HXqP9Xz2QGBJAteMyb
-         hYU3LqAXDjgEatrJJcTzqtqXNI+kAUEhUZqUXQ0dBXDrzb827C1cLPvDyxk6tI24hU5W
-         3LnwdZXifpHYC3dURAYlni/ri9e/Eda5AucS0CPOygNTN6GzAfGRiPnSyuRhqLDnclB8
-         U3OitFVYUqgB+aHEdTS2h/mKFVCnwiQTiak1Mhm4YkjUsV3ZiD0mKlSX6R4+xBWtR/Yd
-         tgNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbpVnKMLA82B9ATP6bYhzXvnqZ+6U9OhBCqTmav/N8MwlB9kok1+yyVKli3uo89C0HAqv8vYtjBQQz5BkChVlu0IymYR9TmbvjcDbo
-X-Gm-Message-State: AOJu0YwBeXxI0jeJhDWveJPjzE/nwnnYFngHo5VaH2Z+XAP/NbN6z8/F
-	iz4LQEuNMPVV+fyVf552D5h8JWWQJYJ24tT+1BC+bvfWiD/dRN9FtcujQA==
-X-Google-Smtp-Source: AGHT+IGUQsjUK3JrjtflPS3usXPAkNfTEb/V/K3P6Ihn7Pt0WENpi/LQwrkKk9C0MjQrvW9McsbAeQ==
-X-Received: by 2002:a2e:9006:0:b0:2e9:768a:12b0 with SMTP id 38308e7fff4ca-2ee8ee13b14mr66713581fa.50.1720369934126;
-        Sun, 07 Jul 2024 09:32:14 -0700 (PDT)
-Received: from 127.0.0.1localhost ([185.69.144.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1e8014sm134335215e9.21.2024.07.07.09.32.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jul 2024 09:32:13 -0700 (PDT)
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: io-uring@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>,
-	asml.silence@gmail.com,
-	Oleg Nesterov <oleg@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	Julian Orth <ju.orth@gmail.com>
-Subject: [PATCH 2/2] kernel: rerun task_work while freezing in get_signal()
-Date: Sun,  7 Jul 2024 17:32:11 +0100
-Message-ID: <1d935e9d87fd8672ef3e8a9a0db340d355ea08b4.1720368770.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1720368770.git.asml.silence@gmail.com>
-References: <cover.1720368770.git.asml.silence@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvX6ngFk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9AB6C3277B;
+	Sun,  7 Jul 2024 16:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720370515;
+	bh=ypqCC1y+XCHXp9lKSFWoqLGkfNuFOLXD5Vy4SuI5cDM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hvX6ngFkHFFz/Y46EDXjuLYR4n8RmLUTipQ7Oa1k1L5ZJOJ1dd5wIDF9nvHcJebIe
+	 2yue86LLh0524Gqg6EU/7mHJ89A97H1xEypZSnPpoRLgU/ZZnfr03plVuEMUPaPNTp
+	 awYsTQZdjiWXs3BhQtotiLbx4h691CpzS6vfzVCuRGXg3ZK72bCDe8mmZ45gGCuTli
+	 v381saJdUir1UoZNQuU3soZsW26odfv6h0Jq0hhTNnnwAKKH/IJDjiIMjOU1HXhuhY
+	 Bozn1ZytBOiDIxrLTYPl32yMLPYG4EVRcwgqxT5JeJm3FXAxpyAZOtnf6tKwj2FVbr
+	 4mslkqXRJeeOg==
+Date: Sun, 7 Jul 2024 17:41:47 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>, dpfrey@gmail.com,
+ himanshujha199640@gmail.com, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mike.looijmans@topic.nl
+Subject: Re: [PATCH v3 00/15] iio: chemical: bme680: Driver cleanup
+Message-ID: <20240707174147.5faba5b2@jic23-huawei>
+In-Reply-To: <20240701170049.GA248279@vamoiridPC>
+References: <20240609233826.330516-1-vassilisamir@gmail.com>
+	<20240630202640.GA185141@vamoiridPC>
+	<20240701134452.00003f1d@Huawei.com>
+	<20240701170049.GA248279@vamoiridPC>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-io_uring can asynchronously add a task_work while the task is getting
-freezed. TIF_NOTIFY_SIGNAL will prevent the task from sleeping in
-do_freezer_trap(), and since the get_signal()'s relock loop doesn't
-retry task_work, the task will spin there not being able to sleep
-until the freezing is cancelled / the task is killed / etc.
+On Mon, 1 Jul 2024 19:00:49 +0200
+Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
 
-Cc: stable@vger.kernel.org
-Link: https://github.com/systemd/systemd/issues/33626
-Fixes: 3146cba99aa28 ("io-wq: make worker creation resilient against signals")
-Reported-by: Julian Orth <ju.orth@gmail.com>
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- kernel/signal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> On Mon, Jul 01, 2024 at 01:44:52PM +0100, Jonathan Cameron wrote:
+> > On Sun, 30 Jun 2024 22:26:40 +0200
+> > Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
+> >   
+> > > On Mon, Jun 10, 2024 at 01:38:11AM +0200, Vasileios Amoiridis wrote:  
+> > > > Based on fixes-togreg as the 4 first commits are already applied
+> > > > 
+> > > > Patch 1/15: Added comment for explanation of what mutex is used for
+> > > > 
+> > > > Patch 2/15: Removed fixes tag
+> > > > 
+> > > > Patch 3-15/15: Reworded the commit messages to come close to convention
+> > > > 	       of 75 chars per line.
+> > > > 
+> > > > v2: https://lore.kernel.org/linux-iio/20240606212313.207550-1-vassilisamir@gmail.com/
+> > > > 
+> > > > Patch 4/19:
+> > > > 	- Combined the bme680_conversion_time_us() and bme680_wait_for_eoc()
+> > > > 	  into one function.
+> > > > 	- Added better comment for the calculation.
+> > > > 	- Added checks in the bme680_wait_for_eoc() function.
+> > > > 
+> > > > Patch 5/19:
+> > > > 	- Fixed typo in commit message.
+> > > > 
+> > > > Patch 6/19:
+> > > > 	- Added a fixes tag since without the mutexes, read operations can be
+> > > > 	  broken.
+> > > > 
+> > > > Patch 10/19:
+> > > > 	- Converted shifting operation to FIELD_GET()
+> > > > 
+> > > > Patch 11/19:
+> > > > 	- Changed convention from &data->bufer[0] to data->buffer.
+> > > > 	- Removed IIO_DMA_MINALIGN as it is not needed anymore.
+> > > > 
+> > > > Patch 13/19:
+> > > > 	- Removed IIO_DMA_MINALIGN
+> > > > 
+> > > > Patch 14/19:
+> > > > 	- Splitted from Patch v1 14/19
+> > > > 
+> > > > Patch 15/19:
+> > > > 	- Splitted from Patch v1 14/19
+> > > > 
+> > > > Patch 16/19: **NEW**
+> > > > 	- Use dev_err_probe() where applicable.
+> > > > 
+> > > > v1: https://lore.kernel.org/linux-iio/20240527183805.311501-1-vassilisamir@gmail.com/
+> > > > 
+> > > > This started as a series to add support for buffers and the new
+> > > > BME688 but it ended up being just a cleaning series. These might
+> > > > be quite some patches for such a thing but I feel that they are
+> > > > are well split, in order to allow for better review.
+> > > > 
+> > > > The patches are mostly small changes but essential for the correct use
+> > > > of the driver. The first patches looked like fixes that should be
+> > > > marked for the stable. Patches [11,17/17] might be a bit bigger but 11/17
+> > > > is quite straightforward and 17/17 is basically a duplication of a
+> > > > very similar commit coming from the BMP280 driver [1].
+> > > > 
+> > > > In general, the datasheet [2] of the driver is not very descriptive,
+> > > > and it redirects the user to the BME68x Sensor API [3]. All the things
+> > > > that were identified from the BME68x Sensor API have been marked with
+> > > > links to the original locations of the GitHub code. If this is too much
+> > > > and we don't want this type of information on the commit message, please
+> > > > let me know and I will fix it.
+> > > > 
+> > > > [1]: https://lore.kernel.org/linux-iio/20240512230524.53990-1-vassilisamir@gmail.com/T/#mc6f814e9a4f8c2b39015909d174c7013b3648b9b
+> > > > [2]: https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf
+> > > > [3]: https://github.com/boschsensortec/BME68x_SensorAPI/tree/master
+> > > > 
+> > > > 
+> > > > Vasileios Amoiridis (15):
+> > > >   iio: chemical: bme680: Fix read/write ops to device by adding mutexes
+> > > >   iio: chemical: bme680: Fix typo in define
+> > > >   iio: chemical: bme680: Drop unnecessary casts and correct adc data
+> > > >     types
+> > > >   iio: chemical: bme680: Remove remaining ACPI-only stuff
+> > > >   iio: chemical: bme680: Sort headers alphabetically
+> > > >   iio: chemical: bme680: Remove duplicate register read
+> > > >   iio: chemical: bme680: Use bulk reads for calibration data
+> > > >   iio: chemical: bme680: Allocate IIO device before chip initialization
+> > > >   iio: chemical: bme680: Add read buffers in read/write buffer union
+> > > >   iio: chemical: bme680: Make error checks consistent
+> > > >   iio: chemical: bme680: Modify startup procedure
+> > > >   iio: chemical: bme680: Move probe errors to dev_err_probe()
+> > > >   iio: chemical: bme680: Remove redundant gas configuration
+> > > >   iio: chemical: bme680: Move forced mode setup in ->read_raw()
+> > > >   iio: chemical: bme680: Refactorize reading functions
+> > > > 
+> > > >  drivers/iio/chemical/bme680.h      |  41 +-
+> > > >  drivers/iio/chemical/bme680_core.c | 631 +++++++++++++----------------
+> > > >  2 files changed, 291 insertions(+), 381 deletions(-)
+> > > > 
+> > > > 
+> > > > base-commit: 4241665e6ea063a9c1d734de790121a71db763fc
+> > > > -- 
+> > > > 2.25.1
+> > > >     
+> > > 
+> > > Hi Jonathan,
+> > > 
+> > > It's been three weeks so I am just checking-in here, to be sure that this
+> > > series was not lost in the countless e-mails that you receive. Totally
+> > > understand the summer time on top, so no hurry at all, just checking in
+> > > that it is not lost! :) Thanks for the amazing job with the reviews
+> > > though anyways! :)  
+> > 
+> > Hi,
+> > 
+> > It's stalled because of a tree management issue - that is the first
+> > few patches were going through fixes-togreg and I'd like to keep
+> > the merge fun simple which means they have to end up upstream and
+> > back in char-misc/char-misc-next which I then rebase on after
+> > an IIO pull request.
+> > 
+> > They are in char-misc-next as of about 45 mins ago.
+> > 
+> > It'll be a bit tight for this cycle but my plan is 2 more pull requests
+> > with the last one at risk because of timing.  This stuff can only be
+> > in that final pull request.
+> > 
+> > Once it's all in place I will take a final look for but not anticipating
+> > needing any changes.
+> > 
+> > Jonathan
+> >   
+> 
+> Hi Jonathan,
+> 
+> Ok, since it is not lost perfect! No need to hurry or anything. Thanks!
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 1f9dd41c04be..790d60fcfff0 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2694,6 +2694,10 @@ bool get_signal(struct ksignal *ksig)
- 	try_to_freeze();
- 
- relock:
-+	clear_notify_signal();
-+	if (unlikely(task_work_pending(current)))
-+		task_work_run();
-+
- 	spin_lock_irq(&sighand->siglock);
- 
- 	/*
--- 
-2.44.0
+Applied to the testing branch of iio.git.
+Unfortunately the tree juggling meant this hit what is probably a few days
+too late to get another pull request out for 6.11.  Hence I'm now treating
+this as 6.12 material.  The tree will be rebased  on 6.11-rc1 once available
+and pushed out then as togreg with linux-next picking that up.
+
+Thanks,
+
+Jonathan
+
+> 
+> Cheers,
+> Vasilis
+> 
+> > 
+> >   
+> > > 
+> > > Cheers,
+> > > Vasilis
+> > >   
+> >   
 
