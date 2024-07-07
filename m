@@ -1,66 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF1B79F2
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 08:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4905917C64
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 08:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720340826; cv=none; b=deYanSlQ9ffslq+kyH1zkepD7ASnxBFiqzKfh5JzhwtUmj/FxBBJYGvThQje5gdn2KtXsumvFFJWHWr1choQBYU35DCOA8cuwV4CZKU0GEb7RB1x+KgIpkVUqNrD4cNua+rH+pzXH8J3cgVnik0iV7LBLeIkRxP0dOitkFxWhcs=
+	t=1720340938; cv=none; b=hE8VrthGTT4gl6QVf8m/MrLqcxdzab56dnTC0mI5ZJnNEznHecM3bfFYoAMsGskKbB57zbiQBL9g/02o0uP6ZhL4Tj4UZmtlU4NuRsVa6egRdRvXp44rrcU9MBPPVgD7L6CIfXZAhfjQzeykCvyEVw9QrbmbiUIN+XpC2oPA/AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720340826; c=relaxed/simple;
-	bh=z1Ie+swoxknZq9zY55UOI5qIeBXSF+/KBwodL1npwbM=;
+	s=arc-20240116; t=1720340938; c=relaxed/simple;
+	bh=CWlaQrfwQ78sWyj5YxJdp+t4BLet4A+mPiUfp/D8DVI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MKWpb0AZAzfTF8MJEqR8bOOtdSZbQlnU1qF/jfm2hYapxGocQfbHPgFWuVNQCjlb3JbAxvIebyZp9gmNxtMHNwcgN1SDnUsBGBfeaLfUQx/9/nuKK+Ii8QWx/5BlExhOxYoM7PRts3MP0807ec2K4oVgeZDmTQOFgIB/bfOlrUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JM8pCKLJ; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=OHyLOzhVeOS36I3jpUdY/YvbKszWyvj2xPYWZDk3QM0LQL0GYUyLCtmNfa6vr4EAjWonni7W1MYLWDJA49GTEoYHEXG2Tw9tmf64i1atww7UcJmARWRAdqPrcDdr4ReLvSjNsyA/GxMtu6SoheHRH4g6GP/WBxzIcRXgorcbWwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JwoAZ39S; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JM8pCKLJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JwoAZ39S"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720340824;
+	s=mimecast20190719; t=1720340936;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZFJq99cRrVpFdbGjaQAOcEkCS5wr5Uww391pCw7GQrY=;
-	b=JM8pCKLJFNoD/E3+AYl4JrLfBvPiDtj8isbMmx7Z0m2XMhiMMhu6C/70RgPchj3SECH2Vr
-	zKxVB7yruXJPjzdKlONd0emWBf7ucHcw91rfAeDHunjTudYqcbij0iT2Rk9eyvZvAJKi8j
-	zXVmYJYCGSFZ2fi2ofmA6GNa6aGG9U4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9RHWJPg9INiiOPZD2SAh5huypv9jP+1nFy6J/LfVsNQ=;
+	b=JwoAZ39SFvGjRbn6LG8ojAJUN9Zs2W4Jd78/l2gJzNM0OIYjUI+RvohtOhdJrU681Xluey
+	CKhT/zs4D0LsBaJ8D63AukE5xmMsz7By38wlJI2zOBneCIAtGf/ywBXvmItsbXk6jxjJ9d
+	HIGTQe0LqgNa7OPX+A48kzsULgzmJv0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-553-Gj842JbxN0GJPdFt7YKVAw-1; Sun, 07 Jul 2024 04:27:02 -0400
-X-MC-Unique: Gj842JbxN0GJPdFt7YKVAw-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4257db9d71fso23283375e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2024 01:27:02 -0700 (PDT)
+ us-mta-686-Xp9XfX5yNdeFRegWBeVHEw-1; Sun, 07 Jul 2024 04:28:54 -0400
+X-MC-Unique: Xp9XfX5yNdeFRegWBeVHEw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42668796662so633845e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2024 01:28:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720340821; x=1720945621;
+        d=1e100.net; s=20230601; t=1720340933; x=1720945733;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZFJq99cRrVpFdbGjaQAOcEkCS5wr5Uww391pCw7GQrY=;
-        b=WybuFpi2hLAAW7YXRWfjm7svPRUeKzeblu9Z878rBJZ/d4iySSu7yKeGf0lCRgpsr1
-         lGEzW6RCWIxYBmjNvAkoKofNJYUZtGdVFKZ7KtxCsIb+tuhH7r9IpQvVyMETRsq/HLoa
-         FJC2/tWUJ28VIDzJ7FvqI/K8tdmvSBaWtORoKC/fIVPavWzViiqRHy4pZns8vA6izjTx
-         o1fcvOW777U00G5PBVRy2M9YDTIxwBP1pMqs4janRZSl+L3yxBIjJeEZyWMdSS0/jKxZ
-         tVbOTHojKkrHMAN6HKvmBkrxTKY9Pfy2+yMN4YY2mhbAbcaDV0QZLuyC38nF8M3be8vS
-         APmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGrvl+r7Xrq5hw9U8OZulnzr5ZuuUjIjdWpsi3iKY9xohsuGNTFLI1+lgzw3Tfu2rJwTMJQaefgj18XM+bOpkQZHwltmEUn0KMYZCb
-X-Gm-Message-State: AOJu0YztTCkUXKrgQxKWpeOBtzNPzDGeyqblRMhH+p7LXoRPAH1QN+5s
-	2sPPTEVaBPKmITewXeMQk2ploMCu2j/68J6m2oE+54QcS36n2nr2wrsOLDuUg3JEKbCVuA8OHPP
-	PVg35xGJn6bDs5EjiImCTpFo16doMDicMrFrfmCIBCRcMHKSK0gk57dGIWqbcjw==
-X-Received: by 2002:a05:600c:48a1:b0:426:5471:12e2 with SMTP id 5b1f17b1804b1-4265471145emr42272015e9.4.1720340821270;
-        Sun, 07 Jul 2024 01:27:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGsR1GhISub8sMIvLPq9JIwL70uvt6AQVbMO9tqAlT2YwA8PN2oV//rNBmcX1sSakwVgndcUw==
-X-Received: by 2002:a05:600c:48a1:b0:426:5471:12e2 with SMTP id 5b1f17b1804b1-4265471145emr42271905e9.4.1720340820875;
-        Sun, 07 Jul 2024 01:27:00 -0700 (PDT)
+        bh=9RHWJPg9INiiOPZD2SAh5huypv9jP+1nFy6J/LfVsNQ=;
+        b=D75Sb1Wh5xLT0yIuh1A5pwK47eRW3HYcMVn2RKJxDToxuXH3UZTd3fVHoSDOtb6d8t
+         Rbe5X4Ooj3EjIg8V+lkox/SjTTey5zUOOWVmFf8MioDmXoZFPKRWNd6032qrkOipEVYg
+         H0nPzcQDywa43WfmFEC+I8yA2nUr15LJnwCWjMoJWxDxqluXvm03n74L+ndXlaCukkuT
+         sskwEVQnkiVPLrny4xxHXFnv3ElyGgZq65ltWuauwN9yR+nu2kZ3F4QjziBjDgsRoCMv
+         EFh30Ws7YcIai1opIkEjVheYG4aGnG3qrKRXX0za2wKY1Ejx7muxsvKC/TreiXYA8gIK
+         8Nwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfF8py9IX7cFfwXSmHPRAusrjaFpUk3eWiphmsWCca9Fcrgxf77mWias2cDyjcBArBAvR/H8Ay/VUJjvgzlK4BQZU4gXS7Nqvt4Keu
+X-Gm-Message-State: AOJu0Yw3HauKFEfPHIqtkQlb6ISOLtb+bODKbLuIGFBbHaHTBTboFVCj
+	m4xGcvOt/Y5FLwrd5Yhv9PKPXtY5vTsPMaMo/F8hp3fxZJ/cjrNbvLKObIR9h22NP5AmXJ+CyZT
+	SWhOGnMtAIos1xAXLorDuFbx/fFYfcWu/xzCgrWB50AbWMSp4zcKMnKnb2qDvLg==
+X-Received: by 2002:a05:600c:1d08:b0:425:6f96:8bee with SMTP id 5b1f17b1804b1-4264a34efe9mr86591255e9.0.1720340933152;
+        Sun, 07 Jul 2024 01:28:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBDkIAj0uC+yoLhRmiFZtVPaxhjALADx0V8DoBHX6FMZ8mPM+NCngUJgMUg0d9kEhOCHmEPg==
+X-Received: by 2002:a05:600c:1d08:b0:425:6f96:8bee with SMTP id 5b1f17b1804b1-4264a34efe9mr86591175e9.0.1720340932752;
+        Sun, 07 Jul 2024 01:28:52 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c72f:c00:10f0:d1a8:c206:17ac? (p200300cbc72f0c0010f0d1a8c20617ac.dip0.t-ipconnect.de. [2003:cb:c72f:c00:10f0:d1a8:c206:17ac])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42662a21066sm31957355e9.22.2024.07.07.01.26.59
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a25b5edsm120953975e9.37.2024.07.07.01.28.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jul 2024 01:27:00 -0700 (PDT)
-Message-ID: <82ca055a-4b51-4db4-be7d-27b84aa70bd7@redhat.com>
-Date: Sun, 7 Jul 2024 10:26:59 +0200
+        Sun, 07 Jul 2024 01:28:52 -0700 (PDT)
+Message-ID: <48727db1-aac8-40d2-be20-9fd7777af62a@redhat.com>
+Date: Sun, 7 Jul 2024 10:28:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,15 +68,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/7] synchronously scan and reclaim empty user PTE
- pages
-To: Qi Zheng <zhengqi.arch@bytedance.com>,
- the arch/x86 maintainers <x86@kernel.org>
-Cc: hughd@google.com, willy@infradead.org, mgorman@suse.de,
- muchun.song@linux.dev, akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1719570849.git.zhengqi.arch@bytedance.com>
- <e7a8ddb2-52b5-4267-859b-e212644440b1@bytedance.com>
+Subject: Re: [PATCH hotfix] mm: fix crashes from deferred split racing folio
+ migration
+To: Hugh Dickins <hughd@google.com>, Kefeng Wang
+ <wangkefeng.wang@huawei.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, Nhat Pham
+ <nphamcs@gmail.com>, Yang Shi <shy828301@gmail.com>, Zi Yan
+ <ziy@nvidia.com>, Barry Song <baohua@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+References: <29c83d1a-11ca-b6c9-f92e-6ccb322af510@google.com>
+ <20240703193536.78bce768a9330da3a361ca8a@linux-foundation.org>
+ <825653a7-a4d4-89f2-278f-4b18f8f8da5d@google.com>
+ <7b7f2eb7-953a-4aa0-acb0-1ab32c7cc1bf@huawei.com>
+ <68feee73-050e-8e98-7a3a-abf78738d92c@google.com>
 Content-Language: en-US
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
@@ -124,20 +129,17 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <e7a8ddb2-52b5-4267-859b-e212644440b1@bytedance.com>
+In-Reply-To: <68feee73-050e-8e98-7a3a-abf78738d92c@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 04.07.24 09:16, Qi Zheng wrote:
-> Add the x86 mailing list that I forgot to CC before.
-
-Hi,
-
-I'm planning on looking into this (again, I'm very interested!), but 
-I'll be a bit (understatement) busy the next 1.5 weeks.
-
-If I don't look into this within the next 3 weeks, an you please remind 
-me? Thanks!
+> [I guess this is the wrong place to say so, but folio_undo_large_rmappable()
+> is a dreadful name: it completely obscures what the function actually does,
+> and gives the false impression that the folio would be !large_rmappable
+> afterwards. I hope that one day the name gets changed to something like
+> folio_unqueue_deferred_split() or folio_cancel_deferred_split().]
+Fully agreed, that is absolutely confusing. (and I thought for a second 
+that the folio would be !large_rmappable afterwards!)
 
 -- 
 Cheers,
