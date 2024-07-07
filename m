@@ -1,277 +1,145 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2115.outbound.protection.outlook.com [40.107.94.115])
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBC528DD1;
-	Sun,  7 Jul 2024 19:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.115
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720382212; cv=fail; b=E/NkHNyFz2dSVRkGR3FyNqsQ/tI5nOyj4a3OAfnpeyoCmkkvN3DTuaNdh5+Ta4/LxheqQc1N8+gfowWrCU0jvOWFAbTbLcqHTPS7MX+8DONLirzvYRKma/1fPgHzlOaQesehf86Jia2Qt7PUiC5AylqXGmS61oo92dVcmDSNsF8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720382212; c=relaxed/simple;
-	bh=0s/MBi/fdGjFrPoxn3yRI1UzBHB1FFeAUBjppD2+nvI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=X9qdPnQYR9X07/Clblt5dmb+INHD4/nA4Q7WLXUuqIqS3zxwuFe0JldY0Ozo0VxqnfFv+4SpUKXJgAXHaBt7opyDNnTJAaASuTEnTJUkk38THGwin0sSlxk7e8oO9VZQzwmhnAiufvh1z/Lan2nPsTHxTbkuilJPZJmEv4ignTI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=labundy.com; spf=pass smtp.mailfrom=labundy.com; dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b=bTuCrrbH; arc=fail smtp.client-ip=40.107.94.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=labundy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=labundy.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A445428DD1
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jul 2024 19:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720382224; cv=none; b=LwrtqF6+vtS4AO1U0jh6/lz0JsAO1amL01jI2L+Rx3bN5zNLZKQ1+q8UOxsgfTNku0fD/74gvpc/VTVuzfEPOd7NtdTPfXEEfs+xnJqzdm+42Zhv4yTPimKseF+CGm6/luWGpCZau9jtOhACnaeJflviHgr5rvxJXr2K5mQRdKY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720382224; c=relaxed/simple;
+	bh=q6/jRZtqsE3Cn59iyfo+2FWJygpr/zkT0pcQNmhnO58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JNfyTxtEmuJflxZLDpWUH/qlFeVo38Zm+6Hs8K1tv0WhSwQ3zkDEl2k66M27U3tcNsEwKr15duhbx2ZWbkyp/IUAc5KeSqhmr/O8IVFUujnh5O9H5CEtnM/XtvqxjKT4zUyaEON6dSKewQSd0bQAotD+L9q9FXCkrzrwCAD6LQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=uGlNR3SU; arc=none smtp.client-ip=193.222.135.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="bTuCrrbH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FesKDJ/uldcRd/sDwRJ8Q4ZSMRIHMR7eGtwQgq5FB6Zy6Vo7ZosrgGzYy4VMpRbMQ2OPsz7DBSNpI7iR2698pMTnI+STjB/nOt9agco55egRnVDpCPuPA/sFX+dWRs13nVbgMQczVfZKiW8UnN8wXyoUi0zLBzBxNb6tMSAf6r+mYHTPNJynh/0vMvzuSwcSAcPmHj3jAjk74awV6M9uHGhmLD/BqnJgWqzB9SzywOFZZJCWFGwlcNUqlUH7E9hyAPS7GdNFK6OHyl1yzl1kFX55Pn3pzUKJhfrrXtXHasHFd/N8UHmhCfal/dEeViYklB47ziVBxl6DfUShgel80g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KdX6uAy0Ki4jM4Oyw6211NG4xI0ajnD93eD/8fK4odo=;
- b=lzDys6qkr+NznLKA5xFOl0abOg+LuTFcDk0XGSsZm8LNKYW8Z3ivLN+rTTwJ2SF+1+GOHu8F3DFwVl2VeAnqQJ5jAUTayCgcHwU2PvvqnjoI6yD2HLrIMfb25N7jSgI4DwhaGQlVax9GdxBohSCrGXN2R17KhTyiHER2u9iMBLNihmZfxNwsn38wjQPZrTQkG6UVyZ/N6mBF8ueHu7soXPV7kssgE/DfTIspKwDNkcxsBaAfKNR1WYN2SpFu6Q+91NiZLN6mlBHaFhnjpBWpAtXnF0TYgdR6M8lNL2J77ZDVmQhKhtYMWn17UIBsvNrHVMD93tGVbxqlxYMn+2ij2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
- dkim=pass header.d=labundy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KdX6uAy0Ki4jM4Oyw6211NG4xI0ajnD93eD/8fK4odo=;
- b=bTuCrrbHgrgQf9BnQUfBBtsWNzgEywZP6RbiOubOKA7mT5sRxZ6ONitqshRud9pJINyJ5G5cBegCworrD0yz9xTVSbyvkhrFXPoEO/rSiBfRnMmF7Mjxe0uPKLQu+fIZR2oaKfDeMcPbVep0kBM+/zA8ZzLzZ1vzeT4skXbMODo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=labundy.com;
-Received: from BN7PR08MB3937.namprd08.prod.outlook.com (2603:10b6:406:8f::25)
- by MN2PR08MB6431.namprd08.prod.outlook.com (2603:10b6:208:1ae::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.34; Sun, 7 Jul
- 2024 19:56:48 +0000
-Received: from BN7PR08MB3937.namprd08.prod.outlook.com
- ([fe80::b729:b21d:93b4:504d]) by BN7PR08MB3937.namprd08.prod.outlook.com
- ([fe80::b729:b21d:93b4:504d%6]) with mapi id 15.20.7741.033; Sun, 7 Jul 2024
- 19:56:48 +0000
-Date: Sun, 7 Jul 2024 14:56:44 -0500
-From: Jeff LaBundy <jeff@labundy.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] Input: preallocate memory to hold event values
-Message-ID: <Zory/JLaf/Y4/YGD@nixie71>
-References: <20240703213756.3375978-1-dmitry.torokhov@gmail.com>
- <20240703213756.3375978-7-dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703213756.3375978-7-dmitry.torokhov@gmail.com>
-X-ClientProxiedBy: SN6PR2101CA0011.namprd21.prod.outlook.com
- (2603:10b6:805:106::21) To BN7PR08MB3937.namprd08.prod.outlook.com
- (2603:10b6:406:8f::25)
+	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="uGlNR3SU"
+Received: (wp-smtpd smtp.tlen.pl 20924 invoked from network); 7 Jul 2024 21:50:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
+          t=1720381820; bh=q6/jRZtqsE3Cn59iyfo+2FWJygpr/zkT0pcQNmhnO58=;
+          h=Subject:To:Cc:From;
+          b=uGlNR3SUDtCS2tRHO2hNO1SfM3LZKFcD7329ziYyIGzZh7KlMTkITKperOBL2+h7o
+           jKwHMnSPIeS26fdCfKr/JHGhlNr9TPX25ubXx9voacNFSQkDRjsiqleTEOVJ39e6iN
+           3GOyAvy3VP1p0ZmSW/tW69viKS3SrYgsbRK9T+yM=
+Received: from aafe223.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.134.223])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linux-raid@vger.kernel.org>; 7 Jul 2024 21:50:19 +0200
+Message-ID: <3f934c1b-756f-4560-9798-98a74c32d857@o2.pl>
+Date: Sun, 7 Jul 2024 21:50:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN7PR08MB3937:EE_|MN2PR08MB6431:EE_
-X-MS-Office365-Filtering-Correlation-Id: 33c885b1-bf09-4ef4-05df-08dc9ebeef7a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VdmLnwjPXTZ+EVtYKK4b+bCoP9zNmjHU5pSThE6Neaj2es6BbDXsQw6XL7k5?=
- =?us-ascii?Q?is2hF00lwFPoUaMcbdEyboCD+CjnI36I6C2F/e/xDbwt+gyQ+L3e38txg8im?=
- =?us-ascii?Q?Mh/3tmDD639b+TKn1oDXZouxWAaTPSjTUA5aKELm/y5FGVp2U1CbbFg6n9OG?=
- =?us-ascii?Q?K766Isqg3tr6LT5gBsWRYK6zA63aVDKtaWGaRoZc7sNk+mr5nQfpwT/f+xEJ?=
- =?us-ascii?Q?I4wgfErcggUzqweKeIe4p6x6nY3vS26tLDQ4CmfQm2fNOJKYjXJmTbCTTQay?=
- =?us-ascii?Q?OecAul/h9WgBSYIZbPs3ORUVvtxuXkBhBywgYph3wm0ZBHADQViGkBiFbitL?=
- =?us-ascii?Q?I71d6u76biteQ1sqQbSPwZlv9q6GWX6qNrTlogbNtK6xXKOma3vEiJe4Qsjk?=
- =?us-ascii?Q?8gazFdQM6+zd+hpocglt9sr48AmC8Ujv9nkSIzZfF8POxxzlQL1FooZIxCAS?=
- =?us-ascii?Q?n/iv8bEeVlMYzPIuDoLTCkLibVpUM7dSpGcl6PPQk0GZ24QKZAydOgvx6Ns5?=
- =?us-ascii?Q?1qQl5EGyI21FfyUy8BYoj/LO5pRyDnKNuQ3dPR0Cu++VyXUXJPJbko1wo8SJ?=
- =?us-ascii?Q?NADaNaT4882roWKC/CE5M74Kc/rQ/SmXjLAPsgJK7XgUhRTF4E017o/tB/B9?=
- =?us-ascii?Q?VK3pCdQ7169PKbB0HVkwSsDRQqoyLc1ecTa4dyUimNCUTDXa22/xjwGWkTpV?=
- =?us-ascii?Q?jC1ZGnt58J1K20Ea5YyEYqjPA6EOKu5lz/c2sp3M7EZaxId74DVJoFQVpwl9?=
- =?us-ascii?Q?UFA6wnz/IEIIPDG32x61Y31RBoKlCPdfwRsMGrpX/wLvdVjtV/R9FeSiyk0/?=
- =?us-ascii?Q?5pGYQoB6w/S1mmb5exrl0uvbyeTuQkx92997znwP6+MvCafqXGa2VD2DHbxT?=
- =?us-ascii?Q?0vkDpRCKshac+dRPM5RBmboPNaBqUT+Ft8iAf/WcJx9+zzDO9meYJZPbN57j?=
- =?us-ascii?Q?HX9RB1rQYJlSJcSlxU6IGQ8sa8Rf4w52Wynci56BhT+USvBY00s0yyTW/raP?=
- =?us-ascii?Q?CbsuYhN8yX0AoUvbiwp6WKE+6GmwjclM+iTlW5ek1pGVbHpgCg1QIiTFuCN/?=
- =?us-ascii?Q?k156MB+HG/VIYUqR+qrgmNtR3C3o85KNmrq/cIPS8H7mSEoesW/rSsEEMq0n?=
- =?us-ascii?Q?R29sTKV8BmGHswsS/4razXdeM3ubOZ6fmUOjtpdJFQaUMI+7p99SPUS76a5r?=
- =?us-ascii?Q?sjI14DF6n3Ajv2oHeb21uQF+kTE8YagJBhX0fuIC5j349f7eAjZyQInD0IXR?=
- =?us-ascii?Q?l2WvbuyDW+Y44aBk9LseBuh6HihQO8Cvh5Sl/cydsrJlzg3Bkafr4Aq/00ae?=
- =?us-ascii?Q?d4ewp9dfGJgUKEmK47FFs+Ake4L7UrdIZEtwmS4Ry3Oaew=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR08MB3937.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?nVsI7uaJAV5jqaPIcWUTmGaC5CUg8oD6dJDsOcQiLtRJkj7wSza9k5ykhPT2?=
- =?us-ascii?Q?ZfwiV5MMAox1d0Jl9xOpez8+gL5RLyO7J/tS8jDfj5vCa4e/2euak304leWw?=
- =?us-ascii?Q?74kePe1bNVbmKhChQPRUz8Y72b2TnM3pHvySb8Y760NEkmvG2b+ioEu8pr/h?=
- =?us-ascii?Q?3yRyLUe5Bogsh2wlfvYJ20tv8e7mCv1O2pq5s//6ZIQVEhIpKFapyQMY2KHq?=
- =?us-ascii?Q?ijila0+YKFGpDDPLXC0ii3W6m956BkzRulyAit1VHxz+J/ugJ/j8ZM57peER?=
- =?us-ascii?Q?NXrD2e3pOuXDM6ulzPGqYC1HFkBdxQSXix0XTKrNPMG4mc+hKrKP2l6lZUt0?=
- =?us-ascii?Q?xe0yAsa+OirwD058Iuw04XSJb9qHfbE2XPBY660XMiqAIqZyN8/hxhH9ArY/?=
- =?us-ascii?Q?QKIG6JkPrW1ZPXn5+5aebs9QAc8S/4V2YSWFRX1m6tSwAR9mIqmjSHQmrhOl?=
- =?us-ascii?Q?Or3bvKxz+mq7q03FM0zySeKriluQzB4bImNaUgS5GabiXbALbmE2wD5QTSoD?=
- =?us-ascii?Q?KzvLbxg6QpAOEoHlcZGlyNHuGf0vitK+mb48hfD5Ooc+NU9SVEQDvGzYCpUo?=
- =?us-ascii?Q?wrVu3CHrFYat7q0VAB8/bMf7ac+93YpdJWQQjjqQlPbD4+TKSO6qP4BkBhXC?=
- =?us-ascii?Q?+MaMYlb5I3jeREw3nFuuR3KmcvfrvY3KGpncYp38u3Rn3Mn2dnNVlU/XGxAu?=
- =?us-ascii?Q?ztkV6/5niq6bWvb2KHWnEAsWpfDMmvvMlojgthCQfq8X1cFao3w+cJDBCdBy?=
- =?us-ascii?Q?D0ePHEfGlDFyVeNYRYuOA+uLfh/sUnVV6sdgzXCEmWybS6wFNEHr2IVORwy1?=
- =?us-ascii?Q?3JL5dheEQO489uBtCrNJRG6HMIWRonsNg+K3qCAmvl4xwA7aVoIDoCrCz+XL?=
- =?us-ascii?Q?D9WuWzOEGcybeaK5QlAK8aTAUrNrDE2Xn5Z3qzXgRt6s775FF5+XqEvXVJfY?=
- =?us-ascii?Q?9GMrs54s5DiRYnOXwA2lD7UP5ER+2UasvwYGnOco46Iq9iymUD6dYUFPKjYr?=
- =?us-ascii?Q?oykvU7NF5QjA355eFv1+lN10LxfM+I97ibjHifvbjnmUUnERW12CxgaW4shL?=
- =?us-ascii?Q?0fHlr3m6tzwdI6f047FSAVo+sNrfkC2K++mBJ2bu8MDk3EZbtjZYQwGqzm8o?=
- =?us-ascii?Q?m2X2eWyqw/TjIH0Hxaig//2lL9fPcyWuj4xdFLWZS7P/+t/cMpjr6Da9M1OG?=
- =?us-ascii?Q?6+T+B6v95Xq3itD1sBSFZCG2aVwkUjilbCc99YPL3+p+ZEFPE0v0K/0vO626?=
- =?us-ascii?Q?+B1fZGS3G40MvyXShyny+niQS39voxk/4X1V+8K6vQRTmgLT1z/2pZJGeuZC?=
- =?us-ascii?Q?jnMOlQJ9DIXfcK2kDQVY3R/lFJxK6ZOZ2KeRU3Xlw4p8XQPllkqf29nAzDFq?=
- =?us-ascii?Q?scSsoM0C5hkrDhg+ezemjB6AF3IAhcjXMHVwAb2uRpw2LPpZrHsIvqxP6Xpk?=
- =?us-ascii?Q?fumrbpNRUht8hsm8B/pB5jvin7s48r5HmvnYZ3zOi5qF8kVXAOpe5GwN78zG?=
- =?us-ascii?Q?RvMKSUTxJCUcsVPP/4xmRPyqiC0Jp9zRwCkDYqEIvMZ//vj5ZyDSWJwVeJFe?=
- =?us-ascii?Q?26EhD2Ggf8VFyjz8A3CBzMXtCzthRv2rmftc60mp?=
-X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33c885b1-bf09-4ef4-05df-08dc9ebeef7a
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR08MB3937.namprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2024 19:56:47.9800
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +fnUFXuFwGcjO1OZIh0q5od07fpl0z3DUjfl+cQsh4msDxuRk0qcWJQPPBBSRDPyCI4+vHiyek1D7zRrsx3qtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB6431
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Cannot start degraded RAID1 array with device with
+ write-mostly flag
+To: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: regressions@lists.linux.dev, Song Liu <song@kernel.org>,
+ Yu Kuai <yukuai3@huawei.com>, Paul Luse <paul.e.luse@linux.intel.com>,
+ Xiao Ni <xni@redhat.com>
+References: <20240706143038.7253-1-mat.jonczyk@o2.pl>
+Content-Language: en-GB
+From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
+ 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
+ TANkZ3QqXNX2
+In-Reply-To: <20240706143038.7253-1-mat.jonczyk@o2.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: cbed63988452608ec28fa2cdc602d631
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [oVPw]                               
 
-Hi Dmitry,
+W dniu 6.07.2024 o 16:30, Mateusz Jończyk pisze:
+> Hello,
+>
+> Linux 6.9+ cannot start a degraded RAID1 array when the only remaining
+> device has the write-mostly flag set. Linux 6.8.0 works fine, as does
+> 6.1.96.
+[snip]
+> After some investigation, I have determined that the bug is most likely in
+> choose_slow_rdev() in drivers/md/raid1.c, which doesn't set max_sectors
+> before returning early. A test patch (below) seems to fix this issue (Linux
+> boots and appears to be working correctly with it, but I didn't do any more
+> advanced experiments yet).
+>
+> This points to
+> commit dfa8ecd167c1 ("md/raid1: factor out choose_slow_rdev() from read_balance()")
+> as the most likely culprit. However, I was running into other bugs in mdadm when
+> trying to test this commit directly.
+>
+> Distribution: Ubuntu 20.04, hardware: a HP 17-by0001nw laptop.
 
-On Wed, Jul 03, 2024 at 02:37:53PM -0700, Dmitry Torokhov wrote:
-> Preallocate memory for holding event values (input_dev->vals) so that
-> there is no need to check if it was allocated or not in the event
-> processing code.
-> 
-> The amount of memory will be adjusted after input device has been fully
-> set up upon registering device with the input core.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+I have been testing this patch carefully:
 
-Reviewed-by: Jeff LaBundy <jeff@labundy.com>
+1. I have been reliably getting deadlocks when adding / removing devices
+on an array that contains a component with the write-mostly flag set
+- while the array was loaded with fsstress. When the array was idle,
+no such deadlocks happened. This occurred also on Linux 6.8.0
+though, but not on 6.1.97-rc1, so this is likely an independent regression.
 
-> ---
->  drivers/input/input.c | 61 +++++++++++++++++++++++++++++++------------
->  1 file changed, 44 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/input/input.c b/drivers/input/input.c
-> index 9981fdfaee9f..4e12fa79883e 100644
-> --- a/drivers/input/input.c
-> +++ b/drivers/input/input.c
-> @@ -323,9 +323,6 @@ static void input_event_dispose(struct input_dev *dev, int disposition,
->  	if ((disposition & INPUT_PASS_TO_DEVICE) && dev->event)
->  		dev->event(dev, type, code, value);
->  
-> -	if (!dev->vals)
-> -		return;
-> -
->  	if (disposition & INPUT_PASS_TO_HANDLERS) {
->  		struct input_value *v;
->  
-> @@ -1985,6 +1982,18 @@ struct input_dev *input_allocate_device(void)
->  	if (!dev)
->  		return NULL;
->  
-> +	/*
-> +	 * Start with space for SYN_REPORT + 7 EV_KEY/EV_MSC events + 2 spare,
-> +	 * see input_estimate_events_per_packet(). We will tune the number
-> +	 * when we register the device.
-> +	 */
-> +	dev->max_vals = 10;
-> +	dev->vals = kcalloc(dev->max_vals, sizeof(*dev->vals), GFP_KERNEL);
-> +	if (!dev->vals) {
-> +		kfree(dev);
-> +		return NULL;
-> +	}
-> +
->  	mutex_init(&dev->mutex);
->  	spin_lock_init(&dev->event_lock);
->  	timer_setup(&dev->timer, NULL, 0);
-> @@ -2344,6 +2353,35 @@ bool input_device_enabled(struct input_dev *dev)
->  }
->  EXPORT_SYMBOL_GPL(input_device_enabled);
->  
-> +static int input_device_tune_vals(struct input_dev *dev)
-> +{
-> +	struct input_value *vals;
-> +	unsigned int packet_size;
-> +	unsigned int max_vals;
-> +
-> +	packet_size = input_estimate_events_per_packet(dev);
-> +	if (dev->hint_events_per_packet < packet_size)
-> +		dev->hint_events_per_packet = packet_size;
-> +
-> +	max_vals = dev->hint_events_per_packet + 2;
-> +	if (dev->max_vals >= max_vals)
-> +		return 0;
-> +
-> +	vals = kcalloc(max_vals, sizeof(*vals), GFP_KERNEL);
-> +	if (!vals)
-> +		return -ENOMEM;
-> +
-> +	spin_lock_irq(&dev->event_lock);
-> +	dev->max_vals = max_vals;
-> +	swap(dev->vals, vals);
-> +	spin_unlock_irq(&dev->event_lock);
-> +
-> +	/* Because of swap() above, this frees the old vals memory */
-> +	kfree(vals);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * input_register_device - register device with input core
->   * @dev: device to be registered
-> @@ -2371,7 +2409,6 @@ int input_register_device(struct input_dev *dev)
->  {
->  	struct input_devres *devres = NULL;
->  	struct input_handler *handler;
-> -	unsigned int packet_size;
->  	const char *path;
->  	int error;
->  
-> @@ -2399,16 +2436,9 @@ int input_register_device(struct input_dev *dev)
->  	/* Make sure that bitmasks not mentioned in dev->evbit are clean. */
->  	input_cleanse_bitmasks(dev);
->  
-> -	packet_size = input_estimate_events_per_packet(dev);
-> -	if (dev->hint_events_per_packet < packet_size)
-> -		dev->hint_events_per_packet = packet_size;
-> -
-> -	dev->max_vals = dev->hint_events_per_packet + 2;
-> -	dev->vals = kcalloc(dev->max_vals, sizeof(*dev->vals), GFP_KERNEL);
-> -	if (!dev->vals) {
-> -		error = -ENOMEM;
-> +	error = input_device_tune_vals(dev);
-> +	if (error)
->  		goto err_devres_free;
-> -	}
->  
->  	/*
->  	 * If delay and period are pre-set by the driver, then autorepeating
-> @@ -2428,7 +2458,7 @@ int input_register_device(struct input_dev *dev)
->  
->  	error = device_add(&dev->dev);
->  	if (error)
-> -		goto err_free_vals;
-> +		goto err_devres_free;
->  
->  	path = kobject_get_path(&dev->dev.kobj, GFP_KERNEL);
->  	pr_info("%s as %s\n",
-> @@ -2458,9 +2488,6 @@ int input_register_device(struct input_dev *dev)
->  
->  err_device_del:
->  	device_del(&dev->dev);
-> -err_free_vals:
-> -	kfree(dev->vals);
-> -	dev->vals = NULL;
->  err_devres_free:
->  	devres_free(devres);
->  	return error;
-> -- 
-> 2.45.2.803.g4e1b14247a-goog
-> 
+2. When adding a device to the array (/dev/sda1), I once got the following warnings in dmesg on patched 6.10-rc6:
 
-Kind regards,
-Jeff LaBundy
+        [ 8253.337816] md: could not open device unknown-block(8,1).
+        [ 8253.337832] md: md_import_device returned -16
+        [ 8253.338152] md: could not open device unknown-block(8,1).
+        [ 8253.338169] md: md_import_device returned -16
+        [ 8253.674751] md: recovery of RAID array md2
+
+(/dev/sda1 has device major/minor numbers = 8,1). This may be caused by some interaction with udev, though.
+I have also seen this on Linux 6.8.
+
+Additionally, on an unpatched 6.1.97-rc1 (which was handy for testing), I got a deadlock
+when removing a bitmap from such an array while it was loaded with fsstress.
+
+I'll file independent reports, but wanted to give a head's up.
+
+Greetings,
+
+Mateusz
+
