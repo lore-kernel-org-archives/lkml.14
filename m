@@ -1,123 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C3C14900C;
-	Mon,  8 Jul 2024 19:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB12C1DA53
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 19:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720467168; cv=none; b=sN8kTPLPj/eS9Xp7Fc3Tcj2X4RfJeG1n2iG9tjORaD936VpWKYJ85FbW2ZnAkw0WBTlUaHCVggvQdW6bSDKo7TowDLEGNbh61Sw4GRJdg6NwqqpivvOS5VlhLWMLoStqS7m7EyDuxuHLQYAKVhPIA2WPP3xMVwCkmERcQoK7zvU=
+	t=1720467210; cv=none; b=q/xge11/PhnIAp+vn9XCbW0DFojcwU9dYPhg34BhhRPz5xdq6MZ/gWBXoLhJNp/nuiXlUy7VwG6h9Jj4S7WPQEruO15GFR5E7i9S2QPgVwn14qIC+CNFWiNrUyNYQ4fBI2XH3+B6IGIKM3IUvK6mPKe3HvBRGi8gtfSsHa8GNZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720467168; c=relaxed/simple;
-	bh=PQRWnOx82i3fG2doBPseySJto3zDK3NV4Mn8e9GyrTY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qkDpp3E/6bGhMTOt4dG4rovUQKvcpBpfYoJ/JfNUMb3aXkPtztR4AoeztUnBa+pP37+XQkE9L2ky7nNZ6TvvdbYcSbSupq5Q59FS9+jF1qexnjQMTKnMKgKprcnGvtapScCuGUuKmZ1ZJu+D7Rk1gkPftncTq1uObXsJCF4a1VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OCJG12EX; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720467210; c=relaxed/simple;
+	bh=Lkct58u03qKX24GL/17oS13ObQaBn0gV67+onEUoBa0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=i/3TwlpCF6Uct9LD54GO2n6b9RwXtlxDB8PWe99nmBfHhs+3EHhMxE0C8qUyY9jb7UjLTBhfeF7/qvyfgfUT62elG5k34kVm08Ix9gN4DYNdkEpCMtxvzeOvAoOsHSuXWTnhOgdm4PSF5VDgajzTHff0PZys8A6iT9sRn4I7NdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nxoW+xBl; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OCJG12EX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720467166; x=1752003166;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PQRWnOx82i3fG2doBPseySJto3zDK3NV4Mn8e9GyrTY=;
-  b=OCJG12EX5DwJd+SSDwV/7QWN8uUNzKdAA8BJuz3Y5ZLPtqlpMmD0ZQR2
-   88KEHflkFHz+yAaRO53c41BjpBBUxpy8FUXdECMQYhbR3uteusWLgkz3R
-   eAUks8223hJ3zAmoKPgtqEo9ZAUfPQ89e9tQmUT7Hnw8X8ah46JtNoeM7
-   HAzVh8qYbXDwef9GxKtBrF+9JnjUp4C4nGiT3UimUWPxeteyEXaWboHfh
-   m27duOLj1I7mkGvRhilpO78OwIWkLlylSa2nkmimNUbmjYkKdAshWTW1n
-   WNQCOOONSz+44EJp9EN5oMlpt5QHxV6SlKtbCnxB5RO6y+pAJI1PLWlJI
-   w==;
-X-CSE-ConnectionGUID: MXhKG6/iT9a9ZUweaPEI5A==
-X-CSE-MsgGUID: aT+sJGZwQs+D14kctfAd9A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="17520497"
-X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
-   d="scan'208";a="17520497"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 12:32:42 -0700
-X-CSE-ConnectionGUID: TRnwzIJdTVOWbRO8PJilvg==
-X-CSE-MsgGUID: aK+CzMhgQU2ZUlCUsjL8ZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
-   d="scan'208";a="48265602"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa007.jf.intel.com with ESMTP; 08 Jul 2024 12:32:42 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@kernel.org,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	linux-kernel@vger.kernel.org
-Cc: ak@linux.intel.com,
-	eranian@google.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	"Bayduraev, Alexey V" <alexey.v.bayduraev@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 3/3] perf/x86/intel/ds: Fix non 0 retire latency on Raptorlake
-Date: Mon,  8 Jul 2024 12:33:36 -0700
-Message-Id: <20240708193336.1192217-4-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20240708193336.1192217-1-kan.liang@linux.intel.com>
-References: <20240708193336.1192217-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nxoW+xBl"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e03c68c7163so6689882276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 12:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720467208; x=1721072008; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0SsfUEhdZE3jvwQ557rvrdiT1mwqMCwVY9Pd8h40l2A=;
+        b=nxoW+xBlNrd834SNYp2ya1Ktrhqw6FbKFdYgDCOYuxx6IY0k5rTe69cU1SGqG4fLP6
+         h3WnxSkK81mQRzNqZpFHzsn8UUMf7HgnaY5oj7RG71/2NbMfkXtmiWMcImdl1/9GcC1u
+         kdwUTpHLM+uQaCyFtow7zKdBYXHAHVcrcmTRj8E7MUzqIfHAujG8+yHDkjEId22vvzRS
+         mYyeCfByyUV0jN5nNPnC8PxJPZIGRKq0Wxpj10PXU4TuQA9KqdY9rL2jMvRKDrpBx7Mg
+         OSBQeVlwBuGL2WLo3cFyb+unxhtgky4Z3FYqYTo7J8baKpBl2DZI9xuSwdsEilDTVrja
+         cbDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720467208; x=1721072008;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0SsfUEhdZE3jvwQ557rvrdiT1mwqMCwVY9Pd8h40l2A=;
+        b=uO6eaFV/BdpQ1XqYFZ5Q9t6LMQLnCj0lZSaJD6+qxTHPMpCMSRyJeHG0F0da4jTVH2
+         yPuaPUEhhLqJwPHFDHoYREcXbfr862mAXPOfWEiKPKISG7S5CaZ+NnPqiaDTklymsSxx
+         9YKBR2PUEQQo+FpKzj1SNzxuNOrRgYpnnIdza16B0qaKOhEb4Pb5bgVsABM9PlamvTb5
+         Zbjg5H9b4nOwxcZfKz2cfUHkhE5A+zgP059lmpsTnxPuxJiBBI+28KZynhv7Ezw76JWx
+         lQ+TJNyh9PujyjW68IMIRbMD1HXE+Rha0SQrW7d4c74a/svJoNolOg2Im/Ax5zA0P/0q
+         Gt0A==
+X-Forwarded-Encrypted: i=1; AJvYcCV8udXzNzCSfoc2UY/hfawbNoQUJaDTAlops5EQW6VUocJBfhd0kFI09KJ1ihaL1v9/u4jkos1UIWHp8fzWLAiT/+cyChw86Axx3oym
+X-Gm-Message-State: AOJu0YzTqPtafFH1SL/FZABV45RcUA2XuKC1G5vQo4FYTSY+m3AjPdyC
+	U5PanIsYmv8tDTAwmTro596PrmjGc2cpnYfnaYsyfIfQvdQCvkDx999iuR0qp+8PA4DfIGI11j1
+	ptg==
+X-Google-Smtp-Source: AGHT+IFPQJJnHnF4cf4wxaeu/SR+dAHcuEg/KlRGY3vjBwuULSNbvnJdgljw2/q9IZ9gwxv615Wjeh5M4cg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1ac1:b0:e03:62dc:63de with SMTP id
+ 3f1490d57ef6-e041b0593efmr47626276.6.1720467207949; Mon, 08 Jul 2024 12:33:27
+ -0700 (PDT)
+Date: Mon, 8 Jul 2024 19:33:26 +0000
+In-Reply-To: <6a8aee9425a47290c7401d4926041c0611d69ff6.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240517173926.965351-1-seanjc@google.com> <20240517173926.965351-6-seanjc@google.com>
+ <6a8aee9425a47290c7401d4926041c0611d69ff6.camel@redhat.com>
+Message-ID: <Zow_BmpOGwQJ9Yoi@google.com>
+Subject: Re: [PATCH v2 05/49] KVM: selftests: Assert that the @cpuid passed to
+ get_cpuid_entry() is non-NULL
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
+	Kechen Lu <kechenl@nvidia.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Binbin Wu <binbin.wu@linux.intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Robert Hoo <robert.hoo.linux@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Thu, Jul 04, 2024, Maxim Levitsky wrote:
+> On Fri, 2024-05-17 at 10:38 -0700, Sean Christopherson wrote:
+> > Add a sanity check in get_cpuid_entry() to provide a friendlier error than
+> > a segfault when a test developer tries to use a vCPU CPUID helper on a
+> > barebones vCPU.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  tools/testing/selftests/kvm/lib/x86_64/processor.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> > index c664e446136b..f0f3434d767e 100644
+> > --- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> > +++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> > @@ -1141,6 +1141,8 @@ const struct kvm_cpuid_entry2 *get_cpuid_entry(const struct kvm_cpuid2 *cpuid,
+> >  {
+> >  	int i;
+> >  
+> > +	TEST_ASSERT(cpuid, "Must do vcpu_init_cpuid() first (or equivalent)");
+> > +
+> >  	for (i = 0; i < cpuid->nent; i++) {
+> >  		if (cpuid->entries[i].function == function &&
+> >  		    cpuid->entries[i].index == index)
+> 
+> Hi,
+> 
+> Maybe it is better to do this assert in __vcpu_get_cpuid_entry() because the
+> assert might confuse the reader, since it just tests for NULL but when it
+> fails, it complains that you need to call some function.
 
-A non-0 retire latency can be observed on a Raptorlake which doesn't
-support the retire latency feature.
-By design, the retire latency shares the PERF_SAMPLE_WEIGHT_STRUCT
-sample type with other types of latency. That could avoid adding too
-many different sample types to support all kinds of latency. For the
-machine which doesn't support some kind of latency, 0 should be
-returned.
-
-Perf doesn’t clear/init all the fields of a sample data for the sake
-of performance. It expects the later perf_{prepare,output}_sample() to
-update the uninitialized field. However, the current implementation
-doesn't touch the field of the retire latency if the feature is not
-supported. The memory garbage is dumped into the perf data.
-
-Clear the retire latency if the feature is not supported.
-
-Fixes: c87a31093c70 ("perf/x86: Support Retire Latency")
-Reported-by: "Bayduraev, Alexey V" <alexey.v.bayduraev@intel.com>
-Tested-by: "Bayduraev, Alexey V" <alexey.v.bayduraev@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/events/intel/ds.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index b9cc520b2942..fa5ea65de0d0 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1944,8 +1944,12 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 	set_linear_ip(regs, basic->ip);
- 	regs->flags = PERF_EFLAGS_EXACT;
- 
--	if ((sample_type & PERF_SAMPLE_WEIGHT_STRUCT) && (x86_pmu.flags & PMU_FL_RETIRE_LATENCY))
--		data->weight.var3_w = format_size >> PEBS_RETIRE_LATENCY_OFFSET & PEBS_LATENCY_MASK;
-+	if (sample_type & PERF_SAMPLE_WEIGHT_STRUCT) {
-+		if (x86_pmu.flags & PMU_FL_RETIRE_LATENCY)
-+			data->weight.var3_w = format_size >> PEBS_RETIRE_LATENCY_OFFSET & PEBS_LATENCY_MASK;
-+		else
-+			data->weight.var3_w = 0;
-+	}
- 
- 	/*
- 	 * The record for MEMINFO is in front of GP
--- 
-2.38.1
-
+IIRC, I originally added the assert in __vcpu_get_cpuid_entry(), but I didn't
+like leaving get_cpuid_entry() unprotected.  What if I add an assert in both?
+E.g. have __vcpu_get_cpuid_entry() assert with the (hopefully) hepful message,
+and have get_cpuid_entry() do a simple TEST_ASSERT_NE()?
