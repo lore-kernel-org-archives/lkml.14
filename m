@@ -1,41 +1,60 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3898A146D40;
-	Mon,  8 Jul 2024 22:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EB614EC44;
+	Mon,  8 Jul 2024 22:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720476900; cv=none; b=AoPHUP6IhSm9V3cnVd9AiQf7C0RRuSLv9059zUeAxos5RRGcSFvG699pK1IdFquFX2BIHgJhd5OrWd+h9Q9C00lexYCWP4R9opYUlJfeaR890UOwWyouaZBGh3UdR0Mu+vuF2bajzwN7uypqn7jPM4WvA6FlGZlxilcL1RgCDfI=
+	t=1720476950; cv=none; b=G9VMXy6d2yipXj5o9XWZ42IYQTDwR/pr/TnbLUjyC7TORk2V/oARQFdDYcjn971W4uJrLhqYUtJYCU8nUzdjUuYHqccpl95CQzPnLwDLX4uENxZztVnqcvGxmwVvXju5W5OoFxyqlkUTBUK+J+PQKJvEAP5sVQ5n9kLCnLiziRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720476900; c=relaxed/simple;
-	bh=zjqI610N9pRC4EqJF11m9EzDbN8ZaWHPOimS03zeegI=;
+	s=arc-20240116; t=1720476950; c=relaxed/simple;
+	bh=ymbu5+bIDcpN0rmlC5oWU/KXdLu7wOWeG7hHztdx8Gg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KPKbjBXRO5dUCAplE/WodTqsaGRmJlqs+C2mSPPCQ1yW4ecrP2mvqlPFxl3CqhVeoaGOnuY4kRqKYZ3RbAWFN3LrSIkzvdOqTlpMX0Rt/SbZt+WjkgOl3el8GIOkOvrdETIOlcZXtRmihVnzoW5W4/yxYZETpFM5euoldnoAZYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=fOpUOtxc; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	 In-Reply-To:Content-Type; b=Q0RfamCXKDGdJWErg7ymbttbbUO7VdjsJudaB8ud+8wvkwFWierb2H/PYgKaDNkKWANyUXczzeaUxvb9KsnLQu/EyBumhaxMoP2eNs9JLSGkIhY1Y5gui+emNciwhLF8QV4gBLOp/0p+QOtRQM1+YNR+EQnHX7KnqenUj7TLPgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lass6E3i; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="fOpUOtxc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1720476883; x=1721081683; i=quwenruo.btrfs@gmx.com;
-	bh=uvtjxh9hgaU0yCTPP3uwX4bGR8q3uFMSBV8Qqx9BXR0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=fOpUOtxcBOaHyeQloPHyN2K/bWbvP/mgj1wC14EtRsbhbQq0P1cRC/0UxGXKDQgs
-	 EA+CX35fGnhQyZDsMpl7b3svpUg2+TMHC13U26oJH48niSZMZr7By3v9YXSA/1CpH
-	 008t3IWQWsB+CdOkNQsMCpeiYyAePyVDmZOnjoyDoWEfqQcmuYjSXp/CcPjYpXb+a
-	 lI9RW5dpWipHw6tjgph0K/Sc2F1g297ptFN++PX81phc1yd1B2G39g2j4+T1xxWfR
-	 1vce2BZZKzjwAGtN1o3ZYAV5/9uhxbRh70eY5RH2wCbwHTA8xcItSpg/Knlv7dWll
-	 VAZFK4NLh5ePIk4rcQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.191] ([159.196.52.54]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MRmjw-1spbIX1Tb8-00M4dd; Tue, 09
- Jul 2024 00:14:43 +0200
-Message-ID: <51eebc20-94f7-4e3d-8a44-741dad2e9900@gmx.com>
-Date: Tue, 9 Jul 2024 07:44:39 +0930
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lass6E3i"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a77c080b521so488829166b.3;
+        Mon, 08 Jul 2024 15:15:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720476946; x=1721081746; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=WakRVrhzYTWXcephGvejlAmFzJ/7jV1NnXpteDXimuk=;
+        b=Lass6E3iMA+UWW4RV+iMJ7WfgOsRHUIiLS+iP7l/NGf2U79oJT4T0SBR+VCJH7f7J2
+         0hLfKPc3jVuiYECqICoqrpdsSGwN8MCcRNTnb+wy82wGEElnJBU+jUgYBgShv0vtJAXR
+         jXTF6/DrM7ntJDg4yAcx5XQAzUf148SHpQuUNUbN89JwQl+4wo/z/cg9601cINj2lyzt
+         rkbaB6iQJ2fKMa8O5o30lm24T552W2Opo78lTQktigPakDiIfTa5Gdqw5FAyjHipBfZ7
+         42OUeHP6zIIdfH6qH8tGS9kGL8iRshRLaXe6d9MczLV/j2RBRmiVIOaGzi0uRM4DZjt3
+         x4Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720476946; x=1721081746;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WakRVrhzYTWXcephGvejlAmFzJ/7jV1NnXpteDXimuk=;
+        b=Jko+iYb7CSaYgr5EzxweH0xUGdhsCnQZ6FGfSCg8jmltppfVv1a/9BE9s56TIZL3Xn
+         WiZM0eJvXdvNf5yYswy9L3mR5JkKdwdHkM3rhqO3PeZkHfd7cT41viR8j12p0U6NQ2pC
+         UAPdcNq1kxxL+vzPzul0gC0V8P6tUBM+DeIasgfy8Nxl9m0JZQB8IuEti9XI2zWxosr9
+         rHjJLd7XOQ1CS3xPAa/vURWAJqHCBP/GRoWN4IB7nvBKErlHrqGWzv35RHfrQDgVWRJe
+         ajd+nzLNOvX1W2t4YDj7xSd7rS5PSMJxiJdpb06csFwLEUNf1ZWBTvpbyFsHisdMMKWE
+         y6Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2zvRMPalTUNAa8JXmR9BdsgT3Mocwt4d8d66gnQqbpoVsWJxr7xcpOeTt124obv7WuFysAiY+AingCVRfArVuV+FMU9pQ7NynGIeAk3DiyXPbbrA4pGl868CZrKvdYLNvvA5Zr4Mvif1NgYDhCXfGsM+/S9pW6T/WIjy3TJwO
+X-Gm-Message-State: AOJu0Ywavk2W69P8HGKgDL9NoW1MfptdGOWadsBLq4bFStvIvjflbELV
+	qRT2/ukQvhWiwcJdcz20NUKwjpYyKun8cKjBqyUSVJg4Vx3dzvNU
+X-Google-Smtp-Source: AGHT+IEZcHx32uwM0SrELtiDJgoF/S5vkZBXbHEgN/9T6mcWUeRzj4UwPkYWYyBBm364aazg6hohtw==
+X-Received: by 2002:a17:906:11ca:b0:a75:1006:4f23 with SMTP id a640c23a62f3a-a780b6fe8d0mr40318666b.34.1720476946294;
+        Mon, 08 Jul 2024 15:15:46 -0700 (PDT)
+Received: from ?IPV6:2a01:c22:7b0c:a200:89f2:32cc:d63b:a6ad? (dynamic-2a01-0c22-7b0c-a200-89f2-32cc-d63b-a6ad.c22.pool.telefonica.de. [2a01:c22:7b0c:a200:89f2:32cc:d63b:a6ad])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a780a6dc626sm26656866b.46.2024.07.08.15.15.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 15:15:45 -0700 (PDT)
+Message-ID: <e1ed82cb-6d20-4ca8-b047-4a02dde115a8@gmail.com>
+Date: Tue, 9 Jul 2024 00:15:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,169 +62,260 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/7] btrfs: replace stripe extents
-To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
- Johannes Thumshirn <jth@kernel.org>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
-Cc: "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240705-b4-rst-updates-v4-0-f3eed3f2cfad@kernel.org>
- <20240705-b4-rst-updates-v4-1-f3eed3f2cfad@kernel.org>
- <e51d0042-ec10-4a50-bd76-3d3d3cbc9bfc@gmx.com>
- <9d7f7acf-8077-481c-926e-d29b4b90d46f@wdc.com>
+Subject: Re: [PATCH] PCI: r8169: add suspend/resume aspm quirk
+To: George-Daniel Matei <danielgeorgem@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nic_swsd@realtek.com, netdev@vger.kernel.org,
+ Bjorn Helgaas <helgaas@kernel.org>
+References: <20240708172339.GA139099@bhelgaas>
 Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00iVQUJDToH
- pgAKCRDCPZHzoSX+qNKACACkjDLzCvcFuDlgqCiS4ajHAo6twGra3uGgY2klo3S4JespWifr
- BLPPak74oOShqNZ8yWzB1Bkz1u93Ifx3c3H0r2vLWrImoP5eQdymVqMWmDAq+sV1Koyt8gXQ
- XPD2jQCrfR9nUuV1F3Z4Lgo+6I5LjuXBVEayFdz/VYK63+YLEAlSowCF72Lkz06TmaI0XMyj
- jgRNGM2MRgfxbprCcsgUypaDfmhY2nrhIzPUICURfp9t/65+/PLlV4nYs+DtSwPyNjkPX72+
- LdyIdY+BqS8cZbPG5spCyJIlZonADojLDYQq4QnufARU51zyVjzTXMg5gAttDZwTH+8LbNI4
- mm2YzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00ibgUJDToHvwAK
- CRDCPZHzoSX+qK6vB/9yyZlsS+ijtsvwYDjGA2WhVhN07Xa5SBBvGCAycyGGzSMkOJcOtUUf
- tD+ADyrLbLuVSfRN1ke738UojphwkSFj4t9scG5A+U8GgOZtrlYOsY2+cG3R5vjoXUgXMP37
- INfWh0KbJodf0G48xouesn08cbfUdlphSMXujCA8y5TcNyRuNv2q5Nizl8sKhUZzh4BascoK
- DChBuznBsucCTAGrwPgG4/ul6HnWE8DipMKvkV9ob1xJS2W4WJRPp6QdVrBWJ9cCdtpR6GbL
- iQi22uZXoSPv/0oUrGU+U5X4IvdnvT+8viPzszL5wXswJZfqfy8tmHM85yjObVdIG6AlnrrD
-In-Reply-To: <9d7f7acf-8077-481c-926e-d29b4b90d46f@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NNYgIL5doO/PSd9LmDlanHV7Gw8um2ZcHnj+kHMe2FX4fhuzJW+
- ylq/tlzaRt/gaVkaQohEg94ltKac2JSEJUDovj25QtfjgixkHWdTdUTlhfM8UGSy10Fray8
- q4d8a8z68IHkx7blY5ZQDOQwsnzRi3U54dfXk/dVQm2Pwhqd2PwNSuqjjXZ2c/6qMhCdXBI
- Y7qs3VWtXVwmulfvuSlfg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6rbF/bWaBpw=;ncmFMcqiS6WuPSjb5M5vHqJh83T
- iwrbeA12a9VB7CFa5rUc8GtnYaiiVK3jCxIFpMLDfpM1GgnF49EVO0WiqjmqxCp09bTF/MMeN
- NGYC7XA7R1zFDWO5q4andsGHcmAUbochUjlnAmL3hHzanNbqEXWZX8Ktzi2zE1tZT/R/C1EOx
- Ykzl0pZJePHRlkHHs/NRA2EFENcE9tepWaQtHrLBe+oR8dQe3ZL0+8JlGdXRi6NVNa+NI/s4U
- o9j1HH+OZGjcM0Vlp3gBFed4XNQXOwcxU9tgwpHyTrh+9RLNqqoyBoeXKtPDgDEUIWb6JG2Kp
- BMn3rQl9tkFzb0N9Tqi7XjGx9mqZ8rCCCp3NZIoMeB2p2N16au2rK8SQh64Rgn0Z5N+Nm5Vsk
- nicEveHMdjgNdtEgiaFIZaOAVJ3/YE1i3RX2NTETJ3s/xTnqfxTPO1aeNgytU6yDf4LwVu2Xp
- OJ0ymIcv8KpsCk6hcsRgYxb0r4G+1QZBiv1vhekUJN3eZD7w9LGDRktwmBNqOsFBeE+POGtF2
- swe5PnFhgy3apsXMjNOVN+h+mokjN2xu0d58fFDwZYHP4k4/wn4SYyuzRJ/cjKCJjCx5JmdJP
- pBMcK2dUTTv8fGsE4GHgAwEzGqvnefxhRhiOJVKapsw7sWcEjclVUO6aSEAcpRM5msFYVbBdT
- Hhyae1vBvSxrK1sJvQxQb99J3hi97FMVLfZilKm+/FsulhZyslHO6whZ6MGpi0oN+m0oS2IXx
- gT0ubKVuW05pnXAic9ctBFWfouMot4sKImSI7a8jxF3jS6gY8Hc5lJxvwWm4BU1DdzgFzLj9R
- 7umrCCE0LgnP7LW+jSiO5LViiVptd+2oO2X0fEZ0oiWOk=
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+In-Reply-To: <20240708172339.GA139099@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 08.07.2024 19:23, Bjorn Helgaas wrote:
+> [+cc r8169 folks]
+> 
+> On Mon, Jul 08, 2024 at 03:38:15PM +0000, George-Daniel Matei wrote:
+>> Added aspm suspend/resume hooks that run
+>> before and after suspend and resume to change
+>> the ASPM states of the PCI bus in order to allow
+>> the system suspend while trying to prevent card hangs
+> 
+> Why is this needed?  Is there a r8169 defect we're working around?
+> A BIOS defect?  Is there a problem report you can reference here?
+> 
 
+Basically the same question from my side. Apparently such a workaround
+isn't needed on any other system. And Realtek NICs can be found on more
+or less every consumer system. What's the root cause of the issue?
+A silicon bug on the host side?
 
-=E5=9C=A8 2024/7/8 21:13, Johannes Thumshirn =E5=86=99=E9=81=93:
-> On 06.07.24 01:19, Qu Wenruo wrote:
+What is the RTL8168 chip version used on these systems?
+
+ASPM L1 is disabled per default in r8169. So why is the patch needed
+at all?
+
+> s/Added/Add/
+> 
+> s/aspm/ASPM/ above
+> 
+> s/PCI bus/device and parent/
+> 
+> Add period at end of sentence.
+> 
+> Rewrap to fill 75 columns.
+> 
+>> Signed-off-by: George-Daniel Matei <danielgeorgem@chromium.org>
+>> ---
+>>  drivers/pci/quirks.c | 142 +++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 142 insertions(+)
 >>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index dc12d4a06e21..aa3dba2211d3 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -6189,6 +6189,148 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b0, aspm_l1_acceptable_latency
+>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency);
+>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
+>> +
+>> +static const struct dmi_system_id chromebox_match_table[] = {
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Brask"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aurash"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +		{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Bujia"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Gaelin"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Gladios"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Hahn"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Jeev"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Kinox"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Kuldax"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Lisbon"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +			.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Moli"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{ }
+>> +};
+>> +
+>> +static void rtl8169_suspend_aspm_settings(struct pci_dev *dev)
+>> +{
+>> +	u16 val = 0;
+>> +
+>> +	if (dmi_check_system(chromebox_match_table)) {
+>> +		//configure parent
+>> +		pcie_capability_clear_and_set_word(dev->bus->self,
+>> +						   PCI_EXP_LNKCTL,
+>> +						   PCI_EXP_LNKCTL_ASPMC,
+>> +						   PCI_EXP_LNKCTL_ASPM_L1);
+>> +
+>> +		pci_read_config_word(dev->bus->self,
+>> +				     dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				     &val);
+>> +		val = (val & ~PCI_L1SS_CTL1_L1SS_MASK) |
+>> +		      PCI_L1SS_CTL1_PCIPM_L1_2 | PCI_L1SS_CTL1_PCIPM_L1_2 |
+>> +		      PCI_L1SS_CTL1_ASPM_L1_1;
+>> +		pci_write_config_word(dev->bus->self,
+>> +				      dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				      val);
+>> +
+>> +		//configure device
+>> +		pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
+>> +						   PCI_EXP_LNKCTL_ASPMC,
+>> +						   PCI_EXP_LNKCTL_ASPM_L1);
+>> +
+>> +		pci_read_config_word(dev, dev->l1ss + PCI_L1SS_CTL1, &val);
+>> +		val = (val & ~PCI_L1SS_CTL1_L1SS_MASK) |
+>> +		      PCI_L1SS_CTL1_PCIPM_L1_2 | PCI_L1SS_CTL1_PCIPM_L1_2 |
+>> +		      PCI_L1SS_CTL1_ASPM_L1_1;
+>> +		pci_write_config_word(dev, dev->l1ss + PCI_L1SS_CTL1, val);
+>> +	}
+>> +}
+>> +
+>> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_REALTEK, 0x8168,
+>> +			  rtl8169_suspend_aspm_settings);
+>> +
+>> +static void rtl8169_resume_aspm_settings(struct pci_dev *dev)
+>> +{
+>> +	u16 val = 0;
+>> +
+>> +	if (dmi_check_system(chromebox_match_table)) {
+>> +		//configure device
+>> +		pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
+>> +						   PCI_EXP_LNKCTL_ASPMC, 0);
+>> +
+>> +		pci_read_config_word(dev->bus->self,
+>> +				     dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				     &val);
+>> +		val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
+>> +		pci_write_config_word(dev->bus->self,
+>> +				      dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				      val);
+>> +
+>> +		//configure parent
+>> +		pcie_capability_clear_and_set_word(dev->bus->self,
+>> +						   PCI_EXP_LNKCTL,
+>> +						   PCI_EXP_LNKCTL_ASPMC, 0);
+>> +
+>> +		pci_read_config_word(dev->bus->self,
+>> +				     dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				     &val);
+>> +		val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
+>> +		pci_write_config_word(dev->bus->self,
+>> +				      dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				      val);
+> 
+> Updates the parent (dev->bus->self) twice; was the first one supposed
+> to update the device (dev)?
+> 
+> This doesn't restore the state as it existed before suspend.  Does
+> this rely on other parts of restore to do that?
+> 
+>> +	}
+>> +}
+>> +
+>> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_REALTEK, 0x8168,
+>> +			 rtl8169_resume_aspm_settings);
+>>  #endif
+>>  
+>>  #ifdef CONFIG_PCIE_DPC
+>> -- 
+>> 2.45.2.803.g4e1b14247a-goog
 >>
->> =E5=9C=A8 2024/7/6 00:43, Johannes Thumshirn =E5=86=99=E9=81=93:
->>> From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
->>>
->>> If we can't insert a stripe extent in the RAID stripe tree, because
->>> the key that points to the specific position in the stripe tree is
->>> already existing, we have to remove the item and then replace it by a
->>> new item.
->>>
->>> This can happen for example on device replace operations.
->>
->> In that case, can we just modify the targeted dev stripe?
->>
->> Or do we have other call sites that can lead to such conflicts?
->>
->> As I'm not that confident if such replace behavior would mask some real
->> problems.
->
-> I've just tested the following patch and it looks like it's working:
->
->
-> diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
-> index e6f7a234b8f6..7bfd8654c110 100644
-> --- a/fs/btrfs/raid-stripe-tree.c
-> +++ b/fs/btrfs/raid-stripe-tree.c
-> @@ -73,6 +73,53 @@ int btrfs_delete_raid_extent(struct
-> btrfs_trans_handle *trans, u64 start, u64 le
->           return ret;
->    }
->
-> +static int update_raid_extent_item(struct btrfs_trans_handle *trans,
-> +				   struct btrfs_key *key,
-> +				   struct btrfs_io_context *bioc)
-> +{
-> +	struct btrfs_path *path;
-> +	struct extent_buffer *leaf;
-> +	struct btrfs_stripe_extent *stripe_extent;
-> +	int num_stripes;
-> +	int ret;
-> +	int slot;
-> +
-> +	path =3D btrfs_alloc_path();
-> +	if (!path)
-> +		return -ENOMEM;
-> +
-> +	ret =3D btrfs_search_slot(trans, trans->fs_info->stripe_root, key, pat=
-h,
-> +				0, 1);
-> +	if (ret)
-> +		return ret =3D=3D 1 ? ret : -EINVAL;
 
-Looks good to me overall.
-
-Considering in this case the bioc should match the existing rst entry,
-can we add an extra ASSERT() to check the length of the entry against
-the bioc?
-
-Thanks,
-Qu
-> +
-> +	leaf =3D path->nodes[0];
-> +	slot =3D path->slots[0];
-> +
-> +	btrfs_item_key_to_cpu(leaf, key, slot);
-> +	num_stripes =3D btrfs_num_raid_stripes(btrfs_item_size(leaf, slot));
-> +	stripe_extent =3D btrfs_item_ptr(leaf, slot, struct btrfs_stripe_exten=
-t);
-> +
-> +	for (int i =3D 0; i < num_stripes; i++) {
-> +		u64 devid =3D bioc->stripes[i].dev->devid;
-> +		u64 physical =3D bioc->stripes[i].physical;
-> +		u64 length =3D bioc->stripes[i].length;
-> +		struct btrfs_raid_stride *raid_stride =3D
-> +			&stripe_extent->strides[i];
-> +
-> +		if (length =3D=3D 0)
-> +			length =3D bioc->size;
-> +
-> +		btrfs_set_raid_stride_devid(leaf, raid_stride, devid);
-> +		btrfs_set_raid_stride_physical(leaf, raid_stride, physical);
-> +	}
-> +
-> +	btrfs_mark_buffer_dirty(trans, leaf);
-> +	btrfs_free_path(path);
-> +
-> +	return ret;
-> +}
-> +
->    static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *tr=
-ans,
-> 					struct btrfs_io_context *bioc)
->    {
-> @@ -112,6 +159,8 @@ static int btrfs_insert_one_raid_extent(struct
-> btrfs_trans_handle *trans,
->
-> 	ret =3D btrfs_insert_item(trans, stripe_root, &stripe_key, stripe_exten=
-t,
-> 				item_size);
-> +	if (ret =3D=3D -EEXIST)
-> +		ret =3D update_raid_extent_item(trans, &stripe_key, bioc);
-> 	if (ret)
-> 		btrfs_abort_transaction(trans, ret);
->
