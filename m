@@ -1,72 +1,108 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC28145B3B;
-	Mon,  8 Jul 2024 16:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FA41419B5
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720455892; cv=none; b=owzkGbOhNX566YzswQL21hM3EJRnjs2FgW6r8GSIf8FrYD8pHjE9EVLsk7rdX6WftCytQuXQi4KkJLl440zAOLRPhFtP/s4z9hqAI9Tv5vS8J7OabdHiFiGFnMWgh3gWSc/w8eWYlgW4lu7lCpi0JsFYcqS9LEgxBxrCynQQgHo=
+	t=1720455995; cv=none; b=ablG7fbwSJC9DBOM61ZzSCeAQQoCiruc4UbBs9848K0pBrLhXmo91DEnGfYx6bLbF1FHmefKi3fu6F39FHTxL8P48BsbfXdyrNVkbd5al3pQ076KEX1jD3izYBu1WiSW2G11mkbXhg4kCNvsoFC9/H61J8OjzVnvwPxKSIhDJ64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720455892; c=relaxed/simple;
-	bh=Gp0kHHNFI2rcZtMat8BDy18rJEf5wmNrtHW9mAED3k4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HCr7X4ISZL2AAuGy7dKFSmZAcieBsSNLefJXkgGr8yyksBL8JZOwP9H1rQ4sVkFWZtbSEq3XqtUPHIcE1styCeIgaki0AGuVKJy9yuVF5zq0r4jT3lKpvgdsvTfBicva7f2JQuIESq6NQ3LGJaHZXSfwY2wpKN8PD/64VFv+GjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=rXOCARO2; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1720455995; c=relaxed/simple;
+	bh=5VqajPkX4cR7Nm9pwm7v4IUn0y7FY5jYA7jJc8omRXQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VOVfFaz1rA6M3XV6IA5p4lgvLplqbAq0JfB1G1dSPVal1JWUeXklGa9iLHJtofHpGLv922Ovj6eqdK5xIhe6WnvnXDfqkKnHdC48id7ckW+tXvNJSDGV5Lb17lpPqNK+11dO9PTRVGfRvV6t3wQevbdxcR/tlY1dxhNFQQ5rhx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fDkjuOGh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="rXOCARO2"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fDkjuOGh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720455992;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J8+nyKJPtmYL3Q1Jw+NMTU5s3BULPLom/3c1fVXHWAY=;
+	b=fDkjuOGhGQF4zkT5cRQyWW+zT3ilhXmI9IS9Sdce9v8wnIvZ7OXn91VLIJTLxA7Nfm8u/3
+	MUtAbqUmrhRg/7WLOeJ0A75JEaEoAGjAW3eNt/txGMmeaxRNIu7mSAzJOSbWF68Qfm2XDS
+	PmxlEPcYc2f2GRPLNNsCmyHgFUdk85M=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-361-PTESLuptN-miLqEs4oSOeA-1; Mon,
+ 08 Jul 2024 12:26:29 -0400
+X-MC-Unique: PTESLuptN-miLqEs4oSOeA-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 5776C887D1;
-	Mon,  8 Jul 2024 18:24:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1720455889;
-	bh=zUULNVojGptCWtPVxs+eXicSamISZThFxxUZa0HSZpA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rXOCARO2PtRFuUu8pxRp+fcq5/BOkRU+FlQqVGeMPDOIc/zZjfqDhHoTh/P7FBx8P
-	 yekFiWsXcp/5H1LnmZUcoP1qIU57ow/1LKYu1n4D2s2le7VMpeuaKeV8vlOAlIDs/u
-	 Z7QchiKwi9Ozq8kUaKLEVCCcyLaRYnq/cWW/q4kpCkGq0DfugNwPXndMesYV4bL5H2
-	 0bSwM5cwCV7rt7PqNkS6czG1S4YoH/PvrmWfHD6V0ghJdkq7P4kNWX+jp+vsDc4ynB
-	 IDtxy6elZBhTahjXinTuNdL8Aqshllme4UDXS6Cnsr7fqFpU9VkVoIS/eWzHoM3/73
-	 AJrhaXdKl7pTw==
-Message-ID: <1921604a-c4c5-440c-9d9b-90169a556062@denx.de>
-Date: Mon, 8 Jul 2024 17:53:25 +0200
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0A493197702C;
+	Mon,  8 Jul 2024 16:26:20 +0000 (UTC)
+Received: from oldenburg.str.redhat.com (unknown [10.45.224.113])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 388F41955F3B;
+	Mon,  8 Jul 2024 16:26:01 +0000 (UTC)
+From: Florian Weimer <fweimer@redhat.com>
+To: Jeff Xu <jeffxu@google.com>
+Cc: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,  Al Viro
+ <viro@zeniv.linux.org.uk>,
+  Christian Brauner <brauner@kernel.org>,  Kees Cook
+ <keescook@chromium.org>,  Linus Torvalds <torvalds@linux-foundation.org>,
+  Paul Moore <paul@paul-moore.com>,  "Theodore Ts'o" <tytso@mit.edu>,
+  Alejandro Colomar <alx.manpages@gmail.com>,  Aleksa Sarai
+ <cyphar@cyphar.com>,  Andrew Morton <akpm@linux-foundation.org>,  Andy
+ Lutomirski <luto@kernel.org>,  Arnd Bergmann <arnd@arndb.de>,  Casey
+ Schaufler <casey@schaufler-ca.com>,  Christian Heimes
+ <christian@python.org>,  Dmitry Vyukov <dvyukov@google.com>,  Eric Biggers
+ <ebiggers@kernel.org>,  Eric Chiang <ericchiang@google.com>,  Fan Wu
+ <wufan@linux.microsoft.com>,  Geert Uytterhoeven <geert@linux-m68k.org>,
+  James Morris <jamorris@linux.microsoft.com>,  Jan Kara <jack@suse.cz>,
+  Jann Horn <jannh@google.com>,  Jonathan Corbet <corbet@lwn.net>,  Jordan
+ R Abrahams <ajordanr@google.com>,  Lakshmi Ramasubramanian
+ <nramas@linux.microsoft.com>,  Luca Boccassi <bluca@debian.org>,  Luis
+ Chamberlain <mcgrof@kernel.org>,  "Madhavan T . Venkataraman"
+ <madvenka@linux.microsoft.com>,  Matt Bobrowski
+ <mattbobrowski@google.com>,  Matthew Garrett <mjg59@srcf.ucam.org>,
+  Matthew Wilcox <willy@infradead.org>,  Miklos Szeredi
+ <mszeredi@redhat.com>,  Mimi Zohar <zohar@linux.ibm.com>,  Nicolas
+ Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,  Scott Shell
+ <scottsh@microsoft.com>,  Shuah Khan <shuah@kernel.org>,  Stephen Rothwell
+ <sfr@canb.auug.org.au>,  Steve Dower <steve.dower@python.org>,  Steve
+ Grubb <sgrubb@redhat.com>,  Thibaut Sautereau
+ <thibaut.sautereau@ssi.gouv.fr>,  Vincent Strubel
+ <vincent.strubel@ssi.gouv.fr>,  Xiaoming Ni <nixiaoming@huawei.com>,  Yin
+ Fengwei <fengwei.yin@intel.com>,  kernel-hardening@lists.openwall.com,
+  linux-api@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
+  linux-integrity@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-security-module@vger.kernel.org
+Subject: Re: [RFC PATCH v19 1/5] exec: Add a new AT_CHECK flag to execveat(2)
+In-Reply-To: <CALmYWFu_JFyuwYhDtEDWxEob8JHFSoyx_SCcsRVKqSYyyw30Rg@mail.gmail.com>
+	(Jeff Xu's message of "Mon, 8 Jul 2024 09:08:29 -0700")
+References: <20240704190137.696169-1-mic@digikod.net>
+	<20240704190137.696169-2-mic@digikod.net>
+	<87bk3bvhr1.fsf@oldenburg.str.redhat.com>
+	<CALmYWFu_JFyuwYhDtEDWxEob8JHFSoyx_SCcsRVKqSYyyw30Rg@mail.gmail.com>
+Date: Mon, 08 Jul 2024 18:25:59 +0200
+Message-ID: <87ed83etpk.fsf@oldenburg.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: display: bridge: ti,sn65dsi83: add
- burst-mode-disabled
-To: stefano.radaelli21@gmail.com, Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: "Noah J . Rosa" <noahj.rosa@gmail.com>
-References: <20240708151857.40538-1-stefano.radaelli21@gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240708151857.40538-1-stefano.radaelli21@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 7/8/24 5:18 PM, stefano.radaelli21@gmail.com wrote:
-> From: Stefano Radaelli <stefano.radaelli21@gmail.com>
-> 
-> It allows to disable Burst video mode
+* Jeff Xu:
 
-Why would you want to disable burst mode ? This is the energy efficient 
-and recommended mode, why disable it ? Details please ?
+> Will dynamic linkers use the execveat(AT_CHECK) to check shared
+> libraries too ?  or just the main executable itself.
+
+I expect that dynamic linkers will have to do this for everything they
+map.  Usually, that does not include the maim program, but this can
+happen with explicit loader invocations (=E2=80=9Cld.so /bin/true=E2=80=9D).
+
+Thanks,
+Florian
+
