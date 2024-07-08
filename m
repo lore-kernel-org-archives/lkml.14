@@ -1,117 +1,110 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E4D28E3;
-	Mon,  8 Jul 2024 13:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798CB28E3
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 13:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720445646; cv=none; b=mWIuQYslx5xY7apvrYzgVlh8FJoo8yjP39dR3vK4n/hEnkvLCR46Fydef7OyIY9g//s3ykIzFx1zLRyba+W8KJLjerE0B05ybaax+zDqatXCPbUMCIKcwWvG0V6Zxyu9yaxGkobTlGFdsLJQ9cCfoKTJKyS8mnoPuxYhfRLjycA=
+	t=1720445661; cv=none; b=ma6woX6FnGsQkY6EyS98AQVcYtv0cwJYH2092h/3P1gvEtVMgD64M9gmSedGwg4FdHtV6Y1HEdjI13MXZMBBxBG6RUBm6cGG48mRD4Hi0pEZEJAIna8XRAI5EqMPdBN3390orztBuL1TyjxRrgyfkxbICM6PLB9Wh2UXGhGoOUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720445646; c=relaxed/simple;
-	bh=v8OHFlk7ICswpQ3iB+blCtY7cm91+7G5/yFt+R4dKFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lypOqbwQltwLUbnz5yQuNd7XsL8LHKLmMIu3p5Z6j+RMeva5LTsxEmNqglGe259M6tBhHFsaxFx3u+Q9b/m+poN8gQJKaF/peiHEgqdcqOgu+AWJVo8A8pdd+rv5xKZDgBXpsJY5Oj33SHzS15ACV3w5agpWSO4w5yCGV8rIopc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XWR5sSIr; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720445661; c=relaxed/simple;
+	bh=rzu8YeWFMIpX2LFGWzhRhNhE1/1Kenjfbn/z0WpATv4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=o1s9koX7niSmk8kDSnsWxJ1K4YppeNTaO0oPMU1scHZ2m3OUYwzuUf7OKjrKSoCs0Dg3roD6tLVBwYs0kx7TB5JEpX9BqyLdzWwpdvjmmCAiJfK6hQWIX9KPBkX2Arx6e1/ohiLXXPXJteXPM0KTNe9Y5LhePGxs2lo6peAq8vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=c/wXRHcT; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWR5sSIr"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ec61eeed8eso48437781fa.0;
-        Mon, 08 Jul 2024 06:34:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720445643; x=1721050443; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=a9KZem+hR+Ssu5sLJZQFJef/Bm0HGi/lC7YM1maoGyM=;
-        b=XWR5sSIrDofgLBs0wuaeWemGMoaPMeh8vGVjoVBc0BFAHwyL5BjD/cqHYypp6T/LTG
-         knNKrosEKoixL5vyCo9itItAUQKEk+IoQAPcohA8yMH9sZ4ucfNWt0jDmvIP8LjFys7H
-         BnNBIcQFT2PG4ALT9EU/bnWJAscYp6fCrRIp4Maf5/hRH7Fv9CVnK9/68a+LawCWlaUA
-         8346eDwNmmX6ZYCVoV1Zyhc3Z84MId5q+sRrgjSZLDLahvoYfsTpoyONyzIzA3oJwfXb
-         RkJjdwavjHfrN/8CWJuv6mz8eyC1xMV9RKNI7+iqsa50JLnMbWdx769F5C9DX/v5BwU6
-         BQ3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720445643; x=1721050443;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a9KZem+hR+Ssu5sLJZQFJef/Bm0HGi/lC7YM1maoGyM=;
-        b=AxatTtu2a72kiAVuPpfJSKC06DwYOmS6TLdEijznAan66vCaLiNnOvJm+FTRGsi+kj
-         EyEEM5dGdgo2garklAZ7iCaLwRyrQYPMeO6D2nwSFP/zN32E3cDYhjuurxyR61fQXgee
-         TaXOVdO4ZEOfJZWXfLVpKI/WfiKlCyQC3nPoGoOgOjN9ucjYHSYAI1EtvmaZZUmhC3Gn
-         q5TGLB8PzUVyXZ+2kP4JpcOfof8Dmuja59mEdSCSgYIW3GcwoWe5wPC9vpEKWxJ9dmNQ
-         w/zYYiGpbj+/KYHmK6pURft7wuClLpLjiky7T05CAfGwM8L2Z/NbITXtcVRqaPRAK1PY
-         LZSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcMShdE7CGGeTRD5KQGpGgZgV/DSIzPHC69+cDfJUwHUv9HsVeCGu5ffqwXEg+Kx+g9LweVmMGwYrQqC/cST+S8PpOnyyb5oPQj7jRqBaFSvJ4mjp+5lBoVHNS6NfUWHvxNKun
-X-Gm-Message-State: AOJu0Ywhq9ThG4LH7Dz1jGYoBPCu4mLqWvi6cHcDGhKrXR9GImF0b2mB
-	MbUP4WP5CjqdqvoAOvD7r1BBtp8cwuUdQiqMrvnZgRcpgwUNx/LE
-X-Google-Smtp-Source: AGHT+IEQu9zjQlULh2lm47m/DaCiSvsXwcsjLuaAMCjs8rdt+0vOxB36+NT7Ah6gIEaprzFcZ7Qu+Q==
-X-Received: by 2002:a2e:bc0c:0:b0:2ee:7bcd:a3f with SMTP id 38308e7fff4ca-2ee8ed5edfamr103234371fa.22.1720445642560;
-        Mon, 08 Jul 2024 06:34:02 -0700 (PDT)
-Received: from skbuf ([188.25.110.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36784e3e0f5sm16538327f8f.11.2024.07.08.06.34.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 06:34:02 -0700 (PDT)
-Date: Mon, 8 Jul 2024 16:33:59 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Landen Chao <Landen.Chao@mediatek.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5] net: dsa: mt7530: fix impossible MDIO address and
- issue warning
-Message-ID: <20240708133359.rylvvmpcwlsxtrs5@skbuf>
-References: <f485d1d4f7b34cc2ebf3d60030d1c67b4016af3c.1720107535.git.daniel@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="c/wXRHcT"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468CKG7F014260;
+	Mon, 8 Jul 2024 15:33:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	pQZd32lrwSdbK0qtBZuTFC92e7n3xKS/AFWQ/E+TqbY=; b=c/wXRHcTxFs5gH/5
+	YRtl8gvXgiXGdQCjMn2vHnt20BZYsH8+1B4JFmJoUANjxUIdM7xm0GZyyKiBKswQ
+	/3se3CkImCgtX8gixqqWJUzujsRFrrzjWuo1QLDkop+tfH7J1N5dSnZRuYYBnCSm
+	MZp0+S6J93IZ5iGg0hzZJz9aWRYPsw5gskZrNqU5B/kobtwIltPLeeG7Z4zGsyr4
+	8IlVofsitziA7SMrfrXzSEfGn7/0uw8RM7Sl0tAxzT+24mQmHmQoiuNGoljwicZx
+	6RN+90bLmqmPAerLHrfRkDI2+LGfDFTUSp3UyDL5kyMLBzpbxgdgehemST71Cx9n
+	kWzQoQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 406whfq3jj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jul 2024 15:33:33 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C364740044;
+	Mon,  8 Jul 2024 15:33:26 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F3A1D223644;
+	Mon,  8 Jul 2024 15:32:36 +0200 (CEST)
+Received: from [10.48.86.145] (10.48.86.145) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 8 Jul
+ 2024 15:32:35 +0200
+Message-ID: <9d60f79c-6cf3-eb6c-57ae-e6ea391fa618@foss.st.com>
+Date: Mon, 8 Jul 2024 15:32:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f485d1d4f7b34cc2ebf3d60030d1c67b4016af3c.1720107535.git.daniel@makrotopia.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] drm/stm: Remove unnecessary .owner for
+ lvds_platform_driver
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        <yannick.fertre@foss.st.com>
+CC: <raphael.gallais-pou@foss.st.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+        <daniel@ffwll.ch>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@foss.st.com>, <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Abaci
+ Robot <abaci@linux.alibaba.com>
+References: <20240701062304.42844-1-jiapeng.chong@linux.alibaba.com>
+Content-Language: en-US
+From: Philippe CORNU <philippe.cornu@foss.st.com>
+In-Reply-To: <20240701062304.42844-1-jiapeng.chong@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_09,2024-07-05_01,2024-05-17_01
 
-On Fri, Jul 05, 2024 at 11:48:40AM +0100, Daniel Golle wrote:
-> The MDIO address of the MT7530 and MT7531 switch ICs can be configured
-> using bootstrap pins. However, there are only 4 possible options for the
-> switch itself: 7, 15, 23 and 31. As in MediaTek's SDK the address of the
-> switch is wrongly stated in the device tree as 0 (while in reality it is
-> 31), warn the user about such broken device tree and make a good guess
-> what was actually intended.
+
+
+On 7/1/24 08:23, Jiapeng Chong wrote:
+> Remove .owner field if calls are used which set it automatically.
 > 
-> This is necessary to not break compatibility with existing Device Trees
-> wrongly declaring the switch to be present at address 0 or 1, as with
-> commit 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY address of switch
-> from device tree") the address in device tree will be taken into
-> account, while before it was hard-coded in the driver to 0x1f
-> independently of the value in Device Tree.
+> ./drivers/gpu/drm/stm/lvds.c:1213:3-8: No need to set .owner here. The core will do it.
 > 
-> Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Tested-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> Reviewed-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9457
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 > ---
+>   drivers/gpu/drm/stm/lvds.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/stm/lvds.c b/drivers/gpu/drm/stm/lvds.c
+> index 2fa2c81784e9..06f2d7a56cc9 100644
+> --- a/drivers/gpu/drm/stm/lvds.c
+> +++ b/drivers/gpu/drm/stm/lvds.c
+> @@ -1210,7 +1210,6 @@ static struct platform_driver lvds_platform_driver = {
+>   	.remove = lvds_remove,
+>   	.driver = {
+>   		.name = "stm32-display-lvds",
+> -		.owner = THIS_MODULE,
+>   		.of_match_table = lvds_dt_ids,
+>   	},
+>   };
 
-Despite having commented on v3, I am not going to leave a review tag on
-this patch. Its contents has nothing to do with DSA, so I have no
-technical objections of my own, plus little authority for an ack.
-It basically boils down to whether the phylib maintainers are okay with
-this use of mdio_device_remove() API from mdio_device drivers
-themselves.
-
-I did have a technical concern in v3 about a race between the finishing
-of probe() and the call to mdio_device_remove(), which Daniel did not
-respond to, but I suspect that __device_driver_lock() from
-drivers/base/dd.c will serialize those.
+Hi Jiapeng,
+Applied on drm-misc-next.
+Many thanks,
+Philippe :-)
