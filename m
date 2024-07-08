@@ -1,846 +1,244 @@
-Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01olkn2082.outbound.protection.outlook.com [40.92.103.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8A6365;
-	Mon,  8 Jul 2024 00:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.103.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720398377; cv=fail; b=Wp5rrf6rPVI3eiGt21Ohy2Skgw8ldLILZ3hytiDgsXoo8zsi3gzH6p+2vbTc2CO+sNpt6HkhrU4y6Xaj1aUvf+1uAoV6S/Nza5pmWLXjZTyUN3aPfr+Js0+aL+Wvk5Y7gW+sR+frJU4nbp8szD9czD1g9YAFmzAMuahDwBvGrh0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720398377; c=relaxed/simple;
-	bh=sOK4HSVO4HOzVZTNRjD++Z57TnRCb5SlY4gmn1oSGiU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Fd5cHpcaCRH1SyszTSZRj63e3eWiI2xz+omgL52tWfbIXTD6f97c0ISBdks5WRPQNLYlbp3VuY4qKXzz3p0pGmUfd7icFNaGUj/3IUlh6LryhM3gl71gDXxBh5g0iuBgVdsOc3g9/COgFzI3oYl7UmF7ceJfvUsd6CTif0zPa0Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=m0R9v5Zv; arc=fail smtp.client-ip=40.92.103.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B7236D
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 00:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720399024; cv=none; b=WZcZJr+1CxWBvlOujQpOdfDWREHe82bVxMVM0h1BKan0RgajZfzPKvUu3Jm6SrAn5BuLRqPTcirTmPNs2Iep0/xYoWtFGddIcS3OBsyNwTCNrqQIJMtFGsYX8Yn1+xP9DSkgSkCMrIkVfbT1HJ9YDZhDqUjubQjLEL3ji6zDbgQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720399024; c=relaxed/simple;
+	bh=fDwuiOF5SskQ21aQul+QOFafliGQvPvTIZY+hAzQWcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sN+eKIEAypvbjcai0hokQdT0aUVvQSWPEjCtgyeqzmGOpNjZF7tj8OFjboEeTWgXWNcZ5AQvU4Wm/P653sWxGHqbAnDtVh3RdLbdBeBGUrgEg3BWv2e1QNKmm5+HVj3g+vF13E3aKf3EjZAsi1kc6z79n9mKjabxiRuNNRbZLGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=evV4AvbY; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="m0R9v5Zv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=egQsAH5MYri7O0tVbfy6NTRnaMxCUyV1EJtWavmi0jkWkanwdPw2uGKlYOK+YBti3Mfb8Z7lCjS+LyYK2kZby0/aGz+Wc+dXwnCntcZcL1zsvrwAPHOhMWUPtoy0jpUvmLOk6yVHQ8bfDhYYdB+a84zHfU6gq2NtTkVvGNwdJ19E1o6cm5mubbQKXau0r11QRNYypBr9blrFwrovu10Mbw1KbJEXJOTzEN0u4Hho4AnSYOkZU87SHBVtwE053QW6w35w50i/AnvrhtOQKpZiwVvSYL972WhfjNrPq9qCJRBv/m/hQKnUBe5RhS3NWtWVk0dEO4VfhPHUF038XUYrGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=upmYSeavjK4SIMyWGP3qWEoQnHfUuQmze9tXDb7FJW4=;
- b=IXG6WtF81v+Te2mVAyArsEtainYDTo0FryQ/VGM6VC2KnroWOLg9PoUt9NEeoR26U7rlBxOpy58SnAbQWzGiKbXb4lwpfIyBV/angmm9Ycqa5QYNJuace/T10xQTxDCyWk4nVVH2hFxUJZFTFBNy14+65d3NQKemEioM9WsqW5wlAM17z+TKXt6tmRO7fu3p7i7RjbVIUQ9ZhqWvMyAI70JrWKSZLT/PZt9arNy+Diwk01ru5oR/uSEQNOGBFnRpneWazT6S5Gn+9ipaaf/i7tRmR6zuDT//0JEq6+LWxJMwzylaqJWa96MMG/dEO+jcKdqpXGcKkQHZp6d85zaAqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=upmYSeavjK4SIMyWGP3qWEoQnHfUuQmze9tXDb7FJW4=;
- b=m0R9v5ZvCjhg1dfZ4LPU+xlKCITQ+bKlAU3FzeldT7BnaNu+6aaaJ8Mzt/4DWkeIwHjsn6TnaFDxatldV/MIfyyt54wvHWr6ZWUeQmZan+i5GQhSnVZAgIbSA/iqZC6+qlchetewGLmYbBpbpl5nrbgCQ26ro3rX9UXAOTc95Dk9dBQ8m4KANiwqvQJ1PnsdwEhu514pPFUxsdr281p3yZUn1GM8yiNW5+beOYAdk779XN4+w/O36uMMZ0ManBbpMiAXHA1rDqvMr88ROQ9cXbw8PMuA52T54emjBhT/weRaRjj29TackD8dQftHqGCBII22zDFFvp/QEZ5h9BNJQQ==
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:138::5)
- by PN0P287MB0653.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:162::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Mon, 8 Jul
- 2024 00:26:07 +0000
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::a94:ad0a:9071:806c]) by MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::a94:ad0a:9071:806c%3]) with mapi id 15.20.7741.033; Mon, 8 Jul 2024
- 00:26:07 +0000
-Message-ID:
- <MA0P287MB2822935DEA9EE418F3411CFAFEDA2@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
-Date: Mon, 8 Jul 2024 08:25:55 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] drivers: hwmon: sophgo: Add SG2042 external
- hardware monitor support
-To: Inochi Amaoto <inochiama@outlook.com>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <IA1PR20MB4953967EA6AF3A6EFAE6AB10BBDD2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <IA1PR20MB4953EC4C486B8D4B186BB848BBDD2@IA1PR20MB4953.namprd20.prod.outlook.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <IA1PR20MB4953EC4C486B8D4B186BB848BBDD2@IA1PR20MB4953.namprd20.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TMN: [JMoqFQ/e/yIZGNIKhthL7ocupKX2TlOF]
-X-ClientProxiedBy: TYXPR01CA0061.jpnprd01.prod.outlook.com
- (2603:1096:403:a::31) To MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:138::5)
-X-Microsoft-Original-Message-ID:
- <5a41ac32-6660-4c0f-94c7-7097d9953b38@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evV4AvbY"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ee8911b451so41696501fa.2
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2024 17:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720399020; x=1721003820; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0maobCSW8jMDbFz8GUq2aphge1nCAKz/nFEddtGsYBM=;
+        b=evV4AvbYdfYc9Po2U/udNEylEsyLwJfqcH9Okbro5SRly3rXNvuhCx6pVJOMFOwIU1
+         FCyCncTgt8fXA2NIV2PnBYbgrdy/rJsi47FKFmdtDeS8rJOx6jat+Lobf1PvFW5MOoPi
+         FU3PnKUgRlBtddLO6hfntySUqULxY4y3P4CMuUUVj7jW2FrnduK3FcNeQHGOrriumdRE
+         dqmmkb2Z1vX1+NhSvq/oTBz6bWdPt0yQZ0/NH4rlRjcxPQpbYb8dMEGDi/OG6hEv8nBU
+         FpZyJ9kV96Cxf2dKMcPCjex/0fn64xssjjMngyDJUiWr0gzzw442BRNtkOu89Uy76epK
+         oaVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720399020; x=1721003820;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0maobCSW8jMDbFz8GUq2aphge1nCAKz/nFEddtGsYBM=;
+        b=kL6bI+ZX0m5p6Tq4B04uHs4BA4iTAXmDh7YzWyn/O/8BZF+00w0K+NCdtiyP6mUGL5
+         yAQXDZbCDVS0sEkozQOMUTp4kyQgddiRv3JABMBSsB2VhstORqR7gnsg8ARcKIZf5LIM
+         Et5nHJrJNroPdspLtg0kf9zdn8Fen/x28dHUehOhAKC7eYw6h5pMHmIyaV2kenrV0Prw
+         O9Vpx5d6NK9WLPebAwNTLF7og5NtUCsLU8csCz9dCq/6JvJkoYmWD6IeYgzvIM7Ys2Qt
+         tHyqpyRRD3OnyIT7aPPTb1Cajql9oKf1MXFnl+DXSUikYEq7GxnlAnD0/CZXd/gAWRB/
+         ++cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2NNzbiQacEMn2gyY1m3yx/A5L3grLrB+55IZ/V2X0cySZ/q5vTKgA9N4wNFSg+tWsK56Lhrger2biyl7+GCpQjVdKAdnWP+oGUzYp
+X-Gm-Message-State: AOJu0YwsQcSLacQTrE6+00OcWJNLY2KgvryEv2WOVlgm6mFnoWKwYzuW
+	PAxAvFxeUz2fh1nnX4zsx097pb3qsnQ6xRzFSxyLGzAVACVt/pSu
+X-Google-Smtp-Source: AGHT+IGvfoRCtahGcXgfBB0qSDli+0q4c6M0sTsmdYOaNTpy2n+v6qWfPqsOXrVP8DOoWe8kJoFCxw==
+X-Received: by 2002:a05:651c:2da:b0:2ec:40cf:fa9 with SMTP id 38308e7fff4ca-2ee8eda03bamr69533711fa.29.1720399020036;
+        Sun, 07 Jul 2024 17:37:00 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58fbfccf0f9sm3245044a12.75.2024.07.07.17.36.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 07 Jul 2024 17:36:59 -0700 (PDT)
+Date: Mon, 8 Jul 2024 00:36:58 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	Mike Rapoport <rppt@kernel.org>, akpm@linux-foundation.org,
+	brauner@kernel.org, mjguzik@gmail.com, tandersen@netflix.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] mm/memblock: introduce a new helper
+ memblock_estimated_nr_pages()
+Message-ID: <20240708003658.fivcxqgwqhst4mip@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20240703005151.28712-1-richard.weiyang@gmail.com>
+ <Zoe4XN-gKJnjJtzi@kernel.org>
+ <20240706012805.uuvysz2qgapgqj6p@master>
+ <9f38e4f1-0ad3-4cd4-bcb7-5ec287859051@redhat.com>
+ <20240707190304.GC11914@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2822:EE_|PN0P287MB0653:EE_
-X-MS-Office365-Filtering-Correlation-Id: 13abe859-2f39-4c62-b1d9-08dc9ee48da1
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|19110799003|8060799006|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	zesxG79x3aP7nOQ8ZVP31h2dMD6hXvOHSZv+WThNnL26LC5uVNG/ou4AtPOHZtzLDqTc82qTYtxpbn81IxYPLZKQPtHpadwzk81EQEJEMnLMuPmzp74YG/GazUH3Ok/loIXvysMkQE+YAD5lvKY0daM/WR+W+N710N3U3JnSB10gpUnAOH1GBVYKVes3wt8nvP5U822DIhcb3qhaw84Ivi17YBoc6eUh/vwHUessJqCWflOfAdWBuL+VEroWR/4VvKGxP4mtS+0lA/M8sa8kthXPUTRIjhnn63zjBez/8pVx5J5j+JuUwtFYsQ7WWoCkFlbDAFiMK3/ceAdngJebSYC1EkK9+eP2TNXvQfdmrnWN71nCfuwttqgELcPpwkhrqdGxoJwGBI4/MEeb+J3aEIkYEJMxMIvLtkFZCzQetZuOUDlZKPBDgXeNbxUJ430w2Uu0K/M7YbeDrmYJKd22JA+PhxPxfPZvyOrqx03RsAH5UyCKb/XeZlz9kW5saakeLe3TksoevoMXu5N8S+Egk1MCSkg1D6VIWVWXP9cTP5pFFfkdfMo1QB9QiaL+k0vKUQntfO5V0FVYDvR+9o2nr2SSCDxJqJFJQ3xk6w2D3bEdLH+k5xL4bjOpjS+jka0YYXRjOg1PYynzO7v+9XlcGA==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eENOU2NtZGdxNmRtRlh5bDh4bGhiYnlkREtHY1dSbndoeFNpdkJDMys4K1VY?=
- =?utf-8?B?bHBuN3ZOTDg1cy9lTFMzSS9hcWptK3NUSU9EMGxOODl5OUhLOE5iQ2tTaFJl?=
- =?utf-8?B?dXBlOUpsWS9BTjlFTHNZcjdMY1R5QTFTZmZCTHBBU1BnSElDazA2a1hLRnFh?=
- =?utf-8?B?RjBVelJXNFowcEJMZC9XMy9sbkFrTGRYYjNaRGNCYnU5ZUtkaHZTOUdxcGRW?=
- =?utf-8?B?bkl1K3drVHV3V1BCMEJXb3RkWTRrNmtaMW1xOWVSelErRFh6d29WYitPdGJr?=
- =?utf-8?B?T1J5QUpoZElSazRPdUpqcDVFWlk4dU5HZWtnODJETWNudms3Z0Y0cytrZTVS?=
- =?utf-8?B?QVArQ2llbzJ3OWxoRDB6b0NQVW85ZHErM3NncVlvUzNyb0VhSzU2N3pKRHlB?=
- =?utf-8?B?eWZoVUttS3JqN2RZeFRoQzBDV0RFeEZFcHNOTFFqWnNYajRJM2pCQ3E4WmVT?=
- =?utf-8?B?TGlYdWR2b2ZMK3hNcVQ1YUQ1bll3NXB0Uk8wdEhaRjl2ZVBBdld2S2J0RFh5?=
- =?utf-8?B?R2hwclJwZ2hJaTlxTTRycDJqeHpUZWJVT3dYZDdKaWRnQ2lmdUZLaG0zSmQ3?=
- =?utf-8?B?R29ST0Z3eTNyZG9qSFlaanJmY2FaVkNYdlZzcXhLYUI4cEV2NUNvcURlYkli?=
- =?utf-8?B?d1RoSGgyMlBWMXJMait1YjgzMDYvcVdGQWJSZnFMa1hidFF1TTgxZENiYStJ?=
- =?utf-8?B?NGNmelZseHJUZllNOEJRMnB0TjNuWWNuT1drZ2xNS1VuNXVyM1h2c3FsaTRk?=
- =?utf-8?B?YndUcVRPV2xNQ25pUWNpU1VLSDhtSDA3MGxmMWt4NUlZZzAyZEtXYW81Nkcw?=
- =?utf-8?B?eFhyOWQ2OWpiNFJ6YVlxaFRhUW83eVNtV1N3MDZzcDZ0NlhQN0dtZHFpVnpp?=
- =?utf-8?B?MkFIaTI4T1ZHa096K0ttWXhQV09kVTQvZHdxcmsvZ1FQNGdqN21EeHVNYndH?=
- =?utf-8?B?Y0ZVYXBLK0tma29MeDI1L25CWVRUVWg1bzFNeXVmSzN4ZHhQcXF0dFZjdEFH?=
- =?utf-8?B?a09GbU8xR242YWViUUtEWmMrUVRkelYrWnZ1Nk9hcWlyZGZ0bVRFWktpek91?=
- =?utf-8?B?dEFMRm9PV0ZQcWFpbFBqK05CZUkxK3BuWVh1MVJjaDh3Uks3NDc0MUJ5SXZP?=
- =?utf-8?B?WDVSWE80ck9paThDWE1adzllOXV4d0ltZGFCS0xOQkloVFN4dS9UeEwybnBZ?=
- =?utf-8?B?cmMxdXZMVkxCZy9hM09oSEZUTXd1YjBxWlBjOE90MlRqamlKQ25UcFBkZEpq?=
- =?utf-8?B?alFnTjBVZlQ2dENWcUhkUzlYUWEwcCtXand3enZsOGtQUlAvMm4zbTllQlF3?=
- =?utf-8?B?aGQ2am5JeWl0dGY3aEk4azVyc2dxKzI2N1duRU5jMFAyMHBTRDhpbEpPMnJ5?=
- =?utf-8?B?VXUzd1RGcGZSTlBrUEVvelJ3dVJPQmZycFRIRnZWcVY2SHRoWWVZN1NGaDln?=
- =?utf-8?B?bldUUS96TjBuRVpNdFZNVFRvTFlzT3RlbUhTN245VW5YM0h2VUNrQkNxMVg3?=
- =?utf-8?B?RnArdW50UkhibjIrV2FXSjM0UitIZGh0VTFmTjltV1RvVE1DdW9WQ2lydnBm?=
- =?utf-8?B?OFRMb25QaWRqMU93K013b1VuZWx0WktScXlVUXQxMUMrSDIzUUpJQ05UQUJO?=
- =?utf-8?B?bHpnUHJxckFMckdPcTB0dVQ3ZzFBWk5saEhKQktnWDZVclFVcm9VN0lCNUVn?=
- =?utf-8?Q?M9CMuKCbNnfSpZqJFd7P?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13abe859-2f39-4c62-b1d9-08dc9ee48da1
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2024 00:26:06.6172
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB0653
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240707190304.GC11914@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
+On Sun, Jul 07, 2024 at 09:03:05PM +0200, Oleg Nesterov wrote:
+>As I have already said, I can't review this patch.
+>
+>But I am curious, why set_max_threads() is the only user of the new helper?
+>Say, should files_maxfiles_init() use it too or not? Perhaps the changelog
+>can explain this?
+>
 
-On 2024/7/3 10:30, Inochi Amaoto wrote:
-> SG2042 use an external MCU to provide basic hardware information
-> and thermal sensors.
->
-> Add driver support for the onboard MCU of SG2042.
->
-> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-> ---
->   Documentation/hwmon/index.rst |   1 +
->   Documentation/hwmon/sgmcu.rst |  44 +++
->   drivers/hwmon/Kconfig         |  11 +
->   drivers/hwmon/Makefile        |   1 +
->   drivers/hwmon/sgmcu.c         | 585 ++++++++++++++++++++++++++++++++++
->   5 files changed, 642 insertions(+)
->   create mode 100644 Documentation/hwmon/sgmcu.rst
->   create mode 100644 drivers/hwmon/sgmcu.c
->
-> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-> index 03d313af469a..189626b3a055 100644
-> --- a/Documentation/hwmon/index.rst
-> +++ b/Documentation/hwmon/index.rst
-> @@ -203,6 +203,7 @@ Hardware Monitoring Kernel Drivers
->      sch5636
->      scpi-hwmon
->      sfctemp
-> +   sgmcu
-This driver is for sg2042 only, right? "sgmcu" looks be general for all 
-sophgo products.
->      sht15
->      sht21
->      sht3x
-> diff --git a/Documentation/hwmon/sgmcu.rst b/Documentation/hwmon/sgmcu.rst
-> new file mode 100644
-> index 000000000000..5669dcfb2a33
-> --- /dev/null
-> +++ b/Documentation/hwmon/sgmcu.rst
-Same question as upon.
-> @@ -0,0 +1,44 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Kernel driver sgmcu
-> +=====================
-> +
-> +Supported chips:
-> +
-> +  * Onboard MCU for sg2042
-> +
-> +    Addresses scanned: -
-> +
-> +    Prefix: 'sgmcu'
-Same question as upon.
-> +
-> +Authors:
-> +
-> +  - Inochi Amaoto <inochiama@outlook.com>
-> +
-> +Description
-> +-----------
-> +
-> +This driver supprts hardware monitoring for onboard MCU with
-> +PMBus interface.
-> +
-> +Usage Notes
-> +-----------
-> +
-> +This driver does not auto-detect devices. You will have to instantiate
-> +the devices explicitly.
-> +Please see Documentation/i2c/instantiating-devices.rst for details.
-> +
-> +Platform data support
-> +---------------------
-> +
-> +The driver supports standard PMBus driver platform data.
-> +
-> +Sysfs Attributes
-> +----------------
-> +
-> +================= =============================================
-> +temp1_input       Measured temperature of SoC
-> +temp1_crit        Critical high temperature
-> +temp1_crit_hyst   hysteresis temperature restore from Critical
-> +temp2_input       Measured temperature of the base board
-> +================= =============================================
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index e14ae18a973b..1100dd11f7f5 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -2079,6 +2079,17 @@ config SENSORS_SFCTEMP
->   	  This driver can also be built as a module.  If so, the module
->   	  will be called sfctemp.
->
-> +config SENSORS_SGMCU
-Same question as upon.
-> +	tristate "Sophgo onboard MCU support"
-Same question as upon.
-> +	depends on I2C
-> +	depends on ARCH_SOPHGO || COMPILE_TEST
-> +	help
-> +	  Support for onboard MCU of Sophgo SoCs. This mcu provides power
-> +	  control and some basic information.
-> +
-> +	  This driver can be built as a module. If so, the module
-> +	  will be called sgmcu.
-> +
->   config SENSORS_SURFACE_FAN
->   	tristate "Surface Fan Driver"
->   	depends on SURFACE_AGGREGATOR
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index e3f25475d1f0..e9b78ff8338e 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -195,6 +195,7 @@ obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
->   obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
->   obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
->   obj-$(CONFIG_SENSORS_SFCTEMP)	+= sfctemp.o
-> +obj-$(CONFIG_SENSORS_SGMCU)	+= sgmcu.o
-Same question as upon.
->   obj-$(CONFIG_SENSORS_SL28CPLD)	+= sl28cpld-hwmon.o
->   obj-$(CONFIG_SENSORS_SHT15)	+= sht15.o
->   obj-$(CONFIG_SENSORS_SHT21)	+= sht21.o
-> diff --git a/drivers/hwmon/sgmcu.c b/drivers/hwmon/sgmcu.c
-> new file mode 100644
-> index 000000000000..d941d6fe741f
-> --- /dev/null
-> +++ b/drivers/hwmon/sgmcu.c
-Same question as upon.
-> @@ -0,0 +1,585 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2024 Inochi Amaoto <inochiama@outlook.com>
-> + *
-> + * Sophgo power control mcu for SG2042
-> + */
-> +
-> +#include <linux/debugfs.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/err.h>
-> +#include <linux/hwmon.h>
-> +
-> +/* fixed MCU registers */
-> +#define REG_BOARD_TYPE				0x00
-> +#define REG_MCU_FIRMWARE_VERSION		0x01
-> +#define REG_PCB_VERSION				0x02
-> +#define REG_PWR_CTRL				0x03
-> +#define REG_SOC_TEMP				0x04
-> +#define REG_BOARD_TEMP				0x05
-> +#define REG_RST_COUNT				0x0a
-> +#define REG_UPTIME				0x0b
-> +#define REG_RESET_REASON			0x0d
-> +#define REG_MCU_TYPE				0x18
-> +#define REG_CRITICAL_ACTIONS			0x65
-> +#define REG_CRITICAL_TEMP			0x66
-> +#define REG_REPOWER_TEMP			0x67
-> +
-> +#define CRITICAL_ACTION_REBOOT			0x1
-> +#define CRITICAL_ACTION_POWEROFF		0x2
-> +
-> +#define DEFAULT_REPOWER_TEMP			60
-> +#define MAX_REPOWER_TEMP			100
-> +
-> +#define sg2042_mcu_read_byte(client, reg)			\
-> +	i2c_smbus_read_byte_data(client, reg)
-> +#define sg2042_mcu_write_byte(client, reg, value)		\
-> +	i2c_smbus_write_byte_data(client, reg, value)
-> +#define sg2042_mcu_read_block(client, reg, array)		\
-> +	i2c_smbus_read_i2c_block_data(client, reg, sizeof(array), array)
-> +
-> +#define DEFINE_MCU_ATTR_READ_FUNC(_name, _type, _format)		\
-> +	static ssize_t _name##_show(struct device *dev,			\
-> +				    struct device_attribute *attr,	\
-> +				    char *buf)				\
-> +	{								\
-> +		struct sg2042_mcu_data *mcu = dev_get_drvdata(dev);	\
-> +		_type ret;						\
-> +		ret = sg2042_mcu_get_##_name(mcu->client);		\
-> +		if (ret < 0)						\
-> +			return ret;					\
-> +		return sprintf(buf, _format "\n", ret);			\
-> +	}
-> +
-> +#define DEFINE_MCU_DEBUG_ATTR_READ_FUNC(_name, _type, _format)		\
-> +	static int _name##_show(struct seq_file *seqf,			\
-> +				    void *unused)			\
-> +	{								\
-> +		struct sg2042_mcu_data *mcu = seqf->private;		\
-> +		_type ret;						\
-> +		ret = sg2042_mcu_get_##_name(mcu->client);		\
-> +		if (ret < 0)						\
-> +			return ret;					\
-> +		seq_printf(seqf, _format "\n", ret);			\
-> +		return 0;						\
-> +	}
-> +
-> +#define _CREATE_DEBUG_ENTRY(name, perm, d, data)			\
-> +	debugfs_create_file(#name, perm, d, data, &name##_fops)
-> +
-> +struct sg2042_mcu_board_data {
-> +	u8		id;
-> +	const char	*name;
-> +};
-> +
-> +struct sg2042_mcu_data {
-> +	struct i2c_client			*client;
-> +	const struct sg2042_mcu_board_data	*board_info;
-> +	struct dentry				*debugfs;
-> +};
-> +
-> +static const struct sg2042_mcu_board_data sg2042_boards_data[] = {
-> +	{
-> +		.id = 0x80,
-> +		.name = "SG2042 evb x8",
-> +	},
-> +	{
-> +		.id = 0x81,
-> +		.name = "SG2042R evb",
-> +	},
-> +	{
-> +		.id = 0x83,
-> +		.name = "SG2042 evb x4",
-> +	},
-> +	{
-> +		.id = 0x90,
-> +		.name = "Milk-V Pioneer",
-> +	},
-> +};
+files_maxfiles_init() is called in two places:
 
-Upstream kernel DTS only supports Milk-V pioneer, evb boards are not 
-supported in plan. Can we figure a method to let user extend this 
-outside kernel or just ask vendor to patch this when necessary?
+  * vfs_caches_init()
+  * page_alloc_init_late()
 
-> +
-> +static const char *sg2042_mcu_reset_reason[8] = {
-> +	"Power supply overheat",
-> +	"Power supply failure",
-> +	"12V power supply failure",
-> +	"Reset commant",
-> +	"Unknown",
-> +	"Unknown",
-> +	"Unknown",
-> +	"SoC overheat",
-> +};
-> +
-> +static struct dentry *sgmcu_debugfs;
-> +
-> +static int sg2042_mcu_get_board_type(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_BOARD_TYPE);
-> +}
-> +
-> +static int sg2042_mcu_get_firmware_version(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_MCU_FIRMWARE_VERSION);
-> +}
-> +
-> +static int sg2042_mcu_get_pcb_version(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_PCB_VERSION);
-> +}
-> +
-> +static int sg2042_mcu_get_soc_temp(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_SOC_TEMP);
-> +}
-> +
-> +static int sg2042_mcu_get_board_temp(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_BOARD_TEMP);
-> +}
-> +
-> +static int sg2042_mcu_get_reset_count(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_RST_COUNT);
-> +}
-> +
-> +static s32 sg2042_mcu_get_uptime(struct i2c_client *client)
-> +{
-> +	int ret;
-> +	u8 time_val[2];
-> +
-> +	ret = sg2042_mcu_read_block(client, REG_UPTIME, time_val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return (s32)(time_val[0]) + ((s32)(time_val[1]) << 8);
-> +}
-> +
-> +static int sg2042_mcu_get_reset_reason(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_RESET_REASON);
-> +}
-> +
-> +static int sg2042_mcu_get_mcu_type(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_MCU_TYPE);
-> +}
-> +
-> +static int sg2042_mcu_get_soc_crit_action(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_CRITICAL_ACTIONS);
-> +}
-> +
-> +static int sg2042_mcu_get_soc_crit_temp(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_CRITICAL_TEMP);
-> +}
-> +
-> +static int sg2042_mcu_get_soc_hyst_temp(struct i2c_client *client)
-> +{
-> +	return sg2042_mcu_read_byte(client, REG_REPOWER_TEMP);
-> +}
-> +
-> +static int sg2042_mcu_set_soc_crit_action(struct i2c_client *client,
-> +					  u8 value)
-> +{
-> +	return sg2042_mcu_write_byte(client, REG_CRITICAL_ACTIONS, value);
-> +}
-> +
-> +static int sg2042_mcu_set_soc_crit_temp(struct i2c_client *client,
-> +					u8 value)
-> +{
-> +	return sg2042_mcu_write_byte(client, REG_CRITICAL_TEMP, value);
-> +}
-> +
-> +static int sg2042_mcu_set_soc_hyst_temp(struct i2c_client *client,
-> +					u8 value)
-> +{
-> +	return sg2042_mcu_write_byte(client, REG_REPOWER_TEMP, value);
-> +}
-> +
-> +DEFINE_MCU_ATTR_READ_FUNC(reset_count, int, "%d");
-> +DEFINE_MCU_ATTR_READ_FUNC(uptime, s32, "%d");
-> +
-> +static ssize_t reset_reason_show(struct device *dev,
-> +				 struct device_attribute *attr,
-> +				 char *buf)
-> +{
-> +	struct sg2042_mcu_data *mcu = dev_get_drvdata(dev);
-> +	int ret, val, i;
-> +
-> +	val = sg2042_mcu_get_reset_reason(mcu->client);
-> +	if (val < 0)
-> +		return val;
-> +
-> +	ret = sprintf(buf, "Reason: 0x%02x\n", val);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(sg2042_mcu_reset_reason); i++) {
-> +		if (val & BIT(i))
-> +			ret += sprintf(buf + ret, "bit %d: %s\n", i,
-> +						  sg2042_mcu_reset_reason[i]);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static ssize_t critical_action_show(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    char *buf)
-> +{
-> +	struct sg2042_mcu_data *mcu = dev_get_drvdata(dev);
-> +	int ret;
-> +	const char *action;
-> +
-> +	ret = sg2042_mcu_get_soc_crit_action(mcu->client);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (ret == CRITICAL_ACTION_REBOOT)
-> +		action = "reboot";
-> +	else if (ret == CRITICAL_ACTION_POWEROFF)
-> +		action = "poweroff";
-> +	else
-> +		action = "unknown";
-> +
-> +	return sprintf(buf, "%s\n", action);
-> +}
-> +
-> +static ssize_t critical_action_store(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     const char *buf, size_t count)
-> +{
-> +	struct sg2042_mcu_data *mcu = dev_get_drvdata(dev);
-> +	int value;
-> +
-> +	if (sysfs_streq("reboot", buf))
-> +		value = CRITICAL_ACTION_REBOOT;
-> +	else if (sysfs_streq("poweroff", buf))
-> +		value = CRITICAL_ACTION_POWEROFF;
-> +	else
-> +		return -EINVAL;
-> +
-> +	return sg2042_mcu_set_soc_crit_action(mcu->client, value);
-> +}
-> +
-> +static DEVICE_ATTR_RO(reset_count);
-> +static DEVICE_ATTR_RO(uptime);
-> +static DEVICE_ATTR_RO(reset_reason);
-> +static DEVICE_ATTR_RW(critical_action);
-> +
-> +DEFINE_MCU_DEBUG_ATTR_READ_FUNC(firmware_version, int, "0x%02x");
-> +DEFINE_MCU_DEBUG_ATTR_READ_FUNC(pcb_version, int, "0x%02x");
-> +
-> +static int board_type_show(struct seq_file *seqf, void *unused)
-> +{
-> +	struct sg2042_mcu_data *mcu = seqf->private;
-> +
-> +	seq_printf(seqf, "%s\n", mcu->board_info->name ?: "Unknown");
-> +
-> +	return 0;
-> +}
-> +
-> +static int mcu_type_show(struct seq_file *seqf, void *unused)
-> +{
-> +	struct sg2042_mcu_data *mcu = seqf->private;
-> +	int ret;
-> +
-> +	ret = sg2042_mcu_get_mcu_type(mcu->client);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	seq_puts(seqf, ret ? "GD32\n" : "STM32\n");
-> +
-> +	return 0;
-> +}
-> +
-> +DEFINE_SHOW_ATTRIBUTE(firmware_version);
-> +DEFINE_SHOW_ATTRIBUTE(pcb_version);
-> +DEFINE_SHOW_ATTRIBUTE(mcu_type);
-> +DEFINE_SHOW_ATTRIBUTE(board_type);
-> +
-> +// TODO: to debugfs
-> +
-> +static struct attribute *sg2042_mcu_attrs[] = {
-> +	&dev_attr_reset_count.attr,
-> +	&dev_attr_uptime.attr,
-> +	&dev_attr_reset_reason.attr,
-> +	&dev_attr_critical_action.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group sg2042_mcu_attr_group = {
-> +	.attrs	= sg2042_mcu_attrs,
-> +};
-> +
-> +static const struct hwmon_channel_info * const sg2042_mcu_info[] = {
-> +	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ | HWMON_C_UPDATE_INTERVAL),
-> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT | HWMON_T_CRIT |
-> +					HWMON_T_CRIT_HYST,
-> +				 HWMON_T_INPUT),
-> +	NULL
-> +};
-> +
-> +static int sg2042_mcu_read_temp(struct device *dev,
-> +				u32 attr, int channel,
-> +				long *val)
-> +{
-> +	struct sg2042_mcu_data *mcu = dev_get_drvdata(dev);
-> +	long tmp;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		switch (channel) {
-> +		case 0:
-> +			tmp = sg2042_mcu_get_soc_temp(mcu->client);
-> +			if (tmp < 0)
-> +				return tmp;
-> +			*val = tmp * 1000;
-> +			break;
-> +		case 1:
-> +			tmp = sg2042_mcu_get_board_temp(mcu->client);
-> +			if (tmp < 0)
-> +				return tmp;
-> +			*val = tmp * 1000;
-> +			break;
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
-> +		break;
-> +	case hwmon_temp_crit:
-> +		if (channel)
-> +			return -EOPNOTSUPP;
-> +
-> +		tmp = sg2042_mcu_get_soc_crit_temp(mcu->client);
-> +		if (tmp < 0)
-> +			return tmp;
-> +		*val = tmp * 1000;
-> +		break;
-> +	case hwmon_temp_crit_hyst:
-> +		if (channel)
-> +			return -EOPNOTSUPP;
-> +
-> +		tmp = sg2042_mcu_get_soc_hyst_temp(mcu->client);
-> +		if (tmp < 0)
-> +			return tmp;
-> +		*val = tmp * 1000;
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int sg2042_mcu_read(struct device *dev,
-> +			   enum hwmon_sensor_types type,
-> +			   u32 attr, int channel, long *val)
-> +{
-> +	switch (type) {
-> +	case hwmon_chip:
-> +		if (attr != hwmon_chip_update_interval)
-> +			return -EOPNOTSUPP;
-> +		*val = 1000;
-> +		break;
-> +	case hwmon_temp:
-> +		return sg2042_mcu_read_temp(dev, attr, channel, val);
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int sg2042_mcu_write(struct device *dev,
-> +			    enum hwmon_sensor_types type,
-> +			    u32 attr, int channel, long val)
-> +{
-> +	struct sg2042_mcu_data *mcu = dev_get_drvdata(dev);
-> +	u8 down_temp, repower_temp;
-> +	int ret;
-> +
-> +	if (type != hwmon_temp || attr != hwmon_temp_crit || !channel)
-> +		return -EOPNOTSUPP;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_crit:
-> +		ret = sg2042_mcu_get_soc_hyst_temp(mcu->client);
-> +		if (ret < 0)
-> +			repower_temp = DEFAULT_REPOWER_TEMP;
-> +		else
-> +			repower_temp = ret;
-> +
-> +		down_temp = val / 1000;
-> +		if (down_temp < repower_temp)
-> +			return -EINVAL;
-> +
-> +		return sg2042_mcu_set_soc_crit_temp(mcu->client,
-> +						    (u8)(val / 1000));
-> +	case hwmon_temp_crit_hyst:
-> +		ret = sg2042_mcu_get_soc_crit_temp(mcu->client);
-> +		if (ret < 0)
-> +			return -ENODEV;
-> +
-> +		down_temp = ret;
-> +		repower_temp = val / 1000;
-> +		if (down_temp < repower_temp)
-> +			return -EINVAL;
-> +
-> +		return sg2042_mcu_set_soc_hyst_temp(mcu->client,
-> +						    (u8)(val / 1000));
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
-> +
-> +static umode_t sg2042_mcu_is_visible(const void *_data,
-> +				     enum hwmon_sensor_types type,
-> +				     u32 attr, int channel)
-> +{
-> +	switch (type) {
-> +	case hwmon_chip:
-> +		if (attr == hwmon_chip_update_interval)
-> +			return 0444;
-> +		break;
-> +	case hwmon_temp:
-> +		switch (attr) {
-> +		case hwmon_temp_input:
-> +			if (channel < 2)
-> +				return 0444;
-> +			break;
-> +		case hwmon_temp_crit:
-> +		case hwmon_temp_crit_hyst:
-> +			if (channel == 0)
-> +				return 0664;
-> +			break;
-> +		default:
-> +			return 0;
-> +		}
-> +		break;
-> +	default:
-> +		return 0;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct hwmon_ops sg2042_mcu_ops = {
-> +	.is_visible = sg2042_mcu_is_visible,
-> +	.read = sg2042_mcu_read,
-> +	.write = sg2042_mcu_write,
-> +};
-> +
-> +static const struct hwmon_chip_info sg2042_mcu_chip_info = {
-> +	.ops = &sg2042_mcu_ops,
-> +	.info = sg2042_mcu_info,
-> +};
-> +
-> +static void sg2042_mcu_debugfs_init(struct sg2042_mcu_data *mcu,
-> +				    struct device *dev)
-> +{
-> +	mcu->debugfs = debugfs_create_dir(dev_name(dev), sgmcu_debugfs);
-> +	if (mcu->debugfs) {
-> +		_CREATE_DEBUG_ENTRY(firmware_version, 0444, mcu->debugfs, mcu);
-> +		_CREATE_DEBUG_ENTRY(pcb_version, 0444, mcu->debugfs, mcu);
-> +		_CREATE_DEBUG_ENTRY(mcu_type, 0444, mcu->debugfs, mcu);
-> +		_CREATE_DEBUG_ENTRY(board_type, 0444, mcu->debugfs, mcu);
-> +	}
-> +}
-> +
-> +static int sg2042_mcu_check_board(u8 id)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(sg2042_boards_data); i++) {
-> +		if (sg2042_boards_data[i].id == id)
-> +			return i;
-> +	}
-> +
-> +	return -ENODEV;
-> +}
-> +
-> +static int sg2042_mcu_i2c_probe(struct i2c_client *client)
-> +{
-> +	int ret;
-> +	struct device *dev = &client->dev;
-> +	struct sg2042_mcu_data *mcu;
-> +	struct device *hwmon_dev;
-> +
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
-> +						I2C_FUNC_SMBUS_BLOCK_DATA))
-> +		return -EIO;
-> +
-> +	ret = sg2042_mcu_get_board_type(client);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = sg2042_mcu_check_board(ret);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	mcu = devm_kmalloc(dev, sizeof(*mcu), GFP_KERNEL);
-> +	if (!mcu)
-> +		return -ENOMEM;
-> +
-> +	mcu->client = client;
-> +	mcu->board_info = &sg2042_boards_data[ret];
-> +
-> +	ret = sysfs_create_group(&dev->kobj, &sg2042_mcu_attr_group);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	i2c_set_clientdata(client, mcu);
-> +
-> +	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
-> +							 mcu,
-> +							 &sg2042_mcu_chip_info,
-> +							 NULL);
-> +
-> +	sg2042_mcu_debugfs_init(mcu, dev);
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +static void sg2042_mcu_i2c_remove(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +
-> +	sysfs_remove_group(&dev->kobj, &sg2042_mcu_attr_group);
-> +}
-> +
-> +static const struct i2c_device_id sg2042_mcu_id[] = {
-> +	{ "sg2042_hwmon_mcu", 0 },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(i2c, sg2042_mcu_id);
-> +
-> +static const struct of_device_id sg2042_mcu_of_id[] = {
-> +	{ .compatible = "sophgo,sg2042-hwmon-mcu" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sg2042_mcu_of_id);
-> +
-> +static struct i2c_driver sg2042_mcu_driver = {
-> +	.driver = {
-> +		.name = "sg2042-mcu",
-> +		.of_match_table = sg2042_mcu_of_id,
-> +	},
-> +	.probe = sg2042_mcu_i2c_probe,
-> +	.remove = sg2042_mcu_i2c_remove,
-> +	.id_table = sg2042_mcu_id,
-> +};
-> +
-> +static int __init sg2042_mcu_init(void)
-> +{
-> +	sgmcu_debugfs = debugfs_create_dir("sgmcu", NULL);
-> +	return i2c_add_driver(&sg2042_mcu_driver);
-> +}
-> +
-> +static void __exit sg2042_mcu_exit(void)
-> +{
-> +	debugfs_remove_recursive(sgmcu_debugfs);
-> +	i2c_del_driver(&sg2042_mcu_driver);
-> +}
-> +
-> +module_init(sg2042_mcu_init);
-> +module_exit(sg2042_mcu_exit);
-> +
-> +MODULE_AUTHOR("Inochi Amaoto <inochiama@outlook.com>");
-> +MODULE_DESCRIPTION("MCU I2C driver for SG2042 soc platform");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.45.2
+And in page_alloc_init_late(), it is called after deferred_init_memmap(). This
+means the totalram_pages() here return the real free pages at this point. So
+it is not necessary to touch it now.
+
+>Thanks,
 >
+>Oleg.
+>
+>On 07/07, David Hildenbrand wrote:
+>>
+>> On 06.07.24 03:28, Wei Yang wrote:
+>> >On Fri, Jul 05, 2024 at 12:09:48PM +0300, Mike Rapoport wrote:
+>> >>On Wed, Jul 03, 2024 at 12:51:49AM +0000, Wei Yang wrote:
+>> >>>Instead of using raw memblock api, we wrap a new helper for user.
+>> >>
+>> >>The changelog should be more elaborate and explain why this function is
+>> >>needed.
+>> >>
+>> >>>Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+>> >>>---
+>> >>>  include/linux/memblock.h |  1 +
+>> >>>  mm/memblock.c            | 19 +++++++++++++++++++
+>> >>>  2 files changed, 20 insertions(+)
+>> >>>
+>> >>>diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> >>>index 40c62aca36ec..7d1c32b3dc12 100644
+>> >>>--- a/include/linux/memblock.h
+>> >>>+++ b/include/linux/memblock.h
+>> >>>@@ -486,6 +486,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
+>> >>>  phys_addr_t memblock_phys_mem_size(void);
+>> >>>  phys_addr_t memblock_reserved_size(void);
+>> >>>+unsigned long memblock_estimated_nr_pages(void);
+>> >>>  phys_addr_t memblock_start_of_DRAM(void);
+>> >>>  phys_addr_t memblock_end_of_DRAM(void);
+>> >>>  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+>> >>>diff --git a/mm/memblock.c b/mm/memblock.c
+>> >>>index e81fb68f7f88..c1f1aac0459f 100644
+>> >>>--- a/mm/memblock.c
+>> >>>+++ b/mm/memblock.c
+>> >>>@@ -1729,6 +1729,25 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
+>> >>>  	return memblock.reserved.total_size;
+>> >>>  }
+>> >>>+/**
+>> >>>+ * memblock_estimated_nr_pages - return number of pages from memblock point of
+>> >>>+ * view
+>> >>
+>> >>This function returns the estimate for free pages, not the number of pages
+>> >>in RAM.
+>> >>
+>> >>How about memblock_estimated_nr_free_pages()?
+>> >>
+>> >>>+ * some calculation before all pages are freed to buddy system, especially
+>> >>>+ * when CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
+>> >>
+>> >>I'm failing to parse this sentence. The return value here won't depend on
+>> >>CONFIG_DEFERRED_STRUCT_PAGE_INIT.
+>> >>
+>> >>>+ *
+>> >>>+ * At this point, we can get this information from memblock. Since the system
+>> >>>+ * state is not settle down and address alignment, the value is an estimation.
+>> >>>+ *
+>> >>>+ * Return:
+>> >>>+ * An estimated number of pages from memblock point of view.
+>> >>
+>> >>                            ^ free
+>> >>
+>> >>>+ */
+>> >>>+unsigned long __init memblock_estimated_nr_pages(void)
+>> >>>+{
+>> >>>+	return PHYS_PFN(memblock_phys_mem_size() - memblock_reserved_size());
+>> >>>+}
+>> >>>+
+>> >>>  /* lowest address */
+>> >>>  phys_addr_t __init_memblock memblock_start_of_DRAM(void)
+>> >>>  {
+>> >>>-- 
+>> >>>2.34.1
+>> >>>
+>> >
+>> >Thanks for review. Is this one looks better?
+>> >
+>> >Subject: [PATCH] mm/memblock: introduce a new helper memblock_estimated_nr_free_pages()
+>> >
+>> >During bootup, system may need the number of free pages in the whole system
+>> >to do some calculation before all pages are freed to buddy system. Usually
+>> >this number is get from totalram_pages(). Since we plan to move the free
+>> >pages accounting in __free_pages_core(), this value may not represent
+>> >total free pages at the early stage, especially when
+>> >CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
+>> >
+>> >Instead of using raw memblock api, let's introduce a new helper for user
+>> >to get the estimated number of free pages from memblock point of view.
+>> >
+>> >Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+>> >CC: David Hildenbrand <david@redhat.com>
+>> >---
+>> >  include/linux/memblock.h |  1 +
+>> >  mm/memblock.c            | 22 ++++++++++++++++++++++
+>> >  2 files changed, 23 insertions(+)
+>> >
+>> >diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> >index 40c62aca36ec..7d1c32b3dc12 100644
+>> >--- a/include/linux/memblock.h
+>> >+++ b/include/linux/memblock.h
+>> >@@ -486,6 +486,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
+>> >  phys_addr_t memblock_phys_mem_size(void);
+>> >  phys_addr_t memblock_reserved_size(void);
+>> >+unsigned long memblock_estimated_nr_pages(void);
+>> >  phys_addr_t memblock_start_of_DRAM(void);
+>> >  phys_addr_t memblock_end_of_DRAM(void);
+>> >  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+>> >diff --git a/mm/memblock.c b/mm/memblock.c
+>> >index e81fb68f7f88..00decc42e02b 100644
+>> >--- a/mm/memblock.c
+>> >+++ b/mm/memblock.c
+>> >@@ -1729,6 +1729,28 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
+>> >  	return memblock.reserved.total_size;
+>> >  }
+>> >+/**
+>> >+ * memblock_estimated_nr_free_pages - return estimated number of free pages
+>> >+ * from memblock point of view
+>> >+ *
+>> >+ * During bootup, system may need the number of free pages in the whole system
+>> >+ * to do some calculation before all pages are freed to buddy system. Usually
+>> >+ * this number is get from totalram_pages(). Since we plan to move the free
+>> >+ * pages accounting in __free_pages_core(), this value may not represent total
+>> >+ * free pages at the early stage, especially when > + * CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
+>> 
+>> These historical details should be dropped. "Since we plan ..." will easily
+>> get outdated soon.
+>> 
+>> * During bootup, subsystems might need a rough estimate of the number of *
+>> free pages in the whole system, before precise numbers are available
+>> * from the buddy. Especially with CONFIG_DEFERRED_STRUCT_PAGE_INIT, the
+>> * numbers obtained from the buddy might be very imprecise during bootup.
+>> 
+>> ?
+>> 
+>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>> 
+>> -- 
+>> Cheers,
+>> 
+>> David / dhildenb
+>> 
+
+-- 
+Wei Yang
+Help you, Help me
