@@ -1,61 +1,61 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576ED132101
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F045F135A58
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720441389; cv=none; b=exAK+sxrCmJPjaj1BmutYAtF4wMnzXQauSV1ZG0jfAwx1CvIsMTKRNZYDICsWZ/buSzP5Nw4NXTnwZprvPryvpWVprhSS0ucPvXS+Xc4YQ/6Cny2UuLSDrk83/yqTSjJVdUsGcxgmy0Nka69E9d1RhW9SSTE87ZRxIS2deurFEA=
+	t=1720441393; cv=none; b=r3xAiCtOVy3tnZaGx28pXf5eXjanUgC/1mzGsQZ9c4AI/cGsTRmfEqMkSmSkmKv1ohDk0WiY0dG1w+to/gkfrC8l4V/io9o/rIP7IQzPtdDHuGA9aYjoZQ68rplPZTEbNI8wJBIioQU/kTBYK5QANR9bS5RS6qHmX8BtR8Cdtrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720441389; c=relaxed/simple;
-	bh=Wmml6hetLnrK6osoIWlLKX4VBPJjFr4OuDi5tTldbY8=;
+	s=arc-20240116; t=1720441393; c=relaxed/simple;
+	bh=lFhFm8XkOz5Bskd3D5+xaH3dSN5OhtVheagJNvAQMPQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KmH3V32u0u7uT3fmC/5HK+mlXUBk+Dvs+qgSX2srvz5YjDSn6tGEM6AEDk3ZH7WEO/wnBwMxPHUEox3wVeczQUAzMIjX7uqTJAEb/nSVf7aDbV2zpckfctfDamfPgk2nSo1wEiQzBdJcXG8jJOHN1xjIlzpa9aZeKCb9GO5QjQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y9zNjX6e; arc=none smtp.client-ip=209.85.167.54
+	 In-Reply-To:To:Cc; b=RJbIBB0viJ8oaWngVxZtjx0D2t/i96n5Ran+Sv/bnshU9xjC54VcxIq4IXzToag5OvYc2T26KfwHxpYk3FbU4/opGWhklBTRB2Rgatnz1ZdX+5+zSOQk2h50zpaWKsBwHTjp7TBBaeRrKCDYa2uez7TQhg5F1u9kZ3FsiGhadps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ExEiBYs5; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y9zNjX6e"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52ea5dc3c66so4787841e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 05:23:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ExEiBYs5"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a689ad8d1f6so414816466b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 05:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720441386; x=1721046186; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1720441390; x=1721046190; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DE/7eJQHePQ4xKfVi2IWIe5SUccHU+P6ps3RrhqI1kM=;
-        b=y9zNjX6edExK4Or8S6OhbN6NwEayf4xdCasA17sX0VzooeJ9KRs59ZQiii/wj3dRMo
-         cUL4RXW0oI19RAOrdj3moYAgtSg3CnXKilldR1ST5FBw+syoi9gnRSYCaCwSzlVlT0rd
-         7/0c23oO5I1pSrHvLv7ByjMy7ZxXpHVu2ci9wU7n5lbtjxOweK01NzqTGhzL7cfjwWBf
-         hhmssQQUpDsKGvvnxUBdVBSm+0pZcLPiyaUGMG6+yP3iHfy/tcCzO0wyn5k6Kvs7GsP+
-         263I+a2bSHyMwD3Uc5wS6kbONrKV9aqvupY7mk49FiTJ8ji4qZjlCzbpxqugYfRobIcY
-         8xhQ==
+        bh=G1uTwXH469EZcpo+8MN3uCbZzqBdHjB+YY0ngrC8PfI=;
+        b=ExEiBYs5gOA+1F78aNQih8+kOiJjznrm29dTDmYneXcDG/QGJbhexi2eEumI+vn447
+         o6cWOBn9O2vXgTLrgp5NGCaeimlPnK21hatWSZaB/5RpbgGNwq3vyBstLTTJGqgbD/1G
+         Zti9YIeM1E/IXNETxKu88ha+zU63mt0Pq/V+yj+UjW+BCqc7FRte9qDLlsnsOh24fmKm
+         lg7lt5aPad/siS44zja0JaUdjp0FBBdEcLgsx7Q4uonW67/Liie4qWbl9SX5pye1Fe6c
+         ZiYzCZXDLTueC0pZA1U1curYXti1AgdubAPm7O4G56eqo5oR25dUIvYWLzafguC++83N
+         5PxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720441386; x=1721046186;
+        d=1e100.net; s=20230601; t=1720441390; x=1721046190;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DE/7eJQHePQ4xKfVi2IWIe5SUccHU+P6ps3RrhqI1kM=;
-        b=MjdT7SIq0AVxf98kaoZaP/6ae0thQIsB90Pon0TdUlr98HAawNKjisn2UUnvMtthph
-         2cVRh9lduF/SFEoW3JqLBzYb+iAIjXkyIA6TfMKBc3woETswD62MVjVm1GDsqw169tgW
-         Gl3qkxBYwaPH/jv7cbcOk/NA3257qFY5lbrmQ05ubVzrQAHO+u8rItxBSKPp6erdsdD7
-         xVB5WNz8poaaW64RWp/9xxgEt8BTNpaTCPkSN37E6pZFJwx5e0DHp8t8UOa/lSQ259hi
-         3ljtj9mHqMdRBe2KovIWFVExbnGxDgX7BJpOA+KV1fgOeFGidurceCuQcCzsXdLHxvHo
-         +aqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWbm+xX+zdsiChkJx01ipKL9gDsr68MQIOnZo9stArgHVFhuC8i5VBOohjCGc2pLa6wuOWzBhgE3SCFXsvVXeclAtHSdw1uR8P/+DoG
-X-Gm-Message-State: AOJu0YyWwDDlDNxHKKeReXOlw/Ntxrl28HuUCuccE36jao/iLHIOBHoB
-	xv146LLNWAbS/pwqoWK2iSQguclInhaguKVZj/KYbdpSdyn966lsxUBgxArVygA=
-X-Google-Smtp-Source: AGHT+IFc+McOteL5VPmGxgxqXitDP1GUotcOSNEdtZCvOApgh6hUobyU6tTMLc/kIfASGRM8FH86QQ==
-X-Received: by 2002:ac2:5e2a:0:b0:52c:d2ab:693a with SMTP id 2adb3069b0e04-52ea06a673cmr7841846e87.54.1720441385476;
-        Mon, 08 Jul 2024 05:23:05 -0700 (PDT)
+        bh=G1uTwXH469EZcpo+8MN3uCbZzqBdHjB+YY0ngrC8PfI=;
+        b=lgePHqtysQ0OZvUbpXPt8xl0238pgTZDxObmojTdHZi+WQYG+Maok5YKwVTZEvOBYR
+         YNnxqEvryKW2u6Dsjw7Qbm4qwH4CZAPrfLDw05HwZakoCnz5zM6ccz0ER0Mv97QwBwgP
+         aCMWjW2k2CGurjMF6z/LY8LVk4n7GYurEmXT9Y7c3L/S8zJTOYgNh6d7/Mw9+MXwTXVM
+         G1z3LHSazmk2he8BwVrQ9gbD8Aon/SntzSBd1ClKFh1o7+WTmJ1lGz1CSKka/vK5OfA2
+         ksdQ3V7Kso/NuZbE0vdYgxIp4+edWjHEu5M9VHH09jPBZXqyxzlrl8m58BFdtM+pZ4QV
+         GTDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyA6ZHkdxAVVTa4hq9kEgwkvaM+Y4S1ldIupbzPRuMwpEujO18jYYHyPlIUqTNou2pL8AXSSS05G49L7UGItiz0Iv/wiQwQuF8FmYZ
+X-Gm-Message-State: AOJu0YxYu5xd32c31XpWqmaRf6IlBoE+0bjXAKhRwEMxtcTT+yopBoqL
+	EQVPM4+jLkkEhShNhS7Y+Jurpjk5EOyr2HQF+1qyfYLi6nkLxS3PZR0I8xW8Rys=
+X-Google-Smtp-Source: AGHT+IEzrIE8nTDCnmlFyNmQLCQDmburyEgzq+VfZPoE2qFHfdKrbEcZLGwxoqFHstrY2KSjFmvBDg==
+X-Received: by 2002:a17:907:7212:b0:a77:cf9d:f498 with SMTP id a640c23a62f3a-a77cf9df683mr672501166b.40.1720441390300;
+        Mon, 08 Jul 2024 05:23:10 -0700 (PDT)
 Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77e52ccf19sm208983666b.147.2024.07.08.05.23.02
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77e52ccf19sm208983666b.147.2024.07.08.05.23.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 05:23:05 -0700 (PDT)
+        Mon, 08 Jul 2024 05:23:10 -0700 (PDT)
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Mon, 08 Jul 2024 14:22:35 +0200
-Subject: [PATCH v15 04/10] dt-bindings: soc: qcom: cpr3: Add bindings for
- CPR3+ driver
+Date: Mon, 08 Jul 2024 14:22:37 +0200
+Subject: [PATCH v15 06/10] soc: qcom: cpr-common: Add support for flat fuse
+ adjustment
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240708-topic-cpr3h-v15-4-5bc8b8936489@linaro.org>
+Message-Id: <20240708-topic-cpr3h-v15-6-5bc8b8936489@linaro.org>
 References: <20240708-topic-cpr3h-v15-0-5bc8b8936489@linaro.org>
 In-Reply-To: <20240708-topic-cpr3h-v15-0-5bc8b8936489@linaro.org>
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
@@ -87,317 +87,73 @@ Cc: Robert Marko <robimarko@gmail.com>, linux-kernel@vger.kernel.org,
  Konrad Dybcio <konrad.dybcio@linaro.org>, 
  AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720441372; l=10110;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720441372; l=2082;
  i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=ik8RK9Ie3BviA6NfBk4NawRgtBhRWoEsNL3XFx2OwzU=;
- b=/AkYuekKkq1NvkIP7vtRP+2OUSs1dhl7gPczC+NJQn5b5fPAcypyjqD/BarQLzFnJOT+i72OC
- V0COe4cddCQCoBys2F0B7Wnqmp6gIp7WH3RdPLeOseQAmW8KYKgMkCX
+ bh=FEkMInUlFGjcpdQZXJiXJbXnI1fSzwAHTqwD5lohyQc=;
+ b=NK+iXcizWrvtLUoUHu/vS0S0kTwc1u4mGLBKv+flCXlPGC3SJ5V91qAvPd1I7NOa5WZEltNRB
+ zQe4a73aENsAHL/qm2+6U71S9C0Oqb7IKxclklhO20xqMzrg8/TpLad
 X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
 
-Add the bindings for the Qualcomm CPR3+ hardware.
+CPR3 makes use of post-calculation flat value adjustments. Add the
+necessary bits to the common functions to support it.
 
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
-[Konrad: Make binding check pass, some other changes]
+[Konrad: separate this patch out of a bigger one]
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- .../devicetree/bindings/soc/qcom/qcom,cpr3.yaml    | 286 +++++++++++++++++++++
- 1 file changed, 286 insertions(+)
+ drivers/pmdomain/qcom/cpr-common.c | 9 ++++++---
+ drivers/pmdomain/qcom/cpr-common.h | 1 +
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,cpr3.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,cpr3.yaml
-new file mode 100644
-index 000000000000..2e6712aa1c58
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,cpr3.yaml
-@@ -0,0 +1,286 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/qcom/qcom,cpr3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/pmdomain/qcom/cpr-common.c b/drivers/pmdomain/qcom/cpr-common.c
+index ea85f6b4bef8..44c681bbbf13 100644
+--- a/drivers/pmdomain/qcom/cpr-common.c
++++ b/drivers/pmdomain/qcom/cpr-common.c
+@@ -49,7 +49,7 @@ int cpr_populate_ring_osc_idx(struct device *dev,
+ EXPORT_SYMBOL_GPL(cpr_populate_ring_osc_idx);
+ 
+ static int cpr_read_fuse_uV(int init_v_width, int step_size_uV, int ref_uV,
+-			    int step_volt, const char *init_v_efuse,
++			    int adj, int step_volt, const char *init_v_efuse,
+ 			    struct device *dev)
+ {
+ 	int steps, uV;
+@@ -67,6 +67,9 @@ static int cpr_read_fuse_uV(int init_v_width, int step_size_uV, int ref_uV,
+ 
+ 	uV = ref_uV + steps * step_size_uV;
+ 
++	/* Apply open-loop fixed adjustments to fused values */
++	uV += adj;
 +
-+title: Qualcomm Core Power Reduction v3+
-+
-+description:
-+  CPR (Core Power Reduction) is a technology to reduce core power of a CPU
-+  (or another device). Each OPP of a device corresponds to a "corner" that
-+  has a range of valid voltages for a particular frequency.
-+  The CPR monitors dynamic factors such as temperature, etc. and suggests
-+  or (in the CPR-hardened case) applies voltage adjustments to save power
-+  and meet silicon characteristic requirements for a given chip unit.
-+
-+maintainers:
-+  - Konrad Dybcio <konradybcio@kernel.org>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: qcom,cpr3
-+      - const: qcom,cpr4
-+      - items:
-+          - enum:
-+              - qcom,msm8998-cprh
-+              - qcom,sdm630-cprh
-+          - const: qcom,cprh
-+
-+  reg:
-+    items:
-+      - description: Register space of the CPR controller0
-+      - description: Register space of the CPR controller1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: CPR reference clock
-+
-+  vdd-supply:
-+    description: Autonomous Phase Control (APC) or other power supply
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  qcom,acc:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: phandle to syscon for writing ACC settings
-+
-+  nvmem-cells:
-+    description: Cells containing the fuse corners and revision data
-+    maxItems: 32
-+
-+  nvmem-cell-names:
-+    maxItems: 32
-+
-+  operating-points-v2: true
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - operating-points-v2
-+  - "#power-domain-cells"
-+  - nvmem-cells
-+  - nvmem-cell-names
-+
-+additionalProperties: false
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - qcom,msm8998-cprh
-+    then:
-+      properties:
-+        nvmem-cell-names:
-+          items:
-+            - const: cpr_speed_bin
-+            - const: cpr_fuse_revision
-+            - const: cpr0_quotient1
-+            - const: cpr0_quotient2
-+            - const: cpr0_quotient3
-+            - const: cpr0_quotient4
-+            - const: cpr0_quotient_offset2
-+            - const: cpr0_quotient_offset3
-+            - const: cpr0_quotient_offset4
-+            - const: cpr0_init_voltage1
-+            - const: cpr0_init_voltage2
-+            - const: cpr0_init_voltage3
-+            - const: cpr0_init_voltage4
-+            - const: cpr0_ring_osc1
-+            - const: cpr0_ring_osc2
-+            - const: cpr0_ring_osc3
-+            - const: cpr0_ring_osc4
-+            - const: cpr1_quotient1
-+            - const: cpr1_quotient2
-+            - const: cpr1_quotient3
-+            - const: cpr1_quotient4
-+            - const: cpr1_quotient_offset2
-+            - const: cpr1_quotient_offset3
-+            - const: cpr1_quotient_offset4
-+            - const: cpr1_init_voltage1
-+            - const: cpr1_init_voltage2
-+            - const: cpr1_init_voltage3
-+            - const: cpr1_init_voltage4
-+            - const: cpr1_ring_osc1
-+            - const: cpr1_ring_osc2
-+            - const: cpr1_ring_osc3
-+            - const: cpr1_ring_osc4
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    cpus {
-+        #address-cells = <2>;
-+        #size-cells = <0>;
-+
-+        cpu@0 {
-+            compatible = "qcom,kryo280";
-+            device_type = "cpu";
-+            reg = <0x0 0x0>;
-+            operating-points-v2 = <&cpu0_opp_table>;
-+            power-domains = <&apc_cprh 0>;
-+            power-domain-names = "perf";
-+        };
-+
-+        cpu@100 {
-+            compatible = "qcom,kryo280";
-+            device_type = "cpu";
-+            reg = <0x0 0x100>;
-+            operating-points-v2 = <&cpu4_opp_table>;
-+            power-domains = <&apc_cprh 1>;
-+            power-domain-names = "perf";
-+        };
-+    };
-+
-+    cpu0_opp_table: opp-table-cpu0 {
-+        compatible = "operating-points-v2";
-+        opp-shared;
-+
-+        opp-1843200000 {
-+            opp-hz = /bits/ 64 <1843200000>;
-+            required-opps = <&cprh_opp3>;
-+        };
-+
-+        opp-1094400000 {
-+            opp-hz = /bits/ 64 <1094400000>;
-+            required-opps = <&cprh_opp2>;
-+        };
-+
-+        opp-300000000 {
-+            opp-hz = /bits/ 64 <300000000>;
-+            required-opps = <&cprh_opp1>;
-+        };
-+    };
-+
-+    cpu4_opp_table: opp-table-cpu4 {
-+        compatible = "operating-points-v2";
-+        opp-shared;
-+
-+        opp-2208000000 {
-+            opp-hz = /bits/ 64 <2208000000>;
-+            required-opps = <&cprh_opp3>;
-+        };
-+
-+        opp-1113600000 {
-+            opp-hz = /bits/ 64 <1113600000>;
-+            required-opps = <&cprh_opp2>;
-+        };
-+
-+        opp-300000000 {
-+            opp-hz = /bits/ 64 <300000000>;
-+            required-opps = <&cprh_opp1>;
-+        };
-+    };
-+
-+    cprh_opp_table: opp-table-cprh {
-+        compatible = "operating-points-v2-qcom-level";
-+
-+        cprh_opp1: opp-1 {
-+            opp-level = <1>;
-+            qcom,opp-fuse-level = <1>;
-+            qcom,opp-cloop-vadj = <0>;
-+            qcom,opp-oloop-vadj = <0>;
-+        };
-+
-+        cprh_opp2: opp-2 {
-+            opp-level = <2>;
-+            qcom,opp-fuse-level = <2>;
-+            qcom,opp-cloop-vadj = <0>;
-+            qcom,opp-oloop-vadj = <0>;
-+        };
-+
-+        cprh_opp3: opp-3 {
-+            opp-level = <3>;
-+            qcom,opp-fuse-level = <2 3>;
-+            qcom,opp-cloop-vadj = <0>;
-+            qcom,opp-oloop-vadj = <0>;
-+        };
-+    };
-+
-+    apc_cprh: power-controller@179c8000 {
-+        compatible = "qcom,msm8998-cprh", "qcom,cprh";
-+        reg = <0x0179c8000 0x4000>, <0x0179c4000 0x4000>;
-+        clocks = <&gcc GCC_HMSS_RBCPR_CLK>;
-+
-+        operating-points-v2 = <&cprh_opp_table>;
-+        #power-domain-cells = <1>;
-+
-+        nvmem-cells = <&cpr_efuse_speedbin>,
-+                      <&cpr_fuse_revision>,
-+                      <&cpr_quot0_pwrcl>,
-+                      <&cpr_quot1_pwrcl>,
-+                      <&cpr_quot2_pwrcl>,
-+                      <&cpr_quot3_pwrcl>,
-+                      <&cpr_quot_offset1_pwrcl>,
-+                      <&cpr_quot_offset2_pwrcl>,
-+                      <&cpr_quot_offset3_pwrcl>,
-+                      <&cpr_init_voltage0_pwrcl>,
-+                      <&cpr_init_voltage1_pwrcl>,
-+                      <&cpr_init_voltage2_pwrcl>,
-+                      <&cpr_init_voltage3_pwrcl>,
-+                      <&cpr_ro_sel0_pwrcl>,
-+                      <&cpr_ro_sel1_pwrcl>,
-+                      <&cpr_ro_sel2_pwrcl>,
-+                      <&cpr_ro_sel3_pwrcl>,
-+                      <&cpr_quot0_perfcl>,
-+                      <&cpr_quot1_perfcl>,
-+                      <&cpr_quot2_perfcl>,
-+                      <&cpr_quot3_perfcl>,
-+                      <&cpr_quot_offset1_perfcl>,
-+                      <&cpr_quot_offset2_perfcl>,
-+                      <&cpr_quot_offset3_perfcl>,
-+                      <&cpr_init_voltage0_perfcl>,
-+                      <&cpr_init_voltage1_perfcl>,
-+                      <&cpr_init_voltage2_perfcl>,
-+                      <&cpr_init_voltage3_perfcl>,
-+                      <&cpr_ro_sel0_perfcl>,
-+                      <&cpr_ro_sel1_perfcl>,
-+                      <&cpr_ro_sel2_perfcl>,
-+                      <&cpr_ro_sel3_perfcl>;
-+        nvmem-cell-names = "cpr_speed_bin",
-+                           "cpr_fuse_revision",
-+                           "cpr0_quotient1",
-+                           "cpr0_quotient2",
-+                           "cpr0_quotient3",
-+                           "cpr0_quotient4",
-+                           "cpr0_quotient_offset2",
-+                           "cpr0_quotient_offset3",
-+                           "cpr0_quotient_offset4",
-+                           "cpr0_init_voltage1",
-+                           "cpr0_init_voltage2",
-+                           "cpr0_init_voltage3",
-+                           "cpr0_init_voltage4",
-+                           "cpr0_ring_osc1",
-+                           "cpr0_ring_osc2",
-+                           "cpr0_ring_osc3",
-+                           "cpr0_ring_osc4",
-+                           "cpr1_quotient1",
-+                           "cpr1_quotient2",
-+                           "cpr1_quotient3",
-+                           "cpr1_quotient4",
-+                           "cpr1_quotient_offset2",
-+                           "cpr1_quotient_offset3",
-+                           "cpr1_quotient_offset4",
-+                           "cpr1_init_voltage1",
-+                           "cpr1_init_voltage2",
-+                           "cpr1_init_voltage3",
-+                           "cpr1_init_voltage4",
-+                           "cpr1_ring_osc1",
-+                           "cpr1_ring_osc2",
-+                           "cpr1_ring_osc3",
-+                           "cpr1_ring_osc4";
-+    };
-+...
+ 	return DIV_ROUND_UP(uV, step_volt) * step_volt;
+ }
+ 
+@@ -119,8 +122,8 @@ int cpr_populate_fuse_common(struct device *dev,
+ 
+ 	/* Populate uV */
+ 	uV = cpr_read_fuse_uV(init_v_width, init_v_step,
+-			      fdata->ref_uV, step_volt,
+-			      cpr_fuse->init_voltage, dev);
++			      fdata->ref_uV, fdata->volt_oloop_adjust,
++			      step_volt, cpr_fuse->init_voltage, dev);
+ 	if (uV < 0)
+ 		return uV;
+ 
+diff --git a/drivers/pmdomain/qcom/cpr-common.h b/drivers/pmdomain/qcom/cpr-common.h
+index 1f2ebf9394cf..0aa227617d2f 100644
+--- a/drivers/pmdomain/qcom/cpr-common.h
++++ b/drivers/pmdomain/qcom/cpr-common.h
+@@ -22,6 +22,7 @@ struct fuse_corner_data {
+ 	int ref_uV;
+ 	int max_uV;
+ 	int min_uV;
++	int volt_oloop_adjust;
+ 	int max_volt_scale;
+ 	int max_quot_scale;
+ 	/* fuse quot */
 
 -- 
 2.45.2
