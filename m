@@ -1,99 +1,163 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4C48C04
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 07:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B232D381B8;
+	Mon,  8 Jul 2024 07:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720424717; cv=none; b=uGEHKDFcZF8Jjp5RDxcdiz92cwv5S/wJF8qzILPVAR6ZeCvPy3jxkDegEdP0p/IaAc2Ekzu9/hBfu8IKomAIpmkdvMPSgvDXHu7L0tcRC8IcUcL2FWoLcnLYYpB1nlr/C9IsCFDnSe1uA8kAlHMUFw/taR9ZFTBwVr5s3C9ESvE=
+	t=1720424750; cv=none; b=TzBRCckqXM5SfyviwBxEwhzlafk6gCiqryPxVxdyHYDD3GUsQ4sdy2YBi6pASH+WLV9RMTSZ0h526bRJJNgC0AnAe1D/y3AKPDUfDkjDPlv5eif4x73WzfCtJREGPH1+uZiipfJWh3wOaza4C+uPM/LFoXOOw+t076SxmWAZuPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720424717; c=relaxed/simple;
-	bh=CIpq+tHXooEAZzxw0fF4yhNIHvERWGGg1G8htwhDg8s=;
+	s=arc-20240116; t=1720424750; c=relaxed/simple;
+	bh=Ctg0u/mGa+VwyDSlNuzK+P613udK8Frsp14C56Ebnqw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqsWsasK8m17T/0GlcadgtOy2fTGNQ2hZYiyt+ITGEGDL+kwXY9Ml/XdHbrGlZ4RtXNiXb3HBk1U9aMHfOiENtqzG9/81Q5/iPuPAhTe2+KoKzss6E2m7mwRBzyeUk2Mgcyo6b5Io68znAWyopbT/tpy5NvZTaCQyMwrDhjg9gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EhGYtmth; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MyoFKImpPMGN9sOnaJ8QVsZej0C6uOujQmNd6mYfLuIcZcFzEAyefJAQdrUqXzs28ZM0V4pr/iF0nHPtakwg6hsuXJooE90kNjNAmpeReUPOtsbgYjwY34V0iqh3PW0XjizHa/1KLpn7J7RPzwHUi5/LFTq+wi26IV0FDK6pvNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gh9N9Uw0; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EhGYtmth"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720424714;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gh9N9Uw0"
+X-Envelope-To: luca.ceresoli@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1720424745;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bQ6oO+NBE5KmHBrK1egMaXWpdDDzquNgOi2z2wMWGCY=;
-	b=EhGYtmthK0LQciWEsxpwia2d6nmyJyHRh65SRiLOOM1utwx/X2i+j2TR06whCIoIlIFUMh
-	qqe0vbF9sUI9zrLN0oIB8cSbWk0mbJjSWX7VICIVI3h8rHBWlUGPuivS6aiTuRr3bIllhX
-	tRoC2WejYAOfjNz+FE5HwQJpeCAr1s0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-343-OMIDTzpzN0qtc5a682khwQ-1; Mon,
- 08 Jul 2024 03:45:12 -0400
-X-MC-Unique: OMIDTzpzN0qtc5a682khwQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A08481954229;
-	Mon,  8 Jul 2024 07:45:09 +0000 (UTC)
-Received: from localhost (unknown [10.39.192.131])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DB4E119560AA;
-	Mon,  8 Jul 2024 07:45:07 +0000 (UTC)
-Date: Mon, 8 Jul 2024 09:45:06 +0200
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: axboe@kernel.dk, mst@redhat.com, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
-	pbonzini@redhat.com, hare@suse.de, kbusch@kernel.org, hch@lst.de,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH 4/5] virtio_blk: Don't bother validating blocksize
-Message-ID: <20240708074506.GB38033@dynamic-pd01.res.v6.highway.a1.net>
-References: <20240705115127.3417539-1-john.g.garry@oracle.com>
- <20240705115127.3417539-5-john.g.garry@oracle.com>
+	bh=6r0t4bqCeyTcKMQipHqJ13XIJ0M/NNLgBRa8TFFkq0k=;
+	b=gh9N9Uw0u8C6T2INQwENuJbySC4x56TU/bCYId7J19tXTNv2leS8YvS59ZHGfqV5iEcc2W
+	giRbXLJT0kVM9blL6cZF0eI0W/NaGwdLwsoCYd+qWtWL+ssOTOGgYIaHoZkEp8DXV+BDKD
+	QBEscHkTSbtdZ0QzmCUfJBvJe1gdrAw=
+X-Envelope-To: ojeda@kernel.org
+X-Envelope-To: robh@kernel.org
+X-Envelope-To: saravanak@google.com
+X-Envelope-To: nathan@kernel.org
+X-Envelope-To: mturquette@baylibre.com
+X-Envelope-To: sboyd@kernel.org
+X-Envelope-To: tony@atomide.com
+X-Envelope-To: andersson@kernel.org
+X-Envelope-To: emilio@elopez.com.ar
+X-Envelope-To: wens@csie.org
+X-Envelope-To: jernej.skrabec@gmail.com
+X-Envelope-To: samuel@sholland.org
+X-Envelope-To: krzk@kernel.org
+X-Envelope-To: daniel.lezcano@linaro.org
+X-Envelope-To: tglx@linutronix.de
+X-Envelope-To: florian.fainelli@broadcom.com
+X-Envelope-To: bcm-kernel-feedback-list@broadcom.com
+X-Envelope-To: linus.walleij@linaro.org
+X-Envelope-To: brgl@bgdev.pl
+X-Envelope-To: jic23@kernel.org
+X-Envelope-To: lee@kernel.org
+X-Envelope-To: shawnguo@kernel.org
+X-Envelope-To: kernel@pengutronix.de
+X-Envelope-To: ukleinek@kernel.org
+X-Envelope-To: gregkh@linuxfoundation.org
+X-Envelope-To: jirislaby@kernel.org
+X-Envelope-To: lgirdwood@gmail.com
+X-Envelope-To: broonie@kernel.org
+X-Envelope-To: nicolas.ferre@microchip.com
+X-Envelope-To: mpe@ellerman.id.au
+X-Envelope-To: npiggin@gmail.com
+X-Envelope-To: christophe.leroy@csgroup.eu
+X-Envelope-To: naveen.n.rao@linux.ibm.com
+X-Envelope-To: dlemoal@kernel.org
+X-Envelope-To: peng.fan@oss.nxp.com
+X-Envelope-To: thomas.petazzoni@bootlin.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: devicetree@vger.kernel.org
+X-Envelope-To: llvm@lists.linux.dev
+X-Envelope-To: linux-clk@vger.kernel.org
+X-Envelope-To: linux-omap@vger.kernel.org
+X-Envelope-To: linux-arm-msm@vger.kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-sunxi@lists.linux.dev
+X-Envelope-To: linux-samsung-soc@vger.kernel.org
+X-Envelope-To: linux-gpio@vger.kernel.org
+X-Envelope-To: linux-iio@vger.kernel.org
+X-Envelope-To: linux-pwm@vger.kernel.org
+X-Envelope-To: linux-serial@vger.kernel.org
+X-Envelope-To: linux-usb@vger.kernel.org
+X-Envelope-To: patches@opensource.cirrus.com
+X-Envelope-To: linux-sound@vger.kernel.org
+X-Envelope-To: linuxppc-dev@lists.ozlabs.org
+X-Envelope-To: linux-riscv@lists.infradead.org
+Date: Mon, 8 Jul 2024 09:45:39 +0200
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Richard Leitner <richard.leitner@linux.dev>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Tony Lindgren <tony@atomide.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Emilio =?utf-8?B?TMOzcGV6?= <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-usb@vger.kernel.org, patches@opensource.cirrus.com, linux-sound@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 15/20] usb: usb251xb: convert to
+ of_property_for_each_u32_new()
+Message-ID: <34bbebxag4neccfkb4isi4bx5uvi2dk446bqqmfmtru4vwbehk@hp7vufvfyon4>
+References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
+ <20240703-of_property_for_each_u32-v1-15-42c1fc0b82aa@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OkGs/uj0FPvoaRGC"
-Content-Disposition: inline
-In-Reply-To: <20240705115127.3417539-5-john.g.garry@oracle.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
-
-
---OkGs/uj0FPvoaRGC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240703-of_property_for_each_u32-v1-15-42c1fc0b82aa@bootlin.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jul 05, 2024 at 11:51:26AM +0000, John Garry wrote:
-> The block queue limits validation does this for us now.
->=20
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
+Hi Luca,
+
+On Wed, Jul 03, 2024 at 12:36:59PM GMT, Luca Ceresoli wrote:
+> Simplify code using of_property_for_each_u32_new() as the two additional
+> parameters in of_property_for_each_u32() are not used here.
+> 
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+
+please feel free to add:
+
+Acked-by: Richard Leitner <richard.leitner@linux.dev>
+
 > ---
->  drivers/block/virtio_blk.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---OkGs/uj0FPvoaRGC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmaLmQIACgkQnKSrs4Gr
-c8hD7wgAmE3KWfwdfsZ1kkFHXdSkQnTns0LGYPW3TJVUFza6nLhXDjMDTnrcOqHv
-M7V7FEEXj23V44hk/RTx5HmhyDTSCfbOEFi2gMaOlVcJZzNDcMrEEgEcMOrEapKd
-imlRGIuR6WAC4jMsd8nJ/mjI1l/oNOdh7dibQnvCUQLSjv/Orr+pAAnlDrS6Lnkn
-o9aI4PUAK+5yLET/h1gTnA4I78m/Im/tGUnZeLKv4tchMpk9LowGaEe8Bp5p7VqI
-meQPYlhxU5jI/1atRzE29/ICNkoMrqetnEy3mwvxUDIg074Hk/JNszHBRESHpfsi
-OApRPcfaygQyrjQtlVUye2lMvE8iJg==
-=5G7c
------END PGP SIGNATURE-----
-
---OkGs/uj0FPvoaRGC--
+>  drivers/usb/misc/usb251xb.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> index 7da404f55a6d..490004dbb9d8 100644
+> --- a/drivers/usb/misc/usb251xb.c
+> +++ b/drivers/usb/misc/usb251xb.c
+> @@ -382,11 +382,9 @@ static void usb251xb_get_ports_field(struct usb251xb *hub,
+>  				    bool ds_only, u8 *fld)
+>  {
+>  	struct device *dev = hub->dev;
+> -	struct property *prop;
+> -	const __be32 *p;
+>  	u32 port;
+>  
+> -	of_property_for_each_u32(dev->of_node, prop_name, prop, p, port) {
+> +	of_property_for_each_u32_new(dev->of_node, prop_name, port) {
+>  		if ((port >= ds_only ? 1 : 0) && (port <= port_cnt))
+>  			*fld |= BIT(port);
+>  		else
+> 
+> -- 
+> 2.34.1
 
