@@ -1,115 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E236F2E9;
-	Mon,  8 Jul 2024 09:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A626855E58
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 09:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720430437; cv=none; b=kX4koq1RgrQ7XTZKM+3m3g0ORvKaEbLdz57jTcmM09E64mmW8v551+Z8mc6Ts0zOf2gjHWug6Uzra2t67eUgNiqn4wmaGPrbeltKbK7bW9V0oRyTYJQaQcIdmwPiZXZIX1y3BXUWj31wlI9eraR73DqUT97vBIpzyERmgnqjEbc=
+	t=1720430469; cv=none; b=m23LKqSyCLCWCKXv76UE6oYuKlzDbp5sHqU6U9HimUMkIbVn9vAIeg9WiAUZ8X37k04Mwa7KAb+eFOMMZChKNonh/s/xWjoLnCu6aJmE4Fn2aJhMMdXhdIXTICw7ZlNpkaMvqYUNvgPb8uk25+3H6FMrFpyNHc+0mn9qN4WkA4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720430437; c=relaxed/simple;
-	bh=gjQUODsu+gw87w2W9bA7NO+17xGjpExlTBwcwJx/TSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DE2hHCWziTD/lHlMoKbitKvhop46bj50lsQOaeJ+OLljDLjtJKj9SxMdmV51zbFMlkS0TQqpKsfEP8HaApX17ldkS6hd2GhuMq7yhoxDfWvxC0wvLBZZTCvYx5m7En6jkBKyR9OpZX6IFY7D36TCNMUfJyEju8H86fDmqLuy0Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g5xk6fUs; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720430469; c=relaxed/simple;
+	bh=I8QhZEOkkuFPKbGbEt5Gnqo9X1ZigVSRpSXa/floQDk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DOSn7R5W4ut1UexMJoQH/jY01bUTF2bk66iyxfTb+6+vLAU9DkLFn+BCHlod3I8wKCJZEt8iE2yKpFAKr39Rmt/AoeLTUo30X9cLGg84ZpE/+leeP8cnb/bFQEyqclfZbIzhiwS+9DxrRdQijJy7KWHGz3GNMlzG5XAVlL1nDN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=d9LfoMKp; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g5xk6fUs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720430437; x=1751966437;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gjQUODsu+gw87w2W9bA7NO+17xGjpExlTBwcwJx/TSc=;
-  b=g5xk6fUsYE6tD+ytApm014u0gnHViIqkOPOMZcksax4P6nI2WkZGeQfa
-   WeHD54zz3jbmQs0/x8ur20CPVaRufxmJ6F+7vRX2hswDexH7O++7eCgXK
-   +a5yr1fZObTmCozWvYaZ2kVDviq4T+PzwcCMSrCh5VR4vN33aKmphebm1
-   aIo4M2lqTNt5tX0rLSBrdgaS6ryyctBv+dam3NDBo9AizQ9JUR67cmco7
-   cDOMg4r3aqiKvDYR+PvxmjRLusSKLa9J8xxSgjbh6GEhyP5Iq/jkdSOwb
-   nMKvgI5A3oYd0jFDyopSIChTbxqHsRq1dSZPAnDtHbE2etoKWZdlXFo7Z
-   A==;
-X-CSE-ConnectionGUID: 6vfRm9XURNST3biiyWVuWg==
-X-CSE-MsgGUID: 6tDBcvzJQBec4V/DlxEFUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17577727"
-X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="17577727"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 02:20:37 -0700
-X-CSE-ConnectionGUID: 55muiDxcRyifFniJIJ/xIw==
-X-CSE-MsgGUID: 2ockUX/5THOYx3iIzwhPOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="51866645"
-Received: from unknown (HELO litbin-desktop.sh.intel.com) ([10.239.156.93])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 02:20:34 -0700
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: pbonzini@redhat.com,
-	seanjc@google.com,
-	isaku.yamahata@intel.com,
-	michael.roth@amd.com,
-	binbin.wu@linux.intel.com
-Subject: [PATCH 2/2] KVM: x86: Use is_kvm_hc_exit_enabled() instead of opencode
-Date: Mon,  8 Jul 2024 17:21:50 +0800
-Message-ID: <20240708092150.1799371-3-binbin.wu@linux.intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240708092150.1799371-1-binbin.wu@linux.intel.com>
-References: <20240708092150.1799371-1-binbin.wu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="d9LfoMKp"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-70b00f3216bso161947b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 02:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1720430467; x=1721035267; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yONsKyON4CTbcJqehjyTd+ofNBjy0v+0whVPKelNE4U=;
+        b=d9LfoMKpoXGLtT0YJGi+LSBbmJGjCx346TpOSjgZRPfBzLbIqPNk4ZUa2BH95ER6La
+         NmGt+OaBla/Pg2CxQxVf6JTUcRrugEgC1eyk7wEBE4fL6YrGF3heSTM3LErB6yvZZ4Qq
+         uepypOYmSexq3Qfvyemnh/9OLpbTOT2v49eFrpFTv3IIzMtK5ILj06RVdEHPfwbefpSN
+         lO10eSPbq8JjrizH5ROcSkUomvQ7zNzjXbvFCQVmDfg2ov3HoFzqAm7nz1T1G7zrj+pg
+         XulNGnsOS1y4mQt74UAkszEu9PfzHlRpq0TgZHs8Cy/JV8bl+OMcTjqm5zkHf/D4aMKK
+         ntJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720430467; x=1721035267;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yONsKyON4CTbcJqehjyTd+ofNBjy0v+0whVPKelNE4U=;
+        b=wDewJbRwCuIqlv3eocEsWoZuoZzh/4BVrI2p22WP+kjrdz/cgrQCc69K0NA4I2nfYx
+         6yIFfuEN4kWjf3nOJ/KWp0uPxeRkSpsF0KLKPbZMO2USQ2EgDped1GMsOu+XzHP166/l
+         vp5TkDpajVam40aIniseOtIxlJu1nrXLhHfjvFWJ01yCxNkEqLcsX+uLF6pEcMG9L1Sh
+         7dQ8/UUAVOXgXmiX4R08qkHiWMnJVgt3pb1Zn7ouvMNmLSWIpI9lqTGYweD8IdJOPNoX
+         O+B/t7CjpU33XDj4T41qo6MSlrKVZ1Kp9vHi181Cfc+toEUf687fEc+LK3uQSDCX3xV7
+         N9Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCV91n1xBKSvDlHkVDtxGf+uu8hJ6Df8J7tXGoiaFA2Csyr0/RlztLSSA28gAb1l57xpj0ZxGWb+bitKKPG1dEJN1i9ql0+FX/dHJQtM
+X-Gm-Message-State: AOJu0YxWUWMoCAX0XCh8nJETbfcw5624KcuJqD888cLIs8tLVOfD4XeG
+	07Km+9ktKbPOo7FTEtWwFlNglFVd+yZetlRPxXFYVjy6+RlDMSMne3Ba9/3MBs1PobVnp3vV/0a
+	5358=
+X-Google-Smtp-Source: AGHT+IE6l+fF5Oib8luYdfU/tlpPhpXd/IrKtwSiDAdNpn8c69VDxJXQmjGu+WqyNfzAosOJpvap2g==
+X-Received: by 2002:a62:e402:0:b0:706:aadc:b0a7 with SMTP id d2e1a72fcca58-70b00918545mr11587876b3a.1.1720430466875;
+        Mon, 08 Jul 2024 02:21:06 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b1086d32dsm5681597b3a.46.2024.07.08.02.21.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 02:21:06 -0700 (PDT)
+Message-ID: <beb8a766-8143-40ad-912b-b04f7937d4a4@rivosinc.com>
+Date: Mon, 8 Jul 2024 11:20:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: select ARCH_USE_SYM_ANNOTATIONS
+To: Jisheng Zhang <jszhang@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240705132308.1469-1-jszhang@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20240705132308.1469-1-jszhang@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use is_kvm_hc_exit_enabled() instead of opencode.
 
-No functional change intended.
 
-Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
----
- arch/x86/kvm/svm/sev.c | 4 ++--
- arch/x86/kvm/x86.c     | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+On 05/07/2024 15:23, Jisheng Zhang wrote:
+> After commit 76329c693924 ("riscv: Use SYM_*() assembly macros instead
+> of deprecated ones"), riscv has been to the new style SYM_ assembler
+> annotations. So select ARCH_USE_SYM_ANNOTATIONS to ensure the
+> deprecated macros such as ENTRY(), END(), WEAK() and so on are not
+> available and we don't regress.
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 43a450fb01fd..ed55ff5d1ed5 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3548,7 +3548,7 @@ static int snp_begin_psc_msr(struct vcpu_svm *svm, u64 ghcb_msr)
- 		return 1; /* resume guest */
- 	}
- 
--	if (!(vcpu->kvm->arch.hypercall_exit_enabled & (1 << KVM_HC_MAP_GPA_RANGE))) {
-+	if (!is_kvm_hc_exit_enabled(vcpu->kvm, KVM_HC_MAP_GPA_RANGE)) {
- 		set_ghcb_msr(svm, GHCB_MSR_PSC_RESP_ERROR);
- 		return 1; /* resume guest */
- 	}
-@@ -3631,7 +3631,7 @@ static int snp_begin_psc(struct vcpu_svm *svm, struct psc_buffer *psc)
- 	bool huge;
- 	u64 gfn;
- 
--	if (!(vcpu->kvm->arch.hypercall_exit_enabled & (1 << KVM_HC_MAP_GPA_RANGE))) {
-+	if (!is_kvm_hc_exit_enabled(vcpu->kvm, KVM_HC_MAP_GPA_RANGE)) {
- 		snp_complete_psc(svm, VMGEXIT_PSC_ERROR_GENERIC);
- 		return 1;
- 	}
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f84c1f263e9b..ec9ebc258bf3 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10168,7 +10168,7 @@ unsigned long __kvm_emulate_hypercall(struct kvm_vcpu *vcpu, unsigned long nr,
- 		u64 gpa = a0, npages = a1, attrs = a2;
- 
- 		ret = -KVM_ENOSYS;
--		if (!(vcpu->kvm->arch.hypercall_exit_enabled & (1 << KVM_HC_MAP_GPA_RANGE)))
-+		if (!is_kvm_hc_exit_enabled(vcpu->kvm, KVM_HC_MAP_GPA_RANGE))
- 			break;
- 
- 		if (!PAGE_ALIGNED(gpa) || !npages ||
--- 
-2.43.2
+Hi Jisheng,
 
+On which branch/series is it based ? I tried it and it fails on
+errata_cip-435.s which still contains some uses of ENTRY():
+
+ENTRY(sifive_cip_453_page_fault_trp)
+
+Thanks,
+
+Clément
+
+> 
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> ---
+>  arch/riscv/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 0525ee2d63c7..c51b32a8ddff 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -62,6 +62,7 @@ config RISCV
+>  	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
+>  	select ARCH_USE_MEMTEST
+>  	select ARCH_USE_QUEUED_RWLOCKS
+> +	select ARCH_USE_SYM_ANNOTATIONS
+>  	select ARCH_USES_CFI_TRAPS if CFI_CLANG
+>  	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if MMU
+>  	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
