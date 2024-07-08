@@ -1,178 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B426B1CAB1;
-	Mon,  8 Jul 2024 22:18:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3C53CF63;
+	Mon,  8 Jul 2024 22:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720477126; cv=none; b=J9sXpaMTsw1/NS9jCxGYQN5N9LXqKvIC5MD5+cSzBO/LQ2TpMifprH1VJvdXkWhdTk7sFLCzKDNACUq9c328UZl/R58DQ+4nb5QWRC128EtlXESyq6fcOSMJ3fK1oCEp8SIObWYrlqHB+KCDMwXPjNm2T8xUOUi4LMuEIB25Ig0=
+	t=1720477458; cv=none; b=KPeeQzdvMserxC+uIBCMN+xHpyB6YmovjbFQhJKJedG8S/4XnHbKD6N4RoMpzG7TvduL1ChgbWBKZsfsELrS96Cls8bOrgBynZ7xY7Nn9/CE4n3+3bCFXNcuiCaTntyOtx/H0qTh7dBIk06+X2lo8dl2sdgCTgPAPXrJe/V5CBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720477126; c=relaxed/simple;
-	bh=cU8H6Bif4LESAVrZggzoDOjewrXPpFQprPeYSGmE6rk=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=g8cp0qqyREDo6NdZuOtIim76Kb30WBlGrTwdlWjbBAaEOrHhxEe14UTy/gvyVAq4xMb21j300VMV4HsKO492kcmj6lnh+olX3+EuU7Xql9IutRuyGvVFJ4sCSszvj7QHqeOkIAHXg29HpZLRxGpW/HXJZ4tboOM/KGGxFouBJp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uehsCfh6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720477458; c=relaxed/simple;
+	bh=8XuionVt0DvPvOIWWAhGLBrijPvhU3Xsyq/SGIrQtXM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rfziz5DUcqmhZw8d8N1515ZB4FREy9LkTGoI7JpcAHBVKND+VS2LciYRzBaj3DZptY9DePEVYWDDfqKkFSSHW7PEKPzLioDzWHouF+QwfNLpSz5SHR2dSFkqY5pLtlli+9rXBmrfjeEVVpVvTt6JdZ4tfVKJ4Ety8wy4fHNWjOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5NqQoUY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uehsCfh6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0980BC116B1;
-	Mon,  8 Jul 2024 22:18:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5NqQoUY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA1B2C116B1;
+	Mon,  8 Jul 2024 22:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720477126;
-	bh=cU8H6Bif4LESAVrZggzoDOjewrXPpFQprPeYSGmE6rk=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=uehsCfh6UfBo77U0FtaULfdGBO4IIJUUsXQFPEiyns6oY7m67Jw4VijgoOlcCm2NU
-	 uKZStTPs2Rpq17fcaJnE0NaQoOFZY3zp9mlMzTywhJ8n/4JPzIeMRw0WMGPq2F+Pe1
-	 0XDU1S+FmVHtD9G4cK9UvGtA6CJPfFnTtaizpdiNX5TqXiyGpjpD/JzW3ho7TQLZj0
-	 mN0TxDFox76mxB9+DKDGluegcS9awx5G0nThr50Il21PXGH0uDQ3HvjLTVdKXg8evA
-	 zvI0CGrGs2NSMMlnLJjXRWGsv2lc9wvQ4I1iC4iDv3D/12NT4pjsV+arZz9ZhYkWPl
-	 Q3ZRhvlYPQ6mw==
-Message-ID: <6c5d6c0730698969ef613ec9ec4aa14a.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1720477457;
+	bh=8XuionVt0DvPvOIWWAhGLBrijPvhU3Xsyq/SGIrQtXM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=O5NqQoUY3m7btM3+K+Pcf1lnOHHTDZ38SUH5wlVrCpc3JRx25wRH2gg3dMUfV6ckv
+	 TsU6b3cbRPQ7H1XQFwIESlqFdiUVeq737yr57OplRs4Odo66DuN3oayogrp08vym26
+	 3tuxOnvwruJxfhaqvpvrgB9Xr1a3/peSs8M4W3JvA4GudHxVBYAQ2Jc1qUtLjO03qM
+	 0Dn9yr2Itu9d+BwwXjy8R/vn8ZR63paayVnE/I2dQp7VzkbXe3tuE32lL+DhgY7GZ9
+	 fXHgsd7NaM8bgOzurYmWxk23IcAeMbQtCSqL4qWarKVjiVWt/dNmxogioY+qeeiOau
+	 QA0StGSL0FH4w==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52e99060b0dso4899473e87.1;
+        Mon, 08 Jul 2024 15:24:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWqvPd0AjFHhRvvivgEEcW3xJynV/KxkBCFvfNaaFlRBvSS6bIfLD4f3FITfk8PtT+4aS2C/MgEtx4+GxlkMnZjhUT0+11XnOcwVkKt7xIhNsrUlYzBpAADqoCj2EhLD+uvIMybj1gtzA==
+X-Gm-Message-State: AOJu0Yy3qELPJ9AAM2h5AA1DoGQyZFdF9wY8Gx9bmE8bKfU+IXttTUcm
+	ai68tcNGX/NHOlVuYqMjx7YngCBNc9WPWeGcLfcxrEMre+b4Tu0QbGcr/8VwtaJhKVcCWVznu/r
+	pWwjPG32lioRyeUmZPYPXH50Iig==
+X-Google-Smtp-Source: AGHT+IGA+gx1CJRO7PuMBtYHXR9AAopPxjZSU2r+9k2ZKjbtcBW2HNrWoESjU/w2884KLIByMyMmowg0ZLjwDFCyv4E=
+X-Received: by 2002:a05:6512:15a4:b0:52e:9fda:f18a with SMTP id
+ 2adb3069b0e04-52eb99d4bf0mr357761e87.44.1720477456167; Mon, 08 Jul 2024
+ 15:24:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240708-of-match-node-v1-1-90aaa7c2d21d@bootlin.com>
+In-Reply-To: <20240708-of-match-node-v1-1-90aaa7c2d21d@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 8 Jul 2024 16:24:03 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLBmpEQVgZ1UciAdxdiSj6Ly4bpYtYPvazr9m=vRj7qEQ@mail.gmail.com>
+Message-ID: <CAL_JsqLBmpEQVgZ1UciAdxdiSj6Ly4bpYtYPvazr9m=vRj7qEQ@mail.gmail.com>
+Subject: Re: [PATCH] of: replace of_match_node() macro by a function when !CONFIG_OF
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	=?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240617-ep93xx-v10-3-662e640ed811@maquefel.me>
-References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me> <20240617-ep93xx-v10-3-662e640ed811@maquefel.me>
-Subject: Re: [PATCH v10 03/38] clk: ep93xx: add DT support for Cirrus EP93xx
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-To: Michael Turquette <mturquette@baylibre.com>, Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>, nikita.shubin@maquefel.me
-Date: Mon, 08 Jul 2024 15:18:43 -0700
-User-Agent: alot/0.10
 
-Quoting Nikita Shubin via B4 Relay (2024-06-17 02:36:37)
-> diff --git a/drivers/clk/clk-ep93xx.c b/drivers/clk/clk-ep93xx.c
-> new file mode 100644
-> index 000000000000..a0430a5ae4da
-> --- /dev/null
-> +++ b/drivers/clk/clk-ep93xx.c
-> @@ -0,0 +1,834 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-[...]
-> +
-> +static int ep93xx_clk_enable(struct clk_hw *hw)
-> +{
-> +       struct ep93xx_clk *clk =3D ep93xx_clk_from(hw);
-> +       struct ep93xx_clk_priv *priv =3D ep93xx_priv_from(clk);
-> +       u32 val;
-> +
-> +       guard(spinlock_irqsave)(&priv->lock);
+On Mon, Jul 8, 2024 at 2:55=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@bootli=
+n.com> wrote:
+>
+> In the !CONFIG_OF case, replace the of_match_node() macro implementation
+> by a static function. This ensures drivers calling of_match_node() can
+> be COMPILE_TESTed.
+>
+> include/linux/of.h declares of_match_node() like this:
+>
+>         #ifdef CONFIG_OF
+>         extern const struct of_device_id *of_match_node(
+>                 const struct of_device_id *matches, const struct device_n=
+ode *node);
+>         #else
+>         #define of_match_node(_matches, _node)  NULL
+>         #endif
+>
+> When used inside an expression, those two implementations behave truly
+> differently. The macro implementation has (at least) two pitfalls:
+>
+>  - Arguments are removed by the preprocessor meaning they do not appear
+>    to the compiler. This can give "defined but not used" warnings.
 
-I thought guard() was most important when there were multiple exit paths
-from a function, but OK.
+It also means the arguments don't have to be defined at all which is
+the reasoning the commit adding the macro gave:
 
-> +
-[...]
-> +
-> +static int ep93xx_plls_init(struct ep93xx_clk_priv *priv)
-> +{
-> +       const char fclk_divisors[] =3D { 1, 2, 4, 8, 16, 1, 1, 1 };
-> +       const char hclk_divisors[] =3D { 1, 2, 4, 5, 6, 8, 16, 32 };
-[...]
-> +       if (!(value & EP93XX_SYSCON_CLKSET2_NBYP2))
-> +               clk_pll2_rate =3D EP93XX_EXT_CLK_RATE;
-> +       else if (value & EP93XX_SYSCON_CLKSET2_PLL2_EN)
-> +               clk_pll2_rate =3D calc_pll_rate(EP93XX_EXT_CLK_RATE, valu=
-e);
-> +       else
-> +               clk_pll2_rate =3D 0;
-> +
-> +       hw =3D devm_clk_hw_register_fixed_rate(dev, "pll2", "xtali", 0, c=
-lk_pll2_rate);
+    I have chosen to use a macro instead of a function to
+    be able to avoid defining the first parameter.
+    In fact, this "struct of_device_id *" first parameter
+    is usualy not defined as well on non-dt builds.
 
-Please use clk_parent_data for topology descriptions.
+We could change our mind here, but I suspect applying this would
+result in some build failures.
 
-> +       if (IS_ERR(hw))
-> +               return PTR_ERR(hw);
-> +
-> +       priv->fixed[EP93XX_CLK_PLL2] =3D hw;
-> +
-> +       return 0;
-> +}
-> +
-> +static int ep93xx_clk_probe(struct auxiliary_device *adev,
-> +                              const struct auxiliary_device_id *id)
-> +{
-> +       struct ep93xx_regmap_adev *rdev =3D to_ep93xx_regmap_adev(adev);
-> +       struct clk_parent_data xtali =3D { .index =3D 0 };
-> +       struct clk_parent_data ddiv_pdata[3] =3D { };
-> +       unsigned int clk_spi_div, clk_usb_div;
-> +       struct clk_parent_data pdata =3D {};
-> +       struct device *dev =3D &adev->dev;
-> +       struct ep93xx_clk_priv *priv;
-> +       struct ep93xx_clk *clk;
-> +       struct clk_hw *hw;
-> +       unsigned int idx;
-> +       int ret;
-> +       u32 value;
-> +
-> +       priv =3D devm_kzalloc(dev, struct_size(priv, reg, 10), GFP_KERNEL=
-);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       spin_lock_init(&priv->lock);
-> +       priv->dev =3D dev;
-> +       priv->aux_dev =3D rdev;
-> +       priv->map =3D rdev->map;
-> +       priv->base =3D rdev->base;
-> +
-> +       ret =3D ep93xx_plls_init(priv);
-> +       if (ret)
-> +               return ret;
-> +
-> +       regmap_read(priv->map, EP93XX_SYSCON_CLKSET2, &value);
-> +       clk_usb_div =3D (value >> 28 & GENMASK(3, 0)) + 1;
-> +       hw =3D devm_clk_hw_register_fixed_factor(dev, "usb_clk", "pll2", =
-0, 1, clk_usb_div);
+>  - The returned value type is (void *)
+>    versus (const struct of_device_id *).
+>    It works okay if the value is stored in a variable, thanks to C's
+>    implicit void pointer casting rules. It causes build errors if used
+>    like `of_match_data(...)->data`.
 
-This one can use clk_hw to reference pll2.
+Really, the only places of_match_node() should be used are ones
+without a struct device. Otherwise, of_device_get_match_data() or
+device_get_match_data() should be used instead.
 
-> +       if (IS_ERR(hw))
-> +               return PTR_ERR(hw);
-> +
-> +       priv->fixed[EP93XX_CLK_USB] =3D hw;
-> +
-> +       ret =3D ep93xx_uart_clock_init(priv);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D ep93xx_dma_clock_init(priv);
-> +       if (ret)
-> +               return ret;
-> +
-> +       clk_spi_div =3D id->driver_data;
-> +       hw =3D devm_clk_hw_register_fixed_factor(dev, "ep93xx-spi.0", "xt=
-ali",
-
-Are these clk names trying to match device names?
-
-> +                                              0, 1, clk_spi_div);
-> +       if (IS_ERR(hw))
-> +               return PTR_ERR(hw);
-> +
-> +       priv->fixed[EP93XX_CLK_SPI] =3D hw;
-> +
-> +       /* PWM clock */
-> +       hw =3D devm_clk_hw_register_fixed_factor(dev, "pwm_clk", "xtali",=
- 0, 1, 1);
-> +       if (IS_ERR(hw))
-> +               return PTR_ERR(hw);
-> +
-> +       priv->fixed[EP93XX_CLK_PWM] =3D hw;
-> +
-> +       /* USB clock */
-> +       hw =3D devm_clk_hw_register_gate(priv->dev, "ohci-platform", "usb=
-_clk",
-> +                                      0, priv->base + EP93XX_SYSCON_PWRC=
-NT,
-> +                                      EP93XX_SYSCON_PWRCNT_USH_EN, 0,
-> +                                      &priv->lock);
-> +       if (IS_ERR(hw))
-> +               return PTR_ERR(hw);
-> +
+Rob
