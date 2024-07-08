@@ -1,57 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A20B7E57F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAD07E782;
 	Mon,  8 Jul 2024 11:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720439369; cv=none; b=hdqU57YdwOvfqn/jqGI8XjwN0OP+2oydxoo8beRrVRq3dp9cYICgDCxZYfo7ZWyNpkagd152KIQoIqdcDF5Sy0oWNYMSUmGSlqY12s/opDFa8Vw5zXXCFICS5YhoMWu7SMuMMz+3AzYNfu+ImSPGQX2VFRp1IQuLcIIeO4tGaaM=
+	t=1720439369; cv=none; b=utWgaZs81qY3/ftBbESo8fbvLSMN3MUsUmKxGvkt2sp5TPMSbray4LenAqsac+6HcxVsDBk4n1vHq+pkRQ2GYncYaAmTfG8CFHE6xlM0Wqo7NYv3xJMBs4WdbmjCfsdS02yWUod+X9qHbv5DNXaBiWub+054YTDLZ/OVkwr7+5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720439369; c=relaxed/simple;
-	bh=yxYuWUOiEzMPIr9eIOnEB2yA+hic/+m5MEj2MEoVLV8=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=mF9cX8Kzqn7aQqq7PXBOFpxRR7hwc9PQoCscWuWtlBJQqjulwhRFA4mHJay60LVJIsR3GnmdffI9pYKvV3Tf92+NyaqAc+1U0ZqGt6t2lmqXcwQTNlZ6+KOgZ72hXhhKoGrNgkU7xZ8XPd1pBUeD6RlMiCw3D0J6HNX+jpdKlrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xpfouwIG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MXI7X8dU; arc=none smtp.client-ip=193.142.43.55
+	bh=JMvOIIIwUdwSATWtfKd0c3sMLRV5aQc0P8CA+pcbykU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=kD9Q1HtM15q5O/ikQfVASXu2up+3q27QsvkCGpt9Y/zPCnRL328R6UU/ui0YNqRjP+8kRixuDE8Trzq1W4qq7if/ZDp6e13Fj54n7fgZlcOvHM6Tift+iSwTdRRFxdMQyLcBb3jNfCyIGJ0TdVI6sCfxfADROr5SD6heL0VqU9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qrsgz0Co; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Do8IP27p; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xpfouwIG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MXI7X8dU"
-Date: Mon, 08 Jul 2024 11:49:24 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qrsgz0Co";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Do8IP27p"
+Date: Mon, 08 Jul 2024 11:49:25 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1720439365;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=BbwMPylEy43ltkm0sAu8CCcR6tMz1LHrMTFmPccd4QQ=;
-	b=xpfouwIG4+ng1/ewzPRVi3CPMmhyjqCHx7BoLboUtSe9N+QTE92REgbNkOHdV2rIdKSYWs
-	kEvvVnW1EziFmFZ8s8Uil0RSGW7nRP9VTfP2tRFqGyUqdJ3kEs6dUIVdRIrwh9uSWO4hbZ
-	6bpixROJ5QkWDOY5Sgvi79Z4XT3pByAjoGwD45rGcDfSIC1S3/hzcwEt5GtQmoqn1Eh9sI
-	S/CXR3lrGR2mrbLyK/T1eMLZJQXBt53f++JohtBO3EkwDyNWd4RkLaeAxIUllH7dzr56uX
-	oKmX4EXsa7x+P5nThzqbloyelwCI1y5e/yPsVUrfBwY+lXn/cVaPyOUA4uLaCw==
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lXJqXBWEiKwrervet3ens56ojcvaQ3s6gGE6YSi4TJQ=;
+	b=qrsgz0CoDBWxiJNbPQMfQuAtBz3dsPRWNG96DBGDEHfrB/USoGOrcQtPEltsPcKDkcMu2/
+	Dd4/3l7spWYZC6BHPfkbQtv7LTwu4xygHkUUfzy8ePAM0ArmbYPgBbRRMweaTDqCLK0Ep2
+	PmAezkxdB+ekGufA/XSNKKctNuqfP6x4zpGKfgxVS+dsw+sPc/AFeU3h03aloIsRR8Pe6d
+	ri9F0Ln1hmbF5nrf6FjYSAGW8v13pgdMcUvCeZHjkiSfeZ8ONPl/r3ACFqhJ5CRQduCq6A
+	/2eGoA2AFdMKTXjswB4v7jDphBAyBoMm6xRu6wDIc/n/lY6nXIycp2ujxzxcQg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1720439365;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=BbwMPylEy43ltkm0sAu8CCcR6tMz1LHrMTFmPccd4QQ=;
-	b=MXI7X8dU3qVdf2O+tk5ksSuFigntHWnmuPWRoTkOB0pFt7ikoYA79tfKyquf/6Dj5ZXbs5
-	e1g6OjUDmup4eRBQ==
-From: "tip-bot2 for Siddh Raman Pant" <tip-bot2@linutronix.de>
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lXJqXBWEiKwrervet3ens56ojcvaQ3s6gGE6YSi4TJQ=;
+	b=Do8IP27p1iNNsdmFdfDo+0mKBwV8PNPZA+vjtRSsOH5ggRXALc6YG/DZ2r47SDxH2edTXP
+	85CC9Hw/ikU5nYAg==
+From: "tip-bot2 for Brian Johannesmeyer" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Use "action" in error message to be
- consistent with help
-Cc: Siddh Raman Pant <siddh.raman.pant@oracle.com>,
+Subject: [tip: objtool/core] scripts/faddr2line: Remove call to addr2line from
+ find_dir_prefix()
+Cc: Brian Johannesmeyer <bjohannesmeyer@gmail.com>,
  Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
+In-Reply-To: <20240415145538.1938745-7-bjohannesmeyer@gmail.com>
+References: <20240415145538.1938745-7-bjohannesmeyer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172043936486.2215.15811418345178205978.tip-bot2@tip-bot2>
+Message-ID: <172043936523.2215.14997470133117283568.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,46 +68,56 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     b13e9f6da4cc34240dae05418b9876b2758ebe35
-Gitweb:        https://git.kernel.org/tip/b13e9f6da4cc34240dae05418b9876b2758ebe35
-Author:        Siddh Raman Pant <siddh.raman.pant@oracle.com>
-AuthorDate:    Fri, 10 May 2024 15:02:57 +05:30
+Commit-ID:     406b5c12aad8110e1b1f9355f176cac43cd1fecb
+Gitweb:        https://git.kernel.org/tip/406b5c12aad8110e1b1f9355f176cac43cd1fecb
+Author:        Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+AuthorDate:    Mon, 15 Apr 2024 16:55:37 +02:00
 Committer:     Josh Poimboeuf <jpoimboe@kernel.org>
-CommitterDate: Tue, 02 Jul 2024 23:40:24 -07:00
+CommitterDate: Tue, 02 Jul 2024 23:38:37 -07:00
 
-objtool: Use "action" in error message to be consistent with help
+scripts/faddr2line: Remove call to addr2line from find_dir_prefix()
 
-The help message mentions the main options as "actions", which is
-different from the optional "options". But the check error messages
-outputs "option" or "command" for referring to actions.
+Use the single long-running faddr2line process from find_dir_prefix().
 
-Make the error messages consistent with help.
-
-Signed-off-by: Siddh Raman Pant <siddh.raman.pant@oracle.com>
+Signed-off-by: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+Link: https://lore.kernel.org/r/20240415145538.1938745-7-bjohannesmeyer@gmail.com
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/builtin-check.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/faddr2line | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index 5e21cfb..387d56a 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -144,7 +144,7 @@ static bool opts_valid(void)
- 	    opts.static_call		||
- 	    opts.uaccess) {
- 		if (opts.dump_orc) {
--			ERROR("--dump can't be combined with other options");
-+			ERROR("--dump can't be combined with other actions");
- 			return false;
- 		}
+diff --git a/scripts/faddr2line b/scripts/faddr2line
+index 48fc8cf..1fa6bee 100755
+--- a/scripts/faddr2line
++++ b/scripts/faddr2line
+@@ -85,15 +85,17 @@ command -v ${ADDR2LINE} >/dev/null 2>&1 || die "${ADDR2LINE} isn't installed"
+ # init/main.c!  This only works for vmlinux.  Otherwise it falls back to
+ # printing the absolute path.
+ find_dir_prefix() {
+-	local objfile=$1
+-
+ 	local start_kernel_addr=$(echo "${ELF_SYMS}" | sed 's/\[.*\]//' |
+ 		${AWK} '$8 == "start_kernel" {printf "0x%s", $2}')
+ 	[[ -z $start_kernel_addr ]] && return
  
-@@ -159,7 +159,7 @@ static bool opts_valid(void)
- 	if (opts.dump_orc)
- 		return true;
+-	local file_line=$(${ADDR2LINE} -e $objfile $start_kernel_addr)
+-	[[ -z $file_line ]] && return
++	run_addr2line ${start_kernel_addr} ""
++	[[ -z $ADDR2LINE_OUT ]] && return
  
--	ERROR("At least one command required");
-+	ERROR("At least one action required");
- 	return false;
- }
++	local file_line=${ADDR2LINE_OUT#* at }
++	if [[ -z $file_line ]] || [[ $file_line = $ADDR2LINE_OUT ]]; then
++		return
++	fi
+ 	local prefix=${file_line%init/main.c:*}
+ 	if [[ -z $prefix ]] || [[ $prefix = $file_line ]]; then
+ 		return
+@@ -350,7 +352,7 @@ echo "${ELF_SECHEADERS}" | ${GREP} -q '\.debug_info' || die "CONFIG_DEBUG_INFO n
+ init_addr2line $objfile
  
+ DIR_PREFIX=supercalifragilisticexpialidocious
+-find_dir_prefix $objfile
++find_dir_prefix
+ 
+ FIRST=1
+ while [[ $# -gt 0 ]]; do
