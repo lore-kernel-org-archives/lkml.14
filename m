@@ -1,34 +1,50 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77D97E782;
-	Mon,  8 Jul 2024 11:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47DD13ACC;
+	Mon,  8 Jul 2024 12:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720439929; cv=none; b=iYzzaRtap4igvfGWau2lwbWSYh3ykSPkFR9O4YzS9ujbaeGuD53zF9Rk9YzSd0gVmBOxuQlHlxS3jJ6Xa2bdkc7lKDH0fxAQOYUqJuaHCALQ48A4Q4r6+adtZ+TvjYhFUmimLy73oteabY+omuy4JkWHd1tMMREPkJOJuhmiufo=
+	t=1720440031; cv=none; b=jR3iVQtueNqsqbaTqcthXBIFxbFXG+Aj5G9h5TvRjDJTxHwChe/se3MwS/gN6XPcG6hlrqMPZdwKZKZbA5utgA3ysl4Z4iBvOukLxreCCDJKMWRYatzCdDX3UXwKyqvrEraNOrTVKLzIgaD2fAdfIOPnP6BhZ0ur9lIXeZ27l+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720439929; c=relaxed/simple;
-	bh=1E3I1ZiHzIVudZmbIetq96mRUH/6Y96+47Ui1GlIlUM=;
+	s=arc-20240116; t=1720440031; c=relaxed/simple;
+	bh=UHaB+noDuK6djyp9soKq/KV4rz/uj79BNWXm0lcZWa8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=elKiuv3WQpmkVyqll3GVlULP0bTNi+EkJTw8nv2U7hf4IihbKJygfG6Wt7WqM2aWnlmxwdAP+2VynozjKSlBdyTsj348/SxydwK7FBTlUEuR02AQbYejGncKUt//k3ncBWVcTT1iYVd2XddUEMIoanLZMBTY7Jq6sxboo/nYjxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1sQn0p-0000Q8-6r; Mon, 08 Jul 2024 13:58:31 +0200
-Date: Mon, 8 Jul 2024 13:58:31 +0200
-From: Florian Westphal <fw@strlen.de>
-To: Hillf Danton <hdanton@sina.com>
-Cc: Florian Westphal <fw@strlen.de>, Tejun Heo <tj@kernel.org>,
-	netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com
-Subject: Re: [PATCH nf] netfilter: nf_tables: unconditionally flush pending
- work before notifier
-Message-ID: <20240708115831.GA1289@breakpoint.cc>
-References: <20240707080824.GA29318@breakpoint.cc>
- <20240708105631.841-1-hdanton@sina.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aEwpoog+UA/kcprBqnJMouB6ZPs/BGZGlfQEAYkhGVpvTLCdP2yMcgvcpMt89SEJdWaNLcKKiuQCgfmxAjJpXvCtz9nvRuv7vd86AeuDUr/rFztZ8TQza63bgWRdBYz3Zrs6yRkNJalChLu23l8nGTHes1L8QYSF1K6bpRR8eYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1lH0qAq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1lH0qAq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6AECC116B1;
+	Mon,  8 Jul 2024 12:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720440031;
+	bh=UHaB+noDuK6djyp9soKq/KV4rz/uj79BNWXm0lcZWa8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f1lH0qAq6UGJmgMO1TstfsAY0es5762ajHpP4gGsc2dSNlg0kOLgVjiZcvouLkkdt
+	 +IVz4cmw+kTTL8x8YtmXF428KfUgfwXgWimQU39vL5Vt3gwC6AVRkK5D5cjw6Rqb12
+	 /zsetAeUp6lq8TbLS87RcSnvlmrLc/zxiiOdppKX4joQAtQbYyQ1ayINj/S9o4NSDe
+	 5kSb3R7Zk1lcIyER3VYUc2sjW9SEVF7hMnJctvmraL5QjYvic/wqQFDKdRLb37zUoP
+	 Npgw2lgiv2peA4WxqAkrOisXsZtsaD9gHwaRJr6Tip8U0XPvtnyNYpEjU9JLuckQMV
+	 sFW0pUKLwPofg==
+Date: Mon, 8 Jul 2024 13:00:26 +0100
+From: Will Deacon <will@kernel.org>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Mark Rutland <mark.rutland@arm.com>, Janne Grunau <j@jannau.net>,
+	Hector Martin <marcan@marcan.st>, Asahi Lina <lina@asahilina.net>,
+	asahi@lists.linux.dev,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] drivers/perf: apple_m1: fix affinity table for event
+ 0x96 and 0x9b
+Message-ID: <20240708120026.GC11771@willie-the-truck>
+References: <tencent_7B71486CE305DF8AE084B6BB6313EE550C06@qq.com>
+ <20240701140148.GE2250@willie-the-truck>
+ <87cynxp52o.wl-maz@kernel.org>
+ <87bk3hp3z7.wl-maz@kernel.org>
+ <tencent_371517268623E4A61194EF4C70497BDC5105@qq.com>
+ <8634oshxhj.wl-maz@kernel.org>
+ <20240702121340.GB3542@willie-the-truck>
+ <tencent_A6F18ECEB80131BA21638D187C6782F6DA08@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,45 +53,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240708105631.841-1-hdanton@sina.com>
+In-Reply-To: <tencent_A6F18ECEB80131BA21638D187C6782F6DA08@qq.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hillf Danton <hdanton@sina.com> wrote:
-> On Sun, 7 Jul 2024 10:08:24 +0200 Florian Westphal <fw@strlen.de>
-> > Hillf Danton <hdanton@sina.com> wrote:
-> > > > I think this change might be useful as it also documents
-> > > > this requirement.
-> > > 
-> > > Yes it is boy and the current reproducer triggered another warning [1,2].
-> > > 
-> > > [1] https://lore.kernel.org/lkml/20240706231332.3261-1-hdanton@sina.com/
+On Tue, Jul 02, 2024 at 08:43:16PM +0800, Yangyu Chen wrote:
+> 
+> 
+> > On Jul 2, 2024, at 20:13, Will Deacon <will@kernel.org> wrote:
 > > 
-> > The WARN is incorrect.  The destroy list can be non-empty; i already
-> > tried to explain why.
-> >
-> That warning as-is could be false positive but it could be triggered with a
-> single netns.
-
-How?
-
-> 	cpu1		cpu2		cpu3
-> 	---		---		---
-> 					nf_tables_trans_destroy_work()
-> 					spin_lock(&nf_tables_destroy_list_lock);
+> > On Tue, Jul 02, 2024 at 11:58:00AM +0100, Marc Zyngier wrote:
+> >> On Tue, 02 Jul 2024 11:22:21 +0100,
+> >> Yangyu Chen <cyy@cyyself.name> wrote:
+> >>> 
+> >>>> Yangyu, can you please clarify how you came to the conclusion that
+> >>>> these events didn't count anywhere other than counter 7?
+> >>>> 
+> >>> 
+> >>> IIRC, I came across some web page that says events 0x96 and 0x9b
+> >>> can only be installed on counter 7 to count Apple AMX, but I can't
+> >>> find the page now. Since AMX is not usable in Linux, I don't know
+> >>> if this will affect some other instructions that are usable in
+> >>> Linux.
+> >> 
+> >> As you said, AMX cannot be used with Linux, and that's unlikely to
+> >> ever change. But when it comes to the standard ARM ISA, we can only
+> >> witness counters 5,6 and 7 being incremented with at the exact same
+> >> rate.
+> >> 
+> >> So reading between the lines, what I understand is that AMX
+> >> instructions would only have their effects counted in counter 7 for
+> >> these events, while other instructions would be counted in all 3
+> >> counters.
+> >> 
+> >> By extension, such behaviour could be applied to SME on HW that
+> >> supports it (wild guess).
+> >> 
+> >>> There are some other reasons, but I can't say in public.
+> >> 
+> >> Fair enough, I'm not asking for the disclosure of anything that isn't
+> >> public (the least I know, the better).
+> >> 
+> >>> Even though I can't find the actual usage, I think using count 7
+> >>> only for these 2 events is safer. If this reason is insufficient,
+> >>> we can ignore this patch until we find other evidence that this
+> >>> affinity affects some instructions usable in Linux.
+> >> 
+> >> I honestly don't mind.
+> >> 
+> >> The whole thing is a black box, and is more useful as an interrupt
+> >> generator than an actual PMU, due to the lack of freely available
+> >> documentation. If the PMU maintainers want to merge this, I won't
+> >> oppose it.
+> > 
+> > I'd rather leave the code as-is than tweak specific counters based on
+> > a combination of guesswork and partial information.
+> > 
+> > Of course, if somebody who knows better wants to fix up all of the
+> > mappings (because this surely isn't the only corner-case), then we can
+> > take that. But at least what we have today has _some_ sort of consistent
+> > rationale behind it.
 > 
-> 					// 1) clear the destroy list
-> 					list_splice_init(&nf_tables_destroy_list, &head);
-> 					spin_unlock(&nf_tables_destroy_list_lock);
+> Actually, anyone who has macOS software can learn the whole affinity
+> table of PMU. The detailed information can be extracted from a plist
+> file stored in the macOS root filesystem. I also provide that script
+> [1] to extract this information.
 > 
-> 			nf_tables_commit_release()
-> 			spin_lock(&nf_tables_destroy_list_lock);
+> However, I can't directly use this information for legal concerns.
+> Would this be acceptable if the information I provide matches Apple's
+> information? I can't say whether it matches or not in public. I can
+> only say we can easily find someone who uploaded this file to the
+> internet.
 > 
-> 			// 2) refill the destroy list
-> 			list_splice_tail_init(&nft_net->commit_list, &nf_tables_destroy_list);
-> 			spin_unlock(&nf_tables_destroy_list_lock);
-> 			schedule_work(&trans_destroy_work);
-> 			mutex_unlock(&nft_net->commit_mutex);
+> [1] https://github.com/cyyself/m1-pmu-gen
 
-So you're saying work can be IDLE after schedule_work()?
+I can't say I feel hugely comfortable with this, so I'll leave the code
+as-is unless a patch shows up fixing all the events.
 
-I'm not following at all.
+Thanks for the reply, though. You've clearly spent a bunch of effort on
+this and it's a pity we can't easily apply your results to the driver :/
+
+Will
