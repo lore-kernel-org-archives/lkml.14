@@ -1,116 +1,75 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from resqmta-a2p-640029.sys.comcast.net (resqmta-a2p-640029.sys.comcast.net [96.103.146.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C58487A5;
-	Tue,  9 Jul 2024 03:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028F33214
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 03:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.103.146.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720494903; cv=none; b=fFKtGTObdibf7LYZKJcwbMCNyQN7Hz6xoCK5wsSt+JC3u3ygzznpvxWuAXTfq4/Gs8CFMh0b3SuJ4iPdAPk/REP23L3qbWn1Ezj+hj/JFjPjw5lCYTvpemsbRKRjveFJDHh+1bLOlInB7B80lsOWhp2+id8eCa38lq4QRGiZBvE=
+	t=1720495045; cv=none; b=VNbEJs+aNmzj302pnJYi8pDVoY4wnuxZPuTGZh5fnBQ7JaQHugb+tCFP4FlrmpSTtOE+S2l3XLZC9JJZSRh+9xJYp4/SBAGD2Yxn9j3U3kGXgHahXPB8EpCAaQpJH16oJ/pgpH28vrOuoTjlqTIUoKweu/l2GY2rDK09JUTxOq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720494903; c=relaxed/simple;
-	bh=4ZZio3Wb7LL1vgb5mt6lXU9W0NhwIVtcCUDpe3CmPn8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kYC7eT/GIVlUky7oiqYMFsaoWc8t4ee39TEeuZDCavUFhLOlQ01J58zyp5ePKTxBSUOLl88FP7a8KoPzlnsdNXIysQ+JNo8hWHU4n/1uBbosKmK7tKVXIDLqKkKrnhHDdbN7eRIRWH0h680KhMRz9IGBfXB8xmZA9BIHr7SUfGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JxT5OWKg; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720495045; c=relaxed/simple;
+	bh=WulyWmygwaQ0MdedkwbBjIGjXow7f8tKSi7X/DfCvG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=u3/0trT75tOUgmK14Tx6D4nfv7ZzNZ5U4Cc1fNcrp5VW6pHMAg0iIJ3sDy1qFBgl9kGF4hdxnMMW7LJsT0uDtIG6D73g/0yUf9spsxFN7UUXFZjf2MC1qpagxExYRYNRtGddmWLB9PNxdTLgkMXxjqjGSefSFUNZNFVpuA/jU1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=spacefreak18.xyz; spf=fail smtp.mailfrom=spacefreak18.xyz; dkim=pass (2048-bit key) header.d=comcastmailservice.net header.i=@comcastmailservice.net header.b=CKK9eBNg; arc=none smtp.client-ip=96.103.146.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=spacefreak18.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=spacefreak18.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxT5OWKg"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-38abd30a1c9so663555ab.3;
-        Mon, 08 Jul 2024 20:15:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=comcastmailservice.net header.i=@comcastmailservice.net header.b="CKK9eBNg"
+Received: from resomta-a2p-647974.sys.comcast.net ([96.103.145.228])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 256/256 bits)
+	(Client did not present a certificate)
+	by resqmta-a2p-640029.sys.comcast.net with ESMTPS
+	id R0bSsDMtLMEFPR1JWskLk6; Tue, 09 Jul 2024 03:14:46 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720494901; x=1721099701; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4ZZio3Wb7LL1vgb5mt6lXU9W0NhwIVtcCUDpe3CmPn8=;
-        b=JxT5OWKg9J3guX3BHjsZ3CBCNvoU0lnoTQuF/Cw6wEsPczpfWDwI0cHheNHSNg7Rw7
-         lPb2gphvIUBs/lPcg1kNjDjRnsvc7+8lxtE05sLxNaTazU0U297v8Y9Qsi/4GFRktGEp
-         I/nAj312sez3jmR6x79D+2BnvSbRaNNW7WuhJcHl5AKxpvJYWCrYmuxipzNWV6UNWySy
-         aFMzJqYtlBbBJOw1MjXDUw1000WPP6uO5E8oMCwHJGzXui+Lk+g9tvavw3Ui3hkkiKlt
-         90PHczZdUtvw1HU2eAvs+UtoLKX8bpdkyB9T1K3GffroCbCaCtMO4AYgGiV9/TO0/nIh
-         apYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720494901; x=1721099701;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4ZZio3Wb7LL1vgb5mt6lXU9W0NhwIVtcCUDpe3CmPn8=;
-        b=lnNNry/ZLggmtQoQNUMvHHIfC8xdBj+wQ5O3rGYIppcg122Dx3aEcWw9KjTt++SfLO
-         7B4xDfApcMB9ULx91oqXE3AJHOBNEgJyOG8pOz6sNSpSoSb8U52E8YEO6lhE5VnDbyQ6
-         kz8JieLXDQxo+BWZo4CXbSvJSI5fHOz5JpE06JORggfHlwBjT9seexQuhNQL8OIl4+a1
-         XUf1CxJOpBlPPo4dpxbsfmAhgxvqkm6dCFIQV7NDbj7s6lG0wnz/mqsz8wRvQYdCKkUh
-         I58WBh9f98q6LtKlJkb5Zu+55HIfE2ypfouvUAFVvMiZ5DFjFBW3OVnk5Pzg+j8ZabOh
-         6dgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDzUxDxSu0Pgti2cZ+A/F48ts8cZIFyCDwojRm/SPoE71LEZLeNsj2fztGFQ1RhM/15uK8JUfjCkUohw6LGhNPEd4t2GGy3w5faZ8f/8Szl73/ZOe2SS5XEgwb5iRmztA3fNXGn83fTwIn0eltUXNJ83Wxn+19iozfZCPpKetsQA==
-X-Gm-Message-State: AOJu0YwetvddmtMYZbivB0+xx+wiHCaMD16r9F2DQAA3BvbRFf10iqtx
-	UaLDzTSSlOdZRR2neB+FSgQv6qu0eRqZHVu/vHM+wMeFFYjyT1/biQ31AQF5p7Zpj8J4iNzKVui
-	Y0/FekvPd0j+C+V9uZLXmJHK0YUg=
-X-Google-Smtp-Source: AGHT+IHHmXTRDZjaslqjVeI4snU9357L42htoF1UJL+C84StlG4Jwrg6KF8y1KxRD7RthYqkPyl9yDBwl8IWF0Yrv2c=
-X-Received: by 2002:a05:6e02:1847:b0:374:ada1:295a with SMTP id
- e9e14a558f8ab-38a5848daeamr16806195ab.16.1720494901020; Mon, 08 Jul 2024
- 20:15:01 -0700 (PDT)
+	d=comcastmailservice.net; s=20211018a; t=1720494886;
+	bh=WulyWmygwaQ0MdedkwbBjIGjXow7f8tKSi7X/DfCvG0=;
+	h=Received:Received:Received:Date:From:To:Subject:Message-ID:
+	 MIME-Version:Content-Type:Xfinity-Spam-Result;
+	b=CKK9eBNgivQyzMH6hRjfTVLDanLioksWMqEumuf/vpV0Jo3j/hA1AedIf8trpJdXa
+	 vAqi4NNVuyft5qnFh8i2mDpohcY3O6eN9xRHqQNO7T/jNGZssy6HffNk2jiPRvavlO
+	 40Q37z1uFsd7vPm7hO1g1dcE0gHc6wVHYrVFCd8wxwj1jwwrT1E/htvzHTcazRjWnX
+	 0n0qfoyOwUuUJD1LTroT7aUgM/qjqMPbcDNfk4/fEAe6BgH6x1g3vIca8OTEnIowcf
+	 /10x2uizmOp1T/1bGxElg11+2DMeySe8C4ZbqluapNnN6/x1akw+Czn6fL7WgMfYc8
+	 lj9OA+uH0wIkg==
+Received: from Outgoing.brak ([73.233.191.37])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 256/256 bits)
+	(Client did not present a certificate)
+	by resomta-a2p-647974.sys.comcast.net with ESMTPSA
+	id R1JUsRiYPAYoKR1JVsZaxK; Tue, 09 Jul 2024 03:14:45 +0000
+Received: from ZitZ.localdomain (h100.96.88.75.dynamic.ip.windstream.net [75.88.96.100])
+	by Outgoing.brak (Postfix) with ESMTPSA id 2CE7D9416;
+	Mon,  8 Jul 2024 23:32:43 +0000 (UTC)
+Date: Mon, 8 Jul 2024 19:38:36 -0400
+From: Paul Dino Jones <paul@spacefreak18.xyz>
+To: jikos@kernel.org
+Cc: anssi.hannula@gmail.com, linux-kernel@vger.kernel.org, 
+	paul@spacefreak18.xyz
+Subject: Re: [PATCH RESEND] Interpret 0 length ff effects as infinite
+ (0xffff) length effects
+Message-ID: <ut3bwujnxas6w6ml5aj66nonhx2ryib2re52udwkpgvnuxf6t6@ftaq6wjxha3u>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627170900.1672542-1-andrii@kernel.org> <20240627170900.1672542-4-andrii@kernel.org>
- <878qyqyorq.fsf@linux.intel.com> <CAEf4BzZHOhruFGinsRoPLtOsCzbEJyf2hSW=-F67hEHhvAsNZQ@mail.gmail.com>
- <Zn86IUVaFh7rqS2I@tassilo> <CAEf4Bzb3CnCKZi-kZ21F=qM0BHvJnexgajP0mHanRfEOzzES6A@mail.gmail.com>
- <ZoQTlSLDwaX3u37r@tassilo> <CAEf4BzYikHHoPGGX=hZ5283F1DEoinEt0kfRX3kpq2YFhzqyDw@mail.gmail.com>
- <ZoySCNydQ-bW6Yg_@tassilo>
-In-Reply-To: <ZoySCNydQ-bW6Yg_@tassilo>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 8 Jul 2024 20:14:48 -0700
-Message-ID: <CAEf4Bzbj7zCUzh2thV-Wkk-YjX71tDLPjb=wc6ZF4HbG5nqPRw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/6] fs/procfs: add build ID fetching to PROCMAP_QUERY API
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
-	viro@zeniv.linux.org.uk, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, gregkh@linuxfoundation.org, 
-	linux-mm@kvack.org, liam.howlett@oracle.com, surenb@google.com, 
-	rppt@kernel.org, adobriyan@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.2406040954160.16865@cbobk.fhfr.pm>
+X-CMAE-Envelope: MS4xfBPKAxOF+HpNPTUHTUB5SmdzEolDQbvrltjlRgJjbBU243jUh25WCWoQ6upF7vE3TsaMmAQy6lU5p8QpCMexjr2a8k8+htlqdNLWr995XyRw+G3Ws1kr
+ /QBMEVZEnRk3ok34hRIPlPJ3xXO9Yrw6Smm1CYXeWIJBplEv8GhRcvEtnK014MI0+0rU/8D4zORDu9+tQZmc5lo4RhoEd15DDsHnFKN35bJriojuAlaOf3kQ
+ Rzo1/eFgoJqPd7kNFHW45KBSQ8XJ8rFIPW452rFM9kEfeoBumcYahCrfzfTciQks
 
-On Mon, Jul 8, 2024 at 6:27=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wrot=
-e:
->
-> > So what exactly did you have in mind when you were proposing that
-> > check? Did you mean to do a pass over all VMAs within the process to
-> > check if there is at least one executable VMA belonging to
-> > address_space? If yes, then that would certainly be way too expensive
-> > to be usable.
->
-> I was thinking to only report the build ID when the VMA queried
-> is executable. If software wanted to look up a data symbol
-> and needs that buildid it would need to check a x vma too.
+Hello, thank you for getting back to me.
 
-I think that's way too restrictive and for no good reason, tbh. If
-there is some .rodata ELF section mapped as r/o VMA, I don't see any
-reason why user shouldn't be able to request build ID for it.
+It doesn't make sense to have a force feedback effect with zero
+duration.
 
->
-> Normally tools iterate over all the mappings anyways so this
-> shouldn't be a big burden for them.
->
+Many if not all existing wheels, interpret this as an infinite duration
+effect, and existing software operates under the same assumption.
 
-This API aims to make this unnecessary. So that tools can request only
-relevant VMAs based on whatever captured data or code addresses it got
-from, say, profiling of perf events. And if there are some locks or
-other global data structures that fall into mapped portions of ELF
-data sections, the ability to get build ID for those is just as
-important as getting build ID for executable sections.
+Interpreting 0 as 0, is causing many wheels to appear to not function at
+all using certain software under linux.
 
-> Did I miss something?
->
-> I guess an alternative would be a new VMA flag, but iirc we're low on
-> bits there already.
-
-I think we should just keep things as is. I don't think there is any
-real added security in restricting this just to executable VMAs.
-
->
-> -Andi
+- Paul
