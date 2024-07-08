@@ -1,173 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2003114372C
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 17:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DC764A98
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 17:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720459922; cv=none; b=J8EqY4FFOLk5iIxdkmR1UxdGMJSxIFXGDaAAEc41npiFV59C13kSYGDCPtl3XQNxjJwFixeFOJ+8/eF01FJ4kb5tnJllUQtlRiFGAPIIXv+A1oFUrl5ZKEXUwgaMw3gtr3oh2Yt84T5JHHLv7w/AKHOwpQG4lD9jjdAxVtl9M/s=
+	t=1720460014; cv=none; b=apOnz3atv6aMVPna+9DuTJ+2L6cmxJ/bXB7+BgAhIUpRT7LcwL+FVSrJZVdXjAb5VM0Z81CNRtH9RKT7WA1HtC2nYXBbhTFOQ6c56a68jCrXPbMMemKTWKfuQnANQz/1792KjrPzWJFI/z/taUwzJ5VdSTtO2ijVtmBZOLwxyjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720459922; c=relaxed/simple;
-	bh=zsEq83nm7Ozv8Eb4jLEb08q+BCcaa6z3adsiWS4LS28=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UmvK2mqS1ThFLelm/wA5//IHWmeBZ8aEWGKnVgpCe4olRmV8HcsnqcoTeNjz9uNqTcYFCzppGVtXXxLTyOa0C+TS6BsoLNlOQhJWdOB5ZTv9XG8ksW+8jEBhEtTzuBfGuqiGvFbVURYWf3KKk9+XhYxCihHoPbLX9wlOVcSmrCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kFaZVUys; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720460014; c=relaxed/simple;
+	bh=xMgVMxuVJ+4mDxDIZpv60LWECy5vBRGinidcROVywxQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Wbpb5IEq9C2MMnSk1OZgtx4z3URO57C6LJ3HZZs9rt8w9SVwE+4y70ct6fkNz/Oeg1WCqzoxFBRwysmNrHElmsZzBxmO4mQLFIzoLTO67+/4AWX3ELIDtTlkx9G46wg3mQ2xjeyVdjSeEXsni9WTQpwDyGI0ZM9OvJ2PtoxBNfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y50tGogI; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kFaZVUys"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D3EC116B1;
-	Mon,  8 Jul 2024 17:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720459921;
-	bh=zsEq83nm7Ozv8Eb4jLEb08q+BCcaa6z3adsiWS4LS28=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kFaZVUysheBnN0iK09LLpNTdgO3oIbTk3x+n8v+jUpAIyf+3FDBr2MD+XsR4Mgvoe
-	 uNlV08Jg6VUcZRfN0v0p30CKsIU70pB2Um/2C0DZAkI3keBVtdyFCoL8t0MAHiSTti
-	 98B9JClhalu8HIkqGrpg/3fgip+KKOdqIBZ8wfdwmY29pVIcarS9r47gB+wG6U2c+D
-	 m2d/435NRLsw8H5M3EQ+ogaAuJqd1JLpqtMXSZyhHSAtE4UquMFQsVGlrsNLDo7Fif
-	 kfIVpqVsscNtxbz6VuajnJrB+5nrHxO7Z+qPSeK1HR8dFmXiz9cSwmsvxTzGNZCC9P
-	 UVTK7S2TIXnrw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sQsDW-00Aftu-7Y;
-	Mon, 08 Jul 2024 18:31:58 +0100
-Date: Mon, 08 Jul 2024 18:31:57 +0100
-Message-ID: <865xtf4woi.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: tglx@linutronix.de,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: MSIs not freed in GICv3 ITS driver
-In-Reply-To: <20240708153933.GC5745@thinkpad>
-References: <20240708153933.GC5745@thinkpad>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y50tGogI"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ee8911b451so52344151fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 10:33:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720460010; x=1721064810; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xMgVMxuVJ+4mDxDIZpv60LWECy5vBRGinidcROVywxQ=;
+        b=Y50tGogIngiclh4Gts5xkP4pOWNro5ruF/OZolpDwLqRsNTA+OxfK0DtSOyKzzALe8
+         OVKL3i4CpYcP4Nw6lYb0nfdhnKnrGCIR7T8t70gVVsI44HIpmtlofEaQJ7VZiPolsOn+
+         f8oKytFIs7qqBmvnvOz/7XiPTT0kCMfvXKSK4hHsihxFH1QroOx7ByPSJhBvRrlN2OBQ
+         HHCbi6iN1EA4jTBdC2owSX7quGRalPXVfsO/p2EtzGdUQI7zpwJqeoZ5B/RBk+ZejVeu
+         Dxa9zCLntjXk/8y5NQCFO0oA/zKUgHm7SWYSeGGBjF7oYWtrqhG+0eFfPVs6+QoyFjqd
+         Q5gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720460010; x=1721064810;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xMgVMxuVJ+4mDxDIZpv60LWECy5vBRGinidcROVywxQ=;
+        b=WVwsD00Fzu/zFFRq57T4w4QqYtku8UoLBcgNg7H17/7OjYZW5OCRxsSspOQjutgMXE
+         AyF2Vd3QudpeWJWrcVgygVdh8cuIlBqSBrB2SD/wJamct1ACeniZShXAfMiIr+FRQZFR
+         flI/UzYwAZVZ7HRWqS3D9dueXMjCZA6dgMGlf6WDvcqeSrDxLCspO/fVfQ/1ENHROx5y
+         fi6DE/gW0mwGRuHRoSvtaspwGyF4zCFTRvJJqJpCL6kDn0RcsxsdBxtXkqrQiyr+l4kX
+         zlQzc/K/9qfGB9wEnmxwmJxrIEHXPAIut2lc9IVTmZWUj5a3DO3GJZ7KBesMQGnM6Ckz
+         AV3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWSa8Nj9b2SAR0Q0exY1XNo18kS5s6Z4OqEowFFQQVykROOw9vPjQbDMH4Ufmv0laDMRlrLx73JcMFow63x6pLucxqpT4eMa4pLz2Wr
+X-Gm-Message-State: AOJu0YxMpYLA/PpyupbU2RD93zPA9Hk/B0PQvaUsinGU4Pd8PLuJ6t1f
+	zLWtjnZgQpacYpCRbF8n1xfFG7SHVLPNLY/cELaOFqi3lRHHNZxIsuoTC2kB8FQ=
+X-Google-Smtp-Source: AGHT+IHqm74O9XrXu8Sp/c9nwIkpH2JvcIAs+C9RT3fJBrhdSnfh3Hhhnky9bRB/8pAITn8lkJu/iQ==
+X-Received: by 2002:a2e:9a92:0:b0:2ed:136b:755b with SMTP id 38308e7fff4ca-2eeb318b5e9mr2863341fa.53.1720460010540;
+        Mon, 08 Jul 2024 10:33:30 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f741553sm5885805e9.40.2024.07.08.10.33.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 10:33:30 -0700 (PDT)
+Message-ID: <77711848a7e7242a7445a4bccf5c93675239b838.camel@linaro.org>
+Subject: Re: [PATCH] phy: exynos5-usbdrd: fix error code in probe()
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>,  Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
+ <alim.akhtar@samsung.com>, Peter Griffin <peter.griffin@linaro.org>, Sam
+ Protsenko <semen.protsenko@linaro.org>, Rob Herring <robh@kernel.org>,
+ linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+Date: Mon, 08 Jul 2024 18:33:29 +0100
+In-Reply-To: <a956a3e2-c6ce-4f07-ad80-ec8a96e00d16@stanley.mountain>
+References: <a956a3e2-c6ce-4f07-ad80-ec8a96e00d16@stanley.mountain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: manivannan.sadhasivam@linaro.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
 
-Mani,
+On Mon, 2024-07-08 at 12:04 -0500, Dan Carpenter wrote:
+> Return negative -ENOMEM instead of positive ENOMEM.
+>=20
+> Fixes: 497ddafe915e ("phy: exynos5-usbdrd: convert Vbus supplies to regul=
+ator_bulk")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-On Mon, 08 Jul 2024 16:39:33 +0100,
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> 
-> Hi Marc, Thomas,
-> 
-> I'm seeing a weird behavior with GICv3 ITS driver while allocating MSIs from
-> PCIe devices. When the PCIe driver (I'm using virtio_pci_common.c) tries to
-> allocate non power of 2 MSIs (like 3), then the GICv3 MSI driver always rounds
-> the MSI count to power of 2 to find the order. In this case, the order becomes 2
-> in its_alloc_device_irq().
+Reviewed-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
 
-That's because we can only allocate EventIDs as a number of ID
-bits. So you can't have *1* MSI, nor 3. You can have 2, 4, 8, or
-2^24. This is a power-of-two architecture.
-
-> So 4 entries are allocated by bitmap_find_free_region().
-
-Assuming you're calling about its_alloc_device_irq(), it looks like a
-bug. Or rather, some laziness on my part. The thing is, this bitmap is
-only dealing with sub-allocation in the pool that has been given to
-the endpoint. So the power-of-two crap doesn't really matter unless
-you are dealing with Multi-MSI, which has actual alignment
-requirements.
-
->
-> But since the PCIe driver has only requested 3 MSIs, its_irq_domain_alloc()
-> will only allocate 3 MSIs, leaving one bitmap entry unused.
-> 
-> And when the driver frees the MSIs using pci_free_irq_vectors(), only 3
-> allocated MSIs were freed and their bitmap entries were also released. But the
-> entry for the additional bitmap was never released. Due to this,
-> its_free_device() was also never called, resulting in the ITS device not getting
-> freed.
-> 
-> So when the PCIe driver tries to request the MSIs again (PCIe device being
-> removed and inserted back), because the ITS device was not freed previously,
-> MSIs were again requested for the same ITS device. And due to the stale bitmap
-> entry, the ITS driver refuses to allocate 4 MSIs as only 3 bitmap entries were
-> available. This forces the PCIe driver to reduce the MSI count, which is sub
-> optimal.
-> 
-> This behavior might be applicable to other irqchip drivers handling MSI as well.
-> I want to know if this behavior is already known with MSI and irqchip drivers?
-> 
-> For fixing this issue, the PCIe drivers could always request MSIs of power of 2,
-> and use a dummy MSI handler for the extra number of MSIs allocated. This could
-> also be done in the generic MSI driver itself to avoid changes in the PCIe
-> drivers. But I wouldn't say it is the best possible fix.
-
-No, that's terrible. This is just papering over a design mistake, and
-I refuse to go down that road.
-
-> 
-> Is there any other way to address this issue? Or am I missing something
-> completely?
-
-Well, since each endpoint handled by an ITS has its allocation tracked
-by a bitmap, it makes more sense to precisely track the allocation.
-
-Here's a quick hack that managed to survive a VM boot. It may even
-work. The only problem with it is that it probably breaks a Multi-MSi
-device sitting behind a non-transparent bridge that would get its MSIs
-allocated after another device. In this case, we wouldn't honor the
-required alignment and things would break.
-
-So take this as a proof of concept. If that works, I'll think of how
-to deal with this crap in a more suitable way...
-
-	M.
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 3c755d5dad6e6..43479c9e7f8d2 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3475,15 +3475,16 @@ static void its_free_device(struct its_device *its_dev)
- 
- static int its_alloc_device_irq(struct its_device *dev, int nvecs, irq_hw_number_t *hwirq)
- {
--	int idx;
-+	unsigned long idx;
- 
- 	/* Find a free LPI region in lpi_map and allocate them. */
--	idx = bitmap_find_free_region(dev->event_map.lpi_map,
--				      dev->event_map.nr_lpis,
--				      get_count_order(nvecs));
--	if (idx < 0)
-+	idx = bitmap_find_next_zero_area(dev->event_map.lpi_map,
-+					 dev->event_map.nr_lpis, 0, nvecs, 0);
-+	if (idx >= dev->event_map.nr_lpis)
- 		return -ENOSPC;
- 
-+	bitmap_set(dev->event_map.lpi_map, idx, nvecs);
-+
- 	*hwirq = dev->event_map.lpi_base + idx;
- 
- 	return 0;
-@@ -3653,9 +3654,9 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct its_node *its = its_dev->its;
- 	int i;
- 
--	bitmap_release_region(its_dev->event_map.lpi_map,
--			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
--			      get_count_order(nr_irqs));
-+	bitmap_clear(its_dev->event_map.lpi_map,
-+		     its_get_event_id(irq_domain_get_irq_data(domain, virq)),
-+		     nr_irqs);
- 
- 	for (i = 0; i < nr_irqs; i++) {
- 		struct irq_data *data = irq_domain_get_irq_data(domain,
-
--- 
-Without deviation from the norm, progress is not possible.
