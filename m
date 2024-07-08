@@ -1,61 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393DB36D;
-	Mon,  8 Jul 2024 00:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFF0184F
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 00:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720399063; cv=none; b=ERBMSvHsFcobjXO4A1kDGx3cDMO6+vG/B30JzNIw+Kg8BLQrZ8hfdC0m4wHIvhBwmbC6JOn4WnvWoT3nGHf6BsMyCOHRq3AlFUQ767xHyOJ8+aJw33wUhh7EelUMC/96xp0uzVoSkTyQax5ENHY0DxBnAkaXsoBplB8dtEyD/vw=
+	t=1720399158; cv=none; b=a90oQRVZa8MPDVC0vc+49rmzjkLNp2eSXJdbm4QF2Bq5KShIIfDd11zuwxlT7DTafUqkXpS/NNsZOydnP+UG0vpZXZc3Dppn5m6RYv+FHGCM6XQQU6GPJpSq6+dF8LC0oCGzT2MmFvguATOZ07tWk9Ta0f8SggYYLOjQPr4dCFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720399063; c=relaxed/simple;
-	bh=CAQNDS9u4eM3Jei3J6nTrfoKZ9WlAcfbxi11LMHQvQA=;
+	s=arc-20240116; t=1720399158; c=relaxed/simple;
+	bh=vFg3bdUlUvg5V5WaLCa7QL/Xu5lSClGH5THgputqVPk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HypZzm1Yi1u+9HG0uC4+zSIoBaAOYddUyxH79stPSn0U2i1Nco2qenqYjXddCYZWifN/GoiBtbBv1E0TrhLEVWgYE/Ox6bMbQ/m1Huc5rwR1Z0yz1po68+zxyqEuTNdz2BcXCrID9zZIbkoLgLYCWOLX3YjmdAlJY2wx9w490uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NpS9oi6T; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wx1tVvTOT5wfmjPP2gcoO/YjAjDXbW0laePAvfI9IvWa7phGM3LIpvJnzAP+yVOKAaJpIq6RoecfVmT2QSJVJ9cfT2+oIsekQuqEv7Mum7ZVCCOJFdSv8yePFDerxWh9TifWGhiKm4DhecpN5n0bipiNlzSjIdxL2SRj06UfLSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ElUm7gm3; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NpS9oi6T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720399061; x=1751935061;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CAQNDS9u4eM3Jei3J6nTrfoKZ9WlAcfbxi11LMHQvQA=;
-  b=NpS9oi6TR0Z5p14YUFRD8EZD5hYQSp7ErgyUyDYJ/0Zq+LfD400rSmEg
-   AWLEwvYX61B9xY0b3GnmlqjJY93E925//RFtwnnUcGF3UE8mQrbZV+hv/
-   c9xFY09b0vnXQd6GkpnSVOqycrtvpAhAIK+bWfRq20+5hIrXcawFOpR6e
-   2XPOjb0uq7fxT5TSsXgJfrmCdxvCCatr+6lIRIALoO9pnXS1ltXtUiqBn
-   fm6HxiDkME+OJToUR6eYdYJAz2HWvP2dkTrRGwPvZn7W00kl8qpZ1/POr
-   h8WfOzg4WP7JpWUoz5zc0KRvKuidivS4mHFWwukrbITgQa65JL6jIxsMA
-   g==;
-X-CSE-ConnectionGUID: 62xlbypnSt+isboP0buGVg==
-X-CSE-MsgGUID: pEqQ72p2RdW0B+GvHKgx2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="21400420"
-X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="21400420"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2024 17:37:41 -0700
-X-CSE-ConnectionGUID: cAj2mUGoSv6HUR004a3Frg==
-X-CSE-MsgGUID: u0yr88rVShS1hMcCHadJ4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="52539044"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 07 Jul 2024 17:37:27 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sQcNh-000VP0-1I;
-	Mon, 08 Jul 2024 00:37:25 +0000
-Date: Mon, 8 Jul 2024 08:36:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>,
-	hdegoede@redhat.com
-Cc: oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org, carlosmiguelferreira.2003@gmail.com
-Subject: Re: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
-Message-ID: <202407080802.Qbwt3Edr-lkp@intel.com>
-References: <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElUm7gm3"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a77d85f7fa3so322846966b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2024 17:39:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720399155; x=1721003955; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iuTbglylbJkLgy3nA6Vq1cwMPZqasK0i2Sp9zGzr5H8=;
+        b=ElUm7gm37WmoHZvSBFwssfKShluAL/fKjqwV35D0DDSclZVWoE9QihLlWnGP+DcOHi
+         E10Cdbcz1nqFhhXTwC7e7aGm92LyEQMEzpr6VssAOxOGIaRiBXsevpCmWLgNajzdOGnK
+         Ft3m28VtO/2NgQ8IFp/Y08zW6ngyLXahcE5qSvMaZOOJsJNTFLP20spS7jZ2ALrDGhdf
+         BNXVOdbFn0eR1dtTQrxp9fG22ZYyuKZCsHx+a1hRyJWK0Sa6axz5KPZVIwuen11LwHF4
+         yFg4k26JqRKbu+5NiJ+SvwRbj6xVXvGvymQbP7OIWV4CazhwYyH5/uWihybIt5wa8kHd
+         mzQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720399155; x=1721003955;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=iuTbglylbJkLgy3nA6Vq1cwMPZqasK0i2Sp9zGzr5H8=;
+        b=lnvuPlgQHUiGFZtbi6SAjeIINLzpZI5GkakRDsw7GbghKifn1umQoFivK422Y133Az
+         WgrlsTYYkTh5+MOZovXhnbp3FnhQ4EKV9ukgMyspF5MXB5I8VZX9NA52KhAIXbh727xF
+         kZ29XlDHGDqrZSGBnRZPm8XfurepsU5PwrfxeMzzdI4KY6jmYK/U5jWQUCIxVRUfJhWI
+         8JFFNsTsgKEJX6GEuvjw+vLNGGpPe/N5WCbEICnNzTJTLiV82g8Y5wO/uBn0hUuQkw8W
+         psRsM7HalrGZLUzN31ue63YUG3VKUELKKoO3aWcY1PcULrGoTeFdtTvpJNE/LFihJbLo
+         WMhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW59QX9zx5z29jFFXYzt/yCw1oh/cz55jxuiIqMcrsFh98lHoKYlx0Cs84VVtPkE/NOm6YlyUuheIa41I969UiehWsp813vrJgWngSm
+X-Gm-Message-State: AOJu0Yw8XDsPzB5T8IcTAApt1RGp20X2hI+mez1D831HuNv+oA3PS+Zi
+	9twMm6q0A06GKCz9PnBgkBlPfqF5VlVITiRF1deSUDtOgqnEXTK8
+X-Google-Smtp-Source: AGHT+IEZYkuoB+ZC6xUPDOzY48LVIjj5y7t1QTXvwb1eeL6uK5oRMd40fxkQrc9e+5upf8vNuXBYNw==
+X-Received: by 2002:a17:907:1189:b0:a77:f5fc:cb61 with SMTP id a640c23a62f3a-a77f5fccfaamr182021766b.0.1720399155008;
+        Sun, 07 Jul 2024 17:39:15 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77c0dff4a5sm314833266b.27.2024.07.07.17.39.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 07 Jul 2024 17:39:14 -0700 (PDT)
+Date: Mon, 8 Jul 2024 00:39:13 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>, Mike Rapoport <rppt@kernel.org>,
+	akpm@linux-foundation.org, brauner@kernel.org, oleg@redhat.com,
+	mjguzik@gmail.com, tandersen@netflix.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] mm/memblock: introduce a new helper
+ memblock_estimated_nr_pages()
+Message-ID: <20240708003913.dcf7sfklrdpyhom7@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20240703005151.28712-1-richard.weiyang@gmail.com>
+ <Zoe4XN-gKJnjJtzi@kernel.org>
+ <20240706012805.uuvysz2qgapgqj6p@master>
+ <9f38e4f1-0ad3-4cd4-bcb7-5ec287859051@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,99 +75,148 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
+In-Reply-To: <9f38e4f1-0ad3-4cd4-bcb7-5ec287859051@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-Hi Carlos,
+On Sun, Jul 07, 2024 at 10:17:27AM +0200, David Hildenbrand wrote:
+>On 06.07.24 03:28, Wei Yang wrote:
+>> On Fri, Jul 05, 2024 at 12:09:48PM +0300, Mike Rapoport wrote:
+>> > On Wed, Jul 03, 2024 at 12:51:49AM +0000, Wei Yang wrote:
+>> > > Instead of using raw memblock api, we wrap a new helper for user.
+>> > 
+>> > The changelog should be more elaborate and explain why this function is
+>> > needed.
+>> > 
+>> > > Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+>> > > ---
+>> > >   include/linux/memblock.h |  1 +
+>> > >   mm/memblock.c            | 19 +++++++++++++++++++
+>> > >   2 files changed, 20 insertions(+)
+>> > > 
+>> > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> > > index 40c62aca36ec..7d1c32b3dc12 100644
+>> > > --- a/include/linux/memblock.h
+>> > > +++ b/include/linux/memblock.h
+>> > > @@ -486,6 +486,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
+>> > >   phys_addr_t memblock_phys_mem_size(void);
+>> > >   phys_addr_t memblock_reserved_size(void);
+>> > > +unsigned long memblock_estimated_nr_pages(void);
+>> > >   phys_addr_t memblock_start_of_DRAM(void);
+>> > >   phys_addr_t memblock_end_of_DRAM(void);
+>> > >   void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+>> > > diff --git a/mm/memblock.c b/mm/memblock.c
+>> > > index e81fb68f7f88..c1f1aac0459f 100644
+>> > > --- a/mm/memblock.c
+>> > > +++ b/mm/memblock.c
+>> > > @@ -1729,6 +1729,25 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
+>> > >   	return memblock.reserved.total_size;
+>> > >   }
+>> > > +/**
+>> > > + * memblock_estimated_nr_pages - return number of pages from memblock point of
+>> > > + * view
+>> > 
+>> > This function returns the estimate for free pages, not the number of pages
+>> > in RAM.
+>> > 
+>> > How about memblock_estimated_nr_free_pages()?
+>> > 
+>> > > + * some calculation before all pages are freed to buddy system, especially
+>> > > + * when CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
+>> > 
+>> > I'm failing to parse this sentence. The return value here won't depend on
+>> > CONFIG_DEFERRED_STRUCT_PAGE_INIT.
+>> > 
+>> > > + *
+>> > > + * At this point, we can get this information from memblock. Since the system
+>> > > + * state is not settle down and address alignment, the value is an estimation.
+>> > > + *
+>> > > + * Return:
+>> > > + * An estimated number of pages from memblock point of view.
+>> > 
+>> >                             ^ free
+>> > 
+>> > > + */
+>> > > +unsigned long __init memblock_estimated_nr_pages(void)
+>> > > +{
+>> > > +	return PHYS_PFN(memblock_phys_mem_size() - memblock_reserved_size());
+>> > > +}
+>> > > +
+>> > >   /* lowest address */
+>> > >   phys_addr_t __init_memblock memblock_start_of_DRAM(void)
+>> > >   {
+>> > > -- 
+>> > > 2.34.1
+>> > > 
+>> 
+>> Thanks for review. Is this one looks better?
+>> 
+>> Subject: [PATCH] mm/memblock: introduce a new helper memblock_estimated_nr_free_pages()
+>> 
+>> During bootup, system may need the number of free pages in the whole system
+>> to do some calculation before all pages are freed to buddy system. Usually
+>> this number is get from totalram_pages(). Since we plan to move the free
+>> pages accounting in __free_pages_core(), this value may not represent
+>> total free pages at the early stage, especially when
+>> CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
+>> 
+>> Instead of using raw memblock api, let's introduce a new helper for user
+>> to get the estimated number of free pages from memblock point of view.
+>> 
+>> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+>> CC: David Hildenbrand <david@redhat.com>
+>> ---
+>>   include/linux/memblock.h |  1 +
+>>   mm/memblock.c            | 22 ++++++++++++++++++++++
+>>   2 files changed, 23 insertions(+)
+>> 
+>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> index 40c62aca36ec..7d1c32b3dc12 100644
+>> --- a/include/linux/memblock.h
+>> +++ b/include/linux/memblock.h
+>> @@ -486,6 +486,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
+>>   phys_addr_t memblock_phys_mem_size(void);
+>>   phys_addr_t memblock_reserved_size(void);
+>> +unsigned long memblock_estimated_nr_pages(void);
+>>   phys_addr_t memblock_start_of_DRAM(void);
+>>   phys_addr_t memblock_end_of_DRAM(void);
+>>   void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index e81fb68f7f88..00decc42e02b 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -1729,6 +1729,28 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
+>>   	return memblock.reserved.total_size;
+>>   }
+>> +/**
+>> + * memblock_estimated_nr_free_pages - return estimated number of free pages
+>> + * from memblock point of view
+>> + *
+>> + * During bootup, system may need the number of free pages in the whole system
+>> + * to do some calculation before all pages are freed to buddy system. Usually
+>> + * this number is get from totalram_pages(). Since we plan to move the free
+>> + * pages accounting in __free_pages_core(), this value may not represent total
+>> + * free pages at the early stage, especially when > + * CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
+>
+>These historical details should be dropped. "Since we plan ..." will easily
+>get outdated soon.
+>
+>* During bootup, subsystems might need a rough estimate of the number of *
+>free pages in the whole system, before precise numbers are available
+>* from the buddy. Especially with CONFIG_DEFERRED_STRUCT_PAGE_INIT, the
+>* numbers obtained from the buddy might be very imprecise during bootup.
+>
 
-kernel test robot noticed the following build errors:
+Pretty better, thanks :-)
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.10-rc7 next-20240703]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Carlos-Ferreira/HP-wmi-added-support-for-4-zone-keyboard-rgb/20240708-015808
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240707175613.27529-2-carlosmiguelferreira.2003%40gmail.com
-patch subject: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
-config: i386-randconfig-012-20240708 (https://download.01.org/0day-ci/archive/20240708/202407080802.Qbwt3Edr-lkp@intel.com/config)
-compiler: gcc-9 (Ubuntu 9.5.0-4ubuntu2) 9.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240708/202407080802.Qbwt3Edr-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407080802.Qbwt3Edr-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/locktorture.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/test-ww_mutex.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/rcutorture.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/rcuscale.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/refscale.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/torture.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in mm/dmapool_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp437.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp737.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp852.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp855.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp861.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp862.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp932.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_euc-jp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_ascii.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-2.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-9.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-u.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-ru.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-centeuro.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-croatian.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-roman.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_ucs2_utils.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/binfmt_misc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/autofs/autofs4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/curve25519-generic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/math/prime_numbers.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/acpi/platform_profile.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/qcom/hdma_mgmt.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/da9121-regulator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/ttynull.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/ati-agp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/amd64-agp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/efficeon-agp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/sis-agp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/ppdev.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tiny/cirrus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-spmi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/pcf50633-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/qcom-pm8008.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio_aec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio_netx.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-pxa.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/rc/rc-core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/mmc_core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_simple.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_emmc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/simple/simatic-ipc-leds-gpio-core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/coreboot_table.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/framebuffer-coreboot.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/memconsole.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/memconsole-coreboot.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_userspace.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-aspeed.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/parport/parport.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_util.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_cmdset_0020.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/hisi-spmi-controller.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/mr75203.o
->> ERROR: modpost: "devm_led_classdev_multicolor_unregister" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
->> ERROR: modpost: "devm_led_classdev_multicolor_register_ext" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
+>?
+>
+>Reviewed-by: David Hildenbrand <david@redhat.com>
+>
+>-- 
+>Cheers,
+>
+>David / dhildenb
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Wei Yang
+Help you, Help me
