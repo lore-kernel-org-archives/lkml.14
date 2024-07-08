@@ -1,94 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAEB1D69E;
-	Mon,  8 Jul 2024 16:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A2F1D69E
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720457260; cv=none; b=pVNtZiaapcFYiJA9UaqJXeaVri/EJjdunapQBXJ8e5MJphgkwqJ2SlwFAaxrdnMB33svWL5hPbBPa6ApV8V4vFOu7NaKc8j2uXhREDHZBJNwwXcSyDaqfJZaoOBtrVyLna04HstRaZnLbGaXVjmjkA4TNN+03TnWr6dtkWmJrts=
+	t=1720457344; cv=none; b=bzpieWTH9P4g4PpxLKLNvk+W5lQFSRFeW9vYWES3TRSY0MNlAnEuhPJIq/H6/n6gGvc00sKCY8ymWDnBU+AD5fXP42SS8tJTDRAFAycQ+VV0bfa9pJowG65bTr6Z/QL6pzkwX+h7i+v4RX9NZax2ITqCHQF6wNNTmogZ2d4gFow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720457260; c=relaxed/simple;
-	bh=VHvm2D3xsSEmwhh+btt7E0FxJz3widPba7++CMSHLQE=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=QrLIqczPoV0yEddR527ovQURuKWkOOsUBOseaIQR4QUWONJ7N/Clez7i54eaYwsZ2LPmOCN1qwJ32OxVAVl7GPXD0l3SPf8YIuSLMuxnnmS2Y4Dthb1czxJMlTRvCHIR5QiPoHeeQFZGFE0OwJp1AEXYfZXjtBxUaGSSW5IMZ10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3d6P2iJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3d6P2iJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52C90C116B1;
-	Mon,  8 Jul 2024 16:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720457259;
-	bh=VHvm2D3xsSEmwhh+btt7E0FxJz3widPba7++CMSHLQE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=D3d6P2iJU/gosDUr6HODB+GG4Cc7+yOYSEC4NwlKdiNkou68LahgTgitDx/mff8qs
-	 IL/Yj7XLzrMrxD4q1APndxB8mAqE7U5aKw1KvCVRyiAZqiQZ2Xd8rhxNcu9Blmmldh
-	 scF/wUab8KNLcKuz78/taVhnsPXU8Ngn5nJaw1ZMy1Wqj4rqTEgHxMJb1zs0touTRp
-	 CaIW6HQYT62OFvXoTM8QEtbTie7fTxkcxR23mVhaUQLgLKn6RsqyfmhS9zhjUD0SAU
-	 P3FQaPx8XqU7/uUeCW++FURI73QKLhuh+x29smXSBrJlfpdQ2Ym1RLvGy5ReoadrAS
-	 K6n3UagFqsY8w==
-Date: Mon, 08 Jul 2024 10:47:37 -0600
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1720457344; c=relaxed/simple;
+	bh=wxbintdwPXGpmWvSpfQattq8f4fcjNnZYqBXJAqT6vo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=VzLUENye4FNFw9Lw+MQifxbwb36ZpSrAMCF8hS4B6UsM+ViDX+BpSlkOraHCCKW31hGBHCCSMw4f/0XrdUmWYMB0RdffOF2EXWhAg+upwNSNQCg+8+bgP78v6vBOya2NO6c83VuyhVkppZJb0Chkxys/LDzSNZyQ7pFlwpm+azY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f639551768so520888739f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:49:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720457342; x=1721062142;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wo4eRAmAZGnFdF/C2Zm+pUi5KIWTp2C57QMYUt3tGfE=;
+        b=IUAJQPKUCvjeDBLXmyV81PhO1OSXw2nI/OZYsaV4o9Li32OPuIK2BB1hNiSSGqC6om
+         un/OstGNejOLO6inn6jub6BNWp6GvxJbb0L+ug7OKLRsIE1pr5DMflRKTBroluL2f9CK
+         JZd3k4l9IpkA6AvgsLvpjI45QT4NrjrwT9GICKaOfJMv9AO/dd2obmGr+Db22om+LKC2
+         06S1n5f0einlb+kGgy1qEY1DvolwYedEyEU/Fg3RTgaLyCVKlysbsUtPJSCzgtxITn06
+         382uKj8MdOAmwvTlFs7i7fTTo9c2XolpycyPe9zvN6D8RXwT1n9elK3ISAmcVfKAOEE/
+         pHLg==
+X-Gm-Message-State: AOJu0YwFjTUwkHGMImeQgiIZmQweZqxPOQk0vRNEIYKXuxgr8ZP3rUr2
+	dcA7cgCaAFCqhTqXumUnUy4XIz3xUR2PWOWGh/iB/Kl9AhaJJbs2q/HATXf6wzy/5l1lRF/aH6s
+	CqBzfSlvXnV4MJyXfRqXVqgoaIPtFczV/KZlRn4If96ZGdv49upIbRFM=
+X-Google-Smtp-Source: AGHT+IEYjyDIKydf/cF74jp71sEB4MB250/6efwvzKmZJtghjQGayc6bGf1EFLKhlbNZYY5gl1snmiy7MYIe99NIUV8+4faqFluL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: stefano.radaelli21@gmail.com
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Andrzej Hajda <andrzej.hajda@intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- David Airlie <airlied@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>, 
- Marek Vasut <marex@denx.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
- Robert Foss <rfoss@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- Daniel Vetter <daniel@ffwll.ch>, "Noah J . Rosa" <noahj.rosa@gmail.com>, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240708151857.40538-1-stefano.radaelli21@gmail.com>
-References: <20240708151857.40538-1-stefano.radaelli21@gmail.com>
-Message-Id: <172045725750.3389992.15451403448241421795.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: display: bridge: ti,sn65dsi83: add
- burst-mode-disabled
+X-Received: by 2002:a05:6602:1548:b0:7f9:90c5:410b with SMTP id
+ ca18e2360f4ac-7ffffe2284cmr912539f.1.1720457342044; Mon, 08 Jul 2024 09:49:02
+ -0700 (PDT)
+Date: Mon, 08 Jul 2024 09:49:02 -0700
+In-Reply-To: <20240708160329.1868842-1-michal.switala@infogain.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b95d41061cbf302a@google.com>
+Subject: Re: [syzbot] [bpf?] [net?] general protection fault in
+ dev_map_enqueue (2)
+From: syzbot <syzbot+cca39e6e84a367a7e6f6@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, michal.switala@infogain.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
-On Mon, 08 Jul 2024 17:18:56 +0200, stefano.radaelli21@gmail.com wrote:
-> From: Stefano Radaelli <stefano.radaelli21@gmail.com>
-> 
-> It allows to disable Burst video mode
-> 
-> Co-developed-by: Noah J. Rosa <noahj.rosa@gmail.com>
-> Signed-off-by: Noah J. Rosa <noahj.rosa@gmail.com>
-> Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
-> ---
->  .../devicetree/bindings/display/bridge/ti,sn65dsi83.yaml       | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Reported-and-tested-by: syzbot+cca39e6e84a367a7e6f6@syzkaller.appspotmail.com
 
-yamllint warnings/errors:
+Tested on:
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi83.yaml: burst-mode-disabled: missing type definition
+commit:         83c36e7c docs: networking: devlink: capitalise length ..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=16870566980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dcd1b5bf2c3bc3ac
+dashboard link: https://syzkaller.appspot.com/bug?extid=cca39e6e84a367a7e6f6
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16d5d87e980000
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240708151857.40538-1-stefano.radaelli21@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Note: testing is done by a robot and is best-effort only.
