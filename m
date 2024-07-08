@@ -1,108 +1,134 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC1717721
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E8814267
 	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 06:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720421547; cv=none; b=IhDduFmS0xlJ/LXUNQIoftflA8K5ZxRjYPl+vsJl+ST64E/xHLxyMSwRtWe8TOJkeF/VMGb4BRwZfUZolVZWROcoZnBa0+IqVktrj00mM3KdE+IYQxI9E9tE1Qi5BPFEVRq9GXLdimi7wrSRY9Rym2iY7B7oLaeKRmeLo1HsZfk=
+	t=1720421547; cv=none; b=GKAnVCOjjuRxRQCeT7D8qpXxE3xzX+gAEtY9xFUHkfcnUqNd85Hs15+HpY+fByATRPFia37SRD+LBMkPu7HvcA3t7emNa3K+jp3lB0UYF53efqrxYo3VaHhNxhKbgZ1scLawMjuhRjqgSKzPDW5oFyMBb1gyyTK02un+nfVMdI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720421547; c=relaxed/simple;
-	bh=l2FIO3fCqBGmXOF5K6tW+a19O8tFfegMu7Ea4neklnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hWL5tiqXYbGz8EKBAFGXT1EPYCDLq602Vkh/J8sfBL9IltdZZUP9o3DUQ1WkareCTX0XxanJOC9E9sF02C8MNp/dXC4cbBEhTon9M5TGjB+UpYwgCRw6ODPxZPOd3S+GBdx1eggP40M8/1ye0J2z4wU17D7EEmVDH0zuj1qDjuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RFFiqZsa; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=XGAUAZ2tJFn06FQspuaDvlm800OeXNZrlzDbL5cCwhA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=mXaMJZk3x7dOFLovjGRQhl+/CNVHrp0RB0NXSKze9kre+HOygjjK39abDv0W2bGHewv5yxSaedfTipdwYdlTcbNTVOQTZfPJV1MFdNGDBQzfBh5R4aDJWJPHAkFnBoB2H4JkccigWtQtKZHN861tvhpXTCGZetcHZH58B124Onk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=GM4Y2HZW; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RFFiqZsa"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-382458be739so17177545ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2024 23:52:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720421545; x=1721026345; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+DS07n3S2EpZ5vKJ03RyX8V+ApT3KBt/z3ClQ42xfto=;
-        b=RFFiqZsa93lgN4L2ybRuE1iIgzzWKmQx6Plink61hltm+xQrYzzYF5z8S+vK4ibqSF
-         CbF+FK9DxfndMwJgGwsaLyNipXDmGpimihM1OyTQoMHL2TbCvr3n86MR+vsg0z5wh17T
-         k+ifdEckHPTaWtWIRHxa6khT5bMdL+vi4OHIgSiCcGNYHeNvei3atuttii8JDA81ksut
-         OE8RibZrAhCpEM2bsyvSOPGUpfeNsMC8fzMoR9la36cOQt1QFq5rrcUth6TT3ZDUOtn3
-         BsEmlTkSitrp0GZYVx0CJk9PuGMC6cKtsqz04o5ymD4M+yXTalbhxFLoEsAfP8JgdGpi
-         EQHA==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="GM4Y2HZW"
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com [209.85.210.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 8695540C83
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 06:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1720421536;
+	bh=HbzMAQQs0beQFPhhkJhPUz49qUwPsn+ZS8RIbID3OKs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=GM4Y2HZW8SHC3Vm6rGPVn+HMAnkgWBk2iBeNy/xmVEfJEgrwDDIKX729NbkMzyWXy
+	 ZeisYI6Q08bXwH6oANqYaExVXpMfnlHY9onZJXqsuOkcGji1DrvAuUt11bUEvdoQF4
+	 YRoIJnzyYLhtaIc9dYzb5p/kTgyxgIf0JfTixGCScUUxT4t5JziicxhFENuoZuCFLa
+	 8/QevvnQ6fvLyIpHsym8e1snbZg91S0ZYfanx/xHo8SSJWt7VDMDlFY2DsHCIvq68j
+	 fxbL2XLt152SqyKd1tNqal8tWaCoc7oDknc4QC942+i00ZzgXlGsWWlL7gM5mbbK9r
+	 fxFrE3WbiAmaw==
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-7035ae4e205so2291730a34.2
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2024 23:52:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720421545; x=1721026345;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+DS07n3S2EpZ5vKJ03RyX8V+ApT3KBt/z3ClQ42xfto=;
-        b=mTLdkjS9jyEHxcca4JWDEHcVtVmP301KmM2/1NshmKFPi7TiwIJFHWQTTWpw1YnsuF
-         /ZVkbOyuWrdJvwKPuxCx4gaCpF8KXqfPccRjhZtAi7eqFRHgX5AtxegY+v3gOSMRf4cL
-         0L3vW/9NyyHtoFMeVDyroTvXw4GJKHafZk7STQaoqx6bgzv/jW31TyuHo44xXmQO0adp
-         N95LJlkWxvjtnhRhb8CfXQBUpGpJbiJaoo493Ju5ZVlenCm96ZwPSExRiumZa2BEfz5t
-         EE3W+pwNgYp839+Y8fftrpkEakRSj0FrlTQOIFr+8NlCbtcNNRX7jVnfclPdTskRjrBw
-         KfJw==
-X-Forwarded-Encrypted: i=1; AJvYcCW8lFRomcJwfT/rJMj2+A+wSvBd96B1hye8sGRNncj8O4MTyOz46gCQtR2WXBlYwTlP0b3H23Hc08zQ0Sw8xn25+tVXtwE5aM7G/873
-X-Gm-Message-State: AOJu0Yz3sYuaND8SOBGx+jcvT+b7CopVrqKG8nrUdUfkT/3F6u4XoJFP
-	2ZcPBH69Qf2gcKSEjIen0hfbCwG8acjINFZXai1ST1JEvW7XDo/Ac0PfT5+m4ydimqx+oRbXg3W
-	e
-X-Google-Smtp-Source: AGHT+IFBya5V2xQbhJizaPr/Q8T7hEPEzcZGX3jK6EfAM0X5nJdKs0HW0u+/neZnaqmpTki+tnx14w==
-X-Received: by 2002:a05:6e02:1d86:b0:376:4049:69d2 with SMTP id e9e14a558f8ab-38398710582mr172377945ab.6.1720421545272;
-        Sun, 07 Jul 2024 23:52:25 -0700 (PDT)
-Received: from localhost ([122.172.84.129])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b2248b69esm3094293b3a.144.2024.07.07.23.52.24
+        d=1e100.net; s=20230601; t=1720421535; x=1721026335;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HbzMAQQs0beQFPhhkJhPUz49qUwPsn+ZS8RIbID3OKs=;
+        b=nHcNWn5t7GSjp0yX2hKY08JUg1bLUq9bIkbULwyp3KeAKEXJy8eZO32IByLU2+sU9h
+         QNuo/u7ZCy2lFEFmOsWj9HRuHmGE/rCK4BKmajjd0srq0Zkish+As5Ssbe65hcGk1cZT
+         6EiisOU9fxN9bmjSjUQSY798Wwr8+6thQG6KyGRpze4j3I1z/AzqAJKx6Y5Ao4aA5L/p
+         3V/E+l+dpJlzpefJ79gJYoyyxwQ7g0+P9dqE3O5Me4VOGbjCEyzrjRqJ12hZsHBS00RS
+         k01+jSljKhvQD+XxC8I8woQ9uv5b+kDer6xcoWbik3e6Pes3T1IYYwM3PpP69ki8XnEp
+         KfFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUatm+GKUICjJa0dKQev8wS5IsW4gHSpD8sBXAl2cd/Pc5MwiL7QMXncwM4lITNaQ8QikCSVL0yL8vSl9yRDyGZAfXi/LrzWWw3z4je
+X-Gm-Message-State: AOJu0Yxwg7cQ9eTrwU6XUMlnoBXclhVHk9GMgoNkDBQDkOIriYdr8Ff4
+	E8u2Iu2NOiSM+UwYBs3Lzn/MKCqieGjlbICqEhhOKKllP970+SlW9X2huyHPL8//zY+xSNkeaHm
+	nKZ2myLMgbikMU1Sp8NiSW7o66g6Z6Y1ZntPUAAxz6GUNjAQdBGNldy4oksHeP/gNSHgszGrAPD
+	vW8A==
+X-Received: by 2002:a05:6830:4121:b0:703:5be9:7eb2 with SMTP id 46e09a7af769-7035be97fb1mr10205063a34.1.1720421535288;
+        Sun, 07 Jul 2024 23:52:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFDdcN3FhbXbJhL25LGgTT9SMrkYrFZRj+Qr84KVRq4ZsIxJ4/dnZO5KZecMBqaC8bwrBJVHA==
+X-Received: by 2002:a05:6830:4121:b0:703:5be9:7eb2 with SMTP id 46e09a7af769-7035be97fb1mr10205048a34.1.1720421534961;
+        Sun, 07 Jul 2024 23:52:14 -0700 (PDT)
+Received: from solution.. (125-228-254-191.hinet-ip.hinet.net. [125.228.254.191])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b15e0cefcsm4484195b3a.166.2024.07.07.23.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jul 2024 23:52:24 -0700 (PDT)
-Date: Mon, 8 Jul 2024 12:22:22 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sun, 07 Jul 2024 23:52:14 -0700 (PDT)
+From: Jian Hui Lee <jianhui.lee@canonical.com>
+To: Felix Fietkau <nbd@nbd.name>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Mark Lee <Mark-MC.Lee@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Matthias Brugger <matthias.bgg@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	kernel@collabora.com, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2] cpufreq: mediatek: Use dev_err_probe in every error
- path in probe
-Message-ID: <20240708065222.iip3hzlffn2dthjg@vireshk-i7>
-References: <20240705-mtk-cpufreq-dvfs-fail-init-err-v2-1-3a7f91b02ab0@collabora.com>
+Subject: [PATCH v2 net] net: ethernet: mtk-star-emac: set mac_managed_pm when probing
+Date: Mon,  8 Jul 2024 14:52:09 +0800
+Message-ID: <20240708065210.4178980-1-jianhui.lee@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240705-mtk-cpufreq-dvfs-fail-init-err-v2-1-3a7f91b02ab0@collabora.com>
 
-On 05-07-24, 11:54, Nícolas F. R. A. Prado wrote:
-> Use the dev_err_probe() helper to log the errors on every error path in
-> the probe function and its sub-functions. This includes
-> * adding error messages where there was none
-> * converting over dev_err/dev_warn
-> * removing the top-level error message after mtk_cpu_dvfs_info_init() is
->   called, since every error path inside that function already logs the
->   error reason. This gets rid of the misleading error message when probe
->   is deferred:
-> 
->     mtk-cpufreq mtk-cpufreq: failed to initialize dvfs info for cpu0
-> 
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> ---
-> Changes in v2:
-> - Fixed one occurrence of the error code being set after the usage
-> - For the paths that need to set the `ret` variable to the error code,
->   changed them so they set it from dev_err_probe()'s return, in a single
->   line.
-> - Link to v1: https://lore.kernel.org/r/20240628-mtk-cpufreq-dvfs-fail-init-err-v1-1-19c55db23011@collabora.com
-> ---
->  drivers/cpufreq/mediatek-cpufreq.c | 72 ++++++++++++++++++--------------------
->  1 file changed, 34 insertions(+), 38 deletions(-)
+The below commit introduced a warning message when phy state is not in
+the states: PHY_HALTED, PHY_READY, and PHY_UP.
+commit 744d23c71af3 ("net: phy: Warn about incorrect mdio_bus_phy_resume() state")
 
-Applied. Thanks.
+mtk-star-emac doesn't need mdiobus suspend/resume. To fix the warning
+message during resume, indicate the phy resume/suspend is managed by the
+mac when probing.
 
+Fixes: 744d23c71af3 ("net: phy: Warn about incorrect mdio_bus_phy_resume() state")
+Signed-off-by: Jian Hui Lee <jianhui.lee@canonical.com>
+---
+v2: apply reverse x-mas tree order declaration
+
+v1: https://lore.kernel.org/netdev/20240703061840.3137496-1-jianhui.lee@canonical.com/
+
+ drivers/net/ethernet/mediatek/mtk_star_emac.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c b/drivers/net/ethernet/mediatek/mtk_star_emac.c
+index 31aebeb2e285..25989c79c92e 100644
+--- a/drivers/net/ethernet/mediatek/mtk_star_emac.c
++++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
+@@ -1524,6 +1524,7 @@ static int mtk_star_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *of_node;
+ 	struct mtk_star_priv *priv;
++	struct phy_device *phydev;
+ 	struct net_device *ndev;
+ 	struct device *dev;
+ 	void __iomem *base;
+@@ -1649,6 +1650,12 @@ static int mtk_star_probe(struct platform_device *pdev)
+ 	netif_napi_add(ndev, &priv->rx_napi, mtk_star_rx_poll);
+ 	netif_napi_add_tx(ndev, &priv->tx_napi, mtk_star_tx_poll);
+ 
++	phydev = of_phy_find_device(priv->phy_node);
++	if (phydev) {
++		phydev->mac_managed_pm = true;
++		put_device(&phydev->mdio.dev);
++	}
++
+ 	return devm_register_netdev(dev, ndev);
+ }
+ 
 -- 
-viresh
+2.43.0
+
