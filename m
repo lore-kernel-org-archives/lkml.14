@@ -1,49 +1,43 @@
 Received: from mail.fris.de (mail.fris.de [116.203.77.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6520B38FB0;
-	Mon,  8 Jul 2024 08:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8842033A
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 08:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720428095; cv=none; b=WVkyh8lck18ntuqhwnDrktn89YO4nIE1+OOaJSmECWjfd4RVuCws7ayzAzew56zH+yr/Toxbx9mdk9o62/GIv24g3PSYRhM658I4CKA2Kthqh6pgLMcbNosTv/y/ce5x0yUHPVdy8phDjJrYPzjLhBtJTZcBBrQ2938whHK0P0M=
+	t=1720428095; cv=none; b=ti2lBZZgciscqGQiIHRu4DZiFi4MJCssHgbn4UcyPOfhqgbDSH6qdb8BK7IXfJTHIku9h2H5TP3WXQafeE0joB7x1GqlJDNgs+IZy6qRgZ4N6ks7pwDCnDh/QLojHBy0/KaXF8ynYYDpInX7nU4hZdC9Fw6qsdX3l+DtoM7hRr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720428095; c=relaxed/simple;
-	bh=OlqDzkICZh/rXle1yN3cbMo0i3pUWIT0ry1t2Or0OBE=;
+	bh=p2rxEF5VMZjtICNyZJPHmhFLE1AycL7XT30yF4aoSrI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bzBB3Z6tFNKhnrfdcNyEJ6g+mdDjTZoE+fHuKSlxSqHwmWNTJvz+jZjLp/SXsBo1wiWTuhNBtCNwmmn8/d3+z6kLcufQEtCTI6mmsbpumg7+U9XHsdjo1kkm3wuldhigGRajC8fI/GITkUVzQWLaJ9MjmgO5HYUSwEZYE6jyKeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=fail smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=Mdvazh3a; arc=none smtp.client-ip=116.203.77.234
+	 MIME-Version; b=VOkG+6mx6ZFLx9jfZj/aUQ7VECaXSK02Tkin3r26i9ufv/p/YptIKZhil2o/wgF6+2B+mXteCrPOCXUm2RSloFgav3zUvHUHmvzGLRg+BXLVXjWhpu8xQnC8FQIpW8u3ugfpbJFfcwoVuXunp+cGH4fQp6//4HYM3aHwx8N8F1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=fail smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=gFwAX/Il; arc=none smtp.client-ip=116.203.77.234
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fris.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="Mdvazh3a"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0FA9DBFB4D;
-	Mon,  8 Jul 2024 10:41:26 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="gFwAX/Il"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 67B0BBFBAD;
+	Mon,  8 Jul 2024 10:41:30 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
-	t=1720428086; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1720428090; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=8b9WEdH6nX/uhqStbhCkxjbUTBocln+2zCJ0wjlz2TM=;
-	b=Mdvazh3as5WxPvN2jOz6c7pNkuYrl00UjJ8Xt4UlUDINGARD/zK1yFD7tFfH1V8oRmNzOW
-	9J6lBuVIfboFtllMmf+D6/tCkeNfK6aNQqlKfM8P3c2n9QMPdrlLkQsNbwaLGHzfRK8/ND
-	mqVnTgkENTszZAPB3C73dUKZbUh8qLrOuFz9KjwJMqvDA0azx+TWNrjZAVeM5l9pDQqzz+
-	Yur5ZeoEW9LKud5jkhL2P3ylAeYS/Km5qvdfl6u+ZhL77Zb23XRDqv8P0lATdnYoXm2Lb6
-	jLD55CCtRNYwCUmZiuZXTtl6QBpTmRLM5bMlg5nJ/VjXLjR+EDm7eGQ4rMFK4A==
+	bh=Bie3S+NRtQsHAbGNnD72XIrDGSrQyPJe4739teujuCY=;
+	b=gFwAX/IlJ/OIRFFh7HeljCxmKKXyLq/p50urW+HdWGK20Q/9ie59qwOyWue2L4WvZ3UypY
+	ddsTNmyQRcr0R96zvA/paTezwWxsr6DKWH4Fe7BXnw6m5Q5MvIh3JGMCGuUrVZf8Zu+s1B
+	XnsZ4ZABy1OsurU/rscboX5yFBRU/ot2cujdkVgNncR67jHMeS+lG8CCOdFt4FJwDElPfu
+	1LX7YbCoVBjv4BsiMy4qGQ2Qt/gCBKhOknc64oqbFJpJ1wuxQ+8NmFBWJPKYavnJ1umq9j
+	hvxYwx6YcCpJxDxS+BIZQUPHhAqlCH/4Chd79rSyGh+r6i7m27H1CICs9h8RTw==
 From: Frieder Schrempf <frieder@fris.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
+To: Liam Girdwood <lgirdwood@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Stefan Agner <stefan@agner.ch>
+	Mark Brown <broonie@kernel.org>
 Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v2 1/5] dt-bindings: gpio: vf610: Allow gpio-line-names to be set
-Date: Mon,  8 Jul 2024 10:40:31 +0200
-Message-ID: <20240708084107.38986-2-frieder@fris.de>
+	Bo Liu <liubo03@inspur.com>,
+	Joy Zou <joy.zou@nxp.com>,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 4/5] regulator: pca9450: Make IRQ optional
+Date: Mon,  8 Jul 2024 10:40:34 +0200
+Message-ID: <20240708084107.38986-5-frieder@fris.de>
 In-Reply-To: <20240708084107.38986-1-frieder@fris.de>
 References: <20240708084107.38986-1-frieder@fris.de>
 Precedence: bulk
@@ -57,33 +51,76 @@ X-Last-TLS-Session-Version: TLSv1.3
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Describe common "gpio-line-names" property to allow DTs to
-specify names for GPIO lines.
+The IRQ line might not be connected on some boards. Allow the driver
+to be probed without it.
 
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
 Changes for v2:
-* change commit message (remove non-existing warning)
-* add minItems and maxItems
+* none
 ---
- Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/regulator/pca9450-regulator.c | 41 +++++++++++++--------------
+ 1 file changed, 19 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-index a27f929502575..cabda2eab4a23 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-@@ -51,6 +51,10 @@ properties:
+diff --git a/drivers/regulator/pca9450-regulator.c b/drivers/regulator/pca9450-regulator.c
+index be488c5dff140..9714afe347dcc 100644
+--- a/drivers/regulator/pca9450-regulator.c
++++ b/drivers/regulator/pca9450-regulator.c
+@@ -891,11 +891,6 @@ static int pca9450_i2c_probe(struct i2c_client *i2c)
+ 	unsigned int reset_ctrl;
+ 	int ret;
  
-   gpio-controller: true
+-	if (!i2c->irq) {
+-		dev_err(&i2c->dev, "No IRQ configured?\n");
+-		return -EINVAL;
+-	}
+-
+ 	pca9450 = devm_kzalloc(&i2c->dev, sizeof(struct pca9450), GFP_KERNEL);
+ 	if (!pca9450)
+ 		return -ENOMEM;
+@@ -967,23 +962,25 @@ static int pca9450_i2c_probe(struct i2c_client *i2c)
+ 		}
+ 	}
  
-+  gpio-line-names:
-+    minItems: 1
-+    maxItems: 32
-+
-   clocks:
-     items:
-       - description: SoC GPIO clock
+-	ret = devm_request_threaded_irq(pca9450->dev, pca9450->irq, NULL,
+-					pca9450_irq_handler,
+-					(IRQF_TRIGGER_FALLING | IRQF_ONESHOT),
+-					"pca9450-irq", pca9450);
+-	if (ret != 0) {
+-		dev_err(pca9450->dev, "Failed to request IRQ: %d\n",
+-			pca9450->irq);
+-		return ret;
+-	}
+-	/* Unmask all interrupt except PWRON/WDOG/RSVD */
+-	ret = regmap_update_bits(pca9450->regmap, PCA9450_REG_INT1_MSK,
+-				IRQ_VR_FLT1 | IRQ_VR_FLT2 | IRQ_LOWVSYS |
+-				IRQ_THERM_105 | IRQ_THERM_125,
+-				IRQ_PWRON | IRQ_WDOGB | IRQ_RSVD);
+-	if (ret) {
+-		dev_err(&i2c->dev, "Unmask irq error\n");
+-		return ret;
++	if (pca9450->irq) {
++		ret = devm_request_threaded_irq(pca9450->dev, pca9450->irq, NULL,
++						pca9450_irq_handler,
++						(IRQF_TRIGGER_FALLING | IRQF_ONESHOT),
++						"pca9450-irq", pca9450);
++		if (ret != 0) {
++			dev_err(pca9450->dev, "Failed to request IRQ: %d\n",
++				pca9450->irq);
++			return ret;
++		}
++		/* Unmask all interrupt except PWRON/WDOG/RSVD */
++		ret = regmap_update_bits(pca9450->regmap, PCA9450_REG_INT1_MSK,
++					IRQ_VR_FLT1 | IRQ_VR_FLT2 | IRQ_LOWVSYS |
++					IRQ_THERM_105 | IRQ_THERM_125,
++					IRQ_PWRON | IRQ_WDOGB | IRQ_RSVD);
++		if (ret) {
++			dev_err(&i2c->dev, "Unmask irq error\n");
++			return ret;
++		}
+ 	}
+ 
+ 	/* Clear PRESET_EN bit in BUCK123_DVS to use DVS registers */
 -- 
 2.45.2
 
