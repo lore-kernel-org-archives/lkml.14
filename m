@@ -1,247 +1,191 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC40117577
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 06:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529E8111A8;
+	Mon,  8 Jul 2024 06:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720421327; cv=none; b=XcCFwtImHuuxbN6CiO6DUfWP/bNjL1TcpmQ3OzwlVJPeT0XdKKikUaY2VgjwJKvVIhqz2vHd4VBMGnRcZefd3L6jTYlXqC0PUMftmlPDF7exoyeG2+dPC7VgipOyvH9DmWlLcxTsN6/69+2K9+x6X+tUPJNZH4racnWjA7J922I=
+	t=1720421463; cv=none; b=B7HNNRRuOOeXACEmRDBapx5YDXPKEHg6VIz1HOF5YJUT93xOzDUdxq4FFMhGAmQOI6uRe+E4adjpwpZWCMv3g9YJJLTd7A8tE6zB/7eim3/NxLn7j+gtXOM5oZSz7TJUay4L7hZ9I496tyoItQO08Lqr/QawGR7yTndw5iJ9lQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720421327; c=relaxed/simple;
-	bh=AoLMdehBkes1d6GgeEPiJFOpZ18AaXk7Y4RkM+T4E8E=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QkOEdNK8oNixUVG4NF8xRt2U0La0yd4CBjMSkgwTK7gkXA88cTCjn3xarob2GNKJIihi1chPZtLpz2JizNrw57xPwNrgp/x+9vmxNTlQEBqQj0SAwRZMqNeLnnodt/vqd9bEUNtsBW7LH+EwbdCX1YvO8CTjzjm2n2oWUmJIz40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AujPHIpl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AujPHIpl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720421324;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ka5voMkLnXCnTu0/ZE9TEICzmrDDtAGJgajnDyqsx3I=;
-	b=AujPHIpl846rBr30wmVGJSNDu8JUfYzxXpy1YfWyCVli76z28dvXfluqWL4PlBJFDv5BJX
-	/n2movNV90IW14iIxG5qi48HpnJBHCclmRPpNTJ0bAIAMmbrVlkiTznntZ3wet3yurMdxQ
-	LEtlBl9WjQxdXq3sahDfoy5ZlcFiPCc=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-48-sTrY2VPaNVC86PssDVMz0A-1; Mon,
- 08 Jul 2024 02:48:38 -0400
-X-MC-Unique: sTrY2VPaNVC86PssDVMz0A-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF379195609E;
-	Mon,  8 Jul 2024 06:48:36 +0000 (UTC)
-Received: from server.redhat.com (unknown [10.72.112.123])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A281D19560AE;
-	Mon,  8 Jul 2024 06:48:31 +0000 (UTC)
-From: Cindy Lu <lulu@redhat.com>
-To: lulu@redhat.com,
-	dtatulea@nvidia.com,
-	mst@redhat.com,
-	jasowang@redhat.com,
-	parav@nvidia.com,
-	sgarzare@redhat.com,
-	netdev@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [PATCH v3 1/2] vdpa: support set mac address from vdpa tool
-Date: Mon,  8 Jul 2024 14:47:02 +0800
-Message-ID: <20240708064820.88955-2-lulu@redhat.com>
-In-Reply-To: <20240708064820.88955-1-lulu@redhat.com>
-References: <20240708064820.88955-1-lulu@redhat.com>
+	s=arc-20240116; t=1720421463; c=relaxed/simple;
+	bh=tQ4cVw023QVbagybtz4d0LSOHsP4hjFekX/2sc2cLlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=N0dGLWlIVXSXIYQbSc+/S9bXguyJ7xGpELpGqjhyDOopvLlsaPKSqdF3YJe+HofwX+gr8l/c6PRbnAnZ/9C1ysDJcUhI4R6kDU00TKSpQB52JGD3l0hjqsMwOH9GaGa/YXfBdHz6IisdRPcwCgvdthrO1XqpGWB7wPNoLQeLk08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4WHZR50msQz1X4bn;
+	Mon,  8 Jul 2024 14:46:41 +0800 (CST)
+Received: from kwepemf100018.china.huawei.com (unknown [7.202.181.17])
+	by mail.maildlp.com (Postfix) with ESMTPS id E93CB14037D;
+	Mon,  8 Jul 2024 14:50:51 +0800 (CST)
+Received: from [10.67.120.168] (10.67.120.168) by
+ kwepemf100018.china.huawei.com (7.202.181.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 8 Jul 2024 14:50:51 +0800
+Message-ID: <7cae577b-e469-9357-8375-d14746a7787b@hisilicon.com>
+Date: Mon, 8 Jul 2024 14:50:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.0
+Subject: Re: [PATCH for-rc 2/9] RDMA/hns: Fix a long wait for cmdq event
+ during reset
+Content-Language: en-US
+To: Leon Romanovsky <leon@kernel.org>
+CC: <jgg@ziepe.ca>, <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
+	<linux-kernel@vger.kernel.org>
+References: <20240705085937.1644229-1-huangjunxian6@hisilicon.com>
+ <20240705085937.1644229-3-huangjunxian6@hisilicon.com>
+ <20240707083007.GE6695@unreal>
+ <42e9f7dd-05bd-176f-c5c0-02e200b3f58c@hisilicon.com>
+ <20240708053850.GA6788@unreal>
+From: Junxian Huang <huangjunxian6@hisilicon.com>
+In-Reply-To: <20240708053850.GA6788@unreal>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemf100018.china.huawei.com (7.202.181.17)
 
-Add new UAPI to support the mac address from vdpa tool
-Function vdpa_nl_cmd_dev_attr_set_doit() will get the
-new MAC address from the vdpa tool and then set it to the device.
 
-The usage is: vdpa dev set name vdpa_name mac **:**:**:**:**:**
 
-Here is example:
-root@L1# vdpa -jp dev config show vdpa0
-{
-    "config": {
-        "vdpa0": {
-            "mac": "82:4d:e9:5d:d7:e6",
-            "link ": "up",
-            "link_announce ": false,
-            "mtu": 1500
-        }
-    }
-}
+On 2024/7/8 13:38, Leon Romanovsky wrote:
+> On Mon, Jul 08, 2024 at 10:29:54AM +0800, Junxian Huang wrote:
+>>
+>>
+>> On 2024/7/7 16:30, Leon Romanovsky wrote:
+>>> On Fri, Jul 05, 2024 at 04:59:30PM +0800, Junxian Huang wrote:
+>>>> From: wenglianfa <wenglianfa@huawei.com>
+>>>>
+>>>> During reset, cmdq events won't be reported, leading to a long and
+>>>> unnecessary wait. Notify all the cmdqs to stop waiting at the beginning
+>>>> of reset.
+>>>>
+>>>> Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
+>>>> Signed-off-by: wenglianfa <wenglianfa@huawei.com>
+>>>> Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+>>>> ---
+>>>>  drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 18 ++++++++++++++++++
+>>>>  1 file changed, 18 insertions(+)
+>>>>
+>>>> diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+>>>> index a5d746a5cc68..ff135df1a761 100644
+>>>> --- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+>>>> +++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+>>>> @@ -6977,6 +6977,21 @@ static void hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
+>>>>  
+>>>>  	handle->rinfo.instance_state = HNS_ROCE_STATE_NON_INIT;
+>>>>  }
+>>>> +
+>>>> +static void hns_roce_v2_reset_notify_cmd(struct hns_roce_dev *hr_dev)
+>>>> +{
+>>>> +	struct hns_roce_cmdq *hr_cmd = &hr_dev->cmd;
+>>>> +	int i;
+>>>> +
+>>>> +	if (!hr_dev->cmd_mod)
+>>>
+>>> What prevents cmd_mod from being changed?
+>>>
+>>
+>> It's set when the device is being initialized, and won't be changed after that.
+> 
+> This is exactly the point, you are assuming that the device is already
+> ininitialized or not initialized at all. What prevents hns_roce_v2_reset_notify_cmd()
+> from being called in the middle of initialization?
+> 
+> Thanks
+> 
 
-root@L1# vdpa dev set name vdpa0 mac 00:11:22:33:44:55
+This is ensured by hns3 NIC driver.
 
-root@L1# vdpa -jp dev config show vdpa0
-{
-    "config": {
-        "vdpa0": {
-            "mac": "00:11:22:33:44:55",
-            "link ": "up",
-            "link_announce ": false,
-            "mtu": 1500
-        }
-    }
-}
+Initialization and reset of hns RoCE are both called by hns3. It will check the state
+of RoCE device (see line 3798), and notify RoCE device to reset (hns_roce_v2_reset_notify_cmd()
+is called) only if the RoCE device has been already initialized:
 
-Signed-off-by: Cindy Lu <lulu@redhat.com>
----
- drivers/vdpa/vdpa.c       | 81 +++++++++++++++++++++++++++++++++++++++
- include/linux/vdpa.h      |  9 +++++
- include/uapi/linux/vdpa.h |  1 +
- 3 files changed, 91 insertions(+)
+ 3791 static int hclge_notify_roce_client(struct hclge_dev *hdev,
+ 3792                                     enum hnae3_reset_notify_type type)
+ 3793 {
+ 3794         struct hnae3_handle *handle = &hdev->vport[0].roce;
+ 3795         struct hnae3_client *client = hdev->roce_client;
+ 3796         int ret;
+ 3797
+ 3798         if (!test_bit(HCLGE_STATE_ROCE_REGISTERED, &hdev->state) || !client)
+ 3799                 return 0;
+ 3800
+ 3801         if (!client->ops->reset_notify)
+ 3802                 return -EOPNOTSUPP;
+ 3803
+ 3804         ret = client->ops->reset_notify(handle, type);
+ 3805         if (ret)
+ 3806                 dev_err(&hdev->pdev->dev, "notify roce client failed %d(%d)",
+ 3807                         type, ret);
+ 3808
+ 3809         return ret;
+ 3810 }
 
-diff --git a/drivers/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
-index a7612e0783b3..ca97ad43e1bd 100644
---- a/drivers/vdpa/vdpa.c
-+++ b/drivers/vdpa/vdpa.c
-@@ -1149,6 +1149,82 @@ static int vdpa_nl_cmd_dev_config_get_doit(struct sk_buff *skb, struct genl_info
- 	return err;
- }
- 
-+static int vdpa_dev_net_device_attr_set(struct vdpa_device *vdev,
-+					struct genl_info *info)
-+{
-+	struct vdpa_dev_set_config set_config = {};
-+	const u8 *macaddr;
-+	struct vdpa_mgmt_dev *mdev = vdev->mdev;
-+	struct nlattr **nl_attrs = info->attrs;
-+	int err;
-+
-+	if (!vdev->mdev)
-+		return -EINVAL;
-+
-+	down_write(&vdev->cf_lock);
-+	if ((mdev->supported_features & BIT_ULL(VIRTIO_NET_F_MAC)) &&
-+	    nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACADDR]) {
-+		set_config.mask |= BIT_ULL(VDPA_ATTR_DEV_NET_CFG_MACADDR);
-+		macaddr = nla_data(nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACADDR]);
-+		memcpy(set_config.net.mac, macaddr, ETH_ALEN);
-+
-+		if (mdev->ops->dev_set_attr) {
-+			err = mdev->ops->dev_set_attr(mdev, vdev, &set_config);
-+		} else {
-+			NL_SET_ERR_MSG_FMT_MOD(info->extack,
-+					       "features 0x%llx not supported",
-+					       BIT_ULL(VIRTIO_NET_F_MAC));
-+			err = -EINVAL;
-+		}
-+	}
-+	up_write(&vdev->cf_lock);
-+
-+	return err;
-+}
-+static int vdpa_nl_cmd_dev_attr_set_doit(struct sk_buff *skb,
-+					 struct genl_info *info)
-+{
-+	const char *name;
-+	int err = 0;
-+	struct device *dev;
-+	struct vdpa_device *vdev;
-+	u64 classes;
-+
-+	if (!info->attrs[VDPA_ATTR_DEV_NAME])
-+		return -EINVAL;
-+
-+	name = nla_data(info->attrs[VDPA_ATTR_DEV_NAME]);
-+
-+	down_write(&vdpa_dev_lock);
-+	dev = bus_find_device(&vdpa_bus, NULL, name, vdpa_name_match);
-+	if (!dev) {
-+		NL_SET_ERR_MSG_MOD(info->extack, "device not found");
-+		err = -ENODEV;
-+		goto dev_err;
-+	}
-+	vdev = container_of(dev, struct vdpa_device, dev);
-+	if (!vdev->mdev) {
-+		NL_SET_ERR_MSG_MOD(
-+			info->extack,
-+			"Fail to find the specified management device");
-+		err = -EINVAL;
-+		goto mdev_err;
-+	}
-+	classes = vdpa_mgmtdev_get_classes(vdev->mdev, NULL);
-+	if (classes & BIT_ULL(VIRTIO_ID_NET)) {
-+		err = vdpa_dev_net_device_attr_set(vdev, info);
-+	} else {
-+		NL_SET_ERR_MSG_FMT_MOD(info->extack, "%s device not supported",
-+				       name);
-+	}
-+
-+mdev_err:
-+	put_device(dev);
-+dev_err:
-+	up_write(&vdpa_dev_lock);
-+	return err;
-+}
-+
- static int vdpa_dev_config_dump(struct device *dev, void *data)
- {
- 	struct vdpa_device *vdev = container_of(dev, struct vdpa_device, dev);
-@@ -1285,6 +1361,11 @@ static const struct genl_ops vdpa_nl_ops[] = {
- 		.doit = vdpa_nl_cmd_dev_stats_get_doit,
- 		.flags = GENL_ADMIN_PERM,
- 	},
-+	{
-+		.cmd = VDPA_CMD_DEV_ATTR_SET,
-+		.doit = vdpa_nl_cmd_dev_attr_set_doit,
-+		.flags = GENL_ADMIN_PERM,
-+	},
- };
- 
- static struct genl_family vdpa_nl_family __ro_after_init = {
-diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-index db15ac07f8a6..14afa6d59098 100644
---- a/include/linux/vdpa.h
-+++ b/include/linux/vdpa.h
-@@ -576,11 +576,20 @@ void vdpa_set_status(struct vdpa_device *vdev, u8 status);
-  *	     @dev: vdpa device to remove
-  *	     Driver need to remove the specified device by calling
-  *	     _vdpa_unregister_device().
-+  * @dev_set_attr: change a vdpa device's attr after it was create
-+ *	     @mdev: parent device to use for device
-+ *	     @dev: vdpa device structure
-+ *	     @config:Attributes to be set for the device.
-+ *	     The driver needs to check the mask of the structure and then set
-+ *	     the related information to the vdpa device. The driver must return 0
-+ *	     if set successfully.
-  */
- struct vdpa_mgmtdev_ops {
- 	int (*dev_add)(struct vdpa_mgmt_dev *mdev, const char *name,
- 		       const struct vdpa_dev_set_config *config);
- 	void (*dev_del)(struct vdpa_mgmt_dev *mdev, struct vdpa_device *dev);
-+	int (*dev_set_attr)(struct vdpa_mgmt_dev *mdev, struct vdpa_device *dev,
-+			    const struct vdpa_dev_set_config *config);
- };
- 
- /**
-diff --git a/include/uapi/linux/vdpa.h b/include/uapi/linux/vdpa.h
-index 54b649ab0f22..76b3a1fd13f3 100644
---- a/include/uapi/linux/vdpa.h
-+++ b/include/uapi/linux/vdpa.h
-@@ -19,6 +19,7 @@ enum vdpa_command {
- 	VDPA_CMD_DEV_GET,		/* can dump */
- 	VDPA_CMD_DEV_CONFIG_GET,	/* can dump */
- 	VDPA_CMD_DEV_VSTATS_GET,
-+	VDPA_CMD_DEV_ATTR_SET,
- };
- 
- enum vdpa_attr {
--- 
-2.45.0
+And the bit is set (see line 11246) after the initialization has been done (line 11242):
 
+11224 static int hclge_init_roce_client_instance(struct hnae3_ae_dev *ae_dev,
+11225                                            struct hclge_vport *vport)
+11226 {
+11227         struct hclge_dev *hdev = ae_dev->priv;
+11228         struct hnae3_client *client;
+11229         int rst_cnt;
+11230         int ret;
+11231
+11232         if (!hnae3_dev_roce_supported(hdev) || !hdev->roce_client ||
+11233             !hdev->nic_client)
+11234                 return 0;
+11235
+11236         client = hdev->roce_client;
+11237         ret = hclge_init_roce_base_info(vport);
+11238         if (ret)
+11239                 return ret;
+11240
+11241         rst_cnt = hdev->rst_stats.reset_cnt;
+11242         ret = client->ops->init_instance(&vport->roce);
+11243         if (ret)
+11244                 return ret;
+11245
+11246         set_bit(HCLGE_STATE_ROCE_REGISTERED, &hdev->state);
+11247         if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
+11248             rst_cnt != hdev->rst_stats.reset_cnt) {
+11249                 ret = -EBUSY;
+11250                 goto init_roce_err;
+11251         }
+
+Junxian
+
+>>
+>> Junxian
+>>
+>>>> +		return;
+>>>> +
+>>>> +	for (i = 0; i < hr_cmd->max_cmds; i++) {
+>>>> +		hr_cmd->context[i].result = -EBUSY;
+>>>> +		complete(&hr_cmd->context[i].done);
+>>>> +	}
+>>>> +}
+>>>> +
+>>>>  static int hns_roce_hw_v2_reset_notify_down(struct hnae3_handle *handle)
+>>>>  {
+>>>>  	struct hns_roce_dev *hr_dev;
+>>>> @@ -6997,6 +7012,9 @@ static int hns_roce_hw_v2_reset_notify_down(struct hnae3_handle *handle)
+>>>>  	hr_dev->dis_db = true;
+>>>>  	hr_dev->state = HNS_ROCE_DEVICE_STATE_RST_DOWN;
+>>>>  
+>>>> +	/* Complete the CMDQ event in advance during the reset. */
+>>>> +	hns_roce_v2_reset_notify_cmd(hr_dev);
+>>>> +
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>> -- 
+>>>> 2.33.0
+>>>>
+>>
