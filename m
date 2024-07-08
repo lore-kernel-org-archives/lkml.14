@@ -1,147 +1,86 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C581014A609;
-	Mon,  8 Jul 2024 16:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C73C1EA6F;
+	Mon,  8 Jul 2024 16:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720454418; cv=none; b=cpef4LwpvUisNxFcRNT8jQrte1hEDXuNG5FutCzC2/+nwZCjgUMysIMOGNaNNYHNvWp3PpRDPVQzMa8DlaRmBSYaoXCv24sfGeWIIjLJ2nyCp5W+7Vfs3GVK5+qfBzxj7jptMvB1HByuD1WXm4Dob0JOkgCnbqLExX18jphDLTI=
+	t=1720454474; cv=none; b=NLwOhPG/4uB2iZMSi2k5Ytb9ard83wWi1Qn3iLOd99tBe7YDzRDZVOg8/0kRAmRxvxV/Oda8GOeA/7dhyz07pAv64fT9RD+M8fLTb+o6SNqGOGwBhXa4fFZrve3mkgWq/y0gDlppMaIciskrCO5v5FN7esxsii73fHdaeOp4Fgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720454418; c=relaxed/simple;
-	bh=MuEF+GNm/VqqdPc7ws1S3BPo1gOfqoRwznKc1YlSbHY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UrWZ9p0Ue6YMJqTEm9fy9elHeZXAcsaYvJ7vAryQM/i8XLt/nx+ImD7JhYfgrxtVNIny5WPMy0/qORT/QeS9aJXrlBW4h4qW846B7LJvkVjiAj3czrQFxxy/xHsDHQTE0iv7Dha7OsW9Ei12OBzzaiA7t9cz/DkGYcVRZGXzfKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=N5dzKs15; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1720454474; c=relaxed/simple;
+	bh=I0c/LK8KrZzZFHZcOEqRu28OsPSObo3IAzNk0eUwkQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ML051E38YmLcsRSEoD2YmnClSxLqVBYnwg6sk3jf0OQc+JfJtU6gnfUdBzkoYi9wcu4OHFiG25RXra44hMwF7Gj6Cn5Qd0lszJaNRLZwenoj8Now165btEPuzeb8cYGMac2/r4GwYZ9cH6xx4NNbnZBAuE5r9/zNKiMsqkUSXdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k86mSvuD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N5dzKs15"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 468FxqG7054487;
-	Mon, 8 Jul 2024 10:59:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1720454392;
-	bh=d3mM+hxXZg7+ES3r8+HaF5X0gqA1QPFzoF7HByEy0NI=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=N5dzKs15cF5D5oonv+wjDp+JgXx52UK22pvnqbXXDOBHUq8Nkjds4radMVI27S3BJ
-	 8oJZsCnxx5PDl/phiZkLWowr7iGck4lrlE77UQhjaiakgiLJayZY4oMQFANWOZo/wg
-	 I+VU7LsSx7se3DZSKbkKMPXjPjYFlDmgS+3Ikdm8=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 468Fxq7p023140
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 8 Jul 2024 10:59:52 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 8
- Jul 2024 10:59:52 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 8 Jul 2024 10:59:51 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 468FxpAK033408;
-	Mon, 8 Jul 2024 10:59:51 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sebastian.fricke@collabora.com>, <andriy.shevchenko@linux.intel.com>,
-        <jani.nikula@intel.com>, <jirislaby@kernel.org>, <corbet@lwn.net>,
-        <broonie@kernel.org>, <rdunlap@infradead.org>,
-        <linux-doc@vger.kernel.org>
-CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>, <devarsht@ti.com>, <andi.shyti@linux.intel.com>,
-        <nicolas@ndufresne.ca>, <davidgow@google.com>, <dlatypov@google.com>
-Subject: [PATCH 5/6] lib: math_kunit: Add tests for new macros related to rounding to nearest value
-Date: Mon, 8 Jul 2024 21:29:42 +0530
-Message-ID: <20240708155943.2314427-6-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20240708155943.2314427-1-devarsht@ti.com>
-References: <20240708155943.2314427-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k86mSvuD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A995C116B1;
+	Mon,  8 Jul 2024 16:01:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720454474;
+	bh=I0c/LK8KrZzZFHZcOEqRu28OsPSObo3IAzNk0eUwkQ4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=k86mSvuDac5y3aLfYN7mRyoU0IBxkdcBVw1ZKegWSjWlcCMtgxdVOXIxvc3mKrZp8
+	 t9h/DhnBaKdKNdeNhxx/W34Gfj1cdDSdAFGHqUpuK7/heTNIBAEVaM5FQrf+KqeHvf
+	 CmnxWL5o50kwp4x8QmZGmDkkXUHyIXdee1ELMdDvtffUyxUSc7NPeTVs51RVlhfUT4
+	 mBvwq21FzWzRnqL1CSzsEdxJfagGi2vZF8tvGMM6kcSiqpEnOcf4LKW61TnZPmT6VF
+	 UBggMeX8fDz2QN9FCPuWgrWIBIJP8DwUaHl1jMfspTctSSTS03D+B4bj3X7QYwuxEg
+	 NCc+HcBq11DJw==
+Message-ID: <81a93b15-2791-4eec-8164-f141fae9a5f1@kernel.org>
+Date: Mon, 8 Jul 2024 11:01:12 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
+ CONFIG_OF is enabled
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Lukas Wunner <lukas@wunner.de>, Bert Karwatzki <spasswolf@web.de>,
+ caleb.connolly@linaro.org, bhelgaas@google.com, amit.pundir@linaro.org,
+ neil.armstrong@linaro.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, Praveenkumar Patil <PraveenKumar.Patil@amd.com>
+References: <20240707183829.41519-1-spasswolf@web.de>
+ <Zoriz1XDMiGX_Gr5@wunner.de> <20240708003730.GA586698@rocinante>
+ <CACMJSevHmnuDk8hpK8W+R7icySmNF8nT1T9+dJDE_KMd4CbGNg@mail.gmail.com>
+ <20240708083317.GA3715331@rocinante>
+ <6e57dbc0-f47a-464e-af6b-abd45c450dc6@kernel.org>
+ <CACMJSetAKtPp_Gua2S7m_+aC-f9HSUyfF1YoHUPdtcibLtQxpA@mail.gmail.com>
+ <20240708154401.GD5745@thinkpad>
+ <664619a9-c80f-4f81-b302-b9c5258b5e0e@kernel.org>
+ <CAMRc=Mf2pE5JVHzcntO5b+5so_=ekuHGzrY=xJpKatURJFpGZA@mail.gmail.com>
+ <8838b5c3-0c51-42f6-9842-186139822be7@kernel.org>
+ <CAMRc=MdHSsctXYor2ycWqRJHCUciweRTie_TjW9h0yfN7wZhOA@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <CAMRc=MdHSsctXYor2ycWqRJHCUciweRTie_TjW9h0yfN7wZhOA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add tests for round_closest_up/down and roundclosest macros which round
-to nearest multiple of specified argument. These are tested with kunit
-tool as shared here [1] :
+On 7/8/2024 10:58, Bartosz Golaszewski wrote:
+> On Mon, Jul 8, 2024 at 5:53 PM Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>> On 7/8/2024 10:49, Bartosz Golaszewski wrote:
+>>
+>>>
+>>> If you have CONFIG_OF enabled then of_platform_populate() will go the
+>>> normal path and actually try to populate sub-nodes of the host bridge
+>>> node. If there are no OF nodes (not a device-tree system) then it will
+>>> fail.
+>>>
+>>> Bart
+>>
+>> So how about keep both patches then?
+> 
+> No, it doesn't make sense. If CONFIG_OF is enabled then -ENODEV is a
+> valid error. I was wrong to apply the previous patch as it would lead
+> to hiding actual errors on OF-enabled systems.
+> 
+> Bart
 
-Link: https://gist.github.com/devarsht/3f9042825be3da4e133b8f4eda067876 [1]
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- lib/math/math_kunit.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
-diff --git a/lib/math/math_kunit.c b/lib/math/math_kunit.c
-index be27f2afb8e4..05022f010be6 100644
---- a/lib/math/math_kunit.c
-+++ b/lib/math/math_kunit.c
-@@ -70,6 +70,26 @@ static void round_down_test(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, round_down((1 << 30) - 1, 1 << 29), 1 << 29);
- }
- 
-+static void round_closest_up_test(struct kunit *test)
-+{
-+	KUNIT_EXPECT_EQ(test, round_closest_up(17, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_up(15, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_up(14, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_up((1 << 30) - 1, 1 << 30), 1 << 30);
-+	KUNIT_EXPECT_EQ(test, round_closest_up((1 << 30) + 1, 1 << 30), 1 << 30);
-+	KUNIT_EXPECT_EQ(test, round_closest_up((1 << 30) - 1, 2), 1 << 30);
-+}
-+
-+static void round_closest_down_test(struct kunit *test)
-+{
-+	KUNIT_EXPECT_EQ(test, round_closest_down(17, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_down(15, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_down(14, 4), 12);
-+	KUNIT_EXPECT_EQ(test, round_closest_down((1 << 30) - 1, 1 << 30), 1 << 30);
-+	KUNIT_EXPECT_EQ(test, round_closest_down((1 << 30) + 1, 1 << 30), 1 << 30);
-+	KUNIT_EXPECT_EQ(test, round_closest_down((1 << 30) - 1, 2), (1 << 30) - 2);
-+}
-+
- /* These versions can round to numbers that aren't a power of two */
- static void roundup_test(struct kunit *test)
- {
-@@ -95,6 +115,18 @@ static void rounddown_test(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, rounddown(4, 3), 3);
- }
- 
-+static void roundclosest_test(struct kunit *test)
-+{
-+	KUNIT_EXPECT_EQ(test, roundclosest(21, 5), 20);
-+	KUNIT_EXPECT_EQ(test, roundclosest(19, 5), 20);
-+	KUNIT_EXPECT_EQ(test, roundclosest(17, 5), 15);
-+	KUNIT_EXPECT_EQ(test, roundclosest((1 << 30), 3), (1 << 30) - 1);
-+	KUNIT_EXPECT_EQ(test, roundclosest((1 << 30) - 1, 1 << 29), 1 << 30);
-+
-+	KUNIT_EXPECT_EQ(test, roundclosest(4, 3), 3);
-+	KUNIT_EXPECT_EQ(test, roundclosest(5, 3), 6);
-+}
-+
- static void div_round_up_test(struct kunit *test)
- {
- 	KUNIT_EXPECT_EQ(test, DIV_ROUND_UP(0, 1), 0);
-@@ -272,8 +304,11 @@ static struct kunit_case math_test_cases[] = {
- 	KUNIT_CASE(int_sqrt_test),
- 	KUNIT_CASE(round_up_test),
- 	KUNIT_CASE(round_down_test),
-+	KUNIT_CASE(round_closest_up_test),
-+	KUNIT_CASE(round_closest_down_test),
- 	KUNIT_CASE(roundup_test),
- 	KUNIT_CASE(rounddown_test),
-+	KUNIT_CASE(roundclosest_test),
- 	KUNIT_CASE(div_round_up_test),
- 	KUNIT_CASE(div_round_closest_test),
- 	KUNIT_CASE_PARAM(gcd_test, gcd_gen_params),
--- 
-2.39.1
-
+Got it; thanks.
