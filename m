@@ -1,294 +1,210 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00823401.pphosted.com (mx0a-00823401.pphosted.com [148.163.148.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76724145B06
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720474811; cv=none; b=EVe0Q71sVzKFYRC2Ob4YAskB2VeVshz5bg5s93hJkYVKf9imtIShhoAj6RkA08YvIhCtlBd9Ajedb4kCJXaLeXwaKw9FNDS0j0iR3ZBLCo9MenwgV4pADRL9A7X4TcoeeMvCLG4+GvXg0ezUd500dQBe6CFbnZocnbgd8afJnIA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720474811; c=relaxed/simple;
-	bh=ksWUl+7oU5im94h1dU1dhvwd56cmIXpc/qZXAFf5Rs4=;
-	h=From:References:MIME-Version:In-Reply-To:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CdXuHzFU4Ijnq2F+B9l3ElGP3CWEz4AiSMNGZr/FZ8NLJuJZSTJAF7kfcmrXoukByiza0+X/qyrLAWo6pEo5d8n3ZKB19hS0UOYDfrSV9deS7PAOOyEjJ9UTem/TgL+hVcExOgRj1lDLVMTvzfKVUvyKh46A4R9HE0hjVJ6V8x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SLWHmPh9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B28C12E75
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.148.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720474899; cv=fail; b=Dg59dkSpWsFWQKGCGuHcZYm0cdK3QnPBStCb2erYjEYD5qPe6nYjOcXwwBu+8f54jWR28TNU4JjpeE1GVSCLTvKgzpdiTt6eQYPd0ztfn9b9PQvZ9lgMqGLP8MvcBQB5wHF8Va13gTdXVLFWP01tddR/O13xOCSv9N8mnmSFebA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720474899; c=relaxed/simple;
+	bh=S6WSuFVRoXASMaSRS7JK1Bc9nwRxB/TJUZ0blg4KOA0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=d3JjUnbhniY4qTfjSXX32Y7mTcU2/vHMSvxiFAEvBUoB3amaqhVOSKzIDQ2DABAqBqGGz37mLBEKkJtgllVWpfY36EyqDfdUqZ/ngfRTMk3r7nnekZetNViQcYKotPd3g0z+IrQCsS3Jf6EuhJklhIZrSBDv3oKYzgfmXEk3wTs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lenovo.com; spf=pass smtp.mailfrom=lenovo.com; dkim=pass (2048-bit key) header.d=lenovo.com header.i=@lenovo.com header.b=bovOKVjM; arc=fail smtp.client-ip=148.163.148.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lenovo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lenovo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SLWHmPh9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720474808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xrmMfuh6zl+J0VMmb+jXkVGZeQnzPMh5oQVddVrOdbk=;
-	b=SLWHmPh93gTaXfRS39V4mac1zkGdMRp1q1MzkgFbhXpsU7JkY6Gc2/8ftflDQIfnDv+TKM
-	gUXRHmZm+ssJIZLNgg2L36ivr5kO6l5Xx5fljVr5CdHxe/hBGCZadMGso5ZwgEJWfAkjMG
-	XVeACqD4KSYKerGoC6nQUJ7E272wkE8=
-Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
- [209.85.219.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-yLdQE7mzMmaTP-9Bm881-Q-1; Mon, 08 Jul 2024 17:40:07 -0400
-X-MC-Unique: yLdQE7mzMmaTP-9Bm881-Q-1
-Received: by mail-yb1-f200.google.com with SMTP id 3f1490d57ef6-e03a59172dbso7712136276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 14:40:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720474806; x=1721079606;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:in-reply-to
-         :mime-version:references:from:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xrmMfuh6zl+J0VMmb+jXkVGZeQnzPMh5oQVddVrOdbk=;
-        b=wOjEIsGuGS7nzVLXpYMPli5M3ut9HjCpOHwbjm4reI0nx59BQbFvIR1bT0ii22SLD5
-         j7tfy7yXSKXT7JbeHQWIzPkgM5wL9LSko9fTdl8m1/z/j46IkgzY1iP/pPn6qJdLCqDX
-         qmIBdM1UII3NE7/Zo1hcxRAvyCN2LXwkWs4xwoQ/1gd2TWUq6K8LxKvXHg+wJaTkaGwP
-         uZ2RXuwGmMXoUwVND7qXkADJlUZz2Lr7Rt8Nrgyokz2cCFOa9tmQkm13oV5qMhrl9zSy
-         odsU/AnzNkRMuxU0bk8TxoIxGqpeOuoWLTg3XFAq0Y8ngGRecJCIq40xIMqEVBt9I+lW
-         a25Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWz7gEB9WX8wv3fKfeVFsfdJc2gLEzszlA/jfY+ivNSgXPHoV9b9kptcTo4UicHuie0GGsOb9+XBrzBkE4YLegja48wJ3E6PfNijujH
-X-Gm-Message-State: AOJu0YyBdobPZmU+WlGp0X39Ay4hBR2IuMeUZSaE9ADT7dLgxVrVyY0s
-	J2W0ql3MVHe/sSacqvoFhqAlAARtox72rUXPoDtQmVdY+LPVT5dH4OSgdNDRyGFEgtudbzG3CaG
-	VgviqDNJoYHU2qJmRGbT8IOOK3wvucm8miIWG+h8ZQgyAZu1YEoptd4LuJ14RMYifvIShgDZfwH
-	q9YdMjs4J8Ne1x753jmDW32h146gNt3Apo6mnb
-X-Received: by 2002:a25:dc91:0:b0:e03:4e3b:2a49 with SMTP id 3f1490d57ef6-e041b15b11amr1075166276.60.1720474806277;
-        Mon, 08 Jul 2024 14:40:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHhcBFn0ofqIUHCwGg3OYl0O2Ng3lLsFfo+cuSb6XyWrWH/AvKTaMcedW1YcTsjxqISDHxVyzi9sPAVrwvwT+A=
-X-Received: by 2002:a25:dc91:0:b0:e03:4e3b:2a49 with SMTP id
- 3f1490d57ef6-e041b15b11amr1075148276.60.1720474805979; Mon, 08 Jul 2024
- 14:40:05 -0700 (PDT)
-Received: from 311643009450 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 8 Jul 2024 14:40:05 -0700
-From: =?UTF-8?Q?Adri=C3=A1n_Moreno?= <amorenoz@redhat.com>
-References: <20240708134451.3489802-1-amorenoz@redhat.com> <0fd40aed-04d1-43a3-ab3d-c7459a63f753@ovn.org>
+	dkim=pass (2048-bit key) header.d=lenovo.com header.i=@lenovo.com header.b="bovOKVjM"
+Received: from pps.filterd (m0355085.ppops.net [127.0.0.1])
+	by mx0a-00823401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468DWVWK000917;
+	Mon, 8 Jul 2024 13:40:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM202306;
+	 bh=1sPlnB8ht0Ub1UAV3k6ACvaMmTxD9d+dSQT/PRqoGLA=; b=bovOKVjMCQrd
+	mQhbFYXlheRS5ttIC/3c2HGK4AZF4gOfyMkaYc2Vdv5C0G708lkRDMeJVBZwx9tT
+	mHZXYxNu/2PR3vbb13hcPYrd+NH//+ywIOvAL/cF1aW8BU4yeQw/re9OEMbVhAIY
+	Ng/mwBgrnr6ncoI9W40j06AWaQP/2ABCDrP8lDLEwK/YE5T6DuQhjJo6IB9G0EE6
+	/pE9CQyXT1NOPLhjCZG2iTt/q3xo3Dx+uphZLIcmWuZVuX2XnZ8FPfwp3shc/rvY
+	fpC82D28HTTQYpP5sQ2LxAav9JG+q4+EW1hgLD0jJSzoi7pWYdoS/3mbS1ifezHf
+	0xSFXDosmA==
+Received: from apc01-tyz-obe.outbound.protection.outlook.com (mail-tyzapc01lp2040.outbound.protection.outlook.com [104.47.110.40])
+	by mx0a-00823401.pphosted.com (PPS) with ESMTPS id 407meft4jn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jul 2024 13:39:59 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QkT/n21jmnfgXKR4kb96HKIT414HbQODFXTEtLULsN9sZfUg/a2YTSmnZ5ieFUJPIPvNBRZZioElEaZxSyti/cKj3FrHmbmM8twjQRoRHzuojbwvirtnOW1Thh2Lv6bIkmTsrdhq5YdLP1NlGvrmARx09IMCR/Kses1JkLIU5+9gakANKEpLrmr+T6q2QRhu/JsxADY7FmIda/wfWA/sK+UmmZcijQlWdpxaMYd9zDMhruFXCKK7rEqJTnMGPi9c9uhe9KNcMm1/BWwgQDQpMADh2nBo81VMIq/+YHyipNDLVpGiZRmnubqk4ga6DfIIPS1zuWmVOi3xvI82XYSY4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1sPlnB8ht0Ub1UAV3k6ACvaMmTxD9d+dSQT/PRqoGLA=;
+ b=hVqS4fe20Hw/rSL6KNTgLAENpPxlGC1UZA4Us6qzbMTsUItFIhmmRX5fp004gf8TWBex3CIJAPEKKBrDKpH75onFwcIvbEy2mwNdOUjQIsOzk55lpCyDgKDLU5dlJgnmSEHMy5IIEFbPSaRQANIF8C6XOwioht45W+zq17eMvgfgEG/wG/7uwTbhz6bUsaViwjWuHQ9Z0wovcQxDvZAMfY05NSPbN6bVukgt4mzvNkR5lqlv91uEGjDV/5Ohbm5f4S7Xdiaq9t8JWej2ePqE92PZH1l5MUYIPneXeExlKTfulV2lA0jFnjrP++3LdYKabCjJYkgZTYWtAEeGYiv9vQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=lenovo.com; dmarc=pass action=none header.from=lenovo.com;
+ dkim=pass header.d=lenovo.com; arc=none
+Received: from TYZPR03MB6192.apcprd03.prod.outlook.com (2603:1096:400:130::9)
+ by TYZPR03MB8614.apcprd03.prod.outlook.com (2603:1096:405:af::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.34; Mon, 8 Jul
+ 2024 13:39:57 +0000
+Received: from TYZPR03MB6192.apcprd03.prod.outlook.com
+ ([fe80::54ac:ace0:dab9:cf27]) by TYZPR03MB6192.apcprd03.prod.outlook.com
+ ([fe80::54ac:ace0:dab9:cf27%4]) with mapi id 15.20.7741.033; Mon, 8 Jul 2024
+ 13:39:57 +0000
+From: Adrian Huang12 <ahuang12@lenovo.com>
+To: Uladzislau Rezki <urezki@gmail.com>,
+        Adrian Huang
+	<adrianhuang0701@gmail.com>
+CC: Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig
+	<hch@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiwei JW10 Sun
+	<sunjw10@lenovo.com>
+Subject: RE: [External] Re: [PATCH 1/1] mm/vmalloc: Add preempt point in
+ purge_vmap_node() when enabling kasan
+Thread-Topic: [External] Re: [PATCH 1/1] mm/vmalloc: Add preempt point in
+ purge_vmap_node() when enabling kasan
+Thread-Index: AQHazvEibLVY0u/ZyEqO+9IiidqC3LHs2RQw
+Date: Mon, 8 Jul 2024 13:39:57 +0000
+Message-ID: 
+ <TYZPR03MB619290520C6552B540870C32B3DA2@TYZPR03MB6192.apcprd03.prod.outlook.com>
+References: <20240705130808.1581-1-ahuang12@lenovo.com>
+ <ZogS_04dP5LlRlXN@pc636>
+In-Reply-To: <ZogS_04dP5LlRlXN@pc636>
+Accept-Language: en-US, zh-TW
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR03MB6192:EE_|TYZPR03MB8614:EE_
+x-ms-office365-filtering-correlation-id: cd6a1d9d-fd01-4240-83b4-08dc9f537507
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: 
+ =?us-ascii?Q?OiALOs4lIa1BLhyIJv+3M3ZH1cgXicR7pupWNlbsFv7GsNLqU6ww6hgeS7dN?=
+ =?us-ascii?Q?wPGtP0M/3Ia7qTbgntL2h5TjGKxc6YyBSC1ZByVBJV/R2APcX9vauhfzepkv?=
+ =?us-ascii?Q?9ATH2Rrk4m9R8V3kIuTPyNXcsTgQNrlEvIdT/LiJFLF0fl0AkN2bzzaGm96p?=
+ =?us-ascii?Q?uXbGidMq9J59X0u6fp7sZil+m3LE1SMM9/xU68pe86tSgF+XX62vbbEM4z69?=
+ =?us-ascii?Q?GoJZdJEbUCLqmNrZO+BTsXadOWIOLxx2gXdIp/F6QI6LtnzFBjtRsBpLOinv?=
+ =?us-ascii?Q?XO0CPE4g9ZVQbykobQmuXbNzjF+AsZ0oyp7JCBHEImeGHwog8WtkPc//2GEy?=
+ =?us-ascii?Q?Z1KRXx2USKrDnBMx2tZ0Vw0tz+X2M8sk/8EdYRUjwWKeOT0HeSv4+bqyi6IA?=
+ =?us-ascii?Q?pXXXpg2fkkWU1jG4wtw1KBPwSyse78TivrHezhWsqyhY9u06rUvAklQWcKnV?=
+ =?us-ascii?Q?mP60Bk8zw5hAASixenMXEsfX4D4+eBWZ2CMZ2h5bOw7Z8O7GEn1LFGtcEnUM?=
+ =?us-ascii?Q?vs8xhU6KRA0DBM7aOGvJZJq+/QOJAMJBS5WykrK8DB9+4ZPMWySlWwaNVdor?=
+ =?us-ascii?Q?Mh+i9f5XmPRekQjMo1jsueJzQgmg+C1KzviAT5tVFjzShreys/VWQGLqGCYW?=
+ =?us-ascii?Q?jk7pd+ijt7xiJb62gP9C5EpsS/HJ0KlRWGnDBScDDLXJ5D0hMrd+IQEwZGGX?=
+ =?us-ascii?Q?pX6Mp9EXNQUK/vlrPt0QHjrxdX5qSaBwP13XI7JqVrkjq7pQFIPvFIOlfKuM?=
+ =?us-ascii?Q?lxeIOG4q80x0F6UkFTpt3RvLeeH1y1ll+m+GtknhqUFULD95G7B2tBIb0ODY?=
+ =?us-ascii?Q?g7Kn5b4FaxI8uSnbaSMUPiZYonAnX95DEiHddrCAhS41S1io/F4K/ICO4ovu?=
+ =?us-ascii?Q?B2NViJC975Q8JCTjU+uGBdUW8+dHgSJat+CERrvFHhylcoOoAl0LyU/AyXkC?=
+ =?us-ascii?Q?N0N8hOs6T6Q76+DTHsAXb78MCWVUW7Dwh7hvbBU9lNCSLS2iwIRkhJ6Qt/We?=
+ =?us-ascii?Q?aRkseyaEfqGU0KWAhRLSVpd7ZeqGkMol8J1CNM3RfsHxUkS1vZGct9xogsLs?=
+ =?us-ascii?Q?tGlyFSG1Sp8X71qBGTeE0lpz+3GEdjvT2ORBKc004N8CIw6d/0dI3IkS6Kur?=
+ =?us-ascii?Q?GplCJFmnd9oFz7odUI381xzQyQImIR8f1j4U9kded6N3BCuq/1xU85oYaRJX?=
+ =?us-ascii?Q?lRjyMx4r5wNN5CoaUq6WDTBF2ryTAKrgxAP11WQzfBl7UYU8z7Cgh/UI2PNV?=
+ =?us-ascii?Q?BshanUD4odCOrrMvAGpoP/vg41OH/dyXu0RBms6/8RHAje27KqbKjvDRdGtn?=
+ =?us-ascii?Q?C1mZ9sY+9R8iBdiU28vjfal/RGHOyjZ0DY0+mkFy8l/feTnhkU2sML81RmX6?=
+ =?us-ascii?Q?7MQuNmvZCJ4zBwG7F9x+MPFaSGszoM/T3cW8yaHL6g69BZkigg=3D=3D?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6192.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?Y2+NC9saDB7sWommNJCNF4l0RD7Xray7YdDVfQEFJ7I7xhYwzJrgj9k1Ro0c?=
+ =?us-ascii?Q?rNLqot31XfNRDC8Sdq7XcV/gelOwKDuaMSUTQWv1qQTyFI8YTMOi9vxbfbRN?=
+ =?us-ascii?Q?fIbmD9CSF3sqKehswdc6tYqXxKBrx0QkQ2vBuYyMRGdLp6kL76ZCT/Db/55E?=
+ =?us-ascii?Q?HJnjDrhGwAQCAsDXAkEecKnkgmwR8wS8XF02sjyp5YFABtm4i838TlBiEwky?=
+ =?us-ascii?Q?IArZg/pI6culfzKp7v+2ggOY36Olb9CQn/V4m1lpgw6/biGe30L0U63M8irs?=
+ =?us-ascii?Q?vMw7u5HcCfyxTMtP4MGxwc8AO7eZlqCcuA5GivCmqSCMHm5gFlBEAiutoUz2?=
+ =?us-ascii?Q?Lri8bAeiaeWLVZA/S+suTEZBtVXfemWQuBhXjyZwMMckCDJj/FYRi7yOYYoU?=
+ =?us-ascii?Q?kelhIpUD7xbC2lBKZ4gHh//T72zRXP/WgFfWnbNJxvwubTWVL7zixEvzm2VH?=
+ =?us-ascii?Q?yQjQgQYm5gMFcm/+HQK0aG/oPU0YIQzcNVbcKyqu9pj07tV8g20iP1tGEvKg?=
+ =?us-ascii?Q?1JKNNwcni7YiQFsBv4GoCeXhXGoyYYAZuTexBSnmKlUSj0ggXJeH/x4zAvXA?=
+ =?us-ascii?Q?ByeX++zwcwB+TU0cLktIfKjoMv2HzV2FkpzUfWd7y2EGMWpMn6a4VLjURR0B?=
+ =?us-ascii?Q?gt/BTwI583rOVOh/Po0TVZGH6Czfy6BGDxHiDefFCaMiGm81OaOLREeQp7CO?=
+ =?us-ascii?Q?A5yHMcjF/8DDA+cyuhM5GovjjDDh8AAExY6kMt06z9q1iDdHMTdip2trsrDL?=
+ =?us-ascii?Q?8Lt5fxJ0tWwCzybMDZYo5tiqstSqRwMHE/zC/+eBDUy5oF8V15JKKBesFYG8?=
+ =?us-ascii?Q?IdvLASM16b3uJg4r3oeW/OG6fJi1jbkAqj00QO2rXLIeN/R67sZHgoKLVD0z?=
+ =?us-ascii?Q?9F0vpPGuHQrzLYd2AGSRvqLiAqZ7whVOrZ88G9f8l2yFS7rUWdogFnw8ui1s?=
+ =?us-ascii?Q?w2QHriZYdTflY1bw9pnoyyZeyQ1sJExZXZtziZnKtPmr9IkBS9Xlyg2RdGiK?=
+ =?us-ascii?Q?oZILDZP3JhWepCfIz2YxbJgNGH8mjWQprhJUgridEX4UubndwnRdkgwjtF1H?=
+ =?us-ascii?Q?Ixaf9uwaxjChMWUwRAHM/0FMC+oxwtiYfQJGkYwYyupRhE7yCzkYx0LG8hKy?=
+ =?us-ascii?Q?OKyTGCesu2dt132iNuObJRJA4KrQ0KWmAldPfEpJc3L99MdSAd/Lp+Gobwm0?=
+ =?us-ascii?Q?Q1jEzFo5loeqNs6w1S5qF9HH1RKlf6imv1FhlESf3QkmW/iNYubucO5Zvi1v?=
+ =?us-ascii?Q?a4+JUB3dyuLKsG0zAk8lZLkIGdg6QhYikpJEheK9WHM1mWWkx4r7F+/hXwpn?=
+ =?us-ascii?Q?MH1OH4ap6FQ9Po2WKAb4gAOpcYLbbWYzU/suNr3iV8pz5QBEiattNUqPvETc?=
+ =?us-ascii?Q?WmsAaLdOtXzhg3OSyzQNJ+2/X9FtryNfIMI5yuxh7ePjjOyjsqf/WpxxC6QH?=
+ =?us-ascii?Q?Jhu+HbLPxhnjP8goSsaNHwzbZqyT15qPP9d2p5w5hlm+sjRC25GlgxHIOOE9?=
+ =?us-ascii?Q?g2X6hWpkK8FGXoMvDPFhG7IX8JL685bbsDL4grOPekuig4HkozZzzQcZREg4?=
+ =?us-ascii?Q?J8aCLaPsRiGmEHiEk/vHc7J8TCRiJHwaELzLY0AP?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <0fd40aed-04d1-43a3-ab3d-c7459a63f753@ovn.org>
-Date: Mon, 8 Jul 2024 14:40:05 -0700
-Message-ID: <CAG=2xmO3Je7W0pstvN_ALFcNFRqTLCaRhaCV=O+2VEu5_e+g-A@mail.gmail.com>
-Subject: Re: [ovs-dev] [PATCH v1] selftests: openvswitch: retry instead of sleep
-To: Ilya Maximets <i.maximets@ovn.org>
-Cc: netdev@vger.kernel.org, dev@openvswitch.org, 
-	Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org, 
-	Eric Dumazet <edumazet@google.com>, linux-kselftest@vger.kernel.org, 
-	Jakub Kicinski <kuba@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Aaron Conole <aconole@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: lenovo.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6192.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd6a1d9d-fd01-4240-83b4-08dc9f537507
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2024 13:39:57.3965
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CB92EOiVmCoLUfHL8rHLfHmFM+teaGnUHacgnjpm+sNH9+WXH3qtMzp5ddZ5Atj2X4gmevNwWZ5S+ihKGVLEoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB8614
+X-Proofpoint-ORIG-GUID: 7NE1WTLxPqMfPT3n3rSeEAhYzGGZfiyT
+X-Proofpoint-GUID: 7NE1WTLxPqMfPT3n3rSeEAhYzGGZfiyT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_09,2024-07-05_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ impostorscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 spamscore=0 phishscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=-20 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407080101
 
-On Mon, Jul 08, 2024 at 09:31:58PM GMT, Ilya Maximets wrote:
-> On 7/8/24 15:44, Adrian Moreno wrote:
-> > There are a couple of places where the test script "sleep"s to wait for
-> > some external condition to be met.
-> >
-> > This is error prone, specially in slow systems (identified in CI by
-> > "KSFT_MACHINE_SLOW=3Dyes").
-> >
-> > To fix this, add a "ovs_wait" function that tries to execute a command
-> > a few times until it succeeds. The timeout used is set to 5s for
-> > "normal" systems and doubled if a slow CI machine is detected.
-> >
-> > This should make the following work:
-> >
-> > $ vng --build  \
-> >     --config tools/testing/selftests/net/config \
-> >     --config kernel/configs/debug.config
-> >
-> > $ vng --run . --user root -- "make -C tools/testing/selftests/ \
-> >     KSFT_MACHINE_SLOW=3Dyes TARGETS=3Dnet/openvswitch run_tests"
-> >
-> > Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
-> > ---
-> >  .../selftests/net/openvswitch/openvswitch.sh  | 49 ++++++++++++++++---
-> >  .../selftests/net/openvswitch/ovs-dpctl.py    |  1 +
-> >  2 files changed, 42 insertions(+), 8 deletions(-)
-> >
->
-> Hi, Adrian.  See a small pile of nitpicks below.
->
-> None of them are blocking from my perspective, except for a typo.
-> Just listed them since there is a typo anyway.
->
-> > diff --git a/tools/testing/selftests/net/openvswitch/openvswitch.sh b/t=
-ools/testing/selftests/net/openvswitch/openvswitch.sh
-> > index bc71dbc18b21..83407b42073a 100755
-> > --- a/tools/testing/selftests/net/openvswitch/openvswitch.sh
-> > +++ b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-> > @@ -11,6 +11,7 @@ ksft_skip=3D4
-> >  PAUSE_ON_FAIL=3Dno
-> >  VERBOSE=3D0
-> >  TRACING=3D0
-> > +WAIT_TIMEOUT=3D5
-> >
-> >  tests=3D"
-> >  	arp_ping				eth-arp: Basic arp ping between two NS
-> > @@ -29,6 +30,32 @@ info() {
-> >  	[ $VERBOSE =3D 0 ] || echo $*
-> >  }
-> >
-> > +ovs_wait() {
-> > +	info "waiting $WAIT_TIMEOUT s for: $@"
-> > +
-> > +	"$@"
-> > +	if [[ $? -eq 0 ]]; then
->
-> Maybe just 'if "$@"; then' ?
->
+Hi,
 
-In my head this is a bit less clean but I don't mind.
+> Could you please test it:
+>=20
+> <snip>
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c index 03b82fb8ecd3..6dc204b8495a
+> 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2190,10 +2190,12 @@ static void purge_vmap_node(struct work_struct
+> *work)  {
+>  	struct vmap_node *vn =3D container_of(work,
+>  		struct vmap_node, purge_work);
+> +	unsigned long resched_threshold;
+>  	struct vmap_area *va, *n_va;
+>  	LIST_HEAD(local_list);
+>=20
+>  	vn->nr_purged =3D 0;
+> +	resched_threshold =3D lazy_max_pages() << 1;
+>=20
+>  	list_for_each_entry_safe(va, n_va, &vn->purge_list, list) {
+>  		unsigned long nr =3D (va->va_end - va->va_start) >> PAGE_SHIFT; @@
+> -2210,6 +2212,9 @@ static void purge_vmap_node(struct work_struct *work)
+>  		atomic_long_sub(nr, &vmap_lazy_nr);
+>  		vn->nr_purged++;
+>=20
+> +		if (atomic_long_read(&vmap_lazy_nr) < resched_threshold)
+> +			cond_resched();
+> +
+>  		if (is_vn_id_valid(vn_id) && !vn->skip_populate)
+>  			if (node_pool_add_va(vn, va))
+>  				continue;
+> <snip>
 
-> > +		info "wait succeeded inmediately"
->
-> * immediately
+This patch can fix the issue. Feel free to add my tested-by.
+Tested-by: Adrian Huang <ahuang12@lenovo.com>
 
-Thanks. Will fix the typo.
-
->
-> > +		return 0
-> > +	fi
-> > +
-> > +	# A quick re-check helps speed up small races in fast systems.
-> > +	# However, fractional sleeps might not necessarily work.
-> > +	local start=3D0
-> > +	sleep 0.1 || { sleep 1; start=3D1; }
-> > +
-> > +	for (( i=3Dstart; i<WAIT_TIMEOUT; i++ )); do
->
-> for i in $(seq ${start} ${WAIT_TIMEOUT}); do
->
-> Will need to initialize start to 1 and 2.
->
-> It works, but seems like an unnecessary use of non-POSIX constructs.
-
-The reason why I chose this form is that I find it more robust on a
-script that changes IFS. If this function is called within a block that
-has changed IFS, "i" will take the entire sequence as the value for the
-first iteration.
-
->
-> > +		"$@"
-> > +		if [[ $? -eq 0 ]]; then
->
-> if "$@"; then
->
-> > +			info "wait succeeded after $i seconds"
-> > +			return 0
-> > +		fi
-> > +		sleep 1
-> > +	done
-> > +	info "wait failed after $i seconds"
-> > +	return 1
-> > +}
-> > +
-> >  ovs_base=3D`pwd`
-> >  sbxs=3D
-> >  sbx_add () {
-> > @@ -278,20 +305,21 @@ test_psample() {
-> >
-> >  	# Record psample data.
-> >  	ovs_spawn_daemon "test_psample" python3 $ovs_base/ovs-dpctl.py psampl=
-e-events
-> > +	ovs_wait grep -q "listening for psample events" ${ovs_dir}/stdout
-> >
-> >  	# Send a single ping.
-> > -	sleep 1
-> >  	ovs_sbx "test_psample" ip netns exec client ping -I c1 172.31.110.20 =
--c 1 || return 1
-> > -	sleep 1
-> >
-> >  	# We should have received one userspace action upcall and 2 psample p=
-ackets.
-> > -	grep -E "userspace action command" $ovs_dir/s0.out >/dev/null 2>&1 ||=
- return 1
-> > +	ovs_wait grep -q "userspace action command" $ovs_dir/s0.out
-> > +	[[ $? -eq 0 ]] || return 1
->
-> Why checking separately and not one the same line with || return 1 ?
-
-IMHO, passing complex commands to a function in bash can easily get very
-problematic. That's why I try to remove all pipes, redirections or
-logical operators like && and ||. At least for me it removes one extra
-cycle that my brain has to spend looking at quotes and figuring out if
-the operand will be interpreted inside the function or outside.
-
-> Also double brackets seem unnecessary.
-
-That's true.
-
->
-> >
-> >  	# client -> server samples should only contain the first 14 bytes of =
-the packet.
-> > -	grep -E "rate:4294967295,group:1,cookie:c0ffee data:[0-9a-f]{28}$" \
-> > -			 $ovs_dir/stdout >/dev/null 2>&1 || return 1
-> > -	grep -E "rate:4294967295,group:2,cookie:eeff0c" \
-> > -			 $ovs_dir/stdout >/dev/null 2>&1 || return 1
-> > +	ovs_wait grep -qE "rate:4294967295,group:1,cookie:c0ffee data:[0-9a-f=
-]{28}$" $ovs_dir/stdout
-> > +	[[ $? -eq 0 ]] || return 1
-> > +
-> > +	ovs_wait grep -q "rate:4294967295,group:2,cookie:eeff0c" $ovs_dir/std=
-out
-> > +	[[ $? -eq 0 ]] || return 1
->
-> Same for above two.
->
-> >
-> >  	return 0
-> >  }
-> > @@ -711,7 +739,8 @@ test_upcall_interfaces() {
-> >  	ovs_add_netns_and_veths "test_upcall_interfaces" ui0 upc left0 l0 \
-> >  	    172.31.110.1/24 -u || return 1
-> >
-> > -	sleep 1
-> > +	ovs_wait grep -q "listening on upcall packet handler" ${ovs_dir}/left=
-0.out
-> > +
-> >  	info "sending arping"
-> >  	ip netns exec upc arping -I l0 172.31.110.20 -c 1 \
-> >  	    >$ovs_dir/arping.stdout 2>$ovs_dir/arping.stderr
-> > @@ -811,6 +840,10 @@ shift $(($OPTIND-1))
-> >  IFS=3D"=09
-> >  "
-> >
-> > +if test "X$KSFT_MACHINE_SLOW" =3D=3D "Xyes"; then
-> > +	WAIT_TIMEOUT=3D10
-> > +fi
->
-> Should this be done closer to the first initialization of WAIT_TIMEOUT ?
->
-
-My rationale was splitting "variable declaration" and "code". Sure
-we're not adding an explicit cli argument for this (as with TRACING or
-VERBOSE) but we kind-of are using KSFT_MACHINE_SLOW as an input so for
-me grouping input processing all together made some sense. Having said
-that, I don't have a very strong opinion. I guess we can move it up as
-well.
-
-> > +
-> >  for arg do
-> >  	# Check first that all requested tests are available before running a=
-ny
-> >  	command -v > /dev/null "test_${arg}" || { echo "=3D=3D=3D Test ${arg}=
- not found"; usage; }
-> > diff --git a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py b/too=
-ls/testing/selftests/net/openvswitch/ovs-dpctl.py
-> > index 1e15b0818074..8a0396bfaf99 100644
-> > --- a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-> > +++ b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-> > @@ -2520,6 +2520,7 @@ class PsampleEvent(EventSocket):
-> >      marshal_class =3D psample_msg
-> >
-> >      def read_samples(self):
-> > +        print("listening for psample events", flush=3DTrue)
-> >          while True:
-> >              try:
-> >                  for msg in self.get():
->
-
-Thanks.
-Adri=C3=A1n
-
+-- Adrian
