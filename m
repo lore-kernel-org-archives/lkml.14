@@ -1,80 +1,85 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F4118E1E
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 19:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C092079FD;
+	Mon,  8 Jul 2024 19:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720467014; cv=none; b=lre0pwnCsPXgMMbqcQ1+VFg7ZE8OsejfBOkRVcci4VVIJtC0Lr1q/FDUEM8KJFWhicYd2sJTph/sh01NjBKbLROawL/v5LKgV4ROBq9zwqsMfBRmyradubpMirjehIExOXJvSdrmUnNxgw/qAq7k6GzMR+gxnr0WvkL64xqaLPw=
+	t=1720467043; cv=none; b=itO4MN/HozEg1XWBzWQ4hu/3V1UYY9e87Q8Dep3LMplzjkg4hjsMCE4vIGFOD2VNMZjtwjsjI68t9AW2yGAss0aIIusH4yxNtmEOqySRvJdnFEH8GItwY22nwtOhxP271yZMpQ8b5wNzcYmAZ03gL1XjByP6BKOoOvJTzzPNKFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720467014; c=relaxed/simple;
-	bh=NpgwHPX/d3tp/EyiDsUQn8KVXyW32rJMURGHE0iQyAA=;
+	s=arc-20240116; t=1720467043; c=relaxed/simple;
+	bh=QqsIjAwAx9n+inGkLP22a0n82rYg97l4n/OFS3+ObVM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gyHypsyR/Vt0Dy1B+eavf2mP5BHBC9X+FKxS2nPMt7XzKlNRQO86A7/BExiDzXAHVGVrWX+IzVF0tpQg9UKGrBTgTJezMfcRWmrtto7RY04peyThePik7ZJriGULr855vdrnQLM5YPMuR/NBLH+LrXTuD2Xh34Qt2LBHcBd5+nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=QUQbLp4h; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OQBCRnqNZWKb3UweaN3pDYw+POLsDl8zfGXbtOqJdIicS8T37Hms4NvJTXqtgEAVJMiwdUE/lvv0Gbkg2hevjaeQQxpZGsTRdrYA6iw/wLZSH28Q+mq0QCworwsb1d37kwTMnNoGPfCK7znTf7th7lpxrKVDBlLaSw9iWWY9Qqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SBfJrmbq; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="QUQbLp4h"
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468IQVFh002080;
-	Mon, 8 Jul 2024 19:29:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pps0720; bh=H4RsE4EKfRow56WbdKNcMSY
-	bYBDOUL/8VYeHWiX8J0U=; b=QUQbLp4hc5zBnowbt4miBJIo/pPjTvOXYq7dWPN
-	FID6/tagd9nUfPWpqHqmse17Ih0bFjm86ai+AkmBMB2PrzHZWgcRDeB9v4B5fQiG
-	o3trblrMIFPBrhgQks+GRYlQVzae1M7s0EtfxBGAKZImcnQy7yloltup2Jg/fDdX
-	9JVmwimV8PctEEs/yvtgLgcwRbxapKYEZjd91VlN+w9Ma1QGbixCNQZER7TtjGN6
-	UFbFpa1ZjUKcOYGtqUvfMcA0OVB60H5MH4erph72DGoQBB3r9BlVwy5wz/VgyBNb
-	rl8IGNwTdqEfgI0Qvz95niMAyj6bvYklRx/+07nwzhdczug==
-Received: from p1lg14878.it.hpe.com ([16.230.97.204])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 408dr8vfm0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jul 2024 19:29:16 +0000 (GMT)
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 7A64912E9A;
-	Mon,  8 Jul 2024 19:29:13 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 855628014F7;
-	Mon,  8 Jul 2024 19:29:07 +0000 (UTC)
-Date: Mon, 8 Jul 2024 14:29:05 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Steve Wahl <steve.wahl@hpe.com>,
-        Ashish Kalra <ashish.kalra@amd.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, Pavin Joseph <me@pavinjoseph.com>,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
-        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
-Message-ID: <Zow-AXsLHjU6gfET@swahl-home.5wahls.com>
-References: <20240621131742.GEZnV9dn_0XVH0IZ58@fat_crate.local>
- <ZnmNKAE5qT48yhrI@swahl-home.5wahls.com>
- <20240701142704.GGZoK8uDt-2VVtclHl@fat_crate.local>
- <20240702174425.GHZoQ8edlTfB1falcO@fat_crate.local>
- <CAMj1kXGsjU5CpF655me1XNA8-5nbk3020vT2Bu5ZoFY25igovg@mail.gmail.com>
- <20240703154301.GEZoVxhREtHjk0vtaL@fat_crate.local>
- <ZowI9w7huVfcKJ7I@swahl-home.5wahls.com>
- <20240708181133.GHZowr1eznPqgvdtRw@fat_crate.local>
- <CAMj1kXG8hZ86BFbar9S5mmvKMH4a0XF0oCm36WwZxYNqc0+pjQ@mail.gmail.com>
- <20240708190724.GIZow47G0J8vO6J3ee@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBfJrmbq"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-75ee39f1ffbso3156357a12.2;
+        Mon, 08 Jul 2024 12:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720467041; x=1721071841; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8KmNcC+I9gtqNl0qK6Sv3GvWp2GJox/ne1ngUcC0thQ=;
+        b=SBfJrmbq+IN4WdB+zrWafp7X5AZuLq/dX3eEqNtAJKR2U5gdTinF+3dpNrEbmNtD+e
+         ZbQCbqnKbqBwPAM5tdpxvH4d6VtRqEIHbGoaskjn2PRNPi7eKX3cX2bmFQAY2TpdFXIk
+         Yfbfpy4NBqHFOOmaCCaIr2fPVw09LY3MCVWoRVvBClesm3B/1NOhTn/buefhvRPF0Zl8
+         Y8VM0/PxBvuDaD7UNF0ZEEyacabyHM7E1rEJZsol/rC214ejwOom6DMwo3NWpd5fxtgK
+         UHZ5obQFvPf0R44JjwyrcTv9qPrrzeiDUJxRKPDNF1gDwWINJiSxD5Gclccdzsd2tWg0
+         sr5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720467041; x=1721071841;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8KmNcC+I9gtqNl0qK6Sv3GvWp2GJox/ne1ngUcC0thQ=;
+        b=m06S0oesH+bZZRiZsXnPvR4Ni64qDshFtRkg4YczKtINGZclhanUaihts1LOrKYo3m
+         iF+vll5LzGQiETrkx7EvfrNYKV4L1wADRfLYsAkQJ4XnNLxZcXdBV6iIPDqkO8O6J2N+
+         RaDK4QcNruAghXtTSe+UqG4dmARq8Ke0iZxJDKoQyJBLI5G1yJy3ZVjx/Xgw2owdtSMD
+         IxrnkZHSAIcJ704eTzJ1IuC7AaR8WyDcY7fyn1X6QKdViNCi+zQ/3s/oJBQ3YqCuLERD
+         JYDHBmosF8miJ75jiyCEP4gwe47vjnXRh1ZbrRy/UVHZ5N0UEw/SYG56Sv7Lg2tW3xFc
+         aPQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNrztED0U/kcpuI3A7MHh9DsjE3MmsdAd2XT7AEPCSymvOVuO/0EaXRml0bvys1P0gwEyfPRbHuL7YhkJ3CYzqRB6ld+Gyv6RR2o//hWHqgVmXmukElDjNycWHdI8k/K+S
+X-Gm-Message-State: AOJu0YzwUZTaB0vFV07YoZ7uxJd9qsKeYQiCNCFDcfdRQyBaW992/IXt
+	ydXocpvno1xTQkW2Wp3EeUh3TNCfPum1FPNmLXhM0X8xtGIefc+I
+X-Google-Smtp-Source: AGHT+IGyl/jS9MvDQyLMzLqanEZPeD0lXGN0ufhqi4CP0RDFUXeihZ73BJMdoiaHHL2bgtohShPEDg==
+X-Received: by 2002:a05:6a21:3086:b0:1c2:8d3f:796 with SMTP id adf61e73a8af0-1c29822d057mr349495637.25.1720467040914;
+        Mon, 08 Jul 2024 12:30:40 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab75a8sm2201765ad.156.2024.07.08.12.30.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 12:30:39 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 8 Jul 2024 09:30:38 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: torvalds@linux-foundation.org, mingo@redhat.com, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+	joshdon@google.com, brho@google.com, pjt@google.com,
+	derkling@google.com, haoluo@google.com, dvernet@meta.com,
+	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
+	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
+	andrea.righi@canonical.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	kernel-team@meta.com, Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH sched_ext/for-6.11] sched_ext: Disallow loading BPF
+ scheduler if isolcpus= domain isolation is in effect
+Message-ID: <Zow-XrnYpDmdyg9O@slm.duckdns.org>
+References: <20240501151312.635565-1-tj@kernel.org>
+ <20240501151312.635565-10-tj@kernel.org>
+ <20240624113212.GL31592@noisy.programming.kicks-ass.net>
+ <ZnnijsMAQYgCnrZF@slm.duckdns.org>
+ <20240625082926.GT31592@noisy.programming.kicks-ass.net>
+ <ZntVjZ3a2k5IGbzE@slm.duckdns.org>
+ <20240626082342.GY31592@noisy.programming.kicks-ass.net>
+ <ZnxXej8h46lmzrAP@slm.duckdns.org>
+ <Zny_5syk1K74HP0D@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,68 +88,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240708190724.GIZow47G0J8vO6J3ee@fat_crate.local>
-X-Proofpoint-ORIG-GUID: oWEE9cDr5kzfnxuLmOl787osxcn3GcUb
-X-Proofpoint-GUID: oWEE9cDr5kzfnxuLmOl787osxcn3GcUb
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_10,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 priorityscore=1501 mlxscore=0
- suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0 mlxlogscore=996
- spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2406140001 definitions=main-2407080146
+In-Reply-To: <Zny_5syk1K74HP0D@slm.duckdns.org>
 
-On Mon, Jul 08, 2024 at 09:07:24PM +0200, Borislav Petkov wrote:
-> On Mon, Jul 08, 2024 at 08:17:43PM +0200, Ard Biesheuvel wrote:
-> > Happy to assist, but I'm not sure I follow the approach here.
-> > 
-> > In the context of a confidential VM, I don't think the page fault
-> > handler is ever an acceptable approach. kexec should filter out config
-> > tables that it doesn't recognize, and map the ones that it does (note
-> > that EFI config tables have no standardized header with a length, so
-> > mapping tables it does *not* recognize is not feasible to begin with).
-> > 
-> > All these games with on-demand paging may have made sense for 64-bit
-> > kernels booting in 32-bit mode (which can only map the first 4G of
-> > RAM), but in a confiidential VM context with measurement/attestation
-> > etc I think the cure is worse than the disease.
+On Wed, Jun 26, 2024 at 03:27:02PM -1000, Tejun Heo wrote:
+> sched_domains regulate the load balancing for sched_classes. A machine can
+> be partitioned into multiple sections that are not load-balanced across
+> using either isolcpus= boot param or cpuset partitions. In such cases, tasks
+> that are in one partition are expected to stay within that partition.
 > 
-> See upthread. I think this is about AMD server machines which support SEV
-> baremetal and not about SEV-ES/SNP guests which must do attestation.
+> cpuset configured partitions are always reflected in each member task's
+> cpumask. As SCX always honors the task cpumasks, the BPF scheduler is
+> automatically in compliance with the configured partitions.
 > 
-> Steve?
-
-Yes, this is about AMD machines which support SEV, running bare metal.
-("Server" is in question, one of my testers is known to be using a
-laptop, so the facilities must be present in non-servers as well.)
-
-> AFAIR, there was some kink that we have to parse the blob regardless which
-> I didn't like either but I'd need to refresh with Tom and see whether we can
-> solve it differently after all. Perhaps check X86_FEATURE_HYPERVISOR or so...
+> However, for isolcpus= domain isolation, the isolated CPUs are simply
+> omitted from the top-level sched_domain[s] without further restrictions on
+> tasks' cpumasks, so, for example, a task currently running in an isolated
+> CPU may have more CPUs in its allowed cpumask while expected to remain on
+> the same CPU.
 > 
-> Thx for offering to help still - appreciated! :-)
+> There is no straightforward way to enforce this partitioning preemptively on
+> BPF schedulers and erroring out after a violation can be surprising.
+> isolcpus= domain isolation is being replaced with cpuset partitions anyway,
+> so keep it simple and simply disallow loading a BPF scheduler if isolcpus=
+> domain isolation is in effect.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Link: http://lkml.kernel.org/r/20240626082342.GY31592@noisy.programming.kicks-ass.net
+> Cc: David Vernet <void@manifault.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Frederic Weisbecker <frederic@kernel.org>
 
-You asked me to imagine if the one-liner had worked.  Yes, it would
-have been a magical, easy fix!  But things should be as simple as
-possible, but no simpler, and that solution is "simpler than
-possible".
+Applied to cgroup/for-6.11.
 
-As far as I can see it, the effort you're putting into finding a
-different solution must mean you find something less than desirable
-about the solution I have offered.  But at this point, I don't
-understand why; and lacking that understanding, I'm powerless to help
-find alternatives that would be more acceptable.
-
-Having kexec place these portions in the identity map before jumping
-to the new kernel more closely mimics the conditions we are under when
-entered from the BIOS and bootloader.  So it seems to me to be the
-logical way to go.
-
-Thanks,
-
---> Steve
+Thanks.
 
 -- 
-Steve Wahl, Hewlett Packard Enterprise
+tejun
