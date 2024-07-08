@@ -1,121 +1,106 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46A71D52D
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 07:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AC818EAB
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 07:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720423034; cv=none; b=YMSzs+Tx3ft+UAaYMVKInJMS46zR4y+vzTQsxYVZwMBJuAltQpVDoEORfBCXuWB4pBhaGewnOYPaSXRsFrDncKDpZ2NohBMLxDKgnLtuQZNLecwipd2hF/Aiqt8t+XSeI4Wm/t6Qhfad8yI5+2PdbT7EH9P7jJcniTe11Tuh5MM=
+	t=1720423139; cv=none; b=U/5FaWPEF4scmVHrI/RrZ9jcwEMCc1fJ4qkbBKfh/YK7D/iYJCbUPo30Wkaq3L1XW2KD5S3oPwsJAqn3zQ9fveqBwYgyMYjCDLQzj4PBlokC7npXbsH43KkwsxAnegH+uDPNnpW0UgmIdhZzS8/hGG2N7J0ox1A0cwXz7bKLcRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720423034; c=relaxed/simple;
-	bh=vN1qPV7aqV+lGUAD0aSzllM6M3CntoLPoPMO+06F8OI=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=GTYIribDQmzWVNp+PMaIMKDh6evYqPjkNhHsjo45cr2c5wB3KcmsHAbgKS1oKcO4JsVmkCbpTWIIrcRHWK6yVao9pxCCRV9GeoiauDHYwIakXwgVEkj6vjiNWFMg3cad1nnijoXqfr76bcJBTl1RcmTvOtslSPNlzvqmz3dJA/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WadghP79; arc=none smtp.client-ip=95.215.58.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1720423139; c=relaxed/simple;
+	bh=hx5T64Sj7xlhECM1HZmMWAV4zDvIOfGL0LNkMgwHf64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XziuwHqW0owM6n+Q/L4fLvMT7u/Hm3d/HL3CF+Lpb/7Jau6q9IM6sKROHcdzeP4dxJJcXHND1h+mAPtpPFEg71Z7NwCwTPBU1Jm4VcW5ATsqW1aKDCNKArnh0N0FaFZXtk3pnfkD6M3sZSfq9Si5n0cxDl8f6/RIsMy8LtZDS5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=x6/Mff5k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WadghP79"
-X-Envelope-To: zenghui.yu@linux.dev
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1720423030;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T36XZ8NE/xxyJanvS7KHX10z9vs3L4mHUQHRi7pq3/w=;
-	b=WadghP79cOsglEKSb5MnvjchwOCRyosqU8qghV3Cfr90y2v4qkvBKAFnB9MviYBzSGLu1O
-	pYyIkptuEw/cJqv0bSkOL247XTq9tCYFXJlysw9xyD4ImNRBFKJ7LVGo8Rw/IPKeynmPY0
-	GEgK0tjn7RmI7hs1b9Q4XIWv+MpKHqI=
-X-Envelope-To: linux-doc@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: alexs@kernel.org
-X-Envelope-To: siyanteng@loongson.cn
-X-Envelope-To: corbet@lwn.net
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="x6/Mff5k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 478C0C116B1;
+	Mon,  8 Jul 2024 07:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720423138;
+	bh=hx5T64Sj7xlhECM1HZmMWAV4zDvIOfGL0LNkMgwHf64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=x6/Mff5kg9KH6IhgDurv0EhiYNCxdegeIdLKSLMzjea4rSr4KxW4Jt/FEPO9nzfZk
+	 +MNYhA5+y5RoBGXQaSjrw5fcxG9A6hlTT8Su3b4fg/5cOwfuGSw3q2GqNjrxEMpYOA
+	 502BZlz25ZZbwPDiiCP7NV54S5M/m/u9NhhkuTwo=
+Date: Mon, 8 Jul 2024 09:18:55 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: tuhaowen <tuhaowen@uniontech.com>
+Cc: alexander.deucher@amd.com, huangbibo@uniontech.com,
+	linux-kernel@vger.kernel.org, sudipm.mukherjee@gmail.com,
+	wangyuli@uniontech.com
+Subject: Re: [PATCH] dev/parport: fix the array out-of-bounds risk
+Message-ID: <2024070820-corncob-kelp-f50c@gregkh>
+References: <2024070523-singer-dweller-f1bb@gregkh>
+ <20240708023330.22775-1-tuhaowen@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 08 Jul 2024 07:17:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: si.yanteng@linux.dev
-Message-ID: <8096f15395443a9d6c0bc059baa43db1c743b0ac@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH] docs/zh_CN/virt: Update the translation of
- guest-halt-polling.rst
-To: "Zenghui Yu" <zenghui.yu@linux.dev>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: alexs@kernel.org, siyanteng@loongson.cn, corbet@lwn.net, "Zenghui Yu"
- <zenghui.yu@linux.dev>
-In-Reply-To: <20240707161444.98715-1-zenghui.yu@linux.dev>
-References: <20240707161444.98715-1-zenghui.yu@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708023330.22775-1-tuhaowen@uniontech.com>
 
-2024=E5=B9=B47=E6=9C=888=E6=97=A5 00:14, "Zenghui Yu" <zenghui.yu@linux.d=
-ev> =E5=86=99=E5=88=B0:
+On Mon, Jul 08, 2024 at 10:33:30AM +0800, tuhaowen wrote:
+> Fixed array out-of-bounds issues caused by sprintf
+> by replacing it with snprintf for safer data copying,
+> ensuring the destination buffer is not overflowed.
+> 
+> Below is the stack trace I encountered during the actual issue:
+> 
+> [ 66.575408s] [pid:5118,cpu4,QThread,4]Kernel panic - not syncing: stack-protector:
+> Kernel stack is corrupted in: do_hardware_base_addr+0xcc/0xd0 [parport]
+> [ 66.575408s] [pid:5118,cpu4,QThread,5]CPU: 4 PID: 5118 Comm:
+> QThread Tainted: G S W O 5.10.97-arm64-desktop #7100.57021.2
+> [ 66.575439s] [pid:5118,cpu4,QThread,6]TGID: 5087 Comm: EFileApp
+> [ 66.575439s] [pid:5118,cpu4,QThread,7]Hardware name: HUAWEI HUAWEI QingYun
+> PGUX-W515x-B081/SP1PANGUXM, BIOS 1.00.07 04/29/2024
+> [ 66.575439s] [pid:5118,cpu4,QThread,8]Call trace:
+> [ 66.575469s] [pid:5118,cpu4,QThread,9] dump_backtrace+0x0/0x1c0
+> [ 66.575469s] [pid:5118,cpu4,QThread,0] show_stack+0x14/0x20
+> [ 66.575469s] [pid:5118,cpu4,QThread,1] dump_stack+0xd4/0x10c
+> [ 66.575500s] [pid:5118,cpu4,QThread,2] panic+0x1d8/0x3bc
+> [ 66.575500s] [pid:5118,cpu4,QThread,3] __stack_chk_fail+0x2c/0x38
+> [ 66.575500s] [pid:5118,cpu4,QThread,4] do_hardware_base_addr+0xcc/0xd0 [parport]
+> 
+> Signed-off-by: tuhaowen <tuhaowen@uniontech.com>
+> ---
+>  drivers/parport/procfs.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
 
+Hi,
 
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
->=20
->=20Update to commit 1954d51592b5 ("Documentation: virt: correct location=
- of
->=20
->=20haltpoll module params") to fix the obvious mistake.
->=20
->=20Signed-off-by: Zenghui Yu <zenghui.yu@linux.dev>
-Reviewed-by: Yanteng Si <siyanteng@loongson.cn>
+You are receiving this message because of the following common error(s)
+as indicated below:
 
+- It looks like you did not use your normal name for the patch on either
+  the Signed-off-by: line, or the From: line (both of which have to
+  match).  Please read the kernel file,
+  Documentation/process/submitting-patches.rst for how to do this
+  correctly.
 
-BTW=EF=BC=8C
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
 
-Since the maintainers may have set up email filtering rules,=20
-let's=20send --to them.
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
+thanks,
 
-Thanks,
-Yanteng
->=20
->=20---
->=20
->=20 Documentation/translations/zh_CN/virt/guest-halt-polling.rst | 2 +-
->=20
->=20 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
->=20diff --git a/Documentation/translations/zh_CN/virt/guest-halt-polling=
-.rst b/Documentation/translations/zh_CN/virt/guest-halt-polling.rst
->=20
->=20index b798d1cf0b48..463d1d829062 100644
->=20
->=20--- a/Documentation/translations/zh_CN/virt/guest-halt-polling.rst
->=20
->=20+++ b/Documentation/translations/zh_CN/virt/guest-halt-polling.rst
->=20
->=20@@ -76,7 +76,7 @@ guest_halt_poll_ns=E5=B0=86=E4=BF=9D=E6=8C=81=E9=AB=
-=98=E4=BD=8D=EF=BC=89=E3=80=82
->=20
->=20=20
->=20
->  =E9=BB=98=E8=AE=A4=E5=80=BC: Y
->=20
->=20=20
->=20
-> -=E6=A8=A1=E5=9D=97=E5=8F=82=E6=95=B0=E5=8F=AF=E4=BB=A5=E4=BB=8EDebugfs=
-=E6=96=87=E4=BB=B6=E4=B8=AD=E8=AE=BE=E7=BD=AE=EF=BC=8C=E5=9C=A8::
->=20
->=20+=E6=A8=A1=E5=9D=97=E5=8F=82=E6=95=B0=E5=8F=AF=E4=BB=A5=E4=BB=8Esysfs=
-=E6=96=87=E4=BB=B6=E4=B8=AD=E8=AE=BE=E7=BD=AE=EF=BC=8C=E5=9C=A8::
->=20
->=20=20
->=20
->  /sys/module/haltpoll/parameters/
->=20
->=20=20
->=20
-> --=20
->=20
-> 2.34.1
->
+greg k-h's patch email bot
