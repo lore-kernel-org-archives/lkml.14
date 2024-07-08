@@ -1,162 +1,89 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9EA5381B
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 13:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5593C5381B
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 13:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720446661; cv=none; b=gTaWzys3oNTpLPMNy4602v3tZDG2OEwsayUN0FGgMRYqJCSNN0hqNQt38ImkGcvcpvNEEcF54gpV+CefHo8sLzKtvn0lAooq2/6o+O7zcCb/Zbh2TdcoPKY8skU4P5hKmnN6ljYI2SBpOW70r1gcrF5YGLt6z5FJ+bNb+P586x4=
+	t=1720446678; cv=none; b=TyHvJMntRGDFtJ9npAPkVYi5ICG6/yv5txhMt5pZ9wkO4oaaBs02WGuVkVCTmquPcKc8mEy7uMiOm0gFmm7+tnSCefNpGPb+skE2FCdCZraJZRJQcmHj64kcqWCMH7OgiIvZvgvb1wlx7jXJNtGU8hkM0FCG35hBuSKXCLSEZQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720446661; c=relaxed/simple;
-	bh=ErfxnE1QtOx539jhVj0UMiBkfS53AdOyd10ZtlQwUXI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=I8+s4feO2G3g8zXG0ACtkCz9TrfZLgHqdLWxItISZT9GzkxXIByEGQlNEupuFZfNdCd0ke24UwiyQvHge3GyPZ8KAhz+qweMamKl2qotGGda/r59Nd1qPYRhQGFStmuNIpCmjFcpH0whj8DFnQysfaRVarxTXavVLSAdmAMA0e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PQUaODyn; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720446678; c=relaxed/simple;
+	bh=pWko05GGof4j2Z/fCXj05ykEWE4MVmDniId2gQhLqWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gCsnqL+kSbFsq0ai1N7T3t7WZNg4a35J6vNPmkdWtzZm8UvQg2dh568pfAlPPBhdChp7Uecu9kDP/jxz4gTMl3MmsdTOQ3HaP9xTE2mCmNAfO2vA2FdmghB76qZJHT6Kqgg+P0GDXQCOYxnDT0noNuPLd6M5NQJe4WYRHObLb8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S26sOscc; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PQUaODyn"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468BPDae028546;
-	Mon, 8 Jul 2024 13:50:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3PnUPyQCMMPiqKaGefYWb1FkezKyHgZdvyDbiDlFOnA=; b=PQUaODynRUj8sd3a
-	CCFf4wk1SyZZjG9ofSChPCN7nXnBTXMEnWoVqD/YivCzV28tf16cC4boAtXRpPjN
-	RvkyqMex8Z+XOltOPT3bszgQ3Wohlp9W0vaM9XyWKHTzfr1/WPUVcIdKDyEvFx2M
-	T1XwlkSJQElKqV3OXC/Tx0Jiq/6QPWjcY2ybLBCmhVKsSlx9p5Y26Bujayq+037Q
-	39lTNM/bvUTxrIvI7xOmjB7xBbWeepzjeBk47MtmHKzRY2KN4t5Ln+3WObbKhFKJ
-	mQdCcNukBLGNySKWAalIEo/2ATeMyIziAF0zQg4VR6p+8L3Ko7rcNa6tkGqis0eR
-	wN5MXQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wjn3u94-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jul 2024 13:50:53 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 468DoqSo013515
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jul 2024 13:50:52 GMT
-Received: from [10.253.36.134] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Jul 2024
- 06:50:50 -0700
-Message-ID: <12e5dade-8ef3-4532-aff6-b78b87dc0147@quicinc.com>
-Date: Mon, 8 Jul 2024 21:50:48 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S26sOscc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720446678; x=1751982678;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pWko05GGof4j2Z/fCXj05ykEWE4MVmDniId2gQhLqWg=;
+  b=S26sOscckzjEN++Yh39sGbdJi1NjTX90YUTxnGvQXzR8GExJJnMMLN4e
+   QtzdRyAdK3sJtGOwkLD8N1aBtttzRZVX6Y0LG+ZEz93nUPoopihDNXlms
+   b6pZgCpG+jE6idKeJ5rm6mw04iDqkRXyIQa7sCF9nZ51a6ipshdn9ghnz
+   w6/sZtHceBYZEkj3Sr5dWiM5RfXFR8oYYpkKjFve+LT7S56amx+EwGIxr
+   0LbPKgFuolOoCF5GHil+IqFXM5crvxNh+5bKwqSF/gXAgZ2pM/3JZAMA8
+   5BUWZUpvpGCcRqZJD2pN3h7uCk7Mqh//tkj06hBD0xkP2F9gHpMh6cD69
+   g==;
+X-CSE-ConnectionGUID: FNRS86EqT0i3akdriFNvdQ==
+X-CSE-MsgGUID: fxILOCybR46aobxAA6+vbw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="20548791"
+X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
+   d="scan'208";a="20548791"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 06:51:17 -0700
+X-CSE-ConnectionGUID: 6UCAwG2CSB+EgeDtur6MlQ==
+X-CSE-MsgGUID: MjDdKtFgQe6Sv2NLZ2LUjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
+   d="scan'208";a="47281776"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 08 Jul 2024 06:51:13 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id DFC8E1AC; Mon, 08 Jul 2024 16:51:12 +0300 (EEST)
+Date: Mon, 8 Jul 2024 16:51:12 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Dexuan Cui <decui@microsoft.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Michael Kelley <mikelley@microsoft.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/tdx: Fix crash on kexec
+Message-ID: <xa4zdohlxg2xeq3qjpaeycd5ixpkm3b4bjwm6mcoore6dfhiqt@xxbajpzq24je>
+References: <20240629130621.1671544-1-kirill.shutemov@linux.intel.com>
+ <20240629135933.GAZoATRVAubo7ZDdKB@fat_crate.local>
+ <poxeykijyqrz5hxrey46s6hh2qd6byirbevwuwec2gtbfq266c@npegk7sn3ot7>
+ <SA1PR21MB1317A2E38083B300256AD5F1BFD12@SA1PR21MB1317.namprd21.prod.outlook.com>
+ <20240629194103.GCZoBjTzC4m9a9yw1k@fat_crate.local>
+ <SA1PR21MB1317B5850E4274CC31EDFBF8BFDD2@SA1PR21MB1317.namprd21.prod.outlook.com>
+ <nx7jjplwvtmxsq675omsi5hc5oxceiffpmkqx754azuv7ee2zh@7fttse2hssti>
+ <SA1PR21MB131745AD18D9E91D2ACA1964BFDE2@SA1PR21MB1317.namprd21.prod.outlook.com>
+ <uewczuxr5foiwe6wklhcgzi6ejfwgacxxoa67xadey62s46yro@quwpodezpxh5>
+ <20240708133242.GCZovqepGsDSL72tjZ@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/5] devres: Simplify devm_percpu_match()
- implementation
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: <linux-kernel@vger.kernel.org>, <rafael@kernel.org>,
-        <madalin.bucur@nxp.com>
-References: <1719931914-19035-1-git-send-email-quic_zijuhu@quicinc.com>
- <1719931914-19035-5-git-send-email-quic_zijuhu@quicinc.com>
- <2024070424-deplete-dangling-bcc6@gregkh>
- <4ecbe215-6b73-48ea-8e8d-831e3682754c@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <4ecbe215-6b73-48ea-8e8d-831e3682754c@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: uYlsu01m3opJpryJ0_jlo9oAZMoC6GrA
-X-Proofpoint-GUID: uYlsu01m3opJpryJ0_jlo9oAZMoC6GrA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_09,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 bulkscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407080104
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708133242.GCZovqepGsDSL72tjZ@fat_crate.local>
 
-On 7/4/2024 9:17 PM, quic_zijuhu wrote:
-> On 7/4/2024 6:34 PM, Greg KH wrote:
->> On Tue, Jul 02, 2024 at 10:51:53PM +0800, Zijun Hu wrote:
->>> Simplify devm_percpu_match() implementation by removing redundant
->>> conversions.
->>>
->>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->>> ---
->>> Previous discussion link:
->>> https://lore.kernel.org/lkml/1719496036-24642-1-git-send-email-quic_zijuhu@quicinc.com/
->>>
->>> Changes since the original one:
->>>  - Select the simplier solution
->>>
->>>  drivers/base/devres.c | 5 ++---
->>>  1 file changed, 2 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
->>> index e9b0d94aeabd..2ad6dacb3472 100644
->>> --- a/drivers/base/devres.c
->>> +++ b/drivers/base/devres.c
->>> @@ -1176,9 +1176,8 @@ static void devm_percpu_release(struct device *dev, void *pdata)
->>>  
->>>  static int devm_percpu_match(struct device *dev, void *data, void *p)
->>>  {
->>> -	struct devres *devr = container_of(data, struct devres, data);
->>> -
->>> -	return *(void **)devr->data == p;
->>> +	/* @data is already and must be (void *)devr->data */
->>> +	return *(void **)data == p;
->>
->> The compiler output should be identical here, right?  And container_of()
-> yes, you are right.
->> enforces the placement so I'd prefer the original here as a comment
->> isn't going to enforce anything :)
->>
-> i would like to show 2 different points related to the comments below:
+On Mon, Jul 08, 2024 at 03:32:42PM +0200, Borislav Petkov wrote:
+> On Mon, Jul 08, 2024 at 03:34:34PM +0300, Kirill A. Shutemov wrote:
+> > Borislav, could you drop the original patch from tip tree?
 > 
-> 1) the comments is applicable for *ALL* kinds of devres match()s, and is
-> *NOT* specific to devm_percpu_match() and also does *NOT* enforce anything.
-> 
-> may i remove the comments?
-> 
-> 2) the original implementation is *NOT* normative as explained below:
-> include/linux/device.h:
-> typedef int (*dr_match_t)(struct device *dev, void *res, void *match_data);
-> void *devres_find(struct device *dev, dr_release_t release,
-> 		  dr_match_t match, void *match_data);
-> 
-> devres API users maybe need to write their match() functions, for
-> example, user of API devres_find(), but struct devres is a devres
-> internal implementation defined within devres.c and is *NOT* exposed to
-> API user by device.h, so API user should not use struct devres when
-> implement their devres match() normally.
-> but original devm_percpu_match() uses the struct devres.
-> 
+> Long gone already.
 
-thanks for your code review.
-may i know which of below options is your final preference?
+Hm. I still see it in tip/x86/cc branch which is merged in tip/master.
 
-A) remain current kernel design, namely, no changes.
-
-B) changes shown by this [PATCH v1 4/5]
-
-C) below changes we ever discussed by below link
-https://lore.kernel.org/all/1719496036-24642-1-git-send-email-quic_zijuhu@quicinc.com/
-
- static int devm_percpu_match(struct device *dev, void *data, void *p)
- {
--	struct devres *devr = container_of(data, struct devres, data);
-+	void __percpu *ptr = *(void __percpu **)data;
-
--	return *(void **)devr->data == p;
-+	return ptr == (void __percpu *)p;
- }
-
->> thanks,
->>
->> greg k-h
-> 
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
