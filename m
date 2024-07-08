@@ -1,91 +1,85 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ED49142E80;
-	Mon,  8 Jul 2024 15:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591F013F426;
+	Mon,  8 Jul 2024 15:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720452571; cv=none; b=rF3B97KaFtUIuGqyhhe5JkKEr897wXl2BMiAD0DTg9/JqSDRdTmVks6udxka1f7ZvEfnl/fZ+jSwIToz21OboFR7G+Uq6eb1lc+mW4JXntQx9udiidEAFJTUM1iFoOsDSKjlyPdLGcZdCpMzpb95CpAS696WPfLPKdp9ePhdWX8=
+	t=1720452584; cv=none; b=uvC2zuRnkhL11XtdLex50HBlNaSqOlt1PJ6i4Rc0P/bCSYenFHGcwTBqpk8+CZUkAMpLXqRl52EMJq4rgSI8dHQqU5AubEJNslzQVeVVK9gLfNiNov+evFeq4MgCg3kRCmsfEdXd5LA38Twv4RIv4Q4bZDIj8UGhrQ9cxxQzxlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720452571; c=relaxed/simple;
-	bh=pHGrU06dDgIohfOZNyTOXRGFIfPJGLhM05zDRXQwlIA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ABwqTDGga2U8aIBMS9VoUC2/DsSYHqHK7ucekrAHld9XZiTL2vhWZlmCaWADTSJ2ZylFh+IQYlqZzlcXqOG7viunLqrb32k4STw9n/PJfXvGWeb4OUXXuW1teKjYpDhXUP6Apr6vXQUkg1VsUaDzgc/Cv16B3b6CbTLFQZbh71I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn; spf=pass smtp.mailfrom=buaa.edu.cn; dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b=KU5FpEh8; arc=none smtp.client-ip=206.189.21.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buaa.edu.cn
+	s=arc-20240116; t=1720452584; c=relaxed/simple;
+	bh=ztW0g2FoZv1Ha2AVuu/92vUst4UA6CVs3jAeJnz1ouU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SqPHK3r5v3ozNbdtP7397oLQGOrs7B7H0mER6XTgyCGxu8bqKa9Qk3AmnSxKd19urTRomMoULhqLXb5dY1mV1Q4yVbrZ6XooQR1tbgQ1BWP+2NfP89nvzn9aiad/BgYZ4ENhzffFq4lhbjKyD7kErHSAYGxSi/9L9w+UW6q1CBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2zvUdOK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="KU5FpEh8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=buaa.edu.cn; s=buaa; h=Received:From:To:Cc:Subject:Date:
-	Message-ID:MIME-Version:Content-Transfer-Encoding; bh=jpG9/lUJIA
-	huGAbBRSauqWsUisuORJ+1OpZD4Zt02hY=; b=KU5FpEh8pSwVYDeS0VgumKDCGA
-	FxgPTXY0PVxaILalUASm/BRhtyLBT/H7Jwc30mK0MXkoJeHeueR4TqYf4H3WXTKd
-	P5/nlgik4La5rxsQP9xidv3mtSamvCZe1b/tFnvJnbbtu6ZwEYxVgtqnsKmXkDTT
-	W1jc71x0WrPQh4MJw=
-Received: from gp-VMware-Virtual-Platform.localdomain (unknown [139.227.253.190])
-	by coremail-app2 (Coremail) with SMTP id Nyz+CgD3UfXABYxmOvOYAA--.32315S2;
-	Mon, 08 Jul 2024 23:29:18 +0800 (CST)
-From: peng guo <engguopeng@buaa.edu.cn>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	wyguopeng@163.com,
-	peng guo <engguopeng@buaa.edu.cn>
-Subject: [PATCH] cxl core:wrong value of macro definition
-Date: Mon,  8 Jul 2024 23:29:02 +0800
-Message-ID: <20240708152902.5853-1-engguopeng@buaa.edu.cn>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2zvUdOK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB60DC116B1;
+	Mon,  8 Jul 2024 15:29:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720452584;
+	bh=ztW0g2FoZv1Ha2AVuu/92vUst4UA6CVs3jAeJnz1ouU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U2zvUdOKa60zfvyxouCovnzIYJPdLX2Ba6Ifi+5eEjkgsccW/d8ZWsClTVvVnlai0
+	 7eBjOuB+R3uElB9PAZhYeUXLyFk7KdDHzSArMzcMnLOp52GUtPc3x71AUsNiu/Y2k4
+	 ZY6PMjTf0uqbPVekBang/zSi6holrnmrPZybFcVlrVcCC2GiVt/D6BMfNpt1JhjAY5
+	 epoulaz/QvSYWNlwAYC7BgvTh9f7J8I7R0BX9m49CVQOTrsTh423kW4ld0peEdxcat
+	 yxgqleXx8MXUtY/tA/24eSFh9xfrv05Wap6xaO6cEGaDzq07JQPPVeNYIgqdboyT/2
+	 FCQHXBMARN2EQ==
+Message-ID: <6e57dbc0-f47a-464e-af6b-abd45c450dc6@kernel.org>
+Date: Mon, 8 Jul 2024 10:29:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
+ CONFIG_OF is enabled
+To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Bert Karwatzki <spasswolf@web.de>,
+ caleb.connolly@linaro.org, bhelgaas@google.com, amit.pundir@linaro.org,
+ neil.armstrong@linaro.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, Praveenkumar Patil <PraveenKumar.Patil@amd.com>
+References: <20240707183829.41519-1-spasswolf@web.de>
+ <Zoriz1XDMiGX_Gr5@wunner.de> <20240708003730.GA586698@rocinante>
+ <CACMJSevHmnuDk8hpK8W+R7icySmNF8nT1T9+dJDE_KMd4CbGNg@mail.gmail.com>
+ <20240708083317.GA3715331@rocinante>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20240708083317.GA3715331@rocinante>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Nyz+CgD3UfXABYxmOvOYAA--.32315S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw4DZFWxZr4kKF4fury8Zrb_yoW3Wrg_Gr
-	1rWrZxZa1FvF9rKFnIgr4rC3yS9a1kXr1FvFn5Kr4akayakrs8Wry09r47ZrW2vrW8tr1D
-	J34DJr18tr47tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbakFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-	wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-	vE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2
-	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWU
-	XwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
-	14v_XrWl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW7tr1UJr1l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
-	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjfU5Q6JUUUUU
-X-CM-SenderInfo: d2isijirrujqpexdthxhgxhubq/
 
-The first value of the macro definition DEFINE_CXL_VENDOR_DEBUG_UUID
-does not match the definition in the CXL 2.0 specification table 170.
+On 7/8/2024 3:33, Krzysztof Wilczyński wrote:
+> [...]
+>>> If there aren't any objections, I will take this via the PCI tree, and add
+>>> the missing tags.  So, no need to send a new version of this patch.
+>>>
+>>> Thank you for the work here!  Appreciated.
+>>>
+>>>          Krzysztof
+>>
+>> I don't think you can take it via the PCI tree as it depends on the
+>> changes that went via the new pwrseq tree (with Bjorn's blessing).
+> 
+> Aye.
+> 
+>> Please leave your Ack here and I will take it with the other PCI
+>> pwrctl changes.
+> 
+> Sounds good!  With that...
+> 
+> Acked-by: Krzysztof Wilczyński <kw@linux.com>
+> 
+>> After the upcoming merge window we should go back to normal.
+> 
+> Thank you!
+> 
+> 	Krzysztof
 
-Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
----
- drivers/cxl/cxlmem.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+FWIW this other patch makes it quieter too.
 
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index af8169ccdbc0..feb1106559d2 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -563,7 +563,7 @@ enum cxl_opcode {
- 		  0x3b, 0x3f, 0x17)
- 
- #define DEFINE_CXL_VENDOR_DEBUG_UUID                                           \
--	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
-+	UUID_INIT(0x5e1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
- 		  0x40, 0x3d, 0x86)
- 
- struct cxl_mbox_get_supported_logs {
--- 
-2.43.0
-
+https://lore.kernel.org/linux-pci/20240702180839.71491-1-superm1@kernel.org/
