@@ -1,155 +1,178 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7589914388F
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 15:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD59138C;
+	Mon,  8 Jul 2024 15:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720453459; cv=none; b=uo4HIe7nmQkbdk6IoqDFNJvqBDN18XrhEdDqtka75Z+VVXGp/ZUJpSI4a71BKW2kRnse/tu8M/OYgHGqBn4A08V3bd+4B/IgOZnINBwGJNFCUvMsXXy0007G+ZXJwLZUatm1FzMN6VHibrzddXpWZoLp/TSRE+PPD2FrGYcFcOQ=
+	t=1720453550; cv=none; b=SChIqXEUTz40+UbHFkq0xwaerX2a+Y9AkUcWMhmBnjNoA1G0Any2UZxn9mB+KCozZSqeNr4Z0VycAc8DtKR27iSXktCewKGqLUEY1A1/xpiDWPawc0n9PqWYexq3UFE6NsZjbDLLXenWIhHr79i7xqnOpCDIqy/cq9Q4rSxtJos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720453459; c=relaxed/simple;
-	bh=GMSb6T8O6OYkZ/FNnE1PL3FavlZARXIzGMH704UX7Bg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dsnSyDLTstK+saXEIqcCGIDxeLkRL0vNqxhoDmnoalhlCQFzKU1lEq6nKT5qYplAp6G+YKo8Yz/svxVQMVsM9MUY4PjmV1rOYr7Xc0e0PwMCYObW9GGH/NJ7CULLo56MlYYtWiTqGrGxDZYkBrnjz+2e/nEsAu2Jz3jflHEHwDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=K4ypnVUp; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1720453550; c=relaxed/simple;
+	bh=Lno49dn6Wp3XRCaV6biRDC5IjTigepJR3LEZe26mXSY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=A24uAfKHmLKocZlD/0pFwcHsfMKQ5kEc5aEeQIi36X0kp1rRBIfJhWPb/u7D75j9NQJSirprJ5KNONR6caP8WqynVHJLjT5OSrLig5rFPTpPNycaV1FYhJWfmOcd0GJJNmZJLCHRf3cTdpyhXzZxnmBsUwYgsQJl8OnS6Ir9fjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j5YbolPp; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="K4ypnVUp"
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468E8Vg7008475;
-	Mon, 8 Jul 2024 15:42:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pps0720; bh=8kJQOPWbJ+aKHyQ9fZc+lY+
-	bRONOJ/gC1llyMQ4rbOQ=; b=K4ypnVUpA0BIaZkuNT0V4a7jasZK4HmRuMsD/aH
-	MvA4h0WMAOGyL+QnRCduCxqiEH/oCRAg9+lh455ZA5HtIdYF08+MbRzWLEuq9oAx
-	9qZUk9Wk5s+B0dsU1OBsE3fa7z8Xzc8gbRW+KY/71i3uaLOGnmuB5Cmi9HyZ4Stc
-	6FtY6k4tzqe04MwG5gR1oxP/0clg/265Iwj+8qIb8Snsp7SsQEKOBOPktzIz1g8w
-	HhdGEgeYKoe1eRn2Dha3JoMky+ez+G9E3G+MKMtHRw9A+ZWFAjwHQrOjntxoKi8d
-	VvslW02i7CaRnz09+qeDfYNP4sdRDLsoROr8K4m833ejNOA==
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 408hm6rrsm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jul 2024 15:42:57 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id D676A80025D;
-	Mon,  8 Jul 2024 15:42:56 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 7F38080A3F8;
-	Mon,  8 Jul 2024 15:42:50 +0000 (UTC)
-Date: Mon, 8 Jul 2024 10:42:47 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Steve Wahl <steve.wahl@hpe.com>,
-        Ashish Kalra <ashish.kalra@amd.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, Pavin Joseph <me@pavinjoseph.com>,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
-        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
-Message-ID: <ZowI9w7huVfcKJ7I@swahl-home.5wahls.com>
-References: <20240613152826.GKZmsQGnO3OthLH3Vu@fat_crate.local>
- <ZmsbZCF9rFzuB3rO@swahl-home.5wahls.com>
- <20240616202533.GDZm9KPZtpDKw5aXWX@fat_crate.local>
- <ZnBR6MgS-jzjgA8A@swahl-home.5wahls.com>
- <20240621131742.GEZnV9dn_0XVH0IZ58@fat_crate.local>
- <ZnmNKAE5qT48yhrI@swahl-home.5wahls.com>
- <20240701142704.GGZoK8uDt-2VVtclHl@fat_crate.local>
- <20240702174425.GHZoQ8edlTfB1falcO@fat_crate.local>
- <CAMj1kXGsjU5CpF655me1XNA8-5nbk3020vT2Bu5ZoFY25igovg@mail.gmail.com>
- <20240703154301.GEZoVxhREtHjk0vtaL@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5YbolPp"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so25028775e9.1;
+        Mon, 08 Jul 2024 08:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720453547; x=1721058347; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qkICa0ofvLlVTjjsmaahvBqbNaY6s0KcNDXv8H869/w=;
+        b=j5YbolPpwdIiDL2vrPStJbRtMwyCeIJQEinF0UD+JHipfMcOY8zX5K57kby037aqV8
+         7fms1x61VPzkPiTXt5OYAeEfyfk10Xxr30r2uaOQ6FPKvltT70vT7b7zwcFentHJWAJ4
+         RgnZ37uchy9FSMA0RHJmlZffWgOArpfwFM3YqWCq1qvmITscGqg7Rqw1bikv/URwLdo0
+         1Fb4YvNGfijIO9VSIIlxR/TobZc4ZLXY18gLuu51m2n9FRlhOTAB5CGdvbclX70scSSO
+         fW5Uxg44HMx6xjQVJ9KpHcNPX8/yvkEmhiDUq0YuoiSbHSQOl5zZFBWF7EpVK77+FcKp
+         L5kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720453547; x=1721058347;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qkICa0ofvLlVTjjsmaahvBqbNaY6s0KcNDXv8H869/w=;
+        b=MKi35TBQ/8all9UvLJ+PFVyuNtk/V8onrYNNIuJTu9Y9C/Ob3JA6ot8Hq+wHNFICFw
+         EWhyMlSn/e7P/fbELFn/YcQyw2WwIP5KIvWDg2xKVAu4mJ4PtgO8XPEhMNwBdpIHhwp2
+         svVBpIeVTBDC4V+uBmIP8Cf0byqb8bCV+Y+dZl6e35GvWBZuPWQRtmsF218jhuCYc/dJ
+         hwbRLA0JTzRWfjjG7pUT80ZwkvTJuTuJj5wwgD0OQfkc+s5VwDDBtBfWiFRiVbKjh3lx
+         AgUog321D9xLrHhoAftRK/IEOH1zJczzTUPUZo1vjA3ckh7AdudWwVJQu4abtGVTZxTI
+         E8hA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7fPKnw6lsreEstvX5jU6z0p17ypTyPzTiaTdHJGg9DSchLYPZMIpxcsZ5PXQyd/le32ymIKSrJEJYZflTRGkdbcw20ul+4fxoI72R92qtMt2yeekz9kFQkRrr0yt74O2o3sYrLMDtT1Iaa16+73KE+i6JcKONdIAvYQbeaqnULR28TuXx0YUz0WhWJcf02+eoDkad1+g+uTh0b7PaLyP+w6Wef08k6/OQ7ySj1nc9X9LyOnN+V9ddLw==
+X-Gm-Message-State: AOJu0Yx2Bp/gZk3Bd1SSa1/KmpUd6FBHGGssmR6fEFvJPMHIm6sLRkQ4
+	ZXDk4GOX19jkKL9ILwUN8703QA1Bm/1qzzNh6nIRTyH1u6PvMsBL
+X-Google-Smtp-Source: AGHT+IEPZ7bBGfEpmnLUfGsNXVTk4kA/uPf8kqKXrCigSFsssX0ifq5fYeIZEnN6//AqJ9JvXtUdhA==
+X-Received: by 2002:a05:600c:1c98:b0:426:5fa7:b495 with SMTP id 5b1f17b1804b1-4265fa7b6c3mr55487905e9.15.1720453546702;
+        Mon, 08 Jul 2024 08:45:46 -0700 (PDT)
+Received: from ?IPV6:2a02:8389:41cf:e200:2322:5f32:18e0:d6c4? (2a02-8389-41cf-e200-2322-5f32-18e0-d6c4.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:2322:5f32:18e0:d6c4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e09f1sm3388355e9.1.2024.07.08.08.45.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 08:45:46 -0700 (PDT)
+Message-ID: <2cd45260-e737-43e9-9bf6-c267d6f86ad3@gmail.com>
+Date: Mon, 8 Jul 2024 17:45:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703154301.GEZoVxhREtHjk0vtaL@fat_crate.local>
-X-Proofpoint-ORIG-GUID: xmqM3nHnZ6R7M3-ZRhe8OJfi4hXHzMFb
-X-Proofpoint-GUID: xmqM3nHnZ6R7M3-ZRhe8OJfi4hXHzMFb
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_09,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=983
- malwarescore=0 phishscore=0 mlxscore=0 clxscore=1015 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 spamscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407080117
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/6] leds: bd2606mvv: use device_for_each_child_node() to
+ access device child nodes
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>,
+ Andreas Kemnade <andreas@kemnade.info>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rob Herring <robh@kernel.org>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Jean Delvare
+ <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Marcin Wojtas <marcin.s.wojtas@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-leds@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20240706-device_for_each_child_node-available-v1-0-8a3f7615e41c@gmail.com>
+ <20240706-device_for_each_child_node-available-v1-3-8a3f7615e41c@gmail.com>
+ <20240707175713.4deb559f@jic23-huawei>
+ <4cf71de7-dc47-475c-bba0-a9e755f66d49@gmail.com>
+Content-Language: en-US, de-AT
+In-Reply-To: <4cf71de7-dc47-475c-bba0-a9e755f66d49@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 03, 2024 at 06:14:41PM +0200, Borislav Petkov wrote:
-> On Tue, Jul 02, 2024 at 08:32:22PM +0200, Ard Biesheuvel wrote:
-> > For kexec on a 64-bit system, I would expect the high-level support
-> > code to be capable of simply mapping all of DRAM 1:1, rather than
-> > playing these games with #PF handlers and on-demand mapping.
+On 08/07/2024 10:14, Javier Carrasco wrote:
+> On 07/07/2024 18:57, Jonathan Cameron wrote:
+>> On Sat, 06 Jul 2024 17:23:35 +0200
+>> Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
+>>
+>>> The iterated nodes are direct children of the device node, and the
+>>> `device_for_each_child_node()` macro accounts for child node
+>>> availability.
+>>>
+>>> `fwnode_for_each_available_child_node()` is meant to access the child
+>>> nodes of an fwnode, and therefore not direct child nodes of the device
+>>> node.
+>>>
+>>> Use `device_for_each_child_node()` to indicate device's direct child
+>>> nodes.
+>>>
+>>> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+>> Why not the scoped variant?
+>> There look to be two error paths in there which would be simplified.
+>>
 > 
-> Yeah, apparently we can't do that on SGI, as Steve said.
+> I did not use the scoped variant because "child" is used outside the loop.
 > 
-> I like the aspect that the #PF handler won't fire in the first kernel because
-> of EFI mapping all RAM. That's good.
+> On the other hand, I think an fwnode_handle_get() is missing for every
+> "led_fwnodes[reg] = child" because a simple assignment does not
+> increment the refcount.
 > 
-> So we could try to wire in a #PF handler in stage1, see below.
+> After adding fwnode_handle_get(), the scoped variant could be used, and
+> the call to fwnode_handle_put() would act on led_fwnodes[reg] instead.
 > 
-> Steve, I don't have a good idea how to test that. Maybe some of those
-> reporters you were talking about, would be willing to...
+
+Actually, the whole trouble comes from doing the processing in two
+consecutive loops, where the second loop accesses a child node that gets
+released at the end of the first one. It seems that some code got moved
+from one loop to a new one between two versions of the patchset.
+
+@Andreas Kemnade: I see that you had a single loop until v4 (the driver
+got applied with v6), and then you split it into two loops, but I don't
+see any mention to this modification in the change log.
+
+What was the reason for this modification? Apparently, similar drivers
+do everything in one loop to avoid such issues.
+
+Maybe refactoring to have a single loop again (if possible) would be the
+cleanest solution. Otherwise a get/put mechanism might be necessary.
+
+>>> ---
+>>>  drivers/leds/leds-bd2606mvv.c | 7 +++----
+>>>  1 file changed, 3 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/leds/leds-bd2606mvv.c b/drivers/leds/leds-bd2606mvv.c
+>>> index 3fda712d2f80..4f38b7b4d9d1 100644
+>>> --- a/drivers/leds/leds-bd2606mvv.c
+>>> +++ b/drivers/leds/leds-bd2606mvv.c
+>>> @@ -69,7 +69,7 @@ static const struct regmap_config bd2606mvv_regmap = {
+>>>  
+>>>  static int bd2606mvv_probe(struct i2c_client *client)
+>>>  {
+>>> -	struct fwnode_handle *np, *child;
+>>> +	struct fwnode_handle *child;
+>>>  	struct device *dev = &client->dev;
+>>>  	struct bd2606mvv_priv *priv;
+>>>  	struct fwnode_handle *led_fwnodes[BD2606_MAX_LEDS] = { 0 };
+>>> @@ -77,8 +77,7 @@ static int bd2606mvv_probe(struct i2c_client *client)
+>>>  	int err, reg;
+>>>  	int i;
+>>>  
+>>> -	np = dev_fwnode(dev);
+>>> -	if (!np)
+>>> +	if (!dev_fwnode(dev))
+>>>  		return -ENODEV;
+>>>  
+>>>  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>>> @@ -94,7 +93,7 @@ static int bd2606mvv_probe(struct i2c_client *client)
+>>>  
+>>>  	i2c_set_clientdata(client, priv);
+>>>  
+>>> -	fwnode_for_each_available_child_node(np, child) {
+>>> +	device_for_each_child_node(dev, child) {
+>>>  		struct bd2606mvv_led *led;
+>>>  
+>>>  		err = fwnode_property_read_u32(child, "reg", &reg);
+>>>
+>>
 > 
-> ---
-> diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
-> index d100284bbef4..a258587c8949 100644
-> --- a/arch/x86/boot/compressed/idt_64.c
-> +++ b/arch/x86/boot/compressed/idt_64.c
-> @@ -32,6 +32,7 @@ void load_stage1_idt(void)
->  {
->  	boot_idt_desc.address = (unsigned long)boot_idt;
->  
-> +	set_idt_entry(X86_TRAP_PF, boot_page_fault);
->  
->  	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
->  		set_idt_entry(X86_TRAP_VC, boot_stage1_vc);
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
 
-Boris,
-
-Eric Hagberg tested this patch for me and it didn't work.  (Thanks,
-Eric.)
-
-So I looked at the code more closely, and I don't think
-boot_page_fault is going to work prior to the call to
-initialize_identity_maps.  In the current flow in head_64.S, that
-comes after load_stage2_idt, where here we were trying to use it
-just after load_stage1_idt, quite a bit earlier.
-
-Is there a reason you want to avoid having these areas already entered
-in the identity map setup by kexec?
-
-I can see this could have the appearance of getting out of hand if we
-had to continually add things to it. But only those pieces that need
-to be referenced before the page fault handler is established actually
-require this treatment.
-
---> Steve
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
