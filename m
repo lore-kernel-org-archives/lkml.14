@@ -1,40 +1,40 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39A854F8C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251AA56452
 	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 09:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720430970; cv=none; b=jW7S1jRFVn+BoJmh4AAHdou8FmKs3eGei7jbatFta4JpYppYzdQToDW4I4Gu24Z24uydA0MX7BcaUb/GhHGCLncrn4FY1gIjU9ipw4PGG/+YXHo/yoboNHSGlYNg8sMdrC8eVZzGT+uFFXSX6dNpv6zXELrXQuHCTq14BNOqc1Y=
+	t=1720430970; cv=none; b=mllTubQ2l/lQcPywL8TqJ+rUVlWrCmd7W+AcOcpvG2ojtSiBAvNR9va0Z8UYQ1w42hPib4hZz23jF9VPcQ/IyHoV1R0FUBokjfRjpwlb/+Bob7o6Vg09j+dH9ST34+R+C+I5LUeSYQVnb6sFOvvDsIV7fIWdsrGMU8E/j3u2Lvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720430970; c=relaxed/simple;
-	bh=Z+tf+zGbvC0gSaMaFf/2zXls1bdcxX+Z2+74bcL4sJ4=;
+	bh=NIznFFC+YqfstGk8XO7oJGHArYFE63Hknj2SoWt6TsY=;
 	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=kpoq2AN3XVlnEbl+wR0vUsyuBhf3dRg1ErKAcs3McDAQ/2W0GYQTnLd4VEIsfGPO1jowEl/mJSG87KqsoXmf4s55b5Gj4F3k0voJnaAoKD+3abPgL/EuCbDxXBjzeUBmpAF1FbHlrtkEq1KymgpFX2STwdDOPCD0aAOrxaCCd4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fLP2gPzh; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type; b=HP60VQaTGm0c/JdRf3Es0XwZuokdneuikbqLWrrZ2Kfk+5Y+iOH98XDn8+3UWVrjAB3CiTrRLFFe2oL0uSBcybeATkyq+0RvW7fadf71rMwGH/UQ6LurunU9M08MK2SMspU8i0fJToSoLNoWJfpgyoHBTMVoZSfN7LkoOsfV1/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BzQoAiQL; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fLP2gPzh"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BzQoAiQL"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=FqzzvelQ00c0zN3R4blHkZc53U+LXab6OIi85Tl6cJg=; b=fLP2gPzh1ziLfREnPNinzFXPxf
-	sBEqJ7n7OTCxUyDyP8q/bXvawVZAyjInEmcSc9+0lpU6nc+ksfETXaboPaCDQ9WWygKzm7IuFyF3c
-	mdAtHCaTIB2pjKBQaFTfbbfX+WqW4HmpzkMfvoh3bay70f2GyIRbGmr46tGoMC7SQ3366a4UbzO5c
-	E05PXU/Lb8eBJ+rM9uYp7juW0cnlXrPuBo3PN4QpeyNH1TAFBGx6Ubprnrw9AfyfCzxVno4myTp0i
-	0nsukPCI+l7AkUVhOjNh3ynw+0lDiDKXAcm+7kGKipX5FCQApa+iyIIjpDEntWqkhB7FTd2yAI73Y
-	av1EunCQ==;
+	bh=AYprHqdZvozegjyHQBgBMRoiJh+6953VLAW68QuttTQ=; b=BzQoAiQL9I7o+H+8dxZD+BCApE
+	tp6gHlJGlDKtfvwVz+Jtx/n5jLZ+ZSw+IVZu0vbs56KOSaIHQnAA2E1JtZijVXITclURJ9Q1RTjzW
+	VebEQcJSojL26exBrIpxB2ZwUJBDlHPYCgEcwJ9DWlobpZmpHApk4Hj9u1IoXGwAskJFhTCyT3fG0
+	JAj9j3vgXWaFG2f/x4pYu7fX1N9mgig+JFS1P5w+zmsxn31puXqeJAG19mOHHDCkxV447BF1v2tq7
+	RcJfudZU9fqcVQGvfzPJPmyObjSJKmIJd7JWC9vqQcfUDPK/3MXD/ztPhUbgR4aNjQbPEPv8xoupI
+	0PnWmiXw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sQkgN-00000000ZsP-4BCt;
-	Mon, 08 Jul 2024 09:29:18 +0000
+	id 1sQkgO-00000000ZsS-1FMa;
+	Mon, 08 Jul 2024 09:29:19 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 184B2302182; Mon,  8 Jul 2024 11:29:13 +0200 (CEST)
-Message-Id: <20240708092415.695619684@infradead.org>
+	id 2DCE9304BE6; Mon,  8 Jul 2024 11:29:13 +0200 (CEST)
+Message-Id: <20240708092416.235666453@infradead.org>
 User-Agent: quilt/0.65
-Date: Mon, 08 Jul 2024 11:12:46 +0200
+Date: Mon, 08 Jul 2024 11:12:51 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  andrii@kernel.org
@@ -46,7 +46,7 @@ Cc: linux-kernel@vger.kernel.org,
  jolsa@kernel.org,
  clm@meta.com,
  paulmck@kernel.org
-Subject: [PATCH 05/10] perf/uprobe: SRCU-ify uprobe->consumer list
+Subject: [PATCH 10/10] perf/uprobe: Add uretprobe timer
 References: <20240708091241.544262971@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,145 +56,183 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-With handle_swbp() hitting concurrently on (all) CPUs the
-uprobe->register_rwsem can get very contended. Replace it with
-SRCU+mutex.
+In order to put a bound on the uretprobe_srcu critical section, add a
+timer to uprobe_task. Upon every RI added or removed the timer is
+pushed forward to now + 1s. If the timer were ever to fire, it would
+convert the SRCU 'reference' to a refcount reference if possible.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/uprobes.c |   37 +++++++++++++++++++++++--------------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+ include/linux/uprobes.h |    8 +++++
+ kernel/events/uprobes.c |   66 ++++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 68 insertions(+), 6 deletions(-)
 
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -15,6 +15,7 @@
+ #include <linux/rbtree.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
++#include <linux/timer.h>
+ 
+ struct vm_area_struct;
+ struct mm_struct;
+@@ -79,6 +80,10 @@ struct uprobe_task {
+ 	struct return_instance		*return_instances;
+ 	unsigned int			depth;
+ 	unsigned int			active_srcu_idx;
++
++	struct timer_list		ri_timer;
++	struct callback_head		ri_task_work;
++	struct task_struct		*task;
+ };
+ 
+ struct return_instance {
+@@ -86,7 +91,8 @@ struct return_instance {
+ 	unsigned long		func;
+ 	unsigned long		stack;		/* stack pointer */
+ 	unsigned long		orig_ret_vaddr; /* original return address */
+-	bool			chained;	/* true, if instance is nested */
++	u8			chained;	/* true, if instance is nested */
++	u8			has_ref;
+ 	int			srcu_idx;
+ 
+ 	struct return_instance	*next;		/* keep as stack */
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
-@@ -26,6 +26,7 @@
- #include <linux/task_work.h>
- #include <linux/shmem_fs.h>
- #include <linux/khugepaged.h>
-+#include <linux/srcu.h>
- 
- #include <linux/uprobes.h>
- 
-@@ -49,6 +50,8 @@ static struct mutex uprobes_mmap_mutex[U
- 
- DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem);
- 
-+DEFINE_STATIC_SRCU(uprobes_srcu);
-+
- /* Have a copy of original instruction */
- #define UPROBE_COPY_INSN	0
- 
-@@ -56,7 +59,7 @@ struct uprobe {
- 	struct rb_node		rb_node;	/* node in the rb tree */
- 	refcount_t		ref;
- 	struct rcu_head		rcu;
--	struct rw_semaphore	register_rwsem;
-+	struct mutex		register_mutex;
- 	struct rw_semaphore	consumer_rwsem;
- 	struct list_head	pending_list;
- 	struct uprobe_consumer	*consumers;
-@@ -750,7 +753,7 @@ static struct uprobe *alloc_uprobe(struc
- 	uprobe->inode = inode;
- 	uprobe->offset = offset;
- 	uprobe->ref_ctr_offset = ref_ctr_offset;
--	init_rwsem(&uprobe->register_rwsem);
-+	mutex_init(&uprobe->register_mutex);
- 	init_rwsem(&uprobe->consumer_rwsem);
- 
- 	/* add to uprobes_tree, sorted on inode:offset */
-@@ -1129,10 +1132,12 @@ void uprobe_unregister(struct inode *ino
- 	if (WARN_ON(!uprobe))
- 		return;
- 
--	down_write(&uprobe->register_rwsem);
-+	mutex_lock(&uprobe->register_mutex);
- 	__uprobe_unregister(uprobe, uc);
--	up_write(&uprobe->register_rwsem);
-+	mutex_unlock(&uprobe->register_mutex);
- 	put_uprobe(uprobe);
-+
-+	synchronize_srcu(&uprobes_srcu);
- }
- EXPORT_SYMBOL_GPL(uprobe_unregister);
- 
-@@ -1192,7 +1197,7 @@ static int __uprobe_register(struct inod
- 	 * We can race with uprobe_unregister()->delete_uprobe().
- 	 * Check uprobe_is_active() and retry if it is false.
- 	 */
--	down_write(&uprobe->register_rwsem);
-+	mutex_lock(&uprobe->register_mutex);
- 	ret = -EAGAIN;
- 	if (likely(uprobe_is_active(uprobe))) {
- 		consumer_add(uprobe, uc);
-@@ -1200,7 +1205,7 @@ static int __uprobe_register(struct inod
- 		if (ret)
- 			__uprobe_unregister(uprobe, uc);
- 	}
--	up_write(&uprobe->register_rwsem);
-+	mutex_unlock(&uprobe->register_mutex);
- 	put_uprobe(uprobe);
- 
- 	if (unlikely(ret == -EAGAIN))
-@@ -1240,12 +1245,12 @@ int uprobe_apply(struct inode *inode, lo
- 	if (WARN_ON(!uprobe))
- 		return ret;
- 
--	down_write(&uprobe->register_rwsem);
-+	mutex_lock(&uprobe->register_mutex);
- 	for (con = uprobe->consumers; con && con != uc ; con = con->next)
- 		;
- 	if (con)
- 		ret = register_for_each_vma(uprobe, add ? uc : NULL);
--	up_write(&uprobe->register_rwsem);
-+	mutex_unlock(&uprobe->register_mutex);
- 	put_uprobe(uprobe);
- 
- 	return ret;
-@@ -2087,14 +2092,19 @@ static struct uprobe *find_active_uprobe
- 	return uprobe;
- }
- 
-+#define for_each_consumer_rcu(pos, head) \
-+	for (pos = rcu_dereference_raw(head); pos; \
-+	     pos = rcu_dereference_raw(pos->next))
-+
- static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+@@ -1742,7 +1742,12 @@ unsigned long uprobe_get_trap_addr(struc
+ static struct return_instance *free_ret_instance(struct return_instance *ri)
  {
- 	struct uprobe_consumer *uc;
- 	int remove = UPROBE_HANDLER_REMOVE;
- 	bool need_prep = false; /* prepare return uprobe, when needed */
+ 	struct return_instance *next = ri->next;
+-	srcu_read_unlock(&uretprobes_srcu, ri->srcu_idx);
++	if (ri->uprobe) {
++		if (ri->has_ref)
++			put_uprobe(ri->uprobe);
++		else
++			srcu_read_unlock(&uretprobes_srcu, ri->srcu_idx);
++	}
+ 	kfree(ri);
+ 	return next;
+ }
+@@ -1766,11 +1771,48 @@ void uprobe_free_utask(struct task_struc
+ 	while (ri)
+ 		ri = free_ret_instance(ri);
  
--	down_read(&uprobe->register_rwsem);
--	for (uc = uprobe->consumers; uc; uc = uc->next) {
-+	guard(srcu)(&uprobes_srcu);
-+
-+	for_each_consumer_rcu(uc, uprobe->consumers) {
- 		int rc = 0;
- 
- 		if (uc->handler) {
-@@ -2116,7 +2126,6 @@ static void handler_chain(struct uprobe
- 		WARN_ON(!uprobe_is_active(uprobe));
- 		unapply_uprobe(uprobe, current->mm);
- 	}
--	up_read(&uprobe->register_rwsem);
++	timer_delete_sync(&utask->ri_timer);
++	task_work_cancel(utask->task, &utask->ri_task_work);
+ 	xol_free_insn_slot(t);
+ 	kfree(utask);
+ 	t->utask = NULL;
  }
  
- static void
-@@ -2125,12 +2134,12 @@ handle_uretprobe_chain(struct return_ins
++static void return_instance_task_work(struct callback_head *head)
++{
++	struct uprobe_task *utask = container_of(head, struct uprobe_task, ri_task_work);
++	struct return_instance *ri;
++
++	for (ri = utask->return_instances; ri; ri = ri->next) {
++		if (!ri->uprobe)
++			continue;
++		if (ri->has_ref)
++			continue;
++		if (refcount_inc_not_zero(&ri->uprobe->ref))
++			ri->has_ref = true;
++		else
++			ri->uprobe = NULL;
++		srcu_read_unlock(&uretprobes_srcu, ri->srcu_idx);
++	}
++}
++
++static void return_instance_timer(struct timer_list *timer)
++{
++	struct uprobe_task *utask = container_of(timer, struct uprobe_task, ri_timer);
++	task_work_add(utask->task, &utask->ri_task_work, TWA_SIGNAL);
++}
++
++static struct uprobe_task *alloc_utask(struct task_struct *task)
++{
++	struct uprobe_task *utask = kzalloc(sizeof(struct uprobe_task), GFP_KERNEL);
++	if (!utask)
++		return NULL;
++	timer_setup(&utask->ri_timer, return_instance_timer, 0);
++	init_task_work(&utask->ri_task_work, return_instance_task_work);
++	utask->task = task;
++	return utask;
++}
++
+ /*
+  * Allocate a uprobe_task object for the task if necessary.
+  * Called when the thread hits a breakpoint.
+@@ -1782,7 +1824,7 @@ void uprobe_free_utask(struct task_struc
+ static struct uprobe_task *get_utask(void)
+ {
+ 	if (!current->utask)
+-		current->utask = kzalloc(sizeof(struct uprobe_task), GFP_KERNEL);
++		current->utask = alloc_utask(current);
+ 	return current->utask;
+ }
+ 
+@@ -1791,7 +1833,7 @@ static int dup_utask(struct task_struct
+ 	struct uprobe_task *n_utask;
+ 	struct return_instance **p, *o, *n;
+ 
+-	n_utask = kzalloc(sizeof(struct uprobe_task), GFP_KERNEL);
++	n_utask = alloc_utask(t);
+ 	if (!n_utask)
+ 		return -ENOMEM;
+ 	t->utask = n_utask;
+@@ -1803,13 +1845,20 @@ static int dup_utask(struct task_struct
+ 			return -ENOMEM;
+ 
+ 		*n = *o;
+-		__srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
++		if (n->uprobe) {
++			if (n->has_ref)
++				get_uprobe(n->uprobe);
++			else
++				__srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
++		}
+ 		n->next = NULL;
+ 
+ 		*p = n;
+ 		p = &n->next;
+ 		n_utask->depth++;
+ 	}
++	if (n_utask->return_instances)
++		mod_timer(&n_utask->ri_timer, jiffies + HZ);
+ 
+ 	return 0;
+ }
+@@ -1957,6 +2006,8 @@ static void prepare_uretprobe(struct upr
+ 	ri->next = utask->return_instances;
+ 	utask->return_instances = ri;
+ 
++	mod_timer(&utask->ri_timer, jiffies + HZ);
++
+ 	return;
+ fail:
+ 	kfree(ri);
+@@ -2151,6 +2202,9 @@ handle_uretprobe_chain(struct return_ins
  	struct uprobe *uprobe = ri->uprobe;
  	struct uprobe_consumer *uc;
  
--	down_read(&uprobe->register_rwsem);
--	for (uc = uprobe->consumers; uc; uc = uc->next) {
-+	guard(srcu)(&uprobes_srcu);
++	if (!uprobe)
++		return;
 +
-+	for_each_consumer_rcu(uc, uprobe->consumers) {
- 		if (uc->ret_handler)
- 			uc->ret_handler(uc, ri->func, regs);
- 	}
--	up_read(&uprobe->register_rwsem);
- }
+ 	guard(srcu)(&uprobes_srcu);
  
- static struct return_instance *find_next_ret_chain(struct return_instance *ri)
+ 	for_each_consumer_rcu(uc, uprobe->consumers) {
+@@ -2197,8 +2251,10 @@ static void handle_trampoline(struct pt_
+ 
+ 		instruction_pointer_set(regs, ri->orig_ret_vaddr);
+ 		do {
+-			if (valid)
++			if (valid) {
+ 				handle_uretprobe_chain(ri, regs);
++				mod_timer(&utask->ri_timer, jiffies + HZ);
++			}
+ 			ri = free_ret_instance(ri);
+ 			utask->depth--;
+ 		} while (ri != next);
 
 
