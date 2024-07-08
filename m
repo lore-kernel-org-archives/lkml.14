@@ -1,142 +1,190 @@
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8257345B
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720475345; cv=fail; b=OZ9h9d7x8AJZ67/ChnI6xJKtCvqS/OYLsxx3yGVdaQqGESTNqvolNo6XAzTOeRxi3O5HLCuEF28P91LTjqDhjczMnSi4Q9TvSLSPuKzJC3mgovbo0D1Xq5jvE1ELv6oPg/vInvej5gZacTF/gXn6xsBckvb6MpXu0Yz52I7Su2o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720475345; c=relaxed/simple;
-	bh=4TtO2sntfGeQOH6q4WlC+yYcVRb75tRgpuRvumGtajY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kfegai9jmNxMU+rGRF2f/f+m5qwDWX4aL6SHDY7t+YFsaLa5P10Rjy5Z8R0xpu/mcZh3LDbzB9eckkbFnjrnUJjrCT4/NpqJ1ypjtkDm8fC9XScv1kruwRbZSF7XZFz8zr27CiYeYpBZaZXhecoeOwtFIxo9TTRk05m5a+X5RRM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=yFadK6fY; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=hNHn5/CK; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E815F7345B
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720475457; cv=none; b=t2eYNwMiGIwKM+D3qlZZkQ52oBUohdt9+H5zuWpys2kcn1SbZkmPPZehqv9qsCUzAmlG0oiatrAZhJPiTkZrrTzqAgjNw8ZBLuP0BXklJ3JT3k4IK2ZQ/uObAkRr9AIcRCU5/WVlLTmtTYmH5v1xQhROkHLfJqH0Je6C3JzbcnA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720475457; c=relaxed/simple;
+	bh=CGhJ++WMMJldXOYCgNnryvzCnalvDx/0i19ERCrU6Js=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B0Pl9ddydWe5bVquBNW9oqj1E8WMAex68Xve+fE2dhsVGUa+hpA8sfTI99a2eW6p8gYpZGlz7vMUNnxXRutGitCid+gaRxpa7GeYttpJ5QL+mYpUqRi6wYgTA/EdxDROfo81l1K7vD1NdYSAEw4T9rFkjFyqMUmME7MjyGW5Ozg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZruS5U54; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="yFadK6fY";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="hNHn5/CK"
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id 22A814809B4;
-	Mon, 08 Jul 2024 17:39:27 -0400 (EDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1720474767;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=S6XBRzh9DZg2tX9b2GATh0K63Iw+3VDyPu6Zm+GFSGE=;
- b=yFadK6fYZClrUUSqbjrUqWdX+CuOe+tZwiBYVMdm3NQxzGRQWmm+p6GOq0QWUH/XmJIlV
- pd/0fLmoBq0lEXKCQ==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1720474767;
-	cv=none; b=Y6aM1GPihBomft2cRY+L3F0qHviR8LJALidAQioa8TSmckWKaCUsKFkfotGb4uqnrxhaD+La+W/9B3XS1YCbdT3/QJA2j6upPpd9OUoxkYeaylFBC2K3UiaquNIfjK7WmHxzD3aoAJrtfvDuC5IT9bTBXgEHLwgOqIGbt63w4QBPAzAfSjQPf3xtl1u2RBYTK8C6gjpFfT0me7ohntT/eir2vmgOD4Lq3onOCy0DTUHNvw2WfSkILPyZ51/QeO7BzpFuHeZdZ3mUFkhn2laXyZuHu4ZC6nTvlRNZ3Cxvfu1CeCDdS0UUZBZETnHTYTuEkFvogCZKIALzjfHnCNHrpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1720474767; c=relaxed/simple;
-	bh=4TtO2sntfGeQOH6q4WlC+yYcVRb75tRgpuRvumGtajY=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=sOw3Y/dUovCQLzuOqXykvrWd72qzM27Co5QGXT+HkMyxfAw5IuWi0huiqGpZKovTzy9I18t09ki6QKiIkHqCK1KppIa4RfqK1Ewb3jrrNE1Ix1LrDYBDs4TSzLF6XR3fV9D/kj7pcrtOV91XqgP36Y6ygcKcm2LYSMlLn9zRfdNlG7YXi2Qu7iUUgXwh4PHZ+hHl+7kywnW9hJJj44Kt4g1CnLjhbpXogVXawREWk7t3WIjF5K3rJM7CaFnU2kxhhuujD5fXn6wMJpAYAr/ptZGq/HjQl32o5MeG9T7yUSR20K2lIfTP8x2CZhrBk0sl199n9A0mRvGkKmN3rokCaw==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1720474767;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=S6XBRzh9DZg2tX9b2GATh0K63Iw+3VDyPu6Zm+GFSGE=;
- b=hNHn5/CK6EHhd32MdfK/emAv/oNXE5yby7GAtXKB8hC2gWgdbl6TWtJR5RH4MEJlvmjGk
- P9X9U3uDrzS72C1gljKJ0T13VvxCa+KnTUttaNn/ybueQyG59Bg5WcYdCtuUTmeQEd2fL4x
- +i30Lueh6A4kSRsEwzWkEDLK6MH6xHaWPzDUJT6Sd7ABKvhSXrG6JWiLm0u4+2LXBVO0noj
- gzj4lttVd0n7PNhHQPyLY2VB8G9/xbsXqFdEAWFnCRcIUgnROJ8rb2wlxuFaRUwX/g0V3is
- vPcePJth0IJXXj2nhcO1KGAjvqUSaGbMnbqvEuVIsvXA0Zxy2mIbCvRxBk6w==
-Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by srv8.sapience.com (Postfix) with ESMTPS id EE9AF28001A;
-	Mon, 08 Jul 2024 17:39:26 -0400 (EDT)
-Message-ID: <a6e0a7d79f9599621a1b4a3263a7b7b5dd810300.camel@sapience.com>
-Subject: Re: crosstool: x86 kernel compiled with GCC 14.1 fails to boot
-From: Genes Lists <lists@sapience.com>
-To: Arnd Bergmann <arnd@arndb.de>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, ath12k@lists.infradead.org
-Date: Mon, 08 Jul 2024 17:39:26 -0400
-In-Reply-To: <0ddafa32-1fc2-45e1-b71c-beb64f8cd589@app.fastmail.com>
-References: <87y16bbvgb.fsf@kernel.org>
-	 <0ddafa32-1fc2-45e1-b71c-beb64f8cd589@app.fastmail.com>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-iwKPurN+EOys0t/g2faq"
-User-Agent: Evolution 3.52.3 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZruS5U54"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720475454;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XseuSPGkDJ27OOmizeaAYkdaDU09mgUt9vN5WdBaaf0=;
+	b=ZruS5U54FfpHs85/mOUW7TDsgxYgjaJngItaTAtWJA8bQJ0lkWLmJ0mV698fc1WDY26d0Q
+	AUoofdIkBYCsULN9x0J5KLZqQw9RJIq81dEN9WH+eqA4LA10GIjZPF1FjslqOrKoe54Gli
+	U08AjMYAbue73cCXrcKQfZhwKF+kVK8=
+Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com
+ [209.85.217.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-co7-elyrOlyGe3BA_EPDcw-1; Mon, 08 Jul 2024 17:50:53 -0400
+X-MC-Unique: co7-elyrOlyGe3BA_EPDcw-1
+Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-48ff6aa3d8cso270871137.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 14:50:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720475453; x=1721080253;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XseuSPGkDJ27OOmizeaAYkdaDU09mgUt9vN5WdBaaf0=;
+        b=srVxdA4xufuTSeFHE+hFamzmHPEyAurh6VjuKTN+z+WrJrZNCzNzjNaz4+tW0mSfRw
+         SKoj7RYJkXOOeQoLW8U7H8IyMQdSM5WvY/qMJSjNef8edAzH51i9ER2VUnhVrLNiQR0d
+         9eEhz3FEfFxWKjnF1/wgy3V3bsRKjeTX1phLHiXM/5HHJ6kprD5Vj1w/XZikq5RRm+Iw
+         6SjP3VrBOsfpgvrGQjn6kyfC10G4VRglMvUGdE6ZdbXghw8r+dBxLQBHq/1Rr907gmLN
+         c39xfU9tJdWm3+6RtkyqofnUwvt9ahlrhXbtFRdM3mxW9QBVLtVhkKQz3S4fPZKHmoXV
+         rbRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2uBNwzFLwBNrI7nO8rJiD0cljDkY2XGqAQ0ktI1X8sGIdyr9aME9OGGQr6F7gWmfE3A0j1XLDGLn9UKH8bA8N5bTfVX/aFasejR/7
+X-Gm-Message-State: AOJu0YzPrA+w+bu7GbBSxpmDtRejavAudaRWaeyhv+RhAtlUcR+NMzeT
+	IBcK6tg6RR7mBFwp2hqNMKLmkcJzJqTUe5jdWN7vucA9w6scsrqCZICdLm5hFWuj3EocXK6dIt8
+	Wddqm21KtprOCg6WfGfrAMDPnH/5TjBi2i8prKCc+V89fMqkU8fVCOgrjHvm5IQ==
+X-Received: by 2002:a05:6102:549e:b0:48f:e729:f476 with SMTP id ada2fe7eead31-4903220c4c2mr771714137.2.1720475452864;
+        Mon, 08 Jul 2024 14:50:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFXeSjvMFB80yk4vNSDELW45skeRc2NPeBOJ3FpTQYCg15myh1f/p8d//jJWxYNCrhNEEK1vw==
+X-Received: by 2002:a05:6102:549e:b0:48f:e729:f476 with SMTP id ada2fe7eead31-4903220c4c2mr771706137.2.1720475452543;
+        Mon, 08 Jul 2024 14:50:52 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9b522fesm3533721cf.51.2024.07.08.14.50.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 14:50:51 -0700 (PDT)
+Date: Mon, 8 Jul 2024 17:50:49 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Huang Ying <ying.huang@intel.com>,
+	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH hotfix] mm/migrate: fix kernel BUG at
+ mm/compaction.c:2761!
+Message-ID: <ZoxfOZ48v-lrOcyb@x1n>
+References: <46c948b4-4dd8-6e03-4c7b-ce4e81cfa536@google.com>
+ <ZowLTDJG_i2ILmx7@x1n>
+ <BF97E908-8FC9-43FD-909B-845994FB36E8@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BF97E908-8FC9-43FD-909B-845994FB36E8@nvidia.com>
 
+On Mon, Jul 08, 2024 at 12:39:10PM -0400, Zi Yan wrote:
+> On 8 Jul 2024, at 11:52, Peter Xu wrote:
+> 
+> > On Tue, Jun 11, 2024 at 10:06:20PM -0700, Hugh Dickins wrote:
+> >> I hit the VM_BUG_ON(!list_empty(&cc->migratepages)) in compact_zone();
+> >> and if DEBUG_VM were off, then pages would be lost on a local list.
+> >>
+> >> Our convention is that if migrate_pages() reports complete success (0),
+> >> then the migratepages list will be empty; but if it reports an error or
+> >> some pages remaining, then its caller must putback_movable_pages().
+> >>
+> >> There's a new case in which migrate_pages() has been reporting complete
+> >> success, but returning with pages left on the migratepages list: when
+> >> migrate_pages_batch() successfully split a folio on the deferred list,
+> >> but then the "Failure isn't counted" call does not dispose of them all.
+> >>
+> >> Since that block is expecting the large folio to have been counted as 1
+> >> failure already, and since the return code is later adjusted to success
+> >> whenever the returned list is found empty, the simple way to fix this
+> >> safely is to count splitting the deferred folio as "a failure".
+> >>
+> >> Fixes: 7262f208ca68 ("mm/migrate: split source folio if it is on deferred split list")
+> >> Signed-off-by: Hugh Dickins <hughd@google.com>
+> >> ---
+> >> A hotfix to 6.10-rc, not needed for stable.
+> >>
+> >>  mm/migrate.c | 8 +++++++-
+> >>  1 file changed, 7 insertions(+), 1 deletion(-)
+> >>
+> >> --- a/mm/migrate.c
+> >> +++ b/mm/migrate.c
+> >> @@ -1654,7 +1654,12 @@ static int migrate_pages_batch(struct list_head *from,
+> >>
+> >>  			/*
+> >>  			 * The rare folio on the deferred split list should
+> >> -			 * be split now. It should not count as a failure.
+> >> +			 * be split now. It should not count as a failure:
+> >> +			 * but increment nr_failed because, without doing so,
+> >> +			 * migrate_pages() may report success with (split but
+> >> +			 * unmigrated) pages still on its fromlist; whereas it
+> >> +			 * always reports success when its fromlist is empty.
+> >> +			 *
+> >>  			 * Only check it without removing it from the list.
+> >>  			 * Since the folio can be on deferred_split_scan()
+> >>  			 * local list and removing it can cause the local list
+> >> @@ -1669,6 +1674,7 @@ static int migrate_pages_batch(struct list_head *from,
+> >>  			if (nr_pages > 2 &&
+> >>  			   !list_empty(&folio->_deferred_list)) {
+> >>  				if (try_split_folio(folio, split_folios) == 0) {
+> >> +					nr_failed++;
+> >>  					stats->nr_thp_split += is_thp;
+> >>  					stats->nr_split++;
+> >>  					continue;
+> >> -- 
+> >> 2.35.3
+> >>
+> >>
+> >
+> > We probably hit the same issue in our testbeds, but in the other
+> > migrate_misplaced_folio() path, which contains the BUG_ON() rather than
+> > VM_BUG_ON().  Looks like this patch can also fix that.
+> >
+> > When looking at that, I wonder whether we overlooked one more spot where we
+> > mostly always use putback_movable_pages() for migrate failures, but didn't
+> > in migrate_misplaced_folio().  I feel like it was overlooked but want to
+> > check with all of you here, as I do think the folio can already be split
+> > when reaching here too. So I wonder whether below would make sense as a fix
+> > from that POV.
+> >
+> > ===8<===
+> > diff --git a/mm/migrate.c b/mm/migrate.c
+> > index e10d2445fbd8..20da2595527a 100644
+> > --- a/mm/migrate.c
+> > +++ b/mm/migrate.c
+> > @@ -2615,14 +2615,8 @@ int migrate_misplaced_folio(struct folio *folio, struct vm_area_struct *vma,
+> >         nr_remaining = migrate_pages(&migratepages, alloc_misplaced_dst_folio,
+> >                                      NULL, node, MIGRATE_ASYNC,
+> >                                      MR_NUMA_MISPLACED, &nr_succeeded);
+> > -       if (nr_remaining) {
+> > -               if (!list_empty(&migratepages)) {
+> > -                       list_del(&folio->lru);
+> > -                       node_stat_mod_folio(folio, NR_ISOLATED_ANON +
+> > -                                       folio_is_file_lru(folio), -nr_pages);
+> > -                       folio_putback_lru(folio);
+> > -               }
+> > -       }
+> > +       if (nr_remaining && !list_empty(&migratepages))
+> > +               putback_movable_pages(&migratepages);
+> >         if (nr_succeeded) {
+> >                 count_vm_numa_events(NUMA_PAGE_MIGRATE, nr_succeeded);
+> >                 if (!node_is_toptier(folio_nid(folio)) && node_is_toptier(node))
+> > ===8<===
+> 
+> If the original folio is large and split without migrating all subpages,
+> not migrated sub pages will be left on migratepages list. list_del(&folio->lru)
+> can remove the first subpage from a wrong list, if it is migrated, and loses
+> the rest. It is not a problem before, since MR_NUMA_MISPLACED prevents the
+> folio from being split.
+> 
+> The fix looks good to me.
 
---=-iwKPurN+EOys0t/g2faq
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks, Zi.  Let me send a formal patch then.
 
-On Mon, 2024-07-08 at 21:03 +0200, Arnd Bergmann wrote:
-> On Mon, Jul 8, 2024, at 20:16, Kalle Valo wrote:
-> > Hi Arnd,
-> >=20
-> > I installed GCC 14.1 from:
-> >=20
-> > https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_6
-> > 4/14.1.0/
-> >=20
-> > But I have a problem that a kernel compiled with that compiler
-> > fails to
-> > boot on my x86 NUC test box. I don't see any errors, just black
-> > screen
-...
+-- 
+Peter Xu
 
->=20
->=20
-> Thanks for the report. Unfortunately I have no idea what the
-> problem may be, and so far nobody else has reported this.
->=20
-...
-
-> =C2=A0=C2=A0=C2=A0=C2=A0 Arnd
->=20
-
-Another data point in case it's helpful.
-
-I =C2=A0have been compiling on Archlinux using the native gcc 14.1 toolchai=
-n
-since early May.
-
-I have had no problems at all booting and running either stable or
-mainline on several x86-64 machines including 2 NUCs.
-One is NUC6i5SYB and the other is NUC10i5FNK.
-
-  Gene
-
-
---=-iwKPurN+EOys0t/g2faq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZoxcjgAKCRA5BdB0L6Ze
-2yH6APwIP/9tgi0VYheywdzzRJFHVlevvtmUOCp1cShuaG8gMAEAtBF/4xNIAvkI
-Na5bkoEp1j6pJIF8V0HND86pgnLeZQo=
-=XUoM
------END PGP SIGNATURE-----
-
---=-iwKPurN+EOys0t/g2faq--
