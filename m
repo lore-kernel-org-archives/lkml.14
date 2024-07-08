@@ -1,194 +1,88 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6D71CD3D
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE2E14EC51
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720473652; cv=none; b=JEMSE8P5ZEdRCMilafQjTVQjs6sEZ1Y4l3rrnZwygr75MI1+uJa5YO7Dq+x+6GGVkRTPze6AUu39vRVFnqo017kOe24dTwD7WseA020EjCpfs/0SLa+Nrlscdh2enYk9Uy5VWgFwdZ45aE/f95ZZS6pKKTdRzM3idnDENg71mwU=
+	t=1720473937; cv=none; b=eFVYm2QTH+/zv4/LycjPCYH960gCRrwFbf0HjpAkYusBbW4I4b/UEIQ7P1vP9sLZoT6uHFI1iYs4v9qWM8r4ecUktXsmTE5YakkUxPPCtlImbMTHvqrYU4soZ0Nj2OyjgZKikT/+MRqbJotR5dSLzupSIFlH1h/C2fO7DkiOnvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720473652; c=relaxed/simple;
-	bh=dJnYTz1ag8EQmfFSoSRPHa2Nk0g/OZkdcnp4VY+/vFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E1SyLRAysTjaVWXctMO0GSTOtAOfTsuwV7AyvfoctWEjKzIvwY31Oht85CUGQ3hzEHqZdq+1WFNDSf041ATROi3hqpaLquJwPKQ6D0GOSEKfOB7LEcqp8tcKFBU4RiX8Z8IzQKu9g3tNW01+cOew98xqDMNeBDAIVwS71VudUYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=c+dX4Ww5; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1720473937; c=relaxed/simple;
+	bh=7JctZJAKiS8OEudEyYr/ynOmVp0voSFvu/g3pykv3D0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PRxbR7jilFqUDvysXfzNpP4yzzTFwe00kcjfnPpfUENzTGteaOh9r/B91nRLBSAg3kPLyfusmRQwJnlutR18pL0nVTI/vcJWS3PJMJuBMksx+6nxXcNPW2BNpEiHMF/XwgdCOmvLyn0N0y4roOQprS7MSOLpe0acz2mo3QCOUyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=BrFEH0TF; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="c+dX4Ww5"
-Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468EkjZa005646;
-	Mon, 8 Jul 2024 21:20:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pps0720; bh=d0OI0mJZSSL4IwjltDfuVUY
-	eJXJFIC5RyBFtpQK7OmQ=; b=c+dX4Ww5/sBjd9rs485vVMe5PfaKBfM60LRgXy4
-	MSSIg/77ryzfCec7eRHpp0mzzyTSZlS4etc+NECXFVRKDcpIhWqxXAM5UZPaM0Xi
-	GimnVSKu6htAresLQ13ozbl29NfAMO0Gxn1uVake/SJ/2Fb3vy9niFFvGz7TnnTM
-	JeyUzqJHoRHzCNEJ23ijmXyS+xwzIPhe7OXM2J9JrclCmsDF2Dg3kXAKq3kIplZ7
-	FE4501q9GDD7Hgk4iI8y5WaGpoz3h0ResSEVnz/3MYLQj/37eL6zgIjajvu+k24f
-	R5sZ6NCq/2pKHHpBgAbehmltwW2Dryojayu4uq/qfExVyiQ==
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 408j5tamdn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jul 2024 21:20:00 +0000 (GMT)
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 9FB48147A1;
-	Mon,  8 Jul 2024 21:19:56 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id D8DA480283E;
-	Mon,  8 Jul 2024 21:19:52 +0000 (UTC)
-Date: Mon, 8 Jul 2024 16:19:50 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Borislav Petkov <bp@alien8.de>,
-        Ashish Kalra <ashish.kalra@amd.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, Pavin Joseph <me@pavinjoseph.com>,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
-        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
-Message-ID: <ZoxX9mckeu046zed@swahl-home.5wahls.com>
-References: <CAMj1kXGsjU5CpF655me1XNA8-5nbk3020vT2Bu5ZoFY25igovg@mail.gmail.com>
- <20240703154301.GEZoVxhREtHjk0vtaL@fat_crate.local>
- <ZowI9w7huVfcKJ7I@swahl-home.5wahls.com>
- <20240708181133.GHZowr1eznPqgvdtRw@fat_crate.local>
- <CAMj1kXG8hZ86BFbar9S5mmvKMH4a0XF0oCm36WwZxYNqc0+pjQ@mail.gmail.com>
- <20240708190724.GIZow47G0J8vO6J3ee@fat_crate.local>
- <Zow-AXsLHjU6gfET@swahl-home.5wahls.com>
- <20240708195810.GKZoxE0pRWHEUljjnQ@fat_crate.local>
- <ZoxOt1_w7nblRQCv@swahl-home.5wahls.com>
- <CAMj1kXGA8zG95WutMgVgeb-M7oQKJrVO6QWNzLi1GMuj1wq=bg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="BrFEH0TF"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-25e0c0df558so2291150fac.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 14:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720473935; x=1721078735; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xJvFU7TYtpQ06K0DjMCeUx+4vp854MVTBkG3gu9NGtM=;
+        b=BrFEH0TFO/sVO7amffuQwbUgj3tcoE1Z/l702jjZY9TMQl173pUcT2uiQl7nyqVnuH
+         K7KqbPqGVUwUN+uMec7k/rD1soOQHcjbRa9jgFWSIGm1fmi2wBzT466XVfbH5WAjs3Ra
+         CMcNj04TEE9CaoPXDgfNsC0I70JS7YR0QJesCaqPFeQcRIXWp920wDuY/2NoC2grPgvR
+         f74uea0Qw39QZzGA0Us6hkDDmntJcY+xw0K64BCr7Y4G7zAfKKTfb2OnSmAWnD8Qbso5
+         zZZtJATBIjvU6N0Ojwhu3RFhc81RR/aTyvzmmfTk71soOE4JtErqUxNJvZWjEBgZglZF
+         fTIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720473935; x=1721078735;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xJvFU7TYtpQ06K0DjMCeUx+4vp854MVTBkG3gu9NGtM=;
+        b=xI3LY9699Pb5RKM2eTcp8P2PDdpamcXrUTQaEApdGM87ZbHxFh5GJdUDXXyeOYW6wu
+         LeuhBfPtriZvE6Qv++EGt6oSHmLX2pNGlyJ1A+ytYm5Px620GJY2ErfMY7s9WTYrnr0F
+         sJqoYWEsGVxFQYlENzTEzpK3Tgu3SlfGFpywbM57qw/eX4IAnG4YWJcPvx2GeaUcPgtn
+         HoHP7WgNKIbLMBTipqYVqGoonByihAJUkNbMG3gYX+3a0QLu3eD+rZPM/w4DHeUB0byC
+         k8s0ahFeTFm1urRYwnw5RmNrZMuzPahMSxyEbHyuoH9r8YpZ6MA29GlNsyUY1BjGsz6X
+         6Gdw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPc5NR8g53QdHBSC0feChWh8KUT5NQXTVzFoNKpK3M8yfTEuZ+kiKeuJN+PmKvhekTLHLNdtaHu4CdpacbQxZILNTclsvFhEv7wxCs
+X-Gm-Message-State: AOJu0YwyBIcIbV5Pn93v2Y4PVtXrzWtFYcpofFwOWL/bZIPqRn2J8NBs
+	6r/XsIHZ0luUU8gWAky+Fl9DRKShKPHlJFeoLJ0XZ0rp+ZtXgF7kuvwMl2aTkEU=
+X-Google-Smtp-Source: AGHT+IFibYrQLzTfmVuZB2cwTblZ0w0GWvA/Rp6zMFtf4QieNjy5zWIw9c6j8/BZsVvjrbrriJbOIg==
+X-Received: by 2002:a05:6870:2105:b0:25e:1f67:b3c2 with SMTP id 586e51a60fabf-25eae756dc3mr544905fac.1.1720473934739;
+        Mon, 08 Jul 2024 14:25:34 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-25ea9feb688sm194630fac.20.2024.07.08.14.25.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 14:25:34 -0700 (PDT)
+Message-ID: <d4505dbf-a886-4fbe-8305-9ebee22a46b9@baylibre.com>
+Date: Mon, 8 Jul 2024 16:25:33 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGA8zG95WutMgVgeb-M7oQKJrVO6QWNzLi1GMuj1wq=bg@mail.gmail.com>
-X-Proofpoint-GUID: qrTtK2tngBdJtj67WDJ4y-f71hKunap-
-X-Proofpoint-ORIG-GUID: qrTtK2tngBdJtj67WDJ4y-f71hKunap-
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_11,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- impostorscore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015
- phishscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407080158
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 7/7] docs: iio: Add documentation for AD4000
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+ lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ nuno.sa@analog.com, corbet@lwn.net, marcelo.schmitt1@gmail.com
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1719686465.git.marcelo.schmitt@analog.com>
+ <d5f07e2ea4f4aaae1c13ed0b1b0c6abb15492a67.1719686465.git.marcelo.schmitt@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <d5f07e2ea4f4aaae1c13ed0b1b0c6abb15492a67.1719686465.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 08, 2024 at 11:05:29PM +0200, Ard Biesheuvel wrote:
-> On Mon, 8 Jul 2024 at 22:41, Steve Wahl <steve.wahl@hpe.com> wrote:
-> >
-> > On Mon, Jul 08, 2024 at 09:58:10PM +0200, Borislav Petkov wrote:
-> > > On Mon, Jul 08, 2024 at 02:29:05PM -0500, Steve Wahl wrote:
-> > > > Yes, this is about AMD machines which support SEV, running bare metal.
-> > > > ("Server" is in question, one of my testers is known to be using a
-> > > > laptop, so the facilities must be present in non-servers as well.)
-> > >
-> > > No, they can't be. SEV is supported only on server, not on client. This laptop
-> > > has a different problem it seems.
-> >
-> > Ahhh.  On the laptop, it's not looking *at* the CC blob that's the
-> > problem.
-> >
-> > Its looking *for* the CC blob in the EFI config table; the CC blob
-> > probably does not exist in that table on the laptop.  But the EFI
-> > config table needs to be identity mapped, to look through it and see
-> > that the CC blob is not there, and the EFI config table is not mapped.
-> >
-> > I think the existence of the CC blob in the EFI config table is being
-> > used, more or less, as a flag as to whether we need to do SEV related
-> > code.  Without mapping the EFI config table, we can't look for that
-> > blob.
-> >
+On 6/29/24 2:07 PM, Marcelo Schmitt wrote:
+> Document wiring configurations for the AD4000 series of ADCs.
 > 
-> We have run into this exact problem before - I don't have time to
-> check lore right now (it's 11pm here) but 'CC blob' and 'EFI config
-> table' are the keywords that may help you track down the thread.
-> 
-> So first of all, let's define some terminology:
-> - the EFI system table is the EFI root table that contains some magic
-> numbers and pointers to various other assets in memory, one of which
-> is:
-> - the EFI config table array, which is just a list of (GUID, pointer)
-> tuples, the length of which is recorded in the EFI system table
-> - an EFI config table is some asset elsewhere in memory that is
-> identified by its GUID.
-> 
-> The EFI config table array can grow and shrink at boot time, which is
-> why it is a separate allocation, as this allows it to be realloc()'ed.
-> This means any bootloader that intends to map the primary EFI table
-> should also map the EFI config table array, which may be elsewhere
-> entirely.
-> 
-> > > > As far as I can see it, the effort you're putting into finding a
-> > > > different solution must mean you find something less than desirable
-> > > > about the solution I have offered.  But at this point, I don't
-> > > > understand why;
-> > >
-> > > Why would we parse the CC blob which is destined *solely* for a SEV- *guest*,
-> > > when booting the baremetal kernel which is *not* a guest?
-> > >
-> > > This is the solution I'm chasing - don't do something you're not supposed to
-> > > or needed to do.
-> >
-> > What you're saying suggests that, maybe, my patch #2 will not be
-> > necessary.  The CC blob will never be present except for in a guest.
-> > But can you do a kexec to a new kernel within that guest?  If so,
-> > patch #2 might still be necessary.
-> >
-> > Anyway, I think the references you're trying to eliminate when they're
-> > not needed are the references used to determine if the SEV feature is
-> > to be used in this specific boot iteration or not.
-> >
-> 
-> It would be better if we did not have to rely on page fault handling
-> to map the EFI config table array this early. This is not strictly
-> related to SEV, but the CC blob happens to be the EFI config table
-> that is accessed before the page fault handler is installed.
-> 
-> So regardless of how we fix any SEV-guest specific issues, we should
-> ensure that kexec infrastructure creates the mappings of the EFI
-> system table and the EFI config table array upfront.
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
 
-I think that's exactly what this patch series does.
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
-The mapping of the EFI system table is/was already present in
-map_efi_systab.  Patch #1 in this series adds the efi_config_table to
-what gets mapped.
 
-Patch #2 adds the CC blob to the identity map as well, if present,
-since if present it is also dereferenced before the page fault handler
-can be put into place.  Given what's been discussed, this patch might
-not be necessary; I don't know enough to say whether kexec-ing a new
-kernel within a SEV guest makes sense.  I'm pretty certain it can
-cause no harm, though.
-
-And patch #3 fixes the UV platform problem as discussed, which will
-not cause the previous reported regression if patches #1 and #2 are
-already in place.
-
---> Steve
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
