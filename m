@@ -1,42 +1,25 @@
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D34F3C08A
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28F6454277;
+	Mon,  8 Jul 2024 12:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720441919; cv=none; b=rCDRBjoQ96TGLsRUjvvSDeIHjGgYVft4Z7xU5+8EuytFhcegOYiWVUKpV5X1fOdg3u+4huFpY+KAL2r9yG1naGeTcK9xDyeNX9mLl599bemu0+dfxFDtFHcduZUP1MOnXKQmp8GWxm1M0FxxDMQS8rgPDouxEynUTRGn/1uq6V8=
+	t=1720441932; cv=none; b=dbUYbax23lMMuhYc09JFoJil4qvJSJDicRwaHhWvG7C263us2HIQaFCoP8RZtzLyvIY1zSTD2ihSWQyV04M6FaXycozgZxblbNUTG1ch3pzyvehvccXblDic4C/h8oLAFZphsax98dq32aPpKM2pBBYhYOT2zVzbw3uD/8qTJw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720441919; c=relaxed/simple;
-	bh=Kl5nUKYm6zGxZClFeL76kQHq2+ADhXs616WjkcIg2lQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NeFzxQDE7V+SUdRtCusumSBOkgDP7y5eZOI82RRHqY5NkblEF+3pKCM3xxPC7gYlVtbtNV0NxrGlk8dLl+dww46t+K4wNn4n+pBdWYesIk4fGF1PcVrP99F71RDNB1fG3T0EyYZoDlhbnjnPk+PM3hTGSJ3I4cjDZequRvXDySg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=FDl15BYd; arc=none smtp.client-ip=91.26.50.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="FDl15BYd"
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1720441907; x=1723033907;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Kl5nUKYm6zGxZClFeL76kQHq2+ADhXs616WjkcIg2lQ=;
-	b=FDl15BYdVYG9naBa6n6BcP3GKt7/JaFPG7RpQXVs8+AuQ7EfAuGg4Pf/VKT4Xe3a
-	kjl9auJQm2pNxHOgWvPu+MHhhG56bJ65HBjkQid6+0qoGe+yY9szo+YKJzce8qZV
-	iXQsEATq3zEFBct1wA8kvQMDusU5eMbjTi75FA7zb2g=;
-X-AuditID: ac14000a-03251700000021bc-58-668bdc3261cf
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id B1.83.08636.23CDB866; Mon,  8 Jul 2024 14:31:46 +0200 (CEST)
-Received: from [172.25.39.28] (172.25.0.11) by Berlix.phytec.de (172.25.0.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Mon, 8 Jul 2024
- 14:31:45 +0200
-Message-ID: <871dab7c-3158-451f-8938-dc1ab477e725@phytec.de>
-Date: Mon, 8 Jul 2024 14:31:44 +0200
+	s=arc-20240116; t=1720441932; c=relaxed/simple;
+	bh=DMnLTqC6BUcFBeBvAD31PCj2jQEyHSG/XGFN5/YEEjw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KxS0REWP+7MEoQ+32PLQFzGqWfrW5ltTQpwnznW7LgUPH/6YzcdXb8LnhPwZ/M0AMC/vUVzqhSaPLyU+dQsfk+YCa9jDIFkTFBdYmSHqn4IP2jD2nZYXx5wTVGFkzBW1+iJ//1qeNg4WXWGzgy2KzIAGpJTGOF8o9y2Ay+5AZRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEF221042;
+	Mon,  8 Jul 2024 05:32:35 -0700 (PDT)
+Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB56F3F766;
+	Mon,  8 Jul 2024 05:32:09 -0700 (PDT)
+Message-ID: <9f65c70f-7b7e-40be-9726-5e4d83d33817@arm.com>
+Date: Mon, 8 Jul 2024 13:32:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,71 +27,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/3] arm64: dts: ti: k3-am642-evm: add ICSSG1 Ethernet
- support
-To: MD Danish Anwar <danishanwar@ti.com>, Vignesh Raghavendra
-	<vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
-CC: Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring
-	<robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, Tero
- Kristo <kristo@kernel.org>, <srk@ti.com>, <r-gunasekaran@ti.com>, Roger
- Quadros <rogerq@kernel.org>, Daniel Schultz <D.Schultz@phytec.de>
-References: <20240215103036.2825096-1-danishanwar@ti.com>
- <20240215103036.2825096-3-danishanwar@ti.com>
+Subject: Re: [PATCH v2 1/6] perf build: Conditionally add feature check flags
+ for libtrace{event,fs}
+To: Guilherme Amadio <amadio@gentoo.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Thorsten Leemhuis <linux@leemhuis.info>, linux-perf-users@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20240628202608.3273329-1-amadio@gentoo.org>
+ <20240628203432.3273625-1-amadio@gentoo.org>
 Content-Language: en-US
-From: Wadim Egorov <w.egorov@phytec.de>
-In-Reply-To: <20240215103036.2825096-3-danishanwar@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <20240628203432.3273625-1-amadio@gentoo.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Berlix.phytec.de (172.25.0.12) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWyRpKBR9f4TneaQd8yJovzdw8xW6zZe47J
-	4ueGXhaL+UfOsVos/zyb3aLvxUNmi02Pr7FaXN41h83izY+zTBZdr9vZLVr3HmG3OHdvHatF
-	9/YJTBb/z35gd+Dz2LSqk83jzrU9bB6bl9R77Nzxmcnj+I3tTB6fN8kFsEVx2aSk5mSWpRbp
-	2yVwZbxq7WcrOMhd8XXacqYGxs2cXYycHBICJhK/Np5l6mLk4hASWMIkcfHTbTYI5w6jxIHO
-	sywgVbwCNhLtB1Yzg9gsAioSnzpbWSHighInZz4BqxEVkJe4f2sGO4gtLBAu0XlrJli9iECu
-	xJ83P5hBhjILzGeW+PtqI9A6DqANmRKHJhaD1DALiEvcejKfCcRmE1CXuLPhG9h8TgEriYPv
-	X7NA1FhILH5zkB3ClpfY/nYO2HwhIPvFpeUsEN/IS0w795oZwg6V2PplO9MERuFZSE6dhWTd
-	LCRjZyEZu4CRZRWjUG5mcnZqUWa2XkFGZUlqsl5K6iZGUDyKMHDtYOyb43GIkYmD8RCjBAez
-	kgjv/BvdaUK8KYmVValF+fFFpTmpxYcYpTlYlMR5V3cEpwoJpCeWpGanphakFsFkmTg4pRoY
-	bQRVFl5r3H77zGrjSUsZLuQ0KDpMXz9Rp2ily6XQw4ZZKhO/x4c1eaTYqZ08pmsR/N7pdnik
-	1arP5y/N6rrH7nRiuoPSlANWHcyra/70727aLL0qQtbNuu7j0RvRzjr+fp2N984tXle7TOYA
-	66z/+W28f648rqmo3GgquiRsS4WDrLflg7V5SizFGYmGWsxFxYkAleZUHLUCAAA=
 
-Hi,
+Hi Guilherme,
 
-Am 15.02.24 um 11:30 schrieb MD Danish Anwar:
-> ICSSG1 provides dual Gigabit Ethernet support with proper FW loaded.
+On 6/28/24 21:34, Guilherme Amadio wrote:
 > 
-> The ICSSG1 MII0 (RGMII1) has DP83869 PHY attached to it. The ICSSG1 shares
-> MII1 (RGMII2) PHY DP83869 with CPSW3g and it's assigned by default to
-> CPSW3g. The MDIO access to MII1 (RGMII2) PHY DP83869 is controlled by MDIO
-> bus switch and also assigned to CPSW3g. Therefore the ICSSG1 MII1 (RGMII2)
-> port is kept disable and ICSSG1 is enabled in single MAC mode by
-> default.
+> This avoids reported warnings when the packages are not installed.
+> 
+> Fixes: 0f0e1f44569061e3dc590cd0b8cb74d8fd53706b
+> Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
+> ---
+>   tools/perf/Makefile.config | 28 +++++++++++++++-------------
+>   1 file changed, 15 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 5271a4c1d2b3..5387babb8f04 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -182,13 +182,21 @@ endif
+>   FEATURE_CHECK_CFLAGS-libzstd := $(LIBZSTD_CFLAGS)
+>   FEATURE_CHECK_LDFLAGS-libzstd := $(LIBZSTD_LDFLAGS)
+> 
+> -# for linking with debug library, run like:
+> -# make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
+> -FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
+> -FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
+> -
+> -FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
+> -FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
+> +ifneq ($(NO_LIBTRACEEVENT),1)
+> +  ifeq ($(call get-executable,$(PKG_CONFIG)),)
+> +  dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
+> +  endif
+> +endif
+> +ifeq ($(shell $(PKG_CONFIG) --exists libtraceevent 2>&1 1>/dev/null; echo $$?),0)
+> +  # for linking with debug library, run like:
+> +  # make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
+> +  FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
+> +  FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
+> +endif
+> +ifeq ($(shell $(PKG_CONFIG) --exists libtracefs 2>&1 1>/dev/null; echo $$?),0)
+> +  FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
+> +  FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
+> +endif
 
-sorry for bumping this old thread, but I was about to add PRU-ICSSG 
-nodes for the phyBOARD-Electra and noticed a difference in the firmware 
-names.
+Seems to me, the patch 03 uses a more neat way for appending CFLAGS and
+LDFLAGS of libtraceevent and libtracefs, should not use the same code
+in patch 01?
 
-[snip]
-> +	icssg1_eth: icssg1-eth {
-> +		compatible = "ti,am642-icssg-prueth";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&icssg1_rgmii1_pins_default>;
-> +		sram = <&oc_sram>;
-> +		ti,prus = <&pru1_0>, <&rtu1_0>, <&tx_pru1_0>, <&pru1_1>, <&rtu1_1>, <&tx_pru1_1>;
-> +		firmware-name = "ti-pruss/am64x-sr2-pru0-prueth-fw.elf",
-> +				"ti-pruss/am64x-sr2-rtu0-prueth-fw.elf",
-> +				"ti-pruss/am64x-sr2-txpru0-prueth-fw.elf",
-> +				"ti-pruss/am64x-sr2-pru1-prueth-fw.elf",
-> +				"ti-pruss/am64x-sr2-rtu1-prueth-fw.elf",
-> +				"ti-pruss/am64x-sr2-txpru1-prueth-fw.elf";
+Thanks,
+Leo
 
-Where do these firmware names come from? All references I can find use 
-am65x-sr2*: ti-linux-firmware, meta-ti and so on.
-Are we expecting the the names to be renamed for linux-firmware?
-
-Regards,
-Wadim
+>   FEATURE_CHECK_CFLAGS-bpf = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
+>   # include ARCH specific config
+> @@ -208,12 +216,6 @@ ifeq ($(call get-executable,$(BISON)),)
+>     $(error Error: $(BISON) is missing on this system, please install it)
+>   endif
+> 
+> -ifneq ($(NO_LIBTRACEEVENT),1)
+> -  ifeq ($(call get-executable,$(PKG_CONFIG)),)
+> -  dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
+> -  endif
+> -endif
+> -
+>   ifneq ($(OUTPUT),)
+>     ifeq ($(shell expr $(shell $(BISON) --version | grep bison | sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\= 371), 1)
+>       BISON_FILE_PREFIX_MAP := --file-prefix-map=$(OUTPUT)=
+> --
+> 2.45.2
+> 
