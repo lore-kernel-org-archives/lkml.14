@@ -1,145 +1,126 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811F380BEC
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86D53C08A
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720440461; cv=none; b=CyVIdxZlznmyWsZPQtm4UMNANWMCiZJYKjqA96AlRSKVUdBT0wGra5OSsu7T1rw19E0MGY9xfO//N66RegsbBzREBHWaZP/Nl+WWBbQosBKrrQL+B9RE7YVQEbf7p//1NJjw9T5RHADLGbVVTa7nB7MajiuRxf1P0o30LO30IeI=
+	t=1720440496; cv=none; b=pmqSuapibdUOIRbV6oMv7V5f5U6SFuLHy2Ww24gfbN7Wzu2OKYieqIQ0inHlPnelaJxr7FNsKDOUGX4IvmVz83r7W0674RsRUtRXoR2OQBKVq7eyma7Z9EL1D08N0MCGHgw+3+BDL9uyM6wll5oLpLuKXaGzHWkpT4t8s3Wnyw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720440461; c=relaxed/simple;
-	bh=io01hl0mtesneL2LZ5G5Ith3zDY7NttBBQHX2oUhV+8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N/RpIZS6O22BOkgbWUqIseuBuf1xEw+LkfmyKs5srDlAMssLMKz+on9ORKlIykVkJ8QfFs6Lz4itl5ZTOxg1kIkdxsGCysxApVBD5fWGL9Io6K9kxABUtzAE3QJZPV5owdIev1mK5gje4LyPaE1Nd3/SE0rvue5JEEo3uPb03LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WHjXt4M1hznYfQ;
-	Mon,  8 Jul 2024 20:07:10 +0800 (CST)
-Received: from kwepemf500005.china.huawei.com (unknown [7.202.181.243])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2B176180AA6;
-	Mon,  8 Jul 2024 20:07:35 +0800 (CST)
-Received: from huawei.com (10.67.174.161) by kwepemf500005.china.huawei.com
- (7.202.181.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 8 Jul
- 2024 20:07:34 +0800
-From: Cheng Yu <serein.chengyu@huawei.com>
-To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
-	<vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
-	<rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
-	<bristot@redhat.com>, <vschneid@redhat.com>,
-	<changhuaixin@linux.alibaba.com>, <shanpeic@linux.alibaba.com>,
-	<dtcccc@linux.alibaba.com>, <vishalc@linux.ibm.com>, <tj@kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <zhangqiao22@huawei.com>, <judy.chenhui@huawei.com>,
-	<yusongping@huawei.com>, <zhaowenhui8@huawei.com>,
-	<serein.chengyu@huawei.com>
-Subject: [PATCH v2] sched/fair: set burst to 0 when remove the restriction on cfs bandwidth
-Date: Mon, 8 Jul 2024 20:00:53 +0800
-Message-ID: <20240708120053.861037-1-serein.chengyu@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720440496; c=relaxed/simple;
+	bh=CZz0OjF+N3d/uH296pPaOfWKFpaq9SpRo0F+caUTF6I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i7ZtRAFuldGGL/HDL987y1TuXTs3E7GzqJke3Rjcq9lq5u9j5c4mRHjzyLmceL3sp15q3FJBqphWgtzAAeZP5yGzXu3i5WDSvYT/7fdbMaenfVYhimho/25bjPGXX1A//mmXA3q4FSxV6SxSgC10IrYcqk+0Qr3hVo3Au2NXz0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h0vvqDe8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h0vvqDe8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720440493;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nwb/NHCNDPBbNOYdrz+GYj8J2TCseSslvd8sX/M8mWk=;
+	b=h0vvqDe8ogmpj3+nSGVKfQmMZMw9Hiw/9bf973evxfzsnfJs4kayuvF5qez0SUe0KeYA+Y
+	HzEhrGrjgq9pU8kLg+GZMsXFSaycgVBWJ21frk8ZllG0XaRO8R+UAS8HWr7BHYWFFGlzcH
+	MZeDg/yeH0emLnO+2fPVQ8YWYf+G+J4=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-25-bq_DEXeJOnu7jSAyH_mHaw-1; Mon, 08 Jul 2024 08:08:12 -0400
+X-MC-Unique: bq_DEXeJOnu7jSAyH_mHaw-1
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-75ea23782f5so1586812a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 05:08:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720440490; x=1721045290;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nwb/NHCNDPBbNOYdrz+GYj8J2TCseSslvd8sX/M8mWk=;
+        b=VAn304rVmjsElbx/WKmn39Z2RKn8EWPWGL3TdyfPh5uRHYY1zmZWP4NwxceTkVOJnC
+         TTyYqvKocG4fAXwWBIzgH5dY+p2YoS9OYqoM4XCzCb+ArNpR3YuKbMOgEQLYNxHuFlp4
+         VSNO5x29bE61V7clxB32nazbOdzwponVOe1zZRfa7SYayKMoL+blUVNLj+G5q9DRzZkb
+         s9wKIWTe+HTL1dLurP6wLydPaBZHGV9tsAfPN8Bm9bmJ+kT5LM54YaUOU8HPaQZPYRe2
+         3O+ieQ/xW4EFg92eUfNalFJlqOGjWfa2zrgfimN2a6LZFEU6pHjiP+o2J9Ivk/T1rVx8
+         OJpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYMaQxfu9Cea1u09J7BAU9bZjFN3ReQxuHgE3WRLwtKE5uT+O04WePpTSishEo2myG2ugVjQHIU6ksJev4+j2kj/QGktKxuFOcw/XZ
+X-Gm-Message-State: AOJu0YzerT1bKX5dzkQdUmd39SBy88afSKtMj7DxMveyJNtZUZVAmftP
+	70tIlNUWa+wWOtsrkj5QaXZkGH9XV81O/3iGjPsM4adYEPatlB+5IXRrCXSF85fCNa2U2pMsz0o
+	kcyjAQx35V/dUDZ2T10r5lEbnF7IXWGeYuTPNFyBhqMdi+gtEYOCpIXYnzZ0J2T1zUTEVJN5GYS
+	MwhkloimjgoG5pYrVR/IyN62hjl12sVjSWKHZr
+X-Received: by 2002:a17:90a:ac0d:b0:2c9:7616:dec7 with SMTP id 98e67ed59e1d1-2c99c54186fmr7125412a91.6.1720440490510;
+        Mon, 08 Jul 2024 05:08:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGPwHzsQDzGu+xR3DQUoweoTT1Kf7TAdTBOw1dFR4nyWDCgQYp85Jk5+a4EU54LIpsTE9hEkS0qlGqZ3527u2o=
+X-Received: by 2002:a17:90a:ac0d:b0:2c9:7616:dec7 with SMTP id
+ 98e67ed59e1d1-2c99c54186fmr7125397a91.6.1720440490094; Mon, 08 Jul 2024
+ 05:08:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemf500005.china.huawei.com (7.202.181.243)
+References: <20240705133348.728901-1-ast@fiberby.net> <20240705133348.728901-2-ast@fiberby.net>
+ <aadf8f7c-2f99-4282-b94e-9c46c55975dd@fiberby.net>
+In-Reply-To: <aadf8f7c-2f99-4282-b94e-9c46c55975dd@fiberby.net>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Mon, 8 Jul 2024 14:07:58 +0200
+Message-ID: <CAKa-r6u85yD=Ct4nq2xZLXLT+3vWsz+WoDZ__xS4tkpge=yf-Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 01/10] net/sched: flower: refactor tunnel flag definitions
+To: =?UTF-8?B?QXNiasO4cm4gU2xvdGggVMO4bm5lc2Vu?= <ast@fiberby.net>
+Cc: netdev@vger.kernel.org, Ilya Maximets <i.maximets@ovn.org>, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	David Ahern <dsahern@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Ratheesh Kannoth <rkannoth@marvell.com>, Florian Westphal <fw@strlen.de>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, linux-kernel@vger.kernel.org, 
+	Stephen Hemminger <stephen@networkplumber.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Zhao Wenhui <zhaowenhui8@huawei.com>
+hello,
 
-In the cpu subsystem of cgroup v1 and v2, we set the restriction on cfs
-bandwidth by setting the quota and burst value. Later, when we remove
-the restriction by setting the quota to the default value, the burst
-value should also be forced to the its default value of zero.
+On Mon, Jul 8, 2024 at 1:12=E2=80=AFPM Asbj=C3=B8rn Sloth T=C3=B8nnesen <as=
+t@fiberby.net> wrote:
+>
 
-In the cgroup v1 cpu subsystem, assuming we have a cgroup named 'test',
-and we set cpu.cfs_quota_us and cpu.cfs_burst_us:
-    # echo 100000 > cpu.cfs_quota_us
-    # echo 100000 > cpu.cfs_burst_us
+[...]
 
-Next we remove the restriction on cfs bandwidth:
-    # echo -1 > cpu.cfs_quota_us
-    # cat cpu.cfs_quota_us
-    -1
-    # cat cpu.cfs_burst_us
-    100000
+> Davide, I think David Ahern would be happy [1] if you could post a new ip=
+route2 patch,
+> since the kernel patches should preferably hit net-next this week (due to=
+ uAPI breakage).
 
-Now we expect that the value of burst should be zero. When the burst is
-zero, it means that the restriction on burst is removed.
+I will send an updated patch (don't use "matches" + add missing man
+page + rename keywords [1])  in the next hours.
+thanks,
+--=20
+davide
 
-The same situation exists for cgroup v2. The difference is that the
-interface definition of the cpu subsystem and the default value of
-quota. In v2, we remove the restriction on cfs bandwidth by setting max
-to cpu.max.
+[1]
 
-Fixes: f4183717b370 ("sched/fair: Introduce the burstable CFS controller")
-Reported-by: Zhao Gongyi <zhaogongyi@huawei.com>
-Reported-by: Qixin Liao <liaoqixin@huawei.com>
-Signed-off-by: Zhao Wenhui <zhaowenhui8@huawei.com>
-Signed-off-by: Cheng Yu <serein.chengyu@huawei.com>
-Tested-by: Vishal Chourasia <vishalc@linux.ibm.com>
-Reviewed-by: Tianchen Ding <dtcccc@linux.alibaba.com>
-Reviewed-by: Ben Segall <bsegall@google.com>
----
-Change log:
-----------
-v2:
- - Put the modifications to cgroup v1 and v2 in one patch
-v1:
- - patch for cgroup v1:
-   https://lore.kernel.org/all/20220809120320.19496-1-zhaowenhui8@huawei.com/
- - patchset for cgroup v1 and v2:
-   https://lore.kernel.org/all/20240522031007.643498-1-serein.chengyu@huawei.com/
----
- kernel/sched/core.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+> Nit: I would prefix all of these with "tun_".
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index bcf2c4cc0522..982d357b3983 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -10840,6 +10840,12 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota,
- 				     burst + quota > max_cfs_runtime))
- 		return -EINVAL;
- 
-+	/*
-+	 * Ensure burst equals to zero when quota is -1.
-+	 */
-+	if (quota == RUNTIME_INF && burst)
-+		return -EINVAL;
-+
- 	/*
- 	 * Prevent race between setting of cfs_rq->runtime_enabled and
- 	 * unthrottle_offline_cfs_rqs().
-@@ -10899,8 +10905,10 @@ static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
- 
- 	period = ktime_to_ns(tg->cfs_bandwidth.period);
- 	burst = tg->cfs_bandwidth.burst;
--	if (cfs_quota_us < 0)
-+	if (cfs_quota_us < 0) {
- 		quota = RUNTIME_INF;
-+		burst = 0;
-+	}
- 	else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
- 		quota = (u64)cfs_quota_us * NSEC_PER_USEC;
- 	else
-@@ -11406,8 +11414,11 @@ static ssize_t cpu_max_write(struct kernfs_open_file *of,
- 	int ret;
- 
- 	ret = cpu_period_quota_parse(buf, &period, &quota);
--	if (!ret)
-+	if (!ret) {
-+		if (quota == RUNTIME_INF)
-+			burst = 0;
- 		ret = tg_set_cfs_bandwidth(tg, period, quota, burst);
-+	}
- 	return ret ?: nbytes;
- }
- #endif
--- 
-2.25.1
+"tun_" or just "tun" ? please note that each flag can have a "no"
+prefix, so is it better
+
+notuncsum
+notundf
+notunoam
+notuncrit
+
+or
+
+notun_csum
+notun_df
+notun_oam
+notun_crit
+
+?
+
+(I'm for not using the underscore - but I'm open to ideas: please let me kn=
+ow)
 
