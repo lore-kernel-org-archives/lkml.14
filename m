@@ -1,102 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D6E78C73;
-	Mon,  8 Jul 2024 17:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AA378C73;
+	Mon,  8 Jul 2024 17:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720458400; cv=none; b=MoUJ7V7vLRdrodF9uDg0jPIrUIZaholCULIFkWzeEEQILh28+BH3PA6VXYdkTn/pc1lD8fo6oQmdBylyfmrSRSZWTVYAhgb/I4DdiGC8Sc/GKh0f3yYo79EliQY6jrhTtss8zQW++qLqC5uT+W5twpdd0UiiMTHATdaMxBSmUh4=
+	t=1720458505; cv=none; b=ILgre8i0lPx4geBV2uAnwLVUPUOstVTm93057ciF6NVMM6S91oOS8u2Qh2DWrSbss/DN0aO0KhIsmvKQ1OJt9qDReYSAVONZcCwKLLGZ6PIeW8hZoPNDtOrb1FP4GtLTgaceUSD7tFWgbzNRcWTlrmy4cnSNtfiPxQq5aZJApUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720458400; c=relaxed/simple;
-	bh=2f8q+yRV/YZzbTa6kjlhS3zOQvqRz+hKZA8xbKefsrw=;
+	s=arc-20240116; t=1720458505; c=relaxed/simple;
+	bh=BqTgLx+0wRcTK/3ZMMN47PaeHKnWPpAqUgTXj7Nuc90=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bx6aSBgNZ2jrPk2YUBj6XUyRbzYKe4uwriF3I87NraeKt3k2k+A10JR060prL7w5tokWBoWdogoDvw6nYRWrn6LyKwCSzqJBZPyCbf6Pee10mbW8Gxn34Fvv/lVvAAWxQ+Q4In7HfibarUnC1u+9j1RqlRX9dxILNR14zpkFACA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFChjORz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R1Sge4j5AEqaaym1p1HIsWMQbVJST86BM4tyS1ktkjyqmDFNTt88QXOKiHQUEr5B6SzLEywI4X0pQ6itrK3559RkjyMS3atw1tgVRcB7kPEbAB/1WyJh42OXj2kFs4Yar6J13hNbpZSCXyXBjxj7JdWbNRJmCbS0HpL7EHsgvc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E/unPdKq; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFChjORz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01740C116B1;
-	Mon,  8 Jul 2024 17:06:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720458400;
-	bh=2f8q+yRV/YZzbTa6kjlhS3zOQvqRz+hKZA8xbKefsrw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YFChjORzkrSRvpg0qf9hHSbnArYrOkY2sDIzeW6p9z7TqmeC+oJ+lqIgmqsWPWaeb
-	 /7ehneH/7J8a87SH/FobPdKtg1kLkzFzs5LKXvgu6MWhxlXfN+vFA6MTC1pWY1xjr6
-	 81c/TamG9SfB12BBHulwa/DwF/6k/alnZ4ZpWZrsoH595EycNULqwhjDeltiMQ6my8
-	 b4OHVObh09TD7m5mKkw/ht1cK55lt3T5VKIVEtoyLyyZTUaT/Gr9tkoLmGsPKm18OR
-	 onmyzQ/y6Kkhqy6afMMv5jQBss2zA3ejKWoDv5dYLWRirE+jXHF4qlMUmoOraH1Rps
-	 j40p/oiBWYNyA==
-Date: Mon, 8 Jul 2024 18:06:35 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/unPdKq"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-70af8062039so2516029b3a.0;
+        Mon, 08 Jul 2024 10:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720458503; x=1721063303; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=q+xCwo0Qll+B7YIHIpiMJLZUhkmJAp1xH4lUbp6PMrE=;
+        b=E/unPdKqBGNx8xTiL5f15VmUhfUysxFM8UK4ajlSLoRScKO9QTwvCgLQOZYqDWlj8A
+         XewCBZYB3wDo+ukjS+wA9Qby50VgW1UJ8Ija+mCA6uT5gVg46VtbjdAmeHEAypM4VW1s
+         tbrVP2bB3dUoyjarQDA/unGfpYFQDQRmVsQhqEDJvVDiEERiZpb2tC5QhOIkeggLIgIc
+         Q7fFSqf45jak8Xh1oAvvWy014A30zvJ/8Brjs9OjRA0aYkmNgFKh/nvnKcEWBUFbeKhD
+         dkeHZx72qy1AfwuBlOSM25c31AWETsLQcGEUd+0rNlYmb7RNqhd22Nu5hA5OOJtyugzJ
+         F9hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720458503; x=1721063303;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q+xCwo0Qll+B7YIHIpiMJLZUhkmJAp1xH4lUbp6PMrE=;
+        b=aTDkTFinvDEVHDK4hUIxLoe+CgSMbTS+2XUysoxQquvp8ORn9FRqcACe9lDM8kWdA/
+         oI5OEl1b4QKKNPVAMhg11kwGfauLsqXyKqofFqBcLYrWVRK0HouRFCNF9TOCxc4cmfU/
+         8Pzw1IOqTAiUeNEoKt+FbvJk97QvkSD6TWCfxe/u9Akb9AWZMVWiIOzxj8xdi9hV/TNX
+         uU04cD+WPyLWwQYTez5KH0mbBKCbEkT/Mn25MT8gPVBjaAboHTjESIzUlQqhHamOiYdc
+         Zx9DmEF0WWHwwlt4tkVPCL27fMiyC2nIlsR+v7+4919C5H0/0e7s5CLiXcBN1dYiQjNH
+         uthQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvk8fUPNpXu+lqJI6jGliBRmi10buK7LZKsgdomhQ95C+WzeTIvdJ3SUaa3BvFeySUxD3BOrPtQUCviacAZT+iN+BCkEbfgK9A52QUfYm1mzA/QjHYxCRGD/kgy0nbxqBLpIzGaaxBwhUd9Ev+t4b2ZsmeQsHcBLSbtca0mdyM9V2vyCG4
+X-Gm-Message-State: AOJu0Yzb9osVcv07CJR8jRNCKoKVu1+qoC9RvV2jyOPjBWaJauzr6X+f
+	wYi5CxLSZUjtrBBK4QzowNW+Kk9XHg6DF7/OL6AnNVtn2dWlWR0HQZMmEw==
+X-Google-Smtp-Source: AGHT+IG8qhGDhkqEpLeGA+8Lo44gyRZPNrfK68aS83rLNSUglQ0AfX4k1FsXSCL9weU/AY3jlMhoOA==
+X-Received: by 2002:a05:6a20:918c:b0:1c2:8904:14c2 with SMTP id adf61e73a8af0-1c29824364dmr12068637.37.1720458503494;
+        Mon, 08 Jul 2024 10:08:23 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:d2a4:59f0:2144:2c00])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a950c37sm8440917a91.13.2024.07.08.10.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 10:08:23 -0700 (PDT)
+Date: Mon, 8 Jul 2024 10:08:20 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Andrew Davis <afd@ti.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] dt-bindings: iio: BU27034 => BU27034ANUC
-Message-ID: <20240708-tropical-stifle-0aca848ad340@spud>
-References: <cover.1720176341.git.mazziesaccount@gmail.com>
- <c39f9c67b3c07a27d7a13109c7b69cff9cfd2b9b.1720176341.git.mazziesaccount@gmail.com>
+Subject: Re: [PATCH] dt-bindings: input: ti,nspire-keypad: convert to YAML
+ format
+Message-ID: <ZowdBObFaYMEASR5@google.com>
+References: <20240612150711.26706-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="v12WfoeUb24sNLN2"
-Content-Disposition: inline
-In-Reply-To: <c39f9c67b3c07a27d7a13109c7b69cff9cfd2b9b.1720176341.git.mazziesaccount@gmail.com>
-
-
---v12WfoeUb24sNLN2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240612150711.26706-1-afd@ti.com>
 
-On Fri, Jul 05, 2024 at 01:54:12PM +0300, Matti Vaittinen wrote:
-> The BU27034NUC was cancelled before it entered mass production. It was
-> replaced by a new variant BU27034ANUC (note, added 'A'). The new
-> variant gained a few significant changes, like removal of the 3.rd data
-> channel and dropping some of the gain settings. This means that, from
-> software point of view these ICs are incompatible. Lux calculation based
-> on the data from the sensors needs to be done differently, and on the
-> BU27034ANUC the channel 3 data is missing. Also, the gain setting
-> differencies matter.
->=20
-> Unfortunately, the identification register was not changed so there is no
-> safe way for the software to distinguish the variants.
->=20
-> According to the ROHM HQ engineers, the old BU27034NUC should not be
-> encountered in the wild. Hence it makes sense to remove the support for
-> the old BU27034NUC and add support for the new BU27034ANUC. Change the
-> compatible in order to not load the incompatible old driver for new sensor
-> (or, if someone had the old sensor, the new driver for it).
->=20
-> Drop the compatible for old sensor which should not be in the wild and
-> add a new compatible for the new model with accurate model suffix
-> 'anuc'.
+On Wed, Jun 12, 2024 at 10:07:11AM -0500, Andrew Davis wrote:
+> Convert TI-NSPIRE Keypad controller bindings to DT schema.
+> 
+> Signed-off-by: Andrew Davis <afd@ti.com>
 
-Since you say that the "old" device should never be encountered "in the
-wild", this change seems fine. If it turns out that it is in the wild,
-the new compatible means we could resurrect the old driver etc.
+Applied, thank you.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
---v12WfoeUb24sNLN2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZowcmwAKCRB4tDGHoIJi
-0tiaAP4sGu3u4NXB0ToW0RMaH2jH1yXUHtCuWfIAvY3lKfNlfwD/UqcHOyuamhTn
-WUqCY0E3qrPVCZPbSm10PgDJrOGqiQE=
-=j56h
------END PGP SIGNATURE-----
-
---v12WfoeUb24sNLN2--
+-- 
+Dmitry
