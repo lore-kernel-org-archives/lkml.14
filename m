@@ -1,155 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6584D224F2
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 07:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9AE1C17
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 07:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720423155; cv=none; b=ViKt44vwViZUj5awM/ReOtZgYSVHmTVXgCnN54LF54DHxd0Qio5R1r/ZWU8faoe5K4qRq6EuQMTaqtzp7sxkHJVhlS0PQOhjMOUYW2/0319pGEKxpctsY04VAmeXhkFY7F2qoexiAf+j4c0uuul4Hltt64TH4AoXzaDzL9Yzj7g=
+	t=1720423353; cv=none; b=U4pYuevzHKWLxLM+JSilgaAQ2pmWrtJcvFADgH/tfyZAUMzLyxU7+Ls5JqGa76ix75Kb2iTMgWU0vfzJMsEQ5fR0IT0pEE+ZOiKKVAgntmJNvIoaejV9H4GoIQgL4TXJBcyIbnSuo8EoLxjCR8uBtvEurbHRH+46esro315iVsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720423155; c=relaxed/simple;
-	bh=BCpNb63WRewgJB37gIEoqo5egyIJUDlpbkKJgwO8OHU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CRJSwlFfWLuJiTIZVt+coOLHbg6kaVHwR05iek2HKwPbY/+0yVmBOPH6Dw8O4s7SIV2a11Fw9y43MjI2quJ+/7b1X2aLNJud4kOmdcMfV3lK7DhO07CGMBs7d8z/0T16yG7ugKabrI2lAtE+DrXhvtizWSg05lSi71erl4pGFUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R9MdByrt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720423353; c=relaxed/simple;
+	bh=idrcO3j6ZJtjys03L4/z16VLpQLwc7Vr6ABcCm9c4rg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PcHtVvplTD6rBZhillqk71KteggXe3rNLYSzkp9LlEInScr7/fwidtI6SM085tjr7eocA+anRDTTp54mJAJ+C95Jpti0NcxG2vMLs7h/m8yB9pmhYBzCGgxnNlWdrGY35vSDE/in39IBRyH53PZ36BP8aH9zqqEZVDZtP5hlfbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=naJtVH36; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R9MdByrt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720423152;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jqM73JSLXU66f0uRVT9WU+gkf5AyrsxUM3dUDMhxBT4=;
-	b=R9MdByrtVbjqdnDxj6k98BnLA/j3PI1gj0PvHWOEPI9bn+2WdO+H7V/eCT/nxvJNGeH9Jc
-	upn9CRou1hJUl9Y65BKxsJKi4LMoSNnVzSCMaxQmGXUAshuoecr8ZpwTcYKnU2tnw+S2VD
-	6KVBc0SwXB9pXo5jiRJATmbAYWf7JVs=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-655-7g24U4EjOoaNPM3pfon5oA-1; Mon, 08 Jul 2024 03:19:10 -0400
-X-MC-Unique: 7g24U4EjOoaNPM3pfon5oA-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a77e024eaa4so147362866b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 00:19:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="naJtVH36"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2c980b55741so1976305a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 00:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720423351; x=1721028151; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WBYy4DFhtHluGvHK6v5yjGoMYZnZkSaBjiQQhAn19qs=;
+        b=naJtVH36XF1jE7eLb7qFGnd0s0CnBklb/R39zYap08YrXaBuLp78z7BBvXdSrpE081
+         dyGO9RSJQTN7tv8YG7K9z1n99aJgSvVw1cL8tswEV6SfYzr7hbU8wAVwUG0wJOgsBMvU
+         At9CxJ5F/uAkyQVEupaqc0nejtYCzSKggO1r3eRIGfuTq7vPq2YwCdAuK7Xjr7xp40dM
+         /9xgz9n1i8vgFDGwapEbewocYCDWiPAxhQ5ULRNn02BeqDeUyHH6jF9QmHWwdex98qN6
+         uzsPXMlhc47SYLlmdC8sCIw7hBqcOi1M0t2TrbmsoG8nGj2PvapGR+s50K/dFCoSlwxK
+         Psnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720423148; x=1721027948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jqM73JSLXU66f0uRVT9WU+gkf5AyrsxUM3dUDMhxBT4=;
-        b=Ne5IfIjnaAfqq5tazVIxhg/c+OR0an2y1nsOuPbsdGmVn5BidlHZiVYFkfZtjYD2xL
-         0sOXvYBNsDf2cIZvhVerfnlBmL/lu/q2NCAcJtpUSeYTwMwK0Wt75dqM1remjeMv0co8
-         Cjuw3HN50SmFetapjqjjqHe8I+amsqlQGi7IxRhCHNUJOYH3/JvkHjCMAu133qXoCTNj
-         vQ+lRdPh4AeJ9eGCbfP1AazIg1FwqrET3iSiJqCA26UJIOIM7SY0OQ2wYZXTbnjamOEV
-         u4NJLZ4x12h2GZNdlG4yCWFl6xY0Qu5IReBW/9YtrX+AMT1Vx+AgU9A9dvl1la9VBydp
-         bHKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXi8RDwQ3/EbUITTa4pMBpJuYQgED0gHz3yqLJp+jEzgz5zBIgn2V2E1+0UiqO7JaSXlcDVPmkNpEKZEYWu9Maeyw9hSyv8UQ+2cnm
-X-Gm-Message-State: AOJu0YxxCcrpLUEtlLmh0zX2h2VfEccW03zelrV/EZyLAIb3MKrAF6af
-	dLEootF3sR37xvaASuBOQ9avqisZwXg0M50jillZSJ7WXyUu/frYnN3V/kXsXmRuZBazjEPbd4h
-	FhNTyrm8fQBHzn//T/8wGUtFDvmhCzSp1oTaPMnW3viUyIq0QTPTgW164HeDgaHQCcwBthWz34E
-	PfVwErzZbD8RPztZUwJyFWE7A3ZKzqifmG6V5VXOoE3pfkcf4=
-X-Received: by 2002:a17:906:175b:b0:a77:a630:cf89 with SMTP id a640c23a62f3a-a77b9dee79dmr706515266b.0.1720423148321;
-        Mon, 08 Jul 2024 00:19:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEGUu1W6MyDpHHXhXDXEq+4hte1tFdv4eIOo7asqiTd/PZmPPhD5t+yUjE3Q9R2KpY/v0HSjx6vJ4Xu91Rb1yY=
-X-Received: by 2002:a17:906:175b:b0:a77:a630:cf89 with SMTP id
- a640c23a62f3a-a77b9dee79dmr706512466b.0.1720423147970; Mon, 08 Jul 2024
- 00:19:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720423351; x=1721028151;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WBYy4DFhtHluGvHK6v5yjGoMYZnZkSaBjiQQhAn19qs=;
+        b=uBuwghFPdtl3qA88yFDPs7oNllocLT/julPTEnbB/cFqamtlrI1foLE/6HhBx9VCPl
+         QGn9Zj7+XHgC6+JnmrH8DJ+nObXwMdhyTTbXC9zSZkFk7w1KyWfQ6egs+zLxDOtJG1JF
+         oKu7VYvKrVcM+h5y6j+GmAYaDzPWIv9Z596nybUbzZbMiK0Z4TSCV71VOQ/QBTK48Xuq
+         VAt+yL99jlG2oQKKBqxh2L1uYWS0uLS2PLXXB4jFG96mGKRdEP2UfU11ompErZm1nMW6
+         05z3zyTtCq4Vh+eKQwtYDqVbCaXi0mTRocUTmN3AhcvS9g3QV0O2nFkoFAHk7huHRdsM
+         yd3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUL5HgpTr4YyzN4HfN2AqMFOZP9jHSerQFj5aRgVLTCEmUlS9YSg+RJzuqTRzzKIoOsEk1WGpVQ0cHbvNGcD6lic/brdXk+LF4uIuLr
+X-Gm-Message-State: AOJu0Yzwi7P0Wvdqu3OKxHMw/j0bZJdVpW/5qCjJVHf/7gN2tgkwcbfE
+	TseSgSRoYtnIr3tLVBgMeoltTu05jhAxbhlyybEVjXcd4Grg6snlww1N9q9YcQ==
+X-Google-Smtp-Source: AGHT+IFngwXllRFZcKK0nuNe7EQX8bnOyVP4qDVSraN9DPENqjrGFBeOrH4P+ZLdpGIK4/tpQ4aKPg==
+X-Received: by 2002:a17:90a:f0d6:b0:2c9:8d5d:d175 with SMTP id 98e67ed59e1d1-2c99c825acbmr5927647a91.48.1720423351318;
+        Mon, 08 Jul 2024 00:22:31 -0700 (PDT)
+Received: from thinkpad ([120.56.204.122])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99aab8e04sm7429684a91.56.2024.07.08.00.22.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 00:22:30 -0700 (PDT)
+Date: Mon, 8 Jul 2024 12:52:26 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	caleb.connolly@linaro.org, bhelgaas@google.com,
+	amit.pundir@linaro.org, neil.armstrong@linaro.org,
+	Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
+ CONFIG_OF is enabled
+Message-ID: <20240708072226.GB3866@thinkpad>
+References: <20240707183829.41519-1-spasswolf@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708064820.88955-1-lulu@redhat.com> <20240708064820.88955-3-lulu@redhat.com>
- <CACGkMEum7Ufgkez9p4-o9tfYBqfvPUA+BPrxZD8gF7PmWVhE2g@mail.gmail.com>
-In-Reply-To: <CACGkMEum7Ufgkez9p4-o9tfYBqfvPUA+BPrxZD8gF7PmWVhE2g@mail.gmail.com>
-From: Cindy Lu <lulu@redhat.com>
-Date: Mon, 8 Jul 2024 15:18:31 +0800
-Message-ID: <CACLfguXdL_FvdvReQrzvKvzJrHnE9gcTv+rLYsCNB0HtvXC74w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] vdpa_sim_net: Add the support of set mac address
-To: Jason Wang <jasowang@redhat.com>
-Cc: dtatulea@nvidia.com, mst@redhat.com, parav@nvidia.com, sgarzare@redhat.com, 
-	netdev@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240707183829.41519-1-spasswolf@web.de>
 
-On Mon, 8 Jul 2024 at 15:06, Jason Wang <jasowang@redhat.com> wrote:
->
-> On Mon, Jul 8, 2024 at 2:48=E2=80=AFPM Cindy Lu <lulu@redhat.com> wrote:
-> >
-> > Add the function to support setting the MAC address.
-> > For vdpa_sim_net, the driver will write the MAC address
-> > to the config space, and other devices can implement
-> > their own functions to support this.
-> >
-> > Signed-off-by: Cindy Lu <lulu@redhat.com>
-> > ---
-> >  drivers/vdpa/vdpa_sim/vdpa_sim_net.c | 19 ++++++++++++++++++-
-> >  1 file changed, 18 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim_net.c b/drivers/vdpa/vdpa_s=
-im/vdpa_sim_net.c
-> > index cfe962911804..a472c3c43bfd 100644
-> > --- a/drivers/vdpa/vdpa_sim/vdpa_sim_net.c
-> > +++ b/drivers/vdpa/vdpa_sim/vdpa_sim_net.c
-> > @@ -414,6 +414,22 @@ static void vdpasim_net_get_config(struct vdpasim =
-*vdpasim, void *config)
-> >         net_config->status =3D cpu_to_vdpasim16(vdpasim, VIRTIO_NET_S_L=
-INK_UP);
-> >  }
-> >
-> > +static int vdpasim_net_set_attr(struct vdpa_mgmt_dev *mdev,
-> > +                               struct vdpa_device *dev,
-> > +                               const struct vdpa_dev_set_config *confi=
-g)
-> > +{
-> > +       struct vdpasim *vdpasim =3D container_of(dev, struct vdpasim, v=
-dpa);
-> > +
-> > +       struct virtio_net_config *vio_config =3D vdpasim->config;
-> > +       if (config->mask & (1 << VDPA_ATTR_DEV_NET_CFG_MACADDR)) {
-> > +               if (!is_zero_ether_addr(config->net.mac)) {
-> > +                       memcpy(vio_config->mac, config->net.mac, ETH_AL=
-EN);
-> > +                       return 0;
-> > +               }
-> > +       }
-> > +       return -EINVAL;
->
-> I think in the previous version, we agreed to have a lock to
-> synchronize the writing here?
->
-> Thanks
->
-Hi Jason
-I have moved the down_write(&vdev->cf_lock) and
-up_write(&vdev->cf_lock) to the function vdpa_dev_net_device_attr_set
-in vdpa/vdpa.c. Then the device itself doesn't need to call it again.
-Do you think this is ok?
-Thanks
-Cindy
-> > +}
-> > +
-> >  static void vdpasim_net_setup_config(struct vdpasim *vdpasim,
-> >                                      const struct vdpa_dev_set_config *=
-config)
-> >  {
-> > @@ -510,7 +526,8 @@ static void vdpasim_net_dev_del(struct vdpa_mgmt_de=
-v *mdev,
-> >
-> >  static const struct vdpa_mgmtdev_ops vdpasim_net_mgmtdev_ops =3D {
-> >         .dev_add =3D vdpasim_net_dev_add,
-> > -       .dev_del =3D vdpasim_net_dev_del
-> > +       .dev_del =3D vdpasim_net_dev_del,
-> > +       .dev_set_attr =3D vdpasim_net_set_attr
-> >  };
-> >
-> >  static struct virtio_device_id id_table[] =3D {
-> > --
-> > 2.45.0
-> >
->
+On Sun, Jul 07, 2024 at 08:38:28PM +0200, Bert Karwatzki wrote:
+> If of_platform_populate() is called when CONFIG_OF is not defined this
+> leads to spurious error messages of the following type:
+>  pci 0000:00:01.1: failed to populate child OF nodes (-19)
+>  pci 0000:00:02.1: failed to populate child OF nodes (-19)
+> 
+> Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
+> 
+> Signed-off-by: Bert Karwatzki <spasswolf@web.de>
 
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+>  drivers/pci/bus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index e4735428814d..3bab78cc68f7 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -350,7 +350,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+> 
+>  	pci_dev_assign_added(dev, true);
+> 
+> -	if (pci_is_bridge(dev)) {
+> +	if (IS_ENABLED(CONFIG_OF) && pci_is_bridge(dev)) {
+>  		retval = of_platform_populate(dev->dev.of_node, NULL, NULL,
+>  					      &dev->dev);
+>  		if (retval)
+> --
+> 2.45.2
+> 
+> Just in case this is needed.
+> 
+> Bert Karwatzki
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
