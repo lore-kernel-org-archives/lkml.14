@@ -1,114 +1,61 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A626855E58
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 09:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCE73D0AD;
+	Mon,  8 Jul 2024 09:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720430469; cv=none; b=m23LKqSyCLCWCKXv76UE6oYuKlzDbp5sHqU6U9HimUMkIbVn9vAIeg9WiAUZ8X37k04Mwa7KAb+eFOMMZChKNonh/s/xWjoLnCu6aJmE4Fn2aJhMMdXhdIXTICw7ZlNpkaMvqYUNvgPb8uk25+3H6FMrFpyNHc+0mn9qN4WkA4w=
+	t=1720430643; cv=none; b=lGKMr0pypX3F7zi5TYxTfsSSnN1X2Inbk+lSrHG3ZlckS4CYZMb2qTVpCsJxd5alf9o9XsEkh+cW6mZYQr2T4Avu74vEE6v7MEkSpmMN6B7IjxEaHrxvvD94udXH56S4G5qoNus+UNxvY3ibKE+o2gHRpUcSZ9RE+7pyw8x/SPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720430469; c=relaxed/simple;
-	bh=I8QhZEOkkuFPKbGbEt5Gnqo9X1ZigVSRpSXa/floQDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DOSn7R5W4ut1UexMJoQH/jY01bUTF2bk66iyxfTb+6+vLAU9DkLFn+BCHlod3I8wKCJZEt8iE2yKpFAKr39Rmt/AoeLTUo30X9cLGg84ZpE/+leeP8cnb/bFQEyqclfZbIzhiwS+9DxrRdQijJy7KWHGz3GNMlzG5XAVlL1nDN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=d9LfoMKp; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1720430643; c=relaxed/simple;
+	bh=nTynzleANp1b5PUBbvg0geeK7VnuU+V2yh/HYTvcZAk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=F2+TEjzXpzBJOYC96GrhOV2uQpwHAYJgKLxwGqqDtliiaZK3mbDtx60Xx0ktraaJ82+ER1lbKVklhjMgQAXflng/9iQNI6sBRVDwKNnd4G5RGshhGaRScFI7P1obEK1GW+cfI/ugirKFRUw5EbxrMMSzkD439i9wi/MNKnRG0CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqHjsNTS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="d9LfoMKp"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-70b00f3216bso161947b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 02:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1720430467; x=1721035267; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yONsKyON4CTbcJqehjyTd+ofNBjy0v+0whVPKelNE4U=;
-        b=d9LfoMKpoXGLtT0YJGi+LSBbmJGjCx346TpOSjgZRPfBzLbIqPNk4ZUa2BH95ER6La
-         NmGt+OaBla/Pg2CxQxVf6JTUcRrugEgC1eyk7wEBE4fL6YrGF3heSTM3LErB6yvZZ4Qq
-         uepypOYmSexq3Qfvyemnh/9OLpbTOT2v49eFrpFTv3IIzMtK5ILj06RVdEHPfwbefpSN
-         lO10eSPbq8JjrizH5ROcSkUomvQ7zNzjXbvFCQVmDfg2ov3HoFzqAm7nz1T1G7zrj+pg
-         XulNGnsOS1y4mQt74UAkszEu9PfzHlRpq0TgZHs8Cy/JV8bl+OMcTjqm5zkHf/D4aMKK
-         ntJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720430467; x=1721035267;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yONsKyON4CTbcJqehjyTd+ofNBjy0v+0whVPKelNE4U=;
-        b=wDewJbRwCuIqlv3eocEsWoZuoZzh/4BVrI2p22WP+kjrdz/cgrQCc69K0NA4I2nfYx
-         6yIFfuEN4kWjf3nOJ/KWp0uPxeRkSpsF0KLKPbZMO2USQ2EgDped1GMsOu+XzHP166/l
-         vp5TkDpajVam40aIniseOtIxlJu1nrXLhHfjvFWJ01yCxNkEqLcsX+uLF6pEcMG9L1Sh
-         7dQ8/UUAVOXgXmiX4R08qkHiWMnJVgt3pb1Zn7ouvMNmLSWIpI9lqTGYweD8IdJOPNoX
-         O+B/t7CjpU33XDj4T41qo6MSlrKVZ1Kp9vHi181Cfc+toEUf687fEc+LK3uQSDCX3xV7
-         N9Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCV91n1xBKSvDlHkVDtxGf+uu8hJ6Df8J7tXGoiaFA2Csyr0/RlztLSSA28gAb1l57xpj0ZxGWb+bitKKPG1dEJN1i9ql0+FX/dHJQtM
-X-Gm-Message-State: AOJu0YxWUWMoCAX0XCh8nJETbfcw5624KcuJqD888cLIs8tLVOfD4XeG
-	07Km+9ktKbPOo7FTEtWwFlNglFVd+yZetlRPxXFYVjy6+RlDMSMne3Ba9/3MBs1PobVnp3vV/0a
-	5358=
-X-Google-Smtp-Source: AGHT+IE6l+fF5Oib8luYdfU/tlpPhpXd/IrKtwSiDAdNpn8c69VDxJXQmjGu+WqyNfzAosOJpvap2g==
-X-Received: by 2002:a62:e402:0:b0:706:aadc:b0a7 with SMTP id d2e1a72fcca58-70b00918545mr11587876b3a.1.1720430466875;
-        Mon, 08 Jul 2024 02:21:06 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b1086d32dsm5681597b3a.46.2024.07.08.02.21.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jul 2024 02:21:06 -0700 (PDT)
-Message-ID: <beb8a766-8143-40ad-912b-b04f7937d4a4@rivosinc.com>
-Date: Mon, 8 Jul 2024 11:20:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqHjsNTS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1415C4AF0C;
+	Mon,  8 Jul 2024 09:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720430642;
+	bh=nTynzleANp1b5PUBbvg0geeK7VnuU+V2yh/HYTvcZAk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=EqHjsNTSZ5zqJhUNjXehRt9Dqfb6TRUJi5pCsm+2vdOZhZ7Gmdid7jM9GhqhgbWNd
+	 ZNixcoxSW8HEjwA52lKn6F1lJhSNde11sW+0jH6tDCW3hQbUd3G/rZQpXEXaudTo9q
+	 rw2zpVlqHOtJtLJMkKA6emAdINSDZZMbzPDrIwM8TppvdKbkc+uarkA6znFCKJKL+Y
+	 2fQx+WUDJJFsU7S8b+SBTM89nlF2rkJFJ8qYKGIyGEB1TFWA6r9Dmj1oK8epkZ4HHI
+	 TEmTUBljr2n9L/J6amxFntKKECugZEhHelnznoS/8vMmUyScm3t1iEZol1X/aKWdYx
+	 r9vmki02w2Odg==
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240705-for-6-11-bpf-v1-1-1960e3165c9e@kernel.org>
+References: <20240705-for-6-11-bpf-v1-1-1960e3165c9e@kernel.org>
+Subject: Re: [PATCH] HID: samples: fix the 2 struct_ops definitions
+Message-Id: <172043064147.298354.6203971743384650152.b4-ty@kernel.org>
+Date: Mon, 08 Jul 2024 11:24:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: select ARCH_USE_SYM_ANNOTATIONS
-To: Jisheng Zhang <jszhang@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240705132308.1469-1-jszhang@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20240705132308.1469-1-jszhang@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
 
-
-
-On 05/07/2024 15:23, Jisheng Zhang wrote:
-> After commit 76329c693924 ("riscv: Use SYM_*() assembly macros instead
-> of deprecated ones"), riscv has been to the new style SYM_ assembler
-> annotations. So select ARCH_USE_SYM_ANNOTATIONS to ensure the
-> deprecated macros such as ENTRY(), END(), WEAK() and so on are not
-> available and we don't regress.
-
-Hi Jisheng,
-
-On which branch/series is it based ? I tried it and it fails on
-errata_cip-435.s which still contains some uses of ENTRY():
-
-ENTRY(sifive_cip_453_page_fault_trp)
-
-Thanks,
-
-Clément
-
+On Fri, 05 Jul 2024 14:09:25 +0200, Benjamin Tissoires wrote:
+> Turns out that this is not compiling anymore because the hid_bpf_ops
+> struct_ops definition had a change during the revisions.
 > 
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
->  arch/riscv/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 0525ee2d63c7..c51b32a8ddff 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -62,6 +62,7 @@ config RISCV
->  	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
->  	select ARCH_USE_MEMTEST
->  	select ARCH_USE_QUEUED_RWLOCKS
-> +	select ARCH_USE_SYM_ANNOTATIONS
->  	select ARCH_USES_CFI_TRAPS if CFI_CLANG
->  	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if MMU
->  	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+
+Applied to hid/hid.git (for-6.11/bpf), thanks!
+
+[1/1] HID: samples: fix the 2 struct_ops definitions
+      https://git.kernel.org/hid/hid/c/b35e0dc548aa
+
+Cheers,
+-- 
+Benjamin Tissoires <bentiss@kernel.org>
+
