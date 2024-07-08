@@ -1,167 +1,175 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC247E782
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 09:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E3834CD8
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 09:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720431592; cv=none; b=rX4xpCj41jxk9Youznhy9McUXXkscZP59YSPRvxFnwB+bVc84ky7XRRb5BpiUypNeC4HOg7AaccPFVFmlby/+8ImZ9g1fogM3WA9xm52ulq+mRSEPMjJwIEQlRKsU6D7i6Vyn2OD+iSeveHu82XcYCEiTNsTof9FgC9Dp4YqH2I=
+	t=1720431609; cv=none; b=aSBQU1pz5XSdDLCxMxrz0sZeO0j1sTqw1jwP+HJIWcfC9s6spf3g2kR827HgLAjv/6n9qnLipdaDFRZfE7xbWq2xQlZUuWK4VzFBrtppDAyLrSmZp0CFeT8XuRS3IlZfzo0QWLQluHGB4oqwe9h42NOIhGXb398IxxEo+zXBHNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720431592; c=relaxed/simple;
-	bh=x+REoia1SPVixROvzFdazwCRh5mhW9XzZbQzMlPar2M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cu15eOr1QMK6TmCKowv1bEvU/hrwR57qds8eMUF3Seuhzvnw9c9Pzd/Jw5x/ekTpKDcVjszPGp/X5sd9jUVkbesPMjfJ/sFrFmsMNy/YQpEu9shT0xAf/3Vd9+fO1vlvKCc+V4VjBLb/3gPL/6PYpmVrxFV59YMUGIt5/dt2CXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=i3jIcC4c; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1720431609; c=relaxed/simple;
+	bh=WaFvJOB3LuiYAl5tSbw8XBeRtas3+9eoV/NljR6xXu4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DdxmLhoZlnGapU2A0jo4+Qd0xxKD3bWu3LOzf7yqPOCM9533TgAPWB8pAgtFP4ClMiJqnmDtIKRAo84PS9FxAD6T8oBiJwUOH9tGqC9vx9yPPxcKud6g824RqzFaM9k4uJaWpsxzj9Aar/BhlAztmTWnB9OCi3V2CE7MM1jlQO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=JrnxO4dt; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="i3jIcC4c"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4255fa23f7bso24675195e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 02:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720431588; x=1721036388; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xo8BvOJHNg5KkElAnqbJxKoNs4vF5XqhPo69/tFmIJc=;
-        b=i3jIcC4cODRRa+XF9L/yYxQffmSSCtsBMAsmvCNUzVVht8gH1EGSVZB36ObUTypG99
-         J45i05tSAFJAVQEIVSnFjxfkvwwF2wAZ3cyRZW9y6hTuiZNx8Q/zqOgyTLwcT7s9+0dr
-         t1kGk8zS8/ctwT8kDoB23rYM9cHnKUUBrNcf9kwcrm2F3LaMpxU0w9bcEc47GNNkgU3C
-         AtemdtDMiab7Y/aLQ5mDJwSYoWz3dsZAS1y/d49zAdjYnLkWllcTjH5/GtfCej5r+wav
-         /Oky6vz6QBwcioNqKmMV5BE/3Hnl/WyUXLfxybqduuyVO6hF4dStAJlozl/a5bwhd+oM
-         E1Hw==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="JrnxO4dt"
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id CC3803F630
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 09:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1720431602;
+	bh=7ei+RMDKGt0qavUEnbUSXeg6e8zBixhaGO9TYuEP2Ck=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=JrnxO4dtSCSti5Qln6bffbctd6AGOqfYHOV9FBD4SKC/B6oAOLsoSr2oBWmv9sN+d
+	 ySLdtyG6vkYYFsZlCddeX3inMD6pT7XHncMMMryZG8RodDVV3S4oyXj3mo6zKJbd2C
+	 Na+QxW/qsCVw26fLQK1hIFfIoXw8TWdd1CiIbFC+lUvN1UCtTpeDIeSTkOKFrtff4U
+	 llNZ+7WxHUNOfrXtiPCe5M9qFIChJZ88mMCq4taKsxh2kzM9HaALf5i4Z8aDCJmA9x
+	 aTSMtobKXgNvGBMZktytus+vn4tiin7x3PuKxDOLuTdGYJ7i6gG/UIZB/yDeojMkO8
+	 HyGSczPXyRG3Q==
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a77c20f3adcso268736366b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 02:40:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720431588; x=1721036388;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1720431602; x=1721036402;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xo8BvOJHNg5KkElAnqbJxKoNs4vF5XqhPo69/tFmIJc=;
-        b=VXUKJreY8uHwUkWMN1ELP4jFLatkChXZ6dy694qx8kWbSRgE27xRuSfAmLsCPnogod
-         9Pc+8YhMm1XHHZCiuemnzm7THVelGlHGh48fW50FeJL/Msnilw5fCPMufoBt9D9sYpJd
-         YlWdysVbkBb0Rlc//zK82zXgT5ouPBTN1pkalWH8tgX9o7jGLVgjuH/NOCr2St3gcd7A
-         pIdX1KJWxynfDhhrwUoYFSuTUGx18PPdYaNJzLC75UWIrDftGM9S0UllLzCb+EOTQIJq
-         ZuLiKfEjHDHuWsjMVt034aueR/cJbu0Ow9d2CEqJBRzOOfcUQBwLgOEzurmtRwYnSoy4
-         Aqmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMFJa+nuAm3HZMPS0KG6xi9gKii8bKmiga59R4R53hGZwuylS3SF/l7Sma9Hs74wXY4I6uXByCKt8vztPwRpw2CnLLtGH1PxO6SNVP
-X-Gm-Message-State: AOJu0Yx7wNSPn5b7Out42IgiKnZOD1jhMolaKb8CF5NCHiigOoDze14f
-	zSTr/heuN8zVoXAcDQatLEgb5HJBZKtb/h1Px4btq7reMUcoMTK1zhEjbH2VghU=
-X-Google-Smtp-Source: AGHT+IFX4NmOMlKq6u6ELmSfHAdUOXEIC/NFVGVqPUkBzbvs1KI8EYpyG6LPnijLV3R8h9eDbqBeVg==
-X-Received: by 2002:a05:600c:1d1e:b0:426:5dc8:6a63 with SMTP id 5b1f17b1804b1-4265dc86b5fmr41077435e9.30.1720431588135;
-        Mon, 08 Jul 2024 02:39:48 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:a2a3:9ebc:2cb5:a86a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36789fd7a0esm15457779f8f.104.2024.07.08.02.39.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 02:39:47 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 08 Jul 2024 11:39:29 +0200
-Subject: [PATCH v2 6/6] arm64: dts: qcom: sm8650-qrd: use the PMU to power
- up bluetooth
+        bh=7ei+RMDKGt0qavUEnbUSXeg6e8zBixhaGO9TYuEP2Ck=;
+        b=eBO80xoFJfvT5/UBMEDExpNyLwqYhIOm4pxNG+eePvlY77ul/R5MekP4OhRpde9iKp
+         +EyKKDit1Hacp94bs5QdKvBUyvhPxMMS+s+dFNKH4/SfwIkdJV13YK8U1Zm7289FJtKF
+         CGaH+slUJJnDMh5/RZxiLHmGF7OXS64langMLLnADCw0rpb0a6JkOZNUu7ou5+kRIrZr
+         4LfcTdQqPZUIImx5dH+ODC7pzoV0H40EN9OhnZD0oLdV0nGxaZWkkm5AJZL8BkysYj/Q
+         w9gryv93i2sjQmBFyJwBC1H15DwIhK3CfGEiJLGFvvNNIwrxU+pBsQRjaIB16VN4EeY0
+         YySg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsZnLhrZpmCEKthxK/6MTq4IaKzYUqOAA2WRKr9qaDE9kaXvbf+m6jIzVeKhwaCCZt6rumj9E7t1nb96pEfbw+aE7dQTMmvHAlUZfI
+X-Gm-Message-State: AOJu0Yyg0vyuHABPajZWahZLsaCDC8h30GbBD84i6PApOgIgYZ14q3Vv
+	ymRZUj/2wOt0cWMt+nRrrDaApgHqYcjqtofFwKKlpizt8kfVSs1tqju+n1ojpkAPM/qxtnOKEWS
+	w0bC/iexYhM0PY4dD7WtwGonbQISzlrPxXTbdvAaVAzWV69tGuGFENquPqsxHNyBMx9iECMovL3
+	kWL66g7texZG20VoPBDJetMymvgpq78yt7Z9pX+S+nZOEwABDI6J8s
+X-Received: by 2002:a17:907:9620:b0:a77:b54f:c25e with SMTP id a640c23a62f3a-a77ba7097c7mr844317866b.53.1720431602395;
+        Mon, 08 Jul 2024 02:40:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHY8/evpdBw/IfUE6NzTQP9L4Tw6quV4206So53Zy4ouW7JYhzgqtmgj/ZFwKu+7dYfhWhJqGqDKpcGa/fQFQc=
+X-Received: by 2002:a17:907:9620:b0:a77:b54f:c25e with SMTP id
+ a640c23a62f3a-a77ba7097c7mr844316066b.53.1720431602031; Mon, 08 Jul 2024
+ 02:40:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240708-hci_qca_refactor-v2-6-b6e83b3d1ca5@linaro.org>
-References: <20240708-hci_qca_refactor-v2-0-b6e83b3d1ca5@linaro.org>
-In-Reply-To: <20240708-hci_qca_refactor-v2-0-b6e83b3d1ca5@linaro.org>
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
- Rocky Liao <quic_rjliao@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1973;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=kdQldVCRGhnIPxVPu3DpUjVdb4CujtCOUfjhf5GMlEY=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmi7PavRvoDk+qu9H80Nik2zZsdjGSAEOv4dUvI
- 0g2wBXIniaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZouz2gAKCRARpy6gFHHX
- ctu5EACHDBOa9Md5wzEatjgmUSsIFi4954ytTWLBcm08mGigjLZL/YnbW/11UFU1fk0ScjmfjgV
- xpnC75B6+u39wTv65J2Txd7rg+vQ5fCnTWdEzPOiy55PeYyX9GvsChbcZCMEXNcuJrOsWNCA/9k
- 6wyiXs5oNi6bPhzQmNlOb1OGER30tNo+GfyM5kQrHCdiVRLm89ecaQmzM1BDg01SLxRoeSw0UuU
- uYA4QOfGirGofHKScWT6T7cCVDS7sDkiyOEuUrvG2y0z32kLJeOWK9AbfXzMQzk1yEP8zUsTuM6
- 6LgNCQhJXv65eY05hC6/L8OhZ4CrswKm1lv/CC237u7UWQnzDwYko1zH2By1FznAmifMPOlDJxh
- /jWq0CC8H5hg/tuihuw2f1D9DGmoOYiVihtP4s5KQdCOhrjsj923jcd8/b+n6Ufwks6hrNKoLs+
- 7fpJBiRI5dhcWpB5WNf4w21FC3Fca/0QnoOZJgVEa+Wc39yXBrg5kr+r9TECl1URtDEVYo8tf04
- dqOwDMmbE+WOoskCUpfAE6IbHbsxo3A5AWmy76PqWuoKO2DKschrNYNBHmYyyZfLatXqpnN4TLR
- lvl8L10cS9ZMWiYMcsX7cvYjd4rr/qb56WCw2jfBSXPMEfuN3MHOSWtxSGZRv2VYyxnoOU6Wdf6
- rGYOfmIr9iUq0LQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+References: <20240705025056.12712-1-chengen.du@canonical.com>
+ <ZoetDiKtWnPT8VTD@localhost.localdomain> <20240705093525.GA30758@breakpoint.cc>
+ <CAPza5qdAzt7ztcA=8sBhLZiiGp2THZF+1yFcbsm3+Ed8pDYSHg@mail.gmail.com> <ZoukPaoTJKefF1g+@localhost.localdomain>
+In-Reply-To: <ZoukPaoTJKefF1g+@localhost.localdomain>
+From: Chengen Du <chengen.du@canonical.com>
+Date: Mon, 8 Jul 2024 17:39:51 +0800
+Message-ID: <CAPza5qc0J7QaEjxJBW=AyHOpiSUN9nkhOor_K2dMcpC_kg0cPg@mail.gmail.com>
+Subject: Re: [PATCH net v2] net/sched: Fix UAF when resolving a clash
+To: Michal Kubiak <michal.kubiak@intel.com>
+Cc: Florian Westphal <fw@strlen.de>, jhs@mojatatu.com, xiyou.wangcong@gmail.com, 
+	jiri@resnulli.us, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, ozsh@nvidia.com, paulb@nvidia.com, 
+	marcelo.leitner@gmail.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Gerald Yang <gerald.yang@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jul 8, 2024 at 4:33=E2=80=AFPM Michal Kubiak <michal.kubiak@intel.c=
+om> wrote:
+>
+> On Sat, Jul 06, 2024 at 09:42:00AM +0800, Chengen Du wrote:
+>
+> [...]
+>
+> > >
+> > > > > diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+> > > > > index 2a96d9c1db65..6f41796115e3 100644
+> > > > > --- a/net/sched/act_ct.c
+> > > > > +++ b/net/sched/act_ct.c
+> > > > > @@ -1077,6 +1077,14 @@ TC_INDIRECT_SCOPE int tcf_ct_act(struct sk=
+_buff *skb, const struct tc_action *a,
+> > > > >              */
+> > > > >             if (nf_conntrack_confirm(skb) !=3D NF_ACCEPT)
+> > > > >                     goto drop;
+> > > > > +
+> > > > > +           /* The ct may be dropped if a clash has been resolved=
+,
+> > > > > +            * so it's necessary to retrieve it from skb again to
+> > > > > +            * prevent UAF.
+> > > > > +            */
+> > > > > +           ct =3D nf_ct_get(skb, &ctinfo);
+> > > > > +           if (!ct)
+> > > > > +                   goto drop;
+> > > >
+> > > > After taking a closer look at this change, I have a question: Why d=
+o we
+> > > > need to change an action returned by "nf_conntrack_confirm()"
+> > > > (NF_ACCEPT) and actually perform the flow for NF_DROP?
+> > > >
+> > > > From the commit message I understand that you only want to prevent
+> > > > calling "tcf_ct_flow_table_process_conn()". But for such reason we =
+have
+> > > > a bool variable: "skip_add".
+> > > > Shouldn't we just set "skip_add" to true to prevent the UAF?
+> > > > Would the following example code make sense in this case?
+> > > >
+> > > >       ct =3D nf_ct_get(skb, &ctinfo);
+> > > >       if (!ct)
+> > > >               skip_add =3D true;
+> >
+> > The fix is followed by the KASAN analysis. The ct is freed while
+> > resolving a clash in the __nf_ct_resolve_clash function, but it is
+> > still accessed in the tcf_ct_flow_table_process_conn function. If I
+> > understand correctly, the original logic still adds the ct to the flow
+> > table after resolving a clash once the skip_add is false. The chance
+> > of encountering a drop case is rare because the skb's ct is already
+> > substituted into the hashes one. However, if we still encounter a NULL
+> > ct, the situation is unusual and might warrant dropping it as a
+> > precaution. I am not an expert in this area and might have some
+> > misunderstandings. Please share your opinions if you have any
+> > concerns.
+> >
+>
+> I'm also not an expert in this part of code. I understand the scenario
+> of UAF found by KASAN analysis.
+> My only concern is that the patch changes the flow of the function:
+> in case of NF_ACCEPT we will go to "drop" instead of performing a normal
+> flow.
+>
+> For example, if "nf_conntrack_confirm()" returns NF_ACCEPT, (even after
+> the clash resolving), I would not expect calling "goto drop".
+> That is why I suggested a less invasive solution which is just blocking
+> calling "tcf_ct_flow_table_process_conn()" where there is a risk of UAF.
+> So, I asked if such solution would work in case of this function.
 
-Change the HW model in sm8650-qrd.dts to a one closer to reality - where
-the WLAN and Bluetooth modules of the WCN7850 are powered by the PMU
-inside the package.
+Thank you for expressing your concerns in detail.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8650-qrd.dts | 28 +++++++++-------------------
- 1 file changed, 9 insertions(+), 19 deletions(-)
+In my humble opinion, skipping the addition of an entry in the flow
+table is controlled by other logic and may not be suitable to mix with
+error handling. If nf_conntrack_confirm returns NF_ACCEPT, I believe
+there is no reason for nf_ct_get to fail. The nf_ct_get function
+simply converts skb->_nfct into a struct nf_conn type. The only
+instance it might fail is when CONFIG_NF_CONNTRACK is disabled. The
+CONFIG_NET_ACT_CT depends on this configuration and determines whether
+act_ct.c needs to be compiled. Actually, the "goto drop" logic is
+included for completeness and might only be relevant if the memory is
+corrupted. Perhaps we could wrap the judgment with "unlikely" to
+emphasize this point?
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-index b0d7927b708f..8ca0d28eba9b 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-@@ -208,13 +208,10 @@ wcn7850-pmu {
- 		compatible = "qcom,wcn7850-pmu";
- 
- 		pinctrl-names = "default";
--		pinctrl-0 = <&wlan_en>;
-+		pinctrl-0 = <&wlan_en>, <&bt_default>;
- 
- 		wlan-enable-gpios = <&tlmm 16 GPIO_ACTIVE_HIGH>;
--		/*
--		 * TODO Add bt-enable-gpios once the Bluetooth driver is
--		 * converted to using the power sequencer.
--		 */
-+		bt-enable-gpios = <&tlmm 17 GPIO_ACTIVE_HIGH>;
- 
- 		vdd-supply = <&vreg_s4i_0p85>;
- 		vddio-supply = <&vreg_l15b_1p8>;
-@@ -1255,22 +1252,15 @@ &uart14 {
- 	bluetooth {
- 		compatible = "qcom,wcn7850-bt";
- 
--		clocks = <&rpmhcc RPMH_RF_CLK1>;
--
--		vddio-supply = <&vreg_l3c_1p2>;
--		vddaon-supply = <&vreg_l15b_1p8>;
--		vdddig-supply = <&vreg_s3c_0p9>;
--		vddrfa0p8-supply = <&vreg_s3c_0p9>;
--		vddrfa1p2-supply = <&vreg_s1c_1p2>;
--		vddrfa1p9-supply = <&vreg_s6c_1p8>;
-+		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
-+		vddaon-supply = <&vreg_pmu_aon_0p59>;
-+		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-+		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
-+		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-+		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-+		vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
- 
- 		max-speed = <3200000>;
--
--		enable-gpios = <&tlmm 17 GPIO_ACTIVE_HIGH>;
--		swctrl-gpios = <&tlmm 18 GPIO_ACTIVE_HIGH>;
--
--		pinctrl-0 = <&bt_default>;
--		pinctrl-names = "default";
- 	};
- };
- 
-
--- 
-2.43.0
-
+>
+> Thanks,
+> Michal
+>
+> > >
+> > > It depends on what tc wants do to here.
+> > >
+> > > For netfilter, the skb is not dropped and continues passing
+> > > through the stack. Its up to user to decide what to do with it,
+> > > e.g. doing "ct state invalid drop".
