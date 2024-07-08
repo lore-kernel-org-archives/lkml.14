@@ -1,166 +1,235 @@
-Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01olkn2086.outbound.protection.outlook.com [40.92.103.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA801B974;
-	Mon,  8 Jul 2024 07:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.103.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720422717; cv=fail; b=oBi9RD41ykrwyMbRTq1sJ81sphR8b457TRofdnHdPot+mftf931t+Auc3GuMOGDh8nc6ywMwQVJLSVDxNL59sScORogFGC9D4N1v6Ra4TXaCKNuD+1WOSAqqFQRpfICfj7fuzNYyJF1BJ8a+LpFIunJc2CEkr1sJ/IomO/1RNsI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720422717; c=relaxed/simple;
-	bh=jX38H/jQW1l8cWOvploavVudiSpCl4dJL0H7qlfXy68=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=hQmphJz+zU6+XjcY/CuS+ltp3MFAsRr19TUvW4KWis9qDAkgYALJXPYF6uJ0MbG69BkRpL4FrnZZT5K9W2caAWHWiyLJaAftgr32p6ZBsxj3FcA3cPTBLAXuV9eeTR8pcISacgR6Y9U2WVKtYxGVmVSXmh8EWBRwEjd9sI667bo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EG6CfMm3; arc=fail smtp.client-ip=40.92.103.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6937BA930;
+	Mon,  8 Jul 2024 07:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720422859; cv=none; b=XsHFTkaefgHvxjhg6axjIaHPg5Szo8eMVsMO2wbZKDOauUJc2xLhADyp1iujTBIPayYMimK7jLylX66mSvsSdV5cpjSjhDcERatB6/JtCOvPLFCU/2iqTrRWksC+c6iXhXs39I+ge3/L/muImnhi+574A4z5Vn/EC/OkSlXdC3A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720422859; c=relaxed/simple;
+	bh=jVPnjWFbFGgUdHE2F4RhwvmCDFOLH7C7z7xHSp2YNA0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=sgMuxyiK26gHKVm3kyqFd+vCO7Ec89BVBpxPHtpUO/x3+JtSZ8w7bAB9ThigNZdAGzjY34QG2uBo1mnZ27ErEzrWMYT9COfTX31kkOEMXHNXwMqMgmBxuzxYra585Bedhf3M2NOkKA2wZS/6Ti2680Iz8sR6WZ4eqVFN3v4tzr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F8pOyX+e; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EG6CfMm3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oFebkLIS13gOOEEyPtKanTX//EmJngEs7FYtKBRxZJgXJWzzBMyM+ybHslRMtNsir4nYrR8a6bADkpeNEkui1Zs8viebK+/UwVi3BkPDaQTEVZGE3oSZTzFB5AJ+bE2xUWwPO6Kmg/3ABzZDgqsTPf5iJmjwUep+7WQfpBpCbC6RwNOMcd01X2vHkP4R26Gl/wNLKbZQtDgPbhrv1e0LPDDoxhUFm+Wvf0UnZSsIBg+Fx+SMg2KH53Qrvc3dE+VEBP+Sd66stEyaeVVacmw/iTkdHqziwPONSGlrdM/z6eYSrHjHGweAmVu0dOSb8eX7J2yBuXveV+X6oQyn9Vpsjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lPpEuvVXl2NNqEItLR5sL9PS/9JtEz5hrMRoCpU9MY4=;
- b=je87wFh8QBUSNB9ebiqfULVVPDWL/Dwkc4hEYr0tgvBwKHgxdvcNgim3K7TjXn7LA+5doe6Rgu5DNDYJ2VJYwISSKq8Wk33sD/CRZHiuEKH+gK6nQN2CQkHa5RCbCWmvpjJQd5ciERZmhcvXvAa17ZFG8y34wZTmJypD81PaeR5j0n6H2yGV0GTU1k8ukf48YKQgc01Gp3ncdiyr4FI+wdPOYGrV20Wwh+cC3pACCeh7yhCSN6MVYVWjyGSsP0xVkyRrb+zTpkrG95y4qI1/wW1xdKuOQ/8U1f1m9qG/4gpAfD/SEZFO13O2mtuWQeQSU/b2wq3mYgDXxlC6X842EA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lPpEuvVXl2NNqEItLR5sL9PS/9JtEz5hrMRoCpU9MY4=;
- b=EG6CfMm3L/H50eEDqdxI/fqLE0SCHKNATh9G9sGh2OmQD49i+nhpcvx05jegsw8Zp4Zbb32MuL1AP+7D6ucLWkDJbctBjzVgsbqSu6+A0eFbfVbq7c8+Z6iBdBv7U8wgL3gy+ZfQnAPZxBMMAjztvg+NV7HpXtQvvVxnnz/iDYNT8a6eVglOrCVyIn1aClxJHV3EUiiV6gRgRYWsj6viPACmKkxpWYBMsltKsqbT6rtDgjrvsXqhxX8yVvdNRI6i6qeAQOC3xnolndoo9T5nLdVhwSe0ssC1GkeK5xjoIaBNYTbSyuLgOXgCQewXjDF2bQDVNbxmdWGG8nd74Xh4mQ==
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:138::5)
- by PN3P287MB0082.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:d6::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Mon, 8 Jul
- 2024 07:11:43 +0000
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::a94:ad0a:9071:806c]) by MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::a94:ad0a:9071:806c%3]) with mapi id 15.20.7741.033; Mon, 8 Jul 2024
- 07:11:43 +0000
-Message-ID:
- <MA0P287MB2822676C9CF9443B9A3CB657FEDA2@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
-Date: Mon, 8 Jul 2024 15:11:37 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] drivers: hwmon: sophgo: Add SG2042 external
- hardware monitor support
-To: Inochi Amaoto <inochiama@outlook.com>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <IA1PR20MB4953967EA6AF3A6EFAE6AB10BBDD2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <IA1PR20MB4953EC4C486B8D4B186BB848BBDD2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <MA0P287MB2822935DEA9EE418F3411CFAFEDA2@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
- <IA1PR20MB4953230DCEDD7DF01134A8A9BBDA2@IA1PR20MB4953.namprd20.prod.outlook.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <IA1PR20MB4953230DCEDD7DF01134A8A9BBDA2@IA1PR20MB4953.namprd20.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TMN: [oc1yEjBa3zVZtTUQ5G6VQQSsnP4wgOvR]
-X-ClientProxiedBy: SI1PR02CA0033.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::14) To MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:138::5)
-X-Microsoft-Original-Message-ID:
- <f8829b4c-5ba3-45ff-a2cd-234e3c3c7e44@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8pOyX+e"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-42662d80139so7550995e9.0;
+        Mon, 08 Jul 2024 00:14:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720422856; x=1721027656; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vcpZKxffh1BIPbGttr7eH91nbmnE8KOM65bYeiW3Qyg=;
+        b=F8pOyX+eDvuTEUcG+d+rK0oBEd6m6dr2p+aT8ifpS5a1oJJNFoCof7ihahKI/7B5g2
+         Br5uGW/DU4QT8naN65O4Hlg6ZiVIQNs2MxBuIzpqX3mRO2fRDebvTaOMARxqZt518c5/
+         EYOCxwehjPA/QrzuwqBFt+Fa/yswLe0zj/WE9OnZ0iM8WnFADqIjVc7m+XJhU+oc/xs/
+         nyMEDZXalPEdG9aNkaIsDV9hvDeVSEhZgxjWCdkwKFdBTHzfovMeFdvts3WJeOJsS//t
+         EYSNVHZrn9hLQYvLID6WnToX/ELQlFkAdDTb4Qpa3mE35W1jq7b6A5yiKYAAEsfz/KbK
+         IASA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720422856; x=1721027656;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vcpZKxffh1BIPbGttr7eH91nbmnE8KOM65bYeiW3Qyg=;
+        b=Xb1UAzGaNz3imfGm130838yLn1zdiSWXz2AIY7+STDrfASq/pJO6t7h8lQxc3BoGyF
+         vtPkamikk+1NzqRnMfTqm9rBgQmP/W0XUAMvCnLhpC1VKzJaLM0GURL+Nxx9FNpyOa1B
+         MQXtsO1icOSWAOzL5f4lUCcp/fu5hpL43Y15jg6hl/lyACA2dOjEkQrqi8kECc8WxV10
+         ZcY6AdiRa8ZbSYn0Vg57/5s2Hbvd4eFx2DG9GHt1YKe5Xno2h38dA/yqM7skz3xibE6I
+         JpXF3GXha8Ypic4ctDRHe1kU4Rhvn+ABaaRs3z3xHBYuTit8vR0a46fXwZsN8sqa0t2h
+         Oumw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUdLWkXshs0+QAK85PJWOt1s7qX+8FidJp2/kHEj5MOuyYG2nXa+KQGQdPx3DN5vy0iMG0lqLM9lShK+x9jkz7pmUwhZtPXaZfu0LUhOiaemnAz1ifZi5Qkca2owqo3ByZ17pvlwZA+cqgu4skqrPgNFCNvcEcnQ3i616/vmefbZzgZcCP
+X-Gm-Message-State: AOJu0YwTq5vgYAkVyb0SdxD2UtXyPedVZEKlfJuYsvTdiH/0ow98Qw1a
+	1HiWVzA7yvnqvxY2WpU3iBlbHRdv0wxwNF/106hDyKol+h8lzO3yCeoa8g==
+X-Google-Smtp-Source: AGHT+IE7rimd7KEtTYGAglzE1thSHNWtvzIpA30fmoas+DNLkSTy3PEkmPXIgmyCB2YCS+utG0lcoA==
+X-Received: by 2002:a05:600c:20c:b0:426:65bf:5cc2 with SMTP id 5b1f17b1804b1-42665bf5d8bmr23951935e9.1.1720422855227;
+        Mon, 08 Jul 2024 00:14:15 -0700 (PDT)
+Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2519a4sm151263255e9.35.2024.07.08.00.14.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 00:14:14 -0700 (PDT)
+Message-ID: <41859b82-fe75-451a-9e13-fec254bdaad5@gmail.com>
+Date: Mon, 8 Jul 2024 09:14:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2822:EE_|PN3P287MB0082:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19e69aa7-2018-425a-b368-08dc9f1d3868
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|19110799003|8060799006|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	DLBETb3AD5yfkpn3sxeSaVc6JYZrjaP59CL5yTW9oTB3kWGK4bEEt9vHz5oezFdbjVQOsdn3YOZT9R0/PUVUi4eTGquaYkvieljK/pZkHT8IIbvJSqrjZ9zxtD+hUzdECBrmKByVv9p+O0G2lXsgSynS8BFzsbhEKnl50pRDQhqgtPisxO/X1e2OjggEusPduq2qDcjxhZMx5zea3djR4x3Z8COfgIBZ4VLY3Yj4D70nKhOgexXcOm5E/eKRVXrD9pzCpnRxH3A7/1d/AZ1RikoQhcBYawK0K1Yi9lmjYkwWmuanHdJ2Y5EC/zxb5NP736vleFKrTfqvINeGJ1LlFiCV2FKv9eN3V+DTLdPDOSb9Y8OR+61ao1jF+UQpL27DCI16+5dZ/xK6JBl6pP8Mil0hIxNre4BJFYIivyOyRSDQ10FAIQHbWoNFR5EvyRAs80FenZoXRbuuDE5klRC8kEDsYmABNIffq/gGreJYc6hZ5dVn17XS6WhZsgk8YeqBdlsjZb7PS0wCyeObq9vs27WaQjwioD8tzgXDU8ltrssm4Y7EKdLbvSbXKKDeuUlg+8BjgVwvak1kj6HDulCsC6DnPyvcBVvXi4+qKNgwH6O01RQP8bYCV/ilp0gqpNJK3t86EX+pv6rXVegwnAF/Ag==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M3Z2dnk2bXNzdHcxUEYxdEN6eGlXWWhFTW81VUkzSWFpenpFMTY3Y0U4Z29R?=
- =?utf-8?B?RTNmK0tKbU9HQU92SXJVaFUxTkEzQ1BaK2kvREJkZzUvL0N5YW9OM2NrUzJO?=
- =?utf-8?B?RjB4WkJ5cU0xREQ5NFFZQWpPTkh3Si9qcFBBTWdUNWNQNmFtekRtYU5XdVh0?=
- =?utf-8?B?L1gvSzdsQ1N6K21MckhyY2Jtc0ZNU1kwVE5uNndiditLZytSY09DYmt6MFJt?=
- =?utf-8?B?Z2hPQXlleUpZV3d6RVNJWWUyZVhmL09LMUZZQ0Jqbk8yZnRQc01xYWk4d1hG?=
- =?utf-8?B?TURlSTc3UVlFaGNrMHlFaDB3aDhJTElORjdVa1BtWW1neWhsYjgreHlhUkgy?=
- =?utf-8?B?SFdETmlEZXQyOCtreTRnK3JTYm9Ca2t2RDhzWkF0RnZER3VHdlUyenIvTFVP?=
- =?utf-8?B?cVhXZm5EQVoyTGtmNlFJUHNjam1sQ2hFekM5SXdsTHE2aTQrazBDOWdwMEc0?=
- =?utf-8?B?V0JoN0RieHozVU50blNTZ1dnTmFWcDdYUHc0cENMQW15RnJXRjNiWWpwM092?=
- =?utf-8?B?QVNVUTg1RGhWeTdPK2Vocmd3b0dVVHluTEtPanE2TVpGYXJLSlZ6NmlvekhW?=
- =?utf-8?B?VTRXeFhnNGhtdnVUelk2ek1YQlRXaXNVTHV0dTRTZEhaMjBaNVpOdTJUM2hU?=
- =?utf-8?B?T3JsbkRBK2orZ2hpWmN1dEhRV25vbFFlUk1GMGJ2OTBFaWpCV1FrditOQ1lt?=
- =?utf-8?B?SEJUSDJqTjBlWWJvcldVZ3VjblRpckZEZEx3aWg0aHhLQnJjdW9aSWN2MXFO?=
- =?utf-8?B?Wnh1czNweUFBWnVxNlh1NHRJM3JPa2FHVGg0eHlMWFo0Nko1S3dzTG54SkFp?=
- =?utf-8?B?ditMM1ptdCswMU5YZFMrYWFzeGh5cG1lcktzYldFVCs1SWY0c0lEMkVTZ1o1?=
- =?utf-8?B?NkRWS3VqS3lwK3c0bDZlQVNEYjJvdHcxc0pmUUV5UzI4NExyOVZ3djVlcmVD?=
- =?utf-8?B?KzJNalBxUXI2VlBJU1I1YlcvNFZFRFcwdnFxNkFDVy9jMGIwQWhjcVRsSjRN?=
- =?utf-8?B?VC9vRjYzV2FtZ0FVSGNNQlhpTDBGY2x4Ky8yN1IxRW05eDZLUHdQTHhLN2hD?=
- =?utf-8?B?RVoxYXNPdUJ5Ynd2c1NNTG01ckU5YU83TE5VSG5HUlU5dWR2SWJQaXA5S0pS?=
- =?utf-8?B?Nm9PTHJDUUpiVVpMTjVxWVUzdkVXd3VNVTlxaXRzNVBmaWNERlVpMHlpL1lu?=
- =?utf-8?B?WmpCRmI5MUdrbFIyWHZHY25Jc0duWk5rMnNDSjNuWGFQMVJOMHQ3Sk1DK0J3?=
- =?utf-8?B?L3F2ZzFMR29pU1ZRVE1JbXJicmRBTDF6NTNqY1BrNitmd2JORUtKaW9wa1R6?=
- =?utf-8?B?ZWZkODg4Z3Fkb1BYdUJCTU1qWlhuRnVDdjVlVFh5SDh2U2pZMDljOERONlVa?=
- =?utf-8?B?RjVGTnJOMEg3bThmWU1haFBNS0dTaW14L2lWQ21aUHorT0pkay9lN0gxQ01T?=
- =?utf-8?B?QUZBTm9vWks5VVpnV2grQzg5WGY4V2NCU1BXSmFaZHRVWlNxelN1QmFCN1Jn?=
- =?utf-8?B?T0hkNUJnTldQNktzSms0dVJ3Tm1qVXdQUmROZEdwdHc1OVBCMU52K0w3NzhG?=
- =?utf-8?B?elpLdzh5V2dnbjRPSXBvdkZGTkx0MEEveE9WL1RJallyY3E2dlBsQnZDN2d1?=
- =?utf-8?B?NG0zdFQrOVdmb0dJYlVSNE9JRnJrNTNmRHFyemI2cDRoV21hRnAvV1FGS2Fy?=
- =?utf-8?Q?/m1oMrv3xQVQieiRysmj?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19e69aa7-2018-425a-b368-08dc9f1d3868
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2024 07:11:43.0601
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3P287MB0082
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Linaro-mm-sig] Re: [PATCH 0/8] dma-buf: heaps: Support
+ carved-out heaps and ECC related-flags
+To: Thierry Reding <thierry.reding@gmail.com>,
+ Maxime Ripard <mripard@kernel.org>, John Stultz <jstultz@google.com>,
+ Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, "T.J. Mercier"
+ <tjmercier@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <christian.koenig@amd.com>, Mattijs Korpershoek <mkorpershoek@baylibre.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org
+References: <20240515-dma-buf-ecc-heap-v1-0-54cbbd049511@kernel.org>
+ <CANDhNCoOKwtpstFE2VDcUvzdXUWkZ-Zx+fz6xrdPWTyciVXMXQ@mail.gmail.com>
+ <ZkXmWwmdPsqAo7VU@phenom.ffwll.local>
+ <CANDhNCo5hSC-sLwdkBi3e-Ja-MzdqcGGbn-4G3XNYwCzZUwscw@mail.gmail.com>
+ <ZkyOOwpM57HIiO3v@phenom.ffwll.local>
+ <qy7aczeu6kumv5utemoevi7omp5ryq55zmgzxh5hrz5orf2osp@wypg66awof4n>
+ <20240628-resilient-resolute-rook-0fc531@houat>
+ <3e37rhrcqogix5obsu2gq7jar7bcoamx4bbd376az5z3zdkwvm@jstirwdl5efm>
+ <20240704-therapeutic-maroon-coucal-f61a63@houat>
+ <wapv4gl2se34tq3isycb7bui5xi3x6kxjqtyz24qhjipnkbuqu@sv4w2crksuq5>
+ <ZogSxHFPt8SpOa0w@phenom.ffwll.local>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+In-Reply-To: <ZogSxHFPt8SpOa0w@phenom.ffwll.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-On 2024/7/8 8:53, Inochi Amaoto wrote:
-> On Mon, Jul 08, 2024 at 08:25:55AM GMT, Chen Wang wrote:
->> On 2024/7/3 10:30, Inochi Amaoto wrote:
->>> SG2042 use an external MCU to provide basic hardware information
->>> and thermal sensors.
+Am 05.07.24 um 17:35 schrieb Daniel Vetter:
+> Just figured I'll jump in on one detail here.
+>
+> On Fri, Jul 05, 2024 at 04:31:34PM +0200, Thierry Reding wrote:
+>> On Thu, Jul 04, 2024 at 02:24:49PM GMT, Maxime Ripard wrote:
+>>> On Fri, Jun 28, 2024 at 04:42:35PM GMT, Thierry Reding wrote:
+>>>> On Fri, Jun 28, 2024 at 03:08:46PM GMT, Maxime Ripard wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On Fri, Jun 28, 2024 at 01:29:17PM GMT, Thierry Reding wrote:
+>>>>>> On Tue, May 21, 2024 at 02:06:19PM GMT, Daniel Vetter wrote:
+>>>>>>> On Thu, May 16, 2024 at 09:51:35AM -0700, John Stultz wrote:
+>>>>>>>> On Thu, May 16, 2024 at 3:56 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>>>>>>>>> On Wed, May 15, 2024 at 11:42:58AM -0700, John Stultz wrote:
+>>>>>>>>>> But it makes me a little nervous to add a new generic allocation flag
+>>>>>>>>>> for a feature most hardware doesn't support (yet, at least). So it's
+>>>>>>>>>> hard to weigh how common the actual usage will be across all the
+>>>>>>>>>> heaps.
+>>>>>>>>>>
+>>>>>>>>>> I apologize as my worry is mostly born out of seeing vendors really
+>>>>>>>>>> push opaque feature flags in their old ion heaps, so in providing a
+>>>>>>>>>> flags argument, it was mostly intended as an escape hatch for
+>>>>>>>>>> obviously common attributes. So having the first be something that
+>>>>>>>>>> seems reasonable, but isn't actually that common makes me fret some.
+>>>>>>>>>>
+>>>>>>>>>> So again, not an objection, just something for folks to stew on to
+>>>>>>>>>> make sure this is really the right approach.
+>>>>>>>>> Another good reason to go with full heap names instead of opaque flags on
+>>>>>>>>> existing heaps is that with the former we can use symlinks in sysfs to
+>>>>>>>>> specify heaps, with the latter we need a new idea. We haven't yet gotten
+>>>>>>>>> around to implement this anywhere, but it's been in the dma-buf/heap todo
+>>>>>>>>> since forever, and I like it as a design approach. So would be a good idea
+>>>>>>>>> to not toss it. With that display would have symlinks to cma-ecc and cma,
+>>>>>>>>> and rendering maybe cma-ecc, shmem, cma heaps (in priority order) for a
+>>>>>>>>> SoC where the display needs contig memory for scanout.
+>>>>>>>> So indeed that is a good point to keep in mind, but I also think it
+>>>>>>>> might re-inforce the choice of having ECC as a flag here.
+>>>>>>>>
+>>>>>>>> Since my understanding of the sysfs symlinks to heaps idea is about
+>>>>>>>> being able to figure out a common heap from a collection of devices,
+>>>>>>>> it's really about the ability for the driver to access the type of
+>>>>>>>> memory. If ECC is just an attribute of the type of memory (as in this
+>>>>>>>> patch series), it being on or off won't necessarily affect
+>>>>>>>> compatibility of the buffer with the device.  Similarly "uncached"
+>>>>>>>> seems more of an attribute of memory type and not a type itself.
+>>>>>>>> Hardware that can access non-contiguous "system" buffers can access
+>>>>>>>> uncached system buffers.
+>>>>>>> Yeah, but in graphics there's a wide band where "shit performance" is
+>>>>>>> defacto "not useable (as intended at least)".
+>>>>>>>
+>>>>>>> So if we limit the symlink idea to just making sure zero-copy access is
+>>>>>>> possible, then we might not actually solve the real world problem we need
+>>>>>>> to solve. And so the symlinks become somewhat useless, and we need to
+>>>>>>> somewhere encode which flags you need to use with each symlink.
+>>>>>>>
+>>>>>>> But I also see the argument that there's a bit a combinatorial explosion
+>>>>>>> possible. So I guess the question is where we want to handle it ...
+>>>>>> Sorry for jumping into this discussion so late. But are we really
+>>>>>> concerned about this combinatorial explosion in practice? It may be
+>>>>>> theoretically possible to create any combination of these, but do we
+>>>>>> expect more than a couple of heaps to exist in any given system?
+>>>>> I don't worry too much about the number of heaps available in a given
+>>>>> system, it would indeed be fairly low.
+>>>>>
+>>>>> My concern is about the semantics combinatorial explosion. So far, the
+>>>>> name has carried what semantics we were supposed to get from the buffer
+>>>>> we allocate from that heap.
+>>>>>
+>>>>> The more variations and concepts we'll have, the more heap names we'll
+>>>>> need, and with confusing names since we wouldn't be able to change the
+>>>>> names of the heaps we already have.
+>>>> What I was trying to say is that none of this matters if we make these
+>>>> names opaque. If these names are contextual for the given system it
+>>>> doesn't matter what the exact capabilities are. It only matters that
+>>>> their purpose is known and that's what applications will be interested
+>>>> in.
+>>> If the names are opaque, and we don't publish what the exact
+>>> capabilities are, how can an application figure out which heap to use in
+>>> the first place?
+>> This would need to be based on conventions. The idea is to standardize
+>> on a set of names for specific, well-known use-cases.
+>>
+>>>>>> Would it perhaps make more sense to let a platform override the heap
+>>>>>> name to make it more easily identifiable? Maybe this is a naive
+>>>>>> assumption, but aren't userspace applications and drivers not primarily
+>>>>>> interested in the "type" of heap rather than whatever specific flags
+>>>>>> have been set for it?
+>>>>> I guess it depends on what you call the type of a heap. Where we
+>>>>> allocate the memory from, sure, an application won't care about that.
+>>>>> How the buffer behaves on the other end is definitely something
+>>>>> applications are going to be interested in though.
+>>>> Most of these heaps will be very specific, I would assume.
+>>> We don't have any specific heap upstream at the moment, only generic
+>>> ones.
+>> But we're trying to add more specific ones, right?
+>>
+>>>> For example a heap that is meant to be protected for protected video
+>>>> decoding is both going to be created in such a way as to allow that
+>>>> use-case (i.e. it doesn't make sense for it to be uncached, for
+>>>> example) and it's also not going to be useful for any other use-case
+>>>> (i.e. there's no reason to use that heap for GPU jobs or networking,
+>>>> or whatever).
+>>> Right. But also, libcamera has started to use dma-heaps to allocate
+>>> dma-capable buffers and do software processing on it before sending it
+>>> to some hardware controller.
 >>>
->>> Add driver support for the onboard MCU of SG2042.
->>>
->>> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
->>> ---
->>>    Documentation/hwmon/index.rst |   1 +
->>>    Documentation/hwmon/sgmcu.rst |  44 +++
->>>    drivers/hwmon/Kconfig         |  11 +
->>>    drivers/hwmon/Makefile        |   1 +
->>>    drivers/hwmon/sgmcu.c         | 585 ++++++++++++++++++++++++++++++++++
->>>    5 files changed, 642 insertions(+)
->>>    create mode 100644 Documentation/hwmon/sgmcu.rst
->>>    create mode 100644 drivers/hwmon/sgmcu.c
->>>
->>> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
->>> index 03d313af469a..189626b3a055 100644
->>> --- a/Documentation/hwmon/index.rst
->>> +++ b/Documentation/hwmon/index.rst
->>> @@ -203,6 +203,7 @@ Hardware Monitoring Kernel Drivers
->>>       sch5636
->>>       scpi-hwmon
->>>       sfctemp
->>> +   sgmcu
->> This driver is for sg2042 only, right? "sgmcu" looks be general for all
->> sophgo products.
-> Yes, according to sophgo, it use this mechanism for multiple products,
-> so I switch to a general name.
+>>> Caches are critical here, and getting a non-cacheable buffer would be
+>>> a clear regression.
+>> I understand that. My point is that maybe we shouldn't try to design a
+>> complex mechanism that allows full discoverability of everything that a
+>> heap supports or is capable of. Instead if the camera has specific
+>> requirements, it could look for a heap named "camera". Or if it can
+>> share a heap with other multimedia devices, maybe call the heap
+>> "multimedia".
+>>
+>> The idea is that heaps for these use-cases are quite specific, so you
+>> would likely not find an arbitrary number of processes try to use the
+>> same heap.
+> Yeah the idea to sort this out was to have symlinks in sysfs from the
+> device to each heap. We could then have priorities for each such link, so
+> that applications can pick the "best" heap that will work with all
+> devices. Or also special links for special use-cases, like for a
+> display+render drm device you might want to have separate links for the
+> display and the render-only use-case.
+>
+> I think trying to encode this all into the name of a heap without linking
+> it to the device is not going to work well in general.
+>
+> We still have that entire "make sysfs symlinks work for dma-buf heaps" on
+> our todos, and that idea is almost as old as dma-buf itself :-/
 
-But multiple != ALL.
+I still have the draft patches for that lying around on my harddisk 
+somewhere with zero time to look into it.
 
-[......]
+If anybody wants to pick it up feel free to ping me, but be aware that 
+you need to write more documentation than code.
 
+Regards,
+Christian.
+
+> -Sima
 
