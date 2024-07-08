@@ -1,60 +1,60 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA55713B783
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC9C81729
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720441398; cv=none; b=FKn4Wcmif2gG5UK3+VYCqMVlOA3b05CIM8Bm6J0f9KdOHH3rMboMn6Kxmrn6gXmdqGLEsoD6tkNAimLSA6Dy5FTYgr00uReQ0KQfN2nq5Tei9iDvNoLbeFVHeaCYXrlZYAL0i4redEhTnDlb2QileKwBqv5yDrClzWupvJ4g5tI=
+	t=1720441406; cv=none; b=A5h/MCVNXG9bMM9wHtMzDTbg/+5sfsyWf5Rc+7tMf1l75N7+/pUQ1jsbg+Nbwymeu0tGTRErr2AvdhAH+M3a2xTLGr7go6QWUnTPVP45fTdf5xXrE+4lV/umQq9ehk1U3Tsd49khP2tRMN+Bnq4WPYiQbsGfKoC9Z5tMy4yFRps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720441398; c=relaxed/simple;
-	bh=4GFe15MMplZISD2mRKRIGTrlhVdPcnPi6hg96zSRZoE=;
+	s=arc-20240116; t=1720441406; c=relaxed/simple;
+	bh=U5O4I1BycNTZgBsVof/ETOs7kY/AKAUuAG5BawDgWe4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p8JIe1SGeWVvVKQqDyQhQ5LfgbH3Tgf+WuI97BmxkWZSGhlcqhZOaC7OedZjPbB08BFVc9IUeuA9eA3hrSoaoB0B29SNGk07so+p8VQyhXe+2tebCbFsoQlplPIThrGzctvl83NwWiwQvRE0hZ59zJR+zzhSRw51nKXPQOquFJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VOjJDF8o; arc=none smtp.client-ip=209.85.218.53
+	 In-Reply-To:To:Cc; b=hCP3u69ERpEV69L4V4aA4ZI6TL7P70zu/+5JJF9BPWYItpXPY31CsFLqiwitat9glRTDDTBOBZ0TzG61gPPc/+eS/Zx3sJ4daVevJe9SOmRoAN7jOAYsrEYOr1frkdzVkQAv0OeOrNCn6WE/A+xc9qJMYaMjZY0veNNGTxTvMtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IAhC7/JH; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VOjJDF8o"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a77b60cafecso435854666b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 05:23:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IAhC7/JH"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2eea8ea8bb0so14702131fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 05:23:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720441395; x=1721046195; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1720441401; x=1721046201; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sMYtsmrWmpra2TO4Mu5yog2tiXr5havv6xPG/BMSews=;
-        b=VOjJDF8oVeWEqDMzQgH/Vm+Ou1vimSrehjCQKdV+j/LzzwGTDx9C2OJO6nhpQ17y4Z
-         6eRDmlFDp2zvS1gNdCgCpw8pr7j2DS1TL83NVUV4ySMFp7xssxnTpSt702v6QQ02rFoG
-         hN9LeoqL/h5fA9pwVc97zmrpCeSAC0a/ImK5Y3YFiBZ3gfWUdI/pLRL3qhC3DPCfuFRq
-         m+rylCxwV7Obciki2FhiuyNaT92s3eZo8aEOxesK/R4xcmcBQ7q0mxosZkBHn0WIgl64
-         HOMJLSjQa9a7jKNNN7tjbO9DMRgdTQMyaOLSJ9V4WBEGE9frx/YroCfKDRxBnpotTUSm
-         2xnQ==
+        bh=PjDUABUK3xx+ytWh0W8WQWs64uvDq8uBEyIiDbivdvU=;
+        b=IAhC7/JHAr/inh1sdYS6/PbnifAxQg8A9fOJDTVV1HPo8MdamuYws/w8e/ubsqSOHj
+         Fc6Q18tka3c5E+t9Dh/zU6uH2fgZWJmMfYuTyUk5IpqG/7EUeOSe9K9D7VHN4nKu4bpl
+         wQMBzcZpFB8hV/No0tRGXCJYAFjj457HL6lzAM1LtBYKv/rtN/J8kMhtgtr1PzBQ1hFP
+         +RngQjTlxKqCTMzKZZtMKfI8RwY5+3AjzT05zevgeL6v9SuNlLEJVaTuxHIzcWG0bLKv
+         h5sU1X+4CEhVQXW5/xcGx/KfSdNRjZiqHoNli7DneML87gJI20xwBZ8WLmnynfYHjPBs
+         +oxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720441395; x=1721046195;
+        d=1e100.net; s=20230601; t=1720441401; x=1721046201;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sMYtsmrWmpra2TO4Mu5yog2tiXr5havv6xPG/BMSews=;
-        b=YdYZH/Kb/fx/qBmjay4zabSOjfe9JqPnxxvgTAenTGnPCxB9n3ykTOtO0NGjeKoF8E
-         M8+DB7Wy33vdAY6nL0xC/+GiIxWpHVZZryN7rYsiVMwbI1mqOmc7qzx8wzaYnvpvbEK3
-         5WuYzDZBRbVoJZcCUap2DiWPwMavTUxgCXY/mWoT9xjZ/LzJvteawUBkkPrBGcz3pogZ
-         r9H/rbgVarz99uninXyRkdzFmU0km7mMLlrZi8NG78oleUThkF5hmXkgoAUJJhhBNlaI
-         tTCj9JkPWVanvFQMc7ZHDSpi/aeEfvIcijkVNkixUYmNwmwbsgRM47QFWK0pbnkKSFg6
-         j5Gw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7/8qU+BB00CkhgDLd+xecs8xmR/6qA6Rwc61LBXm22vQdGyGGtPMK3URSqfOPRgcVFF2lhzrkDvprEIWQuY0T4Zb57DjkJCGsdbDg
-X-Gm-Message-State: AOJu0Yz0PZitW+JkOhJPzDeu8IE0d5TOGVXwxmQO9d+qAqAM8Lzyt2hB
-	R8i12ZzVosQHBCjR+yswWMZ/eCQjoFqO2Utgx+gqfFyNWxJhKaH1sy+j3589ymY=
-X-Google-Smtp-Source: AGHT+IEQaZ79JDmlucwfNuLT9gh+vSxm1knKqmZGZ2z3D+cWhJoBD0Auw9q3oQRpPHMtRiPG371X4A==
-X-Received: by 2002:a17:907:3f8b:b0:a72:8fc7:ef7f with SMTP id a640c23a62f3a-a77ba72c6camr845528366b.65.1720441395134;
-        Mon, 08 Jul 2024 05:23:15 -0700 (PDT)
+        bh=PjDUABUK3xx+ytWh0W8WQWs64uvDq8uBEyIiDbivdvU=;
+        b=ku4EVV7Z6s+FXfmVZ5BuICvfXj1X3V75NKZ873JUuPwJG/L9SvLFopHCwV1V9g6co6
+         FUw/vbC/2CPMexj86q3e60sv5tVqWj0B7DCzeD/CVh1NeOQTjxncqAdhZYAK8XR7uzQZ
+         xy5vPb7GHoneCwFPOw8qOay42Zsf75mBmQXBm19NGrtaWV1hOgMyzsITlhkyZrCeKeJN
+         qo41fdj8dizaClOjfxzlLxPUzt84rf0Y27/iQaBk5cc7s0Mr8huS0znbkoZNe3j9UIf+
+         Cerc8Rz1Mq0wWuG0r6rZATJZTEs4aUZMdXMVFixAi0ubzDI5Zrj+TT3qAMsyAY1ohDUH
+         c3jA==
+X-Forwarded-Encrypted: i=1; AJvYcCWLCvDYuYRIB62ZmGxZQqRzEQuvAFCd5aheCEs3JXScSGs7OmgQ05TxeM/zhsFI8YLaJ1tb+8mqgobJZU+0bPMw4zaT1XGJpH1/K38y
+X-Gm-Message-State: AOJu0YzZRmBReVihzZ+ACRlrrPkr7/Jz5GbXg3S1aOa+TJ8Ffh7leVqr
+	YvYO6A9ptBgMRUQrAY9lJ7TatVt/OeJGGRCkp4HTD5MWW2BRAfKUlJVMO7dblWs=
+X-Google-Smtp-Source: AGHT+IF6aJUScrnUHLCSNDQgFomku9MLgY24W6AhtGmQFuzrXH91AuQAefQTBlXfrNEwpU80dUhwZQ==
+X-Received: by 2002:ac2:4ed0:0:b0:52e:9904:71e with SMTP id 2adb3069b0e04-52ea062ac85mr9529332e87.28.1720441400257;
+        Mon, 08 Jul 2024 05:23:20 -0700 (PDT)
 Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77e52ccf19sm208983666b.147.2024.07.08.05.23.13
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77e52ccf19sm208983666b.147.2024.07.08.05.23.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 05:23:14 -0700 (PDT)
+        Mon, 08 Jul 2024 05:23:19 -0700 (PDT)
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Mon, 08 Jul 2024 14:22:39 +0200
-Subject: [PATCH v15 08/10] soc: qcom: cpr-common: Add threads support
+Date: Mon, 08 Jul 2024 14:22:41 +0200
+Subject: [PATCH v15 10/10] arm64: dts: qcom: msm8998: Configure CPRh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240708-topic-cpr3h-v15-8-5bc8b8936489@linaro.org>
+Message-Id: <20240708-topic-cpr3h-v15-10-5bc8b8936489@linaro.org>
 References: <20240708-topic-cpr3h-v15-0-5bc8b8936489@linaro.org>
 In-Reply-To: <20240708-topic-cpr3h-v15-0-5bc8b8936489@linaro.org>
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
@@ -86,187 +86,868 @@ Cc: Robert Marko <robimarko@gmail.com>, linux-kernel@vger.kernel.org,
  Konrad Dybcio <konrad.dybcio@linaro.org>, 
  AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720441372; l=6371;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720441372; l=20951;
  i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=R3yGeSgRjC51yaphFTSAoby0H8mBl+gtp/QxV8bmOsY=;
- b=A+jP0/5BMkKY8RDg2GPX0zR6ICkcO7W5/MFwC85A3taeme0Zan2dFEccMJ5Rgq34Z0gvSgB97
- yskZLO8DsIYDqdAdHHr6Cjg8RvSAYuDic9iRvbtFnokuEX7fwwYsBAn
+ bh=5x045ydwpU33EuZqCL8pyoFFUMu40vCZUOwz6198gVg=;
+ b=kkazzRzQyJWRsKW5GK0NpfpbvemhnkGDteMxIazt4gVJGx/j2BXubtAK5oH9dwU+T2gFE/j/7
+ 8XVDWurZAznAn2mvzcOdl8XxUokmQElOtinAuAMkfXJwIRjJOa4EwR+
 X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
 
-Add support for parsing per-CPR-thread data in preparation for introducing
-CPR3+ support.
+Now that the CPR v3/v4/Hardened is ready, enable it on MSM8998.
+
+[Konrad: separate from adding cpufreq, sort nodes, use lowercase hex,
+ update for driver changes]
 
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
-[Konrad: separate this patch out of a bigger one]
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- drivers/pmdomain/qcom/cpr-common.c | 42 +++++++++++++++++++++++---------------
- drivers/pmdomain/qcom/cpr-common.h |  8 ++++++--
- drivers/pmdomain/qcom/cpr.c        |  4 ++--
- 3 files changed, 33 insertions(+), 21 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 760 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 760 insertions(+)
 
-diff --git a/drivers/pmdomain/qcom/cpr-common.c b/drivers/pmdomain/qcom/cpr-common.c
-index 3e3a4a61cfde..9001dccd4d95 100644
---- a/drivers/pmdomain/qcom/cpr-common.c
-+++ b/drivers/pmdomain/qcom/cpr-common.c
-@@ -73,35 +73,42 @@ static int cpr_read_fuse_uV(int init_v_width, int step_size_uV, int ref_uV,
- 	return DIV_ROUND_UP(uV, step_volt) * step_volt;
- }
- 
--const struct cpr_fuse *cpr_get_fuses(struct device *dev,
-+const struct cpr_fuse *cpr_get_fuses(struct device *dev, int tid,
- 				     unsigned int num_fuse_corners)
- {
- 	struct cpr_fuse *fuses;
--	int i;
-+	char cpr_name[11]; /* length of "cpr" + length of UINT_MAX (7) + \0 */
-+	unsigned int i;
- 
- 	fuses = devm_kcalloc(dev, num_fuse_corners, sizeof(*fuses), GFP_KERNEL);
- 	if (!fuses)
- 		return ERR_PTR(-ENOMEM);
- 
-+	/* Support legacy bindings */
-+	if (tid == UINT_MAX)
-+		snprintf(cpr_name, sizeof(cpr_name), "cpr");
-+	else
-+		snprintf(cpr_name, sizeof(cpr_name), "cpr%d", tid);
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 3c94d823a514..f966d37ac0d5 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -144,6 +144,10 @@ CPU0: cpu@0 {
+ 			capacity-dmips-mhz = <1024>;
+ 			cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+ 			next-level-cache = <&L2_0>;
++			operating-points-v2 = <&cpu0_opp_table>;
++			power-domains = <&apc_cprh 0>;
++			power-domain-names = "perf";
 +
- 	for (i = 0; i < num_fuse_corners; i++) {
--		char tbuf[32];
-+		char tbuf[50];
+ 			L2_0: l2-cache {
+ 				compatible = "cache";
+ 				cache-level = <2>;
+@@ -159,6 +163,9 @@ CPU1: cpu@1 {
+ 			capacity-dmips-mhz = <1024>;
+ 			cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+ 			next-level-cache = <&L2_0>;
++			operating-points-v2 = <&cpu0_opp_table>;
++			power-domains = <&apc_cprh 0>;
++			power-domain-names = "perf";
+ 		};
  
--		snprintf(tbuf, 32, "cpr_ring_osc%d", i + 1);
-+		snprintf(tbuf, sizeof(tbuf), "%s_ring_osc%d", cpr_name, i + 1);
- 		fuses[i].ring_osc = devm_kstrdup(dev, tbuf, GFP_KERNEL);
- 		if (!fuses[i].ring_osc)
- 			return ERR_PTR(-ENOMEM);
+ 		CPU2: cpu@2 {
+@@ -169,6 +176,9 @@ CPU2: cpu@2 {
+ 			capacity-dmips-mhz = <1024>;
+ 			cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+ 			next-level-cache = <&L2_0>;
++			operating-points-v2 = <&cpu0_opp_table>;
++			power-domains = <&apc_cprh 0>;
++			power-domain-names = "perf";
+ 		};
  
--		snprintf(tbuf, 32, "cpr_init_voltage%d", i + 1);
-+		snprintf(tbuf, sizeof(tbuf), "%s_init_voltage%d", cpr_name, i + 1);
- 		fuses[i].init_voltage = devm_kstrdup(dev, tbuf, GFP_KERNEL);
- 		if (!fuses[i].init_voltage)
- 			return ERR_PTR(-ENOMEM);
+ 		CPU3: cpu@3 {
+@@ -179,6 +189,9 @@ CPU3: cpu@3 {
+ 			capacity-dmips-mhz = <1024>;
+ 			cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+ 			next-level-cache = <&L2_0>;
++			operating-points-v2 = <&cpu0_opp_table>;
++			power-domains = <&apc_cprh 0>;
++			power-domain-names = "perf";
+ 		};
  
--		snprintf(tbuf, 32, "cpr_quotient%d", i + 1);
-+		snprintf(tbuf, sizeof(tbuf), "%s_quotient%d", cpr_name, i + 1);
- 		fuses[i].quotient = devm_kstrdup(dev, tbuf, GFP_KERNEL);
- 		if (!fuses[i].quotient)
- 			return ERR_PTR(-ENOMEM);
+ 		CPU4: cpu@100 {
+@@ -189,6 +202,10 @@ CPU4: cpu@100 {
+ 			capacity-dmips-mhz = <1536>;
+ 			cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+ 			next-level-cache = <&L2_1>;
++			operating-points-v2 = <&cpu4_opp_table>;
++			power-domains = <&apc_cprh 1>;
++			power-domain-names = "perf";
++
+ 			L2_1: l2-cache {
+ 				compatible = "cache";
+ 				cache-level = <2>;
+@@ -204,6 +221,9 @@ CPU5: cpu@101 {
+ 			capacity-dmips-mhz = <1536>;
+ 			cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+ 			next-level-cache = <&L2_1>;
++			operating-points-v2 = <&cpu4_opp_table>;
++			power-domains = <&apc_cprh 1>;
++			power-domain-names = "perf";
+ 		};
  
--		snprintf(tbuf, 32, "cpr_quotient_offset%d", i + 1);
-+		snprintf(tbuf, sizeof(tbuf), "%s_quotient_offset%d", cpr_name, i + 1);
- 		fuses[i].quotient_offset = devm_kstrdup(dev, tbuf, GFP_KERNEL);
- 		if (!fuses[i].quotient_offset)
- 			return ERR_PTR(-ENOMEM);
-@@ -202,15 +209,15 @@ int cpr_find_initial_corner(struct device *dev, struct clk *cpu_clk,
- }
- EXPORT_SYMBOL_GPL(cpr_find_initial_corner);
+ 		CPU6: cpu@102 {
+@@ -214,6 +234,9 @@ CPU6: cpu@102 {
+ 			capacity-dmips-mhz = <1536>;
+ 			cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+ 			next-level-cache = <&L2_1>;
++			operating-points-v2 = <&cpu4_opp_table>;
++			power-domains = <&apc_cprh 1>;
++			power-domain-names = "perf";
+ 		};
  
--unsigned int cpr_get_fuse_corner(struct dev_pm_opp *opp)
-+unsigned int cpr_get_fuse_corner(struct dev_pm_opp *opp, u32 tid)
- {
- 	struct device_node *np;
- 	unsigned int fuse_corner = 0;
+ 		CPU7: cpu@103 {
+@@ -224,6 +247,9 @@ CPU7: cpu@103 {
+ 			capacity-dmips-mhz = <1536>;
+ 			cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+ 			next-level-cache = <&L2_1>;
++			operating-points-v2 = <&cpu4_opp_table>;
++			power-domains = <&apc_cprh 1>;
++			power-domain-names = "perf";
+ 		};
  
- 	np = dev_pm_opp_get_of_node(opp);
--	if (of_property_read_u32(np, "qcom,opp-fuse-level", &fuse_corner))
--		pr_err("%s: missing 'qcom,opp-fuse-level' property\n",
--		       __func__);
-+	if (of_property_read_u32_index(np, "qcom,opp-fuse-level", tid, &fuse_corner))
-+		pr_err("%s: missing 'qcom,opp-fuse-level[%u]' property\n",
-+		       __func__, tid);
+ 		cpu-map {
+@@ -317,6 +343,491 @@ scm {
+ 		};
+ 	};
  
- 	of_node_put(np);
++	cprh_opp_table: opp-table-cprh {
++		compatible = "operating-points-v2-qcom-level";
++		opp-shared;
++
++		cprh_opp1: opp-1 {
++			opp-level = <1>;
++			qcom,opp-fuse-level = <1 1>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp2: opp-2 {
++			opp-level = <2>;
++			qcom,opp-fuse-level = <1 1>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp3: opp-3 {
++			opp-level = <3>;
++			qcom,opp-fuse-level = <1 1>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp4: opp-4 {
++			opp-level = <4>;
++			qcom,opp-fuse-level = <1 1>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp5: opp-5 {
++			opp-level = <5>;
++			qcom,opp-fuse-level = <1 1>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp6: opp-6 {
++			opp-level = <6>;
++			qcom,opp-fuse-level = <1 1>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp7: opp-7 {
++			opp-level = <7>;
++			qcom,opp-fuse-level = <1 1>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp8: opp-8 {
++			opp-level = <8>;
++			qcom,opp-fuse-level = <1 1>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp9: opp-9 {
++			opp-level = <9>;
++			qcom,opp-fuse-level = <2 2>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp10: opp-10 {
++			opp-level = <10>;
++			qcom,opp-fuse-level = <2 2>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp11: opp-11 {
++			opp-level = <11>;
++			qcom,opp-fuse-level = <2 2>;
++			qcom,opp-cloop-vadj = <0 0>;
++			qcom,opp-oloop-vadj = <0 0>;
++		};
++
++		cprh_opp12: opp-12 {
++			opp-level = <12>;
++			qcom,opp-fuse-level = <3 2>;
++			qcom,opp-cloop-vadj = <(-10000) (-10000)>;
++			qcom,opp-oloop-vadj = <(-12000) (-8000)>;
++		};
++
++		cprh_opp13: opp-13 {
++			opp-level = <13>;
++			qcom,opp-fuse-level = <3 3>;
++			qcom,opp-cloop-vadj = <(-11000) (-10000)>;
++			qcom,opp-oloop-vadj = <(-16000) (-16000)>;
++		};
++
++		cprh_opp14: opp-14 {
++			opp-level = <14>;
++			qcom,opp-fuse-level = <3 3>;
++			qcom,opp-cloop-vadj = <(-12000) (-11000)>;
++			qcom,opp-oloop-vadj = <(-16000) (-12000)>;
++		};
++
++		cprh_opp15: opp-15 {
++			opp-level = <15>;
++			qcom,opp-fuse-level = <3 3>;
++			qcom,opp-cloop-vadj = <(-13000) (-12000)>;
++			qcom,opp-oloop-vadj = <(-12000) (-16000)>;
++		};
++
++		cprh_opp16: opp-16 {
++			opp-level = <16>;
++			qcom,opp-fuse-level = <3 3>;
++			qcom,opp-cloop-vadj = <(-14000) (-12000)>;
++			qcom,opp-oloop-vadj = <(-12000) (-16000)>;
++		};
++
++		cprh_opp17: opp-17 {
++			opp-level = <17>;
++			qcom,opp-fuse-level = <3 3>;
++			qcom,opp-cloop-vadj = <(-14000) (-13000)>;
++			qcom,opp-oloop-vadj = <(-16000) (-12000)>;
++		};
++
++		cprh_opp18: opp-18 {
++			opp-level = <18>;
++			qcom,opp-fuse-level = <3 3>;
++			qcom,opp-cloop-vadj = <(-15000) (-14000)>;
++			qcom,opp-oloop-vadj = <(-16000) (-16000)>;
++		};
++
++		cprh_opp19: opp-19 {
++			opp-level = <19>;
++			qcom,opp-fuse-level = <4 3>;
++			qcom,opp-cloop-vadj = <(-21000) (-14000)>;
++			qcom,opp-oloop-vadj = <(-20000) (-16000)>;
++		};
++
++		cprh_opp20: opp-20 {
++			opp-level = <20>;
++			qcom,opp-fuse-level = <4 3>;
++			qcom,opp-cloop-vadj = <(-24000) (-15000)>;
++			qcom,opp-oloop-vadj = <(-24000) (-16000)>;
++		};
++
++		cprh_opp21: opp-21 {
++			opp-level = <21>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <(-26000) (-16000)>;
++			qcom,opp-oloop-vadj = <(-28000) (-24000)>;
++		};
++
++		cprh_opp22: opp-22 {
++			opp-level = <22>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <(-28000) (-16000)>;
++			qcom,opp-oloop-vadj = <(-28000) (-16000)>;
++		};
++
++		cprh_opp23: opp-23 {
++			opp-level = <23>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <0 (-17000)>;
++			qcom,opp-oloop-vadj = <0 (-20000)>;
++		};
++
++		cprh_opp24: opp-24 {
++			opp-level = <24>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <0 (-15000)>;
++			qcom,opp-oloop-vadj = <0 (-16000)>;
++		};
++
++		cprh_opp25: opp-25 {
++			opp-level = <25>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <0 (-14000)>;
++			qcom,opp-oloop-vadj = <0 (-12000)>;
++		};
++
++		cprh_opp26: opp-26 {
++			opp-level = <26>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <0 (-27000)>;
++			qcom,opp-oloop-vadj = <0 (-28000)>;
++		};
++
++		cprh_opp27: opp-27 {
++			opp-level = <27>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <0 (-27000)>;
++			qcom,opp-oloop-vadj = <0 (-28000)>;
++		};
++
++		cprh_opp28: opp-28 {
++			opp-level = <28>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <0 (-28000)>;
++			qcom,opp-oloop-vadj = <0 (-28000)>;
++		};
++
++		cprh_opp29: opp-29 {
++			opp-level = <29>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <0 (-28000)>;
++			qcom,opp-oloop-vadj = <0 (-28000)>;
++		};
++
++		cprh_opp30: opp-30 {
++			opp-level = <30>;
++			qcom,opp-fuse-level = <4 4>;
++			qcom,opp-cloop-vadj = <0 (-28000)>;
++			qcom,opp-oloop-vadj = <0 (-28000)>;
++		};
++	};
++
++	cpu0_opp_table: opp-table-cpu0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-1900800000 {
++			opp-hz = /bits/ 64 <1900800000>;
++			required-opps = <&cprh_opp22>;
++		};
++
++		opp-1824000000 {
++			opp-hz = /bits/ 64 <1824000000>;
++			required-opps = <&cprh_opp21>;
++		};
++
++		opp-1747200000 {
++			opp-hz = /bits/ 64 <1747200000>;
++			required-opps = <&cprh_opp20>;
++		};
++
++		opp-1670400000 {
++			opp-hz = /bits/ 64 <1670400000>;
++			required-opps = <&cprh_opp19>;
++		};
++
++		opp-1555200000 {
++			opp-hz = /bits/ 64 <1555200000>;
++			required-opps = <&cprh_opp18>;
++		};
++
++		opp-1478400000 {
++			opp-hz = /bits/ 64 <1478400000>;
++			required-opps = <&cprh_opp17>;
++		};
++
++		opp-1401600000 {
++			opp-hz = /bits/ 64 <1401600000>;
++			required-opps = <&cprh_opp16>;
++		};
++
++		opp-1324800000 {
++			opp-hz = /bits/ 64 <1324800000>;
++			required-opps = <&cprh_opp15>;
++		};
++
++		opp-1248000000 {
++			opp-hz = /bits/ 64 <1248000000>;
++			required-opps = <&cprh_opp14>;
++		};
++
++		opp-1171200000 {
++			opp-hz = /bits/ 64 <1171200000>;
++			required-opps = <&cprh_opp13>;
++		};
++
++		opp-1094400000 {
++			opp-hz = /bits/ 64 <1094400000>;
++			required-opps = <&cprh_opp12>;
++		};
++
++		opp-1036800000 {
++			opp-hz = /bits/ 64 <1036800000>;
++			required-opps = <&cprh_opp11>;
++		};
++
++		opp-960000000 {
++			opp-hz = /bits/ 64 <960000000>;
++			required-opps = <&cprh_opp10>;
++		};
++
++		opp-883200000 {
++			opp-hz = /bits/ 64 <883200000>;
++			required-opps = <&cprh_opp9>;
++		};
++
++		opp-825600000 {
++			opp-hz = /bits/ 64 <825600000>;
++			required-opps = <&cprh_opp8>;
++		};
++
++		opp-748800000 {
++			opp-hz = /bits/ 64 <748800000>;
++			required-opps = <&cprh_opp7>;
++		};
++
++		opp-672000000 {
++			opp-hz = /bits/ 64 <672000000>;
++			required-opps = <&cprh_opp6>;
++		};
++
++		opp-595200000 {
++			opp-hz = /bits/ 64 <595200000>;
++			required-opps = <&cprh_opp5>;
++		};
++
++		opp-518400000 {
++			opp-hz = /bits/ 64 <518400000>;
++			required-opps = <&cprh_opp4>;
++		};
++
++		opp-441600000 {
++			opp-hz = /bits/ 64 <441600000>;
++			required-opps = <&cprh_opp3>;
++		};
++
++		opp-364800000 {
++			opp-hz = /bits/ 64 <364800000>;
++			required-opps = <&cprh_opp2>;
++		};
++
++		opp-300000000 {
++			opp-hz = /bits/ 64 <300000000>;
++			required-opps = <&cprh_opp1>;
++		};
++	};
++
++	cpu4_opp_table: opp-table-cpu4 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-2361600000 {
++			opp-hz = /bits/ 64 <2361600000>;
++			required-opps = <&cprh_opp30>;
++		};
++
++		opp-2342400000 {
++			opp-hz = /bits/ 64 <2342400000>;
++			required-opps = <&cprh_opp29>;
++		};
++
++		opp-2323200000 {
++			opp-hz = /bits/ 64 <2323200000>;
++			required-opps = <&cprh_opp28>;
++		};
++
++		opp-2265600000 {
++			opp-hz = /bits/ 64 <2265600000>;
++			required-opps = <&cprh_opp27>;
++		};
++
++		opp-2208000000 {
++			opp-hz = /bits/ 64 <2208000000>;
++			required-opps = <&cprh_opp26>;
++		};
++
++		opp-2112000000 {
++			opp-hz = /bits/ 64 <2112000000>;
++			required-opps = <&cprh_opp25>;
++		};
++
++		opp-2035200000 {
++			opp-hz = /bits/ 64 <2035200000>;
++			required-opps = <&cprh_opp24>;
++		};
++
++		opp-1958400000 {
++			opp-hz = /bits/ 64 <1958400000>;
++			required-opps = <&cprh_opp23>;
++		};
++
++		opp-1881600000 {
++			opp-hz = /bits/ 64 <1881600000>;
++			required-opps = <&cprh_opp22>;
++		};
++
++		opp-1804800000 {
++			opp-hz = /bits/ 64 <1804800000>;
++			required-opps = <&cprh_opp21>;
++		};
++
++		opp-1728000000 {
++			opp-hz = /bits/ 64 <1728000000>;
++			required-opps = <&cprh_opp20>;
++		};
++
++		opp-1651200000 {
++			opp-hz = /bits/ 64 <1651200000>;
++			required-opps = <&cprh_opp19>;
++		};
++
++		opp-1574400000 {
++			opp-hz = /bits/ 64 <1574400000>;
++			required-opps = <&cprh_opp18>;
++		};
++
++		opp-1497600000 {
++			opp-hz = /bits/ 64 <1497600000>;
++			required-opps = <&cprh_opp17>;
++		};
++
++		opp-1420800000 {
++			opp-hz = /bits/ 64 <1420800000>;
++			required-opps = <&cprh_opp16>;
++		};
++
++		opp-1344000000 {
++			opp-hz = /bits/ 64 <1344000000>;
++			required-opps = <&cprh_opp15>;
++		};
++
++		opp-1267200000 {
++			opp-hz = /bits/ 64 <1267200000>;
++			required-opps = <&cprh_opp14>;
++		};
++
++		opp-1190400000 {
++			opp-hz = /bits/ 64 <1190400000>;
++			required-opps = <&cprh_opp13>;
++		};
++
++		opp-1132800000 {
++			opp-hz = /bits/ 64 <1132800000>;
++			required-opps = <&cprh_opp12>;
++		};
++
++		opp-1056000000 {
++			opp-hz = /bits/ 64 <1056000000>;
++			required-opps = <&cprh_opp11>;
++		};
++
++		opp-979200000 {
++			opp-hz = /bits/ 64 <979200000>;
++			required-opps = <&cprh_opp10>;
++		};
++
++		opp-902400000 {
++			opp-hz = /bits/ 64 <902400000>;
++			required-opps = <&cprh_opp9>;
++		};
++
++		opp-806400000 {
++			opp-hz = /bits/ 64 <806400000>;
++			required-opps = <&cprh_opp8>;
++		};
++
++		opp-729600000 {
++			opp-hz = /bits/ 64 <729600000>;
++			required-opps = <&cprh_opp7>;
++		};
++
++		opp-652800000 {
++			opp-hz = /bits/ 64 <652800000>;
++			required-opps = <&cprh_opp6>;
++		};
++
++		opp-576000000 {
++			opp-hz = /bits/ 64 <576000000>;
++			required-opps = <&cprh_opp5>;
++		};
++
++		opp-499200000 {
++			opp-hz = /bits/ 64 <499200000>;
++			required-opps = <&cprh_opp4>;
++		};
++
++		opp-422400000 {
++			opp-hz = /bits/ 64 <422400000>;
++			required-opps = <&cprh_opp3>;
++		};
++
++		opp-345600000 {
++			opp-hz = /bits/ 64 <345600000>;
++			required-opps = <&cprh_opp2>;
++		};
++
++		opp-300000000 {
++			opp-hz = /bits/ 64 <300000000>;
++			required-opps = <&cprh_opp1>;
++		};
++	};
++
+ 	dsi_opp_table: opp-table-dsi {
+ 		compatible = "operating-points-v2";
  
-@@ -235,15 +242,16 @@ u64 cpr_get_opp_hz_for_req(struct dev_pm_opp *ref,
- 	if (!ref_np)
- 		goto out_ref;
+@@ -852,6 +1363,174 @@ qfprom: qfprom@784000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
  
--	do {
--		of_node_put(child_req_np);
--		child_np = of_get_next_available_child(desc_np, child_np);
-+	for_each_available_child_of_node(desc_np, child_np) {
- 		child_req_np = of_parse_phandle(child_np, "required-opps", 0);
--	} while (child_np && child_req_np != ref_np);
++			cpr_efuse_speedbin: speedbin@133 {
++				reg = <0x133 0x8>;
++				bits = <5 3>;
++			};
++
++			cpr_fuse_revision: cpr-fusing-rev@13e {
++				reg = <0x13e 0x1>;
++				bits = <3 3>;
++			};
++
++			/* CPR Ring Oscillator: Power Cluster */
++			cpr_ro_sel3_pwrcl: rosel3-pwrcl@218 {
++				reg = <0x218 0x1>;
++				bits = <0 4>;
++			};
++
++			cpr_ro_sel2_pwrcl: rosel2-pwrcl@218 {
++				reg = <0x218 0x1>;
++				bits = <4 4>;
++			};
++
++			cpr_ro_sel1_pwrcl: rosel1-pwrcl@219 {
++				reg = <0x219 0x1>;
++				bits = <0 4>;
++			};
++
++			cpr_ro_sel0_pwrcl: rosel0-pwrcl@219 {
++				reg = <0x219 0x1>;
++				bits = <4 4>;
++			};
++
++			/* CPR Init Voltage: Power Cluster */
++			cpr_init_voltage3_pwrcl: ivolt3-pwrcl@21a {
++				reg = <0x21a 0x1>;
++				bits = <0 6>;
++			};
++
++			cpr_init_voltage2_pwrcl: ivolt2-pwrcl@21a {
++				reg = <0x21a 0x2>;
++				bits = <6 6>;
++			};
++
++			cpr_init_voltage1_pwrcl: ivolt1-pwrcl@21b {
++				reg = <0x21b 0x2>;
++				bits = <4 6>;
++			};
++
++			cpr_init_voltage0_pwrcl: ivolt0-pwrcl@21c {
++				reg = <0x21c 0x1>;
++				bits = <2 6>;
++			};
++
++			/* CPR Target Quotients: Power Cluster */
++			cpr_quot3_pwrcl: quot3-pwrcl@21d {
++				reg = <0x21d 0x3>;
++				bits = <6 12>;
++			};
++
++			cpr_quot2_pwrcl: quot2-pwrcl@21f {
++				reg = <0x21f 0x2>;
++				bits = <2 11>;
++			};
++
++			cpr_quot1_pwrcl: quot1-pwrcl@220 {
++				reg = <0x220 0x3>;
++				bits = <6 12>;
++			};
++
++			cpr_quot0_pwrcl: quot0-pwrcl@222 {
++				reg = <0x222 0x2>;
++				bits = <2 12>;
++			};
++
++			/* CPR Quotient Offsets: Power Cluster */
++			cpr_quot_offset3_pwrcl: qoff3-pwrcl@226 {
++				reg = <0x226 0x1>;
++				bits = <1 7>;
++			};
++
++			cpr_quot_offset2_pwrcl: qoff2-pwrcl@227 {
++				reg = <0x227 0x1>;
++				bits = <0 7>;
++			};
++
++			cpr_quot_offset1_pwrcl: qoff1-pwrcl@227 {
++				reg = <0x227 0x2>;
++				bits = <7 6>;
++			};
++
++			/* CPR Ring Oscillator: Performance Cluster */
++			cpr_ro_sel3_perfcl: rosel3-perfcl@229 {
++				reg = <0x229 0x2>;
++				bits = <6 4>;
++			};
++
++			cpr_ro_sel2_perfcl: rosel2-perfcl@22a {
++				reg = <0x22a 0x1>;
++				bits = <2 4>;
++			};
++
++			cpr_ro_sel1_perfcl: rosel1-perfcl@22a {
++				reg = <0x22a 0x2>;
++				bits = <6 4>;
++			};
++
++			cpr_ro_sel0_perfcl: rosel0-perfcl@22b {
++				reg = <0x22b 0x1>;
++				bits = <2 4>;
++			};
++
++			/* CPR Init Voltage: Performance Cluster */
++			cpr_init_voltage3_perfcl: ivolt3-perfcl@22b {
++				reg = <0x22b 0x2>;
++				bits = <6 6>;
++			};
++
++			cpr_init_voltage2_perfcl: ivolt2-perfcl@22c {
++				reg = <0x22c 0x2>;
++				bits = <4 6>;
++			};
++
++			cpr_init_voltage1_perfcl: ivolt1-perfcl@22d {
++				reg = <0x22d 0x1>;
++				bits = <2 6>;
++			};
++
++			cpr_init_voltage0_perfcl: ivolt0-perfcl@22e {
++				reg = <0x22e 0x1>;
++				bits = <0 6>;
++			};
++
++			/* CPR Target Quotients: Performance Cluster */
++			cpr_quot3_perfcl: quot3-perfcl@22f {
++				reg = <0x22f 0x2>;
++				bits = <4 11>;
++			};
++
++			cpr_quot2_perfcl: quot2-perfcl@231 {
++				reg = <0x231 0x2>;
++				bits = <0 12>;
++			};
++
++			cpr_quot1_perfcl: quot1-perfcl@232 {
++				reg = <0x232 0x2>;
++				bits = <4 12>;
++			};
++
++			cpr_quot0_perfcl: quot0-perfcl@234 {
++				reg = <0x234 0x2>;
++				bits = <0 12>;
++			};
++
++			/* CPR Quotient Offsets: Performance Cluster */
++			cpr_quot_offset3_perfcl: qoff3-perfcl@237 {
++				reg = <0x237 0x2>;
++				bits = <7 6>;
++			};
++
++			cpr_quot_offset2_perfcl: qoff2-perfcl@238 {
++				reg = <0x238 0x2>;
++				bits = <6 7>;
++			};
++
++			cpr_quot_offset1_perfcl: qoff1-perfcl@239 {
++				reg = <0x239 0x1>;
++				bits = <5 3>;
++			};
++
+ 			qusb2_hstx_trim: hstx-trim@23a {
+ 				reg = <0x23a 0x1>;
+ 				bits = <0 4>;
+@@ -3137,6 +3816,87 @@ frame@17928000 {
+ 			};
+ 		};
  
--	if (child_np && child_req_np == ref_np)
--		of_property_read_u64(child_np, "opp-hz", &rate);
-+		if (child_np && child_req_np == ref_np) {
-+			of_property_read_u64(child_np, "opp-hz", &rate);
-+			goto out;
-+		}
-+	}
- 
-+out:
- 	of_node_put(child_req_np);
- 	of_node_put(child_np);
- 	of_node_put(ref_np);
-diff --git a/drivers/pmdomain/qcom/cpr-common.h b/drivers/pmdomain/qcom/cpr-common.h
-index 1b2fa344eb09..2c5bb81ab713 100644
---- a/drivers/pmdomain/qcom/cpr-common.h
-+++ b/drivers/pmdomain/qcom/cpr-common.h
-@@ -22,6 +22,9 @@ struct fuse_corner_data {
- 	int ref_uV;
- 	int max_uV;
- 	int min_uV;
-+	int range_uV;
-+	/* fuse volt: closed/open loop */
-+	int volt_cloop_adjust;
- 	int volt_oloop_adjust;
- 	int max_volt_scale;
- 	int max_quot_scale;
-@@ -55,6 +58,7 @@ struct corner {
- 	u32 save_ctl;
- 	u32 save_irq;
- 	u64 freq;
-+	bool is_open_loop;
- 	struct fuse_corner *fuse_corner;
- };
- 
-@@ -81,7 +85,7 @@ int cpr_populate_ring_osc_idx(struct device *dev,
- 			      struct fuse_corner *fuse_corner,
- 			      const struct cpr_fuse *cpr_fuse,
- 			      int num_fuse_corners);
--const struct cpr_fuse *cpr_get_fuses(struct device *dev,
-+const struct cpr_fuse *cpr_get_fuses(struct device *dev, int tid,
- 				     unsigned int num_fuse_corners);
- int cpr_populate_fuse_common(struct device *dev,
- 			     struct fuse_corner_data *fdata,
-@@ -91,7 +95,7 @@ int cpr_populate_fuse_common(struct device *dev,
- 			     int init_v_step);
- int cpr_find_initial_corner(struct device *dev, struct clk *cpu_clk,
- 			    struct corner *corners, int num_corners);
--u32 cpr_get_fuse_corner(struct dev_pm_opp *opp);
-+u32 cpr_get_fuse_corner(struct dev_pm_opp *opp, u32 tid);
- u64 cpr_get_opp_hz_for_req(struct dev_pm_opp *ref, struct device *cpu_dev);
- int cpr_calculate_scaling(struct device *dev,
- 			  const char *quot_offset,
-diff --git a/drivers/pmdomain/qcom/cpr.c b/drivers/pmdomain/qcom/cpr.c
-index b2e6e6eaae73..25856cf721ae 100644
---- a/drivers/pmdomain/qcom/cpr.c
-+++ b/drivers/pmdomain/qcom/cpr.c
-@@ -851,7 +851,7 @@ static int cpr_corner_init(struct cpr_drv *drv)
- 		opp = dev_pm_opp_find_level_exact(&drv->pd.dev, level);
- 		if (IS_ERR(opp))
- 			return -EINVAL;
--		fc = cpr_get_fuse_corner(opp);
-+		fc = cpr_get_fuse_corner(opp, 0);
- 		if (!fc) {
- 			dev_pm_opp_put(opp);
- 			return -EINVAL;
-@@ -1319,7 +1319,7 @@ static int cpr_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	drv->cpr_fuses = cpr_get_fuses(drv->dev, desc->num_fuse_corners);
-+	drv->cpr_fuses = cpr_get_fuses(drv->dev, UINT_MAX, desc->num_fuse_corners);
- 	if (IS_ERR(drv->cpr_fuses))
- 		return PTR_ERR(drv->cpr_fuses);
- 
++		apc_cprh: power-controller@179c8000 {
++			compatible = "qcom,msm8998-cprh", "qcom,cprh";
++			reg = <0x179c8000 0x4000>,
++			      <0x179c4000 0x4000>;
++
++			clocks = <&gcc GCC_HMSS_RBCPR_CLK>;
++
++			/* Set the CPR clock here, it needs to match XO */
++			assigned-clocks = <&gcc GCC_HMSS_RBCPR_CLK>;
++			assigned-clock-rates = <19200000>;
++
++			operating-points-v2 = <&cprh_opp_table>;
++			power-domains = <&rpmpd MSM8998_VDDCX_AO>;
++			#power-domain-cells = <1>;
++
++			nvmem-cells = <&cpr_efuse_speedbin>,
++				      <&cpr_fuse_revision>,
++				      <&cpr_quot0_pwrcl>,
++				      <&cpr_quot1_pwrcl>,
++				      <&cpr_quot2_pwrcl>,
++				      <&cpr_quot3_pwrcl>,
++				      <&cpr_quot_offset1_pwrcl>,
++				      <&cpr_quot_offset2_pwrcl>,
++				      <&cpr_quot_offset3_pwrcl>,
++				      <&cpr_init_voltage0_pwrcl>,
++				      <&cpr_init_voltage1_pwrcl>,
++				      <&cpr_init_voltage2_pwrcl>,
++				      <&cpr_init_voltage3_pwrcl>,
++				      <&cpr_ro_sel0_pwrcl>,
++				      <&cpr_ro_sel1_pwrcl>,
++				      <&cpr_ro_sel2_pwrcl>,
++				      <&cpr_ro_sel3_pwrcl>,
++				      <&cpr_quot0_perfcl>,
++				      <&cpr_quot1_perfcl>,
++				      <&cpr_quot2_perfcl>,
++				      <&cpr_quot3_perfcl>,
++				      <&cpr_quot_offset1_perfcl>,
++				      <&cpr_quot_offset2_perfcl>,
++				      <&cpr_quot_offset3_perfcl>,
++				      <&cpr_init_voltage0_perfcl>,
++				      <&cpr_init_voltage1_perfcl>,
++				      <&cpr_init_voltage2_perfcl>,
++				      <&cpr_init_voltage3_perfcl>,
++				      <&cpr_ro_sel0_perfcl>,
++				      <&cpr_ro_sel1_perfcl>,
++				      <&cpr_ro_sel2_perfcl>,
++				      <&cpr_ro_sel3_perfcl>;
++			nvmem-cell-names = "cpr_speed_bin",
++					   "cpr_fuse_revision",
++					   "cpr0_quotient1",
++					   "cpr0_quotient2",
++					   "cpr0_quotient3",
++					   "cpr0_quotient4",
++					   "cpr0_quotient_offset2",
++					   "cpr0_quotient_offset3",
++					   "cpr0_quotient_offset4",
++					   "cpr0_init_voltage1",
++					   "cpr0_init_voltage2",
++					   "cpr0_init_voltage3",
++					   "cpr0_init_voltage4",
++					   "cpr0_ring_osc1",
++					   "cpr0_ring_osc2",
++					   "cpr0_ring_osc3",
++					   "cpr0_ring_osc4",
++					   "cpr1_quotient1",
++					   "cpr1_quotient2",
++					   "cpr1_quotient3",
++					   "cpr1_quotient4",
++					   "cpr1_quotient_offset2",
++					   "cpr1_quotient_offset3",
++					   "cpr1_quotient_offset4",
++					   "cpr1_init_voltage1",
++					   "cpr1_init_voltage2",
++					   "cpr1_init_voltage3",
++					   "cpr1_init_voltage4",
++					   "cpr1_ring_osc1",
++					   "cpr1_ring_osc2",
++					   "cpr1_ring_osc3",
++					   "cpr1_ring_osc4";
++		};
++
+ 		intc: interrupt-controller@17a00000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x17a00000 0x10000>,       /* GICD */
 
 -- 
 2.45.2
