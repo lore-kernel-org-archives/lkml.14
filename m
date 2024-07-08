@@ -1,220 +1,166 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14ED11CF9B
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 20:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB231BDD0
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 20:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720469080; cv=none; b=kWLPNOR1eBmHxY30FvQreXb6dTaV7oXR+ROE5/SKWLbv3KnCd+0bGlnd0rQFxGy/oqC1VjxFLH7wBsh42I1CZ87qj8+VdXXJzjId/ShIlG7/3XfqidXK2S/ynU12d8WxWCH9coM1FCgUXtQ+EE1GlM/VtmGQjC94NuQT13TbL2c=
+	t=1720469164; cv=none; b=EgxqfE0gpr4/DSJ186iD4932rSAUfkUX5sIHLYDwMyrkhgMyLR/lYd2ghLQcRO95mM7hK/Imgad3t+XyInDWUAEJ7j8RKGlvef/dPxI8ApOGrTA5874K2CI6ODo9YF2tHnB7dwDvhh9hU8nzNY4GLV8DWF6ZOKn6BLrJTafKSJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720469080; c=relaxed/simple;
-	bh=xjmk/dH/FYb97SYHbofjRLmIMf7HeZ/fziMC3AWkA1c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hEFIhYyiipruft0PBxIt8HmFnUJTnofLtbtk6V77hzX9mRSy1LM7JitZjHR4O+1b2//gvmFw8p+mh1E+CLD1ZIoz0JIRplRj0szXOryNxSPe/BIGO0VgQEcVOrQYPvVgYPAexD5m4AABWzxFctrqR6ka1AUz7FZFjsBsKnnv20E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OioRHqSR; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720469164; c=relaxed/simple;
+	bh=aRagdgTlsE3MWGFlwzI6ef72f+KQMUPg1M2pXIo5ZqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VKvM5ADg6+Zy41hu22GVLZyg0bAVnSBwwl+Ub2Hx5M2C6HG9dDsW90d4ZiTfqcIbC1biPWX1YucLwFBVWlF96bf4DKg+Ot/2RuM/agUaRI1Y5tD64Y2NLGQyeSUqPsDeVemGHd967pIxgn3HaeHatEe666GHvMNFZGm4tfoRSXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bE7c3Ouw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OioRHqSR"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-707040e3017so2908232a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 13:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720469078; x=1721073878; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4W49Ts2h7IXoKSnNhKTlkJLMbVTeV+7YxvdVcGt2FXk=;
-        b=OioRHqSR65/dcC95ZYNvSYTX3nZj1yGlvMUthnzC0mdbvEIQfsJEZizRkg1f6VTJWW
-         M9fTNPjcEGtC/ba4MJG4cQe1EeAE9T7lPVN8fU3V16ixSH4bLl9f+yeJ/mEgqUpLKOX/
-         6K8m4tRxu8LlRwnMhf4HqKMc0HdnyyQDA67TTNnDOCsvTwgTiQMZTzzzRRNepopHFolk
-         fnNUysA3io8baysJFZi97L+XWzx4tp3BxA24BbSx4SFNdY3WH2w5K8ijys1Mvwl6VLwa
-         anB4jcIHsPTqMZDF1e69364eMBCqdsjSc7/9aK9111/DI2gTGN8bD6b+Bjcqkz+v8aju
-         bqJQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bE7c3Ouw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720469162;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=j2lTC/uV+6KmvXYNZup4rA4eKjMMz1SsHbPB0aVLD3U=;
+	b=bE7c3OuwjhP+5SSY4w9lA9AF/MWu9vn+gZ60p3zN3xjHUikoo9oOgbcpmDq+6Bd/fgQ4Rt
+	uxDSer4WVMpeLL8QR6Kn5f50+b08L6Aq7wee1QBkR9uK5OAzt45glSPa60jd0XPf0Jp1YY
+	AAKTAGbSETbxkdF4klet6mLzXCuF5zA=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-257-PtNVF0mYMSqgNizEiaK3jA-1; Mon, 08 Jul 2024 16:06:01 -0400
+X-MC-Unique: PtNVF0mYMSqgNizEiaK3jA-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52ea63885d3so3374032e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 13:06:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720469078; x=1721073878;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4W49Ts2h7IXoKSnNhKTlkJLMbVTeV+7YxvdVcGt2FXk=;
-        b=u2ihFzTVpDIPc7hKKpVjzyYMFPgQbPLFeZrto9eTzbFd5LzjdE/t30SF7gwE380TWP
-         MtzRQxfRx79mND/jP3WryJtz8XKWtn27LSNIwuy5N/rJJnLjXDzeIa+q9tAh1GuZ2gwW
-         +Va2xfManfSDic5OfMwwtSGgsYedYnqlblyPKefMpfbyXR0IfH3hAqiWUD1nCIHJjeOE
-         4SnBnIiPCRE/iuujiJra2N1ZmfgNJpz75kvD59Nl9UR3Ap1G686WW2i6eEsUgB9ZltXm
-         7/qLuEUlCqPC21j097uIIrv3K5RcPApgFjUJVZn5sRTcE0tZivZ1QmXiUoArzVw+EMYL
-         p0ug==
-X-Forwarded-Encrypted: i=1; AJvYcCX6z4r2bCifG2v9+mRMHlgOpG/CUuNwd2dhE5wHl+BkyP9PSNhRYpayLOtzc8QajxFrMNztXuy4Wa3voS+pKUP8XjTj55u7SaPVavSt
-X-Gm-Message-State: AOJu0YxED5fkkiuISPWQ65q2UNZLyE5ClFDL0uIYzosPW7+uZoX6xScq
-	GvEzwbOatZa+lq2uHw4sBbSk88F15U4vW03bzvtLEXgumlTuZ0HLnzsQoQg7NIBHQ71iQTj3GzI
-	UoHZM1dLMlt47j75KIEFLzGf5ZzE=
-X-Google-Smtp-Source: AGHT+IG+RG9sKH282j1PUR1uFtwEkAUIQDyBg0mzm5Zr7D1Y3mFiNCPk0xP+P9igu7ELI0aPhLclO7bBMc3MaJ4qawk=
-X-Received: by 2002:a17:90b:1fcd:b0:2c8:db8b:7247 with SMTP id
- 98e67ed59e1d1-2ca35be7c77mr668245a91.9.1720469078305; Mon, 08 Jul 2024
- 13:04:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720469159; x=1721073959;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=j2lTC/uV+6KmvXYNZup4rA4eKjMMz1SsHbPB0aVLD3U=;
+        b=AsqDHZ2a1TNVmC1VY3itXbB6tBy5UVtvLZcqJBZcNtZVguAHDI2ezOHNxFtZJLgxX4
+         bbvUHsoXm1t6fW19oxPwDerv9iI08fcAsBj8jIpSr8p6PYoHYGnSCipFgB/OfwkROSCW
+         k/obGbfjqaaWx99YSp5g6Uo/uLgo4w6nSwlvGkdz+DIO4kh+QyxQp77bsIoQrxIyz0y2
+         Vv8TEt6JKn4wckXkNwORuKHVKVMUFh6KVFfR4KvV+jOA5Tyyud1Ly/gWvvFFIZEWOqRf
+         0VxyT+5E1cnk/4jm3j4MWLY+fK4vzXL5EfxrLuBA2gUJhFyp333LJzXkNELC06bzM7fT
+         87kw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhpQjVjslxRVGiTdp+mbxwR7ZkYZ9uQ95OSauJdKaqWRuQYVbNTuMWsmgmYSMLpCnDoMMV/5Ml9zpzmwqOnvNr5R2i3Q3tH+88KXgR
+X-Gm-Message-State: AOJu0Yy7FyIRqtshSvaqc+28CYzL9W0Sl/U3T7b9kK1y5CMBV5C/0DHr
+	etyDexM2sBJmt3Vfok7z+lc3fHfaf2AHZsN5Z5bTgm+bxQp7UsRRg5hO9UYvix1el/mg43X36Is
+	bQV8lk36ZrdJLEzWbEXq7f8dDqv7f8wA+Gt+YSruyJUhcCvz0pN1M26GN5ropkw==
+X-Received: by 2002:a19:ac4b:0:b0:52c:84a2:d848 with SMTP id 2adb3069b0e04-52eb99d5f90mr212444e87.65.1720469159544;
+        Mon, 08 Jul 2024 13:05:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEOutunBjtATYlYPcPc2RtJuaPBHwhpp2F+6BNL1SdYd55rueYzXjB88TMPhrVMThULXxhZ7w==
+X-Received: by 2002:a19:ac4b:0:b0:52c:84a2:d848 with SMTP id 2adb3069b0e04-52eb99d5f90mr212419e87.65.1720469159140;
+        Mon, 08 Jul 2024 13:05:59 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c744:2200:bad7:95bd:e25e:a9e? (p200300cbc7442200bad795bde25e0a9e.dip0.t-ipconnect.de. [2003:cb:c744:2200:bad7:95bd:e25e:a9e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5a27sm10282465e9.23.2024.07.08.13.05.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 13:05:58 -0700 (PDT)
+Message-ID: <3492ea69-54cd-4ba3-b328-2e76542ccc32@redhat.com>
+Date: Mon, 8 Jul 2024 22:05:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240630165949.117634-1-wuhoipok@gmail.com> <20240630165949.117634-7-wuhoipok@gmail.com>
- <3ecb6fb4-ff60-4c49-8199-b76b4f297ecf@suse.de>
-In-Reply-To: <3ecb6fb4-ff60-4c49-8199-b76b4f297ecf@suse.de>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 8 Jul 2024 16:04:26 -0400
-Message-ID: <CADnq5_NNhVZ481RJMcAchxh-66vCOqcp_kOx9HLO2g2agyWOKA@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] drm/radeon: change drm_dev_alloc to devm_drm_dev_alloc
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Wu Hoi Pok <wuhoipok@gmail.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v21 1/4] mm: add VM_DROPPABLE for designating always
+ lazily freeable mappings
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, patches@lists.linux.dev, tglx@linutronix.de,
+ linux-crypto@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
+ Carlos O'Donell <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
+ Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+ Christian Brauner <brauner@kernel.org>,
+ David Hildenbrand <dhildenb@redhat.com>, linux-mm@kvack.org
+References: <20240707002658.1917440-1-Jason@zx2c4.com>
+ <20240707002658.1917440-2-Jason@zx2c4.com>
+ <1583c837-a4d5-4a8a-9c1d-2c64548cd199@redhat.com>
+ <CAHk-=wjs-9DVeoc430BDOv+dkpDkdVvkEsSJxNVZ+sO51H1dJA@mail.gmail.com>
+ <e2f104ac-b6d9-4583-b999-8f975c60d469@redhat.com>
+ <CAHk-=wibRRHVH5D4XvX1maQDCT-o4JLkANXHMoZoWdn=tN0TLA@mail.gmail.com>
+ <6705c6c8-8b6a-4d03-ae0f-aa83442ec0ab@redhat.com>
+ <CAHk-=wi=XvCZ9r897LjEb4ZarLzLtKN1p+Fyig+F2fmQDF8GSA@mail.gmail.com>
+ <7439da2e-4a60-4643-9804-17e99ce6e312@redhat.com>
+ <8bf64731-9e5c-4c8c-b46b-5b18ae3110a1@redhat.com>
+ <ZovwO8KJ5Cv5fa26@zx2c4.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZovwO8KJ5Cv5fa26@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Applied the series.  Thanks!
+On 08.07.24 15:57, Jason A. Donenfeld wrote:
+> On Mon, Jul 08, 2024 at 10:23:10AM +0200, David Hildenbrand wrote:
+>>> As a side note, I'll raise that I am not a particular fan of the
+>>> "droppable" terminology, at least with the "read 0s" approach.
+>>>
+>>>    From a user perspective, the memory might suddenly lose its state and
+>>> read as 0s just like volatile memory when it loses power. "dropping
+>>> pages" sounds more like an implementation detail.
+>>
+>> Long story short: it's the hypervisor that could be effectively
+>> dropping/zeroing out that memory, not the guest VM. "NONVOLATILE" might
+>> be clearer than "DROPPABLE".
+> 
+> Surely you mean "VOLATILE", not "NONVOLATILE", right?
 
-Alex
+Yes, typo :)
 
-On Wed, Jul 3, 2024 at 4:55=E2=80=AFAM Thomas Zimmermann <tzimmermann@suse.=
-de> wrote:
->
->
->
-> Am 30.06.24 um 18:59 schrieb Wu Hoi Pok:
-> > "drm_dev_alloc" is deprecated, in order to use the newer "devm_drm_dev_=
-alloc",
-> > the "drm_device" is stored inside "radeon_device", by changing "rdev_to=
-_drm(rdev)"
-> > other functions still gain access to the member "drm_device". Also, "de=
-vm_drm_dev_alloc"
-> > is now allocating "radeon_device", allocation inside "radeon_driver_loa=
-d_kms" has to be
-> > removed.
-> >
-> > In "radeon_device_init", it originally assigned "rdev->dev" etc. Howeve=
-r it is already
-> > done right after "devm_drm_dev_alloc" as you can see down below. It is =
-better remove them.
-> >
-> > Signed-off-by: Wu Hoi Pok <wuhoipok@gmail.com>
->
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Tested-by: Thomas Zimmermann <tzimmermann@suse.de>
->
->
-> > ---
-> >   drivers/gpu/drm/radeon/radeon.h        |  4 ++--
-> >   drivers/gpu/drm/radeon/radeon_device.c |  3 ---
-> >   drivers/gpu/drm/radeon/radeon_drv.c    | 12 +++++++++---
-> >   drivers/gpu/drm/radeon/radeon_kms.c    |  8 +-------
-> >   4 files changed, 12 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/r=
-adeon.h
-> > index ae35c102a487..fd8a4513025f 100644
-> > --- a/drivers/gpu/drm/radeon/radeon.h
-> > +++ b/drivers/gpu/drm/radeon/radeon.h
-> > @@ -2297,7 +2297,7 @@ typedef void (*radeon_wreg_t)(struct radeon_devic=
-e*, uint32_t, uint32_t);
-> >
-> >   struct radeon_device {
-> >       struct device                   *dev;
-> > -     struct drm_device               *ddev;
-> > +     struct drm_device               ddev;
-> >       struct pci_dev                  *pdev;
-> >   #ifdef __alpha__
-> >       struct pci_controller           *hose;
-> > @@ -2478,7 +2478,7 @@ void cik_mm_wdoorbell(struct radeon_device *rdev,=
- u32 index, u32 v);
-> >
-> >   static inline struct drm_device *rdev_to_drm(struct radeon_device *rd=
-ev)
-> >   {
-> > -     return rdev->ddev;
-> > +     return &rdev->ddev;
-> >   }
-> >
-> >   /*
-> > diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/r=
-adeon/radeon_device.c
-> > index 32851632643d..554b236c2328 100644
-> > --- a/drivers/gpu/drm/radeon/radeon_device.c
-> > +++ b/drivers/gpu/drm/radeon/radeon_device.c
-> > @@ -1285,9 +1285,6 @@ int radeon_device_init(struct radeon_device *rdev=
-,
-> >       bool runtime =3D false;
-> >
-> >       rdev->shutdown =3D false;
-> > -     rdev->dev =3D &pdev->dev;
-> > -     rdev->ddev =3D ddev;
-> > -     rdev->pdev =3D pdev;
-> >       rdev->flags =3D flags;
-> >       rdev->family =3D flags & RADEON_FAMILY_MASK;
-> >       rdev->is_atom_bios =3D false;
-> > diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/rade=
-on/radeon_drv.c
-> > index 7b8aa8406751..f36aa71c57c7 100644
-> > --- a/drivers/gpu/drm/radeon/radeon_drv.c
-> > +++ b/drivers/gpu/drm/radeon/radeon_drv.c
-> > @@ -260,6 +260,7 @@ static int radeon_pci_probe(struct pci_dev *pdev,
-> >   {
-> >       unsigned long flags =3D 0;
-> >       struct drm_device *ddev;
-> > +     struct radeon_device *rdev;
-> >       int ret;
-> >
-> >       if (!ent)
-> > @@ -300,9 +301,14 @@ static int radeon_pci_probe(struct pci_dev *pdev,
-> >       if (ret)
-> >               return ret;
-> >
-> > -     ddev =3D drm_dev_alloc(&kms_driver, &pdev->dev);
-> > -     if (IS_ERR(ddev))
-> > -             return PTR_ERR(ddev);
-> > +     rdev =3D devm_drm_dev_alloc(&pdev->dev, &kms_driver, typeof(*rdev=
-), ddev);
-> > +     if (IS_ERR(rdev))
-> > +             return PTR_ERR(rdev);
-> > +
-> > +     rdev->dev =3D &pdev->dev;
-> > +     rdev->pdev =3D pdev;
-> > +     ddev =3D rdev_to_drm(rdev);
-> > +     ddev->dev_private =3D rdev;
-> >
-> >       ret =3D pci_enable_device(pdev);
-> >       if (ret)
-> > diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/rade=
-on/radeon_kms.c
-> > index a16590c6247f..645e33bf7947 100644
-> > --- a/drivers/gpu/drm/radeon/radeon_kms.c
-> > +++ b/drivers/gpu/drm/radeon/radeon_kms.c
-> > @@ -104,15 +104,9 @@ void radeon_driver_unload_kms(struct drm_device *d=
-ev)
-> >   int radeon_driver_load_kms(struct drm_device *dev, unsigned long flag=
-s)
-> >   {
-> >       struct pci_dev *pdev =3D to_pci_dev(dev->dev);
-> > -     struct radeon_device *rdev;
-> > +     struct radeon_device *rdev =3D dev->dev_private;
-> >       int r, acpi_status;
-> >
-> > -     rdev =3D kzalloc(sizeof(struct radeon_device), GFP_KERNEL);
-> > -     if (rdev =3D=3D NULL) {
-> > -             return -ENOMEM;
-> > -     }
-> > -     dev->dev_private =3D (void *)rdev;
-> > -
-> >   #ifdef __alpha__
-> >       rdev->hose =3D pdev->sysdata;
-> >   #endif
->
-> --
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
->
+-- 
+Cheers,
+
+David / dhildenb
+
