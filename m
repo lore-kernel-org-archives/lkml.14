@@ -1,104 +1,125 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF2714431B;
-	Mon,  8 Jul 2024 15:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B49561EA84
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 15:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720452596; cv=none; b=T8rlZIotmYVnXJoyzxvNC2vjoQOQwQA6U1thCs9e2HjlmQFB/FqZxtVgS5wtl/axtIwKRTN8b0hz0RcucRKf/DuZ12fvRhsdzaWYzdgDQDa957vMHoycI8xdWorSR5e7d89DOOgaWsCldhS56xOPstZMU0Ea3VA/6YzLRG9PQz4=
+	t=1720452640; cv=none; b=JmrYUnFK2Py8Y38FzVcfAnWyJI/5qDo40mCthwjtMlAhD7bTEW/sSToULs47dwg5acCvl79dK00bMOPRd99ult8QkS35A/Jc7ihw4laJo3HflZGZ0P+vk0I6pANUFphimmElb6DyeO3U4dbC3eSK2J76+EpVZs5tknWyj9L031g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720452596; c=relaxed/simple;
-	bh=+WbYP/ASZE0Fc29CvTr3L/Q+sOkCaRxupWDJeEoQrBU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=rD/Swy9KADzCosphZF5ZWjM7qZ6AXIPN0exzMM9joxXj6nOUev6lYK/VdgZvzanL22AafBrjiEABlO8Y4ryox9I4Zhy3MVroMPBUkK+BNoRhX/lJtDwW0x7bU7Avf3XpYOW6Gi4wFyS0unE3LXnxwcgpViY+/FMa6XEC1xraclU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=EQm+8gvE; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="EQm+8gvE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=p34bz90eb2CO67g2ifIO9gi0Uadhuo4uIRkThb3fbK8=; b=EQm+8gvE2upzrKgSaRC8+Uu1US
-	wrBfoPqGX8PiU+6uFPY9MVtD4jfnM0eUDnJ/NBFIHzHKfTIdpTTKiEfPjDmSLNmeDo3hKM9i+ZKRu
-	eMTFr4ENi/T0mLeosoN1uECMjO8e9xXayvS4sKDbMZiKFjbykYe5TEbqmCdj09KOmw5rzFDybhRH1
-	za4PxzRqHgFfr06cDEgfwcjNnGKEqBWbD5TCQ95Au6KQANwWq8TStqGiJv/npnTYO3VwavX6YRqgp
-	u4KN5PSO4ofTucwotclAEfy8sRenZnoReb6vl7ESjd14Od7JQdBeRSgKMBR6ztn0NRhM7WCfKiK3y
-	0k14XJqw==;
-Received: from sslproxy07.your-server.de ([78.47.199.104])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1sQqJB-000Cue-U4; Mon, 08 Jul 2024 17:29:41 +0200
-Received: from [178.197.248.35] (helo=linux.home)
-	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1sQqIg-0002ra-13;
-	Mon, 08 Jul 2024 17:29:10 +0200
-Subject: Re: [PATCH bpf] selftests/bpf: DENYLIST.aarch64: Remove fexit_sleep
-To: KP Singh <kpsingh@kernel.org>, Puranjay Mohan <puranjay@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
- <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
- Alexei Starovoitov <ast@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Manu Bretelle <chantra@meta.com>,
- Florent Revest <revest@google.com>
-References: <20240705145009.32340-1-puranjay@kernel.org>
- <c0ef7ecf-595b-375a-7785-d7bf50040c6b@iogearbox.net>
- <mb61pjzhwvshc.fsf@kernel.org>
- <CACYkzJ7d_u=aRzbubBypSVhnUSjBQnbZjPuGXhqnMzbp0tJm_g@mail.gmail.com>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <224eeadb-fc5f-baeb-0808-a4f9916afa3c@iogearbox.net>
-Date: Mon, 8 Jul 2024 17:29:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	s=arc-20240116; t=1720452640; c=relaxed/simple;
+	bh=dQTtY3SoxZiiFNuasIQ2nT+tyAbwIFDezaf6yGDD4RA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dcMqoNlmYohaZ2yKE5LeskbWNSTpQ1TItIbSZRRhzCuflaDv68oYcZRWKB6aAjrhf/gjYOUSjtD/lZO9R220cFaSbx4ejXba2Wy77t4tatBI771y/4N5e/tCNIOojdciiv/f7GzqilldjovfA1OXKykb/4Oje6Pr5VR41+hPrSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EABE21042;
+	Mon,  8 Jul 2024 08:31:02 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0ABAF3F641;
+	Mon,  8 Jul 2024 08:30:35 -0700 (PDT)
+Date: Mon, 8 Jul 2024 16:30:30 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Fuad Tabba <tabba@google.com>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v4 0/4] KVM: arm64: Fix underallocation of storage for
+ SVE state
+Message-ID: <ZowGFl/1AEuevh96@e133380.arm.com>
+References: <20240704-kvm-arm64-fix-pkvm-sve-vl-v4-0-b6898ab23dc4@kernel.org>
+ <86a5iw3ri2.wl-maz@kernel.org>
+ <fec60c7f-0cc3-44e2-8be1-09c120e8523e@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CACYkzJ7d_u=aRzbubBypSVhnUSjBQnbZjPuGXhqnMzbp0tJm_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27330/Mon Jul  8 10:36:43 2024)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fec60c7f-0cc3-44e2-8be1-09c120e8523e@sirena.org.uk>
 
-On 7/8/24 5:26 PM, KP Singh wrote:
-> On Mon, Jul 8, 2024 at 5:00 PM Puranjay Mohan <puranjay@kernel.org> wrote:
->>
->> Daniel Borkmann <daniel@iogearbox.net> writes:
->>
->>> On 7/5/24 4:50 PM, Puranjay Mohan wrote:
->>>> fexit_sleep test runs successfully now on the CI so remove it from the
->>>> deny list.
->>>
->>> Do you happen to know which commit fixed it? If yes, might be nice to have it
->>> documented in the commit message.
->>
->> Actually, I never saw this test failing on my local setup and yesterday
->> I tried running it on the CI where it passed as well. So, I assumed that
->> this would be fixed by some commit. I am not sure which exact commit
->> might have fixed this.
->>
->> Manu, Martin
->>
->> When this was added to the deny list was this failing every time and did
->> you have some reproducer for this. If there is a reproducer, I can try
->> fixing it but when ran normally this test never fails for me.
+Hi all,
+
+On Fri, Jul 05, 2024 at 06:18:50PM +0100, Mark Brown wrote:
+> On Fri, Jul 05, 2024 at 02:20:05PM +0100, Marc Zyngier wrote:
+> > Mark Brown <broonie@kernel.org> wrote:
 > 
-> I think this never worked until
-> https://lore.kernel.org/lkml/20230405180250.2046566-1-revest@chromium.org/
-> was merged, FTrace direct calls was blocking tracing programs on ARM,
-> since then it has always worked.
+> > > As observed during review the pKVM support for saving host SVE state is
+> > > broken if an asymmetric system has VLs larger than the maximum shared
+> > > VL, fix this by discovering then using the maximum VL for allocations
+> > > and using RDVL during the save/restore process.
+> 
+> > I really don't see why we need such complexity here.
 
-Awesome, thanks! I'll add this to the commit desc then when applying.
+The first patch is orthogonal cleanup, and the rest doesn't really add
+complexity IIUC.
+
+> > Fuad did post something[1] that did the trick with a far less invasive
+> > change, and it really feels like we are putting the complexity at the
+> > wrong place.
+> 
+> > So what's wrong with that approach? I get that you want to shout about
+> > secondary CPUs, but that's an orthogonal problem.
+> 
+> As I've said from a clarity/fragility point of view I'm not happy with
+> configuring the vector length to one value then immediately doing things
+> that assume another value, even if everything is actually lined up
+> in a way that works.  Having uncommented code where you have to go and
+> check correctness when you see it isn't great, seeing an inconsistency
+> just raises alarm bells.  It is much clearer to write the code in a way
+> that makes it obvious that the VL we are using is the one the hardware
+> is using, for the host save/restore reading the actual VL back seemed
+> like the most straightforward way to do that.
+> 
+> A similar thing applies with the enumeration code - like I said in reply
+> to one of Fuad's postings I originally wrote something that's basically
+> the same as the patch Faud posted but because it is not consistent with
+> the surrounding code in how it approaches things it was just raising
+> questions about if the new code was missing something, or if there was
+> some problem that should be addressed in the existing code.  Rather than
+> write an extensive changelog and/or comments covering these
+> considerations it seemed more better to just write the code in a
+> consistent manner so the questions aren't prompted.  Keeping the
+> approach consistent is a bit more code right now but makes the result
+> much easier to reason about.
+> 
+> The late CPUs thing is really just an answer to the initial "why is this
+> different, what might we have missed?" question rather than a particular
+> goal itself.  Adding a warning is as much about documenting the handling
+> of late CPUs as it is about highlighting any unfortunate implementation
+> choices we run into.
+> 
+> Basically it's maintainability concerns, especially with the enumeration
+> code.
+
+I tend to agree here.
+
+It's probably best to stick to one convention everywhere about how the
+SVE regs are laid out for a given VL.  There's nothing wrong with Fuad's
+fixed sve_ffr_offset(), but it's different from the VL-dependent offset
+already used elsewhere and so risks causing confusion further down the
+line.
+
+
+One thing confuses me:
+
+The host could never use over-max VLs except in non-preemptible kernel
+code, since code doing that would be non-migratable to other physical
+CPUs.  This is done to probe SVE only, and the extra bits in the vector
+registers are never used at all.
+
+Can't pKVM just hide the non symmetrically supported VLs using ZCR_EL2,
+just as regular KVM does for the guest?
+
+(I may be making bad assumptions about pKVM's relationship with the host
+kernel.)
+
+Cheers
+---Dave
