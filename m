@@ -1,205 +1,232 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDE71DA303;
-	Mon,  8 Jul 2024 10:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F9D77F2F;
+	Mon,  8 Jul 2024 10:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720435273; cv=none; b=HTj3Wg/eXVaW/cP/b/53FN+iaksW4YxlxlC9jpfuOEAafzXJuuIxJnZaSBBQvDJaYOiMWbAOFPPsIiUvsODOYJLTjGeIk/vtOBdos7pKSWs/GZ2Vdsj0/o2+q2pKnxa959B1v481ak5VxNTMjbuGBSJ1em7jZ8G7ap5CkfRuNJE=
+	t=1720435354; cv=none; b=hcnLhIrYodS9cJaGSgJmq5aUACsn9acjOH/NxBD1jwqqI4T2PpCvpUa2rMwKq7xIE31iV6d7NHXdkvqYNFhX6Q5Tu46Mb2IT8rrjBCdKVYn9LD6853qpElTuO00JsQybBfpn5DHS7WbQ9I4WoQ+MVNpGNZ10olWDLAJw1PPX2Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720435273; c=relaxed/simple;
-	bh=XskS0maRgQZBHDKIK+8SstCfUi84xbdyiEgDFbw91do=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=pqVi7qOig4bBFMme7NMc/iW34EEYnBkGoGUkrdllQm7frEjSE1LrX4ksEw6SVAq3Y7IrNpPx/Jk+frWjrsrX2c19YjtU/EIAnsHxbKZc/pTA2NBCyiyXbskmOkqpxsFAme6KcqaPbcSmhcKMlbkWKUzIl2QhXuBDJlTMy4rkjt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=si4lGhfo; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1720435354; c=relaxed/simple;
+	bh=i/kHEvju2I6c+qBQX8v1bX565zHgz0y+711zN3vWcZk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=An8VX17goDoof/jE8wj9SjqEbc2wqbcr5CusJZbTjLHSBp6djiW5VJK+tuKtSSACQJpsZUKqE/xzUjRgwKe3cV3wHmT8pDLG435HWm1udYmLp9rM1mAXCVdIIZmEd2ta5peBgynppXhbPU4pbqnc0i6S1Aa20d28vhxM1VkjfDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=a2mJkDs0; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="si4lGhfo"
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 622EC120008;
-	Mon,  8 Jul 2024 13:33:41 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 622EC120008
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1720434821;
-	bh=kBbfq6zVIOZORkXhMU7x0H9PE5kCZaCWJAnTAIPXkmY=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version:From;
-	b=si4lGhfoSQTWKP9/NbaYbHvz1faTyy/JNf1vI3yqVkRZayYWHD0xzEnShKSZ2tZrE
-	 a6IloUlEQ8PY/QvFvgUp6SxqspX0cQirhGdr7EK7Gr9NJ/Cqq1ObfH7s4ssHLk+Fcd
-	 daX9+ezpKZO2aF8WU1BoVM/v1Xaf+Kv5We7VFzajZDsJE4KImCpoS/d3WmZwMwQ1c+
-	 v6hJRRJJZb1MPNuGq+LFkyyiW3JkGJZnHMJ0THBrA4gQGvaC9fX+Uf2YroFHT8kYFY
-	 x3iuKAmuVw3i4UIpFU3z5+nQ5QI7MUcXW4Vcb8KKGsBKa0lyTB9yYxOgUAHofDp/UG
-	 UZ+CVfBeS7faw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Mon,  8 Jul 2024 13:33:41 +0300 (MSK)
-Received: from p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="a2mJkDs0"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46889YRM015055;
+	Mon, 8 Jul 2024 06:42:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=9C39xYUzc+KtN/fSDo0lILdCzlb
+	q4vaUdJ1kkUuwPHY=; b=a2mJkDs0Eu/R7M6ipECMy6fKK5imKFSsl3zdlFq5Jzk
+	3ewQacT9Jg3Bz/Wrs5Um/nF3SHicyR+AWK+/Dvf0Va0aK6ebul8Tsu8etRqGovBW
+	ErK/2gyvWshHg8ADlavStVGzeSITgNLlJ+R8jUbZEqXsDmSpoZo51iyU7f+9/qME
+	MdECeRodJVSMlF3hkju2fY+64nI/DuqJl9XWk2iDo11oRqQK8mOkIJm8Q0sCPPFw
+	Ox2Bzl0sslGwf8WckF//zfeKYWR5txRfDNelGK9hqn1vhc+w5Tfctfyb11Is7f6e
+	lHKeRGkP1gNpHnhveEKfqNnvIdUClRjHf5MecVaw0FQ==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 406ys2nt3s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jul 2024 06:42:01 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 468AfxHu001202
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 8 Jul 2024 06:42:00 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 8 Jul 2024 13:33:40 +0300
-Received: from p-i-exch-sc-m02.sberdevices.ru ([fe80::81d7:3d68:fdfd:518]) by
- p-i-exch-sc-m02.sberdevices.ru ([fe80::81d7:3d68:fdfd:518%9]) with mapi id
- 15.02.1118.040; Mon, 8 Jul 2024 13:33:40 +0300
-From: Alexey Romanov <avromanov@salutedevices.com>
-To: Rob Herring <robh@kernel.org>
-CC: "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
-	"clabbe@baylibre.com" <clabbe@baylibre.com>, "herbert@gondor.apana.org.au"
-	<herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "khilman@baylibre.com"
-	<khilman@baylibre.com>, "jbrunet@baylibre.com" <jbrunet@baylibre.com>,
-	"martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>,
-	"vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, kernel <kernel@sberdevices.ru>
-Subject: Re: [PATCH v8 17/23] dt-bindings: crypto: meson: correct clk and
- remove second interrupt line
-Thread-Topic: [PATCH v8 17/23] dt-bindings: crypto: meson: correct clk and
- remove second interrupt line
-Thread-Index: AQHauOTSAXN6fA211UWCwBG9LZMwhLHBZvKAgCs5hgA=
-Date: Mon, 8 Jul 2024 10:33:40 +0000
-Message-ID: <20240708103330.w2krusjlyoucsvcn@cab-wsm-0029881.sigma.sbrf.ru>
-References: <20240607141242.2616580-1-avromanov@salutedevices.com>
- <20240607141242.2616580-18-avromanov@salutedevices.com>
- <20240610222827.GA3166929-robh@kernel.org>
-In-Reply-To: <20240610222827.GA3166929-robh@kernel.org>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <79D38F7E409215488E684887CF215ECF@sberdevices.ru>
-Content-Transfer-Encoding: quoted-printable
+ 15.2.986.14; Mon, 8 Jul 2024 06:41:59 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 8 Jul 2024 06:41:58 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 8 Jul 2024 06:41:58 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.159])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 468AfZLI008375;
+	Mon, 8 Jul 2024 06:41:38 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: Ramona Gradinariu <ramona.gradinariu@analog.com>,
+        Antoniu Miclaus
+	<antoniu.miclaus@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Michael
+ Hennerich" <Michael.Hennerich@analog.com>,
+        Jonathan Cameron
+	<jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet
+	<corbet@lwn.net>,
+        Jun Yan <jerrysteve1101@gmail.com>,
+        Matti Vaittinen
+	<mazziesaccount@gmail.com>,
+        Sean Nyekjaer <sean@geanix.com>,
+        Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>,
+        Mario Limonciello
+	<mario.limonciello@amd.com>,
+        Mehdi Djait <mehdi.djait.k@gmail.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>
+CC: Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v5 1/3] dt-bindings: iio: accel: add ADXL380
+Date: Mon, 8 Jul 2024 13:40:11 +0300
+Message-ID: <20240708104114.29894-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186370 [Jul 08 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;cab-wsm-0029881.sigma.sbrf.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/08 09:16:00 #25900162
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: OppW38yYS8VqOleUvm1gJpbDIiTy6nug
+X-Proofpoint-GUID: OppW38yYS8VqOleUvm1gJpbDIiTy6nug
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_05,2024-07-05_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 malwarescore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407080083
 
-Hi Rob,
+Add dt-bindings for ADXL380/ADLX382 low noise density, low
+power, 3-axis accelerometer with selectable measurement ranges.
 
-thank you for the review.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+no changes in v5.
+ .../bindings/iio/accel/adi,adxl380.yaml       | 92 +++++++++++++++++++
+ MAINTAINERS                                   |  7 ++
+ 2 files changed, 99 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
 
-On Mon, Jun 10, 2024 at 04:28:27PM -0600, Rob Herring wrote:
-> On Fri, Jun 07, 2024 at 05:12:36PM +0300, Alexey Romanov wrote:
-> > GXL and newer SoC's uses the DMA engine (not blkmv) for crypto HW.
-> > Crypto HW doesn't actually use the blkmv clk. At RTL level, crypto
-> > engine is hard weired to a clk81 (CLKID_CLK81).
->=20
-> typo.
->=20
-> >=20
-> > Also, GXL crypto IP isn't to seconnd interrput line. So we must
->=20
-> 2 more typos. Spell checkers exist. Use them instead of me please.
->=20
-> I think you forgot the word 'connected' too.
+diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
+new file mode 100644
+index 000000000000..f1ff5ff4f478
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
+@@ -0,0 +1,92 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/accel/adi,adxl380.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADXL380/382 3-Axis Digital Accelerometer
++
++maintainers:
++  - Ramona Gradinariu <ramona.gradinariu@analog.com>
++  - Antoniu Miclaus <antoniu.miclaus@analog.com>
++
++description: |
++  The ADXL380/ADXL382 is a low noise density, low power, 3-axis
++  accelerometer with selectable measurement ranges. The ADXL380
++  supports the ±4 g, ±8 g, and ±16 g ranges, and the ADXL382 supports
++  ±15 g, ±30 g, and ±60 g ranges.
++
++  https://www.analog.com/en/products/adxl380.html
++
++properties:
++  compatible:
++    enum:
++      - adi,adxl380
++      - adi,adxl382
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++
++  interrupt-names:
++    minItems: 1
++    items:
++      - enum: [INT0, INT1]
++      - const: INT1
++
++  vddio-supply: true
++
++  vsupply-supply: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - vddio-supply
++  - vsupply-supply
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      accelerometer@54 {
++        compatible = "adi,adxl380";
++        reg = <0x54>;
++        vddio-supply = <&vddio>;
++        vsupply-supply = <&vsupply>;
++        interrupt-parent = <&gpio>;
++        interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "INT0";
++      };
++    };
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      accelerometer@0 {
++        compatible = "adi,adxl380";
++        reg = <0>;
++        spi-max-frequency = <8000000>;
++        vddio-supply = <&vddio>;
++        vsupply-supply = <&vsupply>;
++        interrupt-parent = <&gpio>;
++        interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "INT0";
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 06ecfa64a39a..fe24becaeca5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -618,6 +618,13 @@ F:	drivers/iio/accel/adxl372.c
+ F:	drivers/iio/accel/adxl372_i2c.c
+ F:	drivers/iio/accel/adxl372_spi.c
+ 
++ADXL380 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
++M:	Ramona Gradinariu <ramona.gradinariu@analog.com>
++M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
++
+ AF8133J THREE-AXIS MAGNETOMETER DRIVER
+ M:	Ondřej Jirman <megi@xff.cz>
+ S:	Maintained
+-- 
+2.45.2
 
-Yep, sorry, I will fix all typos.
-
->=20
-> > remove it from dt-bindings.
->=20
->=20
-> So did this binding not work at all?=20
-
-Yes.
-
-> Are there any users?=20
-
-No.
-
-> You need a bit=20
-> more justification for an ABI breaking change.
-
-I will add more clarification information in commit message in V9.
-
->=20
-> >=20
-> > Fixes: 7f7d115dfb51 ("dt-bindings: crypto: Add DT bindings
-> > documentation for amlogic-crypto")
->=20
-> This line should not be wrapped.
-> >=20
->=20
-> Drop the blank line.
->=20
-> > Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
-> > ---
-> >  .../bindings/crypto/amlogic,gxl-crypto.yaml          | 12 +++++++-----
-> >  1 file changed, 7 insertions(+), 5 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypt=
-o.yaml b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
-> > index 948e11ebe4ee..aff6f3234dc9 100644
-> > --- a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
-> > +++ b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
-> > @@ -20,13 +20,15 @@ properties:
-> >    interrupts:
-> >      items:
-> >        - description: Interrupt for flow 0
-> > -      - description: Interrupt for flow 1
-> > =20
-> >    clocks:
-> >      maxItems: 1
-> > =20
-> >    clock-names:
-> > -    const: blkmv
-> > +    const: clk81
->=20
-> Clocks are supposed be named local to the block like what function or=20
-> part of the block they clock. This sounds like something global.=20
->=20
-> With only 1 clock, I'd just drop the name altogether.
-
-I think I have to remove clock-names field in V9.
-
->=20
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > =20
-> >  required:
-> >    - compatible
-> > @@ -46,7 +48,7 @@ examples:
-> >      crypto: crypto-engine@c883e000 {
-> >          compatible =3D "amlogic,gxl-crypto";
-> >          reg =3D <0xc883e000 0x36>;
-> > -        interrupts =3D <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>, <GIC_SPI 18=
-9 IRQ_TYPE_EDGE_RISING>;
-> > -        clocks =3D <&clkc CLKID_BLKMV>;
-> > -        clock-names =3D "blkmv";
-> > +        interrupts =3D <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>;
-> > +        clocks =3D <&clkc CLKID_CLK81>;
-> > +        clock-names =3D "clk81";
-> >      };
-> > --=20
-> > 2.34.1
-> >=20
-
---=20
-Thank you,
-Alexey=
