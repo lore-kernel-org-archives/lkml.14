@@ -1,125 +1,116 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46656145323
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D69145B37
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720456556; cv=none; b=sor4h2WvNFdQV6+vg0+Jbe2AjeQQWPgg0d+1ZKtUJD0dVa6LPS9Unf5d7RdNovgYOiptzdtVHBEXLEPsOtHRZc6iFuKFKPK0nfYl6Onv9kYscCyC9PsxwIFGYp04QMq5SH4lZSpmzvU/6usTjPVvxnRVFa9xsGAU1zuhmGmY2Ag=
+	t=1720456573; cv=none; b=bgcfhuJuQ2lHJl3RkhWyT0j4PmsJ/PpsUuXBccTSLRMXHv9sbcx3AwPkeaQ5SR8WI4PrJMlz84nDcaBEoX05oh6uDOKP8SDlvMn7N5f/PeGrtVHIuxD4yFEkJhX+t7H5t5CpD1JNMzYr5cFW/EWf2Q95smVuVuagfMdCo+TXeJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720456556; c=relaxed/simple;
-	bh=epV5XKr+izWXQUuHLm0+Hd1JdiR9XIiEqS4eTdKApHY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UUPtdMMZgIgcSwcPWQ1rJpH+V84p4fP3cqVdjoImezGQSkTHUdukPF/Jz1QR4EgAWPpJ0BDZPQESl+wMk0tC8VTDrkAEtijse6/dxQDWcnxZEYMwZ6xvkvU3/Ka3z43SxoCg7eSeCbtfFXSFRmcb9YDGf2U/OQhBXEel8GycveM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=U44a0MWP; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1720456573; c=relaxed/simple;
+	bh=kF79k4M0wfI5NybhocxG/V7HbuwRgXY/PbwykoiZ0u4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gXQ14C24zVlp8Sl/I5PKVdgwWfc+drBAPb+B2I1m1dSVIjGyR2Ulkq7OT+0FZkvk7NjuZ11YVbjgmK26oZ8Xhg6NTKxk8nph0N1FfpEcPXl+pEblST5QqwfZJluRMR/SbkSKlcJV4d6OrKIjIrzk284LqPW6MTHCaSBMrSbi0jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WNRjkqbl; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="U44a0MWP"
-X-Envelope-To: macromorgan@hotmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1720456552;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q1xLGY2jSIrtPqPZ9NbhDBkO1nnpCkyLaDO8znSKpp4=;
-	b=U44a0MWPWvNcZbVouFYU5A9SDhVDTDZA4UcB2WhGSUt87LnPir9tVEsOxbm1QjV3ITL2QN
-	ex3G2qsk5edc65UXRRd7GIPsSZYWd1STBVrSVXvCUHK2yi8M+MTzfagvmDfeSKjYJAbyVO
-	Yhk9Sc7tF6qQ2s3KW0QSNKj+Ve8uBAohc6pMZKRxMtj/F6EIXofU2MOkTLNrMIBWdqeRqJ
-	rOfVlZmvkD56mawtUvu9xHDg8lELcz/1wJJaHW/wPJ2cgqs7KQuNPGYETyzqIierkd1pII
-	14Yu7lWMSDhr1pkjwg/ME0Gd0boEj90C8AuAFyiu43dmpiGgio67mGBZubJ4wA==
-X-Envelope-To: heiko@sntech.de
-X-Envelope-To: mweigand@mweigand.net
-X-Envelope-To: dsimic@manjaro.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: andyshrk@163.com
-X-Envelope-To: jagan@amarulasolutions.com
-X-Envelope-To: amadeus@jmu.edu.cn
-X-Envelope-To: f.kardame@manjaro.org
-X-Envelope-To: michael.riesch@wolfvision.net
-X-Envelope-To: wiagn233@outlook.com
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Chris Morgan <macromorgan@hotmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
- Maximilian Weigand <mweigand@mweigand.net>,
- Dragan Simic <dsimic@manjaro.org>, linux-rockchip@lists.infradead.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Andy Yan <andyshrk@163.com>,
- Jagan Teki <jagan@amarulasolutions.com>, Chukun Pan <amadeus@jmu.edu.cn>,
- Furkan Kardame <f.kardame@manjaro.org>,
- Michael Riesch <michael.riesch@wolfvision.net>,
- Shengyu Qu <wiagn233@outlook.com>
-Subject:
- Re: arm64: dts: rockchip: Add dma-names to uart-bluetooth rk3566 devices
-Date: Mon, 08 Jul 2024 18:35:39 +0200
-Message-ID: <18704154.NT27xa3IZQ@bagend>
-Organization: Connecting Knowledge
-In-Reply-To:
- <MN2PR16MB29416FE9165FB72824266667A5DA2@MN2PR16MB2941.namprd16.prod.outlook.com>
-References:
- <20240705163004.29678-2-didi.debian@cknow.org>
- <MN2PR16MB29416FE9165FB72824266667A5DA2@MN2PR16MB2941.namprd16.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WNRjkqbl"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ee75ffce77so50627811fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720456569; x=1721061369; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QXr0BWZGWxSKsJl1B6BOaJ9LQX+PHNjm3zoOsNxl8ZY=;
+        b=WNRjkqbloxri6luzKllXA5AfQc2ky71ytz6BqIkRQk96rqQG8aW5AeOcwXWA1G580x
+         4KmMK0RygLZK463xytq8u9eVTEjv9FkSV1nXd7yHorchpyMAkh8nsj7ysZIdYFbRh02u
+         uvg7DpyYAwiDhQgZa40yHx97o5+OC8yrxwERODd81iDXIYoRP51cW5MLuzZuKONz/4AX
+         wmYUqmn4Sqh0jWijlKsngzCecWEi5hXnUG+pRKD8C0ygEqiFYCRtVLb5irzRkGpYa5tq
+         y95Gt5nY5s7YxxalWjJ6UVhhs9bcP6NzcZMu6ur87JlrcZyKQ7vgrdYs1SmjvgsMqa71
+         DjoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720456569; x=1721061369;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QXr0BWZGWxSKsJl1B6BOaJ9LQX+PHNjm3zoOsNxl8ZY=;
+        b=VTwDRMIxe0shFAkS369N51Xzf/RB3e58GFVdaRM1SVQDd8WdGhv3kPFA/GmN2nenfJ
+         MgxK2OY30zibClAHK2/9j2pY5uqWZUUhW+V14LgwSpdaT0RfymA+FakeyTddRvdKcqKL
+         rUBxqrtQvblPB/CrvY+R8DV4Xly31OHWadvdUaN3hde1ZlVtnz3ILcjeCDWIULL3mV7A
+         DgT4rKMwY0kOBPkUX3bZsTRP8l4RDpxhfFJeeOu78AJ9jJ2Vk10xRIr4w/Rr5amvhAQp
+         l724MBzM2MyopDkWGm89P+dGgIpiypx/SE72mxpz51Jgj22FObksNqcNAhGbtsySch+Q
+         Jv9A==
+X-Forwarded-Encrypted: i=1; AJvYcCV8OsZ/fo4moLPIBY73/wVRCpU74t9NUKL2fZXyfdq8OIQfAacBXEGnkz+8iPqbQgfIVTE4b/nYu7kt5EncQBD9Y5dvu6dMRFE9f7gB
+X-Gm-Message-State: AOJu0YzTWTvHPS9CX4Xd2cSirkz5d2mbLHr0hGASkw4dizL6aSaAPc6t
+	Rl38aPzUNVMiVe6mfirHybPIBVT22985ptYK+Whe1RIBigtSQp88yCi9d+F30hY=
+X-Google-Smtp-Source: AGHT+IFwhURRS94WBKV1QcWHN4yHD3pCaXhUL3ZA3yoqhHrsgcoWidzDCWKI/z1AIwjXQyKRTVK+EA==
+X-Received: by 2002:a2e:a792:0:b0:2ec:4f0c:36f9 with SMTP id 38308e7fff4ca-2eeb3169f11mr2339051fa.36.1720456569321;
+        Mon, 08 Jul 2024 09:36:09 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:cf24:cce:17df:12ab? ([2a05:6e02:1041:c10:cf24:cce:17df:12ab])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5f51sm5021515e9.25.2024.07.08.09.36.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 09:36:08 -0700 (PDT)
+Message-ID: <bf4a45e9-4ed3-4d3b-bb96-add20a71b04c@linaro.org>
+Date: Mon, 8 Jul 2024 18:36:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5757575.N3OQHAa34O";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/14] clocksource: mips-gic-timer: Always use cluster
+ 0 counter as clocksource
+To: Aleksandar Rikalo <aleksandar.rikalo@syrmia.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Aleksandar Rikalo <arikalo@gmail.com>, Chao-ying Fu <cfu@wavecomp.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Greg Ungerer <gerg@kernel.org>,
+ Hauke Mehrtens <hauke@hauke-m.de>,
+ Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+ Paul Burton <paulburton@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Serge Semin <fancer.lancer@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <20240511104341.151550-1-aleksandar.rikalo@syrmia.com>
+ <20240511104341.151550-8-aleksandar.rikalo@syrmia.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20240511104341.151550-8-aleksandar.rikalo@syrmia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---nextPart5757575.N3OQHAa34O
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Chris Morgan <macromorgan@hotmail.com>
-Date: Mon, 08 Jul 2024 18:35:39 +0200
-Message-ID: <18704154.NT27xa3IZQ@bagend>
-Organization: Connecting Knowledge
-MIME-Version: 1.0
-
-On Monday, 8 July 2024 18:05:05 CEST Chris Morgan wrote:
-> > This is a single patch which adds the dma-names property to the uart
-> > node with a bluetooth subnode on Pine64's rk356x devices.
-> > 
-> > But that property can potentially be added to several other devices, but
-> > I have zero familiarity with them or their community, so I choose not to
-> > add it to those devices, but inform people via this cover letter.
+On 11/05/2024 12:43, Aleksandar Rikalo wrote:
+> From: Paul Burton <paulburton@kernel.org>
 > 
-> Thank you, but based on past experience the bluetooth failed to work
-> when I had the DMA names present (which is why I removed them on my
-> devices). I will however test it again to confirm that is still the
-> case or not.
+> In a multi-cluster MIPS system we have multiple GICs - one in each
+> cluster - each of which has its own independent counter. The counters in
+> each GIC are not synchronised in any way, so they can drift relative to
+> one another through the lifetime of the system. This is problematic for
+> a clocksource which ought to be global.
+> 
+> Avoid problems by always accessing cluster 0's counter, using
+> cross-cluster register access. This adds overhead so we only do so on
+> systems where we actually have CPUs present in multiple clusters.
+> For now, be extra conservative and don't use gic counter for vdso or
+> sched_clock in this case.
+> 
+> Signed-off-by: Paul Burton <paulburton@kernel.org>
+> Signed-off-by: Chao-ying Fu <cfu@wavecomp.com>
+> Signed-off-by: Dragan Mladjenovic <dragan.mladjenovic@syrmia.com>
+> Signed-off-by: Aleksandar Rikalo <aleksandar.rikalo@syrmia.com>
+> ---
 
-That is very well possible as I had specifically you in mind when I chose to 
-only apply it to Pine64 devices (as I could directly contact those people).
-I had a vague recollection that there was 'something' with bluetooth on 
-devices you added.
+Applied patch 7 and 8
 
-Thus it seemed better to inform people of the possibility, but let the actual 
-implementation up to them.
+Thanks
 
-Cheers,
-  Diederik
---nextPart5757575.N3OQHAa34O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZowVWwAKCRDXblvOeH7b
-bvr8AQCR3UX8zsLmcd9BjCPsexTjAxcrLuEqZKdpAGwYqlz/8AEAijpXHym1iyGu
-wbw7/ntw95MClGyHkeh4XovtnqM37gc=
-=+Whf
------END PGP SIGNATURE-----
-
---nextPart5757575.N3OQHAa34O--
-
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
