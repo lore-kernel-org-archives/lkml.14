@@ -1,195 +1,176 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2043.outbound.protection.outlook.com [40.107.92.43])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E058614E2E3;
-	Mon,  8 Jul 2024 12:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720440183; cv=fail; b=SxqoHgfIq1emg6L5TeysR5+G7/ta1KOka5vb/xTtSoMQ6pcOWVidu9nyHeBlOqqk/cUJ9NQd2k1aJWjety5DAG91HZ1FUjxcJottdZrD+htdsa/h6nLZycBeTXm7d7H+re6WSludg45Jw/Wc5/TNz+Ewu2A9AZ1ygM+YbK4fYwI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720440183; c=relaxed/simple;
-	bh=alpx4DHW++4vPyW2+DZYTz5s+xhITTe/eBUA+Ib9QPs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=t9QtNYOZLgnwefwff7tF9TsEd3xjb76a8m1p5P5KdFYg85WGYs7D1/a8bM2MiOU198GKhn+QokWCcbEsWSRWWL0bY28arwRh29uAK9bN6t3cs8B2djwCSR6fWqCqtV2Xm7nHD9vKn4IeemuAi9VcgNcgsu8omQGvLwSWAmtcsZk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Xpog2HKR; arc=fail smtp.client-ip=40.107.92.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCA514F12C
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720440187; cv=none; b=G3xnfO9oXiH8uSDCDZ0vdtgJyDfL+jre0B/bz6bYnB/CDCPMrL5a00enCdqzhY3Y1Rk1pIJ2Gz3lcqJHyOp7SzpfuYXn3FmSCCzFyoaaYSlvQ+uizUlK2aPETKC6619u8M0hOmwEWmDyFbBSUQwRwSeINvft6SJ+LuXZsAf/cVk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720440187; c=relaxed/simple;
+	bh=PIaL/yqX99/BaglaH4odjyhKYxhBv42DHDN+EBZYDm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CeZgkJhJz181FTuCbV/D68K4TBGJpXPzlXYMY2SRBbnC3ppFdoLHMLq85kPwQAtseBX8TVPHa8ujvUsCiQXWH7PGMhBtGsycG9crs1zifpCxK6+dgqI2rYvBD7r6F8EHHCpsf3jRTzhe+YdxOUCa7m1Isbl+WXuBo9wPEuhOB7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hHcvL34I; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Xpog2HKR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZeG13vFw/fHcO39/KZ71Tbkala6TffSxG+IAe6vvBEpWsLlAc5YYvPnim35EDhLhoR9KL8fXDvMmPHdQ0VSzpqd5nTQgSjF1Ge70DG/FpLINx0bbBmX67AS+qASzsyT2fHHAEiAh/r7zwL8QvNqoJGOYQ0kA0CQXzpYHGeipcga3QdBJsgs0trmHLGmWo/ARhCGQxyXxkJ1RYu0odYylk3T3IvlbCOqfJg9yLDT5NVLyx7FsszoEmk/vMvAJtIzXrSjCnUBN3GUjcojcm/dHzaMLAlVuIqbhav8R/C/XGq7YoSRKXBGmTlXmBBeM9r5SM3EHi1DkFxNy4TQeXhKZyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KU05PAbc7XWmqajIj841Tg7fnNV9AYqRZIy+qRdkNds=;
- b=XAQ6dwu1wMWw8ZCy6c8IOxuln1NOwgEBjZ3zLFi37/Y8ZvGATS6IK9bAItbOLrCxYGs77hEftjT7cSHN8nbRoCN14i5Awc18PhHHnBjZB4VWbHoEOAkU7g/ojbCXf0IzyZYdZya7z9LX3KLYwgzm4gllIKdjxqQ524BT3LuYMQoCuTKBrCi480sTa1A/5KLOF0ZHHGPMvRgH8HBhGHOIQ4ax0tTWRE1V7p0YE6pSy+8tSYxwjo9Ja5bEjX8f12AWju58uycWeGr9gZnUw1gVtCESkCOFs55CcloSovT71vdtBPJxILo7p7DJ+qJO7KX6BKFCeNOerQ6MJv/n7i1rEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=oracle.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KU05PAbc7XWmqajIj841Tg7fnNV9AYqRZIy+qRdkNds=;
- b=Xpog2HKR9zNllqL3zSNl+okSrBGxEt2XQYrt2F+c1xkOQ9SXkjfGbdmWg8Bjmyy1UB+w43NJoge5JH686q/B25Ffcwzv9gJal7+7lWd+NnFX8THBXPEwboEpY4INCeV18+8fs4Zu4nFYPndavcfuK9A3RmTtKbKlZe08Q72W6vmb4VOpSXcGaEJKRsIaicrM/I1ZuusId8rpuDtRHFpCBtA9pwXP1eBsKDFTsnphE9CVkKFU+XSmiiaOJdWanm+qeDEsDOa2C8DHVPf/f19ON/rSAZE88n0o+7GV2kY2RiSRqgI/GrG9PtiVuumWtPBJ/PSZy/2uMDaIVveKCQWGdQ==
-Received: from BL6PEPF0001640C.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1004:0:13) by CYYPR12MB8871.namprd12.prod.outlook.com
- (2603:10b6:930:c2::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Mon, 8 Jul
- 2024 12:02:57 +0000
-Received: from BL6PEPF00020E62.namprd04.prod.outlook.com
- (2a01:111:f403:c901::1) by BL6PEPF0001640C.outlook.office365.com
- (2603:1036:903:4::a) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36 via Frontend
- Transport; Mon, 8 Jul 2024 12:02:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BL6PEPF00020E62.mail.protection.outlook.com (10.167.249.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7762.17 via Frontend Transport; Mon, 8 Jul 2024 12:02:57 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 8 Jul 2024
- 05:02:20 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 8 Jul 2024
- 05:02:19 -0700
-Received: from dev-l-177.mtl.labs.mlnx (10.127.8.11) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 8 Jul 2024 05:02:16 -0700
-From: Dragos Tatulea <dtatulea@nvidia.com>
-Date: Mon, 8 Jul 2024 15:00:44 +0300
-Subject: [PATCH vhost v3 20/24] vdpa/mlx5: Use suspend/resume during VQP
- change
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hHcvL34I"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mz4HcF1cWkqY6j9aPHDhrm/cJCubNYXQhHFHVaVLed4=; b=hHcvL34I5tfBx1hROrG1RnVODG
+	JRD1u3UytwKDxscg+TJ6dt82ZtHsy6nGHzHEzKiZkHMZWNd/r4KFr91bYmXqSLfi3TOMV/fhv1vNX
+	UyedLIazJImeL/1qLMyZzY7lO9VuT3aYSs/vHp9IKhRCwzdbXqKzkRphGm64t9xJyTIUVTynKSV11
+	EUR2BwatcDmkLVJ59gpORfkqofh4cWaxVwMOLHrLniq5/jmaT2YvtGN92+Lj4a88vXVkv9xCFnKvv
+	wf4XUWTlZB93mhRD8TZnOD/njIkaVnWVmqb23es5Rww5X7whYLr5K712hIRCoMYI3CibOZiQvzrMO
+	Ea3TQK9g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sQn54-00000000azs-2VU5;
+	Mon, 08 Jul 2024 12:02:54 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3B765300694; Mon,  8 Jul 2024 14:02:54 +0200 (CEST)
+Date: Mon, 8 Jul 2024 14:02:54 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tianchen Ding <dtcccc@linux.alibaba.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Josh Don <joshdon@google.com>
+Subject: Re: [PATCH v2] sched/fair: Make SCHED_IDLE entity be preempted in
+ strict hierarchy
+Message-ID: <20240708120254.GA27299@noisy.programming.kicks-ass.net>
+References: <20240626023505.1332596-1-dtcccc@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20240708-stage-vdpa-vq-precreate-v3-20-afe3c766e393@nvidia.com>
-References: <20240708-stage-vdpa-vq-precreate-v3-0-afe3c766e393@nvidia.com>
-In-Reply-To: <20240708-stage-vdpa-vq-precreate-v3-0-afe3c766e393@nvidia.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?utf-8?q?Eugenio_P=C3=A9rez?=
-	<eperezma@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky
-	<leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu
-	<si-wei.liu@oracle.com>
-CC: <virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, Cosmin Ratiu
-	<cratiu@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>
-X-Mailer: b4 0.13.0
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E62:EE_|CYYPR12MB8871:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5c55a67-27d8-45e9-ab67-08dc9f45e829
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|7416014|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WjhNeUExS3djZVZQYS81cGNrMmd4U3Q2MHBJSlFrbTdRQUZqUVU3eC9JVE5w?=
- =?utf-8?B?NGg5WURmNmdhaGRDS2F0cWhNYTdTRlNQcGhVcGNWcDF0dVB3NzNtRm5ZK29G?=
- =?utf-8?B?NGpJeWd2ZHNHYXJ0alZPTlpQZDRzUnVyVWlRajY2Ulh4SVhOeXdrUm1yTC9N?=
- =?utf-8?B?bnhsRGhmbzV0aE55TjhlV25mSGJyK1h4dUg3ekFReUpBeGNQSHY1RTBVeWJl?=
- =?utf-8?B?Q0hTRjlVKzVKTS9taFVjVUN3WnJ4M1kxMWJrb1hBUmc0d3loUFRkZUFtOEpV?=
- =?utf-8?B?NjBkaVJ2NjdyZzRwdXE2S1B5WTYrWko4d1J0QlhqR2RucTBtRHFzNS9pbUtJ?=
- =?utf-8?B?WVZIZVdOd3BaSUVMZEFOU2dLSXpLOXVLUFAxWlRIRy83bGhkN2NlRDBHNlBG?=
- =?utf-8?B?YmxOVVUvNW5Kenh2cXdVMU5UTzBQalZvWWQ5U0szUUZCQ1l2cE1zeW5VK0FT?=
- =?utf-8?B?VGxiWXNHeHd6elYvenpCYUNZa1EzQWpZTXk1ZkVDclQzalh6MFBtOXdNeHFW?=
- =?utf-8?B?WDNvRnk5TnpSVTlBSlR2ajBxSm16VDdBSFJtMW5ISGhxZWtjVUhSQWozWDlP?=
- =?utf-8?B?eGx3RVNkdk5CQ1docnI5MzRSdVNGZ1d4LzlrdjBvd0ZTSXhNdCtNdjRNc3hk?=
- =?utf-8?B?U2ZSZW12QnR3aStMZzduT2pOZjVYOWEzWEw3R2RVc29GTDhrSGVRclJkNzhM?=
- =?utf-8?B?bGhlL0NMWGVtTzh3dERub3BybFZFWWRNKzYxZzR4MWVTUXpWSDcyQVNpUld3?=
- =?utf-8?B?elMyNGt3bmsrQ3dGVTFodjFVazlaYUxzRXl4elpwWXNnTnRGNkZUWlBUVFo3?=
- =?utf-8?B?TmxnRFo2R2Fyb09TeklCMEVTV1pYNithZ09veDdWNjVaaTFsa1hSQ1hUTE1y?=
- =?utf-8?B?eHNZOUFPSDB2cXc1eEJrWkN6MHh1cFpxdWFaZ2czUEJ5MXdaZTVXZGNHcmZL?=
- =?utf-8?B?dDgzNHA2Skh0aGI0Vk1JVDVNRHB3TkhKdE5BZWVDb0xHUExqWWFWZ2VsLy9o?=
- =?utf-8?B?enVpR2RPYzhJRGZGc1FJcm54cFpGZmtxQ2lmK2lxa29UTzBQM29NV1hBSFZy?=
- =?utf-8?B?TzY3Q0Z1MjlGZVI2ci96dEhBL0NQbGYwVitmUUYyNkpIb05uSU92bkFuYmFM?=
- =?utf-8?B?Uk54RmdreXZRQVNDaHdHbWFVUVMvSTNMeC9RakdWK3RqSExPdkRUM0J4WFRj?=
- =?utf-8?B?RXM5U1hZcWo0dXdZdW5BaTZ4M1NwNVFnOXBYQWpSWDlhTTB2ck02NWY0TlBC?=
- =?utf-8?B?Z24xOTNrZWQyQ21RQXdrNUJkN3NtTE1sYVRLZ2V1enc1cHBqc3JvWm9xdVFy?=
- =?utf-8?B?WHIzK3RqL3FLb2xWaTZaRXM5RW12cVMwak9RS3pvcHdlcy85Wm4zTEcrcWdh?=
- =?utf-8?B?MDIvNEoreHZJQ1ArdWVRelJMcWR5NS9jMUsxbTd6cFNEY2FFRDh2UE5LcXF1?=
- =?utf-8?B?M1hiOFBoRmNubHphZDdGbWt6TUdOUHpmemJYRnlDVjJLdjBXSHlVcXA1QXdq?=
- =?utf-8?B?YUtxTnJHR25wQ3g2NFlta084TGVra3RjRmFjaDdRN2o4aldTMk9iWkZnVGM1?=
- =?utf-8?B?T0dsNUwzMlpSZ21jeGxRZXVhSEpoZVIzM1pzUUdGdXVQQ2dIY3ZHeC94RWRv?=
- =?utf-8?B?Qk41aW1KbVVXS282eWpaR0lrZEliS3VBSVQyNktneTQ3UVo3RHZjNHlwSGJm?=
- =?utf-8?B?dnd4d0V3aC9SV1NoY3YyWUdRRzRpRVRmNXdhUG9jMS9UbnlMdVk2MUwwUDR4?=
- =?utf-8?B?SzMrdHhlYjFxY2xoMVpNVExpd1NBSGVWNmlsaUViQ3lFTTlCMlV6SHV2dThC?=
- =?utf-8?B?RXV4a3YwSkJCT2FNdVJkU0FveVNpbHlhbWU4S1BYYmthUzNRbmdQWGM3RVcz?=
- =?utf-8?B?OEVjYmk1Q3BTM0hVeCt1S3FCaUllV1RiMWxudmdHblBia3U0SWFEL2M0bTRw?=
- =?utf-8?Q?ZHIKDcuw5TJzCI3CTaTafQTisp7fBFi8?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2024 12:02:57.4497
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5c55a67-27d8-45e9-ab67-08dc9f45e829
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E62.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8871
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626023505.1332596-1-dtcccc@linux.alibaba.com>
 
-Resume a VQ if it is already created when the number of VQ pairs
-increases. This is done in preparation for VQ pre-creation which is
-coming in a later patch. It is necessary because calling setup_vq() on
-an already created VQ will return early and will not enable the queue.
+On Wed, Jun 26, 2024 at 10:35:05AM +0800, Tianchen Ding wrote:
+> Consider the following cgroup:
+> 
+>                        root
+>                         |
+>              ------------------------
+>              |                      |
+>        normal_cgroup            idle_cgroup
+>              |                      |
+>    SCHED_IDLE task_A           SCHED_NORMAL task_B
+> 
+> According to the cgroup hierarchy, A should preempt B. But current
+> check_preempt_wakeup_fair() treats cgroup se and task separately, so B
+> will preempt A unexpectedly.
+> Unify the wakeup logic by {c,p}se_is_idle only. This makes SCHED_IDLE of
+> a task a relative policy that is effective only within its own cgroup,
+> similar to the behavior of NICE.
+> 
+> Also fix se_is_idle() definition when !CONFIG_FAIR_GROUP_SCHED.
+> 
+> Fixes: 304000390f88 ("sched: Cgroup SCHED_IDLE support")
+> Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
+> Reviewed-by: Josh Don <joshdon@google.com>
+> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+> v2:
+> Use entity_is_task() to check whether pse is a task.
+> Improve comments and commit log.
+> 
+> v1: https://lore.kernel.org/all/20240624073900.10343-1-dtcccc@linux.alibaba.com/
+> ---
+>  kernel/sched/fair.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 41b58387023d..f0b038de99ce 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -511,7 +511,7 @@ static int cfs_rq_is_idle(struct cfs_rq *cfs_rq)
+>  
+>  static int se_is_idle(struct sched_entity *se)
+>  {
+> -	return 0;
+> +	return task_has_idle_policy(task_of(se));
+>  }
+>  
+>  #endif	/* CONFIG_FAIR_GROUP_SCHED */
+> @@ -8382,16 +8382,7 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
+>  	if (test_tsk_need_resched(curr))
+>  		return;
+>  
+> -	/* Idle tasks are by definition preempted by non-idle tasks. */
+> -	if (unlikely(task_has_idle_policy(curr)) &&
+> -	    likely(!task_has_idle_policy(p)))
+> -		goto preempt;
+> -
+> -	/*
+> -	 * Batch and idle tasks do not preempt non-idle tasks (their preemption
+> -	 * is driven by the tick):
+> -	 */
+> -	if (unlikely(p->policy != SCHED_NORMAL) || !sched_feat(WAKEUP_PREEMPTION))
+> +	if (!sched_feat(WAKEUP_PREEMPTION))
+>  		return;
+>  
+>  	find_matching_se(&se, &pse);
+> @@ -8401,7 +8392,7 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
+>  	pse_is_idle = se_is_idle(pse);
+>  
+>  	/*
+> -	 * Preempt an idle group in favor of a non-idle group (and don't preempt
+> +	 * Preempt an idle entity in favor of a non-idle entity (and don't preempt
+>  	 * in the inverse case).
+>  	 */
+>  	if (cse_is_idle && !pse_is_idle)
+> @@ -8409,6 +8400,15 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
+>  	if (cse_is_idle != pse_is_idle)
+>  		return;
+>  
+> +	/*
+> +	 * Batch tasks do not preempt non-idle tasks (their preemption
+> +	 * is driven by the tick).
+> +	 * We've done the check about "only one of the entities is idle",
+> +	 * so cse must be non-idle if p is a batch task.
+> +	 */
+> +	if (unlikely(entity_is_task(pse) && p->policy == SCHED_BATCH))
+> +		return;
 
-For symmetry, suspend a VQ instead of tearing it down when the number of
-VQ pairs decreases. But only if the resume operation is supported.
+I'm not convinced this condition is right. The current behaviour of
+SCHED_BATCH doesn't care about pse, only p.
 
-Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-Acked-by: Eugenio Pérez <eperezma@redhat.com>
-Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
----
- drivers/vdpa/mlx5/net/mlx5_vnet.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+That is, if p is SCHED_BATCH it will not preempt -- except an
+SCHED_IDLE.
 
-diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-index ce1f6a1f36cd..324604b16b91 100644
---- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-+++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-@@ -2130,14 +2130,22 @@ static int change_num_qps(struct mlx5_vdpa_dev *mvdev, int newqps)
- 		if (err)
- 			return err;
- 
--		for (i = ndev->cur_num_vqs - 1; i >= 2 * newqps; i--)
--			teardown_vq(ndev, &ndev->vqs[i]);
-+		for (i = ndev->cur_num_vqs - 1; i >= 2 * newqps; i--) {
-+			struct mlx5_vdpa_virtqueue *mvq = &ndev->vqs[i];
-+
-+			if (is_resumable(ndev))
-+				suspend_vq(ndev, mvq);
-+			else
-+				teardown_vq(ndev, mvq);
-+		}
- 
- 		ndev->cur_num_vqs = 2 * newqps;
- 	} else {
- 		ndev->cur_num_vqs = 2 * newqps;
- 		for (i = cur_qps * 2; i < 2 * newqps; i++) {
--			err = setup_vq(ndev, &ndev->vqs[i], true);
-+			struct mlx5_vdpa_virtqueue *mvq = &ndev->vqs[i];
-+
-+			err = mvq->initialized ? resume_vq(ndev, mvq) : setup_vq(ndev, mvq, true);
- 			if (err)
- 				goto clean_added;
- 		}
+So I'm tempted to delete this first part of your condition and have it
+be:
 
--- 
-2.45.2
+	if (p->policy == SCHED_BATCH)
+		return;
 
+That is, suppose you have:
+
+                        root
+                         |
+              ------------------------
+              |                      |
+        normal_cgroup          normal_cgroup
+              |                      |
+        SCHED_BATCH task_A     SCHED_BATCH task_B
+
+Then the preemption crud will end up comparing the groups to one another
+and still allow A to preempt B -- except we explicitly do not want this.
+
+The 'problem' is that the whole BATCH thing isn't cgroup aware ofcourse,
+but I'm not sure we want to go fix that -- esp. not in this patch.
+
+Hmm?
