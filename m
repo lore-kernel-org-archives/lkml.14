@@ -1,45 +1,46 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9EF13C67D;
-	Mon,  8 Jul 2024 16:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772C1148855;
+	Mon,  8 Jul 2024 16:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720454411; cv=none; b=q5Apa2Hu/vjqskoJg6ebiHs1Xu/83y5+rtvT4QblsDaRQoTTMikFZBcsqF4YzXOPLnIZ2/+prWh4HCSAWc4WR+9mjGuZq1c4hA4oWZRH5rm34GI5FM0uNynY4iUUD0hYDraTmIS1mf662Jr9tbIxHw209XknG1F2zSOVpFlVFe8=
+	t=1720454415; cv=none; b=MQ4cf0N90BQccFtHRBcNELGLj+jHyApeJx6exmVPIY7ZrWuYnMxXdiJZfUD2LAzONx6evNvZX2gKCWV5hZVoZbcizffkYIfGqJPMPP/lA7hLK2VM3ZQp6wKS1kGIrosbd+H6n8LhE7Fe9P9siCHFT5xTCR6XGVHLsF9XOZvo0w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720454411; c=relaxed/simple;
-	bh=ZQbTkaBr2DOoUJe1drOkDZl3IrtY8+Zz0OkM0BQHeC8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TgRtegoQCuUNZBh/epaftpzUiMJ5cNS0AONyoyuteuR8OsNfCjwiCckkSuHEF0ExLGV2hUBeYMxPFJZ32Kgdvpsxtaemix2AlZH9IdE7lqI4Ald5hs2LLq4KJTxk8lHQPM8+uNihX1LtFDkD8MhbkrXyomTA2tfYLYeVcTpZWvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GuAFNxQt; arc=none smtp.client-ip=198.47.23.248
+	s=arc-20240116; t=1720454415; c=relaxed/simple;
+	bh=TBwnL3wQbc4QRf7j9akENyB348Gia8jiwKmTJHW1ai0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P7gTOfFV5rVqsMIfM/tf+rL6g10vqzskg+gtAs1i9h2N+/Bopt6CXL3TUz226Qmq1RCtmtfV0Oc72JJQzfS+wVzkGUt9GMuWwJAc1IBP/hJd+XL7Kfp6eWpgA31O71p5HW/xAr1fIrGD638pUxrJxsZoKIUhHSu4gUOmVaithMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GJ+2cbp9; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GuAFNxQt"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 468FxiSK079666;
-	Mon, 8 Jul 2024 10:59:44 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GJ+2cbp9"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 468Fxric046208;
+	Mon, 8 Jul 2024 10:59:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1720454384;
-	bh=QkURj1joryyxKfydPczK0vpjAuNzFSZp9U/Qg34mdC0=;
-	h=From:To:CC:Subject:Date;
-	b=GuAFNxQtFxCBsc7Psy96CHyQJ8GG/m/uMfFjpLHfMVLsulfIpDT0Bxw0mgty+q3C3
-	 7n/0qNQM7Id6JUHUcIxiIMop2cxs0tOp12ague3Sv0LfDERm+DO4robvzM55fm1iOa
-	 3FnY69pjAHWBTtcUEMpyN4V0ucNIgcfwjFtxOPHc=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 468FxiQV051938
+	s=ti-com-17Q1; t=1720454393;
+	bh=nqty+XynRb9yhSMGja4MzmxCzRnKyzh3bIOszbGtJeg=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=GJ+2cbp9poQRrJGgNk55dSebq0oXq4sKCJ2cl7QR+MEG9cuFrua3Af+0+gmJ8262f
+	 otMb5PDI8bTk/9ocLrcE+DZwEnTtCXFQF2BsomM07SLWp46OiXm6F/kooHCE5Hen70
+	 8omF1YPsYT5Ei6xARLJNeIPPhs1FMqyeC+PmtqK4=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 468FxrVM023160
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 8 Jul 2024 10:59:44 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+	Mon, 8 Jul 2024 10:59:53 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 8
- Jul 2024 10:59:44 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2024 10:59:53 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 8 Jul 2024 10:59:44 -0500
+ Frontend Transport; Mon, 8 Jul 2024 10:59:53 -0500
 Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 468FxhEX103421;
-	Mon, 8 Jul 2024 10:59:44 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 468Fxqh9103605;
+	Mon, 8 Jul 2024 10:59:53 -0500
 From: Devarsh Thakkar <devarsht@ti.com>
 To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
         <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -52,10 +53,12 @@ CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
         <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
         <vijayp@ti.com>, <devarsht@ti.com>, <andi.shyti@linux.intel.com>,
         <nicolas@ndufresne.ca>, <davidgow@google.com>, <dlatypov@google.com>
-Subject: [PATCH 0/6] Add rounding macros and enable KUnit tests
-Date: Mon, 8 Jul 2024 21:29:37 +0530
-Message-ID: <20240708155943.2314427-1-devarsht@ti.com>
+Subject: [PATCH 6/6] media: imagination: Round to closest multiple for cropping region
+Date: Mon, 8 Jul 2024 21:29:43 +0530
+Message-ID: <20240708155943.2314427-7-devarsht@ti.com>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20240708155943.2314427-1-devarsht@ti.com>
+References: <20240708155943.2314427-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,39 +69,48 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This adds new rounding macros to round to closest integer along with
-enabling KUnit tests for all math.h macros.  It also updates kernel-doc to
-render math.h related documentation and lastly updates the imagination jpeg
-encoder to use the newly introduced rounding macros to find nearest value.
+If neither of the flags to round down (V4L2_SEL_FLAG_LE) or round up
+(V4L2_SEL_FLAG_GE) are specified by the user, then round to nearest
+multiple of requested value while updating the crop rectangle coordinates.
 
-Also to note that math.h is orphaned and so these changes need
-to be pulled by subsystem using it as a first as discussed in below
-threads:
+Use the rounding macro which gives preference to rounding down in case two
+nearest values (high and low) are possible to raise the probability of
+cropping rectangle falling inside the bound region.
 
-Link:
-https://lore.kernel.org/all/1db64af7-3688-4bcc-a671-9440d8f02d1a@xs4all.nl/
-https://lore.kernel.org/all/ZmHDWeuezCEgj20m@smile.fi.intel.com/
+This complies with the VIDIOC_G_SELECTION, VIDIOC_S_SELECTION ioctl
+description as documented in v4l uapi [1] which specifies that driver
+should choose crop rectangle as close as possible if no flags are passed by
+user-space, as quoted below :
 
-Daniel Latypov (1):
-  lib: Add basic KUnit test for lib/math
+"``0`` - The driver can adjust the rectangle size freely and shall choose a
+crop/compose rectangle as close as possible to the requested
+ one."
 
-Devarsh Thakkar (5):
-  math.h: Add macros for rounding to closest value
-  math.h: Use kernel-doc syntax for divison macros
-  Documentation: core-api: Add math.h macros and functions
-  lib: math_kunit: Add tests for new macros related to rounding to
-    nearest value
-  media: imagination: Round to closest multiple for cropping region
+Link: https://www.kernel.org/doc/Documentation/userspace-api/media/v4l/vidioc-g-selection.rst [1]
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+ drivers/media/platform/imagination/e5010-jpeg-enc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- Documentation/core-api/kernel-api.rst         |   6 +
- .../platform/imagination/e5010-jpeg-enc.c     |   8 +-
- include/linux/math.h                          |  86 ++++-
- lib/math/Kconfig                              |  14 +
- lib/math/Makefile                             |   1 +
- lib/math/math_kunit.c                         | 329 ++++++++++++++++++
- 6 files changed, 434 insertions(+), 10 deletions(-)
- create mode 100644 lib/math/math_kunit.c
-
+diff --git a/drivers/media/platform/imagination/e5010-jpeg-enc.c b/drivers/media/platform/imagination/e5010-jpeg-enc.c
+index 187f2d8abfbb..6c3687445803 100644
+--- a/drivers/media/platform/imagination/e5010-jpeg-enc.c
++++ b/drivers/media/platform/imagination/e5010-jpeg-enc.c
+@@ -514,10 +514,10 @@ static int e5010_s_selection(struct file *file, void *fh, struct v4l2_selection
+ 
+ 	switch (s->flags) {
+ 	case 0:
+-		s->r.width = round_down(s->r.width, queue->fmt->frmsize.step_width);
+-		s->r.height = round_down(s->r.height, queue->fmt->frmsize.step_height);
+-		s->r.left = round_down(s->r.left, queue->fmt->frmsize.step_width);
+-		s->r.top = round_down(s->r.top, 2);
++		s->r.width = round_closest_down(s->r.width, queue->fmt->frmsize.step_width);
++		s->r.height = round_closest_down(s->r.height, queue->fmt->frmsize.step_height);
++		s->r.left = round_closest_down(s->r.left, queue->fmt->frmsize.step_width);
++		s->r.top = round_closest_down(s->r.top, 2);
+ 
+ 		if (s->r.left + s->r.width > queue->width)
+ 			s->r.width = round_down(s->r.width + s->r.left - queue->width,
 -- 
 2.39.1
 
