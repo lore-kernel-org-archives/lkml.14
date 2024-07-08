@@ -1,40 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803E9125DE
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 06:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A18014A96;
+	Mon,  8 Jul 2024 06:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720420052; cv=none; b=rMbdqCebda8K7VwlZfTSV0OCnKXpSdme501ft8d2n08fZ1JZW16J9n6ZhFAdZbnq5GC8ppZR+ap1BDDapDOyIOsqg7nZ0m3wHxlB8/ITKGmf2Hn/CFTv7VPSxAqCbdC/FWHBhi+Uiqs9I4LYqrldHw3turozQ49/pCBQK9IyDmc=
+	t=1720420073; cv=none; b=P/dsjxWlxOA4MtMunbqzzjGiVox/dYw66s6yIqvGyuLD+EWmL1xf0gk+nMi+vVuUrbrgx4hzhMY9nyWg46tcEs/QuKAumvK8HeX7+7PfSgvkDaruYzSoJRmXENegPaFlA+CSxSyGC6reN4+s2nTUQd7f7ktvKpQDl3HBAtC9kD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720420052; c=relaxed/simple;
-	bh=q7EkaLpJ/goiOKVT9D8Ig3s/2pCWyrNA2sFi+gAcE8c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ckvjXmFZdljpGpLFA5/EuJqSoL6JJVIc97EUJzTf06nAOG4H2SkI/TRCV356NX5KxoKoJbZhhuj0688vc6AEIYMOKLCUlms5xaz70DWPBOBhnADeaz7mr4iDMNDCd/gsdqYoT/d6ci4q6gbVNnLu8DH3BzhnqzahO+mKWktyRZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJIjQAs5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720420073; c=relaxed/simple;
+	bh=zUZXGOv2xUoJrPD1neMWOjpl2CBT0LIydrty+iTwh10=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SguzebCi3HQU++m3wQR1ZYy/GbLAzQI1vWgzBXDjOro8lI4oOLtI10E6L99+okqD5B54PlITfbwlYPe2pv1EUlEnBaF78JXUI4DF9JQFnQ5WRtv9wpoOQj9Exr4uCnRzCfWk+BSscDrnsNlHmCvfPhlGn3tuMIjfRaCK2JBnzVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=nfZCbNCa; arc=none smtp.client-ip=45.254.50.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJIjQAs5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60DDC116B1;
-	Mon,  8 Jul 2024 06:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720420052;
-	bh=q7EkaLpJ/goiOKVT9D8Ig3s/2pCWyrNA2sFi+gAcE8c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sJIjQAs5ZGXjbLeP++6RmvZHC0YRyCHMnt4tZx/Lf73m6icR9LOiXmmd1a0oQjGku
-	 Yuw7ZthHhCeghr1avEhndKIk1BKh38M2/GVn/LWQrlKvPcXNjoy1plYUUxcL7MPStE
-	 enWR5fw3NWaZbH+wbGROz1htD1r2m+/IJuEUhCmLE3+YaOUA1KAEJ6Sjw5jNmcZEH+
-	 B0wjq/rJCnxq3Dp9n9NQj1ZmsSmlK20m/+T1ZXk9LyGzVdDX6H+OsvGx9R4mjwfEhe
-	 JiIAJhq3CEBmoP1CPOIaNuQnttD665cV2Ent+9OIkpduOPxd4BQaFT1DnvRVXitVVn
-	 OABcqRzNRkSHg==
-From: alexs@kernel.org
-To: Johannes Weiner <hannes@cmpxchg.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org (open list)
-Cc: "Alex Shi (Tencent)" <alexs@kernel.org>
-Subject: [PATCH] mm/memcg: alignment memcg_data define condition
-Date: Mon,  8 Jul 2024 14:32:36 +0800
-Message-ID: <20240708063236.1096395-1-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nfZCbNCa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=upyb9
+	37w393WAml9P6J+oTFNrAbx52a2d5ij2dreU80=; b=nfZCbNCa4H7AdMPv7hY7B
+	L9r4HrgedrZUogKfP71wz79mkP462VsGZXGP9EHsmoonmnCpL7PmKQAuQuAvh/Ve
+	+Usli8W12WC1ynDqALgzgG74Oh3z23RvZOE1kHyu+Zlx67dqC6ahRBd5sAqRoSar
+	fwSgXMFiw3usn67/uERigg=
+Received: from localhost.localdomain (unknown [193.203.214.57])
+	by gzga-smtp-mta-g0-5 (Coremail) with SMTP id _____wDHr1h7hotm9x0lCA--.18455S4;
+	Mon, 08 Jul 2024 14:26:09 +0800 (CST)
+From: ran xiaokai <ranxiaokai627@163.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com,
+	corbet@lwn.net,
+	usama.anjum@collabora.com,
+	avagin@google.com
+Cc: linux-mm@kvack.org,
+	vbabka@suse.cz,
+	svetly.todorov@memverge.com,
+	ran.xiaokai@zte.com.cn,
+	si.hao@zte.com.cn,
+	yang.yang29@zte.com.cn,
+	ryan.roberts@arm.com,
+	ziy@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH v3] kpageflags: detect isolated KPF_THP folios
+Date: Mon,  8 Jul 2024 06:26:01 +0000
+Message-Id: <20240708062601.165215-1-ranxiaokai627@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,49 +49,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHr1h7hotm9x0lCA--.18455S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAw18KFW5GrW8Kr4xXw4fXwb_yoW5ArW7pa
+	98GasFvF4kJ3ZxJryxJrn2yr13KrZxWayjka4akw1SvFnxJ34vgF1xK34Fka4aqFy8Aa10
+	vFWjgF1fua4UAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UCYLPUUUUU=
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/1tbiqRATTGVOBTu8eQABs3
 
-From: "Alex Shi (Tencent)" <alexs@kernel.org>
+From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 
-commit 21c690a349ba ("mm: introduce slabobj_ext to support slab object
-extensions") changed the folio/page->memcg_data define condition from
-MEMCG to SLAB_OBJ_EXT. The code works well, since config SLAB_OBJ_EXT is
-fold into MEMCG in init/Kconfig.
+When folio is isolated, the PG_lru bit is cleared. So the PG_lru
+check in stable_page_flags() will miss this kind of isolated folios.
+Use folio_test_large_rmappable() instead to also include isolated folios.
 
-But many related functions that deal with memcg_data still defined under
-MEMCG instead of SLAB_OBJ_EXT, and FOLIO_MATCH with memcg_data are defined
-under MEMCG too. That looks weird and incorrect with memcg_data raw
-meaning.
+Since pagecache supports large folios and the introduction of mTHP,
+the semantics of KPF_THP have been expanded, now it indicates
+not only PMD-sized THP. Update related documentation to clearly state
+that KPF_THP indicates multiple order THPs.
 
-So let's put memcg_data under MEMCG config to alignment the definition
-with FOLIO_MATCH and its usage in functions.
+Changes since v2:
+  - directly use is_zero_folio() suggested by David
 
-Signed-off-by: Alex Shi (Tencent) <alexs@kernel.org>
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 ---
- include/linux/mm_types.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/admin-guide/mm/pagemap.rst |  4 ++--
+ fs/proc/page.c                           | 21 +++++++++------------
+ 2 files changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index ef09c4eef6d3..c067db6fa711 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -180,7 +180,7 @@ struct page {
- 	/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
- 	atomic_t _refcount;
+diff --git a/Documentation/admin-guide/mm/pagemap.rst b/Documentation/admin-guide/mm/pagemap.rst
+index f5f065c67615..0a8a4decdb72 100644
+--- a/Documentation/admin-guide/mm/pagemap.rst
++++ b/Documentation/admin-guide/mm/pagemap.rst
+@@ -118,7 +118,7 @@ Short descriptions to the page flags
+ 21 - KSM
+     Identical memory pages dynamically shared between one or more processes.
+ 22 - THP
+-    Contiguous pages which construct transparent hugepages.
++    Contiguous pages which construct THP of any size and mapped by any granularity.
+ 23 - OFFLINE
+     The page is logically offline.
+ 24 - ZERO_PAGE
+@@ -252,7 +252,7 @@ Following flags about pages are currently supported:
+ - ``PAGE_IS_PRESENT`` - Page is present in the memory
+ - ``PAGE_IS_SWAPPED`` - Page is in swapped
+ - ``PAGE_IS_PFNZERO`` - Page has zero PFN
+-- ``PAGE_IS_HUGE`` - Page is THP or Hugetlb backed
++- ``PAGE_IS_HUGE`` - Page is PMD-mapped THP or Hugetlb backed
+ - ``PAGE_IS_SOFT_DIRTY`` - Page is soft-dirty
  
--#ifdef CONFIG_SLAB_OBJ_EXT
-+#ifdef CONFIG_MEMCG
- 	unsigned long memcg_data;
- #endif
+ The ``struct pm_scan_arg`` is used as the argument of the IOCTL.
+diff --git a/fs/proc/page.c b/fs/proc/page.c
+index 2fb64bdb64eb..a718ddc43bdf 100644
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -148,19 +148,16 @@ u64 stable_page_flags(const struct page *page)
+ 		u |= 1 << KPF_COMPOUND_TAIL;
+ 	if (folio_test_hugetlb(folio))
+ 		u |= 1 << KPF_HUGE;
+-	/*
+-	 * We need to check PageLRU/PageAnon
+-	 * to make sure a given page is a thp, not a non-huge compound page.
+-	 */
+-	else if (folio_test_large(folio)) {
+-		if ((k & (1 << PG_lru)) || is_anon)
+-			u |= 1 << KPF_THP;
+-		else if (is_huge_zero_folio(folio)) {
+-			u |= 1 << KPF_ZERO_PAGE;
+-			u |= 1 << KPF_THP;
+-		}
+-	} else if (is_zero_pfn(page_to_pfn(page)))
++	else if (folio_test_large(folio) &&
++	         folio_test_large_rmappable(folio)) {
++		/* Note: we indicate any THPs here, not just PMD-sized ones */
++		u |= 1 << KPF_THP;
++	} else if (is_huge_zero_folio(folio)) {
+ 		u |= 1 << KPF_ZERO_PAGE;
++		u |= 1 << KPF_THP;
++	} else if (is_zero_folio(folio)) {
++		u |= 1 << KPF_ZERO_PAGE;
++	}
  
-@@ -343,7 +343,7 @@ struct folio {
- 			};
- 			atomic_t _mapcount;
- 			atomic_t _refcount;
--#ifdef CONFIG_SLAB_OBJ_EXT
-+#ifdef CONFIG_MEMCG
- 			unsigned long memcg_data;
- #endif
- #if defined(WANT_PAGE_VIRTUAL)
+ 	/*
+ 	 * Caveats on high order pages: PG_buddy and PG_slab will only be set
 -- 
-2.43.0
+2.15.2
+
 
