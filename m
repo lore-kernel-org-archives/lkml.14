@@ -1,188 +1,310 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31039219F3;
-	Mon,  8 Jul 2024 09:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F98B4AEF7;
+	Mon,  8 Jul 2024 09:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720429824; cv=none; b=AID0PTitW5TPqgGZ06Ael6lmM6212f5wHhzxOnHlD7J7K3/ZLXy7BJiYqo/B2LSX+WqKCTe6NvYGvXMIok/7w3AR1iac0zeCrdcx8nOOeEFlH97ydzE4a96n5/LsGQ//j2G3O6v+mgsd31sh3bsWJOrbz/e9ePLF62dkQmNUw8I=
+	t=1720429978; cv=none; b=LRISHcitClahjwQ8BXcbhNG49tqYFMB2OjaKb/yHHJWg7pUFfNr2L0RTf6ObZNCqfHdg54p8/OCDGZ6eXta6ecu5rIEWjVhXwA239uJCy+1LHTQkmSYDoWK4HSppTGEt7C+g1lWDzuNk+eUeJ5H47EcunA4feOUu9OdCvEcCIV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720429824; c=relaxed/simple;
-	bh=AuzOmWIxG3jTWVum4y8+8Lc6vfI9lgPYT1Wp/Q8wmms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M8rij5c+nXLOAx36q3kJuva7Jt1PT7Y6V1CLYjh4a+Kz1Si3uaEabk1iGlv3y6OWNiNEpf4hKEmgjV5wS8M8PfqtQNTCRfjL2MeemkD1FoFqmbQQfGRWwCy5IKTYZxC6pcmgckFikyhJt9zqUaWfj5/oMhA6P8jVWhBK3B1VOdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mT+SLy+D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720429978; c=relaxed/simple;
+	bh=CAaJk++tecrLaptH+16hNaBiNTEIQYH3fzlW19fwgC8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YC11U0YCk/x8MHoR7NsQ4Utyhrzg3uYlHD0WzjtnMOqlXfQPjMcJp5NawuzMiVivcUI/gtFkFVWAz/taFlrJTGfZ3BmdtM3+TMcrfJeZEsWQf3R2fL9xn4weaulIcgYfS+xIGcUzTClKLiTvaapUNVL5qFaMyVfCHl9KBzHMOUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhhjHDwh; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mT+SLy+D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C550AC116B1;
-	Mon,  8 Jul 2024 09:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720429823;
-	bh=AuzOmWIxG3jTWVum4y8+8Lc6vfI9lgPYT1Wp/Q8wmms=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mT+SLy+DopjjwCiD7ovp5hicIF7srnkLzzCJTsCMeH7WWwOeoD1+Y0vKDzpKl9kIv
-	 OpOr8maktMyHQXUgYVVgVESlE1S+zKzrhlfFyeVkQbseh58GDMIVen/EqHFYxl/xFG
-	 pLjI7hXz9Cgaja2eXExClzHNb6fBeeQyL3vbBHTBgq/rPQUdUWKelJ0tcfZVk8q/od
-	 aAe+eh0MetBQWBMVL9qaEl30hkOazVsaHAeq3VtPBsgzbKo4sSQfsCKMWksCVp1Nnd
-	 0+iXi3r78oJ3GEp7VOBkIavMDZh2o93SZ7kgvtfvkSbCHkZY1exAgit0vsy9Jxgbkt
-	 L5GbUM8LW2n5Q==
-Message-ID: <aab8fae1-c0ba-4fab-8690-88c6cfe569e5@kernel.org>
-Date: Mon, 8 Jul 2024 11:10:18 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhhjHDwh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720429977; x=1751965977;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=CAaJk++tecrLaptH+16hNaBiNTEIQYH3fzlW19fwgC8=;
+  b=HhhjHDwhanIM/ZBn5ioqv2C28DFo+wddg4yG1JRLUmvBUVuhxyWO+Gbx
+   bO8RN/poSBl7rBMwTVUooYN2Xg9XBxuU3oZiuDt8k+22mn+qpH1N2Uo3a
+   cOxELzChgI3/4YtKiaM5TgZaNs2j9VErEVoayNg0/BbZy4QeCWTvVJGzL
+   LvWc8xAQ1THl7M34xHXdmWlvv8PM76sxYnMGSx2k3LPI7ilRqJD6wIw0Z
+   UlHqaWZc1MbgYk6EbkkT0AQhW0fb9N4PNAqms+wGSF+KPk3S25ah/HU+W
+   9qQ5vvGUZECv9R3x1SdjFlAyk1kOaWpOp9iLr67tIRtae7bk9kvqDblVw
+   g==;
+X-CSE-ConnectionGUID: 6sDNUsU/Q469SsZWeA+v3A==
+X-CSE-MsgGUID: oeshmtegR9i7o4tndMaTcA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17436554"
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="17436554"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 02:12:56 -0700
+X-CSE-ConnectionGUID: Bri5CEPIQAqx34xgx/2URQ==
+X-CSE-MsgGUID: WSwuHQr9TZyy0hw2Fm3MbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="47509006"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.115])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 02:12:51 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 8 Jul 2024 12:12:46 +0300 (EEST)
+To: daire.mcnamara@microchip.com
+cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    conor.dooley@microchip.com, lpieralisi@kernel.org, kw@linux.com, 
+    robh@kernel.org, bhelgaas@google.com, LKML <linux-kernel@vger.kernel.org>, 
+    linux-riscv@lists.infradead.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v6 2/3] PCI: microchip: Fix inbound address translation
+ tables
+In-Reply-To: <20240628115923.4133286-3-daire.mcnamara@microchip.com>
+Message-ID: <addb88b3-1318-d337-052e-088c832bc088@linux.intel.com>
+References: <20240628115923.4133286-1-daire.mcnamara@microchip.com> <20240628115923.4133286-3-daire.mcnamara@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: power: Add power sequence for Amloigc
- WCN chips
-To: Yang Li <yang.li@amlogic.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20240705-pwrseq-v1-0-31829b47fc72@amlogic.com>
- <20240705-pwrseq-v1-1-31829b47fc72@amlogic.com>
- <a4d08999-55ea-4674-bb0f-6d618b7bdea7@kernel.org>
- <9c550278-2205-4663-917c-c303c65726ad@amlogic.com>
- <726a0561-b3fc-46bb-a834-3ed8b0e993e1@kernel.org>
- <91e42fbc-712e-44b4-8200-23aaf1fade43@amlogic.com>
- <7d109ab0-ebd0-4739-a15e-958e82552a7d@kernel.org>
- <2c51fff5-bc63-4f30-bb6d-f5fe91854d6d@amlogic.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <2c51fff5-bc63-4f30-bb6d-f5fe91854d6d@amlogic.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 08/07/2024 10:21, Yang Li wrote:
+On Fri, 28 Jun 2024, daire.mcnamara@microchip.com wrote:
+
+> From: Daire McNamara <daire.mcnamara@microchip.com>
 > 
-> On 2024/7/8 15:32, Krzysztof Kozlowski wrote:
->> On 08/07/2024 08:32, Yang Li wrote:
->>> 在 2024/7/8 14:11, Krzysztof Kozlowski wrote:
->>>> On 08/07/2024 08:04, Yang Li wrote:
->>>>>>> +
->>>>>>> +required:
->>>>>>> +  - compatible
->>>>>>> +  - clocks
->>>>>>> +  - clock-names
->>>>>>> +  - amlogic,chip-enable-gpios
->>>>>>> +  - amlogic,bt-enable-gpios
->>>>>>> +
->>>>>>> +additionalProperties: false
->>>>>>> +
->>>>>>> +examples:
->>>>>>> +  - |
->>>>>>> +    #include <dt-bindings/gpio/gpio.h>
->>>>>>> +    wcn_pwrseq {
->>>>>> No underscores in node names, generic node names.
->>>>>>
->>>>>> There is no device as "pwrseq". I also do not get what "wcn" means here.
->>>>> Yes, I understand.
->>>>>
->>>>> Can I change "wcn_pwrseq" to "pmu", and do I need to change the binding
->>>> What is pmu for your device? What is this device in the first place you
->>>> are documenting? Where is the datasheet?
->>> ^_^ Well, You are right, the "pmu" wasn't really fit in here.
+> On Microchip PolarFire SoC the PCIe Root Port can be behind one of three
+> general purpose Fabric Interface Controller (FIC) buses that encapsulates
+> an AXI-S bus. Depending on which FIC(s) the Root Port is connected
+> through to CPU space, and what address translation is done by that FIC,
+> the Root Port driver's inbound address translation may vary.
+> 
+> For all current supported designs and all future expected designs,
+> inbound address translation done by a FIC on PolarFire SoC varies
+> depending on whether PolarFire SoC in operating in dma-coherent mode or
+> dma-noncoherent mode.
 
-So no datasheet? Then you are on your own.
+Please improve the use of capital letters in general.
 
->>>
->>> I'd like to explain the current usage first, and could you please give
->>> me a suggestion?
->>>
->>> This module(pwrseq) used to power on Bluetooth & Wi-Fi combo chip, both
->>> Bluetooth and
->>>
->>> Wi-Fi driver need to control "chip-en-gpios" pins, so we introduced the
->>> power sequence module.
->>>
->>> What should we call it in this case?
->> Sorry, you describe driver, not a device.
->>
->> That would be a no-go for entire binding. Please describe the hardware,
->> not what you want to achieve in Linux drivers.
-> W155s2 is a Bluetooth and WiFi combination chip. Bluetooth requires the 
-
-I asked about this device here.
-
-You speak now about W155s2 but everywhere else you were using "WCN".
-What is that WCN?
-
-> bt-en pin to be pulled up, the chip-en pin to be pulled up, and the 
-> 32.768KHz clock. WiFi requires the chip-en pin to be pulled up, and the 
-> 32.768KHz clock. It can be seen that Bluetooth and WiFi are coupled to 
-> the chip-en pin and the 32.768KHz clock. When Bluetooth and WiFi are 
-> working at the same time, no matter which one is turned off, it will 
-> affect the other device. Therefore, a pwrseq device is now abstracted to 
-
-It is the first time you mention pwrseq device from above paragraph.
-Nothing above describes pwrseq.
-
-Stop describing your problem, we all know it exactly if you follow the
-discussions about power sequencing. Instead describe this particular
-device you add binding for. What is this pwrseq in hardware? How does it
-look? Where is it located? What are its pins? What are its supplies?
-
-> manage the chip-en pin, bt-en pin, and the 32.768KHz clock.
+DMA x2
 
 > 
-> There is currently no matching device name for the pwrseq composite device.
+> The setup of the outbound address translation tables in the root port
 
-? No clue what does this mean.
+Root Port
+
+> driver only needs to handle these two cases.
 > 
-> Could you please give me some advice?
+> Setup the inbound address translation tables to one of two address
+> translations, depending on whether the rootport is marked as dma-coherent or
+> dma-noncoherent.
 
-Again, you do not describe the device for the binding but something
-else. Something for your drivers, sorry. No.
+DMA x2
 
-If you disagree, respond accurately to all questions above, not to only
-some of them...
+> 
+> Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip Polarfire PCIe controller driver")
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  drivers/pci/controller/pcie-microchip-host.c | 106 +++++++++++++++++--
+>  1 file changed, 97 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+> index 47c397ae515a..27bfa3b7a187 100644
+> --- a/drivers/pci/controller/pcie-microchip-host.c
+> +++ b/drivers/pci/controller/pcie-microchip-host.c
+> @@ -7,16 +7,20 @@
+>   * Author: Daire McNamara <daire.mcnamara@microchip.com>
+>   */
+>  
+> +#include <linux/align.h>
+>  #include <linux/bitfield.h>
+> +#include <linux/bits.h>
+>  #include <linux/clk.h>
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqdomain.h>
+> +#include <linux/log2.h>
+>  #include <linux/module.h>
+>  #include <linux/msi.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/pci-ecam.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/wordpart.h>
+>  
+>  #include "../pci.h"
+>  
+> @@ -32,6 +36,9 @@
+>  #define MC_PCIE_BRIDGE_ADDR			(MC_PCIE1_BRIDGE_ADDR)
+>  #define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
+>  
+> +#define MC_MAX_NUM_INBOUND_WINDOWS		8
+> +#define MPFS_NC_BOUNCE_ADDR			0x80000000
+> +
+>  /* PCIe Bridge Phy Regs */
+>  #define PCIE_PCI_IRQ_DW0			0xa8
+>  #define  MSIX_CAP_MASK				BIT(31)
+> @@ -99,14 +106,15 @@
+>  
+>  /* PCIe AXI slave table init defines */
+>  #define ATR0_AXI4_SLV0_SRCADDR_PARAM		0x800u
+> -#define  ATR_SIZE_SHIFT				1
+> -#define  ATR_IMPL_ENABLE			1
+> +#define  ATR_SIZE_MASK				GENMASK(6, 1)
+> +#define  ATR_IMPL_ENABLE			BIT(0)
+>  #define ATR0_AXI4_SLV0_SRC_ADDR			0x804u
+>  #define ATR0_AXI4_SLV0_TRSL_ADDR_LSB		0x808u
+>  #define ATR0_AXI4_SLV0_TRSL_ADDR_UDW		0x80cu
+>  #define ATR0_AXI4_SLV0_TRSL_PARAM		0x810u
+>  #define  PCIE_TX_RX_INTERFACE			0x00000000u
+>  #define  PCIE_CONFIG_INTERFACE			0x00000001u
+> +#define  TRSL_ID_AXI4_MASTER_0			0x00000004u
+>  
+>  #define ATR_ENTRY_SIZE				32
+>  
+> @@ -933,6 +941,86 @@ static int mc_pcie_init_irq_domains(struct mc_pcie *port)
+>  	return mc_allocate_msi_domains(port);
+>  }
+>  
+> +static void mc_pcie_setup_inbound_atr(int window_index, u64 axi_addr, u64 pcie_addr, u64 size)
+> +{
+> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	u32 table_offset = window_index * ATR_ENTRY_SIZE;
+> +	void __iomem *table_addr = bridge_base_addr + table_offset;
+> +	u32 atr_sz;
+> +	u32 val;
+> +
+> +	atr_sz = ilog2(size) - 1;
+> +
+> +	val = ALIGN_DOWN(lower_32_bits(pcie_addr), SZ_4K);
+> +	val |= FIELD_PREP(ATR_SIZE_MASK, atr_sz);
+> +	val |= ATR_IMPL_ENABLE;
+> +
+> +	writel(val, table_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
+> +
+> +	writel(upper_32_bits(pcie_addr), table_addr + ATR0_PCIE_WIN0_SRC_ADDR);
+> +
+> +	writel(lower_32_bits(axi_addr), table_addr + ATR0_PCIE_WIN0_TRSL_ADDR_LSB);
+> +	writel(upper_32_bits(axi_addr), table_addr + ATR0_PCIE_WIN0_TRSL_ADDR_UDW);
+> +
+> +	writel(TRSL_ID_AXI4_MASTER_0, table_addr + ATR0_PCIE_WIN0_TRSL_PARAM);
+> +}
+> +
+> +static int mc_pcie_setup_inbound_ranges(struct platform_device *pdev, struct mc_pcie *port)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *dn = dev->of_node;
+> +	struct of_range_parser parser;
+> +	struct of_range range;
+> +	int atr_index = 0;
+> +
+> +	/*
+> +	 * MPFS PCIe root port is 32-bit only, behind a Fabric Interface
+> +	 * Controller FPGA logic block which contains the AXI-S interface.
+> +	 *
+> +	 * From the point of view of the PCIe root port, There are only
 
-Best regards,
-Krzysztof
+, There -> , there
+
+Root Port
+
+> +	 * two supported Root Port configurations
+
+Terminate with either : or .
+
+> +	 *
+> +	 * Configuration 1: for use with fully coherent designs; supports a
+> +	 * window from 0x0 (CPU space) to specified PCIe space.
+> +	 *
+> +	 * Configuration 2: for use with non-coherent designs; supports two
+> +	 * 1 Gb wide windows to CPU space; one mapping cpu space 0 to pcie
+
+Gb means gigabits?? GB is for gigabytes.
+
+CPU
+PCIe
+
+> +	 * space 0x80000000 and mapping cpu space 0x40000000 to pcie
+
+Ditto.
+
+> +	 * space 0xc0000000. This cfg needs two windows because of how
+> +	 * the MSI space is allocated in the AXI-S range on MPFS.
+> +	 *
+> +	 * The FIC interface outside the PCIe block *must* complete the inbound
+> +	 * address translation as per MCHP MPFS FPGA design guidelines.
+> +	 */
+> +	if (device_property_read_bool(dev, "dma-noncoherent")) {
+> +		/*
+> +		 * Always need same two tables in this case.  Need two tables
+> +		 * due to hardware interactions between address and size.
+> +		 */
+> +		mc_pcie_setup_inbound_atr(0, 0, MPFS_NC_BOUNCE_ADDR, SZ_1G);
+> +		mc_pcie_setup_inbound_atr(1, SZ_1G, MPFS_NC_BOUNCE_ADDR + SZ_1G, SZ_1G);
+> +	} else {
+> +		/* Find any dma-ranges */
+
+DMA
+
+> +		if (of_pci_dma_range_parser_init(&parser, dn)) {
+> +			/* No dma-range property - setup default */
+
+DMA
+
+> +			mc_pcie_setup_inbound_atr(0, 0, 0, SZ_4G);
+> +			return 0;
+> +		}
+> +
+> +		for_each_of_range(&parser, &range) {
+> +			if (atr_index >= MC_MAX_NUM_INBOUND_WINDOWS) {
+> +				dev_err(dev, "too many inbound ranges; %d available tables\n",
+> +					MC_MAX_NUM_INBOUND_WINDOWS);
+> +				return -EINVAL;
+> +			}
+> +			mc_pcie_setup_inbound_atr(atr_index, 0, range.pci_addr, range.size);
+> +			atr_index++;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+>  				 phys_addr_t axi_addr, phys_addr_t pci_addr,
+>  				 resource_size_t size)
+> @@ -948,8 +1036,9 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+>  	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
+>  	       ATR0_AXI4_SLV0_TRSL_PARAM);
+>  
+> -	val = lower_32_bits(axi_addr) | (atr_sz << ATR_SIZE_SHIFT) |
+> -			    ATR_IMPL_ENABLE;
+> +	val = ALIGN_DOWN(lower_32_bits(axi_addr), SZ_4K);
+> +	val |= FIELD_PREP(ATR_SIZE_MASK, atr_sz);
+> +	val |= ATR_IMPL_ENABLE;
+>  	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
+>  	       ATR0_AXI4_SLV0_SRCADDR_PARAM);
+>  
+> @@ -964,11 +1053,6 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+>  	val = upper_32_bits(pci_addr);
+>  	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
+>  	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
+> -
+> -	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
+> -	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
+> -	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
+> -	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
+>  }
+>  
+>  static int mc_pcie_setup_windows(struct platform_device *pdev,
+> @@ -1131,6 +1215,10 @@ static int mc_platform_init(struct pci_config_window *cfg)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = mc_pcie_setup_inbound_ranges(pdev, port);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Address translation is up; safe to enable interrupts */
+>  	ret = mc_init_interrupts(pdev, port);
+>  	if (ret)
+> 
+
+The code change itself looks fine for the extent I understand it.
+
+-- 
+ i.
 
