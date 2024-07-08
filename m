@@ -1,137 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07ED212E75;
-	Mon,  8 Jul 2024 21:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C4E14372B
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720473318; cv=none; b=eQ1C5pnYfE/ONdCnw/vI+seH8g67rmt0W+q2vsN5WqsAg3BTwIZRPZbX0a2evtq5Q7NEH2rXoOhu9l273XCb4I/KhugxXMtI4WZ3hR5/wF+twhqbjchZPCfETkJJW5CBmvApXs5Wd4hgvk6Y6tZZw3FIWAshwPH+b8eWZdpKZjQ=
+	t=1720473350; cv=none; b=cKvhZu7aEfaLZScJcp5dKOXHnOmoL+YSvUSJfH3rTXjntIC0cifJ2pZbY0LhxmlrjNst01c9ilocxXuFj+zNYhN4Er0hMQEoaanL5WddIM6rZMrEiirDivsRstmOokUEjbr9Gj6Bh+rl9H6AwyLd+8PAcNKqpYX7BKh8MdTORKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720473318; c=relaxed/simple;
-	bh=kAc6w7ha10sYNCEe/V6aYJmYQvnIrUSX27i4gmDVeaw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=tb/wi7aUNdBvleFLUXCEEO9vix/3W9QDc568McfGeoeV6bbCMqFNVTjNvRRdUD0isj0i93cmFvFwblt/RMxAKU5SYOy5gkUK+YTMTq8/jn45F1i+obPqG3E8rzXL6W7Z9Gwv78DnjJR4h7Z5Ncu4IDU7K+4xyTUlw9ZfSMowcRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nbIApz44; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720473350; c=relaxed/simple;
+	bh=rhLMzhnBr1fmJn4hsQMzNNrDyhSsV9+nyDHGBNMD9LQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p/xeIUU8C47YoyyRffERPr3qwAu/AAP0adUrfQSPJZvOMyAoicvLzHy26wQhLUl4N9ZfZsPbUkrPOWDkNnFRSou3fEiXhLRcbWL3tIlZtollcBtN8KQ75zMtcRXECgYRWRDr/k/ll01n+Dt8XxN7Gdj3gybI/5BksLmQsbIqnV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hrz3z6OW; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nbIApz44"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468BwTvk025637;
-	Mon, 8 Jul 2024 21:15:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=HIraQW69nRCntJylblT984
-	/L8ukZ5pc+efMd0GeGwhk=; b=nbIApz44TDoEtAqJlDyc7uwdWdfby7UYYXUqCn
-	vQTbPL8awqp7TxGcNAinhnPY2mDILZoFi2exaBiyZJUnpBsfFd8HrXYwJCYcIQ/s
-	7SQvCqMGhXP6KMu0+bfIB0H+Bqn5bDzh/GBfCYrti1RWA9tjYgtup8b/5lJOlcu+
-	pnopY0uC77fNKnGup4GNA241JY/yyNxu2hPXLcYlF8yMrPo9HjsMeehSv/r5sXur
-	5G2EKAJJlkzhZgaFqlqhyERsHk7N+RRSSlg3LOk4bfER56gKeLEnTv27SIz+ChtO
-	ORjCmEOgSbQFL/FwFlgwCGxOpeWQjL9gjCdiUvqwZcBLxuHw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406we8vt0p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jul 2024 21:15:08 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 468LF6gk030793
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jul 2024 21:15:06 GMT
-Received: from hu-scheluve-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 8 Jul 2024 14:15:03 -0700
-From: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
-Date: Mon, 8 Jul 2024 14:14:47 -0700
-Subject: [PATCH] arm64: dts: qcom: sa8775p: Add interconnects for ethernet
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hrz3z6OW"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7035d5eec5aso1702067a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 14:15:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720473347; x=1721078147; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0uy9ikK6i2ce0Lmsca9PL3vsPP0xYz4tW9STZ+9c+oE=;
+        b=hrz3z6OW3ATt5CSB4mfO5xjFlxqwUs6Lo/q/HKft1Js9CilVhTs/Y4SGBf/dIqNMSq
+         nsCYuBpZRNHDb9jyyrez8V/6qZMgIHz2EZn3ORg2SB17NxPMPKmWYhd66/LrCbQfbS+E
+         /JVYjpIfQwnE3PxGZfvNddZSnCFoyOmFeiNfmcJVtvuV7tvADNdkJQraZfk3Xp/xBQyG
+         F4HnMoaVRTkL7VchWJNgQq7VHxxTaG+AzgsI/xdwSLcod/x2s4UMHngt7frp2WjwytBm
+         b0RcZTcQlbQ8eHGAHpLRaPEQeDkbh1UyP1KRIWQzf5hYlwyFA8RhR8e6gJcNd8KbmnMZ
+         lxuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720473347; x=1721078147;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0uy9ikK6i2ce0Lmsca9PL3vsPP0xYz4tW9STZ+9c+oE=;
+        b=V22VqTR+LmZW8bJMeftoNDGZVb2mg/5tyIVxBSKfKt6DqcwzB5OXGvoiA/82KuUFvp
+         Yt/HwDq05Gj4xD7yv0AQNi4JEKSdv/tocwIE4Nzscqc1NwE+zW1gERiREhci2rbj7ZcR
+         GxLb3VfdcesthyjfVFNi8ATjMdtX96D1/w4SkxDtmPdzeeXDeM2n23BV5Pfavb7kMAAu
+         ayUfa435QqkNPyan3ouhy9qW2Qx2sjU3WWOlC4O/1flYpT7ojsOdpDksGl+qmRVv9pFv
+         UNgsRObXf3dGSRr9PxS3HPyNAJhhc+CzSXuBz3UhIPtYYT3jaQ/Q8UQKqxn6iayDtdIL
+         pDew==
+X-Forwarded-Encrypted: i=1; AJvYcCUYeOOrbT8e+P3XqPJl0FHwpVb1Fb9FGufPaKr4zFnFFDveq044Bil+1koBnppxr3QSb09Qm9/y4a+aECGxHJRJ6hH0hdpzoFho2jGA
+X-Gm-Message-State: AOJu0Yy4/ApKR5YvbT5n2yz0NKN5FQ/nMAuzn6jEW/fNmBPQ9UBCag/n
+	zf1y2R1RaxdV1hBaFTqz/AWqP5p4mdzzJv+msBy5XHtsk8l9gdOxIwEyAupYq9c=
+X-Google-Smtp-Source: AGHT+IFCFAiZRzRwOpzCyq4dZt7m1IKHP5ZbEcsTgsYyiNk5cHylYqzh4ru8zGjJ0H54yTk3AdBIWw==
+X-Received: by 2002:a9d:6316:0:b0:703:64d4:8e12 with SMTP id 46e09a7af769-70375a06a12mr723275a34.2.1720473346891;
+        Mon, 08 Jul 2024 14:15:46 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-70374fc0af5sm157297a34.62.2024.07.08.14.15.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 14:15:46 -0700 (PDT)
+Message-ID: <bc88e0c7-516f-4eef-a9d9-ce0250d6a570@baylibre.com>
+Date: Mon, 8 Jul 2024 16:15:45 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/7] spi: Enable controllers to extend the SPI protocol
+ with MOSI idle configuration
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+ lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ nuno.sa@analog.com, corbet@lwn.net, marcelo.schmitt1@gmail.com
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1719686465.git.marcelo.schmitt@analog.com>
+ <7eb23146ad6bf6090183c6340e4d59cb269d83a7.1719686465.git.marcelo.schmitt@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <7eb23146ad6bf6090183c6340e4d59cb269d83a7.1719686465.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240708-icc_bw_voting_emac_dtsi-v1-1-4b091b3150c0@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAMZWjGYC/x3MQQqAIBBA0avIrBPUgrKrRIjZVLNIQ6WC6O5Jy
- 7f4/4GEkTBBzx6IeFKi4AtkxcBt1q/IaS4GJVQjWlFzcs5MlzlDJr8a3K0zc07ElRV60VZ2sm2
- g1EfEhe7/PIzv+wFnY8UVaQAAAA==
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Andrew Halaney
-	<ahalaney@redhat.com>, <kernel@quicinc.com>,
-        Sagar Cheluvegowda
-	<quic_scheluve@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bqWY1VxPVVcV1HvT7K3kLRKBqr30oM4O
-X-Proofpoint-ORIG-GUID: bqWY1VxPVVcV1HvT7K3kLRKBqr30oM4O
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_11,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- malwarescore=0 priorityscore=1501 clxscore=1011 impostorscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407080157
 
-Define interconnect properties for ethernet hardware.
+On 6/29/24 2:04 PM, Marcelo Schmitt wrote:
+> The behavior of an SPI controller data output line (SDO or MOSI or COPI
+> (Controller Output Peripheral Input) for disambiguation) is usually not
+> specified when the controller is not clocking out data on SCLK edges.
+> However, there do exist SPI peripherals that require specific MOSI line
+> state when data is not being clocked out of the controller.
+> 
+> Conventional SPI controllers may set the MOSI line on SCLK edges then bring
+> it low when no data is going out or leave the line the state of the last
+> transfer bit. More elaborated controllers are capable to set the MOSI idle
+> state according to different configurable levels and thus are more suitable
+> for interfacing with demanding peripherals.
+> 
+> Add SPI mode bits to allow peripherals to request explicit MOSI idle state
+> when needed.
+> 
+> When supporting a particular MOSI idle configuration, the data output line
+> state is expected to remain at the configured level when the controller is
+> not clocking out data. When a device that needs a specific MOSI idle state
+> is identified, its driver should request the MOSI idle configuration by
+> setting the proper SPI mode bit.
+> 
+> Acked-by: Nuno Sa <nuno.sa@analog.com>
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
 
-Suggested-by: Andrew Halaney <ahalaney@redhat.com>
-Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
----
-Adding interconnect dtsi properties within ethernet node of SA8775P,
-this patch is adding support for the interconnect properties defined
-in the series ->  
-https://lore.kernel.org/all/20240703-icc_bw_voting_from_ethqos-v3-0-8f9148ac60a3@quicinc.com/
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Tested both valid and invalid combinations of flags and saw expected
+behavior/error messages in all cases.
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 23f1b2e5e624..7ebf03953b7b 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -3464,6 +3464,12 @@ ethernet1: ethernet@23000000 {
- 				      "ptp_ref",
- 				      "phyaux";
- 
-+			interconnect-names = "mac-mem", "cpu-mac";
-+			interconnects = <&aggre1_noc MASTER_EMAC_1 QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-+					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
-+					 &config_noc SLAVE_EMAC1_CFG QCOM_ICC_TAG_ALWAYS>;
-+
- 			power-domains = <&gcc EMAC1_GDSC>;
- 
- 			phys = <&serdes1>;
-@@ -3499,6 +3505,12 @@ ethernet0: ethernet@23040000 {
- 				      "ptp_ref",
- 				      "phyaux";
- 
-+			interconnect-names = "mac-mem", "cpu-mac";
-+			interconnects = <&aggre1_noc MASTER_EMAC QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-+					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
-+					 &config_noc SLAVE_EMAC_CFG QCOM_ICC_TAG_ALWAYS>;
-+
- 			power-domains = <&gcc EMAC0_GDSC>;
- 
- 			phys = <&serdes0>;
-
----
-base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
-change-id: 20240703-icc_bw_voting_emac_dtsi-2a09f9a18174
-
-Best regards,
--- 
-Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+Reviewed-by: David Lechner <dlechner@baylibre.com>
+Tested-by: David Lechner <dlechner@baylibre.com>
 
