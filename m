@@ -1,101 +1,164 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5E413F45F
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 14:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52B6478C75;
+	Mon,  8 Jul 2024 14:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720450430; cv=none; b=d2EVMpIgB40vjodliygrn1AeWdL7YEnwQ73lRXxmPOL+NxyQKjTHRndVK7jhV1GmdY4mvaZrqgo3IqZNbnvwkrhRAFwTEGh6jGcyYrptleKM3LvZFYHoWddUD6/T6S2PGOxBLDbvd8nmAofTVV1HkenEds4XDQ0X1eHGWYRPndA=
+	t=1720450537; cv=none; b=eBJYLeVgGjv71D/vzWoFHdldddZXEjB4/NX8dEr4Hi35fj9PFhC3Cp6pVwxS5UlwRq7cv5zGCt3bza/sMV24y3UHwnL2EMuSeh+2kZn47mHuozN4K6wNGTcRstlYxZeW1yJMULNR1bMMYyMGNi5DMok9UNQZ5zx9gguUU0OPCVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720450430; c=relaxed/simple;
-	bh=oS/9j3dsYpP59idtGgIC4uuWK33USwlviNFf2Yb9edY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UbBYsw0BztKTzR0w5PWK95UQrgXZEohx0zgzhT3jgDKFDDraM/x3h6d6fLAA00RDqYA+r/WkbYtlIvcPzRt630Vm6FVC8B24IjKAvFzQe/Upy7JAKeIvk9iZw6iLsfaXgPJQ+GbM8kGh0q5/NosmF8rQLUzQ0vXyf2SbFepEaBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XL1CqNZw; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XL1CqNZw"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4257d5fc9b7so34622225e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 07:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720450427; x=1721055227; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EyqFib4M3rqlBFw/ZGzz1LaByQHFqZPSGdvyPY+IPB0=;
-        b=XL1CqNZwkkWELRYJEe9haeA07ZsDwWWm3PbUZF6DzOWI9yTLS72PRr5QecEoUmuh8J
-         0GfgCfxRnSi6ULMkKakl8H2DB0negyPnLI8hfGTZvLI3lSBGAkWJZBgKhItFFd6FxT6U
-         tiqxTPMdbygQQGo7b8KysReMrE0+rAWzf8LiS65c59/lIRE0p38E8ug9RD/XlqCysSzO
-         KkeNopZ0pVr3RHd4LKMrZ6SaMdohrnT1BaxughNmfw4DP3+5Xlq/lw+ybwLZIYiB3xk4
-         sX3yM4vAQYNhJjAeivmQL1nxKvH4oghdPG2rng5EehQHriKFJe0dFTyL/RRV7Oi8KShr
-         HNuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720450427; x=1721055227;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EyqFib4M3rqlBFw/ZGzz1LaByQHFqZPSGdvyPY+IPB0=;
-        b=a3ihCGRdTQHIzs1nrBkSFzoGyAUiTB3LM+cqldJ9xZmhbVlzH1TwEXz4d2UFGn1LCZ
-         z8Eluk3ycKd6CcmhIhuDJWqPbZZoWCzptEDlfvrdplgHYrh7a5kV/UvLboG42VzCY92D
-         DLY2W42u8HCJowzQRcWdUkGArOEKy2ssF++hN3XvDeymHyaKzHE4AK5ENvSs14Srof69
-         JeqiZE2Y6wm8jBLVqrkuDzrMYiW8ktvXP/OfxbRFq7enKHn6ai7EZYzpsOwiV7p6g8nS
-         38rRyGEH0021AVRuUKeC1iAxfNkms2d4Z0hTSbzZ3PtSiNLIZy0b80FBprQAAZlwCYzF
-         cwng==
-X-Forwarded-Encrypted: i=1; AJvYcCVE3Mqww9exGLnJ8AyyvAp+67uQDrDI23f8d/ncWyaZWBme6e0sFtnMxk+P7yDUcrU6lRYYkXvM1Mv+CChBZws9hmtl9msQGjdKY6s7
-X-Gm-Message-State: AOJu0YzYTx4+sK2gbDtfW3JyJ0gKc7hpnVYoiL0fK7iKFGHUrGi2CE4F
-	zeg0TcbbLSJw61x6Og0ukdiywpHd0LuRmA3htWaMdnIo3RPKuCojc52+AT6D6ZM=
-X-Google-Smtp-Source: AGHT+IEBuhdhAHUYp56NAUgYnKaRIraX3CZBvDDbgKXiz0kpyc8NLn1O5Tq1/i1agiHJxKvs5l9b7Q==
-X-Received: by 2002:a05:600c:378b:b0:426:6f87:65fc with SMTP id 5b1f17b1804b1-4266f876712mr488425e9.17.1720450427358;
-        Mon, 08 Jul 2024 07:53:47 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a2a3:9ebc:2cb5:a86a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e09fcsm1933645e9.4.2024.07.08.07.53.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 07:53:47 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Stefan Agner <stefan@agner.ch>,
-	Frieder Schrempf <frieder@fris.de>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: gpio: vf610: Allow gpio-line-names to be set
-Date: Mon,  8 Jul 2024 16:53:45 +0200
-Message-ID: <172045041379.123415.15663684790489482699.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240708084107.38986-2-frieder@fris.de>
-References: <20240708084107.38986-1-frieder@fris.de> <20240708084107.38986-2-frieder@fris.de>
+	s=arc-20240116; t=1720450537; c=relaxed/simple;
+	bh=PE42KBFhGlWopSbb9HwFgyvZxhtwLCUTz4w/jhjsbmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kS6u0pqi3xVeqFTEaywxi2ODH94cmxhAtknkPYGUMwAqahr7ZHd273aEqByeFTv6feGxQdM2fVwP8h2atcr4qwgqLbjP0HJ6Eayky/h68rXdMMe2S8w2HMmM3/xctEocQRj+ohBQB4fHLm0cWmoDYl3VpvGLcVyUnTRPeDoacZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3B3C1042;
+	Mon,  8 Jul 2024 07:55:59 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E6513F641;
+	Mon,  8 Jul 2024 07:55:33 -0700 (PDT)
+Date: Mon, 8 Jul 2024 15:55:30 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: arm,scmi: introduce
+ property mbox-rx-timeout-ms
+Message-ID: <Zov94i6FVShbVFee@pluto>
+References: <20240703031715.379815-1-peng.fan@oss.nxp.com>
+ <ZoZ7NCSaG0YRK-60@bogus>
+ <AM6PR04MB5941A61736496B9850A3B52C88DE2@AM6PR04MB5941.eurprd04.prod.outlook.com>
+ <ZoZ8pfi5KZZGY1wd@bogus>
+ <AM6PR04MB5941F61DFB15AFDA384C153A88DE2@AM6PR04MB5941.eurprd04.prod.outlook.com>
+ <ZoatADKjBfpRCeLz@pluto>
+ <AM6PR04MB594199822CE1944DCE3F86D888DE2@AM6PR04MB5941.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR04MB594199822CE1944DCE3F86D888DE2@AM6PR04MB5941.eurprd04.prod.outlook.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Mon, 08 Jul 2024 10:40:31 +0200, Frieder Schrempf wrote:
-> Describe common "gpio-line-names" property to allow DTs to
-> specify names for GPIO lines.
+On Thu, Jul 04, 2024 at 11:48:31PM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: arm,scmi: introduce
+> > property mbox-rx-timeout-ms
+> > 
+> > On Thu, Jul 04, 2024 at 12:33:09PM +0000, Peng Fan wrote:
+> > > > Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: arm,scmi:
+> > > > introduce property mbox-rx-timeout-ms
+> > > >
+> > > > On Thu, Jul 04, 2024 at 10:39:53AM +0000, Peng Fan wrote:
+> > > > > > Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: arm,scmi:
+> > > > > > introduce property mbox-rx-timeout-ms
+> > > > > >
+> > > > > > On Wed, Jul 03, 2024 at 11:17:14AM +0800, Peng Fan (OSS)
+> > wrote:
+> > > > > > > From: Peng Fan <peng.fan@nxp.com>
+> > > > > > >
+> > > > > > > System Controller Management Interface(SCMI) firmwares
+> > might
+> > > > > > have
+> > > > > > > different designs by SCMI firmware developers. So the
+> > maximum
+> > > > > > receive
+> > > > > > > channel timeout value might also varies in the various designs.
+> > > > > > >
+> > > > > > > So introduce property mbox-rx-timeout-ms to let each
+> > platform
+> > > > > > > could set its own timeout value in device tree.
+> > > > > > >
+> > > > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > > > > ---
+> > > > > > >
+> > > > > > > V2:
+> > > > > > >  Drop defaults, update description.
+> > > > > > >
+> > > > > > >  Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > | 6
+> > > > > > ++++++
+> > > > > > >  1 file changed, 6 insertions(+)
+> > > > > > >
+> > > > > > > diff --git
+> > > > > > a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > > >
+> > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > > > index ebf384e76df1..dcac0b36c76f 100644
+> > > > > > > ---
+> > > > a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > > > +++
+> > > > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > > > @@ -121,6 +121,12 @@ properties:
+> > > > > > >        atomic mode of operation, even if requested.
+> > > > > > >      default: 0
+> > > > > > >
+> > > > > > > +  max-rx-timeout-ms:
+> > > > > > > +    description:
+> > > > > > > +      An optional time value, expressed in milliseconds,
+> > > > > > > + representing
+> > > > > > the
+> > > > > > > +      mailbox maximum timeout value for receive channel. The
+> > > > > > > + value
+> > > > > > should
+> > > > > > > +      be a non-zero value if set.
+> > > > > > > +
+> > > > > >
+> > > > > > IIRC, you had the min and max constraint in the earlier response.
+> > > > > > You need to have rushed and posted another version before I
+> > > > > > could respond with my preference.
+> > > > > >
+> > > > > > So there is no rush, these are v6.12 material. Take time for
+> > > > > > respining and give some time for the review.
+> > > > >
+> > > > > Sure. I just not sure what the maximum should be set, so I drop
+> > > > > the minimum and maximum from my previous email.
+> > > > >
+> > > >
+> > > > Worst case we can just have min constraint to indicate it must be
+> > > > non- zero value as you have mentioned above and drop that
+> > statement
+> > > > as it becomes explicit with the constraint.
+> > >
+> > > I'll use below in v3:
+> > >   max-rx-timeout-ms:
+> > >     description:
+> > >       An optional time value, expressed in milliseconds, representing
+> > the
+> > >       mailbox maximum timeout value for receive channel. The value
+> > should
+> > >       be a non-zero value if set.
+> > >     minimum: 1
+> > >
+> > > Put the binding away, when you have time, please check whether the
+> > > driver changes are good or not.
+> > > BTW, since our Android team is waiting for this patchset got R-b or
+> > > A-b, then the patches could be accepted by Google common kernel,
+> > we
+> > > could support GKI in our release which is soon in near days. So I am
+> > > being pushed :)
+> > 
+> > Hi Peng,
+> > 
+> > once the bindings are accepted I wanted to fold also this series of yours
+> > in my transport rework series.
 > 
+> No problem, feel free to take it into your series, I will post out V3 later(wait
+> if Sudeep is ok with I add minimum 1 or not), but v3 2/2 should be same
+> as v2 2/2.
 > 
 
-Applied, thanks!
+Still not taken in transport rework V1, but not forgotten :D
 
-[1/5] dt-bindings: gpio: vf610: Allow gpio-line-names to be set
-      commit: 8060be2489f9bfa0c603373fa71cc2f93e46e462
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Thanks,
+Cristian
