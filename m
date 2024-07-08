@@ -1,40 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8741B558B7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EDB54F8C
 	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 09:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720430962; cv=none; b=TRmRkzArn5qHC10/U0ScWiqjqorpk0g+QPLihs0Y7eQ2QuhwG1WoAIN68Z0r+LXcfTrvulQvXtwiPHmtEyM2XrW/R4AAcqP7SLPUuIadJglcxySJOos8Pm4MmqYLB0R0WboB8gX1OTKJFPDHlhLIiCP83J2HxvLuFTOgphEB62M=
+	t=1720430962; cv=none; b=TsvICwTcCi47glcV5yuyfpQcFEYFvksbC/UVjMA+OhtZMeBvCiRWaNHCQ2KmNo+r88JmmXTu5lf0WuBCyRNpJ28TRCbNktTPi49eXu6BPhHWH/13nWxSYR5FacQaz9NQjAHkgAZXTdLWOND0G15ZGXKDpmEPnxqN+QU21BaCKtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720430962; c=relaxed/simple;
-	bh=iPnzJDPYV69x97yqOMsVW8M8RvXBmzlPMZ6dojO6w9w=;
+	bh=Jzk70wrwgyLqpwlKGY57fPB8+FPqSQUySn0ZoqTIHvk=;
 	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MedHdErqTeaABiaDnfG8CjJM2aonAQVyUhT8OUwyYy0gnVSK0x+Q6NSk4zHyUhCViJXdFjlDbydzV2r/Igad19FRjS1CCYLX9LJRTUgSc3cDUdu4wWBokPQqNeMHMAVTpF3dYrIKOhrztoVEdctE+WI3v0m7ADtgmn9MPer5Iyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZhDoV64x; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=SLJZqizgTIUwfj68J0gcC9ABQNU4WE+r5c8pCO2hhCDJcJ1eV2NF9O7JZBtzuWgo+UIa6X6zZzAVuX4TXNPybYx8MCp/DHqumfeN52D7IAmgG7ohOI1wnB++17VDQav6J3z4oQ603MVKT4Mh3kw1leqc+ZiFUtkY2FbQom/UxvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Og/wOdK6; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZhDoV64x"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Og/wOdK6"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=D/qnIt6lTHMe7dedD5Wou6cHbGCP/Pb/6K/ANgI22y8=; b=ZhDoV64xmEOYU3QOIuxBQCNP+Y
-	Ynnoc9WLR+a6eFbtR7QM7jbooUAyBMP6wgKs87UjpKsmZs5PeyTJeOwJfFJw4TwX5+lA78oK0jZSz
-	mVAgKDK5wkYirKH9OrxYh+temyYaENpOByTAXm/IpzLMJ03kXhR6kVYy6dDpN1R8WVP/vZgSvdbA8
-	e6mQOawMKct21VRt92YBJkam4rt3EjOv4K/z4Imue/1vbdQH/pRnhlz/TVY3BVsQvvYrdSdvaX0ly
-	s1OZJ9fwdUA9pyRAT5WjWB3zYQsW0XdPAAIKK8bMotWEuj7fUkcqNW3SxG0T9oiQ2UoW88KA8ptPH
-	YJ3LXvLQ==;
+	bh=rOfuhX/Ngd/1oTixnYxtLLU1jaqckcc7jQQl+4rPfhA=; b=Og/wOdK6h9PcPwOSR4GCF6P3Qr
+	mHdhMeReDtpf2IlRf+7AnhsUrNg2PkOZysnu6MdE/GHx4UnP0J7ieaIqJRORB8PMWKMBIjcfJ703Y
+	W3XIyPy5i5mUmfUv+oUsLH8YhX7ShORQ0/477eJgzAsQf4PTEN1NGrbiXKCOXLlNlPoMfYoevRDGM
+	VMXiIG5/m4qz0lnjeguJOEeBbzwdUrswAWlQhVYZe/DtQoPnlU4+u/1tFUtTbfD2HD/4b6P+jz2NJ
+	VTWA0JHmfE8DLJ1yYzcLoYcRYFBFsKYzPpZ3UCCk/sRNoGmT9ao7+DdntbXzUEYqoUvZCzEy46X/o
+	XNlNjXEA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sQkgN-00000006hOX-0jnI;
+	id 1sQkgN-00000006hOc-354R;
 	Mon, 08 Jul 2024 09:29:15 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 044993006B7; Mon,  8 Jul 2024 11:29:13 +0200 (CEST)
-Message-Id: <20240708092415.248663071@infradead.org>
+	id 1D5A3302440; Mon,  8 Jul 2024 11:29:13 +0200 (CEST)
+Message-Id: <20240708092415.801757710@infradead.org>
 User-Agent: quilt/0.65
-Date: Mon, 08 Jul 2024 11:12:42 +0200
+Date: Mon, 08 Jul 2024 11:12:47 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  andrii@kernel.org
@@ -46,7 +46,7 @@ Cc: linux-kernel@vger.kernel.org,
  jolsa@kernel.org,
  clm@meta.com,
  paulmck@kernel.org
-Subject: [PATCH 01/10] perf/uprobe: Re-indent labels
+Subject: [PATCH 06/10] perf/uprobe: Split uprobe_unregister()
 References: <20240708091241.544262971@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,123 +56,110 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Remove the silly label indenting.
+With uprobe_unregister() having grown a synchronize_srcu(), it becomes
+fairly slow to call. Esp. since both users of this API call it in a
+loop.
 
- s/^\ \([[:alnum:]]*\):$/\1:/g
+Peel off the sync_srcu() and do it once, after the loop.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/uprobes.c |   26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ include/linux/uprobes.h     |    8 ++++++--
+ kernel/events/uprobes.c     |    8 ++++++--
+ kernel/trace/bpf_trace.c    |    6 ++++--
+ kernel/trace/trace_uprobe.c |    6 +++++-
+ 4 files changed, 21 insertions(+), 7 deletions(-)
 
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -113,7 +113,8 @@ extern int uprobe_write_opcode(struct ar
+ extern int uprobe_register(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
+ extern int uprobe_register_refctr(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+ extern int uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, bool);
+-extern void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
++extern void uprobe_unregister_nosync(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
++extern void uprobe_unregister_sync(void);
+ extern int uprobe_mmap(struct vm_area_struct *vma);
+ extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
+ extern void uprobe_start_dup_mmap(void);
+@@ -163,7 +164,10 @@ uprobe_apply(struct inode *inode, loff_t
+ 	return -ENOSYS;
+ }
+ static inline void
+-uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
++uprobe_unregister_nosync(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
++{
++}
++static inline void uprobes_unregister_sync(void)
+ {
+ }
+ static inline int uprobe_mmap(struct vm_area_struct *vma)
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
-@@ -205,7 +205,7 @@ static int __replace_page(struct vm_area
- 	folio_put(old_folio);
+@@ -1126,7 +1126,7 @@ __uprobe_unregister(struct uprobe *uprob
+  * @offset: offset from the start of the file.
+  * @uc: identify which probe if multiple probes are colocated.
+  */
+-void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
++void uprobe_unregister_nosync(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
+ {
+ 	struct uprobe *uprobe;
  
- 	err = 0;
-- unlock:
-+unlock:
- 	mmu_notifier_invalidate_range_end(&range);
- 	folio_unlock(old_folio);
- 	return err;
-@@ -857,7 +857,7 @@ static int prepare_uprobe(struct uprobe
- 	smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
- 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
+@@ -1138,10 +1138,14 @@ void uprobe_unregister(struct inode *ino
+ 	__uprobe_unregister(uprobe, uc);
+ 	mutex_unlock(&uprobe->register_mutex);
+ 	put_uprobe(uprobe);
++}
++EXPORT_SYMBOL_GPL(uprobe_unregister_nosync);
  
-- out:
-+out:
- 	up_write(&uprobe->consumer_rwsem);
++void uprobe_unregister_sync(void)
++{
+ 	synchronize_srcu(&uprobes_srcu);
+ }
+-EXPORT_SYMBOL_GPL(uprobe_unregister);
++EXPORT_SYMBOL_GPL(uprobe_unregister_sync);
  
- 	return ret;
-@@ -965,7 +965,7 @@ build_map_info(struct address_space *map
- 	struct map_info *info;
- 	int more = 0;
+ /*
+  * __uprobe_register - register a probe
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -3181,9 +3181,11 @@ static void bpf_uprobe_unregister(struct
+ 	u32 i;
  
-- again:
-+again:
- 	i_mmap_lock_read(mapping);
- 	vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
- 		if (!valid_vma(vma, is_register))
-@@ -1019,7 +1019,7 @@ build_map_info(struct address_space *map
- 	} while (--more);
- 
- 	goto again;
-- out:
-+out:
- 	while (prev)
- 		prev = free_map_info(prev);
- 	return curr;
-@@ -1068,13 +1068,13 @@ register_for_each_vma(struct uprobe *upr
- 				err |= remove_breakpoint(uprobe, mm, info->vaddr);
- 		}
- 
-- unlock:
-+unlock:
- 		mmap_write_unlock(mm);
-- free:
-+free:
- 		mmput(mm);
- 		info = free_map_info(info);
+ 	for (i = 0; i < cnt; i++) {
+-		uprobe_unregister(d_real_inode(path->dentry), uprobes[i].offset,
+-				  &uprobes[i].consumer);
++		uprobe_unregister_nosync(d_real_inode(path->dentry), uprobes[i].offset,
++					 &uprobes[i].consumer);
  	}
-- out:
-+out:
- 	percpu_up_write(&dup_mmap_sem);
- 	return err;
- }
-@@ -1159,7 +1159,7 @@ static int __uprobe_register(struct inod
- 	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
- 		return -EINVAL;
- 
-- retry:
-+retry:
- 	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
- 	if (!uprobe)
- 		return -ENOMEM;
-@@ -1468,7 +1468,7 @@ static int xol_add_vma(struct mm_struct
- 	ret = 0;
- 	/* pairs with get_xol_area() */
- 	smp_store_release(&mm->uprobes_state.xol_area, area); /* ^^^ */
-- fail:
-+fail:
- 	mmap_write_unlock(mm);
- 
- 	return ret;
-@@ -1512,7 +1512,7 @@ static struct xol_area *__create_xol_are
- 	kfree(area->bitmap);
-  free_area:
- 	kfree(area);
-- out:
-+out:
- 	return NULL;
++	if (cnt)
++		uprobe_unregister_sync();
  }
  
-@@ -1915,7 +1915,7 @@ static void prepare_uretprobe(struct upr
- 	utask->return_instances = ri;
+ static void bpf_uprobe_multi_link_release(struct bpf_link *link)
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -1104,6 +1104,7 @@ static int trace_uprobe_enable(struct tr
+ static void __probe_event_disable(struct trace_probe *tp)
+ {
+ 	struct trace_uprobe *tu;
++	bool sync = false;
  
- 	return;
-- fail:
-+fail:
- 	kfree(ri);
+ 	tu = container_of(tp, struct trace_uprobe, tp);
+ 	WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
+@@ -1112,9 +1113,12 @@ static void __probe_event_disable(struct
+ 		if (!tu->inode)
+ 			continue;
+ 
+-		uprobe_unregister(tu->inode, tu->offset, &tu->consumer);
++		uprobe_unregister_nosync(tu->inode, tu->offset, &tu->consumer);
++		sync = true;
+ 		tu->inode = NULL;
+ 	}
++	if (sync)
++		uprobe_unregister_sync();
  }
  
-@@ -2031,7 +2031,7 @@ static int is_trap_at_addr(struct mm_str
- 
- 	copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
- 	put_page(page);
-- out:
-+out:
- 	/* This needs to return true for any variant of the trap insn */
- 	return is_trap_insn(&opcode);
- }
-@@ -2159,7 +2159,7 @@ static void handle_trampoline(struct pt_
- 	utask->return_instances = ri;
- 	return;
- 
-- sigill:
-+sigill:
- 	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
- 	force_sig(SIGILL);
- 
+ static int probe_event_enable(struct trace_event_call *call,
 
 
