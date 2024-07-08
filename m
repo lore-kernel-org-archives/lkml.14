@@ -1,253 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F10038FA1;
-	Mon,  8 Jul 2024 12:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AA07E0EA
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720442763; cv=none; b=nC9edYOVvvw5rWY6rkKrILcHq+mDSPBpNUrb4cE3Dc7rDbQyXz/R+oL9KftNDyFDkYq0GS37el0ZpnK9EMXIzKlZ5VzVLoCY8DP6iSPCR8tPBc3jZPjM4ETjLDSWbmi7TSoSWrXBybBcTrMrsWJ1UGsDfR2IGzS9rcCPznB3jJQ=
+	t=1720442868; cv=none; b=udnnjk5+5TsaDWN9rPKF8ySKzCoPub7eZWrPijSkV4wJgGFha+U7iVDMGdebZTZhlO5c1/weRdQCdyDDD8ZegvU5QYTB4miQig69fdbrXMHb3DEA96KtfAWiLL86TdOdRMMbW8hZ9K4Cs7emBvfaUEaap/Jsiw7+XdQwM9I4etA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720442763; c=relaxed/simple;
-	bh=05BE5QIkNqGHLnlozE+/nCBRDY5C8lMe8j3HBLlQiBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ym9qyAV5yniPCifMi9++I35L6xJ9sCP2eSl/J3/EjTgWOyAGibm5kS6MGiv2sUlrOx/R8UpaTN86MaOUH6w9R2L11LhnxFjvtI2qt7Mz9ZV6fOGOFuttziTV7/f8ORYo9tN9v3O6cRsNUAJkbRIvkifFla0BGu0/mhEKiu4Nv8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIhtQM98; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720442868; c=relaxed/simple;
+	bh=3Ak5xUBHyaHOdfMhs/mCfmmplbSl0ZIAZgXlRgGAfTU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MzS+yh69le09ehCGKiz0ZXlHOCMa4NU57oqnHgBgOvAtph/D5t/4y+pO5rLrMecJX5wrV0rJ0dXH7WcpTTCiB4X7+l48zHh6MTV/ivm4DZL3qJoiNJpNUXHKYZd7z3G96f4DKMe78yIoF6Z6iAoUMRpeDU6aW6+3d3Va8kmiDWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UlCNFTe2; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIhtQM98"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610ACC116B1;
-	Mon,  8 Jul 2024 12:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720442763;
-	bh=05BE5QIkNqGHLnlozE+/nCBRDY5C8lMe8j3HBLlQiBI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KIhtQM98DRc+Q3iqGQRKLHhd1DctOduNh0S+DNqGQ1ehzrJNcvWpyNZv65htncc4N
-	 KOc5BnykMyZ87lhvedTdLfpcJ00LCEb46+qrMMaRLBQ8rT+uTH5p69T/6rIy78q9MB
-	 nWgeZfMdJu1mwB01HOdNcJy/Y4Ff60SKMWjB/KzUJznx/m9dmG9nZvXjYaBv/hK0Hx
-	 gErwQ67NLvpC8mBv53u+vgyY1NpeHyIt/qLHMRDNGd0aGkjyEcBPofjo2T/AsGUegO
-	 MndmCKSd8GGntzi4SYRvtDbcXW3a1QamjfVyrhVSgPE6AsfOibebqcn/nT+JU/C9S6
-	 LAGss79wiDclg==
-Date: Mon, 8 Jul 2024 20:31:45 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>,
-	Inochi Amaoto <inochiama@outlook.com>, linux-serial@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Meng Zhang <zhangmeng.kevin@spacemit.com>
-Subject: Re: [PATCH v3 08/11] riscv: dts: add initial SpacemiT K1 SoC device
- tree
-Message-ID: <ZovcMYs1jnmPCWVE@xhacker>
-References: <20240703-k1-01-basic-dt-v3-0-12f73b47461e@gentoo.org>
- <20240703-k1-01-basic-dt-v3-8-12f73b47461e@gentoo.org>
- <Zoanxksn0nio4MPg@xhacker>
- <20240705063839.GA3042186@ofsar>
- <ZojEEAdUwxPJwqIS@xhacker>
- <20240706050556.GA3590714@ofsar>
- <ZokfBzjvwN0IUQIX@xhacker>
- <20240706142403.GYA4138928.dlan.gentoo>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UlCNFTe2"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1fb70169c23so6278105ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 05:47:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720442866; x=1721047666; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TlTxrHUn7mwk/tnpYeQaN++XyU41zDkCIyIHXuoEzmw=;
+        b=UlCNFTe2gKLvTgAE79GvnpmI8Wlb5yQZVn4kwEgG0Ltcq+fBSBXv4jjWsfM/Rx9ls1
+         G38acQOD+QKbZtftbseVOMxJz7mzrUdTsGMYZVwIqy8ytdnyq869kaJuOdlQun12x/12
+         ITd42IxPqiZVgp6JV9bPlotyWBXjIG4H1CGUxJN2LK5MhmsHwy0z5WMnRGaRR28N760P
+         mSpqckZXibBeNpmb1MIVLd+DTQybHhRWjUjzsGi0rAcKRC/WaWLGldTagVCmjrjsAHva
+         mlpV90OC6QtKPhOF+B8A84GSSCHm2WCah5abf+izqtn/va1iRqpRGP25qHDbJUHJs2Sa
+         tQ+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720442866; x=1721047666;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TlTxrHUn7mwk/tnpYeQaN++XyU41zDkCIyIHXuoEzmw=;
+        b=e067LdqIA1mBEj/Awp5Hk+17PU6ck+C20Q87LGgzlhlS7EBSwyHZpxlsGPK/AVlJY9
+         0mduzrmQc4AfXlnwvq/RADrXBefDlp2Ty/8sKZpMkSqHdLpSJriF4ffm8iythoK3E3r1
+         jJKVGkVWK9v7bDsg1Pd1xe9r48+6a+eEbuAYe6XsiK+yR+Au8bRuM/m2QajclosWt1TP
+         UF+ANHkXvED8z73TvifW3bvQ0Fbn0rii5KJ2IEfgcveTAbL3JrJP7njEbMnwLz/fgaMN
+         kwz6scZf7Rm2ZhcYwLpwh0IgGcWSti/K35BTb47dvKYYXnraVzvUXG4cokV8rLnqpb2y
+         IOKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzB+F2PIBvV64sldTDg6Xp2xlPpU+py8keLPoRBK/L8c+rJnHtzJ9XVWRLhTc5sRHDe+S5L0wflqPyfGDkRvWe4Ogaju/YqEZg9e7Z
+X-Gm-Message-State: AOJu0YzGv59/ZD0jzK0MPoJGKPcl4nZCxgHnlToX3l5v9Fra35hOR/Op
+	CDinuFIKoSbzblb+nd8kYwAQiupebcaHVd2LSHVdd01ybeAv1rECN+sZpSdFyfvqenGwbIDvPS9
+	6/c1cfRko+npSfwa+sHIb4XLSyQLcGnI9mXC0gg==
+X-Google-Smtp-Source: AGHT+IGgSzvZ8Vjg+cCCxFTfIyMnGzcjLhYPG5WHmlvXiHzjVsWh+Qmco5WQkXlzKtgYVsGEedDjDY9AMoeenXRSZCo=
+X-Received: by 2002:a17:903:41c9:b0:1fb:57e7:5bba with SMTP id
+ d9443c01a7336-1fb57e75c96mr35913635ad.20.1720442866205; Mon, 08 Jul 2024
+ 05:47:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240706142403.GYA4138928.dlan.gentoo>
+References: <20240626023505.1332596-1-dtcccc@linux.alibaba.com> <20240708120254.GA27299@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240708120254.GA27299@noisy.programming.kicks-ass.net>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Mon, 8 Jul 2024 14:47:34 +0200
+Message-ID: <CAKfTPtDxdLpm6cC-vv1PpHaEtiOeLtuCwChgZ6Ypg6owz3Vvsw@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/fair: Make SCHED_IDLE entity be preempted in
+ strict hierarchy
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Tianchen Ding <dtcccc@linux.alibaba.com>, linux-kernel@vger.kernel.org, 
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, Josh Don <joshdon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Jul 06, 2024 at 02:24:03PM +0000, Yixun Lan wrote:
-> On 18:40 Sat 06 Jul     , Jisheng Zhang wrote:
-> > On Sat, Jul 06, 2024 at 05:05:56AM +0000, Yixun Lan wrote:
-> > > 
-> > > On 12:12 Sat 06 Jul     , Jisheng Zhang wrote:
-> > > > On Fri, Jul 05, 2024 at 06:38:39AM +0000, Yixun Lan wrote:
-> > > > > 
-> > > > > On 21:46 Thu 04 Jul     , Jisheng Zhang wrote:
-> > > > > > On Wed, Jul 03, 2024 at 02:55:11PM +0000, Yixun Lan wrote:
-> > > > > > > From: Yangyu Chen <cyy@cyyself.name>
-> > > > > > > 
-> > > > > > > Banana Pi BPI-F3 motherboard is powered by SpacemiT K1[1].
-> > > > > > > 
-> > > > > > > Key features:
-> > > > > > > - 4 cores per cluster, 2 clusters on chip
-> > > > > > > - UART IP is Intel XScale UART
-> > > > > > > 
-> > > > > > > Some key considerations:
-> > > > > > > - ISA string is inferred from vendor documentation[2]
-> > > > > > > - Cluster topology is inferred from datasheet[1] and L2 in vendor dts[3]
-> > > > > > > - No coherent DMA on this board
-> > > > > > >     Inferred by taking vendor ethernet and MMC drivers to the mainline
-> > > > > > >     kernel. Without dma-noncoherent in soc node, the driver fails.
-> > > > > > > - No cache nodes now
-> > > > > > >     The parameters from vendor dts are likely to be wrong. It has 512
-> > > > > > >     sets for a 32KiB L1 Cache. In this case, each set is 64B in size.
-> > > > > > >     When the size of the cache line is 64B, it is a directly mapped
-> > > > > > >     cache rather than a set-associative cache, the latter is commonly
-> > > > > > >     used. Thus, I didn't use the parameters from vendor dts.
-> > > > > > > 
-> > > > > > > Currently only support booting into console with only uart, other
-> > > > > > > features will be added soon later.
-> > > > > > > 
-> > > > > > > Link: https://docs.banana-pi.org/en/BPI-F3/SpacemiT_K1_datasheet [1]
-> > > > > > > Link: https://developer.spacemit.com/#/documentation?token=BWbGwbx7liGW21kq9lucSA6Vnpb [2]
-> > > > > > > Link: https://gitee.com/bianbu-linux/linux-6.1/blob/bl-v1.0.y/arch/riscv/boot/dts/spacemit/k1-x.dtsi [3]
-> > > > > > > Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-> > > > > > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > > > > > > ---
-> > > > > > >  arch/riscv/boot/dts/spacemit/k1.dtsi | 376 +++++++++++++++++++++++++++++++++++
-> > > > > > >  1 file changed, 376 insertions(+)
-> > > > > > > 
-> > > > > > > diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> > > > > > > new file mode 100644
-> > > > > > > index 0000000000000..a076e35855a2e
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> > > > > > > @@ -0,0 +1,376 @@
-> > > > > > > +// SPDX-License-Identifier: GPL-2.0 OR MIT
-> > > > > > > +/*
-> > > > > > > + * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
-> > > > > > > + */
-> > > > > > > +
-> > > > > > > +/dts-v1/;
-> > > > > > > +/ {
-> > > > > > > +	#address-cells = <2>;
-> > > > > > > +	#size-cells = <2>;
-> > > > > > > +	model = "SpacemiT K1";
-> > > > > > > +	compatible = "spacemit,k1";
-> > > > > > > +
-> > > > > > > +
-> > ...
-> > > > > > > +	soc {
-> > > > > > > +		compatible = "simple-bus";
-> > > > > > > +		interrupt-parent = <&plic>;
-> > > > > > > +		#address-cells = <2>;
-> > > > > > > +		#size-cells = <2>;
-> > > > > > > +		dma-noncoherent;
-> > > > > > > +		ranges;
-> > > > > > > +
-> > > > > > > +		uart0: serial@d4017000 {
-> > > > > > > +			compatible = "spacemit,k1-uart", "intel,xscale-uart";
-> > > > > > 
-> > > > > > no, this is not a correct hw modeling. The doc on spacemit says
-> > > > > > all the uart support 64 bytes FIFO, declaring xscale only makes
-> > > > > > use of 32 bytes FIFO.
-> > > > > yes, I also noticed it's 64 bytes FIFO
-> > > > > 
-> > > > > > 
-> > > > > > IIRC, 8250_pxa is a xscale uart with 64 bytes FIFO, so this should be
-> > > > > > "mrvl,pxa-uart" or "mrvl,mmp-uart"
-> > > > > 
-> > > > > 
-> > > > > for mrvl,pxa-uart, I think you imply to use drivers/tty/serial/8250/8250_pxa.c,
-> > > > > which turn out doesn't work on k1 SoC, for the record, we need to adjust
-> > > > 
-> > > > Really? I just tried "mrvl,pxa-uart" with rc6, it works perfectly, and the FIFO
-> > > > in the driver logic is 64bytes now. Am I misssing something or you never tried it?
-> > > > 
-> > > Ok, I realised it's the clock issue
-> > > 
-> > > still, I'm not fully convinced about using "mrvl,pxa-uart",
-> > > e.g this driver hardcoded tz_loadsz to 32, not sure if K1 suffer same problem
-> > > 5208e7ced520 ("serial: 8250_pxa: Configure tx_loadsz to match FIFO IRQ level")
-> > 
-> > I believe the problem commit 5208e7ced520 tries to solve is: the
-> > mmp|pxa-uart only support threshold up to 32Bytes, tz_loadsz will be
-> > fifo size by default, this will cause probleme with 64Bytes FIFO.
-> > 
-> yes, exactly
-> 
-> > > 
-> > > also, what's the preference when choosing driver between 8250_pxa.c vs 8250_of.c?
-> > 
-> > Good question. I have no preference. But there are two problems with
-> > 8250_of, I have sent out patches[1][2] to address them.
-> > 
-> > After these two patches, both the earlycon and uart FIFO logic work too
-> > with below dts properties:
-> > 		uart0: serial@d4017000 {
-> > 			compatible = "mrvl,mmp-uart";
-> to be precise, I think here should be compatible = "mrvl,mmp-uart", "intel,xscale-uart"
+On Mon, 8 Jul 2024 at 14:02, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Jun 26, 2024 at 10:35:05AM +0800, Tianchen Ding wrote:
+> > Consider the following cgroup:
+> >
+> >                        root
+> >                         |
+> >              ------------------------
+> >              |                      |
+> >        normal_cgroup            idle_cgroup
+> >              |                      |
+> >    SCHED_IDLE task_A           SCHED_NORMAL task_B
+> >
+> > According to the cgroup hierarchy, A should preempt B. But current
+> > check_preempt_wakeup_fair() treats cgroup se and task separately, so B
+> > will preempt A unexpectedly.
+> > Unify the wakeup logic by {c,p}se_is_idle only. This makes SCHED_IDLE of
+> > a task a relative policy that is effective only within its own cgroup,
+> > similar to the behavior of NICE.
+> >
+> > Also fix se_is_idle() definition when !CONFIG_FAIR_GROUP_SCHED.
+> >
+> > Fixes: 304000390f88 ("sched: Cgroup SCHED_IDLE support")
+> > Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
+> > Reviewed-by: Josh Don <joshdon@google.com>
+> > Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > ---
+> > v2:
+> > Use entity_is_task() to check whether pse is a task.
+> > Improve comments and commit log.
+> >
+> > v1: https://lore.kernel.org/all/20240624073900.10343-1-dtcccc@linux.alibaba.com/
+> > ---
+> >  kernel/sched/fair.c | 24 ++++++++++++------------
+> >  1 file changed, 12 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 41b58387023d..f0b038de99ce 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -511,7 +511,7 @@ static int cfs_rq_is_idle(struct cfs_rq *cfs_rq)
+> >
+> >  static int se_is_idle(struct sched_entity *se)
+> >  {
+> > -     return 0;
+> > +     return task_has_idle_policy(task_of(se));
+> >  }
+> >
+> >  #endif       /* CONFIG_FAIR_GROUP_SCHED */
+> > @@ -8382,16 +8382,7 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
+> >       if (test_tsk_need_resched(curr))
+> >               return;
+> >
+> > -     /* Idle tasks are by definition preempted by non-idle tasks. */
+> > -     if (unlikely(task_has_idle_policy(curr)) &&
+> > -         likely(!task_has_idle_policy(p)))
+> > -             goto preempt;
+> > -
+> > -     /*
+> > -      * Batch and idle tasks do not preempt non-idle tasks (their preemption
+> > -      * is driven by the tick):
+> > -      */
+> > -     if (unlikely(p->policy != SCHED_NORMAL) || !sched_feat(WAKEUP_PREEMPTION))
+> > +     if (!sched_feat(WAKEUP_PREEMPTION))
+> >               return;
+> >
+> >       find_matching_se(&se, &pse);
+> > @@ -8401,7 +8392,7 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
+> >       pse_is_idle = se_is_idle(pse);
+> >
+> >       /*
+> > -      * Preempt an idle group in favor of a non-idle group (and don't preempt
+> > +      * Preempt an idle entity in favor of a non-idle entity (and don't preempt
+> >        * in the inverse case).
+> >        */
+> >       if (cse_is_idle && !pse_is_idle)
+> > @@ -8409,6 +8400,15 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
+> >       if (cse_is_idle != pse_is_idle)
+> >               return;
+> >
+> > +     /*
+> > +      * Batch tasks do not preempt non-idle tasks (their preemption
+> > +      * is driven by the tick).
+> > +      * We've done the check about "only one of the entities is idle",
+> > +      * so cse must be non-idle if p is a batch task.
+> > +      */
+> > +     if (unlikely(entity_is_task(pse) && p->policy == SCHED_BATCH))
+> > +             return;
+>
+> I'm not convinced this condition is right. The current behaviour of
+> SCHED_BATCH doesn't care about pse, only p.
+>
+> That is, if p is SCHED_BATCH it will not preempt -- except an
+> SCHED_IDLE.
+>
+> So I'm tempted to delete this first part of your condition and have it
+> be:
+>
+>         if (p->policy == SCHED_BATCH)
+>                 return;
+>
+> That is, suppose you have:
+>
+>                         root
+>                          |
+>               ------------------------
+>               |                      |
+>         normal_cgroup          normal_cgroup
+>               |                      |
+>         SCHED_BATCH task_A     SCHED_BATCH task_B
+>
+> Then the preemption crud will end up comparing the groups to one another
+> and still allow A to preempt B -- except we explicitly do not want this.
+>
+> The 'problem' is that the whole BATCH thing isn't cgroup aware ofcourse,
+> but I'm not sure we want to go fix that -- esp. not in this patch.
+>
+> Hmm?
 
-see below.
+Good question, but do we want to make SCHED_BATCH tasks behave
+differently than SCHED_IDLE tasks in a group in this case ?
 
-> 
-> but can you check this patch below? it should be ok with your two proposed patches applied
-> https://lore.kernel.org/all/20240703-k1-01-basic-dt-v3-6-12f73b47461e@gentoo.org/
-> 
-> > 			...
-> >                         reg-shift = <2>;
-> >                         reg-io-width = <4>;
-> >                         tx-threshold = <32>;
-> >                         fifo-size = <64>;
+With this patch, we don't want task_B to preempt task_A for the case
+but task_A will preempt task_B whereas task A is SCHED_IDLE
 
-I just tried, the previous "spacemit,k1-uart", "intel,xscale-uart"; with above properties
-work too, and the fifo size in driver logic seems correct as well.
+                         root
+                          |
+               ------------------------
+               |                      |
+         normal_cgroup          idle_cgroup
+               |                      |
+         SCHED_IDLE task_A     SCHED_NORMAL task_B
 
-> ..
-> >                         no-loopback-test;
->             need to check, from vendor docs, there is a loopback mode
+As we only look at the common level of hierarchy between the tasks,
+the below will make A to preempt B whereas both are SCHED_IDLE
 
-oh, this property is from the UPF_SKIP_TEST of 8250_pxa.c. This
-property can be removed.
-
->             see 16.2.4.1 SSCR register description, bit12
-> 
-> https://developer.spacemit.com/#/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf
-> > 			...
-> > 		}
-> > 
-> > Link: https://lore.kernel.org/linux-riscv/20240706082928.2238-1-jszhang@kernel.org/ [1]
-> I have some comments for this patch, and I believe it's a valid fix,
-> without this patch, K1 will also have problem duo to "UART_CAP_UUE | UART_CAP_RTOIE" lost
-> 
-> > Link: https://lore.kernel.org/linux-riscv/20240706101856.3077-1-jszhang@kernel.org/ [2]
-> > 
-> > > it occur to me that 8250_pxa.c is more specially tailored for pxa hardware, while
-> > > 8250_of.c is more generic.. besides, should we consider one more step if we want to
-> > 
-> > there's a work around for Erratum #74 in 8250_pxa, while I believe the
-> do you have any link for this Erratum? let's double check it..
-
-I can't find any link now :(
-
-> 
-> > Errata doesn't exisit in K1, so from this PoV it seems 8250_of is
-> > better, no?
-> > 
-> > > support DMA mode in the future (vendor uart driver has DMA support)?
-> > 
-> > Adding dma engine support to 8250_of is doable.
-> Ok, sounds good to me
-> > 
-> > > 
-> > > 
-> > > > >  drivers/tty/serial/8250/Kconfig to enable the driver for ARCH_SPACEMIT,
-> > > > >  and change uart compatible to "spacemit,k1-uart", "mrvl,pxa-uart"
-> > > > > 
-> > > > > for mrvl,mmp-uart, I see two choices, one using 8250_pxa.c which has same result
-> > > > > as mrvl,pxa-uart, another choice would using the driver of 8250_of.c 
-> > > > > and it work as same as "intel,xscale-uart", I don't see any difference..
-> > > > > 
-> > > > > P.S: there is possibly a side problem that "mrvl,mmp-uart" from 8250_of.c doesn't 
-> > > > > really compatile with "mrvl,mmp-uart" from 8250_pxa.c, but I think it's another story
-> > > 
-> > > -- 
-> > > Yixun Lan (dlan)
-> > > Gentoo Linux Developer
-> > > GPG Key ID AABEFD55
-> 
-> -- 
-> Yixun Lan (dlan)
-> Gentoo Linux Developer
-> GPG Key ID AABEFD55
+                         root
+                          |
+               ------------------------
+               |                      |
+         normal_cgroup          normal_cgroup
+               |                      |
+         SCHED_IDLE task_A     SCHED_IDLE task_B
