@@ -1,310 +1,206 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F98B4AEF7;
-	Mon,  8 Jul 2024 09:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B8F433CA;
+	Mon,  8 Jul 2024 09:15:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720429978; cv=none; b=LRISHcitClahjwQ8BXcbhNG49tqYFMB2OjaKb/yHHJWg7pUFfNr2L0RTf6ObZNCqfHdg54p8/OCDGZ6eXta6ecu5rIEWjVhXwA239uJCy+1LHTQkmSYDoWK4HSppTGEt7C+g1lWDzuNk+eUeJ5H47EcunA4feOUu9OdCvEcCIV0=
+	t=1720430157; cv=none; b=qFgWzjI0XYoheppo38nsQ3Flc/FwRb/yreQZ886yE5K7La5PT4qtVO+wSJU9gtEsP8uqFNaF4yEeh8G95W4qCHfJ+9LpQ1WhATsXCa4AO/4T/ROKWsBDCYqYD6gzmWoe6d8wTVavAk7Mu/w3OQgezk1RXkFn/Z8l9kY+rhR7P9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720429978; c=relaxed/simple;
-	bh=CAaJk++tecrLaptH+16hNaBiNTEIQYH3fzlW19fwgC8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YC11U0YCk/x8MHoR7NsQ4Utyhrzg3uYlHD0WzjtnMOqlXfQPjMcJp5NawuzMiVivcUI/gtFkFVWAz/taFlrJTGfZ3BmdtM3+TMcrfJeZEsWQf3R2fL9xn4weaulIcgYfS+xIGcUzTClKLiTvaapUNVL5qFaMyVfCHl9KBzHMOUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhhjHDwh; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720430157; c=relaxed/simple;
+	bh=hgN66bAz8IkkTy8CvtHp3JUw6MLJpCYUWOaeBYIssMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXVvPIi3tfdOK39cAoX97GG+9X2X7Vlmc90GAIuN8fsFb3yHXBESnwD9b5H6WclRRI0DBWLWVxzCNhiLa2M/HVYRqiu3vsp8B2unoo4SNSKwbbhU/uH15GWzXx9S9aNMSS1+PTwJl97NVd6H+SFI8IV9ye358l5MFlTBfKiQ6Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KxY8xRGs; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhhjHDwh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KxY8xRGs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720429977; x=1751965977;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=CAaJk++tecrLaptH+16hNaBiNTEIQYH3fzlW19fwgC8=;
-  b=HhhjHDwhanIM/ZBn5ioqv2C28DFo+wddg4yG1JRLUmvBUVuhxyWO+Gbx
-   bO8RN/poSBl7rBMwTVUooYN2Xg9XBxuU3oZiuDt8k+22mn+qpH1N2Uo3a
-   cOxELzChgI3/4YtKiaM5TgZaNs2j9VErEVoayNg0/BbZy4QeCWTvVJGzL
-   LvWc8xAQ1THl7M34xHXdmWlvv8PM76sxYnMGSx2k3LPI7ilRqJD6wIw0Z
-   UlHqaWZc1MbgYk6EbkkT0AQhW0fb9N4PNAqms+wGSF+KPk3S25ah/HU+W
-   9qQ5vvGUZECv9R3x1SdjFlAyk1kOaWpOp9iLr67tIRtae7bk9kvqDblVw
-   g==;
-X-CSE-ConnectionGUID: 6sDNUsU/Q469SsZWeA+v3A==
-X-CSE-MsgGUID: oeshmtegR9i7o4tndMaTcA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17436554"
+  t=1720430156; x=1751966156;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hgN66bAz8IkkTy8CvtHp3JUw6MLJpCYUWOaeBYIssMU=;
+  b=KxY8xRGsbd3BfyVE/R2N5+YRZGwtBnkkRG4HvzhVf3SBWU1oyIhqzt7Y
+   73eq7M+pCMgTff/EMQJTDuHQaKhj/mo5TxvhP0rUVEn/chKtu4WrijXRg
+   VbfJtrCoBiZOQzBMa1lW0+xL08SfaRhQs0HLfljiMBm4JFtTZuE5p+twm
+   yhjLF35orJVhFCO25aH12kPzMtEddz3ehXl/DSneCUEeWFLHjgHLPrAA5
+   K3U8I7ToWufxaFnYJgbJjGn/YhtG2aQlnOHLTWnqIDS2yW0Wjf2EM8s/d
+   2V58eGuPeRKMgjRTzMC0NryvNOJwtmfiVlylRGEJuyOa01zaBcjzn+noe
+   Q==;
+X-CSE-ConnectionGUID: 58YOtsXYQxultniENuwPcg==
+X-CSE-MsgGUID: rmxa/o0uSzikG/hy/tWVvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17437027"
 X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="17436554"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 02:12:56 -0700
-X-CSE-ConnectionGUID: Bri5CEPIQAqx34xgx/2URQ==
-X-CSE-MsgGUID: WSwuHQr9TZyy0hw2Fm3MbA==
+   d="scan'208";a="17437027"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 02:15:56 -0700
+X-CSE-ConnectionGUID: GrQZXYTkQeW7szw5V2SzlQ==
+X-CSE-MsgGUID: 5eqphG5pS+y70DV+Iv/DwA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="47509006"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.115])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 02:12:51 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 8 Jul 2024 12:12:46 +0300 (EEST)
-To: daire.mcnamara@microchip.com
-cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    conor.dooley@microchip.com, lpieralisi@kernel.org, kw@linux.com, 
-    robh@kernel.org, bhelgaas@google.com, LKML <linux-kernel@vger.kernel.org>, 
-    linux-riscv@lists.infradead.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v6 2/3] PCI: microchip: Fix inbound address translation
- tables
-In-Reply-To: <20240628115923.4133286-3-daire.mcnamara@microchip.com>
-Message-ID: <addb88b3-1318-d337-052e-088c832bc088@linux.intel.com>
-References: <20240628115923.4133286-1-daire.mcnamara@microchip.com> <20240628115923.4133286-3-daire.mcnamara@microchip.com>
+   d="scan'208";a="70652136"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 08 Jul 2024 02:15:52 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sQkTO-000Ve0-01;
+	Mon, 08 Jul 2024 09:15:50 +0000
+Date: Mon, 8 Jul 2024 17:15:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Cindy Lu <lulu@redhat.com>, dtatulea@nvidia.com, mst@redhat.com,
+	jasowang@redhat.com, parav@nvidia.com, sgarzare@redhat.com,
+	netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v3 1/2] vdpa: support set mac address from vdpa tool
+Message-ID: <202407081733.FCiMubD8-lkp@intel.com>
+References: <20240708064820.88955-2-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708064820.88955-2-lulu@redhat.com>
 
-On Fri, 28 Jun 2024, daire.mcnamara@microchip.com wrote:
+Hi Cindy,
 
-> From: Daire McNamara <daire.mcnamara@microchip.com>
-> 
-> On Microchip PolarFire SoC the PCIe Root Port can be behind one of three
-> general purpose Fabric Interface Controller (FIC) buses that encapsulates
-> an AXI-S bus. Depending on which FIC(s) the Root Port is connected
-> through to CPU space, and what address translation is done by that FIC,
-> the Root Port driver's inbound address translation may vary.
-> 
-> For all current supported designs and all future expected designs,
-> inbound address translation done by a FIC on PolarFire SoC varies
-> depending on whether PolarFire SoC in operating in dma-coherent mode or
-> dma-noncoherent mode.
+kernel test robot noticed the following build warnings:
 
-Please improve the use of capital letters in general.
+[auto build test WARNING on linus/master]
+[also build test WARNING on horms-ipvs/master v6.10-rc7 next-20240703]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-DMA x2
+url:    https://github.com/intel-lab-lkp/linux/commits/Cindy-Lu/vdpa-support-set-mac-address-from-vdpa-tool/20240708-144942
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240708064820.88955-2-lulu%40redhat.com
+patch subject: [PATCH v3 1/2] vdpa: support set mac address from vdpa tool
+config: i386-buildonly-randconfig-005-20240708 (https://download.01.org/0day-ci/archive/20240708/202407081733.FCiMubD8-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240708/202407081733.FCiMubD8-lkp@intel.com/reproduce)
 
-> 
-> The setup of the outbound address translation tables in the root port
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407081733.FCiMubD8-lkp@intel.com/
 
-Root Port
+All warnings (new ones prefixed by >>):
 
-> driver only needs to handle these two cases.
-> 
-> Setup the inbound address translation tables to one of two address
-> translations, depending on whether the rootport is marked as dma-coherent or
-> dma-noncoherent.
+>> drivers/vdpa/vdpa.c:1377:6: warning: variable 'err' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+    1377 |         if ((mdev->supported_features & BIT_ULL(VIRTIO_NET_F_MAC)) &&
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1378 |             nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACADDR]) {
+         |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/vdpa/vdpa.c:1394:9: note: uninitialized use occurs here
+    1394 |         return err;
+         |                ^~~
+   drivers/vdpa/vdpa.c:1377:2: note: remove the 'if' if its condition is always true
+    1377 |         if ((mdev->supported_features & BIT_ULL(VIRTIO_NET_F_MAC)) &&
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1378 |             nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACADDR]) {
+         |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/vdpa/vdpa.c:1377:6: warning: variable 'err' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+    1377 |         if ((mdev->supported_features & BIT_ULL(VIRTIO_NET_F_MAC)) &&
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/vdpa/vdpa.c:1394:9: note: uninitialized use occurs here
+    1394 |         return err;
+         |                ^~~
+   drivers/vdpa/vdpa.c:1377:6: note: remove the '&&' if its condition is always true
+    1377 |         if ((mdev->supported_features & BIT_ULL(VIRTIO_NET_F_MAC)) &&
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/vdpa/vdpa.c:1371:9: note: initialize the variable 'err' to silence this warning
+    1371 |         int err;
+         |                ^
+         |                 = 0
+   2 warnings generated.
 
-DMA x2
 
-> 
-> Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip Polarfire PCIe controller driver")
-> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  drivers/pci/controller/pcie-microchip-host.c | 106 +++++++++++++++++--
->  1 file changed, 97 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-> index 47c397ae515a..27bfa3b7a187 100644
-> --- a/drivers/pci/controller/pcie-microchip-host.c
-> +++ b/drivers/pci/controller/pcie-microchip-host.c
-> @@ -7,16 +7,20 @@
->   * Author: Daire McNamara <daire.mcnamara@microchip.com>
->   */
->  
-> +#include <linux/align.h>
->  #include <linux/bitfield.h>
-> +#include <linux/bits.h>
->  #include <linux/clk.h>
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqdomain.h>
-> +#include <linux/log2.h>
->  #include <linux/module.h>
->  #include <linux/msi.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
->  #include <linux/pci-ecam.h>
->  #include <linux/platform_device.h>
-> +#include <linux/wordpart.h>
->  
->  #include "../pci.h"
->  
-> @@ -32,6 +36,9 @@
->  #define MC_PCIE_BRIDGE_ADDR			(MC_PCIE1_BRIDGE_ADDR)
->  #define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
->  
-> +#define MC_MAX_NUM_INBOUND_WINDOWS		8
-> +#define MPFS_NC_BOUNCE_ADDR			0x80000000
-> +
->  /* PCIe Bridge Phy Regs */
->  #define PCIE_PCI_IRQ_DW0			0xa8
->  #define  MSIX_CAP_MASK				BIT(31)
-> @@ -99,14 +106,15 @@
->  
->  /* PCIe AXI slave table init defines */
->  #define ATR0_AXI4_SLV0_SRCADDR_PARAM		0x800u
-> -#define  ATR_SIZE_SHIFT				1
-> -#define  ATR_IMPL_ENABLE			1
-> +#define  ATR_SIZE_MASK				GENMASK(6, 1)
-> +#define  ATR_IMPL_ENABLE			BIT(0)
->  #define ATR0_AXI4_SLV0_SRC_ADDR			0x804u
->  #define ATR0_AXI4_SLV0_TRSL_ADDR_LSB		0x808u
->  #define ATR0_AXI4_SLV0_TRSL_ADDR_UDW		0x80cu
->  #define ATR0_AXI4_SLV0_TRSL_PARAM		0x810u
->  #define  PCIE_TX_RX_INTERFACE			0x00000000u
->  #define  PCIE_CONFIG_INTERFACE			0x00000001u
-> +#define  TRSL_ID_AXI4_MASTER_0			0x00000004u
->  
->  #define ATR_ENTRY_SIZE				32
->  
-> @@ -933,6 +941,86 @@ static int mc_pcie_init_irq_domains(struct mc_pcie *port)
->  	return mc_allocate_msi_domains(port);
->  }
->  
-> +static void mc_pcie_setup_inbound_atr(int window_index, u64 axi_addr, u64 pcie_addr, u64 size)
-> +{
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	u32 table_offset = window_index * ATR_ENTRY_SIZE;
-> +	void __iomem *table_addr = bridge_base_addr + table_offset;
-> +	u32 atr_sz;
-> +	u32 val;
-> +
-> +	atr_sz = ilog2(size) - 1;
-> +
-> +	val = ALIGN_DOWN(lower_32_bits(pcie_addr), SZ_4K);
-> +	val |= FIELD_PREP(ATR_SIZE_MASK, atr_sz);
-> +	val |= ATR_IMPL_ENABLE;
-> +
-> +	writel(val, table_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
-> +
-> +	writel(upper_32_bits(pcie_addr), table_addr + ATR0_PCIE_WIN0_SRC_ADDR);
-> +
-> +	writel(lower_32_bits(axi_addr), table_addr + ATR0_PCIE_WIN0_TRSL_ADDR_LSB);
-> +	writel(upper_32_bits(axi_addr), table_addr + ATR0_PCIE_WIN0_TRSL_ADDR_UDW);
-> +
-> +	writel(TRSL_ID_AXI4_MASTER_0, table_addr + ATR0_PCIE_WIN0_TRSL_PARAM);
-> +}
-> +
-> +static int mc_pcie_setup_inbound_ranges(struct platform_device *pdev, struct mc_pcie *port)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *dn = dev->of_node;
-> +	struct of_range_parser parser;
-> +	struct of_range range;
-> +	int atr_index = 0;
-> +
-> +	/*
-> +	 * MPFS PCIe root port is 32-bit only, behind a Fabric Interface
-> +	 * Controller FPGA logic block which contains the AXI-S interface.
-> +	 *
-> +	 * From the point of view of the PCIe root port, There are only
+vim +1377 drivers/vdpa/vdpa.c
 
-, There -> , there
-
-Root Port
-
-> +	 * two supported Root Port configurations
-
-Terminate with either : or .
-
-> +	 *
-> +	 * Configuration 1: for use with fully coherent designs; supports a
-> +	 * window from 0x0 (CPU space) to specified PCIe space.
-> +	 *
-> +	 * Configuration 2: for use with non-coherent designs; supports two
-> +	 * 1 Gb wide windows to CPU space; one mapping cpu space 0 to pcie
-
-Gb means gigabits?? GB is for gigabytes.
-
-CPU
-PCIe
-
-> +	 * space 0x80000000 and mapping cpu space 0x40000000 to pcie
-
-Ditto.
-
-> +	 * space 0xc0000000. This cfg needs two windows because of how
-> +	 * the MSI space is allocated in the AXI-S range on MPFS.
-> +	 *
-> +	 * The FIC interface outside the PCIe block *must* complete the inbound
-> +	 * address translation as per MCHP MPFS FPGA design guidelines.
-> +	 */
-> +	if (device_property_read_bool(dev, "dma-noncoherent")) {
-> +		/*
-> +		 * Always need same two tables in this case.  Need two tables
-> +		 * due to hardware interactions between address and size.
-> +		 */
-> +		mc_pcie_setup_inbound_atr(0, 0, MPFS_NC_BOUNCE_ADDR, SZ_1G);
-> +		mc_pcie_setup_inbound_atr(1, SZ_1G, MPFS_NC_BOUNCE_ADDR + SZ_1G, SZ_1G);
-> +	} else {
-> +		/* Find any dma-ranges */
-
-DMA
-
-> +		if (of_pci_dma_range_parser_init(&parser, dn)) {
-> +			/* No dma-range property - setup default */
-
-DMA
-
-> +			mc_pcie_setup_inbound_atr(0, 0, 0, SZ_4G);
-> +			return 0;
-> +		}
-> +
-> +		for_each_of_range(&parser, &range) {
-> +			if (atr_index >= MC_MAX_NUM_INBOUND_WINDOWS) {
-> +				dev_err(dev, "too many inbound ranges; %d available tables\n",
-> +					MC_MAX_NUM_INBOUND_WINDOWS);
-> +				return -EINVAL;
-> +			}
-> +			mc_pcie_setup_inbound_atr(atr_index, 0, range.pci_addr, range.size);
-> +			atr_index++;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->  				 phys_addr_t axi_addr, phys_addr_t pci_addr,
->  				 resource_size_t size)
-> @@ -948,8 +1036,9 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->  	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->  	       ATR0_AXI4_SLV0_TRSL_PARAM);
->  
-> -	val = lower_32_bits(axi_addr) | (atr_sz << ATR_SIZE_SHIFT) |
-> -			    ATR_IMPL_ENABLE;
-> +	val = ALIGN_DOWN(lower_32_bits(axi_addr), SZ_4K);
-> +	val |= FIELD_PREP(ATR_SIZE_MASK, atr_sz);
-> +	val |= ATR_IMPL_ENABLE;
->  	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->  	       ATR0_AXI4_SLV0_SRCADDR_PARAM);
->  
-> @@ -964,11 +1053,6 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->  	val = upper_32_bits(pci_addr);
->  	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->  	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
-> -
-> -	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
-> -	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
-> -	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
-> -	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
->  }
->  
->  static int mc_pcie_setup_windows(struct platform_device *pdev,
-> @@ -1131,6 +1215,10 @@ static int mc_platform_init(struct pci_config_window *cfg)
->  	if (ret)
->  		return ret;
->  
-> +	ret = mc_pcie_setup_inbound_ranges(pdev, port);
-> +	if (ret)
-> +		return ret;
-> +
->  	/* Address translation is up; safe to enable interrupts */
->  	ret = mc_init_interrupts(pdev, port);
->  	if (ret)
-> 
-
-The code change itself looks fine for the extent I understand it.
+  1363	
+  1364	static int vdpa_dev_net_device_attr_set(struct vdpa_device *vdev,
+  1365						struct genl_info *info)
+  1366	{
+  1367		struct vdpa_dev_set_config set_config = {};
+  1368		const u8 *macaddr;
+  1369		struct vdpa_mgmt_dev *mdev = vdev->mdev;
+  1370		struct nlattr **nl_attrs = info->attrs;
+  1371		int err;
+  1372	
+  1373		if (!vdev->mdev)
+  1374			return -EINVAL;
+  1375	
+  1376		down_write(&vdev->cf_lock);
+> 1377		if ((mdev->supported_features & BIT_ULL(VIRTIO_NET_F_MAC)) &&
+  1378		    nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACADDR]) {
+  1379			set_config.mask |= BIT_ULL(VDPA_ATTR_DEV_NET_CFG_MACADDR);
+  1380			macaddr = nla_data(nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACADDR]);
+  1381			memcpy(set_config.net.mac, macaddr, ETH_ALEN);
+  1382	
+  1383			if (mdev->ops->dev_set_attr) {
+  1384				err = mdev->ops->dev_set_attr(mdev, vdev, &set_config);
+  1385			} else {
+  1386				NL_SET_ERR_MSG_FMT_MOD(info->extack,
+  1387						       "features 0x%llx not supported",
+  1388						       BIT_ULL(VIRTIO_NET_F_MAC));
+  1389				err = -EINVAL;
+  1390			}
+  1391		}
+  1392		up_write(&vdev->cf_lock);
+  1393	
+  1394		return err;
+  1395	}
+  1396	static int vdpa_nl_cmd_dev_attr_set_doit(struct sk_buff *skb,
+  1397						 struct genl_info *info)
+  1398	{
+  1399		const char *name;
+  1400		int err = 0;
+  1401		struct device *dev;
+  1402		struct vdpa_device *vdev;
+  1403		u64 classes;
+  1404	
+  1405		if (!info->attrs[VDPA_ATTR_DEV_NAME])
+  1406			return -EINVAL;
+  1407	
+  1408		name = nla_data(info->attrs[VDPA_ATTR_DEV_NAME]);
+  1409	
+  1410		down_write(&vdpa_dev_lock);
+  1411		dev = bus_find_device(&vdpa_bus, NULL, name, vdpa_name_match);
+  1412		if (!dev) {
+  1413			NL_SET_ERR_MSG_MOD(info->extack, "device not found");
+  1414			err = -ENODEV;
+  1415			goto dev_err;
+  1416		}
+  1417		vdev = container_of(dev, struct vdpa_device, dev);
+  1418		if (!vdev->mdev) {
+  1419			NL_SET_ERR_MSG_MOD(
+  1420				info->extack,
+  1421				"Fail to find the specified management device");
+  1422			err = -EINVAL;
+  1423			goto mdev_err;
+  1424		}
+  1425		classes = vdpa_mgmtdev_get_classes(vdev->mdev, NULL);
+  1426		if (classes & BIT_ULL(VIRTIO_ID_NET)) {
+  1427			err = vdpa_dev_net_device_attr_set(vdev, info);
+  1428		} else {
+  1429			NL_SET_ERR_MSG_FMT_MOD(info->extack, "%s device not supported",
+  1430					       name);
+  1431		}
+  1432	
+  1433	mdev_err:
+  1434		put_device(dev);
+  1435	dev_err:
+  1436		up_write(&vdpa_dev_lock);
+  1437		return err;
+  1438	}
+  1439	
 
 -- 
- i.
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
