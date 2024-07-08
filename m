@@ -1,106 +1,139 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3267B18E;
-	Mon,  8 Jul 2024 00:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80228628
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 01:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720400137; cv=none; b=d3KDgyuLM89+ZMdVAR3DBmZujYJnvumm1X3UUkrMcGYGFjEq0Q8uT+sph3FPlqcQ2xFDc0GE67IMh8QfnCAoCXeroIbrcRJpg9ATYvEl0Av5jKmC1rynOZOeJzqGampXKiCaaNDuqTXMTU9c5QcKK5+7lAwSAem2RooXIUsdOwU=
+	t=1720400423; cv=none; b=pXZmJLishIoRTCzWhdIMmMgWmZz2GNMTz3A1nXqtoCrJPFk8QlMgkC1+dSl1pT/867ZNlKsDn6K7M4DL4TKF5XFsLesClsvaljRTeYJ8R1ZOSSCXFD18okpKxzAOOoG7aUn9xpYT743CcaUBIqoB/gOoIsZggLL1NVnp/WBV880=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720400137; c=relaxed/simple;
-	bh=ERXbQUuJWEgOsNCx2q78Ud0n+TUu5fUHCLROMqVVCVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7++pCfv43RzybijYjJhmZ61XNuZ1w62SzLaMnu2QDgsbbMoLyvHYtg4rs3PKK2ZFj0KXHHB8aBZvI+p/ooG5/KZd4fNJJ4J+tIgYw4vtZEzrnIwihev+fjZp5GajkhRh5axDncxdUkoRZ0YLg2+pLBLDiaX5mn10vUnPkO/2KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+	s=arc-20240116; t=1720400423; c=relaxed/simple;
+	bh=KJNOyTeAgP0fiV8du1sY1ijqlPN56MAk180oNB0RFmw=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=o+YV+GVqswAA2OHHQ/PE6UYkC5yZGpXcY1yGO/RH5cvsuPK8+90o2+uDBUOcMgLvZTi4KJ9gsQGu3c6P8zyznVQ9X1ECT50FzMSptGLjpw0SPugCtuJbwpVqI+sHxr6ymfPc/WPpEksewfHVwqBHIOkl7dMYD3450tG5cYYI1JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LqV03JSK; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1fb0d88fd25so21006105ad.0;
-        Sun, 07 Jul 2024 17:55:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720400135; x=1721004935;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqV03JSK"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a77e392f59fso137959966b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2024 18:00:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720400420; x=1721005220; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RDJcioIgRokoEknQP/HTNblVSt1TW8hmi/54+StFqeE=;
-        b=Topt8Rj1ScFqCV0ZlmJe379wQslBkwTlGK/1Ze5eQr35Xf+ygS0FuiJDAaj+/jJkhT
-         oJyFd7tpVqFdWudcCPhOQsb+Kb3Y6w2hqRqDFWgyrKdBPSMbqafQw+KN8cNdcERUXg2Q
-         HJex0s2v0MkyWoE7AZ1LrbQcE3Areg4+c3IMNH/rHijlfesKdXGS9T9PRoeJOL0kjK0Z
-         gcexe6ZExMf2gMs/9BpMbgCMKn5QSqk/vP1kmg9BH/zyYUIwmM0dt/GgoU2ZzcyboY3d
-         WNYTzLtFLIcN4rypduKov03RZuEwDgGlP3434OsgDNBo3OCcXEhsa81ojXz+qilfQl+c
-         xu6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUMDi9u0NOtegXCtJFNiF4/DNOctmNSc1TGTpJc9s26DH6Xb4sC6Doqd4EH/K+1ZXE7X7ND5l4exSCVh1U6n3ENrJ9kVZux2+qagh1uNsTJv1cj1Wv06y4yqRGDzotMDBVJaU4Dz41K
-X-Gm-Message-State: AOJu0YxYO+fyVsxvGMMn2ShrQ6TZKehWccRwLCrcDerAE/RwofaezwG9
-	i9/erxiF86C5ACAH4G7rNIq9v+9UmnbO7SyxRuaddTm/SSqUKuLP
-X-Google-Smtp-Source: AGHT+IEkJcV1nhz6kvCkwOiNdOEu8m3NKshaNXgH6aBbiceLbDy1XIpqsBC01SAiq5mdA67stW12gA==
-X-Received: by 2002:a17:902:ea0b:b0:1fb:4985:22e0 with SMTP id d9443c01a7336-1fb498524d9mr114885495ad.23.1720400135325;
-        Sun, 07 Jul 2024 17:55:35 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb4e7c31afsm46915785ad.2.2024.07.07.17.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jul 2024 17:55:34 -0700 (PDT)
-Date: Mon, 8 Jul 2024 09:55:33 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, lukas@wunner.de,
-	alex.williamson@redhat.com, christian.koenig@amd.com,
-	kch@nvidia.com, gregkh@linuxfoundation.org, logang@deltatee.com,
-	linux-kernel@vger.kernel.org, chaitanyak@nvidia.com,
-	rdunlap@infradead.org, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v13 3/4] PCI/DOE: Expose the DOE features via sysfs
-Message-ID: <20240708005533.GC586698@rocinante>
-References: <20240702060418.387500-1-alistair.francis@wdc.com>
- <20240702060418.387500-3-alistair.francis@wdc.com>
- <20240702145806.0000669b@Huawei.com>
- <CAKmqyKPEX632ywm5DiKvVZU=hr-yHNBJ=tcN2DasKpfWdykgZg@mail.gmail.com>
- <20240705112953.00007303@Huawei.com>
+        bh=H3NdiAyId3OkrVUGqOgRgAW66faEghB0UHBtTZW80kM=;
+        b=LqV03JSKQUrPdKAr3DkEdeLpoO5KEeiAfNVK678DhoiTAIuOfNxADyngA9pMeKpucv
+         dj82rf07KwrrLSzzBIWs5inGgqpU2irAByF2dtu03j++NVsC4Cm6gSQ0M4wN0h95YZcs
+         6mL4sQ3+vxqQmaKgBxRgJrND61Rr/HC10WKhyA/PSllcKpj4yP0pJJQvqE44s10pmXD3
+         TIs9YOcA59GJzlKI3esywcXKqdDaHH8K29XS4qSbQK0XwNrWbdYkF5UK9i+kP9imRIB5
+         oeISPcxf8LlMRAW7PD1bpDcG+ANH3Nw1SzDbis/DokBvIchEd1oCGU/3bqp2Ia7G5Xnz
+         l43g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720400420; x=1721005220;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H3NdiAyId3OkrVUGqOgRgAW66faEghB0UHBtTZW80kM=;
+        b=c1N4Fue45FiICcWc6FIlw66LavVBckLm6Rj8rUFuxELesnr/8UgWkM7jl+6Qmk3pnx
+         t6s/y6erCusa/+WcHpunD20EuC6Mi+BOxTj54OVLFDDTVF1Y2q2f3R+cdi/RECdp4w8d
+         AGwMf9TeuCdTsLE2/3aEVI5H5GNC+NCHfSa43USC8Y3eMLpD8QxctD5En8rgztt7ruwb
+         5JnNG1J7zZQfHddGO0GHKiDqz0qkngwCpFnDW5qbRy158fktOf4Lh71QC0JKi5sZ5ujS
+         sjCOz3nc+4e+pu30H/cJZCZRt4NlesngshzmQj/ZhI1gJx9vERbkhlXtrLKJBAnN8hMZ
+         TNHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXI+ldfTGGdHM3wvT1HhdE1F4vXYOjIi7jbp4+oYmmPbnxYxqsTOfvuYnqShrM97GOPDtvaSHwEKI/Xqk5pNyNRYpPG+l+ClV2ovSLB
+X-Gm-Message-State: AOJu0YyhsqzPx93XN5YCZAywpkP9WbrNdVT6CTEZb9BGKvAqvO+Mj8sW
+	mIK2e9vDJbfk0vpi4lyyfmjM2MhQAVHMV3ugDxLpJZ0Vo4lXrR28
+X-Google-Smtp-Source: AGHT+IH0ggJbCGlEbdNIAlUNjEkV2/8ro0xOqCXLERCyOHyPaxPfuby2ZfgoB96xxYv+uuaOgXO/Tg==
+X-Received: by 2002:a17:906:34d3:b0:a6f:3155:bb89 with SMTP id a640c23a62f3a-a77ba72759cmr734858766b.70.1720400419585;
+        Sun, 07 Jul 2024 18:00:19 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77e3f48abcsm175087666b.186.2024.07.07.18.00.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 07 Jul 2024 18:00:19 -0700 (PDT)
+From: Wei Yang <richard.weiyang@gmail.com>
+To: rppt@kernel.org,
+	akpm@linux-foundation.org,
+	brauner@kernel.org,
+	oleg@redhat.com,
+	mjguzik@gmail.com,
+	tandersen@netflix.com
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>
+Subject: [PATCH v4 1/3] mm/memblock: introduce a new helper memblock_estimated_nr_free_pages()
+Date: Mon,  8 Jul 2024 01:00:08 +0000
+Message-Id: <20240708010010.32347-1-richard.weiyang@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240705112953.00007303@Huawei.com>
 
-Hello,
+During bootup, system may need the number of free pages in the whole system
+to do some calculation before all pages are freed to buddy system. Usually
+this number is get from totalram_pages(). Since we plan to move the free
+pages accounting in __free_pages_core(), this value may not represent
+total free pages at the early stage, especially when
+CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
 
-> > Any input from a PCI maintainer here?
+Instead of using raw memblock api, let's introduce a new helper for user
+to get the estimated number of free pages from memblock point of view.
 
-Something that I am curious about: can we make this a single file with a
-bitmask inside that denotes what DOE features are enabled?  Would this be
-approach be even feasible here?
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+CC: David Hildenbrand <david@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Thoughts?  Or is it too late to think about this now?
+---
+v4: adjust comment per david's suggestion
+---
+ include/linux/memblock.h |  1 +
+ mm/memblock.c            | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-> > There are basically two approaches.
-> > 
-> >  1. We can have a pci_doe_sysfs_init() function that is called where
-> > we dynamically add the entries, like in v12
-> >  2. We can go down the dev->groups and device_add() path, like this
-> > patch and discussed at
-> > https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
-> > 
-> > For the second we will have to create a global pci_doe_sysfs_group
-> > that contains all possible DOE entries on the system and then have the
-> > show functions determine if they should be displayed for that device.
-> > 
-> > Everytime we call pci_doe_init() we can check for any missing entries
-> > in pci_doe_sysfs_group.attrs and then realloc
-> > pci_doe_sysfs_group.attrs to add them. 
-> > Untested, but that should work
-> > even for hot-plugged devices. pci_doe_sysfs_group.attrs would just
-> > grow forever though as I don't think we have an easy way to deallocate
-> > anything as we aren't sure if we are the only entry.
-> 
-> I think this needs to be per device, not global and you'll have to manually
-> do the group visibility magic rather than using the macros.
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 40c62aca36ec..7d1c32b3dc12 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -486,6 +486,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
+ 
+ phys_addr_t memblock_phys_mem_size(void);
+ phys_addr_t memblock_reserved_size(void);
++unsigned long memblock_estimated_nr_pages(void);
+ phys_addr_t memblock_start_of_DRAM(void);
+ phys_addr_t memblock_end_of_DRAM(void);
+ void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index e81fb68f7f88..26162902789f 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1729,6 +1729,26 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
+ 	return memblock.reserved.total_size;
+ }
+ 
++/**
++ * memblock_estimated_nr_free_pages - return estimated number of free pages
++ * from memblock point of view
++ *
++ * During bootup, subsystems might need a rough estimate of the number of free
++ * pages in the whole system, before precise numbers are available from the
++ * buddy. Especially with CONFIG_DEFERRED_STRUCT_PAGE_INIT, the numbers
++ * obtained from the buddy might be very imprecise during bootup.
++ *
++ * While we can get the estimated number of free pages from memblock, which is
++ * good enough for estimation.
++ *
++ * Return:
++ * An estimated number of free pages from memblock point of view.
++ */
++unsigned long __init memblock_estimated_nr_free_pages(void)
++{
++	return PHYS_PFN(memblock_phys_mem_size() - memblock_reserved_size());
++}
++
+ /* lowest address */
+ phys_addr_t __init_memblock memblock_start_of_DRAM(void)
+ {
+-- 
+2.34.1
 
-Lukas proposes a very interesting feature of kernfs recently per:
-
-  https://lore.kernel.org/linux-pci/16490618cbde91b5aac04873c39c8fb7666ff686.1719771133.git.lukas@wunner.de
-
-Would this help with DOE features?
-
-	Krzysztof
