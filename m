@@ -1,164 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1823365;
-	Mon,  8 Jul 2024 14:03:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8D15381B;
+	Mon,  8 Jul 2024 14:04:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720447425; cv=none; b=g8gcqm62GWMm19F3QrM4rDQrSsnrYpidT3E48c4jiskIghoJWCAn9gjNFsw5qcWyj/K+f/2rJjPME/9GQcLuhlpc81wwh0WnJv6ArxVyF5pHGfvgLgypzvzZovpoKINS3FKGR+RA99UVymERWhPQc2gLMvzdgia8DozneKXI8mY=
+	t=1720447470; cv=none; b=YJsMie1V3sSVpTd4VzdgvXMmJPIlFn5ZTrof0YTfVKwV7/0M3/KtZIkCj/UL7gyCqRhXigT3jUQbO5VFXHRWOyLZd3U/gK5/iPUtDmaT1/oBfIO6esVvwiuD1txHcCqfEEuV/ZyiE+6LtIim+GY622WMP/VyuYpdeQa5DxHY9eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720447425; c=relaxed/simple;
-	bh=A/3ZjjFes8GuhpOGOj2FY+YGzFu892sLxdZ3QKkwKlE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aCytS9Iyg5cprOsf6Jp9c47vKpCyALDkcfPP36jRBn8mFq5cgXEH7NO3mauz3fKZGGleAy//6fLi/AI78iqWoDZlFTqeDGLOEMoKi1RPMyRycTYuiqDzpGihi4b0qCrLVsoRoqu7vkDDxoeIBwlMaeA6ZIjYeNXxdEdHJYidKr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIaYTtGT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720447470; c=relaxed/simple;
+	bh=sU//YEXkZ7jfva2ENxty2a+qho5n0tDVgvY1hYo24wc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X5PpgS7sbVL6t5s2jBurBCHeLC5K8adN2M4S5t51f6KRzKFnWCj1mYb+3Lru9FfBOZzsKvNEYfjHyMpVWMV4VrpoYbQt8UBhmPGGqqsFbWzhs+GbcX3DZItv0nPwr0guP7qXSAtI1yGFKpL/Fedp0LKKFInHDPS9fbDkcDycKw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BThpioBs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIaYTtGT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB2AC116B1;
-	Mon,  8 Jul 2024 14:03:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BThpioBs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2695BC116B1;
+	Mon,  8 Jul 2024 14:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720447425;
-	bh=A/3ZjjFes8GuhpOGOj2FY+YGzFu892sLxdZ3QKkwKlE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oIaYTtGTt8v4gWfDBR1je0+oi32IadA86dWZjrRR1cCG86MprUjOIkDVARhKj+2a6
-	 SWHLAesXxqy6Gy1LW1iJCYJ6lpeqGg7/CAeqFdDThMSq4AuXjlBi6yXrM+j6+dWuV6
-	 gb3tkO5LwSV3uLZACz1spIIQvJKSsDnk1jWPc98rK5jXdGgGbSzyhS1qLuBqaCAGc6
-	 Wp3jI6GOQVh88wIyZy2Yv3L9VKC7YKZrwpUNa5dtecnj7sWrrqRwd73EcmXgsH8gIR
-	 fDdU/BXZNf2HA5AoSDEGBP3UZc/XFXGNGr1ZBdidkRIe/czFH8POWNap2jhwUGPbDd
-	 FuN5EIl1ew/vg==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5c665d8345dso66930eaf.2;
-        Mon, 08 Jul 2024 07:03:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV6Mx1JzFn+cr32asgrBg1Jy/tfiz/wtJQMUlXDtJus7gNSyQQsd39qxZouYfgf0tOomuLHFCx5hJvkIILd/lWDZkocXAmgQWmJWF3OmOOtf8w8Q1IIR47X8/8iBs4VhBzdhxwWjD8=
-X-Gm-Message-State: AOJu0Yzerpxh0zHUypHcS1w+onLMf17rFv60m0L9tIPToN3klaxVRAhW
-	xFhs0ETUr5Mrw+rjwNRO7HBe5ezXpDfcNQ+YWosikBvyCw9gbe1aWm25uZIM1sSKIMBhpvEFcVm
-	ApeSDdgQNK0LtFVkDSnRYT2RN3sM=
-X-Google-Smtp-Source: AGHT+IEl2JwqTjYTZp4XOuoPpIdEzHVejZ87NwADjNwIkEh8f7/pazmJMZpUo3rvQZMxCvkCsxQ3auk+d5/qRxUPulo=
-X-Received: by 2002:a05:6820:1011:b0:5c6:67b7:41dd with SMTP id
- 006d021491bc7-5c667b74e38mr5176178eaf.0.1720447424404; Mon, 08 Jul 2024
- 07:03:44 -0700 (PDT)
+	s=k20201202; t=1720447469;
+	bh=sU//YEXkZ7jfva2ENxty2a+qho5n0tDVgvY1hYo24wc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BThpioBsTdqrF5dMdzK2Cdsv1E7TZtDH7YeNe45ZR7Eo2RJTzOkGT1VwgzxYazt2m
+	 rEpB7sQLEtXqVg5Npk6q25gSCLE3vMsuqGVkZz4VkJ6Qu0jPCBRHlQUNYV8otQcYQI
+	 xVC6cJoNihv59O6h/VHQK0WeNSVk+QbJEQDdaSaCjtGtNG41cwQGIfYPSzIi2gjAqz
+	 3G9mRIRbe6LiVqu7TnazINfzE8gfglTgcSAxtfOVFpJGLM9ueSMzarc8eC2ItmWDHM
+	 CubnXFeZN7oWnEJG+z875pnFrem40xUzOyP3aklr4rRvWn8l/5k1HtkSwNxbiplqF2
+	 R2UNQgfe2lytw==
+Message-ID: <eda90514-e40c-4edd-8c15-18717a5e9784@kernel.org>
+Date: Mon, 8 Jul 2024 16:04:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2746673.mvXUDI8C0e@rjwysocki.net> <4940808.31r3eYUQgx@rjwysocki.net>
- <402ede79-5eda-48fc-8eb8-5d89ffe6bd41@linaro.org> <CAJZ5v0jgTN+6WC9nPGCidMnMjSsYMcMe+m=8Ge7Hr--utefM2Q@mail.gmail.com>
- <a5188c05-cd06-4678-8fb4-1f0b55c18b04@linaro.org>
-In-Reply-To: <a5188c05-cd06-4678-8fb4-1f0b55c18b04@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 8 Jul 2024 16:03:32 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0i89BJD8AayxqJR912rkg+P8m9qq=GubCXJxmdPuj7DmQ@mail.gmail.com>
-Message-ID: <CAJZ5v0i89BJD8AayxqJR912rkg+P8m9qq=GubCXJxmdPuj7DmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] thermal: core: Add sanity check for polling_delay
- and passive_delay
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Lukasz Luba <lukasz.luba@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/10] dt-bindings: display: imx: Add i.MX8qxp Display
+ Controller display engine
+To: Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com, tglx@linutronix.de
+References: <20240705090932.1880496-1-victor.liu@nxp.com>
+ <20240705090932.1880496-3-victor.liu@nxp.com>
+ <cd558335-6e72-46d1-911b-68ccbb211136@kernel.org>
+ <b9583c86-b5ed-4642-9baf-2ac850656ee3@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <b9583c86-b5ed-4642-9baf-2ac850656ee3@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 8, 2024 at 3:58=E2=80=AFPM Daniel Lezcano <daniel.lezcano@linar=
-o.org> wrote:
->
-> On 08/07/2024 15:38, Rafael J. Wysocki wrote:
-> > On Mon, Jul 8, 2024 at 2:12=E2=80=AFPM Daniel Lezcano <daniel.lezcano@l=
-inaro.org> wrote:
-> >>
-> >> On 05/07/2024 21:46, Rafael J. Wysocki wrote:
-> >>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>>
-> >>> If polling_delay is nonzero and passive_delay is 0, the thermal zone
-> >>> will use polling except when tz->passive is nonzero, which does not m=
-ake
-> >>> sense.
-> >>>
-> >>> Also if polling_delay is nonzero and passive_delay is greater than
-> >>> polling_delay, the thermal zone temperature will be updated less ofte=
-n
-> >>> when tz->passive is nonzero.  This does not make sense either.
-> >>>
-> >>> Ensure that none of the above will happen.
-> >>>
-> >>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>> ---
-> >>>
-> >>> v1 -> v2: The patch actually matches the changelog
-> >>>
-> >>> ---
-> >>>    drivers/thermal/thermal_core.c |    3 +++
-> >>>    1 file changed, 3 insertions(+)
-> >>>
-> >>> Index: linux-pm/drivers/thermal/thermal_core.c
-> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>> --- linux-pm.orig/drivers/thermal/thermal_core.c
-> >>> +++ linux-pm/drivers/thermal/thermal_core.c
-> >>> @@ -1440,6 +1440,9 @@ thermal_zone_device_register_with_trips(
-> >>>                td->threshold =3D INT_MAX;
-> >>>        }
-> >>>
-> >>> +     if (polling_delay && (passive_delay > polling_delay || !passive=
-_delay))
-> >>> +             passive_delay =3D polling_delay;
-> >>
-> >> Given this is a system misconfiguration, it would make more sense to
-> >> bail out with -EINVAL. Assigning a default value in the back of the
-> >> caller will never raise its attention and can make a bad configuration
-> >> staying for a long time.
-> >
-> > This works except for the case mentioned below.
-> >
-> > I think that passive_delay > polling_delay can trigger a -EINVAL, but
-> > (polling_delay && !passive_delay) cannot do it because it is regarded
-> > as a valid case as per the below.
->
-> Right I can see ATM only this as an illogic combination:
->
->         polling_delay && passive_delay &&
->         (polling_delay < passive_delay)
->
-> >> That said, there are configurations with a passive delay set to zero b=
-ut
-> >> with a non zero polling delay. For instance, a thermal zone mitigated
-> >> with a fan, so active trip points are set. Another example is when the=
-re
-> >> is only critical trip points for a thermal zone.
-> >>
-> >> Actually there are multiple combinations with delays value which may
-> >> look invalid but which are actually valid.
-> >>
-> >> For example, a setup with polling_delay > 0, passive_delay =3D 0, acti=
-ve
-> >> trip points, cooling map to this active trips, passive trip points
-> >> without cooling map.
-> >>
-> >> IMHO, it is better to do the configuration the system is asking for,
-> >> even if it sounds weird
-> >
-> > Except that it doesn't work as expected because if passive_delay =3D 0,
-> > polling is paused when tz->passive is set.
->
-> Yes, but as there is no cooling map, there is no governor action, thus
-> tz->passive is never set.
+On 08/07/2024 08:40, Liu Ying wrote:
+>>> +
+>>> +  "^framegen@[0-9a-f]+$":
+>>> +    type: object
+>>> +    additionalProperties: true
+>>> +
+>>> +    properties:
+>>> +      compatible:
+>>> +        const: fsl,imx8qxp-dc-framegen
+>>> +
+>>> +  "^gammacor@[0-9a-f]+$":
+>>
+>> This looks like you are organizing bindings per your driver architecture.
+> 
+> As I mentioned in cover letter, this series addresses Maxime's
+> comment for the previous series - split the display controller
+> into multiple internal devices.  Maxime insisted on doing this.
 
-In current linux-next, it is set when a passive trip is crossed on the way =
-up.
+But these are not separate devices. Look:
+1. parent DC:
+reg = <0x56180000 0x40000>;
 
-> So we can have a passive polling equal to zero
-> without being illegal as no passive mitigation will happen.
->
-> The passive delay is really there only if there is a passive cooling
-> device mapped to a passive trip point.
+2. child interrupt controller:
+reg = <0x56180040 0x60>;
 
-Well, shouldn't user space get notified more often when passive
-cooling is under way?
+That address is within parent.
 
-> The polling delay is in charge of mitigating the active cooling device
-> like a fan. So it is possible to mix an active trip point to mitigate
-> with a fan and then put at a higher temperature a passive trip point
-> with a higher sampling resolution.
+3. Then we go to things like:
+reg = <0x5618b400 0x14>, <0x5618b800 0x1c00>;
 
-But it is not correct to pause polling when tz->passive is set.
+Still within parent's range and just few words in address range. That's
+a clear indication that you choose few registers and call it a "device".
+
+Best regards,
+Krzysztof
+
