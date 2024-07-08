@@ -1,58 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9C9A29;
-	Mon,  8 Jul 2024 20:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177C81E522;
+	Mon,  8 Jul 2024 20:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720471451; cv=none; b=f+ODVHyQmUgcmVDP+KHDad73WBnhgamMUnccixkKaLrJOGWBIldXuRm17UKo2fzzpxJJblOLwDbRBU83No0BHk5BlJe+qyC4hNW0xU+Uq3s22jIqmILRs5zk9ARX0AK9TsqmAIWqhtml7BaBB7bpxItU1ivXLdlpVC7XLeIwen8=
+	t=1720471695; cv=none; b=s7fCt6bsqU3n9yg2s9Fnk4GMZDBUzhAAYZ3aKimXMSGOFOKwrxJjBnoJa2ZYnggTgTaZQdH2UsFroKHAQHPz52PnIn3C+1PNfBKPYDb0LeVfRU+k93NT0ewl7tiiXxtQuygNSs53/fy37KM2CYZeAjbCcPK5EeyFyOS6NkEr11k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720471451; c=relaxed/simple;
-	bh=ji7wYm2m/vKs/SRhmS/int3PI83ishRDU4ddyjP+vsU=;
+	s=arc-20240116; t=1720471695; c=relaxed/simple;
+	bh=hmf3tM7swWEbHP67M7gMRWixLCqvfDFzdn2pHxB7eYc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jIy1c2Wzedgt5lwbNv1EyIdZhsJUP0IV7cCePPq+TNzilAfbS8E8NlXp/b89vsnFrOqcPbMMrpuPGG+6kk1QCLl1B7478IaiG2by/MYVt72QwnHaEIMDhdK1GKPmcJVFuiyophTw6xhQ0y41ki4amRuVHdQwCeORnXup0d0KuHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sXPIoSHk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=aeB9PlROasxC/JpKPlB7uUf4djVut4zW3QZLLw93XgShSeYIOEoX3d0cv/1ao90YK1r43vsXFbXbBuLroKWP8jAAN0TWkrHBBD9YUMfS6vIpvVKcO+FpNYfxHYnzTJOLRjgL9SdiXmhl6KpOmN4S4b4bh0Hm7eonWKkIOK+ogEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=Ya5O5hJ0; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sXPIoSHk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31FC7C116B1;
-	Mon,  8 Jul 2024 20:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720471451;
-	bh=ji7wYm2m/vKs/SRhmS/int3PI83ishRDU4ddyjP+vsU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sXPIoSHkktYvW9NG0COkM9irwnheNNBwGlTkvyMTGjkHNk13bsZrRHziY8nhRDtRr
-	 jF/WFrK2nGeujC0LKE+8OTLRVbmWWFU++9jUwNdn9rYBIJFacKBGzmEETF0A5v/Qlt
-	 CIrG211PhR+7cxPAMv4su1lxgD36K61D+nOsv2HQ0jqdCxvPlp/5LMwFRQVBFKocRk
-	 QiCK3i6/7040w310GS60PrmjJ/VDqoFNUju+hkj2MNha1jLf9XEEU8fVKOgIEswjat
-	 tARQNNmdLLWpEUd+Uc3Vg1dGta4cJwlOdvF/ESXlHikDrkINYlXdxIZFLCvOOYuktH
-	 3YXnMOm2O3w4A==
-Date: Mon, 8 Jul 2024 13:44:09 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Simon Horman <horms@kernel.org>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Richard
- Cochran <richardcochran@gmail.com>, Radu Pirea
- <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy
- Gospodarek <andy@greyhouse.net>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
- <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Vladimir Oltean <vladimir.oltean@nxp.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Subject: Re: [PATCH net-next v16 13/14] net: ethtool: Add support for
- tsconfig command to get/set hwtstamp config
-Message-ID: <20240708134409.0418e44a@kernel.org>
-In-Reply-To: <20240707145523.37fdfeec@kmaincent-XPS-13-7390>
-References: <20240705-feature_ptp_netnext-v16-0-5d7153914052@bootlin.com>
-	<20240705-feature_ptp_netnext-v16-13-5d7153914052@bootlin.com>
-	<20240707082408.GF1481495@kernel.org>
-	<20240707145523.37fdfeec@kmaincent-XPS-13-7390>
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Ya5O5hJ0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=2NZfop9xMXj5MCVj5FYiZaUu1Tz5sI/EKDJi9yyJQdI=; b=Ya5O5hJ0EnKooPY1JBAy2CixYj
+	e5EOZp/uXx/nWW0cgyJO0B9zCk+ecCZe9ky9Slp5bnDVuJDCtCQrrJFYc3uS9UnBNr5wisFwN9H0d
+	BwYQhMfX8E80WoXTIELLHgZi8TLk10tCZDamK1wXIMd1qG03Hq31IM5psmzdxaE0/+n5fSsnXsTvg
+	JiIHK2pMy12F1YMIX9CXgIB980MjvaD/cNBAQ9JNd5dDIiXq5TFlnIsL+ACD5m4G/c67COwCBPhzg
+	SXne3UcAjbDTtef17SqZPs+F1AgFhn8tZAVfiRpxHw8DWHCjvZTIYI2N4jAqorM/ZOe7EumJmE0+D
+	gu/5u5Ag==;
+Date: Mon, 8 Jul 2024 22:32:05 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Rob Herring <robh@kernel.org>
+Cc: lee@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Krzysztof
+ Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4] dt-bindings: regulator: twl-regulator: convert to
+ yaml
+Message-ID: <20240708223205.22b7029d@akphone>
+In-Reply-To: <CAL_Jsq+9v0i-6xvPY6cvnJUSLV1d4irqcPv60p+KwC5sx7WDDg@mail.gmail.com>
+References: <20240606111611.371463-1-andreas@kemnade.info>
+	<CAL_Jsq+9v0i-6xvPY6cvnJUSLV1d4irqcPv60p+KwC5sx7WDDg@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.37; aarch64-alpine-linux-musl)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,12 +51,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 7 Jul 2024 14:55:23 +0200 Kory Maincent wrote:
-> > 
-> > nit: make htmldocs flags that this title underline is too short
-> > 
-> > ...  
-> 
-> Arf, indeed forgot to rebuild the doc, sorry.
+On Tue, 11 Jun 2024 07:39:25 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-Looks like there's also a new driver to fix :(
+> > +
+> > +        gpadc {
+> > +          compatible = "ti,twl6030-gpadc";
+> > +          interrupts = <6>;  
+> 
+> Now a warning in linux-next:
+> 
+> Documentation/devicetree/bindings/mfd/ti,twl.example.dtb: gpadc:
+> '#io-channel-cells' is a required property
+>         from schema $id:
+> http://devicetree.org/schemas/iio/adc/ti,twl6030-gpadc.yaml#
+
+I sent a fix. It was not applied, maybe because subject does not
+contain regulator and so missing Mark's filter?
+
+Regards
+Andreas
