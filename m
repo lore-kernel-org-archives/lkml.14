@@ -1,140 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C45680046;
-	Mon,  8 Jul 2024 12:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB54A80046
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720440355; cv=none; b=HZiaYgaE4pUeQJdVSITh++TmoCXmXx7iNjHTC1e+/BTWgcdZWwH94Xg+dX1cbQX4DcTZQQqqEV7bjpK5w3kIRFcjJ5YGUEytqEgeDpohZrnEVSQBRiVAtlBwn05/+H2u4FkPKufQnaGTdoTfwfaLKLEij7Khul93SsPRInPv4ZQ=
+	t=1720440398; cv=none; b=EINomtToXZhVcF6AaZzhVSCORmlEMU/u3Bq4pylItRwyib50GT5W3dtUGgFNwTwjclcNL5BLMne0nzY+mryVCKnNcuD1Lu8WgI9G/TefU3Z/soUYZZnjRG56xU6vWcWQTZk2ay48P0h9C4+9MRG2RtLbKMz2ZOUy1KHb6E7iccQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720440355; c=relaxed/simple;
-	bh=zYiZL26YpL9nyJBbsDP8s4nzF/bHXrFqq56T1M+s51E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cQl1JDn/iaifH6mY60F0ZjafawAj/aYQ1K7vUA7vbHNv4tvokzLG3VmMfLGxwUdYvYUG5DsH2Qv6cTjBDS95pHFpM4u0VlEflBWKYE0m1eyFe5RbcVU7g9xBOWRp35ahvYAmHLyIRs8O9qVOtSYEujrGc8r7EO8gmHOaJoh3iI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CScz0WZ9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720440398; c=relaxed/simple;
+	bh=vvhp4fRApGwcWx+HYgN66svEhYeuk2Cy5WZpOCo0nx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dSdjfbvavTIsjhkuDZCq4lycqxmA+SHE6fKZOGIez3t5glDK6rUR2oF0hn4kwLMfJbaGAa5c6VPiCsGlFW46Zhbp45c5Y8BlmU2B1oJgLnvC+GHUc/pJFEhcwskR+Pv401XYYHx+jWIoiGnjOZJizhIuUJSw0g96xTV+f/RKVPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NWhhWVC8; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CScz0WZ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64675C116B1;
-	Mon,  8 Jul 2024 12:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720440354;
-	bh=zYiZL26YpL9nyJBbsDP8s4nzF/bHXrFqq56T1M+s51E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CScz0WZ99qjtrVPURkXM/OG7BWNP/9toOwOYu6FHQmMXHVS6vkrvE9s+tv5Ag5GyX
-	 d+zy08c/3FCc+bWgUIJ7D1QfpyaxOclKyAHbpORvZQ3DzeBDFFpM9eKl8bF8rGjBxg
-	 O8elQO+czjq/PgK0FCDdM25lfRqHJ5rZnhexQ2hQloqpbDSQaznCXUIj6Kkm7W2zar
-	 NA8pOYoEg8GY9ARqy90GQp9O/yRmwRLa4w8v5X27EEMtbutKNUoe1k2Ys/mxs1z7WY
-	 Q5DiUvNWoCzrUZ0ZEEFqFibTyuflF0nlqRRMzfMh5DnQLLR9rKpBDr8DjJik3arWvl
-	 3VRj9O/Fa7eQg==
-Date: Mon, 8 Jul 2024 19:51:43 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] serial: 8250: move mmp|pxa uart earlycon code and add
- xscale earlycon
-Message-ID: <ZovSzxZzZJRS8JWm@xhacker>
-References: <20240706101856.3077-1-jszhang@kernel.org>
- <20240706223323.GYA367.dlan.gentoo>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NWhhWVC8"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ee910d6aaeso42987761fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 05:06:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720440395; x=1721045195; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GIOHsuoN+RJIrgoMh8AOlVtaMS5uVmOStC/SKT1pRY4=;
+        b=NWhhWVC8IkFdOxM8oeAOq6g1YgxyiZ+LrU+YiMumcYIOP9Ug5xM+n7amIBKEA6EQHL
+         Tr3NawyaZIEgqdXvbg6VF+SbXzvDeWpCI99nxh4RVFRUVHcqgKKzGyPKhF8YJQOjoTFD
+         Pzfne7Rw57BA1Miuc9Dbc9XMnoKzqujZ7WqjtGYLDY0UNtwUPBrXie+fHvndR92KTxYf
+         BY4S1BsFl08LYnqCKrakxDCqWYsNMYcU9zB8AuCkVm+FoYEvpCF0cYRkLZQcxX7lBOXN
+         fEL05YQCHh809UU+h5NmNbopMggeAQpxgnnm03wTpd2QHvOMRAtai/1FNY36KcRKb8+M
+         FpCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720440395; x=1721045195;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GIOHsuoN+RJIrgoMh8AOlVtaMS5uVmOStC/SKT1pRY4=;
+        b=boykat4oJyfOxSJkVFmHaiEWxvJc4hJiGW1qiD5HA2W4DeXqGETK3xJD9u9qLPB3z0
+         LipLCKw5NEWOb7BwvfJEjgDu+lOJHxSAQv8Q2VKo74bsrVZAAYKvmr5C2pU5JX2/GSI3
+         oshrBlEdG5efz+cBKLHnx8TaSBZQtqt9APWFin/z9ied2JnuhnFsPFsIb5o+ehDiqHlF
+         EWk5HbHbEJxyho+zV9oTg8BQYqOT8hUTbT5dZ9ziOmSQsfOexyNj9LzD1wVBSzidCOaZ
+         rlcM1KyDID2xQaQt32DV6QGit98frs5aeF2CXzAGYtaqD1SU4eiQmJIWPccArgH7ERm9
+         QTxA==
+X-Gm-Message-State: AOJu0Yz0BfRfrMBfUXPBQXosFHE1/zV0uoFY19VHyDvSKP7SyCgJY7Nm
+	OeFsbsRLX/QL7fMmzZP5l3aSseeLaeHzaqgkSPUhBAvbAXk+YfO2bD2bb3fwfylCRKp0pjDlBYS
+	i
+X-Google-Smtp-Source: AGHT+IGgWz353tljKhdO83u9sS54lkUMOPfQr8fMIV7vCsqQ+f3NT52R0i3CP1D+AoSSca2X/CFjuA==
+X-Received: by 2002:a2e:99c9:0:b0:2ee:8bc6:6817 with SMTP id 38308e7fff4ca-2ee8ed5e0ecmr71535501fa.16.1720440394755;
+        Mon, 08 Jul 2024 05:06:34 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0? ([2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-58f4114a9ffsm4282023a12.12.2024.07.08.05.06.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 05:06:34 -0700 (PDT)
+Message-ID: <402ede79-5eda-48fc-8eb8-5d89ffe6bd41@linaro.org>
+Date: Mon, 8 Jul 2024 14:06:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240706223323.GYA367.dlan.gentoo>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] thermal: core: Add sanity check for polling_delay
+ and passive_delay
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
+References: <2746673.mvXUDI8C0e@rjwysocki.net>
+ <4940808.31r3eYUQgx@rjwysocki.net>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <4940808.31r3eYUQgx@rjwysocki.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jul 06, 2024 at 10:33:23PM +0000, Yixun Lan wrote:
-> Hi 
-> On 18:18 Sat 06 Jul     , Jisheng Zhang wrote:
-> > There are two other drivers that bind to "mrvl,mmp-uart": the 8250_of
-> > and the 8250_pxa. The previous one is generic and the latter is binded
-> > to ARCH_PXA || ARCH_MMP. Now we may have pxa programming compatible
-> > HW to support, making use of the generic 8250_of seems a good idea.
-> > However, there's no earlycon support if we go with this solution. So
-> > move the mmp|pxa-uart earlycon code to core 8250_early.c.
-> > 
-> > At the same, add xscale earlycon support too, only build test since
-> > I have no xscale machine any more.
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > ---
-> >  drivers/tty/serial/8250/8250_early.c | 11 +++++++++++
-> >  drivers/tty/serial/8250/8250_pxa.c   | 16 ----------------
-> >  2 files changed, 11 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/drivers/tty/serial/8250/8250_early.c b/drivers/tty/serial/8250/8250_early.c
-> > index e3f482fd3de4..6176083d0341 100644
-> > --- a/drivers/tty/serial/8250/8250_early.c
-> > +++ b/drivers/tty/serial/8250/8250_early.c
-> > @@ -171,6 +171,17 @@ OF_EARLYCON_DECLARE(ns16550a, "ns16550a", early_serial8250_setup);
-> >  OF_EARLYCON_DECLARE(uart, "nvidia,tegra20-uart", early_serial8250_setup);
-> >  OF_EARLYCON_DECLARE(uart, "snps,dw-apb-uart", early_serial8250_setup);
-> >  
-> > +static int __init early_serial8250_rs2_setup(struct earlycon_device *device,
-> > +					     const char *options)
-> > +{
-> > +	device->port.regshift = 2;
-> just wondering if possible to introduce a generic earlycon sub option? so kernel
-
-the 8250 ealycon can parse reg-shift from dt too, so no sub option is
-needed. The reason I hardcoded here is: pxa-uart and xscale-uart doesn't
-mandate "reg-shift" property in the binding, while I did see mmp-uart
-mentions "reg-shift" is required in the DT binding.
-
-
-> can parse reg-shift from command line parameter instead of hardcoding here,
-> which would benefit more drivers (potentially without adding more OF_EARLYCON_DECLAREs..)
+On 05/07/2024 21:46, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> I mean something like this:
-> Documentation/admin-guide/kernel-parameters.txt
-> uart[8250],mmio32,<addr>[,options[,reg-shift=0,1,2,4 ..]]
+> If polling_delay is nonzero and passive_delay is 0, the thermal zone
+> will use polling except when tz->passive is nonzero, which does not make
+> sense.
 > 
-> > +
-> > +	return early_serial8250_setup(device, options);
-> > +}
-> > +OF_EARLYCON_DECLARE(uart, "intel,xscale-uart", early_serial8250_rs2_setup);
-> > +OF_EARLYCON_DECLARE(uart, "mrvl,mmp-uart", early_serial8250_rs2_setup);
-> > +OF_EARLYCON_DECLARE(uart, "mrvl,pxa-uart", early_serial8250_rs2_setup);
-> > +
-> >  #ifdef CONFIG_SERIAL_8250_OMAP
-> >  
-> >  static int __init early_omap8250_setup(struct earlycon_device *device,
-> > diff --git a/drivers/tty/serial/8250/8250_pxa.c b/drivers/tty/serial/8250/8250_pxa.c
-> > index ba96fa913e7f..b5d937f6f3f9 100644
-> > --- a/drivers/tty/serial/8250/8250_pxa.c
-> > +++ b/drivers/tty/serial/8250/8250_pxa.c
-> > @@ -165,22 +165,6 @@ static struct platform_driver serial_pxa_driver = {
-> >  
-> >  module_platform_driver(serial_pxa_driver);
-> >  
-> > -#ifdef CONFIG_SERIAL_8250_CONSOLE
-> > -static int __init early_serial_pxa_setup(struct earlycon_device *device,
-> > -				  const char *options)
-> > -{
-> > -	struct uart_port *port = &device->port;
-> > -
-> > -	if (!(device->port.membase || device->port.iobase))
-> > -		return -ENODEV;
-> > -
-> > -	port->regshift = 2;
-> > -	return early_serial8250_setup(device, NULL);
-> > -}
-> > -OF_EARLYCON_DECLARE(early_pxa, "mrvl,pxa-uart", early_serial_pxa_setup);
-> > -OF_EARLYCON_DECLARE(mmp, "mrvl,mmp-uart", early_serial_pxa_setup);
-> > -#endif
-> > -
-> >  MODULE_AUTHOR("Sergei Ianovich");
-> >  MODULE_LICENSE("GPL");
-> >  MODULE_ALIAS("platform:pxa2xx-uart");
-> > -- 
-> > 2.43.0
-> > 
+> Also if polling_delay is nonzero and passive_delay is greater than
+> polling_delay, the thermal zone temperature will be updated less often
+> when tz->passive is nonzero.  This does not make sense either.
 > 
-> -- 
-> Yixun Lan (dlan)
-> Gentoo Linux Developer
-> GPG Key ID AABEFD55
+> Ensure that none of the above will happen.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> v1 -> v2: The patch actually matches the changelog
+> 
+> ---
+>   drivers/thermal/thermal_core.c |    3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> Index: linux-pm/drivers/thermal/thermal_core.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_core.c
+> +++ linux-pm/drivers/thermal/thermal_core.c
+> @@ -1440,6 +1440,9 @@ thermal_zone_device_register_with_trips(
+>   		td->threshold = INT_MAX;
+>   	}
+>   
+> +	if (polling_delay && (passive_delay > polling_delay || !passive_delay))
+> +		passive_delay = polling_delay;
+
+Given this is a system misconfiguration, it would make more sense to 
+bail out with -EINVAL. Assigning a default value in the back of the 
+caller will never raise its attention and can make a bad configuration 
+staying for a long time.
+
+That said, there are configurations with a passive delay set to zero but 
+with a non zero polling delay. For instance, a thermal zone mitigated 
+with a fan, so active trip points are set. Another example is when there 
+is only critical trip points for a thermal zone.
+
+Actually there are multiple combinations with delays value which may 
+look invalid but which are actually valid.
+
+For example, a setup with polling_delay > 0, passive_delay = 0, active 
+trip points, cooling map to this active trips, passive trip points 
+without cooling map.
+
+IMHO, it is better to do the configuration the system is asking for, 
+even if it sounds weird
+
+
+>   	thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
+>   	thermal_set_delay_jiffies(&tz->polling_delay_jiffies, polling_delay);
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
