@@ -1,107 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCA014EC6E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF7714EC62;
 	Mon,  8 Jul 2024 15:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720454044; cv=none; b=goRwBp+SJjCUV6IuQFkOptui3dNAsOVZFpBKXOZdCXKiJbjkzdJfVYXgsP7UktJXRBVEfB2G8DFC9kXyg5aZ1SQW8pARS+AU7ngdiO8ih0rXcuGLVivwPqCfxTYndPkEZZzcibF/TS00Twzy/9xa43F5wfu7n/iMKfla3/8Zih0=
+	t=1720454045; cv=none; b=HW24p5qnxsBi2aoXPt9Fcqug2+KBZ0kYjxCMgsP1R5Mrrfg/P+oTrvV6COezu89CA8dMP8mv9KJqLAh94+ZqmFoLoxwru+bLP8Sc4TFmRof48YW08USOMrtJ5LoasPK519pPwkG6cA++DJ5kpHQfa8o0m1/CiZIld2N+mnKU9Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720454044; c=relaxed/simple;
-	bh=aIxGR7na/Qdc3ayjXzlWsssXh9j6/eXvzZW4Lz1mI/Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XX1lzKiPzCjbKrPOinDWi8ca9fPmHG+L92elKArBVermXrzHgCYOz1bKOq6QjzzGxwUwN1C0Km9jZxrrTes7FsYCngdv/SK0afZ+X1RJkrRqNkM+NPYwT0EQaOjU+8Cq/4r9VtnnkVbZJ0jGG6fcBxhyAYk/VwjXiionMH5+Lyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WdZmqhZE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720454045; c=relaxed/simple;
+	bh=Jv9Osj1MkLpJnopOQ2p6sePdzmKda/4nq+wQ2oK8DOM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rK7FU4gg0Fkn+Cq7QHTBW/rNNrz1AwkTWigXVTe5i9l3LNN/+Ihn6roB4Y8/+SMlOsKIXcrqUqHMom0H0LzW4StZEuWrlFfGGhgpgt/BO7myg0vIsB4PmUGPUrluRyDnMbIiL/xQucRb7jVpTeWUqBoLPY3gJcEQsUmIjudx8n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Zr4xsfIn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WdZmqhZE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B02DC4AF0F;
-	Mon,  8 Jul 2024 15:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720454043;
-	bh=aIxGR7na/Qdc3ayjXzlWsssXh9j6/eXvzZW4Lz1mI/Q=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WdZmqhZEKcdRor0xeRZQ1AMbtjW8CCS6wtr9O5WYow4WRp4uGqcoWspFWu9aOgxk/
-	 05tMfHGKk+jbx4L5sjDmCtp37o3pHA/E3ErO+DjPywyV7S9VxEDTgypzb2c/IgpNbZ
-	 ZtaLocdM76/fWP/DNQD2TZjUMfKZcfr70nMP0S7IUdcv755TKcYHTmTEQPEU3wGDkZ
-	 X3n2VKVCnCOtvaoqnFx83g5WFH/bOJeKHGmA1A00nqffpV4NGLpFSFWWkmSv1ovx0L
-	 4de01hkrsGxPUOXTdsG7AiOLqm0l3pEyU5WwhAE7CZCRkeuIsiefmeENFR6jx6/xAi
-	 FjxZUnHiiE7SQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 08 Jul 2024 11:53:40 -0400
-Subject: [PATCH v4 7/9] ext4: switch to multigrain timestamps
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Zr4xsfIn"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468Bi7s4031378;
+	Mon, 8 Jul 2024 15:53:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Ry4a33oM2h+smvuuo7xpH1
+	VE6ViBwP9kkXd/cgX2QYI=; b=Zr4xsfIngMqSR3qf5curMx6x88rsFEMvSWLbok
+	m8PzMws9NoUELMigsbSnfkAQgPp/6ba/QPp51hq66sHCJ50CLHeiwkp8vk+BxM9+
+	l1fvOFniZtcenqi3QVM4xTDyrPHkNThFuUj4kbDZUEJq4LZezUDa53ePoU89CWED
+	yGiybw1bFAsxqIuhHWwcJ6PWiqlB95QnNdo3bArTRm2Gwz6j0+UpD3M9WQcZXGJF
+	4IibW1FXtIwvx28c8dSXfAFhQ2+dDbVyMVxtk4MTsTT9LaXe9EJOeS0aZdUoGbkx
+	hTIKKVFyjug+1Mk6SlL9NBMvmKsQpzYvxKkyThHeWB26xnwQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406xpdkxd8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jul 2024 15:53:59 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 468FrwYV024988
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Jul 2024 15:53:58 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 8 Jul 2024 08:53:56 -0700
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <robimarko@gmail.com>,
+        Mukesh Ojha
+	<quic_mojha@quicinc.com>
+Subject: [PATCH v2] firmware: qcom: scm: Disable SDI and write no dump to dump mode
+Date: Mon, 8 Jul 2024 21:23:32 +0530
+Message-ID: <20240708155332.4056479-1-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240708-mgtime-v4-7-a0f3c6fb57f3@kernel.org>
-References: <20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org>
-In-Reply-To: <20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Chandan Babu R <chandan.babu@oracle.com>, 
- "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
- Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
- Kent Overstreet <kent.overstreet@linux.dev>, kernel-team@fb.com, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
- linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=839; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=aIxGR7na/Qdc3ayjXzlWsssXh9j6/eXvzZW4Lz1mI/Q=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmjAuEhXGg7q/ZSXYWrlObmN4kWG5CFpkeFLGJL
- BloJF+qTcyJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZowLhAAKCRAADmhBGVaC
- FWd2D/4nrrrq9qnRRkHaEtLBNuSn/vN9DMXD7XETJ5F+WVPpSdvHtM7RvXEvUR188K+EDnmqFa7
- o7+7pTjzyn+uIzpSE0j9ZEBO482oLUFDAgItrDGhJeXZUfEQHKYdukxSKgarTD5nYbYC/i4TjDM
- RXka9WXpUFUIsCqd98h1XZ+S5W3AT88rUp/jv1LD0P+yF/Lp3FGcORSuAF95AU1GrjLSoKL2X5q
- mBf4nBLDpSmvRAdTGSSScut5LJdrMYO9jg6gJf8Cb4Mc3bDRPGo+oGd2nL1kTG+WyrErLM3IfqR
- 9H7jH8QQqXyvoso0FNo8KN3SCsgwXxMLq0qEv1iWFONDAyMYbmy5udOw6BEzIGBaYGMvPg9G1I7
- nRUJUZPDWBdr7unHL2np3W4PFAT/l2nh7cZkxSkTk8z0pIQVG6udI1wTxdGpuC/zptSfzJpWzXB
- fRwotHXbhtA5mXZhu3gwUW8jNFYAy389DNBbYcPp66G2Mff8KECeoEJz0lRK5nzAaV43OCaOqPQ
- 2YuwPX57BH6wGkn+gvPZ0Fa6/0wMNEaZsZqNsf11YevvL/5srjIMlSr/luKwInTOD9YjtkP1HZR
- K08XctFRkt5sYW9WLrcZufyxUtPXnoe86WEOj3V8UMjB/HtQg4qUvpljpL1fhq+HiBfjzwrJ7ve
- tRYcHqYUd5VvbRA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: j52KZ0MhL9fhPUEACbJQel7hqdiBPTBn
+X-Proofpoint-ORIG-GUID: j52KZ0MhL9fhPUEACbJQel7hqdiBPTBn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_09,2024-07-05_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1011 lowpriorityscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407080118
 
-Enable multigrain timestamps, which should ensure that there is an
-apparent change to the timestamp whenever it has been written after
-being actively observed via getattr.
+SDI is enabled for most of the Qualcomm SoCs and as per commit
+ff4aa3bc9825 ("firmware: qcom_scm: disable SDI if required")
+it was recommended to disable SDI by mentioning it in device tree
+to avoid hang during watchdog or during reboot.
 
-For ext4, we only need to enable the FS_MGTIME flag.
+However, for some cases if download mode tcsr register already
+configured from boot firmware to collect dumps and if SDI is
+disabled via means of mentioning it in device tree we could
+still end up with dump collection. Disabling SDI alone is
+not completely enough to disable dump mode and we also need to
+zero out the bits download bits from tcsr register.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Current commit now, unconditionally call qcom_scm_set_download_mode()
+based on download_mode flag, at max if TCSR register is not mentioned
+or available for a SoC it will fallback to legacy way of setting
+download mode through command which may be no-ops or return error
+in case current firmware does not implements QCOM_SCM_INFO_IS_CALL_AVAIL
+so, at worst it does nothing if it fails.
+
+It also does to call SDI disable call if dload mode is disabled, which
+looks fine to do as intention is to disable dump collection even if
+system crashes.
+
+Fixes: ff4aa3bc9825 ("firmware: qcom_scm: disable SDI if required")
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
- fs/ext4/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2: https://lore.kernel.org/lkml/20240705120623.1424931-1-quic_mojha@quicinc.com/
+ - Modified the commit description to make the problem description more clearer. [eberman]
+ - Added Fixes tag and removed conditional operator from qcom_scm_set_download_mode()
+   argument. [eberman]
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index eb899628e121..95d4d7c0957a 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -7294,7 +7294,7 @@ static struct file_system_type ext4_fs_type = {
- 	.init_fs_context	= ext4_init_fs_context,
- 	.parameters		= ext4_param_specs,
- 	.kill_sb		= ext4_kill_sb,
--	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
-+	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_MGTIME,
- };
- MODULE_ALIAS_FS("ext4");
+ drivers/firmware/qcom/qcom_scm.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+index 00c379a3cceb..0f5ac346bda4 100644
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -1954,14 +1954,12 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ 	 * will cause the boot stages to enter download mode, unless
+ 	 * disabled below by a clean shutdown/reboot.
+ 	 */
+-	if (download_mode)
+-		qcom_scm_set_download_mode(true);
+-
++	qcom_scm_set_download_mode(download_mode);
  
-
+ 	/*
+ 	 * Disable SDI if indicated by DT that it is enabled by default.
+ 	 */
+-	if (of_property_read_bool(pdev->dev.of_node, "qcom,sdi-enabled"))
++	if (of_property_read_bool(pdev->dev.of_node, "qcom,sdi-enabled") || !download_mode)
+ 		qcom_scm_disable_sdi();
+ 
+ 	ret = of_reserved_mem_device_init(__scm->dev);
 -- 
-2.45.2
+2.34.1
 
