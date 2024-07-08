@@ -1,121 +1,98 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962C01482F5
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 17:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C45145344;
+	Mon,  8 Jul 2024 17:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720461012; cv=none; b=JtBBVwg7MldKpzQiYO9hLjoZsKKXIMjzDh66Fx5GwbXSa3YS1b+rFBcpptHIfVEG6d9Vz7y8x0ZjzzQe8G51vL99ogj3zkzG6/Kd5Qd6nJ4xQAENA0htpziK/wEA5MdPo+V2CDAqe0Q7qsWbm7dO+g6cM4RcZXyjchQ+VsSyWAg=
+	t=1720461195; cv=none; b=t643CV0cgbKuJ9N6b/i+godCq57VyD6fP8jDTqUqC5LFm463aQ4qUNIJ5prUeDOSV93t17cogPqkg7rHvSMgIav9mbs3fUHq1YDk9bghalthKk/vldP34RZo35s3aRYFxvz3qmTcvsWOOAJHomSSzuagTrhuZNWlxaH3S0o6LJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720461012; c=relaxed/simple;
-	bh=Cgeu270hOmX3S5GZTXTxjnZltMxA5nAub89Ban01DjU=;
+	s=arc-20240116; t=1720461195; c=relaxed/simple;
+	bh=iOLaAKGVBNBu76WR45/Ccdjddni/NIVquIog/WJvECg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZoxLrpjpZww+0QikNfYhTECxPxFKF1InHNpW36oLhThfoQdVpEh4hVEfVk1JY7FEAgJ5wyOADLaKZGN3pMg4u7Gh6UW0pECEAnG51qrgV1LEmbbQrrVpEMmZiWH7cWGGnb7BWNxmrAwMjUgUAOzpkOZrwUYpVngIqB9GTqXh1H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kxMjx8y8; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=LKtOLqnQVKSfPEZto4vDzpjModMzEm7mULZsFJ45Feci/YWeVpJRbAJSLwZCHaqgHg0jp8B1npuSmpATIqX66S3wuGpU7bqqL9FgJqbfZUoeeny6FE9Em8BYhlBsyB74yme6e17Pd4gerg6S12G15KRBrHwtoreyyNnFQySPtKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GctH8zc0; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kxMjx8y8"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-df481bf6680so4080161276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 10:50:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GctH8zc0"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52e98087e32so4693134e87.2;
+        Mon, 08 Jul 2024 10:53:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720461009; x=1721065809; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720461192; x=1721065992; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nESyMzGZXBtAqIeO/AYycg3VVtY82ta3I2iF0FVP4cE=;
-        b=kxMjx8y8+f//+s7hEupd9DKh37DXdEahAVb2tjOhRg3I+KR8cBC+wrlTsZAnearr09
-         poj2fR+HiezIpXAOvx/+j4SXmv+jxd0LUv5DwTlvGskBUXBE8x75i0fSPlD85ZY0TpUf
-         ljmRpZu75n+UXw9PVSFuH4+fI/ctN49/YzKmtyLM7aLkkeiPp92sAzp5BEO3nZ2O7Zov
-         Anr+kyAuj3iiTQB4BwPToWM9CnelVdJ+vWj3uZclatMRnAU5+NEzocQ5+gY6rptYn5U4
-         5SfYoxdr3MyxJSy59iWeIaFI31lEwYk7Hdi9y6LrbijHXCaf9kewubcp5GHXvOL186U2
-         exzQ==
+        bh=iOLaAKGVBNBu76WR45/Ccdjddni/NIVquIog/WJvECg=;
+        b=GctH8zc0USblV9J1ov+1BEREUepGoaJHbJLMUGpOGjFOEU85qFUwCUYS1B4g9roV3F
+         iLYsK6n2oXXLbMqFGJ65O89cdGVHymXByQQGZX4yd9l3Esflx9xvaM7cRKXG1Fn22q5z
+         Yk/E1AsUhtcNeyr1Gfcz1Wm1v3tP0UBLX+ZXK9ziQeaBg2Uj8jxG4r/WZMgzzbdNkcUZ
+         c9gY2e6UwbyYovLsVyB0o1aySihmoeG7jpx8E6pMMiTYOcrl9NSesW9Ml7SjPk3PrSIN
+         GOihkxJI974n0fEOSgXo2O2mxa5eNzQTmN2JNAZ/ZHzDHETGWnmZw5ag1C8gLhCX0/5H
+         Th1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720461009; x=1721065809;
+        d=1e100.net; s=20230601; t=1720461192; x=1721065992;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nESyMzGZXBtAqIeO/AYycg3VVtY82ta3I2iF0FVP4cE=;
-        b=aeLwtckJH9LuR7w3uumJ82CoXvOJuNOvqaEjzeTvarEvFyFIBOCx+oy1rR9WYAQkA7
-         CZcXc9yrnSWxAVbS/jysU9LAAr/Z42rlLXeQiAo7pVZYUQA4JkWU0ym7uxmg8h9pJTH8
-         qPxoZs/oUGTtYYWkO/Vc+iqxP6oBwRfXai6HJYRxlbyxYd6Cq3x67sWCZ/wFryk0ysEQ
-         v/p7Ay9UKJ8nlsDaIq8HzIWEWd8Km0jtCL9bt51LJor8peK3MX5g0ljXIBe+WPaqWOsK
-         a66T34lalNkSo16s27QTJOwKGtwqBm+H+uMaSIYf6ZdgDwlmw7pleuzQBWaQVrVHoZQO
-         iaBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpmrtZdLh8JeOy6s9c1dXx7naSSGF4oJJer99qGftYXBH0HFppd+pW4XIa/Ml43qDm8EkRzJ+MrqNsxL/cyIGgEdu7Zfn2mZ1ggIwv
-X-Gm-Message-State: AOJu0YxxhRV7RgLhLv7KCIDz8Kyo2NgBtWjL0ZzRl15sAjNi7pAKJbj5
-	nTz0WuGl6IEdGvSJtNfhTntjUK64Z2LyH9Ma+yz2WTRidvuQ54hZwLVpi1HhzLdjjK6vpFHFrqs
-	z/D8gs7VnyOdLIbdT/ruVJ9S6NH9c+KwohvfQ
-X-Google-Smtp-Source: AGHT+IHcxq/i9rzCxsEN5hnVo4LPbu8O3jBlhcP+IANI38Pst6MQnmRwrHXpKPTOw9a59dfbicjTNMHGzlIpXAxgcP4=
-X-Received: by 2002:a05:6902:1361:b0:e03:4e08:c93c with SMTP id
- 3f1490d57ef6-e041b03995dmr571404276.13.1720461009288; Mon, 08 Jul 2024
- 10:50:09 -0700 (PDT)
+        bh=iOLaAKGVBNBu76WR45/Ccdjddni/NIVquIog/WJvECg=;
+        b=bpSrl+AISecg8psGLd9e93Bhiozy1Ofm1k9GN/ZaG3Ka4xfHlinZrsl8KjSbhrh/FH
+         kn10CmCQuTeF+BB2Vy3qroola5bVTXiMlrlLNMVc26N96HF7sR8fhjsSH5tEiK2Z2bzN
+         ziG3nbQ6lZpw2fhu1bL1MSq82ljiFCRDODIvaxgoiPlSp6WZtMAQ4zA54ujjIas+HK+5
+         Qp7TrLySoX6yWr14fMxiqt06RxprS7cQRW4IrJri73vPnRQpz7rZUciEVcbQLgJnrred
+         bANb29gwfUigQocmckll/6O3C4QY+cpPjnqsfx7rLGEClzQb43O4snt0sVbjkSxIq//O
+         9fHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCKEx9U0a3gcWHEPwKZdtUSfR2ezJuFPjmJ8TVIlFuDrW+FW3zcVsFGoVdvp8d3atCE312LK+qS9CH6+F2XzE6LHb+OPGL9UFrKPkp1hVtMbPj5tEZUxnRqhy3lieIolF8jacPPL3jHYeBViY=
+X-Gm-Message-State: AOJu0YyWiSRvfR9alj/aAL1rKg3Vt0atZRIqNN7JkaVSvMIKUqbhbpPn
+	k0jluc3PG90RCs/ZmsM5oPZnnShs8fwiS505zY1mY7ITf6rKp+hOKfGYfK1VhzmTZ94Z9jPFNW6
+	oeZV7d3IXm+wLQgwRJ4pggsiIXKU=
+X-Google-Smtp-Source: AGHT+IG6OxwJnPlRecfs0gLI9tl8froTvbIEsUoz11AIQoqRN2W4OAbu0Ma5H0uhfPLdp3GnATqEA7zPVA+NU+bUB6o=
+X-Received: by 2002:a05:6512:6d3:b0:52e:a008:8f41 with SMTP id
+ 2adb3069b0e04-52eb99916damr62580e87.25.1720461191362; Mon, 08 Jul 2024
+ 10:53:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708134654.1725-1-yuzenghui@huawei.com>
-In-Reply-To: <20240708134654.1725-1-yuzenghui@huawei.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Mon, 8 Jul 2024 10:49:57 -0700
-Message-ID: <CABdmKX1CXWuw0-gRukZeSoF=SZFi3eRPELe=EU_-q3OVKQHZzw@mail.gmail.com>
-Subject: Re: [PATCH] kselftests: dmabuf-heaps: Ensure the driver name is null-terminated
-To: Zenghui Yu <yuzenghui@huawei.com>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, sumit.semwal@linaro.org, 
-	benjamin.gaignard@collabora.com, Brian.Starkey@arm.com, jstultz@google.com, 
-	shuah@kernel.org, wanghaibin.wang@huawei.com
+References: <20240703110624.1301830-1-wangrui@loongson.cn>
+In-Reply-To: <20240703110624.1301830-1-wangrui@loongson.cn>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 8 Jul 2024 19:52:44 +0200
+Message-ID: <CANiq72m35W=8V77Rcu7MKw29EXEFq102tOL_Myyx1UvMuJYUBA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: rust: Use rustc option -Zdirect-access-external-data
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Xi Ruoyao <xry111@xry111.site>, Xuefeng Li <lixuefeng@loongson.cn>, loongarch@lists.linux.dev, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 8, 2024 at 6:47=E2=80=AFAM Zenghui Yu <yuzenghui@huawei.com> wr=
-ote:
+On Wed, Jul 3, 2024 at 1:24=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wrote=
+:
 >
-> Even if a vgem device is configured in, we will skip the import_vgem_fd()
-> test almost every time.
+> -Zdirect-access-external-data is a new Rust compiler option added
+> in Rust 1.78, which we use to optimize the access of external data
+> in the Linux kernel's Rust code. This patch modifies the Rust code
+> in vmlinux to directly access externa data, using PC-REL instead of
+> GOT. However, Rust code whithin modules is constrained by the PC-REL
+> addressing range and is explicitly set to use an indirect method.
 >
->   TAP version 13
->   1..11
->   # Testing heap: system
->   # =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->   # Testing allocation and importing:
->   ok 1 # SKIP Could not open vgem -1
->
-> The problem is that we use the DRM_IOCTL_VERSION ioctl to query the drive=
-r
-> version information but leave the name field a non-null-terminated string=
-.
-> Terminate it properly to actually test against the vgem device.
+> Signed-off-by: WANG Rui <wangrui@loongson.cn>
 
-Hm yeah. Looks like drm_copy_field resets version.name to the actual
-size of the name in the case of truncation, so maybe worth checking
-that too in case there is a name like "vgemfoo" that gets converted to
-"vgem\0" by this?
+I have created a tracking issue for this in
+https://github.com/rust-lang/rust/issues/127488 since there was only
+the MCP, I hope that helps.
 
->
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/t=
-esting/selftests/dmabuf-heaps/dmabuf-heap.c
-> index 5f541522364f..2fcc74998fa9 100644
-> --- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> @@ -32,6 +32,8 @@ static int check_vgem(int fd)
->         if (ret)
->                 return 0;
->
-> +       name[4] =3D '\0';
-> +
->         return !strcmp(name, "vgem");
->  }
->
-> --
-> 2.33.0
->
+I also added it to our #2 list of unstable features -- please feel
+free to ping me in the future if you add others that you will need in
+the kernel, I am happy to add the entry even before you send the patch
+to the kernel in order to track things (in fact, even if it is not
+implemented we can still track it in the other lists).
+
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+
+Cheers,
+Miguel
