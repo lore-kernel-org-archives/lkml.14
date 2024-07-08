@@ -1,346 +1,314 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012034.outbound.protection.outlook.com [52.101.66.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B0A148FEE;
-	Mon,  8 Jul 2024 17:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720458508; cv=none; b=kPmOW+t1eHUvTprr2mPDj3RcR2gAMDSJAr3YrWlHWPjFUsYRdMlewXh3kn3rNrjkDw/k1KHmVSfvldfM9LJ8DPMwb95BHSNFMQpY48ULIpKOTEcBJFlsPBvW97paddvVrd414mmvb3UfOR5VXPQcdqgprtsULduLDpvdPmbsRys=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720458508; c=relaxed/simple;
-	bh=Y3aHN1NmCiICEtufO9VLeJIX/a8wyoqvGJdPF9we2rQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FusKsrserFArVkMr6TV0UFgJ1ofma4KtlIxADxaw3g8d9FAnc6nEQKLIY5170IBw9wXnTN8JAfK2/DyDMvGbwqf3PI9bRKens6SZxkAyyEsbcIYA08GqbA83VGB5g75T+PYqC7ssm+C79X8JMQ0DROT5CSxdmMipDPnf0Jx6k9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJ3EEjpJ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D1B1487F6;
+	Mon,  8 Jul 2024 17:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.34
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720458510; cv=fail; b=lYlGKT1aWl5X57V1E1mZQxsYWyMNPM9xcQIekc5vxtmUNWadP5/FLZoIriEffqe9c9HpAS/0G9/TlsDL0AX/iSYU8G5MG6OnfxnvO44LBSKjIxomNloR4nhXbsma0aZXRWQVEMy0OE83/YZAV9RpgC15OLwdBUuyFJou4WrjWhg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720458510; c=relaxed/simple;
+	bh=oJdpnvFrwzNO20vBsTXtf1b6RdeVWZxj8gmAXLfTPjo=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=bZiaCTVZk+xOKBhmbP5l1aPnRQB20j60TVZpb9uOm5/El2IzdvdPUfmjbMxHSKP3MzptzCpC6U/L0l0vxPE718yFBLPj/pb+q5wwGJIPSJFppGIt0r3mYvmHK56/RKcmPWko4HOOsjKzduz8aET4Hr3TtkFSTQUz8KU5SFpq4Rw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=ktxsFH2f; arc=fail smtp.client-ip=52.101.66.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJ3EEjpJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC899C32786;
-	Mon,  8 Jul 2024 17:08:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720458508;
-	bh=Y3aHN1NmCiICEtufO9VLeJIX/a8wyoqvGJdPF9we2rQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KJ3EEjpJQ7KhLsBB1ZzRBnG2cF+rHHd/CNFLUWehzYoGgnDC/ydRyoxwpMMWB1c1U
-	 d64dEgd9+rJ4fqSar4OYyvZ32TIKvoD5U/fbKVq3cMwGBBDvsoniJFYljs1jg+0nO3
-	 XgDypjRFCNXY8AhYMNn4ve/nAwpdAntsO7XBecmWAis7kJk+RsS3o8+/FTdxZvf+Ih
-	 ITY4Mw0Fy0ljYlYqQW9N/6BZqHJrTAHlK3kcuCCPucieJtpTCMYafNhb4bD//+NU7K
-	 heUPMFFOcvGY2pub23LOyPaH810AZW66VSp3NXkOvDr5STkoOvtri9old3uQlbY79X
-	 6yQ+qdHhjo9eg==
-Date: Mon, 8 Jul 2024 11:08:26 -0600
-From: Rob Herring <robh@kernel.org>
-To: Olivier Moysan <olivier.moysan@foss.st.com>
-Cc: fabrice.gasnier@foss.st.com,
-	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	alsa-devel@alsa-project.org, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/8] dt-bindings: iio: dfsdm: move to backend framework
-Message-ID: <20240708170826.GA3381590-robh@kernel.org>
-References: <20240704155338.2387858-1-olivier.moysan@foss.st.com>
- <20240704155338.2387858-5-olivier.moysan@foss.st.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ktxsFH2f"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gc2BudVVbFnpAhm4RXcW8q4nKWAI8cxb/8gCHQLFhiNOIX4JlP1ZQct2Sr2ixUwLz3DnoKpKNwVY/N1sYDKm0M33qtrdUI4OV866nhAXSMFHwmKWcR8JwSajZFndAPpUe7OG+ni5hEcgTX9tdXWRnspZnM9DAe2G9u37dORn32GJoYzzfT3T0Kg+5nhk/+Yn6ML27moTyOtaWdGyzqglCcYP/tjH3Pa/oE7Vz9xo0Y48d3F/IrN5BMlP7fc+ZvRTX2wW3jsYdoJ/++idnXPyeSArP/txTwoTtOErWm4tqhxXFMWAexYyRFmaDEHWZwvHWuSvo00c9PVWYv7hPNORfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9AHFoolGVa6F/eMqcRtTi3hGdiBLvFPvivikGVbUnL8=;
+ b=L65Y/lLCJX9uUz7a/NJQQrvKOLwQNMyIoX8YHIIMA8JaFM+3kfDCyeYEW/0LSUehfQPyK0p2cHAPWpxnVjQ1+DyW9bVhxmQXRo1+/jgGv8d2ITYZ1zIdUVt9ydcbpk3svEiQQ3OrzlzY9YukCwyTHx+HMVRIPAsadP6EYz9nQoIIwVjp/nQLRIczOYXMVUOERkG/ytEQAq2Jbf3FJAsA36aswPBB60qsiT6OC0YaSCCahVk/YhxOp74GmdSRYS8bSeDECGXCOLxv7NDr1vOFVmZ57l0ihUAjjGuL73oPiDK76RTypVA4QVWpssRXM4c41GGgo2WSwp84KFKjaJy/cA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9AHFoolGVa6F/eMqcRtTi3hGdiBLvFPvivikGVbUnL8=;
+ b=ktxsFH2f4jTysCb5ciaiSD6IDeGArRPHShgt9V7S/4410IoJ8PE6qjznnANZ8P390t+AurVV0mrC1bdB2S+bwnBxgUb+7M9K2AtyGtim+nCXNYEQQDZ2SoKjX6FOiHw2u5V5mZYPuivIAVfX2jM8SghFwgxmF1e4Ak1RYwbvyd0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB7867.eurprd04.prod.outlook.com (2603:10a6:10:1e5::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Mon, 8 Jul
+ 2024 17:08:23 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7741.033; Mon, 8 Jul 2024
+ 17:08:23 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v7 00/10] PCI: imx6: Fix\rename\clean up and add lut
+ information for imx95
+Date: Mon, 08 Jul 2024 13:08:04 -0400
+Message-Id: <20240708-pci2_upstream-v7-0-ac00b8174f89@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAPQcjGYC/3XOTW7DIBAF4KtErEs1DL/uqveoogoDbljEtiC1E
+ kW+e8fZOHbU5Rvxvced1VRyquzjcGclTbnmoadg3w4snHz/k3iOlBkCKkC0fAwZv3/HeinJnzm
+ EGEXjhRZGMjJjSV2+Pvq+jpRPuV6GcnvUT2K5/tc0CQ68bTR2TkppwHz21/E9DGe29Ey4Wglqb
+ 5Gsj2CDTq2Jxm6tXC0t760k60AqodrYKglbq1ar4eXPimxywUF0lh7sdvWTRbe3mqzV4L1NsXU
+ Jt9as1oiXXbPsgkOB0nVN87Q7z/MfPdyn5dQBAAA=
+To: Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-pci@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, devicetree@vger.kernel.org, 
+ Frank Li <Frank.Li@nxp.com>, Jason Liu <jason.hui.liu@nxp.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720458497; l=5867;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=oJdpnvFrwzNO20vBsTXtf1b6RdeVWZxj8gmAXLfTPjo=;
+ b=RwfWdQT2Lp0uhLOnkMhSlMJj1IIM7OATlEdLnTlw1uNGhwBjk98gok1HEIrpEcBHIO+KvIeQ4
+ qLm6hXKd06lCHNhp7UrjkiV47PuOXHdJIbOwcDbazSsE46SB6gONUeM
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR13CA0198.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::23) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240704155338.2387858-5-olivier.moysan@foss.st.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7867:EE_
+X-MS-Office365-Filtering-Correlation-Id: 93352382-50cd-486a-8132-08dc9f70933c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dzNtakRRU2UwOVNDUy81MHoyT3JES1l5a2NNVVVoNFZGRk81S053ZXMydS9W?=
+ =?utf-8?B?ZGk5REpGV2craVFoTmludnk3eHpDUmFHMzhoUFBtTTllc0FmcWw2SlhRaDk5?=
+ =?utf-8?B?UGpwQ3hKZlk2azdqVy9ia21FeWtISUxYeHFqaXNIaE03MFdwZ0FlU2hFYkFk?=
+ =?utf-8?B?Qm9RU1cvM2pET2FaN2gwTTkyTU95QWhuZC9xRmhKckpqOVB0MWkvK0hDUUJP?=
+ =?utf-8?B?azNQV1FyTGp3aXkySEZpbzIwZ0dsUGpWdC9vUFQxQVlLNTFacXhHZXRVOVlq?=
+ =?utf-8?B?U2dteWE4T2Z0NUpDY1NISEdDbkNHaUdQdjcrRUpQVTUzNTZtU0hqZnI2KytJ?=
+ =?utf-8?B?YjlEam41RFEzNUVIQmU1cExDaHhJMC9mTVZ1OTdpakZLb3BzV092L3RXNzh2?=
+ =?utf-8?B?M1h3RmhCZFQ2TzRHSEsxKzBvVEJPSllSUHBONUlCU1Rwa2xTaWsvK2ErWk1F?=
+ =?utf-8?B?TW9mdGpuV3RyQUNGQXZyL0dpRWVXTWFZbkFUNW5Ka3RCMExNc0dPbDNJOVJv?=
+ =?utf-8?B?R1YxY1NDYURsR2lSbXF3Y1ZXRHJkTGpNR2NGSFRyOUVweFFSSE1meGY3dUtT?=
+ =?utf-8?B?Wnl6ZjRqRFpvWGFBLzRDM2tremtZOWM3bTErUWtYbDJTWS8vcU8zbU52WTRV?=
+ =?utf-8?B?WFU0NW5wNGVVb3ZGOGhyQUhhanVUajdwT0IzWkdRQXplWTVPOHdJU2UzRUx0?=
+ =?utf-8?B?UEdoWDJMbUlpV0ltb2dJdHlxeXVRSC92T1lJZ2s2ODlqeXhzazNFNjhFb01T?=
+ =?utf-8?B?d3gzcmRYei9pb1pYS0ZBWlFmaU5ONUF1cUFKMWt2WDBuVi9QbmlvVWh1MjF2?=
+ =?utf-8?B?b1VDK0I5aDI5R0ZhbWxqTFJzSXZhTGt3UE1FYmRIVnFDN25mekVlUTVtVkFa?=
+ =?utf-8?B?cnZmN1ZiNE5WK0s2SlVYMHJVT1dLWjRKVVIxK0VSWHFuYStiWjBEQUhtc09u?=
+ =?utf-8?B?NFdBRldWSTFiOXZBRk40SnBRNEJkUng1Y2xkb3NaNEh3OS95SXdjdytQRE1X?=
+ =?utf-8?B?VTdsNEwzbVJncGlVbGNFL2NqQjBpcDczTDlQemhVeS8vbWx2OXBkdjAvc3NK?=
+ =?utf-8?B?TkRqMnhWb0Q5MVhPYUYyWlIxVVBmTjJjQ20yaTdzNGNtRHE3Zk1oRTVMOUlW?=
+ =?utf-8?B?WVE0ZVR3TG5vMTJsZnUvZ3BINlRIVFdQZ1VoNnBnNGcwNGQwN2hyMjl4NjVT?=
+ =?utf-8?B?Nms0WDlNTzc4N3pySTl3OThCVGZWSmp1dmx2NjZKM0FyR3MzOUFaRlVzallq?=
+ =?utf-8?B?bURzeUw1S3VmemovYUZTWUZWM3BQUW9sRUtadzBwQjlQLzVFYVJFOEhoWjB1?=
+ =?utf-8?B?VFBXU2d6K0dSazJxcGdLNnA3SWlqTDJLRjY3T1Vpd1F4eEk5UFJxNDZvdE95?=
+ =?utf-8?B?dk9JaWp3ZG5JTWdDN2ZYdk95eEgxdFpMQ3ZUZHBFL3dReUtCaWZsSEp5VEVJ?=
+ =?utf-8?B?cTg5QTNMMWlKemNNN1JmTmRNNzVwamFpdy9UTjdZenlVa3dJQjVNbzQrcTZo?=
+ =?utf-8?B?NUpESzRxY0s1WlBCd2pKY3Z5SmcvSytHR0w4MHJSQkQ3cHA1bVFkOXFMR01D?=
+ =?utf-8?B?SlBIV1RMUlhvdk1FUS9wMG5TM2duZVFVc2VvSGFOczZHNUZYMjlyd3hrUlRO?=
+ =?utf-8?B?d2k4b0RKKzM4NHcrQXRHTXV6cEJJa21FdHF1YmgwSWZRQjVSQmszcjJaaitK?=
+ =?utf-8?B?TUd2L2tScXJkd0w1d3RBZ2xZVk5uOWlPZFg3M0xCeDlxZ3VmU3puWkhFd3Rk?=
+ =?utf-8?B?U3p1THFub3NyMVJ3eFpyNzMyM1JvRG5raVRhRXc4NkxkNExhRnhuOFFXU29Z?=
+ =?utf-8?B?VXBlcnZCeEczVVRkZ2FXTDVJUHpzaEJZeUFOUUVZWHNuSkwzeVlOS2hnQTBw?=
+ =?utf-8?Q?WYySVakkJlzS2?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cC84U3lUcmRpbDlUNzl1azYvVUI3SmRKeXZXRmtYVkZWS0Y1eUlGWDltdFVk?=
+ =?utf-8?B?N0VnSllZNnc5Y0ZsaGNJTHk3YjEwdTZtTXk3RnBhOGpGZHBWMVJxc3ArRlFx?=
+ =?utf-8?B?SDNtNEQwOFo3bGVxYThMMG5Cb0M1R1ZlQndSSWd5dFlPY29sSm1DV2dZWFN1?=
+ =?utf-8?B?OEhwYWJJbTdpSGtLZlhuMkxDQy9QcGprWitUbUZJV2o1amp5WituamNGd2ZY?=
+ =?utf-8?B?eFJJdEhCMGZEQUYydjhYTytRcnlTTm0rdTJlR01BeXRIeitQVlRUTU04cTY1?=
+ =?utf-8?B?Ymh2LzZRV0FieUtjQ0V4NjhDMmJNN3RaV05QZXk1VnpvOU9Wbyt1anJUWU1a?=
+ =?utf-8?B?Z1FPL0JvOTJEd3RIc1VKK29xU0w1amtlaXlhQWJFQVV5RzdpY3l6TXo2Rmo1?=
+ =?utf-8?B?dEZCWlNmeGlUcEZwaGtFcWVaaitYU0hsYjc5Mk9rNmlvakNBREdKRWMzRnZI?=
+ =?utf-8?B?ZVd0Z3VIbTVjY3p2c1R2b2ZtQ2pxUzhjSXlCd0RPckc4d09ZL2tVMGtDdnlZ?=
+ =?utf-8?B?YnlaNDNCL2Zqc28yR2c0anVHK1J2blBvRXZZeXNNeDhMN0NXNlRmbmo3RHpZ?=
+ =?utf-8?B?S3hEb292MFdaSlRqQXhyOFRCK1VnYlZUd1JFc0N6QmRmYzQ1ZHVsUlBlczU5?=
+ =?utf-8?B?Y1h2aHNsQzI2MmdnbysxTllpY3pBNE5FeG1CMEF3WlFCNWtERXF2UlMvRjVT?=
+ =?utf-8?B?cTdqNmIzd2tEb1VyeXBlTFRaVUpsMzRuUWVUS2hHNkMzNnJ2OVhBRHRLVnZu?=
+ =?utf-8?B?VkNONXdPQmI2ay82cVZ2VjJqY3Ywd2NVcjRHMnA5aXA1STlmakNqNG1WcC9G?=
+ =?utf-8?B?SWwyMU9tWjZuRnk5VFpPQ2VkU3VkMlRnTWRYRmVxMWIxbFFSRHhnTnowU2po?=
+ =?utf-8?B?ZXJTdG1nQXNPdzdubTZ2LzRJUFdVL2lmNjZiczF2QUtuSlMvaTlwRU1yM3Z3?=
+ =?utf-8?B?SEo0YjQ4c0VjNjV0d09rUVQwcEx6WmxSNkxIanI3Z1ptUS9yRG9tWE1KRHNs?=
+ =?utf-8?B?N0tRcThJMllSZWJQQzN5Si9GTmNLQ3Q1OUIrTnhCTWJsbnQ0cExyOTZSOG1i?=
+ =?utf-8?B?cUlub2svVk9EenVhNUVtYWdsVnh4c2RkQmVZUFd5eFFOa2pPSGNSVUo4RjVn?=
+ =?utf-8?B?NnJEUWJnbWFRQ2YrUGxlN1QyUHVQYURqRG9BUzI1TUdhMnhhNENocTVVRXUz?=
+ =?utf-8?B?TFo0ZnFrcnF1c0l1cFQxbXN2UTNqcnhyT2twVFBFYnA0WjBCUk1hNElmdFJT?=
+ =?utf-8?B?ZEUxUllaUDFDV3pPV2UvcjhISWtnWDM2dGNYVXFFSjVaRFlnei9HSi9iSGIx?=
+ =?utf-8?B?R3J0N2xUdVFSTVBHcHUzMk41Q0VtaE9TaGNBbnM4Y05DM2daQVRxQ3lZTHln?=
+ =?utf-8?B?dVQ2amVpaVQ4dWtpUFZNcU9Xc0gxNnhodFpGeUI4NGZUdVJKa3paRzhlMTdZ?=
+ =?utf-8?B?UE1xNE5DaU1EbVJxaVZxellnNHlFTGJsbjlYejRCV1UzN1JNdzB3SGdFVnE0?=
+ =?utf-8?B?MktmOHNlOUtZT01DVCs3enlTUDdKL2JGR2U1U3BuQ3JnOUNQWFBxQWtWY3A1?=
+ =?utf-8?B?L2RXT0xMRmc5YklaMWhGOGZKOUFpM2lZdmVXUXc2ODRkeVBDNHhYSTFUaHB5?=
+ =?utf-8?B?Umk0VzE5MGYrWEl6M2FLaCtNZlVmSnhGM0tBTTRnSEpHTVJuVFZrSUg0RUhy?=
+ =?utf-8?B?RFp5TURINjZGRUhic0xJa3NyN0l1RlFuTmliekZPZWNmWmNQZnJzV05wRVRo?=
+ =?utf-8?B?dUVjZ1UvQ2RBMm5CYStFc0kwMmk3Sk1ZTUVEa1NkK1A3WDU3VnRtcEtEUWNG?=
+ =?utf-8?B?ZVRhREo5Wk82TG10ejM1dHFOVnRMdldXdEg0VHIvQWw5UjF3UFl2V0s3bUY5?=
+ =?utf-8?B?WTZSQzZ3VjBOVDg5QzVjSm5BOW9HUjVmSWpzcTlqb0E1R1pyUHNkN05xZFlI?=
+ =?utf-8?B?STF1WmRDQzYxNXdubmJEbWpscDdOYXBuN1ZwbGZXWTN4VVgvVkxJV1BtZ0s2?=
+ =?utf-8?B?MGw0eGJkQ3B2emtqay9TREhEN0tEVU8rV1BPbjdvTVZVQ3hYeEVUN1AyQXg1?=
+ =?utf-8?B?clYyamt5WTAzNVdSMERJV21lWTlUT0k4ekg3K2V5MzkvYkFGVFlUNjd5ekFU?=
+ =?utf-8?Q?cNRk=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93352382-50cd-486a-8132-08dc9f70933c
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2024 17:08:23.6444
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /pBAbaaNQT7Rc3vDefr605EshAiqQOXwMZ5DerBEysLa9CfOYdnEFIn/PabIjBGKaDyGCvnYNqVth8H0D3+jFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7867
 
-On Thu, Jul 04, 2024 at 05:53:32PM +0200, Olivier Moysan wrote:
-> Change the DFSDM binding to use the new IIO backend framework,
-> along with the adoption of IIO generic channels.
-> This binding change allows to add scaling support to the DFSDM.
-> 
-> Keep the legacy binding as deprecated for backward compatibility.
-> 
-> The io-backends property is supported only in generic IIO channel
-> binding.
-> 
-> - Channel description with the generic binding (Audio and Analog):
-> 
->   Properties superseded by generic properties:
->     st,adc-channels: becomes "reg" property in channel node
->     st,adc-channel-names: becomes "label" property in channel node
->   Properties moved to channel child node:
->     st,adc-channel-types: becomes st,adc-channel-type
->     st,adc-channel-clk-src, st,adc-alt-channel
-> 
-> - Analog binding:
-> 
->   DFSDM filter channel is configured as an IIO backend consumer.
->   Add io-backends property in channel child nodes.
-> 
->   DFSDM is no more configured as a channel consumer from SD modulator.
->   Use of io-channels in DFSDM node is deprecated.
-> 
-> - Audio binding:
-> 
->   DFSDM audio DAI is configured as a channel consumer from DFSDM filter.
->   No change compare to legacy.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
-> ---
->  .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  | 153 +++++++++++++++++-
->  1 file changed, 147 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-> index 2722edab1d9a..5a5bc8b96402 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
-> @@ -102,9 +102,11 @@ patternProperties:
->          items:
->            minimum: 0
->            maximum: 7
-> +        deprecated: true
->  
->        st,adc-channel-names:
->          description: List of single-ended channel names.
-> +        deprecated: true
->  
->        st,filter-order:
->          description: |
-> @@ -118,6 +120,12 @@ patternProperties:
->        "#io-channel-cells":
->          const: 1
->  
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
->        st,adc-channel-types:
->          description: |
->            Single-ended channel input type.
-> @@ -128,6 +136,7 @@ patternProperties:
->          items:
->            enum: [ SPI_R, SPI_F, MANCH_R, MANCH_F ]
->          $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> +        deprecated: true
->  
->        st,adc-channel-clk-src:
->          description: |
-> @@ -139,6 +148,7 @@ patternProperties:
->          items:
->            enum: [ CLKIN, CLKOUT, CLKOUT_F, CLKOUT_R ]
->          $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> +        deprecated: true
->  
->        st,adc-alt-channel:
->          description:
-> @@ -147,6 +157,7 @@ patternProperties:
->            If not set, channel n is connected to SPI input n.
->            If set, channel n is connected to SPI input n + 1.
->          type: boolean
-> +        deprecated: true
->  
->        st,filter0-sync:
->          description:
-> @@ -165,11 +176,60 @@ patternProperties:
->        - compatible
->        - reg
->        - interrupts
-> -      - st,adc-channels
-> -      - st,adc-channel-names
->        - st,filter-order
->        - "#io-channel-cells"
->  
-> +    patternProperties:
-> +      "^channel@([0-7])$":
-> +        type: object
-> +        $ref: adc.yaml
-> +        unevaluatedProperties: false
-> +        description: Represents the external channels which are connected to the DFSDM.
-> +
-> +        properties:
-> +          reg:
-> +            maxItems: 1
+Fixed 8mp EP mode problem.
 
-Instead:
+imx6 actaully for all imx chips (imx6*, imx7*, imx8*, imx9*). To avoid
+confuse, rename all imx6_* to imx_*, IMX6_* to IMX_*. pci-imx6.c to
+pci-imx.c to avoid confuse.
 
-maximum: 7
+Using callback to reduce switch case for core reset and refclk.
 
-> +
-> +          label:
-> +            description:
-> +              Unique name to identify which channel this is.
-> +
-> +          st,adc-channel-type:
-> +            description: |
-> +              Single-ended channel input type.
-> +              - "SPI_R": SPI with data on rising edge (default)
-> +              - "SPI_F": SPI with data on falling edge
-> +              - "MANCH_R": manchester codec, rising edge = logic 0, falling edge = logic 1
-> +              - "MANCH_F": manchester codec, rising edge = logic 1, falling edge = logic 0
-> +            $ref: /schemas/types.yaml#/definitions/string
-> +            enum: [ SPI_R, SPI_F, MANCH_R, MANCH_F ]
-> +
-> +          st,adc-channel-clk-src:
-> +            description: |
-> +              Conversion clock source.
-> +              - "CLKIN": external SPI clock (CLKIN x)
-> +              - "CLKOUT": internal SPI clock (CLKOUT) (default)
-> +              - "CLKOUT_F": internal SPI clock divided by 2 (falling edge).
-> +              - "CLKOUT_R": internal SPI clock divided by 2 (rising edge).
-> +            $ref: /schemas/types.yaml#/definitions/string
-> +            enum: [ CLKIN, CLKOUT, CLKOUT_F, CLKOUT_R ]
-> +
-> +          st,adc-alt-channel:
-> +            description:
-> +              Must be defined if two sigma delta modulators are
-> +              connected on same SPI input.
-> +              If not set, channel n is connected to SPI input n.
-> +              If set, channel n is connected to SPI input n + 1.
-> +            type: boolean
-> +
-> +          io-backends:
-> +            description:
-> +              Used to pipe external sigma delta modulator or internal ADC backend to DFSDM channel.
-> +            maxItems: 1
-> +
-> +        required:
-> +          - reg
-> +
->      allOf:
->        - if:
->            properties:
-> @@ -199,9 +259,19 @@ patternProperties:
->                description:
->                  From common IIO binding. Used to pipe external sigma delta
->                  modulator or internal ADC output to DFSDM channel.
-> +              deprecated: true
->  
-> -          required:
-> -            - io-channels
-> +          if:
-> +            required:
-> +              - st,adc-channels
-> +          then:
-> +            required:
-> +              - io-channels
-> +
-> +          patternProperties:
-> +            "^channel@([0-9])$":
+Add iMX8QXP and iMX8QM support. PHY driver ref:
+https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/commit/?h=next&id=82c56b6dd24fcdf811f2b47b72e5585c8a79b685
 
-Is it 8 or 10 channels?
+Base on linux 6.10-rc1
 
-> +              required:
-> +                - io-backends
->  
->        - if:
->            properties:
-> @@ -298,7 +368,77 @@ examples:
->        #address-cells = <1>;
->        #size-cells = <0>;
->  
-> +      // Example 1: Audio use case with generic binding
->        dfsdm0: filter@0 {
-> +        compatible = "st,stm32-dfsdm-dmic";
-> +        reg = <0>;
-> +        interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-> +        dmas = <&dmamux1 101 0x400 0x01>;
-> +        dma-names = "rx";
-> +        #io-channel-cells = <1>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        st,filter-order = <5>;
-> +
-> +        channel@1 {
-> +          reg = <1>;
-> +          label = "dmic0";
-> +          st,adc-channel-type = "SPI_R";
-> +          st,adc-channel-clk-src = "CLKOUT";
-> +          st,adc-alt-channel;
-> +        };
-> +
-> +        asoc_pdm0: dfsdm-dai {
-> +          compatible = "st,stm32h7-dfsdm-dai";
-> +          #sound-dai-cells = <0>;
-> +          io-channels = <&dfsdm0 0>;
-> +        };
-> +      };
-> +
-> +      // Example 1: Analog use case with generic binding
+To: Richard Zhu <hongxing.zhu@nxp.com>
+To: Lucas Stach <l.stach@pengutronix.de>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Krzysztof Wilczyński <kw@linux.com>
+To: Rob Herring <robh@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+To: Shawn Guo <shawnguo@kernel.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+To: Pengutronix Kernel Team <kernel@pengutronix.de>
+To: Fabio Estevam <festevam@gmail.com>
+To: NXP Linux Team <linux-imx@nxp.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+To: Liam Girdwood <lgirdwood@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+To: Conor Dooley <conor+dt@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Cc: imx@lists.linux.dev
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-2nd example 1?
+Changes in v7:
+- rework commit message for PCI: imx6: Fix i.MX8MP PCIe EP's occasional failure to trigger MSI 
+- Add Mani's review tags for patch 1, 5
+- Fix errata number in commit message for patch 6
+- replace set_ref_clk with enable_ref_clk in patch 4
+- using regmap_set(clear)_bits in patch 4
+- Use exactly the same logic with original code at patch 4
+- Add errata doc link for patch 6
+- Fix miss "." at comment form patch 6.
+- order include header for patch 9
+- use cap register to set_speed for patch 9
+- use PCIe in error msg for patch 9
+- Remove reduntant ':' at patch 9' subject.
+- Change range to ranges for patch 10.
+- Change error code to -ENODEV for patch 10.
+- Link to v6: https://lore.kernel.org/r/20240617-pci2_upstream-v6-0-e0821238f997@nxp.com
 
-> +      dfsdm1: filter@1 {
-> +        compatible = "st,stm32-dfsdm-adc";
-> +        reg = <1>;
-> +        interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-> +        dmas = <&dmamux1 102 0x400 0x01>;
-> +        dma-names = "rx";
-> +        st,filter-order = <1>;
-> +        #io-channel-cells = <1>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        channel@2 {
-> +          reg = <2>;
-> +          label = "in2";
-> +          st,adc-channel-type = "SPI_F";
-> +          st,adc-channel-clk-src = "CLKOUT";
-> +          st,adc-alt-channel;
-> +          io-backends = <&sd_adc2>;
-> +        };
-> +
-> +        channel@3 {
-> +          reg = <3>;
-> +          label = "in3";
-> +          st,adc-channel-type = "SPI_R";
-> +          st,adc-channel-clk-src = "CLKOUT";
-> +          io-backends = <&sd_adc3>;
-> +        };
-> +      };
-> +    };
-> +
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    dfsdm_2: dfsdm@4400d000 {
-> +      compatible = "st,stm32mp1-dfsdm";
-> +      reg = <0x4400d000 0x800>;
-> +      clocks = <&rcc DFSDM_K>, <&rcc ADFSDM_K>;
-> +      clock-names = "dfsdm", "audio";
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      // Example 3: Audio use case with legacy binding
+Changes in v6:
+- Base on Linux 6.10-rc1 by Bjorn's required.
+- Remove imx95 LUT patch because it need more time to work out the
+solution. This patch add 8qxp and 8qm and support and some bug fixes.
+- Link to v5: https://lore.kernel.org/r/20240528-pci2_upstream-v5-0-750aa7edb8e2@nxp.com
 
-I don't think it is worthwhile to show how to use the deprecated 
-binding.
+Changes in v5:
+- Rebase to linux-pci next. fix conflict with gpiod change
+- Add rob and cornor's review tag
+- Link to v4: https://lore.kernel.org/r/20240507-pci2_upstream-v4-0-e8c80d874057@nxp.com
 
-> +      dfsdm0_2: filter@0 {
->          compatible = "st,stm32-dfsdm-dmic";
->          reg = <0>;
->          interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -311,14 +451,15 @@ examples:
->          st,adc-channel-clk-src = "CLKOUT";
->          st,filter-order = <5>;
->  
-> -        asoc_pdm0: dfsdm-dai {
-> +        asoc_pdm0_2: dfsdm-dai {
->            compatible = "st,stm32h7-dfsdm-dai";
->            #sound-dai-cells = <0>;
->            io-channels = <&dfsdm0 0>;
->          };
->        };
->  
-> -      dfsdm_pdm1: filter@1 {
-> +      // Example 3: Analog use case with legacy binding
-> +      dfsdm1_2: filter@1 {
->          compatible = "st,stm32-dfsdm-adc";
->          reg = <1>;
->          interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-> -- 
-> 2.25.1
-> 
+Changes in v4:
+- Improve comment message for patch 1 and 2.
+- Rework commit message for patch 3 and add mani's review tag
+- Remove file rename patch and update maintainer patch
+- [PATCH v3 06/11] PCI: imx: Simplify switch-case logic by involve set_ref_clk callback
+	remove extra space.
+	keep original comments format (wrap at 80 column width)
+	update error message "'Failed to enable PCIe REFCLK'"
+- PATCH v3 07/11] PCI: imx: Simplify switch-case logic by involve core_reset callback
+	keep exact the logic as original code
+- Add patch to update comment about workaround ERR010728
+- Add patch about help function imx_pcie_match_device()
+- Using bus device notify to update LUT information for imx95 to avoid
+parse iommu-map and msi-map in driver code.  Bus notify will better and
+only update lut when device added.
+- split patch call PHY interface function.
+- Improve commit message for imx8q. remove local-address dts proptery. and
+use standard "range" to convert cpu address to bus address.
+- Check entry in cpu_fix function is too late. Check it at probe
+- Link to v3: https://lore.kernel.org/r/20240402-pci2_upstream-v3-0-803414bdb430@nxp.com
+
+Changes in v3:
+- Add an EP fixed patch
+  PCI: imx6: Fix PCIe link down when i.MX8MM and i.MX8MP PCIe is EP mode
+  PCI: imx6: Fix i.MX8MP PCIe EP can not trigger MSI
+- Add 8qxp rc support
+dt-bing yaml pass binding check
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,imx6q-pcie.yaml
+  LINT    Documentation/devicetree/bindings
+  DTEX    Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dts
+  CHKDT   Documentation/devicetree/bindings/processed-schema.json
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+  DTC_CHK Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dtb
+
+- Link to v2: https://lore.kernel.org/r/20240304-pci2_upstream-v2-0-ad07c5eb6d67@nxp.com
+
+Changes in v2:
+- remove file to 'pcie-imx.c'
+- keep CONFIG unchange.
+- Link to v1: https://lore.kernel.org/r/20240227-pci2_upstream-v1-0-b952f8333606@nxp.com
+
+---
+Frank Li (6):
+      PCI: imx6: Rename imx6_* with imx_*
+      PCI: imx6: Introduce SoC specific callbacks for controlling REFCLK
+      PCI: imx6: Simplify switch-case logic by involve core_reset callback
+      PCI: imx6: Improve comment for workaround ERR010728
+      PCI: imx6: Consolidate redundant if-checks
+      PCI: imx6: Call common PHY API to set mode, speed, and submode
+
+Richard Zhu (4):
+      PCI: imx6: Fix establish link failure in EP mode for iMX8MM and iMX8MP
+      PCI: imx6: Fix i.MX8MP PCIe EP's occasional failure to trigger MSI
+      dt-bindings: imx6q-pcie: Add i.MX8Q pcie compatible string
+      PCI: imx6: Add i.MX8Q PCIe root complex (RC) support
+
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.yaml    |   16 +
+ drivers/pci/controller/dwc/pci-imx6.c              | 1005 +++++++++++---------
+ 2 files changed, 553 insertions(+), 468 deletions(-)
+---
+base-commit: 48f0407456e4e68319a5cfcf409ceb57902acc54
+change-id: 20240227-pci2_upstream-0cdd19a15163
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
+
