@@ -1,109 +1,139 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61EB1C36
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 02:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD86469D;
+	Mon,  8 Jul 2024 02:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720407354; cv=none; b=tUfnAC+73beAuscSt5WU/LNykP6mDXMRloCCFez33mQgukBXizDCXtInL96gVc2WWS85uhndayuGHLi5QSAW0hgdjtmmSxgidl6V12IAW1imcH2sMw+K5la+ke8LgflMYexuON/VhGyYhTi77V05gyl19qlHSMqtkClNVPA6jXQ=
+	t=1720407589; cv=none; b=KlYG6V8PDzoSBGdA/pxAYmlxL0jW1+bATTFz8iaZSWgbwu+xQS0ECick4OlkqV0fwarLsU8HEFM+iyQBqf1aUyTd4ei2oLxDAKFH1tjLUQx2VdtMtqWdEoqyJQIzFEaJGqmV9oCD/yb+WRu7b1JTZ1dW7nSNft/aMIqOcya/b9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720407354; c=relaxed/simple;
-	bh=TIJFYcwncefs81L64nH97/1r4gDoMr3DB0nk+YkOI3w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uUm7xF6c2MAmcL1M7kUkQk4dFAT1AeIA+vflalUQv0CAjrOuTeL+USKSLu6ZujSEpkQHZ3A7wAL1x1Y6Gya4n8T+mPiRGwhsLl/Mp9hTmC8KewpBIgsCeWWaH8fJAxnGtmkCPOF6xrAuKNO7Rrdk/7aUrEfDG0PZLSq7fHbxPL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WHTCJ2sT9zwWJT;
-	Mon,  8 Jul 2024 10:51:08 +0800 (CST)
-Received: from kwepemd200019.china.huawei.com (unknown [7.221.188.193])
-	by mail.maildlp.com (Postfix) with ESMTPS id EB7C9180AE6;
-	Mon,  8 Jul 2024 10:55:47 +0800 (CST)
-Received: from huawei.com (10.173.127.72) by kwepemd200019.china.huawei.com
- (7.221.188.193) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 8 Jul
- 2024 10:55:47 +0800
-From: Miaohe Lin <linmiaohe@huawei.com>
-To: <akpm@linux-foundation.org>, <muchun.song@linux.dev>
-CC: <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] mm/hugetlb: fix potential race in __update_and_free_hugetlb_folio()
-Date: Mon, 8 Jul 2024 10:51:27 +0800
-Message-ID: <20240708025127.107713-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1720407589; c=relaxed/simple;
+	bh=A1FQ2BG5XM8p1fshxHOyJ7FQDlUasavHLtnXZJmCBN8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uo0v6hYupDUoqrou1EexqxpTyoRh3Pp4bDi7nlTDhU2Rvarg27RlCehaSld7glycui+Phx8h9r4oGQzbrgYqdVyrczp0WT5SsVDjPVv4b8fi+c8GY3ZUNuWxq4xC2ugq9kj3dvWitq7hJ5uIZtEXs9ES23aIoISp/tlPo0Yk/Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WN4v4FeZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WN4v4FeZ"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4682EFSP012919;
+	Mon, 8 Jul 2024 02:59:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	nTchpMjfhBevEBM42fp3Ef+mrykdVch3hUrrS7l5hto=; b=WN4v4FeZ6gYCnk17
+	TK6o9QM1XX7+H4GcrObDY0ZUDbn8vIGUqrcy1JT3c/K3SNKuiufbZty2G0IE90r2
+	qwNxSOyxPYl14WUtM0IN5XGXn1MP54IMLQ8JyXvpO0zNniJHzo7jcLyarXciaLkQ
+	wjgOQSvd04C7hsByoQurHmLGASTYgSIAHHZJ4GYvA/2yZIH/OXw2ty4CPKxyN44K
+	GqAvHzhGGi7HmqWey9rKDCnDF1VdKQay6FcGF22zImNEn6it20W0EGEzKedCaikm
+	A0VBtzO0l1QOerSOMYdTu6e3WRxDCrw64ASwYYVX5VGBXEWHXsltXyOaF/R33SxW
+	KKwAJA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406x512edr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jul 2024 02:59:39 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4682xcwo012098
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Jul 2024 02:59:38 GMT
+Received: from [10.239.154.73] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 7 Jul 2024
+ 19:59:33 -0700
+Message-ID: <40dfeb9c-e420-4695-939f-ef9b1985d61c@quicinc.com>
+Date: Mon, 8 Jul 2024 10:59:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200019.china.huawei.com (7.221.188.193)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v3] leds: flash: leds-qcom-flash: limit LED current
+ based on thermal condition
+To: Luca Weiss <luca.weiss@fairphone.com>, <kernel@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones
+	<lee@kernel.org>
+CC: <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "David
+ Collins" <quic_collinsd@quicinc.com>,
+        Subbaraman Narayanamurthy
+	<quic_subbaram@quicinc.com>
+References: <20240705-qcom_flash_thermal_derating-v3-1-8e2e2783e3a6@quicinc.com>
+ <D2HO9CAE81NA.3UIL5UZ1N5I4W@fairphone.com>
+Content-Language: en-US
+From: Fenglin Wu <quic_fenglinw@quicinc.com>
+In-Reply-To: <D2HO9CAE81NA.3UIL5UZ1N5I4W@fairphone.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: cbG9am1QUBLpZ3l3KeuYeJbmyqb9REpU
+X-Proofpoint-ORIG-GUID: cbG9am1QUBLpZ3l3KeuYeJbmyqb9REpU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-07_10,2024-07-05_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=711 mlxscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 lowpriorityscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407080023
 
-There is a potential race between __update_and_free_hugetlb_folio() and
-try_memory_failure_hugetlb():
 
- CPU1					CPU2
- __update_and_free_hugetlb_folio	try_memory_failure_hugetlb
-					 folio_test_hugetlb
-					  -- It's still hugetlb folio.
-  folio_clear_hugetlb_hwpoison
-  					  spin_lock_irq(&hugetlb_lock);
-					   __get_huge_page_for_hwpoison
-					    folio_set_hugetlb_hwpoison
-					  spin_unlock_irq(&hugetlb_lock);
-  spin_lock_irq(&hugetlb_lock);
-  __folio_clear_hugetlb(folio);
-   -- Hugetlb flag is cleared but too late.
-  spin_unlock_irq(&hugetlb_lock);
 
-When above race occurs, raw error page info will be leaked. Even worse,
-raw error pages won't have hwpoisoned flag set and hit pcplists/buddy.
-Fix this issue by deferring folio_clear_hugetlb_hwpoison() until
-__folio_clear_hugetlb() is done. So all raw error pages will have
-hwpoisoned flag set.
+On 7/5/2024 10:23 PM, Luca Weiss wrote:
+> On Fri Jul 5, 2024 at 9:55 AM CEST, Fenglin Wu via B4 Relay wrote:
+>> From: Fenglin Wu <quic_fenglinw@quicinc.com>
+>>
+>> The flash module has status bits to indicate different thermal
+>> conditions which are called as OTSTx. For each OTSTx status,
+>> there is a recommended total flash current for all channels to
+>> prevent the flash module entering into higher thermal level.
+>> For example, the total flash current should be limited to 1000mA/500mA
+>> respectively when the HW reaches the OTST1/OTST2 thermal level.
+> 
+> Hi Fenglin,
+> 
+> Only semi-related to this patch, but I wanted to ask.
+> 
+> Since most phones with a flash also have a thermistor for the flash led,
+> is there any plan to add support to be able to declare the flash led to
+> be a "cooling-device" for the relevant thermal zone? That way from a
+> Linux thermal API standpoint when the zone gets too hot that it can ask
+> the driver to throttle the brightness or turn the LED off completely.
+> 
+> Right now the only action the kernel can take is with type 'critical' to
+> just kill the entire system to mitigate the thermal situation.
+> 
+> Regards
+> Luca
+> 
 
-Fixes: 32c877191e02 ("hugetlb: do not clear hugetlb dtor until allocating vmemmap")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Cc: <stable@vger.kernel.org>
----
- mm/hugetlb.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Hi Luca,
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 61847f799b6a..63a2f1132a81 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1729,13 +1729,6 @@ static void __update_and_free_hugetlb_folio(struct hstate *h,
- 		return;
- 	}
- 
--	/*
--	 * Move PageHWPoison flag from head page to the raw error pages,
--	 * which makes any healthy subpages reusable.
--	 */
--	if (unlikely(folio_test_hwpoison(folio)))
--		folio_clear_hugetlb_hwpoison(folio);
--
- 	/*
- 	 * If vmemmap pages were allocated above, then we need to clear the
- 	 * hugetlb flag under the hugetlb lock.
-@@ -1746,6 +1739,13 @@ static void __update_and_free_hugetlb_folio(struct hstate *h,
- 		spin_unlock_irq(&hugetlb_lock);
- 	}
- 
-+	/*
-+	 * Move PageHWPoison flag from head page to the raw error pages,
-+	 * which makes any healthy subpages reusable.
-+	 */
-+	if (unlikely(folio_test_hwpoison(folio)))
-+		folio_clear_hugetlb_hwpoison(folio);
-+
- 	folio_ref_unfreeze(folio, 1);
- 
- 	/*
--- 
-2.33.0
+This change provides the ability to throttle flash current based on the 
+thermal status sensed by the temperature sensor inside the flash module 
+HW , it doesn't need to register anything in Linux thermal framework.
 
+For the case that you mentioned, when an external thermistor is 
+installed nearby the flash LED component and normally the ADC_TM driver 
+registers a thermal_zone device with it, I agree that having the flash 
+LED driver providing a thermal_cooling device so that any cooling 
+mapping policy could be defined between the thermal sensor and the 
+cooling device would be a good option for better system level thermal 
+control. I would assume that this could be added in flash LED framework 
+driver instead of the client drivers considering this should be a common 
+request because of the big thermal dissipation of flash LED?
+
+Fenglin
+>>
+>> ---
+>> base-commit: ca66b10a11da3c445c9c0ca1184f549bbe9061f2
+>> change-id: 20240507-qcom_flash_thermal_derating-260b1f3c757c
+>>
+>> Best regards,
+> 
