@@ -1,28 +1,29 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787B4B665
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675B3137757
 	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 13:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720445393; cv=none; b=MxHjvkFQkId2e9kUOjt39D5OsGNzT5gcC/KTTftWQ1liJXOGD9OmI5jz3+JOscwdIYgAdr0RXvFNV8LSSjBavR5qe27Y3calJqmTipgaPHime/rG8E8jVXZMfDx+TmjptqKhaI6CCgm7YY3+PNDHQ8bTBe7cTd6A2Pmm0x4ywoo=
+	t=1720445394; cv=none; b=HFfyMV7LuA4H9DEiLRwyDCJqiWUlXPQ/agvx9zvF3QDlK/lTMYmr9N28i3QoBuE8VPwGbzok2zf0CujTLDZRRmjR272SJYKjcAtZfKzF0U2WfNZozcJ/QfqY2/89/M8BYNQ+9aTNP9fAG9wdF8ZIqslYiuqCUQQtvgdhrxRNRLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720445393; c=relaxed/simple;
-	bh=Mi4GSE3gm+fErCC3cU3mZPhxHzANML4Hc56U2pjR/sI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lfi3g9863aaSBdMuOwhnB5ovpsU1+/js8pzhMGl0SzaM0k2Nx/SV+2LJz6Xv0QKobrcL04OKimCI8QlmrWwZI9r2lXCdOHoV0hZG0mi18jRjDHZJ5akThIAiGQf7xaO92NLpNGpAY6OjlzcXGGc6128msEjyFubtGamWIx2ql+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1720445394; c=relaxed/simple;
+	bh=v0m01wOgJdCx25vKCu7GRWUXyEUDmtefnlx+KwmQUEU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P8Ip8Bi51GrWgYygVNxboGLFX5SUTsubR22LVCYVvC98s2Rn9bzT76VghSTVUye26XutAV6tTMADNtrRilkJD+XOoX05EUbsGE25VGj62uCU9bX4s55PvwpcKRqarM485me4KbPeala4dnMw8qa5rvxK+4U2yvrm6b5GazbSLyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WHlMl1wM9znZMj;
-	Mon,  8 Jul 2024 21:29:23 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WHlGs2J4bzwWPg;
+	Mon,  8 Jul 2024 21:25:09 +0800 (CST)
 Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id DDA4F140415;
-	Mon,  8 Jul 2024 21:29:47 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8465C180087;
+	Mon,  8 Jul 2024 21:29:49 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
  (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 8 Jul
- 2024 21:29:46 +0800
+ 2024 21:29:48 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <linux@armlinux.org.uk>, <bhe@redhat.com>, <vgoyal@redhat.com>,
 	<dyoung@redhat.com>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
@@ -34,10 +35,12 @@ To: <linux@armlinux.org.uk>, <bhe@redhat.com>, <vgoyal@redhat.com>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<kexec@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH 0/3] ARM: Use generic interface to simplify crashkernel reservation
-Date: Mon, 8 Jul 2024 21:33:45 +0800
-Message-ID: <20240708133348.3592667-1-ruanjinjie@huawei.com>
+Subject: [PATCH 2/3] ARM: Fix crash kenrel data type bug
+Date: Mon, 8 Jul 2024 21:33:47 +0800
+Message-ID: <20240708133348.3592667-3-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240708133348.3592667-1-ruanjinjie@huawei.com>
+References: <20240708133348.3592667-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,23 +52,36 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemi100008.china.huawei.com (7.221.188.57)
 
-Currently, x86, arm64, riscv and loongarch has been switched to generic
-crashkernel reservation. Also use generic interface to simplify crashkernel
-reservation for arm32, and fix two bugs by the way.
+On QEMU vexpress-a9 with 1GB memory, the crash kernel "crashkernel=4G"
+is ok as below:
+	Reserving 4096MB of memory at 2432MB for crashkernel (System RAM: 1024MB)
 
-Jinjie Ruan (3):
-  crash: Fix memory reserve dead loop bug in
-    reserve_crashkernel_generic()
-  ARM: Fix crash kenrel data type bug
-  ARM: Use generic interface to simplify crashkernel reservation
+The above info is confusing, because the System memory is as below:
+	# cat /proc/iomem | grep Sys
+	60000000-9fffffff : System RAM
 
- arch/arm/Kconfig                     |  3 ++
- arch/arm/include/asm/crash_reserve.h | 24 +++++++++++
- arch/arm/kernel/setup.c              | 63 +++++-----------------------
- kernel/crash_reserve.c               |  8 +++-
- 4 files changed, 44 insertions(+), 54 deletions(-)
- create mode 100644 arch/arm/include/asm/crash_reserve.h
+The cause is that the crash_size is parsed and printed with "unsigned long
+long" data type which is 8 bytes but used with "phys_addr_t" which is
+4 bytes in memblock_phys_alloc_range().
 
+Fixes: 9d17f3372306 ("ARM: 9190/1: kdump: add invalid input check for 'crashkernel=0'")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ arch/arm/kernel/setup.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index e6a857bf0ce6..59e1a13b5cf6 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -1012,6 +1012,7 @@ static void __init reserve_crashkernel(void)
+ 				&crash_size, &crash_base,
+ 				NULL, NULL);
+ 	/* invalid value specified or crashkernel=0 */
++	crash_size = (phys_addr_t)crash_size;
+ 	if (ret || !crash_size)
+ 		return;
+ 
 -- 
 2.34.1
 
