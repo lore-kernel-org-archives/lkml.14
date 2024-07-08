@@ -1,50 +1,53 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5629C125DB
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 07:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95780182AE;
+	Mon,  8 Jul 2024 07:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720422113; cv=none; b=WssAKIUCGE0gXqfgJBLv/42WXeSWjd+sA2fMkRjQmGFmSa9/9wBy+qqVpHWpINUnqNtxFJtrADtEApxFJGL5ILNFLQmG0pDP/ltlKW9cxp1oyw5lbg2ltrDEBKAo+eF3eJx0iaa3s8g92dX/xINDSrP+yOJpnqSlzbGvmbUEVOU=
+	t=1720422115; cv=none; b=ad5CLmSLrlmKpAUSQipYzeagSkOEOggZqnS2YDJJ605vxOZAPg9jqP87GyFc4ocIs8uoVBjeQ0udqtBGSnnNhzKNYbMezC/e6Gj25+XLJ6EVkF+hKRpis9RBRdn91top5h4uaITPHPa2CPLKeopZYWwkxd80kPgpdJPxJpMm+RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720422113; c=relaxed/simple;
-	bh=nPyN36GutmNhmyHw9V+VcOZE8+57QoYSa5a4nDUgRXI=;
+	s=arc-20240116; t=1720422115; c=relaxed/simple;
+	bh=UwwuUSuo2D6/dt6MqiW1z0OObhU6shNIC63QWSIFu7E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uBCfSO4ewfT8+lnBmZN4U6PHuthVfv5Am1sufCTgLW58gFcERiC4Y/SLZMjFCIjBhgbVM+ohBxr2r5+VvB/HzJxUC9MMNjZfpVivoVKSkKwPdFfkHeo6URdHw3O2nngL2obZpalTQjuXOI6g7stufUk1Gk3RhusI4NxogmobR8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HQqpX/30; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=IWIv3A9/I4QhAi4H5bNmzlBwW6eiNrfbFfJPaHf2XIiJdkWQshDrIuvI+3GKSEazHbLbUJ7t2+EIE1qSCjVhcHSj8tph7t3gmScGFbdW/3MY8tOHh32sKC+KTuhT8lbyl+jrb2n9k6FN3DtmjJgY831I9ha/IZ11LchMRR7l1RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=csnDubFD; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HQqpX/30"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1672BFF80A;
-	Mon,  8 Jul 2024 07:01:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="csnDubFD"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 68E841C0002;
+	Mon,  8 Jul 2024 07:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720422109;
+	t=1720422106;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0IaAPKCcDN2cUovINHTRRQvROEbqxOoQ8Bs5uDLntLo=;
-	b=HQqpX/30vAlKLZs+VPQX8TkROXwJN6lGd2F87LBBGmfs2suBp3A0rEa0YJlgWQ2iKarA/i
-	xeK9FYkRIyfwSgkTWSNwDoM/nFp56zU6oCecHhn7Sre7pACTgcs2aNWefTCRJMNjzE6art
-	Bj9YKZbevGkwX39CkTkRRR1znELptxIARDmbKLesK/krKz25hn5sDiTjjv6GYZhQbG6r93
-	AHLusY9R5LTi+HxAEPS26+y9002xDT3qEQjsV8YjxFg7znBjfZaF03QKI7W8eSNVu6HFjV
-	Opwsxua70gr2AUl+816+cPJj2L9VQGNWqXlPddF6RIVWMHE/i4SKfRiQYaam4A==
+	bh=UFyhUQfDWH2BkI3PZl+BB8bptYesbh+J9oIuRZIQ3+Y=;
+	b=csnDubFDvkPISyceGvrqdlxbuax7LfjnBvSwBCZIVZ2Bxzx1nbRCMLzV2cfRFTcvcgoMoS
+	160VjK8L2pogbqOcIoH0+rZvjxx/z70M36+8OWVwh6ivxior4c7pEnySrkrvSz7RnPbeRk
+	a1LKS2zVqAGX/eTJU93s5cv9nHVsjHnGMMl318U/tWVu9Ak6GLx9qvgbRrmk9eiH0Q4+4B
+	X8Z0VqjFKuAFq2zt3P4B2xglPp/FfNB/dfxLDEOvpwwr7gO6+cwuVlCKaxlTjj3+cIxTZv
+	qTbrBXbZFRXl2IbKTCT8wsVqZ7oBfY4OggevI9HURM4Zo4B+shwE78DqIqRCBg==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Cheng Ming Lin <linchengming884@gmail.com>,
-	miquel.raynal@bootlin.com,
-	vigneshr@ti.com
-Cc: richard@nod.at,
+To: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	miquel.raynal@bootlin.com
+Cc: stable@vger.kernel.org,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Li Zetao <lizetao1@huawei.com>,
 	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	alvinzhou@mxic.com.tw,
-	leoyu@mxic.com.tw,
-	Cheng Ming Lin <chengminglin@mxic.com.tw>
-Subject: Re: [PATCH v2 2/2] mtd: spinand: macronix: Add support for serial NAND flash
-Date: Mon,  8 Jul 2024 09:01:48 +0200
-Message-Id: <20240708070148.12215-1-miquel.raynal@bootlin.com>
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2] mtd: rawnand: lpx32xx: Fix dma_request_chan() error checks
+Date: Mon,  8 Jul 2024 09:01:44 +0200
+Message-Id: <20240708070144.12186-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240704024839.241101-3-linchengming884@gmail.com>
+In-Reply-To: <20240705115139.126522-1-piotr.wojtaszczyk@timesys.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,23 +56,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'd7e25375f7d988cff65823119961f3a75f2a8c69'
+X-linux-mtd-patch-commit: b'5f713030117a12b0239e604c163e69af58bb0b63'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Thu, 2024-07-04 at 02:48:39 UTC, Cheng Ming Lin wrote:
-> From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+On Fri, 2024-07-05 at 11:51:35 UTC, Piotr Wojtaszczyk wrote:
+> The dma_request_chan() returns error pointer in case of error, while
+> dma_request_channel() returns NULL in case of error therefore different
+> error checks are needed for the two.
 > 
-> MX35{U,L}F{2,4}G24AD-Z4I8 are Macronix serial NAND flashes.
-> 
-> Their main difference from MX35{U,L}F{2,4}G24AD lies in
-> the plane number. The plane number for those with the
-> postfix Z4I8 is 1.
-> 
-> These flashes have been validated on Xilinx zynq-picozed
-> board which include Macronix SPI Host.
-> 
-> Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
+> Fixes: 7326d3fb1ee3 ("mtd: rawnand: lpx32xx: Request DMA channels using DT entries")
+> Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+> Cc: stable@vger.kernel.org
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
