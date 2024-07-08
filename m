@@ -1,79 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8E37C081;
-	Mon,  8 Jul 2024 11:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2AF7E761;
+	Mon,  8 Jul 2024 11:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720439334; cv=none; b=EO9QYmM9IHW+zJrHRpAka9p1ehdUt2NKC5Jclx9X0BoTqmwvTHGASteg+2fGYAKmzzaFJq/DnGcFa/PkwN9YKaDBn2Ncb3+j/j3MD/A64bPAZamfuk4r7VMUP79DlYzJyybUbkBdpOyu8NypQo+cmAWVaYFp5bOFaXA6RN7q/3M=
+	t=1720439369; cv=none; b=sVsZcsw5iuFjfYJ2XNl8VGjAELWd0lKPXPx0KFW/fUjm367wTq3ayfQ2sod1CZ32UXg0PlaSQ4SLyOIjxlhGHm/ywa+nfNj8qhzrbx6rQpIkA0CGgHSluuKBr9EHjxUHJeexjAWD4ImHtTjy4IO8PeMzQUntTEm7ZNzQvcdW18w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720439334; c=relaxed/simple;
-	bh=aS0g16LlmzLraDi70hLNiR0Upx3Nm/PgrSsD8O55+6g=;
-	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
-	 Message-ID:In-Reply-To; b=GZ1WWxol95gNWLVbKIrzhUinweriSDulIwhftxF9Fb80E+vSJaMg0ZHEumdE/i1vckllEID5dxG8Iti3UyoqRp2Lc/54dajK0coQ2c/r0wadVpTCE4a6TbnnZNJ+c42KEP3yJUGqI0ahQtgDKVQhRsH3jhgfNpxZisSnxKbCZCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kpM29nd7; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720439369; c=relaxed/simple;
+	bh=BKgMBranHyMlS3hSBaL/ZQ4+gXkZWDigvWX3Bll/Ii8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=cygVinkrTKtVWbCMuXCSZuYPCHJB+byZu95IV+Zx/v/I4T4aiOcbEN8v8XvVvmtjN34wQwvryz4E2ToUtLlDjnMvP4oFHZzDzj5j3sPZsYU61c2gBUU6QW6q4/M8k0ECaNOPiQhyy2O4NkLLu08OwmHwDWeRIGmYqg7XpBISzp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pS7INsXw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qmOlxvuJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kpM29nd7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720439333; x=1751975333;
-  h=to:cc:subject:references:date:mime-version:
-   content-transfer-encoding:from:message-id:in-reply-to;
-  bh=aS0g16LlmzLraDi70hLNiR0Upx3Nm/PgrSsD8O55+6g=;
-  b=kpM29nd7JY84iSogDdXuUk6eRUtnrdFUbQGQEbVxuzwqpbPYO+FNFWOh
-   A6Jvo1/qa7yTxxMdjzBDfEOsgH8v+d4zKOIymdxlERnb6FI2eUL4+IZx8
-   sz5sc5fTSw3x6+aJ+nCTkqR4rDBXg1KhvkqpV/hYkivRwiiknIbCmsk/1
-   SrwKKvHsUGIfm8R1UpNfVqJbf5xhzBkyXVkDmyIVGrPDjnoyyhglXRtIv
-   WmHJfkCyjqXN0dJGq3252feDSeedGLaGWEgbfLp5I0R5zBtaaKhIK4VzT
-   vqf3kl9YcZj7IaRoiCRUbPGHI88sEps/tHXJQR1DV/HNTGkJeKhE3j1hO
-   g==;
-X-CSE-ConnectionGUID: b2GEv2xQSOOM18TU/FlEUw==
-X-CSE-MsgGUID: E6hW8TUbSxuqJkGl5IHjZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="28242067"
-X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="28242067"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 04:48:52 -0700
-X-CSE-ConnectionGUID: C1CYfNmxQCSddArW/f0+uQ==
-X-CSE-MsgGUID: hSjjsO+8TOKCW6pXb2WBXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="52680457"
-Received: from hhuan26-mobl.amr.corp.intel.com ([10.246.119.97])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 08 Jul 2024 04:48:50 -0700
-Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
-To: tj@kernel.org, lizefan.x@bytedance.com, hannes@cmpxchg.org,
- corbet@lwn.net, kamalesh.babulal@oracle.com, "Xiu Jianfeng"
- <xiujianfeng@huawei.com>
-Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pS7INsXw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qmOlxvuJ"
+Date: Mon, 08 Jul 2024 11:49:25 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720439365;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+zA7JFbuj4jq6o6iUBDdmHySvxMe7vNtiMMEsWolvmg=;
+	b=pS7INsXwP87fPbD/wv/d4V+sQnOu0fR47dj+JuqwJO4ImcJVMk5riDdR9Iu2PCcyEspw1m
+	EIoF82TAwztX946yiHw5PZZBX5gsK9LNmF3EJsobhj+MGe5JuAmflHzrn9V9k28dZlcMwq
+	YG9gux+3emSjXyL4fIE70Gf9IfUpf005NUd1sctzTS/79X75hfTj9ujx6C7ZboNQS1sX1k
+	uu7VkUmfGoGhM3OEpSbfyKr6vvOYb3gYiIa4R8QZzbQInyTyb/3DQUdp58NOp3VkzSrME2
+	54Phm56+FbUkmFVbwj+mo4BqdxIAeC7r/7xs9LlzTe+sdCjDD2eUMLbMRDWpPA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720439365;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+zA7JFbuj4jq6o6iUBDdmHySvxMe7vNtiMMEsWolvmg=;
+	b=qmOlxvuJ83YBzJIqwYbwoCso7ulnP1gC1Im0zHjaOQyVY604I93yAaZX8ZwEHvFJtOaHTF
+	dQevEEsVpyjea0Dg==
+From: "tip-bot2 for Brian Johannesmeyer" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: objtool/core] scripts/faddr2line: Check only two symbols when
+ calculating symbol size
+Cc: Brian Johannesmeyer <bjohannesmeyer@gmail.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 -next] cgroup/misc: Introduce misc.peak
-References: <20240703003646.2762150-1-xiujianfeng@huawei.com>
-Date: Mon, 08 Jul 2024 06:48:48 -0500
+In-Reply-To: <20240415145538.1938745-8-bjohannesmeyer@gmail.com>
+References: <20240415145538.1938745-8-bjohannesmeyer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <172043936503.2215.12742290480548729781.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-From: "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel
-Message-ID: <op.2qk9rmcawjvjmi@hhuan26-mobl.amr.corp.intel.com>
-In-Reply-To: <20240703003646.2762150-1-xiujianfeng@huawei.com>
-User-Agent: Opera Mail/1.0 (Win32)
 
-On Tue, 02 Jul 2024 19:36:46 -0500, Xiu Jianfeng <xiujianfeng@huawei.com>  
-wrote:
+The following commit has been merged into the objtool/core branch of tip:
 
-> Introduce misc.peak to record the historical maximum usage of the
-> resource, as in some scenarios the value of misc.max could be
-> adjusted based on the peak usage of the resource.
->
-Acked-by: haitao.huang@linux.intel.com
-BTW, from SGX point of view, I think it also makes sense to show peak  
-usage in the root group.
-Thanks
-Haitao
+Commit-ID:     c02904f05ff805d6c0631634d5751ebd338f75ec
+Gitweb:        https://git.kernel.org/tip/c02904f05ff805d6c0631634d5751ebd338f75ec
+Author:        Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+AuthorDate:    Mon, 15 Apr 2024 16:55:38 +02:00
+Committer:     Josh Poimboeuf <jpoimboe@kernel.org>
+CommitterDate: Tue, 02 Jul 2024 23:38:37 -07:00
+
+scripts/faddr2line: Check only two symbols when calculating symbol size
+
+Rather than looping through each symbol in a particular section to
+calculate a symbol's size, grep for the symbol and its immediate
+successor, and only use those two symbols.
+
+Signed-off-by: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+Link: https://lore.kernel.org/r/20240415145538.1938745-8-bjohannesmeyer@gmail.com
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+---
+ scripts/faddr2line | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/faddr2line b/scripts/faddr2line
+index 1fa6bee..fe0cc45 100755
+--- a/scripts/faddr2line
++++ b/scripts/faddr2line
+@@ -252,7 +252,7 @@ __faddr2line() {
+ 				found=2
+ 				break
+ 			fi
+-		done < <(echo "${ELF_SYMS}" | sed 's/\[.*\]//' | ${AWK} -v sec=$sym_sec '$7 == sec' | sort --key=2)
++		done < <(echo "${ELF_SYMS}" | sed 's/\[.*\]//' | ${AWK} -v sec=$sym_sec '$7 == sec' | sort --key=2 | ${GREP} -A1 --no-group-separator " ${sym_name}$")
+ 
+ 		if [[ $found = 0 ]]; then
+ 			warn "can't find symbol: sym_name: $sym_name sym_sec: $sym_sec sym_addr: $sym_addr sym_elf_size: $sym_elf_size"
