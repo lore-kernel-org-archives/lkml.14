@@ -1,115 +1,96 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83429208B0
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 20:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246D11CF9B;
+	Mon,  8 Jul 2024 20:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720468867; cv=none; b=BKy/u4KMrdw5HUWfaDsXgXF+fUeo5uyT8bBLQFqlwAX7SsrbG7FjRbKnUj+b+woNaoMBr/m2sQZPb+Ue3ZHFUozcSt9OVb49UOG7s4V/9A5HghTwrLCXBBszol5Y5zDVfnHzQZDraiz2Mj9lbAQw+PsIMBYVERzgNrWCpTHE9M4=
+	t=1720469073; cv=none; b=BjLBvdf4jChZZu8GNiXhYHyzi5obeOIjOc+/TIZDo2+av5fZ5JvE2dZir19W2clRlzUNUlKLKP9EM2dnNiTwUlSH/k7ZEiN20MyViaj1vAtFP1MHBtCe1uW7GHv0xMraMNguuW6qigMiPSZ5sSTfVIRdeEyb99iv5gbKBzldtOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720468867; c=relaxed/simple;
-	bh=h90f6fLktIu1HBZ8opHuxfw9LxTv8oTTaF1DCZ5fFZo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jptJfwWXWRN+O2jcsNwHqRs0FBBjGSeel3SngkEnWSIzqgFZ8UtS+w5hsgVyA9eIo9pIXPOv6gdE8W+EBoLZrkrltsoDxcLh1gT1adA4W2uIfVVYQlEV2CSeKYVFnyPtGU7Y3EuepBTwWOkTK0dcyDfxuP22b2hxWhr0GPwCJTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NDj5Ntu9; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720469073; c=relaxed/simple;
+	bh=+LGYnoamoS4zfZqMrzKzYDviwFlUv6xLADZa36LTO0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qRo8aLl/EqUroEqU1UpvD+g2r2HCVaWVuTli6CgoP6t+P3aYiNMgFPjQ1nanws+i4J0OAqHi9C8HLv7eOrEBpuVBRXGtqqVnk4jZwSCqIKG/O8doqeuT2Uw/OQFAVuxif4YN2YJzv4oHrLsI7V7nwgvQEMzs4V54DQiCZaX6/go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3PWHRlJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NDj5Ntu9"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2c9a7323e62so2145297a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 13:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720468865; x=1721073665; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JKofRGCVbdBaxylVyvWkAtca/dIYQIMpyiEB7Yojpz4=;
-        b=NDj5Ntu9qFsgZCT+CouRtObh50WDTxR1AtKJ4HalD+tgfDXbiY0EdsUO+Uhc6zvu/4
-         OAJZcqA99aLrncdyJMOGMHri2BQFPrPWJTjwqggcWGXqGF5/jA6fQyvuzLEevhVJV2OS
-         XjF203eHeUobS/VKvTtYwqtE5yomRqWKqJF880u6VocuZQuPC5+VzvXxW3Ww0Ke1YVKq
-         gK5uh4bou2tmqeKVfiYCxIV4qtadwefpY0V1r/zp5MpDK1Mkrs1s5baZxoJL+GZp9CWY
-         lonwzhp/ruaniQtAlTHiBaCYSzVbpKpxlyTP85xNm6xySGAlfRl9GmGG0OVwLKuhj6yb
-         msIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720468865; x=1721073665;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JKofRGCVbdBaxylVyvWkAtca/dIYQIMpyiEB7Yojpz4=;
-        b=SlGorTWrKn7FZmWSaXUSfrXNtj/kY5WixV4NpKuPw5XZqiF5WzWcpfzfML8ouwfT0a
-         O4X+EbRMZFcd10lTgr2h/oelOPABCFJ9ajUGF0fWpzYekRfxDQvB5xBj9v4Yf01PdTb7
-         PV92FzhfJ64Z3mO6YonMf208t4If5uHV4CUH3mQOFVMtIdMgv1I+RU6mKJPlRMftuC3P
-         nzE/gcuZjg+DYXhnivZzwWawt/kJSBCQTvuouOZQeJnmQR3UHiTzr/CbUewv82q1lwQ2
-         IXwpTI8BhWSh+1UxFPBZDhdqCEGkLhb1PcIO3+xPI+0acgyHJBEHZMfvtwfC/8xm7EB5
-         vHug==
-X-Forwarded-Encrypted: i=1; AJvYcCU3M+Cy7iFP2mR+CRMx3MzkzQd6jVC29krsyrE/CRmXl8b0RIibJRegnJhDP5Gw4G/FVojszy+NmI1mB8Sb0JK0EcBQ5RrtP7bzRzG3
-X-Gm-Message-State: AOJu0YxkEfybYBu/ED5iBxnSd71ZTVGtzqzAq3ulpibXA0Tfihvhf5Cq
-	bFopCGSC2Dzdk9cytkIsZiHY9TuiHdKc3zCUkEvE7Ivy+CU4m6QP9Ja3kmke49W/EX7SL5fdK68
-	aGfrJGCVGQ9c9cUvOBFtKAzQdkioGF+8egEuMtA==
-X-Google-Smtp-Source: AGHT+IFztnCuCRrbApG1GuZVo5/3MzzM9skVkiyuEleO8prqkTs5JqjFclMOe/J0WMPG/dXnaF3KupnbFOLmkqgWyaE=
-X-Received: by 2002:a17:90a:fd83:b0:2c8:7330:68b3 with SMTP id
- 98e67ed59e1d1-2ca35d3da20mr571322a91.39.1720468864736; Mon, 08 Jul 2024
- 13:01:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3PWHRlJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74967C116B1;
+	Mon,  8 Jul 2024 20:04:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720469072;
+	bh=+LGYnoamoS4zfZqMrzKzYDviwFlUv6xLADZa36LTO0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S3PWHRlJ0VCjKO1lj50fEwf/58isiHjCmzm7NgA9+k3pMwfnIopSOatyfxItxA4st
+	 Rnft84KW6cOJ3zTX2writ+/UVW1fs/hqOqmNiCrIpTIGQA0Lr9EnJVk7dhEHKVU/aY
+	 LGvP6aGWDFLnFyX9uqpf6hPRdx7IAAhydYmOF7CXvA7DP5Z1rJHFVD8lrkTp+i0t7o
+	 ZOoa75Ju8biYaHc2XvmaoeQoR3pzMTzomvqGPSII2E+bcdc2FwvhixjGxcUvu/BuV8
+	 v2bVClheX+wE9OOOn55kW2Wq8PdUvmc6TJSDDvYQiVbEGpcwZaWivSw5SmL27cGG1x
+	 1wnkCCu8XVFGg==
+Date: Mon, 8 Jul 2024 14:04:31 -0600
+From: Rob Herring <robh@kernel.org>
+To: Liu Ying <victor.liu@nxp.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, tglx@linutronix.de
+Subject: Re: [PATCH 01/10] dt-bindings: display: imx: Add some i.MX8qxp
+ Display Controller processing units
+Message-ID: <20240708200431.GA3492466-robh@kernel.org>
+References: <20240705090932.1880496-1-victor.liu@nxp.com>
+ <20240705090932.1880496-2-victor.liu@nxp.com>
+ <eec3d2a7-0197-4196-bf6f-71d0e29777de@kernel.org>
+ <9a911f88-7fbf-4484-997c-98b6c3ec045b@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708075752.GF11386@noisy.programming.kicks-ass.net>
- <alpine.DEB.2.21.2407081038350.38148@angie.orcam.me.uk> <20240708095520.GI11386@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240708095520.GI11386@noisy.programming.kicks-ass.net>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Mon, 8 Jul 2024 22:00:53 +0200
-Message-ID: <CAKfTPtBiYfoDWAA+wzk0=MiztZzWz_232fjvhnJrHz6XTgZwaQ@mail.gmail.com>
-Subject: Re: sched: Update MAINTAINERS
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Ingo Molnar <mingo@kernel.org>, juri.lelli@redhat.com, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org, 
-	tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a911f88-7fbf-4484-997c-98b6c3ec045b@nxp.com>
 
-On Mon, 8 Jul 2024 at 11:55, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Jul 08, 2024 at 10:47:18AM +0100, Maciej W. Rozycki wrote:
-> > On Mon, 8 Jul 2024, Peter Zijlstra wrote:
-> >
-> > >   Thank you for having been our friend!
-> > >
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > ---
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -19929,7 +19929,6 @@ R:  Dietmar Eggemann <dietmar.eggemann@ar
-> > >  R: Steven Rostedt <rostedt@goodmis.org> (SCHED_FIFO/SCHED_RR)
-> > >  R: Ben Segall <bsegall@google.com> (CONFIG_CFS_BANDWIDTH)
-> > >  R: Mel Gorman <mgorman@suse.de> (CONFIG_NUMA_BALANCING)
-> > > -R: Daniel Bristot de Oliveira <bristot@redhat.com> (SCHED_DEADLINE)
-> >
-> >  I think perhaps a CREDITS entry would be due rather than just dropping
-> > from MAINTAINERS.
->
-> Ah, I was not aware of that file. Yes we can add a few lines there.
->
-> Thank you for the suggestion.
+On Mon, Jul 08, 2024 at 02:30:37PM +0800, Liu Ying wrote:
+> On 07/07/2024, Krzysztof Kozlowski wrote:
+> > On 05/07/2024 11:09, Liu Ying wrote:
+> >> Freescale i.MX8qxp Display Controller is implemented as construction set of
+> >> building blocks with unified concept and standardized interfaces.
+> >>
+> >> Document some processing units to support two display outputs.
+> > 
+> > 
+> >> +maintainers:
+> >> +  - Liu Ying <victor.liu@nxp.com>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: fsl,imx8qxp-dc-tcon
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  fsl,dc-tc-id:
+> >> +    description: Timing Controller unit instance number
+> > 
+> > No instance numbering. This applies to your entire patchset.
+> 
+> Then, I'll call of_alias_get_id() from the drivers to get
+> instance number instead.
 
-For the patch and this
+Ideally, no.
 
-Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+> As i.MX8qm SoC embeds two Display Controllers, the alias
+> stem would contain the Display Controller instance
+> number, like "dc0-tcon" and "dc1-tcon".  Is this ok?
 
->
-> ---
-> diff --git a/CREDITS b/CREDITS
-> index 1a1a54555e11..a58066be6d73 100644
-> --- a/CREDITS
-> +++ b/CREDITS
-> @@ -271,6 +271,9 @@ D: Driver for WaveFront soundcards (Turtle Beach Maui, Tropez, Tropez+)
->  D: Various bugfixes and changes to sound drivers
->  S: USA
->
-> +N: Daniel Bristot de Oliveira
-> +D: Scheduler contributions, notably: SCHED_DEADLINE
-> +
->  N: Carlos Henrique Bauer
->  E: chbauer@acm.org
->  E: bauer@atlas.unisinos.br
+The format of aliases is fooN, so no. Aliases should also be generic 
+rather than vendor specific.
+
+If you need to describe the connection of components in the display 
+pipeline, then use the graph binding.
+
+Rob
