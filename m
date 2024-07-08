@@ -1,85 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591F013F426;
-	Mon,  8 Jul 2024 15:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF2714431B;
+	Mon,  8 Jul 2024 15:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720452584; cv=none; b=uvC2zuRnkhL11XtdLex50HBlNaSqOlt1PJ6i4Rc0P/bCSYenFHGcwTBqpk8+CZUkAMpLXqRl52EMJq4rgSI8dHQqU5AubEJNslzQVeVVK9gLfNiNov+evFeq4MgCg3kRCmsfEdXd5LA38Twv4RIv4Q4bZDIj8UGhrQ9cxxQzxlw=
+	t=1720452596; cv=none; b=T8rlZIotmYVnXJoyzxvNC2vjoQOQwQA6U1thCs9e2HjlmQFB/FqZxtVgS5wtl/axtIwKRTN8b0hz0RcucRKf/DuZ12fvRhsdzaWYzdgDQDa957vMHoycI8xdWorSR5e7d89DOOgaWsCldhS56xOPstZMU0Ea3VA/6YzLRG9PQz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720452584; c=relaxed/simple;
-	bh=ztW0g2FoZv1Ha2AVuu/92vUst4UA6CVs3jAeJnz1ouU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SqPHK3r5v3ozNbdtP7397oLQGOrs7B7H0mER6XTgyCGxu8bqKa9Qk3AmnSxKd19urTRomMoULhqLXb5dY1mV1Q4yVbrZ6XooQR1tbgQ1BWP+2NfP89nvzn9aiad/BgYZ4ENhzffFq4lhbjKyD7kErHSAYGxSi/9L9w+UW6q1CBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2zvUdOK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720452596; c=relaxed/simple;
+	bh=+WbYP/ASZE0Fc29CvTr3L/Q+sOkCaRxupWDJeEoQrBU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=rD/Swy9KADzCosphZF5ZWjM7qZ6AXIPN0exzMM9joxXj6nOUev6lYK/VdgZvzanL22AafBrjiEABlO8Y4ryox9I4Zhy3MVroMPBUkK+BNoRhX/lJtDwW0x7bU7Avf3XpYOW6Gi4wFyS0unE3LXnxwcgpViY+/FMa6XEC1xraclU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=EQm+8gvE; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2zvUdOK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB60DC116B1;
-	Mon,  8 Jul 2024 15:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720452584;
-	bh=ztW0g2FoZv1Ha2AVuu/92vUst4UA6CVs3jAeJnz1ouU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U2zvUdOKa60zfvyxouCovnzIYJPdLX2Ba6Ifi+5eEjkgsccW/d8ZWsClTVvVnlai0
-	 7eBjOuB+R3uElB9PAZhYeUXLyFk7KdDHzSArMzcMnLOp52GUtPc3x71AUsNiu/Y2k4
-	 ZY6PMjTf0uqbPVekBang/zSi6holrnmrPZybFcVlrVcCC2GiVt/D6BMfNpt1JhjAY5
-	 epoulaz/QvSYWNlwAYC7BgvTh9f7J8I7R0BX9m49CVQOTrsTh423kW4ld0peEdxcat
-	 yxgqleXx8MXUtY/tA/24eSFh9xfrv05Wap6xaO6cEGaDzq07JQPPVeNYIgqdboyT/2
-	 FCQHXBMARN2EQ==
-Message-ID: <6e57dbc0-f47a-464e-af6b-abd45c450dc6@kernel.org>
-Date: Mon, 8 Jul 2024 10:29:41 -0500
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="EQm+8gvE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=p34bz90eb2CO67g2ifIO9gi0Uadhuo4uIRkThb3fbK8=; b=EQm+8gvE2upzrKgSaRC8+Uu1US
+	wrBfoPqGX8PiU+6uFPY9MVtD4jfnM0eUDnJ/NBFIHzHKfTIdpTTKiEfPjDmSLNmeDo3hKM9i+ZKRu
+	eMTFr4ENi/T0mLeosoN1uECMjO8e9xXayvS4sKDbMZiKFjbykYe5TEbqmCdj09KOmw5rzFDybhRH1
+	za4PxzRqHgFfr06cDEgfwcjNnGKEqBWbD5TCQ95Au6KQANwWq8TStqGiJv/npnTYO3VwavX6YRqgp
+	u4KN5PSO4ofTucwotclAEfy8sRenZnoReb6vl7ESjd14Od7JQdBeRSgKMBR6ztn0NRhM7WCfKiK3y
+	0k14XJqw==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1sQqJB-000Cue-U4; Mon, 08 Jul 2024 17:29:41 +0200
+Received: from [178.197.248.35] (helo=linux.home)
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1sQqIg-0002ra-13;
+	Mon, 08 Jul 2024 17:29:10 +0200
+Subject: Re: [PATCH bpf] selftests/bpf: DENYLIST.aarch64: Remove fexit_sleep
+To: KP Singh <kpsingh@kernel.org>, Puranjay Mohan <puranjay@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
+ <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Alexei Starovoitov <ast@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Manu Bretelle <chantra@meta.com>,
+ Florent Revest <revest@google.com>
+References: <20240705145009.32340-1-puranjay@kernel.org>
+ <c0ef7ecf-595b-375a-7785-d7bf50040c6b@iogearbox.net>
+ <mb61pjzhwvshc.fsf@kernel.org>
+ <CACYkzJ7d_u=aRzbubBypSVhnUSjBQnbZjPuGXhqnMzbp0tJm_g@mail.gmail.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <224eeadb-fc5f-baeb-0808-a4f9916afa3c@iogearbox.net>
+Date: Mon, 8 Jul 2024 17:29:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
- CONFIG_OF is enabled
-To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Lukas Wunner <lukas@wunner.de>, Bert Karwatzki <spasswolf@web.de>,
- caleb.connolly@linaro.org, bhelgaas@google.com, amit.pundir@linaro.org,
- neil.armstrong@linaro.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, Praveenkumar Patil <PraveenKumar.Patil@amd.com>
-References: <20240707183829.41519-1-spasswolf@web.de>
- <Zoriz1XDMiGX_Gr5@wunner.de> <20240708003730.GA586698@rocinante>
- <CACMJSevHmnuDk8hpK8W+R7icySmNF8nT1T9+dJDE_KMd4CbGNg@mail.gmail.com>
- <20240708083317.GA3715331@rocinante>
+In-Reply-To: <CACYkzJ7d_u=aRzbubBypSVhnUSjBQnbZjPuGXhqnMzbp0tJm_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20240708083317.GA3715331@rocinante>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27330/Mon Jul  8 10:36:43 2024)
 
-On 7/8/2024 3:33, Krzysztof Wilczyński wrote:
-> [...]
->>> If there aren't any objections, I will take this via the PCI tree, and add
->>> the missing tags.  So, no need to send a new version of this patch.
->>>
->>> Thank you for the work here!  Appreciated.
->>>
->>>          Krzysztof
+On 7/8/24 5:26 PM, KP Singh wrote:
+> On Mon, Jul 8, 2024 at 5:00 PM Puranjay Mohan <puranjay@kernel.org> wrote:
 >>
->> I don't think you can take it via the PCI tree as it depends on the
->> changes that went via the new pwrseq tree (with Bjorn's blessing).
+>> Daniel Borkmann <daniel@iogearbox.net> writes:
+>>
+>>> On 7/5/24 4:50 PM, Puranjay Mohan wrote:
+>>>> fexit_sleep test runs successfully now on the CI so remove it from the
+>>>> deny list.
+>>>
+>>> Do you happen to know which commit fixed it? If yes, might be nice to have it
+>>> documented in the commit message.
+>>
+>> Actually, I never saw this test failing on my local setup and yesterday
+>> I tried running it on the CI where it passed as well. So, I assumed that
+>> this would be fixed by some commit. I am not sure which exact commit
+>> might have fixed this.
+>>
+>> Manu, Martin
+>>
+>> When this was added to the deny list was this failing every time and did
+>> you have some reproducer for this. If there is a reproducer, I can try
+>> fixing it but when ran normally this test never fails for me.
 > 
-> Aye.
-> 
->> Please leave your Ack here and I will take it with the other PCI
->> pwrctl changes.
-> 
-> Sounds good!  With that...
-> 
-> Acked-by: Krzysztof Wilczyński <kw@linux.com>
-> 
->> After the upcoming merge window we should go back to normal.
-> 
-> Thank you!
-> 
-> 	Krzysztof
+> I think this never worked until
+> https://lore.kernel.org/lkml/20230405180250.2046566-1-revest@chromium.org/
+> was merged, FTrace direct calls was blocking tracing programs on ARM,
+> since then it has always worked.
 
-FWIW this other patch makes it quieter too.
-
-https://lore.kernel.org/linux-pci/20240702180839.71491-1-superm1@kernel.org/
+Awesome, thanks! I'll add this to the commit desc then when applying.
