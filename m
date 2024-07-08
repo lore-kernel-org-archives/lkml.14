@@ -1,42 +1,61 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5552214901C;
-	Mon,  8 Jul 2024 19:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B771474AF;
+	Mon,  8 Jul 2024 19:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720465269; cv=none; b=Wq0y+pAAwwSOCOYhzJ/KUgx0ltky4G781gYT4VSBTHxAcvtpI5J6ySTW6AevnqmlQgOyfX5LOPsfmnE/8BF7ZsGeItMLGa6bDWj1PeGVHA72InRBi8N48f2aPZMfQw8NapzKdWSFzDK/+gHTvpIwl73oM93MIKm7hUlDhZ4kzhc=
+	t=1720465306; cv=none; b=rIq5L1ZV2cy4T18DPgNZuzQZ2KGQvyX419fQ71rb9z545n02NTw4Z+ZL1uWrIvG6nfoYb2WJeR5oLmui74mQF+gT69TkKPRWZPwpfrh57hVE0pPZxbWZ18wHbXhLJn1T2rk3S/iM3MMNe5IKRI9Mi/m1vBa6g2Yj/yS0V83x0Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720465269; c=relaxed/simple;
-	bh=ZYwHIigIhSCIMsMfoGRMJkJk1tF8c24wZcbHSusq7ao=;
+	s=arc-20240116; t=1720465306; c=relaxed/simple;
+	bh=1hW/kypdr+uaGZf3TpRDZkCzjeuosv/ANU6YTGTLXeI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G+MBhMeFVohcAZpHoaSWWk9tRjMVdXzOJtEEyL6P/gAiZkt7DN6JbG3P8ZG/NAUiTSn+5KfsMfgKFEbYWC/y+coI6kfoAeoPPfBLskMH9YXysCZhjkaz9VDBa75hS+tv1yu/QsBu5q8N05wX7HQFJEgSZuO3wsGkoZjeZng5mdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=IzjJXRwx; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=PfctVvaoVW7aGUJSAhUFAOfSdZd8cehcmigPdbCmBkIK5rkOjzsH82l2P5irM6r+6sOoV8NIgEHC86EyfydLwTTAKFCWqmVbchNwMXEksk13zF/LtcEeyQ5WJGJiu4/aIzXz/XMwULzwaAc53RoY2i6Ovf0qXmAaqhxcIunrb0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqkkvI/h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IzjJXRwx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=XGGpiGEn99M1OyeTkZzsgnB6kBfceyDYhXGtdp6H+LU=; b=IzjJXRwxcCU8iVPQpEtfBZ9ZSL
-	UZB/QcbD4oWaRg9SaqqBXc7UsGT8dZTU4Nd9/SVUYmkhw1gOiXPC+WeKskETHk906vqsclC0AlP2v
-	I6+2pQvOThD6jUArmHxfmbGacwlH8SdLYQxI3cIlRgD9xtvQV5u/N4U2ZkjWrsNa+/Uc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sQtba-0024I0-IB; Mon, 08 Jul 2024 21:00:54 +0200
-Date: Mon, 8 Jul 2024 21:00:54 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Cindy Lu <lulu@redhat.com>
-Cc: dtatulea@nvidia.com, mst@redhat.com, jasowang@redhat.com,
-	parav@nvidia.com, sgarzare@redhat.com, netdev@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] vdpa/mlx5: Add the support of set mac address
-Message-ID: <b680300d-d18d-45b8-848f-85824332c7ca@lunn.ch>
-References: <20240708065549.89422-1-lulu@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqkkvI/h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F6DC116B1;
+	Mon,  8 Jul 2024 19:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720465306;
+	bh=1hW/kypdr+uaGZf3TpRDZkCzjeuosv/ANU6YTGTLXeI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iqkkvI/hBM0I8W+ZlvH3nLQoPJO9QM8LmBrpuyAneOgy7NF+RSRTyrPIWVCAxl5OK
+	 Qj7h38Si0auCjMoYaBibCpq8aDetMl4COkWD0P6xktZmsKwRtdqJ2x55/O2ja9TXot
+	 SLWLacZcZ+Ayzt6msQoyxlKdrXzStPcaO4ML88Q1wl5xuA1dOmXa1k4i3ZjM9ak3fT
+	 Q4fOFD8pQY0YtIHBbyjIuL67+JTPJXsN6RpcsGvIOgkW1o/JtRgcMxa6vARj9gM0RD
+	 eGE9ck/XLn75yxhkgIqQ1RohuU0oxUUxLiizAAfuEVRq0M3xm29w8uUJ17fmIRfiEP
+	 EsVzG2aeV0ySQ==
+Date: Mon, 8 Jul 2024 12:01:45 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 6/9] xfs: switch to multigrain timestamps
+Message-ID: <20240708190145.GR612460@frogsfrogsfrogs>
+References: <20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org>
+ <20240708-mgtime-v4-6-a0f3c6fb57f3@kernel.org>
+ <20240708184739.GP612460@frogsfrogsfrogs>
+ <28e7a6c193674f2aa41ab1eec9bb8747ddba1a4c.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,48 +64,127 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240708065549.89422-1-lulu@redhat.com>
+In-Reply-To: <28e7a6c193674f2aa41ab1eec9bb8747ddba1a4c.camel@kernel.org>
 
-On Mon, Jul 08, 2024 at 02:55:49PM +0800, Cindy Lu wrote:
-> Add the function to support setting the MAC address.
-> For vdpa/mlx5, the function will use mlx5_mpfs_add_mac
-> to set the mac address
+On Mon, Jul 08, 2024 at 02:51:07PM -0400, Jeff Layton wrote:
+> On Mon, 2024-07-08 at 11:47 -0700, Darrick J. Wong wrote:
+> > On Mon, Jul 08, 2024 at 11:53:39AM -0400, Jeff Layton wrote:
+> > > Enable multigrain timestamps, which should ensure that there is an
+> > > apparent change to the timestamp whenever it has been written after
+> > > being actively observed via getattr.
+> > > 
+> > > Also, anytime the mtime changes, the ctime must also change, and those
+> > > are now the only two options for xfs_trans_ichgtime. Have that function
+> > > unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
+> > > always set.
+> > > 
+> > > Finally, stop setting STATX_CHANGE_COOKIE in getattr, since the ctime
+> > > should give us better semantics now.
+> > > 
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > >  fs/xfs/libxfs/xfs_trans_inode.c |  6 +++---
+> > >  fs/xfs/xfs_iops.c               | 10 +++-------
+> > >  fs/xfs/xfs_super.c              |  2 +-
+> > >  3 files changed, 7 insertions(+), 11 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
+> > > index 69fc5b981352..1f3639bbf5f0 100644
+> > > --- a/fs/xfs/libxfs/xfs_trans_inode.c
+> > > +++ b/fs/xfs/libxfs/xfs_trans_inode.c
+> > > @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
+> > >  	ASSERT(tp);
+> > >  	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
+> > >  
+> > > -	tv = current_time(inode);
+> > > +	/* If the mtime changes, then ctime must also change */
+> > > +	ASSERT(flags & XFS_ICHGTIME_CHG);
+> > >  
+> > > +	tv = inode_set_ctime_current(inode);
+> > >  	if (flags & XFS_ICHGTIME_MOD)
+> > >  		inode_set_mtime_to_ts(inode, tv);
+> > > -	if (flags & XFS_ICHGTIME_CHG)
+> > > -		inode_set_ctime_to_ts(inode, tv);
+> > >  	if (flags & XFS_ICHGTIME_CREATE)
+> > >  		ip->i_crtime = tv;
+> > >  }
+> > > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > > index a00dcbc77e12..d25872f818fa 100644
+> > > --- a/fs/xfs/xfs_iops.c
+> > > +++ b/fs/xfs/xfs_iops.c
+> > > @@ -592,8 +592,9 @@ xfs_vn_getattr(
+> > >  	stat->gid = vfsgid_into_kgid(vfsgid);
+> > >  	stat->ino = ip->i_ino;
+> > >  	stat->atime = inode_get_atime(inode);
+> > > -	stat->mtime = inode_get_mtime(inode);
+> > > -	stat->ctime = inode_get_ctime(inode);
+> > > +
+> > > +	fill_mg_cmtime(stat, request_mask, inode);
+> > 
+> > Sooo... for setting up a commit-range operation[1], XFS_IOC_START_COMMIT
+> > could populate its freshness data by calling:
+> > 
+> > 	struct kstat dummy;
+> > 
+> > 	fill_mg_ctime(&dummy, STATX_CTIME | STATX_MTIME, inode);
+> > 
+> > and then using dummy.[cm]time to populate the freshness data that it
+> > gives to userspace, right?  Having set QUERIED, a write to the file
+> > immediately afterwards will cause a (tiny) increase in ctime_nsec which
+> > will cause the XFS_IOC_COMMIT_RANGE to reject the commit[2].  Right?
+> > 
 > 
-> Tested in ConnectX-6 Dx device
+> Yes. Once you call fill_mg_ctime, the first write after that point
+> should cause the kernel to ensure that there is a distinct change in
+> the ctime.
 > 
-> Signed-off-by: Cindy Lu <lulu@redhat.com>
-> ---
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+> IOW, I think this should alleviate the concerns I had before with using
+> timestamps with the XFS_IOC_COMMIT_RANGE interface.
+
+Cool, thank you!  Apologies for roaring earlier.
+
+--D
+
+> > --D
+> > 
+> > [1] https://lore.kernel.org/linux-xfs/20240227174649.GL6184@frogsfrogsfrogs/
+> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/commit/?h=atomic-file-commits&id=0520d89c2698874c1f56ddf52ec4b8a3595baa14
+> > 
+> > > +
+> > >  	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
+> > >  
+> > >  	if (xfs_has_v3inodes(mp)) {
+> > > @@ -603,11 +604,6 @@ xfs_vn_getattr(
+> > >  		}
+> > >  	}
+> > >  
+> > > -	if ((request_mask & STATX_CHANGE_COOKIE) && IS_I_VERSION(inode)) {
+> > > -		stat->change_cookie = inode_query_iversion(inode);
+> > > -		stat->result_mask |= STATX_CHANGE_COOKIE;
+> > > -	}
+> > > -
+> > >  	/*
+> > >  	 * Note: If you add another clause to set an attribute flag, please
+> > >  	 * update attributes_mask below.
+> > > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > > index 27e9f749c4c7..210481b03fdb 100644
+> > > --- a/fs/xfs/xfs_super.c
+> > > +++ b/fs/xfs/xfs_super.c
+> > > @@ -2052,7 +2052,7 @@ static struct file_system_type xfs_fs_type = {
+> > >  	.init_fs_context	= xfs_init_fs_context,
+> > >  	.parameters		= xfs_fs_parameters,
+> > >  	.kill_sb		= xfs_kill_sb,
+> > > -	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
+> > > +	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_MGTIME,
+> > >  };
+> > >  MODULE_ALIAS_FS("xfs");
+> > >  
+> > > 
+> > > -- 
+> > > 2.45.2
+> > > 
+> > > 
 > 
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> index 26ba7da6b410..f78701386690 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -3616,10 +3616,33 @@ static void mlx5_vdpa_dev_del(struct vdpa_mgmt_dev *v_mdev, struct vdpa_device *
->  	destroy_workqueue(wq);
->  	mgtdev->ndev = NULL;
->  }
-> +static int mlx5_vdpa_set_attr_mac(struct vdpa_mgmt_dev *v_mdev,
-> +				  struct vdpa_device *dev,
-> +				  const struct vdpa_dev_set_config *add_config)
-> +{
-> +	struct mlx5_vdpa_dev *mvdev = to_mvdev(dev);
-> +	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
-> +	struct mlx5_core_dev *mdev = mvdev->mdev;
-> +	struct virtio_net_config *config = &ndev->config;
-> +	int err;
-> +	struct mlx5_core_dev *pfmdev;
-> +
-> +	if (add_config->mask & (1 << VDPA_ATTR_DEV_NET_CFG_MACADDR)) {
-> +		if (!is_zero_ether_addr(add_config->net.mac)) {
-
-Is the core happy to call into the driver without validating the MAC
-address? Will the core pass the broadcast address? That is not
-zero. Or a multicast address? Should every driver repeat the same
-validation, and probably get it just as wrong?
-
-    Andrew
-
----
-pw-bot: cr
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
