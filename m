@@ -1,125 +1,94 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49149148820
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E301E876;
+	Mon,  8 Jul 2024 16:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720456200; cv=none; b=j1voG7gdC8jndGY5v3sTOPyUx1enE6DhdeqS/715+5UlS/whWUIEI2bx2QvBMihntFtZkgQduWyIoOsRLzVx0nZUDrbvdloceROmaG6dYy+nzQPYtxFz7Zjvk+Kg7TouXylMIfxmN0VLqr5TB2omTcXlgA6+C4F/lLAJWF1zdW8=
+	t=1720456312; cv=none; b=ECB7P7dXsGeXZ1XakNO3JoC9vuLlehFgSdR8u0vWjRBVe/HRDvxy7f433V/YLCuaDkqOQQfcgUej/Uku0LwcXp96nVl0wJJf4bSTLEi/4A2OMvitDHCO1ka28NYrVwij4NFboyGTZpVOXkWUDoy5LIioUMLZf96UuydxM87F9z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720456200; c=relaxed/simple;
-	bh=3h766dFHjusL9yF2BAWAi2RB7FAbv/vaFEWG4U4Nou4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MtVcmfxePVPOzJKCHYXqzk4y3QoAC/iz4pCu5sCPuvHSVUMJMRbmPu2yyuNJ13PbgARImATV7wDR1hEnia/DCl2iIDx7L7o9kyZdJIhw7gkIEUugK8oHUaVrU3SERw9nBi7fAFnFWusf3e7vLmq+/FvowACmqKT19C1GniFtq+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=fmwMo1P9; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1720456312; c=relaxed/simple;
+	bh=OIY7mAKliXOrSwkWIU8gDcsma9imTxj14l4XNTy5SdI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n28YTjFViPriMACbnp+B8oDzA2c+RWuKy7SehKHSlc51qoNsntpMSbFBTaLphMPrPnxxcP8fIUbfNhF1KXMEcndQWe2Dhl8ae1tCcvTu+yZFUmgJm+/MuLESWIUgcZpbT9uV9mz+XgxBezOhTg9PFuvbMlgMHqk8nsbESaNh59M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M/aaHGSE; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fmwMo1P9"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-447f0a7660fso5912591cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1720456198; x=1721060998; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bpADAnxMmPl0KnU1qL520o96mOq4J8FvDBj3a92ycMo=;
-        b=fmwMo1P9nL5gcyFt5FoTZuQIKGG5Kcm436paAzeexMbYCUjPOuNLDEpgCBP5H4XwUx
-         BoxYzPqKyQnW8D5Uz7evocfcpRe4B1ihD4GShGaIWxgF6eoqGZuVmbw6VJabnEeVUaDd
-         7vNtQC3SL9H6/EC9aNF5gK8s8YOdqKRG8Z2XZ/CNJsX3DdgvxUl9GuB19GVXwP1uGYgZ
-         W6sTKJk7kPHz/P4whLlsao6GJWxyflmUBTXmysVGVfE5tTbEqgihJdd77uJ8+b6odq1C
-         8wx4cJeV2magFGqBvdWIZsX17vRjnj4PblibjgfI2Nu7uW7OoARWTxWcq7nLwI16AsQ0
-         8hIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720456198; x=1721060998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bpADAnxMmPl0KnU1qL520o96mOq4J8FvDBj3a92ycMo=;
-        b=VNPmk1I9uhfeAwe96Xbx6Emqb0LA4y/zcN5q6gg9KvKmq/bD1946y1PrjRPviK2EE7
-         zJvscyAV8FBQeUAIPtOC5tYDOEox0cJ+/eOxZG/QHquwQIRtpLp/kU+i2Z4D6tiC1zSh
-         pwCBnA/LEoZ8tF7bqJFtITziMfgN/lW2TmR2a1YRx5IUgada8snCVnSprT0pzgl0jQiL
-         9dBOq+PSknTiLd9zTuRsqOPtmZcyRJe/cJEMHDPQeq6jCLxXzf6Kng5+QRVOOMIkO6S0
-         wGGjhqZiZOmyqsGiJTDciEy1n62t154c8nS1pXvw6Wc4CDm8c2I+qr7QzxjVtp09zzDs
-         P5cg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFHUW3+6yRRnwFwWRArkJ5qIHqCodMMARumVLsuxNNQTOAy8O1f9189PvmXAXeDAsrLYu23IlZRNeAAHTusIxo0XNYJRiAmAQ6DjPJ
-X-Gm-Message-State: AOJu0YySrb/ql+7NSw1ufmQd5Lf4jcCHeun+TJ7g/cZkXJZe5tTthD8B
-	3Ew7LyLKiirORig9dDwZaXRq7ormjygq+/IXtjumHM28X33AcPcCie5+1P00Ycc=
-X-Google-Smtp-Source: AGHT+IFU/w14qf4HQu+71Ycg0U3BawEnHajgQaixjaC+e8UHgPl40rgFBfuNrXSLQ5sWrKc6QmM3IA==
-X-Received: by 2002:a05:622a:13d2:b0:447:eb16:2e6a with SMTP id d75a77b69052e-447eb163298mr71776471cf.40.1720456198133;
-        Mon, 08 Jul 2024 09:29:58 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9bfb2b7sm914951cf.86.2024.07.08.09.29.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 09:29:57 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sQrFV-000SlT-1j;
-	Mon, 08 Jul 2024 13:29:57 -0300
-Date: Mon, 8 Jul 2024 13:29:57 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>, Kevin Tian <kevin.tian@intel.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 06/10] iommufd: Add iommufd fault object
-Message-ID: <20240708162957.GB14050@ziepe.ca>
-References: <20240702063444.105814-1-baolu.lu@linux.intel.com>
- <20240702063444.105814-7-baolu.lu@linux.intel.com>
- <ZoXZZ2SJ/WdlMJaX@Asurada-Nvidia>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M/aaHGSE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720456311; x=1751992311;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=OIY7mAKliXOrSwkWIU8gDcsma9imTxj14l4XNTy5SdI=;
+  b=M/aaHGSE/Ne41bS0j0GYxKGhThR6buGOx1AhXNVRGI/yJuyD50ccvczl
+   GI7dYQNuM9/Ip6qiWG5amJ5gEjhSZEeA6QmEAvgVFlnO2dZHRQgbRGpD5
+   74kR59sgDirxGPH0qc07yjKOwlVbbs5qfoH0ZFZZabY7cn1qtjJmf6dwo
+   JBVxRy2ExFGQABFRiW7m3xaxQcuLs2n3GA8wh1ot1xhb3WVqC8mSXoD8B
+   UlJ0P6hgV9Aexr0oL6lb64zVeuAl4BvX/I5LXv9QuSgOo8KSK6x6BABKl
+   c6TafGGS3sloKgxjFDKhXopDDvnhitGzgH8AMPcS3IkEV8sCNl0V62H7k
+   Q==;
+X-CSE-ConnectionGUID: /HS5tWg0TFewRRuiKJTSBg==
+X-CSE-MsgGUID: RYp3gOkLTkC9gUm09oC/wQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="28275805"
+X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
+   d="scan'208";a="28275805"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 09:31:50 -0700
+X-CSE-ConnectionGUID: MJNGz0qSTHakYub2nmsH9A==
+X-CSE-MsgGUID: UKtqXDqdS1OtluFW6HoMag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
+   d="scan'208";a="52498124"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.108.203]) ([10.125.108.203])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 09:31:49 -0700
+Message-ID: <045fb08e-6d18-4558-b7b2-b83c412307da@intel.com>
+Date: Mon, 8 Jul 2024 09:31:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZoXZZ2SJ/WdlMJaX@Asurada-Nvidia>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl core:wrong value of macro definition
+To: peng guo <engguopeng@buaa.edu.cn>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, wyguopeng@163.com
+References: <20240708152902.5853-1-engguopeng@buaa.edu.cn>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240708152902.5853-1-engguopeng@buaa.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 03, 2024 at 04:06:15PM -0700, Nicolin Chen wrote:
 
-> I learned that this hwpt->fault is exclusively for IOPF/PRI. And
-> Jason suggested me to add a different one for VIOMMU. Yet, after
-> taking a closer look, I found the fault object in this series is
-> seemingly quite generic at the uAPI level: its naming/structure,
-> and the way how it's allocated and passed to hwpt, despite being
-> highly correlated with IOPF in its fops code. So, I feel that we
-> might have a chance of reusing it for different fault types:
+
+On 7/8/24 8:29 AM, peng guo wrote:
+> The first value of the macro definition DEFINE_CXL_VENDOR_DEBUG_UUID
+> does not match the definition in the CXL 2.0 specification table 170.
+
+Thank you for the fix. Please use latest spec to identify. CXL spec r3.1 Table 8-71 I think?
+
+Also, can you please provide a Fixes tag for this issue? Thanks!
 > 
-> +enum iommu_fault_type {
-> +	IOMMU_FAULT_TYPE_HWPT_IOPF,
-> +	IOMMU_FAULT_TYPE_VIOMMU_IRQ,
-> +};
+> Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
+> ---
+>  drivers/cxl/cxlmem.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  struct iommu_fault_alloc {
->  	__u32 size;
->  	__u32 flags;
-> +	__u32 type;  /* enum iommu_fault_type */
->  	__u32 out_fault_id;
->  	__u32 out_fault_fd;
->  };
-
-I think I would just add the type at the end of the struct and rely on
-our existing 0 is backwards compat mechanism. 0 means HWPT_IOPF. ie no
-need to do anything now.
-
-It would make some sense to call this a "report" object than "fault"
-if we are going to use it for different things. We could probably
-rename it without much trouble. There is also not a significant issue
-with having two alloc commands for FDs.
-
-I'd also think VIOMMU_IRQ is probably not that right abstraction,
-likely it makes more sense to push driver-specific event messages sort
-of like IOPF and one of the messages can indicate a arm-smmu-v3 VCDMQ
-interrupt, other messages could indicate BAD_CD and similar sorts of
-events we might want to capture and forward.
-
-So, I'm inclined to just take this series as-is
-
-Jason
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index af8169ccdbc0..feb1106559d2 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -563,7 +563,7 @@ enum cxl_opcode {
+>  		  0x3b, 0x3f, 0x17)
+>  
+>  #define DEFINE_CXL_VENDOR_DEBUG_UUID                                           \
+> -	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
+> +	UUID_INIT(0x5e1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
+>  		  0x40, 0x3d, 0x86)
+>  
+>  struct cxl_mbox_get_supported_logs {
