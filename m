@@ -1,203 +1,124 @@
-Received: from forward500d.mail.yandex.net (forward500d.mail.yandex.net [178.154.239.208])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522F5381B9;
-	Mon,  8 Jul 2024 07:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F55A1F932
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 07:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720424534; cv=none; b=aCBRDhC+fQSIyKfGLvD9JovgMnyrTTrcT41pG4eHKAsC+PtnC9yiEwGk1TJGLyOHu9SPG8OE+8yUp0qBunhRnZeaJZabqH+nHO7A2lnyMB9+8ckJHPzSQbggwQD+A3SP+mVWLgZnR46JIl0sBGIf44o9j+s/n+JWVn/0V7Efhwg=
+	t=1720424584; cv=none; b=Vg/0kDppUDH0q8ogYNFrECNceVseleIMKWGfsilKf3/jsPTelL1J89E1U35oyX/w1S1N037kWyTV9VHf+IejGRrvfn20WSaRXVbet/d46Bo7Z1L9iqKEFV+lSzWPo5DBchC8Rl7nUc//21VOypLBawa/XAD/diSpGje2vsvJ8FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720424534; c=relaxed/simple;
-	bh=O9RoOO9HvF5SuUCeDg6vUA4wVmtzSSul9Xm5/s61R6Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GZvza9XF6nJILN6gLmoEHqQ9x8nje2HC//JgXX1onsz18q0bmZF87ZXtK401h6yLmsqZlTjYumbt54CpIWxqOvPMdhOIdd+9tu5rPaAtPegM8g7CQ2Z4dejZltQLbRzPUlvLaRHsYodxcKvQYCvqnD1gCliZs5P7kLaOUFGUk7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=VhLZU4xm; arc=none smtp.client-ip=178.154.239.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+	s=arc-20240116; t=1720424584; c=relaxed/simple;
+	bh=gR2sv2VYvHGEVJeByiF31fIirAGeTcv2VNhnHXYZaJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fw8NBghCp4R2a4mQ5tWDo27+FYHGfHjipcwxk2L+iGosPSNRJf0tIIUvlQ786JUVDDMWhp6nQZ7gX8cbvIKBp7O6J6MqTpzJAG5ED4por+yshbIUyReu/FbLlSh93F5Zx1J1+pL3sy8naWXILKqxoqmthIKYmNvMSsA1u032WRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CWHRehCm; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="VhLZU4xm"
-Received: from mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:7dca:0:640:d4d9:0])
-	by forward500d.mail.yandex.net (Yandex) with ESMTPS id C5DDC60A3F;
-	Mon,  8 Jul 2024 10:34:32 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 6YW3mBQe3W20-qUQtuv72;
-	Mon, 08 Jul 2024 10:34:30 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1720424070; bh=O9RoOO9HvF5SuUCeDg6vUA4wVmtzSSul9Xm5/s61R6Y=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=VhLZU4xmXX2w4OBfMMBdLTuYfNHiVS81wr+5BeazZfJVOu+yyXSQdoaO60cjQziKc
-	 M0uTvIyCbbrFj9TBj/klf6qeczg17/a4YJiSE0dCEH6yKJCldgKqcd4qvfnukuaDOU
-	 WcbQbDv7ImiZUeCsbYrO017QDF3uXjKDnJWXQ9oc=
-Authentication-Results: mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <663b1749afeb5cec281149fdb445ed36fdcbc68e.camel@maquefel.me>
-Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
-	Arnd Bergmann
-	 <arnd@arndb.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Stephen Boyd
- <sboyd@kernel.org>,  Hartley Sweeten <hsweeten@visionengravers.com>,
- Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy
- Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
- Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter
- Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, Mark
- Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,  Takashi Iwai
- <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron"
- <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
- <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org,  devicetree@vger.kernel.org,
- dmaengine@vger.kernel.org,  linux-watchdog@vger.kernel.org,
- linux-pwm@vger.kernel.org,  linux-spi@vger.kernel.org,
- netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-sound@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>,  Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Vinod
- Koul <vkoul@kernel.org>
-Date: Mon, 08 Jul 2024 10:34:05 +0300
-In-Reply-To: <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
-References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
-	 <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
-	 <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
-	 <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
-	 <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CWHRehCm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720424583; x=1751960583;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=gR2sv2VYvHGEVJeByiF31fIirAGeTcv2VNhnHXYZaJ4=;
+  b=CWHRehCm1aVy1LnOr/FlqqrIB9pW0JkEKCVwbt5C25RepNmDWsPqo54e
+   srLICCdfnsKwoDleOqSJaiJSAQjuh8csCuJi91qE5MAfDGjyEiT8MeVxm
+   b7IEirXMUXUBQ2IVXkbMg3vIAwp5sbpW6OazGLJC+lHUR6L6q5kN/BJZS
+   oRp0kAW/6bAappwcbJ9+zHseoY671YKCb11TtnLaW09LiQaWKsD4kmfrx
+   jmr3INcmdlbziit1ftpg+cvmiuOOpmLy3x9qm3wSA9Y5MrEviSD+wKIec
+   lWagQPgb+RKkVubgjpAkACuTeIhgMsWv72/FxsDXeQ+eJSgnMb+JwCndO
+   A==;
+X-CSE-ConnectionGUID: MTQ9wl0ETg+hm9yODPXMVQ==
+X-CSE-MsgGUID: 8mtOjrnVQLS4c1R2k1bR6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17567054"
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="17567054"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 00:43:02 -0700
+X-CSE-ConnectionGUID: 8OQH5ZjYQ86Xnc0uG9Baow==
+X-CSE-MsgGUID: puA4PV+gSDyj6Xi9BWrIKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="47190926"
+Received: from jlawryno-mobl.ger.corp.intel.com (HELO [10.246.19.58]) ([10.246.19.58])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 00:42:59 -0700
+Message-ID: <832c27d0-a2ec-46df-afcd-be74b8108358@linux.intel.com>
+Date: Mon, 8 Jul 2024 09:42:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] accel/ivpu: Add missing MODULE_FIRMWARE metadata
+To: "Alexander F. Lent" <lx@xanderlent.com>,
+ Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+ Oded Gabbay <ogabbay@kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Andrzej Kacprowski <andrzej.kacprowski@linux.intel.com>,
+ Krystian Pradzynski <krystian.pradzynski@linux.intel.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240705-fix-ivpu-firmware-metadata-v1-1-704b73852d92@xanderlent.com>
+Content-Language: en-US
+From: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
+ Gdansk - KRS 101882 - NIP 957-07-52-316
+In-Reply-To: <20240705-fix-ivpu-firmware-metadata-v1-1-704b73852d92@xanderlent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Arnd,=20
+Hi, thanks for the commit.
 
-Are we continuing this patch series ?
+On 05.07.2024 13:14, Alexander F. Lent wrote:
+> Modules that load firmware from various paths at runtime must declare
+> those paths at compile time, via the MODULE_FIRMWARE macro, so that the
+> firmware paths are included in the module's metadata.
+> 
+> The accel/ivpu driver loaded firmware but lacked this metadata,
+> preventing dracut from correctly locating firmware files.
+> 
+> Fixes: 9ab43e95f922 ("accel/ivpu: Switch to generation based FW names")
+> Fixes: 02d5b0aacd05 ("accel/ivpu: Implement firmware parsing and booting")
+> Signed-off-by: Alexander F. Lent <lx@xanderlent.com>
+> ---
+>  drivers/accel/ivpu/ivpu_fw.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/accel/ivpu/ivpu_fw.c b/drivers/accel/ivpu/ivpu_fw.c
+> index 1457300828bf..51792a00b7e3 100644
+> --- a/drivers/accel/ivpu/ivpu_fw.c
+> +++ b/drivers/accel/ivpu/ivpu_fw.c
+> @@ -48,16 +48,26 @@ static char *ivpu_firmware;
+>  module_param_named_unsafe(firmware, ivpu_firmware, charp, 0644);
+>  MODULE_PARM_DESC(firmware, "NPU firmware binary in /lib/firmware/..");
+>  
+> +#define IVPU_FW_PATH_37XX_BIN		"vpu_37xx.bin"
+> +#define IVPU_FW_PATH_37XX_V0_BIN	"intel/vpu/vpu_37xx_v0.0.bin"
+> +#define IVPU_FW_PATH_40XX_BIN		"vpu_40xx.bin"
+> +#define IVPU_FW_PATH_40XX_V0_BIN	"intel/vpu/vpu_40xx_v0.0.bin"
+> +
+>  static struct {
+>  	int gen;
+>  	const char *name;
+>  } fw_names[] = {
+> -	{ IVPU_HW_37XX, "vpu_37xx.bin" },
+> -	{ IVPU_HW_37XX, "intel/vpu/vpu_37xx_v0.0.bin" },
+> -	{ IVPU_HW_40XX, "vpu_40xx.bin" },
+> -	{ IVPU_HW_40XX, "intel/vpu/vpu_40xx_v0.0.bin" },
+> +	{ IVPU_HW_37XX, IVPU_FW_PATH_37XX_BIN },
+> +	{ IVPU_HW_37XX, IVPU_FW_PATH_37XX_V0_BIN },
+> +	{ IVPU_HW_40XX, IVPU_FW_PATH_40XX_BIN },
+> +	{ IVPU_HW_40XX, IVPU_FW_PATH_40XX_V0_BIN },
+>  };
+>  
+> +MODULE_FIRMWARE(IVPU_FW_PATH_37XX_BIN);
+> +MODULE_FIRMWARE(IVPU_FW_PATH_37XX_V0_BIN);
+> +MODULE_FIRMWARE(IVPU_FW_PATH_40XX_BIN);
+> +MODULE_FIRMWARE(IVPU_FW_PATH_40XX_V0_BIN);
+Include only V0 variants, FW names without version are used for development and they wont be included in any distribution.
+I would also skip macros and just use literal strings as macros add a lot of lines that don't increase readability.
 
-You are silent since last version submit, which makes me a bit worried.
-
-If you suddenly changed your mind please let us know, cause anyway we
-have no possibility to merge these series without you.
-
-
-On Fri, 2024-07-05 at 11:21 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
->=20
-> On Thu, Jun 27, 2024 at 11:29:44AM +0300, Nikita Shubin wrote:
-> > On Tue, 2024-06-18 at 19:20 +0300, Nikita Shubin wrote:
-> > > Hello Andy!
-> > > On Mon, 2024-06-17 at 12:58 +0200, Andy Shevchenko wrote:
-> > > > On Mon, Jun 17, 2024 at 11:38=E2=80=AFAM Nikita Shubin via B4 Relay
-> > > > <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
-> > > > >=20
-> > > > > The goal is to recieve ACKs for all patches in series to
-> > > > > merge it
-> > > > > via Arnd branch.
-> > > >=20
-> > > > 'receive'
-> > > >=20
-> > > > > Unfortunately, CLK subsystem suddenly went silent on clk
-> > > > > portion
-> > > > > of
-> > > > > series V2 reroll,
-> > > > > tried to ping them for about a month but no luck.
-> > > > >=20
-> > > > > Link:
-> > > > > https://lore.kernel.org/r/20240408-ep93xx-clk-v2-1-adcd68c13753@m=
-aquefel.me
-> > > > >=20
-> > > > > Some changes since last version (v9) - see "Changes in v10",
-> > > > > mostly
-> > > > > cosmetic.
-> > > >=20
-> > > > ...
-> > > >=20
-> > > > > Patches should be formated with '--histogram'
-> > > >=20
-> > > > 'formatted'
-> > > >=20
-> > > > ...
-> > > >=20
-> > > > > Changes in v10:
-> > > > >=20
-> > > > > Reordered SoB tags to make sure they appear before Rb and
-> > > > > Acked
-> > > > > tags.
-> > > >=20
-> > > > This is not required. The importance is only the order of SoBs
-> > > > themselves. If they are interleaved with other tags, it's fine.
-> > >=20
-> > > Ah - ok. Just saw someone was complaining about b4 reordering
-> > > them.=20
-> > >=20
-> > > >=20
-> > > > ...
-> > > >=20
-> > > >=20
-> > > > Hopefully to see this series being eventually applied soon.
-> > > > Arnd? (Do we have all necessary subsystem maintainers' tags,
-> > > > btw?)
-> > > >=20
-> > > >=20
-> > >=20
-> > > As i see from my perspective only three left:
-> > >=20
-> > > Clk subsystem:
-> > >=20
-> > > - clk: ep93xx: add DT support for Cirrus EP93xx
-> > >=20
-> > > DMA subsystem (but the only request from Vinod, as far as i
-> > > remember,
-> > > was fixing commits titles):
-> > >=20
-> > > - dmaengine: cirrus: Convert to DT for Cirrus EP93xx
-> > > - dmaengine: cirrus: remove platform code
-> > >=20
-> > > Beside that tags missing on platform code removal (which can be
-> > > Acked
-> > > by Arnd himself i believe) and dtsi/dts files (same ?).
-> >=20
-> > Vinod acked the above two patches:
-> >=20
-> > https://lore.kernel.org/all/ZnkIp8bOcZK3yVKP@matsya/
-> > https://lore.kernel.org/all/ZnkImp8BtTdxl7O3@matsya/
-> >=20
-> > so only:
-> >=20
-> > - clk: ep93xx: add DT support for Cirrus EP93xx
-> >=20
-> > https://lore.kernel.org/all/20240617-ep93xx-v10-3-662e640ed811@maquefel=
-.me/
-> >=20
-> > left.
-> >=20
-> > Hope Stephen will find some time for this one.
->=20
-> As we're approaching the merge window and this is still unclear, I
-> applied the pwm bits (i.e. patches 12, 13). If I understand
-> correctly,
-> patch 33 isn't suitable for application yet as it has a dependency on
-> pinctrl changes in that series.
->=20
-> (side note: Your patches are signed, but that doesn't bring any
-> benefit
-> if the receivers don't have your key. I didn't find it neither on
-> keys.openpgp.org nor in the kernel pgp key collection.)
->=20
-> Best regards
-> Uwe
-
+Regards,
+Jacek
