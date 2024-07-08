@@ -1,71 +1,73 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D360EC7
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDE2EC7
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720454767; cv=none; b=PHFkf/m9Nk1hVa0jRFFT58UgcBZlGqm1qN7fN5EU4ORotaRmSuQp4LSBOV3//RPsfcutydw+sBhaT//d850YPkIM1LqbGhIWofoUpptwvGM3JeRRQVz+6Yuw+2uI3c3R1s4D6WQrhsngSouLW7s4LlySzBRzANx/o9UZ/1pSPp4=
+	t=1720454820; cv=none; b=ljBQpvheNXcBIDaU17yVZZpQk/N/ke0PgTMW/j0BMSpZz/3k7jUhP/4lDlAOieYxkPZIuD5SasY2CMvyMt5CVPCOPugYXNKmXAng6aw79zNin8h4YKdN+9/fErQAQCT0dCvZx0PNfc49OaKIwIalXYyqpbbQHjbcuhtet1Krxxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720454767; c=relaxed/simple;
-	bh=lGPmJeUaHAtXVao18UW/KktsnLKISywsTLBsKiL//kY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EpEL6AdaDf7XuDA/lSV4qzPSDID4crYzR9qurLvjZWrMKA2S9Rh8fl80W7P9AvShzKbK9745+aYihpa1AP8KO7zpG4n1vDVS60jJdHAu20DoQAJ0+9qf3s/xFGOX2xtZc8MoNMocjtmnmdC7CXXkKDrQ8K5oQbuoSHfK/Xyy2uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Loi3SDcF; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720454820; c=relaxed/simple;
+	bh=Oj3hsdILNOBqYksTF24ZCDK0pPDq/s+08dH78BrsdaQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rVkFJh3zNnBhYdpwkNm8BBlsOaaTQ+k5iWv+/g1gQyDkrvIma/ywG8bvPyKepuxF9hYol5oYuJHZGbPP/tHldPUsZuuHZ8BIIBVXs451LMXyt61IIeRdjVr0iAice0p7K7b4AcNe9s5jL8mQXI/do4xV3WHSM+wmd2GxGMQV+e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=etDppFs1; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Loi3SDcF"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7201cb6cae1so1972286a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:06:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etDppFs1"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52ea5765e75so4133535e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:06:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720454765; x=1721059565; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720454817; x=1721059617; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3yotOwh1dtE5DgMK4jrp0VM5GfIPbQCVEmdEcJAa+qI=;
-        b=Loi3SDcF4sto1qJme4c15I7DvUwCgu8huwCjqFA9+FnIIZLHLTt1VtyyZbjF/VDYVe
-         RrVJFo6yhUk/SoZgiFWLNGxie6zitgbB58GH77424EBea0ITPYdryXJ2MrAI13mhDNMf
-         7GIPi6mYTniVj/6vO7lVIOO0wJ3uIVS/8REj+wFI0A9L5oiCJ82YZEFL40ywyFpqFcYd
-         ghg1mpR/MDINfUAvTDOuGJtrua/Gs8Z0PMURXzIN5/QZ39fp1oqo7EI9pU8K/G48HDxY
-         8TzLi1E+rAdJD9Y/DOr6vAZdAaoVzl7ZblNnmp5Vx9Zi1KQ6cisoZDwi1GW0XcJQHd3T
-         ni9w==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ij25sqUdevns5tkTNnYc8JRUONkaiwAFtKXPJUw+bLU=;
+        b=etDppFs1itQgPCBbPnJA08SWNN/20ePIf0LZAKuPfOb4vb9BMJ9XszlFRulGxT5/AT
+         BKp5fJFvfbr53I38GoOGz3k1D7rJuoq6PxkH6m6QmHmTGy7NBc9gpECjt7r0yJ//4j1l
+         kCZoxgsP01RFAFvxEkOUY/vNPGacfwIfUeCZdY2U/qIyxseJ8DEpSMa6p0lfVJc3QpSK
+         piGvxiEpUcQycGukjpTp+RJSO4vwgLH2+Alp2lhksIc7/g384kJIXnw9PLzZ/SpWETAG
+         zE/nmb5U/j7RYcgWLeNij6HvTyu/oH5ZcespQYde31Dvc6BZWXEjIWIh0U3TPobrMs+P
+         SFJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720454765; x=1721059565;
+        d=1e100.net; s=20230601; t=1720454817; x=1721059617;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3yotOwh1dtE5DgMK4jrp0VM5GfIPbQCVEmdEcJAa+qI=;
-        b=da2M7E2J3wru8b39JxqQFCYvmhQbFQxFhDl+iizNw/18RpTJFlHC5V976Vw4YdM7WA
-         Ayh91oFeQ4Djoyc3CuTjEkhbC2NiMwVrOPOfOyvxfg6PgJUfTxUEprf6YdPmw22jDIjd
-         INBO/5SceXEmgrbNlNiaqBZTx/4KBO6xecbCc5LIr+H0l6Nv7S2ZH0vWH05D6E4Gj4ad
-         1RFcYtPgeCw2YQBpiYw871kLssYAwDjQhbEyh4sdQSOMDGCu7Un2nDy5rjqR8dJ9lqu4
-         +MJorLwn6hJS4qry3zKiB505xAY4fvbOs8zGZWO4ESePA9KQ1EP5wE0SOO18G8u6fX4Z
-         C/aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSR5bbIU7ZMrGHDeAoUoMG1SbvyzUdfTNnlmn0Nk3paeSFQru/iSXig2bo1khiaFGZ154zzM20ZbAuWhtpPpPOqv+PNXm9wvr8l3qo
-X-Gm-Message-State: AOJu0Yx4NDRI89LI9onOKOrhfx9JfwrueS5s1SVLE3YboyJtMFIIrVvF
-	p/6vJefrVlkZOcQR8+2azmwCIjsgG5W3+s0nHKojSzLjyv5ReCeFPAc38sE1JRQ=
-X-Google-Smtp-Source: AGHT+IF4pL8APdY3c5DhYc7WskK7MW7W4Z9fYaj4VTZU8WRclPesMbXiUmaRA3FuKwavhdhGST/T1Q==
-X-Received: by 2002:a05:6a20:db0c:b0:1c2:8a36:29d with SMTP id adf61e73a8af0-1c28a3613d0mr2559231637.6.1720454765685;
-        Mon, 08 Jul 2024 09:06:05 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:f189:baee:28ea:c31c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b439b5585sm20701b3a.188.2024.07.08.09.06.03
+        bh=Ij25sqUdevns5tkTNnYc8JRUONkaiwAFtKXPJUw+bLU=;
+        b=K5aWgfLTB4skMwHUnT9wFbyoh3Hi2Wm/LWkNJeNxNLcqn3OH00N7Gn624WUnJyRaYJ
+         MnsoekHl5l5AlJ0z9YNASjgCHXqc4avynWZu8CBKvHC8O54d+QDM8roHxjirFQX9tAuA
+         fgWqtELeFXPDyWZB1kFlg4m2ct7oFn4HpTUyyWZFdoFVfOBoxWVKACw82CGTzC+VHkmg
+         VezKVm4RC+0llEMuH1uvY3HFhf+v/gjU03XVlqUVjvpAH+0f+R0P12EfkXRYUJ0x60xX
+         56IWNHlTEpag4CNl9wicFNpbWw3hO3dNp/p9hjjUXiW09uKpcswyiEY0Ri4SlwXGPudh
+         7cfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+LuoyXAhqEBrkRdBdgVd6gfT+IFrzwMgRk8s4wd8uDIQCFYhQavpX+goKJ6OOK5SeqNIbPP6Yl93n6pJd1DHg1TT56Q1xLpk+i1lu
+X-Gm-Message-State: AOJu0YzJwCbpYpKSKUIDdglf2QJcxI6YWABSQcs8b9Jd75PA941b8fWq
+	eAGesyk2R4MSViPSf2mMYYlHRlCUzQShMCflcEMXEOYuLdFCeZy0OnuCoQ==
+X-Google-Smtp-Source: AGHT+IF/hrw4dhXyNpsl+U7poN/yPOjQGKFeq3B2IbiPefe0FzqELZ9Ys2LIlNm3+EGL+ueuEfb9HQ==
+X-Received: by 2002:a19:6a10:0:b0:52e:9b68:d2d4 with SMTP id 2adb3069b0e04-52ea06e76afmr7735829e87.56.1720454817039;
+        Mon, 08 Jul 2024 09:06:57 -0700 (PDT)
+Received: from pc636 (host-90-233-219-252.mobileonline.telia.com. [90.233.219.252])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52eb8e346a5sm12760e87.35.2024.07.08.09.06.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 09:06:05 -0700 (PDT)
-Date: Mon, 8 Jul 2024 10:06:01 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Jason Chen <Jason-ch.Chen@mediatek.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Project_Global_Chrome_Upstream_Group@mediatek.com,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] remoteproc: mediatek: Increase MT8188/MT8195 SCP core0
- DRAM size
-Message-ID: <ZowOaQ7Atf9D4uoM@p14s>
-References: <20240703034409.698-1-Jason-ch.Chen@mediatek.com>
- <f9cbd088-c00c-455f-912b-cc119566e62c@collabora.com>
+        Mon, 08 Jul 2024 09:06:56 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Mon, 8 Jul 2024 18:06:54 +0200
+To: Adrian Huang12 <ahuang12@lenovo.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	Adrian Huang <adrianhuang0701@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Jiwei JW10 Sun <sunjw10@lenovo.com>
+Subject: Re: [External] Re: [PATCH 1/1] mm/vmalloc: Add preempt point in
+ purge_vmap_node() when enabling kasan
+Message-ID: <ZowOnkxaFbqxv6sW@pc636>
+References: <20240705130808.1581-1-ahuang12@lenovo.com>
+ <ZogS_04dP5LlRlXN@pc636>
+ <TYZPR03MB619290520C6552B540870C32B3DA2@TYZPR03MB6192.apcprd03.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,22 +76,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f9cbd088-c00c-455f-912b-cc119566e62c@collabora.com>
+In-Reply-To: <TYZPR03MB619290520C6552B540870C32B3DA2@TYZPR03MB6192.apcprd03.prod.outlook.com>
 
-On Wed, Jul 03, 2024 at 11:05:59AM +0200, AngeloGioacchino Del Regno wrote:
-> Il 03/07/24 05:44, Jason Chen ha scritto:
-> > The current DRAM size is insufficient for the HEVC feature, which
-> > requires more memory for proper functionality. This change ensures the
-> > feature has the necessary resources.
+On Mon, Jul 08, 2024 at 01:39:57PM +0000, Adrian Huang12 wrote:
+> Hi,
+> 
+> > Could you please test it:
 > > 
-> > Signed-off-by: Jason Chen <Jason-ch.Chen@mediatek.com>
+> > <snip>
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c index 03b82fb8ecd3..6dc204b8495a
+> > 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -2190,10 +2190,12 @@ static void purge_vmap_node(struct work_struct
+> > *work)  {
+> >  	struct vmap_node *vn = container_of(work,
+> >  		struct vmap_node, purge_work);
+> > +	unsigned long resched_threshold;
+> >  	struct vmap_area *va, *n_va;
+> >  	LIST_HEAD(local_list);
+> > 
+> >  	vn->nr_purged = 0;
+> > +	resched_threshold = lazy_max_pages() << 1;
+> > 
+> >  	list_for_each_entry_safe(va, n_va, &vn->purge_list, list) {
+> >  		unsigned long nr = (va->va_end - va->va_start) >> PAGE_SHIFT; @@
+> > -2210,6 +2212,9 @@ static void purge_vmap_node(struct work_struct *work)
+> >  		atomic_long_sub(nr, &vmap_lazy_nr);
+> >  		vn->nr_purged++;
+> > 
+> > +		if (atomic_long_read(&vmap_lazy_nr) < resched_threshold)
+> > +			cond_resched();
+> > +
+> >  		if (is_vn_id_valid(vn_id) && !vn->skip_populate)
+> >  			if (node_pool_add_va(vn, va))
+> >  				continue;
+> > <snip>
 > 
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->
-
-I have applied this patch.
-
-Thanks,
-Mathieu
-
+> This patch can fix the issue. Feel free to add my tested-by.
+> Tested-by: Adrian Huang <ahuang12@lenovo.com>
 > 
+Thank you. I will add you tested-by!
+
+--
+Uladzislau Rezki
