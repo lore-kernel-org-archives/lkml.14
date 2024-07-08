@@ -1,116 +1,149 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D69145B37
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA12813A3FF
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720456573; cv=none; b=bgcfhuJuQ2lHJl3RkhWyT0j4PmsJ/PpsUuXBccTSLRMXHv9sbcx3AwPkeaQ5SR8WI4PrJMlz84nDcaBEoX05oh6uDOKP8SDlvMn7N5f/PeGrtVHIuxD4yFEkJhX+t7H5t5CpD1JNMzYr5cFW/EWf2Q95smVuVuagfMdCo+TXeJ0=
+	t=1720456653; cv=none; b=niVYzVhs0yn9T9lrEYnIafrWNCACYJ48T6nxpPRGFSyVxdrF+NiENif0eT5g0TZCzo4MOeUiRl36PCsO7a3B5TF2nnCITsXiEBGdcvis2JbtFzcw05iKAYu1rACddAADMtkvXoK6Ny7FUsAcdPLZzaJOdbxnX1FWtrya4yOsdAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720456573; c=relaxed/simple;
-	bh=kF79k4M0wfI5NybhocxG/V7HbuwRgXY/PbwykoiZ0u4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gXQ14C24zVlp8Sl/I5PKVdgwWfc+drBAPb+B2I1m1dSVIjGyR2Ulkq7OT+0FZkvk7NjuZ11YVbjgmK26oZ8Xhg6NTKxk8nph0N1FfpEcPXl+pEblST5QqwfZJluRMR/SbkSKlcJV4d6OrKIjIrzk284LqPW6MTHCaSBMrSbi0jI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WNRjkqbl; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720456653; c=relaxed/simple;
+	bh=kDcbHjwgPyuefWVKv/pNk6ua7WnA7T4u7uZWV8tH5Jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mb4cuyEPLXB9hHXrI4QAkCDOY9ooS4iwQHdLwzt02iffAczANs2uPQWB8h3TrXXzKth0NHhsadpdBGVYtExddogOSCwEOx58HUED5AwtxySN2Fp7V9CvmsGIUmFJQ34ckuX4xoaV1U3hg8nrUwb5nYtzAeT5j6SNUHkiQ6gLcgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NhzgwbCG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WNRjkqbl"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ee75ffce77so50627811fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:36:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720456569; x=1721061369; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QXr0BWZGWxSKsJl1B6BOaJ9LQX+PHNjm3zoOsNxl8ZY=;
-        b=WNRjkqbloxri6luzKllXA5AfQc2ky71ytz6BqIkRQk96rqQG8aW5AeOcwXWA1G580x
-         4KmMK0RygLZK463xytq8u9eVTEjv9FkSV1nXd7yHorchpyMAkh8nsj7ysZIdYFbRh02u
-         uvg7DpyYAwiDhQgZa40yHx97o5+OC8yrxwERODd81iDXIYoRP51cW5MLuzZuKONz/4AX
-         wmYUqmn4Sqh0jWijlKsngzCecWEi5hXnUG+pRKD8C0ygEqiFYCRtVLb5irzRkGpYa5tq
-         y95Gt5nY5s7YxxalWjJ6UVhhs9bcP6NzcZMu6ur87JlrcZyKQ7vgrdYs1SmjvgsMqa71
-         DjoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720456569; x=1721061369;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QXr0BWZGWxSKsJl1B6BOaJ9LQX+PHNjm3zoOsNxl8ZY=;
-        b=VTwDRMIxe0shFAkS369N51Xzf/RB3e58GFVdaRM1SVQDd8WdGhv3kPFA/GmN2nenfJ
-         MgxK2OY30zibClAHK2/9j2pY5uqWZUUhW+V14LgwSpdaT0RfymA+FakeyTddRvdKcqKL
-         rUBxqrtQvblPB/CrvY+R8DV4Xly31OHWadvdUaN3hde1ZlVtnz3ILcjeCDWIULL3mV7A
-         DgT4rKMwY0kOBPkUX3bZsTRP8l4RDpxhfFJeeOu78AJ9jJ2Vk10xRIr4w/Rr5amvhAQp
-         l724MBzM2MyopDkWGm89P+dGgIpiypx/SE72mxpz51Jgj22FObksNqcNAhGbtsySch+Q
-         Jv9A==
-X-Forwarded-Encrypted: i=1; AJvYcCV8OsZ/fo4moLPIBY73/wVRCpU74t9NUKL2fZXyfdq8OIQfAacBXEGnkz+8iPqbQgfIVTE4b/nYu7kt5EncQBD9Y5dvu6dMRFE9f7gB
-X-Gm-Message-State: AOJu0YzTWTvHPS9CX4Xd2cSirkz5d2mbLHr0hGASkw4dizL6aSaAPc6t
-	Rl38aPzUNVMiVe6mfirHybPIBVT22985ptYK+Whe1RIBigtSQp88yCi9d+F30hY=
-X-Google-Smtp-Source: AGHT+IFwhURRS94WBKV1QcWHN4yHD3pCaXhUL3ZA3yoqhHrsgcoWidzDCWKI/z1AIwjXQyKRTVK+EA==
-X-Received: by 2002:a2e:a792:0:b0:2ec:4f0c:36f9 with SMTP id 38308e7fff4ca-2eeb3169f11mr2339051fa.36.1720456569321;
-        Mon, 08 Jul 2024 09:36:09 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:cf24:cce:17df:12ab? ([2a05:6e02:1041:c10:cf24:cce:17df:12ab])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5f51sm5021515e9.25.2024.07.08.09.36.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jul 2024 09:36:08 -0700 (PDT)
-Message-ID: <bf4a45e9-4ed3-4d3b-bb96-add20a71b04c@linaro.org>
-Date: Mon, 8 Jul 2024 18:36:07 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NhzgwbCG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720456650;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AbDyKf/92TqlYnLhXEQPoYqdtflY1u/aK6V6CtlGINo=;
+	b=NhzgwbCGHubP798iqZZ+kxNvZ7lrZ2mWVxFR7eM5eId6b12hQfXWiM1RldMtV4fsu9jIOI
+	cfhwGkGZcCfx96PtauhBNe7gCp5cOjeJEUyDNxubFh53318i5rdAzAPvYMao8DkEDTX864
+	TBnC61BYxA2Z919ubLiyHzVrSa5blAA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-499-7MszoXygPvKnYW5cWmplJw-1; Mon,
+ 08 Jul 2024 12:37:28 -0400
+X-MC-Unique: 7MszoXygPvKnYW5cWmplJw-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A457C1935853;
+	Mon,  8 Jul 2024 16:37:26 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.75])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 403921955E83;
+	Mon,  8 Jul 2024 16:37:22 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  8 Jul 2024 18:35:50 +0200 (CEST)
+Date: Mon, 8 Jul 2024 18:35:45 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
+	clm@meta.com, paulmck@kernel.org
+Subject: Re: [PATCH 04/10] perf/uprobe: RCU-ify find_uprobe()
+Message-ID: <20240708163545.GB18761@redhat.com>
+References: <20240708091241.544262971@infradead.org>
+ <20240708092415.579623285@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/14] clocksource: mips-gic-timer: Always use cluster
- 0 counter as clocksource
-To: Aleksandar Rikalo <aleksandar.rikalo@syrmia.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Aleksandar Rikalo <arikalo@gmail.com>, Chao-ying Fu <cfu@wavecomp.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Greg Ungerer <gerg@kernel.org>,
- Hauke Mehrtens <hauke@hauke-m.de>,
- Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
- Paul Burton <paulburton@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Serge Semin <fancer.lancer@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-References: <20240511104341.151550-1-aleksandar.rikalo@syrmia.com>
- <20240511104341.151550-8-aleksandar.rikalo@syrmia.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20240511104341.151550-8-aleksandar.rikalo@syrmia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708092415.579623285@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 11/05/2024 12:43, Aleksandar Rikalo wrote:
-> From: Paul Burton <paulburton@kernel.org>
-> 
-> In a multi-cluster MIPS system we have multiple GICs - one in each
-> cluster - each of which has its own independent counter. The counters in
-> each GIC are not synchronised in any way, so they can drift relative to
-> one another through the lifetime of the system. This is problematic for
-> a clocksource which ought to be global.
-> 
-> Avoid problems by always accessing cluster 0's counter, using
-> cross-cluster register access. This adds overhead so we only do so on
-> systems where we actually have CPUs present in multiple clusters.
-> For now, be extra conservative and don't use gic counter for vdso or
-> sched_clock in this case.
-> 
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
-> Signed-off-by: Chao-ying Fu <cfu@wavecomp.com>
-> Signed-off-by: Dragan Mladjenovic <dragan.mladjenovic@syrmia.com>
-> Signed-off-by: Aleksandar Rikalo <aleksandar.rikalo@syrmia.com>
-> ---
+I hate to say this again, but I'll try to read this series later ;)
 
-Applied patch 7 and 8
+But let me ask...
 
-Thanks
+On 07/08, Peter Zijlstra wrote:
+>
+> +static void uprobe_free_rcu(struct rcu_head *rcu)
+> +{
+> +	struct uprobe *uprobe = container_of(rcu, struct uprobe, rcu);
+> +	kfree(uprobe);
+> +}
+> +
+>  static void put_uprobe(struct uprobe *uprobe)
+>  {
+>  	if (refcount_dec_and_test(&uprobe->ref)) {
+> @@ -604,7 +612,7 @@ static void put_uprobe(struct uprobe *up
+>  		mutex_lock(&delayed_uprobe_lock);
+>  		delayed_uprobe_remove(uprobe, NULL);
+>  		mutex_unlock(&delayed_uprobe_lock);
+> -		kfree(uprobe);
+> +		call_rcu(&uprobe->rcu, uprobe_free_rcu);
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+kfree_rcu() ?
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+
+>  static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+>  {
+> -	struct uprobe *uprobe;
+> +	unsigned int seq;
+>
+> -	read_lock(&uprobes_treelock);
+> -	uprobe = __find_uprobe(inode, offset);
+> -	read_unlock(&uprobes_treelock);
+> +	guard(rcu)();
+>
+> -	return uprobe;
+> +	do {
+> +		seq = read_seqcount_begin(&uprobes_seqcount);
+> +		struct uprobe *uprobe = __find_uprobe(inode, offset);
+> +		if (uprobe) {
+> +			/*
+> +			 * Lockless RB-tree lookups are prone to false-negatives.
+> +			 * If they find something, it's good.
+
+Is it true in this case?
+
+Suppose we have uprobe U which has no extra refs, so uprobe_unregister()
+called by the task X should remove it from uprobes_tree and kfree.
+
+Suppose that the task T hits the breakpoint and enters handle_swbp().
+
+Now,
+
+	- X calls find_uprobe(), this increments U->ref from 1 to 2
+
+	  register_for_each_vma() succeeds
+
+	  X enters delete_uprobe()
+
+	- T calls find_active_uprobe() -> find_uprobe()
+
+	  __read_seqcount_begin__read_seqcount_begin() returns an even number
+
+	  __find_uprobe() -> rb_find_rcu() succeeds
+
+	- X continues and returns from delete_uprobe(), U->ref == 1
+
+	  then it does the final uprobe_unregister()->put_uprobe(U),
+	  refcount_dec_and_test() succeeds, X calls call_rcu(uprobe_free_rcu).
+
+	- T does get_uprobe() which changes U->ref from 0 to 1, __find_uprobe()
+	  returns, find_uprobe() doesn't check read_seqcount_retry().
+
+	- T returns from find_active_uprobe() and plays with the "soon to be
+	  freed" U.
+
+Looks like __find_uprobe() needs refcount_inc_not_zero() or return NULL, but
+I am not sure this is the only problem...
+
+No?
+
+Oleg.
 
