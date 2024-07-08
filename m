@@ -1,348 +1,185 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D997E563;
-	Mon,  8 Jul 2024 11:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48B080027
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 11:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720437161; cv=none; b=IDwj5yEesTy/0ixcKNghv/fIBOMtJ6ALmDe9VlX3Cp31j8w49EofOgepd8zJDs1FVNy6sJgfzLHVCx0zbH7zEIzN6r2jiAsZBbuR+TFaeXk2wGGJ9pdBdvfYSPhfZhADae45pBoOxKElq272Ap46g9XlaBXPzG8GD2z7eEhg+1I=
+	t=1720437165; cv=none; b=cPdmId+lrc88p3KohtFwvhPf1z9gSBDEMQTxQC2ew1VGlvI8feR9wwIa00HqBt0oNa1ObLoBTMdQg7wNsdtX9ZLXo7UOq+mnMDvYh3CY5Db9t/LmGke1z2gDL9QJ6kWP2HEKLQPYSXkFUIGyYXeqlbVC7uzrQ8wSIp+9cJaOlWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720437161; c=relaxed/simple;
-	bh=5BLcsTfo0rV5f4qZJpImeGyVeTz/xEjb4R0RfWgOikI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EqILwUTvTTxFO/v1bHE066bGKlu6ZyhXfIAN+i4hQLtxsZtNOy2IF0tiHW0oJmRGWz7ftXsoQQJhKkukTiE7hh0eNtrPzpCglY1+WuTUmGcGUERtlgeRPD7aqrpsMwO1styYYJd802z46dZr0f8UJ9+Mlk6WU5roC8uSE3L3Dwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xs3TkAQU; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720437165; c=relaxed/simple;
+	bh=A2Amlxz9Q+VLZ+ZbVuZyhOzaRtPRJ07PVprnUekDnmo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NOYR5aTE47MuisP4jZ+hV0dL6ELQ2BteuZDDJPtoY5Y2YutPH2d/Tdr9mFzmEYaAOvkeK1W70HYBKnMcGVWgpZ0hBwMCfBaUQXJ5f8v43Fsu1S/RAUzea8yEdoNlN8jXedwoKGuwr4le4AZQqq4wtIvWHxtjYSHgsXSkJhm9iUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=SREvpOmE; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xs3TkAQU"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52e9f863c46so4017577e87.1;
-        Mon, 08 Jul 2024 04:12:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="SREvpOmE"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7515437ff16so2454236a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 04:12:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720437157; x=1721041957; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=moshSUpTB58NWCr+RD24wwBakIQnGrq783baZS6Dezg=;
-        b=Xs3TkAQU6iS/dEpfxmoMMWMWuKgTzryND12/41JlU0U1f7y4Da0GjdbBj9mBjoMrIf
-         447SNbidIxqbRTwn+c3q4PO/lQDSgpXG+mM6aBf5M1VLvx7IpY1sLn83AZ7bUXnmPZ/w
-         GsYY9vNysCzdwPbDE6DNeEQsJBPAOit2uCzCHw9DDaiZuAovD926T+Q8rdlO9rYuZdjs
-         2Adw2jY4nXAmKJvW0K7MTXwsOadgCHWZj/p9j2+Tcg3OD3Br8ozii/l4T0DZpd9yc1c+
-         fA0QX5QHO2L46x4dpuIAfpgFjviGPQeEjGmOeJkezIbkCaLf59I6lvYhkPBSpdRk8grx
-         doHA==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1720437163; x=1721041963; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mSy3YtVRLz8Qqrmq3FDZ7/bd/sxHOLhAnKAcU2qf1+s=;
+        b=SREvpOmElyUxuPMoPV5gDO6lQycyumWwEg3q8ANSZf0dyj3h6Qv7zO71CZwm6JUSLG
+         ANINJb9l1Kq0dUPvu99KnCYMX2wpGX+CxOiwCaBvkFtQc/aqeGWKfTUdg2ao+FPlIwDs
+         lc4E+0Tsr6He4knX6DqPqngTxevPxq9qeF/mG9qnHInR95zcMyR3Wd+3IuKDqPePlwCe
+         5ESXAbHFZ46NshUX82oaCdDBGy+U7IUe6qPb7WbiVmKGNnAbpdq3CqJo/xjDQNaOMKwG
+         CZ305KFvgEA/I6RI2EhnfnN45lAVLtRRucq6RxmP12qlt5RtoaK2jEmP5gQtsq8fbwep
+         R88g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720437157; x=1721041957;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=moshSUpTB58NWCr+RD24wwBakIQnGrq783baZS6Dezg=;
-        b=nz9iIl1gcrHVraNHFT8qYEP3pzrHC5J/suDCxKZrZw+4fqP1hnSVvjyzdmL3V83Fdt
-         k8ZHK0mHWHbOtcps2wHt/8BLwypJzYyhXSiApK6s9fqCzRhDpTXo/0ose0Uf7lf6nu0C
-         TAfWTtWSwYpc+rkywmQC+q25SQa+8BkxN01pk8d/tTkv1y0uH94GHv4MY1SLO38xjZ1t
-         1FnRYmdNhjXv5aoJ7mgJMZ+Z7P0ITUVhPlz1c3geJmQZVkW/RE2AD6kNOxh+F2kVjpPg
-         uf9qXDFZ3IakEb+ctF1LWc+Bf3UDf5krUmTmV/CJufrC5tEc0TgL/zPr4NC1xr1TVuLo
-         LS6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUbaKQTcuYAymVRjZten4DoLDAJUVqeg6kz/bieKC/qzeH81NKmTa1b6JCR3tJKW7OSH2K2gjMJzhYfZJawEiEyImAIIYtHJG7iyup/TiJldU7yUrP9ibMAmjWSHv0sl41O9M3x
-X-Gm-Message-State: AOJu0Yzz1mCRu3OtcbOjJzl/KXli1uI57aViPuQHe4JdhVc24SPXlNk8
-	4Lwn1SEYSY55Wx/2XEY0jyK0kT//8bQpJ7n6gI5pBvxokJkkz0if
-X-Google-Smtp-Source: AGHT+IE/QZe2jq+2zc6qJ5cM6luB7AB54IQHSX6ZtrahaqxiOGpqj60NN3IUSliA6KkCvVwT6VFuxA==
-X-Received: by 2002:a19:6b0e:0:b0:52e:9df2:7ddd with SMTP id 2adb3069b0e04-52ea0629d76mr7520380e87.22.1720437157014;
-        Mon, 08 Jul 2024 04:12:37 -0700 (PDT)
-Received: from localhost ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36799382af8sm11288592f8f.59.2024.07.08.04.12.35
+        d=1e100.net; s=20230601; t=1720437163; x=1721041963;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mSy3YtVRLz8Qqrmq3FDZ7/bd/sxHOLhAnKAcU2qf1+s=;
+        b=IgPgh/f/1UhBnOjHYFvcwo4PMrjBOk8bR264cTndL/UqqxWsV/A/5byXYupBW9MSeE
+         wF2KCJ3FCXgVKQIfr/kvcIfZ9QCq3wzX2TfzfIezlX+KBIlJs90qMIAYWy8mCFCn2uhM
+         uhr/6rwP4psvsAU6/kPswjF3WBnBBBT1SG6WfAVDUYehopORH98DQ/BhuY7VIF5tbabR
+         A997fluqJriBChAUeIkMsnx2fM3GetXbacv1OrV68kr4I8X9FRh9L3Z1fbysuTplhhJr
+         eaen5t4aTHYYHY2ReAopxc8Yxc6uf6Pg3C9+0typX/lktAWQHYN4W7SSxfefWp8WSql/
+         rJfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXVngHP/slte/BmpNq7xHlq0i5gPuGYCbg00rRU7einEWYC2mIL/ywjSacGSZzERWbl9HIHSWQDuaLP7d952EZ66saWlDk3/02jVMJO
+X-Gm-Message-State: AOJu0YxxoyUL85px08wN4xjpAHQjUOKDaEMuSKxvPwOPd0erUHZUwqHU
+	StoU037ryFY2YYiFHwOAiodrSnijf2qGkQKTgWHmh900mw2tpdZuEHbFPOt7ZBM=
+X-Google-Smtp-Source: AGHT+IHfNuRXWdkd9A3TuADFoTsa8jBjnmvwH6ZaWhwnmXrfHwV8g/iNZoGZuUc1/0V1do1JY2onFw==
+X-Received: by 2002:a05:6a20:7349:b0:1c2:74b4:a05d with SMTP id adf61e73a8af0-1c274b4a983mr2918085637.23.1720437163092;
+        Mon, 08 Jul 2024 04:12:43 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb48b1bb5bsm58699265ad.1.2024.07.08.04.12.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 04:12:36 -0700 (PDT)
-From: Richard Gobert <richardbgobert@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	idosch@nvidia.com,
-	amcohen@nvidia.com,
-	petrm@nvidia.com,
-	gnault@redhat.com,
-	jbenc@redhat.com,
-	b.galvani@gmail.com,
-	martin.lau@kernel.org,
-	daniel@iogearbox.net,
-	aahila@google.com,
-	liuhangbin@gmail.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Richard Gobert <richardbgobert@gmail.com>
-Subject: [PATCH net-next v2 2/2] net: geneve: enable local address bind for geneve sockets
-Date: Mon,  8 Jul 2024 13:11:03 +0200
-Message-Id: <20240708111103.9742-3-richardbgobert@gmail.com>
-In-Reply-To: <20240708111103.9742-1-richardbgobert@gmail.com>
-References: <20240708111103.9742-1-richardbgobert@gmail.com>
+        Mon, 08 Jul 2024 04:12:42 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sQmIS-008S5V-1F;
+	Mon, 08 Jul 2024 21:12:40 +1000
+Date: Mon, 8 Jul 2024 21:12:40 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, djwong@kernel.org,
+	chandan.babu@oracle.com, dchinner@redhat.com,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, catherine.hoang@oracle.com,
+	martin.petersen@oracle.com
+Subject: Re: [PATCH v2 08/13] xfs: Do not free EOF blocks for forcealign
+Message-ID: <ZovJqNFyHYRWRVbA@dread.disaster.area>
+References: <20240705162450.3481169-1-john.g.garry@oracle.com>
+ <20240705162450.3481169-9-john.g.garry@oracle.com>
+ <20240706075609.GB15212@lst.de>
+ <ZotEmyoivd1CEAIS@dread.disaster.area>
+ <6427a661-2e92-49a0-8329-7f67e8dd5c35@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6427a661-2e92-49a0-8329-7f67e8dd5c35@oracle.com>
 
-This patch adds support for binding to a local address in geneve sockets.
-It achieves this by adding a new netlink local argument and geneve_addr union
-to represent local address to bind to, and copying it to udp_port_cfg in
-geneve_create_sock.
+On Mon, Jul 08, 2024 at 08:36:52AM +0100, John Garry wrote:
+> On 08/07/2024 02:44, Dave Chinner wrote:
+> > On Sat, Jul 06, 2024 at 09:56:09AM +0200, Christoph Hellwig wrote:
+> > > On Fri, Jul 05, 2024 at 04:24:45PM +0000, John Garry wrote:
+> > > > -	if (xfs_inode_has_bigrtalloc(ip))
+> > > > +
+> > > > +	/* Only try to free beyond the allocation unit that crosses EOF */
+> > > > +	if (xfs_inode_has_forcealign(ip))
+> > > > +		end_fsb = roundup_64(end_fsb, ip->i_extsize);
+> > > > +	else if (xfs_inode_has_bigrtalloc(ip))
+> > > >   		end_fsb = xfs_rtb_roundup_rtx(mp, end_fsb);
+> > > 
+> > > Shouldn't we have a common helper to align things the right way?
+> > 
+> > Yes, that's what I keep saying.
+> 
+> Such a change was introduced in
+> https://lore.kernel.org/linux-xfs/20240501235310.GP360919@frogsfrogsfrogs/
+> 
+> and, as you can see, Darrick was less than happy with it. That is why I kept
+> this method which removed recently added RT code.
 
-Also change geneve_find_sock to search the socket based on listening address.
+I know.
 
-Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
----
- drivers/net/geneve.c               | 78 ++++++++++++++++++++++++++----
- drivers/net/vxlan/vxlan_core.c     |  5 +-
- include/net/geneve.h               |  6 +++
- include/uapi/linux/if_link.h       |  2 +
- tools/include/uapi/linux/if_link.h |  2 +
- 5 files changed, 81 insertions(+), 12 deletions(-)
+However, "This is pointless busywork!" is not a technical argument
+against the observation that rtbigalloc and forcealign are exactly
+the same thing from the BMBT management POV and so should be
+combined.
 
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index 838e85ddec67..d192efdfabcd 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -57,6 +57,7 @@ struct geneve_config {
- 	bool			ttl_inherit;
- 	enum ifla_geneve_df	df;
- 	bool			inner_proto_inherit;
-+	union geneve_addr saddr;
- };
- 
- /* Pseudo network device */
-@@ -461,7 +462,8 @@ static int geneve_udp_encap_err_lookup(struct sock *sk, struct sk_buff *skb)
- }
- 
- static struct socket *geneve_create_sock(struct net *net, bool ipv6,
--					 __be16 port, bool ipv6_rx_csum)
-+					 __be16 port, bool ipv6_rx_csum,
-+					 union geneve_addr *local_addr)
- {
- 	struct socket *sock;
- 	struct udp_port_cfg udp_conf;
-@@ -473,9 +475,17 @@ static struct socket *geneve_create_sock(struct net *net, bool ipv6,
- 		udp_conf.family = AF_INET6;
- 		udp_conf.ipv6_v6only = 1;
- 		udp_conf.use_udp6_rx_checksums = ipv6_rx_csum;
-+#if IS_ENABLED(CONFIG_IPV6)
-+		memcpy(&udp_conf.local_ip6,
-+		       &local_addr->sin6.sin6_addr,
-+		       sizeof(local_addr->sin6.sin6_addr));
-+#endif
- 	} else {
- 		udp_conf.family = AF_INET;
- 		udp_conf.local_ip.s_addr = htonl(INADDR_ANY);
-+		memcpy(&udp_conf.local_ip,
-+		       &local_addr->sin.sin_addr,
-+		       sizeof(local_addr->sin.sin_addr));
- 	}
- 
- 	udp_conf.local_udp_port = port;
-@@ -582,7 +592,8 @@ static int geneve_gro_complete(struct sock *sk, struct sk_buff *skb,
- 
- /* Create new listen socket if needed */
- static struct geneve_sock *geneve_socket_create(struct net *net, __be16 port,
--						bool ipv6, bool ipv6_rx_csum)
-+						bool ipv6, bool ipv6_rx_csum,
-+						union geneve_addr *local_addr)
- {
- 	struct geneve_net *gn = net_generic(net, geneve_net_id);
- 	struct geneve_sock *gs;
-@@ -594,7 +605,7 @@ static struct geneve_sock *geneve_socket_create(struct net *net, __be16 port,
- 	if (!gs)
- 		return ERR_PTR(-ENOMEM);
- 
--	sock = geneve_create_sock(net, ipv6, port, ipv6_rx_csum);
-+	sock = geneve_create_sock(net, ipv6, port, ipv6_rx_csum, local_addr);
- 	if (IS_ERR(sock)) {
- 		kfree(gs);
- 		return ERR_CAST(sock);
-@@ -653,16 +664,25 @@ static void geneve_sock_release(struct geneve_dev *geneve)
- 
- static struct geneve_sock *geneve_find_sock(struct geneve_net *gn,
- 					    sa_family_t family,
--					    __be16 dst_port)
-+					    __be16 dst_port,
-+					    union geneve_addr *saddr)
- {
- 	struct geneve_sock *gs;
- 
- 	list_for_each_entry(gs, &gn->sock_list, list) {
--		if (inet_sk(gs->sock->sk)->inet_sport == dst_port &&
--		    geneve_get_sk_family(gs) == family) {
--			return gs;
-+		struct sock *sk = gs->sock->sk;
-+		struct inet_sock *inet = inet_sk(sk);
-+
-+		if (inet->inet_sport == dst_port && geneve_get_sk_family(gs) == family) {
-+			if (family == AF_INET && inet->inet_rcv_saddr == saddr->sin.sin_addr.s_addr)
-+				return gs;
-+#if IS_ENABLED(CONFIG_IPV6)
-+			else if (ipv6_addr_cmp(&sk->sk_v6_rcv_saddr, &saddr->sin6.sin6_addr) == 0)
-+				return gs;
-+#endif
- 		}
- 	}
-+
- 	return NULL;
- }
- 
-@@ -675,14 +695,16 @@ static int geneve_sock_add(struct geneve_dev *geneve, bool ipv6)
- 	__u8 vni[3];
- 	__u32 hash;
- 
--	gs = geneve_find_sock(gn, ipv6 ? AF_INET6 : AF_INET, geneve->cfg.info.key.tp_dst);
-+	gs = geneve_find_sock(gn, ipv6 ? AF_INET6 : AF_INET, geneve->cfg.info.key.tp_dst,
-+			      &geneve->cfg.saddr);
- 	if (gs) {
- 		gs->refcnt++;
- 		goto out;
- 	}
- 
- 	gs = geneve_socket_create(net, geneve->cfg.info.key.tp_dst, ipv6,
--				  geneve->cfg.use_udp6_rx_checksums);
-+				  geneve->cfg.use_udp6_rx_checksums,
-+				  &geneve->cfg.saddr);
- 	if (IS_ERR(gs))
- 		return PTR_ERR(gs);
- 
-@@ -1234,6 +1256,8 @@ static const struct nla_policy geneve_policy[IFLA_GENEVE_MAX + 1] = {
- 	[IFLA_GENEVE_TTL_INHERIT]	= { .type = NLA_U8 },
- 	[IFLA_GENEVE_DF]		= { .type = NLA_U8 },
- 	[IFLA_GENEVE_INNER_PROTO_INHERIT]	= { .type = NLA_FLAG },
-+	[IFLA_GENEVE_LOCAL]	= NLA_POLICY_EXACT_LEN(sizeof_field(struct iphdr, saddr)),
-+	[IFLA_GENEVE_LOCAL6]	= NLA_POLICY_EXACT_LEN(sizeof(struct in6_addr)),
- };
- 
- static int geneve_validate(struct nlattr *tb[], struct nlattr *data[],
-@@ -1561,6 +1585,31 @@ static int geneve_nl2info(struct nlattr *tb[], struct nlattr *data[],
- 		cfg->inner_proto_inherit = true;
- 	}
- 
-+	if (data[IFLA_GENEVE_LOCAL]) {
-+		if (changelink && cfg->saddr.sa.sa_family != AF_INET) {
-+			NL_SET_ERR_MSG_ATTR(extack, tb[IFLA_GENEVE_LOCAL], "New local address family does not match old");
-+			return -EOPNOTSUPP;
-+		}
-+
-+		cfg->saddr.sin.sin_addr.s_addr = nla_get_in_addr(data[IFLA_GENEVE_LOCAL]);
-+		cfg->saddr.sa.sa_family = AF_INET;
-+	}
-+
-+	if (data[IFLA_GENEVE_LOCAL6]) {
-+#if IS_ENABLED(CONFIG_IPV6)
-+		if (changelink && cfg->saddr.sa.sa_family != AF_INET6) {
-+			NL_SET_ERR_MSG_ATTR(extack, tb[IFLA_GENEVE_LOCAL6], "New local address family does not match old");
-+			return -EOPNOTSUPP;
-+		}
-+
-+		cfg->saddr.sin6.sin6_addr = nla_get_in6_addr(data[IFLA_GENEVE_LOCAL6]);
-+		cfg->saddr.sa.sa_family = AF_INET6;
-+#else
-+		NL_SET_ERR_MSG_ATTR(extack, tb[IFLA_GENEVE_LOCAL6], "IPv6 support not enabled in the kernel");
-+		return -EPFNOSUPPORT;
-+#endif
-+	}
-+
- 	return 0;
- change_notsup:
- 	NL_SET_ERR_MSG_ATTR(extack, data[attrtype],
-@@ -1741,6 +1790,7 @@ static size_t geneve_get_size(const struct net_device *dev)
- 		nla_total_size(sizeof(__u8)) + /* IFLA_GENEVE_UDP_ZERO_CSUM6_RX */
- 		nla_total_size(sizeof(__u8)) + /* IFLA_GENEVE_TTL_INHERIT */
- 		nla_total_size(0) +	 /* IFLA_GENEVE_INNER_PROTO_INHERIT */
-+		nla_total_size(sizeof(struct in6_addr)) + /* IFLA_GENEVE_LOCAL{6} */
- 		0;
- }
- 
-@@ -1762,6 +1812,11 @@ static int geneve_fill_info(struct sk_buff *skb, const struct net_device *dev)
- 		if (nla_put_in_addr(skb, IFLA_GENEVE_REMOTE,
- 				    info->key.u.ipv4.dst))
- 			goto nla_put_failure;
-+
-+		if (nla_put_in_addr(skb, IFLA_GENEVE_LOCAL,
-+				    info->key.u.ipv4.src))
-+			goto nla_put_failure;
-+
- 		if (nla_put_u8(skb, IFLA_GENEVE_UDP_CSUM,
- 			       test_bit(IP_TUNNEL_CSUM_BIT,
- 					info->key.tun_flags)))
-@@ -1772,6 +1827,11 @@ static int geneve_fill_info(struct sk_buff *skb, const struct net_device *dev)
- 		if (nla_put_in6_addr(skb, IFLA_GENEVE_REMOTE6,
- 				     &info->key.u.ipv6.dst))
- 			goto nla_put_failure;
-+
-+		if (nla_put_in6_addr(skb, IFLA_GENEVE_LOCAL6,
-+				     &info->key.u.ipv6.src))
-+			goto nla_put_failure;
-+
- 		if (nla_put_u8(skb, IFLA_GENEVE_UDP_ZERO_CSUM6_TX,
- 			       !test_bit(IP_TUNNEL_CSUM_BIT,
- 					 info->key.tun_flags)))
-diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
-index 9a797147beb7..79be743874c7 100644
---- a/drivers/net/vxlan/vxlan_core.c
-+++ b/drivers/net/vxlan/vxlan_core.c
-@@ -90,13 +90,12 @@ static struct vxlan_sock *vxlan_find_sock(struct net *net, sa_family_t family,
- 		    vxlan_get_sk_family(vs) == family &&
- 		    vs->flags == flags &&
- 		    vs->sock->sk->sk_bound_dev_if == ifindex) {
--			if (family == AF_INET && inet->inet_rcv_saddr == saddr->sin.sin_addr.s_addr) {
-+			if (family == AF_INET && inet->inet_rcv_saddr == saddr->sin.sin_addr.s_addr)
- 				return vs;
--			}
-+
- #if IS_ENABLED(CONFIG_IPV6)
- 			else if (ipv6_addr_cmp(&sk->sk_v6_rcv_saddr, &saddr->sin6.sin6_addr) == 0)
- 				return vs;
--			}
- #endif
- 		}
- 
-diff --git a/include/net/geneve.h b/include/net/geneve.h
-index 5c96827a487e..8dcd7fff2c0f 100644
---- a/include/net/geneve.h
-+++ b/include/net/geneve.h
-@@ -68,6 +68,12 @@ static inline bool netif_is_geneve(const struct net_device *dev)
- 	       !strcmp(dev->rtnl_link_ops->kind, "geneve");
- }
- 
-+union geneve_addr {
-+	struct sockaddr_in sin;
-+	struct sockaddr_in6 sin6;
-+	struct sockaddr sa;
-+};
-+
- #ifdef CONFIG_INET
- struct net_device *geneve_dev_create_fb(struct net *net, const char *name,
- 					u8 name_assign_type, u16 dst_port);
-diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-index 6dc258993b17..25ddf4dda47b 100644
---- a/include/uapi/linux/if_link.h
-+++ b/include/uapi/linux/if_link.h
-@@ -1419,6 +1419,8 @@ enum {
- 	IFLA_GENEVE_TTL_INHERIT,
- 	IFLA_GENEVE_DF,
- 	IFLA_GENEVE_INNER_PROTO_INHERIT,
-+	IFLA_GENEVE_LOCAL,
-+	IFLA_GENEVE_LOCAL6,
- 	__IFLA_GENEVE_MAX
- };
- #define IFLA_GENEVE_MAX	(__IFLA_GENEVE_MAX - 1)
-diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
-index f0d71b2a3f1e..8321c8b32f6e 100644
---- a/tools/include/uapi/linux/if_link.h
-+++ b/tools/include/uapi/linux/if_link.h
-@@ -888,6 +888,8 @@ enum {
- 	IFLA_GENEVE_TTL_INHERIT,
- 	IFLA_GENEVE_DF,
- 	IFLA_GENEVE_INNER_PROTO_INHERIT,
-+	IFLA_GENEVE_LOCAL,
-+	IFLA_GENEVE_LOCAL6,
- 	__IFLA_GENEVE_MAX
- };
- #define IFLA_GENEVE_MAX	(__IFLA_GENEVE_MAX - 1)
+Arguing that "but doing the right thing makes more work for me"
+doesn't hold any weight. It never has. Shouting and ranting
+irrationally is a great way to shut down any further conversation,
+though.
+
+Our normal process is to factor the code and add the extra condition
+for the new feature. That's all I'm asking to be done. It's not
+technically difficult. It makes the code better. it makes the code
+easier to test, too, because there are now two entries in the test
+matrix taht exercise that code path. It's simpler to understand
+months down the track, makes new alignment features easier to add in
+future, etc.
+
+Put simply: if we just do what we have always done, then we end up
+with better code.  Hence I just don't see why people are trying to
+make a mountain out of this...
+
+> Darrick, can we find a better method to factor this code out, like below?
+> 
+> > The common way to do this is:
+> > 
+> > 	align = xfs_inode_alloc_unitsize(ip);
+> > 	if (align > mp->m_blocksize)
+> > 		end_fsb = roundup_64(end_fsb, align);
+> > 
+> > Wrapping that into a helper might be appropriate, though we'd need
+> > wrappers for aligning both the start (down) and end (up).
+> > 
+> > To make this work, the xfs_inode_alloc_unitsize() code needs to grow
+> > a forcealign check. That overrides the RT rextsize value (force
+> > align on RT should work the same as it does on data devs) and needs
+> > to look like this:
+> > 
+> > 	unsigned int		blocks = 1;
+> > 
+> > +	if (xfs_inode_has_forcealign(ip)
+> > +		blocks = ip->i_extsize;
+> > -	if (XFS_IS_REALTIME_INODE(ip))
+> > +	else if (XFS_IS_REALTIME_INODE(ip))
+> >                  blocks = ip->i_mount->m_sb.sb_rextsize;
+> 
+> That's in 09/13
+
+Thanks, I thought it was somewhere in this patch series, I just
+wanted to point out (once again) that rtbigalloc and forcealign are
+basically the same thing.
+
+And, in case it isn't obvious to everyone, setting forcealign on a
+rt inode is basically the equivalent of turning on "rtbigalloc" for
+just that inode....
+
+> >          return XFS_FSB_TO_B(ip->i_mount, blocks);
+> > 
+> > > But more importantly shouldn't this also cover hole punching if we
+> > > really want force aligned boundaries?
+> 
+> so doesn't the xfs_file_fallocate(PUNCH_HOLES) -> xfs_flush_unmap_range() ->
+> rounding with xfs_inode_alloc_unitsize() do the required job?
+
+No, xfs_flush_unmap_range() should be flushing to *outwards*
+block/page size boundaries because it is cleaning and invalidating
+the page cache over the punch range, not manipulating the physical
+extents underlying the data.
+
+It's only once we go to punch out the extents in
+xfs_free_file_space() that we need to use xfs_inode_alloc_unitsize()
+to determine the *inwards* rounding for the extent punch vs writing
+physical zeroes....
+
+-Dave.
 -- 
-2.36.1
-
+Dave Chinner
+david@fromorbit.com
