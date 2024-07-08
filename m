@@ -1,135 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E37F7E10B
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 11:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD726BFB0;
+	Mon,  8 Jul 2024 11:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720437985; cv=none; b=UGDkNCkkUe3JhpTXz5g1oEKtXg8TwaYwR3Jlz/WzKBNTBXdRgirZTp+ox4y+uO9+Kamjc19XIVnTIGg68a/xNlzEhJZpcH7/b5D50UBSrk0z4ImCuxAJkqrKQebm69fyIBMmn4PAruVwJUfE6NUZkL08PsoB1V3DaG6pJ0geZA4=
+	t=1720438104; cv=none; b=V6aezDSqTBheiJJvXpdOZ/qi5Gri+paDx5d7d2g1fAuOYMGt3g+TQSAdCB5KBzbYf79xk/mnsZhum5pedq1KtPo1v2ldp/Hl1jqprlJdFsjRDLgHu1Yaufsvywll4Tj1ytN18XGH0EM3fOyMlDlGa0b0PCSuu5TcoiGjWczv/uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720437985; c=relaxed/simple;
-	bh=BiZcXjD0MF9+4zB3dvLvvXJajt6y3TabHLQgZnFuMWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ybf6KSZqW7rHA0QJRv1WRfZ2q8kbAjoBodyBGZJgzbf/0oz/D/GQ2L2kgJGFyiZzgbOl6h5Nw1hd2Fotcloya0BmPOJDmjGgWIxWb0bceFT+OeJdCq7KMwq5RHdKrELHFwugdhjLueX+yIeXEyhunYHCkw124aWCWlyJapUnSzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LQ2uiRb4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720438104; c=relaxed/simple;
+	bh=GPu8iit/eGR640jFWQy/tZFiqa691QaPlWTCDmj98s8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OviIvAK3vCJC3KxNixpM6gd+m7HpwLwQB2OwJB+8oJ52Rdld1GUuP7S2c9zubLC7Zv6khp3QSDtqN3kV8v9z6wEwOaLsXSmzXPmEVpCkDYQboZHRX8iZTlpA53VrgmX/bLKGYveFD7cAXJI27ZrF3DoqhhDGZ7lPOcWbRtao6iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=sE6/guWb; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LQ2uiRb4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720437983;
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="sE6/guWb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1720437632;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H+1JhCgg1e3xAL9ukropoVjm3oRaKeBDSlDAr3D/8Qw=;
-	b=LQ2uiRb4y0F2J7JPP2jAPWoWTFUClBHHxp2E+Qbd89I8uOrZAy+inh3DFb+Y0T01VSpxfT
-	7kRMCTXTJgz1y0YPpDMDv0BZun1XsEXlSKFRrtJ0nARZ75C9GkJMGehmCOOj0I860W6vYt
-	sA3AjlHCyyCschv7y8MIsnJ2OAY1kCQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-A1wVyI7uOCaV6nw2sfX4wg-1; Mon, 08 Jul 2024 07:26:21 -0400
-X-MC-Unique: A1wVyI7uOCaV6nw2sfX4wg-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-42668699453so9560395e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 04:26:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720437981; x=1721042781;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H+1JhCgg1e3xAL9ukropoVjm3oRaKeBDSlDAr3D/8Qw=;
-        b=iTh+sDXUEna9f82IPcdFszujgNqZigzZ8/asCMHSy6nh+jtNvJo8cs3OHdyDH3ZbgO
-         tfAoCPfu8n/yhwAQdoEz7AbaW9di8B0mCH6WNiQXBfdRK7lYpwCRKXZukWaFuVSba5st
-         GhahMTU2FrdlQRliJeCH33uWrWwBAn0kFB0u+5R+YgV2Z3q+QIlM4aAHkaMSVOg7d/QD
-         Od23rmNwOWdO/g2CuOqRpH6N1sYXcf4ZzqbGEIHNqqs6FboD500rWCyeVYHzTqJxnk1M
-         MyIrz124w7x+j2xubnyAi52Mf0Xr85ZwdILOLL74SwdJ/EKoq1kSk5J1sJ0P2yp+Bqot
-         C77w==
-X-Forwarded-Encrypted: i=1; AJvYcCUR4hqd+np5yzpChG8O60kRSRH9kyedBoEiwzNHsPDAMmNu4Tcz00wo7nFzuD7q+Qt8BcnmknK0z4N7fWAnoz/7O+y6FykqzR9As+By
-X-Gm-Message-State: AOJu0YzIuGKo9h2Oo0CTKRSiYvsxqjaFGw1xLRUJK40Qc+jeJgvIM02M
-	Cj78FC25SwbNHMdaJo/KFZ1keaDtyz6cUTpe9UAXolTROrwTTeHfi5ox+hUSJhDVnqbecbSe7lW
-	t6ETizaujkRpiU+zmzT7UiYtGvApttoBsJxoJ+mzf12QDxvutDEtP9N86MMhAsA==
-X-Received: by 2002:a05:600c:1d11:b0:426:6e9a:7a1e with SMTP id 5b1f17b1804b1-4266e9a7b2cmr4958735e9.35.1720437980864;
-        Mon, 08 Jul 2024 04:26:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGGpA7ji/rZ+8HL55hEF/BG5Syq+7fVBtOtgJNBvAR3h2aS4f0cQ39/TmwMykXfwdCiYI7Sog==
-X-Received: by 2002:a05:600c:1d11:b0:426:6e9a:7a1e with SMTP id 5b1f17b1804b1-4266e9a7b2cmr4958475e9.35.1720437980375;
-        Mon, 08 Jul 2024 04:26:20 -0700 (PDT)
-Received: from redhat.com ([2.52.29.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4265c2a99c7sm59914285e9.1.2024.07.08.04.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 04:26:19 -0700 (PDT)
-Date: Mon, 8 Jul 2024 07:26:15 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Cindy Lu <lulu@redhat.com>
-Cc: dtatulea@nvidia.com, jasowang@redhat.com, parav@nvidia.com,
-	sgarzare@redhat.com, netdev@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] vdpa/mlx5: Add the support of set mac address
-Message-ID: <20240708072603-mutt-send-email-mst@kernel.org>
-References: <20240708065549.89422-1-lulu@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5DUgHHV1DHrfVnhwy+rGR+NJuOY7BK+4EjrTbzeDMNM=;
+	b=sE6/guWb+aA+nu5tgIHHek3kA7IxPFNBH1Q/nR7X1AIX1Tn6A7bMhPHaG1kfLHEUdPNtbz
+	+uBVRQBCvTLEjjAK2ogPk3WhuEXuoq7OtyRbAYmMCm3RD5DnHxUEtOFmlZdPFbXOO+qFYY
+	oB/OEQJhW4xs2eSo8x8l4RBQzFf9qH0=
+Message-ID: <566c018d5d413bfa29800a26360c6175024f7fa3.camel@crapouillou.net>
+Subject: Re: [PATCH v2 24/60] i2c: jz4780: reword according to newest
+ specification
+From: Paul Cercueil <paul@crapouillou.net>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-i2c@vger.kernel.org
+Cc: Andi Shyti <andi.shyti@kernel.org>, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 08 Jul 2024 13:20:30 +0200
+In-Reply-To: <20240706112116.24543-25-wsa+renesas@sang-engineering.com>
+References: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
+	 <20240706112116.24543-25-wsa+renesas@sang-engineering.com>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
+ qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
+ JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
+ 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
+ X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
+ AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
+ Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
+ Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
+ McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
+ 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
+ LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240708065549.89422-1-lulu@redhat.com>
 
-On Mon, Jul 08, 2024 at 02:55:49PM +0800, Cindy Lu wrote:
-> Add the function to support setting the MAC address.
-> For vdpa/mlx5, the function will use mlx5_mpfs_add_mac
-> to set the mac address
-> 
-> Tested in ConnectX-6 Dx device
-> 
-> Signed-off-by: Cindy Lu <lulu@redhat.com>
+Hi Wolfram,
 
-Is this on top of your other patchset?
+Le samedi 06 juillet 2024 =C3=A0 13:20 +0200, Wolfram Sang a =C3=A9crit=C2=
+=A0:
+> Change the wording of this driver wrt. the newest I2C v7 and SMBus
+> 3.2
+> specifications and replace "master/slave" with more appropriate
+> terms.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+Acked-by: Paul Cercueil <paul@crapouillou.net>
+
+Cheers,
+-Paul
 
 > ---
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> index 26ba7da6b410..f78701386690 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -3616,10 +3616,33 @@ static void mlx5_vdpa_dev_del(struct vdpa_mgmt_dev *v_mdev, struct vdpa_device *
->  	destroy_workqueue(wq);
->  	mgtdev->ndev = NULL;
->  }
-> +static int mlx5_vdpa_set_attr_mac(struct vdpa_mgmt_dev *v_mdev,
-> +				  struct vdpa_device *dev,
-> +				  const struct vdpa_dev_set_config *add_config)
-> +{
-> +	struct mlx5_vdpa_dev *mvdev = to_mvdev(dev);
-> +	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
-> +	struct mlx5_core_dev *mdev = mvdev->mdev;
-> +	struct virtio_net_config *config = &ndev->config;
-> +	int err;
-> +	struct mlx5_core_dev *pfmdev;
-> +
-> +	if (add_config->mask & (1 << VDPA_ATTR_DEV_NET_CFG_MACADDR)) {
-> +		if (!is_zero_ether_addr(add_config->net.mac)) {
-> +			memcpy(config->mac, add_config->net.mac, ETH_ALEN);
-> +			pfmdev = pci_get_drvdata(pci_physfn(mdev->pdev));
-> +			err = mlx5_mpfs_add_mac(pfmdev, config->mac);
-> +			if (err)
-> +				return -1;
-> +		}
-> +	}
-> +	return 0;
-> +}
->  
->  static const struct vdpa_mgmtdev_ops mdev_ops = {
->  	.dev_add = mlx5_vdpa_dev_add,
->  	.dev_del = mlx5_vdpa_dev_del,
-> +	.dev_set_attr = mlx5_vdpa_set_attr_mac,
->  };
->  
->  static struct virtio_device_id id_table[] = {
-> -- 
-> 2.45.0
+> =C2=A0drivers/i2c/busses/i2c-jz4780.c | 4 ++--
+> =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-jz4780.c
+> b/drivers/i2c/busses/i2c-jz4780.c
+> index 7951891d6b97..4aafdfab6305 100644
+> --- a/drivers/i2c/busses/i2c-jz4780.c
+> +++ b/drivers/i2c/busses/i2c-jz4780.c
+> @@ -730,8 +730,8 @@ static u32 jz4780_i2c_functionality(struct
+> i2c_adapter *adap)
+> =C2=A0}
+> =C2=A0
+> =C2=A0static const struct i2c_algorithm jz4780_i2c_algorithm =3D {
+> -	.master_xfer	=3D jz4780_i2c_xfer,
+> -	.functionality	=3D jz4780_i2c_functionality,
+> +	.xfer =3D jz4780_i2c_xfer,
+> +	.functionality =3D jz4780_i2c_functionality,
+> =C2=A0};
+> =C2=A0
+> =C2=A0static const struct ingenic_i2c_config jz4780_i2c_config =3D {
 
