@@ -1,98 +1,93 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50C814D2A3
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88E11CD3D;
+	Mon,  8 Jul 2024 21:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720473557; cv=none; b=Jrf/HrbgNQ0zlkuXxeTNj89NT1CDsgaOAFrCIYFJf1aUsqANFQqLAXjT9jrlCVse+QI3O3sH3+CM/81Sp39l2Ak8fOI002M/Wcwl2H7ccokHDJZxpmi4Ti8uO+sPSGQz9GP3Mkd91pmAxbPtVFC2P4LIZ4lksMzHlgQQPe+2YQQ=
+	t=1720473633; cv=none; b=JM1F47VgL4NNYO78YuuN5M3SqbC+9QSZdvtq54K4LWqoOaeu6W+7b1Vymn3xbdXye/D/TT+7regkADtmEH2johAiunhbihww6Jfs1gIMBC3PlolfnjXDKX9l4obmWEjw9CPbzS1l3XwQhEw7OIEoISMsGEgTxJswAjcTSOMTYH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720473557; c=relaxed/simple;
-	bh=hsAhfj8aFEJs71FYpyqPwZGOXF4mUvOaxuVfwyymbI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bZiM+wJUGDgs1bT6CNZeYFujG0z47HU2wq9dJMVpaOteiyqxkSBpPtZxsOL/Sy2h8w09d+XwT0jmBBsDMveu4YSacYv0OEzfYqTxTURvs2as11FJIr0c4Thb3Er/kjCp2xusXbHAuafUIpJ0xMnKBcra/k7ldCRLrAbd5ddJips=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XDys5MyZ; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1720473633; c=relaxed/simple;
+	bh=UWSUycG/PBa3IFkaEkQfdVNMaUwjTzQgOq0EeeYQahg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=AW+0UYntgCrSeVWqg1DtHJcwJscqZsZCT4ixRmvcO7QTXyomIuEMndH3EjA0v8S+8WjNrs9BkH1zrn/PH6TBgn2DuFPE1SYBH9zVpD+yOZxHCVpPK7NV0sCG/cwFmBcZ/xZw+DAlaKU4/c+Ho3EjQTM0EPEA9CuyyGnTo/TbOwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tzf3OvlJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XDys5MyZ"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7035d5eec5aso1703353a34.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 14:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720473554; x=1721078354; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mXYMPnBhTdbUT+bRyOjqdFg2raSWl8DIGx1soVkduSw=;
-        b=XDys5MyZhHNieTee5sQHCa2FS0EOHE3PvP1ei/qgPgKD9iv8l+qlmgnU6vcLn7VWP9
-         5aKOIlnaULeszFiPd6zu3vNHSwin08oVh8Cc4za5q0QrFjYbp821bQaBFA2oTY2TK9fM
-         bEj6QrVjanTvCLNPuFzcA5MmMFnhRc0eHr77QJUXBIY3gRekMukemWoP7BDpXQb3cnzY
-         /eGxFzQd3FWpYmcZQGF6okDd9lbo+GPBGkABT95cj4994zIbrjS1yd2x6dJ4fRRK+VtN
-         1kQlt+EDoUZtJKtPAfa74eKMJzFLhWWlDhk7qluZamSs87TdqW3WXxqGTZF562r2m8fU
-         cOJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720473554; x=1721078354;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mXYMPnBhTdbUT+bRyOjqdFg2raSWl8DIGx1soVkduSw=;
-        b=MTPsY57sZnq+b1SlsAJh/R63BzmgzSmUTyB/6GktReuU8mMfhkDiuEaNBQ2UIOn6HN
-         1ZPRXA6JzrLWSni1dpXeSmDfszjApjSMeqWQmcR/XNygqoadejsmYRjdyU/T8eF+WSkF
-         bmYjNLwIFbhNFFN9YZ2DTp3tvS/aA0jx0rhHN4Em9cLqM+JN/N51Qmmd/k137WuGdYOI
-         Ixcl6ajczIRCgSW9bqbyTG3EUszll2YbQFHasTllbujJVXXOMxc6y74Vnth3ipn23WvA
-         +lmqF+Hfg7NN3pxyfxCibLdHXwtqOBIPPlgLJbKEMc0VFj4LtRgn6ZM1XHN2mpgUt0M3
-         /HcA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0skV8HyOELvEEbV4NHz8sDq9aTSU/ei8dVyvv64eNTODlmYY2fDaDuUlXLTU5cRrhtz3opal3qTXPU6kt1fqbBr2TADwKhweH5zka
-X-Gm-Message-State: AOJu0Yy0yTEXYN2DBJ778QGq7KewDcho7JTxK4theDfk3KZ4PAqlFMTr
-	tuBEeew4dw9or+R35HwFRV91G31lNq0yowPi8SllYGsbCB0EyGtBzVGzm0gdSXY=
-X-Google-Smtp-Source: AGHT+IGIs8S5SwxO5AG/xIB7go50K9dRKNy/yvMs5ivx/sMjNBmQ+wjU9JHs8h70Kd5YvwnO3+hheg==
-X-Received: by 2002:a05:6830:3443:b0:703:67f8:9b3b with SMTP id 46e09a7af769-70375b4045fmr634344a34.30.1720473553835;
-        Mon, 08 Jul 2024 14:19:13 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-70374f791fbsm165072a34.27.2024.07.08.14.19.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jul 2024 14:19:13 -0700 (PDT)
-Message-ID: <f543a6c6-ef79-4dc2-a5e0-872d491d9606@baylibre.com>
-Date: Mon, 8 Jul 2024 16:19:12 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tzf3OvlJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7FC7AC3277B;
+	Mon,  8 Jul 2024 21:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720473633;
+	bh=UWSUycG/PBa3IFkaEkQfdVNMaUwjTzQgOq0EeeYQahg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Tzf3OvlJ7VLaI7Cc6adcYuF1tiePYjXl4cOjQ04OvnQMp253PGnyf7Bwb6vRtvFEW
+	 Fn57tGkPCruoBjaHyBpKpvww5/isXUak0mbOrx24QvxkssRgHcWIm3SmnT9pNlSvax
+	 1sEhKlCwCwgBod7ztWUmPvxEuvdtoGCjrh94WRDjx//T+qPxBYH0Cwsj3hZ0rkJz+S
+	 2AAkTVyJvaA+KUavhg81LB+b5xf1dsE38s7UBYlS8Z2/XSKLklhSEeP5c+ksq2CAVY
+	 xzM3Rz4me6mGtnDvSJ5080Z8flYjK+hEWhGgcfcTTBBciXcAIo9GixDzdh+sDSUu4u
+	 +QGHsMp9iik7A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 722C7DF3716;
+	Mon,  8 Jul 2024 21:20:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/7] spi: bitbang: Implement support for MOSI idle
- state configuration
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
- lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- nuno.sa@analog.com, corbet@lwn.net, marcelo.schmitt1@gmail.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1719686465.git.marcelo.schmitt@analog.com>
- <b08e21823638c241228f4bc27a7bf5d4ed88d54a.1719686465.git.marcelo.schmitt@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <b08e21823638c241228f4bc27a7bf5d4ed88d54a.1719686465.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v7 0/8] Bluetooth: btmtk: MediaTek ISO data transmission
+ support
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <172047363346.9973.16198479983313620239.git-patchwork-notify@kernel.org>
+Date: Mon, 08 Jul 2024 21:20:33 +0000
+References: <20240704060116.16600-1-chris.lu@mediatek.com>
+In-Reply-To: <20240704060116.16600-1-chris.lu@mediatek.com>
+To: Chris Lu <chris.lu@mediatek.com>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+ sean.wang@mediatek.com, aaron.hou@mediatek.com, steve.lee@mediatek.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mediatek@lists.infradead.org
 
-On 6/29/24 2:05 PM, Marcelo Schmitt wrote:
-> Some SPI peripherals may require strict MOSI line state when the controller
-> is not clocking out data.
-> Implement support for MOSI idle state configuration (low or high) by
-> setting the data output line level on controller setup and after transfers.
-> Bitbang operations now call controller specific set_mosi_idle() call back
-> to set MOSI to its idle state.
-> The MOSI line is kept at its idle state if no tx buffer is provided.
+Hello:
+
+This series was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+
+On Thu, 4 Jul 2024 14:01:08 +0800 you wrote:
+> Since SIG has not yet clearly defined the specification for ISO data
+> transmission over USB, MediaTek has adopted a method of adding an
+> additional interrupt endpoint for ISO data transmission. This approach
+> differs from the current method used in the Bluetooth upstream driver,
+> which utilizes existing bulk endpoints. The interrupt endpoint provides
+> guaranteed bandwidth, sufficient maximum data length for ISO packets
+> and error checking.
 > 
-> Acked-by: Nuno Sa <nuno.sa@analog.com>
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
+> [...]
 
-FYI, this doesn't apply cleanly to spi-next and needs to be rebased.
+Here is the summary with links:
+  - [v7,1/8] Bluetooth: btusb: mediatek: remove the unnecessary goto tag
+    https://git.kernel.org/bluetooth/bluetooth-next/c/a06a1458192e
+  - [v7,2/8] Bluetooth: btusb: mediatek: return error for failed reg access
+    https://git.kernel.org/bluetooth/bluetooth-next/c/ac7daf0f197c
+  - [v7,3/8] Bluetooth: btmtk: rename btmediatek_data
+    https://git.kernel.org/bluetooth/bluetooth-next/c/dfad4030dcc4
+  - [v7,4/8] Bluetooth: btusb: add callback function in btusb suspend/resume
+    https://git.kernel.org/bluetooth/bluetooth-next/c/cacda8ed6753
+  - [v7,5/8] Bluetooth: btmtk: move btusb_mtk_hci_wmt_sync to btmtk.c
+    https://git.kernel.org/bluetooth/bluetooth-next/c/39a9e1c69e74
+  - [v7,6/8] Bluetooth: btmtk: move btusb_mtk_[setup, shutdown] to btmtk.c
+    https://git.kernel.org/bluetooth/bluetooth-next/c/314f1c00d267
+  - [v7,7/8] Bluetooth: btmtk: move btusb_recv_acl_mtk to btmtk.c
+    https://git.kernel.org/bluetooth/bluetooth-next/c/91d0ac304edf
+  - [v7,8/8] Bluetooth: btusb: mediatek: add ISO data transmission functions
+    https://git.kernel.org/bluetooth/bluetooth-next/c/7eac027d1b20
 
-(conflicts with https://lore.kernel.org/all/20240517194104.747328-3-andriy.shevchenko@linux.intel.com/)
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
