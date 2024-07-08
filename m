@@ -1,107 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB20A2E62D
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 07:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C586822616;
+	Mon,  8 Jul 2024 07:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720424410; cv=none; b=f1PQEX+IUts1jOeKP/hewNOfkmkKpUGE99M2zZqbt/A/NZCNsJArTUAphTUvn9dKcb4UB+0NZp4q6LOtUcB1P2el14W6FEEJvLPjuXrAsP0gkYMtAo0GBGOVzujgHjBFQDl4u8h19PBTj0nN1Eq/eCnJb6hVKRIlulWqQyn09Mg=
+	t=1720424439; cv=none; b=BEyjtIFdnWzq2KsR8shxB0nxXEcdol6AXgmITuAuZo1RlW1wfJcrAG1kI1cKrUAhFsUCjLs1Kszm0oLXE70ZLF1NzRtT642jDFz8qNAqxVbclPttAE5HppLsqN0zLunrEyrLHqwCxOO8UU8YQGbNCNl1O0CXQaSVGjLU3VztLMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720424410; c=relaxed/simple;
-	bh=SpDSboa7oGmRDhx/k6wE6KF7kP4inD3V2rVBJJ2oJZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q6+sYEcCy+vLhX206lxb77MnsQu/Btyu/Qucr3StVFmlX3IJ8+2Y8eGLYEJyzIU5tjOXJSfIlP/6QZeLNvPEpiKMziOFz32pmo8NLlUaJ0qzpYwzBYmI8N4fKwC2q7AVt8Le7MlS1R86FyV77BbbcVXDunUZ6ntN8Mgfne3kLvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BZFjgk/7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720424439; c=relaxed/simple;
+	bh=zSvI+p4Ny5m13sQ7qbhFPTOZZkOCzC7O2DHTDoL4nSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tKn7lD2zyPC8ZjuFwEZmUnKgilmlFAx97vdS7IwM+Fs9oVx9DEC68L/Kb5a9dUR/7cKzaJaP4+khsxMpaGO4PYHEVkldnLG6nz4671PXB8+BBSkeg5pXxg7azLdEmwyYkWayHXIsWWLAVuQ2v7G8W/rHvZCKPTOhErCWJ2Rbeic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ebG30Ovx; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BZFjgk/7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720424407;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WsM1zzo2EHPt9L+YcT4nXiccWCmRJsSwtfUO1i17zD4=;
-	b=BZFjgk/7xk4civPB3aD7UjQMJlP0TAExmXB5AApqh5PsESxhlke0l+m2jcjrJUtme25B4N
-	Q6etmxTJxAYzPJ7FZtds26K/mpFdbaUbpxCL9PEfzhBAq+Gyfq+y3W/2Cy8iY5iO0JaxcV
-	g4RNzGuTombkvfA6QCF3s8iICNEjdVc=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-647-yk7Y3MpwPnyI78oMz-7ULQ-1; Mon,
- 08 Jul 2024 03:40:05 -0400
-X-MC-Unique: yk7Y3MpwPnyI78oMz-7ULQ-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A61F6195609F;
-	Mon,  8 Jul 2024 07:40:02 +0000 (UTC)
-Received: from localhost (unknown [10.39.192.131])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 91C721955E85;
-	Mon,  8 Jul 2024 07:40:00 +0000 (UTC)
-Date: Mon, 8 Jul 2024 09:39:57 +0200
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: axboe@kernel.dk, mst@redhat.com, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
-	pbonzini@redhat.com, hare@suse.de, kbusch@kernel.org, hch@lst.de,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH 1/5] virtio_blk: Fix default logical block size fallback
-Message-ID: <20240708073957.GA38033@dynamic-pd01.res.v6.highway.a1.net>
-References: <20240705115127.3417539-1-john.g.garry@oracle.com>
- <20240705115127.3417539-2-john.g.garry@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ebG30Ovx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720424438; x=1751960438;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zSvI+p4Ny5m13sQ7qbhFPTOZZkOCzC7O2DHTDoL4nSU=;
+  b=ebG30OvxS/3F8eeqefQKVMoF4xKKZZridyRwgNDNlrBGiAkz35uQsrmF
+   M7wotYmjlFxrxL58lkG6S61SuXk2BjxxaB4e9V3P7/q5ZzHBmOkXK/9jS
+   G16Y03SfaXB4F3tgI9cI5XSRZJPh7mCUdl+WGu25hxdyyJhQw88QEG/ZT
+   c0P90lkz1fMRHg6HYO0HLMtyWXPManA0n93IGXtN6CahUVcSZkfTsPHXo
+   DB0RLIC/akOF+/XPZgyF19HyIebtTzsYsBTkxAdZIbJgnNTpkf5xsnORW
+   fqcCDjqZhrTZk/XtXaJ2PAVW2Oou9Bfm7bGfiGqu02drB+A0LVVN6/UyB
+   A==;
+X-CSE-ConnectionGUID: VEqAt8k+SiSybknAdCRNzA==
+X-CSE-MsgGUID: 8mtccSmFRpSCYlxhmBSdfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17819206"
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="17819206"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 00:40:37 -0700
+X-CSE-ConnectionGUID: pUdCrYU+QvaJwKKIYbVVFQ==
+X-CSE-MsgGUID: +fzL/5rXQv2bPKvgpyZLCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="51774068"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by fmviesa003.fm.intel.com with ESMTP; 08 Jul 2024 00:40:34 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 0/5] Bug fixes on topdown events reordering 
+Date: Mon,  8 Jul 2024 14:41:59 +0000
+Message-Id: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FKw8Zu0f8Pq44lmG"
-Content-Disposition: inline
-In-Reply-To: <20240705115127.3417539-2-john.g.garry@oracle.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
+
+Changes:
+v1 -> v2"
+  * Use event/umask code instead of event name to indentify if an event
+    is a topdown slots/metric event (patch 1/5).
+  * Add perf tests to validate topdown events reordering including raw
+    format topdown events (patch 5/5).
+  * Drop the v1 patch 3/4 which doesn't move slots event if no topdown
+    metrics event in group.
+
+Currently whether an event is a topdown slots/metric event is only
+identified by comparing event name. It's inaccurate since topdown events
+can be assigned by raw format and the event name is null in this case,
+e.g.
+
+perf stat -e '{instructions,cpu/r400/,cpu/r8300/}' sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+     <not counted>      instructions
+     <not counted>      cpu/r400/
+   <not supported>      cpu/r8300/
+
+       1.002917796 seconds time elapsed
+
+       0.002955000 seconds user
+       0.000000000 seconds sys
+
+In this case slots and topdown-be-bound events are assigned by raw
+format (slots:r400, topdown-be-bound:r8300) and they are not reordered
+correctly.
+
+The reason of dropping the patch "don't move slots event if no topdown
+metric events in group" is that no any function issues but a warning is
+introduced, and the cost of fixing this issue is expensive.
+
+History:
+  v1: https://lore.kernel.org/all/20240702224037.343958-1-dapeng1.mi@linux.intel.com/
+
+Dapeng Mi (5):
+  perf x86/topdown: Complete topdown slots/metrics events check
+  perf x86/topdown: Correct leader selection with sample_read enabled
+  perf x86/topdown: Don't move topdown metrics events when sorting
+    events
+  perf tests: Add leader sampling test in record tests
+  perf tests: Add topdown events counting and sampling tests
+
+ tools/perf/arch/x86/util/evlist.c  |  9 ++---
+ tools/perf/arch/x86/util/evsel.c   |  3 +-
+ tools/perf/arch/x86/util/topdown.c | 57 ++++++++++++++++++++++++++++--
+ tools/perf/arch/x86/util/topdown.h |  2 ++
+ tools/perf/tests/shell/record.sh   | 34 ++++++++++++++++++
+ tools/perf/tests/shell/stat.sh     |  6 ++++
+ 6 files changed, 101 insertions(+), 10 deletions(-)
 
 
---FKw8Zu0f8Pq44lmG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jul 05, 2024 at 11:51:23AM +0000, John Garry wrote:
-> If we fail to read a logical block size in virtblk_read_limits() ->
-> virtio_cread_feature(), then we default to what is in
-> lim->logical_block_size, but that would be 0.
->=20
-> We can deal with lim->logical_block_size =3D 0 later in the
-> blk_mq_alloc_disk(), but the code in virtblk_read_limits() needs a proper
-> default, so give a default of SECTOR_SIZE.
->=20
-> Fixes: 27e32cd23fed ("block: pass a queue_limits argument to blk_mq_alloc=
-_disk")
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  drivers/block/virtio_blk.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---FKw8Zu0f8Pq44lmG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmaLl8sACgkQnKSrs4Gr
-c8hcrgf/c+60lHGsplPnwddNePPY0ZKeSrLPVKP5bg+1ocK4K9OkqxheH0k7OVb7
-N1J6w2jCV9BaQ+mqdvVF8tbuWasRkCR2t8obb8n8jFngPugUMQ5gGtNIbPWhOCIL
-XHVFbQ4RrWln6E1iw3kJ5CZUSLBrCvb37oj6hMi0bEkxJI6uhTIqSaREfkpnYIZw
-AN9bV1A+Nr8mPyYx91FKoVfPQqOmkUKC/kJnLlyH9kzYdM9meiiCVTIMVfLezuCW
-xQZ8V0Tt93lxg71uGZsS7YtvRj9H6hT1PH+4G//cVMHobL2krs2TrbUeWD+T1fYq
-wnT8E/Rq/KGl1ZCnZ2EZkrfhx+8WVw==
-=DSki
------END PGP SIGNATURE-----
-
---FKw8Zu0f8Pq44lmG--
+base-commit: 73e931504f8e0d42978bfcda37b323dbbd1afc08
+-- 
+2.40.1
 
