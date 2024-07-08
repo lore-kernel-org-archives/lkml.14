@@ -1,63 +1,83 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1422146D74
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 19:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875A614AD10;
+	Mon,  8 Jul 2024 19:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720466804; cv=none; b=UZ0ySbkAEmpwdWUgIKtK+446XjBs9xKF2qzeHbDot3qpPP6+vkKCX7eE/Y3wPywu23n+jghIvHCJ5cMMh5Fn1HEz6p30023hGE7vRx+WR4BxOFjT1faP2ws3W6Cc6mw2aWdZ8eZEJcSZkTvKQoqjhumtmtmipOX2kWjUEbAsDfc=
+	t=1720466971; cv=none; b=scrmIGKgJ4lFXY2Q5A996/yyi7HAR0vwQfBHcBQDMLKtu1+J0sLAOr9mUgS9j4+/jAjSzFvvF2C5rjZzoK8aUXlAUy4W5hsihZQLE4eNiEoeYz31bvl/j82fLyIjDf/sVoHLZz9t22FelhYXXkDTI+6kTObCjIy2vYI0WJK2hzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720466804; c=relaxed/simple;
-	bh=yoalBGunsAhVZHpt4Zz+z9F5awaPae/yF3kNbJXTA5Y=;
+	s=arc-20240116; t=1720466971; c=relaxed/simple;
+	bh=hvfcFq+RhHBIafO6zqI+Oj5jKR3KEkoCbyXd0TVIjlk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QVVk0glH04qYw0jsPyrqznvVgRbdQeV4Hiu5QjIHJW7lA2jrtqxIAA9KttRrnqpE7YTUZ3cVElx8PI9Kt9+HSla+loe4Vg/2NToTTDo6B80jYkHUfmgPVLPmB1nJWedA6evZmi5F/9fllcgkr6fAreQ0Czbc01bWHTw5mHlZhGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QqSWUFe4; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=SAYtGfFMHqSAZ9kpu9geTYZYvusduFOnCsT8S3sF97aaU+t26z392k3hPOIuGCUmQGL8sCy9FzIFI0alne2wtiqA7A1WgxlEd8Hde8hvDXUDCMQ8CzUjX/Xv3MFAmrfzitJLK+XrFpgL0/2tGHN1wIHJ2u9Qh01cnalE3RnUQ8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MaFLwqRV; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QqSWUFe4"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7201cb6cae1so2108933a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 12:26:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaFLwqRV"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-77d3f00778cso212888a12.3;
+        Mon, 08 Jul 2024 12:29:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1720466802; x=1721071602; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720466969; x=1721071769; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Emo5pzCrjfNrsol1oVrwdOxe+d/A9gG3XbKfbbvKsdw=;
-        b=QqSWUFe4PRBfxtxoYviLzlWh1Lh0/Uj3Xmqc/pFyUuGNF+k1nvRlgPARyr26MuHxYQ
-         Pr4NUzyJQJvXgvFsr4usoNIqGXg4VAhJcWLdNOcSfEq7YgeYH/mASysQAEd6uAD9QIr3
-         pMK378Ik9O+pB5k35+pRkAiVvH9rQrJ9FQCeA=
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dWA69OCwnmf93mOPUresyAYLqJ69nFaplaBAWlh6EJs=;
+        b=MaFLwqRVISNjUj2wBTg22YTVhGeSsRvasjXnhz9wIt9NEU3fDVBook5RlAWlg7RULr
+         R6+nGpNG4vIHHlokWwzyQHi+yN0XuTSlsTP950JAY3iZ78MbDFCqjLSpP5qz2OLRdAsH
+         FlkoOhQoI2OqGF3b8YK4eL6umc+KW3ZT2OZHxi4RdHpWurbP0lGkk85yL918XL3F3jsA
+         l7yLLFwyWCQ6R+3nGX7i3UHkk7+M+cvg7eFnvm93wKC/5tst1V27d0RGG+2igXkjk0kX
+         KOgG17rku1E9zfHkvNjBARjEiIsiq0CMUvloCICr3uDG1NrVQkSGg3Jx9aCcDxKVjziD
+         7OUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720466802; x=1721071602;
+        d=1e100.net; s=20230601; t=1720466969; x=1721071769;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Emo5pzCrjfNrsol1oVrwdOxe+d/A9gG3XbKfbbvKsdw=;
-        b=nNhFNDcTo9SMwU/IHQ7BPZzH+mNo2b830lhkHhRCIWDApgssN6B03AkHXPROp1uSLC
-         5LgaaKRxR7KfLqM2qv5ZnChRRfmt0a8BsYVbEsOtPgsY+vgWypva9toJftiz3qrdM79k
-         8PR0PjXjtadZ5CsXC0D26pBcrrRUztJQ09YkqiW8Xmun1BWhYQmb0Zc6WlieAFXNijwP
-         2mJU69f2f3D67tMBY42MmtXO4m96dvHXMos0xZJn5e5P2XLlVZQUf+AEG+ZPYKmOCjRw
-         2v4LZhwmcFXqC2yCk80JZuWAAncoFx4ZSmPBI+Ag2Jgdy93k1IgOuQQ4pJvvOUMD50Rf
-         j2AA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDuQDG1sl6djY2RsGrdbzkw9pnYPz9Ruuc07ClCVadyaurR1yz1oiy+NTwHRZ6bHR1rHKeSEOSuHfE1cG3/LLmRiC2y1LtoBU7BOcX
-X-Gm-Message-State: AOJu0YxPQDYwf2X/aTY/NBNVKKF1pRH2EC19pJXOC/DClsOQxK3cB9vT
-	Pc0ws8uOVYau3JPyRd1Y3Hum+eP++dKO64XLzOhqmiF2ZljVXb0Jasv5uC5Bng==
-X-Google-Smtp-Source: AGHT+IFzWLGpJjfdPjA5LoDyCMlL1inahjNqMJV6Pi2zIPLk2kpujT5ZtrJAD9JSab5j7LYKjxGTVQ==
-X-Received: by 2002:a05:6a20:1582:b0:1c2:94ad:1c66 with SMTP id adf61e73a8af0-1c2982163d9mr331010637.5.1720466802283;
-        Mon, 08 Jul 2024 12:26:42 -0700 (PDT)
-Received: from localhost ([2620:15c:9d:2:3e22:9cde:6b65:e5e8])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-1fbb6a10111sm2283585ad.20.2024.07.08.12.26.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jul 2024 12:26:41 -0700 (PDT)
-Date: Mon, 8 Jul 2024 12:26:40 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: David Lin <yu-hao.lin@nxp.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvalo@kernel.org, francesco@dolcini.it, tsung-hsien.hsieh@nxp.com,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: Re: [PATCH v11 2/2] wifi: mwifiex: add host mlme for AP mode
-Message-ID: <Zow9cOyMvgiddkKw@google.com>
-References: <20240704033001.603419-1-yu-hao.lin@nxp.com>
- <20240704033001.603419-3-yu-hao.lin@nxp.com>
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dWA69OCwnmf93mOPUresyAYLqJ69nFaplaBAWlh6EJs=;
+        b=gCO+JFS9zNYtUOjjDuciXCf0qFtRTr1HbOZVndTnZQbNwYWqa2F/uoIW5KixflRaAw
+         nLgSFpLNhuGN5PQMenMuSBpyvHiHW8Iq71q13rz+TxX8wZcJufcTMu7ePrQwphz0UyYo
+         ivGlRVlQ3jM1n9BUKo7YpWsov3K3oENyxFdYUn5TQzS0j6Uu1Tt/wMrWGy+/GwV6BBVG
+         w/NYr/f1WLtJIMnz+RuOkzx5A7DiJdkpN20jnzqWH8YyU2IvfcyQQZtza1QSW7Umb304
+         Eaw7sq7IKe7dKTBjZFhSryOZrv66m9Jc4BgMDI0e218I8T3v05Q18lb/1hKWIYEFfmLC
+         sm2A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/Xg2vEh2lSO9+KmTnund3ADdvePsAI0UutS0MtGnJth+aPXjWv7CvxvP7jFP+lV7n9KE4HYKqS6xhlgy7ZrDUetqGII6vPHmZQnCSOwwkwS0qWdyY+cdG1IWxFCUj41/b
+X-Gm-Message-State: AOJu0YzxUkDIGhTr6BiymrQfTTZ6kKHuQtG1kIruE1QftZ0tvngV5bvm
+	c5NIQAyYNdb4y+/RGka82CT41vR9B2g6YKqtbpxHFcnwDvKH72qP
+X-Google-Smtp-Source: AGHT+IFKU0Rv3ZsXkK3+TO67PIvDnwUXwpsZqzgXZ30ovAVccORyIgPePH4wncI7/a3i2Y32/HYc4g==
+X-Received: by 2002:a05:6a20:9145:b0:1c0:f594:198c with SMTP id adf61e73a8af0-1c29820c067mr497789637.11.1720466968675;
+        Mon, 08 Jul 2024 12:29:28 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b439b30b9sm240356b3a.178.2024.07.08.12.29.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 12:29:28 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 8 Jul 2024 09:29:27 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: torvalds@linux-foundation.org, mingo@redhat.com, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+	joshdon@google.com, brho@google.com, pjt@google.com,
+	derkling@google.com, haoluo@google.com, dvernet@meta.com,
+	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
+	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
+	andrea.righi@canonical.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [PATCH v2 sched_ext/for-6.11] sched_ext: Account for idle policy
+ when setting p->scx.weight in scx_ops_enable_task()
+Message-ID: <Zow-F1SsJEGyWttX@slm.duckdns.org>
+References: <20240501151312.635565-1-tj@kernel.org>
+ <20240501151312.635565-5-tj@kernel.org>
+ <20240624102331.GI31592@noisy.programming.kicks-ass.net>
+ <ZnoIRnCZaN_oHQ6N@slm.duckdns.org>
+ <20240625072954.GQ31592@noisy.programming.kicks-ass.net>
+ <ZntZcRgm-zok7kyb@slm.duckdns.org>
+ <Znt6sLf62JTIdGxR@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,67 +86,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240704033001.603419-3-yu-hao.lin@nxp.com>
+In-Reply-To: <Znt6sLf62JTIdGxR@slm.duckdns.org>
 
-Hi David,
+From e98abd22fbcada509f776229af688b7f74d6cdba Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Mon, 8 Jul 2024 09:19:14 -1000
+Subject: [PATCH] sched_ext: Account for idle policy when setting p->scx.weight
+ in scx_ops_enable_task()
 
-On Thu, Jul 04, 2024 at 11:30:01AM +0800, David Lin wrote:
-> Add host based MLME to enable WPA3 functionalities in AP mode.
-> This feature required a firmware with the corresponding V2 Key API
-> support. The feature (WPA3) is currently enabled and verified only
-> on IW416. Also, verified no regression with change when host MLME
-> is disabled.
-> 
-> Signed-off-by: David Lin <yu-hao.lin@nxp.com>
-> Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> Acked-by: Brian Norris <briannorris@chromium.org>
-> ---
-> 
-> v11:
->    - modify 'mwifiex_mgmt_stypes' to allow multi-adapters with different
->      setting of host_mlme_enbaled.
-...
-> -	wiphy->mgmt_stypes = mwifiex_mgmt_stypes;
-> +	if (adapter->host_mlme_enabled) {
-> +		memcpy(adapter->mwifiex_mgmt_stypes,
-> +		       mwifiex_mgmt_stypes,
-> +		       NUM_NL80211_IFTYPES *
-> +		       sizeof(struct ieee80211_txrx_stypes));
-> +
-> +		adapter->mwifiex_mgmt_stypes[NL80211_IFTYPE_AP].tx = 0xffff;
-> +		adapter->mwifiex_mgmt_stypes[NL80211_IFTYPE_AP].rx =
-> +			BIT(IEEE80211_STYPE_ASSOC_REQ >> 4) |
-> +			BIT(IEEE80211_STYPE_REASSOC_REQ >> 4) |
-> +			BIT(IEEE80211_STYPE_PROBE_REQ >> 4) |
-> +			BIT(IEEE80211_STYPE_DISASSOC >> 4) |
-> +			BIT(IEEE80211_STYPE_AUTH >> 4) |
-> +			BIT(IEEE80211_STYPE_DEAUTH >> 4) |
-> +			BIT(IEEE80211_STYPE_ACTION >> 4);
-> +		wiphy->mgmt_stypes = adapter->mwifiex_mgmt_stypes;
-> +	} else {
-> +		wiphy->mgmt_stypes = mwifiex_mgmt_stypes;
-> +	}
->  	wiphy->max_remain_on_channel_duration = 5000;
->  	wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
->  				 BIT(NL80211_IFTYPE_P2P_CLIENT) |
-...
-> --- a/drivers/net/wireless/marvell/mwifiex/main.h
-> +++ b/drivers/net/wireless/marvell/mwifiex/main.h
-> @@ -1008,6 +1008,7 @@ struct mwifiex_adapter {
->  
->  	bool ext_scan;
->  	bool host_mlme_enabled;
-> +	struct ieee80211_txrx_stypes mwifiex_mgmt_stypes[NUM_NL80211_IFTYPES];
+When initializing p->scx.weight, scx_ops_enable_task() wasn't considering
+whether the task is SCHED_IDLE. Update it to use WEIGHT_IDLEPRIO as the
+source weight for SCHED_IDLE tasks. This leaves reweight_task_scx() the sole
+user of set_task_scx_weight(). Open code it. @weight is going to be provided
+by sched core in the future anyway.
 
-This wasn't exactly what I had in mind by a "second copy" of
-mwifiex_mgmt_stypes -- that you add a new array to mwifiex_adapter that
-is only sometimes used. I meant something more like a const
-'mwifiex_mgmt_stypes_mlme`, with the appropriate constant values. But I
-suppose this works too, if a bit awkward, and saves a bit of code/data
-duplication.
+v2: Use the newly available @lw->weight to set @p->scx.weight in
+    reweight_task_scx().
 
-So, the 'Acked-by' still seems appropriate.
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: David Vernet <void@manifault.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+---
+A slight adjustment in reweight_task_scx() to match the new load_weight
+argument. Applied to sched_ext/for-6.11.
 
-Thanks for the patience on this series.
+Thanks.
 
-Brian
+ kernel/sched/ext.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 525102f3ff5b..3eb7169e3973 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -3237,22 +3237,23 @@ static int scx_ops_init_task(struct task_struct *p, struct task_group *tg, bool
+ 	return 0;
+ }
+ 
+-static void set_task_scx_weight(struct task_struct *p)
+-{
+-	u32 weight = sched_prio_to_weight[p->static_prio - MAX_RT_PRIO];
+-
+-	p->scx.weight = sched_weight_to_cgroup(weight);
+-}
+-
+ static void scx_ops_enable_task(struct task_struct *p)
+ {
++	u32 weight;
++
+ 	lockdep_assert_rq_held(task_rq(p));
+ 
+ 	/*
+ 	 * Set the weight before calling ops.enable() so that the scheduler
+ 	 * doesn't see a stale value if they inspect the task struct.
+ 	 */
+-	set_task_scx_weight(p);
++	if (task_has_idle_policy(p))
++		weight = WEIGHT_IDLEPRIO;
++	else
++		weight = sched_prio_to_weight[p->static_prio - MAX_RT_PRIO];
++
++	p->scx.weight = sched_weight_to_cgroup(weight);
++
+ 	if (SCX_HAS_OP(enable))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, enable, p);
+ 	scx_set_task_state(p, SCX_TASK_ENABLED);
+@@ -3408,7 +3409,7 @@ static void reweight_task_scx(struct rq *rq, struct task_struct *p,
+ {
+ 	lockdep_assert_rq_held(task_rq(p));
+ 
+-	set_task_scx_weight(p);
++	p->scx.weight = sched_weight_to_cgroup(scale_load_down(lw->weight));
+ 	if (SCX_HAS_OP(set_weight))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, set_weight, p, p->scx.weight);
+ }
+-- 
+2.45.2
+
