@@ -1,89 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2113.outbound.protection.partner.outlook.cn [139.219.17.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C397B2746D;
-	Mon,  8 Jul 2024 13:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720446451; cv=none; b=O6ebkvWcPjUN7CU1fnffQCMUBAhl+okFp9xrZxuIklzOY9LjteE+ZM13xFAQHNliqzIwD0w9rtTPcSvsL9thrhFALhQl0vBe3O+F1lUrkqevJjlyAnIj2cJ9zglPwboLDRRqSH0YIWYbfK3FqJf4e4uvhGAi+/CMaFAFuXTMKFs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720446451; c=relaxed/simple;
-	bh=7hu3e9/Hj8XC7xexm2FHFjZJcixRqYd55unsbK3uK94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q79Fo0Wp23bf9OBWf0hyssl9m4JvQFPPHFrJaqvppq3kfCMDfhDHPx9LbWNs3LuJChlZII2TyV3T8UgjiTPKjAVtd/894eRqn4aYu9hFTjehlvLngp8kGeZPQS3u836hATnfN1pPfY9/9ngiRifdCsfEOtGZm4g4IYJb711fsTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJmTuOFz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJmTuOFz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E71C116B1;
-	Mon,  8 Jul 2024 13:47:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720446451;
-	bh=7hu3e9/Hj8XC7xexm2FHFjZJcixRqYd55unsbK3uK94=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YJmTuOFz9YUaZVvSbeZHVgmn99MOvvOkPPiu3F3d7+5/m5qwDzOZPIyuVKx4O3U1p
-	 1FfRqxlNExaCIF0AtJa8O8k8vDj4tqtbl/7XsHVFb8iuTuGwXU50sMnr/skst8U8Vs
-	 TMuSFeqpmtLZZ+nFYW7bh2UrvJXdFnyUaHV4PQKhhuZxD38t2kmzvfFrWjIQ2HPimE
-	 CQGsCDfOF7yWoRatQHQByGWHGUerIz+V1thfMUIFmJhwJK+k9Ujnun0xRrnU5KByBr
-	 UUA7ivjC8UF8z4BtLu8yQnTNVwlZKOyi9I+ge5s6ZnR4YU88xqTXFsY8vRw2kGgY4r
-	 LOKXviKqq9olw==
-Date: Mon, 8 Jul 2024 07:47:30 -0600
-From: Rob Herring <robh@kernel.org>
-To: Eddie James <eajames@linux.ibm.com>
-Cc: linux-fsi@lists.ozlabs.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ninad@linux.ibm.com,
-	lakshmiy@us.ibm.com, linux-i2c@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-	andrew@codeconstruct.com.au, joel@jms.id.au, conor+dt@kernel.org,
-	krzk+dt@kernel.org, andi.shyti@kernel.org, broonie@kernel.org
-Subject: Re: [PATCH v6 00/20] ARM: dts: aspeed: Add IBM P11 BMC systems
-Message-ID: <20240708134730.GA2916637-robh@kernel.org>
-References: <20240522192524.3286237-1-eajames@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1001B970;
+	Mon,  8 Jul 2024 13:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.113
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720446540; cv=fail; b=WkdLUrfGXONiBPRea3qzli364ra9Nqx8pIi0XcdIxBn1JNl+HrQGhrnrlY8A40xKavkwMTROLYW9EWu107oiqLwFbbiENeDBeeN6N61kiajK/wka6ZNnKxW9AMP6ei1ot3NrPwZI5Fl51+YENGz6j2PU/iATM2Yvwj9NXSXZbjQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720446540; c=relaxed/simple;
+	bh=CNZL79ofy5W0kA59sTYR4TZXiiTYej5YMVQ/r4C7h0I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bwjcLDe80WFCh1JG2ucu3jOokVu+8TYViv0ACT5tkMw9tgpLbPhcMa02b3G7/yR8NObX9P02VuK7NdytIm9PnfYjxcyseGq3o19MpE4TxUlXF9jST3lHvK6CFsqD2p02P1NitWK8EmJ7a2I0sdfH4FeTiFN/cYJlH3c21XH9ErY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TlBVZ57bvEEQ/u/arbLzgFuzMGSo+P6G7e6AKXqoTFF2DlidunOTA6H/5b7isI4DI9cTtha0je7LlIZVwmAljZy3U4nV2upso9rapJ/mDD7U4rkdJZwOPqn0BZxlZSN9lqxf8YbJx7uOJMSVRPMKxoKDvH9spVVEG/UUYWozyYac2E4EtfzYgZrf4Mo8x9GPRVBgbtXiCcQ1KY/0VgRZlCiKr/YLKDHaxZ7SSgd6rvziutZM0hDVSpel6lWecFUIE84dXjWv7Vuk5hU6uCZIaGyzG9M75L+FxNnu1NXU6vK+2Iq9MpGlE9xyGYhn1w0cxe59Ignstbj1ZpG3exPTyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CNZL79ofy5W0kA59sTYR4TZXiiTYej5YMVQ/r4C7h0I=;
+ b=HVWm4GqtLCNf+fUSc1+nO81xPgA0jonyuWVVoAKWAWuxansZ+G9lLfOkt+0dMRcAZ6wUfRmCMtKF3HYTBpU2ppzbAtjIxV0ii2R467z2DSraOEmTcie4HanzcdkGxycYaoJxYAHo6choO1VKvvX/DTTPEx6OCxilfpaXYv6PdZSpZ9SBWg1akat+4hdmUhu/PcR+fv5Vjg59W4NQFKA05cDSUdR/VrO7ngmJTETiFSv6Gc49hc5kq+gBBVgBxLkXREi+lEIY9uLh1cQLzCxNrog0bUhBS+LGR9tHSbkaVHzopoMipRWuchjAEMdp1UQMzo/JXc3jHVxq3DbEL+/fWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9) by ZQ0PR01MB0949.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.29; Mon, 8 Jul
+ 2024 13:14:03 +0000
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ ([fe80::64c5:50d8:4f2c:59aa]) by
+ ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::64c5:50d8:4f2c:59aa%6])
+ with mapi id 15.20.7741.033; Mon, 8 Jul 2024 13:14:03 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, Ming Qian <ming.qian@nxp.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>, Benjamin Gaignard
+	<benjamin.gaignard@collabora.com>, Tomi Valkeinen
+	<tomi.valkeinen+renesas@ideasonboard.com>, Mingjia Zhang
+	<mingjia.zhang@mediatek.com>, Marvin Lin <milkfafa@gmail.com>
+CC: Jack Zhu <jack.zhu@starfivetech.com>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-staging@lists.linux.dev"
+	<linux-staging@lists.linux.dev>
+Subject:
+ =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjQgMDEvMTNdIG1lZGlhOiBzdGFyZml2ZTogQWRk?=
+ =?utf-8?Q?_JH7110_ISP_module_definitions?=
+Thread-Topic: [PATCH v4 01/13] media: starfive: Add JH7110 ISP module
+ definitions
+Thread-Index: AQHahOSTx7demjpW5k2Wo+tNur9vjrHQ+QgAgBxsdMA=
+Date: Mon, 8 Jul 2024 13:14:03 +0000
+Message-ID:
+ <ZQ0PR01MB1302CAD4A6F9DB486793DD95F2DA2@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+References: <20240402100011.13480-1-changhuang.liang@starfivetech.com>
+ <20240402100011.13480-2-changhuang.liang@starfivetech.com>
+ <c401600b-263e-4798-9cb9-91a511c6adc5@xs4all.nl>
+In-Reply-To: <c401600b-263e-4798-9cb9-91a511c6adc5@xs4all.nl>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB0949:EE_
+x-ms-office365-filtering-correlation-id: 80d427fd-85b5-4ed4-d232-08dc9f4fd6f6
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|41320700013|366016|7416014|921020|38070700018;
+x-microsoft-antispam-message-info:
+ xfRMDSvSkYpu0WyNQFpya8r7nbRowfLKPPCIyg0l1XiwUb/uCVzB+e2StBgmKMF4NVCjNrmCwYg3Q0ED9TJBBvJIHbf+pLqovztzOyS48962Nkca1dTi0dMOfBOP2yRXeuohAH0BO20l+FO/lMpZ31rMCdznMzvjeja8OejO+DMHQtBSceP4eaS84M8MwcVjtEpHWdB+mxYfUUzr7dtp+SXtD448TBaDyo3myu7CIhAt1al8dZUr/lqTxJflRsrTVG83Fw9mMjDb4BAvH67K0YrvnJsQgxNqgAvA0Ep/Uxpl/SStQ8ja29y1TitDpbczA5U5JR9tW4WQ5r3N/kFMx/+K8iLHMxgl41Xqi7fwvN1v3jFrxdeoqxcBs7yQPNEnTILYwm3agTck2kl9PqNWg7zELoK1ssfuqEd6XcYWT9xxRQUXZn2WU3cZ3AtpX1fnaKDDTpMiMmDRnaghiUioLolWQ343SeftKeU27E2uyWfxO+Z6XbrphjFLm20AlZSBlkcrN2Mfqy8/JJzGO2emiMbAmYIMsI4cyPCbXR/Pq887ZqdOfJt8J6sXYxhqSdOqEqnjevluuGSoxhDNf3XT/snL1EL28IgiksHY2/XZyL09PXyqKNJ9mPQPTqmu0lkdSEOlvxZ1qoPJEwBL65SzYg==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(41320700013)(366016)(7416014)(921020)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?RG95T2hSUXI5LzdkTnBLTzJCTEhWRDF6YWdSejRVd2RCYU84bWVaWmRubGJC?=
+ =?utf-8?B?Y1ZvT3hkakRuNlVrQjQxQkNId3B0SHF5VlFEMHVuRFZhR3EyaE5YNUlBY1Nv?=
+ =?utf-8?B?YnR5anNiU2F5WFFtVHlsbGw3Q1YrVGQ3NDdBSXMxUjZZc0NJTm5wKzdJN0V6?=
+ =?utf-8?B?dS9jeFFHSmZVM3VRRk9COTZXQXl4Y3J1R1BYaFM4SHlibVJxSWRPNnJ0ZFFC?=
+ =?utf-8?B?NzJlWlVRUU9TV2NNaUl5S2Frak5kemFQdjVmSGpvZm9PTDBJQlhrUGdpT0F5?=
+ =?utf-8?B?UlBVcFA5cUdkZVlUU3g0TjBqaFBRcVRaNUljc2VZU1RuWnBsZ3NqcDhSck0y?=
+ =?utf-8?B?dGxwdmhjWDJaMk84c0NpVksrTW1UbkF6ZW1pWVZ3UVZSYlNjRDBPRHdyWXYr?=
+ =?utf-8?B?SDYvcTBJWjUra002RjFvdko4UGRpYld5L0NaUWJaVWZYckw0ZEJsYUhlMHor?=
+ =?utf-8?B?WTR2T1pINllRREwvaU5VcEs5Vm1KNmJTYk8wQk56M2JyOHdCeDRVZVpVQS90?=
+ =?utf-8?B?MFlqSUhJVHI4TE83L3FDL3UyaVg2c28rMjBqY05JaW1IMmlON21qMWNuaTVS?=
+ =?utf-8?B?WnFjS0F4SEh1aDZxbG1rc2tPbU94WVdFMlN3WUdmRUhOMFpuaUl6QlFqeDQ2?=
+ =?utf-8?B?b3NNU1cwNHVRMjlQaGE4ejE3VnM4U1I5RTVaRjhHbjVaSi9VZFh0QlZPQWo1?=
+ =?utf-8?B?anFEbkNXNExKUVRJQkIvSUVib0JGR3hGSkFGYVgra25pUEpDWWVXbkFnTzRJ?=
+ =?utf-8?B?b1pvaDRzKy8vNEM3TE9nT1luQ1RjbUJWR2FacXdyN1V3bzlPVTRTRzRzQnFY?=
+ =?utf-8?B?eFA4aVlQRTh4NFQrMi9rYmtKeUUrVDY4WnZrWDRUZ3Zsd3F3dFYzOVpLSERB?=
+ =?utf-8?B?MDZWc2pieXM5SXNBaXRYS2cyMFVRMFlhK1VENnlROU14UkZyR2h2TnRxaWRG?=
+ =?utf-8?B?M2NwTXg2cEN5aTkrUGtZVFhUYWdtalFMNTE1V2wvcXlxLzFOMFhnWG1acm83?=
+ =?utf-8?B?eEhOTDQ0eXdVMTQ2azhoUkUvQk92VXE0SnkvTkRDVkhVbVV6bWFnbUNuSXJq?=
+ =?utf-8?B?amFTWk9HNkpkUTRhUG5YcHNSZmd4b3BnbjhkczFFSk96OWtRSlJRUTZoQlZm?=
+ =?utf-8?B?eGtJQnAwbjBvQXczWE9pN3U2ZUVPNUYwUEFGbGNFNGJsL2cyTDlZcGJDREl1?=
+ =?utf-8?B?bXNBSTR3WlM5dDdBZGxKSytNcjFXQ29pazhUL2k5TWRIVUdCa2Y1UDAra1Vq?=
+ =?utf-8?B?akxZSnBCSVZrc1VhNlM1VlVuNnZrU3QyT2R6NWd6SnZwSTUyYWVMQjdwN253?=
+ =?utf-8?B?aDk5eTFJRFpBUHJWRHRsSGtsZm4vNlFhSXpoMVFCcDVwLytuZ1d5OFMvRVBL?=
+ =?utf-8?B?bDNRbVVyZEx4bGIvTytEdlFOOE1PUUtmZXRsSW9rekxrQnZ5blBMSFJzK2FF?=
+ =?utf-8?B?QkQwQ25UT3NaWkxOYmdaZXAvLzNYNE5mclk1WE9tdFl6M3BVQmt5ak96Nnl4?=
+ =?utf-8?B?T25QMStwenVUWXdZN2Mxek96aml1aHFGdEoyM2YydjIxM0JTWXVqUEQ4RHU5?=
+ =?utf-8?B?bEhBTkNjdjRZa2NMcjc1ajRCckIzd1VURGZiOVFpM2wvTTU2bUpzcXBrUlBr?=
+ =?utf-8?B?SENITk5YdzRpZHprZGZuWmN2NUtTc0o2ZDJvRVF3enZ6NUhnamRZd0xuWW5v?=
+ =?utf-8?B?UVBheHFnUko4YVBOSUszVE1IVzZyeXhYYlpxWUtTd2QwMVNYSlN0Nzd6VklS?=
+ =?utf-8?B?cXFCTUoySDJLd3J0UkFjT3UrMGl0Y2xvRGZ4ME95Q0U0dERVdGpqaG8vWlAz?=
+ =?utf-8?B?Y1krZzZNSDRMMWlxeTNiVW1MbHpSR210by96eS9QU3J0R05NL2ZmRjZ2Ungx?=
+ =?utf-8?B?MVNjQ1h4NmpsWXFuVEF0SnlrTkFDNEhxdEd0TkE2WEMrYnZwTjBXRzlSM0ZB?=
+ =?utf-8?B?TWhnUExwUGpQSU40NThrVk5Ebm9nMGphZ3hRWUdwUnQ4aHF0V1BmaVF1OXJt?=
+ =?utf-8?B?RE0yaGxqaFVabnZSSFBkdFQxMkRYSXRGMkFHWDlrYlZsQVVhUThHTkpqYllC?=
+ =?utf-8?B?Q09mZHVvRmlnR3dzTmFtbUVmaytOTGJUVWZxcWNMenkxeWo3SGd5Z20zNUtm?=
+ =?utf-8?B?eXBibCtKcUEwRjdXYlJlcWIyUktJU0NWYzl3bVlRYlRma1F0UjVvWHZYYVdC?=
+ =?utf-8?B?T0E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522192524.3286237-1-eajames@linux.ibm.com>
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80d427fd-85b5-4ed4-d232-08dc9f4fd6f6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2024 13:14:03.7373
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: u5AOhWUs9wRH5xKr6ymtJUgdvKgnyIxd1apW+VWkpVGtoLQ2Z05fDZWVfj6j5h1ba5QCYfgssqT3onaZUXwhPk532pNf385J2uLSb2/Zt+4JhibUx//TNFJuG/EOIGLv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB0949
 
-On Wed, May 22, 2024 at 02:25:04PM -0500, Eddie James wrote:
-> Add the Blueridge and Fuji BMC systems. Document many missing FSI related
-> properties, and fix existing warnings. Make some minor fixes in OCC and
-> SCOM drivers for the updated bindings.
-> 
-> Changes since v5:
->  - Switch from clock-frequency to bus-frequency for common FSI controller
->    properties
->  - Add reg properties for AST2700 FSI controller
->  - Fix patternProperties for i2c bus nodes under FSI-based I2C controller
->  - Add bus-frequency for P11 FSI device tree node
->  - Change model name from Blueridge to Blueridge 2U
->  - Add missing reset gpio to led controller on Fuji
->  - Add Huygens (Rainier with modified FSI wiring)
-> 
-> Eddie James (20):
->   spi: dt-bindings: Document the IBM FSI-attached SPI controller
->   dt-bindings: fsi: fsi2spi: Document SPI controller child nodes
->   dt-bindings: fsi: Document the IBM SCOM engine
->   dt-bindings: fsi: p9-occ: Convert to json-schema
->   dt-bindings: fsi: Document the IBM SBEFIFO engine
->   dt-bindings: fsi: Document the FSI controller common properties
->   dt-bindings: fsi: ibm,i2cr-fsi-master: Reference common FSI controller
->   dt-bindings: fsi: ast2600-fsi-master: Convert to json-schema
->   dt-bindings: fsi: Document the AST2700 FSI controller
->   dt-bindings: fsi: Document the FSI Hub Controller
->   dt-bindings: i2c: i2c-fsi: Convert to json-schema
-
-Looks like these haven't been applied, so I applied patches 2-11.
-
->   dt-bindings: arm: aspeed: add IBM P11 BMC boards
->   ARM: dts: aspeed: Add IBM P11 FSI devices
->   ARM: dts: aspeed: Add IBM P11 Blueridge BMC system
->   ARM: dts: aspeed: Add IBM P11 Blueridge 4U BMC system
->   ARM: dts: aspeed: Add IBM P11 Fuji BMC system
->   ARM: dts: aspeed: Add IBM Huygens BMC system
->   fsi: occ: Get device number from FSI minor number API
->   fsi: occ: Find next available child rather than node name match
->   fsi: scom: Update compatible string to match documentation
+SGkgSGFucywNCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLiANCg0KPiANCj4gSGkgQ2hhbmdo
+dWFuZywNCj4gDQo+IEhhdmUgeW91IGNoZWNrZWQgdGhhdCB0aGVzZSBzdHJ1Y3RzIGhhdmUgdGhl
+IHNhbWUgbGF5b3V0IGZvciAzMiBhbmQgNjQNCj4gYXJjaGl0ZWN0dXJlcz8NCj4gcGFob2xlIGlz
+IGEgdXNlZnVsIHRvb2wgZm9yIHRoYXQuDQo+IA0KPiBJLmUuLCBpZiB0aGUga2VybmVsIGlzIDY0
+IGJpdCBidXQgdXNlcnNwYWNlIGlzIGNvbXBpbGVkIGZvciAzMiBiaXQsIHRoZW4gdGhlc2UNCj4g
+c3RydWN0cyBzaG91bGQgc3RpbGwgaGF2ZSB0aGUgc2FtZSBsYXlvdXQuDQo+IA0KPiBJdCBwcm9i
+YWJseSBpcyBmaW5lLCBjaGVja2luZyBpdCB3aXRoIHBhaG9sZSBpcyBhIGdvb2QgaWRlYS4NCj4g
+DQoNCkkgdGVzdGVkIHRoZSAzMiBhbmQgNjQgYXJjaGl0ZWN0dXJlcyB1c2luZyBwYWhvbGUsIHRo
+ZXkgaGF2ZSB0aGUgc2FtZSBsYXlvdXQuDQpUaGFua3MgZm9yIHBvaW50aW5nIG91dCB0aGUgc3Bl
+bGxpbmcgZXJyb3IsIEkgd2lsbCBjaGVjayBhbGwgdGhlIHNwZWxsaW5nIGFuZCBmaXggdGhlbS4N
+Cg0KUmVnYXJkcywNCkNoYW5naHVhbmcNCg==
