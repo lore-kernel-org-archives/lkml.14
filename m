@@ -1,82 +1,100 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC8C139568;
-	Mon,  8 Jul 2024 15:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06761EA6F;
+	Mon,  8 Jul 2024 15:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720453865; cv=none; b=sH25REIhoEGY60+VpLRglS6+DAOx5QZB8wdkJ5u5YmNzici2Zu4FO5E+G8dSivLmW8hee+a6amnF/RbREUvmL/cKGQwQlFVIlawMIRHOXx4rtmu/NLdM5LrXi8U+yE040RjatC+5PTfF4jFrEgzvV5VyaD4Y5UrtbAobyAFZRYc=
+	t=1720453928; cv=none; b=eXWmiub00IyrWkwPz9yP91Azpp6fik7+J5jW0rlHtvLthiDz5H44RFgL2sgYovwcPkxR/Otc9J4z+2lWwXZqwFpS17APWbGFKx4Dpn04kJ7KfAbMgDKK19exNKZ9kj3F8Zgc4V2IrXo8LTRlAt3SGTKj35j3OZiVaejBXOOVf3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720453865; c=relaxed/simple;
-	bh=ECmc62W1r8d4yhRxll02yvEPSMrRpCCmAb5dzYrKc8Q=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TvGkIfABcOQMhPzUWiDwHzh0uJmh1emM6H7EDS3dbY/OCeT97t5Qyn0uKSIJetz3r/wcLe/XJdkUb0wbRHy6xv/+S5WR5P7Ix5z8PI3DBVB2OmYpI4dHROcipA9eUs3+YRGF74bHy/V835Q1neZY8mu/UD93WCPUdRMHhJZ0fGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WHpV81ty3z6J9dh;
-	Mon,  8 Jul 2024 23:50:08 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 66BC11400CF;
-	Mon,  8 Jul 2024 23:51:01 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 8 Jul
- 2024 16:51:01 +0100
-Date: Mon, 1 Jul 2024 10:12:04 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Chen Ni <nichen@iscas.ac.cn>
-CC: <gupt21@gmail.com>, <jikos@kernel.org>, <bentiss@kernel.org>,
-	<matt@ranostay.sg>, <linux-i2c@vger.kernel.org>,
-	<linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] HID: mcp2221: Remove unneeded semicolon
-Message-ID: <20240701101204.000065ca@Huawei.com>
-In-Reply-To: <20240701071639.846169-1-nichen@iscas.ac.cn>
-References: <20240701071639.846169-1-nichen@iscas.ac.cn>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1720453928; c=relaxed/simple;
+	bh=uX7pjvdiX5hRQZ+rpDun17XQqphODMw7y9hY3JKb7hA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W7gEeo3rPZ/Cnulc157SZ1u8RBvek33Dnc3zzWPUu1gbE2MCs/1ty5GREDfrxLJ+c6Ouz8HV3PLLI/3v9JNAHRgkXAblV6FuFNw6SRmeoUTYoilVdx7J+tvcVxEpI2v7iQ6AUgRZ7F9zKsRDEg0Wf1PWNPPIoSu5hRv5wOIM2lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=KKUduYnr; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="KKUduYnr"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468CQotj008257;
+	Mon, 8 Jul 2024 17:35:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=4Q3Tj4ealwssXZ+WV7UTml
+	cU/6UNVKfTT/zvcxWH+xM=; b=KKUduYnrLS4fNWgApk66VkJTO/MH3Xfno6r3ip
+	el0B3pYAryJ9zNyQ/VuKF5G+liGwxBwAHZaaKXMkEnpwscDqE7yH8VilaSJwhOPu
+	y9xYkcvEC/XMaHPQMVKdLU2OKtzFsZgPLlLqv3erpOu3aNCKPQ1tIU0v4e0Fviwa
+	EoEOvr0kmo2Cf/41TndMrfROA1Yn0O9ZJJ1wSDBbdcykBneQm28h+4NAoylt6KLp
+	s+9G/ijD3XqxSxCu8biGJiEOg0kwbIpc/8NAtiA/3aCGbyRr+7g4b2/SvseEuFRt
+	jy7g/aB9aaT1+ukv5RcmuuO2f+30JXhpjI65ElrlhTYd7g4A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 406whhftpj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jul 2024 17:35:50 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2FF2D40048;
+	Mon,  8 Jul 2024 17:35:44 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7F4F522D0F6;
+	Mon,  8 Jul 2024 17:35:06 +0200 (CEST)
+Received: from localhost (10.48.86.111) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 8 Jul
+ 2024 17:35:06 +0200
+From: Valentin Caron <valentin.caron@foss.st.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Valentin Caron <valentin.caron@foss.st.com>
+Subject: [PATCH v2 0/2] rtc: stm32: introduce new st,stm32mp25-rtc compatible
+Date: Mon, 8 Jul 2024 17:34:32 +0200
+Message-ID: <20240708153434.416287-1-valentin.caron@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_09,2024-07-05_01,2024-05-17_01
 
-On Mon, 1 Jul 2024 15:16:39 +0800
-Chen Ni <nichen@iscas.ac.cn> wrote:
+Introduce new st,stm32mp25-rtc compatible. It is based on st,stm32mp1-rtc.
 
-> Remove unneeded semicolon.
-> This is detected by coccinelle.
-> 
-> Fixes: 960f9df7c620 ("HID: mcp2221: add ADC/DAC support via iio subsystem")
+Difference is that stm32mp25 SoC implements a triple protection on RTC
+registers:
+- Secure bit based protection
+- Privileged context based protection
+- Compartment ID filtering based protection
+This driver will now check theses configurations before probing to avoid
+exceptions and fake reads on register.
 
-Fixes tag not appropriate for this one as it's not a bug.
+Link: https://www.st.com/resource/en/reference_manual/rm0457-stm32mp25xx-advanced-armbased-3264bit-mpus-stmicroelectronics.pdf#page=4081
 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-Otherwise looks fine to me.
+Since v1:
+ - Replace "anyOf: const:" by "enum:"
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Valentin Caron (2):
+  dt-bindings: rtc: stm32: introduce new st,stm32mp25-rtc compatible
+  rtc: stm32: add new st,stm32mp25-rtc compatible and check RIF
+    configuration
 
-> ---
->  drivers/hid/hid-mcp2221.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hid/hid-mcp2221.c b/drivers/hid/hid-mcp2221.c
-> index da5ea5a23b08..0f93c22a479f 100644
-> --- a/drivers/hid/hid-mcp2221.c
-> +++ b/drivers/hid/hid-mcp2221.c
-> @@ -1048,7 +1048,7 @@ static int mcp_iio_channels(struct mcp2221 *mcp)
->  			break;
->  		default:
->  			continue;
-> -		};
-> +		}
->  
->  		chan->type = IIO_VOLTAGE;
->  		chan->indexed = 1;
+ .../devicetree/bindings/rtc/st,stm32-rtc.yaml |  5 +-
+ drivers/rtc/rtc-stm32.c                       | 78 +++++++++++++++++++
+ 2 files changed, 82 insertions(+), 1 deletion(-)
+
+-- 
+2.25.1
 
