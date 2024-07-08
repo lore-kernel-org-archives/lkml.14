@@ -1,350 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2057.outbound.protection.outlook.com [40.107.22.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D85F7E107;
-	Mon,  8 Jul 2024 11:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720437554; cv=none; b=DDM+Co+5twKbZ+nB0U0cZtaOKJpVjmLkAEWlicbm25aQMR8YP7o8DoW2e8rM7wAiv8pbZwdGrESh4caEHvtrsZIUeoQbCKNXbsT37v6iqmHEufiw9MCelVsB/5GJr5O/8vbC47fsnMMA/F1kxjzwA+um5sybm7mJFSBFx7BZ0bI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720437554; c=relaxed/simple;
-	bh=gQA/pDZl+o/citIm68eR2hril/7u79ybBuHKsJuPcVw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QJvMh39C027YiOnX33phnzrAi2telqz4TD7P8nFU0NYbMbylkvgo8p6W7xxlEhASq4NExtXYsPBpwETt2HjqnLV0ZLpvfVwvwBy7uYQuwIYX5+QszZ3HPBxu2ugRxRqmpx8Jj69qgqWIDLTOVqR/Z5WmLwKA823YWrY4L7OZW54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tgg2D+9i; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A679812FB1A;
+	Mon,  8 Jul 2024 11:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720437575; cv=fail; b=WP1hocmJ5nNTwqxalSrFEVWz7sHllQRYQAmY6qeJ7bUzeiEeGLPRkDe7nES6RRb8Tr6857Mh2PxxYqBLh2qVMjUuum0ZCCOt3RBB+vsPemBgecunpIvUtFdunnpLbmclBoXfGwusMhDX6LnPT3tmlo4PrMMuSq7M7xHTSmytlK4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720437575; c=relaxed/simple;
+	bh=Gyqd7HacjbHJtQ2uqZNZcyXnh/RFKtDnpivGTTYSFOc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UKE/cMMQNdL9/iPe7+0JU8C3Z7Bmnjo+6RaEIz1xUdBzE0IfA0HU27WeuC2wN+DbawC7X1r70GwXngD9h/ODDhRDopUcsu2rYamplJkr5iawn+B4yv5bVDtEq4mwgNABj2JqRis2I10milmyErky6ueypPPhY3PzqF/eyyFFZYQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=ZWxB1cya; arc=fail smtp.client-ip=40.107.22.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tgg2D+9i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F3DC4AF0C;
-	Mon,  8 Jul 2024 11:19:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720437554;
-	bh=gQA/pDZl+o/citIm68eR2hril/7u79ybBuHKsJuPcVw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tgg2D+9i7kSqyhLURWyMO5seZpWkrgd/DKdpH9rEA32ypvFJGfAffwqKe8ywpgSzL
-	 fYQnpZ+Qe7RVzwMixwElk9vcMwDFpvKTC3Uv6z5vPVG2MYUg25S/RTnPzP6D36m0st
-	 2UC61DlJOkaiadEPxstgsjxCSpMxL3UNLg615Q4ysrhaDkT5EGaKSLxShsurjbw8Qa
-	 rAxi6KJQMBnUt4BBXiW38jllZz0tI0/xR8pWWIRgHyUnZaN61dsXFqUjaV9eDso4SX
-	 1Sb5HbogIBdbEGZL7EDc8KQpARQ5jleN+ExNYxVJf3IRzl7PMJk/fCDIwNi1c4D/EF
-	 FQG5P0yreK2jA==
-Received: from mchehab by mail.kernel.org with local (Exim 4.97.1)
-	(envelope-from <mchehab@kernel.org>)
-	id 1sQmOl-00000001SQc-2NnM;
-	Mon, 08 Jul 2024 13:19:11 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>
-Cc: Shengwei Luo <luoshengwei@huawei.com>,
-	"Ard Biesheuvel" <ardb@kernel.org>,
-	"James Morse" <james.morse@arm.com>,
-	"Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-	"Len Brown" <lenb@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	"Shiju Jose" <shiju.jose@huawei.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tyler Baicar <tbaicar@codeaurora.org>,
-	Will Deacon <will@kernel.org>,
-	Xie XiuQi <xiexiuqi@huawei.com>,
-	linux-acpi@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jason Tian <jason@os.amperecomputing.com>,
-	Daniel Ferguson <danielf@os.amperecomputing.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 2/6] RAS: Report all ARM processor CPER information to userspace
-Date: Mon,  8 Jul 2024 13:18:11 +0200
-Message-ID: <48ed5eb4448d85ccb5503335087a3e6a5159ca1e.1720436039.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1720436039.git.mchehab+huawei@kernel.org>
-References: <cover.1720436039.git.mchehab+huawei@kernel.org>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZWxB1cya"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JWDl2Cl+I3Vl2jMMkFKILLH5n1I4/fzLOWr4cBzTdbWSjde9qs1ZZNXByd1AHRId+sq4PZyMKiMH0ZaPwECSZ9l4Q7HMTd9M1W1S34bGBws3my9aSQ1pTBa6cz+MFJaZqBpxfvyq8t3JO6COikrnGq6gbghr83BRV4xDEN2FK/vD4dCT7WY4S2VB+DmJBESAgWQfm5QcAwJsGNkj23GLMK2WTxdavCI8PGu9kkHO83Co6/BNHmqXR+sF4UoC5OJ8TW0m8zxHZ09B0q0qXreyzyCjvoupPOWLlUCZsuDwmXFYiJ4prICMY3xvqvSmB81s/hS7A6JcB98JBWA50GGSvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Gyqd7HacjbHJtQ2uqZNZcyXnh/RFKtDnpivGTTYSFOc=;
+ b=ELov6TQ5BElzPYRZB8vHZaZEmKvONX/sXyj8MfpTje5aMCA9TcUML/IgL5Dlqs9VE1lDYZdkEtpCRChft/Z7yTnWBmGinXIjJEoyoKFmebfCZHMrd7lraHlXDI+vFuZrJemQQ9GlThbgnclzeioTNZx9MRHrFqzpJ7mHSa6/su4btpmR7cIAK4UCecOhyFZrxKOcN8bqKI16bx+ybnTaoSGkC2wVTp12L37RhMOOxcklOuRp4eRtPHagWShmDutpgawDQSv2Jh7p1jwwdwrm53HXCcIPoYbuChFRLOBuU0uT/F9+J6Sr805QEl4NlI5VLbScAvJ1p8TNCu7k7/g8Ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gyqd7HacjbHJtQ2uqZNZcyXnh/RFKtDnpivGTTYSFOc=;
+ b=ZWxB1cyajGisH5/MSrDsPiGEAnpEdQJyc6PoBZtycNzcUAXO4gG6S982YKhvLvuhdOUisObuIJRffj2/TJXN8izrpW0zE+i29YvNmHaCZAVWuqooEEYr9IXAWNsbBhRwu3B+kas1SwS6FVWwwVfpe0fhI/i+TtPu6Y/4nvZLgSI=
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com (2603:10a6:20b:43b::21)
+ by AS5PR04MB10042.eurprd04.prod.outlook.com (2603:10a6:20b:67e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.25; Mon, 8 Jul
+ 2024 11:19:29 +0000
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::e751:223e:aa3d:5827]) by AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::e751:223e:aa3d:5827%3]) with mapi id 15.20.7741.033; Mon, 8 Jul 2024
+ 11:19:29 +0000
+From: Pankaj Gupta <pankaj.gupta@nxp.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+CC: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [EXT] Re: [PATCH v4 2/5] dt-bindings: arm: fsl: add imx-se-fw
+ binding doc
+Thread-Topic: [EXT] Re: [PATCH v4 2/5] dt-bindings: arm: fsl: add imx-se-fw
+ binding doc
+Thread-Index: AQHazuMSrg3adK0l6E2Y9DEwTEglUrHrNmCAgAETJjCAABVegIAABHLA
+Date: Mon, 8 Jul 2024 11:19:29 +0000
+Message-ID:
+ <AM9PR04MB86040DFD0C0EF5D904BF960D95DA2@AM9PR04MB8604.eurprd04.prod.outlook.com>
+References: <20240705-imx-se-if-v4-0-52d000e18a1d@nxp.com>
+ <20240705-imx-se-if-v4-2-52d000e18a1d@nxp.com>
+ <450d1575-c9b3-413b-bfa9-8dc4352fa263@kernel.org>
+ <AM9PR04MB8604B9A9F3D22C35679AD1D195DA2@AM9PR04MB8604.eurprd04.prod.outlook.com>
+ <c7688fba-0570-4dc6-80c4-23cd75ed29aa@kernel.org>
+In-Reply-To: <c7688fba-0570-4dc6-80c4-23cd75ed29aa@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM9PR04MB8604:EE_|AS5PR04MB10042:EE_
+x-ms-office365-filtering-correlation-id: 829ecef0-b29d-4d0b-4aaf-08dc9f3fd5bf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?dktLMGtFWEZYTE92Y1A5bFJWdlk1ZjVRZWRnUDhEM1VwVklFZlFJL1dROHdy?=
+ =?utf-8?B?M3FRVTJBdmViTFV3a0hHQWdMQ1ZOSHRjRmtQd3FNOTdiMmFtclNleURSemNG?=
+ =?utf-8?B?bFRBeVFFcVR4MEtlUkhmcU1tNi9mWW1JY1FSYWtEV3FRcjhJMHNjdWc4cWk5?=
+ =?utf-8?B?bDJldllLWUJGcXhnN09sYU96YUpjcUV0dFRPcHJDNWM2Q2gzS0FDcS9NNHVZ?=
+ =?utf-8?B?bm1TZ1k4eHVxMTBUeW45eW5aRGhMcFdRMktVanZKeWFWdDhsUitSSkJKaTRL?=
+ =?utf-8?B?dlVYS0ZNMDErRTZyZ1ZUVWYySHlQdWdZdUZOSnZMa2FCNDVkbjZBN3ArUlVJ?=
+ =?utf-8?B?RzlxUHBKS0diUzVWeDRTanlvUEdCY0t0T09BeW1NRHZuUVlwdFZNam5xRWIy?=
+ =?utf-8?B?VVBSVzZKQSsxVkFrYjFNQzk0MXgvOXBCSjR1RGhveGQwSnpwWWJqZTZ6aUhF?=
+ =?utf-8?B?aHV5OGFnZzhEdVcxUlVmSEdVQ3hqekJxNFk2UVQ1L1drR0VWOFozME43dUd5?=
+ =?utf-8?B?YmZuSDBCN2ZFdFQ4cm9lMUphSVpabkhjLzd4OWdKRjhUcXltRURKa0dDdU5D?=
+ =?utf-8?B?SWNEMWlXdGlETk90UXpvNTZyM0dXU1U3d0t0RWg2VVcyazhnaGN6dnZCRHpz?=
+ =?utf-8?B?RXBBS1BHV0RwbEk3SG5Yc2xjQTcxY1ZFMDd2Sks3MnJsck9sY1RvQjBrekhp?=
+ =?utf-8?B?R1BtQ0VrUnRCSHZ6TFN4MVBLcXJvV0RNaUJZbGM3VW9pMGJmbEE4a0pGeWda?=
+ =?utf-8?B?bXRBeWZRNWtPV25RNWh5cys2cmROOFQyVnl1SzVORTNWZkZZVGZUdmlhVmJ0?=
+ =?utf-8?B?OGZnVTFZb1NOUlpJNWZFVU1LcjdwcEdXQysyOWdEVEVhTGoyMTFwUFhFb3BZ?=
+ =?utf-8?B?YmZHRXlxQ3J3bGVYdVRxVEpBVngvbXRDU2NJSkwzS3BqMWI4UkttRDkyTTBY?=
+ =?utf-8?B?RXlpWlhhRkdPU284YytCMWRTK2tzS0dIV0tLTVF4MG1GK3ljaGQ1Y2huS0V2?=
+ =?utf-8?B?WDF6cnVjOS9nVENyc2RyWDlBTUFMa2JoVnlQRWwwWHJOSUlmR0l5TjhNZWZz?=
+ =?utf-8?B?TWEzRWR2TTAwM2RReXdlbkFzNTE4R0hEWkxDdFdxdE83YmhMbzZzdXBDZVB1?=
+ =?utf-8?B?UmpLT3NFODBweHdKVkdPNzdidG1UU3F6YmN2VTZRSlhWeUlXWjJRTHF0YmIz?=
+ =?utf-8?B?bjJUeGZIYzBYbmJFK1FCU0MyQTlQcGY1cUJFZTJkNzV5OEx4Mkw5V0dITFRh?=
+ =?utf-8?B?YkFCZXB5LzFHeEdGQ1dxYjREeUZzNlNTcng4UUNwLzdDS3ZDNWZZM0RHK2pG?=
+ =?utf-8?B?N3pLcStsbncvcVdsa29xL2VoWXNMOENpb281YjNwcXQ5dHU3OUFvLzVmMnVV?=
+ =?utf-8?B?Wk5yeGo3eFA5N0dCMjRBNGFHamNqaVdiSDV4QVBSeFZaZ0htdllZQThJTFFy?=
+ =?utf-8?B?bFZoS3BJdnFyWFZoN3NuMUdrcXpHcHdRY2V5anVud3VUZFBQRnQ3RE1CV1Ru?=
+ =?utf-8?B?V1N6N3VBa25MU2Z2ZldMVjdQYjdZQkVoNUxXT2xTcGM4R3dUMS9JczdyaTRS?=
+ =?utf-8?B?T2hFUUpmMTVEQnRZTXpGa0MyN1psQXNKdFJ4K3Qxb1k3MHVUMU0vMG42bWd3?=
+ =?utf-8?B?VTZibGVTOVphdjI4MVdhbEQrTUNMYU8ra0Y5SStaVHZnVFhIbXJvVEg2Zm5i?=
+ =?utf-8?B?VzA0QkpQTnpXZ1FBS09IR0ZtUHBabi9xZ054cXJjZnRYdXorQnk2R3k0Mm14?=
+ =?utf-8?B?NnhrSWZhZFEreHdlNlJ3Z3h1TExLYlRQSWZQcUdSZkUzZ0F2amU1NGg5NVgv?=
+ =?utf-8?B?YUhxdFpTM01vZmRkUC81THMyQmQyRFRmRkd4V2FuZ2dhbC9CeVZZVEZHSmlp?=
+ =?utf-8?B?RXRibDNxK2NqSWxvUTNFYzJtbWFGVzF3K3A5TFRzVDhybG14MkZRNzhCcU5N?=
+ =?utf-8?Q?GNMMTJ/I0ss=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8604.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?SDNSTXZDSUt3aEI4K2xpZHFQYVdRSDVQd0xYbzRVRE5nTGtuSXlvUFlJbktk?=
+ =?utf-8?B?cFZBRWNtY2RIUWUxZnNyT0ZUMWtKWmZYbmdVRk52NUpPcHIzd1JkQlNEQUgz?=
+ =?utf-8?B?V3R4UHhkOGNFdjc2UHVrb0RzeTZpQWxYUkpQY0pTSDVUWTJ3YThIbDlKd2Yv?=
+ =?utf-8?B?dExjMldxRC8yZHl1d1VweWJSUjhPYWxpdkN0ZlFub3pkNGJqVHVMQ0xiNjJR?=
+ =?utf-8?B?Rm56V2hLaW5SOTh4ZEI2T1krSW50RTFGSTFDVVBjc0F0S0g3VTFpNFN6dCs1?=
+ =?utf-8?B?YVpDbm9sMzA4dExHZWtDZlNjYlBqKzlETWhBY1VPQXR6VTBlY3k3WTdyS2NH?=
+ =?utf-8?B?bGQ3MnV5U29HaDRJdzVlVnpIM01TdDBVUVNDaytNdEQ5di9QL3J0UkVqbk42?=
+ =?utf-8?B?SFRYejFOUGpsK1BIK25ndFlCMGZpSytQRTZYU2RCdjV3RU5NM3FpdDdBVmVk?=
+ =?utf-8?B?aDFZV2g3dzR1SGhXQnpsOGxUNHJYeEJDaFgzbUlyV0YybUxqVlRhN2Y0c1Rj?=
+ =?utf-8?B?bHVFb2kwbDZNWXhNMG5kV2FaOUUzZSs5NmI0WmJLYUs1WWMvVDBkbnBIN3Jh?=
+ =?utf-8?B?Rk9iNUw2L3UzNzZGYzZMazcvSU5BK055ZkQyUHJWOW9LRlI3dDZHdGVvVXl0?=
+ =?utf-8?B?NlFiY0JyZ2MybHdQV0NHMDczLzgvYXNuNnpuRWNZUFoxYlViNm5oSHJUVGxI?=
+ =?utf-8?B?SDVpSWRsalRwckFub0FPMkNxMDBMZWxVUlFwdkR4MmN6VGpnemk2bHRkekw1?=
+ =?utf-8?B?QnNlMzNHL1dnN051UktBZllxNldLMEF2VzlKWkh4bmRXeEZmSEozSU5GcWsv?=
+ =?utf-8?B?eUgwN3pDVW9UbmVDSW15OHFiWGtxYWk1VTlISTdGMUlTOTRSbjA2Q1V2VnZl?=
+ =?utf-8?B?UUNNT1JDT0J3alJpVys1SEhISVd4elFJQmIyZDBXNHorbStYRldDS29Pc3Fm?=
+ =?utf-8?B?VC9sZTAvL3dwdjFmb0tKU3RZdkFNQnRXRHdpNzZNVlZKUENaWXBRdG1VZWVG?=
+ =?utf-8?B?L2lidHd5RmdUU2R4YnpxaldiWXhPaGFVbWJYdkhmQVZseWZYaDFYNml6ZDg4?=
+ =?utf-8?B?QjZGamt6Z0tKdjhVcmR5QUdaRmFrOUpZQnE2MlNkQmhsZDV1RHZ6NDgyWDgw?=
+ =?utf-8?B?V0lvQ1BYaG5XcXN1dFBramZuSzc0ZHRVUzhDV0VycUo4R1RYSUJIVXdqaytS?=
+ =?utf-8?B?Q3VVSGxocnFOYUhwTmJZL2FCWngyOVNrM1VtVG05RUNqZ0Q1eldaMTFtN0xK?=
+ =?utf-8?B?ZzRnaG0xQWFYQ0taalFDdm1IZi9CYXduc1dNQWFDMVd1US9rV2pTeHZpamgy?=
+ =?utf-8?B?M0lTeS9UUGxyZUkxVVk2b2QvUDlpT2E0VlZQbjEra2ZHdThrdXpuTEJ2VWRn?=
+ =?utf-8?B?UTc1c0xtdkIvcTNkdlY1WWRqc0g1cVkzMDlSUkFEWktBbEpOOVF5OFJWdDBI?=
+ =?utf-8?B?SWV2QjFxcWc0anJDTEhHczBXanE1Y29wOEdwdTR1NzZQdkVDZjNBb1o4ODNF?=
+ =?utf-8?B?VzdDd1FXL2tFcjJwMFpGTHNZNGtMbk1DZHd2T3d6Z3IrZFBsS3RKaWFVeUQ4?=
+ =?utf-8?B?Y1BFZ2RZUnNMejZ6MDdKUjRqdmlUc1REUjNkYUpUVi9vcks2akU0YWJPZU43?=
+ =?utf-8?B?NHg2RTQ2YXlnUlpzTEdsZHZFdWh3dy9HSnJ1M1oremdEdkM3d3lBcllBb2p2?=
+ =?utf-8?B?TXU3OHUxbnhPRFRKeFFPRW9yRFFZQjVKRVFTdlo5QUdCMmk4LzZKNDJPRXky?=
+ =?utf-8?B?ZWdwUm5NMTVJR2IxTGg0SEFKNkZ4bHo2U1UxTWlPazU4U0lkMlJSTEJrazE1?=
+ =?utf-8?B?L3M1RmRFNnowTXhSMDExcVQwZjZacVVCTHdiMkdFT0FmcjdEOGM5UnR5Q1ky?=
+ =?utf-8?B?RFB2VVgvN2tmeW5pYXJDdTFpK3NrcTlyekUvSlEzZGxTOC9qZWJlUklJRlZX?=
+ =?utf-8?B?aXYzVm91Zy9zY0lub0lnOC9CalNmbmltc3ZaTHZMdVExM0sveW5iM1N3VURp?=
+ =?utf-8?B?aDlTOXBpN3FUUFAvc0hXZGV2R0RSZEdmNFN6NmdRaW1VMW41Rkx6VFdQSFo1?=
+ =?utf-8?B?T0ZUWnYvL1R5WEJRcmVmVEVaMjVLVUE2UERpWGRQemY4OW9QbVU2NU03Tm52?=
+ =?utf-8?Q?QmYAbbem9phbBHb+MDfPuYHGS?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8604.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 829ecef0-b29d-4d0b-4aaf-08dc9f3fd5bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2024 11:19:29.7308
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tOU2Vep28nvfp+21vbiKdgKGPtL0udycJ088xItlLZ/gEtTSOLhNI33eO8mFWvp4b7jhynvUZwWjKGca2ou9dg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB10042
 
-From: Shengwei Luo <luoshengwei@huawei.com>
-
-The ARM processor CPER record was added at UEFI 2.6, and hasn't
-any changes up to UEFI 2.10 on its struct.
-
-Yet, the original arm_event trace code added on changeset
-e9279e83ad1f ("trace, ras: add ARM processor error trace event") is
-incomplete, as it only traces some fields of UAPI 2.6 table N.16,
-not exporting at all any information from tables N.17 to N.29 of
-the record.
-
-This is not enough for user to take appropriate action or to log
-what exactly happened.
-
-According to UEFI_2_9 specification chapter N2.4.4, the ARM processor
-error section includes:
-
-- several (ERR_INFO_NUM) ARM processor error information structures
-  (Tables N.17 to N.20);
-- several (CONTEXT_INFO_NUM) ARM processor context information
-  structures (Tables N.21 to N.29);
-- several vendor specific error information structures. The
-  size is given by Section Length minus the size of the other
-  fields.
-
-In addition to those data, it also exports two fields that are
-parsed by the GHES driver when firmware reports it, e. g.:
-
-- error severity
-- cpu logical index
-
-Report all of these information to userspace via trace uAPI, So that
-userspace can properly record the error and take decisions related
-to cpu core isolation according to error severity and other info.
-
-After this patch, all the data from ARM Processor record from table
-N.16 are directly or indirectly visible on userspace:
-
-======================================	=============================
-UEFI field on table N.16		ARM Processor trace fields
-======================================	=============================
-Validation				handled when filling data for
-					affinity MPIDR and running
-					state.
-ERR_INFO_NUM				pei_len
-CONTEXT_INFO_NUM			ctx_len
-Section Length				indirectly reported by
-					pei_len, ctx_len and oem_len
-Error affinity level			affinity
-MPIDR_EL1				mpidr
-MIDR_EL1				midr
-Running State				running_state
-PSCI State				psci_state
-Processor Error Information Structure	pei_err - count at pei_len
-Processor Context			ctx_err- count at ctx_len
-Vendor Specific Error Info		oem - count at oem_len
-======================================	=============================
-
-It should be noticed that decoding of tables N.17 to N.29, if needed,
-will be handled on userspace. That gives more flexibility, as there
-won't be any need to flood the Kernel with micro-architecture specific
-error decoding).
-Also, decoding the other fields require a complex logic, and should
-be done for each of the several values inside the record field.
-So, let userspace daemons like rasdaemon decode them, parsing such
-tables and having vendor-specific micro-architecture-specific decoders.
-
-[mchehab: modified patch description and fix coding style]
-Fixes: e9279e83ad1f ("trace, ras: add ARM processor error trace event")
-Signed-off-by: Shengwei Luo <luoshengwei@huawei.com>
-Signed-off-by: Jason Tian <jason@os.amperecomputing.com>
-Signed-off-by: Daniel Ferguson <danielf@os.amperecomputing.com>
-Tested-by: Shiju Jose <shiju.jose@huawei.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Link: https://uefi.org/specs/UEFI/2.10/Apx_N_Common_Platform_Error_Record.html#arm-processor-error-section
----
- drivers/acpi/apei/ghes.c |  3 +--
- drivers/ras/ras.c        | 45 +++++++++++++++++++++++++++++++++++--
- include/linux/ras.h      | 16 ++++++++++----
- include/ras/ras_event.h  | 48 +++++++++++++++++++++++++++++++++++-----
- 4 files changed, 99 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 2589a3536d91..90efca025d27 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -538,9 +538,8 @@ static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
- 	int sec_sev, i;
- 	char *p;
- 
--	log_arm_hw_error(err);
--
- 	sec_sev = ghes_severity(gdata->error_severity);
-+	log_arm_hw_error(err, sec_sev);
- 	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
- 		return false;
- 
-diff --git a/drivers/ras/ras.c b/drivers/ras/ras.c
-index 5d94ab79c8c3..75acc09bc96a 100644
---- a/drivers/ras/ras.c
-+++ b/drivers/ras/ras.c
-@@ -52,10 +52,51 @@ void log_non_standard_event(const guid_t *sec_type, const guid_t *fru_id,
- 	trace_non_standard_event(sec_type, fru_id, fru_text, sev, err, len);
- }
- 
--void log_arm_hw_error(struct cper_sec_proc_arm *err)
-+void log_arm_hw_error(struct cper_sec_proc_arm *err, const u8 sev)
- {
- #if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
--	trace_arm_event(err);
-+	struct cper_arm_err_info *err_info;
-+	struct cper_arm_ctx_info *ctx_info;
-+	u8 *ven_err_data;
-+	u32 ctx_len = 0;
-+	int n, sz, cpu;
-+	s32 vsei_len;
-+	u32 pei_len;
-+	u8 *pei_err;
-+	u8 *ctx_err;
-+
-+	pei_len = sizeof(struct cper_arm_err_info) * err->err_info_num;
-+	pei_err = (u8 *)err + sizeof(struct cper_sec_proc_arm);
-+
-+	err_info = (struct cper_arm_err_info *)(err + 1);
-+	ctx_info = (struct cper_arm_ctx_info *)(err_info + err->err_info_num);
-+	ctx_err = (u8 *)ctx_info;
-+	for (n = 0; n < err->context_info_num; n++) {
-+		sz = sizeof(struct cper_arm_ctx_info) + ctx_info->size;
-+		ctx_info = (struct cper_arm_ctx_info *)((long)ctx_info + sz);
-+		ctx_len += sz;
-+	}
-+
-+	vsei_len = err->section_length - (sizeof(struct cper_sec_proc_arm) +
-+					  pei_len + ctx_len);
-+	if (vsei_len < 0) {
-+		pr_warn(FW_BUG
-+			"section length: %d\n", err->section_length);
-+		pr_warn(FW_BUG
-+			"section length is too small\n");
-+		pr_warn(FW_BUG
-+			"firmware-generated error record is incorrect\n");
-+		vsei_len = 0;
-+	}
-+	ven_err_data = (u8 *)ctx_info;
-+
-+	cpu = GET_LOGICAL_INDEX(err->mpidr);
-+	/* when return value is invalid, set cpu index to -1 */
-+	if (cpu < 0)
-+		cpu = -1;
-+
-+	trace_arm_event(err, pei_err, pei_len, ctx_err, ctx_len,
-+			ven_err_data, (u32)vsei_len, sev, cpu);
- #endif
- }
- 
-diff --git a/include/linux/ras.h b/include/linux/ras.h
-index a64182bc72ad..6025afe5736a 100644
---- a/include/linux/ras.h
-+++ b/include/linux/ras.h
-@@ -24,8 +24,7 @@ int __init parse_cec_param(char *str);
- void log_non_standard_event(const guid_t *sec_type,
- 			    const guid_t *fru_id, const char *fru_text,
- 			    const u8 sev, const u8 *err, const u32 len);
--void log_arm_hw_error(struct cper_sec_proc_arm *err);
--
-+void log_arm_hw_error(struct cper_sec_proc_arm *err, const u8 sev);
- #else
- static inline void
- log_non_standard_event(const guid_t *sec_type,
-@@ -33,7 +32,7 @@ log_non_standard_event(const guid_t *sec_type,
- 		       const u8 sev, const u8 *err, const u32 len)
- { return; }
- static inline void
--log_arm_hw_error(struct cper_sec_proc_arm *err) { return; }
-+log_arm_hw_error(struct cper_sec_proc_arm *err, const u8 sev) { return; }
- #endif
- 
- struct atl_err {
-@@ -52,5 +51,14 @@ static inline void amd_retire_dram_row(struct atl_err *err) { }
- static inline unsigned long
- amd_convert_umc_mca_addr_to_sys_addr(struct atl_err *err) { return -EINVAL; }
- #endif /* CONFIG_AMD_ATL */
--
-+#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
-+#include <asm/smp_plat.h>
-+/*
-+ * Include ARM specific SMP header which provides a function mapping mpidr to
-+ * cpu logical index.
-+ */
-+#define GET_LOGICAL_INDEX(mpidr) get_logical_index(mpidr & MPIDR_HWID_BITMASK)
-+#else
-+#define GET_LOGICAL_INDEX(mpidr) -EINVAL
-+#endif /* CONFIG_ARM || CONFIG_ARM64 */
- #endif /* __RAS_H__ */
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index 7c47151d5c72..ce5214f008eb 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -168,11 +168,24 @@ TRACE_EVENT(mc_event,
-  * This event is generated when hardware detects an ARM processor error
-  * has occurred. UEFI 2.6 spec section N.2.4.4.
-  */
-+#define APEIL "ARM Processor Err Info data len"
-+#define APEID "ARM Processor Err Info raw data"
-+#define APECIL "ARM Processor Err Context Info data len"
-+#define APECID "ARM Processor Err Context Info raw data"
-+#define VSEIL "Vendor Specific Err Info data len"
-+#define VSEID "Vendor Specific Err Info raw data"
- TRACE_EVENT(arm_event,
- 
--	TP_PROTO(const struct cper_sec_proc_arm *proc),
-+	TP_PROTO(const struct cper_sec_proc_arm *proc, const u8 *pei_err,
-+			const u32 pei_len,
-+			const u8 *ctx_err,
-+			const u32 ctx_len,
-+			const u8 *oem,
-+			const u32 oem_len,
-+			u8 sev,
-+			int cpu),
- 
--	TP_ARGS(proc),
-+	TP_ARGS(proc, pei_err, pei_len, ctx_err, ctx_len, oem, oem_len, sev, cpu),
- 
- 	TP_STRUCT__entry(
- 		__field(u64, mpidr)
-@@ -180,6 +193,14 @@ TRACE_EVENT(arm_event,
- 		__field(u32, running_state)
- 		__field(u32, psci_state)
- 		__field(u8, affinity)
-+		__field(u32, pei_len)
-+		__dynamic_array(u8, buf, pei_len)
-+		__field(u32, ctx_len)
-+		__dynamic_array(u8, buf1, ctx_len)
-+		__field(u32, oem_len)
-+		__dynamic_array(u8, buf2, oem_len)
-+		__field(u8, sev)
-+		__field(int, cpu)
- 	),
- 
- 	TP_fast_assign(
-@@ -199,12 +220,29 @@ TRACE_EVENT(arm_event,
- 			__entry->running_state = ~0;
- 			__entry->psci_state = ~0;
- 		}
-+		__entry->pei_len = pei_len;
-+		memcpy(__get_dynamic_array(buf), pei_err, pei_len);
-+		__entry->ctx_len = ctx_len;
-+		memcpy(__get_dynamic_array(buf1), ctx_err, ctx_len);
-+		__entry->oem_len = oem_len;
-+		memcpy(__get_dynamic_array(buf2), oem, oem_len);
-+		__entry->sev = sev;
-+		__entry->cpu = cpu;
- 	),
- 
--	TP_printk("affinity level: %d; MPIDR: %016llx; MIDR: %016llx; "
--		  "running state: %d; PSCI state: %d",
-+	TP_printk("cpu: %d; error: %d; affinity level: %d; MPIDR: %016llx; MIDR: %016llx; "
-+		  "running state: %d; PSCI state: %d; "
-+		  "%s: %d; %s: %s; %s: %d; %s: %s; %s: %d; %s: %s",
-+		  __entry->cpu,
-+		  __entry->sev,
- 		  __entry->affinity, __entry->mpidr, __entry->midr,
--		  __entry->running_state, __entry->psci_state)
-+		  __entry->running_state, __entry->psci_state,
-+		  APEIL, __entry->pei_len, APEID,
-+		  __print_hex(__get_dynamic_array(buf), __entry->pei_len),
-+		  APECIL, __entry->ctx_len, APECID,
-+		  __print_hex(__get_dynamic_array(buf1), __entry->ctx_len),
-+		  VSEIL, __entry->oem_len, VSEID,
-+		  __print_hex(__get_dynamic_array(buf2), __entry->oem_len))
- );
- 
- /*
--- 
-2.45.2
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxv
+d3NraSA8a3J6a0BrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIEp1bHkgOCwgMjAyNCAxMTo0
+NiBBTQ0KPiBUbzogUGFua2FqIEd1cHRhIDxwYW5rYWouZ3VwdGFAbnhwLmNvbT47IEpvbmF0aGFu
+IENvcmJldA0KPiA8Y29yYmV0QGx3bi5uZXQ+OyBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+PjsgS3J6eXN6dG9mIEtvemxvd3NraQ0KPiA8a3J6aytkdEBrZXJuZWwub3JnPjsgQ29ub3IgRG9v
+bGV5IDxjb25vcitkdEBrZXJuZWwub3JnPjsgU2hhd24gR3VvDQo+IDxzaGF3bmd1b0BrZXJuZWwu
+b3JnPjsgU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPjsNCj4gUGVuZ3V0cm9u
+aXggS2VybmVsIFRlYW0gPGtlcm5lbEBwZW5ndXRyb25peC5kZT47IEZhYmlvIEVzdGV2YW0NCj4g
+PGZlc3RldmFtQGdtYWlsLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBL
+cnp5c3p0b2YNCj4gS296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpK2R0QGxpbmFyby5vcmc+
+DQo+IENjOiBsaW51eC1kb2NAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgaW14QGxpc3RzLmxpbnV4LmRl
+djsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBS
+ZTogW0VYVF0gUmU6IFtQQVRDSCB2NCAyLzVdIGR0LWJpbmRpbmdzOiBhcm06IGZzbDogYWRkIGlt
+eC1zZS1mdw0KPiBiaW5kaW5nIGRvYw0KPiANCj4gQ2F1dGlvbjogVGhpcyBpcyBhbiBleHRlcm5h
+bCBlbWFpbC4gUGxlYXNlIHRha2UgY2FyZSB3aGVuIGNsaWNraW5nIGxpbmtzIG9yDQo+IG9wZW5p
+bmcgYXR0YWNobWVudHMuIFdoZW4gaW4gZG91YnQsIHJlcG9ydCB0aGUgbWVzc2FnZSB1c2luZyB0
+aGUgJ1JlcG9ydA0KPiB0aGlzIGVtYWlsJyBidXR0b24NCj4gDQo+IA0KPiBPbiAwOC8wNy8yMDI0
+IDA3OjUwLCBQYW5rYWogR3VwdGEgd3JvdGU6DQo+ID4+IERyb3AgcmVkdW5kYW50L29idmlvdXMg
+cGFydHMuDQo+ID4gV2lsbCByZXBsYWNlIGFib3ZlIHR3byBkZXNjcmlwdGlvbiBsaW5lIHdpdGgg
+dGhlIGJlbG93IHR3by4NCj4gPiAgICAgICAtIGRlc2NyaXB0aW9uOiBtYWlsYm94IHBoYW5kbGUg
+dG8gc2VuZCBtZXNzYWdlIHRvIHNlIGZpcm13YXJlDQo+ID4gICAgICAgLSBkZXNjcmlwdGlvbjog
+bWFpbGJveCBwaGFuZGxlIHRvIHJlY2VpdmUgbWVzc2FnZSBmcm9tIHNlDQo+ID4gZmlybXdhcmUN
+Cj4gPg0KPiA+Pg0KPiA+PiBTbyB0d28gbWFpbGJveGVzPw0KPiA+IFR3byBoYW5kbGVzIG9mIHRo
+ZSBzYW1lIG1haWxib3guDQo+ID4NCj4gPj4NCj4gPj4+ICsNCj4gPj4+ICsgIG1ib3gtbmFtZXM6
+DQo+ID4+PiArICAgIGl0ZW1zOg0KPiA+Pj4gKyAgICAgIC0gY29uc3Q6IHR4DQo+ID4+PiArICAg
+ICAgLSBjb25zdDogcngNCj4gPj4+ICsgICAgICAtIGNvbnN0OiB0eGRiDQo+ID4+PiArICAgICAg
+LSBjb25zdDogcnhkYg0KPiA+Pg0KPiA+PiA0IG1haWxib3hlcz8gVGhpcyBjYW5ub3QgYmUgZGlm
+ZmVyZW50Lg0KPiA+IG1ib3gtbmFtZXMgY2FuIGhhdmUgYW55IG9mIHRoZSBhYm92ZSBtZW50aW9u
+ZWQgNCB2YWx1ZXMuDQo+ID4gQW5kICB0d28gdmFsdWVzIGFyZSBtaW5pbXVtLCByZXF1aXJlZC4N
+Cj4gDQo+IE5vLCBJIHNhaWQgaXQgY2Fubm90IGJlIGRpZmZlcmVudC4gSWYgdHdvIGFyZSBtaW5p
+bXVtLCB0aGVuIHlvdSBjYW4gaGF2ZSBoZXJlDQo+IDQsIHJpZ2h0PyBCdXQgZWFybGllciB5b3Ug
+c2FpZCB5b3UgY2FuIGhhdmUgb25seSAyLiBJdCBkb2VzIG5vdCBtYWtlIGFueSBzZW5zZS4NCg0K
+VW5kZXJzdG9vZC4gIFdpbGwgZml4IHRoaXMgd2l0aCBmb2xsb3dpbmcgY2hhbmdlcy4NCg0KLSAg
+ICAgIC0gY29uc3Q6IHR4DQotICAgICAgLSBjb25zdDogcngNCi0gICAgICAtIGNvbnN0OiB0eGRi
+DQotICAgICAgLSBjb25zdDogcnhkYg0KLSAgICBtaW5JdGVtczogMg0KKyAgICAgIC0gZW51bToN
+CisgICAgICAgICAgLSB0eA0KKyAgICAgICAgICAtIHR4ZGINCisgICAgICAtIGVudW06DQorICAg
+ICAgICAgIC0gcngNCisgICAgICAgICAgLSByeGRiDQoNCg0KPiANCj4gPg0KPiA+Pg0KPiA+Pj4g
+KyAgICBtaW5JdGVtczogMg0KPiA+Pj4gKw0KPiA+Pj4gKyAgbWVtb3J5LXJlZ2lvbjoNCj4gPj4+
+ICsgICAgZGVzY3JpcHRpb246IGNvbnRhaW5zIHRoZSBwaGFuZGxlIHRvIHJlc2VydmVkIGV4dGVy
+bmFsIG1lbW9yeS4NCj4gPj4NCj4gPj4gRHJvcA0KPiA+IFdpbGwgcmVtb3ZlIHRoZSBsaW5lICIg
+ZGVzY3JpcHRpb246IGNvbnRhaW5zIHRoZSBwaGFuZGxlIHRvIHJlc2VydmVkIGV4dGVybmFsDQo+
+IG1lbW9yeS4iDQo+ID4NCj4gPj4NCj4gPj4+ICsgICAgaXRlbXM6DQo+ID4+PiArICAgICAgLSBk
+ZXNjcmlwdGlvbjogSXQgaXMgdXNlZCBieSBzZWN1cmUtZW5jbGF2ZSBmaXJtd2FyZS4gSXQgaXMg
+YW4gb3B0aW9uYWwNCj4gPj4+ICsgICAgICAgICAgcHJvcGVydHkgYmFzZWQgb24gY29tcGF0aWJs
+ZSBhbmQgaWRlbnRpZmllciB0bw0KPiA+Pj4gKyBjb21tdW5pY2F0aW9uDQo+ID4+IGludGVyZmFj
+ZS4NCj4gPj4+ICsgICAgICAgICAgKHNlZSBiaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkvcmVzZXJ2
+ZWQtbWVtb3J5LnR4dCkNCj4gPj4+ICsNCj4gPj4+ICsgIHNyYW06DQo+ID4+PiArICAgIGRlc2Ny
+aXB0aW9uOiBjb250YWlucyB0aGUgcGhhbmRsZSB0byBzcmFtLg0KPiA+Pg0KPiA+PiBEcm9wDQo+
+ID4gV2lsbCByZW1vdmUgIiBkZXNjcmlwdGlvbjogY29udGFpbnMgdGhlIHBoYW5kbGUgdG8gc3Jh
+bS4iDQo+ID4NCj4gPj4NCj4gPj4+ICsgICAgaXRlbXM6DQo+ID4+PiArICAgICAgLSBkZXNjcmlw
+dGlvbjogUGhhbmRsZSB0byB0aGUgZGV2aWNlIFNSQU0uIEl0IGlzIGFuIG9wdGlvbmFsIHByb3Bl
+cnR5DQo+ID4+PiArICAgICAgICAgIGJhc2VkIG9uIGNvbXBhdGlibGUgYW5kIGlkZW50aWZpZXIg
+dG8gY29tbXVuaWNhdGlvbiBpbnRlcmZhY2UuDQo+ID4+PiArDQo+ID4+PiArcmVxdWlyZWQ6DQo+
+ID4+PiArICAtIGNvbXBhdGlibGUNCj4gPj4+ICsgIC0gcmVnDQo+ID4+PiArICAtIG1ib3hlcw0K
+PiA+Pj4gKyAgLSBtYm94LW5hbWVzDQo+ID4+PiArDQo+ID4+PiArYWRkaXRpb25hbFByb3BlcnRp
+ZXM6IGZhbHNlDQo+ID4+DQo+ID4+IEtlZXAgaXQgYWZ0ZXIgYWxsT2YgYmxvY2sNCj4gPg0KPiA+
+IEluIFYyLCBpdCBpcyBhZnRlciBhbGxPZiBibG9jay4NCj4gPiBJbiBwcmV2aW91cyBjb21tZW50
+cywgaXQgd2FzIGNvbW1lbnRlZCB0byBwbGFjZSBhbGxPZiBibG9jaywgYWZ0ZXINCj4gcmVxdWly
+ZWQuDQo+ID4gSSBhbSBsaXR0bGUgY29uZnVzZWQuDQo+IA0KPiBTbyB3aHkgZGlkIHlvdSBpbXBs
+ZW1lbnQgaXQgZW50aXJlbHkgZGlmZmVyZW50PyBSZWFkIHRoZSBjb21tZW50IGZyb20gQ29ub3IN
+Cj4gYW5kIGZyb20gbWUgYWdhaW4uIEkgYW0gc29ycnksIGJ1dCByZXBlYXRpbmcgdGhlIHNhbWUg
+dGhyZWUgdGltZXMgKG9uY2UgYnkNCj4gQ29ub3IsIHR3aWNlIGJ5IG1lKSBpcyBxdWl0ZSBhIHdh
+c3RlIG9mIHRpbWUuDQo+IA0KPiBPcGVuIGV4YW1wbGUtc2NoZW1hLiBIb3cgaXMgaXQgZG9uZSB0
+aGVyZT8NCg0KVW5kZXJzdG9vZCB0aGUgcG9pbnQuIFJlZmVycmVkIHRvIHRoZSBleGFtcGxlLXNj
+aGVtYS4NCldpbGwgY29ycmVjdCBhcyBwZXIgdGhlIGV4YW1wbGUtc2NoZW1hLg0KDQo+IA0KPiBC
+ZXN0IHJlZ2FyZHMsDQo+IEtyenlzenRvZg0KDQo=
