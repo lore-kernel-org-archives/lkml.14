@@ -1,118 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425171B970;
-	Mon,  8 Jul 2024 13:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BE813A3FF;
+	Mon,  8 Jul 2024 13:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720446769; cv=none; b=ptERqDGIdB4ar3tij/E80ApKJn6Y8NS3q3urYawBrN6RgTe8vSJRRdTWXE6vyacqf8T/EiyfhxSxkE81uFyedKgXqixttjS7On2eu0i3Z0GMK1wrVX1Gj9kTtMOHcNKZa7EDHW+WImHtbRhfNLbDl7/yd4zSF1Ob1qt6gNpbw+w=
+	t=1720446795; cv=none; b=fmMNrWuKzB4vJOMK585U37yM9IvO0qeAF+Lw7uixp+wSRI/zsPL497PzSI0CvQ7oKvOdcEcy7qF/PoMzPbrsjJDEZVVxeMJZrrLuoOJAJGDbEbxhgrYhwwSZCEQbH92H0i96h8IS4okFbfOugsqVYaMEvkbdgjjjx0+swuk8tQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720446769; c=relaxed/simple;
-	bh=qJjk7aS0JUEnJMP/IcWZ9dq3cQUIML8i3O7nI1+q8P0=;
+	s=arc-20240116; t=1720446795; c=relaxed/simple;
+	bh=/r+/nMzPahn0eESG2XANrb9OH0ViDm6C4ibSsbg1d6A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BCiBVYKlwKNhl79kz/xBHOr1c+ew5JkbKshAYgosofkT9XY3+ecAvBGowQIO7huu7NQBCsqygQUa9mp7+ZfGb+2freNuSaFz7AFNPgF2v5mORRAz3vLgmvb5AbgrZq1LGTx44obXErizXmlw9UKsE/rRNUf+hkFfVjtY+tk2HnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKOWXfac; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gTZtxyQ6G5Gcx4prFln0oq10IyqUNQw0olsZ+xeEr0TeW8ueJ7X28BDfVCgRmIZTuCh9pnRsS2/RSVSvrSgnfANssctlv0+Ccq4eXYd102TnJPAVjQogcYbFjalYVInz0i+QkZCyfledlWSWLngXz7fneiOxGFMxXcJqIZgDz8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=idMvzb3t; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M13IblR0; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKOWXfac"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 227D1C116B1;
-	Mon,  8 Jul 2024 13:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720446769;
-	bh=qJjk7aS0JUEnJMP/IcWZ9dq3cQUIML8i3O7nI1+q8P0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qKOWXfacIrPrjs2mon60OPe2CAMWqCusXuoaliTMaI325BnUCgl9hc5oob0h09FWR
-	 jjyYxiEvlkELFtVjm3YJU1WlPCoh83j+jZ3xL17MvSOcVW9HLkTGyWCkOGyyuJNbPG
-	 53WtcqAy993FpNvze6amPwB5XEsLsaseHL3faBpjJzL/r8PubXnVB0NxZdPUqVI8Wc
-	 BtsebfusN4LQesQR3TIag4Qn6NyXu5p3FRSwshiI/UdqC3n3I5/f5IWcD6ZKxMSzjd
-	 xtCj7BiwoBSqIwzBezL+Icfwn7CMdzDoxdQJse5tTXiKBtJS3JElicOHs98XHSTfo3
-	 Xf+TLZJmO4kyw==
-Date: Mon, 8 Jul 2024 14:52:43 +0100
-From: Will Deacon <will@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Linux-Arch <linux-arch@vger.kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	mark.rutland@arm.com
-Subject: Re: [PATCH 0/4] riscv: uaccess: optimizations
-Message-ID: <20240708135243.GA11898@willie-the-truck>
-References: <20240625040500.1788-1-jszhang@kernel.org>
- <4d8e0883-6a8c-4eb5-bf61-604e2b98356a@app.fastmail.com>
- <CAHk-=wjDrx1XW1oEuUap=MN+Ku_FqFXQAwDJhyC5Q1CJkgBbFA@mail.gmail.com>
- <CAHk-=wiv=9zGSwsu+=tKNgDg8oBUJn_25OEy_0wqO+rvz7p8wg@mail.gmail.com>
- <20240705112502.GC9231@willie-the-truck>
- <CAHk-=wgRgDy8_=uZPZr4LRyF7BiN1nDNzUx7iRzrD0g8O+bh3A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="idMvzb3t";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M13IblR0"
+Date: Mon, 8 Jul 2024 15:53:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720446791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Msuqgjwb5He6YYwNRjzMabQUnm6Wy6XzGH5sueeY8Q=;
+	b=idMvzb3tG0e27yENCyIPgOaUlpXrpKSEMlndewY3UuHO9wv93LN1IkvziRk/3yQGls+NSs
+	IalS3y3r6+317icTSIpFhdcDtnpjEMoeVn4MrcNenLwPq0xMQhlaF92atj+HV95lSLhMRu
+	8hIrHYBEth7PpA2EDYnnATFUeE4Cwqri2yRvD/GQycfnzzgSPM2aNAFP2qhQPirChEe5Dj
+	KZ3MrpHQA+Pj+Xlw6cCKd+JERxP7jDPP+yZyibwjKG7sNs+5RInafnnd3g2wh4HPNoNbUc
+	ekA2jXzXG70NIuheP5ot0ZzGxhRG2YDYa91GdfMrFXrFk3+bnk6i9tBhUCv1Cw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720446791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Msuqgjwb5He6YYwNRjzMabQUnm6Wy6XzGH5sueeY8Q=;
+	b=M13IblR0AfHP6xSVuJw+Ty5KFZaCF8douxAxyPoEdDQhvo1kTOoyk5738csvtak+08cDmb
+	TwDqqBYx9O73bEAg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
+	Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+	Nikunj Kela <nkela@quicinc.com>,
+	Prasad Sodagudi <psodagud@quicinc.com>,
+	Maulik Shah <quic_mkshah@quicinc.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-rt-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] pmdomain/cpuidle-psci: Support s2idle/s2ram on
+ PREEMPT_RT
+Message-ID: <20240708135310.3VRFnmk1@linutronix.de>
+References: <20240527142557.321610-1-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgRgDy8_=uZPZr4LRyF7BiN1nDNzUx7iRzrD0g8O+bh3A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20240527142557.321610-1-ulf.hansson@linaro.org>
 
-On Fri, Jul 05, 2024 at 10:58:29AM -0700, Linus Torvalds wrote:
-> On Fri, 5 Jul 2024 at 04:25, Will Deacon <will@kernel.org> wrote:
-> >
-> > we'd probably want to use an address that lives between the two TTBRs
-> > (i.e. in the "guard region" you mentioned above), just in case somebody
-> > has fscked around with /proc/sys/vm/mmap_min_addr.
+On 2024-05-27 16:25:50 [+0200], Ulf Hansson wrote:
+> Updates in v2:
+> 	- Rebased and fixed a small issue in genpd, see patch3.
+> 	- Re-tested on v6.9-rt5 (PREEMPT_RT enabled)
+> 	- Re-tested on v6.10-rc1 (for regressions, PREEMPT_RT disabled)
 > 
-> Yes, I don't want to use a NULL pointer and rely on mmap_min_addr.
+> The hierarchical PM domain topology and the corresponding domain-idle-states
+> are currently disabled on a PREEMPT_RT based configuration. The main reason is
+> because spinlocks are turned into sleepable locks on PREEMPT_RT, which means
+> genpd and runtime PM can't be use in the atomic idle-path when
+> selecting/entering an idle-state.
 > 
-> For x86-64, we have two "guard regions" that can be used to generate
-> an address that is guaranteed to fault:
-> 
->  - the kernel always lives in the "top bit set" part of the address
-> space (and any address tagging bits don't touch that part), and does
-> not map the highest virtual address because that's used for error
-> pointers, so the "all bits set" address always faults
-> 
->  - the region between valid user addresses and kernel addresses is
-> also always going to fault, and we don't have them adjacent to each
-> other (unlike, for example, 32-bit i386, where the kernel address
-> space is directly adjacent to the top of user addresses)
+> For s2idle/s2ram this is an unnecessary limitation that this series intends to
+> address. Note that, the support for cpuhotplug is left to future improvements.
+> More information about this are available in the commit messages.
 
-I think we're very similar on arm64. The kernel lives at the top (i.e.
-virtual address space descends below 0) and is mapped by TTBR1.
-Userspace lives at the bottom (i.e. virtual address space ascends from
-0) and is mapped by TTBR0. There's an unaddressable gap in the middle
-and it's bit 55 of the address which determines user vs kernel (well, it
-selects the TTBR to be precise).
+I looked at it and it seems limited to pmdomain/core.c, also I don't
+know if there is a ->set_performance_state callback set since the one I
+checked have mutex_t locking ;)
+So if this is needed, then be it. s2ram wouldn't be used in "production"
+but in "safe state" so I wouldn't worry too much about latency spikes.
+Not sure what it means for the other modes.
+I am not to worried for now, please don't let spread more than needed ;)
 
-The kernel doesn't map the top 8MiB of its VA space, although talking to
-Mark, it sounds like we might not be as robust as x86 if there's a stray
-dereference of an unaligned error pointer that straddles 0. He can
-elaborate, but we probably can't rely on a pointer of all-ones faulting
-safely for the same reason.
+> Kind regards
+> Ulf Hansson
 
-> So on x86-64, the simple solution is to just say "we know if the top
-> bit is clear, it cannot ever touch kernel code, and if the top bit is
-> set we have to make the address fault". So just duplicating the top
-> bit (with an arithmetic shift) and or'ing it with the low bits, we get
-> exactly what we want.
-> 
-> But my knowledge of arm64 is weak enough that while I am reading
-> assembly language and I know that instead of the top bit, it's bit55,
-> I don't know what the actual rules for the translation table registers
-> are.
-> 
-> If the all-bits-set address is guaranteed to always trap, then arm64
-> could just use the same thing x86 does (just duplicating bit 55
-> instead of the sign bit)?
-
-Perhaps we could just force accesses with bit 55 set to the address
-'1UL << 55'? That should sit slap bang in the middle of the guard
-region between the TTBRs and I think it would resolve any issues we may
-have with wrapping. It still means effectively reverting 2305b809be93
-("arm64: uaccess: simplify uaccess_mask_ptr()"), though.
-
-Dunno. Mark, Catalin, what do you guys reckon?
-
-Will
+Sebastian
