@@ -1,117 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C18820DE8
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BB414E2E3
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 21:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720472842; cv=none; b=CRRVgbANtVjMh6EHCZSIPKSnRuzriPOJCcl3t5vGjosmu2sDueSbd2zeOpDsry6Ik/J1UBbpxZY0LlueSwlc5qGIou4ORwnyu6Ccv3Gs3eiIpZIQ6GsKKQ/oBjt172cLRRWaziw890001eyKm1g+eWkOsI2hnCefWvfRejS+qpw=
+	t=1720472943; cv=none; b=OwRa5Y6NjeSM/kzgThJ25fRrxnaRhnSCgCXDwL7F4EtpS4inbE2xGOfLnxWW4vUrNHPcgpowVB0B+3ZhAsA12MZJCCGkFB1kDKvPtyawWe+cnxDoic7kG5uB78zotlO32DYAM4uUr9LSij6RnrLQqxEFmmRPz3y2aszxCNL0Jao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720472842; c=relaxed/simple;
-	bh=L8YH8jz9n1wZoySLoa92P8odJeZQ9rAEncrrj7IV4WE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FLMLqv7oOQU3wLkv0MguZnFgk3MSPjF08NLpW646+dMuidWwsM93b5/OsR1CQCiX5ElnbG7V3kY4omtGWsywYyCEUd/WxB3pmJUNZH4qL+qNKdcB5C6YoXWbCLmha3SNJyJH9BK6k3YYWTgDlX+wKY5nbRF5Dn1cucbfY5LG+2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dOU3SJ6m; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720472943; c=relaxed/simple;
+	bh=UCY0oMT12cXbYGxiUb0whNTnVhKRKyO8T7T985QBy3g=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XyJrnqmhDVaLg9glPVhRJuw8Whxu06nei1YymBO2WRXz4XBwzmrokkiooBk3DBB4Q65+lP33Cuj8DntGDIvY5CF7Aac3HJUlm5Mc2guFfFOGVaxhpAdk98V6vSPebgtq4Nzn7bXKb54muPHTsIIi/M69OAXquVPg7aa1AKzqaxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qhlytQDo; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dOU3SJ6m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720472839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cFqRthfbsSdjt+c678nPva0J5xGverzYDIQbIkQstA8=;
-	b=dOU3SJ6m3ZXhp9o7Gn/vjLFdVtcaZoCa0o41kGNR4mPveuNlBedhJXs0fQEQBwNcbg9QBD
-	HtcyWgYDrQGCW0/BVbbsT5VMr5xma9JFXSZkIDhLZKla8Bb8Q17jTkQLwQWdkFxLEWSvMY
-	L633xwj9C+m5WJlqs5vlolz1tIc9beY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-423-o2oHz7LwMFmd4Ak2Yt8VLw-1; Mon, 08 Jul 2024 17:07:17 -0400
-X-MC-Unique: o2oHz7LwMFmd4Ak2Yt8VLw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-426620721c2so17687455e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 14:07:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhlytQDo"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-72c1d0fafb3so2842280a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 14:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720472941; x=1721077741; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kJc8hSvDaUDWo9RUDcvqIuOmjAm4LLBeUNho1Hv2CCU=;
+        b=qhlytQDo4yLTixTHN86gLToH8o14kiN9Xs/RhFWsu9MUVcUGa9NgmbL7p9J5L5PkxZ
+         P35hzZfyoieaYshkmDbie6XTY1Ol6ipmrFsCwCHc98nTC72x7jJKuAMG4hW0P+XDS8f3
+         8SFNIPPhKahfgvpa+F8a0Ud09RB6LyBQV9HYnedkFpTLaaJ+xGdNVHuROJBokip1j/fH
+         WmWZ3dk31bRQK1yWt3pLowjiQ3mqqMRLkBnvQ+VP2ODS1JfXp0TPl3ZXJI63FnmVDL1e
+         1fFfrYifoX8iXPb4vosJr2nI3mCV/t6K2osDQQVk6hWtNPIN5xPq9eh49o04o8ubil9c
+         ITUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720472837; x=1721077637;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cFqRthfbsSdjt+c678nPva0J5xGverzYDIQbIkQstA8=;
-        b=sHjKz41TVbhLiblOaqBrfEdyo5aCyh+7a/NvEIMBeflSZ/cfav9saI2Q2PMXpaYC/H
-         +ELH1FHhTAuRAtlt/Am4Q9mzFaxzMMDI6lsTAzGe09RfyP5oFS7hSKhRcg0zjQDwaGBd
-         xnB7VTqvb6dytaU5jbaJyS9aQj4uNG9O9Hlc7R3Mf2DWiiPNeUY5TuyD1CsSoH8garTL
-         cWUbITAej55+bYz6aLbSUKsxQVvgrWX1VlJlcZIcMVdbwE0xf0bVYOPniDL0IuF6h0Q0
-         GUX+HxlEH1LI6pz3qZjxx1PFgI3Fv906/h4dYMARS6ryUyzcfy1TG93Ygv4ncrfF95GI
-         Kaug==
-X-Forwarded-Encrypted: i=1; AJvYcCVIBVmcPSGjK/GrI8HvsehvtCCT6bI3Bv0/m6zbH7dM7PedZi7CEKoulAntC9A6pQLn1YUGLtoOQOpGwl0HDR1edjU0G2J0XznE7MC6
-X-Gm-Message-State: AOJu0Yx57euiQGEfBVXwai8rCSPXFf2yuPlqNugxxivzOI4Fh0qaYx5z
-	Kiulvs7QmS1RgFIU7fuLGfdY/wBctipMifk8RQFa5/lkEEzhx54jrV8h/RT9Ill+Eur/uUl6CSy
-	CDxN1NoiZQSl671HBoufKp15hY74fJ9HWRI32vxBEP4zuoYreG3VBm3SF0rnDAA==
-X-Received: by 2002:a05:600c:4a98:b0:426:5269:1a50 with SMTP id 5b1f17b1804b1-426707da1a6mr4450345e9.11.1720472836872;
-        Mon, 08 Jul 2024 14:07:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWOtEfljcKGLvuBNvpw3i/hd/jPNNrk3kagEm0uLHE35JpntWw5a/hT+IC3JuzZw+mS7Am4g==
-X-Received: by 2002:a05:600c:4a98:b0:426:5269:1a50 with SMTP id 5b1f17b1804b1-426707da1a6mr4450275e9.11.1720472836490;
-        Mon, 08 Jul 2024 14:07:16 -0700 (PDT)
-Received: from cassiopeiae ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f76c2sm11492425e9.28.2024.07.08.14.07.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 14:07:16 -0700 (PDT)
-Date: Mon, 8 Jul 2024 23:07:14 +0200
-From: Danilo Krummrich <dakr@redhat.com>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: russ.weight@linux.dev, gregkh@linuxfoundation.org,
-	chrisi.schrefl@gmail.com, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, Gary Guo <gary@garyguo.net>
-Subject: Re: [PATCH v2 2/2] firmware_loader: fix soundness issue in
- `request_internal`
-Message-ID: <ZoxVAiNPqdGChvH8@cassiopeiae>
-References: <20240708200724.3203-1-dakr@redhat.com>
- <20240708200724.3203-2-dakr@redhat.com>
- <ZoxOHxHze2ynJS-q@bombadil.infradead.org>
+        d=1e100.net; s=20230601; t=1720472941; x=1721077741;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kJc8hSvDaUDWo9RUDcvqIuOmjAm4LLBeUNho1Hv2CCU=;
+        b=A7aDAgtC7ni0F4M8uN1EaJbP25yH5r4lmxrdbMB7MGJLdM4YsqcLoAsOj87Pmk3uW2
+         m5jNEMVKIDPnUrucJkpiWeXA4FiR1NflL3HwZWgLJ6+AF2Mvi6OkpvMxUSILfCkac7pv
+         JEUJ5ngvKI2cThTFoQ3mRK0eJP7eTRt0gJ+Wm54sNfldmT+60wbEFbOP7IHPgsbPuAf9
+         yLNLciAXsDibyYmzBTOOxdB5hSlpxptJh5UQhDFDeUPfRNMJQLCXsGv3fct0iZP3VB8q
+         O2hzhzBLRUqlos8GofWAkbfn55cPZ+mD9xT6JejDrDtgwLkFYRS/bdE0miHv30oSVkE+
+         oR3g==
+X-Forwarded-Encrypted: i=1; AJvYcCU4N2J8pY8gPDtO+qRqbF3pJtsm3Rhxqvl9uogyQal3+aaQun6w3RRAhLNh891dDOphZyWXnzaGZsnl9TwuVzFdmMGI37AXDdEClfRE
+X-Gm-Message-State: AOJu0Yy3M9g4AtjTfBsCeHaEXDJwLPVa9EhaI+6qJcG1x1tHJ5sSIajJ
+	MNQk75BYTPkPC2L/SC4i5QXAdtagDja2Gk+TY/OpW5M7sgcv+Ma5W/H6tQgDqq71JCH/xmfNS5m
+	8NQ==
+X-Google-Smtp-Source: AGHT+IGsVKL0cdx/QPl63vLzqZ+LYLCok44hWrS2+8LTAOBodGDenIuqrC8nG2+j+jaKbmFY7lnYYFb5VmQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a02:50a:b0:6e4:d411:7c64 with SMTP id
+ 41be03b00d2f7-77db501c382mr1344a12.3.1720472940832; Mon, 08 Jul 2024 14:09:00
+ -0700 (PDT)
+Date: Mon, 8 Jul 2024 14:08:59 -0700
+In-Reply-To: <43ef06aca700528d956c8f51101715df86f32a91.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZoxOHxHze2ynJS-q@bombadil.infradead.org>
+Mime-Version: 1.0
+References: <20240517173926.965351-1-seanjc@google.com> <20240517173926.965351-23-seanjc@google.com>
+ <43ef06aca700528d956c8f51101715df86f32a91.camel@redhat.com>
+Message-ID: <ZoxVa55MIbAz-WnM@google.com>
+Subject: Re: [PATCH v2 22/49] KVM: x86: Add a macro to precisely handle
+ aliased 0x1.EDX CPUID features
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
+	Kechen Lu <kechenl@nvidia.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Binbin Wu <binbin.wu@linux.intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Robert Hoo <robert.hoo.linux@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Jul 08, 2024 at 01:37:51PM -0700, Luis Chamberlain wrote:
-> On Mon, Jul 08, 2024 at 10:07:21PM +0200, Danilo Krummrich wrote:
-> > `request_internal` must be called with one of the following function
-> > pointers: request_firmware(), firmware_request_nowarn(),
-> > firmware_request_platform() or request_firmware_direct().
+On Thu, Jul 04, 2024, Maxim Levitsky wrote:
+> On Fri, 2024-05-17 at 10:38 -0700, Sean Christopherson wrote:
+> > Add a macro to precisely handle CPUID features that AMD duplicated from
+> > CPUID.0x1.EDX into CPUID.0x8000_0001.EDX.  This will allow adding an
+> > assert that all features passed to kvm_cpu_cap_init() match the word being
+> > processed, e.g. to prevent passing a feature from CPUID 0x7 to CPUID 0x1.
 > > 
-> > The previous `FwFunc` alias did not guarantee this, which is unsound.
+> > Because the kernel simply reuses the X86_FEATURE_* definitions from
+> > CPUID.0x1.EDX, KVM's use of the aliased features would result in false
+> > positives from such an assert.
 > > 
-> > In order to fix this up, implement `FwFunc` as new type with a
-> > corresponding type invariant.
+> > No functional change intended.
 > > 
-> > Reported-by: Gary Guo <gary@garyguo.net>
-> > Closes: https://lore.kernel.org/lkml/20240620143611.7995e0bb@eugeo/
-> > Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/kvm/cpuid.c | 24 +++++++++++++++++-------
+> >  1 file changed, 17 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index 5e3b97d06374..f2bd2f5c4ea3 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -88,6 +88,16 @@ u32 xstate_required_size(u64 xstate_bv, bool compacted)
+> >  	F(name);						\
+> >  })
+> >  
+> > +/*
+> > + * Aliased Features - For features in 0x8000_0001.EDX that are duplicates of
+> > + * identical 0x1.EDX features, and thus are aliased from 0x1 to 0x8000_0001.
+> > + */
+> > +#define AF(name)								\
+> > +({										\
+> > +	BUILD_BUG_ON(__feature_leaf(X86_FEATURE_##name) != CPUID_1_EDX);	\
+> > +	feature_bit(name);							\
+> > +})
+> > +
+> >  /*
+> >   * Magic value used by KVM when querying userspace-provided CPUID entries and
+> >   * doesn't care about the CPIUD index because the index of the function in
+> > @@ -758,13 +768,13 @@ void kvm_set_cpu_caps(void)
+> >  	);
+> >  
+> >  	kvm_cpu_cap_init(CPUID_8000_0001_EDX,
+> > -		F(FPU) | F(VME) | F(DE) | F(PSE) |
+> > -		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
+> > -		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SYSCALL) |
+> > -		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
+> > -		F(PAT) | F(PSE36) | 0 /* Reserved */ |
+> > -		F(NX) | 0 /* Reserved */ | F(MMXEXT) | F(MMX) |
+> > -		F(FXSR) | F(FXSR_OPT) | X86_64_F(GBPAGES) | F(RDTSCP) |
+> > +		AF(FPU) | AF(VME) | AF(DE) | AF(PSE) |
+> > +		AF(TSC) | AF(MSR) | AF(PAE) | AF(MCE) |
+> > +		AF(CX8) | AF(APIC) | 0 /* Reserved */ | F(SYSCALL) |
+> > +		AF(MTRR) | AF(PGE) | AF(MCA) | AF(CMOV) |
+> > +		AF(PAT) | AF(PSE36) | 0 /* Reserved */ |
+> > +		F(NX) | 0 /* Reserved */ | F(MMXEXT) | AF(MMX) |
+> > +		AF(FXSR) | F(FXSR_OPT) | X86_64_F(GBPAGES) | F(RDTSCP) |
+> >  		0 /* Reserved */ | X86_64_F(LM) | F(3DNOWEXT) | F(3DNOW)
+> >  	);
+> >  
 > 
-> While you're at it, can you go ahead and extend out selftest coverage
-
-I think that'd be good and I thought about it. However, I think it makes more
-sense once we got a few more abstractions in place, such that we can come up
-with a Rust test module analogue to lib/test_firmware.c. What do you think?
-
-> for the firmware_loader so we can test Rust too? Could these issues
-> have been caught with a selftest? If not why not?
-
-This patch isn't actually fixing a real bug. Which is also why I didn't put a
-"Fixes" tag.
-
-It's more that without the `FwFunc` type indirection and the corresponding
-invariant the safety of `request_internal` isn't guranteed formally.
-
-- Danilo
-
+> Hi,
 > 
->   Luis
+> What if we defined the aliased features instead.
+> Something like this:
 > 
+> #define __X86_FEATURE_8000_0001_ALIAS(feature) \
+> 	(feature + (CPUID_8000_0001_EDX - CPUID_1_EDX) * 32)
+> 
+> #define KVM_X86_FEATURE_FPU_ALIAS	__X86_FEATURE_8000_0001_ALIAS(KVM_X86_FEATURE_FPU)
+> #define KVM_X86_FEATURE_VME_ALIAS	__X86_FEATURE_8000_0001_ALIAS(KVM_X86_FEATURE_VME)
+> 
+> And then just use for example the 'F(FPU_ALIAS)' in the CPUID_8000_0001_EDX
 
+At first glance, I really liked this idea, but after working through the
+ramifications, I think I prefer "converting" the flag when passing it to
+kvm_cpu_cap_init().  In-place conversion makes it all but impossible for KVM to
+check the alias, e.g. via guest_cpu_cap_has(), especially since the AF() macro
+doesn't set the bits in kvm_known_cpu_caps (if/when a non-hacky validation of
+usage becomes reality).
+
+Side topic, if it's not already documented somewhere else, kvm/x86/cpuid.rst
+should call out that KVM only honors the features in CPUID.0x1, i.e. that setting
+aliased bits in CPUID.0x8000_0001 is supported if and only if the bit(s) is also
+set in CPUID.0x1.
