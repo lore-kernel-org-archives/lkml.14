@@ -1,141 +1,145 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB54A80046
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811F380BEC
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720440398; cv=none; b=EINomtToXZhVcF6AaZzhVSCORmlEMU/u3Bq4pylItRwyib50GT5W3dtUGgFNwTwjclcNL5BLMne0nzY+mryVCKnNcuD1Lu8WgI9G/TefU3Z/soUYZZnjRG56xU6vWcWQTZk2ay48P0h9C4+9MRG2RtLbKMz2ZOUy1KHb6E7iccQ=
+	t=1720440461; cv=none; b=CyVIdxZlznmyWsZPQtm4UMNANWMCiZJYKjqA96AlRSKVUdBT0wGra5OSsu7T1rw19E0MGY9xfO//N66RegsbBzREBHWaZP/Nl+WWBbQosBKrrQL+B9RE7YVQEbf7p//1NJjw9T5RHADLGbVVTa7nB7MajiuRxf1P0o30LO30IeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720440398; c=relaxed/simple;
-	bh=vvhp4fRApGwcWx+HYgN66svEhYeuk2Cy5WZpOCo0nx4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dSdjfbvavTIsjhkuDZCq4lycqxmA+SHE6fKZOGIez3t5glDK6rUR2oF0hn4kwLMfJbaGAa5c6VPiCsGlFW46Zhbp45c5Y8BlmU2B1oJgLnvC+GHUc/pJFEhcwskR+Pv401XYYHx+jWIoiGnjOZJizhIuUJSw0g96xTV+f/RKVPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NWhhWVC8; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NWhhWVC8"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ee910d6aaeso42987761fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 05:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720440395; x=1721045195; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GIOHsuoN+RJIrgoMh8AOlVtaMS5uVmOStC/SKT1pRY4=;
-        b=NWhhWVC8IkFdOxM8oeAOq6g1YgxyiZ+LrU+YiMumcYIOP9Ug5xM+n7amIBKEA6EQHL
-         Tr3NawyaZIEgqdXvbg6VF+SbXzvDeWpCI99nxh4RVFRUVHcqgKKzGyPKhF8YJQOjoTFD
-         Pzfne7Rw57BA1Miuc9Dbc9XMnoKzqujZ7WqjtGYLDY0UNtwUPBrXie+fHvndR92KTxYf
-         BY4S1BsFl08LYnqCKrakxDCqWYsNMYcU9zB8AuCkVm+FoYEvpCF0cYRkLZQcxX7lBOXN
-         fEL05YQCHh809UU+h5NmNbopMggeAQpxgnnm03wTpd2QHvOMRAtai/1FNY36KcRKb8+M
-         FpCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720440395; x=1721045195;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GIOHsuoN+RJIrgoMh8AOlVtaMS5uVmOStC/SKT1pRY4=;
-        b=boykat4oJyfOxSJkVFmHaiEWxvJc4hJiGW1qiD5HA2W4DeXqGETK3xJD9u9qLPB3z0
-         LipLCKw5NEWOb7BwvfJEjgDu+lOJHxSAQv8Q2VKo74bsrVZAAYKvmr5C2pU5JX2/GSI3
-         oshrBlEdG5efz+cBKLHnx8TaSBZQtqt9APWFin/z9ied2JnuhnFsPFsIb5o+ehDiqHlF
-         EWk5HbHbEJxyho+zV9oTg8BQYqOT8hUTbT5dZ9ziOmSQsfOexyNj9LzD1wVBSzidCOaZ
-         rlcM1KyDID2xQaQt32DV6QGit98frs5aeF2CXzAGYtaqD1SU4eiQmJIWPccArgH7ERm9
-         QTxA==
-X-Gm-Message-State: AOJu0Yz0BfRfrMBfUXPBQXosFHE1/zV0uoFY19VHyDvSKP7SyCgJY7Nm
-	OeFsbsRLX/QL7fMmzZP5l3aSseeLaeHzaqgkSPUhBAvbAXk+YfO2bD2bb3fwfylCRKp0pjDlBYS
-	i
-X-Google-Smtp-Source: AGHT+IGgWz353tljKhdO83u9sS54lkUMOPfQr8fMIV7vCsqQ+f3NT52R0i3CP1D+AoSSca2X/CFjuA==
-X-Received: by 2002:a2e:99c9:0:b0:2ee:8bc6:6817 with SMTP id 38308e7fff4ca-2ee8ed5e0ecmr71535501fa.16.1720440394755;
-        Mon, 08 Jul 2024 05:06:34 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0? ([2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-58f4114a9ffsm4282023a12.12.2024.07.08.05.06.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jul 2024 05:06:34 -0700 (PDT)
-Message-ID: <402ede79-5eda-48fc-8eb8-5d89ffe6bd41@linaro.org>
-Date: Mon, 8 Jul 2024 14:06:33 +0200
+	s=arc-20240116; t=1720440461; c=relaxed/simple;
+	bh=io01hl0mtesneL2LZ5G5Ith3zDY7NttBBQHX2oUhV+8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N/RpIZS6O22BOkgbWUqIseuBuf1xEw+LkfmyKs5srDlAMssLMKz+on9ORKlIykVkJ8QfFs6Lz4itl5ZTOxg1kIkdxsGCysxApVBD5fWGL9Io6K9kxABUtzAE3QJZPV5owdIev1mK5gje4LyPaE1Nd3/SE0rvue5JEEo3uPb03LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WHjXt4M1hznYfQ;
+	Mon,  8 Jul 2024 20:07:10 +0800 (CST)
+Received: from kwepemf500005.china.huawei.com (unknown [7.202.181.243])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2B176180AA6;
+	Mon,  8 Jul 2024 20:07:35 +0800 (CST)
+Received: from huawei.com (10.67.174.161) by kwepemf500005.china.huawei.com
+ (7.202.181.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 8 Jul
+ 2024 20:07:34 +0800
+From: Cheng Yu <serein.chengyu@huawei.com>
+To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
+	<vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
+	<rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+	<bristot@redhat.com>, <vschneid@redhat.com>,
+	<changhuaixin@linux.alibaba.com>, <shanpeic@linux.alibaba.com>,
+	<dtcccc@linux.alibaba.com>, <vishalc@linux.ibm.com>, <tj@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <zhangqiao22@huawei.com>, <judy.chenhui@huawei.com>,
+	<yusongping@huawei.com>, <zhaowenhui8@huawei.com>,
+	<serein.chengyu@huawei.com>
+Subject: [PATCH v2] sched/fair: set burst to 0 when remove the restriction on cfs bandwidth
+Date: Mon, 8 Jul 2024 20:00:53 +0800
+Message-ID: <20240708120053.861037-1-serein.chengyu@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] thermal: core: Add sanity check for polling_delay
- and passive_delay
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
-References: <2746673.mvXUDI8C0e@rjwysocki.net>
- <4940808.31r3eYUQgx@rjwysocki.net>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <4940808.31r3eYUQgx@rjwysocki.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemf500005.china.huawei.com (7.202.181.243)
 
-On 05/07/2024 21:46, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> If polling_delay is nonzero and passive_delay is 0, the thermal zone
-> will use polling except when tz->passive is nonzero, which does not make
-> sense.
-> 
-> Also if polling_delay is nonzero and passive_delay is greater than
-> polling_delay, the thermal zone temperature will be updated less often
-> when tz->passive is nonzero.  This does not make sense either.
-> 
-> Ensure that none of the above will happen.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> v1 -> v2: The patch actually matches the changelog
-> 
-> ---
->   drivers/thermal/thermal_core.c |    3 +++
->   1 file changed, 3 insertions(+)
-> 
-> Index: linux-pm/drivers/thermal/thermal_core.c
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/thermal_core.c
-> +++ linux-pm/drivers/thermal/thermal_core.c
-> @@ -1440,6 +1440,9 @@ thermal_zone_device_register_with_trips(
->   		td->threshold = INT_MAX;
->   	}
->   
-> +	if (polling_delay && (passive_delay > polling_delay || !passive_delay))
-> +		passive_delay = polling_delay;
+From: Zhao Wenhui <zhaowenhui8@huawei.com>
 
-Given this is a system misconfiguration, it would make more sense to 
-bail out with -EINVAL. Assigning a default value in the back of the 
-caller will never raise its attention and can make a bad configuration 
-staying for a long time.
+In the cpu subsystem of cgroup v1 and v2, we set the restriction on cfs
+bandwidth by setting the quota and burst value. Later, when we remove
+the restriction by setting the quota to the default value, the burst
+value should also be forced to the its default value of zero.
 
-That said, there are configurations with a passive delay set to zero but 
-with a non zero polling delay. For instance, a thermal zone mitigated 
-with a fan, so active trip points are set. Another example is when there 
-is only critical trip points for a thermal zone.
+In the cgroup v1 cpu subsystem, assuming we have a cgroup named 'test',
+and we set cpu.cfs_quota_us and cpu.cfs_burst_us:
+    # echo 100000 > cpu.cfs_quota_us
+    # echo 100000 > cpu.cfs_burst_us
 
-Actually there are multiple combinations with delays value which may 
-look invalid but which are actually valid.
+Next we remove the restriction on cfs bandwidth:
+    # echo -1 > cpu.cfs_quota_us
+    # cat cpu.cfs_quota_us
+    -1
+    # cat cpu.cfs_burst_us
+    100000
 
-For example, a setup with polling_delay > 0, passive_delay = 0, active 
-trip points, cooling map to this active trips, passive trip points 
-without cooling map.
+Now we expect that the value of burst should be zero. When the burst is
+zero, it means that the restriction on burst is removed.
 
-IMHO, it is better to do the configuration the system is asking for, 
-even if it sounds weird
+The same situation exists for cgroup v2. The difference is that the
+interface definition of the cpu subsystem and the default value of
+quota. In v2, we remove the restriction on cfs bandwidth by setting max
+to cpu.max.
 
+Fixes: f4183717b370 ("sched/fair: Introduce the burstable CFS controller")
+Reported-by: Zhao Gongyi <zhaogongyi@huawei.com>
+Reported-by: Qixin Liao <liaoqixin@huawei.com>
+Signed-off-by: Zhao Wenhui <zhaowenhui8@huawei.com>
+Signed-off-by: Cheng Yu <serein.chengyu@huawei.com>
+Tested-by: Vishal Chourasia <vishalc@linux.ibm.com>
+Reviewed-by: Tianchen Ding <dtcccc@linux.alibaba.com>
+Reviewed-by: Ben Segall <bsegall@google.com>
+---
+Change log:
+----------
+v2:
+ - Put the modifications to cgroup v1 and v2 in one patch
+v1:
+ - patch for cgroup v1:
+   https://lore.kernel.org/all/20220809120320.19496-1-zhaowenhui8@huawei.com/
+ - patchset for cgroup v1 and v2:
+   https://lore.kernel.org/all/20240522031007.643498-1-serein.chengyu@huawei.com/
+---
+ kernel/sched/core.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
->   	thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
->   	thermal_set_delay_jiffies(&tz->polling_delay_jiffies, polling_delay);
-
-
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bcf2c4cc0522..982d357b3983 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -10840,6 +10840,12 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota,
+ 				     burst + quota > max_cfs_runtime))
+ 		return -EINVAL;
+ 
++	/*
++	 * Ensure burst equals to zero when quota is -1.
++	 */
++	if (quota == RUNTIME_INF && burst)
++		return -EINVAL;
++
+ 	/*
+ 	 * Prevent race between setting of cfs_rq->runtime_enabled and
+ 	 * unthrottle_offline_cfs_rqs().
+@@ -10899,8 +10905,10 @@ static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
+ 
+ 	period = ktime_to_ns(tg->cfs_bandwidth.period);
+ 	burst = tg->cfs_bandwidth.burst;
+-	if (cfs_quota_us < 0)
++	if (cfs_quota_us < 0) {
+ 		quota = RUNTIME_INF;
++		burst = 0;
++	}
+ 	else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
+ 		quota = (u64)cfs_quota_us * NSEC_PER_USEC;
+ 	else
+@@ -11406,8 +11414,11 @@ static ssize_t cpu_max_write(struct kernfs_open_file *of,
+ 	int ret;
+ 
+ 	ret = cpu_period_quota_parse(buf, &period, &quota);
+-	if (!ret)
++	if (!ret) {
++		if (quota == RUNTIME_INF)
++			burst = 0;
+ 		ret = tg_set_cfs_bandwidth(tg, period, quota, burst);
++	}
+ 	return ret ?: nbytes;
+ }
+ #endif
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.25.1
 
