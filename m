@@ -1,130 +1,69 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2764C28EF;
-	Mon,  8 Jul 2024 18:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A404A149C60;
+	Mon,  8 Jul 2024 18:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720463401; cv=none; b=rE8DqL5MGXGMjzbN2dPm+CoZsuRWn/Tj5M7AMGHiWzxDOAzTtPiRyOGeITUusrHpiP554oxfPnlhBDdFd5dygPV0FIP+OiePZ40/F5yygqTbQhjdNfseIf57meHTT/X3Tl+9Oe7liNtofXe8SynERkPA/F3iVq4elRN2EuY2Ju0=
+	t=1720463582; cv=none; b=tngZfoUhMGvUFGAInctiVcX0SLFcax+1X6SDwS2DSv4al2yBzS68OBoJusloJXhpZ8D127eM37JuPCHTbEzgQ16cQowEO9NxVl+SzFMMFWBt216q4UZUmwICj1llNMIix9Wy8VhUSQbO/7K1DjrAQ1adDwrsrPpTfhnGaADj/gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720463401; c=relaxed/simple;
-	bh=O3xBDVnWQzb55rR/mzxUKhgpUevGiB0NqubMDbDd/UE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ug67Vlmi19eO1W/G87ETc4t3pDqo/EMZZHovWlQ8oHsuI5dnPRvAJrWt4YeKcYVksyeLPu257jnAEelPW8LJzztryhmJGKXopgxqOWy6c0sUDrk+ZzodQ1Opc79IpGYrUzAC0aitUIAbAXbQyE1ahWsMrVOV1aiq78Yw4IKsPAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=DZi7NR4W; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1720463582; c=relaxed/simple;
+	bh=KlhIji6fttN1x/SuLkmgEm0UYEtfE/gtPa7l/csoIQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K0aazo6hgJuvHWmzgYen4MbcMTldccjAL3IO1ac7klg+NlITA97HGyjDolaGhcAeZIXtbg6f7OUd0eH8p0QkUsGFKA7IfxDlJQqOWfyXN6SvEPq/ycSJ2uUH66wSh0nuR24ei+6bZmoDE2hf9FlwiliihjzF+3oUCqe+YjhUDTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUjY2FKm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="DZi7NR4W"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 4F7D9100003;
-	Mon,  8 Jul 2024 21:29:31 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1720463371; bh=lqlgfh7w5S1N0Xg3sR42UQkt3Wbstut9nFE9pC0xW0g=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=DZi7NR4WOJF6Xs7dx8orMK06jRLVVorqm2lgEbqgKENapc/53dTwfbCxlAsmpkhmC
-	 7DZ3wJYa2jtN3ZOm9lllrC09RQXqHLpXuAlDw0ZPIbM3LpzqJll3EbMzNxj2l+7zoX
-	 oUwL5bfg1oPWa8iMWQ8YNGfeDbRLRCbVniNyr375bnFuYvXnA65hwHKJCFXtGqWLgq
-	 VeNwFVvY83QEg85OeY8jrWzliYGJPR3Emqsh7SsWdK23jE6Qb+bva8JMGPbsEHASvv
-	 VlnepPqiPUEscZ5p7/BYdIaQBXHQ1q/Mn53lJRiqtj3niG8B4d/nRXd7HzEMTJLidV
-	 ePENkKYOJyBWg==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Mon,  8 Jul 2024 21:28:14 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Jul 2024
- 21:27:54 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Jesse Brandeburg
-	<jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Przemek
- Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net-next v3] ice: Adjust over allocation of memory in ice_sched_add_root_node() and ice_sched_add_node()
-Date: Mon, 8 Jul 2024 21:27:36 +0300
-Message-ID: <20240708182736.8514-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUjY2FKm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90D2C4AF0B;
+	Mon,  8 Jul 2024 18:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720463582;
+	bh=KlhIji6fttN1x/SuLkmgEm0UYEtfE/gtPa7l/csoIQE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fUjY2FKmbf1k3PeDlo0rojuAuNY+XEou808qqCdBFmJrh9+dbwo5rS0WhqHg2OZgl
+	 IbzuxmWW1e2LU1w7zP4wCrghMH7EpZRCL7Svzs5tA5gD3oaC5j6gauxu9i6LjFCJwl
+	 dWFPb4h856sldakLWBe7Teh95gyyPefGkhlOSke2Lq6GQIHBqljSpo0xqmBV8WabaA
+	 T1RFEYh8YdXOp1T1H/pq9cadVNtEtpbAa+bETwd+gQyh+n72RJm/sJs80/0TBiZrtc
+	 tavakNtybfK4JjZhdlCqPICLSUFC/imr7szrOYZdYfzd0KGxtYHuEjpfFIxq3DzICS
+	 E4POah8BbIDEA==
+Date: Mon, 8 Jul 2024 11:33:00 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Donald Hunter
+ <donald.hunter@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Jonathan Corbet <corbet@lwn.net>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>,
+ kernel@pengutronix.de, linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next v6 5/7] net: ethtool: Add new power limit get
+ and set features
+Message-ID: <20240708113300.3544d36d@kernel.org>
+In-Reply-To: <20240708113846.215a2fde@kmaincent-XPS-13-7390>
+References: <20240704-feature_poe_power_cap-v6-0-320003204264@bootlin.com>
+	<20240704-feature_poe_power_cap-v6-5-320003204264@bootlin.com>
+	<20240705184116.13d8235a@kernel.org>
+	<20240708113846.215a2fde@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186376 [Jul 08 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 23 0.3.23 8881c50ebb08f9085352475be251cf18bb0fcfdd, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, lore.kernel.org:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/08 17:13:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/08 15:35:00 #25918408
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-In ice_sched_add_root_node() and ice_sched_add_node() there are calls to
-devm_kcalloc() in order to allocate memory for array of pointers to
-'ice_sched_node' structure. But incorrect types are used as sizeof()
-arguments in these calls (structures instead of pointers) which leads to
-over allocation of memory.
+On Mon, 8 Jul 2024 11:38:46 +0200 Kory Maincent wrote:
+> > This smells of null-deref if user only passes one of the attributes.
+> > But the fix should probably be in ethnl_set_pse_validate() so it won't
+> > conflict (I'm speculating that it will need to go to net).  
+> 
+> Mmh, indeed if the netlink PSE type attribute is different with the supported
+> PSE type we might have an issue here.
+> 
+> I am wondering, if I fix it in net won't it conflict with net-next now that
+> this series is merged?
 
-Adjust over allocation of memory by correcting types in devm_kcalloc()
-sizeof() arguments.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Suggested-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
-v3:
-  - Update comment and use the correct entities as suggested by Przemek
-v2: https://lore.kernel.org/all/20240706140518.9214-1-amishin@t-argos.ru/
-  - Update comment, remove 'Fixes' tag and change the tree from 'net' to
-    'net-next' as suggested by Simon
-    (https://lore.kernel.org/all/20240706095258.GB1481495@kernel.org/)
-v1: https://lore.kernel.org/all/20240705163620.12429-1-amishin@t-argos.ru/
-
- drivers/net/ethernet/intel/ice/ice_sched.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_sched.c b/drivers/net/ethernet/intel/ice/ice_sched.c
-index ecf8f5d60292..6ca13c5dcb14 100644
---- a/drivers/net/ethernet/intel/ice/ice_sched.c
-+++ b/drivers/net/ethernet/intel/ice/ice_sched.c
-@@ -28,9 +28,8 @@ ice_sched_add_root_node(struct ice_port_info *pi,
- 	if (!root)
- 		return -ENOMEM;
- 
--	/* coverity[suspicious_sizeof] */
- 	root->children = devm_kcalloc(ice_hw_to_dev(hw), hw->max_children[0],
--				      sizeof(*root), GFP_KERNEL);
-+				      sizeof(*root->children), GFP_KERNEL);
- 	if (!root->children) {
- 		devm_kfree(ice_hw_to_dev(hw), root);
- 		return -ENOMEM;
-@@ -186,10 +185,9 @@ ice_sched_add_node(struct ice_port_info *pi, u8 layer,
- 	if (!node)
- 		return -ENOMEM;
- 	if (hw->max_children[layer]) {
--		/* coverity[suspicious_sizeof] */
- 		node->children = devm_kcalloc(ice_hw_to_dev(hw),
- 					      hw->max_children[layer],
--					      sizeof(*node), GFP_KERNEL);
-+					      sizeof(*node->children), GFP_KERNEL);
- 		if (!node->children) {
- 			devm_kfree(ice_hw_to_dev(hw), node);
- 			return -ENOMEM;
--- 
-2.30.2
-
+Don't worry I understand the code well enough to resolve any conflicts
+(famous last words?). And if we fix as part of ethnl_set_pse_validate()
+then there's no conflict, AFAICT.
