@@ -1,137 +1,74 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AB413DBA8;
-	Mon,  8 Jul 2024 14:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF84513DDAC;
+	Mon,  8 Jul 2024 14:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720449823; cv=none; b=cqH4uo3PUKLt4zcMRN5VnMs9PHna/IU7P0iVqJ5urwvYYxp47RwZ+0LeMuLcpMKhgDJG7x7vDhuXDO3U5/b2y/dIvoQPTeqYykYOU1+cPT+3+YvFtiC2Hh9eDk9uf6jyD9vSOW3UZ9wDh0eAc0kFc9cYFuUWrAqBhl9YYD6bsfs=
+	t=1720449879; cv=none; b=mLTAug6RUqSYlE6Z5RbgTIjgG5IGogyWo13lvaw3qjaUnrCbEyD6dh72Puguc3zGxYGnEW5ga8GR1Z32Tp8GVW+GpGDxjSqVrPhqEQd0+swRNm3RVV8LsZ5+MXokxhXCyjIuriOGjNwFe3/jtn8Zo9CAcJrIKE/V+2h0b03t5X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720449823; c=relaxed/simple;
-	bh=6r9GwMwzx4BegyuJiN3K/5ffe24Qmh1cznIApLU/HsY=;
+	s=arc-20240116; t=1720449879; c=relaxed/simple;
+	bh=XOlkof7heUnyINqmNnRU1NkGO2/QrognmlUxLHzJxxE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LOfZ1mSOYos1aukJIjoesUyZrEp6BH9B9ZkbFuG4EMPXwnKjxuG8kP54gTu7IFX6GialEHCTm4rzutMhgtd2Noa57cO9HVTcJPXCjURz6//zWtskomgPSx9hxQrKEpxGiFMPo7Mcluu2hy+78DKSc1Ib4jZq/eIMJxEovyuJDoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=IrtmFB6v; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=HE4cvdP5JgRC5A1HW6WK57mCqNZAQA2cOn4yeT/scwRdBMPrbjbEMCAdRJ/u7+jABoa5C5kLipz6RgSoD7g/aqbmzIOKdHFLrIne00/Io3r49y0PnToLHBo8VdEAmoMh2UfTtDSFFyAyWdmygkAUCpCTQsLR8CgiLDM1QwpYk+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgVOK1Pa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="IrtmFB6v"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3BBFE40E019D;
-	Mon,  8 Jul 2024 14:43:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Im9_FPgsFzvy; Mon,  8 Jul 2024 14:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1720449816; bh=HPR5oAR0WCbg35zick8k1uzFT5/3MX20de4uqLiFOQk=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgVOK1Pa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D20C4AF0C;
+	Mon,  8 Jul 2024 14:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720449879;
+	bh=XOlkof7heUnyINqmNnRU1NkGO2/QrognmlUxLHzJxxE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IrtmFB6vbY/5blp83KHa07VwmxI3dDxa/ATwxCr2C2JNAd3G7j2KBj2UFI3HQYL3T
-	 ZYq9HhIsE2WGI1ggLJ23VGspF4ADTwEz1K5asgW+8B7v9Sbpw2YrvWaxEpW5NAltcC
-	 iYBUvP0aNtvwasVD90O87UNuNQ1lqDbTHDUHbla43KL91bLtj0x606Zo74xXfkG7e1
-	 lyYTuGQ2U4fk1PFh2a842J1TX9FLI354c5wa/VRrB4xxxegDKjYUqKyNPHvdQJoHlg
-	 lPiL+dCIFCWiU3+UnA8kfc0UiB5C0QmXVJfeBZqZfJ/0oue7j95ea0wInZbvUF6N9b
-	 67ST2kNHsy0wgMDLsujn5AQMTMt2Ww2dN+DVl4mneOXLb5ZhEvR8aa1FZvLsIqknza
-	 4qYJQ/jVGH0/Moit9UgDhggAmHiNj2DQu5RWUmoQ7qDvJOkMiWJdtQu3rYScvCN4Ac
-	 TXUPs2mA9Vfd5nEwBCMxOFsZSPVzU33ks+XoPVWTe/b8+6ekSMPovbxoh9Xkjl8fyK
-	 LkPwV3oT5v1liDjV+4mWSZwlDJJbDwpgsWciaaB6ryn2FFlZ59cuBjx6h/ZlaVR9/p
-	 AMuhBbJLhueBOiTxVlZ1JMlJpztbwjLUxyBpn5Xb74X3qgi9EFWGhjqfnGnQDcJObQ
-	 DlV1PwQBrxZk1vlfyuVkbftE=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E097340E0192;
-	Mon,  8 Jul 2024 14:43:17 +0000 (UTC)
-Date: Mon, 8 Jul 2024 16:43:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>,
-	Daniel Ferguson <danielf@os.amperecomputing.com>,
-	Ard Biesheuvel <ardb@kernel.org>, James Morse <james.morse@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Len Brown <lenb@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>, linux-acpi@vger.kernel.org,
-	linux-edac@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] RAS: ACPI: APEI: add conditional compilation to ARM
- error report functions
-Message-ID: <20240708144312.GDZov7AEzBDfSEGQEY@fat_crate.local>
-References: <cover.1720436039.git.mchehab+huawei@kernel.org>
- <f520f2529bb27d452a2dee762b6968939df42f45.1720436039.git.mchehab+huawei@kernel.org>
- <20240708113234.GDZovOUgjXFt2XoNg6@fat_crate.local>
- <20240708141025.3e5ddd51@foz.lan>
+	b=mgVOK1PaoG2+z5fHjbpQCgjbgXDapnKot4qp1Ol8fk83NoRQSblAvhGWpLebd7doa
+	 cTP+xvUle8d1sugEXAqIuHZcB+rHUGG6vynie3vHsnmM69LZjPB1deOvEjqFhXRdQS
+	 21ZNXf1aIE+qlXrG+1zwh/YndRa2Jn2WJ0fe9SkgQJEQpI1ra7RF90jQoTfFCVLp6k
+	 KbMYCsFOKi97JTR0uatjDYb29zLiR6XmbpPZVCzb8ucOrYg3uAX0iPEsNGF2hLg8sk
+	 txKlvK2edCIljuKCJg+FL/QEGqyq1Q8TzDmNDROcG8pRrzK2SqNfvNq4Mk5NNawwVV
+	 MEVJH8Vea9NZQ==
+Date: Mon, 8 Jul 2024 08:44:37 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Kamil =?iso-8859-1?Q?Hor=E1k?= <kamilh@axis.com>
+Cc: linux@armlinux.org.uk, andrew@lunn.ch, edumazet@google.com,
+	devicetree@vger.kernel.org, davem@davemloft.net,
+	conor+dt@kernel.org, netdev@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com, hkallweit1@gmail.com,
+	kuba@kernel.org, florian.fainelli@broadcom.com, krzk+dt@kernel.org,
+	pabeni@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 3/4] dt-bindings: ethernet-phy: add optional brr-mode
+ flag
+Message-ID: <172044987681.3165374.12381204340909635857.robh@kernel.org>
+References: <20240708102716.1246571-1-kamilh@axis.com>
+ <20240708102716.1246571-4-kamilh@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240708141025.3e5ddd51@foz.lan>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240708102716.1246571-4-kamilh@axis.com>
 
-On Mon, Jul 08, 2024 at 02:10:25PM +0200, Mauro Carvalho Chehab wrote:
-> This patch itself just add conditionals to optimize out code on
-> non-ARM architectures. The next one will add some ARM-specific bits
-> inside ARM processor CPER trace, thus causing compilation breakages
-> on non-ARM, due to arm-specific kAPI bits that will be used then.
 
-Are you sure?
+On Mon, 08 Jul 2024 12:27:15 +0200, Kamil Horák (2N) wrote:
+> There is a group of PHY chips supporting BroadR-Reach link modes in
+> a manner allowing for more or less identical register usage as standard
+> Clause 22 PHY.
+> These chips support standard Ethernet link modes as well, however, the
+> circuitry is mutually exclusive and cannot be auto-detected.
+> The link modes in question are 100Base-T1 as defined in IEEE802.3bw,
+> based on Broadcom's 1BR-100 link mode, and newly defined 10Base-T1BRR
+> (1BR-10 in Broadcom documents).
+> 
+> Add optional brr-mode flag to switch the PHY to BroadR-Reach mode.
+> 
+> Signed-off-by: Kamil Horák (2N) <kamilh@axis.com>
+> ---
+>  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
 
-I have both patches applied and then practically reverting the second one
-builds an allmodconfig just fine.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 90efca025d27..524fea3f4f76 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -532,7 +532,6 @@ static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
- 				     int sev, bool sync)
- {
- 	bool queued = false;
--#if defined(CONFIG_ARM) || defined (CONFIG_ARM64)
- 	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
- 	int flags = sync ? MF_ACTION_REQUIRED : 0;
- 	int sec_sev, i;
-@@ -570,7 +569,6 @@ static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
- 				    error_type);
- 		p += err_info->length;
- 	}
--#endif
- 	return queued;
- }
- 
-diff --git a/drivers/ras/ras.c b/drivers/ras/ras.c
-index 75acc09bc96a..359bb163aee0 100644
---- a/drivers/ras/ras.c
-+++ b/drivers/ras/ras.c
-@@ -54,7 +54,6 @@ void log_non_standard_event(const guid_t *sec_type, const guid_t *fru_id,
- 
- void log_arm_hw_error(struct cper_sec_proc_arm *err, const u8 sev)
- {
--#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
- 	struct cper_arm_err_info *err_info;
- 	struct cper_arm_ctx_info *ctx_info;
- 	u8 *ven_err_data;
-@@ -97,7 +96,6 @@ void log_arm_hw_error(struct cper_sec_proc_arm *err, const u8 sev)
- 
- 	trace_arm_event(err, pei_err, pei_len, ctx_err, ctx_len,
- 			ven_err_data, (u32)vsei_len, sev, cpu);
--#endif
- }
- 
- static int __init ras_init(void)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
