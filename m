@@ -1,58 +1,61 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DFC80B;
-	Mon,  8 Jul 2024 00:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393DB36D;
+	Mon,  8 Jul 2024 00:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720399054; cv=none; b=rSOIqPl1gBqjX70Nbia3jRq9Zp+I0/3wvzBVXm0ABVW27jrxAFkbaGL877uZnVcoIbFZeJefGX+BEt/xRc85cSVpynZcC0qmWaf7Lid48yepG1mQ5oaP+c0OaSoOan6OlKL0gyaZvk9JzOMulGbYkKOZviGs6gRo1agoE+D3krA=
+	t=1720399063; cv=none; b=ERBMSvHsFcobjXO4A1kDGx3cDMO6+vG/B30JzNIw+Kg8BLQrZ8hfdC0m4wHIvhBwmbC6JOn4WnvWoT3nGHf6BsMyCOHRq3AlFUQ767xHyOJ8+aJw33wUhh7EelUMC/96xp0uzVoSkTyQax5ENHY0DxBnAkaXsoBplB8dtEyD/vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720399054; c=relaxed/simple;
-	bh=MiMJG63NASlvt7qJxASie1GoZRUC/mr0UtW13M84QPM=;
+	s=arc-20240116; t=1720399063; c=relaxed/simple;
+	bh=CAQNDS9u4eM3Jei3J6nTrfoKZ9WlAcfbxi11LMHQvQA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BR8USX5+3Y8KS5LPPLBTsqMZTz35MdDvzTKwk3v8IS5Gl6vS+T70zWtJkF5i3Zx+fkvzmOeDWB3/z+rWRU9Sy4MF6Z2qngGGjqB16Z+DhyUx0iZpCLoOdAZ0J2eBx2//T44YhSFE1ikwz0DUYA0o/3+NtdSMmnlhlFTaKtU7BXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fb3cf78fbdso14952295ad.1;
-        Sun, 07 Jul 2024 17:37:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720399052; x=1721003852;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lTvNLM66nwd68RQoTUd8FCCFjj11nByhXLQEJt7gNuk=;
-        b=cq8nrhdE9Phd0E1DzxAqpMq4pIREszRYpFhCjInDiZkYHJA+eli/r3lI7XzeZJNJKL
-         9JKOHXh9DbLofdamNb0axonAfTHa9vz7k3oVCA5LDENViKvQezkOlC5z9gVQfW4sm+C+
-         9q0wiErDKaCMugM8qFc7/bbyOq5vt7r4/Q9w2n+KkfXQMH1jZpIbk47pi/TAEKtsLvdM
-         3EmmIJZM3InuXufnq6ZgT5nwDtCrLggHt3YMtTwHAFNfVoKxp1cqf9PIt5DOJ51BvF4I
-         ClxhBQFvg+/C9/zwLFX2j2Yo5P6IU4JX+CTMSa/FtmE44L+Pvuza7A2OTqgj9CQLi9R9
-         tC9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXQtOvSOhf3jsAnvBJwzNXzAn1M4sPwwS13tEwCy0ra3Z63nL6FT5G4tWNxujbxzzOQDoeqEZ1uJGjsZCCp++VDiier8oepXWU4yfUdBr9jNjHc0JrbdNufVsstzpwlP333V/83lBc+
-X-Gm-Message-State: AOJu0YxIw8MMZBRQFsOyOiJZpM+a+MM3yoeQf9aXiZG5aFyz5yNon3bA
-	vYcgidPYnIJxQIFEZcvRCaORHaxSeyqpAAfqz+CEdkyIcVRYoWrT
-X-Google-Smtp-Source: AGHT+IEQ0YSIsZQiYlWjdmirmhz8CjJ0C3r8wFYZao/qN8Azt4ufSCus+IcSGA8zg3S0laH5vg5sqA==
-X-Received: by 2002:a17:902:e995:b0:1fb:183e:7be8 with SMTP id d9443c01a7336-1fb33f35ab5mr47156325ad.68.1720399052280;
-        Sun, 07 Jul 2024 17:37:32 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb1e4f12b1sm81396135ad.146.2024.07.07.17.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jul 2024 17:37:31 -0700 (PDT)
-Date: Mon, 8 Jul 2024 09:37:30 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	caleb.connolly@linaro.org, bhelgaas@google.com,
-	amit.pundir@linaro.org, neil.armstrong@linaro.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Praveenkumar Patil <PraveenKumar.Patil@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
- CONFIG_OF is enabled
-Message-ID: <20240708003730.GA586698@rocinante>
-References: <20240707183829.41519-1-spasswolf@web.de>
- <Zoriz1XDMiGX_Gr5@wunner.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HypZzm1Yi1u+9HG0uC4+zSIoBaAOYddUyxH79stPSn0U2i1Nco2qenqYjXddCYZWifN/GoiBtbBv1E0TrhLEVWgYE/Ox6bMbQ/m1Huc5rwR1Z0yz1po68+zxyqEuTNdz2BcXCrID9zZIbkoLgLYCWOLX3YjmdAlJY2wx9w490uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NpS9oi6T; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NpS9oi6T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720399061; x=1751935061;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CAQNDS9u4eM3Jei3J6nTrfoKZ9WlAcfbxi11LMHQvQA=;
+  b=NpS9oi6TR0Z5p14YUFRD8EZD5hYQSp7ErgyUyDYJ/0Zq+LfD400rSmEg
+   AWLEwvYX61B9xY0b3GnmlqjJY93E925//RFtwnnUcGF3UE8mQrbZV+hv/
+   c9xFY09b0vnXQd6GkpnSVOqycrtvpAhAIK+bWfRq20+5hIrXcawFOpR6e
+   2XPOjb0uq7fxT5TSsXgJfrmCdxvCCatr+6lIRIALoO9pnXS1ltXtUiqBn
+   fm6HxiDkME+OJToUR6eYdYJAz2HWvP2dkTrRGwPvZn7W00kl8qpZ1/POr
+   h8WfOzg4WP7JpWUoz5zc0KRvKuidivS4mHFWwukrbITgQa65JL6jIxsMA
+   g==;
+X-CSE-ConnectionGUID: 62xlbypnSt+isboP0buGVg==
+X-CSE-MsgGUID: pEqQ72p2RdW0B+GvHKgx2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="21400420"
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="21400420"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2024 17:37:41 -0700
+X-CSE-ConnectionGUID: cAj2mUGoSv6HUR004a3Frg==
+X-CSE-MsgGUID: u0yr88rVShS1hMcCHadJ4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="52539044"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 07 Jul 2024 17:37:27 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sQcNh-000VP0-1I;
+	Mon, 08 Jul 2024 00:37:25 +0000
+Date: Mon, 8 Jul 2024 08:36:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>,
+	hdegoede@redhat.com
+Cc: oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, carlosmiguelferreira.2003@gmail.com
+Subject: Re: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
+Message-ID: <202407080802.Qbwt3Edr-lkp@intel.com>
+References: <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,27 +64,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zoriz1XDMiGX_Gr5@wunner.de>
+In-Reply-To: <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
 
-Hello,
+Hi Carlos,
 
-> > If of_platform_populate() is called when CONFIG_OF is not defined this
-> > leads to spurious error messages of the following type:
-> >  pci 0000:00:01.1: failed to populate child OF nodes (-19)
-> >  pci 0000:00:02.1: failed to populate child OF nodes (-19)
-> > 
-> > Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
-> > 
-> > Signed-off-by: Bert Karwatzki <spasswolf@web.de>
-> 
-> Reported-by: Praveenkumar Patil <PraveenKumar.Patil@amd.com>
-> Closes: https://lore.kernel.org/all/20240702173255.39932-1-superm1@kernel.org/
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Mario Limonciello <mario.limonciello@amd.com>
+kernel test robot noticed the following build errors:
 
-If there aren't any objections, I will take this via the PCI tree, and add
-the missing tags.  So, no need to send a new version of this patch.
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.10-rc7 next-20240703]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thank you for the work here!  Appreciated.
+url:    https://github.com/intel-lab-lkp/linux/commits/Carlos-Ferreira/HP-wmi-added-support-for-4-zone-keyboard-rgb/20240708-015808
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240707175613.27529-2-carlosmiguelferreira.2003%40gmail.com
+patch subject: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
+config: i386-randconfig-012-20240708 (https://download.01.org/0day-ci/archive/20240708/202407080802.Qbwt3Edr-lkp@intel.com/config)
+compiler: gcc-9 (Ubuntu 9.5.0-4ubuntu2) 9.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240708/202407080802.Qbwt3Edr-lkp@intel.com/reproduce)
 
-	Krzysztof
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407080802.Qbwt3Edr-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/locktorture.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/test-ww_mutex.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/rcutorture.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/rcuscale.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/refscale.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/torture.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in mm/dmapool_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv4.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp437.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp737.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp852.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp855.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp861.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp862.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp932.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_euc-jp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_ascii.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-2.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-9.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-u.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-ru.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-centeuro.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-croatian.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-roman.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_ucs2_utils.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/binfmt_misc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/autofs/autofs4.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/curve25519-generic.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/math/prime_numbers.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/acpi/platform_profile.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/qcom/hdma_mgmt.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/da9121-regulator.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/ttynull.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/ati-agp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/amd64-agp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/efficeon-agp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/agp/sis-agp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/ppdev.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tiny/cirrus.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-spmi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/pcf50633-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/qcom-pm8008.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio_aec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio_netx.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-pxa.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/rc/rc-core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/mmc_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_simple.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_emmc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/simple/simatic-ipc-leds-gpio-core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/coreboot_table.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/framebuffer-coreboot.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/memconsole.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/memconsole-coreboot.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_userspace.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-aspeed.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/parport/parport.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_util.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_cmdset_0020.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/hisi-spmi-controller.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/mr75203.o
+>> ERROR: modpost: "devm_led_classdev_multicolor_unregister" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
+>> ERROR: modpost: "devm_led_classdev_multicolor_register_ext" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
