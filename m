@@ -1,117 +1,103 @@
-Received: from out.smtpout.orange.fr (out-14.smtpout.orange.fr [193.252.22.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD3617C9E;
-	Mon,  8 Jul 2024 18:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DCF14BFA8;
+	Mon,  8 Jul 2024 18:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720464387; cv=none; b=EmXMiazvq6oc4GvWxVeD/26XnPn8F+hOf7786DPe3kf4tQN8FPexHtrE/VevUZ0US3oHsFwWMTmBzktHBWN8aLm0wURyNjbGMtnAzh6lvrjEwwWH8Lb1doJ5AbKOg5tpadhoCo6Gpxwm3INVCZtZKzKziy8k+J5aP3V9IsXsPd4=
+	t=1720464392; cv=none; b=Pv64waKKN4tDd/yRyNAE3/DWEPKFyHFX61ToIKjfb8GfN+Vzza4fy4VrZWZriwmVox2L0tm2NVG3biq0EL5YAXRTdgI1rWuCyIM6b1Uzs8Au6wzFf4wsHdVrPJS9mCdzfsbBBiFmipmG0yKUgGSGDwDk6klXrHsql19huMpPrhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720464387; c=relaxed/simple;
-	bh=qhKBayIAPavSMW75aEM3zJFBTq4j3VWijVeLsHFc6bE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mF5exyT8mYmQbb0TdjpYY/jf24gwpWdJvmyS5bqC4KvY+JZW+hh19xat7C0lurpmohjA0xZpUCJIA3atDcugCmRofY3p8hpnx3eC3FlLynHIEK7Fddi9buEbTp9xnxFh0g7OVoznFFdYTew3xV37Vo+V81h+h/F2QivG3YqASu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=myuGue4s; arc=none smtp.client-ip=193.252.22.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1720464392; c=relaxed/simple;
+	bh=nWsKkWowCIBu+p5sjvVUVjNIp23bl9SMKEPKGmLp4tc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rsD08Ls0r1mJV4hgX1NslexkUq+mUWsgbejYGP4o30urF+mK6NT0//ZOEizU646D6Ky9rAuTMHkCl+XA47wFV5hA+dRO+4lm0Tx8BDCu9Z4EI/QkCpAM/g4mjwRKZ3BEGoGJDs/04oYF9S1cwoKX0iRMpmbaiD0JseSMw4uNFDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=axskcSQs; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="myuGue4s"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id QsprsV0CzZLaOQspssvWtF; Mon, 08 Jul 2024 20:11:36 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1720462296;
-	bh=krSibVlXs2Xtz/4LEWDf2JDpcRVHt1a2jYVqAJYebcs=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=myuGue4s1pukqR07LJDpCxc11AGXJ4/MLDGGJ/h9rppxkYq/auADyRTiP42xlwiVo
-	 NjvawSS23pOqRM4r0jwEn71PnICPoL9r1H3MYNm5DgtLJO/QZ1cUSepN0wb85FYafp
-	 0ACf17Rtk15N4iWRE3w+x6uvcWPkfy7urwBe/JEIq0dkBh3fiuy2IDgFWT8i3KDrt7
-	 yUjxGM0taYXeZLyX8cyecR9CEiISmAf8CveSqqwBLkrDn/p+M/fi9Lc9wfFLi5F627
-	 MYkNPFG6gQZjSKmqhjPNa/TBnHJ9Sq76K1NNLuacKQfwnQXwapHSi8G2DFY+Afb+NW
-	 dDrAYKK1AUecQ==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 08 Jul 2024 20:11:36 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-	Jack Wang <jinpu.wang@ionos.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-block@vger.kernel.org
-Subject: [PATCH] block/rnbd: Constify struct kobj_type
-Date: Mon,  8 Jul 2024 20:11:30 +0200
-Message-ID: <e3d454173ffad30726c9351810d3aa7b75122711.1720462252.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="axskcSQs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720464390; x=1752000390;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nWsKkWowCIBu+p5sjvVUVjNIp23bl9SMKEPKGmLp4tc=;
+  b=axskcSQszyy9taC6iLt7nKXnhU7imk7ovy84sB3UFRYPWriWLOTsVLJ5
+   LcJNBi83fu6cwGCV+WVsD3UGaiW7J0afN/z8gENfO2hcbjv2A6hKpbbRg
+   7n+rEqWnyHWAkX3PW8NrCx1SlcgdENGUsNMC53HqLhtKqpyBCM2dbxW2c
+   FEL3A91er620EHWZGQjXpJjcy5CkhWal5zGHu6uEvGzvoKwg0y49/jWg8
+   +IO3BoIwRI8Pi+qmnPOXRk+/PtwUaWd72dlJ77+P6EJb90VOu16RSafHN
+   2JFXtiSHFL1EyKCMjQ90Fm5wmzS8j/xoTjpJNcQMePBnNrBaybk1uhEdy
+   g==;
+X-CSE-ConnectionGUID: /4mzYbb8RvedRjCFGFlGtA==
+X-CSE-MsgGUID: luO3H9uWT42Pd7Cn1bZuRQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="40194942"
+X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
+   d="scan'208";a="40194942"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 11:46:29 -0700
+X-CSE-ConnectionGUID: 6zaTBzB8TcKx8bpQm7yTCg==
+X-CSE-MsgGUID: mUB86ChdRU6fPZ2trmZSvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
+   d="scan'208";a="48327202"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.105.241])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 11:46:29 -0700
+Date: Mon, 8 Jul 2024 11:46:27 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: peng guo <engguopeng@buaa.edu.cn>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, wyguopeng@163.com
+Subject: Re: [PATCH] cxl core:wrong value of macro definition
+Message-ID: <Zow0Aw+vrXShXv+n@aschofie-mobl2>
+References: <20240708152902.5853-1-engguopeng@buaa.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708152902.5853-1-engguopeng@buaa.edu.cn>
 
-'struct kobj_type' is not modified in this driver. It is only used with
-kobject_init_and_add() which takes a "const struct kobj_type *" parameter.
+On Mon, Jul 08, 2024 at 11:29:02PM +0800, peng guo wrote:
+> The first value of the macro definition DEFINE_CXL_VENDOR_DEBUG_UUID
+> does not match the definition in the CXL 2.0 specification table 170.
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
+Please update commit message format and make it specific, like:
+cxl/core: Support mbox op clear log of vendor debug logs
 
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-   4082	    792	      8	   4882	   1312	drivers/block/rnbd/rnbd-srv-sysfs.o
+Isn't that what this is actually doing? It's correcting a typo to enable
+the clearing of those logs. If that's true, let's not bury the impact
+in a typo headline.
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-   4210	    672	      8	   4890	   131a	drivers/block/rnbd/rnbd-srv-sysfs.o
+See cxl_payload_from_user_allowed(). I'm guessing that's how you
+found this.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only
----
- drivers/block/rnbd/rnbd-clt-sysfs.c | 2 +-
- drivers/block/rnbd/rnbd-srv-sysfs.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+--Alison
 
-diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
-index 39887556cf95..6ea7c12e3a87 100644
---- a/drivers/block/rnbd/rnbd-clt-sysfs.c
-+++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
-@@ -475,7 +475,7 @@ void rnbd_clt_remove_dev_symlink(struct rnbd_clt_dev *dev)
- 	}
- }
- 
--static struct kobj_type rnbd_dev_ktype = {
-+static const struct kobj_type rnbd_dev_ktype = {
- 	.sysfs_ops      = &kobj_sysfs_ops,
- 	.default_groups = rnbd_dev_groups,
- };
-diff --git a/drivers/block/rnbd/rnbd-srv-sysfs.c b/drivers/block/rnbd/rnbd-srv-sysfs.c
-index cba6ba43c2c2..64780094442c 100644
---- a/drivers/block/rnbd/rnbd-srv-sysfs.c
-+++ b/drivers/block/rnbd/rnbd-srv-sysfs.c
-@@ -33,7 +33,7 @@ static void rnbd_srv_dev_release(struct kobject *kobj)
- 	kfree(dev);
- }
- 
--static struct kobj_type dev_ktype = {
-+static const struct kobj_type dev_ktype = {
- 	.sysfs_ops = &kobj_sysfs_ops,
- 	.release = rnbd_srv_dev_release
- };
-@@ -184,7 +184,7 @@ static void rnbd_srv_sess_dev_release(struct kobject *kobj)
- 	rnbd_destroy_sess_dev(sess_dev, sess_dev->keep_id);
- }
- 
--static struct kobj_type rnbd_srv_sess_dev_ktype = {
-+static const struct kobj_type rnbd_srv_sess_dev_ktype = {
- 	.sysfs_ops	= &kobj_sysfs_ops,
- 	.release	= rnbd_srv_sess_dev_release,
- };
--- 
-2.45.2
-
+> 
+> Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
+> ---
+>  drivers/cxl/cxlmem.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index af8169ccdbc0..feb1106559d2 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -563,7 +563,7 @@ enum cxl_opcode {
+>  		  0x3b, 0x3f, 0x17)
+>  
+>  #define DEFINE_CXL_VENDOR_DEBUG_UUID                                           \
+> -	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
+> +	UUID_INIT(0x5e1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
+>  		  0x40, 0x3d, 0x86)
+>  
+>  struct cxl_mbox_get_supported_logs {
+> -- 
+> 2.43.0
+> 
