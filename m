@@ -1,48 +1,49 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F192746D;
-	Mon,  8 Jul 2024 21:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127F91EB44;
+	Mon,  8 Jul 2024 21:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720474245; cv=none; b=BdOhHCV/nV/H+sFxTSursXLQje65StSq4D7H0F2dFNrD7615uHeSc1x8hDEF0Aic3OrOFc+/vIieBTHiOfR+6wnDQmTUIFMJnsBeyA45QumpxfYq9TzXFZJTcoBfYbFgVITXbBV4ck2WXHxpxAkCImzPGtY9R/rfygifMXptBBo=
+	t=1720474246; cv=none; b=pNOEdDGfdj50HIv2sC6P1BJCgb1ATRKb/1KlLOBiVqSOg7P67Pfg7+hx7Me143DHfOeVHGwgM6ZucXdpOkpkcMHmAhOCO/xyHPTQaolHRoYnaz1eGZrUNnDQns2jWS447sRVpZxN4PE+W7DFINqdXmTf5q3hn+N7qgINL+zg4Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720474245; c=relaxed/simple;
-	bh=duozjZXMWWvq5tYkbpTynS/FuQA3cC8dbUZBNsR0puk=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=pZAS/Ywh98d8Bat4IYCB3gDjMYDRlwsfibIFyjz+6r9cA3bbJVwcISj6wfzEaXEgMeKssmB09e0wgWgpSe3Mb9RRIPzgqtHE6uHkuQiHPAS89SO8qxSOw9DVBegiEih1BFGfitUa1WYybc2p+s7dEty537jrZ/u543guLDthqEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ydg49n5i; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1720474246; c=relaxed/simple;
+	bh=UQd0EeHvwuiEjQaFcAKp5z898/9I3p67P2UNvkMBYmQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=KPvY/PaD+PFTBYbpRbX/vLW3sEWzx8k6ShWiCjU1UYFqM/pALyTZQ2HxjPh7ONA42fK/yr0ZuonV9Rz8AdAgeUM27ZgzfzPbfVuis+uVGh5WExxNiYenACjdQH8O1rnBHIMWbX8W68g0oK6uBbL24Zj6oqejV3RHNtuIc7HY0zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gIRKfcFe; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ydg49n5i"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468B1fTC007224;
-	Mon, 8 Jul 2024 21:30:19 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gIRKfcFe"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468BVxft006674;
+	Mon, 8 Jul 2024 21:30:20 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=L6cEO64TKdDlNc083+GDhR
-	JFbcXjfXusz+trKqJlFRU=; b=Ydg49n5iAkp7OW3/p0HYQCp60GHSewIXYZxwHc
-	Y4Pbpo7LfNzrkXecSa03h3fO/CRpOWw+DG9PLbeZahJ+471MHqee2PyYUw1Z5hJG
-	+phc3EnYQ1drvCzdR0ARH3/0fQwJwlSr5+zqAJSCqItJ5RbN0KzHN+RSdNpPl1jw
-	OZN2GWL985YM+Q2ZIYlskyqj1cnbc2cl6AwOBO1GGHGuzEUPX7kfy3K0aVQRHnXY
-	btI6yY9V1Opt+HuJ1ZwCd5o0egz2vQ7audjHC/yMEs0tZObTkeA7g6aCMIvdlh6/
-	fW07HG6+kzz7S1hz5a3BTbdOdMv3u6SsavCeorngS5JL73Eg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wmmms8k-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	KS606ZWf5wW3Nf/IpnMfTERzoRSsXb3f/8SaJ+eoiwA=; b=gIRKfcFeQdkovkkA
+	AazRKLKefZJp8jTu4dV+WWI8n21FEqLuEQwAr06YjhQN320lWN0h/4tMAFX0Ffip
+	3GahY04NzhFRzg29Zd1nFTA3tR4qRPbWtmL5NPyU/Fk7sjfSNwtVK07BRTDoU2pk
+	ATG1qLfij2pJD7c3JJKVjRMACxnG+svPuw9X9F8lQNK9XxaMiXVq15BvimXt+vg1
+	zfkIXtY95GfqXUifdU9bevcEcS3rFfeUytNWRt5xVZcaQ8d565WvQzs1+fm9tPZB
+	UkwgdzSfZjoLzZDGz1IXjeHW/BmwvgcEzBLpSc6/Xg5gUkMjqo70YPP3oSj+i9zu
+	ZcKbxQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wjn4txx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jul 2024 21:30:19 +0000 (GMT)
+	Mon, 08 Jul 2024 21:30:20 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 468LUI0u017962
+	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 468LUJg2019360
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jul 2024 21:30:18 GMT
+	Mon, 8 Jul 2024 21:30:19 GMT
 Received: from hu-scheluve-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 8 Jul 2024 14:30:14 -0700
+ 15.2.1544.9; Mon, 8 Jul 2024 14:30:15 -0700
 From: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
-Subject: [PATCH v4 0/2] Add interconnect support for stmmac driver.
-Date: Mon, 8 Jul 2024 14:29:59 -0700
-Message-ID: <20240708-icc_bw_voting_from_ethqos-v4-0-c6bc3db86071@quicinc.com>
+Date: Mon, 8 Jul 2024 14:30:01 -0700
+Subject: [PATCH v4 2/2] net: stmmac: Add interconnect support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,10 +52,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFdajGYC/33NwWrDMAzG8VcpPs9DVhw32WnvMUpwVbnRoXFrZ
- +5GybvPLYxtDHL8f6CfbipzEs7qZXNTiYtkiVMN+7RRNPrpyFoOtRUCWnAGtBAN++tQ4izTcQg
- pngaex0vM2mBoyfHBOkJV78+Jg3w87Ldd7VHyHNPn41Ux9/Vb7VfUYjRoZwz2ttt32PLr5V1IJ
- nqmeFJ3t+AvC9s1C6vF3m8p9OAgwH+r+bG20KxZTbW60BvbeXLgm7/WsixfpyKkVFwBAAA=
+Message-ID: <20240708-icc_bw_voting_from_ethqos-v4-2-c6bc3db86071@quicinc.com>
+References: <20240708-icc_bw_voting_from_ethqos-v4-0-c6bc3db86071@quicinc.com>
+In-Reply-To: <20240708-icc_bw_voting_from_ethqos-v4-0-c6bc3db86071@quicinc.com>
 To: Vinod Koul <vkoul@kernel.org>,
         Alexandre Torgue
 	<alexandre.torgue@foss.st.com>,
@@ -84,66 +84,108 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: p_fTsgHqrwjyrVdqsaQvV_rEG8Z20c_C
-X-Proofpoint-ORIG-GUID: p_fTsgHqrwjyrVdqsaQvV_rEG8Z20c_C
+X-Proofpoint-ORIG-GUID: zfAhGpNLOw1bMQx9XUBga-F_rOwxdG52
+X-Proofpoint-GUID: zfAhGpNLOw1bMQx9XUBga-F_rOwxdG52
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-08_11,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0 adultscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 bulkscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2406140001 definitions=main-2407080159
 
-Interconnect is a software framework to access NOC bus topology
-of the system, this framework is designed to provide a standard
-kernel interface to control the settings of the interconnects on
-an SoC.
-The interconnect support is now being added to the stmmac driver
-so that any vendors who wants to use this feature can just
-define corresponging dtsi properties according to their
-NOC bus topologies.
+Add interconnect support to vote for bus bandwidth based
+on the current speed of the driver.
+Adds support for two different paths - one from ethernet to
+DDR and the other from CPU to ethernet, Vote from each
+interconnect client is aggregated and the on-chip interconnect
+hardware is configured to the most appropriate bandwidth profile.
 
-here is a patch series which is enabling interconnect support
-for ethernet node of SA8775P
-https://lore.kernel.org/all/20240708-icc_bw_voting_emac_dtsi-v1-1-4b091b3150c0@quicinc.com/ 
-
+Suggested-by: Andrew Halaney <ahalaney@redhat.com>
 Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
 ---
-Changes in v4:
-- Add reference to the series which is enabling interconnect-properties defined in this series
-- Link to v3: https://lore.kernel.org/r/20240703-icc_bw_voting_from_ethqos-v3-0-8f9148ac60a3@quicinc.com
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h          |  1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     |  8 ++++++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 12 ++++++++++++
+ include/linux/stmmac.h                                |  2 ++
+ 4 files changed, 23 insertions(+)
 
-Changes in v3:
-- Drop the patch:
-	[PATCH v2 3/3] net: stmmac: Bring down the clocks to lower frequencies when mac link goes down.
-- Modify the dt-bindings property names from "axi" and "ahb" to "mac-mem" and
-  "cpu-mac" respectively.
-- Link to v2: https://lore.kernel.org/r/20240625-icc_bw_voting_from_ethqos-v2-0-eaa7cf9060f0@quicinc.com
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index b23b920eedb1..56a282d2b8cd 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -21,6 +21,7 @@
+ #include <linux/ptp_clock_kernel.h>
+ #include <linux/net_tstamp.h>
+ #include <linux/reset.h>
++#include <linux/interconnect.h>
+ #include <net/page_pool/types.h>
+ #include <net/xdp.h>
+ #include <uapi/linux/bpf.h>
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b3afc7cb7d72..ec7c61ee44d4 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -985,6 +985,12 @@ static void stmmac_fpe_link_state_handle(struct stmmac_priv *priv, bool is_up)
+ 	}
+ }
+ 
++static void stmmac_set_icc_bw(struct stmmac_priv *priv, unsigned int speed)
++{
++	icc_set_bw(priv->plat->axi_icc_path, Mbps_to_icc(speed), Mbps_to_icc(speed));
++	icc_set_bw(priv->plat->ahb_icc_path, Mbps_to_icc(speed), Mbps_to_icc(speed));
++}
++
+ static void stmmac_mac_link_down(struct phylink_config *config,
+ 				 unsigned int mode, phy_interface_t interface)
+ {
+@@ -1080,6 +1086,8 @@ static void stmmac_mac_link_up(struct phylink_config *config,
+ 	if (priv->plat->fix_mac_speed)
+ 		priv->plat->fix_mac_speed(priv->plat->bsp_priv, speed, mode);
+ 
++	stmmac_set_icc_bw(priv, speed);
++
+ 	if (!duplex)
+ 		ctrl &= ~priv->hw->link.duplex;
+ 	else
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 54797edc9b38..201f9dea6da9 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -642,6 +642,18 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
+ 		dev_dbg(&pdev->dev, "PTP rate %d\n", plat->clk_ptp_rate);
+ 	}
+ 
++	plat->axi_icc_path = devm_of_icc_get(&pdev->dev, "mac-mem");
++	if (IS_ERR(plat->axi_icc_path)) {
++		ret = ERR_CAST(plat->axi_icc_path);
++		goto error_hw_init;
++	}
++
++	plat->ahb_icc_path = devm_of_icc_get(&pdev->dev, "cpu-mac");
++	if (IS_ERR(plat->ahb_icc_path)) {
++		ret = ERR_CAST(plat->ahb_icc_path);
++		goto error_hw_init;
++	}
++
+ 	plat->stmmac_rst = devm_reset_control_get_optional(&pdev->dev,
+ 							   STMMAC_RESOURCE_NAME);
+ 	if (IS_ERR(plat->stmmac_rst)) {
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index f92c195c76ed..385f352a0c23 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -283,6 +283,8 @@ struct plat_stmmacenet_data {
+ 	struct reset_control *stmmac_rst;
+ 	struct reset_control *stmmac_ahb_rst;
+ 	struct stmmac_axi *axi;
++	struct icc_path *axi_icc_path;
++	struct icc_path *ahb_icc_path;
+ 	int has_gmac4;
+ 	int rss_en;
+ 	int mac_port_sel_speed;
 
-Changes in v2:
-- Edit the cover letter to give a big picture of this change.
-- Move the interconnect changes from ethqos driver to stmmac driver.
-- Reorder the the patches to place bindings patch on the top.
-- Remove "_icc_path" redundant string from the "interconnect-names" property.
-- Link to v1: https://lore.kernel.org/r/20240619-icc_bw_voting_from_ethqos-v1-0-6112948b825e@quicinc.com
-
----
-Sagar Cheluvegowda (2):
-      dt-bindings: net: qcom: ethernet: Add interconnect properties
-      net: stmmac: Add interconnect support
-
- Documentation/devicetree/bindings/net/qcom,ethqos.yaml |  8 ++++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h           |  1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c      |  8 ++++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c  | 12 ++++++++++++
- include/linux/stmmac.h                                 |  2 ++
- 5 files changed, 31 insertions(+)
----
-base-commit: 8a92980606e3585d72d510a03b59906e96755b8a
-change-id: 20240610-icc_bw_voting_from_ethqos-12f5c6ed46c2
-
-Best regards,
 -- 
-Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+2.34.1
 
