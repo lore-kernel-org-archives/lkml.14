@@ -1,132 +1,113 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD36142E90
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E805F139D07
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720454953; cv=none; b=j/OxZpXrFd6ulkbX8EI7FJQRPDq2kIlO3UxJNTu7TD/zqS1Yn2mBdXuixSYb6S4mO2ot7MGvXXn8JZl5iHvcRbo06p/OZJ1jUW6VbQpkfAGCmT2NERSlB1wDWxx8LruB4p4n0NiUwwAmZf7q7FU3V/FvlU0PYnJHt1f4RaUGtsI=
+	t=1720454964; cv=none; b=cntK7Xt1SXHvoBw/RN5qV6vmnxK9RNBQEczVoXAISX459svDTCl0JCRXW6qLQ7AcqcSCEdLuTn4EiR7jO7LSxl0CFOyNth/kBA/qgmrm+OTrIlV3mWxtUpqAAVy/9/rvCQC6c5uksxYfPZAz25sum4TvNrj6wEKRTShpmPMl6lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720454953; c=relaxed/simple;
-	bh=Vuy+tdEYiWTkuOL1+Ju14j/vlrE3oT4RzPh9CG4iLj0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LRagxpD7RIfiGkzRx6yJzAMywO6gVjaNif0hdN44i4MqFtVYKdw/Y7HceOXwCfiFzMa12n5iHnz74Ly8PKlu6M1nUn+3e742wpEjpDCZyQDMIkBtQdP9fb3qlFEguRAQ2ltGM6JIPZPGa01YYZbJmr6WyyErrKVscpgpeqT2sVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VqrsY0w5; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720454964; c=relaxed/simple;
+	bh=1hyrMvUmTrLThb3BPu5SecNYjPVq4I35yMc98VTDyJI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MT+5f+O0+L4X8K8PV6vBGV0hq6Au6utQRTb/cCX1HVoR3J9wXUG5uUmeuXadDrA+zpEoZ6utk77N8aQTY4MriFyYq9SWgtvO/8V3dC6+TrTc2ELZ4O5RVUDI0qpbABhSqDmZacM9R6/yFHEp9mpiBFayv4G473yHNKddgX7NBqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KQFBJcmA; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VqrsY0w5"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-58ce966a1d3so38714a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:09:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQFBJcmA"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fb3cf78ff3so24969015ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:09:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720454950; x=1721059750; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rsiFj/WxLrZpXhxwXs3+FDSwWwZ1Cd4GcIfLRJ1s7ho=;
-        b=VqrsY0w5ejKEVldgEKJIRbeyqZ9zuUGKF86JuCw6p2IFCoAxNFyaeqq2Dh3q64hO/x
-         dkYXzluGQPJrYaBUD5Gj7NTBQrkFQtRwXL8lmrZPD9IS4z1MRKEcY7/H+mFMMSBteQWa
-         FR44zgKoCMFDmg/ZsDIkwintaK4q7XqQgrjnvxdc1AU+bwrZxA002cOnMqb6yU6atuRo
-         1yhWKFVFGlraZeF2OxMQiW6L8og8fylrQmIBfLW/z67Loz7IGpSKIr+O7XXezhTPDcIv
-         qzrnEejjDLidPqvbrKh5667Lu4di/DuUoikzbLfCuKJISjNRlGs3u64mKrJE6aduhb7b
-         53lQ==
+        d=gmail.com; s=20230601; t=1720454962; x=1721059762; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qd9Dr+L7Fb98s7uPfWDn40nWo8gZpQe2KQvaLhVreGQ=;
+        b=KQFBJcmAVigFfkL4nzwk374fvLKE6dZZQi9i369xrYndqzAgOCJ8mdPOv7exTX3xyH
+         WMf+52lC9ygPSw1FSQqvU7C5TtbH6SnxLexpaFnoupnEYp4vi5+ygScITGHUhG7f7EUT
+         YfyfVlBzFsu0exkedryV9mvEchwQ8QA00PcU2Fo127HZfvtwDGf5X7n1+zM2FitOKznf
+         Z9OVcz1QseTigQgEkSPzaz1mrP6TeFe5E2AWXtOFELjHSZAMiZ33MFdhd/FM+GlXJGer
+         WWF9eNJXytCNDX4RrnlDFEQZauLXEQOd2wuPO11M/VNLnYCfj2HXpnKqsvYHdiLrfxvf
+         navQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720454950; x=1721059750;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rsiFj/WxLrZpXhxwXs3+FDSwWwZ1Cd4GcIfLRJ1s7ho=;
-        b=SGqtLJ4dv2VofTNXlm6+FZVRkdtfg7H/tk8YUVAJZnUwlBKtoXPVzu+vAmtHlsMM2Q
-         tWTgKnUUTIYP/NpSluKRX+aau9Zkjgn/NIAW0Vare5U6Pi7oTshBMJT2m/r3/gqUhnr3
-         HEJfkqx/ZNt+7czR9iBDnBZ7cqX7LbFAteEanBArf5CThxT15xdZaXzIT+iWzWYHrgXy
-         qgLKdHePyx8Ts8sfIpig5DBEHR0i5e5xT90IRW5KSECzKIqK5P4bVxbIp5GPo88y0jWX
-         06iTfopTf2HGWMcJVADjqX8gF8kGPHVjzqmlSwy35c3sZcInbpmuAmtA+PrC6mQVxLYF
-         rQ+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXADUokuaOJ0Q61GWwW8spPnmOHEIwJx27uI9/+vvwY9DZqJ8UkXX93lzuS5XqaAepNH/9s7ySE8evg+ltLUXiOmOB3TYgyKGRarQtj
-X-Gm-Message-State: AOJu0YyQgqCvtbWYxesuHicZHa2cYlQx/wi8Bll36/pBCxshy1TxfWTy
-	qiC9+v9IhxpGM6EuDESPRmQ/cv2ZpTWuV2JQOe5NLHBZWQ4O0QrQuvhpcC01CUE/D6WTeKjZpSg
-	CJi6/4wQd1XodI5DkCH8L0rqGznxTpMc3XIHJ
-X-Google-Smtp-Source: AGHT+IG68WVmOzY4xDmfQcCAQVMnFKtmNO3cbEdYJgbHLx0bLl7VhaJKp8PuklOozwexmfThc7tkOd6AwzlEUeRW6sA=
-X-Received: by 2002:a50:8ad3:0:b0:57c:bb0d:5e48 with SMTP id
- 4fb4d7f45d1cf-58e00933a13mr529925a12.2.1720454949927; Mon, 08 Jul 2024
- 09:09:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720454962; x=1721059762;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qd9Dr+L7Fb98s7uPfWDn40nWo8gZpQe2KQvaLhVreGQ=;
+        b=ll9lXkwPVk2B0M52LJXSC5Kx1TQxVEmhPDw85TMMwBavjE/M2Cnu4hclPicWzk6zd5
+         qjUDbh0tdLew/ekETXMtLVdKNu+ejAsvZLEk0gGj9JUj9URo+Y2GtUgWisQUVJEzmDUd
+         OUl5Ubp/L/wA9ebuDwJ9F7zXl5K3BNFgTxXTdVtGow4ggfCmbzUsWsbbrcWnIcwaqNGb
+         tiP9wDvO2m6OMul6VPlFVuHoLUSTcy2rrWU23MdUWUEqdbj5Vhv8qFAO7SV4Et56JIWp
+         IviEA0wVT9vDU0pxd19bLRoeDI8crWr+4VABwypnwDPmYCOmYTyDrseOh1vJTetW2F99
+         f5LQ==
+X-Gm-Message-State: AOJu0YzpREsugFffbXLLk8xWuIDWwVmZeGsaEQxmW1KmA6il6JAque6i
+	PlrU5oAdw/xjN+ChVPLR0lHfye1ogZn/3VxraSM9XSmAuaLQ+91Jckj8fw==
+X-Google-Smtp-Source: AGHT+IEluhfAcYD0yesaKTDMbCVEB/FSh6VZTrk/LMlueM7BnoX1U4q0AUzwwm4iXrrHl8/4pyzFYQ==
+X-Received: by 2002:a17:903:41cd:b0:1fb:58b8:2fbc with SMTP id d9443c01a7336-1fb58b8323amr53357385ad.29.1720454962057;
+        Mon, 08 Jul 2024 09:09:22 -0700 (PDT)
+Received: from cheng.localdomain (218-164-83-170.dynamic-ip.hinet.net. [218.164.83.170])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6acf3a3sm305305ad.245.2024.07.08.09.09.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 09:09:21 -0700 (PDT)
+From: ChengChaoChun <abc21531050@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: ChengChaoChun <abc21531050@gmail.com>
+Subject: [PATCH] linux/interrupt.h: fix struct irqaction comment order inconsistency
+Date: Tue,  9 Jul 2024 00:06:51 +0800
+Message-Id: <20240708160651.54239-1-abc21531050@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240704190137.696169-1-mic@digikod.net> <20240704190137.696169-2-mic@digikod.net>
- <87bk3bvhr1.fsf@oldenburg.str.redhat.com>
-In-Reply-To: <87bk3bvhr1.fsf@oldenburg.str.redhat.com>
-From: Jeff Xu <jeffxu@google.com>
-Date: Mon, 8 Jul 2024 09:08:29 -0700
-Message-ID: <CALmYWFu_JFyuwYhDtEDWxEob8JHFSoyx_SCcsRVKqSYyyw30Rg@mail.gmail.com>
-Subject: Re: [RFC PATCH v19 1/5] exec: Add a new AT_CHECK flag to execveat(2)
-To: Florian Weimer <fweimer@redhat.com>
-Cc: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Paul Moore <paul@paul-moore.com>, "Theodore Ts'o" <tytso@mit.edu>, 
-	Alejandro Colomar <alx.manpages@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Christian Heimes <christian@python.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	Eric Biggers <ebiggers@kernel.org>, Eric Chiang <ericchiang@google.com>, 
-	Fan Wu <wufan@linux.microsoft.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	James Morris <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>, 
-	Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Jordan R Abrahams <ajordanr@google.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, 
-	Luca Boccassi <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Matthew Garrett <mjg59@srcf.ucam.org>, Matthew Wilcox <willy@infradead.org>, 
-	Miklos Szeredi <mszeredi@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, Scott Shell <scottsh@microsoft.com>, 
-	Shuah Khan <shuah@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Steve Dower <steve.dower@python.org>, Steve Grubb <sgrubb@redhat.com>, 
-	Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>, 
-	Vincent Strubel <vincent.strubel@ssi.gouv.fr>, Xiaoming Ni <nixiaoming@huawei.com>, 
-	Yin Fengwei <fengwei.yin@intel.com>, kernel-hardening@lists.openwall.com, 
-	linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi
+Rearrange struct irqaction comment to match member order in the code.
 
-On Fri, Jul 5, 2024 at 11:03=E2=80=AFAM Florian Weimer <fweimer@redhat.com>=
- wrote:
->
-> * Micka=C3=ABl Sala=C3=BCn:
->
-> > Add a new AT_CHECK flag to execveat(2) to check if a file would be
-> > allowed for execution.  The main use case is for script interpreters an=
-d
-> > dynamic linkers to check execution permission according to the kernel's
-> > security policy. Another use case is to add context to access logs e.g.=
-,
-> > which script (instead of interpreter) accessed a file.  As any
-> > executable code, scripts could also use this check [1].
->
-> Some distributions no longer set executable bits on most shared objects,
-> which I assume would interfere with AT_CHECK probing for shared objects.
-> Removing the executable bit is attractive because of a combination of
-> two bugs: a binutils wart which until recently always set the entry
-> point address in the ELF header to zero, and the kernel not checking for
-> a zero entry point (maybe in combination with an absent program
-> interpreter) and failing the execve with ELIBEXEC, instead of doing the
-> execve and then faulting at virtual address zero.  Removing the
-> executable bit is currently the only way to avoid these confusing
-> crashes, so I understand the temptation.
->
-Will dynamic linkers use the execveat(AT_CHECK) to check shared
-libraries too ?  or just the main executable itself.
+Signed-off-by: ChengChaoChun <abc21531050@gmail.com>
+---
+ include/linux/interrupt.h | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-Thanks.
--Jeff
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 5c9bdd3ffccc..b405e181829b 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -104,19 +104,19 @@ typedef irqreturn_t (*irq_handler_t)(int, void *);
+ 
+ /**
+  * struct irqaction - per interrupt action descriptor
+- * @handler:	interrupt handler function
+- * @name:	name of the device
+- * @dev_id:	cookie to identify the device
+- * @percpu_dev_id:	cookie to identify the device
+- * @next:	pointer to the next irqaction for shared interrupts
+- * @irq:	interrupt number
+- * @flags:	flags (see IRQF_* above)
+- * @thread_fn:	interrupt handler function for threaded interrupts
+- * @thread:	thread pointer for threaded interrupts
+- * @secondary:	pointer to secondary irqaction (force threading)
+- * @thread_flags:	flags related to @thread
+- * @thread_mask:	bitmask for keeping track of @thread activity
+- * @dir:	pointer to the proc/irq/NN/name entry
++ * @handler:    interrupt handler function
++ * @dev_id:     cookie to identify the device
++ * @percpu_dev_id:      cookie to identify the device
++ * @next:       pointer to the next irqaction for shared interrupts
++ * @thread_fn:  interrupt handler function for threaded interrupts
++ * @thread:     thread pointer for threaded interrupts
++ * @secondary:  pointer to secondary irqaction (force threading)
++ * @irq:        interrupt number
++ * @flags:      flags (see IRQF_* above)
++ * @thread_flags:       flags related to @thread
++ * @thread_mask:        bitmask for keeping track of @thread activity
++ * @name:       name of the device
++ * @dir:        pointer to the proc/irq/NN/name entry
+  */
+ struct irqaction {
+ 	irq_handler_t		handler;
+-- 
+2.34.1
 
-
-> Thanks,
-> Florian
->
