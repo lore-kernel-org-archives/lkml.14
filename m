@@ -1,89 +1,152 @@
-Received: from pb-smtp2.pobox.com (pb-smtp2.pobox.com [64.147.108.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67017E0F1
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.108.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40F281211;
+	Mon,  8 Jul 2024 12:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720442601; cv=none; b=lAcse9VzXGllCdUKltVvp2+J1kbQ91uvwmZeFDXzknJiV21fB1W1445HXBThhgXjwTeVYuJ3IZljlsCa8LYaPhPGS59XuGuLCY06AkYimj0mep21InwKMkM9TrAVbv4snTu0JOn4i2L5sV+k2uhfy5ovLMqIH4Df0ngDY8PfczY=
+	t=1720442615; cv=none; b=JixMjr3dpF183ijIOnxVvA7uHC+867PJJF4pn3IkU/4VpBsP8xeot81aAAj4YeCUk94pdBu1pg43Qysy9Q4P514emJB+gtaLQBBzvGW1QOn0DzpTbhUzPhr6W12ube8TdMx0OMq3o8LTfuuUpg4ZqomD7edvIWn1Q/3LsQOW1Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720442601; c=relaxed/simple;
-	bh=Sj8dq56WHnqpDW3EJuSCzyx6a/EVZChEdc13sNBYjCM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hVO5zXTiZwnnOt5SNEOxUig/rzJCQlHn8Inaxk6CrDK+UcwToJA58y+xNzmvtiEv+OFgG6Mzv0jLteCiJZunHRWc3lwXqMhofHIjyBsC+1z35FqQH1GCICTQ+4CR9bmLl/OHofIIQNdXv2M+LTJGb9o4sOlnBS38m8oBfDKXNp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=uJ+I4i9C; dkim=fail (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=zA9DGP8o reason="signature verification failed"; arc=none smtp.client-ip=64.147.108.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1720442615; c=relaxed/simple;
+	bh=BI28wz5XInTgMXnFdy8HZ6+ujkFpibqozOzg9QsIMI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SeGE7/PWKuNzA8WxyqbV7pT47ig4ycvP6PxdgajqhqvD+7rMpDkSJEeeDC6fMLTICRDv0KDZfOoKyKcUcH+1tXAVX4i1qqZUzmzvKpVQtasEj7nMOWx0NwyiMhUiYPwAXrD2arK1nkE4Gvw/1c82+aYERmQxASVJ7AieGE7v4MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PtwQDajp; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="uJ+I4i9C";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="zA9DGP8o"
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-	by pb-smtp2.pobox.com (Postfix) with ESMTP id 9A04620341;
-	Mon,  8 Jul 2024 08:43:18 -0400 (EDT)
-	(envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=date:from
-	:to:cc:subject:in-reply-to:message-id:references:mime-version
-	:content-type; s=sasl; bh=Sj8dq56WHnqpDW3EJuSCzyx6a/EVZChEdc13sN
-	BYjCM=; b=uJ+I4i9CiCJM6JrzFFu+VjTup38Uth/1im4QxiyOHhEo5iePTq1g0Q
-	8bjIeHbqdHqVPhDY28qwWHDDimZeEizv00HOKfleouDyLyXmD22WKhea3l/gW+hi
-	IPHvR1W6Cz11Cd7N27WM90/dvxV4dzPeVyGEn8cbDlpuStyb3TQnI=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-	by pb-smtp2.pobox.com (Postfix) with ESMTP id 924B820340;
-	Mon,  8 Jul 2024 08:43:18 -0400 (EDT)
-	(envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=dWm9CSVC+GPoMmSbbveKW8Rh5xMK+1DRAgEC7oHO654=; b=zA9DGP8oJGquhFN4rL1WrkPKZwvifUQRKArsw1xN72IsD7m1QmrJt5Gqiyx81F6bVgPS+T6NSKluzB9O4DPm0AXjQh3tDrVVGnibLHC5zFJhm/9cpXJNRtvSOhZXZhp2erYyv0Cs/MwiGfZGmUoSIzPv3YEdWSjUgCKqiQt/rE0=
-Received: from yoda.fluxnic.net (unknown [184.162.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 1C80C2033F;
-	Mon,  8 Jul 2024 08:43:18 -0400 (EDT)
-	(envelope-from nico@fluxnic.net)
-Received: from xanadu (unknown [IPv6:fd17:d3d3:663b:0:9696:df8a:e3:af35])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 03D9FD3D164;
-	Mon,  8 Jul 2024 08:43:16 -0400 (EDT)
-Date: Mon, 8 Jul 2024 08:43:16 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] mul_u64_u64_div_u64: basic sanity test
-In-Reply-To: <nkvmie4gedfeqw545wl27wwiw7gderp76tvjnehpd4bf5y7suu@sp7dclirn35b>
-Message-ID: <nrss95p0-3s44-6q04-9onp-nq07n001075q@syhkavp.arg>
-References: <20240707190648.1982714-1-nico@fluxnic.net> <20240707190648.1982714-3-nico@fluxnic.net> <nkvmie4gedfeqw545wl27wwiw7gderp76tvjnehpd4bf5y7suu@sp7dclirn35b>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtwQDajp"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52e9fe05354so5657360e87.1;
+        Mon, 08 Jul 2024 05:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720442612; x=1721047412; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tE4/Xw/cTAW7KhMX9aTxF+9g4e51k+vLuUCkv+6bpaI=;
+        b=PtwQDajpW9YriSdltVhsOZo8EtXVyXm1UF6m7I0EXWbTYl7lW57mkWALIp2VY0Taty
+         bgx5bg3DVQ9sZhQahU9jVo7hR7K27O402Hn9Tj+2fOu4uYWStlB03wg/LMBwhzvf2I1X
+         jsL7KsL8IAojdOI4GgYsjEyhLDltThrfZpJc/he2Kkzr01mv8lc3c2ecGUdhymN8xOM3
+         LMR2oU+irvGUJh7uX+iO1Va9y1dGxYfNHSL2t9FzK8Pv/Ovgn36obgHPhX+h09mEEx8p
+         jAduzkGfiTAyyIyOl0oAQWHCpJImYq140kTArOOCo7Jzcax6yPVfOkRKc/cgC1QDZ3qu
+         D8ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720442612; x=1721047412;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tE4/Xw/cTAW7KhMX9aTxF+9g4e51k+vLuUCkv+6bpaI=;
+        b=bPTUG37651Z1a3SL/D57ycSvu1iPgRWwTZV80StbFU7e9CmVWLqEOh0z5J1Xnb58uN
+         CtiEbFeiVefGpfs8jS6jPdPWIUwBHdzEAcl20EpbeMv9vR7da50I6hZ+oolWVUPq/D24
+         KkfFe3H22QlRHmvzM1KSXe8/Jxl+bjsyzOSUe7P3EDDBq7OGOFALLo2dqYgpNAJA2BBD
+         FA4YXA35IECBOnZhI4+FNrH0lkkc1UxprbRlogF9g8q18lSG5e5Mj0jeTnf2fwEwPYMJ
+         w8pOmLK8CpJKUgM/96OSdJN0waIEA1DuAJR2FixdUyPcclJs1xlK71kVUmwi1L+s65sB
+         bTaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlG5Ls+4TqR+dJ1UU/+nDb/Go4gdXuYOp4diBflknEK84phh9JRLHTQlgl6GsrSJMLG7sBH/QAqLUxC2WFEybKBmV+wXuJkDHmIqC8T5N9oooQPKTDgs1L7AF3uu+H8Z3YTnJoYJ8dha9kIVxyKSrWjedN9WF6cIhGQhoieQV+KvRDSQ==
+X-Gm-Message-State: AOJu0Yy63JdclNuykdJ+Z6wYt1VX6EASJ7R6f1HrEBaqTarkF37WBkVj
+	chBoW4TcMjT43SQD+iupHj+9uSd2L8kgTU9SxfDrAsRi/gM/+k6b
+X-Google-Smtp-Source: AGHT+IFxhmAI/t2baGo+8FHPDAJctn5KhZOEAfWFa+hD/m+yvpkjzx7stU+T+XnzM4iZBgNF6eESyA==
+X-Received: by 2002:a19:7702:0:b0:52c:dba6:b4c8 with SMTP id 2adb3069b0e04-52ea0619e3cmr9176706e87.13.1720442611240;
+        Mon, 08 Jul 2024 05:43:31 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd? ([2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ea90ba285sm723630e87.127.2024.07.08.05.43.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 05:43:30 -0700 (PDT)
+Message-ID: <622f5382-10c9-4bd5-84ab-544d7c16f1fe@gmail.com>
+Date: Mon, 8 Jul 2024 15:43:29 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463781375-783957929-1720442597=:826828"
-X-Pobox-Relay-ID:
- A6B043A6-3D27-11EF-8C0A-965B910A682E-78420484!pb-smtp2.pobox.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/7] dt-bindings: iio: BU27034 => BU27034ANUC
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1720176341.git.mazziesaccount@gmail.com>
+ <c39f9c67b3c07a27d7a13109c7b69cff9cfd2b9b.1720176341.git.mazziesaccount@gmail.com>
+ <20240707140536.1dbb989b@jic23-huawei>
+Content-Language: en-US, en-GB
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20240707140536.1dbb989b@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 7/7/24 16:05, Jonathan Cameron wrote:
+> On Fri, 5 Jul 2024 13:54:12 +0300
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> 
+>> The BU27034NUC was cancelled before it entered mass production. It was
+>> replaced by a new variant BU27034ANUC (note, added 'A'). The new
+>> variant gained a few significant changes, like removal of the 3.rd data
+>> channel and dropping some of the gain settings. This means that, from
+>> software point of view these ICs are incompatible. Lux calculation based
+>> on the data from the sensors needs to be done differently, and on the
+>> BU27034ANUC the channel 3 data is missing. Also, the gain setting
+>> differencies matter.
+>>
+>> Unfortunately, the identification register was not changed so there is no
+>> safe way for the software to distinguish the variants.
+>>
+>> According to the ROHM HQ engineers, the old BU27034NUC should not be
+>> encountered in the wild. Hence it makes sense to remove the support for
+>> the old BU27034NUC and add support for the new BU27034ANUC. Change the
+>> compatible in order to not load the incompatible old driver for new sensor
+>> (or, if someone had the old sensor, the new driver for it).
+>>
+>> Drop the compatible for old sensor which should not be in the wild and
+>> add a new compatible for the new model with accurate model suffix
+>> 'anuc'.
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> Rename indeed makes sense.  One minor, 'whilst you are here' comment inline.
+> 
+>>
+>> ---
+>> A patch renaming the file according to the new compatible will follow.
+>> If renaming is not needed or appropriate, that patch can be dropped.
+>>
+>> Revision history:
+>> v2: New patch
+>> ---
+>>   .../devicetree/bindings/iio/light/rohm,bu27034.yaml      | 9 ++++-----
+>>   1 file changed, 4 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/light/rohm,bu27034.yaml b/Documentation/devicetree/bindings/iio/light/rohm,bu27034.yaml
+>> index 30a109a1bf3b..535bd18348ac 100644
+>> --- a/Documentation/devicetree/bindings/iio/light/rohm,bu27034.yaml
+>> +++ b/Documentation/devicetree/bindings/iio/light/rohm,bu27034.yaml
+>> @@ -4,20 +4,19 @@
+>>   $id: http://devicetree.org/schemas/iio/light/rohm,bu27034.yaml#
+>>   $schema: http://devicetree.org/meta-schemas/core.yaml#
+>>   
+>> -title: ROHM BU27034 ambient light sensor
+>> +title: ROHM BU27034ANUC ambient light sensor
+>>   
+>>   maintainers:
+>>     - Matti Vaittinen <mazziesaccount@gmail.com>
+>>   
+>>   description: |
+>> -  ROHM BU27034 is an ambient light sesnor with 3 channels and 3 photo diodes
+>> +  ROHM BU27034ANUC is an ambient light sesnor with 2 channels and 2 photo diodes
+> 
+>   sensor
 
----1463781375-783957929-1720442597=:826828
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: quoted-printable
+Thanks Jonathan!
 
-On Mon, 8 Jul 2024, Uwe Kleine-K=F6nig wrote:
+I won't re-spin this unless you ask me to because you wrote you can fix 
+it whilist applying... Please, let me know if you wish me to fix and 
+re-spin :)
 
-> Hello,
->=20
-> On Sun, Jul 07, 2024 at 03:05:20PM -0400, Nicolas Pitre wrote:
-> > +static void __exit test_exit(void)
-> > +{
-> > +}
-> > +
-> > +module_init(test_init);
-> > +module_exit(test_exit);
->=20
-> Can module_exit() and test_exit() just be dropped?
+-- 
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
-I suppose. All the test modules I've looked at also have that empty exit=20
-method. Maybe dropping them all separately?
+~~ When things go utterly wrong vim users can always type :help! ~~
 
-
-Nicolas
----1463781375-783957929-1720442597=:826828--
