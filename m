@@ -1,40 +1,40 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C075579F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ADC55E58
 	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 09:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720430969; cv=none; b=ZPhjbKA3mQNH9RuOcWtH0KQP4ab5KWNC0HttfXSer/R1vbntuUekoYcb0u5cD3d1/+daAWr3ULhhSfZ4r38S230bLUs/b3HUxUq9ZPIMNKL5bz9rzTS/K1NG3BS29yw6c+RuwXE8bBfN+xlKJEPZBKlqUt3x4Gk6ckG6d+MZmE8=
+	t=1720430970; cv=none; b=MMb1qOUdPXg78e//C6kMtm2EqhNh87sKYCNZIrGM3KVfcvdZi4YiOFYhbKNk+2F3GF+7nK3R2H1WbI+9tGC7CvAB94a+bsW2Wv7eA6/O26qxvI135HoBm+koT7fKiiAlS1TZFS3PBrTExfsBrI3nxNCFmfHf0iXmDR6yTuPC1Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720430969; c=relaxed/simple;
-	bh=aTGIb0+D9Sv/jOsQ3tTClvWRoDWhCH/sWnarT4el9/Q=;
+	s=arc-20240116; t=1720430970; c=relaxed/simple;
+	bh=dTtktbIQzPN0M1WT/SSamB3BTYm0QnUYyOtyVkFgo2s=;
 	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=OHYMYLb7VqqTRJ5f/LhSALJD+R6Sk1HFEk6XYxPxayAecGTHLfGh5qXhY0zYpxls79mPmQyvt0VOeF1bs7Zh19SCL0D/2oabzAJArqwXT2gQMf1E20+h1kpcsJYo0Y+MkQZqXfWJaNlK7lG4Nz42ZZHBcJ8OpuXZSaiLzpfV5KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mmpXG2zb; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type; b=NxkLzt3UG8F426rS1kqgTOSMM9d+ZI3okNUp8E1DtpRgUpDxVcGHLfSeenE8SUKnJv6gnVHKRO88oQjefjpS9Cuk//UvJx27BKgUQ4NZj+cH2oKrtyuJo/j90wHb/bw2gLqaD0PuT1Ub6sr2vIDtRJDKsG55rdTTcQv+fSyyulM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XlrAmO7w; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mmpXG2zb"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XlrAmO7w"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=zdZYKFLVQz7+kKvF6YVvGcJqDTuHqI+KXzq8RKGs9qc=; b=mmpXG2zbMpxwAJZJMpb71M4RpE
-	jjqNfmIKbELEopjL5cr2kPfQrKs6PNFoXYLUv4qPIAOM8sfD7PsDwlZSZeco0s7WVquN1I+Lw8xo+
-	c8Qv5e8hOUNywoT4bo5c4WAQ8HyRQWnOD/YCsYdr+th+xuptAKTSGtyVFTNnJsVy0g0Ptz1prfho9
-	LtZM0NI+tvvUVEpbUPWHO2xXxzZdiGJSeZGruMKYcGNBiy6/gERqUjhago0vwViukNIRBRyRBEorC
-	Q6tVhmXb3nrnMV6gd0rxGDnYPte1ImmUa26jHmxt4BBimqZWaLmdB8kabtJIP3NPLeV1EfeWMrEHx
-	K0Ae4C7g==;
+	bh=epm86oBKZwoCXF9Cm3n9QKwfFnScPDeksYSx49nPLjc=; b=XlrAmO7wkpxZa38ZJDKZYvgdCT
+	0I/265L5x/eqAMAJz3wL9jS+qGVvJ18V6Rjtv5mxbvA2MCcdKwphchej4geFBSgtLKal7kxxACgVk
+	RZYepdzrjpf05+nP8jgTWMJhCQoYeVbPLRmXxP6tSmQaoZs7Rh2N7Fs9InZCdB3mqK+37r43Uw+Q6
+	BGrV5sv0yde4GstfYlZNR3LyPDqdQYG4ddoF3+l3c5x6r5EdrfK20PCtYXK/WoGzlbzz+WH+h8oj1
+	o2zxu8lcEPd1QVSWmaZ7ksF+8y5D3nEyJr5o/iJL37vO8owyKXJN1XypJv8l4VfHUZ018e+RN3cj0
+	pdP5OtWA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sQkgO-00000000ZsO-044y;
-	Mon, 08 Jul 2024 09:29:19 +0000
+	id 1sQkgN-00000000ZsQ-4AzS;
+	Mon, 08 Jul 2024 09:29:18 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 133B1301173; Mon,  8 Jul 2024 11:29:13 +0200 (CEST)
-Message-Id: <20240708092415.579623285@infradead.org>
+	id 254BF302DCD; Mon,  8 Jul 2024 11:29:13 +0200 (CEST)
+Message-Id: <20240708092416.010695534@infradead.org>
 User-Agent: quilt/0.65
-Date: Mon, 08 Jul 2024 11:12:45 +0200
+Date: Mon, 08 Jul 2024 11:12:49 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  andrii@kernel.org
@@ -46,7 +46,7 @@ Cc: linux-kernel@vger.kernel.org,
  jolsa@kernel.org,
  clm@meta.com,
  paulmck@kernel.org
-Subject: [PATCH 04/10] perf/uprobe: RCU-ify find_uprobe()
+Subject: [PATCH 08/10] srcu: Add __srcu_clone_read_lock()
 References: <20240708091241.544262971@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,122 +56,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-With handle_swbp() triggering concurrently on (all) CPUs, tree_lock
-becomes a bottleneck. Avoid treelock by doing RCU lookups of the
-uprobe.
+In order to support carrying an srcu_read_lock() section across fork,
+where both the parent and child process will do: srcu_read_unlock(),
+it is needed to account for the extra decrement with an extra
+increment at fork time.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/uprobes.c |   40 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 32 insertions(+), 8 deletions(-)
+ include/linux/srcu.h     |    1 +
+ include/linux/srcutiny.h |   10 ++++++++++
+ kernel/rcu/srcutree.c    |    5 +++++
+ 3 files changed, 16 insertions(+)
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -40,6 +40,7 @@ static struct rb_root uprobes_tree = RB_
- #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
- 
- static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
-+static seqcount_rwlock_t uprobes_seqcount = SEQCNT_RWLOCK_ZERO(uprobes_seqcount, &uprobes_treelock);
- 
- #define UPROBES_HASH_SZ	13
- /* serialize uprobe->pending_list */
-@@ -54,6 +55,7 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem)
- struct uprobe {
- 	struct rb_node		rb_node;	/* node in the rb tree */
- 	refcount_t		ref;
-+	struct rcu_head		rcu;
- 	struct rw_semaphore	register_rwsem;
- 	struct rw_semaphore	consumer_rwsem;
- 	struct list_head	pending_list;
-@@ -593,6 +595,12 @@ static struct uprobe *get_uprobe(struct
- 	return uprobe;
+--- a/include/linux/srcu.h
++++ b/include/linux/srcu.h
+@@ -55,6 +55,7 @@ void call_srcu(struct srcu_struct *ssp,
+ 		void (*func)(struct rcu_head *head));
+ void cleanup_srcu_struct(struct srcu_struct *ssp);
+ int __srcu_read_lock(struct srcu_struct *ssp) __acquires(ssp);
++void __srcu_clone_read_lock(struct srcu_struct *ssp, int idx);
+ void __srcu_read_unlock(struct srcu_struct *ssp, int idx) __releases(ssp);
+ void synchronize_srcu(struct srcu_struct *ssp);
+ unsigned long get_state_synchronize_srcu(struct srcu_struct *ssp);
+--- a/include/linux/srcutiny.h
++++ b/include/linux/srcutiny.h
+@@ -71,6 +71,16 @@ static inline int __srcu_read_lock(struc
+ 	return idx;
  }
  
-+static void uprobe_free_rcu(struct rcu_head *rcu)
++static inline void __srcu_clone_read_lock(struct srcu_struct *ssp, int idx)
 +{
-+	struct uprobe *uprobe = container_of(rcu, struct uprobe, rcu);
-+	kfree(uprobe);
++	int newval;
++
++	preempt_disable();  // Needed for PREEMPT_AUTO
++	newval = READ_ONCE(ssp->srcu_lock_nesting[idx]) + 1;
++	WRITE_ONCE(ssp->srcu_lock_nesting[idx], newval);
++	preempt_enable();
 +}
 +
- static void put_uprobe(struct uprobe *uprobe)
+ static inline void synchronize_srcu_expedited(struct srcu_struct *ssp)
  {
- 	if (refcount_dec_and_test(&uprobe->ref)) {
-@@ -604,7 +612,7 @@ static void put_uprobe(struct uprobe *up
- 		mutex_lock(&delayed_uprobe_lock);
- 		delayed_uprobe_remove(uprobe, NULL);
- 		mutex_unlock(&delayed_uprobe_lock);
--		kfree(uprobe);
-+		call_rcu(&uprobe->rcu, uprobe_free_rcu);
- 	}
+ 	synchronize_srcu(ssp);
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -720,6 +720,11 @@ int __srcu_read_lock(struct srcu_struct
  }
+ EXPORT_SYMBOL_GPL(__srcu_read_lock);
  
-@@ -653,7 +661,7 @@ static struct uprobe *__find_uprobe(stru
- 		.inode = inode,
- 		.offset = offset,
- 	};
--	struct rb_node *node = rb_find(&key, &uprobes_tree, __uprobe_cmp_key);
-+	struct rb_node *node = rb_find_rcu(&key, &uprobes_tree, __uprobe_cmp_key);
- 
- 	if (node)
- 		return get_uprobe(__node_2_uprobe(node));
-@@ -667,20 +675,32 @@ static struct uprobe *__find_uprobe(stru
-  */
- static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
- {
--	struct uprobe *uprobe;
-+	unsigned int seq;
- 
--	read_lock(&uprobes_treelock);
--	uprobe = __find_uprobe(inode, offset);
--	read_unlock(&uprobes_treelock);
-+	guard(rcu)();
- 
--	return uprobe;
-+	do {
-+		seq = read_seqcount_begin(&uprobes_seqcount);
-+		struct uprobe *uprobe = __find_uprobe(inode, offset);
-+		if (uprobe) {
-+			/*
-+			 * Lockless RB-tree lookups are prone to false-negatives.
-+			 * If they find something, it's good. If they do not find,
-+			 * it needs to be validated.
-+			 */
-+			return uprobe;
-+		}
-+	} while (read_seqcount_retry(&uprobes_seqcount, seq));
++void __srcu_clone_read_lock(struct srcu_struct *ssp, int idx)
++{
++	this_cpu_inc(ssp->sda->srcu_lock_count[idx].counter);
++}
 +
-+	/* Really didn't find anything. */
-+	return NULL;
- }
- 
- static struct uprobe *__insert_uprobe(struct uprobe *uprobe)
- {
- 	struct rb_node *node;
- 
--	node = rb_find_add(&uprobe->rb_node, &uprobes_tree, __uprobe_cmp);
-+	node = rb_find_add_rcu(&uprobe->rb_node, &uprobes_tree, __uprobe_cmp);
- 	if (node)
- 		return get_uprobe(__node_2_uprobe(node));
- 
-@@ -702,7 +722,9 @@ static struct uprobe *insert_uprobe(stru
- 	struct uprobe *u;
- 
- 	write_lock(&uprobes_treelock);
-+	write_seqcount_begin(&uprobes_seqcount);
- 	u = __insert_uprobe(uprobe);
-+	write_seqcount_end(&uprobes_seqcount);
- 	write_unlock(&uprobes_treelock);
- 
- 	return u;
-@@ -936,7 +958,9 @@ static void delete_uprobe(struct uprobe
- 		return;
- 
- 	write_lock(&uprobes_treelock);
-+	write_seqcount_begin(&uprobes_seqcount);
- 	rb_erase(&uprobe->rb_node, &uprobes_tree);
-+	write_seqcount_end(&uprobes_seqcount);
- 	write_unlock(&uprobes_treelock);
- 	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
- 	put_uprobe(uprobe);
+ /*
+  * Removes the count for the old reader from the appropriate per-CPU
+  * element of the srcu_struct.  Note that this may well be a different
 
 
