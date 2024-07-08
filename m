@@ -1,109 +1,193 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E677144307
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 15:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8808145340;
+	Mon,  8 Jul 2024 16:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720454345; cv=none; b=maJeUEayBWR1js/RkL+UQw9p0HQriNFV9vbvYSu1B+XknSWVyHARmiDzu73KzSBO0qDZKJiQSA4Q/M4aQOM7K1jduWgM5dZMY4bxeiTM1tEEcBygx5/Z2TQrSXJqGyc5GPKOQ6t8YLzaBoM5I21xj/uzjmwfFXQFB4E7LAAK+o0=
+	t=1720454410; cv=none; b=d8sq/9xghSr+Lr4abLE3ydDGe/2Oy1HdL/6alfnZ52wgE7OieKc5DQ+RaDxNyOIn/OqV9EOMsRf8vV9nfox/tT2/L/YZxH19iugbNCS9UGNRDdGY7uvQ+vTMQVDdWCO16nsgGxBUMCof9G47n2TEnHwCC4KrQlu5jzjQqhJt28U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720454345; c=relaxed/simple;
-	bh=T5r3mJm2PSBO0KpcpoVkQJClJnZRVOvT+7sfiReF18Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYX0Q/ksmmXbQn5rT9/VOmQ2mpBC+9wLIBbKY16BNe9llVdwgvCRoexgpDmteCX3leXWyAKehznbjFE15U0EoX+1X/2GJwJ6vwu1i3vUYRwA2BhcCE1GxaMhmMlMTYyJWDBxtd7qLKcNE9cjNywcs0lGkRICyWVaKxHAFewOrhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CtXlsyxo; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720454410; c=relaxed/simple;
+	bh=nFbJnq23XTYikyNFznKLNb2hOHJ7fDlvEzP7lvzRdss=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ArKThmqxh+zb2qJRVT2ON51U2LEy/+/DMSeFGFI7kAJNjw2jwJF6M2LxPjvTAHo8BTchDU6ID+PhVT//mQI2o8bS4uiQl1ildd+L1D6v4RQBpcgCgD25793wZy41E8gYxzM9IXY3IowDC1BCRj6tD6KVYJXW3ddjd8X7V2rAJAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=d857G0Wz; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CtXlsyxo"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-70b31272a04so710650b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 08:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720454343; x=1721059143; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8Rr0PPFKZTDxFeXGu4e7pIimZBTpzWSD8DHkcidYJLk=;
-        b=CtXlsyxoeAwISJ0ExiNeFQ2LtdR/ab6Jc8WiEFxa3tokSwoTjG6n3ke80URDq37QrP
-         r6NIxi/zIFE0/ELa2ULmxoXTXL+IXK7QBHm7K3XdE3eoIQwLk8HftKBYH6jO+gRWI8dl
-         FlrYdaHMdPFcp57IHWmqZ/AD+80WXs9tLagW2B1c3ncDaT0QS1hGU+dBH1pOexHP//xs
-         E/hxtflE9XraZ5AOAu+x9WGY3R8y+k0TXMTdLoz72WBCQlRaVYxY3Md2GaEZYepplvwP
-         18gYcBGolxYHV3SUkuzBoi8siDEk+xZTepg9823Hc9YraBFLlkhC1FCZsX01ZWLDXpIn
-         6dxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720454343; x=1721059143;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Rr0PPFKZTDxFeXGu4e7pIimZBTpzWSD8DHkcidYJLk=;
-        b=B2+wx9aq8wIZk8lB5/xoGkqEV/UkLUS3qNR2S57ig93r71BfIMYPfdtm4XU4Jns8ej
-         tJXa94fJpI7OedWdZRRvDKIdMPLnIkWXLpFF+B8rjxUMCQaad2HkU8yuMD1P9sxej5pJ
-         U272SigQSbHHGrF5RNPWltmz5LQBagwYsHH0kpCFBor5vST7nf6tOdhl8Jk17FeIWp+q
-         avvR3NuqJ9f+R0bZ/v6kam7Nrj54ZhUDOqQ+3WD5fq7e+RxnOfe79EaVqtmqiyheaxQj
-         YCu52f2qo3LgzUzLqJcrvXiIAwd6MkGM6ylHQdG9eeZxODcNYk5svhtuJ8+OkLWzesWf
-         alsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEXfjhmmm8ae6KomC8zjvH+QeOQnMEzEZiRdGfo05loK49tnM3DXvSD10MY5mXCiPF6god1c/622cnOO4Nj4psdEe/sOKDoP+BqHsm
-X-Gm-Message-State: AOJu0YyRE7Hk1U3zBkr0gEWsvu+tMADScnfqg68CWm9hSlWG0olHk6+9
-	xj5RtshHE+bvD9UrZmZk2+kAVayXCSy+IXiGUu6HVfqKpfpWeT3dUKfK03lVNw==
-X-Google-Smtp-Source: AGHT+IGL7y17EBQGZOQtqPKSNxUDptufJrdZlvrmTqMgjsNgJkzF5C8xozj5jrdwZhFb1OwzQWhInA==
-X-Received: by 2002:a05:6a20:3949:b0:1c2:8c90:8e8a with SMTP id adf61e73a8af0-1c28c908f74mr3250148637.26.1720454343660;
-        Mon, 08 Jul 2024 08:59:03 -0700 (PDT)
-Received: from thinkpad ([120.56.193.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b439e9fc0sm9814b3a.206.2024.07.08.08.58.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 08:59:03 -0700 (PDT)
-Date: Mon, 8 Jul 2024 21:28:56 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lukas Wunner <lukas@wunner.de>, Bert Karwatzki <spasswolf@web.de>,
-	caleb.connolly@linaro.org, bhelgaas@google.com,
-	amit.pundir@linaro.org, neil.armstrong@linaro.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Praveenkumar Patil <PraveenKumar.Patil@amd.com>
-Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
- CONFIG_OF is enabled
-Message-ID: <20240708155856.GE5745@thinkpad>
-References: <Zoriz1XDMiGX_Gr5@wunner.de>
- <20240708003730.GA586698@rocinante>
- <CACMJSevHmnuDk8hpK8W+R7icySmNF8nT1T9+dJDE_KMd4CbGNg@mail.gmail.com>
- <20240708083317.GA3715331@rocinante>
- <6e57dbc0-f47a-464e-af6b-abd45c450dc6@kernel.org>
- <CACMJSetAKtPp_Gua2S7m_+aC-f9HSUyfF1YoHUPdtcibLtQxpA@mail.gmail.com>
- <20240708154401.GD5745@thinkpad>
- <664619a9-c80f-4f81-b302-b9c5258b5e0e@kernel.org>
- <CAMRc=Mf2pE5JVHzcntO5b+5so_=ekuHGzrY=xJpKatURJFpGZA@mail.gmail.com>
- <8838b5c3-0c51-42f6-9842-186139822be7@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d857G0Wz"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 468FxkRq046174;
+	Mon, 8 Jul 2024 10:59:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1720454386;
+	bh=S1jiyaqWjuWtWeLWTjTTn+GeFYYElSU9yqWMjOuLZc8=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=d857G0Wz2wf8dAWlvF9zVBUZ9LG20T6juG/8uicnGa8Pzqz8GwMKe47w+S9XOg0oq
+	 nFpzvjq/ciHuiVJNyfyPiGhfyhG0zM00HTBs6RC4sb1hDhhADafX435TSsOySpbjUj
+	 PAeXws324cSdW0T3ko3xAsdHev7ZQgp7UK8GOKKg=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 468FxkGm021706
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 8 Jul 2024 10:59:46 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 8
+ Jul 2024 10:59:46 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 8 Jul 2024 10:59:45 -0500
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 468Fxj1A103461;
+	Mon, 8 Jul 2024 10:59:45 -0500
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sebastian.fricke@collabora.com>, <andriy.shevchenko@linux.intel.com>,
+        <jani.nikula@intel.com>, <jirislaby@kernel.org>, <corbet@lwn.net>,
+        <broonie@kernel.org>, <rdunlap@infradead.org>,
+        <linux-doc@vger.kernel.org>
+CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
+        <vijayp@ti.com>, <devarsht@ti.com>, <andi.shyti@linux.intel.com>,
+        <nicolas@ndufresne.ca>, <davidgow@google.com>, <dlatypov@google.com>
+Subject: [PATCH 1/6] math.h: Add macros for rounding to closest value
+Date: Mon, 8 Jul 2024 21:29:38 +0530
+Message-ID: <20240708155943.2314427-2-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20240708155943.2314427-1-devarsht@ti.com>
+References: <20240708155943.2314427-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8838b5c3-0c51-42f6-9842-186139822be7@kernel.org>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, Jul 08, 2024 at 10:53:18AM -0500, Mario Limonciello wrote:
-> On 7/8/2024 10:49, Bartosz Golaszewski wrote:
-> 
-> > 
-> > If you have CONFIG_OF enabled then of_platform_populate() will go the
-> > normal path and actually try to populate sub-nodes of the host bridge
-> > node. If there are no OF nodes (not a device-tree system) then it will
-> > fail.
-> > 
-> > Bart
-> 
-> So how about keep both patches then?
+Add below rounding related macros:
 
-Why would anyone running non OF system have CONFIG_OF enabled? If that's the
-case, they have to see the error because there would be no DT nodes.
+round_closest_up(x, y) : Rounds x to closest multiple of y where y is a
+power of 2, with a preference to round up in case two nearest values are
+possible.
 
-- Mani
+round_closest_down(x, y) : Rounds x to closest multiple of y where y is a
+power of 2, with a preference to round down in case two nearest values are
+possible.
 
+roundclosest(x, y) : Rounds x to closest multiple of y, this macro should
+generally be used only when y is not multiple of 2 as otherwise
+round_closest* macros should be used which are much faster.
+
+Examples:
+ * round_closest_up(17, 4) = 16
+ * round_closest_up(15, 4) = 16
+ * round_closest_up(14, 4) = 16
+ * round_closest_down(17, 4) = 16
+ * round_closest_down(15, 4) = 16
+ * round_closest_down(14, 4) = 12
+ * roundclosest(21, 5) = 20
+ * roundclosest(19, 5) = 20
+ * roundclosest(17, 5) = 15
+
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+NOTE: This patch is inspired from the Mentor Graphics IPU driver [1]
+which uses similar macro locally and which is updated in further patch
+in the series to use this generic macro instead along with other drivers
+having similar requirements.
+
+Link: https://elixir.bootlin.com/linux/v6.8.9/source/drivers/gpu/ipu-v3/ipu-image-convert.c#L480 [1]
+---
+ include/linux/math.h | 63 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+
+diff --git a/include/linux/math.h b/include/linux/math.h
+index dd4152711de7..79e3dfda77fc 100644
+--- a/include/linux/math.h
++++ b/include/linux/math.h
+@@ -34,6 +34,52 @@
+  */
+ #define round_down(x, y) ((x) & ~__round_mask(x, y))
+ 
++/**
++ * round_closest_up - round closest to be multiple of specified value (which is
++ *                    power of 2) with preference to rounding up
++ * @x: the value to round
++ * @y: multiple to round closest to (must be a power of 2)
++ *
++ * Rounds @x to closest multiple of @y (which must be a power of 2).
++ * The value can be either rounded up or rounded down depending upon rounded
++ * value's closeness to the specified value. If there are two closest possible
++ * values, i.e. the difference between the specified value and it's rounded up
++ * and rounded down values is same then preference is given to rounded up
++ * value.
++ *
++ * To perform arbitrary rounding to closest value (not multiple of 2), use
++ * roundclosest().
++ *
++ * Examples:
++ * * round_closest_up(17, 4) = 16
++ * * round_closest_up(15, 4) = 16
++ * * round_closest_up(14, 4) = 16
++ */
++#define round_closest_up(x, y) round_down((x) + (y) / 2, (y))
++
++/**
++ * round_closest_down - round closest to be multiple of specified value (which
++ *			is power of 2) with preference to rounding down
++ * @x: the value to round
++ * @y: multiple to round closest to (must be a power of 2)
++ *
++ * Rounds @x to closest multiple of @y (which must be a power of 2).
++ * The value can be either rounded up or rounded down depending upon rounded
++ * value's closeness to the specified value. If there are two closest possible
++ * values, i.e. the difference between the specified value and it's rounded up
++ * and rounded down values is same then preference is given to rounded up
++ * value.
++ *
++ * To perform arbitrary rounding to closest value (not multiple of 2), use
++ * roundclosest().
++ *
++ * Examples:
++ * * round_closest_down(17, 4) = 16
++ * * round_closest_down(15, 4) = 16
++ * * round_closest_down(14, 4) = 12
++ */
++#define round_closest_down(x, y) round_up((x) - (y) / 2, (y))
++
+ #define DIV_ROUND_UP __KERNEL_DIV_ROUND_UP
+ 
+ #define DIV_ROUND_DOWN_ULL(ll, d) \
+@@ -77,6 +123,23 @@
+ }							\
+ )
+ 
++/**
++ * roundclosest - round to nearest multiple
++ * @x: the value to round
++ * @y: multiple to round nearest to
++ *
++ * Rounds @x to nearest multiple of @y.
++ * The rounded value can be greater than or less than @x depending
++ * upon it's nearness to @x. If @y will always be a power of 2, consider
++ * using the faster round_closest_up() or round_closest_down().
++ *
++ * Examples:
++ * * roundclosest(21, 5) = 20
++ * * roundclosest(19, 5) = 20
++ * * roundclosest(17, 5) = 15
++ */
++#define roundclosest(x, y) rounddown((x) + (y) / 2, (y))
++
+ /*
+  * Divide positive or negative dividend by positive or negative divisor
+  * and round to closest integer. Result is undefined for negative
 -- 
-மணிவண்ணன் சதாசிவம்
+2.39.1
+
