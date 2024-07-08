@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D971DA303;
-	Mon,  8 Jul 2024 10:33:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EFC1DA303;
+	Mon,  8 Jul 2024 10:36:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720434792; cv=none; b=eFVVDmP2pk0izYb/VN+e0AoUrKhZDNd9fdfcMtEloGbUOzNyEOO4ZIWisqUXQ/6Sj2b3ncqf2+az4cIx5u8eoxGLTZ/EJO7jHRdspf3GXqYwo3cx+4VyxOcuYwkislGQlStjjyiNZ2oEVnSJ31UKCP2pnF45BUJCeBDdTfzYXCY=
+	t=1720435006; cv=none; b=rkHnnt8fN0sk/c02vINCVmF62NkEmtyLDPe9bk4+L887Pi6rMPctXlWA/xfk35SFBEikkPf2ZEADeqsDO9L041Fj8Xi39lGdR0c7g9qv+hpJvIwobLVkz3IGs158mLU2LXBfdO9YtRfrLt6BK8WiYjL68f5n33m59TwHB7L4ZyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720434792; c=relaxed/simple;
-	bh=WHPq6XGox2t5QBzjMLQf3aMokr2bbVCFuM47TTyBV48=;
+	s=arc-20240116; t=1720435006; c=relaxed/simple;
+	bh=3Nxqm3JLpo/2FtZzwnd9TEiW+RAk0KUEjOFh9w97bxg=;
 	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=DRF+EC3DUkZXiAyLilMnNzKgtoJaX74ZrHFO7m5tuEljxgBzfh5rCKTxpOUilHAY6O2r8Z+BA9Alon69NZs67yuud8ui3WV3Xex6/kNirgs+Fo3Qyq8gSDDJmdvazpYrXkcqWBkGVn7wLR+s2dQmP3ZmYcc2wvidARPLT+LSoRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3Cyg1Vw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=DyzDVheliz2TZHqMUcAC8NEqH5CuCvvoQMnS05RR3EaBy0G0fnJE8gW/vIfyGIYQiJQtq+OvdrpZlPUAPYsUxMxHqETLyO/jPIhX5nBjmKj1CLwTYO0oWsys1AOns+3DashihYQ8o6q4CJIvIWK5YYNrGxsQe3fw1IBN22H6GY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bqHtdiKc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3Cyg1Vw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 950FFC116B1;
-	Mon,  8 Jul 2024 10:33:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bqHtdiKc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3DEAC116B1;
+	Mon,  8 Jul 2024 10:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720434792;
-	bh=WHPq6XGox2t5QBzjMLQf3aMokr2bbVCFuM47TTyBV48=;
+	s=k20201202; t=1720435006;
+	bh=3Nxqm3JLpo/2FtZzwnd9TEiW+RAk0KUEjOFh9w97bxg=;
 	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=W3Cyg1Vwy3FFg1cZWs9jmLvodhj8id0aPGwX7oukQDFr3XEq38uxdHJRhNIjC0mG6
-	 By/8xO5k3w/jrBJ+VQzQYPowUal2cDIK4ICRae+VeYvOwJhcUkDXgF2IchS61TxSXa
-	 N+ujTz23HaMpfEHWI5X9HY9IIeEQL/Nv4LVZovLTbDaQ0E0tH52UsI+Z2oyJFHqi7S
-	 eYTNwgZUVdo9qIdOCZZwaC5hpkORmbgmjlkq6oW4OajYV1d7tq6ljAji34BioGi/cG
-	 7ENTsZ+Nt3oYRMrKRv/WQDMcZA37f9z0J6r6PENJ7+li1ZjYzUUQ+KbmKw5U4ViYyF
-	 U1j8FHjA7ZY2A==
+	b=bqHtdiKcDbR5oKuI2SUSQjjlOJ3EOawsksDOjfas2zNslxhQPIxVFzo36sLkheSPF
+	 qetIqmyf7fwnH6jDdn2Ok6U+ZmEyJR7fT2PAXFXtmnGijNwHiMcuP4jaBhGvRk8rhb
+	 3UC8PQ7mEDM9Z40FhIZdH/D/JqB3bFmPMhahOwH8mLeinP+B0c2Qxyo4ZlMVHukkor
+	 9JlTXPYzwo0zzK7vottWFfSqfNZ1HTjxrdHJGSQRbHTG9PoE9TfkRtqJpuAw+AEKB6
+	 WnlIGujYVoTo/GKpvRo7kKf3lMBozTEn7n7YQAha72BYAb9HWmE7RiCWNZuRKfRLIo
+	 vAvaOJs5EMrSQ==
 From: Kalle Valo <kvalo@kernel.org>
 To: Baochen Qiang <quic_bqiang@quicinc.com>
 Cc: Paul Menzel <pmenzel@molgen.mpg.de>,  James Prestwood
@@ -43,10 +43,12 @@ References: <fba24cd3-4a1e-4072-8585-8402272788ff@molgen.mpg.de>
 	<462c97dc-f366-4f75-9327-04d9424b819a@quicinc.com>
 	<b30307fd-4417-4220-a3ac-e3e80f23105e@molgen.mpg.de>
 	<ceddb62b-61dd-44c9-babd-cd375c5a147d@quicinc.com>
-Date: Mon, 08 Jul 2024 13:33:08 +0300
-In-Reply-To: <ceddb62b-61dd-44c9-babd-cd375c5a147d@quicinc.com> (Baochen
-	Qiang's message of "Fri, 5 Jul 2024 18:51:47 +0800")
-Message-ID: <87sewkcgwr.fsf@kernel.org>
+	<fb8acc69-89aa-4b26-91b4-e768ae4c2238@molgen.mpg.de>
+	<82e10a1a-ed23-4d5c-b691-02e39296a91e@quicinc.com>
+Date: Mon, 08 Jul 2024 13:36:42 +0300
+In-Reply-To: <82e10a1a-ed23-4d5c-b691-02e39296a91e@quicinc.com> (Baochen
+	Qiang's message of "Mon, 8 Jul 2024 09:53:08 +0800")
+Message-ID: <87o778cgqt.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,28 +56,39 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
 Baochen Qiang <quic_bqiang@quicinc.com> writes:
 
->>>> 2.=C2=A0 invalid vht params rate 960 100kbps nss 1 mcs 9
->>>> 3.=C2=A0 invalid vht params rate 1730 100kbps nss 2 mcs 9
->>>> 4.=C2=A0 invalid vht params rate 1920 100kbps nss 2 mcs 9
->>>
->>> OK, these are due to mismatch between host and QCA6174 firmware, we
->>> can update host to fix them.
+>>> Checked with firmware team and just know that, the TX rate info is
+>>> generated by firmware directly but for RX rate it is from phy side.
+>>> From firmware TX rate generation code seems NSS 3 is an impossible
+>>> value, so it might be an RX rate generated by phy side. But I could
+>>> not tell for now since the log is not complete. Paul, could you
+>>> enable full ath10k log and try to reproduce? With full log we can
+>>> check whether it is a RX rate issue,
+>> 
+>> Please tell me how I enable full logging.
 >
-> Kalle, the root cause to these three warnings are clear now and if you
-> agree I can submit patches to fix them. Or I can also wait until the
-> NSS 3 issue is clear.
+> once boot, first unload ath10k modules by 
+>
+> sudo modprobe -r ath10k_pci
+>
+> then load ath10k modules with
+>
+> sudo modprobe ath10k_core debug_mask=0xffffffff
+> sudo modprobe ath10k_pci
+>
+> you should see lots of prints now
 
-I'm not sure why would we want to wait for the NSS 3 to be solved? Based
-on my (limited) understanding I think it would be good to submit patches
-for solved issues now.
+BTW the extensive debug messages can slow down the system so there's
+also the option of using tracing which is a lot faster:
 
---=20
+https://wireless.wiki.kernel.org/en/users/drivers/ath10k/debug#tracing
+
+Though I have not tested that for a long time but I hope it still works.
+
+-- 
 https://patchwork.kernel.org/project/linux-wireless/list/
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
