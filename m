@@ -1,37 +1,38 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A043C08A;
-	Mon,  8 Jul 2024 12:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B00F84E1F;
+	Mon,  8 Jul 2024 12:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720440582; cv=none; b=gvOGJl7C3Q7wOwNytZACI2OKaChsqui2YH1S6bNX/TjqOEYHMk0gUvaSULX2zh8sKSGru2o5xk/VvA/SBjvv+YZRBPKVBt6Tz1LiJvuBFlco0XJcXnnR5F8AePoewxPpZ/YNWvZOAFEr1k61AceqkddeYiH5XqgiV8NNiADTQ9M=
+	t=1720440594; cv=none; b=dGfv4dwtH0D+3gVa0bHwUdQw+cF1ZDhgwInh2ykfNuIPJcxPzGyaZ3tmfXFLD2scqu2UZ+Zd1CF80eNKF4pjqbGAXbpJl++mdx30C9wm3E4fZseKqxlPPPID6vkXtkGQJrW/Fujecl8ggbl2JlBglpAku+xM7q5JTr26tXmFaRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720440582; c=relaxed/simple;
-	bh=LixmteUS5gYgJ/PPXczu+PsnnDVZsOkJdxUiZfHsntw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s3sGWVoRl2rn6ewIft6xvVZLtCT0UVP89SdSUeL+eTjxfWCfH6raosL8w7ud1s5m2koGnT3zBIgvjhqBu2Vmmoul2TEGdBkPLlLsT9BLyL11MykmlsE8JINiWCkX0S7nf4zDGU5qU4iASDcxE+1suYWTI6uVKXMTaPPiBgDzh/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=D8q1AFg9; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1720440594; c=relaxed/simple;
+	bh=nmcue+x2Xg45a6s/x0ugPR6Jgu4A/v+oknSpz5Ymk30=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TMBaqj+otTco7+2GUCoJHbT1UYrnyPf/I6ZNh1otFa6+S8UAYM1mAZVE/9q24HXlwAwSo4or5LpdZMlQXfRBZOtphOdUjAM1Q0Kq+ZRaTd2ND5fHvbas8p2CnHqNzFlili+cZtdFqWd3iOiX1txY81Mj2uaq/x+tGSIUa+z8lCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=L6kmbK+3; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="D8q1AFg9"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="L6kmbK+3"
 Received: from localhost (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 8E9E041AAD;
-	Mon,  8 Jul 2024 14:09:32 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 687F944D58;
+	Mon,  8 Jul 2024 14:09:50 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
 	by localhost (disroot.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id ZZdBFLd7Gx_I; Mon,  8 Jul 2024 14:09:31 +0200 (CEST)
+	with ESMTP id r-v2oQzEaTSq; Mon,  8 Jul 2024 14:09:49 +0200 (CEST)
 From: Yao Zi <ziyao@disroot.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1720440571; bh=LixmteUS5gYgJ/PPXczu+PsnnDVZsOkJdxUiZfHsntw=;
-	h=From:To:Cc:Subject:Date;
-	b=D8q1AFg9z24hBB18YM8MJt044NefpABngXoUt0Z3FlzL2tkFswv3SlkdPaNOZqPuP
-	 LHCQaSX3n7Vxr6EhXUWfJfoX4IerSx0AJ8uN21Um97G1YY86q5mUNcidnKw1HGPbWz
-	 M6fNSRQIJh00FAHGk8su6FiL4udi2E1aaQbsYG4yU3Av0VDaJkWXYgzm/+cTok5jGz
-	 X0BqirpWpzZ7SroB6ZWUpQhpoff9inRjovijWA52o2KBm6P5kCb9ZH7ZA+/+QEXiEh
-	 MQpev+aQ/v4xG/3+44KTuTN0Ouvd4FhuruqxH+61RNWhPZA+WSIXNESeO/nIN3sGrs
-	 ZH6rPB8wrQxBw==
+	t=1720440584; bh=nmcue+x2Xg45a6s/x0ugPR6Jgu4A/v+oknSpz5Ymk30=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=L6kmbK+35yIfkShOgt6FQzazv/R/hhn81mv2D+9Y8vNV8HLAEpIEZOJml4iLEYCSv
+	 CPEkrm5219QvhFsyJlZGloUWAGH2OG2BDiG/UuRk7af7Wxw3xyBBKMIExlxoOEJjtv
+	 quLEbcTiYHgJ1H1Qwy35htW2scBnTxVJUpG44/rPJPoRUhhQW55rfUK/lxoTTsJhfo
+	 uqnFTUQeAvF2tKFbJlb7rNLQV0APZ2CFFIeyjKY6W3eyf9qX4Ro0pbETCrhEJBNwIv
+	 OGwBE++0h7QpcYviRpKjF5F2PnI9KnPkMOVjalOUUMBfGUqkMyf+TzIjPLFGRaarhv
+	 u+qEcBNnAszWw==
 To: Vinod Koul <vkoul@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -48,9 +49,11 @@ To: Vinod Koul <vkoul@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
 Cc: Yao Zi <ziyao@disroot.org>
-Subject: [PATCH 0/3] Add USB support for Sophgo CV1800/SG200x SoCs
-Date: Mon,  8 Jul 2024 12:08:27 +0000
-Message-ID: <20240708120830.5785-1-ziyao@disroot.org>
+Subject: [PATCH 2/3] riscv: dts: sophgo: add nodes for USB phy and controller
+Date: Mon,  8 Jul 2024 12:08:29 +0000
+Message-ID: <20240708120830.5785-3-ziyao@disroot.org>
+In-Reply-To: <20240708120830.5785-1-ziyao@disroot.org>
+References: <20240708120830.5785-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,28 +62,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Sophgo CV1800/SG200x SoCs integrate a USB 2.0 phy and a USB 2.0
-controller based on dwc2 IP. This series implements a basic driver
-for the USB phy and add USB-related device tree nodes.
+CV1800/SG200x SoCs integrate a USB 2.0 phy and a USB controller based
+on dwc2 IP. Add device tree nodes for these peripherals.
 
-Yao Zi (3):
-  dt-bindings: phy: add YAML schema for cv1800-usb-phy driver bindings
-  riscv: dts: sophgo: add nodes for USB phy and controller
-  phy: sophgo: add usb phy driver for Sophgo CV1800 SoCs
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+---
+ arch/riscv/boot/dts/sophgo/cv18xx.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
- .../bindings/phy/sophgo,cv1800-usb-phy.yaml   |  67 ++++++
- arch/riscv/boot/dts/sophgo/cv18xx.dtsi        |  23 ++
- drivers/phy/Kconfig                           |   1 +
- drivers/phy/Makefile                          |   1 +
- drivers/phy/sophgo/Kconfig                    |  10 +
- drivers/phy/sophgo/Makefile                   |   2 +
- drivers/phy/sophgo/phy-cv1800-usb.c           | 213 ++++++++++++++++++
- 7 files changed, 317 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/sophgo,cv1800-usb-phy.yaml
- create mode 100644 drivers/phy/sophgo/Kconfig
- create mode 100644 drivers/phy/sophgo/Makefile
- create mode 100644 drivers/phy/sophgo/phy-cv1800-usb.c
-
+diff --git a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+index 891932ae470f..06461f1f1986 100644
+--- a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
++++ b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+@@ -61,6 +61,18 @@ clk: clock-controller@3002000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
++		usb_phy: usb-phy@3006000 {
++			compatible = "sophgo,cv1800-usb-phy";
++			reg = <0x3006000 0x60>, <0x3000048 0x4>;
++			reg-names = "phy", "pin";
++			clocks = <&clk CLK_APB_USB>,
++				 <&clk CLK_USB_125M>,
++				 <&clk CLK_USB_33K>,
++				 <&clk CLK_USB_12M>;
++			clock-names = "apb", "125m", "33k", "12m";
++			#phy-cells = <0>;
++		};
++
+ 		gpio0: gpio@3020000 {
+ 			compatible = "snps,dw-apb-gpio";
+ 			reg = <0x3020000 0x1000>;
+@@ -297,6 +309,17 @@ sdhci0: mmc@4310000 {
+ 			status = "disabled";
+ 		};
+ 
++		usb_otg: usb@4340000 {
++			compatible = "sophgo,cv1800-usb";
++			reg = <0x4340000 0x10000>;
++			clocks = <&clk CLK_AXI4_USB>;
++			clock-names = "otg";
++			dr_mode = "otg";
++			interrupts = <30 IRQ_TYPE_LEVEL_HIGH>;
++			phys = <&usb_phy>;
++			phy-names = "usb2-phy";
++		};
++
+ 		plic: interrupt-controller@70000000 {
+ 			reg = <0x70000000 0x4000000>;
+ 			interrupts-extended = <&cpu0_intc 11>, <&cpu0_intc 9>;
 -- 
 2.45.2
 
