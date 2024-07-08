@@ -1,513 +1,483 @@
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8638365;
-	Mon,  8 Jul 2024 01:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EC9D386;
+	Mon,  8 Jul 2024 01:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720400708; cv=none; b=Ocjzyb4gYKBVuQfhLkMD6ZL+C+AqWxLwyY/c88Q/GT318qIzThx6fITmmBL8oAQoMds1kYwQYDhNMtWp3AYBx3GKYHkjAnWGdr1x+qgof362DiZYbg327JCk0nqDHyN1aNtPTukmKWVDJOl+ZP9pQQckYoN5sYV6qTiYhhYKGQA=
+	t=1720401380; cv=none; b=AhR8BUuJJ1QH+d/aqnyKJ2fWPYtxEvxU3jrw331I6hykf3UmqAW4CyVws3sMDrFiMBka5Ph8kCGoAxW9CigiA6xVaskpiVxP+GR9E91bPedLVfNT0NFSCYxUx8HYnulSFhYOSbFfWKj/1y65VBw9xXJJhs8lT1EpzuyuKnMoeFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720400708; c=relaxed/simple;
-	bh=nadROCNWCSGNpP2psx2C5aggRwjnZw6OLxT40FVmKW8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pu6pTD7tGOn5c/dUeZhot4r0YyRwR0k0e44QxLoJtJKOXeKOMDK2fuWpZvV8Y5RwDdIbQWWbp0NJ1VfjVUIUwYZk+eJ+XYq5Y/XAlwRSTSxdAmdZOPteh9Cxe8oZc0+TT9TrSNAzY+FvBnbZ6us7EG4XLCbrQGoJIoKgs/LYgh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 8 Jul
- 2024 08:59:53 +0800
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX02.aspeed.com
- (192.168.0.25) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 8 Jul
- 2024 08:59:54 +0800
-Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Mon, 8 Jul 2024 08:59:52 +0800
-From: Jammy Huang <jammy_huang@aspeedtech.com>
-To: <eajames@linux.ibm.com>, <mchehab@kernel.org>, <joel@jms.id.au>,
-	<andrew@aj.id.au>, <linux-media@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] media: aspeed: Allow to capture from SoC display (GFX)
-Date: Mon, 8 Jul 2024 08:59:52 +0800
-Message-ID: <20240708005952.481727-1-jammy_huang@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720401380; c=relaxed/simple;
+	bh=YxGKNOt+bYKwtB8aSr+XryXqvFkmAo8egk8yltaeaJ4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TImvPcDALg13WAvhWVUN/9t1sYHJSXoJUuF/cfg8ydiKg+ksTOc/IWESaW5InH0XvDkvLw7G051c2LURiKZv73PdDQZ8tw8lv54ZSOpmPz4MebphRiimeeE02GC2irY2vE6dKd4U0gBrWATA4UT3llDNCBCTPz3D88FMb/45tgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cx7+vYPYtm1d8BAA--.5578S3;
+	Mon, 08 Jul 2024 09:16:08 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqsbUPYtm7wk_AA--.13719S3;
+	Mon, 08 Jul 2024 09:16:06 +0800 (CST)
+Subject: Re: [PATCH v4 1/2] LoongArch: KVM: Add steal time support in kvm side
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, x86@kernel.org, virtualization@lists.linux.dev
+References: <20240524073812.731032-1-maobibo@loongson.cn>
+ <20240524073812.731032-2-maobibo@loongson.cn>
+ <CAAhV-H5G7O7tbwzyaoO4iEXuN+_xbVFJDEyv1HH7GqOH24639Q@mail.gmail.com>
+ <1aa110a8-28b9-d1d0-4b39-bc894b31f26c@loongson.cn>
+ <CAAhV-H5oS+KrcGH+1wJCGKCjs2VKHkWyZ5QnorPjFMuE_eBb3g@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <ae21f9ef-e043-0f8c-b088-6645fc1f3c30@loongson.cn>
+Date: Mon, 8 Jul 2024 09:16:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H5oS+KrcGH+1wJCGKCjs2VKHkWyZ5QnorPjFMuE_eBb3g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: Fail (TWMBX02.aspeed.com: domain of jammy_huang@aspeedtech.com
- does not designate 192.168.10.10 as permitted sender)
- receiver=TWMBX02.aspeed.com; client-ip=192.168.10.10;
- helo=twmbx02.aspeed.com;
+X-CM-TRANSID:AQAAf8CxqsbUPYtm7wk_AA--.13719S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9fXoW3KFy7WF43Kr18GFWfXFWrWFX_yoW8Xr4fZo
+	W5AF1xtw48Gr45uF1DJ3s0q3yjv34Fkw4UA3y3Ars3XF4Uta47Ar15Gw4YqF43Wr1kGr13
+	Ca42gw40vFWfXwn5l-sFpf9Il3svdjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUY27kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9U
+	UUUU=
 
-ASPEED BMC IC has 2 different display engines. Please find AST2600's
-datasheet to get detailed information.
 
-1. VGA on PCIe
-2. SoC Display (GFX)
 
-By default, video engine (VE) will capture video from VGA. This patch
-adds an option to capture video from GFX with standard ioctl,
-vidioc_s_input.
+On 2024/7/6 下午5:41, Huacai Chen wrote:
+> On Sat, Jul 6, 2024 at 2:59 PM maobibo <maobibo@loongson.cn> wrote:
+>>
+>> Huacai,
+>>
+>> On 2024/7/6 上午11:00, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Fri, May 24, 2024 at 3:38 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> Steal time feature is added here in kvm side, VM can search supported
+>>>> features provided by KVM hypervisor, feature KVM_FEATURE_STEAL_TIME
+>>>> is added here. Like x86, steal time structure is saved in guest memory,
+>>>> one hypercall function KVM_HCALL_FUNC_NOTIFY is added to notify KVM to
+>>>> enable the feature.
+>>>>
+>>>> One cpu attr ioctl command KVM_LOONGARCH_VCPU_PVTIME_CTRL is added to
+>>>> save and restore base address of steal time structure when VM is migrated.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/kvm_host.h  |   7 ++
+>>>>    arch/loongarch/include/asm/kvm_para.h  |  10 ++
+>>>>    arch/loongarch/include/asm/kvm_vcpu.h  |   4 +
+>>>>    arch/loongarch/include/asm/loongarch.h |   1 +
+>>>>    arch/loongarch/include/uapi/asm/kvm.h  |   4 +
+>>>>    arch/loongarch/kvm/Kconfig             |   1 +
+>>>>    arch/loongarch/kvm/exit.c              |  38 +++++++-
+>>>>    arch/loongarch/kvm/vcpu.c              | 124 +++++++++++++++++++++++++
+>>>>    8 files changed, 187 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>>>> index c87b6ea0ec47..2eb2f7572023 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_host.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>>>> @@ -30,6 +30,7 @@
+>>>>    #define KVM_PRIVATE_MEM_SLOTS          0
+>>>>
+>>>>    #define KVM_HALT_POLL_NS_DEFAULT       500000
+>>>> +#define KVM_REQ_STEAL_UPDATE           KVM_ARCH_REQ(1)
+>>>>
+>>>>    #define KVM_GUESTDBG_SW_BP_MASK                \
+>>>>           (KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP)
+>>>> @@ -201,6 +202,12 @@ struct kvm_vcpu_arch {
+>>>>           struct kvm_mp_state mp_state;
+>>>>           /* cpucfg */
+>>>>           u32 cpucfg[KVM_MAX_CPUCFG_REGS];
+>>>> +       /* paravirt steal time */
+>>>> +       struct {
+>>>> +               u64 guest_addr;
+>>>> +               u64 last_steal;
+>>>> +               struct gfn_to_hva_cache cache;
+>>>> +       } st;
+>>>>    };
+>>>>
+>>>>    static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
+>>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+>>>> index 4ba2312e5f8c..a9ba8185d4af 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_para.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_para.h
+>>>> @@ -14,6 +14,7 @@
+>>>>
+>>>>    #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
+>>>>    #define  KVM_HCALL_FUNC_IPI            1
+>>>> +#define  KVM_HCALL_FUNC_NOTIFY         2
+>>>>
+>>>>    #define KVM_HCALL_SWDBG                        HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
+>>>>
+>>>> @@ -24,6 +25,15 @@
+>>>>    #define KVM_HCALL_INVALID_CODE         -1UL
+>>>>    #define KVM_HCALL_INVALID_PARAMETER    -2UL
+>>>>
+>>>> +#define KVM_STEAL_PHYS_VALID           BIT_ULL(0)
+>>>> +#define KVM_STEAL_PHYS_MASK            GENMASK_ULL(63, 6)
+>>>> +struct kvm_steal_time {
+>>>> +       __u64 steal;
+>>>> +       __u32 version;
+>>>> +       __u32 flags;
+>>> I found that x86 has a preempted field here, in our internal repo the
+>>> LoongArch version also has this field. Moreover,
+>>> kvm_steal_time_set_preempted() and kvm_steal_time_clear_preempted()
+>>> seems needed.
+>> By my understanding, macro vcpu_is_preempted() is used together with pv
+>> spinlock, and pv spinlock depends on pv stealtime. So I think preempted
+>> flag is not part of pv stealtime, it is part of pv spinlock.
+>>
+>> We are going to add preempted field if pv spinlock is added.
+>>>
+>>>> +       __u32 pad[12];
+>>>> +};
+>>>> +
+>>>>    /*
+>>>>     * Hypercall interface for KVM hypervisor
+>>>>     *
+>>>> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+>>>> index 590a92cb5416..d7e51300a89f 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+>>>> @@ -120,4 +120,8 @@ static inline void kvm_write_reg(struct kvm_vcpu *vcpu, int num, unsigned long v
+>>>>           vcpu->arch.gprs[num] = val;
+>>>>    }
+>>>>
+>>>> +static inline bool kvm_pvtime_supported(void)
+>>>> +{
+>>>> +       return !!sched_info_on();
+>>>> +}
+>>>>    #endif /* __ASM_LOONGARCH_KVM_VCPU_H__ */
+>>>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+>>>> index eb09adda54b7..7a4633ef284b 100644
+>>>> --- a/arch/loongarch/include/asm/loongarch.h
+>>>> +++ b/arch/loongarch/include/asm/loongarch.h
+>>>> @@ -169,6 +169,7 @@
+>>>>    #define  KVM_SIGNATURE                 "KVM\0"
+>>>>    #define CPUCFG_KVM_FEATURE             (CPUCFG_KVM_BASE + 4)
+>>>>    #define  KVM_FEATURE_IPI               BIT(1)
+>>>> +#define  KVM_FEATURE_STEAL_TIME                BIT(2)
+>>>>
+>>>>    #ifndef __ASSEMBLY__
+>>>>
+>>>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+>>>> index f9abef382317..ddc5cab0ffd0 100644
+>>>> --- a/arch/loongarch/include/uapi/asm/kvm.h
+>>>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+>>>> @@ -81,7 +81,11 @@ struct kvm_fpu {
+>>>>    #define LOONGARCH_REG_64(TYPE, REG)    (TYPE | KVM_REG_SIZE_U64 | (REG << LOONGARCH_REG_SHIFT))
+>>>>    #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_64(KVM_REG_LOONGARCH_CSR, REG)
+>>>>    #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_64(KVM_REG_LOONGARCH_CPUCFG, REG)
+>>>> +
+>>>> +/* Device Control API on vcpu fd */
+>>>>    #define KVM_LOONGARCH_VCPU_CPUCFG      0
+>>>> +#define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
+>>>> +#define  KVM_LOONGARCH_VCPU_PVTIME_GPA 0
+>>>>
+>>>>    struct kvm_debug_exit_arch {
+>>>>    };
+>>>> diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
+>>>> index c4ef2b4d9797..248744b4d086 100644
+>>>> --- a/arch/loongarch/kvm/Kconfig
+>>>> +++ b/arch/loongarch/kvm/Kconfig
+>>>> @@ -29,6 +29,7 @@ config KVM
+>>>>           select KVM_MMIO
+>>>>           select HAVE_KVM_READONLY_MEM
+>>>>           select KVM_XFER_TO_GUEST_WORK
+>>>> +       select SCHED_INFO
+>>>>           help
+>>>>             Support hosting virtualized guest machines using
+>>>>             hardware virtualization extensions. You will need
+>>>> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+>>>> index c86e099af5ca..e2abd97fb13f 100644
+>>>> --- a/arch/loongarch/kvm/exit.c
+>>>> +++ b/arch/loongarch/kvm/exit.c
+>>>> @@ -24,7 +24,7 @@
+>>>>    static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+>>>>    {
+>>>>           int rd, rj;
+>>>> -       unsigned int index;
+>>>> +       unsigned int index, ret;
+>>>>
+>>>>           if (inst.reg2_format.opcode != cpucfg_op)
+>>>>                   return EMULATE_FAIL;
+>>>> @@ -50,7 +50,10 @@ static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+>>>>                   vcpu->arch.gprs[rd] = *(unsigned int *)KVM_SIGNATURE;
+>>>>                   break;
+>>>>           case CPUCFG_KVM_FEATURE:
+>>>> -               vcpu->arch.gprs[rd] = KVM_FEATURE_IPI;
+>>>> +               ret = KVM_FEATURE_IPI;
+>>>> +               if (sched_info_on())
+>>> What about replacing it with your helper function kvm_pvtime_supported()?
+>> Sure, will replace it with helper function kvm_pvtime_supported().
+> If you are sure this is the only issue, then needn't submit a new version.
+OK, thanks.
 
-An enum, aspeed_video_input, is added for this purpose.
-enum aspeed_video_input {
-	VIDEO_INPUT_VGA = 0,
-	VIDEO_INPUT_GFX,
-	VIDEO_INPUT_MAX
-};
+By searching orginal submit of vcpu_is_preempt(), it can be located at
+https://lore.kernel.org/lkml/1477642287-24104-1-git-send-email-xinhui.pan@linux.vnet.ibm.com/
 
-To test this feature, you will need to enable GFX first. Please refer to
-ASPEED's SDK_User_Guide, 6.3.x Soc Display driver, for more information.
-In your application, you will need to use v4l2 ioctl, VIDIOC_S_INPUT, as
-below to select before start streaming.
+It is separated one, only that is depends on pv-spinlock and 
+pv-stealtime. And there is no capability indicator for guest kernel, it 
+is enabled by default.
 
-int rc;
-struct v4l2_input input;
+Regards
+Bibo Mao
 
-input.index = VIDEO_INPUT_GFX;
-rc = ioctl(fd, VIDIOC_S_INPUT, &input);
-if (rc < 0)
-{
-	...
-}
-
-Link: https://github.com/AspeedTech-BMC/openbmc/releases
-Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
----
- drivers/media/platform/aspeed/aspeed-video.c | 189 ++++++++++++++++---
- include/uapi/linux/aspeed-video.h            |   7 +
- 2 files changed, 170 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/media/platform/aspeed/aspeed-video.c b/drivers/media/platform/aspeed/aspeed-video.c
-index fc6050e3be0d..79dbec113f3f 100644
---- a/drivers/media/platform/aspeed/aspeed-video.c
-+++ b/drivers/media/platform/aspeed/aspeed-video.c
-@@ -25,6 +25,8 @@
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
- #include <linux/ktime.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-dev.h>
- #include <media/v4l2-device.h>
-@@ -203,6 +205,25 @@
- #define VE_MEM_RESTRICT_START		0x310
- #define VE_MEM_RESTRICT_END		0x314
- 
-+/* SCU's registers */
-+#define SCU_MISC_CTRL			0xC0
-+#define  SCU_DPLL_SOURCE		BIT(20)
-+
-+/* GFX's registers */
-+#define GFX_CTRL			0x60
-+#define  GFX_CTRL_ENABLE		BIT(0)
-+#define  GFX_CTRL_FMT			GENMASK(9, 7)
-+
-+#define GFX_H_DISPLAY			0x70
-+#define  GFX_H_DISPLAY_DE		GENMASK(28, 16)
-+#define  GFX_H_DISPLAY_TOTAL		GENMASK(12, 0)
-+
-+#define GFX_V_DISPLAY			0x78
-+#define  GFX_V_DISPLAY_DE		GENMASK(27, 16)
-+#define  GFX_V_DISPLAY_TOTAL		GENMASK(11, 0)
-+
-+#define GFX_DISPLAY_ADDR		0x80
-+
- /*
-  * VIDEO_MODE_DETECT_DONE:	a flag raised if signal lock
-  * VIDEO_RES_CHANGE:		a flag raised if res_change work on-going
-@@ -262,6 +283,7 @@ struct aspeed_video_perf {
- /*
-  * struct aspeed_video - driver data
-  *
-+ * version:		holds the version of aspeed SoC
-  * res_work:		holds the delayed_work for res-detection if unlock
-  * buffers:		holds the list of buffer queued from user
-  * flags:		holds the state of video
-@@ -273,6 +295,7 @@ struct aspeed_video_perf {
-  * yuv420:		a flag raised if JPEG subsampling is 420
-  * format:		holds the video format
-  * hq_mode:		a flag raised if HQ is enabled. Only for VIDEO_FMT_ASPEED
-+ * input:		holds the video input
-  * frame_rate:		holds the frame_rate
-  * jpeg_quality:	holds jpeq's quality (0~11)
-  * jpeg_hq_quality:	holds hq's quality (1~12) only if hq_mode enabled
-@@ -298,6 +321,9 @@ struct aspeed_video {
- 	struct video_device vdev;
- 	struct mutex video_lock;	/* v4l2 and videobuf2 lock */
- 
-+	struct regmap *scu;
-+	struct regmap *gfx;
-+	u32 version;
- 	u32 jpeg_mode;
- 	u32 comp_size_read;
- 
-@@ -316,6 +342,7 @@ struct aspeed_video {
- 	bool yuv420;
- 	enum aspeed_video_format format;
- 	bool hq_mode;
-+	enum aspeed_video_input input;
- 	unsigned int frame_rate;
- 	unsigned int jpeg_quality;
- 	unsigned int jpeg_hq_quality;
-@@ -331,21 +358,25 @@ struct aspeed_video {
- #define to_aspeed_video(x) container_of((x), struct aspeed_video, v4l2_dev)
- 
- struct aspeed_video_config {
-+	u32 version;
- 	u32 jpeg_mode;
- 	u32 comp_size_read;
- };
- 
- static const struct aspeed_video_config ast2400_config = {
-+	.version = 4,
- 	.jpeg_mode = AST2400_VE_SEQ_CTRL_JPEG_MODE,
- 	.comp_size_read = AST2400_VE_COMP_SIZE_READ_BACK,
- };
- 
- static const struct aspeed_video_config ast2500_config = {
-+	.version = 5,
- 	.jpeg_mode = AST2500_VE_SEQ_CTRL_JPEG_MODE,
- 	.comp_size_read = AST2400_VE_COMP_SIZE_READ_BACK,
- };
- 
- static const struct aspeed_video_config ast2600_config = {
-+	.version = 6,
- 	.jpeg_mode = AST2500_VE_SEQ_CTRL_JPEG_MODE,
- 	.comp_size_read = AST2600_VE_COMP_SIZE_READ_BACK,
- };
-@@ -485,6 +516,7 @@ static const struct v4l2_dv_timings_cap aspeed_video_timings_cap = {
- 
- static const char * const format_str[] = {"Standard JPEG",
- 	"Aspeed JPEG"};
-+static const char * const input_str[] = {"VGA", "BMC GFX"};
- 
- static unsigned int debug;
- 
-@@ -609,6 +641,14 @@ static int aspeed_video_start_frame(struct aspeed_video *video)
- 		aspeed_video_free_buf(video, &video->bcd);
- 	}
- 
-+	if (video->input == VIDEO_INPUT_GFX) {
-+		u32 val;
-+
-+		// update input buffer address as gfx's
-+		regmap_read(video->gfx, GFX_DISPLAY_ADDR, &val);
-+		aspeed_video_write(video, VE_TGS_0, val);
-+	}
-+
- 	spin_lock_irqsave(&video->lock, flags);
- 	buf = list_first_entry_or_null(&video->buffers,
- 				       struct aspeed_video_buffer, link);
-@@ -1026,9 +1066,23 @@ static void aspeed_video_get_timings(struct aspeed_video *v,
- 	}
- }
- 
-+static void aspeed_video_get_resolution_gfx(struct aspeed_video *video,
-+					    struct v4l2_bt_timings *det)
-+{
-+	u32 h_val, v_val;
-+
-+	regmap_read(video->gfx, GFX_H_DISPLAY, &h_val);
-+	regmap_read(video->gfx, GFX_V_DISPLAY, &v_val);
-+
-+	det->width = FIELD_GET(GFX_H_DISPLAY_DE, h_val) + 1;
-+	det->height = FIELD_GET(GFX_V_DISPLAY_DE, v_val) + 1;
-+	video->v4l2_input_status = 0;
-+}
-+
- #define res_check(v) test_and_clear_bit(VIDEO_MODE_DETECT_DONE, &(v)->flags)
- 
--static void aspeed_video_get_resolution(struct aspeed_video *video)
-+static void aspeed_video_get_resolution_vga(struct aspeed_video *video,
-+					    struct v4l2_bt_timings *det)
- {
- 	bool invalid_resolution = true;
- 	int rc;
-@@ -1036,7 +1090,6 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
- 	u32 mds;
- 	u32 src_lr_edge;
- 	u32 src_tb_edge;
--	struct v4l2_bt_timings *det = &video->detected_timings;
- 
- 	det->width = MIN_WIDTH;
- 	det->height = MIN_HEIGHT;
-@@ -1113,14 +1166,20 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
- 
- 	aspeed_video_get_timings(video, det);
- 
--	/*
--	 * Enable mode-detect watchdog, resolution-change watchdog and
--	 * automatic compression after frame capture.
--	 */
-+	/* Enable mode-detect watchdog, resolution-change watchdog */
- 	aspeed_video_update(video, VE_INTERRUPT_CTRL, 0,
- 			    VE_INTERRUPT_MODE_DETECT_WD);
--	aspeed_video_update(video, VE_SEQ_CTRL, 0,
--			    VE_SEQ_CTRL_AUTO_COMP | VE_SEQ_CTRL_EN_WATCHDOG);
-+	aspeed_video_update(video, VE_SEQ_CTRL, 0, VE_SEQ_CTRL_EN_WATCHDOG);
-+}
-+
-+static void aspeed_video_get_resolution(struct aspeed_video *video)
-+{
-+	struct v4l2_bt_timings *det = &video->detected_timings;
-+
-+	if (video->input == VIDEO_INPUT_GFX)
-+		aspeed_video_get_resolution_gfx(video, det);
-+	else
-+		aspeed_video_get_resolution_vga(video, det);
- 
- 	v4l2_dbg(1, debug, &video->v4l2_dev, "Got resolution: %dx%d\n",
- 		 det->width, det->height);
-@@ -1156,7 +1215,7 @@ static void aspeed_video_set_resolution(struct aspeed_video *video)
- 	aspeed_video_write(video, VE_SRC_SCANLINE_OFFSET, act->width * 4);
- 
- 	/* Don't use direct mode below 1024 x 768 (irqs don't fire) */
--	if (size < DIRECT_FETCH_THRESHOLD) {
-+	if (video->input == VIDEO_INPUT_VGA && size < DIRECT_FETCH_THRESHOLD) {
- 		v4l2_dbg(1, debug, &video->v4l2_dev, "Capture: Sync Mode\n");
- 		aspeed_video_write(video, VE_TGS_0,
- 				   FIELD_PREP(VE_TGS_FIRST,
-@@ -1171,10 +1230,20 @@ static void aspeed_video_set_resolution(struct aspeed_video *video)
- 				    VE_CTRL_INT_DE | VE_CTRL_DIRECT_FETCH,
- 				    VE_CTRL_INT_DE);
- 	} else {
-+		u32 ctrl, val, bpp;
-+
- 		v4l2_dbg(1, debug, &video->v4l2_dev, "Capture: Direct Mode\n");
-+		ctrl = VE_CTRL_DIRECT_FETCH;
-+		if (video->input == VIDEO_INPUT_GFX) {
-+			regmap_read(video->gfx, GFX_CTRL, &val);
-+			bpp = FIELD_GET(GFX_CTRL_FMT, val) ? 32 : 16;
-+			if (bpp == 16)
-+				ctrl |= VE_CTRL_INT_DE;
-+			aspeed_video_write(video, VE_TGS_1, act->width * (bpp >> 3));
-+		}
- 		aspeed_video_update(video, VE_CTRL,
- 				    VE_CTRL_INT_DE | VE_CTRL_DIRECT_FETCH,
--				    VE_CTRL_DIRECT_FETCH);
-+				    ctrl);
- 	}
- 
- 	size *= 4;
-@@ -1207,6 +1276,22 @@ static void aspeed_video_set_resolution(struct aspeed_video *video)
- 		aspeed_video_free_buf(video, &video->srcs[0]);
- }
- 
-+/*
-+ * Update relative parameters when timing changed.
-+ *
-+ * @video: the struct of aspeed_video
-+ * @timings: the new timings
-+ */
-+static void aspeed_video_update_timings(struct aspeed_video *video, struct v4l2_bt_timings *timings)
-+{
-+	video->active_timings = *timings;
-+	aspeed_video_set_resolution(video);
-+
-+	video->pix_fmt.width = timings->width;
-+	video->pix_fmt.height = timings->height;
-+	video->pix_fmt.sizeimage = video->max_compressed_size;
-+}
-+
- static void aspeed_video_update_regs(struct aspeed_video *video)
- {
- 	u8 jpeg_hq_quality = clamp((int)video->jpeg_hq_quality - 1, 0,
-@@ -1219,6 +1304,8 @@ static void aspeed_video_update_regs(struct aspeed_video *video)
- 	u32 ctrl = 0;
- 	u32 seq_ctrl = 0;
- 
-+	v4l2_dbg(1, debug, &video->v4l2_dev, "input(%s)\n",
-+		 input_str[video->input]);
- 	v4l2_dbg(1, debug, &video->v4l2_dev, "framerate(%d)\n",
- 		 video->frame_rate);
- 	v4l2_dbg(1, debug, &video->v4l2_dev, "jpeg format(%s) subsample(%s)\n",
-@@ -1234,6 +1321,9 @@ static void aspeed_video_update_regs(struct aspeed_video *video)
- 	else
- 		aspeed_video_update(video, VE_BCD_CTRL, VE_BCD_CTRL_EN_BCD, 0);
- 
-+	if (video->input == VIDEO_INPUT_VGA)
-+		ctrl |= VE_CTRL_AUTO_OR_CURSOR;
-+
- 	if (video->frame_rate)
- 		ctrl |= FIELD_PREP(VE_CTRL_FRC, video->frame_rate);
- 
-@@ -1252,7 +1342,9 @@ static void aspeed_video_update_regs(struct aspeed_video *video)
- 	aspeed_video_update(video, VE_SEQ_CTRL,
- 			    video->jpeg_mode | VE_SEQ_CTRL_YUV420,
- 			    seq_ctrl);
--	aspeed_video_update(video, VE_CTRL, VE_CTRL_FRC, ctrl);
-+	aspeed_video_update(video, VE_CTRL,
-+			    VE_CTRL_FRC | VE_CTRL_AUTO_OR_CURSOR |
-+			    VE_CTRL_SOURCE, ctrl);
- 	aspeed_video_update(video, VE_COMP_CTRL,
- 			    VE_COMP_CTRL_DCT_LUM | VE_COMP_CTRL_DCT_CHR |
- 			    VE_COMP_CTRL_EN_HQ | VE_COMP_CTRL_HQ_DCT_LUM |
-@@ -1280,6 +1372,7 @@ static void aspeed_video_init_regs(struct aspeed_video *video)
- 	aspeed_video_write(video, VE_JPEG_ADDR, video->jpeg.dma);
- 
- 	/* Set control registers */
-+	aspeed_video_write(video, VE_SEQ_CTRL, VE_SEQ_CTRL_AUTO_COMP);
- 	aspeed_video_write(video, VE_CTRL, ctrl);
- 	aspeed_video_write(video, VE_COMP_CTRL, VE_COMP_CTRL_RSVD);
- 
-@@ -1311,12 +1404,7 @@ static void aspeed_video_start(struct aspeed_video *video)
- 	aspeed_video_get_resolution(video);
- 
- 	/* Set timings since the device is being opened for the first time */
--	video->active_timings = video->detected_timings;
--	aspeed_video_set_resolution(video);
--
--	video->pix_fmt.width = video->active_timings.width;
--	video->pix_fmt.height = video->active_timings.height;
--	video->pix_fmt.sizeimage = video->max_compressed_size;
-+	aspeed_video_update_timings(video, &video->detected_timings);
- }
- 
- static void aspeed_video_stop(struct aspeed_video *video)
-@@ -1414,16 +1502,47 @@ static int aspeed_video_enum_input(struct file *file, void *fh,
- 
- static int aspeed_video_get_input(struct file *file, void *fh, unsigned int *i)
- {
--	*i = 0;
-+	struct aspeed_video *video = video_drvdata(file);
-+
-+	*i = video->input;
- 
- 	return 0;
- }
- 
- static int aspeed_video_set_input(struct file *file, void *fh, unsigned int i)
- {
--	if (i)
-+	struct aspeed_video *video = video_drvdata(file);
-+
-+	if (i >= VIDEO_INPUT_MAX)
- 		return -EINVAL;
- 
-+	if (IS_ERR(video->scu)) {
-+		v4l2_dbg(1, debug, &video->v4l2_dev, "%s: scu isn't ready for input-control\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	if (IS_ERR(video->gfx) && i == VIDEO_INPUT_GFX) {
-+		v4l2_dbg(1, debug, &video->v4l2_dev, "%s: gfx isn't ready for GFX input\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	video->input = i;
-+
-+	if (video->version == 6) {
-+		/* modify dpll source per current input */
-+		if (video->input == VIDEO_INPUT_VGA)
-+			regmap_update_bits(video->scu, SCU_MISC_CTRL, SCU_DPLL_SOURCE, 0);
-+		else
-+			regmap_update_bits(video->scu, SCU_MISC_CTRL, SCU_DPLL_SOURCE, SCU_DPLL_SOURCE);
-+	}
-+
-+	aspeed_video_update_regs(video);
-+
-+	/* update signal status */
-+	aspeed_video_get_resolution(video);
-+	if (!video->v4l2_input_status)
-+		aspeed_video_update_timings(video, &video->detected_timings);
-+
- 	return 0;
- }
- 
-@@ -1527,13 +1646,7 @@ static int aspeed_video_set_dv_timings(struct file *file, void *fh,
- 	if (vb2_is_busy(&video->queue))
- 		return -EBUSY;
- 
--	video->active_timings = timings->bt;
--
--	aspeed_video_set_resolution(video);
--
--	video->pix_fmt.width = timings->bt.width;
--	video->pix_fmt.height = timings->bt.height;
--	video->pix_fmt.sizeimage = video->max_compressed_size;
-+	aspeed_video_update_timings(video, &timings->bt);
- 
- 	timings->type = V4L2_DV_BT_656_1120;
- 
-@@ -1911,6 +2024,7 @@ static int aspeed_video_debugfs_show(struct seq_file *s, void *data)
- 	val08 = aspeed_video_read(v, VE_CTRL);
- 	if (FIELD_GET(VE_CTRL_DIRECT_FETCH, val08)) {
- 		seq_printf(s, "  %-20s:\tDirect fetch\n", "Mode");
-+		seq_printf(s, "  %-20s:\t%s\n", "Input", input_str[v->input]);
- 		seq_printf(s, "  %-20s:\t%s\n", "VGA bpp mode",
- 			   FIELD_GET(VE_CTRL_INT_DE, val08) ? "16" : "32");
- 	} else {
-@@ -2070,12 +2184,34 @@ static int aspeed_video_setup_video(struct aspeed_video *video)
- 	return 0;
- }
- 
-+/*
-+ * Get regmap without checking res, such as clk/reset, that could lead to
-+ * conflict.
-+ */
-+static struct regmap *aspeed_regmap_lookup(struct device_node *np, const char *property)
-+{
-+	struct device_node *syscon_np;
-+	struct regmap *regmap;
-+
-+	syscon_np = of_parse_phandle(np, property, 0);
-+	if (!syscon_np)
-+		return ERR_PTR(-ENODEV);
-+
-+	regmap = device_node_to_regmap(syscon_np);
-+	of_node_put(syscon_np);
-+
-+	return regmap;
-+}
-+
- static int aspeed_video_init(struct aspeed_video *video)
- {
- 	int irq;
- 	int rc;
- 	struct device *dev = video->dev;
- 
-+	video->scu = aspeed_regmap_lookup(dev->of_node, "aspeed,scu");
-+	video->gfx = aspeed_regmap_lookup(dev->of_node, "aspeed,gfx");
-+
- 	irq = irq_of_parse_and_map(dev->of_node, 0);
- 	if (!irq) {
- 		dev_err(dev, "Unable to find IRQ\n");
-@@ -2167,6 +2303,7 @@ static int aspeed_video_probe(struct platform_device *pdev)
- 	if (!config)
- 		return -ENODEV;
- 
-+	video->version = config->version;
- 	video->jpeg_mode = config->jpeg_mode;
- 	video->comp_size_read = config->comp_size_read;
- 
-diff --git a/include/uapi/linux/aspeed-video.h b/include/uapi/linux/aspeed-video.h
-index 6586a65548c4..15168e8c931e 100644
---- a/include/uapi/linux/aspeed-video.h
-+++ b/include/uapi/linux/aspeed-video.h
-@@ -8,6 +8,13 @@
- 
- #include <linux/v4l2-controls.h>
- 
-+/* aspeed video's input types */
-+enum aspeed_video_input {
-+	VIDEO_INPUT_VGA = 0,
-+	VIDEO_INPUT_GFX,
-+	VIDEO_INPUT_MAX
-+};
-+
- #define V4L2_CID_ASPEED_HQ_MODE			(V4L2_CID_USER_ASPEED_BASE  + 1)
- #define V4L2_CID_ASPEED_HQ_JPEG_QUALITY		(V4L2_CID_USER_ASPEED_BASE  + 2)
- 
-
-base-commit: e9d22f7a6655941fc8b2b942ed354ec780936b3e
--- 
-2.25.1
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>> Huacai
+>>>
+>>>> +                       ret |= KVM_FEATURE_STEAL_TIME;
+>>>> +               vcpu->arch.gprs[rd] = ret;
+>>>>                   break;
+>>>>           default:
+>>>>                   vcpu->arch.gprs[rd] = 0;
+>>>> @@ -687,6 +690,34 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
+>>>>           return RESUME_GUEST;
+>>>>    }
+>>>>
+>>>> +static long kvm_save_notify(struct kvm_vcpu *vcpu)
+>>>> +{
+>>>> +       unsigned long id, data;
+>>>> +
+>>>> +       id   = kvm_read_reg(vcpu, LOONGARCH_GPR_A1);
+>>>> +       data = kvm_read_reg(vcpu, LOONGARCH_GPR_A2);
+>>>> +       switch (id) {
+>>>> +       case KVM_FEATURE_STEAL_TIME:
+>>>> +               if (!kvm_pvtime_supported())
+>>>> +                       return KVM_HCALL_INVALID_CODE;
+>>>> +
+>>>> +               if (data & ~(KVM_STEAL_PHYS_MASK | KVM_STEAL_PHYS_VALID))
+>>>> +                       return KVM_HCALL_INVALID_PARAMETER;
+>>>> +
+>>>> +               vcpu->arch.st.guest_addr = data;
+>>>> +               if (!(data & KVM_STEAL_PHYS_VALID))
+>>>> +                       break;
+>>>> +
+>>>> +               vcpu->arch.st.last_steal = current->sched_info.run_delay;
+>>>> +               kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
+>>>> +               break;
+>>>> +       default:
+>>>> +               break;
+>>>> +       };
+>>>> +
+>>>> +       return 0;
+>>>> +};
+>>>> +
+>>>>    /*
+>>>>     * kvm_handle_lsx_disabled() - Guest used LSX while disabled in root.
+>>>>     * @vcpu:      Virtual CPU context.
+>>>> @@ -758,6 +789,9 @@ static void kvm_handle_service(struct kvm_vcpu *vcpu)
+>>>>                   kvm_send_pv_ipi(vcpu);
+>>>>                   ret = KVM_HCALL_SUCCESS;
+>>>>                   break;
+>>>> +       case KVM_HCALL_FUNC_NOTIFY:
+>>>> +               ret = kvm_save_notify(vcpu);
+>>>> +               break;
+>>>>           default:
+>>>>                   ret = KVM_HCALL_INVALID_CODE;
+>>>>                   break;
+>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>> index 9e8030d45129..382796f1d3e6 100644
+>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>> @@ -31,6 +31,117 @@ const struct kvm_stats_header kvm_vcpu_stats_header = {
+>>>>                          sizeof(kvm_vcpu_stats_desc),
+>>>>    };
+>>>>
+>>>> +static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
+>>>> +{
+>>>> +       struct kvm_steal_time __user *st;
+>>>> +       struct gfn_to_hva_cache *ghc;
+>>>> +       struct kvm_memslots *slots;
+>>>> +       gpa_t gpa;
+>>>> +       u64 steal;
+>>>> +       u32 version;
+>>>> +
+>>>> +       ghc = &vcpu->arch.st.cache;
+>>>> +       gpa = vcpu->arch.st.guest_addr;
+>>>> +       if (!(gpa & KVM_STEAL_PHYS_VALID))
+>>>> +               return;
+>>>> +
+>>>> +       gpa &= KVM_STEAL_PHYS_MASK;
+>>>> +       slots = kvm_memslots(vcpu->kvm);
+>>>> +       if (slots->generation != ghc->generation || gpa != ghc->gpa) {
+>>>> +               if (kvm_gfn_to_hva_cache_init(vcpu->kvm, ghc, gpa,
+>>>> +                                       sizeof(*st))) {
+>>>> +                       ghc->gpa = INVALID_GPA;
+>>>> +                       return;
+>>>> +               }
+>>>> +       }
+>>>> +
+>>>> +       st = (struct kvm_steal_time __user *)ghc->hva;
+>>>> +       unsafe_get_user(version, &st->version, out);
+>>>> +       if (version & 1)
+>>>> +               version += 1;
+>>>> +       version += 1;
+>>>> +       unsafe_put_user(version, &st->version, out);
+>>>> +       smp_wmb();
+>>>> +
+>>>> +       unsafe_get_user(steal, &st->steal, out);
+>>>> +       steal += current->sched_info.run_delay -
+>>>> +               vcpu->arch.st.last_steal;
+>>>> +       vcpu->arch.st.last_steal = current->sched_info.run_delay;
+>>>> +       unsafe_put_user(steal, &st->steal, out);
+>>>> +
+>>>> +       smp_wmb();
+>>>> +       version += 1;
+>>>> +       unsafe_put_user(version, &st->version, out);
+>>>> +out:
+>>>> +       mark_page_dirty_in_slot(vcpu->kvm, ghc->memslot, gpa_to_gfn(ghc->gpa));
+>>>> +}
+>>>> +
+>>>> +static int kvm_loongarch_pvtime_has_attr(struct kvm_vcpu *vcpu,
+>>>> +                                       struct kvm_device_attr *attr)
+>>>> +{
+>>>> +       if (!kvm_pvtime_supported() ||
+>>>> +                       attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
+>>>> +               return -ENXIO;
+>>>> +
+>>>> +       return 0;
+>>>> +}
+>>>> +
+>>>> +static int kvm_loongarch_pvtime_get_attr(struct kvm_vcpu *vcpu,
+>>>> +                                       struct kvm_device_attr *attr)
+>>>> +{
+>>>> +       u64 __user *user = (u64 __user *)attr->addr;
+>>>> +       u64 gpa;
+>>>> +
+>>>> +       if (!kvm_pvtime_supported() ||
+>>>> +                       attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
+>>>> +               return -ENXIO;
+>>>> +
+>>>> +       gpa = vcpu->arch.st.guest_addr;
+>>>> +       if (put_user(gpa, user))
+>>>> +               return -EFAULT;
+>>>> +
+>>>> +       return 0;
+>>>> +}
+>>>> +
+>>>> +static int kvm_loongarch_pvtime_set_attr(struct kvm_vcpu *vcpu,
+>>>> +                                       struct kvm_device_attr *attr)
+>>>> +{
+>>>> +       u64 __user *user = (u64 __user *)attr->addr;
+>>>> +       struct kvm *kvm = vcpu->kvm;
+>>>> +       u64 gpa;
+>>>> +       int ret = 0;
+>>>> +       int idx;
+>>>> +
+>>>> +       if (!kvm_pvtime_supported() ||
+>>>> +                       attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
+>>>> +               return -ENXIO;
+>>>> +
+>>>> +       if (get_user(gpa, user))
+>>>> +               return -EFAULT;
+>>>> +
+>>>> +       if (gpa & ~(KVM_STEAL_PHYS_MASK | KVM_STEAL_PHYS_VALID))
+>>>> +               return -EINVAL;
+>>>> +
+>>>> +       if (!(gpa & KVM_STEAL_PHYS_VALID)) {
+>>>> +               vcpu->arch.st.guest_addr = gpa;
+>>>> +               return 0;
+>>>> +       }
+>>>> +
+>>>> +       /* Check the address is in a valid memslot */
+>>>> +       idx = srcu_read_lock(&kvm->srcu);
+>>>> +       if (kvm_is_error_hva(gfn_to_hva(kvm, gpa >> PAGE_SHIFT)))
+>>>> +               ret = -EINVAL;
+>>>> +       srcu_read_unlock(&kvm->srcu, idx);
+>>>> +
+>>>> +       if (!ret) {
+>>>> +               vcpu->arch.st.guest_addr = gpa;
+>>>> +               vcpu->arch.st.last_steal = current->sched_info.run_delay;
+>>>> +               kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
+>>>> +       }
+>>>> +
+>>>> +       return ret;
+>>>> +}
+>>>> +
+>>>>    /*
+>>>>     * kvm_check_requests - check and handle pending vCPU requests
+>>>>     *
+>>>> @@ -48,6 +159,9 @@ static int kvm_check_requests(struct kvm_vcpu *vcpu)
+>>>>           if (kvm_dirty_ring_check_request(vcpu))
+>>>>                   return RESUME_HOST;
+>>>>
+>>>> +       if (kvm_check_request(KVM_REQ_STEAL_UPDATE, vcpu))
+>>>> +               kvm_update_stolen_time(vcpu);
+>>>> +
+>>>>           return RESUME_GUEST;
+>>>>    }
+>>>>
+>>>> @@ -671,6 +785,9 @@ static int kvm_loongarch_vcpu_has_attr(struct kvm_vcpu *vcpu,
+>>>>           case KVM_LOONGARCH_VCPU_CPUCFG:
+>>>>                   ret = kvm_loongarch_cpucfg_has_attr(vcpu, attr);
+>>>>                   break;
+>>>> +       case KVM_LOONGARCH_VCPU_PVTIME_CTRL:
+>>>> +               ret = kvm_loongarch_pvtime_has_attr(vcpu, attr);
+>>>> +               break;
+>>>>           default:
+>>>>                   break;
+>>>>           }
+>>>> @@ -703,6 +820,9 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
+>>>>           case KVM_LOONGARCH_VCPU_CPUCFG:
+>>>>                   ret = kvm_loongarch_get_cpucfg_attr(vcpu, attr);
+>>>>                   break;
+>>>> +       case KVM_LOONGARCH_VCPU_PVTIME_CTRL:
+>>>> +               ret = kvm_loongarch_pvtime_get_attr(vcpu, attr);
+>>>> +               break;
+>>>>           default:
+>>>>                   break;
+>>>>           }
+>>>> @@ -725,6 +845,9 @@ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+>>>>           case KVM_LOONGARCH_VCPU_CPUCFG:
+>>>>                   ret = kvm_loongarch_cpucfg_set_attr(vcpu, attr);
+>>>>                   break;
+>>>> +       case KVM_LOONGARCH_VCPU_PVTIME_CTRL:
+>>>> +               ret = kvm_loongarch_pvtime_set_attr(vcpu, attr);
+>>>> +               break;
+>>>>           default:
+>>>>                   break;
+>>>>           }
+>>>> @@ -1084,6 +1207,7 @@ static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>>>>
+>>>>           /* Control guest page CCA attribute */
+>>>>           change_csr_gcfg(CSR_GCFG_MATC_MASK, CSR_GCFG_MATC_ROOT);
+>>>> +       kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
+>>>>
+>>>>           /* Don't bother restoring registers multiple times unless necessary */
+>>>>           if (vcpu->arch.aux_inuse & KVM_LARCH_HWCSR_USABLE)
+>>>> --
+>>>> 2.39.3
+>>>>
+>>
 
