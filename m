@@ -1,253 +1,114 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB347404B
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 12:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBD780C1D;
+	Mon,  8 Jul 2024 12:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720442216; cv=none; b=XZ692wl6fD6rYFQhdWxG4Qra36piEMujXQj+1kgWErLowKGt7zbSn8kxIW9eGWcFmAettuFt6bATVvGRDwvtgt9WM6AhluUBCiVubKcTkRqFsdFXoT6clLyWBGNoiUzkYDYcQda50lYNgBGQQFM1EwvKs845coLATgCtxZL65VE=
+	t=1720442222; cv=none; b=JpM/dGJr3sjsQWMC2wIatte4REtpYnnDd2uFZeQvqSVlRKkSbLaxrf9oTevAeoghQr1qObWCE48uCe5g2ud7C+gG1Flzyxi7IlSkUySfJ2Kmn0aOT4/KYK3+RHNQ75m0V3OKY43BqHItnP5hdT0aAtR6PMaGngmE1yuZ8m01u9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720442216; c=relaxed/simple;
-	bh=VEzmrbhsif6JgITHRFFe75NLNgDIMRuAgvsX2FzcpFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W+ORCbWzS4mJiHHw/7QfqUZ7Uny5JPljZaDRnxsVENeBQnPlrxJPJxbnh27P7wEC+ZPz2wcYfV29ypxeUKfEuoPZ8TNDoXHeju8qZAD0tCCSc2CBJ3fGffT73E2VF7mmgBMgpD+OXHJ9nvDJsqSX+wWATBum1HWHg+lTNRoFigg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CovDcesS; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720442222; c=relaxed/simple;
+	bh=k2nKkDwz2QUcUUubz+8bTRR+mcQV8cGn88iaImb1KnI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=TROVc97HjeXuZMW9CdA3gIJie2NMq0AC/mXylh8Zz8Y5Pqgy+5e3H/nssfVOMecHwL+wWwxw4Pz9Frn3DTq5NHLHdLF6M/AkA6ZmM1v9I3VRH94+IBTzEMAXrX5D3zWSDW769YQ+iM9ZrIMwe13rzFWBmUi/6Z8igziPFZT0Omk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=pdizYSDo; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CovDcesS"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70af0684c2bso2299577b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 05:36:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720442214; x=1721047014; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yXn9040q77oGlxBnBYUKFbDXyOPG8b0Isv78rveFo2M=;
-        b=CovDcesS0uAOVMqLRz8UPEUj5NQB9UqAsHrD43OLvAXc4VRcfFvSQd07vsC5hdiQFV
-         fp8tkZSECMjqCt2m1Qhb5bX415cRa24MJYLrda3gSbBhHMLyhFyDl7AQLbg//6bO4Vik
-         Yf4apXkoVSvagxOhy1vXvK+v9lCSG3tS64HWQ3I/VFyaRIA+mqDaIqpggOWCWMGzAHKI
-         fQXmy4yKCyrD0QFRFjZrrUYi3h/N37Hg3EomESkIFL9QFsV7jXqtLNZRlSEW+QQljufg
-         87UlcPDML3bp+bY8Y74PKEzehDqn7ndIwHwCvaXjo0fJ8Cco61TJuwCh0s3dCvtmvfWP
-         He5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720442214; x=1721047014;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yXn9040q77oGlxBnBYUKFbDXyOPG8b0Isv78rveFo2M=;
-        b=rWWG0Sgi0iuRKDmc9fRPIimfI4Nt0I75Vr8dIZZRrf0BxXZFDcLv1JVbmBKqKzDku1
-         dakRKG8RUItAIvUbybV+HpLugs5x9CQ/6PIgZNXNvzOx8ooxtcpDhuUQT2tjtaJJhckp
-         rWUWa6MVPu0k+NbSPsruJbiy9mjUs5WVYWKIlSl5jqM07wviEbP3J0I+Qppy15niNdz7
-         OBN3zGZgZOmyaLBl+1GvzaW1uqBIy+bJaHCLJXsO3tyc/CUpnGTnqNYMpQwB/yLmQ23W
-         NNNvy1Oja1FJZ2CvYWJWMx1qsQKr2arFmiyOfY3aa3OVvA0dQcXnsM9oFukyYlu0suBo
-         Z4ww==
-X-Forwarded-Encrypted: i=1; AJvYcCXUE41VeMG41oTFibb5K9twQF5kypCafwvslnjHFJ1x5R7Zt97aV/cVum3DQ8MkFP2Nm2oi3uD5ILHOQgn9Bdk9hhJr2d3iKALL0EgI
-X-Gm-Message-State: AOJu0YzM8Ht7lzm9vKvOcRFK/918zG6IKP91r8OD3bRBBxiov2pkFQ6v
-	bePxDFR4Avz3V5qTwyZ0q0VcTWoebXY0pYsnykkfUk/8Nn4piaszQaBGwsyyXpH/AsJINkdgpqg
-	KMZbww0vb1OMukRHfatPZ5l1ldFU=
-X-Google-Smtp-Source: AGHT+IGDyypax6tFZ+0anhgmRjNpIBTLAzdwlweVYSSS9ZlMea4/i8gmb8U7aD4CSE+xGJaBxWDhp4YVGLzu89vRlPk=
-X-Received: by 2002:a05:6a00:1891:b0:70b:1450:1d05 with SMTP id
- d2e1a72fcca58-70b14501ee1mr5909528b3a.20.1720442213791; Mon, 08 Jul 2024
- 05:36:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="pdizYSDo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720442185; x=1721046985; i=markus.elfring@web.de;
+	bh=cMrB7BHtiDHWjGBwQZ00kQOwlupR+xSgXUFnmpTv91U=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=pdizYSDojXw7AtchFs1pXBqXpZPhlNn+TFbAaM9kML7LGKgr/csRNmmLldbRoVxt
+	 MEUK+boVQhC3GawxnB0xcZfitAJEKz56c9MQlAOzU8P21PfMIxiu//odMNR5xyB9K
+	 TGgqaOU5SyfsTZA9kC9wxLeg5d2umLyMtUUYF3Lxyxhj0kxfpkpvknPdr9Ehojfm5
+	 Fvyg7VMI7Cu7Cwb7oBMuozkNr1jy1kog92n7+Rp+cQrlwsAKQ0LBSp6PXYPmSHcDv
+	 962pDJWpYvYntkyLV0JzZ+I+GSK+ANmJtXvAhRqwxMQodQjcgDXSwOcavMu/0xmys
+	 4dtte0npcteg/f+V8Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MpTxm-1s3ZHY41vA-00aKyi; Mon, 08
+ Jul 2024 14:36:25 +0200
+Message-ID: <25a195a5-9c05-489b-8ad0-909486c15d25@web.de>
+Date: Mon, 8 Jul 2024 14:36:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240630221931.1650565-1-aford173@gmail.com>
-In-Reply-To: <20240630221931.1650565-1-aford173@gmail.com>
-From: Adam Ford <aford173@gmail.com>
-Date: Mon, 8 Jul 2024 07:36:41 -0500
-Message-ID: <CAHCN7xKE34WBgUjOaHQg4Z_+0LwYHoHy5jgFtdr-754CnW6qqA@mail.gmail.com>
-Subject: Re: [PATCH V3] drm/bridge: adv7511: Fix Intermittent EDID failures
-To: dri-devel@lists.freedesktop.org
-Cc: aford@beaconembedded.com, Liu Ying <victor.liu@nxp.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Jie Gan <quic_jiegan@quicinc.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ James Clark <james.clark@arm.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Mike Leach <mike.leach@linaro.org>, Rob Herring <robh@kernel.org>,
+ Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+ Song Chai <quic_songchai@quicinc.com>, Tao Zhang <quic_taozha@quicinc.com>,
+ Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>,
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>
+References: <20240705090049.1656986-2-quic_jiegan@quicinc.com>
+Subject: Re: [PATCH v2 1/4] Coresight: Add trace_id function to collect trace
+ ID
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240705090049.1656986-2-quic_jiegan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ppbjShWg3ECY6M4nE8zVf+rKqhRfa0Xrt77Ns2HfQrBggCoV4QR
+ J3wqtpk2WFk/l1+YrOVH/JF+vrUl7fd2H897VKaOFeJBT1tVTweussO0HSO8jjEdTqeHvqC
+ 0vVgvhz3VR1Y3O/DkpJj9cK0xqNvuTbc0BXko4r8L2nle+pUQbGxz2Kmcla6Rny3qZF81kq
+ VfY+MkxlbfrugFa+pMmhg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Bot9zNdFTVg=;5Z1ZIogJWU8LIfZLe0Ik57JF8te
+ iLlu8HZsNBs3mYuz6h3N/8F0NqaLCgOsIasPV6QaCtyNa1UThySNplj3Qv7txKtZ9AEpV9eS+
+ D5XDGSb1DzSHfvF06OfqO4PIyh6zx5cCh2MUpuqBKhh7LCt0qC8SjG8648m7GVZiFZ1LsEmUJ
+ 8Va3cd5cYA7fWsxLZrasMTsJTroIoOIt7RZJTOy8LyNMcO/MavtGdz8rbbxT9azQrAwsTVR/D
+ yGYS/08/gEbGjXXiRwNodufHQdEU0NLb6Ho5+Aw55wYBhFsThEnhO3VyUfzdlacnAeMOTIotd
+ gfmvaysZ8wNB8Js4G4UoCWoJLS8AaTm0vrk9/Rb48rpZod/I3wA5Zs1V8cKDtm9zBD+mNkeEC
+ vjAf1Zufqmft+lJqGRClMacljR/Sxfuroij8QplyOwemRcWHaglivwdYqbAmjgoXoizBO4jkH
+ eh7+VPSn6eIwekxtJB0huaqY3N/n1/9piLli6vflBYadlvgH+1A7p+bYKn+I23EgC3pJ64cKe
+ PG7/PPgd/lfj5frRNTr+b0W6bNJbYD6X39MB9q9+MgWAlicpn+Ga5QHvJhYey4LzapXSRgsD5
+ eMFladDFNfuwPNP6RDCZtgqRQjopDYjUsYLDlpmrxAhiltYYC+RlROh4AvadH9d53bOW7yCAU
+ mucpSgNYPtJTwXl0RxkWtHSdn3lT0jyUoaSfL2tYHBaOMHZBAFAqrHACx/E3Mb9IqtpR37JPU
+ mRmCGTRQjeKVhhnMgYKy6MP7SgyxuKPq2o++NxWfX11xbCGrowmTKK/UxzvZ494IlYcBcmAec
+ JVIJ02ZoFjU9Tqj8CgVXtmTQV4DI+AF1T9P3Q0vd4Yrr4=
 
-On Sun, Jun 30, 2024 at 5:19=E2=80=AFPM Adam Ford <aford173@gmail.com> wrot=
-e:
->
-> In the process of adding support for shared IRQ pins, a scenario
-> was accidentally created where adv7511_irq_process returned
-> prematurely causing the EDID to fail randomly.
->
-> Since the interrupt handler is broken up into two main helper functions,
-> update both of them to treat the helper functions as IRQ handlers. These
-> IRQ routines process their respective tasks as before, but if they
-> determine that actual work was done, mark the respective IRQ status
-> accordingly, and delay the check until everything has been processed.
->
-> This should guarantee the helper functions don't return prematurely
-> while still returning proper values of either IRQ_HANDLED or IRQ_NONE.
->
-> Reported-by: Liu Ying <victor.liu@nxp.com>
-> Fixes: f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins")
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Tested-by: Liu Ying <victor.liu@nxp.com> # i.MX8MP EVK ADV7535 EDID retri=
-eval w/o IRQ
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Add 'trace_id' function pointer in ops. It's responsible for collect the
+=E2=80=A6
 
-Gentle nudge on this.  I was hoping it could be merged in the 6.10
-window since it fixes a known regression, but  I know it's summer in
-the northern hemisphere, and everyone is busy.
+                                          It is?               collecting?
 
-adam
-> ---
-> V3:  Remove unnecessary declaration of ret by evaluating the return
->      code of regmap_read directly.
->
-> V2:  Fix uninitialized cec_status
->      Cut back a little on error handling to return either IRQ_NONE or
->      IRQ_HANDLED.
->
-> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/drm/b=
-ridge/adv7511/adv7511.h
-> index ea271f62b214..ec0b7f3d889c 100644
-> --- a/drivers/gpu/drm/bridge/adv7511/adv7511.h
-> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h
-> @@ -401,7 +401,7 @@ struct adv7511 {
->
->  #ifdef CONFIG_DRM_I2C_ADV7511_CEC
->  int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511);
-> -void adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq1)=
-;
-> +int adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq1);
->  #else
->  static inline int adv7511_cec_init(struct device *dev, struct adv7511 *a=
-dv7511)
->  {
-> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c b/drivers/gpu/d=
-rm/bridge/adv7511/adv7511_cec.c
-> index 44451a9658a3..2e9c88a2b5ed 100644
-> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
-> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
-> @@ -119,7 +119,7 @@ static void adv7511_cec_rx(struct adv7511 *adv7511, i=
-nt rx_buf)
->         cec_received_msg(adv7511->cec_adap, &msg);
->  }
->
-> -void adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq1)
-> +int adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq1)
->  {
->         unsigned int offset =3D adv7511->info->reg_cec_offset;
->         const u32 irq_tx_mask =3D ADV7511_INT1_CEC_TX_READY |
-> @@ -131,16 +131,19 @@ void adv7511_cec_irq_process(struct adv7511 *adv751=
-1, unsigned int irq1)
->         unsigned int rx_status;
->         int rx_order[3] =3D { -1, -1, -1 };
->         int i;
-> +       int irq_status =3D IRQ_NONE;
->
-> -       if (irq1 & irq_tx_mask)
-> +       if (irq1 & irq_tx_mask) {
->                 adv_cec_tx_raw_status(adv7511, irq1);
-> +               irq_status =3D IRQ_HANDLED;
-> +       }
->
->         if (!(irq1 & irq_rx_mask))
-> -               return;
-> +               return irq_status;
->
->         if (regmap_read(adv7511->regmap_cec,
->                         ADV7511_REG_CEC_RX_STATUS + offset, &rx_status))
-> -               return;
-> +               return irq_status;
->
->         /*
->          * ADV7511_REG_CEC_RX_STATUS[5:0] contains the reception order of=
- RX
-> @@ -172,6 +175,8 @@ void adv7511_cec_irq_process(struct adv7511 *adv7511,=
- unsigned int irq1)
->
->                 adv7511_cec_rx(adv7511, rx_buf);
->         }
-> +
-> +       return IRQ_HANDLED;
->  }
->
->  static int adv7511_cec_adap_enable(struct cec_adapter *adap, bool enable=
-)
-> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/d=
-rm/bridge/adv7511/adv7511_drv.c
-> index 66ccb61e2a66..c8d2c4a157b2 100644
-> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> @@ -469,6 +469,8 @@ static int adv7511_irq_process(struct adv7511 *adv751=
-1, bool process_hpd)
->  {
->         unsigned int irq0, irq1;
->         int ret;
-> +       int cec_status =3D IRQ_NONE;
-> +       int irq_status =3D IRQ_NONE;
->
->         ret =3D regmap_read(adv7511->regmap, ADV7511_REG_INT(0), &irq0);
->         if (ret < 0)
-> @@ -478,29 +480,31 @@ static int adv7511_irq_process(struct adv7511 *adv7=
-511, bool process_hpd)
->         if (ret < 0)
->                 return ret;
->
-> -       /* If there is no IRQ to handle, exit indicating no IRQ data */
-> -       if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
-> -           !(irq1 & ADV7511_INT1_DDC_ERROR))
-> -               return -ENODATA;
-> -
->         regmap_write(adv7511->regmap, ADV7511_REG_INT(0), irq0);
->         regmap_write(adv7511->regmap, ADV7511_REG_INT(1), irq1);
->
-> -       if (process_hpd && irq0 & ADV7511_INT0_HPD && adv7511->bridge.enc=
-oder)
-> +       if (process_hpd && irq0 & ADV7511_INT0_HPD && adv7511->bridge.enc=
-oder) {
->                 schedule_work(&adv7511->hpd_work);
-> +               irq_status =3D IRQ_HANDLED;
-> +       }
->
->         if (irq0 & ADV7511_INT0_EDID_READY || irq1 & ADV7511_INT1_DDC_ERR=
-OR) {
->                 adv7511->edid_read =3D true;
->
->                 if (adv7511->i2c_main->irq)
->                         wake_up_all(&adv7511->wq);
-> +               irq_status =3D IRQ_HANDLED;
->         }
->
->  #ifdef CONFIG_DRM_I2C_ADV7511_CEC
-> -       adv7511_cec_irq_process(adv7511, irq1);
-> +       cec_status =3D adv7511_cec_irq_process(adv7511, irq1);
->  #endif
->
-> -       return 0;
-> +       /* If there is no IRQ to handle, exit indicating no IRQ data */
-> +       if (irq_status =3D=3D IRQ_HANDLED || cec_status =3D=3D IRQ_HANDLE=
-D)
-> +               return IRQ_HANDLED;
-> +
-> +       return IRQ_NONE;
->  }
->
->  static irqreturn_t adv7511_irq_handler(int irq, void *devid)
-> @@ -509,7 +513,7 @@ static irqreturn_t adv7511_irq_handler(int irq, void =
-*devid)
->         int ret;
->
->         ret =3D adv7511_irq_process(adv7511, true);
-> -       return ret < 0 ? IRQ_NONE : IRQ_HANDLED;
-> +       return ret < 0 ? IRQ_NONE : ret;
->  }
->
->  /* ---------------------------------------------------------------------=
---------
-> --
-> 2.43.0
->
+
+=E2=80=A6
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+=E2=80=A6
+> +	sink_data =3D kzalloc(sizeof(*sink_data), GFP_KERNEL);
+> +	if (!sink_data)
+> +		goto fail_end_stop;
+=E2=80=A6
+> +	if (coresight_enable_path(path, CS_MODE_PERF, sink_data)) {
+> +		kfree(sink_data);
+>  		goto fail_end_stop;
+> +	}
+=E2=80=A6
+
+Would you like to to benefit any more from further applications of scope-b=
+ased
+resource management by using an attribute like =E2=80=9C__free(kfree)=E2=
+=80=9D?
+https://elixir.bootlin.com/linux/v6.10-rc7/source/include/linux/slab.h#L28=
+2
+
+Regards,
+Markus
