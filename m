@@ -1,133 +1,341 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEA614B967;
-	Mon,  8 Jul 2024 19:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CDA143C47;
+	Mon,  8 Jul 2024 19:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720465694; cv=none; b=OyvB9Pkhg7GaiX4B0liNrsXOHkqJdcaSxczmgK7dE9sYmnvd9L0W+e3qmEW9AQuEZyz9iYf18XDznuq4jl90tixeQsiS39Eg+23GF4QfLzMh+rExKYtIjaMF+5ML78KeO3enSDqsyOXOJEkeuq/TNrskRXRunomDl/XbBDjiG50=
+	t=1720465839; cv=none; b=Er1iJyDtntBFDNMC0EJOjsgHDLpzCnMq5pQUaXEA96NB5uIJDiQ/RPprlOupwIqhUfZnr7aOQn5a6Nx9GnROdoxa89+ZYuyDAFmI9PdNI5PGZiHYlX1P07m3jiF6f3+U6EaHDb6EsXte5AaC8DItZsHeFY7QN1a15MT3JLqAgTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720465694; c=relaxed/simple;
-	bh=pYbSygs6DFw3cN9dVfNQF3w63IPyDQV/ph7ZmPU1o+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iO5eyqz+2e1vMIexsxRu9mAYoWJoZZcvIgRliayGuW42qOYFqtOXjCgucMe+DkoAPMJ20Ys6UilnrV2Ylsfo7Qe+Px0TGYTKegUr/r0n0gaZOllP/DS1JpHQMgdksuXLL2iGxsaJQU7b1a+Ps6GPC2+FxjrCVLd0gYPbnexxPEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-58b0dddab63so6406448a12.3;
-        Mon, 08 Jul 2024 12:08:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720465689; x=1721070489;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i5VCdX60NWwfC1nVwekLYgNiGy5kNm96Cosdiq19/GM=;
-        b=Vc3Mr2ZQG15v6DVdtNOutBGcabEVLFta2MGTxn8reDEw6Yo0IWSnD6IPzvEZM+6cKC
-         K5Db3rTYoum2l89EN+2KapWbCCn2d9+TjfMe5+lF10zFZDpZL8wlJwJTpkU6VqwvFwHO
-         mRwjZyAePEyyIHGTEyiNrRBFYsyC8F29SRGOjOYWDIKVaOkQ6OEmcTfp4uOGJ/YFSDZY
-         tPrlIm3gjCVCeDUDoBPxDlckVAm1iCMtrkBaRLF+gR3BigVwZk4ajIZBgbzmUAsxAZPb
-         uz4hFSze6MaFTGZaSCC329XEvXga+sc0IdH/cvTSGX/xXy+Wl5P/+HaCF4KlBl63Txf5
-         o3Gw==
-X-Forwarded-Encrypted: i=1; AJvYcCV98chX5X/iQdUCLMuD/yVXw9gyp0O5j+3GQMr4BbxjP29lcyy67kpIIW/0d+tH4RBdTyelKRlbeCglU8qTHBNYAK5vXz19UiWxj/3c/JeMAdoJ53wkEIfzW1b/nNwbj/UPhH+N
-X-Gm-Message-State: AOJu0Ywr9vv+1LaplFf0i2oOdXdOV7jB9/C14FvGaCG+kgAflWQh3gMW
-	jiO2krWkoO7XHeXnUTP/zLrUHO+nQLkIta8qEnhLTD/UWNk2nuv3
-X-Google-Smtp-Source: AGHT+IHe2bAuF3QoVgM+CiLRff4u7OuOz5mDHUAISjnBCInvO4afmYAsw4m/dW4O/4hmNTBdmgEXYA==
-X-Received: by 2002:a05:6402:84d:b0:57d:12c3:eca6 with SMTP id 4fb4d7f45d1cf-594ba0ced20mr293140a12.18.1720465688385;
-        Mon, 08 Jul 2024 12:08:08 -0700 (PDT)
-Received: from gmail.com (fwdproxy-lla-001.fbsv.net. [2a03:2880:30ff:1::face:b00c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bda30f76sm146037a12.97.2024.07.08.12.08.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 12:08:08 -0700 (PDT)
-Date: Mon, 8 Jul 2024 12:08:05 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: kernel test robot <lkp@intel.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	kuba@kernel.org, horms@kernel.org, Roy.Pledge@nxp.com,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] soc: fsl: qbman: FSL_DPAA depends on COMPILE_TEST
-Message-ID: <Zow5FUmOADrqUpM9@gmail.com>
-References: <20240624162128.1665620-1-leitao@debian.org>
- <202406261920.l5pzM1rj-lkp@intel.com>
- <20240626140623.7ebsspddqwc24ne4@skbuf>
- <Zn2yGBuwiW/BYvQ7@gmail.com>
- <20240708133746.ea62kkeq2inzcos5@skbuf>
+	s=arc-20240116; t=1720465839; c=relaxed/simple;
+	bh=wTRdVhhGGBiVJK8BHn08SZ7h85NIsA55xyfHO8rjY+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l0S+/xP2cu/NTdvJ0sEc8DoHYUJGx9edvuWPmmHoVByWFIlelnomLmAHI+/biBW7zvpL7zkZKyf9qWD21Gtmf/LPdZBt4XolREoy74gijAQOiEzfYvwc98/jtdboJKGzg379Zk9wnF1cBkPQ2Qy9PBQl3AyjXlC1tAU8T08snuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KXDbx6tn; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KXDbx6tn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720465837; x=1752001837;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wTRdVhhGGBiVJK8BHn08SZ7h85NIsA55xyfHO8rjY+E=;
+  b=KXDbx6tnqhbt952fihw6MCnjQwJGAQ4UeU+x0SgucRyCm6ZOGIyLKFut
+   D+eVSv4n26ToIslXoFrj6SW1H1/1U32ClD2J3l02SCO4IM6uOX31ha1u1
+   lbOG9B40jVorA7vc7tfB7lBFCXvUl2M1L+Pgb37jjsKX5Vw28lSd40ZW0
+   ZCE1tpNSEYhStfrY1BZ2rrwbPXloViA/cGPmUSnGDd7wMpqlwGd/sRT2e
+   CdylWspAbnPGeCdZrsbkoSqLVZAgyNHp3k4SsyD2+N6/qFM3Yb0zJD8N/
+   hwv4k292yJLXVzR/F2PxW7+4C/kAptb5kYJx2o5CbAa8bBiLyBtQfGrL1
+   A==;
+X-CSE-ConnectionGUID: ILXGkjMJTueM7NtFdsbYoQ==
+X-CSE-MsgGUID: ZO6lqrENQQubbNUldsASfg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="28288990"
+X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
+   d="scan'208";a="28288990"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 12:10:37 -0700
+X-CSE-ConnectionGUID: i3XDM3oRSNKccOHE3beRWA==
+X-CSE-MsgGUID: Z5m9nhJ7QfeIorYqkZvj+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
+   d="scan'208";a="47571606"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.108.203]) ([10.125.108.203])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 12:10:36 -0700
+Message-ID: <fe57cb13-8a00-4a38-9ae6-b362007d03f4@intel.com>
+Date: Mon, 8 Jul 2024 12:10:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240708133746.ea62kkeq2inzcos5@skbuf>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] dmaengine: idxd: Add idxd_device_config_save() and
+ idxd_device_config_restore() helpers
+To: Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+References: <20240705181519.4067507-1-fenghua.yu@intel.com>
+ <20240705181519.4067507-4-fenghua.yu@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240705181519.4067507-4-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Vladimir,
 
-On Mon, Jul 08, 2024 at 04:37:46PM +0300, Vladimir Oltean wrote:
-> On Thu, Jun 27, 2024 at 11:40:24AM -0700, Breno Leitao wrote:
 
-> > > >      454 | static int dpaa_set_coalesce(struct net_device *dev,
-> > > >          |            ^
-> > > >    1 warning generated.
-> > > 
-> > > Arrays of NR_CPUS elements are what it probably doesn't like?
+On 7/5/24 11:15 AM, Fenghua Yu wrote:
+> Add the helpers to save and restore IDXD device configurations.
+> 
+> These helpers will be called during Function Level Reset (FLR) processing.
+> 
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> ---
+>  drivers/dma/idxd/idxd.h |  11 ++
+>  drivers/dma/idxd/init.c | 224 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 235 insertions(+)
+> 
+> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+> index 03f099518ec1..4f3e98720b45 100644
+> --- a/drivers/dma/idxd/idxd.h
+> +++ b/drivers/dma/idxd/idxd.h
+> @@ -377,6 +377,17 @@ struct idxd_device {
+>  	struct dentry *dbgfs_evl_file;
+>  
+>  	bool user_submission_safe;
+> +
+> +	struct idxd_saved_states *idxd_saved;
+> +};
+> +
+> +struct idxd_saved_states {
+> +	struct idxd_device saved_idxd;
+> +	struct idxd_evl saved_evl;
+> +	struct idxd_engine **saved_engines;
+> +	struct idxd_wq **saved_wqs;
+> +	struct idxd_group **saved_groups;
+> +	unsigned long *saved_wq_enable_map;
+>  };
+>  
+>  static inline unsigned int evl_ent_size(struct idxd_device *idxd)
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index a6d8097b2dcf..bb03d8cc5d32 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -749,6 +749,230 @@ static void idxd_unbind(struct device_driver *drv, const char *buf)
+>  	put_device(dev);
+>  }
+>  
+> +/* Free allocated saved wq enable map after saving wq configs. */
+> +static void free_saved_wq_enable_map(unsigned long *map)
+> +{
+> +	bitmap_free(map);
+> +}
+> +
+> +DEFINE_FREE(free_saved_wq_enable_map, unsigned long *, if (!IS_ERR_OR_NULL(_T))
+> +	    free_saved_wq_enable_map(_T))
+> +
+> +#define idxd_free_saved_configs(saved_configs, count)	\
+> +	do {						\
+> +		int i;					\
+> +							\
+> +		for (i = 0; i < (count); i++)		\
+> +			kfree(saved_configs[i]);	\
+> +	} while (0)
+> +
+> +/*
+> + * Save IDXD device configurations including engines, groups, wqs etc.
+> + * The saved configurations can be restored when needed.
+> + */
+> +static int idxd_device_config_save(struct idxd_device *idxd,
+> +				   struct idxd_saved_states *idxd_saved)
+> +{
+> +	struct device *dev = &idxd->pdev->dev;
+> +	int i;
+> +
+> +	memcpy(&idxd_saved->saved_idxd, idxd, sizeof(*idxd));
+> +
+> +	if (idxd->evl) {
+> +		memcpy(&idxd_saved->saved_evl, idxd->evl,
+> +		       sizeof(struct idxd_evl));
+> +	}
+> +
+> +	struct idxd_group **saved_groups __free(kfree) =
+> +			kcalloc_node(idxd->max_groups,
+> +				     sizeof(struct idxd_group *),
+> +				     GFP_KERNEL, dev_to_node(dev));
+> +	if (!saved_groups)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < idxd->max_groups; i++) {
+> +		struct idxd_group *saved_group __free(kfree) =
+> +			kzalloc_node(sizeof(*saved_group), GFP_KERNEL,
+> +				     dev_to_node(dev));
+> +
+> +		if (!saved_group) {
+> +			idxd_free_saved_configs(saved_groups, i);
+> +
+> +			return -ENOMEM;
+> +		}
+> +
+> +		memcpy(saved_group, idxd->groups[i], sizeof(*saved_group));
+> +		saved_groups[i] = no_free_ptr(saved_group);
+> +	}
+> +
+> +	struct idxd_engine **saved_engines =
+> +			kcalloc_node(idxd->max_engines,
+> +				     sizeof(struct idxd_engine *),
+> +				     GFP_KERNEL, dev_to_node(dev));
+> +	if (!saved_engines) {
+> +		/* Free saved groups */
+> +		idxd_free_saved_configs(saved_groups, idxd->max_groups);
 
-> > Can it use the number of online CPUs instead of NR_CPUS?
+I would put a wrapper function around idxd_device_config_save(). If error is returned from idxd_device_config_save(), then you can just call the cleanup function and free everything allocated. That way you don't need to keep calling idxd_free_saved_configs() for every error exit point.
 
-> I don't see how, given that variable length arrays are something which
-> should be avoided in the kernel?
+DJ
 
-I thought about a patch like the following (compile tested only). What
-do you think?
-
-	Author: Breno Leitao <leitao@debian.org>
-	Date:   Mon Jul 8 11:57:33 2024 -0700
-
-	    net: dpaa: Allocate only for online CPUs in dpaa_set_coalesce
-	    
-	    Currently, dpaa_set_coalesce allocates a boolean for every possible CPU
-	    (NR_CPUS). This approach is suboptimal and causes failures in COMPILE_TEST.
-	    For reference, see:
-	    https://lore.kernel.org/all/202406261920.l5pzM1rj-lkp@intel.com/
-	    
-	    Modify the allocation to consider only online CPUs instead of
-	    NR_CPUs. This change reduces the function's memory footprint and resolves
-	    the COMPILE_TEST issues.
-	    
-	    Signed-off-by: Breno Leitao <leitao@debian.org>
-
-	diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
-	index 5bd0b36d1feb..7202a5310045 100644
-	--- a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
-	+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
-	@@ -457,7 +457,7 @@ static int dpaa_set_coalesce(struct net_device *dev,
-				     struct netlink_ext_ack *extack)
-	 {
-		const cpumask_t *cpus = qman_affine_cpus();
-	-	bool needs_revert[NR_CPUS] = {false};
-	+	bool *needs_revert;
-		struct qman_portal *portal;
-		u32 period, prev_period;
-		u8 thresh, prev_thresh;
-	@@ -466,6 +466,11 @@ static int dpaa_set_coalesce(struct net_device *dev,
-		period = c->rx_coalesce_usecs;
-		thresh = c->rx_max_coalesced_frames;
-	 
-	+	needs_revert = kmalloc_array(num_possible_cpus(), sizeof(bool), GFP_KERNEL);
-	+	if (!needs_revert)
-	+		return -ENOMEM;
-	+	memset(needs_revert, 0, num_online_cpus() * sizeof(bool));
-	+
-		/* save previous values */
-		portal = qman_get_affine_portal(smp_processor_id());
-		qman_portal_get_iperiod(portal, &prev_period);
-	@@ -498,6 +503,7 @@ static int dpaa_set_coalesce(struct net_device *dev,
-			qman_dqrr_set_ithresh(portal, prev_thresh);
-		}
-	 
-	+	kfree(needs_revert);
-		return res;
-	 }
-	 
+> +
+> +		return -ENOMEM;
+> +	}
+> +	for (i = 0; i < idxd->max_engines; i++) {
+> +		struct idxd_engine *saved_engine __free(kfree) =
+> +				kzalloc_node(sizeof(*saved_engine), GFP_KERNEL,
+> +					     dev_to_node(dev));
+> +		if (!saved_engine) {
+> +			/* Free saved groups and engines */
+> +			idxd_free_saved_configs(saved_groups, idxd->max_groups);
+> +			idxd_free_saved_configs(saved_engines, i);
+> +
+> +			return -ENOMEM;
+> +		}
+> +
+> +		memcpy(saved_engine, idxd->engines[i], sizeof(*saved_engine));
+> +		saved_engines[i] = no_free_ptr(saved_engine);
+> +	}
+> +
+> +	unsigned long *saved_wq_enable_map __free(free_saved_wq_enable_map) =
+> +			bitmap_zalloc_node(idxd->max_wqs, GFP_KERNEL,
+> +					   dev_to_node(dev));
+> +	if (!saved_wq_enable_map) {
+> +		/* Free saved groups and engines */
+> +		idxd_free_saved_configs(saved_groups, idxd->max_groups);
+> +		idxd_free_saved_configs(saved_engines, idxd->max_engines);
+> +
+> +		return -ENOMEM;
+> +	}
+> +
+> +	bitmap_copy(saved_wq_enable_map, idxd->wq_enable_map, idxd->max_wqs);
+> +
+> +	struct idxd_wq **saved_wqs __free(kfree) =
+> +			kcalloc_node(idxd->max_wqs, sizeof(struct idxd_wq *),
+> +				     GFP_KERNEL, dev_to_node(dev));
+> +	if (!saved_wqs) {
+> +		/* Free saved groups and engines */
+> +		idxd_free_saved_configs(saved_groups, idxd->max_groups);
+> +		idxd_free_saved_configs(saved_engines, idxd->max_engines);
+> +
+> +		return -ENOMEM;
+> +	}
+> +
+> +	for (i = 0; i < idxd->max_wqs; i++) {
+> +		struct idxd_wq *saved_wq __free(kfree) =
+> +			kzalloc_node(sizeof(*saved_wq), GFP_KERNEL,
+> +				     dev_to_node(dev));
+> +		struct idxd_wq *wq;
+> +
+> +		if (!saved_wq) {
+> +			/* Free saved groups, engines, and wqs */
+> +			idxd_free_saved_configs(saved_groups, idxd->max_groups);
+> +			idxd_free_saved_configs(saved_engines,
+> +						idxd->max_engines);
+> +			idxd_free_saved_configs(saved_wqs, i);
+> +
+> +			return -ENOMEM;
+> +		}
+> +
+> +		if (!test_bit(i, saved_wq_enable_map))
+> +			continue;
+> +
+> +		wq = idxd->wqs[i];
+> +		mutex_lock(&wq->wq_lock);
+> +		memcpy(saved_wq, wq, sizeof(*saved_wq));
+> +		saved_wqs[i] = no_free_ptr(saved_wq);
+> +		mutex_unlock(&wq->wq_lock);
+> +	}
+> +
+> +	/* Save configurations */
+> +	idxd_saved->saved_groups = no_free_ptr(saved_groups);
+> +	idxd_saved->saved_engines = no_free_ptr(saved_engines);
+> +	idxd_saved->saved_wq_enable_map = no_free_ptr(saved_wq_enable_map);
+> +	idxd_saved->saved_wqs = no_free_ptr(saved_wqs);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Restore IDXD device configurations including engines, groups, wqs etc
+> + * that were saved before.
+> + */
+> +static void idxd_device_config_restore(struct idxd_device *idxd,
+> +				       struct idxd_saved_states *idxd_saved)
+> +{
+> +	struct idxd_evl *saved_evl = &idxd_saved->saved_evl;
+> +	int i;
+> +
+> +	idxd->rdbuf_limit = idxd_saved->saved_idxd.rdbuf_limit;
+> +
+> +	if (saved_evl)
+> +		idxd->evl->size = saved_evl->size;
+> +
+> +	for (i = 0; i < idxd->max_groups; i++) {
+> +		struct idxd_group *saved_group, *group;
+> +
+> +		saved_group = idxd_saved->saved_groups[i];
+> +		group = idxd->groups[i];
+> +
+> +		group->rdbufs_allowed = saved_group->rdbufs_allowed;
+> +		group->rdbufs_reserved = saved_group->rdbufs_reserved;
+> +		group->tc_a = saved_group->tc_a;
+> +		group->tc_b = saved_group->tc_b;
+> +		group->use_rdbuf_limit = saved_group->use_rdbuf_limit;
+> +
+> +		kfree(saved_group);
+> +	}
+> +	kfree(idxd_saved->saved_groups);
+> +
+> +	for (i = 0; i < idxd->max_engines; i++) {
+> +		struct idxd_engine *saved_engine, *engine;
+> +
+> +		saved_engine = idxd_saved->saved_engines[i];
+> +		engine = idxd->engines[i];
+> +
+> +		engine->group = saved_engine->group;
+> +
+> +		kfree(saved_engine);
+> +	}
+> +	kfree(idxd_saved->saved_engines);
+> +
+> +	bitmap_copy(idxd->wq_enable_map, idxd_saved->saved_wq_enable_map,
+> +		    idxd->max_wqs);
+> +	bitmap_free(idxd_saved->saved_wq_enable_map);
+> +
+> +	for (i = 0; i < idxd->max_wqs; i++) {
+> +		struct idxd_wq *saved_wq, *wq;
+> +		size_t len;
+> +
+> +		if (!test_bit(i, idxd->wq_enable_map))
+> +			continue;
+> +
+> +		saved_wq = idxd_saved->saved_wqs[i];
+> +		wq = idxd->wqs[i];
+> +
+> +		mutex_lock(&wq->wq_lock);
+> +
+> +		wq->group = saved_wq->group;
+> +		wq->flags = saved_wq->flags;
+> +		wq->threshold = saved_wq->threshold;
+> +		wq->size = saved_wq->size;
+> +		wq->priority = saved_wq->priority;
+> +		wq->type = saved_wq->type;
+> +		len = strlen(saved_wq->name) + 1;
+> +		strscpy(wq->name, saved_wq->name, len);
+> +		wq->max_xfer_bytes = saved_wq->max_xfer_bytes;
+> +		wq->max_batch_size = saved_wq->max_batch_size;
+> +		wq->enqcmds_retries = saved_wq->enqcmds_retries;
+> +		wq->descs = saved_wq->descs;
+> +		wq->idxd_chan = saved_wq->idxd_chan;
+> +		len = strlen(saved_wq->driver_name) + 1;
+> +		strscpy(wq->driver_name, saved_wq->driver_name, len);
+> +
+> +		mutex_unlock(&wq->wq_lock);
+> +
+> +		kfree(saved_wq);
+> +	}
+> +
+> +	kfree(idxd_saved->saved_wqs);
+> +}
+> +
+>  /*
+>   * Probe idxd PCI device.
+>   * If idxd is not given, need to allocate idxd and set up its data.
