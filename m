@@ -1,89 +1,98 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12F21420DF;
-	Mon,  8 Jul 2024 16:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D2B1D69E
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720457345; cv=none; b=LLD+hkDPkzaE8xqZtacN5SzTeIB2zYAD2Sm/43Wik6YmoB9sFmZbK4+YF2vCxsp9AoSBQ0GeChB8gYgpmHEQBr5tyzl/7V218L0aOH+KubzCwVd17/dbMBafjRtrL7uZ14vVsUUnU5R8FT3HcJEutBMLZ+OkkYWNU9RgPmjcffI=
+	t=1720457382; cv=none; b=YPNKd3eCtzjj2JdMNcN23ZQJZNxSC8qBmOExIa/W9wBnR5JiU0yzkR6uG9zHJE8F8G1DhkHm6D0ruQ4HytJcgeWVJ6AGBwxqT5aOE/p8OoMIubbwVxG7YSZGAtKoIdSEoAZpL3oDEzLYuHGhN/iWVfv519E6p7TvzjHHl7AKUs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720457345; c=relaxed/simple;
-	bh=dn2Naz7DgHKdIPlqUUXdQML8v/8YmmXJzyHEKsgUUkk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dw8AuZHf9QjCzvpXc17tFjWhwYVEjPiO5AFDvaOLM0cthMCbA545apz1JFZLWkJkl1NL1Ys/MxDZCKYUusBZArXPT4fT9upSaXSJ58GY+1HGFf1Rcm17RDIWsENCEB8uCsthWDz9n7tuGDVnfSY7RIwXr/7ae3NuqhoUa8J/1zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VMNZywL6; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1720457382; c=relaxed/simple;
+	bh=38O5tYiUeu6BQ0UCErCZy/FI2MURCpJPkePGIDgKNxM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q3KntVPqBjRYfbzgw/mO0/wNbMMl1FaFScD3ywfxz/S1H3lp8FmYnQQ/aAHAVOwYPJr7vuTYDZ4i0BgpzwMbgai2ZfEXKEswZVNfJFcUepfgsFQcUGhwrbNKdSOB+mG0zRMQ7CHqG75uyEzYzFcrRK5hCnFGqdJdqbYkAsbHcfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JarX0xlZ; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VMNZywL6"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8875540E019D;
-	Mon,  8 Jul 2024 16:49:01 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id QCR0pN8wUZMS; Mon,  8 Jul 2024 16:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1720457338; bh=4SpgDKEgGt9WxI4KKGDZv5tcCTEy2R9UvSKhwxPW1Fs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VMNZywL6m9FSPyMeeByybJqpDsMCXpjX5av9p8sr2TjwNHDV1dv3LQyEUSvMrJoQq
-	 hF8YkjB0AfXMCPjEfF8tTPZygKs6QdnRfwgqHleqTUmON5B1HN2etgcPUHYBKgCmma
-	 k5054tLqmNq6IYlYnS9odXv+jbaIPBV7/tO8SOSLvO211zv0EWGGc7F8LrIj5Y663I
-	 mlsSrvfVUsDy2C5IjdoAgxdQs2Lsw5cIrqUDLS9KoxOIbhNV87Q0DJsVFnzycAvHMZ
-	 AzXhhaJ2QEAqJlunfOIa3Fu5rOEU35t01E6rgOtqE6toQpu7iXuj//fmmN7QRlhJdk
-	 vbrNiug8rVgBKaeQvW6G0cWHS4BA893t8d1RELv6QUKG2qlkT54W3jia8HeFXNWd5p
-	 BmskGSrhqb87veKMUFOxk1nxasS/Ns1+ZJtsh8o/kUmI4WGPvpwy54FdnWLRqfu7T8
-	 +eUvKs7ABnfvL3VOXDhaAySBuZEhr/CC6+R+dpXHdyGJgZJbPFuTcm9hVNUKD3qPD6
-	 hrlHIoogIbHRqgJyZ01w0WwGQUl1l3+6zN5jBYH4C5wvcJsCZRQ3Ld5J5PTaDeyBUc
-	 +1TsRXh06/8RsqhCLJvt29q5blOU+B3sN4osw33IDB3Qdby1YBnLDAjTCR/C2CztB3
-	 umocZt5irpesD90/uHlRJ1Z4=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EE9B840E0177;
-	Mon,  8 Jul 2024 16:48:51 +0000 (UTC)
-Date: Mon, 8 Jul 2024 18:48:46 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org, kernel test robot <lkp@intel.com>,
-	Alexandre Chartre <alexandre.chartre@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Subject: Re: [tip: objtool/core] objtool/x86: objtool can confuse memory and
- stack access
-Message-ID: <20240708164846.GFZowYbmQpBu2Y4GeL@fat_crate.local>
-References: <20240620144747.2524805-1-alexandre.chartre@oracle.com>
- <172043936454.2215.16620277258416300859.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JarX0xlZ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4266f535e82so1749735e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720457379; x=1721062179; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Rp3R4cib1Zeaxm8jFtF9C6khZfb6CGKVgyOo5y3pEDw=;
+        b=JarX0xlZfU62RV2K3VJZJ3kZn18cZeLZTK04ZSh/a0Gw33MlnHHvmBZ9ruZ1zknyUg
+         8e1tK+EnB6MaKfmQBxt2Px7fuGuu67lC3htV5lI8UIxqFxWD/WNyvxSERySAl+hbdxgr
+         srE6W1w3n95VMzM4yIWvyCfNrCEsmvtpk4786PGnFLU609bux1TKQf3OmvNdgIC+xE+o
+         Z0uQJsiQEizTxLQ0TkOvWSEABm+ZEEjz/HqQA0Q4FnraHNZpEb0QnSYayTJzbyQMxohh
+         f6Cyeii8WwGHsxZThxR0uvCCp0Lbme7jHcoouETvo9agTdrLhWjKIwdeGutt4hr7Iuta
+         UEbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720457379; x=1721062179;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rp3R4cib1Zeaxm8jFtF9C6khZfb6CGKVgyOo5y3pEDw=;
+        b=d1YdZYaEvTyW/400GsX20Pre9VXTBpmv5QfVFkk1d7qUhMKps4zataZAnjRM0pljds
+         sPO71tfXy75V94vs7TilwiJlYG6LUKywF9/fGFJmQEe+miCiDK6wiNy+R4DPbDpO1W7c
+         5QTu8Rq7FKmOkGITEbFmmZvP86eehRPx6Kk3q8nGOVXNy++tFpekJGUZUdYsskosqRvj
+         A+r4fC1IwXTrV1EviFkIUTZ8ulvN7b+4tSW/9hihhsHP806cn631U1L4TNztUhnl0YVW
+         5Ad0F60pvdjDbjVxEwBb6NyAS/J8A5njNUcuLYTqZyahWBs7P6Ma78hrQCW4Tc3vUwiy
+         sBDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgT1aq+f9yOs7oDJJG/mouXulblA1BTIZjV57WlJDgswxMwjJGRlNgmSVErlxWxSqihEiR0GPCXhA/pVJhh9kqFC8FuFyDEACNtH+b
+X-Gm-Message-State: AOJu0YxaKVhqo2Ib2hGCCVRV0K+pVnQgrkHZ/BrBLVDtw8wWNph35svU
+	l9NyZBClmxV8TNCxQCYS2fdZmpWlzS9TD4PPffoVU7UeIR/4pXIp6pvKJvPD+Nw=
+X-Google-Smtp-Source: AGHT+IFKead1I13aWVfFHtBOYYoWJyJxwmMF203zfTMM0cnTLZDUD7Yzpi8BOWx2qpDlTcn/ijTd8Q==
+X-Received: by 2002:a05:600c:1587:b0:426:5e91:3920 with SMTP id 5b1f17b1804b1-426708f1df1mr1071645e9.29.1720457379381;
+        Mon, 08 Jul 2024 09:49:39 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:cf24:cce:17df:12ab? ([2a05:6e02:1041:c10:cf24:cce:17df:12ab])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4266f7361b5sm5261415e9.29.2024.07.08.09.49.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 09:49:39 -0700 (PDT)
+Message-ID: <2b946a68-dcdd-4a1e-b7c3-416725033c2e@linaro.org>
+Date: Mon, 8 Jul 2024 18:49:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <172043936454.2215.16620277258416300859.tip-bot2@tip-bot2>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] clocksource: sp804: Make user selectable
+To: Mark Brown <broonie@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ David Abdurachmanov <david.abdurachmanov@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Ross Burton <ross.burton@arm.com>
+References: <20240529-arm64-vexpress-sp804-v2-1-c542a80af33a@kernel.org>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20240529-arm64-vexpress-sp804-v2-1-c542a80af33a@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 08, 2024 at 11:49:24AM -0000, tip-bot2 for Alexandre Chartre wrote:
->  4c 8b 24 25 e0 ff ff    mov    0xffffffffffffffe0,%r12
+On 29/05/2024 21:48, Mark Brown wrote:
+> The sp804 is currently only user selectable if COMPILE_TEST, this was
+> done by commit dfc82faad725 ("clocksource/drivers/sp804: Add
+> COMPILE_TEST to CONFIG_ARM_TIMER_SP804") in order to avoid it being
+> spuriously offered on platforms that won't have the hardware since it's
+> generally only seen on Arm based platforms.  This config is overly
+> restrictive, while platforms that rely on the SP804 do select it in
+> their Kconfig there are others such as the Arm fast models which have a
+> SP804 available but currently unused by Linux.  Relax the dependency to
+> allow it to be user selectable on arm and arm64 to avoid surprises and
+> in case someone comes up with a use for extra timer hardware.
 
-Right, this is missing a "ff" which is the 4th byte of a disp32.
+Would it make sense to add the option in the platform so it selects the 
+timer ?
 
-I.e., ModRM=0, SIB=5 simply means that what follows is a disp32 field:
-
- REX:                   0x4c { 4 [w]: 1 [r]: 1 [x]: 0 [b]: 0 }
-Opcode:                 0x8b
-ModRM:                  0x24  [mod:0b][.R:1b,reg:1100b][.B:0b,r/m:100b]
-                        register-indirect mode, offset 0
-SIB:                    0x25 [.B:0b,base:101b][.X:0b,idx:100b][scale: 0]
-
- MOV Gv,Ev; MOV reg{16,32,64} reg/mem{16,32,64}
-               0:       4c 8b 24 25 e0 ff ff    mov 0xffffffffffffffe0,%r12
-               7:       ff
 -- 
-Regards/Gruss,
-    Boris.
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
