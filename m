@@ -1,129 +1,135 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19319146016
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DD381751
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720456886; cv=none; b=f4Xmi2fIKvHiuuswlhADCWSPFNOrc6EGu/n1Cuw4rBAcwuQgLYdJ6jEbZW0q9gF/9Y1LQC4N793i7ixgRhxqxTU23Nlm2n1pC15Xs9ru1AcG0+LyyeobBg9K6I7VW6Ixwh6KRkaXCW5PZgwQ7PzfE2rrpKxDq7QRRZAXpPJuo+k=
+	t=1720456965; cv=none; b=PMbCMEtJvmHXn2GveiwJHp9C5qBnUHcOgundbQS7hRonELvckRVKynTP5Vf6qYavhIMseWbrj4X9bWCs9gLGH5S4TmbbivicIB1WfvgkT5ZGVQ1rcbc87cdSyogQE3wqKawkT0iD4ciuyyyJmEAp8BvzqBRDh7xV88fyqdRRUGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720456886; c=relaxed/simple;
-	bh=kgSwKFu/TnS6fJXWAO8HYbXIDAtOL7ia5DsT4ZaMrJ4=;
+	s=arc-20240116; t=1720456965; c=relaxed/simple;
+	bh=SMSXQy/4fLhK2QipqoruTLc7ydPAgk2ANoH8rp63Jis=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LFgWfe9a+1qo93VmKudROZEmeawsf5xe6EMtLfnV+7B6iE/svJE8oYWfZln8PFaqT60shCSiXpLiTylvJXPK3KeUWcERDCeJehGCzNyCrSdHrnX0tceGmcU9jh6dxr3RkcFHuRVTbSUKyKaYuxQJxGjJfXJgLKwcnIGkCWe6dBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2Ls7ifb6; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=HT1fi70WqfYT5gfHov71Y3J2qqNi76Q1Q1z0/hTjmke+K7Fmza4hbc+70nncgKMPfvYhUT1SRRxpxFp5hsGBYkfH9XMyJm8IB1DsXP7yAvF94N01i0ZS4grHkc44t5HF4RI8gILF3uLIyjTvyCk/YXA1qlnMCRBG55qmc1hbSik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhl2y14B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2Ls7ifb6"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-58c92e77ac7so41607a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720456883; x=1721061683; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T5h9K8a8sSLubZd/W2Bpa7ei/SlFMORW/ZDCStOq+wM=;
-        b=2Ls7ifb6v0UXptyiNOS8Qk3j0Fsn4WCN0HGGsBuOipNbtsbqctXuxei9NsUSdia8BV
-         3HlsQy0z9fQWERbbgerwhh0sFBoYgB0xj80YiKL2DDZwgI5zFO7c0b62STuvA7i7fdPn
-         j+SgYrQdcrxxMn4zf92QrCT8+OIYkAEmebWy65/lU/tfRXXqOELKhqCWprBFRm1aNFSt
-         PeF/+Vn+BXT+PkU1nh4lfr6LI6KIjptHqyR3L3gALE/f1kTiWO7HB1wiT5F/m3TiaVmf
-         jwBqSxUAuNETAr+L39b4ogXSjcBPtL2C4zsG2dWbRleOpPLBavQwv4iIuBnwzqXs2dso
-         G7eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720456883; x=1721061683;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T5h9K8a8sSLubZd/W2Bpa7ei/SlFMORW/ZDCStOq+wM=;
-        b=OkhYSfTZf+R2bh64sMsawzYtSDJknPH/oBFTFMYebvnsZ16wNFaZPIpYNMkNNKbdZx
-         45J2zkb3zIl0PboNwSPOqQh6d+peTto2czN5C8pXTgCQyMBg/ucu9efXwgshRyZuSgv3
-         XbvaU0ajCghiA08BKJB4NhsUlGC93Dq07mkDZ7wl09vPDApKTJvYYy0flw4GQIAaeMX6
-         sqJYOZ86+KrLNxGhq7M64XwBlOKKomJ6dyACY0lJCTHrugEFb2iwtqHiBbIUPgZICcHi
-         IBr1x+tKqIQXbqLXaLXfgbHtzQyV4wgWhpT+9Mz1w7G2yFR8d16ikc23d89grOhI2PYk
-         hgbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrDvxHyKznnarEMKEdL5colsdfaf1CLb57uzhPcG1ZSoArwjlKwUgnldhrygp6In1bOE4FK1ySJ/YC1zJriM4fMlMHZ53ssIjwOdmY
-X-Gm-Message-State: AOJu0YwZA8cpT5VwDGbciaCE6NOvQwbpsx8akKsT6x7ZThj7mHPxYMur
-	rm2B2DO1IJYQ+jSTed01bTvniaS+6m9aw0ZuEEIBNJpZ0SyxLiHEnYXqbsItF3/pOXOeJxBxX33
-	zmZ+bnfFl5njw8RpIZzVW7lE68uRipwnC/EvE
-X-Google-Smtp-Source: AGHT+IGnZrn5/gF0KK99nMLQYDqQtH14UdCGc9dpKYr4CJb2IgbOmv7c7MrCZL5Np69D3hoUFnM393mMoyI6bE88g5c=
-X-Received: by 2002:a50:bae9:0:b0:58b:dfaa:a5cd with SMTP id
- 4fb4d7f45d1cf-59352e1a5b2mr174396a12.2.1720456883109; Mon, 08 Jul 2024
- 09:41:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhl2y14B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80999C4AF0C
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 16:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720456964;
+	bh=SMSXQy/4fLhK2QipqoruTLc7ydPAgk2ANoH8rp63Jis=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qhl2y14BeeVEDy0eOdkxoyxNmMv8hqiDNQJgwyj2Pg46zbeonXs4u3EEqCgbwBLCJ
+	 UGJf0D30adjef4PsCZ22JcIIYa3V9aiKPoqDvl5sFSkb439bS5actA3gdrWy46ObFu
+	 oLN1ltT1EN20hnT8iFWB6GA7rRyFnnnX6218pht7REdmV3Jqz5x1Hd5E+vD38zOnEB
+	 2TvSuDNPNaE4VaeJRtvmsauBVyNUa1ExJymnd+Ea7vyIVTt8PZRcCiL4Evu+D6iYvs
+	 NEwmOa16Jk7idZj8YS2okepnHTkOoeCUky3CU+nG0l/2Eo4AyiP9puDdv5IlN/fO37
+	 8KAhuuRCYWsNg==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57cbc2a2496so4800242a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 09:42:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUOKtBYvqqf3HVdXt49bKEXjTBRrp2C3juAocNiOIgHJps5SS6jUrlVvJC4KDOMSZXSs9ppGFLoHJLYUJmWAuOLP4VqwC+0cD/4Hlyj
+X-Gm-Message-State: AOJu0YwRp9idTmqErMd164Bjkyfsg50ukgB289VK5c5MaqLmfteKTKGT
+	xzoKivPcUAOn0VNkMswS3Mwh3jmMjCkv5RVZtUUvSg1i4VzDebFUJ0TTXhaz0lFC5v1FjMj4GJD
+	S4XpaZJugBShzC8Wf6E+ZRL/1TqCQbWrlOM34
+X-Google-Smtp-Source: AGHT+IEn/+zjOxNlsBbi8sx43v/ohZLMhX0KlqE0oZIG6iZ1BHYOnNlwXxTHtOhQXzhPvikWp9mzFU3o7Y7l6KCRW/o=
+X-Received: by 2002:a05:6402:354f:b0:57d:2c9:6497 with SMTP id
+ 4fb4d7f45d1cf-594bab80106mr125789a12.3.1720456963027; Mon, 08 Jul 2024
+ 09:42:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240704190137.696169-1-mic@digikod.net> <20240704190137.696169-2-mic@digikod.net>
- <87bk3bvhr1.fsf@oldenburg.str.redhat.com> <CALmYWFu_JFyuwYhDtEDWxEob8JHFSoyx_SCcsRVKqSYyyw30Rg@mail.gmail.com>
- <87ed83etpk.fsf@oldenburg.str.redhat.com>
-In-Reply-To: <87ed83etpk.fsf@oldenburg.str.redhat.com>
-From: Jeff Xu <jeffxu@google.com>
-Date: Mon, 8 Jul 2024 09:40:45 -0700
-Message-ID: <CALmYWFvkUnevm=npBeaZVkK_PXm=A8MjgxFXkASnERxoMyhYBg@mail.gmail.com>
-Subject: Re: [RFC PATCH v19 1/5] exec: Add a new AT_CHECK flag to execveat(2)
-To: Florian Weimer <fweimer@redhat.com>
-Cc: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Paul Moore <paul@paul-moore.com>, "Theodore Ts'o" <tytso@mit.edu>, 
-	Alejandro Colomar <alx.manpages@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Christian Heimes <christian@python.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	Eric Biggers <ebiggers@kernel.org>, Eric Chiang <ericchiang@google.com>, 
-	Fan Wu <wufan@linux.microsoft.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	James Morris <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>, 
-	Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Jordan R Abrahams <ajordanr@google.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, 
-	Luca Boccassi <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Matthew Garrett <mjg59@srcf.ucam.org>, Matthew Wilcox <willy@infradead.org>, 
-	Miklos Szeredi <mszeredi@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, Scott Shell <scottsh@microsoft.com>, 
-	Shuah Khan <shuah@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Steve Dower <steve.dower@python.org>, Steve Grubb <sgrubb@redhat.com>, 
-	Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>, 
-	Vincent Strubel <vincent.strubel@ssi.gouv.fr>, Xiaoming Ni <nixiaoming@huawei.com>, 
-	Yin Fengwei <fengwei.yin@intel.com>, kernel-hardening@lists.openwall.com, 
-	linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
+References: <20240705145009.32340-1-puranjay@kernel.org> <c0ef7ecf-595b-375a-7785-d7bf50040c6b@iogearbox.net>
+ <mb61pjzhwvshc.fsf@kernel.org> <CACYkzJ7d_u=aRzbubBypSVhnUSjBQnbZjPuGXhqnMzbp0tJm_g@mail.gmail.com>
+ <224eeadb-fc5f-baeb-0808-a4f9916afa3c@iogearbox.net> <mb61ped836gn7.fsf@kernel.org>
+ <d36b0c2e-fdf2-d3b0-46a8-7936e0eda5a8@iogearbox.net>
+In-Reply-To: <d36b0c2e-fdf2-d3b0-46a8-7936e0eda5a8@iogearbox.net>
+From: KP Singh <kpsingh@kernel.org>
+Date: Mon, 8 Jul 2024 18:42:31 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ5E+3xYkNsH7JoVkjabzSwnZZCzzTz5B50qDB7bLYkmMA@mail.gmail.com>
+Message-ID: <CACYkzJ5E+3xYkNsH7JoVkjabzSwnZZCzzTz5B50qDB7bLYkmMA@mail.gmail.com>
+Subject: Re: [PATCH bpf] selftests/bpf: DENYLIST.aarch64: Remove fexit_sleep
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Puranjay Mohan <puranjay@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Manu Bretelle <chantra@meta.com>, 
+	Florent Revest <revest@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 8, 2024 at 9:26=E2=80=AFAM Florian Weimer <fweimer@redhat.com> =
-wrote:
+On Mon, Jul 8, 2024 at 6:09=E2=80=AFPM Daniel Borkmann <daniel@iogearbox.ne=
+t> wrote:
 >
-> * Jeff Xu:
+> On 7/8/24 5:35 PM, Puranjay Mohan wrote:
+> > Daniel Borkmann <daniel@iogearbox.net> writes:
+> >
+> >> On 7/8/24 5:26 PM, KP Singh wrote:
+> >>> On Mon, Jul 8, 2024 at 5:00=E2=80=AFPM Puranjay Mohan <puranjay@kerne=
+l.org> wrote:
+> >>>>
+> >>>> Daniel Borkmann <daniel@iogearbox.net> writes:
+> >>>>
+> >>>>> On 7/5/24 4:50 PM, Puranjay Mohan wrote:
+> >>>>>> fexit_sleep test runs successfully now on the CI so remove it from=
+ the
+> >>>>>> deny list.
+> >>>>>
+> >>>>> Do you happen to know which commit fixed it? If yes, might be nice =
+to have it
+> >>>>> documented in the commit message.
+> >>>>
+> >>>> Actually, I never saw this test failing on my local setup and yester=
+day
+> >>>> I tried running it on the CI where it passed as well. So, I assumed =
+that
+> >>>> this would be fixed by some commit. I am not sure which exact commit
+> >>>> might have fixed this.
+> >>>>
+> >>>> Manu, Martin
+> >>>>
+> >>>> When this was added to the deny list was this failing every time and=
+ did
+> >>>> you have some reproducer for this. If there is a reproducer, I can t=
+ry
+> >>>> fixing it but when ran normally this test never fails for me.
+> >>>
+> >>> I think this never worked until
+> >>> https://lore.kernel.org/lkml/20230405180250.2046566-1-revest@chromium=
+.org/
+> >>> was merged, FTrace direct calls was blocking tracing programs on ARM,
+> >>> since then it has always worked.
+> >>
+> >> Awesome, thanks! I'll add this to the commit desc then when applying.
+> >
+> > The commit that added this to the deny list said:
+> > 31f4f810d533 ("selftests/bpf: Add fexit_sleep to DENYLIST.aarch64")
+> >
+> > ```
+> > It is reported that the fexit_sleep never returns in aarch64.
+> > The remaining tests cannot start.
+> > ```
+
+It may also have something to do with sleepable programs. But I think
+it's generally in the category of "BPF tracing was catching up with
+ARM", it has now.
+
+- KP
+
+> >
+> > So, if the lack of Ftrace direct calls would be the reason then the
+> > failure would be due to fexit programs not being supported on arm64.
+> >
+> > But this says that the selftest never returns therefore is not related
+> > to ftrace direct call support but another bug?
 >
-> > Will dynamic linkers use the execveat(AT_CHECK) to check shared
-> > libraries too ?  or just the main executable itself.
+> Fwiw, at least it is passing in the BPF CI now.
 >
-> I expect that dynamic linkers will have to do this for everything they
-> map.
-Then all the objects (.so, .sh, etc.) will go through  the check from
-execveat's main  to security_bprm_creds_for_exec(), some of them might
-be specific for the main executable ?
-e.g. ChromeOS uses security_bprm_creds_for_exec to block executable
-memfd [1], applying this means automatically extending the block to
-the .so object.
-
-I'm not sure if other LSMs need to be updated ?  e.g.  will  SELINUX
-check for .so with its process transaction policy ?
-
-[1] https://chromium-review.googlesource.com/c/chromiumos/third_party/kerne=
-l/+/3834992
-
--Jeff
-
-
-> Usually, that does not include the maim program, but this can
-> happen with explicit loader invocations (=E2=80=9Cld.so /bin/true=E2=80=
-=9D).
->
-> Thanks,
-> Florian
->
+> https://github.com/kernel-patches/bpf/actions/runs/9841781347/job/2716961=
+0006
