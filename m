@@ -1,67 +1,100 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34D53BBE8
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2024 07:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B21738FA1;
+	Mon,  8 Jul 2024 07:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720425484; cv=none; b=W1QuBXePyWJVOxRO7dlZvqt2Xkhaxs9jne/PKLDqjFvTwQdhV02h3yD113hmYw0RxuLsgNmMl876Ay8QKwDABFlc4+ocNhI0MI6FOM3jxdgY/SFH3Az67BL7i71d6B6NP/AXh9LLxs81cHpNlXNzsK7bBFd5svqtsn4RPtJxx18=
+	t=1720425595; cv=none; b=flr7KlRg4ADKnoH64yI9B0RjOS7XG5Lh/ZxkhnK5YDEoA1s/EpRqDmHTrdzbx+jnJLaaX3lkHbmYaq8JjaFTKjgl9UeA0I0YBDQnmuudHmUDRNh410Y9vVryGr9dpn7kKc8JbXwU//cAv1a+IJCWYMa0+UKXTYcyargFOtXtdu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720425484; c=relaxed/simple;
-	bh=twaeYzFSn/1h1d9xhwS1tJhtyc/6QNjEWD6skPomBNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=cqLqQ14idmggWuZsfHgJ0Q9Yv0lcXHiO64omko/K+3dxDlR55KiQFrofWBrHS6gi93psnctr19QT0uWuf5Uy1Pd04pTVojXPqzWPkQRIvw273eDZhOrXAnuCmjJZRDcO4XzYZ23JJyTMreDkJIj2ij9Y7N3GOQqcH+2CbDobaGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FFDAOOsZ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720425595; c=relaxed/simple;
+	bh=rs6JcL6vNDmIMyLHr4sEqjRKenwYOM5DCBPg4j4VF0E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GbhIWXFqovhXuZ8a1nQjKAh8LsH18XScYsCRvlW8sbgwVwCH5mI6/YMCG8KjPaapYX/18HP3KeuJc7Ye8bL2GowJvsKzlM46XHc/03byB8TMtlN/SnQ4t3c1Xyy6Exsn+YMErxHytzOWmd1uQdPqKlc/kb7RBpoo4u8rXPkC85g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UHluF3Ik; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FFDAOOsZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=GHePrlKh36QSGwKVJ3OqNArqPsDNDuyy0iY4WXPrnn4=; b=FFDAOOsZgk415dXO7SwRQzbFWg
-	hBfwCl7djiLf12yI0AUhLhM/WmtSmf84kj7HWoYyz2ilhfDVvzG2VhcYoNsDCAwLgCLVG10TfX3xG
-	2cRvyPHrlt0UJu8PlP2YljdfGHInryAoy9qQSpo7KVwic4zd9nyeOcBxV2yYn1iKRWg+pOvt9zFWr
-	l5Hci+ckMx2sLKa3cfQd7x71H1x6XxAv/sz1oN1k1y7Dnl7DznydXtuVhMq5tQnb+bI3oFH2ZIo0f
-	n0m/QGS/bhpvf+h7vVSaQ1IUqX6YFupPJ9auRPc2DKkY49WciZtefbcN0LBMU4lYuCSo7Wxx+52H2
-	aF2FBzFA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sQjFy-00000006ddV-2ncE;
-	Mon, 08 Jul 2024 07:57:54 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 85FDD3006B7; Mon,  8 Jul 2024 09:57:52 +0200 (CEST)
-Date: Mon, 8 Jul 2024 09:57:52 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: mingo@kernel.org
-Cc: juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de
-Subject: sched: Update MAINTAINERS
-Message-ID: <20240708075752.GF11386@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHluF3Ik"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-447f0a76a08so4402231cf.0;
+        Mon, 08 Jul 2024 00:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720425593; x=1721030393; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rs6JcL6vNDmIMyLHr4sEqjRKenwYOM5DCBPg4j4VF0E=;
+        b=UHluF3IkE2J56VNAsUetfBF/yrOEyAN605DgzzkZ7Csux8PkQqlE05Wqbg81a8LZjo
+         qCPlOJyQi3phRrpOHrqb4FNnC2iA3C2qnv50ocr+rvyu6xSgvwgFOhr7vp6zpDD9u06I
+         N2fn9NBw4eejwxNTziDE36VQJLSDp+psSsVFfh8+CcwF5tjWODbsekl9no9g1kNRP4/V
+         u4MWkzwhsGa5704t+JNLMrrlAhXNIn89+pWS8FX6LPyMVWNbXMtbT0BxmPHic2Tds9Kk
+         yW+Mk9PcB0TQ5xTCDenEAdJPE8bwBELHZ+Vx3I2xA3y7YFkuYfh0tLh6zeYecwmHBDmx
+         dw5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720425593; x=1721030393;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rs6JcL6vNDmIMyLHr4sEqjRKenwYOM5DCBPg4j4VF0E=;
+        b=ZMiDu8pav/DwJN+IWoAOhl3ZrwG3m2O8CdppWOVDp3kFrBqzHsB/jjx+WloGCR5VkR
+         aSM8wgtNRYXjfzUnsxvk6wpH3Gk2EI1TgCoebHjg+DTdi1E4WxWXi6DUE+gjif6dFl3n
+         8EbHYZ++Qn7i1scUr2YQuBazzuh0lM0vJhU7t/m9hVVlyVKwsj2nsNfLbDzTM9/iyO0r
+         Caeg2/6k7ROTMhxIerD6FRlX2uT6bUWDts6iVVDvSAIQNogG5HX1KIciJ+hxxw49dcAn
+         cPHfQ+Re123LYrUQ5dFR3r0tk06iaw4E3uEG372i8ciq4Rcjx2Wpp+4jTCaRiyWHB9/+
+         oeeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHpie7PiXWoDwaZfOBts01GazD3XQ0fv7NdHUFvFW0d0jogCX2YxNbzAZHCfaFhH6TqfdnSMT8MY2LLZcmA9OQwzCLkZruF1ff5ottmcepNu7pgh6YFB4EKMR+X6P0YmScx/tlcZx+uQ==
+X-Gm-Message-State: AOJu0YzRlf8wWmiHngNnMhyeVO8jff/6kqP/11ffY4ZZhjyzasCckzhG
+	QHcnSn/vg5afpWitYaUBw/csM9XLkFza2mIoPbIEuDe06S1XUXps6wC49p8jOSHpOkIYZLpVBg+
+	gSlMGWoXp3YQweN2AMR3iQOuK+D6VXkrnkCOVvg==
+X-Google-Smtp-Source: AGHT+IH/VkfDIhs6MN4moaEli4OluWsChfXFbrXfH1W4zaZXzfmzxCus8rkkzYzz2iIioaZ3+7DwykAmfvpfNMasWUw=
+X-Received: by 2002:a05:622a:40c:b0:446:6824:166a with SMTP id
+ d75a77b69052e-447cced7b40mr172582011cf.10.1720425593179; Mon, 08 Jul 2024
+ 00:59:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240617-rk-dts-additions-v5-0-c1f5f3267f1e@gmail.com>
+ <0418B5BB-6759-4BFA-BE6E-F5C7FA0CBF4F@gmail.com> <2236519.ZfL8zNpBrT@diego>
+ <1E6ED98C-BD49-485D-9FE9-9E7CAEDB4564@gmail.com> <503ECE3A-CA1C-43A7-AEB2-C0000A930B3A@gmail.com>
+In-Reply-To: <503ECE3A-CA1C-43A7-AEB2-C0000A930B3A@gmail.com>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Mon, 8 Jul 2024 10:59:42 +0300
+Message-ID: <CABjd4YyY68dcA+Z0nWAUq1UmVLeLw52Pg6NGpzcW=WMNX8ioqA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] RK3588 and Rock 5B dts additions: thermal, OPP and fan
+To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Dragan Simic <dsimic@manjaro.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Chen-Yu Tsai <wens@kernel.org>, 
+	Diederik de Haas <didi.debian@cknow.org>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	"open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Piotr,
 
-  Thank you for having been our friend!
+On Sun, Jul 7, 2024 at 9:32=E2=80=AFPM Piotr Oniszczuk
+<piotr.oniszczuk@gmail.com> wrote:
+>
+> Heiko, Alexey,
+>
+> After some more tests: is varying fan-speeds working stable for you?
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19929,7 +19929,6 @@ R:	Dietmar Eggemann <dietmar.eggemann@ar
- R:	Steven Rostedt <rostedt@goodmis.org> (SCHED_FIFO/SCHED_RR)
- R:	Ben Segall <bsegall@google.com> (CONFIG_CFS_BANDWIDTH)
- R:	Mel Gorman <mgorman@suse.de> (CONFIG_NUMA_BALANCING)
--R:	Daniel Bristot de Oliveira <bristot@redhat.com> (SCHED_DEADLINE)
- R:	Valentin Schneider <vschneid@redhat.com> (TOPOLOGY)
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
+Yes, in my testing on Rock 5B it's been stable.
+
+> In my case - 1 per few reboots results with board enters state with: cons=
+tant full speed and no any reaction for cpu temp.
+> In such state - I need multiple hw poweroffs (remove usb-c plug) to get f=
+an-speeds working again.
+> When board is such state - all seems to work ok (frequency scaling, etc) =
+except fan is constantly full speed=E2=80=A6
+
+One thought: could you please check which thermal governor gets
+loaded? I used stepwise in my testing.
+
+Best regards,
+Alexey
