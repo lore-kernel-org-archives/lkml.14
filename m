@@ -1,38 +1,35 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82AC382;
-	Tue,  9 Jul 2024 13:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7BE1EA74;
+	Tue,  9 Jul 2024 13:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720531110; cv=none; b=QkNGfolJGrunn7hf7XaRUYXorZBGhuGKDylAvGZ7Xnm5Ors1SAoVlVH+ZO86zb5Yk4AfEW66FVaWV4lmTuixPaoOe0ULWsZqG1efU1IyKssYAlXOojrwhxVH04kAekBO0P3vTi5/BoshrByOShCf3ftm3R7cK33H+FKchWwq2F8=
+	t=1720531229; cv=none; b=mPgNizJuxUFep3YPA2k1m4Ek90R/5IM3Vo2IPIJ0Uvtgc7gYioV10GhN0KUyTuuV/l3Pe86gWA5MQNuGFjO8ExMWp4ePSnq/EqsyG7PW0CQ5CysezFDx4n3hNAE4AzlTnxEfyESQjpjyalMCTaA1JggKDwFRmCun7x4aoCwrGKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720531110; c=relaxed/simple;
-	bh=uRqSv2EgEs82nXjT4mnoIzvAPWG9RwZrzwafVBscE1A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WAkNfFRqtuVw5iU/uQ4/ASl6Lem9U2be2K+Yr4B492djNSlWXE6do7vLQD0/mQPKIofiJLSBqPGQ8z9HmT1i8FGzRKGi6Pk8k7achvCgwvcqsHJrWRdWdA4WLUeyvSogDKcMYD24setPAhuSJHkka7XFZjtGy3Xmk9Bnybcrtpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-05 (Coremail) with SMTP id zQCowADHz+eEOI1m3nhgAg--.39722S2;
-	Tue, 09 Jul 2024 21:18:05 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: fbarrat@linux.ibm.com,
-	ajd@linux.ibm.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	manoj@linux.vnet.ibm.com,
-	mpe@ellerman.id.au,
-	clombard@linux.vnet.ibm.com,
-	imunsie@au1.ibm.com
-Cc: linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] cxl: Fix possible null pointer dereference in read_handle()
-Date: Tue,  9 Jul 2024 21:17:54 +0800
-Message-Id: <20240709131754.855144-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720531229; c=relaxed/simple;
+	bh=BgrLyZZ3OPPlPIhvPTNiCSJwn6+2VtS9YFUiTxvLlhM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=mbNF7biUChj0m9L8fv9Hf0Xe6KIZdEPkniXOr87AZGcGTAS5zBNCt6KQsMtrAM82OFdxu+8yVfWeV8q+Rc/dIBa5CcLmEcQCoH4fjtj19QBrCHujL0fYLbYcCahdIvWjb7YnUNx0QbCJ/tj3MonWOJmpUWplcuU1UXli0vx8a+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9vbrFjq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9vbrFjq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3256FC32786;
+	Tue,  9 Jul 2024 13:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720531229;
+	bh=BgrLyZZ3OPPlPIhvPTNiCSJwn6+2VtS9YFUiTxvLlhM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=t9vbrFjqDuoI9V3g4OuryFAuUakCLvqe8ytCK5KDssSlWdFS9wJrnuNxMNU/61a/w
+	 qH+hcMbzEgIlA3U+yHClg981ZA3e1qBI5zDoJzmTUIt7cI/6q03BNvffq+n2X8ZsBu
+	 G0OlKhRr5DYRwrgxxREsbzgG7JtQDR4Y4vic+XfZHJ+DQTHASNKTi+wp1chMUnbXgB
+	 D5rGimrq5ErgaJyFb2Xr5vTcLJGK7jhSlOLUWquEgf7PoDSABctX3uBso+vRQ7To4v
+	 4k3ifgS7HNLwWSIe7RusZvdjNCg6IbJHptJ4tHzfnHNp0xmsAAGfKUaso1fmxOEAUR
+	 MuVdi/DNBCWTA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 21B37C4332D;
+	Tue,  9 Jul 2024 13:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,48 +37,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowADHz+eEOI1m3nhgAg--.39722S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKFWDGrWDAw4xAr4UWry8Krg_yoW3Awc_CF
-	4UZr1xXryjgr9rGr1Y9r47Zr92yrW8uF95Zr4ftFW7K3y5CF1aqr1I9rs3ZrnrWr4DXFyD
-	Aw1qy3sY9r42gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-	YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VUbHa0DUUUUU==
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+Subject: Re: [PATCH net-next v3 1/1] net: phy: microchip: lan937x: add support for
+ 100BaseTX PHY
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172053122913.19292.3616221576979957912.git-patchwork-notify@kernel.org>
+Date: Tue, 09 Jul 2024 13:20:29 +0000
+References: <20240706154201.1456098-1-o.rempel@pengutronix.de>
+In-Reply-To: <20240706154201.1456098-1-o.rempel@pengutronix.de>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: davem@davemloft.net, andrew@lunn.ch, edumazet@google.com,
+ f.fainelli@gmail.com, kuba@kernel.org, pabeni@redhat.com,
+ woojung.huh@microchip.com, arun.ramadoss@microchip.com, hkallweit1@gmail.com,
+ linux@armlinux.org.uk, yuiko.oshino@microchip.com,
+ florian.fainelli@broadcom.com, michal.kubiak@intel.com,
+ kernel@pengutronix.de, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ UNGLinuxDriver@microchip.com
 
-In read_handle() of_get_address() may return NULL which is later
-dereferenced. Fix this bug by adding NULL check.
+Hello:
 
-Cc: stable@vger.kernel.org
-Fixes: 14baf4d9c739 ("cxl: Add guest-specific code")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
- drivers/misc/cxl/of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-diff --git a/drivers/misc/cxl/of.c b/drivers/misc/cxl/of.c
-index bcc005dff1c0..d8dbb3723951 100644
---- a/drivers/misc/cxl/of.c
-+++ b/drivers/misc/cxl/of.c
-@@ -58,7 +58,7 @@ static int read_handle(struct device_node *np, u64 *handle)
- 
- 	/* Get address and size of the node */
- 	prop = of_get_address(np, 0, &size, NULL);
--	if (size)
-+	if (!prop || size)
- 		return -EINVAL;
- 
- 	/* Helper to read a big number; size is in cells (not bytes) */
+On Sat,  6 Jul 2024 17:42:01 +0200 you wrote:
+> Add support of 100BaseTX PHY build in to LAN9371 and LAN9372 switches.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
+> ---
+> changes v3:
+> - add function comments
+> - split read_status function
+> - use (ret < 0) instead of (ret)
+> changes v2:
+> - move LAN937X_TX code from microchip_t1.c to microchip.c
+> - add Reviewed-by tags
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v3,1/1] net: phy: microchip: lan937x: add support for 100BaseTX PHY
+    https://git.kernel.org/netdev/net-next/c/870a1dbcbc2e
+
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
