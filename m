@@ -1,125 +1,107 @@
-Received: from mail.eh5.me (mail.eh5.me [45.76.111.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D531208B0;
-	Tue,  9 Jul 2024 11:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.76.111.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C642155303
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 11:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720522912; cv=none; b=bxEx3xo29k9EMy6ob5yNWcbXBi+Bv2ufGNhNnhs26jrbXD+6787MZrnLHbx46Jy6kcmH59v1blhTfVzicPtqrFBRsXXf6pw5IBjW1l8wzMoYTpiubW/Z7KnWV7rWSinHFBvezHSwWk9V9Wa7ya5X0Rbq6uLJlEGlcQ5w5ngWO0s=
+	t=1720522969; cv=none; b=YsaxdPS21pzvRyORXJWKGSWbwEGv33h26CMGGzN4ccr4oeAkfJP5aq/s5DIdFT4wTSfPzh7dOo2it+jcJvKzXjMwVIswIkN5QXZH9DsrMN/nE5N+sNavPBDVLCQbgxfmjAblnuJ8+kI2a1vJOAk9pFx6zwchO3S6C/d5zzyWu90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720522912; c=relaxed/simple;
-	bh=8EmcdkkE0oYTAYdtdr5zNdvUUpmSvtRnsxWuk/O4hkk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vb1amhtyFVdyItfGkc2oXKzjomOMCwcBqPnYvGoY4UhPdl2XL7RuZAK/Z5hJsAOXthKl43Nao1ws90FE3FumjzEfCfIZk4Px6K2ojRaFxLNGqf7D0DRjXpwVudr8OxJ/T1i12fSRZz0EV2dMTABGGJ0tCr+lEcKZ3kRA+TqHxw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eh5.me; spf=pass smtp.mailfrom=eh5.me; dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b=hXXnOM5p; arc=none smtp.client-ip=45.76.111.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eh5.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eh5.me
+	s=arc-20240116; t=1720522969; c=relaxed/simple;
+	bh=ICwC8hHB4nssKkN75Qlzvd8rIcpX9ZQoWm9Hdqy5DwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MJkeUK54l+u/fSH13o4oBW7ouJbChWRZO6M64GbqK4YtCQCIJPO7iV4Ee/YK23EcdM05sdI8wWwbuUa93dJR94+v0K9zpatfBHcYzJ9iDN1wvmUiXYWqGNU/FTa//PEl3P02epbJ3U+De1d0SBhx7o3QeQFQvaNOFonoulFdaqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tOAOMrxm; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b="hXXnOM5p"
-From: Huang-Huang Bao <i@eh5.me>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eh5.me; s=dkim;
-	t=1720522497;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=f/I3Vjm8cEq2ZeTlVvfzwsec4AJR5wa4TlSZ79HvmRk=;
-	b=hXXnOM5pURRKMcaz1BuylPpxtLsSgiW29cfj5UI9EfWqUgfbHBWDipLEsXQxkHZajqgq/9
-	/z4O6xvH/jZiofPvAKDzi4j0wC1RJUypDGeIuo3XKhOH7aBM2SB5RLnfffkwTiQ7VA0i8q
-	N58KAUdO386ccj+s9wqtXiJNkAc72PA=
-To: Heiko Stuebner <heiko@sntech.de>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Richard Kojedzinszky <richard@kojedz.in>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Huang-Huang Bao <i@eh5.me>,
-	stable@vger.kernel.org
-Subject: [PATCH] pinctrl: rockchip: correct RK3328 iomux width flag for GPIO2-B pins
-Date: Tue,  9 Jul 2024 18:54:28 +0800
-Message-ID: <20240709105428.1176375-1-i@eh5.me>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tOAOMrxm"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-70af2b1a35aso3180583b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 04:02:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720522968; x=1721127768; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yz8rqRMqOY683u5fU+cnnte1WW97jEHEhVYRD53PDio=;
+        b=tOAOMrxmF5SX9/yidFT9l3oQFPMmITisdEw0c3YjacAvBaG4OwL32ijQGjOnU4tScA
+         loK0ASFvIfha/dDCuOCQj6Hj/fVeAjpoGLPdHHUHYvBkG2Kr5FRmefmd8CUe5/rQZ3XC
+         kjR/7HQuMuD1uzpIiX0NW64A3E7kkdkOYJS+F7PKXOo5fJs9TX+fNzVeBVh5sKBCBfuq
+         5uzEWpnI61a4f0qdHO6hnDA35m3vFd28VdVyRaQZc8cycXWcFfAMS3Ac6Wog94+v5eBb
+         VyjNFC/xBaaZzMl7YOe/9ryJ3QOOBju2zUgCSc0iMlbdtBpnxmeKL8kEL+reOMeXTUvw
+         vfNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720522968; x=1721127768;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yz8rqRMqOY683u5fU+cnnte1WW97jEHEhVYRD53PDio=;
+        b=fA/unVpHO86ZTmZ5WoXLM+uIx0/kS0lpPUe99I4arjSb4XCAlKmxOHmuIX2rV3PokV
+         WfEwOaOMPfODTFV1chBXm8lMtLBErdpwUUqG4Kh2QymtXReWjOA1xcbPMs63mp7jymR/
+         CkdKUjxUen+Jia5cknhVOQqdNpB8JuAuj4gEODhkYPZR5yd1aMiFIMEO3zZ9McRpbhbe
+         BqG6Rt8F6Ze+IXuSbuKxyd3ndCzcXx61BVi70aNPZCoLK5OQ1YV+dMz+gEHgFkhaNuOI
+         GFewLRxOkWiF4k8c9ENJ/T6xZnchFqB2pLMLJJdvbxijR19QH7MZJAs0Ar108VkjYp9L
+         R0Gw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBkKXZx0LgSZv+UlPbApmDuVF2cCARhU42CBjVhPB3evsGHbvAwvbeMiPH/VAgApdV1zuQjWdA6cgijLLOspzoegyUlK0XMCFKQ1zq
+X-Gm-Message-State: AOJu0YyqmbT+dqVMTTBMGf57UI+v8ihXYOM/8iuyffGK5EDTFSD3z7Wj
+	zHYFoTeCBQ5qhr5u/HbZhRZbwDs7Yb5GuN/RT+aGdb9UUYVzQpZDn+wAP4TRchg=
+X-Google-Smtp-Source: AGHT+IEnZeyyy+JNipf3YeCIVNiI2S39fnrN1eQJ+5u6wVxKp7TogZLRs6I2FcH4SNfru3myy0T1dQ==
+X-Received: by 2002:a05:6a00:1d0e:b0:706:6cb2:ed17 with SMTP id d2e1a72fcca58-70b435220f9mr2429638b3a.2.1720522967959;
+        Tue, 09 Jul 2024 04:02:47 -0700 (PDT)
+Received: from localhost ([122.172.84.129])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b438c0996sm1513827b3a.60.2024.07.09.04.02.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 04:02:47 -0700 (PDT)
+Date: Tue, 9 Jul 2024 16:32:45 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Erik Schilling <erik.schilling@linaro.org>,
+	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH V3 1/8] rust: Add initial bindings for OPP framework
+Message-ID: <20240709110245.o73xnrj6jsvz2v2w@vireshk-i7>
+References: <cover.1719990273.git.viresh.kumar@linaro.org>
+ <fe8e9a96b29122876346fc98a6a9ede7e4f28707.1719990273.git.viresh.kumar@linaro.org>
+ <ZoVvn0QCSR8y4HQJ@Boquns-Mac-mini.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoVvn0QCSR8y4HQJ@Boquns-Mac-mini.home>
 
-The base iomux offsets for each GPIO pin line are accumulatively
-calculated based off iomux width flag in rockchip_pinctrl_get_soc_data.
-If the iomux width flag is one of IOMUX_WIDTH_4BIT, IOMUX_WIDTH_3BIT or
-IOMUX_WIDTH_2BIT, the base offset for next pin line would increase by 8
-bytes, otherwise it would increase by 4 bytes.
+On 03-07-24, 08:34, Boqun Feng wrote:
+> On Wed, Jul 03, 2024 at 12:44:26PM +0530, Viresh Kumar wrote:
+> > +// SAFETY: `OPP` only holds a pointer to a C OPP, which is safe to be used from any thread.
+> > +unsafe impl Send for OPP {}
+> > +
+> > +// SAFETY: `OPP` only holds a pointer to a C OPP, references to which are safe to be used from any
+> > +// thread.
+> > +unsafe impl Sync for OPP {}
+> > +
+> 
+> Same for the above safety comments, as they are still based on the old
+> implementation.
 
-Despite most of GPIO2-B iomux have 2-bit data width, which can be fit
-into 4 bytes space with write mask, it actually take 8 bytes width for
-whole GPIO2-B line.
+Do I still need to change these ? Since we aren't always using ARef
+now.
 
-Commit e8448a6c817c ("pinctrl: rockchip: fix pinmux bits for RK3328
-GPIO2-B pins") wrongly set iomux width flag to 0, causing all base
-iomux offset for line after GPIO2-B to be calculated wrong. Fix the
-iomux width flag to IOMUX_WIDTH_2BIT so the offset after GPIO2-B is
-correctly increased by 8, matching the actual width of GPIO2-B iomux.
-
-Fixes: e8448a6c817c ("pinctrl: rockchip: fix pinmux bits for RK3328 GPIO2-B pins")
-Cc: stable@vger.kernel.org
-Reported-by: Richard Kojedzinszky <richard@kojedz.in>
-Closes: https://lore.kernel.org/linux-rockchip/4f29b743202397d60edfb3c725537415@kojedz.in/
-Tested-by: Richard Kojedzinszky <richard@kojedz.in>
-Signed-off-by: Huang-Huang Bao <i@eh5.me>
----
-
-I have double checked the iomux offsets in debug message match iomux
-register definitions in "GRF Register Description" section in RK3328
-TRM[1].
-
-[1]: https://opensource.rock-chips.com/images/9/97/Rockchip_RK3328TRM_V1.1-Part1-20170321.pdf
-
-Kernel pinctrl debug message with dyndbg="file pinctrl-rockchip.c +p":
-  rockchip-pinctrl pinctrl: bank 0, iomux 0 has iom_offset 0x0 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 0, iomux 1 has iom_offset 0x4 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 0, iomux 2 has iom_offset 0x8 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 0, iomux 3 has iom_offset 0xc drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 1, iomux 0 has iom_offset 0x10 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 1, iomux 1 has iom_offset 0x14 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 1, iomux 2 has iom_offset 0x18 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 1, iomux 3 has iom_offset 0x1c drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 2, iomux 0 has iom_offset 0x20 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 2, iomux 1 has iom_offset 0x24 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 2, iomux 2 has iom_offset 0x2c drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 2, iomux 3 has iom_offset 0x34 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 3, iomux 0 has iom_offset 0x38 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 3, iomux 1 has iom_offset 0x40 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 3, iomux 2 has iom_offset 0x48 drv_offset 0x0
-  rockchip-pinctrl pinctrl: bank 3, iomux 3 has iom_offset 0x4c drv_offset 0x0
-
-The "Closes" links to test report from original reporter with original
-issue contained, which was not delivered to any mailing list thus not
-available on the web.
-
-Added CC stable as the problematic e8448a6c817c fixed by this patch was
-recently merged to stable kernels.
-
-Sorry for the inconvenience caused,
-Huang-Huang
-
- drivers/pinctrl/pinctrl-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 3f56991f5b89..f6da91941fbd 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -3813,7 +3813,7 @@ static struct rockchip_pin_bank rk3328_pin_banks[] = {
- 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
- 	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
- 	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", 0,
--			     0,
-+			     IOMUX_WIDTH_2BIT,
- 			     IOMUX_WIDTH_3BIT,
- 			     0),
- 	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3",
-
-base-commit: 4376e966ecb78c520b0faf239d118ecfab42a119
---
-2.45.2
+-- 
+viresh
