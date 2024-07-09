@@ -1,74 +1,110 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8769F19E82B;
-	Tue,  9 Jul 2024 16:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330DA41C6D;
+	Tue,  9 Jul 2024 16:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542643; cv=none; b=ChjcYcIdLVwbdSSPwxQn74jXJfaXoDLyp7jIondEBCYFx5y0BnQjXhrDCEO1o6T5IMB+7K7hdcnmK4KoW9nEcYMKgC5pRefRNZ7raU8uMHpdsezgQcAPhynKJ1MYcRcXDCggH7sQdoMFHCUxAaK+87QJ8MGfWYhlwsBQqL8ootY=
+	t=1720542660; cv=none; b=fMB37sfpfEDxmXKhu08cdHpN7kKM37iWCI5M11SzAmp9Kbuu38N27TQOpg3q59aQJUwQpoH86womQv8tsNFq5OQJTF2EmnkqRLtwYX+xy15Vu2iEI/XuD/ZpkLnPQPPBTGOqOj9MuSpdrtd8nvAi9IkDc+2WqrZCHQbjun0a1gQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542643; c=relaxed/simple;
-	bh=+J135aSrqRX9xE08EI2dz/9gEk4k8tD5i2S4SEz08/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ji4hpgc66DfvS6th9f9PQNIB4Plt1EEjNyYj4v58uVaWGPu4Sehwv+3Q9NU+0QZam1QlhqajH+7BDCmnDh4mlLho6LsoaTWoqntkm6W7gj3f0vlCJmIqmEupceu/0FWQxToWq3qPhIN1zVbn64hKR+WQNu5WR6NcLYQBkFIIwdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZaR7Ei/e; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720542660; c=relaxed/simple;
+	bh=aZ0XXr0nDnQLLxUcNF9UReVDz1vfMZZfSrVsx0gtJVg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RSlSSITLHGoH4jsMgQ+fJqcNdAwrvhQplN4K4ecVJJJjCrwgPSSknGStKVRf6/RIlddrfbq0d9aunUQekUXR5eevq+yPq9C1pqQE8O/r59a4PsaN9CDkrVusaEEqmmVJRLwqIa4Nhss/JO/qTkNUh4xBgboXDrDFRlMVpugO5iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEV8ZWwO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZaR7Ei/e"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7XRXfrB2fmvhSy87pLmluWUrfWrZdc4sO1XIVyso348=; b=ZaR7Ei/ex4FOsarOP4tLl94nhr
-	e1cacMyPF3N9oJdwpcqL2UaDdrA9n6fy53iEtvxvEI7BvwDLHDNwMQlSYkn13tosWrD09EvYRooub
-	qm/knWfWhIaQ5ZqqPUpCROJfAmN2pKzRJbRDj6ykEoPro5AGzXkQT98enA5+VnfrEE0/GONxKkhMM
-	B5sJLa+mAC/FS5nW81j9UtlF4WKn9H7MLTtz+u8+9naiT7T3rtVjvHcBnz5PPPudrPYvx6XJ09SRl
-	lFZEqd+QMLcSn+RRmZF8flLzN0TJv1KLh4v3B1w1i1xVSv1NaCp8hfUYFANFfNgweNN6uc9ObyPT4
-	MxVFMG6A==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRDji-0000000845p-0jEz;
-	Tue, 09 Jul 2024 16:30:38 +0000
-Date: Tue, 9 Jul 2024 17:30:38 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>, mingo@kernel.org,
-	andrii@kernel.org, linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org, oleg@redhat.com, jolsa@kernel.org,
-	clm@meta.com, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 00/10] perf/uprobe: Optimize uprobes
-Message-ID: <Zo1lrpO3suceheVj@casper.infradead.org>
-References: <20240708091241.544262971@infradead.org>
- <20240709075651.122204f1358f9f78d1e64b62@kernel.org>
- <CAEf4BzY6tXrDGkW6mkxCY551pZa1G+Sgxeuex==nvHUEp9ynpg@mail.gmail.com>
- <20240709090153.GF27299@noisy.programming.kicks-ass.net>
- <91d37ad3-137b-4feb-8154-4deaa4b11dc3@paulmck-laptop>
- <20240709142943.GL27299@noisy.programming.kicks-ass.net>
- <Zo1hBFS7c_J-Yx-7@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEV8ZWwO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C09E6C32782;
+	Tue,  9 Jul 2024 16:30:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720542659;
+	bh=aZ0XXr0nDnQLLxUcNF9UReVDz1vfMZZfSrVsx0gtJVg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lEV8ZWwOqa2+hjsQS8bf4Nx3aKCxGtFwb2epTvrNk88QN0p7jh6gPE0Yjb8RpHAvM
+	 EHw9y8D6EyhphynGMwsQB+8XUzlCPM+EWdNW1ZLqsSn3uXewCeNwNAmcMz70xsJqZY
+	 ZJDJDjyXp8lTHif1ObB1VVF7iGxazSzZoljAZQXeObNh1+Df8uDAm1SZdt+J6OedQ+
+	 t8rJJhEpggK+ehdsJHWXmOZ6Z7dieAQs8rAzRVFqBQ7fH19nFLZmiLcL9e08XsQh9T
+	 klCbUvBFKYAs7qd4gqzqe6Rbd0U/Kk+ghwBmg/tyhOZ418RzRikBSXqMdtwOrZHeJ1
+	 6QNo6WGwVdZyA==
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-25e14bf05e5so202684fac.1;
+        Tue, 09 Jul 2024 09:30:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU1BPUth0zOSmv6BtaqcG+P+zXcwX66qfRltKLhoYAsmrvFo7iEqWYpK+ILGqxYz5FJJ7JscXVbX6man8nbPqm7PjRZhLI7FUURbWxds2qk0l9ImgTVftxR3AyVfAUjW4pj0WIMKg8=
+X-Gm-Message-State: AOJu0YzMDvoo2QRDRe2xkjynmdMBL1aPFjpmbfPUH5eHE+07Pv23+Dup
+	N43PbpbB/uK+DfAHwO7w7OuF3q6zU1koQKnamLXvlwClYGggwAcQz7g1aBFKShMHAi4p6PhI8u3
+	ce6jv7bxe+G39mW1kd3VhcmO1PGk=
+X-Google-Smtp-Source: AGHT+IFg4SGPhvte9A3/r95e5Z76zMscbdv+0BmKg1Frjs8YNDDKJG7v4RzwM/VDlXhKkuThdheXwyeWn/39T483/SA=
+X-Received: by 2002:a05:6871:24d5:b0:254:ecbd:1815 with SMTP id
+ 586e51a60fabf-25eaece08f4mr2668644fac.5.1720542659073; Tue, 09 Jul 2024
+ 09:30:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zo1hBFS7c_J-Yx-7@casper.infradead.org>
+References: <20240703055445.125362-1-rui.zhang@intel.com> <CAJZ5v0gVFPNK=_=Tnr0QJ-yBWfSWc+wuJrE079Fz+Ba1P57TmA@mail.gmail.com>
+ <20240709021917.GA1891@ranerica-svr.sc.intel.com>
+In-Reply-To: <20240709021917.GA1891@ranerica-svr.sc.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 9 Jul 2024 18:30:47 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jTfayK6GbiQWYOVt7OxxyzcFduCiGgNEVNodmoC==88w@mail.gmail.com>
+Message-ID: <CAJZ5v0jTfayK6GbiQWYOVt7OxxyzcFduCiGgNEVNodmoC==88w@mail.gmail.com>
+Subject: Re: [PATCH] Thermal: intel: hfi: Give HFI instances package scope
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, rafael.j.wysocki@intel.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 09, 2024 at 05:10:45PM +0100, Matthew Wilcox wrote:
-> > So I fundamentally do not believe in per-VMA locking. Specifically for
-> > this case that would be trading one hot line for another. I tried
-> > telling people that, but it doesn't seem to stick :/
-> 
-> SRCU also had its own performance problems, so we've got problems one
-> way or the other.  The per-VMA lock probably doesn't work quite the way
-> you think it does, but it absoutely can be a hot cacheline.
-> 
-> I did propose a store-free variant at LSFMM 2022 and again at 2023,
-> but was voted down.  https://lwn.net/Articles/932298/
+On Tue, Jul 9, 2024 at 4:13=E2=80=AFAM Ricardo Neri
+<ricardo.neri-calderon@linux.intel.com> wrote:
+>
+> On Wed, Jul 03, 2024 at 01:33:03PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Jul 3, 2024 at 7:55=E2=80=AFAM Zhang Rui <rui.zhang@intel.com> =
+wrote:
+> > >
+> > > The Intel Software Developer's Manual defines the scope of HFI (regis=
+ters
+> > > and memory buffer) as package. Use package scope* in the software
+> >
+> > "as a package"
+> >
+> > > representation of an HFI instance.
+> > >
+> > > Using die scope in HFI instances has the effect of creating multiple,
+> > > conflicting, instances for the same package: each instance allocates =
+its
+> > > own memory buffer and configures the same package-level registers.
+> > > Specifically, only one of the allocated memory buffers can be set in =
+the
+> > > MSR_IA32_HW_FEEDBACK_PTR register. CPUs get incorrect HFI data from t=
+he
+> > > table.
+> > >
+> > > The problem does not affect current HFI-capable platforms because the=
+y
+> > > all have single-die processors.
+> > >
+> > > * We used die scope for HFI instances because there have been process=
+ors
+> > > in which packages where enumerated as dies. None of those systems sup=
+port
+> >
+> > "were"
+> >
+> > > HFI. If such a system emerged we would need to quirk it.
+> > >
+> > > Co-developed-by: Chen Yu <yu.c.chen@intel.com>
+> > > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> > > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> >
+> > Ricardo, any concerns?
+>
+> No concerns. IMO, it is important to document why we were using die scope
+> before. Rui has done it.
+>
+> This patch looks good to me.
+>
+> FWIW, Reviewed-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 
-Actually, the 2022 version has a bit more of the flavour of the
-argument: https://lwn.net/Articles/893906/
-
+Applied as 6.11 material, thanks!
