@@ -1,113 +1,77 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6F3187853
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 21:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5D715574D;
+	Tue,  9 Jul 2024 21:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720562240; cv=none; b=mKaaNe5zKRdpdYONU0+lloTW2Ze6+L0no8dAOIRNX82Hrhjo3YwEj6pUYaF3+i5wbYWRB4FBe0jgdfePOGqfynTk42+ml5xXwKg2xSltlCywhf5UKH2emwvGr4UXcNrmpERSFZr27v62cAyHbUW8uR6XXwemUeth2IbPfhRShDc=
+	t=1720562281; cv=none; b=T4xTT7Q0ETeL45MnSmQYOr2DFqhwY007xU/hgatuV49RCLn4uIMuQ2ulbgIcZ2Kfp1dnQ/bMlJokG9u/hoedLIqTJDDPg3HLyEstERUEssWP1AGyzzh0xh+jnIhEU09zP/GIqf2zLpzAoV9/S8U1afXfDD/odP687n8oC9IVHj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720562240; c=relaxed/simple;
-	bh=JUqS5ttBBM1omPFCYgFWCMxpQuQRl+1KMMx3uqcfNqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AFndxAFuYpdNZuwAHsHRuoHjBsNNpWEoAKK6H4W8vBgaNtaQr6DUTUsVDp6UFbvVdo1oX3rQaqZdp7W2l7/nkhliFsENNQ3wagiahx+ZzcVyzFcsMCLaZguRuj5n5SwKTV1h9BpjaDXrsL69PhKT5oLwnqr4HNn0/YcKBR6a2H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=L/lbTHYE; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1720562281; c=relaxed/simple;
+	bh=0UnqKQZJ2AqhTn/B/aEXjJquoPhJbwDB378LYYynJO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R87L6cDE1nGG+oohLPDn9DLUaT7R4oTVYinzLgShhoiLEqeaE1GlmhXT3UvwPlsTxHYNxP6p6Q8nkYP4s+2oHt50ohrcvn2UnkynJ6JVyOQeiZIr9uMhp0SLWwlHsI5+XokGv74gPLlPmoUZL2Nk1z664Us9jJMVLQCe5qOgCwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ne1v4A4v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="L/lbTHYE"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5957040e32aso793339a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 14:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1720562237; x=1721167037; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tJgVkcG2gOFg2qkpKsciV3FiyRxdKHB8MVcn4EaNMzM=;
-        b=L/lbTHYE//IOA3xtJVToffU9ybVoic8qvNnOkgMQs9tCydP+ZQ2X82mjvrfAuNfEtD
-         fAHuYHh1xHX6uMTIX7hK+xT5yqHEBddQgm//xhuTTfNr5SWh3sY1UztxnBKGitSHU3xa
-         Pm449Jj7vx7u4X7UBncOGiGQN+kP370Cf1+x4i01vIFlg/PxwDJFz3xiQ4Ex7ZMQg/+v
-         zRw5L7bgE4IpsujG6kNNQKTI4zNpUglqm5/on3SY3V22Ln2ToM10WwyAHmOVFQ7B6Gy8
-         zJ9IEgZKqyS++mexlyagT0E4hGRsAhCGSCFDEbrMlCoulMlmFXORPVymF6vBEiH9MJlF
-         yZZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720562237; x=1721167037;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tJgVkcG2gOFg2qkpKsciV3FiyRxdKHB8MVcn4EaNMzM=;
-        b=VEJZgtVjp3YNhw7/Opehfzn2lJofLl1SVdzihkau+AnNnWC+VdXxZBlPKrZup6qgJg
-         uru9BmQq5gRiUR0407lL0qYPnTWpVpe8INKg2CYUJzrt/MGqeKfLQ/Fbl+kx9kmPdizU
-         ZkNH/mZvohc8qr84xpY8ppXv5nWzyKz59dUAmJRwxe/amh1+Ll8YNmVDOC0mCCjxKc3O
-         tC4iPx5myYFc+YbQ5hI6sbJXsrd/j2R+krjep91CW4Wvh5QjxdLqzGljqi/TLHDhN+f2
-         ZTGnRyfkRDxZpjBAgaXAXMMxyUL5yAhlWeyCp7Tx9b3KJrLkGL/Es6p44Fwseksls2RN
-         xvBQ==
-X-Gm-Message-State: AOJu0YztX1Lqf/gvybqErr/5KeU+AtZX7t676gqmNm3lZ61txvIAWM6D
-	Ri2kf2QBRQIrhfg6We8Y6Zb7FDaLsYvXWZus2E51XPQuveUiw0r5gle80ssDO9c=
-X-Google-Smtp-Source: AGHT+IFJslFIOpghoKDTLR0OGIUDV2UVIGb9hL36ZC1+ww2JbzD7HcVhw/J/gYtk0+dYuF64+MiEEA==
-X-Received: by 2002:aa7:d0d5:0:b0:58e:2f7c:a9c with SMTP id 4fb4d7f45d1cf-594bc7cab19mr2781021a12.26.1720562236651;
-        Tue, 09 Jul 2024 14:57:16 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-224.dynamic.mnet-online.de. [82.135.80.224])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bb9605dcsm1499572a12.6.2024.07.09.14.57.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 14:57:16 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [RESEND PATCH] ring-buffer: Use vma_pages() helper function
-Date: Tue,  9 Jul 2024 23:56:58 +0200
-Message-ID: <20240709215657.322071-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ne1v4A4v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E826C3277B;
+	Tue,  9 Jul 2024 21:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720562280;
+	bh=0UnqKQZJ2AqhTn/B/aEXjJquoPhJbwDB378LYYynJO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ne1v4A4vTs/D/dfmKPSEXTxGjT5m1cyRnYfJZfCTAUaKY5/zkcfd/PbpyUOxMToHY
+	 fMO3OlAs4sQFbwmigjhUcuUWn8qm7V5GU4i/vYYrQazYPD2iVemimgD455yt0SH1yt
+	 sPD7yH3EzaRdSV++IG86ko5IXRweSksCOeg41qC2kZsaXkeZqO1ux3fck4RMQlUZhO
+	 m5sK0zUHm33HaKl9gZJkPqE4fKS7R+dEXcAJkFhrV00A+JIe77F3D9EXFengbsuiuL
+	 Jp6c8y9wr/dPmtW7dR1Y95yEdeqY+0Z4NJw5E7lyKKlPlHvvm7czjV6v1v27ci8LvW
+	 t0qoAyTvKYYZQ==
+Date: Tue, 9 Jul 2024 14:57:59 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: chandan.babu@oracle.com, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: convert comma to semicolon
+Message-ID: <20240709215759.GC612460@frogsfrogsfrogs>
+References: <20240709073632.1152995-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709073632.1152995-1-nichen@iscas.ac.cn>
 
-Use the vma_pages() helper function and fix the following
-Coccinelle/coccicheck warning reported by vma_pages.cocci:
+On Tue, Jul 09, 2024 at 03:36:32PM +0800, Chen Ni wrote:
+> Replace a comma between expression statements by a semicolon.
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
 
-  WARNING: Consider using vma_pages helper on vma
+LGTM
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-Rename the local variable vma_pages accordingly.
+--D
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- kernel/trace/ring_buffer.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 28853966aa9a..473ba56b889b 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6226,7 +6226,7 @@ static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
- static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 			struct vm_area_struct *vma)
- {
--	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
-+	unsigned long nr_subbufs, nr_pages, nr_vma_pages, pgoff = vma->vm_pgoff;
- 	unsigned int subbuf_pages, subbuf_order;
- 	struct page **pages;
- 	int p = 0, s = 0;
-@@ -6252,11 +6252,11 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
- 	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
- 
--	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
--	if (!vma_pages || vma_pages > nr_pages)
-+	nr_vma_pages = vma_pages(vma);
-+	if (!nr_vma_pages || nr_vma_pages > nr_pages)
- 		return -EINVAL;
- 
--	nr_pages = vma_pages;
-+	nr_pages = nr_vma_pages;
- 
- 	pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
- 	if (!pages)
--- 
-2.45.2
-
+>  fs/xfs/xfs_attr_list.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
+> index 5c947e5ce8b8..7db386304875 100644
+> --- a/fs/xfs/xfs_attr_list.c
+> +++ b/fs/xfs/xfs_attr_list.c
+> @@ -139,7 +139,7 @@ xfs_attr_shortform_list(
+>  		sbp->name = sfe->nameval;
+>  		sbp->namelen = sfe->namelen;
+>  		/* These are bytes, and both on-disk, don't endian-flip */
+> -		sbp->value = &sfe->nameval[sfe->namelen],
+> +		sbp->value = &sfe->nameval[sfe->namelen];
+>  		sbp->valuelen = sfe->valuelen;
+>  		sbp->flags = sfe->flags;
+>  		sbp->hash = xfs_attr_hashval(dp->i_mount, sfe->flags,
+> -- 
+> 2.25.1
+> 
+> 
