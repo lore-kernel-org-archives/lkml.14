@@ -1,196 +1,221 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mo-csw-fb.securemx.jp (mo-csw-fb1800.securemx.jp [210.130.202.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC013D966;
-	Tue,  9 Jul 2024 01:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E90D30358;
+	Tue,  9 Jul 2024 01:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720489339; cv=none; b=Bqw6ROaNVlGceS/HIOMc1EsS/rv1LBoB34hL1HJUiso+PlNr1FBtBY+1fweBge3A7e855rxaOKwnI/UOKxStScwXFaE8QtHDDe6fOu7vU+IKjahXZIakvCQcHxUtHskPRmGJAODMy4xR7d7mJ/cbL2eMkHugiPn3ugG9uLPLAYg=
+	t=1720489475; cv=none; b=ix/GBJnrsEVS0REYj8nzjaCFwnVLbVNAm3QGLxI52Shb1tgY4yFR4gl4e7crQskJm/Me4ppa1lOo1FTE9fqfKYKI84C/8DeCPGvc2z0tqwOS0ZN4ymLSVLibifiTHI7vkENlbVns/wNyQoqXNhfO41GJqsirSFeRcQlqsBjiFz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720489339; c=relaxed/simple;
-	bh=iLDEgsZEuGirQQVwHzZSmfqPlOaPKhWq15eL5/i+Fcw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ooIZ/DQ711E9G8pApAWQmZgn9MhOUSrwM39+wr28ORQZ8zBGKCnWRHv6G0L3TN/vqFkAaPdltVhAJs+kClRZVkc6OUO4hVvWGxNaL82sHvGFf/eGmQpA0vLpXvWTXl8RugCgBXejypgPdrZX3t9B50xBrwkzsYkTsiT9jhOGjhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fUPmVD5X; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720489475; c=relaxed/simple;
+	bh=Q83xjEUL1NZQogk0y4QQ08YEUB6zaP79T5+pa0Z7kD4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=InfdFXO3++uKVyJHA2J8uM22Li0PmVlct/7y5CB77aygCPgVhzT5a1/OhBSP2X+OFAGvR4FyM+KwHvwPhJVVyCES07MpBTbpKdwbjev2m+/eFOLx0Z0VAqCp2KA/3OJcU9pbloJVGFz4aA+mTEonl45ZDF+i7dmNZdnr8Yw5YPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b=eSG2f345; arc=none smtp.client-ip=210.130.202.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fUPmVD5X"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-376069031c7so17924305ab.0;
-        Mon, 08 Jul 2024 18:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720489337; x=1721094137; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=efZGwFEn680Tz97EnfQTVaTzk6j1FWkM3gtbIw3HXUY=;
-        b=fUPmVD5XvZhZgq8tL7TQh1JX6U6OAnbaAnC1UBMcFu3JURvQJ6G4MgB1POoRWyA0Qz
-         hbZEMDZY0RES6BS8HvTpR7pC2Vv6pezI67vfIO3sNuMbey/KgCiNvRFtURWHNqyn3wx8
-         pudCE+OwxFH9w+lyTuxCTr1AQzCsVg6sDgxxEQoKqIUoCvT/lh2p8+IzP+smkFCr2mvj
-         eF2yEUtsiyI2ykLod0S9cnnr4Ak7kC+dj5Bxv8VB0rQmfZn/X5hA0L3siLoSVVLzh8ON
-         pR8etb/EWc+nN+25nc/XPcuW46sqQRf8quBk/k166KkKfu/+rGR23xVlocM4VrVz5IOb
-         0q6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720489337; x=1721094137;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=efZGwFEn680Tz97EnfQTVaTzk6j1FWkM3gtbIw3HXUY=;
-        b=QJAXokjNNTeoFfz9nKAHs3OmEDxpDEDAT7LQHr7JVjOVZXJv/Bh7C+W1BK60xGQ3qT
-         CZWCiN7x70UUY2vZ18qqyGqzXSE3yWjGu/rVgaarIxmz7KFe/cBuZBVlLXd6C4QSjPL/
-         8HrVQx7z+7gXtaBFXOd9ht4h6AZRPmhaJDiQgR5xDBFyX/DqoKlUnAbn/+vPByMdJu88
-         jLUr73WPQJ7yXjZLQ2Ln6+4shwfKZ4BPfWNPvJRmX0jwOsGlwMv4b3x/VO0hJ4BEHV18
-         jdA/dSoteOzKFhBCL2GKKn5Ad6202S1S7W/I3fUqsYio9IIATqih76Ar9d2jrkA8UDRu
-         JS+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVUtq7J2UYN/xxETioknUehIMvWgkf7rYup0hdmMkRt3whMH/AgQvWam2ULO2oQE6JfRFH4nF/nIjWTF7Pd6fUewxw/t2OX+3LZYKr4607x1YpJUfvloHPS1nsIfgJXvx+eUQvYz7TmJDtDMvgFx/SUX5faizBt6dsy8wVVxATyEAQUqA==
-X-Gm-Message-State: AOJu0YwNV4Ip8+xoMOXqTO0bdEwUpQivMhkz5gIY/Uneu5oqnL8eJ9e+
-	wH7ZMbKrzV/4KxohF6RrHD/cWeFOgmBadQoaKkgcyQGjxwcpbyoj
-X-Google-Smtp-Source: AGHT+IG8eUAcS4B1l5l4JiSl/3TaEIecY5XR5AN4tDAQCt2iZtbcK0ZRlYGtkKblTEEVqV94WD505g==
-X-Received: by 2002:a05:6e02:214f:b0:382:b446:e139 with SMTP id e9e14a558f8ab-38a5740178fmr14071885ab.11.1720489337076;
-        Mon, 08 Jul 2024 18:42:17 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b4389abb6sm569002b3a.18.2024.07.08.18.42.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jul 2024 18:42:15 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <b12fc4a5-1b12-4d59-bf21-edd583a81b4d@roeck-us.net>
-Date: Mon, 8 Jul 2024 18:42:14 -0700
+	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b="eSG2f345"
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1800) id 4690FGEw742851; Tue, 9 Jul 2024 09:15:16 +0900
+DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
+	:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;i=
+	yuji2.ishikawa@toshiba.co.jp;s=key2.smx;t=1720484072;x=1721693672;bh=Q83xjEUL
+	1NZQogk0y4QQ08YEUB6zaP79T5+pa0Z7kD4=;b=eSG2f345loBhjWhmXLwuUF6I3Yjh9Mifl06+mg
+	JBLHrfMbKxt6piXScXdncrXttgE8qEBgOCD7FKLvzmULYX3rx9jw4onnpGgPZTxxASkbezQQv4Cbl
+	jQkh0LsamyLf2Dt1KUbdeOsIegkIMzUDDJK7+J3Cb6MID8q1mb23PAuxU3HK0F9inkBH6/NbTbSv8
+	YTv5g5bwwh2ayJMsg4esq8bLSprG9ZLA+bpROMLuJMjO+bKsN2EqHAtLWQgD7goQ2DTLTBxAxnYdj
+	AWdaLOWm86cM/qlbzuftc8F2ezKk3bXk+EHjd+yV69TL5UdhKsAiMQhy4FgFwrNnFWv+rC0zQ==;
+Received: by mo-csw.securemx.jp (mx-mo-csw1800) id 4690ETtW1605432; Tue, 9 Jul 2024 09:14:30 +0900
+X-Iguazu-Qid: 2yAaT64FYgJTTafAum
+X-Iguazu-QSIG: v=2; s=0; t=1720484069; q=2yAaT64FYgJTTafAum; m=jQG016lu/7vjGIW8QL8mHidGAmurOhAtj8fW3xeXfy4=
+Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
+	by relay.securemx.jp (mx-mr1801) id 4690ERZY2534880
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 09:14:27 +0900
+X-SA-MID: 26358967
+From: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 0/6] Add Toshiba Visconti Video Input Interface driver
+Date: Tue,  9 Jul 2024 09:08:42 +0900
+X-TSB-HOP2: ON
+Message-Id: <20240709000848.1108788-1-yuji2.ishikawa@toshiba.co.jp>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] drivers: hwmon: sophgo: Add SG2042 external
- hardware monitor support
-To: Inochi Amaoto <inochiama@outlook.com>,
- Chen Wang <unicorn_wang@outlook.com>, Jean Delvare <jdelvare@suse.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <IA1PR20MB4953967EA6AF3A6EFAE6AB10BBDD2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <IA1PR20MB4953EC4C486B8D4B186BB848BBDD2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <MA0P287MB2822935DEA9EE418F3411CFAFEDA2@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
- <IA1PR20MB4953230DCEDD7DF01134A8A9BBDA2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <MA0P287MB2822676C9CF9443B9A3CB657FEDA2@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
- <IA1PR20MB495309AA07F1B77D4DA1EF6BBBDA2@IA1PR20MB4953.namprd20.prod.outlook.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <IA1PR20MB495309AA07F1B77D4DA1EF6BBBDA2@IA1PR20MB4953.namprd20.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/8/24 15:15, Inochi Amaoto wrote:
-> On Mon, Jul 08, 2024 at 03:11:37PM GMT, Chen Wang wrote:
->>
->> On 2024/7/8 8:53, Inochi Amaoto wrote:
->>> On Mon, Jul 08, 2024 at 08:25:55AM GMT, Chen Wang wrote:
->>>> On 2024/7/3 10:30, Inochi Amaoto wrote:
->>>>> SG2042 use an external MCU to provide basic hardware information
->>>>> and thermal sensors.
->>>>>
->>>>> Add driver support for the onboard MCU of SG2042.
->>>>>
->>>>> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
->>>>> ---
->>>>>     Documentation/hwmon/index.rst |   1 +
->>>>>     Documentation/hwmon/sgmcu.rst |  44 +++
->>>>>     drivers/hwmon/Kconfig         |  11 +
->>>>>     drivers/hwmon/Makefile        |   1 +
->>>>>     drivers/hwmon/sgmcu.c         | 585 ++++++++++++++++++++++++++++++++++
->>>>>     5 files changed, 642 insertions(+)
->>>>>     create mode 100644 Documentation/hwmon/sgmcu.rst
->>>>>     create mode 100644 drivers/hwmon/sgmcu.c
->>>>>
->>>>> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
->>>>> index 03d313af469a..189626b3a055 100644
->>>>> --- a/Documentation/hwmon/index.rst
->>>>> +++ b/Documentation/hwmon/index.rst
->>>>> @@ -203,6 +203,7 @@ Hardware Monitoring Kernel Drivers
->>>>>        sch5636
->>>>>        scpi-hwmon
->>>>>        sfctemp
->>>>> +   sgmcu
->>>> This driver is for sg2042 only, right? "sgmcu" looks be general for all
->>>> sophgo products.
->>> Yes, according to sophgo, it use this mechanism for multiple products,
->>> so I switch to a general name.
->>
->> But multiple != ALL.
->>
->> [......]
->>
->>
-> 
-> We can add new driver when there is new mechanism.
+This series is the Video Input Interface driver
+for Toshiba's ARM SoC, Visconti.
+This provides DT binding documentation,
+device driver, documentation and MAINTAINER files.
 
-Now you are contradicting yourself. Either sgmcu is the catch-all
-driver, or it isn't. How are you going to call that new driver ? sgmcuv2 ?
-Are we going to have sgmcuv[2-N] over time ?
+A visconti VIIF driver instance exposes
+1 media control device file, 3 video device files for capture
+and 2 video device files for controlling image signal processor.
+Detailed HW/SW are described in documentation directory.
+The VIIF hardware has CSI2 receiver,
+image signal processor and DMAC inside.
+The subdevice for image signal processor provides
+vendor specific V4L2 controls.
 
-All we know so far is that the driver and the mcu support sg2042. That is how the
-driver should be named. It is easier to add support a new device with a different
-name to the existing driver than to add a new driver if the name of an existing driver
-is too generic.
+The device driver depends on two other drivers under development;
+clock framework driver and IOMMU driver.
+Corresponding features will be added later.
 
-Ultimately this is similar to wildcards in a file name, which are strongly discouraged.
-One of the worst examples is drivers/hwmon/ina2xx.c, which does _not_ support all chips
-from ina200 to ina299. Please don't let us go there.
+Best regards,
+Yuji
 
-An opposite example is the lm90 driver, which has not problem supporting more than 40
-different chips with different names because they are all similar. The driver can be named
-sg2042 and support as many similar variants if that mcu as feasible. It should not be named
-sgmcu because we can not make the assumption that it will support all mcu variants from
-sophgo.
+Changelog v2:
+- Resend v1 because a patch exceeds size limit.
 
-Guenter
+Changelog v3:
+- Add documentation to describe SW and HW
+- Adapted to media control framework
+- Introduced ISP subdevice, capture device
+- Remove private IOCTLs and add vendor specific V4L2 controls
+- Change function name avoiding camelcase and uppercase letters
+
+Changelog v4:
+- Split patches because a patch exceeds size limit
+- fix dt-bindings document
+- stop specifying ID numbers for driver instance explicitly at device tree
+- use pm_runtime to trigger initialization of HW
+  along with open/close of device files.
+- add a entry for a header file at MAINTAINERS file
+
+Changelog v5:
+- Fix coding style problem in viif.c (patch 2/6)
+
+Changelog v6:
+- add register definition of BUS-IF and MPU in dt-bindings
+- add CSI2RX subdevice (separeted from ISP subdevice)
+- change directory layout (moved to media/platform/toshiba/visconti)
+- change source file layout (removed hwd_xxxx.c)
+- pointer to userland memory is removed from uAPI parameters
+- change register access (from struct style to macro style)
+- remove unused macros
+
+Changelog v7:
+- remove redundant "bindings" from header and description text
+- fix multiline text of "description"
+- change "compatible" to "visconti5-viif"
+- explicitly define allowed properties for port::endpoint
+- remove unused variables
+- update kerneldoc comments
+- update references to headers
+
+Changelog v8:
+- rename bindings description file
+- remove/simplify items in bindings
+- update operations around v4l2_async_notifier
+- use v4l2_async_connection instead of v4l2_async_subdev
+- use dev_err_probe()
+- better error handling at probe
+- remove redundant mutex
+- add V4L2_CTRL_TYPE_VISCONTI_ISP constant
+
+Changelog v9:
+- dictionary ordering of dt-bindings properties
+- applied sparce checker
+- call div64_u64 for 64bit division
+- rebase to media_staging tree
+- fix warning for cast between ptr and dma_addr_t
+
+Changelog v10:
+- add an independent entry in MAINTAINERS
+- add paddings to uAPI structs
+- use parameter buffer to control ISP (instead of vendor specific controls)
+
+Changelog v11:
+- stop merging sensor's controls and capture device's
+- fix strange indents at initializations
+- remove feature VB2_USERPTR from viif_params and viif_stats
+- fix usage in the document
+
+Yuji Ishikawa (6):
+  dt-bindings: media: platform: visconti: Add Toshiba Visconti Video
+    Input Interface
+  media: videodev2.h: add visconti viif meta buffer format
+  media: platform: visconti: Add Toshiba Visconti Video Input Interface
+    driver
+  media: platform: visconti: add streaming interface for ISP parameters
+    and status
+  documentation: media: add documentation for Toshiba Visconti Video
+    Input Interface driver
+  MAINTAINERS: Add entries for Toshiba Visconti Video Input Interface
+
+ .../admin-guide/media/v4l-drivers.rst         |    1 +
+ .../admin-guide/media/visconti-viif.dot       |   18 +
+ .../admin-guide/media/visconti-viif.rst       |  255 +++
+ .../media/toshiba,visconti5-viif.yaml         |  105 +
+ .../userspace-api/media/v4l/meta-formats.rst  |    1 +
+ .../media/v4l/metafmt-visconti-viif.rst       |   48 +
+ MAINTAINERS                                   |   11 +
+ drivers/media/platform/Kconfig                |    1 +
+ drivers/media/platform/Makefile               |    1 +
+ drivers/media/platform/toshiba/Kconfig        |    6 +
+ drivers/media/platform/toshiba/Makefile       |    2 +
+ .../media/platform/toshiba/visconti/Kconfig   |   19 +
+ .../media/platform/toshiba/visconti/Makefile  |    8 +
+ .../media/platform/toshiba/visconti/viif.c    |  651 ++++++
+ .../media/platform/toshiba/visconti/viif.h    |  393 ++++
+ .../platform/toshiba/visconti/viif_capture.c  | 1431 ++++++++++++
+ .../platform/toshiba/visconti/viif_capture.h  |   21 +
+ .../platform/toshiba/visconti/viif_common.c   |  239 ++
+ .../platform/toshiba/visconti/viif_common.h   |   42 +
+ .../platform/toshiba/visconti/viif_csi2rx.c   |  657 ++++++
+ .../platform/toshiba/visconti/viif_csi2rx.h   |   24 +
+ .../toshiba/visconti/viif_csi2rx_regs.h       |  102 +
+ .../platform/toshiba/visconti/viif_isp.c      | 1190 ++++++++++
+ .../platform/toshiba/visconti/viif_isp.h      |   24 +
+ .../platform/toshiba/visconti/viif_params.c   | 2020 +++++++++++++++++
+ .../platform/toshiba/visconti/viif_params.h   |   19 +
+ .../platform/toshiba/visconti/viif_regs.h     |  721 ++++++
+ .../platform/toshiba/visconti/viif_stats.c    |  336 +++
+ .../platform/toshiba/visconti/viif_stats.h    |   14 +
+ include/uapi/linux/videodev2.h                |    4 +
+ include/uapi/linux/visconti_viif.h            | 1921 ++++++++++++++++
+ 31 files changed, 10285 insertions(+)
+ create mode 100644 Documentation/admin-guide/media/visconti-viif.dot
+ create mode 100644 Documentation/admin-guide/media/visconti-viif.rst
+ create mode 100644 Documentation/devicetree/bindings/media/toshiba,visconti5-viif.yaml
+ create mode 100644 Documentation/userspace-api/media/v4l/metafmt-visconti-viif.rst
+ create mode 100644 drivers/media/platform/toshiba/Kconfig
+ create mode 100644 drivers/media/platform/toshiba/Makefile
+ create mode 100644 drivers/media/platform/toshiba/visconti/Kconfig
+ create mode 100644 drivers/media/platform/toshiba/visconti/Makefile
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_capture.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_capture.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_common.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_common.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_csi2rx.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_csi2rx.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_csi2rx_regs.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_isp.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_isp.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_params.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_params.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_regs.h
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_stats.c
+ create mode 100644 drivers/media/platform/toshiba/visconti/viif_stats.h
+ create mode 100644 include/uapi/linux/visconti_viif.h
+
+-- 
+2.25.1
+
 
