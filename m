@@ -1,162 +1,99 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F791AC42B;
-	Tue,  9 Jul 2024 16:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2671019DF94
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542560; cv=none; b=rcfI/bmrRJzfKxh3ydGZ5KzS6ExklqJpErc9uU2pbWDmPKhk7dBU34IzOBydzMFDxNF/zGQp5vZ1DIz9dDLudTox+YABX7PA5e8u4o0MsZOlZ1wVvFE6ojse24Gbfow7ySiSFYECSYRAdpytprzeuHwjoNElhv51zoGQeip4u7g=
+	t=1720542593; cv=none; b=EnUFQXHWp+06VWjPkGDhRk8mN/naAN7dWbIsMMp8H4qGUE9GQbDg/I6mLSZ3hznCAgnee5+MxRMm7uF0mb6x+ldreAGpi6bcl0duXG8BlGgp4Wj2IlahRCJFExkYuc58kw9fBaU5FAbPQSgme8X62HE1Zne9gtJTzIKbKhVMnbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542560; c=relaxed/simple;
-	bh=ao5OgCKTmWGOeQIyqG5Xq2Q5h8oVpW7lbNX6sg3ahiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oDtbfLgTVJbss6LpjXnvrYhGEiLhZqWAJQjL+Z8R1y6RzpB8Lfk6DV/8rPOZXW5LnUJJJMghrhb2jPq9i6uGAXpeHvkpyNVNN34dX6T956r8Zcij1xvhe+2ous1EXO+I2ui9ACmIkoD6wl4EBaos6YNEqlkuRcpQpHoFNAUnGWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=ywLRd9ti; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1720542593; c=relaxed/simple;
+	bh=IM6QmybZepBTV4M87U3hzs2YeN+T6D14TFCsMzcbKQI=;
+	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
+	 Date:Cc:References:To; b=eCQO3it/lZzEW10uA7S1OdT0apKQLvZA/bNRr7qfAD2OBfWiSk1q8+lw/TZmEdhyXQFdJrF16hVzBrmcSJuEINTaRL+KeysEmtOb3jNxhNA3XzFmIP9Zy0mka+ZgAsnntvjPDTXIjGseRDcL/UnFsmPPTSJHVcOFBM1LuJ7CQcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=fmV5Xyag; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="ywLRd9ti"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4WJRJm2fVFz9sZq;
-	Tue,  9 Jul 2024 18:29:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1720542552;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hMN5EYeTIpPEIty7JnyHmAV09HNDOPhhuiUc4fcA8Kg=;
-	b=ywLRd9tisZo5XSSl4UArOgl3V9/+GSA2V7Qm1iabardoueztN4qHS1RNkBAHDtSTCijfWz
-	HNOXXh/PSOqAJ/GyZHhf1VtCjsd3KSyV71nNJQv/k1NX980gReU+YRx+X+gXWBQsRugO2x
-	fGK1q1NAMxWolVCYJlY9BmkO0C9T4x+fcr2DrkFhkei8a8nsy2h92ICViJbGrWdcy34+eL
-	P/LjWTzvBOsBwSwGFx+LfeyU/Ls3CzY9dfyNEdbJY7Zu5AInhjON7kL9rduwrfEnZaxggV
-	4mKliB31DWgpZwPzUhdvaHlzfX24RMs0Tb8Kg7Dz+IXo/AYPSsZ82l3GfKaZ4A==
-Date: Tue, 9 Jul 2024 16:29:07 +0000
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: david@fromorbit.com, willy@infradead.org, ryan.roberts@arm.com,
-	djwong@kernel.org
-Cc: linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
-	linux-mm@kvack.org, john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
-	mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org, hch@lst.de, Zi Yan <zi.yan@sent.com>,
-	akpm@linux-foundation.org, chandan.babu@oracle.com
-Subject: Re: [PATCH v8 01/10] fs: Allow fine-grained control of folio sizes
-Message-ID: <20240709162907.gsd5nf33teoss5ir@quentin>
-References: <20240625114420.719014-1-kernel@pankajraghav.com>
- <20240625114420.719014-2-kernel@pankajraghav.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="fmV5Xyag"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1720542587; bh=IM6QmybZepBTV4M87U3hzs2YeN+T6D14TFCsMzcbKQI=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=fmV5Xyag0HrbfA2BECFD3tQs5acq/pf82D2PUYux4hl9R+oprcGGMsFN4UW41AbXC
+	 CbtUYQAeNphzz8y2xWGKiDdaEJp0f/mikvf2c0zZHFGIIY+8XcH14PBzNpP4tKGsFH
+	 TCU1dphi+SKyFZlN9GbMH+TV0fDOwAXQ3jXNwMgI=
+Received: from smtpclient.apple ([2408:8207:18a1:c8b0:118:fc2:1adb:e03d])
+	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
+	id 76DA60CC; Wed, 10 Jul 2024 00:29:45 +0800
+X-QQ-mid: xmsmtpt1720542585t6qpb6cno
+Message-ID: <tencent_9CE4ABB18A4F4490459BC3111B5726262905@qq.com>
+X-QQ-XMAILINFO: NBOcPERDMH3AZhswaHj/Ct8I/ngCFLeZb6M2dR61l4SAnoiBcwyIru8lnhyAtu
+	 MpuJkMSfRgUD70tI33RtgrHtUZrdqrDnkJL20+m/c9+nphmn5YrYZFsnMbP1DJs193Zm6gjmXgRX
+	 4HDpVZXuchh8+oCcQhR2y6b4tOhMsi+qItAk+anUGptxsKmyRjRDD2M1Obospr3ZueRyZK+3RRHi
+	 SzKwaABCrUrNQEQBmCkDqvaf3FLEXDmQUTuUGHabtMvaY5KaH1s9mMowhjp524R9CEC0FKTGrpoZ
+	 kyCDNsLRxR+IbsqCoouPB+MavRXwXMaeqWP7HAQy06lqtM22b4UJY60eS2Sk62+LE4DL8Y5GJjNG
+	 5gAi+5BjiOh79UrV0dyJCWdtz5zgumPV/5GEvVVHIy5mrHCzey5+1CnGMTiHM8cc1E0PFn9+4Lep
+	 CF75gi8OiTWav/PMf6KrE4NxYTiPFyfoVKdzaKYBExgZ4gP+FjPTY1zQDfa6csa0vvyo9/sSd9je
+	 YNPcBQxTJsbRuan7+e/Gv+ZTGB611L1iJJeZxrslo0yKUCqwRoaofWWGp+x1+jtPtVgmcJzymm80
+	 htS+vIZAZVyl8APJpsmxuX83B2cdHpmFy5DRJH6kIZL2+jCGQnAalJqx56y+dniDTpC3VylSw4A/
+	 Cr3M9MOo5poR8HCsvsuycoLP/nJ597ZzfsJLhc/Kt7ohBqxE/DuWnuoXKjk2Udr+XcIw7mdjQlP3
+	 HWJ31cR6ebyINxqNcSRyom6vaO/dQjKynOOouZEDhmnK0+D4m3CjAm3JbjWWMBYnEqI0Iipb6NkL
+	 5SJfelX78FoBCgMDU2J17pkuPy/W/T4CEyiAZEu6jbmA6p2jLKNwR8nNLJRpW55ylGh+bUGCMhQS
+	 +eofu/xRbOWvPzlU5QzOXR8d4exCu6jfMUI0CNxfeppvGzRty9fsg9rMZFu182lA06hXnHMAOzE+
+	 dsbuY7SVrr7lsPaOg0nuOwGCEZildveVG9ryVKeEvqjShbhx8YEIpULbPr3wrP9WsxiENbCOE=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240625114420.719014-2-kernel@pankajraghav.com>
-X-Rspamd-Queue-Id: 4WJRJm2fVFz9sZq
-
-For now, this is the only patch that is blocking for the next version.
-
-Based on the discussion, is the following logical @ryan, @dave and
-@willy?
-
-- We give explicit VM_WARN_ONCE if we try to set folio order range if
-  the THP is disabled, min and max is greater than MAX_PAGECACHE_ORDER.
-
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 14e1415f7dcf4..313c9fad61859 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -394,13 +394,24 @@ static inline void mapping_set_folio_order_range(struct address_space *mapping,
-                                                 unsigned int min,
-                                                 unsigned int max)
- {
--       if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
-+       if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
-+               VM_WARN_ONCE(1, 
-+       "THP needs to be enabled to support mapping folio order range");
-                return;
-+       }
- 
--       if (min > MAX_PAGECACHE_ORDER)
-+       if (min > MAX_PAGECACHE_ORDER) {
-+               VM_WARN_ONCE(1, 
-+       "min order > MAX_PAGECACHE_ORDER. Setting min_order to MAX_PAGECACHE_ORDER");
-                min = MAX_PAGECACHE_ORDER;
--       if (max > MAX_PAGECACHE_ORDER)
-+       }
-+
-+       if (max > MAX_PAGECACHE_ORDER) {
-+               VM_WARN_ONCE(1, 
-+       "max order > MAX_PAGECACHE_ORDER. Setting max_order to MAX_PAGECACHE_ORDER");
-                max = MAX_PAGECACHE_ORDER;
-+       }
-+
-        if (max < min)
-                max = min;
-
-- We make THP an explicit dependency for XFS:
-
-diff --git a/fs/xfs/Kconfig b/fs/xfs/Kconfig
-index d41edd30388b7..be2c1c0e9fe8b 100644
---- a/fs/xfs/Kconfig
-+++ b/fs/xfs/Kconfig
-@@ -5,6 +5,7 @@ config XFS_FS
-        select EXPORTFS
-        select LIBCRC32C
-        select FS_IOMAP
-+       select TRANSPARENT_HUGEPAGE
-        help
-          XFS is a high performance journaling filesystem which originated
-          on the SGI IRIX platform.  It is completely multi-threaded, can
-
-OR
-
-We create a helper in page cache that FSs can use to check if a specific
-order can be supported at mount time:
-
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 14e1415f7dcf..9be775ef11a5 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -374,6 +374,14 @@ static inline void mapping_set_gfp_mask(struct address_space *m, gfp_t mask)
- #define MAX_XAS_ORDER          (XA_CHUNK_SHIFT * 2 - 1)
- #define MAX_PAGECACHE_ORDER    min(MAX_XAS_ORDER, PREFERRED_MAX_PAGECACHE_ORDER)
- 
-+
-+static inline unsigned int mapping_max_folio_order_supported()
-+{
-+    if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
-+      return 0;
-+    return MAX_PAGECACHE_ORDER;
-+}
-+
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH -fixes] dma-mapping: add default implementation to
+ arch_dma_{set|clear}_uncached
+From: Yangyu Chen <cyy@cyyself.name>
+In-Reply-To: <42552be3-df90-4f8f-a27b-abd08e350fc4@arm.com>
+Date: Wed, 10 Jul 2024 00:29:33 +0800
+Cc: Christoph Hellwig <hch@lst.de>,
+ iommu@lists.linux.dev,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Transfer-Encoding: quoted-printable
+X-OQ-MSGID: <7FB35339-3F19-472A-8E66-31C608410600@cyyself.name>
+References: <tencent_A5ED71472ADCAF18F59085464CBE23C12A07@qq.com>
+ <20240709111901.GC4421@lst.de>
+ <tencent_651BC4D11C9730062064ACB186AF4A904005@qq.com>
+ <20240709114629.GB6959@lst.de>
+ <tencent_30E109FE684F391AE15AC6F4854034C2F00A@qq.com>
+ <42552be3-df90-4f8f-a27b-abd08e350fc4@arm.com>
+To: Robin Murphy <robin.murphy@arm.com>
+X-Mailer: Apple Mail (2.3774.600.62)
 
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index b8a93a8f35cac..e2be8743c2c20 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1647,6 +1647,15 @@ xfs_fs_fill_super(
-                        goto out_free_sb;
-                }
- 
-+               if (mp->m_sb.sb_blocklog - PAGE_SHIFT >
-+                   mapping_max_folio_order_supported()) {
-+                       xfs_warn(mp,
-+"Block Size (%d bytes) is not supported. Check MAX_PAGECACHE_ORDER",
-+                       mp->m_sb.sb_blocksize);
-+                       error = -ENOSYS;
-+                       goto out_free_sb;
-+               }
-+
-                xfs_warn(mp,
- "EXPERIMENTAL: V5 Filesystem with Large Block Size (%d bytes) enabled.",
-                        mp->m_sb.sb_blocksize);
 
+> On Jul 9, 2024, at 23:52, Robin Murphy <robin.murphy@arm.com> wrote:
+> On 09/07/2024 1:22 pm, Yangyu Chen wrote:
+>> The only failed symbol on the kernel with `ARCH=3Driscv defconfig`
+>> is `arch_dma_set_uncached` since the compiler requires all possible
+>> values to be known. I think a pattern like in kernel/dma/direct.c:349
+>> for symbol `arch_dma_clear_uncached`, which uses `if
+>> (IS_ENABLE(CONFIG_ARCH_HAS_xxx)) xxx` is acceptable. But for the
+>> symbol `arch_dma_set_uncached`, a complex analysis is needed for a
+>> value set in a block of branches. I think we should not rely on such
+>> compiler optimization in such a complex pattern.
+> I'm not a compiler guy, but is it really that complex when the =
+variable is only ever written with the same compile-time-constant value =
+that it's already initialised with? If the optimisation pass is so =
+focused on being able to use a conditional store instruction that it =
+would rather emit one which has no effect either way than elide it =
+entirely, that doesn't strike me as a particularly good optimisation :/
 
---
-Pankaj
+I confirm this is a regression for the compiler. However, I think
+both the compiler and the kernel should be fixed, as I mentioned
+the complexity of this pattern in the last email. Also, here is the
+only failed symbol in the kernel with RISC-V defconfig.
+
+Thanks,
+Yangyu Chen
+
