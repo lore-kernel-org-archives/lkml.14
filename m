@@ -1,126 +1,110 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593CC1A00FB;
-	Tue,  9 Jul 2024 16:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1B51A01A8
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542969; cv=none; b=Y+T3Kn19bxaQDYmk9qHY/2vfhTU62k7DJ2nQylCXYQT78sVY28p147anuL0kWg+0qvCdZ4p47bXoMEuQtUXHPLjgeGpF5JMFSxyc95uJRYNXOZZamIMKdRswol/i1K6yrsUn3F1nlGssooHphTFmRnttIEPagJV/rrXkKC1nW1w=
+	t=1720542979; cv=none; b=Gc+WI0utI+DkiCRFTfH4/6i6u+HBGQjd/niBZlhPGk7zS3Z6JZJ3O7Wt6AODUyfysCXzT2qKOxDzYHbg6tQY4Z8Qdan1fHFkBc8S4KlZQh73UiZcvPRcIEbDuSwY3dtpDInndeRC30i3VISyG9QKCDRkAmEklwQLUg+ZeUNMD+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542969; c=relaxed/simple;
-	bh=k3zBwtbLJ9hY5BBMbz1smXEp4I8217xTp4I3ha5Mv5E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u97bY8tBHVt0Q0CnXnYC0nqBUm4WBxnWwWHbWU8IJACx3DEj3f7DgBI2bm0SqB78UxzNnXkayAe8sr2fGLaEdld0f5aogSbk8Gbk/UcfqFkztTfxZrkUmq6gcopnDuR8YRc5rD4JKOTemJ0dUMTxfaa/RV0hnmXi16mhBCAXxjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=FxL1ChYQ; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1720542979; c=relaxed/simple;
+	bh=gfuBjzaQL9gTYODlRQx6yFrgftBRvfPKkRJDUxKB4SU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dz6j536ESNYMn26759y9vevbKaqMIcuAZ+V2L9s2c5VvQ066/MzKGP+QtZKuP523lkQ2f4R9cW0V7svotK3aEns8+l99Vot+At/7Qkp0tFKUF8J07fNx1LfPeW1XxRZ4Y+r5qY867Krft5i6y4QDClsb1bcCScv7uHOq2XOkIQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk; spf=pass smtp.mailfrom=thegoodpenguin.co.uk; dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20230601.gappssmtp.com header.i=@thegoodpenguin-co-uk.20230601.gappssmtp.com header.b=lvzWx5O0; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thegoodpenguin.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="FxL1ChYQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1720542952; x=1721147752; i=w_armin@gmx.de;
-	bh=OOKOIpWhQxnQYbfkIYw8x0Tz+jDtP8c3HvQIOJBcTwA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=FxL1ChYQoAS7YK1ssNqqG7sqbJhYZcFg10wBxJ868vKpqjeEDpcVlNze7ApL58Sv
-	 nsYcV2loDNULKuk+1HBwKMoadycdvesdF7CMxtl4+LVzBErgU44GpiX1wWlhSKBy6
-	 5x8Y7DjD55H+01v2x7yoMtSHHcFdBrznguifcwKGoK+w5xfpz8UXBSPtYXm5LLCMK
-	 ANtFMeliwd3QvzjWQlGPq8xXmO4r7QlTYQbTFHvZZKyb9BsKKmuiNB3/JbB+K01bY
-	 DZ0f64T1y/dvW10mke08ILRuNoig1C4HaeJyJIW69pYXVJhr65C1271RIN3QQAUF5
-	 UYDPhefu5Y+PxvD5bA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mk0Ne-1ryjc82qrI-00eIfK; Tue, 09
- Jul 2024 18:35:52 +0200
-Message-ID: <7cb80962-c1c5-4971-9283-d822a054cfc3@gmx.de>
-Date: Tue, 9 Jul 2024 18:35:52 +0200
+	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20230601.gappssmtp.com header.i=@thegoodpenguin-co-uk.20230601.gappssmtp.com header.b="lvzWx5O0"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52ea1a69624so6190593e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 09:36:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thegoodpenguin-co-uk.20230601.gappssmtp.com; s=20230601; t=1720542976; x=1721147776; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X9MYJUKCZJqpXesGhM7neSV7GESDWq919aeqPs6MM58=;
+        b=lvzWx5O0H3ZdXvs5RUmt5flpOHMNF5YFAICSl0boQ+tPi9XaI4r/lswnBgGFVd8eWF
+         3y9KfZaAc8gcePsZG/FuSa7S3XwNBjL0Q0LetHa/ILU6p45DpTZt3/+UJw6qE4m0t0nF
+         94rqgSaQHG9S1GSBo6a1c0iuVtOeoCe+fhVmpcoVXVXEV9bP19pWukFB3XXXINwEvjln
+         fEKYPANnKmd+skfQ0QmlpA+zhecAyX2OIn1KO4wxkbQuQSVp6ZwD71TPTX4vGXhRlU1s
+         gqclynI/digOtRb5cDeoS+MCf71KdgLdfxF4UOWPsBwrhDa2YZ6gQgdz2gwEJJwOLS7a
+         Q8sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720542976; x=1721147776;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X9MYJUKCZJqpXesGhM7neSV7GESDWq919aeqPs6MM58=;
+        b=QQxeFwsIxx20sjy+sOY+Z7vieMJhxPViwcDV2l6agk/pmRUOwH/RocSj+TossqdiGO
+         DPrmyNus9Xilboa4NfbjVghXT1XkT7fjBI/x64vriLupaCTWUmuf6INjGT8xIF2uPsJQ
+         7uzjwXp/jfevhfEjTzU3iZwJPANMU4449XcymQ3FQi8lqbk3C5cs+dmbGWWVIOhIOzYR
+         iGSzzHSiqLm51abcmvNxRTJ9ozNPYG6Hbp0pZAq1AOjyWcpMPn+GDR98NEVwAAFoNYqm
+         k70CpycLUln15A+0Jt2/dKbV9/WMGeyCC5S7lCGfMAVIfOvM56+w4KzjR/N25BowCSNu
+         zBgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNRDH9ZDgjO/yYtiCc/8HO5ZHR4OHWVvSOJEFkGxu/FQG0P2qOFKZVxC1tCQQEtkO3UQXFI+4NkLQaKrRT08iOlOpDGs/6c+34VtSO
+X-Gm-Message-State: AOJu0YwmPcR5jNs5CYzaxZJu86sqSPERKTNK877PE3gEcmjIuvOxJaAw
+	PGX67LRZCg4zE+7PfowX5T8c7YuMkD6BBrB45qU1j9py2A4gQ8r+am5eGHDdmHQ=
+X-Google-Smtp-Source: AGHT+IF2kTry7mVZy8wNL9+hXKmtByo6R5klQmpio5TGpcq8XeZkhMImhKEomb+u/Obf3niL5ZY8pQ==
+X-Received: by 2002:a05:6512:10ca:b0:52c:de47:b317 with SMTP id 2adb3069b0e04-52eb99a0805mr1684871e87.39.1720542975452;
+        Tue, 09 Jul 2024 09:36:15 -0700 (PDT)
+Received: from carbon.local (aztw-29-b2-v4wan-166913-cust1764.vm26.cable.virginm.net. [82.37.38.229])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5f25sm48897745e9.26.2024.07.09.09.36.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 09:36:15 -0700 (PDT)
+From: Joshua Felmeden <jfelmeden@thegoodpenguin.co.uk>
+Subject: [PATCH 0/2] iio: humidity: Add support for en21x sensor family
+Date: Tue, 09 Jul 2024 17:36:09 +0100
+Message-Id: <20240709-ens21x-v1-0-678521433cdd@thegoodpenguin.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH AUTOSEL 5.4 09/11] platform/x86: lg-laptop: Change ACPI
- device id
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Cc: Agathe Boutmy <agathe@boutmy.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>, matan@svgalib.org,
- platform-driver-x86@vger.kernel.org
-References: <20240709162654.33343-1-sashal@kernel.org>
- <20240709162654.33343-9-sashal@kernel.org>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240709162654.33343-9-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:M4snPnEylnQexQn+fCwbKkg/S1qfCsZgG9j609yUM1bNgaOTFY1
- kDE2t55tIxwoGhIe/30cxNJ+iOZ2WHTQqnv+11NIwsFFimgLYBeCsoPUY48JHCOhCpCjSHi
- uDBCHzHF890yWkxV8G1abt3AT7gII9OrSdZgyRr4WmLqpob8f/JjpZehMGpWjy1sd70FxF9
- KZLNc5MCWWFzuihWHkOWg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:UzAaiWb9quM=;fvE1nYvNh5R3KL+WbRqP39HsxO5
- 4H0UcfMs9Wv2LymgfPx00/Rx2YVIDxFK/SXWRDY7panxpFv/Q6+Cqq9T1+gAnFYuXskkBga6S
- /HHYj0ITyM+ytrKDo0+HxHzz2f8LjcJYyiFsQJTLHz9tQL4Y1KiE2auTvmR5j9Tyyba9Ix7Bn
- hKgvhgLMKx4D4gLrKxq0S8UarD8H7Jdt9FD43R0J1q47Q2GKcVjl4JrpeV5EuO8NNdPvObwIK
- v5bDG4AM79EkUeHx0qvIqye4DR0Xh6swT1RQY/dPloe2/x7GXODjUnyo2V0IrBFNyyb+/LQla
- PFeVU8HV6kbFXoJ94RxmpJhrkJ/TEoZ2Duk+ylqcZIton2xohmWDOsU8JvpxQGZO26htvGCwN
- 45WHoLpU2BCE8+QnvD7YYCDcsqH68JhmUHGoBTvWmArG3+4zDMcQCFBCungCY2z+NyPlHeOdw
- MCf26Az8j4MemrhjbvmOa4SOYQ1TFTSbU7o0ol3JkBWV6jnhjZURW6Psn01xopJv8KCd0GPFN
- GztMqzE6FJ+6NhtQfYxMhsunIvnF3cmquAKQRD9oafcemVnrzi3iPSSz31+Mb0Rnr8XDsIolT
- R7oz36UThc26f+vMaWURopBhrV0PvC+hKHT4MO0uFHYgmh2Z+n84udNRZxLWBDzVShxuxivW6
- sGXdDrPEe0exV0evHOmAGbORPeVGRurXFTUmX4D0pZt0mp0T7Bp9Y96/M7c+nVIsp9TfXvk60
- gV8L2V8D7gLlnzNg5dV/P4aQxQiNzsiBxSVgnUNMNGoDlIjml2Fw5KZPHkjaA4FLkgWQybrG7
- Wv9/VUziHRdgfbY0L7veDSbmXQr/GMTbJhtQBZH18BCcI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPlmjWYC/yWMywqDMBBFfyXMuoGYPvVXxIXVazoLk3YmLYL47
+ w26upzL4aykEIZSY1YS/Fg5xQLVydDw6mOA5bEweecv7u5qi6i+Wuxj8tezq29lQUV+CyZe9lD
+ bHSz4fEsvHyc9e4Ud0jxzbkxOQRCo27Y/cLtgKYIAAAA=
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Joshua Felmeden <jfelmeden@thegoodpenguin.co.uk>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720542974; l=916;
+ i=jfelmeden@thegoodpenguin.co.uk; s=20240709; h=from:subject:message-id;
+ bh=gfuBjzaQL9gTYODlRQx6yFrgftBRvfPKkRJDUxKB4SU=;
+ b=UPDKdoiVHDUupCbcU10xRQso7vvKmh3tWU1eFOts+m/t6rLYecJWfFxLao1pg3dq9psg11s6D
+ JfPM4It7kCmC43aB39RZ07HHPgVnbpjXTgB29APGt5tCRgBVW6vHGer
+X-Developer-Key: i=jfelmeden@thegoodpenguin.co.uk; a=ed25519;
+ pk=tePkZ5iJ3ejQ2O3vjhsj7GrLYcyJN1o1sMT3IEXvKo0=
 
-Am 09.07.24 um 18:26 schrieb Sasha Levin:
+This patch series adds support for the
+ENS210/ENS210A/ENS211/ENS212/ENS213A/ENS215 temperature and humidity
+sensors.
 
-> From: Armin Wolf <W_Armin@gmx.de>
->
-> [ Upstream commit 58a54f27a0dac81f7fd3514be01012635219a53c ]
->
-> The LGEX0815 ACPI device id is used for handling hotkey events, but
-> this functionality is already handled by the wireless-hotkey driver.
->
-> The LGEX0820 ACPI device id however is used to manage various
-> platform features using the WMAB/WMBB ACPI methods. Use this ACPI
-> device id to avoid blocking the wireless-hotkey driver from probing.
+Patch 1 adds the required device tree bindings.
 
-Hi,
+Patch 2 adds the driver, providing the probe and read functions.
 
-this depends on other patches not in kernel 5.4, please do not use this
-patch for kernel 5.4.
+Signed-off-by: Joshua Felmeden <jfelmeden@thegoodpenguin.co.uk>
+---
+Joshua Felmeden (2):
+      dt-bindings: iio: humidity: add ENS21x sensor family
+      iio: humidity: Add support for ENS21x
 
-Thanks,
-Armin Wolf
+ .../bindings/iio/humidity/sciosense,ens21x.yaml    |  50 +++
+ drivers/iio/humidity/Kconfig                       |  11 +
+ drivers/iio/humidity/Makefile                      |   1 +
+ drivers/iio/humidity/ens21x.c                      | 348 +++++++++++++++++++++
+ 4 files changed, 410 insertions(+)
+---
+base-commit: 1ebab783647a9e3bf357002d5c4ff060c8474a0a
+change-id: 20240709-ens21x-8f2530968f2e
 
->
-> Tested-by: Agathe Boutmy <agathe@boutmy.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Link: https://lore.kernel.org/r/20240606233540.9774-4-W_Armin@gmx.de
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   drivers/platform/x86/lg-laptop.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-=
-laptop.c
-> index 27c456b517850..ff7ed8882aacb 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -653,7 +653,7 @@ static int acpi_remove(struct acpi_device *device)
->   }
->
->   static const struct acpi_device_id device_ids[] =3D {
-> -	{"LGEX0815", 0},
-> +	{"LGEX0820", 0},
->   	{"", 0}
->   };
->   MODULE_DEVICE_TABLE(acpi, device_ids);
+Best regards,
+-- 
+Joshua Felmeden <jfelmeden@thegoodpenguin.co.uk>
+
