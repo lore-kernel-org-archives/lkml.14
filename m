@@ -1,149 +1,153 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE911591F1;
-	Tue,  9 Jul 2024 14:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1541591F1;
+	Tue,  9 Jul 2024 14:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720534898; cv=none; b=cTZ8L71L8qjVuMSBy1WHp3CUqP5BwROT4yS6XOb9j+N4oDeGUCjdW5shIB6wnYAz1NMNYe/OO1hMq0rVlB9eUgC4JrQXbIY7AFPimsgUk2xo1X5XOCHxhsKc1AVOXm2kB73Yr4k5zMtRQNrPJd7CyKXsg6/impuujGnSS7dGYDs=
+	t=1720534966; cv=none; b=urWj6Mwon/bXGazqoJmGcL8/N1sV1VtJdZeFCroTKkku9KLU1+nBMaZwHh6qUumeGwktqUL8Qb6rw4jnzxjML5eOdBmxvFFjWc87G6tU9XrsQt1IzWkuiSdXrNLToAHmlg+hcjQIuKqgYH81uLJMRb1oGyXNfAP4S9HxCPTzMso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720534898; c=relaxed/simple;
-	bh=4E1vxQgpgX3kemPC0EQy1ZCCU3UQ28R1B05CW+AMOn0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=jQnwD5ZE+ZM0Kl048q3O/dRxvGTsUSrIrcHLe9m61h8nmqbLM1c8ElqDc5ytEdBxac9tDP3UoNaHBSVJWI8kWL2w4RzYej+Pa4Gzgi+FDOSn7tTDowL7h7KmPO3Wb+xPw/R9vR0UONoJyqorcXHM3HXj8Cgp/0MJQ6IrSSnM9u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cKV2t6EO; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720534966; c=relaxed/simple;
+	bh=FWTGpT0uE1WJVBkIi/BrIbSsTltp36GvoROONoB2Dpc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lKwMS2SHqE6Pgnf8MZNQdT5utLV9Ufb6VnmrW0XxHgjjyuAluptqJ6JOvBGOSwVV203AX0o4Fp1gbzHR7a/PldpcbEfJFXLEbGuCdGQQWX4GR5IEzsKl+ytRzedHRaYYLSiGipZLc7K63Rc6KW6ETx8icwQckPq2eNDhexVExQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAR/3/9i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cKV2t6EO"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469CwtaR004756;
-	Tue, 9 Jul 2024 14:21:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=cr5c/9QT2RyhMKr0m9AhQ2
-	SOiseSOKanTDp/1ZsMK/M=; b=cKV2t6EOzE9B+95KwTBUpKXNjgW9vBG81oKgG5
-	T6vYhXKlGBxTnX9m7ph4pifqHblVLGhZmHEG4pTKu0rdXnjd6oT3IaihhT2rEcP2
-	6HL2ik9Z904CB3kaoyyJLzMKUD5Uq7Q+uWSE3NGvuAEqSTRNdWjl2mPKfYbfMolb
-	yOdRRUVB9VpcIswjcH70H4vllNStu2PcF1x/I5SFQked35QUsA/P1aAxn/N+ljPD
-	cBq04EdJiH7g7uiDzt5U09llBAyvemXXvz24Se4KsXqIHDG4tC0w6BRptmr7N41M
-	8xtulRSsomKKR2yEE3sX5rz2Q8fuWOo31McgX7adlq+baVqA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 408w0r9hdm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 14:21:20 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469ELJ9M002163
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 14:21:19 GMT
-Received: from tengfan-gv.ap.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 9 Jul 2024 07:21:14 -0700
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-Date: Tue, 9 Jul 2024 22:21:00 +0800
-Subject: [PATCH v2] dt-bindings: watchdog: qcom-wdt: document QCS9100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAR/3/9i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1ACC32782;
+	Tue,  9 Jul 2024 14:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720534966;
+	bh=FWTGpT0uE1WJVBkIi/BrIbSsTltp36GvoROONoB2Dpc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=CAR/3/9iQ6zIplQ/QpFyPIrSdLTZS157UiymInXvhe2THRdF8hNEYC913LfnbuDLY
+	 7Sypc7AxKf4AsjdJofn4STT4RvGnn2z907DoH3T0sNlALEoD3pWhgB1N8an4OQBvKN
+	 f8VQ6uCG0OIjUUXPb2aaPUnemhrz7QDLNWVdTDD6KgduvMAp7ZSrJ3EcTHh09o2358
+	 oT005qae+YYwDmY6EXBMdEmR92mmYv5/BZ7VNA1BzT0M+xICVLFyYxondCDOPJKSoW
+	 PJ1aRRbsI/bHzsWIAy1E+x51qh4NGwIGUO64+kKJWllbE5PKJrJi5j06TuwZo+w2o7
+	 C+NRYZI57TOsw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id D9D27CE09F8; Tue,  9 Jul 2024 07:22:45 -0700 (PDT)
+Date: Tue, 9 Jul 2024 07:22:45 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: takakura@valinux.co.jp
+Cc: boqun.feng@gmail.com, bristot@redhat.com, bsegall@google.com,
+	dietmar.eggemann@arm.com, frederic@kernel.org,
+	jiangshanlai@gmail.com, joel@joelfernandes.org,
+	josh@joshtriplett.org, juri.lelli@redhat.com,
+	linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	mgorman@suse.de, mingo@redhat.com, neeraj.upadhyay@kernel.org,
+	peterz@infradead.org, qiang.zhang1211@gmail.com,
+	rcu@vger.kernel.org, rostedt@goodmis.org,
+	vincent.guittot@linaro.org, vschneid@redhat.com
+Subject: Re: [PATCH] rcu: Let rcu_dump_task() be used without preemption
+ disabled
+Message-ID: <83446d9b-f6fe-4786-8f84-c2716d03637c@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <5528fb77-9249-4223-96fb-8f5e9c3dac7f@paulmck-laptop>
+ <20240709053426.94526-1-takakura@valinux.co.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240709-document_qcs9100_apss_wdt_compatible-v2-1-beeba6288c97@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAEtHjWYC/zXN0Q6CIBiG4VtpHIf7IQztqPtojhmi/luCAlrNe
- e+hW4fvd/A9KwnGownkdlqJNwsGdDYFP5+I7mvbGYpNasKBC5BQ0sbpeTA2qkmHkgGoegxBvZu
- otBvGOuLzZahkUggtriznkqSr0ZsWPwfzqFL3GKLz30Nd2L7+gQvwvMgh40xygIIyOs2oVTS2a
- 2t73wOtzpJFqm3bfvYE8dnAAAAA
-To: Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck
-	<linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Rajendra Nayak
-	<quic_rjendra@quicinc.com>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Tengfei Fan <quic_tengfan@quicinc.com>
-X-Mailer: b4 0.15-dev-a66ce
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720534873; l=2433;
- i=quic_tengfan@quicinc.com; s=20240709; h=from:subject:message-id;
- bh=4E1vxQgpgX3kemPC0EQy1ZCCU3UQ28R1B05CW+AMOn0=;
- b=zHIHHw1gtolQXeMOBJz4uSYgOcLoM/lRgHBXc24SFrKW82jh0Le/3zvQ6MZwvq8y/589oQm9L
- s9JI7WQ2FVHAPFZT3uHY66Qlwqfko4J8tZDBytR6tFYjJCLQN+J99/r
-X-Developer-Key: i=quic_tengfan@quicinc.com; a=ed25519;
- pk=4VjoTogHXJhZUM9XlxbCAcZ4zmrLeuep4dfOeKqQD0c=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: vIB4a5dQTvHyv8HiWA352rcW2I6tvhJP
-X-Proofpoint-GUID: vIB4a5dQTvHyv8HiWA352rcW2I6tvhJP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_04,2024-07-09_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- impostorscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
- phishscore=0 spamscore=0 priorityscore=1501 bulkscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090093
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709053426.94526-1-takakura@valinux.co.jp>
 
-Document the QCS9100 watchdog compatible.
-QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
-platform use non-SCMI resource. In the future, the SA8775p platform will
-move to use SCMI resources and it will have new sa8775p-related device
-tree. Consequently, introduce "qcom,apss-wdt-qcs9100" to describe
-non-SCMI based watchdog.
+On Tue, Jul 09, 2024 at 02:34:26PM +0900, takakura@valinux.co.jp wrote:
+> Hi Paul,
+> 
+> On Mon, 8 July 2024, Paul E. McKenney wrote:
+> >On Fri, Jun 28, 2024 at 01:18:26PM +0900, takakura@valinux.co.jp wrote:
+> >> From: Ryo Takakura <takakura@valinux.co.jp>
+> >> 
+> >> The commit 2d7f00b2f0130 ("rcu: Suppress smp_processor_id() complaint
+> >> in synchronize_rcu_expedited_wait()") disabled preemption around
+> >> dump_cpu_task() to suppress warning on its usage within preemtible context.
+> >> 
+> >> Calling dump_cpu_task() doesn't required to be in non-preemptible context
+> >> except for suppressing the smp_processor_id() warning.
+> >> As the smp_processor_id() is evaluated along with in_hardirq()
+> >> to check if it's in interrupt context, this patch removes the need
+> >> for its preemtion disablement by reordering the condition so that
+> >> smp_processor_id() only gets evaluated when it's in interrupt context.
+> >> 
+> >> Signed-off-by: Ryo Takakura <takakura@valinux.co.jp>
+> >
+> >Hearing no objections, I pulled this in for further review and testing.
+> >
+> >I had to hand-apply this due to a recent conflicting change in the
+> >-rcu tree, so could you please check the version below in case I messed
+> >something up?
+> >
+> >							Thanx, Paul
+> 
+> Thanks for preparing the patch!
+> I checked it on the rcu tree and looks good to me.
+> 
+> If possible, could you replace the title with s/rcu_dump_task()/dump_cpu_task()/ 
+> when applying?
+> I made a mistake with the title where dump_cpu_task() is the one being modified, 
+> not rcu_dump_task(). I'm sorry for the confusion.
 
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
----
-Introduce support for the QCS9100 SoC device tree (DTSI) and the
-QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
-While the QCS9100 platform is still in the early design stage, the
-QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
-mounts the QCS9100 SoC instead of the SA8775p SoC.
+Thank you for calling my attention to this.
 
-The QCS9100 SoC DTSI is directly renamed from the SA8775p SoC DTSI, and
-all the compatible strings will be updated from "SA8775p" to "QCS9100".
-The QCS9100 device tree patches will be pushed after all the device tree
-bindings and device driver patches are reviewed.
+Done locally, and it will show up on my next rebase.
 
-The final dtsi will like:
-https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-3-quic_tengfan@quicinc.com/
+								Thanx, Paul
 
-The detailed cover letter reference:
-https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
----
-Changes in v2:
-  - Split huge patch series into different patch series according to
-    subsytems
-  - Update patch commit message
-
-prevous disscussion here:
-[1] v1: https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
----
- Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-index 47587971fb0b..5a78816aeece 100644
---- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-@@ -26,6 +26,7 @@ properties:
-               - qcom,apss-wdt-msm8994
-               - qcom,apss-wdt-qcm2290
-               - qcom,apss-wdt-qcs404
-+              - qcom,apss-wdt-qcs9100
-               - qcom,apss-wdt-sa8775p
-               - qcom,apss-wdt-sc7180
-               - qcom,apss-wdt-sc7280
-
----
-base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
-change-id: 20240709-document_qcs9100_apss_wdt_compatible-71744c461527
-
-Best regards,
--- 
-Tengfei Fan <quic_tengfan@quicinc.com>
-
+> Sincerely,
+> Ryo Takakura
+> 
+> >
+> >------------------------------------------------------------------------
+> >
+> >commit ad6647a70f239aa9f2741b2f5a828a4483122a26
+> >Author: Ryo Takakura <takakura@valinux.co.jp>
+> >Date:   Fri Jun 28 13:18:26 2024 +0900
+> >
+> >    rcu: Let rcu_dump_task() be used without preemption disabled
+> >    
+> >    The commit 2d7f00b2f0130 ("rcu: Suppress smp_processor_id() complaint
+> >    in synchronize_rcu_expedited_wait()") disabled preemption around
+> >    dump_cpu_task() to suppress warning on its usage within preemtible context.
+> >    
+> >    Calling dump_cpu_task() doesn't required to be in non-preemptible context
+> >    except for suppressing the smp_processor_id() warning.
+> >    As the smp_processor_id() is evaluated along with in_hardirq()
+> >    to check if it's in interrupt context, this patch removes the need
+> >    for its preemtion disablement by reordering the condition so that
+> >    smp_processor_id() only gets evaluated when it's in interrupt context.
+> >    
+> >    Signed-off-by: Ryo Takakura <takakura@valinux.co.jp>
+> >    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> >
+> >diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> >index d4be644afb50..c5d9a7eb0803 100644
+> >--- a/kernel/rcu/tree_exp.h
+> >+++ b/kernel/rcu/tree_exp.h
+> >@@ -597,9 +597,7 @@ static void synchronize_rcu_expedited_stall(unsigned long jiffies_start, unsigne
+> > 			mask = leaf_node_cpu_bit(rnp, cpu);
+> > 			if (!(READ_ONCE(rnp->expmask) & mask))
+> > 				continue;
+> >-			preempt_disable(); // For smp_processor_id() in dump_cpu_task().
+> > 			dump_cpu_task(cpu);
+> >-			preempt_enable();
+> > 		}
+> > 		rcu_exp_print_detail_task_stall_rnp(rnp);
+> > 	}
+> >diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> >index 05afa2932b5e..bdb0e0328f6a 100644
+> >--- a/kernel/sched/core.c
+> >+++ b/kernel/sched/core.c
+> >@@ -11485,7 +11485,7 @@ struct cgroup_subsys cpu_cgrp_subsys = {
+> > 
+> > void dump_cpu_task(int cpu)
+> > {
+> >-	if (cpu == smp_processor_id() && in_hardirq()) {
+> >+	if (in_hardirq() && cpu == smp_processor_id()) {
+> > 		struct pt_regs *regs;
+> > 
+> > 		regs = get_irq_regs();
