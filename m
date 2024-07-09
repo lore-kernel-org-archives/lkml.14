@@ -1,39 +1,39 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D719F18F2EA;
-	Tue,  9 Jul 2024 13:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D35418FDD7;
+	Tue,  9 Jul 2024 13:54:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720533247; cv=none; b=fjWa+Y4sQTHqIVH1tHuJZ1hUZWHJU0KgXNLxBbTDtoKC8UokamAjiMNGpVClPGWBk6HiHoY6mswoF7oYyrnKgJbfYFUG+RGkWkygXD4nP/ptQta1BH1v4s1J8fETh/LzndbfJ/tZ22CjqsmW4NzDiM/ctNVnSe5q5IY8I06/Zl8=
+	t=1720533250; cv=none; b=cHM/UKTbXZyq1D51NDRtC2rXGMuKJ7uE04i6E2pN73nUUb/6B1IY9L8I15G7DNG0BRgWSbNbSeZ6CkZ3QbJ8R52ewaFivkL+5D3ARPc+aNEjxoXGTJpsnt+KAmbk/xZKkrIIzpqeJ0ElVV7k5tIPvDj5GbSDeZH7llTSn7+Oj10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720533247; c=relaxed/simple;
-	bh=HVpD28Kc7WQmz9AiDvwVWC5TDZSnKSnK/jPDtDLw820=;
+	s=arc-20240116; t=1720533250; c=relaxed/simple;
+	bh=zHUPZZHW+ZEur32yOu9bNVrl2FFhAMVvCk/Q3HSZ+HY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EQFBo5XojXwRJ0+O6doj1oyKMnGumuWLgJbrX4FDJ1qsD0+87OuSkeAgSpee4fJr4cbsmx2i3uGoh1mw+Oiy4ogWmsSsU1waVdzLFcrIQk7GrJm9vLNrsPupN01Sb3/Zpr82o1dSumiaoKu/JLb8y0yemcsEsptCa6dpfKuWeeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mZUFsNZC; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=LRqN/Zto7JcnFYeUdQKR8MttKolnT5onwO53OWwPdmL21HpbW7JbWJidv9faS9OYGOKGY7Md5CYvciyAtJDT2LIHNsufJUEjueQ/ubDjNd7+OQlodYZIgfmz6FOh2P+DB6Ju/MNKjpKThCVQgT+6L6CSIYhV/u2K0U3pTKKl8WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hISbiTjz; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mZUFsNZC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 066771BF20A;
-	Tue,  9 Jul 2024 13:54:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hISbiTjz"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8D5FB1BF218;
+	Tue,  9 Jul 2024 13:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720533242;
+	t=1720533247;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9bldM+RxHTkeqo5apEJUiJO0ACebCKL7FRM1kEW38t4=;
-	b=mZUFsNZCA7EDalE+Xr2Wp14s2NfcBHNk3xh1QgN1MMK8YBwS5Mv/bkmoU171Ywxu7zztjs
-	qF61y4q0Rr1qwCAN5GuUtD3IktSUDzsXsj8BLTVmY+TrhL8/tLgHXjkiEFx3hrl7wv3SZe
-	3xFtfwOD6R0hfmj3bSiSRNWwgYxRv3cI166sHrUGbccESl3qsqvFlW1WqRGLAXZYr070Rl
-	XmWdIBSgLaSo5YizTb0Ha7xw2xrTy+7lJ1CmWkNkrsmU8UhQTdO7Tgz/d7sY9XAP0Bt/m5
-	7W7nHr2axRK863vP6zT++RyALPhjNC5JtTfVixNU9SdAYIlS2xg96QypQ6/g6Q==
+	bh=/akqxQ8ZFvPLOMVKUlPKOLHsqv0rRfnwElZnZGMC46k=;
+	b=hISbiTjzrYqxngR+Kjs0NqZ8c8J+Yevjvvxgp1E3M0ua3yIIInRDKj2pG80IGapfdgb8Rv
+	Aezgz9Ev9Ae2JGX0SDRlNyU//oPWvFv6Uip4zwXViUxYE1l0Il3w1oDeNhkJWUyQZ+W0QQ
+	qKzD7h95Xv6R5mkYPWj9/ItY+MKIOaoZKVlI894mJ+9P2zm0xZnCvvVw+sjGrqZgzwilzD
+	RGqYZkgy9XM4jtwsc0SI6FUuWUTxV/NblEGOMYWZLC27OadyywYV6AXkKCcI3qBtErR5jB
+	FKRzuKBSrlLE8sAN7DKTPSVML4f6DAeDsFLfEhKF1B+XuAG3knqhjIzBTd/VuA==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 09 Jul 2024 15:53:36 +0200
-Subject: [PATCH net-next v17 04/14] net: Change the API of PHY default
- timestamp to MAC
+Date: Tue, 09 Jul 2024 15:53:39 +0200
+Subject: [PATCH net-next v17 07/14] ptp: Add phc source and helpers to
+ register specific PTP clock or get information
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240709-feature_ptp_netnext-v17-4-b5317f50df2a@bootlin.com>
+Message-Id: <20240709-feature_ptp_netnext-v17-7-b5317f50df2a@bootlin.com>
 References: <20240709-feature_ptp_netnext-v17-0-b5317f50df2a@bootlin.com>
 In-Reply-To: <20240709-feature_ptp_netnext-v17-0-b5317f50df2a@bootlin.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
@@ -73,247 +73,396 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Change the API to select MAC default time stamping instead of the PHY.
-Indeed the PHY is closer to the wire therefore theoretically it has less
-delay than the MAC timestamping but the reality is different. Due to lower
-time stamping clock frequency, latency in the MDIO bus and no PHC hardware
-synchronization between different PHY, the PHY PTP is often less precise
-than the MAC. The exception is for PHY designed specially for PTP case but
-these devices are not very widespread. For not breaking the compatibility
-default_timestamp flag has been introduced in phy_device that is set by
-the phy driver to know we are using the old API behavior.
+Prepare for future hardware timestamp selection by adding source and
+corresponding pointers to ptp_clock structure.
+Additionally, introduce helpers for registering specific phydev or netdev
+PTP clocks, retrieving PTP clock information such as hwtstamp source or
+phydev/netdev pointers, and obtaining the ptp_clock structure from the
+phc index.
+These helpers are added to a new ptp_clock_consumer.c file, built as
+builtin. This is necessary because these helpers will be called by
+ethtool or net timestamping, which are builtin code.
 
-Reviewed-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
-Changes in v5:
-- Extract the API change in this patch.
-- Rename whitelist to allowlist.
-- Set NETDEV_TIMESTAMPING in register_netdevice function.
-- Add software timestamping case description in ts_info.
-
-Change in v6:
-- Replace the allowlist phy with a default_timestamp flag to know which
-  phy is using old API behavior.
-- Fix dereferenced of a possible null pointer.
-- Follow timestamping layer naming update.
-- Update timestamp default set between MAC and software.
-- Update ts_info returned in case of software timestamping.
-
 Change in v8:
-- Reform the implementation to use a simple phy_is_default_hwtstamp helper
-  instead of saving the hwtstamp in the net_device struct.
+- New patch.
 
-Change in v9:
-- Update few nit following the review.
+Change in v10:
+- Add get and put function to avoid unregistering a ptp clock object used.
+- Fix kdoc issues.
+
+Change in v11:
+- Remove useless extern.
 
 Change in v12:
 - Add missing return description in the kdoc.
----
- drivers/net/phy/bcm-phy-ptp.c     |  3 +++
- drivers/net/phy/dp83640.c         |  2 ++
- drivers/net/phy/micrel.c          |  6 ++++++
- drivers/net/phy/mscc/mscc_ptp.c   |  3 +++
- drivers/net/phy/nxp-c45-tja11xx.c |  3 +++
- include/linux/phy.h               | 19 +++++++++++++++++++
- net/core/dev_ioctl.c              |  8 +++-----
- net/core/timestamping.c           |  5 +++--
- net/ethtool/common.c              |  2 +-
- 9 files changed, 43 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/phy/bcm-phy-ptp.c b/drivers/net/phy/bcm-phy-ptp.c
-index 617d384d4551..d3e825c951ee 100644
---- a/drivers/net/phy/bcm-phy-ptp.c
-+++ b/drivers/net/phy/bcm-phy-ptp.c
-@@ -931,6 +931,9 @@ struct bcm_ptp_private *bcm_ptp_probe(struct phy_device *phydev)
- 		return ERR_CAST(clock);
- 	priv->ptp_clock = clock;
+Change in v13:
+- Remove a semicolon which bring errors while not building PTP driver.
+- Remove few useless EXPORT_SYMBOL().
+- Separate PTP consumer symbole which are builtin from PTP provider.
+
+Change in v14:
+- Add back missing EXPORT_SYMBOL().
+---
+ drivers/ptp/Makefile             |   5 ++
+ drivers/ptp/ptp_clock.c          |  33 ++++++++++-
+ drivers/ptp/ptp_clock_consumer.c | 100 +++++++++++++++++++++++++++++++
+ drivers/ptp/ptp_private.h        |   7 +++
+ include/linux/ptp_clock_kernel.h | 125 +++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 269 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
+index 68bf02078053..9d7226b995cf 100644
+--- a/drivers/ptp/Makefile
++++ b/drivers/ptp/Makefile
+@@ -3,6 +3,11 @@
+ # Makefile for PTP 1588 clock support.
+ #
  
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
-+
- 	priv->phydev = phydev;
- 	bcm_ptp_init(priv);
++ifdef CONFIG_PTP_1588_CLOCK
++# The ptp_clock consumer is built-in whenever PTP_1588_CLOCK is built-in
++# or module
++obj-y					:= ptp_clock_consumer.o
++endif
+ ptp-y					:= ptp_clock.o ptp_chardev.o ptp_sysfs.o ptp_vclock.o
+ ptp_kvm-$(CONFIG_X86)			:= ptp_kvm_x86.o ptp_kvm_common.o
+ ptp_kvm-$(CONFIG_HAVE_ARM_SMCCC)	:= ptp_kvm_arm.o ptp_kvm_common.o
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index c56cd0f63909..593b5c906314 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -34,7 +34,6 @@ const struct class ptp_class = {
  
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index 5c42c47dc564..d3e72d5c1472 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1447,6 +1447,8 @@ static int dp83640_probe(struct phy_device *phydev)
- 	for (i = 0; i < MAX_RXTS; i++)
- 		list_add(&dp83640->rx_pool_data[i].list, &dp83640->rxpool);
+ static dev_t ptp_devt;
  
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
- 	phydev->mii_ts = &dp83640->mii_ts;
- 	phydev->priv = dp83640;
+-static DEFINE_XARRAY_ALLOC(ptp_clocks_map);
  
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index ebafedde0ab7..8d57225d8575 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -3781,6 +3781,9 @@ static void lan8814_ptp_init(struct phy_device *phydev)
- 	ptp_priv->mii_ts.ts_info  = lan8814_ts_info;
+ /* time stamp event queue operations */
  
- 	phydev->mii_ts = &ptp_priv->mii_ts;
-+
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
+@@ -512,6 +511,38 @@ void ptp_cancel_worker_sync(struct ptp_clock *ptp)
  }
+ EXPORT_SYMBOL(ptp_cancel_worker_sync);
  
- static int lan8814_ptp_probe_once(struct phy_device *phydev)
-@@ -5279,6 +5282,9 @@ static int lan8841_probe(struct phy_device *phydev)
- 
- 	phydev->mii_ts = &ptp_priv->mii_ts;
- 
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
-+
- 	return 0;
- }
- 
-diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
-index eb0b032cb613..e66d20eff7c4 100644
---- a/drivers/net/phy/mscc/mscc_ptp.c
-+++ b/drivers/net/phy/mscc/mscc_ptp.c
-@@ -1570,6 +1570,9 @@ int vsc8584_ptp_probe(struct phy_device *phydev)
- 		return PTR_ERR(vsc8531->load_save);
- 	}
- 
-+	/* Timestamp selected by default to keep legacy API */
-+	phydev->default_timestamp = true;
-+
- 	vsc8531->ptp->phydev = phydev;
- 
- 	return 0;
-diff --git a/drivers/net/phy/nxp-c45-tja11xx.c b/drivers/net/phy/nxp-c45-tja11xx.c
-index 3cf614b4cd52..d18c133e6013 100644
---- a/drivers/net/phy/nxp-c45-tja11xx.c
-+++ b/drivers/net/phy/nxp-c45-tja11xx.c
-@@ -1660,6 +1660,9 @@ static int nxp_c45_probe(struct phy_device *phydev)
- 		priv->mii_ts.ts_info = nxp_c45_ts_info;
- 		phydev->mii_ts = &priv->mii_ts;
- 		ret = nxp_c45_init_ptp_clock(priv);
-+
-+		/* Timestamp selected by default to keep legacy API */
-+		phydev->default_timestamp = true;
- 	} else {
- 		phydev_dbg(phydev, "PTP support not enabled even if the phy supports it");
- 	}
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index bd68f9d8e74f..e7a38137211c 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -616,6 +616,8 @@ struct macsec_ops;
-  *                 handling shall be postponed until PHY has resumed
-  * @irq_rerun: Flag indicating interrupts occurred while PHY was suspended,
-  *             requiring a rerun of the interrupt handler after resume
-+ * @default_timestamp: Flag indicating whether we are using the phy
-+ *		       timestamp as the default one
-  * @interface: enum phy_interface_t value
-  * @possible_interfaces: bitmap if interface modes that the attached PHY
-  *			 will switch between depending on media speed.
-@@ -681,6 +683,8 @@ struct phy_device {
- 	unsigned irq_suspended:1;
- 	unsigned irq_rerun:1;
- 
-+	unsigned default_timestamp:1;
-+
- 	int rate_matching;
- 
- 	enum phy_state state;
-@@ -1625,6 +1629,21 @@ static inline void phy_txtstamp(struct phy_device *phydev, struct sk_buff *skb,
- 	phydev->mii_ts->txtstamp(phydev->mii_ts, skb, type);
- }
- 
-+/**
-+ * phy_is_default_hwtstamp - Is the PHY hwtstamp the default timestamp
-+ * @phydev: Pointer to phy_device
-+ *
-+ * This is used to get default timestamping device taking into account
-+ * the new API choice, which is selecting the timestamping from MAC by
-+ * default if the phydev does not have default_timestamp flag enabled.
-+ *
-+ * Return: True if phy is the default hw timestamp, false otherwise.
-+ */
-+static inline bool phy_is_default_hwtstamp(struct phy_device *phydev)
++struct ptp_clock *netdev_ptp_clock_register(struct ptp_clock_info *info,
++					    struct net_device *dev)
 +{
-+	return phy_has_hwtstamp(phydev) && phydev->default_timestamp;
++	struct ptp_clock *ptp;
++
++	ptp = ptp_clock_register(info, &dev->dev);
++	if (IS_ERR(ptp))
++		return ptp;
++
++	ptp->phc_source = HWTSTAMP_SOURCE_NETDEV;
++	ptp->netdev = dev;
++
++	return ptp;
++}
++EXPORT_SYMBOL(netdev_ptp_clock_register);
++
++struct ptp_clock *phydev_ptp_clock_register(struct ptp_clock_info *info,
++					    struct phy_device *phydev)
++{
++	struct ptp_clock *ptp;
++
++	ptp = ptp_clock_register(info, &phydev->mdio.dev);
++	if (IS_ERR(ptp))
++		return ptp;
++
++	ptp->phc_source = HWTSTAMP_SOURCE_PHYLIB;
++	ptp->phydev = phydev;
++
++	return ptp;
++}
++EXPORT_SYMBOL(phydev_ptp_clock_register);
++
+ /* module operations */
+ 
+ static void __exit ptp_exit(void)
+diff --git a/drivers/ptp/ptp_clock_consumer.c b/drivers/ptp/ptp_clock_consumer.c
+new file mode 100644
+index 000000000000..58b0c8948fc8
+--- /dev/null
++++ b/drivers/ptp/ptp_clock_consumer.c
+@@ -0,0 +1,100 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * PTP 1588 clock support
++ *
++ * Copyright (C) 2010 OMICRON electronics GmbH
++ */
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/posix-clock.h>
++#include <linux/pps_kernel.h>
++#include <linux/slab.h>
++#include <linux/syscalls.h>
++#include <linux/uaccess.h>
++#include <linux/debugfs.h>
++#include <linux/xarray.h>
++#include <uapi/linux/sched/types.h>
++
++#include "ptp_private.h"
++
++DEFINE_XARRAY_ALLOC(ptp_clocks_map);
++EXPORT_SYMBOL(ptp_clocks_map);
++
++bool ptp_clock_from_phylib(struct ptp_clock *ptp)
++{
++	return ptp->phc_source == HWTSTAMP_SOURCE_PHYLIB;
 +}
 +
++bool ptp_clock_from_netdev(struct ptp_clock *ptp)
++{
++	return ptp->phc_source == HWTSTAMP_SOURCE_NETDEV;
++}
++
++struct net_device *ptp_clock_netdev(struct ptp_clock *ptp)
++{
++	if (ptp->phc_source != HWTSTAMP_SOURCE_NETDEV)
++		return NULL;
++
++	return ptp->netdev;
++}
++
++struct phy_device *ptp_clock_phydev(struct ptp_clock *ptp)
++{
++	if (ptp->phc_source != HWTSTAMP_SOURCE_PHYLIB)
++		return NULL;
++
++	return ptp->phydev;
++}
++EXPORT_SYMBOL(ptp_clock_phydev);
++
++int ptp_clock_get(struct device *dev, struct ptp_clock *ptp)
++{
++	struct device_link *link;
++
++	if (!ptp)
++		return 0;
++
++	if (!try_module_get(ptp->info->owner))
++		return -EPROBE_DEFER;
++
++	get_device(&ptp->dev);
++
++	link = device_link_add(dev, &ptp->dev, DL_FLAG_STATELESS);
++	if (!link)
++		dev_warn(dev, "failed to create device link to %s\n",
++			 dev_name(&ptp->dev));
++
++	return 0;
++}
++
++struct ptp_clock *ptp_clock_get_by_index(struct device *dev, int index)
++{
++	struct ptp_clock *ptp;
++	int ret;
++
++	if (index < 0)
++		return NULL;
++
++	ptp = xa_load(&ptp_clocks_map, (unsigned long)index);
++	if (IS_ERR_OR_NULL(ptp))
++		return ptp;
++
++	ret = ptp_clock_get(dev, ptp);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return ptp;
++}
++
++void ptp_clock_put(struct device *dev, struct ptp_clock *ptp)
++{
++	if (!ptp)
++		return;
++
++	device_link_remove(dev, &ptp->dev);
++	put_device(&ptp->dev);
++	module_put(ptp->info->owner);
++}
+diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+index 18934e28469e..6a306e6e34c2 100644
+--- a/drivers/ptp/ptp_private.h
++++ b/drivers/ptp/ptp_private.h
+@@ -24,6 +24,8 @@
+ #define PTP_DEFAULT_MAX_VCLOCKS 20
+ #define PTP_MAX_CHANNELS 2048
+ 
++extern struct xarray ptp_clocks_map;
++
+ struct timestamp_event_queue {
+ 	struct ptp_extts_event buf[PTP_MAX_TIMESTAMPS];
+ 	int head;
+@@ -41,6 +43,11 @@ struct ptp_clock {
+ 	struct ptp_clock_info *info;
+ 	dev_t devid;
+ 	int index; /* index into clocks.map */
++	enum hwtstamp_source phc_source;
++	union { /* Pointer of the phc_source device */
++		struct net_device *netdev;
++		struct phy_device *phydev;
++	};
+ 	struct pps_device *pps_source;
+ 	long dialed_frequency; /* remembers the frequency adjustment */
+ 	struct list_head tsevqs; /* timestamp fifo list */
+diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
+index 6e4b8206c7d0..860c1e293a62 100644
+--- a/include/linux/ptp_clock_kernel.h
++++ b/include/linux/ptp_clock_kernel.h
+@@ -9,7 +9,9 @@
+ #define _PTP_CLOCK_KERNEL_H_
+ 
+ #include <linux/device.h>
++#include <linux/netdevice.h>
+ #include <linux/pps_kernel.h>
++#include <linux/phy.h>
+ #include <linux/ptp_clock.h>
+ #include <linux/timecounter.h>
+ #include <linux/skbuff.h>
+@@ -340,6 +342,106 @@ extern void ptp_clock_event(struct ptp_clock *ptp,
+ 
+ extern int ptp_clock_index(struct ptp_clock *ptp);
+ 
++/**
++ * netdev_ptp_clock_register() - Register a PTP hardware clock driver for
++ *				 a net device
++ *
++ * @info: Structure describing the new clock.
++ * @dev:  Pointer of the net device.
++ *
++ * Return: Pointer of the PTP clock, error pointer otherwise.
++ */
++
++struct ptp_clock *
++netdev_ptp_clock_register(struct ptp_clock_info *info,
++			  struct net_device *dev);
++
++/**
++ * phydev_ptp_clock_register() - Register a PTP hardware clock driver for
++ *				 a phy device
++ *
++ * @info:   Structure describing the new clock.
++ * @phydev:  Pointer of the phy device.
++ *
++ * Return: Pointer of the PTP clock, error pointer otherwise.
++ */
++
++struct ptp_clock *
++phydev_ptp_clock_register(struct ptp_clock_info *info,
++			  struct phy_device *phydev);
++
++/**
++ * ptp_clock_from_phylib() - Does the PTP clock comes from phylib
++ *
++ * @ptp:  The clock obtained from net/phy_ptp_clock_register().
++ *
++ * Return: True if the PTP clock comes from phylib, false otherwise.
++ */
++
++bool ptp_clock_from_phylib(struct ptp_clock *ptp);
++
++/**
++ * ptp_clock_from_netdev() - Does the PTP clock comes from netdev
++ *
++ * @ptp:  The clock obtained from net/phy_ptp_clock_register().
++ *
++ * Return: True if the PTP clock comes from netdev, false otherwise.
++ */
++
++bool ptp_clock_from_netdev(struct ptp_clock *ptp);
++
++/**
++ * ptp_clock_netdev() - Obtain the net_device reference of PTP clock
++ *
++ * @ptp:  The clock obtained from netdev_ptp_clock_register().
++ *
++ * Return: Pointer of the net device, NULL otherwise.
++ */
++
++struct net_device *ptp_clock_netdev(struct ptp_clock *ptp);
++
++/**
++ * ptp_clock_phydev() - Obtain the phy_device reference of a PTP clock
++ *
++ * @ptp:  The clock obtained from phydev_ptp_clock_register().
++ *
++ * Return: Pointer of the phy device, NULL otherwise.
++ */
++
++struct phy_device *ptp_clock_phydev(struct ptp_clock *ptp);
++
++/**
++ * ptp_clock_get() - Increment refcount of the PTP clock
++ *
++ * @dev:  The device which get the PTP clock.
++ * @ptp:  Pointer of a PTP clock.
++ *
++ * Return: 0 in case of success, error otherwise.
++ */
++
++int ptp_clock_get(struct device *dev, struct ptp_clock *ptp);
++
++/**
++ * ptp_clock_get_by_index() - Obtain the PTP clock reference from a given
++ *			      PHC index
++ *
++ * @dev:  The device which get the PTP clock.
++ * @index:  The device index of a PTP clock.
++ *
++ * Return: Pointer of the PTP clock, error pointer otherwise.
++ */
++
++struct ptp_clock *ptp_clock_get_by_index(struct device *dev, int index);
++
++/**
++ * ptp_clock_put() - decrement refcount of the PTP clock
++ *
++ * @dev:  The device which get the PTP clock.
++ * @ptp:  Pointer of a PTP clock.
++ */
++
++void ptp_clock_put(struct device *dev, struct ptp_clock *ptp);
++
  /**
-  * phy_is_internal - Convenience function for testing if a PHY is internal
-  * @phydev: the phy_device struct
-diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
-index 6aaa8326bf8f..36cea843381f 100644
---- a/net/core/dev_ioctl.c
-+++ b/net/core/dev_ioctl.c
-@@ -259,9 +259,7 @@ static int dev_eth_ioctl(struct net_device *dev,
-  * @dev: Network device
-  * @cfg: Timestamping configuration structure
+  * ptp_find_pin() - obtain the pin index of a given auxiliary function
   *
-- * Helper for enforcing a common policy that phylib timestamping, if available,
-- * should take precedence in front of hardware timestamping provided by the
-- * netdev.
-+ * Helper for calling the default hardware provider timestamping.
-  *
-  * Note: phy_mii_ioctl() only handles SIOCSHWTSTAMP (not SIOCGHWTSTAMP), and
-  * there only exists a phydev->mii_ts->hwtstamp() method. So this will return
-@@ -271,7 +269,7 @@ static int dev_eth_ioctl(struct net_device *dev,
- int dev_get_hwtstamp_phylib(struct net_device *dev,
- 			    struct kernel_hwtstamp_config *cfg)
- {
--	if (phy_has_hwtstamp(dev->phydev))
-+	if (phy_is_default_hwtstamp(dev->phydev))
- 		return phy_hwtstamp_get(dev->phydev, cfg);
- 
- 	return dev->netdev_ops->ndo_hwtstamp_get(dev, cfg);
-@@ -327,7 +325,7 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
- 			    struct netlink_ext_ack *extack)
- {
- 	const struct net_device_ops *ops = dev->netdev_ops;
--	bool phy_ts = phy_has_hwtstamp(dev->phydev);
-+	bool phy_ts = phy_is_default_hwtstamp(dev->phydev);
- 	struct kernel_hwtstamp_config old_cfg = {};
- 	bool changed = false;
- 	int err;
-diff --git a/net/core/timestamping.c b/net/core/timestamping.c
-index 04840697fe79..3717fb152ecc 100644
---- a/net/core/timestamping.c
-+++ b/net/core/timestamping.c
-@@ -25,7 +25,8 @@ void skb_clone_tx_timestamp(struct sk_buff *skb)
- 	struct sk_buff *clone;
- 	unsigned int type;
- 
--	if (!skb->sk)
-+	if (!skb->sk || !skb->dev ||
-+	    !phy_is_default_hwtstamp(skb->dev->phydev))
- 		return;
- 
- 	type = classify(skb);
-@@ -47,7 +48,7 @@ bool skb_defer_rx_timestamp(struct sk_buff *skb)
- 	struct mii_timestamper *mii_ts;
- 	unsigned int type;
- 
--	if (!skb->dev || !skb->dev->phydev || !skb->dev->phydev->mii_ts)
-+	if (!skb->dev || !phy_is_default_hwtstamp(skb->dev->phydev))
- 		return false;
- 
- 	if (skb_headroom(skb) < ETH_HLEN)
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 6b2a360dcdf0..01b7550f12c6 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -637,7 +637,7 @@ int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
- 	memset(info, 0, sizeof(*info));
- 	info->cmd = ETHTOOL_GET_TS_INFO;
- 
--	if (phy_has_tsinfo(phydev))
-+	if (phy_is_default_hwtstamp(phydev) && phy_has_tsinfo(phydev))
- 		return phy_ts_info(phydev, info);
- 	if (ops->get_ts_info)
- 		return ops->get_ts_info(dev, info);
+@@ -405,6 +507,29 @@ static inline void ptp_clock_event(struct ptp_clock *ptp,
+ { }
+ static inline int ptp_clock_index(struct ptp_clock *ptp)
+ { return -1; }
++static inline struct ptp_clock *
++netdev_ptp_clock_register(struct ptp_clock_info *info,
++			  struct net_device *dev)
++{ return NULL; }
++static inline struct ptp_clock *
++phydev_ptp_clock_register(struct ptp_clock_info *info,
++			  struct phy_device *phydev)
++{ return NULL; }
++static inline bool ptp_clock_from_phylib(struct ptp_clock *ptp)
++{ return false; }
++static inline bool ptp_clock_from_netdev(struct ptp_clock *ptp)
++{ return false; }
++static inline struct net_device *ptp_clock_netdev(struct ptp_clock *ptp)
++{ return NULL; }
++static inline struct phy_device *ptp_clock_phydev(struct ptp_clock *ptp)
++{ return NULL; }
++static inline int ptp_clock_get(struct device *dev, struct ptp_clock *ptp)
++{ return -ENODEV; }
++static inline void ptp_clock_put(struct device *dev, struct ptp_clock *ptp)
++{ }
++static inline struct ptp_clock *ptp_clock_get_by_index(struct device *dev,
++						       int index)
++{ return NULL; }
+ static inline int ptp_find_pin(struct ptp_clock *ptp,
+ 			       enum ptp_pin_function func, unsigned int chan)
+ { return -1; }
 
 -- 
 2.34.1
