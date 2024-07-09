@@ -1,78 +1,142 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695F3364AB;
-	Tue,  9 Jul 2024 15:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC24364AB
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720537708; cv=none; b=bsD/efpMFQ1DRk7HmRT3YgDH6FmxKK9Cd1CCmDJE5kn0syGMkB+BTF7ukA6GcEAR4sh7P3HiyHP9I2/eovrmxQDtPmEOPNnSfr4DS9W7hPc62IRrQZ1I9gM0/d9a/dQ7Yg+WCQK6iBIv/LVB7K6iiRosm9hFxZZWT5WuMnj9AEA=
+	t=1720537743; cv=none; b=HqjWDtytUvq0A+J7JqYZi393VZ/+vPeY/zhL1Dz48+/te7E/l7wRWmR4tlk5DCPmD0kCxOiJPopEUkM5FUd7uWI7EoIyyM5MDTjDV9Mkfrs4UBI8ZHMXEWQEOPQ9Y0VWFE/QzxJ54SXniMhvubjAeWSFQQJrbE70FM0mgwj8h6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720537708; c=relaxed/simple;
-	bh=Ar9lAiUCjYvL61z7OCjl3X6GHb52GEYA7SN0yPdX5Vk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=O4YEDKCxD7vbzip1uj6DpwwT6UVWEpNcQ2ie4eXYP6FpndJli4NvDFQbJYKsecUUKae5GNlVZXYqyIRXfdt+Usdm9nq+PAsuJhWW4qwz+51By/pQimbDBLE8fbjGV11QH3kQOy6JwD/V2c5RF9hlvrwYHHBaalkgP1yRzRx2cCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=dlNdrblm; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1720537743; c=relaxed/simple;
+	bh=ARWgJgSVMvfRKaq7gILKEe9d/d+dOgJf2X3do9RlQ7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ne4BfblrBrbE0vHVMig3Fj2eV9cO4NQjlxuti0AqnpA5sgs5m4z6z9STUdtnBYQzbFDaOMYxJ0aNvM/2zpKaVAtw2/d0vdhlNkXLx3GrajVs3OOhGWLccx0fXRh+64xzixp2e0vuc9S8APSXZ1V9KM8nyhb2ce5oWP/4tltQeds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=hwcbQVhL; arc=none smtp.client-ip=148.163.143.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="dlNdrblm"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 846ED41A36
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1720537706; bh=Ar9lAiUCjYvL61z7OCjl3X6GHb52GEYA7SN0yPdX5Vk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=dlNdrblmyPxOeknj1lmNfNWjfKpvHr1188AUc2hk4pUYNhz7N1wFS/RPUzx+m8erx
-	 tTPeOtLYvYzaiwhYGmvAqlxD/2Y2fTIf9+feENFdFG+6oeweO6eYLI5RuyvLjc3uNW
-	 m9ZSY3ZYX2xM4zGD5HAisrVJqDw1aso6ANmn4wjSh5jSADSF+PffIe+rmXtdzSccgE
-	 ahK9SlBmVjuh+KpCAbhW8VcT9l4OjGpc0JJVoapT3RL3iGltWwkGvAg+RF+3TWCqq3
-	 xDgJMKo6s/QKL2JS8RMeTeUk6uqRjkDIlnqI1a9DSsu+BHir1BbVrp5pXToR6XdPMe
-	 3pF63qEGY9isA==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="hwcbQVhL"
+Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469D38V0014424;
+	Tue, 9 Jul 2024 15:07:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date
+	:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=pps0720; bh=XBbugEwSm7aqeaT41Tr29EK
+	RuB+6EebZt+Dw6pA9kzo=; b=hwcbQVhLtEg6gTEpmCYI/JBfjJQbFsxw19fOi5Y
+	yOTYdDh0kh72rFUCOeg3xqh9DOgoRL59EcUOfecVeH7c/xs+DfbGhqldREbwJ16j
+	P3cB3dMDRgePy9K38J6JmM3EcgKb1OMS7T0DavtRqOt17o9MHOLrhDS8tnN0Dzbf
+	r+9ARukdXs/U24LIYHWK02Wgxj0pi3Ac+H4ibCYeVa+bddeMXOkoYTMEamEtgtI1
+	WV/MKn2gDI+HdZNvWwE+QCmivewp/d0Kg4wjkkWNWRY7uM2d04mMLseaZESkF2NG
+	BVBdQB/cwj1m1dpWU26u/iJBcsNGtQ4CYdagThN9P7UsqDQ==
+Received: from p1lg14881.it.hpe.com ([16.230.97.202])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 4095n296wf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 15:07:57 +0000 (GMT)
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 846ED41A36;
-	Tue,  9 Jul 2024 15:08:26 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Tao Zou <wodemia@linux.alibaba.com>, Alex Shi <alexs@kernel.org>,
- Yanteng Si <siyanteng@loongson.cn>
-Cc: Tao Zou <wodemia@linux.alibaba.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] zh_CN/admin-guide: one typo fix
-In-Reply-To: <20240705022842.51451-1-wodemia@linux.alibaba.com>
-References: <20240705022842.51451-1-wodemia@linux.alibaba.com>
-Date: Tue, 09 Jul 2024 09:08:25 -0600
-Message-ID: <87cynm8uxi.fsf@trenco.lwn.net>
+	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id 3F1F38059F2;
+	Tue,  9 Jul 2024 15:07:56 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id E352D80161F;
+	Tue,  9 Jul 2024 15:07:50 +0000 (UTC)
+Date: Tue, 9 Jul 2024 10:07:48 -0500
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Steve Wahl <steve.wahl@hpe.com>,
+        Ashish Kalra <ashish.kalra@amd.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, Pavin Joseph <me@pavinjoseph.com>,
+        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
+        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
+        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Hou Wenlong <houwenlong.hwl@antgroup.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
+Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
+Message-ID: <Zo1SRIZEhveMwSPX@swahl-home.5wahls.com>
+References: <20240708181133.GHZowr1eznPqgvdtRw@fat_crate.local>
+ <CAMj1kXG8hZ86BFbar9S5mmvKMH4a0XF0oCm36WwZxYNqc0+pjQ@mail.gmail.com>
+ <20240708190724.GIZow47G0J8vO6J3ee@fat_crate.local>
+ <Zow-AXsLHjU6gfET@swahl-home.5wahls.com>
+ <20240708195810.GKZoxE0pRWHEUljjnQ@fat_crate.local>
+ <ZoxOt1_w7nblRQCv@swahl-home.5wahls.com>
+ <CAMj1kXGA8zG95WutMgVgeb-M7oQKJrVO6QWNzLi1GMuj1wq=bg@mail.gmail.com>
+ <ZoxX9mckeu046zed@swahl-home.5wahls.com>
+ <CAMj1kXE5OYTxxBEO38dRyYt_J1FNpU-tdkaU8rxvrMLd_k_beg@mail.gmail.com>
+ <20240709103742.GCZo0S9md7YyeevRN-@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709103742.GCZo0S9md7YyeevRN-@fat_crate.local>
+X-Proofpoint-GUID: kPxHdGZfeB7wTZBBMbdGcPnlsYTYKy4r
+X-Proofpoint-ORIG-GUID: kPxHdGZfeB7wTZBBMbdGcPnlsYTYKy4r
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-09_04,2024-07-09_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 mlxlogscore=903 phishscore=0
+ bulkscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407090099
 
-VGFvIFpvdSA8d29kZW1pYUBsaW51eC5hbGliYWJhLmNvbT4gd3JpdGVzOg0KDQo+IEZpeCBvbmUg
-Y2hpbmVzZSB0eXBvIGVycm9yLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBUYW8gWm91IDx3b2RlbWlh
-QGxpbnV4LmFsaWJhYmEuY29tPg0KPiAtLS0NCj4gVGhlIHByZXZpb3VzIHRyYW5zbGF0aW9uIHBh
-dGNoIHY0IGhhcyBhbHJlYWR5IGJlZW4gYXBwaWVkLCBhbmQgdGhlIGNoYW5nZXMgZnJvbSB2NCB0
-byB2NSB3ZXJlIG1pc3NlZC4NCj4gVGhpcyBwYXRjaCBpcyBvbmUgdHlwb2ZpeCwgYW5kIGluY2x1
-ZGVzIHRoZSBjaGFuZ2VzIGZyb20gdjQgdG8gdjUuDQo+ICANCj4gIERvY3VtZW50YXRpb24vdHJh
-bnNsYXRpb25zL3poX0NOL2FkbWluLWd1aWRlL251bWFzdGF0LnJzdCB8IDIgKy0NCj4gIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPg0KPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhfQ04vYWRtaW4tZ3VpZGUvbnVtYXN0YXQu
-cnN0IGIvRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhfQ04vYWRtaW4tZ3VpZGUvbnVtYXN0
-YXQucnN0DQo+IGluZGV4IGMwZjU0ZDlhNmIwNS4uNGQ5ODE3YjkxODcwIDEwMDY0NA0KPiAtLS0g
-YS9Eb2N1bWVudGF0aW9uL3RyYW5zbGF0aW9ucy96aF9DTi9hZG1pbi1ndWlkZS9udW1hc3RhdC5y
-c3QNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhfQ04vYWRtaW4tZ3VpZGUv
-bnVtYXN0YXQucnN0DQo+IEBAIC0xMyw3ICsxMyw3IEBAIE51bWHnrZbnlaXlkb3kuK0v5pyq5ZG9
-5Lit57uf6K6hDQo+ICANCj4gIOaJgOacieaVsOaNrueahOWNleS9jemDveaYr+mhtemdouOAguW3
-qOmhteacieeLrOeri+eahOiuoeaVsOWZqOOAgg0KPiAgDQo+IC1udW1hX2hpdOOAgW51bWFfbWlz
-c+WSjG51bWFfZm9yZWlnbuiuoeaVsOWZqOWPjeW6lOS6hui/m+eoi+aYr+WQpuiDveWkn+WcqOS7
-luS7rOWBj+WlveeahOiKgueCueS4iuWIhumFjeWGheWtmOOAgg0KPiArbnVtYV9oaXTjgIFudW1h
-X21pc3PlkoxudW1hX2ZvcmVpZ27orqHmlbDlmajlj43mmKDkuobov5vnqIvmmK/lkKbog73lpJ/l
-nKjku5bku6zlgY/lpb3nmoToioLngrnkuIrliIbphY3lhoXlrZjjgIINCj4gIOWmguaenOi/m+eo
-i+aIkOWKn+WcqOWBj+WlveeahOiKgueCueS4iuWIhumFjeWGheWtmOWImeWcqOWBj+WlveeahOiK
-gueCueS4iuWinuWKoG51bWFfaGl06K6h5pWw77yM5ZCm5YiZ5Zyo5YGP5aW955qE6IqC54K55LiK
-5aKeDQo+ICDliqBudW1hX2ZvcmVpZ27orqHmlbDlkIzml7blnKjlrp7pmYXlhoXlrZjliIbphY3n
-moToioLngrnkuIrlop7liqBudW1hX21pc3PorqHmlbDjgIINCg0KQXBwbGllZCwgdGhhbmtzLg0K
-DQpqb24NCg==
+On Tue, Jul 09, 2024 at 12:37:42PM +0200, Borislav Petkov wrote:
+> On Tue, Jul 09, 2024 at 08:49:43AM +0200, Ard Biesheuvel wrote:
+> > > Patch #2 adds the CC blob to the identity map as well, if present,
+> > > since if present it is also dereferenced before the page fault handler
+> > > can be put into place.  Given what's been discussed, this patch might
+> > > not be necessary; I don't know enough to say whether kexec-ing a new
+> > > kernel within a SEV guest makes sense.  I'm pretty certain it can
+> > > cause no harm, though.
+> 
+> No, keep it in the bag until it is really needed. No proactive "fixing".
+> 
+> > I'd prefer it if that is addressed within the context of the SEV guest
+> > work. The memory setup is quite intricate, and dealing with individual
+> > types of EFI config tables is something we should avoid in general. I
+> > still maintain that the best approach would be to map all of DRAM 1:1
+> > instead of mapping patches left and right (as this is what EFI does),
+> > but if we need to do so, let's keep it as generic as we possibly can.
+> 
+> Sure. There's the kink that coco guests need to accept memory first and
+> mapping it all is the least performant one. But we can deal with that later.
+> 
+> > I wasn't cc'ed on any of the patches so I don't know exactly what was
+> > discussed.
+> > 
+> > Please cc me and linux-efi@ on your next revision.
+> 
+> And please update your commit messages with what was discussed on this thread.
+> 
+> Thx.
+
+Thanks, Boris.  I'll give it my best shot.
+
+Next version will leave out the current patch #2, and update the
+comments to include this conversation somehow summarized.
+
+I think perhaps the cover letter was also too verbose on the history
+and unintentionally hid the information necesary to understand the
+situation.  I will try to make it more concise.
+
+--> Steve
+
+
+-- 
+Steve Wahl, Hewlett Packard Enterprise
