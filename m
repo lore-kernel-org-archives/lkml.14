@@ -1,26 +1,26 @@
 Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2111.outbound.protection.partner.outlook.cn [139.219.146.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4136D154426;
-	Tue,  9 Jul 2024 08:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16251552FC;
+	Tue,  9 Jul 2024 08:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.111
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720514401; cv=fail; b=pobBi2p5t5pF+vRtR2wCE3vsODAINoCwoULc1JsOqnk0GZyTWrtSSDtqzz7QLf1wZuBX/cn5Bzet4gYaeOoklAnsw4K8u7RZw/2KeLbWmrnalk1IIBgCXcMcObPnbCLfkVKmxkEAGZCsw4KZu8+Os/8A9vjshl40uhiRYHZWLvY=
+	t=1720514405; cv=fail; b=FLdLyeoWxHv/L7cWP80miNtR9DlZbfO2Jw88og3RR9Wje4vALJ9+zpG/C8MEHB3gxwXJsd/M8AU3WeISouNT3W24Rq0Ysdv2Ceatcl9lw4PGTxGqAdNqahRyZq67O4pjDz5qjH1Py1EXkap7gmM2JVmN56XDoEe2i4x/1yI2DfQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720514401; c=relaxed/simple;
-	bh=0FDg1Dj4Neu94iKgf6Vq/84ghq2Tgp84xqp4AdbB87o=;
+	s=arc-20240116; t=1720514405; c=relaxed/simple;
+	bh=XjJKkics5oMbBQtYcpr9yL22hoFeuD/czTzMkW9bu0Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TnUBfj3HV2QJGAZiRXD35wQZCjJagZwpCjyJmwJcGBWyuFGVj223+deduxiaib7Zgq02qoruPVjCIs8nMwMHT5HYRbCFtnHvYNIzaUQVkXslDpYIBp7F+TcNtkJlJr0Nn+k01rmQkFat2R8AS1vAyV2K9Zs1sBs5jhK2xwh1dNA=
+	 Content-Type:MIME-Version; b=FZPhsC/B5cNW2CQfb82RGVHaMu0Dtnr1uDug4j7dSGSCSY/d1CYQw21V1aYjk+PmaQDVZ/RPvjGc0sdjwfddUglEvHlVtavsHUoAK2KngPvzf0eXkDOCkvhRPmy7Ejn92Y4LJcE9St3u/6IUk26it7voPFvw8wzVefEEgv6ow2o=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QrHot2MMCuKAEFCHUn9WpF7+MxpxfrztbppNDJ2qjxJLrJXOUODzFLPcfssMinY5kz6EDJeT7XtAXrz1km2HNV/ZL/kzY2DlR7C7jHpKN5YKnkSdsPHMRVXBf7oS646xh4bI05xIarrYv9MOdyYbdAJ9d2q6KN30XZLxVsxk+0Z1wBkKlzsKsEtrn1JMrPfqxPSvGAxg1nMcGU1Nn3GW+IO9hK5tAvfRbQSKzS19Gi7UrhT8iLtyThf6n9mMAMRv57cUEqgk7Od7t69VJKiFMQaZfShIGxoltG0mseUq9Kgqwpn1AiilJFObynkmsr3kazWou2EdC0SvLmRrsF3dUw==
+ b=Ixyh6j+lT3mx+5si5iOGnmpIFWMTkUfoybgfu/4EQiCJ/Pc1u4yQRxfIEs7hkT4VhVDoZ1Ex4n7NJy8uHD3vInizmTgDVrPLSHCNl6hWzOf6PN14xIB8AbwF1TnJw9X3tCYT+GyigroGsWbKB5A3f7DpYrigimRWWUY6Ihp5uMpS2V19Zc3V5yIgln02WUFKarpHSTViDM8MTVVyp8+W1Gw8K4NRwkZr8JzopAUkX3yhCL9Gc2lIsIPoeG2PXr3Citj76RO943/SS2y1yeE9FgxEfoGuBdKa7YNvXKgNvwce258uUPUaWqrEfsMlZ92sICnwCS4hplnJih0qm9Pb1g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=thBwTr7qfYGt42akuCR7XIcF6Ei8+yjyc2yt/SHlfyE=;
- b=Lyzsk52CyY0SmKnb/sYckLhqNCS/bT4cukVB1N2p1WJD+EUE0TOFaDPtYKE47y3ddAcqQ4Wpf8KtRO4Fr/FrDqS0BOSRGdFNOcpXqLvbhWlb9rfKtUrHwj+gDKybnyhCAyeS/4sEqIfHmnF4Hv3nFBJynLuyap4B3NPiJsUoVJRbD/OsNWP2XmIuEd8hA8pv1T3f4MEI/p7IzmzoYQog/dJvVWcXZfkpoBMZ08XL0bb7vsITeHb+KEgQosGeDEU/BPh647ov4nIDPuvo4TLGpW9I1U/Cx4dlC41qoC0zz+q3G75CNCqp0P0MfU3guRIA+X9z0/hKrm5/Lj2ovr61Yg==
+ bh=379HMc1/LSUOcf9HcMn7Zcj0bVXtl3Wt0/nMNbeCe5o=;
+ b=SdxjGE7BUUfoLqlI3ueB6pXooL0Q26nVVMoJmTzIT+3UKogRFe20NiVpE8Rz4g91wNTyaOCQVshMJUiTSeF9FVU3pDu9DW3tXs4BjBl8gcMjXRAsYyPJkou7xFo9p2TzVlbYkbdtKf5TRsD/3hKFfmRslrUBUGExxvCcnWm6bfc7VMuPBNaxyyG2FFlasryJ999kQ/MKdNrbWjcdc2Wq8IE+oYK5OLNBtIP63c/AmCSCKN5FUAEbRSegPU7p889bLP/oPa/bzZnBJpJboYJKHMd68uWSiVGlcjR1xHAdQNJ6KfeSRNMrPfk2wHdCQ9D4ngR8QX+GY1H9h8tAwaRz8A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -30,11 +30,11 @@ Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c550:1b::9) by ZQ0PR01MB1271.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c550:18::13) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.37; Tue, 9 Jul
- 2024 08:38:38 +0000
+ 2024 08:38:43 +0000
 Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
  ([fe80::64c5:50d8:4f2c:59aa]) by
  ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::64c5:50d8:4f2c:59aa%6])
- with mapi id 15.20.7741.033; Tue, 9 Jul 2024 08:38:37 +0000
+ with mapi id 15.20.7741.033; Tue, 9 Jul 2024 08:38:43 +0000
 From: Changhuang Liang <changhuang.liang@starfivetech.com>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,9 +51,9 @@ Cc: Jack Zhu <jack.zhu@starfivetech.com>,
 	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-staging@lists.linux.dev
-Subject: [PATCH v5 05/14] staging: media: starfive: Separate buffer from ISP hardware operation
-Date: Tue,  9 Jul 2024 01:38:15 -0700
-Message-Id: <20240709083824.430473-6-changhuang.liang@starfivetech.com>
+Subject: [PATCH v5 10/14] staging: media: starfive: Add V4L2_CAP_IO_MC capability
+Date: Tue,  9 Jul 2024 01:38:20 -0700
+Message-Id: <20240709083824.430473-11-changhuang.liang@starfivetech.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240709083824.430473-1-changhuang.liang@starfivetech.com>
 References: <20240709083824.430473-1-changhuang.liang@starfivetech.com>
@@ -70,215 +70,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB1271:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7337e719-7f54-4e8b-c18a-08dc9ff28727
+X-MS-Office365-Filtering-Correlation-Id: 2c97d4d9-a910-4e36-928a-08dc9ff28aaa
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|41320700013|366016|52116014|7416014|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	yeHI6/WXXV2HG1dOqFy7lwDILtUzd/WKICIqk5xSQ2Y4naWo01xW/Mu7YfQ15vKbPsJgwRLMVie/rDNuHbmNuD/L1se0xxYUc7sdWY1iOQXrUTfnjq56gZClQNLLZxYctWGTB4mvbXyjF4ZzBWc5jYFLpU090U6c1WZnHve/e3bxDCrBS9QtywoG6MZZ2AbI/1/KOacYDlSKx9vS7EJwQw014tKdso9+Io25yevTaxjH+e27FXDk1Xxn0crZnzj9ol/paJRlVyIfqqlPa2aoHa/+UHAhQ+GnGq5f0OBOyioVp2lxovNNcsXqM5RC8GgDccuI0TePpmw2dRAyw4GPmcp1JoUgmUNME2LSBqTPEVSQvWxZzekZqYaLs/QSFcV55+/aID86rc1a4ycSP/C+M7ToP6wbzRzk3PgaCEz4MHreeuK1ttLB7e7raK8ts5RS71nNvUxb9kAiK3NKXaefoVYvglyG+L+pQR379BadbIO5Ce13I3Q0RkohffZXerCCeMFFSmGkWyHW6tn3gPScmkhoHhCw4kmq8D2noyKmFx1qSc9XOepapQYZ3XEBn3MLXOgmz5kHo4hKpfPTe8+gOdyKOsKnv1HK5J9zXixJ9ISfCzUmsJNeSfy4PqJjBoN8
+	0UQ8+xBk2k/3pI7ljw8Dm8R/LOJAAvj9Vawt3uaHPuzYtXYEfuAb1XkHzMuERR10kFTh+ndrLVYFv3w88jrpQ2jh4EWR9eB2LSmS1hR8rXFdzf7OBis0S+nU4nr+rVwiZ3ejmVoKHRzXpo8fq5n2xNO2LUGsAII0sLu2q+4R6TESpBasg4qZ3ySaDiSana9UaUyryktc5yEGd6HKedExYbmrohcNxK5uYHVWC9+Ap30YyMGW6Qlcvhcr9V7Q089qLXKwyqMDUXLNRx7rKtaYBigHh4RrxZOvCIcuSmBeuoaCBUf2uKZ0k6qeFkBdxKZr2wwqeGB7iaxdafX1ReTWSUVY0loi1KUswzxRU7BLM2FyeKPNy9EBGEtPeVgvP4v5nsYqOL6qQ4qEQCp3OhUmKC4iLjUHT2PPZcEtX5/sFHQ0GakyeFaXzLP8l7hId4GLA4Pg1MnX8AIv0Ba6cbEVPH8HCUcIm8mQCJVVwNg71KGzdJdzsBGYzxi5OFraSCLJonBWzZuGGdmmY2z+zZeDqtguizs8tUGlKVoEr2xppQQjGLoN5QxlAdcsVtiJYGvwRh82oBCG2PS8UVogmpIppugJyrM8kC6UwgoSLZOnRETdh8/tdUyYWzYYtx2VBXV0
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(41320700013)(366016)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XeAeDfOWDP3ODFJcdEjZ3qTsKD8l/YTm+XkgAO+/Fs9A4bFqPh7F3UPzqBYg?=
- =?us-ascii?Q?2wAAwNnUz62igHjfx5SpdR2RKACioa0u4z9qqUxsa8mjIg99YfuUleMBBBEX?=
- =?us-ascii?Q?owoithvml61lbt1c5NSe+LxEBRsg4jaTx3lVAFWfoAMm15OUyEweB5eqNJ0d?=
- =?us-ascii?Q?chtzPJ/DBJI8V6qlLTm2ZZRgIuE3ITh9InFXo6LL/vE3ac0gu8zYOCpGkk33?=
- =?us-ascii?Q?xnDbXD/kWIKgZJl2mPXdu5N++hd4lgGSRi8KFYXvTvsEC8LGQesNw4igUnRA?=
- =?us-ascii?Q?dvsso2UDEUFVUB0uGxigSxvQg4iL0ksyeP/mHd6s1qGi8y44ZH5lzBUpb2RS?=
- =?us-ascii?Q?PqsNd4wQru3qzcht9dI1F44rLaVvNqLYmeH4lIhPn/cNfluuaqxfLWyyQEMs?=
- =?us-ascii?Q?gBxWZNt8sY0uvsfx3sAxXO1S51tcAEKKK08+N+sJCZCeyRuGRrV/FwJ/qJrM?=
- =?us-ascii?Q?UyQuyEQ6v4sXE+CjadbwO1u/iyodyLR/JGcaw7XrCjZ1KXOFTm4gWvohBIjg?=
- =?us-ascii?Q?jqqw6PHE0Kvh0owyedIQKwZInTJbouf9wvZO9xOpuTf9Ws7URHp53sxc8oXN?=
- =?us-ascii?Q?q00TbrYILCEqXhPGAWc7KSzZf+NkJIOH/8YAG5634ISwwrIoRa+XMhwqWFgP?=
- =?us-ascii?Q?bfGYjv86qogyLfp8YzL6FsD2QKvB9YQ4DbibJcIkDIq8A5xmz6QDwkE90/NQ?=
- =?us-ascii?Q?jgUWE9kgR85o2KPENsgdMIZvEKP8kUN2e/Pl9p+xlS6U8EyYVaNslNjgFWoB?=
- =?us-ascii?Q?PPdOFGaSoaJSBOpVn9jW52cWOwS5rE6dpmxCtgg71ZBbT0vzzxcIhFucLCoo?=
- =?us-ascii?Q?sVksh0a5+lnFVVAoClrbhM5tWahaOwIVtIYjwfnaG3WAGOhjTPMaklknNgql?=
- =?us-ascii?Q?+1SDE7jrh1GYFfxJ1xsm/IsALOY0Z49QDkoBAEQBvIra4KRADsKjWrerkh86?=
- =?us-ascii?Q?0N6jqsAmtSFSAyrYbcjdTUAl/Ffg01HwRRwZOs6uZIsCWObDDI9euW9UTZnM?=
- =?us-ascii?Q?QUQ2t00eBrAklNSEdRzl9UEzYAgLGxVgokW3jxNbA4JhkNKQI7Q4YVJuwmL6?=
- =?us-ascii?Q?OQ56Mi69LW7ppQXbcgnF6Bu1mwA9HabRqChJS3Vy+j4dGEBtEHwtMhQG346J?=
- =?us-ascii?Q?3Cg6ut3+B71/vot/P9n/ajj0nGSTxi+jQZcBJ9NuJU6EE0ja682RBSZ1io6H?=
- =?us-ascii?Q?9vXc+sAESOzd3Edxy7sSuxrpoQjF4uzIh2ZsqDDBDorMGzIKji4+dR43lcUX?=
- =?us-ascii?Q?wSkFNO7IOwfOcxtWMVJ1oFuLfYo48Pi0LWBccHDUrIFXGoSa9R8r4A8Oce81?=
- =?us-ascii?Q?dZMe+q/8xZVNB6iRAy0OLUQtQLFQr+uYUQ74VDtDym29xlBDvu8znsqghN+Q?=
- =?us-ascii?Q?VtRUDFlFzTwCvYEQ1z+cElpgJnEguC4T0HFEYZsLd6vLUXek1NUFwrKK7KKi?=
- =?us-ascii?Q?j7TNcdM5aa9uO8t+nm+2r+1YJsCLnFm7LxNdSeJDLTF6Q9aOMHh5bWOyXdyR?=
- =?us-ascii?Q?EQzCr/xJ/mzLq6srSDF67BydRigT7HU0iCfQ/sBgX/MBXTU1qyaEkXpP30pT?=
- =?us-ascii?Q?wK4PPLhY2qTBad6hU5AeUVpOLY2lRmwk+6CwfpkFAsu4WvvYnCYz0CDg+ArZ?=
- =?us-ascii?Q?AExcdJDJC37by5gY0+Yuou4=3D?=
+	=?us-ascii?Q?vS/hfPhqo8wZisFlGbNIr4pNM5iM7uwVC6iXexyZepe8qQ18gX+GzUrM10gs?=
+ =?us-ascii?Q?fGJ/L311a496ZP/75A5DskUzqYCa6K/qT3uBjC1bvCt8mTRT9qJgrpBXk7nK?=
+ =?us-ascii?Q?S23fBSAPjBi5uqqI2U7NS3N1ti1Wm5RFOdFjSOwSDTBn0qwAVoJKPChUyP6g?=
+ =?us-ascii?Q?R709msYMiD4jIulJMH6VKg8FlJppAO/X0oWavyds7uRzUNcL5oKiE4Nb2q0v?=
+ =?us-ascii?Q?jbwRhMmm2udrbsjvW4m//pt7bKjYv7Uy38MSYVm7fJAP/IsCaydH+Z9XALwc?=
+ =?us-ascii?Q?Oaf6en+ZxPB7QcidZ6RH/GqPtLhPPqKJGFClw/95DD/GFJF1htqF7Eo6FRe2?=
+ =?us-ascii?Q?6guqU8rJDxNEts8zzM1N4Uc4vZKn6kACYU0jZtVHkdUDWxCFyhDx4S2ZAc4G?=
+ =?us-ascii?Q?Vp2+QHuHllB442NPp8XWJmZ6czchzVuXf9bDnIvhGAx5mb2I9TWWjOde1m7z?=
+ =?us-ascii?Q?cEBtVw9nnDJat8mXiuDfayB54HXxvxJzAefT+KSQpjWuJb6A71AnR4IHHYCn?=
+ =?us-ascii?Q?oLkKpoI8INX1rp6nY0LNxL2Fpd0dsUeyMPqJL0PrfG+TsggeeCx9QvBirLAp?=
+ =?us-ascii?Q?o2LjjRzVRxD4GGr6zEgd3aFeVO7Ts8UoRHDT7qO79Au5fA9lmZ8rOrezlOJL?=
+ =?us-ascii?Q?uXXeoHzVj2fBFBTPYpdqeg9sCyDxzNvcvuKlKE1D7jBGvj+nTwuCGB10J+AV?=
+ =?us-ascii?Q?jcah2DsYzMPxjICQJX7N6rlD2/yXzKdmGLwH/RRh3XNbGlgnmiyBzWQzUxkZ?=
+ =?us-ascii?Q?ZGb0MMvaRHvKmfAWLYqDaMDrKbzxmI3J0vviv9pl0riTlyEerCTqVCJxBMou?=
+ =?us-ascii?Q?e4/27jdFvZsWRvMzRZ2Jy8l9z04Jg8A83tLk19tgddGXK7KaO3lrWPgS1ZGh?=
+ =?us-ascii?Q?od8t29CeZJ5T6bebu+SKr4t4PamOhYgEmQiPtA2CR8/MlfyZDut7ft/gsQ9X?=
+ =?us-ascii?Q?fVYPYa7as2rCCzyDXtDDlNBc9T+25mWiDtt1dY7uDqwMwRo+flv94zPgn9QE?=
+ =?us-ascii?Q?phc1rZ/iuzFiU6FCVEPNSFw9/Otb3VfEOl9YCcTEoK/EG6Ko9Xn3CX2+l+Hz?=
+ =?us-ascii?Q?zpE2rFUTmRiV4/qHNw2geNP+Jn6kwkDQ5DAIzezKqcTcQOvI21mtqetpj1wz?=
+ =?us-ascii?Q?3U9G6gwRSuUwmg/xZAa0oIUIqjfP0+pU44/VfBnYioqSrYntZ/0k66ywOY0c?=
+ =?us-ascii?Q?6hYRD27UnHqWb96Smy+vuJvFq/9VtMC3A3DGVnYR6l2VeBGGOzLGkMAlc3EY?=
+ =?us-ascii?Q?IfSWjpOPJHHr5ukiO6CGpo8GgryqqOwxrz2JTDshr7NZeU4weTxAc9Jij31q?=
+ =?us-ascii?Q?rToiCRxSe2jhPeDek6vhJOb2WfYBm4v2hehJfYugs3GFOApaJHqYD9Odc/hy?=
+ =?us-ascii?Q?4ZAKzEAemhU1D9vCEjq+peuNma6RsQ86mECf+3h5ZrKIckOcEm2BYdnoAYT7?=
+ =?us-ascii?Q?eJP1UPFJxTaGS0tEdY/VsvlqeV7EifoK4Uvmc6VRt9VsDsHpN4C+bB2s7dVY?=
+ =?us-ascii?Q?XSNd9hwqXe8mvauNOVsFE0MCRu+rNyHwMyHZ1ID37erfzb4fv5Q/6n96Sh92?=
+ =?us-ascii?Q?hNtM1HO2OkAKaWmsC3MStR1qdHkosAt8owqPSjlzcyzLMw8G1FnVpe2qmDjY?=
+ =?us-ascii?Q?iIGQYU3m5c6ONfSe0XPJ0MM=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7337e719-7f54-4e8b-c18a-08dc9ff28727
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c97d4d9-a910-4e36-928a-08dc9ff28aaa
 X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 08:38:37.9544
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 08:38:43.8109
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bVJn9V9c8i4vMP/mGzPaHNje1YtvDeeP3GL1u3Zwefol+f+00auLdVEhRstpeNQZrhMxwsJVDTeegBAUtvmqLIXTpD/4al32wPx/vDUA+ihx09zxWDtJTGx2kFqZ5PSt
+X-MS-Exchange-CrossTenant-UserPrincipalName: MY8CWRGFkPWHsoxjQNshVcxnec1IioFDFpyv+zCVdK1mI9SiMmUn/IBTZhbeX1FrJXFpbuD4G/RQE6Ghn+7C5pwJTLOi9q0EaYGTnMPmqZyeC59a4T9e+p4ojCVT52ss
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1271
 
-Separate buffer from ISP hardware operation. Convenient to extract the
-buffer be a common file.
-Replace "while" with "if" in stf_buf_done helper function because one
-interrupt signal only handle one video buffer.
+Add V4L2_CAP_IO_MC capabality for video device. User space can enumerate
+formats by mbus code.
 
 Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
 ---
- .../media/starfive/camss/stf-capture.c        | 63 +++++++++++--------
- 1 file changed, 36 insertions(+), 27 deletions(-)
+ drivers/staging/media/starfive/camss/stf-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/starfive/camss/stf-capture.c b/drivers/staging/media/starfive/camss/stf-capture.c
-index ec5169e7b391..494e56e731f0 100644
---- a/drivers/staging/media/starfive/camss/stf-capture.c
-+++ b/drivers/staging/media/starfive/camss/stf-capture.c
-@@ -368,7 +368,7 @@ static void stf_buf_flush(struct stf_v_buf *output, enum vb2_buffer_state state)
- 	}
- }
- 
--static void stf_buf_done(struct stf_v_buf *output)
-+static struct stfcamss_buffer *stf_buf_done(struct stf_v_buf *output)
- {
- 	struct stfcamss_buffer *ready_buf;
- 	u64 ts = ktime_get_ns();
-@@ -376,27 +376,27 @@ static void stf_buf_done(struct stf_v_buf *output)
- 
- 	if (output->state == STF_OUTPUT_OFF ||
- 	    output->state == STF_OUTPUT_RESERVED)
--		return;
-+		return NULL;
- 
- 	spin_lock_irqsave(&output->lock, flags);
- 
--	while ((ready_buf = stf_buf_get_ready(output))) {
-+	ready_buf = stf_buf_get_ready(output);
-+	if (ready_buf) {
- 		ready_buf->vb.vb2_buf.timestamp = ts;
- 		ready_buf->vb.sequence = output->sequence++;
--
--		vb2_buffer_done(&ready_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
+diff --git a/drivers/staging/media/starfive/camss/stf-video.c b/drivers/staging/media/starfive/camss/stf-video.c
+index 2203605ec9c7..8c6c45d8b7a1 100644
+--- a/drivers/staging/media/starfive/camss/stf-video.c
++++ b/drivers/staging/media/starfive/camss/stf-video.c
+@@ -668,7 +668,7 @@ int stf_video_register(struct stfcamss_video *video,
  	}
  
- 	spin_unlock_irqrestore(&output->lock, flags);
-+
-+	return ready_buf;
- }
- 
--static void stf_change_buffer(struct stf_v_buf *output)
-+static struct stfcamss_buffer *stf_change_buffer(struct stf_v_buf *output)
- {
- 	struct stf_capture *cap = container_of(output, struct stf_capture,
- 					       buffers);
- 	struct stfcamss *stfcamss = cap->video.stfcamss;
- 	struct stfcamss_buffer *ready_buf;
--	dma_addr_t *new_addr;
- 	unsigned long flags;
- 	u32 active_index;
- 
-@@ -404,7 +404,7 @@ static void stf_change_buffer(struct stf_v_buf *output)
- 	    output->state == STF_OUTPUT_STOPPING ||
- 	    output->state == STF_OUTPUT_RESERVED ||
- 	    output->state == STF_OUTPUT_IDLE)
--		return;
-+		return NULL;
- 
- 	spin_lock_irqsave(&output->lock, flags);
- 
-@@ -426,37 +426,37 @@ static void stf_change_buffer(struct stf_v_buf *output)
- 
- 	/* Get next buffer */
- 	output->buf[active_index] = stf_buf_get_pending(output);
--	if (!output->buf[active_index]) {
--		new_addr = ready_buf->addr;
-+	if (!output->buf[active_index])
- 		stf_buf_update_on_last(output);
--	} else {
--		new_addr = output->buf[active_index]->addr;
-+	else
- 		stf_buf_update_on_next(output);
--	}
- 
--	if (output->state == STF_OUTPUT_STOPPING) {
-+	if (output->state == STF_OUTPUT_STOPPING)
- 		output->last_buffer = ready_buf;
--	} else {
--		if (cap->type == STF_CAPTURE_RAW)
--			stf_set_raw_addr(stfcamss, new_addr[0]);
--		else if (cap->type == STF_CAPTURE_YUV)
--			stf_set_yuv_addr(stfcamss, new_addr[0], new_addr[1]);
--
-+	else
- 		stf_buf_add_ready(output, ready_buf);
--	}
- 
- out_unlock:
- 	spin_unlock_irqrestore(&output->lock, flags);
-+
-+	return output->buf[active_index];
- }
- 
- irqreturn_t stf_wr_irq_handler(int irq, void *priv)
- {
- 	struct stfcamss *stfcamss = priv;
- 	struct stf_capture *cap = &stfcamss->captures[STF_CAPTURE_RAW];
-+	struct stfcamss_buffer *change_buf;
-+	struct stfcamss_buffer *ready_buf;
- 
- 	if (atomic_dec_if_positive(&cap->buffers.frame_skip) < 0) {
--		stf_change_buffer(&cap->buffers);
--		stf_buf_done(&cap->buffers);
-+		change_buf = stf_change_buffer(&cap->buffers);
-+		if (change_buf)
-+			stf_set_raw_addr(stfcamss, change_buf->addr[0]);
-+
-+		ready_buf = stf_buf_done(&cap->buffers);
-+		if (ready_buf)
-+			vb2_buffer_done(&ready_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
- 	}
- 
- 	stf_syscon_reg_set_bit(stfcamss, VIN_INRT_PIX_CFG, U0_VIN_INTR_CLEAN);
-@@ -469,12 +469,16 @@ irqreturn_t stf_isp_irq_handler(int irq, void *priv)
- {
- 	struct stfcamss *stfcamss = priv;
- 	struct stf_capture *cap = &stfcamss->captures[STF_CAPTURE_YUV];
-+	struct stfcamss_buffer *ready_buf;
- 	u32 status;
- 
- 	status = stf_isp_reg_read(stfcamss, ISP_REG_ISP_CTRL_0);
- 	if (status & ISPC_ISP) {
--		if (status & ISPC_ENUO)
--			stf_buf_done(&cap->buffers);
-+		if (status & ISPC_ENUO) {
-+			ready_buf = stf_buf_done(&cap->buffers);
-+			if (ready_buf)
-+				vb2_buffer_done(&ready_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
-+		}
- 
- 		stf_isp_reg_write(stfcamss, ISP_REG_ISP_CTRL_0,
- 				  (status & ~ISPC_INT_ALL_MASK) |
-@@ -488,13 +492,18 @@ irqreturn_t stf_line_irq_handler(int irq, void *priv)
- {
- 	struct stfcamss *stfcamss = priv;
- 	struct stf_capture *cap = &stfcamss->captures[STF_CAPTURE_YUV];
-+	struct stfcamss_buffer *change_buf;
- 	u32 status;
- 
- 	status = stf_isp_reg_read(stfcamss, ISP_REG_ISP_CTRL_0);
- 	if (status & ISPC_LINE) {
- 		if (atomic_dec_if_positive(&cap->buffers.frame_skip) < 0) {
--			if ((status & ISPC_ENUO))
--				stf_change_buffer(&cap->buffers);
-+			if ((status & ISPC_ENUO)) {
-+				change_buf = stf_change_buffer(&cap->buffers);
-+				if (change_buf)
-+					stf_set_yuv_addr(stfcamss, change_buf->addr[0],
-+							 change_buf->addr[1]);
-+			}
- 		}
- 
- 		stf_isp_reg_set_bit(stfcamss, ISP_REG_CSIINTS,
+ 	vdev->fops = &stf_vid_fops;
+-	vdev->device_caps |= V4L2_CAP_STREAMING;
++	vdev->device_caps |= V4L2_CAP_STREAMING | V4L2_CAP_IO_MC;
+ 	vdev->entity.ops = &stf_media_ops;
+ 	vdev->vfl_dir = VFL_DIR_RX;
+ 	vdev->release = stf_video_release;
 -- 
 2.25.1
 
