@@ -1,81 +1,161 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BE019CCE1;
-	Tue,  9 Jul 2024 15:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63A319CCE1
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720537608; cv=none; b=DjGB3XLuWrSWfW/vyWEMOczpNACE5CfQQu32PHtYYbInP9IBEdGorgkjs3x3MNSV3/Ad1CmMyPX4VaAWP2wVadYdy/HyC31HxfQNrReNFAHDM00FqQMUDATT43wjqftkV/Xm2eNEzArNyaQ/IMdbUI9eXVIc6i7GEh50CfyQ4+c=
+	t=1720537614; cv=none; b=XsG4BJsrAqwgTfHnPRNVoFqxzKik0JpUafV98OjtkvSW3ak9sPJXeRzi+GzoqGBr+Vw60pAjQGGz6iLwzZdAC1xVbNoJ5+eLROylOorTWdqzqwN93R0GLm6aXj12cfgLGVTop+gjQmpi8QoAzCDKs1CPzt10T7EDbsFcO5yiQZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720537608; c=relaxed/simple;
-	bh=Ev+hYYCgQuT+OInBf7HOjWwJu3rpgA3FZ5vehiFufpk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SYzTsIy2GGmVcj+1SenBQ9gyntmogBxaqAPb3R1GDttqV655AYpDGgxRSebtILqFL0TBl25aOgxDo5+/o8Cg6g3t2ZWHlSPuM0JyInfT4VhPqez/gcL/AX1vHU+imut/xQq2YSyqIP3dHpk4ULcOE7XrU2fV54XseQuhyNC+MKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=tZ0Ke6Ij; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1720537614; c=relaxed/simple;
+	bh=51kUKee66GC78kVNFb48z+4FmZxQlPv3lIlopAqxUSE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XAaPveCLPz1sO+/vUx+cTYIutnKMfL0FfSMUxyZtYRyb09bvmSk//yDDErFXe19jUwl/Q5KPYQXAsqtQML5EwB3ANd4GCjgeo3EHTS5o7CyhreZ/+NEhAC5l8pwukldsFNpHmG96T4knsgrIc0x1WXQ6XxZWtzXpnRIkVGYWyjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qr1CqDCp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="tZ0Ke6Ij"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5831541A36
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1720537606; bh=+aZefzjyqJcmqhE79dhI7IuzKowlLWiHzqxibVnrW0E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=tZ0Ke6IjtuJUW90INGiHySZBmgCKtM9RT94BUkyaztoM77aRUPtHhc57hNdSZ6aKC
-	 zWcHKRjxyLLqjGiGrJF+10PXHvqE3yBYanquhPyXVNA/rdpMXMJsWBHGDKgI/HDlQz
-	 7GO0Hd4kHDrbxjqhYKyRMVDoGu3v33TTlmP//Eq4xknw2Uy6GSKbtkBU4cAjhjZhSB
-	 gEVq9tdqKnjhT+2h0oqUD35FaLIqauFsiNZqUv/b9a5mt4cttC6FaBOFwdd205TePF
-	 1E0JQW2Exhkg74YOryQpexp5JMVnkb0Xr7+2fTV0I0pc65/zLkEEnWGNRHPIIuCoEO
-	 ICp+gAo/skEXg==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qr1CqDCp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720537611;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9g5A7SXqltxpQ8rMmUVgyuk85viXZ5bqucOss47RPM4=;
+	b=Qr1CqDCpRuxnb+RxljFI+DXszMvjpZaBMYDBnP0+zTP4BbgKmDFX0HaWv6dQ3+zuTW/YxP
+	BqvP9bwRpj9qbtZ/NmKavLshwqHZNdIHCh6o7pc5LvEZbDJbJD4bx4noGURWPZZbVnjcme
+	A+NCA5u8eFEMKwUGIVQ4/1ou1atpD8Y=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-cOYatm8PN1Sd9vhHauD-7g-1; Tue,
+ 09 Jul 2024 11:06:48 -0400
+X-MC-Unique: cOYatm8PN1Sd9vhHauD-7g-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 5831541A36;
-	Tue,  9 Jul 2024 15:06:46 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Zenghui Yu <zenghui.yu@linux.dev>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: alexs@kernel.org, siyanteng@loongson.cn, Zenghui Yu <zenghui.yu@linux.dev>
-Subject: Re: [PATCH] docs/zh_CN/virt: Update the translation of
- guest-halt-polling.rst
-In-Reply-To: <20240707161444.98715-1-zenghui.yu@linux.dev>
-References: <20240707161444.98715-1-zenghui.yu@linux.dev>
-Date: Tue, 09 Jul 2024 09:06:45 -0600
-Message-ID: <87h6cy8v0a.fsf@trenco.lwn.net>
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 060C21955F3D;
+	Tue,  9 Jul 2024 15:06:45 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.34])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 983BE3000183;
+	Tue,  9 Jul 2024 15:06:41 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  9 Jul 2024 17:05:08 +0200 (CEST)
+Date: Tue, 9 Jul 2024 17:05:04 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
+	clm@meta.com, paulmck@kernel.org
+Subject: Re: [PATCH 05/10] perf/uprobe: SRCU-ify uprobe->consumer list
+Message-ID: <20240709150504.GF28495@redhat.com>
+References: <20240708091241.544262971@infradead.org>
+ <20240708092415.695619684@infradead.org>
+ <20240709120551.GK27299@noisy.programming.kicks-ass.net>
+ <20240709133349.GC28495@redhat.com>
+ <20240709143218.GM27299@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709143218.GM27299@noisy.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Zenghui Yu <zenghui.yu@linux.dev> writes:
-
-> Update to commit 1954d51592b5 ("Documentation: virt: correct location of
-> haltpoll module params") to fix the obvious mistake.
+On 07/09, Peter Zijlstra wrote:
 >
-> Signed-off-by: Zenghui Yu <zenghui.yu@linux.dev>
-> ---
->  Documentation/translations/zh_CN/virt/guest-halt-polling.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Tue, Jul 09, 2024 at 03:33:49PM +0200, Oleg Nesterov wrote:
+> > On 07/09, Peter Zijlstra wrote:
+> > >
+> > > > +	guard(srcu)(&uprobes_srcu);
+> > > > +
+> > > > +	for_each_consumer_rcu(uc, uprobe->consumers) {
+> > > >  		int rc = 0;
+> > > >
+> > > >  		if (uc->handler) {
+> > > > @@ -2116,7 +2126,6 @@ static void handler_chain(struct uprobe
+> > > >  		WARN_ON(!uprobe_is_active(uprobe));
+> > > >  		unapply_uprobe(uprobe, current->mm);
+> > >
+> > >    ^^^ this remove case needs more thought.
+> >
+> > Yeah... that is why the current code doesn't use ->consumer_rwsem, iirc.
 >
-> diff --git a/Documentation/translations/zh_CN/virt/guest-halt-polling.rst=
- b/Documentation/translations/zh_CN/virt/guest-halt-polling.rst
-> index b798d1cf0b48..463d1d829062 100644
-> --- a/Documentation/translations/zh_CN/virt/guest-halt-polling.rst
-> +++ b/Documentation/translations/zh_CN/virt/guest-halt-polling.rst
-> @@ -76,7 +76,7 @@ guest_halt_poll_ns=E5=B0=86=E4=BF=9D=E6=8C=81=E9=AB=98=
-=E4=BD=8D=EF=BC=89=E3=80=82
->=20=20
->  =E9=BB=98=E8=AE=A4=E5=80=BC: Y
->=20=20
-> -=E6=A8=A1=E5=9D=97=E5=8F=82=E6=95=B0=E5=8F=AF=E4=BB=A5=E4=BB=8EDebugfs=
-=E6=96=87=E4=BB=B6=E4=B8=AD=E8=AE=BE=E7=BD=AE=EF=BC=8C=E5=9C=A8::
-> +=E6=A8=A1=E5=9D=97=E5=8F=82=E6=95=B0=E5=8F=AF=E4=BB=A5=E4=BB=8Esysfs=E6=
-=96=87=E4=BB=B6=E4=B8=AD=E8=AE=BE=E7=BD=AE=EF=BC=8C=E5=9C=A8::
->=20=20
-Applied, thanks.
+> AFAICT something like the below should work. Concurrent
+> remove_breakpoint() should already be possible today and doesn't appear
+> to be a problem.
 
-jon
+Sorry, I don't understand how can this patch help. Yes, it removes the
+uprobe->consumers != NULL check, but this is minor.
+
+To simplify, suppose we have a single consumer which is not interested
+in this task/mm, it returns UPROBE_HANDLER_REMOVE.
+
+For example, event->hw.target != NULL and the current task is the forked
+child which hits the breakpoint copied by dup_mmap().
+
+Now. We need to ensure that another (say system-wide) consumer can't come
+and call register_for_each_vma() before unapply_uprobe().
+
+But perhaps I missed your point...
+
+Oleg.
+
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1260,6 +1260,10 @@ int uprobe_apply(struct inode *inode, lo
+>  	return ret;
+>  }
+>
+> +/*
+> + * Can race against uprobe_unregister() / register_for_each_vma(), and relies
+> + * on duplicate remove_breakpoint() being a no-op.
+> + */
+>  static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+>  {
+>  	VMA_ITERATOR(vmi, mm, 0);
+> @@ -2101,6 +2105,7 @@ static void handler_chain(struct uprobe
+>  	struct uprobe_consumer *uc;
+>  	int remove = UPROBE_HANDLER_REMOVE;
+>  	bool need_prep = false; /* prepare return uprobe, when needed */
+> +	bool had_handler = false;
+>
+>  	down_read(&uprobe->register_rwsem);
+>  	for (uc = uprobe->consumers; uc; uc = uc->next) {
+> @@ -2115,16 +2120,26 @@ static void handler_chain(struct uprobe
+>  		if (uc->ret_handler)
+>  			need_prep = true;
+>
+> +		/*
+> +		 * A single handler that does not mask out REMOVE, means the
+> +		 * probe stays.
+> +		 */
+> +		had_handler = true;
+>  		remove &= rc;
+>  	}
+>
+> +	/*
+> +	 * If there were no handlers called, nobody asked for it to be removed
+> +	 * but also nobody got to mask the value. Fix it up.
+> +	 */
+> +	if (!had_handler)
+> +		remove = 0;
+> +
+>  	if (need_prep && !remove)
+>  		prepare_uretprobe(uprobe, regs); /* put bp at return */
+>
+> -	if (remove && uprobe->consumers) {
+> -		WARN_ON(!uprobe_is_active(uprobe));
+> +	if (remove)
+>  		unapply_uprobe(uprobe, current->mm);
+> -	}
+>  	up_read(&uprobe->register_rwsem);
+>  }
+>
+>
+
