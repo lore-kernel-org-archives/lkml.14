@@ -1,95 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C4E19EECE;
-	Tue,  9 Jul 2024 16:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812581B47C6;
+	Tue,  9 Jul 2024 16:21:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542115; cv=none; b=qusO3o8WClvHWlCb0s6/11rYxXiaE7DabF+/IOpcPlhyDICPoRRmLjjNyuuwfHuoLop+14bBr+mt3g3TaRCW8zw/TylqmnYh8PXARXoO9WQeVF4vDQ2HuQuWicSCxY4H1NSAMzQcf+qpJ1A2mCdD2W94TD5TE9xT3BIcEa8NsYQ=
+	t=1720542116; cv=none; b=JcCSnbuIBtXg16cPl/3Cz6gtzif6amXLlXX25MQ1tHA/WKRiILvsuXET5/RMU+jteF3vGaFTZlU+0ozVPDACHhedEB+g1wIziQxoiQ+NbaKcdjDE5rYlNF7UNc90vPKMxanO0LiDZ2aVtPbCC/ArUq+KidRfttziuvVyYcJQ2iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542115; c=relaxed/simple;
-	bh=x4j+mPJIwJCDbaZ9DjFvkJ8ODGnYpHCdSfBKribIdbs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WtMnfovdDI7wevSD3GxcLJ83WNU1fD0rxa7fQlMsOknCg8+LOvPLsuVE5b/FjAzquG8+uiKmlCFnJ4QvCVZZAPt4+tBNCGhpZAMdoNBrmPQ7F7AIF8F6cpvxU0UsM2J0Ri3CPA/njfbMjgkiRLecdx4PO9zzLZMue7qfkERkcRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EeHNrylf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720542116; c=relaxed/simple;
+	bh=9Gcw21XytUn5kvBs9uu7DBexRcY56exFFjtUr3t699k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=LR2eBEqBvjNk0c+dC1+Kz12ijmRw0e4QItTij5nmZNmA8nsob2qlav+itKPXV3gMeroxHpcDSP2U1CY3s+kLEBxHsNr95aAOQ8PDeoGPvCRNuta8M40uSRMj9C9egWrN1g8IpTq2/v6uF/8s1EkNZ6m1sf9kSF6pkAS9D6bhyjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsryhlAU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EeHNrylf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500D9C32786;
-	Tue,  9 Jul 2024 16:21:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsryhlAU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38363C32782;
+	Tue,  9 Jul 2024 16:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542115;
-	bh=x4j+mPJIwJCDbaZ9DjFvkJ8ODGnYpHCdSfBKribIdbs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EeHNrylfNef6+3vNEK4chCDE85vUheVuPkL0TSIp+wcpcl8IZMLuTp/555bdvPzsn
-	 QkfEfd1Cy2Wj58s4JfnqU0vrZpT4Acxr7+S7adoPk+3gu6BNYY/JDQz36ozGJ8YBEZ
-	 Rd/0GrAMCKdj88YTBah/1MA1Pu0lEOTjYQZsbew2GHSr4tIfSyK6sxK0ZSUbYvpJxL
-	 xtIDdLl6RK2GqFiKPgcwAk7Nzb9+S4HoMEdby7xkM57TQGOryKW7JV5g17wJ7g2ERm
-	 ntQMSOi46os08QRtDFOCqOWCPACInQhoiJu/pveNo16+fK9fMG7YFJ58/9wxUtqfzF
-	 9scHTWcmADfgQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Vyacheslav Frantsishko <itmymaill@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	me@jwang.link,
-	end.to.start@mail.ru,
-	git@augustwikerfors.se,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 39/40] ASoC: amd: yc: Fix non-functional mic on ASUS M5602RA
-Date: Tue,  9 Jul 2024 12:19:19 -0400
-Message-ID: <20240709162007.30160-39-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240709162007.30160-1-sashal@kernel.org>
-References: <20240709162007.30160-1-sashal@kernel.org>
+	s=k20201202; t=1720542116;
+	bh=9Gcw21XytUn5kvBs9uu7DBexRcY56exFFjtUr3t699k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=fsryhlAU8McMtVI0ObeJxYWgTWf3CZ+c3jtBxSQ0lvW4w31TM72q1Vra5slo085y6
+	 HyuwO6rW9GvZ+Qj9IDGSjAM7prFMNbVFZnN1vmYgtQZpKF501gayYCHQJ2Nbhi77C7
+	 rX1gOlqqiV4yzP6/WYRisT/NQGr2aWjBfM1/W8U6iTkPnbTI8wpZgA5A8eQjY++G31
+	 4AmqRBd3vEHOejCeHFBP66VWvPeF0jVFHuZrIELtYhp586/Txg3HgwDx6gDq4tAvl1
+	 dGdpvJ7nJoYWHoxcEuGmGfci23P6hXShiQHEwCWO33yXWK8LJ5aJ8R0MGJPdy5xTbE
+	 E4RrqgZ/8JGog==
+Date: Tue, 9 Jul 2024 11:21:54 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Stewart Hildebrand <stewart.hildebrand@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] PCI: align small (<4k) BARs
+Message-ID: <20240709162154.GA175839@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709133610.1089420-7-stewart.hildebrand@amd.com>
 
-From: Vyacheslav Frantsishko <itmymaill@gmail.com>
+On Tue, Jul 09, 2024 at 09:36:03AM -0400, Stewart Hildebrand wrote:
+> Issues observed when small (<4k) BARs are not 4k aligned are:
+> 
+> 1. Devices to be passed through (to e.g. a Xen HVM guest) with small
+> (<4k) BARs require each memory BAR to be page aligned. Currently, the
+> only way to guarantee this alignment from a user perspective is to fake
+> the size of the BARs using the pci=resource_alignment= option. This is a
+> bad user experience, and faking the BAR size is not always desirable.
+> See the comment in drivers/pci/pci.c:pci_request_resource_alignment()
+> for further discussion.
 
-[ Upstream commit 63b47f026cc841bd3d3438dd6fccbc394dfead87 ]
+Include the relevant part of this discussion directly here so this log
+is self-contained.  Someday that function will change, which will make
+this commit log less useful.
 
-The Vivobook S 16X IPS needs a quirks-table entry for the internal microphone to function properly.
-
-Signed-off-by: Vyacheslav Frantsishko <itmymaill@gmail.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Link: https://patch.msgid.link/20240626070334.45633-1-itmymaill@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index 1760b5d42460a..4e3a8ce690a45 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -283,6 +283,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "M5402RA"),
- 		}
- 	},
-+        {
-+		.driver_data = &acp6x_card,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "M5602RA"),
-+		}
-+	},
- 	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
--- 
-2.43.0
-
+> 2. Devices with multiple small (<4k) BARs could have the MSI-X tables
+> located in one of its small (<4k) BARs. This may lead to the MSI-X
+> tables being mapped in the same 4k region as other data. The PCIe 6.1
+> specification (section 7.7.2 MSI-X Capability and Table Structure) says
+> we probably shouldn't do that.
+> 
+> To improve the user experience, and increase conformance to PCIe spec,
+> set the default minimum resource alignment of memory BARs to 4k. Choose
+> 4k (rather than PAGE_SIZE) for the alignment value in the common code,
+> since that is the value called out in the PCIe 6.1 spec, section 7.7.2.
+> The new default alignment may be overridden by arches by implementing
+> pcibios_default_alignment(), or by the user with the
+> pci=resource_alignment= option.
+> 
+> Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
+> ---
+> Preparatory patches in this series are prerequisites to this patch.
+> ---
+>  drivers/pci/pci.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9f7894538334..e7b648304383 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6453,7 +6453,12 @@ struct pci_dev __weak *pci_real_dma_dev(struct pci_dev *dev)
+>  
+>  resource_size_t __weak pcibios_default_alignment(void)
+>  {
+> -	return 0;
+> +	/*
+> +	 * Avoid MSI-X tables being mapped in the same 4k region as other data
+> +	 * according to PCIe 6.1 specification section 7.7.2 MSI-X Capability
+> +	 * and Table Structure.
+> +	 */
+> +	return 4 * 1024;
+>  }
+>  
+>  /*
+> -- 
+> 2.45.2
+> 
