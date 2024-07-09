@@ -1,102 +1,161 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B9855E4C;
-	Tue,  9 Jul 2024 11:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D15255E4C
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 11:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720524822; cv=none; b=Khzwz+Eg9u2hKYUGHuxrtnUWQXWn4haF0ZZtt3NFXdh2mN6zdOcw7mvw6HhluDxdJM5K4uPsIvgbQYvTJwagbxDDJdd/4U3Fhzfykwda0gMr+Nk083nPsuyBrPSntFLMeZzWIhHOI1zr9RhqagPG1PiprdGTtvoTrDMD2TVUdy4=
+	t=1720524937; cv=none; b=gsBkypu7aCX2p7DWPuXo4watbMCzQgcHdZC0XFF6uj7q5q9eLS3wY+tPd0t8IaOubcl1NMXVii6yk1gjawj79X2xz+eHreAegAxrV3V+iuft4JeES9t5tXgsmd1/YS2UOMLOYheeT3pNLvajm8tPboAFgx0LZCnsd5+/NIKcGS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720524822; c=relaxed/simple;
-	bh=+qzS59c3fdH5vXtrObTlu3zWUbvBHhppuPkCToi9+CY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EhVc2nAFon7cI1OKLzA/0/fslq+P8Y4rst1gq3qaTbpzPbf2up4XMOHVaSwKVIVa02grJ7S63NU7CprnBF/LTWESvxWDq7lXtlYuZ5PYuLMkYhCFIDYrWNlFYv+WSIz+v1OdzFMJSndl19NyOBRPxySzBvgdIBsoKnz2pyvSISk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-03 (Coremail) with SMTP id rQCowABXeiz5H41mOeXVFA--.41574S2;
-	Tue, 09 Jul 2024 19:33:23 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: patrik.r.jakobsson@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	daniel.vetter@ffwll.ch,
-	alan@linux.intel.com,
-	airlied@redhat.com,
-	akpm@linux-foundation.org
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v4] drm/gma500: fix null pointer dereference in cdv_intel_lvds_get_modes
-Date: Tue,  9 Jul 2024 19:33:11 +0800
-Message-Id: <20240709113311.37168-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720524937; c=relaxed/simple;
+	bh=MN8tQlU/WjfJAm5vJUB/k6Sbg2NBCUv0pDcfrVCj4T0=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=rmPLlys+TszfdbtZYM7ngELtyCVd/D9BvItt+EeKVEKiJsDqeAG61YaYkuqRuFH27+flcgnwJBtIsJ1VKNPnGeiSw3Tt+pz/KV1V50q90rnLbYLapD1nk9SdJF3rs3AuIT0u3dgj05v06h2fpNAvhvtEU1keKZVLJDTxNy/GTL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HGVygQy4; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HGVygQy4"
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240709113532epoutp04113d442178dfa9672a231ffafdb97789~giE9gK4Cx1199611996epoutp04l
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 11:35:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240709113532epoutp04113d442178dfa9672a231ffafdb97789~giE9gK4Cx1199611996epoutp04l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1720524932;
+	bh=1/vAaKQvg/yK38AxX7tzEigXwlhSdwGh+WKBfS50Va0=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=HGVygQy4shpvOpMMxlQwY82C0LZ5854xzqS64pnx+dAEO8/3aconBI8FRsDRjvt9B
+	 Xx+zpMeTX1Uzh8InF7ZA4RzvQPm3XCFppptA9FGZ0XECx1/mcGfrNzYeveD0puQSAQ
+	 HOnF07gi3BO1ZMa2eGDOHDZ3TAL1ZiPV4a1/jzYY=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+	20240709113531epcas1p44ff51bb93c0ef9c60bddbb4c2a0272ac~giE9EbOps0486104861epcas1p45;
+	Tue,  9 Jul 2024 11:35:31 +0000 (GMT)
+Received: from epsmgec1p1.samsung.com (unknown [182.195.36.223]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4WJJnv1zSQz4x9Py; Tue,  9 Jul
+	2024 11:35:31 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+	epsmgec1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	FC.78.09847.3802D866; Tue,  9 Jul 2024 20:35:31 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240709113530epcas1p493461714f6a520e29ba42d132c0b4af1~giE8H_ZWT0486104861epcas1p44;
+	Tue,  9 Jul 2024 11:35:30 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240709113530epsmtrp2aafe2cecd213d687aebf67bfb37ea3c8~giE8HQrJu2310623106epsmtrp2_;
+	Tue,  9 Jul 2024 11:35:30 +0000 (GMT)
+X-AuditID: b6c32a36-60dff70000002677-1e-668d20832a40
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	C8.44.29940.2802D866; Tue,  9 Jul 2024 20:35:30 +0900 (KST)
+Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240709113530epsmtip2bb740741224e63ca19c26fb3e3dbf6c9~giE76K2Fp3215932159epsmtip2g;
+	Tue,  9 Jul 2024 11:35:30 +0000 (GMT)
+From: "Sungjong Seo" <sj1557.seo@samsung.com>
+To: "'OGAWA Hirofumi'" <hirofumi@mail.parknet.co.jp>
+Cc: <akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+	<sj1557.seo@samsung.com>
+In-Reply-To: <87bk37t3zl.fsf@mail.parknet.co.jp>
+Subject: RE: [PATCH] fat: print s_dev via fat_msg
+Date: Tue, 9 Jul 2024 20:35:30 +0900
+Message-ID: <0c5c01dad1f4$1a46bd80$4ed43880$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABXeiz5H41mOeXVFA--.41574S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF1rJF1DtF1UKw43Xr1rCrg_yoW8Xr18pr
-	W7GFyYyr4FqF9FgFW8CF18WFW5G3W3J3W8KrykXws3u3Z0yryUXr95u3y3Xry3AFZxGrZY
-	yrnxtFW3GayUAF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-	rcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUQZ23UUUUU=
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQHwcbNQtGVXTyWTefViKeJrDA01VgFnFHFwAi3Zi2MBwlUF6QGrmzuusYrholA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGJsWRmVeSWpSXmKPExsWy7bCmnm6zQm+awd8eDos569ewWUyfu4HF
+	4vKuOWwWW/4dYXVg8Tgx4zeLx/23iR59W1YxenzeJBfAEtXAaJNYlJyRWZaqkJqXnJ+SmZdu
+	qxQa4qZroaSQkV9cYqsUbWhopGdoYK5nZGSkZ2oUa2VkqqSQl5ibaqtUoQvVq6RQlFwAVJtb
+	WQw0ICdVDyquV5yal+KQlV8KcqZecWJucWleul5yfq6SQlliTinQCCX9hG+MGVsOaRQ84KnY
+	P3sRawNjC1cXIyeHhICJRM+ClexdjFwcQgI7GCVuL2pkhnA+MUq0fumDynxjlNjTsJ6ti5ED
+	rKX3DBtEfC+jxOOp3YwQzktGiZl/v7CCzGUT0JV4cuMnM4gtAtTw8yLIDk4OZoFoiZ2LDrKB
+	2JwCBhLP/t1hArGFBQwlTvc1gdksAioS1yZ+BuvlFbCUuPLhGQuELShxcuYTFog58hLb385h
+	hvhBQWL3p6OsIMeJCPhJTGnIgCgRkZjd2Qb2jYTAV3aJzgN9UPUuEid3r2SDsIUlXh3fwg5h
+	S0l8freXDaKhm1Hi+Md3LBCJGYwSSzocIGx7iebWZnBIMAtoSqzfpQ+xjE/i3dceVogSQYnT
+	17qZIYHFK9HRJgQRVpH4/mEnC8yqKz+uMk1gVJqF5LNZSD6bheSFWQjLFjCyrGIUSy0ozk1P
+	LTYsMEKO7k2M4CSqZbaDcdLbD3qHGJk4GA8xSnAwK4nwzr/RnSbEm5JYWZValB9fVJqTWnyI
+	MRkY1hOZpUST84FpPK8k3tDMzNLC0sjE0NjM0JCwsImlgYmZkYmFsaWxmZI475krZalCAumJ
+	JanZqakFqUUwW5g4OKUamBSfpEmVxPP8Lrt0w77hE++FXs5muVeLnV7cK5149xx/YNmNV/JN
+	gfOaSu6vC1oSmstefG/6I8OOprbtx0+9S2J/sV1rkvJWOe3Wp8oMhZttf72ISDPp4N/2jGvf
+	DB6G5DuTTm66JPdif9ShO5HzHqilRZve/nk3c47TGSPJ6QpVLFc3B38Pb3/mclF8j1ukv6On
+	yVW+OLX8OUkHT3VsXeSW09sTVXt8ZtCVohf7dQ69P8O5sPT4pZ5DbiVbmOsOexf9m6VTJjRh
+	rtMusVmVxz2et+RZxT089PWYRf6ztZt635vJz3kyxf7V0t/sShK3DQ2rLk295tWbGPiiYQuP
+	1eXdXx2dnuc9uHsjbMGjb/OVWIozEg21mIuKEwEuvB5tWQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsWy7bCSvG6TQm+awfEuRYs569ewWUyfu4HF
+	4vKuOWwWW/4dYXVg8Tgx4zeLx/23iR59W1YxenzeJBfAEsVlk5Kak1mWWqRvl8CVseWQRsED
+	nor9sxexNjC2cHUxcnBICJhI9J5h62Lk4hAS2M0ose3RfFaIuJTEwX2aEKawxOHDxRAlzxkl
+	Fs1Yx97FyMnBJqAr8eTGT2YQWwRozM+LK8HizAKxEtv/voSa2cokcebOWlaQBKeAgcSzf3eY
+	QGxhAUOJ031NYDaLgIrEtYmfwQbxClhKXPnwjAXCFpQ4OfMJC8gRzAJ6Em0bGSHmy0tsfzsH
+	rFxCQEFi96ejYCeLCPhJTGnIgCgRkZjd2cY8gVF4FpJBsxAGzUIyaBaSjgWMLKsYJVMLinPT
+	c4sNCwzzUsv1ihNzi0vz0vWS83M3MYIjQ0tzB+P2VR/0DjEycTAeYpTgYFYS4Z1/oztNiDcl
+	sbIqtSg/vqg0J7X4EKM0B4uSOK/4i94UIYH0xJLU7NTUgtQimCwTB6dUA9OaeXfaxdvylJfn
+	x0pcOZsbMkHMa0tRqcIkO4V5R05ovxVkza97KZ9pkbY16VpDMZfpuwyXmZxmaoynwye4qglF
+	TFylHHAiorSp0P10st7mfbP/y8/6uue7unloZ/uF23u/TtcMW2/wZ33ocv9TqpNenlqh8SPA
+	6em5zfMnLpDd8Yq9bsG/npTiSf1Oyj++ceVy1EY87lZx2Cb7cX/sBb25dXzRNw6aPZkue7CA
+	+8Hnzf9b7v7VPTk92HYbN/ftab9ya7f9epunsXzXkhNXJ0my9Se7KP9tjprnGBTw/PuMV8I/
+	m27N3j9nydYLcvlB615z2zYfPNjRmH0n79u9lf/rYxdkTYz/KPO5N+1zkOVNJZbijERDLeai
+	4kQAC6Lv4PsCAAA=
+X-CMS-MailID: 20240709113530epcas1p493461714f6a520e29ba42d132c0b4af1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+X-ArchiveUser: EV
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240709041754epcas1p4ee6f7b1fd0dbf287e756b709aba321c8
+References: <CGME20240709041754epcas1p4ee6f7b1fd0dbf287e756b709aba321c8@epcas1p4.samsung.com>
+	<20240709041734.3719513-1-sj1557.seo@samsung.com>
+	<87frsjt9i2.fsf@mail.parknet.co.jp>
+	<000001dad1ca$6b61c720$42255560$@samsung.com>
+	<87bk37t3zl.fsf@mail.parknet.co.jp>
 
-In cdv_intel_lvds_get_modes(), the return value of drm_mode_duplicate()
-is assigned to mode, which will lead to a NULL pointer dereference on
-failure of drm_mode_duplicate(). Add a check to avoid npd.
+> "Sungjong Seo" <sj1557.seo@samsung.com> writes:
+> 
+> >> Sungjong Seo <sj1557.seo@samsung.com> writes:
+> >>
+> >> > To clarify MAJOR/MINOR number of a mounted device, fat_msg prints
+> prefix
+> >> > that includes them.
+> >>
+> >> Hm, why do we need the major/minor (why can't use sysfs to resolve if
+> >> need), and why do you care only fat?
+> >> Thanks.
+> > You're right, if you can access to sysfs on a system, this might not
+> > be useful. However, when analyzing problems based on logs, s_dev can be
+> > very helpful for identifying devices. This is because, in systems like
+> > Android, a filesystem gets mounted on a device node with a nickname
+> > like public:179,1.
+> >
+> > I think it would be really useful if applied to representative
+> filesystems
+> > for removable storage devices such as fat and exfat. So I will send the
+> > similar PR to exfat as well.
+> 
+> So this is for the naming policy like android?
+Yes, but I think it is just one of examples.
+>
+> And why don't you care the other places (like vfs) that using ->s_id?
+Because, I think it's enough to change fat-fs and exfat-fs.
+> 
+> Because I dislike to use the inconsitent stuff, some logs are "sda3" and
+> some logs are "sda3[8:3]".
+Do you mean consistency between all logs under Linux VFS?
+If so, I think it's meaningless. As mentioned above, this patch
+helps analyze removable storage devices, so it would be nice if it could
+be applied to both fat-fs and exfat-fs.
 
-Cc: stable@vger.kernel.org
-Fixes: 6a227d5fd6c4 ("gma500: Add support for Cedarview")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
-Changes in v4:
-- revised the recipient email list, apologize for the inadvertent mistake.
-Changes in v3:
-- added the recipient's email address, due to the prolonged absence of a 
-response from the recipients.
-Changes in v2:
-- modified the patch according to suggestions from other patchs;
-- added Fixes line;
-- added Cc stable;
-- Link: https://lore.kernel.org/lkml/20240622072514.1867582-1-make24@iscas.ac.cn/T/
----
- drivers/gpu/drm/gma500/cdv_intel_lvds.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpu/drm/gma500/cdv_intel_lvds.c b/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-index f08a6803dc18..3adc2c9ab72d 100644
---- a/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-+++ b/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-@@ -311,6 +311,9 @@ static int cdv_intel_lvds_get_modes(struct drm_connector *connector)
- 	if (mode_dev->panel_fixed_mode != NULL) {
- 		struct drm_display_mode *mode =
- 		    drm_mode_duplicate(dev, mode_dev->panel_fixed_mode);
-+		if (!mode)
-+			return 0;
-+
- 		drm_mode_probed_add(connector, mode);
- 		return 1;
- 	}
--- 
-2.25.1
+Anyway, this is just my opinion and I think you might have a different one.
+Thanks!
+> 
+> Thanks.
+> --
+> OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 
