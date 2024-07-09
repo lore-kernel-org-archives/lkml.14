@@ -1,479 +1,505 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1122.securemx.jp [210.130.202.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698FF1FA1;
-	Tue,  9 Jul 2024 01:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.130
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15CF029408;
+	Tue,  9 Jul 2024 01:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720489103; cv=none; b=r+3kd/CLj8EbJvzQiQaZDM2+Gs0Ux/dFotMn+jW16iLSlNx7sROuDi3HSkpYZnq7w05c/q/P1ECHW8lXVbWFGJhdXDwUYAdpyi27qYbOXF4fTbtjz0fWMYun9I8+FD/KNoVQPpJhj7ALL8ty3Hn4AkoKjxu8++opv//gYWbXXsc=
+	t=1720489181; cv=none; b=rilKGto4wQtcFLsm0L8wRr7jgOG+71lhQQvSh0EI76PKYjtoTxzph1bRKPNYtKbe9oxcedJfcegHmULkJ1UFlJIJ4/ugdo6u0A9mAdt7ILxWYDS2Y6JNgaq32lvK6O3vEcO1tD9G5SeVhM3RvwRUKvhzGPi5qVBnFuDz+/CBIXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720489103; c=relaxed/simple;
-	bh=yGm4NiHkNpXQZjBpGzfo7rQ5fHzY1Gob6bg6fhRAEzU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vqt5Zj4aTNCxS0uCYocBp0tqMP3A3rhYxrfNsa1S3x6ybKRE5Lunei0GK+SnDx9Q1KUfo0LFQQMoHotmxeLlx9dX5zdV+iNI933ilRjo7wVx7ffE9hc0r6zDBaW9YgdxikymKK1thVXmtTMSwAKSxzjwJJBZxz2IqwBbakXnRH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b=ov+nJCD6; arc=none smtp.client-ip=210.130.202.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b="ov+nJCD6"
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1122) id 4690FI3N2337247; Tue, 9 Jul 2024 09:15:18 +0900
-DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
-	:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:
-	Content-Transfer-Encoding;i=yuji2.ishikawa@toshiba.co.jp;s=key2.smx;t=
-	1720484087;x=1721693687;bh=yGm4NiHkNpXQZjBpGzfo7rQ5fHzY1Gob6bg6fhRAEzU=;b=ov+
-	nJCD6MnpyHpmh6oc9KhjutMdO8nMvJFBFAcRaoj8t3MCZ45ALzhMwrZ9t9u4w8g1fDdiBnLMgxf95
-	buOK88HtP34vcWZFKLoXP+ii805D43VGx1fRJK2qIda+ENbSPuE6fI3vVJFYQZEQKbA+G4lRtSpNF
-	o578LOmZgivlSdH51li/gEQNqB+d+jFX3/sjZ68S7nLylFQMM/oPsKR0NUa0vZ2MeqQHdkvuuaNPY
-	gPRwgwmd/H92DpN51Dzzrgwse0TfMBWEzoTSSavTU9o4T1HUiYo9lkHR1YjvyWtYff3tyNBB7cq2v
-	TohMejI4Ly9Fbi1T3irsNJL4q9XqjRw==;
-Received: by mo-csw.securemx.jp (mx-mo-csw1120) id 4690Elwj2855004; Tue, 9 Jul 2024 09:14:47 +0900
-X-Iguazu-Qid: 2rWg5LUt5cs8GU03Gt
-X-Iguazu-QSIG: v=2; s=0; t=1720484086; q=2rWg5LUt5cs8GU03Gt; m=ZLQ1fksQG9j8zHUII69DiNyoO7fx1SdIPIzcNTsU/WA=
-Received: from imx12-a.toshiba.co.jp ([38.106.60.135])
-	by relay.securemx.jp (mx-mr1123) id 4690EjGG243258
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 09:14:45 +0900
-X-SA-MID: 24614099
-From: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-To: Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 5/6] documentation: media: add documentation for Toshiba Visconti Video Input Interface driver
-Date: Tue,  9 Jul 2024 09:08:47 +0900
-X-TSB-HOP2: ON
-Message-Id: <20240709000848.1108788-6-yuji2.ishikawa@toshiba.co.jp>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240709000848.1108788-1-yuji2.ishikawa@toshiba.co.jp>
-References: <20240709000848.1108788-1-yuji2.ishikawa@toshiba.co.jp>
+	s=arc-20240116; t=1720489181; c=relaxed/simple;
+	bh=AqtyCXcFramHe/V0dEdchFFflmOtEOJsSeiRlHBoJ4U=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=eV6OjgUk+IzT4pJ2vdDplvtpSme+cQNXWi613AMQzGZxMo0HcRq425oBepmOa44TxtugM8lAq031ULYuKzWmoSvHZQEdLzsIqsDkBRZWlb9qIFcaimKmRmqFQpTUk1reeedtwpyk/lk4Olb5Ism+vDulW1VmQ1wRVxerTHdn5Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxXPDWlIxmtzoCAA--.6688S3;
+	Tue, 09 Jul 2024 09:39:34 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axw8TTlIxmwmZAAA--.5936S3;
+	Tue, 09 Jul 2024 09:39:33 +0800 (CST)
+Subject: Re: [PATCH v4 1/2] LoongArch: KVM: Add steal time support in kvm side
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, x86@kernel.org, virtualization@lists.linux.dev
+References: <20240524073812.731032-1-maobibo@loongson.cn>
+ <20240524073812.731032-2-maobibo@loongson.cn>
+ <CAAhV-H5G7O7tbwzyaoO4iEXuN+_xbVFJDEyv1HH7GqOH24639Q@mail.gmail.com>
+ <1aa110a8-28b9-d1d0-4b39-bc894b31f26c@loongson.cn>
+ <CAAhV-H5oS+KrcGH+1wJCGKCjs2VKHkWyZ5QnorPjFMuE_eBb3g@mail.gmail.com>
+ <ae21f9ef-e043-0f8c-b088-6645fc1f3c30@loongson.cn>
+ <CAAhV-H7QKqOX0fSyN=wnf_Y_5=CDE2ysP2O3Shj2zex8ce1ZMA@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <23405391-1c54-bccb-ff4a-0ae096a042fa@loongson.cn>
+Date: Tue, 9 Jul 2024 09:39:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H7QKqOX0fSyN=wnf_Y_5=CDE2ysP2O3Shj2zex8ce1ZMA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Axw8TTlIxmwmZAAA--.5936S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9fXoW3KFy3GFyfAF17uFWkCF17Jwc_yoW8WrWxZo
+	W5JF1xtr48Jr1UCF1UJ34qq3yjy340yr4UA345ArnxXF1Utw17Ar1UGw4YqF47Wr1DGr13
+	Ga47tw18ZFW3Xwn8l-sFpf9Il3svdjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUYc7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_Ma
+	UUUUU
 
-Added description of Video Input Interface driver of
-Toshiba Visconti architecture.
-It includes hardware organization, structure of the driver
-and metadata format for embedded image signal processor.
 
-Signed-off-by: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
----
-Changelog v3:
-- Newly add documentation to describe SW and HW
 
-Changelog v4:
-- no change
+On 2024/7/8 下午5:47, Huacai Chen wrote:
+> On Mon, Jul 8, 2024 at 9:16 AM maobibo <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2024/7/6 下午5:41, Huacai Chen wrote:
+>>> On Sat, Jul 6, 2024 at 2:59 PM maobibo <maobibo@loongson.cn> wrote:
+>>>>
+>>>> Huacai,
+>>>>
+>>>> On 2024/7/6 上午11:00, Huacai Chen wrote:
+>>>>> Hi, Bibo,
+>>>>>
+>>>>> On Fri, May 24, 2024 at 3:38 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> Steal time feature is added here in kvm side, VM can search supported
+>>>>>> features provided by KVM hypervisor, feature KVM_FEATURE_STEAL_TIME
+>>>>>> is added here. Like x86, steal time structure is saved in guest memory,
+>>>>>> one hypercall function KVM_HCALL_FUNC_NOTIFY is added to notify KVM to
+>>>>>> enable the feature.
+>>>>>>
+>>>>>> One cpu attr ioctl command KVM_LOONGARCH_VCPU_PVTIME_CTRL is added to
+>>>>>> save and restore base address of steal time structure when VM is migrated.
+>>>>>>
+>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>> ---
+>>>>>>     arch/loongarch/include/asm/kvm_host.h  |   7 ++
+>>>>>>     arch/loongarch/include/asm/kvm_para.h  |  10 ++
+>>>>>>     arch/loongarch/include/asm/kvm_vcpu.h  |   4 +
+>>>>>>     arch/loongarch/include/asm/loongarch.h |   1 +
+>>>>>>     arch/loongarch/include/uapi/asm/kvm.h  |   4 +
+>>>>>>     arch/loongarch/kvm/Kconfig             |   1 +
+>>>>>>     arch/loongarch/kvm/exit.c              |  38 +++++++-
+>>>>>>     arch/loongarch/kvm/vcpu.c              | 124 +++++++++++++++++++++++++
+>>>>>>     8 files changed, 187 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>>>>>> index c87b6ea0ec47..2eb2f7572023 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_host.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>>>>>> @@ -30,6 +30,7 @@
+>>>>>>     #define KVM_PRIVATE_MEM_SLOTS          0
+>>>>>>
+>>>>>>     #define KVM_HALT_POLL_NS_DEFAULT       500000
+>>>>>> +#define KVM_REQ_STEAL_UPDATE           KVM_ARCH_REQ(1)
+>>>>>>
+>>>>>>     #define KVM_GUESTDBG_SW_BP_MASK                \
+>>>>>>            (KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP)
+>>>>>> @@ -201,6 +202,12 @@ struct kvm_vcpu_arch {
+>>>>>>            struct kvm_mp_state mp_state;
+>>>>>>            /* cpucfg */
+>>>>>>            u32 cpucfg[KVM_MAX_CPUCFG_REGS];
+>>>>>> +       /* paravirt steal time */
+>>>>>> +       struct {
+>>>>>> +               u64 guest_addr;
+>>>>>> +               u64 last_steal;
+>>>>>> +               struct gfn_to_hva_cache cache;
+>>>>>> +       } st;
+>>>>>>     };
+>>>>>>
+>>>>>>     static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+>>>>>> index 4ba2312e5f8c..a9ba8185d4af 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_para.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_para.h
+>>>>>> @@ -14,6 +14,7 @@
+>>>>>>
+>>>>>>     #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
+>>>>>>     #define  KVM_HCALL_FUNC_IPI            1
+>>>>>> +#define  KVM_HCALL_FUNC_NOTIFY         2
+>>>>>>
+>>>>>>     #define KVM_HCALL_SWDBG                        HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
+>>>>>>
+>>>>>> @@ -24,6 +25,15 @@
+>>>>>>     #define KVM_HCALL_INVALID_CODE         -1UL
+>>>>>>     #define KVM_HCALL_INVALID_PARAMETER    -2UL
+>>>>>>
+>>>>>> +#define KVM_STEAL_PHYS_VALID           BIT_ULL(0)
+>>>>>> +#define KVM_STEAL_PHYS_MASK            GENMASK_ULL(63, 6)
+>>>>>> +struct kvm_steal_time {
+>>>>>> +       __u64 steal;
+>>>>>> +       __u32 version;
+>>>>>> +       __u32 flags;
+>>>>> I found that x86 has a preempted field here, in our internal repo the
+>>>>> LoongArch version also has this field. Moreover,
+>>>>> kvm_steal_time_set_preempted() and kvm_steal_time_clear_preempted()
+>>>>> seems needed.
+>>>> By my understanding, macro vcpu_is_preempted() is used together with pv
+>>>> spinlock, and pv spinlock depends on pv stealtime. So I think preempted
+>>>> flag is not part of pv stealtime, it is part of pv spinlock.
+>>>>
+>>>> We are going to add preempted field if pv spinlock is added.
+>>>>>
+>>>>>> +       __u32 pad[12];
+>>>>>> +};
+>>>>>> +
+>>>>>>     /*
+>>>>>>      * Hypercall interface for KVM hypervisor
+>>>>>>      *
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+>>>>>> index 590a92cb5416..d7e51300a89f 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+>>>>>> @@ -120,4 +120,8 @@ static inline void kvm_write_reg(struct kvm_vcpu *vcpu, int num, unsigned long v
+>>>>>>            vcpu->arch.gprs[num] = val;
+>>>>>>     }
+>>>>>>
+>>>>>> +static inline bool kvm_pvtime_supported(void)
+>>>>>> +{
+>>>>>> +       return !!sched_info_on();
+>>>>>> +}
+>>>>>>     #endif /* __ASM_LOONGARCH_KVM_VCPU_H__ */
+>>>>>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+>>>>>> index eb09adda54b7..7a4633ef284b 100644
+>>>>>> --- a/arch/loongarch/include/asm/loongarch.h
+>>>>>> +++ b/arch/loongarch/include/asm/loongarch.h
+>>>>>> @@ -169,6 +169,7 @@
+>>>>>>     #define  KVM_SIGNATURE                 "KVM\0"
+>>>>>>     #define CPUCFG_KVM_FEATURE             (CPUCFG_KVM_BASE + 4)
+>>>>>>     #define  KVM_FEATURE_IPI               BIT(1)
+>>>>>> +#define  KVM_FEATURE_STEAL_TIME                BIT(2)
+>>>>>>
+>>>>>>     #ifndef __ASSEMBLY__
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+>>>>>> index f9abef382317..ddc5cab0ffd0 100644
+>>>>>> --- a/arch/loongarch/include/uapi/asm/kvm.h
+>>>>>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+>>>>>> @@ -81,7 +81,11 @@ struct kvm_fpu {
+>>>>>>     #define LOONGARCH_REG_64(TYPE, REG)    (TYPE | KVM_REG_SIZE_U64 | (REG << LOONGARCH_REG_SHIFT))
+>>>>>>     #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_64(KVM_REG_LOONGARCH_CSR, REG)
+>>>>>>     #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_64(KVM_REG_LOONGARCH_CPUCFG, REG)
+>>>>>> +
+>>>>>> +/* Device Control API on vcpu fd */
+>>>>>>     #define KVM_LOONGARCH_VCPU_CPUCFG      0
+>>>>>> +#define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
+>>>>>> +#define  KVM_LOONGARCH_VCPU_PVTIME_GPA 0
+>>>>>>
+>>>>>>     struct kvm_debug_exit_arch {
+>>>>>>     };
+>>>>>> diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
+>>>>>> index c4ef2b4d9797..248744b4d086 100644
+>>>>>> --- a/arch/loongarch/kvm/Kconfig
+>>>>>> +++ b/arch/loongarch/kvm/Kconfig
+>>>>>> @@ -29,6 +29,7 @@ config KVM
+>>>>>>            select KVM_MMIO
+>>>>>>            select HAVE_KVM_READONLY_MEM
+>>>>>>            select KVM_XFER_TO_GUEST_WORK
+>>>>>> +       select SCHED_INFO
+>>>>>>            help
+>>>>>>              Support hosting virtualized guest machines using
+>>>>>>              hardware virtualization extensions. You will need
+>>>>>> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+>>>>>> index c86e099af5ca..e2abd97fb13f 100644
+>>>>>> --- a/arch/loongarch/kvm/exit.c
+>>>>>> +++ b/arch/loongarch/kvm/exit.c
+>>>>>> @@ -24,7 +24,7 @@
+>>>>>>     static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+>>>>>>     {
+>>>>>>            int rd, rj;
+>>>>>> -       unsigned int index;
+>>>>>> +       unsigned int index, ret;
+>>>>>>
+>>>>>>            if (inst.reg2_format.opcode != cpucfg_op)
+>>>>>>                    return EMULATE_FAIL;
+>>>>>> @@ -50,7 +50,10 @@ static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+>>>>>>                    vcpu->arch.gprs[rd] = *(unsigned int *)KVM_SIGNATURE;
+>>>>>>                    break;
+>>>>>>            case CPUCFG_KVM_FEATURE:
+>>>>>> -               vcpu->arch.gprs[rd] = KVM_FEATURE_IPI;
+>>>>>> +               ret = KVM_FEATURE_IPI;
+>>>>>> +               if (sched_info_on())
+>>>>> What about replacing it with your helper function kvm_pvtime_supported()?
+>>>> Sure, will replace it with helper function kvm_pvtime_supported().
+>>> If you are sure this is the only issue, then needn't submit a new version.
+>> OK, thanks.
+>>
+>> By searching orginal submit of vcpu_is_preempt(), it can be located at
+>> https://lore.kernel.org/lkml/1477642287-24104-1-git-send-email-xinhui.pan@linux.vnet.ibm.com/
+>>
+>> It is separated one, only that is depends on pv-spinlock and
+>> pv-stealtime. And there is no capability indicator for guest kernel, it
+>> is enabled by default.
+> Series applied with some modifications here, you can double-check the
+> correctness.
+> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-kvm
 
-Changelog v5:
-- no change
+Huacai,
 
-Changelog v6:
-- add description of CSI2RX subdevice
-- add ordering of ioctl(S_FMT) and ioctl(S_EXT_CTRLS)
+I download and test. The stealtime works for me.
 
-Changelog v7:
-- no change
 
-Changelog v8:
-- add usage of V4L2_CTRL_TYPE_VISCONTI_ISP
-
-Changelog v9:
-- fix warning: set reference target for keyword V4L2_CTRL_TYPE_VISCONTI_ISP
-
-Changelog v10:
-- use parameter buffers instead of compound control
-  - removed description of vendor specific compound control
-  - add description of parameter buffers for ISP control
-- update directory structure
-  - remove documents under driver-api
-  - add documents to admin-guide, userspace-api
-
-Changelog v11:
-- update usage of the driver
-
- .../admin-guide/media/v4l-drivers.rst         |   1 +
- .../admin-guide/media/visconti-viif.dot       |  18 ++
- .../admin-guide/media/visconti-viif.rst       | 255 ++++++++++++++++++
- .../userspace-api/media/v4l/meta-formats.rst  |   1 +
- .../media/v4l/metafmt-visconti-viif.rst       |  48 ++++
- 5 files changed, 323 insertions(+)
- create mode 100644 Documentation/admin-guide/media/visconti-viif.dot
- create mode 100644 Documentation/admin-guide/media/visconti-viif.rst
- create mode 100644 Documentation/userspace-api/media/v4l/metafmt-visconti-viif.rst
-
-diff --git a/Documentation/admin-guide/media/v4l-drivers.rst b/Documentation/admin-guide/media/v4l-drivers.rst
-index 4120eded9a..c7e67f455a 100644
---- a/Documentation/admin-guide/media/v4l-drivers.rst
-+++ b/Documentation/admin-guide/media/v4l-drivers.rst
-@@ -31,5 +31,6 @@ Video4Linux (V4L) driver-specific documentation
- 	si476x
- 	starfive_camss
- 	vimc
-+	visconti-viif
- 	visl
- 	vivid
-diff --git a/Documentation/admin-guide/media/visconti-viif.dot b/Documentation/admin-guide/media/visconti-viif.dot
-new file mode 100644
-index 0000000000..239d9fa2b3
---- /dev/null
-+++ b/Documentation/admin-guide/media/visconti-viif.dot
-@@ -0,0 +1,18 @@
-+digraph board {
-+        rankdir=TB
-+        n00000001 [label="{{<port0> 0} | visconti-viif:csi2rx\n/dev/v4l-subdev0 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-+        n00000001:port1 -> n00000004:port0
-+        n00000004 [label="{{<port0> 0 | <port4> 4} | visconti-viif:isp\n/dev/v4l-subdev1 | {<port1> 1 | <port2> 2 | <port3> 3 | <port5> 5}}", shape=Mrecord, style=filled, fillcolor=green]
-+        n00000004:port1 -> n0000000b
-+        n00000004:port2 -> n0000000f
-+        n00000004:port3 -> n00000013
-+        n00000004:port5 -> n0000001b
-+        n0000000b [label="viif_capture_post0\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
-+        n0000000f [label="viif_capture_post1\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
-+        n00000013 [label="viif_capture_sub\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
-+        n00000017 [label="viif_params\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
-+        n00000017 -> n00000004:port4
-+        n0000001b [label="viif_stats\n/dev/video4", shape=box, style=filled, fillcolor=yellow]
-+        n0000002b [label="{{} | imx219 1-0010\n/dev/v4l-subdev2 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-+        n0000002b:port0 -> n00000001:port0
-+}
-diff --git a/Documentation/admin-guide/media/visconti-viif.rst b/Documentation/admin-guide/media/visconti-viif.rst
-new file mode 100644
-index 0000000000..4ef676754c
---- /dev/null
-+++ b/Documentation/admin-guide/media/visconti-viif.rst
-@@ -0,0 +1,255 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================================
-+Visconti Video Input Interface Driver (visconti-viif)
-+======================================================
-+
-+Introduction
-+============
-+
-+This file documents the driver for the Video Input Interface (VIIF) that is
-+part of Toshiba Visconti SoCs.
-+The driver is located under drivers/media/platform/toshiba/visconti and uses
-+the Media-Controller API.
-+
-+The Visconti VIIF Hardware
-+==========================
-+
-+The Visconti VIIF hardware is a proprietary video capture device.
-+Following function modules are integrated:
-+
-+* MIPI CSI2 receiver (CSI2RX)
-+* L1 Image Signal Processor (L1ISP)
-+
-+  * Correction, enhancement, adjustment on RAW pictures.
-+
-+* L2 Image Signal Processor (L2ISP)
-+
-+  * Lens distortion correction
-+  * Scaling
-+  * Cropping
-+
-+* Video DMAC
-+
-+  * format picture (RGB, YUV, Grayscale, ...)
-+  * write picture into DRAM
-+
-+Visconti5 SoC has two VIIF hardware instances.
-+
-+Topology
-+========
-+
-+.. _visconti_viif_topology_graph:
-+
-+.. kernel-figure:: visconti-viif.dot
-+	:alt: Diagram of the default media pipeline topology
-+	:align: center
-+
-+The driver has 5 video devices:
-+
-+- viif_capture_post0: capture device for image.
-+    - corresponds to L2ISP and Video DMAC HW.
-+- viif_capture_post1: capture device for image.
-+    - corresponds to L2ISP and Video DMAC HW.
-+- viif_capture_sub: capture device for RAW image.
-+    - corresponds to Video DMAC HW.
-+- viif_params: a metadata output device that receives ISP parameters.
-+    - corresponds to L1ISP and L2ISP HW.
-+- viif_stats: a metadata capture device that sends statistics.
-+    - corresponds to L1ISP and L2ISP HW.
-+
-+The driver has 2 subdevices:
-+
-+- visconti-viif:csi2rx: CSI2 receiver operation.
-+    - corresponds to CSI2RX HW.
-+- visconti-viif:isp: Image Signal Processor operation.
-+    - corresponds to L1ISP and L2ISP HW.
-+
-+viif_capture_post0, viif_capture_post1 - Processed Image Capture Video Node
-+---------------------------------------------------------------------------
-+
-+These video nodes are used for capturing images processed at ISPs.
-+They capture only following formats:
-+
-+- RGB3
-+- AR24
-+- YM16
-+- YM24
-+- Y16
-+
-+Bayer format is not supported. Use viif_capture_sub instead.
-+
-+POST0 and POST1 can output images from the same input image
-+using different cropping and scaling settings.
-+
-+viif_capture_sub - Raw Image Capture Video Node
-+-----------------------------------------------
-+
-+This video node is used for capturing bayer image from the sensor.
-+The output picture has exactly the same resolution and format as the sensor input.
-+The following depth of bayer format is supported:
-+
-+- 8bit
-+- 10bit
-+- 12bit
-+- 14bit
-+
-+visconti-viif:csi2rx - CSI2 Receiver Subdevice Node
-+---------------------------------------------------
-+
-+This subdevice node corresponds to a MIPI CSI2 receiver.
-+It resides between an image sensor subdevice and the ISP subdevice.
-+It controls CSI2 link configuration and training process.
-+
-+visconti-viif:isp - ISP Subdevice Node
-+--------------------------------------
-+
-+This subdevice node corresponds to L1/L2 ISPs.
-+It receives pictures from an sensor (via CSI2RX),
-+applies multiple operations on pictures, then passes resulting images to capture nodes.
-+
-+L1 ISP provides following operations:
-+
-+- Input: accepts 8, 10, 12, 14bit bayer format
-+- Preprocessing: generate intermediate data (24bit RAW)
-+    - HDRE: HDR expansion (only for PWL image);
-+      see :c:type:`viif_l1_hdre_config`, :c:type:`viif_l1_input_mode_config`
-+    - SLIC: Image Extraction (x3 12bit planes for preprocessing);
-+      see :c:type:`viif_l1_img_extraction_config`
-+    - ABPC/DPC: Defect pixel correction :c:type:`viif_l1_dpc_config`
-+    - PWHB: Preset white balance; see :c:type:`viif_l1_preset_white_balance_config`
-+    - RCNR: RAW color noise reduction; see :c:type:`viif_l1_raw_color_noise_reduction_config`
-+    - HDRS: HDR synthesis; see :c:type:`viif_l1_hdrs_config`
-+- Processing on RAW image
-+    - BLVC: black level correction and normalization;
-+      see :c:type:`viif_l1_black_level_correction_config`
-+    - LSSC: Lens shading correction; see :c:type:`viif_l1_lsc_config`
-+    - MPRO: digital amplifier; see :c:type:`viif_l1_main_process_config`
-+    - MPRO: bayer demosaicing; see :c:type:`viif_l1_main_process_config`
-+    - MPRO: color matrix correction; see :c:type:`viif_l1_main_process_config`
-+    - HDRC: HDR compression;
-+      see :c:type:`viif_l1_hdrc_config`, :c:type:`viif_l1_hdrc_ltm_config`,
-+      :c:type:`viif_l1_rgb_to_y_coef_config`
-+- Processing on RGB/YUV image
-+    - VPRO: gamma correction; see :c:type:`viif_l1_gamma_config`
-+    - VPRO: RGB2YUV;
-+      see :c:type:`viif_l1_rgb_to_y_coef_config`,
-+      :c:type:`viif_l1_img_quality_adjustment_config`
-+    - VPRO: image quality adjustment; see :c:type:`viif_l1_img_quality_adjustment_config`
-+- Output: 16bit YUV
-+- Feedback loop with software
-+    - AWHB: auto white balance; see :c:type:`viif_l1_awb_config`,
-+      :c:type:`viif_isp_capture_status`
-+    - AEXP: auto exposure (average luminance calculation);
-+      see :c:type:`viif_l1_avg_lum_generation_config`,
-+      :c:type:`viif_l1_rgb_to_y_coef_config`, :c:type:`viif_isp_capture_status`
-+    - AG: analog gain calculation;
-+      see :c:type:`viif_l1_ag_mode_config`, :c:type:`viif_l1_ag_config`
-+
-+L2 ISP provides following operations:
-+
-+- Input: accepts 16bit YUV
-+- Operations:
-+    - Lens undistortion; see :c:type:`viif_l2_undist`
-+    - Scaling; see :c:type:`viif_l2_roi`
-+    - Cropping; see :c:type:`viif_l2_roi`
-+    - Gamma correction; see :c:type:`viif_l2_gamma_config`
-+    - YUV2RGB
-+- Output: RGB, YUV422, YUV444
-+
-+ISP configurations/parameters are passed from userland via viif_params node.
-+The status of ISP operations are passed to userland via viif_stats node.
-+
-+.. _viif_params:
-+
-+viif_params - ISP Parameters Video Node
-+---------------------------------------
-+
-+The viif_params video node receives a set of ISP parameters from userspace
-+to be applied to the hardware during a video stream.
-+
-+The buffer format is defined by struct :c:type:`visconti_viif_isp_config`, and userspace should set
-+:ref:`V4L2_META_FMT_VISCONTI_VIIF_PARAMS <v4l2-meta-fmt-visconti-viif-params>` as the data format.
-+
-+.. _viif_stats:
-+
-+viif_stats - Statistics Video Node
-+----------------------------------
-+
-+The viif_stats video node provides current status of ISP.
-+
-+Following information is included:
-+
-+* statistics of auto white balance
-+* average luminance information which can be used by auto exposure software impl.
-+
-+The buffer format is defined by struct :c:type:`visconti_viif_isp_stat`, and userspace should set
-+:ref:`V4L2_META_FMT_VISCONTI_VIIF_STATS <v4l2-meta-fmt-visconti-viif-stats>` as the data format.
-+
-+Capturing Video Frames Example
-+==============================
-+
-+In the following example,
-+imx219 camera is connected to pad 0 of 'visconti-viif:isp'.
-+
-+The following commands can be used to capture video from the main path 0
-+with dimension 1024x1024 and RGB format.
-+
-+.. code-block:: bash
-+
-+	# set the links
-+	media-ctl -d platform:visconti-viif-0 -r
-+	media-ctl -d platform:visconti-viif-0 -l '"imx219 1-0010":0 -> "visconti-viif:csi2rx":0 [1]'
-+	media-ctl -d platform:visconti-viif-0 -l '"visconti-viif:csi2rx":1 -> "visconti-viif:isp":0 [1]'
-+	media-ctl -d platform:visconti-viif-0 -l '"visconti-viif:isp":1 -> "viif_capture_post0":0 [1]'
-+	media-ctl -d platform:visconti-viif-0 -l '"visconti-viif:isp":2 -> "viif_capture_post1":0 [1]'
-+	media-ctl -d platform:visconti-viif-0 -l '"visconti-viif:isp":3 -> "viif_capture_sub":0 [1]'
-+	media-ctl -d platform:visconti-viif-0 -l '"viif_params":0 -> "visconti-viif:isp":4 [1]'
-+	media-ctl -d platform:visconti-viif-0 -l '"visconti-viif:isp":5 -> "viif_stats":0 [1]'
-+
-+	# set format for imx219
-+	media-ctl -d platform:visconti-viif-0 --set-v4l2 '"imx219 1-0010":0 [fmt:SRGGB10_1X10/1920x1080]'
-+
-+	# set format for csi2rx
-+	media-ctl -d platform:visconti-viif-0 --set-v4l2 '"visconti-viif:csi2rx":0 [fmt:SRGGB10_1X10/1920x1080]'
-+
-+	# set format for isp sink pad
-+	media-ctl -d platform:visconti-viif-0 --set-v4l2 '"visconti-viif:isp":0 [fmt:SRGGB10_1X10/1920x1080 compose:(0,0)/1920x1080]'
-+
-+	# set format for isp source pad
-+	media-ctl -d platform:visconti-viif-0 --set-v4l2 '"visconti-viif:isp":1 [fmt:YUV8_1X24/1024 crop:(640,0)/1024x1024]'
-+
-+	# set format for main path0
-+	v4l2-ctl -z platform:visconti-viif-0 -d viif_capture_post0 -v "width=1024,height=1024"
-+	v4l2-ctl -z platform:visconti-viif-0 -d viif_capture_post0 -v "pixelformat=RGB3"
-+
-+	# start streaming
-+	v4l2-ctl -z platform:visconti-viif-0 -d viif_capture_post0 --stream-mmap --stream-count 10
-+
-+
-+Use of coherent memory
-+======================
-+
-+Visconti5 SoC has two independent DDR SDRAM controllers.
-+Each controller is mapped to 36bit address space.
-+
-+Accelerator bus masters have two paths to access memory;
-+one is directly connected to SDRAM controller,
-+the another is connected via a cache coherency bus
-+which keeps coherency among CPUs.
-+
-+From accelerators and CPUs, the address map is following:
-+
-+* 0x0_8000_0000 DDR0 direct access
-+* 0x4_8000_0000 DDR0 coherency bus
-+* 0x8_8000_0000 DDR1 direct access
-+* 0xC_8000_0000 DDR1 coherency bus
-+
-+The base address can be specified with "memory" and "reserved-memory" elements
-+in a device tree description.
-+It's not recommended to mix direct address and coherent address.
-+
-+The Visconti5 VIIF driver always use only direct address to configure Video DMACs of the hardware.
-+This design is to avoid great performance loss at coherency bus caused by massive memory access.
-+You should not put the dma_coherent attribute to viif element in device tree.
-+Cache operations are done automatically by videobuf2 driver.
-diff --git a/Documentation/userspace-api/media/v4l/meta-formats.rst b/Documentation/userspace-api/media/v4l/meta-formats.rst
-index c6e56b5888..23fa0ebe45 100644
---- a/Documentation/userspace-api/media/v4l/meta-formats.rst
-+++ b/Documentation/userspace-api/media/v4l/meta-formats.rst
-@@ -18,6 +18,7 @@ These formats are used for the :ref:`metadata` interface only.
-     metafmt-pisp-be
-     metafmt-rkisp1
-     metafmt-uvc
-+    metafmt-visconti-viif
-     metafmt-vivid
-     metafmt-vsp1-hgo
-     metafmt-vsp1-hgt
-diff --git a/Documentation/userspace-api/media/v4l/metafmt-visconti-viif.rst b/Documentation/userspace-api/media/v4l/metafmt-visconti-viif.rst
-new file mode 100644
-index 0000000000..dc4b31627f
---- /dev/null
-+++ b/Documentation/userspace-api/media/v4l/metafmt-visconti-viif.rst
-@@ -0,0 +1,48 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. _v4l2-meta-fmt-visconti-viif-params:
-+
-+.. _v4l2-meta-fmt-visconti-viif-stats:
-+
-+***************************************************************************************
-+V4L2_META_FMT_VISCONTI_VIIF_PARAMS ('vifp'), V4L2_META_FMT_VISCONTI_VIIF_STATS ('vifs')
-+***************************************************************************************
-+
-+Configuration parameters
-+========================
-+
-+The configuration parameters are passed to the
-+:ref:`viif_params <viif_params>` metadata output video node, using
-+the :c:type:`v4l2_meta_format` interface. The buffer contains
-+a single instance of the C structure :c:type:`visconti_viif_isp_config` defined in
-+``visconti_viif.h``. So the structure can be obtained from the buffer by:
-+
-+.. code-block:: c
-+
-+	struct visconti_viif_isp_config *params = (struct visconti_viif_isp_config*) buffer;
-+
-+VIIF statistics
-+===============
-+
-+The VIIF device collects different statistics over an input Bayer frame.
-+Those statistics are obtained from the :ref:`viif_stats <viif_stats>`
-+metadata capture video node,
-+using the :c:type:`v4l2_meta_format` interface. The buffer contains a single
-+instance of the C structure :c:type:`visconti_viif_isp_stat` defined in
-+``visconti_viif.h``. So the structure can be obtained from the buffer by:
-+
-+.. code-block:: c
-+
-+	struct visconti_viif_isp_stat *stats = (struct visconti_viif_isp_stat*) buffer;
-+
-+The statistics collected are Exposure, AWB (auto white balance) and errors.
-+See :c:type:`visconti_viif_isp_stat` for details of the statistics.
-+
-+The statistics and configuration parameters described here are usually
-+consumed and produced by dedicated user space libraries that comprise the
-+tuning tools using software control loop.
-+
-+visconti viif uAPI data types
-+=============================
-+
-+.. kernel-doc:: include/uapi/linux/visconti_viif.h
--- 
-2.25.1
-
+Regards
+Bibo Mao
+> 
+> Huacai
+>>
+>> Regards
+>> Bibo Mao
+>>
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>> +                       ret |= KVM_FEATURE_STEAL_TIME;
+>>>>>> +               vcpu->arch.gprs[rd] = ret;
+>>>>>>                    break;
+>>>>>>            default:
+>>>>>>                    vcpu->arch.gprs[rd] = 0;
+>>>>>> @@ -687,6 +690,34 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
+>>>>>>            return RESUME_GUEST;
+>>>>>>     }
+>>>>>>
+>>>>>> +static long kvm_save_notify(struct kvm_vcpu *vcpu)
+>>>>>> +{
+>>>>>> +       unsigned long id, data;
+>>>>>> +
+>>>>>> +       id   = kvm_read_reg(vcpu, LOONGARCH_GPR_A1);
+>>>>>> +       data = kvm_read_reg(vcpu, LOONGARCH_GPR_A2);
+>>>>>> +       switch (id) {
+>>>>>> +       case KVM_FEATURE_STEAL_TIME:
+>>>>>> +               if (!kvm_pvtime_supported())
+>>>>>> +                       return KVM_HCALL_INVALID_CODE;
+>>>>>> +
+>>>>>> +               if (data & ~(KVM_STEAL_PHYS_MASK | KVM_STEAL_PHYS_VALID))
+>>>>>> +                       return KVM_HCALL_INVALID_PARAMETER;
+>>>>>> +
+>>>>>> +               vcpu->arch.st.guest_addr = data;
+>>>>>> +               if (!(data & KVM_STEAL_PHYS_VALID))
+>>>>>> +                       break;
+>>>>>> +
+>>>>>> +               vcpu->arch.st.last_steal = current->sched_info.run_delay;
+>>>>>> +               kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
+>>>>>> +               break;
+>>>>>> +       default:
+>>>>>> +               break;
+>>>>>> +       };
+>>>>>> +
+>>>>>> +       return 0;
+>>>>>> +};
+>>>>>> +
+>>>>>>     /*
+>>>>>>      * kvm_handle_lsx_disabled() - Guest used LSX while disabled in root.
+>>>>>>      * @vcpu:      Virtual CPU context.
+>>>>>> @@ -758,6 +789,9 @@ static void kvm_handle_service(struct kvm_vcpu *vcpu)
+>>>>>>                    kvm_send_pv_ipi(vcpu);
+>>>>>>                    ret = KVM_HCALL_SUCCESS;
+>>>>>>                    break;
+>>>>>> +       case KVM_HCALL_FUNC_NOTIFY:
+>>>>>> +               ret = kvm_save_notify(vcpu);
+>>>>>> +               break;
+>>>>>>            default:
+>>>>>>                    ret = KVM_HCALL_INVALID_CODE;
+>>>>>>                    break;
+>>>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>>>> index 9e8030d45129..382796f1d3e6 100644
+>>>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>>>> @@ -31,6 +31,117 @@ const struct kvm_stats_header kvm_vcpu_stats_header = {
+>>>>>>                           sizeof(kvm_vcpu_stats_desc),
+>>>>>>     };
+>>>>>>
+>>>>>> +static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
+>>>>>> +{
+>>>>>> +       struct kvm_steal_time __user *st;
+>>>>>> +       struct gfn_to_hva_cache *ghc;
+>>>>>> +       struct kvm_memslots *slots;
+>>>>>> +       gpa_t gpa;
+>>>>>> +       u64 steal;
+>>>>>> +       u32 version;
+>>>>>> +
+>>>>>> +       ghc = &vcpu->arch.st.cache;
+>>>>>> +       gpa = vcpu->arch.st.guest_addr;
+>>>>>> +       if (!(gpa & KVM_STEAL_PHYS_VALID))
+>>>>>> +               return;
+>>>>>> +
+>>>>>> +       gpa &= KVM_STEAL_PHYS_MASK;
+>>>>>> +       slots = kvm_memslots(vcpu->kvm);
+>>>>>> +       if (slots->generation != ghc->generation || gpa != ghc->gpa) {
+>>>>>> +               if (kvm_gfn_to_hva_cache_init(vcpu->kvm, ghc, gpa,
+>>>>>> +                                       sizeof(*st))) {
+>>>>>> +                       ghc->gpa = INVALID_GPA;
+>>>>>> +                       return;
+>>>>>> +               }
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       st = (struct kvm_steal_time __user *)ghc->hva;
+>>>>>> +       unsafe_get_user(version, &st->version, out);
+>>>>>> +       if (version & 1)
+>>>>>> +               version += 1;
+>>>>>> +       version += 1;
+>>>>>> +       unsafe_put_user(version, &st->version, out);
+>>>>>> +       smp_wmb();
+>>>>>> +
+>>>>>> +       unsafe_get_user(steal, &st->steal, out);
+>>>>>> +       steal += current->sched_info.run_delay -
+>>>>>> +               vcpu->arch.st.last_steal;
+>>>>>> +       vcpu->arch.st.last_steal = current->sched_info.run_delay;
+>>>>>> +       unsafe_put_user(steal, &st->steal, out);
+>>>>>> +
+>>>>>> +       smp_wmb();
+>>>>>> +       version += 1;
+>>>>>> +       unsafe_put_user(version, &st->version, out);
+>>>>>> +out:
+>>>>>> +       mark_page_dirty_in_slot(vcpu->kvm, ghc->memslot, gpa_to_gfn(ghc->gpa));
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int kvm_loongarch_pvtime_has_attr(struct kvm_vcpu *vcpu,
+>>>>>> +                                       struct kvm_device_attr *attr)
+>>>>>> +{
+>>>>>> +       if (!kvm_pvtime_supported() ||
+>>>>>> +                       attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
+>>>>>> +               return -ENXIO;
+>>>>>> +
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int kvm_loongarch_pvtime_get_attr(struct kvm_vcpu *vcpu,
+>>>>>> +                                       struct kvm_device_attr *attr)
+>>>>>> +{
+>>>>>> +       u64 __user *user = (u64 __user *)attr->addr;
+>>>>>> +       u64 gpa;
+>>>>>> +
+>>>>>> +       if (!kvm_pvtime_supported() ||
+>>>>>> +                       attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
+>>>>>> +               return -ENXIO;
+>>>>>> +
+>>>>>> +       gpa = vcpu->arch.st.guest_addr;
+>>>>>> +       if (put_user(gpa, user))
+>>>>>> +               return -EFAULT;
+>>>>>> +
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int kvm_loongarch_pvtime_set_attr(struct kvm_vcpu *vcpu,
+>>>>>> +                                       struct kvm_device_attr *attr)
+>>>>>> +{
+>>>>>> +       u64 __user *user = (u64 __user *)attr->addr;
+>>>>>> +       struct kvm *kvm = vcpu->kvm;
+>>>>>> +       u64 gpa;
+>>>>>> +       int ret = 0;
+>>>>>> +       int idx;
+>>>>>> +
+>>>>>> +       if (!kvm_pvtime_supported() ||
+>>>>>> +                       attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
+>>>>>> +               return -ENXIO;
+>>>>>> +
+>>>>>> +       if (get_user(gpa, user))
+>>>>>> +               return -EFAULT;
+>>>>>> +
+>>>>>> +       if (gpa & ~(KVM_STEAL_PHYS_MASK | KVM_STEAL_PHYS_VALID))
+>>>>>> +               return -EINVAL;
+>>>>>> +
+>>>>>> +       if (!(gpa & KVM_STEAL_PHYS_VALID)) {
+>>>>>> +               vcpu->arch.st.guest_addr = gpa;
+>>>>>> +               return 0;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       /* Check the address is in a valid memslot */
+>>>>>> +       idx = srcu_read_lock(&kvm->srcu);
+>>>>>> +       if (kvm_is_error_hva(gfn_to_hva(kvm, gpa >> PAGE_SHIFT)))
+>>>>>> +               ret = -EINVAL;
+>>>>>> +       srcu_read_unlock(&kvm->srcu, idx);
+>>>>>> +
+>>>>>> +       if (!ret) {
+>>>>>> +               vcpu->arch.st.guest_addr = gpa;
+>>>>>> +               vcpu->arch.st.last_steal = current->sched_info.run_delay;
+>>>>>> +               kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       return ret;
+>>>>>> +}
+>>>>>> +
+>>>>>>     /*
+>>>>>>      * kvm_check_requests - check and handle pending vCPU requests
+>>>>>>      *
+>>>>>> @@ -48,6 +159,9 @@ static int kvm_check_requests(struct kvm_vcpu *vcpu)
+>>>>>>            if (kvm_dirty_ring_check_request(vcpu))
+>>>>>>                    return RESUME_HOST;
+>>>>>>
+>>>>>> +       if (kvm_check_request(KVM_REQ_STEAL_UPDATE, vcpu))
+>>>>>> +               kvm_update_stolen_time(vcpu);
+>>>>>> +
+>>>>>>            return RESUME_GUEST;
+>>>>>>     }
+>>>>>>
+>>>>>> @@ -671,6 +785,9 @@ static int kvm_loongarch_vcpu_has_attr(struct kvm_vcpu *vcpu,
+>>>>>>            case KVM_LOONGARCH_VCPU_CPUCFG:
+>>>>>>                    ret = kvm_loongarch_cpucfg_has_attr(vcpu, attr);
+>>>>>>                    break;
+>>>>>> +       case KVM_LOONGARCH_VCPU_PVTIME_CTRL:
+>>>>>> +               ret = kvm_loongarch_pvtime_has_attr(vcpu, attr);
+>>>>>> +               break;
+>>>>>>            default:
+>>>>>>                    break;
+>>>>>>            }
+>>>>>> @@ -703,6 +820,9 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
+>>>>>>            case KVM_LOONGARCH_VCPU_CPUCFG:
+>>>>>>                    ret = kvm_loongarch_get_cpucfg_attr(vcpu, attr);
+>>>>>>                    break;
+>>>>>> +       case KVM_LOONGARCH_VCPU_PVTIME_CTRL:
+>>>>>> +               ret = kvm_loongarch_pvtime_get_attr(vcpu, attr);
+>>>>>> +               break;
+>>>>>>            default:
+>>>>>>                    break;
+>>>>>>            }
+>>>>>> @@ -725,6 +845,9 @@ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+>>>>>>            case KVM_LOONGARCH_VCPU_CPUCFG:
+>>>>>>                    ret = kvm_loongarch_cpucfg_set_attr(vcpu, attr);
+>>>>>>                    break;
+>>>>>> +       case KVM_LOONGARCH_VCPU_PVTIME_CTRL:
+>>>>>> +               ret = kvm_loongarch_pvtime_set_attr(vcpu, attr);
+>>>>>> +               break;
+>>>>>>            default:
+>>>>>>                    break;
+>>>>>>            }
+>>>>>> @@ -1084,6 +1207,7 @@ static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>>>>>>
+>>>>>>            /* Control guest page CCA attribute */
+>>>>>>            change_csr_gcfg(CSR_GCFG_MATC_MASK, CSR_GCFG_MATC_ROOT);
+>>>>>> +       kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
+>>>>>>
+>>>>>>            /* Don't bother restoring registers multiple times unless necessary */
+>>>>>>            if (vcpu->arch.aux_inuse & KVM_LARCH_HWCSR_USABLE)
+>>>>>> --
+>>>>>> 2.39.3
+>>>>>>
+>>>>
+>>
+>>
 
