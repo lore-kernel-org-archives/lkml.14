@@ -1,35 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.eh5.me (mail.eh5.me [45.76.111.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC85146D53;
-	Tue,  9 Jul 2024 11:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D531208B0;
+	Tue,  9 Jul 2024 11:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.76.111.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720522830; cv=none; b=aM8WDzcQeOHlhUuSoZxAnmm40xBiU6BLgWI6yNUTN73Y9NlYkKpGmiRgoJH77dNuedIDFOrNfoKcg+EBNtmOngRzmP7MOCr2yBdwXmIuj3cZzbMINwKqTLhu63yrGXKewoV7WYDhVUmHwal2tD86wdk1M8oog6df3XQEdo8hZY0=
+	t=1720522912; cv=none; b=bxEx3xo29k9EMy6ob5yNWcbXBi+Bv2ufGNhNnhs26jrbXD+6787MZrnLHbx46Jy6kcmH59v1blhTfVzicPtqrFBRsXXf6pw5IBjW1l8wzMoYTpiubW/Z7KnWV7rWSinHFBvezHSwWk9V9Wa7ya5X0Rbq6uLJlEGlcQ5w5ngWO0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720522830; c=relaxed/simple;
-	bh=Q0dPZCvbfhUYOkbkFi5y6s3AsoY0e8nz1VTs8LhwtPg=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=iba6RQ//BmWnXjfHdI+EHSkulMqUvClOQZ8v045NYLkP4zsSauULUKIbmODLksqaLUZgQSGBtyEvNUwXlJb5wQx3Y8mQVtcyiZaHrloZmOKaLlUBxu1vgwotgTuxpzYPh8KjaSkdCmC2PAZCHLEPIROt/NHdGW5enMWCdDz8iVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMExDQ6P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720522912; c=relaxed/simple;
+	bh=8EmcdkkE0oYTAYdtdr5zNdvUUpmSvtRnsxWuk/O4hkk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vb1amhtyFVdyItfGkc2oXKzjomOMCwcBqPnYvGoY4UhPdl2XL7RuZAK/Z5hJsAOXthKl43Nao1ws90FE3FumjzEfCfIZk4Px6K2ojRaFxLNGqf7D0DRjXpwVudr8OxJ/T1i12fSRZz0EV2dMTABGGJ0tCr+lEcKZ3kRA+TqHxw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eh5.me; spf=pass smtp.mailfrom=eh5.me; dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b=hXXnOM5p; arc=none smtp.client-ip=45.76.111.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eh5.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eh5.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMExDQ6P"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E33CFC4AF0C;
-	Tue,  9 Jul 2024 11:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720522830;
-	bh=Q0dPZCvbfhUYOkbkFi5y6s3AsoY0e8nz1VTs8LhwtPg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=rMExDQ6P/6bjaeSdSRMhLBPH1oo2EtL6JK+seuat5VKoCISU1PBUnz686H9CLzSqf
-	 O8gphX7z8ydWgH5AQIDJmSFxw8ZNUExgut0EEt8EDv1YAR3H28BKLddo/+YGVXOmxp
-	 p3DTcmM7EF2aL/5ZQpdWvRmA+E2wGTYKVxZ4Q1ASCngJjScks01UK4NIZUC912jIgx
-	 XYv6miakCiYKVmWj6O/lJSPQLjxOBKW3Pg1iXUBirQQtlMJHFALhGwzcspHgy1iQyZ
-	 kv2uRuIVGwopjI62d6JRfx7jDPQ5cWRrLB+l9IEDG9JzQhtCt1TDLZXc4yPEsPmEvf
-	 iCLlLfRLnn3RA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D126CC4332E;
-	Tue,  9 Jul 2024 11:00:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b="hXXnOM5p"
+From: Huang-Huang Bao <i@eh5.me>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eh5.me; s=dkim;
+	t=1720522497;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=f/I3Vjm8cEq2ZeTlVvfzwsec4AJR5wa4TlSZ79HvmRk=;
+	b=hXXnOM5pURRKMcaz1BuylPpxtLsSgiW29cfj5UI9EfWqUgfbHBWDipLEsXQxkHZajqgq/9
+	/z4O6xvH/jZiofPvAKDzi4j0wC1RJUypDGeIuo3XKhOH7aBM2SB5RLnfffkwTiQ7VA0i8q
+	N58KAUdO386ccj+s9wqtXiJNkAc72PA=
+To: Heiko Stuebner <heiko@sntech.de>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Richard Kojedzinszky <richard@kojedz.in>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Huang-Huang Bao <i@eh5.me>,
+	stable@vger.kernel.org
+Subject: [PATCH] pinctrl: rockchip: correct RK3328 iomux width flag for GPIO2-B pins
+Date: Tue,  9 Jul 2024 18:54:28 +0800
+Message-ID: <20240709105428.1176375-1-i@eh5.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,44 +44,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] octeontx2-af: Fix incorrect value output on error path in
- rvu_check_rsrc_availability()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172052282985.30718.7752224049592096233.git-patchwork-notify@kernel.org>
-Date: Tue, 09 Jul 2024 11:00:29 +0000
-References: <20240705095317.12640-1-amishin@t-argos.ru>
-In-Reply-To: <20240705095317.12640-1-amishin@t-argos.ru>
-To: Aleksandr Mishin <amishin@t-argos.ru>
-Cc: sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
- jerinj@marvell.com, hkelam@marvell.com, sbhatta@marvell.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
 
-Hello:
+The base iomux offsets for each GPIO pin line are accumulatively
+calculated based off iomux width flag in rockchip_pinctrl_get_soc_data.
+If the iomux width flag is one of IOMUX_WIDTH_4BIT, IOMUX_WIDTH_3BIT or
+IOMUX_WIDTH_2BIT, the base offset for next pin line would increase by 8
+bytes, otherwise it would increase by 4 bytes.
 
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Despite most of GPIO2-B iomux have 2-bit data width, which can be fit
+into 4 bytes space with write mask, it actually take 8 bytes width for
+whole GPIO2-B line.
 
-On Fri, 5 Jul 2024 12:53:17 +0300 you wrote:
-> In rvu_check_rsrc_availability() in case of invalid SSOW req, an incorrect
-> data is printed to error log. 'req->sso' value is printed instead of
-> 'req->ssow'. Looks like "copy-paste" mistake.
-> 
-> Fix this mistake by replacing 'req->sso' with 'req->ssow'.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> [...]
+Commit e8448a6c817c ("pinctrl: rockchip: fix pinmux bits for RK3328
+GPIO2-B pins") wrongly set iomux width flag to 0, causing all base
+iomux offset for line after GPIO2-B to be calculated wrong. Fix the
+iomux width flag to IOMUX_WIDTH_2BIT so the offset after GPIO2-B is
+correctly increased by 8, matching the actual width of GPIO2-B iomux.
 
-Here is the summary with links:
-  - [net] octeontx2-af: Fix incorrect value output on error path in rvu_check_rsrc_availability()
-    https://git.kernel.org/netdev/net/c/442e26af9aa8
+Fixes: e8448a6c817c ("pinctrl: rockchip: fix pinmux bits for RK3328 GPIO2-B pins")
+Cc: stable@vger.kernel.org
+Reported-by: Richard Kojedzinszky <richard@kojedz.in>
+Closes: https://lore.kernel.org/linux-rockchip/4f29b743202397d60edfb3c725537415@kojedz.in/
+Tested-by: Richard Kojedzinszky <richard@kojedz.in>
+Signed-off-by: Huang-Huang Bao <i@eh5.me>
+---
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+I have double checked the iomux offsets in debug message match iomux
+register definitions in "GRF Register Description" section in RK3328
+TRM[1].
 
+[1]: https://opensource.rock-chips.com/images/9/97/Rockchip_RK3328TRM_V1.1-Part1-20170321.pdf
 
+Kernel pinctrl debug message with dyndbg="file pinctrl-rockchip.c +p":
+  rockchip-pinctrl pinctrl: bank 0, iomux 0 has iom_offset 0x0 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 0, iomux 1 has iom_offset 0x4 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 0, iomux 2 has iom_offset 0x8 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 0, iomux 3 has iom_offset 0xc drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 1, iomux 0 has iom_offset 0x10 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 1, iomux 1 has iom_offset 0x14 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 1, iomux 2 has iom_offset 0x18 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 1, iomux 3 has iom_offset 0x1c drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 2, iomux 0 has iom_offset 0x20 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 2, iomux 1 has iom_offset 0x24 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 2, iomux 2 has iom_offset 0x2c drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 2, iomux 3 has iom_offset 0x34 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 3, iomux 0 has iom_offset 0x38 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 3, iomux 1 has iom_offset 0x40 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 3, iomux 2 has iom_offset 0x48 drv_offset 0x0
+  rockchip-pinctrl pinctrl: bank 3, iomux 3 has iom_offset 0x4c drv_offset 0x0
+
+The "Closes" links to test report from original reporter with original
+issue contained, which was not delivered to any mailing list thus not
+available on the web.
+
+Added CC stable as the problematic e8448a6c817c fixed by this patch was
+recently merged to stable kernels.
+
+Sorry for the inconvenience caused,
+Huang-Huang
+
+ drivers/pinctrl/pinctrl-rockchip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 3f56991f5b89..f6da91941fbd 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -3813,7 +3813,7 @@ static struct rockchip_pin_bank rk3328_pin_banks[] = {
+ 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
+ 	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
+ 	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", 0,
+-			     0,
++			     IOMUX_WIDTH_2BIT,
+ 			     IOMUX_WIDTH_3BIT,
+ 			     0),
+ 	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3",
+
+base-commit: 4376e966ecb78c520b0faf239d118ecfab42a119
+--
+2.45.2
