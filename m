@@ -1,243 +1,115 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723A515252D;
-	Tue,  9 Jul 2024 08:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528F21527AF
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720513385; cv=none; b=kTz+Oy5fLYIAn/LrDL253iQmAk7rPEPb0A74j0bpUFlAOoA5I1PuVLq/2oATuELaH8K1OIxjpoBAYQV3vfREICFew3rp84V5Cp02bdcna7+pqPGZ/wj7uhC1at7LrVArol6zS4TVZd8gkWyczPoEsEloSgQS9YFdV8F3mSuRvOc=
+	t=1720513392; cv=none; b=pNMdvxyCE6OfjxrlhSS0zTyQz6bZ3WLhcE07KfRSGeG4WloeqdxhNpMhyRlOA1oXJXgQ4/M00eGYlSyYKL8lJERLslIk+bJXLY3v7+0E8W1+lCg2E4N2EJ/UZMTlE531YxLVZxaRFi3SkU3UhiyT0RV7Ro8K/7jeKM/v0qAoKZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720513385; c=relaxed/simple;
-	bh=PF04ATtnNRqM/BWo/fqGDFpvk1WaS+H8YY782xKK+UM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ui6yDgPQnyCuwo3oLAHHexBHBe6rvh3GKwqcGV8vfTTK5qyruizrIUR2WD0xSGQ8zfalGA6Y9HiEH8wJj8Keqx59rl65LuenXMAAnk8/JB76dGKprmdIjmDaMxPOA/2XJSdQG8hYF3NKxlsQEqLyL5zN4AkX/0lmfIVfDBCEe4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HEikvHgQ; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720513392; c=relaxed/simple;
+	bh=7Z6us27qIuTlxBXAFyHcsMvVHOHakLdFL2jtnKejVHs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MJD+ibtFECDABtLuqql0L31Jh2hkQltz8wlFqe+u0gRSB9Xaid0zMdgweK1OYNoXYSmdOkl3zam9uDXAF4IWejhwBy8OTHTFJqKrdoacyoIks9OV8p4HGAh7Ih0L4xqZ1jHuSdq/KPolfFMj96ZpVRVtIY2iZZ3mNMWTfeVVKEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ps7cKKMW; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HEikvHgQ"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c2c6b27428so2777909a91.3;
-        Tue, 09 Jul 2024 01:23:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ps7cKKMW"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ee77db6f97so66372581fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 01:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720513384; x=1721118184; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720513389; x=1721118189; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VbCdNehdkqlQo0sbLo5ceHBxjJlaQK9zcub8z/dtnZ8=;
-        b=HEikvHgQNMjPv2cQGX0xhOejHUGqMY7teuXaL/PS9OkFQkmXbgCAX6+mADmq/deLlr
-         7hojfoNPkKI5qU0QSy1vjz4P9NMsXSP0voiMaX0xLlEC5UK/IgBxX0ZzTNSXoFM3xXyn
-         c6mHWfjdc2Ngj6gEQQFPX+uAqGxggRjZDtQ0E2tGkb3a0lTfX/ofHdgXmWnZ/N+j6pdb
-         jWmkWuARTIAp9W+dI5R860Plt04hiotsLulf2QNIQQ2bjjLhgp8ZzHUrtXzbhgxp8vK/
-         vfQpLjC88rh4bG5g1zkk8ttHlAH1mwzT3ZabCu2dR+buYSJynCe+8yDRxlk6JLRJRFMD
-         xBEw==
+        bh=5HGUof91eotwEdfihh0OBz6TKkOSwGergxDj8SELw6I=;
+        b=Ps7cKKMWaMTKxEmOaxW2SSN1nAfCJPz6BUI9yUb5R+1Hm2jZP6T8nfYP/vZjlowFcW
+         hIBH7U7vvLaGuaIEM1P4QKmFqkOe8Oc1X8cenBPAM1GSzTUMn/y46cDEu4F0dYX0UZoy
+         riRBiN9OIjZ5RGna8dNQ1pZwK2uVKWZyVoBOykaEiahCfzw+qfhcYizaHC0icIsGlaDE
+         V08bdSUHK+r3Dl7wvZoe7i5/3wj3+J9MglilMO5HVGLXv+Oeg+4KcDw7nG5Y1Hrlehag
+         qNEOkyMYEVCnfaFOKxbC/QXQWBMCyK12gSnHRRpW2h2HfbYOiXmRumYVjBsru+v6w+L9
+         JtBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720513384; x=1721118184;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1720513389; x=1721118189;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VbCdNehdkqlQo0sbLo5ceHBxjJlaQK9zcub8z/dtnZ8=;
-        b=JQdkBAQBWJAPy4CtJ8MneefghDikQf3aNEKaabGaX9EMrM0fB4TD9JM7ZuveKAr9fg
-         633db12Is20ERz1jxQi3X09sPAM+PYzOXIs5LLk2vr5yu3erN6dJeWQZymhs/QAoU/Yp
-         B6dz9g37kTWRFTazl5uJLjS/4+rBGFQPJJMtq9ensm2xKPbPa2e4TDqUZe/QqN3iW0Zt
-         BsPh3JpQwmVpc7/OFtQab/g2SxkKMcoKoFp3UcH9U89ACz0MoE2nYHrJqeKsdUpXinp2
-         t7S44yFXl/ky8c2WlLi+JsfXxNGYvjPL0xd6AXCKt9FY2iGKk/AXx2RzB10QEKdmywRQ
-         yAJg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4dexOgwmF5PMfK+5a79oIFO+lf2tHCK1opv7e6a8nPlPIHDXPQvm476n4dxMW3in9Q/J1WarcZS/jY5eXiyoAPNAzu0qCEqRZlJ7U
-X-Gm-Message-State: AOJu0YzcCFwVS6mCX7+lA16O3/8YS/NLBrNfpwjGVriznwXIExBUB2VN
-	FG3tu8XWhcW2Rp1RqRZE3iHEx2rv2Yqq8M2BBE3sXWBtsNSINVRz
-X-Google-Smtp-Source: AGHT+IFEmIk4Fnua+udZbbg4a2Wno8OJPoEc2MEYng2DzfsTfKmBeu2Kld3lgrUK1ZzT7Ajm2ycsmQ==
-X-Received: by 2002:a17:90b:3804:b0:2c7:43c5:f2dc with SMTP id 98e67ed59e1d1-2ca35d86e39mr1275183a91.47.1720513383553;
-        Tue, 09 Jul 2024 01:23:03 -0700 (PDT)
-Received: from localhost.localdomain ([129.146.253.192])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2c99a92a430sm9588929a91.4.2024.07.09.01.22.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 01:23:03 -0700 (PDT)
-From: Furong Xu <0x1207@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Joao Pinto <jpinto@synopsys.com>
-Cc: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	xfr@outlook.com,
-	rock.xu@nio.com,
-	Furong Xu <0x1207@gmail.com>
-Subject: [PATCH net-next v1 3/7] net: stmmac: refactor Frame Preemption(FPE) implementation
-Date: Tue,  9 Jul 2024 16:21:21 +0800
-Message-Id: <4820163fc24ad809aa4d90467debd41f068908ca.1720512888.git.0x1207@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1720512888.git.0x1207@gmail.com>
-References: <cover.1720512888.git.0x1207@gmail.com>
+        bh=5HGUof91eotwEdfihh0OBz6TKkOSwGergxDj8SELw6I=;
+        b=J38HLsgobfjPZdb9wrB5JUTq1WETt4MC+3guScC+3Kjz9W9kKcY65G+uUY4cHn1L3n
+         R9Ni+H5Y+k4t4sIw/16oRZIfnAeGUm5i9TM3796ngcC/gAgWtfKRedIXKK5qgJgnJL8I
+         R+dPJQ/l5EWwZtMhBsvubY6LIplp9zO3obMdw/uT/OJ6l1HKM34f478mE6+yILdCz2Qc
+         UcUg1lrGrvIS5xIVgeJ6EmpyEtMRqQwOaGOhzbjOimIeKVs4qfUqpwJJHfcUCAsd8uWW
+         WW5nx+XMrJvKgDnrnwJVjq6S5nvmLVa5yjVDoLf39zwcbbBYA1XCcRWc9trhzLzqCz1y
+         CQ3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVeKjRVI5R3tmAfc43gGBAQfSENbfHYoNwwNEjrbqGDXSNtX5zah9BW58eKgw2d8S/oZ4/jd2B0b8rI0tE64YaFJw0J2Kiyxzd53+LO
+X-Gm-Message-State: AOJu0YxmRG5Yh2WHmb55kSZxPXDTo6cbHXx5p6FTD3WuKh+UUhQfWP0m
+	Cvv0EekkQsHfT+0dpdfEpB+OBKI7Dz8EvYdqntHDGAVDUKgyWtw23eLCkzA6i2yRo96bXcqvZ/Y
+	TMT8eo2qJixbkOEBUxHs2PEXXkru81++hxzNvew==
+X-Google-Smtp-Source: AGHT+IEjr783ZzbCEinWzyI7wDmtA25dbr46RPbhoYwSLTpW27laIhd76XiAAgguwAZROdppDcw7BBgS+Ujd64hgPcs=
+X-Received: by 2002:a2e:a316:0:b0:2ec:5945:62e9 with SMTP id
+ 38308e7fff4ca-2eeb316b47bmr13784661fa.32.1720513389359; Tue, 09 Jul 2024
+ 01:23:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240703181500.28491-1-brgl@bgdev.pl> <172049643096.15240.14162761125981219295.git-patchwork-notify@kernel.org>
+In-Reply-To: <172049643096.15240.14162761125981219295.git-patchwork-notify@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 9 Jul 2024 10:22:58 +0200
+Message-ID: <CAMRc=McHFoVEJrMM6UpOZY2Ct7PvuQd-yPeWquUPNYHfDYkSww@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 0/2] net: stmmac: qcom-ethqos: enable 2.5G
+ ethernet on sa8775p-ride
+To: kuba@kernel.org
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk, 
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bartosz.golaszewski@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Refactor FPE implementation into a separate FPE module.
-Interfaces only, implementations for gmac4 and xgmac will follow.
+On Tue, Jul 9, 2024 at 5:40=E2=80=AFAM <patchwork-bot+netdevbpf@kernel.org>=
+ wrote:
+>
+> Hello:
+>
+> This series was applied to netdev/net-next.git (main)
+> by Jakub Kicinski <kuba@kernel.org>:
+>
+> On Wed,  3 Jul 2024 20:14:57 +0200 you wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Here are the changes required to enable 2.5G ethernet on sa8775p-ride.
+> > As advised by Andrew Lunn and Russell King, I am reusing the existing
+> > stmmac infrastructure to enable the SGMII loopback and so I dropped the
+> > patches adding new callbacks to the driver core. I also added more
+> > details to the commit message and made sure the workaround is only
+> > enabled on Rev 3 of the board (with AQR115C PHY). Also: dropped any
+> > mentions of the OCSGMII mode.
+> >
+> > [...]
+>
+> Here is the summary with links:
+>   - [net-next,v3,1/2] net: stmmac: qcom-ethqos: add support for 2.5G BASE=
+X mode
+>     https://git.kernel.org/netdev/net-next/c/61e9be0efbe8
+>   - [net-next,v3,2/2] net: stmmac: qcom-ethqos: enable SGMII loopback dur=
+ing DMA reset on sa8775p-ride-r3
+>     https://git.kernel.org/netdev/net-next/c/3c466d6537b9
+>
 
-Signed-off-by: Furong Xu <0x1207@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/Makefile  |  2 +-
- drivers/net/ethernet/stmicro/stmmac/common.h  |  1 +
- drivers/net/ethernet/stmicro/stmmac/hwif.c    |  3 ++
- drivers/net/ethernet/stmicro/stmmac/hwif.h    | 28 ++++++++++---------
- .../net/ethernet/stmicro/stmmac/stmmac_fpe.c  |  9 ++++++
- .../net/ethernet/stmicro/stmmac/stmmac_fpe.h  | 13 +++++++++
- 6 files changed, 42 insertions(+), 14 deletions(-)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.c
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.h
+Hi Jakub,
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index c2f0e91f6bf8..7e46dca90628 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -6,7 +6,7 @@ stmmac-objs:= stmmac_main.o stmmac_ethtool.o stmmac_mdio.o ring_mode.o	\
- 	      mmc_core.o stmmac_hwtstamp.o stmmac_ptp.o dwmac4_descs.o	\
- 	      dwmac4_dma.o dwmac4_lib.o dwmac4_core.o dwmac5.o hwif.o \
- 	      stmmac_tc.o dwxgmac2_core.o dwxgmac2_dma.o dwxgmac2_descs.o \
--	      stmmac_xdp.o stmmac_est.o \
-+	      stmmac_xdp.o stmmac_est.o stmmac_fpe.o \
- 	      $(stmmac-y)
- 
- stmmac-$(CONFIG_STMMAC_SELFTESTS) += stmmac_selftests.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index cd36ff4da68c..73c145dda11a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -591,6 +591,7 @@ struct mac_device_info {
- 	const struct stmmac_tc_ops *tc;
- 	const struct stmmac_mmc_ops *mmc;
- 	const struct stmmac_est_ops *est;
-+	const struct stmmac_fpe_ops *fpe;
- 	struct dw_xpcs *xpcs;
- 	struct phylink_pcs *phylink_pcs;
- 	struct mii_regs mii;	/* MII register Addresses */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-index 29367105df54..fc9f58f44180 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-@@ -8,6 +8,7 @@
- #include "stmmac.h"
- #include "stmmac_ptp.h"
- #include "stmmac_est.h"
-+#include "stmmac_fpe.h"
- 
- static u32 stmmac_get_id(struct stmmac_priv *priv, u32 id_reg)
- {
-@@ -116,6 +117,7 @@ static const struct stmmac_hwif_entry {
- 	const void *tc;
- 	const void *mmc;
- 	const void *est;
-+	const void *fpe;
- 	int (*setup)(struct stmmac_priv *priv);
- 	int (*quirks)(struct stmmac_priv *priv);
- } stmmac_hw[] = {
-@@ -351,6 +353,7 @@ int stmmac_hwif_init(struct stmmac_priv *priv)
- 		mac->tc = mac->tc ? : entry->tc;
- 		mac->mmc = mac->mmc ? : entry->mmc;
- 		mac->est = mac->est ? : entry->est;
-+		mac->fpe = mac->fpe ? : entry->fpe;
- 
- 		priv->hw = mac;
- 		priv->ptpaddr = priv->ioaddr + entry->regs.ptp_off;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 97934ccba5b1..bd360f3ea784 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -418,13 +418,6 @@ struct stmmac_ops {
- 				bool en, bool udp, bool sa, bool inv,
- 				u32 match);
- 	void (*set_arp_offload)(struct mac_device_info *hw, bool en, u32 addr);
--	void (*fpe_configure)(void __iomem *ioaddr, struct stmmac_fpe_cfg *cfg,
--			      u32 num_txq, u32 num_rxq,
--			      bool enable);
--	void (*fpe_send_mpacket)(void __iomem *ioaddr,
--				 struct stmmac_fpe_cfg *cfg,
--				 enum stmmac_mpacket_type type);
--	int (*fpe_irq_status)(void __iomem *ioaddr, struct net_device *dev);
- };
- 
- #define stmmac_core_init(__priv, __args...) \
-@@ -523,12 +516,6 @@ struct stmmac_ops {
- 	stmmac_do_callback(__priv, mac, config_l4_filter, __args)
- #define stmmac_set_arp_offload(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, mac, set_arp_offload, __args)
--#define stmmac_fpe_configure(__priv, __args...) \
--	stmmac_do_void_callback(__priv, mac, fpe_configure, __args)
--#define stmmac_fpe_send_mpacket(__priv, __args...) \
--	stmmac_do_void_callback(__priv, mac, fpe_send_mpacket, __args)
--#define stmmac_fpe_irq_status(__priv, __args...) \
--	stmmac_do_callback(__priv, mac, fpe_irq_status, __args)
- 
- /* PTP and HW Timer helpers */
- struct stmmac_hwtimestamp {
-@@ -660,6 +647,21 @@ struct stmmac_est_ops {
- #define stmmac_est_irq_status(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, est, irq_status, __args)
- 
-+struct stmmac_fpe_ops {
-+	void (*configure)(void __iomem *ioaddr, struct stmmac_fpe_cfg *cfg,
-+			  u32 num_txq, u32 num_rxq, bool enable);
-+	int (*irq_status)(void __iomem *ioaddr, struct net_device *dev);
-+	void (*send_mpacket)(void __iomem *ioaddr, struct stmmac_fpe_cfg *cfg,
-+			     enum stmmac_mpacket_type type);
-+};
-+
-+#define stmmac_fpe_configure(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, fpe, configure, __args)
-+#define stmmac_fpe_irq_status(__priv, __args...) \
-+	stmmac_do_callback(__priv, fpe, irq_status, __args)
-+#define stmmac_fpe_send_mpacket(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, fpe, send_mpacket, __args)
-+
- struct stmmac_regs_off {
- 	u32 ptp_off;
- 	u32 mmc_off;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.c
-new file mode 100644
-index 000000000000..f6701ba93805
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.c
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 Furong Xu <0x1207@gmail.com>
-+ * stmmac FPE(802.3 Qbu) handling
-+ */
-+
-+#include "stmmac.h"
-+#include "stmmac_fpe.h"
-+
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.h b/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.h
-new file mode 100644
-index 000000000000..84e3ceb9bdda
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2024 Furong Xu <0x1207@gmail.com>
-+ * stmmac FPE(802.3 Qbu) handling
-+ */
-+
-+#define FPE_CTRL_STS_TRSP		BIT(19)
-+#define FPE_CTRL_STS_TVER		BIT(18)
-+#define FPE_CTRL_STS_RRSP		BIT(17)
-+#define FPE_CTRL_STS_RVER		BIT(16)
-+#define FPE_CTRL_STS_SRSP		BIT(2)
-+#define FPE_CTRL_STS_SVER		BIT(1)
-+#define FPE_CTRL_STS_EFPE		BIT(0)
--- 
-2.34.1
+Does picking these patches up now mean they will still make the v6.11
+merge window? If so: could you also consider picking up the associated
+PHY changes[1] as - with the DT changes already in next - this is the
+last missing bit allowing enabling the 2.5G ethernet on the
+sa8775p-ride-r3 board?
 
+Best Regards,
+Bartosz
+
+[1] https://lore.kernel.org/netdev/20240708075023.14893-1-brgl@bgdev.pl/
