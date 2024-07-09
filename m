@@ -1,48 +1,55 @@
-Received: from mx0a-00300601.pphosted.com (mx0a-00300601.pphosted.com [148.163.146.64])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D96813213A;
-	Tue,  9 Jul 2024 06:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.146.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CCE139CEF;
+	Tue,  9 Jul 2024 06:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720507690; cv=none; b=O7ZLy86QikSLjdU/ldkyoCkX0hP2X21ijg2BmO0518IurL3FP30attz/JHltfCRbW8J35XFIhAieIJnL26ys5/QI1En+rPxl7rJWXw0MfmurQkEgGbxz7aj67/PxwmvZbgEBYVXLYE2HLp8AsIsYRuzX+2FExCAv5xJ6Xd+ovHk=
+	t=1720507793; cv=none; b=GgKfXtd0yOwPaEGOS4wlQIchl9Gku35sKqoo8B67G53iUtk14JRqxGxRfIITT0LToCFy1VAcFc0zXYpCtWJgCdtN7YEarTGSUWshlfqKrah1p8bIJ8jSrDNtPLyR5bRnkIbWtH92PJXWdyYJ2xa+8rE/MAfui+Yr1U3I4cMb7Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720507690; c=relaxed/simple;
-	bh=OQvb9CZbdmX9E0d9iBJGKerkjF+Vly6dcszw03VebUo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PQaKAuzbAeX0VMCOkeb0hXEM+yD+6sTpaGqWcov2Ed4qayNqkFlPEzVvYcRXfdT8Oh8Ep6lS5yHGZBlCvcgvU4NlEqV1DIROG6fv/JLvlX43hSBusKi6fuyu5Aa4Z1ps0NFuFBfhdUSfRRmiAzjrh3HleM6Va4ED651PtkEBDUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=emerson.com; spf=pass smtp.mailfrom=emerson.com; arc=none smtp.client-ip=148.163.146.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=emerson.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emerson.com
-Received: from pps.filterd (m0359308.ppops.net [127.0.0.1])
-	by mx0b-00300601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4692tkD2022971;
-	Tue, 9 Jul 2024 06:28:37 GMT
-Received: from usgdcecpmsgae02.extemr.org ([144.191.128.198])
-	by mx0b-00300601.pphosted.com (PPS) with ESMTPS id 408s364ewq-15
+	s=arc-20240116; t=1720507793; c=relaxed/simple;
+	bh=eAJZO8VqIeM3ZCD26TNDGfhdnssipGbvH3HVWHeuYhM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OfER56DPTgSy3MV6TU4PYp0+kpFcJSW4cwE50qpGpO5EMVTo0KGly+FnbSPTgf1ADN6gR8THY0BCMfvw+LpaOcY/0SnFsLw0jyDhRCesQZ80qGGbo/tWr5jZOqgs/jxBiO0CihCkGYqqT/ucNgkUAZ+Uvi+oqVROL+N/JqamCek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YsqmCYI/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YsqmCYI/"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4692h9H4021878;
+	Tue, 9 Jul 2024 06:49:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=MVJBzv8BrQY+trYbZfn1AF
+	xfcozwDiGsLtFJrpRlxNg=; b=YsqmCYI/UMY2J9RO1a1qZSOGJZSf3Na4c1dszz
+	KTEIPq6s3HrfsMdNotYxjPS+3ELu0j1BCoGGnnIL8CH0vlREcCiAqj7ro8LrmEfm
+	oUCSU6kO1Z3wRuuV3+TpC6oz0756JJ/IyEBiSC92prUj56n7eHEqw7vw//R5gxXV
+	x59Ux5guD36bWE36AI1rRNOAAapM2KKMMl2FEcTicovI9EVjq4/FDms/BpQR3XZo
+	IgX6nllvxgSslZNuyZT/h3UcQ+oU6dhbljdpl7Yl2KNSV3CotDsOZNUwzNElN5BO
+	6sw1MlY2LllMD7MwAgfp4kvR5W0/w6icNDJWcKxJppJ81W7A==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406x0t5rxg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 06:28:37 +0000 (GMT)
-Received: from usgdcecpmsgap04.emrsn.org (10.16.75.145) by mail.emerson.com
- (10.16.11.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 9 Jul
- 2024 06:28:49 +0000
-Received: from usgdcecpmsgap05.emrsn.org (10.16.75.137) by
- usgdcecpmsgap04.emrsn.org (10.16.75.145) with Microsoft SMTP Server
+	Tue, 09 Jul 2024 06:49:48 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4696nlXS006003
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 06:49:47 GMT
+Received: from hu-nainmeht-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 9 Jul 2024 06:27:41 +0000
-Received: from aug-swlinux1c.aug (10.19.249.15) by Inetmail.emrsn.net
- (10.16.75.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11 via Frontend
- Transport; Tue, 9 Jul 2024 06:27:41 +0000
-Received: from Inetmail.emrsn.net (unknown [10.70.41.16])
-	by aug-swlinux1c.aug (Postfix) with ESMTP id 426EDB0B0017;
-	Tue,  9 Jul 2024 08:27:40 +0200 (CEST)
-From: Philipp Hortmann <philipp.hortmann@emerson.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-staging@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-CC: Philipp Hortmann <philipp.hortmann@emerson.com>
-Subject: [PATCH] staging: rtl8723bs: Remove constant result function CheckNegative()
-Date: Tue, 9 Jul 2024 08:26:34 +0200
-Message-ID: <20240709062634.9454-1-philipp.hortmann@emerson.com>
-X-Mailer: git-send-email 2.45.2
+ 15.2.1544.9; Mon, 8 Jul 2024 23:49:43 -0700
+From: Naina Mehta <quic_nainmeht@quicinc.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>, <manivannan.sadhasivam@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_nainmeht@quicinc.com>
+Subject: [PATCH v4 0/5] Add MPSS remoteproc support for SDX75
+Date: Tue, 9 Jul 2024 12:19:19 +0530
+Message-ID: <20240709064924.325478-1-quic_nainmeht@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,130 +58,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: cFmUnU8ehzE1BMmzNw-kVnDvI_HUDQao
-X-Proofpoint-GUID: cFmUnU8ehzE1BMmzNw-kVnDvI_HUDQao
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: qptHEOUfivvD7_jSSOOAM9NLjcUHPP7D
+X-Proofpoint-ORIG-GUID: qptHEOUfivvD7_jSSOOAM9NLjcUHPP7D
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-08_15,2024-07-08_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- bulkscore=0 clxscore=1011 priorityscore=1501 phishscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
- adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090041
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=789 priorityscore=1501 malwarescore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407090044
 
-Remove function CheckNegative() that returns always true to shorten code.
+Add modem support to SDX75 using the PAS remoteproc driver.
+Also, add qlink_logging memory region and split MPSS DSM
+region into 2 separate regions.
 
-Signed-off-by: Philipp Hortmann <philipp.hortmann@emerson.com>
----
-Tested with rtl8723bs in ODYS Trendbook Next 14
----
- .../staging/rtl8723bs/hal/HalHWImg8723B_BB.c    | 17 ++---------------
- .../staging/rtl8723bs/hal/HalHWImg8723B_MAC.c   | 12 +-----------
- .../staging/rtl8723bs/hal/HalHWImg8723B_RF.c    | 12 +-----------
- 3 files changed, 4 insertions(+), 37 deletions(-)
+These patches were co-authored by Rohit Agarwal while at
+Qualcomm.
 
-diff --git a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_BB.c b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_BB.c
-index dd0f74b0cf0d..4da2487f6750 100644
---- a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_BB.c
-+++ b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_BB.c
-@@ -70,13 +70,6 @@ static bool CheckPositive(
- 	return false;
- }
- 
--static bool CheckNegative(
--	struct dm_odm_t *pDM_Odm, const u32  Condition1, const u32 Condition2
--)
--{
--	return true;
--}
--
- /******************************************************************************
- *                           AGC_TAB.TXT
- ******************************************************************************/
-@@ -244,10 +237,7 @@ void ODM_ReadAndConfig_MP_8723B_AGC_TAB(struct dm_odm_t *pDM_Odm)
- 				READ_NEXT_PAIR(v1, v2, i);
- 			} else {
- 				READ_NEXT_PAIR(v1, v2, i);
--				if (!CheckNegative(pDM_Odm, v1, v2))
--					bMatched = false;
--				else
--					bMatched = true;
-+				bMatched = true;
- 				READ_NEXT_PAIR(v1, v2, i);
- 			}
- 
-@@ -506,10 +496,7 @@ void ODM_ReadAndConfig_MP_8723B_PHY_REG(struct dm_odm_t *pDM_Odm)
- 				READ_NEXT_PAIR(v1, v2, i);
- 			} else {
- 				READ_NEXT_PAIR(v1, v2, i);
--				if (!CheckNegative(pDM_Odm, v1, v2))
--					bMatched = false;
--				else
--					bMatched = true;
-+				bMatched = true;
- 				READ_NEXT_PAIR(v1, v2, i);
- 			}
- 
-diff --git a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_MAC.c b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_MAC.c
-index 47e66f4ad9d1..1f0cc8d58df3 100644
---- a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_MAC.c
-+++ b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_MAC.c
-@@ -68,13 +68,6 @@ static bool CheckPositive(
- 	return false;
- }
- 
--static bool CheckNegative(
--	struct dm_odm_t *pDM_Odm, const u32 Condition1, const u32 Condition2
--)
--{
--	return true;
--}
--
- /******************************************************************************
- *                           MAC_REG.TXT
- ******************************************************************************/
-@@ -214,10 +207,7 @@ void ODM_ReadAndConfig_MP_8723B_MAC_REG(struct dm_odm_t *pDM_Odm)
- 				READ_NEXT_PAIR(v1, v2, i);
- 			} else {
- 				READ_NEXT_PAIR(v1, v2, i);
--				if (!CheckNegative(pDM_Odm, v1, v2))
--					bMatched = false;
--				else
--					bMatched = true;
-+				bMatched = true;
- 				READ_NEXT_PAIR(v1, v2, i);
- 			}
- 
-diff --git a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_RF.c b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_RF.c
-index efc68c17b126..155ec311a52e 100644
---- a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_RF.c
-+++ b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_RF.c
-@@ -78,13 +78,6 @@ static bool CheckPositive(
- 	return false;
- }
- 
--static bool CheckNegative(
--	struct dm_odm_t *pDM_Odm, const u32  Condition1, const u32 Condition2
--)
--{
--	return true;
--}
--
- /******************************************************************************
- *                           RadioA.TXT
- ******************************************************************************/
-@@ -245,10 +238,7 @@ void ODM_ReadAndConfig_MP_8723B_RadioA(struct dm_odm_t *pDM_Odm)
- 				READ_NEXT_PAIR(v1, v2, i);
- 			} else {
- 				READ_NEXT_PAIR(v1, v2, i);
--				if (!CheckNegative(pDM_Odm, v1, v2))
--					bMatched = false;
--				else
--					bMatched = true;
-+				bMatched = true;
- 				READ_NEXT_PAIR(v1, v2, i);
- 			}
- 
+Changes in v4:
+ - Updated commit message for reserved memory updation for mpss to add
+   the motivation behind the change.
+ - Link to v3: https://lore.kernel.org/all/20240618131342.103995-1-quic_nainmeht@quicinc.com/
+
+Changes in v3:
+ - Updated commit message for reserved memory updation for mpss.
+ - Link to v2: https://lore.kernel.org/all/20240617093428.3616194-1-quic_nainmeht@quicinc.com/
+
+Changes in v2:
+ - Added missing binding for SDX75 to allOf constraints.
+ - Updated reserved memory node names to remove underscores.
+ - Link to v1: https://lore.kernel.org/all/20240606143858.4026-1-quic_nainmeht@quicinc.com/
+
+Naina Mehta (5):
+  dt-bindings: remoteproc: qcom,sm8550-pas: document the SDX75 PAS
+  remoteproc: qcom: pas: Add SDX75 remoteproc support
+  arm64: dts: qcom: sdx75: update reserved memory regions for mpss
+  arm64: dts: qcom: sdx75: Add remoteproc node
+  arm64: dts: qcom: sdx75-idp: enable MPSS remoteproc node
+
+ .../bindings/remoteproc/qcom,sm8550-pas.yaml  |  3 +
+ arch/arm64/boot/dts/qcom/sdx75-idp.dts        |  6 ++
+ arch/arm64/boot/dts/qcom/sdx75.dtsi           | 65 +++++++++++++++++--
+ drivers/remoteproc/qcom_q6v5_pas.c            |  1 +
+ 4 files changed, 71 insertions(+), 4 deletions(-)
+
 -- 
-2.45.2
+2.34.1
 
