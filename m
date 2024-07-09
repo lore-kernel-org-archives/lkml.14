@@ -1,206 +1,221 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5A1154434
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F0B4154BE8;
+	Tue,  9 Jul 2024 09:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720516928; cv=none; b=YJqQzw1szx2WkDZ7esxRvhZhugS8Kllycic7MRI0fJPf8p4A02TWACh8M5Xf+DSrXunL7VdaRYS0FY10O5YisDfkDtRXmtf3+mPWgQLVTT5eMUnQ2O7+6nkQz8CmFxYGZNke/hASMYkri6Zur8JpnUoFsT4Zm0hx2DkdE3VFj8Q=
+	t=1720516986; cv=none; b=bDx+n1+f0ueWM5N4EkJgeJFMjRqHuHDq6QCFl4YEo8C0JSP2HbEuZZnNnuXlc/HSIMjl3jPeo/yg85mXi3tyh6v5PMlg74v4dsTq7rsuipv+nqNYRybL1gIxfDF0VnB+aDPQBwgQJLiiYHFMHxl7m2EqdoLgvxItcvRsnDgr4Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720516928; c=relaxed/simple;
-	bh=1Afy59d9rvoNifwLU0IZusSAU7p8fTyjgjyF+URDHps=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FPHDBOKHfaaSK434TJMyt84aVkzp5m0yaWcsm5TZNZ3f1/NbYcE2vn+lWsFQk05z++DUJV8OOtBrJf5ZSsUQvBCp/Y7fo7FFTxcr7gsyihu3BnvvddSc1AmZFnbx4wUhWuQyzP1euWz0D7cL/ULOCSHcdl7+K9mlqwyQpdA/OGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ADJ77naX; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ADJ77naX"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4697vMpK024493;
-	Tue, 9 Jul 2024 09:21:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:content-transfer-encoding
-	:mime-version; s=pp1; bh=VAu8nuSyKpLacLsQUVBecgg5k9Mqzo3eKlp3op6
-	poZg=; b=ADJ77naXvcUzRAu4i3KnasFfUhTEG55x5/gya9kq66qEiILR7fumpH9
-	tDncklx40bX5br0/JBziddJ9zEX/PoMXrB9oTydbne3ZS1r4nxq73Zew7HgBVHUv
-	WpLkPUuowIHxJ85mktEOVDNmxmhIZn8P6KpnQ+45wJgHsdorKxBYGS0qFQ7yGITk
-	oaOFaTl/kefxK2ewto34hFTecYq+S+OSM/G6u7omrwFnvFfYggE+E5LEwhUUN8X5
-	6Lxn4bIdQXx/UR2e0+hoGFCMtj0d1rgqRvxs4Giv2orufQg472o5xBLbRU/+j2vC
-	AvjEpOCscRYRa67agDhNkNgQmQY1lYw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 408ws38p9j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 09:21:34 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4699LXEl020805;
-	Tue, 9 Jul 2024 09:21:33 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 408ws38p9f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 09:21:33 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4698tVce024583;
-	Tue, 9 Jul 2024 09:21:32 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 407hrmkjpx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 09:21:32 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4699LS0r42140092
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Jul 2024 09:21:30 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AAC3220040;
-	Tue,  9 Jul 2024 09:21:28 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 800A020043;
-	Tue,  9 Jul 2024 09:21:26 +0000 (GMT)
-Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.40.194.31])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Jul 2024 09:21:26 +0000 (GMT)
-From: Donet Tom <donettom@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Muchun Song <muchun.song@linux.dev>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Ritesh Harjani <ritesh.list@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Tony Battersby <tonyb@cybernetics.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Donet Tom <donettom@linux.ibm.com>
-Subject: [PATCH v2] fs/hugetlbfs/inode.c: Ensure generic_hugetlb_get_unmapped_area() returns higher address than mmap_min_addr
-Date: Tue,  9 Jul 2024 04:21:22 -0500
-Message-ID: <20240709092122.41232-1-donettom@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oaUkanhYWHG3dfuPoU_w4oO8JCSI7bbG
-X-Proofpoint-ORIG-GUID: LNKnn6UQNhxNm9BSsiI72LSIydZX6VL0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1720516986; c=relaxed/simple;
+	bh=Mg/A831yLmDsApgW71u2EDNhhGRIX5UWXSlgAY7Jyvo=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=kH9CY4PAZcXKVMCZOv9smnyE1cqVu/lnIP6/NNN61Nv1+NJih1lKnplm26b3toqwhBqhUEaEZ2JjbvaQDTnW9RspHMQMqyuRD5WvZazPdDPTs4jb5LMWAcSy3+rIOK6dNItOFf8sVKnTxSdHclIzdI9Bk+OY68Ck9ObqsDnibrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cx7+tyAY1msFwCAA--.7080S3;
+	Tue, 09 Jul 2024 17:22:58 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxusZwAY1mitJAAA--.18510S3;
+	Tue, 09 Jul 2024 17:22:58 +0800 (CST)
+Subject: Re: [PATCH v2] LoongArch: KVM: Implement feature passing from user
+ space
+From: maobibo <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20240611123655.4169939-1-maobibo@loongson.cn>
+Message-ID: <5b568152-7912-c613-588e-7b2bf1491ee5@loongson.cn>
+Date: Tue, 9 Jul 2024 17:22:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_15,2024-07-08_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 clxscore=1015 impostorscore=0 lowpriorityscore=0
- spamscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 suspectscore=0
- phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090059
+In-Reply-To: <20240611123655.4169939-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxusZwAY1mitJAAA--.18510S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Aw1UGrWfKw4rWry3ArykXrc_yoW7Cr4kpF
+	y7AFn5Gr4rKryfCw1ktws8ur47XFs7Gr129Fy2g3y5AF4j9r18Jr1kKrZrXFy5Jw48Z3WI
+	qF1Fkwn0va1qvwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8
+	yCJUUUUU=
 
-generic_hugetlb_get_unmapped_area() was returning an address less
-than mmap_min_addr if the mmap argument addr, after alignment, was
-less than mmap_min_addr, causing mmap to fail.
+Gently ping.
 
-This is because current generic_hugetlb_get_unmapped_area() code does
-not take into account mmap_min_addr.
-
-This patch ensures that generic_hugetlb_get_unmapped_area() always returns
-an address that is greater than mmap_min_addr. Additionally, similar to
-generic_get_unmapped_area(), vm_end_gap() checks are included to ensure
-that the address is within the limit.
-
-How to reproduce
-================
-
- #include <stdio.h>
- #include <stdlib.h>
- #include <sys/mman.h>
- #include <unistd.h>
-
- #define HUGEPAGE_SIZE (16 * 1024 * 1024)
-
- int main() {
-
-    void *addr = mmap((void *)-1, HUGEPAGE_SIZE,
-                 PROT_READ | PROT_WRITE,
-                 MAP_SHARED | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
-    if (addr == MAP_FAILED) {
-        perror("mmap");
-        exit(EXIT_FAILURE);
-    }
-
-    snprintf((char *)addr, HUGEPAGE_SIZE, "Hello, Huge Pages!");
-
-    printf("%s\n", (char *)addr);
-
-    if (munmap(addr, HUGEPAGE_SIZE) == -1) {
-        perror("munmap");
-        exit(EXIT_FAILURE);
-    }
-
-    return 0;
- }
-
-Result without fix
-==================
- # cat /proc/meminfo |grep -i HugePages_Free
- HugePages_Free:       20
- # ./test
- mmap: Permission denied
- #
-
-Result with fix
-===============
- # cat /proc/meminfo |grep -i HugePages_Free
- HugePages_Free:       20
- # ./test
- Hello, Huge Pages!
- #
-
-V2:
-Added vm_end_gap() check.
-
-V1:
-https://lore.kernel.org/all/20240705071150.84972-1-donettom@linux.ibm.com/
-
-Reported-by Pavithra Prakash <pavrampu@linux.vnet.ibm.com>
-Signed-off-by: Donet Tom <donettom@linux.ibm.com>
----
- fs/hugetlbfs/inode.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 412f295acebe..cdd8e53ddd19 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -222,13 +222,13 @@ generic_hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
- 				  unsigned long flags)
- {
- 	struct mm_struct *mm = current->mm;
--	struct vm_area_struct *vma;
-+	struct vm_area_struct *vma, *prev;
- 	struct hstate *h = hstate_file(file);
- 	const unsigned long mmap_end = arch_get_mmap_end(addr, len, flags);
- 
- 	if (len & ~huge_page_mask(h))
- 		return -EINVAL;
--	if (len > TASK_SIZE)
-+	if (len > mmap_end - mmap_min_addr)
- 		return -ENOMEM;
- 
- 	if (flags & MAP_FIXED) {
-@@ -239,9 +239,10 @@ generic_hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
- 
- 	if (addr) {
- 		addr = ALIGN(addr, huge_page_size(h));
--		vma = find_vma(mm, addr);
--		if (mmap_end - len >= addr &&
--		    (!vma || addr + len <= vm_start_gap(vma)))
-+		vma = find_vma_prev(mm, addr, &prev);
-+		if (mmap_end - len >= addr && addr >= mmap_min_addr &&
-+		    (!vma || addr + len <= vm_start_gap(vma)) &&
-+		    (!prev || addr >= vm_end_gap(prev)))
- 			return addr;
- 	}
- 
--- 
-2.43.5
+On 2024/6/11 下午8:36, Bibo Mao wrote:
+> Currently features defined in cpucfg CPUCFG_KVM_FEATURE come from
+> kvm kernel mode only. However KVM is not aware of user-space VMM
+> features which makes it hard to employ optimizations. Here interface
+> is added to update register CPUCFG_KVM_FEATURE from user space,
+> only bit 24 - 31 is valid, so that VM can detect features implemented
+> in user-space VMM.
+> 
+> A new feature bit KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI is added which
+> can be set from user space. This feature indicates that the virt EXTIOI
+> can route interrupts to 256 vCPUs, rather than 4 vCPUs like with real HW.
+> 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> v1 ... v2:
+>    1. Update changelog suggested by WangXuerui.
+>    2. Fix typo issue in function kvm_loongarch_cpucfg_set_attr(), usr_features
+> should be assigned directly, also suggested by WangXueRui.
+> ---
+>   arch/loongarch/include/asm/kvm_host.h  |  4 +++
+>   arch/loongarch/include/asm/loongarch.h |  5 ++++
+>   arch/loongarch/include/uapi/asm/kvm.h  |  2 ++
+>   arch/loongarch/kvm/exit.c              |  1 +
+>   arch/loongarch/kvm/vcpu.c              | 36 +++++++++++++++++++++++---
+>   5 files changed, 44 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index 88023ab59486..8fa50d757247 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -135,6 +135,9 @@ enum emulation_result {
+>   #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
+>   #define KVM_LARCH_LBT		(0x1 << 5)
+>   
+> +#define KVM_LOONGARCH_USR_FEAT_MASK			\
+> +	BIT(KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI)
+> +
+>   struct kvm_vcpu_arch {
+>   	/*
+>   	 * Switch pointer-to-function type to unsigned long
+> @@ -210,6 +213,7 @@ struct kvm_vcpu_arch {
+>   		u64 last_steal;
+>   		struct gfn_to_hva_cache cache;
+>   	} st;
+> +	unsigned int usr_features;
+>   };
+>   
+>   static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+> index 7a4633ef284b..4d9837512c19 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -167,9 +167,14 @@
+>   
+>   #define CPUCFG_KVM_SIG			(CPUCFG_KVM_BASE + 0)
+>   #define  KVM_SIGNATURE			"KVM\0"
+> +/*
+> + * BIT 24 - 31 is features configurable by user space vmm
+> + */
+>   #define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
+>   #define  KVM_FEATURE_IPI		BIT(1)
+>   #define  KVM_FEATURE_STEAL_TIME		BIT(2)
+> +/* With VIRT_EXTIOI feature, interrupt can route to 256 VCPUs */
+> +#define  KVM_FEATURE_VIRT_EXTIOI	BIT(24)
+>   
+>   #ifndef __ASSEMBLY__
+>   
+> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+> index ed12e509815c..dd141259de48 100644
+> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> @@ -99,6 +99,8 @@ struct kvm_fpu {
+>   
+>   /* Device Control API on vcpu fd */
+>   #define KVM_LOONGARCH_VCPU_CPUCFG	0
+> +/* For CPUCFG_KVM_FEATURE register */
+> +#define  KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI	24
+>   #define KVM_LOONGARCH_VCPU_PVTIME_CTRL	1
+>   #define  KVM_LOONGARCH_VCPU_PVTIME_GPA	0
+>   
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index e1bd81d27fd8..ab2dcc76784a 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -53,6 +53,7 @@ static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+>   		ret = KVM_FEATURE_IPI;
+>   		if (sched_info_on())
+>   			ret |= KVM_FEATURE_STEAL_TIME;
+> +		ret |= vcpu->arch.usr_features;
+>   		vcpu->arch.gprs[rd] = ret;
+>   		break;
+>   	default:
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 3783151fde32..4a06a9e96e4e 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -832,6 +832,8 @@ static int kvm_loongarch_cpucfg_has_attr(struct kvm_vcpu *vcpu,
+>   	switch (attr->attr) {
+>   	case 2:
+>   		return 0;
+> +	case CPUCFG_KVM_FEATURE:
+> +		return 0;
+>   	default:
+>   		return -ENXIO;
+>   	}
+> @@ -865,9 +867,18 @@ static int kvm_loongarch_get_cpucfg_attr(struct kvm_vcpu *vcpu,
+>   	uint64_t val;
+>   	uint64_t __user *uaddr = (uint64_t __user *)attr->addr;
+>   
+> -	ret = _kvm_get_cpucfg_mask(attr->attr, &val);
+> -	if (ret)
+> -		return ret;
+> +	switch (attr->attr) {
+> +	case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
+> +		ret = _kvm_get_cpucfg_mask(attr->attr, &val);
+> +		if (ret)
+> +			return ret;
+> +		break;
+> +	case CPUCFG_KVM_FEATURE:
+> +		val = vcpu->arch.usr_features & KVM_LOONGARCH_USR_FEAT_MASK;
+> +		break;
+> +	default:
+> +		return -ENXIO;
+> +	}
+>   
+>   	put_user(val, uaddr);
+>   
+> @@ -896,7 +907,24 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
+>   static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+>   					 struct kvm_device_attr *attr)
+>   {
+> -	return -ENXIO;
+> +	u64 __user *user = (u64 __user *)attr->addr;
+> +	u64 val, valid_flags;
+> +
+> +	switch (attr->attr) {
+> +	case CPUCFG_KVM_FEATURE:
+> +		if (get_user(val, user))
+> +			return -EFAULT;
+> +
+> +		valid_flags = KVM_LOONGARCH_USR_FEAT_MASK;
+> +		if (val & ~valid_flags)
+> +			return -EINVAL;
+> +
+> +		vcpu->arch.usr_features = val;
+> +		return 0;
+> +
+> +	default:
+> +		return -ENXIO;
+> +	}
+>   }
+>   
+>   static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+> 
+> base-commit: 2df0193e62cf887f373995fb8a91068562784adc
+> 
 
