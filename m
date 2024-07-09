@@ -1,482 +1,171 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9966156991;
-	Tue,  9 Jul 2024 09:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CC0154C15
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720515796; cv=none; b=f4MDmucmdYHJGS7BsmVYnjyFW4OqX4tvxcTRqV+hyJRBfsdrVby4LeqyOTim5r16/YB/45y5FIahq/Gr7Mi8y8C1vt5OAWoey/wdV6y6v9jaLvBx4rMMOUc6ioUZbMT2BUOYa9kXtZN5gezqHY91qIaNnnCl/R1ATnyROYkFf8M=
+	t=1720515825; cv=none; b=GQAfSUaSPRP3UQcNqmfTRTS5mvZuX6vm5+ZPuMHmqXdxsQz3C4JqEgoL7LujsIRq6dLPzGQ/cwtijUhN5yjA61u5fpWSadT5qupUvMe0KVceUbeDuE1+3YwL/SMgx3rsh0HTNpzFEXYa3+uCIa4Y38ufSPVd/NQeH2U+OKaiUIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720515796; c=relaxed/simple;
-	bh=qoTHyueTQ/dT4+44hHIQbKgJFJ3Y7RgrwoEpxOGhv0A=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rdua4zQuOkLLy3yMDSM1u69dbjcZBB7YMb3XXjd2k26AwY7xc8GBylFvzgXUcNziIYPNPyY0KLQLMID+tcsrvUQgHyas1kMSby4GMz6ytpRheb/tgEGpOBB2zkzKMBjQ6qTTzMK7MUbjS8h/G2PPVjuMIXiViGOZL2vs9Tc9aCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DQveGeKO; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720515825; c=relaxed/simple;
+	bh=RwybyzzL0dNpt2i8Hun7VUiB0fNyNCWjuNNKxXa+kdI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=l13Z/1rbrHlPnI1vU/dp2yQlAJe0CAx1DLhO6hJ+n39ZWX1vJHsGhC4Xym4Q9q4Us/HxDW3voXouaZQLQ5kVENFrRbzB079oQIjvTkgHQ6y8fTO7oB5gt/s/Vh8WWfuztSkOV4wfdVzysx7Y94xOpZeAH2vaDEBFbw8ykIYOdEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BJpo7gRb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DQveGeKO"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46932KU1016601;
-	Tue, 9 Jul 2024 09:03:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8AbjZX+XaDXMjC7NooiO5noD6SB5icWzrytd0VpePi4=; b=DQveGeKOspKwqONi
-	5YvS9+prOI2AEBOFuWPvdpkgndzVF1UMTN5L74r3T0v8jfwwsxZHeb6OqZ/nyzS0
-	63Aq6/CRtx4Jd93unfSKrYsLkuyXTlRty90ZU85UiNer9yQ0NJ36c0pTCCJzAzYU
-	JV3S+b+Odzci76iZKlReZVmE9Ss/Gh3kAoiPrrom3+i4+NMTbr9cmnE/QAEdiLed
-	kgGvSWXkyb+6QMEL8FCI5I97rEIomuQoWsXnkbnIh8wuyihInnmTF079xmNWsCcF
-	B/cQgoaprYbssLZfCvxnH+Gz/8kE1JFrlKJtMTTXCVoEWK36cgvEeZ4x/dzqcxOS
-	2uD7+Q==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406xa65ukg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 09:03:02 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469931c6010758
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 09:03:01 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 9 Jul 2024 02:02:53 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <angelogioacchino.delregno@collabora.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ilia.lin@kernel.org>, <rafael@kernel.org>,
-        <viresh.kumar@linaro.org>, <ulf.hansson@linaro.org>,
-        <quic_sibis@quicinc.com>, <quic_varada@quicinc.com>,
-        <quic_rjendra@quicinc.com>, <otto.pflueger@abscue.de>,
-        <luca@z3ntu.xyz>, <danila@jiaxyga.com>, <quic_ipkumar@quicinc.com>,
-        <stephan.gerhold@kernkonzept.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: [PATCH v5 9/9] dts: arm64: qcom: ipq9574: Enable CPR
-Date: Tue, 9 Jul 2024 14:31:32 +0530
-Message-ID: <20240709090132.117077-10-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240709090132.117077-1-quic_varada@quicinc.com>
-References: <20240709090132.117077-1-quic_varada@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BJpo7gRb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720515822;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wGrefDyHXPEmhLFp1M8+y8s3v1m1eiH05AfmCPOG95I=;
+	b=BJpo7gRbVm8pScrif0qLvHPPn0eP98UUrZLMLONV3oI5cCfzglO/XsEdOk8F0FiDlEuAId
+	K2ZKnh0Ri74EC/FSZjwvOYWA0Vx/MMQuVHicCWVDMfrQu4Kw6RgQokQa/zKtOU1cPq/Oms
+	a6LDVT26K6DDxMM3tS8zmA/sSlw97/c=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-168-4DuzHk-zM1y6NVgcZ0djbQ-1; Tue, 09 Jul 2024 05:03:40 -0400
+X-MC-Unique: 4DuzHk-zM1y6NVgcZ0djbQ-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ee9cf9398aso5160021fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 02:03:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720515819; x=1721120619;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wGrefDyHXPEmhLFp1M8+y8s3v1m1eiH05AfmCPOG95I=;
+        b=R5SqGceexB2tdm2FMT40u3pZS1GO76TBH57Q3mVwvhGkLyZMO5eYJbuU1MJ6VaXFGa
+         XAudZj25IGGh3PFqtrSeG8b8hrDZshzynzDx31KeRBBUlNT/Mti4AEBSYfnt2jp1JOG9
+         ZsREjzP3Ft4jXVqWTzCSeSD/jcstAWiVwRl77tpOsr5QxEjA4WU39riczAIH0e5Pr6xV
+         BuFc92BB1Oe0xj7ekVsLvmoITL4rakfEJnkAHJDzF17FVsaA0xICZzdgNOmJg/5clqjM
+         QAUerLU8nxbozhQXW8RkNbjPOyPyg/OyaCBZc8HWimDOUyL1W328RNdC1npPcrdHeRCM
+         ib9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUwqzAc8UAo9M9QkQNTSAJnK4OYG+PJyfZalnFho5cklw5FsLychKE7Sv23/4jBpaBkVAtbv9N5Nhl3tsFfinByTy8AbfaQq1niKbDJ
+X-Gm-Message-State: AOJu0Yywy/QJVBOhnfA1g43xYrmSUcw/w8vSD47kRASPnHWDHZI3P/bj
+	V07gMnBXAd4ULi8oNNrPGzoOOnGyJ3765mUmKg343JfCn1qTxjzdQA9Pt/oFpatfEJQWYZq+w5Q
+	BahMjMedMU4tdoEH4tQuMTnWYeQHBOUp/g6eNEqD/ZETDrssAJ8ZsCzfq1tIxnA==
+X-Received: by 2002:a05:6512:3f09:b0:52c:def2:d8af with SMTP id 2adb3069b0e04-52eb99da573mr1153955e87.4.1720515818858;
+        Tue, 09 Jul 2024 02:03:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEqXEA3xrkSPy78VcJY90d8zrk5a2k8vyWg3ZIb3jTeTIJNBT9NRLD+6W0UWQiWEDFvdSSQug==
+X-Received: by 2002:a05:6512:3f09:b0:52c:def2:d8af with SMTP id 2adb3069b0e04-52eb99da573mr1153932e87.4.1720515818365;
+        Tue, 09 Jul 2024 02:03:38 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3344:1710:e810:1180:8096:5705:abe])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfab6d3sm1912544f8f.112.2024.07.09.02.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 02:03:37 -0700 (PDT)
+Message-ID: <ce5973fe2017177e6f4c1f577fa8309fe7258612.camel@redhat.com>
+Subject: Re: [PATCH net-next v2] l2tp: fix possible UAF when cleaning up
+ tunnels
+From: Paolo Abeni <pabeni@redhat.com>
+To: James Chapman <jchapman@katalix.com>, Hillf Danton <hdanton@sina.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tparkin@katalix.com, 
+	syzbot+b471b7c936301a59745b@syzkaller.appspotmail.com, 
+	syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com
+Date: Tue, 09 Jul 2024 11:03:36 +0200
+In-Reply-To: <a65127e4-544b-27e6-a1e1-e20e5fb4d480@katalix.com>
+References: <20240708115940.892-1-hdanton@sina.com>
+	 <a65127e4-544b-27e6-a1e1-e20e5fb4d480@katalix.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: JUK3ExhBC7RhrEtcJKkunC2I-3pvaA9a
-X-Proofpoint-ORIG-GUID: JUK3ExhBC7RhrEtcJKkunC2I-3pvaA9a
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_15,2024-07-08_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0 spamscore=0
- clxscore=1015 adultscore=0 malwarescore=0 mlxscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090060
 
-* Add CPR, RPMPD, OPP table nodes as applicable to IPQ9574 to
-  enable CPR functionality on IPQ9574.
+On Mon, 2024-07-08 at 14:57 +0100, James Chapman wrote:
+> On 08/07/2024 12:59, Hillf Danton wrote:
+> > On Mon, 8 Jul 2024 11:06:25 +0100 James Chapman <jchapman@katalix.com>
+> > > On 05/07/2024 11:32, Hillf Danton wrote:
+> > > > On Thu,  4 Jul 2024 16:25:08 +0100 James Chapman <jchapman@katalix.=
+com>
+> > > > > --- a/net/l2tp/l2tp_core.c
+> > > > > +++ b/net/l2tp/l2tp_core.c
+> > > > > @@ -1290,17 +1290,20 @@ static void l2tp_session_unhash(struct l2=
+tp_session *session)
+> > > > >    static void l2tp_tunnel_closeall(struct l2tp_tunnel *tunnel)
+> > > > >    {
+> > > > >    	struct l2tp_session *session;
+> > > > > -	struct list_head *pos;
+> > > > > -	struct list_head *tmp;
+> > > > >   =20
+> > > > >    	spin_lock_bh(&tunnel->list_lock);
+> > > > >    	tunnel->acpt_newsess =3D false;
+> > > > > -	list_for_each_safe(pos, tmp, &tunnel->session_list) {
+> > > > > -		session =3D list_entry(pos, struct l2tp_session, list);
+> > > > > +	for (;;) {
+> > > > > +		session =3D list_first_entry_or_null(&tunnel->session_list,
+> > > > > +						   struct l2tp_session, list);
+> > > > > +		if (!session)
+> > > > > +			break;
+> > > > > +		l2tp_session_inc_refcount(session);
+> > > > >    		list_del_init(&session->list);
+> > > > >    		spin_unlock_bh(&tunnel->list_lock);
+> > > > >    		l2tp_session_delete(session);
+> > > > >    		spin_lock_bh(&tunnel->list_lock);
+> > > > > +		l2tp_session_dec_refcount(session);
+> > > >=20
+> > > > Bumping refcount up makes it safe for the current cpu to go thru ra=
+ce
+> > > > after releasing lock, and if it wins the race, dropping refcount ma=
+kes
+> > > > the peer head on uaf.
+> > >=20
+> > > Thanks for reviewing this. Can you elaborate on what you mean by "mak=
+es
+> > > the peer head on uaf", please?
+> > >=20
+> > Given race, there are winner and loser. If the current cpu wins the rac=
+e,
+> > the loser hits uaf once winner drops refcount.
+>=20
+> I think the session's dead flag would protect against threads racing in=
+=20
+> l2tp_session_delete to delete the same session.
+> Any thread with a pointer to a session should hold a reference on it to=
+=20
+> prevent the session going away while it is accessed. Am I missing a=20
+> codepath where that's not the case?
 
-* Bootloader set frequency 792MHz is added to the OPP table to
-  the avoid 'need at least 2 OPPs to use CPR' error
+AFAICS this patch is safe, as the session refcount can't be 0 at
+l2tp_session_inc_refcount() time and will drop to 0 after
+l2tp_session_dec_refcount() only if no other entity/thread is owning
+any reference to the session.
 
-* Remove 1.2GHz as it is not supported in any of the IPQ9574 SKUs.
+@James: the patch has a formal issue, you should avoid any empty line
+in the tag area, specifically between the 'Fixes' and SoB tags.
 
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
-v4: s/cprh/cpr4/
-v2: Update commit log. No code change.
----
- arch/arm64/boot/dts/qcom/ipq9574.dtsi | 269 ++++++++++++++++++++++++--
- 1 file changed, 252 insertions(+), 17 deletions(-)
+I'll exceptionally fix this while applying the patch, but please run
+checkpatch before your next submission.
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-index 04ba09a9156c..cda30a877877 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/qcom,ipq9574-gcc.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -42,8 +43,9 @@ CPU0: cpu@0 {
- 			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
- 			clock-names = "cpu";
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&ipq9574_s1>;
- 			#cooling-cells = <2>;
-+			power-domains = <&apc_cpr4 0>;
-+			power-domain-names = "perf";
- 		};
- 
- 		CPU1: cpu@1 {
-@@ -55,8 +57,9 @@ CPU1: cpu@1 {
- 			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
- 			clock-names = "cpu";
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&ipq9574_s1>;
- 			#cooling-cells = <2>;
-+			power-domains = <&apc_cpr4 0>;
-+			power-domain-names = "perf";
- 		};
- 
- 		CPU2: cpu@2 {
-@@ -68,8 +71,9 @@ CPU2: cpu@2 {
- 			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
- 			clock-names = "cpu";
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&ipq9574_s1>;
- 			#cooling-cells = <2>;
-+			power-domains = <&apc_cpr4 0>;
-+			power-domain-names = "perf";
- 		};
- 
- 		CPU3: cpu@3 {
-@@ -81,8 +85,9 @@ CPU3: cpu@3 {
- 			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
- 			clock-names = "cpu";
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&ipq9574_s1>;
- 			#cooling-cells = <2>;
-+			power-domains = <&apc_cpr4 0>;
-+			power-domain-names = "perf";
- 		};
- 
- 		L2_0: l2-cache {
-@@ -105,58 +110,111 @@ memory@40000000 {
- 		reg = <0x0 0x40000000 0x0 0x0>;
- 	};
- 
-+	cpr4_opp_table: opp-table-cpr4 {
-+		compatible = "operating-points-v2-qcom-level";
-+
-+		cpr4_opp0: opp-0 {
-+			opp-level = <1>;
-+			qcom,opp-fuse-level = <1>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp1: opp-1 {
-+			opp-level = <2>;
-+			qcom,opp-fuse-level = <1>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp2: opp-2 {
-+			opp-level = <3>;
-+			qcom,opp-fuse-level = <1>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp3: opp-3 {
-+			opp-level = <4>;
-+			qcom,opp-fuse-level = <2>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp4: opp-4 {
-+			opp-level = <5>;
-+			qcom,opp-fuse-level = <2>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp5: opp-5 {
-+			opp-level = <6>;
-+			qcom,opp-fuse-level = <3>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+
-+		cpr4_opp6: opp-6 {
-+			opp-level = <7>;
-+			qcom,opp-fuse-level = <4>;
-+			qcom,opp-cloop-vadj = <0>;
-+			qcom,opp-oloop-vadj = <0>;
-+		};
-+	};
-+
- 	cpu_opp_table: opp-table-cpu {
- 		compatible = "operating-points-v2-kryo-cpu";
- 		opp-shared;
- 		nvmem-cells = <&cpu_speed_bin>;
- 
-+		opp-792000000 {
-+			opp-hz = /bits/ 64 <792000000>;
-+			opp-supported-hw = <0x0>;
-+			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp0>;
-+		};
-+
- 		opp-936000000 {
- 			opp-hz = /bits/ 64 <936000000>;
--			opp-microvolt = <725000>;
- 			opp-supported-hw = <0xf>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp1>;
- 		};
- 
- 		opp-1104000000 {
- 			opp-hz = /bits/ 64 <1104000000>;
--			opp-microvolt = <787500>;
--			opp-supported-hw = <0xf>;
--			clock-latency-ns = <200000>;
--		};
--
--		opp-1200000000 {
--			opp-hz = /bits/ 64 <1200000000>;
--			opp-microvolt = <862500>;
- 			opp-supported-hw = <0xf>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp2>;
- 		};
- 
- 		opp-1416000000 {
- 			opp-hz = /bits/ 64 <1416000000>;
--			opp-microvolt = <862500>;
- 			opp-supported-hw = <0x7>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp3>;
- 		};
- 
- 		opp-1488000000 {
- 			opp-hz = /bits/ 64 <1488000000>;
--			opp-microvolt = <925000>;
- 			opp-supported-hw = <0x7>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp4>;
- 		};
- 
- 		opp-1800000000 {
- 			opp-hz = /bits/ 64 <1800000000>;
--			opp-microvolt = <987500>;
- 			opp-supported-hw = <0x5>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp5>;
- 		};
- 
- 		opp-2208000000 {
- 			opp-hz = /bits/ 64 <2208000000>;
--			opp-microvolt = <1062500>;
- 			opp-supported-hw = <0x1>;
- 			clock-latency-ns = <200000>;
-+			required-opps = <&cpr4_opp6>;
- 		};
- 	};
- 
-@@ -182,6 +240,40 @@ glink-edge {
- 			rpm_requests: rpm-requests {
- 				compatible = "qcom,rpm-ipq9574";
- 				qcom,glink-channels = "rpm_requests";
-+
-+				rpmpd: power-controller {
-+					compatible = "qcom,ipq9574-rpmpd";
-+					#power-domain-cells = <1>;
-+					operating-points-v2 = <&rpmpd_opp_table>;
-+
-+					rpmpd_opp_table: opp-table {
-+						compatible = "operating-points-v2";
-+
-+						rpmpd_opp_svs: opp1 {
-+							opp-level = <RPM_SMD_LEVEL_SVS>;
-+						};
-+
-+						rpmpd_opp_svs_plus: opp2 {
-+							opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
-+						};
-+
-+						rpmpd_opp_nom: opp3 {
-+							opp-level = <RPM_SMD_LEVEL_NOM>;
-+						};
-+
-+						rpmpd_opp_nom_plus: opp4 {
-+							opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
-+						};
-+
-+						rpmpd_opp_turbo: opp5 {
-+							opp-level = <RPM_SMD_LEVEL_TURBO>;
-+						};
-+
-+						rpmpd_opp_turbo_high: opp6 {
-+							opp-level = <RPM_SMD_LEVEL_TURBO_HIGH>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-@@ -252,6 +344,95 @@ cpu_speed_bin: cpu-speed-bin@15 {
- 				reg = <0x15 0x2>;
- 				bits = <7 2>;
- 			};
-+
-+			cpr_efuse_speedbin: speedbin@5 {
-+				reg = <0x5 0x8>;
-+				bits = <0 3>;
-+			};
-+
-+			cpr_fuse_revision: cpr-fusing-rev@7 {
-+				reg = <0x7 0x8>;
-+				bits = <1 5>;
-+			};
-+
-+			/* CPR Ring Oscillator: Power Cluster */
-+			cpr_ro_sel0_pwrcl: rosel0-pwrcl@358 {	/* ROSEL_SVS */
-+				reg = <0x358 0x1>;
-+				bits = <4 4>;
-+			};
-+
-+			cpr_ro_sel1_pwrcl: rosel1-pwrcl@358 {	/* ROSEL_NOM */
-+				reg = <0x358 0x1>;
-+				bits = <0 4>;
-+			};
-+
-+			cpr_ro_sel2_pwrcl: rosel2-pwrcl@350 {	/* ROSEL_TUR */
-+				reg = <0x350 0x1>;
-+				bits = <4 4>;
-+			};
-+
-+			cpr_ro_sel3_pwrcl: rosel3-pwrcl@350 {	/* ROSEL_STUR */
-+				reg = <0x350 0x1>;
-+				bits = <0 4>;
-+			};
-+
-+			/* CPR Init Voltage: Power Cluster */
-+			cpr_init_voltage0_pwrcl: ivolt0-pwrcl@343 {	/* VOLT_SVS */
-+				reg = <0x343 0x1>;
-+				bits = <0 6>;
-+			};
-+
-+			cpr_init_voltage1_pwrcl: ivolt1-pwrcl@342 {	/* VOLT_NOM */
-+				reg = <0x342 0x1>;
-+				bits = <2 6>;
-+			};
-+
-+			cpr_init_voltage2_pwrcl: ivolt2-pwrcl@341 {	/* VOLT_TUR */
-+				reg = <0x341 0x2>;
-+				bits = <4 6>;
-+			};
-+
-+			cpr_init_voltage3_pwrcl: ivolt3-pwrcl@340 {	/* VOLT_STUR */
-+				reg = <0x340 0x2>;
-+				bits = <6 6>;
-+			};
-+
-+			/* CPR Target Quotients: Power Cluster */
-+			cpr_quot0_pwrcl: quot0-pwrcl@354 {	/* QUOT_VMIN_SVS */
-+				reg = <0x354 0x2>;
-+				bits = <0 12>;
-+			};
-+
-+			cpr_quot1_pwrcl: quot1-pwrcl@352 {	/* QUOT_VMIN_NOM */
-+				reg = <0x352 0x2>;
-+				bits = <4 12>;
-+			};
-+
-+			cpr_quot2_pwrcl: quot2-pwrcl@351 {	/* QUOT_VMIN_TUR */
-+				reg = <0x351 0x2>;
-+				bits = <0 12>;
-+			};
-+
-+			cpr_quot3_pwrcl: quot3-pwrcl@355 {	/* QUOT_VMIN_STUR */
-+				reg = <0x355 0x2>;
-+				bits = <4 12>;
-+			};
-+
-+			/* CPR Quotient Offsets: Power Cluster */
-+			cpr_quot_offset1_pwrcl: qoff1-pwrcl@34e {	/* QUOT_OFFSET_NOM_SVS */
-+				reg = <0x34e 0x1>;
-+				bits = <0 8>;
-+			};
-+
-+			cpr_quot_offset2_pwrcl: qoff2-pwrcl@34d {	/* QUOT_OFFSET_TUR_NOM */
-+				reg = <0x34d 0x1>;
-+				bits = <0 8>;
-+			};
-+
-+			cpr_quot_offset3_pwrcl: qoff0-pwrcl@34c {	/* QUOT_OFFSET_STUR_TUR */
-+				reg = <0x34c 0x1>;
-+				bits = <0 8>;
-+			};
- 		};
- 
- 		cryptobam: dma-controller@704000 {
-@@ -639,6 +820,60 @@ usb_0_dwc3: usb@8a00000 {
- 			};
- 		};
- 
-+		apc_cpr4: power-controller@b018000 {
-+			compatible = "qcom,ipq9574-cpr4", "qcom,cprh";
-+			reg = <0x0b018000 0x4000>,
-+			      <0x00048000 0x4000>;
-+
-+			clocks = <&gcc GCC_RBCPR_CLK>;
-+
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_EDGE_RISING>;
-+			vdd-supply = <&ipq9574_s1>;
-+
-+			/* Set the CPR clock here, it needs to match XO */
-+			assigned-clocks = <&gcc GCC_RBCPR_CLK>;
-+			assigned-clock-rates = <24000000>;
-+
-+			operating-points-v2 = <&cpr4_opp_table>;
-+			power-domains = <&rpmpd IPQ9574_VDDAPC>;
-+			#power-domain-cells = <1>;
-+
-+			nvmem-cells = <&cpr_efuse_speedbin>,
-+				      <&cpr_fuse_revision>,
-+				      <&cpr_quot0_pwrcl>,
-+				      <&cpr_quot1_pwrcl>,
-+				      <&cpr_quot2_pwrcl>,
-+				      <&cpr_quot3_pwrcl>,
-+				      <&cpr_quot_offset1_pwrcl>,
-+				      <&cpr_quot_offset2_pwrcl>,
-+				      <&cpr_quot_offset3_pwrcl>,
-+				      <&cpr_init_voltage0_pwrcl>,
-+				      <&cpr_init_voltage1_pwrcl>,
-+				      <&cpr_init_voltage2_pwrcl>,
-+				      <&cpr_init_voltage3_pwrcl>,
-+				      <&cpr_ro_sel0_pwrcl>,
-+				      <&cpr_ro_sel1_pwrcl>,
-+				      <&cpr_ro_sel2_pwrcl>,
-+				      <&cpr_ro_sel3_pwrcl>;
-+			nvmem-cell-names = "cpr_speed_bin",
-+					   "cpr_fuse_revision",
-+					   "cpr0_quotient1",
-+					   "cpr0_quotient2",
-+					   "cpr0_quotient3",
-+					   "cpr0_quotient4",
-+					   "cpr0_quotient_offset2",
-+					   "cpr0_quotient_offset3",
-+					   "cpr0_quotient_offset4",
-+					   "cpr0_init_voltage1",
-+					   "cpr0_init_voltage2",
-+					   "cpr0_init_voltage3",
-+					   "cpr0_init_voltage4",
-+					   "cpr0_ring_osc1",
-+					   "cpr0_ring_osc2",
-+					   "cpr0_ring_osc3",
-+					   "cpr0_ring_osc4";
-+		};
-+
- 		intc: interrupt-controller@b000000 {
- 			compatible = "qcom,msm-qgic2";
- 			reg = <0x0b000000 0x1000>,  /* GICD */
--- 
-2.34.1
+Also somewhat related, I think there is still a race condition in
+l2tp_tunnel_get_session():
+
+	rcu_read_lock_bh();
+        hlist_for_each_entry_rcu(session, session_list, hlist)
+                if (session->session_id =3D=3D session_id) {
+                        l2tp_session_inc_refcount(session);
+
+I think that at l2tp_session_inc_refcount(), the session refcount could
+be 0 due to a concurrent tunnel cleanup. l2tp_session_inc_refcount()
+should likely be refcount_inc_not_zero() and the caller should check
+the return value.
+
+In any case the latter is a separate issue.
+
+Thanks,
+
+Paolo
 
