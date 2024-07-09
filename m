@@ -1,152 +1,91 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A12433BE
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 03:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6EB4A15;
+	Tue,  9 Jul 2024 03:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720494742; cv=none; b=KgJNGOYvirUJCLwohS8IyoiWZhj7SfJtqCrJRJyUefctw2lm5v2x2xKs63wPkHa0aLfhsrjTkOzlwA2SyAtagU8KY2Auw4wZVRJIWHxIyKRWZOCN1GeTVSQBoNvCaEjy68OHYukdfOqDfi9TI6gWu79+tMEZDeeO03ggu1JdZwY=
+	t=1720494770; cv=none; b=Q4svF/l0JZ8O/d4Ph4DVIlplQNbAD75bP43ZOyjWg2zjU9/E8+w9KgtatNK3A+omwXGxwafI4q5JaLDT+yNIoQgpj9GxFp4Yf6tGxZkwe04nCu5E2v6TKxnBgFtj6D3on6DdOrZ4iA2GQcILPeVEudyfRLycoy86PHBCKpFtwcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720494742; c=relaxed/simple;
-	bh=XFZV0Qc4ElXWa6xsPTH1q6tmPFm4bZl/59yAA5SYUPo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MnppUO3lDuyetjeSaEQJtTT8zuX5nMbmIgsi940lbPUfrj5wPuiYJ+YqvwBUrquKjmBFqGcJsTzwpwmBr6C+w7EcCed48ckCqblvslr7GYoUsm6AucxqXZh7+PgbLbJvisb4ZxER3fxNFaXVzwyfhCCW/bMH3qFLNrqGCORi7Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7f12ee1959cso590205039f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 20:12:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720494740; x=1721099540;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iTcOd6S5hjqJaw4entfORyAfTyoeoPtGdQQtiW3Xu+0=;
-        b=AOJj0ExQtFl5DHOIwCYNHGt4mdk80s1WJq51uBKHMutGJiXA41HpDgWI9RkZxg8Udq
-         k7wm0zg7Qav+Iq4knvW2L397eNpBjtYAzsQXfEeBl67s0Hxc1b1CS/VIevf4zNxVr/yd
-         csb0f4X4Y8vU5mWMo6c+Ie52xOsP1m6zC18PukOF46NHXVFF2hUtKP4XOzorhGjXiDbr
-         jqKpKL4xAjXyrAdg2IE1hSzXbLwSY5FugwruJSJor00eVysM8bgtm5uWBJ7gSUgmxoQz
-         CBRmg/kOhDLraRXWHObPnbV0YNQCzPA6exC/f2YstIkfBmL2VK/RQyD5jkRh+mfcuKOf
-         316g==
-X-Forwarded-Encrypted: i=1; AJvYcCV9ZWV9ZXv34OtiR0laYBtEHRhqiaJ/sKBGJV7GkmzYoqCxHn9ERaMLXpZNg992MFtLkvp7vcUfp5HFlmFXTVMEpIArcZ0NmpnKFg5k
-X-Gm-Message-State: AOJu0Yw8zMABxgNg3cDz+8LnoHlthXmu5D2w4R0GJX9qQiWIhCw9aHoO
-	/uKGqfrep9mQXMFt58Zo0eZPXmJrN85iisonh3sQrbDKiRKgoeXjmrHiSRt6ZrhgOvJ5o1OvJrX
-	t8i/6WkDBuAfIgKWb/wGoKWs4CmfTOrQ6oVutkQ7TSusI5Ih3Em+tmYY=
-X-Google-Smtp-Source: AGHT+IHCkPwdiq/I65r8mVNNcFB5ddKi+JZqFLSl5kiqL1VBKN+R733LItz1xqfogQGSn+L11xbxyKAqT0hOIRtszNm6L5WoOluE
+	s=arc-20240116; t=1720494770; c=relaxed/simple;
+	bh=gG7VPVdC1NgmfJ9wBm/I1DUwm9R5dW8xyB+Gsar80dg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pmX4Ae/ruCJjDZuZts0kQ9E5JgzX9FitYv6eavHWUkGP2FArhcleCxAzDT23wnA/RQuZT6VEqNtbuFeLhehJAACByEw00w4DHFXv5Hbr7DR1B8nSqa650J8p421nDoh66dib8qiEnHnwipD4b8IeDdrkCgHJWTOI/Kcg0qAd8Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowADnx0ydqoxmqBVcAg--.237S2;
+	Tue, 09 Jul 2024 11:12:29 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: cezary.rojewski@intel.com,
+	pierre-louis.bossart@linux.intel.com,
+	liam.r.girdwood@linux.intel.com,
+	peter.ujfalusi@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	kai.vehmanen@linux.intel.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	ckeepax@opensource.cirrus.com
+Cc: alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] ASoC: Intel: sof_sdw: Convert comma to semicolon
+Date: Tue,  9 Jul 2024 11:09:21 +0800
+Message-Id: <20240709030921.585740-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2d85:b0:7fc:dfb0:4e52 with SMTP id
- ca18e2360f4ac-80006d99988mr10069739f.4.1720494739840; Mon, 08 Jul 2024
- 20:12:19 -0700 (PDT)
-Date: Mon, 08 Jul 2024 20:12:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ce6fdb061cc7e5b2@google.com>
-Subject: [syzbot] [batman?] BUG: soft lockup in batadv_iv_send_outstanding_bat_ogm_packet
-From: syzbot <syzbot+572f6e36bc6ee6f16762@syzkaller.appspotmail.com>
-To: a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	mareklindner@neomailbox.ch, netdev@vger.kernel.org, pabeni@redhat.com, 
-	sven@narfation.org, sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADnx0ydqoxmqBVcAg--.237S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZF15Zr4rKw4DKF4UArb_yoW3KrbEy3
+	Z3Ga4kuryUXr4Ivr15J3yavF4qgFZ2vF1UW3Z0gr4qyr9rJrWfX3Z3Jrs3urn5XrW8uFy2
+	yFykZw4qv3y0qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb38FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
+	628vn2kIc2xKxwCY02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+	evJa73UjIFyTuYvjfUYdgADUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Hello,
+Replace a comma between expression statements by a semicolon.
 
-syzbot found the following issue on:
-
-HEAD commit:    795c58e4c7fc Merge tag 'trace-v6.10-rc6' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11bf7976980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c950e46ec3ea637a
-dashboard link: https://syzkaller.appspot.com/bug?extid=572f6e36bc6ee6f16762
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/393fdf1d08dd/disk-795c58e4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/724001a1b4be/vmlinux-795c58e4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/1ede352392b0/bzImage-795c58e4.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+572f6e36bc6ee6f16762@syzkaller.appspotmail.com
-
-watchdog: BUG: soft lockup - CPU#0 stuck for 143s! [kworker/u8:8:2833]
-Modules linked in:
-irq event stamp: 1708674
-hardirqs last  enabled at (1708673): [<ffffffff81e178c0>] ___slab_alloc+0x870/0x1870 mm/slub.c:3577
-hardirqs last disabled at (1708674): [<ffffffff8ae84a1e>] sysvec_apic_timer_interrupt+0xe/0xb0 arch/x86/kernel/apic/apic.c:1043
-softirqs last  enabled at (1708660): [<ffffffff8aa82f2d>] spin_unlock_bh include/linux/spinlock.h:396 [inline]
-softirqs last  enabled at (1708660): [<ffffffff8aa82f2d>] batadv_iv_ogm_queue_add net/batman-adv/bat_iv_ogm.c:661 [inline]
-softirqs last  enabled at (1708660): [<ffffffff8aa82f2d>] batadv_iv_ogm_schedule_buff+0x97d/0x1500 net/batman-adv/bat_iv_ogm.c:833
-softirqs last disabled at (1708658): [<ffffffff8aa82ee3>] spin_lock_bh include/linux/spinlock.h:356 [inline]
-softirqs last disabled at (1708658): [<ffffffff8aa82ee3>] batadv_iv_ogm_queue_add net/batman-adv/bat_iv_ogm.c:639 [inline]
-softirqs last disabled at (1708658): [<ffffffff8aa82ee3>] batadv_iv_ogm_schedule_buff+0x933/0x1500 net/batman-adv/bat_iv_ogm.c:833
-CPU: 0 PID: 2833 Comm: kworker/u8:8 Not tainted 6.10.0-rc6-syzkaller-00069-g795c58e4c7fc #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
-RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
-RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
-RIP: 0010:atomic_read include/linux/atomic/atomic-instrumented.h:33 [inline]
-RIP: 0010:kfence_alloc include/linux/kfence.h:127 [inline]
-RIP: 0010:slab_alloc_node mm/slub.c:3986 [inline]
-RIP: 0010:kmem_cache_alloc_noprof+0x1bd/0x2f0 mm/slub.c:4009
-Code: 5d 41 5e 41 5f 5d e9 2d aa 2e 09 31 c9 e9 71 ff ff ff 41 8b 44 24 08 a8 82 0f 84 5b ff ff ff a8 08 41 0f 45 de e9 50 ff ff ff <8b> 05 fd b8 f4 0b 85 c0 0f 85 c0 fe ff ff 4c 89 e7 44 89 f6 44 89
-RSP: 0018:ffffc90009717840 EFLAGS: 00000246
-RAX: 0000000000000000 RBX: 0000000000002120 RCX: 0000000000000000
-RDX: 1ffffffff1bace70 RSI: 0000000000000028 RDI: ffff88802ba3b3c4
-RBP: ffffc90009717888 R08: 00000000ffffffff R09: ffff8880250de500
-R10: 0000000000000000 R11: 0000000000000004 R12: ffff88801544f8c0
-R13: 0000000000002120 R14: 0000000000000028 R15: 00000000250de500
-FS:  0000000000000000(0000) GS:ffff8880b9200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f64bd0ce2d8 CR3: 000000006623e000 CR4: 0000000000350ef0
-Call Trace:
- <IRQ>
- </IRQ>
- <TASK>
- fill_pool+0x26b/0x5d0 lib/debugobjects.c:168
- debug_objects_fill_pool lib/debugobjects.c:615 [inline]
- __debug_object_init+0xf7/0x480 lib/debugobjects.c:627
- __init_work+0x4c/0x60 kernel/workqueue.c:678
- batadv_iv_ogm_aggregate_new+0x2dd/0x4a0 net/batman-adv/bat_iv_ogm.c:584
- batadv_iv_ogm_queue_add net/batman-adv/bat_iv_ogm.c:670 [inline]
- batadv_iv_ogm_schedule_buff+0x99b/0x1500 net/batman-adv/bat_iv_ogm.c:833
- batadv_iv_ogm_schedule net/batman-adv/bat_iv_ogm.c:868 [inline]
- batadv_iv_ogm_schedule net/batman-adv/bat_iv_ogm.c:861 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0x31e/0x8d0 net/batman-adv/bat_iv_ogm.c:1712
- process_one_work+0x9c8/0x1b40 kernel/workqueue.c:3248
- process_scheduled_works kernel/workqueue.c:3329 [inline]
- worker_thread+0x6c8/0xf30 kernel/workqueue.c:3409
- kthread+0x2c4/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1 skipped: idling at native_safe_halt arch/x86/include/asm/irqflags.h:48 [inline]
-NMI backtrace for cpu 1 skipped: idling at arch_safe_halt arch/x86/include/asm/irqflags.h:86 [inline]
-NMI backtrace for cpu 1 skipped: idling at acpi_safe_halt+0x1a/0x20 drivers/acpi/processor_idle.c:112
-
-
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ sound/soc/intel/boards/sof_sdw.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/sound/soc/intel/boards/sof_sdw.c b/sound/soc/intel/boards/sof_sdw.c
+index e94849b84a6b..e5feaef669d1 100644
+--- a/sound/soc/intel/boards/sof_sdw.c
++++ b/sound/soc/intel/boards/sof_sdw.c
+@@ -2136,9 +2136,9 @@ static int mc_probe(struct platform_device *pdev)
+ 
+ 	card = &ctx->card;
+ 	card->dev = &pdev->dev;
+-	card->name = "soundwire",
+-	card->owner = THIS_MODULE,
+-	card->late_probe = sof_sdw_card_late_probe,
++	card->name = "soundwire";
++	card->owner = THIS_MODULE;
++	card->late_probe = sof_sdw_card_late_probe;
+ 
+ 	snd_soc_card_set_drvdata(card, ctx);
+ 
+-- 
+2.25.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
