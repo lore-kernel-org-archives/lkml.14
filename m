@@ -1,76 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBAF2E62D;
-	Tue,  9 Jul 2024 10:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3E42E62D
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 10:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720521270; cv=none; b=NZ7iIKWVP1cGi2HP7devdbfeo46xb/2LYGzxQUR2KGI8vU1VTiDWLKwBBQm5AmpIS7dF0ut+DvzE2kRAp1tAuXOtYbyWk1euHlRmjP/dTI3Jr+rG0u9XIhJonqWyBwxzoI2XX7lkS8Kixj7AockeP1+Uim1SefWP4b/qn3iu1/A=
+	t=1720521299; cv=none; b=tFacp2VSrPqsvIKXpGEnxCwQTp7txNvPD1dI/R8KGSSO4KFk7q9AQfXo976CIZzBFheusdwOmeuWtpmd4IHzZ8f+tlbpLnbXvI2u+hedNdrS5RfZ3aKCuej+JX1b+2AJuh//aNv/gGOI7Ijc5N4662WiEUQLJhjNWY1FwfXIgUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720521270; c=relaxed/simple;
-	bh=yN2LLjJT3sCW/Z7UY8+eDCPVXP7mmixlUlULkXk9xKo=;
+	s=arc-20240116; t=1720521299; c=relaxed/simple;
+	bh=3P2DFYn1DBKMPF40DT1RbJd0AgqHL2WhUpStkH84zJI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aJXrGYWcgjMDl4mJN12w1C5mZJqlRmk172njtKEiLcd4NcLPr5BWU4DgSBqvlhkPwHMxNB+eY5wIxbhJ+poAsHeG3MNJ3iCL9SyxS00zSF9geDZulCM+Z+RP712EEztfKv3XN7zblEDLrylkQ8H19IWz2k+HToDt6sX3s8tey00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C3An3I3O; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KxnAxN2E0mWWPVxG9pNqCM+AY51I2sYam3/fUcJ+hVJ6xRcVcx1kENM1yedrTZs/ivRMD2G02QL85CoKzoYJ7pqwyWp3ZUPrpxwXUxzf3LlUQs79zMxRpYIgShc8DX4P6+Uy2soCFmVjdp/1CLqFL9NhD8ak8QTiPvPM6gOKCvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cyewVVfs; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C3An3I3O"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cyewVVfs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720521269; x=1752057269;
+  t=1720521298; x=1752057298;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=yN2LLjJT3sCW/Z7UY8+eDCPVXP7mmixlUlULkXk9xKo=;
-  b=C3An3I3Oeu6SKZo/Wx3/1LHu85IAHXXtSZ7cSETIgQUS9I2i08N4w7RP
-   /o+B3aOkg1g8BsTzFRhEvBkwT8XfDJYapW91A+WBAwnPGh3rBu3W7mUyO
-   pjmRFe0XFACLJNyYS6X1ii6EyoUcpu/cU3ZK8vlT1A9Z+99ymBSMnYXu0
-   rEzbUez/gprGOmPomIi09d7yc4UJDunic7n71jGdjP0UP9N2+IvADb7VG
-   wkd9c96ri9qGg1otTNZymsiFXCmYkRcy9ZNLa/jJZtPIZa2aE5x2Z3vgD
-   PbWNffe+4EaQha63T58ayGhSV5R9/b3f96J1kRMHOXfUidYJOtoMBmSoN
-   g==;
-X-CSE-ConnectionGUID: oz0NMMHoRwC+RDiPhmvY3g==
-X-CSE-MsgGUID: i1+JFU+dS5WuJjSD/kujfQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="17870397"
+  bh=3P2DFYn1DBKMPF40DT1RbJd0AgqHL2WhUpStkH84zJI=;
+  b=cyewVVfsBqeJM+BZWaxjRqciXoSEEyiJH4WTnafLDOetWmDqhcMh1WmA
+   rJUS2GOdFd3qIe9TSP4DuYrWGDF0iPaUQmlRRo7o6tJOf8GePBbq9+o+t
+   5Fdl4oRgc0xGvyOxmArXWVcRbaE9a1/ZFV5L+18LFuM5khU6ijRvmqtVn
+   tgLUsdsaXOy5a14D57Z3TTXflTIe6GvN/3oWg0P+m1pYwHE5544skv+V/
+   aebKHHTWoFoQWCbpi+45kaHaM3VybaLIYKz1s3BqWB0S5ow/8rKjL5WNp
+   huf3urBWEMblJcoiSXTddmBwalSTaMaWrnLZgShHY+L8E3exRHC1k4HBT
+   A==;
+X-CSE-ConnectionGUID: F1uTROpPQeeYB2Nhj67ViQ==
+X-CSE-MsgGUID: KOxMg7bURqeMs7xOLUIB6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="12449716"
 X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
-   d="scan'208";a="17870397"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 03:34:28 -0700
-X-CSE-ConnectionGUID: YT7fd2qWR5eAuFUzN6L/ag==
-X-CSE-MsgGUID: onLi0RA5S2KrMKFJAvqkyA==
+   d="scan'208";a="12449716"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 03:34:58 -0700
+X-CSE-ConnectionGUID: pDxVPSVaSYyj7rLcSun4KA==
+X-CSE-MsgGUID: gR3cPS93So+DFacnnGLSUA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
-   d="scan'208";a="47780121"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 09 Jul 2024 03:34:23 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sR8Av-000WZU-0J;
-	Tue, 09 Jul 2024 10:34:21 +0000
-Date: Tue, 9 Jul 2024 18:33:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-	Rocky Liao <quic_rjliao@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 2/6] Bluetooth: hci_qca: schedule a devm action for
- disabling the clock
-Message-ID: <202407091813.9IlBCkUP-lkp@intel.com>
-References: <20240708-hci_qca_refactor-v2-2-b6e83b3d1ca5@linaro.org>
+   d="scan'208";a="52216252"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 09 Jul 2024 03:34:55 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 9B18215B; Tue, 09 Jul 2024 13:34:53 +0300 (EEST)
+Date: Tue, 9 Jul 2024 13:34:53 +0300
+From: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Ritesh Harjani <ritesh.list@gmail.com>, Mike Rapoport <rppt@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>, 
+	Tony Battersby <tonyb@cybernetics.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>, 
+	Nicholas Piggin <npiggin@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2] fs/hugetlbfs/inode.c: Ensure
+ generic_hugetlb_get_unmapped_area() returns higher address than
+ mmap_min_addr
+Message-ID: <kbypmoemiq43kuok7c3f3rxhzigpva6ov7ua2wfblkjmaccyes@6k4b37lj7msd>
+References: <20240709092122.41232-1-donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,71 +68,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240708-hci_qca_refactor-v2-2-b6e83b3d1ca5@linaro.org>
+In-Reply-To: <20240709092122.41232-1-donettom@linux.ibm.com>
 
-Hi Bartosz,
+On Tue, Jul 09, 2024 at 04:21:22AM -0500, Donet Tom wrote:
+> generic_hugetlb_get_unmapped_area() was returning an address less
+> than mmap_min_addr if the mmap argument addr, after alignment, was
+> less than mmap_min_addr, causing mmap to fail.
+> 
+> This is because current generic_hugetlb_get_unmapped_area() code does
+> not take into account mmap_min_addr.
+> 
+> This patch ensures that generic_hugetlb_get_unmapped_area() always returns
+> an address that is greater than mmap_min_addr. Additionally, similar to
+> generic_get_unmapped_area(), vm_end_gap() checks are included to ensure
+> that the address is within the limit.
 
-kernel test robot noticed the following build warnings:
+checks are included to maintain stack gap.
 
-[auto build test WARNING on 0b58e108042b0ed28a71cd7edf5175999955b233]
+> 
+> How to reproduce
+> ================
+> 
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <sys/mman.h>
+>  #include <unistd.h>
+> 
+>  #define HUGEPAGE_SIZE (16 * 1024 * 1024)
+> 
+>  int main() {
+> 
+>     void *addr = mmap((void *)-1, HUGEPAGE_SIZE,
+>                  PROT_READ | PROT_WRITE,
+>                  MAP_SHARED | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
+>     if (addr == MAP_FAILED) {
+>         perror("mmap");
+>         exit(EXIT_FAILURE);
+>     }
+> 
+>     snprintf((char *)addr, HUGEPAGE_SIZE, "Hello, Huge Pages!");
+> 
+>     printf("%s\n", (char *)addr);
+> 
+>     if (munmap(addr, HUGEPAGE_SIZE) == -1) {
+>         perror("munmap");
+>         exit(EXIT_FAILURE);
+>     }
+> 
+>     return 0;
+>  }
+> 
+> Result without fix
+> ==================
+>  # cat /proc/meminfo |grep -i HugePages_Free
+>  HugePages_Free:       20
+>  # ./test
+>  mmap: Permission denied
+>  #
+> 
+> Result with fix
+> ===============
+>  # cat /proc/meminfo |grep -i HugePages_Free
+>  HugePages_Free:       20
+>  # ./test
+>  Hello, Huge Pages!
+>  #
+> 
+> V2:
+> Added vm_end_gap() check.
+> 
+> V1:
+> https://lore.kernel.org/all/20240705071150.84972-1-donettom@linux.ibm.com/
+> 
+> Reported-by Pavithra Prakash <pavrampu@linux.vnet.ibm.com>
+> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/dt-bindings-bluetooth-qualcomm-describe-the-inputs-from-PMU-for-wcn7850/20240708-175040
-base:   0b58e108042b0ed28a71cd7edf5175999955b233
-patch link:    https://lore.kernel.org/r/20240708-hci_qca_refactor-v2-2-b6e83b3d1ca5%40linaro.org
-patch subject: [PATCH v2 2/6] Bluetooth: hci_qca: schedule a devm action for disabling the clock
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240709/202407091813.9IlBCkUP-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240709/202407091813.9IlBCkUP-lkp@intel.com/reproduce)
+Please use "hugetlbfs:" as subject prefix. No need to spell out full path.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407091813.9IlBCkUP-lkp@intel.com/
+Otherwise,
 
-All warnings (new ones prefixed by >>):
-
-   drivers/bluetooth/hci_qca.c:2495:2: warning: label at end of compound statement is a C23 extension [-Wc23-extensions]
-    2495 |         }
-         |         ^
->> drivers/bluetooth/hci_qca.c:2494:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-    2494 |         default:
-         |         ^
-   drivers/bluetooth/hci_qca.c:2494:2: note: insert '__attribute__((fallthrough));' to silence this warning
-    2494 |         default:
-         |         ^
-         |         __attribute__((fallthrough)); 
-   drivers/bluetooth/hci_qca.c:2494:2: note: insert 'break;' to avoid fall-through
-    2494 |         default:
-         |         ^
-         |         break; 
-   2 warnings generated.
-
-
-vim +2494 drivers/bluetooth/hci_qca.c
-
-05ba533c5c1155 Thierry Escande                2018-03-29  2478  
-05ba533c5c1155 Thierry Escande                2018-03-29  2479  static void qca_serdev_remove(struct serdev_device *serdev)
-05ba533c5c1155 Thierry Escande                2018-03-29  2480  {
-05ba533c5c1155 Thierry Escande                2018-03-29  2481  	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
-054ec5e94a46b0 Venkata Lakshmi Narayana Gubba 2020-09-10  2482  	struct qca_power *power = qcadev->bt_power;
-05ba533c5c1155 Thierry Escande                2018-03-29  2483  
-691d54d0f7cb14 Neil Armstrong                 2023-08-16  2484  	switch (qcadev->btsoc_type) {
-691d54d0f7cb14 Neil Armstrong                 2023-08-16  2485  	case QCA_WCN3988:
-691d54d0f7cb14 Neil Armstrong                 2023-08-16  2486  	case QCA_WCN3990:
-691d54d0f7cb14 Neil Armstrong                 2023-08-16  2487  	case QCA_WCN3991:
-691d54d0f7cb14 Neil Armstrong                 2023-08-16  2488  	case QCA_WCN3998:
-691d54d0f7cb14 Neil Armstrong                 2023-08-16  2489  	case QCA_WCN6750:
-691d54d0f7cb14 Neil Armstrong                 2023-08-16  2490  	case QCA_WCN6855:
-e0c1278ac89b03 Neil Armstrong                 2023-08-16  2491  	case QCA_WCN7850:
-d12f113a15e826 Bartosz Golaszewski            2024-07-08  2492  		if (power->vregs_on)
-c2d7827338618a Balakrishna Godavarthi         2018-08-22  2493  			qca_power_shutdown(&qcadev->serdev_hu);
-691d54d0f7cb14 Neil Armstrong                 2023-08-16 @2494  	default:
-691d54d0f7cb14 Neil Armstrong                 2023-08-16 @2495  	}
-fa9ad876b8e0eb Balakrishna Godavarthi         2018-08-03  2496  
-fa9ad876b8e0eb Balakrishna Godavarthi         2018-08-03  2497  	hci_uart_unregister_device(&qcadev->serdev_hu);
-05ba533c5c1155 Thierry Escande                2018-03-29  2498  }
-05ba533c5c1155 Thierry Escande                2018-03-29  2499  
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Kiryl Shutsemau / Kirill A. Shutemov
