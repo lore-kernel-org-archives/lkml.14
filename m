@@ -1,92 +1,84 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from dysnomia.uberspace.de (dysnomia.uberspace.de [185.26.156.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5033218E76F;
-	Tue,  9 Jul 2024 13:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BEC18A92B
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720532977; cv=none; b=Tt04o8b7UWF0G3AXlU0AW2PJZZyR0S4itcOKgPzuN154iOvdI/ad5oGB5N7U7dHUVn7ERQswRqvkVVV9CJAa+teZWOE4lvhx4g3fcHwDGnclt+Dx4CpVetmov9z5gZuzkD2tG1XpduqA9eWc6GgbpaH4gVXcjJ7Sm93GAWG6Pus=
+	t=1720533141; cv=none; b=ahoCtzwtVfne+1qoMa6EfuU+pOKgShfd7dLHMLE0rr/vNW1CWP5bwiy4TyBFwUaF0EXBHk8h1O3Igb0PNzDuYdhuIw/K1gXBBmc8GHPfuewoatokkWU2TsrPf0TcEtIfMuKh8NEWnpl+OE3ZOgGxqVO5mvD9FSHV8zxMFBzCPDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720532977; c=relaxed/simple;
-	bh=a015ZC5r03ehNw73sIJe/WiI2A13WN9tv5vZoYkZ0RU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=rT+GtkKarEdc07u6yIeahtKKiIr1ktAhnAMoLqDRaMRKrfKVG9m3C/gjy+0ww/SaI39aTMUxb81eLXgNOPgJFfkl+iUCLkL758ZTddtMfZsp4G6wsG7QRVcei72o999FTqOPIegYypteT4478q9PfI8THu6UoWvd8TPKFJULki0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=WkltUh1i; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1720533141; c=relaxed/simple;
+	bh=qKJYEZA0smcFgq+FhK5l8Y1wMc+S0BF7hSq8um9dZro=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XUU1sV1Xl2o4hff8KbnRllM2ONagTOqbOKxcI+RO5jgcrVDjgOnCt+PTerZZyTfRHeMqRr1hL/ecxLmgiQtxuI5XXlTEJZELIjwHjJ75vsTRkG3OiEXMQCBnG7Gapqov+JupoB0Zh1hX9OGgTkAmUWNlTmviQp//WiXo4uiukmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lublin.se; spf=pass smtp.mailfrom=lublin.se; dkim=fail (0-bit key) header.d=lublin.se header.i=@lublin.se header.b=pRqhuJMD reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lublin.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lublin.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="WkltUh1i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720532947; x=1721137747; i=markus.elfring@web.de;
-	bh=a015ZC5r03ehNw73sIJe/WiI2A13WN9tv5vZoYkZ0RU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=WkltUh1iEhfoZNCT8KIZzUNg0zksVJFjJ//b7xvaMKPZYWZzqaql+V44Zp7pOk5I
-	 2QZqvsbiNHMN9zmFympsFgqukqxmprSUZk2LSLxIJNzsZU9jWLefhYUyn9ppEUNTM
-	 nvJmckHQmcuwW13RKU7MUWzx7rdnzu7pdcjOGKxFXtCkHC3Zl8geeA9jqnQjawtpZ
-	 i4iCh67n2gH7f8kPpMXd3vbELVHT5EHgYgmqSXdullP+YqkB2uopSLdPi7Ekkqa03
-	 cux55NxZK0qaSInTsYavVTpxt57EAFMFB9cVdI8l+DZ2sNmPLKtZhOlyAgvavZj4R
-	 ykjxJpkJIoVN0ZwzLQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MOm0r-1skBlk0bNv-00Lgme; Tue, 09
- Jul 2024 15:49:07 +0200
-Message-ID: <a10b0d71-2e1c-47d6-9c7a-4086035fc6ec@web.de>
-Date: Tue, 9 Jul 2024 15:48:57 +0200
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=lublin.se header.i=@lublin.se header.b="pRqhuJMD"
+Received: (qmail 1058 invoked by uid 989); 9 Jul 2024 13:52:15 -0000
+Authentication-Results: dysnomia.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by dysnomia.uberspace.de (Haraka/3.0.1) with ESMTPSA; id 8E7421C002A; Tue, 09 Jul 2024 15:52:14 +0200 (CEST)
+From: Daniel Lublin <daniel@lublin.se>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Daniel Lublin <daniel@lublin.se>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Documentation: add reference from dynamic debug to loglevel kernel params
+Date: Tue,  9 Jul 2024 15:51:57 +0200
+Message-ID: <4633bdb82c1c7c014d79840887878624a55c59f8.1720533043.git.daniel@lublin.se>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: make24@iscas.ac.cn, linuxppc-dev@lists.ozlabs.org,
- kernel-janitors@vger.kernel.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
- Christophe Lombard <clombard@linux.vnet.ibm.com>,
- Frederic Barrat <fbarrat@linux.ibm.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ian Munsie <imunsie@au1.ibm.com>, "Manoj N. Kumar" <manoj@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Wei Liu <wei.liu@kernel.org>
-References: <20240709131754.855144-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] cxl: Fix possible null pointer dereference in
- read_handle()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240709131754.855144-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wD8tpFNoCW581VFsOPGKJF66fFjx15l+bwepghLJM6uHTOaEEIV
- S+CYjNw6rH2wZ4TwvNgnSQP8vBlD/7iuiRLjicS9hxBOLD8V1kU2vdnDrofiv4uP6k9Fh63
- tqjoNqMkBduPCI8cZMTSYsHsjI2ttQfQTSuaquQ1HtekCs1jJFF+FNrDUy0EF/ZT3bBSY5l
- XIyBXWpEoWS9T6Vfr42qw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MqjwUJAwWmA=;d33iWjaAIjULA24pEscPLGP8YoJ
- nnxs35QjcOFAwZUZOS/fchXGW2rVCJTqaBwzJC3otBl2Nku7qfiw0wV6Xvlf8W+rr2JpjG7oW
- Ax0SjwWa5i85kIiemtwn+/qUrpNio9Wltl1QXbrFRSLOgFmTW+6m3RT25od+kA4JTuGJJrhE1
- +V72jE+WfgmWe8buVOkeJQzlA6witivjXSsni+spk7rD9X2QkMB2uQe9oEyW4pT48zsAEkpLT
- l+n7kL9Ju8MPN/aPKOaeD2naiXWuTVVbdJomjnS45Eyu+dT1hi1zyLwBO0+FeiP/uwGOe/v3W
- WdnK72SAHW1OcK0pfs9EpWk/OBk6rUSXDzH9lG3ADFodCCmeRHNm6pxyAVdvtUz827ZOahdCd
- T47sLWT3wNR19SCzdd6PrLkFWJQpmfgmBRkj16Zam7hl1JacP2KwMmFZKgz0FFvEVauFWB524
- HMqyJobNi4lnigHkg7pJ+VZxtMpdAPI9i3gsivCR+VGYueYpbjQq2N1Gz3gWSkj6OUp+dkV9v
- KOL6OHmzv2b/ntdMOaxRMo7DyqK+rvZku2hJgxYXpNlqsb86S3qfaeTpms4gnW7NpfFoFvEoB
- pP1MAyVx1cegla6iWuJpFte1lg1SLidWLzXp8u7tfK1bpfk66Xohy9JZNjScdTsGERdqiG5KT
- cbBUs/wiXNzkl9AbNVsJxDBF2sGWkEqxlstxPnpdxGZFKrZRE11RZ73T5vYSbzDFffSLHq5kQ
- BZi2xY6kJksgnRBYPyzNtbDHWj6BdSWycz1xAFr6ShVATEdztfpHEhAkODEpsA+atYGhMG5Ol
- ux7Myq0mUUuINiM7gvwKns6m8TXTYbqM4bfj1DdUbAxWY=
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: /
+X-Rspamd-Report: BAYES_HAM(-1.146869) MIME_GOOD(-0.1) MID_CONTAINS_FROM(1) FORGED_SENDER(0.3) R_MISSING_CHARSET(0.5)
+X-Rspamd-Score: 0.55313
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=lublin.se; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=qKJYEZA0smcFgq+FhK5l8Y1wMc+S0BF7hSq8um9dZro=;
+	b=pRqhuJMDNktpa9RcjYugQHzAGjLblsecUTBYWZx/4DvzEVBB3dyvFYhbr+98tAWbdafy2gtxu/
+	sepKGIMSWSq56+a5xCOG1bNI0mExpZqAdhT6Uu49Pd9DrHuwrpI+dr2ixoLHbYOkLcCmd0OKhn+R
+	QGRP+jS8svYsW2fttNh8xSX2HQxZLtZ2LRs4HIqpInQL87kdeAXO92nJ7IbV1T1lk68I2w9nIOCe
+	e8hGwl9V7te8pDZWk7+DM25Unhbok7yr/h7DBkyF4dDmJqB06+Sljb2T2rjSySVWDSAxc8mGJirP
+	7KDlOzG2QYSxrD3rGc33BKF7eTFWdF6fQiAxsYMjdF5D5OctaOoHv4lA0MDxx3kOAL1CLdgwpP/D
+	3P+GRvZ13hEYi2bXc5lTLlAM90phhBFAGSBofnPlfmZUccLyd41p29A2kdhBUMma4gwsWt0AZEKc
+	0LkHo1bOib2cG0wrw5VUO90ejZvKlFLZQPwhCVCW54mYTgU0iwjNNmkdHUEG0+PbE7sswB1Q0X5N
+	9Tjd3Jz0gLfA0w/upVdHzISxRU+vm1Bm3r2weqJwjFQZu3dgU5mCBRhHE/2YcwjdKE79u+RJCdM7
+	WnidAdkdujjp7DUI7EAhOygYx6FBV3lqh+3+8Fjknv+mWfN1daVRAX+A6IhrOaYQeIAvL3pk9ok8
+	g=
 
-=E2=80=A6
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+This is useful information for somebody who has managed to dig into
+enabling debug output, but is wondering why there is no such output
+appearing on the console.
 
-Under which circumstances will this information be corrected anyhow?
+Signed-off-by: Daniel Lublin <daniel@lublin.se>
+---
+ Documentation/admin-guide/dynamic-debug-howto.rst | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-The usage of mailing list addresses is probably undesirable for
-the Developer's Certificate of Origin, isn't it?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc7#n398
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index 0e9b48daf690..7c036590cd07 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -26,6 +26,11 @@ Dynamic debug provides:
+    - format string
+    - class name (as known/declared by each module)
+ 
++NOTE: To actually get the debug-print output on the console, you may
++need to adjust the kernel ``loglevel=``, or use ``ignore_loglevel``.
++Read about these kernel parameters in
++Documentation/admin-guide/kernel-parameters.rst.
++
+ Viewing Dynamic Debug Behaviour
+ ===============================
+ 
+-- 
+2.45.2
 
-Regards,
-Markus
