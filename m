@@ -1,87 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E2A13C8EA;
-	Tue,  9 Jul 2024 20:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FA113C8EA
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 20:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720557445; cv=none; b=B3nUdFTF/sLWU+fxmtEM9sBUOVo6536HgxBlLqVY4OayFVPJHdoFaIgSPQLYuPegEP0+QTjPQ92k0oHrvDZstyvcfZBGz+3eOf/y9HZP9B5NWbqz4Tdy08+Dp3cTD4Apq1nVAA+ao0ZE+LrhkTgYpOiP3TKanu1PzPgDSEkPWgw=
+	t=1720557481; cv=none; b=f44l432cxcpGxpbPpN07BL16KE6IV+Wcr83lHKJOjNJmauE4Oj/Gqpn44AuDLoBj0HDmAMrT4cBy056n2ZM7rsenTBwXFqBbb72zBNZpywFF9EBLIU3hlnllOxtO1hAyjr1lMBCqmr7YYB6Q5wOOrJGPrJokEwkhFKKFYA2UC2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720557445; c=relaxed/simple;
-	bh=eK+ElAZ3HYE+YOrVt86IwYpztcjk8MJ4RaWg/ldd9Cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DiKZh2pzF018ePYYCGqwr7NW6YMB6FN5+gmVQzbPELU6544QZXyQVZZc7wfPucnqYWuHWHnx+g9Xg7NXBlkSvJ5h7Rvxq0RnGduMimY313TIdTQ604PbKxauCwy1O53ZEV1P5XD6Ya5qLDe5k5EwpLqDcTUe2uD4V2zv00N2ldU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U9DtBC9s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720557481; c=relaxed/simple;
+	bh=ZVITLZw3RZWYg9D/gUYsaAPt39mhDi81cXcYf0kiYo8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rBU+qlGUsLxx+qR8Uuef9qmPfc40sWp8lv8d1ILHKmkkP9olEyqnpE92EVoqhY4IOhDvwdyYd9CZAL6jqO6n2j5ARXCktxP33+8v03aKKCRmT7pPhql+Sg9pnq2+fKwoshErsVxEG7dJlIx3r+jt2JyPts3BN+PsRj81qJ5ql2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=MjQhK/BS; arc=none smtp.client-ip=80.12.242.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9DtBC9s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B87C3277B;
-	Tue,  9 Jul 2024 20:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720557443;
-	bh=eK+ElAZ3HYE+YOrVt86IwYpztcjk8MJ4RaWg/ldd9Cs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U9DtBC9srjnRK0WtbLFP7KzD/PxN/xKQOSTV0VrYbYP57KmGsPBmsqSDhak0Mc+bC
-	 LQbkUnQAiW6aicKldsxTDDpncBMP8lsjiLvi8cK7t/Rrsugam4nZV1oOCNhjnM1uYj
-	 RljnWAlgEH1wTb7t4xHNyXX4OD5gcl9augH+y6JWEW7JF7SDYMLgn32H6CSvFSq4cW
-	 RkPMvBbPy/RqK2EarHe+gk9/w1/bu9XWu5fmgunD64hJzqDgskHA3djuBeuE2HJgLV
-	 1q7Rb/njZnhbths+sxqiiJH+ynPiS2zTo9sVfSKrnpIQsxjDy5NrQcejJzG2dTgzHJ
-	 84BfqBGl+MKKA==
-Date: Tue, 9 Jul 2024 13:37:23 -0700
-From: Kees Cook <kees@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Simon Horman <horms@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	linux-hardening@vger.kernel.org,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] netdevice: define and allocate &net_device
- _properly_
-Message-ID: <202407091334.A7BAB27@keescook>
-References: <20240709125433.4026177-1-leitao@debian.org>
- <20240709181128.GO346094@kernel.org>
- <Zo2bYCAVQaViN6z8@gmail.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="MjQhK/BS"
+Received: from fedora.. ([77.130.249.53])
+	by smtp.orange.fr with ESMTPA
+	id RHavsh9C6phyvRHavsZbUA; Tue, 09 Jul 2024 22:37:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1720557471;
+	bh=Pf/cwNIvre1Xs+7SJVXgRoolLcWJeJYfmUMXMPn3ODo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=MjQhK/BSIx30xmH7mN5f+J/v7FA+3Dx9jApKTwGVicxPrsrXS3NthcOcSEw/Q7e34
+	 UhBeZtkGxt1lx+17JV17sGoWpFV04V7G3f1YaIYuYlzbzX6fsA6GqWJ6vp2kPusDD9
+	 M6RHtkjKyjxxlu+UGIv+zYXJEJcbcGFfJonKdX+3QKgh6MH5Mta83sHtc5SeNx07EV
+	 h7/BXjL/PaMMeMlhNj5jJpfQPf2mlc/Ix8UjY331Q4JclOtp9XucOnp0Yh/eSCFBOF
+	 gUUY5vg0hRfvY9dmLx6VWStNeiDWFUaScgHon5jG4ElIPz/xOmX0ppe33XEMClIFZH
+	 Bfb5AUaV9LzUA==
+X-ME-Helo: fedora..
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 09 Jul 2024 22:37:51 +0200
+X-ME-IP: 77.130.249.53
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: linus.walleij@linaro.org,
+	lokeshvutla@ti.com,
+	nm@ti.com,
+	robh@kernel.org,
+	tony@atomide.com
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 0/3] pinctrl: ti: ti-iodelay: Fix some error handling paths + 2 unrelated clean-ups
+Date: Tue,  9 Jul 2024 22:37:42 +0200
+Message-ID: <cover.1720556038.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zo2bYCAVQaViN6z8@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 09, 2024 at 01:19:44PM -0700, Breno Leitao wrote:
-> On Tue, Jul 09, 2024 at 07:11:28PM +0100, Simon Horman wrote:
-> > Flagged by: kernel-doc -none
-> 
-> How do you run this test exactly? I would like to add to my workflow.
+The first patch is completly speculative. It is based on static analysis
+when a function is called in the remove() function, but not in the
+error handling path of the probe.
+When looking deeper at it, it seems that part of
+ti_iodelay_pinconf_init_dev() also needed to be fixed.
 
-Details here:
-https://docs.kernel.org/doc-guide/kernel-doc.html
+/!\ This is completly speculative. So review with care /!\
 
-But basically, either:
 
-$ ./scripts/kernel-doc -none include/linux/netdevice.h
-include/linux/netdevice.h:2404: warning: ...
+Patch 2 and 3 are just constification patches spoted while looking at
+the code.
 
-or:
+Christophe JAILLET (3):
+  pinctrl: ti: ti-iodelay: Fix some error handling paths
+  pinctrl: ti: ti-iodelay: Constify struct ti_iodelay_reg_data
+  pinctrl: ti: ti-iodelay: Constify struct regmap_config
 
-$ make ... W=n
-...
-../drivers/firewire/init_ohci1394_dma.c:178: warning: Function parameter or struct member 'ohci' not described in 'init_ohci1394_wait_for_busresets'
-...
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 58 ++++++++++---------------
+ 1 file changed, 24 insertions(+), 34 deletions(-)
 
 -- 
-Kees Cook
+2.45.2
+
