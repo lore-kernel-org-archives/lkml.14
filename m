@@ -1,102 +1,115 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C29B19D07E
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6912B15C9
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720538927; cv=none; b=Pf2wa77RR4CFSfsHPqSiul2ViKFz691OHjsALl6pfFCSzQqqSWrWqsIk2Sma29OFQh4tIAfbT4TGUef58hRXvuA17102lDh3kE2WhRllZVG4RGLqFzm9BEwIEvB597gTPZ5tQG1nuKx97KtmyQUcKySLQUJEwdXQ3V2WRY43K5c=
+	t=1720538928; cv=none; b=W3GSuSIpg6wKcEHv9ryjIx1ITG4RTxflHVnA1taiARIAi10mIFRJew7U7DXtKPdN5rdNLdbEIyblP1zeeNtpYY/OaD8Vxsp7agVsR0pDwicEHY/PHMjzG7ksTqD79VCKb+uCTz9UytVoMlvqcZ+s0nrVnb9TKWMq2/ZXrvgETpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720538927; c=relaxed/simple;
-	bh=68++p0TLm5vTWyW+78bNCCU7gxHIxep9gk/S1rYIeHc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n8QuwHRDtMz+r0kJ2n8b4jgMMf3irHxXQNuzTdcJGPYq9e9myzFXUXYBFvWGrPELuwW8nVOSl2FdEIn6kOJxwb6RHSH44QRcE11rR4jKG6mmteKaqlZ0fIm4P2YRcG2viObP3m/M0Kh4uE1JuQOO1mpa6E4BA7m1/cmKhvv95Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qEqYBGub; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1720538928; c=relaxed/simple;
+	bh=JZ5BZeaxbdiSFlXTOCSDXtgZTkCzn2hATfivmbxW4hA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TVQuthhDPHZb8qDwetv6wiCD0NdztNeAANZPoiicakAWPZruPB/OuW1e3Df8ar/6WE8VpA0zWrVX++j2PIp4dwrbvO22+o3LVXyExU3FjLuZepsd/M0lNxHueQjqWXdlyMZupPZ9cZyqjg3yOVNlqmGb4BVnCdhYJAoNJV4SLow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jjM+1wvR; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qEqYBGub"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42561c16ffeso37260045e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 08:28:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jjM+1wvR"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52ea7d2a039so4387697e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 08:28:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720538924; x=1721143724; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1uvKJVDAkNfWouoiWb+1kR3F4IBUjlyoO5Q61R4r4Tw=;
-        b=qEqYBGubdShLx0Pykh5mmAC4J3htyJaup7qIgGYidQZAvkO4HgOepwSbPjhAGBJ8hD
-         wlmNUEp3Ziss1Ob+aa2D91N6nOjiQDKEr8WJJut1g0Pms4bAlyib9q2gnEXF5fP6qWm2
-         j3SgFlpSHfxEFVJBWVIOKmRyyc5/L696WhkKHigHwssWROVJXQmUmUYTlNXByDu1nb3Z
-         L1RiPH9qCJKUIHrIQuZHtrhZrOHBSOI6/3hGZftxVYzChR+HsUbX7gQBpZXGHy4e2DCs
-         WmAOtpa/Tp2vd7lWUwXdvSJqUKNE8ZPN607zPzy7/V0Q8tNj/O8qeR4ZxcNC91K48NP1
-         NQiA==
+        d=linaro.org; s=google; t=1720538925; x=1721143725; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m7VCefezFc30AtwGu+xav+TuUFtkI2yJOqQ6ST8ep6k=;
+        b=jjM+1wvRQutEs9SuZSWxz5YwmC8hnmWBNWWfONxsPmlu2jQXG4tjlGpJ6Gc8KdjDeC
+         szE4GkZIvC9vB+XCMqagIwrku2OnsUV94u0oHNduhlh8B1N6yVqvjYbyCeYZrEQa1e1E
+         2hgemWFNKS9hH3FNLVm9p3NrVOtaQNJsu64tQ+7NGj3lyC+AtH7SKBrjMRXfaLA/voMB
+         8HJMnvg/gwqHa9E5ehaxCsI0dZqI1rFu5IdxBKtiMKZY4ZlhGK/X2aqLL5p15eD1Uiov
+         L/v1JkQyzkNeC4iVcAzd/0eJquOcXTQXejLQtvFMtyBLCERj+ep4HvT8rbRz0qpIsQYx
+         1Mwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720538924; x=1721143724;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1uvKJVDAkNfWouoiWb+1kR3F4IBUjlyoO5Q61R4r4Tw=;
-        b=Zm801sWhy1tUnTfJpFnnY5VvSXFmKwGDz0cT2mMH1EU8j+VFmqeKbnw+Gk4KsbiSUV
-         ydGdACfUe7OgkQDzJT2u6LQ1Je4JJLrfO95LVy/eUaRD+jXersowK5qF2QDSE74YNHn+
-         N8jJWXj2t9yACvqruNbqQfaTaC7bwWFeRjZaOEXIsmKf9wceejGnL48pWE9l2+qvsq3F
-         fl2JbYAZZjy8NTPCqNLEWbAuAF5aa9Tb3WbAi/PoUe1eYO/H34qsv71ULKhJ9x3MrLuV
-         xIWMS69zdEUiJzWktHm5yLZRiYusq3OFNtI6xCW8Sf6MYL8+palSLLOiINupNsvCKgQ3
-         8XSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbkiJSll5SoLc3DVAOhh5E22RKXT6MgdxKBCBiG3fyiXGiCF88ohqO33XcJXZZ9groKnDFRKUZcGeyI1TMVfb2wXmblENBPGu7fP3o
-X-Gm-Message-State: AOJu0YwX/0AOiUcvesfcnIn5K0zow3Lvgq2we2qtp+Y3Ji/VFvOnQWpn
-	+mHp8NVqPcflitGSWfWB707SbHsbgb8BuKVlE2LStzdXhDuaSSDhDeZYA23cs4o=
-X-Google-Smtp-Source: AGHT+IECZyuBODbUWxODlQIq2TNUEQPYhnYHr3v7tlYB31S3xcLkk0SWvj9qahKiYTMEWYdHqCwhUA==
-X-Received: by 2002:a05:600c:2e04:b0:426:59ad:bbb3 with SMTP id 5b1f17b1804b1-426708f1f54mr17918255e9.32.1720538923729;
-        Tue, 09 Jul 2024 08:28:43 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5a32sm45883775e9.24.2024.07.09.08.28.43
+        d=1e100.net; s=20230601; t=1720538925; x=1721143725;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m7VCefezFc30AtwGu+xav+TuUFtkI2yJOqQ6ST8ep6k=;
+        b=Z1PTFShxMjKiWCL3Tfo3wdo2EliQCowk7buHme1Efp8H2+eLDcGc9W/A/4V48cjbDg
+         pbFNVQQxUfOWFZm8qc7IA94dlgdY+Az/q8M5B86/RGEv4XASAvVJPpiO/qISxlOpLCfu
+         yZsmWtEy+7QKQR7e5CrIen6ZRK82ZE/DDwUimziVOIMntqzZ8Ula06bkP1ZoMhnE3N9M
+         SIoR3X5qu3hzum5VdUYzBFR1UU6nI0u9F6yW+Axl2w8oyRk68cq2cYy4AbjsVnia8jSQ
+         CVVqyqeg48cpZFuADN12YlzO9HfxbaLsG9NWvttSvzWdNK1/4oZ84eahVzGo6IYl/eGb
+         4wWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRPkJvXOrX6DR0a0PV47f7f52qDGzhpqNxRTfZqF2rFzBhYekbFlbOO6FglGgSKLc3fXLoTEaanPKROrL/QkDnBZeaRpAtn4mr9J7L
+X-Gm-Message-State: AOJu0Yww+xJtckK2pkMMdKFEQZMPCQMw8DoKsrakok0EW+CHzBr4nEuy
+	ahUmwhPOwqFH7t42ANunPxNVbS7tFV+4xoJ+t4Yc3xkhNK4XmCQckk1PeqVBvXY+H2+ni5ykDTg
+	nPCA=
+X-Google-Smtp-Source: AGHT+IFa2X1bOPgyGU6tWNjQXbvCOo8F9vMPhtpQvUqb8MkspFBRD/98lPiJyeKG8fauhInR8IKF6Q==
+X-Received: by 2002:ac2:4641:0:b0:52c:df5f:7b4e with SMTP id 2adb3069b0e04-52eb99a3087mr1588779e87.38.1720538924372;
+        Tue, 09 Jul 2024 08:28:44 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfab748sm2849119f8f.111.2024.07.09.08.28.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 09 Jul 2024 08:28:43 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: devicetree@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	alsa-devel@alsa-project.org,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 0/2] ASoC: dt-bindings: convert qcom sound bindings to yaml
-Date: Tue,  9 Jul 2024 16:24:41 +0100
-Message-ID: <20240709152808.155405-1-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240705-s4_node-v1-1-646ca7ac4f09@amlogic.com>
+References: <20240705-s4_node-v1-1-646ca7ac4f09@amlogic.com>
+Subject: Re: [PATCH] arm64: dts: amlogic: enable some device nodes for S4
+Message-Id: <172053892355.1166789.14049124707326749938.b4-ty@linaro.org>
+Date: Tue, 09 Jul 2024 17:28:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
 Hi,
-These patches convert the remaining plain text bindings for Qualcomm
-sound drivers to dt schema, so device trees can be validated against
-them.
 
-Thanks,
-Rayyan
+On Fri, 05 Jul 2024 13:39:16 +0800, Xianwei Zhao wrote:
+> Enable some device nodes for AQ222 base S4, including
+> SD, regulator and ethnernet node.
+> 
+> 
 
-Rayyan Ansari (2):
-  ASoC: dt-bindings: qcom,msm8916-wcd-digital-codec: convert to dtschema
-  ASoC: dt-bindings: qcom,apq8096-sndcard: use dtschema
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/arm64-dt)
 
- .../bindings/sound/qcom,apq8096.txt           | 128 ------------------
- .../sound/qcom,msm8916-wcd-digital-codec.yaml |  53 ++++++++
- .../sound/qcom,msm8916-wcd-digital.txt        |  20 ---
- .../bindings/sound/qcom,sm8250.yaml           |   1 +
- 4 files changed, 54 insertions(+), 148 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital-codec.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital.txt
+[1/1] arm64: dts: amlogic: enable some device nodes for S4
+      https://git.kernel.org/amlogic/c/d3cc1daf38aaa0dd6546dd915ce5d536c250f3eb
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.11/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 
 -- 
-2.45.2
+Neil
 
