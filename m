@@ -1,382 +1,172 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F88382;
-	Tue,  9 Jul 2024 00:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07BA4A02
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 00:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720483703; cv=none; b=Gn/T7CUTzL4iqPLsNbro5MF3gDbBHucoP5ie7MLIbns73VYifHVgbHXPTVBScmxuvH8q8ejbO4tHE4qqm8A2GzGzpiT/SXfNgl9ihDM+R9JCpz+pWFEslmYlmPcP3OvZ8ZwXcfLeiir0dtodqYj05iZayVQQAUHuSC0Kx8Z0MiM=
+	t=1720483813; cv=none; b=mqDD+83xpeH/mzWZ72hbGn204kDKq5ZQtiNm8uIYjQhE3x/i4ZAey6q2zKmChGBuF79AnzEWo1UTZp3fNCM3u5WvLAum/OS2HYt1uxp2dRSEVx+1d6KFUV0mrQTExNL0Y6F43b2Ph4K+3/P+ExgOBKcRLMyYNnu9UYafqaOv51A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720483703; c=relaxed/simple;
-	bh=gaVdvvGicT567vVFCczRy1l1kJqIdBBzeUuU5sLRwdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kg4icUXfuVxf8gUzC1Drl4xhKTXGkaRZbE0uINtIiXYpa3g9Zvk5UNpqRN1xwlkz0u9IQeuK0GeMraYAL2aXAGbfBnHlhEg3nc6etEdMIhb3QEoIdihN+q19KnDsZRZ6jvc/NInFTg+46m9e468Q3kciXWAGQPqoYFDjir6Uvnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/oNas2D; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720483813; c=relaxed/simple;
+	bh=u1YhRWYwhZwdoRcIhg3U0o0satceY/8ehPA4ZGJZ+OA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=b5z+jeODXpIBZ3YO34uxivjuRyILF1Xvae5tVbmHsiyq9eclrkayGQxLUGO0sTp8ycvl3ahzKqtE6IvuWk55WIScdI8ZiLHjhC2AnPkKZIi4LbTEiRYPnfmP94RpIeMKKxrR4YE481bHWZogxsOkRHKEhdASExUXdT8XQV7hWiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xmqwU+ro; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/oNas2D"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3839d74a2abso15568665ab.1;
-        Mon, 08 Jul 2024 17:08:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xmqwU+ro"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-70af0dff5c5so2629235b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 17:10:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720483701; x=1721088501; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PQyUTvav3geX5M69VveKYVAii5SPAUbkEumnvWX/cP8=;
-        b=b/oNas2DVJOBFSPnch6aKNzR2a2ha//oeQmV053kyc65mglrvHvY5BpF2nBN9U7qe6
-         Klnee6J5Jzz7UOumFYji8JcH16XxbXCDGJ/TfNrwOytJ5i7OluqroaZCte84QyISJc/6
-         LvqVUgUgk5pQy3VJ83lLRGZFPn1JyNi4sBsnr9se4YN2po30z1R8pXoVLbzygXsMjPPQ
-         JzC57xlLP4JM3qj/Ipzp0J1W/QcPuiOWd/7FhpshSCez8Ypod6geElAgn1g2MEAoKkCE
-         UJgCSRPsHNAk0FXTSUAvXBYx3fKEiqwHUp5cWkeYQF0JPd0BVfmBVq9v8Y8Df+pH5XVe
-         qbMA==
+        d=google.com; s=20230601; t=1720483811; x=1721088611; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dpCSyQ48xZMBu3JWSxSWQAlxvGTkpYpPpBTugKDLStA=;
+        b=xmqwU+rofJ/GbwxcDXffaGCAnTv6w69BEJlCjhnxgGUZGtX5hki+0ywNF1xNSo844c
+         We82ZmOom3Hpk8wn8mfhU3lIcjEAwGT/gfpJ3jk+ZkmwhaZs7q5NPl+qIdE3dmw1jWgQ
+         rZ6rTeEEHo75wd/jg5ONTCzHuEU/WSI3PxZJCyls1UBoOXKhb8xzr+dhzuc1dhPHng/e
+         Ah727Al44w6eXY7yThs7o0HCYyaVCzkfirY8IEWegqctboD4jLgAlw8Jm6GKo1ICuJOc
+         lD3EGwbmIoeW0KPnf1SGN4f2/7PubE2OdNPw5JgNzcNQyWFZGCww+QP7TxYT5nckbdU0
+         Pdog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720483701; x=1721088501;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PQyUTvav3geX5M69VveKYVAii5SPAUbkEumnvWX/cP8=;
-        b=t2xnLp/Uvah1mgUsywVJS3nc8wF+/XFg0gjBTQUhaJUa40ZwMhkLw1295ihh+mpb6J
-         82tRfscDSKnlvl8PLN7Z4kuFsoVzSLKDzMZowCpUXNGbgRh8gOS7hjiL2KnSk/acdgm9
-         7W30OxmEUvK3hT/gTq66hSDX3uRH8Ce5WEpf1UmHklr66ylNA2GkLeA1sdm4VEzw1k91
-         4QNix8RD39xoeynsLd9V4Qo487HRqmgtRcq2y5kSAkMqi2pM0XTJf3oanGnCNRKQh1qk
-         xdTfppjpI8pCuawvJgWEiNx2cNnhg8fX3Fsds0cPb0CgQVYUiOkosFdfNkpYqcWu06NX
-         gj2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVGwdmCQHoTmiyw4tDmHpzwfYZEMCpR+xWfD5U8hY7AZga8R3C+HcLkPm/VeIrgmq0lwVKTyYBXpQ7rXgsSDJoSUGG36v50neTh9yQ4szpSWC+YcQjuxGE7smne3m4l9433bqj6AwzNRDmIpwTY+4EcKRgNb/niDqDGLMyrlxv+0ZtOA11F
-X-Gm-Message-State: AOJu0Yw20dQz3ciGnkRlbYYL+A/j9/EAOGVGcQuRNVJ2aaO5Cw2FiPW+
-	2Chesoi8HSwKM3ybP9BV1qmtr6Ta6j7D/SaT0Q0tv4vFjIMylvwG
-X-Google-Smtp-Source: AGHT+IFIc2Ri20+2OjJjk5qK4wEgUHT9NuZc8wPegHJyVXr0NxVgD1EFTld9Pwz7Waa7D2DKsJyo7Q==
-X-Received: by 2002:a92:c26d:0:b0:376:1fae:463a with SMTP id e9e14a558f8ab-38a5a360459mr10611895ab.32.1720483700528;
-        Mon, 08 Jul 2024 17:08:20 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:922a:af36:b3d9:2eac])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b4397f3c6sm462938b3a.157.2024.07.08.17.08.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 17:08:20 -0700 (PDT)
-Date: Mon, 8 Jul 2024 17:08:17 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Javier Carrasco <javier.carrasco@wolfvision.net>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bastian Hecht <hechtb@gmail.com>,
-	Michael Riesch <michael.riesch@wolfvision.net>,
-	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jeff LaBundy <jeff@labundy.com>
-Subject: Re: [PATCH v10 2/4] Input: touch-overlay - Add touchscreen overlay
- handling
-Message-ID: <Zox_cVYsErrLu4Mq@google.com>
-References: <20240626-feature-ts_virtobj_patch-v10-0-873ad79bb2c9@wolfvision.net>
- <20240626-feature-ts_virtobj_patch-v10-2-873ad79bb2c9@wolfvision.net>
+        d=1e100.net; s=20230601; t=1720483811; x=1721088611;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dpCSyQ48xZMBu3JWSxSWQAlxvGTkpYpPpBTugKDLStA=;
+        b=SDtUfuXp4JC4PVVLk5CCmrXm2MpTDzHgr3sPjI9jp56OPIL5EoiyEbYKxp8T4hnxbd
+         unPZVIGIGaboNfKhnA2XfJ8YOHdlumg4qVAXUJv0MC+wNFY+K76MxB0WAsLan+hK7D1J
+         qDXtJXpqvxo2tYPzjNe33r8xWDa38alOYpkPWPmVQRyzT36aVeYVDTeZnKuYLsPG1+cW
+         Xa7mgfOxKb/M/Z5EON3ZOY8t27Xtjz4eMK0yN752AFe3snvjhozjwsMZQArAoofMluxr
+         0voFCira2cOApmMVJujxDouViinZUmTrrkgdkHgFbR5VqdHbhI7IeJ7cEh6pMbldewXn
+         HZyw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1I6SGkoxd+nrS0txG1u0rQqu6CYOErdzS1TbvzoIEYIfy0MFWDhzLjV58KHXov001k3dI74zWizd2cLR7aLH+wyb8wI04JmKqkiee
+X-Gm-Message-State: AOJu0YxlaDVWVGHvySWwNd2wYV51AkWXBGjLKrWjekXA8YEStD+1Ef5J
+	keUDOGkQAUp024C4CAR9hjzF9s3agoJ9XNersXKw7l8rVQZ9yTCRZur/rrB3JUROpCGE1Rnt1/0
+	Deg==
+X-Google-Smtp-Source: AGHT+IE8Sc6LQTLRePG8g/rnbxnP4tA1RmQTE1krI+cbmi9biNwvhd17jHYMiXVZhIfvuCRmpmWcyv3nEb0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:aa7:9f10:0:b0:704:3610:9354 with SMTP id
+ d2e1a72fcca58-70b4367c139mr40520b3a.4.1720483810067; Mon, 08 Jul 2024
+ 17:10:10 -0700 (PDT)
+Date: Mon, 8 Jul 2024 17:10:08 -0700
+In-Reply-To: <030c973172dcf3a24256ddc8ddc5e9ef57ecabcb.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626-feature-ts_virtobj_patch-v10-2-873ad79bb2c9@wolfvision.net>
+Mime-Version: 1.0
+References: <20240517173926.965351-1-seanjc@google.com> <20240517173926.965351-41-seanjc@google.com>
+ <030c973172dcf3a24256ddc8ddc5e9ef57ecabcb.camel@redhat.com>
+Message-ID: <Zox_4OoDmGDHOaSA@google.com>
+Subject: Re: [PATCH v2 40/49] KVM: x86: Initialize guest cpu_caps based on KVM support
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
+	Kechen Lu <kechenl@nvidia.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Binbin Wu <binbin.wu@linux.intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Robert Hoo <robert.hoo.linux@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Javier,
-
-On Wed, Jun 26, 2024 at 11:56:14AM +0200, Javier Carrasco wrote:
-> Some touch devices provide mechanical overlays with different objects
-> like buttons or clipped touchscreen surfaces.
-
-Thank you for your work. I think it is pretty much ready to be merged,
-just a few small comments:
-
+On Thu, Jul 04, 2024, Maxim Levitsky wrote:
+> On Fri, 2024-05-17 at 10:39 -0700, Sean Christopherson wrote:
+> > @@ -421,6 +423,7 @@ void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+> >  	 */
+> >  	for (i = 0; i < NR_KVM_CPU_CAPS; i++) {
+> >  		const struct cpuid_reg cpuid = reverse_cpuid[i];
+> > +		struct kvm_cpuid_entry2 emulated;
+> >  
+> >  		if (!cpuid.function)
+> >  			continue;
+> > @@ -429,7 +432,16 @@ void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+> >  		if (!entry)
+> >  			continue;
+> >  
+> > -		vcpu->arch.cpu_caps[i] = cpuid_get_reg_unsafe(entry, cpuid.reg);
+> > +		cpuid_func_emulated(&emulated, cpuid.function);
+> > +
+> > +		/*
+> > +		 * A vCPU has a feature if it's supported by KVM and is enabled
+> > +		 * in guest CPUID.  Note, this includes features that are
+> > +		 * supported by KVM but aren't advertised to userspace!
+> > +		 */
+> > +		vcpu->arch.cpu_caps[i] = kvm_cpu_caps[i] | kvm_vmm_cpu_caps[i] |
+> > +					 cpuid_get_reg_unsafe(&emulated, cpuid.reg);
+> > +		vcpu->arch.cpu_caps[i] &= cpuid_get_reg_unsafe(entry, cpuid.reg);
 > 
-> In order to support these objects, add a series of helper functions
-> to the input subsystem to transform them into overlay objects via
-> device tree nodes.
+> Hi,
 > 
-> These overlay objects consume the raw touch events and report the
-> expected input events depending on the object properties.
-
-So if we have overlays and also want to invert/swap axis then the
-overlays should be processed first and only then
-touchscreen_set_mt_pos() or touchscreen_report_pos() should be called?
-
-But then it will not work if we need help frm the input core to assign
-slots in cases when touch controller does not implement [reliable]
-contact tracing/identification.
-
-I think this all needs to be clarified.
-
+> I have an idea. What if we get rid of kvm_vmm_cpu_caps, and instead advertise the
+> MWAIT in KVM_GET_EMULATED_CPUID?
 > 
-> Note that the current implementation allows for multiple definitions
-> of touchscreen areas (regions that report touch events), but only the
-> first one will be used for the touchscreen device that the consumers
-> typically provide.
-> Should the need for multiple touchscreen areas arise, additional
-> touchscreen devices would be required at the consumer side.
-> There is no limitation in the number of touch areas defined as buttons.
-> 
-> Reviewed-by: Jeff LaBundy <jeff@labundy.com>
-> Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
+> MWAIT is sort of emulated as NOP after all, plus features in KVM_GET_EMULATED_CPUID are
+> sort of 'emulated inefficiently' and you can say that NOP is an inefficient emulation
+> of MWAIT sort of.
 
-> +int touch_overlay_map(struct list_head *list, struct input_dev *input)
-> +{
-> +	struct fwnode_handle *overlay, *fw_segment;
-> +	struct device *dev = input->dev.parent;
-> +	struct touch_overlay_segment *segment;
-> +	int error = 0;
-> +
-> +	overlay = device_get_named_child_node(dev, "touch-overlay");
+Heh, sort of indeed.  I really don't want to advertise MWAIT to userspace in any
+capacity beyond KVM_CAP_X86_DISABLE_EXITS, because advertising MWAIT to VMs when
+MONITOR/MWAIT exiting is enabled is actively harmful, to both host and guest.
 
-We can annotate this as
+KVM also doesn't emulate them on #UD, unlike MOVBE, which would make the API even
+more confusing than it already is.
 
-	struct fwnode_handle *overlay __free(fwnode_handle) = 
-		device_get_named_child_node(dev, "touch-overlay");
+> It just feels to me that kvm_vmm_cpu_caps, is somewhat an overkill, and its name is
+> somewhat confusing.
 
-> +	if (!overlay)
-> +		return 0;
-> +
-> +	fwnode_for_each_available_child_node(overlay, fw_segment) {
-> +		segment = devm_kzalloc(dev, sizeof(*segment), GFP_KERNEL);
-> +		if (!segment) {
-> +			fwnode_handle_put(fw_segment);
-> +			error = -ENOMEM;
+Yeah, I don't love it either, but trying to handle MWAIT as a one-off was even
+uglier.  One option would be to piggyback cpuid_func_emulated(), but add a param
+to have it fill MWAIT only for KVM's internal purposes.  That'd essentially be
+the same as a one-off in kvm_vcpu_after_set_cpuid(), but less ugly.
 
-return -ENOMEM;
+I'd say it comes down to whether or not we expect to have more features that KVM
+"supports", but doesn't advertise to userspace.  If we do, then I think adding
+VMM_F() is the way to go.  If we expect MWAIT to be the only feature that gets
+this treatment, then I'm ok if we bastardize cpuid_func_emulated().
 
-> +			break;
-> +		}
-> +		error = touch_overlay_get_segment(fw_segment, segment, input);
-> +		if (error) {
-> +			fwnode_handle_put(fw_segment);
+And I think/hope that MWAIT will be a one-off.  Emulating it as a nop was a
+mistake and has since been quirked, and I like to think we (eventually) learn
+from our mistakes.
 
-return error;
-
-> +			break;
-> +		}
-> +		list_add_tail(&segment->list, list);
-> +	}
-> +	fwnode_handle_put(overlay);
-
-Drop.
-
-> +
-> +	return error;
-
-return 0;
-
-> +}
-> +EXPORT_SYMBOL(touch_overlay_map);
-> +
-> +/**
-> + * touch_overlay_get_touchscreen_abs - get abs size from the touchscreen area.
-> + * @list: pointer to the list that holds the segments
-> + * @x: horizontal abs
-> + * @y: vertical abs
-> + */
-> +void touch_overlay_get_touchscreen_abs(struct list_head *list, u16 *x, u16 *y)
-> +{
-> +	struct touch_overlay_segment *segment;
-> +	struct list_head *ptr;
-> +
-> +	list_for_each(ptr, list) {
-> +		segment = list_entry(ptr, struct touch_overlay_segment, list);
-> +		if (!segment->key) {
-> +			*x = segment->x_size - 1;
-> +			*y = segment->y_size - 1;
-> +			break;
-> +		}
-> +	}
-> +}
-> +EXPORT_SYMBOL(touch_overlay_get_touchscreen_abs);
-> +
-> +static bool touch_overlay_segment_event(struct touch_overlay_segment *seg,
-> +					u32 x, u32 y)
-> +{
-> +	if (!seg)
-> +		return false;
-
-This is a static function in the module, we are not passing NULL
-segments to it ever. Such tests should be done on API boundary.
-
-> +
-> +	if (x >= seg->x_origin && x < (seg->x_origin + seg->x_size) &&
-> +	    y >= seg->y_origin && y < (seg->y_origin + seg->y_size))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +/**
-> + * touch_overlay_mapped_touchscreen - check if a touchscreen area is mapped
-> + * @list: pointer to the list that holds the segments
-> + *
-> + * Returns true if a touchscreen area is mapped or false otherwise.
-> + */
-> +bool touch_overlay_mapped_touchscreen(struct list_head *list)
-> +{
-> +	struct touch_overlay_segment *segment;
-> +	struct list_head *ptr;
-> +
-> +	list_for_each(ptr, list) {
-> +		segment = list_entry(ptr, struct touch_overlay_segment, list);
-> +		if (!segment->key)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +EXPORT_SYMBOL(touch_overlay_mapped_touchscreen);
-> +
-> +static bool touch_overlay_event_on_ts(struct list_head *list, u32 *x, u32 *y)
-> +{
-> +	struct touch_overlay_segment *segment;
-> +	struct list_head *ptr;
-> +	bool valid_touch = true;
-> +
-> +	if (!x || !y)
-> +		return false;
-> +
-> +	list_for_each(ptr, list) {
-> +		segment = list_entry(ptr, struct touch_overlay_segment, list);
-> +		if (segment->key)
-> +			continue;
-> +
-> +		if (touch_overlay_segment_event(segment, *x, *y)) {
-> +			*x -= segment->x_origin;
-> +			*y -= segment->y_origin;
-> +			return true;
-> +		}
-> +		/* ignore touch events outside the defined area */
-> +		valid_touch = false;
-> +	}
-> +
-> +	return valid_touch;
-> +}
-> +
-> +static bool touch_overlay_button_event(struct input_dev *input,
-> +				       struct touch_overlay_segment *segment,
-> +				       const u32 *x, const u32 *y, u32 slot)
-> +{
-> +	bool contact = x && y;
-> +
-> +	if (segment->slot == slot && segment->pressed) {
-> +		/* button release */
-> +		if (!contact) {
-> +			segment->pressed = false;
-> +			input_report_key(input, segment->key, false);
-> +			input_sync(input);
-
-Do we really need to emit sync here? Can we require/rely on the driver
-calling us to emit input_sync() once it's done processing current
-frame/packet?
-
-> +			return true;
-> +		}
-> +
-> +		/* sliding out of the button releases it */
-> +		if (!touch_overlay_segment_event(segment, *x, *y)) {
-> +			segment->pressed = false;
-> +			input_report_key(input, segment->key, false);
-> +			input_sync(input);
-> +			/* keep available for a possible touch event */
-> +			return false;
-> +		}
-> +		/* ignore sliding on the button while pressed */
-> +		return true;
-> +	} else if (contact && touch_overlay_segment_event(segment, *x, *y)) {
-> +		segment->pressed = true;
-> +		segment->slot = slot;
-> +		input_report_key(input, segment->key, true);
-> +		input_sync(input);
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +/**
-> + * touch_overlay_process_event - process input events according to the overlay
-> + * mapping. This function acts as a filter to release the calling driver from
-> + * the events that are either related to overlay buttons or out of the overlay
-> + * touchscreen area, if defined.
-> + * @list: pointer to the list that holds the segments
-> + * @input: pointer to the input device associated to the event
-> + * @x: pointer to the x coordinate (NULL if not available - no contact)
-> + * @y: pointer to the y coordinate (NULL if not available - no contact)
-
-Would it be better to have a separate argument communicating slot state
-(contact/no contact)?
-
-> + * @slot: slot associated to the event
-
-What if we are not dealing with an MT device? Can we say that they
-should use slot 0 or maybe -1?
-
-> + *
-> + * Returns true if the event was processed (reported for valid key events
-> + * and dropped for events outside the overlay touchscreen area) or false
-> + * if the event must be processed by the caller. In that case this function
-> + * shifts the (x,y) coordinates to the overlay touchscreen axis if required.
-> + */
-> +bool touch_overlay_process_event(struct list_head *list,
-> +				 struct input_dev *input,
-> +				 u32 *x, u32 *y, u32 slot)
-> +{
-> +	struct touch_overlay_segment *segment;
-> +	struct list_head *ptr;
-> +
-> +	/*
-> +	 * buttons must be prioritized over overlay touchscreens to account for
-> +	 * overlappings e.g. a button inside the touchscreen area.
-> +	 */
-> +	list_for_each(ptr, list) {
-> +		segment = list_entry(ptr, struct touch_overlay_segment, list);
-> +		if (segment->key &&
-> +		    touch_overlay_button_event(input, segment, x, y, slot))
-> +			return true;
-> +	}
-> +
-> +	/*
-> +	 * valid touch events on the overlay touchscreen are left for the client
-> +	 * to be processed/reported according to its (possibly) unique features.
-> +	 */
-> +	return !touch_overlay_event_on_ts(list, x, y);
-> +}
-> +EXPORT_SYMBOL(touch_overlay_process_event);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("Helper functions for overlay objects on touch devices");
-> diff --git a/include/linux/input/touch-overlay.h b/include/linux/input/touch-overlay.h
-> new file mode 100644
-> index 000000000000..cef05c46000d
-> --- /dev/null
-> +++ b/include/linux/input/touch-overlay.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2023 Javier Carrasco <javier.carrasco@wolfvision.net>
-> + */
-> +
-> +#ifndef _TOUCH_OVERLAY
-> +#define _TOUCH_OVERLAY
-> +
-> +#include <linux/types.h>
-> +
-> +struct input_dev;
-> +
-> +int touch_overlay_map(struct list_head *list, struct input_dev *input);
-> +
-> +void touch_overlay_get_touchscreen_abs(struct list_head *list, u16 *x, u16 *y);
-> +
-> +bool touch_overlay_mapped_touchscreen(struct list_head *list);
-> +
-> +bool touch_overlay_process_event(struct list_head *list, struct input_dev *input,
-> +				 u32 *x, u32 *y, u32 slot);
-> +
-> +#endif
-> 
-> -- 
-> 2.40.1
-> 
-
-Thanks.
-
--- 
-Dmitry
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 0e64a6332052..dbc3f6ce9203 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -448,7 +448,7 @@ void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+                if (!entry)
+                        continue;
+ 
+-               cpuid_func_emulated(&emulated, cpuid.function);
++               cpuid_func_emulated(&emulated, cpuid.function, false);
+ 
+                /*
+                 * A vCPU has a feature if it's supported by KVM and is enabled
+@@ -1034,7 +1034,8 @@ static struct kvm_cpuid_entry2 *do_host_cpuid(struct kvm_cpuid_array *array,
+        return entry;
+ }
+ 
+-static int cpuid_func_emulated(struct kvm_cpuid_entry2 *entry, u32 func)
++static int cpuid_func_emulated(struct kvm_cpuid_entry2 *entry, u32 func,
++                              bool only_advertised)
+ {
+        memset(entry, 0, sizeof(*entry));
+ 
+@@ -1048,6 +1049,9 @@ static int cpuid_func_emulated(struct kvm_cpuid_entry2 *entry, u32 func)
+                return 1;
+        case 1:
+                entry->ecx = F(MOVBE);
++               /* comment goes here. */
++               if (!only_advertised)
++                       entry->ecx |= F(MWAIT);
+                return 1;
+        case 7:
+                entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+@@ -1065,7 +1069,7 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
+        if (array->nent >= array->maxnent)
+                return -E2BIG;
+ 
+-       array->nent += cpuid_func_emulated(&array->entries[array->nent], func);
++       array->nent += cpuid_func_emulated(&array->entries[array->nent], func, true);
+        return 0;
+ }
