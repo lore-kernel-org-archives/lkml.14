@@ -1,100 +1,123 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5184619047F
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637E819047D;
+	Tue,  9 Jul 2024 13:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720533256; cv=none; b=uESd1qO1wDv2xD5ZcbJPkOUmB3izDQaEPqTMu+Mefy7l0RvaeBeFy8yEeawZS56hkyuIy5EO5KoHi4qVqQCnGkbZ6cpcX7DlN0EKzekwvK311JRaj2z0S/H+FpQcDyx2Xhwfl24dtL+6aT9SZn8kCQ5zYz9ZAX0Jf1JwoqbB6HY=
+	t=1720533256; cv=none; b=RFgxwiKEoy9N8lsyTh0L2yjxtTYTige14groDPJD5dhctfOPCQx62HHZaR10yxMX6y+MGi1be8vnCeeQ8BW/T5axgIeZLkA4omrvViY8dsnvrR4mfpj9xYkdsWfN4RS1vrSH8EjHpIr0kPAs9ZXz7qcj48aBnFA1t4DnwJ/n4Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720533256; c=relaxed/simple;
-	bh=KBOre6/MDvMpB7h5Xj0oPpmrjYw7FxE8FwVxcWXAqjE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LtRthLXh6hEBBv/WCGl5Erh9jP3YpUpUqUQ/7hISj6luARgM++RyyTFInNsgxH029Z4ztFnhYTZwSFTnFr/4j+vJ7vqai2zAGos+dZ7CAQatsaxQ4e3HVSUlwdaKhe+ZhgIVT80OutOZK23LgQCHLQFmIk+F6DdML0IjszycCh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XAppoia/; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=Ex1DFxzqtCXqvJ+a4DTzxQmabU1eUIweEZT/7M8pQ/I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hQapG8AnyyNze2crurUStxvUxVdUwm0wLy4ril7oZO6rbAGKI+bfAHek5f54yK49Dj4ZOvq6uASjC2E61awWqrbiH5+u4kjZUxvN7kXL3dF/2AO4CdOJZfZ/TviBnXOfxIk1QXA5ZAtnyng/Gv9dcxMR7XTsyYJzdgLloUy6NGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lK0LJS7C; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XAppoia/"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7035d5eec5aso2067504a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720533253; x=1721138053; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iEGMIzj8Deb0RSCNYi9bStxauFP2LxGa08Z7wteG51E=;
-        b=XAppoia/CFo7O6AkT5lFBTr1ALeEFE8UQ5k4V/2jwMTsgkXCsKG2Am7mTgPgkM05F+
-         cGYcpZOeYnBalYPin4EKa4ndqiz0YNQCEmxOMShb26FjEq46E188mExnH5pf6FAL8E/L
-         eTiihG9/v+swpSid0qpvA4WW5+/e3/paGMCgo5c/Hx4EDb0wbCtFE/b6rJ6e/ZzeqLvZ
-         oHo8E0q1dPeeIQDjByePUCu5nIg27xSDMKvbXl4fj+CqquBsRodUT3ZAv0pJGTBcGNxP
-         A7LU6ahSEB+mdnDPyOJMufJd44HZ/Q5KnAi+Guaog36erzx8X094GVHTwtdX4aNgyr0u
-         TnUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720533253; x=1721138053;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iEGMIzj8Deb0RSCNYi9bStxauFP2LxGa08Z7wteG51E=;
-        b=EUDHQYNbcpivqXgr/krEiPRCgFNCLnMgyV4aU7feAWDPCON0XG/SwfioIoFH7AojhM
-         MDcs1NvpiFM5X3u5Btz03jzxHxtklF2KjXFFpL0qZTLhFZEwilqcUsE4dak9/n7DWOtP
-         VrEPFpLfJde40lxhxIkJ2pGdY6hEJSVq97CD4MGEwOt+gQkxvREbC0ojLRa2Z4duLBc9
-         NZfVIfBU0x9I76n2siRNl2bsaL/EXiZkh+UPD01J1vnQVQYQJXM0JRHoXToTQkrq1rJi
-         ffgCMFfdIlam9CdEH2lha3QTxtSXeBUV8TEYHpNtxvuceVedH9vr4+JR0iHbqHVir9jE
-         J/6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUL/GSrORJ25OvtqiYSl1h/5D/e8Ai+GTZ8tMm0TAA98xNDhbQpLCFouL8L41g9GTcYF2i7BNqvdKTyadiVqqNiJKR812EGw3qSSgFO
-X-Gm-Message-State: AOJu0YxZPWjvxY81yVoTvpVg62jLNSM+hUPuOj0YMBhXNYPRMb+X8cpS
-	H2Q0E2b1UUJVTXvjwLJFCpQwD0z+VcFR73IoLMnn6c8hbgu1LrNktfsJZLdZUAdFelGBy0djvV1
-	ZvXPqO5BMZ2AcIGvgch0a9aaRu0ihOLo9L2Ujqw==
-X-Google-Smtp-Source: AGHT+IEBlPAe12D8BWoXO1Z2SMxlnxkHjz990ex0k2qP/zp0P3Mh4WSIRdE0HeqPtKk5VekF8gOhWE2iYeaf40I0cws=
-X-Received: by 2002:a05:6830:84b:b0:701:fdc2:5bd9 with SMTP id
- 46e09a7af769-70375a11ea2mr3008904a34.13.1720533253365; Tue, 09 Jul 2024
- 06:54:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lK0LJS7C"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6EF041BF210;
+	Tue,  9 Jul 2024 13:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720533252;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UylGglBX1XOLCextmbCbiuNhWEiRQlnEHwkHESX5MAo=;
+	b=lK0LJS7CPzwfV0FbvevTD90jN7njRzuuW/O5Y66FrbbXoTCKoV+6hqt3fv8d8DvKzjI8yJ
+	auYVJ21PW55Jjqlilq3V4z3q3h9oea9zIRcjToJLthUlePeSZvCDaF792DYv9cUxmCLieP
+	23ROSV/QnU07OcEAzHC3PMJxj3pQHYJUk1d7NTwxn/U4tUlw/5N55Fio22vLkRorCLMRrC
+	H7yLwMVoybE4FsXjQlso6eILzFUEYU795H8ajjQKTRl0ZeYsErAYx20qEJ8w99Vau5e+9f
+	QrIWTUTqJGbAGDd2aTXF7shOYO5CUPC5FKE7kq/AWBvti/rddbRNds4TDBMo4g==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Tue, 09 Jul 2024 15:53:43 +0200
+Subject: [PATCH net-next v17 11/14] net: ptp: Move ptp_clock_index() to
+ builtin symbol
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240706090511.48818-1-huangbing775@126.com>
-In-Reply-To: <20240706090511.48818-1-huangbing775@126.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Tue, 9 Jul 2024 15:54:01 +0200
-Message-ID: <CAKfTPtB=5Se427by2ntnkW4gD8p6xL39mipVvcRFdH4fLOPjKQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Remove stale buddies comment for last and skip
-To: Bing Huang <huangbing775@126.com>
-Cc: dietmar.eggemann@arm.com, rostedt@goodmis.org, brauner@kernel.org, 
-	bsegall@google.com, juri.lelli@redhat.com, linux-kernel@vger.kernel.org, 
-	mgorman@suse.de, mingo@redhat.com, peterz@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240709-feature_ptp_netnext-v17-11-b5317f50df2a@bootlin.com>
+References: <20240709-feature_ptp_netnext-v17-0-b5317f50df2a@bootlin.com>
+In-Reply-To: <20240709-feature_ptp_netnext-v17-0-b5317f50df2a@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>, 
+ donald.hunter@gmail.com, danieller@nvidia.com, ecree.xilinx@gmail.com
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Willem de Bruijn <willemb@google.com>, 
+ Shannon Nelson <shannon.nelson@amd.com>, 
+ Alexandra Winter <wintera@linux.ibm.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Sat, 6 Jul 2024 at 11:10, Bing Huang <huangbing775@126.com> wrote:
->
-> From: Bing Huang <huangbing@kylinos.cn>
->
-> commit 5e963f2bd465 ("sched/fair: Commit to EEVDF") has removed last and
-> skip. Modify the comment accordingly.
->
-> Signed-off-by: Bing Huang <huangbing@kylinos.cn>
+Move ptp_clock_index() to builtin symbols to prepare for supporting get
+and set hardware timestamps from ethtool, which is builtin.
 
-Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
 
-> ---
->  kernel/sched/fair.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 41b58387023d..383582f87def 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5466,8 +5466,6 @@ set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
->   * Pick the next process, keeping these things in mind, in this order:
->   * 1) keep things fair between processes/task groups
->   * 2) pick the "next" process, since someone really wants that to run
-> - * 3) pick the "last" process, for cache locality
-> - * 4) do not run the "skip" process, if something else is available
->   */
->  static struct sched_entity *
->  pick_next_entity(struct cfs_rq *cfs_rq)
-> --
-> 2.25.1
->
+Change in v13:
+- New patch
+---
+ drivers/ptp/ptp_clock.c          | 6 ------
+ drivers/ptp/ptp_clock_consumer.c | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index 593b5c906314..fc4b266abe1d 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -460,12 +460,6 @@ void ptp_clock_event(struct ptp_clock *ptp, struct ptp_clock_event *event)
+ }
+ EXPORT_SYMBOL(ptp_clock_event);
+ 
+-int ptp_clock_index(struct ptp_clock *ptp)
+-{
+-	return ptp->index;
+-}
+-EXPORT_SYMBOL(ptp_clock_index);
+-
+ int ptp_find_pin(struct ptp_clock *ptp,
+ 		 enum ptp_pin_function func, unsigned int chan)
+ {
+diff --git a/drivers/ptp/ptp_clock_consumer.c b/drivers/ptp/ptp_clock_consumer.c
+index f5fab1c14b47..f521b07da231 100644
+--- a/drivers/ptp/ptp_clock_consumer.c
++++ b/drivers/ptp/ptp_clock_consumer.c
+@@ -108,3 +108,9 @@ void remove_hwtstamp_provider(struct rcu_head *rcu_head)
+ 	kfree(hwtstamp);
+ }
+ EXPORT_SYMBOL(remove_hwtstamp_provider);
++
++int ptp_clock_index(struct ptp_clock *ptp)
++{
++	return ptp->index;
++}
++EXPORT_SYMBOL(ptp_clock_index);
+
+-- 
+2.34.1
+
