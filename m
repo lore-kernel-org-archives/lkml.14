@@ -1,35 +1,35 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A24413BC05;
-	Tue,  9 Jul 2024 06:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723FB1514C6;
+	Tue,  9 Jul 2024 06:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720506658; cv=none; b=LT54/Pi+uXX3kb7vRnRoclr69ec0bTIkyJHjHm8jHscWyAo8GCTuuYZR0TM2D1zhEfEqQg/J7wuJg2lMeYYCH8D10qklfZf7FCMP9rkU1yQTUrqN4OIe4mjEyqXEMf8PfxcHNOWaKGCNADWszu/cNFnVUQfAjx3Dv7BPWp6AYbM=
+	t=1720506661; cv=none; b=RXOGILyaWkwobU5Ol9DfkRKjY7rO++irpCy4YoQfJfEHXXMeZlja+Knh9LezBokXAPZERJ2QPVRUbUGCHKJX7CVgsVN+UPJM8p5dCAsk621shi1KCMI+oPQ7oEZDx9ZhfBUeCvVRmpoG95XepNhJo0c5rB+++iZfJUpPq6Ee6io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720506658; c=relaxed/simple;
-	bh=Se0OpcXdJMOZAcNV+f7yNVvHFmyAetKI008P6DvkUVs=;
+	s=arc-20240116; t=1720506661; c=relaxed/simple;
+	bh=L0ONWoy9z7ss22OWuzBPdJcEsX+sQsE8JCPEXqdLPTM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qkxibGMbFv9UfkMp4HR3+qwCp/HGCLUB39Vz2ai5Jc7LZT0WIj2X8H9SCHbDrinpmUUD76cdBwYPKGzeOK8jRGklFgH+G7kmbL8Fj+zBxUAC9XBiY9GbKXhgUO3WJndYV1uN8kNRqTfyIlr8x+zCq3/5aDtn8jh7u9PVffP03NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CXieVLq5; arc=none smtp.client-ip=217.70.183.201
+	 MIME-Version; b=hdPVFVS/wHZWGyLcnKRoEIMh9aXQQrFjPPOmq0008n5VAtTvpr81VyANjjRBcGnovLDt9rv3z2gJTmLTrfY/lEj0mqkJdCoUOJOs6/XpimzZkcZkw6QzKSQOCS7pLjeh7bIs4lP6vBB2U8I6+Uku5Qyj+ZCyNHf/N0sfi8wNi0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R9eH/NjR; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CXieVLq5"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DBA1B1BF204;
-	Tue,  9 Jul 2024 06:30:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R9eH/NjR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 815BF1BF20B;
+	Tue,  9 Jul 2024 06:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720506649;
+	t=1720506657;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Np2E2Wo+yMlx8QuUe/2VwIZbUHViB7wquDb8VmYoMGQ=;
-	b=CXieVLq5lDg1tKbq1d5zltjNdgx0g6ddbtquW3gPFKwMQ5NqSQTqK7/EwZp5jzAtSgKYCN
-	ni4BuUsQePg2h1YnL5Dxmi6jLADACcSv/hR4IlfSbr5D2sy9XZ5bOL11lJxCClkIwp6PUP
-	ZCsjnM6jFzT4g2xqb07UugfN+r7yfWNpgkP2rZnbF+XbfcyznPlUrBHRll4bd8G4iVQU7O
-	fUmiFA/bVZEh2lnMerc9MdjHET8WS/fbwG3W3OfgwTBJ6TOtuUMcm7ddULG00nOAPIt16J
-	8xsHWCuK+0bgFQ6nriveMl277tzsO+0wudtSxGgPrkqg+BCEPp5e9IPaSY/MCw==
+	bh=QzTBo7l3QbBVpqce2Y0sMqV+sQ4S8OpXIK1DNekBelo=;
+	b=R9eH/NjR0+z0RRPmMohaZghHOcANF2I+vwroUWJNGM1hx5xg8F67pSSnJrUW4B8I9wU4A1
+	Q9+7aIEcU96DH9WUmRYH1X3Xy9jsCILelm18syRASLpGjHfKoqjvLckQvPseN/+ofQjl3o
+	M4u6xWPO1waBzfpFGXhogTrNUGYMHJ9CLWvl/g/Wr9HzPXHOnMAPvJEg+y0zfyZJ89Fx0i
+	8aDrvy/GMChNEY0ebdhDApxLPqxoqPFJYAFY3CXrkOiZRpPY1BatA1PwmFfP9Ljkga8tj5
+	ZRP83LT4QqrgFgTa1bXrhuFq2+zTpT68AWLVevl5/xPJB8ESYDTJgXw7TD1wgg==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -60,9 +60,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Marc Kleine-Budde <mkl@pengutronix.de>,
 	Dan Carpenter <dan.carpenter@linaro.org>,
 	Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next v17 03/14] net: phy: add helpers to handle sfp phy connect/disconnect
-Date: Tue,  9 Jul 2024 08:30:26 +0200
-Message-ID: <20240709063039.2909536-4-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v17 09/14] net: ethtool: plca: Target the command to the requested PHY
+Date: Tue,  9 Jul 2024 08:30:32 +0200
+Message-ID: <20240709063039.2909536-10-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240709063039.2909536-1-maxime.chevallier@bootlin.com>
 References: <20240709063039.2909536-1-maxime.chevallier@bootlin.com>
@@ -75,157 +75,124 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-There are a few PHY drivers that can handle SFP modules through their
-sfp_upstream_ops. Introduce Phylib helpers to keep track of connected
-SFP PHYs in a netdevice's namespace, by adding the SFP PHY to the
-upstream PHY's netdev's namespace.
-
-By doing so, these SFP PHYs can be enumerated and exposed to users,
-which will be able to use their capabilities.
+PLCA is a PHY-specific command. Instead of targeting the command
+towards dev->phydev, use the request to pick the targeted PHY.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/phy/marvell-88x2222.c |  2 ++
- drivers/net/phy/marvell.c         |  2 ++
- drivers/net/phy/marvell10g.c      |  2 ++
- drivers/net/phy/phy_device.c      | 42 +++++++++++++++++++++++++++++++
- drivers/net/phy/qcom/at803x.c     |  2 ++
- drivers/net/phy/qcom/qca807x.c    |  2 ++
- include/linux/phy.h               |  2 ++
- 7 files changed, 54 insertions(+)
+ net/ethtool/plca.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/phy/marvell-88x2222.c b/drivers/net/phy/marvell-88x2222.c
-index b88398e6872b..0b777cdd7078 100644
---- a/drivers/net/phy/marvell-88x2222.c
-+++ b/drivers/net/phy/marvell-88x2222.c
-@@ -553,6 +553,8 @@ static const struct sfp_upstream_ops sfp_phy_ops = {
- 	.link_down = mv2222_sfp_link_down,
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
+diff --git a/net/ethtool/plca.c b/net/ethtool/plca.c
+index b1e2e3b5027f..d95d92f173a6 100644
+--- a/net/ethtool/plca.c
++++ b/net/ethtool/plca.c
+@@ -25,7 +25,7 @@ struct plca_reply_data {
+ 
+ const struct nla_policy ethnl_plca_get_cfg_policy[] = {
+ 	[ETHTOOL_A_PLCA_HEADER]		=
+-		NLA_POLICY_NESTED(ethnl_header_policy),
++		NLA_POLICY_NESTED(ethnl_header_policy_phy),
  };
  
- static int mv2222_probe(struct phy_device *phydev)
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index b89fbffa6a93..9964bf3dea2f 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -3613,6 +3613,8 @@ static const struct sfp_upstream_ops m88e1510_sfp_ops = {
- 	.module_remove = m88e1510_sfp_remove,
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
- };
+ static void plca_update_sint(int *dst, struct nlattr **tb, u32 attrid,
+@@ -58,10 +58,14 @@ static int plca_get_cfg_prepare_data(const struct ethnl_req_info *req_base,
+ 	struct plca_reply_data *data = PLCA_REPDATA(reply_base);
+ 	struct net_device *dev = reply_base->dev;
+ 	const struct ethtool_phy_ops *ops;
++	struct nlattr **tb = info->attrs;
++	struct phy_device *phydev;
+ 	int ret;
  
- static int m88e1510_probe(struct phy_device *phydev)
-diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
-index ad43e280930c..6642eb642d4b 100644
---- a/drivers/net/phy/marvell10g.c
-+++ b/drivers/net/phy/marvell10g.c
-@@ -503,6 +503,8 @@ static int mv3310_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
- static const struct sfp_upstream_ops mv3310_sfp_ops = {
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
- 	.module_insert = mv3310_sfp_insert,
- };
++	phydev = ethnl_req_get_phydev(req_base, tb[ETHTOOL_A_PLCA_HEADER],
++				      info->extack);
+ 	// check that the PHY device is available and connected
+-	if (!dev->phydev) {
++	if (IS_ERR_OR_NULL(phydev)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+ 	}
+@@ -80,7 +84,7 @@ static int plca_get_cfg_prepare_data(const struct ethnl_req_info *req_base,
+ 	memset(&data->plca_cfg, 0xff,
+ 	       sizeof_field(struct plca_reply_data, plca_cfg));
  
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index e68acaba1b4f..a3309782220c 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1370,6 +1370,48 @@ phy_standalone_show(struct device *dev, struct device_attribute *attr,
+-	ret = ops->get_plca_cfg(dev->phydev, &data->plca_cfg);
++	ret = ops->get_plca_cfg(phydev, &data->plca_cfg);
+ 	ethnl_ops_complete(dev);
+ 
+ out:
+@@ -129,7 +133,7 @@ static int plca_get_cfg_fill_reply(struct sk_buff *skb,
+ 
+ const struct nla_policy ethnl_plca_set_cfg_policy[] = {
+ 	[ETHTOOL_A_PLCA_HEADER]		=
+-		NLA_POLICY_NESTED(ethnl_header_policy),
++		NLA_POLICY_NESTED(ethnl_header_policy_phy),
+ 	[ETHTOOL_A_PLCA_ENABLED]	= NLA_POLICY_MAX(NLA_U8, 1),
+ 	[ETHTOOL_A_PLCA_NODE_ID]	= NLA_POLICY_MAX(NLA_U32, 255),
+ 	[ETHTOOL_A_PLCA_NODE_CNT]	= NLA_POLICY_RANGE(NLA_U32, 1, 255),
+@@ -141,15 +145,17 @@ const struct nla_policy ethnl_plca_set_cfg_policy[] = {
+ static int
+ ethnl_set_plca(struct ethnl_req_info *req_info, struct genl_info *info)
+ {
+-	struct net_device *dev = req_info->dev;
+ 	const struct ethtool_phy_ops *ops;
+ 	struct nlattr **tb = info->attrs;
+ 	struct phy_plca_cfg plca_cfg;
++	struct phy_device *phydev;
+ 	bool mod = false;
+ 	int ret;
+ 
++	phydev = ethnl_req_get_phydev(req_info, tb[ETHTOOL_A_PLCA_HEADER],
++				      info->extack);
+ 	// check that the PHY device is available and connected
+-	if (!dev->phydev)
++	if (IS_ERR_OR_NULL(phydev))
+ 		return -EOPNOTSUPP;
+ 
+ 	ops = ethtool_phy_ops;
+@@ -168,7 +174,7 @@ ethnl_set_plca(struct ethnl_req_info *req_info, struct genl_info *info)
+ 	if (!mod)
+ 		return 0;
+ 
+-	ret = ops->set_plca_cfg(dev->phydev, &plca_cfg, info->extack);
++	ret = ops->set_plca_cfg(phydev, &plca_cfg, info->extack);
+ 	return ret < 0 ? ret : 1;
  }
- static DEVICE_ATTR_RO(phy_standalone);
  
-+/**
-+ * phy_sfp_connect_phy - Connect the SFP module's PHY to the upstream PHY
-+ * @upstream: pointer to the upstream phy device
-+ * @phy: pointer to the SFP module's phy device
-+ *
-+ * This helper allows keeping track of PHY devices on the link. It adds the
-+ * SFP module's phy to the phy namespace of the upstream phy
-+ *
-+ * Return: 0 on success, otherwise a negative error code.
-+ */
-+int phy_sfp_connect_phy(void *upstream, struct phy_device *phy)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct net_device *dev = phydev->attached_dev;
-+
-+	if (dev)
-+		return phy_link_topo_add_phy(dev, phy, PHY_UPSTREAM_PHY, phydev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(phy_sfp_connect_phy);
-+
-+/**
-+ * phy_sfp_disconnect_phy - Disconnect the SFP module's PHY from the upstream PHY
-+ * @upstream: pointer to the upstream phy device
-+ * @phy: pointer to the SFP module's phy device
-+ *
-+ * This helper allows keeping track of PHY devices on the link. It removes the
-+ * SFP module's phy to the phy namespace of the upstream phy. As the module phy
-+ * will be destroyed, re-inserting the same module will add a new phy with a
-+ * new index.
-+ */
-+void phy_sfp_disconnect_phy(void *upstream, struct phy_device *phy)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct net_device *dev = phydev->attached_dev;
-+
-+	if (dev)
-+		phy_link_topo_del_phy(dev, phy);
-+}
-+EXPORT_SYMBOL(phy_sfp_disconnect_phy);
-+
- /**
-  * phy_sfp_attach - attach the SFP bus to the PHY upstream network device
-  * @upstream: pointer to the phy device
-diff --git a/drivers/net/phy/qcom/at803x.c b/drivers/net/phy/qcom/at803x.c
-index c8f83e5f78ab..105602581a03 100644
---- a/drivers/net/phy/qcom/at803x.c
-+++ b/drivers/net/phy/qcom/at803x.c
-@@ -770,6 +770,8 @@ static const struct sfp_upstream_ops at8031_sfp_ops = {
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
- 	.module_insert = at8031_sfp_insert,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
+@@ -191,7 +197,7 @@ const struct ethnl_request_ops ethnl_plca_cfg_request_ops = {
+ 
+ const struct nla_policy ethnl_plca_get_status_policy[] = {
+ 	[ETHTOOL_A_PLCA_HEADER]		=
+-		NLA_POLICY_NESTED(ethnl_header_policy),
++		NLA_POLICY_NESTED(ethnl_header_policy_phy),
  };
  
- static int at8031_parse_dt(struct phy_device *phydev)
-diff --git a/drivers/net/phy/qcom/qca807x.c b/drivers/net/phy/qcom/qca807x.c
-index 672c6929119a..5eb0ab1cb70e 100644
---- a/drivers/net/phy/qcom/qca807x.c
-+++ b/drivers/net/phy/qcom/qca807x.c
-@@ -699,6 +699,8 @@ static const struct sfp_upstream_ops qca807x_sfp_ops = {
- 	.detach = phy_sfp_detach,
- 	.module_insert = qca807x_sfp_insert,
- 	.module_remove = qca807x_sfp_remove,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
- };
+ static int plca_get_status_prepare_data(const struct ethnl_req_info *req_base,
+@@ -201,10 +207,14 @@ static int plca_get_status_prepare_data(const struct ethnl_req_info *req_base,
+ 	struct plca_reply_data *data = PLCA_REPDATA(reply_base);
+ 	struct net_device *dev = reply_base->dev;
+ 	const struct ethtool_phy_ops *ops;
++	struct nlattr **tb = info->attrs;
++	struct phy_device *phydev;
+ 	int ret;
  
- static int qca807x_probe(struct phy_device *phydev)
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 2d477eb2809a..f7ef7ed6d5ce 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1762,6 +1762,8 @@ int phy_suspend(struct phy_device *phydev);
- int phy_resume(struct phy_device *phydev);
- int __phy_resume(struct phy_device *phydev);
- int phy_loopback(struct phy_device *phydev, bool enable);
-+int phy_sfp_connect_phy(void *upstream, struct phy_device *phy);
-+void phy_sfp_disconnect_phy(void *upstream, struct phy_device *phy);
- void phy_sfp_attach(void *upstream, struct sfp_bus *bus);
- void phy_sfp_detach(void *upstream, struct sfp_bus *bus);
- int phy_sfp_probe(struct phy_device *phydev,
++	phydev = ethnl_req_get_phydev(req_base, tb[ETHTOOL_A_PLCA_HEADER],
++				      info->extack);
+ 	// check that the PHY device is available and connected
+-	if (!dev->phydev) {
++	if (IS_ERR_OR_NULL(phydev)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+ 	}
+@@ -223,7 +233,7 @@ static int plca_get_status_prepare_data(const struct ethnl_req_info *req_base,
+ 	memset(&data->plca_st, 0xff,
+ 	       sizeof_field(struct plca_reply_data, plca_st));
+ 
+-	ret = ops->get_plca_status(dev->phydev, &data->plca_st);
++	ret = ops->get_plca_status(phydev, &data->plca_st);
+ 	ethnl_ops_complete(dev);
+ out:
+ 	return ret;
 -- 
 2.45.1
 
