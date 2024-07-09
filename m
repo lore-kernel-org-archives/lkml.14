@@ -1,106 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D7037147;
-	Tue,  9 Jul 2024 02:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FB643AB4
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 02:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720491181; cv=none; b=Uuks3IRXKn1vTX75INGFo761lWxZRogqJ8Xp2hJXiKXwNvhCPEmSEViQ3FAq/fNpUmafg4fILeSxnC1RC9XZqgMhC1Dm0wEWtZJzlwOGD41fOxuq+GDWJOuiAgVzsZrMkfLrBe/EQ7DTNcgeM/ZpmphwymlNrozXBRJNTUrr7kA=
+	t=1720491225; cv=none; b=UyJoz3Q/fj1YpH951mFX1Ik8dM1t39oKoN9/8mcqlb3I9nfHkgEkh4NN3q8Nm9+OPSfp0HtbGLwOCw4fP8bqd5KOxtRGZxdOThp30MdnONUYdTw4/dtvlW1AsRI/i1uEjzbaEmbfpDFG3ga4gQmtmbIKOVgaUQIV2/tRd40p2So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720491181; c=relaxed/simple;
-	bh=w5UaszG4XXKi5o1MoKE2BrIX11vIICgpXkxs0Zot6ic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LNBL8zZICLdpxB/uPL92pj0BrYpcjbHYgiDX2urkodLeKmmAIxML7PNK7+GmLVWHKLJvTvJViECMgbIqv+yVIEU8E59lo5NbtwFWq54UelQLS+ybIn0Q7VqBS2kaQubMM17M3YLy7nyNoG58CgA2ebwixetn0m1tIMmL8/7ne3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZQmDKBXI; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1720491225; c=relaxed/simple;
+	bh=qmfe73rj7uPFO7PgvLZEQThh1iERDsTRnG6XRTqML+c=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=XniVQ0zT582l17HUiKC++l32d4SFciGf+RJ9ANb/EQaCSurc+Q39EQ9qE3bz0y5xnlIY7rYSVaVj2x9KRwhLuO+eaLewgykNBexMMpg7CV7l5iwVjJ+0jdqMm4v8RjmZZbXS8Wt5aZYCOEWX7cH27dlJHF4KpqTfCZ/JarycuIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QW6bfgDJ; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZQmDKBXI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QW6bfgDJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720491179; x=1752027179;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=w5UaszG4XXKi5o1MoKE2BrIX11vIICgpXkxs0Zot6ic=;
-  b=ZQmDKBXIsGOhuWONlxRLkh78XQHuWsfa/Xu1nEJkolqf72IAXzafYMWh
-   tw+LcnSwQ3kPz82cVH2P22sLNgTruIeqXmeCSALxNq9HrauCO2Adr9CFo
-   kO+/xe0KXzrsnLLb6CU5iYgeHbYr1cUYRDl/oC6H6Wgd7KZTdEAeZ3MWM
-   lbrYlF3Uy9cRZ/aLoDiTqZsZ67j4uJQZpi6pjaWiMXSnIF3VFBSkvp2rr
-   ob3CkIicmx/16Hx84QoQ5CNrE8bbwcpjagD6ACSzlHVXdS4oo0hunThN5
-   4qYU9jROsKiyxtoHopMhJLts2SGM7fKjSbY0H1OEy0+TpF8CxQ9Nwyf6F
-   Q==;
-X-CSE-ConnectionGUID: v4VF0BkzTt+iGyOq5qPf/g==
-X-CSE-MsgGUID: ouyEQjjlTIugDB4JuX3BzQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="17426005"
+  t=1720491224; x=1752027224;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qmfe73rj7uPFO7PgvLZEQThh1iERDsTRnG6XRTqML+c=;
+  b=QW6bfgDJ9zu1GSu/Vhjq8NDRjN2OmjJTqgHF3lknRZAGaCwVvXxln4ND
+   4a1BtjTK9O9s4809LzuunswiY6fF+ckgPsjZaReGwL7ypVBoR4+LWnf7z
+   SgJ/7Ttmi5l5Nbg8tSTBvfuEDWwe0dpJjoeyfQRlD2LT7E+H7m/LQnjv8
+   pOlfBiyjIPEacnP3Hyyi2GmkQ8PMByb+ZUYOO6jxegKRgAc/m7Vbp2ukg
+   ecNP/bFHm7Qc9qz729wLJrvbpfzQ6DWtFK569T5NRQYrCFjZIQtmeoe6U
+   wqX7KIa5fDhUn+WH4gtK0132vKSItklb1JtAN5mbqA6TMhwzPVsU/Q0d3
+   w==;
+X-CSE-ConnectionGUID: CmBAvXmCQZqY14jy0DFBgQ==
+X-CSE-MsgGUID: OwI1PYMhTZSsF9eXko5lEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="17824232"
 X-IronPort-AV: E=Sophos;i="6.09,193,1716274800"; 
-   d="scan'208";a="17426005"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 19:12:58 -0700
-X-CSE-ConnectionGUID: TwhE19AgQOqinpqkSvBWtw==
-X-CSE-MsgGUID: gADE25TSQvOmNCB4/aPMvg==
+   d="scan'208";a="17824232"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 19:13:42 -0700
+X-CSE-ConnectionGUID: d5zKqABkTUWp4MS7DXpD4g==
+X-CSE-MsgGUID: AnVNl0FXQyWJ4eCG+5lDGg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,193,1716274800"; 
-   d="scan'208";a="47791317"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 19:12:58 -0700
-Date: Mon, 8 Jul 2024 19:19:17 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, rafael.j.wysocki@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH] Thermal: intel: hfi: Give HFI instances package scope
-Message-ID: <20240709021917.GA1891@ranerica-svr.sc.intel.com>
-References: <20240703055445.125362-1-rui.zhang@intel.com>
- <CAJZ5v0gVFPNK=_=Tnr0QJ-yBWfSWc+wuJrE079Fz+Ba1P57TmA@mail.gmail.com>
+   d="scan'208";a="52100309"
+Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmviesa005.fm.intel.com with ESMTP; 08 Jul 2024 19:13:33 -0700
+Message-ID: <56911ed6-d819-4882-9c7e-bfe4ba5826c2@linux.intel.com>
+Date: Tue, 9 Jul 2024 10:10:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gVFPNK=_=Tnr0QJ-yBWfSWc+wuJrE079Fz+Ba1P57TmA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Robin Murphy <robin.murphy@arm.com>, Kevin Tian <kevin.tian@intel.com>,
+ catalin.marinas@arm.com, kernel-team@android.com, Yi Liu
+ <yi.l.liu@intel.com>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Kalle Valo <kvalo@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
+ Jason Wang <jasowang@redhat.com>, Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Mikko Perttunen <mperttunen@nvidia.com>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>, ath10k@lists.infradead.org,
+ ath11k@lists.infradead.org, iommu@lists.linux.dev,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/21] iommu: Refactoring domain allocation interface
+To: Jason Gunthorpe <jgg@ziepe.ca>, Will Deacon <will@kernel.org>
+References: <20240610085555.88197-1-baolu.lu@linux.intel.com>
+ <172009858593.2049787.5200500337719932334.b4-ty@kernel.org>
+ <20240708163407.GC14050@ziepe.ca>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240708163407.GC14050@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 03, 2024 at 01:33:03PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Jul 3, 2024 at 7:55 AM Zhang Rui <rui.zhang@intel.com> wrote:
-> >
-> > The Intel Software Developer's Manual defines the scope of HFI (registers
-> > and memory buffer) as package. Use package scope* in the software
-> 
-> "as a package"
-> 
-> > representation of an HFI instance.
-> >
-> > Using die scope in HFI instances has the effect of creating multiple,
-> > conflicting, instances for the same package: each instance allocates its
-> > own memory buffer and configures the same package-level registers.
-> > Specifically, only one of the allocated memory buffers can be set in the
-> > MSR_IA32_HW_FEEDBACK_PTR register. CPUs get incorrect HFI data from the
-> > table.
-> >
-> > The problem does not affect current HFI-capable platforms because they
-> > all have single-die processors.
-> >
-> > * We used die scope for HFI instances because there have been processors
-> > in which packages where enumerated as dies. None of those systems support
-> 
-> "were"
-> 
-> > HFI. If such a system emerged we would need to quirk it.
-> >
-> > Co-developed-by: Chen Yu <yu.c.chen@intel.com>
-> > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> 
-> Ricardo, any concerns?
+On 7/9/24 12:34 AM, Jason Gunthorpe wrote:
+> On Thu, Jul 04, 2024 at 03:18:56PM +0100, Will Deacon wrote:
+>> On Mon, 10 Jun 2024 16:55:34 +0800, Lu Baolu wrote:
+>>> The IOMMU subsystem has undergone some changes, including the removal
+>>> of iommu_ops from the bus structure. Consequently, the existing domain
+>>> allocation interface, which relies on a bus type argument, is no longer
+>>> relevant:
+>>>
+>>>      struct iommu_domain *iommu_domain_alloc(struct bus_type *bus)
+>>>
+>>> [...]
+>> Applied a few of these to iommu (iommufd/paging-domain-alloc), thanks!
+>>
+>> [01/21] iommu: Add iommu_paging_domain_alloc() interface
+>>          https://git.kernel.org/iommu/c/a27bf2743cb8
+>> [02/21] iommufd: Use iommu_paging_domain_alloc()
+>>          https://git.kernel.org/iommu/c/26a581606fab
+>> [03/21] vfio/type1: Use iommu_paging_domain_alloc()
+>>          https://git.kernel.org/iommu/c/60ffc4501722
+>> [04/21] vhost-vdpa: Use iommu_paging_domain_alloc()
+>>          https://git.kernel.org/iommu/c/9c159f6de1ae
+>> [05/21] drm/msm: Use iommu_paging_domain_alloc()
+>>          https://git.kernel.org/iommu/c/45acf35af200
+>>
+>> [10/21] wifi: ath10k: Use iommu_paging_domain_alloc()
+>>          https://git.kernel.org/iommu/c/d5b7485588df
+>> [11/21] wifi: ath11k: Use iommu_paging_domain_alloc()
+>>          https://git.kernel.org/iommu/c/ef50d41fbf1c
+>>
+>> [14/21] RDMA/usnic: Use iommu_paging_domain_alloc()
+>>          https://git.kernel.org/iommu/c/3b10f25704be
+>> [15/21] iommu/vt-d: Add helper to allocate paging domain
+>>          https://git.kernel.org/iommu/c/9e9ba576c259
+> Great, Lu can you please split the remaining by subsystem and try to
+> get them to go through subsystem trees? Joerg can take the leftovers
+> at rc6/7 or something like that so we can finish this.
 
-No concerns. IMO, it is important to document why we were using die scope
-before. Rui has done it.
+Yes, sure. I guess I need to wait until 6.11-rc1 is out. It's a bit late
+in the cycle for the subsystem trees to accept brand new changes.
 
-This patch looks good to me.
+> I think this is enough that Intel and AMD could now assert that dev is
+> non-null?
 
-FWIW, Reviewed-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Yes.
 
+Thanks,
+baolu
