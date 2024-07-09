@@ -1,126 +1,242 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11020142.outbound.protection.outlook.com [52.101.51.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D0518786A
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 22:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720564114; cv=none; b=qDsntD58bqrUoWjni1vOOMehMuFviwJJ5Ob9n6uDh3flzONK2dTnBrHO0d8rYh7im2Um7K9MVtj9fmvZBRLOMu0nUNJYLhEyxrAoJVpPbkxdPWbPGsMQG1XYHKq6+P0TL5vWzY609J7tjwvI1yJeciK7JWS7uMMHfkXbgfmepGo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720564114; c=relaxed/simple;
-	bh=ch4pEoajc1Hcg13db7SXOy/3RpPUdyRprv37vkUf5bY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IUTdDCXBIiBgRVp3Js7mnTDh+xb7SnruLC0MIOfONXWqIodMTH74BUum67bVE26Th4nL8Sv5d0k+V3bB5eLHpwxEypL1VtzSg2zljRoqOeJS+vjvgN/JeZZ0nYjg02UoSwzbgZWngTi/X0fP8L8mkyAKcvfqhYH/nZd6l1QDntA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pjPsQixP; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A91C14F9C5
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 22:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.51.142
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720564211; cv=fail; b=SSTkgTY9v4H9EXPaOsWehfZBBPDKLBmXEBMM07CoopBqk7SNfleSsajONEZViyqNGL+bD69UUST8lxJWMPsCYR6qj5djAqubE1WiKY9P7qSZMB1QRCil5Aqgh5mHxgv76LNYimcO7QSgTWbt3c126OURwanRSpwjZ3ERLO/z86E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720564211; c=relaxed/simple;
+	bh=8+Dbj+G/JflBlBI8F5gCOl1XxyNoVrl5vpYD5JZV1Pk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=vDit/4fIV1ZPG6W07bR7bxfbKzSWG6OlIzekK4301XtV6ZuuV2qx5xiyZmPodP1tJSXg2BAZ5NWczpJKQEGIV8j+CtLBPaB0Z+9R9lbl6mTeYCu+Ob2DU/Vw8RB617qBdHrn9GNXyAnn8Z4TRNY8BBqtDU+ts00Ua7sSYAxJEME=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=HZKOWLxv; arc=fail smtp.client-ip=52.101.51.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pjPsQixP"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-44664ad946eso36391cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 15:28:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="HZKOWLxv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CNUTkX2wzkbncTRtui3DZ+7Qci0WqY/ummxar74aCJyKhAG1pTiRXcXz02jeUOFbihhp2ph2Srm4pnSaHty1I2haVLI1h8Z3DN0IOD4TwO+tvfF9yrw6Do6xxW3no8dwlpFxND5p6kvL2nGqhvhpWogm1Y0AuUgFKyYzwmBRa0g7Le7fiU/IXUEcjPyozezyOmmTlQlGR1z5aueIG4zzmwzkYPHxeu3Qb15WKejpXIdetIdPxNwAeqPG4Am7qQnIaIyh0tFBs2ATmbfnOAKnM+PspHd/YlaymUH1h9MZV35XaTmLHdbZzrAX02chq57PX5ZO75tduojI7e5HxgkPmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3vVWwHdA1siAl85Om5D0yuWv8t9KHd+lfgc34ftp07Q=;
+ b=GyWaFK7DzZcuZ5su6jsf6y9+rUoX/VwovB0lNrZl1/q8ZcW7Q6+oRiVVESqZqCDzFXXUMPwzW5fPpB42HThWYRg2P+k491HZ8XnC8yOS8e9/1YGHyJjQMv93PP1cZVxpebkI88hWFgFF2bizvyP7J+Lem3Wm+D/eEhj5THOwOb5wn8FF2n2ArhR/97q7PJFTENm4RUvBbM+n6fhIcFZmcXcYKJUoOYb7ESR7vF1CyHId+ylttUNWKGTkgvTQWdvsrp/roY8fqwdzwX4W3a/ZhBbP2Lk0sjNRbs6Hv1NAY6AF+gOXtnn6qdEElOQWkrA7aew53+QzoNDC4IvCZDRa3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720564112; x=1721168912; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RhsBlu6qll24zUY2yKGJJYQBS72AqtpPAo9VnNpUeh0=;
-        b=pjPsQixPzDm3tD8BWMH8nL/mR8J3dENxRh28dzf+atS3EQPXF1+RSKv98NjirMX7za
-         T8U48gsoLeBx4Y83A+zvJkVl7cbXmU1BvEBnPTB4F2PilNOhwDdAdYPG0Pvg03sebz1N
-         fHsttDPqYORa0y2XhWEA2seWcnTkY8hFmE3+xD/YWXk8V9qhkdh7xt1x34QnUGT1gqLW
-         8pZ2WxwSz+2RbO+vZg8YC9lXXo3I3Y948hHr56PNbDnu6tITh8dkKAKq/+ck0qvFQrJ9
-         6CX7saya3FU3tDnuwYhA1gewYT62A+YP+WCtCxF8RWJajeqE4sXarnjrZqg1DS0RlmO6
-         H8/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720564112; x=1721168912;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RhsBlu6qll24zUY2yKGJJYQBS72AqtpPAo9VnNpUeh0=;
-        b=rlLtzqi2n6hai0kjT0zLiFuXTtF/GUBU2RmfPtEZvmWIVdv3Zve+WqxO1iZdwyjYOG
-         ErULdPlameGa3NYLvgI8qgwpbOOwlaEo42hQDwSW2aD0/a3+ZUCkWmrQQfmcXFd7B9Mu
-         4yt3y5+WJFSU02ythnt+O+efcTYcrFzr/9yfSuV3xYrYU3QtzacWAtioqW81oGjL5XEe
-         xYV3sq7yC2eS7BZd0Vdzyinf4qXAK1BaOh1tpyuOvnu8jbIlboBoQFlSXQc2qUe5Y/G2
-         hc3cJ5+q+kf/txC2fD7HuQdzJsBvJnIdlqLTLJmHuYqIU/UIyQY4mUXW55K5z9Lf5WXc
-         3A3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUfcd2k7eHuwLriDB2svKU1eqZP+ayOy1vavreN5RT9D0ItJTYnfD7B63jDPjn2BGWDsLrNgL2rXrI6mCP0AIG+8hpbbl3vMrbwePDY
-X-Gm-Message-State: AOJu0YzzysRzdr6SnkOqx3t6xMIxpLV7vSDyGPrV+8OSyW0XbaCxAdjj
-	CIYHNMcAwhckffCBfl3cmZwUOb2tO2hkwcUkkCfSba1nPtDJZBk9y9uSh2b9T2AGmw/mwBuBmgz
-	zFq3cLnA4OgKyvkDXxee8fwfTIbdExHD1vw7u
-X-Google-Smtp-Source: AGHT+IHeB9je+NxBzMGN6VzuBwrcm7niEoBEFnF9hemcs2GIYWQUqURUMjo2KvD1MmvJR2s2VXNPBW4xff4Hg23gm78=
-X-Received: by 2002:a05:622a:214:b0:444:e366:3fda with SMTP id
- d75a77b69052e-44b1a8fb553mr589791cf.27.1720564111990; Tue, 09 Jul 2024
- 15:28:31 -0700 (PDT)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3vVWwHdA1siAl85Om5D0yuWv8t9KHd+lfgc34ftp07Q=;
+ b=HZKOWLxvtz9xfjuUo5Awdi+HjxiuNOvNKgCOMK5qQ1yFBXN39GVhW5tQ8D0YYWLScJOE2ASi2NxrE2hlDmW4s6x8nHEhIHI7RmDBqwxjuCX+zrVuAZ0Lm1/PxqQdk/nbHs7I6ToDC68EFHdWF1ICOtyWdHpGDEJRRF2T4cs59KU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from BYAPR01MB5463.prod.exchangelabs.com (2603:10b6:a03:11b::20) by
+ CH5PR01MB8886.prod.exchangelabs.com (2603:10b6:610:20f::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7741.33; Tue, 9 Jul 2024 22:30:02 +0000
+Received: from BYAPR01MB5463.prod.exchangelabs.com
+ ([fe80::4984:7039:100:6955]) by BYAPR01MB5463.prod.exchangelabs.com
+ ([fe80::4984:7039:100:6955%6]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
+ 22:30:02 +0000
+Message-ID: <cb0bd817-6948-4944-ab09-4ec2aba41cfa@os.amperecomputing.com>
+Date: Tue, 9 Jul 2024 15:29:58 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v5 PATCH] arm64: mm: force write fault for atomic RMW
+ instructions
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, will@kernel.org,
+ anshuman.khandual@arm.com, david@redhat.com, scott@os.amperecomputing.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240626191830.3819324-1-yang@os.amperecomputing.com>
+ <Zn7q3oL1AE8jdM-g@arm.com> <773c8be7-eb73-010c-acea-1c2fefd65b84@gentwo.org>
+ <Zn7xs6OYZz4dyA8a@arm.com>
+ <200c5d06-c551-4847-adaf-287750e6aac4@os.amperecomputing.com>
+ <ZoMG6n4hQp5XMhUN@arm.com>
+ <1689cd26-514a-4d72-a1bd-b67357aab3e0@os.amperecomputing.com>
+ <ZoZzhf9gGQxADLFM@arm.com>
+ <35f70ba6-5305-4268-b7ba-81545cacd83f@os.amperecomputing.com>
+ <Zo2C4eXr5_9kifyO@arm.com>
+Content-Language: en-US
+From: Yang Shi <yang@os.amperecomputing.com>
+In-Reply-To: <Zo2C4eXr5_9kifyO@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BYAPR06CA0068.namprd06.prod.outlook.com
+ (2603:10b6:a03:14b::45) To BYAPR01MB5463.prod.exchangelabs.com
+ (2603:10b6:a03:11b::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708212753.3120511-1-yuzhao@google.com> <20240708151619.dc738d16d3b2d56d6c4fe285@linux-foundation.org>
-In-Reply-To: <20240708151619.dc738d16d3b2d56d6c4fe285@linux-foundation.org>
-From: Yu Zhao <yuzhao@google.com>
-Date: Tue, 9 Jul 2024 16:27:54 -0600
-Message-ID: <CAOUHufZ42qn4vv+2w2MhFhqHib66s054YaXben28nddbZWRp5Q@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v1] mm/truncate: batch-clear shadow entries
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Bharata B Rao <bharata@amd.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>, 
-	Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR01MB5463:EE_|CH5PR01MB8886:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12fb1027-2f53-445a-e15c-08dca066ac26
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SmF4VjlBRkg3R2YyeGxWaUpaaU5LRXNVd1VobWdGekdTVFRKOHlIYmlTS3l4?=
+ =?utf-8?B?Y2M3MzlWOE9FTzVXYU5MUm0xWTFjUnNGb0Vrd3d4M2grZzhXY2FWVnRiQ01H?=
+ =?utf-8?B?dHlvTnVFYS9Ka09ValZUTDduOVJHV3FXQjhkaW5POGNqajU2ejhtdWhJMDRX?=
+ =?utf-8?B?eU9UbzFWT09lVVVQcmtxWlQ2bUxqRHdYUUl0TVlDY3FDa1ZscDZTNjVaSWQz?=
+ =?utf-8?B?anNCUi9ZaGVNVFo0dHd6eVhmR0dmQkt1bDZ1eEx4VE9iRmVQck01b2w4dTdm?=
+ =?utf-8?B?MWNRd3NDdmhVandacjM2NkdPNGg3ajR5Y2k1L2xlaUhBdTB4UlZNUnpqSTZN?=
+ =?utf-8?B?MVkyQmVXMEJoc2lSaHRjMENlZkNHbHJzSmRaQytQY2lBZEhDeG8zVUNRTVQz?=
+ =?utf-8?B?SzJWUU01MHlOWHZuWGVYcjQ3dDhvWXBaZUcwMjBQUEZRK3R5cVBxUTZOcWNP?=
+ =?utf-8?B?YkRHeHhsV1JiYmNTNXJJUUwycy9Ma2lrTDJQT1J0K3U3SFhySm82VTg5cmIr?=
+ =?utf-8?B?ckh0QjY0VU13bUpSNGJibGs5Sk5LVWdlOXhLeDFYU0JJL0Ywa2tGL0lrOGM3?=
+ =?utf-8?B?bHpsbWI0RmFZZXhscmRTYU5UTVpjNkMvZ2RmM2FMQ0RSZnRXazZNdTVNZTNS?=
+ =?utf-8?B?YzlrMjh4R2I5Z0RLYURpc2tJcFNYemphRVF1cm55Z2tsSzZRSUpTMmRRMUwz?=
+ =?utf-8?B?ZEIvWlZRRmFra05wMHRpZjFoamh0K2pHZ296OEpmd0hHVmRQdGdLdlhrWnpm?=
+ =?utf-8?B?allSdWdaaCt5aHlWek5xOWJxQWZoZHoxQkNrTytpdm1MVm51L2QyNVZqWnVJ?=
+ =?utf-8?B?NDNNc0hKZ3F1NzlpcDRBQStXK3o4ekYwaTRWMkVCbXRYTjdzVnpuWkdTWDBI?=
+ =?utf-8?B?ZUxJQXFOZ0VoZlZJcUVpcDJMT3JUWVNjd0oreWVYN3R0bkZXUjRjd2lQeU0y?=
+ =?utf-8?B?M1hSWFRhNmNkblhYNllpMDlhZnphQ2JZVG16QUZhaVIxM3hVM0UyRk4yb1ZE?=
+ =?utf-8?B?bmIrdWFLaUgyeTRjMk5qMzcreDhYYTRsUzc5MGhCYjIweDlQcHNTYmU0Mmww?=
+ =?utf-8?B?ZWdCd1RGTVVTV21oblRCMVV4bm1nNVNmMzBlYms4SVNjdTN0alR1bGppZUQ5?=
+ =?utf-8?B?WWVtMWtiTnpxbzViOWdFOXR0eWt5M3lZQzZxRmUwb2IrUEJTeVVrQUZua05V?=
+ =?utf-8?B?bjJXeEw0UW1ERTQ0SFJWODFaRUZGYkJxbHJHOVFJdVY1OVJ3SndCNE5ERkJh?=
+ =?utf-8?B?OFdlMEMvL0d3NGtPZFpKNzZQOXJaR1RvUktvdDY5MnpWTldVMDFZOWVPaWdr?=
+ =?utf-8?B?VzViU281TzN5QmxzT2ZFYUY5UnZXNjRXZ0tROERKOERDY0VpWk9PMWROYzAx?=
+ =?utf-8?B?SlZqRmpvVmpnZXdvcjB1c3JXYk9CT09Xd1FvOFNqSSt3d1ZYTE5aWk5pbGlF?=
+ =?utf-8?B?am9BRS9wL1ZRWlY4dTRVM1V6bFo5cWtQMUYrSSs4NzRYa2dCZ21mbGZZNXU0?=
+ =?utf-8?B?VXJNcE40bTUrSnVCNlpuaXhZakVsOHZpb0k5VmdvK3NTZHhNS1pGdzVTZ1ha?=
+ =?utf-8?B?bFBxVG5RMDhJME1TV0IzVTBxSzU2eFl4UDFmUDhWQ0lCcHI0ZHFqZjJRYURU?=
+ =?utf-8?B?K0tqVEw4bjYzcDNMRUZ3TjFCTHV4VWhHL296ZDZyWTJOWW5KUC9vS3ZlSjZl?=
+ =?utf-8?B?cDJ2ZzhsRlRSWXNqZWZaK1Y5dzFtODg0SHQrMDNObFowS3NYTVkycXFnQ3lX?=
+ =?utf-8?B?NGp3dTY1NW53cGpzakx4alk4ZlRMSWp2NFpIcE5qVnNJUC9GaERBUWxnQzZE?=
+ =?utf-8?B?SkhObVArS2FwdDA3QmlrQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB5463.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YzdVRGlFWlFpZ2NvY2M1VXI2bE03Ym1MRTZSbERtc0s5VVhZVHN0RHRQRmtq?=
+ =?utf-8?B?b3piZDBiT3B0cHBENWpOYVFsM2ZsR1BGbElUV2M2bGlZOE1zQTdPVFVKZ05u?=
+ =?utf-8?B?bmNyeDVlL1VEVW9ReFZLT2dlQ1VwcGpSNEo3b2pSdGhiOXBnKzArRnVSazRB?=
+ =?utf-8?B?ZUhMa2xzemw4aGhyTFNsdDNreUVicGdIQ1lwVFdlbmRZWDhFdzZ0TWNBWmNL?=
+ =?utf-8?B?aGNMSk94SFFIdEN0cUVPWGdxV3g5R2l0QVVPWERzZlhhbGpObDBxbVY2Nlcr?=
+ =?utf-8?B?NHkzK0swelZmeXUzeUp2MEdRUjNkVVA5SWt2MGIzR3Mxek12N29hYm55b2xJ?=
+ =?utf-8?B?NGoyZmhBak1Fd2lRRWFYcWNJb0tXQVdtdFVMdko5MGQxRHhvM0YyZTNtaCtW?=
+ =?utf-8?B?WWRkWGNzTU1NRUhjZnJLdk40T2VVZnFjcUU2Y1NDUDJlSUV6dzdFNGdPMndl?=
+ =?utf-8?B?SjU2UHMzeHE2eHo3VUhoSHhKUmhWN0dHelg3Mk9YcTIvR1hDNHNmQlZZSGww?=
+ =?utf-8?B?cTR5V3dKKzlsbGQzK1J5SW1nZTc2SVFtUmtQcVcyc09VWlN0Mm5vMllkd0hV?=
+ =?utf-8?B?d1JMeTh1SDFzQmJxZkNTcmp2Nko5eWdDVWNxd1JqbGt5Rmdhd1FxMU5rN0RE?=
+ =?utf-8?B?b1d1NE41TnRSc2hVMzBWYlA2dkJZcUYvK1p5Mmtac0d5MG9GeDRGdDJ3dU93?=
+ =?utf-8?B?ZERlZXhqcnUrVlVnZDFxd3NTMzd0NFBJY1BwV3ZLNzNMSEtEUnl2anR1c3pU?=
+ =?utf-8?B?NXZlK0poSWJybTRzenMydzJGUktGM0ZMNkIyM0dqS3o3VDMxUm9lblR3T3Nv?=
+ =?utf-8?B?SlBya2tsQTVuK2pxNE1Wa0Q2cmI3MkFYSUw1ZTFhaElvNG40dzJGclhiMFhv?=
+ =?utf-8?B?QktuUTNZZ0RwMGZTS3k5b1BwclBDeERhOWptanVVMDhTNmk2NHR6WlQyS0or?=
+ =?utf-8?B?djEwcURjcTdyZ0g3OUgrakJ6aUxWbGcvOHBSMlZZRGFTUld5cnpTalJEYWhh?=
+ =?utf-8?B?cTlqb0lVOENMRU8rcDNZeThRWWdRU2c4ZE5ycnlqamV3bFpYRW5TQlIrYVYz?=
+ =?utf-8?B?eXBhTUczOGszRGpua1ZnYno4ZVA3U0tzK1Yxa0lNaXdKY05EWmhndno5dkFM?=
+ =?utf-8?B?eGZUSTdGZ3NEYnY1Umd3Zi80dUpJdXpnK3BUaVJmQ2JtNXNlTEdOeko1a0Fx?=
+ =?utf-8?B?ckk3YW45em5UcW9TWHE4SndZOVRrWmdkS05HN25vbGtFMDMvQjB5TE1nTGgx?=
+ =?utf-8?B?UVpydnNtcUlYK0tPRFlMd2U0UjBWSXpnK0FsRXZrVGl1UFN3ZmxDZEttcVh4?=
+ =?utf-8?B?eU5MaXpGT0NYY29Za3E4c2paNkpLZklLZzVXejRQTk1zM1BBN0pXckU1WWF3?=
+ =?utf-8?B?anJab0J0dkxLNmw2L0tvMWdrZjJYVlNmOFpxcExqbjd1YnFGeVVlY3prSThK?=
+ =?utf-8?B?eWNzVWhnUjZUZ09VdFlzbmVYZGZEc3FaNW1HZlF0RVg3UHEzdE8waFNodEY2?=
+ =?utf-8?B?ajFpZktNUk9pL3VQcEVPVHJzdkkrMnFIclpwakVWbnRhQzk5UHNOSHBEMk8r?=
+ =?utf-8?B?ckQzaW1GS05tcEtaR1FodURHODN6WThWd0VjMVRBWnJxekwrbGJ5b1BSU1BO?=
+ =?utf-8?B?d2tSTkxpMC9EOFVWMXVrK2dZZEZKYjFaTEpaZHRVWlBJaC9vL3YyNlZtV0RF?=
+ =?utf-8?B?UWZsQlY5NHRqaDFUaFNYeXFZcEk4bGVYRDROK0pWalZGc0o4MjZYNElTTzFO?=
+ =?utf-8?B?Q0d5UDl1b1FBVUwwNmFlT2YrQnZiMVNQTGVzRWg2ZGN5NjFlU0E4blVGWXBK?=
+ =?utf-8?B?SHE0b3czSlRtdFBCYVBUSFhsdU80aStqb3VmQlNRR0o5eGplVUNxTTY4Qmhs?=
+ =?utf-8?B?VHNNN2hSZkJkaWVnWXZrM0M3OEEyVm0wNk4yTGsyRGpLeWxjZWpQMHZvUk5E?=
+ =?utf-8?B?bHJLbS9tNjUyQnl1YTV0U3JzaDh0djZZSFVXVnpUUHhmalZkVW9WYmFudFlX?=
+ =?utf-8?B?U09RbG1UakNHYWRSRWhuYVN1RGgzVExnbkUxNm5ONVZiaGdEWFlWbjk3c3JV?=
+ =?utf-8?B?b2FFS0d6ZEluMGxtc2FoNDZqY1AyWkNPSnlhVTBwbEN1Mkk4K05Ndmx3NnlY?=
+ =?utf-8?B?M0NVOFR0bEVOMXM5MlZMd2MveVZsbERKZW1NbStXdDdZUmRPNEQwaDdwMWlV?=
+ =?utf-8?Q?bv3Fue8BStmcbRZsBybIOS8=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12fb1027-2f53-445a-e15c-08dca066ac26
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR01MB5463.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 22:30:01.7995
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 13tqBBJ2tSWZItuunm/W9gcaL909Ljy3YM3d0Fbh7WIZqdN5LyjCWe1PP/uo4Owi4xGPDruF1cDi/w1JYM2gVefyRwsAy0SyNndSEtTWf20=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH5PR01MB8886
 
-On Mon, Jul 8, 2024 at 4:16=E2=80=AFPM Andrew Morton <akpm@linux-foundation=
-.org> wrote:
+
+
+On 7/9/24 11:35 AM, Catalin Marinas wrote:
+> On Tue, Jul 09, 2024 at 10:56:55AM -0700, Yang Shi wrote:
+>> On 7/4/24 3:03 AM, Catalin Marinas wrote:
+>>> I haven't figured out what the +24% case is in there, it seems pretty
+>>> large.
+>> I think I ran the test much more iterations and I didn't see such outlier
+>> anymore.
+> That's good, thanks for confirming.
 >
-> On Mon,  8 Jul 2024 15:27:53 -0600 Yu Zhao <yuzhao@google.com> wrote:
+>>> What you haven't benchmarked (I think) is the case where the instruction
+>>> is in an exec-only mapping. The subsequent instruction read will fault
+>>> and it adds to the overhead. Currently exec-only mappings are not
+>>> widespread but I heard some people planning to move in this direction as
+>>> a default build configuration.
+>> I tested exec-only on QEMU tcg, but I don't have a hardware supported EPAN.
+>> I don't think performance benchmark on QEMU tcg makes sense since it is
+>> quite slow, such small overhead is unlikely measurable on it.
+> Yeah, benchmarking under qemu is pointless. I think you can remove some
+> of the ARM64_HAS_EPAN checks (or replaced them with ARM64_HAS_PAN) just
+> for testing. For security reason, we removed this behaviour in commit
+> 24cecc377463 ("arm64: Revert support for execute-only user mappings")
+> but it's good enough for testing. This should give you PROT_EXEC-only
+> mappings on your hardware.
+
+Thanks for the suggestion. IIUC, I still can emulate exec-only even 
+though hardware doesn't support EPAN? So it means reading exec-only area 
+in kernel still can trigger fault, right?
+
+And 24cecc377463 ("arm64: Revert support for execute-only user 
+mappings") can't be reverted cleanly by git revert, so I did it manually 
+as below.
+
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index 6a8b71917e3b..0bdedd415e56 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -573,8 +573,8 @@ static int __kprobes do_page_fault(unsigned long 
+far, unsigned long esr,
+                 /* Write implies read */
+                 vm_flags |= VM_WRITE;
+                 /* If EPAN is absent then exec implies read */
+-               if (!alternative_has_cap_unlikely(ARM64_HAS_EPAN))
+-                       vm_flags |= VM_EXEC;
++               //if (!alternative_has_cap_unlikely(ARM64_HAS_EPAN))
++               //      vm_flags |= VM_EXEC;
+         }
+
+         if (is_ttbr0_addr(addr) && is_el1_permission_fault(addr, esr, 
+regs)) {
+diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
+index 642bdf908b22..d30265d424e4 100644
+--- a/arch/arm64/mm/mmap.c
++++ b/arch/arm64/mm/mmap.c
+@@ -19,7 +19,7 @@ static pgprot_t protection_map[16] __ro_after_init = {
+         [VM_WRITE]                                      = PAGE_READONLY,
+         [VM_WRITE | VM_READ]                            = PAGE_READONLY,
+         /* PAGE_EXECONLY if Enhanced PAN */
+-       [VM_EXEC]                                       = 
+PAGE_READONLY_EXEC,
++       [VM_EXEC]                                       = PAGE_EXECONLY,
+         [VM_EXEC | VM_READ]                             = 
+PAGE_READONLY_EXEC,
+         [VM_EXEC | VM_WRITE]                            = 
+PAGE_READONLY_EXEC,
+         [VM_EXEC | VM_WRITE | VM_READ]                  = 
+PAGE_READONLY_EXEC,
+
+
+Is it correct? Just wanted to make sure I did the right thing before 
+running test.
+
 >
-> > Make clear_shadow_entry() clear shadow entries in `struct folio_batch`
-> > so that it can reduce contention on i_lock and i_pages locks, e.g.,
-> >
-> >   watchdog: BUG: soft lockup - CPU#29 stuck for 11s! [fio:2701649]
-> >     clear_shadow_entry+0x3d/0x100
-> >     mapping_try_invalidate+0x117/0x1d0
-> >     invalidate_mapping_pages+0x10/0x20
-> >     invalidate_bdev+0x3c/0x50
-> >     blkdev_common_ioctl+0x5f7/0xa90
-> >     blkdev_ioctl+0x109/0x270
->
-> This will clearly reduce lock traffic a lot, but does it truly fix the
-> issue?  Is it the case that sufficiently extreme loads will still run
-> into problems?
 
-I think Bharata was running extreme loads. So I'd say it's good enough
-for now, considering truncation doesn't happen that often.
-
-> > --- a/mm/truncate.c
-> > +++ b/mm/truncate.c
-> > @@ -39,12 +39,24 @@ static inline void __clear_shadow_entry(struct addr=
-ess_space *mapping,
-> >       xas_store(&xas, NULL);
-> >  }
-> >
-> > -static void clear_shadow_entry(struct address_space *mapping, pgoff_t =
-index,
-> > -                            void *entry)
-> > +static void clear_shadow_entry(struct address_space *mapping,
-> > +                            struct folio_batch *fbatch, pgoff_t *indic=
-es)
-> >  {
-> > +     int i;
-> > +
-> > +     if (shmem_mapping(mapping) || dax_mapping(mapping))
-> > +             return;
->
-> We lost the comment which was in invalidate_exceptional_entry() and
-> elsewhere.  It wasn't a terribly good one but I do think a few words
-> which explain why we're testing for these things would be helpful.
-
-I'll put the original comment back. It seems to me it was stating the
-obvious, and I don't really know how to improve it since it's obvious
-;)
-
-> I expect we should backport this.  But identifying a Fixes: target
-> looks to be challenging.
-
-I wouldn't worry about backporting, nobody else has run into this
-scalability issue (not even a day-to-day performance problem).
