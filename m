@@ -1,115 +1,237 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528F21527AF
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7342B154BFF;
+	Tue,  9 Jul 2024 08:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720513392; cv=none; b=pNMdvxyCE6OfjxrlhSS0zTyQz6bZ3WLhcE07KfRSGeG4WloeqdxhNpMhyRlOA1oXJXgQ4/M00eGYlSyYKL8lJERLslIk+bJXLY3v7+0E8W1+lCg2E4N2EJ/UZMTlE531YxLVZxaRFi3SkU3UhiyT0RV7Ro8K/7jeKM/v0qAoKZI=
+	t=1720513395; cv=none; b=Ob4dkFFhYmLWROmsSIL8QQ8FyHXeAl3iqmo9hOgxi+UFnIjcglbslDXteQEiGHcipzwComG4kSZMcNI+Ol5+CyDVxmR/OulxMvlmWREWqqin8m4O9JExhhHSvKbewXrWUplC5ZutzUjhrmgYg3YWXh2VtE/BVbF8PUAlvtvLZE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720513392; c=relaxed/simple;
-	bh=7Z6us27qIuTlxBXAFyHcsMvVHOHakLdFL2jtnKejVHs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MJD+ibtFECDABtLuqql0L31Jh2hkQltz8wlFqe+u0gRSB9Xaid0zMdgweK1OYNoXYSmdOkl3zam9uDXAF4IWejhwBy8OTHTFJqKrdoacyoIks9OV8p4HGAh7Ih0L4xqZ1jHuSdq/KPolfFMj96ZpVRVtIY2iZZ3mNMWTfeVVKEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ps7cKKMW; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1720513395; c=relaxed/simple;
+	bh=j3+Fqcv4SuXIX+AP4voaXbaU8e6nuOk+mCcXfqpFsQA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=F8ioURXyyBvVkvEZmJ1h8+5blPbKdUsSkypK4C8IljDlCVoGsIevG7GJ5wobkKv9g7/6w/mpd/0aQD3gdxeEAuVdVkzrIqwjnWE8HGalkhsP8cRsEyNcu2fJAvMQvAFIEbsPyc+p7Vgjs0IL5Q63pXuPOkPOz+JL7AQIGcPEVH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IRqZBPEJ; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ps7cKKMW"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ee77db6f97so66372581fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 01:23:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRqZBPEJ"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-70af8128081so3025011b3a.1;
+        Tue, 09 Jul 2024 01:23:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720513389; x=1721118189; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1720513394; x=1721118194; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5HGUof91eotwEdfihh0OBz6TKkOSwGergxDj8SELw6I=;
-        b=Ps7cKKMWaMTKxEmOaxW2SSN1nAfCJPz6BUI9yUb5R+1Hm2jZP6T8nfYP/vZjlowFcW
-         hIBH7U7vvLaGuaIEM1P4QKmFqkOe8Oc1X8cenBPAM1GSzTUMn/y46cDEu4F0dYX0UZoy
-         riRBiN9OIjZ5RGna8dNQ1pZwK2uVKWZyVoBOykaEiahCfzw+qfhcYizaHC0icIsGlaDE
-         V08bdSUHK+r3Dl7wvZoe7i5/3wj3+J9MglilMO5HVGLXv+Oeg+4KcDw7nG5Y1Hrlehag
-         qNEOkyMYEVCnfaFOKxbC/QXQWBMCyK12gSnHRRpW2h2HfbYOiXmRumYVjBsru+v6w+L9
-         JtBg==
+        bh=29S9tCNcE/YwkqoQYa1nGmQDJhmHQQbSPi7L9uy3DQY=;
+        b=IRqZBPEJFY9RXYKtf/Qc4MLqdEnwUMyA59bFP5qIDPy6vnwxz7BnwazBoX1UrBAj8C
+         Gp+PaAbs4dd7U1us62rSyvtyK+6yttsf02/+CVjJlb7o5c538me8Bxuh+hG8F4DhtqTx
+         mU0AI9KUx5rG+4sY5X/ZLM/NWaFTvE6nLZGzAsgA8zQbRdkmLaxHPwHLjY0lyyHij2lP
+         DYyDfBzfcmUgVu1gtT+MypEG1rGe1StN0ktBpuPSVFeXzYp6HQx7WLnqj6ajOJA67Ldt
+         hotnOhydiKTAhiPGH0EkYKk8QWMFkBvXoVEM9zAnC4VS7t7Uc050rT6/DC1Uq6/d8HxE
+         KWFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720513389; x=1721118189;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1720513394; x=1721118194;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5HGUof91eotwEdfihh0OBz6TKkOSwGergxDj8SELw6I=;
-        b=J38HLsgobfjPZdb9wrB5JUTq1WETt4MC+3guScC+3Kjz9W9kKcY65G+uUY4cHn1L3n
-         R9Ni+H5Y+k4t4sIw/16oRZIfnAeGUm5i9TM3796ngcC/gAgWtfKRedIXKK5qgJgnJL8I
-         R+dPJQ/l5EWwZtMhBsvubY6LIplp9zO3obMdw/uT/OJ6l1HKM34f478mE6+yILdCz2Qc
-         UcUg1lrGrvIS5xIVgeJ6EmpyEtMRqQwOaGOhzbjOimIeKVs4qfUqpwJJHfcUCAsd8uWW
-         WW5nx+XMrJvKgDnrnwJVjq6S5nvmLVa5yjVDoLf39zwcbbBYA1XCcRWc9trhzLzqCz1y
-         CQ3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVeKjRVI5R3tmAfc43gGBAQfSENbfHYoNwwNEjrbqGDXSNtX5zah9BW58eKgw2d8S/oZ4/jd2B0b8rI0tE64YaFJw0J2Kiyxzd53+LO
-X-Gm-Message-State: AOJu0YxmRG5Yh2WHmb55kSZxPXDTo6cbHXx5p6FTD3WuKh+UUhQfWP0m
-	Cvv0EekkQsHfT+0dpdfEpB+OBKI7Dz8EvYdqntHDGAVDUKgyWtw23eLCkzA6i2yRo96bXcqvZ/Y
-	TMT8eo2qJixbkOEBUxHs2PEXXkru81++hxzNvew==
-X-Google-Smtp-Source: AGHT+IEjr783ZzbCEinWzyI7wDmtA25dbr46RPbhoYwSLTpW27laIhd76XiAAgguwAZROdppDcw7BBgS+Ujd64hgPcs=
-X-Received: by 2002:a2e:a316:0:b0:2ec:5945:62e9 with SMTP id
- 38308e7fff4ca-2eeb316b47bmr13784661fa.32.1720513389359; Tue, 09 Jul 2024
- 01:23:09 -0700 (PDT)
+        bh=29S9tCNcE/YwkqoQYa1nGmQDJhmHQQbSPi7L9uy3DQY=;
+        b=cut0SCz/fxk0bjHxHEhK3mXT54ZCMRihRdBvL/0+9Wig9f2RonENcLUjkKv32F+uhy
+         EpkhrxdoLlALhfGvsZ0qi5IN7X5RiwbdJpLSIBVeEShllZQjXi/3W5cGynjT5OSVsKhS
+         oADpjxDqn4iaSQIwaWELC9QUq5r9574BGYleX0nuDXGlKccFOOS5l63DVyHaO61PcxyB
+         Av499nTTwW+YX/W3YC0SP6my4Rc/pikf1Pz8sS9vw7p1duELEuGzLx0AyS3wPb0wCZyi
+         ba72PhwnZpTjrbj7fglqjCz1QPWDp2OChGMT6Y1CqWTma/1wSGTNGNHRniWD5alAg8PV
+         OLRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXCXzAiwzOToQpWS9SR2PvmGFwkghXs6PCnN13YXnASkh++ce0YgfV2x67DxtHNRP2PpfAaL0IjKtoAFj1jgOe2a1VJv0mC8++SpEcu
+X-Gm-Message-State: AOJu0YzJb6X6jCcrLaYG9v5ZcimFsj3sBgv5mar8q3kXid1UxehQNF+g
+	ImEIPbDDd0F4+nSUJzE+XgnqHgr1BioV/u9PQazBmIIjDPJqBJq1f4LQbw==
+X-Google-Smtp-Source: AGHT+IFP7v9XA+038juiIKo9wMYKaZosf3yLoyyuExumRzoZB0Txu2gnsXX83zEVAqRtpk376wQ+bg==
+X-Received: by 2002:a05:6a20:db0c:b0:1c2:93a7:2541 with SMTP id adf61e73a8af0-1c29822d122mr1658758637.24.1720513393543;
+        Tue, 09 Jul 2024 01:23:13 -0700 (PDT)
+Received: from localhost.localdomain ([129.146.253.192])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2c99a92a430sm9588929a91.4.2024.07.09.01.23.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 01:23:13 -0700 (PDT)
+From: Furong Xu <0x1207@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Joao Pinto <jpinto@synopsys.com>
+Cc: netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	xfr@outlook.com,
+	rock.xu@nio.com,
+	Furong Xu <0x1207@gmail.com>
+Subject: [PATCH net-next v1 4/7] net: stmmac: gmac4: complete FPE support
+Date: Tue,  9 Jul 2024 16:21:22 +0800
+Message-Id: <7cc2f0bd9216a4d34b6a937c22a14acc7e6cc5b2.1720512888.git.0x1207@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1720512888.git.0x1207@gmail.com>
+References: <cover.1720512888.git.0x1207@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703181500.28491-1-brgl@bgdev.pl> <172049643096.15240.14162761125981219295.git-patchwork-notify@kernel.org>
-In-Reply-To: <172049643096.15240.14162761125981219295.git-patchwork-notify@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 9 Jul 2024 10:22:58 +0200
-Message-ID: <CAMRc=McHFoVEJrMM6UpOZY2Ct7PvuQd-yPeWquUPNYHfDYkSww@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 0/2] net: stmmac: qcom-ethqos: enable 2.5G
- ethernet on sa8775p-ride
-To: kuba@kernel.org
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk, 
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bartosz.golaszewski@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 9, 2024 at 5:40=E2=80=AFAM <patchwork-bot+netdevbpf@kernel.org>=
- wrote:
->
-> Hello:
->
-> This series was applied to netdev/net-next.git (main)
-> by Jakub Kicinski <kuba@kernel.org>:
->
-> On Wed,  3 Jul 2024 20:14:57 +0200 you wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Here are the changes required to enable 2.5G ethernet on sa8775p-ride.
-> > As advised by Andrew Lunn and Russell King, I am reusing the existing
-> > stmmac infrastructure to enable the SGMII loopback and so I dropped the
-> > patches adding new callbacks to the driver core. I also added more
-> > details to the commit message and made sure the workaround is only
-> > enabled on Rev 3 of the board (with AQR115C PHY). Also: dropped any
-> > mentions of the OCSGMII mode.
-> >
-> > [...]
->
-> Here is the summary with links:
->   - [net-next,v3,1/2] net: stmmac: qcom-ethqos: add support for 2.5G BASE=
-X mode
->     https://git.kernel.org/netdev/net-next/c/61e9be0efbe8
->   - [net-next,v3,2/2] net: stmmac: qcom-ethqos: enable SGMII loopback dur=
-ing DMA reset on sa8775p-ride-r3
->     https://git.kernel.org/netdev/net-next/c/3c466d6537b9
->
+Introduce dwmac4_fpe_ops to complete the FPE implementation for DWMAC4
 
-Hi Jakub,
+Signed-off-by: Furong Xu <0x1207@gmail.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/hwif.c    |  2 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h    |  1 +
+ .../net/ethernet/stmicro/stmmac/stmmac_fpe.c  | 85 +++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_fpe.h  |  2 +
+ 4 files changed, 90 insertions(+)
 
-Does picking these patches up now mean they will still make the v6.11
-merge window? If so: could you also consider picking up the associated
-PHY changes[1] as - with the DT changes already in next - this is the
-last missing bit allowing enabling the 2.5G ethernet on the
-sa8775p-ride-r3 board?
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+index fc9f58f44180..655012ffbc0a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+@@ -216,6 +216,7 @@ static const struct stmmac_hwif_entry {
+ 		.tc = &dwmac510_tc_ops,
+ 		.mmc = &dwmac_mmc_ops,
+ 		.est = &dwmac510_est_ops,
++		.fpe = &dwmac4_fpe_ops,
+ 		.setup = dwmac4_setup,
+ 		.quirks = NULL,
+ 	}, {
+@@ -236,6 +237,7 @@ static const struct stmmac_hwif_entry {
+ 		.tc = &dwmac510_tc_ops,
+ 		.mmc = &dwmac_mmc_ops,
+ 		.est = &dwmac510_est_ops,
++		.fpe = &dwmac4_fpe_ops,
+ 		.setup = dwmac4_setup,
+ 		.quirks = NULL,
+ 	}, {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index bd360f3ea784..7b19614c611d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -685,6 +685,7 @@ extern const struct stmmac_desc_ops dwxgmac210_desc_ops;
+ extern const struct stmmac_mmc_ops dwmac_mmc_ops;
+ extern const struct stmmac_mmc_ops dwxgmac_mmc_ops;
+ extern const struct stmmac_est_ops dwmac510_est_ops;
++extern const struct stmmac_fpe_ops dwmac4_fpe_ops;
+ 
+ #define GMAC_VERSION		0x00000020	/* GMAC CORE Version */
+ #define GMAC4_VERSION		0x00000110	/* GMAC4+ CORE Version */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.c
+index f6701ba93805..97e404fac56a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.c
+@@ -6,4 +6,89 @@
+ 
+ #include "stmmac.h"
+ #include "stmmac_fpe.h"
++#include "dwmac4.h"
+ 
++static int __fpe_irq_status(void __iomem *ioaddr, struct net_device *dev)
++{
++	u32 value;
++	int status;
++
++	status = FPE_EVENT_UNKNOWN;
++
++	/* Reads from the MAC_FPE_CTRL_STS register should only be performed
++	 * here, since the status flags of MAC_FPE_CTRL_STS are "clear on read"
++	 */
++	value = readl(ioaddr);
++
++	if (value & FPE_CTRL_STS_TRSP) {
++		status |= FPE_EVENT_TRSP;
++		netdev_info(dev, "FPE: Respond mPacket is transmitted\n");
++	}
++
++	if (value & FPE_CTRL_STS_TVER) {
++		status |= FPE_EVENT_TVER;
++		netdev_info(dev, "FPE: Verify mPacket is transmitted\n");
++	}
++
++	if (value & FPE_CTRL_STS_RRSP) {
++		status |= FPE_EVENT_RRSP;
++		netdev_info(dev, "FPE: Respond mPacket is received\n");
++	}
++
++	if (value & FPE_CTRL_STS_RVER) {
++		status |= FPE_EVENT_RVER;
++		netdev_info(dev, "FPE: Verify mPacket is received\n");
++	}
++
++	return status;
++}
++
++static void __fpe_send_mpacket(void __iomem *ioaddr, struct stmmac_fpe_cfg *cfg,
++			       enum stmmac_mpacket_type type)
++{
++	u32 value = cfg->fpe_csr;
++
++	if (type == MPACKET_VERIFY)
++		value |= FPE_CTRL_STS_SVER;
++	else if (type == MPACKET_RESPONSE)
++		value |= FPE_CTRL_STS_SRSP;
++
++	writel(value, ioaddr);
++}
++
++static void dwmac4_fpe_configure(void __iomem *ioaddr,
++				 struct stmmac_fpe_cfg *cfg,
++				 u32 num_txq, u32 num_rxq, bool enable)
++{
++	u32 value;
++
++	if (enable) {
++		cfg->fpe_csr = FPE_CTRL_STS_EFPE;
++		value = readl(ioaddr + GMAC_RXQ_CTRL1);
++		value &= ~GMAC_RXQCTRL_FPRQ;
++		value |= (num_rxq - 1) << GMAC_RXQCTRL_FPRQ_SHIFT;
++		writel(value, ioaddr + GMAC_RXQ_CTRL1);
++	} else {
++		cfg->fpe_csr = 0;
++	}
++
++	writel(cfg->fpe_csr, ioaddr + FPE_CTRL_STS_GMAC4_OFFSET);
++}
++
++static int dwmac4_fpe_irq_status(void __iomem *ioaddr, struct net_device *dev)
++{
++	return __fpe_irq_status(ioaddr + FPE_CTRL_STS_GMAC4_OFFSET, dev);
++}
++
++static void dwmac4_fpe_send_mpacket(void __iomem *ioaddr,
++				    struct stmmac_fpe_cfg *cfg,
++				    enum stmmac_mpacket_type type)
++{
++	__fpe_send_mpacket(ioaddr + FPE_CTRL_STS_GMAC4_OFFSET, cfg, type);
++}
++
++const struct stmmac_fpe_ops dwmac4_fpe_ops = {
++	.configure = dwmac4_fpe_configure,
++	.irq_status = dwmac4_fpe_irq_status,
++	.send_mpacket = dwmac4_fpe_send_mpacket,
++};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.h b/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.h
+index 84e3ceb9bdda..efdb5536e856 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.h
+@@ -4,6 +4,8 @@
+  * stmmac FPE(802.3 Qbu) handling
+  */
+ 
++#define FPE_CTRL_STS_GMAC4_OFFSET	0x00000234
++
+ #define FPE_CTRL_STS_TRSP		BIT(19)
+ #define FPE_CTRL_STS_TVER		BIT(18)
+ #define FPE_CTRL_STS_RRSP		BIT(17)
+-- 
+2.34.1
 
-Best Regards,
-Bartosz
-
-[1] https://lore.kernel.org/netdev/20240708075023.14893-1-brgl@bgdev.pl/
