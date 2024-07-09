@@ -1,203 +1,229 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E117156967;
-	Tue,  9 Jul 2024 10:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C89155329;
+	Tue,  9 Jul 2024 10:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720522338; cv=none; b=o4m8byBitGemWOoeJI4qg+AEkqH/kUr4Q5Ppoz6r3KWBR0rYDiSy/L0Uo11uBQVSHpH/0bk1iaA10hZRcW/+IRBPx21/aebWLsSitvBlvaOgLGWPYuymM6d9J6Bu6zTq0Dv2ck8LSfNwCjzky7MSlRBXCSRGh2ciACScfpkcEr8=
+	t=1720522339; cv=none; b=JhNigAN3amIjBCzZahnPjNxHO6rBkmGvl+N8e9KKhhGt2Ae3nGSSi/lnYKwbB6H10kejTmQlQ8bgdn8EyLpyhqdIEoTGxTY2XDZ0mFJwuhmU35jEZJOHk9m+qddr3qBTJjvsgn60WeJ33STtGiywebRTeJiyfF3wBdmccMNkrHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720522338; c=relaxed/simple;
-	bh=YdQdM4xh2TvaXiWwL+MAEKPz4S6pTyKfrWoVs5MiXbc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GCJOK4qHALaTn7NTac3JF/VcyAMWU3y6B80qKfCKNWb9rZ+QADKZna5nwMU2P6lwjkVMvmBNZfJTTOzg9HRU30nVdVtLnnERtFT8VxGD1gXw4nSoD+4t7bJ/ktFspj2/UOTNesDXUEXo0YkgiIIACinJVAEha3WFXMzCRcqq4IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I0ET5kgq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720522339; c=relaxed/simple;
+	bh=FRgjCLcJ6MXfKDSYddl5jo5cz8bvhM5ilxUGSXDAteA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fy8ocqqH+/wWzOA+m1Uygm/OMNlWzK01M+1GMT1kukoz610K7yOsnp3VbpG7dvkbhSFTtZIu1KA0Oal7pizxq89oLoybAQRIPH0SO/6XKPNiGJ7Qhv/RDbJJPfKI9TNAUppMG79TWtrExxoeXw2uGtjX7cgOihwFD3imF9IOFZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cbZmbl0b; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I0ET5kgq"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46919w0X003975;
-	Tue, 9 Jul 2024 10:51:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	jtlchnQOp+qiPnzd0Np2Gdw+hp5nOtyxLmguasiBaZ8=; b=I0ET5kgqIqnTLexz
-	kQDobNNWzQMUda0c/lsLbz5436ybQBkMjJgevy+0HlCWVknwCVbWcelEdZlN6Jgn
-	GlbXfRm/kRew/Xdp1xutO7BqY/OuhYrLYtWzu3eSIGQuTUjWimGM7YZfZOmgkeuV
-	LlEdTywnVVsg1pn41SyWYIbKwta9KxFXHhRNKpXY+4ZfUM3eQxRxQrwgSPhePzjb
-	j9noYa0afvaaBDpdqWftJHO1AT0XlVh7ISwd8YA2mR+Cpem86wEpPVTRdxltDSXi
-	4oEMPkyCExsPCQ3i2okkBoG0lfhF5YXYIWf0ITlauUGbrjCnceHCyRhjyjeJaR6J
-	x4X5aQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wmmpap3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 10:51:49 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469Apm2n023176
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 10:51:48 GMT
-Received: from [10.216.26.146] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 9 Jul 2024
- 03:51:42 -0700
-Message-ID: <6adaca81-2751-ae48-850c-453a34c0e341@quicinc.com>
-Date: Tue, 9 Jul 2024 16:21:38 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cbZmbl0b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720522338; x=1752058338;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=FRgjCLcJ6MXfKDSYddl5jo5cz8bvhM5ilxUGSXDAteA=;
+  b=cbZmbl0brGS1ZuUutOydvwB2jZXKFJxFLGQZvwunGX5AewA7+qw9Jg29
+   4TKZhtguygXiO61XOCQ1W/TsdB1qWbo34AgiO2ai3Wq/63mmDQj+pSRQH
+   cuAG2L9tRM7IdhcU2NSmOJEnIZIh8V5/RzInEEkWCsvquXhBCydfV6hti
+   DTtepvjkPNWQuO+OgBu0E25YPQHy5ROSfOeebXmjhIhpmlq9BK5DsyZzn
+   R+ZcMvL/Tq6AGqdyltrbvPkRlqK+vKE2/rEOtM/s0Hen+jx89px/pMnph
+   t/DDQLlIJv30zVtocSxaG+c23zncsYqxL8sTKaATOen5AHVAZUrI4z8Ea
+   A==;
+X-CSE-ConnectionGUID: 2p52lraDRoSMEA11uU3gYQ==
+X-CSE-MsgGUID: PCuxifZtTl++tye+Neh+Rw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="28366708"
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="28366708"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 03:52:17 -0700
+X-CSE-ConnectionGUID: WWaLn5PnTiaOMvwna+yrPQ==
+X-CSE-MsgGUID: KrKTrYGrREyTb4p/oMmiRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="47708644"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.123])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 03:52:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 9 Jul 2024 13:52:07 +0300 (EEST)
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>, 
+    Hagan Billy <billy.hagan@amd.com>, Simon Guinot <simon.guinot@seagate.com>, 
+    "Maciej W . Rozycki" <macro@orcam.me.uk>, 
+    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2] PCI: pciehp: Clear LBMS on hot-remove to prevent link
+ speed reduction
+In-Reply-To: <73fd7b2d-9256-9eba-70be-d69ea336fd67@amd.com>
+Message-ID: <6014882f-0936-ec31-d641-112a70eb2749@linux.intel.com>
+References: <20240617231841.GA1232294@bhelgaas> <27be113e-3e33-b969-c1e3-c5e82d1b8b7f@amd.com> <cf5f3b03-4c70-7a35-056e-5d94fc26f697@amd.com> <ZnKNJxJwdtWRphgX@wunner.de> <73fd7b2d-9256-9eba-70be-d69ea336fd67@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v2 3/6] clk: qcom: clk-alpha-pll: Add support for Regera
- PLL ops
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Abhishek Sahu <absahu@codeaurora.org>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>,
-        "Imran
- Shaik" <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>
-References: <20240702-camcc-support-sm8150-v2-0-4baf54ec7333@quicinc.com>
- <20240702-camcc-support-sm8150-v2-3-4baf54ec7333@quicinc.com>
- <kxoxr5cxxedckh7q45zhhyssqx4ahdfbqw7sdsrxx2ddplummh@2s6jv62ipnhb>
-From: "Satya Priya Kakitapalli (Temp)" <quic_skakitap@quicinc.com>
-In-Reply-To: <kxoxr5cxxedckh7q45zhhyssqx4ahdfbqw7sdsrxx2ddplummh@2s6jv62ipnhb>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bkMPp0JjqBcXkNi5caMNDOKNajXImBl5
-X-Proofpoint-ORIG-GUID: bkMPp0JjqBcXkNi5caMNDOKNajXImBl5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_02,2024-07-08_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0 adultscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 mlxscore=0 mlxlogscore=997
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090074
+Content-Type: text/plain; charset=US-ASCII
 
+On Tue, 25 Jun 2024, Smita Koralahalli wrote:
 
-On 7/3/2024 3:35 PM, Dmitry Baryshkov wrote:
-> On Tue, Jul 02, 2024 at 09:20:41PM GMT, Satya Priya Kakitapalli wrote:
->> From: Taniya Das <quic_tdas@quicinc.com>
->>
->> Regera PLL ops are required to control the Regera PLL from clock
->> controller drivers, thus add support for the same.
-> the same what?
-
-
-I'll rephrase the commit text.
-
-
->> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
->> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
->> ---
->>   drivers/clk/qcom/clk-alpha-pll.c | 32 +++++++++++++++++++++++++++++++-
->>   drivers/clk/qcom/clk-alpha-pll.h |  5 +++++
->>   2 files changed, 36 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
->> index d2bef078588f..afb7ab72c90d 100644
->> --- a/drivers/clk/qcom/clk-alpha-pll.c
->> +++ b/drivers/clk/qcom/clk-alpha-pll.c
->> @@ -1,7 +1,7 @@
->>   // SPDX-License-Identifier: GPL-2.0
->>   /*
->>    * Copyright (c) 2015, 2018, The Linux Foundation. All rights reserved.
->> - * Copyright (c) 2021, 2023, Qualcomm Innovation Center, Inc. All rights reserved.
->> + * Copyright (c) 2021, 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
->>    */
->>   
->>   #include <linux/kernel.h>
->> @@ -2605,3 +2605,33 @@ const struct clk_ops clk_alpha_pll_stromer_plus_ops = {
->>   	.set_rate = clk_alpha_pll_stromer_plus_set_rate,
->>   };
->>   EXPORT_SYMBOL_GPL(clk_alpha_pll_stromer_plus_ops);
->> +
->> +void clk_regera_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
->> +			     const struct alpha_pll_config *config)
->> +{
->> +	clk_alpha_pll_write_config(regmap, PLL_L_VAL(pll), config->l);
->> +	clk_alpha_pll_write_config(regmap, PLL_ALPHA_VAL(pll), config->alpha);
->> +	clk_alpha_pll_write_config(regmap, PLL_CONFIG_CTL(pll), config->config_ctl_val);
->> +	clk_alpha_pll_write_config(regmap, PLL_CONFIG_CTL_U(pll), config->config_ctl_hi_val);
->> +	clk_alpha_pll_write_config(regmap, PLL_CONFIG_CTL_U1(pll), config->config_ctl_hi1_val);
->> +	clk_alpha_pll_write_config(regmap, PLL_USER_CTL(pll), config->user_ctl_val);
->> +	clk_alpha_pll_write_config(regmap, PLL_USER_CTL_U(pll), config->user_ctl_hi_val);
->> +	clk_alpha_pll_write_config(regmap, PLL_USER_CTL_U1(pll), config->user_ctl_hi1_val);
->> +	clk_alpha_pll_write_config(regmap, PLL_TEST_CTL(pll), config->test_ctl_val);
->> +	clk_alpha_pll_write_config(regmap, PLL_TEST_CTL_U(pll), config->test_ctl_hi_val);
->> +	clk_alpha_pll_write_config(regmap, PLL_TEST_CTL_U1(pll), config->test_ctl_hi1_val);
->> +
->> +	/* Set operation mode to STANDBY */
->> +	regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
->> +}
->> +EXPORT_SYMBOL_GPL(clk_regera_pll_configure);
-> Does it make sense to call this function from clk_zonda_pll_configure()?
-
-
-Okay, I'll evaluate this internally and see if that can be done.
-
-
+> Sorry for the delay here. Took some time to find a system to run experiments.
+> Comments inline.
 >
->> +
->> +const struct clk_ops clk_alpha_pll_regera_ops = {
->> +	.enable = clk_zonda_pll_enable,
->> +	.disable = clk_zonda_pll_disable,
->> +	.is_enabled = clk_alpha_pll_is_enabled,
->> +	.recalc_rate = clk_trion_pll_recalc_rate,
->> +	.round_rate = clk_alpha_pll_round_rate,
->> +	.set_rate = clk_zonda_pll_set_rate,
->> +};
->> +EXPORT_SYMBOL_GPL(clk_alpha_pll_regera_ops);
->> diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
->> index fb6d50263bb9..5bb0a07da53d 100644
->> --- a/drivers/clk/qcom/clk-alpha-pll.h
->> +++ b/drivers/clk/qcom/clk-alpha-pll.h
->> @@ -21,6 +21,7 @@ enum {
->>   	CLK_ALPHA_PLL_TYPE_LUCID = CLK_ALPHA_PLL_TYPE_TRION,
->>   	CLK_ALPHA_PLL_TYPE_AGERA,
->>   	CLK_ALPHA_PLL_TYPE_ZONDA,
->> +	CLK_ALPHA_PLL_TYPE_REGERA = CLK_ALPHA_PLL_TYPE_ZONDA,
->>   	CLK_ALPHA_PLL_TYPE_ZONDA_OLE,
->>   	CLK_ALPHA_PLL_TYPE_LUCID_EVO,
->>   	CLK_ALPHA_PLL_TYPE_LUCID_OLE,
->> @@ -189,6 +190,8 @@ extern const struct clk_ops clk_alpha_pll_postdiv_lucid_evo_ops;
->>   extern const struct clk_ops clk_alpha_pll_rivian_evo_ops;
->>   #define clk_alpha_pll_postdiv_rivian_evo_ops clk_alpha_pll_postdiv_fabia_ops
->>   
->> +extern const struct clk_ops clk_alpha_pll_regera_ops;
->> +
->>   void clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
->>   			     const struct alpha_pll_config *config);
->>   void clk_fabia_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
->> @@ -210,5 +213,7 @@ void clk_rivian_evo_pll_configure(struct clk_alpha_pll *pll, struct regmap *regm
->>   				  const struct alpha_pll_config *config);
->>   void clk_stromer_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
->>   			       const struct alpha_pll_config *config);
->> +void clk_regera_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
->> +			     const struct alpha_pll_config *config);
->>   
->>   #endif
->>
->> -- 
->> 2.25.1
->>
+> On 6/19/2024 12:47 AM, Lukas Wunner wrote:
+> > On Tue, Jun 18, 2024 at 02:23:21PM -0700, Smita Koralahalli wrote:
+> > > On 6/18/2024 11:51 AM, Smita Koralahalli wrote:
+> > > > > > > But IIUC LBMS is set by hardware but never cleared by hardware, so
+> > > > > > > if
+> > > > > > > we remove a device and power off the slot, it doesn't seem like
+> > > > > > > LBMS
+> > > > > > > could be telling us anything useful (what could we do in response
+> > > > > > > to
+> > > > > > > LBMS when the slot is empty?), so it makes sense to me to clear
+> > > > > > > it.
+> > > > > > > 
+> > > > > > > It seems like pciehp_unconfigure_device() does sort of PCI core
+> > > > > > > and
+> > > > > > > driver-related things and possibly could be something shared by
+> > > > > > > all
+> > > > > > > hotplug drivers, while remove_board() does things more specific to
+> > > > > > > the
+> > > > > > > hotplug model (pciehp, shpchp, etc).
+> > > > > > > 
+> > > > > > >  From that perspective, clearing LBMS might fit better in
+> > > > > > > remove_board(). In that case, I wonder whether it should be done
+> > > > > > > after turning off slot power? This patch clears is *before*
+> > > > > > > turning
+> > > > > > > off the power, so I wonder if hardware could possibly set it again
+> > > > > > > before the poweroff?
+> > > 
+> > > While clearing LBMS in remove_board() here:
+> > > 
+> > > if (POWER_CTRL(ctrl)) {
+> > > 	pciehp_power_off_slot(ctrl);
+> > > +	pcie_capability_write_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
+> > > 				   PCI_EXP_LNKSTA_LBMS);
+> > > 
+> > > 	/*
+> > > 	 * After turning power off, we must wait for at least 1 second
+> > > 	 * before taking any action that relies on power having been
+> > > 	 * removed from the slot/adapter.
+> > > 	 */
+> > > 	msleep(1000);
+> > > 
+> > > 	/* Ignore link or presence changes caused by power off */
+> > > 	atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
+> > > 		   &ctrl->pending_events);
+> > > }
+> > > 
+> > > This can happen too right? I.e Just after the slot poweroff and before
+> > > LBMS
+> > > clearing the PDC/PDSC could be fired. Then
+> > > pciehp_handle_presence_or_link_change() would hit case "OFF_STATE" and
+> > > proceed with pciehp_enable_slot() ....pcie_failed_link_retrain() and
+> > > ultimately link speed drops..
+> > > 
+> > > So, I added clearing just before turning off the slot.. Let me know if I'm
+> > > thinking it right.
+> 
+> I guess I should have experimented before putting this comment out.
+> 
+> After talking to the HW/FW teams, I understood that, none of our CRBs support
+> power controller for NVMe devices, which means the "Power Controller Present"
+> in Slot_Cap is always false. That's what makes it a "surprise removal." If the
+> OS was notified beforehand and there was a power controller attached, the OS
+> would turn off the power with SLOT_CNTL. That's an "orderly" removal. So
+> essentially, the entire block from "if (POWER_CTRL(ctrl))" will never be
+> executed for surprise removal for us.
+> 
+> There could be board designs outside of us, with power controllers for the
+> NVME devices, which I'm not aware of.
+> > 
+> > This was added by 3943af9d01e9 ("PCI: pciehp: Ignore Link State Changes
+> > after powering off a slot").  You can try reproducing it by writing "0"
+> > to the slot's "power" file in sysfs, but your hardware needs to support
+> > slot power.
+> > 
+> > Basically the idea is that after waiting for 1 sec, chances are very low
+> > that any DLLSC or PDSC events caused by removing slot power may still
+> > occur.
+> 
+> PDSC events occurring in our case aren't by removing slot power. It
+> should/will always happen on a surprise removal along with DLLSC for us. But
+> this PDSC is been delayed and happens after DLLSC is invoked and ctrl->state =
+> OFF_STATE in pciehp_disable_slot(). So the PDSC is mistook to enable slot in
+> pciehp_enable_slot() inside pciehp_handle_presence_or_link_change().
+> > 
+> > Arguably the same applies to LBMS changes, so I'd recommend to likewise
+> > clear stale LBMS after the msleep(1000).
+> > 
+> > pciehp_ctrl.c only contains the state machine and higher-level logic of
+> > the hotplug controller and all the actual register accesses are in helpers
+> > in pciehp_hpc.c.  So if you want to do it picture-perfectly, add a helper
+> > in pciehp_hpc.c to clear LBMS and call that from remove_board().
+> > 
+> > That all being said, I'm wondering how this plays together with Ilpo's
+> > bandwidth control driver?
+> > 
+> > https://lore.kernel.org/all/20240516093222.1684-1-ilpo.jarvinen@linux.intel.com/
+> 
+> I need to yet do a thorough reading of Ilpo's bandwidth control driver. Ilpo
+> please correct me if I misspeak something as I don't have a thorough
+> understanding.
+> 
+> Ilpo's bandwidth controller also checks for lbms count to be greater than zero
+> to bring down link speeds if CONFIG_PCIE_BWCTRL is true. If false, it follows
+> the default path to check LBMS bit in link status register. So if,
+> CONFIG_PCIE_BWCTRL is disabled by default we continue to see link speed drops.
+> Even, if BWCTRL is enabled, LBMS count is incremented to 1 in
+> pcie_bwnotif_enable() so likely pcie_lbms_seen() might return true thereby
+> bringing down speeds here as well if DLLLA is clear?
+
+I did add code to clear the LBMS count in pciehp_unconfigure_device() in 
+part thanks to this patch of yours. Do you think it wouldn't work?
+
+But I agree there would still be problem if BWCTRL is not enabled. I 
+already have to keep part of it enabled due to the Target Speed quirk
+and now this is another case where just having it always on would be
+beneficial.
+
+> > IIUC, the bandwidth control driver will be in charge of handling LBMS
+> > changes.  So clearing LBMS behind the bandwidth control driver's back
+> > might be problematic.  Ilpo?
+
+Yes, BW controller will take control of LBMS and other code should not 
+touch it directly (and LBMS will be kept cleared by the BW controller). 
+However, in this case I'll just need to adapt the code to replace the 
+LBMS clearing with resetting the LBMS count (if this patch is accepted 
+before BW controller), the resetting is already there anyway.
+
+> > Also, since you've confirmed that this issue is fallout from
+> > a89c82249c37 ("PCI: Work around PCIe link training failures"),
+> > I'm wondering if the logic introduced by that commit can be
+> > changed so that the quirk is applied more narrowly, i.e. *not*
+> > applied to unaffected hardware, such as AMD's hotplug ports.
+> > That would avoid the need to undo the effect of the quirk and
+> > work around the downtraining you're seeing.
+> > 
+> > Maciej, any ideas?
+> 
+> Yeah I'm okay to go down to that approach as well. Any ideas would be helpful
+> here.
+
+One thing I don't like in the Target Speed quirk is that it leaves the 
+Link Speed into the lower value if the quirk fails to bring the link up, 
+the quirk could restore the original Link Speed on failure to avoid these 
+problems. I even suggested that earlier, however, the downside of 
+restoring the original Link Speed is that it will require triggering yet 
+another retraining (perhaps we could avoid waiting for its completion 
+though since we expect it to fail).
+
+It might be possible to eventually trigger the Target Speed quirk from the 
+BW controller but it would require writing some state machine so that the 
+quirk is not repeatedly attempted. It seemed to complicate things too much 
+to add such a state machine at this point.
+
+-- 
+ i.
+
