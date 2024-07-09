@@ -1,170 +1,196 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DFC18002F;
-	Tue,  9 Jul 2024 18:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CDF18005D;
+	Tue,  9 Jul 2024 18:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720550627; cv=none; b=CMrBCN71uxrtUz2BrAX20SL7BF44yhUt3IygxkF4Nzaio/PMw+vJ4E8eC4cgYgl2on2RLEVk36u2buiOSE2MWDy6WYItF7ZR/sx2Xf47VFzgS5EKBLhn0nktA0NRdPZMZJnWKA26E+eidX12nko6cpZ+Z1SYZ7Fz5cx2JK5LhYI=
+	t=1720550629; cv=none; b=mfzLk48V5gXCsXq5EkVvZWlSn22PLmAEjyeT9oRhaDUlcbVtv8yVB9J7QsW8ntkJlT1Dv4hRASjfUMIzjL89UqQ4rzAtLRlnAlqGWZ0xhxzw/KsFN8zts9p+bEug5xap+E72dMT98swX94xZ4RE/4V2BYrELHG+ZyuwDRQlpiek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720550627; c=relaxed/simple;
-	bh=sV0QNiu1ACdOwHExfhARey+8qdFXfJgWgtnl0Lf31yQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dWgKskOHQpdwnTo6w7nGBfgdRQiggVLDk186gaRqKz/IQlKOLJdpA3H/oLqY8tLOYNQrp5D9D8AhHkbwY4Fru1T9cy4NKFRdoPAU4ZGqmlswI/K+T+QuG72Zj27w/tP8Cvfutv8pRccRbTGPsUbHdIsUyK3bJvbimHmU+KkLjVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QNYF5UT2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720550629; c=relaxed/simple;
+	bh=VCkxZ+pGG+YSVbanqtrhKtfrCSVwsi7AFT3M1DJIRSY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cW0siFjtJcZdtqrElMTKzUkB61yvOgVCAaT/wTbX5Fam4wfJhrxWscsbR2GdxdhHktIlicrb7KVSHT+wHh4Ilb/djiAA6XHhzlXTK9K/5DsHslSnRXGtjqtD8/8uerWZileoYM1ZGzKRtQCv3qk1bXiOvtL6v3NebUB0arr1o1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akNPpfxv; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QNYF5UT2"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469DuWEM001325;
-	Tue, 9 Jul 2024 18:42:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Qx6une2YhOK6cKGgEHtW+BpepZHrWXU+G+j+pEyAC4w=; b=QNYF5UT2yd5HreEx
-	TeWF71+Kzpal0OUgp839p/TtebHNLNmV2aAKkHERfnhjzHkpLNqoz/gZO0VbFuQf
-	8juG9jiKXmre5Eie87p6eretzHTTHwoYiwBpd7Id+vfSzBsBXTKKWhyR8B78Vh4l
-	XuOHg72zTL/PeTpJgcQ5EiCn8EDd21ZAg2h3FS+zCENGN653zNyN8dctQRiy9Ikh
-	rDNXHQj/gIkGBE5LV2RBvv5MVFVAOaypmsWGxkhTlzptYZnB5T8j4eLy2kyBtTPf
-	hf+hFj43ikaPMZsUoAFavNQpRnlAgkaSghQHa5oYrYSWmhIuw4duMM4FEljQQ/nO
-	7EBu8Q==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406we8y7h8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 18:42:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469IgN7B026072
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 18:42:23 GMT
-Received: from [10.71.110.34] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 9 Jul 2024
- 11:42:22 -0700
-Message-ID: <8376e3a1-0630-f489-8938-a1c77eaccdf8@quicinc.com>
-Date: Tue, 9 Jul 2024 11:42:01 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akNPpfxv"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3d93df6b54dso618179b6e.2;
+        Tue, 09 Jul 2024 11:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720550627; x=1721155427; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/EJpK7h0+8kfla+x9mc6dab7bKKbfLCaCqSeT7reyNM=;
+        b=akNPpfxvUdliG6i9mZCH8d6rqB/vhI3Zdx11hVUDjuwgKOQ0geo+UrDzw/RKGqtzFo
+         mk52qbVV/rjaGyY1wReNoSEUAm1+q0lphfyR17Au/e9zCj8PIwt5FQbiYxjBNYBZVafy
+         Kc2jKJhi7VsM+mJXbpMc5hujQzkvAN7XggfBk7OZeJhUhGel1HdDubGHmf8FOzNYE4Y6
+         udZhpWTizPGezaY1UMSQ4G45H97wskEgOT5lmjophuLVb3O+Uk3sWEiDiJIgwUCpJLcS
+         EUe808aU2orEhutjzDk0iEFDSucnAJSSkSzHo+mgWZK+Pa5UPbP0j6RSa1akMuxxINAd
+         IqvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720550627; x=1721155427;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/EJpK7h0+8kfla+x9mc6dab7bKKbfLCaCqSeT7reyNM=;
+        b=sB4TWWl+rekhsy5dFEPszmXHE1MOalCtaCc34mODY2ZuT/7HTCS8Xep9ZE+0ECooZu
+         91TQMeIjstDA1GcEnPHw7FxjdP0kLfegqfg/H1hdMsvehtopjJUw1TWLswjDICccr5gV
+         ggIIryol8z6tg94dkyPuQCj+Eqv8nIOWrCxPr8/oyD+5nDA/5VmzZEo4QxxYr08wg75I
+         Nkz0QD6lfaQ0aZp9V0ga+IEmJ+GUMfdUli5kMavXJ0XaelmbHGYFXtme5oCjDiGBMQAP
+         52z8s/XVT04fbWo9M3Pb1FW5fAntVAEAPP6A8eLhH3Cpm0Lsp4O8tRUH52/tCHlfNqaR
+         efOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUS1OKULJEvQYzWmTyU/KkSMKmKc7SAQAGBB+qF8rLUmPdFc2rLrD8xT2r/lY5Eyanlvd/s8FoHbo4Pfv9gJEOqih2RdEaS6Xq1Fc53VUQCBGIxVav4IBHnknXXn95BXR59mNq043Qzrx1bCo846f0Qe3nk51P0EEQqRoo/+wiMFVrjJy4w
+X-Gm-Message-State: AOJu0YzQ5lM7oqqyAGTysNfe6ZBcx+L56sQ8iNWOqDqT7rgy7uiaQigE
+	1rG8oOPXwDZ8hv6OKKJ0Rmx7ZrwzkhjrX9UEeVYFbhhrhAEypHi0
+X-Google-Smtp-Source: AGHT+IETG2JaYyEkIUs57OEWEyQjKyGmBijThps0J2yxIds1meOyf1V8scuBk/IWotf98tiQ4xEPJA==
+X-Received: by 2002:a05:6808:148b:b0:3d9:2920:bc2f with SMTP id 5614622812f47-3d93bdd1669mr3866455b6e.10.1720550626620;
+        Tue, 09 Jul 2024 11:43:46 -0700 (PDT)
+Received: from fedora.. ([45.118.158.79])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d607d5fa5sm1741683a12.31.2024.07.09.11.43.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 11:43:46 -0700 (PDT)
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+To: 
+Cc: Animesh Agarwal <animeshagarwal28@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	patches@opensource.cirrus.com,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ASoC: dt-bindings: cirrus,cs4270: Convert to dtschema
+Date: Wed, 10 Jul 2024 00:12:25 +0530
+Message-ID: <20240709184231.125207-1-animeshagarwal28@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 1/2] drm/msm/dpu1: don't choke on disabling the writeback
- connector
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark
-	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jordan@cosmicpenguin.net>,
-        Chandan
- Uddaraju <chandanu@codeaurora.org>,
-        Rajesh Yadav <ryadav@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Archit Taneja
-	<architt@codeaurora.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Jeykumar
- Sankaran <jsanka@codeaurora.org>, <stable@vger.kernel.org>,
-        Leonard Lausen
-	<leonard@lausen.nl>
-References: <20240709-dpu-fix-wb-v1-0-448348bfd4cb@linaro.org>
- <20240709-dpu-fix-wb-v1-1-448348bfd4cb@linaro.org>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20240709-dpu-fix-wb-v1-1-448348bfd4cb@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 2ntLbvO9KprV2q3qVEJ1cQebCIomZGgk
-X-Proofpoint-GUID: 2ntLbvO9KprV2q3qVEJ1cQebCIomZGgk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_08,2024-07-09_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- bulkscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 malwarescore=0 mlxscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407090126
+Content-Transfer-Encoding: 8bit
 
+Convert the Cirrus Logic CS4270 audio CODEC bindings to DT schema. Add
+missing va-supply, vd-supply and vlc-supply properties, because they
+are already being used in the DTS and the driver for this device.
 
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
 
-On 7/9/2024 6:48 AM, Dmitry Baryshkov wrote:
-> In order to prevent any errors on connector being disabled, move the
-> state->crtc check upfront. This should fix the issues during suspend
-> when the writeback connector gets forcebly disabled.
-> 
-> Fixes: 71174f362d67 ("drm/msm/dpu: move writeback's atomic_check to dpu_writeback.c")
-> Cc: stable@vger.kernel.org
-> Reported-by: Leonard Lausen <leonard@lausen.nl>
-> Closes: https://gitlab.freedesktop.org/drm/msm/-/issues/57
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
-> index 16f144cbc0c9..5c172bcf3419 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
-> @@ -39,6 +39,13 @@ static int dpu_wb_conn_atomic_check(struct drm_connector *connector,
->   
->   	DPU_DEBUG("[atomic_check:%d]\n", connector->base.id);
->   
-> +	crtc = conn_state->crtc;
+---
+Changes in v2:
+  - Added proper description for power supply properties.
+  - Added ref to dai-common.
+  - Added '#sound-dai-cells'.
+  - Dropped unused labels in example.
+  - Replaced example node name to a generic name.
+---
+ .../bindings/sound/cirrus,cs4270.yaml         | 59 +++++++++++++++++++
+ .../devicetree/bindings/sound/cs4270.txt      | 21 -------
+ 2 files changed, 59 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs4270.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/cs4270.txt
 
-We are checking for !conn_state a few lines below but we are 
-dereferencing conn_state here.
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,cs4270.yaml b/Documentation/devicetree/bindings/sound/cirrus,cs4270.yaml
+new file mode 100644
+index 000000000000..336e11773694
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cirrus,cs4270.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/cirrus,cs4270.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cirrus Logic CS4270 audio CODEC
++
++maintainers:
++  - patches@opensource.cirrus.com
++
++description:
++  The CS4270 is a stereo audio codec. The driver for this device currently only
++  supports I2C.
++
++allOf:
++  - $ref: dai-common.yaml#
++
++properties:
++  compatible:
++    const: cirrus,cs4270
++
++  reg:
++    maxItems: 1
++
++  '#sound-dai-cells':
++    const: 0
++
++  reset-gpios:
++    description:
++      This pin will be deasserted before communication to the codec starts.
++    maxItems: 1
++
++  va-supply:
++    description: Analog power supply.
++
++  vd-supply:
++    description: Digital power supply.
++
++  vlc-supply:
++    description: Serial Control Port power supply.
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      codec@48 {
++          compatible = "cirrus,cs4270";
++          reg = <0x48>;
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/sound/cs4270.txt b/Documentation/devicetree/bindings/sound/cs4270.txt
+deleted file mode 100644
+index c33770ec4c3c..000000000000
+--- a/Documentation/devicetree/bindings/sound/cs4270.txt
++++ /dev/null
+@@ -1,21 +0,0 @@
+-CS4270 audio CODEC
+-
+-The driver for this device currently only supports I2C.
+-
+-Required properties:
+-
+-  - compatible : "cirrus,cs4270"
+-
+-  - reg : the I2C address of the device for I2C
+-
+-Optional properties:
+-
+-  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
+-		  deasserted before communication to the codec starts.
+-
+-Example:
+-
+-codec: cs4270@48 {
+-	compatible = "cirrus,cs4270";
+-	reg = <0x48>;
+-};
+-- 
+2.45.2
 
-This is bound to hit a smatch error and also does not look right.
-
-If conn_state will always be valid, we should drop that check too rather 
-than checking it later.
-
-Coming to the issue itself, I tried checking the logs but it was not clear.
-
-During force disable, were we hitting below check and hence the 
-connector was not getting disabled?
-
-else if (conn_state->connector->status != connector_status_connected) {
-                 DPU_ERROR("connector not connected %d\n", 
-conn_state->connector->status);
-                 return -EINVAL;
-         }
-
-
-I did not see this error log there, so can you pls explain where we were 
-bailing out? The check seems valid to me.
-
-> +	if (!crtc)
-> +		return 0;
-> +
-> +	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-> +		return 0;
-> +
->   	if (!conn_state || !conn_state->connector) {
->   		DPU_ERROR("invalid connector state\n");
->   		return -EINVAL;
-> @@ -47,13 +54,6 @@ static int dpu_wb_conn_atomic_check(struct drm_connector *connector,
->   		return -EINVAL;
->   	}
->   
-> -	crtc = conn_state->crtc;
-> -	if (!crtc)
-> -		return 0;
-> -
-> -	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-> -		return 0;
-> -
->   	crtc_state = drm_atomic_get_crtc_state(state, crtc);
->   	if (IS_ERR(crtc_state))
->   		return PTR_ERR(crtc_state);
-> 
