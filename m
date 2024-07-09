@@ -1,231 +1,176 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6615C1D556;
-	Tue,  9 Jul 2024 08:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC34152175
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720513273; cv=none; b=jmy7LdjWInwdctVh8GXLe/yxjy3ie0FWKBb7kBniaAVKL9LNDMY4cOtaRdGrG9ceupB8hqeIx8YOZJVxsJaud5rJaijpHoPhsN/TDoFkAFwevEL6DRKy/nV02/OzdSDPN4eVT1JEfqHwpWKpd0Sfaw3vjJFFduMEBdpVcvG8AGA=
+	t=1720513297; cv=none; b=rDdQ4QPaqkhD4n410oP09fiUEYb+iknt2JJYi0lIFuc3mzKb2Tv8rR2EPp9heGzVaX/AlZvSjllcYj4RYYynUNz8K2kT+gfloW9d8sM9GGkZ6DD2J+ETZ+DcSS54BUdhVmCEBASjNF4UL2jAWHMx7SHhBmyR3huc078XcAEzlNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720513273; c=relaxed/simple;
-	bh=d2qIWg94Pgm0hhjuDcO+Aopiw+vdWMVSPCeQhYGUSBs=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=mp6QkecbbeHmoLwMGW3llM3FPBHCuZq4fYuJ2VCWq3dZEKWjU5fX2nVG1Z20xTEs5s8OxIRkzppolSPrRtsfCjxrY1h/jwNdH7YMpOlQfLM7uti0ntzlQAELUQtZ41ezdYJEQ1fGK4mEWZrTipVNW0LfVF9koIhevq+WXY9Yz1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z9VQouwJ; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720513297; c=relaxed/simple;
+	bh=iqEHmgQIJItmSQVc7sOwdfKA04RRVxsynMqfVAgDpBo=;
+	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cmyDUR0n7eQU2nMnL7ncrGjiEyUVXEUWJB5nsScKyF8w3NutEfKJjMecfICxHwAQdlsu4qnEC/GxkNCwrLu9Gn9jJ/PeTYIgQWwnwPC1GGrwBLgvtT27Ks2NIDkfWlEfBd9wps6UOl7ARMT1R+yCo2HqDTcd773wv4bnUWhhVlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=oB43yuTJ; arc=none smtp.client-ip=207.171.184.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9VQouwJ"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42671a676c7so4781915e9.3;
-        Tue, 09 Jul 2024 01:21:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oB43yuTJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720513270; x=1721118070; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Oyx6FrKL7238jfjI4xQrSfHoIpZUun53kvKziTOzlU=;
-        b=Z9VQouwJrK4NQ9TludR0GoP1HdVKEL9ksLmGUDJl+NlDQEU+A29dLfqUlcimEGPgz1
-         qOm7E6EYWEH6cuw/NsDRIHaX37oyZ2PdNwk47i0c5sK/tnRWAhQ2+9Q+gUoHpTqcXhqp
-         0emw7MsXlp/L+Py2MObcPt9HMYfXzUsIZgFmSoRvkT2dJ2Ni0NnTxawUqwS+Ok4Z3vwG
-         9jBrysYeHLh57iHVp+etbXH/hy74uM37TWq/YznRO/I6QhbEYEEoTUdcnti4SVwszlse
-         qkYX+j/OzX7m6BiPKblTEW/KiAeFKU4mtol1+GHLp00hmlJWFm2HRSj8C+LrZSPnbT/e
-         FeyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720513270; x=1721118070;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5Oyx6FrKL7238jfjI4xQrSfHoIpZUun53kvKziTOzlU=;
-        b=ocXyiUtr9IfxqH3NhhPt8iwDuiRudz611/OtmiypCqpQRCUKAoCz6xpO2P1NzI3dK8
-         mnPKdfCPUF4qFXSpegmOvDNDKlE7CtH37HG0PS5MXaVw5kVOtKa0o1BoauEWtn+b0fnI
-         aMue6/fOKljruki+EtS/P5G/q684GkewD1WA57uhrRZn72AtWyEf67S9IkTc+RTli/lv
-         z2a7lokKRXfHXtDnKDInW95dbpz6xfecQoMiPc8jKUcTTm5XW2f1Klgm0kBJWSB9BIpY
-         WcaWTn0mL1NjanN+n6JYzBSfs3/PZl6ZUlVZoXN4E0Ru2GosOHf7D1kw+LaTy1T8CHrD
-         Zg+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUKuyOGnm3qWNkOj39i+G2oOY8jalk7kSUnC/enMX/+Z8jf87sYUBXqr442RIOKEAI79JJWe1r13PhPjoEQ7NrpwhshsoNOwOCuXWtyMT7oJReslh5avkqz5YYiP/Jn1MpzpFGYxO1YwiAuPO3k2kNm205Meh14zV220GIBUavRb+PEBw==
-X-Gm-Message-State: AOJu0YzXEeiV3PlHN9xfj6ey3VvlNqlfJe/Lt88JBeZgZ1D9G3FBR2oO
-	iQF9Sh+Sb0XJIZgTJoPCBs9iqox+xu22lHFqjVxPL6v+iwX50xjGWKTnje35
-X-Google-Smtp-Source: AGHT+IEsdZTff0seLeEKmalSeHclTahjKFRJCT8BMEFjVHxoSZqlVJTz3vfZ+XNndSOkmnCEOeEEMA==
-X-Received: by 2002:a7b:cb92:0:b0:426:5ef5:bcb1 with SMTP id 5b1f17b1804b1-426706c62fbmr11566485e9.6.1720513269502;
-        Tue, 09 Jul 2024 01:21:09 -0700 (PDT)
-Received: from localhost (host-79-55-57-217.retail.telecomitalia.it. [79.55.57.217])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e0b6bsm29339845e9.3.2024.07.09.01.21.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 01:21:09 -0700 (PDT)
-Date: Tue, 09 Jul 2024 10:21:07 +0200
-From: Matteo Martelli <matteomartelli3@gmail.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Marius Cristea <marius.cristea@microchip.com>, 
- Matteo Martelli <matteomartelli3@gmail.com>, 
- linux-iio@vger.kernel.org, 
- devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Message-ID: <668cf2f3ece62_1f6ba37012@njaxe.notmuch>
-In-Reply-To: <20240708173439.000070b4@Huawei.com>
-References: <20240704-iio-pac1921-v2-0-0deb95a48409@gmail.com>
- <20240704-iio-pac1921-v2-2-0deb95a48409@gmail.com>
- <20240707160442.6bab64c9@jic23-huawei>
- <668bec2a8b23a_6e037017@njaxe.notmuch>
- <20240708173439.000070b4@Huawei.com>
-Subject: Re: [PATCH v2 2/2] iio: adc: add support for pac1921
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1720513297; x=1752049297;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=iqEHmgQIJItmSQVc7sOwdfKA04RRVxsynMqfVAgDpBo=;
+  b=oB43yuTJ8vSuJSlVHfQM/4Dd+8jctXAoLaBDv1j4/s6tnuUVRcljUHZr
+   2oX4EOIrwBGjB0pEPfARtdMXrUl0/4DMfOzzyfj8Zq+cW5fvY0VGTrEBt
+   vljA03wWG87HXrtcM0jn8u+QrTUAUT2WL1Ut+kxqp1CGitZ7WPWOmG8RE
+   0=;
+X-IronPort-AV: E=Sophos;i="6.09,194,1716249600"; 
+   d="scan'208";a="432817487"
+Subject: Re: [linux-next-6.10-rc6-20240703] Warning at mm/memblock.c:1447
+Thread-Topic: [linux-next-6.10-rc6-20240703] Warning at mm/memblock.c:1447
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 08:21:31 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:14903]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.122:2525] with esmtp (Farcaster)
+ id 998e1886-9550-493e-9281-744d2b4433bc; Tue, 9 Jul 2024 08:21:29 +0000 (UTC)
+X-Farcaster-Flow-ID: 998e1886-9550-493e-9281-744d2b4433bc
+Received: from EX19D020UWC002.ant.amazon.com (10.13.138.147) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Tue, 9 Jul 2024 08:21:29 +0000
+Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
+ EX19D020UWC002.ant.amazon.com (10.13.138.147) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Tue, 9 Jul 2024 08:21:29 +0000
+Received: from EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41]) by
+ EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41%3]) with mapi id
+ 15.02.1258.034; Tue, 9 Jul 2024 08:21:28 +0000
+From: "Gowans, James" <jgowans@amazon.com>
+To: "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "christophe.leroy@csgroup.eu"
+	<christophe.leroy@csgroup.eu>, "naveen.n.rao@linux.ibm.com"
+	<naveen.n.rao@linux.ibm.com>, "venkat88@linux.vnet.ibm.com"
+	<venkat88@linux.vnet.ibm.com>, "npiggin@gmail.com" <npiggin@gmail.com>,
+	"rppt@kernel.org" <rppt@kernel.org>
+CC: "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>, "linux-mm@vger.kernel.org"
+	<linux-mm@vger.kernel.org>, "Graf (AWS), Alexander" <graf@amazon.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Thread-Index: AQHa0RrhQT/K7aCq10aAtnfUXeDICrHsmHGAgAF3VAA=
+Date: Tue, 9 Jul 2024 08:21:27 +0000
+Message-ID: <b2a69b564f4661b2c948bf876778730c01f982f2.camel@amazon.com>
+References: <a70e4064-a040-447b-8556-1fd02f19383d@linux.vnet.ibm.com>
+	 <e6dbf04ca92a021856d8da2a4e795908290c6c9c.camel@amazon.com>
+In-Reply-To: <e6dbf04ca92a021856d8da2a4e795908290c6c9c.camel@amazon.com>
+Accept-Language: en-ZA, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <21C2137E0AA6764DAD9C15DF3B7152BB@amazon.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
 
-Jonathan Cameron wrote:
-...
-> > I could add the shunt-resistor controls to allow calibration as Marius
-> > suggested, but that's also a custom ABI, what are your thoughts on this?
-> 
-> This would actually be a generalization of existing device specific ABI
-> that has been through review in the past.
-> See Documentation/ABI/testing/sysfs-bus-iio-adc-pac1934
-> for example (similar in other places).
-> So if you want to do this move that ABI up a level to cover multiple devices
-> (removing the entries in specific files as you do so).
-> 
-I would do this in a separate commit, would you prefer it in this same patch
-set or in another separate patch?
-
-...
-> > 
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/resolution_bits_available
-> > > > +KernelVersion:	6.10
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		List all possible ADC measurement resolutions: "11 14"
-> > > > +
-> > > > +What:		/sys/bus/iio/devices/iio:deviceX/integration_samples
-> > > > +KernelVersion:	6.10
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		Number of samples taken during a full integration period. Can be
-> > > > +		set to any power of 2 value from 1 (default) to 2048.
-> > > > +		This attribute affects the integration time: higher the number
-> > > > +		of samples, longer the integration time. See Table 4-5 in device
-> > > > +		datasheet for details.  
-> > > 
-> > > Sounds like oversampling_ratio which is standards ABI. So use that or explain
-> > > why you can't here.  
-> > 
-> > I am not sure that this is an oversampling ratio but correct me if I am wrong:
-> > generally by increasing the oversampling you would have additional samples in a
-> > fixed time period, while in this case by increasing the number of samples you
-> > would still have the same number of samples in a fixed time period, but you
-> > would have a longer integration period. So maybe the comment is not very
-> > clear since this parameter actually means "the number of samples required to
-> > complete the integration period".
-> 
-> No. Oversampling is independent of the sampling period in general (though
-> here the 'integration time' is very confusing terminology.  You may
-> have to have sampling_frequency (if provided) updated to incorporate that
-> the device can't deliver data as quickly.
-> 
-> > 
-> > Initially I thought to let the user edit this by writing the integration_time
-> > control (which is currently read-only), but since the integration period
-> > depends also on the resolution and whether filters are enabled or not, it would
-> > have introduced some confusion: what parameter is being changed upon
-> > integretion_time write? Maybe after removing resolution and filter controls
-> > there would be no such confusion anymore.
-> 
-> Hmm. The documentation seems to have an unusual definition of 'integration' time.
-> That looks like 1/sampling_frequency.  In an oversampling device integration time
-> is normally about a single sample, not the aggregate of sampling and read out
-> etc.
-> 
-> I guess here the complexity is that integration time isn't about the time
-> taken for a capacitor to charge, but more the time over which power is computed.
-> But then the value is divided by number of samples so I'm even more confused.
-> 
-> If we just read 'integration time' as data acquisition time, it makes a lot
-> more sense.
-> 
-I think I now get what you are suggesting, please correct me otherwise:
-
-1. Let's consider the sampling frequency as how often the device provides
-   computed ("integrated") measurements to the host, so this would be
-   1/"integration period". This is not the internal ADC sampling rate.
-
-2. I will expose sampling_frequency (RO), oversampling_ratio (R/W) and
-   oversampling_ratio_available (RO) to the user, where oversampling_ratio
-   corresponds to what the datasheet refers to as the "number of ADC samples to
-   complete an integration".
-
-3. When the user writes the oversampling_ratio, the sampling_frequency gets
-   updated accordingly.
-
-4. With two real examples:
-    4.1. The user writes 16 to oversampling_ratio, then reads 43.478 from
-      sampling_frequency: with 16 samples the "integration period" is 23ms
-      (from Table 4-5) so 1/0.023 => 43.478 Hz
-    4.2. The user writes 2048 to oversampling_ratio, then reads 0.34 from
-      sampling_frequency: with 2048 samples the "integration period" is 2941ms
-      (from Table 4-5) so 1/2.941 => 0.34 Hz
-
-5. Do not expose the integration_time control to avoid confusion: the so called
-   "integration period" can be derived from the sampling frequency as
-   1/sampling_frequency.
-
-...
-> > > > +static int pac1921_update_cfg_reg(struct pac1921_priv *priv, unsigned int reg,
-> > > > +				  unsigned int mask, unsigned int val)
-> > > > +{
-> > > > +	/* Enter READ state before configuration */
-> > > > +	int ret = regmap_update_bits(priv->regmap, PAC1921_REG_INT_CFG,
-> > > > +				     PAC1921_INT_CFG_INTEN, 0);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	/* Update configuration value */
-> > > > +	ret = regmap_update_bits(priv->regmap, reg, mask, val);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	/* Re-enable integration and reset start time */
-> > > > +	ret = regmap_update_bits(priv->regmap, PAC1921_REG_INT_CFG,
-> > > > +				 PAC1921_INT_CFG_INTEN, PAC1921_INT_CFG_INTEN);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	priv->integr_start_time = jiffies;  
-> > > 
-> > > Add a comment for why this value.
-> > >  
-> > Could you elaborate what's confusing here? The comment above states "reset
-> > start time", maybe I should move it above the assignment of
-> > priv->integr_start_time? Or it's the use of jiffies that it's confusing?
-> 
-> Why is it jiffies?   Why not jiffies * 42?
-> I'm looking for a datasheet reference for why the particular value is used.
-> 
-I used jiffies just to track the elapsed time between readings. Something I am
-not considering here? Of course jiffies granularity might be larger than the
-minimum sampling frequency. Is there a common better approach?
-
-...
-> For future reference, no need to acknowledge stuff you agree
-> with.  Much better to crop to the places where there are questions or responses
-> as it saves time for the next step of the discussion!
-Ok....oops!
-
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-
-Thanks,
-Matteo
+T24gTW9uLCAyMDI0LTA3LTA4IGF0IDExOjU4ICswMjAwLCBKYW1lcyBHb3dhbnMgd3JvdGU6DQo+
+IEhpIFZlbmthdCwNCj4gDQo+IE9uIE1vbiwgMjAyNC0wNy0wOCBhdCAxNTowOSArMDUzMCwgVmVu
+a2F0IFJhbyBCYWdhbGtvdGUgd3JvdGU6DQo+ID4gR3JlZXRpbmdzISEhDQo+ID4gDQo+ID4gDQo+
+ID4gT2JzZXJ2aW5nIGJlbG93IHdhcm5pbmcgd2hpbGUgYm9vdGluZywgd2hlbiBmYWR1bXAgaXMg
+Y29uZmlndXJlZCB3aXRoIG5vY2FtLg0KPiA+IA0KPiA+IA0KPiA+IFvCoMKgwqAgMC4wNjEzMjld
+IC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQ0KPiA+IFvCoMKgwqAgMC4wNjEz
+MzJdIFdBUk5JTkc6IENQVTogMCBQSUQ6IDEgYXQgbW0vbWVtYmxvY2suYzoxNDQ3DQo+ID4gbWVt
+YmxvY2tfYWxsb2NfcmFuZ2VfbmlkKzB4MjRjLzB4Mjc4DQo+ID4gW8KgwqDCoCAwLjA2MTMzN10g
+TW9kdWxlcyBsaW5rZWQgaW46DQo+ID4gW8KgwqDCoCAwLjA2MTMzOV0gQ1BVOiAwIFVJRDogMCBQ
+SUQ6IDEgQ29tbTogc3dhcHBlci8wIE5vdCB0YWludGVkDQo+ID4gNi4xMC4wLXJjNi1uZXh0LTIw
+MjQwNzAzLWF1dG8gIzENCj4gPiBbwqDCoMKgIDAuMDYxMzQxXSBIYXJkd2FyZSBuYW1lOiBJQk0s
+OTA4MC1IRVggUE9XRVIxMCAoYXJjaGl0ZWN0ZWQpDQo+ID4gMHg4MDAyMDAgMHhmMDAwMDA2IG9m
+OklCTSxGVzEwNjAuMDAgKE5IMTA2MF8wMTYpIGh2OnBoeXAgcFNlcmllcw0KPiA+IFvCoMKgwqAg
+MC4wNjEzNDJdIE5JUDogIGMwMDAwMDAwMDIwNjE2MTAgTFI6IGMwMDAwMDAwMDIwNjE0MjQgQ1RS
+Og0KPiA+IDAwMDAwMDAwMDAwMDAwMDANCj4gPiBbwqDCoMKgIDAuMDYxMzQ0XSBSRUdTOiBjMDAw
+MDAwMDA0ZDJmNzgwIFRSQVA6IDA3MDAgICBOb3QgdGFpbnRlZA0KPiA+ICg2LjEwLjAtcmM2LW5l
+eHQtMjAyNDA3MDMtYXV0bykNCj4gPiBbwqDCoMKgIDAuMDYxMzQ1XSBNU1I6ICA4MDAwMDAwMDAy
+MDI5MDMzIDxTRixWRUMsRUUsTUUsSVIsRFIsUkksTEU+wqAgQ1I6DQo+ID4gNDQwMDAyNDIgIFhF
+UjogMjAwNDAwMTANCj4gPiBbwqDCoMKgIDAuMDYxMzUwXSBDRkFSOiBjMDAwMDAwMDAyMDYxNDJj
+IElSUU1BU0s6IDANCj4gPiBbwqDCoMKgIDAuMDYxMzUwXSBHUFIwMDogYzAwMDAwMDAwMjA2MTQy
+NCBjMDAwMDAwMDA0ZDJmYTIwIGMwMDAwMDAwMDE1YTNkMDANCj4gPiAwMDAwMDAwMDAwMDAwMDAx
+DQo+ID4gW8KgwqDCoCAwLjA2MTM1MF0gR1BSMDQ6IDAwMDAwMDAwMDAwMDA4MDAgMDAwMDAwMTJj
+MDAwMDAwMCAwMDAwMDAyNTgwMDAwMDAwDQo+ID4gZmZmZmZmZmZmZmZmZmZmZg0KPiA+IFvCoMKg
+wqAgMC4wNjEzNTBdIEdQUjA4OiAwMDAwMDAwMDAwMDAwMDAwIDAwMDAwMDAwMDAwMDAwMDIgYzAw
+MDAwMDAwMmY1OGMwOA0KPiA+IDAwMDAwMDAwMjQwMDAyNDINCj4gPiBbwqDCoMKgIDAuMDYxMzUw
+XSBHUFIxMjogYzAwMDAwMDAwMDQ1NDQwOCBjMDAwMDAwMDAzMDEwMDAwIGMwMDAwMDAwMDAwMTEy
+YWMNCj4gPiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gW8KgwqDCoCAwLjA2MTM1MF0gR1BSMTY6IDAw
+MDAwMDAwMDAwMDAwMDAgMDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gMDAw
+MDAwMDAwMDAwMDAwMA0KPiA+IFvCoMKgwqAgMC4wNjEzNTBdIEdQUjIwOiAwMDAwMDAwMDAwMDAw
+MDAwIDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAwMDAwMDAwMDAwMA0KPiA+IGMwMDAwMDAwMDE0OWQz
+OTANCj4gPiBbwqDCoMKgIDAuMDYxMzUwXSBHUFIyNDogYzAwMDAwMDAwMjAwNDY2YyBmZmZmZmZm
+ZmZmZmZmZmZmIDAwMDAwMDI1ODAwMDAwMDANCj4gPiAwMDAwMDAxMmMwMDAwMDAwDQo+ID4gW8Kg
+wqDCoCAwLjA2MTM1MF0gR1BSMjg6IDAwMDAwMDAwMDAwMDA4MDAgMDAwMDAwMDAwMDAwMDAwNSAw
+MDAwMDAwMDAwMDAwMDAwDQo+ID4gMDAwMDAwMDAwMDAwMDAwMA0KPiA+IFvCoMKgwqAgMC4wNjEz
+NjVdIE5JUCBbYzAwMDAwMDAwMjA2MTYxMF0gbWVtYmxvY2tfYWxsb2NfcmFuZ2VfbmlkKzB4MjRj
+LzB4Mjc4DQo+ID4gW8KgwqDCoCAwLjA2MTM2OF0gTFIgW2MwMDAwMDAwMDIwNjE0MjRdIG1lbWJs
+b2NrX2FsbG9jX3JhbmdlX25pZCsweDYwLzB4Mjc4DQo+ID4gW8KgwqDCoCAwLjA2MTM3MF0gQ2Fs
+bCBUcmFjZToNCj4gPiBbwqDCoMKgIDAuMDYxMzcxXSBbYzAwMDAwMDAwNGQyZmEyMF0gW2MwMDAw
+MDAwMDRkMmZhNjBdIDB4YzAwMDAwMDAwNGQyZmE2MA0KPiA+ICh1bnJlbGlhYmxlKQ0KPiA+IFvC
+oMKgwqAgMC4wNjEzNzNdIFtjMDAwMDAwMDA0ZDJmYWUwXSBbYzAwMDAwMDAwMjA2MTc4Y10NCj4g
+PiBtZW1ibG9ja19waHlzX2FsbG9jX3JhbmdlKzB4NjAvMHhlNA0KPiA+IFvCoMKgwqAgMC4wNjEz
+NzZdIFtjMDAwMDAwMDA0ZDJmYjYwXSBbYzAwMDAwMDAwMjAxN2E2MF0NCj4gPiBzZXR1cF9mYWR1
+bXArMHgxMTQvMHgyNDQNCj4gPiBbwqDCoMKgIDAuMDYxMzc5XSBbYzAwMDAwMDAwNGQyZmJlMF0g
+W2MwMDAwMDAwMDAwMTBlNzhdDQo+ID4gZG9fb25lX2luaXRjYWxsKzB4NjAvMHgzOTgNCj4gPiBb
+wqDCoMKgIDAuMDYxMzgxXSBbYzAwMDAwMDAwNGQyZmNjMF0gW2MwMDAwMDAwMDIwMDZiNWNdDQo+
+ID4gZG9faW5pdGNhbGxzKzB4MTJjLzB4MjE4DQo+ID4gW8KgwqDCoCAwLjA2MTM4M10gW2MwMDAw
+MDAwMDRkMmZkNzBdIFtjMDAwMDAwMDAyMDA2ZjI4XQ0KPiA+IGtlcm5lbF9pbml0X2ZyZWVhYmxl
+KzB4MjM4LzB4MzcwDQo+ID4gW8KgwqDCoCAwLjA2MTM4Nl0gW2MwMDAwMDAwMDRkMmZkZTBdIFtj
+MDAwMDAwMDAwMDExMmQ4XSBrZXJuZWxfaW5pdCsweDM0LzB4MjZjDQo+ID4gW8KgwqDCoCAwLjA2
+MTM4OF0gW2MwMDAwMDAwMDRkMmZlNTBdIFtjMDAwMDAwMDAwMDBkZjdjXQ0KPiA+IHJldF9mcm9t
+X2tlcm5lbF91c2VyX3RocmVhZCsweDE0LzB4MWMNCj4gPiBbwqDCoMKgIDAuMDYxMzg5XSAtLS0g
+aW50ZXJydXB0OiAwIGF0IDB4MA0KPiA+IFvCoMKgwqAgMC4wNjEzOTBdIENvZGU6IGViODFmZmUw
+IGViYzFmZmYwIGViZTFmZmY4IDdjMDgwM2E2IDdkNzEwMTIwDQo+ID4gN2Q3MDgxMjAgNGU4MDAw
+MjAgNjAwMDAwMDAgNGFmYmYyMTkgNjAwMDAwMDAgM2I4MDAwODAgNGJmZmZlNDANCj4gPiA8MGZl
+MDAwMDA+IGU4NjEwMDY4IDdmMjZjYjc4IDM4YTAyOTAwDQo+ID4gW8KgwqDCoCAwLjA2MTM5Nl0g
+LS0tWyBlbmQgdHJhY2UgMDAwMDAwMDAwMDAwMDAwMCBdLS0tDQo+IA0KPiBUaGUgcHVycG9zZSBv
+ZiB0aGF0IG5ld2x5IGludHJvZHVjZWQgd2FybmluZyBpcyB0byBkZXRlY3QgaW5jb3JyZWN0DQo+
+IHVzYWdlIG9mIHRoZSBtZW1ibG9jayBhbGxvY2F0b3IuIFNwZWNpZmljYWxseSwgdG8gZmluZCB3
+aGVuIGENCj4gZHJpdmVyL3N1YnN5c3RlbSB0cmllcyB0byBkbyBhIG1lbWJsb2NrIGFsbG9jIGFm
+dGVyIG1lbWJsb2NrIGhhcyBnaXZlbg0KPiBhbGwgc3lzdGVtIFJBTSB0byB0aGUgYnVkZHkgYWxs
+b2NhdG9yLiBJdCBoYXMgbWF5YmUgY2F1Z2h0IHN1Y2ggYSBjYXNlDQo+IG5vdy4uLg0KPiANCj4g
+SSBkb24ndCBoYXZlIGEgcG93ZXJwYyBzeXN0ZW0gaGFuZHkgdG8gcmVwcm8geW91ciBmYWlsdXJl
+LCBidXQgbG9va2luZw0KPiBhdCB0aGUgY29kZSwgaXQgbG9va3MgbGlrZToNCj4gMS4gZmFkdW1w
+X3NldHVwX3BhcmFtX2FyZWEgYWxsb2NzIGEgcGh5c2ljYWwgcmFuZ2UgZm9yDQo+IGZ3X2R1bXAu
+cGFyYW1fYXJlYSBhbmQgemVyb2VzIHRoYXQgcmFuZ2UuDQo+IDIuIGZhZHVtcF9hcHBlbmRfYm9v
+dGFyZ3MoKSBtYXJrcyBpdCBhcyByZXNlcnZlZA0KPiANCj4gQnV0IEkgYmVsaWV2ZSB0aGF0IGJ5
+IHRoaXMgcG9pbnQgdGhlIG1lbW9yeSBoYXMgYWxyZWFkeSBiZWVuIGhhbmRlZCB0bw0KPiB0aGUg
+YnVkZHkgYWxsb2NhdG9yLiBTbyBpdCdzIHBvc3NpYmxlIGZvciB0aGF0IHplcm9pbmcgdG8gYmUg
+Y2xvYmJlcmluZw0KPiBzb21lb25lIGVsc2UncyBtZW1vcnksIGFzIHRoZSBmYWR1bXAgY29kZSBp
+bmNvcnJlY3RseSBhc3N1bWVzIHRoYXQgaXQNCj4gaGFzIGV4Y2x1c2l2ZSB1c2Ugb2YgdGhpcyBy
+ZWdpb24uDQoNCkp1c3QgdG8gc2hvdyB5b3Ugd2hlcmUgdGhlIG1lbWJsb2NrIG1lbW9yeSBpcyBn
+aXZlbiB0byB0aGUgYnVkZHkNCmFsbG9jYXRvcjoNCg0KbW1fY29yZV9pbml0DQogIG1lbV9pbml0
+DQogICAgbWVtYmxvY2tfZnJlZV9hbGwNCiAgICAgIGZyZWVfbG93X21lbW9yeV9jb3JlX2Vhcmx5
+DQogIGttZW1fY2FjaGVfaW5pdA0KDQoNClRoYXQgZmlyc3QgbWVtX2luaXQoKSBwYXRoIGdpdmVz
+IHRoZSBtZW1vcnkgdG8gdGhlIGJ1ZGR5IGFsbG9jYXRvciwgYW5kDQp0aGVuIHRoZSBjYWxsIHRv
+IGttZW1fY2FjaGVfaW5pdCgpIG1hcmtzIHRoZSBzbGFiIGFzIFVQIGFmdGVyIHdoaWNoDQpwb2lu
+dCBjYWxscyB0byBhbGxvY2F0ZSBmcm9tIHRoZSBtZW1ibG9jayBhbGxvY2F0b3Igd2lsbCB0cmln
+Z2VyIHRoZQ0Kd2FybmluZy4NCg0KSSBzdXNwZWN0IHRoYXQgdGhlIGZhZHVtcCBhbGxvY2F0aW9u
+IGluIHF1ZXN0aW9uIGlzIGhhcHBlbmluZyBhZnRlciB0aGUNCmFib3ZlIG1lbW9yeSBpbml0aWFs
+aXNhdGlvbiBjYWxscywgd2hpY2ggSSB0aGluayBtYWtlcyBpdCBhbiBpbmNvcnJlY3QNCnVzZSBv
+ZiB0aGUgbWVtYmxvY2sgYWxsb2NhdG9yLiBDYW4geW91IGNvbmZpcm0gdGhhdCBzZXR1cF9mYWR1
+bXAoKQ0KaGFwcGVucyBhZnRlciB0aGF0PyBJZiBzbyBJIHRoaW5rIHlvdSBzaG91bGQgZWl0aGVy
+IG1ha2UgdGhlIGZhZHVtcA0Kc2V0dXAgaGFwcGVuIG11Y2ggZWFybGllciBpZiB5b3Ugd2FudCB0
+byB1c2UgbWVtYmxvY2ssIG9yIGVsc2UgdXNlIGENCm5vcm1hbCBrbWFsbG9jLg0KDQpKRw0KDQo+
+IA0KPiBJIG1heSBiZSB3aWxkbHkgb2ZmLCBidXQgdGhhdCB3YXMgdGhlICppbnRlbnRpb24qIG9m
+IHRoZSB3YXJuaW5nLg0KPiANCj4gQWRkaW5nIFBvd2VyUEMgbWFpbnRhaW5lcnMgaGVyZSBmb3Ig
+dGhlaXIgb3BpbmlvbiBvbiB3aGV0aGVyIGZhZHVtcCBpcw0KPiBkb2luZyB0aGUgcmlnaHQgdGhp
+bmcgaGVyZSBvciBub3QuDQo+IA0KPiA+IA0KPiA+IA0KPiA+IGNhdCAvcHJvYy9jbWRsaW5lDQo+
+ID4gQk9PVF9JTUFHRT0oaWVlZTEyNzUvL3ZkZXZpY2UvdmZjLWNsaWVudEAzMDAwMDBkNC9kaXNr
+QDUwMDUwNzY4MTAxNTM1ZTUsbXNkb3MzKS9ib290L3ZtbGludXotNi4xMC4wLXJjNi1uZXh0LTIw
+MjQwNzAzDQo+ID4gcm9vdD1VVUlEPTJjOTBhYjQ3LTMzODktNDAxNy05ZjA2LTBjOTQ1MzRmZDlj
+YiBybw0KPiA+IGNyYXNoa2VybmVsPTJHLTRHOjM4NE0sNEctMTZHOjUxMk0sMTZHLTY0RzoxRyw2
+NEctMTI4RzoyRywxMjhHLTo0Rw0KPiA+IGZhZHVtcD1ub2NtYQ0KPiA+IA0KPiA+IA0KPiA+IFJl
+dmVydGluZyB0aGUgYmVsb3cgY29tbWl0LCBpc3N1ZSBpcyBub3Qgc2Vlbi4NCj4gPiANCj4gPiAN
+Cj4gPiBDb21taXQgSUQ6IDBmYTRhYzY3MjIxMjdmNGFhZTJlYTk4MTNiYTI0NmNlMmJlYzgzMjYN
+Cj4gPiANCj4gPiANCj4gPiBSZWdhcmRzLA0KPiA+IA0KPiA+IFZlbmthdC4NCj4gPiANCj4gDQoN
+Cg==
