@@ -1,102 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A94013A25F;
-	Tue,  9 Jul 2024 12:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBEE2B9D4;
+	Tue,  9 Jul 2024 12:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720528964; cv=none; b=HeSlWu1XubPa7p9sJ5QfblZT8YycRWNSV2wTiMDrQkQLRb/NpfPvzuy9oz104uBxp5coCKK3XdE3GFisVTlqu33RKfGEKjhZJd49BZz4eFvXNrtuapFKcRN1hM55PyNhUnJy0MGPAMabitaUmRFvC0/48YcLpUKJKqoX/k/y0FU=
+	t=1720529112; cv=none; b=ASf/UeahEzne7jBmgsHL3mulyK2HJy3UIPUJYQRRvQPxPsz2BN09cz1kUX0CZG8yNTkjWBkBSfDPPI+9+qKQTQG5N6E7S2RkkeBu5XGs2yHWW4kdRRLsDk1dr6vNb98pnMZjDKZtoFN2p/kDvx1rbKerZLIi1Wen2gsk5T7znIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720528964; c=relaxed/simple;
-	bh=qQEcMYXqKNq0TWv7hl5Ht7iPEiXNq7qFmMddZ9VMTXg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jpVu5DiuXPArXMG13i39iKC8miUA7UO/3RaOG14pc8v6dsBfma0p1bXOv9AgyIZYMTTSIQ/EgAgMZ27SjFec70qs9kzTceb0w7FbceQvFu3a8Es3kOg5+/8EAZLY9DLAI3dNGl5tPytiKv63ZCa/Agl52AAyrj+Nh+VnHl49weU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eiDtjfFE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720529112; c=relaxed/simple;
+	bh=yFQzCYDWKZHNil0VhVLf1v51X/j/lFsJuPiW6woxYgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XTksF++7NstfuBttOvHARrwpejihufW6iJqPLbb9M559UfYeBscyGFHcsIHkSOhGD0i4UFAEvyFrOg7uehlACtGe5WruwfuMF0i0QL2+UP0OCNdgkA+JhMDpoDhW2+CDo03t1HfTOmIutq8dUh3exDVmlB8G4nuOavkx+lKWi7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INv1g0DR; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eiDtjfFE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1844C4AF49;
-	Tue,  9 Jul 2024 12:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720528963;
-	bh=qQEcMYXqKNq0TWv7hl5Ht7iPEiXNq7qFmMddZ9VMTXg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eiDtjfFE0b87jVlqh+ARPh6NTorVLpRPS652gZi7AGYtEV/4PNaLy6MIhKTEdbn0T
-	 EU8AyNLQPKN3V5Idkx9uBX4kFEkXr/GzNlD/c8whgg91JS2JhiwT5oYJM08L4HJDfG
-	 x4pDnhYD4fKpNKiFFd07m2yHUzLoMgnugHIrJq/hcto90jxKQcLoSxX1LrwpLYB7Er
-	 gRMzsy57ztX0v+tonhb0kPT+vFF3pnx3kXxpGW5pjZCmkaOOK6TXqOcy/Ku8DL+SFA
-	 6o5hbJ8uLYtAa2IIAD/pC823BUS9PfAbgPtExROglBye3QnDinMLO7dQ0L9TpnoQCA
-	 v726klfFpiLWA==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eea8ea8bb0so35167311fa.1;
-        Tue, 09 Jul 2024 05:42:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUfJ5Qte1s92FngL4zamFRSUneaaVnicrdf3iRto8xNWVlDQ+QJoefpDogO1Fguz6fZTzNQrZPAMCkhWXBGfEKIEh4hVe7YoPBvE981SlHsDEXTstn8yTj7Z0gywrcL6PRsUOjBxo7d4w==
-X-Gm-Message-State: AOJu0YwZktZZ+acBczbCsgdBOrvPIbYM+QYKSssGj6RdCSrOP/rQiYdA
-	SJvoFbz5HIHODhGXN+/bREXu78iy9zZmGX2t95FAHjgeOwPX6stlc5WA15yvoJ9qR3W0NNlRTir
-	FcRl03FSf9T0ou7PvAM/C7GILvA==
-X-Google-Smtp-Source: AGHT+IGPoEZZTFAs7uz5nkr/yFitdKrLKwVDJKkZqaUX25kKoBaBI7eEU/23XfVDTOu2IdbWdo2Tu1TL/WSQlZ2suDk=
-X-Received: by 2002:a2e:96d3:0:b0:2ee:4a67:3d82 with SMTP id
- 38308e7fff4ca-2eeb30fef9bmr20467101fa.28.1720528962220; Tue, 09 Jul 2024
- 05:42:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INv1g0DR"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a77c349bb81so448200366b.3;
+        Tue, 09 Jul 2024 05:45:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720529109; x=1721133909; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xE7ByKNc5E5Jc1wKL8KG6ET8SWs9CYKJyRRw08AComY=;
+        b=INv1g0DRn8vMQP7t7zwdRyP4Kr+rFf/gCovPoFtWyOfGAJw0NuCYlHZesU18GYWIBK
+         54f5yD6PaMP5ZAkxA+8tjW1EkVyWWBVFBkU4JXD6mQ2Fxhk3SJYvh82aMB1OkH8WcJh5
+         nWKMy/K9mLii7PTEBFmLqMFiWZoNMQGpBoxNCi7ChzOwTZAPQK+TxbC5VQNPEzKuxoTC
+         BJSpbagpocuYFOU24kT1l34pB5pTBagxT1fYdNl3UMUmA4KRYys0Bnc81bHRS1FZvZBi
+         PlrIxQU0RjZFKohXxzuVEzXKmfkX6UoHU/x8wk1iLQBC3B7z4D+z91e5UDLRX0/kZsiw
+         5k+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720529109; x=1721133909;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xE7ByKNc5E5Jc1wKL8KG6ET8SWs9CYKJyRRw08AComY=;
+        b=bdAsrhe8J3pSNkWN++togviGMhTLG1J973NJ4kDTsgTRv831ZP14E/LhxYctmwThUf
+         b2u5KxzBRtk43/v/d1dD2k/PYFS9jYnsa2uLm4+SuT4j5fXNPCa4ajjefKxXhc5x/sR2
+         3WaOKPnCrkuAPuRuSsH14vPcq7Os7BQIHCHLJCmnk+qbJzXClbTvZ/JtRlB6mdvB0ZAx
+         70vU6v0LtToedej7e84X89+UiYx2ZGHRyb2apyWX0kBLAZoWiI/j8SAcUEmzlAUBLvX4
+         2mdDFQyXpyw8UUTme3PMyIqhT3mnSN7FPIY6UniRK280zexrxuVBtR/ICbo/9xkDe20e
+         D3ng==
+X-Forwarded-Encrypted: i=1; AJvYcCWdrEUme9nOq8RFBo4sM7Xiv2jceGDJ1RSAy75S6UxRueRcPq1MK5AXPl/GR3+bXUAR1JVpTYazmDCS5naT6CgCctUSVerS6JpBcDD+bV5ycDVP7lKq0bZPKmbQngAh5YiahpCxhaUikzNP/FHZnctE9UGXUhjt+Of5gylxf0XW3w==
+X-Gm-Message-State: AOJu0Yz9QX7MSoDoy3L00PqkEQu61B43FEeOmpgjXfP4Lh/YzFQiKVtZ
+	QmMro0yLX8tRz22Z/UX1V9FhuB10KSMcn5znZPVVPNd6riGNkpd+
+X-Google-Smtp-Source: AGHT+IELiYQOG9o7ZSqxbSBQOf8eGO2u0vcUtyNN0rM9xp2ommpq7yGdxF9YDBi3Kan0LNQHUsKGnA==
+X-Received: by 2002:a17:906:c090:b0:a77:de81:c7b0 with SMTP id a640c23a62f3a-a780b6b2ef8mr153437066b.22.1720529108645;
+        Tue, 09 Jul 2024 05:45:08 -0700 (PDT)
+Received: from skbuf ([188.25.110.57])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a87204esm74507766b.222.2024.07.09.05.45.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 05:45:07 -0700 (PDT)
+Date: Tue, 9 Jul 2024 15:45:03 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: John Thomson <git@johnthomson.fastmail.com.au>, andrew@lunn.ch,
+	f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC net-next] net: dsa: generate port ifname if exists or
+ invalid
+Message-ID: <20240709124503.pubki5nwjfbedhhy@skbuf>
+References: <20240608014724.2541990-1-git@johnthomson.fastmail.com.au>
+ <20240608014724.2541990-1-git@johnthomson.fastmail.com.au>
+ <20240613114314.jxmjkdbycqqiu5wn@skbuf>
+ <Zm2mOZGPuPstMdlB@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709164618.69cfcfad@canb.auug.org.au>
-In-Reply-To: <20240709164618.69cfcfad@canb.auug.org.au>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 9 Jul 2024 06:42:28 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLmm6Da=4G9cJfAtKJB5j_dfbTywRRwHMKZyf3J7SAxfg@mail.gmail.com>
-Message-ID: <CAL_JsqLmm6Da=4G9cJfAtKJB5j_dfbTywRRwHMKZyf3J7SAxfg@mail.gmail.com>
-Subject: Re: linux-next: duplicate patches in the devicetree tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <paul@pwsan.com>, ARM <linux-arm-kernel@lists.infradead.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zm2mOZGPuPstMdlB@makrotopia.org>
 
-On Tue, Jul 9, 2024 at 12:46=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> Hi all,
->
-> The following commits are also in the arm-soc and risc-v trees as
-> different commits (but the same patches):
->
->   0620bce64afa ("dt-bindings: riscv: cpus: add ref to interrupt-controlle=
-r")
->   877097a2fab0 ("dt-bindings: interrupt-controller: convert marvell,mpic =
-binding to YAML")
->   c7ce06684bf5 ("dt-bindings: interrupt-controller: riscv,cpu-intc: conve=
-rt to dtschema")
+On Sat, Jun 15, 2024 at 03:33:30PM +0100, Daniel Golle wrote:
+> Sounds fine generally. Where would you store the device-specific renaming
+> rules while making sure you don't need to carry the rules for all devices
+> onto every single device? Would you generate a device-specific rootfs for
+> each and every device? For obvious reasons this is something we'd very
+> much like to avoid, as building individual filesystems for ~ 1000 devices
+> would be insane compared to having a bunch (< 100) of generic filesystems
+> which some of them fitting a large group (ie. same SoC) of boards.
+> Most OpenWrt devices out there are based on the same SoCs, so currently
+> the devices in the popular targets like MT7621 or IPQ40xx all share the
+> same target-wide kernel **and rootfs**.
+> 
+> tl;dr: The good thing about the 'label' property is certainly that such
+> board- specific details are kept in DT, and hence a generic rootfs can
+> deal with it.
+> 
+> As having the 'label' property applied also for non-DSA netdevs by the
+> kernel has been rejected we did come up with a simple userland
+> implementation:
+> 
+> https://git.openwrt.org/?p=openwrt/openwrt.git;a=commit;h=2a25c6ace8d833cf491a66846a0b9e7c5387b8f0
+> 
+> For interfaces added at a later stage at boot, ie. by loading kernel modules
+> or actual hotplug, we could do the same in a hotplug script.
+> 
+> So yes, dropping support for dealing with the 'label' property in kernel
+> entirely would also fix it for us, because then we would just always deal
+> with it in userland (still using the same property in DT, just not applied
+> by the kernel).
 
-I had to rebase my tree yesterday to drop a bunch of reserved-memory
-restructuring that seems broken beyond repair. Maybe I'm going to have
-to just do reverts instead. I had no knowledge that anyone had pulled
-in my tree and how is it just these 3 commits? It should be at least
-these:
+2 thoughts come to my mind.
 
-e83445ff82c3 dt-bindings: interrupt-controller: convert marvell,mpic
-binding to YAML
-7de99a24a975 dt-bindings: clock: drop obsolete stericsson,abx500.txt
-c0ea5d103c5d dt-bindings: riscv: cpus: add ref to interrupt-controller
-634c4347b3b4 dt-bindings: interrupt-controller: riscv,cpu-intc:
-convert to dtschema
-27674d602e7e dt-bindings: arm: cpus: Add new Cortex and Neoverse names
-3251b36bf430 dt-bindings: interrupt-controller: qcom,pdc: Add sc8180x PDC
-4f42882bb9e4 PCI: of_property: Add interrupt-controller property in
-PCI device nodes
-58a7a4ac485f of: unittest: Add a test case for of_changeset_add_prop_bool()
-de63fa7dc80e of: dynamic: Introduce of_changeset_add_prop_bool()
-05c9f943c9d8 of: unittest: Add tests for changeset properties adding
-8957c7464362 of: dynamic: Constify parameter in
-of_changeset_add_prop_string_array()
-a16705e10236 dt-bindings: dma: qcom,gpi: document the SDX75 GPI DMA Engine
-8c58884d056d dt-bindings: watchdog: img,pdc-wdt: Convert to dtschema
-dab5b8e26e84 dt-bindings: timer: renesas,tmu: Make interrupt-names required
-285c645d842c dt-bindings: interrupt-controller: fsl,irqsteer: Add
-imx8mp/imx8qxp support
+First there is the focus on the user, which in the case of OpenWrt is
+the home user. What does he want? We are debating where to put a fixed
+Ethernet interface name, but does the user want it to be fixed?
+Like, if I were looking in my system log, I would certainly prefer if I
+saw 'Network device 'printer'/'nas'/'pc' link is up' rather than 'eth1',
+even if it says 'eth1' on the chassis.
 
-Rob
+With that in mind, I would say it would be preferable to ship
+architecture-wide udev naming rules, which essentially give each
+netdev a predictable name according to its SoC position. Then give
+the user the possibility to use that udev rule file as a _framework_
+and name the interfaces as he wishes. The OpenWrt wiki for a board can
+list a diagram with the correlations between SoC interface names and
+chassis labels, in case the user desires to preserve that (the board
+will be used on a bench and the labels will always be visible, rather
+than being more easily recognizable by their role).
+
+Then there is the fact that we are dealing with low-cost boards with
+low-cost/low-effort design. Ilya Lipnitskiy brought forward a case where
+the chassis had labeled the ports 'eth0', 'eth1', 'eth2', ..., which is
+clearly a design problem since it conflicts with the way in which the
+kernel naturally wants to name the devices ('eth0' is the initial name
+for the DSA master, but also the chassis label for a DSA user port...
+yay...).
+
+I don't honestly think you can/should fix low-effort design.
+
+But, if you insist that putting fixed netdev names in the device tree is
+the best option, I suppose that could be considered a low-effort
+solution which belongs to the same general theme.
+
+But I don't see why not go low-cost all the way. Since 'label creates
+(avoidable) conflicts with DSA, why don't you just name all of them
+'openwrt,netdev-name' or something, and proudly own that low-cost
+solution as a downstream scheme which needs no kernel support
+whatsoever (you parse it from the init scripts as you already do)?
+U-Boot also is another example of a project which uses additional device
+tree properties for its own purpose.
