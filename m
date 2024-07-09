@@ -1,107 +1,145 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B8017995B
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A699817F4EB
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720532908; cv=none; b=fumQ313IO1Z8oH5xJ7E8hrKvPylWwhLZi1JVl38vcw9YZAFaY+tCqWD+ymbQYBi9ZkmGjsBZFFDHzVPDrkV1iAaIcI1TShB3Oo3PdSeswGpaDrYa56bClcm2JKICru+pIvWj3ugFLThO6NGT6yYcd7Hbj2YNPvLxFiCnCsMKnng=
+	t=1720532915; cv=none; b=ChFGNaFMTYMH5oTne8jy8Yhdjc+ggjAqe6+VnoOkJeASs5toHEkJP0EH/U49lPdWgDxLapL9kDQrEIWYapZIHq/iLy9r2LW/8DXZ15JGq2ee11XvxyQCDWGOuIQadwOpod7u6Lhf10zBcZmgofvwx2FXlwK4J31u1z+zwjMX58o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720532908; c=relaxed/simple;
-	bh=pYPTNY8X4IxGHrR0aSERyjf84J9xMrNFhAnJJZV75Tg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=aK2cMkemHMRBB+X62M3IIY5evlF3DXiioGmRHUvnAWyYnXuf10f0fpuT/Pj9gRnS0P+/3eW3b1WoxbqvufWSzWuBrwBk5zrf2bTV2G0vyENLZuhgbUq5hIe9dbFAdAutvEmgEQ+BbSLXK/8u/6C4EIfVaUYcDDbtt5S3le9F/2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=rFhzhbGG; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	s=arc-20240116; t=1720532915; c=relaxed/simple;
+	bh=+E5EN258CmnPr6iL8KBqJO5+7w/22exHf4+Ix8HRjHU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=J7qnvgtww/m/9g0VqZzWuQfdyWMzOZ+rqjhrKuTMUE/rFEEYLxvJVoA0NFeB9Y+vvm1yQsIDgGBNlrM0QfZlk8lne7Nc+B3ocsCZSdu9TMbud328bA/KFRH79iiCf6l17DC9llGFdmSEPPf30bAlrmJigrpWw5ZjELLY9YEPXQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zr76ttDD; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="rFhzhbGG"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fb64d627b0so14225665ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:48:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zr76ttDD"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52ea952ce70so3337771e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:48:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1720532902; x=1721137702; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EcZGfscxWH1cfj2JazAFXoJC02WpocVggpq54m1oHTg=;
-        b=rFhzhbGGNorhXYF/A5bwxIO/XkFdwTiqdKRPSUG/Y5uxbEr8UTQ9lQ+UWtBbu0Bjyl
-         xlXPVIDN28YM3FtFXdzSQyO2T3+DP0UFFq5Kk7NsEG7e+ZHypP+IwfkxrJAYzQ5/r8bb
-         RlVtFBjnFQuniR5qAuxTgvGEx6lqh7IGCgbr7GRarG7DYDK3iR9yKOUo3JPTn2jpQvmy
-         lu51t39ktT3utHuC1Kt4/pJAfK8zpnytutSF0yviSJi4OIfdJdDCAfG1AhGzOkim9t2r
-         Rl+UlirOf9f+uJWE+sGyLwJ+LIHfw3yBAdTUPRORqv8A4LmeKPpvgJ5OjQJ5iWHNyOrR
-         t1KQ==
+        d=linaro.org; s=google; t=1720532908; x=1721137708; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E3rqoSXZHGMGmxvjGDiiPCjvj8LcgIFTaqvOfNwnFjg=;
+        b=Zr76ttDDfeHuwdLf4kUX12C25hkYo9VmC+JC6hoIo0Hqb2dmWEIpIfLY3iv3xBOm7l
+         v63Ppl40wIVSI1KdPnH3+4skV8BKeXfiB5BHhwHAKbxeuaCN36xz/VIuaRc1AHt1Vgs2
+         AIAc1KjZQUVqLhC5mJ4ddxAz0CwwWjiYOYhyDTrXC3oXH381Q0h3rB7450cfjlzqm7E1
+         358zqRTstBUtCipgtzvDmhM5xwo117eVVBT9HFz0IS2vTE/6Dv1VqAyVvyvakzxu0QS6
+         vpiMJ3BQE7wIct+9R8R3Hi2vPqXykYRCw2ZmM+qz1DN1OUzS9Ym5/hPzVHSjCRul9pgu
+         aYuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720532902; x=1721137702;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EcZGfscxWH1cfj2JazAFXoJC02WpocVggpq54m1oHTg=;
-        b=wvST9ZzPlVCM+KvZeAkdKlThjM1gN8cQ9TGIOaODQ91mc8Od+PboiFmhsoYTQfFe0b
-         Q96yTuFOL5gMOXk8jWIzEz1C3th+fvjnryjnK9FC+/plu006701guMXuVdiGm5ed8tto
-         JfjBRq0+kbDEDOu6kY+60LBpDLsE2S6PSZuPQKNicuvoe9vwCNvLPHgw/uZBWtKHOMk2
-         pKW4rMRyfxAIkmLTM+z5H0+sfPiwjwaTSYYvffTNF7rj1JsXEdHC0cqSlv9d5cx5Awr7
-         5ASPxzBnfIMT15jv8m0dOKAka4/cpfzl4H7e5lfA42ljRqYfgNzGc2snzd5232OpaHZg
-         Kj6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVSxPuBI5nI1HAm/V6JsPxOMMtKjlSbR3gNG+W/sXL2vT5JexK0clnFChGrFL4yTTXTut7JwT9ba+IhCXBYZ+Wf1T6ZspPICVlue7Ol
-X-Gm-Message-State: AOJu0YzdnpckejcHRw+oLUNoKiHD2Y/0ixhZlmK/2TftuClzxKcIeJ6Y
-	h+hrrRYAlLz3N2ikoZ95e5UfhhtGNK7QsJ236I22FJ03tSd08IX1pyiuWBoyhYs=
-X-Google-Smtp-Source: AGHT+IFX21o+X3VwRasdQwyrEqH0PuWe1B+40bbzeOg94dAYx5KftRVmTty5gE2r5cIfdyuv5HR6pw==
-X-Received: by 2002:a17:902:d552:b0:1fb:90bd:afc2 with SMTP id d9443c01a7336-1fbb6d2516emr17327055ad.36.1720532901816;
-        Tue, 09 Jul 2024 06:48:21 -0700 (PDT)
-Received: from lvzhaoxiong-KLVC-WXX9.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab6b9fsm16211685ad.138.2024.07.09.06.48.18
+        d=1e100.net; s=20230601; t=1720532908; x=1721137708;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E3rqoSXZHGMGmxvjGDiiPCjvj8LcgIFTaqvOfNwnFjg=;
+        b=KXTxiVYO4D+PvT6w6FxWF9WFZw4voqDv1z4i4TxV1kgdeNp+ISHMq3D9FR3hAS93HO
+         6udomF2ivBTDFx0QYOqu9fMWKgW449RpI0ko/WPDGnyIMPXXp2Ot6y3PJmZZZnWBk6qX
+         q+lSnRSO5J8qU+5GG71/8RL8mneb5yQp88xc7JAji/c0dot3K8C6zsPEacR450MNVUBO
+         ZjBs/WPmLBZKCmk23GyK4/yUYUgE9N5hrtGoLbLSIseXG6+Nzil1ZAGSVf3lu7sf99DU
+         1a4ndT44VvBMvgONNIOZTw/4AqcBwutxUiJS9tPhlnbBPbU7AtCnjrbefJEHP0z+1vz/
+         trjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRkOpYS1vkbhClHZc7a7G/Fw08SApM8N8IWIC6WfgFZ6ZslBrA8sQ6Pm65IqRyATtbfs9lQJY02eJQ1mfe4IZl/eaCW/z2F9jxhTbS
+X-Gm-Message-State: AOJu0YwQ3hzcKuNSqE7dl7UT0KfkO8axgCQAchDS2Zvaruv3jr1AbGN/
+	RVO2maXCjfHOKGKVI/wJ0XFJ9TV3UGE5jgbQs1mvHmGhyQChbYkEwJ/P16C5orY=
+X-Google-Smtp-Source: AGHT+IEJOKC9CKr3gPG/ltR1Yag3QnJkvqhSLl98qea8/8qeL+x+wytN3L9Buqxyh3K51KaCWlt2Iw==
+X-Received: by 2002:a05:6512:ea5:b0:52c:dbe6:f5f9 with SMTP id 2adb3069b0e04-52eb9990e79mr1811035e87.12.1720532907990;
+        Tue, 09 Jul 2024 06:48:27 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52eb8e4959csm250297e87.82.2024.07.09.06.48.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 06:48:21 -0700 (PDT)
-From: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-To: neil.armstrong@linaro.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	airlied@gmail.com,
-	mripard@kernel.org,
-	dianders@google.com,
-	hsinyi@google.com,
-	awarnecke002@hotmail.com,
-	quic_jesszhan@quicinc.com,
-	dmitry.baryshkov@linaro.org
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Subject: [PATCH v6 2/5] drm/panel: boe-th101mb31ig002: switch to devm_gpiod_get_optional() for reset_gpio
-Date: Tue,  9 Jul 2024 21:47:51 +0800
-Message-Id: <20240709134754.28013-3-lvzhaoxiong@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240709134754.28013-1-lvzhaoxiong@huaqin.corp-partner.google.com>
-References: <20240709134754.28013-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+        Tue, 09 Jul 2024 06:48:27 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 09 Jul 2024 16:48:22 +0300
+Subject: [PATCH 1/2] drm/msm/dpu1: don't choke on disabling the writeback
+ connector
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240709-dpu-fix-wb-v1-1-448348bfd4cb@linaro.org>
+References: <20240709-dpu-fix-wb-v1-0-448348bfd4cb@linaro.org>
+In-Reply-To: <20240709-dpu-fix-wb-v1-0-448348bfd4cb@linaro.org>
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Jordan Crouse <jordan@cosmicpenguin.net>, 
+ Chandan Uddaraju <chandanu@codeaurora.org>, 
+ Rajesh Yadav <ryadav@codeaurora.org>, 
+ Sravanthi Kollukuduru <skolluku@codeaurora.org>, 
+ Archit Taneja <architt@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Jeykumar Sankaran <jsanka@codeaurora.org>, stable@vger.kernel.org, 
+ Leonard Lausen <leonard@lausen.nl>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1664;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=+E5EN258CmnPr6iL8KBqJO5+7w/22exHf4+Ix8HRjHU=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmjT+ot0Pj4iBt23/EIWWepNxdc5knallwOTMKB
+ koOGNPvKYCJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZo0/qAAKCRCLPIo+Aiko
+ 1QKrCACjWqffsbS74ss5192ue6vxtSpLZimoCu02BjWnVbJm7yBYjEdISlCFKotHf0tVu/dW71C
+ WhQy92Bej8KFlfXpBgnE/GvMqMDyQN7azFM/rcRWqJl/nKSbia/Fw5sKXHmNAQonGSBXEZWF0WP
+ V7HsgrG016SbytVD0wPJiZaY/HfWxWsn8qZgpS1m4PRrNnPt0cM6JOF9WLaZLs27utpEm6yDD8X
+ uPv2DI1F+EcsA+UQPo3hBTZnJv+GnghVf2SQqatQT64R/lPa+S+Uza7IbvvYpQcrrdf/rHB4dR7
+ IJcfpheofCTjzvSWLvpf7s2AX5bmdzxZG2fv60b6kEFW0n+m
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Switch the driver to use devm_gpiod_get_optional() on reset_gpio to avoid
-driver probe issues when reset line is not specified.
+In order to prevent any errors on connector being disabled, move the
+state->crtc check upfront. This should fix the issues during suspend
+when the writeback connector gets forcebly disabled.
 
-Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Fixes: 71174f362d67 ("drm/msm/dpu: move writeback's atomic_check to dpu_writeback.c")
+Cc: stable@vger.kernel.org
+Reported-by: Leonard Lausen <leonard@lausen.nl>
+Closes: https://gitlab.freedesktop.org/drm/msm/-/issues/57
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Changes between V6 and V5:
--  1. No changes.
-v5: https://lore.kernel.org/all/20240704072958.27876-3-lvzhaoxiong@huaqin.corp-partner.google.com/
----
- drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
-index 8f03920e3503..b92082bfc932 100644
---- a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
-+++ b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
-@@ -286,7 +286,7 @@ static int boe_th101mb31ig002_dsi_probe(struct mipi_dsi_device *dsi)
- 		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->enable),
- 				     "Failed to get enable GPIO\n");
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
+index 16f144cbc0c9..5c172bcf3419 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
+@@ -39,6 +39,13 @@ static int dpu_wb_conn_atomic_check(struct drm_connector *connector,
  
--	ctx->reset = devm_gpiod_get(&dsi->dev, "reset", GPIOD_OUT_HIGH);
-+	ctx->reset = devm_gpiod_get_optional(&dsi->dev, "reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(ctx->reset))
- 		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->reset),
- 				     "Failed to get reset GPIO\n");
+ 	DPU_DEBUG("[atomic_check:%d]\n", connector->base.id);
+ 
++	crtc = conn_state->crtc;
++	if (!crtc)
++		return 0;
++
++	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
++		return 0;
++
+ 	if (!conn_state || !conn_state->connector) {
+ 		DPU_ERROR("invalid connector state\n");
+ 		return -EINVAL;
+@@ -47,13 +54,6 @@ static int dpu_wb_conn_atomic_check(struct drm_connector *connector,
+ 		return -EINVAL;
+ 	}
+ 
+-	crtc = conn_state->crtc;
+-	if (!crtc)
+-		return 0;
+-
+-	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
+-		return 0;
+-
+ 	crtc_state = drm_atomic_get_crtc_state(state, crtc);
+ 	if (IS_ERR(crtc_state))
+ 		return PTR_ERR(crtc_state);
+
 -- 
-2.17.1
+2.39.2
 
