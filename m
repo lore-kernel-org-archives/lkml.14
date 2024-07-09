@@ -1,80 +1,66 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC24364AB
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8675119CD03;
+	Tue,  9 Jul 2024 15:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720537743; cv=none; b=HqjWDtytUvq0A+J7JqYZi393VZ/+vPeY/zhL1Dz48+/te7E/l7wRWmR4tlk5DCPmD0kCxOiJPopEUkM5FUd7uWI7EoIyyM5MDTjDV9Mkfrs4UBI8ZHMXEWQEOPQ9Y0VWFE/QzxJ54SXniMhvubjAeWSFQQJrbE70FM0mgwj8h6k=
+	t=1720537780; cv=none; b=GJGZSI5v0E/pVvkaZMLdj63HpF1nqqCjb0XILdDUdI4BvW2hdIm+CbKAOwalqBBv2kFLjQHpzarccxQz4ZBacHLxJFxMgjRgpj9NI4WWU+kIA5Cl41BgQgh2Oc0jEnXGS+I+CzfHkGjWU8H7ATG/vh5TU+xDybWbfjpv5ZthMBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720537743; c=relaxed/simple;
-	bh=ARWgJgSVMvfRKaq7gILKEe9d/d+dOgJf2X3do9RlQ7k=;
+	s=arc-20240116; t=1720537780; c=relaxed/simple;
+	bh=5DrqVOSH/ft+huHFvRwNe4A0c6YO5hZHNoZYWRR3cKQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ne4BfblrBrbE0vHVMig3Fj2eV9cO4NQjlxuti0AqnpA5sgs5m4z6z9STUdtnBYQzbFDaOMYxJ0aNvM/2zpKaVAtw2/d0vdhlNkXLx3GrajVs3OOhGWLccx0fXRh+64xzixp2e0vuc9S8APSXZ1V9KM8nyhb2ce5oWP/4tltQeds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=hwcbQVhL; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=opJbxFEekNo+LD3bgF6QG8AL9ZTrPlHXEPb61S6JL0uC/d/EOuYMNe7Lxr4erortn1CVa3eUO69OKbmNWez5nO82lkz6qe0TSHNKFKvJqm2u73Z0yxkoe+9URqsYPo55xV8ZKRdnt/ruMlnFmjEKJfKWRUEaPK288dvwx46vT6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M++NMgxf; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="hwcbQVhL"
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469D38V0014424;
-	Tue, 9 Jul 2024 15:07:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pps0720; bh=XBbugEwSm7aqeaT41Tr29EK
-	RuB+6EebZt+Dw6pA9kzo=; b=hwcbQVhLtEg6gTEpmCYI/JBfjJQbFsxw19fOi5Y
-	yOTYdDh0kh72rFUCOeg3xqh9DOgoRL59EcUOfecVeH7c/xs+DfbGhqldREbwJ16j
-	P3cB3dMDRgePy9K38J6JmM3EcgKb1OMS7T0DavtRqOt17o9MHOLrhDS8tnN0Dzbf
-	r+9ARukdXs/U24LIYHWK02Wgxj0pi3Ac+H4ibCYeVa+bddeMXOkoYTMEamEtgtI1
-	WV/MKn2gDI+HdZNvWwE+QCmivewp/d0Kg4wjkkWNWRY7uM2d04mMLseaZESkF2NG
-	BVBdQB/cwj1m1dpWU26u/iJBcsNGtQ4CYdagThN9P7UsqDQ==
-Received: from p1lg14881.it.hpe.com ([16.230.97.202])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 4095n296wf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 15:07:57 +0000 (GMT)
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id 3F1F38059F2;
-	Tue,  9 Jul 2024 15:07:56 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.39])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id E352D80161F;
-	Tue,  9 Jul 2024 15:07:50 +0000 (UTC)
-Date: Tue, 9 Jul 2024 10:07:48 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Steve Wahl <steve.wahl@hpe.com>,
-        Ashish Kalra <ashish.kalra@amd.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, Pavin Joseph <me@pavinjoseph.com>,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
-        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
-Message-ID: <Zo1SRIZEhveMwSPX@swahl-home.5wahls.com>
-References: <20240708181133.GHZowr1eznPqgvdtRw@fat_crate.local>
- <CAMj1kXG8hZ86BFbar9S5mmvKMH4a0XF0oCm36WwZxYNqc0+pjQ@mail.gmail.com>
- <20240708190724.GIZow47G0J8vO6J3ee@fat_crate.local>
- <Zow-AXsLHjU6gfET@swahl-home.5wahls.com>
- <20240708195810.GKZoxE0pRWHEUljjnQ@fat_crate.local>
- <ZoxOt1_w7nblRQCv@swahl-home.5wahls.com>
- <CAMj1kXGA8zG95WutMgVgeb-M7oQKJrVO6QWNzLi1GMuj1wq=bg@mail.gmail.com>
- <ZoxX9mckeu046zed@swahl-home.5wahls.com>
- <CAMj1kXE5OYTxxBEO38dRyYt_J1FNpU-tdkaU8rxvrMLd_k_beg@mail.gmail.com>
- <20240709103742.GCZo0S9md7YyeevRN-@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M++NMgxf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720537779; x=1752073779;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5DrqVOSH/ft+huHFvRwNe4A0c6YO5hZHNoZYWRR3cKQ=;
+  b=M++NMgxfwz10AnlLkR9G8nzSxDD6wFYfkNp7dClh0qx4yxnjA5Jw/cZG
+   OCiq6s9elXI5h8k9cSER8VB3dRSWvJcyufJZAGc87Ag4vgqM8Pj6SIS+3
+   0KLc67jHe5gNcX7ZRUOYzwyLU+29ljKFDwJ6afJg48YVYVo7HjbYTrzea
+   KMO99RgKkc/XmsY2Wq1rJl/LKz84CscmUl6JoQWW0KUicEUVjFdMNn3FP
+   lwRoZ5zwwpYBaYTvxnxfFbRe5giSfnFhOg+1qRoiAp2G6/SKQeMVPGogI
+   3Dw4gZx+O/APnHDXLR1KbCGLGbeJet1SFB5BNyo5wBRcfSe3hLjLoREaO
+   g==;
+X-CSE-ConnectionGUID: TyRx199LRVmtJrS/zNwK4Q==
+X-CSE-MsgGUID: hn4B5aGNSOCf2AqPBWZjug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="17620699"
+X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
+   d="scan'208";a="17620699"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 08:09:38 -0700
+X-CSE-ConnectionGUID: c15VrcBoT5eu4VoWgg5m4w==
+X-CSE-MsgGUID: pEWjBfDCRMGhpr7iL1bKGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
+   d="scan'208";a="47869198"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 08:09:35 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 1939811F811;
+	Tue,  9 Jul 2024 18:09:32 +0300 (EEST)
+Date: Tue, 9 Jul 2024 15:09:32 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Greg KH <greg@kroah.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+	David Plowman <david.plowman@raspberrypi.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Naushir Patuck <naush@raspberrypi.com>,
+	Nick Hollinghurst <nick.hollinghurst@raspberrypi.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the driver-core tree
+Message-ID: <Zo1SrABWB-axGibI@kekkonen.localdomain>
+References: <20240709163715.3bcd6ab3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,60 +69,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240709103742.GCZo0S9md7YyeevRN-@fat_crate.local>
-X-Proofpoint-GUID: kPxHdGZfeB7wTZBBMbdGcPnlsYTYKy4r
-X-Proofpoint-ORIG-GUID: kPxHdGZfeB7wTZBBMbdGcPnlsYTYKy4r
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_04,2024-07-09_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- suspectscore=0 spamscore=0 priorityscore=1501 mlxlogscore=903 phishscore=0
- bulkscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407090099
+In-Reply-To: <20240709163715.3bcd6ab3@canb.auug.org.au>
 
-On Tue, Jul 09, 2024 at 12:37:42PM +0200, Borislav Petkov wrote:
-> On Tue, Jul 09, 2024 at 08:49:43AM +0200, Ard Biesheuvel wrote:
-> > > Patch #2 adds the CC blob to the identity map as well, if present,
-> > > since if present it is also dereferenced before the page fault handler
-> > > can be put into place.  Given what's been discussed, this patch might
-> > > not be necessary; I don't know enough to say whether kexec-ing a new
-> > > kernel within a SEV guest makes sense.  I'm pretty certain it can
-> > > cause no harm, though.
-> 
-> No, keep it in the bag until it is really needed. No proactive "fixing".
-> 
-> > I'd prefer it if that is addressed within the context of the SEV guest
-> > work. The memory setup is quite intricate, and dealing with individual
-> > types of EFI config tables is something we should avoid in general. I
-> > still maintain that the best approach would be to map all of DRAM 1:1
-> > instead of mapping patches left and right (as this is what EFI does),
-> > but if we need to do so, let's keep it as generic as we possibly can.
-> 
-> Sure. There's the kink that coco guests need to accept memory first and
-> mapping it all is the least performant one. But we can deal with that later.
-> 
-> > I wasn't cc'ed on any of the patches so I don't know exactly what was
-> > discussed.
-> > 
-> > Please cc me and linux-efi@ on your next revision.
-> 
-> And please update your commit messages with what was discussed on this thread.
-> 
-> Thx.
+Hi Stephen,
 
-Thanks, Boris.  I'll give it my best shot.
+Thanks for the patch.
 
-Next version will leave out the current patch #2, and update the
-comments to include this conversation somehow summarized.
+On Tue, Jul 09, 2024 at 04:37:15PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the driver-core tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> drivers/media/platform/raspberrypi/pisp_be/pisp_be.c:1786:27: error: initialization of 'void (*)(struct platform_device *)' from incompatible pointer type 'int (*)(struct platform_device *)' [-Werror=incompatible-pointer-types]
+>  1786 |         .remove         = pispbe_remove,
+>       |                           ^~~~~~~~~~~~~
+> drivers/media/platform/raspberrypi/pisp_be/pisp_be.c:1786:27: note: (near initialization for 'pispbe_pdrv.<anonymous>.remove')
+> cc1: all warnings being treated as errors
+> 
+> Caused by commit
+> 
+>   0edb555a65d1 ("platform: Make platform_driver::remove() return void")
+> 
+> interacting withc commit
+> 
+>   12187bd5d4f8 ("media: raspberrypi: Add support for PiSP BE")
+> 
+> from the vl4-dvb-next tree.
+> 
+> I have applied the following fix up patch.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 9 Jul 2024 16:03:05 +1000
+> Subject: [PATCH] fix up for "platform: Make platform_driver::remove() return void"
+> 
+> interacting with commit
+> 
+>   12187bd5d4f8 ("media: raspberrypi: Add support for PiSP BE")
+> 
+> from the v4l-dvb-next tree.
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/media/platform/raspberrypi/pisp_be/pisp_be.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> index e74df5b116dc..7596ae1f7de6 100644
+> --- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> +++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> @@ -1756,7 +1756,7 @@ static int pispbe_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> -static int pispbe_remove(struct platform_device *pdev)
+> +static void pispbe_remove(struct platform_device *pdev)
 
-I think perhaps the cover letter was also too verbose on the history
-and unintentionally hid the information necesary to understand the
-situation.  I will try to make it more concise.
+While this approach works when the patch is squashed to commit
+0edb555a65d1, it's better to also use the remove_new op as its return type
+won't be changed. That can be merged independently of commit 0edb555a65d1.
 
---> Steve
+Feel free to submit v2, I can post a modified patch as well.
 
+Thanks.
+
+>  {
+>  	struct pispbe_dev *pispbe = platform_get_drvdata(pdev);
+>  
+> @@ -1765,8 +1765,6 @@ static int pispbe_remove(struct platform_device *pdev)
+>  	pispbe_runtime_suspend(pispbe->dev);
+>  	pm_runtime_dont_use_autosuspend(pispbe->dev);
+>  	pm_runtime_disable(pispbe->dev);
+> -
+> -	return 0;
+>  }
+>  
+>  static const struct dev_pm_ops pispbe_pm_ops = {
 
 -- 
-Steve Wahl, Hewlett Packard Enterprise
+Kind regards,
+
+Sakari Ailus
