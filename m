@@ -1,146 +1,92 @@
-Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADE215F3E7;
-	Tue,  9 Jul 2024 13:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E97915FA67
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720531290; cv=none; b=DpgWZ6qwG2zR6TtIZqMhzQ8weRxTONnehx5wpqcorjsi+c6+zAuf3Zn/VN6B13zCHr9dSN6tgicOA2Li7DOkeO6YCQyG2BP1ErHHjXNpi+M+4EYeD/vaiTLwpLWaMNlliao1g6LChBQBzozH3eaLiM5SnEqKSQt/E+2CkSRBSMU=
+	t=1720531316; cv=none; b=OuBhkqen0cZiknCvCXBVIWxRR1lp10HtErxVFywH3i9outI0NK5GjOAAP1IDF7E2DoZd9UBidVbh5e8oPwBJQ5AROE5e4xG7Alxls4qQ2bveVxNOJQZwhsendcoqSdQimOVqUft38brPJSVixP7F5Zr3upj0ZR0p7dKPnJgt0E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720531290; c=relaxed/simple;
-	bh=V11/sfRjwHrSFGwa38UBGzs+K1mzWvLoZ6p6GzApERs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A5Oj735/97Lt9kLdhkIXEYqn7NBm1EkAmTmNd1i5dsxaNpzECNrx+IP9rKXYH9XAEPo1oZ7K61kmsHkfxhgLxZRHAq/VVVXcuyahMcYjdY7zXOF2bIjJg1ihdJgz0ZHM/S+X2wJ1ioU0uGu/+F0x+kJxrr2QREAnmH3uLdR8OBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=PlwmWrIi; arc=none smtp.client-ip=207.171.190.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1720531316; c=relaxed/simple;
+	bh=k6JiNPjzCUXlWLR2VKrt+9v5eOoNlh/Q8eoxarWSitI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tuJ+cr3j78d4YUNA2DqEGU19MKmH565HzJsaP/LEQdJbSmdDWQQwZBMH0XXvdyj5vqb0FOs48STGdMCy9N0V5ElLdAp6vUmRLNSs/GVmvRUhN5wYcGeB1b2OYxBgRC/FPIwR9HIwgI/z/id5omdbpE81W0KtGcV53iMD0CHQ4bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fwag4LSY; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="PlwmWrIi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fwag4LSY"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fb2936c4ccso201645ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1720531287; x=1752067287;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Zs9pi34/tgrMwAZ4z/XLHKURo1LH266GsNUebv4yq5Y=;
-  b=PlwmWrIiBE+IVPEi67xgHs9KoDET7GLIOHr6V70yGpa0nuwRMOjv9/j/
-   gM8D/sZeij5p+PRz1AgcA1RbCdi123ZtYs7VgXAcNYLtqaCYQzOib3iUn
-   h/eqFNp5BtjZiXs7XZ+NJQf+zWHEcdLSg+HDSOoBGxgl6OtNLjHZdiJAD
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.09,195,1716249600"; 
-   d="scan'208";a="355121480"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 13:21:21 +0000
-Received: from EX19MTAUEA001.ant.amazon.com [10.0.0.204:8257]
- by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.59.218:2525] with esmtp (Farcaster)
- id f29e8f74-c847-4100-b6a1-572dc2245bb7; Tue, 9 Jul 2024 13:21:19 +0000 (UTC)
-X-Farcaster-Flow-ID: f29e8f74-c847-4100-b6a1-572dc2245bb7
-Received: from EX19D008UEA002.ant.amazon.com (10.252.134.125) by
- EX19MTAUEA001.ant.amazon.com (10.252.134.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 9 Jul 2024 13:21:17 +0000
-Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
- EX19D008UEA002.ant.amazon.com (10.252.134.125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 9 Jul 2024 13:21:17 +0000
-Received: from ua2d7e1a6107c5b.ant.amazon.com (172.19.88.180) by
- mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34
- via Frontend Transport; Tue, 9 Jul 2024 13:21:14 +0000
-From: Patrick Roy <roypat@amazon.co.uk>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <akpm@linux-foundation.org>,
-	<dwmw@amazon.co.uk>, <rppt@kernel.org>, <david@redhat.com>
-CC: Patrick Roy <roypat@amazon.co.uk>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <willy@infradead.org>, <graf@amazon.com>,
-	<derekmn@amazon.com>, <kalyazin@amazon.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <dmatlack@google.com>,
-	<tabba@google.com>, <chao.p.peng@linux.intel.com>, <xmarcalx@amazon.co.uk>
-Subject: [RFC PATCH 7/8] mm: secretmem: use AS_INACCESSIBLE to prohibit GUP
-Date: Tue, 9 Jul 2024 14:20:35 +0100
-Message-ID: <20240709132041.3625501-8-roypat@amazon.co.uk>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240709132041.3625501-1-roypat@amazon.co.uk>
-References: <20240709132041.3625501-1-roypat@amazon.co.uk>
+        d=google.com; s=20230601; t=1720531314; x=1721136114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VWfCXnbUzbCcNCB7MVb6Cv6HV8LAXJzhSocPRu67CSw=;
+        b=Fwag4LSYaA5EGyThl77DA/cH2VIQ/ETN4yjzDhIo02c0oi6/EOUkQ1/obkEnVNDfti
+         UO78zZct+2bumL6vv82pXES9UF+75k8LOAbzB3xOLa6ajjMfc3svnWNJDDT50yMwGnqz
+         AB6GhicyD/2zorig+v9+VfzMi7L0yBtMW/QqnQHGVdEP2TL5VMtnZW49hXTPVvDIIdBO
+         nO/4/w8tL3aenxVov9Uce+8wQ6tvrTkG6YW/HD+8eqr+wvhAzkiRLJTrUpDh2UP+7VFk
+         kh2IELzNXmSIHKFxKOLz9/8dWy8I4I44bM05GcTT+lf+jxTioOMlx3nCRsrlf5BUvuQe
+         18+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720531314; x=1721136114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VWfCXnbUzbCcNCB7MVb6Cv6HV8LAXJzhSocPRu67CSw=;
+        b=ALefWQuShdzIV6m8MVMV+vhjXedEkZ1n+ndIOnKjuQUw54562CCmfNwUrAm+ybUmsZ
+         U6/CsTBIrXx+lQhtAgUWZHqXzXT2dd2S9fpEVjSOZb/t2uV117lcTXnzl1fDViYggruq
+         zKRE7kXGsEYAEm1bk+plC4Lsut+vfkxwvy/SF41vkUCEwYTy62+Hgybz+aorwoZv9Cp2
+         l75iXSlOwxe9iAURWdCsoaPIXLu3rpWLL7oq4hd9kqS0zQVSgT4qBka26VjrdELCl4SA
+         AB1T5H1q/tFDbbqv9oB2XOa/jLYVdsHB8ex/ap5v6u17mZjqWCBX4VWIpKyCchHgI7kJ
+         706w==
+X-Forwarded-Encrypted: i=1; AJvYcCU6MbMc7or4pq2m/zdVfS4avj4hOrmCsHwLAiRpQ79Z3B6CGbnlC3qJ1egK4eGLZC+StelYPzMuDHlA+1Xu6i51jFPxar535ZTno5ai
+X-Gm-Message-State: AOJu0YystgAPT6NVM5+XtclooFCN9DMP7VFI9B3AUh1XCRFkpDtZBJVw
+	/xzdWJzT3D4AbqH2ZBT3PqOWg/89jZArYIR5akX6jDpdaV40EUQT70zHtMtv3RG501idWc5IKol
+	Aossj/tsAtlE7BjRs8Ot1H99+xCpsnSnUqsUd
+X-Google-Smtp-Source: AGHT+IHqwd134yFfeEIa6jEM4ZZ5PFKf/6flzJz0D3TM2orSLKf1ymG+qZkZbsIWwbjHya7rb59L2SSMPP4BjBUG3aM=
+X-Received: by 2002:a17:902:7b8d:b0:1f8:80e1:8dcc with SMTP id
+ d9443c01a7336-1fbb997a044mr2602075ad.7.1720531314085; Tue, 09 Jul 2024
+ 06:21:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+References: <20240708164319.3801778-1-jmattson@google.com> <20240708170541.GGZowcZZ0tZmt7znYA@fat_crate.local>
+ <2024070949-blame-emperor-a764@gregkh> <20240709111101.GFZo0axWLVb2e-n_fK@fat_crate.local>
+In-Reply-To: <20240709111101.GFZo0axWLVb2e-n_fK@fat_crate.local>
+From: Jim Mattson <jmattson@google.com>
+Date: Tue, 9 Jul 2024 06:21:41 -0700
+Message-ID: <CALMp9eQ4kO_x_eS_ehLQKrvn+9cfh6b_WNcgaNj1jfakh4e8-g@mail.gmail.com>
+Subject: Re: [PATCH 5.10] x86/retpoline: Move a NOENDBR annotation to the SRSO
+ dummy return thunk
+To: Borislav Petkov <bp@alien8.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, Greg Thelen <gthelen@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Inside of vma_is_secretmem and secretmem_mapping, instead of checking
-whether a vm_area_struct/address_space has the secretmem ops structure
-attached to it, check whether the address_space has the AS_INACCESSIBLE
-bit set. Then set the AS_INACCESSIBLE flag for secretmem's
-address_space.
+On Tue, Jul 9, 2024 at 4:11=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrote=
+:
+>
+> On Tue, Jul 09, 2024 at 07:15:37AM +0200, Greg Kroah-Hartman wrote:
+> > Sending fixups like this, for things that are already committed are
+> > fine.  But note, someone needs to at least send them to the right place
+> > (i.e. no one cc:ed stable@vger.kernel.org...) if they wish to see them
+> > applied to a stable kernel...
+>
+> Jim, should I or you want?
 
-This means that get_user_pages and friends are disables for all
-adress_spaces that set AS_INACCESIBLE. The AS_INACCESSIBLE flag was
-introduced in commit c72ceafbd12c ("mm: Introduce AS_INACCESSIBLE for
-encrypted/confidential memory") specifically for guest_memfd to indicate
-that no reads and writes should ever be done to guest_memfd
-address_spaces. Disallowing gup seems like a reasonable semantic
-extension, and means that potential future mmaps of guest_memfd cannot
-be GUP'd.
+Done.
 
-Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
----
- include/linux/secretmem.h | 13 +++++++++++--
- mm/secretmem.c            |  6 +-----
- 2 files changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/secretmem.h b/include/linux/secretmem.h
-index e918f96881f5..886c8f7eb63e 100644
---- a/include/linux/secretmem.h
-+++ b/include/linux/secretmem.h
-@@ -8,10 +8,19 @@ extern const struct address_space_operations secretmem_aops;
- 
- static inline bool secretmem_mapping(struct address_space *mapping)
- {
--	return mapping->a_ops == &secretmem_aops;
-+	return mapping->flags & AS_INACCESSIBLE;
-+}
-+
-+static inline bool vma_is_secretmem(struct vm_area_struct *vma)
-+{
-+	struct file *file = vma->vm_file;
-+
-+	if (!file)
-+		return false;
-+
-+	return secretmem_mapping(file->f_inode->i_mapping);
- }
- 
--bool vma_is_secretmem(struct vm_area_struct *vma);
- bool secretmem_active(void);
- 
- #else
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-index 3afb5ad701e1..fd03a84a1cb5 100644
---- a/mm/secretmem.c
-+++ b/mm/secretmem.c
-@@ -136,11 +136,6 @@ static int secretmem_mmap(struct file *file, struct vm_area_struct *vma)
- 	return 0;
- }
- 
--bool vma_is_secretmem(struct vm_area_struct *vma)
--{
--	return vma->vm_ops == &secretmem_vm_ops;
--}
--
- static const struct file_operations secretmem_fops = {
- 	.release	= secretmem_release,
- 	.mmap		= secretmem_mmap,
-@@ -218,6 +213,7 @@ static struct file *secretmem_file_create(unsigned long flags)
- 
- 	inode->i_op = &secretmem_iops;
- 	inode->i_mapping->a_ops = &secretmem_aops;
-+	inode->i_mapping->flags |= AS_INACCESSIBLE;
- 
- 	/* pretend we are a normal file with zero size */
- 	inode->i_mode |= S_IFREG;
--- 
-2.45.2
-
+> Thx.
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
