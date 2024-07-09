@@ -1,143 +1,134 @@
-Received: from smtp-190c.mail.infomaniak.ch (smtp-190c.mail.infomaniak.ch [185.125.25.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA5D152515
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 20:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2E0185607
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 20:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720557771; cv=none; b=XtbeH+4EKFzmoxHJwnWGcOxe+2P5nJKPHJA4vE9RiJhGZYp/gunlBEbArDG1SuY6P7Ir6PF+fNI10/dObFNBiMeYUE6LIcb32pcAMDUISdfmKgJxLLKyhTOxYaMrvcJAnnn/FQGprYq0FltOVa8JRqCALStEfD6pN/0WkTFZQx4=
+	t=1720557772; cv=none; b=C3RBXdEAhjPfMl9nDXCTFd4vojk8skuLMlG5yQSBo/yR+h8AUh1KJjPe8ySWkjBx8TRmUga8gCSjqeI2Ax93TjavNLIV2VDNCVlmgZtskUVrzWTbuk3gROW6kFdH0HVaLHuWyhcFB+9KfBbXfN1J+ROl9C4xbKylB+vm0OBQ/7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720557771; c=relaxed/simple;
-	bh=1QBKXu3jqFWHp7ODXEq4PElTSHgXNyLv8UHEElkesGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1PcE0h1HIekNtV7CY8n+L9mr6cG3zzMbCnEgTGUs63YfAa2lvXdoBMWY+fipB644k9NojivtlL05NNXGH5UyHpRdjWQimmQCs8flj3Chlfbc/0lQuKDHgCBSqn+g+PnAzbioTnFqdnZLzVboP2cxYUWUfWx+9k+t5482kX3dVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=p6fMaJ47; arc=none smtp.client-ip=185.125.25.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1720557772; c=relaxed/simple;
+	bh=NzFd7/N3dtVr8i5r6QNxUqTOXBxNxROsAYCor52Ghrc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AzFqX+vsgViE0CSdINFXjJiMwkeu9o7cCLMSONd+1uByg9sXcrcz1DTCS0eghKPZTSx0ork6hnE7LDH8hq19Jb13nlXEwVYcdC71raWmMQzdtmKuhgJla8hMSvCrpY0cMCh9jzZLHAobpiFER0U8ooAY2ug2Lbib6p3WcMYYUls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dkcW2G9R; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="p6fMaJ47"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4WJXxF4bqpz7MX;
-	Tue,  9 Jul 2024 22:42:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1720557761;
-	bh=+M0cj9RJBsMQlDlXWmP2+vv32bVUSk1HwJJOYHICSoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p6fMaJ47GOnH3pyV97wzKVJkhfBcX43IFGH9mW68qQleai1N0F2E5svaC9Rpeni25
-	 rODWCAzpEGcQyW354+RE76PuMO5fIDChw2WVaSHVjg0h+Wj55sNtGK5SZ3juJ/T99O
-	 iuvNor9EklPGxRbDO5m72LLpb8sdTQt6OAwDTHxo=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4WJXxD4M7kzVTf;
-	Tue,  9 Jul 2024 22:42:40 +0200 (CEST)
-Date: Tue, 9 Jul 2024 22:42:37 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Jeff Xu <jeffxu@google.com>
-Cc: Steve Dower <steve.dower@python.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Paul Moore <paul@paul-moore.com>, Theodore Ts'o <tytso@mit.edu>, 
-	Alejandro Colomar <alx@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Christian Heimes <christian@python.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, Eric Biggers <ebiggers@kernel.org>, 
-	Eric Chiang <ericchiang@google.com>, Fan Wu <wufan@linux.microsoft.com>, 
-	Florian Weimer <fweimer@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	James Morris <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>, Jann Horn <jannh@google.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Jordan R Abrahams <ajordanr@google.com>, 
-	Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Luca Boccassi <bluca@debian.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Matthew Garrett <mjg59@srcf.ucam.org>, 
-	Matthew Wilcox <willy@infradead.org>, Miklos Szeredi <mszeredi@redhat.com>, 
-	Mimi Zohar <zohar@linux.ibm.com>, Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, 
-	Scott Shell <scottsh@microsoft.com>, Shuah Khan <shuah@kernel.org>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Steve Grubb <sgrubb@redhat.com>, 
-	Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>, Vincent Strubel <vincent.strubel@ssi.gouv.fr>, 
-	Xiaoming Ni <nixiaoming@huawei.com>, Yin Fengwei <fengwei.yin@intel.com>, 
-	kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
-Subject: Re: [RFC PATCH v19 2/5] security: Add new SHOULD_EXEC_CHECK and
- SHOULD_EXEC_RESTRICT securebits
-Message-ID: <20240709.aech3geeMoh0@digikod.net>
-References: <20240704190137.696169-1-mic@digikod.net>
- <20240704190137.696169-3-mic@digikod.net>
- <CALmYWFscz5W6xSXD-+dimzbj=TykNJEDa0m5gvBx93N-J+3nKA@mail.gmail.com>
- <CALmYWFsLUhkU5u1NKH8XWvSxbFKFOEq+A_eqLeDsN29xOEAYgg@mail.gmail.com>
- <20240708.quoe8aeSaeRi@digikod.net>
- <CALmYWFuVJiRZgB0ye9eR95dvBOigoOVShgS9i_ESjEre-H5pLA@mail.gmail.com>
- <ef3281ad-48a5-4316-b433-af285806540d@python.org>
- <CALmYWFuFE=V7sGp0_K+2Vuk6F0chzhJY88CP1CAE9jtd=rqcoQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dkcW2G9R"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fb457b53c8so36306945ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 13:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1720557769; x=1721162569; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IClM+nkNh3bQyMb1SpTr5S0Y3fVSw1KJe9ktaS1rz2Q=;
+        b=dkcW2G9R0uxdWnZnyrbMHLHkBAvfmy84GKC/vFqTxwRk84nyU4wLYWSN9xviZNRPtg
+         c1ZMHoJKUhKHGX8H89JHUZDBE0nWgdBz1Aj2sCQP5zGL6OGYILE2vcCxCmQtm/gx5e0u
+         8dmGTeMVvqqvMpYM0l4Dt1UKimh4jhCtBz/4E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720557769; x=1721162569;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IClM+nkNh3bQyMb1SpTr5S0Y3fVSw1KJe9ktaS1rz2Q=;
+        b=UI9Pmoo5GCBBdjVhkKYW4vejchFMybnjGel0el9I/YpCAS3qskcldl8mPkIS6bUdHg
+         cOCxdOCYH3U43+hdVhiwpXbP+qN37vWR9FUO9GlsHji0XBTY9j78m8LXoOdu6oqXgMjU
+         uGcy7zvDWHAo1cQR6q7i8MaE4+NQqHPZSi1TRtKNPO6r8yj2YkjoOLLkXGNruqeYedmz
+         rT++eSZKuOgVyxfo1TWovs9X8sKYpLXuq5XukTrMiZkDKkmylsFIIyh/LtpBfw/V9DxE
+         ywYKzZNR8jMOpBMCU+FjxyTVmWjWaQ0heEmCvy/qh82vxb4fp1VBvEwtXBsq9l/URxCK
+         5qzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwUju2+snWZxm9nCwXeEB4FjohW4Lio/ORgtoz5VnmjRA3sPH9dlcWmLehnQS0OqiFswOc2J40vXmziZ+iJHLhAZMPKXZYvJU26BxM
+X-Gm-Message-State: AOJu0Yxt7ZMiqzEqih3WPQvPcjumP059o3OGy0UgnQGXe9WgaHqFKi0J
+	4uSN3Cxbt5T5huZ4NUgYw4In5DKJ+yokJfx8Yn4gbG+QJ3K53TaOZ3Tl1tdv3fO/4UnuS2Pi3gw
+	=
+X-Google-Smtp-Source: AGHT+IGoLgQUOgFZQ37HZfVJhxLYUs8U/Kuzkwqzf3f2LTNflHkGkZ0CMMSP3/cENo3kBdzUxltHGA==
+X-Received: by 2002:a17:902:d50c:b0:1fb:5f82:6a5d with SMTP id d9443c01a7336-1fbb6d44060mr37343645ad.21.1720557769407;
+        Tue, 09 Jul 2024 13:42:49 -0700 (PDT)
+Received: from localhost ([2620:15c:9d:2:4d59:98c6:8095:9b12])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-1fbb6ab6d80sm20322515ad.170.2024.07.09.13.42.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jul 2024 13:42:49 -0700 (PDT)
+From: Brian Norris <briannorris@chromium.org>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v3 0/3] tools build: Incorrect fixdep dependencies
+Date: Tue,  9 Jul 2024 13:41:50 -0700
+Message-ID: <20240709204203.1481851-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALmYWFuFE=V7sGp0_K+2Vuk6F0chzhJY88CP1CAE9jtd=rqcoQ@mail.gmail.com>
-X-Infomaniak-Routing: alpha
 
-On Mon, Jul 08, 2024 at 03:07:24PM -0700, Jeff Xu wrote:
-> On Mon, Jul 8, 2024 at 2:25 PM Steve Dower <steve.dower@python.org> wrote:
-> >
-> > On 08/07/2024 22:15, Jeff Xu wrote:
-> > > IIUC:
-> > > CHECK=0, RESTRICT=0: do nothing, current behavior
-> > > CHECK=1, RESTRICT=0: permissive mode - ignore AT_CHECK results.
-> > > CHECK=0, RESTRICT=1: call AT_CHECK, deny if AT_CHECK failed, no exception.
-> > > CHECK=1, RESTRICT=1: call AT_CHECK, deny if AT_CHECK failed, except
-> > > those in the "checked-and-allowed" list.
-> >
-> > I had much the same question for Mickaël while working on this.
-> >
-> > Essentially, "CHECK=0, RESTRICT=1" means to restrict without checking.
-> > In the context of a script or macro interpreter, this just means it will
-> > never interpret any scripts. Non-binary code execution is fully disabled
-> > in any part of the process that respects these bits.
-> >
-> I see, so Mickaël does mean this will block all scripts.
+Hi all,
 
-That is the initial idea.
+The following series consists of a few bugfixes on the topic of "misuse
+of fixdep in the tools/ build tree." There is no listed maintainer for
+tools/build, but there are for tools/bpf and tools/objtool, which are
+the main pieces that affect most users, because they're built as part of
+the main kernel build. I've addressed this series to a selection of
+those maintainers, and those that have previously applied build changes
+in tools/. I hope one of you can apply this series, pending favorable
+review. Or feel free to point me to a different set of maintainers.
 
-> I guess, in the context of dynamic linker, this means: no more .so
-> loading, even "dlopen" is called by an app ?  But this will make the
-> execve()  fail.
+This patch series came out of poking around some build errors seen by me
+and my coworkers, and I found that there were rather similar reports a
+while back here:
 
-Hmm, I'm not sure this "CHECK=0, RESTRICT=1" configuration would make
-sense for a dynamic linker except maybe if we want to only allow static
-binaries?
+    Subject: possible dependency error?
+    https://lore.kernel.org/all/ZGVi9HbI43R5trN8@bhelgaas/
 
-The CHECK and RESTRICT securebits are designed to make it possible a
-"permissive mode" and an enforcement mode with the related locked
-securebits.  This is why this "CHECK=0, RESTRICT=1" combination looks a
-bit weird.  We can replace these securebits with others but I didn't
-find a better (and simple) option.  I don't think this is an issue
-because with any security policy we can create unusable combinations.
-The three other combinations makes a lot of sense though.
+I reported some findings to that thread; see also subsequent discussion:
 
-> 
-> > "CHECK=1, RESTRICT=1" means to restrict unless AT_CHECK passes. This
-> > case is the allow list (or whatever mechanism is being used to determine
-> > the result of an AT_CHECK check). The actual mechanism isn't the
-> > business of the script interpreter at all, it just has to refuse to
-> > execute anything that doesn't pass the check. So a generic interpreter
-> > can implement a generic mechanism and leave the specifics to whoever
-> > configures the machine.
-> >
-> In the context of dynamic linker. this means:
-> if .so passed the AT_CHECK, ldopen() can still load it.
-> If .so fails the AT_CHECK, ldopen() will fail too.
+    https://lore.kernel.org/all/Zk-C5Eg84yt6_nml@google.com/
 
-Correct
+One element of that discussion: these problems are already solved
+consistently in Kbuild. tools/build purposely borrows some from Kbuild,
+but also purposely does not actually use Kbuild. While it'd make my life
+easier if tools/ would just adopt Kbuild (at least for the tools which
+are built during kernel builds), I've chosen a path that I hope will
+yield less resistance -- simply hacking up the existing tools/ build
+without major changes to its design.
 
-> 
-> Thanks
-> -Jeff
-> 
-> > The other two case are more obvious. "CHECK=0, RESTRICT=0" is the
-> > zero-overhead case, while "CHECK=1, RESTRICT=0" might log, warn, or
-> > otherwise audit the result of the check, but it won't restrict execution.
-> >
-> > Cheers,
-> > Steve
+NB: I've also CC'd Kbuild folks, since Masahiro has already been so
+helpful here, but note that this is not really a "kbuild" patch series.
+
+Regards,
+Brian
+
+Changes in v3:
+ - Drop unnecessary tools/build/Build
+
+Changes in v2:
+ - also fix libbpf shared library rules
+ - ensure OUTPUT is always set, and always an absolute path
+ - add backup $(Q) definition in tools/build/Makefile.include
+
+Brian Norris (3):
+  tools build: Correct libsubcmd fixdep dependencies
+  tools build: Avoid circular .fixdep-in.o.cmd issues
+  tools build: Correct bpf fixdep dependencies
+
+ tools/build/Build            |  3 ---
+ tools/build/Makefile         | 11 ++---------
+ tools/build/Makefile.include | 12 +++++++++++-
+ tools/lib/bpf/Makefile       | 14 ++++++++++++--
+ tools/lib/subcmd/Makefile    |  2 +-
+ 5 files changed, 26 insertions(+), 16 deletions(-)
+ delete mode 100644 tools/build/Build
+
+-- 
+2.45.2.803.g4e1b14247a-goog
+
