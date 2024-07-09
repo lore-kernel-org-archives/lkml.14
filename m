@@ -1,119 +1,197 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A657152515;
-	Tue,  9 Jul 2024 08:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9022F152789
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720512165; cv=none; b=JLdN3yjcmCnURbiHuMp+X2qEP4SQuH65Vc7EgjTsoyYuWKmuMQpIXxA3CJtOQlhBCOtXPgpjce2KwfRcMlSGxOh1GVlpfuO5rjA36EPA966Zy9RaHKbi0niLUArFyN5n9MpYkao+WebyRybviv2QAOEI679mAprpdfHr2sx9qzI=
+	t=1720512167; cv=none; b=CH+hQWDraZHhGGI7Ai28O99mvZxQXhEPH2ktDKTaxM/iRE7a+OSg84UNLTYxwlQA1kRJcQIUMhoek5oIxH5hr0uFNZGs10nNqI+JjHWwx2mHyPVqORDeezkynK/ovqd/BiZb2UvNmnAsH7JcuKDvlLGZ4qFp9MQmcmOUPQ1kYfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720512165; c=relaxed/simple;
-	bh=+vBaRI03edLB5xWMveAjscYshlkoOpIt+pkMK8Ze/QI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U82mshogCHHqav5OeTXjUHO3cPxtY1tsErMbM5WIqP9vBCKXzt+JUVqW9zJdFBp9cWllUQFrkWnSR/zS73EcDQi5y0BQOktI6C34hjXW3RW06QbZAr6I7Mkm5owxd30NhOoONnsKU6CqGUAM7QINkQ5YAdMScPpMd4PcSubftW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N8XqFns4; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720512167; c=relaxed/simple;
+	bh=doJuD6Ad6+WLmrSoHdYJY3eqzbQod0yKfr5czeLyavM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VpPmc42vQHEe25WGwcd1MGVthCdAso7f9nRLFY9mAn5LVEdaE8opc4RBLt3qNCF8LihrQ/GmYBjdyEmVoc1YcrD8nof/3HIgKIELqigt0FXfR5K6rwG9u/hrBuy+DlDud1pwXrHxOGIvTIAVEX8Vjp8wp0mMR8WdXN0BYLid4jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YhK8TBv/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8XqFns4"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7611b6a617cso2924282a12.3;
-        Tue, 09 Jul 2024 01:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720512164; x=1721116964; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=saVEdMntiEIairw273nwNBQX/lPMGFlUAdIrJqbTXIM=;
-        b=N8XqFns4WVOAxPvPHsOWOaftWP+4LDZqd+EmfZ5ERGmrtpfm42fJ25rcqY/UWpZlvT
-         Ze30UC8G6+HPIQt64+H0vM8Ueb4w+2hDpFzRCvb0vQGww3q9vcjfHrqa5+q6uwWektTY
-         AeKzXqXr7mn+opCYWZ5SKkbHtqmnGzcVnIdQxRahUQ8VKgVywKZ/dneHKN96VTE44Mr2
-         4l00M8/pb0u2O9/zhIhUFVLQKRY/JbcLtUp9S8DIEkEJTIJLtnQ9/a0SepHShh6ddrCG
-         zjS+2njiquFjoNN+roFrNnVqmuUQfk5UULeYjEYkYiQngKyjL5f2sppTm56jvvUMr5L0
-         GKRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720512164; x=1721116964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=saVEdMntiEIairw273nwNBQX/lPMGFlUAdIrJqbTXIM=;
-        b=sH8tWn+37ML7x9HGUtJric7Cv1HVrO4bppmVb2Zk+leDFYGv1xr1ZIAaG8J2vvohlD
-         bruGpeSi/aFsI0WOXpCz+x8uhAhtTVsBe4L2/jyUdgTXbjDA+eQRLy+hxoVrxLoX08UC
-         jG4DRQlbhcG91MNqwpJlPgP902eB+ULM4GAeAuVyhXvRjjlWr2wFspyg8qQmESW4AFUf
-         PIsTM5aqTYIS6TqNA00dKVExr/9psEEN/LKq23oo7k4Weo9mJQyuZ2eWwFc1VqcZ7IRO
-         tZJW7OLEDln87AOQhiDhwVQDJ31HBA2RSL83ummVSnOZtMciJNVrOLc6xJ5JWhUUFvpt
-         K/vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUUsmDvwbRi6nffM4TgRqwN7AIoGJwO4M2utI4a5h12YM8VasbniqdaoxPSnscS1dPSOO5LtBJkhDjnEZWKWyMjCzQOscqaJ4wj453CLXY5tookibyCICTg2oc/YmG0jDKaqoZFjyhdlV1uQtE=
-X-Gm-Message-State: AOJu0Yw83jf/IO43/awIVc/dUVkAZsESaNZxjjGeaMnoP7a5ce234ajP
-	FrtOW4rW1JUjpw4bvpsCQUGjdtblTft4X7aQwWCK9pKKqWwaxDAHOwYIBigJfCIJndTXrOCXnaY
-	+VyyAKgJ45e+0Ep+q9wskB3NY+UU=
-X-Google-Smtp-Source: AGHT+IEPaWXpA6bmFKESHiOBiuFGzYAxm69W6WWM8L1uIfwQ+XFOV2DF++TdJgb0DyDbfC7rvCdAhc7gcrok6IqEFcA=
-X-Received: by 2002:a05:6a20:e609:b0:1c2:8e3f:a5c with SMTP id
- adf61e73a8af0-1c29825044emr1612336637.35.1720512163784; Tue, 09 Jul 2024
- 01:02:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YhK8TBv/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720512164;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dHCaS+jY2Jg8S88jwIg+mBIv5Lor8XLl5Lwa81p6b8w=;
+	b=YhK8TBv/AXKFUC8vGNSP0sO6k/+ssQkwEYTYZPzOxaYBCw000+y7o3n3zHnd6/GGsiEhvJ
+	KeQ3DwIDzBQUoOTxy8gw9yYvKKmM3Bsn5GY+pwXboEz1SkZwNrp6IwE79EK8osXIJd4tSJ
+	tF3XvVNTiEpa6P2Mpo0yR2K7GOp2p+M=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-201-nT-aBU6PO7epmALKVrmakw-1; Tue,
+ 09 Jul 2024 04:02:41 -0400
+X-MC-Unique: nT-aBU6PO7epmALKVrmakw-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B70B11977338;
+	Tue,  9 Jul 2024 08:02:39 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.72.112.184])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 08B863000181;
+	Tue,  9 Jul 2024 08:02:32 +0000 (UTC)
+From: Jason Wang <jasowang@redhat.com>
+To: mst@redhat.com,
+	jasowang@redhat.com,
+	xuanzhuo@linux.alibaba.com,
+	eperezma@redhat.com
+Cc: virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
+	Gia-Khanh Nguyen <gia-khanh.nguyen@oracle.com>
+Subject: [PATCH net-next v3 1/3] virtio: rename virtio_config_enabled to virtio_config_core_enabled
+Date: Tue,  9 Jul 2024 16:02:12 +0800
+Message-ID: <20240709080214.9790-2-jasowang@redhat.com>
+In-Reply-To: <20240709080214.9790-1-jasowang@redhat.com>
+References: <20240709080214.9790-1-jasowang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528-alice-mm-v7-0-78222c31b8f4@google.com>
-In-Reply-To: <20240528-alice-mm-v7-0-78222c31b8f4@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 9 Jul 2024 10:02:32 +0200
-Message-ID: <CANiq72ka=tMDHq3S2N0dkzj0DBje+kdz0nFtaQZ9RHC0rbii0g@mail.gmail.com>
-Subject: Re: [PATCH v7 0/4] Memory management patches needed by Rust Binder
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
-	Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, Trevor Gross <tmgross@umich.edu>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, May 28, 2024 at 4:58=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> This patchset contains some abstractions needed by the Rust
-> implementation of the Binder driver for passing data between userspace,
-> kernelspace, and directly into other processes.
->
-> These abstractions do not exactly match what was included in the Rust
-> Binder RFC - I have made various improvements and simplifications since
-> then. Nonetheless, please see the Rust Binder RFC [1] to get an
-> understanding for how this will be used:
->
-> Users of "rust: add userspace pointers"
->      and "rust: add typed accessors for userspace pointers":
->         rust_binder: add binderfs support to Rust binder
->         rust_binder: add threading support
->         rust_binder: add nodes and context managers
->         rust_binder: add oneway transactions
->         rust_binder: add death notifications
->         rust_binder: send nodes in transactions
->         rust_binder: add BINDER_TYPE_PTR support
->         rust_binder: add BINDER_TYPE_FDA support
->         rust_binder: add process freezing
->
-> Users of "rust: add abstraction for `struct page`":
->         rust_binder: add oneway transactions
->         rust_binder: add vma shrinker
->
-> Links: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-0=
-8ba9197f637@google.com/ [1]
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Following patch will allow the config interrupt to be disabled by a
+specific driver via another boolean. So this patch renames
+virtio_config_enabled and relevant helpers to
+virtio_config_core_enabled.
 
-Applied to `rust-next` -- thanks everyone!
+Cc: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
+Cc: Gia-Khanh Nguyen <gia-khanh.nguyen@oracle.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/virtio/virtio.c | 22 +++++++++++-----------
+ include/linux/virtio.h  |  4 ++--
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-[ Wrapped docs to 100 and added a few intra-doc links. - Miguel ]
-[ Fixed typos and added a few intra-doc links. - Miguel ]
+diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+index b968b2aa5f4d..73bab89b5326 100644
+--- a/drivers/virtio/virtio.c
++++ b/drivers/virtio/virtio.c
+@@ -127,7 +127,7 @@ static void __virtio_config_changed(struct virtio_device *dev)
+ {
+ 	struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
+ 
+-	if (!dev->config_enabled)
++	if (!dev->config_core_enabled)
+ 		dev->config_change_pending = true;
+ 	else if (drv && drv->config_changed)
+ 		drv->config_changed(dev);
+@@ -143,17 +143,17 @@ void virtio_config_changed(struct virtio_device *dev)
+ }
+ EXPORT_SYMBOL_GPL(virtio_config_changed);
+ 
+-static void virtio_config_disable(struct virtio_device *dev)
++static void virtio_config_core_disable(struct virtio_device *dev)
+ {
+ 	spin_lock_irq(&dev->config_lock);
+-	dev->config_enabled = false;
++	dev->config_core_enabled = false;
+ 	spin_unlock_irq(&dev->config_lock);
+ }
+ 
+-static void virtio_config_enable(struct virtio_device *dev)
++static void virtio_config_core_enable(struct virtio_device *dev)
+ {
+ 	spin_lock_irq(&dev->config_lock);
+-	dev->config_enabled = true;
++	dev->config_core_enabled = true;
+ 	if (dev->config_change_pending)
+ 		__virtio_config_changed(dev);
+ 	dev->config_change_pending = false;
+@@ -322,7 +322,7 @@ static int virtio_dev_probe(struct device *_d)
+ 	if (drv->scan)
+ 		drv->scan(dev);
+ 
+-	virtio_config_enable(dev);
++	virtio_config_core_enable(dev);
+ 
+ 	return 0;
+ 
+@@ -340,7 +340,7 @@ static void virtio_dev_remove(struct device *_d)
+ 	struct virtio_device *dev = dev_to_virtio(_d);
+ 	struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
+ 
+-	virtio_config_disable(dev);
++	virtio_config_core_disable(dev);
+ 
+ 	drv->remove(dev);
+ 
+@@ -455,7 +455,7 @@ int register_virtio_device(struct virtio_device *dev)
+ 		goto out_ida_remove;
+ 
+ 	spin_lock_init(&dev->config_lock);
+-	dev->config_enabled = false;
++	dev->config_core_enabled = false;
+ 	dev->config_change_pending = false;
+ 
+ 	INIT_LIST_HEAD(&dev->vqs);
+@@ -512,14 +512,14 @@ int virtio_device_freeze(struct virtio_device *dev)
+ 	struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
+ 	int ret;
+ 
+-	virtio_config_disable(dev);
++	virtio_config_core_disable(dev);
+ 
+ 	dev->failed = dev->config->get_status(dev) & VIRTIO_CONFIG_S_FAILED;
+ 
+ 	if (drv && drv->freeze) {
+ 		ret = drv->freeze(dev);
+ 		if (ret) {
+-			virtio_config_enable(dev);
++			virtio_config_core_enable(dev);
+ 			return ret;
+ 		}
+ 	}
+@@ -578,7 +578,7 @@ int virtio_device_restore(struct virtio_device *dev)
+ 	if (!(dev->config->get_status(dev) & VIRTIO_CONFIG_S_DRIVER_OK))
+ 		virtio_device_ready(dev);
+ 
+-	virtio_config_enable(dev);
++	virtio_config_core_enable(dev);
+ 
+ 	return 0;
+ 
+diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+index 96fea920873b..a6f6df72f01a 100644
+--- a/include/linux/virtio.h
++++ b/include/linux/virtio.h
+@@ -115,7 +115,7 @@ struct virtio_admin_cmd {
+  * struct virtio_device - representation of a device using virtio
+  * @index: unique position on the virtio bus
+  * @failed: saved value for VIRTIO_CONFIG_S_FAILED bit (for restore)
+- * @config_enabled: configuration change reporting enabled
++ * @config_core_enabled: configuration change reporting enabled by core
+  * @config_change_pending: configuration change reported while disabled
+  * @config_lock: protects configuration change reporting
+  * @vqs_list_lock: protects @vqs.
+@@ -132,7 +132,7 @@ struct virtio_admin_cmd {
+ struct virtio_device {
+ 	int index;
+ 	bool failed;
+-	bool config_enabled;
++	bool config_core_enabled;
+ 	bool config_change_pending;
+ 	spinlock_t config_lock;
+ 	spinlock_t vqs_list_lock;
+-- 
+2.31.1
 
-Cheers,
-Miguel
