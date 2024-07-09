@@ -1,148 +1,129 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505051FA3;
-	Tue,  9 Jul 2024 10:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88EC13D89D
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 10:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720520246; cv=none; b=QaVMNzYHF5H5GArveC1rGlywvzRVWDQ7+S9V6S9W3nbPChEe7foq0iRWaQyWfWIURiz4F63hK1eOi42U9E87wnrQs32A+TjGhdBkEHqyEgg4wxn5XtlFQJMq5JSO35+9jfxoojM6NUKFhmdlLPpRP3/YzQhBq8prigXjaOJkJEI=
+	t=1720520264; cv=none; b=fZ3szI1nwXhEm2uxoY3b01duf02f9p7xBW/Hg0awpZPgpaHyxTyN8pNFHxIe9Q6tfoxD0ki1i2A9V7IkqMgYKb+wmLiKZb5I/io9OSNmgmUDzmD/in61BjV2ew/mbJr5LnOsx9iu1a/qWllgHTw/jKZDFB7+GnjH4+x5DhsE/L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720520246; c=relaxed/simple;
-	bh=lP7MS/SSQSGkVJ5jAW2+76EJviVIBFt7fQoTvHmqjJc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SAQCFew9lLbl05J6qmSXjePgVMkSt3gGn5eB2LjZ5ddGYGzNogRryuq9wD1fMNgrr1VJSAp/y4/IuOQfuaKXKPAdMxYVdT8NT0yhn42w+sm3ow4y9JoOexETJHbiH0gTxmXGpUQJ88Bl2EiASHN5dJycPM1cJ10G95hr1Qn8VdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PUybTvkG; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720520264; c=relaxed/simple;
+	bh=IESGm/8thX+g40USuX1uHIqqT896ZfnF8Gz3/dMx7xA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Clcrf8u/3Q+a0yFY6FiqAzORa2dJrQ23HUXf0vk2z1ZYgUPs1XJaZeHDCJxVz1k44vAOpOk/4kuhOLtYieU/CRUBIpZZbeLSioDAaxiwZ2Yq5BzR96R4kbOVRV9PYUxFgauQu3XLsdNrWZqet4mcBZAqSfCxbs/FhNlglZ7Y2wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=Ar12+GLc; arc=none smtp.client-ip=178.154.239.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUybTvkG"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-58b447c511eso6141140a12.2;
-        Tue, 09 Jul 2024 03:17:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720520244; x=1721125044; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WUU4V5yTD3E6P/UWJvCDJ0CcvQXY96+XekGETdSHgbU=;
-        b=PUybTvkGeLBizrU6VaWp6QpuQ9CB7JQHsiYgGsjhYHFpDc5easkSVTPx8MAN1BgHga
-         r6k1FMD7eOfShmSIfiT8zoDf0JZyae/8q6541LxA9mVYtpiXXLv/RhvtteEjsSAHEvTL
-         W3uRw9z/qFBNyBM7B+F/ZeEcY9OA26L34j6JDR2SOO536Eac94ObVTEZveRycmXgXdAe
-         Z6EuzFQz0QVjhUCS5FVEy9NO+++Hp31/QeVtZvZ/3OGk/8Rt18+OZmIy/fwuHBIRGKsS
-         pxwfh+aCCIWUpdNorUHvMMRWoN9qQBJFYC3GAFv8vpEf6/oE1qCh52g1QhIBS3h9GOD5
-         2S/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720520244; x=1721125044;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WUU4V5yTD3E6P/UWJvCDJ0CcvQXY96+XekGETdSHgbU=;
-        b=S3JoiTN8qZIbmdplvkciOGsENfZlSEU2zryqgHcVlrAH/15v49mOh/MNenulLU6M2t
-         HLSAgbJ6REX+/OBY+upjoYeUo/Ga236Bk/pHhpDsUQhWyq7ntlHJkqv/Psm9Ibqhr2Hz
-         9bO3qSKgTdHH4gGwVt8I0XL+Y7Se6mTMwbbQjWg1GmHJmrtWUOZS2y2NkSGkTsuZiJ9g
-         uc3Atbq96kPkcc5bqz0aLWF08FJaAW++c/2565cBGhbfe5PCcdidYtYEeEKeN5XdPE08
-         sxqnNaa9BSOkjE647iFZxuyyZ3vvecC0IiJ/oKjlWQIR9zaCe8oTrRbYCdYuZYDvFkH6
-         YpBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2sGFSM1VxllgH7H9s0+B2MAIxnxfFjkcyDVyPhXd44A9V7X5kzEASAjv2l+e4ggNGsHrLNpjhcaOMf2bTI0YOQ5JHlGSQj5S3flM+YwkCYf3w2P8l7MRtxTzBHY/3aMP2z9qTo/X6MYNaqg==
-X-Gm-Message-State: AOJu0YyoJSLPjZ1rrgH2Pgd6J6PJtO8UCseM01AoinsGH6u8432sHUQB
-	9dnh7m5in954/pkD2cwkNiiDkHrL8ebJvmZ5OJgAEr68dR6864qZSYOKm8HM4gdelyGCrkebzDh
-	Z4/+bl4+MtVIaZLcDg9M6ubecWEKMcA==
-X-Google-Smtp-Source: AGHT+IHUGKDAeSkKp9GM4WQ4dY21by1sO/dcn3kMOXX3QjhfD2crAARDs5/+8YBnt2MO0T7d0JodJtKs3FIlQ3siD6I=
-X-Received: by 2002:a17:907:7da8:b0:a72:4320:19f3 with SMTP id
- a640c23a62f3a-a780b70088cmr193963566b.39.1720520243335; Tue, 09 Jul 2024
- 03:17:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Ar12+GLc"
+Received: from mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:2799:0:640:ddd6:0])
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 6988960C7A;
+	Tue,  9 Jul 2024 13:16:12 +0300 (MSK)
+Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:6501::1:b])
+	by mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 4GafBH0xDGk0-UVUGoUQh;
+	Tue, 09 Jul 2024 13:16:09 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1720520169;
+	bh=QMrzmVk4WO8uE3VndqvZoeEHIjcKsa+fOG95bYQveH4=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=Ar12+GLcLDVam8vydIELaDLPt55u79aSvOq5sE9cLemLR1M0ZCqi+XmiGe3B4yHzt
+	 NrxKgnrCy+lhoC8Hn5CLsmzxj1SNI6pLXH9BDiujbQHuaVvyCKhu8XnjchG8E+V/87
+	 CDGmzwbCqwlCus8rv8No4zqwC49gjQBOi5hsyzs0=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From: Nikolay Kuratov <kniv@yandex-team.ru>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Baoquan He <bhe@redhat.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Nikolay Kuratov <kniv@yandex-team.ru>
+Subject: [PATCH RESEND] x86/numa: Bump NR_NODE_MEMBLKS to MAX_NUMNODES * 4
+Date: Tue,  9 Jul 2024 13:15:51 +0300
+Message-Id: <20240709101551.1374100-1-kniv@yandex-team.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240614163416.728752-1-yu.ma@intel.com> <20240703143311.2184454-1-yu.ma@intel.com>
- <20240703143311.2184454-4-yu.ma@intel.com> <CAGudoHH_P4LGaVN1N4j8FNTH_eDm3SDL7azMc25+HY2_XgjvJQ@mail.gmail.com>
- <20240704215507.mr6st2d423lvkepu@quack3> <3c7a0cd7-1dd2-4762-a2dd-67e6b6a82df7@intel.com>
- <1296ef8d-dade-46e5-8571-e7dba158f405@intel.com>
-In-Reply-To: <1296ef8d-dade-46e5-8571-e7dba158f405@intel.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 9 Jul 2024 12:17:09 +0200
-Message-ID: <CAGudoHGJrRi_UZ2wv2dG9U9VGasHW203O4nQHkE9KkaWJJ61WQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] fs/file.c: add fast path in find_next_fd()
-To: "Ma, Yu" <yu.ma@intel.com>
-Cc: Jan Kara <jack@suse.cz>, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	edumazet@google.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, pan.deng@intel.com, tianyou.li@intel.com, 
-	tim.c.chen@intel.com, tim.c.chen@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Right, forgot to respond.
+With modern AMD EPYC platform we're able to spot 3
+memblocks per NUMA, so bump MAX_NUMNODES multiplier
+from 2 to 4. Problem becomes apparent if MAX_NUMNODES
+close enough to real amount of nodes and leaves us with
+`too many memblk ranges` NUMA init error.
 
-I suspect the different result is either because of mere variance
-between reboots or blogbench using significantly less than 100 fds at
-any given time -- I don't have an easy way to test at your scale at
-the moment. You could probably test that by benching both approaches
-while switching them at runtime with a static_branch. However, I don't
-know if that effort is warranted atm.
+Bump also maximal count of immovable regions accordingly.
 
-So happens I'm busy with other stuff and it is not my call to either
-block or let this in, so I'm buggering off.
+Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
+---
+ If overhead related to doubled arrays is too undesirable
+ maybe we should consider config option for this? It appears that
+ NR_NODE_MEMBLKS used only on LoongArch and x86 (macro in asm-generic
+ is orphane).
+---
+ arch/x86/boot/compressed/acpi.c | 6 +++---
+ arch/x86/boot/compressed/misc.h | 2 +-
+ arch/x86/include/asm/numa.h     | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-On Tue, Jul 9, 2024 at 10:32=E2=80=AFAM Ma, Yu <yu.ma@intel.com> wrote:
->
->
-> On 7/5/2024 3:56 PM, Ma, Yu wrote:
-> > I had something like this in mind:
-> >>> diff --git a/fs/file.c b/fs/file.c
-> >>> index a3b72aa64f11..4d3307e39db7 100644
-> >>> --- a/fs/file.c
-> >>> +++ b/fs/file.c
-> >>> @@ -489,6 +489,16 @@ static unsigned int find_next_fd(struct fdtable
-> >>> *fdt, unsigned int start)
-> >>>          unsigned int maxfd =3D fdt->max_fds; /* always multiple of
-> >>> BITS_PER_LONG */
-> >>>          unsigned int maxbit =3D maxfd / BITS_PER_LONG;
-> >>>          unsigned int bitbit =3D start / BITS_PER_LONG;
-> >>> +       unsigned int bit;
-> >>> +
-> >>> +       /*
-> >>> +        * Try to avoid looking at the second level map.
-> >>> +        */
-> >>> +       bit =3D find_next_zero_bit(&fdt->open_fds[bitbit], BITS_PER_L=
-ONG,
-> >>> +                               start & (BITS_PER_LONG - 1));
-> >>> +       if (bit < BITS_PER_LONG) {
-> >>> +               return bit + bitbit * BITS_PER_LONG;
-> >>> +       }
-> >> Drat, you're right. I missed that Ma did not add the proper offset to
-> >> open_fds. *This* is what I meant :)
-> >>
-> >>                                 Honza
-> >
-> > Just tried this on v6.10-rc6, the improvement on top of patch 1 and
-> > patch 2 is 7% for read and 3% for write, less than just check first wor=
-d.
-> >
-> > Per my understanding, its performance would be better if we can find
-> > free bit in the same word of next_fd with high possibility, but
-> > next_fd just represents the lowest possible free bit. If fds are
-> > open/close frequently and randomly, that might not always be the case,
-> > next_fd may be distributed randomly, for example, 0-65 are occupied,
-> > fd=3D3 is returned, next_fd will be set to 3, next time when 3 is
-> > allocated, next_fd will be set to 4, while the actual first free bit
-> > is 66 , when 66 is allocated, and fd=3D5 is returned, then the above
-> > process would be went through again.
-> >
-> > Yu
-> >
-> Hi Guzik, Honza,
->
-> Do we have any more comment or idea regarding to the fast path? Thanks
-> for your time and any feedback :)
->
->
-> Regards
->
-> Yu
->
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index f196b1d1ddf8..74575a900924 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -17,9 +17,9 @@
+ 
+ /*
+  * Immovable memory regions representation. Max amount of memory regions is
+- * MAX_NUMNODES*2.
++ * MAX_NUMNODES*4.
+  */
+-struct mem_vector immovable_mem[MAX_NUMNODES*2];
++struct mem_vector immovable_mem[MAX_NUMNODES*4];
+ 
+ static acpi_physical_address
+ __efi_get_rsdp_addr(unsigned long cfg_tbl_pa, unsigned int cfg_tbl_len)
+@@ -305,7 +305,7 @@ int count_immovable_mem_regions(void)
+ 				num++;
+ 			}
+ 
+-			if (num >= MAX_NUMNODES*2) {
++			if (num >= ARRAY_SIZE(immovable_mem)) {
+ 				debug_putstr("Too many immovable memory regions, aborting.\n");
+ 				return 0;
+ 			}
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index b353a7be380c..a756569852e5 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -174,7 +174,7 @@ static inline acpi_physical_address get_rsdp_addr(void) { return 0; }
+ #endif
+ 
+ #if defined(CONFIG_RANDOMIZE_BASE) && defined(CONFIG_MEMORY_HOTREMOVE) && defined(CONFIG_ACPI)
+-extern struct mem_vector immovable_mem[MAX_NUMNODES*2];
++extern struct mem_vector immovable_mem[MAX_NUMNODES*4];
+ int count_immovable_mem_regions(void);
+ #else
+ static inline int count_immovable_mem_regions(void) { return 0; }
+diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
+index ef2844d69173..057eafe6fed5 100644
+--- a/arch/x86/include/asm/numa.h
++++ b/arch/x86/include/asm/numa.h
+@@ -10,7 +10,7 @@
+ 
+ #ifdef CONFIG_NUMA
+ 
+-#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
++#define NR_NODE_MEMBLKS		(MAX_NUMNODES*4)
+ 
+ extern int numa_off;
+ 
+-- 
+2.34.1
 
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
