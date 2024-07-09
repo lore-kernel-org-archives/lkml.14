@@ -1,211 +1,63 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CE315EFBD
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC1015EFBD;
+	Tue,  9 Jul 2024 15:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720538486; cv=none; b=J6nJfIDA8XEl466iyRpqsSm9uVzKntNHkQBaC4MRf7giCy/xSOYQhVXqqLSODvBCyO0ivDiVvFlmWMcW3XgXsRTTG3EAgcVcnY591pFrpdearxS8ERT/34GYAm0HAlzxHjZjb2mlTHhy/Bs7+bZ37xIRpGMhd3uVm8GvOiFX+5c=
+	t=1720538515; cv=none; b=M5QGmmmyaUlzw3dFgrYVJZagRYtU9bI+kl0Xlx1JjY6cNkVv3GXsDPa+zgkNEPSBxxvpxksiWxfTFilmp1Res4cJbdhv2u/vFwGQUeQd4ZWUeJvk2jBNG+sJWhQUH5cqBoaeXnUku04/yz+FWtCgbzaj5m7KXBRreGplQ6aMNHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720538486; c=relaxed/simple;
-	bh=JnqGX+NqSmCpgSLShW9xRhy64Jd1gG2A9mOPxMqFDNM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MI8nB8Ss2UTLVIXsAWH0NI8/ZI+2AYzk+Snkwnt4ttJRZb56cXTa//WWhFdMF1vUgBqV0FweLZA4RXUovfDIDw2FiAJhp4mb+hxMAxSxAOeObI9oJQp0zfi+MDdq3b/ZASBaFXY8W0YxMGk8i4FR3Uy2g7RRLlOpNliqkObyv7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v4Q4VgRG; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720538515; c=relaxed/simple;
+	bh=NGYF3r+51VrPnLhaoABnquh6/Dcy7gNwQ9xgvekmjFI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=tZoINLMlRCD1eng2q3avqewg4zKqwmJcDFPD28N3SS4kIJ0QdEeZrBuO4kx112tViedk/wHLS/r/Oqb9jWeg3oR4ydnXlNKNfFppLKr2vv3nlLMZ+qlZxZL++pGxvMI8DyNgtOi1Mephuk5leJ8+QTwvIGGH0wsSFqwEnBJ98C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RaqJmATu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v4Q4VgRG"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dfef5980a69so5483429276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 08:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720538483; x=1721143283; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ICl7/zRhEDU7+lYP8K9yTw1Jz5+/brpOoKv+lstlOO4=;
-        b=v4Q4VgRGZhA79kUTppY3diTJHXMv8V2mi5R0cSUkcgpMMp7PBVzO+RmmJO1LMHvMsJ
-         hYoGP0SXqM7deZ4Tv5nPFpqKTbLAT5/rBN+HV7Nc0lOdvkS40hMCqBs0lQYITm1feV98
-         ywmqKfioQq84k41pLvIZKWtGv7qAvDJjzqEg8Sqm3/bpCRWL3OmpJTAOBpul34+BIqyM
-         GcvJ6C9lk1QDtp2J3VePsCfRIp9vFeDw4KeFI53reCduEdY6mYH/HGBBJqP+WeDlycgh
-         24QZMu5a4NwUV2J2+9tNHGdiZUm/MF4cyV2Ot4M+QnnZvxMJkrsPxAnkm1wpR7RxgRh8
-         tcrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720538483; x=1721143283;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ICl7/zRhEDU7+lYP8K9yTw1Jz5+/brpOoKv+lstlOO4=;
-        b=B/Y9fWk0TfAfmeER8Z8OL5HujXSyHAGl/703fY9YQGkFDX05mijcFCQwuX9P9dOGfO
-         xd4lBee0FULq36L2E86u3T5Odq5PSstgwb7xbJJKdSqTER+2iw2cIvdtTUUJerhzs9mj
-         2RNWWTuVzBXP4FpHjuXGZiFqAbxaGRF43RzQWIuG9kwIoja4/RbOCa4D2us+m25EvnkL
-         9CRQlgRRkVDHhMMfJ0phEuqTwUNQNMBtYDnCRWfzslr6JBZdaNIsKcdJIoQB+OutGRvC
-         LgDe3Tf6aXGVxR4dQht2HHEEOYLJlHNNYd61fdc2Jirl+Ii+AJ6gT4vdz4RhHw7lYcH4
-         AK/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVf7MpN1ZlKTPfI1n7UEzlSrFVaaxpocqWtXdGk7A+QRs8WGRvNKX6XuZkj9wJ6FAyGMVuZFM/P0am7aN0l1sVwIvzXjYKHOdotIUov
-X-Gm-Message-State: AOJu0YwMe1fwub2oZgp/d9V/VbqVlgW3akOl8bIW7NhvMf6o1TPnbr6s
-	GdHwUN2Rm7yl9eC/3Tz61O1SOxuuXHeen1PmdX3AkLu8wt+GPmM8KkLK5CfQvhlNp5cizHaXzJX
-	8I4NG3e5wgYvRLvc3N1uQEuGPJzCtDcPj2GtXuQ==
-X-Google-Smtp-Source: AGHT+IEEAUwdlCn2/Ki0VmNsTPtfj2S/xTZsi8vYK2ZmZboTHZVvEXX6s9CJFnBiMKE9+CtvZNiEJj0wkmn4ulsV4X8=
-X-Received: by 2002:a05:690c:30f:b0:643:ed61:11bb with SMTP id
- 00721157ae682-658ee791041mr37664557b3.7.1720538483530; Tue, 09 Jul 2024
- 08:21:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RaqJmATu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 654B4C3277B;
+	Tue,  9 Jul 2024 15:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720538515;
+	bh=NGYF3r+51VrPnLhaoABnquh6/Dcy7gNwQ9xgvekmjFI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=RaqJmATu1Q1RfK+rfD0b8MnDsDWH2Vsr6EZtSbKV0aPoZGa72rquO4sUpLzur9EYZ
+	 ZSfWshf1gCG9uhBn2cbzrPo80z8qIhOuLnHvSc9w3I//Au1GRUlWb/mJAfbbf0jk0G
+	 oDN1DplOYNTlPwUI9+CoAf3crUKGFri1+bYZahJWPaUp3G+vSMFcucqc8OMbPiokZk
+	 gAvjz9Wf4NqPYD2F3uxK0x77VWECBLQ7qi9JBPWAH8uU8KldH0KuFODaxct/sUz5yh
+	 2bUlivrXr681l3PwRQ8oUBn+v204WzwIYdIJgB3YurN2KMSy8BCHez/b40DUHIrikU
+	 OUitebNeFJD/w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4B05FC4332C;
+	Tue,  9 Jul 2024 15:21:55 +0000 (UTC)
+Subject: Re: [GIT PULL] Kselftest fixes for Linux 6.10
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <7007e67e-0af4-4b01-a708-ba108208b217@linuxfoundation.org>
+References: <7007e67e-0af4-4b01-a708-ba108208b217@linuxfoundation.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <7007e67e-0af4-4b01-a708-ba108208b217@linuxfoundation.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-fixes-6.10
+X-PR-Tracked-Commit-Id: 66cde337fa1b7c6cf31f856fa015bd91a4d383e7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 920bc844baa92fe508d9cb7c72765d6f54dfebe1
+Message-Id: <172053851529.32730.6447158470930026357.pr-tracker-bot@kernel.org>
+Date: Tue, 09 Jul 2024 15:21:55 +0000
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, shuah <shuah@kernel.org>, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>, "Jason A. Donenfeld" <Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1716811405.git.geert+renesas@glider.be> <CAPDyKFpa4LZF3eN7x-NT+b9=dKB3Oe6RY8RAyetdRBSR1-LQoQ@mail.gmail.com>
- <0a025885-ed95-45d3-bf76-d2a043baaed7@ideasonboard.com> <CAPDyKFrxUDhnUUfz5wHpGVQfNYssxoWO5Eb2wtmZMTcMYhEjxQ@mail.gmail.com>
- <1bda8e8f-10df-4a10-a217-26cf50ef3577@ideasonboard.com> <CAGETcx-T54w=x=gv524dUJtnRGmOiXFA2CRYHE5Pawbux8_Tig@mail.gmail.com>
- <CAMuHMdUTGLSDv-zAun7tV2VnN0q08PibBT9B-MhxqdwmRTA_UQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdUTGLSDv-zAun7tV2VnN0q08PibBT9B-MhxqdwmRTA_UQ@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 9 Jul 2024 17:20:46 +0200
-Message-ID: <CAPDyKFpYvinCB3t7aNp02_-=QNwQr+B4wWvtzAAzYi8rTwKkKQ@mail.gmail.com>
-Subject: Re: [PATCH/RFC 0/3] pmdomain: renesas: rmobile-sysc: Remove serial
- console handling
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Peng Fan <peng.fan@nxp.com>, linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Devarsh Thakkar <devarsht@ti.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
 
-[...]
+The pull request you sent on Mon, 8 Jul 2024 16:42:13 -0600:
 
-> > > >>>>
-> > > >>>> However, if the serial port's clock or PM Domain is shared with another
-> > > >>>> device, and that other device is runtime-suspended before the full
-> > > >>>> serial driver has probed, the serial port's clock and/or PM Domain will
-> > > >>>> be disabled inadvertently.  Any subsequent serial console output will
-> > > >>>> cause a crash or system lock-up.  E.g. on R/SH-Mobile SoCs, the serial
-> > > >>>> ports share their PM Domain with several other I/O devices.  After the
-> > > >>>> use of pwm (Armadillo-800-EVA) or i2c (KZM-A9-GT) during early boot,
-> > > >>>> before the full serial driver takes over, the PM Domain containing the
-> > > >>>> early serial port is powered down, causing a lock-up when booted with
-> > > >>>> "earlycon".
->
-> Let's call this "Case B".
->
-> > > >>>
-> > > >>> Thanks for the detailed description of the problem! As pointed out in
-> > > >>> regards to another similar recent patch [1], this is indeed a generic
-> > > >>> problem, not limited to the serial console handling.
-> > > >>>
-> > > >>> At Linaro Connect a few weeks ago I followed up with Saravana from the
-> > > >>> earlier discussions at LPC last fall. We now have a generic solution
-> > > >>> for genpd drafted on plain paper, based on fw_devlink and the
-> > > >>> ->sync_state() callback. I am currently working on the genpd series,
-> > > >>> while Saravana will re-spin the series (can't find the link to the
-> > > >>> last version) for the clock framework. Ideally, we want these things
-> > > >>> to work in a very similar way.
-> > > >>>
-> > > >>> That said, allow me to post the series for genpd in a week or two to
-> > > >>> see if it can solve your problem too, for the serial console.
+> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-fixes-6.10
 
-I managed to hit the vacation period before I was able to post the
-series. I will pick it up this week and hopefully should be able to
-post something next week.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/920bc844baa92fe508d9cb7c72765d6f54dfebe1
 
-> > > >>
-> > > >> Both the genpd and the clock solutions will make suppliers depend on all
-> > > >> their consumers to be probed, right?
-> > > >>
-> > > >> I think it is a solution, and should be worked on, but it has the
-> > > >> drawback that suppliers that have consumers that will possibly never be
-> > > >> probed, will also never be able to turn off unused resources.
-> > > >>
-> > > >> This was specifically the case with the TI ti-sci pmdomain case I was
-> > > >> looking at: the genpd driver (ti_sci_pm_domains.c) provides a lot of
-> > > >> genpds for totally unrelated devices, and so if, e.g., you don't have or
-> > > >> don't want to load a driver for the GPU, all PDs are affected.
-> > > >>
-> > > >> Even here the solutions you mention will help: instead of things getting
-> > > >> broken because genpds get turned off while they are actually in use, the
-> > > >> genpds will be kept enabled, thus fixing the breakage. Unfortunately,
-> > > >> they'll be kept enabled forever.
-> > > >>
-> > > >> I've been ill for quite a while so I haven't had the chance to look at
-> > > >> this more, but before that I was hacking around a bit with something I
-> > > >> named .partial_sync_state(). .sync_state() gets called when all the
-> > > >> consumers have probed, but .partial_sync_state() gets called when _a_
-> > > >> consumer has been probed.
-> > > >>
-> > > >> For the .sync_state() things are easy for the driver, as it knows
-> > > >> everything related has been probed, but for .partial_sync_state() the
-> > > >> driver needs to track resources internally. .partial_sync_state() will
-> > > >> tell the driver that a consumer device has probed, the driver can then
-> > > >> find out which specific resources (genpds in my case) that consumer
-> > > >> refers to, and then... Well, that's how far I got with my hacks =).
-> > > >>
-> > > >> So, I don't know if this .partial_sync_state() can even work, but I
-> > > >> think we do need something more on top of the .sync_state().
-> > > >
-> > > > Thanks for the update!
-> > > >
-> > > > You certainly have a point, but rather than implementing some platform
-> > > > specific method, I think we should be able enforce the call to
-> > > > ->sync_state(), based upon some condition/timeout - and even if all
-> > > > consumers haven't been probed.
-> > >
-> > > Hmm, I think that was already implemented in some of the serieses out
-> > > there (or even in mainline already?), as I remember doing some
-> > > experiments with it. I don't like it much, though.
-> > >
-> > > With a simple timeout, it'll always be just a bit too early for some
-> > > user (nfs mount took a bit more time than expected -> board frozen).
-> > >
-> > > The only condition I can see that would somewhat work is a manual
-> > > trigger from the userspace. The boot scripts could then signal the
-> > > kernel when all the modules have been loaded and probably a suitable,
-> > > platform/use case specific amount of time has passed to allow the
-> > > drivers to probe.
-> >
-> > This is also already supported in mainline.
-> >
-> > Devices with sync_state() implementations (once Ulf adds it) will have
-> > a state_synced file in sysfs. It shows where it has been called yet or
-> > not. But you can also echo 1 into it to force the sync_state()
-> > callback (only if it hasn't been called already). So, yeah, all
-> > methods of handling this are available if you implement the
-> > sync_state() callback.
-> >
-> > By default it's all strict (wait till all consumers probe
-> > successfully). But you can set it to timeout (fw_devlink.sync_state).
-> > And you also have the option I mentioned above that you can use with
-> > both cases.
->
-> So the idea is to disable unused genpds and clocks from the genpd
-> resp. clock's driver .sync_state() callback, instead of from a late
-> initcall?  That would indeed solve issues related to "Case A".
->
-> However, how to solve "Case B"? Ignore disabling genpds or clocks
-> before .sync_state() callback() has been called?
-> That would cause issues for cases where the clock must be disabled,
-> cfr.
->     "[PATCH RFC 0/3] Add clk_disable_unprepare_sync()"
->     https://lore.kernel.org/all/20240131160947.96171-1-biju.das.jz@bp.renesas.com/
->     "[PATCH v3 0/3] Add clk_poll_disable_unprepare()"
->     https://lore.kernel.org/linux-renesas-soc/20240318110842.41956-1-biju.das.jz@bp.renesas.com/
->
+Thank you!
 
-For genpd, the plan is to check the initial state of the PM domain. It
-can be powered-on or powered-off and if it's powered-on, we should not
-allow it to be powered-off until after ->sync_state() have been
-called.
-
-The similar approach is what Saravanna is trying to implement for
-clocks, I think.
-
-In the end, we simply need to try out these approaches to see if they
-really work. Although, based on previous discussions (LKML +
-F2F-conferences), I think there should be a good chance for us.
-
-[...]
-
-Kind regards
-Uffe
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
