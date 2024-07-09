@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AB4185614
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 20:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B4B185639
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 20:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720557154; cv=none; b=d3NbQRuB91TSicd+Qbej+kgfmR1FyabAG43daPMqPY6UxLbrC6THZqYD1u2F95KjWD/F9fMOTSQl3rJ6N23t1PipcY39hxucypDNp/HDIUqt4HSFu0OPaflJ6zIrlQ9pQiWm9aNlsDoeEnePyqEyzKhs1PF6dRLfIin1R02rBqU=
+	t=1720557157; cv=none; b=atBUWVONEb8cJ8cP/+z5/yAHhUusu5E8JBLfHE9m1j4bNbet9u9X2awhwxGLxC99Tj9Ee5WR98s2uAp30UwDT3/2dcbj8IoXqjIllaLR7Z/0hY2dRN1ttrUg2YblgEnQvQJr52wJShVSTVwbLevODJ7KdIVXs4e+bYNIRuuQLeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720557154; c=relaxed/simple;
-	bh=8WwFP5CCf9stN1FiTOlKvBC5zqi6xiZP0UDWiU8fL0k=;
+	s=arc-20240116; t=1720557157; c=relaxed/simple;
+	bh=oQTA8x65GQzVtig5DcSmr8Ibwy1iNnjZMuGwkCWZtXU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=t5E24m11nQhScZI/e+oVaEUAsxkCdTJfWiK5PxYrAG2t6wyxAqBCoDrkT554sqmjYXWpzcqz6517uXs5QYYl+SNkfFyMniZqlzXnaItgxca3swqcMYNWQd3YvH/F3PHa6JRE4te6XQiRCsmJa9k2KxDiUlIivFReS3F+HVfca2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kRriDddW; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=p9I+hxd2ZGI/Y1N5J0SFbIaNq8b6C2M0bi3CRCyXmF8hZ8fEiMS4smwR2qmX5m/D74bncYs8fcx+V5muTGkAHZGfgGTvzpi26LjsHfLB0dAsnl4/bK4jgj4JyceM4ybVbNxvvQXxTna3Tpq2fzOzvzyZF5dX9B7C+6bG1FiDesY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WRBJ/T71; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kRriDddW"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso84516a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 13:32:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WRBJ/T71"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2c1a9e8d3b0so5116937a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 13:32:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720557151; x=1721161951; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720557155; x=1721161955; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dLvTAbNH73dBrl7bNnyR5edCKfFkbAVRdkATgKgoksk=;
-        b=kRriDddWYlXlgFyqUDT6O5yMU+O7f1xMIClEigxPga0u5tVetcpX++Fzf+1h8JqwKP
-         N9tM1fOmvduAZytY50/dsUiDsgpF24s824T5by2S3pCsYK6vb818TlFyLIw9YZ5svr/M
-         nu30flUOuGbxaqVQU1EAoPYCt0zKUJnDEYMiI1M1nTZmqSkaUteWWMwYkxKfgBA3HziE
-         WnyEM83I2Ab/0fb3if1Xmij1qaEkjbiOOZubR8NUqrMdANVhPzMkXa8k+TWJlqoBiwCV
-         8yr2YJc48Lb56KA7Ejs2W0qzViJ9ACKL89BNJMLfXjIdel8JIpyFPS/ocKOr/94R+qLK
-         kF2w==
+        bh=SK4jF2z7xl5uoUAgslE/9jLcJAWwxsMsuk73k7nd2+0=;
+        b=WRBJ/T71/bmxhqzlCuBznydgPqvt2TJHsKCxdgkM2qdivlftAxd1eFPDDIGduugl9Q
+         X7pG/R3zrhsdKOMnLjD6a63+FlZVOben5hGUDcrPf7kL8XH7JxcxDDRZiyDHGIby2U6q
+         CbQlIuj5SZ3wzZQbSI8wORhH2tIEYyiADBHZQ7KNPEs73mY95PHoWMWaKkSuLE9AJrCd
+         2xZXSresuRsVqnfb0H9EqgEsOcYIbiZHNEFSp8EAAsnjOTKhTfDmELP2KyIM7b/iV6ub
+         MZQnktuXmSNs6fafUF0jx0OISkJurkXsd3Lj9gGaWg9EWjzJVOgW6I7d2QFHL/lC0Ozr
+         TMEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720557151; x=1721161951;
+        d=1e100.net; s=20230601; t=1720557155; x=1721161955;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dLvTAbNH73dBrl7bNnyR5edCKfFkbAVRdkATgKgoksk=;
-        b=KHOiDssZOWURzFsslrVFyYV5ucLru5yk0aXCgo0SliyYrN1xzuoVNFfNaepBmhzOuX
-         25VuybLLVgDR5ZL/xHVGr6/MchOwnqiLVcuzdr5AYFwQ99NTLHAIYMKO3udwcpSkwha7
-         u7rq2XcA8IOGyJFnlAfyUXzGaDk8XO0aTES3jtlk3UegXrW/ClsaFp9PYKL9FoqT3qwN
-         dgpGWAI6kLCPeE76fPrrLYD4jdb44v49/7z1N00xjB/AnFFAELnD/wScVpFxX0c5NQGV
-         tS9b2kmEzW+4kDoZTlxwAKBgP7KGlrSNIfrDtzSYDgbU1sFoM5BpbOrfdFV3HNx7Wkg1
-         iu+Q==
-X-Gm-Message-State: AOJu0YwfOETly6t5c9XANuH2FcvEkKF6wxGR4eh18w05XLfnoouXVc7I
-	KYhfWL0OsKN8lQDHgeVcYGFthpe+m2X87Q5j8EoFfyqZq1dlpyr0Qe5XjKJovs1rYENKtqwRReP
-	uQSZaX478SLIM6qXfkzEQqkfqc778MVM6YLqPDjRiFReaOqwOf3cESgDxI9km/Ih6SdUC+JBoLT
-	qXHqDfQTtVn/hfdbeom5ePVt2DcOflACiRvNX3Y31CsrbF
-X-Google-Smtp-Source: AGHT+IGMvCZToZeHj65S2vUnjRIIe0nCFMOuJ9QbdPNkwAiB09LaXZrmLtpISjk6zta7Lvx8LztCl8RRgrDp
+        bh=SK4jF2z7xl5uoUAgslE/9jLcJAWwxsMsuk73k7nd2+0=;
+        b=Kp/Uh3AfDr80Z3Ex9WSuZgGIEFM+fXupc/1iBEQmChomCkv+97OdyJfZBtkPQwImff
+         huOogw5HcQuz/2j+Og/qME2BBfq1/9j5wMpQC+EMQ1L0PTbh/LInt572beP+ALvwYaWv
+         ZuBrhdNL+n3d4Sc5eaXV34cFRCSeETYYaKy7PgPSD9tCB1Cm/NDzPb9fLNnnjRUuadd+
+         WPgYymQrPpD8DkDwGSl7F23zyZpOkMBYqBbj69kQRJedeCQ6+lMstFSQLbSoTwAytsfS
+         fIH+LFSUreqYSdV9OHr/+aoMmduJ3yrGBVxzUMGKNpVlxS2mIBEz4lFM8gzJpEovV7bx
+         ErrA==
+X-Gm-Message-State: AOJu0YysZaGBb04YCMtq1Fg29WYV1uqo9guyubtgySkMc3DZZrPokvHl
+	YuP3e2RG5iWm3QIvD04yDk3UxBipHAnb1Ikx0xj7173Fb7pU3LpX3wEhXMHCAEGVLLCeikqUiHC
+	thGV3+b1JHOA2eB2X73xjJnD4Nq0UNhA4bWfmwMWU6Ev5qOzcoDQk/rjMnup2tsf0sHorPhQLOx
+	yF0NNklEzsYZUmQ7ZolqAAKwIMrxOvuvHInd3pk7mdsJkI
+X-Google-Smtp-Source: AGHT+IEvefeNpWBJ9CbUI1hgDOI+7IfAEHN9pnRIlIhRJhJ/mWxMB3uWM2sWWUIxs6D5KtBnBELcK4gb6kAm
 X-Received: from jstultz-noogler2.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:600])
- (user=jstultz job=sendgmr) by 2002:a65:67da:0:b0:70e:1058:e16c with SMTP id
- 41be03b00d2f7-77dfededd53mr8536a12.1.1720557148168; Tue, 09 Jul 2024 13:32:28
- -0700 (PDT)
-Date: Tue,  9 Jul 2024 13:31:45 -0700
+ (user=jstultz job=sendgmr) by 2002:a17:90a:e610:b0:2c9:6903:a427 with SMTP id
+ 98e67ed59e1d1-2ca35be7eb9mr87390a91.1.1720557154317; Tue, 09 Jul 2024
+ 13:32:34 -0700 (PDT)
+Date: Tue,  9 Jul 2024 13:31:47 -0700
 In-Reply-To: <20240709203213.799070-1-jstultz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,29 +59,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240709203213.799070-1-jstultz@google.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Message-ID: <20240709203213.799070-3-jstultz@google.com>
-Subject: [PATCH v11 2/7] locking/mutex: Make mutex::wait_lock irq safe
+Message-ID: <20240709203213.799070-5-jstultz@google.com>
+Subject: [PATCH v11 4/7] sched: Add move_queued_task_locked helper
 From: John Stultz <jstultz@google.com>
 To: LKML <linux-kernel@vger.kernel.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>, Joel Fernandes <joelaf@google.com>, 
+Cc: "Connor O'Brien" <connoro@google.com>, Joel Fernandes <joelaf@google.com>, 
 	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
-	Zimuzo Ezeozue <zezeozue@google.com>, Youssef Esmat <youssefesmat@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Metin Kaya <Metin.Kaya@arm.com>, Xuewen Yan <xuewen.yan94@gmail.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com, 
-	"Connor O'Brien" <connoro@google.com>, John Stultz <jstultz@google.com>, Metin Kaya <metin.kaya@arm.com>
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, 
+	Youssef Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, 
+	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com, 
+	John Stultz <jstultz@google.com>, Metin Kaya <metin.kaya@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Connor O'Brien <connoro@google.com>
 
-mutex::wait_lock might be nested under rq->lock.
+Switch logic that deactivates, sets the task cpu,
+and reactivates a task on a different rq to use a
+helper that will be later extended to push entire
+blocked task chains.
 
-Make it irq safe then.
+This patch was broken out from a larger chain migration
+patch originally by Connor O'Brien.
 
 Cc: Joel Fernandes <joelaf@google.com>
 Cc: Qais Yousef <qyousef@layalina.io>
@@ -106,178 +110,143 @@ Cc: K Prateek Nayak <kprateek.nayak@amd.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc: kernel-team@android.com
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-[rebase & fix {un,}lock_wait_lock helpers in ww_mutex.h]
 Signed-off-by: Connor O'Brien <connoro@google.com>
+[jstultz: split out from larger chain migration patch]
 Signed-off-by: John Stultz <jstultz@google.com>
 Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
 Tested-by: Metin Kaya <metin.kaya@arm.com>
 Reviewed-by: Metin Kaya <metin.kaya@arm.com>
 Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+Reviewed-by: Qais Yousef <qyousef@layalina.io>
 ---
-v3:
-* Re-added this patch after it was dropped in v2 which
-  caused lockdep warnings to trip.
-v7:
-* Fix function definition for PREEMPT_RT case, as pointed out
-  by Metin Kaya.
-* Fix incorrect flags handling in PREEMPT_RT case as found by
-  Metin Kaya
+v8:
+* Renamed from push_task_chain to do_push_task so it makes
+  more sense without proxy-execution
+v10:
+* Changed name to move_queued_task_locked as suggested by Valentin
+v11:
+* Also use new helper in __migrate_swap_task() and
+  try_steal_cookie() as suggested by Qais Yousef
+* Nit cleanups suggested by Metin
 ---
- kernel/locking/mutex.c    | 18 ++++++++++--------
- kernel/locking/ww_mutex.h | 22 +++++++++++-----------
- 2 files changed, 21 insertions(+), 19 deletions(-)
+ kernel/sched/core.c     | 13 +++----------
+ kernel/sched/deadline.c |  8 ++------
+ kernel/sched/rt.c       |  8 ++------
+ kernel/sched/sched.h    | 12 ++++++++++++
+ 4 files changed, 19 insertions(+), 22 deletions(-)
 
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index 4269da1f3ef5..6d843a0978a5 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -578,6 +578,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 	DEFINE_WAKE_Q(wake_q);
- 	struct mutex_waiter waiter;
- 	struct ww_mutex *ww;
-+	unsigned long flags;
- 	int ret;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bcf2c4cc0522..5e63dbcbc1f0 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2712,9 +2712,7 @@ int push_cpu_stop(void *arg)
  
- 	if (!use_ww_ctx)
-@@ -620,7 +621,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 		return 0;
+ 	// XXX validate p is still the highest prio task
+ 	if (task_rq(p) == rq) {
+-		deactivate_task(rq, p, 0);
+-		set_task_cpu(p, lowest_rq->cpu);
+-		activate_task(lowest_rq, p, 0);
++		move_queued_task_locked(rq, lowest_rq, p);
+ 		resched_curr(lowest_rq);
  	}
  
--	raw_spin_lock(&lock->wait_lock);
-+	raw_spin_lock_irqsave(&lock->wait_lock, flags);
- 	/*
- 	 * After waiting to acquire the wait_lock, try again.
- 	 */
-@@ -681,7 +682,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 				goto err;
- 		}
+@@ -3414,9 +3412,7 @@ static void __migrate_swap_task(struct task_struct *p, int cpu)
+ 		rq_pin_lock(src_rq, &srf);
+ 		rq_pin_lock(dst_rq, &drf);
  
--		raw_spin_unlock(&lock->wait_lock);
-+		raw_spin_unlock_irqrestore(&lock->wait_lock, flags);
- 		/* Make sure we do wakeups before calling schedule */
- 		if (!wake_q_empty(&wake_q)) {
- 			wake_up_q(&wake_q);
-@@ -707,9 +708,9 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 			trace_contention_begin(lock, LCB_F_MUTEX);
- 		}
+-		deactivate_task(src_rq, p, 0);
+-		set_task_cpu(p, cpu);
+-		activate_task(dst_rq, p, 0);
++		move_queued_task_locked(src_rq, dst_rq, p);
+ 		wakeup_preempt(dst_rq, p, 0);
  
--		raw_spin_lock(&lock->wait_lock);
-+		raw_spin_lock_irqsave(&lock->wait_lock, flags);
- 	}
--	raw_spin_lock(&lock->wait_lock);
-+	raw_spin_lock_irqsave(&lock->wait_lock, flags);
- acquired:
- 	__set_current_state(TASK_RUNNING);
+ 		rq_unpin_lock(dst_rq, &drf);
+@@ -6369,10 +6365,7 @@ static bool try_steal_cookie(int this, int that)
+ 		if (sched_task_is_throttled(p, this))
+ 			goto next;
  
-@@ -735,7 +736,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 	if (ww_ctx)
- 		ww_mutex_lock_acquired(ww, ww_ctx);
- 
--	raw_spin_unlock(&lock->wait_lock);
-+	raw_spin_unlock_irqrestore(&lock->wait_lock, flags);
- 	wake_up_q(&wake_q);
- 	preempt_enable();
- 	return 0;
-@@ -745,7 +746,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 	__mutex_remove_waiter(lock, &waiter);
- err_early_kill:
- 	trace_contention_end(lock, ret);
--	raw_spin_unlock(&lock->wait_lock);
-+	raw_spin_unlock_irqrestore(&lock->wait_lock, flags);
- 	debug_mutex_free_waiter(&waiter);
- 	mutex_release(&lock->dep_map, ip);
- 	wake_up_q(&wake_q);
-@@ -916,6 +917,7 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
- 	struct task_struct *next = NULL;
- 	DEFINE_WAKE_Q(wake_q);
- 	unsigned long owner;
-+	unsigned long flags;
- 
- 	mutex_release(&lock->dep_map, ip);
- 
-@@ -942,7 +944,7 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
- 		}
- 	}
- 
--	raw_spin_lock(&lock->wait_lock);
-+	raw_spin_lock_irqsave(&lock->wait_lock, flags);
- 	debug_mutex_unlock(lock);
- 	if (!list_empty(&lock->wait_list)) {
- 		/* get the first entry from the wait-list: */
-@@ -960,7 +962,7 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
- 		__mutex_handoff(lock, next);
- 
- 	preempt_disable();
--	raw_spin_unlock(&lock->wait_lock);
-+	raw_spin_unlock_irqrestore(&lock->wait_lock, flags);
- 	wake_up_q(&wake_q);
- 	preempt_enable();
- }
-diff --git a/kernel/locking/ww_mutex.h b/kernel/locking/ww_mutex.h
-index 7189c6631d90..9facc0ddfdd3 100644
---- a/kernel/locking/ww_mutex.h
-+++ b/kernel/locking/ww_mutex.h
-@@ -70,14 +70,14 @@ __ww_mutex_has_waiters(struct mutex *lock)
- 	return atomic_long_read(&lock->owner) & MUTEX_FLAG_WAITERS;
- }
- 
--static inline void lock_wait_lock(struct mutex *lock)
-+static inline void lock_wait_lock(struct mutex *lock, unsigned long *flags)
- {
--	raw_spin_lock(&lock->wait_lock);
-+	raw_spin_lock_irqsave(&lock->wait_lock, *flags);
- }
- 
--static inline void unlock_wait_lock(struct mutex *lock)
-+static inline void unlock_wait_lock(struct mutex *lock, unsigned long *flags)
- {
--	raw_spin_unlock(&lock->wait_lock);
-+	raw_spin_unlock_irqrestore(&lock->wait_lock, *flags);
- }
- 
- static inline void lockdep_assert_wait_lock_held(struct mutex *lock)
-@@ -144,14 +144,14 @@ __ww_mutex_has_waiters(struct rt_mutex *lock)
- 	return rt_mutex_has_waiters(&lock->rtmutex);
- }
- 
--static inline void lock_wait_lock(struct rt_mutex *lock)
-+static inline void lock_wait_lock(struct rt_mutex *lock, unsigned long *flags)
- {
--	raw_spin_lock(&lock->rtmutex.wait_lock);
-+	raw_spin_lock_irqsave(&lock->rtmutex.wait_lock, *flags);
- }
- 
--static inline void unlock_wait_lock(struct rt_mutex *lock)
-+static inline void unlock_wait_lock(struct rt_mutex *lock, unsigned long *flags)
- {
--	raw_spin_unlock(&lock->rtmutex.wait_lock);
-+	raw_spin_unlock_irqrestore(&lock->rtmutex.wait_lock, *flags);
- }
- 
- static inline void lockdep_assert_wait_lock_held(struct rt_mutex *lock)
-@@ -380,6 +380,7 @@ static __always_inline void
- ww_mutex_set_context_fastpath(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
- {
- 	DEFINE_WAKE_Q(wake_q);
-+	unsigned long flags;
- 
- 	ww_mutex_lock_acquired(lock, ctx);
- 
-@@ -408,10 +409,9 @@ ww_mutex_set_context_fastpath(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
- 	 * Uh oh, we raced in fastpath, check if any of the waiters need to
- 	 * die or wound us.
- 	 */
--	lock_wait_lock(&lock->base);
-+	lock_wait_lock(&lock->base, &flags);
- 	__ww_mutex_check_waiters(&lock->base, ctx, &wake_q);
--	unlock_wait_lock(&lock->base);
+-		deactivate_task(src, p, 0);
+-		set_task_cpu(p, this);
+-		activate_task(dst, p, 0);
 -
-+	unlock_wait_lock(&lock->base, &flags);
- 	wake_up_q(&wake_q);
- }
++		move_queued_task_locked(src, dst, p);
+ 		resched_curr(dst);
  
+ 		success = true;
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index c75d1307d86d..3e05e239f5f6 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -2442,9 +2442,7 @@ static int push_dl_task(struct rq *rq)
+ 		goto retry;
+ 	}
+ 
+-	deactivate_task(rq, next_task, 0);
+-	set_task_cpu(next_task, later_rq->cpu);
+-	activate_task(later_rq, next_task, 0);
++	move_queued_task_locked(rq, later_rq, next_task);
+ 	ret = 1;
+ 
+ 	resched_curr(later_rq);
+@@ -2530,9 +2528,7 @@ static void pull_dl_task(struct rq *this_rq)
+ 			if (is_migration_disabled(p)) {
+ 				push_task = get_push_task(src_rq);
+ 			} else {
+-				deactivate_task(src_rq, p, 0);
+-				set_task_cpu(p, this_cpu);
+-				activate_task(this_rq, p, 0);
++				move_queued_task_locked(src_rq, this_rq, p);
+ 				dmin = p->dl.deadline;
+ 				resched = true;
+ 			}
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index aa4c1c874fa4..55bb33f367ad 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -2105,9 +2105,7 @@ static int push_rt_task(struct rq *rq, bool pull)
+ 		goto retry;
+ 	}
+ 
+-	deactivate_task(rq, next_task, 0);
+-	set_task_cpu(next_task, lowest_rq->cpu);
+-	activate_task(lowest_rq, next_task, 0);
++	move_queued_task_locked(rq, lowest_rq, next_task);
+ 	resched_curr(lowest_rq);
+ 	ret = 1;
+ 
+@@ -2378,9 +2376,7 @@ static void pull_rt_task(struct rq *this_rq)
+ 			if (is_migration_disabled(p)) {
+ 				push_task = get_push_task(src_rq);
+ 			} else {
+-				deactivate_task(src_rq, p, 0);
+-				set_task_cpu(p, this_cpu);
+-				activate_task(this_rq, p, 0);
++				move_queued_task_locked(src_rq, this_rq, p);
+ 				resched = true;
+ 			}
+ 			/*
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index a831af102070..a24286059a6a 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3479,5 +3479,17 @@ static inline void init_sched_mm_cid(struct task_struct *t) { }
+ 
+ extern u64 avg_vruntime(struct cfs_rq *cfs_rq);
+ extern int entity_eligible(struct cfs_rq *cfs_rq, struct sched_entity *se);
++#ifdef CONFIG_SMP
++static inline
++void move_queued_task_locked(struct rq *src_rq, struct rq *dst_rq, struct task_struct *task)
++{
++	lockdep_assert_rq_held(src_rq);
++	lockdep_assert_rq_held(dst_rq);
++
++	deactivate_task(src_rq, task, 0);
++	set_task_cpu(task, dst_rq->cpu);
++	activate_task(dst_rq, task, 0);
++}
++#endif
+ 
+ #endif /* _KERNEL_SCHED_SCHED_H */
 -- 
 2.45.2.993.g49e7a77208-goog
 
