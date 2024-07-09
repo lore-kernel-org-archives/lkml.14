@@ -1,119 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83CB12DDAE;
-	Tue,  9 Jul 2024 12:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8F712DDAE;
+	Tue,  9 Jul 2024 12:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720526660; cv=none; b=V6P4cn7g1sFMBq1zZr419GoaJ5dnENxFBveUyaC0TXEO0OUBAdnJolkJNvZwvFHOzy9P1aN9Xv3mnXwy49Vx1U1jc0IZ9VKvtfUMRj4Sk4Lb0WnrabeCPtInsKkf8mUQw3TcFpuQSDG86eITW8fJVpKcR9lKcXBuVgyY3h/CEqs=
+	t=1720526747; cv=none; b=pvbPGX27Q2aN/O58kBu8vgLQvZwJkn8TtSOsiprWnM+IU1egxxO3f0wafWsg91xLFXu9vyMq5SfBYjlswI1zyurSjmzgfODTbFUfnTdI0hLPlTpXL+KB6NyUjBeSg64xLTRZA4FUGxSIp6F9Xhwciq4f/phiJAQHb6mHImqJCsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720526660; c=relaxed/simple;
-	bh=SrhoJeKBbAEYzxdE1V+GdZPDntsSpImr4rqlfBA4UyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EXqHwJ+Nj+9BxXye5E+8zi582BatdplC1yRZyrG0p3QZZluSAfA2/tD6sqyXaNDqD0cKO+7YaqOsZViFMR01Jiv9Bp89631CluizlxLqBBKYqmaIhMjfVeZgxcG9sutin3trgGPaTxkZRbQsSvxGDySSKxBhQxuHWQh+C5caV/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoZFPiWI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoZFPiWI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96878C3277B;
-	Tue,  9 Jul 2024 12:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720526659;
-	bh=SrhoJeKBbAEYzxdE1V+GdZPDntsSpImr4rqlfBA4UyU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UoZFPiWIQppoyym1oPlAXiIL3Yh/A68blo9/dr4qFRjqIg8EYAsS9dInpbuvzJddz
-	 6L6zwOvxFjTJAJF/LPajTp32MdzifK0G5z6uy4MQifS0pHfKk5RcmsGMXfnwYJmK1A
-	 PUC1t4vI4V6WUm+8xwXtbdKdhozP0AcyT6boR4bmOapfI6ssuO9lohsu8xMg1tVmje
-	 5PuOUMiItONrexD8xXShpaM+Q76dp6qIxKHt9CKu9/x/Ur2jNN/21pCbLv1oS+jJye
-	 HtwYmA0g8onmTz8Qz55CJzaFi7YBmLdlRmJ0rWLXSmJ7HHWgLjLRKgIn3aqkXvypeW
-	 Mtk0Cxf2msmZg==
-Date: Tue, 9 Jul 2024 13:04:13 +0100
-From: Will Deacon <will@kernel.org>
-To: Steven Price <steven.price@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Subject: Re: [PATCH v4 00/15] arm64: Support for running as a guest in Arm CCA
-Message-ID: <20240709120412.GE13242@willie-the-truck>
-References: <20240701095505.165383-1-steven.price@arm.com>
+	s=arc-20240116; t=1720526747; c=relaxed/simple;
+	bh=ASrMse71KGxR4W6YXPjOC0NqqUxqgYmeIkU14MvNDtc=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gic+eAvNizFSBqR9cC+7YbsEy48RhCYnXDCUCcPep4Mu+N0H/JT+SOpOUc7HPVeEPfvkIBvc3n3wFDA+Q1c9cux6RX8lGU8t+Ku5tbKyTIi9cQPHXlL/0OIsPwAyNP7+BMx1P08ignUdvGrrQSZyI/F/jxnTxVqs+TW6TyaStG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxbPCVJ41mi2sCAA--.7156S3;
+	Tue, 09 Jul 2024 20:05:41 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJMWUJ41m8QJBAA--.7892S3;
+	Tue, 09 Jul 2024 20:05:41 +0800 (CST)
+Subject: Re: [PATCH v3 1/3] perf: Add perf_event_attr::bp_priv
+To: Will Deacon <will@kernel.org>
+References: <20240709095506.9691-1-yangtiezhu@loongson.cn>
+ <20240709095506.9691-2-yangtiezhu@loongson.cn>
+ <20240709100304.GA12978@willie-the-truck>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <6d18e6fc-1d3f-f866-e887-bf5e01fb9368@loongson.cn>
+Date: Tue, 9 Jul 2024 20:05:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701095505.165383-1-steven.price@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20240709100304.GA12978@willie-the-truck>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8CxJMWUJ41m8QJBAA--.7892S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cw17Gw4rtrykAr1fuFyxCrX_yoW8uF1xpr
+	ZxCFn5K3yktry093ZrWwsrZryUXws29rWqg3W3Kw4Ykryav3s3G3ykWr909Fn5Zr1xAa4r
+	twnFgFn8ta4UXagCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07joc_-UUU
+	UU=
 
-Hi Steven,
+On 07/09/2024 06:03 PM, Will Deacon wrote:
+> On Tue, Jul 09, 2024 at 05:55:04PM +0800, Tiezhu Yang wrote:
+>> When developing hardware watchpoint on LoongArch, we want to set the
+>> same privilege passed by the ptrace user data, but there is no bridge
+>> to save this value like bp_addr, bp_type and bp_len. This is a common
+>> issue for the archs which have privilege level of breakpoint.
+>>
+>> Add a member "bp_priv" which lives in a union on config3 at the end
+>> of the uapi struct perf_event_attr to make a bridge between ptrace
+>> and hardware breakpoint.
+>>
+>> This is preparation for later patch on some archs such as ARM, ARM64
+>> and LoongArch which have privilege level of breakpoint.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>  include/uapi/linux/perf_event.h | 5 ++++-
+>>  kernel/events/hw_breakpoint.c   | 1 +
+>>  2 files changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>> index 3a64499b0f5d..abe8da7a1f60 100644
+>> --- a/include/uapi/linux/perf_event.h
+>> +++ b/include/uapi/linux/perf_event.h
+>> @@ -521,7 +521,10 @@ struct perf_event_attr {
+>>  	 */
+>>  	__u64	sig_data;
+>>
+>> -	__u64	config3; /* extension of config2 */
+>> +	union {
+>> +		__u8	bp_priv; /* privilege level of breakpoint */
+>> +		__u64	config3; /* extension of config2 */
+>> +	};
+>>  };
+>>
+>>  /*
+>> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+>> index 6c2cb4e4f48d..3ad16b226e4f 100644
+>> --- a/kernel/events/hw_breakpoint.c
+>> +++ b/kernel/events/hw_breakpoint.c
+>> @@ -754,6 +754,7 @@ static void hw_breakpoint_copy_attr(struct perf_event_attr *to,
+>>  	to->bp_addr = from->bp_addr;
+>>  	to->bp_type = from->bp_type;
+>>  	to->bp_len  = from->bp_len;
+>> +	to->bp_priv = from->bp_priv;
+>>  	to->disabled = from->disabled;
+>>  }
+>
+> Sorry, but I still don't see why we should change uapi for this. As I
+> have said multiple times, this is unnecessary.
 
-On Mon, Jul 01, 2024 at 10:54:50AM +0100, Steven Price wrote:
-> This series adds support for running Linux in a protected VM under the
-> Arm Confidential Compute Architecture (CCA). This has been updated
-> following the feedback from the v3 posting[1]. Thanks for the feedback!
-> Individual patches have a change log. But things to highlight:
+Thanks for your review, I see your point but let us wait
+for more comments from perf people.
 
-Hold onto your hat, I'm going to dust off our pKVM protected guest
-changes and see what we can share here! I've left a few comments on the
-series, but the main differences seem to be:
+Thanks,
+Tiezhu
 
-  - You try to probe really early
-  - You have that horrible split IPA space thing from the RSI spec
-
-but some of the mechanisms are broadly similar (e.g. implementing the
-set_memory_*crypted() API).
-
-Hopefully I can give your GIC changes a spin, too.
-
-Just one minor (but probably annoying) comment:
-
->  arch/arm64/Kconfig                            |   3 +
->  arch/arm64/include/asm/fixmap.h               |   2 +-
->  arch/arm64/include/asm/io.h                   |   8 +-
->  arch/arm64/include/asm/mem_encrypt.h          |  17 ++
->  arch/arm64/include/asm/pgtable-hwdef.h        |   6 -
->  arch/arm64/include/asm/pgtable-prot.h         |   3 +
->  arch/arm64/include/asm/pgtable.h              |  13 +-
->  arch/arm64/include/asm/rsi.h                  |  64 ++++++
->  arch/arm64/include/asm/rsi_cmds.h             | 134 +++++++++++
->  arch/arm64/include/asm/rsi_smc.h              | 142 ++++++++++++
->  arch/arm64/include/asm/set_memory.h           |   3 +
->  arch/arm64/kernel/Makefile                    |   3 +-
->  arch/arm64/kernel/efi.c                       |   2 +-
->  arch/arm64/kernel/rsi.c                       | 104 +++++++++
->  arch/arm64/kernel/setup.c                     |   8 +
->  arch/arm64/mm/init.c                          |  10 +-
->  arch/arm64/mm/pageattr.c                      |  76 ++++++-
->  drivers/firmware/psci/psci.c                  |  25 +++
->  drivers/irqchip/irq-gic-v3-its.c              | 142 +++++++++---
->  drivers/virt/coco/Kconfig                     |   2 +
->  drivers/virt/coco/Makefile                    |   1 +
->  drivers/virt/coco/arm-cca-guest/Kconfig       |  11 +
->  drivers/virt/coco/arm-cca-guest/Makefile      |   2 +
->  .../virt/coco/arm-cca-guest/arm-cca-guest.c   | 211 ++++++++++++++++++
->  include/linux/psci.h                          |   5 +
->  25 files changed, 953 insertions(+), 44 deletions(-)
->  create mode 100644 arch/arm64/include/asm/mem_encrypt.h
->  create mode 100644 arch/arm64/include/asm/rsi.h
->  create mode 100644 arch/arm64/include/asm/rsi_cmds.h
->  create mode 100644 arch/arm64/include/asm/rsi_smc.h
->  create mode 100644 arch/arm64/kernel/rsi.c
->  create mode 100644 drivers/virt/coco/arm-cca-guest/Kconfig
->  create mode 100644 drivers/virt/coco/arm-cca-guest/Makefile
->  create mode 100644 drivers/virt/coco/arm-cca-guest/arm-cca-guest.c
-
-Any chance of some documentation, please?
-
-Cheers,
-
-Will
