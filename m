@@ -1,103 +1,125 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701C119CCF2
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 14:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095AF19CCEF
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 14:34:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720535676; cv=none; b=fJJ+t6xt8DbRJ2kbXRBswcULnJUixlO3LkqZ8ukpQp51XHzN8mZJ/3542o4v31+PyglKPMtc5TosiqdeyAUEDrpTVNYORcaJY+PUBiWWeWXa7b2Sqvswts1sSgd0Fx/3hIxHhLNsmC0GICMKRSltWFbnzWj3j3uh8SA0DW3Pttw=
+	t=1720535689; cv=none; b=Szr3wAnanvYHOKkIeme1KIUW8Medf2MBjeMvlJUzU2re8XLUdlsOhcN2LVarJjZvygu73e/lUy+6Ma5Vf/+LevQBXC0drchB6Y3HxurhyFCIoaFR02vlH5WScn5VpfXJ9fCbeBe8ex4IV9rFmdhflccf1VE8Q/EOfCrmkGZBbdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720535676; c=relaxed/simple;
-	bh=bpzhk5cfR3F+pR8M1FUWFRktJXUEzVfeuMK6fUbiyOc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iVCep40OWCMMREymlEezxtO3rsssLfjnp+jj5z8Q7EDIrMHBcCKnWvIJkYYjMRmTQvmV6Q9jBJFqdXq42Rx5WZr2hbBtoEInsgu8lUX4VBGrLzfx3pTuvbGOJVFzbCCLS8xmsTUgGlKFuf94ebik24v2MadF4VqlB2NKGSpOKcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gGnHqwAK; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1720535689; c=relaxed/simple;
+	bh=c0tyW1ijVrR7xsv9J8MUnpSWSwHDTldwccl5EfWtEtg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G2W/+XRkFR/uhbe4jjluLQh5Uv9D8OiLIKZDqLHaU4cWHmO43l9oCVy5mMOONtFlJfkQ7kVo7P1Q8xG8wNEEOrHkdBrNas86bZ2ioMbsxVs/o9i9/IhY7nIJD6gxrxXYpVtQ+3QUyRXyT+jmsIiJ8Xlq3LBAlfAUPT2sdzo/OIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZQjHQkhr; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGnHqwAK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQjHQkhr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720535673;
+	s=mimecast20190719; t=1720535687;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2KSGK3LaL1Mx5upY3a+zMUsotplQxAZK6hNQur1F1ok=;
-	b=gGnHqwAKKphcA+0QPrut7O4zTXH168UG9u0UYpIp+Rb4+/02XO4+VYsIhtjA5jchtuMixv
-	yXdeDJcqlzRihIaWI2FriMLb0J1QbDg9KjE0nzCBINRIhmD68fk4audmfA85zUTqXmt0yf
-	1DpCENdTT0glHyQ09swxtt/8EewYNrE=
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
- [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-38-n9td_YVYPpapCFgPvYv8Vg-1; Tue, 09 Jul 2024 10:34:32 -0400
-X-MC-Unique: n9td_YVYPpapCFgPvYv8Vg-1
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-38acde528afso7460905ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 07:34:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720535671; x=1721140471;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2KSGK3LaL1Mx5upY3a+zMUsotplQxAZK6hNQur1F1ok=;
-        b=GHiUIxbrcpoKP3Ye3hE6ZgYmYUKCHvVd10KH+dtzJWm4aTD+VXGBY0F/Wq777SuFY0
-         /PEOWe4d/gc1bZ1l4BI6EzMYbDOgLmnH3/RfUw4zoj3yYv9OGGw68xv/n9PN2FNJ/9IH
-         xRtzzDtWfn+c2SynXyTC1Zx1TBALYRsCaucO+fGGMWoZ+nQHmLckyvOAFj8lo1XRgyoT
-         Wcg5x1ZMTXpMN0jKFi6QWPXtGB51qzCqdIIT2ajtICbN35rCGYLvbjrrX99krXdKGI8P
-         Hq1nJNR1wwvpHicYB6YnfAUnrqFoA1D+EpSnOVgi6QbWtvBu81+a0aenuE17WI3ti4l2
-         43DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpqLEjurO8TY+fXqCe6LmRtmoJL7B5oYidF/+f1Z1yp1nIDds3aNDOSO7D1Av0YpkgXo8J0F/wx1ygbD9f06K46cFh9TYYb7+ntyXN
-X-Gm-Message-State: AOJu0YzuWH9b1IfGCbdzksLdhl/5Rz5fshNxnyKCwUQxNpxvOsJHzaGy
-	QPa3iyDGp5Z+ByrAY7VjeSbUj7cNGusrmQMwCKBB9Vm5UtoMmu3B8UPC7vzT+j/jnRgewri5qzZ
-	BuQdccYH2Yymwh4bK6qYvUgdHrETNkgc8ofAOUIlCFgsqh5mnV3pb5w1dMUMRqg==
-X-Received: by 2002:a05:6e02:19cf:b0:374:983b:6ff2 with SMTP id e9e14a558f8ab-38a5a079b58mr31038955ab.20.1720535671198;
-        Tue, 09 Jul 2024 07:34:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCBm/l4muSrDy7yEx0OBrZXGu/5Ywn0CQg3zoXjkv0vgrA62wtGegT+1Otz+Rekjv0zwGo3g==
-X-Received: by 2002:a05:6e02:19cf:b0:374:983b:6ff2 with SMTP id e9e14a558f8ab-38a5a079b58mr31038695ab.20.1720535670921;
-        Tue, 09 Jul 2024 07:34:30 -0700 (PDT)
-Received: from ryzen.. ([240d:1a:c0d:9f00:ca7f:54ff:fe01:979d])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d60117b61sm1501424a12.22.2024.07.09.07.34.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 07:34:30 -0700 (PDT)
-From: Shigeru Yoshida <syoshida@redhat.com>
-To: jmaloy@redhat.com,
-	ying.xue@windriver.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Shigeru Yoshida <syoshida@redhat.com>
-Subject: [PATCH net-next] tipc: Remove unused struct declaration
-Date: Tue,  9 Jul 2024 23:34:10 +0900
-Message-ID: <20240709143410.352006-1-syoshida@redhat.com>
-X-Mailer: git-send-email 2.45.2
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PucfIIVLf+L1XCVXEbmqJcQ5iJs8yaBnEDX4Ck00ukA=;
+	b=ZQjHQkhrmP5GYOzfmV5XqE5JpYQplmtzaWC05pImsU85CoNXeQ7GAD4guCt4CzJ9zPv6w6
+	zNbmdgQ4bMHi4/mnEC8fY+Dj7LgH+dTL5gP1RB9qPOY4BtA0VaiCySTp5DnsCCnN1CQxNb
+	FS+DDssOQ8pwR99Chf4Mf+WzCewQVCg=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-558-xYeDQG77NlarONmXKcIg5w-1; Tue,
+ 09 Jul 2024 10:34:43 -0400
+X-MC-Unique: xYeDQG77NlarONmXKcIg5w-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D3B991955BCD;
+	Tue,  9 Jul 2024 14:34:41 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.34])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A51E71953967;
+	Tue,  9 Jul 2024 14:34:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  9 Jul 2024 16:33:05 +0200 (CEST)
+Date: Tue, 9 Jul 2024 16:32:55 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
+	clm@meta.com, paulmck@kernel.org
+Subject: Re: [PATCH 04/10] perf/uprobe: RCU-ify find_uprobe()
+Message-ID: <20240709143255.GD28495@redhat.com>
+References: <20240708091241.544262971@infradead.org>
+ <20240708092415.579623285@infradead.org>
+ <20240708163545.GB18761@redhat.com>
+ <20240708180837.GC27299@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708180837.GC27299@noisy.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-struct tipc_name_table in core.h is not used. Remove this declaration.
+On 07/08, Peter Zijlstra wrote:
+>
+> On Mon, Jul 08, 2024 at 06:35:45PM +0200, Oleg Nesterov wrote:
+> >
+> > Suppose we have uprobe U which has no extra refs, so uprobe_unregister()
+> > called by the task X should remove it from uprobes_tree and kfree.
+> >
+> > Suppose that the task T hits the breakpoint and enters handle_swbp().
+> >
+> > Now,
+> >
+> > 	- X calls find_uprobe(), this increments U->ref from 1 to 2
+> >
+> > 	  register_for_each_vma() succeeds
+> >
+> > 	  X enters delete_uprobe()
+> >
+> > 	- T calls find_active_uprobe() -> find_uprobe()
+> >
+> > 	  __read_seqcount_begin__read_seqcount_begin() returns an even number
+> >
+> > 	  __find_uprobe() -> rb_find_rcu() succeeds
+> >
+> > 	- X continues and returns from delete_uprobe(), U->ref == 1
+> >
+> > 	  then it does the final uprobe_unregister()->put_uprobe(U),
+> > 	  refcount_dec_and_test() succeeds, X calls call_rcu(uprobe_free_rcu).
+> >
+> > 	- T does get_uprobe() which changes U->ref from 0 to 1, __find_uprobe()
+> > 	  returns, find_uprobe() doesn't check read_seqcount_retry().
+>
+> I think you're right. However, this get_uprobe() will go away in a few
+> patches.
 
-Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
----
- net/tipc/core.h | 1 -
- 1 file changed, 1 deletion(-)
+OK, I am looking at 7/10 perf/uprobe: Convert (some) uprobe->refcount to SRCU
 
-diff --git a/net/tipc/core.h b/net/tipc/core.h
-index 7eccd97e0609..7f3fe3401c45 100644
---- a/net/tipc/core.h
-+++ b/net/tipc/core.h
-@@ -72,7 +72,6 @@ struct tipc_node;
- struct tipc_bearer;
- struct tipc_bc_base;
- struct tipc_link;
--struct tipc_name_table;
- struct tipc_topsrv;
- struct tipc_monitor;
- #ifdef CONFIG_TIPC_CRYPTO
--- 
-2.45.2
+Yes, __find_uprobe() no longer does get_uprobe(). But at first glance we have
+the same problem with this change
+
+	@@ -1977,7 +1979,7 @@ pre_ssout(struct uprobe *uprobe, struct
+			return err;
+		}
+	 
+	-	utask->active_uprobe = uprobe;
+	+	utask->active_uprobe = get_uprobe(uprobe);
+		utask->state = UTASK_SSTEP;
+		return 0;
+	 }
+
+from 7/12 above. It can change uprobe->ref from 0 to 1 when
+call_srcu(&uprobes_srcu, uprobe_free_rcu) was already scheduled.
+
+Once guard(srcu)(&uprobes_srcu) in handle_swbp() drops the uprobes_srcu lock,
+utask->active_uprobe can be freed.
+
+Oleg.
 
