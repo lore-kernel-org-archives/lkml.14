@@ -1,52 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C78419D072;
-	Tue,  9 Jul 2024 15:56:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5393C15C9;
+	Tue,  9 Jul 2024 15:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720540608; cv=none; b=ljQmzzwBLkG/irTT0FObMJh68QkOgLMYY9tZ2FbgqyStLJeVaFEVyVjt6MEAbSjAk3m6WbWp7SwSEXtwVLN3tiGn1Gy/PzFuc0KF8zBRJGHEzhhO1h8OsHpy24A3ux6wxHdbvgJiRjRKesovWnHF4SXGWOslWjyABJxD5CBkn94=
+	t=1720540698; cv=none; b=Ba30vht2TqWQeTRoqfprNCln8XpHtei3z7zmKLKMYhojVJyKtpIOPVCoetKO4NwE56UitCI0qDuj47tsWTwJwAZq/Ql8P1z8CUEdGWhXqX8CNgE4KisHqcRT4pxENndEVinVJhbB4jNuBvFJ/W6+kwPTsqRsCUdEBZva9W1m1NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720540608; c=relaxed/simple;
-	bh=7QDmkH9dU/DwLIoWyMJ6ELPOYRMutG6ZVvgVUh6sV+Y=;
+	s=arc-20240116; t=1720540698; c=relaxed/simple;
+	bh=jZZfFhDWJGWsSF3CS99E11c1PeK4aHzAek4MCfMwkMo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iPc7IzhLdF0fofdnfPKXmjIcRAddtiZk7+AxNyrLAI2XQNbk2kyb5U2umsX7hTRzQ6eQL42oyBkkLpKtgSQ/fZWOxZy0kiJwqtwBALRWYLOr40KYymVkF0GbI1mbW2bl9lNzEML6KjvCQj90a2F4tELnZS3zW7l5gr3LNqdnjBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTSSEdLc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gOevjagQugVtscO0IiQ9MCWmmURgM4O53QkGLfCfhlTalSFA6Y06Q+2OqIp2DWMFz26d71E1b5o+PugoJ5V3BIwfid6OKwFvTfxPnfhFr107Psd9HcOh6VcuZCaNlfqaf0f88nTFDA8PUC+Q2NbLEkQSePETQlzcCi8gRVvUQ0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d02Y0aDb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTSSEdLc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1BD9C3277B;
-	Tue,  9 Jul 2024 15:56:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d02Y0aDb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B585CC3277B;
+	Tue,  9 Jul 2024 15:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720540607;
-	bh=7QDmkH9dU/DwLIoWyMJ6ELPOYRMutG6ZVvgVUh6sV+Y=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=nTSSEdLcK70FpPyPZo/K52yKYgyJ/m/2ElJh2sivBjsvzu92ayHYaeVlMMsncpRD1
-	 TYEOIrZ08hDZnIdvTFcdUyunZ1XYOghvF32BvYFUj+BWj3HLtqLb5TcozY+qY4VldH
-	 CuoAxsBOc7bYpjHgcmDR3wCF2R+AnWzlF7H24cZf3ez3E+hbyM7msS9NOuvBRd/SwO
-	 y80RWMfzy8Uo4xnwKpk1N1kMB4ZcMRNIASpp90QdpXTkh9whlXWSWGcHahFlEV/pww
-	 OjAx2/G2OuTmzZ2ZqhuDYfyh84c5CxETD5REAM85hqpZcDJvKSTSJIAlYECNlme5x4
-	 8dt3wK83CCkPA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 63B78CE0A45; Tue,  9 Jul 2024 08:56:47 -0700 (PDT)
-Date: Tue, 9 Jul 2024 08:56:47 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>, mingo@kernel.org,
-	andrii@kernel.org, linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org, oleg@redhat.com, jolsa@kernel.org,
-	clm@meta.com, bpf <bpf@vger.kernel.org>, willy@infradead.org
-Subject: Re: [PATCH 00/10] perf/uprobe: Optimize uprobes
-Message-ID: <7505621f-23ce-4b50-9e0d-84c9e7754444@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240708091241.544262971@infradead.org>
- <20240709075651.122204f1358f9f78d1e64b62@kernel.org>
- <CAEf4BzY6tXrDGkW6mkxCY551pZa1G+Sgxeuex==nvHUEp9ynpg@mail.gmail.com>
- <20240709090153.GF27299@noisy.programming.kicks-ass.net>
- <91d37ad3-137b-4feb-8154-4deaa4b11dc3@paulmck-laptop>
- <20240709142943.GL27299@noisy.programming.kicks-ass.net>
- <445aed81-a845-4f5d-8b20-70eced3ce4f8@paulmck-laptop>
- <20240709153132.GR27299@noisy.programming.kicks-ass.net>
+	s=k20201202; t=1720540697;
+	bh=jZZfFhDWJGWsSF3CS99E11c1PeK4aHzAek4MCfMwkMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d02Y0aDbRlaXAbUBJh1EwfgwtWzOq1XH1M5oLg5Y7qDaHwbzMdBrufjcGzZ0veWwg
+	 dQGg+tSExq3JxOZkPltLzuP5Meu8n+odhnLiVUu4FsTFJIpVwidwYm8YwRf+AXa9Yo
+	 BNyOAFfSYoxuSCHFJPFXBotrK5iM9ot7cwIZ+gP4TWtJpIzH+vFh1EjWsk2hg8rT63
+	 RVKhJzmKaym4eJMDRrJBTt0a+lagw5JBhSpKwSPRhvHJJZIcg29AYAfyuzWpI065vu
+	 0SNfg1khrex2qrSN4JLAgosrgfxP2XvBWUG5BoxnDLbAMQHFbEBaxIIHF1UyrarExL
+	 jyRBFlgo+ETgg==
+Date: Tue, 9 Jul 2024 09:58:16 -0600
+From: Rob Herring <robh@kernel.org>
+To: Manikandan Muralidharan <manikandan.m@microchip.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, krzk+dt@kernel.org,
+	conor+dt@kernel.org, nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
+	arnd@arndb.de, durai.manickamkr@microchip.com,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] dt-bindings: pinctrl: Convert Atmel PIO3 pinctrl
+ to json-schema
+Message-ID: <20240709155816.GB3589336-robh@kernel.org>
+References: <20240709092354.191643-1-manikandan.m@microchip.com>
+ <20240709092354.191643-6-manikandan.m@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,36 +48,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240709153132.GR27299@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240709092354.191643-6-manikandan.m@microchip.com>
 
-On Tue, Jul 09, 2024 at 05:31:32PM +0200, Peter Zijlstra wrote:
-> On Tue, Jul 09, 2024 at 07:36:41AM -0700, Paul E. McKenney wrote:
+On Tue, Jul 09, 2024 at 02:53:54PM +0530, Manikandan Muralidharan wrote:
+> Convert Atmel PIO3 pinctrl binding document to DT schema format
+> json-schema.
 > 
-> > > Per VMA refcounts or per VMA locks are a complete fail IMO.
-> > 
-> > Not even to allow concurrent updates of the address space by different
-> > threads of a process?
+> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> changes in v3:
+> - Remove quotes in $ref
+> - modify the gpio regex
+> - Remove pinmux pinctrl subnode regex and modify it since they do not
+> follow a particular order or pattern, Adding 'type:object' with this
+> '^[a-z0-9-_]+$' regex does throw DTC_CHK errors for other
+> pio3 pinctrl properties
 > 
-> Well, I'm sure it helps some workloads. But for others it is just moving
-> the problem.
+> changes in v2:
+> - Fix bot errors by fixing issues in 4/5 
+> - remove qoutes from $ref
+> ---
+>  .../bindings/pinctrl/atmel,at91-pinctrl.txt   | 178 -----------------
+>  .../pinctrl/atmel,at91rm9200-pinctrl.yaml     | 184 ++++++++++++++++++
+>  2 files changed, 184 insertions(+), 178 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
 
-From where I sit, helping a wide range of workloads is a good thing.  ;-)
-
-> > For me, per-VMA locking's need to RCU-protect the VMA is a good step
-> > towards permitting RCU-protected scans of the Maple Tree, which then
-> > gets lockless lookup.
-> 
-> Right, the question is if the VMA lock is required to be stable against
-> splitting. If that is the case, we're hosed :/
-
-Let's just say that VMA splitting and merging has consumed much time
-and effort from the usual suspects over the past while.
-
-> At the time I added a seqcount for that, but I'm also remembering that's
-> one of the things people complained about for single threaded
-> performance.
-
-Sequence locks are lighter weight these days, but again, this has been
-very much a long-term whack-a-mole exercise with odd regressions.
-
-							Thanx, Paul
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
