@@ -1,153 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE70743147;
-	Tue,  9 Jul 2024 15:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D05D43147;
+	Tue,  9 Jul 2024 15:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720538804; cv=none; b=YCbUuT7WxoEEDf3hT5Me1HVJh+d28LebTsgHMT8n7JA/oo1fuvLthzJ4tVk91kWzaVuxOPWFBsVPuImgBmdkyVqyW9nC0d20uNDhRkaEX5cqB1RrCq5l2pyBvJUgZrGZOXzvDYY6dObKZuH8Eub9UbGx9JS/1+pLZuvkV04zrHY=
+	t=1720538862; cv=none; b=CgWvAqKRK3YVpK+m2fgvEsLqGO2Ra3aDbdygqnMN7FritRqybB6xjJZ8wWt07uOb/ewFkDrHBgYFNbuwndt6AyeAxpl8Obr6FdE7rv9dr/eCjdasUOOS49vharyiBk3mGohMWdhZl4S6CYAOycR0ip2ENImV5Py5fXP6goCRFto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720538804; c=relaxed/simple;
-	bh=0iOSYuZ06gPqnu9DLFKt9TUyS7HzPq7eik1t5fjAP54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y8WA/f7nGvjqolDUzwuEmW8U9gNQp51Vqq/aZk3ozhCpbOqVwUgDHFOKILmeaaTXyBiELmzz0KiKjE9TbgUR5c2zOI6Y5qKHl+fgzbSDDjUDuKgxr7+Ha2Ox3JfYUFlAMXClRznhaZdQdbPe1zns1JUruONJqWFNGVxQLDbg2Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZzqcsqIU; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720538862; c=relaxed/simple;
+	bh=O0o3i35g9yIYq7V1d5PS5NTZJHLF+8SpUYDRPKu7OO4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=U4bJLZROZPdG88+8/ed3ps6DaQZGy33qZVt0ZwqR1hrY4xPjvg8XC/G7MEn/UdrzVKsXYBRSph83JENm67YYvFidHjw1PEB3TCoSqrcZpJHuyp8f6K2EqOSk798NIdf8AJmX8ofi+YmNYbISPJrhEQ60vq8DlucMWTqLN+0LmbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4Ywpoy6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZzqcsqIU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720538803; x=1752074803;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0iOSYuZ06gPqnu9DLFKt9TUyS7HzPq7eik1t5fjAP54=;
-  b=ZzqcsqIUwO68XloXoGOLd5g0eEEfsD60YB+dThOb7m9psKxTCuV2nlwT
-   WhaGn2tZYV0TsuKpGmvmoTVgp340VQyKY77GdRBL/MAYWKdIDPa1qGjK6
-   ebQ6YDhgYU64zFRWjlhSn/5qt7c/tEdJMMnmYnkTbPa4NHf3BO9uhYUH+
-   f9u7afCpRtDCfDu10jlGlb/ZrPrQqPOeWbt8PrH55XK6fMGpQwqIru8o1
-   sHM+9GQQEGgaBTxkRpjnqA1gzUfSPVbE1OCqn/CBCjwi1wbhRMuiv3/TL
-   UYUOyMsWiHN1bnzSkNV7p/9t9X9uKs6JIz3aQMCrBBDlq5BCnKB4DmEV5
-   Q==;
-X-CSE-ConnectionGUID: m7mL+v5pQuuaSSrFAzAZpQ==
-X-CSE-MsgGUID: 1eEHvo06R56fpxYojPdzDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="28963519"
-X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="28963519"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 08:26:42 -0700
-X-CSE-ConnectionGUID: d16CEwxwRampy1lisffegg==
-X-CSE-MsgGUID: UIX/+oVTQLKDZRM9BA4edQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="48333094"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 08:26:40 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id A439211F811;
-	Tue,  9 Jul 2024 18:26:36 +0300 (EEST)
-Date: Tue, 9 Jul 2024 15:26:36 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Greg KH <greg@kroah.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-	David Plowman <david.plowman@raspberrypi.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Naushir Patuck <naush@raspberrypi.com>,
-	Nick Hollinghurst <nick.hollinghurst@raspberrypi.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the driver-core tree
-Message-ID: <Zo1WrGAL2mJejdeS@kekkonen.localdomain>
-References: <20240709163715.3bcd6ab3@canb.auug.org.au>
- <Zo1SrABWB-axGibI@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4Ywpoy6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E471C32782;
+	Tue,  9 Jul 2024 15:27:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720538861;
+	bh=O0o3i35g9yIYq7V1d5PS5NTZJHLF+8SpUYDRPKu7OO4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=C4Ywpoy6K5wIoIRwcQNFUBcFBSm+8LwYLbaOFn62U9hkqPOC3Xnp3SAClvusoEu/4
+	 t8PRG95A7Jh+FvPMm+Wsh/PIwjOyavjD16xowvdOXr+ZkLNrEHc7NywXAwTlaW2/84
+	 L5fDlxJ52lV97hEa9XAM4Z0Qn2BpkbqwHaFsng0dM/I4u1TZonELVmo2XR8U+U0B3a
+	 OOT8Bs6m8EwF+G50dpIP0OET5Njsa9AL7rC7aYIW9MFRSdAuCsBQbhydmmhr0V3nGn
+	 4lY3OsaqdOEJr7kMH/5OHPjt68AtrtYmRHdbQBGPxGYhV1KMQgfd1sqBPlQuuLkj/A
+	 qg+N0VUr5wxWQ==
+Message-ID: <edd2d831320fb14333e605e77d4b284b1123eb86.camel@kernel.org>
+Subject: Re: [jlayton:mgtime 5/13] inode.c:undefined reference to
+ `__invalid_cmpxchg_size'
+From: Jeff Layton <jlayton@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org
+Date: Tue, 09 Jul 2024 11:27:40 -0400
+In-Reply-To: <92726965-19a0-433b-9b49-69af84b25081@app.fastmail.com>
+References: <202407091931.mztaeJHw-lkp@intel.com>
+	 <c1d4fcee3098a58625bb03c8461b92af02d93d15.camel@kernel.org>
+	 <CAMuHMdVsDSBdz2axqTqrV4XP8UVTsN5pPS4ny9QXMUoxrTOU3w@mail.gmail.com>
+	 <c4df5f73-2687-4160-801c-5011193c9046@app.fastmail.com>
+	 <6ab599393503a50b4b708767f320a46388aa95f2.camel@kernel.org>
+	 <92726965-19a0-433b-9b49-69af84b25081@app.fastmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zo1SrABWB-axGibI@kekkonen.localdomain>
 
-On Tue, Jul 09, 2024 at 03:09:34PM +0000, Sakari Ailus wrote:
-> Hi Stephen,
-> 
-> Thanks for the patch.
-> 
-> On Tue, Jul 09, 2024 at 04:37:15PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > After merging the driver-core tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > drivers/media/platform/raspberrypi/pisp_be/pisp_be.c:1786:27: error: initialization of 'void (*)(struct platform_device *)' from incompatible pointer type 'int (*)(struct platform_device *)' [-Werror=incompatible-pointer-types]
-> >  1786 |         .remove         = pispbe_remove,
-> >       |                           ^~~~~~~~~~~~~
-> > drivers/media/platform/raspberrypi/pisp_be/pisp_be.c:1786:27: note: (near initialization for 'pispbe_pdrv.<anonymous>.remove')
-> > cc1: all warnings being treated as errors
-> > 
-> > Caused by commit
-> > 
-> >   0edb555a65d1 ("platform: Make platform_driver::remove() return void")
-> > 
-> > interacting withc commit
-> > 
-> >   12187bd5d4f8 ("media: raspberrypi: Add support for PiSP BE")
-> > 
-> > from the vl4-dvb-next tree.
-> > 
-> > I have applied the following fix up patch.
-> > 
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Tue, 9 Jul 2024 16:03:05 +1000
-> > Subject: [PATCH] fix up for "platform: Make platform_driver::remove() return void"
-> > 
-> > interacting with commit
-> > 
-> >   12187bd5d4f8 ("media: raspberrypi: Add support for PiSP BE")
-> > 
-> > from the v4l-dvb-next tree.
-> > 
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  drivers/media/platform/raspberrypi/pisp_be/pisp_be.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-> > index e74df5b116dc..7596ae1f7de6 100644
-> > --- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-> > +++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-> > @@ -1756,7 +1756,7 @@ static int pispbe_probe(struct platform_device *pdev)
-> >  	return ret;
-> >  }
-> >  
-> > -static int pispbe_remove(struct platform_device *pdev)
-> > +static void pispbe_remove(struct platform_device *pdev)
-> 
-> While this approach works when the patch is squashed to commit
-> 0edb555a65d1, it's better to also use the remove_new op as its return type
-> won't be changed. That can be merged independently of commit 0edb555a65d1.
-> 
-> Feel free to submit v2, I can post a modified patch as well.
+On Tue, 2024-07-09 at 17:07 +0200, Arnd Bergmann wrote:
+> On Tue, Jul 9, 2024, at 16:23, Jeff Layton wrote:
+> > On Tue, 2024-07-09 at 16:16 +0200, Arnd Bergmann wrote:
+> > > On Tue, Jul 9, 2024, at 15:45, Geert Uytterhoeven wrote:
+> >=20
+> > I think the simplest solution is to make the floor value I'm
+> > tracking
+> > be an atomic64_t. That looks like it should smooth over the
+> > differences
+> > between arches. I'm testing a patch to do that now.
+>=20
+> Yes, atomic64_t should work, but be careful about using this
+> in a fast path since it can turn into a global spinlock
+> in lib/atomic64.c on architectures that don't support it
+> natively.
+>=20
+> I'm still reading through the rest of your series, but
+> it appears that you pass the time value into=20
+> ktime_to_timespec64() directly afterwards, so I guess
+> that is already a fairly large overhead on 32-bit
+> architectures and an extra spinlock doesn't hurt too
+> much.
+>=20
 
-IOW, I'll add this and post v2:
+Thanks Arnd.
 
-diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-index 7596ae1f7de6..65ff2382cffe 100644
---- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-+++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-@@ -1781,7 +1781,7 @@ MODULE_DEVICE_TABLE(of, pispbe_of_match);
- 
- static struct platform_driver pispbe_pdrv = {
-        .probe          = pispbe_probe,
--       .remove         = pispbe_remove,
-+       .remove_new     = pispbe_remove,
-        .driver         = {
-                .name   = PISPBE_NAME,
-                .of_match_table = pispbe_of_match,
+The context for this is generally a write or other change to an inode,
+so I too am hoping the overhead won't be too bad. It does take great
+pains to avoid changing the ctime_floor value whenever possible.
 
--- 
-Sakari Ailus
+
+> Two more things I noticed in your patch:
+>=20
+> - smp_load_acquire() on a 64-bit variable seems problematic
+> =C2=A0 as well, maybe this needs a spinlock on 32-bit
+> =C2=A0 architectures?
+>=20
+
+That should go away with the conversion of ctime_floor to atomic64_t.
+AFAICT, arches that don't have native a 64-bit cmpxchg op usually
+emulate that with hashed spinlocks.=20
+
+> - for the coarse_ctime function, I think you should be
+> =C2=A0 able to avoid the conversion to timespec by just calling
+> =C2=A0 ktime_get_coarse_real_ts64() again instead of converting
+> =C2=A0 monotonic to real and then to timespec.
+>=20
+
+Note that we might get different values for the coarse timestamps, but
+if we do then the second fetch will just be a little later (which is
+OK). I'll plan to make this change.
+
+
+> - inode_set_ctime_current() seems to now store a fine-grained
+> =C2=A0 timespec in the inode even for the !is_mgtime case, skipping
+> =C2=A0 the timestamp_truncate() step. This appears to potentially
+> =C2=A0 leak a non-truncated value to userspace, which would be
+> =C2=A0 inconsistent with the value read back from disk.
+
+Oof, you're right. I'll fix that up for the next version.
+
+Thanks for the review!
+--=20
+Jeff Layton <jlayton@kernel.org>
