@@ -1,39 +1,39 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C09190075;
-	Tue,  9 Jul 2024 13:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21EE192B71;
+	Tue,  9 Jul 2024 13:54:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720533255; cv=none; b=BamZ4aXcYW0+XRhVcTYxATAD4eAEme5rHD8arTp3ZP+oHrFu74KY4m0YfAD3ZwXr/vAR0Wc05XUMFAR80l0CRol+qFy/IvQnw49GzaalT68/gVt65To8Y82rOjc/KA7ylZRSnY+IUlVBCIF9KS2SXxi+BFMUMHyPynynGiNaKm8=
+	t=1720533261; cv=none; b=JhM6uSlFjhTg7ki+0GWsbPSqZwpbBbpv/I944JBbG47SvwJWqh0LxP5G7DdXHY++JyIZNo+w3f670aJ9VisqiKSZRozGT4pta2v919y32iYsM34Nn/ru1rE7303cbyPjYlJef4QNZLBNdOhd6EXl/Q8e0UmrWuKrWlzqTscYaRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720533255; c=relaxed/simple;
-	bh=zxqgQ6Vs+86Eh3h50dtc/Unx4WJMtsjrr83itZrYaGE=;
+	s=arc-20240116; t=1720533261; c=relaxed/simple;
+	bh=U/rrxL89230dfCn1N7xyO76Wb3rr5XDLFItX8MIGiuM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JsxPNtmGaKFjS/ULpC/THHbgKLjTedmCceJp5HZM723Jlt6F//NBOgL9Go7bX4hrzxneKIZLnjgRlBrTXCGwP+kjs7yT4M6W+ynRgZZkMOFKY45PsJf1CD9Jqd4fKfSllyXlkvS5ypTMlebob3cocrQpBstpJnHyUrGBKemk6Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LjTo6IzV; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=pcMQEOJAP5BvhuEcSPP61Nfm0qCa1OjgXe95H3Fg2r48+lUUbwGdpCA01gyrDyiNoKWjIadaJoiSSjo+dT311kjFDAlizSGFRw9PCW8g/aOMQXaoael4O2R8Z9mhLNdjjbOYSx6kXeDmaW89LTp1Webyj90FjWSt+3L7iOAwc5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HQl5EBvY; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LjTo6IzV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1ACE61BF219;
-	Tue,  9 Jul 2024 13:54:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HQl5EBvY"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DEE011BF215;
+	Tue,  9 Jul 2024 13:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720533248;
+	t=1720533257;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VLURsRiTiRR57FM31CRHAv3oVqTfnYmA42jSKgbnYok=;
-	b=LjTo6IzVdxskBwRGLh2ud6ettDpCIBZle24GG0uun2/lrEKfH0beKVzA0oEywbpXnB5ans
-	N3NCAd82SbIFCfaBt/2tt2oDtQZ5IjIci41aQocg6SCeIbarITgK5oNvODvQXyJxdmoBuJ
-	eb274D61sIo1qZP1MhmPqk0K5zv1GIXul7ih9Iq8N6TRS5DwXWODbmO1nLadPLIl2p7txQ
-	KpZSBdQrCDJN1Uc3gq8uYmEUQSnWXwEq01DXtwGckfbur3ZXXkumFSQ+vO3+Gp7NMLu832
-	nIviuutlZJyRjeBHaYJmWwGUCYIPf6mWFb2N9DAOdC48hKpBJw6CUjGZvFn69w==
+	bh=DTRtCRpypwFu3ITgB0O8mCGVy40pFL3Vl2LtOLRtGRI=;
+	b=HQl5EBvYzTLbQK9fVYV+kNpgPqD9VwAp90AZECH+dJmkJUOfANObaBfZv++97n3ToRLrnK
+	rCWjGCUf4N0nWs6B7E6UZXk7Xa4N+s+jP2n5tukbP0GENBIQEAUlKUT/lQ0wxCbz9rVQDq
+	Ab3eKkjBdes5jkIIahQ/6Vvkfkg3Wx5pe9JW8OKfLnL9OrJbvtROQ/fK8NJFO53pGmzL7r
+	N58PCKLv4dq6CQNKT/bcm6+8Bmu8ioAGvEHMwgAnHo8A8XykbTNsNIMDwDJ7BhOC3Gzhw2
+	p0sfZjc2rGXX2eLb1rE+z1dMbjhY+Aa3NcWF24u01pyONGgvQwBmCbyiHYTBoQ==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 09 Jul 2024 15:53:40 +0200
-Subject: [PATCH net-next v17 08/14] net: Add the possibility to support a
- selected hwtstamp in netdevice
+Date: Tue, 09 Jul 2024 15:53:46 +0200
+Subject: [PATCH net-next v17 14/14] netlink: specs: Enhance tsinfo netlink
+ attributes and add a tsconfig set command
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240709-feature_ptp_netnext-v17-8-b5317f50df2a@bootlin.com>
+Message-Id: <20240709-feature_ptp_netnext-v17-14-b5317f50df2a@bootlin.com>
 References: <20240709-feature_ptp_netnext-v17-0-b5317f50df2a@bootlin.com>
 In-Reply-To: <20240709-feature_ptp_netnext-v17-0-b5317f50df2a@bootlin.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
@@ -73,389 +73,240 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Introduce the description of a hwtstamp provider, mainly defined with a
-ptp_clock pointer and a qualifier value.
+Add new attributed to tsinfo allowing to get the tsinfo from a phc provider
+(composed by a phc index and a phc qualifier) on a netdevice's link.
+Add simultaneously a tsconfig command to be able to get and set hwtstamp
+configuration for a specified phc provider.
 
-Add a hwtstamp provider description within the netdev structure to
-allow saving the hwtstamp we want to use. This prepares for future
-support of an ethtool netlink command to select the desired hwtstamp
-provider. By default, the old API that does not support hwtstamp
-selectability is used, meaning the hwtstamp ptp_clock pointer is unset.
+Here is few examples:
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema
+             --dump tsinfo-get
+             --json '{"header":{"dev-name":"eth0"}}'
+[{'header': {'dev-index': 3, 'dev-name': 'eth0'},
+  'hwtst-provider': {'index': 0, 'qualifier': 0},
+  'phc-index': 0,
+  'rx-filters': {'bits': {'bit': [{'index': 0, 'name': 'none'},
+                                  {'index': 2, 'name': 'some'}]},
+                 'nomask': True,
+                 'size': 16},
+  'timestamping': {'bits': {'bit': [{'index': 0, 'name': 'hardware-transmit'},
+                                    {'index': 2, 'name': 'hardware-receive'},
+                                    {'index': 6,
+                                     'name': 'hardware-raw-clock'}]},
+                   'nomask': True,
+                   'size': 17},
+  'tx-types': {'bits': {'bit': [{'index': 0, 'name': 'off'},
+                                {'index': 1, 'name': 'on'}]},
+               'nomask': True,
+               'size': 4}},
+ {'header': {'dev-index': 3, 'dev-name': 'eth0'},
+  'hwtst-provider': {'index': 2, 'qualifier': 0},
+  'phc-index': 2,
+  'rx-filters': {'bits': {'bit': [{'index': 0, 'name': 'none'},
+                                  {'index': 1, 'name': 'all'}]},
+                 'nomask': True,
+                 'size': 16},
+  'timestamping': {'bits': {'bit': [{'index': 0, 'name': 'hardware-transmit'},
+                                    {'index': 1, 'name': 'software-transmit'},
+                                    {'index': 2, 'name': 'hardware-receive'},
+                                    {'index': 3, 'name': 'software-receive'},
+                                    {'index': 4,
+                                     'name': 'software-system-clock'},
+                                    {'index': 6,
+                                     'name': 'hardware-raw-clock'}]},
+                   'nomask': True,
+                   'size': 17},
+  'tx-types': {'bits': {'bit': [{'index': 0, 'name': 'off'},
+                                {'index': 1, 'name': 'on'},
+                                {'index': 2, 'name': 'onestep-sync'}]},
+               'nomask': True,
+               'size': 4}}]
+
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do tsinfo-get
+             --json '{"header":{"dev-name":"eth0"},
+                      "hwtst-provider":{"index":0, "qualifier":0 }
+}'
+{'header': {'dev-index': 3, 'dev-name': 'eth0'},
+ 'hwtst-provider': {'index': 0, 'qualifier': 0},
+ 'phc-index': 0,
+ 'rx-filters': {'bits': {'bit': [{'index': 0, 'name': 'none'},
+                                 {'index': 2, 'name': 'some'}]},
+                'nomask': True,
+                'size': 16},
+ 'timestamping': {'bits': {'bit': [{'index': 0, 'name': 'hardware-transmit'},
+                                   {'index': 2, 'name': 'hardware-receive'},
+                                   {'index': 6, 'name': 'hardware-raw-clock'}]},
+                  'nomask': True,
+                  'size': 17},
+ 'tx-types': {'bits': {'bit': [{'index': 0, 'name': 'off'},
+                               {'index': 1, 'name': 'on'}]},
+              'nomask': True,
+              'size': 4}}
+
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do tsinfo-set
+             --json '{"header":{"dev-name":"eth0"},
+                      "hwtst-provider":{"index":2, "qualifier":0}}'
+None
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do tsconfig-get
+	     --json '{"header":{"dev-name":"eth0"}}'
+{'header': {'dev-index': 3, 'dev-name': 'eth0'},
+ 'hwtstamp-flags': 1,
+ 'hwtstamp-provider': {'index': 1, 'qualifier': 0},
+ 'rx-filters': {'bits': {'bit': [{'index': 12, 'name': 'ptpv2-event'}]},
+                'nomask': True,
+                'size': 16},
+ 'tx-types': {'bits': {'bit': [{'index': 1, 'name': 'on'}]},
+              'nomask': True,
+              'size': 4}}
+
+ ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do tsconfig-set
+	      --json '{"header":{"dev-name":"eth0"},
+		       "hwtstamp-provider":{"index":1, "qualifier":0 },
+		       "rx-filters":{"bits": {"bit": {"name":"ptpv2-l4-event"}},
+				     "nomask": 1},
+		       "tx-types":{"bits": {"bit": {"name":"on"}},
+				   "nomask": 1}}'
+None
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
-Change in v8:
+Changes in v8:
 - New patch
 
-Change in v10:
-- Set hwtstamp in netdevice as a pointer for future use of rcu lock.
-- Fix a nit in teh order of setting phydev pointer.
-- Add a missing kdoc description.
+Changes in v10:
+- Add ghwtstamp attributes
+- Add tsinfo ntf command
 
-Change in v13:
-- Remove an include from netdevices.h.
+Changes in v11:
+- Add examples in the commit message.
 
-Change in v16:
-- Import the part of the patch 12 which belong to the hwtstamp provider
-  selectability of net core.
+Changes in v13:
+- Replace shorter name by real name.
+- Fix an issue reported by "make -C tools/net/ynl" on the namings.
+
+Changes in v16:
+- Move to tsconfig command to get and set hwtstamp configuration.
 ---
- drivers/net/phy/phy_device.c     | 11 +++++++++
- drivers/ptp/ptp_clock_consumer.c | 10 ++++++++
- include/linux/net_tstamp.h       | 18 +++++++++++++++
- include/linux/netdevice.h        |  5 ++++
- include/linux/ptp_clock_kernel.h | 10 ++++++++
- include/uapi/linux/net_tstamp.h  | 11 +++++++++
- net/core/dev_ioctl.c             | 43 ++++++++++++++++++++++++++++++++--
- net/core/timestamping.c          | 50 ++++++++++++++++++++++++++++++++++++----
- 8 files changed, 151 insertions(+), 7 deletions(-)
+ Documentation/netlink/specs/ethtool.yaml | 73 ++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 70b07e621fb2..57a9943bb1c1 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -31,6 +31,7 @@
- #include <linux/phy_led_triggers.h>
- #include <linux/pse-pd/pse.h>
- #include <linux/property.h>
-+#include <linux/ptp_clock_kernel.h>
- #include <linux/rtnetlink.h>
- #include <linux/sfp.h>
- #include <linux/skbuff.h>
-@@ -1936,6 +1937,16 @@ void phy_detach(struct phy_device *phydev)
+diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+index 495e35fcfb21..9bd1f8a7bd3f 100644
+--- a/Documentation/netlink/specs/ethtool.yaml
++++ b/Documentation/netlink/specs/ethtool.yaml
+@@ -624,6 +624,15 @@ attribute-sets:
+       -
+         name: tx-err
+         type: uint
++  -
++    name: ts-hwtstamp-provider
++    attributes:
++      -
++        name: index
++        type: u32
++      -
++        name: qualifier
++        type: u32
+   -
+     name: tsinfo
+     attributes:
+@@ -650,6 +659,10 @@ attribute-sets:
+         name: stats
+         type: nest
+         nested-attributes: ts-stat
++      -
++        name: hwtstamp-provider
++        type: nest
++        nested-attributes: ts-hwtstamp-provider
+   -
+     name: cable-result
+     attributes:
+@@ -1085,6 +1098,28 @@ attribute-sets:
+       -
+         name: total
+         type: uint
++  -
++    name: tsconfig
++    attributes:
++      -
++        name: header
++        type: nest
++        nested-attributes: header
++      -
++        name: hwtstamp-provider
++        type: nest
++        nested-attributes: ts-hwtstamp-provider
++      -
++        name: tx-types
++        type: nest
++        nested-attributes: bitset
++      -
++        name: rx-filters
++        type: nest
++        nested-attributes: bitset
++      -
++        name: hwtstamp-flags
++        type: u32
  
- 	phy_suspend(phydev);
- 	if (dev) {
-+		struct hwtstamp_provider *hwtstamp;
+ operations:
+   enum-model: directional
+@@ -1526,6 +1561,7 @@ operations:
+         request:
+           attributes:
+             - header
++            - hwtstamp-provider
+         reply:
+           attributes:
+             - header
+@@ -1534,6 +1570,7 @@ operations:
+             - rx-filters
+             - phc-index
+             - stats
++            - hwtstamp-provider
+       dump: *tsinfo-get-op
+     -
+       name: cable-test-act
+@@ -1877,3 +1914,39 @@ operations:
+           - status-msg
+           - done
+           - total
++    -
++      name: tsconfig-get
++      doc: Get hwtstamp config.
 +
-+		hwtstamp = rtnl_dereference(dev->hwtstamp);
-+		/* Disable timestamp if selected */
-+		if (hwtstamp && ptp_clock_phydev(hwtstamp->ptp) == phydev) {
-+			rcu_assign_pointer(dev->hwtstamp, NULL);
-+			call_rcu(&hwtstamp->rcu_head,
-+				 remove_hwtstamp_provider);
-+		}
++      attribute-set: tsconfig
 +
- 		phydev->attached_dev->phydev = NULL;
- 		phydev->attached_dev = NULL;
- 	}
-diff --git a/drivers/ptp/ptp_clock_consumer.c b/drivers/ptp/ptp_clock_consumer.c
-index 58b0c8948fc8..f5fab1c14b47 100644
---- a/drivers/ptp/ptp_clock_consumer.c
-+++ b/drivers/ptp/ptp_clock_consumer.c
-@@ -98,3 +98,13 @@ void ptp_clock_put(struct device *dev, struct ptp_clock *ptp)
- 	put_device(&ptp->dev);
- 	module_put(ptp->info->owner);
- }
++      do: &tsconfig-get-op
++        request:
++          attributes:
++            - header
++        reply:
++          attributes:
++            - header
++            - hwtstamp-provider
++            - tx-types
++            - rx-filters
++            - hwtstamp-flags
++      dump: *tsconfig-get-op
++    -
++      name: tsconfig-set
++      doc: Set hwtstamp config.
 +
-+void remove_hwtstamp_provider(struct rcu_head *rcu_head)
-+{
-+	struct hwtstamp_provider *hwtstamp;
++      attribute-set: tsconfig
 +
-+	hwtstamp = container_of(rcu_head, struct hwtstamp_provider, rcu_head);
-+	ptp_clock_put(hwtstamp->dev, hwtstamp->ptp);
-+	kfree(hwtstamp);
-+}
-+EXPORT_SYMBOL(remove_hwtstamp_provider);
-diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
-index 662074b08c94..077037f9ad0f 100644
---- a/include/linux/net_tstamp.h
-+++ b/include/linux/net_tstamp.h
-@@ -19,6 +19,22 @@ enum hwtstamp_source {
- 	HWTSTAMP_SOURCE_PHYLIB,
- };
- 
-+/**
-+ * struct hwtstamp_provider - Description of a hwtstamp provider object
-+ *
-+ * @rcu_head: RCU callback used to free the struct.
-+ * @dev: device attached to the hwtstamp provider used to put the ptp clock.
-+ * @ptp: PTP clock pointer of the hwtstamp provider.
-+ * @qualifier: hwtstamp provider qualifier.
-+ */
-+
-+struct hwtstamp_provider {
-+	struct rcu_head rcu_head;
-+	struct device *dev;
-+	struct ptp_clock *ptp;
-+	enum hwtstamp_provider_qualifier qualifier;
-+};
-+
- /**
-  * struct kernel_hwtstamp_config - Kernel copy of struct hwtstamp_config
-  *
-@@ -31,6 +47,7 @@ enum hwtstamp_source {
-  *	copied the ioctl request back to user space
-  * @source: indication whether timestamps should come from the netdev or from
-  *	an attached phylib PHY
-+ * @qualifier: qualifier of the hwtstamp provider
-  *
-  * Prefer using this structure for in-kernel processing of hardware
-  * timestamping configuration, over the inextensible struct hwtstamp_config
-@@ -43,6 +60,7 @@ struct kernel_hwtstamp_config {
- 	struct ifreq *ifr;
- 	bool copied_to_user;
- 	enum hwtstamp_source source;
-+	enum hwtstamp_provider_qualifier qualifier;
- };
- 
- static inline void hwtstamp_config_to_kernel(struct kernel_hwtstamp_config *kernel_cfg,
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 93558645c6d0..c18761c36455 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -81,6 +81,7 @@ struct xdp_frame;
- struct xdp_metadata_ops;
- struct xdp_md;
- struct ethtool_netdev_state;
-+struct hwtstamp_provider;
- 
- typedef u32 xdp_features_t;
- 
-@@ -2027,6 +2028,8 @@ enum netdev_reg_state {
-  *	@dpll_pin: Pointer to the SyncE source pin of a DPLL subsystem,
-  *		   where the clock is recovered.
-  *
-+ *	@hwtstamp: Tracks which PTP performs hardware packet time stamping.
-+ *
-  *	FIXME: cleanup struct net_device such that network protocol info
-  *	moves out.
-  */
-@@ -2406,6 +2409,8 @@ struct net_device {
- 
- 	/** @irq_moder: dim parameters used if IS_ENABLED(CONFIG_DIMLIB). */
- 	struct dim_irq_moder	*irq_moder;
-+
-+	struct hwtstamp_provider __rcu	*hwtstamp;
- };
- #define to_net_dev(d) container_of(d, struct net_device, dev)
- 
-diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
-index 860c1e293a62..6d9e6cd5c832 100644
---- a/include/linux/ptp_clock_kernel.h
-+++ b/include/linux/ptp_clock_kernel.h
-@@ -442,6 +442,14 @@ struct ptp_clock *ptp_clock_get_by_index(struct device *dev, int index);
- 
- void ptp_clock_put(struct device *dev, struct ptp_clock *ptp);
- 
-+/**
-+ * remove_hwtstamp_provider() - Put and free the hwtstamp provider
-+ *
-+ * @rcu_head:  RCU callback head.
-+ */
-+
-+void remove_hwtstamp_provider(struct rcu_head *rcu_head);
-+
- /**
-  * ptp_find_pin() - obtain the pin index of a given auxiliary function
-  *
-@@ -530,6 +538,8 @@ static inline void ptp_clock_put(struct device *dev, struct ptp_clock *ptp)
- static inline struct ptp_clock *ptp_clock_get_by_index(struct device *dev,
- 						       int index)
- { return NULL; }
-+static inline void remove_hwtstamp_provider(struct rcu_head *rcu_head)
-+{ return; }
- static inline int ptp_find_pin(struct ptp_clock *ptp,
- 			       enum ptp_pin_function func, unsigned int chan)
- { return -1; }
-diff --git a/include/uapi/linux/net_tstamp.h b/include/uapi/linux/net_tstamp.h
-index a2c66b3d7f0f..a9ed48ee8fc7 100644
---- a/include/uapi/linux/net_tstamp.h
-+++ b/include/uapi/linux/net_tstamp.h
-@@ -13,6 +13,17 @@
- #include <linux/types.h>
- #include <linux/socket.h>   /* for SO_TIMESTAMPING */
- 
-+/*
-+ * Possible type of htstamp provider. Mainly "precise" the default one
-+ * is for IEEE 1588 quality and "approx" is for NICs DMA point.
-+ */
-+enum hwtstamp_provider_qualifier {
-+	HWTSTAMP_PROVIDER_QUALIFIER_PRECISE,
-+	HWTSTAMP_PROVIDER_QUALIFIER_APPROX,
-+
-+	HWTSTAMP_PROVIDER_QUALIFIER_CNT,
-+};
-+
- /* SO_TIMESTAMPING flags */
- enum {
- 	SOF_TIMESTAMPING_TX_HARDWARE = (1<<0),
-diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
-index 36cea843381f..350d123c09c9 100644
---- a/net/core/dev_ioctl.c
-+++ b/net/core/dev_ioctl.c
-@@ -6,6 +6,7 @@
- #include <linux/rtnetlink.h>
- #include <linux/net_tstamp.h>
- #include <linux/phylib_stubs.h>
-+#include <linux/ptp_clock_kernel.h>
- #include <linux/wireless.h>
- #include <linux/if_bridge.h>
- #include <net/dsa_stubs.h>
-@@ -269,6 +270,22 @@ static int dev_eth_ioctl(struct net_device *dev,
- int dev_get_hwtstamp_phylib(struct net_device *dev,
- 			    struct kernel_hwtstamp_config *cfg)
- {
-+	struct hwtstamp_provider *hwtstamp;
-+
-+	hwtstamp = rtnl_dereference(dev->hwtstamp);
-+	if (hwtstamp) {
-+		struct ptp_clock *ptp = hwtstamp->ptp;
-+
-+		cfg->qualifier = hwtstamp->qualifier;
-+		if (ptp_clock_from_phylib(ptp))
-+			return phy_hwtstamp_get(ptp_clock_phydev(ptp), cfg);
-+
-+		if (ptp_clock_from_netdev(ptp))
-+			return dev->netdev_ops->ndo_hwtstamp_get(dev, cfg);
-+
-+		return -EOPNOTSUPP;
-+	}
-+
- 	if (phy_is_default_hwtstamp(dev->phydev))
- 		return phy_hwtstamp_get(dev->phydev, cfg);
- 
-@@ -325,11 +342,33 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
- 			    struct netlink_ext_ack *extack)
- {
- 	const struct net_device_ops *ops = dev->netdev_ops;
--	bool phy_ts = phy_is_default_hwtstamp(dev->phydev);
- 	struct kernel_hwtstamp_config old_cfg = {};
-+	struct hwtstamp_provider *hwtstamp;
-+	struct phy_device *phydev;
- 	bool changed = false;
-+	bool phy_ts;
- 	int err;
- 
-+	hwtstamp = rtnl_dereference(dev->hwtstamp);
-+	if (hwtstamp) {
-+		struct ptp_clock *ptp = hwtstamp->ptp;
-+
-+		if (ptp_clock_from_phylib(ptp)) {
-+			phy_ts = true;
-+			phydev = ptp_clock_phydev(ptp);
-+		} else if (ptp_clock_from_netdev(ptp)) {
-+			phy_ts = false;
-+		} else {
-+			return -EOPNOTSUPP;
-+		}
-+
-+		cfg->qualifier = hwtstamp->qualifier;
-+	} else {
-+		phy_ts = phy_is_default_hwtstamp(dev->phydev);
-+		if (phy_ts)
-+			phydev = dev->phydev;
-+	}
-+
- 	cfg->source = phy_ts ? HWTSTAMP_SOURCE_PHYLIB : HWTSTAMP_SOURCE_NETDEV;
- 
- 	if (phy_ts && (dev->priv_flags & IFF_SEE_ALL_HWTSTAMP_REQUESTS)) {
-@@ -351,7 +390,7 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
- 		changed = kernel_hwtstamp_config_changed(&old_cfg, cfg);
- 
- 	if (phy_ts) {
--		err = phy_hwtstamp_set(dev->phydev, cfg, extack);
-+		err = phy_hwtstamp_set(phydev, cfg, extack);
- 		if (err) {
- 			if (changed)
- 				ops->ndo_hwtstamp_set(dev, &old_cfg, NULL);
-diff --git a/net/core/timestamping.c b/net/core/timestamping.c
-index 3717fb152ecc..f8522fefd468 100644
---- a/net/core/timestamping.c
-+++ b/net/core/timestamping.c
-@@ -9,6 +9,7 @@
- #include <linux/ptp_classify.h>
- #include <linux/skbuff.h>
- #include <linux/export.h>
-+#include <linux/ptp_clock_kernel.h>
- 
- static unsigned int classify(const struct sk_buff *skb)
- {
-@@ -21,19 +22,38 @@ static unsigned int classify(const struct sk_buff *skb)
- 
- void skb_clone_tx_timestamp(struct sk_buff *skb)
- {
-+	struct hwtstamp_provider *hwtstamp;
- 	struct mii_timestamper *mii_ts;
-+	struct phy_device *phydev;
- 	struct sk_buff *clone;
- 	unsigned int type;
- 
--	if (!skb->sk || !skb->dev ||
--	    !phy_is_default_hwtstamp(skb->dev->phydev))
-+	if (!skb->sk || !skb->dev)
- 		return;
- 
-+	rcu_read_lock();
-+	hwtstamp = rcu_dereference(skb->dev->hwtstamp);
-+	if (hwtstamp) {
-+		if (!ptp_clock_from_phylib(hwtstamp->ptp)) {
-+			rcu_read_unlock();
-+			return;
-+		}
-+
-+		phydev = ptp_clock_phydev(hwtstamp->ptp);
-+	} else {
-+		phydev = skb->dev->phydev;
-+		if (!phy_is_default_hwtstamp(phydev)) {
-+			rcu_read_unlock();
-+			return;
-+		}
-+	}
-+	rcu_read_unlock();
-+
- 	type = classify(skb);
- 	if (type == PTP_CLASS_NONE)
- 		return;
- 
--	mii_ts = skb->dev->phydev->mii_ts;
-+	mii_ts = phydev->mii_ts;
- 	if (likely(mii_ts->txtstamp)) {
- 		clone = skb_clone_sk(skb);
- 		if (!clone)
-@@ -45,12 +65,32 @@ EXPORT_SYMBOL_GPL(skb_clone_tx_timestamp);
- 
- bool skb_defer_rx_timestamp(struct sk_buff *skb)
- {
-+	struct hwtstamp_provider *hwtstamp;
- 	struct mii_timestamper *mii_ts;
-+	struct phy_device *phydev;
- 	unsigned int type;
- 
--	if (!skb->dev || !phy_is_default_hwtstamp(skb->dev->phydev))
-+	if (!skb->dev)
- 		return false;
- 
-+	rcu_read_lock();
-+	hwtstamp = rcu_dereference(skb->dev->hwtstamp);
-+	if (hwtstamp) {
-+		if (!ptp_clock_from_phylib(hwtstamp->ptp)) {
-+			rcu_read_unlock();
-+			return false;
-+		}
-+
-+		phydev = ptp_clock_phydev(hwtstamp->ptp);
-+	} else {
-+		phydev = skb->dev->phydev;
-+		if (!phy_is_default_hwtstamp(phydev)) {
-+			rcu_read_unlock();
-+			return false;
-+		}
-+	}
-+	rcu_read_unlock();
-+
- 	if (skb_headroom(skb) < ETH_HLEN)
- 		return false;
- 
-@@ -63,7 +103,7 @@ bool skb_defer_rx_timestamp(struct sk_buff *skb)
- 	if (type == PTP_CLASS_NONE)
- 		return false;
- 
--	mii_ts = skb->dev->phydev->mii_ts;
-+	mii_ts = phydev->mii_ts;
- 	if (likely(mii_ts->rxtstamp))
- 		return mii_ts->rxtstamp(mii_ts, skb, type);
- 
++      do:
++        request:
++          attributes:
++            - header
++            - hwtstamp-provider
++            - tx-types
++            - rx-filters
++            - hwtstamp-flags
++    -
++      name: tsconfig-ntf
++      doc: Notification for change in tsconfig configuration.
++      notify: tsconfig-get
 
 -- 
 2.34.1
