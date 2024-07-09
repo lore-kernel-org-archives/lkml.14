@@ -1,79 +1,71 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C800770FB
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 03:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF45664A;
+	Tue,  9 Jul 2024 03:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720495677; cv=none; b=a6fYvBWgZZv4uabMeLMPWuiVH+3rA17TtdIwd7AWauAZIzq3AeI/vAZ3TcPOD65e5nbLUZjvtm9UZAjh7QH0zcof2tOxWJs8m+Oyb2snrbD1l3DPkj89QKW7Gws2GiCeWOahnNMu+iAnutd+tIfvjv5yvQU45EYY5WJ/QjqH25g=
+	t=1720495905; cv=none; b=HnzZz5XkD3fzwUzN7CJGoBBF8hEiPtpSTL64UzNOvvnx7eI5gzQ+5+m2IaGNIYqJLgBoZAKgBxGETB6FHSq5di+gKApr0jiH38Cmzs9zmC9yPOzdzBRKi9+fF5gImmcuNRc2AniySwier9Tbfav3wPi0CmZvnbB5n9T5rBEzVLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720495677; c=relaxed/simple;
-	bh=pKxi0mF8lMnoUcZD+Px5CPw7KKQhbEEBduiVTQH6ctk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aU0p/sSQ7eKH5mZ/eImW4MDGCvo8k3X+JHJp0j57FEgDGL/YV1DgK6KfQ/s/B8jlcWn+NP8YUUClCJ6uNWL6HHr5sBB/7qYZ9l0fOuas7yaF60aw/H2L0cqW8IM3iBMXa62IMDMVlfxvxipghGK5QF/rxHUrU8fzfByWZeT12ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowACHjso2roxmH4ZcAg--.18440S2;
-	Tue, 09 Jul 2024 11:27:51 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: hverkuil-cisco@xs4all.nl,
-	benjamin.gaignard@collabora.com,
-	mchehab@kernel.org,
-	kees@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] media: v4l2-pci-skeleton: Convert comma to semicolon
-Date: Tue,  9 Jul 2024 11:26:33 +0800
-Message-Id: <20240709032633.586042-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720495905; c=relaxed/simple;
+	bh=reDBoHM4FmpBLKApE4BRXy3nadP7Vf26p0GIlJBPv4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LcsJ6waF0v6byXykUfKwVq/+kpebGXCL4u0+ezHW+YV83y+pPt8r2OWERtvmnZDjssKqAeoPJBJ4KZADwzSZXCp2LRdzq+rKAsPDxPlzJacg1zx/MUGbxE4whgh23zHxzpUhT57MnE4xK5DdSlYGN5rGaI2dgpenoGj5rv3fsDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70af5fbf0d5so2900358b3a.1;
+        Mon, 08 Jul 2024 20:31:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720495903; x=1721100703;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ar4dhfjUe2YqQB1ma5/z2JYsatI/fICi2DYsiJcXzhQ=;
+        b=d04Gd+/+w/v7lUuPSJtVcUyfa1twfpwySNOjLKcJ6YCIuR6Qo3Yk7o1/jMtIMGJsV/
+         LELYNC0mrWHyqLQavpHpMjENOyMtKmvOQXL3W76jHx+HTjwJocstn845n7bX1YLG8HPn
+         jvXrd0661ialAl4kG6kz175iOO/cQ/W1L1vKg/CTssTkSfsuFqnvqHz6zkNrXfxswhh4
+         cOfk1LrkwcfhmtS7RJpEe4aY1/zyPgM79So59mykygkYZCykkvHH15ZDJCUsBl9jaWca
+         pagls2YF2YhcsQb/Nc901cVkWI0YKHNM9vJy2Ffr1oH7CKOAeAkXPIhbZdOlXItZ4nN7
+         UtYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCCDMi91VMr+45Kyq4k4k/Z6g8f8izABn/+FVZwdLfhJMA7SDDDOajgJDaZf1r7316RTNxIlEFpaHFDEY2YpAXlYgRru+p0uae2DF7yPCfnOxU8lFqHKEaUFPF5KnhrHdM5R3KbKjmug==
+X-Gm-Message-State: AOJu0YwMSf4iVrQsl5LUSDZznHLk8kHczGVR21l0HapLQQy7x/mub7go
+	LDjPTwScEDsoOMbaTQZi0yFdtG49vEN5VcBBF+EdD/7zXrd4nu6C
+X-Google-Smtp-Source: AGHT+IH/83wMwWG9Rj6rD03TbTr2U8FgYQTShrKVdvAtOd/8vABJgzbbrQy009PzSTh9LAJz57Cytw==
+X-Received: by 2002:a05:6a00:c8c:b0:70b:a46:7dfd with SMTP id d2e1a72fcca58-70b44dd8bb1mr1531152b3a.17.1720495902864;
+        Mon, 08 Jul 2024 20:31:42 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b4389ba28sm657650b3a.9.2024.07.08.20.31.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 20:31:42 -0700 (PDT)
+Date: Tue, 9 Jul 2024 12:31:41 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the pci tree
+Message-ID: <20240709033141.GA2897846@rocinante>
+References: <20240708181559.3920edf6@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowACHjso2roxmH4ZcAg--.18440S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZF15Zr47Gr4ftF45GFg_yoWfWrX_t3
-	90kas5urZxJrW29w1aka4rZFsIg3srt3y7Wr43KFW2yas3ua1DuF17Xrn8Cr45Wa1UuFs8
-	Jwn8Jr1akF47CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
-	Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUeID7DUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708181559.3920edf6@canb.auug.org.au>
 
-Replace a comma between expression statements by a semicolon.
+Hello,
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- samples/v4l/v4l2-pci-skeleton.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Commit
+> 
+>   5f5817e68ef8 ("PCI: Add missing MODULE_DESCRIPTION() macros")
+> 
+> is missing a Signed-off-by from its committer.
 
-diff --git a/samples/v4l/v4l2-pci-skeleton.c b/samples/v4l/v4l2-pci-skeleton.c
-index 4fc2063b9f59..a131c27d5509 100644
---- a/samples/v4l/v4l2-pci-skeleton.c
-+++ b/samples/v4l/v4l2-pci-skeleton.c
-@@ -852,8 +852,8 @@ static int skeleton_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	 * function. The release callback must be non-NULL.
- 	 */
- 	vdev->release = video_device_release_empty;
--	vdev->fops = &skel_fops,
--	vdev->ioctl_ops = &skel_ioctl_ops,
-+	vdev->fops = &skel_fops;
-+	vdev->ioctl_ops = &skel_ioctl_ops;
- 	vdev->device_caps = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_READWRITE |
- 			    V4L2_CAP_STREAMING;
- 	/*
--- 
-2.25.1
+Should be fixed now.  Thank you!
 
+	Krzysztof
