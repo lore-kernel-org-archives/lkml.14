@@ -1,153 +1,240 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mo-csw-fb.securemx.jp (mo-csw-fb1121.securemx.jp [210.130.202.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5940E1EA80
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 00:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690FB2629D;
+	Tue,  9 Jul 2024 00:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720486583; cv=none; b=U0IHTAyLVUeZyFbWrPgSskeizobeHGY5YG3bETDw1NgSnthYNrxOk5+jPoDoKn6hQZldV9GDyyv3O1dMB9HuA70bRGbMu6H/IH/lRDf5E6qNHykqfj3w5bahMkjdCQJlM+DZWhRZgql8iV3juxgcfPfXJPOmpGCpQz1Z5LD6zeY=
+	t=1720486608; cv=none; b=RB2RCsgid5IY0bungbdAld7IiQES4hnAtj4IbvRTS4WqeFeYpoWjeyBL3N56MvbhBam65oLx8qTqzJsFJBf7XjGZ67mBk6R63972vqa1HitWdofumbxqLHb1CT7JSunJu/DxSN9KCk4cjGOXQ+ZvtQGwvP16y8Q2D853NpkbXkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720486583; c=relaxed/simple;
-	bh=iH4XkXh2lpYUuCPClm2R6l5GXTXOIFlp+/I6YQb8XCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eWXmiCbVVpFSggqQ7wJj8+rHADtNn8wx0zCNldo9BxGgdkTiYbxb+62i7KhOMkow93mHCLXZV7CNPB5neRW2q1ut+gWoEjnZLt495FCNGq+8Q0UKnenpLB5/arbptsNV3ZtS67ounTk6cfzEl5zOacsNkv5cv0bN1z7ZMTY1bnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mXYe7yad; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720486608; c=relaxed/simple;
+	bh=k54OwyzEI9CQ5Jv14pCG4WNSPzFTk/etUxtTuHqboYs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FYEZJbZGklmy2sTNIangAC5XzjjbnWMIE81C7Hm9vMb8NQjbX7q1TLiLp1K4FVBjpCFg5xoKqVps2QBF6/mhM+ZrSvWcKW0My5wHLkCDKZQzF12P30U7SS3x8KHln4KNT5CBidMl7qtdt2MELnpfLxISYgcem70byR+5NKLJQ5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b=PIoj5GCY; arc=none smtp.client-ip=210.130.202.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXYe7yad"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-58b447c519eso5524904a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 17:56:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720486580; x=1721091380; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iFO55uxdi8FRVhzNa7rRusXHfIz8daUjQUpq0icE1SY=;
-        b=mXYe7yadr8I74FR6NUdcLsHrrLIqPQ9IQ7AyEQZyq7coBLsQm9uUBLkWLuhtepBrF0
-         JxK6TurOIFxjNcv3C1kfO0jR61a9NT0KdE/rSzWJNMcvGPyuTBv5OR2zh+Kt5PMJXe9f
-         puGedI3W2oQL5qsOrtPfMluyV9gwxY5+nPgFHyX765DFADZBnyUEf/7R241fCVkR8GjR
-         /ZdYO3HRG4zx/HAWKqXMuZcTqSD0lyqa3Z26vwcbdd21YRT/e8X6/4QfHofyt7RrEYWJ
-         0ROFk4Ns9FlHYtxHI6u4pxtFCgI8sDKiXFrdqg7DeZsZ9pCpFGzjonbdYdasJmDxC9Li
-         8lyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720486580; x=1721091380;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=iFO55uxdi8FRVhzNa7rRusXHfIz8daUjQUpq0icE1SY=;
-        b=OkpPf41Xp+J4Kn22cjBMOJpdqjQoOGIWxQgFpFW6M1rP7ojT+M5huPwuVPIUb/nFoE
-         AL2bU6gMGW1AOJx1JcIyFitX8N/HiEu9duxon9XGsau0F/2qxnmYxkXQlbik1ZceSxXt
-         tutd5E4HtCWDEV7Hk++HJITbcXsO2+zKTgpDVOtFNHHRQ+ujxmcHQNODmil8mzhhQmFd
-         Q2HUZIMwC3FBZeIMkuhpenhaSucIl7TQh8EOXoAmWmGucfCloqhNZzDNXjHd07HPl0uO
-         pCSKspCNCvi0ntFXBEceg/XfQ+5VpE7TTS8aIHC17rCK1UctOUhw0fhBoePcWB2E4Dpk
-         ysJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVrmAS44L2aIljnybuGwbBeUb2FRfZco8phYWm/uJYQ7XL81FPw4SwhcrJW42DVRcWk4MVuRlbrLHH8lHUM+8pnFmnVmysjRHIsNu7
-X-Gm-Message-State: AOJu0YxMteSh6TWxX2oWm0Mf3N/Ba+sIzwqdd2iGMoWfUnzAXBR0A4tX
-	1zaPTsH3XijsJ5mrqAA7OHo0gWOY41slYT/Z0Jgt7rkmYsq4ck0y
-X-Google-Smtp-Source: AGHT+IGfSsAqjNtOUpM4VVF5QwRLL78xs/D2lW+2NQL//NMV7n0myPbPXpX+umYlGfSbQ5qvxqe3wA==
-X-Received: by 2002:a50:ee0b:0:b0:58d:836e:5d83 with SMTP id 4fb4d7f45d1cf-594ba59f8eamr535289a12.22.1720486579362;
-        Mon, 08 Jul 2024 17:56:19 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bda30f0csm416259a12.88.2024.07.08.17.56.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Jul 2024 17:56:18 -0700 (PDT)
-Date: Tue, 9 Jul 2024 00:56:18 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>, rppt@kernel.org,
-	akpm@linux-foundation.org, brauner@kernel.org, oleg@redhat.com,
-	mjguzik@gmail.com, tandersen@netflix.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] mm/memblock: introduce a new helper
- memblock_estimated_nr_free_pages()
-Message-ID: <20240709005618.a4uvufvnledd4vb5@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20240708010010.32347-1-richard.weiyang@gmail.com>
- <e84fcec1-31bc-4397-851a-da70dd754b19@redhat.com>
+	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b="PIoj5GCY"
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1121) id 4690FHsx2760176; Tue, 9 Jul 2024 09:15:17 +0900
+DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
+	:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:
+	Content-Transfer-Encoding;i=yuji2.ishikawa@toshiba.co.jp;s=key2.smx;t=
+	1720484070;x=1721693670;bh=k54OwyzEI9CQ5Jv14pCG4WNSPzFTk/etUxtTuHqboYs=;b=PIo
+	j5GCYVAWegKFzfdu+8mc0Woklf8y/NZlUoEL6KziyRW3EHJRGymM+LjSNJbUjwK0vIbr2hyxe4ZM+
+	LVLwSNWMKqH1IMeL+iSSP6OPPK/zfuYNKvPYdHWXcWvSCZcEmW7C60l+Ci5Pbd32Ey6bih5s73U2A
+	gUx90z7rauWGLokxDNylPQSz0IUvmvrme+CxqDaK81WiY3eSVkPmlQ4T6PmeL4dDvXL2J7yaVVPtr
+	GMd/UUPTH+Fs4rjmPKAXHS/RWJRbC6EY8/2Pvd6/yZY6EJ+iu2jymJDmWbzb7S8/ATqdG1VeBr6wg
+	QVj0zOODgQW0lNjwTdRCgSEeinLbhDQ==;
+Received: by mo-csw.securemx.jp (mx-mo-csw1122) id 4690ET8C3580465; Tue, 9 Jul 2024 09:14:29 +0900
+X-Iguazu-Qid: 2rWgDT56m9icomVPkt
+X-Iguazu-QSIG: v=2; s=0; t=1720484069; q=2rWgDT56m9icomVPkt; m=HHO3hzq3McyvrP3CuDTwfOPyk7CLTqRpdO7D0e7XGNQ=
+Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
+	by relay.securemx.jp (mx-mr1120) id 4690ERNe950929
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 09:14:27 +0900
+X-SA-MID: 26358968
+From: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v11 1/6] dt-bindings: media: platform: visconti: Add Toshiba Visconti Video Input Interface
+Date: Tue,  9 Jul 2024 09:08:43 +0900
+X-TSB-HOP2: ON
+Message-Id: <20240709000848.1108788-2-yuji2.ishikawa@toshiba.co.jp>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240709000848.1108788-1-yuji2.ishikawa@toshiba.co.jp>
+References: <20240709000848.1108788-1-yuji2.ishikawa@toshiba.co.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e84fcec1-31bc-4397-851a-da70dd754b19@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 08, 2024 at 09:56:21AM +0200, David Hildenbrand wrote:
->On 08.07.24 03:00, Wei Yang wrote:
->> During bootup, system may need the number of free pages in the whole system
->> to do some calculation before all pages are freed to buddy system. Usually
->> this number is get from totalram_pages(). Since we plan to move the free
->> pages accounting in __free_pages_core(), this value may not represent
->> total free pages at the early stage, especially when
->> CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled.
->> 
->> Instead of using raw memblock api, let's introduce a new helper for user
->> to get the estimated number of free pages from memblock point of view.
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->> CC: David Hildenbrand <david@redhat.com>
->> Reviewed-by: David Hildenbrand <david@redhat.com>
->> 
->> ---
->> v4: adjust comment per david's suggestion
->> ---
->>   include/linux/memblock.h |  1 +
->>   mm/memblock.c            | 20 ++++++++++++++++++++
->>   2 files changed, 21 insertions(+)
->> 
->> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->> index 40c62aca36ec..7d1c32b3dc12 100644
->> --- a/include/linux/memblock.h
->> +++ b/include/linux/memblock.h
->> @@ -486,6 +486,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
->>   phys_addr_t memblock_phys_mem_size(void);
->>   phys_addr_t memblock_reserved_size(void);
->> +unsigned long memblock_estimated_nr_pages(void);
->
->^ stale name
+Adds the Device Tree binding documentation that allows to describe
+the Video Input Interface found in Toshiba Visconti SoCs.
 
-My bad.
+Signed-off-by: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
+Reviewed-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+Changelog v2:
+- no change
 
->
->>   phys_addr_t memblock_start_of_DRAM(void);
->>   phys_addr_t memblock_end_of_DRAM(void);
->>   void memblock_enforce_memory_limit(phys_addr_t memory_limit);
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index e81fb68f7f88..26162902789f 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -1729,6 +1729,26 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
->>   	return memblock.reserved.total_size;
->>   }
->> +/**
->> + * memblock_estimated_nr_free_pages - return estimated number of free pages
->> + * from memblock point of view
->> + *
->> + * During bootup, subsystems might need a rough estimate of the number of free
->> + * pages in the whole system, before precise numbers are available from the
->> + * buddy. Especially with CONFIG_DEFERRED_STRUCT_PAGE_INIT, the numbers
->> + * obtained from the buddy might be very imprecise during bootup.
->> + *
->> + * While we can get the estimated number of free pages from memblock, which is
->> + * good enough for estimation.
->
->I'd drop that sentence.
->
+Changelog v3:
+- no change
 
-Will update it.
+Changelog v4:
+- fix style problems at the v3 patch
+- remove "index" member
+- update example
 
->
->Apart form that LGTM
->
->-- 
->Cheers,
->
->David / dhildenb
+Changelog v5:
+- no change
 
+Changelog v6:
+- add register definition of BUS-IF and MPU
+
+Changelog v7:
+- remove trailing "bindings" from commit header message
+- remove trailing "Device Tree Bindings" from title
+- fix text wrapping of description
+- change compatible to visconti5-viif
+- explicitly define allowed properties for port::endpoint
+
+Changelog v8:
+- Suggestion from Krzysztof Kozlowski
+  - rename bindings description file
+  - use block style array instead of inline style
+  - remove clock-lane (as it is fixed at position 0)
+  - update sample node's name
+  - use lowercase hex for literals
+- Suggestion from Laurent Pinchart
+  - update description message port::description
+  - remove port::endpoint::bus-type as it is fixed to <4>
+  - remove port::endpoint::clock-lanes from example
+  - add port::endpoint::data-lanes to required parameters list
+  - fix sequence of data-lanes: <1 2 3 4> because current driver does not support data reordering
+  - update port::endpoint::data-lanes::description
+  - remove redundant type definition for port::endpoint::data-lanes
+
+Changelog v9:
+- place "required" after "properties"
+- dictionary ordering of properties
+
+Changelog v10:
+- no change
+
+Changelog v11:
+- no change
+
+ .../media/toshiba,visconti5-viif.yaml         | 105 ++++++++++++++++++
+ 1 file changed, 105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/toshiba,visconti5-viif.yaml
+
+diff --git a/Documentation/devicetree/bindings/media/toshiba,visconti5-viif.yaml b/Documentation/devicetree/bindings/media/toshiba,visconti5-viif.yaml
+new file mode 100644
+index 0000000000..97e8bda427
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/toshiba,visconti5-viif.yaml
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/toshiba,visconti5-viif.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Toshiba Visconti5 SoC Video Input Interface
++
++maintainers:
++  - Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
++
++description: |-
++  Toshiba Visconti5 SoC Video Input Interface (VIIF) receives MIPI CSI2 video
++  stream, processes the stream with image signal processors (L1ISP, L2ISP),
++  then stores pictures to main memory.
++
++properties:
++  compatible:
++    const: toshiba,visconti5-viif
++
++  reg:
++    items:
++      - description: Registers for capture control
++      - description: Registers for CSI2 receiver control
++      - description: Registers for bus interface unit control
++      - description: Registers for Memory Protection Unit
++
++  interrupts:
++    items:
++      - description: Sync Interrupt
++      - description: Status (Error) Interrupt
++      - description: CSI2 Receiver Interrupt
++      - description: L1ISP Interrupt
++
++  port:
++    $ref: /schemas/graph.yaml#/$defs/port-base
++    unevaluatedProperties: false
++    description: CSI-2 input port, with a single endpoint connected to the CSI-2 transmitter.
++
++    properties:
++      endpoint:
++        $ref: video-interfaces.yaml#
++        additionalProperties: false
++
++        properties:
++          data-lanes:
++            description: VIIF supports 1, 2, 3 or 4 data lanes
++            minItems: 1
++            items:
++              - const: 1
++              - const: 2
++              - const: 3
++              - const: 4
++
++          clock-noncontinuous: true
++          link-frequencies: true
++          remote-endpoint: true
++
++        required:
++          - clock-noncontinuous
++          - data-lanes
++          - link-frequencies
++          - remote-endpoint
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - port
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        video@1c000000 {
++            compatible = "toshiba,visconti5-viif";
++            reg = <0 0x1c000000 0 0x6000>,
++                  <0 0x1c008000 0 0x400>,
++                  <0 0x1c00e000 0 0x1000>,
++                  <0 0x2417a000 0 0x1000>;
++            interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++
++            port {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                csi_in0: endpoint {
++                    clock-noncontinuous;
++                    data-lanes = <1 2>;
++                    link-frequencies = /bits/ 64 <456000000>;
++                    remote-endpoint = <&imx219_out0>;
++                };
++            };
++        };
++    };
 -- 
-Wei Yang
-Help you, Help me
+2.25.1
+
+
