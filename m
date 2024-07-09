@@ -1,168 +1,234 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95EB14C5A7
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309D6155314;
+	Tue,  9 Jul 2024 09:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720517065; cv=none; b=pxkBnY9qCFAgMZJG9qLEsrmIJn1e50JoTaKHwWY1F6ixXpOZa+8P59/3rgVoA2JXTyNkNRvVYM/buTn0iHZnDqbhqBlPPcDfGFIpwKDfs4786IIAuO0HtpjrqHlppxvkji7OmxS2rSpMQLWL66J3WdZWop5v6JPAhUwBLX5T5Qc=
+	t=1720517068; cv=none; b=YqiZJ1UXELTm+O6F8ULVl6z0O6XYnmeWdf4Fd2R4FPCwkWLctqduifQAYxucFOS3hqkoTKXb10kryzGhViiTCEhsJEwaFmWUlC2cR9UIUsh3CBHhfqxgzz31xzneg3f+R1jveNdXhYylkrw9Crhr0OmyXUlPX3XMQOrC6N0jULw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720517065; c=relaxed/simple;
-	bh=hPWdIQzrDIKsdWWedF3zVBgednRjpKR88jLhX5flbm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=huO+ZHsqEcMTJBR/c0EfAGbGqwDMyY866soQGeOgTqmGStGsR0upBk961GUm8c/NuT2SPQUKlh0mTPA7SrX80GV6UvqMUFdvcVxfd1D08TZXwplIPNuMuroQHxZC3LIytpYVT4+KKlLRMIlrGCVSoYof3NSZNt2LRaIONZK02kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1sR73F-0004Yx-KQ; Tue, 09 Jul 2024 11:22:21 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1sR739-008FMs-2o; Tue, 09 Jul 2024 11:22:15 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1sR738-006U3J-31;
-	Tue, 09 Jul 2024 11:22:14 +0200
-Date: Tue, 9 Jul 2024 11:22:14 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Maxime Ripard <mripard@kernel.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Russell King <linux@armlinux.org.uk>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Vladimir Zapolskiy <vz@mleia.com>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	imx@lists.linux.dev, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-	openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH 4/9] mtd: devices: add AT24 eeprom support
-Message-ID: <20240709092214.omr7ccphdzdk7z7j@pengutronix.de>
-References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
- <20240701-b4-v6-10-topic-usbc-tcpci-v1-4-3fd5f4a193cc@pengutronix.de>
- <07b701a9-7b52-45b7-8dba-1c25d77cbf15@linaro.org>
- <mafs0ikxnykpr.fsf@kernel.org>
- <20240702-congenial-vigilant-boar-aeae44@houat>
- <mafs0ed8byj5z.fsf@kernel.org>
- <20240702-mighty-brilliant-eel-b0d9fa@houat>
- <20240708084440.70186564@xps-13>
+	s=arc-20240116; t=1720517068; c=relaxed/simple;
+	bh=5niALDe5JhRUHa6Zv/qHec7YrdTFlmlNYWhHdW2TWms=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QsOkMmX4x1LvvVmeXFcEzjvMp3cy9JKJPQA2xaZHQosGOjtPyCN7kKuAccRibSSf9rBSCetCI9u9FpzAivS+qMztVXzh28J55bFMLOvQ351ffuh9ml9TdAc3PZuqc98i2e0XNeor07Kxrld7sszY83pZNmyCMiLoPe3d0SpTOZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=0bpoYwft; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="0bpoYwft"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1720517067; x=1752053067;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=5niALDe5JhRUHa6Zv/qHec7YrdTFlmlNYWhHdW2TWms=;
+  b=0bpoYwftbUXxMUVEtu9pRFyGy1/3IeQdEKgurJyxRo/3c++MkoZP6J1r
+   P4uDgotkc+1iQCt+wLWUhtinYVkQG+qUsL+ObNut/l9rY+tMGlKyz6HzC
+   NwjWfnasu05Ku6Upz2ODl0lcZ3cI/MEkuLStzeMnzqTYEl524aMNHtG7h
+   +vwFpidTnn48wGSp9WewwM5WZ+zk42oIfgyWsnZEuRi8V0+dvVRQeM9HZ
+   pQTgzpfw85CBymmAYe2wPv/F2vVYUIqxDp74QVZXYmSbnHjoLWY8EYwgc
+   9D26lNfa4F24aFL46z6iUN3RF0soXW2ANBqu7GLVMyHbJUyQWYF+Cwzwz
+   w==;
+X-CSE-ConnectionGUID: w5tIxLpnR3SF7j7uDQGsuA==
+X-CSE-MsgGUID: xWNIz4AzSt+n1dIE1Ormrw==
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="28970332"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Jul 2024 02:24:25 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 9 Jul 2024 02:24:11 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 9 Jul 2024 02:24:05 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>, <arnd@arndb.de>,
+	<durai.manickamkr@microchip.com>, <linux-gpio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <manikandan.m@microchip.com>
+Subject: [PATCH v3 1/5] ARM: dts: microchip: change to simple-mfd from simple-bus for PIO3 pinumux controller
+Date: Tue, 9 Jul 2024 14:53:50 +0530
+Message-ID: <20240709092354.191643-2-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240709092354.191643-1-manikandan.m@microchip.com>
+References: <20240709092354.191643-1-manikandan.m@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240708084440.70186564@xps-13>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
 
-Hi Miquel,
+The pinctrl subnodes that define the pin configuration of other devices
+under PIO3 pinmux controller are not simple memory mapped nodes.Ergo,
+change simple-bus to simple-mfd.
 
-On 24-07-08, Miquel Raynal wrote:
-> Hi,
-> 
-> > > >> >> Port the current misc/eeprom/at24.c driver to the MTD framework since
-> > > >> >> EEPROMs are memory-technology devices and the framework already supports  
-> > > >> >
-> > > >> > I was under the impression that MTD devices are tightly coupled by erase
-> > > >> > blocks. But then we see MTD_NO_ERASE, so what are MTD devices after all?  
-> > > >> 
-> > > >> I was curious as well so I did some digging.
-> > > >>   
-> > > [...]  
-> > > >> 
-> > > >> I also found a thread from 2013 by Maxime Ripard (+Cc) suggesting adding
-> > > >> EEPROMs to MTD [1]. The main purpose would have been unifying the EEPROM
-> > > >> drivers under a single interface. I am not sure what came of it though,
-> > > >> since I can't find any patches that followed up with the proposal.  
-> > > >
-> > > > That discussion led to drivers/nvmem after I started to work on
-> > > > some early prototype, and Srinivas took over that work.  
-> > > 
-> > > So would you say it is better for EEPROM drivers to use nvmem instead of
-> > > moving under MTD?  
-> > 
-> > I thought so at the time, but that was more than 10y ago, and I have
-> > followed neither nvmem nor MTD since so I don't really have an opinion
-> > there.
-> > 
-> > It looks like drivers/misc/eeprom/at24.c has support for nvmem though,
-> > and MTD can be used as an nvmem provider too, so it's not clear to me
-> > why we would want to create yet another variant.
-> > 
-> > But again, you shouldn't really ask me in the first place :)
-> > 
-> > I'm sure Miquel, Srinivas, and surely others, are much more relevant to
-> > answer that question.
-> 
-> More relevant, I doubt, but just a feeling: EEPROMs have their own
-> subsystem now, NVMEM, which, as Maxime said, was initially written for
-> that very specific case. EEPROMs don't have the complexity of MTD
-> devices, and thus pulling the whole MTD subsystem just for getting
-> partitions seems counter intuitive to me. You can definitely "split"
-> EEPROM devices with NVMEM as well anyway.
+Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ arch/arm/boot/dts/microchip/at91rm9200.dtsi  | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9260.dtsi | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9261.dtsi | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9263.dtsi | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9g45.dtsi | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9n12.dtsi | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9rl.dtsi  | 2 +-
+ arch/arm/boot/dts/microchip/at91sam9x5.dtsi  | 2 +-
+ arch/arm/boot/dts/microchip/sam9x60.dtsi     | 2 +-
+ arch/arm/boot/dts/microchip/sama5d3.dtsi     | 2 +-
+ arch/arm/boot/dts/microchip/sama5d4.dtsi     | 2 +-
+ 11 files changed, 11 insertions(+), 11 deletions(-)
 
-I asked for feedback on my RFC [1] and all I got was to merge both
-drivers into one and make the driver backward compatible, which I did by
-this commit.
+diff --git a/arch/arm/boot/dts/microchip/at91rm9200.dtsi b/arch/arm/boot/dts/microchip/at91rm9200.dtsi
+index 16c675e3a890..02a838541dc3 100644
+--- a/arch/arm/boot/dts/microchip/at91rm9200.dtsi
++++ b/arch/arm/boot/dts/microchip/at91rm9200.dtsi
+@@ -225,7 +225,7 @@ macb0: ethernet@fffbc000 {
+ 			pinctrl@fffff400 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
++				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff400 0xfffff400 0x800>;
+ 
+ 				atmel,mux-mask = <
+diff --git a/arch/arm/boot/dts/microchip/at91sam9260.dtsi b/arch/arm/boot/dts/microchip/at91sam9260.dtsi
+index e56d5546554c..0038183e9a53 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9260.dtsi
+@@ -170,7 +170,7 @@ tcb1: timer@fffdc000 {
+ 			pinctrl: pinctrl@fffff400 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
++				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff400 0xfffff400 0x600>;
+ 
+ 				atmel,mux-mask = <
+diff --git a/arch/arm/boot/dts/microchip/at91sam9261.dtsi b/arch/arm/boot/dts/microchip/at91sam9261.dtsi
+index 307b60658014..b57a7fd67197 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9261.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9261.dtsi
+@@ -317,7 +317,7 @@ dbgu: serial@fffff200 {
+ 			pinctrl@fffff400 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
++				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff400 0xfffff400 0x600>;
+ 
+ 				atmel,mux-mask =
+diff --git a/arch/arm/boot/dts/microchip/at91sam9263.dtsi b/arch/arm/boot/dts/microchip/at91sam9263.dtsi
+index 75d8ff2d12c8..b95d4016ae9f 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9263.dtsi
+@@ -167,7 +167,7 @@ poweroff@fffffd10 {
+ 			pinctrl@fffff200 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
++				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff200 0xfffff200 0xa00>;
+ 
+ 				atmel,mux-mask = <
+diff --git a/arch/arm/boot/dts/microchip/at91sam9g45.dtsi b/arch/arm/boot/dts/microchip/at91sam9g45.dtsi
+index 325c63a53118..c54eb21d5cba 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9g45.dtsi
+@@ -190,7 +190,7 @@ dma: dma-controller@ffffec00 {
+ 			pinctrl@fffff200 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
++				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff200 0xfffff200 0xa00>;
+ 
+ 				atmel,mux-mask = <
+diff --git a/arch/arm/boot/dts/microchip/at91sam9n12.dtsi b/arch/arm/boot/dts/microchip/at91sam9n12.dtsi
+index 8dc04e9031a6..9aa22195051d 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9n12.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9n12.dtsi
+@@ -226,7 +226,7 @@ dma: dma-controller@ffffec00 {
+ 			pinctrl@fffff400 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
++				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff400 0xfffff400 0x800>;
+ 
+ 				atmel,mux-mask = <
+diff --git a/arch/arm/boot/dts/microchip/at91sam9rl.dtsi b/arch/arm/boot/dts/microchip/at91sam9rl.dtsi
+index 7436b5c862b1..1fec9fcc7cd1 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9rl.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9rl.dtsi
+@@ -339,7 +339,7 @@ dbgu: serial@fffff200 {
+ 			pinctrl@fffff400 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
++				compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff400 0xfffff400 0x800>;
+ 
+ 				atmel,mux-mask =
+diff --git a/arch/arm/boot/dts/microchip/at91sam9x5.dtsi b/arch/arm/boot/dts/microchip/at91sam9x5.dtsi
+index a7456c2191fa..d41d7c844200 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9x5.dtsi
+@@ -202,7 +202,7 @@ dma1: dma-controller@ffffee00 {
+ 			pinctrl: pinctrl@fffff400 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
++				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff400 0xfffff400 0x800>;
+ 
+ 				/* shared pinctrl settings */
+diff --git a/arch/arm/boot/dts/microchip/sam9x60.dtsi b/arch/arm/boot/dts/microchip/sam9x60.dtsi
+index 291540e5d81e..4e71ae63edf1 100644
+--- a/arch/arm/boot/dts/microchip/sam9x60.dtsi
++++ b/arch/arm/boot/dts/microchip/sam9x60.dtsi
+@@ -1223,7 +1223,7 @@ AT91_XDMAC_DT_PERID(28))>,
+ 			pinctrl: pinctrl@fffff400 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "microchip,sam9x60-pinctrl", "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
++				compatible = "microchip,sam9x60-pinctrl", "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff400 0xfffff400 0x800>;
+ 
+ 				/* mux-mask corresponding to sam9x60 SoC in TFBGA228L package */
+diff --git a/arch/arm/boot/dts/microchip/sama5d3.dtsi b/arch/arm/boot/dts/microchip/sama5d3.dtsi
+index d4fc0c1dfc10..f1614dcd7d28 100644
+--- a/arch/arm/boot/dts/microchip/sama5d3.dtsi
++++ b/arch/arm/boot/dts/microchip/sama5d3.dtsi
+@@ -493,7 +493,7 @@ aic: interrupt-controller@fffff000 {
+ 			pinctrl: pinctrl@fffff200 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-bus";
++				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-mfd";
+ 				ranges = <0xfffff200 0xfffff200 0xa00>;
+ 				atmel,mux-mask = <
+ 					/*   A          B          C  */
+diff --git a/arch/arm/boot/dts/microchip/sama5d4.dtsi b/arch/arm/boot/dts/microchip/sama5d4.dtsi
+index 58ceed997889..69dd4e7b4c14 100644
+--- a/arch/arm/boot/dts/microchip/sama5d4.dtsi
++++ b/arch/arm/boot/dts/microchip/sama5d4.dtsi
+@@ -791,7 +791,7 @@ dbgu: serial@fc069000 {
+ 			pinctrl: pinctrl@fc06a000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-bus";
++				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-mfd";
+ 				ranges = <0xfc068000 0xfc068000 0x100
+ 					  0xfc06a000 0xfc06a000 0x4000>;
+ 				/* WARNING: revisit as pin spec has changed */
+-- 
+2.25.1
 
-> Overall I think the idea of getting rid of these misc/ drivers is goes
-> into the right direction, but registering directly into NVMEM makes
-> more sense IMO.
-
-So you propose to have two places for the partition handling (one for
-MTD and one for NVMEM) instead of one and moving the code into NVMEM
-directly? That doesn't sound right to me either. Also I don't get the
-point why EEPROMs can't be handled by the MTD layer? The layer already
-supports devices of type MTD_RAM which are very simple and don't require
-an erase-op at least I don't see one.
-
-[1] https://lore.kernel.org/all/20231127164623.1008176-1-m.felsch@pengutronix.de
-
-Regards,
-  Marco
-
-> 
-> Thanks,
-> Miquèl
-> 
