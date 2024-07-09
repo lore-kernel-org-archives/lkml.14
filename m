@@ -1,126 +1,117 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74311DFCF
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 19:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4401B86E9
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 19:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720552105; cv=none; b=jbHmoOjs2rkNpe2e/jWTKA9QDAPAhqJ1WFaf7Uh2e3AAMjD+yO85AcO2VImpmV5xuo3QwnWtDHxII/B2/kIgxUIg8aQr9vCWCarMO6egFAWqgd1L+s/0QpTykMMECQjc1AAzbGwGhSkGVOfduMrhRUylfxUOmx0lygisqlWuBjw=
+	t=1720552174; cv=none; b=By87Fo4aXcT7vFc0UEDJAQqWQY0kgeijZW/MYWDCHD+gdQV+YXw8qL/U3In3QoJi6o4TzP9VNErspXjy8ctimEGJWLur0IX+ii6lJ/wRrElliwqR8WvhCFNyxRg7GsfrS0LDawMPpWWg+iR2WcSe3FheiZW9jyqTOaJ8SnxmPY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720552105; c=relaxed/simple;
-	bh=+FRYxpij7KrNXOurW6VCprxSAuGG/K0HE+tx2ZLbQIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KEcW/hYraNUVJqnGerFAJP5qqDCYYrZc7Fq+yTaVyg2+UAI3vkRoz12GyTvMXFCmO/yH0Mao74f9aPfJ3lC54EQ/FHzNqCKW7pl/yc0yA/+mSNzKMQyZ2kHo50qfGH8Xgm+6gSVltn/49SXlqubM5qWBMZ3Pg2pYIJcBBnzWYDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=ul2JCkoy; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1720552174; c=relaxed/simple;
+	bh=80GqaqTeOgHHI4tnQMSIOx4wIsLZkIL6Sr5RMyAQw1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Av56KnacPb0vWpY+HLEKp8C5f8rOHippIoxh1UG0VF90HrHfNJMJf54IOiRgtTGQGH97jMduQM5aW3tPHaHkbN2hvDQxarkmnA4KHvA3asMtvgaFtiDWQfznkXnNlhpwH5DDLDjjZB8RXzy1bDzF2Etmat66SdsvPLfV8PVRBf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SON9NnTx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="ul2JCkoy"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SON9NnTx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720552172;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NXZKL8ojyqitWmVdURnWWa13FACQeMHK3/aNjCXRfs4=;
+	b=SON9NnTxZMDFVPVOj5752kbd33KeMgvb6GNKOhxgSCQ/6VXpPspD7Z7NL/5VAEly0H7peg
+	vouUvpI4ifZZHP9UsKctecL96ZsIjn6Qfk9UIlguvsX/BFA0WICmBmk+QhA+98ybrY12tC
+	unsHnCUwMhFSHVn/V9biddqDKpuivrY=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-0akiT6_UNpCE_dTNJ7c1cA-1; Tue,
+ 09 Jul 2024 15:09:27 -0400
+X-MC-Unique: 0akiT6_UNpCE_dTNJ7c1cA-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 12AB71E0FE9;
-	Tue,  9 Jul 2024 21:08:19 +0200 (CEST)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1720552099; bh=HPcNlq4GbiFGcV0kx+F+Uo4jc+3/yYr06hN62dwcW68=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ul2JCkoyadIyHntKSfaKg8VHAH9z8YOSRS24V+Aha9bH0JN3goesReVO/jPJrVsIn
-	 v5724rcJcE1YGHX2rqTIXV4XUWFDdaDJrHRJsy+Jtjeii3qc2C8dYUMF9W4YaMv4ZV
-	 nxFJ5PPko9SRYUjMFWOPVgiv8BWoIlOiz7rJDHhHE8GTKyCQVThm4uBmp4SE6JWOct
-	 xi4lPs89V2KfPA4eEl+EXDK+Mp8GRyxcZfmVCUWo0gAnApIQf5LcoBsfzx9iAVqW81
-	 Ed4RZ0NW8MSKmUJ8Rcgte9KAC9A7OOUwnlq8k4/G0AcjG8GLF9hsOC8WgLeTykIIYi
-	 Uc9tdQ0Gl5gdw==
-Date: Tue, 9 Jul 2024 21:08:18 +0200
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: mhkelley58@gmail.com, mhklinux@outlook.com, robin.murphy@arm.com,
- joro@8bytes.org, will@kernel.org, jgross@suse.com, sstabellini@kernel.org,
- oleksandr_tyshchenko@epam.com, m.szyprowski@samsung.com,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v3 1/1] swiotlb: Reduce swiotlb pool lookups
-Message-ID: <20240709210818.28116c53@meshulam.tesarici.cz>
-In-Reply-To: <20240709111812.GB4421@lst.de>
-References: <20240708194100.1531-1-mhklinux@outlook.com>
-	<20240709111013.6103d3f0@mordecai.tesarici.cz>
-	<20240709111812.GB4421@lst.de>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-suse-linux-gnu)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 68B25195608F;
+	Tue,  9 Jul 2024 19:09:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.34])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AC32E1955E83;
+	Tue,  9 Jul 2024 19:09:20 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  9 Jul 2024 21:07:49 +0200 (CEST)
+Date: Tue, 9 Jul 2024 21:07:43 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Julian Orth <ju.orth@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 2/2] kernel: rerun task_work while freezing in
+ get_signal()
+Message-ID: <20240709190743.GB3892@redhat.com>
+References: <cover.1720368770.git.asml.silence@gmail.com>
+ <1d935e9d87fd8672ef3e8a9a0db340d355ea08b4.1720368770.git.asml.silence@gmail.com>
+ <20240708104221.GA18761@redhat.com>
+ <62c11b59-c909-4c60-8370-77729544ec0a@gmail.com>
+ <20240709103617.GB28495@redhat.com>
+ <658da3fe-fa02-423b-aff0-52f54e1332ee@gmail.com>
+ <Zo1ntduTPiF8Gmfl@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zo1ntduTPiF8Gmfl@slm.duckdns.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Tue, 9 Jul 2024 13:18:12 +0200
-Christoph Hellwig <hch@lst.de> wrote:
+Hi Tejun,
 
-> On Tue, Jul 09, 2024 at 11:10:13AM +0200, Petr Tesa=C5=99=C3=ADk wrote:
-> > Reviewed-by: Petr Tesarik <petr@tesarici.cz> =20
->=20
-> Thanks.
->=20
-> >=20
-> > OK, so __swiotlb_find_pool() is now always declared (so the code
-> > compiles), but if CONFIG_SWIOTLB_DYNAMIC=3Dn, it is never defined. The
-> > result still links, because the compiler optimizes away the whole
-> > if-clause, so there are no references to an undefined symbol in the
-> > object file.
-> >=20
-> > I think I've already seen similar constructs elsewhere in the kernel,
-> > so relying on the optimization seems to be common practice. =20
->=20
-> Yes, it's a pretty common patter.  It's gone here now, though to not
-> add the struct device field unconditionally.
->=20
-> > > +{
-> > > +	struct io_tlb_pool *pool =3D swiotlb_find_pool(dev, addr);
-> > > +
-> > > +	if (unlikely(pool))
-> > > +		__swiotlb_tbl_unmap_single(dev, addr, size, dir, attrs, pool);
-> > > +}
-> > > +
-> > > +static inline void swiotlb_sync_single_for_device(struct device *dev,
-> > > +		phys_addr_t addr, size_t size, enum dma_data_direction dir)
-> > > +{
-> > > +	struct io_tlb_pool *pool =3D swiotlb_find_pool(dev, addr);
-> > > +
-> > > +	if (unlikely(pool))
-> > > +		__swiotlb_sync_single_for_device(dev, addr, size, dir, pool); =20
-> >=20
-> > We're adding an unlikely() here, which wasn't originally present in
-> > iommu_dma_sync_single_for_device(). OTOH it should do no harm, and it
-> > was most likely an omission.  =20
->=20
-> I'm honestly not a big fan of the unlikely annotations unlike they
-> are proven to make a difference.  Normally the runtime branch predictor
-> should do a really good job here, and for some uses this will not
-> just be likely but the only case.
+Thanks for looking at this, can you review this V2 patch from Pavel?
+To me it makes sense even without 1/2 which I didn't even bother to
+read. At least as a simple workaround for now.
 
-I'm confused. If you're not a big fan, why are we effectively adding
-them to more places now than before the patch?
+On 07/09, Tejun Heo wrote:
+>
+> Hello,
+>
+> On Tue, Jul 09, 2024 at 03:05:21PM +0100, Pavel Begunkov wrote:
+> > > -----------------------------------------------------------------------
+> > > Either way I have no idea whether a cgroup_task_frozen() task should
+> > > react to task_work_add(TWA_SIGNAL) or not.
+> > >
+> > > Documentation/admin-guide/cgroup-v2.rst says
+> > >
+> > > 	Writing "1" to the file causes freezing of the cgroup and all
+> > > 	descendant cgroups. This means that all belonging processes will
+> > > 	be stopped and will not run until the cgroup will be explicitly
+> > > 	unfrozen.
+> > >
+> > > AFAICS this is not accurate, they can run but can't return to user-mode.
+> > > So I guess task_work_run() is fine.
+> >
+> > IIUC it's a user facing doc, so maybe it's accurate enough from that
+> > perspective. But I do agree that the semantics around task_work is
+> > not exactly clear.
+>
+> A good correctness test for cgroup freezer is whether it'd be safe to
+> snapshot and restore the tasks in the cgroup while frozen.
 
-FWIW on all architectures I've worked with (arm64, ia64, powerpc,
-s390x, x86_64), the dynamic branch predictor takes precedence over
-static prediction (yes, even ia64 held on to those mandatory .spnt.few
-and .sptk.many hints only if there was no entry in the branch
-predictor). But on every branch instruction, the compiler must decide
-which code follows the branch instruction and which code is placed at
-another place. The latter often needs another jump instruction to
-continue executing instructions _after_ the whole conditional clause,
-which is slightly less efficient. The compiler must make this decision
-even if there is no likely() or unlikely() annotation, but in that case
-it uses some (rather crude) heuristics of its own, e.g. whether the
-condition covers the majority or minority of the value range.
+Well, I don't really understand what can snapshot/restore actually mean...
 
-Long story short, in this case "if (pool)" does pretty much the same
-job as "if (likely(pool))". But we say "if (unlikely(pool)))"...
+I forgot everything about cgroup freezer and I am already sleeping, but even
+if we forget about task_work_add/TIF_NOTIFY_SIGNAL/etc, afaics ptrace can
+change the state of cgroup_task_frozen() task between snapshot and restore ?
 
-You needn't change the code, but I want this documented somewhere that
-people can find it, i.e. in LKML archives.
+Oleg.
 
-Petr T
