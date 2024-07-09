@@ -1,146 +1,121 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7BC154BF0;
-	Tue,  9 Jul 2024 14:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A857257D
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 14:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720533974; cv=none; b=HLuFtytdd0LijKPgbFkv+jlzbJtUbQxUTwgxSXtdurAM3NpYmU4w69TX0RiCRFywoO34d/VHH7keKBYxpWpOrUdRAizxdxsDuXhcF6S02XTLubS5oWpHQR4WHq8pWIqMYHrTvacMj/cMTzTa6vB8m1QE4vjvTW5UpXiDPO6TWv0=
+	t=1720534027; cv=none; b=omRePOiJftqVXJYwhAtubE05wuQBESfY6lWOqXSQCz+4F+qXD9AefbjlULRhNGa94JoSKoBI7sxazP0pKJc8Wt9rRkt2Fj6P1uO91lHz7rsMErMPaC+5duNW7JaKGP5tS/oqfJLD4KoRxMqilHKk5ZTExzZMQwtYgKcRNHDeaiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720533974; c=relaxed/simple;
-	bh=bsQMMNGvSWxwbenIZOgEAoW7NZqDNT6e1zhBpq/+Kp8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=LOqESKhMr/cDbVvMsvebXtMVG91VugPqn1LosNkLllylG8CNRfi59cIUKz8NG9INtWMM43sBgVoQIWHTxo9c3gHPSXphpQ80zL+HzOebWGu8IuJuCsrU0Lij3Ucb1nkUFdSvl4TCyltjYCsc4qXKKXMXLnRXLp038MxNpkzG/ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UGY5H2Yj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720534027; c=relaxed/simple;
+	bh=t6JT6FrSnzv8XklnrYODeF0tSvh6kmlSctN4+IJkZHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BIAXZL/VSlaiAZXHVAY1d6PAVtyP8k2smOBytoFMpFIJVHYGSu6nfaYn2G3k2LzZU+JtjoGLfSifcQn6p6/yOrtf1maIvUZ1dkmdNdvdxAmTH0Hoj+JUr9lhBhOVXZ9GFj/1CsL7XA1zxFR4YAZi79uF3TGqZt8FWLiWNKAko3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CpaOzP05; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UGY5H2Yj"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469BDMFS012016;
-	Tue, 9 Jul 2024 14:06:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=KVAwLXJ6GLQTtRpPDFWqce
-	I8vVCrPRzOmPqggpRbT/U=; b=UGY5H2YjmC90OJq+PTd4bPPPUL2ckP+69EtuCr
-	YUngS+ITu1LRNdqseKrCv97NmiIyD5A+IEq1Rrb1Nofzz4MYhEudws3HCEvp0pJG
-	bWcXkLzAjewTnMrihjWTWPsLNcxg6bbmrjILoXMsu/8lQ+XIJvFRYLphTz3gYHmK
-	QGrA2NTJ9cnaOsaNlh71k0UjZ52/2YQN3XxyNc5rP6b4v5YIrApxvmyUzKTgBkAD
-	zwKW7m/MwVJvNSWzxuwHdvad9ZwdLASFYH38eIc1DffHfJe4hmMxPTwWOemiQhBF
-	tveSA7b8rocH+CyTfkm5UgoJ4ZWpFQurlTHuZPYhk2PJRCqg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wgwpm17-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 14:06:10 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469E69vt018942
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 14:06:09 GMT
-Received: from tengfan-gv.ap.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 9 Jul 2024 07:06:04 -0700
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-Date: Tue, 9 Jul 2024 22:05:52 +0800
-Subject: [PATCH v2] dt-bindings: soc: qcom: add qcom,qcs9100-imem
- compatible
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CpaOzP05"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720534025;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1OvITzQjJfVx93jTak0ogpbPRj+PPTTq5u2++xH/IGU=;
+	b=CpaOzP05Gyj27lzMyQPHi8xoM/Z+rBcRxKs19/OHvfMQ77B0LHVk5n0XD2mrUD982NKDNz
+	gfm0dugSX0ooLKufWhHkYD/bQFv6ize0C4t/VMgX9glVrcvWkORogL8aPODhCpdMr9j/6t
+	+H5dcq+uN4P4WV60qo9lb7LqdB+7aBI=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-274-vAVNTGRxNn6VOLqt5XrmoQ-1; Tue,
+ 09 Jul 2024 10:06:59 -0400
+X-MC-Unique: vAVNTGRxNn6VOLqt5XrmoQ-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EEAF81958B3D;
+	Tue,  9 Jul 2024 14:06:52 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.15])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 810AF1955E70;
+	Tue,  9 Jul 2024 14:06:50 +0000 (UTC)
+Date: Tue, 9 Jul 2024 22:06:46 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: linux@armlinux.org.uk, vgoyal@redhat.com, dyoung@redhat.com,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	arnd@arndb.de, afd@ti.com, akpm@linux-foundation.org,
+	rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
+	eric.devolder@oracle.com, gregkh@linuxfoundation.org, deller@gmx.de,
+	javierm@redhat.com, robh@kernel.org, thunder.leizhen@huawei.com,
+	austindh.kim@gmail.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH 0/3] ARM: Use generic interface to simplify crashkernel
+ reservation
+Message-ID: <Zo1D9sB0UTOIrApP@MiWiFi-R3L-srv>
+References: <20240708133348.3592667-1-ruanjinjie@huawei.com>
+ <Zo0DCVXvCryDr7WN@MiWiFi-R3L-srv>
+ <3157befe-431f-69ac-b9d3-7a8685ba3a4d@huawei.com>
+ <Zo0TbmSnHbiz5YQn@MiWiFi-R3L-srv>
+ <01869981-b1de-32cb-bd25-d6ea09752b3d@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240709-document_qcs9100_imem_compatible-v2-1-de2a8712d788@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAL9DjWYC/zXNQQqDMBCF4auUrBuZREXtqvcoEjQZdaBJ1Ki0i
- HdvFLr83uL9Ows4Ewb2uO1sxo0CeRch7zemh8b1yMlEMwkygwIqbrxeLbpFTTpUAkCRRau0t2O
- zUPtGbjIwbVZUUKbI4s04Y0efK/GqowcKi5+/V3ET5/o/T0HmZQ6JFIUEKLng00paLej6rnHPE
- +R0ElusPo7jB7PvfOq8AAAA
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Tengfei Fan
-	<quic_tengfan@quicinc.com>
-X-Mailer: b4 0.15-dev-a66ce
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720533964; l=2356;
- i=quic_tengfan@quicinc.com; s=20240709; h=from:subject:message-id;
- bh=bsQMMNGvSWxwbenIZOgEAoW7NZqDNT6e1zhBpq/+Kp8=;
- b=5nL3h0xENbIU4xwuwRne3Hhj3wfhPqJvh5RnDxtMv/qvJ0pGF96c1MhrP5l+0zl5u3sxSM29l
- hMmkwswuKtNC3+HXuVXuXZOoeHft33ZB5XRv3u54wK5tIl0Oezog10V
-X-Developer-Key: i=quic_tengfan@quicinc.com; a=ed25519;
- pk=4VjoTogHXJhZUM9XlxbCAcZ4zmrLeuep4dfOeKqQD0c=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KSWDwWKgvrulGkqBKFkREKUreMFGRBpc
-X-Proofpoint-ORIG-GUID: KSWDwWKgvrulGkqBKFkREKUreMFGRBpc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_04,2024-07-09_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=865 mlxscore=0
- adultscore=0 malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- suspectscore=0 clxscore=1015 priorityscore=1501 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090091
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01869981-b1de-32cb-bd25-d6ea09752b3d@huawei.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Add qcom,qcs9100-imem compatible name support.
-QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
-platform use non-SCMI resource. In the future, the SA8775p platform will
-move to use SCMI resources and it will have new sa8775p-related device
-tree. Consequently, introduce "qcom,qcs9100-imem" to describe non-SCMI
-based imem.
+On 07/09/24 at 07:06pm, Jinjie Ruan wrote:
+> 
+> 
+> On 2024/7/9 18:39, Baoquan He wrote:
+> > On 07/09/24 at 05:50pm, Jinjie Ruan wrote:
+> >>
+> >>
+> >> On 2024/7/9 17:29, Baoquan He wrote:
+> >>> On 07/08/24 at 09:33pm, Jinjie Ruan wrote:
+> >>>> Currently, x86, arm64, riscv and loongarch has been switched to generic
+> >>>> crashkernel reservation. Also use generic interface to simplify crashkernel
+> >>>> reservation for arm32, and fix two bugs by the way.
+> >>>
+> >>> I am not sure if this is a good idea. I added the generic reservation
+> >>> itnerfaces for ARCH which support crashkernel=,high|low and normal
+> >>> crashkernel reservation, with this, the code can be simplified a lot.
+> >>> However, arm32 doesn't support crashkernel=,high, I am not sure if it's
+> >>> worth taking the change, most importantly, if it will cause
+> >>> misunderstanding or misoperation.
+> >>
+> >> Yes, arm32 doesn't support crashkernel=,high.
+> >>
+> >> However, a little enhancement to the generic code (please see the first
+> >> patch), the generic reservation interfaces can also be applicable to
+> >> architectures that do not support "high" such as arm32, and it can also
+> >> simplify the code (please see the third patch).
+> > 
+> > Yeah, I can see the code is simplified. When you specified
+> > 'crashkernel=xM,high', do you think what should be warn out? Because
+> > it's an unsupported syntax on arm32, we should do something to print out
+> > appropriate message.
+> 
+> Yes, you are right! In this patch it will print "crashkernel high memory
+> reservation failed." message and out for arm32 if you specify
 
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
----
-Introduce support for the QCS9100 SoC device tree (DTSI) and the
-QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
-While the QCS9100 platform is still in the early design stage, the
-QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
-mounts the QCS9100 SoC instead of the SA8775p SoC.
+That message may mislead people to believe crashkernel=,high is
+supported but reservation is failed, then a bug need be filed for this?
+We may expect a message telling this syntax is not supported on this
+ARCH.
 
-The QCS9100 SoC DTSI is directly renamed from the SA8775p SoC DTSI, and
-all the compatible strings will be updated from "SA8775p" to "QCS9100".
-The QCS9100 device tree patches will be pushed after all the device tree
-bindings and device driver patches are reviewed.
-
-The final dtsi will like:
-https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-3-quic_tengfan@quicinc.com/
-
-The detailed cover letter reference:
-https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
----
-Changes in v2:
-  - Split huge patch series into different patch series according to
-    subsytems
-  - Update patch commit message
-
-prevous disscussion here:
-[1] v1: https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
----
- Documentation/devicetree/bindings/sram/qcom,imem.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/sram/qcom,imem.yaml b/Documentation/devicetree/bindings/sram/qcom,imem.yaml
-index faef3d6e0a94..e45337a21232 100644
---- a/Documentation/devicetree/bindings/sram/qcom,imem.yaml
-+++ b/Documentation/devicetree/bindings/sram/qcom,imem.yaml
-@@ -21,6 +21,7 @@ properties:
-           - qcom,msm8226-imem
-           - qcom,msm8974-imem
-           - qcom,qcs404-imem
-+          - qcom,qcs9100-imem
-           - qcom,qdu1000-imem
-           - qcom,sa8775p-imem
-           - qcom,sc7180-imem
-
----
-base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
-change-id: 20240709-document_qcs9100_imem_compatible-d40db479083e
-
-Best regards,
--- 
-Tengfei Fan <quic_tengfan@quicinc.com>
+> 'crashkernel=xM,high because "CRASH_ADDR_LOW_MAX" and
+> "CRASH_ADDR_HIGH_MAX" is identical for arm32. And it should also warn
+> out for other similar architecture.
+> 
+> 
+> > 
+> > 
+> 
 
