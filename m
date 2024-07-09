@@ -1,225 +1,423 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E401AC45D;
-	Tue,  9 Jul 2024 16:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4196F1AC44A
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542063; cv=none; b=RMvC//n1J4hSSxLElY0vr575fmJGVhvyRaB4cDMTp+UyPpJ847fe+D8tQsWW5X1lEHCM5D8CrKsKbQqKI2DnS1pMl7j7VgU2brNFZ1a+KZhuaDIlIIolmLxNGShSgUmiLuvWuJKOo6U97f3KE1zkWiuYz6thBc1q6BVGDFwRnz8=
+	t=1720542062; cv=none; b=pbjAMz9Z4FcwZsxMFJMoN6PPByc6N35s4bKcvC9VI9fA3KgfxomhkUZdaCDHFf5VjXpnBlv5RtwxxhsjIEwe+Yrzi3zMVtlslqPrJt7vnqUZcs+duTvVwSf8DsqveQZpsHT7u59bJs8XCAisXaLqNiCfAOpqxvnQxa5jCi5pZnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542063; c=relaxed/simple;
-	bh=Hu2xOcJs8TVqPM0RMYZowwcukpj//KPov8PtNRE72D8=;
+	s=arc-20240116; t=1720542062; c=relaxed/simple;
+	bh=K5IDHOGwur5M1wxz6gR+ee2Yecqq87yweHl0ice3ziY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=io1SRT1nZ6U7zvHORKUFo10aYh6x/6Y6ATTARaMCwgWJo1H9crANq1omkM6vpy+D7ms6J+o7ECmAuFZKHYzdRSS89cjdzF5nfQy/P1JvqgtaI9ypFOS9kFxiILp5GM6xQYxxV2H9ZmDFqIxHijdQ3Rr7kOHZh7sPRXv26S1VP/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liV+H3go; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PGNB1wzf0Rb83jnfdRQlZhooxu+cU5EPtzSFQDA1eUFojTjEpB7fYp4xm5w1P4pysgiu61QatRncypxpbno0MF6oqcjkkD294pOXxT56wTtPwV+MXeds9WH3wLZ+JFm4PT1qeRSfFvSHkOJWzEgkuf09etFaW0Np6aGXMBUOCcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WNGTmAyL; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liV+H3go"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A3BFC4AF0A;
-	Tue,  9 Jul 2024 16:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542063;
-	bh=Hu2xOcJs8TVqPM0RMYZowwcukpj//KPov8PtNRE72D8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=liV+H3goaKZwwTADWCxZy39mbreYJgRaY7RwARERCzUQtPkuK6rEWuJI+pFOYhZlf
-	 /4zDTcHvYTOLqowlG1CNR6vxUi1QV6D/PpR3e7M6+zLqFEifqXhbMsdUROooWUDs5t
-	 zQnQ91VfQVxNrvKsZHwbLchBzgOVDsaeDanmsZv9ZiozFd7MX0uStx0ooguTGmwfEn
-	 PKsQNUORDDJfRsjj0FcF4vnHgEBQSc3bS5/FhrvfoJhfh0RylWyXtsGsFVuy4MbN3G
-	 90dqbSL1FKm/+lo7i9u90JcpcNQp3awaKr3qV7rpUVndKHawW23/VdIWWV0G9ILR4n
-	 8bcxB5M0R7cjw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ratheesh Kannoth <rkannoth@marvell.com>,
-	Suman Ghosh <sumang@marvell.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Sasha Levin <sashal@kernel.org>,
-	sgoutham@marvell.com,
-	gakula@marvell.com,
-	sbhatta@marvell.com,
-	hkelam@marvell.com,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 24/40] octeontx2-pf: Fix coverity and klockwork issues in octeon PF driver
-Date: Tue,  9 Jul 2024 12:19:04 -0400
-Message-ID: <20240709162007.30160-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240709162007.30160-1-sashal@kernel.org>
-References: <20240709162007.30160-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WNGTmAyL"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-426717a2d12so7201515e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 09:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720542059; x=1721146859; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QZURG4DQ86OmYUEBMJ73gjiu+OgC68nhtpPKYr4JjTk=;
+        b=WNGTmAyLKztkkcKDTtXHrg7WgBuD4WP/YUklpOIiFvCa4fU9/G8rP8vwzHIOvNjrpf
+         n95Rf9eYxSc1hexXaSZAk1xc6lMI8D9a8bQEfuDSV2FGav8DsPnr3GXYcbtejLBdn8KT
+         hD2tMcM/KO6W0ldJJdCdp4+oaPNxxvpHfyfdQC5xx2bF/GAwn4qreBx8ruG5lbDJu4nK
+         OUgf90nXwW5NEysCdgziu3QL2qdrKNacavmVGsvYNzY5okSm3ETAuE4VgkavF09IaMjL
+         LalontQ1CpQCqZ5RUrn+K3WdSodnFwpdvqiq49VvMIH0K3q9x3juQ0JCpDnPZ5X9TO7N
+         z0hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720542059; x=1721146859;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QZURG4DQ86OmYUEBMJ73gjiu+OgC68nhtpPKYr4JjTk=;
+        b=ttstOKhWLD6CJBxDZzLWLTmwvcSlafu4Ts62D2PBcPdMaAEi17xE+LOizXCmL4DgSA
+         o7PUn4VQzHqfW4MrCYCB7+JaiPAQFoa7v6R4SFvM2Thoj8NYBuPn0mM9dTjf4WhPkI09
+         Nt4yUdZspJmrUPi+prCKcq+wIDIE5C35X5cxbRgDurBsvnRGK/BdzvR85uKk5msLXO6Z
+         7ndo0cUI7+ull4Vr1vpg6f/1ttnIcYXVPeFsYIu3VaVruY9JQzFQSQQQQztrTFQa6aoQ
+         859SasrFoCLZXLlf5cBkcYAGD8yvD8Hq+osFn6/p7hnStZvCjpTiQsL3lqnpIgbORr2h
+         VhqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7rApofznOeC0RZjbDqhyQgNyxrzlbIIVrI2RiYgxTBzlqHvOxHIS2Z7b2xhg3+aauCo7EcgMoH0JbjxAjnOamABAaczgIa0yAXMy9
+X-Gm-Message-State: AOJu0YzejaBxagwyLLhqN2hej/6YLKRlEUQwkFRrJ3QlSXySC4muq26c
+	P80/xpiBR0WmcRLdbIJTK4R0A9E5e+WdWJOCs3dc7Hy5iHDEEUN+9xmeSxWKtNtf6mTLZRorQPY
+	r
+X-Google-Smtp-Source: AGHT+IHJe6Owzua4x6G16KkskCgOHlwfWxLCcRpIy7XL32/xCG893IE+O2YynuqUNB0HAJGA159CzA==
+X-Received: by 2002:a05:600c:378d:b0:426:6981:1bd with SMTP id 5b1f17b1804b1-426722d4b4emr24632085e9.5.1720542058698;
+        Tue, 09 Jul 2024 09:20:58 -0700 (PDT)
+Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e07fsm2966955f8f.17.2024.07.09.09.20.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 09:20:58 -0700 (PDT)
+From: Rayyan Ansari <rayyan.ansari@linaro.org>
+To: devicetree@vger.kernel.org
+Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH 4/4] dt-bindings: pinctrl: qcom,apq8084-pinctrl: convert to dtschema
+Date: Tue,  9 Jul 2024 17:17:56 +0100
+Message-ID: <20240709162009.5166-5-rayyan.ansari@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240709162009.5166-1-rayyan.ansari@linaro.org>
+References: <20240709162009.5166-1-rayyan.ansari@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.8
 Content-Transfer-Encoding: 8bit
 
-From: Ratheesh Kannoth <rkannoth@marvell.com>
+Convert the Qualcomm APQ8084 TLMM block bindings from text to yaml dt
+schema format.
 
-[ Upstream commit 02ea312055da84e08e3e5bce2539c1ff11c8b5f2 ]
-
-Fix unintended sign extension and klockwork issues. These are not real
-issue but for sanity checks.
-
-Signed-off-by: Ratheesh Kannoth <rkannoth@marvell.com>
-Signed-off-by: Suman Ghosh <sumang@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
 ---
- .../marvell/octeontx2/nic/otx2_common.c       | 10 ++--
- .../ethernet/marvell/octeontx2/nic/otx2_reg.h | 55 ++++++++++---------
- .../marvell/octeontx2/nic/otx2_txrx.c         |  2 +-
- .../net/ethernet/marvell/octeontx2/nic/qos.c  |  3 +-
- 4 files changed, 35 insertions(+), 35 deletions(-)
+ .../bindings/pinctrl/qcom,apq8084-pinctrl.txt | 188 ------------------
+ .../pinctrl/qcom,apq8084-pinctrl.yaml         | 129 ++++++++++++
+ 2 files changed, 129 insertions(+), 188 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.yaml
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-index a85ac039d779b..87d5776e3b88e 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-@@ -648,14 +648,14 @@ int otx2_txschq_config(struct otx2_nic *pfvf, int lvl, int prio, bool txschq_for
- 	} else if (lvl == NIX_TXSCH_LVL_TL4) {
- 		parent = schq_list[NIX_TXSCH_LVL_TL3][prio];
- 		req->reg[0] = NIX_AF_TL4X_PARENT(schq);
--		req->regval[0] = parent << 16;
-+		req->regval[0] = (u64)parent << 16;
- 		req->num_regs++;
- 		req->reg[1] = NIX_AF_TL4X_SCHEDULE(schq);
- 		req->regval[1] = dwrr_val;
- 	} else if (lvl == NIX_TXSCH_LVL_TL3) {
- 		parent = schq_list[NIX_TXSCH_LVL_TL2][prio];
- 		req->reg[0] = NIX_AF_TL3X_PARENT(schq);
--		req->regval[0] = parent << 16;
-+		req->regval[0] = (u64)parent << 16;
- 		req->num_regs++;
- 		req->reg[1] = NIX_AF_TL3X_SCHEDULE(schq);
- 		req->regval[1] = dwrr_val;
-@@ -670,11 +670,11 @@ int otx2_txschq_config(struct otx2_nic *pfvf, int lvl, int prio, bool txschq_for
- 	} else if (lvl == NIX_TXSCH_LVL_TL2) {
- 		parent = schq_list[NIX_TXSCH_LVL_TL1][prio];
- 		req->reg[0] = NIX_AF_TL2X_PARENT(schq);
--		req->regval[0] = parent << 16;
-+		req->regval[0] = (u64)parent << 16;
- 
- 		req->num_regs++;
- 		req->reg[1] = NIX_AF_TL2X_SCHEDULE(schq);
--		req->regval[1] = TXSCH_TL1_DFLT_RR_PRIO << 24 | dwrr_val;
-+		req->regval[1] = (u64)hw->txschq_aggr_lvl_rr_prio << 24 | dwrr_val;
- 
- 		if (lvl == hw->txschq_link_cfg_lvl) {
- 			req->num_regs++;
-@@ -698,7 +698,7 @@ int otx2_txschq_config(struct otx2_nic *pfvf, int lvl, int prio, bool txschq_for
- 
- 		req->num_regs++;
- 		req->reg[1] = NIX_AF_TL1X_TOPOLOGY(schq);
--		req->regval[1] = (TXSCH_TL1_DFLT_RR_PRIO << 1);
-+		req->regval[1] = hw->txschq_aggr_lvl_rr_prio << 1;
- 
- 		req->num_regs++;
- 		req->reg[2] = NIX_AF_TL1X_CIR(schq);
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h
-index 45a32e4b49d1c..e3aee6e362151 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_reg.h
-@@ -139,33 +139,34 @@
- #define	NIX_LF_CINTX_ENA_W1C(a)		(NIX_LFBASE | 0xD50 | (a) << 12)
- 
- /* NIX AF transmit scheduler registers */
--#define NIX_AF_SMQX_CFG(a)		(0x700 | (a) << 16)
--#define NIX_AF_TL1X_SCHEDULE(a)		(0xC00 | (a) << 16)
--#define NIX_AF_TL1X_CIR(a)		(0xC20 | (a) << 16)
--#define NIX_AF_TL1X_TOPOLOGY(a)		(0xC80 | (a) << 16)
--#define NIX_AF_TL2X_PARENT(a)		(0xE88 | (a) << 16)
--#define NIX_AF_TL2X_SCHEDULE(a)		(0xE00 | (a) << 16)
--#define NIX_AF_TL2X_TOPOLOGY(a)		(0xE80 | (a) << 16)
--#define NIX_AF_TL2X_CIR(a)              (0xE20 | (a) << 16)
--#define NIX_AF_TL2X_PIR(a)              (0xE30 | (a) << 16)
--#define NIX_AF_TL3X_PARENT(a)		(0x1088 | (a) << 16)
--#define NIX_AF_TL3X_SCHEDULE(a)		(0x1000 | (a) << 16)
--#define NIX_AF_TL3X_SHAPE(a)		(0x1010 | (a) << 16)
--#define NIX_AF_TL3X_CIR(a)		(0x1020 | (a) << 16)
--#define NIX_AF_TL3X_PIR(a)		(0x1030 | (a) << 16)
--#define NIX_AF_TL3X_TOPOLOGY(a)		(0x1080 | (a) << 16)
--#define NIX_AF_TL4X_PARENT(a)		(0x1288 | (a) << 16)
--#define NIX_AF_TL4X_SCHEDULE(a)		(0x1200 | (a) << 16)
--#define NIX_AF_TL4X_SHAPE(a)		(0x1210 | (a) << 16)
--#define NIX_AF_TL4X_CIR(a)		(0x1220 | (a) << 16)
--#define NIX_AF_TL4X_PIR(a)		(0x1230 | (a) << 16)
--#define NIX_AF_TL4X_TOPOLOGY(a)		(0x1280 | (a) << 16)
--#define NIX_AF_MDQX_SCHEDULE(a)		(0x1400 | (a) << 16)
--#define NIX_AF_MDQX_SHAPE(a)		(0x1410 | (a) << 16)
--#define NIX_AF_MDQX_CIR(a)		(0x1420 | (a) << 16)
--#define NIX_AF_MDQX_PIR(a)		(0x1430 | (a) << 16)
--#define NIX_AF_MDQX_PARENT(a)		(0x1480 | (a) << 16)
--#define NIX_AF_TL3_TL2X_LINKX_CFG(a, b)	(0x1700 | (a) << 16 | (b) << 3)
-+#define NIX_AF_SMQX_CFG(a)		(0x700 | (u64)(a) << 16)
-+#define NIX_AF_TL4X_SDP_LINK_CFG(a)	(0xB10 | (u64)(a) << 16)
-+#define NIX_AF_TL1X_SCHEDULE(a)		(0xC00 | (u64)(a) << 16)
-+#define NIX_AF_TL1X_CIR(a)		(0xC20 | (u64)(a) << 16)
-+#define NIX_AF_TL1X_TOPOLOGY(a)		(0xC80 | (u64)(a) << 16)
-+#define NIX_AF_TL2X_PARENT(a)		(0xE88 | (u64)(a) << 16)
-+#define NIX_AF_TL2X_SCHEDULE(a)		(0xE00 | (u64)(a) << 16)
-+#define NIX_AF_TL2X_TOPOLOGY(a)		(0xE80 | (u64)(a) << 16)
-+#define NIX_AF_TL2X_CIR(a)		(0xE20 | (u64)(a) << 16)
-+#define NIX_AF_TL2X_PIR(a)		(0xE30 | (u64)(a) << 16)
-+#define NIX_AF_TL3X_PARENT(a)		(0x1088 | (u64)(a) << 16)
-+#define NIX_AF_TL3X_SCHEDULE(a)		(0x1000 | (u64)(a) << 16)
-+#define NIX_AF_TL3X_SHAPE(a)		(0x1010 | (u64)(a) << 16)
-+#define NIX_AF_TL3X_CIR(a)		(0x1020 | (u64)(a) << 16)
-+#define NIX_AF_TL3X_PIR(a)		(0x1030 | (u64)(a) << 16)
-+#define NIX_AF_TL3X_TOPOLOGY(a)		(0x1080 | (u64)(a) << 16)
-+#define NIX_AF_TL4X_PARENT(a)		(0x1288 | (u64)(a) << 16)
-+#define NIX_AF_TL4X_SCHEDULE(a)		(0x1200 | (u64)(a) << 16)
-+#define NIX_AF_TL4X_SHAPE(a)		(0x1210 | (u64)(a) << 16)
-+#define NIX_AF_TL4X_CIR(a)		(0x1220 | (u64)(a) << 16)
-+#define NIX_AF_TL4X_PIR(a)		(0x1230 | (u64)(a) << 16)
-+#define NIX_AF_TL4X_TOPOLOGY(a)		(0x1280 | (u64)(a) << 16)
-+#define NIX_AF_MDQX_SCHEDULE(a)		(0x1400 | (u64)(a) << 16)
-+#define NIX_AF_MDQX_SHAPE(a)		(0x1410 | (u64)(a) << 16)
-+#define NIX_AF_MDQX_CIR(a)		(0x1420 | (u64)(a) << 16)
-+#define NIX_AF_MDQX_PIR(a)		(0x1430 | (u64)(a) << 16)
-+#define NIX_AF_MDQX_PARENT(a)		(0x1480 | (u64)(a) << 16)
-+#define NIX_AF_TL3_TL2X_LINKX_CFG(a, b)	(0x1700 | (u64)(a) << 16 | (b) << 3)
- 
- /* LMT LF registers */
- #define LMT_LFBASE			BIT_ULL(RVU_FUNC_BLKADDR_SHIFT)
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
-index 04a49b9b545f3..0ca9f2ffd932d 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
-@@ -510,7 +510,7 @@ static int otx2_tx_napi_handler(struct otx2_nic *pfvf,
- 
- static void otx2_adjust_adaptive_coalese(struct otx2_nic *pfvf, struct otx2_cq_poll *cq_poll)
- {
--	struct dim_sample dim_sample;
-+	struct dim_sample dim_sample = { 0 };
- 	u64 rx_frames, rx_bytes;
- 	u64 tx_frames, tx_bytes;
- 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/qos.c b/drivers/net/ethernet/marvell/octeontx2/nic/qos.c
-index 6cddb4da85b71..4995a2d54d7d0 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/qos.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/qos.c
-@@ -153,7 +153,6 @@ static void __otx2_qos_txschq_cfg(struct otx2_nic *pfvf,
- 		num_regs++;
- 
- 		otx2_config_sched_shaping(pfvf, node, cfg, &num_regs);
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+deleted file mode 100644
+index c9782397ff14..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
++++ /dev/null
+@@ -1,188 +0,0 @@
+-Qualcomm APQ8084 TLMM block
 -
- 	} else if (level == NIX_TXSCH_LVL_TL4) {
- 		otx2_config_sched_shaping(pfvf, node, cfg, &num_regs);
- 	} else if (level == NIX_TXSCH_LVL_TL3) {
-@@ -176,7 +175,7 @@ static void __otx2_qos_txschq_cfg(struct otx2_nic *pfvf,
- 		/* check if node is root */
- 		if (node->qid == OTX2_QOS_QID_INNER && !node->parent) {
- 			cfg->reg[num_regs] = NIX_AF_TL2X_SCHEDULE(node->schq);
--			cfg->regval[num_regs] =  TXSCH_TL1_DFLT_RR_PRIO << 24 |
-+			cfg->regval[num_regs] =  (u64)hw->txschq_aggr_lvl_rr_prio << 24 |
- 						 mtu_to_dwrr_weight(pfvf,
- 								    pfvf->tx_max_pktlen);
- 			num_regs++;
+-This binding describes the Top Level Mode Multiplexer block found in the
+-MSM8960 platform.
+-
+-- compatible:
+-	Usage: required
+-	Value type: <string>
+-	Definition: must be "qcom,apq8084-pinctrl"
+-
+-- reg:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: the base address and size of the TLMM register space.
+-
+-- interrupts:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: should specify the TLMM summary IRQ.
+-
+-- interrupt-controller:
+-	Usage: required
+-	Value type: <none>
+-	Definition: identifies this node as an interrupt controller
+-
+-- #interrupt-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: must be 2. Specifying the pin number and flags, as defined
+-		    in <dt-bindings/interrupt-controller/irq.h>
+-
+-- gpio-controller:
+-	Usage: required
+-	Value type: <none>
+-	Definition: identifies this node as a gpio controller
+-
+-- #gpio-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: must be 2. Specifying the pin number and flags, as defined
+-		    in <dt-bindings/gpio/gpio.h>
+-
+-- gpio-ranges:
+-	Usage: required
+-	Definition:  see ../gpio/gpio.txt
+-
+-- gpio-reserved-ranges:
+-	Usage: optional
+-	Definition: see ../gpio/gpio.txt
+-
+-Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+-a general description of GPIO and interrupt bindings.
+-
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices, including the meaning of the
+-phrase "pin configuration node".
+-
+-The pin configuration nodes act as a container for an arbitrary number of
+-subnodes. Each of these subnodes represents some desired configuration for a
+-pin, a group, or a list of pins or groups. This configuration can include the
+-mux function to select on those pin(s)/group(s), and various pin configuration
+-parameters, such as pull-up, drive strength, etc.
+-
+-
+-PIN CONFIGURATION NODES:
+-
+-The name of each subnode is not important; all subnodes should be enumerated
+-and processed purely based on their content.
+-
+-Each subnode only affects those parameters that are explicitly listed. In
+-other words, a subnode that lists a mux function but no pin configuration
+-parameters implies no information about any pin configuration parameters.
+-Similarly, a pin subnode that describes a pullup parameter implies no
+-information about e.g. the mux function.
+-
+-
+-The following generic properties as defined in pinctrl-bindings.txt are valid
+-to specify in a pin configuration subnode:
+-
+-- pins:
+-	Usage: required
+-	Value type: <string-array>
+-	Definition: List of gpio pins affected by the properties specified in
+-		    this subnode.  Valid pins are:
+-		    gpio0-gpio146,
+-		    sdc1_clk,
+-		    sdc1_cmd,
+-		    sdc1_data
+-		    sdc2_clk,
+-		    sdc2_cmd,
+-		    sdc2_data
+-
+-- function:
+-	Usage: required
+-	Value type: <string>
+-	Definition: Specify the alternative function to be configured for the
+-		    specified pins. Functions are only valid for gpio pins.
+-		    Valid values are:
+-		    adsp_ext, audio_ref, blsp_i2c1, blsp_i2c2, blsp_i2c3,
+-		    blsp_i2c4, blsp_i2c5, blsp_i2c6, blsp_i2c7, blsp_i2c8,
+-		    blsp_i2c9, blsp_i2c10, blsp_i2c11, blsp_i2c12,
+-		    blsp_spi1, blsp_spi2, blsp_spi3, blsp_spi4, blsp_spi5,
+-		    blsp_spi6, blsp_spi7, blsp_spi8, blsp_spi9, blsp_spi10,
+-		    blsp_spi11, blsp_spi12, blsp_uart1, blsp_uart2, blsp_uart3,
+-		    blsp_uart4, blsp_uart5, blsp_uart6, blsp_uart7, blsp_uart8,
+-		    blsp_uart9, blsp_uart10, blsp_uart11, blsp_uart12,
+-		    blsp_uim1, blsp_uim2, blsp_uim3, blsp_uim4, blsp_uim5,
+-		    blsp_uim6, blsp_uim7, blsp_uim8, blsp_uim9, blsp_uim10,
+-		    blsp_uim11, blsp_uim12, cam_mclk0, cam_mclk1, cam_mclk2,
+-		    cam_mclk3, cci_async, cci_async_in0, cci_i2c0, cci_i2c1,
+-		    cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4,
+-		    edp_hpd, gcc_gp1, gcc_gp2, gcc_gp3, gcc_obt, gcc_vtt,i
+-		    gp_mn, gp_pdm0, gp_pdm1, gp_pdm2, gp0_clk, gp1_clk, gpio,
+-		    hdmi_cec, hdmi_ddc, hdmi_dtest, hdmi_hpd, hdmi_rcv, hsic,
+-		    ldo_en, ldo_update, mdp_vsync, pci_e0, pci_e0_n, pci_e0_rst,
+-		    pci_e1, pci_e1_rst, pci_e1_rst_n, pci_e1_clkreq_n, pri_mi2s,
+-		    qua_mi2s, sata_act, sata_devsleep, sata_devsleep_n,
+-		    sd_write, sdc_emmc_mode, sdc3, sdc4, sec_mi2s, slimbus,
+-		    spdif_tx, spkr_i2s, spkr_i2s_ws, spss_geni, ter_mi2s, tsif1,
+-		    tsif2, uim, uim_batt_alarm
+-
+-- bias-disable:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins should be configured as no pull.
+-
+-- bias-pull-down:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins should be configured as pull down.
+-
+-- bias-pull-up:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins should be configured as pull up.
+-
+-- output-high:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in output mode, driven
+-		    high.
+-		    Not valid for sdc pins.
+-
+-- output-low:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in output mode, driven
+-		    low.
+-		    Not valid for sdc pins.
+-
+-- drive-strength:
+-	Usage: optional
+-	Value type: <u32>
+-	Definition: Selects the drive strength for the specified pins, in mA.
+-		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
+-
+-Example:
+-
+-	tlmm: pinctrl@fd510000 {
+-		compatible = "qcom,apq8084-pinctrl";
+-		reg = <0xfd510000 0x4000>;
+-
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		gpio-ranges = <&tlmm 0 0 147>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		interrupts = <0 208 0>;
+-
+-		uart2: uart2-default {
+-			mux {
+-				pins = "gpio4", "gpio5";
+-				function = "blsp_uart2";
+-			};
+-
+-			tx {
+-				pins = "gpio4";
+-				drive-strength = <4>;
+-				bias-disable;
+-			};
+-
+-			rx {
+-				pins = "gpio5";
+-				drive-strength = <2>;
+-				bias-pull-up;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.yaml
+new file mode 100644
+index 000000000000..38877d8b97ff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.yaml
+@@ -0,0 +1,129 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,apq8084-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. APQ8084 TLMM block
++
++maintainers:
++  - Bjorn Andersson <bjorn.andersson@linaro.org>
++
++description: |
++  Top Level Mode Multiplexer pin controller in Qualcomm APQ8084 SoC.
++
++allOf:
++  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
++
++properties:
++  compatible:
++    const: qcom,apq8084-pinctrl
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  gpio-reserved-ranges: true
++
++patternProperties:
++  "-state$":
++    oneOf:
++      - $ref: "#/$defs/qcom-apq8084-tlmm-state"
++      - patternProperties:
++          "-pins$":
++            $ref: "#/$defs/qcom-apq8084-tlmm-state"
++        additionalProperties: false
++
++$defs:
++  qcom-apq8084-tlmm-state:
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
++    unevaluatedProperties: false
++
++    properties:
++      pins:
++        description:
++          List of gpio pins affected by the properties specified in this
++          subnode.
++        items:
++          oneOf:
++            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-3][0-9]|14[0-6])$"
++            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
++                      sdc2_data ]
++        minItems: 1
++        maxItems: 36
++
++      function:
++        description:
++          Specify the alternative function to be configured for the specified
++          pins.
++        enum: [ adsp_ext, audio_ref, blsp_i2c1, blsp_i2c2, blsp_i2c3,
++                blsp_i2c4, blsp_i2c5, blsp_i2c6, blsp_i2c7, blsp_i2c8,
++                blsp_i2c9, blsp_i2c10, blsp_i2c11, blsp_i2c12,
++                blsp_spi1, blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3,
++                blsp_spi2, blsp_spi3, blsp_spi3_cs1, blsp_spi3_cs2,
++                blsp_spi3_cs3, blsp_spi4, blsp_spi5, blsp_spi6,
++                blsp_spi7, blsp_spi8, blsp_spi9, blsp_spi10,
++                blsp_spi10_cs1, blsp_spi10_cs2, blsp_spi10_cs3,
++                blsp_spi11, blsp_spi12, blsp_uart1, blsp_uart2,
++                blsp_uart3, blsp_uart4, blsp_uart5, blsp_uart6,
++                blsp_uart7, blsp_uart8, blsp_uart9, blsp_uart10,
++                blsp_uart11, blsp_uart12, blsp_uim1, blsp_uim2,
++                blsp_uim3, blsp_uim4, blsp_uim5, blsp_uim6, blsp_uim7,
++                blsp_uim8, blsp_uim9, blsp_uim10, blsp_uim11,
++                blsp_uim12, cam_mclk0, cam_mclk1, cam_mclk2, cam_mclk3,
++                cci_async, cci_async_in0, cci_i2c0, cci_i2c1,
++                cci_timer0, cci_timer1, cci_timer2, cci_timer3,
++                cci_timer4, edp_hpd, gcc_gp1, gcc_gp2, gcc_gp3,
++                gcc_obt, gcc_vtt, gp_mn, gp_pdm0, gp_pdm1, gp_pdm2,
++                gp0_clk, gp1_clk, gpio, hdmi_cec, hdmi_ddc, hdmi_dtest,
++                hdmi_hpd, hdmi_rcv, hsic, ldo_en, ldo_update,
++                mdp_vsync, pci_e0, pci_e0_n, pci_e0_rst, pci_e1,
++                pci_e1_rst, pci_e1_rst_n, pci_e1_clkreq_n, pri_mi2s,
++                qua_mi2s, sata_act, sata_devsleep, sata_devsleep_n,
++                sd_write, sdc_emmc_mode, sdc3, sdc4, sec_mi2s, slimbus,
++                spdif_tx, spkr_i2s, spkr_i2s_ws, spss_geni, ter_mi2s,
++                tsif1, tsif2, uim, uim_batt_alarm ]
++
++    required:
++      - pins
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    tlmm: pinctrl@fd510000 {
++        compatible = "qcom,apq8084-pinctrl";
++        reg = <0xfd510000 0x4000>;
++
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-ranges = <&tlmm 0 0 147>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++
++        uart-state {
++            rx-pins {
++                pins = "gpio5";
++                function = "blsp_uart2";
++                bias-pull-up;
++            };
++
++            tx-pins {
++                pins = "gpio4";
++                function = "blsp_uart2";
++                bias-disable;
++            };
++        };
++    };
 -- 
-2.43.0
+2.45.2
 
