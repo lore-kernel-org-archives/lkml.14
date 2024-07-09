@@ -1,91 +1,131 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37BA18EFD7;
-	Tue,  9 Jul 2024 14:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00C519CCF6;
+	Tue,  9 Jul 2024 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720537027; cv=none; b=Gg2vzETuaEqIIDka+Ito/M76h+fJgNphnnYItDvVSebWsUOMU+CiZ2TMj2JATYWHNSRyn++s/Ekayv1qYexCYLEwCcdUiXo9HeNIQiHP/OMcyNk82Pd5JsZZOyDV1ONRiz5Vhor/XvxkWaUomRebdlWSJGA5V1/sGzKJaardoKI=
+	t=1720537035; cv=none; b=M8cjsQvIgdFw4PB51xxot0uNRDpxhKtx4ZehLr4RRPHgAyfCId9C1OrkVrWQZmbCoGgf0TaeANRRczLHZKCMfGMHgMvVgY3CUbPpT/SYkdx7vAvePUz2/hn94nbL2v/tzq37x9DDhXcNFSKtKvPg+eWMOkQvmYx3o9jIz1bMQlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720537027; c=relaxed/simple;
-	bh=TGP78oa4Q8trWeJFoXv/gZ8zqFMpduK6EZ81uys4LZQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qPT3hoDp6dsKAUgNXq4nuoorYZFznNsf+lJcU9xfPpx3lMbzo0bytDEfnmczV6fYCq3+1iup90aX7hpkXiP0sJfjMF6e0x6d6D1fhW1RF0SrrAEmAoe/hLbMEi7nGFlfDYb/kJ6N0mBsiGlY1n0HkHmNRY7OllxnBmefA7TRG0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZJLntkxR; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720537035; c=relaxed/simple;
+	bh=q183F0/HFGC/8U/gLjzUqH8Bv64w+2hrHp8UiRG815A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=h9T9ngcaoWQb39fxjKU1c7HRdbuh6yf3IeTBRWLGLGD2wdcZXrW1IoUiiWuj9wgojWPxRmKSQnO8cGOrMpL26eptoOOrkzReUvm8t1mQBaJ5NWbCMQuB5ub5nOEDq7UJJVGzzudfJJQ3BBUWl29c1LFokR1K4LQFpqHByxRelmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k/R4UAdb; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJLntkxR"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-367a3d1a378so3502377f8f.1;
-        Tue, 09 Jul 2024 07:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720537024; x=1721141824; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TGP78oa4Q8trWeJFoXv/gZ8zqFMpduK6EZ81uys4LZQ=;
-        b=ZJLntkxRmtqJ1PntSUGsre5Cye5UBrOKKcw6flP/7FbY0pTpCZzIC7+gbDvhdZmDVF
-         Yk+Pimy196psIHWapN5ZWXjz2/dB69CsVWL347dz/MIagewwrohV1ss6M1iRgrN60WYl
-         Ma90r6Btm4K7CIJ4lfpWcpPEKXIxz9bfXM6bymA3ROvZB9SppILJWdHHc0aq1UmpEOqZ
-         5wy3GXdXYQQP5YkTyd5ZkeEcDBFB1zzWXAGmkczKpY5zlyX+k/YA1QXFIceuHZpFEUxh
-         b+uLGJTUW23Q/HCHfR79631AovHE+m4hZa6R6jKd+v6IQwr8qTSy06jPsh6UpMK6VDnw
-         LmyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720537024; x=1721141824;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TGP78oa4Q8trWeJFoXv/gZ8zqFMpduK6EZ81uys4LZQ=;
-        b=Ft2cSpoJTCWT60ClFvJ4muZlaQYpvxvV/RdlgFXAgFcdnQxGB2y7ym32Q5AoILyvMs
-         pIySRvUicRkTU5bHJtsR6ZDEOH5KeqzZC681MhNUMuHGNZZ1jrFJcCEsr9Fy1oHDgmQr
-         zfiF/GUoH75n7Pgn+wGf2Esta+e66hy6iYcxUt0BX6XNJ5lyXZwq8cGjXAgcv02jz1TZ
-         vrQ8E1+3UcCvB698Toxxk4EruxAWQcqRyIAS4oXhggxhdrsbgCR6GHzSMxqwYB6C7v0M
-         C5WxAgCeotT0/ib7239dPYspeDJ42EhsunzseQgdDiv5Yl4Y4h3zjLNTXe1UueutMeXQ
-         9kOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZdonvnGRwSA7gHZeO4LU08waVe8pUNi+lRSt4UXtXv05G7Kesmmpd8QSnws8owGGKhSsD5RNZkkdCB8aOVyUKdqKNiz/9Kchgsu85AILk1e3Xlhu3xZE2AvFuKRvyzjrPu2/2
-X-Gm-Message-State: AOJu0YzDEVdVL//jnFPIU8Nr06+QCebsa1nbl/JkH4HWwzerlwCGXiKz
-	I9PxVMnM6gbrySZQvO7A0FZaqmYW+t+gxaorHNxBXDIGrR8amio+pQ/Uw5efoWRvIh4rHEUi/XD
-	HQMDI+qUZiuNJIC9ZfUIS0uvlXPn57w==
-X-Google-Smtp-Source: AGHT+IFftnKHZMj16Ic6EO/cWEKP2Brpaqf++vaF4SjaXWM9Nok4ZOTK803ow3PbVjGrqZPfXi5GiRSoYvnusza54Rs=
-X-Received: by 2002:adf:a38b:0:b0:367:89e6:e28c with SMTP id
- ffacd0b85a97d-367cea67d63mr2613384f8f.17.1720537023803; Tue, 09 Jul 2024
- 07:57:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k/R4UAdb"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469A7KVD012432;
+	Tue, 9 Jul 2024 14:54:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	CSDkESbCmZqUgbZ09QMkhUrOl3ltgh7Fjn3q70aFm1M=; b=k/R4UAdb5OrEjdUi
+	18iOvHVTqKYUXYx7R46QfueRAIYntkh0OOR6S6GDVDV6CmF/vPq1gvqKdYaJBpUZ
+	jyGRGEy9dam/aVAkwipkF6/QP9ZPUHBKgSNfVKgtQc6j5TqGj/Ez8T2pQZKp3T/k
+	SrWkKhYGM6afqqoKLNP5zJPT6leB3unFS+ycOpfQJPfJZ57GsNtpukKQYCDCpevi
+	tWxlOFcMl0hO+vJxxrbqE/vWSD7jp219ubVpy1f3mhmdDgM84L2wriSEUH0enZGZ
+	zMQjvo6x8zuFA6DzZcwNn4T2JzTuzunk5ZzQw54APcAgE+vzx28kXpWSHUaRwHW7
+	w338WA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406x0t70d4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 14:54:05 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469Es39i022682
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 14:54:04 GMT
+Received: from tengfan-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 9 Jul 2024 07:53:58 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+Date: Tue, 9 Jul 2024 22:53:44 +0800
+Subject: [PATCH v2 2/2] PCI: qcom-ep: Add HDMA support for QCS9100 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709132741.47751-1-linyunsheng@huawei.com> <20240709132741.47751-13-linyunsheng@huawei.com>
-In-Reply-To: <20240709132741.47751-13-linyunsheng@huawei.com>
-From: Alexander Duyck <alexander.duyck@gmail.com>
-Date: Tue, 9 Jul 2024 07:56:27 -0700
-Message-ID: <CAKgT0UdwGGtnTfMv2LDmPVyT4WAbs+Vy7jv-0=WBJy7Ltnxbcw@mail.gmail.com>
-Subject: Re: [PATCH net-next v10 12/15] mm: page_frag: move 'struct
- page_frag_cache' to sched.h
-To: Yunsheng Lin <linyunsheng@huawei.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240709-add_qcs9100_pcie_ep_compatible-v2-2-217742eac32b@quicinc.com>
+References: <20240709-add_qcs9100_pcie_ep_compatible-v2-0-217742eac32b@quicinc.com>
+In-Reply-To: <20240709-add_qcs9100_pcie_ep_compatible-v2-0-217742eac32b@quicinc.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Lorenzo
+ Pieralisi" <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <kernel@quicinc.com>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Tengfei Fan <quic_tengfan@quicinc.com>
+X-Mailer: b4 0.15-dev-a66ce
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720536832; l=1616;
+ i=quic_tengfan@quicinc.com; s=20240709; h=from:subject:message-id;
+ bh=q183F0/HFGC/8U/gLjzUqH8Bv64w+2hrHp8UiRG815A=;
+ b=x91GX2Ia9pAYVTMaewFVd/hPIWWGFBfLU9N3N31guIhozOdaji+JGEv53rHm2j57YMAwZaRjQ
+ bxidEQXStQACkxrVqP4TSNMgIABdpoeiMlDzBCF8kmH5q0o8gWmFTuS
+X-Developer-Key: i=quic_tengfan@quicinc.com; a=ed25519;
+ pk=4VjoTogHXJhZUM9XlxbCAcZ4zmrLeuep4dfOeKqQD0c=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: AA7X_SZwvdZ6RL3bOpGGaLv4OhPi776m
+X-Proofpoint-ORIG-GUID: AA7X_SZwvdZ6RL3bOpGGaLv4OhPi776m
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-09_04,2024-07-09_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=970 priorityscore=1501 malwarescore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407090097
 
-On Tue, Jul 9, 2024 at 6:31=E2=80=AFAM Yunsheng Lin <linyunsheng@huawei.com=
-> wrote:
->
-> As the 'struct page_frag_cache' is going to replace the
-> 'struct page_frag' in sched.h, including page_frag_cache.h
-> in sched.h has a compiler error caused by interdependence
-> between mm_types.h and mm.h for asm-offsets.c, see [1].
->
-> Avoid the above compiler error by moving the 'struct
-> page_frag_cache' to sched.h as suggested by Alexander, see
-> [2].
+QCS9100 SoC supports the new Hyper DMA (HDMA) DMA Engine inside the DWC IP,
+so add support for it by passing the mapping format and the number of
+read/write channels count.
 
-Both the title and this description are misleading. You are moving it
-to mm_types_task.h not sched.h.
+The PCIe EP controller used on this SoC is of version 1.34.0, so a separate
+config struct is introduced for the sake of enabling HDMA conditionally.
 
-Also I am pretty sure you could just fold this into your second patch
-where you moved the code originally with just a tweak to the
-description explaining the build dependency issue. No point in moving
-the same structure twice within the same patch set.
+It should be noted that for the eDMA support (predecessor of HDMA), there
+are no mapping format and channels count specified. That is because eDMA
+supports auto detection of both parameters, whereas HDMA doesn't.
+
+QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
+platform use non-SCMI resource. In the future, the SA8775p platform will
+move to use SCMI resources and it will have new sa8775p-related device
+tree. Consequently, introduce "qcom,qcs9100-pcie-ep" to the PCIe device
+match table.
+
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+---
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 236229f66c80..e2775f4ca7ee 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -904,6 +904,7 @@ static const struct qcom_pcie_ep_cfg cfg_1_34_0 = {
+ };
+ 
+ static const struct of_device_id qcom_pcie_ep_match[] = {
++	{ .compatible = "qcom,qcs9100-pcie-ep", .data = &cfg_1_34_0},
+ 	{ .compatible = "qcom,sa8775p-pcie-ep", .data = &cfg_1_34_0},
+ 	{ .compatible = "qcom,sdx55-pcie-ep", },
+ 	{ .compatible = "qcom,sm8450-pcie-ep", },
+
+-- 
+2.25.1
+
