@@ -1,32 +1,32 @@
 Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F32155399;
-	Tue,  9 Jul 2024 09:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3852155744;
+	Tue,  9 Jul 2024 09:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720517913; cv=none; b=UTh2+8TTPStJYIjQkjZRqofdD2z4r/NKyBT0dmOusuZ/h5ybe0BBKXhuV40cVN8dSplJRey6qNMIM7j1CsvwvWe/2iG3BWPLECIUJ/Sq4uNz6673emdKBR6a0BPjm+ebeMvdYzNBV1UbapK4CcJwev/eGiQw2IHCd387xevTuLI=
+	t=1720517915; cv=none; b=npaL2bfZhMVKG3BDYVYzEfDwKfQoIi6Y0r9ZpDIm4RL89oTF/dYxC3NrZkPeXecNz54WbNvGeEEcqLrQqZ01u6TNZ+cADmee++yJwRTOhk1iThOpLMmkxrA1TQL3mWqIhve59ntsIra/N+BcrZZsb79HUefVJiisV19FTLbgIpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720517913; c=relaxed/simple;
-	bh=IvpU8Pn6r0Sfompii+NMy87uGHYacO5fWxcaFnlZ7Z8=;
+	s=arc-20240116; t=1720517915; c=relaxed/simple;
+	bh=ieoo/lVHCu8KAhAXa5Ty3rQ2sLP5tN2rUtGDpHKZRZ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=dmPCeXpfwuECv8zReCtXPRQ+NGtluqozNhsn1oDzsK1LqhZ/DvEaxWLGpnsjNt14IUJTdIXLyps22UnU9iwerFJanDxFqu4XcnwpByiu28qNhJNEhF+KhTiiaTAo54bPcOEl1XX0HcwSUIV8Q/jVB3EsQloqmxsNexWhGxPHGIw=
+	 Mime-Version:Content-Type; b=vF6iY+nsJU93uZ8kyH/PG2zn49qR49F2dktv5fPpZRfknADp7enTXtw7qspsneIACJWcL7pJOs3eFlDGhJb9u1sdNvCyj9NgvFs/4pJGUopPFDMCyJgQfLIHDg5dZvlIKZzimHud8mRGpjzNCkXcgBBcAwJsBuxqQCFSpSw23yk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
 Received: from fedori.lan (51b693a1.dsl.pool.telekom.hu [::ffff:81.182.147.161])
   (AUTH: CRAM-MD5 soyer@irl.hu, )
   by irl.hu with ESMTPSA
-  id 000000000007142C.00000000668D03E4.0016EC73; Tue, 09 Jul 2024 11:33:19 +0200
+  id 0000000000071EC8.00000000668D03E4.0016EC84; Tue, 09 Jul 2024 11:33:24 +0200
 From: Gergo Koteles <soyer@irl.hu>
 To: Hans de Goede <hdegoede@redhat.com>,
   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
   Ike Panhc <ike.pan@canonical.com>
 Cc: platform-driver-x86@vger.kernel.org,
   linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH 1/4] platform/x86: ideapad-laptop: use cleanup.h
-Date: Tue,  9 Jul 2024 11:33:05 +0200
-Message-ID: <851d4180f1df5a10ca6e2feaf429611f1c0ccc88.1720515666.git.soyer@irl.hu>
+Subject: [PATCH 3/4] platform/x86: ideapad-laptop: move ymc_trigger_ec from lenovo-ymc
+Date: Tue,  9 Jul 2024 11:33:07 +0200
+Message-ID: <44f63dfa758c811ae941216874fbb1ec77f4a293.1720515666.git.soyer@irl.hu>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1720515666.git.soyer@irl.hu>
 References: <cover.1720515666.git.soyer@irl.hu>
@@ -40,151 +40,148 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-Use cleanup.h helpers to simplify some code paths.
+Some models need to trigger the EC for the yoga mode control to work
+properly. EC triggering consists of a VPC call that needs to be
+synchronized. The vpc_mutex is in the ideapad-laptop module, so
+synchronization is easier there.
+
+Move the ymc_trigger_ec function to the ideapad-laptop module.
 
 Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
- drivers/platform/x86/ideapad-laptop.c | 71 ++++++++++++---------------
- 1 file changed, 31 insertions(+), 40 deletions(-)
+ drivers/platform/x86/Kconfig          |  1 +
+ drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++
+ drivers/platform/x86/ideapad-laptop.h |  2 ++
+ drivers/platform/x86/lenovo-ymc.c     | 34 ++++-----------------------
+ 4 files changed, 26 insertions(+), 29 deletions(-)
 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 665fa9524986..ddfccc226751 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -477,6 +477,7 @@ config LENOVO_YMC
+ 	tristate "Lenovo Yoga Tablet Mode Control"
+ 	depends on ACPI_WMI
+ 	depends on INPUT
++	depends on IDEAPAD_LAPTOP
+ 	select INPUT_SPARSEKMAP
+ 	help
+ 	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE input
 diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index fcf13d88fd6e..1ace711f7442 100644
+index 464cc5fd0088..4dcdbb153dda 100644
 --- a/drivers/platform/x86/ideapad-laptop.c
 +++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -13,6 +13,7 @@
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/bug.h>
-+#include <linux/cleanup.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/dmi.h>
-@@ -204,7 +205,7 @@ static int ideapad_shared_init(struct ideapad_private *priv)
- {
- 	int ret;
- 
--	mutex_lock(&ideapad_shared_mutex);
-+	guard(mutex)(&ideapad_shared_mutex);
- 
- 	if (!ideapad_shared) {
- 		ideapad_shared = priv;
-@@ -214,19 +215,15 @@ static int ideapad_shared_init(struct ideapad_private *priv)
- 		ret = -EINVAL;
- 	}
- 
--	mutex_unlock(&ideapad_shared_mutex);
--
- 	return ret;
+@@ -1615,6 +1615,24 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
+ 	priv->r_touchpad_val = value;
  }
  
- static void ideapad_shared_exit(struct ideapad_private *priv)
- {
--	mutex_lock(&ideapad_shared_mutex);
-+	guard(mutex)(&ideapad_shared_mutex);
- 
- 	if (ideapad_shared == priv)
- 		ideapad_shared = NULL;
--
--	mutex_unlock(&ideapad_shared_mutex);
- }
- 
- /*
-@@ -840,36 +837,33 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
- 	unsigned long output;
- 	int err;
- 
--	err = mutex_lock_interruptible(&dytc->mutex);
--	if (err)
--		return err;
--
--	if (profile == PLATFORM_PROFILE_BALANCED) {
--		/* To get back to balanced mode we just issue a reset command */
--		err = eval_dytc(priv->adev->handle, DYTC_CMD_RESET, NULL);
--		if (err)
--			goto unlock;
--	} else {
--		int perfmode;
--
--		err = convert_profile_to_dytc(profile, &perfmode);
--		if (err)
--			goto unlock;
-+	scoped_guard(mutex_intr, &dytc->mutex) {
-+		if (profile == PLATFORM_PROFILE_BALANCED) {
-+			/* To get back to balanced mode we just issue a reset command */
-+			err = eval_dytc(priv->adev->handle, DYTC_CMD_RESET, NULL);
-+			if (err)
-+				return err;
-+		} else {
-+			int perfmode;
++void ideapad_ymc_trigger_ec(void)
++{
++	struct ideapad_private *priv;
++	int ret;
 +
-+			err = convert_profile_to_dytc(profile, &perfmode);
-+			if (err)
-+				return err;
++	guard(mutex)(&ideapad_shared_mutex);
 +
-+			/* Determine if we are in CQL mode. This alters the commands we do */
-+			err = dytc_cql_command(priv,
-+					       DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1),
-+					       &output);
-+			if (err)
-+				return err;
-+		}
++	priv = ideapad_shared;
++	if (!priv)
++		return;
++
++	scoped_guard(mutex, &priv->vpc_mutex)
++		ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
++	if (ret)
++		dev_warn(&priv->platform_device->dev, "Could not write YMC: %d\n", ret);
++}
++EXPORT_SYMBOL_GPL(ideapad_ymc_trigger_ec);
++
+ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+ {
+ 	struct ideapad_private *priv = data;
+diff --git a/drivers/platform/x86/ideapad-laptop.h b/drivers/platform/x86/ideapad-laptop.h
+index 4498a96de597..4dcbed842b0b 100644
+--- a/drivers/platform/x86/ideapad-laptop.h
++++ b/drivers/platform/x86/ideapad-laptop.h
+@@ -13,6 +13,8 @@
+ #include <linux/jiffies.h>
+ #include <linux/errno.h>
  
--		/* Determine if we are in CQL mode. This alters the commands we do */
--		err = dytc_cql_command(priv, DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1),
--				       &output);
--		if (err)
--			goto unlock;
-+		/* Success - update current profile */
-+		dytc->current_profile = profile;
-+		return 0;
- 	}
++void ideapad_ymc_trigger_ec(void);
++
+ enum {
+ 	VPCCMD_R_VPC1 = 0x10,
+ 	VPCCMD_R_BL_MAX,
+diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
+index e1fbc35504d4..0819e9823ca9 100644
+--- a/drivers/platform/x86/lenovo-ymc.c
++++ b/drivers/platform/x86/lenovo-ymc.c
+@@ -62,19 +62,14 @@ static const struct dmi_system_id allowed_chasis_types_dmi_table[] = {
  
--	/* Success - update current profile */
--	dytc->current_profile = profile;
+ struct lenovo_ymc_private {
+ 	struct input_dev *input_dev;
+-	struct acpi_device *ec_acpi_dev;
+ };
+ 
+-static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct lenovo_ymc_private *priv)
++static void lenovo_ymc_trigger_ec(void)
+ {
+-	int err;
 -
--unlock:
--	mutex_unlock(&dytc->mutex);
--
--	return err;
-+	return -EINTR;
- }
- 
- static void dytc_profile_refresh(struct ideapad_private *priv)
-@@ -878,9 +872,8 @@ static void dytc_profile_refresh(struct ideapad_private *priv)
- 	unsigned long output;
- 	int err, perfmode;
- 
--	mutex_lock(&priv->dytc->mutex);
--	err = dytc_cql_command(priv, DYTC_CMD_GET, &output);
--	mutex_unlock(&priv->dytc->mutex);
-+	scoped_guard(mutex, &priv->dytc->mutex)
-+		err = dytc_cql_command(priv, DYTC_CMD_GET, &output);
- 	if (err)
+-	if (!priv->ec_acpi_dev)
++	if (!ec_trigger)
  		return;
  
-@@ -1809,11 +1802,11 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
- 	struct ideapad_wmi_private *wpriv = dev_get_drvdata(&wdev->dev);
- 	struct ideapad_private *priv;
- 
--	mutex_lock(&ideapad_shared_mutex);
-+	guard(mutex)(&ideapad_shared_mutex);
- 
- 	priv = ideapad_shared;
- 	if (!priv)
--		goto unlock;
-+		return;
- 
- 	switch (wpriv->event) {
- 	case IDEAPAD_WMI_EVENT_ESC:
-@@ -1847,8 +1840,6 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
- 
- 		break;
- 	}
--unlock:
--	mutex_unlock(&ideapad_shared_mutex);
+-	err = write_ec_cmd(priv->ec_acpi_dev->handle, VPCCMD_W_YMC, 1);
+-	if (err)
+-		dev_warn(&wdev->dev, "Could not write YMC: %d\n", err);
++	ideapad_ymc_trigger_ec();
  }
  
- static const struct ideapad_wmi_private ideapad_wmi_context_esc = {
+ static const struct key_entry lenovo_ymc_keymap[] = {
+@@ -125,11 +120,9 @@ static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
+ 
+ free_obj:
+ 	kfree(obj);
+-	lenovo_ymc_trigger_ec(wdev, priv);
++	lenovo_ymc_trigger_ec();
+ }
+ 
+-static void acpi_dev_put_helper(void *p) { acpi_dev_put(p); }
+-
+ static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
+ {
+ 	struct lenovo_ymc_private *priv;
+@@ -149,23 +142,6 @@ static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	if (ec_trigger) {
+-		pr_debug("Lenovo YMC enable EC triggering.\n");
+-		priv->ec_acpi_dev = acpi_dev_get_first_match_dev("VPC2004", NULL, -1);
+-
+-		if (!priv->ec_acpi_dev) {
+-			dev_err(&wdev->dev, "Could not find EC ACPI device.\n");
+-			return -ENODEV;
+-		}
+-		err = devm_add_action_or_reset(&wdev->dev,
+-				acpi_dev_put_helper, priv->ec_acpi_dev);
+-		if (err) {
+-			dev_err(&wdev->dev,
+-				"Could not clean up EC ACPI device: %d\n", err);
+-			return err;
+-		}
+-	}
+-
+ 	input_dev = devm_input_allocate_device(&wdev->dev);
+ 	if (!input_dev)
+ 		return -ENOMEM;
+@@ -192,7 +168,7 @@ static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
+ 	dev_set_drvdata(&wdev->dev, priv);
+ 
+ 	/* Report the state for the first time on probe */
+-	lenovo_ymc_trigger_ec(wdev, priv);
++	lenovo_ymc_trigger_ec();
+ 	lenovo_ymc_notify(wdev, NULL);
+ 	return 0;
+ }
 -- 
 2.45.2
 
