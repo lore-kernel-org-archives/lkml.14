@@ -1,102 +1,92 @@
-Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1FA155C8E;
-	Tue,  9 Jul 2024 10:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6714815624B
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 10:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720520531; cv=none; b=q+5NTS+8E2PBtxGk+Kz4mdozHyUXo2/N7zh6cqneeSS1RrBX/M315ATMvwqMv6JtLqWd5//VDps5X6Pp4juYgGWVVFDaHNYefmG369pWj3tAPhZROfNsAri//4igOOscbrMsHCjAR7qOd5jsatlNUvbw2LfieQE64Vk2jvHyXVQ=
+	t=1720520580; cv=none; b=gq4eOAf84nFLuPdByqE4cHt+4V+78NlcLLuBUgS8eBvkGo002QByROJvwVgRKp10np+XvSyQzK0aS4Ly+V08PAsrSKZkwjvdcIEuLIbVYNXP2zLTBMsUyGAzX+VoFwO52PFj0PkOUU4FvAGMvWVd8vqoLIw+Hsdg/zbHIiLQSDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720520531; c=relaxed/simple;
-	bh=6a8qOjBludaUaW7TpO4+yWWp7hirpw9E/AKLu5wnxF8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K90r9Br20/CG9CB0PJr8h7zq6ZYRmJclUBXzFkDWpFtrwB1w702QJe7Q4EDU3gFKndZoO/2CDojWUQ+EP9404wIW2YxXIubgxSEgLfnRhGeETsLRuwtNm7ywgSCCg47DAWe/ah7AK2vMHvA8PpWPbr4RfgTsnEE0mb7iHBd3mKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=YSJDkGCE; arc=none smtp.client-ip=134.0.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1720520580; c=relaxed/simple;
+	bh=/Popa0pu2ve+BT+70iPGnXxHfASirswI1GoEfm2LmEI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=MHzIvbP7IGQB1poxuolEhsNAF1SKi2BVQ6KXm+71XfZ0FfuHDx3jtqxtiLjCQOMaLySKFAyHWK3ar4m7f9wWgHuLTC8UghxylV5kqrDK61II1r5UQwIRBvuOrqzhGAcHaTMt/1usOG5rRp2M4V/I0+rZS5eIvwBe7vFfNa/8FiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fiCVGxzJ; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="YSJDkGCE"
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout1.routing.net (Postfix) with ESMTP id AFEAF41A49;
-	Tue,  9 Jul 2024 10:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1720520015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A6xXij2X8BH/8d0tWoHxSFtMClwNOD6a+irryyVsrSg=;
-	b=YSJDkGCEzplhkljyu5qASGz7Wek4bD9njpCdk8J3AQwudP9J3ovswPumfGsxEZl6337EV2
-	Q+lMzjq8vOANYTii0QAYui28qGjoRQTVlzTDsGts4moPi9QuP8V81ANgtT/++a1ACisLoh
-	kGBy9qAEXNV/nbprGuUZ3XEnnlPQcWY=
-Received: from frank-u24.. (fttx-pool-217.61.149.221.bambit.de [217.61.149.221])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id B87B410075A;
-	Tue,  9 Jul 2024 10:13:34 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-watchdog@vger.kernel.org
-Subject: [PATCH v1 1/4] dt-bindings: watchdog: mediatek,mtk-wdt: add MT7988 syscon requirement
-Date: Tue,  9 Jul 2024 12:13:23 +0200
-Message-ID: <20240709101328.102969-2-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240709101328.102969-1-linux@fw-web.de>
-References: <20240709101328.102969-1-linux@fw-web.de>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fiCVGxzJ"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70af8062039so3003085b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 03:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1720520578; x=1721125378; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=11ioL6MkBuE1i6Mzb5KKuPr/JiRiwhzn3IC3btu4k64=;
+        b=fiCVGxzJHc+khc8ysRoN/L1zd+q0CWhIlnsTQHRBhfqgmt8Q/S8C4D+m9edIQQljX+
+         PjO8hjiOhcudRhBLRTUlLzdXiWAp9MaIJjNCojOABe0xS6JQTKXwt9SvnMTcivBqyxOk
+         jVm++HadCeavB5xgU0cqyiiSz5Q69MXhqjSJA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720520578; x=1721125378;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=11ioL6MkBuE1i6Mzb5KKuPr/JiRiwhzn3IC3btu4k64=;
+        b=m/7FqXLp3T2R8PE5ra/q7zUHfQJLnnHmLc8pMr6GMoX4sYc5s0R3pX9zPUZBHtdhM4
+         xlRfyPG/YAr7cQtuOf5p1bh3QfIgegMZjQUx/ecdoaHAc3fbOEvqXR1g4rznlIvqCA9L
+         zuTRmGfRV6NftUQ0MNc3VedEljU6ivnRlWcYlLDPk33EsKWgpYYT35SSprpZzCG7DUH2
+         LHi8wl/eDpdgw1tex/hd4DLIu+jzGIoY4lvVtjTMF4XrCO3NdpZkcEM+xif8wNgqgMKC
+         jBmKZBcxHIDlT3yzIPJb93bvZWEakLB03Tl2v6np9ecneAbDbb89JkPcmhYYU0b6XhH5
+         gtyw==
+X-Gm-Message-State: AOJu0YxuPhezS6P7nJfHZFPv9WUGfO3l+qRxUWscXwa3dGRzusB2ADaN
+	qRAQnOxtQ+pwP/5O6VZwJY9+6Zt0fVFRDIji0sb/8/LCCQl04gMDhi34KIO4L+z7qcLA8HqIKqi
+	U4PwIy+z1e2dkvKTzrgW14ks9PccOXY5fyAcI6MtEf8/Wdv+5JX1dhKP1S/zyXAU5JcvpAor2pA
+	cH2jFkA8aM3JF8jSaqNUQTxNnXoroD5NH+8wxnOIZBvNgujMYelIElRw==
+X-Google-Smtp-Source: AGHT+IEImvkD6z0gexkfENnSZaUDX8nym2t3SgyFN4Ccwymmm1btyXlvMii3wyggYiErqQf98g/ruw==
+X-Received: by 2002:a05:6a21:a342:b0:1c2:8a69:3391 with SMTP id adf61e73a8af0-1c298242021mr2265566637.30.1720520578368;
+        Tue, 09 Jul 2024 03:22:58 -0700 (PDT)
+Received: from kashwindayan-virtual-machine.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a11757sm12832525ad.35.2024.07.09.03.22.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2024 03:22:58 -0700 (PDT)
+From: Ashwin Kamat <ashwin.kamat@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org,
+	davem@davemloft.net,
+	yoshfuji@linux-ipv6.org,
+	dsahern@kernel.org,
+	kuba@kernel.org,
+	netdev@vger.kernel.org,
+	florian.fainelli@broadcom.com,
+	ajay.kaher@broadcom.com,
+	vasavi.sirnapalli@broadcom.com,
+	tapas.kundu@broadcom.com,
+	ashwin.kamat@broadcom.com
+Subject: [PATCH v5.10 0/2] Fix for CVE-2024-36901
+Date: Tue,  9 Jul 2024 15:52:48 +0530
+Message-Id: <1720520570-9904-1-git-send-email-ashwin.kamat@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: 3691708b-d2e9-40a6-b21e-134ff95be4e9
 
-From: Frank Wunderlich <frank-w@public-files.de>
+From: Ashwin Dayanand Kamat <ashwin.kamat@broadcom.com>
 
-This is needed by u-boot-driver when using OF_UPSTREAM.
+net/ipv6: annotate data-races around cnf.disable_ipv6
+       disable_ipv6 is read locklessly, add appropriate READ_ONCE() and WRITE_ONCE() annotations.
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- .../devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml       | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+net/ipv6: prevent NULL dereference in ip6_output()
+       Fix for CVE-2024-36901
 
-diff --git a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
-index 8d2520241e37..681df2ff9f2e 100644
---- a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
-@@ -25,7 +25,6 @@ properties:
-           - mediatek,mt6735-wdt
-           - mediatek,mt6795-wdt
-           - mediatek,mt7986-wdt
--          - mediatek,mt7988-wdt
-           - mediatek,mt8183-wdt
-           - mediatek,mt8186-wdt
-           - mediatek,mt8188-wdt
-@@ -43,6 +42,10 @@ properties:
-               - mediatek,mt8365-wdt
-               - mediatek,mt8516-wdt
-           - const: mediatek,mt6589-wdt
-+      - items:
-+          - enum:
-+              - mediatek,mt7988-wdt
-+          - const: syscon
- 
-   reg:
-     maxItems: 1
--- 
-2.43.0
+Ashwin Dayanand Kamat (2):
+       net/ipv6: annotate data-races around cnf.disable_ipv6
+       net/ipv6: prevent NULL dereference in ip6_output()
+
+ net/ipv6/addrconf.c   | 9 +++++----
+ net/ipv6/ip6_input.c  | 2 +-
+ net/ipv6/ip6_output.c | 2 +-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
+
+--
+2.7.4
 
