@@ -1,123 +1,90 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CF4185601
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EED18561F;
+	Tue,  9 Jul 2024 16:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542288; cv=none; b=D2Zf3pthXMBvorWODHCnriY6RExFS6y71VqnRvxCusmrbMNNZI1KnM7sWLfHtakNQhf7mUR9CNQoOLsUyjEvMPH23i89rBAul4AyBA5LYkG30Up3FperA/QqlEYn528O3TxEDMFslAwttKMa2LoN5CAUpl/G1aW5zvwx+h21fMs=
+	t=1720542289; cv=none; b=W4Q+xL/41hUSJ2Rh0dCdzCM9swvzIwCrv7uFsvVOxfrXqils53jxOBHUhLVIMhfF13a5HZMa7iIHbzEotIsnQOVzRMfDvDOREvQwutfFeDiEDNGzSfTaiwN1Bsc1EkE2dpYPe9ZG/IDTy5Cy1VJOqL38TbjyMpeBJ7TXAPWKAjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542288; c=relaxed/simple;
-	bh=GQWEaiUiwKONAlIFbIU4AqVczL/Fs+cS33mEhUh4nww=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hi00WOaYjKxWeswkSbIemRh5Cd2grYIv4AzmHsDXOipK+iclRW/GlClHLrpdYMynABA/1L+Ht8jYR/oe7xf3PXuRo7l0u1IliE2ShYoblKSd23hVcQlHKHtSDn/tIrpRyJAVbcXKAfgJlksCWBv3BrPh8yopRjcszGV48pKVYgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ArsdhXo7; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720542289; c=relaxed/simple;
+	bh=8U5v1m5rZ0L42VGyLhuGxEADB+vuJWzhfX6CvvNOFPI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ibSYFT5L8WiroEStYGPz1sh2GmyJs/g0mH9LzNpb5eBq3TCYaVXsMOJnoRKe4FjTXv/JsmVMS9jM/yFkuehsFlRGl802FqG3B0lTCXYia/+MuteINcezoWjGbIX4F5tmNyPZUH2J632bV3kPKOMdUR0NiahaZRnwoXMpe7GKl04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtRWwcNx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ArsdhXo7"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a77e6dd7f72so367620866b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 09:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720542285; x=1721147085; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8dI++N7oMKnriEvMop9NM+PwKTIvjTbwj0rulahrYm0=;
-        b=ArsdhXo7B/MMDfzSd3XmJo9nuwURQSylhqXUdQrc8uIwVk4PyOIN6cNIDFbWLAn0aL
-         bdKFFexIWjQVIWNueN0y7WPVEL3LR1/RiMko67vmXjYgloFTil2uXmvKuXlAsb9d62Av
-         P2Cs+12Qa9tZ/kX8F6TqIjbKQeCP8B+MZ4jTA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720542285; x=1721147085;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8dI++N7oMKnriEvMop9NM+PwKTIvjTbwj0rulahrYm0=;
-        b=FCv7Pu7Kxvgu9yIKm63tKLqy0V39kxSfeF/CscjctUXJdMoIheY09AMyV5XnQrkZG8
-         b4CvpcJ/A65ZNC465FLWGLa5pXMte527cIMhMyTBK+HVmQw4erAcJA1Z5KRhwHt051o2
-         wJ5iaUlD4kddKNu8vKRkmhtpcI/7vq/AszuSltSWY8Mt75y/0qwiHEEbM64En8kdRehl
-         So2+V/ivybIdb5ZlzoXRtmhZ11ISGNSiwLUCkJVnDzD49N46ERtLzSD4ao8bFZVNmV9w
-         NHMGree2/GCnrSsRYYG5YqxFhooOxC6/X28VBKS5lfGWmnU7yon99iF7wCUrsCcNBYqa
-         zluw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMXNdDiYQgZYDlsHVTfr2IOTIJtNUHQ0nGfPUvM6hng6Ww6Y9jfNcMgm9DJR73p0S8A5lm0ObuhJ6q02P3fYyA9Ndd8fS115TKqUO/
-X-Gm-Message-State: AOJu0YxOGHObKu1+HHCgeGt5zfXrFM4ofelcDwWl0UXDyUjYUe3dl8BR
-	/vgQWR8LeLgZ+ykXpfxz7Q0mHMhn3YbNpD8xh2zcr+9SDfYdf+NYsiWwVHsUx8de6HCcMwngJrY
-	l6zc=
-X-Google-Smtp-Source: AGHT+IFZNObGvvm8yCvlD8vA7JuvD+xx6IG/88AxLjAHw3TI9bSUlDUUIp1AXNuzW5tjE5SI0+EZHw==
-X-Received: by 2002:a17:907:7759:b0:a77:c364:c4f1 with SMTP id a640c23a62f3a-a780b705189mr181196366b.46.1720542285088;
-        Tue, 09 Jul 2024 09:24:45 -0700 (PDT)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bcccasm90088866b.12.2024.07.09.09.24.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jul 2024 09:24:44 -0700 (PDT)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-58ba3e37feeso7276251a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 09:24:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURonU4MJoUL5L+11PBETdxUZrbMJyCSp+zUdMs05zOHH3iGZVQyiL3RbUZiYDCDVyzJPUBUgpp4tdtcf1XOfp8c12gHXRFJEyd9NIB
-X-Received: by 2002:a50:ee12:0:b0:57c:4875:10a9 with SMTP id
- 4fb4d7f45d1cf-594bb674a54mr1638342a12.24.1720542284159; Tue, 09 Jul 2024
- 09:24:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtRWwcNx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37B2FC4AF07;
+	Tue,  9 Jul 2024 16:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720542289;
+	bh=8U5v1m5rZ0L42VGyLhuGxEADB+vuJWzhfX6CvvNOFPI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HtRWwcNxy4hqLaaYTrPgY+C4ZFI+NHGGrC8L1zlgsL8bfcdf0ycSwF2xnPqvHpz/J
+	 9a9gLgMMeDfsU5Ik7pXz/YEKE+I5hrmnE04Jrt4BzzGC1R/qHhSJoxCpcr9wdUbXop
+	 yoSNKfIkDuNuRA2QCUozaEiHVNjrtEUIh7zaZz8KOg+GLuYN/PbgF6HcZJC0VziB69
+	 5A8fG+1sjssiQPkfQ5I58UZUYjFnuP6y38psXrnIZO9LZz3nbxlhnZBZ1T2gOGm4/X
+	 xX3Id5rFC9IKBNA4+RslGWuW3HogGdgQLiWZdWN0NYPkUIhwYqr1x3v5NHsd5N29ub
+	 vnh9ENMn3BQlQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Aivaz Latypov <reichaivaz@gmail.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	Sasha Levin <sashal@kernel.org>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	sbinding@opensource.cirrus.com,
+	kailang@realtek.com,
+	shenghao-ding@ti.com,
+	simont@opensource.cirrus.com,
+	foss@athaariq.my.id,
+	rf@opensource.cirrus.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 23/27] ALSA: hda/relatek: Enable Mute LED on HP Laptop 15-gw0xxx
+Date: Tue,  9 Jul 2024 12:23:37 -0400
+Message-ID: <20240709162401.31946-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240709162401.31946-1-sashal@kernel.org>
+References: <20240709162401.31946-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=whHvMbfL2ov1MRbT9QfebO2d6-xXi1ynznCCi-k_m6Q0w@mail.gmail.com>
- <Zo0LECcBUElkHPGs@J2N7QTR9R3> <CAHk-=wgAKfXySpKFcJUdv97Rqz7RxPF-uc6xsue6Oiy=tP65oA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgAKfXySpKFcJUdv97Rqz7RxPF-uc6xsue6Oiy=tP65oA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 9 Jul 2024 09:24:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiKCppvYcjHRivLbw2uPELEuEdythi_bkK9P7oF0wJ4Yw@mail.gmail.com>
-Message-ID: <CAHk-=wiKCppvYcjHRivLbw2uPELEuEdythi_bkK9P7oF0wJ4Yw@mail.gmail.com>
-Subject: Re: FYI: path walking optimizations pending for 6.11
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>, "the arch/x86 maintainers" <x86@kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.97
+Content-Transfer-Encoding: 8bit
 
-On Tue, 9 Jul 2024 at 07:28, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> > For the sake of review, would you be happy to post the uaccess and
-> > runtime-constants patches to the list again? I think there might be some
-> > remaining issues with (real) PAN and we might need to do a bit more
-> > preparatory work there.
->
-> Sure. I'll fix that silly left-over store, and post again.
+From: Aivaz Latypov <reichaivaz@gmail.com>
 
-I only posted the (unchanged) arm64-uaccess series and the (fixed,as
-per your comment today) runtime-constants one. And I only posted it to
-the linux-arm-kernel list, not wanting to bother everybody.
+[ Upstream commit 1d091a98c399c17d0571fa1d91a7123a698446e4 ]
 
-I have two other branches in my git tree if people care:
-link_path_walk and word-at-a-time. The word-at-a-time one does touch
-arm64 files too, but it's pretty trivial:
+This HP Laptop uses ALC236 codec with COEF 0x07 controlling
+the mute LED. Enable existing quirk for this device.
 
- arch/arm64/include/asm/word-at-a-time.h | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+Signed-off-by: Aivaz Latypov <reichaivaz@gmail.com>
+Link: https://patch.msgid.link/20240625081217.1049-1-reichaivaz@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-and really only involves a better instruction choice. It really only
-matters if you end up looking at the generated code of link_path_walk
-and strncpy_from_user().
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 60866e8e1d961..42c98ac3e68c2 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -9696,6 +9696,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x8788, "HP OMEN 15", ALC285_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x87b7, "HP Laptop 14-fq0xxx", ALC236_FIXUP_HP_MUTE_LED_COEFBIT2),
+ 	SND_PCI_QUIRK(0x103c, 0x87c8, "HP", ALC287_FIXUP_HP_GPIO_LED),
++	SND_PCI_QUIRK(0x103c, 0x87d3, "HP Laptop 15-gw0xxx", ALC236_FIXUP_HP_MUTE_LED_COEFBIT2),
+ 	SND_PCI_QUIRK(0x103c, 0x87e5, "HP ProBook 440 G8 Notebook PC", ALC236_FIXUP_HP_GPIO_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x87e7, "HP ProBook 450 G8 Notebook PC", ALC236_FIXUP_HP_GPIO_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x87f1, "HP ProBook 630 G8 Notebook PC", ALC236_FIXUP_HP_GPIO_LED),
+-- 
+2.43.0
 
-The commit message at the top of that branch is a lot more verbose
-than the actual change, because I ended up just explaining the
-different phases of the zero detection more than the actual trivial
-change to it.
-
-All four branches are available in my regular tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-
-as 'arm64-uaccess', 'link_path_walk', 'runtime-constants', and 'word-at-a-time'.
-
-But unlike my normal mainline branch, I still rebase these based on
-feedback, so consider them unstable.
-
-IOW, don't pull them into any tree to be used: just use "git fetch" to
-look at the branches in your local tree instead, or use it for some
-ephemeral testing branch.
-
-                 Linus
