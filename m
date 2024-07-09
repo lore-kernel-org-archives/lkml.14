@@ -1,125 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5B914290;
-	Tue,  9 Jul 2024 08:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDAE12D75A
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720513930; cv=none; b=L7IsHOKSZIsJdRU5jd/Md5k4pmo+8EiOTFRGFobBjmp5VF1nS0pcuDJiMOquK5qpWISM0Yiy+Fl7ERfauoRoYzzFHsTsb0wNSm/6ggN8bOslqCYYaTdQ8RgbafNt7dfdSRM8+gUpsjL68oYeeSNBu8H2Kd79qfnRVvaG2OT/yhQ=
+	t=1720514105; cv=none; b=jx5pkYnXxj9x6fGaek7ctS4MkoGG2N0K4HZPH/X60J914JWothQKo2sqd9n95IZdON5Dlo9dp3cSgA6hDfZnrVuj94szEi+uMxYsA6rOiXPfDljqB1xx4okkXfs0NuHhF6VhfZZpjfDaz9WH85knXLL7/rFNTmAwKVbh08hqXMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720513930; c=relaxed/simple;
-	bh=EJdp+wJBv45BvCTyu+j+WgqZztpkq0r6Q35LEWnQ+/Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vEdZ2nQGWXP+8U178HcXSPa7vQ63NX10zTiPP9GhOySHuvS5PlB3MxWts3m8mfTacgASaHnXBdHI3dE7m3DDwcczTq9++3xwi1brTY/rKVCeDLEWEoFsTFAIXE2WM4MBVNPPRxz01pcIF2mai1H5KWdoTOC2w2VauusJnFcEf3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lXDguvEA; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720514105; c=relaxed/simple;
+	bh=DG9rCxhCwbStHk+MslBqrJkCywgdt6JqcE6YhliXnHA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TpR3vXztTwo+8XBKu2eJ0rdrZiChGnGaqKvm9Fr5vkrkzjJuTVIzFOIsEDEniEEZ5OHixVMq2K1PKbrIEMzNUeMxFFKgfz6lo0274+NtHVuOy1ZG8F9QJed2/d6QLfUuV0Qj77aXGhndBAQ0O04nn50O2fyIic0RYr+GSbUK4o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dNIGnZgA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lXDguvEA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720513928; x=1752049928;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=EJdp+wJBv45BvCTyu+j+WgqZztpkq0r6Q35LEWnQ+/Y=;
-  b=lXDguvEAYrugz1Xq18QRiCJURws3WjIKUgZM9++LKflBHAEB1au1KxAi
-   N+I7jdC1a91VAXgsg+zwXWK2BGeDr5LlnMyqAZrkBDEi1qpvqOCqDGte7
-   QevVv/WXTRM/IWo8dyDxVdKZ4lG5HlB7xj3QPzg2oCYyc7tqQG8CqAvgu
-   IVAXuyXslDyOfNx4CYzhAwC6A5WPm7iiR6qRC6I9zHsgGOk9ZMI7fN8gq
-   LVToRH0j6rRtdwSUpddvDPKX04+Px4J9RkCqxayEsjgj/wN0oZjWOy451
-   HKdqKXqsE/4vXlpTn8LVhVi4+EXLS5brg6/ilYeP73yyhPAEwdVG5SvXs
-   w==;
-X-CSE-ConnectionGUID: sGdDw2jQR4KBoCLRFr6orA==
-X-CSE-MsgGUID: TrcWsZM6Ttmsa2uKLAwtEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="17885174"
-X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
-   d="scan'208";a="17885174"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 01:32:08 -0700
-X-CSE-ConnectionGUID: BY32i6+ySUWWKjgq2aq9/g==
-X-CSE-MsgGUID: eYpp1U4HSWCON/8IkLQWvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
-   d="scan'208";a="47760888"
-Received: from yma27-mobl.ccr.corp.intel.com (HELO [10.124.248.81]) ([10.124.248.81])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 01:32:03 -0700
-Message-ID: <1296ef8d-dade-46e5-8571-e7dba158f405@intel.com>
-Date: Tue, 9 Jul 2024 16:32:01 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dNIGnZgA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720514102;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DG9rCxhCwbStHk+MslBqrJkCywgdt6JqcE6YhliXnHA=;
+	b=dNIGnZgA4lAHmK79v08GyTqHhtacCsqKxBz8BGHCVyA21PzuhzSfGkJKM0eUXkJIlwcTh2
+	I7dHDON1RtBgTUdkMPXZdoTspP1tMjtfgWKoi/yZKT66Sw20O0wSXgSRBWcHFo0MhBBScZ
+	6QTGhb6eAQLFip4x1qdRiHzGvw15Ot8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-413-iWSajMYUNQuCZgZ7_tIZbQ-1; Tue, 09 Jul 2024 04:35:00 -0400
+X-MC-Unique: iWSajMYUNQuCZgZ7_tIZbQ-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-367b6e63573so114574f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 01:35:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720514099; x=1721118899;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DG9rCxhCwbStHk+MslBqrJkCywgdt6JqcE6YhliXnHA=;
+        b=s1kOhO+4yT1FeIRcfAH7gpmI1qNtl0hEI4UIu32AIzUTRmp1v4vCeuPKuvGIIWAWUO
+         INOZO5gmpYBLXVHTn0w6FqxSh2QFrcdUELVnAe0zEBzhLyaxVCvXwkU+E8gatq8Ijdk4
+         f/asqz2Ay0MxwUISoUF6KrYPXNqi9ZnNECyPrurhWvZgnNAqV/cCj6HAGA/mKq9TpTnZ
+         Ex2jcxizaePKcRW9hD0cfDmIcLQyiXR+8fDreNH4TcUV7SynLBZ94qQi+jcKn3siKSrF
+         5Kz2Fv5NxPEdqRMPS+nxlcc09cvB/PyzZojARFmIVdNRSadcLRvyzB1yWCYzJlgTmSpx
+         lq1A==
+X-Forwarded-Encrypted: i=1; AJvYcCX33s+NElTVR1iWS+68oLeM744Anp3MqoDr0FRnAoJzvb4m/G8nQ+x9Lz7XMMvAxDNJ1r8kDh1JObLG5CF4FabjP5lyZikUJ7BbHtsp
+X-Gm-Message-State: AOJu0YyDpOsbigafKQ+YFUMij3WTfOxooRmtxmCQzlxD+6jCWlG5PH7/
+	q6w2oxpll0NWSXMmwnHRAzJ4xEkpiShIdJ+NRIBZnAVP/M6hbB0Z75dILCtVxGZobcv0GF4DIqS
+	rB4IJVZC8LEj4vJ35Gy06pkJzzuiukfb28fYj1oK0Lk/tMYv60eiYemUJKgQ8PQ==
+X-Received: by 2002:a05:600c:35c8:b0:425:7ac6:96f9 with SMTP id 5b1f17b1804b1-42670081862mr12037265e9.0.1720514099664;
+        Tue, 09 Jul 2024 01:34:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGbHUFShpWDqVC/iXoaB83+FNJ0Ugkyu72KYIYZxA0budzUHM+msC/YYqBXCo9/2uaMWdZ8WQ==
+X-Received: by 2002:a05:600c:35c8:b0:425:7ac6:96f9 with SMTP id 5b1f17b1804b1-42670081862mr12037145e9.0.1720514099268;
+        Tue, 09 Jul 2024 01:34:59 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3344:1710:e810:1180:8096:5705:abe])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2fc49fsm196127595e9.39.2024.07.09.01.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 01:34:58 -0700 (PDT)
+Message-ID: <6124782dffadef83707edc7fd4d87a327d5cba1b.camel@redhat.com>
+Subject: Re: [net-next,v1] net: phy: phy_device: fix PHY WOL enabled, PM
+ failed to suspend
+From: Paolo Abeni <pabeni@redhat.com>
+To: Youwan Wang <youwan@nfschina.com>, andrew@lunn.ch
+Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 09 Jul 2024 10:34:57 +0200
+In-Reply-To: <20240704123200.603654-1-youwan@nfschina.com>
+References: <20240704123200.603654-1-youwan@nfschina.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] fs/file.c: add fast path in find_next_fd()
-To: Jan Kara <jack@suse.cz>, Mateusz Guzik <mjguzik@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, edumazet@google.com,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- pan.deng@intel.com, tianyou.li@intel.com, tim.c.chen@intel.com,
- tim.c.chen@linux.intel.com, yu.ma@intel.com
-References: <20240614163416.728752-1-yu.ma@intel.com>
- <20240703143311.2184454-1-yu.ma@intel.com>
- <20240703143311.2184454-4-yu.ma@intel.com>
- <CAGudoHH_P4LGaVN1N4j8FNTH_eDm3SDL7azMc25+HY2_XgjvJQ@mail.gmail.com>
- <20240704215507.mr6st2d423lvkepu@quack3>
- <3c7a0cd7-1dd2-4762-a2dd-67e6b6a82df7@intel.com>
-From: "Ma, Yu" <yu.ma@intel.com>
-Content-Language: en-US
-In-Reply-To: <3c7a0cd7-1dd2-4762-a2dd-67e6b6a82df7@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+Hi,
 
-On 7/5/2024 3:56 PM, Ma, Yu wrote:
-> I had something like this in mind:
->>> diff --git a/fs/file.c b/fs/file.c
->>> index a3b72aa64f11..4d3307e39db7 100644
->>> --- a/fs/file.c
->>> +++ b/fs/file.c
->>> @@ -489,6 +489,16 @@ static unsigned int find_next_fd(struct fdtable
->>> *fdt, unsigned int start)
->>>          unsigned int maxfd = fdt->max_fds; /* always multiple of
->>> BITS_PER_LONG */
->>>          unsigned int maxbit = maxfd / BITS_PER_LONG;
->>>          unsigned int bitbit = start / BITS_PER_LONG;
->>> +       unsigned int bit;
->>> +
->>> +       /*
->>> +        * Try to avoid looking at the second level map.
->>> +        */
->>> +       bit = find_next_zero_bit(&fdt->open_fds[bitbit], BITS_PER_LONG,
->>> +                               start & (BITS_PER_LONG - 1));
->>> +       if (bit < BITS_PER_LONG) {
->>> +               return bit + bitbit * BITS_PER_LONG;
->>> +       }
->> Drat, you're right. I missed that Ma did not add the proper offset to
->> open_fds. *This* is what I meant :)
->>
->>                                 Honza
->
-> Just tried this on v6.10-rc6, the improvement on top of patch 1 and 
-> patch 2 is 7% for read and 3% for write, less than just check first word.
->
-> Per my understanding, its performance would be better if we can find 
-> free bit in the same word of next_fd with high possibility, but 
-> next_fd just represents the lowest possible free bit. If fds are 
-> open/close frequently and randomly, that might not always be the case, 
-> next_fd may be distributed randomly, for example, 0-65 are occupied, 
-> fd=3 is returned, next_fd will be set to 3, next time when 3 is 
-> allocated, next_fd will be set to 4, while the actual first free bit 
-> is 66 , when 66 is allocated, and fd=5 is returned, then the above 
-> process would be went through again.
->
-> Yu
->
-Hi Guzik, Honza,
+On Thu, 2024-07-04 at 20:32 +0800, Youwan Wang wrote:
+> If the PHY of the mido bus is enabled with Wake-on-LAN (WOL),
+> we cannot suspend the PHY. Although the WOL status has been
+> checked in phy_suspend(), returning -EBUSY(-16) would cause
+> the Power Management (PM) to fail to suspend. Since
+> phy_suspend() is an exported symbol (EXPORT_SYMBOL),
+> timely error reporting is needed. Therefore, an additional
+> check is performed here. If the PHY of the mido bus is enabled
+> with WOL, we skip calling phy_suspend() to avoid PM failure.
+>=20
+> Thank you all for your analysis.
 
-Do we have any more comment or idea regarding to the fast path? Thanks 
-for your time and any feedback :)
+Please, use an incremental version number (in this case: 'v2') when
+sending a new revision of this patch, it will make easier to track the
+previous discussion. Even when the changes affect only the
+changelog/commit message.
 
+> I am using the Linux kernel version 6.6, the current system is
+> utilizing ACPI firmware. However, in terms of configuration,
+> the system only includes MAC layer configuration while lacking
+> PHY configuration. Furthermore, it has been observed that the
+> phydev->attached_dev is NULL, phydev is "stmmac-0:01", it not
+> attached, but it will affect suspend and resume. The actually
+> attached "stmmac-0:00" will not dpm_run_callback():
+> mdio_bus_phy_suspend().
 
-Regards
+It looks like the underlying issue is still under investigation.
+As noted by Andrew, the NULL attached_dev hints at some other root
+cause issue, possibly elsewhere. Please reply to Andrew's questions:
 
-Yu
+https://lore.kernel.org/netdev/b61cae2b-6b94-465e-b4e4-6c220c6c66d9@lunn.ch=
+/
+
+before posting a new revision. At very least the replies should be
+reflected in some additional info in the commit message.
+
+Thanks,
+
+Paolo
 
