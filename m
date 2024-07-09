@@ -1,83 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2CC155329
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1333C36
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720517405; cv=none; b=kND96wBEnaGAzVhCoovw+AMofmayJZpMSWxfNIOTS83gOpG9pJdmgQ5QMU2XOnevMt6B35aCCncYxfPv7aoTLrmx2yBPpLZDlqPC8LXhyYViIFVFAq2FSrf8m6umRKNdSBWd7IzWoGbhhtJHs2qH3rwL5XR3qDZvSed02sGe2uU=
+	t=1720517411; cv=none; b=sKVrX2Mm677amnuygs7w0biL1Pz1r75Fd9lmqWBHW/nCaPgnyKufmlYl9cOm/3XUUe4Y9F02og6RtcQ+S6Y6M3RZb6Zzyb+1iS2WpNos8FcNyRHO197yoFmQmxnuyWmBdmfWk+RxSh2d3zEw754X7WX+GeiNkR6o//H++5aHRIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720517405; c=relaxed/simple;
-	bh=3UrNehCdEOz3kmpljIH4fi/GT8Naw2VAyq67V1zlRwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zg1Fhiip4nunFoqQ8Phb8BYVaqsWEwWIBwespNeFCJP9i6CF545jjmRgVqFajWckycOU7RVc4aqochzJ9nKiRpuvs9j7ec9E9utA4iUJR2d7DY95nkmCmBbAs8RzimnU4wUFZUt5Ol7yzw/v1gpPQD5GVzDts+QaHCtJXKGU6oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lq2p6VLJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720517411; c=relaxed/simple;
+	bh=vbDucMH9H69eD0NpQhQw+vNIyIVKugJLEy5UHPh7Zy4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=rKcbS8SWaZcvrwJqvKfwB4y3BHqatxfjqtAPdIx40KnGduWs3aAHF2VIsuKx7joR29uuFweBWJemNoGRsmQmi14HiI2vv5NipHwHdaSOtif3jTQSaojfAiZ7EQjZ62NgqQsKcChublGxx85rzCj9Fn0b05dOo6+HmcSPm0uYk5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=prXWFgTQ; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lq2p6VLJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720517402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3UrNehCdEOz3kmpljIH4fi/GT8Naw2VAyq67V1zlRwE=;
-	b=Lq2p6VLJBQDn/gOad5KoPl6+CmbA8qrE38CAr1BwyRHJBexv19zhrqxpBAMkBon5M+lbIK
-	UbWYIXIbx119xygnqe7+pt1NVLgoXTiIMegZurzYHyIxKmCmC2zyNV8gkNHOZYVYha9tyf
-	7byt+Y76sTAM3+W8CSm6nX62GI6yWiQ=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-454-M8UPmP1PMDilwb-uNonikA-1; Tue,
- 09 Jul 2024 05:29:57 -0400
-X-MC-Unique: M8UPmP1PMDilwb-uNonikA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3CC6B1936187;
-	Tue,  9 Jul 2024 09:29:53 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.15])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0D441955F40;
-	Tue,  9 Jul 2024 09:29:49 +0000 (UTC)
-Date: Tue, 9 Jul 2024 17:29:45 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: linux@armlinux.org.uk, vgoyal@redhat.com, dyoung@redhat.com,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	arnd@arndb.de, afd@ti.com, akpm@linux-foundation.org,
-	rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
-	eric.devolder@oracle.com, gregkh@linuxfoundation.org, deller@gmx.de,
-	javierm@redhat.com, robh@kernel.org, thunder.leizhen@huawei.com,
-	austindh.kim@gmail.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH 0/3] ARM: Use generic interface to simplify crashkernel
- reservation
-Message-ID: <Zo0DCVXvCryDr7WN@MiWiFi-R3L-srv>
-References: <20240708133348.3592667-1-ruanjinjie@huawei.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="prXWFgTQ"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240709093006epoutp03028b9e8e7089c3c91ce584fa8c000967~ggXc6sqjZ0078000780epoutp032
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:30:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240709093006epoutp03028b9e8e7089c3c91ce584fa8c000967~ggXc6sqjZ0078000780epoutp032
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1720517406;
+	bh=vbDucMH9H69eD0NpQhQw+vNIyIVKugJLEy5UHPh7Zy4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=prXWFgTQY9snb2B7EfS8iAEZE9QgeHQkxFzHU0XjZCHCyBoWBjMXmk5EzguG0YVRr
+	 q2WG0cSBRxdX3GLUX9NdrY8JHiyQuLTYezBrNV10Egoq2BtE5k4aF2+e7kvPrqIjRB
+	 j5eMzhmpRsQuyRLN7YnYbi4KeGW7M5hpPn2HtsMs=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240709093006epcas5p21271638f0d32bfdecb0e8df874afd4b9~ggXcpYfAT0471504715epcas5p2V;
+	Tue,  9 Jul 2024 09:30:06 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.179]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4WJG192bjnz4x9Pq; Tue,  9 Jul
+	2024 09:30:05 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	4C.10.07307.D130D866; Tue,  9 Jul 2024 18:30:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240709092454epcas5p4b4ffaa306b3ce12ec57ce4eb19e08572~ggS50YONn2428324283epcas5p4O;
+	Tue,  9 Jul 2024 09:24:54 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240709092454epsmtrp25ebd14e215e4e7c00bc37c9dd7f00435~ggS5zdRKN1284412844epsmtrp2M;
+	Tue,  9 Jul 2024 09:24:54 +0000 (GMT)
+X-AuditID: b6c32a44-18dff70000011c8b-f0-668d031dd0e1
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D7.F9.18846.6E10D866; Tue,  9 Jul 2024 18:24:54 +0900 (KST)
+Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240709092453epsmtip2669b99b14c4e27fb0e1dc6d17e1ed81f~ggS5F7KBJ2283622836epsmtip2b;
+	Tue,  9 Jul 2024 09:24:53 +0000 (GMT)
+From: hexue <xue01.he@samsung.com>
+To: xue01.he@samsung.com
+Cc: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: io_uring: releasing CPU resources when polling
+Date: Tue,  9 Jul 2024 17:24:48 +0800
+Message-Id: <20240709092448.3205817-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240709081619.3177418-1-xue01.he@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240708133348.3592667-1-ruanjinjie@huawei.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDKsWRmVeSWpSXmKPExsWy7bCmhq4sc2+awceNQhZzVm1jtFh9t5/N
+	4l3rORaLy7vmsFl0XTjF5sDqsXPWXXaPy2dLPfq2rGL0+LxJLoAlKtsmIzUxJbVIITUvOT8l
+	My/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB2itkkJZYk4pUCggsbhYSd/Opii/
+	tCRVISO/uMRWKbUgJafApECvODG3uDQvXS8vtcTK0MDAyBSoMCE741d/D2NBdsXM3f4NjCFd
+	jJwcEgImElcmdTN2MXJxCAnsZpSYv+wbO4TziVGi4UYLI5yzZ8JSJpiWd/3Loap2Mkr8OXOd
+	CcL5wSjxoXEXWBWbgJLE/i0fGEFsEQEJiXXnV7GA2MwCqRI/700HiwsLWEv0rT0KZHNwsAio
+	Snw9ZwQS5gUKzzzTxgqxTF7iZtd+ZhCbU8BGYl77EkaIGkGJkzOfQI2Ul2jeOpsZ5AYJgX3s
+	Eme/bGABmSkh4CLxYqsKxBxhiVfHt7BD2FISn9/tZYOw8yUmf1/PCGHXSKzb/I4FwraW+Hdl
+	D9gYZgFNifW79CHCshJTT61jgljLJ9H7+wk0THgldsyDsZUklhxZATVSQuL3hEVQr3hI9G3a
+	xAYJqn5GiVMHV7FOYFSYheSdWUjemYWwegEj8ypGydSC4tz01GTTAsO81HJ4DCfn525iBCdD
+	LZcdjDfm/9M7xMjEwXiIUYKDWUmEd/6N7jQh3pTEyqrUovz4otKc1OJDjKbA4J7ILCWanA9M
+	x3kl8YYmlgYmZmZmJpbGZoZK4ryvW+emCAmkJ5akZqemFqQWwfQxcXBKNTAdzl518kHT3K9L
+	ffhDNqYdflN3dn8cV8bVvj+fSvrSUjY+uTfJ/0XMn0Ptq60F3wqd2mEUefiE6ezre4pnbUvT
+	zVt+bCHnNgFlwcLX7r6/nyVZpJub/o56tln9h9LyUuk/865cfPPS+KpKuXb31Y5rllfXvBVu
+	bv/JJxL0UHXivmuSvSlfPv47sk/s+9fnfg3nbn4+cvG9YV1f+sTz6SsP7W6KzI9VrTza5ep6
+	jiPe3sAtNju43jAjcHu/oaObZ2zOh8OPlR3fSzrZflZRXjFpcfa5Eyfv37RKEJK4uWGetuYX
+	wYX1/cv/BCRKReaWxG1kEHseeZdFk33vwc170r4U/17md8Kv3WD7/M76F7e1lFiKMxINtZiL
+	ihMBy2dTiA8EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPLMWRmVeSWpSXmKPExsWy7bCSvO4zxt40g+0X2SzmrNrGaLH6bj+b
+	xbvWcywWl3fNYbPounCKzYHVY+esu+wel8+WevRtWcXo8XmTXABLFJdNSmpOZllqkb5dAlfG
+	r/4exoLsipm7/RsYQ7oYOTkkBEwk3vUvZ+9i5OIQEtjOKDF3yzlGiISExI5Hf1ghbGGJlf+e
+	QxV9Y5TYfnk+WBGbgJLE/i0fwGwRoIZ151exgNjMApkSuybcZAaxhQWsJfrWHgWq4eBgEVCV
+	+HrOCCTMCxSeeaYNar68xM2u/WDlnAI2EvPal4CNFAKqWbp5JRNEvaDEyZlPoMbLSzRvnc08
+	gVFgFpLULCSpBYxMqxhFUwuKc9NzkwsM9YoTc4tL89L1kvNzNzGCw1QraAfjsvV/9Q4xMnEw
+	HmKU4GBWEuGdf6M7TYg3JbGyKrUoP76oNCe1+BCjNAeLkjivck5nipBAemJJanZqakFqEUyW
+	iYNTqoHJZUn2hLBtL24ckrxW6HvYX7aw4Vw6X/37JydVJr6XcWkS8z+0plfi8OqJasGTlrEk
+	mJ86br4k7NZ5ow0vnv88F+18YXu8e+/OyVytdcf4e89evla1bgfPaXZTwTtH7j9+yP3x2GvP
+	BbNNLOLS7vnYKXeq/Azes+6bRZg6c3DP8kk2G1IP6Vh+tL1/91bnjZ21ryT79rtuy21jNuuJ
+	3Wx0ytNF+47grfTPoYdTX/FofJQ0trFgqz5p3Rr3mnHRx/0v1pxy3t8X8eCcWoOC/c5Zob0c
+	zhFVLdMKSyXXl9Yo96U+j8/e+JZd8t+sq2/rK686rP0UYzdR88GHHP1UhtMvn5ko5eQaH5yz
+	nTfvwwkuJZbijERDLeai4kQAufGf0sICAAA=
+X-CMS-MailID: 20240709092454epcas5p4b4ffaa306b3ce12ec57ce4eb19e08572
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240709092454epcas5p4b4ffaa306b3ce12ec57ce4eb19e08572
+References: <20240709081619.3177418-1-xue01.he@samsung.com>
+	<CGME20240709092454epcas5p4b4ffaa306b3ce12ec57ce4eb19e08572@epcas5p4.samsung.com>
 
-On 07/08/24 at 09:33pm, Jinjie Ruan wrote:
-> Currently, x86, arm64, riscv and loongarch has been switched to generic
-> crashkernel reservation. Also use generic interface to simplify crashkernel
-> reservation for arm32, and fix two bugs by the way.
+Sorry, please ignore this patch, I will resend one later, I'm
+sorry for improper operation.
 
-I am not sure if this is a good idea. I added the generic reservation
-itnerfaces for ARCH which support crashkernel=,high|low and normal
-crashkernel reservation, with this, the code can be simplified a lot.
-However, arm32 doesn't support crashkernel=,high, I am not sure if it's
-worth taking the change, most importantly, if it will cause
-misunderstanding or misoperation.
-
-Thanks
-Baoquan
-
+--
+hexue
