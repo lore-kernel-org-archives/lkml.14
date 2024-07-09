@@ -1,107 +1,85 @@
-Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AF4182A63
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 20:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8268518002F;
+	Tue,  9 Jul 2024 20:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720557485; cv=none; b=utZGILV8Sz7U0Z1RYlpKEBUP+l5JM9VzZk4m5XfFdez1zhWU4foDMwDFr9om2S+fpkG2y3iRBnGgWi0jHtlTvEHaz9XP5SRu3ck4ieWgNC6G8UpqgQSkNhmtG8RaJ5PEt876UMmqqDCTGme4DRkurE3HrDg3aUyejkhofEo9Frc=
+	t=1720557504; cv=none; b=HAXWhwzXQHdu1h+uIzSp5yUTlsvm88wh4G5Hg1h+IIweUK7DETzhmOSHS+XQdubXjoHujrQXPWkP1uuwqXyDbWvqKPe8Vq38FHCPK1dERiVORQig+rLdJirm1VuVihBqZZ6rH3J44CQOQ7oZrC9CnZyf6hWLemgnRRbBrnUlmi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720557485; c=relaxed/simple;
-	bh=gmf3aasC6nYbLpzKP+9gJGJLL0Mreue7d/koV0x/jsc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n7v/1NZ4K0kkwkztPhaGsw8wQ3HJ6w80k8x0BJjplPwfc3YY/EFNRhIA9bqwXTpVUGfQ6Ym2JKk0/q/hlguj5SpEuKZwxAvYljjZ8zk+KLZMvEfyAxIy33MrLYyCFZjVxyTbgkafq0V2FNZSbLGpkOZZhnAsQSsAfREmIS7fYqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=JjMfMUtM; arc=none smtp.client-ip=80.12.242.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1720557504; c=relaxed/simple;
+	bh=4LOKIwPkfG4qv/qDrlGxW3TsoLB+emhFXbvx4Ix4Zk0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=rNDevLZDTxyCVlMBRc+WVet9mDFIz7dWoXC8Fs2qdFG7NyYi5PSmUZFbwFVKAVq21PIfuzIRiu6Lm/jLc4oguPniHFUpgt6J+P0i2ym/DNgCBUj+KsGlhrE0mGICBSE7kyUx62ANs57f5YYoi2hZvyYlUOHQshPzJXdIbiM+d3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=dG40KnSp; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="JjMfMUtM"
-Received: from fedora.. ([77.130.249.53])
-	by smtp.orange.fr with ESMTPA
-	id RHavsh9C6phyvRHb0sZbYg; Tue, 09 Jul 2024 22:37:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1720557475;
-	bh=EgfXHxdLYyi1/TpBSR1xI3tIrUBzJ3KcvfA6MU/OQKo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=JjMfMUtMkRVCbGRXLRdYqkVuZXSnMREEJGWg++G2nMYcQf4OBmfp6sGGu/AK7mZSW
-	 6uUIax8VnEYELmwmXxYFe8WTe3wcR0zQEjWEE69gW9NuW20DQIfnG87ixKkzIU8Rp6
-	 QH/c7IWtZq9VktUVo09HCoXGUTijwehgn/3ivm0nAtBdOBbXpf+I7mstmnXZCrlUB5
-	 Z0IBpeCNGgiCJn04p18Ilh9FT9es6ZX9iz8FGix+KMRRrTzFFqlrtHvau1UJC5hYB7
-	 iMJSzjbdOTQyX9vIf/yizuvmNJRDjPTnrJqjxdXi6fbSisG8iEAa9z4+3ViOZaEFi+
-	 Yd2X7WCdqz85w==
-X-ME-Helo: fedora..
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 09 Jul 2024 22:37:55 +0200
-X-ME-IP: 77.130.249.53
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: linus.walleij@linaro.org,
-	lokeshvutla@ti.com,
-	nm@ti.com,
-	robh@kernel.org,
-	tony@atomide.com
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 3/3] pinctrl: ti: ti-iodelay: Constify struct regmap_config
-Date: Tue,  9 Jul 2024 22:37:45 +0200
-Message-ID: <4eefa8530a55ecde82b3ec9a445f93c01bda7ded.1720556038.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1720556038.git.christophe.jaillet@wanadoo.fr>
-References: <cover.1720556038.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="dG40KnSp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1720557499;
+	bh=4LOKIwPkfG4qv/qDrlGxW3TsoLB+emhFXbvx4Ix4Zk0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=dG40KnSpTErTVkKTdq6BRp9NadeBRzRCaWTosI7Tk4miaSgMU5DWQ3YDJ8flzqxSq
+	 pecskGFgWhodamgFdTf/PyATSfiuvRtjLyFek+lNzebuporQFrIS394sOKiD5BLjHq
+	 TFUj94mQn0Gy57ANFUBOofRKbY+sLaToTC3pffeE=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 09 Jul 2024 22:37:24 +0200
+Subject: [PATCH v2 1/5] ACPI: sysfs: validate return type of _STR method
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240709-acpi-sysfs-groups-v2-1-058ab0667fa8@weissschuh.net>
+References: <20240709-acpi-sysfs-groups-v2-0-058ab0667fa8@weissschuh.net>
+In-Reply-To: <20240709-acpi-sysfs-groups-v2-0-058ab0667fa8@weissschuh.net>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+ Robert Moore <robert.moore@intel.com>, Lance Ortiz <lance.ortiz@hp.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ acpica-devel@lists.linux.dev, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720557498; l=1077;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=4LOKIwPkfG4qv/qDrlGxW3TsoLB+emhFXbvx4Ix4Zk0=;
+ b=LEZeIImkrMhJWNTWnePl193SC5ykHqSmHMH0lFF8V6YtbXAs2SlU4XQBY/in1QpVwIYrpSUF/
+ OYbf6q9I5wgDzFFsRO4cyIZQSRalkUg/SuoRcoHipm/3rernkKkInU9
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-'struct regmap_config' is not modified in this driver.
+Only buffer objects are valid return values of _STR.
+If something else is returned description_show() will access invalid
+memory.
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
-
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  17355	   1692	     16	  19063	   4a77	drivers/pinctrl/ti/pinctrl-ti-iodelay.o
-
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  17729	   1372	     16	  19117	   4aad	drivers/pinctrl/ti/pinctrl-ti-iodelay.o
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Fixes: d1efe3c324ea ("ACPI: Add new sysfs interface to export device description")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
-Compile tested-only.
----
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/acpi/device_sysfs.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-index 65f9439d0d5b..019b302db2b0 100644
---- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-+++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-@@ -82,7 +82,7 @@ struct ti_iodelay_reg_data {
- 	u32 reg_start_offset;
- 	u32 reg_nr_per_pin;
- 
--	struct regmap_config *regmap_config;
-+	const struct regmap_config *regmap_config;
- };
- 
- /**
-@@ -776,7 +776,7 @@ static int ti_iodelay_alloc_pins(struct device *dev,
- 	return 0;
- }
- 
--static struct regmap_config dra7_iodelay_regmap_config = {
-+static const struct regmap_config dra7_iodelay_regmap_config = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
- 	.val_bits = 32,
+diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
+index 23373faa35ec..95a19e3569c8 100644
+--- a/drivers/acpi/device_sysfs.c
++++ b/drivers/acpi/device_sysfs.c
+@@ -540,8 +540,9 @@ int acpi_device_setup_files(struct acpi_device *dev)
+ 	 * If device has _STR, 'description' file is created
+ 	 */
+ 	if (acpi_has_method(dev->handle, "_STR")) {
+-		status = acpi_evaluate_object(dev->handle, "_STR",
+-					NULL, &buffer);
++		status = acpi_evaluate_object_typed(dev->handle, "_STR",
++						    NULL, &buffer,
++						    ACPI_TYPE_BUFFER);
+ 		if (ACPI_FAILURE(status))
+ 			buffer.pointer = NULL;
+ 		dev->pnp.str_obj = buffer.pointer;
+
 -- 
 2.45.2
 
