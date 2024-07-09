@@ -1,96 +1,134 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260B1158A37;
-	Tue,  9 Jul 2024 14:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BDA14B092;
+	Tue,  9 Jul 2024 14:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720534582; cv=none; b=PGfbpmd+wESoZLoDm5Gqm7SuFNUoK20a00jzmjgRRNzaQzmRaBFcNATSsOVGtKOd8KXfxufmSgPYRLWB2aP7/A5BY9Qnk0kFGrGNGuSvZjDaqScmFxIxIbbg+Hili61/XMbzFp8VcPx0GSU6MqI9V/fxpm/aVtyvKrC0jRtmjJ0=
+	t=1720534622; cv=none; b=AMs7mxtb/GIn5Pusymjy8qknqC2aQrzdzYyUuOX6XkNuQnNOUqFG8+vdpxefkrIb8QHaYJEvzCs9PyD4IZ/lheHC5mu8TmYtiNy39weYJN3GnUvePeomYAAXcztYi3qGe7xAo3XQq5t9pSygK4mOGLE0GmAkLL03cr+SpJK7lzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720534582; c=relaxed/simple;
-	bh=ZhaY/4x3f4ruOAcY8iwU5SlZfxMqNd80J3CoK7mNwY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N0U5A/Jkp3RdDmcdZbcbnemJE3vLuJ0G/Wyan1J8zdrQGhB9GKEZYFqrGxm+7jMnqXn/iM69dNBGuW3jQ+8ZAmGvYOHFA1EJM/8HIlPvu8S4julaasHskZ4ia77cM4sG5MTmm14P/8oMMydqJkRYY+WHkIBXpdSnVxSEgsx5k7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=h5sBXcK+; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1720534622; c=relaxed/simple;
+	bh=a1//xVVk/p+X87Fx+350qQgEPBj2+So1siWWSQlf/qI=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=KP43DBo5ps06hEu47MWOgqCqUYJUfAkvQCe84yVoZX4li1iUOl8j5rcG5BnV3EnEp4sUG2gJ/BDPFYvTHZhNnVMYz1OuPlFPL3jqVWtEc1Y13HV5BVAqhaxFGEx20IFWCQfWZq12Cz6HVqpnzu58iXDO47vMnix8LKVFsmGq10U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=c0diSghb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jaHTw5Cm; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="h5sBXcK+"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id CFBC3885CF;
-	Tue,  9 Jul 2024 16:16:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1720534578;
-	bh=j8uH5LAqoGEHnE0i2h70/qLLtUa4idrvgO0Or56fKwE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=h5sBXcK+Co55wCMMwagBGX7JKSszZM7MNPT8jFFyRWLz9842GsMso0IRTgUX+kwIw
-	 2Kq/McQRYspT+6Z6QDz4qETUSI3W21jaPNmzSPcIkUTNcOL5Gd2996hid5tpgAsWbE
-	 cXjiAmSR0dQqY1oyQgAUCGSR3Vwt6gvk1NUhZqUqWkUELk/C029+lzRf7siOVwIdey
-	 QobNnpiRHgQEvwl9D9tUpYm7qcyKNCNlOpOP3LMEc19hcQht1Mq3jOYRjVFJtu1NvU
-	 T32nfkhREUUScQepqN6eEgiQ+R6sLcrQaQ65sA72+O2wY8T4+MqrbcliFAkHRQUNDx
-	 brugWrEj1LQVA==
-Message-ID: <944ecc41-9ef7-4d9e-9d96-3c5c0cdb71b5@denx.de>
-Date: Tue, 9 Jul 2024 15:24:05 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="c0diSghb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jaHTw5Cm"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id D70F3114157F;
+	Tue,  9 Jul 2024 10:16:59 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 09 Jul 2024 10:16:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1720534619;
+	 x=1720621019; bh=ke9rb34FJJV4rF+MkKIiP0p8Y0EQuq37lQsJeEBjSeQ=; b=
+	c0diSghbFlSVyS0R4qPlm97JqWt/eHeSU07qcmYe8WabLBgr2UcwFI5WmVZi80Fk
+	Nd0/hAgAhIyZnC0YANT+DDi8be9vvjOJ72rGEWiPoqzrnU4JTQFWWFGxCGZZV753
+	ahiMnpdP5xcEyrFKnTH+Z7+SevcYwSsXLRURT6FU8FqcH82f9ckTT+VaEpOBnPUQ
+	bTeBV/Ei/6qfjLddTPeIUVY5Nyk0GyUhMRgyRuvpJmwX++28bK79bHSDREEg2cTv
+	8a/esi4WwveO7GBZg9KH6ntT1ufyJgkM5hYU/7dQWz6cDYbnUGyZfNiIdZr/Mu8z
+	PW0A/VzbaaraVWMN1z+Ahw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720534619; x=
+	1720621019; bh=ke9rb34FJJV4rF+MkKIiP0p8Y0EQuq37lQsJeEBjSeQ=; b=j
+	aHTw5CmK8/5xqJqz5b8lxqcYMBOBD30p1lvSj7U3qpHd6mKe8JVbN7TEeZ/0MrF5
+	Th2DccGXcWN5w95/F7M2f6FIipYAVmPjmX6hrqEDJ5Y4dYKPJvHhBs3kMvhSl/1n
+	acGzv55+wLrtD7c1HGEEfLqrGupiZOPUrCr1nIah6pRS06CRiJ7eTAEfBzqE7bCS
+	1rOfxw/paDP6FJB+DNqGyqY3tfaRwREqpF4mBi5kF1E+Yrl+E8aZf0gpW2T5zbxx
+	tcgb/aV4VWOKEXO8XtxHqVQYVrDMMOBZUMz800qwLa1o2woWZawtrDfD00KOmq36
+	t36VB65PatlpizNx4AhOA==
+X-ME-Sender: <xms:WkaNZlZr-ZQkULrvzFP9m46jgGqOi0l4aO3hLjKEy_IUPiJHKAE8wQ>
+    <xme:WkaNZsYT4FNYbgTKtJzD6NZ1jVl5QulGwfi-FZDr7nyOes8Lvubswp7Bl_t1uDIbc
+    8-7wtE6BK6fRn0yhW4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdelgdejgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffeigedtuddtkeevuedvueeuhefhhedvueekvdekkeekuefhtedthfetveej
+    feetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggv
+X-ME-Proxy: <xmx:WkaNZn-nFO6hRIfj_HoTc-3dyjdmtQ5tuxU2mKEvJvoZbGMVIQtnAA>
+    <xmx:WkaNZjrXPr1tt6kFy17V90KPTKev9nlf3AYVcyeAlfLsGz6LuQUF9Q>
+    <xmx:WkaNZgqE2_orJFt-Yci95RJXAVGSDdn1UKTNeQzPpoZQUf_xl8Y8Dw>
+    <xmx:WkaNZpTQNu5fSzN72wbHXC3dreOmpolit72_XiXZQJ9acBJpMMEvWg>
+    <xmx:W0aNZpmu1Z0-eiLc8-dbr28l-81QR--OKBsmeif5mOq1ivdfPej592bO>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 67875B6008F; Tue,  9 Jul 2024 10:16:58 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: display: bridge: ti,sn65dsi83: add
- burst-mode-disabled
-To: Stefano Radaelli <stefano.radaelli21@gmail.com>,
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- David Airlie <airlied@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, devicetree@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
- "Noah J . Rosa" <noahj.rosa@gmail.com>, linux-kernel@vger.kernel.org
-References: <20240708151857.40538-1-stefano.radaelli21@gmail.com>
- <172045725750.3389992.15451403448241421795.robh@kernel.org>
- <CAK+owohBrewYFpDKjsE5iWC5OQ3p6S_9fwj7DWa1Ux2h8CXcAw@mail.gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <CAK+owohBrewYFpDKjsE5iWC5OQ3p6S_9fwj7DWa1Ux2h8CXcAw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Message-Id: <c4df5f73-2687-4160-801c-5011193c9046@app.fastmail.com>
+In-Reply-To: 
+ <CAMuHMdVsDSBdz2axqTqrV4XP8UVTsN5pPS4ny9QXMUoxrTOU3w@mail.gmail.com>
+References: <202407091931.mztaeJHw-lkp@intel.com>
+ <c1d4fcee3098a58625bb03c8461b92af02d93d15.camel@kernel.org>
+ <CAMuHMdVsDSBdz2axqTqrV4XP8UVTsN5pPS4ny9QXMUoxrTOU3w@mail.gmail.com>
+Date: Tue, 09 Jul 2024 16:16:37 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Jeff Layton" <jlayton@kernel.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+Subject: Re: [jlayton:mgtime 5/13] inode.c:undefined reference to
+ `__invalid_cmpxchg_size'
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 7/9/24 2:45 PM, Stefano Radaelli wrote:
-> Hello everyone,
+On Tue, Jul 9, 2024, at 15:45, Geert Uytterhoeven wrote:
+> On Tue, Jul 9, 2024 at 1:58=E2=80=AFPM Jeff Layton <jlayton@kernel.org=
+> wrote:
+>> I've been getting some of these warning emails from the KTR. I think
+>> this is in reference to this patch, which adds a 64-bit try_cmpxchg in
+>> the timestamp handling code:
+>>
+>>     https://lore.kernel.org/linux-fsdevel/20240708-mgtime-v4-0-a0f3c6=
+fb57f3@kernel.org/
+>>
+>> On m68k, there is a prototype for __invalid_cmpxchg_size, but no actu=
+al
+>> function, AFAICT. Should that be defined somewhere, or is this a
+>> deliberate way to force a build break in this case?
+>
+> It's a deliberate way to break the build.
+>
+>> More to the point though: do I need to do anything special for m86k
+>> here (or for other arches that can't do a native 64-bit cmpxchg)?
+>
+> 64-bit cmpxchg() is only guaranteed to exist on 64-bit platforms.
+> See also
+> https://elixir.bootlin.com/linux/latest/source/include/asm-generic/cmp=
+xchg.h#L62
+>
+> I think you can use arch_cmpxchg64(), though.
 
-Hi,
+arch_cmpxchg64() is an internal helper provided by some
+architectures. Driver code should use cmpxchg64() for
+the explicitly 64-bit sized atomic operation.
 
-> Thank you a lot for your prompt feedbacks.
-> I'm really sorry for all the mistakes, it is the first time that I try to
-> submit a patch and i thought I followed the guideline but clearly that was
-> not the case.
-> 
->   @Marek Vasut <marex@denx.de> About your question to why disabling
-> burst-mode:
-> - I agree with you that Burst Mode is the preferred way to send data. For
-> that reason I created the new flag in a way that, if not used in dts, burst
-> mode remains active by default.
->    However, I decide to introduced this property because I have noticed that
-> some dual-channel panels work better in non-burst mode (even if less
-> efficient), and since the sn65dsi84 datasheet allows this setting, I
-> thought to give this opportunity to users.
->    What do you think about it?
+I'm fairly sure we still don't provide this across all
+32-bit architectures though: on architectures that have
+64-bit atomics (i686, armv6k, ...) these can be provided
+architecture specific code, and on non-SMP kernels they
+can use the generic fallback through
+generic_cmpxchg64_local(), but on SMP architectures without
+native atomics you need a Kconfig dependency to turn off
+the particular code.
 
-Are there any further details, which panels behave this way ? Does your 
-DSI host generate correct HS clock, ones which the DSI84 expects to 
-receive on the DSI side ?
-
-Such link mode properties would have to be generic properties placed in 
-some dsi-client.yaml file in any case, such properties are not specific 
-to this DSI8x bridge.
+     Arnd
