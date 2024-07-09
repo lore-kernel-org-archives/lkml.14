@@ -1,221 +1,314 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1800.securemx.jp [210.130.202.159])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E90D30358;
-	Tue,  9 Jul 2024 01:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE22D347A2
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 01:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720489475; cv=none; b=ix/GBJnrsEVS0REYj8nzjaCFwnVLbVNAm3QGLxI52Shb1tgY4yFR4gl4e7crQskJm/Me4ppa1lOo1FTE9fqfKYKI84C/8DeCPGvc2z0tqwOS0ZN4ymLSVLibifiTHI7vkENlbVns/wNyQoqXNhfO41GJqsirSFeRcQlqsBjiFz4=
+	t=1720489476; cv=none; b=XU35fP+dLroX5zrV+6j1ZjRD7SeiaYGjQtnCEFaPY/smyLvrl63ZIUy+QFFx3Gp3Aj01V+ftDjmafJeiRiiWuJRvMYbLDRrwmIh9rpz1ig8KhsUTs//WkLexQv8REUynelG4wztV7JzfxtWr4NzmSIZPM0LMr6bfoW4YI5ZiaEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720489475; c=relaxed/simple;
-	bh=Q83xjEUL1NZQogk0y4QQ08YEUB6zaP79T5+pa0Z7kD4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=InfdFXO3++uKVyJHA2J8uM22Li0PmVlct/7y5CB77aygCPgVhzT5a1/OhBSP2X+OFAGvR4FyM+KwHvwPhJVVyCES07MpBTbpKdwbjev2m+/eFOLx0Z0VAqCp2KA/3OJcU9pbloJVGFz4aA+mTEonl45ZDF+i7dmNZdnr8Yw5YPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b=eSG2f345; arc=none smtp.client-ip=210.130.202.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
+	s=arc-20240116; t=1720489476; c=relaxed/simple;
+	bh=sdOJm9Z+Rrobjli2x5KtQupuJKfwPzoOOLPs6UXdhAc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b9p98o2mo1zrsDfLjxrshJX8Om8WbGT1j6x+uLK24sM7JyDz76DAM3TuroBJsOP+fXyiHoORW0BZsJz0i77m+AmrWsIq2p3JpEHhjXCEP7DysAu5vE1kWX1YGsmzloq9S7z6vj4xosyr1bTaiUn3voNLpVZJyRiMRESMS2mJPkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fz3xrphx; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b="eSG2f345"
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1800) id 4690FGEw742851; Tue, 9 Jul 2024 09:15:16 +0900
-DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
-	:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;i=
-	yuji2.ishikawa@toshiba.co.jp;s=key2.smx;t=1720484072;x=1721693672;bh=Q83xjEUL
-	1NZQogk0y4QQ08YEUB6zaP79T5+pa0Z7kD4=;b=eSG2f345loBhjWhmXLwuUF6I3Yjh9Mifl06+mg
-	JBLHrfMbKxt6piXScXdncrXttgE8qEBgOCD7FKLvzmULYX3rx9jw4onnpGgPZTxxASkbezQQv4Cbl
-	jQkh0LsamyLf2Dt1KUbdeOsIegkIMzUDDJK7+J3Cb6MID8q1mb23PAuxU3HK0F9inkBH6/NbTbSv8
-	YTv5g5bwwh2ayJMsg4esq8bLSprG9ZLA+bpROMLuJMjO+bKsN2EqHAtLWQgD7goQ2DTLTBxAxnYdj
-	AWdaLOWm86cM/qlbzuftc8F2ezKk3bXk+EHjd+yV69TL5UdhKsAiMQhy4FgFwrNnFWv+rC0zQ==;
-Received: by mo-csw.securemx.jp (mx-mo-csw1800) id 4690ETtW1605432; Tue, 9 Jul 2024 09:14:30 +0900
-X-Iguazu-Qid: 2yAaT64FYgJTTafAum
-X-Iguazu-QSIG: v=2; s=0; t=1720484069; q=2yAaT64FYgJTTafAum; m=jQG016lu/7vjGIW8QL8mHidGAmurOhAtj8fW3xeXfy4=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-	by relay.securemx.jp (mx-mr1801) id 4690ERZY2534880
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 09:14:27 +0900
-X-SA-MID: 26358967
-From: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-To: Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 0/6] Add Toshiba Visconti Video Input Interface driver
-Date: Tue,  9 Jul 2024 09:08:42 +0900
-X-TSB-HOP2: ON
-Message-Id: <20240709000848.1108788-1-yuji2.ishikawa@toshiba.co.jp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fz3xrphx"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f9fb3ca81bso26004065ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 18:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720489474; x=1721094274; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i7JwVPtkjnXuNlozYkqpZNw80t4p50gXWxEmF3epp84=;
+        b=Fz3xrphxr/ZORLU76gSmWpx/Dgf9XEOrv6Q2yxl4Fve09DmnShFRnAj+Fw95CHRxeN
+         xQxkPz/vqTVZ2oW3aItyJqNQHqKGj/I2pyzsyodpd9b4SJ3X376xPRiAwmNXIcG2dQJA
+         LleUJzjhTYdO6gSTi8cnEO10Ntb9X2rDR8wEO9zmvKz1tFiBswYWkqVhhNgI0w0MG787
+         Ma+9T8T3mmCy1NAsfvx5aDK/UoFFNw747GIJsVjnXg0h1pqQn18xBp9TzdCkcvP68FpZ
+         aRUqTzuY+r+2umZiM3dR7/8dXL3xmMEbXyLu3pIj28XB/RWDbkUPza7xIJ2mauji3ChO
+         Fuww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720489474; x=1721094274;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i7JwVPtkjnXuNlozYkqpZNw80t4p50gXWxEmF3epp84=;
+        b=gnZ0gWPAWcqI4ZJBxsTqSm0T5VZeB18BNjbohY1zHdZlfnSrcyUBWFY+Y2sxB45k0u
+         3nsb0hEwJBCubZBSBaGhvhIq/p/1RnDt248+9edDjlPwtytpPBP7h+v2BgKHURU060AF
+         B/k70ue1v4m6bbz3+HrfcqE7Z4hZhjvUrMCZLlWSmw9vKIhuz2K+LvOWsERmW1l5E5k6
+         b+NJCcyf+47wIrHVipwZs0WTNRXM2khDHiGKuVmfpJeiIw3wXpevzkiiqmL+dX3NrJ26
+         kk9U6YWkioEItSxZA9QJff+2jd+DJDdbsWdhsAZUjCOe5mVL95bIYs/zqZFUTMK7IEyG
+         /ykQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbQwYBNUL1BSSsVUuisw3M2Bftx88PNGO1KNVRPMv9KhJe96fJ0uk9ffQJFUe6lmM3NV8H8y1MxcJ6LpUwYr0TUd15I2pSVuU72KK3
+X-Gm-Message-State: AOJu0Yz2FTA7JaswXFWDcsl2g4jhwerfTFFmJTqcbSnevlrYvUAeCYze
+	0dlu+nJFOjAZseGZX4B+aJUykc7nK1DNmFH6IN/b1ch4MRIZQJUb
+X-Google-Smtp-Source: AGHT+IEGRgF6WH6W+fLpO2gg+v0EPIgumYh7bbxFBukp6w+Svkfg/57ie1z+Mr5bos7qmDXFjYhyog==
+X-Received: by 2002:a05:6a20:4388:b0:1c0:ee57:a9a5 with SMTP id adf61e73a8af0-1c2984ce6bemr962165637.42.1720489473967;
+        Mon, 08 Jul 2024 18:44:33 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab6c53sm4910245ad.153.2024.07.08.18.44.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 18:44:33 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: ryan.roberts@arm.com
+Cc: akpm@linux-foundation.org,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	corbet@lwn.net,
+	da.gomez@samsung.com,
+	david@redhat.com,
+	hughd@google.com,
+	ioworker0@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	willy@infradead.org,
+	ziy@nvidia.com
+Subject: [PATCH v1] mm: shmem: Rename mTHP shmem counters
+Date: Tue,  9 Jul 2024 13:44:13 +1200
+Message-Id: <20240709014413.18044-1-21cnbao@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <744749c3-4506-40d9-ac48-0dbc59689f92@arm.com>
+References: <744749c3-4506-40d9-ac48-0dbc59689f92@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series is the Video Input Interface driver
-for Toshiba's ARM SoC, Visconti.
-This provides DT binding documentation,
-device driver, documentation and MAINTAINER files.
+On Tue, Jul 9, 2024 at 12:30 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>
+> On 08/07/2024 12:36, Barry Song wrote:
+> > On Mon, Jul 8, 2024 at 11:24 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+> >>
+> >> The legacy PMD-sized THP counters at /proc/vmstat include
+> >> thp_file_alloc, thp_file_fallback and thp_file_fallback_charge, which
+> >> rather confusingly refer to shmem THP and do not include any other types
+> >> of file pages. This is inconsistent since in most other places in the
+> >> kernel, THP counters are explicitly separated for anon, shmem and file
+> >> flavours. However, we are stuck with it since it constitutes a user ABI.
+> >>
+> >> Recently, commit 66f44583f9b6 ("mm: shmem: add mTHP counters for
+> >> anonymous shmem") added equivalent mTHP stats for shmem, keeping the
+> >> same "file_" prefix in the names. But in future, we may want to add
+> >> extra stats to cover actual file pages, at which point, it would all
+> >> become very confusing.
+> >>
+> >> So let's take the opportunity to rename these new counters "shmem_"
+> >> before the change makes it upstream and the ABI becomes immutable.
+> >
+> > Personally, I think this approach is much clearer. However, I recall
+> > we discussed this
+> > before [1], and it seems that inconsistency is a concern?
+>
+> Embarrassingly, I don't recall that converstation at all :-| but at least what I
+> said then is consistent with what I've done in this patch.
+>
+> I think David's conclusion from that thread was to call them FILE_, and add both
+> shmem and pagecache counts to those counters, meaning we can keep the same name
+> as legacy THP counters. But those legacy THP counters only count shmem, and I
+> don't think we would get away with adding pagecache counts to those at this
+> point? (argument: they have been around for long time and there is a risk that
+> user space relies on them and if they were to dramatically increase due to
+> pagecache addition now that could break things). In that case, there is still
+> inconsistency, but its worse; the names are consistent but the semantics are
+> inconsistent.
+>
+> So my vote is to change to SHMEM_ as per this patch :)
 
-A visconti VIIF driver instance exposes
-1 media control device file, 3 video device files for capture
-and 2 video device files for controlling image signal processor.
-Detailed HW/SW are described in documentation directory.
-The VIIF hardware has CSI2 receiver,
-image signal processor and DMAC inside.
-The subdevice for image signal processor provides
-vendor specific V4L2 controls.
+I have no objections. However, I dislike the documentation for
+thp_file_*. Perhaps we can clean it all up together ?
 
-The device driver depends on two other drivers under development;
-clock framework driver and IOMMU driver.
-Corresponding features will be added later.
+diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+index 709fe10b60f4..65df48cb3bbb 100644
+--- a/Documentation/admin-guide/mm/transhuge.rst
++++ b/Documentation/admin-guide/mm/transhuge.rst
+@@ -417,21 +417,22 @@ thp_collapse_alloc_failed
+ 	the allocation.
+ 
+ thp_file_alloc
+-	is incremented every time a file huge page is successfully
+-	allocated.
++	is incremented every time a file (including shmem) huge page is
++	successfully allocated.
+ 
+ thp_file_fallback
+-	is incremented if a file huge page is attempted to be allocated
+-	but fails and instead falls back to using small pages.
++	is incremented if a file (including shmem) huge page is attempted
++	to be allocated but fails and instead falls back to using small
++	pages.
+ 
+ thp_file_fallback_charge
+-	is incremented if a file huge page cannot be charged and instead
+-	falls back to using small pages even though the allocation was
+-	successful.
++	is incremented if a file (including shmem) huge page cannot be
++	charged and instead falls back to using small pages even though
++	the allocation was successful.
+ 
+ thp_file_mapped
+-	is incremented every time a file huge page is mapped into
+-	user address space.
++	is incremented every time a file (including shmem) huge page is
++	mapped into user address space.
+ 
+ thp_split_page
+ 	is incremented every time a huge page is split into base
+ 	
+>
+> >
+> > [1] https://lore.kernel.org/linux-mm/05d0096e4ec3e572d1d52d33a31a661321ac1551.1713755580.git.baolin.wang@linux.alibaba.com/
+> >
+> >
+> >>
+> >> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> >> ---
+> >>
+> >> Hi All,
+> >>
+> >> Applies on top of today's mm-unstable (2073cda629a4) and tested with mm
+> >> selftests; no regressions observed.
+> >>
+> >> The backstory here is that I'd like to introduce some counters for regular file
+> >> folio allocations to observe how often large folio allocation succeeds, but
+> >> these shmem counters are named "file" which is going to make things confusing.
+> >> So hoping to solve that before commit 66f44583f9b6 ("mm: shmem: add mTHP
+> >> counters for anonymous shmem") goes upstream (it is currently in mm-stable).
+> >>
+> >> Admittedly, this change means the mTHP stat names are not the same as the legacy
+> >> PMD-size THP names, but I think that's a smaller issue than having "file_" mTHP
+> >> stats that only count shmem, then having to introduce "file2_" or "pgcache_"
+> >> stats for the regular file memory, which is even more inconsistent IMHO. I guess
+> >> the alternative is to count both shmem and file in these mTHP stats (that's how
+> >> they were documented anyway) but I think it's better to be able to consider them
+> >> separately like we do for all the other counters.
+> >>
+> >> Thanks,
+> >> Ryan
+> >>
+> >>  Documentation/admin-guide/mm/transhuge.rst | 12 ++++++------
+> >>  include/linux/huge_mm.h                    |  6 +++---
+> >>  mm/huge_memory.c                           | 12 ++++++------
+> >>  mm/shmem.c                                 |  8 ++++----
+> >>  4 files changed, 19 insertions(+), 19 deletions(-)
+> >>
+> >> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> >> index 747c811ee8f1..8b891689fc13 100644
+> >> --- a/Documentation/admin-guide/mm/transhuge.rst
+> >> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> >> @@ -496,16 +496,16 @@ swpout_fallback
+> >>         Usually because failed to allocate some continuous swap space
+> >>         for the huge page.
+> >>
+> >> -file_alloc
+> >> -       is incremented every time a file huge page is successfully
+> >> +shmem_alloc
+> >> +       is incremented every time a shmem huge page is successfully
+> >>         allocated.
+> >>
+> >> -file_fallback
+> >> -       is incremented if a file huge page is attempted to be allocated
+> >> +shmem_fallback
+> >> +       is incremented if a shmem huge page is attempted to be allocated
+> >>         but fails and instead falls back to using small pages.
+> >>
+> >> -file_fallback_charge
+> >> -       is incremented if a file huge page cannot be charged and instead
+> >> +shmem_fallback_charge
+> >> +       is incremented if a shmem huge page cannot be charged and instead
+> >>         falls back to using small pages even though the allocation was
+> >>         successful.
+> >>
+> >> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> >> index acb6ac24a07e..cff002be83eb 100644
+> >> --- a/include/linux/huge_mm.h
+> >> +++ b/include/linux/huge_mm.h
+> >> @@ -269,9 +269,9 @@ enum mthp_stat_item {
+> >>         MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+> >>         MTHP_STAT_SWPOUT,
+> >>         MTHP_STAT_SWPOUT_FALLBACK,
+> >> -       MTHP_STAT_FILE_ALLOC,
+> >> -       MTHP_STAT_FILE_FALLBACK,
+> >> -       MTHP_STAT_FILE_FALLBACK_CHARGE,
+> >> +       MTHP_STAT_SHMEM_ALLOC,
+> >> +       MTHP_STAT_SHMEM_FALLBACK,
+> >> +       MTHP_STAT_SHMEM_FALLBACK_CHARGE,
+> >>         MTHP_STAT_SPLIT,
+> >>         MTHP_STAT_SPLIT_FAILED,
+> >>         MTHP_STAT_SPLIT_DEFERRED,
+> >> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> >> index 9ec64aa2be94..f9696c94e211 100644
+> >> --- a/mm/huge_memory.c
+> >> +++ b/mm/huge_memory.c
+> >> @@ -568,9 +568,9 @@ DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
+> >>  DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
+> >>  DEFINE_MTHP_STAT_ATTR(swpout, MTHP_STAT_SWPOUT);
+> >>  DEFINE_MTHP_STAT_ATTR(swpout_fallback, MTHP_STAT_SWPOUT_FALLBACK);
+> >> -DEFINE_MTHP_STAT_ATTR(file_alloc, MTHP_STAT_FILE_ALLOC);
+> >> -DEFINE_MTHP_STAT_ATTR(file_fallback, MTHP_STAT_FILE_FALLBACK);
+> >> -DEFINE_MTHP_STAT_ATTR(file_fallback_charge, MTHP_STAT_FILE_FALLBACK_CHARGE);
+> >> +DEFINE_MTHP_STAT_ATTR(shmem_alloc, MTHP_STAT_SHMEM_ALLOC);
+> >> +DEFINE_MTHP_STAT_ATTR(shmem_fallback, MTHP_STAT_SHMEM_FALLBACK);
+> >> +DEFINE_MTHP_STAT_ATTR(shmem_fallback_charge, MTHP_STAT_SHMEM_FALLBACK_CHARGE);
+> >>  DEFINE_MTHP_STAT_ATTR(split, MTHP_STAT_SPLIT);
+> >>  DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLIT_FAILED);
+> >>  DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
+> >> @@ -581,9 +581,9 @@ static struct attribute *stats_attrs[] = {
+> >>         &anon_fault_fallback_charge_attr.attr,
+> >>         &swpout_attr.attr,
+> >>         &swpout_fallback_attr.attr,
+> >> -       &file_alloc_attr.attr,
+> >> -       &file_fallback_attr.attr,
+> >> -       &file_fallback_charge_attr.attr,
+> >> +       &shmem_alloc_attr.attr,
+> >> +       &shmem_fallback_attr.attr,
+> >> +       &shmem_fallback_charge_attr.attr,
+> >>         &split_attr.attr,
+> >>         &split_failed_attr.attr,
+> >>         &split_deferred_attr.attr,
+> >> diff --git a/mm/shmem.c b/mm/shmem.c
+> >> index 921d59c3d669..f24dfbd387ba 100644
+> >> --- a/mm/shmem.c
+> >> +++ b/mm/shmem.c
+> >> @@ -1777,7 +1777,7 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
+> >>                         if (pages == HPAGE_PMD_NR)
+> >>                                 count_vm_event(THP_FILE_FALLBACK);
+> >>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >> -                       count_mthp_stat(order, MTHP_STAT_FILE_FALLBACK);
+> >> +                       count_mthp_stat(order, MTHP_STAT_SHMEM_FALLBACK);
+> >>  #endif
+> >>                         order = next_order(&suitable_orders, order);
+> >>                 }
+> >> @@ -1804,8 +1804,8 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
+> >>                                 count_vm_event(THP_FILE_FALLBACK_CHARGE);
+> >>                         }
+> >>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >> -                       count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_FALLBACK);
+> >> -                       count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_FALLBACK_CHARGE);
+> >> +                       count_mthp_stat(folio_order(folio), MTHP_STAT_SHMEM_FALLBACK);
+> >> +                       count_mthp_stat(folio_order(folio), MTHP_STAT_SHMEM_FALLBACK_CHARGE);
+> >>  #endif
+> >>                 }
+> >>                 goto unlock;
+> >> @@ -2181,7 +2181,7 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
+> >>                         if (folio_test_pmd_mappable(folio))
+> >>                                 count_vm_event(THP_FILE_ALLOC);
+> >>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >> -                       count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_ALLOC);
+> >> +                       count_mthp_stat(folio_order(folio), MTHP_STAT_SHMEM_ALLOC);
+> >>  #endif
+> >>                         goto alloced;
+> >>                 }
+> >> --
+> >> 2.43.0
+> >>
+> >
 
-Best regards,
-Yuji
-
-Changelog v2:
-- Resend v1 because a patch exceeds size limit.
-
-Changelog v3:
-- Add documentation to describe SW and HW
-- Adapted to media control framework
-- Introduced ISP subdevice, capture device
-- Remove private IOCTLs and add vendor specific V4L2 controls
-- Change function name avoiding camelcase and uppercase letters
-
-Changelog v4:
-- Split patches because a patch exceeds size limit
-- fix dt-bindings document
-- stop specifying ID numbers for driver instance explicitly at device tree
-- use pm_runtime to trigger initialization of HW
-  along with open/close of device files.
-- add a entry for a header file at MAINTAINERS file
-
-Changelog v5:
-- Fix coding style problem in viif.c (patch 2/6)
-
-Changelog v6:
-- add register definition of BUS-IF and MPU in dt-bindings
-- add CSI2RX subdevice (separeted from ISP subdevice)
-- change directory layout (moved to media/platform/toshiba/visconti)
-- change source file layout (removed hwd_xxxx.c)
-- pointer to userland memory is removed from uAPI parameters
-- change register access (from struct style to macro style)
-- remove unused macros
-
-Changelog v7:
-- remove redundant "bindings" from header and description text
-- fix multiline text of "description"
-- change "compatible" to "visconti5-viif"
-- explicitly define allowed properties for port::endpoint
-- remove unused variables
-- update kerneldoc comments
-- update references to headers
-
-Changelog v8:
-- rename bindings description file
-- remove/simplify items in bindings
-- update operations around v4l2_async_notifier
-- use v4l2_async_connection instead of v4l2_async_subdev
-- use dev_err_probe()
-- better error handling at probe
-- remove redundant mutex
-- add V4L2_CTRL_TYPE_VISCONTI_ISP constant
-
-Changelog v9:
-- dictionary ordering of dt-bindings properties
-- applied sparce checker
-- call div64_u64 for 64bit division
-- rebase to media_staging tree
-- fix warning for cast between ptr and dma_addr_t
-
-Changelog v10:
-- add an independent entry in MAINTAINERS
-- add paddings to uAPI structs
-- use parameter buffer to control ISP (instead of vendor specific controls)
-
-Changelog v11:
-- stop merging sensor's controls and capture device's
-- fix strange indents at initializations
-- remove feature VB2_USERPTR from viif_params and viif_stats
-- fix usage in the document
-
-Yuji Ishikawa (6):
-  dt-bindings: media: platform: visconti: Add Toshiba Visconti Video
-    Input Interface
-  media: videodev2.h: add visconti viif meta buffer format
-  media: platform: visconti: Add Toshiba Visconti Video Input Interface
-    driver
-  media: platform: visconti: add streaming interface for ISP parameters
-    and status
-  documentation: media: add documentation for Toshiba Visconti Video
-    Input Interface driver
-  MAINTAINERS: Add entries for Toshiba Visconti Video Input Interface
-
- .../admin-guide/media/v4l-drivers.rst         |    1 +
- .../admin-guide/media/visconti-viif.dot       |   18 +
- .../admin-guide/media/visconti-viif.rst       |  255 +++
- .../media/toshiba,visconti5-viif.yaml         |  105 +
- .../userspace-api/media/v4l/meta-formats.rst  |    1 +
- .../media/v4l/metafmt-visconti-viif.rst       |   48 +
- MAINTAINERS                                   |   11 +
- drivers/media/platform/Kconfig                |    1 +
- drivers/media/platform/Makefile               |    1 +
- drivers/media/platform/toshiba/Kconfig        |    6 +
- drivers/media/platform/toshiba/Makefile       |    2 +
- .../media/platform/toshiba/visconti/Kconfig   |   19 +
- .../media/platform/toshiba/visconti/Makefile  |    8 +
- .../media/platform/toshiba/visconti/viif.c    |  651 ++++++
- .../media/platform/toshiba/visconti/viif.h    |  393 ++++
- .../platform/toshiba/visconti/viif_capture.c  | 1431 ++++++++++++
- .../platform/toshiba/visconti/viif_capture.h  |   21 +
- .../platform/toshiba/visconti/viif_common.c   |  239 ++
- .../platform/toshiba/visconti/viif_common.h   |   42 +
- .../platform/toshiba/visconti/viif_csi2rx.c   |  657 ++++++
- .../platform/toshiba/visconti/viif_csi2rx.h   |   24 +
- .../toshiba/visconti/viif_csi2rx_regs.h       |  102 +
- .../platform/toshiba/visconti/viif_isp.c      | 1190 ++++++++++
- .../platform/toshiba/visconti/viif_isp.h      |   24 +
- .../platform/toshiba/visconti/viif_params.c   | 2020 +++++++++++++++++
- .../platform/toshiba/visconti/viif_params.h   |   19 +
- .../platform/toshiba/visconti/viif_regs.h     |  721 ++++++
- .../platform/toshiba/visconti/viif_stats.c    |  336 +++
- .../platform/toshiba/visconti/viif_stats.h    |   14 +
- include/uapi/linux/videodev2.h                |    4 +
- include/uapi/linux/visconti_viif.h            | 1921 ++++++++++++++++
- 31 files changed, 10285 insertions(+)
- create mode 100644 Documentation/admin-guide/media/visconti-viif.dot
- create mode 100644 Documentation/admin-guide/media/visconti-viif.rst
- create mode 100644 Documentation/devicetree/bindings/media/toshiba,visconti5-viif.yaml
- create mode 100644 Documentation/userspace-api/media/v4l/metafmt-visconti-viif.rst
- create mode 100644 drivers/media/platform/toshiba/Kconfig
- create mode 100644 drivers/media/platform/toshiba/Makefile
- create mode 100644 drivers/media/platform/toshiba/visconti/Kconfig
- create mode 100644 drivers/media/platform/toshiba/visconti/Makefile
- create mode 100644 drivers/media/platform/toshiba/visconti/viif.c
- create mode 100644 drivers/media/platform/toshiba/visconti/viif.h
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_capture.c
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_capture.h
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_common.c
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_common.h
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_csi2rx.c
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_csi2rx.h
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_csi2rx_regs.h
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_isp.c
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_isp.h
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_params.c
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_params.h
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_regs.h
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_stats.c
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_stats.h
- create mode 100644 include/uapi/linux/visconti_viif.h
-
--- 
-2.25.1
-
-
+Thanks
+Barry
