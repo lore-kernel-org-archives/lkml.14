@@ -1,41 +1,35 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC35156653;
-	Tue,  9 Jul 2024 09:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F1C1527B8;
+	Tue,  9 Jul 2024 09:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720518009; cv=none; b=Jg77rEiCLt0uZfBMNg3sWC2L+0KoO4mWT7cmvPthHYqhOgx4M+WtY8iKoUEPIMXTjN4RYfIrtb3CDvtMyIXXsqb4c0X6F2CMk0/uM/9yS8p4kKK6e8bT+7btpYGLRxvzB9l5AKD2fW4edMGp/loVUOA5KdeW4RKCEA+I/r6kmvw=
+	t=1720518031; cv=none; b=NtyTLWRWpKG+rgDVv0DG9KusrAS7qt0q2grryWLRDVEKa43mrNKNSJUQVRxoteVMZAiG+nsLV/C4Qfyd9OGKs8pGCvAtX6CUbbssCgiKj+Gz/npfYlTC4dbtLa22AGi7q2II8+N9TnLmP+UpBXvlBzkzYOBU1D0WoYzdGzUau9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720518009; c=relaxed/simple;
-	bh=gQ7kC5SGovZDvSADjUTJZ6Fcw7+9Z/764TPVWo8xpwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F/5HC1GEFgCxSYnEn1e8b1QNQDXPluWmtDbeL6OYmsaKX3ESNMgT4NQxt0sJnomZa1JIyi5A6Q9wrIik8IjxgRwKCLvKXyjZL0w8bLgxHA126rzD/yPVBnIVpXZlVE2H6SOKaluhKeilZ2LVF3f42yb0fXKAj60M9UAw0mwI9es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=G7F7WjWe; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1720518031; c=relaxed/simple;
+	bh=FY3MxCA57lP59uTzf5TmSdwtfYPfEU3i2RCHRvJXZHc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=YJaNAX5VEPUS+T4kMdh370izouI3yJRBqzGUSDN/jwP6AzZTHdpoOzkYgIXSPhhA7OcOMyV/UfInAgLJGt2LKi7hkCi2DsSs2+8wG9OuJA7xuU5v3jeA9Vn9XlaoH28pyPdR4Wu2TXGrK7Hqcdr5QAgIZhXh7JH/Y9BJalHHsA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sa/A5elr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="G7F7WjWe"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1720517997; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=ze6TTXQFJsy3uKftoLUHbYsxNvRLtcLf0BpbQzfmY4s=;
-	b=G7F7WjWeM2JlDOSSBA4fkD0Uu9Y6S0wJlfIfwnNJN3r12/Ii77EY65FR+ZIPDZ+cFbZUxHWYMVH5ZYlt7gaplZ9oFKp23MZ6qeQHtsS6GSOOFc/dK9Cq7JO0j/8J1lYqDoNswRv/HsdLPeI/kaC8B1PEd0VOGVOWels5APqlhqI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067109;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0WABZZFV_1720517989;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WABZZFV_1720517989)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Jul 2024 17:39:57 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: James.Bottomley@HansenPartnership.com
-Cc: martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	stable@vger.kernel.org,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next v3] scsi: sd: Fix an incorrect type in 'sd_spinup_disk()'
-Date: Tue,  9 Jul 2024 17:39:48 +0800
-Message-Id: <20240709093948.9617-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sa/A5elr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 311A5C4AF0A;
+	Tue,  9 Jul 2024 09:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720518031;
+	bh=FY3MxCA57lP59uTzf5TmSdwtfYPfEU3i2RCHRvJXZHc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=sa/A5elreZlA50marMQIq0/zp2PA4wRCrc/fwGA4vACup7QH7WEoAkqsCQvx37aVO
+	 mT4EVXCDkqiHYnGHBEOg6qecDOWX1KOQh297T3APp8tvq8x4eWqFjwMOV0HkfTmNYc
+	 +Qxh4s6sTS3vFUJBAg4QMJZ5e+tGr/FE8/di5PX2ZyGRcduaZcF3cr4m4y9hDSsumf
+	 lfbMETm+JY/2dCGBvXJxj8mEDmbm6f9WFlA7NGYswcAREFrZkcOOXbtkcCqx+pp6Tf
+	 XR9+v3e+nHJvB3kS+40LuToehcpBxivWgBuw/b5ozEIBTdpFZ8+pSbtULqmJFzzG1Q
+	 oPhq/zLEn+dpA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 188FDC433E9;
+	Tue,  9 Jul 2024 09:40:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,49 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2] l2tp: fix possible UAF when cleaning up tunnels
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172051803109.11180.9963479985374691387.git-patchwork-notify@kernel.org>
+Date: Tue, 09 Jul 2024 09:40:31 +0000
+References: <20240704152508.1923908-1-jchapman@katalix.com>
+In-Reply-To: <20240704152508.1923908-1-jchapman@katalix.com>
+To: James Chapman <jchapman@katalix.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com,
+ syzkaller-bugs@googlegroups.com, tparkin@katalix.com, hdanton@sina.com,
+ syzbot+b471b7c936301a59745b@syzkaller.appspotmail.com,
+ syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com
 
-The return value from the call to scsi_execute_cmd() is int. In the
-'else if' branch of the function scsi_execute_cmd, it will return -EINVAL.
-But the type of "the_result" is "unsigned int", causing the error code to
-reverse. Modify the type of "the_result" to solve this problem.
+Hello:
 
-The code featuring the_result as the return value of the function
-scsi_execute_cmd is as follows:
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-the_result = scsi_execute_cmd(sdkp->device, cmd, REQ_OP_DRV_IN, NULL, 0,
-			      SD_TIMEOUT, sdkp->max_retries, &exec_args);
-if (the_result > 0) {
-...
-}
+On Thu,  4 Jul 2024 16:25:08 +0100 you wrote:
+> syzbot reported a UAF caused by a race when the L2TP work queue closes a
+> tunnel at the same time as a userspace thread closes a session in that
+> tunnel.
+> 
+> Tunnel cleanup is handled by a work queue which iterates through the
+> sessions contained within a tunnel, and closes them in turn.
+> 
+> [...]
 
-./drivers/scsi/sd.c:2333:6-16: WARNING: Unsigned expression compared
-with zero: the_result > 0.
+Here is the summary with links:
+  - [net-next,v2] l2tp: fix possible UAF when cleaning up tunnels
+    https://git.kernel.org/netdev/net-next/c/f8ad00f3fb2a
 
-Fixes: c1acf38cd11e ("scsi: sd: Have midlayer retry sd_spinup_disk() errors")
-Cc: stable@vger.kernel.org
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9463
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
-Changes in v3:
-  -Amend the commit message, Add "Fixes:" and "Cc: stable" tags.
-
- drivers/scsi/sd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 979795dad62b..ade8c6cca295 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -2396,7 +2396,7 @@ sd_spinup_disk(struct scsi_disk *sdkp)
- 	static const u8 cmd[10] = { TEST_UNIT_READY };
- 	unsigned long spintime_expire = 0;
- 	int spintime, sense_valid = 0;
--	unsigned int the_result;
-+	int the_result;
- 	struct scsi_sense_hdr sshdr;
- 	struct scsi_failure failure_defs[] = {
- 		/* Do not retry Medium Not Present */
+You are awesome, thank you!
 -- 
-2.20.1.7.g153144c
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
