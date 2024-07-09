@@ -1,157 +1,131 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EBC7D07F
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 04:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E89620;
+	Tue,  9 Jul 2024 04:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720498687; cv=none; b=gq0t8QZBSOANfgu7wD3cd7/Yfwx3JLkbGkh3EOZCnZzyJlpkChMiDgkKB2srGG/nt/jq+ZFrDW1obdSLvfZwgKhbJeYstSK+sIkNPECGA+Xm3nM16DZ7jGf9RPh3MjHskh2mU+LcCfuJQhMsXf/d7WzYqMNjqCtlbOLGqQ2DveA=
+	t=1720498768; cv=none; b=DbqbEDSQVAon8gzGqKQeyy3wUO6nkqG9uiI/zAstUoly2YhGzt8cGCj4sF8k4KLm1YrbcUpGRBdaoVf22EBuyDC5cOWhoajS//zCizvu/J15VInjGQGvX3fFGR6UTPe8xiq6phi5aucvlAv+mg2zuTS/ygde9m2xZHsVtbj960M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720498687; c=relaxed/simple;
-	bh=XWhzfCvOv6lGGXQToFg0a0wy94X+LXmKI0b4Q/iwd+k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=cSPe7Hr0gpeFI1PuEX07ifNVkS01Epix2R9jC7uqIRUT/HJQT8vHKNXKWtg1R4xSzL1mTGjQI+7jcxoT4VyE4poyAhXqPYljVdCNdYgKePCNU09peLnjq776DqRKs9KRWlUiSwaqB39/ldP/PRy83E71sxDp0GCOVWh1nRU6c00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=inPCg2Eg; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1720498768; c=relaxed/simple;
+	bh=30xitU9m3pbC38fhFhR2exRe8dNHDVsbQb29IhiB1lg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=txK8vLge5uG3LoP5VREEwAdM7BUa3HwbtXnHztUL7jvl7CbgstFydhcEm18D3nQWwzJcPfOoBil8DUGdyzGCyClHH+gieCPQfAWaz2GnjHULVoW8C4EcqktRVjS9pvplcDqKiRtQh5AHZAzbIUlfTLZ5+4VX1Br7tbOkSAvT0kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V2syuKe+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="inPCg2Eg"
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240709041755epoutp02367148d8b0dccb4a1d3bcabbec247b44~gcG4UHEPU0108501085epoutp02e
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 04:17:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240709041755epoutp02367148d8b0dccb4a1d3bcabbec247b44~gcG4UHEPU0108501085epoutp02e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1720498675;
-	bh=lKCM4eKVBkxuPbg+SH2M8AGj93cnrmRZpEG+UsgzVrk=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=inPCg2EgaDGpdRhOUNGOC1MqyLclFHLLw5RZz/Dl069+sec2GwSHe68U8yIma/erK
-	 BrQgxQZvtSw6NPUXmyoICD5oEGSZFXIzwkoafejh8g3+kJhUoNMkCvZb71InUg4MQB
-	 tA74qoFQuRv0wdpJ72h1TA4/sU1kBAak+Xc1rq8Y=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-	20240709041755epcas1p3fdb5a3f91c62ac6260d44f6c07c631a2~gcG398W781900219002epcas1p31;
-	Tue,  9 Jul 2024 04:17:55 +0000 (GMT)
-Received: from epsmgec1p1.samsung.com (unknown [182.195.36.227]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4WJ74z09JVz4x9Py; Tue,  9 Jul
-	2024 04:17:55 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-	epsmgec1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	AC.4E.09847.2F9BC866; Tue,  9 Jul 2024 13:17:54 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240709041754epcas1p4ee6f7b1fd0dbf287e756b709aba321c8~gcG3UKUkw1389813898epcas1p4I;
-	Tue,  9 Jul 2024 04:17:54 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240709041754epsmtrp24b14da4d0e313e4186f761cd0611fc2f~gcG3Tl89j3110831108epsmtrp2c;
-	Tue,  9 Jul 2024 04:17:54 +0000 (GMT)
-X-AuditID: b6c32a36-60dff70000002677-83-668cb9f2c901
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C0.D2.19057.2F9BC866; Tue,  9 Jul 2024 13:17:54 +0900 (KST)
-Received: from u20pb1-0435.tn.corp.samsungelectronics.net (unknown
-	[10.91.133.14]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240709041754epsmtip1f42c978a2a0792569eca3fee95ee74de~gcG3HCySO1245012450epsmtip1b;
-	Tue,  9 Jul 2024 04:17:54 +0000 (GMT)
-From: Sungjong Seo <sj1557.seo@samsung.com>
-To: hirofumi@mail.parknet.co.jp, akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, Sungjong Seo <sj1557.seo@samsung.com>
-Subject: [PATCH] fat: print s_dev via fat_msg
-Date: Tue,  9 Jul 2024 13:17:34 +0900
-Message-Id: <20240709041734.3719513-1-sj1557.seo@samsung.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V2syuKe+"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468Mo2QK015544;
+	Tue, 9 Jul 2024 03:51:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Zet6s/oJP3P7PB+e0PNHbJL8LTPKBRrFKa+rhqJU4Qk=; b=V2syuKe+AVDrV5TW
+	gp75/7tAZ8uXVjLjfKCvLJqqe7Qj/ZGjHqS2ngEklwsSxqH3RI3EkBphDdQStSuQ
+	NV6avtp5mdRaAHEmW8lpRrT1o+08SWnB7/9Twl+dbj1nZLQenGmwJfMR7dv3OEKL
+	y9IcTEPDyp9dQn7Onh5Jl2XU1LRXHj8nIfOX2pPVJghA/jEobu1S0dpoz3RMrmb8
+	G8ZeP4AHGV57XZTcsKZcpq8RnDDoap83Aq+IXsr0Oh290v9hL/xQQQ4MRW72etbo
+	rmVbuBax29XuOwyC1S+XgcgZBwecypM6sKTzZzcnKTIeVoaUssfGYQ5VUYyk2JHE
+	P/VzGQ==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406we8w6tr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 03:51:01 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4693p0GM025417
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 03:51:00 GMT
+Received: from [10.110.80.193] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Jul 2024
+ 20:50:58 -0700
+Message-ID: <fadca811-fabd-92b0-0482-c317344de2d7@quicinc.com>
+Date: Mon, 8 Jul 2024 20:50:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDJsWRmVeSWpSXmKPExsWy7bCmge6nnT1pBme2mFnMWb+GzWL63A0s
-	Fpd3zWGz2PLvCKsDi8eJGb9ZPO6/TfTo27KK0ePzJrkAlqgGRpvEouSMzLJUhdS85PyUzLx0
-	W6XQEDddCyWFjPziElulaENDIz1DA3M9IyMjPVOjWCsjUyWFvMTcVFulCl2oXiWFouQCoNrc
-	ymKgATmpelBxveLUvBSHrPxSkDP1ihNzi0vz0vWS83OVFMoSc0qBRijpJ3xjzPi35DhTwWvu
-	ilevvrM2MD7i7GLk5JAQMJH48fQzM4gtJLCDUeLdydIuRi4g+xOjxK/efjYI5xujRN/Fy2ww
-	HV275kF17GWUWPfCCqKonUmi799SJpAEm4C2xPKmZWBFIgJWEgdvXQFrZhZwl7i2ejVrFyMH
-	h7CArsTkWR4gJouAqsSCXrBqXgFbiSX3XrBCrJKXmHnpOztEXFDi5MwnLBBT5CWat85mhqjZ
-	xC6xYK8+hO0icfFxFyOELSzx6vgWdghbSuLzu71gv0gIdDNKHP/4jgUiMYNRYkmHA4RtL9Hc
-	2swGcg+zgKbE+l36ELv4JN597YG6R1Di9LVuZpASCQFeiY42IYiwisT3DztZYFZd+XGVCcL2
-	kDh9aQMTJKRiJabO3840gVF+FpJvZiH5ZhbC4gWMzKsYxVILinPTU4sNC4yQI3UTIzghapnt
-	YJz09oPeIUYmDsZDjBIczEoivPNvdKcJ8aYkVlalFuXHF5XmpBYfYkwGBu9EZinR5HxgSs4r
-	iTc0M7O0sDQyMTQ2MzQkLGxiaWBiZmRiYWxpbKYkznvmSlmqkEB6YklqdmpqQWoRzBYmDk6p
-	BibHpwU7Y9/3zzwx5dXXg8pMKvu3dM54qLTNfsnx6vNrko+zOFeYlyZIX/jVEbrnlArnrSPR
-	tapKxu2PX/s6NlXcWCT2XamiMibkb3znJgnvx1PO1hTk3k8p5+c7J1bvpX81XijG+qS69bOD
-	LZdfako1VEiu5JNQClh3/CtroNS6rCkfXpafqnhQlp/nanKnr7O1Qr+kXNWnv7e843WC7Ox4
-	SeYlqotXZ196uKlrzbr4rYI66vfnyBYkbeVYd17x+72/KzZmJuyad0J/trlu5w3JegOG7mzp
-	LLnA+h/VfhVVlQzJRp8twk/9Dzpygqf0u/u/SYGRvnM6MrRZHq3g5pt62M7WUi4yt5HXb+Mr
-	JZbijERDLeai4kQAfvI0oT8EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCLMWRmVeSWpSXmKPExsWy7bCSnO6nnT1pBsd/yFvMWb+GzWL63A0s
-	Fpd3zWGz2PLvCKsDi8eJGb9ZPO6/TfTo27KK0ePzJrkAligum5TUnMyy1CJ9uwSujH9LjjMV
-	vOauePXqO2sD4yPOLkZODgkBE4muXfOYuxi5OIQEdjNKLD3zm62LkQMoISVxcJ8mhCkscfhw
-	MUi5kEArk8SHm54gNpuAtsTypmXMICUiAjYSTyfygISZBTwlXt29wAQSFhbQlZg8ywPEZBFQ
-	lVjQywxSwStgK7Hk3gtWiP3yEjMvfWeHiAtKnJz5hAViirxE89bZzBMY+WYhSc1CklrAyLSK
-	UTK1oDg3PbfYsMAoL7Vcrzgxt7g0L10vOT93EyM44LS0djDuWfVB7xAjEwfjIUYJDmYlEd75
-	N7rThHhTEiurUovy44tKc1KLDzFKc7AoifN+e92bIiSQnliSmp2aWpBaBJNl4uCUamBasdrB
-	b03P8UuaMfkC3Fr3JbasPpD799eehVn3Ox9uPZO+KPdVU6/jSs4JDNU8iQIV+3bqBZecKvdj
-	7PlgoXhr+7TPugvj61/kvZrV/q3r378ZEWWBBg9n+2RUXz18xYZv/q+7fk+E1L81cbH+fCIn
-	4Mx9x6Bm8SIm5aZlCoH66Vx/vLSe+PsUPdzeNOdxWZ3Lqqh/jyQ/Llq57vPRGet1khIDXKQ4
-	Baue+Eq0rtI6PUXn2GxHxjfiP7KOOwicsqlq0WmWlJq7JKq0/wXjJfHMQ35tVqYO26Kb8k7U
-	+BbrJT9d/24tH9Ms38WF2XYHnk3aOT/f+sDFnu/u8udW/OW9pey1Lehetvxyh3qGTyFKLMUZ
-	iYZazEXFiQDffvCypwIAAA==
-X-CMS-MailID: 20240709041754epcas1p4ee6f7b1fd0dbf287e756b709aba321c8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-X-ArchiveUser: EV
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240709041754epcas1p4ee6f7b1fd0dbf287e756b709aba321c8
-References: <CGME20240709041754epcas1p4ee6f7b1fd0dbf287e756b709aba321c8@epcas1p4.samsung.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v5 3/4] firmware: psci: Read and use vendor reset types
+Content-Language: en-US
+From: Trilok Soni <quic_tsoni@quicinc.com>
+To: Elliot Berman <quic_eberman@quicinc.com>,
+        Sudeep Holla
+	<sudeep.holla@arm.com>
+CC: Sebastian Reichel <sre@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Andy Yan
+	<andy.yan@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "Mark
+ Rutland" <mark.rutland@arm.com>,
+        Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>,
+        Satya Durga Srinivasu Prabhala
+	<quic_satyap@quicinc.com>,
+        Melody Olvera <quic_molvera@quicinc.com>,
+        Shivendra Pratap <quic_spratap@quicinc.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        <linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+References: <20240617-arm-psci-system_reset2-vendor-reboots-v5-0-086950f650c8@quicinc.com>
+ <20240617-arm-psci-system_reset2-vendor-reboots-v5-3-086950f650c8@quicinc.com>
+ <20240619135143.kr2tx4ynxayc5v3a@bogus>
+ <20240619080933071-0700.eberman@hu-eberman-lv.qualcomm.com>
+ <20240620162547309-0700.eberman@hu-eberman-lv.qualcomm.com>
+ <ZnmTtmZB8epgbUTN@bogus>
+ <20240702155630416-0700.eberman@hu-eberman-lv.qualcomm.com>
+ <1bdc4d4c-9cf1-a8bd-80de-7463cecd2c78@quicinc.com>
+In-Reply-To: <1bdc4d4c-9cf1-a8bd-80de-7463cecd2c78@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: np-jJaWPBl7FoRWLTFcEOK4UClUtoSca
+X-Proofpoint-GUID: np-jJaWPBl7FoRWLTFcEOK4UClUtoSca
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_15,2024-07-08_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ bulkscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 mlxscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407090023
 
-To clarify MAJOR/MINOR number of a mounted device, fat_msg prints prefix
-that includes them.
+On 7/2/2024 4:42 PM, Trilok Soni wrote:
+> On 7/2/2024 4:06 PM, Elliot Berman wrote:
+>> Hi Sudeep,
+>>
+>> On Mon, Jun 24, 2024 at 04:41:42PM +0100, Sudeep Holla wrote:
+>>> Sorry, I completely missed to see that you had already answered those
+>>> in your commit message. As mentioned earlier I haven't looked at the
+>>> reboot mode framework completely yet, so I can't comment on it yet.
+>>>
+>>> I don't want to be blocker though if others are happy with this.
+>>
+>> I think folks are satisfied with the other parts of the series and now
+>> looking for your conclusion on the PSCI driver part.
+> 
+> I will be nice to get these patches picked up before 4th July holiday in US :).
 
-Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
----
- fs/fat/fat.h  | 2 +-
- fs/fat/misc.c | 4 +++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+Sorry to bug you again Sudeep - but I need confirmation that these patches looks good to you
+and you will pick them up. Thanks. 
+ 
 
-diff --git a/fs/fat/fat.h b/fs/fat/fat.h
-index 66cf4778cf3b..538bcb3e28e1 100644
---- a/fs/fat/fat.h
-+++ b/fs/fat/fat.h
-@@ -435,7 +435,7 @@ void __fat_fs_error(struct super_block *sb, int report, const char *fmt, ...);
- #define fat_fs_error_ratelimit(sb, fmt, args...) \
- 	__fat_fs_error(sb, __ratelimit(&MSDOS_SB(sb)->ratelimit), fmt , ## args)
- 
--#define FAT_PRINTK_PREFIX "%sFAT-fs (%s): "
-+#define FAT_PRINTK_PREFIX "%sFAT-fs (%s[%d:%d]): "
- #define fat_msg(sb, level, fmt, args...)				\
- do {									\
- 	printk_index_subsys_emit(FAT_PRINTK_PREFIX, level, fmt, ##args);\
-diff --git a/fs/fat/misc.c b/fs/fat/misc.c
-index c7a2d27120ba..6672cefc5484 100644
---- a/fs/fat/misc.c
-+++ b/fs/fat/misc.c
-@@ -9,6 +9,7 @@
- 
- #include "fat.h"
- #include <linux/iversion.h>
-+#include <linux/blkdev.h>
- 
- /*
-  * fat_fs_error reports a file system problem that might indicate fa data
-@@ -59,7 +60,8 @@ void _fat_msg(struct super_block *sb, const char *level, const char *fmt, ...)
- 	va_start(args, fmt);
- 	vaf.fmt = fmt;
- 	vaf.va = &args;
--	_printk(FAT_PRINTK_PREFIX "%pV\n", level, sb->s_id, &vaf);
-+	_printk(FAT_PRINTK_PREFIX "%pV\n", level, sb->s_id,
-+		MAJOR(sb->s_dev), MINOR(sb->s_dev), &vaf);
- 	va_end(args);
- }
- 
 -- 
-2.25.1
+---Trilok Soni
 
