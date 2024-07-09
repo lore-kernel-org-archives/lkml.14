@@ -1,124 +1,241 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3956D2B9DA;
-	Tue,  9 Jul 2024 13:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32A84A0A;
+	Tue,  9 Jul 2024 13:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720531248; cv=none; b=ilKh/6kXjR5RkA8aS1jvzMsq+5ask4ykaXt0aaHeo+PcjEzN8A2RW3Uf5rQYFCxFxBRAeHb5pVe+OmHR4k+9DVLriDJIju/pi/SaHBX83NmDcS1/Zxr2v2BxX00PVIAtuQoBovhz2fTQ7Y7+kvpnDkI8ZPOGGzX77OtUfwiFRIc=
+	t=1720531262; cv=none; b=JyQEBHSRsBzMofe9rUspCMCIlOvc+Mg6ieKgA5jN6c99CrelfV/l+8iGYmWe+Ow1hTyhCgSLwl7ILuaKXz3KDns3W23bQawlTS1JfUXEA25mgM5TnTIzlFgv62J1Ph6kHhtZ6AG08x21wMLDV/XMZJe4VQNlYPgCWDcMntMO/fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720531248; c=relaxed/simple;
-	bh=IWo9o+BR5hri80OXw059McKLXefmWML8DKmyfp52TPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KlCJeJaZQ8n7fpR2jWh8+ke2fRY1ZHY0YUeJ1LUvZzMrtvwkvevrMcFZdZMdivd3v78eyvTBYB1Ye7BUJviioEKBc6LjBrjsgL0hJ+JqJ47DXQjNqfM/pT51znU9hWj+rIPBnwt5SBPf8yga6wrNiVUlKVqDPyC0F1E0ruLVNZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eg0Cjm/T; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1720531262; c=relaxed/simple;
+	bh=UJ4B+Q4x+Ego4l6SJ2nX8aLysQrcdIIiRMf9d2sbkio=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XDJzib2b409ivgk19cd/Osp+R2Er8P56AoIvydj/IOin5qIatooSsavnE2y8cnk4qqxi/Y9S/BwyFGZevp18DWGaX1J3OmI6mXjYaeCOVGIldM0zLfyJU0Wd9Gmx18srxde34d2hgZNysmxCsr5GEnoa0qFWpHhp/r1HzsEREr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=bEsxCxdN; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eg0Cjm/T"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2B18E1BF20B;
-	Tue,  9 Jul 2024 13:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720531243;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jdgtcZmaR8+U0BJCpEZXKmWLsv2ubjnvbI1hvNLijts=;
-	b=eg0Cjm/TBMLMJTS1BOIpLtUkMz04COoBTpzrwORid+BpxEyX+kDNujFxtgVc2TKgi/6s+X
-	ZsQYZUVdQRO1F2olaO6cOrSqVISF8oPJdFlM0kXMx3QFu4eOENVEkOFMZBkDKg2LBTLBbK
-	OwhnizFilnKwzPZCCR2kKpnElseJBhkd0kVqq6NtQfUfzX/zAP/yBrcu9QzMVCGtkzXWAX
-	NJO0AQtf6fBqo7TgbU1q4WRitgzmkvmsqwmNhDZ9bBB7uMDIdwLtF1P4qAtmm6hB3qycjz
-	0qCzV/9RVb3Wa2i/uyJ4HNvffzu8LoVD6q7E5B+SYUfbyBAvJOSnoAP8m8UoJw==
-Date: Tue, 9 Jul 2024 15:20:41 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Donald Hunter
- <donald.hunter@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
- Jonathan Corbet <corbet@lwn.net>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>,
- kernel@pengutronix.de, linux-doc@vger.kernel.org
-Subject: Re: [PATCH net-next v6 5/7] net: ethtool: Add new power limit get
- and set features
-Message-ID: <20240709152041.7493ffc5@kmaincent-XPS-13-7390>
-In-Reply-To: <20240708113300.3544d36d@kernel.org>
-References: <20240704-feature_poe_power_cap-v6-0-320003204264@bootlin.com>
-	<20240704-feature_poe_power_cap-v6-5-320003204264@bootlin.com>
-	<20240705184116.13d8235a@kernel.org>
-	<20240708113846.215a2fde@kmaincent-XPS-13-7390>
-	<20240708113300.3544d36d@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="bEsxCxdN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazon201209; t=1720531260; x=1752067260;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=myefINasqoLP8LFmYmmDEFb4CuSNvTYNmrkp8V5RNNQ=;
+  b=bEsxCxdN3ru94aKZb0/1q4Gst3DjyxBRIiFbG8KuVk28wAnM/z/Xpc9s
+   WRlKtr2wazKJVhx5mHreB1pfy2RkrhEmP1VU1iNKLU6wIwVOL5FOontin
+   1XSKRl2kDsQ+Za/E9B8ZDSBLejoVfWuuusJRbh4twHSnA8Yid6P5Mu4ja
+   0=;
+X-IronPort-AV: E=Sophos;i="6.09,195,1716249600"; 
+   d="scan'208";a="217222124"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 13:20:58 +0000
+Received: from EX19MTAUEB001.ant.amazon.com [10.0.0.204:19435]
+ by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.13.24:2525] with esmtp (Farcaster)
+ id 18a4efc4-1b3b-4e58-98d8-17e4bb420299; Tue, 9 Jul 2024 13:20:57 +0000 (UTC)
+X-Farcaster-Flow-ID: 18a4efc4-1b3b-4e58-98d8-17e4bb420299
+Received: from EX19D008UEA004.ant.amazon.com (10.252.134.191) by
+ EX19MTAUEB001.ant.amazon.com (10.252.135.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Tue, 9 Jul 2024 13:20:57 +0000
+Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
+ EX19D008UEA004.ant.amazon.com (10.252.134.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Tue, 9 Jul 2024 13:20:56 +0000
+Received: from ua2d7e1a6107c5b.ant.amazon.com (172.19.88.180) by
+ mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34
+ via Frontend Transport; Tue, 9 Jul 2024 13:20:54 +0000
+From: Patrick Roy <roypat@amazon.co.uk>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <akpm@linux-foundation.org>,
+	<dwmw@amazon.co.uk>, <rppt@kernel.org>, <david@redhat.com>
+CC: Patrick Roy <roypat@amazon.co.uk>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <willy@infradead.org>, <graf@amazon.com>,
+	<derekmn@amazon.com>, <kalyazin@amazon.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <dmatlack@google.com>,
+	<tabba@google.com>, <chao.p.peng@linux.intel.com>, <xmarcalx@amazon.co.uk>
+Subject: [RFC PATCH 1/8] kvm: Allow reading/writing gmem using kvm_{read,write}_guest
+Date: Tue, 9 Jul 2024 14:20:29 +0100
+Message-ID: <20240709132041.3625501-2-roypat@amazon.co.uk>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240709132041.3625501-1-roypat@amazon.co.uk>
+References: <20240709132041.3625501-1-roypat@amazon.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Mon, 8 Jul 2024 11:33:00 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+If KVM can access guest-private memory without causing a host-kernel
+panic (e.g. currently only if the vm type is KVM_SW_PROTECTED_VM), allow
+`kvm_{read,write}_guest` to access gfns that are set to "private".  If
+KVM cannot access guest-private memory (say, because it is running a TDX
+VM), prepare a KVM_EXIT_MEMORY_FAULT (if possible) and return -EFAULT.
 
-> On Mon, 8 Jul 2024 11:38:46 +0200 Kory Maincent wrote:
->  [...] =20
->  [...] =20
->=20
-> Don't worry I understand the code well enough to resolve any conflicts
-> (famous last words?). And if we fix as part of ethnl_set_pse_validate()
-> then there's no conflict, AFAICT.
+KVM can only prepare the memory fault exit inside the
+`kvm_vcpu_{read,write}_guest` variant, as it needs a vcpu reference to
+assign the exit reason to.
 
-As you can see in the patch I just sent
-https://lore.kernel.org/netdev/20240709131201.166421-1-kory.maincent@bootli=
-n.com/T/#u
-the fix is not in set_pse_validate() therefore you will have a merge confli=
-ct.
+KVM accesses guest-private memory via kernel virtual addresses/the
+direct map. In the special case of guest_memfd, it does not have to
+worry about gfn->pfn mappings being invalidated, since guest_memfd pages
+are immovable.
 
-You could do this to solve the merge conflict:
---- a/net/ethtool/pse-pd.c
-+++ b/net/ethtool/pse-pd.c
-@@ -256,6 +256,7 @@ static int
- ethnl_set_pse(struct ethnl_req_info *req_info, struct genl_info *info)
- {
-        struct net_device *dev =3D req_info->dev;
-+       struct pse_control_config config =3D {};
-        struct nlattr **tb =3D info->attrs;
-        struct phy_device *phydev;
-        int ret =3D 0;
-@@ -273,15 +274,13 @@ ethnl_set_pse(struct ethnl_req_info *req_info, struct=
- genl_info *info)
-        }
-=20
-        /* These values are already validated by the ethnl_pse_set_policy */
-+       if (tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL])
-+               config.podl_admin_control =3D nla_get_u32(tb[ETHTOOL_A_PODL=
-_PSE_ADMIN_CONTROL]);
-+       if (tb[ETHTOOL_A_C33_PSE_ADMIN_CONTROL])
-+               config.c33_admin_control =3D nla_get_u32(tb[ETHTOOL_A_C33_P=
-SE_ADMIN_CONTROL]);
+Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
+---
+ include/linux/kvm_host.h |  5 +++
+ virt/kvm/kvm_main.c      | 85 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+)
+
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 2a6679b46427..8f980aafd5ca 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2407,6 +2407,11 @@ static inline void kvm_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
+ 		vcpu->run->memory_fault.flags |= KVM_MEMORY_EXIT_FLAG_PRIVATE;
+ }
+ 
++static inline bool kvm_can_access_gmem(struct kvm *kvm)
++{
++	return kvm->arch.vm_type == KVM_X86_SW_PROTECTED_VM;
++}
 +
-        if (tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL] ||
-            tb[ETHTOOL_A_C33_PSE_ADMIN_CONTROL]) {
--               struct pse_control_config config =3D {};
--
--               if (pse_has_podl(phydev->psec))
--                       config.podl_admin_control =3D nla_get_u32(tb[ETHTOO=
-L_A_PODL_PSE_ADMIN_CONTROL]);
--               if (pse_has_c33(phydev->psec))
--                       config.c33_admin_control =3D nla_get_u32(tb[ETHTOOL=
-_A_C33_PSE_ADMIN_CONTROL]);
--
-                ret =3D pse_ethtool_set_config(phydev->psec, info->extack,
-                                             &config);
-                if (ret)
+ #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+ static inline unsigned long kvm_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
+ {
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 8c7cbc9ec9ee..b3b3de70a4df 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3286,11 +3286,51 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
+ 	return 0;
+ }
+ 
++static int __kvm_read_guest_private_page(struct kvm *kvm,
++					 struct kvm_memory_slot *memslot, gfn_t gfn,
++					 void *data, int offset, int len)
++{
++	kvm_pfn_t pfn;
++	int r;
++	struct page *page;
++	void *kaddr;
++
++	if (!kvm_can_access_gmem(kvm))
++		return -EFAULT;
++
++	r = kvm_gmem_get_pfn(kvm, memslot, gfn, &pfn, NULL);
++
++	if (r < 0)
++		return -EFAULT;
++
++	page = pfn_to_page(pfn);
++	lock_page(page);
++	kaddr = page_address(page) + offset;
++	memcpy(data, kaddr, len);
++	unlock_page(page);
++	put_page(page);
++	return 0;
++}
++
++static int __kvm_vcpu_read_guest_private_page(struct kvm_vcpu *vcpu,
++					       struct kvm_memory_slot *memslot, gfn_t gfn,
++					       void *data, int offset, int len)
++{
++	if (!kvm_can_access_gmem(vcpu->kvm)) {
++		kvm_prepare_memory_fault_exit(vcpu, gfn + offset, len, false,
++					      false, true);
++		return -EFAULT;
++	}
++	return __kvm_read_guest_private_page(vcpu->kvm, memslot, gfn, data, offset, len);
++}
++
+ int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
+ 			int len)
+ {
+ 	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+ 
++	if (kvm_mem_is_private(kvm, gfn))
++		return __kvm_read_guest_private_page(kvm, slot, gfn, data, offset, len);
+ 	return __kvm_read_guest_page(slot, gfn, data, offset, len);
+ }
+ EXPORT_SYMBOL_GPL(kvm_read_guest_page);
+@@ -3300,6 +3340,8 @@ int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data,
+ {
+ 	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+ 
++	if (kvm_mem_is_private(vcpu->kvm, gfn))
++		return __kvm_vcpu_read_guest_private_page(vcpu, slot, gfn, data, offset, len);
+ 	return __kvm_read_guest_page(slot, gfn, data, offset, len);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_page);
+@@ -3390,11 +3432,52 @@ static int __kvm_write_guest_page(struct kvm *kvm,
+ 	return 0;
+ }
+ 
++static int __kvm_write_guest_private_page(struct kvm *kvm,
++					  struct kvm_memory_slot *memslot, gfn_t gfn,
++					  const void *data, int offset, int len)
++{
++	kvm_pfn_t pfn;
++	int r;
++	struct page *page;
++	void *kaddr;
++
++	if (!kvm_can_access_gmem(kvm))
++		return -EFAULT;
++
++	r = kvm_gmem_get_pfn(kvm, memslot, gfn, &pfn, NULL);
++
++	if (r < 0)
++		return -EFAULT;
++
++	page = pfn_to_page(pfn);
++	lock_page(page);
++	kaddr = page_address(page) + offset;
++	memcpy(kaddr, data, len);
++	unlock_page(page);
++	put_page(page);
++
++	return 0;
++}
++
++static int __kvm_vcpu_write_guest_private_page(struct kvm_vcpu *vcpu,
++					       struct kvm_memory_slot *memslot, gfn_t gfn,
++					       const void *data, int offset, int len)
++{
++	if (!kvm_can_access_gmem(vcpu->kvm)) {
++		kvm_prepare_memory_fault_exit(vcpu, gfn + offset, len, true,
++					      false, true);
++		return -EFAULT;
++	}
++	return __kvm_write_guest_private_page(vcpu->kvm, memslot, gfn, data, offset, len);
++}
++
+ int kvm_write_guest_page(struct kvm *kvm, gfn_t gfn,
+ 			 const void *data, int offset, int len)
+ {
+ 	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+ 
++	if (kvm_mem_is_private(kvm, gfn))
++		return __kvm_write_guest_private_page(kvm, slot, gfn, data, offset, len);
+ 	return __kvm_write_guest_page(kvm, slot, gfn, data, offset, len);
+ }
+ EXPORT_SYMBOL_GPL(kvm_write_guest_page);
+@@ -3404,6 +3487,8 @@ int kvm_vcpu_write_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
+ {
+ 	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+ 
++	if (kvm_mem_is_private(vcpu->kvm, gfn))
++		return __kvm_vcpu_write_guest_private_page(vcpu, slot, gfn, data, offset, len);
+ 	return __kvm_write_guest_page(vcpu->kvm, slot, gfn, data, offset, len);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_write_guest_page);
 
+base-commit: 771df9ffadb8204e61d3e98f36c5067102aab78f
+-- 
+2.45.2
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
