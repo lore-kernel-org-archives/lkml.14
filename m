@@ -1,87 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-251-36.mail.qq.com (out203-205-251-36.mail.qq.com [203.205.251.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BD0155310;
-	Tue,  9 Jul 2024 09:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FB7155310
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720517153; cv=none; b=bnPqpsYnieBfGAWkwPZYF+UZ4/GuEJeez/alI8gU6qr92xuxS5pcLTTt9DDPg9v5KE/TPw5Lxin95dUEWefy5TNy106cY2mDqCUsOz1xJAGNWKSEWizSfkMGLEZ7w5+fcozzzlS5ZzjfTkMnORvayWS/lZVsz4kP26EwJfhbgVY=
+	t=1720517161; cv=none; b=NNfbbGwdfsTuQGQmAMDQQbmWxe2DszXGCPUyZe8N4KtKrr0HSe4UeHCjj4xsFX5UIBYuRF6qxGGaEaZ+UQQ8YZOj66bDRyjxov/jOVJrBTOQnABUzJnGN+ws1IH0LVVhcTeUi5U2oJCQJpJlUC51P/4hnoGTTm+sFtWAX7SFLPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720517153; c=relaxed/simple;
-	bh=QBQ3Vf3AsBCxVX0Ial0oaRT12iQXKMU1CCuUwuqKGGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hOR5O2y4O8et0y0vgbUvbezlOA72sd8d+dTfFiR8lmzESDqQ5m92fdtJzwmPXkBk/rL4JxGcDbm9d9wmx/FuII1BDPel7PzFH8wX+Tv9ZQbIC4lFxRuE9e3E3ZgGMPfW2nakkLBYNzBpCpSV3T3YoCW1u+gXA+4hYeotUadbhtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWH01lHC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720517161; c=relaxed/simple;
+	bh=fSUbV7tFkBt93VskwmkO/ehBNqtRph/kx9sBJz720M4=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=Xbze+1wHGy/erib4Z6Dt8o8wu2T40Br2vP9R/I1lKTqnYqJJtxiab3iunK0eqYZIN0A9b+foaToNoSWQnooIGKGxA2MMRkduQDx8Ts5Q4imrvWz35SucNFzudzvJNeMMz9aqyfrhLLqY2XpqfvxfJmdJrYEgcZd47LALx+43SNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=tNxLlINK; arc=none smtp.client-ip=203.205.251.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWH01lHC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 801C7C3277B;
-	Tue,  9 Jul 2024 09:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720517152;
-	bh=QBQ3Vf3AsBCxVX0Ial0oaRT12iQXKMU1CCuUwuqKGGM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lWH01lHC26cPJsw/X+HBenWlEpFJJfJltpYufo4Nwc+j21AG+AgSd0mO35ip/x55X
-	 1j3wMkPD4jxOL9TWXbtvtIQpK+r5OevcF9GrmWkPk6CyxPTlJhwGyvfrSQpodhNU9T
-	 Ej5H2PNhkrvX3NwrYtw2gYhZg99SIq3DOU0O7SqXa+cuujYzDd5SUzD8zYIMTnYep1
-	 cIUi8500jcB+ittL3URif7r3qBocfl1W3F80r2sNTH5NJflOYtX8H98NBCeE2cMMLB
-	 HXmWdNfbJvJ6qLoehzpkJxb2fWCkI12TVgucRPshBHD2ku/q3Q9I9YQbQNDZx50ZBE
-	 BAe9M3W+wYjVQ==
-Date: Tue, 9 Jul 2024 10:25:47 +0100
-From: Lee Jones <lee@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Dustin Howett <dustin@howett.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	linux-leds@vger.kernel.org,
-	Rajas Paranjpe <paranjperajas@gmail.com>
-Subject: [GIT PULL] Immutable branch between MFD, LEDs and Platform due for
- the v6.11 merge window[GIT PULL] Immutable branch between MFD, LEDs and
- Platform due for the v6.11 merge window
-Message-ID: <20240709092547.GC501857@google.com>
-References: <20240526-cros_ec-kbd-led-framework-v3-0-ee577415a521@weissschuh.net>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tNxLlINK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1720517151; bh=tEdSWJRqnHTNHkLT51gYacmV1crsh1EMbihoD9Utpi0=;
+	h=From:To:Cc:Subject:Date;
+	b=tNxLlINK76oPZcILWawIpisrFMwF/FYAsQ0BuMmgLqsoThAW9RwqouggVkJtZ8PL3
+	 He7SaH6Rw0gDMOp/58D2CFlQ3hhp4mkEqyXtw3VTWs1Fmo6BpzLkGUPeTK3+AScLyp
+	 TXiO1x5rD1RiHqS3HvUlWJo4nqF17Vp6NGjY6k+k=
+Received: from cyy-pc.lan ([240e:379:225e:9b00:b588:778:1f25:bdbe])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id 66284851; Tue, 09 Jul 2024 17:25:34 +0800
+X-QQ-mid: xmsmtpt1720517134th6q0i812
+Message-ID: <tencent_A5ED71472ADCAF18F59085464CBE23C12A07@qq.com>
+X-QQ-XMAILINFO: NLNuKjcZ2ePXhKs02oEt1D3qgjhaBaAXFbzPbSRY78pCLLTTQijsQCYJer0Tg5
+	 pRlmwlx35mIimGnWzWnmHnA8UDn2lELHJDs8ZrseNwisoIVCrD7jHFq06GECRz2RMwJYnzExGauW
+	 FBYLiuLzjMmIcORvBf9yPVu24OUWIQYVNj4ILo5HcBXCUd6fcw6oOVyiVFQROk35HB1WcPbHbdc2
+	 PjN/5Qt2cgTf0BoS5sFcSDkPFFzt3l/7GFUsuIqBtalQ6ytQ+DPOnS15uCAtyLPQk34ME1/G+fJQ
+	 1+Ht/LRVUNlvTS7V8XY1eNB+LzRhpqxvxXHtpd0hH2lItH5+KURA/rhgw2lu/5rxOzvtU7OQi2Px
+	 cfS5/gm8DpdvK9bbIXniqCQwdeu5WQQIhfib+ZOUKaeJP2OaOOeQSzyjVbvsgcSOuwJaPIwOWtlQ
+	 J8xbFBout6eWAcju1nntFgkW9RFYZRdQUS4NGEr12JpIFKpXlIk98PYwlWG+5A4c6T05NkoG9nH/
+	 AZuU8mJ2/wXM0LAj7Rf6DWRZSm4z3t7eUsgHC6dj3dgr2WNXzGaM+qcfHDlLPJItUOnMAa13qaSt
+	 TkRNvE5YoHjxDS0vonvBd1Ryv1W2qen1+rcdGHIsvCTmGj6MmLF9ELMBzM5piFNWEVXQGgRHT98Y
+	 uNSlqr4tHLxgYxi5z8xZQFBbpcEzE2ZEC6ArA4VIbQibRVmc+WDGyR6Ngb0am+P/ccgRQqIzAwL2
+	 m7JuqJTmIzcEHOCiw7Mu0CnRFSG6It6pyjOifmL4X9wyQ8dKHbehkPXicqM1kAs1TRmc47wZp8t2
+	 JyTqoynAlalrl4WVZyvV6Ef/7FXUjhiroU9XuCLGqqP0i2ZGOJ8wex03+mVHTGiU21UbAWaPisIK
+	 a9C+zTO8AS24sTqIa6/wt27JISxiRGPjLmP4YGOJaKA6YQ4fK7ZwlMGud1MrmdKaksbZAXv0BYBu
+	 PEVeStkZijJFJ8IgzYNaqsCVvv8LPAs9/+YgTzIQ8NnMOyxpgaXE6wUD9U2ki8GfCUzLzvOygN/W
+	 tBUBLYaw==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Yangyu Chen <cyy@cyyself.name>
+To: iommu@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Yangyu Chen <cyy@cyyself.name>
+Subject: [PATCH -fixes] dma-mapping: add default implementation to arch_dma_{set|clear}_uncached
+Date: Tue,  9 Jul 2024 17:25:29 +0800
+X-OQ-MSGID: <20240709092529.3977310-1-cyy@cyyself.name>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240526-cros_ec-kbd-led-framework-v3-0-ee577415a521@weissschuh.net>
 
-Enjoy!
+Currently, we have some code in kernel/dma/direct.c which references
+arch_dma_set_uncached and arch_dma_clear_uncached. However, many
+architectures do not provide these symbols, and the code currently
+relies on compiler optimization to cut the unnecessary code. When the
+compiler fails to optimize it, the code will reference the symbol and
+cause a link error. I found this bug when developing some new extensions
+for RISC-V on LLVM. The error message is shown below:
 
-The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
+```
+  LD      .tmp_vmlinux.kallsyms1
+ld.lld: error: undefined symbol: arch_dma_set_uncached
+>>> referenced by direct.c
+>>>               kernel/dma/direct.o:(dma_direct_alloc) in archive
+vmlinux.a
+make[2]: *** [scripts/Makefile.vmlinux:34: vmlinux] Error 1
+```
 
-  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
+This patch adds default implementations for arch_dma_set_uncached and
+arch_dma_clear_uncached in include/linux/dma-map-ops.h. So that the
+code in kernel/dma/direct.c can always reference these symbols to
+avoid link errors.
 
-are available in the Git repository at:
+Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+---
+ include/linux/dma-map-ops.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-leds-platform-v6.11
-
-for you to fetch changes up to 970c3a6b7aa3c68ccdf5af2562c3d39533dd62a9:
-
-  mfd: cros_ec: Register keyboard backlight subdevice (2024-06-14 10:09:40 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, LEDs and Platform due for the v6.11 merge window
-
-----------------------------------------------------------------
-Thomas Weißschuh (4):
-      leds: class: Warn about name collisions earlier
-      leds: class: Add flag to avoid automatic renaming of LED devices
-      platform/chrome: cros_kbd_led_backlight: allow binding through MFD
-      mfd: cros_ec: Register keyboard backlight subdevice
-
- drivers/leds/led-class.c                         |  9 +++---
- drivers/mfd/cros_ec_dev.c                        |  9 ++++++
- drivers/platform/chrome/Kconfig                  |  2 +-
- drivers/platform/chrome/cros_kbd_led_backlight.c | 40 ++++++++++++++++++++++--
- include/linux/leds.h                             |  1 +
- 5 files changed, 54 insertions(+), 7 deletions(-)
-
+diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
+index 02a1c825896b..92a713557859 100644
+--- a/include/linux/dma-map-ops.h
++++ b/include/linux/dma-map-ops.h
+@@ -420,8 +420,22 @@ static inline void arch_dma_mark_clean(phys_addr_t paddr, size_t size)
+ }
+ #endif /* ARCH_HAS_DMA_MARK_CLEAN */
+ 
++#ifdef CONFIG_ARCH_HAS_DMA_SET_UNCACHED
+ void *arch_dma_set_uncached(void *addr, size_t size);
++#else
++static inline void *arch_dma_set_uncached(void *addr, size_t size)
++{
++	return ERR_PTR(-EINVAL);
++}
++#endif /* CONFIG_ARCH_HAS_DMA_SET_UNCACHED */
++
++#ifdef CONFIG_ARCH_HAS_DMA_CLEAR_UNCACHED
+ void arch_dma_clear_uncached(void *addr, size_t size);
++#else
++static inline void arch_dma_clear_uncached(void *addr, size_t size)
++{
++}
++#endif /* CONFIG_ARCH_HAS_DMA_CLEAR_UNCACHED */
+ 
+ #ifdef CONFIG_ARCH_HAS_DMA_MAP_DIRECT
+ bool arch_dma_map_page_direct(struct device *dev, phys_addr_t addr);
 -- 
-Lee Jones [李琼斯]
+2.45.2
+
