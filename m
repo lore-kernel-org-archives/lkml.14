@@ -1,77 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAB04D8BB;
-	Tue,  9 Jul 2024 05:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E784D8BB
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 05:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720502680; cv=none; b=O5reOLvMf5Q5OwQHDK4k7ArcGcFB3uDxbTFcC05sIN9IHn3bLDf3aeXW7MuYzWwB+07qzN/k12x2MkhC3SIDEFA+GCX+bdLrcIH4/tCsQeHeJnbPf+IB6T3kypvtywW09q1AgZFp2GLtkBE7I2UlwhafuCO+XlGUkMQvcDc16GA=
+	t=1720502689; cv=none; b=A0XPMUkvHgRmlehr8uiCoL6NLGqG+Xlm82Ud0GJKyhX5eU3WEkp3lOPHRFPXEEvxRLMt5sfg1BeiPTiCTBOu80iQJpDX9V6jt3RuByigCcq34j9xcpAfS4hwJFCNXX8O7HTt6pua4Cakw82/sgJNoD4HMnUdtB62/3+1ZcR/SYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720502680; c=relaxed/simple;
-	bh=4tizSs2TAz0RtnGGO1qTakHRK5xJiSrgMw06tNFDBRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=doINVKSFpgQY+suw8TFBQajwBUdeEqydP/cOgkAMSgVX73NPjE8T/jBLBoyhXkluuzR+oKdiW0jYSXv5uM7yZnhm0jB2T8Hep41ORrive5cCirdJRWKfal3yjTMcWnre9GHjURWbk+hlx++wtiflL3421fkVUKLoew3qV2pw8BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XDqYKgsI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720502689; c=relaxed/simple;
+	bh=ShJ2SRcPXiThajj6mXrDhek7dNOvA0ou4pf8tpzkyLM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IymyjNJIUrM6OKXGpzxwx5eZmt9SluFbQSfPB/AunYHdMtAZbHoyn8IjnXGpI0NlZdNffFedWo0uUq2teSu/qnXKPiY+w+0PLBJQhff0GKU59JB8wwPPHIbrO0gC/CIcdAmL+tIm6gu0F1h0phW2f2Fnmm/uuVeBIiUdIRpDCZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DEdW7hmY; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XDqYKgsI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1AFAC32782;
-	Tue,  9 Jul 2024 05:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720502679;
-	bh=4tizSs2TAz0RtnGGO1qTakHRK5xJiSrgMw06tNFDBRM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XDqYKgsIjcET2kG1gBOUaqJpVZRjnWrfe/SliV+a6cDFnihfT2gV17xgJBP/01gLl
-	 KBHufVqFyunnGuPTq+OvlHH2V0IuFokKYmXxwNZ6Kl6NojikK6lbLLQonmlYHil3e0
-	 h9DrFrcyO9g+jAUgHYWyvHHmvafZKTrKlMgmSCDs=
-Date: Tue, 9 Jul 2024 07:24:36 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Martin Oliveira <martin.oliveira@eideticom.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-rdma@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Artemy Kovalyov <artemyko@nvidia.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Michael Guralnik <michaelgur@nvidia.com>,
-	Mike Marciniszyn <mike.marciniszyn@intel.com>,
-	Shiraz Saleem <shiraz.saleem@intel.com>, Tejun Heo <tj@kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	David Sloan <david.sloan@eideticom.com>
-Subject: Re: [PATCH v4 1/3] kernfs: remove page_mkwrite() from
- vm_operations_struct
-Message-ID: <2024070927-expand-carless-0680@gregkh>
-References: <20240708165714.3401377-1-martin.oliveira@eideticom.com>
- <20240708165714.3401377-2-martin.oliveira@eideticom.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DEdW7hmY"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2c96e73c886so3401358a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 22:24:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720502687; x=1721107487; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ps3lG/PULQJDldl+4+0mWuZnq0P9RsTgm5luTvIchyg=;
+        b=DEdW7hmYh60jT0aD+2mGJPt00qm01jhydZVVKTpWcZDnTNrXqycdIbJECPDIGb6XVJ
+         CRYnaBv+VPWAy8W18zw2DuAJF0uuV9V2PXnH85cnRrXY/tnQ6SStO3tot0xuGCZQcRL+
+         3PTvIZMQ3EJeXdhno8b8IkmKI0KdQ55PWGfoa6R5/XMmnZ48RU9+B44XGHosWqiDmdCw
+         +yUKw/+vL1Qsr1voLF/wbfNZcO676s4vlt1HOiT2yotBWNgNtg9Aw856BLoWDR4EJPlE
+         1sxTZeLvo3tFkNN4/YUNvdszxrfZ8gVgumyAaf6KWt2d58K+9GLjb4M/ASTeRO1pKT2Y
+         eccg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720502687; x=1721107487;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ps3lG/PULQJDldl+4+0mWuZnq0P9RsTgm5luTvIchyg=;
+        b=lVj2OqbqWskogZW0DU5wkY5aYR4gA1o3Vzyqek6VNwe4tcI337mWiwjErTk9r/cgd/
+         epn9Rl7iIW6QokZHtj0rPp52CjnKkZjYIBZ7YrP0fR41RvgKfzaNHC6sdfLGLcWKgnUn
+         MzQIaX1VlL8qzBcjttE8HPNaVlj0w0JpQaEkZVvqM5ipdhczBhWkwJm/Bu3W9/z2bjv4
+         Brn19mt7ITzRxr1J4ZRxgK2Ytb3CNkmNZKJd+QFR5k2hIlACBF5fweWyqzAA8U5RtyC2
+         5kmsMPFWWZ0iI8VtMV/kRGhtvPmBxjEAjrPxPTDkuRtXS6I7jZUbiMDCjHXgCX05xvxG
+         6CZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZfZLIv0jWvyVClbl4PIpECEifF/QWctDh3eXfXukQNgqVwTQmLv+keYeAvR6yiblpPKWSZznN9DkLaU61sSXb2X0LEFXEF/KBzmIg
+X-Gm-Message-State: AOJu0Yw+q4dlxgLuZQijYn9h97vbI4NLCTK8vYTY+5QXhX4bSAc/cFT0
+	sv/nc0Iv8IkoAeU1WoJsByif45DDHCDAGP3RnCrf26VIaSXVFNz6nku68KklHHxHoVa68e8dgQF
+	VfwlYR3/646dgTigzPSouqg==
+X-Google-Smtp-Source: AGHT+IEnE18pVhj8KxuhMIrrakjlq5qVTSryJpNEnZOtvXnmApyS38wo0XKNdx/2PB7nIwLXgMrWNqpDerA6NWhmOg==
+X-Received: from yuting.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:317f])
+ (user=yutingtseng job=sendgmr) by 2002:a17:90b:278c:b0:2c9:7e93:498b with
+ SMTP id 98e67ed59e1d1-2ca35d8c003mr4534a91.9.1720502687049; Mon, 08 Jul 2024
+ 22:24:47 -0700 (PDT)
+Date: Mon,  8 Jul 2024 22:24:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240708165714.3401377-2-martin.oliveira@eideticom.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240709052408.4032665-1-yutingtseng@google.com>
+Subject: [PATCH v8 0/2] binder: frozen notification
+From: Yu-Ting Tseng <yutingtseng@google.com>
+To: cmllamas@google.com, tkjos@google.com, gregkh@linuxfoundation.org
+Cc: arve@android.com, maco@android.com, joel@joelfernandes.org, 
+	brauner@kernel.org, surenb@google.com, aliceryhl@google.com, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	Yu-Ting Tseng <yutingtseng@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jul 08, 2024 at 10:57:12AM -0600, Martin Oliveira wrote:
-> The .page_mkwrite operator of kernfs just calls file_update_time().
-> This is the same behaviour that the fault code does if .page_mkwrite is
-> not set.
-> 
-> Furthermore, having the page_mkwrite() operator causes
-> writable_file_mapping_allowed() to fail due to
-> vma_needs_dirty_tracking() on the gup flow, which is a pre-requisite for
-> enabling P2PDMA over RDMA.
-> 
-> There are no users of .page_mkwrite and no known valid use cases, so
-> just remove the .page_mkwrite from kernfs_ops and WARN if an mmap()
-> implementation sets .page_mkwrite.
-> 
-> Co-developed-by: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Martin Oliveira <martin.oliveira@eideticom.com>
-> ---
->  fs/kernfs/file.c | 40 +++++++++++-----------------------------
->  1 file changed, 11 insertions(+), 29 deletions(-)
+Separated the binder_features change into its own patch.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Yu-Ting Tseng (2):
+  binder: frozen notification
+  binder: frozen notification binder_features flag
+
+ drivers/android/binder.c                      | 284 +++++++++++++++++-
+ drivers/android/binder_internal.h             |  21 +-
+ drivers/android/binderfs.c                    |   8 +
+ include/uapi/linux/android/binder.h           |  36 +++
+ .../filesystems/binderfs/binderfs_test.c      |   1 +
+ 5 files changed, 346 insertions(+), 4 deletions(-)
+
+
+base-commit: 14d7c92f8df9c0964ae6f8b813c1b3ac38120825
+-- 
+2.45.2.803.g4e1b14247a-goog
+
