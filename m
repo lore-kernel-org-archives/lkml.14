@@ -1,2702 +1,1076 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1120.securemx.jp [210.130.202.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BD829408;
-	Tue,  9 Jul 2024 01:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.128
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21191347A2;
+	Tue,  9 Jul 2024 01:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720489286; cv=none; b=jPOZv8AK7IeAkhnEJzjtIbYpUseP1mQ3ltDva7JdJmCR8sUu08F/2jSN/VJl1azi52OSPSMsHdcpaShFkj7aRoasJo/tMcHWcbBWgj3/OoaeACq+VAjQS18oHVcy8wZ2811GcOt43tbXYj7RfpLzK+ZLEqj6TJL4dF7RezVs8h0=
+	t=1720489323; cv=none; b=prhwzUP+AQVq0bJLuppVCl6p+nHAPUNN1uY3qiPgJhLnwRWijvRP7IGFhXyXsn9mI7iZVZGRaFA3OMVIkfFuGqHoOSdKWSL/kO7WPl189034QXwJwwtR+mRCP1a/rxFOpgucyMFZB10FdXnU8nUGjmurLbJnL058V7G2i+Ac29Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720489286; c=relaxed/simple;
-	bh=l+yhs2Aav1fZKfGQ6Lf/XvPQ6Se4XNxK31vwqWc0ans=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DGDgfCBWypwZiZ7nH1BszYw6NtRuKbjTjB2y1bsIeN3UplwjMqpDBzElY1l4CuQmTAIYMYrNq8lLmb3EQp2Z4Ud+Ut1Ekvg5VnDKhM0+/IiSCSg/oM30UBtTF4prbpsehv+75SkjK19DzQxevMqg8FZnkkUa4LLbOIsyyv+Cp0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b=DRIqHlmr; arc=none smtp.client-ip=210.130.202.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=yuji2.ishikawa@toshiba.co.jp header.b="DRIqHlmr"
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1120) id 4690FL0S2609101; Tue, 9 Jul 2024 09:15:21 +0900
-DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
-	:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:
-	Content-Transfer-Encoding;i=yuji2.ishikawa@toshiba.co.jp;s=key2.smx;t=
-	1720484075;x=1721693675;bh=l+yhs2Aav1fZKfGQ6Lf/XvPQ6Se4XNxK31vwqWc0ans=;b=DRI
-	qHlmrSryzjnSFUdjOf2IlVindi2o7xvu96zKDD6d2kWgoIu0tlworTMqwZ5RHglOTe/E4092nK+WB
-	3uxqC9AMT61GFbAAhmgldufuSB6YFAppChKOJ7lLjZRE0DLmKVDNbUZPY0V2M3tgvdMN/JAgwzUd8
-	SIOZ0noGb8r1ssyHPH6ycealgOlNnFJkyRyEowgNhem+9eTzyClJIO+LFc+VqHc5fjYynGgAxdJ8v
-	ZcsXOZ4IZ/5oxusEDHftpauQmHrXucSUPCe447dSJgu4rGAFKIRN2ml3W65nCkVyJNp4Tp/rwQxUF
-	ezp4wjt5dmkxwF5QeYlYv5GrgqcI66Q==;
-Received: by mo-csw.securemx.jp (mx-mo-csw1120) id 4690EZrM2854320; Tue, 9 Jul 2024 09:14:35 +0900
-X-Iguazu-Qid: 2rWgkjIBWbNp1toCO8
-X-Iguazu-QSIG: v=2; s=0; t=1720484074; q=2rWgkjIBWbNp1toCO8; m=7j1D3UHdzBpVZD/fOy4PcHQ9zCC8bbU5fOKO929gcmQ=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-	by relay.securemx.jp (mx-mr1122) id 4690EWa4444254
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 09:14:32 +0900
-X-SA-MID: 26358969
-From: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-To: Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 4/6] media: platform: visconti: add streaming interface for ISP parameters and status
-Date: Tue,  9 Jul 2024 09:08:46 +0900
-X-TSB-HOP2: ON
-Message-Id: <20240709000848.1108788-5-yuji2.ishikawa@toshiba.co.jp>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240709000848.1108788-1-yuji2.ishikawa@toshiba.co.jp>
-References: <20240709000848.1108788-1-yuji2.ishikawa@toshiba.co.jp>
+	s=arc-20240116; t=1720489323; c=relaxed/simple;
+	bh=MHZ0zhBatIbJUhHJBpifCDn2PS1pAcqrNGGqXmlWMl4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=iTdmJJTZ2YmmoCeeyQZP+2IwnjJpojFuBXsYiwxv7wYUKR8tOcmkAaE80oA76kpMmixAxbl22Z8aJBNc+UcAaP78KtdTFGFqGfdhA/SkKSI3nu/UnL0+D1wujK63b/Lmmy6C+krfRJvRDuH2yLtArz4nPtNWDgQEW2z2wTf2tFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Cx7+tklYxm6joCAA--.6694S3;
+	Tue, 09 Jul 2024 09:41:56 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axw8RdlYxmR2dAAA--.5941S3;
+	Tue, 09 Jul 2024 09:41:52 +0800 (CST)
+Subject: Re: [PATCH V2 2/2] LoongArch: Add AVEC irqchip support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, tglx@linutronix.de, jiaxun.yang@flygoat.com,
+ gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+ yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
+ dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
+ zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
+ zhoubinbin@loongson.cn, loongarch@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240705015315.16541-1-zhangtianyang@loongson.cn>
+ <CAAhV-H7-pWhXh7cruA97WfumZydJQnsWkPB2f47qrnw=sTcC6g@mail.gmail.com>
+ <732083e2-1cee-094e-4a72-3ac3f2b21f32@loongson.cn>
+ <CAAhV-H6heORGsTeBpb4SoN-fmwXM3aNDUyB2jYm0HXW7tXxbGg@mail.gmail.com>
+ <f2578dff-921f-9332-2eaf-35654b082471@loongson.cn>
+ <CAAhV-H4iF8YpySYt59cb71O=kZj+uiGTR+A+PqL1B1TnYpEJ0w@mail.gmail.com>
+ <4b02b946-fbd0-2d54-e96a-f5a947e311fd@loongson.cn>
+ <CAAhV-H5faVDmPY6eLz0nGCJ8wA8__MjTtiofqaz9RFW0+77gCg@mail.gmail.com>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <f798e8d8-4143-9da8-72ed-cfdf4fbc4cfc@loongson.cn>
+Date: Tue, 9 Jul 2024 09:41:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H5faVDmPY6eLz0nGCJ8wA8__MjTtiofqaz9RFW0+77gCg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8Axw8RdlYxmR2dAAA--.5941S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9fXoWDZr1kJw1rXFWrKF4UKFW8KrX_yoWrWFW8Zo
+	W5JF1xJr18Jr1UJryUJ34qqryjyw1UAr4UA34UArsrAr1Utw1UAr1UGr1UJFW7GF1kGr4U
+	Ja4UJr18ZFW7Xrn8l-sFpf9Il3svdjkaLaAFLSUrUUUUeb8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUO07kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUU
+	UUU
 
-Add support to Image Signal Processors of Visconti's Video Input Interface.
-This patch adds two streaming interfaces;
-one for passing parameters to the signal processor,
-the other for receiving status.
 
-Signed-off-by: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
----
-Changelog v2:
-- Resend v1 because a patch exceeds size limit.
+在 2024/7/8 下午6:20, Huacai Chen 写道:
+> On Mon, Jul 8, 2024 at 6:05 PM Tianyang Zhang <zhangtianyang@loongson.cn> wrote:
+>> Hi, Huacai
+>>
+>> 在 2024/7/8 下午4:24, Huacai Chen 写道:
+>>> On Mon, Jul 8, 2024 at 10:17 AM Tianyang Zhang
+>>> <zhangtianyang@loongson.cn> wrote:
+>>>> 在 2024/7/6 下午12:50, Huacai Chen 写道:
+>>>>> On Sat, Jul 6, 2024 at 10:46 AM Tianyang Zhang
+>>>>> <zhangtianyang@loongson.cn> wrote:
+>>>>>> 在 2024/7/5 下午2:58, Huacai Chen 写道:
+>>>>>>> Hi, Tianyang,
+>>>>>>>
+>>>>>>> You can squash two patches into one, as Song does:
+>>>>>>> https://lore.kernel.org/lkml/20240624084410.1026648-1-gaosong@loongson.cn/
+>>>>>> Ok. I have resend the patch with two-in-one mode
+>>>>> I ask several questions but you only take this one.
+>>>>>
+>>>>> Huacai
+>>>> Hi ,Huacai
+>>>>
+>>>> Sorry for my careless first.
+>>>>
+>>>>>>> On Fri, Jul 5, 2024 at 9:53 AM Tianyang Zhang <zhangtianyang@loongson.cn> wrote:
+>>>>>>>> Introduce the advanced extended interrupt controllers. This feature will
+>>>>>>>> allow each core to have 256 independent interrupt vectors and MSI
+>>>>>>>> interrupts can be independently routed to any vector on any CPU.
+>>>>>>>>
+>>>>>>>> Co-developed-by: Jianmin Lv <lvjianmin@loongson.cn>
+>>>>>>>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>>>>>>>> Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
+>>>>>>>> Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
+>>>>>>>> Co-developed-by: Thomas Gleixner <tglx@linutronix.de>
+>>>>>>>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>>>>>>>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>>>>>>>> ---
+>>>>>>>>      arch/loongarch/Kconfig                    |   1 +
+>>>>>>>>      arch/loongarch/include/asm/cpu-features.h |   1 +
+>>>>>>>>      arch/loongarch/include/asm/cpu.h          |   2 +
+>>>>>>>>      arch/loongarch/include/asm/hw_irq.h       |  10 +
+>>>>>>>>      arch/loongarch/include/asm/irq.h          |  12 +-
+>>>>>>>>      arch/loongarch/include/asm/loongarch.h    |  20 +-
+>>>>>>>>      arch/loongarch/include/asm/smp.h          |   2 +
+>>>>>>>>      arch/loongarch/kernel/cpu-probe.c         |   3 +-
+>>>>>>>>      arch/loongarch/kernel/smp.c               |   5 +
+>>>>>>>>      drivers/irqchip/Makefile                  |   2 +-
+>>>>>>>>      drivers/irqchip/irq-loongarch-avec.c      | 440 ++++++++++++++++++++++
+>>>>>>>>      drivers/irqchip/irq-loongarch-cpu.c       |   4 +-
+>>>>>>>>      drivers/irqchip/irq-loongson-eiointc.c    |   3 +
+>>>>>>>>      drivers/irqchip/irq-loongson-pch-msi.c    |  43 ++-
+>>>>>>>>      14 files changed, 538 insertions(+), 10 deletions(-)
+>>>>>>>>      create mode 100644 drivers/irqchip/irq-loongarch-avec.c
+>>>>>>>>
+>>>>>>>> Changes log:
+>>>>>>>> V0->V1:
+>>>>>>>>             1.Modified some formats and declarations
+>>>>>>>>             2.Removed kmalloc/kfree when adding affinity related data to pending_list,
+>>>>>>>>               and used moving tag to replace the original behavior
+>>>>>>>>             3.Adjusted the process that enables AVEC interrupts, now it is at the end of all processes
+>>>>>>>>             4.Removed CPUHP related callbacks, now irq_matrix_online/irq_matrix_offline is completed in start_secondary/loongson_cpu_disable
+>>>>>>>>             5.Adjusted compatibility issues for CONFIG_ACPI
+>>>>>>>>             6.About question:
+>>>>>>>>             > irr = csr_read64(LOONGARCH_CSR_IRR0 + vector / 64);
+>>>>>>>>             > should be good enough, no?
+>>>>>>>>             csr_read64 was built-in as __csrrd_d, it doesn't seem to support variables as parameters
+>>>>>>>>             >>>>
+>>>>>>>>             drivers/irqchip/irq-loongarch-avec.c: In function ‘complete_irq_moving’:
+>>>>>>>>             ./arch/loongarch/include/asm/loongarch.h:164:25: error: invalid argument to built-in function
+>>>>>>>>               164 | #define csr_read64(reg) __csrrd_d(reg)
+>>>>>>>>                   |                         ^~~~~~~~~
+>>>>>>>>             drivers/irqchip/irq-loongarch-avec.c:170:23: note: in expansion of macro ‘csr_read64’
+>>>>>>>>               170 |                 irr = csr_read64(LOONGARCH_CSR_IRR_BASE + vector / VECTORS_PER_REG);
+>>>>>>>>                   |                       ^~~~~~~~~~
+>>>>>>>>             >>>>
+>>>>>>>>             So we have temporarily retained the previous implementation.
+>>>>>>>>
+>>>>>>>> V1->V2:
+>>>>>>>>             Fixed up coding style. Made on/offline functions void
+>>>>>>>>             Added compatibility when CONFIG_SMP is turned off
+>>>>>>>>
+>>>>>>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>>>>>>>> index e38139c576ee..a66e49b5a68c 100644
+>>>>>>>> --- a/arch/loongarch/Kconfig
+>>>>>>>> +++ b/arch/loongarch/Kconfig
+>>>>>>>> @@ -83,6 +83,7 @@ config LOONGARCH
+>>>>>>>>             select GENERIC_ENTRY
+>>>>>>>>             select GENERIC_GETTIMEOFDAY
+>>>>>>>>             select GENERIC_IOREMAP if !ARCH_IOREMAP
+>>>>>>>> +       select GENERIC_IRQ_MATRIX_ALLOCATOR
+>>>>>>>>             select GENERIC_IRQ_MULTI_HANDLER
+>>>>>>>>             select GENERIC_IRQ_PROBE
+>>>>>>>>             select GENERIC_IRQ_SHOW
+>>>>>>>> diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
+>>>>>>>> index 2eafe6a6aca8..16a716f88a5c 100644
+>>>>>>>> --- a/arch/loongarch/include/asm/cpu-features.h
+>>>>>>>> +++ b/arch/loongarch/include/asm/cpu-features.h
+>>>>>>>> @@ -65,5 +65,6 @@
+>>>>>>>>      #define cpu_has_guestid                cpu_opt(LOONGARCH_CPU_GUESTID)
+>>>>>>>>      #define cpu_has_hypervisor     cpu_opt(LOONGARCH_CPU_HYPERVISOR)
+>>>>>>>>      #define cpu_has_ptw            cpu_opt(LOONGARCH_CPU_PTW)
+>>>>>>>> +#define cpu_has_avecint                cpu_opt(LOONGARCH_CPU_AVECINT)
+>>>>>>>>
+>>>>>>>>      #endif /* __ASM_CPU_FEATURES_H */
+>>>>>>>> diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
+>>>>>>>> index 48b9f7168bcc..843f9c4ec980 100644
+>>>>>>>> --- a/arch/loongarch/include/asm/cpu.h
+>>>>>>>> +++ b/arch/loongarch/include/asm/cpu.h
+>>>>>>>> @@ -99,6 +99,7 @@ enum cpu_type_enum {
+>>>>>>>>      #define CPU_FEATURE_GUESTID            24      /* CPU has GuestID feature */
+>>>>>>>>      #define CPU_FEATURE_HYPERVISOR         25      /* CPU has hypervisor (running in VM) */
+>>>>>>>>      #define CPU_FEATURE_PTW                        26      /* CPU has hardware page table walker */
+>>>>>>>> +#define CPU_FEATURE_AVECINT            27      /* CPU has avec interrupt */
+>>>>>>>>
+>>>>>>>>      #define LOONGARCH_CPU_CPUCFG           BIT_ULL(CPU_FEATURE_CPUCFG)
+>>>>>>>>      #define LOONGARCH_CPU_LAM              BIT_ULL(CPU_FEATURE_LAM)
+>>>>>>>> @@ -127,5 +128,6 @@ enum cpu_type_enum {
+>>>>>>>>      #define LOONGARCH_CPU_GUESTID          BIT_ULL(CPU_FEATURE_GUESTID)
+>>>>>>>>      #define LOONGARCH_CPU_HYPERVISOR       BIT_ULL(CPU_FEATURE_HYPERVISOR)
+>>>>>>>>      #define LOONGARCH_CPU_PTW              BIT_ULL(CPU_FEATURE_PTW)
+>>>>>>>> +#define LOONGARCH_CPU_AVECINT          BIT_ULL(CPU_FEATURE_AVECINT)
+>>>>>>>>
+>>>>>>>>      #endif /* _ASM_CPU_H */
+>>>>>>>> diff --git a/arch/loongarch/include/asm/hw_irq.h b/arch/loongarch/include/asm/hw_irq.h
+>>>>>>>> index af4f4e8fbd85..772692e765c0 100644
+>>>>>>>> --- a/arch/loongarch/include/asm/hw_irq.h
+>>>>>>>> +++ b/arch/loongarch/include/asm/hw_irq.h
+>>>>>>>> @@ -9,6 +9,16 @@
+>>>>>>>>
+>>>>>>>>      extern atomic_t irq_err_count;
+>>>>>>>>
+>>>>>>>> +/*
+>>>>>>>> + * 256 vectors Map:
+>>>>>>>> + *
+>>>>>>>> + * 0 - 15: mapping legacy IPs, e.g. IP0-12.
+>>>>>>>> + * 16 - 255: mapping a vector for external IRQ.
+>>>>>>> In handle_cpu_irq() we handle CPUINTC irqs from low to high, which
+>>>>>>> means when we handle AVECINTC (IP13), IP0-12 have been handled
+>>>>>>> already, so should we really mapping IP012 to AVECINTC?
+>>>> In fact, retaining 0-15 vector is for compatibility with future
+>>>> extensions, and currently it has not been done in practice.
+>>>>
+>>>> The AVEC interrupt controller can completely replace the current core-ip
+>>>> 0-12 interrupt. When we implement the
+>>>>
+>>>> function described above, core-ip 0-12 will no longer have its original
+>>>> function
+>>>>
+>>>> Of course, this is a long-term plan
+>>>>>>>> + *
+>>>>>>>> + */
+>>>>>>>> +#define NR_VECTORS             256
+>>>>>>>> +#define IRQ_MATRIX_BITS                NR_VECTORS
+>>>>>>>> +#define NR_LEGACY_VECTORS      16
+>>>>>>> Should we define them in irq.h and update NR_IRQS there?]
+>>>> Yes, you are right, this may indeed cause potential problems
+>>>>>>>>      /*
+>>>>>>>>       * interrupt-retrigger: NOP for now. This may not be appropriate for all
+>>>>>>>>       * machines, we'll see ...
+>>>>>>>> diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
+>>>>>>>> index 480418bc5071..cf3b635a9b86 100644
+>>>>>>>> --- a/arch/loongarch/include/asm/irq.h
+>>>>>>>> +++ b/arch/loongarch/include/asm/irq.h
+>>>>>>>> @@ -65,7 +65,7 @@ extern struct acpi_vector_group msi_group[MAX_IO_PICS];
+>>>>>>>>      #define LOONGSON_LPC_LAST_IRQ          (LOONGSON_LPC_IRQ_BASE + 15)
+>>>>>>>>
+>>>>>>>>      #define LOONGSON_CPU_IRQ_BASE          16
+>>>>>>>> -#define LOONGSON_CPU_LAST_IRQ          (LOONGSON_CPU_IRQ_BASE + 14)
+>>>>>>>> +#define LOONGSON_CPU_LAST_IRQ          (LOONGSON_CPU_IRQ_BASE + 15)
+>>>>>>>>
+>>>>>>>>      #define LOONGSON_PCH_IRQ_BASE          64
+>>>>>>>>      #define LOONGSON_PCH_ACPI_IRQ          (LOONGSON_PCH_IRQ_BASE + 47)
+>>>>>>>> @@ -101,6 +101,16 @@ int pch_msi_acpi_init(struct irq_domain *parent,
+>>>>>>>>                                             struct acpi_madt_msi_pic *acpi_pchmsi);
+>>>>>>>>      int pch_pic_acpi_init(struct irq_domain *parent,
+>>>>>>>>                                             struct acpi_madt_bio_pic *acpi_pchpic);
+>>>>>>>> +
+>>>>>>>> +#ifdef CONFIG_ACPI
+>>>>>>> No #ifdef needed.
+>>>> ok , I adjust here next patch
+>>>>>>>> +int __init pch_msi_acpi_init_v2(struct irq_domain *parent,
+>>>>>>>> +               struct acpi_madt_msi_pic *pch_msi_entry);
+>>>>>>> No line break needed.
+>>>> ok
+>>>>>>>> +int __init loongarch_avec_acpi_init(struct irq_domain *parent);
+>>>>>>>> +void complete_irq_moving(void);
+>>>>>>>> +void loongarch_avec_offline_cpu(unsigned int cpu);
+>>>>>>>> +void loongarch_avec_online_cpu(unsigned int cpu);
+>>>>>>>> +#endif
+>>>>>>>> +
+>>>>>>>>      int find_pch_pic(u32 gsi);
+>>>>>>>>      struct fwnode_handle *get_pch_msi_handle(int pci_segment);
+>>>>>>>>
+>>>>>>>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+>>>>>>>> index eb09adda54b7..16a910359977 100644
+>>>>>>>> --- a/arch/loongarch/include/asm/loongarch.h
+>>>>>>>> +++ b/arch/loongarch/include/asm/loongarch.h
+>>>>>>>> @@ -72,7 +72,6 @@
+>>>>>>>>      #define  CPUCFG1_RPLV                  BIT(23)
+>>>>>>>>      #define  CPUCFG1_HUGEPG                        BIT(24)
+>>>>>>>>      #define  CPUCFG1_CRC32                 BIT(25)
+>>>>>>>> -#define  CPUCFG1_MSGINT                        BIT(26)
+>>>>>>>>
+>>>>>>>>      #define LOONGARCH_CPUCFG2              0x2
+>>>>>>>>      #define  CPUCFG2_FP                    BIT(0)
+>>>>>>>> @@ -252,8 +251,8 @@
+>>>>>>>>      #define  CSR_ESTAT_EXC_WIDTH           6
+>>>>>>>>      #define  CSR_ESTAT_EXC                 (_ULCAST_(0x3f) << CSR_ESTAT_EXC_SHIFT)
+>>>>>>>>      #define  CSR_ESTAT_IS_SHIFT            0
+>>>>>>>> -#define  CSR_ESTAT_IS_WIDTH            14
+>>>>>>>> -#define  CSR_ESTAT_IS                  (_ULCAST_(0x3fff) << CSR_ESTAT_IS_SHIFT)
+>>>>>>>> +#define  CSR_ESTAT_IS_WIDTH            15
+>>>>>>>> +#define  CSR_ESTAT_IS                  (_ULCAST_(0x7fff) << CSR_ESTAT_IS_SHIFT)
+>>>>>>>>
+>>>>>>>>      #define LOONGARCH_CSR_ERA              0x6     /* ERA */
+>>>>>>>>
+>>>>>>>> @@ -999,10 +998,18 @@
+>>>>>>>>      #define CSR_FWPC_SKIP_SHIFT            16
+>>>>>>>>      #define CSR_FWPC_SKIP                  (_ULCAST_(1) << CSR_FWPC_SKIP_SHIFT)
+>>>>>>>>
+>>>>>>>> +#define LOONGARCH_CSR_IRR0             0xa0
+>>>>>>>> +#define LOONGARCH_CSR_IRR1             0xa1
+>>>>>>>> +#define LOONGARCH_CSR_IRR2             0xa2
+>>>>>>>> +#define LOONGARCH_CSR_IRR3             0xa3
+>>>>>>>> +#define LOONGARCH_CSR_IRR_BASE         LOONGARCH_CSR_IRR0
+>>>>>>>> +
+>>>>>>>> +#define        LOONGARCH_CSR_ILR               0xa4
+>>>>>>> What is ILR stand for?
+>>>> Interrupt Load Register, ILR
+>>> According to the user manual, IRR here should be ISR, and ILR here
+>>> should be IRR.
+>> Perhaps my manual version is too old, I will confirm after updating it
+>>>>>>>> +
+>>>>>>>>      /*
+>>>>>>>>       * CSR_ECFG IM
+>>>>>>>>       */
+>>>>>>>> -#define ECFG0_IM               0x00001fff
+>>>>>>>> +#define ECFG0_IM               0x00005fff
+>>>>>>>>      #define ECFGB_SIP0             0
+>>>>>>>>      #define ECFGF_SIP0             (_ULCAST_(1) << ECFGB_SIP0)
+>>>>>>>>      #define ECFGB_SIP1             1
+>>>>>>>> @@ -1045,6 +1052,7 @@
+>>>>>>>>      #define  IOCSRF_EIODECODE              BIT_ULL(9)
+>>>>>>>>      #define  IOCSRF_FLATMODE               BIT_ULL(10)
+>>>>>>>>      #define  IOCSRF_VM                     BIT_ULL(11)
+>>>>>>>> +#define  IOCSRF_AVEC                   BIT_ULL(15)
+>>>>>>>>
+>>>>>>>>      #define LOONGARCH_IOCSR_VENDOR         0x10
+>>>>>>>>
+>>>>>>>> @@ -1055,6 +1063,7 @@
+>>>>>>>>      #define LOONGARCH_IOCSR_MISC_FUNC      0x420
+>>>>>>>>      #define  IOCSR_MISC_FUNC_TIMER_RESET   BIT_ULL(21)
+>>>>>>>>      #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
+>>>>>>>> +#define  IOCSR_MISC_FUNC_AVEC_EN       BIT_ULL(51)
+>>>>>>>>
+>>>>>>>>      #define LOONGARCH_IOCSR_CPUTEMP                0x428
+>>>>>>>>
+>>>>>>>> @@ -1375,9 +1384,10 @@ __BUILD_CSR_OP(tlbidx)
+>>>>>>>>      #define INT_TI         11      /* Timer */
+>>>>>>>>      #define INT_IPI                12
+>>>>>>>>      #define INT_NMI                13
+>>>>>>>> +#define INT_AVEC       14
+>>>>>>>>
+>>>>>>>>      /* ExcCodes corresponding to interrupts */
+>>>>>>>> -#define EXCCODE_INT_NUM                (INT_NMI + 1)
+>>>>>>>> +#define EXCCODE_INT_NUM                (INT_AVEC + 1)
+>>>>>>>>      #define EXCCODE_INT_START      64
+>>>>>>>>      #define EXCCODE_INT_END                (EXCCODE_INT_START + EXCCODE_INT_NUM - 1)
+>>>>>>>>
+>>>>>>>> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
+>>>>>>>> index 278700cfee88..2399004596a3 100644
+>>>>>>>> --- a/arch/loongarch/include/asm/smp.h
+>>>>>>>> +++ b/arch/loongarch/include/asm/smp.h
+>>>>>>>> @@ -69,9 +69,11 @@ extern int __cpu_logical_map[NR_CPUS];
+>>>>>>>>      #define ACTION_BOOT_CPU        0
+>>>>>>>>      #define ACTION_RESCHEDULE      1
+>>>>>>>>      #define ACTION_CALL_FUNCTION   2
+>>>>>>>> +#define ACTION_CLEAR_VECT      3
+>>>>>>>>      #define SMP_BOOT_CPU           BIT(ACTION_BOOT_CPU)
+>>>>>>>>      #define SMP_RESCHEDULE         BIT(ACTION_RESCHEDULE)
+>>>>>>>>      #define SMP_CALL_FUNCTION      BIT(ACTION_CALL_FUNCTION)
+>>>>>>>> +#define SMP_CLEAR_VECT         BIT(ACTION_CLEAR_VECT)
+>>>>>>>>
+>>>>>>>>      struct secondary_data {
+>>>>>>>>             unsigned long stack;
+>>>>>>>> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+>>>>>>>> index 55320813ee08..3b2e72e8f9bd 100644
+>>>>>>>> --- a/arch/loongarch/kernel/cpu-probe.c
+>>>>>>>> +++ b/arch/loongarch/kernel/cpu-probe.c
+>>>>>>>> @@ -106,7 +106,6 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+>>>>>>>>                     elf_hwcap |= HWCAP_LOONGARCH_CRC32;
+>>>>>>>>             }
+>>>>>>>>
+>>>>>>>> -
+>>>>>>>>             config = read_cpucfg(LOONGARCH_CPUCFG2);
+>>>>>>>>             if (config & CPUCFG2_LAM) {
+>>>>>>>>                     c->options |= LOONGARCH_CPU_LAM;
+>>>>>>>> @@ -176,6 +175,8 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+>>>>>>>>                     c->options |= LOONGARCH_CPU_EIODECODE;
+>>>>>>>>             if (config & IOCSRF_VM)
+>>>>>>>>                     c->options |= LOONGARCH_CPU_HYPERVISOR;
+>>>>>>>> +       if (config & IOCSRF_AVEC)
+>>>>>>>> +               c->options |= LOONGARCH_CPU_AVECINT;
+>>>>>>>>
+>>>>>>>>             config = csr_read32(LOONGARCH_CSR_ASID);
+>>>>>>>>             config = (config & CSR_ASID_BIT) >> CSR_ASID_BIT_SHIFT;
+>>>>>>>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+>>>>>>>> index 0dfe2388ef41..6dfedef306f3 100644
+>>>>>>>> --- a/arch/loongarch/kernel/smp.c
+>>>>>>>> +++ b/arch/loongarch/kernel/smp.c
+>>>>>>>> @@ -234,6 +234,9 @@ static irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
+>>>>>>>>                     per_cpu(irq_stat, cpu).ipi_irqs[IPI_CALL_FUNCTION]++;
+>>>>>>>>             }
+>>>>>>>>
+>>>>>>>> +       if (action & SMP_CLEAR_VECT)
+>>>>>>>> +               complete_irq_moving();
+>>>>>>> SMP_CLEAR_VECT trigger complete_irq_moving(), but in
+>>>>>>> complete_irq_moving() it calls mp_ops.send_ipi_single(cpu,
+>>>>>>> ACTION_CLEAR_VECT), which will trigger loongson_ipi_interrupt() again.
+>>>>>>> I'm a bit confused here. Could you please explain the design goal of
+>>>>>>> SMP_CLEAR_VECT here?
+>>>> SMP_CLEAR_VECT is used to release the affinity of interrupts on old CPUs
+>>>>
+>>>> Due to the possibility of certain interrupts occurring during interrupt
+>>>> affinity modification,
+>>>>
+>>>> which can result in the original CPU receiving this interrupt vector, it
+>>>> is necessary to
+>>>>
+>>>> determine whether the interrupt has been processed through the original CPU.
+>>>>
+>>>> When the original CPU discovers that an interrupt that needs to clear
+>>>> affinity has not
+>>>>
+>>>> been processed locally in the SMP_CLEAR_VECT process, it will suspend
+>>>> SMP_CLEAR_VECT
+>>>>
+>>>> again and end the process, allowing the avec interrupt that has already
+>>>> been routed
+>>>>
+>>>> to the current CPU to be processed.
+>>>>
+>>>> Then, it will enter the SMP_CLEAR_VECT process again for judgment
+>>> When setting affinity from CPU A to CPU B, trigger SMP_CLEAR_VECT on
+>>> A, A calls complete_irq_moving() to see if the irq is processed. If
+>>> not, it triggers SMP_CLEAR_VECT again and again, until B has processed
+>>> this irq.
+>>> Am I right (correct me if not)?
+>>>
+>>> Huacai
+>> Releasing affinity  of interrupt in the old CPU does not depend on the
+>> state of the new CPU.
+>>
+>> It only determines whether the interrupt has been processed on old CPU.
+>> This is to avoid
+>>
+>> software cleaning data that may cause kernel crashes before interrupts
+>> generated at
+>>
+>> critical times are properly processed
+>>
+>> So I think a description should be as follows:
+>>
+>> When setting affinity from CPU A to CPU B, trigger SMP_CLEAR_VECT on
+>> A, A calls complete_irq_moving() to see if the irq has been processed on CPU A.
+>> If not, CPU A self-retriggers SMP_CLEAR_VECT again and again, until A has processed
+>> all this irq.
+> But CPU A is running complete_irq_moving() again and again, how does
+> it process the pending irq?
+>
+> Huacai
 
-Changelog v3:
-- Adapted to media control framework
-- Introduced ISP subdevice, capture device
-- Remove private IOCTLs and add vendor specific V4L2 controls
-- Change function name avoiding camelcase and uppercase letters
+Hi, Huacai
 
-Changelog v4:
-- Split patches because the v3 patch exceeds size limit
-- Stop using ID number to identify driver instance:
-  - Use dynamically allocated structure to hold HW specific context,
-    instead of static one.
-  - Call HW layer functions with the context structure instead of ID number
+in driver/irqchip/irq-loongarch-cpu.c:
 
-Changelog v5:
-- no change
+static void handle_cpu_irq(struct pt_regs *regs)
+{
+         int hwirq;
+         unsigned int estat = read_csr_estat() & CSR_ESTAT_IS;
 
-Changelog v6:
-- remove unused macros
-- removed hwd_ and HWD_ prefix
-- update source code documentation
-- Suggestion from Hans Verkuil
-  - pointer to userland memory is removed from uAPI arguments
-    - style of structure is now "nested" instead of "chained by pointer";
-  - use div64_u64 for 64bit division
-  - vendor specific controls support TRY_EXT_CTRLS
-  - add READ_ONLY flag to GET_CALIBRATION_STATUS control and similar ones
-  - human friendry control names for vendor specific controls
-  - add initial value to each vendor specific control
-  - GET_LAST_CAPTURE_STATUS control is updated asyncnously from workqueue
-  - remove EXECUTE_ON_WRITE flag of vendor specific control
-  - uAPI: return value of GET_CALIBRATION_STATUS follows common rules of error codes
-  - applied v4l2-compliance
-- Suggestion from Sakari Ailus
-  - use div64_u64 for 64bit division
-  - update copyright's year
-  - remove redandunt cast
-  - use bool instead of HWD_VIIF_ENABLE/DISABLE
-  - simplify comparison to 0
-  - simplify statements with trigram operator
-  - remove redundant local variables
-  - use general integer types instead of u32/s32
-- Suggestion from Laurent Pinchart
-  - moved VIIF driver to driver/platform/toshiba/visconti
-  - change register access: struct-style to macro-style
-  - remove unused type definitions
-  - define enums instead of successive macro constants
-  - remove redundant parenthesis of macro constant
-  - embed struct hwd_res into struct viif_device
-  - use xxx_dma instead of xxx_paddr for variable names of IOVA
-  - literal value: just 0 instead of 0x0
-  - use literal 1 or 0 instead of HWD_VIIF_ENABLE, DISABLE for register access
-  - use true or false instead of HWD_VIIF_ENABLE, DISABLE for function calls
-  - uAPI: return value of GET_CALIBRATION_STATUS follows common rules of error codes
+         while ((hwirq = ffs(estat))) {
+                 estat &= ~BIT(hwirq - 1);
 
-Changelog v7:
-- remove unused variables
-- split long statements which have multiple logical-OR and trigram operators
+--------------------------------------------------
 
-Changelog v8:
-- define constant V4L2_CTRL_TYPE_VISCONTI_ISP for datatype
-  of Visconti specific controls
-- Suggestion from Hans Verkuil
-  - remove pr_info()
-  - use pm_runtime_get_if_in_use() to get power status
+Every time we enter the CPU interrupt, we will save the value of 
+CSR_ESTAT_IS to estat,
 
-Changelog v9:
-- fix warning for cast between ptr and dma_addr_t
+and then process the interrupt indicated by the corresponding bit one by 
+one.
 
-Changelog v10:
-- use parameter buffer instead of vendor specific compound controls
-  - add viif_params interface for passing ISP parameters
-  - add viif_stats interface for passing ISP status
-- remove parameter validation routine; moved to userland library
+  In our design, avec is routed to core ip-14, so when ipi exits, the 
+avec interrupt will
 
-Changelog v11:
-- remove feature VB2_USERPTR from viif_params and viif_stats
-- fix strange indents at initializations
-- remove a redundant default setting of the ISP: L2_ROI
-- update copyright year
+be executed and the corresponding register flag bits will be cleared
 
- .../media/platform/toshiba/visconti/Makefile  |    2 +-
- .../media/platform/toshiba/visconti/viif.c    |   28 +-
- .../platform/toshiba/visconti/viif_isp.c      |    7 +
- .../platform/toshiba/visconti/viif_params.c   | 2020 +++++++++++++++++
- .../platform/toshiba/visconti/viif_params.h   |   19 +
- .../platform/toshiba/visconti/viif_stats.c    |  336 +++
- .../platform/toshiba/visconti/viif_stats.h    |   14 +
- 7 files changed, 2423 insertions(+), 3 deletions(-)
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_params.c
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_params.h
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_stats.c
- create mode 100644 drivers/media/platform/toshiba/visconti/viif_stats.h
 
-diff --git a/drivers/media/platform/toshiba/visconti/Makefile b/drivers/media/platform/toshiba/visconti/Makefile
-index 5f2f9199c7..8afe8a3fdd 100644
---- a/drivers/media/platform/toshiba/visconti/Makefile
-+++ b/drivers/media/platform/toshiba/visconti/Makefile
-@@ -3,6 +3,6 @@
- # Makefile for the Visconti video input device driver
- #
- 
--visconti-viif-objs = viif.o viif_capture.o viif_isp.o viif_csi2rx.o viif_common.o
-+visconti-viif-objs = viif.o viif_capture.o viif_isp.o viif_csi2rx.o viif_common.o viif_params.o viif_stats.o
- 
- obj-$(CONFIG_VIDEO_VISCONTI_VIIF) += visconti-viif.o
-diff --git a/drivers/media/platform/toshiba/visconti/viif.c b/drivers/media/platform/toshiba/visconti/viif.c
-index 472b292752..0261058c62 100644
---- a/drivers/media/platform/toshiba/visconti/viif.c
-+++ b/drivers/media/platform/toshiba/visconti/viif.c
-@@ -19,6 +19,8 @@
- #include "viif.h"
- #include "viif_capture.h"
- #include "viif_csi2rx.h"
-+#include "viif_params.h"
-+#include "viif_stats.h"
- #include "viif_common.h"
- #include "viif_isp.h"
- #include "viif_regs.h"
-@@ -172,6 +174,8 @@ static void viif_vsync_irq_handler_w_isp(struct viif_device *viif_dev)
- 
- 	/* Delayed Vsync of MAIN unit */
- 	if (event_main & MASK_INT_M_SYNC_LINES_DELAY_INT2) {
-+		unsigned int seq0 = viif_dev->cap_dev0.sequence;
-+
- 		/* unmask timeout error of gamma table */
- 		viif_main_status_err_set_irq_mask(viif_dev, MASK_INT_M_DELAY_INT_ERROR);
- 		viif_dev->masked_gamma_path = 0;
-@@ -190,6 +194,8 @@ static void viif_vsync_irq_handler_w_isp(struct viif_device *viif_dev)
- 						    l2_transfer_status, ts);
- 		visconti_viif_capture_switch_buffer(&viif_dev->cap_dev1, status_err,
- 						    l2_transfer_status, ts);
-+		visconti_viif_stats_isr(viif_dev, seq0, ts);
-+		visconti_viif_params_isr(viif_dev);
- 	}
- 
- 	/* Delayed Vsync of SUB unit */
-@@ -526,16 +532,32 @@ static int visconti_viif_probe(struct platform_device *pdev)
- 		goto error_isp_unregister;
- 	}
- 
-+	ret = visconti_viif_params_register(viif_dev);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to register parameter node\n");
-+		goto error_capture_unregister;
-+	}
-+
-+	ret = visconti_viif_stats_register(viif_dev);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to register stat node\n");
-+		goto error_params_unregister;
-+	}
-+
- 	ret = visconti_viif_create_links(viif_dev);
- 	if (ret)
--		goto error_capture_unregister;
-+		goto error_stats_unregister;
- 
- 	visconti_viif_subdev_notifier_register(viif_dev);
- 	if (ret)
--		goto error_capture_unregister;
-+		goto error_stats_unregister;
- 
- 	return 0;
- 
-+error_stats_unregister:
-+	visconti_viif_stats_unregister(viif_dev);
-+error_params_unregister:
-+	visconti_viif_params_unregister(viif_dev);
- error_capture_unregister:
- 	visconti_viif_capture_unregister(viif_dev);
- error_isp_unregister:
-@@ -560,6 +582,8 @@ static int visconti_viif_remove(struct platform_device *pdev)
- 	v4l2_async_nf_unregister(&viif_dev->notifier);
- 	v4l2_async_nf_cleanup(&viif_dev->notifier);
- 	visconti_viif_capture_unregister(viif_dev);
-+	visconti_viif_params_unregister(viif_dev);
-+	visconti_viif_stats_unregister(viif_dev);
- 	visconti_viif_isp_unregister(viif_dev);
- 	visconti_viif_csi2rx_unregister(viif_dev);
- 	media_device_unregister(&viif_dev->media_dev);
-diff --git a/drivers/media/platform/toshiba/visconti/viif_isp.c b/drivers/media/platform/toshiba/visconti/viif_isp.c
-index 7a66aac715..fe2de44457 100644
---- a/drivers/media/platform/toshiba/visconti/viif_isp.c
-+++ b/drivers/media/platform/toshiba/visconti/viif_isp.c
-@@ -14,6 +14,7 @@
- #include "viif.h"
- #include "viif_common.h"
- #include "viif_isp.h"
-+#include "viif_params.h"
- #include "viif_regs.h"
- 
- /* disable CSI2 capture at viif_mux_start() */
-@@ -745,6 +746,10 @@ int visconti_viif_isp_main_set_unit(struct viif_device *viif_dev)
- 	/* Enable regbuf */
- 	hwd_viif_isp_set_regbuf_auto_transmission(viif_dev);
- 
-+	/* L2 UNDIST Enable through mode as default  */
-+	ret = visconti_viif_l2_undist_through(viif_dev);
-+	if (ret)
-+		dev_err(viif_dev->dev, "l2_set_undist error. %d\n", ret);
- 	return ret;
- }
- 
-@@ -798,6 +803,8 @@ static int visconti_viif_isp_s_stream(struct v4l2_subdev *sd, int enable)
- 	}
- 
- 	/* enabling: start ISP, MUX -> start CSI2RX, sensor */
-+	// prepare ISP parameters
-+	visconti_viif_params_eval_queue(viif_dev);
- 	// start ISP
- 	viif_dev->masked_gamma_path = 0;
- 	viif_mux_start(viif_dev, 0, 0);
-diff --git a/drivers/media/platform/toshiba/visconti/viif_params.c b/drivers/media/platform/toshiba/visconti/viif_params.c
-new file mode 100644
-index 0000000000..45c1a10fbc
---- /dev/null
-+++ b/drivers/media/platform/toshiba/visconti/viif_params.c
-@@ -0,0 +1,2020 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+/* Toshiba Visconti Video Capture Support
-+ *
-+ * (C) Copyright 2024 TOSHIBA CORPORATION
-+ * (C) Copyright 2024 Toshiba Electronic Devices & Storage Corporation
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/pm_runtime.h>
-+#include <media/v4l2-common.h>
-+#include <media/v4l2-subdev.h>
-+#include <media/videobuf2-vmalloc.h>
-+
-+#include "viif.h"
-+#include "viif_csi2rx.h"
-+#include "viif_isp.h"
-+#include "viif_common.h"
-+#include "viif_regs.h"
-+#include "viif_params.h"
-+
-+/* ISP_L1_SET_HDRC */
-+#define VIIF_L1_HDRC_RATIO_OFFSET 10U
-+#define VIIF_REGBUF_ACCESS_TIME	  15360UL
-+#define VIIF_L1_DELAY_W_HDRC	  31U
-+
-+/* V4L2_CID_VISCONTI_VIIF_ISP_L2_SET_UNDIST */
-+#define VIIF_L2_UNDIST_POLY_NUM 11U
-+
-+/*=======================================================================*/
-+/* ISP parameter configuration */
-+/*=======================================================================*/
-+static void viif_l1_set_input_mode(struct viif_device *viif_dev,
-+				   const struct viif_l1_input_mode_config *arg)
-+{
-+	unsigned long irqflags;
-+
-+	/* values are already tested in _try*/
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_SYSM_INPUT_MODE, (u32)arg->mode);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_rgb_to_y_coef(struct viif_device *viif_dev,
-+				      const struct viif_l1_rgb_to_y_coef_config *arg)
-+{
-+	unsigned long irqflags;
-+
-+	/* value is already tested in _try*/
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_SYSM_YCOEF_R, (u32)arg->coef_r);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_YCOEF_G, (u32)arg->coef_g);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_YCOEF_B, (u32)arg->coef_b);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_ag_mode(struct viif_device *viif_dev,
-+				const struct viif_l1_ag_mode_config *arg)
-+{
-+	unsigned long irqflags;
-+	u32 val;
-+
-+	/* value is already tested in _try*/
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	/* SYSM_AG_PARAM */
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_PARAM_A,
-+			   PACK_L1_SYSM_AG_PARAM(arg->sysm_ag_grad[0], arg->sysm_ag_ofst[0]));
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_PARAM_B,
-+			   PACK_L1_SYSM_AG_PARAM(arg->sysm_ag_grad[1], arg->sysm_ag_ofst[1]));
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_PARAM_C,
-+			   PACK_L1_SYSM_AG_PARAM(arg->sysm_ag_grad[2], arg->sysm_ag_ofst[2]));
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_PARAM_D,
-+			   PACK_L1_SYSM_AG_PARAM(arg->sysm_ag_grad[3], arg->sysm_ag_ofst[3]));
-+
-+	/* SYSM_AG_SEL */
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_SEL_HOBC,
-+			   PACK_L1_SYSM_AG_SEL_HML(arg->sysm_ag_psel_hobc_high,
-+						   arg->sysm_ag_psel_hobc_middle_led,
-+						   arg->sysm_ag_psel_hobc_low));
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_SEL_ABPC,
-+			   PACK_L1_SYSM_AG_SEL_HML(arg->sysm_ag_psel_abpc_high,
-+						   arg->sysm_ag_psel_abpc_middle_led,
-+						   arg->sysm_ag_psel_abpc_low));
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_SEL_RCNR,
-+			   PACK_L1_SYSM_AG_SEL_HML(arg->sysm_ag_psel_rcnr_high,
-+						   arg->sysm_ag_psel_rcnr_middle_led,
-+						   arg->sysm_ag_psel_rcnr_low));
-+
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_SEL_LSSC,
-+			   PACK_L1_SYSM_AG_SEL_SP(arg->sysm_ag_ssel_lssc, arg->sysm_ag_psel_lssc));
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_SEL_MPRO,
-+			   PACK_L1_SYSM_AG_SEL_SP(arg->sysm_ag_ssel_mpro, arg->sysm_ag_psel_mpro));
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_SEL_VPRO,
-+			   PACK_L1_SYSM_AG_SEL_SP(arg->sysm_ag_ssel_vpro, arg->sysm_ag_psel_vpro));
-+
-+	/* SYSM_AG_CONT */
-+	val = arg->sysm_ag_cont_hobc_en_middle_led ? MASK_L1_SYSM_AG_CONT_M_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_M_VAL, arg->sysm_ag_cont_hobc_test_middle_led);
-+	val |= arg->sysm_ag_cont_hobc_en_high ? MASK_L1_SYSM_AG_CONT_H_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_H_VAL, arg->sysm_ag_cont_hobc_test_high);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_CONT_HOBC01_EN, val);
-+
-+	val = arg->sysm_ag_cont_hobc_en_low ? MASK_L1_SYSM_AG_CONT_L_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_L_VAL, arg->sysm_ag_cont_hobc_test_low);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_CONT_HOBC2_EN, val);
-+
-+	val = arg->sysm_ag_cont_abpc_en_middle_led ? MASK_L1_SYSM_AG_CONT_M_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_M_VAL, arg->sysm_ag_cont_abpc_test_middle_led);
-+	val |= arg->sysm_ag_cont_abpc_en_high ? MASK_L1_SYSM_AG_CONT_H_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_H_VAL, arg->sysm_ag_cont_abpc_test_high);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_CONT_ABPC01_EN, val);
-+
-+	val = arg->sysm_ag_cont_abpc_en_low ? MASK_L1_SYSM_AG_CONT_L_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_L_VAL, arg->sysm_ag_cont_abpc_test_low);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_CONT_ABPC2_EN, val);
-+
-+	val = arg->sysm_ag_cont_rcnr_en_middle_led ? MASK_L1_SYSM_AG_CONT_M_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_M_VAL, arg->sysm_ag_cont_rcnr_test_middle_led);
-+	val |= arg->sysm_ag_cont_rcnr_en_high ? MASK_L1_SYSM_AG_CONT_H_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_H_VAL, arg->sysm_ag_cont_rcnr_test_high);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_CONT_RCNR01_EN, val);
-+
-+	val = arg->sysm_ag_cont_rcnr_en_low ? MASK_L1_SYSM_AG_CONT_L_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_L_VAL, arg->sysm_ag_cont_rcnr_test_low);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_CONT_RCNR2_EN, val);
-+
-+	val = arg->sysm_ag_cont_lssc_en ? MASK_L1_SYSM_AG_CONT_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_VAL, arg->sysm_ag_cont_lssc_test);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_CONT_LSSC_EN, val);
-+
-+	val = arg->sysm_ag_cont_mpro_en ? MASK_L1_SYSM_AG_CONT_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_VAL, arg->sysm_ag_cont_mpro_test);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_CONT_MPRO_EN, val);
-+
-+	val = arg->sysm_ag_cont_vpro_en ? MASK_L1_SYSM_AG_CONT_EN : 0;
-+	val |= FIELD_PREP(MASK_L1_SYSM_AG_CONT_VAL, arg->sysm_ag_cont_vpro_test);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_CONT_VPRO_EN, val);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_ag(struct viif_device *viif_dev, const struct viif_l1_ag_config *arg)
-+{
-+	unsigned long irqflags;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_H, (u32)arg->gain_h);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_M, (u32)arg->gain_m);
-+	viif_capture_write(viif_dev, REG_L1_SYSM_AG_L, (u32)arg->gain_l);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_hdre(struct viif_device *viif_dev, const struct viif_l1_hdre_config *arg)
-+{
-+	unsigned long irqflags;
-+	int i;
-+
-+	/* value is already tested in _try*/
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	for (i = 0; i < LEN_L1_HDRE_SRCPOINT; i++)
-+		viif_capture_write(viif_dev, REG_L1_HDRE_SRCPOINT(i), arg->hdre_src_point[i]);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRE_SRCBASE(0), 0);
-+	for (i = 1; i < LEN_L1_HDRE_SRCBASE; i++)
-+		viif_capture_write(viif_dev, REG_L1_HDRE_SRCBASE(i), arg->hdre_src_point[i - 1]);
-+
-+	for (i = 0; i < LEN_L1_HDRE_DSTBASE; i++)
-+		viif_capture_write(viif_dev, REG_L1_HDRE_DSTBASE(i), arg->hdre_dst_base[i]);
-+
-+	for (i = 0; i < LEN_L1_HDRE_RATIO; i++)
-+		viif_capture_write(viif_dev, REG_L1_HDRE_RATIO(i), arg->hdre_ratio[i]);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRE_DSTMAXVAL, arg->hdre_dst_max_val);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_img_extraction(struct viif_device *viif_dev,
-+				       const struct viif_l1_img_extraction_config *arg)
-+{
-+	unsigned long irqflags;
-+
-+	/* value is already tested in _try*/
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_SLIC_SRCBLACKLEVEL_GR, arg->input_black_gr);
-+	viif_capture_write(viif_dev, REG_L1_SLIC_SRCBLACKLEVEL_R, arg->input_black_r);
-+	viif_capture_write(viif_dev, REG_L1_SLIC_SRCBLACKLEVEL_B, arg->input_black_b);
-+	viif_capture_write(viif_dev, REG_L1_SLIC_SRCBLACKLEVEL_GB, arg->input_black_gb);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_config_vdm_tgroup(struct viif_device *viif_dev, int idx)
-+{
-+	const struct {
-+		u32 cfg;
-+		u32 sram_base;
-+		u32 sram_size;
-+	} conf[] = {
-+		/* T01: L1_SET_DPC, L1_SET_LSC */
-+		{ VAL_TGROUP_CFG_64BIT_RD, 0x600, 0x20 },
-+		/* T02: L2_UNDIST grid table */
-+		{ VAL_TGROUP_CFG_32BIT_RD, 0x620, 0x20 },
-+		/* T02: L2_GAMMA (path0) */
-+		{ VAL_TGROUP_CFG_32BIT_RD, 0x640, 0x20 },
-+		/* T03: L2 GAMMA (path1) */
-+		{ VAL_TGROUP_CFG_32BIT_RD, 0x660, 0x20 },
-+	};
-+
-+	viif_capture_write(viif_dev, REG_VDM_TGROUP_X_CFG(idx), conf[idx].cfg);
-+	viif_capture_write(viif_dev, REG_VDM_TGROUP_X_SRAM_BASE(idx), conf[idx].sram_base);
-+	viif_capture_write(viif_dev, REG_VDM_TGROUP_X_SRAM_SIZE(idx), conf[idx].sram_size);
-+}
-+
-+static void dpc_table_transmission(struct viif_device *viif_dev, uintptr_t table_h,
-+				   uintptr_t table_m, uintptr_t table_l)
-+{
-+	u32 val = 0x0U;
-+
-+	viif_config_vdm_tgroup(viif_dev, IDX_TGROUP_L1_ISP);
-+
-+	if (table_h) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L1_DPC_H),
-+				   (u32)table_h);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L1_DPC_H),
-+				   VIIF_DPC_TABLE_BYTES);
-+		val |= MASK_VDM_T_ENABLE_L1_DPC_H;
-+	}
-+
-+	if (table_m) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L1_DPC_M),
-+				   (u32)table_m);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L1_DPC_M),
-+				   VIIF_DPC_TABLE_BYTES);
-+		val |= MASK_VDM_T_ENABLE_L1_DPC_M;
-+	}
-+
-+	if (table_l) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L1_DPC_L),
-+				   (u32)table_l);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L1_DPC_L),
-+				   VIIF_DPC_TABLE_BYTES);
-+		val |= MASK_VDM_T_ENABLE_L1_DPC_L;
-+	}
-+
-+	val |= (viif_capture_read(viif_dev, REG_VDM_T_ENABLE) & ~MASK_VDM_T_ENABLE_L1_DPC);
-+	viif_capture_write(viif_dev, REG_VDM_T_ENABLE, val);
-+}
-+
-+static void viif_l1_set_dpc(struct viif_device *viif_dev, const struct viif_l1_dpc_config *arg)
-+{
-+	const struct viif_l1_dpc *param_h, *param_m, *param_l;
-+	dma_addr_t table_h = 0;
-+	dma_addr_t table_m = 0;
-+	dma_addr_t table_l = 0;
-+	unsigned long irqflags;
-+	u32 val;
-+
-+	if (arg->param_h.abpc_sta_en) {
-+		memcpy(viif_dev->tables->dpc_table_h, arg->table_h, VIIF_DPC_TABLE_BYTES);
-+		table_h = (dma_addr_t)(uintptr_t)viif_dev->tables_dma->dpc_table_h;
-+	}
-+	if (arg->param_m.abpc_sta_en) {
-+		memcpy(viif_dev->tables->dpc_table_m, arg->table_m, VIIF_DPC_TABLE_BYTES);
-+		table_m = (dma_addr_t)(uintptr_t)viif_dev->tables_dma->dpc_table_m;
-+	}
-+	if (arg->param_l.abpc_sta_en) {
-+		memcpy(viif_dev->tables->dpc_table_l, arg->table_l, VIIF_DPC_TABLE_BYTES);
-+		table_l = (dma_addr_t)(uintptr_t)viif_dev->tables_dma->dpc_table_l;
-+	}
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	dpc_table_transmission(viif_dev, table_h, table_m, table_l);
-+
-+	param_h = &arg->param_h;
-+	param_m = &arg->param_m;
-+	param_l = &arg->param_l;
-+
-+	val = (param_h->abpc_sta_en) ? MASK_L1_ABPC_ENABLE_H : 0;
-+	val |= (param_m->abpc_sta_en) ? MASK_L1_ABPC_ENABLE_M : 0;
-+	val |= (param_l->abpc_sta_en) ? MASK_L1_ABPC_ENABLE_L : 0;
-+	viif_capture_write(viif_dev, REG_L1_ABPC012_STA_EN, val);
-+
-+	val = (param_h->abpc_dyn_en) ? MASK_L1_ABPC_ENABLE_H : 0;
-+	val |= (param_m->abpc_dyn_en) ? MASK_L1_ABPC_ENABLE_M : 0;
-+	val |= (param_l->abpc_dyn_en) ? MASK_L1_ABPC_ENABLE_L : 0;
-+	viif_capture_write(viif_dev, REG_L1_ABPC012_DYN_EN, val);
-+
-+	val = (param_h->abpc_dyn_mode == VIIF_L1_DPC_2PIXEL) ? MASK_L1_ABPC_DYN_MODE_2PIXEL_H : 0;
-+	val |= (param_m->abpc_dyn_mode == VIIF_L1_DPC_2PIXEL) ? MASK_L1_ABPC_DYN_MODE_2PIXEL_M : 0;
-+	val |= (param_l->abpc_dyn_mode == VIIF_L1_DPC_2PIXEL) ? MASK_L1_ABPC_DYN_MODE_2PIXEL_L : 0;
-+	viif_capture_write(viif_dev, REG_L1_ABPC012_DYN_MODE, val);
-+
-+	/* setup param_h */
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_RATIO_LIMIT, param_h->abpc_ratio_limit);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_DARK_LIMIT, param_h->abpc_dark_limit);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_W_AG_MIN, param_h->abpc_sn_coef_w_ag_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_W_AG_MID, param_h->abpc_sn_coef_w_ag_mid);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_W_AG_MAX, param_h->abpc_sn_coef_w_ag_max);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_B_AG_MIN, param_h->abpc_sn_coef_b_ag_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_B_AG_MID, param_h->abpc_sn_coef_b_ag_mid);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_B_AG_MAX, param_h->abpc_sn_coef_b_ag_max);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_W_TH_MIN, param_h->abpc_sn_coef_w_th_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_W_TH_MAX, param_h->abpc_sn_coef_w_th_max);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_B_TH_MIN, param_h->abpc_sn_coef_b_th_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC0_SN_COEF_B_TH_MAX, param_h->abpc_sn_coef_b_th_max);
-+
-+	/* setup param_m */
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_RATIO_LIMIT, param_m->abpc_ratio_limit);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_DARK_LIMIT, param_m->abpc_dark_limit);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_W_AG_MIN, param_m->abpc_sn_coef_w_ag_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_W_AG_MID, param_m->abpc_sn_coef_w_ag_mid);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_W_AG_MAX, param_m->abpc_sn_coef_w_ag_max);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_B_AG_MIN, param_m->abpc_sn_coef_b_ag_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_B_AG_MID, param_m->abpc_sn_coef_b_ag_mid);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_B_AG_MAX, param_m->abpc_sn_coef_b_ag_max);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_W_TH_MIN, param_m->abpc_sn_coef_w_th_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_W_TH_MAX, param_m->abpc_sn_coef_w_th_max);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_B_TH_MIN, param_m->abpc_sn_coef_b_th_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC1_SN_COEF_B_TH_MAX, param_m->abpc_sn_coef_b_th_max);
-+
-+	/* setup param_l */
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_RATIO_LIMIT, param_l->abpc_ratio_limit);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_DARK_LIMIT, param_l->abpc_dark_limit);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_W_AG_MIN, param_l->abpc_sn_coef_w_ag_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_W_AG_MID, param_l->abpc_sn_coef_w_ag_mid);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_W_AG_MAX, param_l->abpc_sn_coef_w_ag_max);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_B_AG_MIN, param_l->abpc_sn_coef_b_ag_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_B_AG_MID, param_l->abpc_sn_coef_b_ag_mid);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_B_AG_MAX, param_l->abpc_sn_coef_b_ag_max);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_W_TH_MIN, param_l->abpc_sn_coef_w_th_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_W_TH_MAX, param_l->abpc_sn_coef_w_th_max);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_B_TH_MIN, param_l->abpc_sn_coef_b_th_min);
-+	viif_capture_write(viif_dev, REG_L1_ABPC2_SN_COEF_B_TH_MAX, param_l->abpc_sn_coef_b_th_max);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_preset_white_balance(struct viif_device *viif_dev,
-+					     const struct viif_l1_preset_white_balance_config *arg)
-+{
-+	const struct viif_l1_preset_wb *param_h, *param_m, *param_l;
-+	unsigned long irqflags;
-+
-+	param_h = &arg->param_h;
-+	param_m = &arg->param_m;
-+	param_l = &arg->param_l;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_PWHB_DSTMAXVAL, arg->dstmaxval);
-+
-+	viif_capture_write(viif_dev, REG_L1_PWHB_H_GR, param_h->gain_gr);
-+	viif_capture_write(viif_dev, REG_L1_PWHB_HR, param_h->gain_r);
-+	viif_capture_write(viif_dev, REG_L1_PWHB_HB, param_h->gain_b);
-+	viif_capture_write(viif_dev, REG_L1_PWHB_H_GB, param_h->gain_gb);
-+
-+	viif_capture_write(viif_dev, REG_L1_PWHB_M_GR, param_m->gain_gr);
-+	viif_capture_write(viif_dev, REG_L1_PWHB_MR, param_m->gain_r);
-+	viif_capture_write(viif_dev, REG_L1_PWHB_MB, param_m->gain_b);
-+	viif_capture_write(viif_dev, REG_L1_PWHB_M_GB, param_m->gain_gb);
-+
-+	viif_capture_write(viif_dev, REG_L1_PWHB_L_GR, param_l->gain_gr);
-+	viif_capture_write(viif_dev, REG_L1_PWHB_LR, param_l->gain_r);
-+	viif_capture_write(viif_dev, REG_L1_PWHB_LB, param_l->gain_b);
-+	viif_capture_write(viif_dev, REG_L1_PWHB_L_GB, param_l->gain_gb);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void
-+viif_l1_set_raw_color_noise_reduction(struct viif_device *viif_dev,
-+				      const struct viif_l1_raw_color_noise_reduction_config *arg)
-+{
-+	const struct viif_l1_raw_color_noise_reduction *params[] = {
-+		&arg->param_h,
-+		&arg->param_m,
-+		&arg->param_l,
-+	};
-+	unsigned long irqflags;
-+	int i;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	for (i = 0; i < 3; i++) {
-+		const struct viif_l1_raw_color_noise_reduction *param = params[i];
-+		/* param_h */
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_SW(i), param->rcnr_sw ? 1 : 0);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_CNF_DARK_AG0(i),
-+				   param->rcnr_cnf_dark_ag0);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_CNF_DARK_AG1(i),
-+				   param->rcnr_cnf_dark_ag1);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_CNF_DARK_AG2(i),
-+				   param->rcnr_cnf_dark_ag2);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_CNF_RATIO_AG0(i),
-+				   param->rcnr_cnf_ratio_ag0);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_CNF_RATIO_AG1(i),
-+				   param->rcnr_cnf_ratio_ag1);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_CNF_RATIO_AG2(i),
-+				   param->rcnr_cnf_ratio_ag2);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_CNF_CLIP_GAIN_R(i),
-+				   param->rcnr_cnf_clip_gain_r);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_CNF_CLIP_GAIN_G(i),
-+				   param->rcnr_cnf_clip_gain_g);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_CNF_CLIP_GAIN_B(i),
-+				   param->rcnr_cnf_clip_gain_b);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_A1L_DARK_AG0(i),
-+				   param->rcnr_a1l_dark_ag0);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_A1L_DARK_AG1(i),
-+				   param->rcnr_a1l_dark_ag1);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_A1L_DARK_AG2(i),
-+				   param->rcnr_a1l_dark_ag2);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_A1L_RATIO_AG0(i),
-+				   param->rcnr_a1l_ratio_ag0);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_A1L_RATIO_AG1(i),
-+				   param->rcnr_a1l_ratio_ag1);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_A1L_RATIO_AG2(i),
-+				   param->rcnr_a1l_ratio_ag2);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_INF_ZERO_CLIP(i),
-+				   param->rcnr_inf_zero_clip);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_MERGE_D2BLEND_AG0(i),
-+				   param->rcnr_merge_d2blend_ag0);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_MERGE_D2BLEND_AG1(i),
-+				   param->rcnr_merge_d2blend_ag1);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_MERGE_D2BLEND_AG2(i),
-+				   param->rcnr_merge_d2blend_ag2);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_MERGE_BLACK(i), param->rcnr_merge_black);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_MERGE_MINDIV(i),
-+				   param->rcnr_merge_mindiv);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_HRY_TYPE(i), param->rcnr_hry_type);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_ANF_BLEND_AG0(i),
-+				   param->rcnr_anf_blend_ag0);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_ANF_BLEND_AG1(i),
-+				   param->rcnr_anf_blend_ag1);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_ANF_BLEND_AG2(i),
-+				   param->rcnr_anf_blend_ag2);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_LPF_THRESHOLD(i),
-+				   param->rcnr_lpf_threshold);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_MERGE_HLBLEND_AG0(i),
-+				   param->rcnr_merge_hlblend_ag0);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_MERGE_HLBLEND_AG1(i),
-+				   param->rcnr_merge_hlblend_ag1);
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_MERGE_HLBLEND_AG2(i),
-+				   param->rcnr_merge_hlblend_ag2);
-+
-+		viif_capture_write(viif_dev, REG_L1_RCNR_X_GNR_SW(i), param->rcnr_gnr_sw ? 1 : 0);
-+
-+		if (param->rcnr_gnr_sw) {
-+			viif_capture_write(viif_dev, REG_L1_RCNR_X_GNR_RATIO(i),
-+					   param->rcnr_gnr_ratio);
-+			viif_capture_write(viif_dev, REG_L1_RCNR_X_GNR_WIDE_EN(i),
-+					   param->rcnr_gnr_wide_en ? 1 : 0);
-+		}
-+	}
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_hdrs(struct viif_device *viif_dev, const struct viif_l1_hdrs_config *arg)
-+{
-+	unsigned long irqflags;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRS_HDRMODE, arg->hdrs_hdr_mode);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRS_HDRRATIO_M, arg->hdrs_hdr_ratio_m);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_HDRRATIO_L, arg->hdrs_hdr_ratio_l);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_HDRRATIO_E, arg->hdrs_hdr_ratio_e);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRS_DG_H, arg->hdrs_dg_h);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_DG_M, arg->hdrs_dg_m);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_DG_L, arg->hdrs_dg_l);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_DG_E, arg->hdrs_dg_e);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRS_BLENDEND_H, arg->hdrs_blendend_h);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_BLENDEND_M, arg->hdrs_blendend_m);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_BLENDEND_E, arg->hdrs_blendend_e);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRS_BLENDBEG_H, arg->hdrs_blendbeg_h);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_BLENDBEG_M, arg->hdrs_blendbeg_m);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_BLENDBEG_E, arg->hdrs_blendbeg_e);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRS_LEDMODE_ON, arg->hdrs_led_mode_on ? 1 : 0);
-+	viif_capture_write(viif_dev, REG_L1_HDRS_DSTMAXVAL, arg->hdrs_dst_max_val);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void
-+viif_l1_set_black_level_correction(struct viif_device *viif_dev,
-+				   const struct viif_l1_black_level_correction_config *arg)
-+{
-+	unsigned long irqflags;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_BLVC_SRCBLACKLEVEL_GR, arg->srcblacklevel_gr);
-+	viif_capture_write(viif_dev, REG_L1_BLVC_SRCBLACKLEVEL_R, arg->srcblacklevel_r);
-+	viif_capture_write(viif_dev, REG_L1_BLVC_SRCBLACKLEVEL_B, arg->srcblacklevel_b);
-+	viif_capture_write(viif_dev, REG_L1_BLVC_SRCBLACKLEVELGB, arg->srcblacklevel_gb);
-+
-+	viif_capture_write(viif_dev, REG_L1_BLVC_MULTVAL_GR, arg->mulval_gr);
-+	viif_capture_write(viif_dev, REG_L1_BLVC_MULTVAL_R, arg->mulval_r);
-+	viif_capture_write(viif_dev, REG_L1_BLVC_MULTVAL_B, arg->mulval_b);
-+	viif_capture_write(viif_dev, REG_L1_BLVC_MULTVAL_GB, arg->mulval_gb);
-+
-+	viif_capture_write(viif_dev, REG_L1_BLVC_DSTMAXVAL, arg->dstmaxval);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void lsc_table_transmission(struct viif_device *viif_dev, dma_addr_t table_gr,
-+				   dma_addr_t table_r, dma_addr_t table_b, dma_addr_t table_gb)
-+{
-+	u32 val = 0x0U;
-+
-+	viif_config_vdm_tgroup(viif_dev, IDX_TGROUP_L1_ISP);
-+
-+	if (table_gr) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L1_LSSC_GR),
-+				   (u32)table_gr);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L1_LSSC_GR),
-+				   VIIF_LSC_TABLE_BYTES);
-+		val |= MASK_VDM_T_ENABLE_L1_LSSC_GR;
-+	}
-+
-+	if (table_r) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L1_LSSC_R),
-+				   (u32)table_r);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L1_LSSC_R),
-+				   VIIF_LSC_TABLE_BYTES);
-+		val |= MASK_VDM_T_ENABLE_L1_LSSC_R;
-+	}
-+
-+	if (table_b) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L1_LSSC_B),
-+				   (u32)table_b);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L1_LSSC_B),
-+				   VIIF_LSC_TABLE_BYTES);
-+		val |= MASK_VDM_T_ENABLE_L1_LSSC_B;
-+	}
-+
-+	if (table_gb) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L1_LSSC_GB),
-+				   (u32)table_gb);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L1_LSSC_GB),
-+				   VIIF_LSC_TABLE_BYTES);
-+		val |= MASK_VDM_T_ENABLE_L1_LSSC_GB;
-+	}
-+
-+	val |= (viif_capture_read(viif_dev, REG_VDM_T_ENABLE) & ~MASK_VDM_T_ENABLE_L1_LSSC);
-+	viif_capture_write(viif_dev, REG_VDM_T_ENABLE, val);
-+}
-+
-+static inline u32 gen_grid_size(u32 param)
-+{
-+	switch (param) {
-+	case 32U:
-+		return 5U;
-+	case 64U:
-+		return 6U;
-+	case 128U:
-+		return 7U;
-+	case 256U:
-+		return 8U;
-+	case 512U:
-+		return 9U;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+#define PACK_PARA_COEF(max, min) (FIELD_PREP(0x1FFF0000, (max)) | FIELD_PREP(0x1FFF, (min)))
-+
-+static void viif_l1_set_lsc(struct viif_device *viif_dev, const struct viif_l1_lsc_config *arg)
-+{
-+	dma_addr_t table_gr = 0;
-+	dma_addr_t table_gb = 0;
-+	dma_addr_t table_r = 0;
-+	dma_addr_t table_b = 0;
-+	unsigned long irqflags;
-+	u32 val;
-+
-+	if (!arg->enable) {
-+		spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+		hwd_viif_isp_guard_start(viif_dev);
-+
-+		viif_capture_write(viif_dev, REG_L1_LSSC_EN, 0);
-+
-+		hwd_viif_isp_guard_end(viif_dev);
-+		spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+		return;
-+	}
-+
-+	if (arg->enable & VIIF_L1_LSC_GRID_EN_MASK) {
-+		memcpy(viif_dev->tables->lsc_table_gr, arg->table_gr, VIIF_LSC_TABLE_BYTES);
-+		memcpy(viif_dev->tables->lsc_table_r, arg->table_r, VIIF_LSC_TABLE_BYTES);
-+		memcpy(viif_dev->tables->lsc_table_b, arg->table_b, VIIF_LSC_TABLE_BYTES);
-+		memcpy(viif_dev->tables->lsc_table_gb, arg->table_gb, VIIF_LSC_TABLE_BYTES);
-+		table_gr = (dma_addr_t)(uintptr_t)viif_dev->tables_dma->lsc_table_gr;
-+		table_r = (dma_addr_t)(uintptr_t)viif_dev->tables_dma->lsc_table_r;
-+		table_b = (dma_addr_t)(uintptr_t)viif_dev->tables_dma->lsc_table_b;
-+		table_gb = (dma_addr_t)(uintptr_t)viif_dev->tables_dma->lsc_table_gb;
-+	}
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+	lsc_table_transmission(viif_dev, table_gr, table_r, table_b, table_gb);
-+
-+	/* parabola shading */
-+	if (arg->enable & VIIF_L1_LSC_PARABOLA_EN_MASK) {
-+		const struct viif_l1_lsc_parabola_param *parabola_param =
-+			&arg->param.lssc_parabola_param;
-+		const struct viif_l1_lsc_parabola_ag_param *params[] = {
-+			&parabola_param->r_2d,	&parabola_param->r_4d,	&parabola_param->gr_2d,
-+			&parabola_param->gr_4d, &parabola_param->gb_2d, &parabola_param->gb_4d,
-+			&parabola_param->b_2d,	&parabola_param->b_4d,
-+		};
-+		int i;
-+
-+		viif_capture_write(viif_dev, REG_L1_LSSC_PARA_EN, 1);
-+
-+		viif_capture_write(viif_dev, REG_L1_LSSC_PARA_H_CENTER,
-+				   parabola_param->lssc_para_h_center);
-+		viif_capture_write(viif_dev, REG_L1_LSSC_PARA_V_CENTER,
-+				   parabola_param->lssc_para_v_center);
-+
-+		viif_capture_write(viif_dev, REG_L1_LSSC_PARA_H_GAIN,
-+				   parabola_param->lssc_para_h_gain);
-+		viif_capture_write(viif_dev, REG_L1_LSSC_PARA_V_GAIN,
-+				   parabola_param->lssc_para_v_gain);
-+
-+		viif_capture_write(viif_dev, REG_L1_LSSC_PARA_MGSEL2,
-+				   parabola_param->lssc_para_mgsel2);
-+		viif_capture_write(viif_dev, REG_L1_LSSC_PARA_MGSEL4,
-+				   parabola_param->lssc_para_mgsel4);
-+
-+		for (i = 0; i < 8; i++) {
-+			const struct viif_l1_lsc_parabola_ag_param *p = params[i];
-+
-+			viif_capture_write(viif_dev, REG_L1_LSSC_PARA_COEF_X_H_L(i),
-+					   PACK_PARA_COEF(p->lssc_paracoef_h_l_max,
-+							  p->lssc_paracoef_h_l_min));
-+			viif_capture_write(viif_dev, REG_L1_LSSC_PARA_COEF_X_H_R(i),
-+					   PACK_PARA_COEF(p->lssc_paracoef_h_r_max,
-+							  p->lssc_paracoef_h_r_min));
-+			viif_capture_write(viif_dev, REG_L1_LSSC_PARA_COEF_X_V_U(i),
-+					   PACK_PARA_COEF(p->lssc_paracoef_v_u_max,
-+							  p->lssc_paracoef_v_u_min));
-+			viif_capture_write(viif_dev, REG_L1_LSSC_PARA_COEF_X_V_D(i),
-+					   PACK_PARA_COEF(p->lssc_paracoef_v_d_max,
-+							  p->lssc_paracoef_v_d_min));
-+			viif_capture_write(viif_dev, REG_L1_LSSC_PARA_COEF_X_HV_LU(i),
-+					   PACK_PARA_COEF(p->lssc_paracoef_hv_lu_max,
-+							  p->lssc_paracoef_hv_lu_min));
-+			viif_capture_write(viif_dev, REG_L1_LSSC_PARA_COEF_X_HV_RU(i),
-+					   PACK_PARA_COEF(p->lssc_paracoef_hv_ru_max,
-+							  p->lssc_paracoef_hv_ru_min));
-+			viif_capture_write(viif_dev, REG_L1_LSSC_PARA_COEF_X_HV_LD(i),
-+					   PACK_PARA_COEF(p->lssc_paracoef_hv_ld_max,
-+							  p->lssc_paracoef_hv_ld_min));
-+			viif_capture_write(viif_dev, REG_L1_LSSC_PARA_COEF_X_HV_RD(i),
-+					   PACK_PARA_COEF(p->lssc_paracoef_hv_rd_max,
-+							  p->lssc_paracoef_hv_rd_min));
-+		}
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_LSSC_PARA_EN, 0);
-+	}
-+
-+	/* grid shading */
-+	if (arg->enable & VIIF_L1_LSC_GRID_EN_MASK) {
-+		const struct viif_l1_lsc_grid_param *grid_param = &arg->param.lssc_grid_param;
-+		u32 grid_h_size = gen_grid_size(grid_param->lssc_grid_h_size);
-+		u32 grid_v_size = gen_grid_size(grid_param->lssc_grid_v_size);
-+
-+		viif_capture_write(viif_dev, REG_L1_LSSC_GRID_EN, 1);
-+		viif_capture_write(viif_dev, REG_L1_LSSC_GRID_H_SIZE, grid_h_size);
-+		viif_capture_write(viif_dev, REG_L1_LSSC_GRID_V_SIZE, grid_v_size);
-+		viif_capture_write(viif_dev, REG_L1_LSSC_GRID_H_CENTER,
-+				   grid_param->lssc_grid_h_center);
-+		viif_capture_write(viif_dev, REG_L1_LSSC_GRID_V_CENTER,
-+				   grid_param->lssc_grid_v_center);
-+		viif_capture_write(viif_dev, REG_L1_LSSC_GRID_MGSEL, grid_param->lssc_grid_mgsel);
-+
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_LSSC_GRID_EN, 0);
-+	}
-+
-+	/* preset white balance */
-+	val = (arg->param.lssc_pwhb_r_gain_max << 16U) | (arg->param.lssc_pwhb_r_gain_min);
-+	viif_capture_write(viif_dev, REG_L1_LSSC_PWHB_R_GAIN, val);
-+
-+	val = (arg->param.lssc_pwhb_gr_gain_max << 16U) | (arg->param.lssc_pwhb_gr_gain_min);
-+	viif_capture_write(viif_dev, REG_L1_LSSC_PWHB_GR_GAIN, val);
-+
-+	val = (arg->param.lssc_pwhb_gb_gain_max << 16U) | (arg->param.lssc_pwhb_gb_gain_min);
-+	viif_capture_write(viif_dev, REG_L1_LSSC_PWHB_GB_GAIN, val);
-+
-+	val = (arg->param.lssc_pwhb_b_gain_max << 16U) | (arg->param.lssc_pwhb_b_gain_min);
-+	viif_capture_write(viif_dev, REG_L1_LSSC_PWHB_B_GAIN, val);
-+
-+	viif_capture_write(viif_dev, REG_L1_LSSC_EN, 1);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_main_process(struct viif_device *viif_dev,
-+				     const struct viif_l1_main_process_config *arg)
-+{
-+	unsigned long irqflags;
-+	u32 val;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_MPRO_CONF, arg->damp_lsbsel << 4);
-+	viif_capture_write(viif_dev, REG_L1_MPRO_LCS_MODE, arg->demosaic_mode);
-+
-+	if (arg->colormat_enable) {
-+		const struct viif_l1_color_matrix_correction *color_matrix = &arg->colormat_param;
-+
-+		viif_capture_write(viif_dev, REG_L1_MPRO_SW, 1);
-+
-+		val = (u32)color_matrix->coef_rmg_min & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_RMG_MIN, val);
-+
-+		val = (u32)color_matrix->coef_rmg_max & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_RMG_MAX, val);
-+
-+		val = (u32)color_matrix->coef_rmb_min & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_RMB_MIN, val);
-+
-+		val = (u32)color_matrix->coef_rmb_max & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_RMB_MAX, val);
-+
-+		val = (u32)color_matrix->coef_gmr_min & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_GMR_MIN, val);
-+
-+		val = (u32)color_matrix->coef_gmr_max & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_GMR_MAX, val);
-+
-+		val = (u32)color_matrix->coef_gmb_min & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_GMB_MIN, val);
-+
-+		val = (u32)color_matrix->coef_gmb_max & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_GMB_MAX, val);
-+
-+		val = (u32)color_matrix->coef_bmr_min & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_BMR_MIN, val);
-+
-+		val = (u32)color_matrix->coef_bmr_max & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_BMR_MAX, val);
-+
-+		val = (u32)color_matrix->coef_bmg_min & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_BMG_MIN, val);
-+
-+		val = (u32)color_matrix->coef_bmg_max & 0xffffU;
-+		viif_capture_write(viif_dev, REG_L1_MPRO_LM0_BMG_MAX, val);
-+
-+		viif_capture_write(viif_dev, REG_L1_MPRO_DST_MINVAL, (u32)color_matrix->dst_minval);
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_MPRO_SW, 0);
-+	}
-+
-+	viif_capture_write(viif_dev, REG_L1_MPRO_DST_MAXVAL, arg->dst_maxval);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_awb(struct viif_device *viif_dev, const struct viif_l1_awb_config *arg)
-+{
-+	const struct viif_l1_awb *param = &arg->param;
-+	unsigned long irqflags;
-+	u32 val, ygate_data;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_AWHB_WBMRG, arg->awhb_wbmrg);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_WBMGG, arg->awhb_wbmgg);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_WBMBG, arg->awhb_wbmbg);
-+
-+	val = viif_capture_read(viif_dev, REG_L1_AWHB_SW) & ~MASK_L1_AWHB_SW_EN;
-+
-+	/* disabling AWB */
-+	if (!arg->enable) {
-+		viif_capture_write(viif_dev, REG_L1_AWHB_SW, val);
-+		goto op_done;
-+	}
-+
-+	/* enabling AWB */
-+	viif_capture_write(viif_dev, REG_L1_AWHB_SW, val | MASK_L1_AWHB_SW_EN);
-+
-+	if (param->awhb_ygate_data == 64U)
-+		ygate_data = 0U;
-+	else if (param->awhb_ygate_data == 128U)
-+		ygate_data = 1U;
-+	else if (param->awhb_ygate_data == 256U)
-+		ygate_data = 2U;
-+	else
-+		ygate_data = 3U;
-+
-+	val = param->awhb_ygate_sel ? MASK_L1_AWHB_GATE_YGATE_SEL : 0;
-+	val |= FIELD_PREP(MASK_L1_AWHB_GATE_YGATE_DATA, ygate_data);
-+	val |= FIELD_PREP(MASK_L1_AWHB_GATE_CGRANGE, param->awhb_cgrange);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_GATE_CONF0, val);
-+
-+	val = param->awhb_ygatesw ? MASK_L1_AWHB_GATE_YGATESW : 0;
-+	val |= param->awhb_hexsw ? MASK_L1_AWHB_GATE_HEXSW : 0;
-+	val |= FIELD_PREP(MASK_L1_AWHB_GATE_AREAMODE, param->awhb_areamode);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_GATE_CONF1, val);
-+
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AREA_HSIZE, param->awhb_area_hsize);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AREA_VSIZE, param->awhb_area_vsize);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AREA_HOFS, param->awhb_area_hofs);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AREA_VOFS, param->awhb_area_vofs);
-+
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AREA_MASKH, param->awhb_area_maskh);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AREA_MASKL, param->awhb_area_maskl);
-+
-+	val = param->awhb_sq_sw[0] ? MASK_L1_AWHB_SQ_CONF_SQ1SW : 0;
-+	val |= param->awhb_sq_pol[0] ? MASK_L1_AWHB_SQ_CONF_SQ1POL : 0;
-+	val |= param->awhb_sq_sw[1] ? MASK_L1_AWHB_SQ_CONF_SQ2SW : 0;
-+	val |= param->awhb_sq_pol[1] ? MASK_L1_AWHB_SQ_CONF_SQ2POL : 0;
-+	val |= param->awhb_sq_sw[2] ? MASK_L1_AWHB_SQ_CONF_SQ3SW : 0;
-+	val |= param->awhb_sq_pol[2] ? MASK_L1_AWHB_SQ_CONF_SQ3POL : 0;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_SQ_CONF, val);
-+
-+	viif_capture_write(viif_dev, REG_L1_AWHB_YGATEH, (u32)param->awhb_ygateh);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_YGATEL, (u32)param->awhb_ygatel);
-+
-+	viif_capture_write(viif_dev, REG_L1_AWHB_BYCUT0P, param->awhb_bycut0p);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_BYCUT0N, param->awhb_bycut0n);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RYCUT0P, param->awhb_rycut0p);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RYCUT0N, param->awhb_rycut0n);
-+
-+	val = (u32)param->awhb_rbcut0h & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RBCUT0H, val);
-+	val = (u32)param->awhb_rbcut0l & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RBCUT0L, val);
-+
-+	val = (u32)param->awhb_bycut_h[0] & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_BYCUT1H, val);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_BYCUT1L, param->awhb_bycut_l[0]);
-+	val = (u32)param->awhb_bycut_h[1] & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_BYCUT2H, val);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_BYCUT2L, param->awhb_bycut_l[1]);
-+	val = (u32)param->awhb_bycut_h[2] & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_BYCUT3H, val);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_BYCUT3L, param->awhb_bycut_l[2]);
-+
-+	val = (u32)param->awhb_rycut_h[0] & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RYCUT1H, val);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RYCUT1L, param->awhb_rycut_l[0]);
-+	val = (u32)param->awhb_rycut_h[1] & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RYCUT2H, val);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RYCUT2L, param->awhb_rycut_l[1]);
-+	val = (u32)param->awhb_rycut_h[2] & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RYCUT3H, val);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_RYCUT3L, param->awhb_rycut_l[2]);
-+
-+	val = (u32)param->awhb_awbsftu & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AWBSFTU, val);
-+	val = (u32)param->awhb_awbsftv & 0xffU;
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AWBSFTV, val);
-+
-+	val = (param->awhb_awbhuecor ? MASK_L1_AWHB_AWBSPD_HUECOR : 0);
-+	val |= FIELD_PREP(MASK_L1_AWHB_AWBSPD_SPD, param->awhb_awbspd);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AWBSPD, val);
-+
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AWBULV, param->awhb_awbulv);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AWBVLV, param->awhb_awbvlv);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AWBWAIT, (u32)param->awhb_awbwait);
-+
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AWBONDOT, param->awhb_awbondot);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_AWBFZTIM, param->awhb_awbfztim);
-+
-+	viif_capture_write(viif_dev, REG_L1_AWHB_WBGRMAX, (u32)param->awhb_wbgrmax);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_WBGBMAX, (u32)param->awhb_wbgbmax);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_WBGRMIN, (u32)param->awhb_wbgrmin);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_WBGBMIN, (u32)param->awhb_wbgbmin);
-+
-+op_done:
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_lock_awb_gain(struct viif_device *viif_dev, const u32 *enable)
-+{
-+	unsigned long irqflags;
-+	u32 val;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	val = viif_capture_read(viif_dev, REG_L1_AWHB_SW) & ~MASK_L1_AWHB_SW_LOCK;
-+	val |= (*enable ? MASK_L1_AWHB_SW_LOCK : 0);
-+	viif_capture_write(viif_dev, REG_L1_AWHB_SW, val);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+/* Convert the unit of time-period (from sysclk, to num lines in the image) */
-+static u32 sysclk_to_numlines(u32 time_in_sysclk, const struct viif_img_clk *img_clk)
-+{
-+	u64 v1 = (u64)time_in_sysclk * img_clk->pixel_clock;
-+	u64 v2 = (u64)img_clk->htotal_size * VIIF_SYS_CLK;
-+
-+	return (u32)div64_u64(v1, v2);
-+}
-+
-+static void viif_l1_set_hdrc(struct viif_device *viif_dev, const struct viif_l1_hdrc_config *arg)
-+{
-+	const struct viif_l1_hdrc *param = &arg->param;
-+	unsigned long irqflags;
-+	u32 val, sw_delay1;
-+	int i;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	/* disabling HDRC */
-+	if (!arg->enable) {
-+		viif_capture_write(viif_dev, REG_L1_HDRC_THR_SFT_AMT, arg->hdrc_thr_sft_amt);
-+		viif_capture_write(viif_dev, REG_L1_HDRC_EN, 0);
-+
-+		goto done_op;
-+	}
-+
-+	/* enabling HDRC */
-+	viif_capture_write(viif_dev, REG_L1_HDRC_RATIO,
-+			   (param->hdrc_ratio - VIIF_L1_HDRC_RATIO_OFFSET));
-+	viif_capture_write(viif_dev, REG_L1_HDRC_PT_RATIO, param->hdrc_pt_ratio);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRC_PT_BLEND, param->hdrc_pt_blend);
-+	viif_capture_write(viif_dev, REG_L1_HDRC_PT_BLEND2, param->hdrc_pt_blend2);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRC_PT_SAT, param->hdrc_pt_sat);
-+	viif_capture_write(viif_dev, REG_L1_HDRC_TN_TYPE, param->hdrc_tn_type);
-+
-+	for (i = 0; i < LEN_L1_HDRC_UTN_TBL; i++)
-+		viif_capture_write(viif_dev, REG_L1_HDRC_UTN_TBL(i), param->hdrc_utn_tbl[i]);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRC_FLR_VAL, param->hdrc_flr_val);
-+	viif_capture_write(viif_dev, REG_L1_HDRC_FLR_ADP, param->hdrc_flr_adp ? 1 : 0);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRC_YBR_OFF, param->hdrc_ybr_off ? 1 : 0);
-+	viif_capture_write(viif_dev, REG_L1_HDRC_ORGY_BLEND, param->hdrc_orgy_blend);
-+
-+	val = ((viif_capture_read(viif_dev, REG_L1_SYSM_HEIGHT)) % 64U) / 2U;
-+	viif_capture_write(viif_dev, REG_L1_HDRC_MAR_TOP, val);
-+	val = ((viif_capture_read(viif_dev, REG_L1_SYSM_WIDTH)) % 64U) / 2U;
-+	viif_capture_write(viif_dev, REG_L1_HDRC_MAR_LEFT, val);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRC_EN, 1);
-+
-+	/* update of sw_delay1 must be done when MAIN unit is NOT running. */
-+	if (!viif_dev->run_flag_main) {
-+		sw_delay1 = sysclk_to_numlines(VIIF_REGBUF_ACCESS_TIME, &viif_dev->img_clk) +
-+			    VIIF_L1_DELAY_W_HDRC + 1U;
-+		val = viif_capture_read(viif_dev, REG_INT_M1_LINE) & 0xffffU;
-+		val |= (sw_delay1 << 16U);
-+		viif_capture_write(viif_dev, REG_INT_M1_LINE, val);
-+		/* M2_LINE is the same condition as M1_LINE */
-+		viif_capture_write(viif_dev, REG_INT_M2_LINE, val);
-+	}
-+
-+done_op:
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_hdrc_ltm(struct viif_device *viif_dev,
-+				 const struct viif_l1_hdrc_ltm_config *arg)
-+{
-+	unsigned long irqflags;
-+	int i;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	viif_capture_write(viif_dev, REG_L1_HDRC_TNP_MAX, arg->tnp_max);
-+	viif_capture_write(viif_dev, REG_L1_HDRC_TNP_MAG, arg->tnp_mag);
-+
-+	for (i = 0; i < LEN_L1_HDRC_TNP_FIL; i++)
-+		viif_capture_write(viif_dev, REG_L1_HDRC_TNP_FIL(i), (u32)arg->tnp_fil[i]);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void viif_l1_set_gamma(struct viif_device *viif_dev, const struct viif_l1_gamma_config *arg)
-+{
-+	const struct viif_l1_gamma *param = &arg->param;
-+	unsigned long irqflags;
-+	int i;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	/* disabling L1 gamma */
-+	if (!arg->enable) {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_PGC_SW, 0);
-+		goto done_op;
-+	}
-+
-+	/* enabling L1 gamma */
-+	for (i = 0; i < 44; i++)
-+		viif_capture_write(viif_dev, REG_L1_VPRO_GAMxP(i), param->gam_p[i]);
-+	viif_capture_write(viif_dev, REG_L1_VPRO_BLKADJ, param->blkadj);
-+	viif_capture_write(viif_dev, REG_L1_VPRO_PGC_SW, 1);
-+
-+done_op:
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void
-+viif_l1_set_img_quality_adjustment(struct viif_device *viif_dev,
-+				   const struct viif_l1_img_quality_adjustment_config *arg)
-+{
-+	unsigned long irqflags;
-+	u32 val;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	/* RGB to YUV (enabled by default, should be enabled) */
-+	viif_capture_write(viif_dev, REG_L1_VPRO_YUVC_SW, 1);
-+	viif_capture_write(viif_dev, REG_L1_VPRO_CB_MAT, (u32)arg->coef_cb);
-+	viif_capture_write(viif_dev, REG_L1_VPRO_CR_MAT, (u32)arg->coef_cr);
-+
-+	/* brightness */
-+	val = (u32)arg->brightness & 0xffffU;
-+	if (val) {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_BRIGHT_SW, 1);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_BRIGHT, val);
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_BRIGHT_SW, 0);
-+	}
-+
-+	/* linear contrast */
-+	if ((u32)arg->linear_contrast != 128U) {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_LCNT_SW, 1);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_LCONT_LEV, arg->linear_contrast);
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_LCNT_SW, 0);
-+	}
-+
-+	/* nonlinear contrast */
-+	if (arg->enable & VIIF_L1_IQA_NONLINEAR_CONTRAST_EN_MASK) {
-+		const struct viif_l1_nonlinear_contrast *nonlinear_contrast =
-+			&arg->nonlinear_contrast;
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_NLCNT_SW, 1);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_BLK_KNEE, nonlinear_contrast->blk_knee);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_WHT_KNEE, nonlinear_contrast->wht_knee);
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_BLK_CONT0,
-+				   nonlinear_contrast->blk_cont[0]);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_BLK_CONT1,
-+				   nonlinear_contrast->blk_cont[1]);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_BLK_CONT2,
-+				   nonlinear_contrast->blk_cont[2]);
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_WHT_CONT0,
-+				   nonlinear_contrast->wht_cont[0]);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_WHT_CONT1,
-+				   nonlinear_contrast->wht_cont[1]);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_WHT_CONT2,
-+				   nonlinear_contrast->wht_cont[2]);
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_NLCNT_SW, 0);
-+	}
-+
-+	/* luminance noise reduction */
-+	if (arg->enable & VIIF_L1_IQA_LUM_NOISE_REDUCTION_EN_MASK) {
-+		const struct viif_l1_lum_noise_reduction *lum_noise_reduction =
-+			&arg->lum_noise_reduction;
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_YNR_SW, 1);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_YNR_GAIN_MIN,
-+				   lum_noise_reduction->gain_min);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_YNR_GAIN_MAX,
-+				   lum_noise_reduction->gain_max);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_YNR_LIM_MIN, lum_noise_reduction->lim_min);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_YNR_LIM_MAX, lum_noise_reduction->lim_max);
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_YNR_SW, 0);
-+	}
-+
-+	/* edge enhancement */
-+	if (arg->enable & VIIF_L1_IQA_EDGE_ENHANCEMENT_EN_MASK) {
-+		const struct viif_l1_edge_enhancement *edge_enhancement = &arg->edge_enhancement;
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_ETE_SW, 1);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_ETE_GAIN_MIN, edge_enhancement->gain_min);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_ETE_GAIN_MAX, edge_enhancement->gain_max);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_ETE_LIM_MIN, edge_enhancement->lim_min);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_ETE_LIM_MAX, edge_enhancement->lim_max);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_ETE_CORING_MIN,
-+				   edge_enhancement->coring_min);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_ETE_CORING_MAX,
-+				   edge_enhancement->coring_max);
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_ETE_SW, 0);
-+	}
-+
-+	/* UV suppression */
-+	if (arg->enable & VIIF_L1_IQA_UV_SUPPRESSION_EN_MASK) {
-+		const struct viif_l1_uv_suppression *uv_suppression = &arg->uv_suppression;
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_UVSUP_SW, 1);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_BK_SLV, uv_suppression->bk_slv);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_BK_MP, uv_suppression->bk_mp);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_BLACK, uv_suppression->black);
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_WH_SLV, uv_suppression->wh_slv);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_WH_MP, uv_suppression->wh_mp);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_WHITE, uv_suppression->white);
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_UVSUP_SW, 0);
-+	}
-+
-+	/* coring suppression */
-+	if (arg->enable & VIIF_L1_IQA_CORING_SUPPRESSION_EN_MASK) {
-+		const struct viif_l1_coring_suppression *coring_suppression =
-+			&arg->coring_suppression;
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_CORING_SW, 1);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_CORING_LV_MIN,
-+				   coring_suppression->lv_min);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_CORING_LV_MAX,
-+				   coring_suppression->lv_max);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_CORING_GAIN_MIN,
-+				   coring_suppression->gain_min);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_CORING_GAIN_MAX,
-+				   coring_suppression->gain_max);
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CSUP_CORING_SW, 0);
-+	}
-+
-+	/* edge suppression */
-+	if (arg->enable & VIIF_L1_IQA_EDGE_SUPPRESSION_EN_MASK) {
-+		const struct viif_l1_edge_suppression *edge_suppression = &arg->edge_suppression;
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_EDGE_SUP_SW, 1);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_EDGE_SUP_GAIN, edge_suppression->gain);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_EDGE_SUP_LIM, edge_suppression->lim);
-+	} else {
-+		viif_capture_write(viif_dev, REG_L1_VPRO_EDGE_SUP_SW, 0);
-+	}
-+
-+	/* color level */
-+	if (arg->enable & VIIF_L1_IQA_COLOR_LEVEL_EN_MASK) {
-+		const struct viif_l1_color_level *color_level = &arg->color_level;
-+
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CB_GAIN, color_level->cb_gain);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CR_GAIN, color_level->cr_gain);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CBR_MGAIN_MIN, color_level->cbr_mgain_min);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CB_P_GAIN_MAX, color_level->cbp_gain_max);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CB_M_GAIN_MAX, color_level->cbm_gain_max);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CR_P_GAIN_MAX, color_level->crp_gain_max);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CR_M_GAIN_MAX, color_level->crm_gain_max);
-+	} else {
-+		/* disable */
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CB_GAIN, 1024U);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CR_GAIN, 1024U);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CBR_MGAIN_MIN, 1024U);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CB_P_GAIN_MAX, 0U);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CB_M_GAIN_MAX, 0U);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CR_P_GAIN_MAX, 0U);
-+		viif_capture_write(viif_dev, REG_L1_VPRO_CR_M_GAIN_MAX, 0U);
-+	}
-+
-+	/* color noise reduction */
-+	viif_capture_write(viif_dev, REG_L1_VPRO_CNR_SW,
-+			   arg->enable & VIIF_L1_IQA_COLOR_NOISE_REDUCTION_EN_MASK ? 1 : 0);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static inline u32 pack_weight(const u32 *vec)
-+{
-+	return (vec[0] << 14) | (vec[1] << 12) | (vec[2] << 10) | (vec[3] << 8) | (vec[4] << 6) |
-+	       (vec[5] << 4) | (vec[6] << 2U) | (vec[7]);
-+}
-+
-+static void viif_l1_set_avg_lum_generation(struct viif_device *viif_dev,
-+					   const struct viif_l1_avg_lum_generation_config *arg)
-+{
-+	unsigned long irqflags;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	/* disabling aggregation */
-+	if (!arg->enable) {
-+		viif_capture_write(viif_dev, REG_L1_AEXP_ON, 0);
-+		goto op_done;
-+	}
-+
-+	/* enabling aggregation */
-+	viif_capture_write(viif_dev, REG_L1_AEXP_ON, 1);
-+	viif_capture_write(viif_dev, REG_L1_AEXP_START_X, arg->aexp_start_x);
-+	viif_capture_write(viif_dev, REG_L1_AEXP_START_Y, arg->aexp_start_y);
-+	viif_capture_write(viif_dev, REG_L1_AEXP_BLOCK_WIDTH, arg->aexp_block_width);
-+	viif_capture_write(viif_dev, REG_L1_AEXP_BLOCK_HEIGHT, arg->aexp_block_height);
-+
-+	viif_capture_write(viif_dev, REG_L1_AEXP_WEIGHT_0, pack_weight(arg->aexp_weight[0]));
-+	viif_capture_write(viif_dev, REG_L1_AEXP_WEIGHT_1, pack_weight(arg->aexp_weight[1]));
-+	viif_capture_write(viif_dev, REG_L1_AEXP_WEIGHT_2, pack_weight(arg->aexp_weight[2]));
-+	viif_capture_write(viif_dev, REG_L1_AEXP_WEIGHT_3, pack_weight(arg->aexp_weight[3]));
-+	viif_capture_write(viif_dev, REG_L1_AEXP_WEIGHT_3, pack_weight(arg->aexp_weight[4]));
-+	viif_capture_write(viif_dev, REG_L1_AEXP_WEIGHT_4, pack_weight(arg->aexp_weight[5]));
-+	viif_capture_write(viif_dev, REG_L1_AEXP_WEIGHT_5, pack_weight(arg->aexp_weight[6]));
-+	viif_capture_write(viif_dev, REG_L1_AEXP_WEIGHT_7, pack_weight(arg->aexp_weight[7]));
-+
-+	viif_capture_write(viif_dev, REG_L1_AEXP_SATUR_RATIO, arg->aexp_satur_ratio);
-+	viif_capture_write(viif_dev, REG_L1_AEXP_BLACK_RATIO, arg->aexp_black_ratio);
-+	viif_capture_write(viif_dev, REG_L1_AEXP_SATUR_LEVEL, arg->aexp_satur_level);
-+
-+	viif_capture_write(viif_dev, REG_L1_AEXP_AVE4LINESY0, arg->aexp_ave4linesy[0]);
-+	viif_capture_write(viif_dev, REG_L1_AEXP_AVE4LINESY1, arg->aexp_ave4linesy[1]);
-+	viif_capture_write(viif_dev, REG_L1_AEXP_AVE4LINESY2, arg->aexp_ave4linesy[2]);
-+	viif_capture_write(viif_dev, REG_L1_AEXP_AVE4LINESY3, arg->aexp_ave4linesy[3]);
-+
-+op_done:
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static void undist_table_transmission(struct viif_device *viif_dev, dma_addr_t write_g,
-+				      dma_addr_t read_b, dma_addr_t read_g, dma_addr_t read_r,
-+				      u32 size)
-+{
-+	u32 val = 0U;
-+
-+	if (read_b) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L2_UNDIST_RD_B),
-+				   (u32)read_b);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L2_UNDIST_RD_B), size);
-+		val |= MASK_VDM_T_ENABLE_L2_UNDIST_RD_B;
-+	}
-+	if (read_g) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L2_UNDIST_RD_G),
-+				   (u32)read_g);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L2_UNDIST_RD_G), size);
-+		val |= MASK_VDM_T_ENABLE_L2_UNDIST_RD_G;
-+	}
-+	if (read_r) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L2_UNDIST_RD_R),
-+				   (u32)read_r);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L2_UNDIST_RD_R), size);
-+		val |= MASK_VDM_T_ENABLE_L2_UNDIST_RD_R;
-+	}
-+	if (write_g) {
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(IDX_TPORT_L2_UNDIST_WR_G),
-+				   (u32)write_g);
-+		viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(IDX_TPORT_L2_UNDIST_WR_G), size);
-+		val |= MASK_VDM_T_ENABLE_L2_UNDIST_WR_G;
-+	}
-+
-+	if (val)
-+		viif_config_vdm_tgroup(viif_dev, IDX_TGROUP_L2_UNDIST);
-+
-+	val |= viif_capture_read(viif_dev, REG_VDM_T_ENABLE) & ~MASK_VDM_T_ENABLE_L2_UNDIST;
-+	viif_capture_write(viif_dev, REG_VDM_T_ENABLE, val);
-+}
-+
-+static void undist_setup(struct viif_device *viif_dev, const struct viif_l2_undist *param)
-+{
-+	u32 val;
-+	unsigned int i;
-+
-+	/* Undist through mode */
-+	if (param->through_mode) {
-+		/* Enable through mode */
-+		viif_capture_write(viif_dev, REG_L2_MODE, 1);
-+		return;
-+	}
-+
-+	/* Undist operation */
-+	val = (param->roi_mode[0] << 1U) | (param->roi_mode[1] << 3U);
-+	viif_capture_write(viif_dev, REG_L2_MODE, val);
-+	val = (u32)param->sensor_crop_ofs_h & GENMASK(13, 0);
-+	viif_capture_write(viif_dev, REG_L2_SENSOR_CROP_OFS_H, val);
-+	val = (u32)param->sensor_crop_ofs_v & GENMASK(12, 0);
-+	viif_capture_write(viif_dev, REG_L2_SENSOR_CROP_OFS_V, val);
-+	viif_capture_write(viif_dev, REG_L2_NORM_SCALE, param->norm_scale);
-+	viif_capture_write(viif_dev, REG_L2_VALID_R_NORM2_POLY, param->valid_r_norm2_poly);
-+	viif_capture_write(viif_dev, REG_L2_VALID_R_NORM2_GRID, param->valid_r_norm2_grid);
-+	viif_capture_write(viif_dev, REG_L2_ROI_WRITE_AREA_DELTA(0),
-+			   param->roi_write_area_delta[0]);
-+	viif_capture_write(viif_dev, REG_L2_ROI_WRITE_AREA_DELTA(1),
-+			   param->roi_write_area_delta[1]);
-+
-+	for (i = 0; i < VIIF_L2_UNDIST_POLY_NUM; i++) {
-+		val = (u32)param->poly_write_g_coef[i];
-+		viif_capture_write(viif_dev, REG_L2_POLY10_WRITE_G_COEF(i), val);
-+		val = (u32)param->poly_read_b_coef[i];
-+		viif_capture_write(viif_dev, REG_L2_POLY10_READ_B_COEF(i), val);
-+		val = (u32)param->poly_read_g_coef[i];
-+		viif_capture_write(viif_dev, REG_L2_POLY10_READ_G_COEF(i), val);
-+		val = (u32)param->poly_read_r_coef[i];
-+		viif_capture_write(viif_dev, REG_L2_POLY10_READ_R_COEF(i), val);
-+	}
-+	viif_capture_write(viif_dev, REG_L2_GRID_NODE_NUM_H, param->grid_node_num_h);
-+	viif_capture_write(viif_dev, REG_L2_GRID_NODE_NUM_V, param->grid_node_num_v);
-+	viif_capture_write(viif_dev, REG_L2_GRID_PATCH_HSIZE_INV, param->grid_patch_hsize_inv);
-+	viif_capture_write(viif_dev, REG_L2_GRID_PATCH_VSIZE_INV, param->grid_patch_vsize_inv);
-+}
-+
-+static void viif_l2_set_undist(struct viif_device *viif_dev,
-+			       const struct viif_l2_undist_config *arg)
-+{
-+	dma_addr_t table_write_g = 0;
-+	dma_addr_t table_read_b = 0;
-+	dma_addr_t table_read_g = 0;
-+	dma_addr_t table_read_r = 0;
-+	unsigned long irqflags;
-+
-+	if (arg->param.roi_mode[0] != VIIF_L2_UNDIST_POLY ||
-+	    arg->param.roi_mode[1] != VIIF_L2_UNDIST_POLY) {
-+		memcpy(viif_dev->tables->undist_write_g, arg->write_g, arg->size);
-+		memcpy(viif_dev->tables->undist_read_b, arg->read_b, arg->size);
-+		memcpy(viif_dev->tables->undist_read_g, arg->read_g, arg->size);
-+		memcpy(viif_dev->tables->undist_read_r, arg->read_r, arg->size);
-+
-+		table_write_g = (uintptr_t)viif_dev->tables_dma->undist_write_g;
-+		table_read_b = (uintptr_t)viif_dev->tables_dma->undist_read_b;
-+		table_read_g = (uintptr_t)viif_dev->tables_dma->undist_read_g;
-+		table_read_r = (uintptr_t)viif_dev->tables_dma->undist_read_r;
-+	}
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	undist_table_transmission(viif_dev, table_write_g, table_read_b, table_read_g, table_read_r,
-+				  arg->size);
-+
-+	undist_setup(viif_dev, &arg->param);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+int visconti_viif_l2_undist_through(struct viif_device *viif_dev)
-+{
-+	struct viif_l2_undist undist = { 0 };
-+
-+	undist.through_mode = VIIF_ENABLE;
-+	undist.sensor_crop_ofs_h =
-+		1 - FIELD_GET(0x1FFF, viif_capture_read(viif_dev, REG_L2_SENSOR_CROP_HSIZE));
-+	undist.sensor_crop_ofs_v =
-+		1 - FIELD_GET(0x0FFF, viif_capture_read(viif_dev, REG_L2_SENSOR_CROP_VSIZE));
-+	undist.grid_node_num_h = 16;
-+	undist.grid_node_num_v = 16;
-+
-+	undist_setup(viif_dev, &undist);
-+
-+	return 0;
-+}
-+
-+static void viif_l2_set_roi_wrap(struct viif_device *viif_dev, const struct viif_l2_roi_config *roi)
-+{
-+	unsigned long irqflags;
-+
-+	/* update ROI parameter */
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+	visconti_viif_l2_set_roi(viif_dev, roi);
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+
-+	/* reflect change to pad::compose_rect */
-+	visconti_viif_isp_set_compose_rect(viif_dev, roi);
-+}
-+
-+struct viif_l2_gamma_table {
-+	dma_addr_t table[VIIF_L2_GAMMA_TABLE_CH_NUM];
-+};
-+
-+static void l2_gamma_table_transmission(struct viif_device *viif_dev, u32 post_id,
-+					const struct viif_l2_gamma_table *gamma_table)
-+{
-+	u32 vdm_enable = 0U;
-+	u32 i;
-+
-+	/* 0: LUT0-G/Y, 1: LUT1-G/Y, 2: LUT0-B/U, 3: LUT1-B/U, 4: LUT0-R/V, 5: LUT1-R/V */
-+	for (i = 0; i < VIIF_L2_GAMMA_TABLE_CH_NUM; i++) {
-+		if (gamma_table->table[i]) {
-+			int idx = IDX_TPORT_L2_GAMMA_LUT(post_id, i);
-+
-+			viif_capture_write(viif_dev, REG_VDM_TPORT_X_STADR(idx),
-+					   (u32)gamma_table->table[i]);
-+			viif_capture_write(viif_dev, REG_VDM_TPORT_X_SIZE(idx),
-+					   VIIF_L2_GAMMA_TABLE_BYTES);
-+			vdm_enable |= MASK_VDM_T_ENABLE_L2_GAMMA(post_id, i);
-+		}
-+	}
-+	if (vdm_enable)
-+		viif_config_vdm_tgroup(viif_dev, IDX_TGROUP_L2_GAMMA_LUT(post_id));
-+
-+	vdm_enable |= viif_capture_read(viif_dev, REG_VDM_T_ENABLE) &
-+		      ~MASK_VDM_T_ENABLE_L2_GAMMA_ALL(post_id);
-+
-+	viif_capture_write(viif_dev, REG_VDM_T_ENABLE, vdm_enable);
-+}
-+
-+static void viif_l2_set_gamma(struct viif_device *viif_dev, int pathid,
-+			      const struct viif_l2_gamma_config *l2_gamma)
-+{
-+	struct viif_l2_gamma_table dma_table = { 0 };
-+	int postid = (pathid == CAPTURE_PATH_MAIN_POST0) ? VIIF_L2ISP_POST_0 : VIIF_L2ISP_POST_1;
-+	unsigned long irqflags;
-+	int table_en;
-+	u32 val;
-+	int i;
-+
-+	table_en = l2_gamma->table_en;
-+	for (i = 0; i < 6; i++) {
-+		if (table_en & BIT(i)) {
-+			memcpy(viif_dev->tables->l2_gamma_table[pathid][i], l2_gamma->table[i],
-+			       VIIF_L2_GAMMA_TABLE_BYTES);
-+			dma_table.table[i] =
-+				(dma_addr_t)(uintptr_t)
-+					viif_dev->tables_dma->l2_gamma_table[pathid][i];
-+		}
-+	}
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	l2_gamma_table_transmission(viif_dev, postid, &dma_table);
-+
-+	val = (l2_gamma->vsplit << 16U) | (l2_gamma->mode << 4U) | (table_en != 0 ? 1 : 0);
-+	viif_capture_write(viif_dev, REG_L2_POST_X_GAMMA_M(postid), val);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static const struct viif_l1_input_mode_config defval_l1_set_input_mode = {
-+	.mode = VIIF_L1_INPUT_HDR,
-+};
-+
-+static const struct viif_l1_rgb_to_y_coef_config defval_l1_set_rgb_to_y_coef = {
-+	/* ITU-R BT.601 */
-+	.coef_r = 0x4C8C,
-+	.coef_g = 0x9644,
-+	.coef_b = 0x1D30,
-+};
-+
-+static const struct viif_l1_ag_mode_config defval_l1_set_ag_mode = { 0 };
-+
-+static const struct viif_l1_ag_config defval_l1_set_ag = { 0 };
-+
-+static const struct viif_l1_hdre_config defval_l1_set_hdre = {
-+	.hdre_src_point[0] = 0x3FFF,
-+	.hdre_dst_max_val = 0xFFFFFF,
-+};
-+
-+static const struct viif_l1_img_extraction_config defval_l1_set_img_extraction = {
-+	.input_black_gr = 256,
-+	.input_black_r = 256,
-+	.input_black_b = 256,
-+	.input_black_gb = 256,
-+};
-+
-+static const struct viif_l1_dpc_config defval_l1_set_dpc = { 0 };
-+
-+static const struct viif_l1_preset_white_balance_config defval_l1_set_preset_white_balance = {
-+	.dstmaxval = 0x0FFF,
-+	.param_h = {
-+		.gain_gr = 0x4000,
-+		.gain_r  = 0x4000,
-+		.gain_b  = 0x4000,
-+		.gain_gb = 0x4000,
-+	},
-+	.param_m = {
-+		.gain_gr = 0x4000,
-+		.gain_r  = 0x4000,
-+		.gain_b  = 0x4000,
-+		.gain_gb = 0x4000,
-+	},
-+	.param_l = {
-+		.gain_gr = 0x4000,
-+		.gain_r  = 0x4000,
-+		.gain_b  = 0x4000,
-+		.gain_gb = 0x4000,
-+	},
-+};
-+
-+static const
-+struct viif_l1_raw_color_noise_reduction_config defval_l1_set_raw_color_noise_reduction = {
-+	.param_h = {
-+		.rcnr_cnf_clip_gain_r = 3,
-+		.rcnr_cnf_clip_gain_g = 2,
-+		.rcnr_cnf_clip_gain_b = 3,
-+		.rcnr_merge_black = 0x20,
-+		.rcnr_merge_mindiv = 4,
-+		.rcnr_anf_blend_ag0 = 1,
-+		.rcnr_anf_blend_ag1 = 2,
-+		.rcnr_anf_blend_ag2 = 2,
-+		.rcnr_lpf_threshold = 8,
-+	},
-+	.param_m = {
-+		.rcnr_cnf_clip_gain_r = 3,
-+		.rcnr_cnf_clip_gain_g = 2,
-+		.rcnr_cnf_clip_gain_b = 3,
-+		.rcnr_merge_black = 0x20,
-+		.rcnr_merge_mindiv = 4,
-+		.rcnr_anf_blend_ag0 = 1,
-+		.rcnr_anf_blend_ag1 = 2,
-+		.rcnr_anf_blend_ag2 = 2,
-+		.rcnr_lpf_threshold = 8,
-+	},
-+	.param_l = {
-+		.rcnr_cnf_clip_gain_r = 3,
-+		.rcnr_cnf_clip_gain_g = 2,
-+		.rcnr_cnf_clip_gain_b = 3,
-+		.rcnr_merge_black = 0x20,
-+		.rcnr_merge_mindiv = 4,
-+		.rcnr_anf_blend_ag0 = 1,
-+		.rcnr_anf_blend_ag1 = 2,
-+		.rcnr_anf_blend_ag2 = 2,
-+		.rcnr_lpf_threshold = 8,
-+	},
-+};
-+
-+static const struct viif_l1_hdrs_config defval_l1_set_hdrs = {
-+	.hdrs_hdr_mode = 1,
-+	.hdrs_hdr_ratio_m = 0x10000,
-+	.hdrs_hdr_ratio_l = 0x400000,
-+	.hdrs_hdr_ratio_e = 0x400,
-+	.hdrs_dg_h = 0x400,
-+	.hdrs_dg_m = 0x400,
-+	.hdrs_dg_l = 0x400,
-+	.hdrs_dg_e = 0x400,
-+	.hdrs_blendend_h = 0xFA0,
-+	.hdrs_blendend_m = 0xFA0,
-+	.hdrs_blendend_e = 0xFA0,
-+	.hdrs_blendbeg_h = 0x12C,
-+	.hdrs_blendbeg_m = 0x12C,
-+	.hdrs_blendbeg_e = 0x12C,
-+	.hdrs_dst_max_val = 0xFFFFFF,
-+};
-+
-+static const struct viif_l1_black_level_correction_config defval_l1_set_black_level_correction = {
-+	.srcblacklevel_gr = 0x40,
-+	.srcblacklevel_r = 0x40,
-+	.srcblacklevel_b = 0x40,
-+	.srcblacklevel_gb = 0x40,
-+	.mulval_gr = 0x40000,
-+	.mulval_r = 0x40000,
-+	.mulval_b = 0x40000,
-+	.mulval_gb = 0x40000,
-+	.dstmaxval = 0xFFFFFF,
-+};
-+
-+static const struct viif_l1_lsc_config defval_l1_set_lsc = { 0 };
-+
-+static const struct viif_l1_main_process_config defval_l1_set_main_process = {
-+	.damp_lsbsel = 0x8,
-+	.demosaic_mode = 1,
-+	.colormat_enable = 0,
-+	.dst_maxval = 0xFFFFFF,
-+};
-+
-+static const struct viif_l1_awb_config defval_l1_set_awb = {
-+	.enable = 0,
-+	.awhb_wbmrg = 256,
-+	.awhb_wbmgg = 256,
-+	.awhb_wbmbg = 256,
-+};
-+
-+static const u32 defval_l1_lock_awb_gain;
-+
-+static const struct viif_l1_hdrc_config defval_l1_set_hdrc = {
-+	.enable = 1,
-+	.param = {
-+		.hdrc_ratio = 0x0E + VIIF_L1_HDRC_RATIO_OFFSET,
-+		.hdrc_pt_ratio = 7,
-+		.hdrc_pt_sat = 0xFFC0,
-+		.hdrc_tn_type = 1,
-+	},
-+};
-+
-+static const struct viif_l1_hdrc_ltm_config defval_l1_set_hdrc_ltm = {
-+	.tnp_max = 0x3FFFFF,
-+	.tnp_mag = 0x40,
-+	.tnp_fil = { 0x88, 0x84, 0x7A, 0x6A, 0x54 },
-+};
-+
-+static const struct viif_l1_gamma_config defval_l1_set_gamma = {
-+	.enable = 1,
-+	.param = {
-+		.gam_p = {
-+			0x02F, 0x01B, 0x02A, 0x023, 0x020, 0x037, 0x031, 0x057, 0x04D, 0x088,
-+			0x078, 0x0D6, 0x0BD, 0x14F, 0x12A, 0x20D, 0x1D3, 0x1AB, 0x18D, 0x2DC,
-+			0x29E, 0x271, 0x47C, 0x41B, 0x3D4, 0x70A, 0x672, 0x601, 0xB0C, 0xA1D,
-+			0x96C, 0x8E2, 0x874, 0xFDD, 0xEC9, 0xDF2, 0xD42, 0xCB1, 0xC35, 0xBC9,
-+			0xB6A, 0xB16, 0xACB, 0xA86},
-+		.blkadj = 0x1000,
-+	},
-+};
-+
-+static const struct viif_l1_img_quality_adjustment_config defval_l1_set_img_quality_adjustment = {
-+	.enable = 0,
-+	.coef_cb = 0x9078,
-+	.coef_cr = 0xB699,
-+	.brightness = 0,
-+	.linear_contrast = 128,
-+};
-+
-+static const struct viif_l1_avg_lum_generation_config defval_l1_set_avg_lum_generation = {
-+	.enable = 0
-+};
-+
-+static const struct viif_l2_undist_config defval_l2_set_undist = {
-+	.param = {
-+		.through_mode = 1,
-+		.roi_mode = { 0, 0 },
-+		.grid_node_num_h = 0x10,
-+		.grid_node_num_v = 0x10,
-+	},
-+};
-+
-+static const struct viif_l2_gamma_config defval_l2_set_gamma = { 0 };
-+
-+static void viif_apply_default_parameter(struct viif_device *viif_dev)
-+{
-+	viif_l1_set_input_mode(viif_dev, &defval_l1_set_input_mode);
-+	viif_l1_set_rgb_to_y_coef(viif_dev, &defval_l1_set_rgb_to_y_coef);
-+	viif_l1_set_ag_mode(viif_dev, &defval_l1_set_ag_mode);
-+	viif_l1_set_ag(viif_dev, &defval_l1_set_ag);
-+	viif_l1_set_hdre(viif_dev, &defval_l1_set_hdre);
-+	viif_l1_set_img_extraction(viif_dev, &defval_l1_set_img_extraction);
-+	viif_l1_set_dpc(viif_dev, &defval_l1_set_dpc);
-+	viif_l1_set_preset_white_balance(viif_dev, &defval_l1_set_preset_white_balance);
-+	viif_l1_set_raw_color_noise_reduction(viif_dev, &defval_l1_set_raw_color_noise_reduction);
-+	viif_l1_set_hdrs(viif_dev, &defval_l1_set_hdrs);
-+	viif_l1_set_black_level_correction(viif_dev, &defval_l1_set_black_level_correction);
-+	viif_l1_set_lsc(viif_dev, &defval_l1_set_lsc);
-+	viif_l1_set_main_process(viif_dev, &defval_l1_set_main_process);
-+	viif_l1_set_awb(viif_dev, &defval_l1_set_awb);
-+	viif_l1_lock_awb_gain(viif_dev, &defval_l1_lock_awb_gain);
-+	viif_l1_set_hdrc(viif_dev, &defval_l1_set_hdrc);
-+	viif_l1_set_hdrc_ltm(viif_dev, &defval_l1_set_hdrc_ltm);
-+	viif_l1_set_gamma(viif_dev, &defval_l1_set_gamma);
-+	viif_l1_set_img_quality_adjustment(viif_dev, &defval_l1_set_img_quality_adjustment);
-+	viif_l1_set_avg_lum_generation(viif_dev, &defval_l1_set_avg_lum_generation);
-+	viif_l2_set_undist(viif_dev, &defval_l2_set_undist);
-+	viif_l2_set_gamma(viif_dev, CAPTURE_PATH_MAIN_POST0, &defval_l2_set_gamma);
-+	viif_l2_set_gamma(viif_dev, CAPTURE_PATH_MAIN_POST1, &defval_l2_set_gamma);
-+}
-+
-+/*=======================================================================*/
-+/* parameter buffer streaming interface */
-+/*=======================================================================*/
-+struct viif_buffer {
-+	struct vb2_v4l2_buffer vb;
-+	struct list_head queue;
-+};
-+
-+static bool viif_params_get_buffer(struct params_dev *params_dev, struct viif_buffer **buf,
-+				   struct visconti_viif_isp_config **cfg)
-+{
-+	if (list_empty(&params_dev->params_queue))
-+		return false;
-+
-+	*buf = list_first_entry(&params_dev->params_queue, struct viif_buffer, queue);
-+	*cfg = vb2_plane_vaddr(&(*buf)->vb.vb2_buf, 0);
-+
-+	return true;
-+}
-+
-+static int viif_apply_queued_parameter(struct viif_device *viif_dev, bool initial_cfg)
-+{
-+	struct params_dev *params_dev = &viif_dev->params_dev;
-+	struct visconti_viif_isp_config *new_params;
-+	struct viif_buffer *cur_buf;
-+	int ret = 0;
-+
-+	spin_lock(&params_dev->params_lock);
-+
-+	if (!viif_params_get_buffer(params_dev, &cur_buf, &new_params)) {
-+		ret = 1;
-+		goto unlock;
-+	}
-+
-+	/* evaluate new_params */
-+	if (initial_cfg) {
-+		if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_INPUT_MODE)
-+			viif_l1_set_input_mode(viif_dev, &new_params->l1_input_mode);
-+	}
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_RGB_TO_Y_COEF)
-+		viif_l1_set_rgb_to_y_coef(viif_dev, &new_params->l1_rgb_to_y_coef);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_AG_MODE)
-+		viif_l1_set_ag_mode(viif_dev, &new_params->l1_ag_mode);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_AG)
-+		viif_l1_set_ag(viif_dev, &new_params->l1_ag);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_HDRE)
-+		viif_l1_set_hdre(viif_dev, &new_params->l1_hdre);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_IMG_EXTRACTION)
-+		viif_l1_set_img_extraction(viif_dev, &new_params->l1_img_extraction);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_DPC)
-+		viif_l1_set_dpc(viif_dev, &new_params->l1_dpc);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_PRESET_WHITE_BALANCE)
-+		viif_l1_set_preset_white_balance(viif_dev, &new_params->l1_preset_white_balance);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_RAW_COLOR_NOISE_REDUCTION)
-+		viif_l1_set_raw_color_noise_reduction(viif_dev,
-+						      &new_params->l1_raw_color_noise_reduction);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_HDRS)
-+		viif_l1_set_hdrs(viif_dev, &new_params->l1_hdrs);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_BLACK_LEVEL_CORRECTION)
-+		viif_l1_set_black_level_correction(viif_dev,
-+						   &new_params->l1_black_level_correction);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_LSC)
-+		viif_l1_set_lsc(viif_dev, &new_params->l1_lsc);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_MAIN_PROCESS)
-+		viif_l1_set_main_process(viif_dev, &new_params->l1_main_process);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_AWB)
-+		viif_l1_set_awb(viif_dev, &new_params->l1_awb);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_LOCK_AWB_GAIN)
-+		viif_l1_lock_awb_gain(viif_dev, &new_params->lock_awb_gain);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_HDRC)
-+		viif_l1_set_hdrc(viif_dev, &new_params->l1_hdrc);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_HDRC_LTM)
-+		viif_l1_set_hdrc_ltm(viif_dev, &new_params->l1_hdrc_ltm);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_GAMMA)
-+		viif_l1_set_gamma(viif_dev, &new_params->l1_gamma);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_IMG_QUALITY_ADJUSTMENT)
-+		viif_l1_set_img_quality_adjustment(viif_dev,
-+						   &new_params->l1_img_quality_adjustment);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L1_AVG_LUM_GENERATION)
-+		viif_l1_set_avg_lum_generation(viif_dev, &new_params->l1_avg_lum_generation);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L2_UNDIST)
-+		viif_l2_set_undist(viif_dev, &new_params->l2_undist);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L2_ROI)
-+		viif_l2_set_roi_wrap(viif_dev, &new_params->l2_roi);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L2_GAMMA_POST0)
-+		viif_l2_set_gamma(viif_dev, CAPTURE_PATH_MAIN_POST0, &new_params->l2_gamma_post0);
-+	if (new_params->update_cfg & VISCONTI_VIIF_CFG_ISP_L2_GAMMA_POST1)
-+		viif_l2_set_gamma(viif_dev, CAPTURE_PATH_MAIN_POST1, &new_params->l2_gamma_post1);
-+
-+	/* release buffer */
-+	list_del(&cur_buf->queue);
-+	cur_buf->vb.sequence = 0;
-+	vb2_buffer_done(&cur_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
-+
-+unlock:
-+	spin_unlock(&params_dev->params_lock);
-+	return ret;
-+}
-+
-+void visconti_viif_params_isr(struct viif_device *viif_dev)
-+{
-+	viif_apply_queued_parameter(viif_dev, false);
-+}
-+
-+void visconti_viif_params_eval_queue(struct viif_device *viif_dev)
-+{
-+	if (viif_apply_queued_parameter(viif_dev, true))
-+		viif_apply_default_parameter(viif_dev);
-+}
-+
-+static int viif_params_enum_fmt_meta_out(struct file *file, void *priv, struct v4l2_fmtdesc *f)
-+{
-+	struct video_device *vdev = video_devdata(file);
-+
-+	if (f->index > 0 || f->type != vdev->queue->type)
-+		return -EINVAL;
-+
-+	f->pixelformat = V4L2_META_FMT_VISCONTI_VIIF_PARAMS;
-+
-+	return 0;
-+}
-+
-+static int viif_params_g_fmt_meta_out(struct file *file, void *fh, struct v4l2_format *f)
-+{
-+	struct video_device *vdev = video_devdata(file);
-+	struct v4l2_meta_format *meta = &f->fmt.meta;
-+
-+	if (f->type != vdev->queue->type)
-+		return -EINVAL;
-+
-+	memset(meta, 0, sizeof(*meta));
-+	meta->dataformat = V4L2_META_FMT_VISCONTI_VIIF_PARAMS;
-+	meta->buffersize = sizeof(struct visconti_viif_isp_config);
-+
-+	return 0;
-+}
-+
-+static int viif_params_querycap(struct file *file, void *priv, struct v4l2_capability *cap)
-+{
-+	struct video_device *vdev = video_devdata(file);
-+
-+	strscpy(cap->driver, VIIF_DRIVER_NAME, sizeof(cap->driver));
-+	strscpy(cap->card, vdev->name, sizeof(cap->card));
-+	strscpy(cap->bus_info, VIIF_BUS_INFO_BASE "-0", sizeof(cap->bus_info));
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_ioctl_ops viif_params_ioctl = {
-+	.vidioc_reqbufs = vb2_ioctl_reqbufs,
-+	.vidioc_querybuf = vb2_ioctl_querybuf,
-+	.vidioc_create_bufs = vb2_ioctl_create_bufs,
-+	.vidioc_qbuf = vb2_ioctl_qbuf,
-+	.vidioc_dqbuf = vb2_ioctl_dqbuf,
-+	.vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-+	.vidioc_expbuf = vb2_ioctl_expbuf,
-+	.vidioc_streamon = vb2_ioctl_streamon,
-+	.vidioc_streamoff = vb2_ioctl_streamoff,
-+	.vidioc_enum_fmt_meta_out = viif_params_enum_fmt_meta_out,
-+	.vidioc_g_fmt_meta_out = viif_params_g_fmt_meta_out,
-+	.vidioc_s_fmt_meta_out = viif_params_g_fmt_meta_out,
-+	.vidioc_try_fmt_meta_out = viif_params_g_fmt_meta_out,
-+	.vidioc_querycap = viif_params_querycap,
-+	.vidioc_subscribe_event = v4l2_ctrl_subscribe_event,
-+	.vidioc_unsubscribe_event = v4l2_event_unsubscribe,
-+};
-+
-+static const struct v4l2_file_operations viif_params_fops = {
-+	.mmap = vb2_fop_mmap,
-+	.unlocked_ioctl = video_ioctl2,
-+	.poll = vb2_fop_poll,
-+	.open = v4l2_fh_open,
-+	.release = vb2_fop_release,
-+};
-+
-+static int viif_params_vb2_queue_setup(struct vb2_queue *q, unsigned int *num_buffers,
-+				       unsigned int *num_planes, unsigned int sizes[],
-+				       struct device *alloc_devs[])
-+{
-+	*num_buffers = clamp_t(u32, *num_buffers, 2, 8);
-+	*num_planes = 1;
-+	sizes[0] = sizeof(struct visconti_viif_isp_config);
-+	return 0;
-+}
-+
-+static inline struct viif_buffer *vb2_to_viif(struct vb2_v4l2_buffer *vbuf)
-+{
-+	return container_of(vbuf, struct viif_buffer, vb);
-+}
-+
-+static inline struct params_dev *vb2queue_to_paramsdev(struct vb2_queue *vq)
-+{
-+	return (struct params_dev *)vb2_get_drv_priv(vq);
-+}
-+
-+static void viif_params_vb2_buf_queue(struct vb2_buffer *vb)
-+{
-+	struct params_dev *params_dev = vb2queue_to_paramsdev(vb->vb2_queue);
-+	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-+	struct viif_buffer *buf = vb2_to_viif(vbuf);
-+
-+	spin_lock_irq(&params_dev->params_lock);
-+	list_add_tail(&buf->queue, &params_dev->params_queue);
-+	spin_unlock_irq(&params_dev->params_lock);
-+}
-+
-+static int viif_params_vb2_buf_prepare(struct vb2_buffer *vb)
-+{
-+	if (vb2_plane_size(vb, 0) < sizeof(struct visconti_viif_isp_config))
-+		return -EINVAL;
-+
-+	vb2_set_plane_payload(vb, 0, sizeof(struct visconti_viif_isp_config));
-+	return 0;
-+}
-+
-+static int viif_params_vb2_start_streaming(struct vb2_queue *q, unsigned int arg)
-+{
-+	return 0;
-+}
-+
-+static void viif_params_vb2_stop_streaming(struct vb2_queue *q)
-+{
-+	struct params_dev *params_dev = vb2queue_to_paramsdev(q);
-+	struct viif_buffer *buf;
-+	LIST_HEAD(tmp_list);
-+
-+	spin_lock_irq(&params_dev->params_lock);
-+	list_splice_init(&params_dev->params_queue, &tmp_list);
-+	spin_unlock_irq(&params_dev->params_lock);
-+
-+	list_for_each_entry(buf, &tmp_list, queue)
-+		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
-+}
-+
-+static const struct vb2_ops viif_params_vb2_ops = {
-+	.queue_setup = viif_params_vb2_queue_setup,
-+	.wait_prepare = vb2_ops_wait_prepare,
-+	.wait_finish = vb2_ops_wait_finish,
-+	.buf_queue = viif_params_vb2_buf_queue,
-+	.buf_prepare = viif_params_vb2_buf_prepare,
-+	.start_streaming = viif_params_vb2_start_streaming,
-+	.stop_streaming = viif_params_vb2_stop_streaming,
-+};
-+
-+int visconti_viif_params_register(struct viif_device *viif_dev)
-+{
-+	struct params_dev *params_dev = &viif_dev->params_dev;
-+	struct video_device *vdev = &params_dev->vdev;
-+	struct vb2_queue *q = &params_dev->vb2_vq;
-+	int ret;
-+
-+	mutex_init(&params_dev->vlock);
-+	INIT_LIST_HEAD(&params_dev->params_queue);
-+	spin_lock_init(&params_dev->params_lock);
-+
-+	strscpy(vdev->name, "viif_params", sizeof(vdev->name));
-+
-+	/* Register the video device */
-+	video_set_drvdata(vdev, params_dev);
-+	vdev->ioctl_ops = &viif_params_ioctl;
-+	vdev->fops = &viif_params_fops;
-+	vdev->release = video_device_release_empty;
-+	vdev->lock = &params_dev->vlock;
-+	vdev->v4l2_dev = &viif_dev->v4l2_dev;
-+	vdev->queue = &params_dev->vb2_vq;
-+	vdev->device_caps = V4L2_CAP_STREAMING | V4L2_CAP_META_OUTPUT;
-+	vdev->vfl_dir = VFL_DIR_TX;
-+
-+	/* Initialize vb2 queue */
-+	q->type = V4L2_BUF_TYPE_META_OUTPUT;
-+	q->io_modes = VB2_MMAP | VB2_DMABUF;
-+	q->drv_priv = params_dev;
-+	q->ops = &viif_params_vb2_ops;
-+	q->mem_ops = &vb2_vmalloc_memops;
-+	q->buf_struct_size = sizeof(struct viif_buffer);
-+	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-+	q->lock = &params_dev->vlock;
-+	q->dev = viif_dev->v4l2_dev.dev;
-+
-+	ret = vb2_queue_init(q);
-+	if (ret)
-+		return ret;
-+
-+	params_dev->params_pad.flags = MEDIA_PAD_FL_SOURCE;
-+	ret = media_entity_pads_init(&vdev->entity, VIIF_PARAMS_PAD_NUM, &params_dev->params_pad);
-+	if (ret)
-+		goto error;
-+
-+	ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
-+	if (ret) {
-+		dev_err(viif_dev->v4l2_dev.dev, "video_register_device failed: %d\n", ret);
-+		goto error;
-+	}
-+
-+	return 0;
-+
-+error:
-+	media_entity_cleanup(&vdev->entity);
-+	mutex_destroy(&params_dev->vlock);
-+
-+	return ret;
-+}
-+
-+void visconti_viif_params_unregister(struct viif_device *viif_dev)
-+{
-+	struct params_dev *params = &viif_dev->params_dev;
-+	struct video_device *vdev = &params->vdev;
-+
-+	if (!video_is_registered(vdev))
-+		return;
-+
-+	vb2_video_unregister_device(vdev);
-+	media_entity_cleanup(&vdev->entity);
-+	mutex_destroy(&params->vlock);
-+}
-diff --git a/drivers/media/platform/toshiba/visconti/viif_params.h b/drivers/media/platform/toshiba/visconti/viif_params.h
-new file mode 100644
-index 0000000000..e5b41a0f30
---- /dev/null
-+++ b/drivers/media/platform/toshiba/visconti/viif_params.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause */
-+/* Toshiba Visconti Video Capture Support
-+ *
-+ * (C) Copyright 2024 TOSHIBA CORPORATION
-+ * (C) Copyright 2024 Toshiba Electronic Devices & Storage Corporation
-+ */
-+
-+#ifndef VIIF_PARAMS_H
-+#define VIIF_PARAMS_H
-+
-+struct viif_device;
-+
-+void visconti_viif_params_eval_queue(struct viif_device *viif_dev);
-+void visconti_viif_params_isr(struct viif_device *viif_dev);
-+int visconti_viif_params_register(struct viif_device *viif_dev);
-+void visconti_viif_params_unregister(struct viif_device *viif_dev);
-+
-+int visconti_viif_l2_undist_through(struct viif_device *viif_dev);
-+#endif /* VIIF_PARAMS_H */
-diff --git a/drivers/media/platform/toshiba/visconti/viif_stats.c b/drivers/media/platform/toshiba/visconti/viif_stats.c
-new file mode 100644
-index 0000000000..05935f6650
---- /dev/null
-+++ b/drivers/media/platform/toshiba/visconti/viif_stats.c
-@@ -0,0 +1,336 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+/* Toshiba Visconti Video Capture Support
-+ *
-+ * (C) Copyright 2024 TOSHIBA CORPORATION
-+ * (C) Copyright 2024 Toshiba Electronic Devices & Storage Corporation
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/pm_runtime.h>
-+#include <media/v4l2-common.h>
-+#include <media/v4l2-subdev.h>
-+#include <media/videobuf2-vmalloc.h>
-+
-+#include "viif.h"
-+#include "viif_csi2rx.h"
-+#include "viif_isp.h"
-+#include "viif_common.h"
-+#include "viif_regs.h"
-+#include "viif_stats.h"
-+
-+struct viif_buffer {
-+	struct vb2_v4l2_buffer vb;
-+	struct list_head queue;
-+};
-+
-+static void read_isp_capture_regs(struct viif_l1_info *l1_info, struct viif_device *viif_dev)
-+{
-+	unsigned long irqflags;
-+	int i, j;
-+	u32 val;
-+
-+	spin_lock_irqsave(&viif_dev->regbuf_lock, irqflags);
-+	hwd_viif_isp_guard_start(viif_dev);
-+
-+	/* change register buffer to regbuf0 where driver gets information */
-+	viif_capture_write(viif_dev, REG_L1_CRGBF_ACC_CONF, VAL_L1_CRGBF_ACC_CONF_MODE_BUFFER0);
-+
-+	/* get AWB info */
-+	l1_info->awb_ave_u = viif_capture_read(viif_dev, REG_L1_AWHB_AVE_USIG);
-+	l1_info->awb_ave_v = viif_capture_read(viif_dev, REG_L1_AWHB_AVE_VSIG);
-+	l1_info->awb_accumulated_pixel = viif_capture_read(viif_dev, REG_L1_AWHB_NUM_UVON);
-+	l1_info->awb_gain_r = viif_capture_read(viif_dev, REG_L1_AWHB_AWBGAINR);
-+	l1_info->awb_gain_g = viif_capture_read(viif_dev, REG_L1_AWHB_AWBGAING);
-+	l1_info->awb_gain_b = viif_capture_read(viif_dev, REG_L1_AWHB_AWBGAINB);
-+	val = viif_capture_read(viif_dev, REG_L1_AWHB_R_CTR_STOP);
-+	l1_info->awb_status_u = (FIELD_GET(BIT(1), val) != 0);
-+	l1_info->awb_status_v = (FIELD_GET(BIT(0), val) != 0);
-+
-+	/* get average luminance info */
-+	l1_info->avg_lum_weight = viif_capture_read(viif_dev, REG_L1_AEXP_RESULT_AVE);
-+	val = viif_capture_read(viif_dev, REG_L1_AEXP_SATUR_BLACK_PIXNUM);
-+	l1_info->avg_satur_pixnum = FIELD_GET(GENMASK(31, 16), val);
-+	l1_info->avg_black_pixnum = FIELD_GET(GENMASK(15, 0), val);
-+	for (i = 0; i < 8; i++) {
-+		for (j = 0; j < 8; j++) {
-+			l1_info->avg_lum_block[i][j] =
-+				viif_capture_read(viif_dev, REG_L1_AEXP_AVE(i, j));
-+		}
-+	}
-+	l1_info->avg_lum_four_line_lum[0] = viif_capture_read(viif_dev, REG_L1_AEXP_AVE4LINES0);
-+	l1_info->avg_lum_four_line_lum[1] = viif_capture_read(viif_dev, REG_L1_AEXP_AVE4LINES1);
-+	l1_info->avg_lum_four_line_lum[2] = viif_capture_read(viif_dev, REG_L1_AEXP_AVE4LINES2);
-+	l1_info->avg_lum_four_line_lum[3] = viif_capture_read(viif_dev, REG_L1_AEXP_AVE4LINES3);
-+
-+	/* revert to register access from register buffer access */
-+	viif_capture_write(viif_dev, REG_L1_CRGBF_ACC_CONF, VAL_L1_CRGBF_ACC_CONF_MODE_BYPASS);
-+
-+	hwd_viif_isp_guard_end(viif_dev);
-+	spin_unlock_irqrestore(&viif_dev->regbuf_lock, irqflags);
-+}
-+
-+static const struct viif_csi2rx_dphy_calibration_status calib_status_not_streaming = {
-+	.term_cal_with_rext = -EAGAIN,
-+	.clock_lane_offset_cal = -EAGAIN,
-+	.data_lane0_offset_cal = -EAGAIN,
-+	.data_lane1_offset_cal = -EAGAIN,
-+	.data_lane2_offset_cal = -EAGAIN,
-+	.data_lane3_offset_cal = -EAGAIN,
-+	.data_lane0_ddl_tuning_cal = -EAGAIN,
-+	.data_lane1_ddl_tuning_cal = -EAGAIN,
-+	.data_lane2_ddl_tuning_cal = -EAGAIN,
-+	.data_lane3_ddl_tuning_cal = -EAGAIN,
-+};
-+
-+static const struct viif_csi2rx_err_status csi_err_not_streaming;
-+
-+void visconti_viif_stats_isr(struct viif_device *viif_dev, unsigned int sequence, u64 timestamp)
-+{
-+	struct visconti_viif_isp_stat *cur_stat_buf;
-+	struct stats_dev *stats_dev = &viif_dev->stats_dev;
-+	struct viif_buffer *cur_buf;
-+
-+	spin_lock(&stats_dev->stats_lock);
-+
-+	if (list_empty(&stats_dev->stats_queue))
-+		goto done;
-+
-+	cur_buf = list_first_entry(&stats_dev->stats_queue, struct viif_buffer, queue);
-+	list_del(&cur_buf->queue);
-+	cur_stat_buf = (struct visconti_viif_isp_stat *)vb2_plane_vaddr(&cur_buf->vb.vb2_buf, 0);
-+
-+	if (!vb2_start_streaming_called(&viif_dev->cap_dev0.vb2_vq)) {
-+		cur_stat_buf->csi2rx_dphy_calibration = calib_status_not_streaming;
-+	} else {
-+		visconti_viif_csi2rx_get_calibration_status(viif_dev,
-+							    &cur_stat_buf->csi2rx_dphy_calibration);
-+	}
-+
-+	if (!vb2_is_streaming(&viif_dev->cap_dev0.vb2_vq))
-+		cur_stat_buf->csi2rx_err = csi_err_not_streaming;
-+	else
-+		visconti_viif_csi2rx_get_err_status(viif_dev, &cur_stat_buf->csi2rx_err);
-+
-+	read_isp_capture_regs(&cur_stat_buf->isp_capture.l1_info, viif_dev);
-+
-+	cur_stat_buf->errors.main = viif_dev->reported_err_main;
-+	cur_stat_buf->errors.sub = viif_dev->reported_err_sub;
-+	cur_stat_buf->errors.csi2rx = viif_dev->reported_err_csi2rx;
-+	viif_dev->reported_err_main = 0;
-+	viif_dev->reported_err_sub = 0;
-+	viif_dev->reported_err_csi2rx = 0;
-+
-+	vb2_set_plane_payload(&cur_buf->vb.vb2_buf, 0, sizeof(struct visconti_viif_isp_stat));
-+
-+	cur_buf->vb.sequence = sequence;
-+	cur_buf->vb.vb2_buf.timestamp = timestamp;
-+	vb2_buffer_done(&cur_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
-+
-+done:
-+	spin_unlock(&stats_dev->stats_lock);
-+}
-+
-+static int viif_stats_enum_fmt_meta_cap(struct file *file, void *priv, struct v4l2_fmtdesc *f)
-+{
-+	struct video_device *vdev = video_devdata(file);
-+
-+	if (f->index > 0 || f->type != vdev->queue->type)
-+		return -EINVAL;
-+
-+	f->pixelformat = V4L2_META_FMT_VISCONTI_VIIF_STATS;
-+
-+	return 0;
-+}
-+
-+static int viif_stats_g_fmt_meta_cap(struct file *file, void *priv, struct v4l2_format *f)
-+{
-+	struct video_device *vdev = video_devdata(file);
-+	struct v4l2_meta_format *meta = &f->fmt.meta;
-+
-+	if (f->type != vdev->queue->type)
-+		return -EINVAL;
-+
-+	memset(meta, 0, sizeof(*meta));
-+	meta->dataformat = V4L2_META_FMT_VISCONTI_VIIF_STATS;
-+	meta->buffersize = sizeof(struct visconti_viif_isp_stat);
-+
-+	return 0;
-+}
-+
-+static int viif_stats_querycap(struct file *file, void *priv, struct v4l2_capability *cap)
-+{
-+	struct video_device *vdev = video_devdata(file);
-+
-+	strscpy(cap->driver, VIIF_DRIVER_NAME, sizeof(cap->driver));
-+	strscpy(cap->card, vdev->name, sizeof(cap->card));
-+	strscpy(cap->bus_info, VIIF_BUS_INFO_BASE "-0", sizeof(cap->bus_info));
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_ioctl_ops viif_stats_ioctl = {
-+	.vidioc_reqbufs = vb2_ioctl_reqbufs,
-+	.vidioc_querybuf = vb2_ioctl_querybuf,
-+	.vidioc_create_bufs = vb2_ioctl_create_bufs,
-+	.vidioc_qbuf = vb2_ioctl_qbuf,
-+	.vidioc_dqbuf = vb2_ioctl_dqbuf,
-+	.vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-+	.vidioc_expbuf = vb2_ioctl_expbuf,
-+	.vidioc_streamon = vb2_ioctl_streamon,
-+	.vidioc_streamoff = vb2_ioctl_streamoff,
-+	.vidioc_enum_fmt_meta_cap = viif_stats_enum_fmt_meta_cap,
-+	.vidioc_g_fmt_meta_cap = viif_stats_g_fmt_meta_cap,
-+	.vidioc_s_fmt_meta_cap = viif_stats_g_fmt_meta_cap,
-+	.vidioc_try_fmt_meta_cap = viif_stats_g_fmt_meta_cap,
-+	.vidioc_querycap = viif_stats_querycap,
-+	.vidioc_subscribe_event = v4l2_ctrl_subscribe_event,
-+	.vidioc_unsubscribe_event = v4l2_event_unsubscribe,
-+};
-+
-+static const struct v4l2_file_operations viif_stats_fops = {
-+	.mmap = vb2_fop_mmap,
-+	.unlocked_ioctl = video_ioctl2,
-+	.poll = vb2_fop_poll,
-+	.open = v4l2_fh_open,
-+	.release = vb2_fop_release,
-+};
-+
-+static int viif_stats_vb2_queue_setup(struct vb2_queue *vq, unsigned int *num_buffers,
-+				      unsigned int *num_planes, unsigned int sizes[],
-+				      struct device *alloc_devs[])
-+{
-+	*num_planes = 1;
-+	*num_buffers = clamp_t(u32, *num_buffers, 2, 8);
-+	sizes[0] = sizeof(struct visconti_viif_isp_stat);
-+
-+	return 0;
-+}
-+
-+static inline struct viif_buffer *vb2_to_viif(struct vb2_v4l2_buffer *vbuf)
-+{
-+	return container_of(vbuf, struct viif_buffer, vb);
-+}
-+
-+static inline struct stats_dev *vb2queue_to_statsdev(struct vb2_queue *q)
-+{
-+	return (struct stats_dev *)vb2_get_drv_priv(q);
-+}
-+
-+static void viif_stats_vb2_buf_queue(struct vb2_buffer *vb)
-+{
-+	struct stats_dev *stats_dev = vb2queue_to_statsdev(vb->vb2_queue);
-+	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-+	struct viif_buffer *buf = vb2_to_viif(vbuf);
-+
-+	spin_lock_irq(&stats_dev->stats_lock);
-+	list_add_tail(&buf->queue, &stats_dev->stats_queue);
-+	spin_unlock_irq(&stats_dev->stats_lock);
-+}
-+
-+static int viif_stats_vb2_buf_prepare(struct vb2_buffer *vb)
-+{
-+	if (vb2_plane_size(vb, 0) < sizeof(struct visconti_viif_isp_stat))
-+		return -EINVAL;
-+
-+	vb2_set_plane_payload(vb, 0, sizeof(struct visconti_viif_isp_stat));
-+
-+	return 0;
-+}
-+
-+static void viif_stats_vb2_stop_streaming(struct vb2_queue *q)
-+{
-+	struct stats_dev *stats_dev = vb2queue_to_statsdev(q);
-+	struct viif_buffer *buf;
-+	unsigned int i;
-+
-+	spin_lock_irq(&stats_dev->stats_lock);
-+	for (i = 0; i < 8; i++) {
-+		if (list_empty(&stats_dev->stats_queue))
-+			break;
-+		buf = list_first_entry(&stats_dev->stats_queue, struct viif_buffer, queue);
-+		list_del(&buf->queue);
-+		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
-+	}
-+	spin_unlock_irq(&stats_dev->stats_lock);
-+}
-+
-+static const struct vb2_ops viif_stats_vb2_ops = {
-+	.queue_setup = viif_stats_vb2_queue_setup,
-+	.wait_prepare = vb2_ops_wait_prepare,
-+	.wait_finish = vb2_ops_wait_finish,
-+	.buf_queue = viif_stats_vb2_buf_queue,
-+	.buf_prepare = viif_stats_vb2_buf_prepare,
-+	.stop_streaming = viif_stats_vb2_stop_streaming,
-+};
-+
-+int visconti_viif_stats_register(struct viif_device *viif_dev)
-+{
-+	struct stats_dev *stats_dev = &viif_dev->stats_dev;
-+	struct video_device *vdev = &stats_dev->vdev;
-+	struct vb2_queue *q = &stats_dev->vb2_vq;
-+	int ret;
-+
-+	mutex_init(&stats_dev->vlock);
-+	INIT_LIST_HEAD(&stats_dev->stats_queue);
-+	spin_lock_init(&stats_dev->stats_lock);
-+
-+	strscpy(vdev->name, "viif_stats", sizeof(vdev->name));
-+
-+	/* Register the video device */
-+	video_set_drvdata(vdev, stats_dev);
-+	vdev->ioctl_ops = &viif_stats_ioctl;
-+	vdev->fops = &viif_stats_fops;
-+	vdev->release = video_device_release_empty;
-+	vdev->lock = &stats_dev->vlock;
-+	vdev->v4l2_dev = &viif_dev->v4l2_dev;
-+	vdev->queue = &stats_dev->vb2_vq;
-+	vdev->device_caps = V4L2_CAP_META_CAPTURE | V4L2_CAP_STREAMING;
-+	vdev->vfl_dir = VFL_DIR_RX;
-+
-+	/* Initialize vb2 queue */
-+	q->type = V4L2_BUF_TYPE_META_CAPTURE;
-+	q->io_modes = VB2_MMAP | VB2_DMABUF;
-+	q->drv_priv = stats_dev;
-+	q->ops = &viif_stats_vb2_ops;
-+	q->mem_ops = &vb2_vmalloc_memops;
-+	q->buf_struct_size = sizeof(struct viif_buffer);
-+	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-+	q->lock = &stats_dev->vlock;
-+	q->dev = viif_dev->v4l2_dev.dev;
-+
-+	ret = vb2_queue_init(q);
-+	if (ret)
-+		return ret;
-+
-+	stats_dev->stats_pad.flags = MEDIA_PAD_FL_SINK;
-+	ret = media_entity_pads_init(&vdev->entity, VIIF_STATS_PAD_NUM, &stats_dev->stats_pad);
-+	if (ret)
-+		goto error;
-+
-+	ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
-+	if (ret) {
-+		dev_err(viif_dev->v4l2_dev.dev, "video_register_device failed: %d\n", ret);
-+		goto error;
-+	}
-+
-+	return 0;
-+
-+error:
-+	media_entity_cleanup(&vdev->entity);
-+	mutex_destroy(&stats_dev->vlock);
-+
-+	return ret;
-+}
-+
-+void visconti_viif_stats_unregister(struct viif_device *viif_dev)
-+{
-+	struct stats_dev *stats_dev = &viif_dev->stats_dev;
-+	struct video_device *vdev = &stats_dev->vdev;
-+
-+	if (!video_is_registered(vdev))
-+		return;
-+
-+	vb2_video_unregister_device(vdev);
-+	media_entity_cleanup(&vdev->entity);
-+	mutex_destroy(&stats_dev->vlock);
-+}
-diff --git a/drivers/media/platform/toshiba/visconti/viif_stats.h b/drivers/media/platform/toshiba/visconti/viif_stats.h
-new file mode 100644
-index 0000000000..65f390a441
---- /dev/null
-+++ b/drivers/media/platform/toshiba/visconti/viif_stats.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause */
-+/* Toshiba Visconti Video Capture Support
-+ *
-+ * (C) Copyright 2024 TOSHIBA CORPORATION
-+ * (C) Copyright 2024 Toshiba Electronic Devices & Storage Corporation
-+ */
-+
-+#ifndef VIIF_STATS_H
-+#define VIIF_STATS_H
-+
-+void visconti_viif_stats_isr(struct viif_device *viif_dev, unsigned int sequence, u64 timestamp);
-+int visconti_viif_stats_register(struct viif_device *viif_dev);
-+void visconti_viif_stats_unregister(struct viif_device *viif_dev);
-+#endif /* VIIF_STATS_H */
--- 
-2.25.1
+Tianyang
 
+                 generic_handle_domain_irq(irq_domain, hwirq - 1);
+         }
+}
+
+>
+>> Tianyang
+>>
+>>
+>>>>>>>> +
+>>>>>>>>             return IRQ_HANDLED;
+>>>>>>>>      }
+>>>>>>>>
+>>>>>>>> @@ -388,6 +391,7 @@ int loongson_cpu_disable(void)
+>>>>>>>>             irq_migrate_all_off_this_cpu();
+>>>>>>>>             clear_csr_ecfg(ECFG0_IM);
+>>>>>>>>             local_irq_restore(flags);
+>>>>>>>> +       loongarch_avec_offline_cpu(cpu);
+>>>>>>>>             local_flush_tlb_all();
+>>>>>>>>
+>>>>>>>>             return 0;
+>>>>>>>> @@ -566,6 +570,7 @@ asmlinkage void start_secondary(void)
+>>>>>>>>              * early is dangerous.
+>>>>>>>>              */
+>>>>>>>>             WARN_ON_ONCE(!irqs_disabled());
+>>>>>>>> +       loongarch_avec_online_cpu(cpu);
+>>>>>>>>             loongson_smp_finish();
+>>>>>>>>
+>>>>>>>>             cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+>>>>>>>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+>>>>>>>> index 2df72b7b165b..de091a9f7c88 100644
+>>>>>>>> --- a/drivers/irqchip/Makefile
+>>>>>>>> +++ b/drivers/irqchip/Makefile
+>>>>>>>> @@ -110,7 +110,7 @@ obj-$(CONFIG_LS1X_IRQ)                      += irq-ls1x.o
+>>>>>>>>      obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)      += irq-ti-sci-intr.o
+>>>>>>>>      obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)      += irq-ti-sci-inta.o
+>>>>>>>>      obj-$(CONFIG_TI_PRUSS_INTC)            += irq-pruss-intc.o
+>>>>>>>> -obj-$(CONFIG_IRQ_LOONGARCH_CPU)                += irq-loongarch-cpu.o
+>>>>>>>> +obj-$(CONFIG_IRQ_LOONGARCH_CPU)                += irq-loongarch-cpu.o irq-loongarch-avec.o
+>>>>>>>>      obj-$(CONFIG_LOONGSON_LIOINTC)         += irq-loongson-liointc.o
+>>>>>>>>      obj-$(CONFIG_LOONGSON_EIOINTC)         += irq-loongson-eiointc.o
+>>>>>>>>      obj-$(CONFIG_LOONGSON_HTPIC)           += irq-loongson-htpic.o
+>>>>>>>> diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
+>>>>>>>> new file mode 100644
+>>>>>>>> index 000000000000..81dbccbea5a2
+>>>>>>>> --- /dev/null
+>>>>>>>> +++ b/drivers/irqchip/irq-loongarch-avec.c
+>>>>>>>> @@ -0,0 +1,440 @@
+>>>>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>>>>> +/*
+>>>>>>>> + * Copyright (C) 2020-2024 Loongson Technologies, Inc.
+>>>>>>>> + */
+>>>>>>>> +
+>>>>>>>> +#include <linux/cpuhotplug.h>
+>>>>>>>> +#include <linux/init.h>
+>>>>>>>> +#include <linux/interrupt.h>
+>>>>>>>> +#include <linux/irq.h>
+>>>>>>>> +#include <linux/irqchip.h>
+>>>>>>>> +#include <linux/irqchip/chained_irq.h>
+>>>>>>>> +#include <linux/irqdomain.h>
+>>>>>>>> +#include <linux/kernel.h>
+>>>>>>>> +#include <linux/msi.h>
+>>>>>>>> +#include <linux/radix-tree.h>
+>>>>>>>> +#include <linux/spinlock.h>
+>>>>>>>> +
+>>>>>>>> +#include <asm/loongarch.h>
+>>>>>>>> +#include <asm/setup.h>
+>>>>>>>> +
+>>>>>>>> +#define VECTORS_PER_REG                64
+>>>>>>>> +#define ILR_INVALID_MASK       0x80000000UL
+>>>>>>>> +#define ILR_VECTOR_MASK                0xffUL
+>>>>>>>> +#define AVEC_MSG_OFFSET                0x100000
+>>>>>>>> +
+>>>>>>>> +static phys_addr_t msi_base_v2;
+>>>>>>>> +static DEFINE_PER_CPU(struct irq_desc * [NR_VECTORS], irq_map);
+>>>>>>>> +
+>>>>>>>> +#ifdef CONFIG_SMP
+>>>>>>>> +struct pending_list {
+>>>>>>>> +       struct list_head        head;
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static DEFINE_PER_CPU(struct pending_list, pending_list);
+>>>>>>>> +#endif
+>>>>>>>> +
+>>>>>>>> +struct loongarch_avec_chip {
+>>>>>>>> +       struct fwnode_handle    *fwnode;
+>>>>>>>> +       struct irq_domain       *domain;
+>>>>>>>> +       struct irq_matrix       *vector_matrix;
+>>>>>>>> +       raw_spinlock_t          lock;
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static struct loongarch_avec_chip loongarch_avec;
+>>>>>>>> +
+>>>>>>>> +struct loongarch_avec_data {
+>>>>>>>> +       struct list_head        entry;
+>>>>>>>> +       unsigned int            cpu;
+>>>>>>>> +       unsigned int            vec;
+>>>>>>>> +       unsigned int            prev_cpu;
+>>>>>>>> +       unsigned int            prev_vec;
+>>>>>>>> +       unsigned int            moving          : 1,
+>>>>>>>> +                               managed         : 1;
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static struct cpumask intersect_mask;
+>>>>>>>> +
+>>>>>>>> +static int assign_irq_vector(struct irq_data *irqd, const struct cpumask *dest,
+>>>>>>>> +                            unsigned int *cpu)
+>>>>>>>> +{
+>>>>>>>> +       return irq_matrix_alloc(loongarch_avec.vector_matrix, dest, false, cpu);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static inline void loongarch_avec_ack_irq(struct irq_data *d)
+>>>>>>>> +{
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static inline void loongarch_avec_unmask_irq(struct irq_data *d)
+>>>>>>>> +{
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static inline void loongarch_avec_mask_irq(struct irq_data *d)
+>>>>>>>> +{
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +#ifdef CONFIG_SMP
+>>>>>>>> +static inline void pending_list_init(int cpu)
+>>>>>>>> +{
+>>>>>>>> +       struct pending_list *plist = per_cpu_ptr(&pending_list, cpu);
+>>>>>>>> +
+>>>>>>>> +       INIT_LIST_HEAD(&plist->head);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static void loongarch_avec_sync(struct loongarch_avec_data *adata)
+>>>>>>>> +{
+>>>>>>>> +       struct pending_list *plist;
+>>>>>>>> +
+>>>>>>>> +       if (cpu_online(adata->prev_cpu)) {
+>>>>>>>> +               plist = per_cpu_ptr(&pending_list, adata->prev_cpu);
+>>>>>>>> +               list_add_tail(&adata->entry, &plist->head);
+>>>>>>>> +               adata->moving = true;
+>>>>>>>> +               mp_ops.send_ipi_single(adata->prev_cpu, ACTION_CLEAR_VECT);
+>>>>>>>> +       }
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static int loongarch_avec_set_affinity(struct irq_data *data, const struct cpumask *dest,
+>>>>>>>> +                                      bool force)
+>>>>>>>> +{
+>>>>>>>> +       struct loongarch_avec_data *adata;
+>>>>>>>> +       unsigned int cpu, vector;
+>>>>>>>> +       unsigned long flags;
+>>>>>>>> +       int ret;
+>>>>>>>> +
+>>>>>>>> +       raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>>>>>>>> +       adata = irq_data_get_irq_chip_data(data);
+>>>>>>>> +
+>>>>>>>> +       if (adata->vec && cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest)) {
+>>>>>>>> +               raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>>>>>>>> +               return 0;
+>>>>>>>> +       }
+>>>>>>>> +       if (adata->moving)
+>>>>>>>> +               return -EBUSY;
+>>>>>>>> +
+>>>>>>>> +       cpumask_and(&intersect_mask, dest, cpu_online_mask);
+>>>>>>>> +
+>>>>>>>> +       ret = assign_irq_vector(data, &intersect_mask, &cpu);
+>>>>>>>> +       if (ret < 0) {
+>>>>>>>> +               raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>>>>>>>> +               return ret;
+>>>>>>>> +       }
+>>>>>>>> +       vector = ret;
+>>>>>>>> +       adata->cpu = cpu;
+>>>>>>>> +       adata->vec = vector;
+>>>>>>>> +       per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(data);
+>>>>>>>> +       loongarch_avec_sync(adata);
+>>>>>>>> +
+>>>>>>>> +       raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>>>>>>>> +       irq_data_update_effective_affinity(data, cpumask_of(cpu));
+>>>>>>>> +
+>>>>>>>> +       return IRQ_SET_MASK_OK;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +void complete_irq_moving(void)
+>>>>>>>> +{
+>>>>>>>> +       struct pending_list *plist = this_cpu_ptr(&pending_list);
+>>>>>>>> +       struct loongarch_avec_data *adata, *tmp;
+>>>>>>>> +       int cpu, vector, bias;
+>>>>>>>> +       u64 irr;
+>>>>>>>> +
+>>>>>>>> +       raw_spin_lock(&loongarch_avec.lock);
+>>>>>>>> +
+>>>>>>>> +       list_for_each_entry_safe(adata, tmp, &plist->head, entry) {
+>>>>>>>> +               cpu = adata->prev_cpu;
+>>>>>>>> +               vector = adata->prev_vec;
+>>>>>>>> +               bias = vector / VECTORS_PER_REG;
+>>>>>>>> +               switch (bias) {
+>>>>>>>> +               case 0:
+>>>>>>>> +                       irr = csr_read64(LOONGARCH_CSR_IRR0);
+>>>>>>>> +               case 1:
+>>>>>>>> +                       irr = csr_read64(LOONGARCH_CSR_IRR1);
+>>>>>>>> +               case 2:
+>>>>>>>> +                       irr = csr_read64(LOONGARCH_CSR_IRR2);
+>>>>>>>> +               case 3:
+>>>>>>>> +                       irr = csr_read64(LOONGARCH_CSR_IRR3);
+>>>>>>>> +               }
+>>>>>>>> +
+>>>>>>>> +               if (irr & (1UL << (vector % VECTORS_PER_REG))) {
+>>>>>>>> +                       mp_ops.send_ipi_single(cpu, ACTION_CLEAR_VECT);
+>>>>>>>> +                       continue;
+>>>>>>>> +               }
+>>>>>>>> +               list_del(&adata->entry);
+>>>>>>>> +               irq_matrix_free(loongarch_avec.vector_matrix, cpu, vector, adata->managed);
+>>>>>>>> +               this_cpu_write(irq_map[vector], NULL);
+>>>>>>>> +               adata->prev_cpu = adata->cpu;
+>>>>>>>> +               adata->prev_vec = adata->vec;
+>>>>>>>> +               adata->moving = 0;
+>>>>>>>> +       }
+>>>>>>>> +       raw_spin_unlock(&loongarch_avec.lock);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +void loongarch_avec_offline_cpu(unsigned int cpu)
+>>>>>>>> +{
+>>>>>>>> +       struct pending_list *plist = per_cpu_ptr(&pending_list, cpu);
+>>>>>>>> +       unsigned long flags;
+>>>>>>>> +
+>>>>>>>> +       if (!loongarch_avec.vector_matrix)
+>>>>>>>> +               return;
+>>>>>>>> +
+>>>>>>>> +       raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>>>>>>>> +       if (list_empty(&plist->head))
+>>>>>>>> +               irq_matrix_offline(loongarch_avec.vector_matrix);
+>>>>>>>> +       else
+>>>>>>>> +               pr_warn("cpu %d advanced extioi is busy\n", cpu);
+>>>>>>>> +       raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +void loongarch_avec_online_cpu(unsigned int cpu)
+>>>>>>>> +{
+>>>>>>>> +       unsigned long flags;
+>>>>>>>> +
+>>>>>>>> +       if (!loongarch_avec.vector_matrix)
+>>>>>>>> +               return;
+>>>>>>>> +
+>>>>>>>> +       raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>>>>>>>> +
+>>>>>>>> +       irq_matrix_online(loongarch_avec.vector_matrix);
+>>>>>>>> +
+>>>>>>>> +       pending_list_init(cpu);
+>>>>>>>> +
+>>>>>>>> +       raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +#else
+>>>>>>>> +#define loongarch_avec_set_affinity            NULL
+>>>>>>> Empty function is prefered here.
+>>>> ok ,I got it
+>>>>
+>>>> Thanks
+>>>>
+>>>> Tianyang
+>>>>
+>>>>>>> Huacai
+>>>>>>>
+>>>>>>>> +#endif
+>>>>>>>> +
+>>>>>>>> +static void loongarch_avec_compose_msg(struct irq_data *d,
+>>>>>>>> +               struct msi_msg *msg)
+>>>>>>>> +{
+>>>>>>>> +       struct loongarch_avec_data *avec_data;
+>>>>>>>> +
+>>>>>>>> +       avec_data = irq_data_get_irq_chip_data(d);
+>>>>>>>> +
+>>>>>>>> +       msg->address_hi = 0xfd;
+>>>>>>>> +       msg->address_lo = ((avec_data->vec & 0xff) << 4) |
+>>>>>>>> +                         ((cpu_logical_map(avec_data->cpu & 0xffff)) << 12);
+>>>>>>>> +       msg->data = 0x0;
+>>>>>>>> +
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static struct irq_chip loongarch_avec_controller = {
+>>>>>>>> +       .name                   = "AVECINTC",
+>>>>>>>> +       .irq_ack                = loongarch_avec_ack_irq,
+>>>>>>>> +       .irq_mask               = loongarch_avec_mask_irq,
+>>>>>>>> +       .irq_unmask             = loongarch_avec_unmask_irq,
+>>>>>>>> +       .irq_set_affinity       = loongarch_avec_set_affinity,
+>>>>>>>> +       .irq_compose_msi_msg    = loongarch_avec_compose_msg,
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static void loongarch_avec_dispatch(struct irq_desc *desc)
+>>>>>>>> +{
+>>>>>>>> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+>>>>>>>> +       unsigned long vector;
+>>>>>>>> +       struct irq_desc *d;
+>>>>>>>> +
+>>>>>>>> +       chained_irq_enter(chip, desc);
+>>>>>>>> +       vector = csr_read64(LOONGARCH_CSR_ILR);
+>>>>>>>> +       if (vector & ILR_INVALID_MASK)
+>>>>>>>> +               return;
+>>>>>>>> +
+>>>>>>>> +       vector &= ILR_VECTOR_MASK;
+>>>>>>>> +
+>>>>>>>> +       d = this_cpu_read(irq_map[vector]);
+>>>>>>>> +       if (d) {
+>>>>>>>> +               generic_handle_irq_desc(d);
+>>>>>>>> +       } else {
+>>>>>>>> +               pr_warn("IRQ ERROR:Unexpected irq  occur on cpu %d[vector %ld]\n",
+>>>>>>>> +                       smp_processor_id(), vector);
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       chained_irq_exit(chip, desc);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static int loongarch_avec_alloc(struct irq_domain *domain, unsigned int virq,
+>>>>>>>> +                               unsigned int nr_irqs, void *arg)
+>>>>>>>> +{
+>>>>>>>> +       struct loongarch_avec_data *adata;
+>>>>>>>> +       struct irq_data *irqd;
+>>>>>>>> +       unsigned int cpu, vector, i, ret;
+>>>>>>>> +       unsigned long flags;
+>>>>>>>> +
+>>>>>>>> +       raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>>>>>>>> +       for (i = 0; i < nr_irqs; i++) {
+>>>>>>>> +               irqd = irq_domain_get_irq_data(domain, virq + i);
+>>>>>>>> +               adata = kzalloc(sizeof(*adata), GFP_KERNEL);
+>>>>>>>> +               if (!adata) {
+>>>>>>>> +                       raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>>>>>>>> +                       return -ENOMEM;
+>>>>>>>> +               }
+>>>>>>>> +               ret = assign_irq_vector(irqd, cpu_online_mask, &cpu);
+>>>>>>>> +               if (ret < 0) {
+>>>>>>>> +                       raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>>>>>>>> +                       return ret;
+>>>>>>>> +               }
+>>>>>>>> +               vector = ret;
+>>>>>>>> +               adata->prev_cpu = adata->cpu = cpu;
+>>>>>>>> +               adata->prev_vec = adata->vec = vector;
+>>>>>>>> +               adata->managed = irqd_affinity_is_managed(irqd);
+>>>>>>>> +               irq_domain_set_info(domain, virq + i, virq + i, &loongarch_avec_controller,
+>>>>>>>> +                               adata, handle_edge_irq, NULL, NULL);
+>>>>>>>> +               adata->moving = 0;
+>>>>>>>> +               irqd_set_single_target(irqd);
+>>>>>>>> +               irqd_set_affinity_on_activate(irqd);
+>>>>>>>> +
+>>>>>>>> +               per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(irqd);
+>>>>>>>> +       }
+>>>>>>>> +       raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>>>>>>>> +
+>>>>>>>> +       return 0;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static void clear_free_vector(struct irq_data *irqd)
+>>>>>>>> +{
+>>>>>>>> +       struct loongarch_avec_data *adata = irq_data_get_irq_chip_data(irqd);
+>>>>>>>> +       bool managed = irqd_affinity_is_managed(irqd);
+>>>>>>>> +
+>>>>>>>> +       per_cpu(irq_map, adata->cpu)[adata->vec] = NULL;
+>>>>>>>> +       irq_matrix_free(loongarch_avec.vector_matrix, adata->cpu, adata->vec, managed);
+>>>>>>>> +       adata->cpu = 0;
+>>>>>>>> +       adata->vec = 0;
+>>>>>>>> +#ifdef CONFIG_SMP
+>>>>>>>> +       if (!adata->moving)
+>>>>>>>> +               return;
+>>>>>>>> +
+>>>>>>>> +       per_cpu(irq_map, adata->prev_cpu)[adata->prev_vec] = 0;
+>>>>>>>> +       irq_matrix_free(loongarch_avec.vector_matrix, adata->prev_cpu,
+>>>>>>>> +                       adata->prev_vec, adata->managed);
+>>>>>>>> +       adata->prev_vec = 0;
+>>>>>>>> +       adata->prev_cpu = 0;
+>>>>>>>> +       adata->moving = 0;
+>>>>>>>> +       list_del_init(&adata->entry);
+>>>>>>>> +#endif
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static void loongarch_avec_free(struct irq_domain *domain, unsigned int virq,
+>>>>>>>> +               unsigned int nr_irqs)
+>>>>>>>> +{
+>>>>>>>> +       struct irq_data *d;
+>>>>>>>> +       unsigned long flags;
+>>>>>>>> +       unsigned int i;
+>>>>>>>> +
+>>>>>>>> +       raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>>>>>>>> +       for (i = 0; i < nr_irqs; i++) {
+>>>>>>>> +               d = irq_domain_get_irq_data(domain, virq + i);
+>>>>>>>> +               if (d) {
+>>>>>>>> +                       clear_free_vector(d);
+>>>>>>>> +                       irq_domain_reset_irq_data(d);
+>>>>>>>> +
+>>>>>>>> +               }
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static const struct irq_domain_ops loongarch_avec_domain_ops = {
+>>>>>>>> +       .alloc          = loongarch_avec_alloc,
+>>>>>>>> +       .free           = loongarch_avec_free,
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static int __init irq_matrix_init(void)
+>>>>>>>> +{
+>>>>>>>> +       int i;
+>>>>>>>> +
+>>>>>>>> +       loongarch_avec.vector_matrix = irq_alloc_matrix(NR_VECTORS, 0, NR_VECTORS - 1);
+>>>>>>>> +       if (!loongarch_avec.vector_matrix)
+>>>>>>>> +               return -ENOMEM;
+>>>>>>>> +       for (i = 0; i < NR_LEGACY_VECTORS; i++)
+>>>>>>>> +               irq_matrix_assign_system(loongarch_avec.vector_matrix, i, false);
+>>>>>>>> +
+>>>>>>>> +       irq_matrix_online(loongarch_avec.vector_matrix);
+>>>>>>>> +
+>>>>>>>> +       return 0;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static int __init loongarch_avec_init(struct irq_domain *parent)
+>>>>>>>> +{
+>>>>>>>> +       int ret = 0, parent_irq;
+>>>>>>>> +       unsigned long tmp;
+>>>>>>>> +
+>>>>>>>> +       raw_spin_lock_init(&loongarch_avec.lock);
+>>>>>>>> +
+>>>>>>>> +       loongarch_avec.fwnode = irq_domain_alloc_named_fwnode("CORE_AVEC");
+>>>>>>>> +       if (!loongarch_avec.fwnode) {
+>>>>>>>> +               pr_err("Unable to allocate domain handle\n");
+>>>>>>>> +               ret = -ENOMEM;
+>>>>>>>> +               goto out;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       loongarch_avec.domain = irq_domain_create_tree(loongarch_avec.fwnode,
+>>>>>>>> +                       &loongarch_avec_domain_ops, NULL);
+>>>>>>>> +       if (!loongarch_avec.domain) {
+>>>>>>>> +               pr_err("core-vec: cannot create IRQ domain\n");
+>>>>>>>> +               ret = -ENOMEM;
+>>>>>>>> +               goto out_free_handle;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       parent_irq = irq_create_mapping(parent, INT_AVEC);
+>>>>>>>> +       if (!parent_irq) {
+>>>>>>>> +               pr_err("Failed to mapping hwirq\n");
+>>>>>>>> +               ret = -EINVAL;
+>>>>>>>> +               goto out_remove_domain;
+>>>>>>>> +       }
+>>>>>>>> +       irq_set_chained_handler_and_data(parent_irq, loongarch_avec_dispatch, NULL);
+>>>>>>>> +
+>>>>>>>> +       ret = irq_matrix_init();
+>>>>>>>> +       if (ret) {
+>>>>>>>> +               pr_err("Failed to init irq matrix\n");
+>>>>>>>> +               goto out_free_matrix;
+>>>>>>>> +       }
+>>>>>>>> +#ifdef CONFIG_SMP
+>>>>>>>> +       pending_list_init(0);
+>>>>>>>> +#endif
+>>>>>>>> +       tmp = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+>>>>>>>> +       tmp |= IOCSR_MISC_FUNC_AVEC_EN;
+>>>>>>>> +       iocsr_write64(tmp, LOONGARCH_IOCSR_MISC_FUNC);
+>>>>>>>> +
+>>>>>>>> +       return ret;
+>>>>>>>> +
+>>>>>>>> +out_free_matrix:
+>>>>>>>> +       kfree(loongarch_avec.vector_matrix);
+>>>>>>>> +out_remove_domain:
+>>>>>>>> +       irq_domain_remove(loongarch_avec.domain);
+>>>>>>>> +out_free_handle:
+>>>>>>>> +       irq_domain_free_fwnode(loongarch_avec.fwnode);
+>>>>>>>> +out:
+>>>>>>>> +       return ret;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+>>>>>>>> +                                    const unsigned long end)
+>>>>>>>> +{
+>>>>>>>> +       struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
+>>>>>>>> +
+>>>>>>>> +       msi_base_v2 = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
+>>>>>>>> +       return pch_msi_acpi_init_v2(loongarch_avec.domain, pchmsi_entry);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static inline int __init acpi_cascade_irqdomain_init(void)
+>>>>>>>> +{
+>>>>>>>> +       return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +int __init loongarch_avec_acpi_init(struct irq_domain *parent)
+>>>>>>>> +{
+>>>>>>>> +       int ret = 0;
+>>>>>>>> +
+>>>>>>>> +       ret = loongarch_avec_init(parent);
+>>>>>>>> +       if (ret) {
+>>>>>>>> +               pr_err("Failed to init irq domain\n");
+>>>>>>>> +               return ret;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       ret = acpi_cascade_irqdomain_init();
+>>>>>>>> +       if (ret) {
+>>>>>>>> +               pr_err("Failed to cascade IRQ domain\n");
+>>>>>>>> +               return ret;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       return ret;
+>>>>>>>> +}
+>>>>>>>> diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
+>>>>>>>> index 9d8f2c406043..1ecac59925c6 100644
+>>>>>>>> --- a/drivers/irqchip/irq-loongarch-cpu.c
+>>>>>>>> +++ b/drivers/irqchip/irq-loongarch-cpu.c
+>>>>>>>> @@ -138,7 +138,9 @@ static int __init acpi_cascade_irqdomain_init(void)
+>>>>>>>>             if (r < 0)
+>>>>>>>>                     return r;
+>>>>>>>>
+>>>>>>>> -       return 0;
+>>>>>>>> +       if (cpu_has_avecint)
+>>>>>>>> +               r = loongarch_avec_acpi_init(irq_domain);
+>>>>>>>> +       return r;
+>>>>>>>>      }
+>>>>>>>>
+>>>>>>>>      static int __init cpuintc_acpi_init(union acpi_subtable_headers *header,
+>>>>>>>> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+>>>>>>>> index c7ddebf312ad..1f9a30488137 100644
+>>>>>>>> --- a/drivers/irqchip/irq-loongson-eiointc.c
+>>>>>>>> +++ b/drivers/irqchip/irq-loongson-eiointc.c
+>>>>>>>> @@ -359,6 +359,9 @@ static int __init acpi_cascade_irqdomain_init(void)
+>>>>>>>>             if (r < 0)
+>>>>>>>>                     return r;
+>>>>>>>>
+>>>>>>>> +       if (cpu_has_avecint)
+>>>>>>>> +               return 0;
+>>>>>>>> +
+>>>>>>>>             r = acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
+>>>>>>>>             if (r < 0)
+>>>>>>>>                     return r;
+>>>>>>>> diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
+>>>>>>>> index dd4d699170f4..1926857f9a41 100644
+>>>>>>>> --- a/drivers/irqchip/irq-loongson-pch-msi.c
+>>>>>>>> +++ b/drivers/irqchip/irq-loongson-pch-msi.c
+>>>>>>>> @@ -16,7 +16,6 @@
+>>>>>>>>      #include <linux/slab.h>
+>>>>>>>>
+>>>>>>>>      static int nr_pics;
+>>>>>>>> -
+>>>>>>>>      struct pch_msi_data {
+>>>>>>>>             struct mutex    msi_map_lock;
+>>>>>>>>             phys_addr_t     doorbell;
+>>>>>>>> @@ -100,6 +99,17 @@ static struct irq_chip middle_irq_chip = {
+>>>>>>>>             .irq_compose_msi_msg    = pch_msi_compose_msi_msg,
+>>>>>>>>      };
+>>>>>>>>
+>>>>>>>> +static struct irq_chip pch_msi_irq_chip_v2 = {
+>>>>>>>> +       .name                   = "MSI",
+>>>>>>>> +       .irq_ack                = irq_chip_ack_parent,
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static struct msi_domain_info pch_msi_domain_info_v2 = {
+>>>>>>>> +       .flags          = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>>>>>> +                       MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+>>>>>>>> +       .chip   = &pch_msi_irq_chip_v2,
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>>      static int pch_msi_parent_domain_alloc(struct irq_domain *domain,
+>>>>>>>>                                             unsigned int virq, int hwirq)
+>>>>>>>>      {
+>>>>>>>> @@ -268,6 +278,9 @@ struct fwnode_handle *get_pch_msi_handle(int pci_segment)
+>>>>>>>>      {
+>>>>>>>>             int i;
+>>>>>>>>
+>>>>>>>> +       if (cpu_has_avecint)
+>>>>>>>> +               return pch_msi_handle[0];
+>>>>>>>> +
+>>>>>>>>             for (i = 0; i < MAX_IO_PICS; i++) {
+>>>>>>>>                     if (msi_group[i].pci_segment == pci_segment)
+>>>>>>>>                             return pch_msi_handle[i];
+>>>>>>>> @@ -289,4 +302,32 @@ int __init pch_msi_acpi_init(struct irq_domain *parent,
+>>>>>>>>
+>>>>>>>>             return ret;
+>>>>>>>>      }
+>>>>>>>> +
+>>>>>>>> +int __init pch_msi_acpi_init_v2(struct irq_domain *parent,
+>>>>>>>> +               struct acpi_madt_msi_pic *msi_entry)
+>>>>>>>> +{
+>>>>>>>> +       struct irq_domain *msi_domain;
+>>>>>>>> +
+>>>>>>>> +       if (pch_msi_handle[0])
+>>>>>>>> +               return 0;
+>>>>>>>> +
+>>>>>>>> +       pch_msi_handle[0] = irq_domain_alloc_named_fwnode("msipic-v2");
+>>>>>>>> +       if (!pch_msi_handle[0]) {
+>>>>>>>> +               pr_err("Unable to allocate domain handle\n");
+>>>>>>>> +               kfree(pch_msi_handle[0]);
+>>>>>>>> +               return -ENOMEM;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       msi_domain = pci_msi_create_irq_domain(pch_msi_handle[0],
+>>>>>>>> +                       &pch_msi_domain_info_v2,
+>>>>>>>> +                       parent);
+>>>>>>>> +       if (!msi_domain) {
+>>>>>>>> +               pr_err("Failed to create PCI MSI domain\n");
+>>>>>>>> +               kfree(pch_msi_handle[0]);
+>>>>>>>> +               return -ENOMEM;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       pr_info("IRQ domain MSIPIC-V2 init done.\n");
+>>>>>>>> +       return 0;
+>>>>>>>> +}
+>>>>>>>>      #endif
+>>>>>>>> --
+>>>>>>>> 2.20.1
+>>>>>>>>
+>>>>>>>>
 
