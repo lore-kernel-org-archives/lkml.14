@@ -1,58 +1,39 @@
-Received: from out203-205-251-36.mail.qq.com (out203-205-251-36.mail.qq.com [203.205.251.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FB7155310
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE5B154C0F;
+	Tue,  9 Jul 2024 09:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720517161; cv=none; b=NNfbbGwdfsTuQGQmAMDQQbmWxe2DszXGCPUyZe8N4KtKrr0HSe4UeHCjj4xsFX5UIBYuRF6qxGGaEaZ+UQQ8YZOj66bDRyjxov/jOVJrBTOQnABUzJnGN+ws1IH0LVVhcTeUi5U2oJCQJpJlUC51P/4hnoGTTm+sFtWAX7SFLPw=
+	t=1720517236; cv=none; b=QKgapUYi2YDIyKDpnlu61iqENLqKvL7mVU8OIB6WtNk4CGRmz3uLdtOrFnO9uPdhlBD2ZdP+dNQDDBik2jN3ve6rOkU+C4Pdnb3R199D2wL1j9+0/AeeVNUBiMP9aeDfxwBTaekHl3oQiuR/WBAN/HoYY6kPymieJK/btuz90TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720517161; c=relaxed/simple;
-	bh=fSUbV7tFkBt93VskwmkO/ehBNqtRph/kx9sBJz720M4=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=Xbze+1wHGy/erib4Z6Dt8o8wu2T40Br2vP9R/I1lKTqnYqJJtxiab3iunK0eqYZIN0A9b+foaToNoSWQnooIGKGxA2MMRkduQDx8Ts5Q4imrvWz35SucNFzudzvJNeMMz9aqyfrhLLqY2XpqfvxfJmdJrYEgcZd47LALx+43SNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=tNxLlINK; arc=none smtp.client-ip=203.205.251.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tNxLlINK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1720517151; bh=tEdSWJRqnHTNHkLT51gYacmV1crsh1EMbihoD9Utpi0=;
-	h=From:To:Cc:Subject:Date;
-	b=tNxLlINK76oPZcILWawIpisrFMwF/FYAsQ0BuMmgLqsoThAW9RwqouggVkJtZ8PL3
-	 He7SaH6Rw0gDMOp/58D2CFlQ3hhp4mkEqyXtw3VTWs1Fmo6BpzLkGUPeTK3+AScLyp
-	 TXiO1x5rD1RiHqS3HvUlWJo4nqF17Vp6NGjY6k+k=
-Received: from cyy-pc.lan ([240e:379:225e:9b00:b588:778:1f25:bdbe])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 66284851; Tue, 09 Jul 2024 17:25:34 +0800
-X-QQ-mid: xmsmtpt1720517134th6q0i812
-Message-ID: <tencent_A5ED71472ADCAF18F59085464CBE23C12A07@qq.com>
-X-QQ-XMAILINFO: NLNuKjcZ2ePXhKs02oEt1D3qgjhaBaAXFbzPbSRY78pCLLTTQijsQCYJer0Tg5
-	 pRlmwlx35mIimGnWzWnmHnA8UDn2lELHJDs8ZrseNwisoIVCrD7jHFq06GECRz2RMwJYnzExGauW
-	 FBYLiuLzjMmIcORvBf9yPVu24OUWIQYVNj4ILo5HcBXCUd6fcw6oOVyiVFQROk35HB1WcPbHbdc2
-	 PjN/5Qt2cgTf0BoS5sFcSDkPFFzt3l/7GFUsuIqBtalQ6ytQ+DPOnS15uCAtyLPQk34ME1/G+fJQ
-	 1+Ht/LRVUNlvTS7V8XY1eNB+LzRhpqxvxXHtpd0hH2lItH5+KURA/rhgw2lu/5rxOzvtU7OQi2Px
-	 cfS5/gm8DpdvK9bbIXniqCQwdeu5WQQIhfib+ZOUKaeJP2OaOOeQSzyjVbvsgcSOuwJaPIwOWtlQ
-	 J8xbFBout6eWAcju1nntFgkW9RFYZRdQUS4NGEr12JpIFKpXlIk98PYwlWG+5A4c6T05NkoG9nH/
-	 AZuU8mJ2/wXM0LAj7Rf6DWRZSm4z3t7eUsgHC6dj3dgr2WNXzGaM+qcfHDlLPJItUOnMAa13qaSt
-	 TkRNvE5YoHjxDS0vonvBd1Ryv1W2qen1+rcdGHIsvCTmGj6MmLF9ELMBzM5piFNWEVXQGgRHT98Y
-	 uNSlqr4tHLxgYxi5z8xZQFBbpcEzE2ZEC6ArA4VIbQibRVmc+WDGyR6Ngb0am+P/ccgRQqIzAwL2
-	 m7JuqJTmIzcEHOCiw7Mu0CnRFSG6It6pyjOifmL4X9wyQ8dKHbehkPXicqM1kAs1TRmc47wZp8t2
-	 JyTqoynAlalrl4WVZyvV6Ef/7FXUjhiroU9XuCLGqqP0i2ZGOJ8wex03+mVHTGiU21UbAWaPisIK
-	 a9C+zTO8AS24sTqIa6/wt27JISxiRGPjLmP4YGOJaKA6YQ4fK7ZwlMGud1MrmdKaksbZAXv0BYBu
-	 PEVeStkZijJFJ8IgzYNaqsCVvv8LPAs9/+YgTzIQ8NnMOyxpgaXE6wUD9U2ki8GfCUzLzvOygN/W
-	 tBUBLYaw==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Yangyu Chen <cyy@cyyself.name>
-To: iommu@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH -fixes] dma-mapping: add default implementation to arch_dma_{set|clear}_uncached
-Date: Tue,  9 Jul 2024 17:25:29 +0800
-X-OQ-MSGID: <20240709092529.3977310-1-cyy@cyyself.name>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1720517236; c=relaxed/simple;
+	bh=BvITnZGwrv0DcMi9+rbLEpK9pqpsSHIG6x1UYrJpaw0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=diUFHl8EC+RLqa7wX+OrBWKQcd33tcZxyEeAFPydrI07EFZEEvFbAfwtA6x15s5d/5nH+Zf5wGQnZns7PfSwERXZhqpUCQdjX3IjVztSkAJOHB8RfDpjHS48UcVpQulj72LQG8ve1NqWcZXk8XVAc2PZ6NRfXpagtqFGmeysnU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowADX3+dDAo1mG3VXAg--.38115S2;
+	Tue, 09 Jul 2024 17:26:34 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	daniel.vetter@ffwll.ch,
+	sam@ravnborg.org,
+	noralf@tronnes.org,
+	akpm@linux-foundation.org
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] drm/client: fix null pointer dereference in drm_client_modeset_probe
+Date: Tue,  9 Jul 2024 17:26:26 +0800
+Message-Id: <20240709092626.3253492-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,61 +41,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowADX3+dDAo1mG3VXAg--.38115S2
+X-Coremail-Antispam: 1UD129KBjvJXoWrtr4DZw13CFy5urW7urW5trb_yoW8Jr18pr
+	43JF90yF4jvrZrKFs2va97CF17A3W3JF48G3W7Aan3u3Z0qry2vryYvr13WFy7Gry3JF1U
+	JrnIyFW2qF18CaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUFYFADUUUU
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Currently, we have some code in kernel/dma/direct.c which references
-arch_dma_set_uncached and arch_dma_clear_uncached. However, many
-architectures do not provide these symbols, and the code currently
-relies on compiler optimization to cut the unnecessary code. When the
-compiler fails to optimize it, the code will reference the symbol and
-cause a link error. I found this bug when developing some new extensions
-for RISC-V on LLVM. The error message is shown below:
+In drm_client_modeset_probe(), the return value of drm_mode_duplicate() is
+assigned to modeset->mode, which will lead to a possible NULL pointer
+dereference on failure of drm_mode_duplicate(). Add a check to avoid npd.
 
-```
-  LD      .tmp_vmlinux.kallsyms1
-ld.lld: error: undefined symbol: arch_dma_set_uncached
->>> referenced by direct.c
->>>               kernel/dma/direct.o:(dma_direct_alloc) in archive
-vmlinux.a
-make[2]: *** [scripts/Makefile.vmlinux:34: vmlinux] Error 1
-```
-
-This patch adds default implementations for arch_dma_set_uncached and
-arch_dma_clear_uncached in include/linux/dma-map-ops.h. So that the
-code in kernel/dma/direct.c can always reference these symbols to
-avoid link errors.
-
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+Cc: stable@vger.kernel.org
+Fixes: cf13909aee05 ("drm/fb-helper: Move out modeset config code")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 ---
- include/linux/dma-map-ops.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Changes in v2:
+- added the recipient's email address, due to the prolonged absence of a 
+response from the recipients.
+- added Cc stable.
+---
+ drivers/gpu/drm/drm_client_modeset.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
-index 02a1c825896b..92a713557859 100644
---- a/include/linux/dma-map-ops.h
-+++ b/include/linux/dma-map-ops.h
-@@ -420,8 +420,22 @@ static inline void arch_dma_mark_clean(phys_addr_t paddr, size_t size)
- }
- #endif /* ARCH_HAS_DMA_MARK_CLEAN */
+diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+index 31af5cf37a09..cca37b225385 100644
+--- a/drivers/gpu/drm/drm_client_modeset.c
++++ b/drivers/gpu/drm/drm_client_modeset.c
+@@ -880,6 +880,9 @@ int drm_client_modeset_probe(struct drm_client_dev *client, unsigned int width,
  
-+#ifdef CONFIG_ARCH_HAS_DMA_SET_UNCACHED
- void *arch_dma_set_uncached(void *addr, size_t size);
-+#else
-+static inline void *arch_dma_set_uncached(void *addr, size_t size)
-+{
-+	return ERR_PTR(-EINVAL);
-+}
-+#endif /* CONFIG_ARCH_HAS_DMA_SET_UNCACHED */
+ 			kfree(modeset->mode);
+ 			modeset->mode = drm_mode_duplicate(dev, mode);
++			if (!modeset->mode)
++				continue;
 +
-+#ifdef CONFIG_ARCH_HAS_DMA_CLEAR_UNCACHED
- void arch_dma_clear_uncached(void *addr, size_t size);
-+#else
-+static inline void arch_dma_clear_uncached(void *addr, size_t size)
-+{
-+}
-+#endif /* CONFIG_ARCH_HAS_DMA_CLEAR_UNCACHED */
- 
- #ifdef CONFIG_ARCH_HAS_DMA_MAP_DIRECT
- bool arch_dma_map_page_direct(struct device *dev, phys_addr_t addr);
+ 			drm_connector_get(connector);
+ 			modeset->connectors[modeset->num_connectors++] = connector;
+ 			modeset->x = offset->x;
 -- 
-2.45.2
+2.25.1
 
