@@ -1,153 +1,143 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259D712D210
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 10:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451731474A2;
+	Tue,  9 Jul 2024 10:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720520756; cv=none; b=F4Y7gHbAZfECoU1n3obwONnadYK+5JsiP5z2Xqx3Z6meABAGVv+TiEJHdmT28P+65T4Bx+alxNTIrt+MJ1G9dNhDXca4eCNDPzSmWQ85S1bJEJ51ANZil/oipXEMROXJXzlsDBQw4Hrt5aoxzd1eVQc4W76n8XfrCMrLAA/fmL0=
+	t=1720520867; cv=none; b=fJoitP2OwNT18a1le31Eo5gWfy5wK3GiB+vl40cd9yMkD0TDT2/R0qu+DmpXiv3frZ4htOpzjRGeuFlSzRVmRLtTpgOp3/1iTIf9sE+tjY2TeSEO+abR4xiX4S07BMptCh/IWkzF+kqLjFglZ0o99exDMD9wviX4rFCY8pHIbg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720520756; c=relaxed/simple;
-	bh=A6pd2XpYR/VxdLWZQRqvnoyExu02xN7pHANL4n43oi0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GMH8rztVyXaL0B7p74k8mpAqgAQm7cMhgTFDYfz9t2lS0CB3ffaZYAPgs71W8FRhcWVogDjjz19BYQN0mDdyfO0T9/TmApNtNsWDKksycK9FMqbJ5RApEtsL1dLPRH5awJC1XiQrN47OHhUZc8uBoQMasaUA0IiU1W7FOpuerW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FPZKfoqv; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720520867; c=relaxed/simple;
+	bh=+z4hpqhDXZQ2pPLiuyALY3/MD/eHQlYfW+QYnPoY2fk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TqtHI644myi/mgpChFEKqngOMcKc9ue6bsHvaut3e52G3Xy/c1jJDeyhn5G7V6btYM6rONViCXY0iEsLyTvDidCgkr7Odn45J8e1gvRgd4kH+kmWk40QE96BU36kRHYzGD2ngv5OrVHc+q6g2reEs+XaD0Iyhbvfh8Dp3bC+GaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KxCSywIZ; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FPZKfoqv"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-58c947a6692so6124952a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 03:25:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxCSywIZ"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a77e392f59fso330174566b.1;
+        Tue, 09 Jul 2024 03:27:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720520753; x=1721125553; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=GdyTrVsoTN9O7NSdA88oWiFu9OfV95HskzoQpLb15Z4=;
-        b=FPZKfoqvw+z3hsAHPVpMY4VwmvToOOJYXIC1/MEcVe9/JGLj/773nOQglrVoeQA/h8
-         hpDftKB5UsHhyzbG8nrlVRQvYI5VWzWpdSHcJoHZH4DJoOPVzeVVJL67TL0o2RptYAQg
-         Llard+NtcAPX5JVgltXP4EfMRwZQLaFq92leuInRlthtfwDb0Db49/klF5tFhSiezpGy
-         14CtezL5vta2qJRD78J9NxuyrMgONWbJGcwnHTxBkQyd8BUyGqc2YqmTRliQRSWu3kZM
-         JKzZ7qXfW8G5NIwsPmLqJyepsLNRzZO+mxUoS2Uc6eRo3Da/y5HjkIdvfLBe66fLqlGP
-         CXwg==
+        d=gmail.com; s=20230601; t=1720520864; x=1721125664; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DRAWz/V211r8tDaqG2IgXw6lhy00qgcG8GStOKSMZic=;
+        b=KxCSywIZFX/cKVaACAq05t3MjNaScSwiao5TAd9jdxEq7gccXaL1FkF5d8wPun9FuK
+         xX4bhXcvPAOKm5xo7MxYA41YtoWXl0Tf4gVz3OfZyv8kFpHmQ2yXvc7QYbycvO1A/iLT
+         fbm+SV1pQVbwI7RqhXCfI8aILKXyHtI8BOs7sWqQ82cPSQNn3V47Pjq472tgvPxuoLgx
+         sO3VKFPzwUeK2Z0qhgVGkSHEeXnKvlxmhS6txngP/eAvkp9j6ROGod3YYGUpWG8obJrf
+         cTp9BFMVBNPD3JWI929FLLSXYQDeTS3cQNUffBHhIk4X3jIfxaRIdn7gRdsdiDhktktT
+         MMuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720520753; x=1721125553;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GdyTrVsoTN9O7NSdA88oWiFu9OfV95HskzoQpLb15Z4=;
-        b=nVQj5OCYpbQ+Yzg2q2ZfLzXDWTDnbpymMPDdH6IaMUbrw7ZgnEbdyx91hTsC6ynd7l
-         H+GcHQsaQwSvagGvxpKKGXxhNYrbtJ6bEi053FuSm8JYeHaqQJMfawC4e8SdO1F4tdIw
-         f2hNyVpvSMf9XDR6O+E6S/fdPVkuWxTBtVuO4gzp+dHLL6Wa77rjowIVv7kRjn2rzl/c
-         wIUJiyZ8V9gzx+k4ztZ1lGQPoTFigw9hzcUQpP49RBFjVNtuyBBlpv0hP8LRl+rwS9UH
-         y1DPI08AGY58YE13hBxVREOweVtWrs1Ivs6jmHcsZ473W4I8X6jAFW29awmhdBvXJ5Ic
-         UW2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVKBSl2EjbBGu2LLb9nfPXR+3WwaDwtIQ4kPHAnpqMsvK0MdrZ2hgt4YLtqySWFkXQATo1j+aeiFBY6N2oan2HDYIBwZB65vD0SS7+n
-X-Gm-Message-State: AOJu0YxyXotOkxP5csKorU4KRtsIAw4ZwD5RHwuF98suxywmxJNE8Ejt
-	sVB41HigzqIYpZYXZtz0AUVkoPfXMP5MdUH0QYaZIhj7HLKXG39265vbtg5aR3E=
-X-Google-Smtp-Source: AGHT+IFuotZgYfU6wVxhSbZdkYxhEmD3ZRvEboyJqHtucWZwusYkQ9GJldTmncLxCN3+0FO4rv+qFg==
-X-Received: by 2002:aa7:c918:0:b0:58a:ffc3:cea5 with SMTP id 4fb4d7f45d1cf-594bbe2ba54mr1263864a12.35.1720520753419;
-        Tue, 09 Jul 2024 03:25:53 -0700 (PDT)
-Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bda308efsm883514a12.81.2024.07.09.03.25.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jul 2024 03:25:53 -0700 (PDT)
-Message-ID: <5a622896-6ce3-4e73-9383-15793b2536bc@linaro.org>
-Date: Tue, 9 Jul 2024 12:25:50 +0200
+        d=1e100.net; s=20230601; t=1720520864; x=1721125664;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DRAWz/V211r8tDaqG2IgXw6lhy00qgcG8GStOKSMZic=;
+        b=SvUqsmpAPQfLMXGspgGQRnXi3AUg1fen9zHKRwKo1ngv4HvtUfEUh8sai9ez5DPA3l
+         Xwd4F/todegWKwfpM01TYZtfAO5Vi82XuzfZUmGgLkZ7oCTwPiVog6pexZgeyovnnm+A
+         5hQ1L5PlCiF6YqL3ydVU00AVkmmL7L8vRc9mQQ+iNVl092ID6OuKQJxbvHwKTnjAtH9d
+         SdsJH3QdZJPXfTRKVhwOWxCRyUMKYXRo+FQeaY0dEMlEXFZFppHjEqU8LKpDYHJFnGzR
+         qbXowAkyZLyZSN+oD0dYXFkcw/dYR405bqIq7VFIDHq6ACNG2UCbkAmFfYwrvK2xcxgs
+         1BzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnrtUxmpMgb43LPXUrvxPBJ57l2vt6k/i0dUKemXBzdkiPrmaXFhaV1z0QfiC9VzB1Z67nrlassIKmiNAxrD0OfjAos/uA9YoCRLQ2YHCW4zjIZSvq3BGzw8Qh0mfxO3Iav7+r+MBMb7qfa8mexxWRvM+jDU/C3sYNPP/E7xrjghBPzp3TjOOA+oXCr9z8vMtw8YyHzG3fNxFfNUc1PuAxNw==
+X-Gm-Message-State: AOJu0YwvLhwCg6XSa8OHEuvbd1zffcLxfC8zF8bz5IxbRI0509auUVl6
+	tvNGuXmffAJS5Lj9mhWV6W9boVq+faMwcuvhml3cPD8cNKb1I70TrdGX5Q==
+X-Google-Smtp-Source: AGHT+IGdMjoX8eHvB3eUQAtmm8Afat7ogcY4ocmuRNueAmmSsZOYBFwzCw7527LyhM3FGogPoeLYZQ==
+X-Received: by 2002:a17:907:20f1:b0:a75:25ff:550d with SMTP id a640c23a62f3a-a780b6b361cmr113379666b.26.1720520863953;
+        Tue, 09 Jul 2024 03:27:43 -0700 (PDT)
+Received: from localhost.localdomain (bza125.neoplus.adsl.tpnet.pl. [83.30.46.125])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bcc21sm66528166b.16.2024.07.09.03.27.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 03:27:43 -0700 (PDT)
+From: Adam Skladowski <a39.skl@gmail.com>
+To: 
+Cc: phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Adam Skladowski <a39.skl@gmail.com>,
+	Georgi Djakov <djakov@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Vladimir Lypak <vladimir.lypak@gmail.com>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Rohit Agarwal <quic_rohiagar@quicinc.com>,
+	Danila Tikhonov <danila@jiaxyga.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Stephan Gerhold <stephan.gerhold@kernkonzept.com>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Barnabas Czeman <barnabas.czeman@mainlining.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH v3 0/9] msm8937/msm8976/qcs404 icc patches
+Date: Tue,  9 Jul 2024 12:22:45 +0200
+Message-ID: <20240709102728.15349-1-a39.skl@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] drm/msm/adreno: Implement SMEM-based speed bin
-To: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Marijn Suijten <marijn.suijten@somainline.org>,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240625-topic-smem_speedbin-v4-0-f6f8493ab814@linaro.org>
- <20240625-topic-smem_speedbin-v4-1-f6f8493ab814@linaro.org>
- <20240630102524.talnb3qx5jfmcj5y@hu-akhilpo-hyd.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240630102524.talnb3qx5jfmcj5y@hu-akhilpo-hyd.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 30.06.2024 12:25 PM, Akhil P Oommen wrote:
-> On Tue, Jun 25, 2024 at 08:28:06PM +0200, Konrad Dybcio wrote:
->> On recent (SM8550+) Snapdragon platforms, the GPU speed bin data is
->> abstracted through SMEM, instead of being directly available in a fuse.
->>
->> Add support for SMEM-based speed binning, which includes getting
->> "feature code" and "product code" from said source and parsing them
->> to form something that lets us match OPPs against.
->>
->> Due to the product code being ignored in the context of Adreno on
->> production parts (as of SM8650), hardcode it to SOCINFO_PC_UNKNOWN.
->>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->> ---
+This series introduce new ICC drivers for some legacy socs
+while at it also updates a bit of qcs404 driver which seems
+to not receive much attention lately.
+Please take in consideration i do not own any qcs404 board
+so i cannot test anything else than if it compiles.
 
-[...]
+Changes since v2
+================
+1. Moved yamls from separate files into shared file.
+2. Added commit to fix description of msm8953 yaml.
+3. Reworded "Changes since v1" in cover.
 
-> 
-> This value is exposed to userspace via MSM_PARAM_CHIP_ID. 16 bits are
-> reserved for speedbin, so we should ensure somewhere that we don't
-> accidently use more than that.
+Changes since v1
+================
+1. Reworded commit messages.
+2. Dropped intf clocks from MSM8976 driver and yaml.
+3. Aligned yamls to qcom,msm8953.yaml format.
+4. Removed redundant nodes from MSM8939 examples.
+5. Added regmap include into qcs404 regmap commit.
+6. Added coeffs to MSM8976 driver.
+7. Added MSM8953 ab_coeff patch.
 
-The "real" chip id is 32b, leaving the other 32 for speedbin, so it's fine
+Adam Skladowski (9):
+  dt-bindings: interconnect: qcom: Add Qualcomm MSM8976 NoC
+  interconnect: qcom: Add MSM8976 interconnect provider driver
+  dt-bindings: interconnect: qcom: Add Qualcomm MSM8937 NoC
+  interconnect: qcom: Add MSM8937 interconnect provider driver
+  interconnect: qcom: qcs404: Mark AP-owned nodes as such
+  interconnect: qcom: qcs404: Add regmaps and more bus descriptions
+  dt-bindings: interconnect: qcom: msm8939: Fix example
+  interconnect: qcom: msm8953: Add ab_coeff
+  dt-bindings: interconnect: qcom: msm8953: Fix 'See also' in
+    description
 
-> 
-> Also, what is the the max value of fcode? I think we should leave some
-> space for pcode too. We never know for sure if that won't be required in
-> future.
+ .../bindings/interconnect/qcom,msm8939.yaml   |   25 +-
+ .../bindings/interconnect/qcom,msm8953.yaml   |    3 +-
+ drivers/interconnect/qcom/Kconfig             |   18 +
+ drivers/interconnect/qcom/Makefile            |    4 +
+ drivers/interconnect/qcom/msm8937.c           | 1372 ++++++++++++++++
+ drivers/interconnect/qcom/msm8953.c           |    2 +
+ drivers/interconnect/qcom/msm8976.c           | 1440 +++++++++++++++++
+ drivers/interconnect/qcom/qcs404.c            |  127 +-
+ .../dt-bindings/interconnect/qcom,msm8937.h   |   93 ++
+ .../dt-bindings/interconnect/qcom,msm8976.h   |   97 ++
+ 10 files changed, 3165 insertions(+), 16 deletions(-)
+ create mode 100644 drivers/interconnect/qcom/msm8937.c
+ create mode 100644 drivers/interconnect/qcom/msm8976.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8937.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8976.h
 
-As of today it seems to be 0xff. Worst case scenario we'll add a new param,
-but hopefully the people that are in charge won't randomly change things..
+-- 
+2.45.2
 
-Konrad
