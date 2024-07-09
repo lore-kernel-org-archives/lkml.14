@@ -1,90 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B0E1B86FB
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 20:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E2A13C8EA;
+	Tue,  9 Jul 2024 20:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720557324; cv=none; b=OVvGlatvegB/bCLNXVtnzuskDTNcUkzRgQBTUTheLrVblXvfoU9KzJl6Gc3hdgMIqoXzw7HLvjvkvDgZPXkfM/7ESy8vCGgPpEDsGX3dpaSk9HbAdiw4Sd7PMGXWB68UGiKGCfB1/MFO9HnAPlwnDGKH02pHns57vZaGlpAdoBI=
+	t=1720557445; cv=none; b=B3nUdFTF/sLWU+fxmtEM9sBUOVo6536HgxBlLqVY4OayFVPJHdoFaIgSPQLYuPegEP0+QTjPQ92k0oHrvDZstyvcfZBGz+3eOf/y9HZP9B5NWbqz4Tdy08+Dp3cTD4Apq1nVAA+ao0ZE+LrhkTgYpOiP3TKanu1PzPgDSEkPWgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720557324; c=relaxed/simple;
-	bh=eKUKhI2YBw/Ad6+G7vSsx7UPtabwPEA29W5Ci9CXXpQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y2B1LA30fiWp2DT6BZUh8mhdS8bE9mpRq0eh85Emm5nKWYoADQwCBlf7E02EyPCgX2U6n2wrL6I75jHDlAumz0kqMht6YDFIz8fAdi8SranRsaxoyPU3DC5OO2+UGX6Jr7mCkG3n7G/7PEj2JQWspz7vgYWxMbT+u/Y0AFRcokE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IKawx/X2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720557445; c=relaxed/simple;
+	bh=eK+ElAZ3HYE+YOrVt86IwYpztcjk8MJ4RaWg/ldd9Cs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DiKZh2pzF018ePYYCGqwr7NW6YMB6FN5+gmVQzbPELU6544QZXyQVZZc7wfPucnqYWuHWHnx+g9Xg7NXBlkSvJ5h7Rvxq0RnGduMimY313TIdTQ604PbKxauCwy1O53ZEV1P5XD6Ya5qLDe5k5EwpLqDcTUe2uD4V2zv00N2ldU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U9DtBC9s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IKawx/X2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720557321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bQGIDaP1t/pBYsaGFONgFaSDOJQEw7gzA1HsrUDl/TE=;
-	b=IKawx/X2oGPw371uw+Kc/18x9xAQleL2JHoq7UsuA5AcCXe5ApltR4+bM/kmJe00kUAncE
-	FlL/Cf3kmCqWKVrccsVFqUewJEgKkRRdu1ApylT0BDZEvmOT70u865+AK2YmeqTklcGJSl
-	asIrng8f6AJIXzOrJBkrCTimh5zAhGI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-241-3aRxG6oTO369D0qNUyAT1Q-1; Tue,
- 09 Jul 2024 16:35:17 -0400
-X-MC-Unique: 3aRxG6oTO369D0qNUyAT1Q-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 987461944B3E;
-	Tue,  9 Jul 2024 20:35:14 +0000 (UTC)
-Received: from antares.redhat.com (unknown [10.39.192.91])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 55D231955DA1;
-	Tue,  9 Jul 2024 20:35:06 +0000 (UTC)
-From: Adrian Moreno <amorenoz@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Adrian Moreno <amorenoz@redhat.com>,
-	Yotam Gigi <yotam.gi@gmail.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9DtBC9s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B87C3277B;
+	Tue,  9 Jul 2024 20:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720557443;
+	bh=eK+ElAZ3HYE+YOrVt86IwYpztcjk8MJ4RaWg/ldd9Cs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U9DtBC9srjnRK0WtbLFP7KzD/PxN/xKQOSTV0VrYbYP57KmGsPBmsqSDhak0Mc+bC
+	 LQbkUnQAiW6aicKldsxTDDpncBMP8lsjiLvi8cK7t/Rrsugam4nZV1oOCNhjnM1uYj
+	 RljnWAlgEH1wTb7t4xHNyXX4OD5gcl9augH+y6JWEW7JF7SDYMLgn32H6CSvFSq4cW
+	 RkPMvBbPy/RqK2EarHe+gk9/w1/bu9XWu5fmgunD64hJzqDgskHA3djuBeuE2HJgLV
+	 1q7Rb/njZnhbths+sxqiiJH+ynPiS2zTo9sVfSKrnpIQsxjDy5NrQcejJzG2dTgzHJ
+	 84BfqBGl+MKKA==
+Date: Tue, 9 Jul 2024 13:37:23 -0700
+From: Kees Cook <kees@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Simon Horman <horms@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Eelco Chaudron <echaudro@redhat.com>,
-	Aaron Conole <aconole@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: psample: fix flag being set in wrong skb
-Date: Tue,  9 Jul 2024 22:34:36 +0200
-Message-ID: <20240709203437.1257952-1-amorenoz@redhat.com>
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	linux-hardening@vger.kernel.org,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2] netdevice: define and allocate &net_device
+ _properly_
+Message-ID: <202407091334.A7BAB27@keescook>
+References: <20240709125433.4026177-1-leitao@debian.org>
+ <20240709181128.GO346094@kernel.org>
+ <Zo2bYCAVQaViN6z8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zo2bYCAVQaViN6z8@gmail.com>
 
-A typo makes PSAMPLE_ATTR_SAMPLE_RATE netlink flag be added to the wrong
-sk_buff.
+On Tue, Jul 09, 2024 at 01:19:44PM -0700, Breno Leitao wrote:
+> On Tue, Jul 09, 2024 at 07:11:28PM +0100, Simon Horman wrote:
+> > Flagged by: kernel-doc -none
+> 
+> How do you run this test exactly? I would like to add to my workflow.
 
-Fixes: 7b1b2b60c63f ("net: psample: allow using rate as probability")
-Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
----
- net/psample/psample.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Details here:
+https://docs.kernel.org/doc-guide/kernel-doc.html
 
-diff --git a/net/psample/psample.c b/net/psample/psample.c
-index f48b5b9cd409..11b7533067b8 100644
---- a/net/psample/psample.c
-+++ b/net/psample/psample.c
-@@ -498,7 +498,7 @@ void psample_sample_packet(struct psample_group *group, struct sk_buff *skb,
- 		goto error;
- 
- 	if (md->rate_as_probability)
--		nla_put_flag(skb, PSAMPLE_ATTR_SAMPLE_PROBABILITY);
-+		nla_put_flag(nl_skb, PSAMPLE_ATTR_SAMPLE_PROBABILITY);
- 
- 	genlmsg_end(nl_skb, data);
- 	genlmsg_multicast_netns(&psample_nl_family, group->net, nl_skb, 0,
+But basically, either:
+
+$ ./scripts/kernel-doc -none include/linux/netdevice.h
+include/linux/netdevice.h:2404: warning: ...
+
+or:
+
+$ make ... W=n
+...
+../drivers/firewire/init_ohci1394_dma.c:178: warning: Function parameter or struct member 'ohci' not described in 'init_ohci1394_wait_for_busresets'
+...
+
 -- 
-2.45.2
-
+Kees Cook
