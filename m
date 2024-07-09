@@ -1,75 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7C919D8A0;
-	Tue,  9 Jul 2024 14:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701C119CCF2
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 14:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720535642; cv=none; b=CA43lw7kaeOqUhMba67uF+y8lNrkRY9ObHNG0chUpvzbEI/SLt82/TiaYY1TA2v0HnzaDZwSVpwbfEP6ri53Z1u4tNcgEbYbN0j58o6XeNTXzILWr0ipyfLGnWB1khAa8wbZtqsnlKi2/hbMqRpcvx5/eE7HuRwgwquihkh0SDo=
+	t=1720535676; cv=none; b=fJJ+t6xt8DbRJ2kbXRBswcULnJUixlO3LkqZ8ukpQp51XHzN8mZJ/3542o4v31+PyglKPMtc5TosiqdeyAUEDrpTVNYORcaJY+PUBiWWeWXa7b2Sqvswts1sSgd0Fx/3hIxHhLNsmC0GICMKRSltWFbnzWj3j3uh8SA0DW3Pttw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720535642; c=relaxed/simple;
-	bh=Q6QW7Mym11UnH2/NujfWG5rt/LJO2rB7GqNyqlAaMIw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oXF276A4s4zhED5g9E+uEYKFU+RJxpiwRvdSAsAtAG0OcnU3A6v8fv421IXVSlAmlMeVuY5pqTfko1r0ldech9qyr38BKhK2TNOdoKPYH772QWJMRAhGaf47rfROo3R3ALWwCMnJQRWT6h9QeS+fxvr46NBLWzdvsklJunxQJP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XfnxvnPK; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720535676; c=relaxed/simple;
+	bh=bpzhk5cfR3F+pR8M1FUWFRktJXUEzVfeuMK6fUbiyOc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iVCep40OWCMMREymlEezxtO3rsssLfjnp+jj5z8Q7EDIrMHBcCKnWvIJkYYjMRmTQvmV6Q9jBJFqdXq42Rx5WZr2hbBtoEInsgu8lUX4VBGrLzfx3pTuvbGOJVFzbCCLS8xmsTUgGlKFuf94ebik24v2MadF4VqlB2NKGSpOKcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gGnHqwAK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XfnxvnPK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720535640; x=1752071640;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Q6QW7Mym11UnH2/NujfWG5rt/LJO2rB7GqNyqlAaMIw=;
-  b=XfnxvnPKruFeH2p87SWXhI/9mM0tt029vAd4mRp/yWy6mFFW71UaO2PQ
-   CCbpvhRsxOTCmjKA1zec+OxmK04r5a+xGVHG7w37ZSdJpFhBgxoTELB5H
-   Jo6LswOk1Dxt5nNLXyTORanANxcO37MLPRvPHfrs4huTd2URKJ/oSxaZx
-   bBJX6y5Jm8pcEMcDqrjAfGHP+BFjXl6ivEvunOLTQSx1unYjOiRVhMFbm
-   1DPz99byLwTEHtTodSflbMnFOnsDMDN7S+v6et0tdJJl12ZVsCO+cvKGo
-   KC1GC8uRukj6ElaXRm0x5Z0mYkO/D0UrvT8AS2NpO1JG4tZpiPsIc/vay
-   g==;
-X-CSE-ConnectionGUID: AdPfx3b5SCy9BVtCU20lyA==
-X-CSE-MsgGUID: mYatI1ySQ8OZpG4HE0+k5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="35331443"
-X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="35331443"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 07:33:58 -0700
-X-CSE-ConnectionGUID: Ogb6bm/XRymwM71beSQ4NQ==
-X-CSE-MsgGUID: nuB77fl1RZuyVt0OVxt95g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="52272146"
-Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by fmviesa005.fm.intel.com with ESMTP; 09 Jul 2024 07:33:57 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: X86 Kernel <x86@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Ingo Molnar" <mingo@redhat.com>,
-	"Borislav Petkov" <bp@alien8.de>,
-	"Xin Li" <xin3.li@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	acme@kernel.org,
-	kan.liang@linux.intel.com,
-	Andi Kleen <andi.kleen@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	"Mehta, Sohil" <sohil.mehta@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 09/11] x86/irq: Enable NMI source on IPIs delivered as NMI
-Date: Tue,  9 Jul 2024 07:39:04 -0700
-Message-Id: <20240709143906.1040477-10-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240709143906.1040477-1-jacob.jun.pan@linux.intel.com>
-References: <20240709143906.1040477-1-jacob.jun.pan@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGnHqwAK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720535673;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2KSGK3LaL1Mx5upY3a+zMUsotplQxAZK6hNQur1F1ok=;
+	b=gGnHqwAKKphcA+0QPrut7O4zTXH168UG9u0UYpIp+Rb4+/02XO4+VYsIhtjA5jchtuMixv
+	yXdeDJcqlzRihIaWI2FriMLb0J1QbDg9KjE0nzCBINRIhmD68fk4audmfA85zUTqXmt0yf
+	1DpCENdTT0glHyQ09swxtt/8EewYNrE=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-38-n9td_YVYPpapCFgPvYv8Vg-1; Tue, 09 Jul 2024 10:34:32 -0400
+X-MC-Unique: n9td_YVYPpapCFgPvYv8Vg-1
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-38acde528afso7460905ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 07:34:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720535671; x=1721140471;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2KSGK3LaL1Mx5upY3a+zMUsotplQxAZK6hNQur1F1ok=;
+        b=GHiUIxbrcpoKP3Ye3hE6ZgYmYUKCHvVd10KH+dtzJWm4aTD+VXGBY0F/Wq777SuFY0
+         /PEOWe4d/gc1bZ1l4BI6EzMYbDOgLmnH3/RfUw4zoj3yYv9OGGw68xv/n9PN2FNJ/9IH
+         xRtzzDtWfn+c2SynXyTC1Zx1TBALYRsCaucO+fGGMWoZ+nQHmLckyvOAFj8lo1XRgyoT
+         Wcg5x1ZMTXpMN0jKFi6QWPXtGB51qzCqdIIT2ajtICbN35rCGYLvbjrrX99krXdKGI8P
+         Hq1nJNR1wwvpHicYB6YnfAUnrqFoA1D+EpSnOVgi6QbWtvBu81+a0aenuE17WI3ti4l2
+         43DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpqLEjurO8TY+fXqCe6LmRtmoJL7B5oYidF/+f1Z1yp1nIDds3aNDOSO7D1Av0YpkgXo8J0F/wx1ygbD9f06K46cFh9TYYb7+ntyXN
+X-Gm-Message-State: AOJu0YzuWH9b1IfGCbdzksLdhl/5Rz5fshNxnyKCwUQxNpxvOsJHzaGy
+	QPa3iyDGp5Z+ByrAY7VjeSbUj7cNGusrmQMwCKBB9Vm5UtoMmu3B8UPC7vzT+j/jnRgewri5qzZ
+	BuQdccYH2Yymwh4bK6qYvUgdHrETNkgc8ofAOUIlCFgsqh5mnV3pb5w1dMUMRqg==
+X-Received: by 2002:a05:6e02:19cf:b0:374:983b:6ff2 with SMTP id e9e14a558f8ab-38a5a079b58mr31038955ab.20.1720535671198;
+        Tue, 09 Jul 2024 07:34:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCBm/l4muSrDy7yEx0OBrZXGu/5Ywn0CQg3zoXjkv0vgrA62wtGegT+1Otz+Rekjv0zwGo3g==
+X-Received: by 2002:a05:6e02:19cf:b0:374:983b:6ff2 with SMTP id e9e14a558f8ab-38a5a079b58mr31038695ab.20.1720535670921;
+        Tue, 09 Jul 2024 07:34:30 -0700 (PDT)
+Received: from ryzen.. ([240d:1a:c0d:9f00:ca7f:54ff:fe01:979d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d60117b61sm1501424a12.22.2024.07.09.07.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 07:34:30 -0700 (PDT)
+From: Shigeru Yoshida <syoshida@redhat.com>
+To: jmaloy@redhat.com,
+	ying.xue@windriver.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Shigeru Yoshida <syoshida@redhat.com>
+Subject: [PATCH net-next] tipc: Remove unused struct declaration
+Date: Tue,  9 Jul 2024 23:34:10 +0900
+Message-ID: <20240709143410.352006-1-syoshida@redhat.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,196 +79,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Program designated NMI source vectors for all NMI delivered IPIs
-such that their handlers can be selectively invoked.
+struct tipc_name_table in core.h is not used. Remove this declaration.
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
 ---
-v4: Enhance comments, no functional changes (Li Xin)
----
- arch/x86/include/asm/irq_vectors.h | 10 ++++++++++
- arch/x86/kernel/apic/hw_nmi.c      |  3 ++-
- arch/x86/kernel/apic/ipi.c         |  4 ++--
- arch/x86/kernel/apic/local.h       | 18 ++++++++++++------
- arch/x86/kernel/cpu/mce/inject.c   |  2 +-
- arch/x86/kernel/kgdb.c             |  2 +-
- arch/x86/kernel/nmi_selftest.c     |  2 +-
- arch/x86/kernel/reboot.c           |  2 +-
- arch/x86/kernel/smp.c              |  2 +-
- 9 files changed, 31 insertions(+), 14 deletions(-)
+ net/tipc/core.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-index 4f767c3940d6..9b7241e7faa3 100644
---- a/arch/x86/include/asm/irq_vectors.h
-+++ b/arch/x86/include/asm/irq_vectors.h
-@@ -135,6 +135,16 @@
- #define NMI_SOURCE_VEC_IPI_TEST		8	/* For remote and local IPIs */
- #define NR_NMI_SOURCE_VECTORS		9
- 
-+/*
-+ * When programming the local APIC, IDT NMI vector and NMI-source vector
-+ * are encoded in a single 32 bit variable. The top 16 bits contain
-+ * the NMI-source vector and the bottom 16 bits contain NMI_VECTOR (2)
-+ * The top 16 bits are always zero when NMI-source reporting feature
-+ * is not enabled or the caller does not use NMI-source reporting.
-+ */
-+#define NMI_VECTOR_WITH_SOURCE(src)	(NMI_VECTOR | (src << 16))
-+#define NMI_SOURCE_VEC_MASK		GENMASK(15, 0)
-+
- #ifdef CONFIG_X86_LOCAL_APIC
- #define FIRST_SYSTEM_VECTOR		POSTED_MSI_NOTIFICATION_VECTOR
- #else
-diff --git a/arch/x86/kernel/apic/hw_nmi.c b/arch/x86/kernel/apic/hw_nmi.c
-index 9f0125d3b8b0..f73ca95d961e 100644
---- a/arch/x86/kernel/apic/hw_nmi.c
-+++ b/arch/x86/kernel/apic/hw_nmi.c
-@@ -20,6 +20,7 @@
- #include <linux/nmi.h>
- #include <linux/init.h>
- #include <linux/delay.h>
-+#include <asm/irq_vectors.h>
- 
- #include "local.h"
- 
-@@ -33,7 +34,7 @@ u64 hw_nmi_get_sample_period(int watchdog_thresh)
- #ifdef arch_trigger_cpumask_backtrace
- static void nmi_raise_cpu_backtrace(cpumask_t *mask)
- {
--	__apic_send_IPI_mask(mask, NMI_VECTOR);
-+	__apic_send_IPI_mask(mask, NMI_VECTOR_WITH_SOURCE(NMI_SOURCE_VEC_IPI_BT));
- }
- 
- void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
-diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
-index 5da693d633b7..9d2b18e58758 100644
---- a/arch/x86/kernel/apic/ipi.c
-+++ b/arch/x86/kernel/apic/ipi.c
-@@ -157,7 +157,7 @@ static void __default_send_IPI_shortcut(unsigned int shortcut, int vector)
- 	 * issues where otherwise the system hangs when the panic CPU tries
- 	 * to stop the others before launching the kdump kernel.
- 	 */
--	if (unlikely(vector == NMI_VECTOR))
-+	if (unlikely(is_nmi_vector(vector)))
- 		apic_mem_wait_icr_idle_timeout();
- 	else
- 		apic_mem_wait_icr_idle();
-@@ -174,7 +174,7 @@ void __default_send_IPI_dest_field(unsigned int dest_mask, int vector,
- 				   unsigned int dest_mode)
- {
- 	/* See comment in __default_send_IPI_shortcut() */
--	if (unlikely(vector == NMI_VECTOR))
-+	if (unlikely(is_nmi_vector(vector)))
- 		apic_mem_wait_icr_idle_timeout();
- 	else
- 		apic_mem_wait_icr_idle();
-diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
-index 842fe28496be..60e90b7bf058 100644
---- a/arch/x86/kernel/apic/local.h
-+++ b/arch/x86/kernel/apic/local.h
-@@ -12,6 +12,7 @@
- 
- #include <asm/irq_vectors.h>
- #include <asm/apic.h>
-+#include <asm/nmi.h>
- 
- /* X2APIC */
- void __x2apic_send_IPI_dest(unsigned int apicid, int vector, unsigned int dest);
-@@ -26,19 +27,24 @@ extern u32 x2apic_max_apicid;
- 
- DECLARE_STATIC_KEY_FALSE(apic_use_ipi_shorthand);
- 
-+static inline bool is_nmi_vector(int vector)
-+{
-+	return (vector & NMI_SOURCE_VEC_MASK) == NMI_VECTOR;
-+}
-+
- static inline unsigned int __prepare_ICR(unsigned int shortcut, int vector,
- 					 unsigned int dest)
- {
- 	unsigned int icr = shortcut | dest;
- 
--	switch (vector) {
--	default:
--		icr |= APIC_DM_FIXED | vector;
--		break;
--	case NMI_VECTOR:
-+	if (is_nmi_vector(vector)) {
- 		icr |= APIC_DM_NMI;
--		break;
-+		if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
-+			icr |= vector >> 16;
-+	} else {
-+		icr |= APIC_DM_FIXED | vector;
- 	}
-+
- 	return icr;
- }
- 
-diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
-index 365a03f11d06..07bc6c29bd83 100644
---- a/arch/x86/kernel/cpu/mce/inject.c
-+++ b/arch/x86/kernel/cpu/mce/inject.c
-@@ -270,7 +270,7 @@ static void __maybe_unused raise_mce(struct mce *m)
- 					mce_irq_ipi, NULL, 0);
- 				preempt_enable();
- 			} else if (m->inject_flags & MCJ_NMI_BROADCAST)
--				__apic_send_IPI_mask(mce_inject_cpumask, NMI_VECTOR);
-+				__apic_send_IPI_mask(mce_inject_cpumask, NMI_VECTOR_WITH_SOURCE(NMI_SOURCE_VEC_IPI_MCE));
- 		}
- 		start = jiffies;
- 		while (!cpumask_empty(mce_inject_cpumask)) {
-diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
-index d167eb23cf13..02198cf9fe21 100644
---- a/arch/x86/kernel/kgdb.c
-+++ b/arch/x86/kernel/kgdb.c
-@@ -416,7 +416,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
-  */
- void kgdb_roundup_cpus(void)
- {
--	apic_send_IPI_allbutself(NMI_VECTOR);
-+	apic_send_IPI_allbutself(NMI_VECTOR_WITH_SOURCE(NMI_SOURCE_VEC_IPI_KGDB));
- }
- #endif
- 
-diff --git a/arch/x86/kernel/nmi_selftest.c b/arch/x86/kernel/nmi_selftest.c
-index f014c8a66b0c..5aa122d3368c 100644
---- a/arch/x86/kernel/nmi_selftest.c
-+++ b/arch/x86/kernel/nmi_selftest.c
-@@ -76,7 +76,7 @@ static void __init test_nmi_ipi(struct cpumask *mask)
- 	/* sync above data before sending NMI */
- 	wmb();
- 
--	__apic_send_IPI_mask(mask, NMI_VECTOR);
-+	__apic_send_IPI_mask(mask, NMI_VECTOR_WITH_SOURCE(NMI_SOURCE_VEC_IPI_TEST));
- 
- 	/* Don't wait longer than a second */
- 	timeout = USEC_PER_SEC;
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index acc19c1d3b4f..fb63bc0d6a0f 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -918,7 +918,7 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
- 	 */
- 	wmb();
- 
--	apic_send_IPI_allbutself(NMI_VECTOR);
-+	apic_send_IPI_allbutself(NMI_VECTOR_WITH_SOURCE(NMI_SOURCE_VEC_IPI_REBOOT));
- 
- 	/* Kick CPUs looping in NMI context. */
- 	WRITE_ONCE(crash_ipi_issued, 1);
-diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
-index f27469e40141..b79e78762a73 100644
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -217,7 +217,7 @@ static void native_stop_other_cpus(int wait)
- 			pr_emerg("Shutting down cpus with NMI\n");
- 
- 			for_each_cpu(cpu, &cpus_stop_mask)
--				__apic_send_IPI(cpu, NMI_VECTOR);
-+				__apic_send_IPI(cpu, NMI_VECTOR_WITH_SOURCE(NMI_SOURCE_VEC_IPI_SMP_STOP));
- 		}
- 		/*
- 		 * Don't wait longer than 10 ms if the caller didn't
+diff --git a/net/tipc/core.h b/net/tipc/core.h
+index 7eccd97e0609..7f3fe3401c45 100644
+--- a/net/tipc/core.h
++++ b/net/tipc/core.h
+@@ -72,7 +72,6 @@ struct tipc_node;
+ struct tipc_bearer;
+ struct tipc_bc_base;
+ struct tipc_link;
+-struct tipc_name_table;
+ struct tipc_topsrv;
+ struct tipc_monitor;
+ #ifdef CONFIG_TIPC_CRYPTO
 -- 
-2.25.1
+2.45.2
 
