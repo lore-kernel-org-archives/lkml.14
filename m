@@ -1,90 +1,151 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2668A1598EE
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 11:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F37315958D;
+	Tue,  9 Jul 2024 11:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720525499; cv=none; b=bJEV3f99udYl9LmkUpBr4roNPTx51buvwbbDXS9W10XacXhG8tZ6ds8Eq1bwhRG614oPFQTsVFS5FY6SnxkwjhhOoH2ETsB9e2ashnPB/E4Duow4sXnMTKM9754GqKdD94pPDdQjWYmFu4hbdlVjGnsZucMqEpPkQKVGyphlmD4=
+	t=1720525499; cv=none; b=ufRYvieSHYrpsjA6UEa13p+ahCTfffnJjmKRIjw8O1MLoDvptv9DWWnRnUgZXA4Jf8BPyLq+EzNaA0qJwhm2hWtni6A8hJZRukOyH6GWEWWtKJQjsvt5ft2D9Q61r8kJs9up0vl3t8GWvctIPqaSR49rY/uk4DzIrZV6jpDlVKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720525499; c=relaxed/simple;
-	bh=toLUgIpyEQcnggCOrjlh2mBjgYRBLgNBZT0YV/Q8KNs=;
-	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
-	 Date:Cc:References:To; b=kdC9WyIT3GRjm67jinErey70e9XqMA+Qp19iePoAKB8wWjnAGPlFDQReZm334nCNVTx6onYWiQl6duQfQMMf3sIInEPIg6Gl9uTaMB8XyyvSJHt6g9b96NGyazmwqG85cS+EbjBdgI3A3lGuTIH+bDFrf1fcYupxObCo32hsqrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=eiGR7GZr; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	bh=2o/5hW+gcCWq+j3A0Va7RBJStI+BGGvgfi1nWB8g+jw=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=Ph2z/7/l9HVd9gvmFy/iXFe4lDimIK2dAMdPOL1tCFks7vkDsacVw4btWl6/VqGgN1Vgxtm+X01+iTxsNAaTHvFNp8UVBun/7Gihnoh2LhF+/FFL13Pu3LScBpOu6aLnGGZXtE+bvAlApUFX2Qba+54jX68NMngn3PjDIu9tRKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=j7G6Dtq1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eGlfY2QU; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="eiGR7GZr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1720525184; bh=dbZ64BHIp3yV5qLdTNmAqMVYcS00HOsEU1NdCCEBITw=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=eiGR7GZr1EF+BZg+JYNcXkkoN3LVZmamjyA37padZNIVcqv9cz6CVQbvTrJIT8SJT
-	 HrYF0MKh5sOLXhDMX3HYoPimKuEfAX5bUpAmIGngQ1m4yY4WqIYYbqR3MVs1WU1ooi
-	 p3pzHBO2FTMKI5IHBiokOAyBx/VAm5ZUJUSaP2/s=
-Received: from smtpclient.apple ([2409:8900:18c5:1529:4c1d:7b9b:d874:a197])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 9EA148BC; Tue, 09 Jul 2024 19:39:42 +0800
-X-QQ-mid: xmsmtpt1720525182tcupajwad
-Message-ID: <tencent_651BC4D11C9730062064ACB186AF4A904005@qq.com>
-X-QQ-XMAILINFO: MzViUhZOUTdXszP74t4hmOuQJf9OlpdPQ4A8jb9t7m3DXXgCBUtgrL4b7jRWa2
-	 1QGxhWJvQvf5YOJokawhbkTx40VOhQc+hKWW0n4ng0+v+/0qMAV5+G0VbR4XZJvclCI6q8FH1leq
-	 eAAOkMdUcqDrUv9OHK8cRw+x3rPPDgcXeF79z8bKI5cX+ORRludL55IsgeBu3mJAF+Dh0v7m1a+6
-	 rT+N4c/xQIiOZngc9OIUbWZfKPg8UGQnmpj1iOKrfSYHTWz3+lUiyLpiCu0Ix/cZcTK6ZxQNsT93
-	 PHhSKcKC3Cl0IRZ91one71dBjUvbb2Rojxx9Sdi+Z42+R/Q0PZG+YFOWhPHZj3RQFfi+zyG6vKo5
-	 dACIjZrpI3dooip0AAfpIkpfRq3lXSfM63AkcWZjFAiQPAdeEjrPIcZ7MwYW1KwtDb6EXle3fAa7
-	 8zvlz9SPwVpCtqiV1R3olAJkD1dfDRvWo1IdgKYBdjZ5bJxcwuPY50lTUMELrdeSz7QtN3zL1S4g
-	 slzK1jZgHWrau9RgL8eU7PFlBm8of+FO3z1F03BzjjTi7xKaAQ8eDNTDzFcptNxIkXBrXX36v4hT
-	 g3PtgQWdd4/RVllZHkpowRLV/PdqSeKsQ1R2XSEYUVPeESv0HRrjVUeINVqtnuPj/5iA7Pn9DEWC
-	 Z+4Em/ovrObXrbiecK56of6S407wj6Sd14B2wVjxwmkUg3FQdPAxHHQn/FVTsAnDbCPlLqL4ARZH
-	 pcGVuiSNQoH0Y7N5hNzwIV1D9gDdwHEgIpZXyTuil+gXznZ6veEwCh425a0lyQEOH1jBTbMLQ0I2
-	 JFO9rX6AFngpnZqQUdH4QqvF5jZ18wRP2YuiEFItAasgU8udJcOwVuvtXVvE82dDWYQUykPALOpU
-	 O3oB1qKn12ZBscUjCp1nyjR2Z4q5fpJL57jIuD+WuJwZ0qdYRSZrYri/GfB7IK9OIYNFgdsXJY7i
-	 4WqmFEQfJuQ1/FRrECvCK4vwqMchGn8n0CWEp4fdY0qr9xU0tavEQU74IbAWs28/B1R/KTXzQ=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="j7G6Dtq1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eGlfY2QU"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 416B2114607F;
+	Tue,  9 Jul 2024 07:44:56 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 09 Jul 2024 07:44:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1720525496; x=1720611896; bh=ba5l7zNzUz
+	f+yxRyWrMpMuB2JtdlGV2XeE5c+JkVI9U=; b=j7G6Dtq1CAg0YIreWKov3ZHdAH
+	bBLuHFwMv7aiP861NWMgsOjIrWwzEWLIF3kPt8syq59kooF8Xd60J/fRgYcNEaX+
+	HXbqM2iMBayAhTnBQ3VuSQgOHqZhMbuAANVKcE8NOyb4TgmLXV3qq+YthAsOSEjk
+	AoJWUNT5T63tAEeh+6sgws3JToSgMh4koYgor4c2It2vyQYuCcsEVI1OwJC/N6ox
+	0m3m3FXJukV2r8NjkZwAv2g0T/Rnv08erpavza/iGPNkIuB9SIkKoAMNXqA/lmYM
+	XvJPQokL7IyiZhQ9tTzb7TOxafdN10xr8hZJ5j2H7uyER1HUgvcAg8nQiuzA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720525496; x=1720611896; bh=ba5l7zNzUzf+yxRyWrMpMuB2Jtdl
+	GV2XeE5c+JkVI9U=; b=eGlfY2QURb5iJj9C7pTwghMqTSL2yFfgRstEDmlko79i
+	3tleHZVw1ZZ7PjbkRdzgwJtaBS9sggeBruczgL5tnlqpXq0iOvdo3jNsqOsYrTIz
+	/YstAJAOaCgIrXizijJ8CcL8X+X5/njzCQkFrcGNxrReEfeDJAd+1DTNyvHoFa10
+	89QKlQjYu574RuM0g6E7efVcBP/dgd9C/FLc4cgHxPCxlfHAe+raZE4rUE2EkhH6
+	MQaKgDJPANfTEDJMY5eTfvLw34NXbezcZ7iknG+Nb6yvI3fBVHaV+TU7UVBT9G+1
+	BYO4uqS9JMewSsW+kU48GJUcnLDprCZYWUl1EiJ3Ew==
+X-ME-Sender: <xms:tiKNZl0i3QUgnDOqir6hjYkqEZemqD_h5FovJjlgheFePRzxvfC_zg>
+    <xme:tiKNZsFLucexJmlxa6xwINVBifsjCwz6Dl6DlLqVGexdvGFTRaKeFbEkdIiD4LJAl
+    9ddUOtnbLLHYj8zeHw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdelgdeggecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
+    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:tiKNZl7_QK8Dv-z72_l7N4e5_E6dmstatAnn42wy35qm_Ii9B6dpBA>
+    <xmx:tiKNZi2bpjd2VQ7lukeVJs7n9aeOxS67gUUhWxcUBcgTqty5z86gTg>
+    <xmx:tiKNZoFEGrFoae7i3xG7ruOTPwPVCEh6R0QpnrUcCUjqtQaAYN0Dlw>
+    <xmx:tiKNZj-tjYcoltcmvhaMWt51M917I5nUXCe3oC6tb9wBOY3ogxgJFw>
+    <xmx:uCKNZtO0Z8iXFCeYIQL1cpFnrvoYU53_afnSkVaFlTpAs7qYLUgMsEaB>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id AB2DEB6008D; Tue,  9 Jul 2024 07:44:54 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH -fixes] dma-mapping: add default implementation to
- arch_dma_{set|clear}_uncached
-From: Yangyu Chen <cyy@cyyself.name>
-In-Reply-To: <20240709111901.GC4421@lst.de>
-Date: Tue, 9 Jul 2024 19:39:29 +0800
-Cc: iommu@lists.linux.dev,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>
-Content-Transfer-Encoding: 7bit
-X-OQ-MSGID: <701519BA-087C-45FA-B897-86F1CCD442EB@cyyself.name>
-References: <tencent_A5ED71472ADCAF18F59085464CBE23C12A07@qq.com>
- <20240709111901.GC4421@lst.de>
-To: Christoph Hellwig <hch@lst.de>
-X-Mailer: Apple Mail (2.3774.600.62)
+MIME-Version: 1.0
+Message-Id: <784a34e5-4654-44c9-9c07-f9f4ffd952a0@app.fastmail.com>
+In-Reply-To: <20240709200851.4d921e43@canb.auug.org.au>
+References: <20240709105709.18ce785d@canb.auug.org.au>
+ <20240709200851.4d921e43@canb.auug.org.au>
+Date: Tue, 09 Jul 2024 13:44:34 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Stephen Rothwell" <sfr@canb.auug.org.au>,
+ "Christian Brauner" <brauner@kernel.org>
+Cc: =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>,
+ "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+ linux-next <linux-next@vger.kernel.org>, "Jiri Olsa" <jolsa@kernel.org>,
+ =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Subject: Re: linux-next: manual merge of the vfs-brauner tree with the asm-generic tree
+Content-Type: text/plain
 
+On Tue, Jul 9, 2024, at 12:08, Stephen Rothwell wrote:
+> On Tue, 9 Jul 2024 10:57:09 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>
+>> Today's linux-next merge of the fs-next tree got conflicts in:
+>> 
+>>   arch/arm64/include/asm/unistd.h
+>>   arch/arm64/include/asm/unistd32.h
+>> 
+>> between commit:
+>> 
+>>   ea0130bf3c45 ("arm64: convert unistd_32.h to syscall.tbl format")
+>> 
+>> from the asm-generic tree and commit:
+>> 
+>>   e6873349f700 ("fs/xattr: add *at family syscalls")
+>> 
+>> from the vfs-brauner tree.
+>> 
+>> I fixed it up (I used the former versions) and can carry the fix as
+>> necessary. This is now fixed as far as linux-next is concerned, but any
+>> non trivial conflicts should be mentioned to your upstream maintainer
+>> when your tree is submitted for merging.  You may also want to consider
+>> cooperating with the maintainer of the conflicting tree to minimise any
+>> particularly complex conflicts.
+>
+> This resolution may be not enough as I now get the following warnings
+> from the arm64 defconfig build:
+>
+> <stdin>:1603:2: warning: #warning syscall setxattrat not implemented [-Wcpp]
+> <stdin>:1606:2: warning: #warning syscall getxattrat not implemented [-Wcpp]
+> <stdin>:1609:2: warning: #warning syscall listxattrat not implemented [-Wcpp]
+> <stdin>:1612:2: warning: #warning syscall removexattrat not implemented [-Wcpp]
 
+I see. The newly added syscalls need to be copied from
+include/uapi/asm-generic/unistd.h into the newly added
+scripts/syscall.tbl. I am aware of this and was planning
+to send this as a fixup afterward to avoid an awkward
+four-way merge with the uretprobe and xattrat patches.
 
-> On Jul 9, 2024, at 19:19, Christoph Hellwig <hch@lst.de> wrote:
-> 
-> On Tue, Jul 09, 2024 at 05:25:29PM +0800, Yangyu Chen wrote:
->> Currently, we have some code in kernel/dma/direct.c which references
->> arch_dma_set_uncached and arch_dma_clear_uncached. However, many
->> architectures do not provide these symbols, and the code currently
->> relies on compiler optimization to cut the unnecessary code. When the
->> compiler fails to optimize it, the code will reference the symbol and
->> cause a link error. I found this bug when developing some new extensions
->> for RISC-V on LLVM. The error message is shown below:
-> 
-> Same comment as for the last one.  I think your compiler misbehaves,
-> and the typical reason for that would be if you disable all
-> optimizations.
-> 
+Based on your merge in 1dd7a574e54e ("Merge branch
+'for-next' of git://git.kernel.org/pub/scm/linux/kernel/
+git/trace/linux-trace.git"), I think we want this
+to be in all syscall.tbl files:
 
-The reason is that some optimizations failed to apply after adding
-some passes. I will fix the compiler later. Whatever, we should not
-rely on this optimization to get the code being successfully compiled.
+diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
+index b0ea892de12e..4873fa3ca496 100644
+--- a/scripts/syscall.tbl
++++ b/scripts/syscall.tbl
+@@ -419,3 +419,8 @@
+ 460	common	lsm_set_self_attr		sys_lsm_set_self_attr
+ 461	common	lsm_list_modules		sys_lsm_list_modules
+ 462	common	mseal				sys_mseal
++463	common	setxattrat			sys_setxattrat
++464	common	getxattrat			sys_getxattrat
++465	common	listxattrat			sys_listxattrat
++466	common	removexattrat			sys_removexattrat
++467	64	uretprobe			sys_uretprobe
 
+Though I'm still not sure what uretprobe is only added
+to half the architectures at the moment. There is a chance
+we need a different conditional for it than '64'.
+
+      Arnd
