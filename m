@@ -1,30 +1,32 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BFD382
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202D815DBB9
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720530245; cv=none; b=IZbqOYyz91CJFIhZKHdOUNOHWHQup10990FBSkTyb2arNjLppCQn4pkRpHyQiJvSFayyMLP5bdCgNGM6O+eCKk9ugO4IgC2jdBPU0ef+A0VfKEypchbQKoZYy+Q5o0QuxlCJ7kRpyBkxl7t+mRBZtL+THd8RSuzkfcG+bK7ARVs=
+	t=1720530252; cv=none; b=dnRTAQxtVqunrqDZ8bxnCtQWdujK/4H1wMetP9sBaeMrdP55SYi3vsJDzFv4PwnTXIFmqtfWxDLomuGeYizfKv+9g+H1LecoQVHIV48YrBRzzehJJed9cau3jrhoVXeY1zmTYh12jI1pmwmlRSFQJfqYUMT/6Ymm8jJPcI07MQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720530245; c=relaxed/simple;
-	bh=CBJ99x43/70zGwHPjM38CAlxxeD2VQFXSI6RVuuM9wQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NVIsox5Y+I7OdeMEUe/38FzatJCSlGCu11kDo7tU34q1QVdYrLqNZmR6aoGF1qJtzrH0CtXd9dV5a6yPU6CyIWh4thYn8OuC11PbWNwu0rtkxtERKLfbxLC4hcx3+7VHIDiFfJYtp1JL+S5sk5hw9ROnu90GdHGxm9v4M5f9KKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aJ/spdJw; arc=none smtp.client-ip=91.218.175.189
+	s=arc-20240116; t=1720530252; c=relaxed/simple;
+	bh=lV2c8bWlG0rG+1b7v+KJ0Zk0vnKBB3kLOZOZzuXfTnk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HJcQvhqPSNNsaWrs0G7QRErXNe6OM7k/76XmPAOPBVuAP9lY/fWlm9rjJ/QpDU9TpHzyZgoZsIZuhR2y+N4lU+P8D3JflmrrVx55DJlBe/sbs4kdbJNNWOSXV3CowSgzWFCgVXqZmJtyR19bXbPpX+HOXsSLhds8iOiYZBIbBBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KzB+C43I; arc=none smtp.client-ip=91.218.175.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aJ/spdJw"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KzB+C43I"
 X-Envelope-To: axboe@kernel.dk
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1720530235;
+	t=1720530248;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ebK7bmN5g56VOCyyzOzUAvkTrnBN4ITiAsuNihnZjQY=;
-	b=aJ/spdJwG3nfjXdkjEEn3aT5cHRPpEes6XnS9OT7NaBvO98BgA13moroZlR8IljkjedC92
-	ozZ2LKBIx8vOV91iLFgTAv0Y1YRE7ma/ucrdn66Z7S4nUGtVorx1eeYFcZbJKA/Be0B0WM
-	aS9pWeEwF6KIG64yGJaakhda5GnJD+s=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z3jlWOTeAJjlAO+1V1CKn0gATxdO3mNRFLZKZj4yxoE=;
+	b=KzB+C43IYxLcnrg2/A4BKsTpOuvHKfhhmd3+L8WchMd0rjsoR+ZZnsg3uyjOsaFyVTlDfg
+	82wJCqG2C32DlR8sDd1dQ6VTS74/98WYnbt5+aOAtCESM2mWBFpVRxlSFFEoQP+bL9p59/
+	hjWqh8OB+fwNsNiejXtmGHXaxfiJ2X0=
 X-Envelope-To: dan.j.williams@intel.com
 X-Envelope-To: gregory.price@memverge.com
 X-Envelope-To: john@groves.net
@@ -50,9 +52,11 @@ Cc: linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	Dongsheng Yang <dongsheng.yang@linux.dev>
-Subject: [PATCH v1 0/7] Introduce CBD (CXL Block Device)
-Date: Tue,  9 Jul 2024 13:03:36 +0000
-Message-Id: <20240709130343.858363-1-dongsheng.yang@linux.dev>
+Subject: [PATCH v1 2/7] cbd: introduce cbd_host
+Date: Tue,  9 Jul 2024 13:03:38 +0000
+Message-Id: <20240709130343.858363-3-dongsheng.yang@linux.dev>
+In-Reply-To: <20240709130343.858363-1-dongsheng.yang@linux.dev>
+References: <20240709130343.858363-1-dongsheng.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,105 +66,155 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Hi all,
-        This is V1 for CXL Block Device. This patchset is based on v6.9 and
-it's available at: https://github.com/DataTravelGuide/linux branch cbd.
+The "cbd_host" represents a host node. Each node needs to be registered
+before it can use the "cbd_transport". After registration, the node's
+information, such as its hostname, will be recorded in the "hosts" area
+of this transport. Through this mechanism, we can know which nodes are
+currently using each transport.
 
-changes from RFC: (https://lore.kernel.org/lkml/20240422071606.52637-1-dongsheng.yang@easystack.cn/)
-        (1) only support hardware-consistency cxl shared memory.
-		As discussed in the RFC, the current cbd only supports
-hardware-consistency for CXL shared memory, and some code related to
-software-consistency support has been removed from the RFC. In the
-current tests, whether using local PMEM or QEMU-simulated shared memory
-devices, they all are hardware-consistency.
+If a host dies without unregistering, we allow the user to clear this
+host entry in the metadata.
 
-        (2) add a segment abstraction for transport data space management.
-		The layout of the transport remains essentially
-unchanged, with the only difference being the addition of a segment
-abstraction for scalability purposes. A channel is a type of segment
-used for data transfer between the blkdev and the backend. In the
-future, there will be more segment types, such as a cache segment for
-caching data for the blkdev.
-
-        (3) add CONFIG_CBD_CRC option in Kconfig
-		We only support hardware-consistency, so theoretically,
-there should be no data consistency issues when transferring data
-between blkdev and the backend. However, cbd provides a verification
-mechanism, offering CRC checks for both metadata and data to verify
-after data reception. This method impacts performance, so it is an
-option in Kconfig.
-
-        (4) allow user to clear dead object in transport metadata
-		When a host using cbd, whether backend or blkdev, dies
-without unregistering, the metadata in the transport will retain some
-dead information. In v1, users are allowed to clear this dead metadata
-via sysfs. Of course, there is a heartbeat mechanism to ensure users do
-not mistakenly delete alive metadata.
-
-        (5) allow user to force stop blkdev and reattach backend
-		This also handles scenarios where the host goes offline
-unexpectedly. When the backend goes offline unexpectedly, the
-corresponding blkdev might have I/O operations that cannot finish. In
-such cases, cbd provides two ways to handle this:
-		a) If the backend can recover, we can re-add the backend to the
-corresponding transport, allowing the blkdev's I/O operations to continue being processed.
-		b) If the backend cannot recover, the blkdev can be force-stopped, and
-the incomplete I/O operations will return EIO, but they will no longer remain blocked.
-
-        (6) dont allocate new pages in hander for bio data.
-		The backend handler does not allocate pages for bio.
-Instead, the handler can directly map the data pages from the transport
-to the bio, and then send the bio to the backend disk, achieving zero
-copy on the backend side.
-
-        (7) new test project cbd-tests:
-		cbd-tests (https://github.com/DataTravelGuide/cbd-tests), for testing cbd. It is
-an automated testing project based on the Avocado testing framework. Currently,
-it includes xfstests on cbd block devices with XFS, V1 Passed all 944 tests in xfstests
-(https://datatravelguide.github.io/dtg-blog/cbd/test-results/test_result_v1/test-results/xfstests-1-xfstests.py_Xfstests.test_run-cbdd_timeout-no_timeout-disk_type-fs_type-fs_xfs-f090/debug.log). as well as fio performance testing directly on /dev/cbdX block devices.
-
-The test results can be viewed here in [test results]:
-	https://datatravelguide.github.io/dtg-blog/cbd/cbd.html#test-results
-
-Thanx
-
-Dongsheng Yang (7):
-  cbd: introduce cbd_transport
-  cbd: introduce cbd_host
-  cbd: introduce cbd_segment
-  cbd: introduce cbd_channel
-  cbd: introduce cbd_blkdev
-  cbd: introduce cbd_backend
-  block: Init for CBD(CXL Block Device) module
-
- drivers/block/Kconfig             |   2 +
- drivers/block/Makefile            |   2 +
- drivers/block/cbd/Kconfig         |  23 +
- drivers/block/cbd/Makefile        |   3 +
- drivers/block/cbd/cbd_backend.c   | 296 ++++++++++
- drivers/block/cbd/cbd_blkdev.c    | 417 ++++++++++++++
- drivers/block/cbd/cbd_channel.c   | 153 ++++++
- drivers/block/cbd/cbd_handler.c   | 263 +++++++++
- drivers/block/cbd/cbd_host.c      | 128 +++++
- drivers/block/cbd/cbd_internal.h  | 848 ++++++++++++++++++++++++++++
- drivers/block/cbd/cbd_main.c      | 224 ++++++++
- drivers/block/cbd/cbd_queue.c     | 526 ++++++++++++++++++
- drivers/block/cbd/cbd_segment.c   | 108 ++++
- drivers/block/cbd/cbd_transport.c | 883 ++++++++++++++++++++++++++++++
- 14 files changed, 3876 insertions(+)
- create mode 100644 drivers/block/cbd/Kconfig
- create mode 100644 drivers/block/cbd/Makefile
- create mode 100644 drivers/block/cbd/cbd_backend.c
- create mode 100644 drivers/block/cbd/cbd_blkdev.c
- create mode 100644 drivers/block/cbd/cbd_channel.c
- create mode 100644 drivers/block/cbd/cbd_handler.c
+Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
+---
+ drivers/block/cbd/cbd_host.c | 128 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 128 insertions(+)
  create mode 100644 drivers/block/cbd/cbd_host.c
- create mode 100644 drivers/block/cbd/cbd_internal.h
- create mode 100644 drivers/block/cbd/cbd_main.c
- create mode 100644 drivers/block/cbd/cbd_queue.c
- create mode 100644 drivers/block/cbd/cbd_segment.c
- create mode 100644 drivers/block/cbd/cbd_transport.c
 
+diff --git a/drivers/block/cbd/cbd_host.c b/drivers/block/cbd/cbd_host.c
+new file mode 100644
+index 000000000000..8843e09e3a2d
+--- /dev/null
++++ b/drivers/block/cbd/cbd_host.c
+@@ -0,0 +1,128 @@
++#include "cbd_internal.h"
++
++static ssize_t cbd_host_name_show(struct device *dev,
++			       struct device_attribute *attr,
++			       char *buf)
++{
++	struct cbd_host_device *host;
++	struct cbd_host_info *host_info;
++
++	host = container_of(dev, struct cbd_host_device, dev);
++	host_info = host->host_info;
++
++	if (host_info->state == cbd_host_state_none)
++		return 0;
++
++	return sprintf(buf, "%s\n", host_info->hostname);
++}
++
++static DEVICE_ATTR(hostname, 0400, cbd_host_name_show, NULL);
++
++CBD_OBJ_HEARTBEAT(host);
++
++static struct attribute *cbd_host_attrs[] = {
++	&dev_attr_hostname.attr,
++	&dev_attr_alive.attr,
++	NULL
++};
++
++static struct attribute_group cbd_host_attr_group = {
++	.attrs = cbd_host_attrs,
++};
++
++static const struct attribute_group *cbd_host_attr_groups[] = {
++	&cbd_host_attr_group,
++	NULL
++};
++
++static void cbd_host_release(struct device *dev)
++{
++}
++
++const struct device_type cbd_host_type = {
++	.name		= "cbd_host",
++	.groups		= cbd_host_attr_groups,
++	.release	= cbd_host_release,
++};
++
++const struct device_type cbd_hosts_type = {
++	.name		= "cbd_hosts",
++	.release	= cbd_host_release,
++};
++
++int cbd_host_register(struct cbd_transport *cbdt, char *hostname)
++{
++	struct cbd_host *host;
++	struct cbd_host_info *host_info;
++	u32 host_id;
++	int ret;
++
++	if (cbdt->host)
++		return -EEXIST;
++
++	if (strlen(hostname) == 0)
++		return -EINVAL;
++
++	ret = cbdt_get_empty_host_id(cbdt, &host_id);
++	if (ret < 0)
++		return ret;
++
++	host = kzalloc(sizeof(struct cbd_host), GFP_KERNEL);
++	if (!host)
++		return -ENOMEM;
++
++	host->host_id = host_id;
++	host->cbdt = cbdt;
++	INIT_DELAYED_WORK(&host->hb_work, host_hb_workfn);
++
++	host_info = cbdt_get_host_info(cbdt, host_id);
++	host_info->state = cbd_host_state_running;
++	memcpy(host_info->hostname, hostname, CBD_NAME_LEN);
++
++	host->host_info = host_info;
++	cbdt->host = host;
++
++	queue_delayed_work(cbd_wq, &host->hb_work, 0);
++
++	return 0;
++}
++
++int cbd_host_unregister(struct cbd_transport *cbdt)
++{
++	struct cbd_host *host = cbdt->host;
++	struct cbd_host_info *host_info;
++
++	if (!host) {
++		cbd_err("This host is not registered.");
++		return 0;
++	}
++
++	cancel_delayed_work_sync(&host->hb_work);
++	host_info = host->host_info;
++	memset(host_info->hostname, 0, CBD_NAME_LEN);
++	host_info->alive_ts = 0;
++	host_info->state = cbd_host_state_none;
++
++	cbdt->host = NULL;
++	kfree(cbdt->host);
++
++	return 0;
++}
++
++int cbd_host_clear(struct cbd_transport *cbdt, u32 host_id)
++{
++	struct cbd_host_info *host_info;
++
++	host_info = cbdt_get_host_info(cbdt, host_id);
++	if (cbd_host_info_is_alive(host_info)) {
++		cbdt_err(cbdt, "host %u is still alive\n", host_id);
++		return -EBUSY;
++	}
++
++	if (host_info->state == cbd_host_state_none)
++		return 0;
++
++	host_info->state = cbd_host_state_none;
++
++	return 0;
++}
 -- 
 2.34.1
 
