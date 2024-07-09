@@ -1,68 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4401B86E9
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 19:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8F5182A4F;
+	Tue,  9 Jul 2024 19:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720552174; cv=none; b=By87Fo4aXcT7vFc0UEDJAQqWQY0kgeijZW/MYWDCHD+gdQV+YXw8qL/U3In3QoJi6o4TzP9VNErspXjy8ctimEGJWLur0IX+ii6lJ/wRrElliwqR8WvhCFNyxRg7GsfrS0LDawMPpWWg+iR2WcSe3FheiZW9jyqTOaJ8SnxmPY8=
+	t=1720552299; cv=none; b=GIrVnHNS99UbrkHk95oskKxrFqP5RXZyZ5UfHUAB80lvW/zL+w2+Tha7sT0KZtZi2EsHPwAki9QkaIPMse0iVgCnIJtWXdhnbkRlNfTqFB4XfxdGR9kSXjViQoWkR/P6Q15iohRePgga62chL9F/Sd/gaYneSSyE0LX6gpID7Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720552174; c=relaxed/simple;
-	bh=80GqaqTeOgHHI4tnQMSIOx4wIsLZkIL6Sr5RMyAQw1o=;
+	s=arc-20240116; t=1720552299; c=relaxed/simple;
+	bh=YfjdhNm53xzOTj3Z9NufeiEhaRfrnE/93sBlKfwCkw4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Av56KnacPb0vWpY+HLEKp8C5f8rOHippIoxh1UG0VF90HrHfNJMJf54IOiRgtTGQGH97jMduQM5aW3tPHaHkbN2hvDQxarkmnA4KHvA3asMtvgaFtiDWQfznkXnNlhpwH5DDLDjjZB8RXzy1bDzF2Etmat66SdsvPLfV8PVRBf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SON9NnTx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ssflCCydaUIllixHKmmXWxB+yRpOKDM6PLrqHN90GRJg96ckuJ3+lYfV7KoDqER6H/qXDhorEB7axw6dzcOTPQom/6EgDsYI36K3N9f3n1tuOT+pu/CaMcZuyn+S6T3hduyN5iWL54pNepXVDenGU+8R/2rO7utBHhRNienn848=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1xGWNKc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SON9NnTx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720552172;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NXZKL8ojyqitWmVdURnWWa13FACQeMHK3/aNjCXRfs4=;
-	b=SON9NnTxZMDFVPVOj5752kbd33KeMgvb6GNKOhxgSCQ/6VXpPspD7Z7NL/5VAEly0H7peg
-	vouUvpI4ifZZHP9UsKctecL96ZsIjn6Qfk9UIlguvsX/BFA0WICmBmk+QhA+98ybrY12tC
-	unsHnCUwMhFSHVn/V9biddqDKpuivrY=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-0akiT6_UNpCE_dTNJ7c1cA-1; Tue,
- 09 Jul 2024 15:09:27 -0400
-X-MC-Unique: 0akiT6_UNpCE_dTNJ7c1cA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 68B25195608F;
-	Tue,  9 Jul 2024 19:09:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.34])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AC32E1955E83;
-	Tue,  9 Jul 2024 19:09:20 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  9 Jul 2024 21:07:49 +0200 (CEST)
-Date: Tue, 9 Jul 2024 21:07:43 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Julian Orth <ju.orth@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/2] kernel: rerun task_work while freezing in
- get_signal()
-Message-ID: <20240709190743.GB3892@redhat.com>
-References: <cover.1720368770.git.asml.silence@gmail.com>
- <1d935e9d87fd8672ef3e8a9a0db340d355ea08b4.1720368770.git.asml.silence@gmail.com>
- <20240708104221.GA18761@redhat.com>
- <62c11b59-c909-4c60-8370-77729544ec0a@gmail.com>
- <20240709103617.GB28495@redhat.com>
- <658da3fe-fa02-423b-aff0-52f54e1332ee@gmail.com>
- <Zo1ntduTPiF8Gmfl@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1xGWNKc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 719B9C3277B;
+	Tue,  9 Jul 2024 19:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720552298;
+	bh=YfjdhNm53xzOTj3Z9NufeiEhaRfrnE/93sBlKfwCkw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n1xGWNKcA3jQU1NvWSmP4Kgc5Fhvc9PnsEtPXzf9WTwI/TAbA3zBvxjfYcnQi174E
+	 mx3r7rc4t3WfrLaiyHH3wvPtsvPuevdkktak+O0VmRiz+7PPfbwjdDixiwyz/N6ViX
+	 fwlkc2tJ29nOrCsNBoNQYokiS6NGkoLpcgFdgm34q2LSZYu05snnCXAs1lAD4VkRET
+	 3PW8yIm8+3BzAIX7L9sSey+ghDBtY/HCxASy6TtYbJSGBmuNvCFDnCWktd5So5GaEi
+	 u2Tu6QQMiJaY2DBzRt6yIeOo93bmE/0hZfq1JUvzyyay2wxauzWJ7RD3J7kuX6I0Y7
+	 xed2SI43K/dCQ==
+Date: Tue, 9 Jul 2024 14:11:05 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, 
+	linux-pm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 09/12] thermal/drivers/qcom-spmi-adc-tm5: simplify with
+ dev_err_probe()
+Message-ID: <kytoekbx4t52dynndilmbham45ufvsnhbnel6vmjmn4iztdc3c@an4jnvq57gw7>
+References: <20240709-thermal-probe-v1-0-241644e2b6e0@linaro.org>
+ <20240709-thermal-probe-v1-9-241644e2b6e0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,47 +54,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zo1ntduTPiF8Gmfl@slm.duckdns.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <20240709-thermal-probe-v1-9-241644e2b6e0@linaro.org>
 
-Hi Tejun,
+On Tue, Jul 09, 2024 at 02:59:39PM GMT, Krzysztof Kozlowski wrote:
+> Error handling in probe() can be a bit simpler with dev_err_probe().
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks for looking at this, can you review this V2 patch from Pavel?
-To me it makes sense even without 1/2 which I didn't even bother to
-read. At least as a simple workaround for now.
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-On 07/09, Tejun Heo wrote:
->
-> Hello,
->
-> On Tue, Jul 09, 2024 at 03:05:21PM +0100, Pavel Begunkov wrote:
-> > > -----------------------------------------------------------------------
-> > > Either way I have no idea whether a cgroup_task_frozen() task should
-> > > react to task_work_add(TWA_SIGNAL) or not.
-> > >
-> > > Documentation/admin-guide/cgroup-v2.rst says
-> > >
-> > > 	Writing "1" to the file causes freezing of the cgroup and all
-> > > 	descendant cgroups. This means that all belonging processes will
-> > > 	be stopped and will not run until the cgroup will be explicitly
-> > > 	unfrozen.
-> > >
-> > > AFAICS this is not accurate, they can run but can't return to user-mode.
-> > > So I guess task_work_run() is fine.
-> >
-> > IIUC it's a user facing doc, so maybe it's accurate enough from that
-> > perspective. But I do agree that the semantics around task_work is
-> > not exactly clear.
->
-> A good correctness test for cgroup freezer is whether it'd be safe to
-> snapshot and restore the tasks in the cgroup while frozen.
+Regards,
+Bjorn
 
-Well, I don't really understand what can snapshot/restore actually mean...
-
-I forgot everything about cgroup freezer and I am already sleeping, but even
-if we forget about task_work_add/TIF_NOTIFY_SIGNAL/etc, afaics ptrace can
-change the state of cgroup_task_frozen() task between snapshot and restore ?
-
-Oleg.
-
+> ---
+>  drivers/thermal/qcom/qcom-spmi-adc-tm5.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/thermal/qcom/qcom-spmi-adc-tm5.c b/drivers/thermal/qcom/qcom-spmi-adc-tm5.c
+> index 756ac6842ff9..7c9f4023babc 100644
+> --- a/drivers/thermal/qcom/qcom-spmi-adc-tm5.c
+> +++ b/drivers/thermal/qcom/qcom-spmi-adc-tm5.c
+> @@ -829,12 +829,9 @@ static int adc_tm5_get_dt_channel_data(struct adc_tm5_chip *adc_tm,
+>  
+>  	channel->iio = devm_fwnode_iio_channel_get_by_name(adc_tm->dev,
+>  							   of_fwnode_handle(node), NULL);
+> -	if (IS_ERR(channel->iio)) {
+> -		ret = PTR_ERR(channel->iio);
+> -		if (ret != -EPROBE_DEFER)
+> -			dev_err(dev, "%s: error getting channel: %d\n", name, ret);
+> -		return ret;
+> -	}
+> +	if (IS_ERR(channel->iio))
+> +		return dev_err_probe(dev, PTR_ERR(channel->iio), "%s: error getting channel\n",
+> +				     name);
+>  
+>  	ret = of_property_read_u32_array(node, "qcom,pre-scaling", varr, 2);
+>  	if (!ret) {
+> 
+> -- 
+> 2.43.0
+> 
+> 
