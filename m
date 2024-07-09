@@ -1,95 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5F3154BEB
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3388215380A
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720514746; cv=none; b=S1lmLYz4XsdaVxaRor0FlPJnaXc4wjo9x8/LvK+fAwrplVsQNe87eETltPQHOnNrlBRadNM0Pf7GJhjAelqKyZpmqONOLbW5YI5Uk5GI27GWbQK/WU/+u6V/yhWaOAKTd5K2gbvLIdYXsjDXvP2nQfX7Bh6NfiMRKfElNBtRqLU=
+	t=1720514746; cv=none; b=NnapfOELdvCEzkpfK9/gZhQIFb26fQ6jeSvY5NW35wJD/+dJciy7zmi/9ogrq946fQ0BWRh3P1Iwa59hbfaxqT1yNg4Wq+Pg9H66b9hW1RFdhdiduqlbUrrhu0Y9MzIZC9g1G7W3zjwQLzMa6OIADUErBO+5GPrWqSsJLbmb3xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720514746; c=relaxed/simple;
-	bh=HzI5ANFt9GMQuaC6OglWBygqf04hLrubGkDWVL2nkdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HfZinZnbTzEWbTKeiUFAC0n1fb5A682jC7Y0NZwF1CqoGMVom170HC99N0yyZlx+t2wbanXRZ3SmUqf9TcO6en8K0Cfzvl3uoERmDXBLZ2arqHXbpAxHf2YiO5C5JOc+6s2W2QHxoWwOkUwJ/HtuJ36ffNyHc8z2CMdOBJyREsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=paxxODwG; arc=none smtp.client-ip=10.30.226.201
+	bh=JQRVAHBML/ofi/fh/dB1VnG79vj83YpXCxXqoukbtfw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IBUqpufh3voo1j8rbnDiJxP9p+fNYJzQR5STS7g/goPob8Ngn5J3v4FNvpMTa/pdNLPsdcGzhm7evQV29sLHLAEnXd8nKgrSpJyH3rmQgQYECJvl5pWZZNJmoNIrjCykMPjPZ2otyX8folC2YbEjsnvvVV2aTJAXOvsoqpnounE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VBnhIsEo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="paxxODwG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D5A2C32786;
-	Tue,  9 Jul 2024 08:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720514746;
-	bh=HzI5ANFt9GMQuaC6OglWBygqf04hLrubGkDWVL2nkdU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=paxxODwGsxgN/pEQCvdzSL8hJYt+b0437kRpZFx7gvuqp0Et6MibQNDT7dw5OJenl
-	 ZpP2v5NDKIt5qyUIhYTRz9iwsCSYGTL4xOG8t3P6yP0guiI3pgywBrHRp6GLfiHsBm
-	 XejMQMS/XS45WISy9JQmiIx7rBSzf+xqah5JK8nYpVkjQ+WZB8L8rIuiZLWJmJ4WP6
-	 SIUiCF2pYL7MLtZQGccyomcq/53rjq1QmSSws4PPLTBqgRBfJkdsR/SL0bWXzUx+2+
-	 f8qPAc8Wxo9bxVRJkowDH5pLFadbbratB99pJeRW9j1/8/ABGTqkFuW+O5CfYhrRMP
-	 JNxz6kechq0bg==
-Date: Tue, 9 Jul 2024 11:43:01 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: akpm@linux-foundation.org, brauner@kernel.org, oleg@redhat.com,
-	tandersen@netflix.com, mjguzik@gmail.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v5 2/3] kernel/fork.c: get totalram_pages from memblock
- to calculate max_threads
-Message-ID: <Zoz4FVwlGgUGY6re@kernel.org>
-References: <20240709023609.21332-1-richard.weiyang@gmail.com>
- <20240709023609.21332-2-richard.weiyang@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VBnhIsEo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720514744;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OJb+p9Ujbqk0LELEdIF/W40rBpskZlax/n/YCULwTs4=;
+	b=VBnhIsEoUxw3RAkp0yOjIIl3PRyXzRnyTrj8m8ZUn55JUtpj9YPR9Yygdgou+QRBjV49ml
+	DR4q5doQLkOHfpZuAhdaoXOUmyS0LTjO5vbjTLBBF7/XbNYKk6OmqDZc+E/GdriLQVlG1u
+	nxFbXz3ABGA2wq8s7fwkFfZ0Mtas+Zk=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-688-nsMgPU-SMSaVtnM2f-uKLg-1; Tue,
+ 09 Jul 2024 04:45:41 -0400
+X-MC-Unique: nsMgPU-SMSaVtnM2f-uKLg-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ACEF0196E09D;
+	Tue,  9 Jul 2024 08:45:38 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.39.193.246])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EA73919560AA;
+	Tue,  9 Jul 2024 08:45:33 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	"Bjorn Roy Baron" <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	rust-for-linux@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [PATCH v2 3/4] drm/panic: simplify logo handling
+Date: Tue,  9 Jul 2024 10:40:09 +0200
+Message-ID: <20240709084458.158659-4-jfalempe@redhat.com>
+In-Reply-To: <20240709084458.158659-1-jfalempe@redhat.com>
+References: <20240709084458.158659-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709023609.21332-2-richard.weiyang@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Tue, Jul 09, 2024 at 02:36:08AM +0000, Wei Yang wrote:
-> Since we plan to move the accounting into __free_pages_core(),
-> totalram_pages may not represent the total usable pages on system
-> at this point when defer_init is enabled.
-> 
-> Instead we can get the total estimated pages from memblock directly.
-> 
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> CC: Mike Rapoport (IBM) <rppt@kernel.org>
-> CC: David Hildenbrand <david@redhat.com>
-> CC: Oleg Nesterov <oleg@redhat.com>
+Move logo rectangle initialisation, and logo drawing in separate
+functions, so they can be re-used by different panic screens.
+It prepares the introduction of the QR-code panic screen.
 
-Acked-by: Mike Rapoport <rppt@kernel.org>
+Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+---
+ drivers/gpu/drm/drm_panic.c | 57 +++++++++++++++++++++----------------
+ 1 file changed, 33 insertions(+), 24 deletions(-)
 
-> ---
->  kernel/fork.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 279efadabbf2..d6c2a4ccd532 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -44,6 +44,7 @@
->  #include <linux/fs.h>
->  #include <linux/mm.h>
->  #include <linux/mm_inline.h>
-> +#include <linux/memblock.h>
->  #include <linux/nsproxy.h>
->  #include <linux/capability.h>
->  #include <linux/cpu.h>
-> @@ -999,7 +1000,7 @@ void __init __weak arch_task_cache_init(void) { }
->  static void set_max_threads(unsigned int max_threads_suggested)
->  {
->  	u64 threads;
-> -	unsigned long nr_pages = totalram_pages();
-> +	unsigned long nr_pages = memblock_estimated_nr_free_pages();
->  
->  	/*
->  	 * The number of threads shall be limited such that the thread
-> -- 
-> 2.34.1
-> 
-
+diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
+index 9e06609e1799..450585374ca9 100644
+--- a/drivers/gpu/drm/drm_panic.c
++++ b/drivers/gpu/drm/drm_panic.c
+@@ -80,6 +80,7 @@ static struct drm_panic_line panic_msg[] = {
+ 	PANIC_LINE(""),
+ 	PANIC_LINE("Please reboot your computer."),
+ };
++static const int panic_msg_lines = ARRAY_SIZE(panic_msg);
+ 
+ static const struct drm_panic_line logo_ascii[] = {
+ 	PANIC_LINE("     .--.        _"),
+@@ -90,6 +91,7 @@ static const struct drm_panic_line logo_ascii[] = {
+ 	PANIC_LINE(" /'\\_   _/`\\    (_)"),
+ 	PANIC_LINE(" \\___)=(___/"),
+ };
++static const int logo_ascii_lines = ARRAY_SIZE(logo_ascii);
+ 
+ #if defined(CONFIG_LOGO) && !defined(MODULE)
+ static const struct linux_logo *logo_mono;
+@@ -488,33 +490,45 @@ static void draw_txt_rectangle(struct drm_scanout_buffer *sb,
+ 	}
+ }
+ 
++static void drm_panic_logo_rect(struct drm_rect *rect, const struct font_desc *font)
++{
++	if (logo_mono)
++		drm_rect_init(rect, 0, 0, logo_mono->width, logo_mono->height);
++	else {
++		int logo_width = get_max_line_len(logo_ascii, logo_ascii_lines) * font->width;
++
++		drm_rect_init(rect, 0, 0, logo_width, logo_ascii_lines * font->height);
++	}
++}
++
++static void drm_panic_logo_draw(struct drm_scanout_buffer *sb, struct drm_rect *rect,
++				const struct font_desc *font, u32 fg_color)
++{
++	if (logo_mono)
++		drm_panic_blit(sb, rect, logo_mono->data,
++			       DIV_ROUND_UP(drm_rect_width(rect), 8), 1, fg_color);
++	else
++		draw_txt_rectangle(sb, font, logo_ascii, logo_ascii_lines, false, rect,
++				   fg_color);
++}
++
+ static void draw_panic_static_user(struct drm_scanout_buffer *sb)
+ {
+-	size_t msg_lines = ARRAY_SIZE(panic_msg);
+-	size_t logo_ascii_lines = ARRAY_SIZE(logo_ascii);
+ 	u32 fg_color = convert_from_xrgb8888(CONFIG_DRM_PANIC_FOREGROUND_COLOR, sb->format->format);
+ 	u32 bg_color = convert_from_xrgb8888(CONFIG_DRM_PANIC_BACKGROUND_COLOR, sb->format->format);
+ 	const struct font_desc *font = get_default_font(sb->width, sb->height, NULL, NULL);
+ 	struct drm_rect r_screen, r_logo, r_msg;
+-	unsigned int logo_width, logo_height;
++	unsigned int panic_msg_width;
+ 
+ 	if (!font)
+ 		return;
+ 
+ 	r_screen = DRM_RECT_INIT(0, 0, sb->width, sb->height);
+-
+-	if (logo_mono) {
+-		logo_width = logo_mono->width;
+-		logo_height = logo_mono->height;
+-	} else {
+-		logo_width = get_max_line_len(logo_ascii, logo_ascii_lines) * font->width;
+-		logo_height = logo_ascii_lines * font->height;
+-	}
+-
+-	r_logo = DRM_RECT_INIT(0, 0, logo_width, logo_height);
++	drm_panic_logo_rect(&r_logo, font);
++	panic_msg_width = get_max_line_len(panic_msg, panic_msg_lines) * font->width;
+ 	r_msg = DRM_RECT_INIT(0, 0,
+-			      min(get_max_line_len(panic_msg, msg_lines) * font->width, sb->width),
+-			      min(msg_lines * font->height, sb->height));
++			      min(panic_msg_width, sb->width),
++			      min(panic_msg_lines * font->height, sb->height));
+ 
+ 	/* Center the panic message */
+ 	drm_rect_translate(&r_msg, (sb->width - r_msg.x2) / 2, (sb->height - r_msg.y2) / 2);
+@@ -522,15 +536,10 @@ static void draw_panic_static_user(struct drm_scanout_buffer *sb)
+ 	/* Fill with the background color, and draw text on top */
+ 	drm_panic_fill(sb, &r_screen, bg_color);
+ 
+-	if (!drm_rect_overlap(&r_logo, &r_msg)) {
+-		if (logo_mono)
+-			drm_panic_blit(sb, &r_logo, logo_mono->data, DIV_ROUND_UP(logo_width, 8),
+-				       fg_color);
+-		else
+-			draw_txt_rectangle(sb, font, logo_ascii, logo_ascii_lines, false, &r_logo,
+-					   fg_color);
+-	}
+-	draw_txt_rectangle(sb, font, panic_msg, msg_lines, true, &r_msg, fg_color);
++	if (!drm_rect_overlap(&r_logo, &r_msg))
++		drm_panic_logo_draw(sb, &r_logo, font, fg_color);
++
++	draw_txt_rectangle(sb, font, panic_msg, panic_msg_lines, true, &r_msg, fg_color);
+ }
+ 
+ /*
 -- 
-Sincerely yours,
-Mike.
+2.45.2
+
