@@ -1,153 +1,139 @@
-Received: from mail.valinux.co.jp (mail.valinux.co.jp [210.128.90.3])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB409381BE;
-	Tue,  9 Jul 2024 05:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.128.90.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0AA63A;
+	Tue,  9 Jul 2024 05:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720503273; cv=none; b=k1HyJvbQSN6/GJkhwosj6uHzSCBttpXwA3SPMJabbqMOIcB5P+8UQjsvt0wYb1Dw4abyquoCYMr9oGd3vFxDWOfjkcW+jcDvLCJ8bvgrI9seo76IPBjD3/I0Q/DZQ7N99YJGQbe2QAaIrQZciePm6xIVJOon2pEc28gjpxdeEfM=
+	t=1720503347; cv=none; b=teVmiOAJAwkUjAOnsPfbS9QwFdSUpvxfeWTTfUvKc2a313iFA/3bLAUCuO9/5vKXaMo+8VdRMxHf+8aWqyUD4Jq9ew+3WZEWkpNSBZW44awDzCeJRTsEOM42JEWlZH1sAfwxGRsAgqegehj+xHzuWylJENqfIxQZbRgG6faDQ7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720503273; c=relaxed/simple;
-	bh=OLrGDxVS/AZ8w4mBiU4QW+Uhv6Y1Flmef6JocrFtI5k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MGyv8fUV1SHJpgjv1XmNsuEuTxMapfaCXm+SxE3m2g6gM0IBB0b0C7Dz2yuy0HU1sZj4ydBgXs956qtSq94/qlledRlH0I4vminuRtE3cscTEB7GkQ9qOD+8QquFvPUcCJhlOPnn4stlnKt9MGD2TKfxcIsW7zP5BflTMj32V8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; arc=none smtp.client-ip=210.128.90.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valinux.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
-Received: from localhost (localhost [127.0.0.1])
-	by mail.valinux.co.jp (Postfix) with ESMTP id C5E48A9D35;
-	Tue,  9 Jul 2024 14:34:27 +0900 (JST)
-X-Virus-Scanned: Debian amavisd-new at valinux.co.jp
-Received: from mail.valinux.co.jp ([127.0.0.1])
-	by localhost (mail.valinux.co.jp [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 47VvWRLgAQLL; Tue,  9 Jul 2024 14:34:27 +0900 (JST)
-Received: from DESKTOP-NBGHJ1C.local.valinux.co.jp (vagw.valinux.co.jp [210.128.90.14])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.valinux.co.jp (Postfix) with ESMTPSA id 90454A98C3;
-	Tue,  9 Jul 2024 14:34:27 +0900 (JST)
-From: takakura@valinux.co.jp
-To: paulmck@kernel.org
-Cc: boqun.feng@gmail.com,
-	bristot@redhat.com,
-	bsegall@google.com,
-	dietmar.eggemann@arm.com,
-	frederic@kernel.org,
-	jiangshanlai@gmail.com,
-	joel@joelfernandes.org,
-	josh@joshtriplett.org,
-	juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mgorman@suse.de,
-	mingo@redhat.com,
-	neeraj.upadhyay@kernel.org,
-	peterz@infradead.org,
-	qiang.zhang1211@gmail.com,
-	rcu@vger.kernel.org,
-	rostedt@goodmis.org,
-	takakura@valinux.co.jp,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com
-Subject: Re: [PATCH] rcu: Let rcu_dump_task() be used without preemption disabled
-Date: Tue,  9 Jul 2024 14:34:26 +0900
-Message-Id: <20240709053426.94526-1-takakura@valinux.co.jp>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <5528fb77-9249-4223-96fb-8f5e9c3dac7f@paulmck-laptop>
-References: <5528fb77-9249-4223-96fb-8f5e9c3dac7f@paulmck-laptop>
+	s=arc-20240116; t=1720503347; c=relaxed/simple;
+	bh=q5yBRvkwXHYxk8Z1t1bBGwl3WROs3itRozEJnRkItMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AcYZR3SM0v66zmAqccRPQLX2K/IH/QtYzIXH7UpF1FO8L3lqLLNtoBtNuXqBC42LpBfftDyq4uOWFT96cxnoy1d9F/wr/7bP7oT+GR/OcUSF+nfVCuWVw4nGwIWaVwluZlEnrR0H2qzzom6g6hJAwgFDjhQlKtGH09qWRVrCTK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c9getVFx; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c9getVFx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720503346; x=1752039346;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=q5yBRvkwXHYxk8Z1t1bBGwl3WROs3itRozEJnRkItMM=;
+  b=c9getVFxyfaIXgr1QLoyiUe0dNXy5MDDagDFLh+YRHZWPaLQF4yOoShP
+   Rv6SHuIomqTC4DooSj3GNmE+/g7quzenSxIolJIqf8sLuNynRs9iafX0U
+   aIgJd4QnS0LYc04x/EawqFQi/4zuCwoA0YavxK0AuBntVEd701MnSJH/v
+   B1tq3wCgYFtuXLg4zeuRonKBwyrwCuWWtpqTWdrb8pbh8xRScqcpph146
+   7T+8dh4ZlqKdOo7mO2J1Ns6mbfOuHwqrB2cX0XKzQMkneZ5YbuUiF5qpq
+   MoH0mAjQHzvacAj4zzrvCEKpvJfwzZmF/p8z9qRzDcaVwmDz6pf2CHhoq
+   Q==;
+X-CSE-ConnectionGUID: oFrGAgOFSvapZ2FLDSGOig==
+X-CSE-MsgGUID: UZ2ndyANQC6wEpLD0/bzLg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="29128648"
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="29128648"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 22:27:57 -0700
+X-CSE-ConnectionGUID: eHjFZtt7QSCn4GC8NDYZLw==
+X-CSE-MsgGUID: 9cF7aMRpR8CzeDjWlxZuPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="47831369"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 22:27:54 -0700
+Message-ID: <0df5a4c7-65c3-45ea-b245-3ab872db8d96@linux.intel.com>
+Date: Tue, 9 Jul 2024 13:27:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 5/5] perf tests: Add topdown events counting and
+ sampling tests
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
+ <20240708144204.839486-6-dapeng1.mi@linux.intel.com>
+ <c9e09449-f8ff-471f-adf3-1a5e8f97a102@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <c9e09449-f8ff-471f-adf3-1a5e8f97a102@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paul,
 
-On Mon, 8 July 2024, Paul E. McKenney wrote:
->On Fri, Jun 28, 2024 at 01:18:26PM +0900, takakura@valinux.co.jp wrote:
->> From: Ryo Takakura <takakura@valinux.co.jp>
->> 
->> The commit 2d7f00b2f0130 ("rcu: Suppress smp_processor_id() complaint
->> in synchronize_rcu_expedited_wait()") disabled preemption around
->> dump_cpu_task() to suppress warning on its usage within preemtible context.
->> 
->> Calling dump_cpu_task() doesn't required to be in non-preemptible context
->> except for suppressing the smp_processor_id() warning.
->> As the smp_processor_id() is evaluated along with in_hardirq()
->> to check if it's in interrupt context, this patch removes the need
->> for its preemtion disablement by reordering the condition so that
->> smp_processor_id() only gets evaluated when it's in interrupt context.
->> 
->> Signed-off-by: Ryo Takakura <takakura@valinux.co.jp>
+On 7/8/2024 9:40 PM, Liang, Kan wrote:
 >
->Hearing no objections, I pulled this in for further review and testing.
+> On 2024-07-08 10:42 a.m., Dapeng Mi wrote:
+>> Add counting and leader sampling tests to verify topdown events including
+>> raw format can be reordered correctly.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  tools/perf/tests/shell/record.sh | 6 ++++++
+>>  tools/perf/tests/shell/stat.sh   | 6 ++++++
+>>  2 files changed, 12 insertions(+)
+>>
+>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+>> index 8e3e66780fed..164f0cf9648e 100755
+>> --- a/tools/perf/tests/shell/record.sh
+>> +++ b/tools/perf/tests/shell/record.sh
+>> @@ -214,6 +214,12 @@ test_leader_sampling() {
+>>      index=$(($index+1))
+>>      prev_branches=$branches
+>>    done < $script_output
+> The topdown is a model specific feature and only be available for the
+> big core.
 >
->I had to hand-apply this due to a recent conflicting change in the
->-rcu tree, so could you please check the version below in case I messed
->something up?
+> We need to check if topdown is supported before doing the test.
 >
->							Thanx, Paul
+> The same check in the test_topdown_groups() may be used here as well.
+>
+>   if ! perf stat -e '{slots,topdown-retiring}' true > /dev/null 2>&1
+>   then
+>     echo "Topdown sampling read test [Skipped event parsing failed]"
+>     return
+>   fi
 
-Thanks for preparing the patch!
-I checked it on the rcu tree and looks good to me.
-
-If possible, could you replace the title with s/rcu_dump_task()/dump_cpu_task()/ 
-when applying?
-I made a mistake with the title where dump_cpu_task() is the one being modified, 
-not rcu_dump_task(). I'm sorry for the confusion.
-
-Sincerely,
-Ryo Takakura
+Sure. Thanks.
 
 >
->------------------------------------------------------------------------
+> Thanks,
+> Kan
 >
->commit ad6647a70f239aa9f2741b2f5a828a4483122a26
->Author: Ryo Takakura <takakura@valinux.co.jp>
->Date:   Fri Jun 28 13:18:26 2024 +0900
->
->    rcu: Let rcu_dump_task() be used without preemption disabled
->    
->    The commit 2d7f00b2f0130 ("rcu: Suppress smp_processor_id() complaint
->    in synchronize_rcu_expedited_wait()") disabled preemption around
->    dump_cpu_task() to suppress warning on its usage within preemtible context.
->    
->    Calling dump_cpu_task() doesn't required to be in non-preemptible context
->    except for suppressing the smp_processor_id() warning.
->    As the smp_processor_id() is evaluated along with in_hardirq()
->    to check if it's in interrupt context, this patch removes the need
->    for its preemtion disablement by reordering the condition so that
->    smp_processor_id() only gets evaluated when it's in interrupt context.
->    
->    Signed-off-by: Ryo Takakura <takakura@valinux.co.jp>
->    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->
->diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
->index d4be644afb50..c5d9a7eb0803 100644
->--- a/kernel/rcu/tree_exp.h
->+++ b/kernel/rcu/tree_exp.h
->@@ -597,9 +597,7 @@ static void synchronize_rcu_expedited_stall(unsigned long jiffies_start, unsigne
-> 			mask = leaf_node_cpu_bit(rnp, cpu);
-> 			if (!(READ_ONCE(rnp->expmask) & mask))
-> 				continue;
->-			preempt_disable(); // For smp_processor_id() in dump_cpu_task().
-> 			dump_cpu_task(cpu);
->-			preempt_enable();
-> 		}
-> 		rcu_exp_print_detail_task_stall_rnp(rnp);
-> 	}
->diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->index 05afa2932b5e..bdb0e0328f6a 100644
->--- a/kernel/sched/core.c
->+++ b/kernel/sched/core.c
->@@ -11485,7 +11485,7 @@ struct cgroup_subsys cpu_cgrp_subsys = {
-> 
-> void dump_cpu_task(int cpu)
-> {
->-	if (cpu == smp_processor_id() && in_hardirq()) {
->+	if (in_hardirq() && cpu == smp_processor_id()) {
-> 		struct pt_regs *regs;
-> 
-> 		regs = get_irq_regs();
+>> +  if ! perf record -o "${perfdata}" -e "{instructions,slots,topdown-retiring}:S" true 2> /dev/null
+>> +  then
+>> +    echo "Leader sampling [Failed topdown events not reordered correctly]"
+>> +    err=1
+>> +    return
+>> +  fi
+>>    echo "Basic leader sampling test [Success]"
+>>  }
+>>  
+>> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+>> index 3f1e67795490..092a7a2abcf8 100755
+>> --- a/tools/perf/tests/shell/stat.sh
+>> +++ b/tools/perf/tests/shell/stat.sh
+>> @@ -79,6 +79,12 @@ test_topdown_groups() {
+>>      err=1
+>>      return
+>>    fi
+>> +  if perf stat -e '{instructions,r400,r8000}' true 2>&1 | grep -E -q "<not supported>"
+>> +  then
+>> +    echo "Topdown event group test [Failed raw format slots not reordered first]"
+>> +    err=1
+>> +    return
+>> +  fi
+>>    echo "Topdown event group test [Success]"
+>>  }
+>>  
