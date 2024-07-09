@@ -1,148 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A08156886
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 10:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95C86156883;
+	Tue,  9 Jul 2024 10:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720521489; cv=none; b=lXChu/phECvbUuAfzK4+Bk9sTf/Tq95z/VvobOcQkubpkZtCItVYh4XaWlap+3cjAcpyQGSFiv7/YKJj0IEQaPUMeEdEramjCMBqnsv0+xjitDMvFxAm/gckVFqn0MykQIk9mJF3iCXq8XxF9dCQKD3CdR7eygXdnj7JqHQHR4w=
+	t=1720521490; cv=none; b=YzroQ5znugVQaorXbsP4vMlvhMyVY5dwuWgLJa6gA7nziDoZxsOZ6OHrmgTfmnpLciBdtQgJNJwxRRTM7isDN+0GtiADI5+Lyi9Q0xleg/RA0OW1m6a8Tj0t6vVnCyhNzbFZdlh+7MOLRZtSzGPjc/j51uB9qnnjdFcln2oc874=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720521489; c=relaxed/simple;
-	bh=+Yg+eVlThgGe+Ezn1IKSJ8acnNeAxN74NrgtjZ6Y/SA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1ma6AFgYWM9zMrU79o/W1dOYr57WzqKY8v5wxcBUEeP1owisK4gQCB9kO54VRDLsav0Ovdm19qM3E8TXbG69IUmnX1NxlRZxTIdlhNcm5CnCeVbOb+rguKse2HdMSZKDJYb2HaXlHAZXRZxGbGAHNgZYEkuKtS3YrVHqqsuSZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BmPYlK9a; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BmPYlK9a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720521486;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CpfpBe3XbRncb4MRj2ZX3Mauur6N0OMiF3CsST2eABo=;
-	b=BmPYlK9a/kIMecOvqMx09W7BxjLDa0a2tNXxxCDtRr0P4VGuzjk4SB1CSQfE9rL8VIKqfK
-	ZSKegk7ZZGoLt0f0OPDrEBZd6dwBYCCgGhB731vlEG075pFoS2ohaZ4koLVqbye3DWCdEZ
-	hUd7ZedgQd6j/W1IZnQ48BUfxtmheHI=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-447-U8EFPwJmNkqlKDEVFNRMzw-1; Tue,
- 09 Jul 2024 06:38:02 -0400
-X-MC-Unique: U8EFPwJmNkqlKDEVFNRMzw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 367951955BC5;
-	Tue,  9 Jul 2024 10:38:00 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.34])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6DA1419560AE;
-	Tue,  9 Jul 2024 10:37:55 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  9 Jul 2024 12:36:23 +0200 (CEST)
-Date: Tue, 9 Jul 2024 12:36:18 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Julian Orth <ju.orth@gmail.com>, Tejun Heo <tj@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/2] kernel: rerun task_work while freezing in
- get_signal()
-Message-ID: <20240709103617.GB28495@redhat.com>
-References: <cover.1720368770.git.asml.silence@gmail.com>
- <1d935e9d87fd8672ef3e8a9a0db340d355ea08b4.1720368770.git.asml.silence@gmail.com>
- <20240708104221.GA18761@redhat.com>
- <62c11b59-c909-4c60-8370-77729544ec0a@gmail.com>
+	s=arc-20240116; t=1720521490; c=relaxed/simple;
+	bh=B9MLiWwhvjIVDmzpViCggJ8PFLNRpRaLQkP3nygbQXc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B76qVpN2lriruAVeb6P9zfAAJPDI5aM/4tn75EyK3Y/qNSVw16lOHzllA6hrOuRcuyWoxYPq8PVEBxf067hoaunTswSDWhajcp2qJ3pSCSuO4I7PCzN2rKGOmD13BeIMjjt0XzmR0C69kyNPs9bj5NaMxW/M8KtkbaFvoZuRR7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 246AF153B;
+	Tue,  9 Jul 2024 03:38:33 -0700 (PDT)
+Received: from [10.57.74.191] (unknown [10.57.74.191])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 839A23F762;
+	Tue,  9 Jul 2024 03:38:04 -0700 (PDT)
+Message-ID: <97bb37b0-d700-440e-bc21-f4fa338ee9f9@arm.com>
+Date: Tue, 9 Jul 2024 11:38:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62c11b59-c909-4c60-8370-77729544ec0a@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-
-On 07/08, Pavel Begunkov wrote:
->
-> On 7/8/24 11:42, Oleg Nesterov wrote:
-> >I don't think we should blame io_uring even if so far it is the only user
-> >of TWA_SIGNAL.
->
-> And it's not entirely correct even for backporting purposes,
-> I'll pin it to when freezing was introduced then.
-
-This is another problem introduced by 12db8b690010 ("entry: Add support for
-TIF_NOTIFY_SIGNAL")
-
-We need much more changes. Say, zap_threads() does the same and assumes
-that only SIGKILL or freezeing can make dump_interrupted() true.
-
-There are more similar problems. I'll try to think, so far I do not see
-a simple solution...
-
-As for this particular problem, I agree it needs a simple/backportable fix.
-
-> >>  relock:
-> >>+	clear_notify_signal();
-> >>+	if (unlikely(task_work_pending(current)))
-> >>+		task_work_run();
-> >>+
-> >>  	spin_lock_irq(&sighand->siglock);
-> >
-> >Well, but can't we kill the same code at the start of get_signal() then?
-> >Of course, in this case get_signal() should check signal_pending(), not
-> >task_sigpending().
->
-> Should be fine,
-
-Well, not really at least performance-wise... get_signal() should return
-asap if TIF_NOTIFY_SIGNAL was the only reason to call get_signal().
-
-> but I didn't want to change the
-> try_to_freeze() -> __refrigerator() path, which also reschedules.
-
-Could you spell please?
-
-> >Or perhaps something like the patch below makes more sense? I dunno...
->
-> It needs a far backporting, I'd really prefer to keep it
-> lean and without more side effects if possible, unless
-> there is a strong opinion on that.
-
-Well, I don't think my patch is really worse in this sense. Just it
-is buggy ;) it needs another recalc_sigpending() before goto start,
-so lets forget it.
-
-So I am starting to agree with your change as a workaround until we
-find a clean solution (if ever ;).
-
-But can I ask you to add this additional clear_notify_signal() +
-task_work_run() to the end of do_freezer_trap() ? get_signal() is
-already a mess...
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] dt-bindings: arm:
+ qcom,coresight-static-replicator: Add property for source filtering
+Content-Language: en-GB
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Tao Zhang <quic_taozha@quicinc.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Mike Leach <mike.leach@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ James Clark <james.clark@arm.com>
+Cc: Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Song Chai <quic_songchai@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, Jie Gan <quic_jiegan@quicinc.com>
+References: <20240705085152.9063-1-quic_taozha@quicinc.com>
+ <20240705085152.9063-2-quic_taozha@quicinc.com>
+ <907ec6a8-da8b-4b9a-aac0-c650bab04905@linaro.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <907ec6a8-da8b-4b9a-aac0-c650bab04905@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
------------------------------------------------------------------------
-Either way I have no idea whether a cgroup_task_frozen() task should
-react to task_work_add(TWA_SIGNAL) or not.
 
-Documentation/admin-guide/cgroup-v2.rst says
+minor nit: Subject: 
+s/qcom,coresight-static-replicator/arm,coresight-static-replicator ? 
+There is no "qcom,coresight-static-replicator" compatible.
 
-	Writing "1" to the file causes freezing of the cgroup and all
-	descendant cgroups. This means that all belonging processes will
-	be stopped and will not run until the cgroup will be explicitly
-	unfrozen.
+On 05/07/2024 10:02, Krzysztof Kozlowski wrote:
 
-AFAICS this is not accurate, they can run but can't return to user-mode.
-So I guess task_work_run() is fine.
+> On 05/07/2024 10:51, Tao Zhang wrote:
+>> Add a new property "filter_src" to label the source corresponding
+>> to the output connection for a static replicator. By combining
+>> a funnel and a static replicator in devicetree, a new device that
+>> supports multi-port input and multi-port output is implemented.
+>> In order to match the output port with the input port and
+>> successfully build the trace path, add this new property to
+>> indicate the data source corresponding to this output port.
+>>
+>> Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
+>> ---
+>>   .../arm/arm,coresight-static-replicator.yaml   | 18 +++++++++++++++++-
+>>   1 file changed, 17 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
+>> index 1892a091ac35..d9538563f9c6 100644
+>> --- a/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
+>> @@ -45,7 +45,21 @@ properties:
+>>       patternProperties:
+>>         '^port@[01]$':
+>>           description: Output connections to CoreSight Trace bus
+>> -        $ref: /schemas/graph.yaml#/properties/port
+>> +        $ref: /schemas/graph.yaml#/$defs/port-base
+>> +
+>> +        properties:
+>> +          endpoint:
+>> +            $ref: /schemas/media/video-interfaces.yaml#
+> 
+> Ehm? How is this video interface?
+> 
+>> +
+>> +            properties:
+>> +              filter_src:
+> 
+> There are no properties with underscores...
+> 
+>> +                $ref: /schemas/types.yaml#/definitions/phandle
+>> +                description:
+>> +                  defines a phandle reference to an associated CoreSight trace device.
+>> +                  When the associated trace device is enabled, then the respective
+>> +                  trace path will be built and enabled.
+> 
+> How does it differ from remote endpoint? What is "respective trace path"?
 
-Oleg.
+Apparently, there is some "magic" hard coded filtering in the
+replicators, which only passes through trace from a particular "source"
+device. The documentation above doesn't explain this clearly.
+
+it could be:
+
+"phandle to the coresight trace source device matching the hard coded
+filtering for this port"
+
+This could be different from the "remote endpoint" as there could be
+intermediate components between the phandle "source" and the port.
+
+
+Suzuki
+
+
+
+> 
+> <form letter>
+> Please use scripts/get_maintainers.pl to get a list of necessary people
+> and lists to CC (and consider --no-git-fallback argument). It might
+> happen, that command when run on an older kernel, gives you outdated
+> entries. Therefore please be sure you base your patches on recent Linux
+> kernel.
+> 
+> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+> people, so fix your workflow. Tools might also fail if you work on some
+> ancient tree (don't, instead use mainline) or work on fork of kernel
+> (don't, instead use mainline). Just use b4 and everything should be
+> fine, although remember about `b4 prep --auto-to-cc` if you added new
+> patches to the patchset.
+> </form letter>
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
 
