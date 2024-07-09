@@ -1,55 +1,55 @@
 Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A3019CCFA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709E719CCF6;
 	Tue,  9 Jul 2024 14:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720536740; cv=none; b=tDesweTkVuJHeIzSIWGI5kD80V1fzA1QKqYUvf42zdseCZ77WTK3wIEpxV4XYB9K6L1Am13Jz5dQRhJiDz6gsru4hyO5n/8QWq7RZ8BH2mI+KzgFvPn1SXl/UJTLsSB0L7wsigG2c6cCudJe+QXkBZD9u026teLqiIi/iJLVXm4=
+	t=1720536741; cv=none; b=mWnw7yHeh3nafzbHW3kB5a0JHKt7HZo+m1TzoxkasOAq22G4ncAvRX1hag4vIo1Z1T+/JdrVqqCMRAw+6eFMVg76xZAdiWFH9wqDj1XI/3Hi2/fqyIv4lkkJpKSiDFWiX2UHUt0RhZIIsBgxDp0JN24kFQyMrSbndvydlcPwT2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720536740; c=relaxed/simple;
-	bh=tmoNt8lach5F6zb9655OIEWPDXlhgi1uPzdrFNMZQ30=;
+	s=arc-20240116; t=1720536741; c=relaxed/simple;
+	bh=Ij4C3w8dAUmZS8jiq4VbNchaZ9uf5BArZniso9j2Wms=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lg/c6vg38GvYWdzl2zsdCOsVlcXdCpYMOIsbfTU/NKXu7COi2BdZBRXrXllZ8iM4S80UcW5kOkZmfRQS+kvDC27ov0IbD39+/PlirovxgDxJcmVWsUQqVhyh148selI0rjGvzYCe7NDAnnq/6T/9SP52+7kEfS33tOB5dnMK6ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=dZ7IMZhu; arc=none smtp.client-ip=67.231.149.25
+	 MIME-Version:Content-Type; b=by/Mk0c0OCO7z65kRnzuXA5oCgl8HcETvYFpoX546qlSBsQ3Uq13qw6jb/olchJpBVko8ciu0iIV4LM1hLnNT4mh92VFDEclPrGNTium7E/GzGhvLTrVayrm5syprvw+vhddsmG2OkCGTbbt5LX20hsfL19/V4MEKOE/vxrjIRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=c9nkzybT; arc=none smtp.client-ip=67.231.149.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="dZ7IMZhu"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="c9nkzybT"
 Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4699TeIb016166;
-	Tue, 9 Jul 2024 09:52:00 -0500
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4699SgHd015345;
+	Tue, 9 Jul 2024 09:52:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=b0qMF/w47wG0eNUeosr0AcPTRrVfH6R7v97UI4wqM2o=; b=
-	dZ7IMZhuwY15O2DvSnvEzW9QA2xhsXCpOSHwR+YlZPylnVKBZNmzpGQubqVTMxJz
-	IGIgQM/LgtZc1BXlTSy89iuKMVsgTjXdZZQ8Sr985cBkoT4V7XJQuVxxwIfByEvV
-	AOrPwbze36+soaoE5rC8JD2/eYUyr0Tp6dMYSdrvHWEYYIe5cvzNPkL0lJVvJl+u
-	BkDz8CSqECFrDTtwEQ6AvQJlgO5COr6oAIJeyn0dTzIDcu1Ypo/PB1cck3hlHfRW
-	41Anv2TvwTrFCBdt/pGdk98Gok1uOGCacZUEr4T55l0jBl19Ysw6m3TGFUe84xkZ
-	wsDu4O4yLXbdKcg8Non2RQ==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4073axtqje-2
+	PODMain02222019; bh=z7r55chf67cOgUDruDOw4O5x+ATWaOhhgwvyJEKnqDw=; b=
+	c9nkzybTIpOmLkyDjGh7jR2tRS7R76KoGFnR8WamiwGVeg+teeCwzMvwNBQ+uVCt
+	+nZbs/Uu/Ye19ycsAnZ2N5GEWt73vj6MKl8Y8E8NHIDFIDP4Sat3fTzJRHKfb7J2
+	Ph963jV3G8q7eb5nLoyLhzAYoC6T9MSoPraUbXtoO26aA9qlwgBIZD4dzHYdOYLD
+	mwnt+m1pDiJxk9OqPcgzlNk7pvBB7JSAvoQ3gt04sVC2+jhW+FzyF1ctnAZIbedC
+	LZO6/erdB8vRF1lNis4CFF9RGrC2/Wlt1e3h3gqcj1v3cpIbrM9TQe0QS5ijYdH/
+	kgY1jRDRWfdG/BqlSB1+CA==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4073axtqjf-3
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 09:52:00 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 09 Jul 2024 09:52:01 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 9 Jul 2024
  15:51:57 +0100
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
  15.2.1544.9 via Frontend Transport; Tue, 9 Jul 2024 15:51:57 +0100
 Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 0B9C6820257;
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 2424A820259;
 	Tue,  9 Jul 2024 14:51:57 +0000 (UTC)
 From: Richard Fitzgerald <rf@opensource.cirrus.com>
 To: <broonie@kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
         <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
-Subject: [PATCH 2/4] firmware: cs_dsp: Make wmfw and bin filename arguments const char *
-Date: Tue, 9 Jul 2024 15:51:54 +0100
-Message-ID: <20240709145156.268074-3-rf@opensource.cirrus.com>
+Subject: [PATCH 4/4] firmware: cs_dsp: Rename fw_ver to wmfw_ver
+Date: Tue, 9 Jul 2024 15:51:56 +0100
+Message-ID: <20240709145156.268074-5-rf@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240709145156.268074-1-rf@opensource.cirrus.com>
 References: <20240709145156.268074-1-rf@opensource.cirrus.com>
@@ -61,67 +61,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: icj7LZgcHbbRVzl8W7yuhZETv5xS6Vdl
-X-Proofpoint-GUID: icj7LZgcHbbRVzl8W7yuhZETv5xS6Vdl
+X-Proofpoint-ORIG-GUID: f3ubVwF3Xvm_CRayawi4WLiUnt678VJ2
+X-Proofpoint-GUID: f3ubVwF3Xvm_CRayawi4WLiUnt678VJ2
 X-Proofpoint-Spam-Reason: safe
 
-The wmfw_filename and bin_filename strings passed into cs_dsp_power_up()
-and cs_dsp_adsp1_power_up() should be const char *.
+Rename the confusingly named struct member fw_ver to wmfw_ver. It
+contains the wmfw format version of the loaded wmfw file.
+
+This commit also contains an update to wm_adsp for the new name.
 
 Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 ---
- drivers/firmware/cirrus/cs_dsp.c       | 8 ++++----
- include/linux/firmware/cirrus/cs_dsp.h | 8 ++++----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/firmware/cirrus/cs_dsp.c       | 22 +++++++++++-----------
+ include/linux/firmware/cirrus/cs_dsp.h |  2 +-
+ sound/soc/codecs/wm_adsp.c             |  2 +-
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/firmware/cirrus/cs_dsp.c b/drivers/firmware/cirrus/cs_dsp.c
-index bf25107a98ee..1bc2e0b6d40b 100644
+index 141a6c9d6737..b4dd1a768f1e 100644
 --- a/drivers/firmware/cirrus/cs_dsp.c
 +++ b/drivers/firmware/cirrus/cs_dsp.c
-@@ -2413,8 +2413,8 @@ EXPORT_SYMBOL_NS_GPL(cs_dsp_adsp1_init, FW_CS_DSP);
-  * Return: Zero for success, a negative number on error.
-  */
- int cs_dsp_adsp1_power_up(struct cs_dsp *dsp,
--			  const struct firmware *wmfw_firmware, char *wmfw_filename,
--			  const struct firmware *coeff_firmware, char *coeff_filename,
-+			  const struct firmware *wmfw_firmware, const char *wmfw_filename,
-+			  const struct firmware *coeff_firmware, const char *coeff_filename,
- 			  const char *fw_name)
- {
- 	unsigned int val;
-@@ -2707,8 +2707,8 @@ static void cs_dsp_halo_stop_watchdog(struct cs_dsp *dsp)
-  * Return: Zero for success, a negative number on error.
-  */
- int cs_dsp_power_up(struct cs_dsp *dsp,
--		    const struct firmware *wmfw_firmware, char *wmfw_filename,
--		    const struct firmware *coeff_firmware, char *coeff_filename,
-+		    const struct firmware *wmfw_firmware, const char *wmfw_filename,
-+		    const struct firmware *coeff_firmware, const char *coeff_filename,
- 		    const char *fw_name)
- {
- 	int ret;
+@@ -1051,7 +1051,7 @@ static int cs_dsp_create_control(struct cs_dsp *dsp,
+ 
+ 	ctl->fw_name = dsp->fw_name;
+ 	ctl->alg_region = *alg_region;
+-	if (subname && dsp->fw_ver >= 2) {
++	if (subname && dsp->wmfw_ver >= 2) {
+ 		ctl->subname_len = subname_len;
+ 		ctl->subname = kasprintf(GFP_KERNEL, "%.*s", subname_len, subname);
+ 		if (!ctl->subname) {
+@@ -1178,7 +1178,7 @@ static int cs_dsp_coeff_parse_alg(struct cs_dsp *dsp,
+ 
+ 	raw = (const struct wmfw_adsp_alg_data *)region->data;
+ 
+-	switch (dsp->fw_ver) {
++	switch (dsp->wmfw_ver) {
+ 	case 0:
+ 	case 1:
+ 		if (sizeof(*raw) > data_len)
+@@ -1255,7 +1255,7 @@ static int cs_dsp_coeff_parse_coeff(struct cs_dsp *dsp,
+ 	blk->offset = le16_to_cpu(raw->hdr.offset);
+ 	blk->mem_type = le16_to_cpu(raw->hdr.type);
+ 
+-	switch (dsp->fw_ver) {
++	switch (dsp->wmfw_ver) {
+ 	case 0:
+ 	case 1:
+ 		if (sizeof(*raw) > (data_len - pos))
+@@ -1502,7 +1502,7 @@ static int cs_dsp_load(struct cs_dsp *dsp, const struct firmware *firmware,
+ 		goto out_fw;
+ 	}
+ 
+-	dsp->fw_ver = header->ver;
++	dsp->wmfw_ver = header->ver;
+ 
+ 	if (header->core != dsp->type) {
+ 		cs_dsp_err(dsp, "%s: invalid core %d != %d\n",
+@@ -1551,7 +1551,7 @@ static int cs_dsp_load(struct cs_dsp *dsp, const struct firmware *firmware,
+ 		case WMFW_INFO_TEXT:
+ 		case WMFW_NAME_TEXT:
+ 			region_name = "Info/Name";
+-			cs_dsp_info(dsp, "%s (rev %d): %.*s\n", file, dsp->fw_ver,
++			cs_dsp_info(dsp, "%s (rev %d): %.*s\n", file, dsp->wmfw_ver,
+ 				    min(le32_to_cpu(region->len), 100), region->data);
+ 			break;
+ 		case WMFW_ALGORITHM_DATA:
+@@ -1782,7 +1782,7 @@ static struct cs_dsp_alg_region *cs_dsp_create_region(struct cs_dsp *dsp,
+ 
+ 	list_add_tail(&alg_region->list, &dsp->alg_regions);
+ 
+-	if (dsp->fw_ver > 0)
++	if (dsp->wmfw_ver > 0)
+ 		cs_dsp_ctl_fixup_base(dsp, alg_region);
+ 
+ 	return alg_region;
+@@ -1905,7 +1905,7 @@ static int cs_dsp_adsp1_setup_algs(struct cs_dsp *dsp)
+ 			ret = PTR_ERR(alg_region);
+ 			goto out;
+ 		}
+-		if (dsp->fw_ver == 0) {
++		if (dsp->wmfw_ver == 0) {
+ 			if (i + 1 < n_algs) {
+ 				len = be32_to_cpu(adsp1_alg[i + 1].dm);
+ 				len -= be32_to_cpu(adsp1_alg[i].dm);
+@@ -1927,7 +1927,7 @@ static int cs_dsp_adsp1_setup_algs(struct cs_dsp *dsp)
+ 			ret = PTR_ERR(alg_region);
+ 			goto out;
+ 		}
+-		if (dsp->fw_ver == 0) {
++		if (dsp->wmfw_ver == 0) {
+ 			if (i + 1 < n_algs) {
+ 				len = be32_to_cpu(adsp1_alg[i + 1].zm);
+ 				len -= be32_to_cpu(adsp1_alg[i].zm);
+@@ -2018,7 +2018,7 @@ static int cs_dsp_adsp2_setup_algs(struct cs_dsp *dsp)
+ 			ret = PTR_ERR(alg_region);
+ 			goto out;
+ 		}
+-		if (dsp->fw_ver == 0) {
++		if (dsp->wmfw_ver == 0) {
+ 			if (i + 1 < n_algs) {
+ 				len = be32_to_cpu(adsp2_alg[i + 1].xm);
+ 				len -= be32_to_cpu(adsp2_alg[i].xm);
+@@ -2040,7 +2040,7 @@ static int cs_dsp_adsp2_setup_algs(struct cs_dsp *dsp)
+ 			ret = PTR_ERR(alg_region);
+ 			goto out;
+ 		}
+-		if (dsp->fw_ver == 0) {
++		if (dsp->wmfw_ver == 0) {
+ 			if (i + 1 < n_algs) {
+ 				len = be32_to_cpu(adsp2_alg[i + 1].ym);
+ 				len -= be32_to_cpu(adsp2_alg[i].ym);
+@@ -2062,7 +2062,7 @@ static int cs_dsp_adsp2_setup_algs(struct cs_dsp *dsp)
+ 			ret = PTR_ERR(alg_region);
+ 			goto out;
+ 		}
+-		if (dsp->fw_ver == 0) {
++		if (dsp->wmfw_ver == 0) {
+ 			if (i + 1 < n_algs) {
+ 				len = be32_to_cpu(adsp2_alg[i + 1].zm);
+ 				len -= be32_to_cpu(adsp2_alg[i].zm);
 diff --git a/include/linux/firmware/cirrus/cs_dsp.h b/include/linux/firmware/cirrus/cs_dsp.h
-index 82687e07a7c2..8078dc377948 100644
+index 8078dc377948..2e649810169f 100644
 --- a/include/linux/firmware/cirrus/cs_dsp.h
 +++ b/include/linux/firmware/cirrus/cs_dsp.h
-@@ -213,13 +213,13 @@ int cs_dsp_adsp2_init(struct cs_dsp *dsp);
- int cs_dsp_halo_init(struct cs_dsp *dsp);
+@@ -167,7 +167,7 @@ struct cs_dsp {
+ 	const struct cs_dsp_region *mem;
+ 	int num_mems;
  
- int cs_dsp_adsp1_power_up(struct cs_dsp *dsp,
--			  const struct firmware *wmfw_firmware, char *wmfw_filename,
--			  const struct firmware *coeff_firmware, char *coeff_filename,
-+			  const struct firmware *wmfw_firmware, const char *wmfw_filename,
-+			  const struct firmware *coeff_firmware, const char *coeff_filename,
- 			  const char *fw_name);
- void cs_dsp_adsp1_power_down(struct cs_dsp *dsp);
- int cs_dsp_power_up(struct cs_dsp *dsp,
--		    const struct firmware *wmfw_firmware, char *wmfw_filename,
--		    const struct firmware *coeff_firmware, char *coeff_filename,
-+		    const struct firmware *wmfw_firmware, const char *wmfw_filename,
-+		    const struct firmware *coeff_firmware, const char *coeff_filename,
- 		    const char *fw_name);
- void cs_dsp_power_down(struct cs_dsp *dsp);
- int cs_dsp_run(struct cs_dsp *dsp);
+-	int fw_ver;
++	int wmfw_ver;
+ 
+ 	bool booted;
+ 	bool running;
+diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
+index 68d2d6444533..9f8549b34e30 100644
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -601,7 +601,7 @@ static int wm_adsp_control_add(struct cs_dsp_coeff_ctl *cs_ctl)
+ 		return -EINVAL;
+ 	}
+ 
+-	switch (cs_dsp->fw_ver) {
++	switch (cs_dsp->wmfw_ver) {
+ 	case 0:
+ 	case 1:
+ 		ret = scnprintf(name, SNDRV_CTL_ELEM_ID_NAME_MAXLEN,
 -- 
 2.39.2
 
