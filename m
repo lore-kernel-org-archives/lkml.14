@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F1C1527B8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27C9155753;
 	Tue,  9 Jul 2024 09:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720518031; cv=none; b=NtyTLWRWpKG+rgDVv0DG9KusrAS7qt0q2grryWLRDVEKa43mrNKNSJUQVRxoteVMZAiG+nsLV/C4Qfyd9OGKs8pGCvAtX6CUbbssCgiKj+Gz/npfYlTC4dbtLa22AGi7q2II8+N9TnLmP+UpBXvlBzkzYOBU1D0WoYzdGzUau9s=
+	t=1720518031; cv=none; b=Omp1agKuKjoEXdFOSpcgFrwSa6m1ED9Gq7lEmhVBkK0t5RcQtvsNT/lTahpQxzBvon3YpogufiWWV7Al+gHtARHI1HK9VOzHF7Q/1TIEABDe9LNQHapqhjK8C13zbk/JPbHnDoSsPoPYIvJkYKbdF5bDprCIwJEmL1k8dpyCtGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720518031; c=relaxed/simple;
-	bh=FY3MxCA57lP59uTzf5TmSdwtfYPfEU3i2RCHRvJXZHc=;
+	bh=5TIaHQ1h+ppVKyq5g+uP5cTKU9LcAIWcDNPYXCulD7g=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=YJaNAX5VEPUS+T4kMdh370izouI3yJRBqzGUSDN/jwP6AzZTHdpoOzkYgIXSPhhA7OcOMyV/UfInAgLJGt2LKi7hkCi2DsSs2+8wG9OuJA7xuU5v3jeA9Vn9XlaoH28pyPdR4Wu2TXGrK7Hqcdr5QAgIZhXh7JH/Y9BJalHHsA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sa/A5elr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=X/xH+sAsbTML/SW7TiUAMi8rgdT101tmXoc6ynFw+i/eZ0mXTkjpBQsg+b2/rb10SXnA1ZGfe4CG12ro0yzulfN27RB5wetQoGBvoCfHs4lMg2l1p1cssdRyzeeW9VXh4ip8nTJS+ibt10aCAIkL+jHTTVtPeeydVQti/Ep9Aos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SPPo5X/b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sa/A5elr"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 311A5C4AF0A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SPPo5X/b"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 22348C32786;
 	Tue,  9 Jul 2024 09:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720518031;
-	bh=FY3MxCA57lP59uTzf5TmSdwtfYPfEU3i2RCHRvJXZHc=;
+	bh=5TIaHQ1h+ppVKyq5g+uP5cTKU9LcAIWcDNPYXCulD7g=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=sa/A5elreZlA50marMQIq0/zp2PA4wRCrc/fwGA4vACup7QH7WEoAkqsCQvx37aVO
-	 mT4EVXCDkqiHYnGHBEOg6qecDOWX1KOQh297T3APp8tvq8x4eWqFjwMOV0HkfTmNYc
-	 +Qxh4s6sTS3vFUJBAg4QMJZ5e+tGr/FE8/di5PX2ZyGRcduaZcF3cr4m4y9hDSsumf
-	 lfbMETm+JY/2dCGBvXJxj8mEDmbm6f9WFlA7NGYswcAREFrZkcOOXbtkcCqx+pp6Tf
-	 XR9+v3e+nHJvB3kS+40LuToehcpBxivWgBuw/b5ozEIBTdpFZ8+pSbtULqmJFzzG1Q
-	 oPhq/zLEn+dpA==
+	b=SPPo5X/bCtv3Mi1LdAJlKQ1K8op5SsPFs1QeUOSihKjA1ELyFoCCqNXxDVlK1W8E4
+	 GyPOcwgApIP4s7KxpDIQRs/uZ1tw2uDn5A6jixd77GyypWBtw3znpszVN6Sizy4ykv
+	 lcIRVHGPxGesMxRvFERH+9Zrq7eiSn6SIoBEUqxAGHNtm9izL4mJgA+7c8sxy/1YVf
+	 oM5vmp5IqLupI7ZmCoavt4v13BYgdd1wg1/vhZCCz+BKu6fMI8l4zO0qYEz6zttOPs
+	 A3l6D//cViNp9hRVyZbQw3bS6wNcAv23xjKyYS0qMVROYareEA/9QU44uIvLiqn32m
+	 hqoH5PqQ8Vr3w==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 188FDC433E9;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 109D2DF370E;
 	Tue,  9 Jul 2024 09:40:31 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] l2tp: fix possible UAF when cleaning up tunnels
+Subject: Re: [PATCH net-next] sctp: Fix typos and improve comments
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <172051803109.11180.9963479985374691387.git-patchwork-notify@kernel.org>
+ <172051803106.11180.11030029705775228284.git-patchwork-notify@kernel.org>
 Date: Tue, 09 Jul 2024 09:40:31 +0000
-References: <20240704152508.1923908-1-jchapman@katalix.com>
-In-Reply-To: <20240704152508.1923908-1-jchapman@katalix.com>
-To: James Chapman <jchapman@katalix.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com,
- syzkaller-bugs@googlegroups.com, tparkin@katalix.com, hdanton@sina.com,
- syzbot+b471b7c936301a59745b@syzkaller.appspotmail.com,
- syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com
+References: <20240704202558.62704-2-thorsten.blum@toblux.com>
+In-Reply-To: <20240704202558.62704-2-thorsten.blum@toblux.com>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: marcelo.leitner@gmail.com, lucien.xin@gmail.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Paolo Abeni <pabeni@redhat.com>:
 
-On Thu,  4 Jul 2024 16:25:08 +0100 you wrote:
-> syzbot reported a UAF caused by a race when the L2TP work queue closes a
-> tunnel at the same time as a userspace thread closes a session in that
-> tunnel.
+On Thu,  4 Jul 2024 22:25:59 +0200 you wrote:
+> Fix typos s/steam/stream/ and spell out Schedule/Unschedule in the
+> comments.
 > 
-> Tunnel cleanup is handled by a work queue which iterates through the
-> sessions contained within a tunnel, and closes them in turn.
+> Compile-tested only.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,v2] l2tp: fix possible UAF when cleaning up tunnels
-    https://git.kernel.org/netdev/net-next/c/f8ad00f3fb2a
+  - [net-next] sctp: Fix typos and improve comments
+    https://git.kernel.org/netdev/net-next/c/417d88189ccf
 
 You are awesome, thank you!
 -- 
