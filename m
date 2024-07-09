@@ -1,179 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4C815383C
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E86154BE5
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720515394; cv=none; b=qV81rlaKifsIgb1awq3qYznxEX+m0kcNqbkMaUjxJ0kbNRMBCvte0/03ljVMWLp2VuFT4XQtaNzB3ic9qPwRgC4lFQMUuMMhDJAC+FzAeh+BaboHLMW1Hqtr8xl3vREywLO0ZXyF3cU/iXBOaLcuNL+DvtVU286s1di6zBbhDaI=
+	t=1720515406; cv=none; b=tpYkSjmVxHsAtcOa434Q80++ovPqGoOivxLfQj62XKEgCuwXsXMLRsJm/UUFgr50F45Fy3jh8n/KCdoHrrmiX/ZbLWIdqBHbuVFJkcFZyPWCYXthMpCCclvrCbxKcNq/nvBg5s/t20Z+7Cz/4jNN/VkBEmQa8msDUF5VYPyhJvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720515394; c=relaxed/simple;
-	bh=ZjleyqreNzd5N6niM8JfYISv9RvH3ugjN68S6yfTxpM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CvWGNvMIMxFyVhYfEa1w6QRrdqjyf+ul/R2QC2u0hSuOb4clTKZoutY+kSrlkL8Fr8l39nUNFLGqqd0WYz+/1LB9d6aNOXL8N5pt3F3i3hO9/aW2MDjQk/GF88VfZu18xDJSfacN9mqYXD/GFTmQd8gsRuVlrqluRPaeQt0wISE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A/8c7ZnS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720515406; c=relaxed/simple;
+	bh=zeEnEM9kX9Y0nyF8n3K2wS1SB9H7giObmnlLh3K61RY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=H+O6YdxCvb7UKc3RSMNTFk9L+qHT2K4HcKO7fngrFn9U5JDnSsD94TQCdLPLX7c+MmNUODQpSTq6xmub1tlZocUkomAKmC+RNhJ/1ApxSE3JW1gjdG6OrvAzjn2WFCn7RX7by9OA3cLcdchrIDngfawKqQ7S7FLcnM4EJA0wcWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JCnNKGvG; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A/8c7ZnS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720515391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mZo3i4FrLDziFrzuVJBLT1zQ9UdyZZW5nDEeprPuspY=;
-	b=A/8c7ZnSyClGgmVZO6pefIL+cDKIHqkgZEpykFISNPy2BeoRpNJ+usyevLuQQLa9shwujs
-	rurpoCS3XOdzoyuRWSjiZ57UheV3y2+hKsm904roSZCI1whV2xRQx6e6FzqQfk5L12YAMV
-	0e1WM7OGeF91pKcLMp+BHh/gS43PIV8=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-67-Ss3VSe__NV63Gf7sz7i1qg-1; Tue, 09 Jul 2024 04:56:29 -0400
-X-MC-Unique: Ss3VSe__NV63Gf7sz7i1qg-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52e9df289b4so744505e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 01:56:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JCnNKGvG"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4266eda81c5so9640715e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 01:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720515402; x=1721120202; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N6JCs78VemHVLXAEu6lpNSjjhDkuEB/scHH4X5narOY=;
+        b=JCnNKGvG1oCSiGMnObEFAmLoqDR7WxrsIokRBQ0z8vv2O5Shd28+wQINpGzj70nNbl
+         Q/av9hS45kd+Pgj1UBYK6l6U+/BMCPh9YrIGqI93OBM+g/oE8bVhyQIC8sBMl/Fxo95n
+         rxlL9v3HiHggZvojtlROUkzPxgg4DGMbDniEA5GmO0xtxZI7JPsmpIywv29TO/uKcHmc
+         Y2XQSbCbWV2Aryf0gDgI8xxg+4aC3Ae6dBxHKFRLHzHs1eCrHT4TREF47Nr7Gw9DCSsC
+         eVktto3V3gGfnC/lhnt2ZkF6v4UzBUiiXnGrxBqKt8SSYT3lgh9hZj7dC2n87BEnuc+m
+         +zzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720515388; x=1721120188;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mZo3i4FrLDziFrzuVJBLT1zQ9UdyZZW5nDEeprPuspY=;
-        b=i2uNBViwZG4PuwCOToOwN95n3dKviijq7uqq5JzoRncTk5uLQ/4pxzXafnCwi/FlNY
-         8C4upFdRSbT7Yedkk9RNxmlqYZTnwK8zXpJKubO6XjHAUfwLgschOmYMHaJBE6HxLLWp
-         yM9eq86YCIRTvv0Rt9JTEw3+budl7ryTmo5mAyjs3Fb5U07OenNGrlaeGWlCmneWHUsk
-         sV8iSy7VMhFvST5W4O5TZt3qhNL+vqgrcAScGPndSb8ET/5UnXHqQrMBDzn7EZbfiKTK
-         mDQZidbyeylua4QHxbJC4jpFRwbQzdH/18FEd6QxbwwuM+H0la/3fYI3rNcadHpKWSkW
-         /Q8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVr5Qzh93Zt2vpEUobcmkWActmSeLTk0f1HASMsD7fJtMFxNVL0A1DcZEzGO511xxwXyu8TAJlX5pSW46anbQ/UTKWFg12BdPQr7a/b
-X-Gm-Message-State: AOJu0YwlG/eUq+oxOM2dqwo8EASWforXQn7G5N75w426SpWbJLLLGevi
-	h7JAU0c9NR0p7H3NVt2EGv2bvcFFS2NyYrLvQSuWZ5ZjO3oFtdbiMhyk9bhRCD3Fug8STOj0yGe
-	67FnazwwcxAwWkPGtr/aUZgM0WE8fwHkeynjA+0VpTuHRMtZ9Bm+xON0v3xgT1w==
-X-Received: by 2002:a2e:a594:0:b0:2ec:4287:26ac with SMTP id 38308e7fff4ca-2eeb3191af2mr13488351fa.4.1720515388427;
-        Tue, 09 Jul 2024 01:56:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJFO85FdSpN/tGtIniVZthBrr5afzWmwuyHHpTqaBS39B1vWHCFm7f/iojSiOOVOD1vzLidg==
-X-Received: by 2002:a2e:a594:0:b0:2ec:4287:26ac with SMTP id 38308e7fff4ca-2eeb3191af2mr13488161fa.4.1720515387987;
-        Tue, 09 Jul 2024 01:56:27 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f741624sm29991115e9.41.2024.07.09.01.56.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 01:56:27 -0700 (PDT)
-Message-ID: <426645d40776198e0fcc942f4a6cac4433c7a9aa.camel@redhat.com>
-Subject: Re: [PATCH v9 10/13] PCI: Give pci_intx() its own devres callback
-From: Philipp Stanner <pstanner@redhat.com>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: airlied@gmail.com, bhelgaas@google.com, dakr@redhat.com,
- daniel@ffwll.ch,  dri-devel@lists.freedesktop.org, hdegoede@redhat.com, 
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, sam@ravnborg.org, 
- tzimmermann@suse.de, thomas.lendacky@amd.com, mario.limonciello@amd.com
-Date: Tue, 09 Jul 2024 10:56:26 +0200
-In-Reply-To: <20240708214656.4721-1-Ashish.Kalra@amd.com>
-References: <20240613115032.29098-11-pstanner@redhat.com>
-	 <20240708214656.4721-1-Ashish.Kalra@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        d=1e100.net; s=20230601; t=1720515402; x=1721120202;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=N6JCs78VemHVLXAEu6lpNSjjhDkuEB/scHH4X5narOY=;
+        b=EhnR7CEyZZdJbNXFkGNKO4JDTz9aMPoSbxKC+f0eBAA9oIRGyMVfHKW3N2s2kRDEJB
+         ij8hfCnZFbCQAApKG886JP23GaR85OewSqkyE0R3QX9HvfgFNWc7IlfTWU5E7x1b84dc
+         oG3tEecrJWpkv8a60bW3tT+gWNdH8qrQB33kjtjzuvnZmMA8sbPAlSAHSeIDzEdWzzcX
+         eWp1xa9UyV6umqvEXEbTHNRKJVMz2ZBLSK3wBB2J5ejhdtUuQPt9Oh8UJOyUz/XBYIKZ
+         DgPFYyXO2BE4JrKZGywjARXLNbZwOp9t+8tmQI1ueUvgpujcD1cHavA9qOmKx1ddy5sg
+         kHmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWiSEGw2tFXF/VNUL6dZKy91PqOg/g/+FlAvBlfnmrmQfwXO8QGyL97Pe/aPqEAkEadbgIoj1NdGwMmwRoF+q2pQpwRoHqrHQjy+d78
+X-Gm-Message-State: AOJu0YxFBVKeUt9tcTHzcXyG49CtfvNRZocB5vuudEOtnp8/spdGt0jz
+	lJ6RIvbb3Dted2U7uFfXxbzlzu9mXyu+OGKPnhA1mHOpvNHQKwGwQ65SptUDDyc=
+X-Google-Smtp-Source: AGHT+IGl0QCPQ3RtBPhEJx9xP2Qga0g9dxUHEMpPlS8Y3PEVe0Ejn3U5/SxbK1zEVuMX9qiiIAaEow==
+X-Received: by 2002:a05:600c:2057:b0:426:52a5:1ca4 with SMTP id 5b1f17b1804b1-426707db724mr15635825e9.21.1720515402453;
+        Tue, 09 Jul 2024 01:56:42 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:cad:2140:b12a:8461:5e2a:dfe? ([2a01:e0a:cad:2140:b12a:8461:5e2a:dfe])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f1138sm30698455e9.19.2024.07.09.01.56.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jul 2024 01:56:42 -0700 (PDT)
+Message-ID: <9bb13c8a-1452-4a83-b4fa-04c17c8a0819@linaro.org>
+Date: Tue, 9 Jul 2024 10:56:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 2/4] dt-bindings: i2c: amlogic,meson6-i2c: add optional
+ power-domains
+To: George Stark <gnstark@salutedevices.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, khilman@baylibre.com,
+ jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
+ hkallweit1@gmail.com, broonie@kernel.org, glaroque@baylibre.com,
+ rafael@kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com,
+ lukasz.luba@arm.com, b.galvani@gmail.com, mmkurbanov@sberdevices.ru
+Cc: linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kernel@salutedevices.com
+References: <20240708194808.1819185-1-gnstark@salutedevices.com>
+ <20240708194808.1819185-3-gnstark@salutedevices.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240708194808.1819185-3-gnstark@salutedevices.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From c24bd5b66e798a341caf183fb7cdbdf235502d90 Mon Sep 17 00:00:00 2001
-From: Philipp Stanner <pstanner@redhat.com>
-Date: Tue, 9 Jul 2024 09:45:48 +0200
-Subject: [PATCH] PCI: Fix pcim_intx() recursive calls
+On 08/07/2024 21:48, George Stark wrote:
+> On newer SoCs, the I2C hardware can require a power domain to operate.
+> Since the same compatible is used for older and newer SoCs make
+> power-domains property optional.
+> 
+> Signed-off-by: George Stark <gnstark@salutedevices.com>
+> ---
+>   Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml b/Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml
+> index 26bed558c6b8..c4cc8af18280 100644
+> --- a/Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml
+> @@ -30,6 +30,9 @@ properties:
+>     clocks:
+>       minItems: 1
+>   
+> +  power-domains:
+> +    maxItems: 1
+> +
+>   required:
+>     - compatible
+>     - reg
 
-pci_intx() calls into pcim_intx() in managed mode, i.e., when
-pcim_enable_device() had been called. This recursive call causes a bug
-by re-registering the device resource in the release callback.
-
-This is the same phenomenon that made it necessary to implement some
-functionality a second time, see __pcim_request_region().
-
-Implement __pcim_intx() to bypass the hybrid nature of pci_intx() on
-driver detach.
-
-Fixes: https://lore.kernel.org/all/20240708214656.4721-1-Ashish.Kalra@amd.c=
-om/
-Reported-by: Ashish Kalra <Ashish.Kalra@amd.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
----
-Hi Ashish,
-I hacked down this fix that should be applyable on top.
-Could you maybe have a first quick look whether this fixes the issue?
----
- drivers/pci/devres.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index 2f0379a4e58f..dcef049b72fe 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -408,12 +408,31 @@ static inline bool mask_contains_bar(int mask, int ba=
-r)
- 	return mask & BIT(bar);
- }
-=20
-+/*
-+ * This is a copy of pci_intx() used to bypass the problem of occuring
-+ * recursive function calls due to the hybrid nature of pci_intx().
-+ */
-+static void __pcim_intx(struct pci_dev *pdev, int enable)
-+{
-+	u16 pci_command, new;
-+
-+	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-+
-+	if (enable)
-+		new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
-+	else
-+		new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
-+
-+	if (new !=3D pci_command)
-+		pci_write_config_word(pdev, PCI_COMMAND, new);
-+}
-+
- static void pcim_intx_restore(struct device *dev, void *data)
- {
- 	struct pci_dev *pdev =3D to_pci_dev(dev);
- 	struct pcim_intx_devres *res =3D data;
-=20
--	pci_intx(pdev, res->orig_intx);
-+	__pcim_intx(pdev, res->orig_intx);
- }
-=20
- static struct pcim_intx_devres *get_or_create_intx_devres(struct device *d=
-ev)
-@@ -443,7 +462,6 @@ static struct pcim_intx_devres *get_or_create_intx_devr=
-es(struct device *dev)
-  */
- int pcim_intx(struct pci_dev *pdev, int enable)
- {
--	u16 pci_command, new;
- 	struct pcim_intx_devres *res;
-=20
- 	res =3D get_or_create_intx_devres(&pdev->dev);
-@@ -451,16 +469,7 @@ int pcim_intx(struct pci_dev *pdev, int enable)
- 		return -ENOMEM;
-=20
- 	res->orig_intx =3D !enable;
--
--	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
--
--	if (enable)
--		new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
--	else
--		new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
--
--	if (new !=3D pci_command)
--		pci_write_config_word(pdev, PCI_COMMAND, new);
-+	__pcim_intx(pdev, enable);
-=20
- 	return 0;
- }
---=20
-2.45.0
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
