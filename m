@@ -1,138 +1,270 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010068.outbound.protection.outlook.com [52.101.69.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E787F13FD86
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 07:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720510513; cv=none; b=LftqolBkn/VwNdDAkrVsY1pCuWZFoINnRJPdV5zGdRIXMViBzGOMm5wCpw3DI7w08nTbjJxTD4ENjRPhtY8KWYbcnqbkGMG15WtynixhXwgv4FMQsn5BGFtZYO/DypKsZPb6IDBDNsxuf2j4ggRr3EhsQlhoL3vPVJfCO16eXf4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720510513; c=relaxed/simple;
-	bh=DdRhbICaef9j8HkGlMP5Bgg0eQtDwpCDC9yQaq+5/6o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mHRHOESlyd5hDATLYEQ5mupw6JxPP1HDJWTFg28jJ32kRa/fOHpJ2zOnnqPbnBc0IIxHCp5Xo4e5PMcryr+oP2jffCp6luWu1z2z5nA+snDICa4aSCE8HenSdC5RtXzspdoK/0RxrRcaq/bKcfVro0z73uSGyvRzH5WwiUGVO34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GAF8CV5F; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC28713DBA2;
+	Tue,  9 Jul 2024 07:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720510546; cv=fail; b=iqwmM3QzsKaop5iuoKs5OIhuC2T79dMPTDMykqPbuQgj2zlRtjxMvzkzLJzftkp9g5echBdBD0Ai4dfGMd8UXI9OMKBnpDImXgQjMh2clPJBYc4C4mxvsuhmTor+NvCGRRXMT/1QScHT5PT7EECCLN+aPgWIuwPR3xnaq/42i/Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720510546; c=relaxed/simple;
+	bh=DsUir57asJXDEM0c1YCrdZYWhWW56IeVI+UgWBlMiPw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=on0DScOUzh4blQNdES77caKmgI1Ng8lcF7hfuyVVsOYeJlr2xFAmaajLXQcW1i59SHNa9V4ewntkPJKrctdumqtPvHcDBxTeNQbTjnMt6dERxdy0x/C7J/rXPqRd68lJCCuColvrQICBS7htC1Pb22JOhR7zs8yRAoIIOLR6Zyc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=LKCS7x6F; arc=fail smtp.client-ip=52.101.69.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GAF8CV5F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720510510;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EIqC2mqFe9C8xKJMg5ba5cK9RsFhYLPxtTQe6Ed06hU=;
-	b=GAF8CV5FywvHX7Y9YtNYpnuN/kvRklUKXX1AG4MrUW7Kh4OZ2FakWrr39/d4xknlo4FE8o
-	zDXL3wZfFPiLccE1L3tkW5Q2SYUoEjqRcsn+eXrOOBJRn6QWaeB5pj7P0C4vG5ndKGBMug
-	xIwD9XeR3VQWUlaP1LajN1v/zPrlS9o=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654-jUrUdf6KN_G3LtLUxHC24A-1; Tue, 09 Jul 2024 03:35:07 -0400
-X-MC-Unique: jUrUdf6KN_G3LtLUxHC24A-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-58c4f94b57cso3543260a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 00:35:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720510506; x=1721115306;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EIqC2mqFe9C8xKJMg5ba5cK9RsFhYLPxtTQe6Ed06hU=;
-        b=JgHgKvE0JCq3XONN8UNQj6OaVK6P243soAVi32TuZoT6PNWomOkuEsOwXp0yG5byEu
-         u94fabjUpcBoPwGI5wk7znmkUWzK23kGk/6FoIvul0tpvXF2OIAbCDMWMf0D93ei5RdU
-         vN7FNZyxO02kZE3OqQfeV6w3+3ELqMw7eEizaiptZ5BOKMJjZ8lnUSm1f1F2I8vTZgWK
-         xUo2O82RvcFO9bCPLN90dN1n6wln1uE90KXH02HYIfiTynvr18WGPjSKbv5Kl1q2ftdE
-         IGuevb730/ZK4BDIVt3mD89Enrd9tUVd3/ScJvQh80iHtNcRZxwRq86UOQ9MkuFCYQfn
-         HeVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNIY/U1k3aJRjgDAkz7TbfGT7nyup8UjPUOGWOCweDkvro9XuwZK4XuNNe2TO7TMtVyM57Vc5ZVE1eXVq2xNmv6JofnKdsz0gB/7SU
-X-Gm-Message-State: AOJu0YxJeG7hNMw7Yzqnvy7yI/JhEnwfytLEHo43H0x9LZ5z5fuGjgmJ
-	RgEQLxMl/Ekf/aXjbSrtA5F1FLZm3RSS/T02whgHMVFeklyAg94y26IJVC9WMWQA5LX/npuOccf
-	VuP2G98LWotHxdAYuYgzr2C4/LnGz/XEMyygGP29uxY+LOMxRRHGbn60JnHUuFB/mro1wNMCfY0
-	FT4tt5aew/ISoBC1MB0w3wt6Tj6M6kEI+dnKM8
-X-Received: by 2002:a05:6402:2742:b0:57c:610a:6e7f with SMTP id 4fb4d7f45d1cf-594baf8719fmr1467717a12.11.1720510506319;
-        Tue, 09 Jul 2024 00:35:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEprGNtKtwZjWwZDrHR9spCqEFHlNDxGO/hw7rYsSyBxth5QJJ9oylIOl12jUvsQu4A55DuFRtIjAqAaxCAus8=
-X-Received: by 2002:a05:6402:2742:b0:57c:610a:6e7f with SMTP id
- 4fb4d7f45d1cf-594baf8719fmr1467693a12.11.1720510505896; Tue, 09 Jul 2024
- 00:35:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LKCS7x6F"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=luYT6m9hlo/L2R2WugLaUGn55x1YkowjhpgzXyENeX1+BJmkMzQkEwNNEnhqXRjnh9zX84pVARTrl19A4nnRMm0976eezXHGbEaCSUsTp5E2kGv6+aNOsjrJyn07vu7ohH3lcUxVAvaZY27dAcwWaGjFGzDXnfaIslQmqbEgm/TO/UHbLT+gNNcUW32r14fzaXPGU6nIMIn/wFjYvOdrVuVXDb9OzicpTH5QQG+6c/Oo+6tmvziKmRcOstjL5Qy3oSXhw5n+U/C2sq5/ErfUjKl/4s6LprsNc7f/jyefqdLksIEBbobpsepCjrpbsMGXAtmbFweUKUeODcgdhFUQMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Xj6gpVjI+HDfGKnqfiwnAphyOBtXwv+qW1XuOitXKBA=;
+ b=E139R2FN6oiVlIPc+EgkYb4yJfJEu3D1B1Z8OVQR5bTCxUEc338PZAGxrGW17YlB+F+EOaCrFJVMxsICa9Xd+aVugD8P8/7UYp2cQ5g18yGZ7PuHtkPc9BjrHVpaquq3chCbmExWOKnHY5m8Wt6nV7hjNiAPM3QTxcGc8jD1TFL3aVSKF4O8NZzkAFlbt4a+L0YKtTHV/WUof8oC9idOVAo5zBCJRZC6kU70OmTwOhu0ZdevphRijg7rOfBNlYqaCYJw1PlfHP3H3bGhgZABZnvXTuKd6dOOGyhyo4I++49EE27N6r4LS5GsfqcHqjEdXiXcZ8xJYTSzCS3wGWtwCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xj6gpVjI+HDfGKnqfiwnAphyOBtXwv+qW1XuOitXKBA=;
+ b=LKCS7x6FN+gpZobcUY/RjkXSgDx/TEyGuZ2lo2UkGXzeLeE71sdYTld/v/Tl5t8htVNa3WRymnbMQDb6UCGlRKAs4DZ43zmGb0nOe3LiNhWols7aQpMoMppKkmgdnXcFI3gE9XCLyWqKu8X9Y8hHWW5t7Zl5TFkpn0w83Knhw7A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by DUZPR04MB9794.eurprd04.prod.outlook.com (2603:10a6:10:4e0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Tue, 9 Jul
+ 2024 07:35:40 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%2]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
+ 07:35:40 +0000
+Message-ID: <0eacd62e-40ff-476d-9f6b-d0db2aca4108@nxp.com>
+Date: Tue, 9 Jul 2024 15:36:04 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/10] dt-bindings: display: imx: Add some i.MX8qxp
+ Display Controller processing units
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ tglx@linutronix.de
+References: <20240705090932.1880496-1-victor.liu@nxp.com>
+ <20240705090932.1880496-2-victor.liu@nxp.com>
+ <eec3d2a7-0197-4196-bf6f-71d0e29777de@kernel.org>
+ <9a911f88-7fbf-4484-997c-98b6c3ec045b@nxp.com>
+ <20240708200431.GA3492466-robh@kernel.org>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <20240708200431.GA3492466-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0104.apcprd02.prod.outlook.com
+ (2603:1096:4:92::20) To AM7PR04MB7046.eurprd04.prod.outlook.com
+ (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708065549.89422-1-lulu@redhat.com> <20240708072603-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20240708072603-mutt-send-email-mst@kernel.org>
-From: Cindy Lu <lulu@redhat.com>
-Date: Tue, 9 Jul 2024 15:34:28 +0800
-Message-ID: <CACLfguU2OakNJPO6pR6V7D4SV0-VvC=okqDcwutMPztTUweMZA@mail.gmail.com>
-Subject: Re: [PATCH] vdpa/mlx5: Add the support of set mac address
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: dtatulea@nvidia.com, jasowang@redhat.com, parav@nvidia.com, 
-	sgarzare@redhat.com, netdev@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|DUZPR04MB9794:EE_
+X-MS-Office365-Filtering-Correlation-Id: 373e05a7-c671-47e2-a672-08dc9fe9bbbb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U2hsY0tWMkRjUk82Vmg0YVNidWVmTEJJNjh6MGVWdzd1eUdzbXVqa3dqdUhk?=
+ =?utf-8?B?WDcrRGFJOURWeDB6VlFuZ1YyZmxHMkt3a1plWGV5WFNoMk9KaUZQTjJyelFx?=
+ =?utf-8?B?MkZoU1NPY0Q5WklpRU9XWHBaUkR3TU9WTSsvME41dHZpTGNIN0RZTEhZdy95?=
+ =?utf-8?B?VmlJT1pQWUo1akdqTHNsQ01QQis3Z0JwNXZCdit5VTU3RnhndEdMRXZJc0dE?=
+ =?utf-8?B?Zkl2cFFRSGdlTG5HMkdBdGErZDYvMFNOcGx4YURKR2ZCQXI1K3JqMU9YR1NL?=
+ =?utf-8?B?R0hrYVBoNmFick41aEZIYk5pbko1cXZtdlhvNEpxVlZNbDRoUmtnS3JFdGh6?=
+ =?utf-8?B?VXN6a2JUeGtYL3lOQ0tQUzlSVzV3bWxXVHAyUnVTRVdnWXd3SVNpZlFrM21X?=
+ =?utf-8?B?WExEeEhzWHpmbmdIQkhOd0d2cFNxQTV4bkwrREdOT1RYNVdDdytzYlFQUWJX?=
+ =?utf-8?B?ZmhmcmNiTlRlZGVIMDJBVTRNajkrSlFickJacVM4VXYrQWRFeUpaa1c0RUk0?=
+ =?utf-8?B?S1czZldRWnMzK25qS3llaGFDZllDMzgxdFA1OVlwcFpzblVPWFBYZjd2ZFFs?=
+ =?utf-8?B?UW5rV3RyZ1gybm1FWXJibTZjbVFZNm94YkdUTDNEMnRHL2dDZVd6Um9VMUZy?=
+ =?utf-8?B?TU0rN0RWVko3UHpyQm5ydldSa21RMlBwMDB6anRXbWgzVU1TUjVRR1lVdTFX?=
+ =?utf-8?B?YzJoMURGRW1YWDdiaXZoVFNoUThVaHZRRVh0WkYreHNKdm1UUVhFSVF1c21F?=
+ =?utf-8?B?VjJQdVAyWTU0cFNsSk9UTWwzQlNRbURzOWZiSi8zOG1SWUFKSnpoTHlMU2Vz?=
+ =?utf-8?B?dm9NTlBiU0NSeFkrVFhkbHFxYTVaczY3eXBUcTRMQjVTVkFLMlI3anpSeGdu?=
+ =?utf-8?B?V0x6YlNtYkhwc1lPNko5dGpackZqNEp2YnJ2eVg1T2E2MGFrR3VWaVorVmRR?=
+ =?utf-8?B?Z1NMU3RGVS9uZTFxN3lleFlYVCtlV3llZGluMlBLNURERkQ2VkN4Q1loK2Zh?=
+ =?utf-8?B?OVFPN1k3cFRlRmxCS2k2MjI0bUJUcUQvUFNiWjdCS3hNNWNEcFFFZ1p6YkdM?=
+ =?utf-8?B?T1JzUVJVRmpYcC9ZbURtRmREb0FlVjJyVDM2RnZEMzdrN28ydzlZRUl3WnZm?=
+ =?utf-8?B?TmFQYzgvSDNBSldha1NMRkRqdkgyVFNZU0ZDNXVQMjQ2Y3ExU0VhWEFVNi9J?=
+ =?utf-8?B?V21GQjUwaHg1akNTckRBeDJUMERNL2VLL1luUDA0YndZcE1PNE4wZXVRaDZU?=
+ =?utf-8?B?Tkp5ZXdMT2xIUWo2M3lTUVlPckF3Z3JFL1I3bFlzNWsxUWIwa1hFcmxYa2JK?=
+ =?utf-8?B?YWpNZVo1amVVb0E4SXMrajhidmtUbmpqLzlPakNVb1I0eUMyenVLY2hONjFK?=
+ =?utf-8?B?eXpkS0xld0xxK0kzT3l4RUlmYm9SYlk5WXFRYWhnOGIvT3l5Z0xaNnlxU1dJ?=
+ =?utf-8?B?TWZtZmtXME9GdXlQSmZPb0JVNFFhMDIreFh3RzlGWUF6RXZJcDM5a0MwSUUv?=
+ =?utf-8?B?N0VsZ0dWNysySU90bklBQlpoTTIrbWtVUjQvZURWREs1YlN0aE9WT015Z1g3?=
+ =?utf-8?B?Uy9xSzdlUzhYL092U3hSbGRYUkdBRUdvMWdnWUtjQjMrWExKdm9NNnQ5Q2ZG?=
+ =?utf-8?B?L1MvUmd1VGdRYURkek1naGtpdXB5aUVqSVR3eVlsR3ZsSXc3Tk55YUdZc0tX?=
+ =?utf-8?B?TU9lbjErdGUxcS9ic3lvV3JtQlUrZTVDeWl3OEhuNkV4cjlQZHRkbEtFdCtG?=
+ =?utf-8?Q?IvkuKob8TcQMTsOnIU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VGhxeDN6bExuUzl3S0Zaekt6T2tyNk5BajN6T2NNR09leU5kVUNVUzgxRGRG?=
+ =?utf-8?B?RmlvZmFqM0U1NHVVaXhFMDV0VnRhY2NMVldSNmphcHR3MFFvYmZHUmVzUEpC?=
+ =?utf-8?B?Z1VhUTVBbVdTQWxFYXdtaDd6T2JabU5ZdTRUWEQrWGJZL21kK0FkaEwwMWZJ?=
+ =?utf-8?B?ME9rWGw1bnVYOTY2dlhWYVhLOFNFY2NpMkRxcldyN2lJMjBZeWxPU2dJZlRK?=
+ =?utf-8?B?Q3YrazkxaGY1RWYzWmN1NzlHcGR2TkhkZ2JBeVhxUE5SZi9ydlBIVm1HcWZt?=
+ =?utf-8?B?dHNOUWVvRzdoZlhzRGhicDZEQ09CckxTUnpTVkkyNWFhZmdWWXc5YzJoeGtm?=
+ =?utf-8?B?c3QxbUtkOXhRV3owd2wzR0J0S0ZSQ2ZsSTNoUzU5cENBQ3MrUDRjSHBjTmho?=
+ =?utf-8?B?YlY2NExZMjY1K3oxd3RGVjhZME5tL2tRUnZuTWRQRVlnOVpOUlYrY3kyNGRH?=
+ =?utf-8?B?S0syU1ZXQThmazM3d2FnOUtlYm9TaktGYnhNRTVmOXFVUFJocXgxaUlzQnY1?=
+ =?utf-8?B?N3Q5ejNZYjRVcGpSYjJtK3Npemk2L1JpNzROQXA5cDFGalc0MUdOdWRCeWk2?=
+ =?utf-8?B?ZENOa1hrbXA5bHo1dmNKOERIOU12QlhOcDluc0RvdDVJVDIxUVFaU0s0cTJ0?=
+ =?utf-8?B?VWUxMHdUNUpsRDd6dlFsdUpvalFEVStsNCtiTjg3TlZuWnMrWTRqUCtiUitD?=
+ =?utf-8?B?N21hWVFtVjAyTWEvaldCMk1RL0o0ZVhKekppNExLWFMxbHZxM29LcWVHZkdY?=
+ =?utf-8?B?dFhiR0FpTVhDdUJOU2h0K2lrR1EwdGtMRlcxelg2NnZWZXVPZFI3aDdqTlAx?=
+ =?utf-8?B?SmYrQmoyQUJJZENudnZBRUtkVGNYNDl6R1Q0ZnJibkRiZmtSaUZhZHY1ekJW?=
+ =?utf-8?B?b2FLZWczd1loOHQxeTczL0I1R1FGNU1QSUFUbHBtNkhncC94V2NZS3ZCL0Fi?=
+ =?utf-8?B?QWR0M2Q1ekhPaDhmZDdVMi9YYWlIN1pDVE8xejI1SHpHSzlkcHBlNzRiOHlP?=
+ =?utf-8?B?WDdSNm4yR0R0ZXVjNkNOelBybVkyNW15TVZxcnhqUVVYRzN2QXFsZGlTMVY3?=
+ =?utf-8?B?RkhxRFpHeDNSTWd1K1ZQekxnTUxmQm1Qd2dHYVFRcWRhbnd3Y3NMYU00WWcw?=
+ =?utf-8?B?NDc1Q3ZGcGNhNHlYdGhEd0dLUWZMREY1NEFYNFZSYU0xYVVwRW9VVDJsUXBq?=
+ =?utf-8?B?RXBZR0VzVWtQU3hHaE82elZ3YWxJMDkzRjQ5YlFtbXhoZEJpYmdKeWNSRDhV?=
+ =?utf-8?B?bDRYS3pjOXoyanh6OUlXbjhaN0ZkQjd4VmFxUjgxbTNkYTZaNzhsTi84RGUx?=
+ =?utf-8?B?SDZNR0hQQ1V5b3Z4dXJrek5FNzFCZTJvbWZlUGhIQlBpb25mbHh1bW5jWis5?=
+ =?utf-8?B?L1g4OWJFVEQ4QWYvdUs1TVp1bFFnVlpLSkhSTUs5SlNwVjQrM1ovOG9QV1VH?=
+ =?utf-8?B?TzNEUWRaRDNOT3ZBOEJiZlczRStnYjJZaFZFU0JQVnVmYWNrYnJqN1A3eWs4?=
+ =?utf-8?B?eUliN1lmc0hTaHoyTlpjdStTT2pIbHpvOGF3N1pLenhuNmRyRFV2ZzB5T3V5?=
+ =?utf-8?B?RDBLMkFwWDZxQXhsQnFiOWFZb0E0ZHNHR3lJYVpjVS9taHBhL0JFckJ5a2hJ?=
+ =?utf-8?B?R3dNUnlSVlNnSkdsSjd2ZnVydFgrUnNJVGZsaUdZdVBxUllLelhMV3lGTU1j?=
+ =?utf-8?B?RjZ2aFYvL1RtRVBCZGRyaTZMVHljdUNOVkliMThuZk95dzVKQnlKbzBoczRN?=
+ =?utf-8?B?VHpoYmN4a0lPYUdNNTN4VTZsMVNZMFR2Tmh6aFhFT25WU1h2aEVoVzdqS3U3?=
+ =?utf-8?B?eHU1by9HTVlYenJGVGpDc1BtOVZtR3dmZHlUU1JqNmVUNytVQzY2VXl5REEv?=
+ =?utf-8?B?RVd1VlYzcU5IbExWeUJYRWtEcFdQT0hIZ3lyd05KYVo3dFZtaWlnS054OUJ4?=
+ =?utf-8?B?dm1nTlMxaEpFV1F3ZXl1Ly91QnV2dzJVUTQ4L3phY3RicTdUMnBFTDRmQ0tM?=
+ =?utf-8?B?WUVveUNjYmltbVVtSTVtaUhiWTVFeDV4OE1sQWNRZ3prdG9iNFV5cklySmNN?=
+ =?utf-8?B?Tm8yakpQdHdoNVpHWGpvWWtMVlcrUWJoMjVqWjFMWkI4OElOWi9TSWxlQzFR?=
+ =?utf-8?Q?/DhWL4DcVpCrjJTkNzJTSzets?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 373e05a7-c671-47e2-a672-08dc9fe9bbbb
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 07:35:40.8025
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OTTrJTYPJdv4cdMXywm+63OLZpL7NIr2+BVWrOiZiTRLZbnuDCWNKJFWNTJK6MZpqgWgtdjPVJoA5+VTfB0Prw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9794
 
-On Mon, 8 Jul 2024 at 19:26, Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Mon, Jul 08, 2024 at 02:55:49PM +0800, Cindy Lu wrote:
-> > Add the function to support setting the MAC address.
-> > For vdpa/mlx5, the function will use mlx5_mpfs_add_mac
-> > to set the mac address
-> >
-> > Tested in ConnectX-6 Dx device
-> >
-> > Signed-off-by: Cindy Lu <lulu@redhat.com>
->
-> Is this on top of your other patchset?
->
-yes, Will send a new version of these patch
-Thanks
-cindy
-> > ---
-> >  drivers/vdpa/mlx5/net/mlx5_vnet.c | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> > index 26ba7da6b410..f78701386690 100644
-> > --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> > +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> > @@ -3616,10 +3616,33 @@ static void mlx5_vdpa_dev_del(struct vdpa_mgmt_dev *v_mdev, struct vdpa_device *
-> >       destroy_workqueue(wq);
-> >       mgtdev->ndev = NULL;
-> >  }
-> > +static int mlx5_vdpa_set_attr_mac(struct vdpa_mgmt_dev *v_mdev,
-> > +                               struct vdpa_device *dev,
-> > +                               const struct vdpa_dev_set_config *add_config)
-> > +{
-> > +     struct mlx5_vdpa_dev *mvdev = to_mvdev(dev);
-> > +     struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
-> > +     struct mlx5_core_dev *mdev = mvdev->mdev;
-> > +     struct virtio_net_config *config = &ndev->config;
-> > +     int err;
-> > +     struct mlx5_core_dev *pfmdev;
-> > +
-> > +     if (add_config->mask & (1 << VDPA_ATTR_DEV_NET_CFG_MACADDR)) {
-> > +             if (!is_zero_ether_addr(add_config->net.mac)) {
-> > +                     memcpy(config->mac, add_config->net.mac, ETH_ALEN);
-> > +                     pfmdev = pci_get_drvdata(pci_physfn(mdev->pdev));
-> > +                     err = mlx5_mpfs_add_mac(pfmdev, config->mac);
-> > +                     if (err)
-> > +                             return -1;
-> > +             }
-> > +     }
-> > +     return 0;
-> > +}
-> >
-> >  static const struct vdpa_mgmtdev_ops mdev_ops = {
-> >       .dev_add = mlx5_vdpa_dev_add,
-> >       .dev_del = mlx5_vdpa_dev_del,
-> > +     .dev_set_attr = mlx5_vdpa_set_attr_mac,
-> >  };
-> >
-> >  static struct virtio_device_id id_table[] = {
-> > --
-> > 2.45.0
->
+On 07/09/2024, Rob Herring wrote:
+> On Mon, Jul 08, 2024 at 02:30:37PM +0800, Liu Ying wrote:
+>> On 07/07/2024, Krzysztof Kozlowski wrote:
+>>> On 05/07/2024 11:09, Liu Ying wrote:
+>>>> Freescale i.MX8qxp Display Controller is implemented as construction set of
+>>>> building blocks with unified concept and standardized interfaces.
+>>>>
+>>>> Document some processing units to support two display outputs.
+>>>
+>>>
+>>>> +maintainers:
+>>>> +  - Liu Ying <victor.liu@nxp.com>
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: fsl,imx8qxp-dc-tcon
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  fsl,dc-tc-id:
+>>>> +    description: Timing Controller unit instance number
+>>>
+>>> No instance numbering. This applies to your entire patchset.
+>>
+>> Then, I'll call of_alias_get_id() from the drivers to get
+>> instance number instead.
+> 
+> Ideally, no.
+> 
+>> As i.MX8qm SoC embeds two Display Controllers, the alias
+>> stem would contain the Display Controller instance
+>> number, like "dc0-tcon" and "dc1-tcon".  Is this ok?
+> 
+> The format of aliases is fooN, so no. Aliases should also be generic 
+> rather than vendor specific.
+> 
+> If you need to describe the connection of components in the display 
+> pipeline, then use the graph binding.
+
+I mentioned OF graph in the previous patch set discussion.
+
+"
+There are 50+ individual DPU internal units and 20+ unit types.
+Do you really mean that each unit should be a separate device in
+device tree and each unit type should have it's own compatible
+string ? 
+
+
+Almost all units have input/output ports to connect with each other.
+Some units have multiple input/output options.
+Should we use OF graph ports to tell the connections ?
+"
+
+https://lists.infradead.org/pipermail/linux-arm-kernel/2023-August/861811.html
+
+I hope we don't end up using the graph binding, as there are too
+many input/output options between processing units in the pixel engine,
+e.g.,
+
+"
+Selection of the source for the sec input of the layerblend0 module
+000000b - Unit layerblend0 input port sec is disabled
+010100b - Unit layerblend0 input port sec is connected to output of unit fetchwarp2
+010110b - Unit layerblend0 input port sec is connected to output of unit fetchdecode0
+011000b - Unit layerblend0 input port sec is connected to output of unit fetchdecode1
+011010b - Unit layerblend0 input port sec is connected to output of unit fetchlayer0
+011011b - Unit layerblend0 input port sec is connected to output of unit matrix4
+011100b - Unit layerblend0 input port sec is connected to output of unit hscaler4
+011101b - Unit layerblend0 input port sec is connected to output of unit vscaler4
+011110b - Unit layerblend0 input port sec is connected to output of unit matrix5
+011111b - Unit layerblend0 input port sec is connected to output of unit hscaler5
+100000b - Unit layerblend0 input port sec is connected to output of unit vscaler5
+
+Selection of the source for the prim input of the layerblend0 module
+000000b - Unit layerblend0 input port prim is disabled
+000000b - Unit layerblend0 input port prim is connected to output of unit constframe1
+001010b - Unit layerblend0 input port prim is connected to output of unit blitblend9
+001100b - Unit layerblend0 input port prim is connected to output of unit constframe0
+001110b - Unit layerblend0 input port prim is connected to output of unit constframe4
+010010b - Unit layerblend0 input port prim is connected to output of unit constframe5
+011011b - Unit layerblend0 input port prim is connected to output of unit matrix4
+011100b - Unit layerblend0 input port prim is connected to output of unit hscaler4
+011101b - Unit layerblend0 input port prim is connected to output of unit vscaler4
+011110b - Unit layerblend0 input port prim is connected to output of unit matrix5
+011111b - Unit layerblend0 input port prim is connected to output of unit hscaler5
+100000b - Unit layerblend0 input port prim is connected to output of unit vscaler5
+"
+
+Also, Matrix, GammarCor and Dither in the display engine can be bypassed.
+Matrix can be put at optional position(1 or 2).  Signature can be tapped
+after FrameGen, GammaCor, Matrix or Dither.
+
+FrameGen -> Matrix(1) -> GammaCor -> Maxtrix(2) -> Dither -> TCon
+
+Aside from the alias approach, another idea is to specify the instance
+number in compatible string, like "fsl,imx8qxp-dc-constframe5", no?
+
+> 
+> Rob
+
+-- 
+Regards,
+Liu Ying
 
