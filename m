@@ -1,44 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04299180028;
-	Tue,  9 Jul 2024 16:24:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8CB180043;
+	Tue,  9 Jul 2024 16:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542280; cv=none; b=Ph+tnDMdEV0aF0HIf4FwDuN8VUnDL31ElUa5R0JmK10fnxkeSfDuzZabCHl8QrtkP3YjRZhVUeOAIlPf+UYk+E8YbsZW6Qqdg+Cz85zPSdFsNt2y8LT26edcgN6Z+4dP8cwJ+5Gh+Sd0GnPm0boAwtv7iaUJXbzELBSFF8xrlik=
+	t=1720542283; cv=none; b=Usy2n7EKGLAqdjgd+tOttDrD2HDJNl5ECurxInjG3xmSM9eqSSLx/8MstZImbK+L8hTb2d4SRAsbwMyN+aNQMmNUPpxi6ICv7CWkBK/HlD4AT7cXO9yeR3znyP3o5JiNradG/2Sk0OgHU9RxPlFTlGn6IHkuiQ/gUTufEYn7BlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542280; c=relaxed/simple;
-	bh=HKx0w18o9eiINApYoocU2qlU4nW2qJ1zOY2bmX7giL0=;
+	s=arc-20240116; t=1720542283; c=relaxed/simple;
+	bh=7lRbEQCqQpMupPQ3Pa0KTmdnCD+aCGyVQE+QHBlxQ7c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EXkWErPucMVPBXoa2JFnKw/2SVhbaKXwIKsqXZxUfwKzo8jQ6KCCPTXsX7FZmm6oabyzSeT2IcZhNO9eYfQI7clz2VMfCZiLx6rdCNSj9TfVd5tNsckQ+u7fgUV6nnKv2u7AAZ4O4jHeEpb7KfRFFyGeBS2DREF3gN1nCGv1L0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tXxz/ZU8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CK0p1e4zBa+jchGhmFZVUPhRjESIs0If6ygL+4NGgEn8F2sEwF6JPPnOinaPdmHxFfLcjBCVD2a8KYH2lnQSkBMiqZHnUmt2hE6i429fz6IcRnzigSeGDwO4RZ6K7hUo0Uh4F0v49EtjTN2POYtLUQ0r96vFhFACFqckTb3NdEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTzHYYcY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tXxz/ZU8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FDBC4AF07;
-	Tue,  9 Jul 2024 16:24:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTzHYYcY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC171C3277B;
+	Tue,  9 Jul 2024 16:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542279;
-	bh=HKx0w18o9eiINApYoocU2qlU4nW2qJ1zOY2bmX7giL0=;
+	s=k20201202; t=1720542283;
+	bh=7lRbEQCqQpMupPQ3Pa0KTmdnCD+aCGyVQE+QHBlxQ7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tXxz/ZU8iGqf2oZGBcsX1gOMIAEDE1GFfmf8Cl5zBeZQagoTgt0ZVJ/d0OV/bvLVr
-	 fD6CEQw16O8DkahJaHTTItcqejw4CVd7zk+BN5LsT2Q8ddGQ/EsfXPS7TUP1Qozhow
-	 dVeDaqrnPt8py48k+xZnTZklEb9kZno9NEYxPZiqF9BBfUCcvc1gVOV6HyyKgTwYKe
-	 o4j3s7lIwvbT2xhWlP2/4NPzVpYKwa/T1f3CgMMtrgr/ep/C7dqyRuvOFwJapkqPkO
-	 sSrseEQUMF6/Oh8KJSNZ1sXPIgB3/hURDJr4cm0JvPKhCqEqWWo9TF9DrQTGEZUZYu
-	 Qlx/bNSCYAMaw==
+	b=pTzHYYcYW4IvhVVA06cYBtDd845D/RjRnAHwKWIHi5LbZuQo1L6GAVyl50Z95gPKb
+	 na8uGCjEhw70+xDpcVJbim/QZ9y6vvffHzmSVuH/RdY14d6ApiqsndjBkji8x5es8k
+	 QO2CN3l//NOYWM3DIKUk+q3yIKez3dDDhHSyEwMN8ebVB9arKwvj6+vIQzkS/CBfJZ
+	 b4zkPq9bztSptL2apFKBz28wcraRY8qNu01mQMP8d8rntR0ccZn4QnSt23eWu8Cf3b
+	 gi0k10LLtJGmqPuYHVj17riULLF3yGmo2MCLoYpkc9uQlpa2s6NPgNCPSjPcjTc3bD
+	 /hF/OI7B+6Lgw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Agathe Boutmy <agathe@boutmy.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
+Cc: Nick Child <nnac123@linux.ibm.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	matan@svgalib.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 19/27] platform/x86: lg-laptop: Use ACPI device handle when evaluating WMAB/WMBB
-Date: Tue,  9 Jul 2024 12:23:33 -0400
-Message-ID: <20240709162401.31946-19-sashal@kernel.org>
+	mpe@ellerman.id.au,
+	haren@linux.ibm.com,
+	ricklind@linux.ibm.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 21/27] ibmvnic: Add tx check to prevent skb leak
+Date: Tue,  9 Jul 2024 12:23:35 -0400
+Message-ID: <20240709162401.31946-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240709162401.31946-1-sashal@kernel.org>
 References: <20240709162401.31946-1-sashal@kernel.org>
@@ -48,311 +52,66 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.97
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Nick Child <nnac123@linux.ibm.com>
 
-[ Upstream commit b27ea279556121b54d3f45d0529706cf100cdb3a ]
+[ Upstream commit 0983d288caf984de0202c66641577b739caad561 ]
 
-On the LG Gram 16Z90S, the WMAB and WMBB ACPI methods are not mapped
-under \XINI, but instead are mapped under \_SB.XINI.
+Below is a summary of how the driver stores a reference to an skb during
+transmit:
+    tx_buff[free_map[consumer_index]]->skb = new_skb;
+    free_map[consumer_index] = IBMVNIC_INVALID_MAP;
+    consumer_index ++;
+Where variable data looks like this:
+    free_map == [4, IBMVNIC_INVALID_MAP, IBMVNIC_INVALID_MAP, 0, 3]
+                                               	consumer_index^
+    tx_buff == [skb=null, skb=<ptr>, skb=<ptr>, skb=null, skb=null]
 
-The reason for this is that the LGEX0820 ACPI device used by this
-driver is mapped at \_SB.XINI, so the ACPI methods where moved as well
-to appear below the LGEX0820 ACPI device.
+The driver has checks to ensure that free_map[consumer_index] pointed to
+a valid index but there was no check to ensure that this index pointed
+to an unused/null skb address. So, if, by some chance, our free_map and
+tx_buff lists become out of sync then we were previously risking an
+skb memory leak. This could then cause tcp congestion control to stop
+sending packets, eventually leading to ETIMEDOUT.
 
-Fix this by using the ACPI handle from the ACPI device when evaluating
-both methods.
+Therefore, add a conditional to ensure that the skb address is null. If
+not then warn the user (because this is still a bug that should be
+patched) and free the old pointer to prevent memleak/tcp problems.
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218901
-Tested-by: Agathe Boutmy <agathe@boutmy.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Link: https://lore.kernel.org/r/20240606233540.9774-5-W_Armin@gmx.de
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Nick Child <nnac123@linux.ibm.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/lg-laptop.c | 79 +++++++++++++-------------------
- 1 file changed, 33 insertions(+), 46 deletions(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-index 40051b043c422..2e1dc91bfc764 100644
---- a/drivers/platform/x86/lg-laptop.c
-+++ b/drivers/platform/x86/lg-laptop.c
-@@ -39,8 +39,6 @@ MODULE_LICENSE("GPL");
- #define WMI_METHOD_WMBB "2B4F501A-BD3C-4394-8DCF-00A7D2BC8210"
- #define WMI_EVENT_GUID  WMI_EVENT_GUID0
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 157be4e9be4b7..977116a1b3158 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -2288,6 +2288,18 @@ static netdev_tx_t ibmvnic_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	    (tx_pool->consumer_index + 1) % tx_pool->num_buffers;
  
--#define WMAB_METHOD     "\\XINI.WMAB"
--#define WMBB_METHOD     "\\XINI.WMBB"
- #define SB_GGOV_METHOD  "\\_SB.GGOV"
- #define GOV_TLED        0x2020008
- #define WM_GET          1
-@@ -74,7 +72,7 @@ static u32 inited;
- 
- static int battery_limit_use_wmbb;
- static struct led_classdev kbd_backlight;
--static enum led_brightness get_kbd_backlight_level(void);
-+static enum led_brightness get_kbd_backlight_level(struct device *dev);
- 
- static const struct key_entry wmi_keymap[] = {
- 	{KE_KEY, 0x70, {KEY_F15} },	 /* LG control panel (F1) */
-@@ -127,11 +125,10 @@ static int ggov(u32 arg0)
- 	return res;
- }
- 
--static union acpi_object *lg_wmab(u32 method, u32 arg1, u32 arg2)
-+static union acpi_object *lg_wmab(struct device *dev, u32 method, u32 arg1, u32 arg2)
- {
- 	union acpi_object args[3];
- 	acpi_status status;
--	acpi_handle handle;
- 	struct acpi_object_list arg;
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
- 
-@@ -142,29 +139,22 @@ static union acpi_object *lg_wmab(u32 method, u32 arg1, u32 arg2)
- 	args[2].type = ACPI_TYPE_INTEGER;
- 	args[2].integer.value = arg2;
- 
--	status = acpi_get_handle(NULL, (acpi_string) WMAB_METHOD, &handle);
--	if (ACPI_FAILURE(status)) {
--		pr_err("Cannot get handle");
--		return NULL;
--	}
--
- 	arg.count = 3;
- 	arg.pointer = args;
- 
--	status = acpi_evaluate_object(handle, NULL, &arg, &buffer);
-+	status = acpi_evaluate_object(ACPI_HANDLE(dev), "WMAB", &arg, &buffer);
- 	if (ACPI_FAILURE(status)) {
--		acpi_handle_err(handle, "WMAB: call failed.\n");
-+		dev_err(dev, "WMAB: call failed.\n");
- 		return NULL;
- 	}
- 
- 	return buffer.pointer;
- }
- 
--static union acpi_object *lg_wmbb(u32 method_id, u32 arg1, u32 arg2)
-+static union acpi_object *lg_wmbb(struct device *dev, u32 method_id, u32 arg1, u32 arg2)
- {
- 	union acpi_object args[3];
- 	acpi_status status;
--	acpi_handle handle;
- 	struct acpi_object_list arg;
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
- 	u8 buf[32];
-@@ -180,18 +170,12 @@ static union acpi_object *lg_wmbb(u32 method_id, u32 arg1, u32 arg2)
- 	args[2].buffer.length = 32;
- 	args[2].buffer.pointer = buf;
- 
--	status = acpi_get_handle(NULL, (acpi_string)WMBB_METHOD, &handle);
--	if (ACPI_FAILURE(status)) {
--		pr_err("Cannot get handle");
--		return NULL;
--	}
--
- 	arg.count = 3;
- 	arg.pointer = args;
- 
--	status = acpi_evaluate_object(handle, NULL, &arg, &buffer);
-+	status = acpi_evaluate_object(ACPI_HANDLE(dev), "WMBB", &arg, &buffer);
- 	if (ACPI_FAILURE(status)) {
--		acpi_handle_err(handle, "WMAB: call failed.\n");
-+		dev_err(dev, "WMBB: call failed.\n");
- 		return NULL;
- 	}
- 
-@@ -222,7 +206,7 @@ static void wmi_notify(u32 value, void *context)
- 
- 		if (eventcode == 0x10000000) {
- 			led_classdev_notify_brightness_hw_changed(
--				&kbd_backlight, get_kbd_backlight_level());
-+				&kbd_backlight, get_kbd_backlight_level(kbd_backlight.dev->parent));
- 		} else {
- 			key = sparse_keymap_entry_from_scancode(
- 				wmi_input_dev, eventcode);
-@@ -287,7 +271,7 @@ static ssize_t fan_mode_store(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	r = lg_wmab(WM_FAN_MODE, WM_GET, 0);
-+	r = lg_wmab(dev, WM_FAN_MODE, WM_GET, 0);
- 	if (!r)
- 		return -EIO;
- 
-@@ -298,9 +282,9 @@ static ssize_t fan_mode_store(struct device *dev,
- 
- 	m = r->integer.value;
- 	kfree(r);
--	r = lg_wmab(WM_FAN_MODE, WM_SET, (m & 0xffffff0f) | (value << 4));
-+	r = lg_wmab(dev, WM_FAN_MODE, WM_SET, (m & 0xffffff0f) | (value << 4));
- 	kfree(r);
--	r = lg_wmab(WM_FAN_MODE, WM_SET, (m & 0xfffffff0) | value);
-+	r = lg_wmab(dev, WM_FAN_MODE, WM_SET, (m & 0xfffffff0) | value);
- 	kfree(r);
- 
- 	return count;
-@@ -312,7 +296,7 @@ static ssize_t fan_mode_show(struct device *dev,
- 	unsigned int status;
- 	union acpi_object *r;
- 
--	r = lg_wmab(WM_FAN_MODE, WM_GET, 0);
-+	r = lg_wmab(dev, WM_FAN_MODE, WM_GET, 0);
- 	if (!r)
- 		return -EIO;
- 
-@@ -339,7 +323,7 @@ static ssize_t usb_charge_store(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	r = lg_wmbb(WMBB_USB_CHARGE, WM_SET, value);
-+	r = lg_wmbb(dev, WMBB_USB_CHARGE, WM_SET, value);
- 	if (!r)
- 		return -EIO;
- 
-@@ -353,7 +337,7 @@ static ssize_t usb_charge_show(struct device *dev,
- 	unsigned int status;
- 	union acpi_object *r;
- 
--	r = lg_wmbb(WMBB_USB_CHARGE, WM_GET, 0);
-+	r = lg_wmbb(dev, WMBB_USB_CHARGE, WM_GET, 0);
- 	if (!r)
- 		return -EIO;
- 
-@@ -381,7 +365,7 @@ static ssize_t reader_mode_store(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	r = lg_wmab(WM_READER_MODE, WM_SET, value);
-+	r = lg_wmab(dev, WM_READER_MODE, WM_SET, value);
- 	if (!r)
- 		return -EIO;
- 
-@@ -395,7 +379,7 @@ static ssize_t reader_mode_show(struct device *dev,
- 	unsigned int status;
- 	union acpi_object *r;
- 
--	r = lg_wmab(WM_READER_MODE, WM_GET, 0);
-+	r = lg_wmab(dev, WM_READER_MODE, WM_GET, 0);
- 	if (!r)
- 		return -EIO;
- 
-@@ -423,7 +407,7 @@ static ssize_t fn_lock_store(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	r = lg_wmab(WM_FN_LOCK, WM_SET, value);
-+	r = lg_wmab(dev, WM_FN_LOCK, WM_SET, value);
- 	if (!r)
- 		return -EIO;
- 
-@@ -437,7 +421,7 @@ static ssize_t fn_lock_show(struct device *dev,
- 	unsigned int status;
- 	union acpi_object *r;
- 
--	r = lg_wmab(WM_FN_LOCK, WM_GET, 0);
-+	r = lg_wmab(dev, WM_FN_LOCK, WM_GET, 0);
- 	if (!r)
- 		return -EIO;
- 
-@@ -467,9 +451,9 @@ static ssize_t charge_control_end_threshold_store(struct device *dev,
- 		union acpi_object *r;
- 
- 		if (battery_limit_use_wmbb)
--			r = lg_wmbb(WMBB_BATT_LIMIT, WM_SET, value);
-+			r = lg_wmbb(&pf_device->dev, WMBB_BATT_LIMIT, WM_SET, value);
- 		else
--			r = lg_wmab(WM_BATT_LIMIT, WM_SET, value);
-+			r = lg_wmab(&pf_device->dev, WM_BATT_LIMIT, WM_SET, value);
- 		if (!r)
- 			return -EIO;
- 
-@@ -488,7 +472,7 @@ static ssize_t charge_control_end_threshold_show(struct device *device,
- 	union acpi_object *r;
- 
- 	if (battery_limit_use_wmbb) {
--		r = lg_wmbb(WMBB_BATT_LIMIT, WM_GET, 0);
-+		r = lg_wmbb(&pf_device->dev, WMBB_BATT_LIMIT, WM_GET, 0);
- 		if (!r)
- 			return -EIO;
- 
-@@ -499,7 +483,7 @@ static ssize_t charge_control_end_threshold_show(struct device *device,
- 
- 		status = r->buffer.pointer[0x10];
- 	} else {
--		r = lg_wmab(WM_BATT_LIMIT, WM_GET, 0);
-+		r = lg_wmab(&pf_device->dev, WM_BATT_LIMIT, WM_GET, 0);
- 		if (!r)
- 			return -EIO;
- 
-@@ -578,7 +562,7 @@ static void tpad_led_set(struct led_classdev *cdev,
- {
- 	union acpi_object *r;
- 
--	r = lg_wmab(WM_TLED, WM_SET, brightness > LED_OFF);
-+	r = lg_wmab(cdev->dev->parent, WM_TLED, WM_SET, brightness > LED_OFF);
- 	kfree(r);
- }
- 
-@@ -600,16 +584,16 @@ static void kbd_backlight_set(struct led_classdev *cdev,
- 		val = 0;
- 	if (brightness >= LED_FULL)
- 		val = 0x24;
--	r = lg_wmab(WM_KEY_LIGHT, WM_SET, val);
-+	r = lg_wmab(cdev->dev->parent, WM_KEY_LIGHT, WM_SET, val);
- 	kfree(r);
- }
- 
--static enum led_brightness get_kbd_backlight_level(void)
-+static enum led_brightness get_kbd_backlight_level(struct device *dev)
- {
- 	union acpi_object *r;
- 	int val;
- 
--	r = lg_wmab(WM_KEY_LIGHT, WM_GET, 0);
-+	r = lg_wmab(dev, WM_KEY_LIGHT, WM_GET, 0);
- 
- 	if (!r)
- 		return LED_OFF;
-@@ -637,7 +621,7 @@ static enum led_brightness get_kbd_backlight_level(void)
- 
- static enum led_brightness kbd_backlight_get(struct led_classdev *cdev)
- {
--	return get_kbd_backlight_level();
-+	return get_kbd_backlight_level(cdev->dev->parent);
- }
- 
- static LED_DEVICE(kbd_backlight, 255, LED_BRIGHT_HW_CHANGED);
-@@ -664,6 +648,11 @@ static struct platform_driver pf_driver = {
- 
- static int acpi_add(struct acpi_device *device)
- {
-+	struct platform_device_info pdev_info = {
-+		.fwnode = acpi_fwnode_handle(device),
-+		.name = PLATFORM_NAME,
-+		.id = PLATFORM_DEVID_NONE,
-+	};
- 	int ret;
- 	const char *product;
- 	int year = 2017;
-@@ -675,9 +664,7 @@ static int acpi_add(struct acpi_device *device)
- 	if (ret)
- 		return ret;
- 
--	pf_device = platform_device_register_simple(PLATFORM_NAME,
--						    PLATFORM_DEVID_NONE,
--						    NULL, 0);
-+	pf_device = platform_device_register_full(&pdev_info);
- 	if (IS_ERR(pf_device)) {
- 		ret = PTR_ERR(pf_device);
- 		pf_device = NULL;
+ 	tx_buff = &tx_pool->tx_buff[bufidx];
++
++	/* Sanity checks on our free map to make sure it points to an index
++	 * that is not being occupied by another skb. If skb memory is
++	 * not freed then we see congestion control kick in and halt tx.
++	 */
++	if (unlikely(tx_buff->skb)) {
++		dev_warn_ratelimited(dev, "TX free map points to untracked skb (%s %d idx=%d)\n",
++				     skb_is_gso(skb) ? "tso_pool" : "tx_pool",
++				     queue_num, bufidx);
++		dev_kfree_skb_any(tx_buff->skb);
++	}
++
+ 	tx_buff->skb = skb;
+ 	tx_buff->index = bufidx;
+ 	tx_buff->pool_index = queue_num;
 -- 
 2.43.0
 
