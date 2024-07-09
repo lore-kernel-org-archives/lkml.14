@@ -1,214 +1,168 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4951553A7
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D5415534D;
+	Tue,  9 Jul 2024 09:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720518105; cv=none; b=YrBrKhtTrzKKy/DQBI/YH41eew6MxjDknbnOjj4YeXGzvDh7oAfJ3QDB6dwmgVglZ5bZcioa/Q7shaV8mQcJt2VWglAyII4O8W78K0riBdrkOeu2GQ7uNiC9rk58S8/yK3Ugv47uNVX4/9407ZPXLWSLt3A0Ob6SMe5juYtU59k=
+	t=1720518192; cv=none; b=Tbd6w/9fSNdSwg6Jz8VSg96E1yofs0zXMD/LraWqwQt9x2H1lEC+V9mTpDBhU01fn0600RWDHqnotmBvL8QDLAbOgXEyaoQn0gCoAydj762dlpCweQX3b5eHJjp2EwAl+kptOEqzanbNuCCGWuzLc2nuzCZB0WGRAMeitasGiaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720518105; c=relaxed/simple;
-	bh=OVic1D3bXJjoJN/kiWr29pgPclMVMHNBoDKkoGJHFJE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aKlSbVoSGtdD7A6qZXpld5rwFfZI544+cZZc/SzzJbMUNCZk2x7h6NhuxFu6U2r7ArksDqjOCweYtDzaj4TkO5Qbba9fDPA4sEbdOS0BZQUVkt8YQKYroeCQPs0Hz5QMi20NEE6mmuO79pDIM8iMiXKO6mhNg7s4nHBw0Ua822U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wO+81jDc; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720518192; c=relaxed/simple;
+	bh=Z0HcHq7yzl+7AelddnrRR87bt+aU2j10VpepG5UbVu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QiIvcl/KpeNm9lruFLKb7tmg/xYQRtik47v1Jh1DKMPp2Rj87zK5Lm/Im0TFsXN/vvQ9QqCwiU6VOcHmG+o82smL97vjmK6BOD/Y1TMkrZLHdiEGyZKiC4kAyMOH8YHtBE2kwehQ+TN7HofP/6r3uJNvBcDBrWrXBcrCSgQ4U/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pS12M/hF; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wO+81jDc"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-36796aee597so3261869f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 02:41:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720518102; x=1721122902; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IAZt8GtzurYosVReDcWXFfiP8YdX7GkjA3wsNUYSUA0=;
-        b=wO+81jDc9w7jaUVRsGwUO9/7JXRG7ElA29JVWKj2Y5GYKLxRdUJNR1hpngLVv1/OQh
-         uxHJda2hlv0bHweM7RygxPTToM+LJnt+itmErAY7yosrm3piTOG9istwV2eImlzO3zeL
-         VAkFZDVwOBk+io9/VlgZH98v/Ui8AV0cRHQ6F7C+FnCdWacpp1VG3vj9p6rPR7aNGW6J
-         uUwkCPH/tWTK1ligS5PjBCbns/DCD9LdKNvlXPJSqxSqcTlgQiG/QtUj2y0O7AGRXEmK
-         HBGJqOnhGt5FEXkjSxe1VbfjFR+V8DolgYfHdX+tfwTveTaSqQZVjmrqi4r4Rz6+yiaj
-         TxRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720518102; x=1721122902;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IAZt8GtzurYosVReDcWXFfiP8YdX7GkjA3wsNUYSUA0=;
-        b=N7+d/hq/1rsAjlhQlXZsRJVcfMbzFKSVWsvsJIAdgb0ptNOaqbV7DJ/oMHx+EIhxi/
-         lQsBg59Bwi/MFl16wk5S9kQ9ognfdtjUWMqBVKStoWp32JRJQwsvyk9rFKvHkI9y0DQr
-         IUteVpl8JBsFUiBbg2aAQK+VgkY1ra5MTg+SoFH2WbZS8NkF8+vWAvo9EnO3v/OxivAs
-         3yaMc/Yv5i/1pdRP3mRyhk1d8rA/1TVbV3rAj/cFGPPIhs8n176FfV21FIoFWa2rJyBZ
-         crJKdLsnqB1LXOv7G0TrUKGpz2x//hRgdjrNoDvJpKZx/Ga4fDvnZVbSVFNBXQIvzPgp
-         e4KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1HCcZ1RNJqFaE/Hd7n+vJv5ixGpNIK/BJgTwUa2l6J2gaQ2IXtCdWaJB7Kv9A3KbOtDoIur4AhNIPEg+soey7LvL9Q6oPEPY+DJHh
-X-Gm-Message-State: AOJu0YzTqgsZ8KIiDmOOnmnqr8W/AjKbFNTGMA69WoHJMMpQmHWSlMfF
-	rCxUqDvG6wwCZRtO01snChapTTqPgl+NFO/nTVCMWsurOaNU7FEQfXg+TsQHh8mZy7BvQ/ICqvc
-	D0aWJCNa1kBYogFsN0/2g16mtzlAiuQENS/KW
-X-Google-Smtp-Source: AGHT+IGR9yHQ5VjkQb02n11rV5m/nD2z1+GzQbrI8bQfIRwcFNZ5ZAorDCFB5Yu93sLbwZrEWDDYx07QGU+HUmU2sGI=
-X-Received: by 2002:adf:fecc:0:b0:362:40cd:1bc with SMTP id
- ffacd0b85a97d-367cea73537mr1228764f8f.24.1720518102260; Tue, 09 Jul 2024
- 02:41:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pS12M/hF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 896761BF20E;
+	Tue,  9 Jul 2024 09:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720518188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WVMmtSjwlNQmVjxtUeUdR3iKhz4W+lQLl2pkn1Xk12k=;
+	b=pS12M/hFFtUvUahs26E5vD/JZJjIQ8CmyPf5kCaaSJzFbR3RDeMCaG4WkQ18U83Kje7Xfl
+	AyN919sqdbsVTsmreQhwHSygXqgRJ0kdPQ5zjcJUGtxlT4Ho9p8ijdF8YfTeIO6HFDK7eO
+	9ZWZUOd5wpLbo4/rkrKRN8+RnXilQYghyruJzJG1B0By1AlkPDEswaoM56ChbKqR9xzmtO
+	jhtQebyqSJwnet2P69DvwaCq24fYzhp/MVzppGLvK1eJdhxGBanp5/LzDMV65mb+L+itk6
+	lQKaVcgNUEyq8U3sZF8TqV+3RTbRtu+1Gi6vNNP28kc9H4uebjsO4mk9Ei94yg==
+Date: Tue, 9 Jul 2024 11:43:02 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Maxime Ripard <mripard@kernel.org>, Pratyush Yadav
+ <pratyush@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Richard
+ Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Russell King <linux@armlinux.org.uk>,
+ Joel Stanley <joel@jms.id.au>, Andrew Jeffery
+ <andrew@codeconstruct.com.au>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement
+ <gregory.clement@bootlin.com>, Sebastian Hesselbarth
+ <sebastian.hesselbarth@gmail.com>, Tony Lindgren <tony@atomide.com>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Magnus Damm
+ <magnus.damm@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, Michael
+ Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Huacai Chen <chenhuacai@kernel.org>, WANG
+ Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ imx@lists.linux.dev, linux-omap@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+ openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
+ linux-mips@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH 4/9] mtd: devices: add AT24 eeprom support
+Message-ID: <20240709114302.3c604ef3@xps-13>
+In-Reply-To: <20240709092214.omr7ccphdzdk7z7j@pengutronix.de>
+References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
+	<20240701-b4-v6-10-topic-usbc-tcpci-v1-4-3fd5f4a193cc@pengutronix.de>
+	<07b701a9-7b52-45b7-8dba-1c25d77cbf15@linaro.org>
+	<mafs0ikxnykpr.fsf@kernel.org>
+	<20240702-congenial-vigilant-boar-aeae44@houat>
+	<mafs0ed8byj5z.fsf@kernel.org>
+	<20240702-mighty-brilliant-eel-b0d9fa@houat>
+	<20240708084440.70186564@xps-13>
+	<20240709092214.omr7ccphdzdk7z7j@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709084458.158659-1-jfalempe@redhat.com> <20240709084458.158659-5-jfalempe@redhat.com>
-In-Reply-To: <20240709084458.158659-5-jfalempe@redhat.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 9 Jul 2024 11:41:29 +0200
-Message-ID: <CAH5fLgh5fb_NYUNPPXYepJg=pbmHAb+-+sOrCxc0n=fiNjTFTw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] drm/panic: Add a qr_code panic screen
-To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	Bjorn Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org, 
-	Danilo Krummrich <dakr@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Tue, Jul 9, 2024 at 10:45=E2=80=AFAM Jocelyn Falempe <jfalempe@redhat.co=
-m> wrote:
->
-> This patch adds a new panic screen, with a QR code and the kmsg data
-> embedded.
-> If DRM_PANIC_SCREEN_QR_CODE_URL is set, then the kmsg data will be
-> compressed with zlib and encoded as a numerical segment, and appended
-> to the url as a url parameter. This allows to save space, and put
-> about ~7500 bytes of kmsg data, in a V40 QR code.
-> Linux distributions can customize the url, and put a web frontend to
-> directly open a bug report with the kmsg data.
->
-> Otherwise the kmsg data will be encoded as binary segment (ie raw
-> ascii) and only a maximum of 2953 bytes of kmsg data will be
-> available in the QR code.
->
-> You can also limit the QR code size with DRM_PANIC_SCREEN_QR_VERSION.
->
-> v2:
->  * Rewrite the rust comments with Markdown (Alice Ryhl)
->  * Mark drm_panic_qr_generate() as unsafe (Alice Ryhl)
->  * Use CStr directly, and remove the call to as_str_unchecked()
->    (Alice Ryhl)
->  * Add a check for data_len <=3D data_size (Greg KH)
->
-> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+Hi Marco,
 
-[...]
+> > > > >> I also found a thread from 2013 by Maxime Ripard (+Cc) suggestin=
+g adding
+> > > > >> EEPROMs to MTD [1]. The main purpose would have been unifying th=
+e EEPROM
+> > > > >> drivers under a single interface. I am not sure what came of it =
+though,
+> > > > >> since I can't find any patches that followed up with the proposa=
+l.   =20
+> > > > >
+> > > > > That discussion led to drivers/nvmem after I started to work on
+> > > > > some early prototype, and Srinivas took over that work.   =20
+> > > >=20
+> > > > So would you say it is better for EEPROM drivers to use nvmem inste=
+ad of
+> > > > moving under MTD?   =20
+> > >=20
+> > > I thought so at the time, but that was more than 10y ago, and I have
+> > > followed neither nvmem nor MTD since so I don't really have an opinion
+> > > there.
+> > >=20
+> > > It looks like drivers/misc/eeprom/at24.c has support for nvmem though,
+> > > and MTD can be used as an nvmem provider too, so it's not clear to me
+> > > why we would want to create yet another variant.
+> > >=20
+> > > But again, you shouldn't really ask me in the first place :)
+> > >=20
+> > > I'm sure Miquel, Srinivas, and surely others, are much more relevant =
+to
+> > > answer that question. =20
+> >=20
+> > More relevant, I doubt, but just a feeling: EEPROMs have their own
+> > subsystem now, NVMEM, which, as Maxime said, was initially written for
+> > that very specific case. EEPROMs don't have the complexity of MTD
+> > devices, and thus pulling the whole MTD subsystem just for getting
+> > partitions seems counter intuitive to me. You can definitely "split"
+> > EEPROM devices with NVMEM as well anyway. =20
+>=20
+> I asked for feedback on my RFC [1] and all I got was to merge both
+> drivers into one and make the driver backward compatible, which I did by
+> this commit.
 
-> +/// drm_panic_qr_generate()
-> +///
-> +/// C entry point for the rust QR Code generator.
-> +///
-> +/// Write the QR code image in the data buffer, and return the qrcode si=
-ze, or 0
-> +/// if the data doesn't fit in a QR code.
-> +///
-> +/// * `url` The base url of the QR code. It will be encoded as Binary se=
-gment.
-> +/// * `data` A pointer to the binary data, to be encoded. if url is NULL=
-, it
-> +///    will be encoded as binary segment, otherwise it will be encoded
-> +///    efficiently as a numeric segment, and appended to the url.
-> +/// * `data_len` Length of the data, that needs to be encoded.
-> +/// * `data_size` Size of data buffer, it should be at least 4071 bytes =
-to hold
-> +///    a V40 QR-code. It will then be overwritten with the QR-code image=
-.
-> +/// * `tmp` A temporary buffer that the QR-code encoder will use, to wri=
-te the
-> +///    segments and ECC.
-> +/// * `tmp_size` Size of the temporary buffer, it must be at least 3706 =
-bytes
-> +///    long for V40.
-> +///
-> +/// # Safety
-> +///
-> +/// * `url` must be null or point at a nul-terminated string.
-> +/// * `data` must be valid for reading and writing for `data_size` bytes=
-.
-> +/// * `data_len` must be less than `data_size`.
-> +/// * `tmp` must be valid for reading and writing for `tmp_size` bytes.
+I'm sorry for not bringing this earlier.
 
-You don't allow data_len =3D=3D data_size?
+> > Overall I think the idea of getting rid of these misc/ drivers is goes
+> > into the right direction, but registering directly into NVMEM makes
+> > more sense IMO. =20
+>=20
+> So you propose to have two places for the partition handling (one for
+> MTD and one for NVMEM) instead of one and moving the code into NVMEM
+> directly?
 
-> +#[no_mangle]
-> +pub unsafe extern "C" fn drm_panic_qr_generate(
-> +    url: *const i8,
-> +    data: *mut u8,
-> +    data_len: usize,
-> +    data_size: usize,
-> +    tmp: *mut u8,
-> +    tmp_size: usize,
-> +) -> u8 {
-> +    if data_size <=3D 4071 || tmp_size <=3D 3706 || data_len > data_size=
- {
-> +        return 0;
-> +    }
+Why two places for the partitions handling? Just one, in NVMEM. Also
+usually EEPROMs don't require very advanced partitioning schemes,
+unlike flashes (which are the most common MTD devices today).
 
-Since you explicitly check the data_len, it does not *need* to be a
-safety requirement (but it can be). Even if it's wrong, violating the
-requirement does not lead to memory safety.
+> That doesn't sound right to me either. Also I don't get the
+> point why EEPROMs can't be handled by the MTD layer?
 
-> +    // Safety: data must be a valid pointer for reading and writing data=
-_size bytes.
-> +    let data_slice: &mut [u8] =3D unsafe { core::slice::from_raw_parts_m=
-ut(data, data_size) };
-> +    // Safety: tmp must be a valid pointer for reading and writing tmp_s=
-ize bytes.
-> +    let tmp_slice: &mut [u8] =3D unsafe { core::slice::from_raw_parts_mu=
-t(tmp, tmp_size) };
+They can, but should they? Just compile the two layers and observe
+the size difference. MTD is complex and old, carries a lot of history,
+and the user interface is also not straightforward because you need to
+handle pages, blocks, erases, bitflips, ECC stats, OOB bytes and
+positions, two OTP areas... None of that exists in the EEPROM world. So
+why would you want to register into MTD and pull a huge subsystem while
+there is a much more recent, simpler and way lighter subsystem fitting
+much better your device?
 
-These safety comments explain why these calls are dangerous, but
-that's not what safety comments should do. They should explain why
-this particular call is okay. In this case, it's because the caller of
-drm_panic_qr_generate must follow the documented safety requirements
-of the current function. The wording could look like this:
+> The layer already
+> supports devices of type MTD_RAM which are very simple and don't require
+> an erase-op at least I don't see one.
 
-// SAFETY: Due to the safety requirements on this function, the caller
-ensures that tmp is a valid pointer for reading and writing tmp_size
-bytes.
+MTD_RAM has been there forever, probably for "bad" reasons. BTW there
+has been an attempt at removing it which was reverted in _2006_ and then
+felt into the cracks:
+21c8db9eff95 ("[MTD] Restore MTD_ROM and MTD_RAM types")
 
-The wording is not much different, but it's an important distinction.
-
-(Also, safety comments are written SAFETY: not Safety:)
-
-> +    if url.is_null() {
-> +        match EncodedMsg::new(&[&Segment::Binary(&data_slice[0..data_len=
-])], tmp_slice) {
-> +            None =3D> 0,
-> +            Some(em) =3D> {
-> +                let qr_image =3D QrImage::new(&em, data_slice);
-> +                qr_image.width
-> +            }
-> +        }
-> +    } else {
-> +        // Safety: url must be a valid pointer to a nul-terminated strin=
-g.
-> +        let url_cstr: &CStr =3D unsafe { CStr::from_char_ptr(url) };
-
-// SAFETY: The caller ensures that url is a valid pointer to a
-nul-terminated string.
-
-> +        let segments =3D &[
-> +            &Segment::Binary(url_cstr.as_bytes()),
-> +            &Segment::Numeric(&data_slice[0..data_len]),
-> +        ];
-> +        match EncodedMsg::new(segments, tmp_slice) {
-> +            None =3D> 0,
-> +            Some(em) =3D> {
-> +                let qr_image =3D QrImage::new(&em, data_slice);
-> +                qr_image.width
-> +            }
-> +        }
-> +    }
-> +}
-
-Alice
+Thanks,
+Miqu=C3=A8l
