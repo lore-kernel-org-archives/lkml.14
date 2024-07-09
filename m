@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3380217B048;
-	Tue,  9 Jul 2024 16:24:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB77180045;
+	Tue,  9 Jul 2024 16:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542278; cv=none; b=KhAA5qXJLiHV9YDF0b1jp7BC85Ab5V+S3SfLmGR+fgE1PxbDbHk7Thnzi9P7eTl1CqZb1GvI9Fs/Ya8HplzJq/gcS81f6F8Emw6hHa7UU8LupSATtm9AwcX9IsqZsMBM6w5tK4Lg1xCphyCx7D4QDBxsSgTxJ9Ek/ujrAXraBPM=
+	t=1720542281; cv=none; b=MZmheLV2N3aKUnb8ATsptWRq2bNA1h/TzUx8VZscsDTwJEx6dVqhWEqBXjtclQkFUANqx2HZaSRBtMaTWoiJMrS5ABjSsb1Ua1LU8SYmoQlw5Us1HnYmFKAnn5ZgJOWP2HkXlDlE7Tdg1w257JPNDL9zZeU84oZWoKExTd7JyQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542278; c=relaxed/simple;
-	bh=6zXCNEk/FfVcSweKDebwNIp8i4GHsMOkSLcu7DY0MfQ=;
+	s=arc-20240116; t=1720542281; c=relaxed/simple;
+	bh=/pPDZdrL1fgbfg8JalZ4s9HSctgP7Uy078kZQgQ08/w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ETTBKNzP9XT1k1cn6Y2Pa4LTVXu8TcWnTV7dlPFTOdhhVD+INTItZb88zNtMn+dIgwsVfESeG4QRYEpH/vwghTZf2ih2G3LuBYmoPN64YhRMMqTzGpg2+TKbeeiYH3YBF+NZjOynyDKtLulPj32vf93k8jTnasGIkQXLo6lDsck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GLb4GTlY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=a8r6QegG22/86tADZMpJUfKwF5d1gTZNbdSw2Lg3bHe1TNJAtVYNkIOu3IPDmuIFcUrBhh8WyXJTa/Fuk4d6Dp27gVyl7qjJVmM14wwvTxG63QB4XTdEZMUADnKs6eZSdXNY3CiFAB6tOu5HLFrsurASHXB9FVkjq31NwmuD7HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6JUMVJW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GLb4GTlY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1726EC3277B;
-	Tue,  9 Jul 2024 16:24:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6JUMVJW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21C38C3277B;
+	Tue,  9 Jul 2024 16:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542278;
-	bh=6zXCNEk/FfVcSweKDebwNIp8i4GHsMOkSLcu7DY0MfQ=;
+	s=k20201202; t=1720542281;
+	bh=/pPDZdrL1fgbfg8JalZ4s9HSctgP7Uy078kZQgQ08/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GLb4GTlYsMWKQEpSf6KXcNcmYy4lFqzo+l0z3ssPExRzq9v2TY4GXowqVKFFv0Mdl
-	 QmAXOvlZ/6TC12bNVXhWDiD3iOwaZMP57ATa6OTwmITaFwImXh6MaU25FNA6QcuB9x
-	 b8019RTqbFFT78NjtK9RA2UgkJK3F+mMdF/CoLMkiFCR5R/1/suNvlwThPSVNpyWT9
-	 s4Ww0ba4U4hqFyt20Bi/QizZ79irWIXBnHF+42jjdymioBrroVHtgTkWec+9uST/G1
-	 W2g6rEpKmX1eW8k0Xs7rTu3/EMPlOPrq6TIuHsHEbja3EAAFinov0qFc92bwZ6G+My
-	 Uzhc0DdEj3p1A==
+	b=I6JUMVJWPGxWCCIj5Ce+H67XXm0HsiWktupdM52mmZRZKW0RnKQPnnwDZEQXNqcek
+	 p7SUHnd1reEQYp016QT+M/basF1bO5OKqhyCN2AUnuUiGSotVW+/I3GH379xGI9z/Q
+	 lhodPTd6rFeU3gbuyIZcfeTGNUiWpsvB8BjR4UDAkJRTcm4ZCidqErLgBzktI8Gq/B
+	 eFdO7NB5h3G412IeVV2Q3vkx3mUtShXftL03HNAVb1tuysPIW02j9/wffhlftAFL9J
+	 e8zNl+e1LnlvVoZY8by4xKuu5GmQYrw0voV24nYcXJqOptTiRsyf7sR9CKIUPgjdkg
+	 bYx7M0PiVTofA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Agathe Boutmy <agathe@boutmy.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
+Cc: Filipe Manana <fdmanana@suse.com>,
+	Boris Burkov <boris@bur.io>,
+	Qu Wenruo <wqu@suse.com>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
-	matan@svgalib.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 18/27] platform/x86: lg-laptop: Change ACPI device id
-Date: Tue,  9 Jul 2024 12:23:32 -0400
-Message-ID: <20240709162401.31946-18-sashal@kernel.org>
+	clm@fb.com,
+	josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 20/27] btrfs: qgroup: fix quota root leak after quota disable failure
+Date: Tue,  9 Jul 2024 12:23:34 -0400
+Message-ID: <20240709162401.31946-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240709162401.31946-1-sashal@kernel.org>
 References: <20240709162401.31946-1-sashal@kernel.org>
@@ -48,47 +49,62 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.97
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 58a54f27a0dac81f7fd3514be01012635219a53c ]
+[ Upstream commit a7e4c6a3031c74078dba7fa36239d0f4fe476c53 ]
 
-The LGEX0815 ACPI device id is used for handling hotkey events, but
-this functionality is already handled by the wireless-hotkey driver.
+If during the quota disable we fail when cleaning the quota tree or when
+deleting the root from the root tree, we jump to the 'out' label without
+ever dropping the reference on the quota root, resulting in a leak of the
+root since fs_info->quota_root is no longer pointing to the root (we have
+set it to NULL just before those steps).
 
-The LGEX0820 ACPI device id however is used to manage various
-platform features using the WMAB/WMBB ACPI methods. Use this ACPI
-device id to avoid blocking the wireless-hotkey driver from probing.
+Fix this by always doing a btrfs_put_root() call under the 'out' label.
+This is a problem that exists since qgroups were first added in 2012 by
+commit bed92eae26cc ("Btrfs: qgroup implementation and prototypes"), but
+back then we missed a kfree on the quota root and free_extent_buffer()
+calls on its root and commit root nodes, since back then roots were not
+yet reference counted.
 
-Tested-by: Agathe Boutmy <agathe@boutmy.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Link: https://lore.kernel.org/r/20240606233540.9774-4-W_Armin@gmx.de
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Boris Burkov <boris@bur.io>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/lg-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/qgroup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-index aa063c3c935b5..40051b043c422 100644
---- a/drivers/platform/x86/lg-laptop.c
-+++ b/drivers/platform/x86/lg-laptop.c
-@@ -770,7 +770,7 @@ static int acpi_remove(struct acpi_device *device)
- }
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index 80ca7b435b0d1..e482889667ec9 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -1222,7 +1222,7 @@ int btrfs_quota_enable(struct btrfs_fs_info *fs_info)
  
- static const struct acpi_device_id device_ids[] = {
--	{"LGEX0815", 0},
-+	{"LGEX0820", 0},
- 	{"", 0}
- };
- MODULE_DEVICE_TABLE(acpi, device_ids);
+ int btrfs_quota_disable(struct btrfs_fs_info *fs_info)
+ {
+-	struct btrfs_root *quota_root;
++	struct btrfs_root *quota_root = NULL;
+ 	struct btrfs_trans_handle *trans = NULL;
+ 	int ret = 0;
+ 
+@@ -1317,9 +1317,9 @@ int btrfs_quota_disable(struct btrfs_fs_info *fs_info)
+ 	btrfs_free_tree_block(trans, btrfs_root_id(quota_root),
+ 			      quota_root->node, 0, 1);
+ 
+-	btrfs_put_root(quota_root);
+ 
+ out:
++	btrfs_put_root(quota_root);
+ 	mutex_unlock(&fs_info->qgroup_ioctl_lock);
+ 	if (ret && trans)
+ 		btrfs_end_transaction(trans);
 -- 
 2.43.0
 
