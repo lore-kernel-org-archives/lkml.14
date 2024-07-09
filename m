@@ -1,96 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D5F19A86E;
-	Tue,  9 Jul 2024 16:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DB51A6518;
+	Tue,  9 Jul 2024 16:26:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542383; cv=none; b=ASntNNheEu9Ziz/SmdlzOdTM1OCjo9Lt1h+mxgkopQSFpvtLEW7YBPC+ZSVo4mm37zmHNy+hQ+EwK9qWBscwDladQpjMIakWLW7Lv3603P6BzYYzL4++6XnU296GsaCsQHHhK2bRQEJXYgsifphGNO0QLadhy0iA8GAFOfgzVF4=
+	t=1720542384; cv=none; b=ReLu2ucbdRDOPx8o/H40p7XP9jgmiJwXu7+aB877XVgLb+j1N/GnUP1K79WA+6aGXnIH02hOXQHZvm3VTlgr/paCv8rxANIQwf4ipW9ZVlgNDzt3i6HBdS1OcjuvYBaEaAErNU5GLEBxUFLtqpKYxDRBNOJIfri0oEHK2Bqpf+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542383; c=relaxed/simple;
-	bh=9LvZ/VKou4FmKLWBcdKcpGHtv7xBlcn4z4HXRAwZyhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KyyQbehREAQ3GP4fQC/22XlhgQobneS/kl5HCMMjmT3GnMnx+jILzMw2flPY6dCoWURzTNWetPynS12EUAqNwNzzIw8OCrbu1tXCCdOMaBKjonviUHEA4A3J+Q1Jvf8XdCNs+pPJNafDkdSnv1m/iR7ceziKcLMLzR7k6VrYFRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGCb+20a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720542384; c=relaxed/simple;
+	bh=gH/MLw6JgZoOrm83fJgEFdvIeuiZFVBnZ1489eqVJqE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tY05p+OdqqjGSEdEddmb334cFWpHtuY58T07SXnaKftd2UUlXhQeNRNvTJbDKsPu1iNs9c11KDjhqdZLhEK/p04QtppuKIb/b/Jc0CZFBA8zqk4n5qVs9MT9w76PxXt5gO8jRkci3TTE1aYDWdIEj6XllQViuXoCbuiPpuj5oZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wn2OdZK8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGCb+20a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF199C3277B;
-	Tue,  9 Jul 2024 16:26:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wn2OdZK8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D57C4AF11;
+	Tue,  9 Jul 2024 16:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542383;
-	bh=9LvZ/VKou4FmKLWBcdKcpGHtv7xBlcn4z4HXRAwZyhU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aGCb+20aGOoaL23EBtm/kEXkY2NUQakENOVw3rJLSQHVugpNqzGFu2ENhy9gHOD4A
-	 mqDDj7BAmOh5va/DLjP9EM8LlJFBk5VfvwDcsmC8VI0YpcFybjy9ZD83qD5VwPI+KP
-	 x5FXerm2/Dky43YYqzG13DyQ66KoaEFVA/Vck0sd03sQZt+hEt18l0hYPxuVoHJLrD
-	 llb5w1f7M6cTCkYz4fN63YfVsNksePrJq4/LXbXTJrKbX/6xaR2ylI1gbFfeiaYu6A
-	 cj6u+Jg1noOyKY6N8cr+iIs5+axnfqqJrie9+0dIwQDaztCBsbhEZWMGtW/FU+OqRc
-	 Peb5tDF8ezMvg==
-Date: Tue, 9 Jul 2024 11:26:21 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Tengfei Fan <quic_tengfan@quicinc.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, kernel@quicinc.com,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: qcom-ep: Add HDMA support for QCS9100 SoC
-Message-ID: <20240709162621.GA175973@bhelgaas>
+	s=k20201202; t=1720542384;
+	bh=gH/MLw6JgZoOrm83fJgEFdvIeuiZFVBnZ1489eqVJqE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Wn2OdZK892V7w1QHOjWRghCxmlluvUBQBU31pJYCaXGQxg7Jc5ZzDl0Ck5BjBi0Hg
+	 Azw+O1AoH4GvYWMNC6PgKvgNNIgQRZIPLgKhjAl543+pwET8uExmKGdYmNFYdtvi2u
+	 TJ+DveTE4z3/1WY6rhJAp63xoaQbcaLk7Zhm9Mh5eMxtNbEdrrkkxh2yJVCbrvTFwa
+	 1JChxmlIrUJyhRCUz4cPpli4+UM8YH83ibSswNtHtueMflre4hLdVZ0jCf2Uly+BDe
+	 TN+M0dOJFOzmMj7VzXM0PsFyTzUyk/73zGIKEMxMeFMARf8UxQfOUejf76Qof3jn88
+	 iGRouCHlFh27A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Jai Luthra <j-luthra@ti.com>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 05/14] ASoC: ti: davinci-mcasp: Set min period size using FIFO config
+Date: Tue,  9 Jul 2024 12:25:49 -0400
+Message-ID: <20240709162612.32988-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240709162612.32988-1-sashal@kernel.org>
+References: <20240709162612.32988-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709-add_qcs9100_pcie_ep_compatible-v2-2-217742eac32b@quicinc.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.221
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 09, 2024 at 10:53:44PM +0800, Tengfei Fan wrote:
-> QCS9100 SoC supports the new Hyper DMA (HDMA) DMA Engine inside the DWC IP,
-> so add support for it by passing the mapping format and the number of
-> read/write channels count.
-> 
-> The PCIe EP controller used on this SoC is of version 1.34.0, so a separate
-> config struct is introduced for the sake of enabling HDMA conditionally.
+From: Jai Luthra <j-luthra@ti.com>
 
-This patch doesn't add a new config struct.
+[ Upstream commit c5dcf8ab10606e76c1d8a0ec77f27d84a392e874 ]
 
-> It should be noted that for the eDMA support (predecessor of HDMA), there
-> are no mapping format and channels count specified. That is because eDMA
-> supports auto detection of both parameters, whereas HDMA doesn't.
-> 
-> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
-> platform use non-SCMI resource. In the future, the SA8775p platform will
-> move to use SCMI resources and it will have new sa8775p-related device
-> tree. Consequently, introduce "qcom,qcs9100-pcie-ep" to the PCIe device
-> match table.
+The minimum period size was enforced to 64 as older devices integrating
+McASP with EDMA used an internal FIFO of 64 samples.
 
-This series doesn't add the new SCMI stuff you mention.  It sounds
-like this should be deferred and added when you actually move to using
-SCMI resources.
+With UDMA based platforms this internal McASP FIFO is optional, as the
+DMA engine internally does some buffering which is already accounted for
+when registering the platform. So we should read the actual FIFO
+configuration (txnumevt/rxnumevt) instead of hardcoding frames.min to
+64.
 
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom-ep.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index 236229f66c80..e2775f4ca7ee 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -904,6 +904,7 @@ static const struct qcom_pcie_ep_cfg cfg_1_34_0 = {
->  };
->  
->  static const struct of_device_id qcom_pcie_ep_match[] = {
-> +	{ .compatible = "qcom,qcs9100-pcie-ep", .data = &cfg_1_34_0},
->  	{ .compatible = "qcom,sa8775p-pcie-ep", .data = &cfg_1_34_0},
->  	{ .compatible = "qcom,sdx55-pcie-ep", },
->  	{ .compatible = "qcom,sm8450-pcie-ep", },
-> 
-> -- 
-> 2.25.1
-> 
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Signed-off-by: Jai Luthra <j-luthra@ti.com>
+Link: https://lore.kernel.org/r/20240611-asoc_next-v3-2-fcfd84b12164@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/ti/davinci-mcasp.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index a6b72ad53b434..61ea444f2018d 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -1441,10 +1441,11 @@ static int davinci_mcasp_hw_rule_min_periodsize(
+ {
+ 	struct snd_interval *period_size = hw_param_interval(params,
+ 						SNDRV_PCM_HW_PARAM_PERIOD_SIZE);
++	u8 numevt = *((u8 *)rule->private);
+ 	struct snd_interval frames;
+ 
+ 	snd_interval_any(&frames);
+-	frames.min = 64;
++	frames.min = numevt;
+ 	frames.integer = 1;
+ 
+ 	return snd_interval_refine(period_size, &frames);
+@@ -1459,6 +1460,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 	u32 max_channels = 0;
+ 	int i, dir, ret;
+ 	int tdm_slots = mcasp->tdm_slots;
++	u8 *numevt;
+ 
+ 	/* Do not allow more then one stream per direction */
+ 	if (mcasp->substreams[substream->stream])
+@@ -1558,9 +1560,12 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 			return ret;
+ 	}
+ 
++	numevt = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
++			 &mcasp->txnumevt :
++			 &mcasp->rxnumevt;
+ 	snd_pcm_hw_rule_add(substream->runtime, 0,
+ 			    SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
+-			    davinci_mcasp_hw_rule_min_periodsize, NULL,
++			    davinci_mcasp_hw_rule_min_periodsize, numevt,
+ 			    SNDRV_PCM_HW_PARAM_PERIOD_SIZE, -1);
+ 
+ 	return 0;
+-- 
+2.43.0
+
