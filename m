@@ -1,94 +1,217 @@
-Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
+Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D2812CD96;
-	Tue,  9 Jul 2024 08:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A21412CD96;
+	Tue,  9 Jul 2024 08:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720513330; cv=none; b=S22NfY6HarH+SJGD6RLsZtZRa2lU3sknXfhu9axm20QZonx6/wS5vFmrGLwVb4a+KKrYwF/aJ4QNfN40LaLRd5ekAoQY0kMRjQJoKOprHkvBFFF12P6H0Ek0LYr7KSQ1KPl2Gj6pDSN0cCGhTBj7yremqJke6ENU4tau3SmibMY=
+	t=1720513347; cv=none; b=LTFT4sW1bl184HcKFhPjjfd1l3jO1kAXsQmN8cEpWYZZsZfA3w+/55g/GHDz945Ir1qz+Tefg2cJpeAS2xYbeMRXUI4PcPaFau3IugAf3Bg/XkBP6PrMVX9KnE/qoMcCliXO3plE5CfTJDUnkVaWuHpb6A0Z4I/C2frBQy9M9BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720513330; c=relaxed/simple;
-	bh=JgEr5U+fLS4WUxNs5ikEAi/tUDBDyjhkkFSQQmq2Rt8=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=E7cA+WTILsQoP7MADkT7UQYmw+mkU+mVxfXObTg835kr9s+BT1ghmJb8yTiwYjhDxwJPMvWnORwOa2OzDkuNKjmwJvoriujQgPHZZVdx1tKV42wpz2JTXdIMmbXHJ4sRIxCIa1KHX4yKypyOHO+Y8bCSl9lM/bfM4SspXGZRX6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=BlNCmKFr; arc=none smtp.client-ip=49.12.199.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+	s=arc-20240116; t=1720513347; c=relaxed/simple;
+	bh=/gYVJD15xFaui6T9JocnKA1r2ooEEcIgwDZnejMpIlc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DOMl9yIgwtYFLRjLNmsJ6FIjMQNkX8TFS18EhE4X/tP3wFonyUJe0KFS931dLSZecXbTqiTJ9kDhSPM+cyx89G8NUEbkMv8m+mzlBHLEJP9IxS6e4o2HaWSV0Sh5HsATXJHaOPP1r//JILRys2bq48ZvefZhpHQjni7atBS4Ams=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=aU7JabxT; arc=none smtp.client-ip=134.0.28.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="BlNCmKFr"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C8183DACA4;
-	Tue,  9 Jul 2024 10:21:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-	t=1720513318; h=from:subject:date:message-id:to:mime-version:content-type;
-	bh=RqXXP3P3dOyPEGLpGTGXZPEtE5YZun6RO19b1IvkPP0=;
-	b=BlNCmKFr5vOLGPAzsXC5U0+IoiQMidTGXx81eHSW6vFHsoa+1TReAuHj6xSO5vIng5CIFs
-	cq3+Fe34Ue04JoLn1xTW+hE2+y3r4ODtplCcAej6Q6pLeqyQqal6aKOiAlX7HeI8xdJevY
-	gg+TnH1ccEUfupRGVKz9E5sSHfNR4kZEjZgz2q+zoOrHFNoY12/Hl8yi7aKQwCLjuITy0S
-	DPgZFet2ula7+SuNJJ+PQqHwP6mnzG3NYUjLOQY8dY7iUirtuRBDJLfNVaT3cx6JCh/jmp
-	pq7LKkGZSCidOBPVCdiLxP1HM5DNm4bIiUI+ga9GxKs7wDSu1MQMrdndFaodWw==
-Date: Tue, 9 Jul 2024 10:21:53 +0200
-From: Daniel Wagner <wagi@monom.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org, 
-	stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Tom Zanussi <tom.zanussi@linux.intel.com>, Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 4.19.316-rt136
-Message-ID: <172051324712.24919.12388891662776955702@beryllium.lan>
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="aU7JabxT"
+Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
+	by mxout2.routing.net (Postfix) with ESMTP id 0C6E55FD4B;
+	Tue,  9 Jul 2024 08:16:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1720512985;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MDMf7DvFYCdwJ6yYWc6ATDV2rtt8qlGbjIkB3P1prUA=;
+	b=aU7JabxTsf1aK/77OmIldWo1GPgTLA5vNZ2v32VbWnnegBjJxybkGe9FceGO9HlAj28g4w
+	Eb7b0Y8qwAYrzEfsX7GRXJyIQ+7C6CBG62hDSFd2fWvGkcl6v+8eJM2OHAoi8dOT3cgKov
+	mTn9L82xGi7m+N7npAFIKYaHOnhQNl8=
+Received: from frank-u24.. (fttx-pool-217.61.149.221.bambit.de [217.61.149.221])
+	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 082581006CA;
+	Tue,  9 Jul 2024 08:16:23 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	Daniel Golle <daniel@makrotopia.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v1] arm64: dts: mediatek: mt7988: add labels for different nodes
+Date: Tue,  9 Jul 2024 10:16:13 +0200
+Message-ID: <20240709081614.19993-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+X-Mail-ID: 86a6b8d6-7d26-42ab-aaf3-d045996a5733
 
-Hello RT-list!
+From: Frank Wunderlich <frank-w@public-files.de>
 
-I'm pleased to announce the 4.19.316-rt136 stable release. This
-is just an update to the v4.19.316 stable release. No RT specific changes.
+Current devicetree-nodes missing a label which allows to add aproperties
+or phandles to them, so add them.
 
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v4.19-rt
-  Head SHA1: 346ca37165de5ea5ce47dfa9a27d4bf22c77fcd5
-
-Or to build 4.19.316-rt136 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.316.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/older/patch-4.19.316-rt136.patch.xz
-
-Signing key fingerprint:
-
-  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Daniel
-
-Changes from v4.19.315-rt135:
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Fixes: 660c230bf302 ("arm64: dts: mediatek: mt7988: add I2C controllers")
+Fixes: 09ff2216a035 ("arm64: dts: mediatek: mt7988: add PWM controller")
+Fixes: 09346afaba0a ("arm64: dts: mediatek: mt7988: add XHCI controllers")
+Fixes: b616b403cbff ("arm64: dts: mediatek: mt7988: add clock controllers")
+Fixes: 6c1d134a103f ("arm64: dts: mediatek: Add initial MT7988A and BPI-R4")
 ---
+ arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 32 +++++++++++------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-Daniel Wagner (1):
-      Linux 4.19.316-rt136
----
-localversion-rt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
----
-diff --git a/localversion-rt b/localversion-rt
-index e3026053f01e..f824f53c19ea 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt135
-+-rt136
+diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+index aa728331e876..9ced005b1595 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+@@ -14,28 +14,28 @@ cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a73";
+ 			reg = <0x0>;
+ 			device_type = "cpu";
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a73";
+ 			reg = <0x1>;
+ 			device_type = "cpu";
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a73";
+ 			reg = <0x2>;
+ 			device_type = "cpu";
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a73";
+ 			reg = <0x3>;
+ 			device_type = "cpu";
+@@ -43,7 +43,7 @@ cpu@3 {
+ 		};
+ 	};
+ 
+-	oscillator-40m {
++	system_clk: oscillator-40m {
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <40000000>;
+ 		#clock-cells = <0>;
+@@ -86,7 +86,7 @@ infracfg: clock-controller@10001000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
+-		clock-controller@1001b000 {
++		topckgen: clock-controller@1001b000 {
+ 			compatible = "mediatek,mt7988-topckgen", "syscon";
+ 			reg = <0 0x1001b000 0 0x1000>;
+ 			#clock-cells = <1>;
+@@ -99,13 +99,13 @@ watchdog: watchdog@1001c000 {
+ 			#reset-cells = <1>;
+ 		};
+ 
+-		clock-controller@1001e000 {
++		apmixedsys: clock-controller@1001e000 {
+ 			compatible = "mediatek,mt7988-apmixedsys";
+ 			reg = <0 0x1001e000 0 0x1000>;
+ 			#clock-cells = <1>;
+ 		};
+ 
+-		pwm@10048000 {
++		pwm: pwm@10048000 {
+ 			compatible = "mediatek,mt7988-pwm";
+ 			reg = <0 0x10048000 0 0x1000>;
+ 			clocks = <&infracfg CLK_INFRA_66M_PWM_BCK>,
+@@ -124,7 +124,7 @@ pwm@10048000 {
+ 			status = "disabled";
+ 		};
+ 
+-		i2c@11003000 {
++		i2c0: i2c@11003000 {
+ 			compatible = "mediatek,mt7981-i2c";
+ 			reg = <0 0x11003000 0 0x1000>,
+ 			      <0 0x10217080 0 0x80>;
+@@ -137,7 +137,7 @@ i2c@11003000 {
+ 			status = "disabled";
+ 		};
+ 
+-		i2c@11004000 {
++		i2c1: i2c@11004000 {
+ 			compatible = "mediatek,mt7981-i2c";
+ 			reg = <0 0x11004000 0 0x1000>,
+ 			      <0 0x10217100 0 0x80>;
+@@ -150,7 +150,7 @@ i2c@11004000 {
+ 			status = "disabled";
+ 		};
+ 
+-		i2c@11005000 {
++		i2c2: i2c@11005000 {
+ 			compatible = "mediatek,mt7981-i2c";
+ 			reg = <0 0x11005000 0 0x1000>,
+ 			      <0 0x10217180 0 0x80>;
+@@ -163,7 +163,7 @@ i2c@11005000 {
+ 			status = "disabled";
+ 		};
+ 
+-		usb@11190000 {
++		ssusb0: usb@11190000 {
+ 			compatible = "mediatek,mt7988-xhci", "mediatek,mtk-xhci";
+ 			reg = <0 0x11190000 0 0x2e00>,
+ 			      <0 0x11193e00 0 0x0100>;
+@@ -177,7 +177,7 @@ usb@11190000 {
+ 			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck", "xhci_ck";
+ 		};
+ 
+-		usb@11200000 {
++		ssusb1: usb@11200000 {
+ 			compatible = "mediatek,mt7988-xhci", "mediatek,mtk-xhci";
+ 			reg = <0 0x11200000 0 0x2e00>,
+ 			      <0 0x11203e00 0 0x0100>;
+@@ -191,21 +191,21 @@ usb@11200000 {
+ 			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck", "xhci_ck";
+ 		};
+ 
+-		clock-controller@11f40000 {
++		xfi_pll: clock-controller@11f40000 {
+ 			compatible = "mediatek,mt7988-xfi-pll";
+ 			reg = <0 0x11f40000 0 0x1000>;
+ 			resets = <&watchdog 16>;
+ 			#clock-cells = <1>;
+ 		};
+ 
+-		clock-controller@15000000 {
++		ethsys: clock-controller@15000000 {
+ 			compatible = "mediatek,mt7988-ethsys", "syscon";
+ 			reg = <0 0x15000000 0 0x1000>;
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 		};
+ 
+-		clock-controller@15031000 {
++		ethwarp: clock-controller@15031000 {
+ 			compatible = "mediatek,mt7988-ethwarp";
+ 			reg = <0 0x15031000 0 0x1000>;
+ 			#clock-cells = <1>;
+-- 
+2.43.0
+
