@@ -1,116 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6C01959F9;
-	Tue,  9 Jul 2024 16:26:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13D01A4F07;
+	Tue,  9 Jul 2024 16:26:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542377; cv=none; b=ah1dYLw4CBsLVbfYEI/1/JLnKcoyTv/TSZ3l4zBnQQ3nZgpnEgj0afzPAGiJUKWJwp/XkP37uvW9B27jo/nSbiVTgdYd2AO8PSG4zdv/QJPHCzMKSJo/EYgUHaBpb6cafG+WrEpFsh+BDG0/EIYGw3AjJthPDQFdQWjVIPb8rYg=
+	t=1720542378; cv=none; b=seG3k32gfkFOUR74rpVtH+w3Z/aEKkMJ/C7qmKMYVmXwpIOSx6iFT3kz7ocMrC+heoNt/i+Y7tf7MRcgBCvEPV4Nftas3QhQG9wPrmDpkgveg5WRPL6nFqV9JG8+kgMMgcfKqoGE/NSCyFbUKAELisY+BkdJwo6nRh5yw2dMayo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542377; c=relaxed/simple;
-	bh=03p1iCnGDXntEyF3X2nU8sUHQbseSYFaOSYZLNjPkPk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DUX/CKYCajLQOH5P/G95Em2b1DBPp3sFLBY3EdykfNwORYqdAuns7pbtDAJmf/IKas3vELwgePqi2hWXSAh2DNsK9iLXv9LIbcY0FnXNabPYcoY29hqabDDTsv5RnngeDiM7gO2xuvgCbmk0nYZG84PkPaW1YL43ZzUs/K4sTn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsR5/u3B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720542378; c=relaxed/simple;
+	bh=+bZLGqWY1DDBcyTEH10hsAqp0+mebKEECO2I2Lb/wl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=cKTYgS6+0y02D5Agn+k8Q3TCAyJX8LGBys+E+wOSZo2sb92ayoG9Unz9RARG+kCLu0C4iAa6RBiYDJVnhdwb9qXTKjU6UEAqq6f5C9YFB5tJ99/+ySwNMP0wShIA8+Q6ep/eTAq+Oi3jQ0Hbh4lwy3ycXHIQ/ZRdvWkLkJPFavI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDBLvmZB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsR5/u3B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322C0C4AF0A;
-	Tue,  9 Jul 2024 16:26:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDBLvmZB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03FCBC3277B;
+	Tue,  9 Jul 2024 16:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542377;
-	bh=03p1iCnGDXntEyF3X2nU8sUHQbseSYFaOSYZLNjPkPk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RsR5/u3Bi4pe9sTPpYOMKP32BkkvufyVkoY1eRDJF/XS5UmFGKSVKqhkPPEW4k9rp
-	 p19Rg4WFmrbQzGLyaMlp1D9t5A/51LgQ+dTCdvChV9NGiF77IIzhquYAFTbIaISHL5
-	 cq8rZqx1BmgMyFgPoSUerLqc2GvIHZmeCE4wJKp4iIzswDaRuVHioFlafGwjzBgy/n
-	 /3JX+spN1mcNUHAWh0u5LHipX2whPNU2hxNBkFKVyU5obulx33EE45r9X/ESNatM9v
-	 FEUB9/OJCspHxkUcn8PHgxrlROFRCABagX3Q0k1ZjLqQBgSbTsma00ikpNC65XrxdE
-	 tGp2u7VAHZ0jA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Sasha Levin <sashal@kernel.org>,
-	szfabian@bluemarch.art,
-	wse@tuxedocomputers.com,
-	eshimanovich@chromium.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 02/14] Input: i8042 - add Ayaneo Kun to i8042 quirk table
-Date: Tue,  9 Jul 2024 12:25:46 -0400
-Message-ID: <20240709162612.32988-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240709162612.32988-1-sashal@kernel.org>
-References: <20240709162612.32988-1-sashal@kernel.org>
+	s=k20201202; t=1720542378;
+	bh=+bZLGqWY1DDBcyTEH10hsAqp0+mebKEECO2I2Lb/wl8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=IDBLvmZBCCFufsM+sPjL6bm0hoX51V5WbYI6jjJCmWNdXwhUXuEWUtbmUAVlSVtaY
+	 7VUq0dOWOd5vPkGKLT6vEIzv94XAWqZLNJ0yNkJYm9G7wTSvtjbe/j+RIa4fNLaHvQ
+	 eVe67BFLUV9sbdO/iuphzr8kwE/ZExgNxGeTcHa1LKQV0Ig+5Py1irT1nVCktdT/xt
+	 N7Gzb3U01PW2GVllWF9hXRL3FDHxBhuSbtnJ/BDkR6J0GhrLKlgbTEUzCh9k32nLVb
+	 90Ve4y/HS6L+EKvDda1dkV+pYt8E0xyUFicvcX9xixXBZ+tIDg/VWptNhM+M8k5Yl0
+	 /RqOzI/LgAMVQ==
+Date: Tue, 9 Jul 2024 11:26:16 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	kernel@quicinc.com, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: qcom: Add support for QCS9100 SoC
+Message-ID: <20240709162616.GA175928@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.221
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709-add_qcs9100_pcie_compatible-v2-2-04f1e85c8a48@quicinc.com>
 
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+On Tue, Jul 09, 2024 at 10:59:30PM +0800, Tengfei Fan wrote:
+> Add support for QCS9100 SoC that uses controller version 5.90
+> reusing the 1.9.0 config.
 
-[ Upstream commit 955af6355ddfe35140f9706a635838212a32513b ]
+Add blank line here if this is a paragraph break.
 
-See the added comment for details. Also fix a typo in the
-quirk's define.
-
-Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Link: https://lore.kernel.org/r/20240531190100.3874731-1-tjakobi@math.uni-bielefeld.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/input/serio/i8042-acpipnpio.h | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/serio/i8042-acpipnpio.h b/drivers/input/serio/i8042-acpipnpio.h
-index 6804970d8f51a..91edfb88a218e 100644
---- a/drivers/input/serio/i8042-acpipnpio.h
-+++ b/drivers/input/serio/i8042-acpipnpio.h
-@@ -75,7 +75,7 @@ static inline void i8042_write_command(int val)
- #define SERIO_QUIRK_PROBE_DEFER		BIT(5)
- #define SERIO_QUIRK_RESET_ALWAYS	BIT(6)
- #define SERIO_QUIRK_RESET_NEVER		BIT(7)
--#define SERIO_QUIRK_DIECT		BIT(8)
-+#define SERIO_QUIRK_DIRECT		BIT(8)
- #define SERIO_QUIRK_DUMBKBD		BIT(9)
- #define SERIO_QUIRK_NOLOOP		BIT(10)
- #define SERIO_QUIRK_NOTIMEOUT		BIT(11)
-@@ -1235,6 +1235,20 @@ static const struct dmi_system_id i8042_dmi_quirk_table[] __initconst = {
- 		.driver_data = (void *)(SERIO_QUIRK_NOMUX | SERIO_QUIRK_RESET_ALWAYS |
- 					SERIO_QUIRK_NOLOOP | SERIO_QUIRK_NOPNP)
- 	},
-+	{
-+		/*
-+		 * The Ayaneo Kun is a handheld device where some the buttons
-+		 * are handled by an AT keyboard. The keyboard is usually
-+		 * detected as raw, but sometimes, usually after a cold boot,
-+		 * it is detected as translated. Make sure that the keyboard
-+		 * is always in raw mode.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "KUN"),
-+		},
-+		.driver_data = (void *)(SERIO_QUIRK_DIRECT)
-+	},
- 	{ }
- };
- 
-@@ -1553,7 +1567,7 @@ static void __init i8042_check_quirks(void)
- 		if (quirks & SERIO_QUIRK_RESET_NEVER)
- 			i8042_reset = I8042_RESET_NEVER;
- 	}
--	if (quirks & SERIO_QUIRK_DIECT)
-+	if (quirks & SERIO_QUIRK_DIRECT)
- 		i8042_direct = true;
- 	if (quirks & SERIO_QUIRK_DUMBKBD)
- 		i8042_dumbkbd = true;
--- 
-2.43.0
-
+> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
+> platform use non-SCMI resource. In the future, the SA8775p platform will
+> move to use SCMI resources and it will have new sa8775p-related device
+> tree. Consequently, introduce "qcom,pcie-qcs9100" to the PCIe device
+> match table.
+> 
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 26405fcfa499..ea3fddc74498 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1722,6 +1722,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
+>  	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+>  	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+> +	{ .compatible = "qcom,pcie-qcs9100", .data = &cfg_sc8280xp },
+>  	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
+>  	{ .compatible = "qcom,pcie-sa8775p", .data = &cfg_1_34_0},
+>  	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
+> 
+> -- 
+> 2.25.1
+> 
