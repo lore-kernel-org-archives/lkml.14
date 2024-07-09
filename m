@@ -1,165 +1,482 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18684176231
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844F8382;
+	Tue,  9 Jul 2024 13:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720530362; cv=none; b=rlx9hqWEGHAcmlaFueLMWDR9GOF8BKf0abVPQ76SOCxfeK6+y/aTxXfO4z2Y7ES8pTX56b405qxBLJMGZF03kFQTm5lzc7DXnPz2o/DgRftsIq2ANEqA99PoAuj9iHM861x/MVCWu9Y6TAKM6gMxLPvkOe4nNMeWbVYzQ38ueyE=
+	t=1720530367; cv=none; b=Gs1AUlyZwLviNBc5QZ0k9ABVD2+7TZwwxb0o6akqqqp6/I8ah+YPFdbgKTGwG8xZZpzC6X6vGHH6e2rUueYhg2yeTvbuV5xugsoUtAwOYuAd/hPLJMY/CxKAiNtH5BY6QRK36MwrRO9FRkAZA0Rm/Pv2/Cl1bikrWag8UKb6lLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720530362; c=relaxed/simple;
-	bh=EQVVYEOR5xlW6+YN0ZoEefcxKajPe32Jfjcy7Zu5DFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k3QMHZF1RRWaGJZdN7KHCL5uXrzfV+/5f9VOQMq9WYJCRGiud655lejM6aK4srtg3SXVuUCswOPn6uDRzAme22LoQNwpaSeehNz5f0FLa5uGLpaTs3P6X+WvLlW0Sg8TVZoWtWBSKZqDfkNqPos0nFgWhsxoU6LyRNmXIX8MBSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YS0ulNsT; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1720530367; c=relaxed/simple;
+	bh=Wzch4xQ9esrxdmOm22Pn2ApKmukjCb985hoIkY+IA1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mQDoi29AyNsOFpcR0UA0hMixxdDVfVsW4ovK39Q5S7XAgVl/k1XUYrfiJ/r4/lwBYXtCU+F884bi12EiKpAre3UO7yYxHwLJxxWCUPJ1FcLP/rmmY9sCJXSTYbBIjBT3LLkLsVp/pzfLRxeaFHGa+VSOoFqFifIGRULHOLOjFKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=jOzTtJ8d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YS0ulNsT"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ee75ffce77so62138751fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:05:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1720530358; x=1721135158; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LhBjgRzpL9sQaVK76pu/ld0xnGk1Z8E8uhy7X7mxsF4=;
-        b=YS0ulNsT2/R1NwZpPciwZ7CjoiZtk3raGzYkVP9+50os0AtSJw1WOFSnFvfyZ5Qld6
-         s1aJjSAiE0byD/FgIwXEvEBSo2kdQYZQSCDQi5fY0GxnEb43CFEbB9LcJb9Y6dZUDaAt
-         0aoJgWXIAKaDVqCKktKVecBPYbKZQ/7eath+RMOC1M9lqiX6wB0b4TDG6saMe29vAds/
-         DrvdQasKG7yphBGBGt/kscrZph5gVoGC1uVQsyerRtxdiFSxwhgxX23kI1cHayY2PWGi
-         kAGpzvdVJTHY0xhle4eznt/tsLvXJDXYZgKRq60DQOIBILsCnx3uaTPKAolqgYj2kQJ0
-         iNiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720530358; x=1721135158;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LhBjgRzpL9sQaVK76pu/ld0xnGk1Z8E8uhy7X7mxsF4=;
-        b=ZaRKJucf7NxPKJ3iZEHyzVpwnf42qroLVKem2DgFyMjqHbRvCcU4Pane5oUw5O/+RA
-         GRj28HXHpELOPexUOtDm+f1mg7hiqiwhw4NRF6kclVPfYqM8Z2tE7EkHMljKD+pWnT0F
-         lJzIt3goOQ7qcMTfckJQnvmCH5McWny15GgZgkZD5mLkLjx3pWD3yCEvKkpRG8YFNJeq
-         j3pU6tFNjPWVZw7AwBh6MTrxY/LhiHIBNXxbSz/HGAi2hy/7XcLP75hqc+fQXFGwPpSi
-         XjbFuMItqqKx6u78vUSDrHWDl2r4Ry89czyTdNj6i0D/00a2ryX8Cqkv0phCtL1w5tYe
-         H6jg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4iv/dZFMOvAs2eMuI+iJkp2nsZBt17+d8zpC8gEMeUdOlX2Km72dyFu67zh33cmkJVG579uUivvrDGzP1nEYHp8gLCLBJ2MXMS6vW
-X-Gm-Message-State: AOJu0Yw1g4unkQEzMmrq6EhvwMH5iE9UFBJfHFQVKA6nk0FYfXlADKgn
-	SEcDGFph5mN6Iz5F9/fAFqQCCf1STB5Egbf5t2SKQgj15TmSJvTQyEQteo86svk=
-X-Google-Smtp-Source: AGHT+IHOTh69D3Wwh5wXN48yiquSobzGhHe+Le3Ut78ADxB5tyf8MU7GHpgjRa1MPh1vOGvXyEFoJw==
-X-Received: by 2002:a2e:9693:0:b0:2ec:165a:224d with SMTP id 38308e7fff4ca-2eeb3169f03mr20727561fa.38.1720530358111;
-        Tue, 09 Jul 2024 06:05:58 -0700 (PDT)
-Received: from localhost ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a871fe1sm76017166b.223.2024.07.09.06.05.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 06:05:57 -0700 (PDT)
-Date: Tue, 9 Jul 2024 15:05:55 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: xiujianfeng <xiujianfeng@huawei.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, tj@kernel.org,
-	lizefan.x@bytedance.com, hannes@cmpxchg.org, corbet@lwn.net,
-	cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Sidhartha Kumar <sidhartha.kumar@oracle.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>
-Subject: Re: [PATCH -next] mm/hugetlb_cgroup: introduce peak and rsvd.peak to
- v2
-Message-ID: <Zo01s6_PjdO9O9Nw@tiehlicka>
-References: <20240702125728.2743143-1-xiujianfeng@huawei.com>
- <20240702185851.e85a742f3391857781368f6c@linux-foundation.org>
- <6843023e-3e80-0c1c-6aab-b386ffebd668@huawei.com>
- <20240703133804.1d8ddf90f738a7d546399b3b@linux-foundation.org>
- <ZovgDfGFJdc6lVN3@tiehlicka>
- <5ce7be39-ac42-98c9-65fc-589385b8f65b@huawei.com>
- <ZowN8FvmdiEGr_rC@tiehlicka>
- <a78f241f-9601-1033-0013-b9aa83bdeb9c@huawei.com>
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jOzTtJ8d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C967BC4AF62;
+	Tue,  9 Jul 2024 13:06:05 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jOzTtJ8d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1720530359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C22YhHPyr4iBlxXvXl9KGgqSL9EPC/GQkIIWgMAk9R4=;
+	b=jOzTtJ8dELUNyosL5W8UxUgoPj94rBgsk6FqeJlzNEWKybaozHtgimgMtm/eVofN4vk/xU
+	1tdYnupA8mOl+fc5QLVJpblHECcjH6u3gmy/f/s3oaqtBMKFA0C4aw0HvJ7eHyYy6fF3Se
+	V4bWmmVcoyLe3Z5HdZgwVGcfSvj3vjk=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 15e8b6a7 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Tue, 9 Jul 2024 13:05:59 +0000 (UTC)
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	tglx@linutronix.de
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	linux-crypto@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	x86@kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
+	Carlos O'Donell <carlos@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jann Horn <jannh@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Samuel Neves <sneves@dei.uc.pt>
+Subject: [PATCH v22 3/4] x86: vdso: Wire up getrandom() vDSO implementation
+Date: Tue,  9 Jul 2024 15:05:11 +0200
+Message-ID: <20240709130513.98102-4-Jason@zx2c4.com>
+In-Reply-To: <20240709130513.98102-1-Jason@zx2c4.com>
+References: <20240709130513.98102-1-Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a78f241f-9601-1033-0013-b9aa83bdeb9c@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue 09-07-24 20:47:30, xiujianfeng wrote:
-> 
-> 
-> On 2024/7/9 0:04, Michal Hocko wrote:
-> > On Mon 08-07-24 21:40:39, xiujianfeng wrote:
-> >>
-> >>
-> >> On 2024/7/8 20:48, Michal Hocko wrote:
-> >>> On Wed 03-07-24 13:38:04, Andrew Morton wrote:
-> >>>> On Wed, 3 Jul 2024 10:45:56 +0800 xiujianfeng <xiujianfeng@huawei.com> wrote:
-> >>>>
-> >>>>>
-> >>>>>
-> >>>>> On 2024/7/3 9:58, Andrew Morton wrote:
-> >>>>>> On Tue, 2 Jul 2024 12:57:28 +0000 Xiu Jianfeng <xiujianfeng@huawei.com> wrote:
-> >>>>>>
-> >>>>>>> Introduce peak and rsvd.peak to v2 to show the historical maximum
-> >>>>>>> usage of resources, as in some scenarios it is necessary to configure
-> >>>>>>> the value of max/rsvd.max based on the peak usage of resources.
-> >>>>>>
-> >>>>>> "in some scenarios it is necessary" is not a strong statement.  It
-> >>>>>> would be helpful to fully describe these scenarios so that others can
-> >>>>>> better understand the value of this change.
-> >>>>>>
-> >>>>>
-> >>>>> Hi Andrew,
-> >>>>>
-> >>>>> Is the following description acceptable for you?
-> >>>>>
-> >>>>>
-> >>>>> Since HugeTLB doesn't support page reclaim, enforcing the limit at
-> >>>>> page fault time implies that, the application will get SIGBUS signal
-> >>>>> if it tries to fault in HugeTLB pages beyond its limit. Therefore the
-> >>>>> application needs to know exactly how many HugeTLB pages it uses before
-> >>>>> hand, and the sysadmin needs to make sure that there are enough
-> >>>>> available on the machine for all the users to avoid processes getting
-> >>>>> SIGBUS.
-> >>>
-> >>> yes, this is pretty much a definition of hugetlb.
-> >>>
-> >>>>> When running some open-source software, it may not be possible to know
-> >>>>> the exact amount of hugetlb it consumes, so cannot correctly configure
-> >>>>> the max value. If there is a peak metric, we can run the open-source
-> >>>>> software first and then configure the max based on the peak value.
-> >>>
-> >>> I would push back on this. Hugetlb workloads pretty much require to know
-> >>> the number of hugetlb pages ahead of time. Because you need to
-> >>> preallocate them for the global hugetlb pool. What I am really missing
-> >>> in the above justification is an explanation of how come you know how to
-> >>> configure the global pool but you do not know that for a particular
-> >>> cgroup. How exactly do you configure the global pool then?
-> >>
-> >> Yes, in this scenario, it's indeed challenging to determine the
-> >> appropriate size for the global pool. Therefore, a feasible approach is
-> >> to initially configure a larger value. Once the software is running
-> >> within the container successfully, the maximum value for the container
-> >> and the size of the system's global pool can be determined based on the
-> >> peak value, otherwise, increase the size of the global pool and try
-> >> again. so I believe the peak metric is useful for this scenario.
-> > 
-> > This sounds really backwards to me. Not that I care much about peak
-> > value itself. It is not really anything disruptive to add nor maintain
-> > but this approach to configuring the system just feels completely wrong.
-> > You shouldn't be really using hugetlb cgroup controller if you do not
-> > have a very specific idea about expected and therefore allowed hugetlb
-> > pool consumption.
-> > 
-> 
-> Thanks for sharing your thoughts.
-> 
-> Since the peak metric exists in the legacy hugetlb controller, do you
-> have any idea what scenario it's used for? I found it was introduced by
-> commit abb8206cb077 ("hugetlb/cgroup: add hugetlb cgroup control
-> files"), however there is no any description about the scenario.
+Hook up the generic vDSO implementation to the x86 vDSO data page. Since
+the existing vDSO infrastructure is heavily based on the timekeeping
+functionality, which works over arrays of bases, a new macro is
+introduced for vvars that are not arrays.
 
-I do not remember but I suspect this is mimicts other cgroupv1
-interfaces.
+The vDSO function requires a ChaCha20 implementation that does not write
+to the stack, yet can still do an entire ChaCha20 permutation, so
+provide this using SSE2, since this is userland code that must work on
+all x86-64 processors.
 
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Samuel Neves <sneves@dei.uc.pt> # for vgetrandom-chacha.S
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ MAINTAINERS                             |   2 +
+ arch/x86/Kconfig                        |   1 +
+ arch/x86/entry/vdso/Makefile            |   3 +-
+ arch/x86/entry/vdso/vdso.lds.S          |   2 +
+ arch/x86/entry/vdso/vgetrandom-chacha.S | 178 ++++++++++++++++++++++++
+ arch/x86/entry/vdso/vgetrandom.c        |  17 +++
+ arch/x86/include/asm/vdso/getrandom.h   |  55 ++++++++
+ arch/x86/include/asm/vdso/vsyscall.h    |   2 +
+ arch/x86/include/asm/vvar.h             |  16 +++
+ 9 files changed, 275 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/entry/vdso/vgetrandom-chacha.S
+ create mode 100644 arch/x86/entry/vdso/vgetrandom.c
+ create mode 100644 arch/x86/include/asm/vdso/getrandom.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 798158329ad8..00cf0362482b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18749,6 +18749,8 @@ F:	drivers/char/random.c
+ F:	drivers/virt/vmgenid.c
+ F:	include/vdso/getrandom.h
+ F:	lib/vdso/getrandom.c
++F:	arch/x86/entry/vdso/vgetrandom*
++F:	arch/x86/include/asm/vdso/getrandom*
+ 
+ RAPIDIO SUBSYSTEM
+ M:	Matt Porter <mporter@kernel.crashing.org>
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 1d7122a1883e..9c98b7a88cc2 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -287,6 +287,7 @@ config X86
+ 	select HAVE_UNSTABLE_SCHED_CLOCK
+ 	select HAVE_USER_RETURN_NOTIFIER
+ 	select HAVE_GENERIC_VDSO
++	select VDSO_GETRANDOM			if X86_64
+ 	select HOTPLUG_PARALLEL			if SMP && X86_64
+ 	select HOTPLUG_SMT			if SMP
+ 	select HOTPLUG_SPLIT_STARTUP		if SMP && X86_32
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 215a1b202a91..c9216ac4fb1e 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -7,7 +7,7 @@
+ include $(srctree)/lib/vdso/Makefile
+ 
+ # Files to link into the vDSO:
+-vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
++vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o vgetrandom.o vgetrandom-chacha.o
+ vobjs32-y := vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
+ vobjs32-y += vdso32/vclock_gettime.o vdso32/vgetcpu.o
+ vobjs-$(CONFIG_X86_SGX)	+= vsgx.o
+@@ -73,6 +73,7 @@ CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
+ CFLAGS_REMOVE_vgetcpu.o = -pg
+ CFLAGS_REMOVE_vdso32/vgetcpu.o = -pg
+ CFLAGS_REMOVE_vsgx.o = -pg
++CFLAGS_REMOVE_vgetrandom.o = -pg
+ 
+ #
+ # X32 processes use x32 vDSO to access 64bit kernel data.
+diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
+index e8c60ae7a7c8..0bab5f4af6d1 100644
+--- a/arch/x86/entry/vdso/vdso.lds.S
++++ b/arch/x86/entry/vdso/vdso.lds.S
+@@ -30,6 +30,8 @@ VERSION {
+ #ifdef CONFIG_X86_SGX
+ 		__vdso_sgx_enter_enclave;
+ #endif
++		getrandom;
++		__vdso_getrandom;
+ 	local: *;
+ 	};
+ }
+diff --git a/arch/x86/entry/vdso/vgetrandom-chacha.S b/arch/x86/entry/vdso/vgetrandom-chacha.S
+new file mode 100644
+index 000000000000..bcba5639b8ee
+--- /dev/null
++++ b/arch/x86/entry/vdso/vgetrandom-chacha.S
+@@ -0,0 +1,178 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2022-2024 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
++ */
++
++#include <linux/linkage.h>
++#include <asm/frame.h>
++
++.section	.rodata, "a"
++.align 16
++CONSTANTS:	.octa 0x6b20657479622d323320646e61707865
++.text
++
++/*
++ * Very basic SSE2 implementation of ChaCha20. Produces a given positive number
++ * of blocks of output with a nonce of 0, taking an input key and 8-byte
++ * counter. Importantly does not spill to the stack. Its arguments are:
++ *
++ *	rdi: output bytes
++ *	rsi: 32-byte key input
++ *	rdx: 8-byte counter input/output
++ *	rcx: number of 64-byte blocks to write to output
++ */
++SYM_FUNC_START(__arch_chacha20_blocks_nostack)
++
++.set	output,		%rdi
++.set	key,		%rsi
++.set	counter,	%rdx
++.set	nblocks,	%rcx
++.set	i,		%al
++/* xmm registers are *not* callee-save. */
++.set	temp,		%xmm0
++.set	state0,		%xmm1
++.set	state1,		%xmm2
++.set	state2,		%xmm3
++.set	state3,		%xmm4
++.set	copy0,		%xmm5
++.set	copy1,		%xmm6
++.set	copy2,		%xmm7
++.set	copy3,		%xmm8
++.set	one,		%xmm9
++
++	/* copy0 = "expand 32-byte k" */
++	movaps		CONSTANTS(%rip),copy0
++	/* copy1,copy2 = key */
++	movups		0x00(key),copy1
++	movups		0x10(key),copy2
++	/* copy3 = counter || zero nonce */
++	movq		0x00(counter),copy3
++	/* one = 1 || 0 */
++	movq		$1,%rax
++	movq		%rax,one
++
++.Lblock:
++	/* state0,state1,state2,state3 = copy0,copy1,copy2,copy3 */
++	movdqa		copy0,state0
++	movdqa		copy1,state1
++	movdqa		copy2,state2
++	movdqa		copy3,state3
++
++	movb		$10,i
++.Lpermute:
++	/* state0 += state1, state3 = rotl32(state3 ^ state0, 16) */
++	paddd		state1,state0
++	pxor		state0,state3
++	movdqa		state3,temp
++	pslld		$16,temp
++	psrld		$16,state3
++	por		temp,state3
++
++	/* state2 += state3, state1 = rotl32(state1 ^ state2, 12) */
++	paddd		state3,state2
++	pxor		state2,state1
++	movdqa		state1,temp
++	pslld		$12,temp
++	psrld		$20,state1
++	por		temp,state1
++
++	/* state0 += state1, state3 = rotl32(state3 ^ state0, 8) */
++	paddd		state1,state0
++	pxor		state0,state3
++	movdqa		state3,temp
++	pslld		$8,temp
++	psrld		$24,state3
++	por		temp,state3
++
++	/* state2 += state3, state1 = rotl32(state1 ^ state2, 7) */
++	paddd		state3,state2
++	pxor		state2,state1
++	movdqa		state1,temp
++	pslld		$7,temp
++	psrld		$25,state1
++	por		temp,state1
++
++	/* state1[0,1,2,3] = state1[1,2,3,0] */
++	pshufd		$0x39,state1,state1
++	/* state2[0,1,2,3] = state2[2,3,0,1] */
++	pshufd		$0x4e,state2,state2
++	/* state3[0,1,2,3] = state3[3,0,1,2] */
++	pshufd		$0x93,state3,state3
++
++	/* state0 += state1, state3 = rotl32(state3 ^ state0, 16) */
++	paddd		state1,state0
++	pxor		state0,state3
++	movdqa		state3,temp
++	pslld		$16,temp
++	psrld		$16,state3
++	por		temp,state3
++
++	/* state2 += state3, state1 = rotl32(state1 ^ state2, 12) */
++	paddd		state3,state2
++	pxor		state2,state1
++	movdqa		state1,temp
++	pslld		$12,temp
++	psrld		$20,state1
++	por		temp,state1
++
++	/* state0 += state1, state3 = rotl32(state3 ^ state0, 8) */
++	paddd		state1,state0
++	pxor		state0,state3
++	movdqa		state3,temp
++	pslld		$8,temp
++	psrld		$24,state3
++	por		temp,state3
++
++	/* state2 += state3, state1 = rotl32(state1 ^ state2, 7) */
++	paddd		state3,state2
++	pxor		state2,state1
++	movdqa		state1,temp
++	pslld		$7,temp
++	psrld		$25,state1
++	por		temp,state1
++
++	/* state1[0,1,2,3] = state1[3,0,1,2] */
++	pshufd		$0x93,state1,state1
++	/* state2[0,1,2,3] = state2[2,3,0,1] */
++	pshufd		$0x4e,state2,state2
++	/* state3[0,1,2,3] = state3[1,2,3,0] */
++	pshufd		$0x39,state3,state3
++
++	decb		i
++	jnz		.Lpermute
++
++	/* output0 = state0 + copy0 */
++	paddd		copy0,state0
++	movups		state0,0x00(output)
++	/* output1 = state1 + copy1 */
++	paddd		copy1,state1
++	movups		state1,0x10(output)
++	/* output2 = state2 + copy2 */
++	paddd		copy2,state2
++	movups		state2,0x20(output)
++	/* output3 = state3 + copy3 */
++	paddd		copy3,state3
++	movups		state3,0x30(output)
++
++	/* ++copy3.counter */
++	paddq		one,copy3
++
++	/* output += 64, --nblocks */
++	addq		$64,output
++	decq		nblocks
++	jnz		.Lblock
++
++	/* counter = copy3.counter */
++	movq		copy3,0x00(counter)
++
++	/* Zero out the potentially sensitive regs, in case nothing uses these again. */
++	pxor		state0,state0
++	pxor		state1,state1
++	pxor		state2,state2
++	pxor		state3,state3
++	pxor		copy1,copy1
++	pxor		copy2,copy2
++	pxor		temp,temp
++
++	ret
++SYM_FUNC_END(__arch_chacha20_blocks_nostack)
+diff --git a/arch/x86/entry/vdso/vgetrandom.c b/arch/x86/entry/vdso/vgetrandom.c
+new file mode 100644
+index 000000000000..52d3c7faae2e
+--- /dev/null
++++ b/arch/x86/entry/vdso/vgetrandom.c
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2022-2024 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
++ */
++#include <linux/types.h>
++
++#include "../../../../lib/vdso/getrandom.c"
++
++ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque_state, size_t opaque_len);
++
++ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque_state, size_t opaque_len)
++{
++	return __cvdso_getrandom(buffer, len, flags, opaque_state, opaque_len);
++}
++
++ssize_t getrandom(void *, size_t, unsigned int, void *, size_t)
++	__attribute__((weak, alias("__vdso_getrandom")));
+diff --git a/arch/x86/include/asm/vdso/getrandom.h b/arch/x86/include/asm/vdso/getrandom.h
+new file mode 100644
+index 000000000000..b96e674cafde
+--- /dev/null
++++ b/arch/x86/include/asm/vdso/getrandom.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2022-2024 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
++ */
++#ifndef __ASM_VDSO_GETRANDOM_H
++#define __ASM_VDSO_GETRANDOM_H
++
++#ifndef __ASSEMBLY__
++
++#include <asm/unistd.h>
++#include <asm/vvar.h>
++
++/**
++ * getrandom_syscall - Invoke the getrandom() syscall.
++ * @buffer:	Destination buffer to fill with random bytes.
++ * @len:	Size of @buffer in bytes.
++ * @flags:	Zero or more GRND_* flags.
++ * Returns:	The number of random bytes written to @buffer, or a negative value indicating an error.
++ */
++static __always_inline ssize_t getrandom_syscall(void *buffer, size_t len, unsigned int flags)
++{
++	long ret;
++
++	asm ("syscall" : "=a" (ret) :
++	     "0" (__NR_getrandom), "D" (buffer), "S" (len), "d" (flags) :
++	     "rcx", "r11", "memory");
++
++	return ret;
++}
++
++#define __vdso_rng_data (VVAR(_vdso_rng_data))
++
++static __always_inline const struct vdso_rng_data *__arch_get_vdso_rng_data(void)
++{
++	if (IS_ENABLED(CONFIG_TIME_NS) && __vdso_data->clock_mode == VDSO_CLOCKMODE_TIMENS)
++		return (void *)&__vdso_rng_data + ((void *)&__timens_vdso_data - (void *)&__vdso_data);
++	return &__vdso_rng_data;
++}
++
++/**
++ * __arch_chacha20_blocks_nostack - Generate ChaCha20 stream without using the stack.
++ * @dst_bytes:	Destination buffer to hold @nblocks * 64 bytes of output.
++ * @key:	32-byte input key.
++ * @counter:	8-byte counter, read on input and updated on return.
++ * @nblocks:	Number of blocks to generate.
++ *
++ * Generates a given positive number of blocks of ChaCha20 output with nonce=0, and does not write
++ * to any stack or memory outside of the parameters passed to it, in order to mitigate stack data
++ * leaking into forked child processes.
++ */
++extern void __arch_chacha20_blocks_nostack(u8 *dst_bytes, const u32 *key, u32 *counter, size_t nblocks);
++
++#endif /* !__ASSEMBLY__ */
++
++#endif /* __ASM_VDSO_GETRANDOM_H */
+diff --git a/arch/x86/include/asm/vdso/vsyscall.h b/arch/x86/include/asm/vdso/vsyscall.h
+index be199a9b2676..71c56586a22f 100644
+--- a/arch/x86/include/asm/vdso/vsyscall.h
++++ b/arch/x86/include/asm/vdso/vsyscall.h
+@@ -11,6 +11,8 @@
+ #include <asm/vvar.h>
+ 
+ DEFINE_VVAR(struct vdso_data, _vdso_data);
++DEFINE_VVAR_SINGLE(struct vdso_rng_data, _vdso_rng_data);
++
+ /*
+  * Update the vDSO data page to keep in sync with kernel timekeeping.
+  */
+diff --git a/arch/x86/include/asm/vvar.h b/arch/x86/include/asm/vvar.h
+index 183e98e49ab9..9d9af37f7cab 100644
+--- a/arch/x86/include/asm/vvar.h
++++ b/arch/x86/include/asm/vvar.h
+@@ -26,6 +26,8 @@
+  */
+ #define DECLARE_VVAR(offset, type, name) \
+ 	EMIT_VVAR(name, offset)
++#define DECLARE_VVAR_SINGLE(offset, type, name) \
++	EMIT_VVAR(name, offset)
+ 
+ #else
+ 
+@@ -37,6 +39,10 @@ extern char __vvar_page;
+ 	extern type timens_ ## name[CS_BASES]				\
+ 	__attribute__((visibility("hidden")));				\
+ 
++#define DECLARE_VVAR_SINGLE(offset, type, name)				\
++	extern type vvar_ ## name					\
++	__attribute__((visibility("hidden")));				\
++
+ #define VVAR(name) (vvar_ ## name)
+ #define TIMENS(name) (timens_ ## name)
+ 
+@@ -44,12 +50,22 @@ extern char __vvar_page;
+ 	type name[CS_BASES]						\
+ 	__attribute__((section(".vvar_" #name), aligned(16))) __visible
+ 
++#define DEFINE_VVAR_SINGLE(type, name)					\
++	type name							\
++	__attribute__((section(".vvar_" #name), aligned(16))) __visible
++
+ #endif
+ 
+ /* DECLARE_VVAR(offset, type, name) */
+ 
+ DECLARE_VVAR(128, struct vdso_data, _vdso_data)
+ 
++#if !defined(_SINGLE_DATA)
++#define _SINGLE_DATA
++DECLARE_VVAR_SINGLE(640, struct vdso_rng_data, _vdso_rng_data)
++#endif
++
+ #undef DECLARE_VVAR
++#undef DECLARE_VVAR_SINGLE
+ 
+ #endif
 -- 
-Michal Hocko
-SUSE Labs
+2.45.2
+
