@@ -1,80 +1,79 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782F0189F4C
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476A41B86CE
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 17:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720544284; cv=none; b=akwb0CnjGQ9EiJlwEZkLM17EXtG44HYjjOxuZEJvyVHa3S7jArKDSW7Wsi8dYn1qRb76AZL9b8fkic7T0NHyy2pp/HpWTQ6UkNCEld6AWlih8cZcNwYPKVe2YN3CTUCUcCF/JLynlluud5NeqFAj7ZLpoUqJe7GiqBflapLbe0M=
+	t=1720544443; cv=none; b=pmMkri3RnumxCeEE2elGAchZ/LSDiWhQRUpTVC3Cq0IrYw3kxA7PR1k5qyjtnbm5ZJW2VxCpCoHC0Z9Q8StJBsiiVcwGLfDP9MEEZZJ2YE3dSftycQYG0ShnDPZB9xmilQFXSWkwwAMEs0QJbsgUbWTnCcAxx/EicWISK3fybjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720544284; c=relaxed/simple;
-	bh=nkTWMGfjEyh1vvy7M5TLEzkpGoCAbgKFsJFG64WstwE=;
+	s=arc-20240116; t=1720544443; c=relaxed/simple;
+	bh=JgrYzVA7jCxQEkWilrTpq8hpV6Gml8vxozEpNZ2BRzs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eVHcygSYN4tpf0LkB2PjqTFfgupRsSDaMu7G6F7G5R+cXt42qq6fV411eCc6EtivfHv7T1G1VMRqeKUf96kFHWx4Jl8P1tOX9dg51HbJ5MIFWgJI9aGP0z+WtNYncPaNgDsU6jflfSYftiax8B2M8xlurEPn5M93D+GJIUQNf7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=VEYdgSfR; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q+vCGjXJyJ9Yd9Tk9Ond0CWaeeT/HLcHtMze72dWFTfZpUr16CzqHbJZ6AHYSB4vrDt4RXY21Hh83falPdqpLrsKZBvnvINWj2QwkEkPvuJSzi8QnEtBW2u8GXG+gwsmGA3sfdOSe5cTRuG83WNTQppYvYnjaO07DMB5OtA0pto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=LKMXvWGc; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="VEYdgSfR"
-Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469G2xj0025294;
-	Tue, 9 Jul 2024 16:56:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pps0720; bh=xFASJwdgR+cb5+o7gVSxSuY
-	ML2SzklMlZnUynN7IJA0=; b=VEYdgSfROL6G5DJhp+vkx/g3ybkpPAEKlVCBuMJ
-	8neEVSdGBA1kL/h0fYGo9+bdNhL2u6394RHRgSQtIq6f67MF4vVHcXHdEmR1z4SF
-	PS0HEvUBmCf9VWW7qm3AjabEtNXLdI1vztE7BANHR8Nj1Dls/sALG+DR+Tf6Xoof
-	leOq2kWZ449pPZZIaAylae0s2CvLhNox948u6zf3VsP9et8KDmAIITP/dWa6wp5y
-	Q3EivPIRbzqjkvnCI3mZ1kelbGV8wh+UKmaUSPJBl5N6XHeNXXxK3lvrXNy/Cp59
-	oaVabVKy2LdNk2H0gY+J9DySXPhSKUm9lplq2aEbixUvSoA==
-Received: from p1lg14881.it.hpe.com ([16.230.97.202])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 408x1xnppp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 16:56:33 +0000 (GMT)
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id D12C88059E9;
-	Tue,  9 Jul 2024 16:56:32 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.39])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 5BFD2801D88;
-	Tue,  9 Jul 2024 16:56:28 +0000 (UTC)
-Date: Tue, 9 Jul 2024 11:56:26 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Ashish Kalra <ashish.kalra@amd.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, Pavin Joseph <me@pavinjoseph.com>,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
-        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
-Message-ID: <Zo1rugBl5WWy-1LJ@swahl-home.5wahls.com>
-References: <20240708190724.GIZow47G0J8vO6J3ee@fat_crate.local>
- <Zow-AXsLHjU6gfET@swahl-home.5wahls.com>
- <20240708195810.GKZoxE0pRWHEUljjnQ@fat_crate.local>
- <ZoxOt1_w7nblRQCv@swahl-home.5wahls.com>
- <CAMj1kXGA8zG95WutMgVgeb-M7oQKJrVO6QWNzLi1GMuj1wq=bg@mail.gmail.com>
- <ZoxX9mckeu046zed@swahl-home.5wahls.com>
- <CAMj1kXE5OYTxxBEO38dRyYt_J1FNpU-tdkaU8rxvrMLd_k_beg@mail.gmail.com>
- <20240709103742.GCZo0S9md7YyeevRN-@fat_crate.local>
- <Zo1SRIZEhveMwSPX@swahl-home.5wahls.com>
- <20240709164620.GLZo1pXPiG42JH4ylN@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LKMXvWGc"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6b5e760eb36so32365746d6.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 10:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1720544440; x=1721149240; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aoKh6CbSkvE5uLHVYrlgWMx47IaolAIb/KMsl791ino=;
+        b=LKMXvWGc65eZJenjsVSpVOAwyPPCf5vlCk9NMZUhX7pDhrpYqDdyvVJYIxIUfboPc0
+         NcBmMKxcz1ngBLIoDtq7o4w6LjB69xRSPBm/RHXcPkeeUKUVWtgQLR9kFSHtWRXDxPtB
+         Nvj7LLkF90MGoNyI+/02ZPbam8hZ+F75NtItVcCb7+9MXc5BeEkjFxeCdmWsQlFFwn26
+         4r+zwvU4vJRhZuI08JutjwMjL46I2lqQg7BcwRgYo9WE5QR42PaZ9fruM1yZrGIX+sSP
+         J+yczfFvPaPaOhy1rOM2B5nT07y0brVaERg/ae4l4XW4UeL9iu7tolRzlifI8hfRSh0v
+         DaZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720544440; x=1721149240;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aoKh6CbSkvE5uLHVYrlgWMx47IaolAIb/KMsl791ino=;
+        b=uJ4RzP3bHDL026lQlIMnqi4BI7ZDNOvRM0eWt2mcqzCaR7qY+9pgbTFAC0DGlJMvVW
+         IbgQvTg3R2JDAz294TW0EBB56mltJXk9B2G9Vabt/F/oM473kYsAKbXisMlO2QEUMdY2
+         8xa8yHOqfj2Q6HC0RgTaOlZM2JtOO8+HtSX0NeKDhjfn5C1GYuqD7Ka5+oFckW89NYIU
+         A0u9+BLLRDYMUEtLV0B+uKNKjDGtgFIu0hH7RlBgVWf2iVV5lbmc8naASa2rg+FHTZEA
+         fRUpMXRgtqjf96gH7GJbDrPY+3A58vvjGRuELF4NMcTC/cgI4Es2fB3FVgqBzSgGlJH4
+         uS+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUzykbmm+2piuQbNs4JkiQkpwmfG/mCm5R1tYKsodQVP5mFw4VBqlPe6f+z6FSolHWT4nU0oo4PBXPMc4qaMqNfvcMwDPj5xeD53U/b
+X-Gm-Message-State: AOJu0YwPCLb/pUB6no5BGY3q21a0ZzQFnTUygH8twa1PvyVu5fn9t/ZL
+	zGXN/Df5exEDOAdRBvENrYOH4iNJILsSgXGzf+bPoM1z2llLIg5UQzgYeuX3Rv0=
+X-Google-Smtp-Source: AGHT+IHQAqJ8Fss5qEp93E1gpLOGUNuxyAoBEmzUnNgYypyxw8q6HqRIgm5hrD+KkbzXQKOzZkmpdA==
+X-Received: by 2002:a05:6214:21e9:b0:6b4:7910:2b60 with SMTP id 6a1803df08f44-6b61bc7f032mr32420906d6.6.1720544439969;
+        Tue, 09 Jul 2024 10:00:39 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9b59dfbsm12153401cf.52.2024.07.09.10.00.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 10:00:38 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sRECk-002WM4-Ao;
+	Tue, 09 Jul 2024 14:00:38 -0300
+Date: Tue, 9 Jul 2024 14:00:38 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>, Kevin Tian <kevin.tian@intel.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Yi Liu <yi.l.liu@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
+	virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 06/10] iommufd: Add iommufd fault object
+Message-ID: <20240709170038.GG14050@ziepe.ca>
+References: <20240702063444.105814-1-baolu.lu@linux.intel.com>
+ <20240702063444.105814-7-baolu.lu@linux.intel.com>
+ <ZoXZZ2SJ/WdlMJaX@Asurada-Nvidia>
+ <20240708162957.GB14050@ziepe.ca>
+ <ZowxyUQAcqDJ4yZ6@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,67 +82,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240709164620.GLZo1pXPiG42JH4ylN@fat_crate.local>
-X-Proofpoint-ORIG-GUID: HoTSir1je7_bwYRIiP2vGIAvwwc_E7AM
-X-Proofpoint-GUID: HoTSir1je7_bwYRIiP2vGIAvwwc_E7AM
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_06,2024-07-09_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
- clxscore=1015 suspectscore=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090112
+In-Reply-To: <ZowxyUQAcqDJ4yZ6@Asurada-Nvidia>
 
-On Tue, Jul 09, 2024 at 06:46:20PM +0200, Borislav Petkov wrote:
-> On Tue, Jul 09, 2024 at 10:07:48AM -0500, Steve Wahl wrote:
-> > I think perhaps the cover letter was also too verbose on the history
-> > and unintentionally hid the information necesary to understand the
-> > situation.  I will try to make it more concise.
+On Mon, Jul 08, 2024 at 11:36:57AM -0700, Nicolin Chen wrote:
+> Maybe something like this?
 > 
-> Thanks.
+> struct iommu_viommu_event_arm_smmuv3 {
+> 	u64 evt[4];
+> };
 > 
-> And while we're at it, I think we should do this too.
+> struct iommu_viommu_event_tegra241_cmdqv {
+> 	u64 vcmdq_err_map[2];
+> };
 > 
-> Which should actually fix your issue too.
-
-Ok, that one is interesting.  I think you are right, it will fix the
-problem as we would bail before calling find_cc_blob(), which is where
-we get into trouble.  (That call happens just outside the context
-displayed by the diff below).
-
-I will add it.
-
---> Steve
-
-> ---
-> diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-> index cd44e120fe53..a838cad72532 100644
-> --- a/arch/x86/boot/compressed/sev.c
-> +++ b/arch/x86/boot/compressed/sev.c
-> @@ -484,6 +484,15 @@ static bool early_snp_init(struct boot_params *bp)
->  {
->  	struct cc_blob_sev_info *cc_info;
->  
-> +	/*
-> +	 * Bail out if not running on a hypervisor (HV). If the HV
-> +	 * doesn't set the bit, that's an easy SEV-* guest DOS but that
-> +	 * HV has then bigger problems: the SEV-* guest simply won't
-> +	 * start.
-> +	 */
-> +	if (!(native_cpuid_ecx(1) & BIT(31)))
-> +		return false;
-> +
->  	if (!bp)
->  		return false;
->  
+> enum iommu_event_type {
+> 	IOMMM_HWPT_EVENT_TYPE_IOPF,
+> 	IOMMU_VIOMMU_EVENT_TYPE_SMMUv3,
+> 	IOMMU_VIOMMU_EVENT_TYPE_TEGRA241_CMDQV,
+> };
 > 
-> -- 
-> Regards/Gruss,
->     Boris.
+> struct iommu_event_alloc {
+> 	__u32 size;
+> 	__u32 flags;
+> 	__u32 out_event_id;
+> 	__u32 out_event_fd;
+> 	__u32 type;
+> 	__u32 _reserved;
+> };
 > 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> It can be "report" if you prefer.
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+Yeah, something like that makes sense to me. The other question is if
+you want to multiplex the SMMUv3 and CMDQV on the same FD?
+
+Or multiplex physical smmus on the same FD.
+
+We are potentially talking about 5-10 physical smmus and 2-3 FDs per
+physical? Does that scare anyone?
+
+Jason
