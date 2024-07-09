@@ -1,148 +1,122 @@
-Received: from mail.nfschina.com (unknown [42.101.60.195])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 9E5CC1E522;
-	Tue,  9 Jul 2024 11:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E367C149C79;
+	Tue,  9 Jul 2024 11:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720525089; cv=none; b=GuxDigbkG0yRbjjAFFb4RUNSYo7/hKfgpvQbSViugW2eOUCTYLpmLWW2C9lVYYNESHOILp1mpmw1Mutd43mpvojVRPKGwzxc+DZon5pMJ86WhhPH/SKztvXZY4UpIHZSiyQYB+XKWkewt3hr34dFVSq7Y9DdIcTD4vs1H/mKZIg=
+	t=1720525172; cv=none; b=WzNZXCuBbVxjlW+Shy1I5PN0MNseO+w6WviVcSdgjvFASqYCiCDivKgYce8yY8e3bkl61atQP/uU8qVCYak40tTuMNts+A20MSCcCo0CjeLqTdxrxYpRkxsMjdfPDPEU2V40dtfIr/q/+zVV7V+wZUZSWi+1h0jDQpY5S2Fc4sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720525089; c=relaxed/simple;
-	bh=yzbqRSzWb8fvXvy1Dgn9DHVf8RicMrJFrbyPqm3bJoc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=cNKpRGDisNleVI5GWsZhIFLPsAGrp3hHOWMaGUDHeuM1bDo+AKxJQ74Qpj1l7Xsus7eIqmjwOYouJfxjJXfsT9VLTjCGfC8hCD2zmDSc+Vb+zbExccL5ZoJRq2VxyjYS3avBP371FHAoDrult1WxeYy3CiHCgRpkNdfmQ0l0S7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from localhost.localdomain (unknown [103.163.180.4])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPA id D01A7606B6DA6;
-	Tue,  9 Jul 2024 19:37:53 +0800 (CST)
-X-MD-Sfrom: youwan@nfschina.com
-X-MD-SrcIP: 103.163.180.4
-From: Youwan Wang <youwan@nfschina.com>
-To: andrew@lunn.ch
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	hkallweit1@gmail.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@armlinux.org.uk,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	youwan@nfschina.com
-Subject: [net-next,v2] net: phy: phy_device: fix PHY WOL enabled, PM failed to suspend
-Date: Tue,  9 Jul 2024 19:37:35 +0800
-Message-Id: <20240709113735.630583-1-youwan@nfschina.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <b61cae2b-6b94-465e-b4e4-6c220c6c66d9@lunn.ch>
+	s=arc-20240116; t=1720525172; c=relaxed/simple;
+	bh=/gbNQhUzu5NCtcl067Z+7CcqqB4xMXkO1NA71N39dMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T1Wm5J1uKRR4K5t0H4GO93pJzqZgD0BbqZE7hiU6jhiwS4+4VpGdubEISBupNas/s30keOVOIFqhxZ9yji2I6rPI79nQ4oKPFxSOmjbtojZQTQDhSqwxqbugX456KYmrheqqKBmd8PfyTiKKXZt6Yw8oiUfhCgVoPtZ57QbUTGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWTgVx3s; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWTgVx3s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77EFFC3277B;
+	Tue,  9 Jul 2024 11:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720525171;
+	bh=/gbNQhUzu5NCtcl067Z+7CcqqB4xMXkO1NA71N39dMw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kWTgVx3svUaQuIYLcUm2926OaFhtxUS/LuZ8p8OO0fR5TB06GkTblfwngWYAFHuo4
+	 /QExltCfzLf6Z9T9rrlvXq5QmMI1YWK+b/5sndtrEbnW8pyuH1ln/56/99Zsj7ZcsF
+	 WVxeeT01940fssv5ebJSukJqg2HVjsMQ4qSJTh2GueuZyu4A5Qx+nRQUF20NmGfkwx
+	 +wBYZuPqlfb0f1lfvz+ejGM+uZJEQnYh8T51ep9iQTxO/0cDK+0EwhA3Qw3IGlHfZy
+	 1xuqhQgg01sdOMTulvsa6hwnC8BpGNwruPPIlVolyHS61XVn/G2pCZVqTZi+HnDp+W
+	 YYfi5FeCJi+rA==
+Date: Tue, 9 Jul 2024 12:39:25 +0100
+From: Will Deacon <will@kernel.org>
+To: Steven Price <steven.price@arm.com>
+Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: Re: [PATCH v4 05/15] arm64: Mark all I/O as non-secure shared
+Message-ID: <20240709113925.GA13242@willie-the-truck>
+References: <20240701095505.165383-1-steven.price@arm.com>
+ <20240701095505.165383-6-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701095505.165383-6-steven.price@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
->> If the PHY of the mido bus is enabled with Wake-on-LAN (WOL),
->> we cannot suspend the PHY. Although the WOL status has been
->> checked in phy_suspend(), returning -EBUSY(-16) would cause
->> the Power Management (PM) to fail to suspend. Since
->> phy_suspend() is an exported symbol (EXPORT_SYMBOL),
->> timely error reporting is needed. Therefore, an additional
->> check is performed here. If the PHY of the mido bus is enabled
->> with WOL, we skip calling phy_suspend() to avoid PM failure.
->>
->> Thank you all for your analysis.
->> I am using the Linux kernel version 6.6, the current system is
->> utilizing ACPI firmware. However, in terms of configuration,
->> the system only includes MAC layer configuration while lacking
->> PHY configuration. Furthermore, it has been observed that the
->> phydev->attached_dev is NULL
->>
->> Is it possible to add a judgment about netdev is NULL?
->> if (!netdev && phydev->wol_enabled &&
->>     !(phydrv->flags & PHY_ALWAYS_CALL_SUSPEND))
+On Mon, Jul 01, 2024 at 10:54:55AM +0100, Steven Price wrote:
+> All I/O is by default considered non-secure for realms. As such
+> mark them as shared with the host.
+> 
+> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes since v3:
+>  * Add PROT_NS_SHARED to FIXMAP_PAGE_IO rather than overriding
+>    set_fixmap_io() with a custom function.
+>  * Modify ioreamp_cache() to specify PROT_NS_SHARED too.
+> ---
+>  arch/arm64/include/asm/fixmap.h | 2 +-
+>  arch/arm64/include/asm/io.h     | 8 ++++----
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/fixmap.h b/arch/arm64/include/asm/fixmap.h
+> index 87e307804b99..f2c5e653562e 100644
+> --- a/arch/arm64/include/asm/fixmap.h
+> +++ b/arch/arm64/include/asm/fixmap.h
+> @@ -98,7 +98,7 @@ enum fixed_addresses {
+>  #define FIXADDR_TOT_SIZE	(__end_of_fixed_addresses << PAGE_SHIFT)
+>  #define FIXADDR_TOT_START	(FIXADDR_TOP - FIXADDR_TOT_SIZE)
+>  
+> -#define FIXMAP_PAGE_IO     __pgprot(PROT_DEVICE_nGnRE)
+> +#define FIXMAP_PAGE_IO     __pgprot(PROT_DEVICE_nGnRE | PROT_NS_SHARED)
+>  
+>  void __init early_fixmap_init(void);
+>  
+> diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
+> index 4ff0ae3f6d66..07fc1801c6ad 100644
+> --- a/arch/arm64/include/asm/io.h
+> +++ b/arch/arm64/include/asm/io.h
+> @@ -277,12 +277,12 @@ static inline void __const_iowrite64_copy(void __iomem *to, const void *from,
+>  
+>  #define ioremap_prot ioremap_prot
+>  
+> -#define _PAGE_IOREMAP PROT_DEVICE_nGnRE
+> +#define _PAGE_IOREMAP (PROT_DEVICE_nGnRE | PROT_NS_SHARED)
+>  
+>  #define ioremap_wc(addr, size)	\
+> -	ioremap_prot((addr), (size), PROT_NORMAL_NC)
+> +	ioremap_prot((addr), (size), (PROT_NORMAL_NC | PROT_NS_SHARED))
+>  #define ioremap_np(addr, size)	\
+> -	ioremap_prot((addr), (size), PROT_DEVICE_nGnRnE)
+> +	ioremap_prot((addr), (size), (PROT_DEVICE_nGnRnE | PROT_NS_SHARED))
 
->Comments like this should be placed below the --- so they don't make
->it into the commit message.
+Hmm. I do wonder whether you've pushed the PROT_NS_SHARED too far here.
 
->Why is phydev->attached_dev NULL? Was a MAC never attached to the PHY?
->Has the MAC disconnected the PHY as part of the suspend? It would be
->odd that a device being used for WoL would disconnect the PHY.
+There's nothing _architecturally_ special about the top address bit.
+Even if the RSI divides the IPA space in half, the CPU doesn't give two
+hoots about it in the hardware. In which case, it feels wrong to bake
+PROT_NS_SHARED into ioremap_prot -- it feels much better to me if the
+ioremap() code OR'd that into the physical address when passing it down
 
-it has been observed that the phydev->attached_dev is NULL, phydev is
-"stmmac-0:01", it not attached, but it will affect suspend and resume.
-The actually attached "stmmac-0:00" will not dpm_run_callback():
-mdio_bus_phy_suspend().
+There's a selfish side of that argument, in that we need to hook
+ioremap() for pKVM protected guests, but I do genuinely feel that
+treating address bits as protection bits is arbitrary and doesn't belong
+in these low-level definitions. In a similar vein, AMD has its
+sme_{set,clr}() macros that operate on the PA (e.g. via dma_to_phys()),
+which feels like a more accurate abstraction to me.
 
-log:
-[    5.932502] YT8521 Gigabit Ethernet stmmac-0:00: attached PHY driver
-(mii_bus:phy_addr=stmmac-0:00, irq=POLL)
-[    5.932512] YT8521 Gigabit Ethernet stmmac-0:01: attached PHY driver
-(mii_bus:phy_addr=stmmac-0:01, irq=POLL)
-[   24.566289] YT8521 Gigabit Ethernet stmmac-0:00: yt8521_read_status,
-link down, media: UTP
-
->>
->> log:
->> [  322.631362] OOM killer disabled.
->> [  322.631364] Freezing remaining freezable tasks
->> [  322.632536] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
->> [  322.632540] printk: Suspending console(s) (use no_console_suspend to debug)
->> [  322.633052] YT8521 Gigabit Ethernet stmmac-0:01:
->> PM: dpm_run_callback(): mdio_bus_phy_suspend+0x0/0x110 [libphy] returns -16
->> [  322.633071] YT8521 Gigabit Ethernet stmmac-0:01:
->> PM: failed to suspend: error -16
->> [  322.669699] PM: Some devices failed to suspend, or early wake event detected
->> [  322.669949] OOM killer enabled.
->> [  322.669951] Restarting tasks ... done.
->> [  322.671008] random: crng reseeded on system resumption
->> [  322.671014] PM: suspend exit
->>
->> If the YT8521 driver adds phydrv->flags, ask the YT8521 driver to process
->> WOL at suspend and resume time, the phydev->suspended_by_mdio_bus=1
->> flag would cause the resume failure.
->>
->> log:
->> [  260.814763] YT8521 Gigabit Ethernet stmmac-0:01:
->> PM: dpm_run_callback():mdio_bus_phy_resume+0x0/0x160 [libphy] returns -95
->> [  260.814782] YT8521 Gigabit Ethernet stmmac-0:01:
->> PM: failed to resume: error -95
-
->-95 is EOPNOTSUPP. Where is that coming from?
-
-yt8511_config_init() -> ret = -EOPNOTSUPP;
-
-Signed-off-by: Youwan Wang <youwan@nfschina.com>
----
- drivers/net/phy/phy_device.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 2ce74593d6e4..0564decf701f 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -270,6 +270,7 @@ static DEFINE_MUTEX(phy_fixup_lock);
- 
- static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
- {
-+	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
- 	struct device_driver *drv = phydev->mdio.dev.driver;
- 	struct phy_driver *phydrv = to_phy_driver(drv);
- 	struct net_device *netdev = phydev->attached_dev;
-@@ -277,6 +278,15 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
- 	if (!drv || !phydrv->suspend)
- 		return false;
- 
-+	/* If the PHY on the mido bus is not attached but has WOL enabled
-+	 * we cannot suspend the PHY.
-+	 */
-+	phy_ethtool_get_wol(phydev, &wol);
-+	phydev->wol_enabled = !!(wol.wolopts);
-+	if (!netdev && phydev->wol_enabled &&
-+	    !(phydrv->flags & PHY_ALWAYS_CALL_SUSPEND))
-+		return false;
-+
- 	/* PHY not attached? May suspend if the PHY has not already been
- 	 * suspended as part of a prior call to phy_disconnect() ->
- 	 * phy_detach() -> phy_suspend() because the parent netdev might be the
--- 
-2.25.1
-
+Will
