@@ -1,102 +1,139 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C88C3612D;
-	Tue,  9 Jul 2024 15:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3749818FC6E
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720539656; cv=none; b=ce47gKZ0RtDAO9WKnzA4r1pA+6A1ieEwmnlqiTWXgakkp7sk2HcOgdvTyqzXMpJpXQNdo4NrNY+zjhfiDGzUL0W9stvrwC+rzgsWpXb4Pd6UcU+YqC34Opqb1Vz83Ga65bSee5ShPPvZbv/SQ11dPYEI0J1t6o/GcHR4EVMsbt0=
+	t=1720539692; cv=none; b=uSc6AEPyNkFmXeyGgTnhentFbCP4vbwp2mZvOwKvld3SamlYu/HkaUVc7/dZLGhjZWb80z3raKYZ0UKwBpEHmM0WlAEkl4f7Iybca0zfObdFrXbDWaPv/q8VS7etJH7F74o2jO1/bUxG3YMeQNqazOkgg6BtkZZAquVBXDaQlL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720539656; c=relaxed/simple;
-	bh=yLujh+quyCP5qinagyJXHAIxWyF9PCjlaNWetj7c5k0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lu1kTpeNLgi1heq3i8x3GRyJy1CD8z0AASSfM1dfbTFkyjC50/2tWt2vRh4MT50DmzeEZkF4MDG79IL6V2IJRDD5ITO5M3t0nRcsXyysxzDdKsU/MLXfO1vUWUfXnDTQNVUs2kQqdx5pcRb1gZVF/IEf0aoRsYl+JmOq8Oy88og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WJQCF3wqcz6H7nx;
-	Tue,  9 Jul 2024 23:39:21 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 62213140C72;
-	Tue,  9 Jul 2024 23:40:44 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 9 Jul
- 2024 16:40:43 +0100
-Date: Tue, 9 Jul 2024 16:40:43 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-CC: Xiaowei Song <songxiaowei@hisilicon.com>, Binghui Wang
-	<wangbinghui@hisilicon.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] PCI: kirin: use
- for_each_available_child_of_node_scoped()
-Message-ID: <20240709164043.0000184e@Huawei.com>
-In-Reply-To: <20240707-pcie-kirin-dev_err_probe-v2-2-2fa94951d84d@gmail.com>
-References: <20240707-pcie-kirin-dev_err_probe-v2-0-2fa94951d84d@gmail.com>
-	<20240707-pcie-kirin-dev_err_probe-v2-2-2fa94951d84d@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1720539692; c=relaxed/simple;
+	bh=oQ5rHh/qVIUVk3bU5g69AR53OwoI0yLAz7n/fyMP8ZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e36v2XQ+5KSzSphFOVKZRiP3fV/And9R5hFNoiadM+5MdHkSMiBAjp4uaAjNy5T1mUSem8qw3ncbcJY21fFqATocVYd7fls4F2hTRTTxb6VaKVN4H/yTd4mRswP1aOQoSOU81V//EIakRL8FGPVB4yZ96L5UEH63xUCZOo1dxWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Tpg1ZNep; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Tpg1ZNep"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 469FemH13543378
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Tue, 9 Jul 2024 08:41:01 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 469FemH13543378
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024061501; t=1720539661;
+	bh=pR4B9H85x4ggNeQfQfQV1EF3QFKnnueIe5cRPRm/ZjQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Tpg1ZNepji5w0QuBNN367hst5fztm0wW2xQF0Cq63MI9t2DpK3HyDobP8i4/tdz2+
+	 kyVpY5jcCKDp03r0ZgCgmW9GsJZ2zq91p34A9ks4V7LARVGgd65wsy+TQWWw6gXilF
+	 H6zozDHq6/eTt4vnjlKgJBQhir66InfEv1GU0uNzedSaioJxW1OOGmTkcvHruMuBab
+	 3dwkuwAubSGPtbORsxS+SIIydBpRno7wl7qpP/hDla6QI8YsdIhM7vSFbr355iFCEJ
+	 evxxajpi51N6kNsIfycFxCezhEZNXoQQ9202p8vnVlr0oJllLnBXJf9rB97CyEvMRZ
+	 R3OrvwKgaaNFQ==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org
+Cc: hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, peterz@infradead.org,
+        andrew.cooper3@citrix.com, nik.borisov@suse.com,
+        houwenlong.hwl@antgroup.com
+Subject: [PATCH v2 1/3] x86/fred: Parse cmdline param "fred=" in cpu_parse_early_param()
+Date: Tue,  9 Jul 2024 08:40:46 -0700
+Message-ID: <20240709154048.3543361-2-xin@zytor.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240709154048.3543361-1-xin@zytor.com>
+References: <20240709154048.3543361-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Sun, 07 Jul 2024 15:54:02 +0200
-Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
+Depending on whether FRED will be used, sysvec_install() installs
+a system interrupt handler into FRED system vector dispatch table
+or IDT.  However FRED can be disabled later in trap_init(), after
+sysvec_install() is called.  E.g., the HYPERVISOR_CALLBACK_VECTOR
+handler is registered with sysvec_install() in kvm_guest_init(),
+which is called in setup_arch() but way before trap_init().  IOW,
+there is a gap between FRED is available and available but disabled.
+As a result, when FRED is available but disabled, its IDT handler
+is not installed thus spurious_interrupt() will be invoked.
 
-> The scoped version of the macro automatically decrements the child node
-> refcount on early exits, removing the need for the `goto` and
-> `of_node_put()`.
-> 
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fix it by parsing cmdline param "fred=" in cpu_parse_early_param()
+to minimize the gap between FRED is available and available but
+disabled.
 
-> ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index e00152b1ee99..7c591f50d0b2 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -446,7 +446,7 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
->  				    struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> -	struct device_node *child, *node = dev->of_node;
-> +	struct device_node *node = dev->of_node;
->  	void __iomem *apb_base;
->  	int ret;
->  
-> @@ -471,17 +471,13 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
->  		return ret;
->  
->  	/* Parse OF children */
-> -	for_each_available_child_of_node(node, child) {
-> +	for_each_available_child_of_node_scoped(node, child) {
->  		ret = kirin_pcie_parse_port(kirin_pcie, pdev, child);
->  		if (ret)
-> -			goto put_node;
-> +			return ret;
->  	}
->  
->  	return 0;
-> -
-> -put_node:
-> -	of_node_put(child);
-> -	return ret;
->  }
->  
->  static void kirin_pcie_sideband_dbi_w_mode(struct kirin_pcie *kirin_pcie,
-> 
+Fixes: 3810da12710a ("x86/fred: Add a fred= cmdline param")
+Reported-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+---
+
+Change since v1:
+* Use strncmp() instead of strcmp().
+---
+ arch/x86/kernel/cpu/common.c |  5 +++++
+ arch/x86/kernel/traps.c      | 26 --------------------------
+ 2 files changed, 5 insertions(+), 26 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index d4e539d4e158..10a5402d8297 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1510,6 +1510,11 @@ static void __init cpu_parse_early_param(void)
+ 	if (cmdline_find_option_bool(boot_command_line, "nousershstk"))
+ 		setup_clear_cpu_cap(X86_FEATURE_USER_SHSTK);
+ 
++	/* Minimize the gap between FRED is available and available but disabled. */
++	arglen = cmdline_find_option(boot_command_line, "fred", arg, sizeof(arg));
++	if (arglen != 2 || strncmp(arg, "on", 2))
++		setup_clear_cpu_cap(X86_FEATURE_FRED);
++
+ 	arglen = cmdline_find_option(boot_command_line, "clearcpuid", arg, sizeof(arg));
+ 	if (arglen <= 0)
+ 		return;
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 4fa0b17e5043..6afb41e6cbbb 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1402,34 +1402,8 @@ DEFINE_IDTENTRY_SW(iret_error)
+ }
+ #endif
+ 
+-/* Do not enable FRED by default yet. */
+-static bool enable_fred __ro_after_init = false;
+-
+-#ifdef CONFIG_X86_FRED
+-static int __init fred_setup(char *str)
+-{
+-	if (!str)
+-		return -EINVAL;
+-
+-	if (!cpu_feature_enabled(X86_FEATURE_FRED))
+-		return 0;
+-
+-	if (!strcmp(str, "on"))
+-		enable_fred = true;
+-	else if (!strcmp(str, "off"))
+-		enable_fred = false;
+-	else
+-		pr_warn("invalid FRED option: 'fred=%s'\n", str);
+-	return 0;
+-}
+-early_param("fred", fred_setup);
+-#endif
+-
+ void __init trap_init(void)
+ {
+-	if (cpu_feature_enabled(X86_FEATURE_FRED) && !enable_fred)
+-		setup_clear_cpu_cap(X86_FEATURE_FRED);
+-
+ 	/* Init cpu_entry_area before IST entries are set up */
+ 	setup_cpu_entry_areas();
+ 
+-- 
+2.45.2
 
