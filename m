@@ -1,66 +1,101 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C2D376EC
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 06:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA7142052;
+	Tue,  9 Jul 2024 06:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720504985; cv=none; b=sGf3Ns61LXt4lVg8GUnXdwLjLXV1qoUtFeMgyKVEVXv93DzILjApC/eCvQFgXQ+fNKT8gVBhSS+6Cd5Dbky5KNpnmGGxKBNXOzV0z09F/Y+/rcXV3rfrcKI+iiYVxRE4VNSPaSyQWRXteRq5S4qanyZUY80HzleY5aK+axkAaVU=
+	t=1720505203; cv=none; b=Qkty4flDy0ERD1+le7vn8pHj+9Xehqd5nPHDOa5TGIoS7JOYF3RpH8vyDi1MQkrLOtko6VUAzLrfN1JXEWavzwVm8G5nA9vDBDnNGFh0n9qes8XxmE3DhggeiHW9byiIDM17iLkSsef2og2DThz9xSfBp68akJgtXqFiDBaSJ5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720504985; c=relaxed/simple;
-	bh=+1Siwtg2PP4qPcydHrjOjXxACutTM0mVIVCoVyntj2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AdPxxuJ2SViYu9ljrBPDrOu1uLW8fVJbB8T/N5DyLpvMCgfD14OV3aOePBH4mRO86awLmLwGPAdqhDOIFgviVT/2fFmONtthtoGKFbOKHNQabgWZd1G8Y4x7kY9m8BU8KIiOYr/uGsaiKy+Pnk9YO6zrQvk8n2BHLNfSI771pJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gvkTf79+; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1720505203; c=relaxed/simple;
+	bh=AB8GU4lJy6m1ESYPkgpTF64f4Nq208/HyuonUMJToFM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=m8CfJ9TFLHTzkx/6HVMDaCFGkEAK+SZCp/QnEjifEsANNfYi20/UMfD3LN70AeFvEbrEAGZKBkbIjr14Qu9CkuhENiWTYGyMQnzAB5Joao+/xIKGaJnUEs9mY2TzSkG8QKWVOP7nnN4K9KLX+EWielwGo3POzznOS7gOwGhX6nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ov2rCa1w; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gvkTf79+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tKHQRgFDrLCK5Crj5Wg5zMK8q+bae1u83gb7i2j/810=; b=gvkTf79+lcUFCj8HL20XdPK0+1
-	bZrRRH/Ji9hXW8y8EixOJf8T59NxCjk/0/XAUGaHaqDEa1nez1fzcAmMV/qOmbHjMgF8M1K6giwzm
-	p16M0EFKN0ajLX2i8bHdT2+129cn/oDz5uYrNjkQhFZ7oveeKkXSjs+cx4nOIj6djjSqDwaDpL9A1
-	+bt3t7w5WnbbvhocQcy807PaQk3Y/UM1Ag4Ku7BU54YZH8wHq4IQBRhRWvVnC9Q2u00QBFu+4HjR9
-	V2iG3uISkIZNc87aekoQHlf00Zov5GGGcS6VE/DTr6YG1BRMbhQgs+Fe6xTE2dI95/hbZz4SZVlte
-	+P+fOFaw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sR3wK-000000060X9-460K;
-	Tue, 09 Jul 2024 06:03:00 +0000
-Date: Mon, 8 Jul 2024 23:03:00 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: George Stark <gnstark@salutedevices.com>
-Cc: linux-kernel@vger.kernel.org, kernel@salutedevices.com
-Subject: Re: [PATCH 1/1] initrd: use O_SYNC flag while opening /dev/ram for
- write
-Message-ID: <ZozSlCGyKCkj3uUl@infradead.org>
-References: <20240708200923.1824270-1-gnstark@salutedevices.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ov2rCa1w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720505089; x=1721109889; i=markus.elfring@web.de;
+	bh=vocCb0s2+QsTYPRKuzeCkB5145JJcttII2QUDPFbX2k=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=ov2rCa1whGMoNF60ljpXxxNb2tEZLO50JOybCRmWoepN7R/L5eZJUCpaoSelbcUT
+	 KEF0Q05v7eXFfWR16E1whVj9llB98LkgXBBFcuETAURj7LYzyC1HVFOUa9SMQOyNO
+	 m9Fx8BLJkRsins6yiTMIlyfqbDHipiTRJOPrENi5k4ZjhMIm6byoecIZmBUsgPXNa
+	 FW8SroTpKpEjrBS/icy+NzVLtUaZzBQiKbnY0qmE0zQEkbDGAuRFXbDGOTyrWAIpr
+	 mB1idujN75Nc3BeDNqHc8xzt0Y7FBDnnMC2h17Lv1pF8mFnTiAI1KyxQbScJuDnjW
+	 jbU6+TE2haihGnVTlA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MActe-1sXhof0FrM-000PbJ; Tue, 09
+ Jul 2024 08:04:49 +0200
+Message-ID: <fc4323b7-c7f9-47c5-a7eb-4034d2e18bcf@web.de>
+Date: Tue, 9 Jul 2024 08:04:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240708200923.1824270-1-gnstark@salutedevices.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+To: Hao Ge <gehao@kylinos.cn>, linux-integrity@vger.kernel.org,
+ Jarkko Sakkinen <jarkko@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ =?UTF-8?Q?Peter_H=C3=BCwe?= <peterhuewe@gmx.de>
+Cc: Hao Ge <hao.ge@linux.dev>, LKML <linux-kernel@vger.kernel.org>
+References: <20240709023337.102509-1-hao.ge@linux.dev>
+Subject: Re: [PATCH] tpm: Move dereference after NULL check in
+ tpm_buf_check_hmac_response
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240709023337.102509-1-hao.ge@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rYmMZ52qGI3wa0UJ7FqpRq1mkvewDOSlp01g4rQQbvxNCvTkeiw
+ XhK26BhSOihuyvCAR5t4gjJc1HpeqjUhgHQj+J0yLpd7TLjx/Cx1TGdn5kBBWVMDGN9h2Aa
+ q1wsGLdAj5eZu9LVNbIDFkgCiauwDlkYz6SeYkNwK0TYWpSjldZsfJsVdFxOOFDys7nMoN3
+ YFkbfXfLwKIOgeKhtWY3Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:sPcVbkyG1cM=;PlIWtWZXFZovBqgQL5g23Z3/QlT
+ DJsgzHBYGrsuel0Rwu8wgwqLK6Xz5CeXj6orRCO4w9lqrEVY2myMEi7iLHpSm6YNLsgVUY5b8
+ lYBrL9xn0y8pRkOz/cIeAOfzBuS6E/NqjC2Qzn6C6ikkkdy9S0fL/hpXEXZAeLEuVrDFQO8kt
+ bSgL7ubk/tg/sVX3EDf0ZlL5AXvnrPeXyVZ1apAmlNY7QPcuB2cunQ4CLdOy3FUFPLsuMX+nQ
+ 3ufboUv50wl/vQcgHxLNDxdySQpTaSxVcodoVatWZJkxMe920zhgwV2/MF8bFqffSfe/kBgh4
+ af2MGO0YHnJFXgx+nV+eKQi6esYU4QO5gqn6qluQ4n53sWq7tAX1JJlQlp+CoHDacp2PjeUAS
+ AtpZ5KbAL9MOH7p9uEmx8/KYiqBIbJg49GsUhPBdB8Ra1DHmA0RlyKN/opjBXtCoe7b2Y+Y+A
+ UIaBpYXFCS2En3xKRAzcJlQZjrNEmn6aGieyJ89RLuDenLLvD3hbZkkA6lCv33vj6T3dw8lkL
+ HGh7fv1gEKkyy0BylkSewGbng8weN8M7lKC00y5rZkOo22ldXWPdPNj3Sk+Qr9E2RjQlu67w5
+ 90jSyljgQblAny0GD5prEuNJzUfbso8QYS79VqEbAjQhF4ulUtyOVTvxq8f754Kf39c39P1BT
+ KvmtUh3CQ5Sw2qrFpL51wA9LTwNEOoA4IVi0FWgWWws+DYbib1Pu0zVvFMJcFlOA78ULCAjwW
+ uIcw6b1yAoxcl/GpNSqxEbLQlpzkXqcD11r4Unkt4EXmwPSsaGOoYjOOUwbhMuGSR8y3lnFGa
+ NBdHnR4N3/km8GiiX7r3pqHGpUXDJ+SHWwYcWx7ZzuFeM=
 
-On Mon, Jul 08, 2024 at 11:09:23PM +0300, George Stark wrote:
-> initrd image is written to the /dev/ram block device using filp_open(),
-> kernel_write()
+> We shouldn't dereference "auth" until after we have checked that it is
+> non-NULL.
 
-First question: why are you using the legacy initrd and not initramfs?
+How do you think about to improve such a change description with imperativ=
+e wordings?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.10-rc7#n94
 
-> . After fput() /dev/ram is mounted and may fail due to not
-> all data is actually written to the device yet. The mount error remains
-> hidden due to MS_SILENT flag usage and mount_root_generic has retries.
-> So use O_SYNC flag to have all data written to /dev/ram before mounting.
 
-O_SYNC is highly inefficient.  If you have a valid reason to care about
-a corner case in the hopefully soon to be remvoved legacy initrd code,
-the right way to do this is a single fdatasync after the writes have
-finished.
+> Fixes: 7ca110f2679b ("tpm: Address !chip->auth in tpm_buf_append_hmac_se=
+ssion*()")
 
+1. Would the commit 1085b8276bb4239daa7008f0dcd5c973e4bd690f ("tpm:
+   Add the rest of the session HMAC API") be more appropriate as a referen=
+ce?
+
+2. Would you like to add a =E2=80=9Cstable tag=E2=80=9D accordingly?
+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/stable-kernel-rules.rst?h=3Dv6.10-rc7#n34
+
+3. How do you think about to append parentheses to a function name
+   in the summary phrase?
+
+
+Regards,
+Markus
