@@ -1,49 +1,46 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1F319CD0C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEA53612D
 	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720539693; cv=none; b=aAFTWwWL6e3Qp0vT98yB7pC7PkdDE/Q/so/oxYAtK+lbuEAn6ED4m+aVFsr8//r8ayeNf7mFDVAbat3DGJeuwXd6qH47wITi62iw9hY8wohl+8/iDF1Scwdi5Do39EQooPwZLj2LyTKfGUS7fIQId2Y39TzsKePe76owqucEfxs=
+	t=1720539693; cv=none; b=V3/4dg3VXlbgWLQ0Af1n8xqwG3iGkVkr2+kC+dpb0rFxYuqJ6XeJzZnioq1I3E86hBYkrSOdaIIK35XMKhw8aN0STgeAe/JbUCssmdyrjJWR9ppnz5sVeQ1HK+gLIoj1DXTqf+fT7ZIBC0npy75WOv+D7LiLjK4ifeAIYOKLYrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720539693; c=relaxed/simple;
-	bh=i6iI5igdpfgHFwkessxPLUb0pQclZbrgDsIDnR26y3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RGyg6MsWpAaa6EfqvEf692Nbta5TTzZ8ogP3b5YSXRDN3npGDHmUkjxM89pOYJZpWCH7x43y0bgFKvZYWsv8BEpW6V/6twkKLE2hFe5Sq18vuJwss5M1aLzZlkZIH44h67ClQV406WFemEXSGKvwqDW9ySi4R7sUVZ92PUJPQkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=B0v0cL+h; arc=none smtp.client-ip=198.137.202.136
+	bh=L/YLyuFVpcalfodXh6iSUAseC5/BrLWhVSI8KkE2tkc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h9ayunt3eNaqq8nQdKgUhZDePO55IYYvdUfjoeR1tFVihsRpEkAnoZW/KDqKVPZfgK/7KbW9LAEhxPVlA8u+jvh21OcQ94nl3WD97EBTZY5agDPm/lsOLZMpFRKR5R+G60iDJuucSAko/sCbZ046MYO1yspDcyeJPcS1ThtDO6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ceNCeZpf; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="B0v0cL+h"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ceNCeZpf"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 469FemH23543378
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 469FemH03543378
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Tue, 9 Jul 2024 08:41:01 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 469FemH23543378
+	Tue, 9 Jul 2024 08:40:59 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 469FemH03543378
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1720539662;
-	bh=Y3T6o5mCEOAL/OthkgfETflzFrViYS0KVTQMPve51XI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B0v0cL+hvAQnD4zPUvLZ98YLKgNf1DZ8n2VRW+LfuqQRALzztYh+Jb8yfTZ90m9Wu
-	 b9VGGcGLNUzxM4zRMt0S0WPBouDNxR0TEEvSEf8BNSGiEK3kAlimAwCYb8QzF0ub94
-	 jJkLsQ8hubfHDNWeLrLF2pMyJ4MpOgIHzMRd2t2cZjnw+kr9w6/BEsCVj/rd7p0sKz
-	 B/i0avsNezrE87vQ6X23k8sB3bog+9nbsqzamQ5UgK+UvgEqG0AM0XRxmnQEvgLc1K
-	 U9+D97YeXzwOmW5l/S9t3vjOPatseA8+evQHDLcpeLJKoS8GB22ynUuFE9oYcg7dqV
-	 szWetbbgjpbyA==
+	s=2024061501; t=1720539660;
+	bh=4u6YpzKMMp/pyOORgFJw/J79spsRWRinGVyURWEku1Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ceNCeZpfiJR6aBz2gLM89MmpT0RD5PdMLC7LUWHrYdGV4vqpAE2cljfGFJhGKAyJG
+	 of77CiEQUpXox+nhl4KR2le1YRFItW/zutZ5AOOkyAb9kr51enpf3OsrZaPQfATGrU
+	 AN6v1pAamgRzQUantMvKLNelp6749l2Xl5H/iNk7UEZvsMc+7dlT8TegnJPv+POL5f
+	 qzD+fwAE9Fz7asHFQ38INr0pKFcgFMKID3IkaQlOHcFR1TwAJA0D/NdIyb6QQpB8uY
+	 ZAHcKQVKIhwaTFGLj0FZnbpMqu/JjF51vP4ptdYQVEXMBCZCJveRQUc61XBqvX43vL
+	 drNWjPQ6DQhwQ==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org
 Cc: hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org, peterz@infradead.org,
         andrew.cooper3@citrix.com, nik.borisov@suse.com,
         houwenlong.hwl@antgroup.com
-Subject: [PATCH v2 2/3] x86/fred: Split FRED RSP initialization into a separate function
-Date: Tue,  9 Jul 2024 08:40:47 -0700
-Message-ID: <20240709154048.3543361-3-xin@zytor.com>
+Subject: [PATCH v2 0/3] Enable FRED earlier
+Date: Tue,  9 Jul 2024 08:40:45 -0700
+Message-ID: <20240709154048.3543361-1-xin@zytor.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240709154048.3543361-1-xin@zytor.com>
-References: <20240709154048.3543361-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,100 +49,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To enable FRED earlier, split FRED RSP initialization into a separate
-function, as they are initialized with memory from CPU entry areas,
-thus their initialization has to be kept after setup_cpu_entry_areas().
+Wenlong Hou from Ant group reported two problems during the FRED
+initialization:
+https://lore.kernel.org/lkml/cover.1718972598.git.houwenlong.hwl@antgroup.com/
 
-No functional change intended.
+The first problem is that spurious_interrupt() gets called on the
+HYPERVISOR_CALLBACK_VECTOR vector.  Because kvm_guest_init(), being
+executed way before trap_init() in which it is decided that whether
+FRED will be enabled or not, calls sysvec_install() to install
+HYPERVISOR_CALLBACK_VECTOR's interrupt handler into FRED system
+vector dispatch table or IDT depending on whether FRED is enabled.
 
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
+The other problem is that the #PF handler gets a wrong faulting
+address from the stack instead of CR2 before FRED is enabled.
+Because the #PF handler fetches its faulting addresss from the
+stack or CR2 based on whether FRED is available rather than active.
+
+This patchset fixes the 2 problems with suggestions from tglx:
+
+  1) Parse cmdline param "fred=" in cpu_parse_early_param() to
+     minimize the gap mentioned above, before kvm_guest_init().
+
+  2) Enable FRED right after init_mem_mapping() to switch to FRED
+     from early IDT ASAP, avoid intermediately using the IDT #PF
+     handler.
+
+
+Link to v1:
+https://lore.kernel.org/lkml/20240703085426.274801-1-xin@zytor.com/
+
+Changes since v1:
+* Drop the patch that changes wrmsrl() to wrmsrns().
+* Use strncmp() instead of strcmp().
+
+
+Xin Li (Intel) (3):
+  x86/fred: Parse cmdline param "fred=" in cpu_parse_early_param()
+  x86/fred: Split FRED RSP initialization into a separate function
+  x86/fred: Enable FRED right after init_mem_mapping()
+
  arch/x86/include/asm/fred.h  |  2 ++
- arch/x86/kernel/cpu/common.c |  6 ++++--
+ arch/x86/kernel/cpu/common.c |  9 ++++++---
  arch/x86/kernel/fred.c       | 28 +++++++++++++++++++---------
- 3 files changed, 25 insertions(+), 11 deletions(-)
+ arch/x86/kernel/setup.c      | 11 ++++++++++-
+ arch/x86/kernel/smpboot.c    |  6 ++++++
+ arch/x86/kernel/traps.c      | 30 ++++--------------------------
+ 6 files changed, 47 insertions(+), 39 deletions(-)
 
-diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
-index e86c7ba32435..66d7dbe2d314 100644
---- a/arch/x86/include/asm/fred.h
-+++ b/arch/x86/include/asm/fred.h
-@@ -84,11 +84,13 @@ static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int
- }
- 
- void cpu_init_fred_exceptions(void);
-+void cpu_init_fred_rsps(void);
- void fred_complete_exception_setup(void);
- 
- #else /* CONFIG_X86_FRED */
- static __always_inline unsigned long fred_event_data(struct pt_regs *regs) { return 0; }
- static inline void cpu_init_fred_exceptions(void) { }
-+static inline void cpu_init_fred_rsps(void) { }
- static inline void fred_complete_exception_setup(void) { }
- static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector) { }
- #endif /* CONFIG_X86_FRED */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 10a5402d8297..6de12b3c1b04 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -2195,10 +2195,12 @@ void cpu_init_exception_handling(void)
- 	/* GHCB needs to be setup to handle #VC. */
- 	setup_ghcb();
- 
--	if (cpu_feature_enabled(X86_FEATURE_FRED))
-+	if (cpu_feature_enabled(X86_FEATURE_FRED)) {
- 		cpu_init_fred_exceptions();
--	else
-+		cpu_init_fred_rsps();
-+	} else {
- 		load_current_idt();
-+	}
- }
- 
- /*
-diff --git a/arch/x86/kernel/fred.c b/arch/x86/kernel/fred.c
-index 4bcd8791ad96..99a134fcd5bf 100644
---- a/arch/x86/kernel/fred.c
-+++ b/arch/x86/kernel/fred.c
-@@ -32,6 +32,25 @@ void cpu_init_fred_exceptions(void)
- 	       FRED_CONFIG_INT_STKLVL(0) |
- 	       FRED_CONFIG_ENTRYPOINT(asm_fred_entrypoint_user));
- 
-+	wrmsrl(MSR_IA32_FRED_STKLVLS, 0);
-+	wrmsrl(MSR_IA32_FRED_RSP0, 0);
-+	wrmsrl(MSR_IA32_FRED_RSP1, 0);
-+	wrmsrl(MSR_IA32_FRED_RSP2, 0);
-+	wrmsrl(MSR_IA32_FRED_RSP3, 0);
-+
-+	/* Enable FRED */
-+	cr4_set_bits(X86_CR4_FRED);
-+	/* Any further IDT use is a bug */
-+	idt_invalidate();
-+
-+	/* Use int $0x80 for 32-bit system calls in FRED mode */
-+	setup_clear_cpu_cap(X86_FEATURE_SYSENTER32);
-+	setup_clear_cpu_cap(X86_FEATURE_SYSCALL32);
-+}
-+
-+/* Must be called after setup_cpu_entry_areas() */
-+void cpu_init_fred_rsps(void)
-+{
- 	/*
- 	 * The purpose of separate stacks for NMI, #DB and #MC *in the kernel*
- 	 * (remember that user space faults are always taken on stack level 0)
-@@ -47,13 +66,4 @@ void cpu_init_fred_exceptions(void)
- 	wrmsrl(MSR_IA32_FRED_RSP1, __this_cpu_ist_top_va(DB));
- 	wrmsrl(MSR_IA32_FRED_RSP2, __this_cpu_ist_top_va(NMI));
- 	wrmsrl(MSR_IA32_FRED_RSP3, __this_cpu_ist_top_va(DF));
--
--	/* Enable FRED */
--	cr4_set_bits(X86_CR4_FRED);
--	/* Any further IDT use is a bug */
--	idt_invalidate();
--
--	/* Use int $0x80 for 32-bit system calls in FRED mode */
--	setup_clear_cpu_cap(X86_FEATURE_SYSENTER32);
--	setup_clear_cpu_cap(X86_FEATURE_SYSCALL32);
- }
+
+base-commit: aa9d8caba6e40b0b02a6f2b5f2bd9177cd76cacf
 -- 
 2.45.2
 
