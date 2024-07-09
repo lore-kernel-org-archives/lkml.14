@@ -1,341 +1,138 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011048.outbound.protection.outlook.com [52.101.70.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1091F194A6F;
-	Tue,  9 Jul 2024 14:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720533678; cv=fail; b=GgZMNr5Mif56IBErto6/0XXclUj+Kga2u/Pz4/WJrj92gGMzhgOMV5MqQT+uq26WWePPD+8rx0JeLfFLNoWC59YeG7f7bko23+cll/hR9uIIAfQSJQ4xcPRVTPXUH/kv0ozdFEZsmjK9xNp5cqgu6GuRnLMmbkW3GrPA32SEwrY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720533678; c=relaxed/simple;
-	bh=WDL1u0FBwHrjnOuQU3MRTOLp0bf918fPuZ10O5p5csw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NHB3kRMlFlhkR07G6HDAUx/QkP/q/a4qGxbsGO7iFBHnzLdV6JyZrqmiD18uE6cat/83iSf7RQ6Ik0118duNDCTkEFaA2aRBxJ6030F1QhJdK0t45i9WVZISz85z/z2fBNMAILaHIARLp+U/+Myu/gtdNhr0zoE2LNsDwMAitno=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=WsvRIzd8; arc=fail smtp.client-ip=52.101.70.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A631953AD
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 14:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720533686; cv=none; b=ADhWwUGcr+RKxPOUhR0mlMtp3SNyCeLa8WZut6ovczpOGxHfS/+rhjAJeojTqV/gdIoUzmYyjB/MdJngupAue9Jytq9zgrSimQvjpwTKLkuNt8vnTSFtqqnhUYhIQ4NeDM02RTZZwG93dseVldE9qghAgaKTCbL0ePWpvvUOkeo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720533686; c=relaxed/simple;
+	bh=cWksfE0mDrPHGGfr0A1PJv1/l3GTs6C4rc8XVUn8CsM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=unv+aCvh6rAtgUNuQDiaREwgsTrW9riS7/yXz2zeH7Q1Xn3bnFVVU1psVOQwHBlfQIMiZpp0tJKwZvoujiqJTiTR66BKKe9XOnXaQ2w1FKAceC4aKeZNhVvRYdPlVuyIJ20vFkP6qZQ2dx3XWwYu5rqVZrmFqRJPwL8qN9zXt3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x7oRqSVX; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="WsvRIzd8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eeMbFGHRalINOSHgFSrKGnDgoR5VVbPbY0Bz6MPMOsZ2A3vWt10IOb23hg+bu8rWWQyCl/y/RlFzmNenJ+T/5yJq80OWSeY8f0ZWc7hze9+5xjXEwc1jzQJiEv24PbjmWdBBXxunuv6FBXpsDq+9DgIERNZCBXmyh6EVodKc9ISdHxdkWTJvOWaeh5OVvxDwxW0TXl13DA/7ZWPLwgnVUSw+HqThrfa/qhea0XWLzSVEBAF9KOjDiaLP2OF3op+U3NBnc7MuLyHfJvRKg04Mr3sanGtkjnyekO/TqXjjg0AEXamk2CY/cLMnUsKpwzTxg1XZKX9QwD+rN7cwtCNEpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C4upfGYyhv3wfIPAR3t03xft5bnG8ay4hRhDOTNnfuc=;
- b=YBlVJlR6Ih5HgzzIMXTWLBe4b3VXupraElIc4bpoFO5nGXb7iG6QKt5zqWcFaYebLQX8FXteFN2TXGQMs/VfH1X5YvYFqAouvuPpUi8RtUJ5zMXUxid8Um+WkUyJ6cCmn/USvhjE47Pq2VrbH7eJMpbnIKZcxGAiPvVO04iknDfZ2MsyhlnB6A9dXDuVlY/b+XZ+cbblVe6Mw3cwcf+u5nXwMCsNp4p3hTSkFNMAdVPE9JltRpBsebnSf5ujv54c9I4p88Oj1uhN0fA3oc8s9dofAZaDk4OT4ebrGqLSRHS3bPZfhR5J3JiAs98JOmDMvYnhsZJF5qWO0ofbKUcgWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C4upfGYyhv3wfIPAR3t03xft5bnG8ay4hRhDOTNnfuc=;
- b=WsvRIzd8P+toho5JCi30bxqI61unoerVYZBd9g4YUSOfJPfh6HHIKAKIgtEXiMgFgp3PMUMbZdlAqB6x3KdvsKUz+hIdgDtqO6mfHxMphCKwUKuZFprTpDHsDuJSDuOC8k9Y5URO491Lr2GuHlqvuqCnmrCuYzWaJdxGsvC0JFs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by PAXPR04MB8622.eurprd04.prod.outlook.com (2603:10a6:102:219::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Tue, 9 Jul
- 2024 14:01:12 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
- 14:01:12 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: sudeep.holla@arm.com,
-	cristian.marussi@arm.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	arm-scmi@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V3 2/2] firmware: arm_scmi: set mailbox timeout value from device tree
-Date: Tue,  9 Jul 2024 22:09:57 +0800
-Message-Id: <20240709140957.3171255-2-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20240709140957.3171255-1-peng.fan@oss.nxp.com>
-References: <20240709140957.3171255-1-peng.fan@oss.nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2P153CA0035.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:190::14) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x7oRqSVX"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42679f33fefso4409425e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 07:01:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720533683; x=1721138483; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=odNb0yTiM26VkEoxH1kb0dmkgcjAaMfcLxg2VgA0xjA=;
+        b=x7oRqSVXYZ7hiAIq5OIovVu9mQFng0u0iZgGIFPGs4l15dAaQlKt40WeqdgtpEulJH
+         J9Hb2d8XHqRQ1eUFrRIGUnqqmW4PtUcsxAIB4ehTfZfa/ABHoosUjjBcOeah1sYlQS+d
+         qo6nEaMUGs78z0FuGOFPgueT0cofeVxfv0ifISmSI4gZKfZbmSu5LTQ9sFbnJvzpY8f4
+         R75A4qiiu9HomVN8OR2h9j3wOAy1Hcd+X/8V8a9bIedJ9VBUVqliZUh53inDXvcft1tm
+         dT/aCnkEX/VhKTaBKHLpgfEHkdZYihwAhPfratfYN9hOZfIyzCMFjcHuVIiMSOLDqruO
+         mKVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720533683; x=1721138483;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=odNb0yTiM26VkEoxH1kb0dmkgcjAaMfcLxg2VgA0xjA=;
+        b=Dvc6sisHueZSY8nV0cb9/mmo1nCkLmLzT3rFQXB2vzRIKB6vvnaNz9cBKRNgHYNLjU
+         virfZMcH0WY56Ua5KmnJ4k02/qaPhnx6XVUrSLl5zi4tZslg5yLXNPMBCLaCNKZ1g/JJ
+         ExQi7AIYapuiwS/H5gezcCiAMGv5NM9KuEVYvw5GVX05Pds/+ttOHW+y4Qew5lHSIWuB
+         cAtaQCnWfncRs9blcL4Pq5G5csRdIPf3r5urbD9iqhjR5Q81D1C4/wnp9WGpA6N0f6DL
+         ddmIQ8ab/nnWvf5Wy8IfRFhe7yTVxiVyk+DON1zQRGC81Mr3LXr3GvW7hfaiqenrGa5s
+         bQJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnGEkmOHoqEeybqAwadZpjc0AcbPiew+mpsLOh1bXYWItbFvH+r4Uy/TKymBmho4YgPRfPCFgQF7x6e7xBLqeBz09NLRX1kbN9Tn8k
+X-Gm-Message-State: AOJu0Ywh66p0VuVCbBT9nVhohppatGwt2Sm2mFsZfjIU1C81Y/vFuAFt
+	iZYLvHnYrU8c4V1CjXhdSj5zSfKDCvnespKmBw1DfaEhTHkeShd+lkfvWzhE1Hk=
+X-Google-Smtp-Source: AGHT+IH6C9QFWooOG++C3SeWw1jtlVbKwFW/ns0gKbnvV6nNPBXO3ivbl5NS5izygL+PQjq9pWMBmw==
+X-Received: by 2002:a05:600c:1592:b0:426:60d7:d299 with SMTP id 5b1f17b1804b1-426707cf5ecmr15020845e9.7.1720533682768;
+        Tue, 09 Jul 2024 07:01:22 -0700 (PDT)
+Received: from ?IPV6:2a0d:e487:133f:fb1b:7fc5:f63a:ac6f:62c6? ([2a0d:e487:133f:fb1b:7fc5:f63a:ac6f:62c6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfab80asm2655664f8f.109.2024.07.09.07.01.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jul 2024 07:01:22 -0700 (PDT)
+Message-ID: <79774d32-f891-462f-b7b1-2a47c33463b6@linaro.org>
+Date: Tue, 9 Jul 2024 16:01:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PAXPR04MB8622:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ed39383-e31b-460f-bc88-08dca01f976e
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/OSFLw7L0H4FnQ5uP4oRHyHit9TnolWvM8bE9e/LvoSKCO9Bak07HtyBAYDd?=
- =?us-ascii?Q?odEWuH2DpMNHqct5h1yL8AwF9eOTpx5hdxrOSU/H3wb/QZ5ZGQ43Gh/BWIcQ?=
- =?us-ascii?Q?FKsi4vE4oh9Ov4kEo/i9zLYGPTFqYBLV+enXgfaJ4X39qW5SLoJQMdyAk7NM?=
- =?us-ascii?Q?k6WvX2W4hC1jUWxdA1QKblklivMnJ1fDbwf8P1i71jD6PqDOoanqc1CKwWSL?=
- =?us-ascii?Q?oAHJm8QfhhVeTG4uzI4M4aDYCH8QnIngKTRY0agt19rKbyEIvqJxbW8EGK5l?=
- =?us-ascii?Q?fwpmfenwlYYSvDvvMyaKppXZ8PuDDa9US//x2KKeU08IsEgxpHubeoXYAkqI?=
- =?us-ascii?Q?QW7Gud/vASXYuiHUk3UrUjN05oKsexG2wghGci5ly0D6RlRe2SSd7YNPdrGX?=
- =?us-ascii?Q?2ccwhwrw/Xi9WUBIw3Up+1abyBagspSbgJJFqzLuPXiHaHmxl97Wt6LuaIPJ?=
- =?us-ascii?Q?b6xXbALWkfXZip+Ij48LtT9BE4RN8Cw5csjU+zx9tcxVyHKBzI3+dUFYfr57?=
- =?us-ascii?Q?2J7L0fMyXi4Oma3kvG6yik74hocNQFjHz8/eZP5pHqXUT83fdbiNBAw3R/8F?=
- =?us-ascii?Q?vh3xsj3hBBevEQ4oqHELy/KhqLdue0GCfJLXUfg4YHYtbXT9VXA5yxK1YtjE?=
- =?us-ascii?Q?fZ5/UTrJPleERcgoS8pVJEEmk2yn6AFQtQzXzJtY5KIasMPmIRZH+c2fq0e+?=
- =?us-ascii?Q?We86G+1v32kDp9N5d43fyOPw/cdMuGsHb56JDgyzcCooI9et1iWE3ELlRvJx?=
- =?us-ascii?Q?XIOYXzX4os/sbeSqCzmhMGOutKoYMnQdrFedtu+G3ruqa97U2s33T0UDtU9i?=
- =?us-ascii?Q?8NdIL9BrUzMRVgVTEg4kkveibALhM3CUcJVr8aXg/Pp77EKQXIyCJZ4eL7nK?=
- =?us-ascii?Q?Ge3ArICKwXmqExGuJSW5iHP4CA7E8SRZqiHEuyX4oxnGgoEnts1vtRXqga77?=
- =?us-ascii?Q?xtu5J5h/xTPBtpgDsO2JPMvwP/ZWi/WCd9GSaY4ulFyb3SuQ6SRMi1LeWp54?=
- =?us-ascii?Q?JfdRBjN6ra2RTR1Oc+80WRsOuUsXlGaW4I/wnCbcQnj57XSPXEmQwY+ixrBG?=
- =?us-ascii?Q?OjhDb10r0I5qpLoK32n99KWZQ1mWVxa6TMi3aOSNqfD/X++17duCIstpFOaR?=
- =?us-ascii?Q?WIqstJAjY8w0Ms42CiO0TUMQgU9KXNfUXrSbRcTNKNqzTKnmzNB0cUiY1eGp?=
- =?us-ascii?Q?y79LJFYfKr6gq8spdowFnOe59EeLV1iSMz9PQNxih3htfDUL1GsTkOoRpUX3?=
- =?us-ascii?Q?I2Kuy1dR/seBx1KD/xl6ltPykZlteDOUIR6sPjhuYKbpRtYycvCx1k8JmmHP?=
- =?us-ascii?Q?iiD5Ue+CPUhnrtZlE39DwB6W5aH56FFg9O6tra8nRhqo31dI8eTQeBxyDuJ6?=
- =?us-ascii?Q?2PlxLz+EyvkmoDY678h7mIhDcSrC6e7FCsoQZO+aJ/c+DN2WZA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oA1LkSZ7J247P3nQtcBvKALon2Bya2bHa99QuSW3UDKWErjMdN9vdAJETLsD?=
- =?us-ascii?Q?mX1HWBGXRBdYACY+b6tE6+issi7KFqqoXnVl4QriSpwp8Sp/qUlEJBTe7Zvn?=
- =?us-ascii?Q?BzrWHswred7UMCmEpIl63BEjlg6PS3Ueioqb5axGZv5FV2Mo+02cJY0dR0k/?=
- =?us-ascii?Q?yY7Q5m8HTsyh6vGGwruR+AHP6C6UGI7khB+frOFCTJv0wGjoYuIqb/ok3iUz?=
- =?us-ascii?Q?KeyK5ixdj1Co8sNv0iSIM6RNy+rUqspjI8stYmE9ip11/gf1WTr4TrOyIda9?=
- =?us-ascii?Q?aeFlXX0XA4QfMEkLTrCUXPlzBvaBLTuYw44oob8uF/otKbJ4wCS8xa4oZwrU?=
- =?us-ascii?Q?v8EHe/343z4MC1dcLYq5R5Aq/jL1aYVZ39KMo8tmOAdru6MYSm8hPwHimRBU?=
- =?us-ascii?Q?agUonjqrjiYSmsmOobqGT2joHvrPqqTLKzrKMXGcznmXnGIVALEhGjwV8WGA?=
- =?us-ascii?Q?q5e0Wr7m16eaLTRfNZ7GvbFAiOGMKo1SZlYFcxGtULXkAgTBMqemHPdX7S57?=
- =?us-ascii?Q?9er2Jeo2JhhWLHM3Fcx0OuGUZrH6nTUIO6SBfh7tBWxy73whIoO8rWYCmIR1?=
- =?us-ascii?Q?X9XjqWzR73Zg0IjTtF8i/Age+6eVRwrMg1b60PgWrChushE7e9zc+N0jpPNx?=
- =?us-ascii?Q?5wMXPuAcYpJcNurCKCyqlrjIfHonT1bmQAtHme77jbMvmGDPRfhyExXcCVnW?=
- =?us-ascii?Q?Q+lEyfMLJ1XM/qqRR4SMlUaHKfxHiLq02Zbra7hDcmR2bMDFn/JeitX3usR0?=
- =?us-ascii?Q?QP23nd7uGyxVbPTQpuN+BulKAERkhpGm2REi2UJeSBp27+EtLKD9qBCKhGm0?=
- =?us-ascii?Q?xFnYPBwmeiz/wXlFCddOUzmM7bhxugcS+EtCZebmGNCjmnn5uCRR3t1i3da8?=
- =?us-ascii?Q?VnriowvhoBBj1HnOBMWrsLygLoUcqtmFLHdskWTt9rowoMua1PbC7QkffAs/?=
- =?us-ascii?Q?jUfyulRU4SNDehIOe3xrPytEahLGvGIkbUFYa85uF+6NNxWTcbkeKzqACSnP?=
- =?us-ascii?Q?n19pxAVXZQo3Zw9FYMucdfk0FM0U7almMuavryvGgH2TZs3Mkt4rZn3vaULd?=
- =?us-ascii?Q?2RBM4NarparJbqHTif9yLLM0OYRIg8ugF2v0IRvLSIc3ZmewheH7DO2qa9Vu?=
- =?us-ascii?Q?bA2LX9vdNWvn2EGgbbj0kGyuqpcrHjt3zGx3vcpXcgYTknQ0wS+GVCk9mWDp?=
- =?us-ascii?Q?aV1EmMt19MHPBmDXuss+YU21eTzQqzOIkbxq9Qqr9L2lr1TYEAr8ARbaKE1+?=
- =?us-ascii?Q?+Ba+nhvWmLYfrzeyeW7BXiNisdmNJ7wZDc+xCdzVVDAB/hvauFySCXgVRruw?=
- =?us-ascii?Q?+BrxTITK0q9H0q55ebwyMgy7T0dewhjn2Hxs/08sA6YYRtPlrMyR5Y/e7kfX?=
- =?us-ascii?Q?+jDE0ycoY5/KXtqV37oDaRJJvECXKIw4/19/MhRh+7YJLt4kb5em26vigv41?=
- =?us-ascii?Q?VgvbzWxvZwUIu4iCxgyEWhyH6GqEwcv7N5eGNJSrlPXZNUeg/7be76WbBQdn?=
- =?us-ascii?Q?7j6EvQzwF9pvqQGZn01Gu5hmb/gPJujoYVliwrDiDzLkt0MP7UDQdyY26uEB?=
- =?us-ascii?Q?b9iXpzJbcKV4ZgSA5dYeI2F65+xAVsHgehGqcV+t?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ed39383-e31b-460f-bc88-08dca01f976e
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 14:01:12.7778
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zg9Q0dH1MKyNRD8HB+Tv34dOddy6jMyM+Y1k8clY5+Fy59O+EWWy3lRGtqSOsyUzi35B0RT8AG3NNlNQsJY0GQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8622
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v6 2/5] drm/panel: boe-th101mb31ig002: switch to
+ devm_gpiod_get_optional() for reset_gpio
+To: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>,
+ robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ airlied@gmail.com, mripard@kernel.org, dianders@google.com,
+ hsinyi@google.com, awarnecke002@hotmail.com, quic_jesszhan@quicinc.com,
+ dmitry.baryshkov@linaro.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240709134754.28013-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <20240709134754.28013-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240709134754.28013-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Peng Fan <peng.fan@nxp.com>
+On 09/07/2024 15:47, Zhaoxiong Lv wrote:
+> Switch the driver to use devm_gpiod_get_optional() on reset_gpio to avoid
+> driver probe issues when reset line is not specified.
+> 
+> Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+> ---
+> Changes between V6 and V5:
+> -  1. No changes.
+> v5: https://lore.kernel.org/all/20240704072958.27876-3-lvzhaoxiong@huaqin.corp-partner.google.com/
+> ---
+>   drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
+> index 8f03920e3503..b92082bfc932 100644
+> --- a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
+> +++ b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
+> @@ -286,7 +286,7 @@ static int boe_th101mb31ig002_dsi_probe(struct mipi_dsi_device *dsi)
+>   		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->enable),
+>   				     "Failed to get enable GPIO\n");
+>   
+> -	ctx->reset = devm_gpiod_get(&dsi->dev, "reset", GPIOD_OUT_HIGH);
+> +	ctx->reset = devm_gpiod_get_optional(&dsi->dev, "reset", GPIOD_OUT_HIGH);
+>   	if (IS_ERR(ctx->reset))
+>   		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->reset),
+>   				     "Failed to get reset GPIO\n");
 
-Each platform might have its own maximum mailbox receive channel timeout
-value, so get property max-rx-timeout-ms from device tree and use it. If
-the property does not exist, use mailbox 'scmi_desc' fixed value 30ms as
-before.
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
-
-V3:
- None
-V2:
- Fix build error for raw mode.
-
- drivers/firmware/arm_scmi/driver.c   | 19 ++++++++++++++-----
- drivers/firmware/arm_scmi/raw_mode.c | 13 +++++++++----
- drivers/firmware/arm_scmi/raw_mode.h |  3 ++-
- 3 files changed, 25 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 6b6957f4743f..1aa613d4cb43 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -162,6 +162,7 @@ struct scmi_debug_info {
-  * @devreq_mtx: A mutex to serialize device creation for this SCMI instance
-  * @dbg: A pointer to debugfs related data (if any)
-  * @raw: An opaque reference handle used by SCMI Raw mode.
-+ * @max_rx_timeout_ms: the maximum receive channel timeout value
-  */
- struct scmi_info {
- 	int id;
-@@ -188,6 +189,7 @@ struct scmi_info {
- 	struct mutex devreq_mtx;
- 	struct scmi_debug_info *dbg;
- 	void *raw;
-+	unsigned int max_rx_timeout_ms;
- };
- 
- #define handle_to_scmi_info(h)	container_of(h, struct scmi_info, handle)
-@@ -1302,11 +1304,11 @@ static int scmi_wait_for_message_response(struct scmi_chan_info *cinfo,
- 
- 	trace_scmi_xfer_response_wait(xfer->transfer_id, xfer->hdr.id,
- 				      xfer->hdr.protocol_id, xfer->hdr.seq,
--				      info->desc->max_rx_timeout_ms,
-+				      info->max_rx_timeout_ms,
- 				      xfer->hdr.poll_completion);
- 
- 	return scmi_wait_for_reply(dev, info->desc, cinfo, xfer,
--				   info->desc->max_rx_timeout_ms);
-+				   info->max_rx_timeout_ms);
- }
- 
- /**
-@@ -2614,7 +2616,7 @@ static int scmi_chan_setup(struct scmi_info *info, struct device_node *of_node,
- 	if (!cinfo)
- 		return -ENOMEM;
- 
--	cinfo->rx_timeout_ms = info->desc->max_rx_timeout_ms;
-+	cinfo->rx_timeout_ms = info->max_rx_timeout_ms;
- 
- 	/* Create a unique name for this transport device */
- 	snprintf(name, 32, "__scmi_transport_device_%s_%02X",
-@@ -2888,7 +2890,7 @@ static struct scmi_debug_info *scmi_debugfs_common_setup(struct scmi_info *info)
- 	debugfs_create_bool("is_atomic", 0400, trans, &dbg->is_atomic);
- 
- 	debugfs_create_u32("max_rx_timeout_ms", 0400, trans,
--			   (u32 *)&info->desc->max_rx_timeout_ms);
-+			   (u32 *)&info->max_rx_timeout_ms);
- 
- 	debugfs_create_u32("max_msg_size", 0400, trans,
- 			   (u32 *)&info->desc->max_msg_size);
-@@ -2940,7 +2942,8 @@ static int scmi_debugfs_raw_mode_setup(struct scmi_info *info)
- 
- 	info->raw = scmi_raw_mode_init(&info->handle, info->dbg->top_dentry,
- 				       info->id, channels, num_chans,
--				       info->desc, info->tx_minfo.max_msg);
-+				       info->desc, info->tx_minfo.max_msg,
-+				       info->max_rx_timeout_ms);
- 	if (IS_ERR(info->raw)) {
- 		dev_err(info->dev, "Failed to initialize SCMI RAW Mode !\n");
- 		ret = PTR_ERR(info->raw);
-@@ -2953,6 +2956,7 @@ static int scmi_debugfs_raw_mode_setup(struct scmi_info *info)
- static int scmi_probe(struct platform_device *pdev)
- {
- 	int ret;
-+	u32 timeout;
- 	char *err_str = "probe failure\n";
- 	struct scmi_handle *handle;
- 	const struct scmi_desc *desc;
-@@ -3002,6 +3006,11 @@ static int scmi_probe(struct platform_device *pdev)
- 			 info->atomic_threshold);
- 	handle->is_transport_atomic = scmi_is_transport_atomic;
- 
-+	if (!of_property_read_u32(np, "max-rx-timeout-ms", &timeout))
-+		info->max_rx_timeout_ms = timeout;
-+	else
-+		info->max_rx_timeout_ms = info->desc->max_rx_timeout_ms;
-+
- 	if (desc->ops->link_supplier) {
- 		ret = desc->ops->link_supplier(dev);
- 		if (ret) {
-diff --git a/drivers/firmware/arm_scmi/raw_mode.c b/drivers/firmware/arm_scmi/raw_mode.c
-index 130d13e9cd6b..06a764d106f8 100644
---- a/drivers/firmware/arm_scmi/raw_mode.c
-+++ b/drivers/firmware/arm_scmi/raw_mode.c
-@@ -165,6 +165,7 @@ struct scmi_raw_queue {
-  * @wait_wq: A workqueue reference to the created workqueue
-  * @dentry: Top debugfs root dentry for SCMI Raw
-  * @gid: A group ID used for devres accounting
-+ * @max_rx_timeout_ms: Max receive channel timeout value
-  *
-  * Note that this descriptor is passed back to the core after SCMI Raw is
-  * initialized as an opaque handle to use by subsequent SCMI Raw call hooks.
-@@ -187,6 +188,7 @@ struct scmi_raw_mode_info {
- 	struct workqueue_struct	*wait_wq;
- 	struct dentry *dentry;
- 	void *gid;
-+	u32 max_rx_timeout_ms;
- };
- 
- /**
-@@ -379,7 +381,7 @@ static void scmi_xfer_raw_waiter_enqueue(struct scmi_raw_mode_info *raw,
- 	trace_scmi_xfer_response_wait(rw->xfer->transfer_id, rw->xfer->hdr.id,
- 				      rw->xfer->hdr.protocol_id,
- 				      rw->xfer->hdr.seq,
--				      raw->desc->max_rx_timeout_ms,
-+				      raw->max_rx_timeout_ms,
- 				      rw->xfer->hdr.poll_completion);
- 
- 	mutex_lock(&raw->active_mtx);
-@@ -437,7 +439,7 @@ static void scmi_xfer_raw_worker(struct work_struct *work)
- 
- 	raw = container_of(work, struct scmi_raw_mode_info, waiters_work);
- 	dev = raw->handle->dev;
--	max_tmo = msecs_to_jiffies(raw->desc->max_rx_timeout_ms);
-+	max_tmo = msecs_to_jiffies(raw->max_rx_timeout_ms);
- 
- 	do {
- 		int ret = 0;
-@@ -574,7 +576,7 @@ static int scmi_xfer_raw_get_init(struct scmi_raw_mode_info *raw, void *buf,
- 			dev_dbg(dev,
- 				"...retrying[%d] inflight registration\n",
- 				retry);
--			msleep(raw->desc->max_rx_timeout_ms /
-+			msleep(raw->max_rx_timeout_ms /
- 			       SCMI_XFER_RAW_MAX_RETRIES);
- 		}
- 	} while (ret && --retry);
-@@ -1162,6 +1164,7 @@ static int scmi_raw_mode_setup(struct scmi_raw_mode_info *raw,
-  * @num_chans: The number of entries in @channels
-  * @desc: Reference to the transport operations
-  * @tx_max_msg: Max number of in-flight messages allowed by the transport
-+ * @max_rx_timeout_ms: Max receive channel timeout value
-  *
-  * This function prepare the SCMI Raw stack and creates the debugfs API.
-  *
-@@ -1170,7 +1173,8 @@ static int scmi_raw_mode_setup(struct scmi_raw_mode_info *raw,
- void *scmi_raw_mode_init(const struct scmi_handle *handle,
- 			 struct dentry *top_dentry, int instance_id,
- 			 u8 *channels, int num_chans,
--			 const struct scmi_desc *desc, int tx_max_msg)
-+			 const struct scmi_desc *desc, int tx_max_msg,
-+			 u32 max_rx_timeout_ms)
- {
- 	int ret;
- 	struct scmi_raw_mode_info *raw;
-@@ -1188,6 +1192,7 @@ void *scmi_raw_mode_init(const struct scmi_handle *handle,
- 	raw->desc = desc;
- 	raw->tx_max_msg = tx_max_msg;
- 	raw->id = instance_id;
-+	raw->max_rx_timeout_ms = max_rx_timeout_ms;
- 
- 	ret = scmi_raw_mode_setup(raw, channels, num_chans);
- 	if (ret) {
-diff --git a/drivers/firmware/arm_scmi/raw_mode.h b/drivers/firmware/arm_scmi/raw_mode.h
-index 8af756a83fd1..25d4a46261e7 100644
---- a/drivers/firmware/arm_scmi/raw_mode.h
-+++ b/drivers/firmware/arm_scmi/raw_mode.h
-@@ -20,7 +20,8 @@ enum {
- void *scmi_raw_mode_init(const struct scmi_handle *handle,
- 			 struct dentry *top_dentry, int instance_id,
- 			 u8 *channels, int num_chans,
--			 const struct scmi_desc *desc, int tx_max_msg);
-+			 const struct scmi_desc *desc, int tx_max_msg,
-+			 u32 max_rx_timeout_ms);
- void scmi_raw_mode_cleanup(void *raw);
- 
- void scmi_raw_message_report(void *raw, struct scmi_xfer *xfer,
--- 
-2.37.1
-
+Neil
