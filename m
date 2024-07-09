@@ -1,88 +1,41 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.antaris-organics.com (mail.antaris-organics.com [91.227.220.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A44182A7D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 19:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E791DFCF;
+	Tue,  9 Jul 2024 19:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.220.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720551805; cv=none; b=fTdp+JRzk7aY5g2s1TRXvxTJ89sCKmASQd8OUh5aVAVn1HLwDHHfrq7xzRgdOhNA9c4oGn37cD4IjeUWxXENigTdbJtYDndDmfRL6eHTerxlHb57yb3BGT/Kcc/4Mt97ODrWeIodmwj3yGE7KC4d/Jh2LApeCZuDjcXZOpZ0YeQ=
+	t=1720551865; cv=none; b=mbMQ7YpDqyQky4g7Mr5ORCmQmj4EgharbQGcGXMl+xcf7sXAn38+uEK0o0Mkv2WXUulk3qcRrNrZOD1wRfv0pmYdyUu/BzGbWlP+tHHtmJlbSyYOzkApqll29OcHmpgXDz3ySPtJm0h1d/udCbczl2I+ZWdv+Udt9JewTPXS/lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720551805; c=relaxed/simple;
-	bh=sMyzaJ+W703AH//DDEwdvJyCCtm/s3ttll6zL+v1YV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PFgZsJ470l8w9e+c5VK6/PF9nbvtqr7izQ4bGjm04zLh3sU/iBSgO5yohCqW3ov1mzz5GG0aU7a/+SVemGj8itVf44uJpw43IgM2eYL4q8kpyQ0VbyVR8R/XV6Fa3AYPeYdQjVDxMEqBXHGfjy0bRZbzbR8NjGcxGbZaSNIF2pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=nbPJR1pi; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1720551865; c=relaxed/simple;
+	bh=HF0/7o5KU2/pP2+2T1ocFVX77ZJpeIK7POsT/4QwOKg=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CdxJibSy48DpVLNs6ZN4fDJoJtc0bCyP8jvPttmUX9z2V9ilQm2hAcRMtKCNsVn4v6KQijD4IMBF9maTwfioV9/UlGSvsdzZhs+zchPU/G2BvnFXYBZ0uXf7h+RAbE+ji2d21OtePwZIooE7ZrIE8FHXTv7oSgqHBgvMyJFGO2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com; spf=pass smtp.mailfrom=mareichelt.com; dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b=qgvw2HF8; arc=none smtp.client-ip=91.227.220.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mareichelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="nbPJR1pi"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6ad86f3cc34so26108236d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 12:03:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1720551803; x=1721156603; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0eX7Wo0KTUJfWUHtxoHH+B23ObEinslGP6IJ1acrkRc=;
-        b=nbPJR1piOHWb7FIpilvYBLblbTE+7tpBZ90HzWrx2FMBne7q6hIDPrTrxFWa+UJxtZ
-         b5FFRpW4Te9SYc6xWn556udMsYqGutRxzSYR+XJuRsrgPiegPcMAbYv0a30c8dx43E/q
-         UcZHd9kVNYJGcLiVuWXLF9H3blFXgnAZwFEmg5UOXl3Z6gt5V1Fy4fDHLo/SejqN/kV1
-         uqaJf7SBWTj/J0TrZNmZlO9OlA5CZ7C/UeWL7iCZd0T2MdMrcqzPhCdUx5L7gMNEMa2H
-         dMD9ksL/XxscJeyC571fTvlLmLESo+KShU5zpHyra0BhCygdvoEflPqHeefx6fXLSt/H
-         GW/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720551803; x=1721156603;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0eX7Wo0KTUJfWUHtxoHH+B23ObEinslGP6IJ1acrkRc=;
-        b=bZhL27PxHQkvjfcfTqadPcjG9VFujpC0rvotTIL2yg7eqXvB+nGc9VSptKZHWtGRoM
-         H6Yxv+St2L+YPM7lFaNkE8E89HRBk7EZrPBO7S+7+rxiahmH1cP0Vg0htsJYxYk8fbqV
-         n9R8oIFHTq9AohMlrRjGDlMealTvL1ZF3ZpuEnIrambUxEjvVFvAOJxXodAugXKTeSdu
-         OYL6goBUKLe406p/6oYLTOR961vS1eZp9J3atQDBTSpMnqcb+v2KlPA3E5CG1pU6WJOP
-         6fTl0OW/4CJYih0YQoiKrF5CwmNV9RF+9DOw8AxXGqkQmMngilmE8GmTsIlZvG52d4aG
-         RkLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVk2Y/uFNKLqjU84D4EeGyMdhb0gpH8bEoZpnddzMe6DfmX58Tj0Z9dxQ9xlAaHkggNVrwOhNWfqM2j07CIFQnKXpa9TLvVRW91mjuh
-X-Gm-Message-State: AOJu0Yybjj8srBrcMGxog+9g1A0gZk5rWqKEAs+1KsR3AdERuR8UJHcW
-	VaxOCHsFKSD7J16Huim1U0Pf2N0e/svTSAtDma7WJ/trKL7r1XlnW2M0cID/BG4=
-X-Google-Smtp-Source: AGHT+IE9wk6d6lAYU4tvyeORxb5NkdX/FMtkoFI0Rc5O+LsyZzi6JOQvD31sQUESKmTir4qJcqoy3Q==
-X-Received: by 2002:a05:6214:250d:b0:6b4:4470:81a5 with SMTP id 6a1803df08f44-6b61bc7f74bmr43617486d6.2.1720551802811;
-        Tue, 09 Jul 2024 12:03:22 -0700 (PDT)
-Received: from ziepe.ca ([128.77.69.90])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b61b9c4a1fsm11278546d6.12.2024.07.09.12.03.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 12:03:22 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sRG7U-002tXL-BB;
-	Tue, 09 Jul 2024 16:03:20 -0300
-Date: Tue, 9 Jul 2024 16:03:20 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	"Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
-Message-ID: <20240709190320.GN14050@ziepe.ca>
-References: <cover.1719909395.git.leon@kernel.org>
- <20240705063910.GA12337@lst.de>
- <20240708235721.GF14050@ziepe.ca>
- <20240709062015.GB16180@lst.de>
+	dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b="qgvw2HF8"
+Date: Tue, 9 Jul 2024 20:58:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mareichelt.com;
+	s=202107; t=1720551531;
+	bh=HF0/7o5KU2/pP2+2T1ocFVX77ZJpeIK7POsT/4QwOKg=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To:Cc:Cc:content-type:content-type:date:date:
+	 From:from:in-reply-to:in-reply-to:message-id:mime-version:
+	 references:reply-to:Sender:Subject:Subject:To:To;
+	b=qgvw2HF84pTyXd3NuO2iOgRTxyQT2IoKuD1kR5i7udEhZhDKH14JRRl0hlrci0M31
+	 tNRYNNCrvdxFACPbgHgXlxuAsP4qheO3hiRGuuNtGgIraGOE6lUr4TOT03NIRI1IWw
+	 UDdODgfi99wVEM76vw74ygpIJ1IeWwmS/iV7W6Kq2t6vgAFTXPpvo7CQwxvkABLSiO
+	 B2nTi7ArmP0LXJyp5nHIy00dORrS9OwfjLCC9Vvno948OkXWze+fCl9RkYYqQY1/qa
+	 NYajxlXfQiIY3j+0EvFyATN5nAKp05+LHSkGY8xVCtCd6aYKMq5eqe4XAh8ywQI3w5
+	 gkIWHLlFGQjBw==
+From: Markus Reichelt <lkt+2023@mareichelt.com>
+To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.9 000/197] 6.9.9-rc1 review
+Message-ID: <20240709185850.GA2524@pc21.mareichelt.com>
+Mail-Followup-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240709110708.903245467@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,33 +44,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240709062015.GB16180@lst.de>
+In-Reply-To: <20240709110708.903245467@linuxfoundation.org>
 
-On Tue, Jul 09, 2024 at 08:20:15AM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 08, 2024 at 08:57:21PM -0300, Jason Gunthorpe wrote:
-> > I understand the block stack already does this using P2P and !P2P, but
-> > that isn't quite enough here as we want to split principally based on
-> > IOMMU or !IOMMU.
+* Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+
+> This is the start of the stable review cycle for the 6.9.9 release.
+> There are 197 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Except for the powerpc bypass IOMMU or not is a global decision,
-> and the bypass is per I/O.  So I'm not sure what else you want there?
+> Responses should be made by Thu, 11 Jul 2024 11:06:25 +0000.
+> Anything received after that time might be too late.
 
-For P2P we know if the DMA will go through the IOMMU or not based on
-the PCIe fabric path between the initiator (the one doing the DMA) and
-the target (the one providing the MMIO memory).
+Hi Greg
 
-Depending on PCIe topology and ACS flags this path may use the IOMMU
-or may skip the IOMMU.
+6.9.9-rc1 compiles, boots and runs here on x86_64
+(AMD Ryzen 5 PRO 4650G, Slackware64-15.0)
 
-To put it in code, the 'enum pci_p2pdma_map_type' can only be
-determined once we know the initator and target struct device.
-
-PCI_P2PDMA_MAP_BUS_ADDR means we don't use the iommu.
-
-PCI_P2PDMA_MAP_THRU_HOST_BRIDGE means we do.
-
-With this API it is important that a single request always has the
-same PCI_P2PDMA_MAP_* outcome, and the simplest way to do that is to
-split requests if the MMIO memory changes target struct devices.
-
-Jason
+Tested-by: Markus Reichelt <lkt+2023@mareichelt.com>
