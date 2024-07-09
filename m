@@ -1,94 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90EB18FA11;
-	Tue,  9 Jul 2024 16:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8B118FA22;
+	Tue,  9 Jul 2024 16:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542342; cv=none; b=tUJ0kN8B3pmB4l0itTb89y9b89KyfCt6OFWGRi4G41iKK38QPit+R8kdjTuvyOlCfQcDzYB7uuDkd3/bUOn9M3wFKiOhdrNtmlv2PxjLDvXL0HWOMSVqaTuHHDyzpYwwojwNrow06+w5ThBK4gYcLGcXOfJXepqWEKiNR5YYK3s=
+	t=1720542343; cv=none; b=Sm2QiOio7opCXkbAdlsxVRyEFXNfbEWheoNQq1mmIcT+6rzd84yTI0Fp2JyuKK0NX4XUyl//3XwiNtz3LL+NrYA1CgTTPjWbfCHbvaaMqna/vZ8ver2pj46ARXCKFPfyLe5syH5yhJrIg1PatloNSVfnh8h6vpK7Me2dFVKp2mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542342; c=relaxed/simple;
-	bh=LfflC9vvOYsvgBC6GhLTD6FIpi3avh4Z5kpJV7ixlFM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V3XmeWW+gI54ny6Obi/ZAc7/XDq5/1repWF11KhxOiOBymOaJngGvogRE5HiKUjfeF4y29Pf8bdnOAzmGTbBZdH+G4WZhVtfopAt702D8A2Y2v0bpcz8FztdA/KYXBF/W3IauA/lbDeqS1dBgpjaWF4YweQsNgGWbolScJg3nlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxM9jPJP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720542343; c=relaxed/simple;
+	bh=HNZERyax7YfeQp01st75pcXuzHJEbSApRID1V7p3OuE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xs4C5RQl702yJqqx7vZsGDgqKtoh8Jy8vL80tGXYm21VMZIoDYLsuHj0pm3lE29VXDr4dBBmFqhLGodm6xLQGKvVsZ+qtbPL67Or4hdQTp/fsNiQFl9oCuXyYJMgmejlVxlMTky6ebtdCyvNe4AAtlNfi4VdO0+DZjSH5f3dy8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHUIDBE4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxM9jPJP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B258AC32786;
-	Tue,  9 Jul 2024 16:25:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHUIDBE4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 051B3C4AF0A;
+	Tue,  9 Jul 2024 16:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542342;
-	bh=LfflC9vvOYsvgBC6GhLTD6FIpi3avh4Z5kpJV7ixlFM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DxM9jPJPddEYBfsaan4spLVMzaH2nrLNH1nDlK632sTBxEP69Nw3a9exfqfP1dz22
-	 +aQ/gVMysvSwRf+bGTHeEuWp1nQHBZi0aMI0rf0P8gL/DNbCCSV940eqWRT0KBrLCJ
-	 3/5H0ahSXxfl6dhvD3akAR02vGzjOmWOPrQDie8pEcFFeeaIXQuqGSYmUQFctMDZR0
-	 iIYTBZiwANdA/AREfYuMQanxxJoAdKj1QbmckVRSaW1A2zxW/9L4q+OrNtvQmwiwve
-	 Ebn2M2q/6BFNusECI3lc3phGbsERPJaX7LxrDJZ+/ZByw94OWHlPaIPhA8nnGW3acV
-	 JfPa+lVbq7lxA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Agathe Boutmy <agathe@boutmy.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	matan@svgalib.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 11/17] platform/x86: lg-laptop: Change ACPI device id
-Date: Tue,  9 Jul 2024 12:24:55 -0400
-Message-ID: <20240709162517.32584-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240709162517.32584-1-sashal@kernel.org>
-References: <20240709162517.32584-1-sashal@kernel.org>
+	s=k20201202; t=1720542343;
+	bh=HNZERyax7YfeQp01st75pcXuzHJEbSApRID1V7p3OuE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iHUIDBE4GwDL2TuhKWi3TEIqXmzbP/vCD/CeAe6EkVKb3NC3tMP1dYiGFzXlNqoxh
+	 BjBnQU3sGIt9PcajkS1QI8Ufz4/VCk1QNGm3Bd8hdCstWib+384X2BIMDknG6Y8BK2
+	 kcsaTJBMSJFfi8XQ9R0gyIaMsrXHCHGyR6mXSTUn6E0Z4m4hXk90PeQ12cOwEx/0CZ
+	 xp3vliteT2PpbjprrlX75KtrY7aLPxLCWhiRIpNrd+6cRdQmg6Rx06hXOpKyTmMrWU
+	 zUWWx3FM2x38dHdKoVuzF8qIj8t+GYlNkWyiuTDhd+Fvh0uPWIoTRbXJATS/vujvzi
+	 k8lfXH8F9Hg0w==
+Date: Tue, 9 Jul 2024 10:25:41 -0600
+From: Rob Herring <robh@kernel.org>
+To: George Liu <liuxiwei1013@gmail.com>
+Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Subject: Re: [PATCH v2] dt-bindings: arm: aspeed: add IEIT x86 platform BMC
+ boards
+Message-ID: <20240709162541.GA3680692-robh@kernel.org>
+References: <20240708034848.100930-1-liuxiwei@ieisystem.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.162
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708034848.100930-1-liuxiwei@ieisystem.com>
 
-From: Armin Wolf <W_Armin@gmx.de>
+On Mon, Jul 08, 2024 at 11:48:48AM +0800, George Liu wrote:
+> Document the new compatibles used on the ieisystems
+> 
+> Signed-off-by: George Liu <liuxiwei@ieisystem.com>
 
-[ Upstream commit 58a54f27a0dac81f7fd3514be01012635219a53c ]
+Still confused with the 3 names: ieisystems, ieisystem, and ieit
 
-The LGEX0815 ACPI device id is used for handling hotkey events, but
-this functionality is already handled by the wireless-hotkey driver.
+The preference for vendor prefixes is domain names, but if ieit is a 
+better identifier please explain why (in the commit msg).
 
-The LGEX0820 ACPI device id however is used to manage various
-platform features using the WMAB/WMBB ACPI methods. Use this ACPI
-device id to avoid blocking the wireless-hotkey driver from probing.
-
-Tested-by: Agathe Boutmy <agathe@boutmy.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Link: https://lore.kernel.org/r/20240606233540.9774-4-W_Armin@gmx.de
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/lg-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-index 96960f96f775c..807bd4283b979 100644
---- a/drivers/platform/x86/lg-laptop.c
-+++ b/drivers/platform/x86/lg-laptop.c
-@@ -718,7 +718,7 @@ static int acpi_remove(struct acpi_device *device)
- }
- 
- static const struct acpi_device_id device_ids[] = {
--	{"LGEX0815", 0},
-+	{"LGEX0820", 0},
- 	{"", 0}
- };
- MODULE_DEVICE_TABLE(acpi, device_ids);
--- 
-2.43.0
-
+> ---
+>  Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+> index e386d0ebfb14..818fbe9c45fc 100644
+> --- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+> +++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+> @@ -92,6 +92,7 @@ properties:
+>                - ibm,rainier-bmc
+>                - ibm,system1-bmc
+>                - ibm,tacoma-bmc
+> +              - ieit,nf5280m7-bmc
+>                - inventec,starscream-bmc
+>                - inventec,transformer-bmc
+>                - jabil,rbp-bmc
+> -- 
+> 2.34.1
+> 
