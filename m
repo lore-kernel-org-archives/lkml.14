@@ -1,214 +1,109 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A0815EFBD;
-	Tue,  9 Jul 2024 13:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720532205; cv=fail; b=NvKMZTwmY40Vo6Esof0oBHwjrcN58Ip1moU8r6nb3ZCC74BBJrsgScJJ35toZDflHQmYs2r7EnzxrauJTiSRMwhb1rnNLOj+mjbCrJ9RjQZBr9tREP/06m45XzWtpw1Ks/w6OVGXSCbyhncRodrKFVqLvxxCW+iZVGMajfn2U0Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720532205; c=relaxed/simple;
-	bh=yS5YUwNwvGunpsYqywsf0HPFXmSzdF1m3kf2HAepR9c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bs2eRYZpgERQc0niz998n3M9SZCLMQs1E/6Z/ZPQ4viNK4PGPkTLj8Gswb2+ReEOEdtFU9notI/KjYstOv6MJj0j33oUDvtBtGBGXi3ilLa0Umw3vzfUokgWRCfu2pjbv6ZOLZgkCZOQqOtWJ4foXhZJGpCD3fSB4qy3DmqczAU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WQ4Bzswm; arc=fail smtp.client-ip=40.107.220.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1352416D4CA
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720532209; cv=none; b=twOId4smpHzOjBmP9JU7LCzfMaNslZq/D3gP8/kzkuhr0BqEpqYtxKBPbe0MnVCHb12UvNYjkhXcLRPVp9GFnGM81tBZEGl1ZmbChh/GFBGeFuZjpxdPIezbbpLy8q6t62WuxigrWIXcufktoibYbj6quOKoBEakhB2+UzowBb8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720532209; c=relaxed/simple;
+	bh=Onc/w0W8oRYcL0nlkLqAaGGC05n10oVyNR6/WGfjgEY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iJ5wDBNcGh8ssHMqIxtJQGZ8Yn6BrCY4El2vs9/tixemdfiyD/xIA6/jHmi7x8ZqxlsUlvBfDfWU7vD1xfMIZ/sRP5JOHe8D9JscqKxgIXnjQt8x33ha4g/CIvaPJknsJazmsEBniSZP9ytzBvBr/o2/Nh+IHN70VVbSYFUDEsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TmPGTSwh; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WQ4Bzswm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HcGoUA7TD/evxLkD79Gx2gXsSaJw4/2kM6bolV9Zi1eZusbpEyzdrFggwNL3K/HJKkErQgDNkX4W38RZwfHXlFvwx26A7385UOHbK6XH+t9pQ8LGR43Ty4faHfSXNkoUSIiFhXTww6jZ7/m0hQU796Vj7BHA91tFLEEvi7cTFFuw4f1Bm+J5r/xgh3Y9Rfmy2cJWzlYrFbTc+JfU6C5E7qNr8DyrZUrDWoQQUyNLdJ4QM3QN5jQ+USZNJnEd0QlUH9mkR6yOPRFpfN5F1W80K/RYBHd+vyxzvm8xBqqLy+1FuidxalCXCs+eQeihgGxseRG0AMgV4SI8nfu6oXjAEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=40DTTpS8PowNjXj5rEF64iHwiEQlRXNuqEkX8hZUV48=;
- b=ZLFqhvJlTbe7mRwYwxc1pANK+bZbpOgmwEPayIl8TQUTxnCD/IX4RgSDwgzF/bQV6qpecuR1HWi8E6Bx8ecLLXbdv+bUXbLrQuKeyg08lONkILpkOVdiSsc9j9jJ+Ok2Q5foP/BX2aV49dWjTnasdUQtDT91jtv6AEGSRRKdMzuYKqCHB9OIj+CaJ/0cNWbgFqIiMxiXwRj+EEtizTY8ji0c6143r1YbmmCvGIOnOzJIhcYojUFb9WBbO3GmkfrjLXz9xTQq+rRmOU1y9xhQKimzgZyUfVMHzHE38QDtbqn6ZGj4RqSUpF+VxrSC3mjWNcRMsejoimkfKrL7aXNt+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=40DTTpS8PowNjXj5rEF64iHwiEQlRXNuqEkX8hZUV48=;
- b=WQ4BzswmH/R1FnvGI0nE3W4VEO/B+qSGn36s0F8CwTfk7oH3eSwCGHhghkXHrpFHOA7EG+gv7vhghd/Z6mRUJd5DCPjtkiCJjNxJvwZn/+q2iEnx1pTlJwEdN8hVl6m9N3RdbS9S9b33NKxf4SlKPjR7UMigGRZeG7m5E53IacA=
-Received: from SJ0PR13CA0043.namprd13.prod.outlook.com (2603:10b6:a03:2c2::18)
- by PH7PR12MB7329.namprd12.prod.outlook.com (2603:10b6:510:20c::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Tue, 9 Jul
- 2024 13:36:40 +0000
-Received: from SJ1PEPF000023D8.namprd21.prod.outlook.com
- (2603:10b6:a03:2c2:cafe::6b) by SJ0PR13CA0043.outlook.office365.com
- (2603:10b6:a03:2c2::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.20 via Frontend
- Transport; Tue, 9 Jul 2024 13:36:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF000023D8.mail.protection.outlook.com (10.167.244.73) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7762.1 via Frontend Transport; Tue, 9 Jul 2024 13:36:40 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 9 Jul
- 2024 08:36:36 -0500
-Received: from ubuntu.mshome.net (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 9 Jul 2024 08:36:36 -0500
-From: Stewart Hildebrand <stewart.hildebrand@amd.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-CC: Stewart Hildebrand <stewart.hildebrand@amd.com>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/6] PCI: restore memory decoding after reallocation
-Date: Tue, 9 Jul 2024 09:36:00 -0400
-Message-ID: <20240709133610.1089420-4-stewart.hildebrand@amd.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240709133610.1089420-1-stewart.hildebrand@amd.com>
-References: <20240709133610.1089420-1-stewart.hildebrand@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TmPGTSwh"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-44931d9eda6so3081381cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:36:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720532207; x=1721137007; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Onc/w0W8oRYcL0nlkLqAaGGC05n10oVyNR6/WGfjgEY=;
+        b=TmPGTSwhhyAV4cjd0l1IUaQCuEk9eNBsPGO2/hVROmb0jF1uGQEbKKMi/IExfHZRs+
+         BYJrdSo/IvcQeM/XnO3mDS0TEgYnbzY3vVFGeVAMSqKhjjki5MT2Gum/VMeF3NHRi001
+         owG9Cs86Mq/llplhxSzo4ScOBpMNxIQtsbmPD/PSikxaNaY7Hmkx7riojYzVVFQoemK7
+         N+jsW7uhwsnjrlnbCc6Nzrr5aayCvc/TaoV+BlnmcxOgqmB0d1No6uYdschNvdKkla8i
+         VnXEaSo4cTEjtGS39p+otkeJybimHdc/T1fvDDCQFYEim1LSKY7Du8bWz6zs0dVt4ZPC
+         a0vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720532207; x=1721137007;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Onc/w0W8oRYcL0nlkLqAaGGC05n10oVyNR6/WGfjgEY=;
+        b=hPN597jkt8Z7BRiv2JBhN8JHYUqyPt+inPWuT5k21ob1qqz+ESaUCzTKRvWEfhhMp4
+         ZI2mM7hCemniMRhKTznesVqQGsNrEBRmJJ4lQ2TD3g0QUv73m3wwibWdsidPBubkbJKQ
+         GJ8w3qFyKqqk2JmFMebXoako9gqPF698aNNvRfsOzv4hrtY/+jO1KFVNYJMriRQbFdB+
+         pNIgjssbEgGnBC7uZLGEvo2hoOftQtRyoJdCnyWzUM2QrqSKu5zUCD0pcaZgLlOrvlwE
+         JQTw5tvbVtiyCY1otYva+BoCCSQfzJLz3hhST8G9Mcn9lrPF3lTMExxR7i4ZN5Rd4jyW
+         W4Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCXph/jo780VbEB/OzB9l3N+O5BaXvciALZPNx4EPZXKREFCoJ91zLbSWU4Di3HM7zv6VpXjfMMBDkF7sjpfN1mSW51UfOY+44W5JUtQ
+X-Gm-Message-State: AOJu0YwDk05lFTKVjWz5w3RSNcmUbI/wyXMcCbe+mpweuM6LsfSepoPp
+	P1OWzVTRV6EsdG/bESrMJfGWFxRg3LLQpFX8QPGvmPs9+vxzeVdnJyM+8mbFWLJx7kp9Gb+j3vG
+	oMs0+fdRHQxaKJpEMhQSeXOu2XV5cWrLICXLFfw==
+X-Google-Smtp-Source: AGHT+IFbY6+qvqocJnF91c8cRGW6w2sl4YtsuoGZuQkrm2HWP2P7YQnkbM6czb/WQ8nm2/0yW0zSzCFDvYSYvR4R3Sg=
+X-Received: by 2002:ac8:73d6:0:b0:447:e591:2d27 with SMTP id
+ d75a77b69052e-447fc364793mr29602491cf.6.1720532206879; Tue, 09 Jul 2024
+ 06:36:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: stewart.hildebrand@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D8:EE_|PH7PR12MB7329:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb4cd595-f5d8-428b-c2fb-08dca01c2a27
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?k8lxccUkaUnDidP69kSpN6RWxMp9QsfplrUHBCgDHfwUcQ6/xBwuk5xY2ll6?=
- =?us-ascii?Q?DKxaHxSNgkzYUk9o26dLVmTADIUTS5GleSFl7+FOo62X8KX4Wks8sWNjLOsD?=
- =?us-ascii?Q?wQZSB7i/9spEPwRv4ctEGunLrWZ0I0Ld2cX4T/+AUg/t38mLeYIg7p6VQKcJ?=
- =?us-ascii?Q?gW1IrrPIOUlPJX3Sj04oPAi9UCZ/frrACxpRQerd2hWjtyJrwv3MC1WZyGcL?=
- =?us-ascii?Q?d1241gloSsACs97K115AV+km/AWjz9L+NaZkrAoYiEosjTfSOGh2T7mpsTvo?=
- =?us-ascii?Q?QFH4EYtOxTevwk1zYvdcHoy0V/o8Xj1ZHuw556so20YCnFwy7MpuQNcPruzJ?=
- =?us-ascii?Q?CcXqhV8c8b0ovN1RO2kdPQSOJSiusxcKiOWu50iLJTQOkbhsZBFxK/TrJRVg?=
- =?us-ascii?Q?+oyva2L14p4zp38LUrwby/ns4DPbRnAvVBJygfO6MyphXinNEgpFW9xEIAjP?=
- =?us-ascii?Q?VxYcSShjfrkE4o8RpReigXoaqthJF2FwVA4KnlsEl6I1wzf4Q+yS+wFTaMeP?=
- =?us-ascii?Q?8NI2L4+naQ+gVub/YtP+fk6S0oYseAP08t8FvoB3KZ0GKRQdpOQgJtZUrrZu?=
- =?us-ascii?Q?JIoErV4aD7ypIwM6Vd4qB5agrIecRii2iRCMyGNNtyTG9V+CK2dSCb3hSq9g?=
- =?us-ascii?Q?t+Xt4JFZy9HDXrSSWhyluTTn1T0NHbFwyNup6Z6LO1YpBdgkMyCeoLAiPIci?=
- =?us-ascii?Q?1UsYU7OAccLRuzNEjJKHuc/mdgpNr++IdQcPMyGvQDkGZqWNs66Sddc61Nl2?=
- =?us-ascii?Q?VR2GX7oQEzugMx1g7cvKj+p0kiMA8BP4/3WpQdKeGPlvVmLStOIZeuj9m0q4?=
- =?us-ascii?Q?d5+HHdekYhtZShawwUUh+iZ8qPwT9/qTlcKfx1Q/t8i55mNSz71tH1Mp2Vdc?=
- =?us-ascii?Q?gf36PTLCrvJIdA0pvZsCU2XyouKzQ78j1wyI9CgfgRQ0nO0KpcrNtXw8nYV7?=
- =?us-ascii?Q?K/G9xKEN5dafvaZhBBBs1onO/9UvBc1mHEU4XlRdzqiLlSkV3SEaoTi7qZBY?=
- =?us-ascii?Q?v20v/IRup/l3qdZRg+CLKMyVl995ADPBSQXLD2uZw6C4lMpuQ2XL/BNB8z0i?=
- =?us-ascii?Q?aONeNGrd8UR8NS3/2k0WtHukgHxXEkRGmBAhTMGG7hkB1Mg/7ZBA/iuM6M4Z?=
- =?us-ascii?Q?FLqFpORle6mYW0JK7WFqoE02dgmknJgCBbB0Jg9EJT1ErvLe4UqENzEe9s3P?=
- =?us-ascii?Q?queIBTzTyXFvsqdQZNO9ShqI4p68tQ0auhOQJ4J8H5ip0QXSd+HIdQ500nb4?=
- =?us-ascii?Q?1REl/Qyxxah2x9VAq7ScPiL04rowhCsZaASQE4vWeWkqsuHP2VzKh526cq2b?=
- =?us-ascii?Q?dbTQjWYp7lxC2tL95tVfolJPahaSwikRm2VqOZL/d8COGFaqhTyV4b5q17I2?=
- =?us-ascii?Q?HdlmjReCfRbd0hDoW++PezcJ4f8o2PqdCKfBxR7drn50roGJaA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 13:36:40.3576
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb4cd595-f5d8-428b-c2fb-08dca01c2a27
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D8.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7329
+References: <20240619031250.2936087-1-tj@kernel.org> <20240619031250.2936087-3-tj@kernel.org>
+ <ZnM2ywDVRZbrN6OC@slm.duckdns.org> <CAKfTPtBPObGdcaQF5nKqr4042f-+5obTMm_S6S+=3_Ct33ZMyw@mail.gmail.com>
+ <Zog5-Yd5wV0-Y76y@slm.duckdns.org> <CAKfTPtDeA4OTPJmEHd-wKToYwDVizcny-_qxEuDUA-OcaVm2Uw@mail.gmail.com>
+ <ZonzAdyd6zb2Sm06@slm.duckdns.org> <CAKfTPtDE2rWbRouf8zRyM3UpTfK1k_xrWmvAs-zfoRZqM3zGsw@mail.gmail.com>
+ <Zowt7pVWFB-Of-me@slm.duckdns.org> <CAKfTPtB=77c-RsJ23suNZVf7qByeGSjYQJbiEU4JpXU6DezNLQ@mail.gmail.com>
+ <ZoxVZPCrWokjfmFY@slm.duckdns.org>
+In-Reply-To: <ZoxVZPCrWokjfmFY@slm.duckdns.org>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 9 Jul 2024 15:36:34 +0200
+Message-ID: <CAKfTPtAjFvOPByPyeAURN3gw0yp8ByVmpa99_dGEZiTGw_Fawg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] sched_ext: Add cpuperf support
+To: Tejun Heo <tj@kernel.org>
+Cc: rafael@kernel.org, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, 
+	void@manifault.com, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	mingo@redhat.com, peterz@infradead.org, David Vernet <dvernet@meta.com>, 
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Currently, the PCI subsystem unconditionally clears the memory decoding
-bit of devices with resource alignment specified. Unfortunately, some
-drivers assume memory decoding was enabled by firmware. Restore the
-memory decoding bit after the resource has been reallocated.
+On Mon, 8 Jul 2024 at 23:09, Tejun Heo <tj@kernel.org> wrote:
+>
+> Hello, Vincent.
+>
+> On Mon, Jul 08, 2024 at 09:51:08PM +0200, Vincent Guittot wrote:
+> > > Unless we add a WARN_ON_ONCE, if it doesn't behave as expected, the end
+> > > result will most likely be cpufreq sometimes picking a higher freq than
+> > > requested, which won't be the easiest to notice. Would you be against adding
+> > > WARN_ON_ONCE(scx_switched_all && !util) too?
+> >
+> > A WARN_ON_ONCE to detect misbehavior would be ok
+>
+> I tried this and it's a bit problematic. Migrating out all the tasks do
+> bring the numbers pretty close to zero but the math doesn't work out exactly
+> and it often leaves 1 in the averages. While the fair class is in use, they
 
-Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
----
-Relevant prior discussion at [1]
+hmm interesting, such remaining small value could be expected for
+load_avg but not with util_avg which is normally a direct propagation.
+Do you have a sequence in particular ?
 
-[1] https://lore.kernel.org/linux-pci/20160906165652.GE1214@localhost/
----
- drivers/pci/pci.c       |  1 +
- drivers/pci/setup-bus.c | 25 +++++++++++++++++++++++++
- include/linux/pci.h     |  2 ++
- 3 files changed, 28 insertions(+)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index f017e7a8f028..7953e75b9129 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6633,6 +6633,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
- 
- 	pci_read_config_word(dev, PCI_COMMAND, &command);
- 	if (command & PCI_COMMAND_MEMORY) {
-+		dev->dev_flags |= PCI_DEV_FLAGS_MEMORY_ENABLE;
- 		command &= ~PCI_COMMAND_MEMORY;
- 		pci_write_config_word(dev, PCI_COMMAND, command);
- 	}
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index ab7510ce6917..6847b251e19a 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -2131,6 +2131,29 @@ pci_root_bus_distribute_available_resources(struct pci_bus *bus,
- 	}
- }
- 
-+static void restore_memory_decoding(struct pci_bus *bus)
-+{
-+	struct pci_dev *dev;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		struct pci_bus *b;
-+
-+		if (dev->dev_flags & PCI_DEV_FLAGS_MEMORY_ENABLE) {
-+			u16 command;
-+
-+			pci_read_config_word(dev, PCI_COMMAND, &command);
-+			command |= PCI_COMMAND_MEMORY;
-+			pci_write_config_word(dev, PCI_COMMAND, command);
-+		}
-+
-+		b = dev->subordinate;
-+		if (!b)
-+			continue;
-+
-+		restore_memory_decoding(b);
-+	}
-+}
-+
- /*
-  * First try will not touch PCI bridge res.
-  * Second and later try will clear small leaf bridge res.
-@@ -2229,6 +2252,8 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
- 	goto again;
- 
- dump:
-+	restore_memory_decoding(bus);
-+
- 	/* Dump the resource on buses */
- 	pci_bus_dump_resources(bus);
- }
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index e83ac93a4dcb..cb5df4c6a999 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -245,6 +245,8 @@ enum pci_dev_flags {
- 	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
- 	/* Device does honor MSI masking despite saying otherwise */
- 	PCI_DEV_FLAGS_HAS_MSI_MASKING = (__force pci_dev_flags_t) (1 << 12),
-+	/* Firmware enabled memory decoding, to be restored if BAR is updated */
-+	PCI_DEV_FLAGS_MEMORY_ENABLE = (__force pci_dev_flags_t) (1 << 13),
- };
- 
- enum pci_irq_reroute_variant {
--- 
-2.45.2
-
+> would decay quickly through __update_blocked_fair(); however, when all tasks
+> are switched to sched_ext, that function doesn't get called and the
+> remaining small value never decays.
+>
+> Now, the value being really low, it doesn't really matter but it's an
+> unnecessary complication. I can make sched_ext keep calling
+> __update_blocked_fair() in addition to update_other_load_avgs() to decay
+> fair's averages but that seems a lot more complicated than having one
+> scx_switched_all() test.
+>
+> Thanks.
+>
+> --
+> tejun
