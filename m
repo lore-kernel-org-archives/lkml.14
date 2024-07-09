@@ -1,93 +1,96 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF5E0158A37
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 14:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260B1158A37;
+	Tue,  9 Jul 2024 14:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720534576; cv=none; b=CkF2qRwiIG6o5omauzJwbKL+RB65fTU2MndUIZpWQYVVPeyd1BnxaarFEB4aUb56Cr6C1oyiFGhpZVlR7mPQHdGzIJfwHHEb6AvNWUAU4r7mG24EiKPRWfhq9IXZw1NC9L2oBuIKTs/ZjWzRS/XDjLCySSqMW43ysb6Qi2H3m6c=
+	t=1720534582; cv=none; b=PGfbpmd+wESoZLoDm5Gqm7SuFNUoK20a00jzmjgRRNzaQzmRaBFcNATSsOVGtKOd8KXfxufmSgPYRLWB2aP7/A5BY9Qnk0kFGrGNGuSvZjDaqScmFxIxIbbg+Hili61/XMbzFp8VcPx0GSU6MqI9V/fxpm/aVtyvKrC0jRtmjJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720534576; c=relaxed/simple;
-	bh=dbBcfwwwdgQ7zkOucfXaOJCkal1ApeGnpEGKNnuv+14=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=rslemZawfsvrz5MJM5nIZ+u4tf7OXZ54jUU7/sqo91alRBkGh8CDT38s+3JOIV8GXxXRi7/rjueH5hlxJQgn6xaUnGSXB6q7swG+R2nrkr7qZRySOHpL8S4Zf49UN+8RkjeB9KcUK0vzKF41c7UJFl9wheXWO9zvr9LqjxM6kWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Guh0vdWz; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1720534582; c=relaxed/simple;
+	bh=ZhaY/4x3f4ruOAcY8iwU5SlZfxMqNd80J3CoK7mNwY8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N0U5A/Jkp3RdDmcdZbcbnemJE3vLuJ0G/Wyan1J8zdrQGhB9GKEZYFqrGxm+7jMnqXn/iM69dNBGuW3jQ+8ZAmGvYOHFA1EJM/8HIlPvu8S4julaasHskZ4ia77cM4sG5MTmm14P/8oMMydqJkRYY+WHkIBXpdSnVxSEgsx5k7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=h5sBXcK+; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Guh0vdWz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=hr2Ht4qR/EZv1aaOL0
-	fk3Bq9AmPno0JsNR0sSZsJcm8=; b=Guh0vdWzjsBL4dUp0jJ/RGqoYgMjMLFJll
-	vD1Hs07lQ1zGb8RqiYRSwGgbdvfzrqce4KzqgGGIliUypZoZ3WlFlZc3GFhy8RDw
-	rxKfpUBsGv0KoYY+9bV7ENGHWEBZWn1nOqhtTEUyCdAY2JjzHydBJzwo2xNQAUt+
-	lktuPIviA=
-Received: from localhost.localdomain (unknown [114.92.56.131])
-	by gzga-smtp-mta-g1-2 (Coremail) with SMTP id _____wDnv+TKRY1mj_e7AQ--.43922S2;
-	Tue, 09 Jul 2024 22:14:51 +0800 (CST)
-From: Lizhe <sensor1010@163.com>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Lizhe <sensor1010@163.com>
-Subject: [PATCH v3] driver:core: no need to invert the return value of the call_driver_probe()
-Date: Tue,  9 Jul 2024 07:14:17 -0700
-Message-Id: <20240709141417.3349-1-sensor1010@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wDnv+TKRY1mj_e7AQ--.43922S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uFWxtw18Kw1rGw43Ww4xCrg_yoW8Gw15pF
-	s8AFWYvFs8u3yv9FWUGrW0yFyFy3WIkrW09r18G3yS9w17Ar1UC3y7KrWYqw18ZrWv9FWf
-	tF43XrWrCFW7AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piaFAdUUUUU=
-X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/1tbiSBgWq2XAmKdd+gADsT
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="h5sBXcK+"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id CFBC3885CF;
+	Tue,  9 Jul 2024 16:16:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1720534578;
+	bh=j8uH5LAqoGEHnE0i2h70/qLLtUa4idrvgO0Or56fKwE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h5sBXcK+Co55wCMMwagBGX7JKSszZM7MNPT8jFFyRWLz9842GsMso0IRTgUX+kwIw
+	 2Kq/McQRYspT+6Z6QDz4qETUSI3W21jaPNmzSPcIkUTNcOL5Gd2996hid5tpgAsWbE
+	 cXjiAmSR0dQqY1oyQgAUCGSR3Vwt6gvk1NUhZqUqWkUELk/C029+lzRf7siOVwIdey
+	 QobNnpiRHgQEvwl9D9tUpYm7qcyKNCNlOpOP3LMEc19hcQht1Mq3jOYRjVFJtu1NvU
+	 T32nfkhREUUScQepqN6eEgiQ+R6sLcrQaQ65sA72+O2wY8T4+MqrbcliFAkHRQUNDx
+	 brugWrEj1LQVA==
+Message-ID: <944ecc41-9ef7-4d9e-9d96-3c5c0cdb71b5@denx.de>
+Date: Tue, 9 Jul 2024 15:24:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: display: bridge: ti,sn65dsi83: add
+ burst-mode-disabled
+To: Stefano Radaelli <stefano.radaelli21@gmail.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, devicetree@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+ "Noah J . Rosa" <noahj.rosa@gmail.com>, linux-kernel@vger.kernel.org
+References: <20240708151857.40538-1-stefano.radaelli21@gmail.com>
+ <172045725750.3389992.15451403448241421795.robh@kernel.org>
+ <CAK+owohBrewYFpDKjsE5iWC5OQ3p6S_9fwj7DWa1Ux2h8CXcAw@mail.gmail.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <CAK+owohBrewYFpDKjsE5iWC5OQ3p6S_9fwj7DWa1Ux2h8CXcAw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-In the probe function (either drv->bus->probe() or drv->probe()),
-there is no return value of EPROBE_DEFER. the error return from probe
-should be -EPROBE_DEFER, hence no negation of call_driver_probe()'s
-return is needed, nor should there be an EPROBE_DEFER check in
-driver_probe_device()
+On 7/9/24 2:45 PM, Stefano Radaelli wrote:
+> Hello everyone,
 
-Signed-off-by: Lizhe <sensor1010@163.com>
+Hi,
 
-v3:
-	Modify commit message and versions go below the ---
-v2:
-	Delete the judgment with the return value of EPROBEDEFER
-	from the _driver_probe.device()
-v1:
-	Add the judgment with the return value of EPROBEDEFER
-	from the _driver_probe.device()
----
- drivers/base/dd.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+> Thank you a lot for your prompt feedbacks.
+> I'm really sorry for all the mistakes, it is the first time that I try to
+> submit a patch and i thought I followed the guideline but clearly that was
+> not the case.
+> 
+>   @Marek Vasut <marex@denx.de> About your question to why disabling
+> burst-mode:
+> - I agree with you that Burst Mode is the preferred way to send data. For
+> that reason I created the new flag in a way that, if not used in dts, burst
+> mode remains active by default.
+>    However, I decide to introduced this property because I have noticed that
+> some dual-channel panels work better in non-burst mode (even if less
+> efficient), and since the sn65dsi84 datasheet allows this setting, I
+> thought to give this opportunity to users.
+>    What do you think about it?
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 83d352394fdf..d047919d1f5e 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -664,11 +664,6 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 		if (link_ret == -EAGAIN)
- 			ret = -EPROBE_DEFER;
- 
--		/*
--		 * Return probe errors as positive values so that the callers
--		 * can distinguish them from other errors.
--		 */
--		ret = -ret;
- 		goto probe_failed;
- 	}
- 
-@@ -826,7 +821,7 @@ static int driver_probe_device(struct device_driver *drv, struct device *dev)
- 
- 	atomic_inc(&probe_count);
- 	ret = __driver_probe_device(drv, dev);
--	if (ret == -EPROBE_DEFER || ret == EPROBE_DEFER) {
-+	if (ret == -EPROBE_DEFER) {
- 		driver_deferred_probe_add(dev);
- 
- 		/*
--- 
-2.17.1
+Are there any further details, which panels behave this way ? Does your 
+DSI host generate correct HS clock, ones which the DSI84 expects to 
+receive on the DSI side ?
 
+Such link mode properties would have to be generic properties placed in 
+some dsi-client.yaml file in any case, such properties are not specific 
+to this DSI8x bridge.
