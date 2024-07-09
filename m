@@ -1,241 +1,142 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDB119E7F3
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF6A19D08B
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720538934; cv=none; b=GBgiipZMwx0f+7hKNjEy71R/K8hFdMJiT4/AnUEKLvnGabuwX3kyRfOlWMLCecYAEXZryLJsfP/tJkSqPCBPvoBQy2tHTLbmbTbO0sTb98BDpCz0+fwnlm2KtLnTUhBj8ukCQZNAEH8RYoNe4PIPfgZsEl4rgPL05NR2GfZGUmk=
+	t=1720538975; cv=none; b=UisOQ3lF6DSRafKFJTSoLjlLKp6mjMGCC8vo3mK7Xw47NlsiR6HbbP6HnoGOJyLuYiV4XInaKnSEWWt1It9ZgJzrJ5Os8e9+Z/5vBEZn8hfN4QqNndawz+zb3Q4wqEroBYQcNpxva+1obH6NJSRAcGKhObYLvduQNEsshb3zwr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720538934; c=relaxed/simple;
-	bh=3PoSvU8RpFcazekfoaaScSpR1wxv8/6f43Gz5oYx63w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cpCAeG/o0cbuOKrQWwaw+FedYioKwtSDMDJuBfQ9Asx2f6ZxA8jljBaG0f15GXMxj2i53j1oBSCnpdqFCSD30D/F6jmc1VcFg156rVP6aUs4er9q/ZA/620A6Pn7pourUbs6YE+bSSwnXvXhvuSKAR1rVE4Y05nnPgYtCv5oQZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DyLy/oCA; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720538975; c=relaxed/simple;
+	bh=Crrca+M6mzX4SnfPP1ItY7AFeCLgpMEhL4zuTxTaHoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=IbZ33wUnUeQi9OHsUJyKcYHJaqIy6w0XgaDlqceVneEWi02gHfbYZcbe7T4gCb4713nXyqSoGw485QevdlELNfQKi/9Rs27okhZaY9E5F8NqU4zaX9cP3aSI21qaZkbELIoREKz+ZzYK7eI8wfRSx66eceKWAjC+Fpv/Qame+DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YVqycvS2; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DyLy/oCA"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4266f344091so10364675e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 08:28:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720538931; x=1721143731; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rr3GSFWqoAD9HFFPG7fGztnMb9LgjvrtTWNplj4lKO0=;
-        b=DyLy/oCAQ3krLJ+rvFrbNSlHVwPlQ2xBdMqCRfIDBMu1wxS4JlDSDWNzCj7JRnPeL/
-         fq2H2szFVYPdGE/AdaFBlZc3BYtW5N6eJHfwTRxDVtulXzxNH5LH4GdCOSL5zwOa7IJn
-         egDw8CqyBFXksSIlDyuEEvAR+ySfqoG4awh2WUZOKTCXjCidhDCpC0F385nJ9dz92qlu
-         Ytld2VdxxflOczH7p1MGQrlNKC9eI+2a1YmhOmVv1kC7dAc+VBqR88iGzwTfsHMh9AI0
-         FLjzhiyR1SuheQ1rV5OvPFXnGwh2ujlver3aggOUgXir6tiXP2osXj6Dtl3EHB8svi4E
-         y4SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720538931; x=1721143731;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rr3GSFWqoAD9HFFPG7fGztnMb9LgjvrtTWNplj4lKO0=;
-        b=lxAdMaN5LkoPxr1wPuxSgYFimM6uRrwmG1FBfmdqGL+4Dm4fi1UtVO+kjNN9d9Z/QO
-         bHFYGYRI+TLT6SxQqKoxY3BLLi5SRr3JARj6+l7No2TZeJ5ebUxxCSq8z7WzA742wkiy
-         0+bSkuqy8wGGiFUZjSH8wl2LbII0O6gOthLDS7qkpjFbslosQHVYV5DAFFm1D7ARi4V8
-         hGXQvoR11WnyyT3HaMYDLiuc0TcGl8kXA04EfFmEoeUemL58vi3Dm6NlcoEJt8cVrsvs
-         h9W0/mXFdWcdV704l2s+MXNdxLk4Q4a37J4yDmmdGdyP2aY3WV3JWd4FQiBCUKAtz1o1
-         aD2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUzh4sZ43VD+oQsC0KvjjlCWZ5wlyQ3ej3vC9VaDTFWBOgS2s8wPcakubBLno7efrTCXpVlH9gvPT1S7QezfuCVeE/6f20VeuVC40v+
-X-Gm-Message-State: AOJu0YzTWpd4kM1BJKgsq5CnpC2CydNzNIFaJ/y22S2p5hg2jfuys9WJ
-	UfyINI44pfc6LA99M0TEu+dDGozxJEEPuBLQru1ZMCjvjeICjrWhvtXt6+Xn6mk=
-X-Google-Smtp-Source: AGHT+IF4NFy7/t/rb7zZIftACNCfbYCcto8cUw9zZFhNxIMxce8lrJOhUjAw1tc171MTvAxJ5BdJSA==
-X-Received: by 2002:a05:600c:6d4:b0:426:6b85:bafb with SMTP id 5b1f17b1804b1-426707db6e7mr16978265e9.20.1720538931001;
-        Tue, 09 Jul 2024 08:28:51 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5a32sm45883775e9.24.2024.07.09.08.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 08:28:50 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: devicetree@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	alsa-devel@alsa-project.org,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/2] ASoC: dt-bindings: qcom,apq8096-sndcard: use dtschema
-Date: Tue,  9 Jul 2024 16:24:43 +0100
-Message-ID: <20240709152808.155405-3-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240709152808.155405-1-rayyan.ansari@linaro.org>
-References: <20240709152808.155405-1-rayyan.ansari@linaro.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YVqycvS2"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469BQtI7013428;
+	Tue, 9 Jul 2024 15:29:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	h4WiPsIBrKbfAq1y/4pUmCzgG21sEIf+l6gOtFB40m4=; b=YVqycvS2KhXvN9Fd
+	KWCtCoM9TKmQrgF0/qxk3DysQUPg6uFQ4hi3nA8+53ARcN2+AMOXZuFHrpFuPxLg
+	iVzrgrrFMlH4kYiGguHD3mCc257MjTU8Oi5PAXntaN+hAw9PxIr8mrspC8uilKfd
+	PZ4a/w8S2yNT3GIToDiFxDjdZW8zk70euZqn/Zxw0Lzckl8E7aSlSvqnnRHugJi4
+	koBwABwQUWcKZwgfJCoZUFfqe4tZC4ZU3/52V8hCkWU7/XTI+moJKvddi1sz1kB5
+	ODfoY9RqUnkbDZdVGIZiT+h7TPhFzt72N/FmqMXgwCYRvnGn32psC9IIA5oApoA9
+	Ur7F5Q==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wmmpyrr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 15:29:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469FTQK4002573
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 15:29:26 GMT
+Received: from [10.48.245.228] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 9 Jul 2024
+ 08:29:25 -0700
+Message-ID: <0e0150ca-fdfa-40cb-ad7f-6ac695b702e4@quicinc.com>
+Date: Tue, 9 Jul 2024 08:29:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: crosstool: x86 kernel compiled with GCC 14.1 fails to boot
+Content-Language: en-US
+To: Arnd Bergmann <arnd@arndb.de>, Kalle Valo <kvalo@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <ath12k@lists.infradead.org>
+References: <87y16bbvgb.fsf@kernel.org>
+ <917565ee-732a-4df0-a717-a71fbb34fd79@quicinc.com>
+ <837cd2e4-d231-411a-8af4-64b950c4066a@quicinc.com>
+ <c9b23ee3-6790-404d-80a3-4ca196327546@app.fastmail.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <c9b23ee3-6790-404d-80a3-4ca196327546@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: nkkXVyJJJxOzvMf2KM35TbI_eu5ePiEl
+X-Proofpoint-ORIG-GUID: nkkXVyJJJxOzvMf2KM35TbI_eu5ePiEl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-09_04,2024-07-09_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0 adultscore=0
+ impostorscore=0 suspectscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407090101
 
-Remove old txt bindings and add apq8096 soundcard entry to existing
-dt schema.
+On 7/8/2024 10:44 PM, Arnd Bergmann wrote:
+> On Tue, Jul 9, 2024, at 05:55, Jeff Johnson wrote:
+>> On 7/8/2024 6:57 PM, Jeff Johnson wrote:
+>>> We tend to enable a lot of debug config options, so I'm wondering if one of
+>>> them is contributing to the issue? Guess I'll turn off a bunch of those
+>>> options and try again.
+>>
+>> OK, with a bunch of debug turned off my image boots.
+>>
+>> Now to find the culprit.
+>>
+>> Current diff between original config and working config:
+> 
+> Nice! I've tried the reverse now, turning on the options
+> you have turned off on top of my defconfig. This version
+> still works for me, booting with a plain
+> 'qemu-system-x86_64 -kernel arch/x86_64/boot/bzImage'
+> and building with my arm64-to-x86 cross compiler.
 
-Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
+I picked my favorite to begin with, enabling KASAN (which in turn enabled a
+few others). The resulting kernel did not boot for me (just saw a black screen
+after the GRUB menu). Diff between working and non-working config is below.
+
+I then downloaded and built the config you supplied. With that I have the same
+behavior as my original config, the display is frozen with:
+Loading initial ramdisk ...
+
+
+[jjohnson:laptop 1966] diff .config.old .config
+19a20
+> CONFIG_CONSTRUCTORS=y
+326a328
+> CONFIG_GENERIC_CSUM=y
+334a337
+> CONFIG_KASAN_SHADOW_OFFSET=0xdffffc0000000000
+856d858
+< CONFIG_VMAP_STACK=y
+10935a10938,10940
+> CONFIG_STACKDEPOT=y
+> CONFIG_STACKDEPOT_ALWAYS_INIT=y
+> CONFIG_STACKDEPOT_MAX_FRAMES=64
+11033d11037
+< # CONFIG_KCSAN is not set
+11049c11053,11054
+< # CONFIG_SLUB_DEBUG is not set
 ---
- .../bindings/sound/qcom,apq8096.txt           | 128 ------------------
- .../bindings/sound/qcom,sm8250.yaml           |   1 +
- 2 files changed, 1 insertion(+), 128 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-deleted file mode 100644
-index e1b9fa8a5bf8..000000000000
---- a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-+++ /dev/null
-@@ -1,128 +0,0 @@
--* Qualcomm Technologies APQ8096 ASoC sound card driver
--
--This binding describes the APQ8096 sound card, which uses qdsp for audio.
--
--- compatible:
--	Usage: required
--	Value type: <stringlist>
--	Definition: must be "qcom,apq8096-sndcard"
--
--- audio-routing:
--	Usage: Optional
--	Value type: <stringlist>
--	Definition:  A list of the connections between audio components.
--		  Each entry is a pair of strings, the first being the
--		  connection's sink, the second being the connection's
--		  source. Valid names could be power supplies, MicBias
--		  of codec and the jacks on the board:
--		  Valid names include:
--
--		Board Connectors:
--			"Headphone Left"
--			"Headphone Right"
--			"Earphone"
--			"Line Out1"
--			"Line Out2"
--			"Line Out3"
--			"Line Out4"
--			"Analog Mic1"
--			"Analog Mic2"
--			"Analog Mic3"
--			"Analog Mic4"
--			"Analog Mic5"
--			"Analog Mic6"
--			"Digital Mic2"
--			"Digital Mic3"
--
--		Audio pins and MicBias on WCD9335 Codec:
--			"MIC_BIAS1"
--			"MIC_BIAS2"
--			"MIC_BIAS3"
--			"MIC_BIAS4"
--			"AMIC1"
--			"AMIC2"
--			"AMIC3"
--			"AMIC4"
--			"AMIC5"
--			"AMIC6"
--			"AMIC6"
--			"DMIC1"
--			"DMIC2"
--			"DMIC3"
--
--- model:
--	Usage: required
--	Value type: <stringlist>
--	Definition: The user-visible name of this sound card.
--
--- aux-devs
--	Usage: optional
--	Value type: <array of phandles>
--	Definition: A list of phandles for auxiliary devices (e.g. analog
--		    amplifiers) that do not appear directly within the DAI
--		    links. Should be connected to another audio component
--		    using "audio-routing".
--
--= dailinks
--Each subnode of sndcard represents either a dailink, and subnodes of each
--dailinks would be cpu/codec/platform dais.
--
--- link-name:
--	Usage: required
--	Value type: <string>
--	Definition: User friendly name for dai link
--
--= CPU, PLATFORM, CODEC dais subnodes
--- cpu:
--	Usage: required
--	Value type: <subnode>
--	Definition: cpu dai sub-node
--
--- codec:
--	Usage: Optional
--	Value type: <subnode>
--	Definition: codec dai sub-node
--
--- platform:
--	Usage: Optional
--	Value type: <subnode>
--	Definition: platform dai sub-node
--
--- sound-dai:
--	Usage: required
--	Value type: <phandle with arguments>
--	Definition: dai phandle/s and port of CPU/CODEC/PLATFORM node.
--
--Obsolete:
--	qcom,model: String for soundcard name (Use model instead)
--	qcom,audio-routing: A list of the connections between audio components.
--			    (Use audio-routing instead)
--
--Example:
--
--audio {
--	compatible = "qcom,apq8096-sndcard";
--	model = "DB820c";
--
--	mm1-dai-link {
--		link-name = "MultiMedia1";
--		cpu {
--			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA1>;
--		};
--	};
--
--	hdmi-dai-link {
--		link-name = "HDMI Playback";
--		cpu {
--			sound-dai = <&q6afe HDMI_RX>;
--		};
--
--		platform {
--			sound-dai = <&q6adm>;
--		};
--
--		codec {
--			sound-dai = <&hdmi 0>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/sound/qcom,sm8250.yaml b/Documentation/devicetree/bindings/sound/qcom,sm8250.yaml
-index b2e15ebbd1bc..c9076dcd44c1 100644
---- a/Documentation/devicetree/bindings/sound/qcom,sm8250.yaml
-+++ b/Documentation/devicetree/bindings/sound/qcom,sm8250.yaml
-@@ -28,6 +28,7 @@ properties:
-           - const: qcom,sm8450-sndcard
-       - enum:
-           - qcom,apq8016-sbc-sndcard
-+          - qcom,apq8096-sndcard
-           - qcom,msm8916-qdsp6-sndcard
-           - qcom,qcm6490-idp-sndcard
-           - qcom,qcs6490-rb3gen2-sndcard
--- 
-2.45.2
+> CONFIG_SLUB_DEBUG=y
+> # CONFIG_SLUB_DEBUG_ON is not set
+11080c11085,11093
+< # CONFIG_KASAN is not set
+---
+> CONFIG_KASAN=y
+> CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX=y
+> CONFIG_KASAN_GENERIC=y
+> # CONFIG_KASAN_OUTLINE is not set
+> CONFIG_KASAN_INLINE=y
+> CONFIG_KASAN_STACK=y
+> # CONFIG_KASAN_VMALLOC is not set
+> # CONFIG_KASAN_MODULE_TEST is not set
+> # CONFIG_KASAN_EXTRA_INFO is not set
+11300d11312
+< # CONFIG_UNWINDER_GUESS is not set
 
