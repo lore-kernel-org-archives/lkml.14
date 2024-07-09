@@ -1,161 +1,94 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A243B154BF0
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 14:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D0C19B5B6;
+	Tue,  9 Jul 2024 14:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720533851; cv=none; b=d0fgpHfgUbF+CoMBTwjO18LacnZALkWxdUe2VraBON7PckpSjoeIGEiNk1w7pCjOlSn0j57AM50y8OXEfJ/hd0yJvOjb3DxiQcMssFmGFEuK/4cVibWOC6LY3T2+dA7DlMXXBz/xAxFMn13r0w0BiBsE3SqliWXEFCVi8D01Q+s=
+	t=1720533916; cv=none; b=aG0q9RMTuYrPNYYSk+vJGyshXr1uT0zqPdB4fzlD44hOaLlgp8BRYzsiG/zXCc1dDpzMMSAGO73KyQx5wSVJi0AX5Sju2a66cniM5LYT97YwEDL4BA/CScXIoP4/JLmbQSrPYWcSx8DIcPAxH8qTnKvOZEdGytjc+0BQJrF3l0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720533851; c=relaxed/simple;
-	bh=WehO05lTq9i4SfZ4w807g+0X7qjynyaN5S6EzynjTac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hdck/Bj/n3T3y95pa1fO4buOkVPDWiIbyc6c/rY37HICur8mHw3nj/4PW2rAL6l3EXBh3qviEBZUAi2g3NtDlCRBh/MW1f+IsxymJ/wcFwYrFaEjmw0p/4F0INRVyV9NHyJLbysJ3f+xIlyjiyBhJL07q0hxYYHYoatRCmqyKgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B80X2Y8n; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B80X2Y8n"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4266ed6c691so9532425e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 07:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720533847; x=1721138647; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gr+BI9dX0y9cQgrNoEy2ntD0zgiBxsk0wbP5eVeu2Q4=;
-        b=B80X2Y8ngFGYqfoM1qum3NEI3In10P7f2HJMDTwLTx82zuVMqfj/Z5WiWAcdBaG729
-         UtVFNG1BcMRFAKLuzE8ASsFGmgEai5RdCZu8XHhyjW5T204r64mnFNakpts8haS5zWpw
-         AvqexYM1sWhtY6TFtrgPvb7pLcZ3+v53UVtM27aDzHGa9g7l21wR9Vesjg8S1OKVwRTJ
-         qDqrYHvDX1oNYHlKuYGUTMstG6h9RmeRPYf/sktNW/kDRYte5KccNFfYSReNSJX2MssK
-         M9xDHWUvkGWugN0qZXykem6vfeDM/n8rihPE6Pv8SubCueRcPWreiO+cGIoxOHOO4Sha
-         bR5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720533847; x=1721138647;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gr+BI9dX0y9cQgrNoEy2ntD0zgiBxsk0wbP5eVeu2Q4=;
-        b=AonpSwrt1uockgdA0YAniNfZQByQGmboJOqGAFxXQeRLPA36gJ7rISoa4Fo3PZxu09
-         mGv0tvnZ8WFGecxaYbAp5SwB6sUnSzSaXVVzc2QpXiZzR/W28fYbQAY8YQZ0lt7FcabB
-         ghB5xz9VcY/dKipySMCM/wixXa0wHboFTfC36bEfXO7Bs2We5LpKwuVYV1pRZX8YGs3A
-         Od4JytBCIqRrEyR3aW+VHYvzJJI3RMkuRIgcWXDEypZvt71KYGikXxF6ukQlG6LI2xzg
-         3Amo1Hk9sHeH2YGOzgst0uGHb9DYpl7YVAAWem870T5KQhwdanYjbLZSUX3epfefnkbx
-         w0ew==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Tuv1P/CqVVKPnGOLPmv0RMl/c8r+QwhKIw/PUjZyplGvuOAylgOhaedPgs6Qg58zl3eLH5P0l2n5wOoG+HbbW1P2hzZzg647x8vy
-X-Gm-Message-State: AOJu0YzGXEUjH0xQtkhqC7Ed0ZGkfsDSncooFFEOsc1u53DnJrH4Wpxv
-	aOXlWmNVQ6Obwd7dhrcWOqYF04fSL1XQqj0vTt7Qqa+WSSO+ly8GvWmjG6grVZ5NQgn6tLzx/+C
-	S
-X-Google-Smtp-Source: AGHT+IFHJ+GV1aSDHAaZEX2KWlyDDtXutizUkD2W+8jfELexvVFXW2jZy8Aal+D/rXHu12mwyZdQMQ==
-X-Received: by 2002:a05:600c:300a:b0:426:6b47:290b with SMTP id 5b1f17b1804b1-426708f1e2fmr16550985e9.28.1720533846920;
-        Tue, 09 Jul 2024 07:04:06 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:cf24:cce:17df:12ab? ([2a05:6e02:1041:c10:cf24:cce:17df:12ab])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4266f6f07dasm42393815e9.12.2024.07.09.07.04.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jul 2024 07:04:06 -0700 (PDT)
-Message-ID: <56681478-399a-4fae-828c-ccf1b579c296@linaro.org>
-Date: Tue, 9 Jul 2024 16:04:05 +0200
+	s=arc-20240116; t=1720533916; c=relaxed/simple;
+	bh=aT9KxpR/5yygMSydYfDfbgl0RR3g7jLPoGITwLJc9FE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ErsosmRmOkAfF52SrmemOmAV8wg0f2Xitgey25NnomFYBvCs7yU3euSBkndbEX4c3CFpkVPE35++5vNE8sMS+ZEZwi3fwLtmoKtmFtaHTzY3fZIzdOh4qfg6rwBW6uPOAywTaiPaAxM2yY5FQx2DmWJ+Ls+dxkdsEjuw9ftw/rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowACnr+eHQ41mXppiAg--.14867S2;
+	Tue, 09 Jul 2024 22:05:03 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: kristo@kernel.org,
+	bp@alien8.de,
+	tony.luck@intel.com,
+	james.morse@arm.com,
+	mchehab@kernel.org,
+	rric@kernel.org
+Cc: linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>
+Subject: [PATCH] EDAC/ti: Fix possible null pointer dereference in _emif_get_id()
+Date: Tue,  9 Jul 2024 22:04:54 +0800
+Message-Id: <20240709140454.1222094-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clocksource/drivers/sh_cmt: Address race condition for
- clock events
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?=
- <niklas.soderlund+renesas@ragnatech.se>, Thomas Gleixner
- <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org
-References: <20240702190230.3825292-1-niklas.soderlund+renesas@ragnatech.se>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20240702190230.3825292-1-niklas.soderlund+renesas@ragnatech.se>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACnr+eHQ41mXppiAg--.14867S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZrWxAw45Gr4DJF17JFy5urg_yoWDCwb_KF
+	1rWFy7Xr1vgF97GwsIqw13Z34Iy3yj9w1qgrs2g39aqry5Xa43XrsaqF1DZrZrWrW09Fy5
+	KrWqk34rAr1UujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb4xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+	YxC7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUAkucUUU
+	UU=
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-On 02/07/2024 21:02, Niklas Söderlund wrote:
-> There is a race condition in the CMT interrupt handler. In the interrupt
-> handler the driver sets a driver private flag, FLAG_IRQCONTEXT. This
-> flag is used to indicate any call to set_next_event() should not be
-> directly propagated to the device, but instead cached. This is done as
-> the interrupt handler itself reprograms the device when needed before it
-> completes and this avoids this operation to take place twice.
-> 
-> It is unclear why this design was chosen, my suspicion is to allow the
-> struct clock_event_device.event_handler callback, which is called while
-> the FLAG_IRQCONTEXT is set, can update the next event without having to
-> write to the device twice.
-> 
-> Unfortunately there is a race between when the FLAG_IRQCONTEXT flag is
-> set and later cleared where the interrupt handler have already started to
-> write the next event to the device. If set_next_event() is called in
-> this window the value is only cached in the driver but not written. This
-> leads to the board to misbehave, or worse lockup and produce a splat.
-> 
->     rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
->     rcu:     0-...!: (0 ticks this GP) idle=f5e0/0/0x0 softirq=519/519 fqs=0 (false positive?)
->     rcu:     (detected by 1, t=6502 jiffies, g=-595, q=77 ncpus=2)
->     Sending NMI from CPU 1 to CPUs 0:
->     NMI backtrace for cpu 0
->     CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.10.0-rc5-arm64-renesas-00019-g74a6f86eaf1c-dirty #20
->     Hardware name: Renesas Salvator-X 2nd version board based on r8a77965 (DT)
->     pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->     pc : tick_check_broadcast_expired+0xc/0x40
->     lr : cpu_idle_poll.isra.0+0x8c/0x168
->     sp : ffff800081c63d70
->     x29: ffff800081c63d70 x28: 00000000580000c8 x27: 00000000bfee5610
->     x26: 0000000000000027 x25: 0000000000000000 x24: 0000000000000000
->     x23: ffff00007fbb9100 x22: ffff8000818f1008 x21: ffff8000800ef07c
->     x20: ffff800081c79ec0 x19: ffff800081c70c28 x18: 0000000000000000
->     x17: 0000000000000000 x16: 0000000000000000 x15: 0000ffffc2c717d8
->     x14: 0000000000000000 x13: ffff000009c18080 x12: ffff8000825f7fc0
->     x11: 0000000000000000 x10: ffff8000818f3cd4 x9 : 0000000000000028
->     x8 : ffff800081c79ec0 x7 : ffff800081c73000 x6 : 0000000000000000
->     x5 : 0000000000000000 x4 : ffff7ffffe286000 x3 : 0000000000000000
->     x2 : ffff7ffffe286000 x1 : ffff800082972900 x0 : ffff8000818f1008
->     Call trace:
->      tick_check_broadcast_expired+0xc/0x40
->      do_idle+0x9c/0x280
->      cpu_startup_entry+0x34/0x40
->      kernel_init+0x0/0x11c
->      do_one_initcall+0x0/0x260
->      __primary_switched+0x80/0x88
->     rcu: rcu_preempt kthread timer wakeup didn't happen for 6501 jiffies! g-595 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
->     rcu:     Possible timer handling issue on cpu=0 timer-softirq=262
->     rcu: rcu_preempt kthread starved for 6502 jiffies! g-595 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
->     rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
->     rcu: RCU grace-period kthread stack dump:
->     task:rcu_preempt     state:I stack:0     pid:15    tgid:15    ppid:2      flags:0x00000008
->     Call trace:
->      __switch_to+0xbc/0x100
->      __schedule+0x358/0xbe0
->      schedule+0x48/0x148
->      schedule_timeout+0xc4/0x138
->      rcu_gp_fqs_loop+0x12c/0x764
->      rcu_gp_kthread+0x208/0x298
->      kthread+0x10c/0x110
->      ret_from_fork+0x10/0x20
-> 
-> The design have been part of the driver since it was first merged in
-> early 2009. It becomes increasingly harder to trigger the issue the
-> older kernel version one tries. It only takes a few boots on v6.10-rc5,
-> while hundreds of boots are needed to trigger it on v5.10.
-> 
-> Close the race condition by using the CMT channel lock for the two
-> competing sections. The channel lock was added to the driver after its
-> initial design.
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
+In _emif_get_id(), of_get_address() may return NULL which is later
+dereferenced. Fix this bug by adding NULL check.
 
-Applied, thanks
+Fixes: 86a18ee21e5e ("EDAC, ti: Add support for TI keystone and DRA7xx EDAC")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/edac/ti_edac.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/drivers/edac/ti_edac.c b/drivers/edac/ti_edac.c
+index 29723c9592f7..6f3da8d99eab 100644
+--- a/drivers/edac/ti_edac.c
++++ b/drivers/edac/ti_edac.c
+@@ -207,6 +207,9 @@ static int _emif_get_id(struct device_node *node)
+ 	int my_id = 0;
+ 
+ 	addrp = of_get_address(node, 0, NULL, NULL);
++	if (!addrp)
++		return -EINVAL;
++
+ 	my_addr = (u32)of_translate_address(node, addrp);
+ 
+ 	for_each_matching_node(np, ti_edac_of_match) {
+@@ -214,6 +217,9 @@ static int _emif_get_id(struct device_node *node)
+ 			continue;
+ 
+ 		addrp = of_get_address(np, 0, NULL, NULL);
++		if (!addrp)
++			return -EINVAL;
++
+ 		addr = (u32)of_translate_address(np, addrp);
+ 
+ 		edac_printk(KERN_INFO, EDAC_MOD_NAME,
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.25.1
 
